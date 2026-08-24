@@ -11,6 +11,7 @@
     'SYS-INTERIORES':['IN'],
     'SYS-INVERSION':['IV'],
     'SYS-MARKETING':['MK'],
+    'SYS-OBRA':['OB'],
     'SYS-CONTROL':['AC']
   });
   function codes(value){var raw=String(value||'').trim();if(!raw)return [];if(raw==='*')return ['*'];return raw.toUpperCase().split(/[,|; ]+/).filter(Boolean);}

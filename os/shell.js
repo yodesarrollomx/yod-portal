@@ -43,13 +43,14 @@
     'SYS-FLUJO': 'https://alexpueblag.github.io/board-flujo-yod/',
     'SYS-INTERIORES': 'https://alexpueblag.github.io/interiores-aurum/',
     'SYS-INVERSION': 'https://alexpueblag.github.io/yodesarrollo-board/',
-    'SYS-MARKETING': 'https://alexpueblag.github.io/aurum-board/'
+    'SYS-MARKETING': 'https://alexpueblag.github.io/aurum-board/',
+    'SYS-OBRA': 'https://alexpueblag.github.io/yod-portal/obra.html'
   };
-  var ICON = { 'SYS-POTENCIALES': 'map-2', 'SYS-TRACK': 'route', 'SYS-MIRAMAR': 'building-community', 'SYS-TAREAS': 'checklist', 'SYS-FLUJO': 'wallet', 'SYS-INTERIORES': 'armchair-2', 'SYS-INVERSION': 'presentation-analytics', 'SYS-MARKETING': 'speakerphone' };
+  var ICON = { 'SYS-POTENCIALES': 'map-2', 'SYS-TRACK': 'route', 'SYS-MIRAMAR': 'building-community', 'SYS-TAREAS': 'checklist', 'SYS-FLUJO': 'wallet', 'SYS-INTERIORES': 'armchair-2', 'SYS-INVERSION': 'presentation-analytics', 'SYS-MARKETING': 'speakerphone', 'SYS-OBRA': 'building-skyscraper' };
   /* Los títulos oficiales viven en la pestaña Portal del Control Maestro
      (titulo_portal); estos son solo el respaldo si aquella no contesta.
      Deben decir LO MISMO que el Sheet — si renombras allá, renombra acá. */
-  var NAME = { 'SYS-POTENCIALES': 'Potenciales', 'SYS-TRACK': 'Codesarrollos', 'SYS-MIRAMAR': 'Real Miramar', 'SYS-TAREAS': 'MOAC', 'SYS-FLUJO': 'Flujo YOD', 'SYS-INTERIORES': 'Interiores', 'SYS-INVERSION': 'Inversionistas', 'SYS-MARKETING': 'Métricas' };
+  var NAME = { 'SYS-POTENCIALES': 'PPP', 'SYS-TRACK': 'Codesarrollos', 'SYS-MIRAMAR': 'Real de Miramar', 'SYS-TAREAS': 'MOAC', 'SYS-FLUJO': 'Flujo', 'SYS-INTERIORES': 'AURUM', 'SYS-INVERSION': 'Codesarrolladores', 'SYS-MARKETING': 'Embudo comercial', 'SYS-OBRA': 'Obra en vivo' };
   // Códigos por tablero — MISMA matriz que YOD OS (access-policy.js). El menú
   // solo enseña lo que tu sesión permite; el muro real sigue siendo cada backend.
   var CODES = {
@@ -60,7 +61,8 @@
     'SYS-FLUJO': ['FL'],
     'SYS-INTERIORES': ['IN'],
     'SYS-INVERSION': ['IV'],
-    'SYS-MARKETING': ['MK']
+    'SYS-MARKETING': ['MK'],
+    'SYS-OBRA': ['OB']
   };
   // identity: 'pending' (validando) | 'ok' (canje válido) | 'fail' (sin sesión o canje falló)
   var state = { role: '', boards: '', modules: [], identity: 'pending', catalogRows: null };

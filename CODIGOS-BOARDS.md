@@ -17,6 +17,7 @@ Operación, 15-jul-2026).
 | Interiores | `IN` | interiores-aurum | `board=IN` |
 | Inversionistas | `IV` | yodesarrollo-board | `board=IV` |
 | Métricas / Marketing | `MK` | aurum-board | `board=MK` |
+| Obra en vivo | `OB` | yod-portal/obra.html | adaptador de obra |
 | Accesos (admin) | `AC` | potenciales-yod/accesos.html | rol admin |
 
 ## Reglas
