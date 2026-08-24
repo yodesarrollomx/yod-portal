@@ -46,7 +46,10 @@
     'SYS-MARKETING': 'https://alexpueblag.github.io/aurum-board/'
   };
   var ICON = { 'SYS-POTENCIALES': 'map-2', 'SYS-TRACK': 'route', 'SYS-MIRAMAR': 'building-community', 'SYS-TAREAS': 'checklist', 'SYS-FLUJO': 'wallet', 'SYS-INTERIORES': 'armchair-2', 'SYS-INVERSION': 'presentation-analytics', 'SYS-MARKETING': 'speakerphone' };
-  var NAME = { 'SYS-POTENCIALES': 'Potenciales', 'SYS-TRACK': 'Codesarrollos', 'SYS-MIRAMAR': 'Real Miramar', 'SYS-TAREAS': 'Operación', 'SYS-FLUJO': 'Flujo YOD', 'SYS-INTERIORES': 'Interiores', 'SYS-INVERSION': 'Inversionistas', 'SYS-MARKETING': 'Métricas' };
+  /* Los títulos oficiales viven en la pestaña Portal del Control Maestro
+     (titulo_portal); estos son solo el respaldo si aquella no contesta.
+     Deben decir LO MISMO que el Sheet — si renombras allá, renombra acá. */
+  var NAME = { 'SYS-POTENCIALES': 'Potenciales', 'SYS-TRACK': 'Codesarrollos', 'SYS-MIRAMAR': 'Real Miramar', 'SYS-TAREAS': 'MOAC', 'SYS-FLUJO': 'Flujo YOD', 'SYS-INTERIORES': 'Interiores', 'SYS-INVERSION': 'Inversionistas', 'SYS-MARKETING': 'Métricas' };
   // Códigos por tablero — MISMA matriz que YOD OS (access-policy.js). El menú
   // solo enseña lo que tu sesión permite; el muro real sigue siendo cada backend.
   var CODES = {
@@ -61,6 +64,22 @@
   };
   // identity: 'pending' (validando) | 'ok' (canje válido) | 'fail' (sin sesión o canje falló)
   var state = { role: '', boards: '', modules: [], identity: 'pending', catalogRows: null };
+
+  /* El menú se veía distinto en cada tablero: cada carga corría la carrera
+     GAS-vs-respaldo de nuevo y a veces ganaba uno, a veces el otro (2 tableros
+     "MOAC" vs 8 tableros "Operación"). Guardamos el último catálogo bueno para
+     arrancar SIEMPRE con los títulos del Sheet, y la red solo refresca. */
+  var CATCACHE = 'yod_portal_cat_v1';
+  function readCatCache() {
+    try {
+      var raw = localStorage.getItem(CATCACHE); if (!raw) return null;
+      var rows = JSON.parse(raw);
+      return (Array.isArray(rows) && rows.length) ? rows : null;
+    } catch (e) { return null; }
+  }
+  function writeCatCache(rows) {
+    try { localStorage.setItem(CATCACHE, JSON.stringify(rows)); } catch (e) { }
+  }
 
   function boardsList() { return String(state.boards || '').toUpperCase().split(/[,|; ]+/).filter(Boolean); }
   function canOpen(sys) {
@@ -105,7 +124,7 @@
       state.modules = [];
       return;
     }
-    var rows = (state.catalogRows && state.catalogRows.length) ? state.catalogRows : defaultRows();
+    var rows = (state.catalogRows && state.catalogRows.length) ? state.catalogRows : (readCatCache() || defaultRows());
     renderNav(rows.filter(function (r) { return canOpen(r.system_id); }), cur);
   }
 
@@ -231,7 +250,7 @@
         if (!d || !d.ok || !Array.isArray(d.rows)) return;
         var rows = d.rows.filter(function (r) { return r && r.visible === 'SI' && r.system_id && DEST[r.system_id]; })
           .sort(function (a, b) { return Number(a.orden) - Number(b.orden); });
-        if (rows.length) { state.catalogRows = rows; applyNav(); }
+        if (rows.length) { state.catalogRows = rows; writeCatCache(rows); applyNav(); }
       }).catch(function () { });
   }
   function loadIdentity() {
