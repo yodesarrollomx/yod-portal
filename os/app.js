@@ -252,6 +252,7 @@
       var result=await window.YodOperations.load(token);
       state.allTasks=Array.isArray(result.tasks)?result.tasks:[];
       if(state.role==='admin')loadReconcile(token);
+      if(state.role==='admin')renderDecisions(state.allTasks);
       renderOpsScoped(result.source,result.updatedAt);
     }
     catch(error){
@@ -259,6 +260,49 @@
       panel.setAttribute('aria-busy','false');
       panel.innerHTML='<div class="operation-message"><i class="ti ti-shield-lock"></i><span>No se pudo consultar Operación semanal con esta sesión ('+String(diag)+'). El tablero original permanece intacto.</span></div>';
       console.warn('[YOD OS] Operación no cargó →',diag,error);
+      if(state.role==='admin')renderPulseError('decision-card','decision-panel','Decisiones (MOAC)');
+    }
+  }
+
+  /* ── Decisiones pendientes (proyecto "Decisiones" de MOAC) ──
+     Convención del Centro de Decisión: Pendiente = esperando la palabra de
+     Dirección; En proceso = ya decidida, en ejecución; Terminado = cerrada.
+     La edad sale de "DESDE: AAAA-MM-DD" en las observaciones si existe. */
+  function decisionAgeDays(task){
+    var m=String(task&&(task.observaciones||task.obs||'')||'').match(/DESDE:\s*(\d{4})-(\d{2})-(\d{2})/i);
+    if(!m)return null;
+    var d=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));
+    return Math.max(0,Math.round((Date.now()-d.getTime())/86400000));
+  }
+  function renderDecisions(tasks){
+    var card=$('decision-card'),panel=$('decision-panel');if(!card||!panel)return;
+    card.setAttribute('aria-busy','false');panel.replaceChildren();
+    var all=(Array.isArray(tasks)?tasks:[]).filter(function(t){
+      if(!t||/decisi/i.test(String(t.proyecto||''))===false)return false;
+      var arch=t.archivada===true||String(t.archivada).toLowerCase()==='true'||t.borrada===true||String(t.borrada).toLowerCase()==='true';
+      return !arch;
+    });
+    var porDecidir=all.filter(function(t){return window.YodOperations.normalizeStatus(t.estado)==='Pendiente';});
+    var enEjecucion=all.filter(function(t){return window.YodOperations.normalizeStatus(t.estado)==='En proceso';});
+    var ages=porDecidir.map(decisionAgeDays).filter(function(v){return v!=null;});
+    var oldest=ages.length?Math.max.apply(null,ages):null;
+    var grid=document.createElement('div');grid.className='pulse-metrics';
+    grid.append(
+      pulseMetric('Por decidir',String(porDecidir.length),porDecidir.length?'Te esperan en MOAC':'Nada pendiente',porDecidir.length?'alert':'positive'),
+      pulseMetric('En ejecución',String(enEjecucion.length),'Decididas, en curso'),
+      pulseMetric('La más vieja',oldest!=null?oldest+' d':'—',oldest!=null?'esperando desde entonces':'sin fecha registrada')
+    );
+    panel.appendChild(grid);
+    if(porDecidir.length){
+      var list=document.createElement('div');list.className='task-list';
+      porDecidir.slice(0,3).forEach(function(t){
+        var row=document.createElement('div');row.className='task-row';
+        var title=document.createElement('div');title.className='task-title';
+        var strong=document.createElement('strong');strong.textContent=t.actividad||t.entregable||'Decisión sin título';
+        var age=decisionAgeDays(t);var small=document.createElement('small');small.textContent=age!=null?('esperando '+age+' días'):'sin fecha';
+        title.append(strong,small);row.appendChild(title);list.appendChild(row);
+      });
+      panel.appendChild(list);
     }
   }
 
@@ -270,7 +314,8 @@
   async function loadMarketing(token){try{renderMarketing(await window.YodMarketing.load(token));}catch(_error){renderPulseError('marketing-card','marketing-panel','Marketing');}}
   async function loadPulse(token){
     var financeAllowed=state.role==='admin';var marketingAllowed=state.role==='admin'||window.YodAccessPolicy.hasCode(state.boards,'MK');
-    $('finance-card').classList.toggle('hidden',!financeAllowed);$('marketing-card').classList.toggle('hidden',!marketingAllowed);$('pulso').classList.toggle('hidden',!financeAllowed&&!marketingAllowed);
+    var decisionsAllowed=state.role==='admin';
+    $('finance-card').classList.toggle('hidden',!financeAllowed);$('marketing-card').classList.toggle('hidden',!marketingAllowed);$('decision-card').classList.toggle('hidden',!decisionsAllowed);$('pulso').classList.toggle('hidden',!financeAllowed&&!marketingAllowed&&!decisionsAllowed);
     var requests=[];if(financeAllowed)requests.push(loadFinance(token));if(marketingAllowed)requests.push(loadMarketing(token));await Promise.allSettled(requests);
   }
 
