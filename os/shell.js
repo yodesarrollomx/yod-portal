@@ -151,7 +151,7 @@
   // Vital en dispositivos compartidos (una tablet del equipo) para no dejar
   // la sesión ni los datos de una persona al alcance de la siguiente.
   function logout() {
-    try { localStorage.removeItem(LSC); sessionStorage.removeItem('pyod_rol'); } catch (e) { }
+    try { localStorage.removeItem(LSC); sessionStorage.removeItem('pyod_rol'); sessionStorage.removeItem('yod_id_v1'); localStorage.removeItem('yod_pulse_v1'); } catch (e) { }
     purgeAll();
     location.href = OS;
   }
@@ -255,21 +255,34 @@
         if (rows.length) { state.catalogRows = rows; writeCatCache(rows); applyNav(); }
       }).catch(function () { });
   }
+  function aplicaIdentidad(j) {
+    state.role = j.rol || 'vista'; state.boards = j.boards || '';
+    state.identity = 'ok';
+    var nm = j.nombre || j.correo || 'Equipo YOD';
+    var persona = state.role === 'admin' ? 'direccion' : 'colaborador';
+    set('yodName', nm); set('yodRole', persona === 'direccion' ? 'Dirección' : 'Colaborador');
+    var av = document.getElementById('yodAv'); if (av) av.textContent = (nm.split(/\s+/).filter(Boolean).slice(0, 2).map(function (x) { return x[0]; }).join('') || 'YO').toUpperCase();
+    var chip = document.getElementById('yodChip'); if (chip) { chip.className = 'yod-role ' + persona; chip.textContent = persona === 'direccion' ? 'Dirección' : 'Colaborador'; chip.style.display = ''; }
+    applyNav(); maybeLock();
+  }
   function loadIdentity() {
     var k = tok();
     if (!k) { state.identity = 'fail'; set('yodRole', 'Requiere acceso'); applyNav(); return; }
+    /* Velocidad: la identidad ya validada en esta pestaña pinta el menú AL
+       INSTANTE; el canje corre en fondo y solo corrige o cierra si cambió. */
+    var cacheado = null;
+    try { var r = sessionStorage.getItem('yod_id_v1'); cacheado = r ? JSON.parse(r) : null; } catch (e) { }
+    if (cacheado && cacheado.rol) aplicaIdentidad(cacheado);
     canjeConRelevo(k)
       .then(function (j) {
         if (!j || !j.ok) throw 0;
-        state.role = j.rol || 'vista'; state.boards = j.boards || '';
-        state.identity = 'ok';
-        var nm = j.nombre || j.correo || 'Equipo YOD';
-        var persona = state.role === 'admin' ? 'direccion' : 'colaborador';
-        set('yodName', nm); set('yodRole', persona === 'direccion' ? 'Dirección' : 'Colaborador');
-        var av = document.getElementById('yodAv'); if (av) av.textContent = (nm.split(/\s+/).filter(Boolean).slice(0, 2).map(function (x) { return x[0]; }).join('') || 'YO').toUpperCase();
-        var chip = document.getElementById('yodChip'); if (chip) { chip.className = 'yod-role ' + persona; chip.textContent = persona === 'direccion' ? 'Dirección' : 'Colaborador'; chip.style.display = ''; }
-        applyNav(); maybeLock();
-      }).catch(function () { state.identity = 'fail'; set('yodRole', 'Sesión por validar'); applyNav(); });
+        try { sessionStorage.setItem('yod_id_v1', JSON.stringify({ ok: true, rol: j.rol || 'vista', boards: j.boards || '', nombre: j.nombre || '', correo: j.correo || '' })); } catch (e) { }
+        aplicaIdentidad(j);
+      }).catch(function () {
+        try { sessionStorage.removeItem('yod_id_v1'); } catch (e) { }
+        if (cacheado) purgeAll();
+        state.identity = 'fail'; set('yodRole', 'Sesión por validar'); applyNav();
+      });
   }
 
   function wireSearch() {

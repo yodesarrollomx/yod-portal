@@ -32,8 +32,22 @@
   var $=function(id){return document.getElementById(id);};
   // Higiene de sesión en equipos compartidos: purga los datos sensibles cacheados
   // (la lista de tareas de todos los responsables) y, al cerrar sesión, el token del Portero.
-  var SENSITIVE_CACHES=['aurum-cache-v5','yod_ops_me'];
-  function purgarDatosSensibles(){SENSITIVE_CACHES.forEach(function(k){try{localStorage.removeItem(k);}catch(_e){}});}
+  var SENSITIVE_CACHES=['aurum-cache-v5','yod_ops_me','yod_pulse_v1'];
+  function purgarDatosSensibles(){SENSITIVE_CACHES.forEach(function(k){try{localStorage.removeItem(k);}catch(_e){}});try{sessionStorage.removeItem('yod_id_v1');}catch(_e){}}
+
+  /* ── Velocidad: pintar al instante con lo último conocido, refrescar en fondo ──
+     El cuello era la cadena de esperas a Google: canje del portero (segundos)
+     ANTES de enseñar nada, y luego cada tarjeta esperando su propio GAS.
+     Ahora: la identidad validada se recuerda por pestaña (sessionStorage) y los
+     resúmenes del Pulso se recuerdan en localStorage; se pintan de inmediato
+     con su sello de edad y la consulta en vivo los reemplaza al llegar.
+     Si el canje de fondo falla, se purga todo y se cierra (fail-closed). */
+  function idCacheRead(){try{var r=sessionStorage.getItem('yod_id_v1');if(!r)return null;var j=JSON.parse(r);return (j&&j.rol)?j:null;}catch(_e){return null;}}
+  function idCacheWrite(d){try{sessionStorage.setItem('yod_id_v1',JSON.stringify({ok:true,rol:d.rol||'vista',boards:d.boards||'',nombre:d.nombre||'',correo:d.correo||''}));}catch(_e){}}
+  function pulseCacheRead(k){try{var j=JSON.parse(localStorage.getItem('yod_pulse_v1')||'{}');return (j[k]&&j[k].summary)?j[k]:null;}catch(_e){return null;}}
+  function pulseCacheWrite(k,summary){try{var j=JSON.parse(localStorage.getItem('yod_pulse_v1')||'{}');j[k]={summary:summary,ts:Date.now()};localStorage.setItem('yod_pulse_v1',JSON.stringify(j));}catch(_e){}}
+  function edadSello(ts){var m=Math.round((Date.now()-ts)/60000);return m<1?'de hace un momento':m<60?('de hace '+m+' min'):('de hace '+Math.round(m/60)+' h');}
+  function marcarCache(panelId,ts){var p=$(panelId);if(!p)return;var n=document.createElement('small');n.className='pulse-cache-note';n.style.cssText='display:block;margin-top:8px;opacity:.6;font-size:11px';n.textContent='Datos '+edadSello(ts)+' · actualizando…';p.appendChild(n);}
   function cerrarSesion(){try{localStorage.removeItem(TOKEN_KEY);}catch(_e){}purgarDatosSensibles();try{location.reload();}catch(_e){location.href=location.pathname;}}
 
   function greeting(){var h=new Date().getHours();return h<12?'Buenos días':h<19?'Buenas tardes':'Buenas noches';}
@@ -114,32 +128,53 @@
       if(!response.ok)throw new Error('HTTP '+response.status);var data=await response.json();
       if(!data.ok||!Array.isArray(data.rows))throw new Error('Respuesta incompleta');
       renderModules(data.rows);$('updated-at').textContent=selloDato(data);setConnection('ok','En línea');
+      try{localStorage.setItem('yod_portal_cat_v1',JSON.stringify(data.rows));}catch(_e){}
     }catch(error){
       setConnection('error','Sin conexión');$('updated-at').textContent='No se pudo actualizar';
       if(!state.modules.length){var grid=$('module-grid');grid.setAttribute('aria-busy','false');grid.innerHTML='<div class="empty-state">Control Maestro no respondió. Por seguridad no se habilitaron enlaces. Intente actualizar nuevamente.</div>';}
     }finally{clearTimeout(timeout);state.loading=false;$('refresh').disabled=false;var _mr2=$('mobile-refresh');if(_mr2)_mr2.disabled=false;}
   }
 
+  function applyIdentity(data){
+    state.role=data.rol||'vista';state.boards=data.boards||'';state.profileReady=true;
+    state.personName=String(data.nombre||'').trim();
+    var name=data.nombre||data.correo||'Equipo YOD';$('user-name').textContent=name;$('user-role').textContent=state.role;$('avatar').textContent=initials(name);$('first-name').textContent=name.split(/\s|@/)[0];$('access-status').textContent=state.role==='admin'?'Dirección':'Autorizado';
+    var persona=state.role==='admin'?'direccion':'colaborador';
+    document.documentElement.setAttribute('data-persona',persona);
+    var chip=$('role-chip');chip.className='role-chip '+persona;chip.textContent=persona==='direccion'?'Dirección':'Colaborador';
+    $('user-role').textContent=persona==='direccion'?'Dirección':'Colaborador';
+    if(persona==='direccion'){$('hero-eyebrow').textContent='Centro de operación';$('hero-copy').textContent='Un solo acceso para entrar a la operación completa, sin mover ni duplicar la información de sus tableros.';}
+    else{$('hero-eyebrow').textContent='Tu espacio de trabajo';$('hero-copy').textContent='Tus módulos y tus pendientes de la semana, en un solo lugar. Abre lo que necesites.';}
+    document.querySelectorAll('.admin-only').forEach(function(el){el.classList.toggle('hidden',state.role!=='admin');});
+    var visibleQuick=0;document.querySelectorAll('.quick-card[data-system-id]').forEach(function(el){var allowed=window.YodAccessPolicy.canOpen(state.boards,el.dataset.systemId,state.role);el.classList.toggle('hidden',!allowed);if(allowed)visibleQuick++;});$('quick-section').classList.toggle('hidden',visibleQuick===0);
+    if(state.rawRows.length)renderModules(state.rawRows);
+  }
+  function startData(token){
+    var requests=[loadPulse(token)];
+    if(window.YodAccessPolicy.hasCode(state.boards,'TA')||state.role==='admin')requests.push(loadOperations(token));else renderOperationsLocked();
+    return Promise.allSettled(requests);
+  }
   async function loadIdentity(){
     var token='';try{token=localStorage.getItem(TOKEN_KEY)||'';}catch(_error){}
     if(!token){purgarDatosSensibles();$('access-status').textContent='Requiere acceso';state.profileReady=false;return;}
+    // 1) Pintar YA con la identidad validada de esta pestaña (si existe) y
+    //    arrancar los datos en paralelo — sin esperar el canje de Google.
+    var cached=idCacheRead(),arrancado=false;
+    if(cached){console.info('[YOD OS] pintado instantáneo desde caché de pestaña; canje revalidando en fondo');applyIdentity(cached);arrancado=true;startData(token);}
+    // 2) Revalidar el canje en fondo; si cambió algo se re-aplica, si falla se cierra.
     try{
       var data=await canjearConRelevo_(token);
       if(!data||!data.ok){var diag='canje:'+((data&&data.error)||'sin-respuesta');console.warn('[YOD OS] canje falló →',diag);var e2=new Error(diag);e2._diag=diag;throw e2;}
-      state.role=data.rol||'vista';state.boards=data.boards||'';state.profileReady=true;
-      state.personName=String(data.nombre||'').trim();
-      var name=data.nombre||data.correo||'Equipo YOD';$('user-name').textContent=name;$('user-role').textContent=state.role;$('avatar').textContent=initials(name);$('first-name').textContent=name.split(/\s|@/)[0];$('access-status').textContent=state.role==='admin'?'Dirección':'Autorizado';
-      var persona=state.role==='admin'?'direccion':'colaborador';
-      document.documentElement.setAttribute('data-persona',persona);
-      var chip=$('role-chip');chip.className='role-chip '+persona;chip.textContent=persona==='direccion'?'Dirección':'Colaborador';
-      $('user-role').textContent=persona==='direccion'?'Dirección':'Colaborador';
-      if(persona==='direccion'){$('hero-eyebrow').textContent='Centro de operación';$('hero-copy').textContent='Un solo acceso para entrar a la operación completa, sin mover ni duplicar la información de sus tableros.';}
-      else{$('hero-eyebrow').textContent='Tu espacio de trabajo';$('hero-copy').textContent='Tus módulos y tus pendientes de la semana, en un solo lugar. Abre lo que necesites.';}
-      document.querySelectorAll('.admin-only').forEach(function(el){el.classList.toggle('hidden',state.role!=='admin');});
-      var visibleQuick=0;document.querySelectorAll('.quick-card[data-system-id]').forEach(function(el){var allowed=window.YodAccessPolicy.canOpen(state.boards,el.dataset.systemId,state.role);el.classList.toggle('hidden',!allowed);if(allowed)visibleQuick++;});$('quick-section').classList.toggle('hidden',visibleQuick===0);
-      if(state.rawRows.length)renderModules(state.rawRows);
-      var requests=[loadPulse(token)];if(window.YodAccessPolicy.hasCode(state.boards,'TA')||state.role==='admin')requests.push(loadOperations(token));else renderOperationsLocked();await Promise.allSettled(requests);
-    }catch(err){purgarDatosSensibles();var d=(err&&err._diag)||'error';$('user-role').textContent='Sesión por validar';$('access-status').textContent='Pendiente ('+d+')';$('access-status').title='Diagnóstico del canje: '+d+' — revisa la consola para el detalle.';console.warn('[YOD OS] identidad no validada:',d,err);}
+      idCacheWrite(data);
+      var cambio=!cached||cached.rol!==(data.rol||'vista')||String(cached.boards||'')!==String(data.boards||'');
+      if(cambio)applyIdentity(data);
+      if(!arrancado)await startData(token);
+      else if(cambio)startData(token);
+    }catch(err){
+      purgarDatosSensibles();state.profileReady=false;
+      var d=(err&&err._diag)||'error';$('user-role').textContent='Sesión por validar';$('access-status').textContent='Pendiente ('+d+')';$('access-status').title='Diagnóstico del canje: '+d+' — revisa la consola para el detalle.';console.warn('[YOD OS] identidad no validada:',d,err);
+      if(arrancado){renderModules([]);$('pulso').classList.add('hidden');renderOperationsLocked();}
+    }
   }
 
   function renderOperationsLocked(){var panel=$('operation-panel');panel.setAttribute('aria-busy','false');panel.innerHTML='<div class="operation-message"><i class="ti ti-shield-lock"></i><span>Operación semanal no está incluida en los permisos de esta cuenta.</span></div>';}
@@ -248,6 +283,10 @@
   }
   async function loadOperations(token){
     var panel=$('operation-panel');panel.setAttribute('aria-busy','true');
+    // Pintar YA con el último caché del tablero (mismo que usa el board directo);
+    // la consulta en vivo lo reemplaza al llegar.
+    var cachedTasks=null;try{var _raw=localStorage.getItem('aurum-cache-v5');var _pj=_raw?JSON.parse(_raw):null;cachedTasks=Array.isArray(_pj)?_pj:null;}catch(_e){}
+    if(cachedTasks&&cachedTasks.length){state.allTasks=cachedTasks;if(state.role==='admin')renderDecisions(cachedTasks);renderOpsScoped('cache',null);}
     try{
       var result=await window.YodOperations.load(token);
       state.allTasks=Array.isArray(result.tasks)?result.tasks:[];
@@ -310,8 +349,18 @@
   function renderPulseError(cardId,panelId,label){var card=$(cardId),panel=$(panelId);card.setAttribute('aria-busy','false');panel.innerHTML='<div class="pulse-message"><i class="ti ti-cloud-off"></i><span>No se pudo consultar '+label+' en línea. Use Actualizar para reintentar.</span></div>';}
   function renderFinance(result){var card=$('finance-card'),panel=$('finance-panel'),s=result.summary;card.setAttribute('aria-busy','false');panel.replaceChildren();var grid=document.createElement('div');grid.className='pulse-metrics';grid.append(pulseMetric('Saldo actual',money(s.balance),s.updatedAt||'Fuente: Flujo YOD'),pulseMetric('Pagos pendientes',money(s.payments),s.paymentsCount+' registrados'),pulseMetric('Ingresos esperados',money(s.income),s.incomeCount+' registrados'),pulseMetric('Saldo proyectado',money(s.projected),'Saldo + ingresos − pagos',s.projected<0?'negative':'positive'));panel.appendChild(grid);}
   function renderMarketing(result){var card=$('marketing-card'),panel=$('marketing-panel'),s=result.summary;card.setAttribute('aria-busy','false');panel.replaceChildren();var grid=document.createElement('div');grid.className='pulse-metrics';grid.append(pulseMetric('Leads',String(s.leads),s.period||'Periodo activo'),pulseMetric('Citas',String(s.appointments),percent(s.appointmentRate)+' de leads'),pulseMetric('Clientes',String(s.clients),percent(s.clientRate)+' de leads'),pulseMetric('Sin tocar 24 h',String(s.untouched24h),'Requieren seguimiento',s.untouched24h>0?'alert':''));panel.appendChild(grid);}
-  async function loadFinance(token){try{renderFinance(await window.YodFinance.load(token));}catch(_error){renderPulseError('finance-card','finance-panel','Tesorería');}}
-  async function loadMarketing(token){try{renderMarketing(await window.YodMarketing.load(token));}catch(_error){renderPulseError('marketing-card','marketing-panel','Marketing');}}
+  async function loadFinance(token){
+    var c=pulseCacheRead('finance');
+    if(c){renderFinance({summary:c.summary});marcarCache('finance-panel',c.ts);}
+    try{var r=await window.YodFinance.load(token);renderFinance(r);pulseCacheWrite('finance',r.summary);}
+    catch(_error){if(!c)renderPulseError('finance-card','finance-panel','Tesorería');}
+  }
+  async function loadMarketing(token){
+    var c=pulseCacheRead('marketing');
+    if(c){renderMarketing({summary:c.summary});marcarCache('marketing-panel',c.ts);}
+    try{var r=await window.YodMarketing.load(token);renderMarketing(r);pulseCacheWrite('marketing',r.summary);}
+    catch(_error){if(!c)renderPulseError('marketing-card','marketing-panel','Marketing');}
+  }
   async function loadPulse(token){
     var financeAllowed=state.role==='admin';var marketingAllowed=state.role==='admin'||window.YodAccessPolicy.hasCode(state.boards,'MK');
     var decisionsAllowed=state.role==='admin';
@@ -342,6 +391,9 @@
   document.addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch();}});
   // Cajón lateral en móvil (☰) — misma navegación que escritorio
   (function(){var shell=document.querySelector('.app-shell');var burger=$('menu-toggle');var scrim=$('nav-scrim');if(!shell)return;if(window.matchMedia&&window.matchMedia('(max-width:900px)').matches){var seen=false;try{seen=sessionStorage.getItem('yod_drawer_seen')==='1';}catch(e){}if(!seen){shell.classList.add('nav-open');try{sessionStorage.setItem('yod_drawer_seen','1');}catch(e){}}}function closeNav(){shell.classList.remove('nav-open');}if(burger)burger.addEventListener('click',function(){shell.classList.toggle('nav-open');});if(scrim)scrim.addEventListener('click',closeNav);document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNav();});var nav=$('nav-modules');if(nav)nav.addEventListener('click',function(e){if(e.target.closest('.nav-item'))closeNav();});if(window.matchMedia){var mq=window.matchMedia('(min-width:901px)');mq.addEventListener('change',function(m){if(m.matches)closeNav();});}})();
+  // Catálogo: arrancar con el último conocido (mismo caché que usa el marco de
+  // los tableros); loadCatalog lo refresca y reescribe al llegar.
+  try{var _cc=JSON.parse(localStorage.getItem('yod_portal_cat_v1')||'null');if(Array.isArray(_cc)&&_cc.length)state.rawRows=_cc;}catch(_e){}
   loadIdentity();loadCatalog();
 })();
 
