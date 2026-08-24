@@ -34,6 +34,9 @@
  #gate{position:fixed;inset:0;background:#F7F4EC;display:flex;align-items:center;justify-content:center;z-index:60}
  /* embebido en YOD OS: sin lienzo propio, hereda el papel del portal */
  html.embed, html.embed body{height:auto;display:block;background:transparent}
+ /* Embebido, la altura del lienzo sale del ANCHO (aspecto), nunca del alto
+    del iframe: max-height:100vh acoplaba lienzo↔iframe y el marco crecía solo. */
+ html.embed canvas{max-height:none}
  body.embed #gate{position:static;inset:auto;background:transparent;min-height:420px}
  body.embed #gateCard{box-shadow:none;background:#FCF8EE}
  body.embed #sw{padding:2px 4px 10px}
@@ -1748,10 +1751,16 @@ async function validar(k){
   if(!r.ok) throw r.error||"error";
   CLAVE_OK=k;
 }
+let _ultimoAlto=0;
 function avisarAlto(){
   if(!EMBED || window.parent===window) return;
-  const h=Math.ceil(Math.max(document.body.scrollHeight,
-    document.documentElement.scrollHeight))+6;
+  /* Se mide el CONTENIDO (#w), no el body: el body llena el iframe, así que
+     medirlo devolvía el alto que el padre acababa de poner (+6) y el marco
+     crecía sin fin. El filtro de 12px corta cualquier eco restante. */
+  const w=document.getElementById("w");
+  const h=Math.ceil(w?w.scrollHeight:document.body.scrollHeight)+6;
+  if(Math.abs(h-_ultimoAlto)<12) return;
+  _ultimoAlto=h;
   try{ parent.postMessage({yodTablero:"alto", alto:h}, location.origin); }catch(e){}
 }
 function abrir(){
