@@ -103,8 +103,13 @@
     a.append(i,s);return a;
   }
   (function(){var box=document.getElementById('nav-modules');if(!box)return;
-    box.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(!a)return;
-      e.preventDefault();location.assign(a.href);});
+    // el refresco en fondo puede REEMPLAZAR el <a> entre el pointerdown y el
+    // pointerup: el click muere en el contenedor. Se captura el destino al
+    // bajar el dedo y se navega al soltarlo — el DOM ya no importa.
+    var pendiente=null;
+    box.addEventListener('pointerdown',function(e){var a=e.target.closest('a[href]');pendiente=a?a.href:null;});
+    box.addEventListener('pointerup',function(e){if(!pendiente)return;var h=pendiente;pendiente=null;e.preventDefault();location.assign(h);});
+    box.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){e.preventDefault();if(!pendiente)location.assign(a.href);}});
   })();
   function renderSidebarModules(){
     var box=$('nav-modules');if(!box)return;box.replaceChildren();
