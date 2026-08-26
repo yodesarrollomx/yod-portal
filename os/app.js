@@ -102,6 +102,10 @@
     var s=document.createElement('span');s.textContent=safeText(row.titulo_portal)||safeText(row.system_id);
     a.append(i,s);return a;
   }
+  (function(){var box=document.getElementById('nav-modules');if(!box)return;
+    box.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(!a)return;
+      e.preventDefault();location.assign(a.href);});
+  })();
   function renderSidebarModules(){
     var box=$('nav-modules');if(!box)return;box.replaceChildren();
     if(!state.profileReady){var h=document.createElement('span');h.className='nav-loading';h.textContent='Inicia sesión para ver tus tableros';box.appendChild(h);return;}
@@ -109,8 +113,14 @@
     state.modules.forEach(function(row){var n=sidebarNode(row);if(n)box.appendChild(n);});
   }
 
+  var _lastModulesFirma='';
   function renderModules(rows){
-    var grid=$('module-grid');grid.replaceChildren();
+    var grid=$('module-grid');
+    var firmaRows=Array.isArray(rows)?rows:state.rawRows;
+    var firma=state.profileReady+'|'+JSON.stringify((firmaRows||[]).map(function(r){return [r.system_id,r.titulo_portal,r.url_override||''];}));
+    if(firma===_lastModulesFirma&&grid.children.length){state.rawRows=firmaRows;return;}
+    _lastModulesFirma=firma;
+    grid.replaceChildren();
     state.rawRows=Array.isArray(rows)?rows:state.rawRows;
     if(!state.profileReady){state.modules=[];var waiting=document.createElement('div');waiting.className='empty-state';waiting.textContent='Inicie sesión para consultar sus módulos autorizados.';grid.appendChild(waiting);grid.setAttribute('aria-busy','false');$('module-count').textContent='—';renderSidebarModules();return;}
     state.modules=window.PortalCore.cleanRows(state.rawRows).filter(function(row){return Boolean(window.PortalCore.resolveUrl(row))&&window.YodAccessPolicy.canOpen(state.boards,row.system_id,state.role);});
