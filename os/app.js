@@ -172,7 +172,13 @@
       else if(cambio)startData(token);
     }catch(err){
       purgarDatosSensibles();state.profileReady=false;
-      var d=(err&&err._diag)||'error';$('user-role').textContent='Sesión por validar';$('access-status').textContent='Pendiente ('+d+')';$('access-status').title='Diagnóstico del canje: '+d+' — revisa la consola para el detalle.';console.warn('[YOD OS] identidad no validada:',d,err);
+      var d=(err&&err._diag)||'error';
+      // token RECHAZADO por el portero (no timeout): soltarlo y mostrar la puerta.
+      // Sin esto, un relevo muerto deja el OS en «Validando…» para siempre.
+      if(d==='canje:clave'){try{localStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem('yod_id_v1');}catch(_e){}
+        console.warn('[YOD OS] token de relevo muerto — se suelta y se pide la clave de nuevo');
+        location.reload();return;}
+      $('user-role').textContent='Sesión por validar';$('access-status').textContent='Pendiente ('+d+')';$('access-status').title='Diagnóstico del canje: '+d+' — revisa la consola para el detalle.';console.warn('[YOD OS] identidad no validada:',d,err);
       if(arrancado){renderModules([]);$('pulso').classList.add('hidden');renderOperationsLocked();}
     }
   }
