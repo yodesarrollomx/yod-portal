@@ -107,8 +107,10 @@
     // pointerup: el click muere en el contenedor. Se captura el destino al
     // bajar el dedo y se navega al soltarlo — el DOM ya no importa.
     var pendiente=null;
-    box.addEventListener('pointerdown',function(e){var a=e.target.closest('a[href]');pendiente=a?a.href:null;});
-    box.addEventListener('pointerup',function(e){if(!pendiente)return;var h=pendiente;pendiente=null;e.preventDefault();location.assign(h);});
+    function baja(e){var a=e.target.closest('a[href]');if(a)pendiente=a.href;}
+    function sube(e){if(!pendiente)return;var h=pendiente;pendiente=null;e.preventDefault();location.assign(h);}
+    box.addEventListener('pointerdown',baja);box.addEventListener('mousedown',baja);box.addEventListener('touchstart',baja,{passive:true});
+    box.addEventListener('pointerup',sube);box.addEventListener('mouseup',sube);
     box.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){e.preventDefault();if(!pendiente)location.assign(a.href);}});
   })();
   function renderSidebarModules(){
