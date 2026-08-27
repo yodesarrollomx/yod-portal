@@ -102,16 +102,60 @@
     var s=document.createElement('span');s.textContent=safeText(row.titulo_portal)||safeText(row.system_id);
     a.append(i,s);return a;
   }
+
+  /* ══ Máscara del Embudo comercial ═══════════════════════════════════════
+     Alejandro pidió que picarle NO lo saque del OS: una máscara de pantalla
+     (como la revisión de decisiones) con la Sala de Edición lista para decidir.
+     La Sala vive en el MISMO origen, así que entra con su sesión ya puesta. */
+  var EMBUDO_URLS=['alexpueblag.github.io/aurum-board','alexpueblag.github.io/sala-edicion'];
+  (function(){
+    var mask=document.getElementById('embudoMask');if(!mask)return;
+    var frame=document.getElementById('embudoFrame'),load=document.getElementById('embudoLoad'),
+        tabs=document.getElementById('embudoTabs'),tit=document.getElementById('embudoMaskT'),
+        abrir=document.getElementById('embudoAbrir'),pie=document.getElementById('embudoPie'),
+        x=document.getElementById('embudoX'),ultimo=null;
+    var PIE={sala:'La Sala guarda en su Sheet — tus decisiones no se quedan aquí.',
+             metricas:'Números del CRM y de Meta · el cuello del embudo se ve aquí.',
+             ppp:'El imán de leads · así lo ve quien llega por tus publicaciones.'};
+    function ir(vista){
+      var b=tabs.querySelector('[data-vista="'+vista+'"]');if(!b)return;
+      tabs.querySelectorAll('.mask-tab').forEach(function(t){t.classList.toggle('on',t===b);});
+      tit.textContent=b.dataset.t;abrir.href=b.dataset.src;pie.textContent=PIE[vista]||'';
+      load.classList.remove('off');frame.src=b.dataset.src;
+      try{sessionStorage.setItem('yod_embudo_vista',vista);}catch(e){}
+    }
+    frame.addEventListener('load',function(){load.classList.add('off');});
+    window.abrirEmbudo=function(vista){
+      ultimo=document.activeElement;
+      mask.hidden=false;mask.classList.add('open');document.body.style.overflow='hidden';
+      var v=vista;if(!v){try{v=sessionStorage.getItem('yod_embudo_vista');}catch(e){}}
+      ir(v||'sala');x.focus();
+    };
+    function cerrar(){
+      mask.classList.remove('open');mask.hidden=true;document.body.style.overflow='';
+      frame.src='about:blank';           // liberar el tablero al cerrar
+      if(ultimo&&ultimo.focus)ultimo.focus();
+    }
+    x.addEventListener('click',cerrar);
+    mask.addEventListener('click',function(e){if(e.target.hasAttribute('data-cerrar'))cerrar();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&mask.classList.contains('open'))cerrar();});
+    tabs.addEventListener('click',function(e){var b=e.target.closest('.mask-tab');if(b)ir(b.dataset.vista);});
+  })();
+  function esEmbudo(href){return EMBUDO_URLS.some(function(u){return String(href||'').indexOf(u)>-1;});}
   (function(){var box=document.getElementById('nav-modules');if(!box)return;
     // el refresco en fondo puede REEMPLAZAR el <a> entre el pointerdown y el
     // pointerup: el click muere en el contenedor. Se captura el destino al
     // bajar el dedo y se navega al soltarlo — el DOM ya no importa.
     var pendiente=null;
     function baja(e){var a=e.target.closest('a[href]');if(a)pendiente=a.href;}
-    function sube(e){if(!pendiente)return;var h=pendiente;pendiente=null;e.preventDefault();location.assign(h);}
+    function sube(e){if(!pendiente)return;var h=pendiente;pendiente=null;e.preventDefault();
+      if(esEmbudo(h)&&window.abrirEmbudo){window.abrirEmbudo();return;}
+      location.assign(h);}
     box.addEventListener('pointerdown',baja);box.addEventListener('mousedown',baja);box.addEventListener('touchstart',baja,{passive:true});
     box.addEventListener('pointerup',sube);box.addEventListener('mouseup',sube);
-    box.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(a){e.preventDefault();if(!pendiente)location.assign(a.href);}});
+    box.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(!a)return;e.preventDefault();
+      if(esEmbudo(a.href)&&window.abrirEmbudo){window.abrirEmbudo();return;}
+      if(!pendiente)location.assign(a.href);});
   })();
   function renderSidebarModules(){
     var box=$('nav-modules');if(!box)return;box.replaceChildren();
@@ -418,6 +462,11 @@
   // los tableros); loadCatalog lo refresca y reescribe al llegar.
   try{var _cc=JSON.parse(localStorage.getItem('yod_portal_cat_v1')||'null');if(Array.isArray(_cc)&&_cc.length)state.rawRows=_cc;}catch(_e){}
   loadIdentity();loadCatalog();
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a[href]');if(!a)return;
+    if(a.closest('#embudoMask')||a.target==='_blank')return;
+    if(esEmbudo(a.href)&&window.abrirEmbudo){e.preventDefault();window.abrirEmbudo();}
+  },true);
 })();
 
 /* ── El tablero embebido dice cuánto mide; el marco se ajusta solo. ── */

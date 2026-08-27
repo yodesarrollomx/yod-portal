@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
-  <link rel="stylesheet" href="styles.css?v=0.5.0">
+  <link rel="stylesheet" href="styles.css?v=relevo8">
 </head>
 <body>
   <div class="app-shell">
@@ -160,9 +160,34 @@
   <script src="adapters/operations.js?v=0.3.0"></script>
   <script src="adapters/finance.js?v=0.1.0"></script>
   <script src="adapters/marketing.js?v=0.1.0"></script>
-  <script src="app.js?v=relevo7"></script>
+  <script src="app.js?v=relevo8"></script>
   <script src="https://alexpueblag.github.io/potenciales-yod/portero.js?v=relevo3"></script>
   <script src="../chinche.js"></script>
   <script>if(window.YODChinche) YODChinche.init({pantalla:"os"});</script>
+
+  <!-- Máscara del Embudo comercial: la Sala de Edición (y sus vecinos) sin salir del OS -->
+  <div class="mask" id="embudoMask" role="dialog" aria-modal="true" aria-labelledby="embudoMaskT" hidden>
+    <div class="mask-velo" data-cerrar></div>
+    <div class="mask-panel">
+      <div class="mask-head">
+        <div class="t"><p>Embudo comercial</p><h2 id="embudoMaskT">Sala de Edición</h2></div>
+        <div class="mask-tabs" id="embudoTabs">
+          <button class="mask-tab on" type="button" data-vista="sala" data-src="https://alexpueblag.github.io/sala-edicion/" data-t="Sala de Edición"><i class="ti ti-photo-edit"></i><span>Sala de Edición</span></button>
+          <button class="mask-tab" type="button" data-vista="metricas" data-src="https://alexpueblag.github.io/aurum-board/" data-t="Métricas del embudo"><i class="ti ti-chart-funnel"></i><span>Métricas</span></button>
+          <button class="mask-tab" type="button" data-vista="ppp" data-src="https://yodesarrollo.github.io/plan-potencial/" data-t="Plan de Potencial"><i class="ti ti-map-2"></i><span>Plan de Potencial</span></button>
+        </div>
+        <button class="mask-x" id="embudoX" type="button" aria-label="Cerrar (Esc)"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="mask-body">
+        <div class="mask-load" id="embudoLoad"><i class="ti ti-loader-2 spin" style="font-size:26px"></i><span>Abriendo…</span></div>
+        <iframe id="embudoFrame" title="Embudo comercial" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <div class="mask-foot">
+        <span id="embudoPie">La Sala guarda en su Sheet — tus decisiones no se quedan aquí.</span>
+        <a id="embudoAbrir" href="https://alexpueblag.github.io/sala-edicion/" target="_blank" rel="noopener">Abrir en pestaña aparte ↗</a>
+        <span style="margin-left:auto">Esc para cerrar</span>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
