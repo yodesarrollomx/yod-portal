@@ -8,6 +8,8 @@
 (function () {
   'use strict';
   if (window.__YOD_SHELL__) return; window.__YOD_SHELL__ = 1;
+  // Embebido dentro de la máscara del OS: el marco ya lo pone el padre.
+  try { if (/[?&]embed=1/.test(location.search)) return; } catch (e) { }
 
   var LSC = 'pyod_clave_v1';
   var PORTAL = 'https://script.google.com/macros/s/AKfycby5LKYKRwl0EsNgppOIeD_ArST8vSXRgNO4ns8XZbFW4yjfglzu4io_vhabB8h-J792Tw/exec?action=read&resource=Portal';
