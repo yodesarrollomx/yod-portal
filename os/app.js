@@ -225,6 +225,7 @@
     try{
       var data=await canjearConRelevo_(token);
       if(!data||!data.ok){var diag='canje:'+((data&&data.error)||'sin-respuesta');console.warn('[YOD OS] canje falló →',diag);var e2=new Error(diag);e2._diag=diag;throw e2;}
+      try{localStorage.removeItem('yod_canje_fail');}catch(_e){}
       idCacheWrite(data);
       var cambio=!cached||cached.rol!==(data.rol||'vista')||String(cached.boards||'')!==String(data.boards||'');
       if(cambio)applyIdentity(data);
@@ -235,9 +236,15 @@
       var d=(err&&err._diag)||'error';
       // token RECHAZADO por el portero (no timeout): soltarlo y mostrar la puerta.
       // Sin esto, un relevo muerto deja el OS en «Validando…» para siempre.
-      if(d==='canje:clave'){try{localStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem('yod_id_v1');}catch(_e){}
-        console.warn('[YOD OS] token de relevo muerto — se suelta y se pide la clave de nuevo');
-        location.reload();return;}
+      // Un rechazo PUEDE ser pasajero (carrera entre portero y relevo). Sólo se
+      // suelta la sesión tras 3 rechazos seguidos; cualquier canje bueno borra la cuenta.
+      if(d==='canje:clave'){
+        var n=0;try{n=(parseInt(localStorage.getItem('yod_canje_fail')||'0',10)||0)+1;localStorage.setItem('yod_canje_fail',String(n));}catch(_e){}
+        if(n>=3){try{localStorage.removeItem(TOKEN_KEY);localStorage.removeItem('yod_canje_fail');sessionStorage.removeItem('yod_id_v1');}catch(_e){}
+          console.warn('[YOD OS] token rechazado 3 veces seguidas — se suelta y se pide acceso');
+          location.reload();return;}
+        console.warn('[YOD OS] canje rechazado ('+n+'/3) — la sesión se conserva por si es pasajero');
+      }
       $('user-role').textContent='Sesión por validar';$('access-status').textContent='Pendiente ('+d+')';$('access-status').title='Diagnóstico del canje: '+d+' — revisa la consola para el detalle.';console.warn('[YOD OS] identidad no validada:',d,err);
       if(arrancado){renderModules([]);$('pulso').classList.add('hidden');renderOperationsLocked();}
     }
