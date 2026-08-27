@@ -107,7 +107,8 @@
      Alejandro pidió que picarle NO lo saque del OS: una máscara de pantalla
      (como la revisión de decisiones) con la Sala de Edición lista para decidir.
      La Sala vive en el MISMO origen, así que entra con su sesión ya puesta. */
-  var EMBUDO_URLS=['alexpueblag.github.io/aurum-board','alexpueblag.github.io/sala-edicion'];
+  var EMBUDO_URLS=['alexpueblag.github.io/aurum-board','alexpueblag.github.io/sala-edicion',
+                   'alexpueblag.github.io/plan-potencial','yodesarrollo.github.io/plan-potencial'];
   (function(){
     var mask=document.getElementById('embudoMask');if(!mask)return;
     var frame=document.getElementById('embudoFrame'),load=document.getElementById('embudoLoad'),
@@ -124,21 +125,29 @@
       load.classList.remove('off');frame.src=b.dataset.src;
     }
     frame.addEventListener('load',function(){load.classList.add('off');});
-    window.abrirEmbudo=function(vista){
+    var VISTAS={sala:1,metricas:1,ppp:1};
+    function rutaDe(){var m=/^#\/embudo\/(\w+)/.exec(location.hash||'');return m&&VISTAS[m[1]]?m[1]:null;}
+    window.abrirEmbudo=function(vista,silencioso){
+      vista=VISTAS[vista]?vista:'sala';
       ultimo=document.activeElement;
       mask.hidden=false;mask.classList.add('open');document.body.style.overflow='hidden';
-      // SIEMPRE abre en la Sala: es donde se decide. Las métricas son la segunda mirada.
-      ir(vista||'sala');x.focus();
+      ir(vista);x.focus();
+      // la mascara vive en la URL: el login de Google recarga la pagina y antes la mataba
+      if(!silencioso&&rutaDe()!==vista) history.pushState({embudo:vista},'','#/embudo/'+vista);
     };
-    function cerrar(){
+    function cerrar(silencioso){
       mask.classList.remove('open');mask.hidden=true;document.body.style.overflow='';
       frame.src='about:blank';           // liberar el tablero al cerrar
       if(ultimo&&ultimo.focus)ultimo.focus();
+      if(!silencioso&&rutaDe()) history.pushState({},'',location.pathname+location.search);
     }
-    x.addEventListener('click',cerrar);
+    x.addEventListener('click',function(){cerrar()});
+    addEventListener('popstate',function(){var v=rutaDe();if(v)window.abrirEmbudo(v,true);else cerrar(true)});
+    if(rutaDe()) window.abrirEmbudo(rutaDe(),true);   // arranque en frio: aterriza EN la mascara
     mask.addEventListener('click',function(e){if(e.target.hasAttribute('data-cerrar'))cerrar();});
     document.addEventListener('keydown',function(e){if(e.key==='Escape'&&mask.classList.contains('open'))cerrar();});
-    tabs.addEventListener('click',function(e){var b=e.target.closest('.mask-tab');if(b)ir(b.dataset.vista);});
+    tabs.addEventListener('click',function(e){var b=e.target.closest('.mask-tab');
+      if(b){ir(b.dataset.vista);history.replaceState({embudo:b.dataset.vista},'','#/embudo/'+b.dataset.vista)}});
   })();
   function esEmbudo(href){return EMBUDO_URLS.some(function(u){return String(href||'').indexOf(u)>-1;});}
   (function(){var box=document.getElementById('nav-modules');if(!box)return;
@@ -167,7 +176,7 @@
   function renderModules(rows){
     var grid=$('module-grid');
     var firmaRows=Array.isArray(rows)?rows:state.rawRows;
-    var firma=state.profileReady+'|'+JSON.stringify((firmaRows||[]).map(function(r){return [r.system_id,r.titulo_portal,r.url_override||''];}));
+    var firma=state.profileReady+'|'+state.role+'|'+state.boards+'|'+JSON.stringify((firmaRows||[]).map(function(r){return [r.system_id,r.titulo_portal,r.url_override||''];}));
     if(firma===_lastModulesFirma&&grid.children.length){state.rawRows=firmaRows;return;}
     _lastModulesFirma=firma;
     grid.replaceChildren();
@@ -238,7 +247,8 @@
       // Sin esto, un relevo muerto deja el OS en «Validando…» para siempre.
       // Un rechazo PUEDE ser pasajero (carrera entre portero y relevo). Sólo se
       // suelta la sesión tras 3 rechazos seguidos; cualquier canje bueno borra la cuenta.
-      if(d==='canje:clave'){
+      var MUERTO={'canje:clave':1,'canje:liga':1,'canje:revocado':1,'canje:expirado':1};
+      if(MUERTO[d]){
         var n=0;try{n=(parseInt(localStorage.getItem('yod_canje_fail')||'0',10)||0)+1;localStorage.setItem('yod_canje_fail',String(n));}catch(_e){}
         if(n>=3){try{localStorage.removeItem(TOKEN_KEY);localStorage.removeItem('yod_canje_fail');sessionStorage.removeItem('yod_id_v1');}catch(_e){}
           console.warn('[YOD OS] token rechazado 3 veces seguidas — se suelta y se pide acceso');
