@@ -122,14 +122,13 @@
       tabs.querySelectorAll('.mask-tab').forEach(function(t){t.classList.toggle('on',t===b);});
       tit.textContent=b.dataset.t;abrir.href=b.dataset.src;pie.textContent=PIE[vista]||'';
       load.classList.remove('off');frame.src=b.dataset.src;
-      try{sessionStorage.setItem('yod_embudo_vista',vista);}catch(e){}
     }
     frame.addEventListener('load',function(){load.classList.add('off');});
     window.abrirEmbudo=function(vista){
       ultimo=document.activeElement;
       mask.hidden=false;mask.classList.add('open');document.body.style.overflow='hidden';
-      var v=vista;if(!v){try{v=sessionStorage.getItem('yod_embudo_vista');}catch(e){}}
-      ir(v||'sala');x.focus();
+      // SIEMPRE abre en la Sala: es donde se decide. Las métricas son la segunda mirada.
+      ir(vista||'sala');x.focus();
     };
     function cerrar(){
       mask.classList.remove('open');mask.hidden=true;document.body.style.overflow='';
