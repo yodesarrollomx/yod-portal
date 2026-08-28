@@ -138,13 +138,32 @@
       ir(vista);x.focus();
       // la mascara vive en la URL: el login de Google recarga la pagina y antes la mataba
       if(!silencioso&&rutaDe()!==vista) history.pushState({embudo:vista},'','#/embudo/'+vista);
+      if(window.pintarSeccionEmbudo) window.pintarSeccionEmbudo();
     };
     function cerrar(silencioso){
       mask.classList.remove('open');mask.hidden=true;document.body.style.overflow='';
       frame.src='about:blank';           // liberar el tablero al cerrar
       if(ultimo&&ultimo.focus)ultimo.focus();
-      if(!silencioso&&rutaDe()) history.pushState({},'',location.pathname+location.search);
+      // NO te regresa al Inicio: te deja parado EN Embudo comercial
+      if(!silencioso) history.pushState({},'','#/embudo');
+      pintarSeccionEmbudo();
     }
+    // la sección del embudo: tarjeta clara con las tres puertas, como las decisiones del día
+    function pintarSeccionEmbudo(){
+      var host=document.getElementById('seccionEmbudo'); if(!host) return;
+      var enEmbudo=/^#\/embudo/.test(location.hash||'');
+      host.hidden=!enEmbudo;
+      document.querySelectorAll('#inicio,#pulso,#operacion,#modulos,#reconcile').forEach(function(sec){
+        if(sec) sec.hidden=enEmbudo;
+      });
+      document.querySelectorAll('#nav-modules a').forEach(function(a){
+        a.classList.toggle('activo', enEmbudo && /#\/embudo/.test(a.getAttribute('href')||''));
+      });
+      if(enEmbudo) window.scrollTo(0,0);
+    }
+    window.pintarSeccionEmbudo=pintarSeccionEmbudo;
+    addEventListener('hashchange',pintarSeccionEmbudo);
+    pintarSeccionEmbudo();
     x.addEventListener('click',function(){cerrar()});
     addEventListener('popstate',function(){var v=rutaDe();if(v)window.abrirEmbudo(v,true);else cerrar(true)});
     addEventListener('hashchange',function(){var v=rutaDe();if(v)window.abrirEmbudo(v,true);else if(mask.classList.contains('open'))cerrar(true)});

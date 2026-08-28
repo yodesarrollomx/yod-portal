@@ -131,3 +131,20 @@ a:focus-visible,button:focus-visible,input:focus-visible,[tabindex]:focus-visibl
 .mask-foot{flex:none;padding:9px 20px;border-top:1px solid var(--line);background:var(--card);font-size:11px;color:var(--muted);display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .mask-foot a{color:var(--gold);text-decoration:none}
 @media(max-width:680px){.mask{padding:0}.mask-panel{border-radius:0}.mask-head{padding:12px 14px}.mask-head .t h2{font-size:19px}.mask-tab span{display:none}.mask-tab{padding:9px 11px}}
+
+/* Embudo comercial · sección del tablero (mismo lenguaje que las decisiones del día) */
+.emb-cards{display:grid;gap:14px}
+.emb-card{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;
+  background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+  text-decoration:none;color:inherit;box-shadow:var(--shadow);transition:border-color .15s,transform .15s}
+.emb-card:hover{border-color:var(--gold);transform:translateY(-1px)}
+.emb-card.destacada{background:var(--ink);color:#f6f3ed;border-color:transparent}
+.emb-card.destacada .emb-s{color:#c9c2b3}
+.emb-card.destacada .emb-ico{background:rgba(154,123,63,.25);color:#ead8b5}
+.emb-ico{width:46px;height:46px;border-radius:12px;background:var(--gold-soft);color:#705725;
+  display:grid;place-items:center;font-size:22px}
+.emb-t{margin:0 0 3px;font-family:'Instrument Serif',Georgia,serif;font-size:21px;font-weight:400}
+.emb-s{margin:0;font-size:12px;color:var(--muted)}
+.emb-cta{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--gold);white-space:nowrap}
+.nav-item.activo{background:var(--gold-soft);color:#705725}
+@media(max-width:680px){.emb-card{grid-template-columns:auto 1fr;padding:16px}.emb-cta{grid-column:1/-1;justify-content:flex-end}}
