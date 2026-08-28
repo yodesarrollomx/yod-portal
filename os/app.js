@@ -153,7 +153,7 @@
       var host=document.getElementById('seccionEmbudo'); if(!host) return;
       var enEmbudo=/^#\/embudo/.test(location.hash||'');
       host.hidden=!enEmbudo;
-      document.querySelectorAll('#inicio,#pulso,#operacion,#modulos,#reconcile').forEach(function(sec){
+      document.querySelectorAll('.hero,.status-strip,#tablero,#pulso,#operacion,#modulos,#reconcile,#quick-section').forEach(function(sec){
         if(sec) sec.hidden=enEmbudo;
       });
       document.querySelectorAll('#nav-modules a').forEach(function(a){
