@@ -148,3 +148,4 @@ a:focus-visible,button:focus-visible,input:focus-visible,[tabindex]:focus-visibl
 .emb-cta{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--gold);white-space:nowrap}
 .nav-item.activo{background:var(--gold-soft);color:#705725}
 @media(max-width:680px){.emb-card{grid-template-columns:auto 1fr;padding:16px}.emb-cta{grid-column:1/-1;justify-content:flex-end}}
+.nav-item.activo-no{background:transparent!important;color:var(--muted)!important}

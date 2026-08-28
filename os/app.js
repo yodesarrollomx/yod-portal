@@ -159,6 +159,12 @@
       document.querySelectorAll('#nav-modules a').forEach(function(a){
         a.classList.toggle('activo', enEmbudo && /#\/embudo/.test(a.getAttribute('href')||''));
       });
+      // Inicio deja de verse activo cuando estás en el Embudo
+      var ini=document.querySelector('.nav-item[href="#inicio"],.nav-item[href="#"]');
+      if(ini) ini.classList.toggle('nav-item-activo-off', enEmbudo);
+      document.querySelectorAll('.sidebar .nav-item').forEach(function(a){
+        if(/#inicio|^#$/.test(a.getAttribute('href')||'')) a.classList.toggle('activo-no', enEmbudo);
+      });
       if(enEmbudo) window.scrollTo(0,0);
     }
     window.pintarSeccionEmbudo=pintarSeccionEmbudo;
