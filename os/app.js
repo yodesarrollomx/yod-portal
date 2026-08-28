@@ -76,8 +76,11 @@
   function money(value){return new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',maximumFractionDigits:0}).format(Number(value)||0);}
   function percent(value){return new Intl.NumberFormat('es-MX',{style:'percent',maximumFractionDigits:0}).format(Number(value)||0);}
 
-  function moduleNode(row){
-    var url=window.PortalCore.resolveUrl(row);if(!url)return null;
+  function hrefDe(url){
+    // el embudo se abre DENTRO del OS: su enlace es la propia ruta de la mascara
+    return esEmbudo(url) ? '#/embudo/sala' : url;
+  }  function moduleNode(row){
+    var url=hrefDe(window.PortalCore.resolveUrl(row));if(!url)return null;
     // Control Maestro gobierna la disponibilidad: si el estado no es Activo, la tarjeta
     // se muestra pero NO se convierte en enlace (antes siempre decía "Disponible" y abría).
     var on=window.PortalCore.enabled(row),b=window.PortalCore.badge(row);
@@ -92,11 +95,12 @@
     link.append(top,title,desc,foot);return link;
   }
 
+
   function sidebarNode(row){
     var url=window.PortalCore.resolveUrl(row);if(!url)return null;
     var on=window.PortalCore.enabled(row);
     var a=document.createElement(on?'a':'span');a.className='nav-item'+(on?'':' nav-item-off');
-    if(on){a.href=url;a.rel='noopener';}else{a.setAttribute('aria-disabled','true');}
+    if(on){a.href=hrefDe(url);a.rel='noopener';}else{a.setAttribute('aria-disabled','true');}
     a.dataset.systemId=row.system_id;
     var i=document.createElement('i');i.className='ti ti-'+(ICONS[row.system_id]||window.PortalCore.safeIcon(row.icono));
     var s=document.createElement('span');s.textContent=safeText(row.titulo_portal)||safeText(row.system_id);
@@ -143,6 +147,7 @@
     }
     x.addEventListener('click',function(){cerrar()});
     addEventListener('popstate',function(){var v=rutaDe();if(v)window.abrirEmbudo(v,true);else cerrar(true)});
+    addEventListener('hashchange',function(){var v=rutaDe();if(v)window.abrirEmbudo(v,true);else if(mask.classList.contains('open'))cerrar(true)});
     if(rutaDe()) window.abrirEmbudo(rutaDe(),true);   // arranque en frio: aterriza EN la mascara
     mask.addEventListener('click',function(e){if(e.target.hasAttribute('data-cerrar'))cerrar();});
     document.addEventListener('keydown',function(e){if(e.key==='Escape'&&mask.classList.contains('open'))cerrar();});
@@ -463,7 +468,7 @@
   function buildSearch(query){
     var box=$('search-results');box.replaceChildren();var term=safeText(query).trim().toLowerCase();
     var matches=state.modules.filter(function(row){return !term||[row.titulo_portal,row.descripcion_portal,row.audiencia].join(' ').toLowerCase().includes(term);});
-    matches.forEach(function(row){var a=document.createElement('a');a.className='search-result';a.href=window.PortalCore.resolveUrl(row);a.innerHTML='<i class="ti ti-'+(ICONS[row.system_id]||'layout-dashboard')+'"></i>';var text=document.createElement('span');var strong=document.createElement('strong');strong.textContent=safeText(row.titulo_portal);var small=document.createElement('small');small.textContent=safeText(row.audiencia)||'Equipo autorizado';text.append(strong,small);a.appendChild(text);box.appendChild(a);});
+    matches.forEach(function(row){var a=document.createElement('a');a.className='search-result';a.href=hrefDe(window.PortalCore.resolveUrl(row));a.innerHTML='<i class="ti ti-'+(ICONS[row.system_id]||'layout-dashboard')+'"></i>';var text=document.createElement('span');var strong=document.createElement('strong');strong.textContent=safeText(row.titulo_portal);var small=document.createElement('small');small.textContent=safeText(row.audiencia)||'Equipo autorizado';text.append(strong,small);a.appendChild(text);box.appendChild(a);});
     if(!matches.length){var empty=document.createElement('div');empty.className='empty-state';empty.textContent='No encontramos un módulo con ese nombre.';box.appendChild(empty);}
   }
 
