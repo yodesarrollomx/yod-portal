@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <link rel="stylesheet" href="https://unpkg.com/leaflet-gesture-handling@1.2.2/dist/leaflet-gesture-handling.min.css">
-<link rel="stylesheet" href="https://alexpueblag.github.io/yod-portal/os/shell.css">
+<link rel="stylesheet" href="https://tableros.yodesarrollo.mx/yod-portal/os/shell.css">
 <style>
   :root{--bg:#f6f3ed;--card:#ffffff;--text:#231d14;--muted:#766f62;--suave:#4c4536;--linea:#e1dacb;--lineaf:#d8cfbb;--gold:#9a7b3f;--goldc:#b98b3c;--green:#39744b;--orange:#9a6a1e;--red:#a94438}
   *{box-sizing:border-box}
@@ -97,7 +97,7 @@
   let _k=''; try{_k=localStorage.getItem('pyod_clave_v1')||'';}catch(e){}
   if(!_k){
     document.getElementById('source').textContent='Inicia sesión en YOD OS para ver la ruta de proyectos';
-    setTimeout(()=>{location.href='https://alexpueblag.github.io/yod-portal/os/';},1800);
+    setTimeout(()=>{location.href='https://tableros.yodesarrollo.mx/yod-portal/os/';},1800);
   }else{
     const controller=new AbortController();
     const timeout=setTimeout(()=>controller.abort(),8000);
@@ -110,7 +110,7 @@
   }
 })();
 </script>
-<script src="https://alexpueblag.github.io/potenciales-yod/portero.js?v=relevo3"></script>
-<script src="https://alexpueblag.github.io/yod-portal/os/shell.js?v=relevo5"></script>
+<script src="https://tableros.yodesarrollo.mx/potenciales-yod/portero.js?v=relevo3"></script>
+<script src="https://tableros.yodesarrollo.mx/yod-portal/os/shell.js?v=relevo5"></script>
 </body>
 </html>

@@ -4,35 +4,77 @@
   root.PortalCore=api;
 })(typeof globalThis!=='undefined'?globalThis:this,function(){
   'use strict';
+  /* Cada destino acepta DOS bases: la casa nueva y la vieja. No es redundancia —
+     este mapa se usa como allowlist de prefijo (ver safeByManifest), y el Sheet
+     Control Maestro se actualiza en otro momento que el codigo. Con una sola base,
+     el que quede desfasado deja TODAS las tarjetas en "URL invalida" y el portal
+     amanece vacio. La primera de cada par es la canonica: la que se usa cuando el
+     Sheet no trae url. Mismo patron que SITE_BASES en el GAS de potenciales. */
   var DESTINATIONS=Object.freeze({
-    'SYS-CONTROL':'https://docs.google.com/spreadsheets/d/1E_89GQBnOmwv5Nej2B-QEkAdVnFYQbBVQUffHWwI7Vk/',
-    'SYS-POTENCIALES':'https://alexpueblag.github.io/potenciales-yod/',
-    'SYS-TRACK':'https://alexpueblag.github.io/yod-portal/track-codesarrollos.html',
-    'SYS-MIRAMAR':'https://alexpueblag.github.io/real-miramar-board/',
-    'SYS-TAREAS':'https://alexpueblag.github.io/board-aurum/',
-    'SYS-FLUJO':'https://alexpueblag.github.io/board-flujo-yod/',
-    'SYS-INTERIORES':'https://alexpueblag.github.io/interiores-aurum/',
-    'SYS-INVERSION':'https://alexpueblag.github.io/yodesarrollo-board/',
-    'SYS-MARKETING':'https://alexpueblag.github.io/aurum-board/',
+    'SYS-CONTROL':['https://docs.google.com/spreadsheets/d/1E_89GQBnOmwv5Nej2B-QEkAdVnFYQbBVQUffHWwI7Vk/'],
+    'SYS-POTENCIALES':[
+      'https://tableros.yodesarrollo.mx/potenciales-yod/',
+      'https://alexpueblag.github.io/potenciales-yod/'
+    ],
+    'SYS-TRACK':[
+      'https://tableros.yodesarrollo.mx/yod-portal/track-codesarrollos.html',
+      'https://alexpueblag.github.io/yod-portal/track-codesarrollos.html'
+    ],
+    'SYS-MIRAMAR':[
+      'https://tableros.yodesarrollo.mx/real-miramar-board/',
+      'https://alexpueblag.github.io/real-miramar-board/'
+    ],
+    'SYS-TAREAS':[
+      'https://tableros.yodesarrollo.mx/board-aurum/',
+      'https://alexpueblag.github.io/board-aurum/'
+    ],
+    'SYS-FLUJO':[
+      'https://tableros.yodesarrollo.mx/board-flujo-yod/',
+      'https://alexpueblag.github.io/board-flujo-yod/'
+    ],
+    'SYS-INTERIORES':[
+      'https://tableros.yodesarrollo.mx/interiores-aurum/',
+      'https://alexpueblag.github.io/interiores-aurum/'
+    ],
+    'SYS-INVERSION':[
+      'https://tableros.yodesarrollo.mx/yodesarrollo-board/',
+      'https://alexpueblag.github.io/yodesarrollo-board/'
+    ],
+    'SYS-MARKETING':[
+      'https://tableros.yodesarrollo.mx/aurum-board/',
+      'https://alexpueblag.github.io/aurum-board/'
+    ],
     /* Obra vive en obra.html de este mismo repo (motor multi-obra: Casa Alysa y las
        que sigan). El destino anterior era el repo yod-obra, que se retiro el 2026-07-30
        por traer su secreto de escritura en el bundle y la nomina en un data.json publico. */
-    'SYS-OBRA':'https://alexpueblag.github.io/yod-portal/obra.html'
+    'SYS-OBRA':[
+      'https://tableros.yodesarrollo.mx/yod-portal/obra.html',
+      'https://alexpueblag.github.io/yod-portal/obra.html'
+    ]
   });
   var TRACK_DESTINATIONS=Object.freeze({
-    'PRJ-RM':'https://alexpueblag.github.io/real-miramar-board/',
-    'PRJ-ALYSA':'https://alexpueblag.github.io/yod-portal/track-alysa.html',
-    'PRJ-MARIA':'https://alexpueblag.github.io/yod-portal/track-maria.html'
+    'PRJ-RM':[
+      'https://tableros.yodesarrollo.mx/real-miramar-board/',
+      'https://alexpueblag.github.io/real-miramar-board/'
+    ],
+    'PRJ-ALYSA':[
+      'https://tableros.yodesarrollo.mx/yod-portal/track-alysa.html',
+      'https://alexpueblag.github.io/yod-portal/track-alysa.html'
+    ],
+    'PRJ-MARIA':[
+      'https://tableros.yodesarrollo.mx/yod-portal/track-maria.html',
+      'https://alexpueblag.github.io/yod-portal/track-maria.html'
+    ]
   });
   function esc(value){return String(value==null?'':value).replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c];});}
   function state(value){return String(value||'').trim().toLowerCase();}
-  function safeByManifest(value,id,manifest){var prefix=manifest[String(id||'')];if(!value||!prefix)return '';try{var u=new URL(String(value)),href=u.href;return u.protocol==='https:'&&href.indexOf(prefix)===0?href:'';}catch(_error){return '';}}
+  function safeByManifest(value,id,manifest){var bases=manifest[String(id||'')];if(!value||!bases||!bases.length)return '';try{var u=new URL(String(value)),href=u.href;if(u.protocol!=='https:')return '';for(var i=0;i<bases.length;i++){if(href.indexOf(bases[i])===0)return href;}return '';}catch(_error){return '';}}
   function safeUrl(value,systemId){return safeByManifest(value,systemId,DESTINATIONS);}
   function safeTrackUrl(value,projectId){return safeByManifest(value,projectId,TRACK_DESTINATIONS);}
   // Resuelve el destino: la URL del Sheet debe coincidir con el allowlist. Si viene vacía,
   // cae al manifiesto fijo; una URL explícita inválida nunca se sustituye silenciosamente.
-  function resolveUrl(row){var value=row&&row.url;return value?safeUrl(value,row&&row.system_id):(DESTINATIONS[String(row&&row.system_id||'')]||'');}
-  function resolveTrackUrl(row){return safeTrackUrl(row&&row.url,row&&row.project_id)||TRACK_DESTINATIONS[String(row&&row.project_id||'')]||'';}
+  function resolveUrl(row){var value=row&&row.url;return value?safeUrl(value,row&&row.system_id):((DESTINATIONS[String(row&&row.system_id||'')]||[])[0]||'');}
+  function resolveTrackUrl(row){return safeTrackUrl(row&&row.url,row&&row.project_id)||(TRACK_DESTINATIONS[String(row&&row.project_id||'')]||[])[0]||'';}
   // Control Maestro gobierna también la disponibilidad: solo Activo abre. Los estados
   // Mantenimiento/Revisión se muestran, pero no se convierten en enlaces.
   function safeThumb(value){var v=String(value||'');return /^thumbs\/[a-z0-9._-]+$/i.test(v)?v:'thumbs/track.svg';}

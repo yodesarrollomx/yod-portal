@@ -111,7 +111,11 @@
      Alejandro pidió que picarle NO lo saque del OS: una máscara de pantalla
      (como la revisión de decisiones) con la Sala de Edición lista para decidir.
      La Sala vive en el MISMO origen, así que entra con su sesión ya puesta. */
-  var EMBUDO_URLS=['alexpueblag.github.io/aurum-board','alexpueblag.github.io/sala-edicion',
+  // Las dos casas a la vez, a proposito: durante la mudanza la liga vieja sigue
+  // llegando por el cascaron de redireccion y debe seguir contando como del embudo.
+  var EMBUDO_URLS=['tableros.yodesarrollo.mx/aurum-board','tableros.yodesarrollo.mx/sala-edicion',
+                   'tableros.yodesarrollo.mx/plan-potencial',
+                   'alexpueblag.github.io/aurum-board','alexpueblag.github.io/sala-edicion',
                    'alexpueblag.github.io/plan-potencial','yodesarrollo.github.io/plan-potencial'];
   (function(){
     var mask=document.getElementById('embudoMask');if(!mask)return;
