@@ -126,7 +126,10 @@
       var b=tabs.querySelector('[data-vista="'+vista+'"]');if(!b)return;
       tabs.querySelectorAll('.mask-tab').forEach(function(t){t.classList.toggle('on',t===b);});
       tit.textContent=b.dataset.t;abrir.href=b.dataset.src;pie.textContent=PIE[vista]||'';
-      load.classList.remove('off');frame.src=b.dataset.src;
+      load.classList.remove('off');
+      // el iframe NO se refresca con Ctrl+Shift+R del OS: sin esto, Alejandro
+      // veía versiones de la Sala de hace días aunque ya estuvieran corregidas
+      frame.src=b.dataset.src+(b.dataset.src.indexOf('?')>-1?'&':'?')+'cb='+Date.now();
     }
     frame.addEventListener('load',function(){load.classList.add('off');});
     var VISTAS={sala:1,metricas:1,ppp:1};
