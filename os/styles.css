@@ -106,11 +106,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,[tabindex]:focus-visibl
 /* ══ Máscara del Embudo comercial · la Sala de Edición dentro del OS ══
    Mismo lenguaje que la revisión de decisiones: velo de tinta + panel editorial.
    La Sala vive en el MISMO origen, así que su sesión (y su Sheet) ya funcionan. */
-.mask{position:fixed;inset:0;z-index:400;display:none;padding:22px}
+.mask{position:fixed;inset:0;z-index:400;display:none;padding:22px;overflow:auto}
 .mask.open{display:block}
 .mask-velo{position:absolute;inset:0;background:rgba(23,20,15,.62);backdrop-filter:blur(4px);animation:maskIn .22s ease}
 @keyframes maskIn{from{opacity:0}to{opacity:1}}
-.mask-panel{position:relative;height:100%;max-width:1240px;margin:0 auto;background:var(--paper);border-radius:18px;
+.mask-panel{position:relative;height:100%;max-height:calc(100dvh - 44px);width:100%;max-width:1240px;margin:0 auto;background:var(--paper);border-radius:18px;
   box-shadow:0 40px 110px rgba(0,0,0,.45);display:flex;flex-direction:column;overflow:hidden;animation:maskUp .26s cubic-bezier(.2,.8,.2,1)}
 @keyframes maskUp{from{transform:translateY(14px);opacity:0}to{transform:none;opacity:1}}
 .mask-head{flex:none;display:flex;align-items:center;gap:16px;padding:16px 20px;border-bottom:1px solid var(--line);background:var(--card);flex-wrap:wrap}
@@ -130,7 +130,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,[tabindex]:focus-visibl
 .mask-load.off{opacity:0}
 .mask-foot{flex:none;padding:9px 20px;border-top:1px solid var(--line);background:var(--card);font-size:11px;color:var(--muted);display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .mask-foot a{color:var(--gold);text-decoration:none}
-@media(max-width:680px){.mask{padding:0}.mask-panel{border-radius:0}.mask-head{padding:12px 14px}.mask-head .t h2{font-size:19px}.mask-tab span{display:none}.mask-tab{padding:9px 11px}}
+@media(max-width:680px){.mask{padding:0}.mask-panel{border-radius:0;max-height:100dvh}.mask-head{padding:12px 14px}.mask-head .t h2{font-size:19px}.mask-tab span{display:none}.mask-tab{padding:9px 11px}}
 
 /* Embudo comercial · sección del tablero (mismo lenguaje que las decisiones del día) */
 .emb-cards{display:grid;gap:14px}
