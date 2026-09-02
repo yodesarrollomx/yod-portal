@@ -20,10 +20,10 @@ assert.equal(core.safeTrackUrl('javascript:alert(1)','PRJ-RM'),'');
 // Durante la mudanza las DOS casas deben resolver: la vieja porque el cascaron
 // sigue trayendo gente por ahi, la nueva porque es donde vive el tablero.
 assert.equal(core.safeTrackUrl('https://alexpueblag.github.io/real-miramar-board/','PRJ-RM'),'https://alexpueblag.github.io/real-miramar-board/');
-assert.equal(core.safeTrackUrl('https://tableros.yodesarrollo.mx/real-miramar-board/','PRJ-RM'),'https://tableros.yodesarrollo.mx/real-miramar-board/');
+assert.equal(core.safeTrackUrl('https://yodesarrollomx.github.io/real-miramar-board/','PRJ-RM'),'https://yodesarrollomx.github.io/real-miramar-board/');
 assert.equal(core.safeUrl('https://alexpueblag.github.io/potenciales-yod/','SYS-POTENCIALES'),'https://alexpueblag.github.io/potenciales-yod/');
-assert.equal(core.safeUrl('https://tableros.yodesarrollo.mx/potenciales-yod/','SYS-POTENCIALES'),'https://tableros.yodesarrollo.mx/potenciales-yod/');
+assert.equal(core.safeUrl('https://yodesarrollomx.github.io/potenciales-yod/','SYS-POTENCIALES'),'https://yodesarrollomx.github.io/potenciales-yod/');
 // y el allowlist sigue cerrado para todo lo demas
-assert.equal(core.safeUrl('https://tableros.yodesarrollo.mx/otro-tablero/','SYS-POTENCIALES'),'');
+assert.equal(core.safeUrl('https://yodesarrollomx.github.io/otro-tablero/','SYS-POTENCIALES'),'');
 assert.equal(core.cleanRows([{...base,visible:'NO'},active]).length,1);
 console.log('Portal coherence and URL policy: passed');

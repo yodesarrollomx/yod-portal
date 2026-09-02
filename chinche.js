@@ -557,7 +557,7 @@ async function armarTexto(ids, amarre){
   var L = [];
   L.push("# Encargo " + nom + " · " + list.length + (list.length===1?" cambio":" cambios"));
   L.push("Alejandro · " + sello(d) + " (America/Hermosillo) · desde " + aparato());
-  L.push("Repo: yodesarrollomx/yod-portal · publicado en tableros.yodesarrollo.mx/yod-portal/");
+  L.push("Repo: yodesarrollomx/yod-portal · publicado en yodesarrollomx.github.io/yod-portal/");
   L.push("Capturas junto a este archivo: " + conFoto);
   L.push("");
   if (amarre) { L.push("**Lo que quiero con todo esto:** " + amarre); L.push(""); }

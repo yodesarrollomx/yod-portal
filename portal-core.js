@@ -13,34 +13,42 @@
   var DESTINATIONS=Object.freeze({
     'SYS-CONTROL':['https://docs.google.com/spreadsheets/d/1E_89GQBnOmwv5Nej2B-QEkAdVnFYQbBVQUffHWwI7Vk/'],
     'SYS-POTENCIALES':[
+      'https://yodesarrollomx.github.io/potenciales-yod/',
       'https://tableros.yodesarrollo.mx/potenciales-yod/',
       'https://alexpueblag.github.io/potenciales-yod/'
     ],
     'SYS-TRACK':[
+      'https://yodesarrollomx.github.io/yod-portal/track-codesarrollos.html',
       'https://tableros.yodesarrollo.mx/yod-portal/track-codesarrollos.html',
       'https://alexpueblag.github.io/yod-portal/track-codesarrollos.html'
     ],
     'SYS-MIRAMAR':[
+      'https://yodesarrollomx.github.io/real-miramar-board/',
       'https://tableros.yodesarrollo.mx/real-miramar-board/',
       'https://alexpueblag.github.io/real-miramar-board/'
     ],
     'SYS-TAREAS':[
+      'https://yodesarrollomx.github.io/board-aurum/',
       'https://tableros.yodesarrollo.mx/board-aurum/',
       'https://alexpueblag.github.io/board-aurum/'
     ],
     'SYS-FLUJO':[
+      'https://yodesarrollomx.github.io/board-flujo-yod/',
       'https://tableros.yodesarrollo.mx/board-flujo-yod/',
       'https://alexpueblag.github.io/board-flujo-yod/'
     ],
     'SYS-INTERIORES':[
+      'https://yodesarrollomx.github.io/interiores-aurum/',
       'https://tableros.yodesarrollo.mx/interiores-aurum/',
       'https://alexpueblag.github.io/interiores-aurum/'
     ],
     'SYS-INVERSION':[
+      'https://yodesarrollomx.github.io/yodesarrollo-board/',
       'https://tableros.yodesarrollo.mx/yodesarrollo-board/',
       'https://alexpueblag.github.io/yodesarrollo-board/'
     ],
     'SYS-MARKETING':[
+      'https://yodesarrollomx.github.io/aurum-board/',
       'https://tableros.yodesarrollo.mx/aurum-board/',
       'https://alexpueblag.github.io/aurum-board/'
     ],
@@ -48,20 +56,24 @@
        que sigan). El destino anterior era el repo yod-obra, que se retiro el 2026-07-30
        por traer su secreto de escritura en el bundle y la nomina en un data.json publico. */
     'SYS-OBRA':[
+      'https://yodesarrollomx.github.io/yod-portal/obra.html',
       'https://tableros.yodesarrollo.mx/yod-portal/obra.html',
       'https://alexpueblag.github.io/yod-portal/obra.html'
     ]
   });
   var TRACK_DESTINATIONS=Object.freeze({
     'PRJ-RM':[
+      'https://yodesarrollomx.github.io/real-miramar-board/',
       'https://tableros.yodesarrollo.mx/real-miramar-board/',
       'https://alexpueblag.github.io/real-miramar-board/'
     ],
     'PRJ-ALYSA':[
+      'https://yodesarrollomx.github.io/yod-portal/track-alysa.html',
       'https://tableros.yodesarrollo.mx/yod-portal/track-alysa.html',
       'https://alexpueblag.github.io/yod-portal/track-alysa.html'
     ],
     'PRJ-MARIA':[
+      'https://yodesarrollomx.github.io/yod-portal/track-maria.html',
       'https://tableros.yodesarrollo.mx/yod-portal/track-maria.html',
       'https://alexpueblag.github.io/yod-portal/track-maria.html'
     ]

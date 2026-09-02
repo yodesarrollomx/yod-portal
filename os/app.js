@@ -113,10 +113,12 @@
      La Sala vive en el MISMO origen, así que entra con su sesión ya puesta. */
   // Las dos casas a la vez, a proposito: durante la mudanza la liga vieja sigue
   // llegando por el cascaron de redireccion y debe seguir contando como del embudo.
-  var EMBUDO_URLS=['tableros.yodesarrollo.mx/aurum-board','tableros.yodesarrollo.mx/sala-edicion',
+  var EMBUDO_URLS=['yodesarrollomx.github.io/aurum-board','yodesarrollomx.github.io/sala-edicion',
+                   'yodesarrollomx.github.io/plan-potencial',
+                   'tableros.yodesarrollo.mx/aurum-board','tableros.yodesarrollo.mx/sala-edicion',
                    'tableros.yodesarrollo.mx/plan-potencial',
                    'alexpueblag.github.io/aurum-board','alexpueblag.github.io/sala-edicion',
-                   'alexpueblag.github.io/plan-potencial','yodesarrollo.github.io/plan-potencial'];
+                   'alexpueblag.github.io/plan-potencial','yodesarrollomx.github.io/plan-potencial'];
   (function(){
     var mask=document.getElementById('embudoMask');if(!mask)return;
     var frame=document.getElementById('embudoFrame'),load=document.getElementById('embudoLoad'),

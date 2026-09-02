@@ -3,7 +3,7 @@
 Vestíbulo interno que reúne los tableros de equipo de Yodesarrollo / Aurum en un solo lugar.
 Se enlaza desde el menú **Accesos** de yodesarrollo.mx.
 
-- En vivo: https://tableros.yodesarrollo.mx/yod-portal/
+- En vivo: https://yodesarrollomx.github.io/yod-portal/
 - Nueva cabina YOD OS (prueba segura): `/os/`. Reutiliza el catálogo de Control Maestro y el Portero YOD sin modificar ni copiar los datos de los tableros.
 - El portal **no autentica**: es un directorio. Cada tablero mantiene su propio control de acceso.
 - La pestaña `Portal` de **YOD OS · Control Maestro** gobierna orden, visibilidad, textos e iconos.

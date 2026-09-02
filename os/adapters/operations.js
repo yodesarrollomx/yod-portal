@@ -2,7 +2,7 @@
   'use strict';
   var ENDPOINT='https://script.google.com/macros/s/AKfycbyZ1p7rGHuU01vWBbynGdmlKTnlyH9CIXyhKivqLHa4rLxcHNneJKsZHv7smnjLsfH1/exec';
   // Mismo caché que escribe el tablero directo de Operación (board-aurum, App.jsx).
-  // Como el OS y el tablero comparten origen (tableros.yodesarrollo.mx) comparten
+  // Como el OS y el tablero comparten origen (yodesarrollomx.github.io) comparten
   // localStorage: si la consulta en vivo falla podemos mostrar el último resumen
   // conocido, igual que hace el tablero, en vez de un candado sin datos.
   var CACHE_KEY='aurum-cache-v5';
