@@ -28,12 +28,19 @@
     'SYS-TAREAS':'checklist','SYS-FLUJO':'wallet','SYS-INTERIORES':'armchair-2',
     'SYS-INVERSION':'presentation-analytics','SYS-MARKETING':'speakerphone','SYS-OBRA':'building-skyscraper'
   };
-  var state={modules:[],rawRows:[],role:'vista',boards:'',profileReady:false,loading:false,opsScope:'mias',allTasks:[]};
+  // Versión corta del tablero embebido: se sube a mano cuando cambia tablero.html
+  // (sin esto, el caché de 10 min de Pages servía el tablero viejo tras un deploy).
+  var TABLERO_V='os2';
+  var state={modules:[],rawRows:[],role:'vista',boards:'',profileReady:false,loading:false,opsScope:'mias',allTasks:[],sesionEpoch:0};
   var $=function(id){return document.getElementById(id);};
+  // ¿hay clave guardada? distingue «sin sesión» de «sesión validándose»
+  function hayToken(){try{return !!localStorage.getItem(TOKEN_KEY);}catch(_e){return false;}}
   // Higiene de sesión en equipos compartidos: purga los datos sensibles cacheados
   // (la lista de tareas de todos los responsables) y, al cerrar sesión, el token del Portero.
-  var SENSITIVE_CACHES=['aurum-cache-v5','yod_ops_me','yod_pulse_v1'];
-  function purgarDatosSensibles(){SENSITIVE_CACHES.forEach(function(k){try{localStorage.removeItem(k);}catch(_e){}});try{sessionStorage.removeItem('yod_id_v1');}catch(_e){}}
+  var SENSITIVE_CACHES=['aurum-cache-v5','yod_ops_me','yod_pulse_v1','yod_portal_cat_v1'];
+  // sesionEpoch: cada purga invalida las cargas en vuelo, para que una respuesta
+  // que llegue tarde no vuelva a pintar (ni a cachear) datos de la sesión anterior.
+  function purgarDatosSensibles(){state.sesionEpoch++;SENSITIVE_CACHES.forEach(function(k){try{localStorage.removeItem(k);}catch(_e){}});try{sessionStorage.removeItem('yod_id_v1');}catch(_e){}}
 
   /* ── Velocidad: pintar al instante con lo último conocido, refrescar en fondo ──
      El cuello era la cadena de esperas a Google: canje del portero (segundos)
@@ -42,12 +49,18 @@
      resúmenes del Pulso se recuerdan en localStorage; se pintan de inmediato
      con su sello de edad y la consulta en vivo los reemplaza al llegar.
      Si el canje de fondo falla, se purga todo y se cierra (fail-closed). */
-  function idCacheRead(){try{var r=sessionStorage.getItem('yod_id_v1');if(!r)return null;var j=JSON.parse(r);return (j&&j.rol)?j:null;}catch(_e){return null;}}
-  function idCacheWrite(d){try{sessionStorage.setItem('yod_id_v1',JSON.stringify({ok:true,rol:d.rol||'vista',boards:d.boards||'',nombre:d.nombre||'',correo:d.correo||''}));}catch(_e){}}
+  // La identidad cacheada va FIRMADA con la huella del token (mismo criterio que
+  // el portero): si cambias de clave en la misma pestaña, la caché ajena no se pinta.
+  function huella(token){return String(token||'').slice(0,14);}
+  function idCacheRead(token){try{var r=sessionStorage.getItem('yod_id_v1');if(!r)return null;var j=JSON.parse(r);if(!j||!j.rol)return null;return j.f===huella(token)?j:null;}catch(_e){return null;}}
+  function idCacheWrite(d,token){try{sessionStorage.setItem('yod_id_v1',JSON.stringify({ok:true,f:huella(token),rol:d.rol||'vista',boards:d.boards||'',nombre:d.nombre||'',correo:d.correo||''}));}catch(_e){}}
   function pulseCacheRead(k){try{var j=JSON.parse(localStorage.getItem('yod_pulse_v1')||'{}');return (j[k]&&j[k].summary)?j[k]:null;}catch(_e){return null;}}
   function pulseCacheWrite(k,summary){try{var j=JSON.parse(localStorage.getItem('yod_pulse_v1')||'{}');j[k]={summary:summary,ts:Date.now()};localStorage.setItem('yod_pulse_v1',JSON.stringify(j));}catch(_e){}}
   function edadSello(ts){var m=Math.round((Date.now()-ts)/60000);return m<1?'de hace un momento':m<60?('de hace '+m+' min'):('de hace '+Math.round(m/60)+' h');}
   function marcarCache(panelId,ts){var p=$(panelId);if(!p)return;var n=document.createElement('small');n.className='pulse-cache-note';n.style.cssText='display:block;margin-top:8px;opacity:.6;font-size:11px';n.textContent='Datos '+edadSello(ts)+' · actualizando…';p.appendChild(n);}
+  // Si la consulta en vivo falla y había caché, el sello deja de mentir con un
+  // «actualizando…» que ya no está pasando: se conserva el dato con su edad real.
+  function marcarCacheFallo(panelId){var p=$(panelId);if(!p)return;var n=p.querySelector('.pulse-cache-note');if(n)n.textContent=n.textContent.replace(' · actualizando…',' · no se pudo actualizar');}
   function cerrarSesion(){try{localStorage.removeItem(TOKEN_KEY);}catch(_e){}purgarDatosSensibles();try{location.reload();}catch(_e){location.href=location.pathname;}}
 
   function greeting(){var h=new Date().getHours();return h<12?'Buenos días':h<19?'Buenas tardes':'Buenas noches';}
@@ -78,7 +91,7 @@
 
   function hrefDe(url){
     // el embudo se abre DENTRO del OS: su enlace es la propia ruta de la mascara
-    return esEmbudo(url) ? '#/embudo/sala' : url;
+    return esEmbudo(url) ? '#/embudo/'+vistaDe(url) : url;
   }  function moduleNode(row){
     var url=hrefDe(window.PortalCore.resolveUrl(row));if(!url)return null;
     // Control Maestro gobierna la disponibilidad: si el estado no es Activo, la tarjeta
@@ -107,6 +120,24 @@
     a.append(i,s);return a;
   }
 
+  /* ── Trampa de foco: una sola para la máscara y para el cajón móvil ──
+     Sin esto, con Tab te salías del diálogo al menú y a la cabecera que quedan
+     tapados detrás del velo. Devuelve la función que la suelta. */
+  var FOCO_SEL='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),iframe,[tabindex]:not([tabindex="-1"])';
+  function trapFocus(container){
+    if(!container)return function(){};
+    function foco(){return Array.prototype.filter.call(container.querySelectorAll(FOCO_SEL),function(el){return el.offsetParent!==null||el===document.activeElement;});}
+    function onKey(e){
+      if(e.key!=='Tab')return;
+      var f=foco();if(!f.length)return;
+      var pri=f[0],ult=f[f.length-1],dentro=container.contains(document.activeElement);
+      if(e.shiftKey&&(!dentro||document.activeElement===pri)){e.preventDefault();ult.focus();}
+      else if(!e.shiftKey&&(!dentro||document.activeElement===ult)){e.preventDefault();pri.focus();}
+    }
+    document.addEventListener('keydown',onKey,true);
+    return function(){document.removeEventListener('keydown',onKey,true);};
+  }
+
   /* ══ Máscara del Embudo comercial ═══════════════════════════════════════
      Alejandro pidió que picarle NO lo saque del OS: una máscara de pantalla
      (como la revisión de decisiones) con la Sala de Edición lista para decidir.
@@ -118,49 +149,91 @@
                    'tableros.yodesarrollo.mx/aurum-board','tableros.yodesarrollo.mx/sala-edicion',
                    'tableros.yodesarrollo.mx/plan-potencial',
                    'alexpueblag.github.io/aurum-board','alexpueblag.github.io/sala-edicion',
-                   'alexpueblag.github.io/plan-potencial','yodesarrollomx.github.io/plan-potencial'];
+                   'alexpueblag.github.io/plan-potencial'];
   (function(){
     var mask=document.getElementById('embudoMask');if(!mask)return;
     var frame=document.getElementById('embudoFrame'),load=document.getElementById('embudoLoad'),
         tabs=document.getElementById('embudoTabs'),tit=document.getElementById('embudoMaskT'),
         abrir=document.getElementById('embudoAbrir'),pie=document.getElementById('embudoPie'),
-        x=document.getElementById('embudoX'),ultimo=null;
+        x=document.getElementById('embudoX'),ultimo=null,tOut=null,soltarFoco=null,vistaActual=null,
+        bloqueado=false,mkPrev=null;
     var PIE={sala:'La Sala guarda en su Sheet — tus decisiones no se quedan aquí.',
              metricas:'Números del CRM y de Meta · el cuello del embudo se ve aquí.',
              ppp:'El imán de leads · así lo ve quien llega por tus publicaciones.'};
+    var CARGANDO='<i class="ti ti-loader-2 spin" style="font-size:26px"></i><span>Abriendo…</span>';
+    // Métricas del embudo es aurum-board (SYS-MARKETING): sin el código MK no se
+    // carga el iframe. Fail-closed: mientras el canje no resuelve, tampoco abre.
+    function mkOK(){return state.profileReady&&window.YodAccessPolicy.canOpen(state.boards,'SYS-MARKETING',state.role);}
     function ir(vista){
       var b=tabs.querySelector('[data-vista="'+vista+'"]');if(!b)return;
       tabs.querySelectorAll('.mask-tab').forEach(function(t){t.classList.toggle('on',t===b);});
-      tit.textContent=b.dataset.t;abrir.href=b.dataset.src;pie.textContent=PIE[vista]||'';
+      tit.textContent=b.dataset.t;pie.textContent=PIE[vista]||'';
+      // «Abrir en pestaña aparte» debe abrir el tablero CON su marco: sin embed=1
+      abrir.href=String(b.dataset.src||'').replace(/[?&]embed=1/,'').replace(/\?$/,'');
+      clearTimeout(tOut);
       load.classList.remove('off');
+      if(vista==='metricas'&&!mkOK()){
+        bloqueado=true;frame.src='about:blank';   // se suelta el tablero anterior
+        load.innerHTML='<i class="ti ti-shield-lock" style="font-size:26px"></i><span>Métricas del embudo no está incluida en los permisos de esta cuenta.</span>';
+        return;
+      }
+      bloqueado=false;load.innerHTML=CARGANDO;
       // el iframe NO se refresca con Ctrl+Shift+R del OS: sin esto, Alejandro
       // veía versiones de la Sala de hace días aunque ya estuvieran corregidas
       frame.src=b.dataset.src+(b.dataset.src.indexOf('?')>-1?'&':'?')+'cb='+Date.now();
+      // si el marco nunca dispara «load», el velo dejaba «Abriendo…» para siempre
+      tOut=setTimeout(function(){load.textContent='No cargó · usa «abrir» aquí arriba';},12000);
     }
-    frame.addEventListener('load',function(){load.classList.add('off');});
+    frame.addEventListener('load',function(){
+      clearTimeout(tOut);
+      if(bloqueado)return;               // el velo con el candado NO se destapa
+      load.classList.add('off');
+      // Esc sigue cerrando aunque el foco esté DENTRO del tablero embebido
+      try{frame.contentDocument.addEventListener('keydown',function(e){if(e.key==='Escape'&&mask.classList.contains('open'))cerrar();});}catch(_e){}
+    });
     var VISTAS={sala:1,metricas:1,ppp:1};
-    function rutaDe(){var m=/^#\/embudo\/(\w+)/.exec(location.hash||'');return m&&VISTAS[m[1]]?m[1]:null;}
+    function rutaCruda(){var m=/^#\/embudo\/([\w-]+)/.exec(location.hash||'');return m?m[1]:null;}
+    function rutaDe(){var c=rutaCruda();return c&&VISTAS[c]?c:null;}
+    // una subvista desconocida (#/embudo/loquesea) no deja la pantalla en blanco:
+    // se corrige a #/embudo y se ve la sección de las tres puertas
+    function normalizarHash(){var c=rutaCruda();if(c&&!VISTAS[c]){history.replaceState({},'','#/embudo');return true;}return false;}
     window.abrirEmbudo=function(vista,silencioso){
       vista=VISTAS[vista]?vista:'sala';
-      ultimo=document.activeElement;
+      var abierta=mask.classList.contains('open');
+      if(abierta&&vistaActual===vista){if(window.pintarSeccionEmbudo)window.pintarSeccionEmbudo();return;}
+      if(!abierta)ultimo=document.activeElement;
       mask.hidden=false;mask.classList.add('open');document.body.style.overflow='hidden';
-      ir(vista);x.focus();
+      vistaActual=vista;
+      ir(vista);if(!abierta)x.focus();
+      if(!soltarFoco)soltarFoco=trapFocus(mask);
       // la mascara vive en la URL: el login de Google recarga la pagina y antes la mataba
       if(!silencioso&&rutaDe()!==vista) history.pushState({embudo:vista},'','#/embudo/'+vista);
       if(window.pintarSeccionEmbudo) window.pintarSeccionEmbudo();
     };
     function cerrar(silencioso){
       mask.classList.remove('open');mask.hidden=true;document.body.style.overflow='';
+      clearTimeout(tOut);
       frame.src='about:blank';           // liberar el tablero al cerrar
+      vistaActual=null;
+      if(soltarFoco){soltarFoco();soltarFoco=null;}
       if(ultimo&&ultimo.focus)ultimo.focus();
       // NO te regresa al Inicio: te deja parado EN Embudo comercial
-      if(!silencioso) history.pushState({},'','#/embudo');
+      // replaceState (no push): con pushState, «Atrás» resucitaba la máscara recién cerrada
+      if(!silencioso) history.replaceState({},'','#/embudo');
       pintarSeccionEmbudo();
     }
+    // el candado de Métricas se aplica también cuando la identidad llega tarde
+    window.revisarPuertaEmbudo=function(){
+      var ok=mkOK(),mt=tabs.querySelector('[data-vista="metricas"]');
+      if(mt)mt.hidden=state.profileReady&&!ok;
+      // solo se repinta cuando el permiso CAMBIÓ: si no, cada refresco recargaba el marco
+      if(ok!==mkPrev&&mask.classList.contains('open')&&vistaActual==='metricas')ir('metricas');
+      mkPrev=ok;
+    };
     // la sección del embudo: tarjeta clara con las tres puertas, como las decisiones del día
     function pintarSeccionEmbudo(){
       var host=document.getElementById('seccionEmbudo'); if(!host) return;
-      var enEmbudo=/^#\/embudo/.test(location.hash||'');
+      var enEmbudo=/^#\/embudo(\/|$)/.test(location.hash||'');
       host.hidden=!enEmbudo;
       document.querySelectorAll('.hero,.status-strip,#tablero,#pulso,#operacion,#modulos,#reconcile,#quick-section').forEach(function(sec){
         if(sec) sec.hidden=enEmbudo;
@@ -178,10 +251,11 @@
     }
     window.pintarSeccionEmbudo=pintarSeccionEmbudo;
     addEventListener('hashchange',pintarSeccionEmbudo);
+    normalizarHash();
     pintarSeccionEmbudo();
     x.addEventListener('click',function(){cerrar()});
-    addEventListener('popstate',function(){var v=rutaDe();if(v)window.abrirEmbudo(v,true);else cerrar(true)});
-    addEventListener('hashchange',function(){var v=rutaDe();if(v)window.abrirEmbudo(v,true);else if(mask.classList.contains('open'))cerrar(true)});
+    addEventListener('popstate',function(){normalizarHash();var v=rutaDe();if(v)window.abrirEmbudo(v,true);else if(mask.classList.contains('open'))cerrar(true)});
+    addEventListener('hashchange',function(){normalizarHash();var v=rutaDe();if(v)window.abrirEmbudo(v,true);else if(mask.classList.contains('open'))cerrar(true)});
     if(rutaDe()) window.abrirEmbudo(rutaDe(),true);   // arranque en frio: aterriza EN la mascara
     mask.addEventListener('click',function(e){if(e.target.hasAttribute('data-cerrar'))cerrar();});
     document.addEventListener('keydown',function(e){if(e.key==='Escape'&&mask.classList.contains('open'))cerrar();});
@@ -189,6 +263,8 @@
       if(b){ir(b.dataset.vista);history.replaceState({embudo:b.dataset.vista},'','#/embudo/'+b.dataset.vista)}});
   })();
   function esEmbudo(href){return EMBUDO_URLS.some(function(u){return String(href||'').indexOf(u)>-1;});}
+  // cada puerta del embudo aterriza en LO SUYO (antes las tres caían en la Sala)
+  function vistaDe(h){h=String(h||'');return /aurum-board/.test(h)?'metricas':/plan-potencial/.test(h)?'ppp':'sala';}
   (function(){var box=document.getElementById('nav-modules');if(!box)return;
     // el refresco en fondo puede REEMPLAZAR el <a> entre el pointerdown y el
     // pointerup: el click muere en el contenedor. Se captura el destino al
@@ -196,35 +272,41 @@
     var pendiente=null;
     function baja(e){var a=e.target.closest('a[href]');if(a)pendiente=a.href;}
     function sube(e){if(!pendiente)return;var h=pendiente;pendiente=null;e.preventDefault();
-      if(esEmbudo(h)&&window.abrirEmbudo){window.abrirEmbudo();return;}
+      if(esEmbudo(h)&&window.abrirEmbudo){window.abrirEmbudo(vistaDe(h));return;}
       location.assign(h);}
     box.addEventListener('pointerdown',baja);box.addEventListener('mousedown',baja);box.addEventListener('touchstart',baja,{passive:true});
     box.addEventListener('pointerup',sube);box.addEventListener('mouseup',sube);
     box.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(!a)return;e.preventDefault();
-      if(esEmbudo(a.href)&&window.abrirEmbudo){window.abrirEmbudo();return;}
+      if(esEmbudo(a.href)&&window.abrirEmbudo){window.abrirEmbudo(vistaDe(a.href));return;}
       if(!pendiente)location.assign(a.href);});
   })();
   function renderSidebarModules(){
     var box=$('nav-modules');if(!box)return;box.replaceChildren();
-    if(!state.profileReady){var h=document.createElement('span');h.className='nav-loading';h.textContent='Inicia sesión para ver tus tableros';box.appendChild(h);return;}
-    if(!state.modules.length){var e=document.createElement('span');e.className='nav-loading';e.textContent='Sin tableros disponibles';box.appendChild(e);return;}
+    if(!state.profileReady){var h=document.createElement('span');h.className='nav-loading';h.textContent=hayToken()?'Validando tu acceso…':'Inicia sesión para ver tus tableros';box.appendChild(h);if(window.pintarSeccionEmbudo)window.pintarSeccionEmbudo();return;}
+    if(!state.modules.length){var e=document.createElement('span');e.className='nav-loading';e.textContent='Sin tableros disponibles';box.appendChild(e);if(window.pintarSeccionEmbudo)window.pintarSeccionEmbudo();return;}
     state.modules.forEach(function(row){var n=sidebarNode(row);if(n)box.appendChild(n);});
+    // el menú se repinta después del arranque en frío: sin esto, con #/embudo/sala
+    // el lateral seguía marcando Inicio en vez de Embudo
+    if(window.pintarSeccionEmbudo)window.pintarSeccionEmbudo();
   }
 
   var _lastModulesFirma='';
   function renderModules(rows){
     var grid=$('module-grid');
     var firmaRows=Array.isArray(rows)?rows:state.rawRows;
-    var firma=state.profileReady+'|'+state.role+'|'+state.boards+'|'+JSON.stringify((firmaRows||[]).map(function(r){return [r.system_id,r.titulo_portal,r.url_override||''];}));
+    // la firma lleva la fila COMPLETA: antes un cambio de estado/url/descripción en
+    // el Sheet no repintaba (solo se firmaba id+título+url_override)
+    var firma=state.profileReady+'|'+state.role+'|'+state.boards+'|'+JSON.stringify(firmaRows||[]);
     if(firma===_lastModulesFirma&&grid.children.length){state.rawRows=firmaRows;return;}
     _lastModulesFirma=firma;
     grid.replaceChildren();
     state.rawRows=Array.isArray(rows)?rows:state.rawRows;
-    if(!state.profileReady){state.modules=[];var waiting=document.createElement('div');waiting.className='empty-state';waiting.textContent='Inicie sesión para consultar sus módulos autorizados.';grid.appendChild(waiting);grid.setAttribute('aria-busy','false');$('module-count').textContent='—';renderSidebarModules();return;}
+    if(!state.profileReady){state.modules=[];var waiting=document.createElement('div');waiting.className='empty-state';waiting.textContent=hayToken()?'Validando tu acceso…':'Inicia sesión para consultar tus módulos autorizados.';grid.appendChild(waiting);grid.setAttribute('aria-busy','false');$('module-count').textContent='—';renderSidebarModules();return;}
     state.modules=window.PortalCore.cleanRows(state.rawRows).filter(function(row){return Boolean(window.PortalCore.resolveUrl(row))&&window.YodAccessPolicy.canOpen(state.boards,row.system_id,state.role);});
     state.modules.forEach(function(row){var node=moduleNode(row);if(node)grid.appendChild(node);});
     if(!grid.children.length){var empty=document.createElement('div');empty.className='empty-state';empty.textContent='No hay módulos disponibles en Control Maestro.';grid.appendChild(empty);}
-    grid.setAttribute('aria-busy','false');$('module-count').textContent=String(state.modules.length);renderSidebarModules();buildSearch('');
+    // el contador dice DISPONIBLES: los que están en mantenimiento/revisión no cuentan
+    grid.setAttribute('aria-busy','false');$('module-count').textContent=String(state.modules.filter(window.PortalCore.enabled).length);renderSidebarModules();buildSearch('');
   }
 
   async function loadCatalog(){
@@ -235,46 +317,95 @@
       var response=await fetch(CATALOG_ENDPOINT+(_tk?'&k='+encodeURIComponent(_tk):'')+'&cb='+Date.now(),{cache:'no-store',credentials:'omit',signal:controller.signal});
       if(!response.ok)throw new Error('HTTP '+response.status);var data=await response.json();
       if(!data.ok||!Array.isArray(data.rows))throw new Error('Respuesta incompleta');
-      renderModules(data.rows);$('updated-at').textContent=selloDato(data);setConnection('ok','En línea');
+      renderModules(data.rows);nombrarAccionesRapidas();$('updated-at').textContent=selloDato(data);setConnection('ok','En línea');
       try{localStorage.setItem('yod_portal_cat_v1',JSON.stringify(data.rows));}catch(_e){}
     }catch(error){
       setConnection('error','Sin conexión');$('updated-at').textContent='No se pudo actualizar';
-      if(!state.modules.length){var grid=$('module-grid');grid.setAttribute('aria-busy','false');grid.innerHTML='<div class="empty-state">Control Maestro no respondió. Por seguridad no se habilitaron enlaces. Intente actualizar nuevamente.</div>';}
+      if(!state.modules.length){var grid=$('module-grid');grid.setAttribute('aria-busy','false');grid.innerHTML='<div class="empty-state">Control Maestro no respondió. Por seguridad no se habilitaron enlaces. Intenta actualizar de nuevo.</div>';}
     }finally{clearTimeout(timeout);state.loading=false;$('refresh').disabled=false;var _mr2=$('mobile-refresh');if(_mr2)_mr2.disabled=false;}
   }
 
+  /* ── El tablero cenital entra con los códigos de ESTA sesión ──
+     Antes arrancaba solo (src fijo en el HTML) y enseñaba CRM, PPP, Miramar y
+     Obra a quien no tiene esos códigos. Ahora el marco se monta hasta que el
+     canje resuelve y le pasa boards/rol; el propio tablero apaga sus capas. */
+  function montarTablero(){
+    var f=$('board-frame'),aviso=$('board-locked');if(!f)return;
+    var base=f.getAttribute('data-src')||'../tablero.html?embed=1';
+    var url=base+(base.indexOf('?')>-1?'&':'?')+'boards='+encodeURIComponent(state.boards)+
+            '&rol='+encodeURIComponent(state.role)+'&v='+TABLERO_V;
+    if(f.getAttribute('src')!==url)f.setAttribute('src',url);
+    f.hidden=false;if(aviso)aviso.classList.add('hidden');
+  }
+  function tableroSinSesion(){
+    var f=$('board-frame'),aviso=$('board-locked'),t=$('board-locked-t');if(!f)return;
+    f.removeAttribute('src');f.hidden=true;
+    if(t)t.textContent='Inicia sesión para ver el tablero.';
+    if(aviso)aviso.classList.remove('hidden');
+  }
   function applyIdentity(data){
-    state.role=data.rol||'vista';state.boards=data.boards||'';state.profileReady=true;
+    state.role=String(data.rol||'vista').toLowerCase();state.boards=data.boards||'';state.profileReady=true;
     state.personName=String(data.nombre||'').trim();
     var name=data.nombre||data.correo||'Equipo YOD';$('user-name').textContent=name;$('user-role').textContent=state.role;$('avatar').textContent=initials(name);$('first-name').textContent=name.split(/\s|@/)[0];$('access-status').textContent=state.role==='admin'?'Dirección':'Autorizado';
     var persona=state.role==='admin'?'direccion':'colaborador';
     document.documentElement.setAttribute('data-persona',persona);
     var chip=$('role-chip');chip.className='role-chip '+persona;chip.textContent=persona==='direccion'?'Dirección':'Colaborador';
     $('user-role').textContent=persona==='direccion'?'Dirección':'Colaborador';
-    if(persona==='direccion'){$('hero-eyebrow').textContent='Centro de operación';$('hero-copy').textContent='Un solo acceso para entrar a la operación completa, sin mover ni duplicar la información de sus tableros.';}
+    if(persona==='direccion'){$('hero-eyebrow').textContent='Centro de operación';$('hero-copy').textContent='Un solo acceso para entrar a la operación completa, sin mover ni duplicar la información de tus tableros.';}
     else{$('hero-eyebrow').textContent='Tu espacio de trabajo';$('hero-copy').textContent='Tus módulos y tus pendientes de la semana, en un solo lugar. Abre lo que necesites.';}
     document.querySelectorAll('.admin-only').forEach(function(el){el.classList.toggle('hidden',state.role!=='admin');});
     var visibleQuick=0;document.querySelectorAll('.quick-card[data-system-id]').forEach(function(el){var allowed=window.YodAccessPolicy.canOpen(state.boards,el.dataset.systemId,state.role);el.classList.toggle('hidden',!allowed);if(allowed)visibleQuick++;});$('quick-section').classList.toggle('hidden',visibleQuick===0);
+    nombrarAccionesRapidas();
+    // «Abrir tablero completo» de Operación semanal: sin el código TA, el encabezado
+    // se queda (sostiene el mensaje de candado) pero la liga viva desaparece
+    var opLink=document.querySelector('#operacion .section-link');
+    if(opLink)opLink.classList.toggle('hidden',!window.YodAccessPolicy.canOpen(state.boards,'SYS-TAREAS',state.role));
+    montarTablero();
+    if(window.revisarPuertaEmbudo)window.revisarPuertaEmbudo();
     if(state.rawRows.length)renderModules(state.rawRows);
+  }
+  // OTROS-6: las Acciones rápidas se llaman como el catálogo del Sheet (MOAC, PPP…);
+  // si la fila aún no llegó, se conserva el texto que trae el HTML.
+  function nombrarAccionesRapidas(){
+    var filas=window.PortalCore.cleanRows(state.rawRows||[]);
+    document.querySelectorAll('.quick-card[data-system-id]').forEach(function(el){
+      var id=el.dataset.systemId,fila=null;
+      filas.some(function(r){if(String(r.system_id||'')===id){fila=r;return true;}return false;});
+      var t=fila&&String(fila.titulo_portal||'').trim();
+      var strong=el.querySelector('strong');
+      if(t&&strong)strong.textContent=t;
+    });
   }
   function startData(token){
     var requests=[loadPulse(token)];
     if(window.YodAccessPolicy.hasCode(state.boards,'TA')||state.role==='admin')requests.push(loadOperations(token));else renderOperationsLocked();
     return Promise.allSettled(requests);
   }
+  // El diagnóstico técnico del canje se traduce a una frase corta en español.
+  var FRASE_CANJE={'canje:clave':'Acceso vencido · vuelve a entrar','canje:liga':'Acceso vencido · vuelve a entrar',
+                   'canje:revocado':'Acceso retirado · pídelo de nuevo','canje:expirado':'Acceso vencido · vuelve a entrar',
+                   'canje:sin-respuesta':'Google no contestó · toca ⟳','canje:timeout':'Google no contestó · toca ⟳'};
+  function frasePendiente(d){return FRASE_CANJE[d]||'Sin validar · toca ⟳';}
   async function loadIdentity(){
     var token='';try{token=localStorage.getItem(TOKEN_KEY)||'';}catch(_error){}
-    if(!token){purgarDatosSensibles();$('access-status').textContent='Requiere acceso';state.profileReady=false;return;}
+    if(!token){
+      purgarDatosSensibles();$('access-status').textContent='Requiere acceso';
+      // sin esto el lateral decía «Verificando acceso…» para siempre y Operación
+      // se quedaba dando vueltas con un spinner que ya no espera nada
+      $('user-role').textContent='Sin sesión';
+      renderOperationsSinSesion();tableroSinSesion();
+      state.profileReady=false;renderModules(state.rawRows);return;
+    }
     // 1) Pintar YA con la identidad validada de esta pestaña (si existe) y
     //    arrancar los datos en paralelo — sin esperar el canje de Google.
-    var cached=idCacheRead(),arrancado=false;
+    var cached=idCacheRead(token),arrancado=false;
     if(cached){console.info('[YOD OS] pintado instantáneo desde caché de pestaña; canje revalidando en fondo');applyIdentity(cached);arrancado=true;startData(token);}
     // 2) Revalidar el canje en fondo; si cambió algo se re-aplica, si falla se cierra.
     try{
       var data=await canjearConRelevo_(token);
       if(!data||!data.ok){var diag='canje:'+((data&&data.error)||'sin-respuesta');console.warn('[YOD OS] canje falló →',diag);var e2=new Error(diag);e2._diag=diag;throw e2;}
       try{localStorage.removeItem('yod_canje_fail');}catch(_e){}
-      idCacheWrite(data);
+      idCacheWrite(data,token);
       var cambio=!cached||cached.rol!==(data.rol||'vista')||String(cached.boards||'')!==String(data.boards||'');
       if(cambio)applyIdentity(data);
       if(!arrancado)await startData(token);
@@ -294,12 +425,14 @@
           location.reload();return;}
         console.warn('[YOD OS] canje rechazado ('+n+'/3) — la sesión se conserva por si es pasajero');
       }
-      $('user-role').textContent='Sesión por validar';$('access-status').textContent='Pendiente ('+d+')';$('access-status').title='Diagnóstico del canje: '+d+' — revisa la consola para el detalle.';console.warn('[YOD OS] identidad no validada:',d,err);
-      if(arrancado){renderModules([]);$('pulso').classList.add('hidden');renderOperationsLocked();}
+      // La tira de estado la lee Alejandro, no un técnico: el código queda en el title
+      $('user-role').textContent='Sesión por validar';$('access-status').textContent=frasePendiente(d);$('access-status').title='Diagnóstico del canje: '+d+' — revisa la consola para el detalle.';console.warn('[YOD OS] identidad no validada:',d,err);
+      if(arrancado){renderModules([]);$('pulso').classList.add('hidden');renderOperationsLocked();tableroSinSesion();}
     }
   }
 
   function renderOperationsLocked(){var panel=$('operation-panel');panel.setAttribute('aria-busy','false');panel.innerHTML='<div class="operation-message"><i class="ti ti-shield-lock"></i><span>Operación semanal no está incluida en los permisos de esta cuenta.</span></div>';}
+  function renderOperationsSinSesion(){var panel=$('operation-panel');if(!panel)return;panel.setAttribute('aria-busy','false');panel.innerHTML='<div class="operation-message"><i class="ti ti-lock"></i><span>Inicia sesión para ver tus tareas.</span></div>';}
 
   // Conciliación de identidad (solo Dirección): cruza los responsables del board
   // contra las personas de Accesos, para cazar los "cruces" — nombres del board
@@ -326,20 +459,20 @@
     var section=$('reconcile'),panel=$('reconcile-panel');if(!section||!panel)return;
     if(!huerfanos.length&&!sinTareas.length){
       section.classList.remove('hidden');
-      panel.innerHTML='<div class="reconcile-ok"><i class="ti ti-circle-check"></i><span>Todo cuadra: los '+nResp+' responsables del board corresponden a personas en Accesos.</span></div>';
+      panel.innerHTML='<div class="reconcile-ok"><i class="ti ti-circle-check"></i><span>Todo cuadra: los '+nResp+' responsables del tablero corresponden a personas en Accesos.</span></div>';
       return;
     }
     section.classList.remove('hidden');panel.replaceChildren();
     if(huerfanos.length){
       var b1=document.createElement('div');b1.className='reconcile-block warn';
-      b1.innerHTML='<h3><i class="ti ti-alert-triangle"></i> Nombres en el board sin cuenta en Accesos</h3><p>Estas personas aparecen como «responsable» en tareas, pero su nombre no coincide con nadie en Accesos. No verán sus tareas en su resumen hasta que el nombre coincida (o se den de alta).</p>';
+      b1.innerHTML='<h3><i class="ti ti-alert-triangle"></i> Nombres en el tablero sin cuenta en Accesos</h3><p>Estas personas aparecen como «responsable» en tareas, pero su nombre no coincide con nadie en Accesos. No verán sus tareas en su resumen hasta que el nombre coincida (o se den de alta).</p>';
       var ul=document.createElement('div');ul.className='reconcile-chips';
       huerfanos.forEach(function(n){var c=document.createElement('span');c.className='reconcile-chip';c.textContent=n;ul.appendChild(c);});
       b1.appendChild(ul);panel.appendChild(b1);
     }
     if(sinTareas.length){
       var b2=document.createElement('div');b2.className='reconcile-block';
-      b2.innerHTML='<h3><i class="ti ti-user-off"></i> Personas con acceso a Operación sin tareas a su nombre</h3><p>Tienen el tablero, pero no hay tareas donde el «responsable» coincida con su nombre. Puede ser normal, o que el nombre esté escrito distinto en el board.</p>';
+      b2.innerHTML='<h3><i class="ti ti-user-off"></i> Personas con acceso a Operación sin tareas a su nombre</h3><p>Tienen el tablero, pero no hay tareas donde el «responsable» coincida con su nombre. Puede ser normal, o que el nombre esté escrito distinto en el tablero.</p>';
       var ul2=document.createElement('div');ul2.className='reconcile-chips';
       sinTareas.forEach(function(p){var c=document.createElement('span');c.className='reconcile-chip muted';c.textContent=p.nombre||p.correo;ul2.appendChild(c);});
       b2.appendChild(ul2);panel.appendChild(b2);
@@ -405,18 +538,21 @@
   }
   async function loadOperations(token){
     var panel=$('operation-panel');panel.setAttribute('aria-busy','true');
+    var ep=state.sesionEpoch;   // si la sesión se purga mientras esto viaja, no se pinta
     // Pintar YA con el último caché del tablero (mismo que usa el board directo);
     // la consulta en vivo lo reemplaza al llegar.
     var cachedTasks=null;try{var _raw=localStorage.getItem('aurum-cache-v5');var _pj=_raw?JSON.parse(_raw):null;cachedTasks=Array.isArray(_pj)?_pj:null;}catch(_e){}
-    if(cachedTasks&&cachedTasks.length){state.allTasks=cachedTasks;if(state.role==='admin')renderDecisions(cachedTasks);renderOpsScoped('cache',null);}
+    if(cachedTasks&&cachedTasks.length){state.allTasks=cachedTasks;if(state.role==='admin')renderDecisions(cachedTasks,'cache');renderOpsScoped('cache',null);}
     try{
       var result=await window.YodOperations.load(token);
+      if(ep!==state.sesionEpoch)return;
       state.allTasks=Array.isArray(result.tasks)?result.tasks:[];
       if(state.role==='admin')loadReconcile(token);
-      if(state.role==='admin')renderDecisions(state.allTasks);
+      if(state.role==='admin')renderDecisions(state.allTasks,result.source);
       renderOpsScoped(result.source,result.updatedAt);
     }
     catch(error){
+      if(ep!==state.sesionEpoch)return;
       var diag=(error&&(error._diag||error.message))||'error';
       panel.setAttribute('aria-busy','false');
       panel.innerHTML='<div class="operation-message"><i class="ti ti-shield-lock"></i><span>No se pudo consultar Operación semanal con esta sesión ('+String(diag)+'). El tablero original permanece intacto.</span></div>';
@@ -435,7 +571,7 @@
     var d=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));
     return Math.max(0,Math.round((Date.now()-d.getTime())/86400000));
   }
-  function renderDecisions(tasks){
+  function renderDecisions(tasks,source){
     var card=$('decision-card'),panel=$('decision-panel');if(!card||!panel)return;
     card.setAttribute('aria-busy','false');panel.replaceChildren();
     var all=(Array.isArray(tasks)?tasks:[]).filter(function(t){
@@ -465,28 +601,38 @@
       });
       panel.appendChild(list);
     }
+    // el número de decisiones no puede parecer de hoy si salió del caché del equipo
+    if(source==='cache'){
+      var n=document.createElement('div');n.className='operation-note';
+      n.innerHTML='<i class="ti ti-history"></i><span>Último resumen guardado en este dispositivo. La consulta en vivo no respondió.</span>';
+      panel.appendChild(n);
+    }
   }
 
   function pulseMetric(label,value,note,kind){var box=document.createElement('div');box.className='pulse-metric'+(kind?' '+kind:'');var name=document.createElement('span');name.textContent=label;var strong=document.createElement('strong');strong.textContent=value;box.append(name,strong);if(note){var small=document.createElement('small');small.textContent=note;box.appendChild(small);}return box;}
-  function renderPulseError(cardId,panelId,label){var card=$(cardId),panel=$(panelId);card.setAttribute('aria-busy','false');panel.innerHTML='<div class="pulse-message"><i class="ti ti-cloud-off"></i><span>No se pudo consultar '+label+' en línea. Use Actualizar para reintentar.</span></div>';}
-  function renderFinance(result){var card=$('finance-card'),panel=$('finance-panel'),s=result.summary;card.setAttribute('aria-busy','false');panel.replaceChildren();var grid=document.createElement('div');grid.className='pulse-metrics';grid.append(pulseMetric('Saldo actual',money(s.balance),s.updatedAt||'Fuente: Flujo YOD'),pulseMetric('Pagos pendientes',money(s.payments),s.paymentsCount+' registrados'),pulseMetric('Ingresos esperados',money(s.income),s.incomeCount+' registrados'),pulseMetric('Saldo proyectado',money(s.projected),'Saldo + ingresos − pagos',s.projected<0?'negative':'positive'));panel.appendChild(grid);}
-  function renderMarketing(result){var card=$('marketing-card'),panel=$('marketing-panel'),s=result.summary;card.setAttribute('aria-busy','false');panel.replaceChildren();var grid=document.createElement('div');grid.className='pulse-metrics';grid.append(pulseMetric('Leads',String(s.leads),s.period||'Periodo activo'),pulseMetric('Citas',String(s.appointments),percent(s.appointmentRate)+' de leads'),pulseMetric('Clientes',String(s.clients),percent(s.clientRate)+' de leads'),pulseMetric('Sin tocar 24 h',String(s.untouched24h),'Requieren seguimiento',s.untouched24h>0?'alert':''));panel.appendChild(grid);}
+  function renderPulseError(cardId,panelId,label){var card=$(cardId),panel=$(panelId);card.setAttribute('aria-busy','false');panel.innerHTML='<div class="pulse-message"><i class="ti ti-cloud-off"></i><span>No se pudo consultar '+label+' en línea. Usa Actualizar para reintentar.</span></div>';}
+  // Si el GAS contestó pero SIN saldo, se dice «—»: un $0 se lee como cifra real.
+  function sinSaldo(result){return !!(result&&result.data)&&!(result.data.saldo&&result.data.saldo.monto!=null&&result.data.saldo.monto!=='');}
+  function renderFinance(result){var card=$('finance-card'),panel=$('finance-panel'),s=result.summary,vacio=sinSaldo(result);card.setAttribute('aria-busy','false');panel.replaceChildren();var grid=document.createElement('div');grid.className='pulse-metrics';grid.append(pulseMetric('Saldo actual',vacio?'—':money(s.balance),vacio?'sin saldo registrado':(s.updatedAt||'Fuente: Flujo YOD')),pulseMetric('Pagos pendientes',money(s.payments),s.paymentsCount+' registrados'),pulseMetric('Ingresos esperados',money(s.income),s.incomeCount+' registrados'),pulseMetric('Saldo proyectado',vacio?'—':money(s.projected),vacio?'falta el saldo para calcularlo':'Saldo + ingresos − pagos',vacio?'':(s.projected<0?'negative':'positive')));panel.appendChild(grid);}
+  function sinKpis(result){return !!(result&&result.data)&&!(result.data.kpis&&Object.keys(result.data.kpis).length);}
+  function renderMarketing(result){var card=$('marketing-card'),panel=$('marketing-panel'),s=result.summary,vacio=sinKpis(result);card.setAttribute('aria-busy','false');panel.replaceChildren();if(vacio){panel.innerHTML='<div class="pulse-message"><i class="ti ti-help-circle"></i><span>El CRM contestó sin cifras del periodo. No hay números que mostrar todavía.</span></div>';return;}var grid=document.createElement('div');grid.className='pulse-metrics';grid.append(pulseMetric('Leads',String(s.leads),s.period||'Periodo activo'),pulseMetric('Citas',String(s.appointments),percent(s.appointmentRate)+' de leads'),pulseMetric('Clientes',String(s.clients),percent(s.clientRate)+' de leads'),pulseMetric('Sin tocar 24 h',String(s.untouched24h),'Requieren seguimiento',s.untouched24h>0?'alert':''));panel.appendChild(grid);}
   async function loadFinance(token){
-    var c=pulseCacheRead('finance');
+    var c=pulseCacheRead('finance'),ep=state.sesionEpoch;
     if(c){renderFinance({summary:c.summary});marcarCache('finance-panel',c.ts);}
-    try{var r=await window.YodFinance.load(token);renderFinance(r);pulseCacheWrite('finance',r.summary);}
-    catch(_error){if(!c)renderPulseError('finance-card','finance-panel','Tesorería');}
+    try{var r=await window.YodFinance.load(token);if(ep!==state.sesionEpoch)return;renderFinance(r);if(!sinSaldo(r))pulseCacheWrite('finance',r.summary);}
+    catch(_error){if(ep!==state.sesionEpoch)return;if(!c)renderPulseError('finance-card','finance-panel','Tesorería');else marcarCacheFallo('finance-panel');}
   }
   async function loadMarketing(token){
-    var c=pulseCacheRead('marketing');
+    var c=pulseCacheRead('marketing'),ep=state.sesionEpoch;
     if(c){renderMarketing({summary:c.summary});marcarCache('marketing-panel',c.ts);}
-    try{var r=await window.YodMarketing.load(token);renderMarketing(r);pulseCacheWrite('marketing',r.summary);}
-    catch(_error){if(!c)renderPulseError('marketing-card','marketing-panel','Marketing');}
+    try{var r=await window.YodMarketing.load(token);if(ep!==state.sesionEpoch)return;renderMarketing(r);if(!sinKpis(r))pulseCacheWrite('marketing',r.summary);}
+    catch(_error){if(ep!==state.sesionEpoch)return;if(!c)renderPulseError('marketing-card','marketing-panel','Marketing');else marcarCacheFallo('marketing-panel');}
   }
   async function loadPulse(token){
     var financeAllowed=state.role==='admin';var marketingAllowed=state.role==='admin'||window.YodAccessPolicy.hasCode(state.boards,'MK');
     var decisionsAllowed=state.role==='admin';
     $('finance-card').classList.toggle('hidden',!financeAllowed);$('marketing-card').classList.toggle('hidden',!marketingAllowed);$('decision-card').classList.toggle('hidden',!decisionsAllowed);$('pulso').classList.toggle('hidden',!financeAllowed&&!marketingAllowed&&!decisionsAllowed);
+    if(window.revisarPuertaEmbudo)window.revisarPuertaEmbudo();   // misma regla MK para la pestaña Métricas
     var requests=[];if(financeAllowed)requests.push(loadFinance(token));if(marketingAllowed)requests.push(loadMarketing(token));await Promise.allSettled(requests);
   }
 
@@ -502,25 +648,70 @@
   function buildSearch(query){
     var box=$('search-results');box.replaceChildren();var term=safeText(query).trim().toLowerCase();
     var matches=state.modules.filter(function(row){return !term||[row.titulo_portal,row.descripcion_portal,row.audiencia].join(' ').toLowerCase().includes(term);});
-    matches.forEach(function(row){var a=document.createElement('a');a.className='search-result';a.href=hrefDe(window.PortalCore.resolveUrl(row));a.innerHTML='<i class="ti ti-'+(ICONS[row.system_id]||'layout-dashboard')+'"></i>';var text=document.createElement('span');var strong=document.createElement('strong');strong.textContent=safeText(row.titulo_portal);var small=document.createElement('small');small.textContent=safeText(row.audiencia)||'Equipo autorizado';text.append(strong,small);a.appendChild(text);box.appendChild(a);});
+    // el buscador respeta a Control Maestro igual que las tarjetas: lo que está en
+    // Mantenimiento/Revisión aparece, dice por qué, y NO es enlace
+    matches.forEach(function(row){
+      var on=window.PortalCore.enabled(row),b=window.PortalCore.badge(row);
+      var a=document.createElement(on?'a':'div');a.className='search-result';
+      if(on){a.href=hrefDe(window.PortalCore.resolveUrl(row));a.rel='noopener';a.addEventListener('click',function(){try{$('search-dialog').close();}catch(_e){}});}
+      else{a.setAttribute('aria-disabled','true');}
+      a.innerHTML='<i class="ti ti-'+(ICONS[row.system_id]||'layout-dashboard')+'"></i>';
+      var text=document.createElement('span');var strong=document.createElement('strong');strong.textContent=safeText(row.titulo_portal);
+      var small=document.createElement('small');small.textContent=on?(safeText(row.audiencia)||'Equipo autorizado'):b.text;
+      text.append(strong,small);a.appendChild(text);box.appendChild(a);
+    });
     if(!matches.length){var empty=document.createElement('div');empty.className='empty-state';empty.textContent='No encontramos un módulo con ese nombre.';box.appendChild(empty);}
+    var cuenta=$('search-count');
+    if(cuenta)cuenta.textContent=matches.length===1?'1 resultado':(matches.length+' resultados');
   }
 
   function openSearch(){var dialog=$('search-dialog');dialog.showModal();$('search-input').value='';buildSearch('');setTimeout(function(){$('search-input').focus();},0);}
   $('welcome-title').firstChild.textContent=greeting()+', ';
-  function refreshAll(){loadCatalog();var token='';try{token=localStorage.getItem(TOKEN_KEY)||'';}catch(_error){}if(!token||!state.profileReady)return;loadPulse(token);if(window.YodAccessPolicy.hasCode(state.boards,'TA')||state.role==='admin')loadOperations(token);}
+  // ⟳ también revalida la identidad: tras un fallo pasajero del canje el OS se
+  // quedaba en «Sesión por validar» hasta recargar a mano.
+  function refreshAll(){loadCatalog();var token='';try{token=localStorage.getItem(TOKEN_KEY)||'';}catch(_error){}if(!token)return;if(!state.profileReady){loadIdentity();return;}loadPulse(token);if(window.YodAccessPolicy.hasCode(state.boards,'TA')||state.role==='admin')loadOperations(token);}
   $('refresh').addEventListener('click',refreshAll);var _mrb=$('mobile-refresh');if(_mrb)_mrb.addEventListener('click',refreshAll);$('search-trigger').addEventListener('click',openSearch);$('search-input').addEventListener('input',function(e){buildSearch(e.target.value);});var _lo=$('logout');if(_lo)_lo.addEventListener('click',cerrarSesion);
   document.addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch();}});
   // Cajón lateral en móvil (☰) — misma navegación que escritorio
-  (function(){var shell=document.querySelector('.app-shell');var burger=$('menu-toggle');var scrim=$('nav-scrim');if(!shell)return;if(window.matchMedia&&window.matchMedia('(max-width:900px)').matches){var seen=false;try{seen=sessionStorage.getItem('yod_drawer_seen')==='1';}catch(e){}if(!seen){shell.classList.add('nav-open');try{sessionStorage.setItem('yod_drawer_seen','1');}catch(e){}}}function closeNav(){shell.classList.remove('nav-open');}if(burger)burger.addEventListener('click',function(){shell.classList.toggle('nav-open');});if(scrim)scrim.addEventListener('click',closeNav);document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNav();});var nav=$('nav-modules');if(nav)nav.addEventListener('click',function(e){if(e.target.closest('.nav-item'))closeNav();});if(window.matchMedia){var mq=window.matchMedia('(min-width:901px)');mq.addEventListener('change',function(m){if(m.matches)closeNav();});}})();
+  (function(){
+    var shell=document.querySelector('.app-shell');var burger=$('menu-toggle');var scrim=$('nav-scrim');if(!shell)return;
+    var lateral=document.querySelector('.sidebar'),soltar=null,disparador=null;
+    // el cajón anuncia su estado y atrapa el foco: con Tab ya no te salías al
+    // contenido que queda tapado detrás del velo
+    function sync(){
+      var a=shell.classList.contains('nav-open');
+      if(burger){burger.setAttribute('aria-expanded',String(a));burger.setAttribute('aria-label',a?'Cerrar menú':'Abrir menú');}
+      if(a&&!soltar)soltar=trapFocus(lateral);
+      if(!a&&soltar){soltar();soltar=null;if(disparador&&disparador.focus)disparador.focus();disparador=null;}
+    }
+    if(window.matchMedia&&window.matchMedia('(max-width:900px)').matches){var seen=false;try{seen=sessionStorage.getItem('yod_drawer_seen')==='1';}catch(e){}if(!seen){shell.classList.add('nav-open');try{sessionStorage.setItem('yod_drawer_seen','1');}catch(e){}}}
+    sync();
+    function closeNav(){shell.classList.remove('nav-open');sync();}
+    if(burger)burger.addEventListener('click',function(){disparador=burger;shell.classList.toggle('nav-open');sync();});
+    if(scrim)scrim.addEventListener('click',closeNav);
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNav();});
+    var nav=$('nav-modules');if(nav)nav.addEventListener('click',function(e){if(e.target.closest('.nav-item'))closeNav();});
+    if(window.matchMedia){var mq=window.matchMedia('(min-width:901px)');mq.addEventListener('change',function(m){if(m.matches)closeNav();});}
+  })();
   // Catálogo: arrancar con el último conocido (mismo caché que usa el marco de
   // los tableros); loadCatalog lo refresca y reescribe al llegar.
   try{var _cc=JSON.parse(localStorage.getItem('yod_portal_cat_v1')||'null');if(Array.isArray(_cc)&&_cc.length)state.rawRows=_cc;}catch(_e){}
   loadIdentity();loadCatalog();
+  /* ── Entrar la clave DENTRO del tablero despierta al resto del OS ──
+     Antes había que recargar a mano: el iframe guardaba la llave y el padre
+     seguía en «Verificando acceso…». Dos avisos, ambos del mismo origen. */
+  addEventListener('message',function(e){
+    if(e.origin!==location.origin)return;
+    if(!e.data||e.data.yodTablero!=='sesion')return;
+    if(state.profileReady)refreshAll();else loadIdentity();
+  });
+  addEventListener('storage',function(e){
+    if(e.key===TOKEN_KEY&&e.newValue&&!state.profileReady)loadIdentity();
+  });
   document.addEventListener('click',function(e){
     var a=e.target.closest('a[href]');if(!a)return;
     if(a.closest('#embudoMask')||a.target==='_blank')return;
-    if(esEmbudo(a.href)&&window.abrirEmbudo){e.preventDefault();window.abrirEmbudo();}
+    if(esEmbudo(a.href)&&window.abrirEmbudo){e.preventDefault();window.abrirEmbudo(vistaDe(a.href));}
   },true);
 })();
 

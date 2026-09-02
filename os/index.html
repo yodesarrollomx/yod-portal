@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
-  <link rel="stylesheet" href="styles.css?v=relevo17">
+  <link rel="stylesheet" href="styles.css?v=relevo18">
 </head>
 <body>
   <div class="app-shell">
@@ -37,14 +37,14 @@
 
     <main class="main" id="inicio">
       <header class="topbar">
-        <button class="burger" id="menu-toggle" type="button" aria-label="Abrir menú"><i class="ti ti-menu-2"></i></button>
+        <button class="burger" id="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false"><i class="ti ti-menu-2"></i></button>
         <a class="topbar-brand" href="https://yodesarrollo.mx/" title="Ir a yodesarrollo.mx" aria-label="YOD, ir a yodesarrollo.mx"><span>YOD</span><small>OS</small></a>
         <button class="search-trigger" id="search-trigger" type="button" aria-haspopup="dialog">
           <i class="ti ti-search"></i><span>Buscar un módulo…</span><kbd>⌘ K</kbd>
         </button>
         <div class="top-actions">
           <span class="role-chip hidden" id="role-chip"></span>
-          <span class="connection" id="connection"><i class="ti ti-loader-2 spin"></i> Conectando</span>
+          <span class="connection" id="connection" aria-live="polite" aria-atomic="true"><i class="ti ti-loader-2 spin"></i> Conectando</span>
           <button class="icon-button" id="refresh" type="button" title="Actualizar datos" aria-label="Actualizar datos"><i class="ti ti-refresh"></i></button>
         </div>
       </header>
@@ -55,7 +55,7 @@
           <div>
             <p class="eyebrow" id="hero-eyebrow">Centro de operación</p>
             <h1 id="welcome-title">Buenas tardes, <span id="first-name">equipo</span>.</h1>
-            <p class="hero-copy" id="hero-copy">Un solo acceso para entrar a la operación completa, sin mover ni duplicar la información de sus tableros.</p>
+            <p class="hero-copy" id="hero-copy">Un solo acceso para entrar a la operación completa, sin mover ni duplicar la información de tus tableros.</p>
           </div>
           <div class="freshness">
             <span>Última actualización</span>
@@ -75,7 +75,8 @@
             <a class="section-link" href="../tablero.html" target="_blank" rel="noopener">Abrir en grande <i class="ti ti-arrow-up-right"></i></a>
           </div>
           <div class="board-frame">
-            <iframe id="board-frame" src="../tablero.html?embed=1" title="Tablero YOD OS · operación completa"></iframe>
+            <p class="operation-message" id="board-locked"><i class="ti ti-lock"></i><span id="board-locked-t">Preparando el tablero…</span></p>
+            <iframe id="board-frame" data-src="../tablero.html?embed=1" title="Tablero YOD OS · operación completa" hidden></iframe>
           </div>
           <p class="board-foot">Cada canica es un cliente o un expediente real &mdash; p&iacute;cala para abrir su ficha. Los hex&aacute;gonos del marco son los KPIs: <b>verde</b> en l&iacute;nea, <b>&aacute;mbar</b> por conectar. El hex&aacute;gono <b>#16</b> es el avance de obra: sale de <a href="../obra.html" target="_blank" rel="noopener">Avance de obra</a>, donde Rodolfo propone, Mariana o Alma verifican y t&uacute; o Sayri autorizan el pago.</p>
         </section>
@@ -145,7 +146,7 @@
 
         <section class="section" id="modulos" aria-labelledby="modules-title">
           <div class="section-head">
-            <div><p class="eyebrow">Espacios de trabajo</p><h2 id="modules-title">Sus módulos</h2></div>
+            <div><p class="eyebrow">Espacios de trabajo</p><h2 id="modules-title">Tus módulos</h2></div>
             <p id="module-note">Mostramos únicamente destinos registrados en Control Maestro.</p>
           </div>
           <div class="module-grid" id="module-grid" aria-live="polite" aria-busy="true">
@@ -171,6 +172,7 @@
       <input id="search-input" type="search" placeholder="Buscar módulo o área…" autocomplete="off">
       <button value="cancel" aria-label="Cerrar"><i class="ti ti-x"></i></button>
     </form>
+    <div class="sr-only" id="search-count" aria-live="polite"></div>
     <div class="search-results" id="search-results"></div>
   </dialog>
 
@@ -204,9 +206,9 @@
   <script src="adapters/operations.js?v=0.3.0"></script>
   <script src="adapters/finance.js?v=0.1.0"></script>
   <script src="adapters/marketing.js?v=0.1.0"></script>
-  <script src="app.js?v=motor1"></script>
+  <script src="app.js?v=motor2"></script>
   <script src="https://yodesarrollomx.github.io/potenciales-yod/portero.js?v=relevo3"></script>
-  <script src="../chinche.js"></script>
+  <script src="../chinche.js?v=os2"></script>
   <script>if(window.YODChinche) YODChinche.init({pantalla:"os"});</script>
 
   </body>
