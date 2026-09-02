@@ -18,7 +18,7 @@ Operación, 15-jul-2026).
 | Inversionistas | `IV` | yodesarrollo-board | `board=IV` |
 | Métricas / Marketing | `MK` | aurum-board | `board=MK` |
 | Obra en vivo | `OB` | yod-portal/obra.html | adaptador de obra |
-| Accesos (admin) | `AC` | potenciales-yod/accesos.html | rol admin |
+| Accesos (admin) | `AC` (no se otorga) | potenciales-yod/accesos.html | rol admin |
 
 ## Reglas
 
@@ -29,7 +29,13 @@ Operación, 15-jul-2026).
    - `yod-portal/os/access-policy.js` → `SYSTEM_CODES`
    - `yod-portal/os/shell.js` → `CODES`
    - `potenciales-yod/accesos.html` → `CODES` (matriz de alta)
-4. Validación recomendada **sin `board=`**: pedir el canje simple al Portero
+   Las dos primeras las compara `node yod-portal/verify-os.cjs` (falla si divergen);
+   la de `accesos.html` sigue siendo a ojo porque vive en otro repo.
+4. **`SYS-CONTROL` (código `AC`) es el Sheet Control Maestro, no un tablero.**
+   No se otorga desde la matriz de Accesos: `canOpen` solo lo abre con rol
+   `admin` (o `*`). Se queda listado en las dos matrices para que digan lo
+   mismo, pero no tiene tablero, ni icono, ni destino en `shell.js`.
+5. Validación recomendada **sin `board=`**: pedir el canje simple al Portero
    (devuelve `boards`) y revisar el código aquí, en el backend. Así no depende
    del filtro por-board del Portero y no se puede volver a teclear mal el
    código. (Ver `board-aurum/apps-script/portero-auth.gs`.)

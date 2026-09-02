@@ -23,8 +23,13 @@
     return (isFinite(y)&&y>2000)?y:new Date().getFullYear();
   }
   function dueDate(task){
-    var dayMatch=String(task&&task.fecha||'').match(/(\d{1,2})/);var month=MONTHS[String(task&&(task.mesCompromiso||task.mes)||'').toLowerCase()];
-    if(!dayMatch||month==null)return null;return new Date(taskYear(task),month,Number(dayMatch[1]));
+    // `fecha` es el día del mes; el mes viene aparte. Si alguien captura la fecha
+    // completa (2026-03-15) se toma el día real, no los dos primeros dígitos del año.
+    var raw=String(task&&task.fecha||'').trim();
+    var iso=raw.match(/^\d{4}-(\d{2})-(\d{2})/);
+    var day=iso?Number(iso[2]):(raw.match(/^(\d{1,2})\b/)||[])[1];
+    var month=MONTHS[String(task&&(task.mesCompromiso||task.mes)||'').trim().toLowerCase()];
+    if(day==null||month==null)return null;return new Date(taskYear(task),month,Number(day));
   }
   function daysUntil(task){var due=dueDate(task);if(!due)return null;var now=new Date();var today=new Date(now.getFullYear(),now.getMonth(),now.getDate());return Math.round((due-today)/86400000);}
   function isArchived(task){return task&&(task.archivada===true||String(task.archivada).toLowerCase()==='true'||task.borrada===true||String(task.borrada).toLowerCase()==='true');}

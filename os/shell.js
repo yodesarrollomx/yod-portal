@@ -64,7 +64,10 @@
     'SYS-INTERIORES': ['IN'],
     'SYS-INVERSION': ['IV'],
     'SYS-MARKETING': ['MK'],
-    'SYS-OBRA': ['OB']
+    'SYS-OBRA': ['OB'],
+    // SYS-CONTROL (Sheet Control Maestro) no tiene tablero ni DEST: vive aquí solo
+    // para que esta matriz diga LO MISMO que access-policy.js. Solo lo abre Dirección.
+    'SYS-CONTROL': ['AC']
   };
   // identity: 'pending' (validando) | 'ok' (canje válido) | 'fail' (sin sesión o canje falló)
   var state = { role: '', boards: '', modules: [], identity: 'pending', catalogRows: null };
@@ -78,19 +81,37 @@
     try {
       var raw = localStorage.getItem(CATCACHE); if (!raw) return null;
       var rows = JSON.parse(raw);
-      return (Array.isArray(rows) && rows.length) ? rows : null;
+      if (!Array.isArray(rows)) return null;
+      /* El OS guarda las filas crudas del Sheet en esta MISMA llave. Al leer se
+         aplica la misma regla que loadCatalog, para que el menú no "baile". */
+      rows = rows.filter(function (r) { return r && r.visible === 'SI' && r.system_id && DEST[r.system_id]; })
+        .sort(function (a, b) { return Number(a.orden) - Number(b.orden); });
+      return rows.length ? rows : null;
     } catch (e) { return null; }
   }
   function writeCatCache(rows) {
     try { localStorage.setItem(CATCACHE, JSON.stringify(rows)); } catch (e) { }
   }
 
+  // Solo Activo abre (igual que el OS). Las filas de respaldo no traen `estado`:
+  // sin estado se consideran vivas, si no el menú de respaldo quedaría vacío.
+  function vivo(r) { var s = String(r && r.estado || '').trim().toLowerCase(); return !s || s === 'activo'; }
+  /* La URL manda desde el Sheet, pero solo si cuelga del destino conocido
+     (mismo criterio de prefijo que safeByManifest en portal-core.js). */
+  function destino(row) {
+    var base = DEST[row && row.system_id]; if (!base) return '';
+    var u = String(row && row.url || ''); if (!u) return base;
+    try { var p = new URL(u); return (p.protocol === 'https:' && p.href.indexOf(base) === 0) ? p.href : ''; }
+    catch (e) { return ''; }
+  }
   function boardsList() { return String(state.boards || '').toUpperCase().split(/[,|; ]+/).filter(Boolean); }
   function canOpen(sys) {
     if (state.identity !== 'ok') return false;   // fail-closed: sin sesión validada, el menú no enseña nada
     if (state.role === 'admin') return true;
     var l = boardsList();
     if (l.indexOf('*') > -1) return true;
+    // El Control Maestro es el Sheet de Dirección: no se otorga por código.
+    if (sys === 'SYS-CONTROL') return false;
     var req = CODES[sys] || [];
     for (var i = 0; i < req.length; i++) { if (l.indexOf(req[i]) > -1) return true; }
     return false;
@@ -104,7 +125,7 @@
 
   function defaultRows() { return Object.keys(DEST).map(function (k) { return { system_id: k, titulo_portal: NAME[k] }; }); }
   function navItem(row, cur) {
-    var url = DEST[row.system_id]; if (!url) return null;
+    var url = destino(row); if (!url) return null;
     var a = el('a', 'yod-nav-item' + (row.system_id === cur ? ' active' : ''));
     a.href = url; a.setAttribute('rel', 'noopener');
     a.innerHTML = '<i class="ti ti-' + (ICON[row.system_id] || 'layout-dashboard') + '"></i><span>' + esc(row.titulo_portal || NAME[row.system_id] || row.system_id) + '</span>';
@@ -129,7 +150,7 @@
       return;
     }
     var rows = (state.catalogRows && state.catalogRows.length) ? state.catalogRows : (readCatCache() || defaultRows());
-    renderNav(rows.filter(function (r) { return canOpen(r.system_id); }), cur);
+    renderNav(rows.filter(function (r) { return canOpen(r.system_id) && vivo(r); }), cur);
   }
 
   // Cachés de datos que cada board guarda en localStorage (origen compartido:
@@ -164,7 +185,18 @@
   // "entraste" y para que no queden datos cacheados en el dispositivo.)
   function maybeLock() {
     var cur = currentSys();
-    if (!cur || state.identity !== 'ok' || canOpen(cur)) return;
+    if (!cur) return;
+    // Si el canje fresco SÍ concede el tablero, se levanta el candado que puso
+    // la identidad cacheada (antes se quedaba tapado hasta recargar).
+    if (state.identity !== 'ok' || canOpen(cur)) {
+      var puesto = document.getElementById('yodLock');
+      if (puesto && state.identity === 'ok') {
+        if (puesto.parentNode) puesto.parentNode.removeChild(puesto);
+        var lienzo = document.querySelector('.yod-canvas');
+        if (lienzo) lienzo.style.display = '';
+      }
+      return;
+    }
     purgeCaches(cur);
     var canvas = document.querySelector('.yod-canvas');
     if (canvas) canvas.style.display = 'none';
@@ -258,7 +290,7 @@
       }).catch(function () { });
   }
   function aplicaIdentidad(j) {
-    state.role = j.rol || 'vista'; state.boards = j.boards || '';
+    state.role = String(j.rol || 'vista').trim().toLowerCase(); state.boards = j.boards || '';
     state.identity = 'ok';
     var nm = j.nombre || j.correo || 'Equipo YOD';
     var persona = state.role === 'admin' ? 'direccion' : 'colaborador';
@@ -295,16 +327,28 @@
     function results(q) {
       var box = document.getElementById('yodRes'); if (!box) return; box.innerHTML = '';
       var t = (q || '').toLowerCase();
-      state.modules.filter(function (r) { return !t || String(r.titulo_portal || NAME[r.system_id] || '').toLowerCase().indexOf(t) >= 0; }).forEach(function (r) {
-        var url = DEST[r.system_id]; if (!url) return;
+      state.modules.filter(function (r) { return vivo(r) && (!t || String(r.titulo_portal || NAME[r.system_id] || '').toLowerCase().indexOf(t) >= 0); }).forEach(function (r) {
+        var url = destino(r); if (!url) return;
         var a = el('a'); a.href = url; a.setAttribute('rel', 'noopener');
         a.innerHTML = '<i class="ti ti-' + (ICON[r.system_id] || 'layout-dashboard') + '"></i><span><strong>' + esc(r.titulo_portal || NAME[r.system_id]) + '</strong></span>';
         box.appendChild(a);
       });
+      if (!box.children.length) {
+        box.innerHTML = '<span class="yod-nav-loading">' +
+          (state.identity === 'ok' ? 'Sin tableros con ese nombre' : 'Sesión por validar') + '</span>';
+      }
     }
     function open() { results(''); if (dlg.showModal) dlg.showModal(); setTimeout(function () { var q = document.getElementById('yodQ'); if (q) q.focus(); }, 0); }
     trig.addEventListener('click', open);
     dlg.addEventListener('input', function (e) { results(e.target.value); });
+    // Enter abre el primer resultado (antes el envío implícito solo cerraba el diálogo).
+    var frm = dlg.querySelector('form');
+    if (frm) frm.addEventListener('submit', function (e) {
+      if (e.submitter && e.submitter.value === 'cancel') return;
+      var first = dlg.querySelector('#yodRes a');
+      if (!first) return;
+      e.preventDefault(); if (dlg.close) dlg.close(); location.href = first.href;
+    });
     document.addEventListener('keydown', function (e) { if ((e.metaKey || e.ctrlKey) && e.key && e.key.toLowerCase() === 'k') { e.preventDefault(); open(); } });
   }
 

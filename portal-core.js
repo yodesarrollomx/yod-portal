@@ -106,6 +106,6 @@
     var close=on?'</a>':'</article>';
     return open+'<div class="thumb '+(on?'':'soon')+'"><img src="'+esc(safeThumb(row.miniatura))+'" alt="" aria-hidden="true"></div><div class="body"><div class="row"><span class="ic" aria-hidden="true"><i class="ti ti-'+esc(safeIcon(row.icono))+'"></i></span><span class="badge '+esc(b.cls)+'"><i class="ti ti-'+esc(b.icon)+'" aria-hidden="true"></i>'+esc(b.text)+'</span></div><h2 class="ttl" id="'+id+'">'+esc(row.titulo_portal)+'</h2><p class="desc">'+esc(row.descripcion_portal)+'</p><p class="who"><b>Para:</b> '+esc(row.audiencia)+'</p></div>'+close;
   }
-  function cleanRows(rows){return (Array.isArray(rows)?rows:[]).filter(function(r){return r&&r.visible==='SI'&&r.system_id;}).sort(function(a,b){return Number(a.orden)-Number(b.orden);});}
+  function cleanRows(rows){return (Array.isArray(rows)?rows:[]).filter(function(r){return r&&state(r.visible)==='si'&&r.system_id;}).sort(function(a,b){return Number(a.orden)-Number(b.orden);});}
   return Object.freeze({destinations:DESTINATIONS,trackDestinations:TRACK_DESTINATIONS,state:state,safeUrl:safeUrl,safeTrackUrl:safeTrackUrl,resolveUrl:resolveUrl,resolveTrackUrl:resolveTrackUrl,safeIcon:safeIcon,safeThumb:safeThumb,enabled:enabled,badge:badge,card:card,cleanRows:cleanRows,escapeHtml:esc});
 });

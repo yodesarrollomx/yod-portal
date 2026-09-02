@@ -54,7 +54,7 @@ body.yod-on{margin:0;background:#f6f3ed}
 .yod-search{width:min(420px,52%);height:39px;border:1px solid var(--yline);background:var(--ycard);border-radius:9px;
   color:var(--ymuted);display:flex;align-items:center;gap:10px;padding:0 12px;font:inherit;cursor:pointer}
 .yod-search span{text-align:left;flex:1}
-.yod-search kbd{border:1px solid var(--yline);border-radius:5px;padding:2px 6px;background:var(--ypaper);font:11px inherit}
+.yod-search kbd{border:1px solid var(--yline);border-radius:5px;padding:2px 6px;background:var(--ypaper);font:inherit;font-size:11px}
 .yod-top-actions{margin-left:auto;display:flex;align-items:center;gap:12px}
 .yod-role{font-size:11px;font-weight:600;letter-spacing:.03em;padding:5px 11px;border-radius:999px;
   border:1px solid var(--yline);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
@@ -62,7 +62,7 @@ body.yod-on{margin:0;background:#f6f3ed}
 .yod-role.direccion{color:#705725;background:var(--yg-soft);border-color:transparent}
 .yod-role.colaborador{color:var(--ymuted);background:var(--ypaper-2)}
 .yod-back,.yod-home{height:39px;border:1px solid var(--yline);border-radius:9px;background:var(--ycard);color:var(--yink);
-  display:inline-flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;font:12px inherit;text-decoration:none;padding:0 11px;white-space:nowrap}
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;font:inherit;font-size:12px;text-decoration:none;padding:0 11px;white-space:nowrap}
 .yod-back i,.yod-home i{font-size:17px}
 .yod-back:hover,.yod-home:hover{border-color:var(--yg)}
 /* botón menú (hamburguesa) — solo visible en móvil */
@@ -81,7 +81,7 @@ body.yod-on{margin:0;background:#f6f3ed}
   color:var(--yink);box-shadow:0 30px 90px rgba(0,0,0,.32)}
 .yod-dialog::backdrop{background:rgba(23,20,15,.55);backdrop-filter:blur(3px)}
 .yod-dialog form{height:56px;border-bottom:1px solid var(--yline);display:flex;align-items:center;padding:0 15px;gap:10px}
-.yod-dialog input{flex:1;border:0;outline:0;background:transparent;font:15px inherit;color:var(--yink)}
+.yod-dialog input{flex:1;border:0;outline:0;background:transparent;font:inherit;font-size:15px;color:var(--yink)}
 .yod-dialog .yr{padding:10px;max-height:420px;overflow:auto}
 .yod-dialog a{display:flex;align-items:center;gap:12px;padding:12px;border-radius:9px;text-decoration:none;color:var(--yink)}
 .yod-dialog a:hover{background:var(--ypaper)}

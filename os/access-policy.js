@@ -18,6 +18,8 @@
   function hasCode(boards,code){var list=codes(boards);return list.includes('*')||list.includes(String(code||'').toUpperCase());}
   function canOpen(boards,systemId,role){
     if(String(role||'').toLowerCase()==='admin'||codes(boards).includes('*'))return true;
+    // El Control Maestro (Sheet de Dirección) no se otorga por código: solo rol admin.
+    if(String(systemId||'')==='SYS-CONTROL')return false;
     var required=SYSTEM_CODES[String(systemId||'')];if(!required)return false;
     return required.some(function(code){return hasCode(boards,code);});
   }

@@ -15,9 +15,14 @@
   }
   async function load(token){
     if(!token)throw new Error('sin_sesion');
-    var response=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({k:token,action:'getAll'}),redirect:'follow',cache:'no-store',credentials:'omit'});
-    if(!response.ok)throw new Error('HTTP '+response.status);var payload=await response.json();if(!payload.ok)throw new Error(payload.error||'tesoreria');
-    var data=payload.data||{};return {data:data,summary:summarize(data),updatedAt:new Date()};
+    // Sin límite de tiempo la tarjeta se quedaba en "Consultando…" para siempre.
+    var controller=(typeof AbortController!=='undefined')?new AbortController():null;
+    var timer=controller?setTimeout(function(){controller.abort();},12000):null;
+    try{
+      var response=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({k:token,action:'getAll'}),redirect:'follow',cache:'no-store',credentials:'omit',signal:controller?controller.signal:undefined});
+      if(!response.ok)throw new Error('HTTP '+response.status);var payload=await response.json();if(!payload.ok)throw new Error(payload.error||'tesoreria');
+      var data=payload.data||{};return {data:data,summary:summarize(data),updatedAt:new Date()};
+    }finally{if(timer)clearTimeout(timer);}
   }
   root.YodFinance=Object.freeze({load:load,summarize:summarize});
 })(typeof globalThis!=='undefined'?globalThis:this);
