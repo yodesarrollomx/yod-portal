@@ -12,7 +12,10 @@
      Antes el relevo se pegaba en localStorage y, al reactivarse Google, el
      navegador seguía en el respaldo (que no conoce correos ni login de Google). */
   try{localStorage.removeItem('pyod_portero');}catch(e){}
-  function conLimite_(p,ms){return Promise.race([p,new Promise(function(_,rj){setTimeout(function(){rj(new Error('timeout'));},ms||12000);})]);}
+  function conLimite_(p,ms){return Promise.race([p,new Promise(function(_,rj){setTimeout(function(){rj(new Error('timeout'));},ms||LIMITE_MS);})]);}
+  // El Portero (Apps Script) hoy tarda entre 3 y 25 s: esperar 12 s lo daba por muerto
+  // y el OS se ponía «Sin conexión» con el backend vivo. 25 s + reintento en fondo.
+  var LIMITE_MS=25000, REINTENTO_MS=15000, REINTENTOS_MAX=3;
   async function canjearConRelevo_(token){
     async function intenta(base){
       var r=await conLimite_(fetch(base+'?recurso=canje&t='+encodeURIComponent(token),{cache:'no-store',credentials:'omit'}));
@@ -311,16 +314,18 @@
 
   async function loadCatalog(){
     if(state.loading)return;state.loading=true;$('refresh').disabled=true;var _mr=$('mobile-refresh');if(_mr)_mr.disabled=true;setConnection('','Actualizando');
-    var controller=new AbortController();var timeout=setTimeout(function(){controller.abort();},9000);
+    var controller=new AbortController();var timeout=setTimeout(function(){controller.abort();},LIMITE_MS);
     try{
       var _tk='';try{_tk=localStorage.getItem(TOKEN_KEY)||'';}catch(_e){}
       var response=await fetch(CATALOG_ENDPOINT+(_tk?'&k='+encodeURIComponent(_tk):'')+'&cb='+Date.now(),{cache:'no-store',credentials:'omit',signal:controller.signal});
       if(!response.ok)throw new Error('HTTP '+response.status);var data=await response.json();
       if(!data.ok||!Array.isArray(data.rows))throw new Error('Respuesta incompleta');
-      renderModules(data.rows);nombrarAccionesRapidas();$('updated-at').textContent=selloDato(data);setConnection('ok','En línea');
+      state.catRetry=0;renderModules(data.rows);nombrarAccionesRapidas();$('updated-at').textContent=selloDato(data);setConnection('ok','En línea');
       try{localStorage.setItem('yod_portal_cat_v1',JSON.stringify(data.rows));}catch(_e){}
     }catch(error){
-      setConnection('error','Sin conexión');$('updated-at').textContent='No se pudo actualizar';
+      state.catRetry=(state.catRetry||0)+1;
+      if(state.catRetry<=REINTENTOS_MAX){setConnection('error','Portero lento · reintentando');$('updated-at').textContent='Reintentando en fondo';setTimeout(loadCatalog,REINTENTO_MS);}
+      else{setConnection('error','Sin conexión');$('updated-at').textContent='No se pudo actualizar';}
       if(!state.modules.length){var grid=$('module-grid');grid.setAttribute('aria-busy','false');grid.innerHTML='<div class="empty-state">Control Maestro no respondió. Por seguridad no se habilitaron enlaces. Intenta actualizar de nuevo.</div>';}
     }finally{clearTimeout(timeout);state.loading=false;$('refresh').disabled=false;var _mr2=$('mobile-refresh');if(_mr2)_mr2.disabled=false;}
   }
@@ -405,14 +410,20 @@
       var data=await canjearConRelevo_(token);
       if(!data||!data.ok){var diag='canje:'+((data&&data.error)||'sin-respuesta');console.warn('[YOD OS] canje falló →',diag);var e2=new Error(diag);e2._diag=diag;throw e2;}
       try{localStorage.removeItem('yod_canje_fail');}catch(_e){}
-      idCacheWrite(data,token);
+      idCacheWrite(data,token);state.canjeRetry=0;
       var cambio=!cached||cached.rol!==(data.rol||'vista')||String(cached.boards||'')!==String(data.boards||'');
       if(cambio)applyIdentity(data);
       if(!arrancado)await startData(token);
       else if(cambio)startData(token);
     }catch(err){
-      purgarDatosSensibles();state.profileReady=false;
       var d=(err&&err._diag)||'error';
+      // Portero LENTO (no rechazo): si esta pestaña ya validó, se queda pintada y se
+      // reintenta en fondo; purgar aquí cerraba la sesión con el backend vivo.
+      var LENTO={'canje:sin-respuesta':1,'canje:timeout':1,'error':1};
+      if(LENTO[d]&&cached){state.canjeRetry=(state.canjeRetry||0)+1;
+        if(state.canjeRetry<=REINTENTOS_MAX){setConnection('error','Portero lento · reintentando');console.warn('[YOD OS] canje lento ('+state.canjeRetry+'/'+REINTENTOS_MAX+') — se conserva la identidad de la pestaña y se reintenta en '+(REINTENTO_MS/1000)+' s');setTimeout(loadIdentity,REINTENTO_MS);return;}
+      }
+      purgarDatosSensibles();state.profileReady=false;
       // token RECHAZADO por el portero (no timeout): soltarlo y mostrar la puerta.
       // Sin esto, un relevo muerto deja el OS en «Validando…» para siempre.
       // Un rechazo PUEDE ser pasajero (carrera entre portero y relevo). Sólo se
