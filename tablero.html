@@ -39,11 +39,13 @@
  html.embed canvas{max-height:none}
  body.embed #gate{position:static;inset:auto;background:transparent;min-height:420px}
  body.embed #gateCard{box-shadow:none;background:#FCF8EE}
- body.embed #sw{padding:2px 4px 10px}
  body.embed #w{padding:0;width:100%}
  body.embed canvas{max-height:none;width:100%;height:auto}
  body.embed #sw{padding:14px 6px 12px;justify-content:center;flex-wrap:wrap}
  #gate.off{display:none}
+ /* Mientras se verifica una sesión ya guardada no se pide la clave otra vez:
+    solo se avisa. Si el portero rechaza, vuelve el formulario de siempre. */
+ #gate.validando #gateClave,#gate.validando #gateBtn{display:none}
  #gateCard{width:min(380px,92vw);background:#FCF8EE;border:1.5px solid #8B7A57;border-radius:12px;
    padding:26px 26px 22px;box-shadow:0 18px 44px rgba(60,48,28,.25);text-align:center}
  #gateCard h1{font:800 20px/1.2 'Helvetica Neue',Arial,sans-serif;color:#2E2A22;margin:0 0 6px}
@@ -66,7 +68,7 @@
 </style>
 <div id="gate" class="gate"><div id="gateCard">
   <h1>YOD OS &middot; Tablero</h1>
-  <p>El tablero de la operaci&oacute;n. Escribe la clave del portal.</p>
+  <p id="gateMsg">El tablero de la operaci&oacute;n. Escribe la clave del portal.</p>
   <input id="gateClave" type="password" autocomplete="current-password" placeholder="clave">
   <button id="gateBtn">Entrar</button>
   <div id="gateErr"></div>
@@ -76,13 +78,28 @@
  <button data-v="abaco">2 &middot; El &aacute;baco</button>
  <i>hex&aacute;gonos: &#9679; en l&iacute;nea &middot; &#9679; fuente lista &middot; &#9679; tentativo &nbsp;&nbsp; &times;N = varios en un punto: p&iacute;cala y elige</i></div>
 <canvas id="c" width="1536" height="1056"></canvas><canvas id="luz" width="1536" height="1056"></canvas><div id="f"></div></div>
-<script src="chinche.js"></script>
+<script src="chinche.js?v=os2"></script>
+<script src="os/access-policy.js?v=0.1.0"></script>
 <script>
 (function(){
 "use strict";
-const EMBED=new URLSearchParams(location.search).has("embed");
+const QS=new URLSearchParams(location.search);
+const EMBED=QS.has("embed");
 if(EMBED){ document.body.classList.add("embed");
   document.documentElement.classList.add("embed"); }
+/* ═══ CÓDIGOS DE LA SESIÓN · el OS los manda en la liga del iframe ═══
+   El candado del tablero era la LLAVE (misma sesión = todo el tablero). Ahora
+   cada conector pregunta además por el CÓDIGO del módulo, con la misma tabla
+   que usa el OS para esconder tarjetas (os/access-policy.js). Sin código no se
+   llama al GAS: la charola y el hexágono se quedan en "—", no se inventa nada.
+   OJO: esto alinea la pantalla. El candado durable exige que cada GAS valide
+   los boards del canje, no solo que la llave sea válida. */
+const BOARDS=QS.get("boards")||"", ROL=QS.get("rol")||"";
+const SESION_OS=EMBED && (QS.has("boards")||QS.has("rol"));
+function puedo(sys){
+  if(!SESION_OS) return true;                 // suelto o sin códigos en la liga: como antes
+  return !!(window.YodAccessPolicy && window.YodAccessPolicy.canOpen(BOARDS,sys,ROL));
+}
 const CV=document.getElementById("c"), g=CV.getContext("2d");
 const W=1536,H=1056;
 
@@ -218,7 +235,7 @@ function placaKPI(x,y,w,titulo,frac,sub,p,colBar,urg){
   txt(frac,x,y+38,24,M.tinta,800);
   const bw=w-38, bx=x-bw/2, by=y+50;
   quad(bx,by,bw,9,"#CFC3A6");
-  quad(bx,by,Math.max(6,bw*p),9,colBar||M.verde);
+  if(p>0) quad(bx,by,Math.max(6,bw*p),9,colBar||M.verde);   // sin dato ("—"), barra vacía
   if(urg) quad(bx+bw-bw*urg,by,bw*urg,9,M.rojo);
   if(sub) txt(sub,x,y+h+14,13,M.tinta2,600);
 }
@@ -318,14 +335,14 @@ const TAL={x:760,y:792,w:544,h:46};
 const PROJ=[
  {x:420, n:"CASA ALYSA",  f:"—",  p:0,  sub:"hitos · acabados", t:"alysa"},
  {x:790, n:"REAL MIRAMAR",f:"—",  p:0,  sub:"apartados · sin urbanizar", t:"miramar"},
- {x:1160,n:"CASA MARÍA",  f:"—",     p:0.06,  sub:"codesarrollo · arranque", t:"maria"}
+ {x:1160,n:"CASA MARÍA",  f:"—",     p:0,  sub:"codesarrollo · arranque", t:"maria"}
 ];
 const PJY=984;
 let TRAD=null;                        // trámites de Miramar, EN LÍNEA
 let TALD=null;                        // tareas del board-aurum (Taller), EN LÍNEA
 let CODM=null;                        // $ con folio del portal Co-desarrolladores
 let ARCD=null;                        // perdidos reales del CRM (archivo)
-let CRMEST="pidiendo";                // pidiendo | linea | caido — el CRM tarda ~23 s en responder
+let CRMEST="pidiendo";                // pidiendo | linea | caido | sinacceso — el CRM tarda ~23 s
 let APSET=new Set();                  // lotes apartados pintados en la planta
 
 /* ═══ 1 · TABLERO ═══ */
@@ -599,9 +616,10 @@ function placaCRM(){
     quad(x-w/2,py,w,7,M.huesoS);
     txt("CRM YOD",x,py+17,19,M.tinta,800);
     txt(CRMEST==="linea" ? "0" : "—",x,py+40,24,M.tinta,800);
-    txt(CRMEST==="pidiendo" ? "consultando el CRM… tarda unos segundos"
-      : CRMEST==="linea"    ? "en línea · todavía no entra ningún lead"
-      :                       "sin línea · revisar el endpoint del CRM",
+    txt(CRMEST==="pidiendo"   ? "consultando el CRM… tarda unos segundos"
+      : CRMEST==="linea"      ? "en línea · todavía no entra ningún lead"
+      : CRMEST==="sinacceso"  ? "no tienes código para ver el CRM"
+      :                         "sin línea · revisar el endpoint del CRM",
         x,py+ph+14,12,M.tinta2,600);
     return;
   }
@@ -638,6 +656,7 @@ function crmSurcos(){
   FIL.forEach(([nom,tot],j)=>txt(nom,x0+lw*(j+0.5),y-h/2+5.5,9,"rgba(228,240,252,.9)",800));
   if(!TOT) txt(CRMEST==="pidiendo" ? "consultando el CRM…"
       : CRMEST==="linea"             ? "el CRM está en línea · aquí caerá el primer lead que entre"
+      : CRMEST==="sinacceso"         ? "no tienes código para ver el CRM"
       :                                "aquí caerán los leads cuando el CRM esté en línea",
                x,y+6,11,"rgba(228,240,252,.55)",700);
   for(let j=1;j<4;j++){                              // el troquel
@@ -754,8 +773,8 @@ function tramites(){
     }
   }
   placaKPI(x,y+h/2+8,344,"TRÁMITES · REAL DE MIRAMAR",
-    TRAD?(TRAD.apr+"/"+TRAD.tot+" · "+TRAD.blq+" BLOQUEADOS"):"— · sin línea",
-    null, TRAD?TRAD.apr/TRAD.tot:0, M.ambar, TRAD?TRAD.blq/TRAD.tot:0);
+    TRAD&&TRAD.tot?(TRAD.apr+"/"+TRAD.tot+" · "+TRAD.blq+" BLOQUEADOS"):"— · sin línea",
+    null, TRAD&&TRAD.tot?TRAD.apr/TRAD.tot:0, M.ambar, TRAD&&TRAD.tot?TRAD.blq/TRAD.tot:0);
 }
 
 /* ═══ 7 · TALLER · estante en ALZADO, 96 huacales, 44 llenos ═══ */
@@ -906,10 +925,17 @@ function maqueta(t,x,y,prog){
         g.strokeRect(lx*E,-4*V,5.4*E,7*V); }
       g.setLineDash([2.2,2.2]); g.strokeStyle="#8B7A57"; g.lineWidth=0.9;
       g.strokeRect(lx*E,-4*V,5.4*E,7*V); g.setLineDash([]); }
-    // acceso + los 6 trámites urgentes como banderas en el frente
+    // acceso + banderas = trámites BLOQUEADOS, dato vivo del GAS de Miramar.
+    // Antes eran 6 fijas de decoración: decían "6 bloqueados" hubiera 37 o no
+    // hubiera línea. Sin dato (TRAD=null) la planta queda limpia, como los hexes.
     R(46,-8,12,10,"#DCD6C8"); R(47.6,-6.4,8.8,6.8,"#6E7B8A");
-    for(let k=0;k<6;k++){ R(34+k*4.6,-40,0.7,7,"#8A93A6");
+    const nb = TRAD ? Math.min(6, TRAD.blq) : 0;
+    for(let k=0;k<nb;k++){ R(34+k*4.6,-40,0.7,7,"#8A93A6");
       g.fillStyle="#D93A34"; g.fillRect((34.6+k*4.6)*E,-40*V,3.4*E,2.4*V); }
+    if(TRAD && TRAD.blq>6){                       // la ley ×N: varios en un punto
+      g.fillStyle="#D93A34"; g.textAlign="left"; g.textBaseline="middle";
+      g.font="800 "+(4.2*E).toFixed(1)+"px 'Helvetica Neue',Arial,sans-serif";
+      g.fillText("×"+TRAD.blq,(34+6*4.6)*E,-38*V); g.textAlign="center"; }
   }
   else {
     R(-49,-39,104,46,"rgba(60,48,28,.16)");
@@ -1305,6 +1331,18 @@ const QUIETO=matchMedia("(prefers-reduced-motion: reduce)").matches;
 const rgba=(hex,a)=>{const v=parseInt(hex.slice(1),16);
   return "rgba("+(v>>16&255)+","+(v>>8&255)+","+(v&255)+","+a.toFixed(3)+")";};
 let t0=null, pingI=0, pingT=0, RECIEN=[];
+/* Embebido en el OS el lienzo puede quedar fuera de la vista aunque la pestaña
+   siga visible (los iframes del mismo origen no reciben el freno de rAF del
+   navegador): el bucle seguía pintando gradientes de 1536×1056 a 60 fps y se
+   notaba en la batería. Fuera de la vista se trata igual que pestaña oculta. */
+let ENVISTA=true;
+if(typeof IntersectionObserver==="function"){
+  try{ new IntersectionObserver(function(es){
+    const v=es.some(function(e){ return e.isIntersecting; });
+    if(v && !ENVISTA) t0=null;                  // al volver, la fase no salta
+    ENVISTA=v;
+  },{threshold:0}).observe(LZ); }catch(e){}
+}
 /* El anillo significa UNA cosa: acaba de entrar. Antes, si no había ninguno
    recién entrado, el código se lo ponía a TODOS (RECIEN=FOCOS.slice()) — o sea
    se lo ponía justamente a los más viejos, diciendo lo contrario de lo que
@@ -1329,7 +1367,7 @@ function luces(ts){
   requestAnimationFrame(luces);
   // sin focos, sin anillos, con la pestaña oculta o con movimiento reducido:
   // no hay nada que dibujar y no tiene caso gastar batería cuadro tras cuadro.
-  if(document.hidden || (!FOCOS.length && !RECIEN.length && !BAJAN.length)){
+  if(document.hidden || !ENVISTA || (!FOCOS.length && !RECIEN.length && !BAJAN.length)){
     if(LZ.width) LG.clearRect(0,0,LZ.width,LZ.height);
     return;
   }
@@ -1390,30 +1428,49 @@ function ver(v){
   console.log("✓ CRM · "+v+" · "+HIT.length+" clicables · "+FOCOS.length+" focos · "+RECIEN.length+" recién entrados");
 }
 BT.forEach(b=>b.addEventListener("click",()=>ver(b.dataset.v)));
-addEventListener("keydown",e=>{ if(e.key==="1")ver("surcos"); if(e.key==="2")ver("abaco"); });
+addEventListener("keydown",e=>{
+  // el atajo es del tablero, no de lo que estés escribiendo: una clave con 1 o 2,
+  // o el encargo de La Chinche, cambiaban la vista del CRM a media escritura
+  const t=e.target;
+  if(t && (/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.isContentEditable)) return;
+  if(e.key==="1")ver("surcos"); if(e.key==="2")ver("abaco"); });
 let guardada="abaco";
 try{ guardada=localStorage.getItem("yodCRM")||"abaco"; }catch(e){}
 ver(guardada==="surcos"?"surcos":"abaco");
 /* ═══ TRAMO PPP · EN LÍNEA · GAS del Plan de Potencial ═══ */
 const PPP_GAS="https://script.google.com/macros/s/AKfycbw3EB-6Q9Mq-ouDU-JvKMrRUaw4auYVeGkKja783yJ7_dEpCOW8xoMhs8IQMDojmlDB3A/exec";
 async function conectarPPP(){
+  if(!puedo("SYS-POTENCIALES")){                 // sin código no se llama al GAS
+    cegar(KPIHEX_TOP,[1,6,7],"sin código de este módulo"); pintar(); return; }
   try{
-    const r=await fetch(PPP_GAS+"?recurso=board&t="+Date.now(),{cache:"no-store"});
+    // La credencial va como en los demás tramos (Miramar, Obra, CRM): el GAS del
+    // plan-potencial ya la exige y sin ella este tramo salía SIEMPRE ciego.
+    const r=await fetch(PPP_GAS+"?recurso=board&k="+encodeURIComponent(CLAVE_OK||"")+
+      "&t="+Date.now(),{cache:"no-store"});
     const j=await r.json(); if(!j.ok||!j.kpis) throw 0;
-    const kp=j.kpis, pag=kp.clientes||0;
-    const dias=(j.actividad_por_dia||[]);
-    const visTot=dias.reduce((a,d)=>a+(d.visitas||0),0);
-    const empez=dias.reduce((a,d)=>a+(d.empezaron||0),0);   // abrió la 1ª pregunta
-    KPIHEX_TOP[1]={n:pag+"/8", lbl:"PPP PAGADOS", c:pag>0?"verde":"rojo", st:"linea"};
+    const kp=j.kpis;
+    const dias=j.actividad_por_dia;
+    KPIHEX_TOP[1] = cifra(kp.clientes)===null
+      ? {n:"—", lbl:"PPP PAGADOS", c:"gris", st:"ciego", src:"plan-potencial no mandó clientes"}
+      : {n:kp.clientes+"/8", lbl:"PPP PAGADOS",
+         c:kp.clientes>0?"verde":"rojo", st:"linea"};
     // los conteos de leads/agendadas los manda el CRM (ya sin pruebas); aquí va el tráfico
-    KPIHEX_TOP[6]={n:empez+"/"+visTot, lbl:"EMPIEZAN / VISITAS",
-      c:visTot&&empez/visTot>=.4?"verde":(empez?"ambar":"rojo"), st:"linea"};
+    if(!Array.isArray(dias)){
+      KPIHEX_TOP[6]={n:"—", lbl:"EMPIEZAN / VISITAS", c:"gris", st:"ciego",
+        src:"plan-potencial no mandó actividad_por_dia"};
+    }else{
+      const visTot=dias.reduce((a,d)=>a+(d.visitas||0),0);
+      const empez=dias.reduce((a,d)=>a+(d.empezaron||0),0);   // abrió la 1ª pregunta
+      KPIHEX_TOP[6]={n:empez+"/"+visTot, lbl:"EMPIEZAN / VISITAS",
+        c:visTot&&empez/visTot>=.4?"verde":(empez?"ambar":"rojo"), st:"linea"};
+    }
     KPIHEX_TOP[7] = cifra(kp.agendadas)===null
       ? {n:"—", lbl:"AGENDADAS PPP", c:"gris", st:"ciego", src:"plan-potencial no mandó agendadas"}
       : {n:String(kp.agendadas), lbl:"AGENDADAS PPP",
          c:kp.agendadas>0?"verde":"ambar", st:"linea"};
     pintar();
-    console.log("✓ PPP en línea · pagados "+pag+" · leads "+kp.leads+" · agendadas "+kp.agendadas);
+    console.log("✓ PPP en línea · pagados "+(cifra(kp.clientes)===null?"—":kp.clientes)+
+      " · leads "+kp.leads+" · agendadas "+kp.agendadas);
   }catch(e){ cegar(KPIHEX_TOP,[1,6,7],"GAS plan-potencial sin respuesta"); pintar();
      console.warn("PPP sin línea", e); }
 }
@@ -1421,6 +1478,8 @@ async function conectarPPP(){
 /* ═══ TRAMO MIRAMAR · EN LÍNEA · GAS del board Real de Miramar ═══ */
 const MIRA_GAS="https://script.google.com/macros/s/AKfycbzR0-hoPMs7N_1nSD0pFbJtTmaN4kLCIbNFsYw7VeM3xnfu12TSKJSkMyNxm7KNn7o/exec";
 async function conectarMiramar(){
+  if(!puedo("SYS-MIRAMAR")){                     // sin código no se llama al GAS
+    cegar(KPIHEX_BOT,[0,1,5],"sin código de este módulo"); pintar(); return; }
   try{
     // Manda la credencial como el resto de conectores: el backend de Miramar
     // ya la exige (antes servia el board completo sin clave a cualquiera).
@@ -1429,33 +1488,45 @@ async function conectarMiramar(){
     const j=await r.json(); if(!j.ok||!j.tablas) throw 0;
     const tr=j.tablas.TRAMITES||[], lo=j.tablas.LOTES||[];
     const est=e=>String(e.estado||"").trim().toLowerCase();
-    TRAD={ apr:tr.filter(t=>est(t)==="verde").length,
+    // Una tabla VACÍA es ausencia de dato, no un cero: antes salía "0/47" (el 47
+    // lo ponía el código, no el Sheet) y "0/0", que además hacía NaN en la barra.
+    if(!tr.length){ TRAD=null; cegar(KPIHEX_BOT,[0,1],"Miramar no mandó TRAMITES"); }
+    else TRAD={ apr:tr.filter(t=>est(t)==="verde").length,
            blq:tr.filter(t=>est(t)==="rojo").length,
            tot:tr.length, rows:tr };
     const ap=lo.filter(l=>est(l)==="apartado").length;
     const POS=[4,11,7,14,1,9,16,3,12,5,0,8,15,2,10,6,13];
     APSET=new Set(POS.slice(0,Math.min(ap,POS.length)));
-    PROJ[1].f=ap+"/"+lo.length; PROJ[1].p=lo.length?ap/lo.length:0;
-    // LA TORRE DE LOTES · el inventario real ya venía en este mismo fetch y se tiraba.
-    // huecos = lotes del inventario · piezas = apartados. Ley del KPI respetada.
-    const vend=lo.filter(l=>est(l)==="vendido").length,
-          enaj=lo.filter(l=>String(l.enajenable||"").trim().toLowerCase()==="si").length;
-    ORIG[3].h=lo.length||47; ORIG[3].p=ap+vend;
-    ORIG[3].f=(ap+vend)+"/"+(lo.length||47);
-    ORIG[3].sub = enaj ? ("apartados · "+enaj+" enajenables") : "apartados · aún no enajenables";
-    // picar la charola = ver QUÉ lotes son (las losetas verdes)
-    ORIG[3].items = lo.filter(l=>["apartado","vendido"].includes(est(l))).map(l=>({
-      id:l.lote_id||"LOTE", tipo:(l.tipo||"lote")+" · "+(l.superficie_m2||"—")+" m²",
-      zona:"Real de Miramar", st:est(l)==="vendido"?"verde":"ambar", nodo:"LOT", emb:"LOT",
-      resp:"YoDesarrollo", valor:Number(l.precio_actual)||null,
-      accion:(est(l)==="vendido"?"Vendido":"Apartado")+" · etapa "+(l.etapa_precio||"—")}));
-    KPIHEX_BOT[0]={n:TRAD.apr+"/"+TRAD.tot, lbl:"TRÁMITES MIRAMAR",
-      c:TRAD.apr/TRAD.tot<0.5?"ambar":"verde", st:"linea"};
-    KPIHEX_BOT[1]={n:String(TRAD.blq), lbl:"BLOQUEADOS", c:TRAD.blq?"rojo":"verde", st:"linea"};
-    KPIHEX_BOT[5]={n:ap+"/"+lo.length, lbl:"APARTADOS", c:ap>2?"verde":"ambar", st:"linea"};
+    if(!lo.length){
+      PROJ[1].f="—"; PROJ[1].p=0;
+      ORIG[3].f="—"; ORIG[3].p=0; ORIG[3].items=[];
+      cegar(KPIHEX_BOT,[5],"Miramar no mandó LOTES");
+    }else{
+      PROJ[1].f=ap+"/"+lo.length; PROJ[1].p=ap/lo.length;
+      // LA TORRE DE LOTES · el inventario real ya venía en este mismo fetch y se tiraba.
+      // huecos = lotes del inventario · piezas = apartados. Ley del KPI respetada.
+      const vend=lo.filter(l=>est(l)==="vendido").length,
+            enaj=lo.filter(l=>String(l.enajenable||"").trim().toLowerCase()==="si").length;
+      ORIG[3].h=lo.length; ORIG[3].p=ap+vend;
+      ORIG[3].f=(ap+vend)+"/"+lo.length;
+      ORIG[3].sub = enaj ? ("apartados · "+enaj+" enajenables") : "apartados · aún no enajenables";
+      // picar la charola = ver QUÉ lotes son (las losetas verdes)
+      ORIG[3].items = lo.filter(l=>["apartado","vendido"].includes(est(l))).map(l=>({
+        id:l.lote_id||"LOTE", tipo:(l.tipo||"lote")+" · "+(l.superficie_m2||"—")+" m²",
+        zona:"Real de Miramar", st:est(l)==="vendido"?"verde":"ambar", nodo:"LOT", emb:"LOT",
+        resp:"YoDesarrollo", valor:Number(l.precio_actual)||null,
+        accion:(est(l)==="vendido"?"Vendido":"Apartado")+" · etapa "+(l.etapa_precio||"—")}));
+      KPIHEX_BOT[5]={n:ap+"/"+lo.length, lbl:"APARTADOS", c:ap>2?"verde":"ambar", st:"linea"};
+    }
+    if(TRAD){
+      KPIHEX_BOT[0]={n:TRAD.apr+"/"+TRAD.tot, lbl:"TRÁMITES MIRAMAR",
+        c:TRAD.apr/TRAD.tot<0.5?"ambar":"verde", st:"linea"};
+      KPIHEX_BOT[1]={n:String(TRAD.blq), lbl:"BLOQUEADOS", c:TRAD.blq?"rojo":"verde", st:"linea"};
+    }
     pintar();
-    console.log("✓ Miramar en línea · trámites "+TRAD.apr+"/"+TRAD.tot+
-      " · "+TRAD.blq+" bloqueados · apartados "+ap+"/"+lo.length);
+    console.log("✓ Miramar en línea · trámites "+(TRAD?TRAD.apr+"/"+TRAD.tot:"—")+
+      " · "+(TRAD?TRAD.blq+" bloqueados":"sin línea")+
+      " · apartados "+(lo.length?ap+"/"+lo.length:"—"));
   }catch(e){ cegar(KPIHEX_BOT,[0,1,5],"GAS Real Miramar sin respuesta"); pintar();
      console.warn("Miramar sin línea", e); }
 }
@@ -1468,6 +1539,8 @@ const OBRA_GAS="https://script.google.com/macros/s/AKfycbyVb6Y7m00FyhoGa9ZoQul1j
 let OBRD=null;
 async function conectarObra(){
   if(!OBRA_GAS) return;
+  if(!puedo("SYS-OBRA")){                        // sin código no se llama al GAS
+    cegar(KPIHEX_BOT,[7],"sin código de este módulo"); pintar(); return; }
   try{
     const r=await fetch(OBRA_GAS+"?recurso=board&k="+encodeURIComponent(CLAVE_OK||"")+
       "&cb="+Date.now(),{cache:"no-store"});
@@ -1475,7 +1548,9 @@ async function conectarObra(){
     const k=j.kpi||{}, fr=j.frentes||{};
     const nombres=Object.keys(fr);
     const listos=nombres.filter(n=>fr[n].importe>0 && fr[n].ejecutado>=fr[n].importe*0.999).length;
-    const pct=k.avance||0, pctTxt=(pct*100).toFixed(1)+"%";
+    // un avance que NO vino no es 0.0%: eso se lee "hay que trabajar" cuando la
+    // verdad es "estoy ciego". Sin campo, el hex y la placa dicen "—".
+    const av=cifra(k.avance), pct=av===null?0:av, pctTxt=av===null?"—":(pct*100).toFixed(1)+"%";
     OBRD={ pct, importe:k.importe||0, ejecutado:k.ejecutado||0,
            conceptos:k.conceptos||0, frentes:nombres.length, listos,
            pendientes:k.pendientes||0, porAutorizar:k.porAutorizar||0,
@@ -1516,7 +1591,9 @@ async function conectarObra(){
     // tienen precio y quedan fuera del denominador. Mientras eso sea cierto el
     // hex NUNCA se pinta verde, porque un 100% ahí no es obra terminada.
     const sinC = k.sinCostear||0, conC = k.conCosto||nombres.length;
-    KPIHEX_BOT[7]={ n:pctTxt, lbl:"AVANCE OBRA",
+    KPIHEX_BOT[7]= av===null
+      ? { n:"—", lbl:"AVANCE OBRA", c:"gris", st:"ciego", src:"motor de obra no mandó avance" }
+      : { n:pctTxt, lbl:"AVANCE OBRA",
       c: sinC>0 ? (pct>0?"ambar":"rojo") : (pct>=0.8?"verde":(pct>0?"ambar":"rojo")),
       st:"linea",
       src: sinC>0 ? ("de lo costeado · "+conC+" de "+k.conceptos+" conceptos")
@@ -1524,7 +1601,7 @@ async function conectarObra(){
 
     // la maqueta de Alysa sigue contando HITOS; el avance de obra va en su subtítulo,
     // para que ninguna de las dos cifras se disfrace de la otra
-    PROJ[0].sub = "hitos · obra " + (k.ejecutado>0 ? pctTxt : "sin medir");
+    PROJ[0].sub = "hitos · obra " + (av!==null && k.ejecutado>0 ? pctTxt : "sin medir");
 
     pintar();
     console.log("✓ Obra en línea · "+OBRD.conceptos+" conceptos ("+(k.conCosto||"?")+" costeados) · $"+
@@ -1539,6 +1616,8 @@ async function conectarObra(){
 
 /* ═══ TRAMO ALYSA + MARÍA · EN LÍNEA · hitos de sus tracks (usa la clave del candado) ═══ */
 async function conectarTracks(){
+  if(!puedo("SYS-TRACK")){                       // sin código no se llama al GAS
+    cegar(KPIHEX_BOT,[3],"sin código de este módulo"); pintar(); return; }
   const uno=async (track,idx)=>{
     const r=await fetch(GATE_GAS+"?recurso=track&track="+track+"&k="+encodeURIComponent(CLAVE_OK||""))
       .then(x=>x.json());
@@ -1550,12 +1629,13 @@ async function conectarTracks(){
       lbl:"HITOS ALYSA", c:hechos/Math.max(1,tot)>=.7?"verde":"ambar", st:"linea"};
     return hechos+"/"+tot;
   };
-  try{
-    const [a,m]=await Promise.allSettled([uno("alysa",0),uno("maria",2)]);
-    pintar();
-    console.log("✓ tracks en línea · alysa "+(a.value||"sin línea")+" · maría "+(m.value||"sin línea"));
-  }catch(e){ cegar(KPIHEX_BOT,[3],"portero/tracks sin respuesta"); pintar();
-     console.warn("tracks sin línea", e); }
+  // allSettled NUNCA rechaza: el try/catch de antes era código muerto y un track
+  // caído se quedaba en "falta conectar" en vez de decir "la fuente no contestó".
+  const [a,m]=await Promise.allSettled([uno("alysa",0),uno("maria",2)]);
+  if(a.status==="rejected"){ cegar(KPIHEX_BOT,[3],"portero/tracks sin respuesta"); PROJ[0].f="—"; }
+  if(m.status==="rejected"){ PROJ[2].f="—"; }
+  pintar();
+  console.log("✓ tracks · alysa "+(a.value||"sin línea")+" · maría "+(m.value||"sin línea"));
 }
 
 /* ═══ TRAMO TALLER · EN LÍNEA · el board-aurum de Operación (adapter operations) ═══ */
@@ -1608,6 +1688,8 @@ function sumaInversiones(data){
   return { total, n:act.length, recibido, pct: total? recibido/total : null };
 }
 async function conectarCodes(){
+  if(!puedo("SYS-TRACK")){                       // sin código no se llama al GAS
+    cegar(KPIHEX_BOT,[4,6],"sin código de este módulo"); pintar(); return; }
   let res=null, via="live";
   // 1º el AGREGADO PÚBLICO: cuatro números, sin credencial. El portal de
   // codesarrolladores tiene su propia ADMIN_PASS y no se pone en un HTML público
@@ -1664,7 +1746,10 @@ function leadVivo(r){
 }
 async function conectarCRM(){
   if(!CRM_GAS){ CRMEST="caido"; return; }
-  CRMEST="pidiendo"; pintar();                               // sin endpoint aún: charola sin línea
+  if(!puedo("SYS-POTENCIALES")){                 // sin código no se llama al GAS
+    CRMEST="sinacceso"; cegar(KPIHEX_TOP,[0,2,3,4,5],"sin código de este módulo");
+    pintar(); return; }
+  CRMEST="pidiendo"; pintar();                             // sin endpoint aún: charola sin línea
   try{
     const r=await fetch(CRM_GAS+"?recurso=crm&k="+encodeURIComponent(CLAVE_OK||"")+
       "&t="+Date.now(),{cache:"no-store"});
@@ -1742,13 +1827,35 @@ async function sondaFinance(){
   }catch(e){}
 }
 
-/* ═══ EL CANDADO · valida contra el mismo GAS que los tracks ═══ */
-const GATE_GAS="https://script.google.com/macros/s/AKfycbwlDDCWWzOWYZsUpBU9uqsQ7aenQ469PF6s6FkNlBFS1_cJSU5njG9oQmuyELy5zlqzFg/exec";
+/* ═══ EL CANDADO · valida contra el mismo GAS que los tracks ═══
+   Con relevo, como el OS: si el portero original no contesta se prueba el
+   respaldo y el tablero ENTERO se queda con ese endpoint — conectarTracks
+   también pega aquí, así que parchar solo validar() abría la puerta y dejaba
+   los hexágonos ciegos contra un portero muerto. */
+const PORTERO_ORIGINAL="https://script.google.com/macros/s/AKfycbwlDDCWWzOWYZsUpBU9uqsQ7aenQ469PF6s6FkNlBFS1_cJSU5njG9oQmuyELy5zlqzFg/exec";
+const PORTERO_RESPALDO="https://script.google.com/macros/s/AKfycbyrhqMb70Qh8BljAOYnSYBZ8IXUuEclFWPg10NWIv3GJ-nAR597OTsGB4IL-xyUl7Ms/exec";
+let GATE_GAS=PORTERO_ORIGINAL;
 const LSK="pyod_clave_v1", GT=document.getElementById("gate");
 let CLAVE_OK=null;
+/* Una sesión vencida NO es "sin conexión": cada error dice lo que es. */
+function mensajeGate(e){
+  if(e==="clave") return "La clave cambió";
+  if(e==="liga"||e==="expirado"||e==="revocado") return "La sesión venció — vuelve a entrar al OS";
+  return "Sin conexión con el Sheet";
+}
+async function pedirPortero(base,k){
+  const r=await fetch(base+"?recurso=track&track=alysa&k="+encodeURIComponent(k),{cache:"no-store"});
+  return await r.json();
+}
 async function validar(k){
-  const r=await fetch(GATE_GAS+"?recurso=track&track=alysa&k="+encodeURIComponent(k)).then(x=>x.json());
-  if(!r.ok) throw r.error||"error";
+  let j=null;
+  try{ j=await pedirPortero(GATE_GAS,k); }catch(e){ j=null; }
+  if(!j && GATE_GAS!==PORTERO_RESPALDO){         // no contestó: el relevo, una sola vez
+    try{ const j2=await pedirPortero(PORTERO_RESPALDO,k);
+      if(j2){ j=j2; GATE_GAS=PORTERO_RESPALDO; } }catch(e){}
+  }
+  if(!j) throw "red";
+  if(!j.ok) throw j.error||"error";
   CLAVE_OK=k;
 }
 let _ultimoAlto=0;
@@ -1757,8 +1864,11 @@ function avisarAlto(){
   /* Se mide el CONTENIDO (#w), no el body: el body llena el iframe, así que
      medirlo devolvía el alto que el padre acababa de poner (+6) y el marco
      crecía sin fin. El filtro de 12px corta cualquier eco restante. */
+  // …y se mide lo que SE VE: mientras está el candado, #w es display:none y
+  // devolvía 0, así que el padre nunca ajustaba y quedaba papel vacío.
   const w=document.getElementById("w");
-  const h=Math.ceil(w?w.scrollHeight:document.body.scrollHeight)+6;
+  const vis=(w && w.style.display!=="none") ? w : GT;
+  const h=Math.ceil((vis?vis.scrollHeight:document.body.scrollHeight))+6;
   if(Math.abs(h-_ultimoAlto)<12) return;
   _ultimoAlto=h;
   try{ parent.postMessage({yodTablero:"alto", alto:h}, location.origin); }catch(e){}
@@ -1783,8 +1893,13 @@ async function entrar(){
   const err=document.getElementById("gateErr");
   if(!v){ err.textContent="Escribe la clave"; return; }
   document.getElementById("gateBtn").disabled=true; err.textContent="";
-  try{ await validar(v); localStorage.setItem(LSK,v); abrir(); }
-  catch(e){ err.textContent = e==="clave" ? "Clave incorrecta" : "Sin conexión con el Sheet"; }
+  try{ await validar(v); localStorage.setItem(LSK,v);
+    // el dueño de la sesión es el OS: se le avisa que aquí ya hay llave viva
+    if(window.parent!==window){
+      try{ parent.postMessage({yodTablero:"sesion"}, location.origin); }catch(_){}
+    }
+    abrir(); }
+  catch(e){ err.textContent = e==="clave" ? "Clave incorrecta" : mensajeGate(e); }
   document.getElementById("gateBtn").disabled=false;
 }
 document.getElementById("gateBtn").onclick=entrar;
@@ -1794,12 +1909,21 @@ const CLV=localStorage.getItem(LSK)||"";
 // de que no abre es exactamente lo que se necesita
 if(window.YODChinche) YODChinche.init({ pantalla:"tablero", canvas:CV, luz:LZ,
   vista:()=>VISTA, sinPastilla:EMBED });   // en iframe manda la pastilla del portal
-if(CLV) validar(CLV).then(abrir).catch(e=>{
-  if(e==="clave"){ localStorage.removeItem(LSK);
-    document.getElementById("gateErr").textContent="La clave cambió"; }
-  else document.getElementById("gateErr").textContent="Sin conexión con el Sheet";
-  avisarAlto();
-});
+const MSG=document.getElementById("gateMsg"), MSG0=MSG.textContent;
+if(CLV){
+  // Con sesión guardada no se vuelve a pedir la clave: se avisa que se verifica.
+  // Antes salía el formulario «Escribe la clave del portal» ~4 s en cada carga
+  // del OS y se leía como «me volvió a sacar».
+  GT.classList.add("validando"); MSG.textContent="Verificando acceso…";
+  validar(CLV).then(abrir).catch(e=>{
+    GT.classList.remove("validando"); MSG.textContent=MSG0;
+    // el dueño del token es el OS (tolera 3 rechazos y tiene relevo): embebido,
+    // el tablero solo pinta su candado y NO le tira la sesión al padre
+    if(e==="clave" && !EMBED){ try{ localStorage.removeItem(LSK); }catch(_){} }
+    document.getElementById("gateErr").textContent=mensajeGate(e);
+    avisarAlto();
+  });
+}
 avisarAlto(); setTimeout(avisarAlto,300);
 window.__HIT=HIT;
 })();
