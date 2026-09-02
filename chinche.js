@@ -32,7 +32,17 @@ function leerN(){ try { return parseInt(localStorage.getItem(LSN) || "0", 10) ||
 function guardarN(n){
   try { localStorage.setItem(LSN, String(n)); } catch (e) {}
   /* embebido en YOD OS: la pastilla vive en el documento padre; avisarle */
-  try { if (window.parent !== window) window.parent.postMessage({ yodChinche: n }, "*"); } catch (e) {}
+  try { if (window.parent !== window) window.parent.postMessage({ yodChinche: n }, location.origin); } catch (e) {}
+}
+
+/* ── quién está clavando: la identidad validada del OS si la hay ── */
+function quien(){
+  try {
+    var d = JSON.parse(sessionStorage.getItem("yod_id_v1") || "null");
+    var n = d && d.nombre ? String(d.nombre).trim() : "";
+    if (n) return n;
+  } catch (e) {}
+  return "Alejandro";
 }
 
 function abrirBD(){
@@ -300,7 +310,7 @@ async function anotar(op){
     var btn = this;
     btn.disabled = true; btn.textContent = "Clavando…";
     var ch = {
-      id: nuevoId(d), creado: d.toISOString(), sello: sello(d), quien: "Alejandro",
+      id: nuevoId(d), creado: d.toISOString(), sello: sello(d), quien: quien(),
       texto: texto, tipo: tipo, estado: "nueva",
       pantalla: PANT, url: location.href.split("#")[0], aparato: aparato(),
       vista: op.vista || (CTX.vista ? CTX.vista() : ""),
@@ -349,6 +359,22 @@ function ruta(el){
   return p.join(" ");
 }
 function seccionDe(el){
+  /* primero el bloque más cercano que se nombra a sí mismo: si no, el bucle
+     de abajo devuelve el PRIMER encabezado del documento (el saludo del hero)
+     para cosas que no tienen encabezado propio, como la barra o el menú */
+  var b = el.closest && el.closest("section,article,nav,aside,header,[data-seccion],[aria-labelledby],[aria-label]");
+  while (b) {
+    var etq = "";
+    if (b.getAttribute("data-seccion")) etq = b.getAttribute("data-seccion");
+    else if (b.getAttribute("aria-labelledby")) {
+      var r = document.getElementById(b.getAttribute("aria-labelledby"));
+      if (r) etq = legible(r);
+    } else if (b.getAttribute("aria-label")) etq = b.getAttribute("aria-label");
+    if (etq && etq.trim()) return etq.trim().slice(0, 80);
+    b = b.parentElement && b.parentElement.closest
+      ? b.parentElement.closest("section,article,nav,aside,header,[data-seccion],[aria-labelledby],[aria-label]")
+      : null;
+  }
   var n = el;
   while (n && n !== document.body) {
     var h = n.querySelector && n.querySelector("h1,h2,h3,h4,[data-seccion]");
@@ -408,7 +434,20 @@ function modoSenalar(){
       r.width + "px;height:" + r.height + "px";
     marco._el = el;
   }
+  var t0 = null;
+  function marcar(ev){
+    var t = ev.touches && ev.touches[0];
+    t0 = t ? { x: t.clientX, y: t.clientY, ms: Date.now() } : null;
+  }
   function tomar(ev){
+    /* en el cel, arrastrar para llegar al renglón NO es señalar: si el dedo
+       se movió o se tardó, era scroll y no se clava lo que quedó debajo */
+    if (ev.type === "touchend") {
+      var t = ev.changedTouches && ev.changedTouches[0];
+      if (!t0 || !t || Math.abs(t.clientX - t0.x) > 10 || Math.abs(t.clientY - t0.y) > 10 ||
+          Date.now() - t0.ms > 600) { t0 = null; return; }
+      t0 = null;
+    }
     var el = bajo(ev);
     if (!el) return;                              /* barra de scroll: no adivinar */
     if (el.closest && el.closest(".chn-pista")) { ev.preventDefault(); salir(); return; }
@@ -429,6 +468,7 @@ function modoSenalar(){
     senalando = null;
     document.removeEventListener("mousemove", mover, true);
     document.removeEventListener("touchmove", mover, true);
+    document.removeEventListener("touchstart", marcar, true);
     document.removeEventListener("click", tomar, true);
     document.removeEventListener("touchend", tomar, true);
     document.removeEventListener("keydown", tecla, true);
@@ -437,6 +477,7 @@ function modoSenalar(){
   senalando = salir;
   document.addEventListener("mousemove", mover, true);
   document.addEventListener("touchmove", mover, true);
+  document.addEventListener("touchstart", marcar, true);
   document.addEventListener("click", tomar, true);
   document.addEventListener("touchend", tomar, true);
   document.addEventListener("keydown", tecla, true);
@@ -498,8 +539,31 @@ async function pila(){
       e.preventDefault(); e.stopPropagation();
       await borrar(b.dataset.borra);
       var f = b.closest(".chn-fila"); if (f) f.remove();
+      repintarCuentas();
     };
   });
+  /* al borrar con × hay que recontar: si no, la cabecera sigue diciendo "3
+     chinches" con la lista ya vacía y contradice a la pastilla */
+  function repintarCuentas(){
+    var filas = cont.querySelectorAll(".chn-fila");
+    if (!filas.length) { cerrar(v); aviso("Sin pendientes"); return; }
+    var nv = cont.querySelectorAll(".chn-fila:not(.ida)").length;
+    var ni = filas.length - nv;
+    var cab = v.querySelector(".chn-cab b");
+    if (cab) {
+      cab.textContent = String(nv);
+      if (cab.nextSibling) cab.nextSibling.textContent = " " + (nv === 1 ? "chinche" : "chinches");
+    }
+    var gr = v.querySelector(".chn-cab .chn-gris");
+    if (gr) { if (ni) gr.textContent = "· " + ni + " ya mandadas"; else gr.remove(); }
+    [].forEach.call(cont.querySelectorAll(".chn-grupo"), function (g) {
+      var n = 0, x = g.nextElementSibling;
+      while (x && x.classList.contains("chn-fila")) { n++; x = x.nextElementSibling; }
+      if (!n) g.remove();
+      else g.textContent = g.textContent.replace(/ · \d+$/, " · " + n);
+    });
+  }
+
   v.querySelector("[data-todos]").onclick = function () {
     /* solo las vivas: las mandadas ya soltaron su foto grande y reincluirlas
        produce encargos que prometen capturas que no van */
@@ -556,7 +620,7 @@ async function armarTexto(ids, amarre){
   var conFoto = Object.keys(fotos).filter(function(k){ return fotos[k]; }).length;
   var L = [];
   L.push("# Encargo " + nom + " · " + list.length + (list.length===1?" cambio":" cambios"));
-  L.push("Alejandro · " + sello(d) + " (America/Hermosillo) · desde " + aparato());
+  L.push(quien() + " · " + sello(d) + " (America/Hermosillo) · desde " + aparato());
   L.push("Repo: yodesarrollomx/yod-portal · publicado en yodesarrollomx.github.io/yod-portal/");
   L.push("Capturas junto a este archivo: " + conFoto);
   L.push("");
@@ -566,7 +630,7 @@ async function armarTexto(ids, amarre){
     L.push("## " + (i+1) + " · " + (c.tipo ? c.tipo.toUpperCase() : "CAMBIO") + " · " +
            c.pantalla + (c.vista ? ' · vista "' + c.vista + '"' : ""));
     L.push("");
-    L.push('**Dice Alejandro:** "' + c.texto + '"');
+    L.push("**Dice " + (c.quien || "Alejandro") + ':** "' + c.texto + '"');
     L.push("");
     if (c.modo === "lienzo") {
       L.push("- **Punto exacto:** fracción x=" + c.ancla.x + " y=" + c.ancla.y + " del lienzo" +
@@ -598,7 +662,7 @@ async function armarTexto(ids, amarre){
   L.push("────────────────────────────────────────────────────────────────");
   L.push("### Cómo leer esto, Claude");
   L.push("");
-  L.push('- **"Dice Alejandro" es textual.** No lo interpretes de más ni lo pulas.');
+  L.push('- **"Dice ..." es textual.** No lo interpretes de más ni lo pulas.');
   L.push('- **"Objeto" es dato del sistema**, no opinión: es el mismo objeto que el tablero tenía en la mano al picar.');
   L.push("- **La flecha roja de la foto no viaja en el texto.** Para saber a qué apunta usa \"Punto exacto\",");
   L.push("  que es la fracción del clic real sobre el lienzo. Si los .jpg están junto al .md, ábrelos y ahí sí la ves.");
@@ -770,24 +834,29 @@ async function marcarIdas(ids, soltarFotos){
 function estilo(){
   var s = document.createElement("style");
   s.textContent = [
-/* 236+: encima de porteros (obra z:50, tablero z:60) Y del cajón móvil de
-   YOD OS (scrim 205, sidebar 210), debajo de nada que importe */
-".chn-pastilla{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:236;",
+/* 436+: encima de porteros (obra z:50, tablero z:60), del cajón móvil de
+   YOD OS (scrim 205, sidebar 210) y de la máscara del Embudo/Sala (400);
+   debajo de los botones del Portero (1300) y de su reja (2147483000) */
+".chn-pastilla{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:436;",
 " min-width:44px;height:44px;padding:0 12px;border-radius:22px;border:1px solid rgba(46,36,18,.35);",
 " background:rgba(241,228,196,.82);color:#2E2A22;font:800 14px/44px 'Helvetica Neue',Arial,sans-serif;",
 " text-align:center;cursor:pointer;backdrop-filter:blur(6px);box-shadow:0 3px 14px rgba(0,0,0,.22);",
 " -webkit-tap-highlight-color:transparent}",
 ".chn-pastilla.con{background:#E8A02B;color:#231C0E}",
 ".chn-pastilla.llena{background:#D93A34;color:#fff}",
-".chn-velo{position:fixed;inset:0;z-index:240;background:rgba(12,10,6,.55);display:flex;align-items:flex-end;",
+/* el Portero pone su 🌙 en right:14px;bottom:14px y, si eres admin, el ⚙️ en
+   bottom:64px — la pastilla se sube para que se vean los tres */
+"body:has(#temaBtn) .chn-pastilla{bottom:calc(64px + env(safe-area-inset-bottom,0px))}",
+"body:has(#engraneBtn) .chn-pastilla{bottom:calc(114px + env(safe-area-inset-bottom,0px))}",
+".chn-velo{position:fixed;inset:0;z-index:440;background:rgba(12,10,6,.55);display:flex;align-items:flex-end;",
 " justify-content:center}",
 ".chn-hoja{width:min(680px,100%);background:#F6F1E4;border-radius:16px 16px 0 0;padding:18px 18px",
 " calc(18px + env(safe-area-inset-bottom,0px));overflow:auto;transition:transform .18s;",
 " font-family:'Helvetica Neue',Arial,sans-serif;color:#2E2A22}",
 ".chn-velo:not(.on) .chn-hoja{transform:translateY(14px)}",
-".chn-marco{position:fixed;z-index:238;pointer-events:none;border:2px solid #D93A34;",
+".chn-marco{position:fixed;z-index:438;pointer-events:none;border:2px solid #D93A34;",
 " background:rgba(217,58,52,.12);border-radius:4px;transition:top .06s,left .06s,width .06s,height .06s}",
-".chn-pista{position:fixed;z-index:242;border:0;cursor:pointer;left:50%;transform:translateX(-50%);bottom:22px;",
+".chn-pista{position:fixed;z-index:442;border:0;cursor:pointer;left:50%;transform:translateX(-50%);bottom:22px;",
 " background:#2E2A22;color:#F6F1E4;font:600 13px/1 'Helvetica Neue',Arial;padding:10px 16px;",
 " border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.3)}",
 ".chn-senalar{display:block;width:100%;margin:0 0 12px;padding:11px;background:#EFE7D4;",
@@ -834,7 +903,7 @@ function estilo(){
 ".chn-pre{background:#EFE7D5;border:1px solid rgba(90,76,48,.35);border-radius:9px;padding:11px;",
 " font:500 11.5px/1.45 ui-monospace,Menlo,monospace;white-space:pre-wrap;max-height:32vh;overflow:auto;color:#3A342A}",
 ".chn-aviso{position:fixed;left:50%;bottom:calc(72px + env(safe-area-inset-bottom,0px));transform:translate(-50%,10px);",
-" z-index:244;background:#2E2A22;color:#F6F1E4;padding:11px 20px;border-radius:22px;",
+" z-index:444;background:#2E2A22;color:#F6F1E4;padding:11px 20px;border-radius:22px;",
 " font:700 14px 'Helvetica Neue',Arial;opacity:0;transition:.22s;pointer-events:none}",
 ".chn-aviso.on{opacity:1;transform:translate(-50%,0)}",
 "@media (prefers-reduced-motion:reduce){.chn-velo,.chn-hoja,.chn-aviso{transition:none}}"
@@ -850,7 +919,8 @@ function init(op){
   estilo();
   if (op.sinPastilla) { pintarPastilla(); return; }
   addEventListener("message", function (ev) {
-    /* solo el conteo, y solo si es un número: nada más se acepta de un mensaje */
+    /* solo el conteo, y solo si es un número, y solo del mismo origen */
+    if (ev.origin !== location.origin) return;
     if (ev.data && typeof ev.data.yodChinche === "number") {
       guardarN(ev.data.yodChinche); pintarPastilla();
     }
