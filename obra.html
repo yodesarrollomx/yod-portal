@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
 <title>YOD · Obra</title>
 <style>
 :root{
@@ -41,6 +43,8 @@ nav button{background:none;border:1px solid transparent;border-bottom:none;color
 nav button[aria-selected=true]{background:var(--panel);border-color:var(--line);color:var(--ink)}
 nav button .b{display:inline-block;min-width:1.1rem;padding:0 .25rem;margin-left:.35rem;background:var(--bad);color:#fff;border-radius:9px;font-size:.66rem;font-family:var(--mono);text-align:center}
 .pane[hidden]{display:none}
+/* en celular las 5 pestañas no caben en una línea: se acomodan en dos */
+@media(max-width:560px){nav{flex-wrap:wrap;overflow:visible}nav button{padding:.55rem .7rem;font-size:.8rem}}
 
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(8.5rem,1fr));gap:.55rem;margin-bottom:1.3rem}
 .kp{background:var(--panel);border:1px solid var(--line);border-radius:2px;padding:.7rem .85rem}
@@ -98,11 +102,13 @@ textarea{width:100%;padding:.55rem .65rem;background:var(--panel2);border:1px so
 .lib{padding:.5rem .7rem;border-left:2px solid var(--line);margin-bottom:.3rem;font-size:.86rem}
 .lib.ok{border-left-color:var(--ok)}
 .lib.mal{border-left-color:var(--bad)}
+.nohecha{border-top:1px solid var(--line);margin-top:.6rem;padding-top:.6rem}
+.nohecha select{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:2px;padding:.45rem .55rem;font-family:inherit;font-size:.88rem;max-width:100%}
 #pSemana input[type=text]{width:100%;background:var(--panel);
-  border:1px solid var(--line);border-radius:2px;color:var(--fg);padding:.55rem .7rem;
+  border:1px solid var(--line);border-radius:2px;color:var(--ink);padding:.55rem .7rem;
   font:inherit;font-size:.9rem;margin-bottom:.5rem}
 #pProduccion input[type=text],#pProduccion input[type=date]{width:100%;background:var(--panel);
-  border:1px solid var(--line);border-radius:2px;color:var(--fg);padding:.55rem .7rem;
+  border:1px solid var(--line);border-radius:2px;color:var(--ink);padding:.55rem .7rem;
   font:inherit;font-size:.9rem;margin-bottom:.5rem}
 #pProduccion input[type=date]{width:auto}
 .cadena{font-family:var(--mono);font-size:.68rem;letter-spacing:.05em;color:var(--dim);margin-top:1.6rem;padding-top:1rem;border-top:1px solid var(--line)}
@@ -118,6 +124,7 @@ textarea{width:100%;padding:.55rem .65rem;background:var(--panel2);border:1px so
     <input id="clave" type="password" placeholder="clave" autocomplete="current-password">
     <button id="btnEntrar">Entrar</button>
     <div class="gerr" id="gerr"></div>
+    <p id="gvolver" hidden style="margin-top:.6rem;font-size:.85rem"><a href="os/">Volver a YOD OS</a></p>
   </div>
 </div>
 
@@ -127,8 +134,10 @@ textarea{width:100%;padding:.55rem .65rem;background:var(--panel2);border:1px so
     <h1>Avance de obra</h1>
     <div class="quien">
       <span>Soy</span>
-      <select id="selQuien"></select>
+      <b id="miNombre">—</b>
+      <select id="selQuien" hidden></select>
       <span class="rolchip" id="miRol">—</span>
+      <span id="quienNota" style="font-size:.8rem;color:var(--muted)"></span>
       <span id="hInfo" style="margin-left:auto;font-family:var(--mono);font-size:.72rem;color:var(--dim)"></span>
     </div>
   </header>
@@ -181,6 +190,7 @@ textarea{width:100%;padding:.55rem .65rem;background:var(--panel2);border:1px so
       </div>
     </details>
 
+    <p class="nota" id="semAviso" hidden></p>
     <div id="semana"></div>
     <div id="causas"></div>
   </div>
@@ -227,20 +237,33 @@ textarea{width:100%;padding:.55rem .65rem;background:var(--panel2);border:1px so
   <div class="cadena" id="pieCadena"></div>
 </div>
 
+<script src="os/access-policy.js"></script>
 <script>
 (function(){
 "use strict";
 const GAS="https://script.google.com/macros/s/AKfycbyVb6Y7m00FyhoGa9ZoQul1j6IlHdgsCNalaZVGmA0Csh91TqxNvyDT0YQurz-hViA0/exec";
 const LSK="pyod_clave_v1", LSQ="yod_obra_quien";
-let K=localStorage.getItem(LSK)||"", D=null, QUIEN="", ROL="";
+/* Quién eres NO se escoge en un combo: sale del canje del Portero (nombre,
+   correo y rol de la sesión). Mismo relevo que el resto del OS: original
+   primero, respaldo solo si aquel falla. */
+const PORTERO_ORIGINAL="https://script.google.com/macros/s/AKfycbwlDDCWWzOWYZsUpBU9uqsQ7aenQ469PF6s6FkNlBFS1_cJSU5njG9oQmuyELy5zlqzFg/exec";
+const PORTERO_RESPALDO="https://script.google.com/macros/s/AKfycbyrhqMb70Qh8BljAOYnSYBZ8IXUuEclFWPg10NWIv3GJ-nAR597OTsGB4IL-xyUl7Ms/exec";
+const SINYO="Tu sesión no trae nombre en Roles: no puedes firmar. Pídeselo a Dirección.";
+let K=localStorage.getItem(LSK)||"", D=null, QUIEN="", ROL="", SES=null;
 
 const $=s=>document.querySelector(s);
 const dinero=n=>"$"+(Number(n)||0).toLocaleString("es-MX",{minimumFractionDigits:2,maximumFractionDigits:2});
 const pct=n=>((Number(n)||0)*100).toFixed(1)+"%";
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const fecha=f=>{ if(!f) return ""; const d=new Date(f); return isNaN(d)?String(f)
+/* los errores de red no se enseñan crudos ni en inglés */
+const razon=e=>typeof e==="string"?e:"sin conexión con el motor";
+/* "2026-09-05" a secas lo lee el navegador en UTC y en Hermosillo cae un día
+   antes desde las 5pm: las fechas de día se arman a mano, en hora local */
+const dparse=f=>{ const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(f));
+  return m ? new Date(+m[1],+m[2]-1,+m[3]) : new Date(f); };
+const fecha=f=>{ if(!f) return ""; const d=dparse(f); return isNaN(d)?String(f)
   : d.toLocaleDateString("es-MX",{day:"numeric",month:"short"}); };
-const dias=f=>{ if(!f) return 0; const d=new Date(f); return isNaN(d)?0
+const dias=f=>{ if(!f) return 0; const d=dparse(f); return isNaN(d)?0
   : Math.max(0,Math.floor((Date.now()-d)/86400000)); };
 /* las revisiones del colado: si una va sin palomear, no se libera */
 const REVISIONES=[["cimbra","Cimbra aplomada y apuntalada"],["acero","Acero: calibre, traslapes y recubrimiento"],
@@ -262,13 +285,39 @@ async function mandar(cuerpo){
   return j.r;
 }
 
+/* ── sesión: el Portero dice quién eres y qué tableros traes ── */
+async function canjear(){
+  async function intenta(base){
+    const r=await fetch(base+"?recurso=canje&t="+encodeURIComponent(K),{cache:"no-store",credentials:"omit"});
+    const t=await r.text(); try{ return JSON.parse(t); }catch(_e){ return null; }
+  }
+  let j=null; try{ j=await intenta(PORTERO_ORIGINAL); }catch(_e){ j=null; }
+  if(!j||!j.ok){ try{ j=await intenta(PORTERO_RESPALDO); }catch(_e){ j=null; } }
+  return (j&&j.ok)?j:null;
+}
+/* fail-closed: sin canje válido no se pide un solo dato, y sin el código OB
+   en tus accesos tampoco — se queda el candado con su razón. */
+async function sesion(){
+  SES=await canjear();
+  if(!SES) throw "sesion";
+  const pol=window.YodAccessPolicy;
+  if(!pol || !pol.canOpen(SES.boards,"SYS-OBRA",SES.rol)) throw "sinOB";
+}
+const esAdmin=()=>String((SES&&SES.rol)||"").toLowerCase()==="admin";
+function mensajeGate(e){
+  return e==="clave" ? "Clave incorrecta"
+    : e==="sesion" ? "No pudimos validar tu sesión con el Portero. Inténtalo otra vez o entra desde YOD OS."
+    : e==="sinOB" ? "Tu sesión es válida, pero Obra no está en tus accesos. Pídeselo a Dirección."
+    : "Sin conexión con el motor de obra";
+}
+
 /* ── candado ── */
 async function entrar(){
   const v=$("#clave").value.trim();
   if(!v){ $("#gerr").textContent="Escribe la clave"; return; }
-  $("#btnEntrar").disabled=true; $("#gerr").textContent="";
-  try{ K=v; await cargar(); await cargarProd(); localStorage.setItem(LSK,v); abrir(); }
-  catch(e){ $("#gerr").textContent = e==="clave" ? "Clave incorrecta" : "Sin conexión con el motor de obra"; }
+  $("#btnEntrar").disabled=true; $("#gerr").textContent=""; $("#gvolver").hidden=true;
+  try{ K=v; await sesion(); await cargar(); await cargarProd(); localStorage.setItem(LSK,v); abrir(); }
+  catch(e){ $("#gerr").textContent=mensajeGate(e); $("#gvolver").hidden=(e==="clave"); }
   $("#btnEntrar").disabled=false;
 }
 function abrir(){ $("#gate").classList.add("off"); $("#app").style.display=""; pintar(); }
@@ -278,6 +327,16 @@ async function cargar(){ D=await pedir("board"); }
 
 function personas(){ return (D.roles||[]).filter(r=>String(r.activo).toUpperCase()==="SI"); }
 function rolDe(p){ const r=personas().find(x=>x.persona===p); return r?r.rol:""; }
+/* la persona de ROLES que corresponde a esta sesión: por correo y, si no,
+   por nombre. Si no hay coincidencia no se firma nada. */
+function personaDeSesion(){
+  if(!SES) return "";
+  const n=v=>String(v==null?"":v).trim().toLowerCase();
+  const ps=personas(), c=n(SES.correo), nm=n(SES.nombre);
+  let r = c ? ps.find(x=>n(x.correo)===c) : null;
+  if(!r && nm) r=ps.find(x=>n(x.persona)===nm);
+  return r?r.persona:"";
+}
 
 /* ── estado ── */
 function pintarEstado(){
@@ -287,7 +346,7 @@ function pintarEstado(){
   $("#kpis").innerHTML=[
     [pct(k.avance),"avance medido"],
     [dinero(k.ejecutado),"ejecutado"],
-    [dinero(k.importe),"por ejecutar"],
+    [dinero(Math.max(0,(k.importe||0)-(k.ejecutado||0))),"por ejecutar"],
     [listos+"/"+nombres.length,"frentes listos"],
     [String(k.conceptos||0),"conceptos"],
     [String((k.pendientes||0)+(k.porAutorizar||0)),"esperando firma"],
@@ -351,7 +410,7 @@ async function enviar(){
                       .filter(d=>d.cantidad_ejecutada>0);
   const m=$("#capMsg"); m.className="msg";
   if(!detalle.length){ m.className="msg err"; m.textContent="No anotaste ninguna cantidad."; return; }
-  if(!QUIEN){ m.className="msg err"; m.textContent="Dime quién eres arriba."; return; }
+  if(!QUIEN){ m.className="msg err"; m.textContent=SINYO; return; }
   $("#btnEnviar").disabled=true; m.textContent="Enviando…";
   try{
     const r=await mandar({accion:"proponer",persona:QUIEN,frente:$("#selFrente").value,
@@ -362,7 +421,7 @@ async function enviar(){
     m2.textContent = r.autoAprobado
       ? "Listo: "+r.id+" quedó autorizado directo ("+dinero(r.monto)+"), porque tú autorizas."
       : "Enviado: "+r.id+" ("+dinero(r.monto)+") está esperando revisión.";
-  }catch(e){ m.className="msg err"; m.textContent="No se pudo: "+e; }
+  }catch(e){ m.className="msg err"; m.textContent="No se pudo: "+razon(e); }
   $("#btnEnviar").disabled=false;
 }
 
@@ -376,7 +435,7 @@ function pintarBandeja(){
   const mios=(D.avances||[]).filter(meToca);
   const b=$("#badge");
   if(mios.length){ b.hidden=false; b.textContent=mios.length; } else b.hidden=true;
-  if(!ROL){ $("#bandeja").innerHTML='<p class="vacio">Dime quién eres arriba para ver lo que te toca.</p>'; return; }
+  if(!ROL){ $("#bandeja").innerHTML='<p class="vacio">'+esc(QUIEN?"Tu cuenta no tiene rol de firma en este tablero.":SINYO)+'</p>'; return; }
   if(!mios.length){
     $("#bandeja").innerHTML='<p class="vacio">Nada esperando tu firma.'+
       (ROL==="CAPTURA"?' Tu trabajo es capturar: ve a «Capturar avance».':'')+'</p>';
@@ -416,19 +475,31 @@ async function mover(id,acepta,btn){
     m.className="msg ok"; m.textContent=r.de+" → "+r.a;
     await cargar(); pintar();
   }catch(e){
-    m.className="msg err"; m.textContent="No se pudo: "+e;
+    m.className="msg err"; m.textContent="No se pudo: "+razon(e);
     document.querySelectorAll('[data-mv="'+id+'"]').forEach(x=>x.disabled=false);
   }
 }
 
 /* ── pintar ── */
 function pintar(){
-  const sel=$("#selQuien"), ps=personas();
-  if(sel.options.length!==ps.length){
+  const sel=$("#selQuien"), ps=personas(), admin=esAdmin(), yo=personaDeSesion();
+  if(sel.options.length!==ps.length+1)
     sel.innerHTML='<option value="">—</option>'+ps.map(r=>'<option>'+esc(r.persona)+'</option>').join("");
-    const g=localStorage.getItem(LSQ); if(g && ps.some(r=>r.persona===g)) sel.value=g;
+  /* firmar con el nombre de otro se acabó: manda el canje. El combo «Soy»
+     solo queda vivo para rol admin, y en pantalla se dice que es admin. */
+  if(admin){
+    sel.hidden=false; sel.disabled=false;
+    if(!sel.value){ const g=localStorage.getItem(LSQ); sel.value=(g && ps.some(r=>r.persona===g))?g:yo; }
+    QUIEN=sel.value;
+    $("#miNombre").textContent="";
+    $("#quienNota").textContent="rol admin · firmas a nombre de quien elijas";
+  }else{
+    sel.hidden=true; sel.disabled=true; sel.value=yo;
+    QUIEN=yo;
+    $("#miNombre").textContent=yo||"—";
+    $("#quienNota").textContent=yo?"":SINYO;
   }
-  QUIEN=sel.value; ROL=rolDe(QUIEN);
+  ROL=rolDe(QUIEN);
   $("#miRol").textContent=ROL||"sin rol";
   $("#miRol").style.opacity=ROL?1:.4;
   const k=D.kpi||{};
@@ -459,19 +530,26 @@ function pintarSemana(){
 
   const acts=(P&&P.lookahead)||[];
   const abiertas=acts.filter(a=>["PLANEADA","LISTA","EN_CURSO"].includes(String(a.estado).toUpperCase()));
+  /* si el motor no contestó estamos CIEGOS: eso se dice, no se pinta en cero */
+  const ciego=(P===null && !!PERR);
   /* el PPC nulo se dice con palabras, no con un 0% que parecería un fracaso */
-  const ppc = k.ppc==null ? "—" : pct(k.ppc);
+  const ppc = (ciego||k.ppc==null) ? "—" : pct(k.ppc);
   $("#kpisSem").innerHTML=[
-    [ppc, k.ppc==null?"nada cerrado aún":"del plan cumplido"],
-    [String(k.planeadas||0),"comprometidas"],
-    [String(abiertas.length),"sin cerrar"],
-    [String((P&&P.semanaActual)||"—"),"semana"]
+    [ppc, ciego?"sin lectura":(k.ppc==null?"nada cerrado aún":"del plan cumplido")],
+    [ciego?"—":String(k.planeadas||0),"comprometidas"],
+    [ciego?"—":String(abiertas.length),"sin cerrar"],
+    [ciego?"—":String((P&&P.semanaActual)||"—"),"semana"]
   ].map(([v,l])=>'<div class="kp"><div class="v">'+esc(v)+'</div><div class="l">'+esc(l)+'</div></div>').join("");
 
   const b=$("#badgeSem");
   if(abiertas.length){ b.hidden=false; b.textContent=String(abiertas.length); } else b.hidden=true;
 
-  $("#semana").innerHTML = !acts.length
+  const causasOps=(P&&P.causasPosibles)||Object.keys(ETIQ_CAUSA);
+  const causasHTML=causasOps.map(c=>'<option value="'+esc(c)+'">'+esc(ETIQ_CAUSA[c]||c)+'</option>').join("");
+
+  $("#semana").innerHTML = ciego
+    ? '<p class="nota nota-mal">Sin conexión con el motor de obra · la semana no se pudo leer.</p>'
+    : !acts.length
     ? '<p class="nota">Nada comprometido esta semana. Mientras no haya compromiso no hay PPC — y sin PPC no se sabe si el plan sirve o solo se escribe.</p>'
     : '<h3 class="sec">Comprometido esta semana</h3>'+acts.map(a=>{
         const e=String(a.estado).toUpperCase(), cerrada=(e==="HECHA"||e==="NO_HECHA");
@@ -486,7 +564,18 @@ function pintarSemana(){
             (a.causa_no_hecha?' · <b class="mal">'+esc(ETIQ_CAUSA[a.causa_no_hecha]||a.causa_no_hecha)+'</b>':'')+'</div>'+
           (cerrada?'':'<div class="acciones">'+
             '<button class="btn pri" data-hecha="'+esc(a.id)+'">Se hizo</button>'+
-            '<button class="btn" data-nohecha="'+esc(a.id)+'">No se hizo</button></div>')+
+            '<button class="btn" data-nohecha="'+esc(a.id)+'">No se hizo</button>'+
+            '<span class="msg" id="nhmsg_'+esc(a.id)+'"></span></div>'+
+            /* la causa se escoge aquí mismo, no en un cuadro del navegador */
+            '<div class="nohecha" id="nh_'+esc(a.id)+'" hidden>'+
+              '<p class="nota">¿Por qué no se hizo?</p>'+
+              '<select>'+causasHTML+'</select>'+
+              '<label class="chk"><input type="checkbox"> Sigue frenado (se levanta el freno y queda ligado a esta actividad)</label>'+
+              '<div class="acciones">'+
+                '<button class="btn pri" data-cerrarnh="'+esc(a.id)+'">Cerrar como «no se hizo»</button>'+
+                '<button class="btn" data-cancelnh="'+esc(a.id)+'">Cancelar</button>'+
+              '</div>'+
+            '</div>')+
           '</div></div>';
       }).join("");
 
@@ -498,12 +587,26 @@ function pintarSemana(){
     '<p class="nota">Lo que más se repite es lo que hay que arreglar primero.</p>';
 
   $("#semana").querySelectorAll("[data-hecha]").forEach(x=>x.onclick=()=>cerrarAct(x.dataset.hecha,"HECHA",x));
-  $("#semana").querySelectorAll("[data-nohecha]").forEach(x=>x.onclick=()=>cerrarAct(x.dataset.nohecha,"NO_HECHA",x));
+  $("#semana").querySelectorAll("[data-nohecha]").forEach(x=>x.onclick=()=>{
+    const c=document.getElementById("nh_"+x.dataset.nohecha); if(c) c.hidden=false;
+  });
+  $("#semana").querySelectorAll("[data-cancelnh]").forEach(x=>x.onclick=()=>{
+    const c=document.getElementById("nh_"+x.dataset.cancelnh); if(c) c.hidden=true;
+  });
+  $("#semana").querySelectorAll("[data-cerrarnh]").forEach(x=>x.onclick=()=>{
+    const id=x.dataset.cerrarnh, c=document.getElementById("nh_"+id);
+    const sc=c?c.querySelector("select"):null, fr=c?c.querySelector('input[type="checkbox"]'):null;
+    cerrarAct(id,"NO_HECHA",x,sc?sc.value:"",!!(fr&&fr.checked));
+  });
+}
+function avisoSem(t,mal){
+  const a=$("#semAviso"); if(!a) return;
+  a.hidden=!t; a.className=mal?"nota nota-mal":"nota"; a.textContent=t||"";
 }
 
 async function comprometer(){
   const m=$("#akMsg");
-  if(!QUIEN){ m.textContent="Dime quién eres arriba"; return; }
+  if(!QUIEN){ m.textContent=SINYO; return; }
   const a=$("#akActividad").value.trim();
   if(!a){ m.textContent="¿Qué se va a hacer?"; $("#akActividad").focus(); return; }
   const b=$("#btnActividad"); b.disabled=true; m.textContent="Comprometiendo…";
@@ -514,36 +617,30 @@ async function comprometer(){
     $("#akActividad").value=""; $("#akPrereq").value="";
     m.textContent="Comprometida";
     await cargarProd(); pintarSemana();
-  }catch(e){ m.textContent="No se pudo: "+e; }
+  }catch(e){ m.textContent="No se pudo: "+razon(e); }
   b.disabled=false;
 }
 
-async function cerrarAct(id,estado,btn){
-  if(!QUIEN){ alert("Dime quién eres arriba"); return; }
-  let causa="", freno=false;
-  if(estado==="NO_HECHA"){
-    /* la causa NO es opcional: el motor rebota sin ella, y con razón */
-    const ops=(P&&P.causasPosibles)||Object.keys(ETIQ_CAUSA);
-    const txt=ops.map((c,i)=>(i+1)+". "+(ETIQ_CAUSA[c]||c)).join("\n");
-    const r=prompt("¿Por qué no se hizo?\n\n"+txt+"\n\nEscribe el número:");
-    if(r===null) return;
-    const i=parseInt(r,10)-1;
-    if(!(i>=0 && i<ops.length)){ alert("Escoge un número de la lista"); return; }
-    causa=ops[i];
-    freno=confirm("¿Sigue frenado?\n\nSi dices que sí, se levanta el freno solo y queda ligado a esta actividad, para que la semana que entra nadie la vuelva a comprometer a ciegas.");
-  }
+async function cerrarAct(id,estado,btn,causa,freno){
+  const m=document.getElementById("nhmsg_"+id);
+  const decir=t=>{ if(m){ m.className="msg err"; m.textContent=t; } };
+  if(!QUIEN){ decir(SINYO); return; }
+  /* la causa NO es opcional: el motor rebota sin ella, y con razón */
+  if(estado==="NO_HECHA" && !causa){ decir("Escoge la causa de la lista."); return; }
+  if(m){ m.className="msg"; m.textContent=""; }
+  const antes=btn.textContent;
   btn.disabled=true; btn.textContent="…";
   try{
     const r=await mandar({accion:"lookahead", quien:QUIEN, id:id, estado:estado,
-      causa_no_hecha:causa, levantar_freno:freno});
+      causa_no_hecha:causa||"", levantar_freno:!!freno});
     await cargar(); await cargarProd(); pintar();
-    if(r.freno_creado) alert("Se levantó el freno "+r.freno_creado+" y quedó ligado.");
-  }catch(e){ btn.disabled=false; btn.textContent=estado==="HECHA"?"Se hizo":"No se hizo"; alert("No se pudo: "+e); }
+    avisoSem(r.freno_creado?("Se levantó el freno "+r.freno_creado+" y quedó ligado."):"");
+  }catch(e){ btn.disabled=false; btn.textContent=antes; decir("No se pudo: "+razon(e)); }
 }
 
 /* ── qué nos frena ── */
-let P=null;
-async function cargarProd(){ try{ P=await pedir("produccion"); }catch(e){ P=null; } }
+let P=null, PERR="";
+async function cargarProd(){ try{ P=await pedir("produccion"); PERR=""; }catch(e){ P=null; PERR=String(e)||"error"; } }
 
 function pintarProduccion(){
   const fr=D.frentes||{}, nombres=Object.keys(fr).sort();
@@ -561,21 +658,25 @@ function pintarProduccion(){
       '<label class="chk"><input type="checkbox" data-rev="'+k+'"> '+esc(t)+'</label>').join("");
 
   const k=(P&&P.kpi)||{}, abiertas=(P&&P.restricciones)||[];
+  /* motor sin respuesta: los contadores van en «—», nunca en cero */
+  const ciego=(P===null && !!PERR);
   /* PPC nulo NO es 100%: no haber planeado nada no es haber cumplido todo */
-  const ppc = k.ppc==null ? "—" : pct(k.ppc);
+  const ppc = (ciego||k.ppc==null) ? "—" : pct(k.ppc);
   $("#kpisProd").innerHTML=[
-    [String(k.frenos||0),"frenos abiertos"],
-    [String(k.frenosPrograma||0),"atrasan el programa"],
-    [String(k.frenoMasViejo||0)+"d","el más viejo"],
-    [ppc, k.ppc==null?"sin nada comprometido":"del plan cumplido"],
-    [String(k.liberadas||0),"colados liberados"],
-    [String(k.rechazadas||0),"colados rechazados"]
+    [ciego?"—":String(k.frenos||0),"frenos abiertos"],
+    [ciego?"—":String(k.frenosPrograma||0),"atrasan el programa"],
+    [ciego?"—":String(k.frenoMasViejo||0)+"d","el más viejo"],
+    [ppc, ciego?"sin lectura":(k.ppc==null?"sin nada comprometido":"del plan cumplido")],
+    [ciego?"—":String(k.liberadas||0),"colados liberados"],
+    [ciego?"—":String(k.rechazadas||0),"colados rechazados"]
   ].map(([v,l])=>'<div class="kp"><div class="v">'+esc(v)+'</div><div class="l">'+esc(l)+'</div></div>').join("");
 
   const b=$("#badgeFreno");
   if(abiertas.length){ b.hidden=false; b.textContent=String(abiertas.length); } else b.hidden=true;
 
-  $("#frenos").innerHTML = !abiertas.length
+  $("#frenos").innerHTML = ciego
+    ? '<p class="nota nota-mal">Sin conexión con el motor de obra · los frenos no se pudieron leer.</p>'
+    : !abiertas.length
     ? '<p class="nota">Nada frenado hoy. Cuando algo detenga un frente, levántalo aquí — el board lo va a mostrar junto al dinero de ese frente.</p>'
     : '<h3 class="sec">Frenos abiertos</h3>'+abiertas
         .sort((a,b)=>dias(b.fecha)-dias(a.fecha))
@@ -589,7 +690,16 @@ function pintarProduccion(){
               (r.responsable?' · lo destraba '+esc(r.responsable):' · <i>sin responsable</i>')+
               (r.compromiso?' · para '+esc(fecha(r.compromiso))+(tarde?' <b class="mal">(vencido)</b>':''):'')+'</div>'+
             (r.impacto?'<div class="fr-meta">Impide: '+esc(r.impacto)+'</div>':'')+
-            '<div class="acciones"><button class="btn" data-cerrar="'+esc(r.id)+'">Ya se destrabó</button></div>'+
+            '<div class="acciones"><button class="btn" data-cerrar="'+esc(r.id)+'">Ya se destrabó</button>'+
+              '<span class="msg" id="frmsg_'+esc(r.id)+'"></span></div>'+
+            '<div class="nohecha" id="cf_'+esc(r.id)+'" hidden>'+
+              '<p class="nota">¿Cómo se destrabó?</p>'+
+              '<input type="text" placeholder="En una línea: qué lo resolvió">'+
+              '<div class="acciones">'+
+                '<button class="btn pri" data-cerrarok="'+esc(r.id)+'">Cerrar el freno</button>'+
+                '<button class="btn" data-cancelcf="'+esc(r.id)+'">Cancelar</button>'+
+              '</div>'+
+            '</div>'+
             '</div></div>';
         }).join("");
 
@@ -601,12 +711,22 @@ function pintarProduccion(){
       '<span class="fr-meta"> — '+esc(l.liberado_por)+' · '+esc(fecha(l.fecha))+
       (l.resultado==="RECHAZADA"&&l.nota?' · '+esc(l.nota):'')+'</span></div>').join("");
 
-  $("#frenos").querySelectorAll("[data-cerrar]").forEach(b=>b.onclick=()=>cerrarFreno(b.dataset.cerrar,b));
+  $("#frenos").querySelectorAll("[data-cerrar]").forEach(b=>b.onclick=()=>{
+    const c=document.getElementById("cf_"+b.dataset.cerrar); if(c) c.hidden=false;
+  });
+  $("#frenos").querySelectorAll("[data-cancelcf]").forEach(b=>b.onclick=()=>{
+    const c=document.getElementById("cf_"+b.dataset.cancelcf); if(c) c.hidden=true;
+  });
+  $("#frenos").querySelectorAll("[data-cerrarok]").forEach(b=>b.onclick=()=>{
+    const id=b.dataset.cerrarok, c=document.getElementById("cf_"+id);
+    const i=c?c.querySelector('input[type="text"]'):null;
+    cerrarFreno(id,b,i?i.value.trim():"");
+  });
 }
 
 async function levantarFreno(){
   const m=$("#frMsg");
-  if(!QUIEN){ m.textContent="Dime quién eres arriba"; return; }
+  if(!QUIEN){ m.textContent=SINYO; return; }
   const t=$("#frTitulo").value.trim();
   if(!t){ m.textContent="¿Qué está deteniendo el trabajo?"; $("#frTitulo").focus(); return; }
   const b=$("#btnFreno"); b.disabled=true; m.textContent="Levantando…";
@@ -618,24 +738,26 @@ async function levantarFreno(){
     $("#frPrograma").checked=false;
     m.textContent="Levantado";
     await cargar(); await cargarProd(); pintar();
-  }catch(e){ m.textContent="No se pudo: "+e; }
+  }catch(e){ m.textContent="No se pudo: "+razon(e); }
   b.disabled=false;
 }
 
-async function cerrarFreno(id,btn){
-  if(!QUIEN){ alert("Dime quién eres arriba"); return; }
-  const como=prompt("¿Cómo se destrabó?");
-  if(como===null) return;
+async function cerrarFreno(id,btn,como){
+  const m=document.getElementById("frmsg_"+id);
+  const decir=t=>{ if(m){ m.className="msg err"; m.textContent=t; } };
+  if(!QUIEN){ decir(SINYO); return; }
+  if(!como){ decir("Dinos cómo se destrabó."); return; }
+  if(m){ m.className="msg"; m.textContent=""; }
   btn.disabled=true; btn.textContent="Cerrando…";
   try{
     await mandar({accion:"restriccion", quien:QUIEN, id:id, estado:"CERRADA", como_se_cerro:como});
     await cargar(); await cargarProd(); pintar();
-  }catch(e){ btn.disabled=false; btn.textContent="Ya se destrabó"; alert("No se pudo: "+e); }
+  }catch(e){ btn.disabled=false; btn.textContent="Cerrar el freno"; decir("No se pudo: "+razon(e)); }
 }
 
 async function liberarColado(){
   const m=$("#lbMsg");
-  if(!QUIEN){ m.textContent="Dime quién eres arriba"; return; }
+  if(!QUIEN){ m.textContent=SINYO; return; }
   if(ROL!=="VERIFICA" && ROL!=="AUTORIZA"){ m.textContent="Liberar necesita rol de verificar o autorizar"; return; }
   const ref=$("#lbRef").value.trim();
   if(!ref){ m.textContent="¿Qué se va a colar?"; $("#lbRef").focus(); return; }
@@ -652,7 +774,7 @@ async function liberarColado(){
       $("#lbChecks").querySelectorAll("[data-rev]").forEach(c=>{ c.checked=false; });
     }
     await cargarProd(); pintarProduccion();
-  }catch(e){ m.textContent="No se pudo: "+e; }
+  }catch(e){ m.textContent="No se pudo: "+razon(e); }
   b.disabled=false;
 }
 
@@ -670,13 +792,18 @@ $("#btnLiberar").onclick=liberarColado;
 $("#btnEntrar").onclick=entrar;
 $("#clave").addEventListener("keydown",e=>{ if(e.key==="Enter") entrar(); });
 
-if(K) cargar().then(cargarProd).then(abrir).catch(e=>{
-  if(e==="clave"){ localStorage.removeItem(LSK); K=""; $("#gerr").textContent="La clave cambió"; }
-  else $("#gerr").textContent="Sin conexión con el motor de obra";
+/* Un rechazo del motor de obra NO borra pyod_clave_v1: esa llave es la sesión
+   de TODO el OS y solo el cierre de sesión del shell debe soltarla. */
+if(K) sesion().then(cargar).then(cargarProd).then(abrir).catch(e=>{
+  K="";
+  $("#gerr").textContent = e==="clave"
+    ? "Tu sesión no abre el motor de obra. Entra desde YOD OS."
+    : mensajeGate(e);
+  $("#gvolver").hidden=false;
 });
 })();
 </script>
-<script src="chinche.js"></script>
+<script src="chinche.js?v=os2"></script>
 <script>if(window.YODChinche) YODChinche.init({pantalla:"obra",
   vista:function(){ var t=document.querySelector('[role="tab"][aria-selected="true"]');
     return t ? t.textContent.replace(/\s+/g," ").trim() : ""; }});</script>
