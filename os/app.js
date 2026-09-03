@@ -187,6 +187,9 @@
       // si el marco nunca dispara «load», el velo dejaba «Abriendo…» para siempre
       tOut=setTimeout(function(){load.textContent='No cargó · usa «abrir» aquí arriba';},12000);
     }
+    // La Sala avisa cuando abre una capa (expediente, zoom): el marco vuelve arriba
+    // para que la capa no quede fuera de vista si el OS estaba scrolleado (3-sep).
+    window.addEventListener('message',function(ev){ try{ if(ev.data&&ev.data.tipo==='sala:arriba'){ mask.scrollTop=0; frame.scrollIntoView&&frame.scrollIntoView({block:'start'}); } }catch(_e){} });
     frame.addEventListener('load',function(){
       clearTimeout(tOut);
       if(bloqueado)return;               // el velo con el candado NO se destapa
