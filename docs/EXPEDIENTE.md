@@ -68,6 +68,8 @@ se documenta aquí. Decisión de Alejandro, 4-sep-2026.
 | 11 | ~~**La Sala arranca en «editor» para quien no ha entrado**~~ **DECIDIDO 4-sep-2026 (Alejandro): se queda.** El acceso ya lo filtra YOD OS: quien no tenga la Sala seleccionada en sus accesos no la ve. | cerrado | — | — |
 | 12 | **El catálogo no logra autenticar: su comprobación de credencial tarda 60–86 s.** Medido en el registro de ejecuciones del propio Apps Script (4-sep, 12:12–12:14): `credencialValida_` llama al Portero desde el servidor y esas corridas duran 62.4 s, 73.4 s y 86.6 s, mientras el navegador se rinde a los 25 s; un rechazo se cachea 60 s. Resultado: el menú se caía a los 2 tableros públicos con la sesión abierta. **El front ya no se deja:** si el catálogo llega más corto teniendo sesión, se pinta el mejor conocido (el último bueno, o una lista de respaldo curada con los mismos títulos del Sheet) y lo dice en la barra. Falta arreglarlo del lado del servidor: darle tiempo límite a esa llamada y no cachear el rechazo. | abierto | Alejandro (es backend) | El catálogo devolviendo los 8 tableros con credencial, en menos de 10 s |
 
+| 13 | **La Sala puede firmar como Alejandro una decisión de Sayri.** La Sala usa dos definiciones de «quién soy»: para saber qué firmas son tuyas lee el nombre que manda el Sheet, pero para decidir usa el rol guardado en el teléfono, y si ese rol se pierde el valor por omisión es «editor» → firma «Alejandro». Cazado por el revisor de contradicciones el 4-sep. **No lo toqué**: cambiar ROL() o los nombres del código altera quién puede decidir, y eso lo decides tú. | abierto | Alejandro | Que el Sheet mande el nombre junto con el rol, y que la firma salga de ahí |
+
 ---
 
 ## Decisiones (fechadas, con autor)
