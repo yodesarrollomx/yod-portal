@@ -63,6 +63,7 @@ se documenta aquí. Decisión de Alejandro, 4-sep-2026.
 | 6 | **La firma en Obra se sigue confiando al cuerpo de la petición.** La pantalla ya exige identidad del canje, el backend no. | abierto | Alejandro (es backend) | El `Code.gs` de obra validando la credencial, no el campo `persona` |
 | 7 | **140 hallazgos medio/bajo** del barrido del 2-sep quedaron sin verificar ni ejecutar (los 66 confirmados sí se hicieron). | abierto | Claude, por lotes | Lote verificado + commits + las 3 pantallas auditadas |
 | 8 | **Dos restos del barrido sin hacer:** el encabezado pegajoso que se esconde bajo la barra del marco (`SHELL-10`) y el mini-tablero ilegible en iPhone (`TABLERO-48`). | abierto | Claude | Captura en 375 px mostrando el arreglo |
+| 10 | **El backend del catálogo se quedó con la dirección vieja.** El 4-sep se corrigieron las 10 filas del Control Maestro (pestaña `Sistemas`) a la casa nueva, pero el Apps Script del portal solo deja pasar URLs que empiecen con `alexpueblag.github.io` (`allowedPublicUrl_`), así que ahora sirve la URL **vacía**. No se rompe nada: el front cae a su destino canónico, que ya es el nuevo. Pero el Sheet dejó de mandar. | abierto | Alejandro (es backend) | El GET del catálogo devolviendo `url` con `yodesarrollomx` |
 | 9 | **Repos duplicados vivos.** `alexpueblag/aurum-board` quedó como cascarón de redirección; el trabajo de métricas apuntaba ahí (corregido hoy en `refresh_board.sh`). Falta barrer los demás duplicados. | abierto | Alejandro | Un solo repo vivo por tablero, listado y comprobado |
 
 ---
