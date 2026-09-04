@@ -342,6 +342,24 @@
       var response=await fetch(CATALOG_ENDPOINT+(_tk?'&k='+encodeURIComponent(_tk):'')+'&cb='+Date.now(),{cache:'no-store',credentials:'omit',signal:controller.signal});
       if(!response.ok)throw new Error('HTTP '+response.status);var data=await response.json();
       if(!data.ok||!Array.isArray(data.rows))throw new Error('Respuesta incompleta');
+      // 4-sep-2026 · El catálogo valida la credencial llamando al Portero desde su
+      // servidor, y esa llamada tarda entre 60 y 86 s (medido en su registro de
+      // ejecuciones). Cuando no alcanza, contesta como si fueras un anónimo: solo
+      // las filas «Interno». Sin esta guarda, esa respuesta pisaba el catálogo bueno
+      // y el menú se caía a 2 módulos con la sesión abierta. Un catálogo que llega
+      // más corto que el último bueno TENIENDO sesión no es la verdad: es un fallo
+      // de autenticación. Se conserva el bueno, se avisa, y se reintenta.
+      var _ant=[];try{_ant=JSON.parse(localStorage.getItem('yod_portal_cat_v1')||'[]');}catch(_e){_ant=[];}
+      var _tokenVivo=!!_tk&&state.profileReady;
+      if(_tokenVivo&&Array.isArray(_ant)&&data.rows.length<_ant.length){
+        console.warn('[YOD OS] el catálogo llegó recortado ('+data.rows.length+' de '+_ant.length+') con sesión abierta: no autenticó. Se conserva el último bueno.');
+        renderModules(_ant);nombrarAccionesRapidas();
+        setConnection('error','Catálogo sin autenticar · reintentando');
+        $('updated-at').textContent='Mostrando el último catálogo bueno';
+        state.catRetry=(state.catRetry||0)+1;
+        if(state.catRetry<=REINTENTOS_MAX)setTimeout(loadCatalog,REINTENTO_MS);
+        return;
+      }
       state.catRetry=0;renderModules(data.rows);nombrarAccionesRapidas();$('updated-at').textContent=selloDato(data);setConnection('ok','En línea');
       try{localStorage.setItem('yod_portal_cat_v1',JSON.stringify(data.rows));}catch(_e){}
     }catch(error){
