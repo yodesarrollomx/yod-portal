@@ -36,7 +36,7 @@
     }).catch(function () { return intenta(PORTERO_RESPALDO).catch(function () { return null; }); });
   }
   var OS = 'https://yodesarrollomx.github.io/yod-portal/os/';
-  var CORPORATE = 'https://yodesarrollo.mx/';
+  var CORPORATE = 'https://yodesarrollo.mx/'; // sitio público; la marca del shell ya NO cuelga de aquí (lleva al OS)
   var DEST = {
     'SYS-POTENCIALES': 'https://yodesarrollomx.github.io/potenciales-yod/',
     'SYS-TRACK': 'https://yodesarrollomx.github.io/yod-portal/track-codesarrollos.html',
@@ -162,17 +162,24 @@
     'SYS-MIRAMAR': ['rm_cache_v3', 'rm_fin_v1'],
     'SYS-INTERIORES': ['aurum_cache_v1', 'aurum_postq_v1'],
     'SYS-INVERSION': ['ydr_board_data_v1'],
-    'SYS-MARKETING': ['aurum_board_q_v1']
+    'SYS-MARKETING': ['aurum_board_q_v1'],
+    // El board de Flujo guarda el nombre de quien captura ("¿Quién eres?"): en una
+    // tablet compartida quedaba puesto para el siguiente. Verificado 4-sep-2026.
+    'SYS-FLUJO': ['yodflujo-user']
   };
+  /* Los 3 tableros que faltan NO guardan nada en localStorage hoy (revisados el
+     4-sep-2026): SYS-POTENCIALES y SYS-TRACK solo leen la credencial, y SYS-OBRA
+     no usa localStorage. Si alguno empieza a cachear, su llave va aquí. */
   function purgeCaches(sys) {
     (DATA_CACHES[sys] || []).forEach(function (k) { try { localStorage.removeItem(k); } catch (e) { } });
   }
   function purgeAll() {
     Object.keys(DATA_CACHES).forEach(function (s) { purgeCaches(s); });
   }
-  // Cerrar sesión: borra credencial + TODOS los cachés de datos y vuelve al OS.
-  // Vital en dispositivos compartidos (una tablet del equipo) para no dejar
-  // la sesión ni los datos de una persona al alcance de la siguiente.
+  // Cerrar sesión: borra la credencial, la identidad de la sesión y los cachés de
+  // datos LISTADOS en DATA_CACHES (no "todo el localStorage": lo que no está en la
+  // lista sobrevive). Vital en dispositivos compartidos (una tablet del equipo)
+  // para no dejar la sesión ni los datos de una persona al alcance de la siguiente.
   function logout() {
     try { localStorage.removeItem(LSC); sessionStorage.removeItem('pyod_rol'); sessionStorage.removeItem('yod_id_v1'); localStorage.removeItem('yod_pulse_v1'); } catch (e) { }
     purgeAll();
@@ -219,7 +226,7 @@
     while (document.body.firstChild) { canvas.appendChild(document.body.firstChild); }
 
     var side = el('aside', 'yod-sidebar');
-    side.innerHTML = '<a class="yod-brand" href="' + CORPORATE + '" title="Ir a yodesarrollo.mx" aria-label="YOD, ir a yodesarrollo.mx"><b>YOD</b><span>OS</span></a>'
+    side.innerHTML = '<a class="yod-brand" href="' + OS + '" title="Ir a YOD OS" aria-label="Ir a YOD OS"><b>YOD</b><span>OS</span></a>'
       + '<nav class="yod-nav"><a class="yod-nav-item yod-os-link" href="' + OS + '"><i class="ti ti-layout-dashboard"></i><span>Inicio YOD OS</span></a><p class="yod-nav-label">Tableros</p><div id="yodNav"><span class="yod-nav-loading"><i class="ti ti-loader-2 yod-spin"></i> Cargando…</span></div></nav>'
       + '<div class="yod-foot"><div class="yod-avatar" id="yodAv">YO</div><div class="yod-id"><strong id="yodName">Equipo YOD</strong><span id="yodRole">Verificando…</span></div><button class="yod-out" id="yodOut" type="button" title="Cerrar sesión" aria-label="Cerrar sesión"><i class="ti ti-logout"></i></button></div>';
 
@@ -227,7 +234,7 @@
     var top = el('header', 'yod-topbar');
     top.innerHTML = '<button class="yod-burger" id="yodBurger" type="button" aria-label="Abrir tableros"><i class="ti ti-menu-2"></i></button>'
       + '<button class="yod-back" id="yodBack" type="button" title="Volver a la pantalla anterior" aria-label="Volver a la pantalla anterior"><i class="ti ti-arrow-left"></i><span>Atrás</span></button>'
-      + '<a class="yod-topbrand" href="' + CORPORATE + '" title="Ir a yodesarrollo.mx" aria-label="YOD, ir a yodesarrollo.mx"><b>YOD</b><span>OS</span></a>'
+      + '<a class="yod-topbrand" href="' + OS + '" title="Ir a YOD OS" aria-label="Ir a YOD OS"><b>YOD</b><span>OS</span></a>'
       + '<button class="yod-search" id="yodSearch" type="button"><i class="ti ti-search"></i><span>Buscar un tablero…</span><kbd>⌘ K</kbd></button>'
       + '<div class="yod-top-actions"><span class="yod-role" id="yodChip" style="display:none"></span><a class="yod-home" href="' + OS + '" title="Subir a YOD OS" aria-label="Subir a YOD OS"><i class="ti ti-home-2"></i><span>YOD OS</span></a></div>';
     main.appendChild(top); main.appendChild(canvas);
@@ -301,7 +308,7 @@
   }
   function loadIdentity() {
     var k = tok();
-    if (!k) { state.identity = 'fail'; set('yodRole', 'Requiere acceso'); applyNav(); return; }
+    if (!k) { state.identity = 'fail'; set('yodRole', 'Sesión por validar'); applyNav(); return; }
     /* Velocidad: la identidad ya validada en esta pestaña pinta el menú AL
        INSTANTE; el canje corre en fondo y solo corrige o cierra si cambió. */
     var cacheado = null;

@@ -15,7 +15,9 @@ body.yod-on{margin:0;background:#f6f3ed}
   -webkit-font-smoothing:antialiased}
 
 /* ---- barra lateral ---- */
-.yod-sidebar{position:sticky;top:0;height:100vh;background:var(--yink);color:#f6f3ed;
+/* box-sizing: sin él, el padding se SUMA a height:100vh y el pie del cajón
+   (identidad + Cerrar sesión) queda 28 px abajo del borde de la pantalla. */
+.yod-sidebar{box-sizing:border-box;position:sticky;top:0;height:100vh;background:var(--yink);color:#f6f3ed;
   padding:28px 18px 20px;display:flex;flex-direction:column;overflow:hidden;z-index:30}
 .yod-sidebar:after{content:'YOD';position:absolute;right:-35px;bottom:45px;font-family:'Instrument Serif',serif;
   font-size:120px;color:rgba(255,255,255,.025);transform:rotate(-90deg);pointer-events:none}
@@ -90,18 +92,28 @@ body.yod-on{margin:0;background:#f6f3ed}
 .yod-dialog a small{font-size:11px;color:var(--ymuted)}
 .yod-spin{animation:yodspin 1s linear infinite}@keyframes yodspin{to{transform:rotate(1turn)}}
 
+/* ===== Volver a YOD OS siempre visible (enjambre UX: navegación) ===== */
+/* Marca YOD OS en la topbar: en escritorio ya está en el sidebar; en móvil el
+   sidebar es cajón, así que la marca aquí ancla la identidad y da salida clara. */
+.yod-topbrand{display:none;align-items:baseline;gap:5px;text-decoration:none;color:var(--yink);padding:0 2px;flex:none}
+.yod-topbrand b{font-family:'Instrument Serif',Georgia,serif;font-size:21px;font-weight:400;letter-spacing:.02em;line-height:1}
+.yod-topbrand span{font-size:9px;letter-spacing:.14em;color:var(--yg,#9a7b3f)}
+.yod-topbar{z-index:100}
+
 /* ---- responsive · móvil como app (cajón deslizante) ---- */
+/* UN SOLO bloque de móvil: antes había dos y el segundo pisaba al primero. */
 @media(max-width:900px){
   .yod-shell{display:block}
-  /* la barra lateral pasa a ser un cajón off-canvas que entra al tocar ☰ */
-  .yod-sidebar{position:fixed;left:0;top:0;height:100dvh;width:min(304px,86vw);z-index:210;padding:20px 16px 18px;
+  /* la barra lateral pasa a ser un cajón off-canvas que entra al tocar ☰.
+     El padding de abajo lo pone la regla de safe-area, más adelante. */
+  .yod-sidebar{position:fixed;left:0;top:0;height:100dvh;width:min(304px,86vw);z-index:210;padding:20px 16px;
     transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);box-shadow:0 0 70px rgba(0,0,0,.34)}
   .yod-shell.yod-nav-open .yod-sidebar{transform:translateX(0)}
   .yod-shell.yod-nav-open .yod-scrim{opacity:1;pointer-events:auto}
   .yod-burger{display:grid}
   .yod-topbar{height:56px;padding:0 12px;gap:11px}
   /* en móvil el buscador se reduce a la lupa (⌘K abre el panel completo) */
-  .yod-search{width:40px;flex:none;justify-content:center;padding:0}
+  .yod-search{width:44px;flex:none;justify-content:center;padding:0}
   .yod-search span,.yod-search kbd{display:none}
   /* dentro del cajón: labels completos y targets grandes para el dedo */
   .yod-brand span{display:inline}
@@ -110,6 +122,11 @@ body.yod-on{margin:0;background:#f6f3ed}
   .yod-id{display:flex}
   .yod-nav-item i{font-size:21px}
   .yod-canvas{padding:0}
+  /* la marca de la topbar aparece y Atrás/YOD OS se reducen a su icono */
+  .yod-topbrand{display:flex;flex:1;min-width:0}
+  .yod-back{width:40px;padding:0}
+  .yod-back span,.yod-home span{display:none}
+  .yod-home{width:40px;padding:0}
 }
 @media(max-width:430px){.yod-role{display:none}.yod-topbar{padding:0 10px}}
 /* Candado de página: el tablero actual no está en los accesos de esta sesión */
@@ -135,20 +152,4 @@ body.yod-on{margin:0;background:#f6f3ed}
   .yod-out{min-width:44px;min-height:44px}
   .yod-nav-item{min-height:44px}
   .yod-topbar{gap:8px}
-}
-
-/* ===== Volver a YOD OS siempre visible (enjambre UX: navegación) ===== */
-/* Marca YOD OS en la topbar: en escritorio ya está en el sidebar; en móvil el
-   sidebar es cajón, así que la marca aquí ancla la identidad y da salida clara. */
-.yod-topbrand{display:none;align-items:baseline;gap:5px;text-decoration:none;color:var(--yink);padding:0 2px;flex:none}
-.yod-topbrand b{font-family:'Instrument Serif',Georgia,serif;font-size:21px;font-weight:400;letter-spacing:.02em;line-height:1}
-.yod-topbrand span{font-size:9px;letter-spacing:.14em;color:var(--yg,#9a7b3f)}
-.yod-topbar{z-index:100}
-@media(max-width:900px){
-  .yod-topbrand{display:flex;flex:1;min-width:0}
-  .yod-back{width:40px;padding:0}
-  .yod-back span,.yod-home span{display:none}
-  .yod-home{width:40px;padding:0}
-  .yod-search{flex:none;width:44px;padding:0;justify-content:center}
-  .yod-search span,.yod-search kbd{display:none}
 }

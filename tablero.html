@@ -1,4 +1,6 @@
+<!doctype html>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>YOD OS · Tablero</title>
 <style>
  html,body{margin:0;background:#F7F4EC;height:100%;display:flex;align-items:center;justify-content:center;
@@ -64,7 +66,28 @@
  #sw button:focus-visible{outline:2.5px solid #9a7b3f;outline-offset:2px}
  @media (prefers-reduced-motion:reduce){ #sw button{transition:none} }
  #sw button.on{background:#2E2A22;border-color:#2E2A22;color:#F4EEDF}
- #sw i{color:#B0A48D;font-style:normal;font-weight:600;font-size:10.5px;margin-left:3px}
+ #sw i{color:#B0A48D;font-style:normal;font-weight:600;font-size:10.5px;margin-left:3px;
+   flex:1 1 0;min-width:0}   /* la leyenda toma lo que sobra: nunca ensancha el marco */
+ /* dos vocabularios distintos en la misma barra: el punto del hexágono
+    (de dónde sale el dato) y el ×N de las canicas (cuántos casos hay).
+    Se separan con una divisoria para que no se lean como uno solo. */
+ #sw i span{font-size:13px;line-height:1;vertical-align:-1px}
+ #sw i em{font-style:normal;margin-left:9px;padding-left:9px;
+   border-left:1px solid rgba(176,164,141,.55)}
+ /* ══ Pantallas angostas (≤560px) ═══════════════════════════════════════════
+    Encogido a 375 px el lienzo CABÍA pero no se leía ni se podía picar: el
+    dibujo quedaba al 24% de su tamaño. Aquí el lienzo conserva su ancho real
+    y es su contenedor el que lo pasea de lado. El dibujo no se toca. */
+ @media (max-width:560px){
+   /* suelto, html y body son flex: el body se estiraba al ancho del lienzo y
+      el desbordamiento se le iba a la página (el móvil la alejaba). En bloque,
+      el body mide lo que la pantalla y el que pasea es #w. */
+   html,body{display:block;height:auto}
+   #w{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+   #w canvas{max-width:none;max-height:none;width:auto;height:auto}
+   #sw{flex-wrap:wrap;position:sticky;left:0}
+   #sw i{flex-basis:100%;margin-left:0}   /* la leyenda, en su propio renglón */
+ }
 </style>
 <div id="gate" class="gate"><div id="gateCard">
   <h1>YOD OS &middot; Tablero</h1>
@@ -76,7 +99,7 @@
 <div id="w" style="display:none"><div id="sw"><b>CRM</b>
  <button data-v="surcos">1 &middot; Cuatro surcos</button>
  <button data-v="abaco">2 &middot; El &aacute;baco</button>
- <i>hex&aacute;gonos: &#9679; en l&iacute;nea &middot; &#9679; fuente lista &middot; &#9679; tentativo &nbsp;&nbsp; &times;N = varios en un punto: p&iacute;cala y elige</i></div>
+ <i id="leyHex">el hex&aacute;gono se pinta por su n&uacute;mero; el punto dice de d&oacute;nde sale el dato: <span data-punto="linea">&#9679;</span> en l&iacute;nea &middot; <span data-punto="fuente">&#9679;</span> fuente lista, sin conectar &middot; <span data-punto="ciego">&#9679;</span> ciego: no contest&oacute; &middot; <span data-punto="tentativo">&#9679;</span> tentativo, sin fuente<em>&times;N en la canica = varios casos: p&iacute;cala</em></i></div>
 <canvas id="c" width="1536" height="1056"></canvas><canvas id="luz" width="1536" height="1056"></canvas><div id="f"></div></div>
 <script src="chinche.js?v=os2"></script>
 <script src="os/access-policy.js?v=0.1.0"></script>
@@ -1071,6 +1094,12 @@ function canicasCiclo(){
 
 /* ═══ ANILLO DE HEXÁGONOS · el marco ES el tablero de KPIs ═══ */
 const HEXCOL={verde:"#3FAE5E",ambar:"#E8A02B",rojo:"#C0453A",azul:"#2F5F92",gris:"#9A968C"};
+/* El color del PUNTO de estado sale de aquí y de ningún otro lado: lo usa el
+   hexágono al pintarse y lo usa la leyenda de arriba. Así no se desincronizan.
+   Solo se listan los estados que el código realmente pinta. */
+const PUNTOCOL={linea:HEXCOL.verde, fuente:HEXCOL.ambar, cache:HEXCOL.ambar,
+                ciego:HEXCOL.rojo, tentativo:HEXCOL.gris};
+function colorPunto(st){ return PUNTOCOL[st]||HEXCOL.gris; }
 // estado: "linea" (verde, alimentado) · "fuente" (ámbar, existe la fuente, falta conectar)
 //         · "tentativo" (gris, el dato es de relleno y no tiene fuente todavía)
 //         · "cache" (ámbar hueco, es un dato guardado, no recién traído)
@@ -1125,9 +1154,7 @@ function hexTile(cx,cy,k,num){
   g.fillStyle="#2E2A22"; g.textAlign="center"; g.textBaseline="middle";
   g.font="800 "+(k.n.length>4?9.5:12)+"px 'Helvetica Neue',Arial,sans-serif";
   g.fillText(k.n,0,0.5);
-  const dc = k.st==="linea" ? "#3FAE5E"
-           : k.st==="ciego"  ? "#C0453A"
-           : (k.st==="fuente"||k.st==="cache") ? "#E8A02B" : "#9A968C";
+  const dc = colorPunto(k.st);
   g.beginPath(); g.arc(r*0.44,r*0.46,3.3,0,7);
   if(k.st==="cache"){ g.fillStyle="#F1E4C4"; g.fill(); g.strokeStyle=dc; g.lineWidth=1.6; g.stroke(); }
   else { g.fillStyle=dc; g.fill();
@@ -1925,6 +1952,9 @@ if(CLV){
   });
 }
 avisarAlto(); setTimeout(avisarAlto,300);
+/* La leyenda toma su color del mismo mapa que pinta el hexágono. */
+document.querySelectorAll("#leyHex [data-punto]").forEach(function(el){
+  el.style.color=colorPunto(el.getAttribute("data-punto")); });
 window.__HIT=HIT;
 })();
 </script>

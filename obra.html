@@ -42,9 +42,12 @@ nav{display:flex;gap:.3rem;border-bottom:1px solid var(--line);margin-bottom:1.4
 nav button{background:none;border:1px solid transparent;border-bottom:none;color:var(--muted);font-size:.86rem;font-weight:600;padding:.65rem .95rem;cursor:pointer;border-radius:2px 2px 0 0;margin-bottom:-1px;white-space:nowrap}
 nav button[aria-selected=true]{background:var(--panel);border-color:var(--line);color:var(--ink)}
 nav button .b{display:inline-block;min-width:1.1rem;padding:0 .25rem;margin-left:.35rem;background:var(--bad);color:#fff;border-radius:9px;font-size:.66rem;font-family:var(--mono);text-align:center}
+/* la chapa apagada se apaga de verdad: sin esto el display:inline-block de arriba
+   le gana al [hidden] del navegador y queda un «0» rojo pegado en la pestaña */
+nav button .b[hidden]{display:none}
 .pane[hidden]{display:none}
 /* en celular las 5 pestañas no caben en una línea: se acomodan en dos */
-@media(max-width:560px){nav{flex-wrap:wrap;overflow:visible}nav button{padding:.55rem .7rem;font-size:.8rem}}
+@media(max-width:560px){nav{flex-wrap:wrap;overflow:visible}nav button{padding:.8rem .7rem;font-size:.8rem}}
 
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(8.5rem,1fr));gap:.55rem;margin-bottom:1.3rem}
 .kp{background:var(--panel);border:1px solid var(--line);border-radius:2px;padding:.7rem .85rem}
@@ -63,6 +66,9 @@ nav button .b{display:inline-block;min-width:1.1rem;padding:0 .25rem;margin-left
 .bar{height:.35rem;background:var(--panel2);border-radius:1px;overflow:hidden;margin-top:.35rem;width:100%}
 .bar i{display:block;height:100%;background:var(--gold)}
 
+/* las tablas anchas se deslizan dentro de su caja, no empujan la página de lado
+   (si no, en celular el campo de captura se sale de la pantalla) */
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
 table{border-collapse:collapse;width:100%;font-size:.82rem}
 th{text-align:left;font-family:var(--mono);font-weight:500;font-size:.62rem;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);padding:.45rem .5rem;border-bottom:1px solid var(--line)}
 td{padding:.4rem .5rem;border-bottom:1px solid var(--line);vertical-align:middle}
@@ -326,6 +332,21 @@ function abrir(){ $("#gate").classList.add("off"); $("#app").style.display=""; p
 async function cargar(){ D=await pedir("board"); }
 
 function personas(){ return (D.roles||[]).filter(r=>String(r.activo).toUpperCase()==="SI"); }
+/* el pie de firmas sale de ROLES, no de nombres escritos a mano: si mañana
+   entra o sale alguien, el pie cambia solo. Tramo sin gente = «—», nunca
+   se rellena con quien no tiene ese rol. */
+function cadenaFirmas(){
+  const ps=personas();
+  const tramo=(rol,uno,varios)=>{
+    const l=ps.filter(r=>String(r.rol||"").trim().toUpperCase()===rol)
+              .map(r=>String(r.persona||"").trim()).filter(Boolean);
+    if(!l.length) return "—";
+    return l.join(" o ")+" "+(l.length>1?varios:uno);
+  };
+  return tramo("CAPTURA","propone","proponen")+"  →  "+
+         tramo("VERIFICA","verifica","verifican")+"  →  "+
+         tramo("AUTORIZA","autoriza el pago","autorizan el pago");
+}
 function rolDe(p){ const r=personas().find(x=>x.persona===p); return r?r.rol:""; }
 /* la persona de ROLES que corresponde a esta sesión: por correo y, si no,
    por nombre. Si no hay coincidencia no se firma nada. */
@@ -393,14 +414,14 @@ function pintarCaptura(){
     $("#capTabla").innerHTML='<p class="vacio">Este frente no tiene conceptos con cantidad y precio. Hay que costearlo antes de poder medirlo.</p>';
     $("#capPie").hidden=true; return;
   }
-  $("#capTabla").innerHTML='<table><thead><tr><th>Concepto</th><th>Un</th><th style="text-align:right">Total</th><th style="text-align:right">Ya lleva</th><th style="text-align:right">Ejecutado ahora</th></tr></thead><tbody>'+
+  $("#capTabla").innerHTML='<div class="tscroll"><table><thead><tr><th>Concepto</th><th>Un</th><th style="text-align:right">Total</th><th style="text-align:right">Ya lleva</th><th style="text-align:right">Ejecutado ahora</th></tr></thead><tbody>'+
     conc.map(c=>{
       const falta=Number(c.cantidad)-Number(c.cant_ejecutada||0);
       return '<tr><td>'+esc(String(c.descripcion).slice(0,80))+'</td><td>'+esc(c.unidad)+'</td>'+
       '<td class="n">'+Number(c.cantidad).toLocaleString("es-MX")+'</td>'+
       '<td class="n">'+Number(c.cant_ejecutada||0).toLocaleString("es-MX")+'</td>'+
       '<td class="n"><input type="number" min="0" step="any" max="'+falta+'" data-id="'+esc(c.id)+'" placeholder="0"></td></tr>';
-    }).join("")+'</tbody></table>';
+    }).join("")+'</tbody></table></div>';
   $("#capPie").hidden=false; $("#capMsg").textContent="";
 }
 
@@ -434,7 +455,7 @@ function meToca(a){
 function pintarBandeja(){
   const mios=(D.avances||[]).filter(meToca);
   const b=$("#badge");
-  if(mios.length){ b.hidden=false; b.textContent=mios.length; } else b.hidden=true;
+  if(mios.length){ b.hidden=false; b.textContent=mios.length; } else { b.hidden=true; b.textContent=""; }
   if(!ROL){ $("#bandeja").innerHTML='<p class="vacio">'+esc(QUIEN?"Tu cuenta no tiene rol de firma en este tablero.":SINYO)+'</p>'; return; }
   if(!mios.length){
     $("#bandeja").innerHTML='<p class="vacio">Nada esperando tu firma.'+
@@ -450,13 +471,13 @@ function pintarBandeja(){
       '<p class="nota">'+esc(a.id)+' · lo propuso <b>'+esc(a.propuesto_por)+'</b>'+
       (a.nota?' · «'+esc(a.nota)+'»':"")+
       (a.verificado_por?' · verificó <b>'+esc(a.verificado_por)+'</b>':"")+'</p>'+
-      (det.length?'<table><thead><tr><th>Concepto</th><th style="text-align:right">Cantidad</th><th style="text-align:right">Importe</th></tr></thead><tbody>'+
+      (det.length?'<div class="tscroll"><table><thead><tr><th>Concepto</th><th style="text-align:right">Cantidad</th><th style="text-align:right">Importe</th></tr></thead><tbody>'+
         det.map(d=>{
           const c=(D.conceptos||[]).find(x=>x.id===d.id_concepto)||{};
           return '<tr><td>'+esc(String(c.descripcion||d.id_concepto).slice(0,80))+'</td>'+
             '<td class="n">'+Number(d.cantidad_ejecutada).toLocaleString("es-MX")+' '+esc(c.unidad||"")+'</td>'+
             '<td class="n">'+dinero(d.importe)+'</td></tr>';
-        }).join("")+'</tbody></table>':'<p class="nota">Sin detalle.</p>')+
+        }).join("")+'</tbody></table></div>':'<p class="nota">Sin detalle.</p>')+
       '<textarea id="nota_'+esc(a.id)+'" placeholder="Nota (opcional). Si rechazas, di por qué."></textarea>'+
       '<div class="acciones">'+
         '<button class="btn pri" data-mv="'+esc(a.id)+'" data-si="1">'+acto+'</button>'+
@@ -504,7 +525,7 @@ function pintar(){
   $("#miRol").style.opacity=ROL?1:.4;
   const k=D.kpi||{};
   $("#hInfo").textContent=(k.conceptos||0)+" conceptos · "+(k.obras||1)+" obra"+((k.obras||1)>1?"s":"");
-  $("#pieCadena").textContent="Rodolfo propone  →  Mariana o Alma verifican  →  Alejandro o Sayri autorizan el pago"+
+  $("#pieCadena").textContent=cadenaFirmas()+
     "   ·   quien autoriza y captura, queda autorizado directo y sellado";
   pintarEstado(); pintarCaptura(); pintarBandeja(); pintarSemana(); pintarProduccion();
 }
@@ -542,7 +563,7 @@ function pintarSemana(){
   ].map(([v,l])=>'<div class="kp"><div class="v">'+esc(v)+'</div><div class="l">'+esc(l)+'</div></div>').join("");
 
   const b=$("#badgeSem");
-  if(abiertas.length){ b.hidden=false; b.textContent=String(abiertas.length); } else b.hidden=true;
+  if(abiertas.length){ b.hidden=false; b.textContent=String(abiertas.length); } else { b.hidden=true; b.textContent=""; }
 
   const causasOps=(P&&P.causasPosibles)||Object.keys(ETIQ_CAUSA);
   const causasHTML=causasOps.map(c=>'<option value="'+esc(c)+'">'+esc(ETIQ_CAUSA[c]||c)+'</option>').join("");
@@ -672,7 +693,7 @@ function pintarProduccion(){
   ].map(([v,l])=>'<div class="kp"><div class="v">'+esc(v)+'</div><div class="l">'+esc(l)+'</div></div>').join("");
 
   const b=$("#badgeFreno");
-  if(abiertas.length){ b.hidden=false; b.textContent=String(abiertas.length); } else b.hidden=true;
+  if(abiertas.length){ b.hidden=false; b.textContent=String(abiertas.length); } else { b.hidden=true; b.textContent=""; }
 
   $("#frenos").innerHTML = ciego
     ? '<p class="nota nota-mal">Sin conexión con el motor de obra · los frenos no se pudieron leer.</p>'
