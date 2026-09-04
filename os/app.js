@@ -183,13 +183,28 @@
       bloqueado=false;load.innerHTML=CARGANDO;
       // el iframe NO se refresca con Ctrl+Shift+R del OS: sin esto, Alejandro
       // veía versiones de la Sala de hace días aunque ya estuvieran corregidas
-      frame.src=b.dataset.src+(b.dataset.src.indexOf('?')>-1?'&':'?')+'cb='+Date.now();
+      // RELEVO DE LLAVE (3-sep): dentro de un marco, Safari puede darle al tablero
+      // embebido un almacenamiento aparte; aunque él ya haya entrado, la Sala llega
+      // sin llave. El OS (que sí la tiene, mismo origen) se la pasa por el #hash.
+      var extra='';
+      try{
+        if(b.dataset.vista==='sala'){
+          var g=localStorage.getItem('sala_gas'), k=localStorage.getItem('sala_clave'), r=localStorage.getItem('sala_rol');
+          if(g&&k) extra='#gas='+encodeURIComponent(g)+'&clave='+encodeURIComponent(k)+'&rol='+encodeURIComponent(r||'editor');
+        }
+      }catch(_e){}
+      frame.src=b.dataset.src+(b.dataset.src.indexOf('?')>-1?'&':'?')+'cb='+Date.now()+extra;
       // si el marco nunca dispara «load», el velo dejaba «Abriendo…» para siempre
       tOut=setTimeout(function(){load.textContent='No cargó · usa «abrir» aquí arriba';},12000);
     }
     // La Sala avisa cuando abre una capa (expediente, zoom): el marco vuelve arriba
     // para que la capa no quede fuera de vista si el OS estaba scrolleado (3-sep).
-    window.addEventListener('message',function(ev){ try{ if(ev.data&&ev.data.tipo==='sala:arriba'){ mask.scrollTop=0; frame.scrollIntoView&&frame.scrollIntoView({block:'start'}); } }catch(_e){} });
+    window.addEventListener('message',function(ev){
+      try{ if(ev.data&&ev.data.tipo==='sala:llave'&&ev.data.gas&&ev.data.clave){
+        localStorage.setItem('sala_gas',ev.data.gas); localStorage.setItem('sala_clave',ev.data.clave);
+        if(ev.data.rol) localStorage.setItem('sala_rol',ev.data.rol);
+      } }catch(_e){}
+      try{ if(ev.data&&ev.data.tipo==='sala:arriba'){ mask.scrollTop=0; frame.scrollIntoView&&frame.scrollIntoView({block:'start'}); } }catch(_e){} });
     frame.addEventListener('load',function(){
       clearTimeout(tOut);
       if(bloqueado)return;               // el velo con el candado NO se destapa
