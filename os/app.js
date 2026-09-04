@@ -25,6 +25,23 @@
     if(!d||!d.ok){ try{ d=await intenta(PORTERO_RESPALDO); }catch(e){ d=null; } }
     return d;
   }
+  // Respaldo curado del catálogo (4-sep-2026). Son los MISMOS títulos y textos de la
+  // pestaña Portal del Control Maestro — si allá se renombra un tablero, aquí también.
+  // Solo entra en juego cuando el catálogo llega recortado Y el último bueno también:
+  // es decir, cuando el backend no pudo autenticar y no queda memoria que valga. Sin
+  // esto, el menú se caía a 2 módulos con la sesión abierta. La URL va vacía a
+  // propósito: la resuelve portal-core con su destino canónico. Lo que cada quien PUEDE
+  // abrir lo sigue filtrando su lista de códigos, y el muro real sigue siendo cada backend.
+  var CAT_RESPALDO=[
+    {system_id:'SYS-POTENCIALES',orden:'2',visible:'SI',titulo_portal:'PPP',descripcion_portal:'Planes de Potencial Personalizados: mapa de terrenos, escenarios y números para decidir qué construir y cuánto rinde.',audiencia:'Dirección y análisis',icono:'map-pin',miniatura:'thumbs/potenciales.svg',url:'',estado:'Activo',sensibilidad:'Confidencial'},
+    {system_id:'SYS-TRACK',orden:'3',visible:'SI',titulo_portal:'Codesarrollos',descripcion_portal:'Los codesarrollos en curso (Real de Miramar, Casa Alysa, Casa María), cada uno con su etapa y su tablero.',audiencia:'Dirección y tramitología',icono:'route',miniatura:'thumbs/track.svg',url:'',estado:'Activo',sensibilidad:'Interno'},
+    {system_id:'SYS-TAREAS',orden:'5',visible:'SI',titulo_portal:'MOAC',descripcion_portal:'La operación semanal: qué le toca a cada quien, qué va tarde y qué se cierra esta semana.',audiencia:'Todo el equipo',icono:'layout-kanban',miniatura:'thumbs/tareas.jpg',url:'',estado:'Activo',sensibilidad:'Interno'},
+    {system_id:'SYS-FLUJO',orden:'6',visible:'SI',titulo_portal:'Flujo',descripcion_portal:'El dinero al día: saldos, movimientos, pagos por venir e ingresos esperados.',audiencia:'Dirección y Genaro',icono:'cash',miniatura:'thumbs/finanzas.jpg',url:'',estado:'Activo',sensibilidad:'Restringido'},
+    {system_id:'SYS-INTERIORES',orden:'7',visible:'SI',titulo_portal:'AURUM',descripcion_portal:'El expediente de la casa del cliente: interiores, piezas, presupuesto y sus planos en Drive.',audiencia:'Cliente, Sayri y diseño',icono:'armchair',miniatura:'thumbs/interiores.jpg',url:'',estado:'Activo',sensibilidad:'Confidencial'},
+    {system_id:'SYS-INVERSION',orden:'8',visible:'SI',titulo_portal:'Codesarrolladores',descripcion_portal:'Carpeta de inversión: lo que ve quien pone capital en los codesarrollos.',audiencia:'Dirección',icono:'presentation',miniatura:'thumbs/presentacion.jpg',url:'',estado:'Activo',sensibilidad:'Confidencial'},
+    {system_id:'SYS-MARKETING',orden:'9',visible:'SI',titulo_portal:'Embudo comercial',descripcion_portal:'De dónde llegan los leads y en qué se convierten: contenido, alcance, citas y cierres.',audiencia:'Marketing',icono:'chart-line',miniatura:'thumbs/redes.jpg',url:'',estado:'Activo',sensibilidad:'Confidencial'},
+    {system_id:'SYS-OBRA',orden:'10',visible:'SI',titulo_portal:'Obra en vivo',descripcion_portal:'Avance de obra de Casa Alysa, medido por concepto y con evidencias de campo.',audiencia:'Equipo de obra',icono:'building-crane',miniatura:'thumbs/obra.jpg',url:'',estado:'Activo',sensibilidad:'Confidencial'}
+  ];
   var TOKEN_KEY='pyod_clave_v1';
   var SALA_GAS='https://script.google.com/macros/s/AKfycbx61UWsEYCL_dHzi0JrUv3GuAUFSDWW4iCmlNmbDDvWBIYY4Hhqkf6sYmt4d8UGIlk7MA/exec';
   var ICONS={
@@ -350,10 +367,13 @@
       // más corto que el último bueno TENIENDO sesión no es la verdad: es un fallo
       // de autenticación. Se conserva el bueno, se avisa, y se reintenta.
       var _ant=[];try{_ant=JSON.parse(localStorage.getItem('yod_portal_cat_v1')||'[]');}catch(_e){_ant=[];}
+      if(!Array.isArray(_ant))_ant=[];
       var _tokenVivo=!!_tk&&state.profileReady;
-      if(_tokenVivo&&Array.isArray(_ant)&&data.rows.length<_ant.length){
-        console.warn('[YOD OS] el catálogo llegó recortado ('+data.rows.length+' de '+_ant.length+') con sesión abierta: no autenticó. Se conserva el último bueno.');
-        renderModules(_ant);nombrarAccionesRapidas();
+      // el mejor catálogo disponible: el último bueno, y si ése también quedó recortado, el respaldo curado
+      var _mejor=(_ant.length>=CAT_RESPALDO.length)?_ant:CAT_RESPALDO;
+      if(_tokenVivo&&data.rows.length<_mejor.length){
+        console.warn('[YOD OS] el catálogo llegó recortado ('+data.rows.length+' de '+_mejor.length+') con sesión abierta: no autenticó. Se pinta el mejor conocido.');
+        renderModules(_mejor);nombrarAccionesRapidas();
         setConnection('error','Catálogo sin autenticar · reintentando');
         $('updated-at').textContent='Mostrando el último catálogo bueno';
         state.catRetry=(state.catRetry||0)+1;
