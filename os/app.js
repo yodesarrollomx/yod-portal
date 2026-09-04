@@ -208,9 +208,12 @@
       var extra='';
       try{
         if(b.dataset.vista==='sala'){
-          var g=localStorage.getItem('sala_gas'), k=localStorage.getItem('sala_clave'), r=localStorage.getItem('sala_rol');
-          if(g&&k) extra='#gas='+encodeURIComponent(g)+'&clave='+encodeURIComponent(k)+'&rol='+encodeURIComponent(r||'editor');
-          else llaveDeSala_();   // no hay llave: se le pide al Sheet con la sesión de Google
+          // UNA SOLA LLAVE: si la Sala no tiene la suya, va la credencial del OS.
+          // El Sheet de la Sala la valida contra el Portero y decide el rol.
+          var g=localStorage.getItem('sala_gas')||SALA_GAS;
+          var k=localStorage.getItem('sala_clave')||localStorage.getItem(TOKEN_KEY);
+          var r=localStorage.getItem('sala_rol');
+          if(g&&k) extra='#gas='+encodeURIComponent(g)+'&clave='+encodeURIComponent(k)+(r?'&rol='+encodeURIComponent(r):'');
         }
       }catch(_e){}
       frame.src=b.dataset.src+(b.dataset.src.indexOf('?')>-1?'&':'?')+'cb='+Date.now()+extra;
