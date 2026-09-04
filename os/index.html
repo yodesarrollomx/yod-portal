@@ -84,7 +84,7 @@
             <p class="operation-message" id="board-locked"><i class="ti ti-lock"></i><span id="board-locked-t">Preparando el tablero…</span></p>
             <iframe id="board-frame" data-src="../tablero.html?embed=1" title="Tablero YOD OS · operación completa" hidden></iframe>
           </div>
-          <p class="board-foot">Cada canica es un cliente o un expediente real &mdash; p&iacute;cala para abrir su ficha. Los hex&aacute;gonos del marco son los KPIs: <b>verde</b> en l&iacute;nea, <b>&aacute;mbar</b> por conectar. El hex&aacute;gono <b>#16</b> es el avance de obra: sale de <a href="../obra.html" target="_blank" rel="noopener">Avance de obra</a>, donde Rodolfo propone, Mariana o Alma verifican y t&uacute; o Sayri autorizan el pago.</p>
+          <p class="board-foot">Cada canica es un cliente o un expediente real: si el cursor cambia a manita, p&iacute;cala y abre su ficha. Lo que solo lleva conteo &mdash;las torres y el mosaico sin detalle&mdash; no abre nada. Los hex&aacute;gonos del marco son los KPIs; el puntito de cada uno dice de d&oacute;nde sale la cifra, y la leyenda del propio tablero lo explica. El hex&aacute;gono <b>#16</b> es el avance de obra: sale de <a href="../obra.html" target="_blank" rel="noopener">Obra en vivo</a>, donde el avance se propone, se verifica y se autoriza &mdash; qui&eacute;n firma cada tramo lo dice la hoja ROLES, ah&iacute; mismo.</p>
         </section>
 
         <section class="section pulse-section hidden" id="pulso" aria-labelledby="pulse-title">
@@ -94,8 +94,8 @@
           </div>
           <div class="pulse-grid">
             <article class="pulse-card hidden" id="finance-card" aria-busy="true">
-              <header><span class="pulse-icon"><i class="ti ti-wallet"></i></span><div><p>Tesorería</p><h3>Posición financiera</h3></div><a href="https://yodesarrollomx.github.io/board-flujo-yod/" aria-label="Abrir Tesorería"><i class="ti ti-arrow-up-right"></i></a></header>
-              <div class="pulse-body" id="finance-panel"><div class="pulse-message"><i class="ti ti-loader-2 spin"></i> Consultando Flujo YOD…</div></div>
+              <header><span class="pulse-icon"><i class="ti ti-wallet"></i></span><div><p>Flujo</p><h3>Posición financiera</h3></div><a href="https://yodesarrollomx.github.io/board-flujo-yod/" aria-label="Abrir Flujo"><i class="ti ti-arrow-up-right"></i></a></header>
+              <div class="pulse-body" id="finance-panel"><div class="pulse-message"><i class="ti ti-loader-2 spin"></i> Consultando Flujo…</div></div>
             </article>
             <article class="pulse-card hidden" id="marketing-card" aria-busy="true">
               <header><span class="pulse-icon"><i class="ti ti-filter"></i></span><div><p>Embudo comercial</p><h3>Demanda y conversión</h3></div><button class="funnel-toggle" id="funnelToggle" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Herramientas del embudo comercial"><i class="ti ti-chevron-down"></i></button></header>
@@ -104,7 +104,7 @@
                 <a role="menuitem" href="https://yodesarrollomx.github.io/aurum-board/"><i class="ti ti-chart-funnel"></i><span><strong>Métricas del embudo</strong><small>leads, tráfico y publicaciones</small></span></a>
                 <a role="menuitem" href="https://yodesarrollomx.github.io/plan-potencial/"><i class="ti ti-map-2"></i><span><strong>Plan de Potencial</strong><small>el imán de leads</small></span></a>
               </div>
-              <div class="pulse-body" id="marketing-panel"><div class="pulse-message"><i class="ti ti-loader-2 spin"></i> Consultando CRM YOD…</div></div>
+              <div class="pulse-body" id="marketing-panel"><div class="pulse-message"><i class="ti ti-loader-2 spin"></i> Consultando Embudo comercial…</div></div>
             </article>
             <article class="pulse-card hidden" id="decision-card" aria-busy="true">
               <header><span class="pulse-icon"><i class="ti ti-gavel"></i></span><div><p>Decisiones</p><h3>Esperando tu palabra</h3></div><a href="https://yodesarrollomx.github.io/board-aurum/" aria-label="Abrir MOAC"><i class="ti ti-arrow-up-right"></i></a></header>
@@ -163,8 +163,8 @@
         <section class="section quick-section hidden" id="quick-section" aria-labelledby="quick-title">
           <div class="section-head"><div><p class="eyebrow">Continuidad</p><h2 id="quick-title">Acciones rápidas</h2></div></div>
           <div class="quick-grid">
-            <a href="https://yodesarrollomx.github.io/board-aurum/" class="quick-card" data-system-id="SYS-TAREAS"><i class="ti ti-checklist"></i><span><strong>Operación semanal</strong><small>Revisar tareas y responsables</small></span><i class="ti ti-arrow-up-right"></i></a>
-            <a href="https://yodesarrollomx.github.io/potenciales-yod/" class="quick-card" data-system-id="SYS-POTENCIALES"><i class="ti ti-map-2"></i><span><strong>Dónde construir</strong><small>Abrir mapa y potenciales</small></span><i class="ti ti-arrow-up-right"></i></a>
+            <a href="https://yodesarrollomx.github.io/board-aurum/" class="quick-card" data-system-id="SYS-TAREAS"><i class="ti ti-checklist"></i><span><strong>MOAC</strong><small>Revisar tareas y responsables</small></span><i class="ti ti-arrow-up-right"></i></a>
+            <a href="https://yodesarrollomx.github.io/potenciales-yod/" class="quick-card" data-system-id="SYS-POTENCIALES"><i class="ti ti-map-2"></i><span><strong>PPP</strong><small>Abrir mapa y potenciales</small></span><i class="ti ti-arrow-up-right"></i></a>
             <a href="../track-codesarrollos.html" class="quick-card" data-system-id="SYS-TRACK"><i class="ti ti-route"></i><span><strong>Codesarrollos</strong><small>Consultar la ruta de proyectos</small></span><i class="ti ti-arrow-up-right"></i></a>
           </div>
         </section>
@@ -212,7 +212,7 @@
   <script src="adapters/operations.js?v=0.3.0"></script>
   <script src="adapters/finance.js?v=0.1.0"></script>
   <script src="adapters/marketing.js?v=0.1.0"></script>
-  <script src="app.js?v=motor7"></script>
+  <script src="app.js?v=motor8"></script>
   <script src="https://yodesarrollomx.github.io/potenciales-yod/portero.js?v=relevo3"></script>
   <script src="../chinche.js?v=os2"></script>
   <script>if(window.YODChinche) YODChinche.init({pantalla:"os"});</script>

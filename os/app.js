@@ -25,8 +25,11 @@
     if(!d||!d.ok){ try{ d=await intenta(PORTERO_RESPALDO); }catch(e){ d=null; } }
     return d;
   }
-  // Respaldo curado del catálogo (4-sep-2026). Son los MISMOS títulos y textos de la
-  // pestaña Portal del Control Maestro — si allá se renombra un tablero, aquí también.
+  // Respaldo curado del catálogo (4-sep-2026). Los títulos y textos dicen LO MISMO que
+  // la pestaña Portal del Control Maestro — si allá se renombra un tablero, aquí también.
+  // Real de Miramar no aparece en esta lista A PROPÓSITO: al menú no se asoma, se entra
+  // por Codesarrollos (su pin PRJ-RM en el Track abre real-miramar-board). Por eso el
+  // orden salta del 3 al 5; no le agregues la fila.
   // Solo entra en juego cuando el catálogo llega recortado Y el último bueno también:
   // es decir, cuando el backend no pudo autenticar y no queda memoria que valga. Sin
   // esto, el menú se caía a 2 módulos con la sesión abierta. La URL va vacía a
@@ -51,14 +54,17 @@
   };
   // Versión corta del tablero embebido: se sube a mano cuando cambia tablero.html
   // (sin esto, el caché de 10 min de Pages servía el tablero viejo tras un deploy).
-  var TABLERO_V='os2';
+  var TABLERO_V='os3';
   var state={modules:[],rawRows:[],role:'vista',boards:'',profileReady:false,loading:false,opsScope:'mias',allTasks:[],sesionEpoch:0};
   var $=function(id){return document.getElementById(id);};
   // ¿hay clave guardada? distingue «sin sesión» de «sesión validándose»
   function hayToken(){try{return !!localStorage.getItem(TOKEN_KEY);}catch(_e){return false;}}
   // Higiene de sesión en equipos compartidos: purga los datos sensibles cacheados
   // (la lista de tareas de todos los responsables) y, al cerrar sesión, el token del Portero.
-  var SENSITIVE_CACHES=['aurum-cache-v5','yod_ops_me','yod_pulse_v1','yod_portal_cat_v1','sala_clave','sala_gas','sala_rol','sala_cola'];
+  var SENSITIVE_CACHES=['aurum-cache-v5','yod_ops_me','yod_pulse_v1','yod_portal_cat_v1'];
+  // Las llaves de la Sala SOLO se borran al cerrar sesión a propósito: un rechazo pasajero del
+  // Portero no debe tirar la llave propia de la Sala ni la cola de decisiones sin subir.
+  var LLAVES_SALA=['sala_clave','sala_gas','sala_rol'];
   // sesionEpoch: cada purga invalida las cargas en vuelo, para que una respuesta
   // que llegue tarde no vuelva a pintar (ni a cachear) datos de la sesión anterior.
   function purgarDatosSensibles(){state.sesionEpoch++;SENSITIVE_CACHES.forEach(function(k){try{localStorage.removeItem(k);}catch(_e){}});try{sessionStorage.removeItem('yod_id_v1');}catch(_e){}}
@@ -82,7 +88,7 @@
   // Si la consulta en vivo falla y había caché, el sello deja de mentir con un
   // «actualizando…» que ya no está pasando: se conserva el dato con su edad real.
   function marcarCacheFallo(panelId){var p=$(panelId);if(!p)return;var n=p.querySelector('.pulse-cache-note');if(n)n.textContent=n.textContent.replace(' · actualizando…',' · no se pudo actualizar');}
-  function cerrarSesion(){try{localStorage.removeItem(TOKEN_KEY);}catch(_e){}purgarDatosSensibles();try{location.reload();}catch(_e){location.href=location.pathname;}}
+  function cerrarSesion(){try{localStorage.removeItem(TOKEN_KEY);LLAVES_SALA.forEach(function(k){localStorage.removeItem(k);});}catch(_e){}purgarDatosSensibles();try{location.reload();}catch(_e){location.href=location.pathname;}}
 
   function greeting(){var h=new Date().getHours();return h<12?'Buenos días':h<19?'Buenas tardes':'Buenas noches';}
   function timeLabel(date){return new Intl.DateTimeFormat('es-MX',{hour:'2-digit',minute:'2-digit'}).format(date);}
@@ -691,13 +697,13 @@
     var c=pulseCacheRead('finance'),ep=state.sesionEpoch;
     if(c){renderFinance({summary:c.summary});marcarCache('finance-panel',c.ts);}
     try{var r=await window.YodFinance.load(token);if(ep!==state.sesionEpoch)return;renderFinance(r);if(!sinSaldo(r))pulseCacheWrite('finance',r.summary);}
-    catch(_error){if(ep!==state.sesionEpoch)return;if(!c)renderPulseError('finance-card','finance-panel','Tesorería');else marcarCacheFallo('finance-panel');}
+    catch(_error){if(ep!==state.sesionEpoch)return;if(!c)renderPulseError('finance-card','finance-panel','Flujo');else marcarCacheFallo('finance-panel');}
   }
   async function loadMarketing(token){
     var c=pulseCacheRead('marketing'),ep=state.sesionEpoch;
     if(c){renderMarketing({summary:c.summary});marcarCache('marketing-panel',c.ts);}
     try{var r=await window.YodMarketing.load(token);if(ep!==state.sesionEpoch)return;renderMarketing(r);if(!sinKpis(r))pulseCacheWrite('marketing',r.summary);}
-    catch(_error){if(ep!==state.sesionEpoch)return;if(!c)renderPulseError('marketing-card','marketing-panel','Marketing');else marcarCacheFallo('marketing-panel');}
+    catch(_error){if(ep!==state.sesionEpoch)return;if(!c)renderPulseError('marketing-card','marketing-panel','Embudo comercial');else marcarCacheFallo('marketing-panel');}
   }
   async function loadPulse(token){
     var financeAllowed=state.role==='admin';var marketingAllowed=state.role==='admin'||window.YodAccessPolicy.hasCode(state.boards,'MK');

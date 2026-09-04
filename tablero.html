@@ -821,7 +821,7 @@ function taller(){
       g.moveTo(cx2,cy2); g.lineTo(dx2,dy2); g.stroke();
     }
   }
-  placaKPI(x,832,300,"TALLER AURUM",
+  placaKPI(x,832,300,"MOAC",
     TALD?(TALD.done+"/"+TALD.tot):"—",
     TALD?("cerradas · "+TALD.blq+" bloqueadas"):"sin línea",
     TALD?TALD.done/Math.max(1,TALD.tot):0, M.laton);
@@ -1116,7 +1116,7 @@ const KPIHEX_TOP=[
 const KPIHEX_BOT=[
  {n:"—",    lbl:"TRÁMITES MIRAMAR", c:"ambar", st:"fuente",    src:"board Real Miramar"},
  {n:"—",    lbl:"BLOQUEADOS",       c:"rojo",  st:"fuente",    src:"board Real Miramar"},
- {n:"—",    lbl:"TALLER CERRADAS",  c:"ambar", st:"fuente",    src:"board-aurum (operación)"},
+ {n:"—",    lbl:"MOAC · CERRADAS",  c:"ambar", st:"fuente",    src:"board-aurum (operación)"},
  {n:"—",    lbl:"HITOS ALYSA",      c:"ambar", st:"fuente",    src:"track-alysa"},
  {n:"—",    lbl:"COBRADO CODES",    c:"ambar", st:"fuente",    src:"portal Co-desarrolladores"},
  {n:"—",    lbl:"APARTADOS",        c:"ambar", st:"fuente",    src:"board Real Miramar"},
@@ -1559,7 +1559,9 @@ async function conectarMiramar(){
 }
 
 /* ═══ TRAMO OBRA · EN LÍNEA · el motor de avance con cadena de aprobación ═══
-   Rodolfo propone → Mariana o Alma verifican → Alejandro o Sayri autorizan.
+   Quien CAPTURA propone → quien VERIFICA verifica → quien AUTORIZA autoriza el pago.
+   Los nombres de cada tramo salen de la hoja ROLES (los arma obra.html); no se
+   escriben aquí ni en el pie del OS, porque cambian sin avisar.
    El avance que llega aquí está MEDIDO (cantidad ejecutada × precio unitario),
    no declarado: por eso puede contradecir al 81% que anda por otros lados. */
 const OBRA_GAS="https://script.google.com/macros/s/AKfycbyVb6Y7m00FyhoGa9ZoQul1j6IlHdgsCNalaZVGmA0Csh91TqxNvyDT0YQurz-hViA0/exec";
@@ -1691,7 +1693,7 @@ async function conectarTaller(){
   }
   TALD=tareasResumen(tasks);
   const guardado = via.indexOf("cach")>-1;     // ninguna caché guarda su hora: puede ser de semanas
-  KPIHEX_BOT[2]={n:TALD.done+"/"+TALD.tot, lbl:"TALLER CERRADAS",
+  KPIHEX_BOT[2]={n:TALD.done+"/"+TALD.tot, lbl:"MOAC · CERRADAS",
     c:TALD.blq?"ambar":"verde", st: guardado?"cache":"linea",
     src: guardado?"dato guardado, no recién traído":"board-aurum en vivo"};
   pintar();

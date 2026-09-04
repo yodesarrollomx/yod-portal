@@ -9,8 +9,10 @@ Lo usan Alejandro (Dirección), Sayri y el equipo interno; cada quien ve solo lo
 que su fila de Accesos permite.
 
 Cuatro piezas desde el mismo origen: **la cabina** (`os/`: menú, buscador ⌘K, identidad/rol, Pulso),
-**el tablero cenital** (`tablero.html`, embebido en Inicio), **Avance de obra** (`obra.html`: Rodolfo
-propone, Mariana/Alma verifican, Dirección autoriza) y **los tracks** + **La Chinche** (`chinche.js`).
+**el tablero cenital** (`tablero.html`, embebido en Inicio), **Avance de obra** (`obra.html`: cadena
+por ROLES que vienen del Sheet — CAPTURA propone → VERIFICA verifica → AUTORIZA autoriza el pago;
+`obra.html` no nombra a nadie, los nombres van en el comentario de `tablero.html`) y **los tracks**
++ **La Chinche** (`chinche.js`).
 
 **Direcciones (comprobadas con curl el 2026-09-04):**
 | URL | HTTP |
@@ -31,8 +33,9 @@ Repo: `yodesarrollomx/yod-portal` (`git remote -v`), público, Pages desde `main
    `os/shell.js` (`CODES`) y `potenciales-yod/accesos.html` (`CODES`). Si divergen, un colaborador
    con acceso queda bloqueado — fue el bug `BA`→`TA` del 15-jul-2026 (`CODIGOS-BOARDS.md`).
    Las dos primeras las compara `node verify-os.cjs`; la tercera vive en otro repo y va a ojo.
-2. **Cada cambio a `os/app.js` exige subir el `?v=` en `os/index.html`** (hoy `app.js?v=motor3`,
-   `styles.css?v=relevo18`, línea 215 y 19). Sin el bump, Pages sirve el JS viejo y "no se ve el cambio"
+2. **Cada cambio a `os/app.js` exige subir el `?v=` en `os/index.html`** (la etiqueta de `app.js`,
+   línea 215; la de `styles.css`, línea 19 — no copies el valor de aquí, léelo del archivo, cambia
+   seguido). Sin el bump, Pages sirve el JS viejo y "no se ve el cambio"
    (memoria `yod-os-menu-catalogo`).
 3. **No hay copia local del catálogo. Si Sheets no responde, el portal falla CERRADO** y no habilita
    enlaces (`README.md`; `portal-core.js` `enabled()` exige `estado='activo'` + URL del allowlist).
@@ -51,7 +54,7 @@ Repo: `yodesarrollomx/yod-portal` (`git remote -v`), público, Pages desde `main
 
 ## Archivos
 
-- `index.html` — 20 líneas: redirige a `os/` conservando el hash. El portal viejo ya no vive aquí.
+- `index.html` — un redirector de unas cuantas líneas: manda a `os/` conservando el hash. El portal viejo ya no vive aquí.
 - `os/index.html` — el esqueleto de la cabina: menú, Inicio, secciones (`#tablero`, `#pulso`,
   `#seccionEmbudo`, `#operacion`, `#modulos`) y la **máscara del Embudo** (`#embudoMask`, 3 pestañas:
   Sala de Edición / Métricas / Plan de Potencial).
@@ -64,7 +67,7 @@ Repo: `yodesarrollomx/yod-portal` (`git remote -v`), público, Pages desde `main
 - `os/adapters/{operations,finance,marketing}.js` — cada uno con su `/exec` y su `summarize()`.
 - `portal-core.js` — allowlist `DESTINATIONS`/`TRACK_DESTINATIONS` + `safeUrl`, `enabled`, `badge`, `card`.
 - `tablero.html` (102 KB) — el tablero cenital. Llama a 7 GAS; lee `?boards=` y `?rol=` del OS.
-- `obra.html` (46 KB) — Avance de obra. Exige código `OB` (`obra.html:304`).
+- `obra.html` (46 KB) — Avance de obra. Exige código `OB` (la línea con `canOpen(…,"SYS-OBRA",…)`).
 - `chinche.js` — el capturador de pendientes (IndexedDB, por origen). Cargado en las 3 páginas.
 - `verify-os.cjs` / `verify-portal.cjs` — las pruebas. `CODIGOS-BOARDS.md` — la tabla de códigos.
   `.claude/launch.json` — servidor local en el puerto 8787.
@@ -91,7 +94,7 @@ Sheet "YOD OS · Control Maestro" (1E_89GQBnOmwv5Nej2B-QEkAdVnFYQbBVQUffHWwI7Vk)
 os/app.js  y  os/shell.js  → pintan el menú y las tarjetas
         │  el destino se pasa por portal-core.safeUrl(); fuera del allowlist = "URL inválida"
         ▼
-iframe ../tablero.html?embed=1&boards=<códigos>&rol=<rol>&v=os2   (app.js:379-382)
+iframe ../tablero.html?embed=1&boards=<códigos>&rol=<rol>&v=os2   (app.js, el data-src del iframe)
         └─ tablero.html solo llama a los GAS que YodAccessPolicy.canOpen permite; sin permiso pinta "—"
         └─ al validar clave manda parent.postMessage({yodTablero:'sesion'}, origin) y el OS revalida
 
@@ -126,7 +129,7 @@ guarda sus **direcciones** (`portal-core.js` `DESTINATIONS`) y sus **códigos** 
   (comentario en `portal-core.js`, bloque `SYS-OBRA`).
 - **2026-08-23** — la pestaña `Portal` del Control Maestro ES la fuente de los nombres del menú; el
   `NAME` de `shell.js` es solo respaldo y debe decir lo mismo (commits `8b149d2`, `58badd9`).
-- **2026-08-24** — "pinta al instante lo último conocido, refresca en fondo", fail-closed si el canje de fondo falla (commit `05c3447`).
+- **2026-08-23** — "pinta al instante lo último conocido, refresca en fondo", fail-closed si el canje de fondo falla (commit `05c3447`).
 - **2026-09-01 · Alejandro** — mudanza: los tableros viven en `yodesarrollomx.github.io`; la puerta vieja reenvía (commit `9466aa7`).
 - **2026-09-02** — enjambre "YOD OS a nivel Fable": 6 grupos de archivos disjuntos. De ahí salen los
   contratos vigentes (`boards`/`rol` al iframe, puertas MK/TA/OB, `[hidden]` gana a flex/grid,
@@ -141,11 +144,11 @@ guarda sus **direcciones** (`portal-core.js` `DESTINATIONS`) y sus **códigos** 
 | Tema | Dueño | Evidencia para darlo por cerrado |
 |---|---|---|
 | DNS `tableros.yodesarrollo.mx` (CNAME → `yodesarrollomx.github.io.`) | Alejandro + Miguel Reina (cPanel) | `curl -o /dev/null -w "%{http_code}" https://tableros.yodesarrollo.mx/yod-portal/` devuelve 200 (hoy: 000) |
-| La columna `url` del Control Maestro sigue apuntando a `alexpueblag` | Alejandro (edita el Sheet) | El GET anónimo del catálogo devuelve `url` con `yodesarrollomx.github.io` (hoy devuelve `alexpueblag.github.io` en las 2 filas — verificado 2026-09-04) |
+| Revisar CON credencial la columna `url` del Control Maestro: las filas que no se ven sin `k` son las que podrían traer `alexpueblag` escrito a mano | Alejandro (edita el Sheet) | El GET anónimo devuelve hoy `"url":""` en las 2 filas visibles, o sea heredan la base canónica de `portal-core.js`, que ya es yodesarrollomx (verificado 2026-09-04). Falta el mismo GET **con `k`**: se cierra cuando ninguna fila traiga `alexpueblag` |
 | `CODES` de `potenciales-yod/accesos.html` sin prueba automática (regla 3 de `CODIGOS-BOARDS.md`) | quien toque `potenciales-yod` | Una prueba que compare las 3 tablas, o la revisión a ojo firmada con fecha |
 | `TA` significa dos tableros en el Code.gs del Portero (MOAC y track Alysa); el Portero trata `boards` vacío como `*` y `access-policy` como nada | backend del Portero | El Code.gs pegado en el editor, con `TA` desambiguado y `boards` vacío = sin acceso |
 | SHELL-10 (header pegajoso bajo la topbar del shell) y TABLERO-48 (mini-tablero ilegible en iPhone) | quien retome el enjambre | Captura de pantalla en iPhone y en un board con `shell.js` |
-| `obra.html:240` carga `os/access-policy.js` **sin `?v=`** — Pages puede servir la copia vieja tras un cambio de códigos | quien toque `access-policy.js` | La línea con su `?v=` alineado al de `os/index.html:211` |
+| `obra.html` carga `os/access-policy.js` **sin `?v=`** (la etiqueta `<script src="os/access-policy.js">`) — Pages puede servir la copia vieja tras un cambio de códigos | quien toque `access-policy.js` | La línea con su `?v=` alineado al de `os/index.html:211` |
 | `os/embudo-c.html` y `os/embudo-dummy.html` no los referencia nadie (grep en todo el repo) | Alejandro decide | Borrados, o una nota diciendo para qué se conservan |
 
 ## Por confirmar (NO afirmar sin respuesta)
