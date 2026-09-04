@@ -26,25 +26,7 @@
     return d;
   }
   var TOKEN_KEY='pyod_clave_v1';
-  /* ENTRAR CON GOOGLE A LA SALA (3-sep): si el navegador no tiene la llave de la Sala,
-     el OS canjea su propia sesión (el token del Portero) por la llave que corresponde
-     al correo. El Sheet de la Sala le pregunta al Portero antes de entregar nada. */
   var SALA_GAS='https://script.google.com/macros/s/AKfycbx61UWsEYCL_dHzi0JrUv3GuAUFSDWW4iCmlNmbDDvWBIYY4Hhqkf6sYmt4d8UGIlk7MA/exec';
-  var _pidiendoLlave=false;
-  async function llaveDeSala_(){
-    if(_pidiendoLlave) return null; _pidiendoLlave=true;
-    try{
-      var t=localStorage.getItem(TOKEN_KEY); if(!t) return null;
-      var r=await fetch(SALA_GAS,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({accion:'canje_os',token:t})});
-      var j=await r.json();
-      if(!j||!j.ok) return null;
-      localStorage.setItem('sala_gas',j.gas); localStorage.setItem('sala_clave',j.clave); localStorage.setItem('sala_rol',j.rol||'lector');
-      var f=document.getElementById('embudoFrame');
-      if(f&&/sala-edicion/.test(f.src||'')&&!/#gas=/.test(f.src||''))
-        f.src=f.src.split('#')[0]+'#gas='+encodeURIComponent(j.gas)+'&clave='+encodeURIComponent(j.clave)+'&rol='+encodeURIComponent(j.rol||'lector');
-      return j;
-    }catch(_e){ return null } finally{ _pidiendoLlave=false }
-  }
   var ICONS={
     'SYS-POTENCIALES':'map-2','SYS-TRACK':'route','SYS-MIRAMAR':'building-community',
     'SYS-TAREAS':'checklist','SYS-FLUJO':'wallet','SYS-INTERIORES':'armchair-2',
@@ -222,13 +204,10 @@
     }
     // La Sala avisa cuando abre una capa (expediente, zoom): el marco vuelve arriba
     // para que la capa no quede fuera de vista si el OS estaba scrolleado (3-sep).
-    var ORIGEN_SALA='https://yodesarrollomx.github.io';
+    // Sólo se escucha «sube el marco». La rama que sembraba la llave se retiró: aceptaba
+    // el mensaje de cualquier origen y con eso se podía envenenar el GAS o robar la sesión.
     window.addEventListener('message',function(ev){
-      if(ev.origin!==ORIGEN_SALA) return;         // sin esto, cualquier página podía sembrar una llave
-      try{ if(ev.data&&ev.data.tipo==='sala:llave'&&ev.data.gas&&ev.data.clave){
-        localStorage.setItem('sala_gas',ev.data.gas); localStorage.setItem('sala_clave',ev.data.clave);
-        if(ev.data.rol) localStorage.setItem('sala_rol',ev.data.rol);
-      } }catch(_e){}
+      if(ev.origin!==location.origin) return;
       try{ if(ev.data&&ev.data.tipo==='sala:arriba'){ mask.scrollTop=0; frame.scrollIntoView&&frame.scrollIntoView({block:'start'}); } }catch(_e){} });
     frame.addEventListener('load',function(){
       clearTimeout(tOut);
