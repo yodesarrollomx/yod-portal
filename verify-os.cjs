@@ -97,3 +97,13 @@ const financeMiles=finance.summarize({saldo:{monto:'$1,000.50'},pagos:[{monto:'3
 assert.equal(financeMiles.balance,1000.5);
 assert.equal(financeMiles.payments,300);
 console.log('YOD OS adapters + portal-core + paridad de códigos: passed');
+
+// --- La máscara de la Sala (4-sep-2026): el OS valida la credencial contra el Sheet de la
+// Sala ANTES de montar el iframe (esa validación tarda 60-86 s y la Sala se rinde a los 10 s).
+const appSrc=fs.readFileSync(require.resolve('./os/app.js'),'utf8');
+assert.ok(appSrc.includes('function llaveSalaLista_('),'app.js: falta llaveSalaLista_ (la Sala volvería a caer al respaldo)');
+assert.ok(/SALA_LIMITE_MS=(\d+)/.test(appSrc)&&Number(RegExp.$1)>=90000,'app.js: SALA_LIMITE_MS debe cubrir los 60-86 s del Portero');
+assert.ok(!/canje_os/.test(appSrc),'app.js: canje_os se retiró el 4-sep; no debe volver');
+const osHtml=fs.readFileSync(require.resolve('./os/index.html'),'utf8');
+assert.ok(/app\.js\?v=motor9/.test(osHtml),'os/index.html: el ?v= de app.js no coincide con este motor');
+console.log('Máscara de la Sala: passed');

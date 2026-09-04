@@ -210,21 +210,70 @@
       // RELEVO DE LLAVE (3-sep): dentro de un marco, Safari puede darle al tablero
       // embebido un almacenamiento aparte; aunque él ya haya entrado, la Sala llega
       // sin llave. El OS (que sí la tiene, mismo origen) se la pasa por el #hash.
-      var extra='';
+      var extra='',g='',k='',r='';
       try{
         if(b.dataset.vista==='sala'){
           // UNA SOLA LLAVE: si la Sala no tiene la suya, va la credencial del OS.
           // El Sheet de la Sala la valida contra el Portero y decide el rol.
-          var g=localStorage.getItem('sala_gas')||SALA_GAS;
-          var k=localStorage.getItem('sala_clave')||localStorage.getItem(TOKEN_KEY);
-          var r=localStorage.getItem('sala_rol');
+          g=localStorage.getItem('sala_gas')||SALA_GAS;
+          k=localStorage.getItem('sala_clave')||localStorage.getItem(TOKEN_KEY)||'';
+          r=localStorage.getItem('sala_rol')||'';
           if(g&&k) extra='#gas='+encodeURIComponent(g)+'&clave='+encodeURIComponent(k)+(r?'&rol='+encodeURIComponent(r):'');
         }
       }catch(_e){}
-      frame.src=b.dataset.src+(b.dataset.src.indexOf('?')>-1?'&':'?')+'cb='+Date.now()+extra;
+      var destino=b.dataset.src+(b.dataset.src.indexOf('?')>-1?'&':'?')+'cb='+Date.now()+extra;
+      /* LA SALA NO ABRE HASTA QUE SU SHEET TE RECONOZCA (4-sep-2026). Con la credencial del
+         OS, el Sheet de la Sala le pregunta al Portero desde su servidor y esa llamada tarda
+         60-86 s (tema 12 del expediente). La Sala se rinde a los 10 s × 3 y caía al
+         respaldo viejo (datos/manifiesto.json) pintándolo como si fuera el día de hoy:
+         cartas de otro día, «Nada decidido aún» y cada decisión rebotando. Aquí el OS hace
+         esa primera consulta él mismo, con tiempo de sobra, y sólo entonces monta la Sala:
+         su Sheet ya tiene el rol en caché (5 min) y contesta al instante. */
+      if(b.dataset.vista==='sala'&&g&&k){
+        var pedido=++pedidoSala;
+        llaveSalaLista_(g,k,function(seg){ if(pedido!==pedidoSala) return;
+          load.innerHTML='<i class="ti ti-loader-2 spin" style="font-size:26px"></i><span>Validando tu entrada en la Sala… '+seg+' s</span>'+
+            '<small style="max-width:360px;text-align:center;opacity:.7">El Sheet de la Sala le pregunta al Portero; la primera vez puede tardar hasta un minuto y medio.</small>';
+        }).then(function(res){
+          if(pedido!==pedidoSala) return;          // cambiaste de pestaña o cerraste: esto ya no aplica
+          if(res==='rechazada'){
+            bloqueado=true;frame.src='about:blank';
+            load.innerHTML='<i class="ti ti-shield-lock" style="font-size:26px"></i><span>El Sheet de la Sala no reconoció tu credencial.</span>'+
+              '<small style="max-width:380px;text-align:center;opacity:.7">Tu cuenta necesita la Sala (código MK) en Accesos, o el Portero tardó demasiado y el Sheet lo tomó por un no (se le pasa en un minuto).</small>'+
+              '<button type="button" class="mask-tab" data-reintentar-sala style="pointer-events:auto">Volver a intentar</button>';
+            return;
+          }
+          montarMarco(destino);
+        });
+        return;
+      }
+      montarMarco(destino);
+    }
+    var pedidoSala=0;
+    function montarMarco(destino){
+      bloqueado=false;load.innerHTML=CARGANDO;
+      frame.src=destino;
       // si el marco nunca dispara «load», el velo dejaba «Abriendo…» para siempre
       tOut=setTimeout(function(){load.textContent='No cargó · usa «abrir» aquí arriba';},12000);
     }
+    // La misma lectura que hará la Sala (GET recurso=dia: no escribe nada), con tiempo de sobra.
+    // 'lista' = el Sheet contestó el día; 'rechazada' = dijo «clave incorrecta»;
+    // 'sin-respuesta' = red o tiempo agotado → se monta la Sala igual, que ella se defienda.
+    var SALA_LIMITE_MS=100000, salaOkCache={};
+    function llaveSalaLista_(g,k,tic){
+      var firma=g+'|'+huella(k);
+      if(salaOkCache[firma]&&Date.now()-salaOkCache[firma]<240000) return Promise.resolve('lista');   // el rol dura 5 min en el Sheet
+      var ini=Date.now(),reloj=setInterval(function(){tic(Math.round((Date.now()-ini)/1000));},1000);tic(0);
+      var ctl=new AbortController(),tl=setTimeout(function(){ctl.abort();},SALA_LIMITE_MS);
+      return fetch(g+'?recurso=dia&clave='+encodeURIComponent(k),{cache:'no-store',credentials:'omit',signal:ctl.signal})
+        .then(function(r){return r.text();}).then(function(t){var j=null;try{j=JSON.parse(t);}catch(_e){}
+          if(j&&j.error&&/clave|credencial/i.test(String(j.error))){console.warn('[YOD OS] la Sala rechazó la credencial →',j.error);return 'rechazada';}
+          if(j&&!j.error){salaOkCache[firma]=Date.now();console.info('[YOD OS] la Sala reconoció la credencial en '+Math.round((Date.now()-ini)/1000)+' s');return 'lista';}
+          return 'sin-respuesta';})
+        .catch(function(){console.warn('[YOD OS] la Sala no contestó en '+Math.round((Date.now()-ini)/1000)+' s; se monta igual');return 'sin-respuesta';})
+        .then(function(res){clearInterval(reloj);clearTimeout(tl);return res;});
+    }
+    load.addEventListener('click',function(e){ if(e.target.closest('[data-reintentar-sala]')) ir('sala'); });
     // La Sala avisa cuando abre una capa (expediente, zoom): el marco vuelve arriba
     // para que la capa no quede fuera de vista si el OS estaba scrolleado (3-sep).
     // Sólo se escucha «sube el marco». La rama que sembraba la llave se retiró: aceptaba

@@ -104,8 +104,11 @@ Pulso del negocio (3 tarjetas, solo con sesión):
   Operación / Decisiones ← adapters/operations.js /exec AKfycbyZ1p7rGHu… (caché aurum-cache-v5)
 
 Máscara del Embudo (#/embudo/…): iframes a sala-edicion, aurum-board y plan-potencial.
-  app.js canjea el token del Portero por la llave de la Sala:
-  POST {accion:'canje_os', token} → SALA_GAS /exec AKfycbx61UWsEY…  → sala_gas/sala_clave/sala_rol
+  UNA SOLA LLAVE (canje_os retirado el 4-sep): la Sala lee viva la credencial del OS
+  (pyod_clave_v1, mismo origen) y su GAS le pregunta al Portero (rolPorPortero_, caché 5 min).
+  Esa pregunta tarda 60-86 s y la Sala se rinde a los 10 s × 3 → caía al respaldo viejo.
+  Por eso app.js (llaveSalaLista_) hace ÉL la primera lectura GET recurso=dia&clave=<token>
+  a SALA_GAS /exec AKfycbx61UWsEY… con 100 s de límite, y sólo entonces monta el iframe.
 
 Obra: obra.html → GAS /exec AKfycbyVb6Y7m0… (mismo que usa tablero.html para el hexágono #16)
 ```
