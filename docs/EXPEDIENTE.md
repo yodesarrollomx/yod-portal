@@ -84,6 +84,18 @@ se documenta aquí. Decisión de Alejandro, 4-sep-2026.
 - **4-sep-2026 · Claude (hallazgo):** el trabajo que refresca las métricas empujaba al
   cascarón (`alexpueblag/aurum-board`) mientras el menú del OS abre el de la organización.
   Llevaban sin verse los refrescos locales. Corregido en `~/yod_audit/refresh_board.sh`.
+- **4-sep-2026 · Claude (la mecánica funcionando en los dos sentidos):** dos críticos revisaron a
+  mano los 14 documentos escritos ese día y cazaron **50 afirmaciones sin prueba, 11 graves** — la
+  peor, que el documento de MOAC describía archivos que no existen en su clon (esa carpeta está en
+  la rama del cascarón de redirección; el código vivo está en el repo de la organización). Todas
+  corregidas, **y dos veces el documento tenía razón y el crítico no**: se comprobó con `grep` y no
+  se tocó. Regla que salió de ahí: **citar por nombre de función o constante, nunca por número de
+  línea ni por conteo** — eso envejece en el siguiente commit.
+- **4-sep-2026 · Claude:** un tercer revisor cazó **10 contradicciones que se ven de una sola
+  mirada**. Arregladas: el tablero se llamaba de tres formas (ahora se llama como lo llama el
+  Sheet), el dinero era «Flujo» en el menú y «Tesorería» en la tarjeta de al lado, el pie prometía
+  ficha en canicas que no la abren, y explicaba los hexágonos con dos colores cuando el tablero
+  muestra cuatro. El pie ya no nombra a nadie en la cadena de firmas: manda a la hoja de roles.
 - **2-sep-2026 · Alejandro:** el análisis y la estrategia los lleva el modelo grande; la
   ejecución va en órdenes cerradas por grupos de archivos que no se pisan. Así cupo el
   trabajo dentro de los límites de una sesión.
