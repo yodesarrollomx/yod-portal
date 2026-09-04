@@ -375,7 +375,7 @@
         console.warn('[YOD OS] el catálogo llegó recortado ('+data.rows.length+' de '+_mejor.length+') con sesión abierta: no autenticó. Se pinta el mejor conocido.');
         renderModules(_mejor);nombrarAccionesRapidas();
         setConnection('error','Catálogo sin autenticar · reintentando');
-        $('updated-at').textContent='Mostrando el último catálogo bueno';
+        $('updated-at').textContent=(_mejor===CAT_RESPALDO)?'Mostrando la lista de respaldo':'Mostrando el último catálogo bueno';
         state.catRetry=(state.catRetry||0)+1;
         if(state.catRetry<=REINTENTOS_MAX)setTimeout(loadCatalog,REINTENTO_MS);
         return;
