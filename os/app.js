@@ -59,7 +59,7 @@
   function hayToken(){try{return !!localStorage.getItem(TOKEN_KEY);}catch(_e){return false;}}
   // Higiene de sesión en equipos compartidos: purga los datos sensibles cacheados
   // (la lista de tareas de todos los responsables) y, al cerrar sesión, el token del Portero.
-  var SENSITIVE_CACHES=['aurum-cache-v5','yod_ops_me','yod_pulse_v1','yod_portal_cat_v1'];
+  var SENSITIVE_CACHES=['aurum-cache-v5','yod_ops_me','yod_pulse_v1','yod_portal_cat_v1','sala_clave','sala_gas','sala_rol','sala_cola'];
   // sesionEpoch: cada purga invalida las cargas en vuelo, para que una respuesta
   // que llegue tarde no vuelva a pintar (ni a cachear) datos de la sesión anterior.
   function purgarDatosSensibles(){state.sesionEpoch++;SENSITIVE_CACHES.forEach(function(k){try{localStorage.removeItem(k);}catch(_e){}});try{sessionStorage.removeItem('yod_id_v1');}catch(_e){}}
@@ -222,7 +222,9 @@
     }
     // La Sala avisa cuando abre una capa (expediente, zoom): el marco vuelve arriba
     // para que la capa no quede fuera de vista si el OS estaba scrolleado (3-sep).
+    var ORIGEN_SALA='https://yodesarrollomx.github.io';
     window.addEventListener('message',function(ev){
+      if(ev.origin!==ORIGEN_SALA) return;         // sin esto, cualquier página podía sembrar una llave
       try{ if(ev.data&&ev.data.tipo==='sala:llave'&&ev.data.gas&&ev.data.clave){
         localStorage.setItem('sala_gas',ev.data.gas); localStorage.setItem('sala_clave',ev.data.clave);
         if(ev.data.rol) localStorage.setItem('sala_rol',ev.data.rol);
