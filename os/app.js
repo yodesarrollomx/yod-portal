@@ -26,6 +26,25 @@
     return d;
   }
   var TOKEN_KEY='pyod_clave_v1';
+  /* ENTRAR CON GOOGLE A LA SALA (3-sep): si el navegador no tiene la llave de la Sala,
+     el OS canjea su propia sesión (el token del Portero) por la llave que corresponde
+     al correo. El Sheet de la Sala le pregunta al Portero antes de entregar nada. */
+  var SALA_GAS='https://script.google.com/macros/s/AKfycbx61UWsEYCL_dHzi0JrUv3GuAUFSDWW4iCmlNmbDDvWBIYY4Hhqkf6sYmt4d8UGIlk7MA/exec';
+  var _pidiendoLlave=false;
+  async function llaveDeSala_(){
+    if(_pidiendoLlave) return null; _pidiendoLlave=true;
+    try{
+      var t=localStorage.getItem(TOKEN_KEY); if(!t) return null;
+      var r=await fetch(SALA_GAS,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({accion:'canje_os',token:t})});
+      var j=await r.json();
+      if(!j||!j.ok) return null;
+      localStorage.setItem('sala_gas',j.gas); localStorage.setItem('sala_clave',j.clave); localStorage.setItem('sala_rol',j.rol||'lector');
+      var f=document.getElementById('embudoFrame');
+      if(f&&/sala-edicion/.test(f.src||'')&&!/#gas=/.test(f.src||''))
+        f.src=f.src.split('#')[0]+'#gas='+encodeURIComponent(j.gas)+'&clave='+encodeURIComponent(j.clave)+'&rol='+encodeURIComponent(j.rol||'lector');
+      return j;
+    }catch(_e){ return null } finally{ _pidiendoLlave=false }
+  }
   var ICONS={
     'SYS-POTENCIALES':'map-2','SYS-TRACK':'route','SYS-MIRAMAR':'building-community',
     'SYS-TAREAS':'checklist','SYS-FLUJO':'wallet','SYS-INTERIORES':'armchair-2',
@@ -191,6 +210,7 @@
         if(b.dataset.vista==='sala'){
           var g=localStorage.getItem('sala_gas'), k=localStorage.getItem('sala_clave'), r=localStorage.getItem('sala_rol');
           if(g&&k) extra='#gas='+encodeURIComponent(g)+'&clave='+encodeURIComponent(k)+'&rol='+encodeURIComponent(r||'editor');
+          else llaveDeSala_();   // no hay llave: se le pide al Sheet con la sesión de Google
         }
       }catch(_e){}
       frame.src=b.dataset.src+(b.dataset.src.indexOf('?')>-1?'&':'?')+'cb='+Date.now()+extra;
