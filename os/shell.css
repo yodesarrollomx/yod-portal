@@ -153,3 +153,13 @@ body.yod-on{margin:0;background:#f6f3ed}
   .yod-nav-item{min-height:44px}
   .yod-topbar{gap:8px}
 }
+
+/* SHELL-10 (4-sep-2026) · Los tableros traen su propio encabezado pegajoso (`top:0`,
+   y aurum-board `top:55px` en escritorio). Dentro del marco eso quedaba DEBAJO de la
+   barra del marco al bajar: el encabezado del tablero desaparecía. La barra del marco
+   mide 64px (56 en teléfono), así que todo lo pegajoso de adentro arranca ahí. En un
+   elemento que no sea pegajoso, `top` no hace absolutamente nada, así que es seguro. */
+.yod-canvas header,.yod-canvas .secnav,.yod-canvas .topbar{top:calc(64px + env(safe-area-inset-top))}
+@media(max-width:900px){
+  .yod-canvas header,.yod-canvas .secnav,.yod-canvas .topbar{top:calc(56px + env(safe-area-inset-top))}
+}
