@@ -15,7 +15,7 @@
   function conLimite_(p,ms){return Promise.race([p,new Promise(function(_,rj){setTimeout(function(){rj(new Error('timeout'));},ms||LIMITE_MS);})]);}
   // El Portero (Apps Script) hoy tarda entre 3 y 25 s: esperar 12 s lo daba por muerto
   // y el OS se ponía «Sin conexión» con el backend vivo. 25 s + reintento en fondo.
-  var LIMITE_MS=25000, REINTENTO_MS=15000, REINTENTOS_MAX=3;
+  var LIMITE_MS=25000, REINTENTO_MS=15000, REINTENTOS_MAX=3, CAT_LIMITE_MS=100000;
   async function canjearConRelevo_(token){
     async function intenta(base){
       var r=await conLimite_(fetch(base+'?recurso=canje&t='+encodeURIComponent(token),{cache:'no-store',credentials:'omit'}));
@@ -46,6 +46,17 @@
     {system_id:'SYS-OBRA',orden:'10',visible:'SI',titulo_portal:'Obra en vivo',descripcion_portal:'Avance de obra de Casa Alysa, medido por concepto y con evidencias de campo.',audiencia:'Equipo de obra',icono:'building-crane',miniatura:'thumbs/obra.jpg',url:'',estado:'Activo',sensibilidad:'Confidencial'}
   ];
   var TOKEN_KEY='pyod_clave_v1';
+  /* EL MEJOR CATÁLOGO CONOCIDO (5-sep-2026). El catálogo con credencial tarda 60-86 s en
+     autenticar (tema 12); mientras, contesta como anónimo: 2 filas. Antes esa respuesta
+     corta se aceptaba y SE GUARDABA cuando llegaba antes que el canje del Portero (carrera
+     del arranque en frío), y el menú amanecía con 2 tableros teniendo sesión. Regla:
+     con clave guardada, un catálogo más corto que el mejor conocido nunca pinta ni se
+     guarda; se pinta el mejor conocido y se vuelve a pedir. */
+  function catalogoMejor(){
+    var ant=[];try{ant=JSON.parse(localStorage.getItem('yod_portal_cat_v1')||'[]');}catch(_e){ant=[];}
+    if(!Array.isArray(ant))ant=[];
+    return ant.length>=CAT_RESPALDO.length?ant:CAT_RESPALDO;
+  }
   var SALA_GAS='https://script.google.com/macros/s/AKfycbx61UWsEYCL_dHzi0JrUv3GuAUFSDWW4iCmlNmbDDvWBIYY4Hhqkf6sYmt4d8UGIlk7MA/exec';
   var ICONS={
     'SYS-POTENCIALES':'map-2','SYS-TRACK':'route','SYS-MIRAMAR':'building-community',
@@ -408,9 +419,10 @@
 
   async function loadCatalog(){
     if(state.loading)return;state.loading=true;$('refresh').disabled=true;var _mr=$('mobile-refresh');if(_mr)_mr.disabled=true;setConnection('','Actualizando');
-    var controller=new AbortController();var timeout=setTimeout(function(){controller.abort();},LIMITE_MS);
+    var _tk='';try{_tk=localStorage.getItem(TOKEN_KEY)||'';}catch(_e){}
+    // con clave, el catálogo tarda lo que tarde su llamada al Portero (60-86 s): se le da tiempo
+    var controller=new AbortController();var timeout=setTimeout(function(){controller.abort();},_tk?CAT_LIMITE_MS:LIMITE_MS);
     try{
-      var _tk='';try{_tk=localStorage.getItem(TOKEN_KEY)||'';}catch(_e){}
       var response=await fetch(CATALOG_ENDPOINT+(_tk?'&k='+encodeURIComponent(_tk):'')+'&cb='+Date.now(),{cache:'no-store',credentials:'omit',signal:controller.signal});
       if(!response.ok)throw new Error('HTTP '+response.status);var data=await response.json();
       if(!data.ok||!Array.isArray(data.rows))throw new Error('Respuesta incompleta');
@@ -421,12 +433,10 @@
       // y el menú se caía a 2 módulos con la sesión abierta. Un catálogo que llega
       // más corto que el último bueno TENIENDO sesión no es la verdad: es un fallo
       // de autenticación. Se conserva el bueno, se avisa, y se reintenta.
-      var _ant=[];try{_ant=JSON.parse(localStorage.getItem('yod_portal_cat_v1')||'[]');}catch(_e){_ant=[];}
-      if(!Array.isArray(_ant))_ant=[];
-      var _tokenVivo=!!_tk&&state.profileReady;
-      // el mejor catálogo disponible: el último bueno, y si ése también quedó recortado, el respaldo curado
-      var _mejor=(_ant.length>=CAT_RESPALDO.length)?_ant:CAT_RESPALDO;
-      if(_tokenVivo&&data.rows.length<_mejor.length){
+      // el mejor catálogo disponible: el último bueno, y si ése también quedó recortado, el respaldo curado.
+      // Basta con que haya clave guardada: si el canje aún no resuelve, la respuesta corta tampoco vale.
+      var _mejor=catalogoMejor();
+      if(_tk&&data.rows.length<_mejor.length){
         console.warn('[YOD OS] el catálogo llegó recortado ('+data.rows.length+' de '+_mejor.length+') con sesión abierta: no autenticó. Se pinta el mejor conocido.');
         renderModules(_mejor);nombrarAccionesRapidas();
         setConnection('error','Catálogo sin autenticar · reintentando');
@@ -821,7 +831,10 @@
   })();
   // Catálogo: arrancar con el último conocido (mismo caché que usa el marco de
   // los tableros); loadCatalog lo refresca y reescribe al llegar.
-  try{var _cc=JSON.parse(localStorage.getItem('yod_portal_cat_v1')||'null');if(Array.isArray(_cc)&&_cc.length)state.rawRows=_cc;}catch(_e){}
+  try{
+    var _cc=JSON.parse(localStorage.getItem('yod_portal_cat_v1')||'null');
+    if(Array.isArray(_cc)&&_cc.length)state.rawRows=hayToken()?catalogoMejor():_cc;
+  }catch(_e){}
   loadIdentity();loadCatalog();
   /* ── Entrar la clave DENTRO del tablero despierta al resto del OS ──
      Antes había que recargar a mano: el iframe guardaba la llave y el padre

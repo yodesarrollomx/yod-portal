@@ -105,5 +105,5 @@ assert.ok(appSrc.includes('function llaveSalaLista_('),'app.js: falta llaveSalaL
 assert.ok(/SALA_LIMITE_MS=(\d+)/.test(appSrc)&&Number(RegExp.$1)>=90000,'app.js: SALA_LIMITE_MS debe cubrir los 60-86 s del Portero');
 assert.ok(!/canje_os/.test(appSrc),'app.js: canje_os se retiró el 4-sep; no debe volver');
 const osHtml=fs.readFileSync(require.resolve('./os/index.html'),'utf8');
-assert.ok(/app\.js\?v=motor9/.test(osHtml),'os/index.html: el ?v= de app.js no coincide con este motor');
+assert.ok(/app\.js\?v=motor10/.test(osHtml),'os/index.html: el ?v= de app.js no coincide con este motor');
 console.log('Máscara de la Sala: passed');
