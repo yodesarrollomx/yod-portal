@@ -139,8 +139,13 @@ guarda sus **direcciones** (`portal-core.js` `DESTINATIONS`) y sus **códigos** 
   `verify-os.cjs` compara `CODES` con `SYSTEM_CODES`) — commits `66a5d40`…`32f66be`.
 - **2026-09-02** — el Portero lento ya no cierra la sesión: espera 25 s y reintenta en fondo
   (`app.js:18`, `LIMITE_MS=25000`; commit `3415b2e`). Antes 12 s lo daba por muerto estando vivo.
-- **2026-09-03/04** — entrar con Google basta para la Sala de Edición: el OS canja su token por la
-  llave de la Sala (`llaveDeSala_`, commits `bdf7d32`, `447f8bc`).
+- ~~**2026-09-03/04** — entrar con Google basta para la Sala de Edición: el OS canja su token por la
+  llave de la Sala (`llaveDeSala_`, commits `bdf7d32`, `447f8bc`).~~ **OBSOLETO desde 2026-09-04**
+  (`8ab1f13`): no hay canje; la Sala lee viva `pyod_clave_v1` y su GAS pregunta al Portero.
+- **2026-09-05** — la Sala no se monta hasta que su Sheet reconozca la credencial (`llaveSalaLista_`,
+  100 s), y con clave guardada un catálogo más corto que el mejor conocido nunca pinta ni se guarda
+  (`catalogoMejor`, `CAT_LIMITE_MS`). Las dos fallas venían de lo mismo: el Portero tarda 60-86 s
+  cuando lo llama otro Apps Script (tema 12 del expediente), y el front se rendía antes.
 
 ## Pendientes
 
