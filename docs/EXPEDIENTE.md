@@ -74,6 +74,13 @@ se documenta aquí. Decisión de Alejandro, 4-sep-2026.
 
 ## Decisiones (fechadas, con autor)
 
+- **5-sep-2026 · Claude (propuesta, decide Alejandro):** el reloj operativo del MOAC, las decisiones y el
+  mensaje diario está escrito en [`PLAN-OPERATIVO-MOAC.md`](PLAN-OPERATIVO-MOAC.md): una fuente (los dos
+  Sheets), dos rutinas en la nube (cierre 18:00 lun-vie, agenda del lunes 07:00) que hoy están **creadas
+  pero apagadas** porque desde Claude Code no se les puede dar Drive ni Gmail, y seis clics que solo
+  Alejandro puede dar. Hallazgo del día: **las 11 tarjetas de Decisiones vivas ya están decididas y
+  ninguna tiene `🤖 Ejecutado`**; el objetivo C-6 vence el 15-sep con 1 de 4 lunes hechos.
+
 - **4-sep-2026 · Alejandro:** todo el tablero YOD se escribe con la dirección nueva
   (`yodesarrollomx.github.io`), **menos Experiencia Aurum**, que vive fuera del OS.
   Hecho ese día: 9 celdas del Sheet del sitio (pestaña `WEBPAGE`), el portero de Real de
