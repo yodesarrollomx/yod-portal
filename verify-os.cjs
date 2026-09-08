@@ -97,3 +97,27 @@ const financeMiles=finance.summarize({saldo:{monto:'$1,000.50'},pagos:[{monto:'3
 assert.equal(financeMiles.balance,1000.5);
 assert.equal(financeMiles.payments,300);
 console.log('YOD OS adapters + portal-core + paridad de códigos: passed');
+
+/* ── La matriz y El Despacho: acceso por código propio y URL sin deriva ──
+   Alejandro pidió que estos dos los vea solo él (direccion@) y su segunda
+   cuenta, SIN volverla admin. Estas pruebas fijan ese contrato. */
+const acc = access;
+assert.equal(acc.canOpen('MZ', 'SYS-MATRIZ', 'vista'), true, 'MZ debe abrir La matriz');
+assert.equal(acc.canOpen('DP', 'SYS-DESPACHO', 'vista'), true, 'DP debe abrir El Despacho');
+assert.equal(acc.canOpen('TA,IN,AL', 'SYS-MATRIZ', 'vista'), false, 'sin MZ no se ve La matriz');
+assert.equal(acc.canOpen('MZ', 'SYS-DESPACHO', 'vista'), false, 'MZ no abre El Despacho');
+assert.equal(acc.canOpen('', 'SYS-MATRIZ', 'admin'), true, 'admin siempre entra');
+assert.equal(acc.canOpen('', 'SYS-DESPACHO', 'admin'), true, 'admin siempre entra');
+
+/* Candado de deriva: el href de la tarjeta estática y el destino canónico
+   tienen que decir exactamente lo mismo. */
+const indexHtml = fs.readFileSync(require.resolve('./os/index.html'), 'utf8');
+for (const [sysId, cardId] of [['SYS-MATRIZ', 'matriz-card'], ['SYS-DESPACHO', 'despacho-card']]) {
+  const bloque = indexHtml.split('id="' + cardId + '"')[1];
+  assert.ok(bloque, 'falta la tarjeta ' + cardId + ' en os/index.html');
+  assert.ok(bloque.includes('data-system-id="' + sysId + '"'), cardId + ' sin data-system-id');
+  const href = (bloque.slice(0, 900).match(/href="(https:\/\/claude\.ai\/code\/artifact\/[0-9a-f-]+)"/) || [])[1];
+  assert.equal(href, portal.destinations[sysId][0], 'el link de ' + cardId + ' no coincide con DESTINATIONS');
+}
+
+console.log('La matriz + El Despacho: accesos por código y URLs sin deriva: passed');
