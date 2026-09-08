@@ -708,7 +708,7 @@
   async function loadPulse(token){
     var financeAllowed=state.role==='admin';var marketingAllowed=state.role==='admin'||window.YodAccessPolicy.hasCode(state.boards,'MK');
     var decisionsAllowed=state.role==='admin';
-    $('finance-card').classList.toggle('hidden',!financeAllowed);$('marketing-card').classList.toggle('hidden',!marketingAllowed);$('decision-card').classList.toggle('hidden',!decisionsAllowed);$('pulso').classList.toggle('hidden',!financeAllowed&&!marketingAllowed&&!decisionsAllowed);
+    $('finance-card').classList.toggle('hidden',!financeAllowed);$('marketing-card').classList.toggle('hidden',!marketingAllowed);$('decision-card').classList.toggle('hidden',!decisionsAllowed);$('despacho-card').classList.toggle('hidden',!decisionsAllowed);$('pulso').classList.toggle('hidden',!financeAllowed&&!marketingAllowed&&!decisionsAllowed);
     if(window.revisarPuertaEmbudo)window.revisarPuertaEmbudo();   // misma regla MK para la pestaña Métricas
     var requests=[];if(financeAllowed)requests.push(loadFinance(token));if(marketingAllowed)requests.push(loadMarketing(token));await Promise.allSettled(requests);
   }
