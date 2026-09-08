@@ -37,7 +37,10 @@
   }
   var OS = 'https://yodesarrollomx.github.io/yod-portal/os/';
   var CORPORATE = 'https://yodesarrollo.mx/'; // sitio público; la marca del shell ya NO cuelga de aquí (lleva al OS)
+  function esPropioShell(u){return /^https:\/\/(yodesarrollomx\.github\.io|tableros\.yodesarrollo\.mx|alexpueblag\.github\.io|aurumarquitectos\.github\.io)\//.test(String(u||''));}
   var DEST = {
+    'SYS-MATRIZ': 'https://claude.ai/code/artifact/836ce3db-71c6-4c7a-9c05-be2acf4d1f61',
+    'SYS-DESPACHO': 'https://claude.ai/code/artifact/8d4242fb-00f3-4cc5-a792-0e429cff7e1d',
     'SYS-POTENCIALES': 'https://yodesarrollomx.github.io/potenciales-yod/',
     'SYS-TRACK': 'https://yodesarrollomx.github.io/yod-portal/track-codesarrollos.html',
     'SYS-MIRAMAR': 'https://yodesarrollomx.github.io/real-miramar-board/',
@@ -48,11 +51,11 @@
     'SYS-MARKETING': 'https://yodesarrollomx.github.io/aurum-board/',
     'SYS-OBRA': 'https://yodesarrollomx.github.io/yod-portal/obra.html'
   };
-  var ICON = { 'SYS-POTENCIALES': 'map-2', 'SYS-TRACK': 'route', 'SYS-MIRAMAR': 'building-community', 'SYS-TAREAS': 'checklist', 'SYS-FLUJO': 'wallet', 'SYS-INTERIORES': 'armchair-2', 'SYS-INVERSION': 'presentation-analytics', 'SYS-MARKETING': 'speakerphone', 'SYS-OBRA': 'building-skyscraper' };
+  var ICON = { 'SYS-POTENCIALES': 'map-2', 'SYS-TRACK': 'route', 'SYS-MIRAMAR': 'building-community', 'SYS-TAREAS': 'checklist', 'SYS-FLUJO': 'wallet', 'SYS-INTERIORES': 'armchair-2', 'SYS-INVERSION': 'presentation-analytics', 'SYS-MARKETING': 'speakerphone', 'SYS-OBRA': 'building-skyscraper', 'SYS-MATRIZ': 'layout-grid', 'SYS-DESPACHO': 'message-2' };
   /* Los títulos oficiales viven en la pestaña Portal del Control Maestro
      (titulo_portal); estos son solo el respaldo si aquella no contesta.
      Deben decir LO MISMO que el Sheet — si renombras allá, renombra acá. */
-  var NAME = { 'SYS-POTENCIALES': 'PPP', 'SYS-TRACK': 'Codesarrollos', 'SYS-MIRAMAR': 'Real de Miramar', 'SYS-TAREAS': 'MOAC', 'SYS-FLUJO': 'Flujo', 'SYS-INTERIORES': 'AURUM', 'SYS-INVERSION': 'Codesarrolladores', 'SYS-MARKETING': 'Embudo comercial', 'SYS-OBRA': 'Obra en vivo' };
+  var NAME = { 'SYS-POTENCIALES': 'PPP', 'SYS-TRACK': 'Codesarrollos', 'SYS-MIRAMAR': 'Real de Miramar', 'SYS-TAREAS': 'MOAC', 'SYS-FLUJO': 'Flujo', 'SYS-INTERIORES': 'AURUM', 'SYS-INVERSION': 'Codesarrolladores', 'SYS-MARKETING': 'Embudo comercial', 'SYS-OBRA': 'Obra en vivo', 'SYS-MATRIZ': 'La matriz', 'SYS-DESPACHO': 'El Despacho' };
   // Códigos por tablero — MISMA matriz que YOD OS (access-policy.js). El menú
   // solo enseña lo que tu sesión permite; el muro real sigue siendo cada backend.
   var CODES = {
@@ -67,7 +70,9 @@
     'SYS-OBRA': ['OB'],
     // SYS-CONTROL (Sheet Control Maestro) no tiene tablero ni DEST: vive aquí solo
     // para que esta matriz diga LO MISMO que access-policy.js. Solo lo abre Dirección.
-    'SYS-CONTROL': ['AC']
+    'SYS-CONTROL': ['AC'],
+    'SYS-MATRIZ': ['MZ'],
+    'SYS-DESPACHO': ['DP']
   };
   // identity: 'pending' (validando) | 'ok' (canje válido) | 'fail' (sin sesión o canje falló)
   var state = { role: '', boards: '', modules: [], identity: 'pending', catalogRows: null };
@@ -127,7 +132,7 @@
   function navItem(row, cur) {
     var url = destino(row); if (!url) return null;
     var a = el('a', 'yod-nav-item' + (row.system_id === cur ? ' active' : ''));
-    a.href = url; a.setAttribute('rel', 'noopener');
+    a.href = url; a.setAttribute('rel', 'noopener'); if(!esPropioShell(url)) a.setAttribute('target','_blank');
     a.innerHTML = '<i class="ti ti-' + (ICON[row.system_id] || 'layout-dashboard') + '"></i><span>' + esc(row.titulo_portal || NAME[row.system_id] || row.system_id) + '</span>';
     return a;
   }
@@ -336,7 +341,7 @@
       var t = (q || '').toLowerCase();
       state.modules.filter(function (r) { return vivo(r) && (!t || String(r.titulo_portal || NAME[r.system_id] || '').toLowerCase().indexOf(t) >= 0); }).forEach(function (r) {
         var url = destino(r); if (!url) return;
-        var a = el('a'); a.href = url; a.setAttribute('rel', 'noopener');
+        var a = el('a'); a.href = url; a.setAttribute('rel', 'noopener'); if(!esPropioShell(url)) a.setAttribute('target','_blank');
         a.innerHTML = '<i class="ti ti-' + (ICON[r.system_id] || 'layout-dashboard') + '"></i><span><strong>' + esc(r.titulo_portal || NAME[r.system_id]) + '</strong></span>';
         box.appendChild(a);
       });

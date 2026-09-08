@@ -36,6 +36,8 @@
   // propósito: la resuelve portal-core con su destino canónico. Lo que cada quien PUEDE
   // abrir lo sigue filtrando su lista de códigos, y el muro real sigue siendo cada backend.
   var CAT_RESPALDO=[
+    {system_id:'SYS-MATRIZ',orden:'1',visible:'SI',titulo_portal:'La matriz',descripcion_portal:'Primera pantalla: por cada frente del negocio, quien te esta esperando mas, con su antiguedad y el dinero mencionado.',audiencia:'Direccion',icono:'layout-grid',miniatura:'thumbs/track.svg',url:'',estado:'Activo',sensibilidad:'Confidencial'},
+    {system_id:'SYS-DESPACHO',orden:'4',visible:'SI',titulo_portal:'El Despacho',descripcion_portal:'Dictar, firmar y cerrar: lo que sueltas por voz o por escrito vuelve redactado para tu firma.',audiencia:'Direccion',icono:'message-2',miniatura:'thumbs/track.svg',url:'',estado:'Activo',sensibilidad:'Confidencial'},
     {system_id:'SYS-POTENCIALES',orden:'2',visible:'SI',titulo_portal:'PPP',descripcion_portal:'Planes de Potencial Personalizados: mapa de terrenos, escenarios y números para decidir qué construir y cuánto rinde.',audiencia:'Dirección y análisis',icono:'map-pin',miniatura:'thumbs/potenciales.svg',url:'',estado:'Activo',sensibilidad:'Confidencial'},
     {system_id:'SYS-TRACK',orden:'3',visible:'SI',titulo_portal:'Codesarrollos',descripcion_portal:'Los codesarrollos en curso (Real de Miramar, Casa Alysa, Casa María), cada uno con su etapa y su tablero.',audiencia:'Dirección y tramitología',icono:'route',miniatura:'thumbs/track.svg',url:'',estado:'Activo',sensibilidad:'Interno'},
     {system_id:'SYS-TAREAS',orden:'5',visible:'SI',titulo_portal:'MOAC',descripcion_portal:'La operación semanal: qué le toca a cada quien, qué va tarde y qué se cierra esta semana.',audiencia:'Todo el equipo',icono:'layout-kanban',miniatura:'thumbs/tareas.jpg',url:'',estado:'Activo',sensibilidad:'Interno'},
@@ -116,6 +118,9 @@
   function money(value){return new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',maximumFractionDigits:0}).format(Number(value)||0);}
   function percent(value){return new Intl.NumberFormat('es-MX',{style:'percent',maximumFractionDigits:0}).format(Number(value)||0);}
 
+  // Un destino que no vive en nuestros dominios (p.ej. un artifact de claude.ai)
+  // se abre en pestana nueva: si no, el clic reemplaza YOD OS y se pierde el menu.
+  function esPropio(u){return /^https:\/\/(yodesarrollomx\.github\.io|tableros\.yodesarrollo\.mx|alexpueblag\.github\.io|aurumarquitectos\.github\.io)\//.test(String(u||''));}
   function hrefDe(url){
     // el embudo se abre DENTRO del OS: su enlace es la propia ruta de la mascara
     return esEmbudo(url) ? '#/embudo/'+vistaDe(url) : url;
@@ -125,7 +130,7 @@
     // se muestra pero NO se convierte en enlace (antes siempre decía "Disponible" y abría).
     var on=window.PortalCore.enabled(row),b=window.PortalCore.badge(row);
     var link=document.createElement(on?'a':'div');link.className='module-card'+(on?'':' module-card-off');
-    if(on){link.href=url;link.rel='noopener';}else{link.setAttribute('aria-disabled','true');}
+    if(on){link.href=url;link.rel='noopener';if(!esPropio(url))link.target='_blank';}else{link.setAttribute('aria-disabled','true');}
     var top=document.createElement('div');top.className='module-top';
     var icon=document.createElement('span');icon.className='module-icon';icon.innerHTML='<i class="ti ti-'+(ICONS[row.system_id]||window.PortalCore.safeIcon(row.icono))+'"></i>';
     var status=document.createElement('span');status.className='module-state';status.textContent=on?'Disponible':b.text;top.append(icon,status);
@@ -140,7 +145,7 @@
     var url=window.PortalCore.resolveUrl(row);if(!url)return null;
     var on=window.PortalCore.enabled(row);
     var a=document.createElement(on?'a':'span');a.className='nav-item'+(on?'':' nav-item-off');
-    if(on){a.href=hrefDe(url);a.rel='noopener';}else{a.setAttribute('aria-disabled','true');}
+    if(on){a.href=hrefDe(url);a.rel='noopener';if(!esPropio(hrefDe(url)))a.target='_blank';}else{a.setAttribute('aria-disabled','true');}
     a.dataset.systemId=row.system_id;
     var i=document.createElement('i');i.className='ti ti-'+(ICONS[row.system_id]||window.PortalCore.safeIcon(row.icono));
     var s=document.createElement('span');s.textContent=safeText(row.titulo_portal)||safeText(row.system_id);
@@ -708,7 +713,11 @@
   async function loadPulse(token){
     var financeAllowed=state.role==='admin';var marketingAllowed=state.role==='admin'||window.YodAccessPolicy.hasCode(state.boards,'MK');
     var decisionsAllowed=state.role==='admin';
-    $('finance-card').classList.toggle('hidden',!financeAllowed);$('marketing-card').classList.toggle('hidden',!marketingAllowed);$('decision-card').classList.toggle('hidden',!decisionsAllowed);$('despacho-card').classList.toggle('hidden',!decisionsAllowed);$('matriz-card').classList.toggle('hidden',!decisionsAllowed);$('pulso').classList.toggle('hidden',!financeAllowed&&!marketingAllowed&&!decisionsAllowed);
+    // La matriz y El Despacho tienen codigo propio (MZ / DP): no cuelgan de admin,
+    // asi una segunda cuenta puede verlos SIN abrirle Tesoreria ni MOAC.
+    var matrizAllowed=window.YodAccessPolicy.canOpen(state.boards,'SYS-MATRIZ',state.role);
+    var despachoAllowed=window.YodAccessPolicy.canOpen(state.boards,'SYS-DESPACHO',state.role);
+    $('finance-card').classList.toggle('hidden',!financeAllowed);$('marketing-card').classList.toggle('hidden',!marketingAllowed);$('decision-card').classList.toggle('hidden',!decisionsAllowed);$('despacho-card').classList.toggle('hidden',!despachoAllowed);$('matriz-card').classList.toggle('hidden',!matrizAllowed);$('pulso').classList.toggle('hidden',!financeAllowed&&!marketingAllowed&&!decisionsAllowed&&!matrizAllowed&&!despachoAllowed);
     if(window.revisarPuertaEmbudo)window.revisarPuertaEmbudo();   // misma regla MK para la pestaña Métricas
     var requests=[];if(financeAllowed)requests.push(loadFinance(token));if(marketingAllowed)requests.push(loadMarketing(token));await Promise.allSettled(requests);
   }

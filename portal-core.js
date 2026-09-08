@@ -11,6 +11,11 @@
      amanece vacio. La primera de cada par es la canonica: la que se usa cuando el
      Sheet no trae url. Mismo patron que SITE_BASES en el GAS de potenciales. */
   var DESTINATIONS=Object.freeze({
+    /* Artifacts privados de claude.ai: una sola base, NO se mudan al dominio propio.
+       Quien ve la tarjeta lo decide el codigo (MZ/DP); quien ABRE la pagina lo decide
+       la privacidad del artifact en claude.ai, no este repo. */
+    'SYS-MATRIZ':['https://claude.ai/code/artifact/836ce3db-71c6-4c7a-9c05-be2acf4d1f61'],
+    'SYS-DESPACHO':['https://claude.ai/code/artifact/8d4242fb-00f3-4cc5-a792-0e429cff7e1d'],
     'SYS-CONTROL':['https://docs.google.com/spreadsheets/d/1E_89GQBnOmwv5Nej2B-QEkAdVnFYQbBVQUffHWwI7Vk/'],
     'SYS-POTENCIALES':[
       'https://yodesarrollomx.github.io/potenciales-yod/',
