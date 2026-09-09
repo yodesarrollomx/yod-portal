@@ -462,6 +462,7 @@ function pintarBandeja(){
       (ROL==="CAPTURA"?' Tu trabajo es capturar: ve a «Capturar avance».':'')+'</p>';
     return;
   }
+  const causasHTML=opcionesCausa(); // el mismo listado que usa "no se hizo" en la semana
   $("#bandeja").innerHTML=mios.map(a=>{
     const det=(D.detalle||[]).filter(d=>d.id_avance===a.id);
     const acto = a.estado==="PROPUESTO" ? "Verificar" : "Autorizar el pago";
@@ -478,26 +479,51 @@ function pintarBandeja(){
             '<td class="n">'+Number(d.cantidad_ejecutada).toLocaleString("es-MX")+' '+esc(c.unidad||"")+'</td>'+
             '<td class="n">'+dinero(d.importe)+'</td></tr>';
         }).join("")+'</tbody></table></div>':'<p class="nota">Sin detalle.</p>')+
-      '<textarea id="nota_'+esc(a.id)+'" placeholder="Nota (opcional). Si rechazas, di por qué."></textarea>'+
+      '<textarea id="nota_'+esc(a.id)+'" placeholder="Nota (opcional)."></textarea>'+
       '<div class="acciones">'+
         '<button class="btn pri" data-mv="'+esc(a.id)+'" data-si="1">'+acto+'</button>'+
-        '<button class="btn no" data-mv="'+esc(a.id)+'" data-si="0">Rechazar</button>'+
+        '<button class="btn no" data-rz="'+esc(a.id)+'">Rechazar</button>'+
         '<span class="msg" id="msg_'+esc(a.id)+'"></span>'+
+      '</div>'+
+      /* rechazar borraba de un clic el avance que capturó el residente, sin decir por qué:
+         pide la misma causa que ya es obligatoria en "no se hizo" */
+      '<div class="nohecha" id="rz_'+esc(a.id)+'" hidden>'+
+        '<p class="nota">¿Por qué se rechaza?</p>'+
+        '<select>'+causasHTML+'</select>'+
+        '<div class="acciones">'+
+          '<button class="btn no" data-cerrarrz="'+esc(a.id)+'">Confirmar rechazo</button>'+
+          '<button class="btn" data-cancelrz="'+esc(a.id)+'">Cancelar</button>'+
+        '</div>'+
       '</div></div></details>';
   }).join("");
-  document.querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>mover(b.dataset.mv,b.dataset.si==="1",b));
+  document.querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>mover(b.dataset.mv,true,b));
+  document.querySelectorAll("[data-rz]").forEach(b=>b.onclick=()=>{
+    const c=document.getElementById("rz_"+b.dataset.rz); if(c) c.hidden=false;
+  });
+  document.querySelectorAll("[data-cancelrz]").forEach(b=>b.onclick=()=>{
+    const c=document.getElementById("rz_"+b.dataset.cancelrz); if(c) c.hidden=true;
+  });
+  document.querySelectorAll("[data-cerrarrz]").forEach(b=>b.onclick=()=>{
+    const id=b.dataset.cerrarrz, c=document.getElementById("rz_"+id);
+    const sel=c?c.querySelector("select"):null;
+    mover(id,false,b,sel?sel.value:"");
+  });
 }
-async function mover(id,acepta,btn){
-  const m=document.getElementById("msg_"+id); m.className="msg"; m.textContent="…";
-  document.querySelectorAll('[data-mv="'+id+'"]').forEach(x=>x.disabled=true);
+async function mover(id,acepta,btn,causa){
+  const m=document.getElementById("msg_"+id);
+  /* la causa NO es opcional al rechazar: el mismo candado que ya tiene "no se hizo" */
+  if(!acepta && !causa){ m.className="msg err"; m.textContent="Escoge la causa del rechazo."; return; }
+  m.className="msg"; m.textContent="…";
+  document.querySelectorAll('[data-mv="'+id+'"],[data-cerrarrz="'+id+'"],[data-cancelrz="'+id+'"]').forEach(x=>x.disabled=true);
   try{
+    const nota=(document.getElementById("nota_"+id)||{}).value||"";
     const r=await mandar({accion:"mover",persona:QUIEN,id_avance:id,acepta:acepta,
-      nota:(document.getElementById("nota_"+id)||{}).value||""});
+      nota: acepta ? nota : (ETIQ_CAUSA[causa]||causa)+(nota?" · "+nota:"")});
     m.className="msg ok"; m.textContent=r.de+" → "+r.a;
     await cargar(); pintar();
   }catch(e){
     m.className="msg err"; m.textContent="No se pudo: "+razon(e);
-    document.querySelectorAll('[data-mv="'+id+'"]').forEach(x=>x.disabled=false);
+    document.querySelectorAll('[data-mv="'+id+'"],[data-cerrarrz="'+id+'"],[data-cancelrz="'+id+'"]').forEach(x=>x.disabled=false);
   }
 }
 
@@ -535,6 +561,14 @@ const ETIQ_CAUSA={MATERIAL:"Faltó material",MANO_DE_OBRA:"Faltó gente",EQUIPO:
   PROYECTO:"Faltó definición del proyecto",PERMISO:"Faltó un permiso",CLIMA:"Clima",
   ANTECEDENTE:"No estaba lista la actividad anterior",CAMBIO_DE_PRIORIDAD:"Se cambió la prioridad",
   MAL_PLANEADA:"Se planeó mal"};
+/* una sola lista de causas para los dos lugares que la piden: "no se hizo" (semana) y "rechazar" (bandeja) */
+function opcionesCausa(){
+  const ops=(P&&P.causasPosibles)||Object.keys(ETIQ_CAUSA);
+  /* la primera opción va en blanco a propósito: si el navegador preselecciona una causa,
+     "escoge la causa" deja de ser una decisión y se vuelve la que tocó quedar arriba */
+  return '<option value="">— escoge la causa —</option>'+
+    ops.map(c=>'<option value="'+esc(c)+'">'+esc(ETIQ_CAUSA[c]||c)+'</option>').join("");
+}
 
 function pintarSemana(){
   const fr=D.frentes||{}, nombres=Object.keys(fr).sort();
@@ -565,8 +599,7 @@ function pintarSemana(){
   const b=$("#badgeSem");
   if(abiertas.length){ b.hidden=false; b.textContent=String(abiertas.length); } else { b.hidden=true; b.textContent=""; }
 
-  const causasOps=(P&&P.causasPosibles)||Object.keys(ETIQ_CAUSA);
-  const causasHTML=causasOps.map(c=>'<option value="'+esc(c)+'">'+esc(ETIQ_CAUSA[c]||c)+'</option>').join("");
+  const causasHTML=opcionesCausa();
 
   $("#semana").innerHTML = ciego
     ? '<p class="nota nota-mal">Sin conexión con el motor de obra · la semana no se pudo leer.</p>'
@@ -607,7 +640,16 @@ function pintarSemana(){
       '<div class="lib mal"><b>'+cs[c]+'×</b> '+esc(ETIQ_CAUSA[c]||c)+'</div>').join("")+
     '<p class="nota">Lo que más se repite es lo que hay que arreglar primero.</p>';
 
-  $("#semana").querySelectorAll("[data-hecha]").forEach(x=>x.onclick=()=>cerrarAct(x.dataset.hecha,"HECHA",x));
+  $("#semana").querySelectorAll("[data-hecha]").forEach(x=>x.onclick=()=>{
+    /* "se hizo" cerraba la actividad de un clic; ahora enseña cuál es y de quién antes de cerrarla */
+    const a=acts.find(y=>y.id===x.dataset.hecha);
+    const quien=(a&&a.responsable)?a.responsable:"sin responsable asignado";
+    /* si por lo que sea no encontramos la actividad en la lista, se pregunta igual:
+       lo que no se debe es cerrar sin preguntar */
+    const cual=a?('«'+a.actividad+'»\nResponsable: '+quien):'Esta actividad de la semana.';
+    if(!confirm('¿Cerrar como hecha esta actividad?\n\n'+cual)) return;
+    cerrarAct(x.dataset.hecha,"HECHA",x);
+  });
   $("#semana").querySelectorAll("[data-nohecha]").forEach(x=>x.onclick=()=>{
     const c=document.getElementById("nh_"+x.dataset.nohecha); if(c) c.hidden=false;
   });
