@@ -39,6 +39,9 @@
     {system_id:'SYS-DESPACHO',orden:'1',visible:'SI',titulo_portal:'El Despacho',descripcion_portal:'Tu pantalla de trabajo: por cada frente del negocio, quien te esta esperando mas. Se firma aqui y se escribe en el tablero.',audiencia:'Direccion',icono:'message-2',miniatura:'thumbs/track.svg',url:'',estado:'Activo',sensibilidad:'Confidencial'},
     {system_id:'SYS-POTENCIALES',orden:'2',visible:'SI',titulo_portal:'PPP',descripcion_portal:'Planes de Potencial Personalizados: mapa de terrenos, escenarios y números para decidir qué construir y cuánto rinde.',audiencia:'Dirección y análisis',icono:'map-pin',miniatura:'thumbs/potenciales.svg',url:'',estado:'Activo',sensibilidad:'Confidencial'},
     {system_id:'SYS-TRACK',orden:'3',visible:'SI',titulo_portal:'Codesarrollos',descripcion_portal:'Los codesarrollos en curso (Real de Miramar, Casa Alysa, Casa María), cada uno con su etapa y su tablero.',audiencia:'Dirección y tramitología',icono:'route',miniatura:'thumbs/track.svg',url:'',estado:'Activo',sensibilidad:'Interno'},
+    /* Real de Miramar faltaba en el respaldo: si el Sheet no contestaba, el
+       codesarrollo mas grande desaparecia de la rejilla sin que nadie lo notara. */
+    {system_id:'SYS-MIRAMAR',orden:'4',visible:'SI',titulo_portal:'Real de Miramar',descripcion_portal:'Tramitologia e hitos del desarrollo en Guaymas: que falta, quien lo tiene y desde cuando.',audiencia:'Direccion y tramitologia',icono:'building-community',miniatura:'thumbs/miramar.jpg',url:'',estado:'Activo',sensibilidad:'Confidencial'},
     {system_id:'SYS-TAREAS',orden:'5',visible:'SI',titulo_portal:'MOAC',descripcion_portal:'La operación semanal: qué le toca a cada quien, qué va tarde y qué se cierra esta semana.',audiencia:'Todo el equipo',icono:'layout-kanban',miniatura:'thumbs/tareas.jpg',url:'',estado:'Activo',sensibilidad:'Interno'},
     {system_id:'SYS-FLUJO',orden:'6',visible:'SI',titulo_portal:'Flujo',descripcion_portal:'El dinero al día: saldos, movimientos, pagos por venir e ingresos esperados.',audiencia:'Dirección y Genaro',icono:'cash',miniatura:'thumbs/finanzas.jpg',url:'',estado:'Activo',sensibilidad:'Restringido'},
     {system_id:'SYS-INTERIORES',orden:'7',visible:'SI',titulo_portal:'AURUM',descripcion_portal:'El expediente de la casa del cliente: interiores, piezas, presupuesto y sus planos en Drive.',audiencia:'Cliente, Sayri y diseño',icono:'armchair',miniatura:'thumbs/interiores.jpg',url:'',estado:'Activo',sensibilidad:'Confidencial'},
@@ -342,17 +345,30 @@
     if(window.pintarSeccionEmbudo)window.pintarSeccionEmbudo();
   }
 
+  /* Un tablero que ya vive en el código (destino, icono, códigos de acceso) pero
+     al que NADIE dio de alta en la pestaña Portal del Control Maestro quedaba
+     invisible: no salía en la rejilla ni en el buscador, aunque tu sesión tuviera
+     su código. Eso obligaba a un paso manual en el Sheet por cada tablero nuevo.
+     Aquí se le pone su fila de respaldo. OJO con la diferencia que importa: si el
+     Sheet SÍ lo trae y dice visible='NO' o estado distinto de Activo, eso es una
+     decisión de Dirección y se respeta tal cual — solo se rellena lo AUSENTE. */
+  function conAltasNuevas(rows){
+    var vistos={};(rows||[]).forEach(function(r){if(r&&r.system_id)vistos[r.system_id]=1;});
+    var faltan=CAT_RESPALDO.filter(function(r){return !vistos[r.system_id];});
+    return faltan.length?(rows||[]).concat(faltan):(rows||[]);
+  }
+
   var _lastModulesFirma='';
   function renderModules(rows){
     var grid=$('module-grid');
-    var firmaRows=Array.isArray(rows)?rows:state.rawRows;
+    var firmaRows=conAltasNuevas(Array.isArray(rows)?rows:state.rawRows);
     // la firma lleva la fila COMPLETA: antes un cambio de estado/url/descripción en
     // el Sheet no repintaba (solo se firmaba id+título+url_override)
     var firma=state.profileReady+'|'+state.role+'|'+state.boards+'|'+JSON.stringify(firmaRows||[]);
     if(firma===_lastModulesFirma&&grid.children.length){state.rawRows=firmaRows;return;}
     _lastModulesFirma=firma;
     grid.replaceChildren();
-    state.rawRows=Array.isArray(rows)?rows:state.rawRows;
+    state.rawRows=firmaRows;
     if(!state.profileReady){state.modules=[];var waiting=document.createElement('div');waiting.className='empty-state';waiting.textContent=hayToken()?'Validando tu acceso…':'Inicia sesión para consultar tus módulos autorizados.';grid.appendChild(waiting);grid.setAttribute('aria-busy','false');$('module-count').textContent='—';renderSidebarModules();return;}
     state.modules=window.PortalCore.cleanRows(state.rawRows).filter(function(row){return Boolean(window.PortalCore.resolveUrl(row))&&window.YodAccessPolicy.canOpen(state.boards,row.system_id,state.role);});
     state.modules.forEach(function(row){var node=moduleNode(row);if(node)grid.appendChild(node);});

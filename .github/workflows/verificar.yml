@@ -1,0 +1,25 @@
+# Por qué existe: los dos verificadores viven en el repo desde hace meses, pero
+# solo corrían cuando alguien se acordaba de correrlos a mano. La deriva que
+# atrapan (un código de tablero que ya no cuadra, una URL de destino que cambió
+# en un archivo y no en el otro) se cuela justo cuando nadie los corrió.
+# Ahora corren solos en cada push y en cada pull request.
+name: Verificar YOD OS
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Adaptadores, portal-core y paridad de códigos
+        run: node verify-os.cjs
+      - name: Portal
+        run: node verify-portal.cjs

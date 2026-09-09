@@ -73,13 +73,18 @@
     'SYS-DESPACHO': ['DP']
   };
   // identity: 'pending' (validando) | 'ok' (canje válido) | 'fail' (sin sesión o canje falló)
-  var state = { role: '', boards: '', modules: [], identity: 'pending', catalogRows: null };
+  var state = { role: '', boards: '', modules: [], identity: 'pending', catalogRows: null, catalogIds: null };
 
   /* El menú se veía distinto en cada tablero: cada carga corría la carrera
      GAS-vs-respaldo de nuevo y a veces ganaba uno, a veces el otro (2 tableros
      "MOAC" vs 8 tableros "Operación"). Guardamos el último catálogo bueno para
      arrancar SIEMPRE con los títulos del Sheet, y la red solo refresca. */
   var CATCACHE = 'yod_portal_cat_v1';
+  /* Los ids que el Sheet SI trae, aunque vengan apagados. Sirven para distinguir
+     "Direccion lo apago" (se respeta) de "nadie lo dio de alta" (se rellena). */
+  var CATIDS = 'yod_portal_cat_ids_v1';
+  function readCatIds() { try { var r = JSON.parse(localStorage.getItem(CATIDS) || 'null'); return Array.isArray(r) ? r : null; } catch (e) { return null; } }
+  function writeCatIds(ids) { try { localStorage.setItem(CATIDS, JSON.stringify(ids)); } catch (e) { } }
   function readCatCache() {
     try {
       var raw = localStorage.getItem(CATCACHE); if (!raw) return null;
@@ -127,6 +132,18 @@
   function currentSys() { var here = location.href, best = ''; Object.keys(DEST).forEach(function (k) { if (here.indexOf(DEST[k].replace(/\/$/, '')) === 0) best = k; }); return best; }
 
   function defaultRows() { return Object.keys(DEST).map(function (k) { return { system_id: k, titulo_portal: NAME[k] }; }); }
+  /* Un tablero que ya vive aqui (DEST + NAME + CODES) pero al que nadie dio de
+     alta en la pestaña Portal quedaba fuera del menu de TODOS los tableros,
+     aunque tu sesion tuviera su codigo. Se le pone su fila de respaldo. Si el
+     Sheet si lo trae y lo apago, ese id aparece en idsDelSheet y no se toca. */
+  function conAltasNuevas(rows, idsDelSheet) {
+    var vistos = {};
+    (idsDelSheet || []).forEach(function (id) { if (id) vistos[id] = 1; });
+    (rows || []).forEach(function (r) { if (r && r.system_id) vistos[r.system_id] = 1; });
+    var faltan = Object.keys(DEST).filter(function (k) { return !vistos[k]; });
+    if (!faltan.length) return rows || [];
+    return (rows || []).concat(faltan.map(function (k) { return { system_id: k, titulo_portal: NAME[k] }; }));
+  }
   function navItem(row, cur) {
     var url = destino(row); if (!url) return null;
     var a = el('a', 'yod-nav-item' + (row.system_id === cur ? ' active' : ''));
@@ -152,7 +169,8 @@
       state.modules = [];
       return;
     }
-    var rows = (state.catalogRows && state.catalogRows.length) ? state.catalogRows : (readCatCache() || defaultRows());
+    var base = (state.catalogRows && state.catalogRows.length) ? state.catalogRows : (readCatCache() || defaultRows());
+    var rows = conAltasNuevas(base, state.catalogIds || readCatIds());
     renderNav(rows.filter(function (r) { return canOpen(r.system_id) && vivo(r); }), cur);
   }
 
@@ -296,7 +314,10 @@
         if (!d || !d.ok || !Array.isArray(d.rows)) return;
         var rows = d.rows.filter(function (r) { return r && r.visible === 'SI' && r.system_id && DEST[r.system_id]; })
           .sort(function (a, b) { return Number(a.orden) - Number(b.orden); });
-        if (rows.length) { state.catalogRows = rows; writeCatCache(rows); applyNav(); }
+        var ids = d.rows.map(function (r) { return r && r.system_id; }).filter(Boolean);
+        state.catalogIds = ids; writeCatIds(ids);
+        if (rows.length) { state.catalogRows = rows; writeCatCache(rows); }
+        applyNav();
       }).catch(function () { });
   }
   function aplicaIdentidad(j) {

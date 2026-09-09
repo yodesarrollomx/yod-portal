@@ -120,3 +120,24 @@ for (const [sysId, cardId] of [['SYS-DESPACHO', 'despacho-card']]) {
 }
 
 console.log('La matriz + El Despacho: accesos por código y URLs sin deriva: passed');
+
+/* ── Todo destino tiene fila de respaldo ──
+   El menú y la rejilla se arman con la pestaña Portal del Control Maestro. Si un
+   tablero existe en DESTINATIONS pero nadie lo dio de alta allá (o el Sheet no
+   contesta), ahora se rellena con su fila de respaldo — pero solo puede rellenarse
+   lo que EXISTE en CAT_RESPALDO. Real de Miramar no estaba y desaparecía sin ruido.
+   SYS-CONTROL es la excepción declarada: es el Sheet, no un tablero. */
+const appJs = fs.readFileSync(require.resolve('./os/app.js'), 'utf8');
+const respaldoIds = [...appJs.matchAll(/system_id:'(SYS-[A-Z]+)'/g)].map((m) => m[1]);
+for (const sysId of Object.keys(portal.destinations)) {
+  if (sysId === 'SYS-CONTROL') continue;
+  assert.ok(respaldoIds.includes(sysId), sysId + ' no tiene fila en CAT_RESPALDO: desaparece si el Sheet falla');
+}
+/* Y el relleno solo debe tapar AUSENCIAS: un tablero que el Sheet trae apagado
+   sigue apagado. Ese contrato vive en conAltasNuevas() de app.js y shell.js. */
+assert.ok(appJs.includes('function conAltasNuevas('), 'app.js perdió conAltasNuevas');
+const shellJs = fs.readFileSync(require.resolve('./os/shell.js'), 'utf8');
+assert.ok(shellJs.includes('function conAltasNuevas('), 'shell.js perdió conAltasNuevas');
+assert.ok(shellJs.includes('yod_portal_cat_ids_v1'), 'shell.js debe recordar qué ids SÍ trae el Sheet');
+
+console.log('Respaldo del catálogo: ningún tablero desaparece si el Sheet calla: passed');
