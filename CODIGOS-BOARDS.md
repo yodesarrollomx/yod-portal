@@ -19,15 +19,14 @@ Operación, 15-jul-2026).
 | Métricas / Marketing | `MK` | aurum-board | `board=MK` |
 | Obra en vivo | `OB` | yod-portal/obra.html | adaptador de obra |
 | Accesos (admin) | `AC` (no se otorga) | potenciales-yod/accesos.html | rol admin |
-| La matriz | `MZ` | artifact claude.ai `836ce3db…` | privacidad del artifact |
-| El Despacho | `DP` | artifact claude.ai `8d4242fb…` | privacidad del artifact |
+| El Despacho | `DP` | yod-despacho | Portero + el GAS del board |
 
 ## Reglas
 
-0. **`MZ` y `DP` son artifacts privados de claude.ai, no tableros de GitHub Pages.**
-   El código decide **quién ve la tarjeta** dentro del portal; **quién puede ABRIR la
-   página** lo decide la privacidad del artifact en claude.ai, no este repo. Las dos URLs
-   están en HTML público: el candado real está del otro lado.
+0. **`DP` es El Despacho, la pantalla de trabajo de Dirección — y La matriz es cómo se ve.**
+   No son dos cosas: el código `MZ` se retiró el 8-sep. El Despacho es un tablero normal
+   de la casa (repo `yod-despacho` + Pages + Portero + el Apps Script del board-aurum) y
+   el Sheet del board sigue siendo el único almacén.
 
 1. **`admin` y `*` abren todo.** El resto se compara contra la lista `boards`.
 2. El código que valida cada backend debe ser **idéntico** al de esta tabla y

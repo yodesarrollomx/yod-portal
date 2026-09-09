@@ -36,8 +36,7 @@
   // propósito: la resuelve portal-core con su destino canónico. Lo que cada quien PUEDE
   // abrir lo sigue filtrando su lista de códigos, y el muro real sigue siendo cada backend.
   var CAT_RESPALDO=[
-    {system_id:'SYS-MATRIZ',orden:'1',visible:'SI',titulo_portal:'La matriz',descripcion_portal:'Primera pantalla: por cada frente del negocio, quien te esta esperando mas, con su antiguedad y el dinero mencionado.',audiencia:'Direccion',icono:'layout-grid',miniatura:'thumbs/track.svg',url:'',estado:'Activo',sensibilidad:'Confidencial'},
-    {system_id:'SYS-DESPACHO',orden:'4',visible:'SI',titulo_portal:'El Despacho',descripcion_portal:'Dictar, firmar y cerrar: lo que sueltas por voz o por escrito vuelve redactado para tu firma.',audiencia:'Direccion',icono:'message-2',miniatura:'thumbs/track.svg',url:'',estado:'Activo',sensibilidad:'Confidencial'},
+    {system_id:'SYS-DESPACHO',orden:'1',visible:'SI',titulo_portal:'El Despacho',descripcion_portal:'Tu pantalla de trabajo: por cada frente del negocio, quien te esta esperando mas. Se firma aqui y se escribe en el tablero.',audiencia:'Direccion',icono:'message-2',miniatura:'thumbs/track.svg',url:'',estado:'Activo',sensibilidad:'Confidencial'},
     {system_id:'SYS-POTENCIALES',orden:'2',visible:'SI',titulo_portal:'PPP',descripcion_portal:'Planes de Potencial Personalizados: mapa de terrenos, escenarios y números para decidir qué construir y cuánto rinde.',audiencia:'Dirección y análisis',icono:'map-pin',miniatura:'thumbs/potenciales.svg',url:'',estado:'Activo',sensibilidad:'Confidencial'},
     {system_id:'SYS-TRACK',orden:'3',visible:'SI',titulo_portal:'Codesarrollos',descripcion_portal:'Los codesarrollos en curso (Real de Miramar, Casa Alysa, Casa María), cada uno con su etapa y su tablero.',audiencia:'Dirección y tramitología',icono:'route',miniatura:'thumbs/track.svg',url:'',estado:'Activo',sensibilidad:'Interno'},
     {system_id:'SYS-TAREAS',orden:'5',visible:'SI',titulo_portal:'MOAC',descripcion_portal:'La operación semanal: qué le toca a cada quien, qué va tarde y qué se cierra esta semana.',audiencia:'Todo el equipo',icono:'layout-kanban',miniatura:'thumbs/tareas.jpg',url:'',estado:'Activo',sensibilidad:'Interno'},
@@ -715,9 +714,8 @@
     var decisionsAllowed=state.role==='admin';
     // La matriz y El Despacho tienen codigo propio (MZ / DP): no cuelgan de admin,
     // asi una segunda cuenta puede verlos SIN abrirle Tesoreria ni MOAC.
-    var matrizAllowed=window.YodAccessPolicy.canOpen(state.boards,'SYS-MATRIZ',state.role);
     var despachoAllowed=window.YodAccessPolicy.canOpen(state.boards,'SYS-DESPACHO',state.role);
-    $('finance-card').classList.toggle('hidden',!financeAllowed);$('marketing-card').classList.toggle('hidden',!marketingAllowed);$('decision-card').classList.toggle('hidden',!decisionsAllowed);$('despacho-card').classList.toggle('hidden',!despachoAllowed);$('matriz-card').classList.toggle('hidden',!matrizAllowed);$('pulso').classList.toggle('hidden',!financeAllowed&&!marketingAllowed&&!decisionsAllowed&&!matrizAllowed&&!despachoAllowed);
+    $('finance-card').classList.toggle('hidden',!financeAllowed);$('marketing-card').classList.toggle('hidden',!marketingAllowed);$('decision-card').classList.toggle('hidden',!decisionsAllowed);$('despacho-card').classList.toggle('hidden',!despachoAllowed);$('pulso').classList.toggle('hidden',!financeAllowed&&!marketingAllowed&&!decisionsAllowed&&!despachoAllowed);
     if(window.revisarPuertaEmbudo)window.revisarPuertaEmbudo();   // misma regla MK para la pestaña Métricas
     var requests=[];if(financeAllowed)requests.push(loadFinance(token));if(marketingAllowed)requests.push(loadMarketing(token));await Promise.allSettled(requests);
   }

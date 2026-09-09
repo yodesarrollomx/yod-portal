@@ -39,8 +39,7 @@
   var CORPORATE = 'https://yodesarrollo.mx/'; // sitio público; la marca del shell ya NO cuelga de aquí (lleva al OS)
   function esPropioShell(u){return /^https:\/\/(yodesarrollomx\.github\.io|tableros\.yodesarrollo\.mx|alexpueblag\.github\.io|aurumarquitectos\.github\.io)\//.test(String(u||''));}
   var DEST = {
-    'SYS-MATRIZ': 'https://claude.ai/code/artifact/836ce3db-71c6-4c7a-9c05-be2acf4d1f61',
-    'SYS-DESPACHO': 'https://claude.ai/code/artifact/8d4242fb-00f3-4cc5-a792-0e429cff7e1d',
+    'SYS-DESPACHO': 'https://yodesarrollomx.github.io/yod-despacho/',
     'SYS-POTENCIALES': 'https://yodesarrollomx.github.io/potenciales-yod/',
     'SYS-TRACK': 'https://yodesarrollomx.github.io/yod-portal/track-codesarrollos.html',
     'SYS-MIRAMAR': 'https://yodesarrollomx.github.io/real-miramar-board/',
@@ -51,11 +50,11 @@
     'SYS-MARKETING': 'https://yodesarrollomx.github.io/aurum-board/',
     'SYS-OBRA': 'https://yodesarrollomx.github.io/yod-portal/obra.html'
   };
-  var ICON = { 'SYS-POTENCIALES': 'map-2', 'SYS-TRACK': 'route', 'SYS-MIRAMAR': 'building-community', 'SYS-TAREAS': 'checklist', 'SYS-FLUJO': 'wallet', 'SYS-INTERIORES': 'armchair-2', 'SYS-INVERSION': 'presentation-analytics', 'SYS-MARKETING': 'speakerphone', 'SYS-OBRA': 'building-skyscraper', 'SYS-MATRIZ': 'layout-grid', 'SYS-DESPACHO': 'message-2' };
+  var ICON = { 'SYS-POTENCIALES': 'map-2', 'SYS-TRACK': 'route', 'SYS-MIRAMAR': 'building-community', 'SYS-TAREAS': 'checklist', 'SYS-FLUJO': 'wallet', 'SYS-INTERIORES': 'armchair-2', 'SYS-INVERSION': 'presentation-analytics', 'SYS-MARKETING': 'speakerphone', 'SYS-OBRA': 'building-skyscraper', 'SYS-DESPACHO': 'layout-grid' };
   /* Los títulos oficiales viven en la pestaña Portal del Control Maestro
      (titulo_portal); estos son solo el respaldo si aquella no contesta.
      Deben decir LO MISMO que el Sheet — si renombras allá, renombra acá. */
-  var NAME = { 'SYS-POTENCIALES': 'PPP', 'SYS-TRACK': 'Codesarrollos', 'SYS-MIRAMAR': 'Real de Miramar', 'SYS-TAREAS': 'MOAC', 'SYS-FLUJO': 'Flujo', 'SYS-INTERIORES': 'AURUM', 'SYS-INVERSION': 'Codesarrolladores', 'SYS-MARKETING': 'Embudo comercial', 'SYS-OBRA': 'Obra en vivo', 'SYS-MATRIZ': 'La matriz', 'SYS-DESPACHO': 'El Despacho' };
+  var NAME = { 'SYS-POTENCIALES': 'PPP', 'SYS-TRACK': 'Codesarrollos', 'SYS-MIRAMAR': 'Real de Miramar', 'SYS-TAREAS': 'MOAC', 'SYS-FLUJO': 'Flujo', 'SYS-INTERIORES': 'AURUM', 'SYS-INVERSION': 'Codesarrolladores', 'SYS-MARKETING': 'Embudo comercial', 'SYS-OBRA': 'Obra en vivo', 'SYS-DESPACHO': 'El Despacho' };
   // Códigos por tablero — MISMA matriz que YOD OS (access-policy.js). El menú
   // solo enseña lo que tu sesión permite; el muro real sigue siendo cada backend.
   var CODES = {
@@ -71,7 +70,6 @@
     // SYS-CONTROL (Sheet Control Maestro) no tiene tablero ni DEST: vive aquí solo
     // para que esta matriz diga LO MISMO que access-policy.js. Solo lo abre Dirección.
     'SYS-CONTROL': ['AC'],
-    'SYS-MATRIZ': ['MZ'],
     'SYS-DESPACHO': ['DP']
   };
   // identity: 'pending' (validando) | 'ok' (canje válido) | 'fail' (sin sesión o canje falló)

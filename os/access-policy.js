@@ -13,7 +13,6 @@
     'SYS-MARKETING':['MK'],
     'SYS-OBRA':['OB'],
     'SYS-CONTROL':['AC'],
-    'SYS-MATRIZ':['MZ'],
     'SYS-DESPACHO':['DP']
   });
   function codes(value){var raw=String(value||'').trim();if(!raw)return [];if(raw==='*')return ['*'];return raw.toUpperCase().split(/[,|; ]+/).filter(Boolean);}
