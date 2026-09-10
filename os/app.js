@@ -15,7 +15,7 @@
   function conLimite_(p,ms){return Promise.race([p,new Promise(function(_,rj){setTimeout(function(){rj(new Error('timeout'));},ms||LIMITE_MS);})]);}
   // El Portero (Apps Script) hoy tarda entre 3 y 25 s: esperar 12 s lo daba por muerto
   // y el OS se ponía «Sin conexión» con el backend vivo. 25 s + reintento en fondo.
-  var LIMITE_MS=25000, REINTENTO_MS=15000, REINTENTOS_MAX=3;
+  var LIMITE_MS=25000, LIMITE_FRIO_MS=75000, REINTENTO_MS=15000, REINTENTOS_MAX=3;
   async function canjearConRelevo_(token){
     async function intenta(base){
       var r=await conLimite_(fetch(base+'?recurso=canje&t='+encodeURIComponent(token),{cache:'no-store',credentials:'omit'}));
@@ -379,26 +379,40 @@
 
   async function loadCatalog(){
     if(state.loading)return;state.loading=true;$('refresh').disabled=true;var _mr=$('mobile-refresh');if(_mr)_mr.disabled=true;setConnection('','Actualizando');
-    var controller=new AbortController();var timeout=setTimeout(function(){controller.abort();},LIMITE_MS);
+    /* Arranque en frío de Apps Script: medido el 9-sep, la MISMA llamada tardó
+       64.9 s la primera vez y 2 s las siguientes. Con 25 s fijos el primer
+       intento se abortaba siempre y el OS abría en «Portero lento». El primer
+       intento sigue corto (para que la pantalla no se sienta trabada) y el
+       reintento espera lo que de verdad tarda un backend dormido. */
+    var _limite=(state.catRetry||0)?LIMITE_FRIO_MS:LIMITE_MS;
+    var controller=new AbortController();var timeout=setTimeout(function(){controller.abort();},_limite);
     try{
       var _tk='';try{_tk=localStorage.getItem(TOKEN_KEY)||'';}catch(_e){}
       var response=await fetch(CATALOG_ENDPOINT+(_tk?'&k='+encodeURIComponent(_tk):'')+'&cb='+Date.now(),{cache:'no-store',credentials:'omit',signal:controller.signal});
       if(!response.ok)throw new Error('HTTP '+response.status);var data=await response.json();
       if(!data.ok||!Array.isArray(data.rows))throw new Error('Respuesta incompleta');
-      // 4-sep-2026 · El catálogo valida la credencial llamando al Portero desde su
-      // servidor, y esa llamada tarda entre 60 y 86 s (medido en su registro de
-      // ejecuciones). Cuando no alcanza, contesta como si fueras un anónimo: solo
-      // las filas «Interno». Sin esta guarda, esa respuesta pisaba el catálogo bueno
-      // y el menú se caía a 2 módulos con la sesión abierta. Un catálogo que llega
-      // más corto que el último bueno TENIENDO sesión no es la verdad: es un fallo
-      // de autenticación. Se conserva el bueno, se avisa, y se reintenta.
-      var _ant=[];try{_ant=JSON.parse(localStorage.getItem('yod_portal_cat_v1')||'[]');}catch(_e){_ant=[];}
-      if(!Array.isArray(_ant))_ant=[];
+      /* 9-sep-2026 · POR QUÉ CAMBIÓ ESTA GUARDA (el «Catálogo sin autenticar» eterno).
+         Antes se daba por «no autenticado» cuando el catálogo llegaba con MENOS
+         filas que la mejor lista conocida. Ese conteo mentía: la pestaña Portal
+         del Sheet sirve 8 filas y el respaldo curado trae 10 (El Despacho y Real
+         de Miramar viven en el código y nadie los dio de alta en el Sheet). Con
+         la sesión perfectamente válida, 8 < 10 disparaba el aviso rojo y un
+         reintento cada 15 s contra el backend, para siempre. Verificado el 9-sep
+         contra el backend vivo: con la credencial contesta actor='SESSION' y 8
+         filas; sin ella, actor='PUBLIC' y 2.
+         Ahora se le pregunta al backend, que es quien sabe: él firma la respuesta
+         con `actor`. 'PUBLIC' = no pudo canjear la credencial (eso SÍ es no
+         autenticar); cualquier otra cosa ('SESSION' o el person_id) = autenticó.
+         Los tableros que el Sheet no trae los rellena conAltasNuevas(), no esta
+         guarda: el largo de la lista dejó de ser un semáforo. */
+      var _autenticado=String(data.actor||'')!=='PUBLIC';
       var _tokenVivo=!!_tk&&state.profileReady;
-      // el mejor catálogo disponible: el último bueno, y si ése también quedó recortado, el respaldo curado
-      var _mejor=(_ant.length>=CAT_RESPALDO.length)?_ant:CAT_RESPALDO;
-      if(_tokenVivo&&data.rows.length<_mejor.length){
-        console.warn('[YOD OS] el catálogo llegó recortado ('+data.rows.length+' de '+_mejor.length+') con sesión abierta: no autenticó. Se pinta el mejor conocido.');
+      if(_tokenVivo&&!_autenticado){
+        var _ant=[];try{_ant=JSON.parse(localStorage.getItem('yod_portal_cat_v1')||'[]');}catch(_e){_ant=[];}
+        if(!Array.isArray(_ant))_ant=[];
+        // el mejor catálogo disponible: el último bueno, y si ése también quedó corto, el respaldo curado
+        var _mejor=(_ant.length>=CAT_RESPALDO.length)?_ant:CAT_RESPALDO;
+        console.warn('[YOD OS] el backend contestó actor=PUBLIC con sesión abierta: no autenticó. Se pinta el mejor catálogo conocido.');
         renderModules(_mejor);nombrarAccionesRapidas();
         setConnection('error','Catálogo sin autenticar · reintentando');
         $('updated-at').textContent=(_mejor===CAT_RESPALDO)?'Mostrando la lista de respaldo':'Mostrando el último catálogo bueno';
@@ -412,7 +426,25 @@
       state.catRetry=(state.catRetry||0)+1;
       if(state.catRetry<=REINTENTOS_MAX){setConnection('error','Portero lento · reintentando');$('updated-at').textContent='Reintentando en fondo';setTimeout(loadCatalog,REINTENTO_MS);}
       else{setConnection('error','Sin conexión');$('updated-at').textContent='No se pudo actualizar';}
-      if(!state.modules.length){var grid=$('module-grid');grid.setAttribute('aria-busy','false');grid.innerHTML='<div class="empty-state">Control Maestro no respondió. Por seguridad no se habilitaron enlaces. Intenta actualizar de nuevo.</div>';}
+      /* 9-sep-2026 · Antes, si Control Maestro no contestaba, la rejilla se quedaba
+         VACÍA con un aviso: el OS entero se sentía caído aunque la sesión estuviera
+         viva y los tableros siguieran ahí. Ahora, teniendo sesión, se pinta el mejor
+         catálogo conocido (el último bueno guardado en este equipo, o el respaldo
+         curado) y se dice de dónde salió. Los enlaces los sigue filtrando la lista de
+         códigos de la sesión, y el muro real sigue siendo el backend de cada tablero:
+         pintar la tarjeta no abre nada que no se pudiera abrir. */
+      if(!state.modules.length){
+        var _tk2='';try{_tk2=localStorage.getItem(TOKEN_KEY)||'';}catch(_e){}
+        var _ant2=[];try{_ant2=JSON.parse(localStorage.getItem('yod_portal_cat_v1')||'[]');}catch(_e){_ant2=[];}
+        if(!Array.isArray(_ant2))_ant2=[];
+        var _mejor2=(_ant2.length>=CAT_RESPALDO.length)?_ant2:CAT_RESPALDO;
+        if(_tk2&&state.profileReady){
+          renderModules(_mejor2);nombrarAccionesRapidas();
+          $('updated-at').textContent=(_mejor2===CAT_RESPALDO)?'Mostrando la lista de respaldo':'Mostrando el último catálogo bueno';
+        }else{
+          var grid=$('module-grid');grid.setAttribute('aria-busy','false');grid.innerHTML='<div class="empty-state">Control Maestro no respondió. Por seguridad no se habilitaron enlaces. Intenta actualizar de nuevo.</div>';
+        }
+      }
     }finally{clearTimeout(timeout);state.loading=false;$('refresh').disabled=false;var _mr2=$('mobile-refresh');if(_mr2)_mr2.disabled=false;}
   }
 
