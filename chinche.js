@@ -331,6 +331,10 @@ async function anotar(op){
       await guardar(ch, await aBlob(lienzo, 0.7), await aBlob(mini(lienzo), 0.6));
       cerrar(v);
       aviso("Clavado · llevas " + leerN());
+      /* 15-sep: la página que hospeda la Chinche puede querer enterarse al instante (la Sala de
+         Edición manda cada chinche al Sheet como ENCARGO, y /sala la cosecha sin esperar un zip).
+         Opcional y a prueba de errores: si el gancho truena, la chinche ya quedó clavada igual. */
+      try { if (typeof CTX.alClavar === "function") CTX.alClavar(ch); } catch (e) {}
     } catch (e) {
       /* cuota llena o base cerrada: NO fingir que quedó. El texto sigue en la
          hoja para copiarlo a mano. */
