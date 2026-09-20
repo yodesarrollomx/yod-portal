@@ -1,0 +1,95 @@
+name: Vigía diario · YOD OS
+
+on:
+  schedule:
+    - cron: '7 14 * * *'   # 07:07 America/Hermosillo (UTC-7 fijo, sin horario de verano)
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  vigia:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Pruebas de código (verify-os / verify-portal)
+        id: pruebas
+        run: |
+          set +e
+          { node verify-os.cjs && node verify-portal.cjs; } > pruebas.log 2>&1
+          echo "codigo=$?" >> "$GITHUB_OUTPUT"
+          cat pruebas.log
+
+      - name: Salud de los tableros en vivo
+        id: salud
+        run: |
+          urls=(
+            "https://yodesarrollomx.github.io/yod-portal/"
+            "https://yodesarrollomx.github.io/yod-portal/os/"
+            "https://yodesarrollomx.github.io/yod-portal/tablero.html"
+            "https://yodesarrollomx.github.io/yod-portal/obra.html"
+            "https://yodesarrollomx.github.io/yod-portal/track-codesarrollos.html"
+            "https://yodesarrollomx.github.io/yod-despacho/"
+            "https://yodesarrollomx.github.io/sala-edicion/"
+            "https://yodesarrollomx.github.io/potenciales-yod/"
+            "https://yodesarrollomx.github.io/real-miramar-board/"
+            "https://yodesarrollomx.github.io/board-aurum/"
+            "https://yodesarrollomx.github.io/board-flujo-yod/"
+            "https://yodesarrollomx.github.io/interiores-aurum/"
+            "https://yodesarrollomx.github.io/yodesarrollo-board/"
+            "https://yodesarrollomx.github.io/aurum-board/"
+          )
+          roto=0
+          echo "| Tablero | HTTP |" > salud.md
+          echo "|---|---|" >> salud.md
+          for u in "${urls[@]}"; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 15 "$u")
+            [ "$code" != "200" ] && roto=1
+            echo "| $u | $code |" >> salud.md
+          done
+          echo "roto=$roto" >> "$GITHUB_OUTPUT"
+
+      - name: Asegurar etiquetas
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create "vigia" --color "0E8A16" --description "Reporte automático del vigía diario" --force
+          gh label create "atencion" --color "D93F0B" --description "El vigía encontró algo roto" --force
+
+      - name: Publicar el reporte del día
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          titulo="🔎 Vigía diario · YOD OS"
+          numero=$(gh issue list --search "in:title \"$titulo\"" --state open --json number,title --jq ".[] | select(.title==\"$titulo\") | .number" | head -n1)
+          if [ -z "$numero" ]; then
+            numero=$(gh issue create --title "$titulo" --body "Bitácora diaria del vigía automático. Cada corrida agrega un comentario abajo." --label "vigia" | grep -oE '[0-9]+$')
+          fi
+
+          estado="✅ todo bien"
+          if [ "${{ steps.pruebas.outputs.codigo }}" != "0" ] || [ "${{ steps.salud.outputs.roto }}" = "1" ]; then
+            estado="🔴 hay algo que revisar"
+          fi
+
+          {
+            echo "## $estado — $(date -u '+%Y-%m-%d %H:%M UTC')"
+            echo
+            echo "### Pruebas de código"
+            echo '```'
+            cat pruebas.log
+            echo '```'
+            echo
+            echo "### Tableros en vivo"
+            cat salud.md
+          } > comentario.md
+
+          gh issue comment "$numero" --body-file comentario.md
+
+          if [ "$estado" = "🔴 hay algo que revisar" ]; then
+            gh issue edit "$numero" --add-label "atencion"
+          else
+            gh issue edit "$numero" --remove-label "atencion" 2>/dev/null || true
+          fi
