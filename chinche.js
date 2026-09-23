@@ -199,8 +199,19 @@ function cortar(g, txt, x, y, ancho, alto, maxLineas){
   }
   g.fillText(linea, x, y + n * alto);
 }
+/* 23-sep (su captura: el celular se quedó en «Clavando…» para siempre): en iPhone toBlob a veces
+   NUNCA llama de vuelta, y guardar una foto (Blob) en IndexedDB puede colgarse. Nada aquí puede
+   esperar sin límite: sin foto a los 3 s, y si la base no contesta se guarda sólo el texto. */
+function conTope(p, ms, valor){
+  return Promise.race([p, new Promise(function (ok) { setTimeout(function(){ ok(valor); }, ms); })]);
+}
+function conTopeError(p, ms, motivo){
+  return Promise.race([p, new Promise(function (ok, mal) { setTimeout(function(){ mal({ name: motivo }); }, ms); })]);
+}
 function aBlob(canvas, calidad){
-  return new Promise(function (ok) { canvas.toBlob(function (b) { ok(b); }, "image/jpeg", calidad || 0.7); });
+  return conTope(new Promise(function (ok) {
+    try { canvas.toBlob(function (b) { ok(b); }, "image/jpeg", calidad || 0.7); } catch (e) { ok(null); }
+  }), 3000, null);
 }
 function mini(canvas){
   var m = document.createElement("canvas"); m.width = 220;
@@ -344,7 +355,13 @@ async function anotar(op){
       codigo: dondeVive(PANT, op.clase || "")
     };
     try {
-      await guardar(ch, await aBlob(lienzo, 0.7), await aBlob(mini(lienzo), 0.6));
+      var full = await aBlob(lienzo, 0.7), chica = full ? await aBlob(mini(lienzo), 0.6) : null;
+      try {
+        await conTopeError(guardar(ch, full, chica), 6000, "la base del aparato no contestó");
+      } catch (e1) {
+        /* segundo intento sin fotos: el texto es lo que importa */
+        await conTopeError(guardar(ch, null, null), 6000, "la base del aparato no contestó");
+      }
       cerrar(v);
       aviso("Clavado · llevas " + leerN());
       /* 15-sep: la página que hospeda la Chinche puede querer enterarse al instante (la Sala de
