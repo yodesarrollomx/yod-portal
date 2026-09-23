@@ -81,7 +81,10 @@ Repo: `yodesarrollomx/yod-portal` (`git remote -v`), público, Pages desde `main
 2. **Mandar a Claude** — en la hoja del encargo: abre `github.com/yodesarrollomx/<repo>/issues/new`
    con título `📌 …`, etiqueta `chinche` y el encargo en el cuerpo (un botón por repo). Él toca «Submit».
    Sin llaves en la página. Las fotos no viajan por URL (el issue lo dice; siguen en el .zip).
-   La Sala sigue además mandando cada chinche a su Sheet (`alClavar`).
+   **La Sala** manda cada chinche a su Sheet (`alClavar` → PRODUCCION «ENCARGO · chinche»); el **puente**
+   `sala-edicion/.github/workflows/sala-chinches.yml` (cada hora, :45) la vuelve issue 📌 en sala-edicion,
+   apunta «ENCARGO TOMADO» y, al cerrarse el issue, «ENCARGO CUMPLIDO» (23-sep: antes lo hacía la Mac y se perdió
+   con la mudanza a la nube; así se recuperaron 8 chinches del 14 al 22-sep, issues #16–#23).
 3. **El revisor diario** — rutina «Revisor de chinches YOD» (`trig_01QK6vdVXL1QhQcgqTMKwg35`), 07:30 Hermosillo, que despierta la sesión de Claude Code que la creó (ahí están GitHub y los repos; una rutina de sesión nueva no recibe el conector de GitHub en esta organización). Probada de punta a punta el 23-sep con potenciales-yod#1 (commit a2cf2ca): toma los issues abiertos
    `chinche` (o título que empieza con 📌), corrige, verifica, publica a `main`, comenta qué hizo y
    cierra. Si es ambiguo o toca dinero sin regla clara: pregunta en el issue, etiqueta
