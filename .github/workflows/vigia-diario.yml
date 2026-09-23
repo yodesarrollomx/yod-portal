@@ -52,6 +52,33 @@ jobs:
           done
           echo "roto=$roto" >> "$GITHUB_OUTPUT"
 
+      # El Portero (Apps Script) es la cerradura de todos los tableros: si no contesta JSON,
+      # el login con Google dice «No se pudo con Google: servidor». Solo GET con un token falso:
+      # respuesta sana = {"ok":false,"error":"liga"} (potenciales-yod/CLAUDE.md). Nunca POST.
+      - name: Portero vivo (solo lectura)
+        id: portero
+        run: |
+          declare -A ep=(
+            [original]="https://script.google.com/macros/s/AKfycbwlDDCWWzOWYZsUpBU9uqsQ7aenQ469PF6s6FkNlBFS1_cJSU5njG9oQmuyELy5zlqzFg/exec"
+            [respaldo]="https://script.google.com/macros/s/AKfycbyrhqMb70Qh8BljAOYnSYBZ8IXUuEclFWPg10NWIv3GJ-nAR597OTsGB4IL-xyUl7Ms/exec"
+          )
+          sano=0
+          echo "| Portero | HTTP | Tarda | Contesta |" > portero.md
+          echo "|---|---|---|---|" >> portero.md
+          for k in original respaldo; do
+            out=$(curl -sL --max-time 30 -o cuerpo.txt -w "%{http_code} %{time_total}" "${ep[$k]}?recurso=canje&t=zzz" || echo "000 30")
+            code=${out%% *}; t=${out##* }
+            if python3 -c "import json;json.load(open('cuerpo.txt'))" 2>/dev/null; then
+              que="JSON: $(head -c 120 cuerpo.txt | tr '\n|' '  ')"; sano=1
+            else
+              tit=$(grep -o '<title>[^<]*' cuerpo.txt | head -1 | sed 's/<title>//')
+              que="NO es JSON · título: ${tit:-(vacío)} · $(sed 's/<[^>]*>//g' cuerpo.txt | tr -s ' \n' ' ' | head -c 160 | tr '|' ' ')"
+            fi
+            echo "| $k | $code | ${t}s | $que |" >> portero.md
+          done
+          cat portero.md
+          echo "caido=$([ $sano = 1 ] && echo 0 || echo 1)" >> "$GITHUB_OUTPUT"
+
       - name: Asegurar etiquetas
         env:
           GH_TOKEN: ${{ github.token }}
@@ -70,7 +97,7 @@ jobs:
           fi
 
           estado="✅ todo bien"
-          if [ "${{ steps.pruebas.outputs.codigo }}" != "0" ] || [ "${{ steps.salud.outputs.roto }}" = "1" ]; then
+          if [ "${{ steps.pruebas.outputs.codigo }}" != "0" ] || [ "${{ steps.salud.outputs.roto }}" = "1" ] || [ "${{ steps.portero.outputs.caido }}" = "1" ]; then
             estado="🔴 hay algo que revisar"
           fi
 
@@ -84,6 +111,9 @@ jobs:
             echo
             echo "### Tableros en vivo"
             cat salud.md
+            echo
+            echo "### Portero (login de todos los tableros)"
+            cat portero.md
           } > comentario.md
 
           gh issue comment "$numero" --body-file comentario.md
