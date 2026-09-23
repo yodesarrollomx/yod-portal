@@ -104,6 +104,22 @@ function nuevoId(d){
   var r = Math.random().toString(16).slice(2, 6);
   return "CHN-" + d.getFullYear() + p(d.getMonth()+1) + p(d.getDate()) + "-" + p(d.getHours()) + p(d.getMinutes()) + "-" + r;
 }
+/* ── el repo al que pertenece la pantalla: en yodesarrollomx.github.io cada repo
+      vive en su carpeta (/potenciales-yod/…, /yod-portal/…); la raíz es el repo del sitio.
+      Todas comparten ORIGEN y por eso comparten la pila: cada chinche guarda el suyo. ── */
+var ORG = "yodesarrollomx";
+function repoDe(url){
+  try {
+    var u = new URL(url, location.href);
+    if (/github\.io$/.test(u.hostname)) {
+      var seg = u.pathname.split("/").filter(Boolean)[0] || "";
+      return seg && !/\.html?$/.test(seg) ? seg : u.hostname;
+    }
+  } catch (e) {}
+  return "";
+}
+function repoActual(){ return CTX.repo || repoDe(location.href) || "yod-portal"; }
+function repoDeChinche(c){ return c.repo || repoDe(c.url || "") || "yod-portal"; }
 function aparato(){
   var u = navigator.userAgent;
   return /iPhone/.test(u) ? "iPhone" : /iPad/.test(u) ? "iPad" : /Android/.test(u) ? "Android" : "Mac";
@@ -312,7 +328,7 @@ async function anotar(op){
     var ch = {
       id: nuevoId(d), creado: d.toISOString(), sello: sello(d), quien: quien(),
       texto: texto, tipo: tipo, estado: "nueva",
-      pantalla: PANT, url: location.href.split("#")[0], aparato: aparato(),
+      pantalla: PANT, repo: repoActual(), url: location.href.split("#")[0], aparato: aparato(),
       vista: op.vista || (CTX.vista ? CTX.vista() : ""),
       modo: esLienzo ? "lienzo" : "contexto",
       ancla: esLienzo
@@ -625,14 +641,17 @@ async function armarTexto(ids, amarre){
   var L = [];
   L.push("# Encargo " + nom + " · " + list.length + (list.length===1?" cambio":" cambios"));
   L.push(quien() + " · " + sello(d) + " (America/Hermosillo) · desde " + aparato());
-  L.push("Repo: yodesarrollomx/yod-portal · publicado en yodesarrollomx.github.io/yod-portal/");
+  var repos = list.map(repoDeChinche).filter(function(r, i, a){ return a.indexOf(r) === i; });
+  L.push("Repo: " + repos.map(function(r){ return ORG + "/" + r; }).join(", ") +
+         " · publicado en " + repos.map(function(r){ return r.indexOf(".") > -1 ? r : ORG + ".github.io/" + r + "/"; }).join(", "));
   L.push("Capturas junto a este archivo: " + conFoto);
   L.push("");
   if (amarre) { L.push("**Lo que quiero con todo esto:** " + amarre); L.push(""); }
   list.forEach(function (c, i) {
     L.push("────────────────────────────────────────────────────────────────");
     L.push("## " + (i+1) + " · " + (c.tipo ? c.tipo.toUpperCase() : "CAMBIO") + " · " +
-           c.pantalla + (c.vista ? ' · vista "' + c.vista + '"' : ""));
+           repoDeChinche(c) + " · " + c.pantalla + (c.vista ? ' · vista "' + c.vista + '"' : ""));
+    if (c.url) L.push("- **Página:** " + c.url);
     L.push("");
     L.push("**Dice " + (c.quien || "Alejandro") + ':** "' + c.texto + '"');
     L.push("");
@@ -667,16 +686,46 @@ async function armarTexto(ids, amarre){
   L.push("### Cómo leer esto, Claude");
   L.push("");
   L.push('- **"Dice ..." es textual.** No lo interpretes de más ni lo pulas.');
-  L.push('- **"Objeto" es dato del sistema**, no opinión: es el mismo objeto que el tablero tenía en la mano al picar.');
-  L.push("- **La flecha roja de la foto no viaja en el texto.** Para saber a qué apunta usa \"Punto exacto\",");
-  L.push("  que es la fracción del clic real sobre el lienzo. Si los .jpg están junto al .md, ábrelos y ahí sí la ves.");
-  L.push("- **El tablero es un canvas 2D con homografía cenital:** no hay DOM que inspeccionar adentro, todo se");
-  L.push("  dibuja con paths y fillText. La ficha que sale al picar sí es HTML, encima del lienzo.");
+  if (list.some(function(c){ return c.modo === "lienzo"; })) {
+    L.push('- **"Objeto" es dato del sistema**, no opinión: es el mismo objeto que el tablero tenía en la mano al picar.');
+    L.push("- **La flecha roja de la foto no viaja en el texto.** Para saber a qué apunta usa \"Punto exacto\",");
+    L.push("  que es la fracción del clic real sobre el lienzo. Si los .jpg están junto al .md, ábrelos y ahí sí la ves.");
+    L.push("- **El tablero cenital es un canvas 2D con homografía:** no hay DOM que inspeccionar adentro, todo se");
+    L.push("  dibuja con paths y fillText. La ficha que sale al picar sí es HTML, encima del lienzo.");
+  }
+  if (list.some(function(c){ return c.modo !== "lienzo"; }))
+    L.push('- **"Sección", "Elemento" y "Lo que estaba escrito"** son el DOM real de la página al clavar: búscalos en el archivo de "Página".');
   L.push("- Si algo no se entiende, pregunta por su número antes de tocar nada.");
   return { nombre: nom, texto: L.join("\n"), lista: list, fotos: fotos };
 }
+/* ═══ MANDAR A CLAUDE · un issue por repo, ya escrito ═══
+   El issue es la cola que el revisor diario lee (etiqueta «chinche»). Sin llaves en la
+   página: GitHub abre el formulario con título, cuerpo y etiqueta puestos y él solo toca
+   «Submit». Las fotos no caben en una URL; el issue lo dice y el .zip sigue a la mano. */
+var MAX_CUERPO = 5500;
+async function armarIssues(ids, amarre){
+  var list = (await todas()).filter(function(c){ return ids.indexOf(c.id) > -1; });
+  var grupos = {};
+  list.forEach(function(c){ var r = repoDeChinche(c); (grupos[r] = grupos[r] || []).push(c.id); });
+  var out = [];
+  for (var repo in grupos) {
+    var t = await armarTexto(grupos[repo], amarre);
+    var cuerpo = t.texto, conFoto = Object.keys(t.fotos || {}).filter(function(k){ return t.fotos[k]; }).length;
+    if (conFoto) cuerpo += "\n\n> Hay " + conFoto + " captura(s) que no caben en el issue: pídeselas a " + quien() + " (vienen en " + t.nombre + ".zip).";
+    if (cuerpo.length > MAX_CUERPO) cuerpo = cuerpo.slice(0, MAX_CUERPO) + "\n\n…(recortado: el encargo completo está en " + t.nombre + ".md; pídeselo a " + quien() + ")";
+    var primera = t.lista[0], n = t.lista.length;
+    var titulo = "📌 " + (n > 1 ? n + " chinches · " : "") + primera.pantalla + " · " +
+                 primera.texto.replace(/\s+/g, " ").slice(0, 70);
+    out.push({ repo: repo, ids: grupos[repo], n: n,
+      url: "https://github.com/" + ORG + "/" + repo +
+           "/issues/new?labels=chinche&title=" + encodeURIComponent(titulo) + "&body=" + encodeURIComponent(cuerpo) });
+  }
+  return out;
+}
 async function entregar(ids, amarre, vAnterior){
   var r = await armarTexto(ids, amarre);
+  var issues = [];
+  try { issues = await armarIssues(ids, amarre); } catch (e) { issues = []; }
   /* el paquete se arma ANTES de pintar la hoja, igual que el texto del
      portapapeles y por la misma razón: `await` se come el gesto del usuario y
      Chrome bloquea la descarga en silencio —la hoja se cerraba como si hubiera
@@ -696,7 +745,11 @@ async function entregar(ids, amarre, vAnterior){
   if (vAnterior) cerrar(vAnterior);   /* la pila se despide justo cuando esta hoja entra */
   var v = hoja('<div class="chn-tit">Encargo listo · ' + r.lista.length +
       (r.lista.length===1?" cambio":" cambios") + "</div>" +
-    '<div class="chn-nota">Se llama <b>' + r.nombre + '</b>. Escoge cómo me llega:</div>' +
+    '<div class="chn-nota">Se llama <b>' + r.nombre + '</b>. <b>Mandar a Claude</b> abre el pendiente en GitHub ya escrito: ' +
+      'toca «Submit» y el revisor diario lo corrige y te contesta ahí. O escoge otra vía:</div>' +
+    (issues.length ? '<div class="chn-ops">' + issues.map(function (it, i) {
+      return '<a class="chn-btn" style="text-align:center;text-decoration:none" target="_blank" rel="noopener" data-issue="' + i + '" href="' +
+        esc(it.url) + '">Mandar a Claude' + (issues.length > 1 ? " · " + esc(it.repo) + " (" + it.n + ")" : "") + "</a>"; }).join("") + "</div>" : "") +
     '<div class="chn-ops">' +
       '<button type="button" class="chn-btn" data-copiar>Copiar la orden</button>' +
       '<button type="button" class="chn-btn2" data-bajar>Bajar a la Mac</button>' +
@@ -708,6 +761,14 @@ async function entregar(ids, amarre, vAnterior){
   /* el texto YA está armado antes de pintar la hoja: si se leyera la base al
      tocar el botón, Safari bloquea el portapapeles por salirse del gesto —
      y falla SOLO en el celular, que es el peor tipo de falla. */
+  v.querySelectorAll("[data-issue]").forEach(function (a) {
+    a.onclick = function () {
+      var it = issues[+a.dataset.issue];
+      /* el enlace abre GitHub dentro del gesto; marcar va después y no lo estorba */
+      marcarIdas(it.ids, false);
+      a.textContent = "Abierto en GitHub · toca «Submit» allá"; a.style.opacity = ".6";
+    };
+  });
   v.querySelector("[data-copiar]").onclick = async function () {
     /* copiar lleva SOLO texto: las fotos grandes se quedan guardadas para
        poder bajar el zip después */

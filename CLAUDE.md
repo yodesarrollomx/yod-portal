@@ -72,6 +72,22 @@ Repo: `yodesarrollomx/yod-portal` (`git remote -v`), público, Pages desde `main
 - `verify-os.cjs` / `verify-portal.cjs` — las pruebas. `CODIGOS-BOARDS.md` — la tabla de códigos.
   `.claude/launch.json` — servidor local en el puerto 8787.
 
+## La Chinche (📌) · de la pantalla al commit
+
+1. **Clavar** — `chinche.js` vive aquí y lo cargan `os/index.html`, `tablero.html`, `obra.html`, la
+   Sala y, desde el 23-sep-2026, **`os/shell.js`** (todos los boards envueltos: los 8 de `potenciales-yod`,
+   `track-codesarrollos/alysa/maria`). Se guarda en IndexedDB del navegador (`yodChinche`), que es UNA
+   sola pila para todo `yodesarrollomx.github.io`; por eso cada chinche guarda su `repo` y su `url`.
+2. **Mandar a Claude** — en la hoja del encargo: abre `github.com/yodesarrollomx/<repo>/issues/new`
+   con título `📌 …`, etiqueta `chinche` y el encargo en el cuerpo (un botón por repo). Él toca «Submit».
+   Sin llaves en la página. Las fotos no viajan por URL (el issue lo dice; siguen en el .zip).
+   La Sala sigue además mandando cada chinche a su Sheet (`alClavar`).
+3. **El revisor diario** — rutina remota de Claude Code, 07:30 Hermosillo: toma los issues abiertos
+   `chinche` (o título que empieza con 📌), corrige, verifica, publica a `main`, comenta qué hizo y
+   cierra. Si es ambiguo o toca dinero sin regla clara: pregunta en el issue, etiqueta
+   `chinche-pregunta` y lo deja abierto.
+4. Para apagarlo: desactivar la rutina "Revisor de chinches YOD" en claude.ai/code (Rutinas).
+
 ## Arquitectura de datos
 
 **ADVERTENCIA: este repo es ESPEJO del front. Ningún Apps Script vive aquí.** Lo que corre es lo
