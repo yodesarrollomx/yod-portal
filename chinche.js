@@ -720,6 +720,11 @@ async function armarTexto(ids, amarre){
    página: GitHub abre el formulario con título, cuerpo y etiqueta puestos y él solo toca
    «Submit». Las fotos no caben en una URL; el issue lo dice y el .zip sigue a la mano. */
 var MAX_CUERPO = 5500;
+/* GitHub contesta «Bad request» a URLs de más de ~8 KB, y lo que cuenta es la URL YA
+   codificada: un acento vale 6 caracteres y un salto de línea 3, así que 5,500 de texto
+   pueden ser 12,000 de URL (bug 23-sep: dos chinches de 1,500 y 2,000). Arriba de este
+   tope el encargo viaja por el portapapeles y la URL lleva sólo el título. */
+var MAX_URL = 6000;
 async function armarIssues(ids, amarre){
   var list = (await todas()).filter(function(c){ return ids.indexOf(c.id) > -1; });
   var grupos = {};
@@ -733,9 +738,11 @@ async function armarIssues(ids, amarre){
     var primera = t.lista[0], n = t.lista.length;
     var titulo = "📌 " + (n > 1 ? n + " chinches · " : "") + primera.pantalla + " · " +
                  primera.texto.replace(/\s+/g, " ").slice(0, 70);
-    out.push({ repo: repo, ids: grupos[repo], n: n,
-      url: "https://github.com/" + ORG + "/" + repo +
-           "/issues/new?labels=chinche&title=" + encodeURIComponent(titulo) + "&body=" + encodeURIComponent(cuerpo) });
+    var base = "https://github.com/" + ORG + "/" + repo + "/issues/new?labels=chinche&title=" + encodeURIComponent(titulo);
+    var url = base + "&body=" + encodeURIComponent(cuerpo), largo = url.length > MAX_URL;
+    var completo = t.texto + (conFoto ? "\n\n> Hay " + conFoto + " captura(s) en " + t.nombre + ".zip; pídeselas a " + quien() + "." : "");
+    if (largo) url = base + "&body=" + encodeURIComponent("Pega aquí el encargo (Cmd/Ctrl+V): ya está en tu portapapeles.");
+    out.push({ repo: repo, ids: grupos[repo], n: n, url: url, largo: largo, texto: completo });
   }
   return out;
 }
@@ -781,9 +788,25 @@ async function entregar(ids, amarre, vAnterior){
   v.querySelectorAll("[data-issue]").forEach(function (a) {
     a.onclick = function () {
       var it = issues[+a.dataset.issue];
-      /* el enlace abre GitHub dentro del gesto; marcar va después y no lo estorba */
-      marcarIdas(it.ids, false);
-      a.textContent = "Abierto en GitHub · toca «Submit» allá"; a.style.opacity = ".6";
+      /* encargo largo: va por el portapapeles (texto ya armado, dentro del gesto) y
+         GitHub abre sólo con el título */
+      if (it.largo) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(it.texto).then(function () {
+            aviso("Encargo largo: ya está en tu portapapeles · pégalo en el cuerpo del issue");
+          }, function () { aviso("No dejó copiar: usa «Copiar la orden» y pégalo en GitHub"); });
+        } else aviso("No dejó copiar: usa «Copiar la orden» y pégalo en GitHub");
+      }
+      /* NO se marca como mandada al abrir: si GitHub falla o no se toca «Submit», la pila
+         se queda viva. Se marca sólo cuando él confirma que el issue quedó creado. */
+      a.textContent = it.largo ? "Abierto · pega el encargo (Cmd/Ctrl+V) y toca «Submit»" : "Abierto en GitHub · toca «Submit» allá";
+      a.style.opacity = ".6";
+      var ok = document.createElement("button");
+      ok.type = "button"; ok.className = "chn-btn2"; ok.textContent = "Ya quedó el issue en GitHub ✓";
+      ok.onclick = function () { marcarIdas(it.ids, false); ok.disabled = true; ok.textContent = "Marcadas como mandadas"; };
+      if (!a.nextSibling || !a.nextSibling.dataset || a.nextSibling.dataset.okIssue === undefined) {
+        ok.dataset.okIssue = a.dataset.issue; a.parentNode.insertBefore(ok, a.nextSibling);
+      }
     };
   });
   v.querySelector("[data-copiar]").onclick = async function () {
