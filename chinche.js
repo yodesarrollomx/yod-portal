@@ -92,6 +92,53 @@ async function borrar(id){
     t.onerror = function(){ ok(); }; t.onabort = function(){ ok(); };
   });
 }
+/* ═══ ENVÍO DIRECTO (24-sep, Alejandro: «directo, nada de mandar después; que se vayan guardando
+   y cuando las vayas leyendo vayas reparando») ═══
+   Toda chinche de un tablero sale sola al Sheet de la Sala (acción «produccion», la misma que usa la
+   Sala) con la llave del YOD OS que ya vive en este aparato. El puente horario de sala-edicion la
+   vuelve issue 📌 y el revisor diario la trabaja. Si no hay llave o no hay red, se queda «nueva» y se
+   reintenta al abrir cualquier tablero; «Mandar a Claude» sigue como respaldo manual. La Sala tiene
+   su propio gancho (CTX.alClavar) y no pasa por aquí. */
+var GAS_SALA = "https://script.google.com/macros/s/AKfycbx61UWsEYCL_dHzi0JrUv3GuAUFSDWW4iCmlNmbDDvWBIYY4Hhqkf6sYmt4d8UGIlk7MA/exec";
+function llaveOS(){
+  try { return localStorage.getItem("pyod_clave_v1") || localStorage.getItem("sala_clave") || ""; } catch (e) { return ""; }
+}
+async function marcar(id, campos){
+  await abrirBD();
+  var t = tx(["chinches"], "readwrite"), s = t.objectStore("chinches");
+  return new Promise(function (ok) {
+    var g = s.get(id);
+    g.onsuccess = function(){ var c = g.result; if (c) { Object.keys(campos).forEach(function(k){ c[k] = campos[k]; }); s.put(c); } };
+    t.oncomplete = async function () { guardarN((await pendientes()).length); pintarPastilla(); ok(); };
+    t.onerror = function(){ ok(); }; t.onabort = function(){ ok(); };
+  });
+}
+async function enviarDirecto(ch){
+  var llave = llaveOS();
+  if (!llave || !ch || ch.estado === "mandada") return false;
+  var d = new Date(), p2 = function(n){ return (n < 10 ? "0" : "") + n; };
+  var el = ch.elemento || {};
+  var detalle = JSON.stringify({ id: ch.id, texto: ch.texto, tipo: ch.tipo || "", repo: ch.repo, pantalla: ch.pantalla,
+    vista: (ch.repo || "") + "/" + (ch.pantalla || ""), url: ch.url, quien: ch.quien,
+    elemento: { css: el.css || (ch.ancla && ch.ancla.css) || "", texto: (el.texto || "").slice(0, 300), seccion: el.seccion || "" },
+    objeto: ch.objeto || null, codigo: ch.codigo || "" });
+  var envio = { accion: "produccion", clave: llave, fecha: d.getFullYear() + "-" + p2(d.getMonth()+1) + "-" + p2(d.getDate()),
+    pieza: "ENCARGO · chinche · " + (ch.repo || "") + "/" + (ch.pantalla || ""), estado: "pendiente", detalle: detalle, enlace: ch.url || "" };
+  try {
+    var ctl = new AbortController(), tt = setTimeout(function(){ ctl.abort(); }, 20000);
+    var r = await fetch(GAS_SALA, { method: "POST", headers: { "Content-Type": "text/plain" }, body: JSON.stringify(envio), signal: ctl.signal });
+    clearTimeout(tt);
+    var j = null; try { j = JSON.parse(await r.text()); } catch (e) {}
+    if (!r.ok || !j || j.error) return false;
+    await marcar(ch.id, { estado: "mandada", mandada: new Date().toISOString(), via: "directo" });
+    return true;
+  } catch (e) { return false; }
+}
+async function enviarPendientes(){
+  if (CTX.alClavar || !llaveOS()) return;
+  try { var ps = await pendientes(); for (var i = 0; i < ps.length; i++) await enviarDirecto(ps[i]); } catch (e) {}
+}
+
 async function pendientes(){ return (await todas()).filter(function (c) { return c.estado !== "mandada"; }); }
 
 /* ── identificadores legibles y ordenables ── */
@@ -368,6 +415,12 @@ async function anotar(op){
          Edición manda cada chinche al Sheet como ENCARGO, y /sala la cosecha sin esperar un zip).
          Opcional y a prueba de errores: si el gancho truena, la chinche ya quedó clavada igual. */
       try { if (typeof CTX.alClavar === "function") CTX.alClavar(ch); } catch (e) {}
+      if (typeof CTX.alClavar !== "function") {
+        enviarDirecto(ch).then(function (ok) {
+          aviso(ok ? "Clavado y enviado a Claude · lo revisa en la ronda diaria"
+                   : "Clavado · se manda solo en cuanto haya señal (o con «Mandar a Claude»)");
+        });
+      }
     } catch (e) {
       /* cuota llena o base cerrada: NO fingir que quedó. El texto sigue en la
          hoja para copiarlo a mano. */
@@ -1042,7 +1095,7 @@ function init(op){
   };
   document.body.appendChild(pastilla);
   pintarPastilla();
-  abrirBD().then(async function(){ guardarN((await pendientes()).length); pintarPastilla(); })
+  abrirBD().then(async function(){ guardarN((await pendientes()).length); pintarPastilla(); setTimeout(enviarPendientes, 1500); })
     .catch(function () {
       /* navegación privada o almacenamiento bloqueado: que no finja un conteo */
       if (pastilla) { pastilla.textContent = "📌 ×"; pastilla.title = "La base de pendientes no abre en este navegador"; }
