@@ -145,8 +145,15 @@
     if (!faltan.length) return rows || [];
     return (rows || []).concat(faltan.map(function (k) { return { system_id: k, titulo_portal: NAME[k] }; }));
   }
+  /* El Embudo comercial no se abre "pelón": vive en la máscara de la cabina
+     (Sala · Métricas · Plan de Potencial). Desde cualquier tablero envuelto,
+     su enlace lleva a esa ruta del OS, igual que un clic en la cabina. */
+  function enlace(row) {
+    var url = destino(row); if (!url) return '';
+    return (row && row.system_id === 'SYS-MARKETING') ? OS + '#/embudo/metricas' : url;
+  }
   function navItem(row, cur) {
-    var url = destino(row); if (!url) return null;
+    var url = enlace(row); if (!url) return null;
     var a = el('a', 'yod-nav-item' + (row.system_id === cur ? ' active' : ''));
     a.href = url; a.setAttribute('rel', 'noopener'); if(!esPropioShell(url)) a.setAttribute('target','_blank');
     a.innerHTML = '<i class="ti ti-' + (ICON[row.system_id] || 'layout-dashboard') + '"></i><span>' + esc(row.titulo_portal || NAME[row.system_id] || row.system_id) + '</span>';
@@ -390,7 +397,7 @@
       var box = document.getElementById('yodRes'); if (!box) return; box.innerHTML = '';
       var t = (q || '').toLowerCase();
       state.modules.filter(function (r) { return vivo(r) && (!t || String(r.titulo_portal || NAME[r.system_id] || '').toLowerCase().indexOf(t) >= 0); }).forEach(function (r) {
-        var url = destino(r); if (!url) return;
+        var url = enlace(r); if (!url) return;
         var a = el('a'); a.href = url; a.setAttribute('rel', 'noopener'); if(!esPropioShell(url)) a.setAttribute('target','_blank');
         a.innerHTML = '<i class="ti ti-' + (ICON[r.system_id] || 'layout-dashboard') + '"></i><span><strong>' + esc(r.titulo_portal || NAME[r.system_id]) + '</strong></span>';
         box.appendChild(a);
