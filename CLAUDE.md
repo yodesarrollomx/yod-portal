@@ -48,7 +48,7 @@ Repo: `yodesarrollomx/yod-portal` (`git remote -v`), público, Pages desde `main
    (`os/shell.js:56-58`). Nunca confiar en que "no se ve" equivale a "no se puede".
 7. **Repo público: cero datos reales en el HTML.** Las vistas previas de `thumbs/` van difuminadas
    a propósito, y las tres páginas llevan `noindex,nofollow,noarchive` (`README.md`, `os/index.html:6`).
-8. **Antes de publicar: `node verify-portal.cjs` y `node verify-os.cjs`.** Los dos pasan hoy
+8. **Antes de publicar: `node verify-portal.cjs`, `node verify-os.cjs` y `node verify-accesos.cjs`** (este último compara la matriz de `potenciales-yod/accesos.html`). Los dos pasan hoy
    (corridos 2026-09-04).
 9. **No hacer POST a los `/exec` para "probar":** hay backends que escriben (obra, Sala, CRM).
 

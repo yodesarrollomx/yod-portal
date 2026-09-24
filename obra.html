@@ -127,8 +127,9 @@ textarea{width:100%;padding:.55rem .65rem;background:var(--panel2);border:1px so
   <div class="gbox">
     <h1>Obra en vivo</h1>
     <p>Casa Alysa · avance con cadena de aprobación</p>
-    <input id="clave" type="password" placeholder="clave" autocomplete="current-password">
-    <button id="btnEntrar">Entrar</button>
+    <input id="clave" type="password" placeholder="clave" autocomplete="current-password" hidden>
+    <button id="btnEntrar" hidden>Entrar</button>
+    <a class="g-google" href="os/" target="_top" onclick="if(window.YODPortero){YODPortero.entrar();return false}" style="display:block;text-align:center;text-decoration:none;padding:12px;border-radius:10px;background:#2c2718;color:#f6f3ed;font-weight:600;margin-top:8px">Entrar con Google</a>
     <div class="gerr" id="gerr"></div>
     <p id="gvolver" hidden style="margin-top:.6rem;font-size:.85rem"><a href="os/">Volver a YOD OS</a></p>
   </div>
@@ -243,7 +244,7 @@ textarea{width:100%;padding:.55rem .65rem;background:var(--panel2);border:1px so
   <div class="cadena" id="pieCadena"></div>
 </div>
 
-<script src="os/access-policy.js?v=0.1.1"></script>
+<script src="os/access-policy.js?v=0.1.2"></script>
 <script>
 (function(){
 "use strict";

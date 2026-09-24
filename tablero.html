@@ -91,9 +91,10 @@
 </style>
 <div id="gate" class="gate"><div id="gateCard">
   <h1>YOD OS &middot; Tablero</h1>
-  <p id="gateMsg">El tablero de la operaci&oacute;n. Escribe la clave del portal.</p>
-  <input id="gateClave" type="password" autocomplete="current-password" placeholder="clave">
-  <button id="gateBtn">Entrar</button>
+  <p id="gateMsg">El tablero de la operaci&oacute;n. Entra con tu cuenta de Google desde YOD OS.</p>
+  <input id="gateClave" type="password" autocomplete="current-password" placeholder="clave" hidden>
+  <button id="gateBtn" hidden>Entrar</button>
+  <a id="gateGoogle" href="os/" target="_top" onclick="if(window.YODPortero&&window.parent===window){YODPortero.entrar();return false}" style="display:block;text-align:center;text-decoration:none;padding:12px;border-radius:10px;background:#2c2718;color:#f6f3ed;font-weight:600">Entrar con Google</a>
   <div id="gateErr"></div>
 </div></div>
 <div id="w" style="display:none"><div id="sw"><b>CRM</b>
@@ -102,7 +103,7 @@
  <i id="leyHex">el hex&aacute;gono se pinta por su n&uacute;mero; el punto dice de d&oacute;nde sale el dato: <span data-punto="linea">&#9679;</span> en l&iacute;nea &middot; <span data-punto="fuente">&#9679;</span> fuente lista, sin conectar &middot; <span data-punto="ciego">&#9679;</span> ciego: no contest&oacute; &middot; <span data-punto="tentativo">&#9679;</span> tentativo, sin fuente<em>&times;N en la canica = varios casos: p&iacute;cala</em></i></div>
 <canvas id="c" width="1536" height="1056"></canvas><canvas id="luz" width="1536" height="1056"></canvas><div id="f"></div></div>
 <script src="chinche.js?v=ch5"></script>
-<script src="os/access-policy.js?v=0.1.1"></script>
+<script src="os/access-policy.js?v=0.1.2"></script>
 <script>
 (function(){
 "use strict";
@@ -1941,7 +1942,7 @@ if(window.YODChinche) YODChinche.init({ pantalla:"tablero", canvas:CV, luz:LZ,
 const MSG=document.getElementById("gateMsg"), MSG0=MSG.textContent;
 if(CLV){
   // Con sesión guardada no se vuelve a pedir la clave: se avisa que se verifica.
-  // Antes salía el formulario «Escribe la clave del portal» ~4 s en cada carga
+  // Antes salía el formulario «Escribe la clave del portal» (hoy «Entrar con Google») ~4 s en cada carga
   // del OS y se leía como «me volvió a sacar».
   GT.classList.add("validando"); MSG.textContent="Verificando acceso…";
   validar(CLV).then(abrir).catch(e=>{
