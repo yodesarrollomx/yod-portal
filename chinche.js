@@ -791,7 +791,7 @@ async function armarIssues(ids, amarre){
     var primera = t.lista[0], n = t.lista.length;
     var titulo = "📌 " + (n > 1 ? n + " chinches · " : "") + primera.pantalla + " · " +
                  primera.texto.replace(/\s+/g, " ").slice(0, 70);
-    var base = "https://github.com/" + ORG + "/" + repo + "/issues/new?labels=chinche&title=" + encodeURIComponent(titulo);
+    var base = "https://github.com/" + (CTX.org || ORG) + "/" + repo + "/issues/new?labels=chinche&title=" + encodeURIComponent(titulo);
     var url = base + "&body=" + encodeURIComponent(cuerpo), largo = url.length > MAX_URL;
     var completo = t.texto + (conFoto ? "\n\n> Hay " + conFoto + " captura(s) en " + t.nombre + ".zip; pídeselas a " + quien() + "." : "");
     if (largo) url = base + "&body=" + encodeURIComponent("Pega aquí el encargo (Cmd/Ctrl+V): ya está en tu portapapeles.");
