@@ -124,3 +124,31 @@ registrada con **el nombre real de la sesión**, no con el inventado.
 - **Obra San Francisco:** se queda fuera de la organización. Decisión tuya, 4-sep.
 - **La Sala arranca en «editor»:** se queda. Tu razón: el acceso ya lo filtra YOD OS —
   quien no lo tenga seleccionado no la ve. Decisión tuya, 4-sep.
+
+---
+
+## 5 · Sesión de 30 días que se renueva sola (Portero) — 24-sep-2026
+
+**Qué arregla:** que te pida entrar de nuevo. Hoy el token dura 90 días desde que se emitió; con
+esto, cada vez que abres un tablero se alarga, así que mientras entres una vez al mes no vuelve a
+pedirte nada (las 72 h quedan de sobra).
+
+**El cambio (Code.gs del Portero, función del canje):** después de validar el token y antes de
+responder `{ok:true,…}`, actualizar su vencimiento:
+
+```js
+// Sesión deslizante: cada canje bueno empuja el vencimiento 30 días
+const DIAS_SESION = 30;
+fila.expira = new Date(Date.now() + DIAS_SESION * 864e5);   // la columna de vencimiento del token
+hoja.getRange(filaIdx, colExpira).setValue(fila.expira);    // escribir como mucho una vez al día
+```
+
+Luego Implementar → Administrar implementaciones → lápiz → **Versión nueva**.
+
+**En Google Cloud (client `920448126277-…`):** confirmar que `https://yodesarrollomx.github.io` está
+en *Authorized JavaScript origins* — el One Tap automático que ya trae `portero.js` lo necesita.
+
+## 6 · Rotar las 13 claves de Interiores (hoja `Proyectos`)
+
+Se quitaron del `datos.json` público (rama `claude/funny-ritchie-aouldq` de `interiores-aurum`),
+pero siguen en la historia de git. Cambiar cada clave en la hoja y avisar a cada cliente la nueva.
