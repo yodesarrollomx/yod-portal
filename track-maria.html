@@ -73,8 +73,9 @@
 <div id="gate"><div class="gate-box">
   <h1 class="serif">Track Casa María</h1>
   <p>Co-desarrollo Alcinos · qué hicimos, qué falta y qué sigue</p>
-  <input type="password" id="gateClave" placeholder="Clave del board" autocomplete="current-password">
-  <button id="gateBtn">Entrar</button>
+  <input type="password" id="gateClave" placeholder="Clave del board" autocomplete="current-password" hidden>
+  <button id="gateBtn" hidden>Entrar</button>
+  <a class="g-google" href="os/" target="_top" onclick="if(window.YODPortero){YODPortero.entrar();return false}" style="display:block;text-align:center;text-decoration:none;padding:12px;border-radius:10px;background:#2c2718;color:#f6f3ed;font-weight:600;margin-top:8px">Entrar con Google</a>
   <div class="gate-err" id="gateErr"></div>
 </div></div>
 
@@ -150,6 +151,6 @@
   if(clave){cargar(clave).then(()=>$('gate').classList.add('off')).catch(e=>{if(e==='clave'){localStorage.removeItem(LSK);$('gateErr').textContent='La clave cambió'}else $('gateErr').textContent='Sin conexión con el Sheet'})}
 })();
 </script>
-<script src="https://yodesarrollomx.github.io/potenciales-yod/portero.js?v=relevo7"></script>
+<script src="https://yodesarrollomx.github.io/potenciales-yod/portero.js?v=relevo8"></script>
 </body>
 </html>
