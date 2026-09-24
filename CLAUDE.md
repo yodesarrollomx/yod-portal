@@ -89,6 +89,12 @@ Repo: `yodesarrollomx/yod-portal` (`git remote -v`), público, Pages desde `main
    `chinche` (o título que empieza con 📌), corrige, verifica, publica a `main`, comenta qué hizo y
    cierra. Si es ambiguo o toca dinero sin regla clara: pregunta en el issue, etiqueta
    `chinche-pregunta` y lo deja abierto.
+3b. **Amalaya también entra a la ronda (24-sep-2026).** Amalaya es un tablero APARTE de YOD OS
+   (org `yodesarrollo`, sin menú ni enlaces al OS: así lo decidió Alejandro). Su chinche solo aparece
+   a quien la enciende una vez con `?chinche=1` (`?chinche=0` la apaga) y sus encargos se mandan
+   como issue 📌 a **`yodesarrollo/amalaya-board`** (`init({org:'yodesarrollo'})`). El revisor diario
+   debe buscar issues abiertos `chinche`/📌 también en ese repo (agregarlo a la sesión si no está) y
+   verificar allá con `npm run build` y `npm run pruebas`. Nunca ponerle marca ni menú de YOD OS.
 4. Para apagarlo: desactivar la rutina "Revisor de chinches YOD" en claude.ai/code (Rutinas).
 
 ## Arquitectura de datos
