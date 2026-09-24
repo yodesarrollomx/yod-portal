@@ -23,3 +23,5 @@ jobs:
         run: node verify-os.cjs
       - name: Portal
         run: node verify-portal.cjs
+      - name: Matriz de accesos (potenciales-yod) = SYSTEM_CODES
+        run: node verify-accesos.cjs
