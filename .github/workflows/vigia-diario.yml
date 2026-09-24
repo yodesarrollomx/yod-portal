@@ -79,6 +79,46 @@ jobs:
           cat portero.md
           echo "caido=$([ $sano = 1 ] && echo 0 || echo 1)" >> "$GITHUB_OUTPUT"
 
+      # ── Amalaya (repo aparte: yodesarrollo/amalaya-board) ─────────────────────
+      # Mismo vigía, bloque separado: la página responde 200, el /exec contesta el
+      # GET de salud (doGet → {"ok":true,...}; nunca POST) y npm run pruebas pasa.
+      - name: Amalaya · traer el repo (público, solo lectura)
+        uses: actions/checkout@v4
+        with:
+          repository: yodesarrollo/amalaya-board
+          path: amalaya
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Amalaya · página, /exec y pruebas
+        id: amalaya
+        run: |
+          set +e
+          mal=0
+          pag=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 "https://yodesarrollo.github.io/amalaya-board/")
+          [ "$pag" != "200" ] && mal=1
+          exec_url=$(grep -oE "https://script.google.com/macros/s/[A-Za-z0-9_-]+/exec" amalaya/src/config.js | head -1)
+          salud=$(curl -sL --max-time 30 "$exec_url")
+          if echo "$salud" | python3 -c "import json,sys;d=json.load(sys.stdin);sys.exit(0 if d.get('ok') is True else 1)" 2>/dev/null; then
+            exec_estado="✅ ok"
+          else
+            exec_estado="🔴 no contesta JSON sano"; mal=1
+          fi
+          (cd amalaya && npm ci --no-audit --no-fund >/dev/null 2>&1 && npm run pruebas) > amalaya-pruebas.log 2>&1
+          pr=$?
+          [ "$pr" != "0" ] && mal=1
+          {
+            echo "| Pieza | Estado |"
+            echo "|---|---|"
+            echo "| Página https://yodesarrollo.github.io/amalaya-board/ | HTTP $pag |"
+            echo "| /exec (GET de salud) | $exec_estado |"
+            echo "| npm run pruebas | $([ $pr = 0 ] && echo '✅ pasan' || echo '🔴 fallan') |"
+          } > amalaya.md
+          cat amalaya.md
+          echo "mal=$mal" >> "$GITHUB_OUTPUT"
+
       - name: Asegurar etiquetas
         env:
           GH_TOKEN: ${{ github.token }}
@@ -97,7 +137,7 @@ jobs:
           fi
 
           estado="✅ todo bien"
-          if [ "${{ steps.pruebas.outputs.codigo }}" != "0" ] || [ "${{ steps.salud.outputs.roto }}" = "1" ] || [ "${{ steps.portero.outputs.caido }}" = "1" ]; then
+          if [ "${{ steps.pruebas.outputs.codigo }}" != "0" ] || [ "${{ steps.salud.outputs.roto }}" = "1" ] || [ "${{ steps.portero.outputs.caido }}" = "1" ] || [ "${{ steps.amalaya.outputs.mal }}" = "1" ]; then
             estado="🔴 hay algo que revisar"
           fi
 
@@ -114,6 +154,15 @@ jobs:
             echo
             echo "### Portero (login de todos los tableros)"
             cat portero.md
+            echo
+            echo "### Amalaya (bloque aparte · yodesarrollo/amalaya-board)"
+            cat amalaya.md
+            if ! grep -q "✅ pasan" amalaya.md; then
+              echo
+              echo '```'
+              tail -n 30 amalaya-pruebas.log
+              echo '```'
+            fi
           } > comentario.md
 
           gh issue comment "$numero" --body-file comentario.md
