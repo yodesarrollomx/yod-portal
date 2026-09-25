@@ -273,6 +273,16 @@
       });
     } catch (e) { }
   }
+  /* OS-3 · la misma pastilla de estado en todos los tableros, en palabras llanas:
+     verde «Conectado», ámbar «Validando…», rojo «Sin sesión» (clic → entrar en YOD OS). */
+  function pastilla(tipo) {
+    var c = document.getElementById('yodConn'); if (!c) return;
+    var T = { ok: ['Conectado', 'Tu sesión de Google está activa'], wait: ['Validando…', 'Validando tu acceso con Google'], fail: ['Sin sesión', 'Toca para entrar con Google en YOD OS'] }[tipo];
+    c.className = 'yod-conn yod-conn-' + tipo; c.title = T[1];
+    c.querySelector('span').textContent = T[0];
+    c.onclick = tipo === 'fail' ? function () { location.href = OS; } : null;
+    c.style.cursor = tipo === 'fail' ? 'pointer' : '';
+  }
   function boot() {
     if (document.querySelector('.yod-shell')) return;
     document.body.classList.add('yod-on');
@@ -292,7 +302,7 @@
       + '<a class="yod-topbrand" href="' + OS + '" title="Ir a YOD OS" aria-label="Ir a YOD OS"><b>YOD</b><span>OS</span></a>'
       + '<nav class="yod-crumbs" id="yodCrumbs" aria-label="Dónde estoy"><a href="' + OS + '">YOD OS</a><i class="ti ti-chevron-right"></i><b id="yodCrumbHere">' + esc(NAME[cur] || document.title || 'Tablero') + '</b></nav>'
       + '<button class="yod-search" id="yodSearch" type="button"><i class="ti ti-search"></i><span>Buscar un tablero…</span><kbd>⌘ K</kbd></button>'
-      + '<div class="yod-top-actions"><span class="yod-role" id="yodChip" style="display:none"></span><a class="yod-home" href="' + OS + '" title="Subir a YOD OS" aria-label="Subir a YOD OS"><i class="ti ti-home-2"></i><span>YOD OS</span></a></div>';
+      + '<div class="yod-top-actions"><span class="yod-conn yod-conn-wait" id="yodConn" title="Validando tu acceso con Google"><i></i><span>Validando…</span></span><span class="yod-role" id="yodChip" style="display:none"></span><a class="yod-home" href="' + OS + '" title="Subir a YOD OS" aria-label="Subir a YOD OS"><i class="ti ti-home-2"></i><span>YOD OS</span></a></div>';
     main.appendChild(top); main.appendChild(canvas);
 
     var shell = el('div', 'yod-shell'); shell.appendChild(side); shell.appendChild(main);
@@ -392,7 +402,7 @@
   }
   function aplicaIdentidad(j) {
     state.role = String(j.rol || 'vista').trim().toLowerCase(); state.boards = j.boards || '';
-    state.identity = 'ok';
+    state.identity = 'ok'; pastilla('ok');
     var nm = j.nombre || j.correo || 'Equipo YOD';
     var persona = state.role === 'admin' ? 'direccion' : 'colaborador';
     set('yodName', nm); set('yodRole', persona === 'direccion' ? 'Dirección' : 'Colaborador');
@@ -402,7 +412,7 @@
   }
   function loadIdentity() {
     var k = tok();
-    if (!k) { state.identity = 'fail'; set('yodRole', 'Sesión por validar'); applyNav(); return; }
+    if (!k) { state.identity = 'fail'; pastilla('fail'); set('yodRole', 'Sesión por validar'); applyNav(); return; }
     /* Velocidad: la identidad ya validada en esta pestaña pinta el menú AL
        INSTANTE; el canje corre en fondo y solo corrige o cierra si cambió. */
     var cacheado = null;
@@ -416,7 +426,7 @@
       }).catch(function () {
         try { sessionStorage.removeItem('yod_id_v1'); } catch (e) { }
         if (cacheado) purgeAll();
-        state.identity = 'fail'; set('yodRole', 'Sesión por validar'); applyNav();
+        state.identity = 'fail'; pastilla('fail'); set('yodRole', 'Sesión por validar'); applyNav();
       });
   }
 

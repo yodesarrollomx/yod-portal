@@ -173,3 +173,9 @@ body.yod-on{margin:0;background:#f6f3ed}
 @media(max-width:900px){.yod-crumbs a,.yod-crumbs .ti{display:none}.yod-crumbs{font-size:12px;flex:1}}
 .yod-nav-item.hay-nuevo{position:relative}
 .yod-nav-item.hay-nuevo::after{content:"";position:absolute;right:12px;top:50%;width:7px;height:7px;margin-top:-3.5px;border-radius:50%;background:#c9a227;box-shadow:0 0 0 3px rgba(201,162,39,.22)}
+/* OS-3 · pastilla de estado */
+.yod-conn{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;border:1px solid var(--yline,#e1dacb);white-space:nowrap}
+.yod-conn i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.yod-conn-ok i{background:#2f9e5b}.yod-conn-wait i{background:#d4a017}.yod-conn-fail i{background:#d23b2e}
+.yod-conn-fail{border-color:rgba(210,59,46,.45)}
+@media(max-width:430px){.yod-conn span{display:none}.yod-conn{padding:6px}}
