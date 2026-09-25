@@ -65,7 +65,7 @@
   };
   // Versión corta del tablero embebido: se sube a mano cuando cambia tablero.html
   // (sin esto, el caché de 10 min de Pages servía el tablero viejo tras un deploy).
-  var TABLERO_V='os3';
+  var TABLERO_V='os4';
   var state={modules:[],rawRows:[],role:'vista',boards:'',profileReady:false,loading:false,opsScope:'mias',allTasks:[],sesionEpoch:0};
   var $=function(id){return document.getElementById(id);};
   // ¿hay clave guardada? distingue «sin sesión» de «sesión validándose»

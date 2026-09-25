@@ -98,7 +98,7 @@
   <a id="gateGoogle" href="os/" target="_top" onclick="if(window.YODPortero&&window.parent===window){YODPortero.entrar();return false}" style="display:block;text-align:center;text-decoration:none;padding:12px;border-radius:10px;background:#2c2718;color:#f6f3ed;font-weight:600">Entrar con Google</a>
   <div id="gateErr"></div>
 </div></div>
-<div id="w" style="display:none"><div id="etapas" aria-label="Proyectos por etapa"></div><div id="sw"><b>CRM</b>
+<div id="w" style="display:none"><div id="etapas" aria-label="Proyectos por etapa"></div><div id="fuentes" aria-label="Fuentes del tablero"></div><div id="sw"><b>CRM</b>
  <button data-v="surcos">1 &middot; Cuatro surcos</button>
  <button data-v="abaco">2 &middot; El &aacute;baco</button>
  <i id="leyHex">el hex&aacute;gono se pinta por su n&uacute;mero; el punto dice de d&oacute;nde sale el dato: <span data-punto="linea">&#9679;</span> en l&iacute;nea &middot; <span data-punto="fuente">&#9679;</span> fuente lista, sin conectar &middot; <span data-punto="ciego">&#9679;</span> ciego: no contest&oacute; &middot; <span data-punto="tentativo">&#9679;</span> tentativo, sin fuente<em>&times;N en la canica = varios casos: p&iacute;cala</em></i></div>
@@ -114,6 +114,9 @@
 #etapas .et strong{font-size:26px;line-height:1.1;display:block}
 #etapas .et a{display:inline-block;margin:4px 6px 0 0;font-size:12px;color:inherit;text-decoration:none;border-bottom:1px dotted currentColor;overflow-wrap:anywhere}
 #etapas .flecha{opacity:.5;font-size:11px}
+#fuentes{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px;font-size:11px}
+#fuentes .fu{padding:2px 8px;border-radius:999px;border:1px solid rgba(154,123,63,.3)}
+#fuentes .fu-ok{color:#2f7a4b}#fuentes .fu-no{color:#b3261e;border-color:rgba(179,38,30,.4)}#fuentes .fu-esp{opacity:.6}
 @media (max-width:520px){#etapas{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 <script>
@@ -1932,17 +1935,26 @@ function avisarAlto(){
   _ultimoAlto=h;
   try{ parent.postMessage({yodTablero:"alto", alto:h}, location.origin); }catch(e){}
 }
+const FUENTES={};
+function marcaFuente(n,ok){
+  FUENTES[n]={ok:ok,t:new Date()};
+  const box=document.getElementById("fuentes"); if(!box) return;
+  box.innerHTML=Object.keys(FUENTES).map(function(k){const f=FUENTES[k];
+    const h=f.t.toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit"});
+    return '<span class="fu fu-'+(f.ok===null?"esp":f.ok?"ok":"no")+'" title="'+(f.ok===null?"consultando":f.ok?"terminó de cargar a las "+h+" (si no hay dato, su hexágono lo marca)":"falló al cargar ("+h+")")+'">'+k+(f.ok?" · "+h:f.ok===false?" · falló":" · …")+'</span>';
+  }).join("");
+}
 function abrir(){
   GT.classList.add("off");
   document.getElementById("w").style.display="";
   pintar();                                                 // el lienzo ya tiene tamaño real
-  conectarPPP();
-  conectarMiramar();
-  conectarTracks();
-  conectarTaller();
-  conectarCodes();
-  conectarCRM();
-  conectarObra();
+  /* TC-5 · cada fuente dice si contestó y a qué hora (las 7 van en paralelo:
+     cada hexágono se pinta en cuanto llega lo suyo) */
+  [["PPP",conectarPPP],["Miramar",conectarMiramar],["Tracks",conectarTracks],["Taller",conectarTaller],
+   ["Códigos",conectarCodes],["CRM",conectarCRM],["Obra",conectarObra]].forEach(function(f){
+    marcaFuente(f[0],null);
+    Promise.resolve().then(f[1]).then(function(){marcaFuente(f[0],true);},function(){marcaFuente(f[0],false);});
+  });
   sondaFinance();
   avisarAlto(); setTimeout(avisarAlto,400); setTimeout(avisarAlto,1600);
   addEventListener("resize",avisarAlto);
