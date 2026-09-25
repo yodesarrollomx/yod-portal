@@ -1,13 +1,16 @@
-name: Vigía diario · YOD OS
+name: Vigía · YOD OS (el único vigilante)
 
 on:
   schedule:
-    - cron: '7 14 * * *'   # 07:07 America/Hermosillo (UTC-7 fijo, sin horario de verano)
+    - cron: '7 14 * * *'   # 07:07 America/Hermosillo (UTC-7 fijo, sin horario de verano) · reporte del día
+    - cron: '37 * * * *'   # cada hora: solo avisa si algo se rompe (25-sep-2026: absorbe los
+                           # guardianes de aurum-board —uptime y refresco— y la salud de Amalaya)
   workflow_dispatch: {}
 
 permissions:
   contents: read
   issues: write
+  actions: read
 
 jobs:
   vigia:
@@ -119,6 +122,43 @@ jobs:
           cat amalaya.md
           echo "mal=$mal" >> "$GITHUB_OUTPUT"
 
+      # ── Lo que antes vigilaban otros guardianes (25-sep-2026) ──────────────────
+      # aurum-board/guardian-uptime: los backends por donde ENTRAN los leads.
+      # aurum-board/guardian-salud: que el refresco de métricas haya corrido bien.
+      # Y las dos puertas de la Sala. Solo GET y lectura de la API pública de Actions.
+      - name: Leads, refrescos y automatizaciones
+        id: extra
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          mal=0
+          echo "| Pieza | Estado |" > extra.md
+          echo "|---|---|" >> extra.md
+          # Backend del Plan de Potencial: lo sano SIN credencial es que el Portero lo rechace («liga»)
+          r=$(curl -sL --max-time 30 "https://script.google.com/macros/s/AKfycbw3EB-6Q9Mq-ouDU-JvKMrRUaw4auYVeGkKja783yJ7_dEpCOW8xoMhs8IQMDojmlDB3A/exec?recurso=board")
+          if echo "$r" | python3 -c "import json,sys;d=json.load(sys.stdin);sys.exit(0 if d.get('error')=='liga' or d.get('ok') is True else 1)" 2>/dev/null; then e="✅ contesta"; else e="🔴 no contesta JSON"; mal=1; fi
+          echo "| Backend · Plan de Potencial (leads) | $e |" >> extra.md
+          r=$(curl -sL --max-time 30 "https://script.google.com/macros/s/AKfycbztAKA7K5QwO6k45PqjixYLNppLypzCpoz2KvNIkML8kciBLZVKKoais8__0DnYuEQQOg/exec?recurso=textos")
+          if echo "$r" | python3 -c "import json,sys;json.load(sys.stdin)" 2>/dev/null; then e="✅ contesta"; else e="🔴 no contesta JSON"; mal=1; fi
+          echo "| Backend · Cuestionario (leads) | $e |" >> extra.md
+          code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 "https://aurumarquitectos.github.io/experiencia/")
+          [ "$code" != "200" ] && mal=1
+          echo "| Página · Cuestionario | HTTP $code |" >> extra.md
+          # Última corrida EXITOSA de cada automatización y su edad en horas
+          revisa() { # repo workflow umbral_horas nombre
+            ts=$(gh api "repos/$1/actions/workflows/$2/runs?status=success&per_page=1" --jq '.workflow_runs[0].updated_at' 2>/dev/null)
+            if [ -z "$ts" ] || [ "$ts" = "null" ]; then echo "| $4 | ⚪ sin corridas exitosas todavía |" >> extra.md; return; fi
+            h=$(( ( $(date -u +%s) - $(date -u -d "$ts" +%s) ) / 3600 ))
+            if [ "$h" -gt "$3" ]; then echo "| $4 | 🔴 última buena hace ${h} h |" >> extra.md; mal=1; else echo "| $4 | ✅ hace ${h} h |" >> extra.md; fi
+          }
+          revisa yodesarrollomx/aurum-board refresh-board.yml 4 "Refresco de métricas (aurum-board)"
+          revisa yodesarrollomx/sala-edicion sala-cada-hora.yml 3 "Sala · Cada hora"
+          revisa yodesarrollomx/sala-edicion sala-diario.yml 26 "Sala · Diario"
+          revisa yodesarrollomx/sala-edicion publicar.yml 720 "Sala · Publicar"
+          cat extra.md
+          echo "mal=$mal" >> "$GITHUB_OUTPUT"
+
       - name: Asegurar etiquetas
         env:
           GH_TOKEN: ${{ github.token }}
@@ -137,8 +177,12 @@ jobs:
           fi
 
           estado="✅ todo bien"
-          if [ "${{ steps.pruebas.outputs.codigo }}" != "0" ] || [ "${{ steps.salud.outputs.roto }}" = "1" ] || [ "${{ steps.portero.outputs.caido }}" = "1" ] || [ "${{ steps.amalaya.outputs.mal }}" = "1" ]; then
+          if [ "${{ steps.pruebas.outputs.codigo }}" != "0" ] || [ "${{ steps.salud.outputs.roto }}" = "1" ] || [ "${{ steps.portero.outputs.caido }}" = "1" ] || [ "${{ steps.amalaya.outputs.mal }}" = "1" ] || [ "${{ steps.extra.outputs.mal }}" = "1" ]; then
             estado="🔴 hay algo que revisar"
+          fi
+          # La corrida de cada hora solo habla si algo está roto; el reporte completo es el de las 07:07
+          if [ "$estado" = "✅ todo bien" ] && [ "${{ github.event.schedule }}" = "37 * * * *" ]; then
+            echo "Todo bien; la corrida de cada hora no comenta."; exit 0
           fi
 
           {
@@ -154,6 +198,9 @@ jobs:
             echo
             echo "### Portero (login de todos los tableros)"
             cat portero.md
+            echo
+            echo "### Leads y automatizaciones"
+            cat extra.md
             echo
             echo "### Amalaya (bloque aparte · yodesarrollo/amalaya-board)"
             cat amalaya.md
