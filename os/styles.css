@@ -167,3 +167,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,[tabindex]:focus-visibl
 .os-crumbs b{color:var(--ytext,#231d14);font-weight:600;overflow:hidden;text-overflow:ellipsis}
 .os-crumbs .ti{font-size:13px;opacity:.6}
 @media(max-width:900px){.os-crumbs span,.os-crumbs .ti{display:none}.os-crumbs{font-size:12px;flex:1}}
+/* Fase 4 · inicio por persona */
+.mi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.mi-card{display:flex;flex-direction:column;gap:3px;padding:14px 16px;border:1px solid var(--line,#e1dacb);border-radius:12px;background:var(--card,#fff);color:inherit;text-decoration:none;transition:border-color .15s}
+.mi-card:hover{border-color:#9a7b3f}
+.mi-card .ti{font-size:22px;color:#9a7b3f}
+.mi-card b{font-size:15px}
+.mi-card span{font-size:12.5px;opacity:.7}

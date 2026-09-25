@@ -158,6 +158,27 @@
       document.querySelectorAll('[data-system-id="'+sys+'"]').forEach(function(a){a.classList.toggle('hay-nuevo',!!nuevos[sys]);a.title=nuevos[sys]?'Hay algo nuevo desde tu última visita':'';});
     }catch(_e){}
   }
+  /* Fase 4 · un inicio por persona. Dirección arranca en dinero y decisiones
+     (el Pulso sube arriba del tablero); Sayri, en la Sala y sus pendientes (la
+     operación sube, filtrada a su nombre). El resto ve el Inicio de siempre. */
+  function pintarMiInicio(data,persona){
+    var box=$('miInicio'),cont=document.querySelector('.content'),tab=$('tablero');if(!box||!cont||!tab)return;
+    var quien=String((data&&(data.nombre||''))+' '+(data&&(data.correo||''))).toLowerCase();
+    var tarjetas=null,sube=null,titulo='';
+    function t(ic,h,p,href){return '<a class="mi-card" href="'+href+'"><i class="ti ti-'+ic+'"></i><b>'+h+'</b><span>'+p+'</span></a>';}
+    if(persona==='direccion'){
+      titulo='Dinero y decisiones';sube=$('pulso');
+      tarjetas=t('wallet','Tesorería','Saldo, pagos y lo que entra','#pulso')+t('gavel','Decisiones','Lo que espera tu palabra','#pulso')+t('layout-grid','El Despacho','Tu pantalla de trabajo','https://yodesarrollomx.github.io/yod-despacho/');
+    }else if(/sayri/.test(quien)){
+      titulo='La Sala y tus pendientes';sube=$('operacion');
+      try{if(!localStorage.getItem('yod_ops_me')&&data.nombre)localStorage.setItem('yod_ops_me',data.nombre);}catch(_e){}
+      tarjetas=t('movie','Sala de Edición','Lo que se produce hoy','#/embudo/sala')+t('checklist','Mis pendientes','Tus tareas de la semana','#operacion')+t('armchair-2','AURUM','Interiores de los clientes','https://yodesarrollomx.github.io/interiores-aurum/');
+    }
+    if(!tarjetas){box.hidden=true;return;}
+    box.innerHTML='<div class="section-head"><div><p class="eyebrow">Tu inicio</p><h2>'+titulo+'</h2></div></div><div class="mi-grid">'+tarjetas+'</div>';
+    box.hidden=false;
+    if(sube&&sube.parentNode===cont&&sube.nextElementSibling!==tab)cont.insertBefore(sube,tab);
+  }
   function sidebarNode(row){
     var url=window.PortalCore.resolveUrl(row);if(!url)return null;
     var on=window.PortalCore.enabled(row);
@@ -491,7 +512,7 @@
     $('user-role').textContent=persona==='direccion'?'Dirección':'Colaborador';
     if(persona==='direccion'){$('hero-eyebrow').textContent='Centro de operación';$('hero-copy').textContent='Un solo acceso para entrar a la operación completa, sin mover ni duplicar la información de tus tableros.';}
     else{$('hero-eyebrow').textContent='Tu espacio de trabajo';$('hero-copy').textContent='Tus módulos y tus pendientes de la semana, en un solo lugar. Abre lo que necesites.';}
-    document.querySelectorAll('.admin-only').forEach(function(el){el.classList.toggle('hidden',state.role!=='admin');});
+    document.querySelectorAll('.admin-only').forEach(function(el){el.classList.toggle('hidden',state.role!=='admin');});pintarMiInicio(data,persona);
     var visibleQuick=0;document.querySelectorAll('.quick-card[data-system-id]').forEach(function(el){var allowed=window.YodAccessPolicy.canOpen(state.boards,el.dataset.systemId,state.role);el.classList.toggle('hidden',!allowed);if(allowed)visibleQuick++;});$('quick-section').classList.toggle('hidden',visibleQuick===0);
     nombrarAccionesRapidas();
     // «Abrir tablero completo» de Operación semanal: sin el código TA, el encabezado
