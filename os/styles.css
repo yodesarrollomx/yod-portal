@@ -160,3 +160,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,[tabindex]:focus-visibl
 
 /* Sin rayita huérfana en la primera columna de las franjas oscuras */
 .status-strip div:first-child,.operation-metric:first-child{border-left:0;padding-left:0}
+/* Fase 4 · «hay algo nuevo»: punto dorado en el menú */
+.nav-item.hay-nuevo{position:relative}
+.nav-item.hay-nuevo::after{content:"";position:absolute;right:10px;top:50%;width:7px;height:7px;margin-top:-3.5px;border-radius:50%;background:#c9a227;box-shadow:0 0 0 3px rgba(201,162,39,.22)}
+.os-crumbs{display:flex;align-items:center;gap:6px;min-width:0;font-size:13px;color:var(--ymuted,#766f62);white-space:nowrap;overflow:hidden}
+.os-crumbs b{color:var(--ytext,#231d14);font-weight:600;overflow:hidden;text-overflow:ellipsis}
+.os-crumbs .ti{font-size:13px;opacity:.6}
+@media(max-width:900px){.os-crumbs span,.os-crumbs .ti{display:none}.os-crumbs{font-size:12px;flex:1}}

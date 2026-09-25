@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
-  <link rel="stylesheet" href="styles.css?v=relevo19">
+  <link rel="stylesheet" href="styles.css?v=relevo20">
 </head>
 <body>
   <div class="app-shell">
@@ -49,6 +49,7 @@
       <header class="topbar">
         <button class="burger" id="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false"><i class="ti ti-menu-2"></i></button>
         <a class="topbar-brand" href="https://yodesarrollo.mx/" title="Ir a yodesarrollo.mx" aria-label="YOD, ir a yodesarrollo.mx"><span>YOD</span><small>OS</small></a>
+        <nav class="os-crumbs" id="osCrumbs" aria-label="Dónde estoy"><span>YOD OS</span><i class="ti ti-chevron-right"></i><b id="osCrumbHere">Inicio</b></nav>
         <button class="search-trigger" id="search-trigger" type="button" aria-haspopup="dialog">
           <i class="ti ti-search"></i><span>Buscar un módulo…</span><kbd>⌘ K</kbd>
         </button>
@@ -220,10 +221,24 @@
   <script src="adapters/operations.js?v=0.3.0"></script>
   <script src="adapters/finance.js?v=0.1.0"></script>
   <script src="adapters/marketing.js?v=0.1.0"></script>
-  <script src="app.js?v=motor10"></script>
+  <script src="app.js?v=motor11"></script>
   <script src="https://yodesarrollomx.github.io/potenciales-yod/portero.js?v=relevo8"></script>
   <script src="../chinche.js?v=ch5"></script>
   <script>if(window.YODChinche) YODChinche.init({pantalla:"os"});</script>
 
-  </body>
+  <script>
+/* Fase 4 · «Dónde estoy»: las mismas migas que el marco de los tableros (shell.js) */
+(function(){
+  var SUB={sala:'Sala de Edición',metricas:'Métricas',ppp:'Plan de Potencial'};
+  var SEC={pulso:'Pulso del negocio',operacion:'Operación',modulos:'Tableros',tablero:'Tablero'};
+  function pinta(){
+    var h=location.hash||'', b=document.getElementById('osCrumbHere'); if(!b) return;
+    var m=/^#\/embudo(?:\/([\w-]+))?/.exec(h);
+    if(m) b.textContent='Embudo comercial'+(m[1]&&SUB[m[1]]?' › '+SUB[m[1]]:'');
+    else b.textContent=SEC[h.replace(/^#\/?/,'')]||'Inicio';
+  }
+  addEventListener('hashchange',pinta); pinta();
+})();
+</script>
+</body>
 </html>

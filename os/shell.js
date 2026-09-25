@@ -154,7 +154,9 @@
   }
   function navItem(row, cur) {
     var url = enlace(row); if (!url) return null;
-    var a = el('a', 'yod-nav-item' + (row.system_id === cur ? ' active' : ''));
+    var nuevo = false; try { nuevo = row.system_id !== cur && localStorage.getItem('yod_nuevo_' + row.system_id) === '1'; } catch (e) { }
+    var a = el('a', 'yod-nav-item' + (row.system_id === cur ? ' active' : '') + (nuevo ? ' hay-nuevo' : ''));
+    if (nuevo) a.title = 'Hay algo nuevo desde tu última visita';
     a.href = url; a.setAttribute('rel', 'noopener'); if(!esPropioShell(url)) a.setAttribute('target','_blank');
     a.innerHTML = '<i class="ti ti-' + (ICON[row.system_id] || 'layout-dashboard') + '"></i><span>' + esc(row.titulo_portal || NAME[row.system_id] || row.system_id) + '</span>';
     return a;
@@ -163,6 +165,7 @@
     var box = document.getElementById('yodNav'); if (!box) return; box.innerHTML = '';
     state.modules = rows;
     rows.forEach(function (r) { var n = navItem(r, cur); if (n) box.appendChild(n); });
+    rows.forEach(function (r) { if (r.system_id === cur && r.titulo_portal) set('yodCrumbHere', r.titulo_portal); });
     if (!box.children.length) box.innerHTML = '<span class="yod-nav-loading">Sin tableros</span>';
   }
 
@@ -247,6 +250,22 @@
     }
   }
 
+  /* SHELL-10, de verdad (25-sep): cualquier encabezado pegajoso del tablero con
+     top menor al alto de la barra del marco quedaba DEBAJO de ella al bajar (PPP
+     Residencial: .sticky-header en top:0). La regla de shell.css solo cubría
+     header/.secnav/.topbar. Aquí se corrige cualquiera, midiendo la barra real. */
+  function ajustaPegajosos() {
+    try {
+      var bar = document.querySelector('.yod-topbar'); if (!bar) return;
+      var alto = Math.round(bar.getBoundingClientRect().height);
+      document.querySelectorAll('.yod-canvas *').forEach(function (e) {
+        var c = getComputedStyle(e); if (c.position !== 'sticky') return;
+        var base = e.dataset.yodTop != null ? +e.dataset.yodTop : (parseFloat(c.top) || 0);
+        if (e.dataset.yodTop == null) { if (base >= alto) return; e.dataset.yodTop = String(base); }
+        e.style.top = (alto + base) + 'px';
+      });
+    } catch (e) { }
+  }
   function boot() {
     if (document.querySelector('.yod-shell')) return;
     document.body.classList.add('yod-on');
@@ -264,6 +283,7 @@
     top.innerHTML = '<button class="yod-burger" id="yodBurger" type="button" aria-label="Abrir tableros"><i class="ti ti-menu-2"></i></button>'
       + '<button class="yod-back" id="yodBack" type="button" title="Volver a la pantalla anterior" aria-label="Volver a la pantalla anterior"><i class="ti ti-arrow-left"></i><span>Atrás</span></button>'
       + '<a class="yod-topbrand" href="' + OS + '" title="Ir a YOD OS" aria-label="Ir a YOD OS"><b>YOD</b><span>OS</span></a>'
+      + '<nav class="yod-crumbs" id="yodCrumbs" aria-label="Dónde estoy"><a href="' + OS + '">YOD OS</a><i class="ti ti-chevron-right"></i><b id="yodCrumbHere">' + esc(NAME[cur] || document.title || 'Tablero') + '</b></nav>'
       + '<button class="yod-search" id="yodSearch" type="button"><i class="ti ti-search"></i><span>Buscar un tablero…</span><kbd>⌘ K</kbd></button>'
       + '<div class="yod-top-actions"><span class="yod-role" id="yodChip" style="display:none"></span><a class="yod-home" href="' + OS + '" title="Subir a YOD OS" aria-label="Subir a YOD OS"><i class="ti ti-home-2"></i><span>YOD OS</span></a></div>';
     main.appendChild(top); main.appendChild(canvas);
@@ -273,6 +293,10 @@
     document.body.appendChild(shell);
 
     wireDrawer(shell, scrim);
+    // «hay algo nuevo»: entrar a este tablero cuenta como visita; su punto se apaga
+    try { if (cur) { localStorage.setItem('yod_visto_' + cur, String(Date.now())); localStorage.removeItem('yod_nuevo_' + cur); } } catch (e) { }
+    ajustaPegajosos();
+    addEventListener('resize', ajustaPegajosos); setTimeout(ajustaPegajosos, 800); setTimeout(ajustaPegajosos, 2500);
     wireBack();
     var out = document.getElementById('yodOut');
     if (out) out.addEventListener('click', function () { if (confirm('¿Cerrar tu sesión en este dispositivo?')) logout(); });

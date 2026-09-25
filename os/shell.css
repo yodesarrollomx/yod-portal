@@ -163,3 +163,13 @@ body.yod-on{margin:0;background:#f6f3ed}
 @media(max-width:900px){
   .yod-canvas header,.yod-canvas .secnav,.yod-canvas .topbar{top:calc(56px + env(safe-area-inset-top))}
 }
+
+/* Fase 4 · «Dónde estoy» (migas) y «hay algo nuevo» */
+.yod-crumbs{display:flex;align-items:center;gap:6px;min-width:0;font-size:13px;color:var(--ymuted,#766f62);white-space:nowrap;overflow:hidden}
+.yod-crumbs a{color:inherit;text-decoration:none}
+.yod-crumbs a:hover{color:var(--yg,#9a7b3f)}
+.yod-crumbs b{color:var(--ytext,#231d14);font-weight:600;overflow:hidden;text-overflow:ellipsis}
+.yod-crumbs .ti{font-size:13px;opacity:.6}
+@media(max-width:900px){.yod-crumbs a,.yod-crumbs .ti{display:none}.yod-crumbs{font-size:12px;flex:1}}
+.yod-nav-item.hay-nuevo{position:relative}
+.yod-nav-item.hay-nuevo::after{content:"";position:absolute;right:12px;top:50%;width:7px;height:7px;margin-top:-3.5px;border-radius:50%;background:#c9a227;box-shadow:0 0 0 3px rgba(201,162,39,.22)}

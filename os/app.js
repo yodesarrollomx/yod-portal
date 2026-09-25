@@ -143,12 +143,27 @@
   }
 
 
+  /* «Hay algo nuevo» (Fase 4): una huella de lo que el Pulso ve de cada tablero
+     (tareas, tesorería, embudo). Al ENTRAR a ese tablero, el marco (shell.js)
+     apunta yod_visto_<SYS>; la siguiente vez que el OS carga, esa huella pasa a
+     ser la base. Si la huella cambia después de tu última visita: punto dorado. */
+  var nuevos={};
+  function huellaDe(x){try{var t=JSON.stringify(x)||'';var h=0;for(var i=0;i<t.length;i++){h=(h*31+t.charCodeAt(i))|0;}return String(h);}catch(_e){return '';}}
+  function marcaNuevo(sys,dato){
+    try{var h=huellaDe(dato);if(!h)return;
+      var base=localStorage.getItem('yod_base_'+sys),baseT=+(localStorage.getItem('yod_base_t_'+sys)||0),visto=+(localStorage.getItem('yod_visto_'+sys)||0);
+      if(!base||visto>baseT){localStorage.setItem('yod_base_'+sys,h);localStorage.setItem('yod_base_t_'+sys,String(Date.now()));nuevos[sys]=false;}
+      else nuevos[sys]=(base!==h);
+      if(nuevos[sys])localStorage.setItem('yod_nuevo_'+sys,'1');else localStorage.removeItem('yod_nuevo_'+sys);
+      document.querySelectorAll('[data-system-id="'+sys+'"]').forEach(function(a){a.classList.toggle('hay-nuevo',!!nuevos[sys]);a.title=nuevos[sys]?'Hay algo nuevo desde tu última visita':'';});
+    }catch(_e){}
+  }
   function sidebarNode(row){
     var url=window.PortalCore.resolveUrl(row);if(!url)return null;
     var on=window.PortalCore.enabled(row);
     var a=document.createElement(on?'a':'span');a.className='nav-item'+(on?'':' nav-item-off');
     if(on){a.href=hrefDe(url);a.rel='noopener';if(!esPropio(hrefDe(url)))a.target='_blank';}else{a.setAttribute('aria-disabled','true');}
-    a.dataset.systemId=row.system_id;
+    a.dataset.systemId=row.system_id;if(nuevos[row.system_id]){a.classList.add('hay-nuevo');a.title='Hay algo nuevo desde tu última visita';}
     var i=document.createElement('i');i.className='ti ti-'+(ICONS[row.system_id]||window.PortalCore.safeIcon(row.icono));
     var s=document.createElement('span');s.textContent=safeText(row.titulo_portal)||safeText(row.system_id);
     a.append(i,s);return a;
@@ -678,7 +693,7 @@
       state.allTasks=Array.isArray(result.tasks)?result.tasks:[];
       if(state.role==='admin')loadReconcile(token);
       if(state.role==='admin')renderDecisions(state.allTasks,result.source);
-      renderOpsScoped(result.source,result.updatedAt);
+      renderOpsScoped(result.source,result.updatedAt);marcaNuevo('SYS-TAREAS',(result.tasks||[]).map(function(t){return [t.id,t.estado,t.actualizado||''];}));
     }
     catch(error){
       if(ep!==state.sesionEpoch)return;
@@ -748,13 +763,13 @@
   async function loadFinance(token){
     var c=pulseCacheRead('finance'),ep=state.sesionEpoch;
     if(c){renderFinance({summary:c.summary});marcarCache('finance-panel',c.ts);}
-    try{var r=await window.YodFinance.load(token);if(ep!==state.sesionEpoch)return;renderFinance(r);if(!sinSaldo(r))pulseCacheWrite('finance',r.summary);}
+    try{var r=await window.YodFinance.load(token);if(ep!==state.sesionEpoch)return;renderFinance(r);marcaNuevo('SYS-FLUJO',r.summary);if(!sinSaldo(r))pulseCacheWrite('finance',r.summary);}
     catch(_error){if(ep!==state.sesionEpoch)return;if(!c)renderPulseError('finance-card','finance-panel','Flujo');else marcarCacheFallo('finance-panel');}
   }
   async function loadMarketing(token){
     var c=pulseCacheRead('marketing'),ep=state.sesionEpoch;
     if(c){renderMarketing({summary:c.summary});marcarCache('marketing-panel',c.ts);}
-    try{var r=await window.YodMarketing.load(token);if(ep!==state.sesionEpoch)return;renderMarketing(r);if(!sinKpis(r))pulseCacheWrite('marketing',r.summary);}
+    try{var r=await window.YodMarketing.load(token);if(ep!==state.sesionEpoch)return;renderMarketing(r);marcaNuevo('SYS-MARKETING',r.summary);if(!sinKpis(r))pulseCacheWrite('marketing',r.summary);}
     catch(_error){if(ep!==state.sesionEpoch)return;if(!c)renderPulseError('marketing-card','marketing-panel','Embudo comercial');else marcarCacheFallo('marketing-panel');}
   }
   async function loadPulse(token){
