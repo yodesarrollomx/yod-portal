@@ -141,3 +141,17 @@ assert.ok(shellJs.includes('function conAltasNuevas('), 'shell.js perdió conAlt
 assert.ok(shellJs.includes('yod_portal_cat_ids_v1'), 'shell.js debe recordar qué ids SÍ trae el Sheet');
 
 console.log('Respaldo del catálogo: ningún tablero desaparece si el Sheet calla: passed');
+
+// --- Registro de proyectos (folio único) ---
+{
+  const P=require('./os/proyectos.js');
+  const folios=P.lista.map(p=>p.folio);
+  assert.equal(new Set(folios).size,folios.length,'folio repetido en os/proyectos.js');
+  P.lista.forEach(p=>{ assert.ok(/^PRJ-[A-Z0-9-]+$/.test(p.folio),'folio mal formado: '+p.folio);
+    assert.ok(!p.etapa||P.etapas.includes(p.etapa),'etapa desconocida: '+p.etapa);
+    if(p.tablero) assert.ok(p.tablero.startsWith('https://yodesarrollomx.github.io/'),'tablero fuera de casa: '+p.folio); });
+  assert.equal(P.folio('Real de Miramar Guaymas'),'PRJ-RM');
+  assert.equal(P.folio('  admin '),'PRJ-ADMIN');
+  assert.equal(P.duplicados([{proyecto:'Admin',actividad:'Pagar el predial'},{proyecto:'Admin ',actividad:'predial pagar'}]).length,1);
+  console.log('Registro de proyectos: folios únicos, etapas y alias: passed');
+}
