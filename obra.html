@@ -119,6 +119,11 @@ textarea{width:100%;padding:.55rem .65rem;background:var(--panel2);border:1px so
 #pProduccion input[type=date]{width:auto}
 .cadena{font-family:var(--mono);font-size:.68rem;letter-spacing:.05em;color:var(--dim);margin-top:1.6rem;padding-top:1rem;border-top:1px solid var(--line)}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.cola-firma{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px}
+.cola-t{border:1px solid rgba(154,123,63,.35);border-radius:10px;padding:10px 12px;background:rgba(154,123,63,.06)}
+.cola-t b{font-size:24px;display:block;line-height:1.1}
+.cola-t small{display:block;opacity:.7;font-size:11.5px}
+.espera{font-size:11px;opacity:.75;margin-left:6px}
 </style>
 </head>
 <body>
@@ -238,7 +243,8 @@ textarea{width:100%;padding:.55rem .65rem;background:var(--panel2);border:1px so
   </div>
 
   <div class="pane" id="pBandeja" role="tabpanel" hidden>
-    <div id="bandeja"></div>
+    <div id="colaFirma" class="cola-firma" aria-live="polite"></div>
+<div id="bandeja"></div>
   </div>
 
   <div class="cadena" id="pieCadena"></div>
@@ -453,7 +459,20 @@ function meToca(a){
   if(ROL==="VERIFICA")  return a.estado==="PROPUESTO" && a.propuesto_por!==QUIEN;
   return false;
 }
+/* Fase 4 · la cola de firma para todos: cuántos avances esperan verificación o
+   autorización y desde hace cuántos días (la fecha más reciente que traiga el
+   avance: verificado > propuesto > captura). */
+function fechaAvance(a){ return a.fecha_verificado||a.verificado_en||a.fecha_propuesta||a.propuesto_en||a.fecha||a.timestamp||a.creado||""; }
+function pintarCola(){
+  const box=$("#colaFirma"); if(!box) return;
+  const av=D.avances||[];
+  const tramo=(est,txt)=>{ const l=av.filter(a=>a.estado===est);
+    const viejo=l.reduce((m,a)=>Math.max(m,dias(fechaAvance(a))),0);
+    return '<div class="cola-t"><b>'+l.length+'</b> '+txt+(l.length?'<small>'+(viejo?'la más vieja espera '+viejo+(viejo===1?' día':' días'):(l.some(a=>fechaAvance(a))?'de hoy':'sin fecha registrada'))+'</small>':'<small>nada esperando</small>')+'</div>'; };
+  box.innerHTML=tramo("PROPUESTO","por verificar")+tramo("VERIFICADO","por autorizar");
+}
 function pintarBandeja(){
+  pintarCola();
   const mios=(D.avances||[]).filter(meToca);
   const b=$("#badge");
   if(mios.length){ b.hidden=false; b.textContent=mios.length; } else { b.hidden=true; b.textContent=""; }
@@ -469,7 +488,7 @@ function pintarBandeja(){
     const acto = a.estado==="PROPUESTO" ? "Verificar" : "Autorizar el pago";
     return '<details class="card" open><summary><span class="nm">'+esc(a.frente||"—")+'</span>'+
       '<span class="pill '+(a.estado==="PROPUESTO"?"p-warn":"p-ok")+'">'+esc(a.estado)+'</span>'+
-      '<span class="mt">'+dinero(a.monto_propuesto)+'</span></summary><div class="body">'+
+      '<span class="mt">'+dinero(a.monto_propuesto)+'</span>'+(fechaAvance(a)?'<span class="espera">espera '+dias(fechaAvance(a))+' d</span>':'')+'</summary><div class="body">'+
       '<p class="nota">'+esc(a.id)+' · lo propuso <b>'+esc(a.propuesto_por)+'</b>'+
       (a.nota?' · «'+esc(a.nota)+'»':"")+
       (a.verificado_por?' · verificó <b>'+esc(a.verificado_por)+'</b>':"")+'</p>'+
