@@ -58,14 +58,16 @@
     'SYS-MARKETING': 'https://yodesarrollomx.github.io/aurum-board/',
     'SYS-OBRA': 'https://yodesarrollomx.github.io/yod-portal/obra.html'
   };
-  var ICON = { 'SYS-POTENCIALES': 'map-2', 'SYS-TRACK': 'route', 'SYS-MIRAMAR': 'building-community', 'SYS-TAREAS': 'checklist', 'SYS-FLUJO': 'wallet', 'SYS-INTERIORES': 'armchair-2', 'SYS-INVERSION': 'presentation-analytics', 'SYS-MARKETING': 'speakerphone', 'SYS-OBRA': 'building-skyscraper', 'SYS-DESPACHO': 'layout-grid' };
+  var ICON = { 'SYS-DESPACHO': 'layout-grid', 'SYS-POTENCIALES': 'map-2', 'SYS-TRACK': 'route', 'SYS-MIRAMAR': 'building-community', 'SYS-TAREAS': 'checklist', 'SYS-FLUJO': 'wallet', 'SYS-INTERIORES': 'armchair-2', 'SYS-INVERSION': 'presentation-analytics', 'SYS-MARKETING': 'speakerphone', 'SYS-OBRA': 'building-skyscraper' };
   /* Los títulos oficiales viven en la pestaña Portal del Control Maestro
      (titulo_portal); estos son solo el respaldo si aquella no contesta.
      Deben decir LO MISMO que el Sheet — si renombras allá, renombra acá. */
-  var NAME = { 'SYS-POTENCIALES': 'PPP', 'SYS-TRACK': 'Codesarrollos', 'SYS-MIRAMAR': 'Real de Miramar', 'SYS-TAREAS': 'MOAC', 'SYS-FLUJO': 'Flujo', 'SYS-INTERIORES': 'AURUM', 'SYS-INVERSION': 'Codesarrolladores', 'SYS-MARKETING': 'Embudo comercial', 'SYS-OBRA': 'Obra en vivo', 'SYS-DESPACHO': 'El Despacho' };
+  var NAME = { 'SYS-DESPACHO': 'El Despacho', 'SYS-POTENCIALES': 'PPP', 'SYS-TRACK': 'Codesarrollos', 'SYS-MIRAMAR': 'Real de Miramar', 'SYS-TAREAS': 'MOAC', 'SYS-FLUJO': 'Flujo', 'SYS-INTERIORES': 'AURUM', 'SYS-INVERSION': 'Codesarrolladores', 'SYS-MARKETING': 'Embudo comercial', 'SYS-OBRA': 'Obra en vivo' };
   // Códigos por tablero — MISMA matriz que YOD OS (access-policy.js). El menú
   // solo enseña lo que tu sesión permite; el muro real sigue siendo cada backend.
   var CODES = {
+    // generado desde os/catalogo.js (node scripts/catalogo.cjs); SYS-CONTROL solo lo abre Dirección
+    'SYS-DESPACHO': ['DP'],
     'SYS-POTENCIALES': ['PT', 'MP', 'MA', 'MX', 'UN', 'RE', 'PA'],
     'SYS-TRACK': ['CO', 'TC'],
     'SYS-MIRAMAR': ['RM'],
@@ -75,10 +77,7 @@
     'SYS-INVERSION': ['IV'],
     'SYS-MARKETING': ['MK'],
     'SYS-OBRA': ['OB'],
-    // SYS-CONTROL (Sheet Control Maestro) no tiene tablero ni DEST: vive aquí solo
-    // para que esta matriz diga LO MISMO que access-policy.js. Solo lo abre Dirección.
-    'SYS-CONTROL': ['AC'],
-    'SYS-DESPACHO': ['DP']
+    'SYS-CONTROL': ['AC']
   };
   // identity: 'pending' (validando) | 'ok' (canje válido) | 'fail' (sin sesión o canje falló)
   var state = { role: '', boards: '', modules: [], identity: 'pending', catalogRows: null, catalogIds: null };

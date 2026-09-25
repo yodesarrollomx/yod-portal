@@ -29,6 +29,7 @@ Repo: `yodesarrollomx/yod-portal` (`git remote -v`), público, Pages desde `main
 
 ## Reglas INVIOLABLES
 
+0. **El catálogo de tableros vive en `os/catalogo.js` (SH-2, 25-sep-2026).** Nombre de respaldo, ícono, códigos y destino se editan AHÍ y luego `node scripts/catalogo.cjs` regenera las copias de `os/shell.js`, `os/access-policy.js` y `os/app.js`; `verify-os` falla si alguien edita una copia a mano. La matriz de `potenciales-yod/accesos.html` la vigila `verify-accesos.cjs`.
 1. **Las tres tablas de códigos dicen LO MISMO, siempre.** `os/access-policy.js` (`SYSTEM_CODES`),
    `os/shell.js` (`CODES`) y `potenciales-yod/accesos.html` (`CODES`). Si divergen, un colaborador
    con acceso queda bloqueado — fue el bug `BA`→`TA` del 15-jul-2026 (`CODIGOS-BOARDS.md`).

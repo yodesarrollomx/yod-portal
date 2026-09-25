@@ -168,3 +168,6 @@ console.log('Respaldo del catálogo: ningún tablero desaparece si el Sheet call
   assert.ok(fs.readFileSync('os/index.html','utf8').includes('yod-acceso.js'),'os/index.html no carga yod-acceso.js');
   console.log('Dirección del Portero: una sola copia (os/yod-acceso.js): passed');
 }
+
+// --- SH-2: catálogo único (os/catalogo.js) ---
+require('node:child_process').execFileSync(process.execPath,[require.resolve('./scripts/catalogo.cjs'),'--check'],{stdio:'inherit'});

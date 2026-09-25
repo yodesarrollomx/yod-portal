@@ -3,6 +3,7 @@
   // Código de cada tablero YOD OS (debe coincidir con la matriz de Accesos).
   // Se incluyen los códigos históricos de Potenciales/Track por compatibilidad.
   var SYSTEM_CODES=Object.freeze({
+    'SYS-DESPACHO':['DP'],
     'SYS-POTENCIALES':['PT','MP','MA','MX','UN','RE','PA'],
     'SYS-TRACK':['CO','TC'],
     'SYS-MIRAMAR':['RM'],
@@ -12,8 +13,7 @@
     'SYS-INVERSION':['IV'],
     'SYS-MARKETING':['MK'],
     'SYS-OBRA':['OB'],
-    'SYS-CONTROL':['AC'],
-    'SYS-DESPACHO':['DP']
+    'SYS-CONTROL':['AC']
   });
   function codes(value){var raw=String(value||'').trim();if(!raw)return [];if(raw==='*')return ['*'];return raw.toUpperCase().split(/[,|; ]+/).filter(Boolean);}
   function hasCode(boards,code){var list=codes(boards);return list.includes('*')||list.includes(String(code||'').toUpperCase());}

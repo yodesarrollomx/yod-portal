@@ -52,9 +52,16 @@
   var TOKEN_KEY='pyod_clave_v1';
   var SALA_GAS='https://script.google.com/macros/s/AKfycbx61UWsEYCL_dHzi0JrUv3GuAUFSDWW4iCmlNmbDDvWBIYY4Hhqkf6sYmt4d8UGIlk7MA/exec';
   var ICONS={
-    'SYS-POTENCIALES':'map-2','SYS-TRACK':'route','SYS-MIRAMAR':'building-community',
-    'SYS-TAREAS':'checklist','SYS-FLUJO':'wallet','SYS-INTERIORES':'armchair-2',
-    'SYS-INVERSION':'presentation-analytics','SYS-MARKETING':'speakerphone','SYS-OBRA':'building-skyscraper'
+    'SYS-DESPACHO':'layout-grid',
+    'SYS-POTENCIALES':'map-2',
+    'SYS-TRACK':'route',
+    'SYS-MIRAMAR':'building-community',
+    'SYS-TAREAS':'checklist',
+    'SYS-FLUJO':'wallet',
+    'SYS-INTERIORES':'armchair-2',
+    'SYS-INVERSION':'presentation-analytics',
+    'SYS-MARKETING':'speakerphone',
+    'SYS-OBRA':'building-skyscraper'
   };
   // Versión corta del tablero embebido: se sube a mano cuando cambia tablero.html
   // (sin esto, el caché de 10 min de Pages servía el tablero viejo tras un deploy).
