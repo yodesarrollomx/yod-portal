@@ -259,7 +259,8 @@
           // UNA SOLA LLAVE: si la Sala no tiene la suya, va la credencial del OS.
           // El Sheet de la Sala la valida contra el Portero y decide el rol.
           var g=localStorage.getItem('sala_gas')||SALA_GAS;
-          var k=localStorage.getItem('sala_clave')||localStorage.getItem(TOKEN_KEY);
+          // 25-sep: la sesión de Google (la del Portero) va PRIMERO; la llave vieja de la Sala solo si no hay sesión
+          var k=localStorage.getItem(TOKEN_KEY)||localStorage.getItem('sala_clave');
           var r=localStorage.getItem('sala_rol');
           if(g&&k) extra='#gas='+encodeURIComponent(g)+'&clave='+encodeURIComponent(k)+(r?'&rol='+encodeURIComponent(r):'');
         }
