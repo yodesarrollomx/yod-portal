@@ -4,7 +4,7 @@
    (columna project_id = el folio). Esta es una FOTO pública, sin cifras ni
    correos: solo folio, nombre, código, tipo y etapa. Si se da de alta un
    proyecto en el Sheet, se agrega aquí (y `node verify-os.cjs` lo revisa).
-   Foto tomada: 2026-09-25.
+   Foto tomada: 2026-09-25 (altas PRJ-CERCADA y PRJ-RUISENOR del mismo día).
 
    `alias`: cómo aparece escrito el proyecto en los otros Sheets (el board de
    tareas dice «Real de Miramar Guaymas», con espacios de más, etc.). Así un
@@ -18,7 +18,7 @@
   var BASE = 'https://yodesarrollomx.github.io/';
   var PROYECTOS = [
     { folio: 'PRJ-RM', nombre: 'Real de Miramar', codigo: 'RM', tipo: 'Codesarrollo', etapa_actual: 'Preventa I', etapa: 'Venta',
-      alias: ['Real de Miramar Guaymas', 'Miramar'], tablero: BASE + 'real-miramar-board/' },
+      alias: ['Real de Miramar Guaymas', 'Real de Miramar de Guaymas', 'Miramar'], tablero: BASE + 'real-miramar-board/' },
     { folio: 'PRJ-ALYSA', nombre: 'Casa Alysa', codigo: 'ALYSA', tipo: 'Codesarrollo', etapa_actual: 'Obra y comercialización', etapa: 'Obra',
       alias: ['Alysa'], tablero: BASE + 'yod-portal/track-alysa.html' },
     { folio: 'PRJ-MARIA', nombre: 'Casa María', codigo: 'MARIA', tipo: 'Codesarrollo', etapa_actual: 'Arranque', etapa: 'Potencial',
@@ -29,6 +29,8 @@
     { folio: 'PRJ-NUEVOS-CLIENTES', nombre: 'Nuevos Clientes', codigo: 'NUEVOS-CLIENTES', tipo: 'Frente operativo', etapa_actual: 'Por clasificar', etapa: '', alias: [] },
     { folio: 'PRJ-PAGINA-WEB', nombre: 'Página Web', codigo: 'PAGINA-WEB', tipo: 'Frente operativo', etapa_actual: 'Por clasificar', etapa: '', alias: ['Pagina Web'] },
     { folio: 'PRJ-PROMOTORA', nombre: 'Promotora', codigo: 'PROMOTORA', tipo: 'Frente operativo', etapa_actual: 'Por clasificar', etapa: '', alias: [] },
+    { folio: 'PRJ-CERCADA', nombre: 'La Cercada', codigo: 'CERCADA', tipo: 'Codesarrollo', etapa_actual: 'Por clasificar', etapa: '', alias: ['Cercada'] },
+    { folio: 'PRJ-RUISENOR', nombre: 'Torre Ruiseñor', codigo: 'RUISENOR', tipo: 'Codesarrollo', etapa_actual: 'Por clasificar', etapa: '', alias: ['Torre Ruisenor', 'Ruiseñor'] },
     { folio: 'PRJ-RNM', nombre: 'RNM', codigo: 'RNM', tipo: 'Frente operativo', etapa_actual: 'Por clasificar', etapa: '', alias: ['Residencia Navarro Muñoz'] }
   ];
   var ETAPAS = ['Potencial', 'Trámite', 'Obra', 'Venta'];

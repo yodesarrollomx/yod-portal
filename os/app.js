@@ -6,8 +6,8 @@
      aurumarquitectos.com (hoy suspendido): aunque el gate ya te dejara pasar, el
      portal se quedaba en "Verificando Acceso…" para siempre. Ahora usa el mismo
      relevo que el resto del sistema: original primero, respaldo si falla. */
-  var PORTERO_ORIGINAL=window.YOD_PORTERO.original;   // única copia: os/yod-acceso.js
-  var PORTERO_RESPALDO=window.YOD_PORTERO.respaldo;
+  var PORTERO_ORIGINAL=(window.YOD_PORTERO||{}).original;   // única copia: os/yod-acceso.js
+  var PORTERO_RESPALDO=(window.YOD_PORTERO||{}).respaldo;
   /* El ORIGINAL siempre primero; el respaldo solo si aquel falla en esta llamada.
      Antes el relevo se pegaba en localStorage y, al reactivarse Google, el
      navegador seguía en el respaldo (que no conoce correos ni login de Google). */
@@ -242,6 +242,13 @@
       abrir.href=String(b.dataset.src||'').replace(/[?&]embed=1/,'').replace(/\?$/,'');
       clearTimeout(tOut);
       load.classList.remove('off');
+      if(vista==='metricas'&&!state.profileReady){
+        // llegando en frío (desde el menú de otro tablero) el acceso aún se valida:
+        // no se dice «sin permiso» antes de tiempo; revisarPuertaEmbudo la reabre al validar
+        bloqueado=true;frame.src='about:blank';
+        load.innerHTML='<i class="ti ti-loader-2 spin" style="font-size:26px"></i><span>Validando tu acceso…</span>';
+        return;
+      }
       if(vista==='metricas'&&!mkOK()){
         bloqueado=true;frame.src='about:blank';   // se suelta el tablero anterior
         load.innerHTML='<i class="ti ti-shield-lock" style="font-size:26px"></i><span>Métricas del embudo no está incluida en los permisos de esta cuenta.</span>';
@@ -320,6 +327,8 @@
       if(mt)mt.hidden=state.profileReady&&!ok;
       // solo se repinta cuando el permiso CAMBIÓ: si no, cada refresco recargaba el marco
       if(ok!==mkPrev&&mask.classList.contains('open')&&vistaActual==='metricas')ir('metricas');
+      // si se llegó por la ruta #/embudo/… y la máscara no quedó abierta, se abre ya
+      var rv=rutaDe(); if(state.profileReady&&rv&&!mask.classList.contains('open'))window.abrirEmbudo(rv,true);
       mkPrev=ok;
     };
     // la sección del embudo: tarjeta clara con las tres puertas, como las decisiones del día

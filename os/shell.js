@@ -265,6 +265,7 @@
     try {
       var bar = document.querySelector('.yod-topbar'); if (!bar) return;
       var alto = Math.round(bar.getBoundingClientRect().height);
+      if (!alto) return;   // barra aún oculta (candado): se reintenta al bajar o al cambiar tamaño
       document.querySelectorAll('.yod-canvas *').forEach(function (e) {
         var c = getComputedStyle(e); if (c.position !== 'sticky') return;
         var base = e.dataset.yodTop != null ? +e.dataset.yodTop : (parseFloat(c.top) || 0);
@@ -303,7 +304,8 @@
     // «hay algo nuevo»: entrar a este tablero cuenta como visita; su punto se apaga
     try { if (cur) { localStorage.setItem('yod_visto_' + cur, String(Date.now())); localStorage.removeItem('yod_nuevo_' + cur); } } catch (e) { }
     ajustaPegajosos();
-    addEventListener('resize', ajustaPegajosos); setTimeout(ajustaPegajosos, 800); setTimeout(ajustaPegajosos, 2500);
+    addEventListener('resize', ajustaPegajosos); setTimeout(ajustaPegajosos, 800); setTimeout(ajustaPegajosos, 2500); setTimeout(ajustaPegajosos, 6000);
+    var _pegTick = 0; addEventListener('scroll', function () { if (_pegTick) return; _pegTick = setTimeout(function () { _pegTick = 0; ajustaPegajosos(); }, 250); }, { passive: true });
     wireBack();
     var out = document.getElementById('yodOut');
     if (out) out.addEventListener('click', function () { if (confirm('¿Cerrar tu sesión en este dispositivo?')) logout(); });

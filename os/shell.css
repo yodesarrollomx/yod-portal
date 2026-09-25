@@ -50,7 +50,7 @@ body.yod-on{margin:0;background:#f6f3ed}
 /* max-width/margin/padding/box-shadow fijados para que reglas header{}/main{}
    de cada board NO se filtren sobre el chrome del shell (topbar/main). */
 .yod-main{min-width:0;display:flex;flex-direction:column;max-width:none;margin:0;padding:0}
-.yod-topbar{height:64px;position:sticky;top:0;z-index:20;border-bottom:1px solid var(--yline);
+.yod-topbar{height:64px;position:sticky;top:0;z-index:150;border-bottom:1px solid var(--yline);
   background:rgba(246,243,237,.92);backdrop-filter:blur(12px);display:flex;align-items:center;padding:0 30px;gap:18px;
   max-width:none;margin:0;box-shadow:none;flex:none}
 .yod-search{width:min(420px,52%);height:39px;border:1px solid var(--yline);background:var(--ycard);border-radius:9px;
@@ -98,7 +98,7 @@ body.yod-on{margin:0;background:#f6f3ed}
 .yod-topbrand{display:none;align-items:baseline;gap:5px;text-decoration:none;color:var(--yink);padding:0 2px;flex:none}
 .yod-topbrand b{font-family:'Instrument Serif',Georgia,serif;font-size:21px;font-weight:400;letter-spacing:.02em;line-height:1}
 .yod-topbrand span{font-size:9px;letter-spacing:.14em;color:var(--yg,#9a7b3f)}
-.yod-topbar{z-index:100}
+.yod-topbar{z-index:150}   /* arriba de los encabezados pegajosos de los tableros (PPP usa 100) */
 
 /* ---- responsive · móvil como app (cajón deslizante) ---- */
 /* UN SOLO bloque de móvil: antes había dos y el segundo pisaba al primero. */

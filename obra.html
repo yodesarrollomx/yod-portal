@@ -260,8 +260,8 @@ const LSK="pyod_clave_v1", LSQ="yod_obra_quien";
 /* Quién eres NO se escoge en un combo: sale del canje del Portero (nombre,
    correo y rol de la sesión). Mismo relevo que el resto del OS: original
    primero, respaldo solo si aquel falla. */
-const PORTERO_ORIGINAL=window.YOD_PORTERO.original;   // única copia: os/yod-acceso.js
-const PORTERO_RESPALDO=window.YOD_PORTERO.respaldo;
+const PORTERO_ORIGINAL=(window.YOD_PORTERO||{}).original;   // única copia: os/yod-acceso.js
+const PORTERO_RESPALDO=(window.YOD_PORTERO||{}).respaldo;
 const SINYO="Tu sesión no trae nombre en Roles: no puedes firmar. Pídeselo a Dirección.";
 let K=localStorage.getItem(LSK)||"", D=null, QUIEN="", ROL="", SES=null;
 
