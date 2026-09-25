@@ -152,6 +152,7 @@ textarea{width:100%;padding:.55rem .65rem;background:var(--panel2);border:1px so
       <span class="rolchip" id="miRol">—</span>
       <span id="quienNota" style="font-size:.8rem;color:var(--muted)"></span>
       <span id="hInfo" style="margin-left:auto;font-family:var(--mono);font-size:.72rem;color:var(--dim)"></span>
+      <a href="obra-app/" style="font-size:.8rem">YOD Obra →</a>
     </div>
   </header>
 
@@ -867,6 +868,10 @@ const T=[["#tEstado","#pEstado"],["#tCapturar","#pCapturar"],["#tSemana","#pSema
 T.forEach(([t,p],i)=>$(t).onclick=()=>T.forEach(([tt,pp],j)=>{
   $(tt).setAttribute("aria-selected",j===i?"true":"false"); $(pp).hidden=(j!==i);
 }));
+/* YOD Obra enlaza directo a cada pestaña: obra.html#capturar, #bandeja, #semana, #frenos */
+const HASH_TAB={estado:0,capturar:1,semana:2,frenos:3,bandeja:4};
+function tabDeHash(){ const i=HASH_TAB[location.hash.replace("#","")]; if(i!=null) $(T[i][0]).click(); }
+tabDeHash(); addEventListener("hashchange",tabDeHash);
 $("#selQuien").onchange=()=>{ localStorage.setItem(LSQ,$("#selQuien").value); pintar(); };
 $("#selFrente").onchange=pintarCaptura;
 $("#btnEnviar").onclick=enviar;

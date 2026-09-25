@@ -187,3 +187,14 @@ guarda sus **direcciones** (`portal-core.js` `DESTINATIONS`) y sus **códigos** 
   el marco se actualice solo en todos lados) o debería ser ruta relativa?
 - El `README.md` describe el portal v1 (6 tarjetas, "El portal no autentica", tarjeta de Obra en
   "Próximamente"). Pregunta: ¿se reescribe para que hable de YOD OS, o se deja como historia?
+
+## YOD Obra (`obra-app/`, 25-sep-2026)
+
+La super app de obra: una sola estructura para cualquier tipo de obra (Proyecto PRJ → Unidad → Partida → Avance).
+- `obra-app/tipos.js` plantillas por tipo · `obras.js` registro folio→motor · `calculo.js` cálculos puros · `app.js` pantallas.
+- El avance global NO se captura: `calculo.js` lo pondera por importe (sin precios, promedio simple).
+- La captura y la firma siguen en `obra.html` (motor probado); la app enlaza a `obra.html#capturar|bandeja|semana|frenos`.
+- El cliente NUNCA ve YOD OS: `obra-app/index.html` no carga `shell.js` ni la chinche (lo vigila `verify-obra-app.cjs`).
+- Módulo cliente (pagos, documentos, dudas, fotos, gastos): `obra-app/motor/ObraCliente.gs`, Apps Script APARTE.
+  Se instala con `obra-app/motor/INSTALAR.md`; mientras `CLIENTE` esté vacío en `obras.js`, esas secciones dicen «sin instalar».
+- Prueba: `node verify-obra-app.cjs` (además de las tres de siempre).
