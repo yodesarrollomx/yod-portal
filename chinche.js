@@ -118,7 +118,7 @@ async function enviarDirecto(ch){
   if (!llave || !ch || ch.estado === "mandada") return false;
   var d = new Date(), p2 = function(n){ return (n < 10 ? "0" : "") + n; };
   var el = ch.elemento || {};
-  var detalle = JSON.stringify({ id: ch.id, texto: ch.texto, tipo: ch.tipo || "", repo: ch.repo, pantalla: ch.pantalla,
+  var detalle = JSON.stringify({ id: ch.id, folio: ch.folio || "", texto: ch.texto, tipo: ch.tipo || "", repo: ch.repo, pantalla: ch.pantalla,
     vista: (ch.repo || "") + "/" + (ch.pantalla || ""), url: ch.url, quien: ch.quien,
     elemento: { css: el.css || (ch.ancla && ch.ancla.css) || "", texto: (el.texto || "").slice(0, 300), seccion: el.seccion || "" },
     objeto: ch.objeto || null, codigo: ch.codigo || "" });
@@ -164,6 +164,17 @@ function repoDe(url){
     }
   } catch (e) {}
   return "";
+}
+/* CH-2 · el folio del proyecto donde se clavó: por el tablero de ese proyecto
+   (registro yod-portal/os/proyectos.js) o por lo que diga la pantalla. */
+function folioActual(){
+  try {
+    var RP = window.YodProyectos; if (!RP) return CTX.folio || "";
+    var aqui = location.href.split("#")[0];
+    var p = RP.lista.filter(function(x){ return x.tablero && aqui.indexOf(x.tablero) === 0; })[0];
+    if (!p && CTX.proyecto) p = RP.buscar(CTX.proyecto);
+    return (p && p.folio) || CTX.folio || "";
+  } catch (e) { return ""; }
 }
 function repoActual(){ return CTX.repo || repoDe(location.href) || "yod-portal"; }
 function repoDeChinche(c){ return c.repo || repoDe(c.url || "") || "yod-portal"; }
@@ -386,7 +397,7 @@ async function anotar(op){
     var ch = {
       id: nuevoId(d), creado: d.toISOString(), sello: sello(d), quien: quien(),
       texto: texto, tipo: tipo, estado: "nueva",
-      pantalla: PANT, repo: repoActual(), url: location.href.split("#")[0], aparato: aparato(),
+      pantalla: PANT, repo: repoActual(), url: location.href.split("#")[0], aparato: aparato(), folio: folioActual(),
       vista: op.vista || (CTX.vista ? CTX.vista() : ""),
       modo: esLienzo ? "lienzo" : "contexto",
       ancla: esLienzo
@@ -722,6 +733,7 @@ async function armarTexto(ids, amarre){
     L.push("## " + (i+1) + " · " + (c.tipo ? c.tipo.toUpperCase() : "CAMBIO") + " · " +
            repoDeChinche(c) + " · " + c.pantalla + (c.vista ? ' · vista "' + c.vista + '"' : ""));
     if (c.url) L.push("- **Página:** " + c.url);
+    if (c.folio) L.push("- **Proyecto (folio):** " + c.folio);
     L.push("");
     L.push("**Dice " + (c.quien || "Alejandro") + ':** "' + c.texto + '"');
     L.push("");

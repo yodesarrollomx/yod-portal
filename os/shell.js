@@ -284,6 +284,8 @@
     c.style.cursor = tipo === 'fail' ? 'pointer' : '';
   }
   function boot() {
+    // registro de proyectos (folio): lo usan el buscador ⌘K y la chinche
+    if (!window.YodProyectos) { var sp = document.createElement('script'); sp.src = SELF.replace(/shell\.js(\?.*)?$/, 'proyectos.js?v=2'); document.head.appendChild(sp); }
     if (document.querySelector('.yod-shell')) return;
     document.body.classList.add('yod-on');
     var cur = currentSys();
@@ -329,7 +331,7 @@
      (yod-portal/chinche.js), en modo "contexto" (DOM). Cada chinche guarda la tarjeta
      donde se picó por última vez y el repo de la página, para que el encargo llegue al
      repo correcto. Si el board ya la trae, no se carga dos veces. */
-  var CHINCHE_V = 'ch5';
+  var CHINCHE_V = 'ch6';
   function cargarChinche() {
     if (window.YODChinche) return;
     var ultimo = null;
@@ -458,7 +460,6 @@
           (state.identity === 'ok' ? 'Sin tableros con ese nombre' : 'Sesión por validar') + '</span>';
       }
     }
-    if (!window.YodProyectos) { var sp = document.createElement('script'); sp.src = SELF.replace(/shell\.js(\?.*)?$/, 'proyectos.js?v=2'); document.head.appendChild(sp); }
     function open() { results(''); if (dlg.showModal) dlg.showModal(); setTimeout(function () { var q = document.getElementById('yodQ'); if (q) q.focus(); }, 0); }
     trig.addEventListener('click', open);
     dlg.addEventListener('input', function (e) { results(e.target.value); });
