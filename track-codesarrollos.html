@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<script src="os/proyectos.js?v=2"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
 <title>Track de Codesarrollos · Yo Desarrollo</title>
@@ -83,7 +84,7 @@
   let bounds=L.latLngBounds(PINES.map(p=>[p.lat,p.lng])).pad(0.5);
   PINES.forEach(p=>{
     const icon=L.divIcon({className:'',html:`<div class="pin-emoji" style="background:${p.color}">${esc(p.emoji)}</div>`,iconSize:[32,32],iconAnchor:[16,30],popupAnchor:[0,-26]});
-    const html=`<div style="min-width:220px"><span class="pp-badge" style="background:${p.color}">${esc(p.estado)}</span><p class="pp-t">${esc(p.nombre)}</p><p class="pp-l">📍 ${esc(p.lugar)}</p><p class="pp-d">${esc(p.d1)}</p><p class="pp-d"><b>${esc(p.d2)}</b></p>${p.link?`<a class="pp-a" href="${esc(p.link)}" target="_blank" rel="noopener">${esc(p.cta)}</a>`:`<span class="pp-a off">${esc(p.cta)}</span>`}</div>`;
+    const html=`<div style="min-width:220px"><span class="pp-badge" style="background:${p.color}">${esc(p.estado)}</span><p class="pp-t">${esc(p.nombre)}</p>${(()=>{const f=window.YodProyectos&&YodProyectos.buscar(p.project_id);return f?`<p class="pp-l" style="font-size:11px;opacity:.75">Folio ${esc(f.folio)}${f.etapa_actual?" · "+esc(f.etapa_actual):""}</p>`:""})()}<p class="pp-l">📍 ${esc(p.lugar)}</p><p class="pp-d">${esc(p.d1)}</p><p class="pp-d"><b>${esc(p.d2)}</b></p>${p.link?`<a class="pp-a" href="${esc(p.link)}" target="_blank" rel="noopener">${esc(p.cta)}</a>`:`<span class="pp-a off">${esc(p.cta)}</span>`}</div>`;
     L.marker([p.lat,p.lng],{icon}).bindPopup(html).addTo(map);
   });
   // el contenedor puede medir 0×0 al arrancar (pestaña en background): reintentar
