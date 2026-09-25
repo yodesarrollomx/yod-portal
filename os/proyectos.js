@@ -61,20 +61,32 @@
     PROYECTOS.forEach(function (p) { if (p.etapa && o[p.etapa]) o[p.etapa].push(p); });
     return o;
   }
-  /* Normaliza un texto para comparar actividades (duplicados entre tableros). */
-  function huella(s) { return norm(s).replace(/[^a-z0-9ñ ]+/g, ' ').split(' ').filter(function (w) { return w.length > 2; }).sort().join(' '); }
-  /* Grupos de filas {proyecto, actividad, id, tablero} que dicen lo mismo en el mismo folio. */
+  /* Normaliza un texto para comparar actividades (duplicados entre tableros):
+     sin acentos, sin palabras vacías, palabras de 3+ letras, ordenadas. */
+  var VACIAS = { del: 1, las: 1, los: 1, para: 1, con: 1, que: 1, una: 1, uno: 1, por: 1, sus: 1, the: 1 };
+  function palabras(s) { return norm(s).replace(/[^a-z0-9ñ ]+/g, ' ').split(' ').filter(function (w) { return w.length > 2 && !VACIAS[w]; }); }
+  function huella(s) { return palabras(s).sort().join(' '); }
+  function parecidas(a, b) {
+    var x = palabras(a), y = palabras(b); if (!x.length || !y.length) return false;
+    var comun = x.filter(function (w) { return y.indexOf(w) > -1; }).length;
+    return comun / Math.min(x.length, y.length) >= 0.8 && comun >= 2 || huella(a) === huella(b);
+  }
+  /* Grupos de filas {proyecto, actividad, id} que dicen casi lo mismo en el mismo folio. */
   function duplicados(filas) {
-    var g = {};
-    (filas || []).forEach(function (f) {
-      var k = (folio(f.proyecto) || norm(f.proyecto)) + '|' + huella(f.actividad);
-      if (!huella(f.actividad)) return;
-      (g[k] = g[k] || []).push(f);
+    var grupos = [], usada = {};
+    (filas || []).forEach(function (f, i) {
+      if (usada[i] || !palabras(f.actividad).length) return;
+      var k = folio(f.proyecto) || norm(f.proyecto), g = [f];
+      for (var j = i + 1; j < filas.length; j++) {
+        var h = filas[j]; if (usada[j]) continue;
+        if ((folio(h.proyecto) || norm(h.proyecto)) === k && parecidas(f.actividad, h.actividad)) { g.push(h); usada[j] = 1; }
+      }
+      if (g.length > 1) grupos.push(g);
     });
-    return Object.keys(g).filter(function (k) { return g[k].length > 1; }).map(function (k) { return g[k]; });
+    return grupos;
   }
 
-  var api = { lista: PROYECTOS, etapas: ETAPAS, buscar: buscar, folio: folio, auditar: auditar, porEtapa: porEtapa, huella: huella, duplicados: duplicados };
+  var api = { lista: PROYECTOS, etapas: ETAPAS, buscar: buscar, folio: folio, auditar: auditar, porEtapa: porEtapa, huella: huella, parecidas: parecidas, duplicados: duplicados };
   root.YodProyectos = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof window !== 'undefined' ? window : globalThis);
