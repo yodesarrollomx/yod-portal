@@ -18,8 +18,12 @@
      al del dominio suspendido. Con la suscripción caída, su canje fallaba y el
      usuario quedaba en "Sesión por validar" aunque el gate ya lo hubiera dejado
      entrar. Ahora usa el mismo relevo que el resto: original, y si falla, respaldo. */
-  var PORTERO_ORIGINAL = 'https://script.google.com/macros/s/AKfycbwlDDCWWzOWYZsUpBU9uqsQ7aenQ469PF6s6FkNlBFS1_cJSU5njG9oQmuyELy5zlqzFg/exec';
-  var PORTERO_RESPALDO = 'https://script.google.com/macros/s/AKfycbyrhqMb70Qh8BljAOYnSYBZ8IXUuEclFWPg10NWIv3GJ-nAR597OTsGB4IL-xyUl7Ms/exec';
+  /* La dirección del Portero vive SOLO en os/yod-acceso.js. Si la página no la
+     cargó, se pide aquí (misma carpeta que este archivo) antes del primer canje. */
+  var ACCESO_LISTO = window.YOD_PORTERO ? Promise.resolve() : new Promise(function (ok) {
+    var sc = document.createElement('script'); sc.src = SELF.replace(/shell\.js(\?.*)?$/, 'yod-acceso.js?v=1');
+    sc.onload = sc.onerror = function () { ok(); }; document.head.appendChild(sc);
+  });
   /* El ORIGINAL siempre primero; el respaldo solo si aquel falla en esta
      llamada. Antes el relevo se pegaba en localStorage y, al reactivarse
      Google, el navegador seguía en el respaldo (que no conoce los correos ni
@@ -31,10 +35,13 @@
         .then(function (r) { return r.text(); })
         .then(function (t) { try { return JSON.parse(t); } catch (e) { return null; } });
     }
-    return intenta(PORTERO_ORIGINAL).then(function (j) {
-      if (j && j.ok) return j;
-      return intenta(PORTERO_RESPALDO);
-    }).catch(function () { return intenta(PORTERO_RESPALDO).catch(function () { return null; }); });
+    return ACCESO_LISTO.then(function () {
+      var P = window.YOD_PORTERO; if (!P) return null;
+      return intenta(P.original).then(function (j) {
+        if (j && j.ok) return j;
+        return intenta(P.respaldo);
+      }).catch(function () { return intenta(P.respaldo).catch(function () { return null; }); });
+    });
   }
   var OS = 'https://yodesarrollomx.github.io/yod-portal/os/';
   var CORPORATE = 'https://yodesarrollo.mx/'; // sitio público; la marca del shell ya NO cuelga de aquí (lleva al OS)

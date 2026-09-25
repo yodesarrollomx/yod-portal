@@ -6,8 +6,8 @@
      aurumarquitectos.com (hoy suspendido): aunque el gate ya te dejara pasar, el
      portal se quedaba en "Verificando Acceso…" para siempre. Ahora usa el mismo
      relevo que el resto del sistema: original primero, respaldo si falla. */
-  var PORTERO_ORIGINAL='https://script.google.com/macros/s/AKfycbwlDDCWWzOWYZsUpBU9uqsQ7aenQ469PF6s6FkNlBFS1_cJSU5njG9oQmuyELy5zlqzFg/exec';
-  var PORTERO_RESPALDO='https://script.google.com/macros/s/AKfycbyrhqMb70Qh8BljAOYnSYBZ8IXUuEclFWPg10NWIv3GJ-nAR597OTsGB4IL-xyUl7Ms/exec';
+  var PORTERO_ORIGINAL=window.YOD_PORTERO.original;   // única copia: os/yod-acceso.js
+  var PORTERO_RESPALDO=window.YOD_PORTERO.respaldo;
   /* El ORIGINAL siempre primero; el respaldo solo si aquel falla en esta llamada.
      Antes el relevo se pegaba en localStorage y, al reactivarse Google, el
      navegador seguía en el respaldo (que no conoce correos ni login de Google). */

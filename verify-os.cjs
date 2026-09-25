@@ -155,3 +155,16 @@ console.log('Respaldo del catálogo: ningún tablero desaparece si el Sheet call
   assert.equal(P.duplicados([{proyecto:'Admin',actividad:'Pagar el predial'},{proyecto:'Admin ',actividad:'predial pagar'}]).length,1);
   console.log('Registro de proyectos: folios únicos, etapas y alias: passed');
 }
+
+// --- Una sola copia de la dirección del Portero (os/yod-acceso.js) ---
+{
+  const P=require('./os/yod-acceso.js');
+  assert.ok(/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(P.original)&&/\/exec$/.test(P.respaldo));
+  const ids=[P.original,P.respaldo].map(u=>u.split('/s/')[1].split('/')[0]);
+  const archivos=['os/app.js','os/shell.js','obra.html','tablero.html','track-alysa.html','track-maria.html','track-codesarrollos.html','os/index.html','chinche.js','portal-core.js'];
+  archivos.forEach(f=>{ if(!fs.existsSync(f))return; const s=fs.readFileSync(f,'utf8');
+    ids.forEach(id=>assert.ok(!s.includes(id),'la dirección del Portero está copiada en '+f+' (va solo en os/yod-acceso.js)')); });
+  ['obra.html','tablero.html','track-alysa.html','track-maria.html'].forEach(f=>assert.ok(fs.readFileSync(f,'utf8').includes('os/yod-acceso.js'),f+' no carga os/yod-acceso.js'));
+  assert.ok(fs.readFileSync('os/index.html','utf8').includes('yod-acceso.js'),'os/index.html no carga yod-acceso.js');
+  console.log('Dirección del Portero: una sola copia (os/yod-acceso.js): passed');
+}

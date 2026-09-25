@@ -1,5 +1,6 @@
 <!doctype html>
 <meta charset="utf-8">
+<script src="os/yod-acceso.js?v=1"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>YOD OS · Tablero</title>
 <style>
@@ -1890,8 +1891,8 @@ async function sondaFinance(){
    respaldo y el tablero ENTERO se queda con ese endpoint — conectarTracks
    también pega aquí, así que parchar solo validar() abría la puerta y dejaba
    los hexágonos ciegos contra un portero muerto. */
-const PORTERO_ORIGINAL="https://script.google.com/macros/s/AKfycbwlDDCWWzOWYZsUpBU9uqsQ7aenQ469PF6s6FkNlBFS1_cJSU5njG9oQmuyELy5zlqzFg/exec";
-const PORTERO_RESPALDO="https://script.google.com/macros/s/AKfycbyrhqMb70Qh8BljAOYnSYBZ8IXUuEclFWPg10NWIv3GJ-nAR597OTsGB4IL-xyUl7Ms/exec";
+const PORTERO_ORIGINAL=window.YOD_PORTERO.original;   // única copia: os/yod-acceso.js
+const PORTERO_RESPALDO=window.YOD_PORTERO.respaldo;
 let GATE_GAS=PORTERO_ORIGINAL;
 const LSK="pyod_clave_v1", GT=document.getElementById("gate");
 let CLAVE_OK=null;

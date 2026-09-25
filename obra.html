@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="es">
 <head>
+<script src="os/yod-acceso.js?v=1"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow,noarchive">
@@ -259,8 +260,8 @@ const LSK="pyod_clave_v1", LSQ="yod_obra_quien";
 /* Quién eres NO se escoge en un combo: sale del canje del Portero (nombre,
    correo y rol de la sesión). Mismo relevo que el resto del OS: original
    primero, respaldo solo si aquel falla. */
-const PORTERO_ORIGINAL="https://script.google.com/macros/s/AKfycbwlDDCWWzOWYZsUpBU9uqsQ7aenQ469PF6s6FkNlBFS1_cJSU5njG9oQmuyELy5zlqzFg/exec";
-const PORTERO_RESPALDO="https://script.google.com/macros/s/AKfycbyrhqMb70Qh8BljAOYnSYBZ8IXUuEclFWPg10NWIv3GJ-nAR597OTsGB4IL-xyUl7Ms/exec";
+const PORTERO_ORIGINAL=window.YOD_PORTERO.original;   // única copia: os/yod-acceso.js
+const PORTERO_RESPALDO=window.YOD_PORTERO.respaldo;
 const SINYO="Tu sesión no trae nombre en Roles: no puedes firmar. Pídeselo a Dirección.";
 let K=localStorage.getItem(LSK)||"", D=null, QUIEN="", ROL="", SES=null;
 
