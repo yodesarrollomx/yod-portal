@@ -97,13 +97,41 @@
   <a id="gateGoogle" href="os/" target="_top" onclick="if(window.YODPortero&&window.parent===window){YODPortero.entrar();return false}" style="display:block;text-align:center;text-decoration:none;padding:12px;border-radius:10px;background:#2c2718;color:#f6f3ed;font-weight:600">Entrar con Google</a>
   <div id="gateErr"></div>
 </div></div>
-<div id="w" style="display:none"><div id="sw"><b>CRM</b>
+<div id="w" style="display:none"><div id="etapas" aria-label="Proyectos por etapa"></div><div id="sw"><b>CRM</b>
  <button data-v="surcos">1 &middot; Cuatro surcos</button>
  <button data-v="abaco">2 &middot; El &aacute;baco</button>
  <i id="leyHex">el hex&aacute;gono se pinta por su n&uacute;mero; el punto dice de d&oacute;nde sale el dato: <span data-punto="linea">&#9679;</span> en l&iacute;nea &middot; <span data-punto="fuente">&#9679;</span> fuente lista, sin conectar &middot; <span data-punto="ciego">&#9679;</span> ciego: no contest&oacute; &middot; <span data-punto="tentativo">&#9679;</span> tentativo, sin fuente<em>&times;N en la canica = varios casos: p&iacute;cala</em></i></div>
 <canvas id="c" width="1536" height="1056"></canvas><canvas id="luz" width="1536" height="1056"></canvas><div id="f"></div></div>
 <script src="chinche.js?v=ch5"></script>
 <script src="os/access-policy.js?v=0.1.2"></script>
+<script src="os/proyectos.js?v=1"></script>
+<style>
+/* Fase 3 · folio: la tira de etapas (Potencial → Trámite → Obra → Venta) */
+#etapas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 12px}
+#etapas .et{border:1px solid rgba(154,123,63,.35);border-radius:10px;padding:10px 12px;background:rgba(154,123,63,.06);min-width:0}
+#etapas .et b{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#9a7b3f}
+#etapas .et strong{font-size:26px;line-height:1.1;display:block}
+#etapas .et a{display:inline-block;margin:4px 6px 0 0;font-size:12px;color:inherit;text-decoration:none;border-bottom:1px dotted currentColor;overflow-wrap:anywhere}
+#etapas .flecha{opacity:.5;font-size:11px}
+@media (max-width:520px){#etapas{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script>
+(function(){
+  function pinta(){
+    var box=document.getElementById("etapas"), RP=window.YodProyectos; if(!box||!RP) return;
+    var pe=RP.porEtapa();
+    box.innerHTML=RP.etapas.map(function(e,i){
+      var ps=pe[e]||[];
+      return '<div class="et"><b>'+(i?'<span class="flecha">→ </span>':'')+e+'</b><strong>'+ps.length+'</strong>'
+        + ps.map(function(p){
+            var t=p.nombre.replace(/[&<>"]/g,'');
+            return p.tablero ? '<a href="'+p.tablero+'" target="_top" title="'+p.folio+' · '+p.etapa_actual+'">'+t+'</a>' : '<span>'+t+'</span>';
+          }).join('')+'</div>';
+    }).join('');
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",pinta); else pinta();
+})();
+</script>
 <script>
 (function(){
 "use strict";
