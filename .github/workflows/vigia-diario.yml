@@ -61,9 +61,10 @@ jobs:
       - name: Portero vivo (solo lectura)
         id: portero
         run: |
+          # La dirección sale de la única copia: os/yod-acceso.js
           declare -A ep=(
-            [original]="https://script.google.com/macros/s/AKfycbwlDDCWWzOWYZsUpBU9uqsQ7aenQ469PF6s6FkNlBFS1_cJSU5njG9oQmuyELy5zlqzFg/exec"
-            [respaldo]="https://script.google.com/macros/s/AKfycbyrhqMb70Qh8BljAOYnSYBZ8IXUuEclFWPg10NWIv3GJ-nAR597OTsGB4IL-xyUl7Ms/exec"
+            [original]="$(node -p "require('./os/yod-acceso.js').original")"
+            [respaldo]="$(node -p "require('./os/yod-acceso.js').respaldo")"
           )
           sano=0
           echo "| Portero | HTTP | Tarda | Contesta |" > portero.md
