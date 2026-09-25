@@ -424,7 +424,7 @@
   function wireSearch() {
     var trig = document.getElementById('yodSearch'); if (!trig) return;
     var dlg = el('dialog', 'yod-dialog');
-    dlg.innerHTML = '<form method="dialog"><i class="ti ti-search" style="color:var(--ymuted);font-size:20px"></i><input id="yodQ" type="search" placeholder="Buscar tablero o código (RM, FL…)" autocomplete="off"><button value="cancel" type="submit" style="border:0;background:none;cursor:pointer;color:var(--ymuted);font-size:19px"><i class="ti ti-x"></i></button></form><div class="yr" id="yodRes"></div>';
+    dlg.innerHTML = '<form method="dialog"><i class="ti ti-search" style="color:var(--ymuted);font-size:20px"></i><input id="yodQ" type="search" placeholder="Buscar tablero, código o proyecto (RM, Miramar…)" autocomplete="off"><button value="cancel" type="submit" style="border:0;background:none;cursor:pointer;color:var(--ymuted);font-size:19px"><i class="ti ti-x"></i></button></form><div class="yr" id="yodRes"></div>';
     document.body.appendChild(dlg);
     function results(q) {
       var box = document.getElementById('yodRes'); if (!box) return; box.innerHTML = '';
@@ -435,11 +435,21 @@
         a.innerHTML = '<i class="ti ti-' + (ICON[r.system_id] || 'layout-dashboard') + '"></i><span><strong>' + esc(r.titulo_portal || NAME[r.system_id]) + '</strong></span>';
         box.appendChild(a);
       });
+      // OS-2 · también proyectos por folio o nombre (registro os/proyectos.js)
+      var RP = window.YodProyectos;
+      if (RP && t) RP.lista.filter(function (p) {
+        return p.tablero && [p.folio, p.codigo, p.nombre].concat(p.alias || []).join(' ').toLowerCase().indexOf(t) >= 0;
+      }).forEach(function (p) {
+        var a = el('a'); a.href = p.tablero;
+        a.innerHTML = '<i class="ti ti-folder"></i><span><strong>' + esc(p.nombre) + '</strong> <small style="opacity:.6">' + esc(p.folio) + ' · ' + esc(p.etapa_actual || '') + '</small></span>';
+        box.appendChild(a);
+      });
       if (!box.children.length) {
         box.innerHTML = '<span class="yod-nav-loading">' +
           (state.identity === 'ok' ? 'Sin tableros con ese nombre' : 'Sesión por validar') + '</span>';
       }
     }
+    if (!window.YodProyectos) { var sp = document.createElement('script'); sp.src = SELF.replace(/shell\.js(\?.*)?$/, 'proyectos.js?v=2'); document.head.appendChild(sp); }
     function open() { results(''); if (dlg.showModal) dlg.showModal(); setTimeout(function () { var q = document.getElementById('yodQ'); if (q) q.focus(); }, 0); }
     trig.addEventListener('click', open);
     dlg.addEventListener('input', function (e) { results(e.target.value); });
