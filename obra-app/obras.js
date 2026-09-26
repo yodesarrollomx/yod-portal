@@ -10,7 +10,7 @@
       motor:'https://script.google.com/macros/s/AKfycbyVb6Y7m00FyhoGa9ZoQul1j6IlHdgsCNalaZVGmA0Csh91TqxNvyDT0YQurz-hViA0/exec',
       captura:'../obra.html' }
   ];
-  var CLIENTE='';
+  var CLIENTE='https://script.google.com/macros/s/AKfycbyJXwXMi4C_tcXv2QqwvPmOIDi4VRbR3xXJlFlF3bfjYR1l3WedQBKQNrzV6OA9TYBg/exec';
   var api={obras:OBRAS,cliente:CLIENTE,
     porFolio:function(f){f=String(f||'').toUpperCase();return OBRAS.find(function(o){return o.folio===f;})||null;}};
   root.YOD_OBRAS=api;
