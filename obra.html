@@ -299,6 +299,36 @@ async function mandar(cuerpo){
   if(!j.ok) throw (j.error||"error");
   return j.r;
 }
+/* OB-5 (26-sep) · captura sin señal. En la obra no siempre hay red: si el ENVÍO de un avance
+   falla por red (no porque el motor lo rechace), se guarda en este celular y se manda solo al
+   volver la señal. Solo se encola «proponer»: firmar o liberar sin ver el estado real no. */
+const LSCOLA="yod_obra_cola_v1";
+function colaLee(){ try{ return JSON.parse(localStorage.getItem(LSCOLA)||"[]"); }catch(_e){ return []; } }
+function colaGuarda(q){ try{ localStorage.setItem(LSCOLA,JSON.stringify(q)); }catch(_e){} pintarColaLocal(); }
+function pintarColaLocal(){
+  let b=document.getElementById("colaLocal"); const q=colaLee();
+  if(!b){ b=document.createElement("div"); b.id="colaLocal";
+    b.style.cssText="position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:60;background:#D2932E;color:#15171B;padding:.55rem .9rem;border-radius:2px;font-weight:700;font-size:.85rem";
+    document.body.appendChild(b); }
+  b.hidden=!q.length; b.textContent=q.length?(q.length+(q.length>1?" avances guardados":" avance guardado")+" sin señal · se mandan solos al volver la red"):"";
+}
+async function mandarOGuardar(cuerpo){
+  try{ return await mandar(cuerpo); }
+  catch(e){
+    if(!(e instanceof TypeError) && navigator.onLine!==false) throw e;   // el motor contestó: es un rechazo real
+    const q=colaLee(); q.push({cuerpo:cuerpo,ts:Date.now()}); colaGuarda(q);
+    return {sinSenal:true};
+  }
+}
+let drenando=false;
+async function drenarCola(){
+  if(drenando||!K) return; const q=colaLee(); if(!q.length) return; drenando=true;
+  const resto=[];
+  for(const it of q){ try{ await mandar(it.cuerpo); }catch(e){ if(e instanceof TypeError) resto.push(it); else resto.push(Object.assign({},it,{error:String(e)})); } }
+  colaGuarda(resto); drenando=false;
+  if(resto.length<q.length){ try{ await cargar(); pintar(); }catch(_e){} }
+}
+addEventListener("online",drenarCola);
 
 /* ── sesión: el Portero dice quién eres y qué tableros traes ── */
 async function canjear(){
@@ -443,8 +473,11 @@ async function enviar(){
   if(!QUIEN){ m.className="msg err"; m.textContent=SINYO; return; }
   $("#btnEnviar").disabled=true; m.textContent="Enviando…";
   try{
-    const r=await mandar({accion:"proponer",persona:QUIEN,frente:$("#selFrente").value,
+    const r=await mandarOGuardar({accion:"proponer",persona:QUIEN,frente:$("#selFrente").value,
       nota:$("#capNota").value.trim(),detalle:detalle});
+    if(r.sinSenal){ $("#capNota").value=""; m.className="msg ok";
+      m.textContent="Sin señal: el avance quedó guardado en este celular y se manda solo en cuanto vuelva la red.";
+      $("#btnEnviar").disabled=false; return; }
     $("#capNota").value="";
     await cargar(); pintar();                       // repinta con los datos nuevos…
     const m2=$("#capMsg"); m2.className="msg ok";   // …y hasta entonces el aviso, para que no se lo lleve
@@ -883,7 +916,8 @@ $("#clave").addEventListener("keydown",e=>{ if(e.key==="Enter") entrar(); });
 
 /* Un rechazo del motor de obra NO borra pyod_clave_v1: esa llave es la sesión
    de TODO el OS y solo el cierre de sesión del shell debe soltarla. */
-if(K) sesion().then(cargar).then(cargarProd).then(abrir).catch(e=>{
+pintarColaLocal();
+if(K) sesion().then(cargar).then(cargarProd).then(abrir).then(drenarCola).catch(e=>{
   K="";
   $("#gerr").textContent = e==="clave"
     ? "Tu sesión no abre el motor de obra. Entra desde YOD OS."
