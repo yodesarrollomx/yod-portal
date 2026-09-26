@@ -123,13 +123,16 @@
 (function(){
   function pinta(){
     var box=document.getElementById("etapas"), RP=window.YodProyectos; if(!box||!RP) return;
-    var pe=RP.porEtapa();
+    var pe=RP.porEtapa(), MOAC='https://yodesarrollomx.github.io/board-aurum/';
     box.innerHTML=RP.etapas.map(function(e,i){
       var ps=pe[e]||[];
       return '<div class="et"><b>'+(i?'<span class="flecha">→ </span>':'')+e+'</b><strong>'+ps.length+'</strong>'
         + ps.map(function(p){
             var t=p.nombre.replace(/[&<>"]/g,'');
-            return p.tablero ? '<a href="'+p.tablero+'" target="_top" title="'+p.folio+' · '+p.etapa_actual+'">'+t+'</a>' : '<span>'+t+'</span>';
+            /* TC-4 (26-sep): todo proyecto lleva a algún lado, con su folio: su tablero propio o,
+               si no tiene, las tareas de MOAC de ese folio (MOAC lee ?folio= y filtra) */
+            var dest=(p.tablero||MOAC)+((p.tablero||MOAC).indexOf('?')>-1?'&':'?')+'folio='+encodeURIComponent(p.folio);
+            return '<a href="'+dest+'" target="_top" title="'+p.folio+' · '+p.etapa_actual+(p.tablero?'':' · tareas en MOAC')+'">'+t+'</a>';
           }).join('')+'</div>';
     }).join('');
   }
