@@ -57,11 +57,23 @@ function abrirBD(){
       }
       if (!d.objectStoreNames.contains("fotos")) d.createObjectStore("fotos", { keyPath: "id" });
     };
-    p.onsuccess = function (e) { db = e.target.result; ok(db); };
-    p.onerror = function () { mal(p.error); };
+    /* iPhone: dentro del marco de YOD OS la base a veces NUNCA contesta (ni éxito ni
+       error). Sin tope, «Clavar» se quedaba colgado y fallaba. */
+    var tope = setTimeout(function(){ mal({ name: "la base del aparato no contestó" }); }, 4000);
+    p.onsuccess = function (e) {
+      clearTimeout(tope); db = e.target.result;
+      db.onclose = function(){ db = null; };          /* Safari la cierra al ir a segundo plano */
+      db.onversionchange = function(){ try { db.close(); } catch (x) {} db = null; };
+      ok(db);
+    };
+    p.onerror = function () { clearTimeout(tope); mal(p.error); };
+    p.onblocked = function () { clearTimeout(tope); mal({ name: "la base está ocupada en otra pestaña" }); };
   });
 }
-function tx(almacenes, modo){ return db.transaction(almacenes, modo); }
+function tx(almacenes, modo){
+  try { return db.transaction(almacenes, modo); }
+  catch (e) { db = null; throw e; }   /* conexión muerta: la siguiente vez se reabre */
+}
 function pedir(req){ return new Promise(function(ok,mal){ req.onsuccess=function(){ok(req.result);}; req.onerror=function(){mal(req.error);}; }); }
 
 async function todas(){
@@ -130,7 +142,7 @@ async function enviarDirecto(ch){
     clearTimeout(tt);
     var j = null; try { j = JSON.parse(await r.text()); } catch (e) {}
     if (!r.ok || !j || j.error) return false;
-    await marcar(ch.id, { estado: "mandada", mandada: new Date().toISOString(), via: "directo" });
+    if (db) try { await conTopeError(marcar(ch.id, { estado: "mandada", mandada: new Date().toISOString(), via: "directo" }), 4000, "base"); } catch (e) {}
     return true;
   } catch (e) { return false; }
 }
@@ -419,7 +431,8 @@ async function anotar(op){
       try {
         await conTopeError(guardar(ch, full, chica), 6000, "la base del aparato no contestó");
       } catch (e1) {
-        /* segundo intento sin fotos: el texto es lo que importa */
+        /* segundo intento sin fotos: el texto es lo que importa (si la base ni abrió, no se insiste) */
+        if (!db) throw e1;
         await conTopeError(guardar(ch, null, null), 6000, "la base del aparato no contestó");
       }
       cerrar(v);
@@ -435,7 +448,14 @@ async function anotar(op){
         });
       }
     } catch (e) {
-      /* cuota llena o base cerrada: NO fingir que quedó. El texto sigue en la
+      /* La base del aparato falló (iPhone dentro del marco): el destino real es la Sala,
+         así que se manda DIRECTO. Solo si eso también falla se avisa que no quedó. */
+      db = null;
+      btn.textContent = "Mandando directo…";
+      var ok = false;
+      try { ch.estado = "nueva"; ok = await enviarDirecto(ch); } catch (e2) {}
+      if (ok) { cerrar(v); aviso("Enviado directo a Claude · lo revisa en la ronda diaria"); return; }
+      /* cuota llena o base cerrada y sin red: NO fingir que quedó. El texto sigue en la
          hoja para copiarlo a mano. */
       btn.disabled = false; btn.textContent = "Clavar";
       aviso("NO quedó clavado (" + ((e && e.name) || "error de la base") + ") · tu texto sigue aquí");

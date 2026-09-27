@@ -331,7 +331,7 @@
      (yod-portal/chinche.js), en modo "contexto" (DOM). Cada chinche guarda la tarjeta
      donde se picó por última vez y el repo de la página, para que el encargo llegue al
      repo correcto. Si el board ya la trae, no se carga dos veces. */
-  var CHINCHE_V = 'ch7';
+  var CHINCHE_V = 'ch8';
   function cargarChinche() {
     if (window.YODChinche) return;
     var ultimo = null;
