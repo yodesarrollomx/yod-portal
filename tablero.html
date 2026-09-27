@@ -1939,13 +1939,16 @@ function avisarAlto(){
   try{ parent.postMessage({yodTablero:"alto", alto:h}, location.origin); }catch(e){}
 }
 const FUENTES={};
+/* 27-sep: siete pastillas con hora («PPP · 10:20 a.m.») no se entendían. Ahora es UNA línea en
+   palabras: «Datos al día · 10:20 a.m.»; solo se nombra lo que falló o lo que sigue cargando. */
 function marcaFuente(n,ok){
   FUENTES[n]={ok:ok,t:new Date()};
   const box=document.getElementById("fuentes"); if(!box) return;
-  box.innerHTML=Object.keys(FUENTES).map(function(k){const f=FUENTES[k];
-    const h=f.t.toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit"});
-    return '<span class="fu fu-'+(f.ok===null?"esp":f.ok?"ok":"no")+'" title="'+(f.ok===null?"consultando":f.ok?"terminó de cargar a las "+h+" (si no hay dato, su hexágono lo marca)":"falló al cargar ("+h+")")+'">'+k+(f.ok?" · "+h:f.ok===false?" · falló":" · …")+'</span>';
-  }).join("");
+  const ks=Object.keys(FUENTES), mal=ks.filter(function(k){return FUENTES[k].ok===false;}), esp=ks.filter(function(k){return FUENTES[k].ok===null;});
+  const h=new Date().toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit"});
+  box.innerHTML=(esp.length?'<span class="fu fu-esp">Cargando '+esp.length+' de '+ks.length+' fuentes…</span>'
+      :'<span class="fu fu-ok" title="'+ks.join(", ")+'">Datos al día · '+h+'</span>')+
+    (mal.length?' <span class="fu fu-no" title="Su hexágono se marca en rojo">No contestó: '+mal.join(", ")+'</span>':'');
 }
 function abrir(){
   GT.classList.add("off");
