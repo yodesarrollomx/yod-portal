@@ -368,12 +368,14 @@ async function anotar(op){
       ['Cambiar','Quitar','Agregar','Está mal'].map(function(t){
         return '<button type="button" class="chn-chip" data-v="' + t + '">' + t + '</button>'; }).join("") +
     '</div>' +
-    '<textarea class="chn-txt" placeholder="Dilo como lo dirías en voz alta. Usa el micrófono del teclado si quieres."></textarea>' +
+    '<textarea class="chn-txt" placeholder="Escríbelo o pica 🎙 Dictar y dilo en voz alta."></textarea>' +
     '<div class="chn-pie"><button type="button" class="chn-btn2" data-x>Cancelar</button>' +
+    '<button type="button" class="chn-btn2 chn-mic" data-mic>🎙 Dictar</button>' +
     '<button type="button" class="chn-btn" data-ok>Clavar</button></div>', "86vh");
 
   var ta = v.querySelector(".chn-txt"), tipo = "";
   try { ta.focus(); } catch(e){}
+  dictado(v.querySelector("[data-mic]"), ta, v);
   aBlob(lienzo, 0.72).then(function (b) {
     if (!b) { v.querySelector(".chn-foto").remove(); return; }   /* toBlob puede dar null */
     var u = URL.createObjectURL(b);
@@ -507,8 +509,27 @@ function valoresDe(el){
   }
   return v;
 }
+/* Los tableros embebidos (iframe del mismo origen) traen su propia Chinche. Un toque
+   dentro del iframe NUNCA llega a este documento: por eso en el cel "no dejaba
+   seleccionar" nada. Al señalar aquí, se enciende también el modo señalar adentro. */
+function marcosHijos(){
+  var out = [];
+  try {
+    document.querySelectorAll("iframe").forEach(function (f) {
+      try {
+        var r = f.getBoundingClientRect();
+        if (!r.width || !r.height || f.hidden) return;
+        var w = f.contentWindow;
+        if (w && w.YODChinche && w.YODChinche.senalar) out.push(w);
+      } catch (e) {}   /* otro origen: no se puede, se queda el aviso de siempre */
+    });
+  } catch (e) {}
+  return out;
+}
 function modoSenalar(){
   if (senalando) return;
+  var hijos = marcosHijos();
+  hijos.forEach(function (w) { try { w.YODChinche.senalar(); } catch (e) {} });
   var marco = document.createElement("div");
   marco.className = "chn-marco";
   var pista = document.createElement("button");
@@ -546,7 +567,7 @@ function modoSenalar(){
     if (ev.type === "touchend") {
       var t = ev.changedTouches && ev.changedTouches[0];
       if (!t0 || !t || Math.abs(t.clientX - t0.x) > 10 || Math.abs(t.clientY - t0.y) > 10 ||
-          Date.now() - t0.ms > 600) { t0 = null; return; }
+          Date.now() - t0.ms > 900) { t0 = null; return; }
       t0 = null;
     }
     var el = bajo(ev);
@@ -567,6 +588,10 @@ function modoSenalar(){
   function tecla(ev){ if (ev.key === "Escape") salir(); }
   function salir(){
     senalando = null;
+    hijos.forEach(function (w) { try { w.YODChinche.salirSenalar(); } catch (e) {} });
+    hijos = [];
+    /* si esta Chinche vive embebida, que el marco de afuera también suelte su modo */
+    try { if (window.parent !== window && window.parent.YODChinche) window.parent.YODChinche.salirSenalar(); } catch (e) {}
     document.removeEventListener("mousemove", mover, true);
     document.removeEventListener("touchmove", mover, true);
     document.removeEventListener("touchstart", marcar, true);
@@ -582,6 +607,45 @@ function modoSenalar(){
   document.addEventListener("click", tomar, true);
   document.addEventListener("touchend", tomar, true);
   document.addEventListener("keydown", tecla, true);
+}
+
+/* ═══ DICTAR · voz a texto con el reconocimiento del navegador (Chrome/Android,
+      Safari iOS 14.5+). Escribe en vivo en el texto; lo que ya estaba se respeta. ═══ */
+function dictado(btn, ta, hojaV){
+  if (!btn) return;
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    btn.onclick = function(){ ta.focus(); aviso("Este navegador no transcribe: usa el 🎤 del teclado"); };
+    return;
+  }
+  var rec = null, base = "", oyendo = false;
+  function parar(){ oyendo = false; btn.textContent = "🎙 Dictar"; btn.classList.remove("on"); try { rec && rec.stop(); } catch (e) {} }
+  btn.onclick = function(){
+    if (oyendo) { parar(); return; }
+    rec = new SR();
+    rec.lang = "es-MX"; rec.continuous = true; rec.interimResults = true;
+    base = ta.value ? ta.value.replace(/\s*$/, " ") : "";
+    rec.onresult = function(ev){
+      var fin = "", par = "";
+      for (var i = 0; i < ev.results.length; i++) {
+        var t = ev.results[i][0].transcript;
+        if (ev.results[i].isFinal) fin += t; else par += t;
+      }
+      ta.value = base + fin + par;
+    };
+    rec.onerror = function(ev){
+      parar();
+      aviso(ev.error === "not-allowed" || ev.error === "service-not-allowed"
+        ? "Permite el micrófono para esta página y vuelve a picar 🎙"
+        : "No se oyó bien (" + ev.error + "). Pica 🎙 otra vez");
+    };
+    rec.onend = function(){ if (oyendo) parar(); };
+    try { rec.start(); oyendo = true; btn.textContent = "■ Parar"; btn.classList.add("on"); }
+    catch (e) { aviso("No arrancó el micrófono"); }
+  };
+  /* que no se quede oyendo si se cierra la hoja */
+  var obs = new MutationObserver(function(){ if (!hojaV.isConnected) { parar(); obs.disconnect(); } });
+  obs.observe(document.body, { childList: true });
 }
 
 /* ═══════════════════════ LA PILA ═══════════════════════ */
@@ -1024,6 +1088,7 @@ function estilo(){
 " calc(18px + env(safe-area-inset-bottom,0px));overflow:auto;transition:transform .18s;",
 " font-family:'Helvetica Neue',Arial,sans-serif;color:#2E2A22}",
 ".chn-velo:not(.on) .chn-hoja{transform:translateY(14px)}",
+".chn-mic.on{background:#D93A34;color:#fff;border-color:#D93A34}",
 ".chn-marco{position:fixed;z-index:438;pointer-events:none;border:2px solid #D93A34;",
 " background:rgba(217,58,52,.12);border-radius:4px;transition:top .06s,left .06s,width .06s,height .06s}",
 ".chn-pista{position:fixed;z-index:442;border:0;cursor:pointer;left:50%;transform:translateX(-50%);bottom:22px;",
@@ -1114,5 +1179,6 @@ function init(op){
     });
 }
 
-window.YODChinche = { init: init, anotar: anotar, pila: pila, senalar: modoSenalar, cuantas: leerN };
+window.YODChinche = { init: init, anotar: anotar, pila: pila, senalar: modoSenalar, cuantas: leerN,
+  salirSenalar: function(){ if (senalando) senalando(); } };
 })();
