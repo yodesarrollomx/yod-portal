@@ -127,7 +127,8 @@ async function marcar(id, campos){
 }
 async function enviarDirecto(ch){
   var llave = llaveOS();
-  if (!llave || !ch || ch.estado === "mandada") return false;
+  if (!ch || ch.estado === "mandada") return false;
+  if (!llave) { enviarDirecto.motivo = "no hay llave del YOD OS en este navegador"; return false; }
   var d = new Date(), p2 = function(n){ return (n < 10 ? "0" : "") + n; };
   var el = ch.elemento || {};
   var detalle = JSON.stringify({ id: ch.id, folio: ch.folio || "", texto: ch.texto, tipo: ch.tipo || "", repo: ch.repo, pantalla: ch.pantalla,
@@ -141,10 +142,10 @@ async function enviarDirecto(ch){
     var r = await fetch(GAS_SALA, { method: "POST", headers: { "Content-Type": "text/plain" }, body: JSON.stringify(envio), signal: ctl.signal });
     clearTimeout(tt);
     var j = null; try { j = JSON.parse(await r.text()); } catch (e) {}
-    if (!r.ok || !j || j.error) return false;
+    if (!r.ok || !j || j.error) { enviarDirecto.motivo = "la Sala contestó: " + ((j && j.error) || ("HTTP " + r.status)); return false; }
     if (db) try { await conTopeError(marcar(ch.id, { estado: "mandada", mandada: new Date().toISOString(), via: "directo" }), 4000, "base"); } catch (e) {}
     return true;
-  } catch (e) { return false; }
+  } catch (e) { enviarDirecto.motivo = "sin red hacia la Sala (" + ((e && e.name) || "error") + ")"; return false; }
 }
 async function enviarPendientes(){
   if (CTX.alClavar || !llaveOS()) return;
@@ -458,7 +459,17 @@ async function anotar(op){
       /* cuota llena o base cerrada y sin red: NO fingir que quedó. El texto sigue en la
          hoja para copiarlo a mano. */
       btn.disabled = false; btn.textContent = "Clavar";
-      aviso("NO quedó clavado (" + ((e && e.name) || "error de la base") + ") · tu texto sigue aquí");
+      aviso("NO se pudo guardar ni mandar (" + (enviarDirecto.motivo || (e && e.name) || "error") + ") · usa ✉ Correo");
+      /* último recurso que siempre existe: el correo del propio teléfono, con todo el contexto */
+      if (!v.querySelector("[data-mail]")) {
+        var m = document.createElement("a");
+        m.className = "chn-btn2"; m.setAttribute("data-mail", "");
+        m.style.cssText = "display:block;text-align:center;margin-top:10px;text-decoration:none";
+        m.textContent = "✉ Mandarlo por correo";
+        m.href = "mailto:direccion@aurumarquitectos.com?subject=" + encodeURIComponent("📌 Chinche · " + (ch.repo || "") + "/" + (ch.pantalla || "")) +
+          "&body=" + encodeURIComponent(texto + "\n\n— Dónde: " + (ch.url || "") + "\n— Elemento: " + ((ch.elemento && (ch.elemento.seccion || ch.elemento.texto)) || "") + "\n— " + ch.sello);
+        v.querySelector(".chn-pie").after(m);
+      }
     }
   };
 }
