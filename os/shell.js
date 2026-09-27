@@ -287,6 +287,18 @@
     // registro de proyectos (folio): lo usan el buscador ⌘K y la chinche
     if (!window.YodProyectos) { var sp = document.createElement('script'); sp.src = SELF.replace(/shell\.js(\?.*)?$/, 'proyectos.js?v=2'); document.head.appendChild(sp); }
     if (document.querySelector('.yod-shell')) return;
+    /* Los íconos de la barra son de Tabler: los tableros que no traían su hoja (MOAC)
+       mostraban botones vacíos. El marco la carga él mismo, y las fuentes de la marca. */
+    if (!document.querySelector('link[href*="tabler-icons"]')) {
+      var ti = document.createElement('link'); ti.rel = 'stylesheet';
+      ti.href = 'https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css';
+      document.head.appendChild(ti);
+    }
+    if (!document.querySelector('link[href*="Instrument+Serif"],link[href*="Instrument Serif"]')) {
+      var gf = document.createElement('link'); gf.rel = 'stylesheet';
+      gf.href = 'https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600;700&family=Instrument+Serif:ital@0;1&display=swap';
+      document.head.appendChild(gf);
+    }
     document.body.classList.add('yod-on');
     var cur = currentSys();
     var canvas = el('div', 'yod-canvas');
