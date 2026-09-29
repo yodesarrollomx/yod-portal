@@ -170,7 +170,15 @@
   function renderNav(rows, cur) {
     var box = document.getElementById('yodNav'); if (!box) return; box.innerHTML = '';
     state.modules = rows;
-    rows.forEach(function (r) { var n = navItem(r, cur); if (n) box.appendChild(n); });
+    // Chinche #35 (28-sep): Real de Miramar vive DENTRO de Codesarrollos, no suelto en el
+    // menú. Solo se asoma si estás en él o si tu sesión no tiene Codesarrollos para llegar.
+    var DENTRO = { 'SYS-MIRAMAR': 'SYS-TRACK' };
+    var ids = rows.map(function (r) { return r.system_id; });
+    rows.forEach(function (r) {
+      var padre = DENTRO[r.system_id];
+      if (padre && r.system_id !== cur && ids.indexOf(padre) >= 0) return;
+      var n = navItem(r, cur); if (n) box.appendChild(n);
+    });
     rows.forEach(function (r) { if (r.system_id === cur && r.titulo_portal) set('yodCrumbHere', r.titulo_portal); });
     if (!box.children.length) box.innerHTML = '<span class="yod-nav-loading">Sin tableros</span>';
   }
