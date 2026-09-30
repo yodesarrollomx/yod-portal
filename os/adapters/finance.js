@@ -8,7 +8,9 @@
   function total(rows){return (Array.isArray(rows)?rows:[]).reduce(function(sum,row){return sum+number(row&&row.monto);},0);}
   function summarize(data){
     data=data&&typeof data==='object'?data:{};
-    var payments=(Array.isArray(data.pagos)?data.pagos:[]).filter(function(row){return !isClosed(row&&row.estatus);});
+    // Flujo guarda pagos.estado e ingresosEsperados.estatus. El campo legado
+    // solo sirve si estado no viene; nunca debe contradecir al campo canónico.
+    var payments=(Array.isArray(data.pagos)?data.pagos:[]).filter(function(row){return !isClosed(row&&(row.estado!=null?row.estado:row.estatus));});
     var income=(Array.isArray(data.ingresosEsperados)?data.ingresosEsperados:[]).filter(function(row){return !isClosed(row&&row.estatus);});
     var balance=number(data.saldo&&data.saldo.monto),paymentsTotal=total(payments),incomeTotal=total(income);
     return {balance:balance,payments:paymentsTotal,paymentsCount:payments.length,income:incomeTotal,incomeCount:income.length,projected:balance+incomeTotal-paymentsTotal,updatedAt:data.saldo&&data.saldo.fecha||''};

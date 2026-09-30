@@ -29,19 +29,25 @@
      Google, el navegador seguía en el respaldo (que no conoce los correos ni
      el login de Google). Limpiamos ese resto de la emergencia. */
   try { localStorage.removeItem('pyod_portero'); } catch (e) { }
-  function canjeConRelevo(k) {
-    function intenta(base) {
-      return fetch(base + '?recurso=canje&t=' + encodeURIComponent(k), { cache: 'no-store', credentials: 'omit' })
-        .then(function (r) { return r.text(); })
-        .then(function (t) { try { return JSON.parse(t); } catch (e) { return null; } });
+  function rechazoAcceso(error) {
+    return ['liga','clave','expirado','revocado','sin_sesion','sin_acceso','sin acceso','denegado','no autorizado','unauthorized','forbidden','http 401','http 403'].includes(String(error && error.message || error || '').trim().toLowerCase());
+  }
+  async function canjeConRelevo(k) {
+    async function intenta(base) {
+      var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      var timer = controller ? setTimeout(function () { controller.abort(); }, 25000) : null;
+      try {
+        var r = await fetch(base + '?recurso=canje&t=' + encodeURIComponent(k), { cache: 'no-store', credentials: 'omit', signal: controller ? controller.signal : undefined });
+        if (r.status === 401 || r.status === 403) return { ok: false, error: 'HTTP ' + r.status };
+        if (r.ok === false) throw new Error('HTTP ' + r.status);
+        return await r.json();
+      } finally { if (timer) clearTimeout(timer); }
     }
-    return ACCESO_LISTO.then(function () {
-      var P = window.YOD_PORTERO; if (!P) return null;
-      return intenta(P.original).then(function (j) {
-        if (j && j.ok) return j;
-        return intenta(P.respaldo);
-      }).catch(function () { return intenta(P.respaldo).catch(function () { return null; }); });
-    });
+    await ACCESO_LISTO;
+    var P = window.YOD_PORTERO; if (!P) return null;
+    var j = null; try { j = await intenta(P.original); } catch (e) { }
+    if (j && (j.ok || rechazoAcceso(j.error))) return j;
+    try { return await intenta(P.respaldo); } catch (e) { return null; }
   }
   var OS = 'https://yodesarrollomx.github.io/yod-portal/os/';
   var CORPORATE = 'https://yodesarrollo.mx/'; // sitio público; la marca del shell ya NO cuelga de aquí (lleva al OS)
@@ -80,33 +86,20 @@
     'SYS-CONTROL': ['AC']
   };
   // identity: 'pending' (validando) | 'ok' (canje válido) | 'fail' (sin sesión o canje falló)
-  var state = { role: '', boards: '', modules: [], identity: 'pending', catalogRows: null, catalogIds: null };
+  var state = { role: '', boards: '', modules: [], identity: 'pending', catalogRows: null, catalogIds: null, identityRequest: 0, sessionToken: '', sessionIdentity: '' };
 
-  /* El menú se veía distinto en cada tablero: cada carga corría la carrera
-     GAS-vs-respaldo de nuevo y a veces ganaba uno, a veces el otro (2 tableros
-     "MOAC" vs 8 tableros "Operación"). Guardamos el último catálogo bueno para
-     arrancar SIEMPRE con los títulos del Sheet, y la red solo refresca. */
+  /* El catálogo consultado se conserva en memoria de la sesión validada. Las
+     antiguas llaves compartidas se mantienen aquí únicamente para purgarlas. */
   var CATCACHE = 'yod_portal_cat_v1';
   /* Los ids que el Sheet SI trae, aunque vengan apagados. Sirven para distinguir
      "Direccion lo apago" (se respeta) de "nadie lo dio de alta" (se rellena). */
   var CATIDS = 'yod_portal_cat_ids_v1';
-  function readCatIds() { try { var r = JSON.parse(localStorage.getItem(CATIDS) || 'null'); return Array.isArray(r) ? r : null; } catch (e) { return null; } }
-  function writeCatIds(ids) { try { localStorage.setItem(CATIDS, JSON.stringify(ids)); } catch (e) { } }
-  function readCatCache() {
-    try {
-      var raw = localStorage.getItem(CATCACHE); if (!raw) return null;
-      var rows = JSON.parse(raw);
-      if (!Array.isArray(rows)) return null;
-      /* El OS guarda las filas crudas del Sheet en esta MISMA llave. Al leer se
-         aplica la misma regla que loadCatalog, para que el menú no "baile". */
-      rows = rows.filter(function (r) { return r && r.visible === 'SI' && r.system_id && DEST[r.system_id]; })
-        .sort(function (a, b) { return Number(a.orden) - Number(b.orden); });
-      return rows.length ? rows : null;
-    } catch (e) { return null; }
-  }
-  function writeCatCache(rows) {
-    try { localStorage.setItem(CATCACHE, JSON.stringify(rows)); } catch (e) { }
-  }
+  // Las versiones persistidas no indican de qué sesión vinieron. El catálogo
+  // vigente solo se guarda en memoria tras consultar con la sesión actual.
+  function readCatIds() { return state.catalogIds; }
+  function writeCatIds(ids) { state.catalogIds = ids; }
+  function readCatCache() { return state.catalogRows; }
+  function writeCatCache(rows) { state.catalogRows = rows; }
 
   // Solo Activo abre (igual que el OS). Las filas de respaldo no traen `estado`:
   // sin estado se consideran vivas, si no el menú de respaldo quedaría vacío.
@@ -187,7 +180,10 @@
   // Mientras la identidad no valide, se queda en "Cargando…" — nunca se enseña de más.
   function applyNav() {
     var cur = currentSys();
-    if (state.identity === 'pending') return;
+    if (state.identity === 'pending') {
+      state.modules = [];var pending = document.getElementById('yodNav');
+      if (pending) pending.innerHTML = '<span class="yod-nav-loading">Validando acceso…</span>';return;
+    }
     if (state.identity === 'fail') {
       var box = document.getElementById('yodNav');
       if (box) box.innerHTML = '<span class="yod-nav-loading">Sesión por validar</span>';
@@ -197,6 +193,10 @@
     var base = (state.catalogRows && state.catalogRows.length) ? state.catalogRows : (readCatCache() || defaultRows());
     var rows = conAltasNuevas(base, state.catalogIds || readCatIds());
     renderNav(rows.filter(function (r) { return canOpen(r.system_id) && vivo(r); }), cur);
+    if(state.catalogUnavailable){
+      var note=el('span','yod-nav-loading');note.textContent='Catálogo sin acceso · lista de respaldo';
+      var box=document.getElementById('yodNav');if(box)box.appendChild(note);
+    }
   }
 
   // Cachés de datos que cada board guarda en localStorage (origen compartido:
@@ -204,29 +204,34 @@
   // negado, para que en un dispositivo compartido no queden datos de otra
   // persona visibles sin permiso.
   var DATA_CACHES = {
-    'SYS-TAREAS': ['aurum-cache-v5'],
+    'SYS-TAREAS': ['aurum-cache-v5','yod_ops_me'],
+    'SYS-TRACK': ['codeyod-cache-v1'],
     'SYS-MIRAMAR': ['rm_cache_v3', 'rm_fin_v1'],
-    'SYS-INTERIORES': ['aurum_cache_v1', 'aurum_postq_v1'],
+    // La cola de escrituras aurum_postq_v1 no es caché de presentación: no se
+    // elimina al revalidar una sesión, para conservar trabajo pendiente.
+    'SYS-INTERIORES': ['aurum_cache_v1'],
     'SYS-INVERSION': ['ydr_board_data_v1'],
     'SYS-MARKETING': ['aurum_board_q_v1'],
     // El board de Flujo guarda el nombre de quien captura ("¿Quién eres?"): en una
     // tablet compartida quedaba puesto para el siguiente. Verificado 4-sep-2026.
     'SYS-FLUJO': ['yodflujo-user']
   };
-  /* Los 3 tableros que faltan NO guardan nada en localStorage hoy (revisados el
-     4-sep-2026): SYS-POTENCIALES y SYS-TRACK solo leen la credencial, y SYS-OBRA
-     no usa localStorage. Si alguno empieza a cachear, su llave va aquí. */
+  /* Esta lista contiene cachés de presentación conocidas; agregar nuevas
+     requiere revisar por separado las colas de escrituras pendientes. */
   function purgeCaches(sys) {
     (DATA_CACHES[sys] || []).forEach(function (k) { try { localStorage.removeItem(k); } catch (e) { } });
   }
   function purgeAll() {
     Object.keys(DATA_CACHES).forEach(function (s) { purgeCaches(s); });
+    [CATCACHE,CATIDS,'yod_pulse_v1'].forEach(function(k){try{localStorage.removeItem(k);}catch(e){}});
+    try{sessionStorage.removeItem('yod_id_v1');}catch(e){}
   }
   // Cerrar sesión: borra la credencial, la identidad de la sesión y los cachés de
   // datos LISTADOS en DATA_CACHES (no "todo el localStorage": lo que no está en la
   // lista sobrevive). Vital en dispositivos compartidos (una tablet del equipo)
   // para no dejar la sesión ni los datos de una persona al alcance de la siguiente.
   function logout() {
+    state.identityRequest++;state.identity='fail';state.sessionToken='';maybeLock();
     try { localStorage.removeItem(LSC); sessionStorage.removeItem('pyod_rol'); sessionStorage.removeItem('yod_id_v1'); localStorage.removeItem('yod_pulse_v1'); } catch (e) { }
     purgeAll();
     location.href = OS;
@@ -237,31 +242,21 @@
   // del board — esto es la cara honesta de ese muro, para que no parezca que
   // "entraste" y para que no queden datos cacheados en el dispositivo.)
   function maybeLock() {
-    var cur = currentSys();
-    if (!cur) return;
-    // Si el canje fresco SÍ concede el tablero, se levanta el candado que puso
-    // la identidad cacheada (antes se quedaba tapado hasta recargar).
-    if (state.identity !== 'ok' || canOpen(cur)) {
-      var puesto = document.getElementById('yodLock');
-      if (puesto && state.identity === 'ok') {
-        if (puesto.parentNode) puesto.parentNode.removeChild(puesto);
-        var lienzo = document.querySelector('.yod-canvas');
-        if (lienzo) lienzo.style.display = '';
-      }
+    var cur = currentSys();if (!cur) return;
+    var canvas = document.querySelector('.yod-canvas'),lock = document.getElementById('yodLock');
+    if (state.identity === 'ok' && canOpen(cur)) {
+      if (lock && lock.parentNode) lock.parentNode.removeChild(lock);
+      if (canvas) canvas.style.display = '';
       return;
     }
-    purgeCaches(cur);
-    var canvas = document.querySelector('.yod-canvas');
     if (canvas) canvas.style.display = 'none';
-    var main = document.querySelector('.yod-main');
-    if (main && !document.getElementById('yodLock')) {
-      var lock = el('div', 'yod-lock');
-      lock.id = 'yodLock';
-      lock.innerHTML = '<i class="ti ti-shield-lock"></i><h2>' + esc(NAME[cur] || 'Este tablero') + ' no está en tus accesos</h2>'
-        + '<p>Tu sesión es válida, pero este tablero no forma parte de tus permisos. Si lo necesitas, pídelo a Dirección.</p>'
-        + '<a href="' + OS + '"><i class="ti ti-home-2"></i> Volver a YOD OS</a>';
-      main.appendChild(lock);
-    }
+    if (state.identity !== 'pending') purgeCaches(cur);
+    var main = document.querySelector('.yod-main');if (!main) return;
+    if (!lock) { lock = el('div', 'yod-lock');lock.id = 'yodLock';main.appendChild(lock); }
+    var titulo = state.identity === 'pending' ? 'Validando tu acceso…' : state.identity === 'fail' ? 'Sesión por validar' : (NAME[cur] || 'Este tablero') + ' no está en tus accesos';
+    var mensaje = state.identity === 'pending' ? 'Espera la confirmación del servidor.' : state.identity === 'fail' ? 'Vuelve al OS para validar tu sesión o reintentar.' : 'Tu sesión es válida, pero este tablero no forma parte de tus permisos.';
+    lock.innerHTML = '<i class="ti ti-shield-lock"></i><h2>' + esc(titulo) + '</h2><p>' + esc(mensaje) + '</p>'
+      + '<a href="' + OS + '"><i class="ti ti-home-2"></i> Volver a YOD OS</a>';
   }
 
   /* SHELL-10, de verdad (25-sep): cualquier encabezado pegajoso del tablero con
@@ -343,7 +338,6 @@
     // El menú NO se pinta hasta validar la sesión (fail-closed): queda "Cargando…"
     wireSearch();
     loadIdentity();
-    loadCatalog(cur);
     cargarChinche();
   }
 
@@ -409,17 +403,23 @@
   }
 
   function loadCatalog(cur) {
-    var k = tok();
-    fetch(PORTAL + (k ? '&k=' + encodeURIComponent(k) : '') + '&cb=' + Date.now(), { cache: 'no-store', credentials: 'omit' })
-      .then(function (r) { return r.json(); })
+    var k = tok(), request = state.identityRequest;
+    return fetch(PORTAL + (k ? '&k=' + encodeURIComponent(k) : '') + '&cb=' + Date.now(), { cache: 'no-store', credentials: 'omit' })
+      .then(function (r) {
+        if(r.status===401||r.status===403)return {ok:false,error:'HTTP '+r.status};
+        if(r.ok===false)throw new Error('HTTP '+r.status);
+        return r.json();
+      })
       .then(function (d) {
+        if (request !== state.identityRequest || k !== tok() || state.identity !== 'ok') return;
+        if (d && (d.actor === 'PUBLIC' || (!d.ok && rechazoAcceso(d.error)))) {
+          state.catalogRows=null;state.catalogIds=null;state.catalogUnavailable=true;applyNav();return;
+        }
         if (!d || !d.ok || !Array.isArray(d.rows)) return;
         var rows = d.rows.filter(function (r) { return r && r.visible === 'SI' && r.system_id && DEST[r.system_id]; })
           .sort(function (a, b) { return Number(a.orden) - Number(b.orden); });
-        var ids = d.rows.map(function (r) { return r && r.system_id; }).filter(Boolean);
-        state.catalogIds = ids; writeCatIds(ids);
-        if (rows.length) { state.catalogRows = rows; writeCatCache(rows); }
-        applyNav();
+        writeCatIds(d.rows.map(function (r) { return r && r.system_id; }).filter(Boolean));
+        writeCatCache(rows);state.catalogUnavailable=false;applyNav();
       }).catch(function () { });
   }
   function aplicaIdentidad(j) {
@@ -433,24 +433,32 @@
     applyNav(); maybeLock();
   }
   function loadIdentity() {
-    var k = tok();
-    if (!k) { state.identity = 'fail'; pastilla('fail'); set('yodRole', 'Sesión por validar'); applyNav(); return; }
-    /* Velocidad: la identidad ya validada en esta pestaña pinta el menú AL
-       INSTANTE; el canje corre en fondo y solo corrige o cierra si cambió. */
-    var cacheado = null;
-    try { var r = sessionStorage.getItem('yod_id_v1'); cacheado = r ? JSON.parse(r) : null; } catch (e) { }
-    if (cacheado && cacheado.rol) aplicaIdentidad(cacheado);
-    canjeConRelevo(k)
-      .then(function (j) {
-        if (!j || !j.ok) throw 0;
-        try { sessionStorage.setItem('yod_id_v1', JSON.stringify({ ok: true, rol: j.rol || 'vista', boards: j.boards || '', nombre: j.nombre || '', correo: j.correo || '' })); } catch (e) { }
-        aplicaIdentidad(j);
-      }).catch(function () {
-        try { sessionStorage.removeItem('yod_id_v1'); } catch (e) { }
-        if (cacheado) purgeAll();
-        state.identity = 'fail'; pastilla('fail'); set('yodRole', 'Sesión por validar'); applyNav();
-      });
+    var k = tok(), previous = state.sessionToken, request = ++state.identityRequest;
+    state.identity = k ? 'pending' : 'fail';state.role = '';state.boards = '';state.modules = [];
+    state.catalogRows = null;state.catalogIds = null;state.catalogUnavailable=false;purgeAll();
+    set('yodName', 'Equipo YOD');set('yodRole', k ? 'Validando acceso…' : 'Sin sesión');set('yodAv', 'YO');
+    var chip = document.getElementById('yodChip');if(chip)chip.style.display='none';
+    var results = document.getElementById('yodRes');if(results)results.replaceChildren();
+    pastilla(k ? 'wait' : 'fail');applyNav();maybeLock();
+    // El board envuelto conserva su propio estado. Una persona distinta debe
+    // cargarlo desde cero; ocultarlo y reabrirlo expondría los datos anteriores.
+    if(previous && previous !== k){state.sessionToken='';location.reload();return Promise.resolve();}
+    if(!k)return Promise.resolve();
+    return canjeConRelevo(k).then(function(j){
+      if(request !== state.identityRequest || k !== tok())return;
+      if(!j || !j.ok)throw new Error(j && j.error || 'sin-respuesta');
+      var identity = JSON.stringify([j.correo||'',j.nombre||'',j.rol||'vista',j.boards||'']);
+      if(state.sessionIdentity && state.sessionIdentity !== identity){location.reload();return;}
+      state.sessionIdentity=identity;
+      state.sessionToken=k;aplicaIdentidad(j);return loadCatalog(currentSys());
+    }).catch(function(){
+      if(request !== state.identityRequest || k !== tok())return;
+      purgeAll();state.identity='fail';state.sessionToken='';pastilla('fail');
+      set('yodRole','Sesión por validar');applyNav();maybeLock();
+    });
   }
+  window.addEventListener('storage',function(e){if(e.key===LSC||e.key===null)loadIdentity();});
+  window.addEventListener('focus',function(){if(state.sessionToken!==tok())loadIdentity();});
 
   function wireSearch() {
     var trig = document.getElementById('yodSearch'); if (!trig) return;
