@@ -1,0 +1,158 @@
+{
+  "checked_at": "2026-09-30",
+  "method": "Lectura autenticada de metadatos, fuente del editor, implementaciones y fuente de versiones. Identidad acreditada por coincidencia exacta con el endpoint del cliente.",
+  "confirmed_components": [
+    {
+      "component_id": "GAS-PORTERO",
+      "version": 50,
+      "editor_equals_deployed_version": false,
+      "source_files": [
+        {
+          "name": "appsscript",
+          "sha256": "0f96e341f2b96d0d1ba0b3a42f15b5ce0582e2dd3e36040b9151ce7c54f0c8fa"
+        },
+        {
+          "name": "Code",
+          "sha256": "48772bbf293addbef7e26f9c8e2560c35e66d011dbf3f0a24da3bdb6fd90fc10"
+        }
+      ],
+      "verification": "Fuente de la versión activa obtenida por Apps Script API; deployment ID coincide exactamente con el endpoint del cliente versionado.",
+      "functional_runtime_tested": false
+    },
+    {
+      "component_id": "GAS-FLUJO",
+      "version": 14,
+      "editor_equals_deployed_version": true,
+      "source_files": [
+        {
+          "name": "appsscript",
+          "sha256": "e03151f1b5b933a69936ad3563b038d7195b2f635416781f3efb8487dd68f9d0"
+        },
+        {
+          "name": "Código",
+          "sha256": "909ff4fd05072979baf1e56bf94b40036300568e571ff1fc2b23c58b6e9ec612"
+        }
+      ],
+      "verification": "Fuente de la versión activa obtenida por Apps Script API; deployment ID coincide exactamente con el endpoint del cliente versionado.",
+      "functional_runtime_tested": false
+    },
+    {
+      "component_id": "GAS-CODES",
+      "version": 40,
+      "editor_equals_deployed_version": true,
+      "source_files": [
+        {
+          "name": "appsscript",
+          "sha256": "bfdcbf69066598e578a50cdce9877544149e8745c213830a32be3dc73ae8381a"
+        },
+        {
+          "name": "Código",
+          "sha256": "0fe2887893057c22a55573aa04f8abdd42996df1841ef6ad6b7ff41dd0f924af"
+        },
+        {
+          "name": "EditarCampoBoard",
+          "sha256": "0fde5ca61df1be332a3d3b24c3022e6179a328c9c3c817cc724cd9555e84f3f9"
+        }
+      ],
+      "verification": "Fuente de la versión activa obtenida por Apps Script API; deployment ID coincide exactamente con el endpoint del cliente versionado.",
+      "functional_runtime_tested": false
+    },
+    {
+      "component_id": "GAS-ALQUIMIA",
+      "version": 26,
+      "editor_equals_deployed_version": true,
+      "source_files": [
+        {
+          "name": "appsscript",
+          "sha256": "d962f07c3493b00312466473783cfcf57bcad4001cf43a23e5311b0d8e565ffc"
+        },
+        {
+          "name": "Code",
+          "sha256": "b80a9829c49fa3d7f2bc2e0c954e986a777fdac1dfc716fc860b36d0e550bc4f"
+        }
+      ],
+      "verification": "Fuente de la versión activa obtenida por Apps Script API; deployment ID coincide exactamente con el endpoint del cliente versionado.",
+      "functional_runtime_tested": false
+    },
+    {
+      "component_id": "GAS-CATALOGO",
+      "version": 8,
+      "editor_equals_deployed_version": true,
+      "source_files": [
+        {
+          "name": "appsscript",
+          "sha256": "bfdcbf69066598e578a50cdce9877544149e8745c213830a32be3dc73ae8381a"
+        },
+        {
+          "name": "Código",
+          "sha256": "408efa24eea2fbde07b2b767bfb7e868f1484bf34c72f0dc890f85687e77e1bc"
+        }
+      ],
+      "verification": "Fuente de la versión activa obtenida por Apps Script API; deployment ID coincide exactamente con el endpoint del cliente versionado.",
+      "functional_runtime_tested": false
+    },
+    {
+      "component_id": "GAS-OBRA",
+      "version": 16,
+      "editor_equals_deployed_version": true,
+      "source_files": [
+        {
+          "name": "appsscript",
+          "sha256": "e957f2cb9cb8269be1ee9739d19b500fcb2abdb21c3d844ae668b70478c14ebd"
+        },
+        {
+          "name": "Code",
+          "sha256": "73698ae5e233eac2c9015c071b82e6a09050b312d262c096493afed567159720"
+        },
+        {
+          "name": "datos",
+          "sha256": "9d8cc6671f6435b1f0db273b5f1bf74cacf37dfdd6b0bf51b5660f4c6e2cf9be"
+        }
+      ],
+      "verification": "Fuente de la versión activa obtenida por Apps Script API; deployment ID coincide exactamente con el endpoint del cliente versionado.",
+      "functional_runtime_tested": false
+    },
+    {
+      "component_id": "GAS-PLAN-POTENCIAL",
+      "version": 16,
+      "editor_equals_deployed_version": true,
+      "source_files": [
+        {
+          "name": "appsscript",
+          "sha256": "bfdcbf69066598e578a50cdce9877544149e8745c213830a32be3dc73ae8381a"
+        },
+        {
+          "name": "Código",
+          "sha256": "7bb05b007066a10a6a181f33f7fdf3f5f2ae54b78f994f14c6d80f63df9a547a"
+        }
+      ],
+      "verification": "Fuente de la versión activa obtenida por Apps Script API; deployment ID coincide exactamente con el endpoint del cliente versionado.",
+      "functional_runtime_tested": false
+    },
+    {
+      "component_id": "GAS-CRM",
+      "version": 19,
+      "editor_equals_deployed_version": true,
+      "source_files": [
+        {
+          "name": "appsscript",
+          "sha256": "b6e756d1b7706897969676e352a28376f19d684ccd94729e4e451fc1aa1cce5e"
+        },
+        {
+          "name": "Code",
+          "sha256": "ebe8443012c36da229282ee38033457680787df643e04a1fa32f90b2b52cb01f"
+        }
+      ],
+      "verification": "Fuente de la versión activa obtenida por Apps Script API; deployment ID coincide exactamente con el endpoint del cliente versionado.",
+      "functional_runtime_tested": false
+    }
+  ],
+  "business_writes_performed": false,
+  "backend_deployments_modified": false,
+  "limitations": [
+    "No se afirma cobertura exhaustiva de los scripts vinculados a Sheets.",
+    "Los permisos por operación y recorridos por rol siguen pendientes de pruebas aisladas.",
+    "Portero contiene cambios adicionales en el editor respecto a la versión activa; no se publicaron.",
+    "El proyecto vinculado de Obra Cliente requiere su identificador exacto."
+  ]
+}
