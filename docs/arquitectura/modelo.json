@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-09-30.2",
+  "revision": "2026-09-30.3",
   "checked_at": "2026-09-30",
   "priorities": [
     "vender_mas",
@@ -5681,6 +5681,23 @@
         "Validación del esquema y generación determinista del atlas"
       ],
       "deployment": "Solo documentación pública; no modifica Apps Script ni registros de negocio."
+    },
+    {
+      "id": "CHG-EMD-UI-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD"
+      ],
+      "proposal": "Registrar en el atlas la interfaz compacta de evaluación: lista propia por persona, siete etapas y confirmación de guardado/avance del servidor; chinches desde el enlace personal. Mantener los 28 textos, escala admitida, asignaciones, permisos, control de conflictos y fuente de verdad privada; sin nuevas conexiones ni migraciones.",
+      "status": "implementado_local",
+      "tests": [
+        "67 pruebas sintéticas de lógica/importador del portal; no corresponden a participantes humanos",
+        "Recorrido Chromium sintético: 320/390 px, teclado, guardado, chinches, cierre y recarga",
+        "Validación del modelo, vistas deterministas e impacto contra el commit exacto del atlas"
+      ],
+      "deployment": "Registro y frontend preparados en ramas/PR separados; no acredita integración o publicación. Publicar exige preservar la implementación y datos existentes, verificar el recorrido publicado y otro dispositivo. Reversión por revisión del commit de interfaz y referencia de atlas; no restaurar ni borrar registros privados."
     }
   ],
   "data_contracts": [
