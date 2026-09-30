@@ -19,7 +19,7 @@ Los resultados reproducibles y su commit quedan registrados en GitHub Actions. U
 4. Conciliar privadamente registros financieros y referencias de bolsas antes de cualquier corrección. Un ID repetido no acredita un pago duplicado; no se eliminan movimientos por inferencia.
 5. Verificar inicio de sesión real y recorridos por rol en un entorno de prueba; confirmar que cada backend autoriza las operaciones. Ocultar una tarjeta en el navegador no sustituye autorización del servidor.
 6. Observar la primera corrida de los publicadores adaptados y confirmar recursos publicados antes de montar referencias en el motor. Las pruebas de publicación usan dobles y no disparan procesos operativos reales.
-7. Revisar y resolver las alertas de dependencias detectadas en las compilaciones, distinguiendo código servido y herramientas de construcción; una instalación exitosa no demuestra ausencia de vulnerabilidades.
+7. Revisar y resolver las [alertas de dependencias](dependencias.md) detectadas en las compilaciones, distinguiendo código servido y herramientas de construcción; una instalación exitosa no demuestra ausencia de vulnerabilidades.
 8. Medir tiempos de carga y fallos con una muestra representativa. Una respuesta HTTP o una captura local no constituye un diagnóstico completo de rendimiento.
 
 ## Cómo repetir verificaciones locales
