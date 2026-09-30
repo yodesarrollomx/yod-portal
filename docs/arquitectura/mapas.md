@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-09-30.1 · 2026-09-30.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-09-30.2 · 2026-09-30.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -30,7 +30,6 @@ flowchart LR
   n_GAS_MOAC_METAS -->|Lee y vincula estrategia| n_SHEET_MOAC_METAS
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
-  class n_GAS_PORTERO pendiente;
   class n_SHEET_OPERACION pendiente;
   class n_EXT_GMAIL pendiente;
   class n_SHEET_MOAC_METAS pendiente;
@@ -121,9 +120,7 @@ flowchart LR
   class n_SYS_PLAN_POTENCIAL pendiente;
   class n_SYS_CROKISS pendiente;
   class n_SYS_SALA_OPERACION pendiente;
-  class n_GAS_PORTERO pendiente;
   class n_SHEET_MARKETING pendiente;
-  class n_GAS_PLAN_POTENCIAL pendiente;
   class n_SHEET_PLAN_POTENCIAL pendiente;
   class n_SHEET_CROKISS pendiente;
   class n_SHEET_CODES pendiente;
@@ -172,12 +169,9 @@ flowchart LR
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_ALQUIMIA pendiente;
-  class n_GAS_PORTERO pendiente;
-  class n_GAS_CATALOGO pendiente;
   class n_SHEET_MIRAMAR pendiente;
   class n_GAS_INTERIORES pendiente;
   class n_SHEET_INTERIORES pendiente;
-  class n_GAS_ALQUIMIA pendiente;
   class n_SHEET_ALQUIMIA pendiente;
 ```
 
@@ -196,7 +190,6 @@ flowchart LR
   n_SYS_FLUJO -.->|Canje de sesión y permisos| n_GAS_PORTERO
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
-  class n_GAS_PORTERO pendiente;
 ```
 
 ## Obra
@@ -221,7 +214,6 @@ flowchart LR
   n_GAS_OBRA_CLIENTE -->|Consulta avance por folio mediante servicio| n_GAS_OBRA
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
-  class n_GAS_PORTERO pendiente;
   class n_SHEET_OBRA pendiente;
   class n_SHEET_OBRA_CLIENTE pendiente;
 ```
@@ -278,9 +270,6 @@ flowchart LR
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PINTARRON pendiente;
-  class n_GAS_PORTERO pendiente;
-  class n_GAS_CATALOGO pendiente;
-  class n_GAS_PLAN_POTENCIAL pendiente;
 ```
 
 ## Personas
@@ -326,7 +315,6 @@ flowchart LR
   n_SVC_SALA_EJECUTOR -->|Sube activos producidos| n_EXT_DRIVE
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_SITIO_ORG pendiente;
-  class n_GAS_PLAN_POTENCIAL pendiente;
   class n_EXT_DRIVE pendiente;
   class n_EXT_CALENDAR pendiente;
   class n_EXT_META pendiente;
@@ -371,7 +359,6 @@ flowchart LR
   n_GAS_SALA -->|Consulta respaldo de identidad| n_GAS_PORTERO_RESPALDO
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
-  class n_GAS_PORTERO pendiente;
   class n_SHEET_PORTERO pendiente;
 ```
 

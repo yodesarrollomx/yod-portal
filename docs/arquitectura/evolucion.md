@@ -18,6 +18,10 @@ Se construyó el primer atlas de los 20 repositorios, con fichas de componentes,
 
 Los commits y PR constituyen la cronología técnica. Los estados de esta tabla describen alcance; no certifican el despliegue de Apps Script. No se alteraron registros financieros reales para resolver discrepancias.
 
+## Revisión 2026-09-30.2
+
+Se concedieron los permisos de Apps Script y se contrastaron ocho motores mediante fuente versionada y coincidencia exacta de implementación con sus clientes. El atlas registra las versiones activas y conserva pendientes las pruebas funcionales y la cobertura de otros proyectos vinculados. Los cambios adicionales del editor de Portero no se desplegaron. No se modificaron motores ni datos operativos.
+
 ## Próximas revisiones
 
 Cada propuesta nueva obtiene un ID estable en `modelo.json` y declara componentes, contratos, pruebas y reversión. El PR explica el problema concreto y el resultado. Al integrar, registrar el commit, las comprobaciones y el entorno; al desplegar un motor, registrar también la versión y la evidencia de ejecución. Una reversión se registra como un evento nuevo y conserva la trazabilidad anterior.
