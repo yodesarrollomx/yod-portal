@@ -1,11 +1,8 @@
 (function(root){
   'use strict';
   var ENDPOINT='https://script.google.com/macros/s/AKfycbyZ1p7rGHuU01vWBbynGdmlKTnlyH9CIXyhKivqLHa4rLxcHNneJKsZHv7smnjLsfH1/exec';
-  // Mismo caché que escribe el tablero directo de Operación (board-aurum, App.jsx).
-  // Como el OS y el tablero comparten origen (yodesarrollomx.github.io) comparten
-  // localStorage: si la consulta en vivo falla podemos mostrar el último resumen
-  // conocido, igual que hace el tablero, en vez de un candado sin datos.
-  var CACHE_KEY='aurum-cache-v5';
+  // Los datos legacy de localStorage no contienen identidad ni fecha.
+  // El consumidor conserva, si corresponde, memoria de su sesión validada.
   var MONTHS={enero:0,febrero:1,marzo:2,abril:3,mayo:4,junio:5,julio:6,agosto:7,septiembre:8,octubre:9,noviembre:10,diciembre:11};
 
   function normalizeStatus(value){
@@ -43,10 +40,6 @@
     return {total:active.length,open:open.length,overdue:overdue.length,dueSoon:dueSoon.length,review:review.length,priority:priority};
   }
 
-  function readCache(){
-    try{var raw=localStorage.getItem(CACHE_KEY);if(!raw)return null;var parsed=JSON.parse(raw);return Array.isArray(parsed)?parsed:null;}catch(e){return null;}
-  }
-
   // --- "Solo mis tareas": match nombre de la persona ↔ campo responsable ---
   // Normaliza (minúsculas, sin acentos, espacios colapsados) y compara por tokens:
   // el nombre corto debe estar contenido en el largo. Así "Sayri" ↔ "Sayri López"
@@ -79,20 +72,8 @@
 
   async function load(token){
     if(!token)throw new Error('sin_sesion');
-    try{
-      var tasks=await fetchLive(token);
-      // guardar en el mismo caché que usa el tablero, por si el tablero directo no se abrió aún
-      try{localStorage.setItem(CACHE_KEY,JSON.stringify(tasks));}catch(e){}
-      return {tasks:tasks,summary:summarize(tasks),updatedAt:new Date(),source:'live'};
-    }catch(err){
-      // La consulta en vivo falló. El tablero directo muestra el último caché;
-      // hacemos lo mismo aquí para no dejar el OS vacío, marcándolo como caché.
-      var cached=readCache();
-      if(cached&&cached.length){
-        return {tasks:cached,summary:summarize(cached),updatedAt:null,source:'cache',diag:(err&&err.message)||'error'};
-      }
-      var e2=new Error((err&&err.message)||'error');e2._diag=(err&&err.message)||'error';throw e2;
-    }
+    var tasks=await fetchLive(token);
+    return {tasks:tasks,summary:summarize(tasks),updatedAt:new Date(),source:'live'};
   }
   root.YodOperations=Object.freeze({load:load,summarize:summarize,normalizeStatus:normalizeStatus,daysUntil:daysUntil,tasksForPerson:tasksForPerson,isMine:isMine});
 })(typeof globalThis!=='undefined'?globalThis:this);

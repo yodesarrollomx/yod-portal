@@ -2,6 +2,16 @@
 
 Lee este archivo completo antes de tocar nada.
 
+## Entrada vigente para agentes · 30-sep-2026
+
+Leer primero `AGENTS.md` y `docs/arquitectura/README.md`. El modelo estructurado,
+las fichas y la evidencia de despliegue están en `docs/arquitectura/`.
+Registrar propuesta e impacto antes de implementar; entregar PR con pruebas.
+Las comprobaciones fechadas y pendientes históricos de este archivo se conservan
+como contexto: no acreditan el estado actual. Una fuente Apps Script en GitHub
+no acredita que esté desplegada. No usar caches de identidad o datos legacy para
+restaurar permisos; la cabina y el marco deben completar el canje vigente.
+
 ## Qué es
 
 Es la **cabeza** del tablero YOD. No es "un tablero más": es el marco donde entran todos.
@@ -38,8 +48,9 @@ Repo: `yodesarrollomx/yod-portal` (`git remote -v`), público, Pages desde `main
    línea 215; la de `styles.css`, línea 19 — no copies el valor de aquí, léelo del archivo, cambia
    seguido). Sin el bump, Pages sirve el JS viejo y "no se ve el cambio"
    (memoria `yod-os-menu-catalogo`).
-3. **No hay copia local del catálogo. Si Sheets no responde, el portal falla CERRADO** y no habilita
-   enlaces (`README.md`; `portal-core.js` `enabled()` exige `estado='activo'` + URL del allowlist).
+3. **El catálogo no otorga permisos.** La cabina puede tener nombres/destinos de respaldo;
+   la sesión debe validarse y las URLs deben pasar el allowlist. Distinguir metadatos
+   del catálogo de caches de identidad o datos operativos. Ver el código y el atlas vigente.
 4. **El allowlist `DESTINATIONS` acepta las DOS casas** (yodesarrollomx y alexpueblag) a propósito.
    El Sheet se actualiza en otro momento que el código: con una sola base, todas las tarjetas quedan
    en "URL inválida" y el portal amanece vacío (comentario en `portal-core.js:7-15`).
@@ -100,8 +111,9 @@ Repo: `yodesarrollomx/yod-portal` (`git remote -v`), público, Pages desde `main
 
 ## Arquitectura de datos
 
-**ADVERTENCIA: este repo es ESPEJO del front. Ningún Apps Script vive aquí.** Lo que corre es lo
-pegado en el editor de Apps Script. Al desplegar: editar la implementación EXISTENTE → "Versión nueva".
+**ADVERTENCIA: el repo no acredita la versión desplegada de Apps Script.** Sí contiene la fuente
+`obra-app/motor/ObraCliente.gs`; otros motores viven fuera. Contrastar lo que corre con el editor/API
+y la versión activa. Al desplegar: editar la implementación EXISTENTE → "Versión nueva".
 NUNCA "Nueva implementación" (memoria `portal-gas-lectura-abierta`).
 
 ```

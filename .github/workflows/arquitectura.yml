@@ -1,0 +1,45 @@
+name: Arquitectura YOD
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      base_sha:
+        description: Commit base de la propuesta
+        required: true
+        type: string
+      head_sha:
+        description: Commit a verificar (opcional, debe ser el checkout)
+        required: false
+        type: string
+permissions:
+  contents: read
+jobs:
+  validar:
+    name: ${{ github.event_name == 'workflow_dispatch' && 'Arquitectura YOD (manual)' || 'Arquitectura YOD' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Esquema, conexiones y vistas
+        run: node scripts/arquitectura.cjs --check
+      - name: Pruebas de contratos y regresiones
+        run: node --test tests/*.cjs
+      - name: Obra y cálculo
+        run: node verify-obra-app.cjs
+      - name: Impacto de la propuesta
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || inputs.base_sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || inputs.head_sha || github.sha }}
+        run: |
+          if [[ ! "$BASE_SHA" =~ ^[a-f0-9]{40}$ || ! "$HEAD_SHA" =~ ^[a-f0-9]{40}$ ]]; then
+            echo "Se requieren commits SHA completos para verificar impacto" >&2
+            exit 1
+          fi
+          node scripts/verificar-impacto.cjs

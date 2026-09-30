@@ -116,7 +116,7 @@
 #etapas .flecha{opacity:.5;font-size:11px}
 #fuentes{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px;font-size:11px}
 #fuentes .fu{padding:2px 8px;border-radius:999px;border:1px solid rgba(154,123,63,.3)}
-#fuentes .fu-ok{color:#2f7a4b}#fuentes .fu-no{color:#b3261e;border-color:rgba(179,38,30,.4)}#fuentes .fu-esp{opacity:.6}
+#fuentes .fu-ok{color:#2f7a4b}#fuentes .fu-no{color:#b3261e;border-color:rgba(179,38,30,.4)}#fuentes .fu-esp{opacity:.6}#fuentes .fu-aviso{color:#80611e}
 @media (max-width:520px){#etapas{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 <script>
@@ -1500,17 +1500,32 @@ addEventListener("keydown",e=>{
 let guardada="abaco";
 try{ guardada=localStorage.getItem("yodCRM")||"abaco"; }catch(e){}
 ver(guardada==="surcos"?"surcos":"abaco");
+// Los conectores informan cómo obtuvieron el dato. Una promesa resuelta no
+// equivale a una fuente sana: también puede haber acceso rechazado o caché.
+function estadoErrorFuente(e){
+  const codigo=String(e&&e.message||e||"").trim().toLowerCase();
+  return ["liga","clave","expirado","revocado","sin_acceso","sin acceso","denegado",
+    "no autorizado","forbidden","unauthorized","401","403"].includes(codigo)?"sinacceso":"error";
+}
+function motivoErrorFuente(e,nombre){
+  return estadoErrorFuente(e)==="sinacceso"?"acceso no autorizado a esta fuente":nombre+" sin respuesta válida";
+}
+async function leerFuente(r){
+  if(r.status===401||r.status===403) throw String(r.status);
+  if(r.ok===false) throw new Error("HTTP "+r.status);
+  return await r.json();
+}
 /* ═══ TRAMO PPP · EN LÍNEA · GAS del Plan de Potencial ═══ */
 const PPP_GAS="https://script.google.com/macros/s/AKfycbw3EB-6Q9Mq-ouDU-JvKMrRUaw4auYVeGkKja783yJ7_dEpCOW8xoMhs8IQMDojmlDB3A/exec";
 async function conectarPPP(){
   if(!puedo("SYS-POTENCIALES")){                 // sin código no se llama al GAS
-    cegar(KPIHEX_TOP,[1,6,7],"sin código de este módulo"); pintar(); return; }
+    cegar(KPIHEX_TOP,[1,6,7],"sin código de este módulo"); pintar(); return "sinacceso"; }
   try{
     // La credencial va como en los demás tramos (Miramar, Obra, CRM): el GAS del
     // plan-potencial ya la exige y sin ella este tramo salía SIEMPRE ciego.
     const r=await fetch(PPP_GAS+"?recurso=board&k="+encodeURIComponent(CLAVE_OK||"")+
       "&t="+Date.now(),{cache:"no-store"});
-    const j=await r.json(); if(!j.ok||!j.kpis) throw 0;
+    const j=await leerFuente(r); if(!j.ok||!j.kpis) throw j&&j.error||0;
     const kp=j.kpis;
     const dias=j.actividad_por_dia;
     KPIHEX_TOP[1] = cifra(kp.clientes)===null
@@ -1534,21 +1549,22 @@ async function conectarPPP(){
     pintar();
     console.log("✓ PPP en línea · pagados "+(cifra(kp.clientes)===null?"—":kp.clientes)+
       " · leads "+kp.leads+" · agendadas "+kp.agendadas);
-  }catch(e){ cegar(KPIHEX_TOP,[1,6,7],"GAS plan-potencial sin respuesta"); pintar();
-     console.warn("PPP sin línea", e); }
+    return [1,6,7].every(i=>KPIHEX_TOP[i].st==="linea")?"ok":"incompleto";
+  }catch(e){ cegar(KPIHEX_TOP,[1,6,7],motivoErrorFuente(e,"GAS plan-potencial")); pintar();
+     console.warn("PPP sin línea", e); return estadoErrorFuente(e); }
 }
 
 /* ═══ TRAMO MIRAMAR · EN LÍNEA · GAS del board Real de Miramar ═══ */
 const MIRA_GAS="https://script.google.com/macros/s/AKfycbzR0-hoPMs7N_1nSD0pFbJtTmaN4kLCIbNFsYw7VeM3xnfu12TSKJSkMyNxm7KNn7o/exec";
 async function conectarMiramar(){
   if(!puedo("SYS-MIRAMAR")){                     // sin código no se llama al GAS
-    cegar(KPIHEX_BOT,[0,1,5],"sin código de este módulo"); pintar(); return; }
+    cegar(KPIHEX_BOT,[0,1,5],"sin código de este módulo"); pintar(); return "sinacceso"; }
   try{
     // Manda la credencial como el resto de conectores: el backend de Miramar
     // ya la exige (antes servia el board completo sin clave a cualquiera).
     const r=await fetch(MIRA_GAS+"?recurso=board&k="+encodeURIComponent(CLAVE_OK||"")+
       "&cb="+Date.now(),{cache:"no-store"});
-    const j=await r.json(); if(!j.ok||!j.tablas) throw 0;
+    const j=await leerFuente(r); if(!j.ok||!j.tablas) throw j&&j.error||0;
     const tr=j.tablas.TRAMITES||[], lo=j.tablas.LOTES||[];
     const est=e=>String(e.estado||"").trim().toLowerCase();
     // Una tabla VACÍA es ausencia de dato, no un cero: antes salía "0/47" (el 47
@@ -1590,8 +1606,9 @@ async function conectarMiramar(){
     console.log("✓ Miramar en línea · trámites "+(TRAD?TRAD.apr+"/"+TRAD.tot:"—")+
       " · "+(TRAD?TRAD.blq+" bloqueados":"sin línea")+
       " · apartados "+(lo.length?ap+"/"+lo.length:"—"));
-  }catch(e){ cegar(KPIHEX_BOT,[0,1,5],"GAS Real Miramar sin respuesta"); pintar();
-     console.warn("Miramar sin línea", e); }
+    return tr.length&&lo.length?"ok":(tr.length||lo.length?"incompleto":"sindatos");
+  }catch(e){ cegar(KPIHEX_BOT,[0,1,5],motivoErrorFuente(e,"GAS Real Miramar")); pintar();
+     console.warn("Miramar sin línea", e); return estadoErrorFuente(e); }
 }
 
 /* ═══ TRAMO OBRA · EN LÍNEA · el motor de avance con cadena de aprobación ═══
@@ -1603,13 +1620,13 @@ async function conectarMiramar(){
 const OBRA_GAS="https://script.google.com/macros/s/AKfycbyVb6Y7m00FyhoGa9ZoQul1j6IlHdgsCNalaZVGmA0Csh91TqxNvyDT0YQurz-hViA0/exec";
 let OBRD=null;
 async function conectarObra(){
-  if(!OBRA_GAS) return;
+  if(!OBRA_GAS) return "sinconfigurar";
   if(!puedo("SYS-OBRA")){                        // sin código no se llama al GAS
-    cegar(KPIHEX_BOT,[7],"sin código de este módulo"); pintar(); return; }
+    cegar(KPIHEX_BOT,[7],"sin código de este módulo"); pintar(); return "sinacceso"; }
   try{
     const r=await fetch(OBRA_GAS+"?recurso=board&k="+encodeURIComponent(CLAVE_OK||"")+
       "&cb="+Date.now(),{cache:"no-store"});
-    const j=await r.json(); if(!j.ok) throw j&&j.error||0;
+    const j=await leerFuente(r); if(!j.ok) throw j&&j.error||0;
     const k=j.kpi||{}, fr=j.frentes||{};
     const nombres=Object.keys(fr);
     const listos=nombres.filter(n=>fr[n].importe>0 && fr[n].ejecutado>=fr[n].importe*0.999).length;
@@ -1675,32 +1692,36 @@ async function conectarObra(){
       (OBRD.pendientes?" · "+OBRD.pendientes+" por verificar":"")+
       (OBRD.porAutorizar?" · "+OBRD.porAutorizar+" por autorizar":"")+
       (OBRD.frenos?" · ⚠ "+OBRD.frenos+" frenado(s)":""));
-  }catch(e){ cegar(KPIHEX_BOT,[7],"motor de obra sin respuesta"); pintar();
-     console.warn("Obra sin línea", e); }
+    return av===null?"incompleto":"ok";
+  }catch(e){ cegar(KPIHEX_BOT,[7],motivoErrorFuente(e,"motor de obra")); pintar();
+     console.warn("Obra sin línea", e); return estadoErrorFuente(e); }
 }
 
 /* ═══ TRAMO ALYSA + MARÍA · EN LÍNEA · hitos de sus tracks (usa la clave del candado) ═══ */
 async function conectarTracks(){
   if(!puedo("SYS-TRACK")){                       // sin código no se llama al GAS
-    cegar(KPIHEX_BOT,[3],"sin código de este módulo"); pintar(); return; }
+    cegar(KPIHEX_BOT,[3],"sin código de este módulo"); pintar(); return "sinacceso"; }
   const uno=async (track,idx)=>{
     const r=await fetch(GATE_GAS+"?recurso=track&track="+track+"&k="+encodeURIComponent(CLAVE_OK||""))
-      .then(x=>x.json());
+      .then(leerFuente);
     if(!r.ok||!Array.isArray(r.items)) throw r.error||0;
     const tot=r.items.length,
           hechos=r.items.filter(i=>String(i.estado||"").toLowerCase()==="hecho").length;
     PROJ[idx].f=hechos+"/"+tot; PROJ[idx].p=tot?hechos/tot:0;
     if(track==="alysa") KPIHEX_BOT[3]={n:Math.round(hechos/Math.max(1,tot)*100)+"%",
       lbl:"HITOS ALYSA", c:hechos/Math.max(1,tot)>=.7?"verde":"ambar", st:"linea"};
-    return hechos+"/"+tot;
+    return {resumen:hechos+"/"+tot,total:tot};
   };
   // allSettled NUNCA rechaza: el try/catch de antes era código muerto y un track
   // caído se quedaba en "falta conectar" en vez de decir "la fuente no contestó".
   const [a,m]=await Promise.allSettled([uno("alysa",0),uno("maria",2)]);
-  if(a.status==="rejected"){ cegar(KPIHEX_BOT,[3],"portero/tracks sin respuesta"); PROJ[0].f="—"; }
+  if(a.status==="rejected"){ cegar(KPIHEX_BOT,[3],motivoErrorFuente(a.reason,"portero/tracks")); PROJ[0].f="—"; }
   if(m.status==="rejected"){ PROJ[2].f="—"; }
   pintar();
-  console.log("✓ tracks · alysa "+(a.value||"sin línea")+" · maría "+(m.value||"sin línea"));
+  console.log("tracks · alysa "+(a.value?a.value.resumen:"sin línea")+" · maría "+(m.value?m.value.resumen:"sin línea"));
+  const fallos=[a,m].filter(r=>r.status==="rejected");
+  if(fallos.length) return fallos.some(r=>estadoErrorFuente(r.reason)==="error")?"error":"sinacceso";
+  return a.value.total&&m.value.total?"ok":(a.value.total||m.value.total?"incompleto":"sindatos");
 }
 
 /* ═══ TRAMO TALLER · EN LÍNEA · el board-aurum de Operación (adapter operations) ═══ */
@@ -1715,25 +1736,25 @@ function tareasResumen(tasks){
     blq:act.filter(t=>["en standby","en standby.","en revisión","en revision","subido","detenido"].includes(st(t))).length };
 }
 async function conectarTaller(){
+  if(!puedo("SYS-TAREAS")){cegar(KPIHEX_BOT,[2],"sin código de este módulo");pintar();return "sinacceso";}
   let tasks=null, via="live";
   try{
     const r=await fetch(TALLER_GAS,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
       body:JSON.stringify({k:CLAVE_OK||"",action:"getAll"}),redirect:"follow",cache:"no-store"});
-    const j=await r.json();
+    const j=await leerFuente(r);
     if(j&&j.ok&&Array.isArray(j.tasks||j.data)) tasks=j.tasks||j.data; else throw j&&j.error||0;
   }catch(e){
-    try{ const raw=localStorage.getItem("aurum-cache-v5");        // mismo caché que el board-aurum
-      const c=raw&&JSON.parse(raw); if(Array.isArray(c)&&c.length){ tasks=c; via="caché del board"; } }catch(_){}
-    if(!tasks){ cegar(KPIHEX_BOT,[2],"board-aurum sin respuesta"); pintar();
-      console.warn("Taller sin línea", e); return; }
+    // El respaldo legacy no tiene identidad ni fecha; nunca se presenta como
+    // información autorizada de la persona actual, tampoco tras un rechazo.
+    cegar(KPIHEX_BOT,[2],motivoErrorFuente(e,"board-aurum")); pintar();
+    console.warn("Taller sin línea", e); return estadoErrorFuente(e);
   }
   TALD=tareasResumen(tasks);
-  const guardado = via.indexOf("cach")>-1;     // ninguna caché guarda su hora: puede ser de semanas
   KPIHEX_BOT[2]={n:TALD.done+"/"+TALD.tot, lbl:"MOAC · CERRADAS",
-    c:TALD.blq?"ambar":"verde", st: guardado?"cache":"linea",
-    src: guardado?"dato guardado, no recién traído":"board-aurum en vivo"};
+    c:TALD.blq?"ambar":"verde", st:"linea", src:"board-aurum en vivo"};
   pintar();
   console.log("✓ Taller en línea ("+via+") · "+TALD.done+"/"+TALD.tot+" · "+TALD.blq+" bloqueadas");
+  return tasks.length?"ok":"sindatos";
 }
 
 /* ═══ TRAMO CODES · $ con folio del portal Co-desarrolladores ═══ */
@@ -1754,7 +1775,7 @@ function sumaInversiones(data){
 }
 async function conectarCodes(){
   if(!puedo("SYS-TRACK")){                       // sin código no se llama al GAS
-    cegar(KPIHEX_BOT,[4,6],"sin código de este módulo"); pintar(); return; }
+    cegar(KPIHEX_BOT,[4,6],"sin código de este módulo"); pintar(); return "sinacceso"; }
   let res=null, via="live";
   // 1º el AGREGADO PÚBLICO: cuatro números, sin credencial. El portal de
   // codesarrolladores tiene su propia ADMIN_PASS y no se pone en un HTML público
@@ -1762,38 +1783,32 @@ async function conectarCodes(){
   try{
     const r=await fetch(CODES_GAS,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
       body:JSON.stringify({action:"resumenPublico"}),redirect:"follow",cache:"no-store"});
-    const j=await r.json();
+    const j=await leerFuente(r);
     if(j&&j.ok&&j.total!=null){ res={total:j.total,n:j.n,recibido:j.recibido,pct:j.pct}; via="agregado público"; }
   }catch(_){}
-  // 2º mientras el parche no esté pegado, el camino de antes
-  try{
-    if(res&&res.n) throw "listo";
-    const r=await fetch(CODES_GAS,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
-      body:JSON.stringify({action:"getAll",pass:CLAVE_OK||""}),redirect:"follow",cache:"no-store"});
-    const j=await r.json();
-    if(j&&j.ok&&j.data) res=sumaInversiones(j.data); else throw (j&&j.error)||0;
-  }catch(e){
-    if(e==="listo"){ /* ya lo trajo el agregado público */ }
-    else{
-    try{ const raw=localStorage.getItem("codeyod-cache-v1");     // mismo origen que el portal
-      const c=raw&&JSON.parse(raw);
-      const data=c&&(c.data||c);
-      if(data&&(data.Inversiones||data.inversiones)){ res=sumaInversiones(data); via="caché del portal"; }
-    }catch(_){}
-    if(!res||!res.n){ cegar(KPIHEX_BOT,[4,6],"portal codesarrolladores sin respuesta"); pintar();
-      console.warn("Codes sin línea", e); return; }
+  // El agregado válido, incluso vacío, basta. Solo se intenta getAll cuando
+  // no existe agregado; no se reutilizan copias legacy sin sesión ni fecha.
+  if(!res){
+    try{
+      const r=await fetch(CODES_GAS,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+        body:JSON.stringify({action:"getAll",pass:CLAVE_OK||""}),redirect:"follow",cache:"no-store"});
+      const j=await leerFuente(r);
+      if(j&&j.ok&&j.data) res=sumaInversiones(j.data); else throw (j&&j.error)||0;
+    }catch(e){
+      cegar(KPIHEX_BOT,[4,6],motivoErrorFuente(e,"portal codesarrolladores")); pintar();
+      console.warn("Codes sin línea",e);return estadoErrorFuente(e);
     }
   }
-  if(!res||!res.n) return;
+  if(res.n==null){cegar(KPIHEX_BOT,[4,6],"fuente sin conteo de inversiones");pintar();return "incompleto";}
+  if(!res.n){cegar(KPIHEX_BOT,[4,6],"sin inversiones con folio");pintar();return "sindatos";}
   CODM=res.total;
-  const guardadoC = via.indexOf("cach")>-1;
-  const stC = guardadoC?"cache":"linea";
-  const srcC = guardadoC?"dato guardado, no recién traído":("portal codesarrolladores · "+via);
+  const stC="linea", srcC="portal codesarrolladores · "+via;
   KPIHEX_BOT[6]={n:"$"+(res.total/1e6).toFixed(1)+"M", lbl:"CON FOLIO CODES", c:"verde", st:stC, src:srcC};
   if(res.pct!=null) KPIHEX_BOT[4]={n:Math.round(res.pct*100)+"%", lbl:"COBRADO CODES",
     c:res.pct>=.5?"verde":"rojo", st:stC, src:srcC};
   pintar();
   console.log("✓ Codes en línea ("+via+") · $"+(res.total/1e6).toFixed(1)+"M en "+res.n+" folios");
+  return res.pct==null?"incompleto":"ok";
 }
 
 /* ═══ TRAMO CRM · los DOS CRMs, cada quien su parte (decisión 27-jul) ═══ */
@@ -1810,15 +1825,15 @@ function leadVivo(r){
     filtro:r.filtro, accion:r.tarea||"Dar seguimiento", nombre:r.nombre };
 }
 async function conectarCRM(){
-  if(!CRM_GAS){ CRMEST="caido"; return; }
+  if(!CRM_GAS){ CRMEST="caido"; return "sinconfigurar"; }
   if(!puedo("SYS-POTENCIALES")){                 // sin código no se llama al GAS
     CRMEST="sinacceso"; cegar(KPIHEX_TOP,[0,2,3,4,5],"sin código de este módulo");
-    pintar(); return; }
+    pintar(); return "sinacceso"; }
   CRMEST="pidiendo"; pintar();                             // sin endpoint aún: charola sin línea
   try{
     const r=await fetch(CRM_GAS+"?recurso=crm&k="+encodeURIComponent(CLAVE_OK||"")+
       "&t="+Date.now(),{cache:"no-store"});
-    const j=await r.json(); if(!j.ok||!Array.isArray(j.leads)) throw j&&j.error||0;
+    const j=await leerFuente(r); if(!j.ok||!Array.isArray(j.leads)) throw j&&j.error||0;
     const EI={ADA:0,PPP:1,OBR:2,LOT:3,CDS:4}, FI={"CONTACTABLE":0,"CALIFICADO":1,"PROPUESTA":2,"NEGOCIACIÓN":3};
     const porEmb=[0,0,0,0,0], avanz=[0,0,0,0,0];
     const m=[0,1,2,3,4].map(()=> [ [],[],[],[] ]);
@@ -1876,8 +1891,9 @@ async function conectarCRM(){
       console.log("↓ "+MOVIDOS+" canicas se movieron desde tu última visita"); }
     console.log("✓ CRM en línea · "+k.total+" leads · "+k.vanTarde+" van tarde · $"+
       ((k.enJuego||0)/1e6).toFixed(2)+"M en juego · "+k.contratosADA+" contratos A de A");
-  }catch(e){ CRMEST="caido"; cegar(KPIHEX_TOP,[0,2,3,4,5],"GAS del CRM sin respuesta"); pintar();
-     console.warn("CRM sin línea", e); }
+    return [0,2,3,4,5].every(i=>KPIHEX_TOP[i].st==="linea")?(j.leads.length?"ok":"sindatos"):"incompleto";
+  }catch(e){ CRMEST=estadoErrorFuente(e)==="sinacceso"?"sinacceso":"caido"; cegar(KPIHEX_TOP,[0,2,3,4,5],motivoErrorFuente(e,"GAS del CRM")); pintar();
+     console.warn("CRM sin línea", e); return estadoErrorFuente(e); }
 }
 
 /* ═══ SONDA finance · solo reporta la forma del dato, no pinta nada ═══ */
@@ -1939,16 +1955,29 @@ function avisarAlto(){
   try{ parent.postMessage({yodTablero:"alto", alto:h}, location.origin); }catch(e){}
 }
 const FUENTES={};
-/* 27-sep: siete pastillas con hora («PPP · 10:20 a.m.») no se entendían. Ahora es UNA línea en
-   palabras: «Datos al día · 10:20 a.m.»; solo se nombra lo que falló o lo que sigue cargando. */
-function marcaFuente(n,ok){
-  FUENTES[n]={ok:ok,t:new Date()};
+/* Una consulta completada no certifica la antigüedad del contenido. Se separan
+   permisos, datos incompletos, caché y errores de transporte/servidor. */
+function marcaFuente(n,estado){
+  if(estado===true) estado="ok";
+  else if(estado===false) estado="error";
+  else if(estado===null) estado="cargando";
+  const etiquetas={error:"No se pudo consultar",sinacceso:"Sin acceso",sindatos:"Sin datos",
+    incompleto:"Datos incompletos",cache:"Datos guardados, sin actualizar",sinconfigurar:"Sin configurar"};
+  if(estado!=="ok"&&estado!=="cargando"&&!etiquetas[estado]) estado="error";
+  FUENTES[n]={estado:estado,t:new Date()};
   const box=document.getElementById("fuentes"); if(!box) return;
-  const ks=Object.keys(FUENTES), mal=ks.filter(function(k){return FUENTES[k].ok===false;}), esp=ks.filter(function(k){return FUENTES[k].ok===null;});
+  const ks=Object.keys(FUENTES), esp=ks.filter(k=>FUENTES[k].estado==="cargando"), sanas=ks.filter(k=>FUENTES[k].estado==="ok");
   const h=new Date().toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit"});
-  box.innerHTML=(esp.length?'<span class="fu fu-esp">Cargando '+esp.length+' de '+ks.length+' fuentes…</span>'
-      :'<span class="fu fu-ok" title="'+ks.join(", ")+'">Datos al día · '+h+'</span>')+
-    (mal.length?' <span class="fu fu-no" title="Su hexágono se marca en rojo">No contestó: '+mal.join(", ")+'</span>':'');
+  const escape=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const partes=[];
+  if(esp.length) partes.push('<span class="fu fu-esp">Cargando '+esp.length+' de '+ks.length+' fuentes…</span>');
+  if(sanas.length) partes.push('<span class="fu fu-ok" title="'+escape(sanas.join(", "))+'">'+
+    (sanas.length===ks.length?"Fuentes consultadas":sanas.length+" de "+ks.length+" fuentes consultadas")+' · '+h+'</span>');
+  Object.keys(etiquetas).forEach(est=>{
+    const nombres=ks.filter(k=>FUENTES[k].estado===est); if(!nombres.length) return;
+    partes.push('<span class="fu '+(est==="error"?"fu-no":"fu-aviso")+'">'+etiquetas[est]+': '+escape(nombres.join(", "))+'</span>');
+  });
+  box.innerHTML=partes.join(" ");
 }
 function abrir(){
   GT.classList.add("off");
@@ -1959,7 +1988,7 @@ function abrir(){
   [["PPP",conectarPPP],["Miramar",conectarMiramar],["Tracks",conectarTracks],["Taller",conectarTaller],
    ["Códigos",conectarCodes],["CRM",conectarCRM],["Obra",conectarObra]].forEach(function(f){
     marcaFuente(f[0],null);
-    Promise.resolve().then(f[1]).then(function(){marcaFuente(f[0],true);},function(){marcaFuente(f[0],false);});
+    Promise.resolve().then(f[1]).then(function(estado){marcaFuente(f[0],estado);},function(e){marcaFuente(f[0],estadoErrorFuente(e));});
   });
   sondaFinance();
   avisarAlto(); setTimeout(avisarAlto,400); setTimeout(avisarAlto,1600);

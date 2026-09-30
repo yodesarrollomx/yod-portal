@@ -1,0 +1,1939 @@
+{
+  "checked_at": "2026-09-30",
+  "policy": "Inventario completo; deep_review distingue fuente citada de archivo únicamente inventariado. Commits fijan la fotografía anterior a las correcciones de esta revisión.",
+  "repositories": [
+    {
+      "repo": "yodesarrollomx/Co-desarrolladores-Yod",
+      "commit": "f15154f784f204b60946985524e83a2539f40732",
+      "tracked_files": 23,
+      "source_files": [
+        {
+          "path": "apps_script/Código.js",
+          "role": "backend",
+          "sha256": "c38a109104bec1b1beb2d6ec3d9558c313e874788236794a465314cd4714a704",
+          "lines": 1906,
+          "deep_review": "evidence_referenced",
+          "bytes": 83953
+        },
+        {
+          "path": "index.html",
+          "role": "source",
+          "sha256": "8c5b13877e412b9168cd6acf3991b15336b89909dae415fd928a2e3df4a456f8",
+          "lines": 24,
+          "deep_review": "inventory_only",
+          "bytes": 1390
+        },
+        {
+          "path": "postcss.config.js",
+          "role": "source",
+          "sha256": "190c877db466995bf1482f4a16abd06e04a89ede3119341e2a86ff96e1737b27",
+          "lines": 6,
+          "deep_review": "inventory_only",
+          "bytes": 80
+        },
+        {
+          "path": "scripts/gen-icons.mjs",
+          "role": "source",
+          "sha256": "4ff819dcf1f5bc0f4967f38df9fb394543b229131a31dbca409864a9be17cada",
+          "lines": 57,
+          "deep_review": "inventory_only",
+          "bytes": 2934
+        },
+        {
+          "path": "scripts/pruebas-escenarios.mjs",
+          "role": "source",
+          "sha256": "3b9602743db63d48f1bb7d899abfd85558521c82a6a91256ccf405ebd3ca1829",
+          "lines": 499,
+          "deep_review": "inventory_only",
+          "bytes": 35824
+        },
+        {
+          "path": "src/App.jsx",
+          "role": "source",
+          "sha256": "d6849b33d5568eb9c0c515c73cecab3e9676efdace117725eca4c84941df2fdf",
+          "lines": 4820,
+          "deep_review": "evidence_referenced",
+          "bytes": 287076
+        },
+        {
+          "path": "src/index.css",
+          "role": "source",
+          "sha256": "f6b0534c6f5ceb3dfe180ddd3e2f50b7ac5ea217ae2fdd62a15c37534326aa32",
+          "lines": 44,
+          "deep_review": "inventory_only",
+          "bytes": 1353
+        },
+        {
+          "path": "src/main.jsx",
+          "role": "source",
+          "sha256": "acb24feb3540b5ee687f5a65bdbb81fe3644aa19da89256bc24b18d8ee010410",
+          "lines": 10,
+          "deep_review": "inventory_only",
+          "bytes": 235
+        },
+        {
+          "path": "tailwind.config.js",
+          "role": "source",
+          "sha256": "63180b84a9113b988fa914b3d8713e7e7f0d7c287c458fbcab61ab7dac2202e6",
+          "lines": 6,
+          "deep_review": "inventory_only",
+          "bytes": 162
+        },
+        {
+          "path": "vite.config.js",
+          "role": "source",
+          "sha256": "f9b4dfd9c759cd5e7746e9ddbe3c0fa4826038ce3abc3d8220c4b5e4499d009c",
+          "lines": 54,
+          "deep_review": "inventory_only",
+          "bytes": 2069
+        }
+      ],
+      "all_file_types": {
+        ".json": 4,
+        "(sin_extension)": 1,
+        ".md": 1,
+        ".js": 4,
+        ".html": 1,
+        ".png": 7,
+        ".mjs": 2,
+        ".jsx": 2,
+        ".css": 1
+      },
+      "status": "inventariado",
+      "visibility": "public",
+      "source_basis": "git_HEAD"
+    },
+    {
+      "repo": "yodesarrollomx/EMDevaluacion360",
+      "commit": null,
+      "tracked_files": 24,
+      "all_file_types": {
+        ".yml": 1,
+        "(sin_extension)": 1,
+        ".md": 9,
+        ".gs": 1,
+        ".html": 2,
+        ".json": 3,
+        ".txt": 1,
+        ".png": 1,
+        ".py": 2,
+        ".cjs": 3
+      },
+      "status": "inventariado",
+      "visibility": "private",
+      "source_basis": "git_HEAD",
+      "restricted_source_file_count": 9,
+      "restricted_details_omitted": true,
+      "coverage": "Inventario restringido; no publicar estructura interna"
+    },
+    {
+      "repo": "yodesarrollomx/alquimia-urbana",
+      "commit": "bf295e2970ad008e58fa3f216a8cfc14353cf7e8",
+      "tracked_files": 4,
+      "source_files": [
+        {
+          "path": "assets/estilo.css",
+          "role": "source",
+          "sha256": "110e807d605973ae47902de8d29069ff2c49f8d3ddf9750f8f00eeda11ebe8d9",
+          "lines": 255,
+          "deep_review": "inventory_only",
+          "bytes": 23672
+        },
+        {
+          "path": "index.html",
+          "role": "source",
+          "sha256": "40d9680c7979bbc25e3a33edc0a47cc8f2aca57f3ed659de8b834241e3e37db6",
+          "lines": 579,
+          "deep_review": "inventory_only",
+          "bytes": 65827
+        }
+      ],
+      "all_file_types": {
+        ".md": 1,
+        ".css": 1,
+        ".ttf": 1,
+        ".html": 1
+      },
+      "status": "inventariado",
+      "visibility": "public",
+      "source_basis": "git_HEAD"
+    },
+    {
+      "repo": "yodesarrollomx/aurum-board",
+      "commit": "ed41c34892aa8554b9599f0f50f325bb7b1d4deb",
+      "tracked_files": 120,
+      "source_files": [
+        {
+          "path": ".github/workflows/guardian-salud.yml",
+          "role": "workflow",
+          "sha256": "ecf7721b50cefce0218e660240804dc17989f34e8a2da9c80de5d3a776446595",
+          "lines": 27,
+          "deep_review": "inventory_only",
+          "bytes": 803
+        },
+        {
+          "path": ".github/workflows/guardian-token.yml",
+          "role": "workflow",
+          "sha256": "dbac662e5f64ec4f52296154508ac5b4e7ab32ece644eceb022983325ce2623b",
+          "lines": 27,
+          "deep_review": "inventory_only",
+          "bytes": 723
+        },
+        {
+          "path": ".github/workflows/guardian-uptime.yml",
+          "role": "workflow",
+          "sha256": "334ea2b7f5452a06a08d787d7527e313cb0a5aa60a958f2874791506971b99e7",
+          "lines": 27,
+          "deep_review": "inventory_only",
+          "bytes": 821
+        },
+        {
+          "path": ".github/workflows/refresh-board.yml",
+          "role": "workflow",
+          "sha256": "c02bbd5d650bffb0aab18ed2c87aa236f3e6e71fda7bbeaf2e59c9b8130919a6",
+          "lines": 78,
+          "deep_review": "inventory_only",
+          "bytes": 2977
+        },
+        {
+          "path": "apps-script/portero-auth.gs",
+          "role": "backend",
+          "sha256": "592f9c9142bb00ec4168334fe60d261f71127cc31a77cc9ea17f798d35f659f5",
+          "lines": 71,
+          "deep_review": "evidence_referenced",
+          "bytes": 3471
+        },
+        {
+          "path": "index.html",
+          "role": "source",
+          "sha256": "1abff41ce26f0e5f48a3a2ce19164ebddfdc921966dc352bbf809f8141a5b79f",
+          "lines": 1664,
+          "deep_review": "inventory_only",
+          "bytes": 143950
+        },
+        {
+          "path": "scripts/guardian_salud.py",
+          "role": "source",
+          "sha256": "f334bb713e0164bbd5e496e89683bc2caa0b1634b988430d716ca9977e32129f",
+          "lines": 67,
+          "deep_review": "inventory_only",
+          "bytes": 3149
+        },
+        {
+          "path": "scripts/guardian_token.py",
+          "role": "source",
+          "sha256": "d76c10e7094150fb7f7dd2c5125cdee0b53f6f1f28d71baab199ec255b333857",
+          "lines": 75,
+          "deep_review": "inventory_only",
+          "bytes": 3415
+        },
+        {
+          "path": "scripts/guardian_uptime.py",
+          "role": "source",
+          "sha256": "740f18c385a3de368ba8bcdd18e49e2f59491154ec9576453edc57c2ecdc59dd",
+          "lines": 202,
+          "deep_review": "inventory_only",
+          "bytes": 10581
+        },
+        {
+          "path": "scripts/pull_metrics.py",
+          "role": "source",
+          "sha256": "7208b6453b449b6dabab0227d448f48c308e274c8099bce760ae9199fa4ea0ee",
+          "lines": 497,
+          "deep_review": "evidence_referenced",
+          "bytes": 24548
+        }
+      ],
+      "all_file_types": {
+        ".yml": 4,
+        "(sin_extension)": 2,
+        ".md": 2,
+        ".gs": 1,
+        ".jpg": 101,
+        ".json": 2,
+        ".ttf": 1,
+        ".png": 1,
+        ".html": 1,
+        ".py": 4,
+        ".txt": 1
+      },
+      "status": "inventariado",
+      "visibility": "public",
+      "source_basis": "git_HEAD"
+    },
+    {
+      "repo": "yodesarrollomx/aurum-experiencia",
+      "commit": "b67d48a8935c6747caf146cb0b69d25ea5a7ad21",
+      "tracked_files": 21,
+      "source_files": [
+        {
+          "path": "404.html",
+          "role": "source",
+          "sha256": "4b1f778172c6dc24702ef7ee85070a03bf3e6674cc5b85cd714cbd6afd3c0ee2",
+          "lines": 96,
+          "deep_review": "inventory_only",
+          "bytes": 4050
+        },
+        {
+          "path": "index.html",
+          "role": "source",
+          "sha256": "5be9687c100bde5d42420013dc777beb7a988f2ad9e54e6d72c1f61d76ccfd87",
+          "lines": 73,
+          "deep_review": "evidence_referenced",
+          "bytes": 3364
+        }
+      ],
+      "all_file_types": {
+        "(sin_extension)": 1,
+        ".html": 2,
+        ".jpg": 9,
+        ".webp": 9
+      },
+      "status": "inventariado",
+      "visibility": "public",
+      "source_basis": "git_HEAD"
+    },
+    {
+      "repo": "yodesarrollomx/board-aurum",
+      "commit": "096550e5647a63048450b9be848be71901a32a3a",
+      "tracked_files": 15,
+      "source_files": [
+        {
+          "path": ".github/workflows/deploy.yml",
+          "role": "workflow",
+          "sha256": "fc2ec46b760fe70aaa5f18badca7826e625b7ad8438a3779c6c379d968f97498",
+          "lines": 40,
+          "deep_review": "inventory_only",
+          "bytes": 743
+        },
+        {
+          "path": "apps-script/portero-auth.gs",
+          "role": "backend",
+          "sha256": "602146ab04e0168f7bbf6b06298e3efcaf6b33c025102cdb272e8961085b3cc3",
+          "lines": 96,
+          "deep_review": "evidence_referenced",
+          "bytes": 4733
+        },
+        {
+          "path": "index.html",
+          "role": "source",
+          "sha256": "076e4e4dedb00174bd9db60b25a8433afa5b93881be681543d826ff386e243c3",
+          "lines": 21,
+          "deep_review": "inventory_only",
+          "bytes": 1076
+        },
+        {
+          "path": "postcss.config.js",
+          "role": "source",
+          "sha256": "190c877db466995bf1482f4a16abd06e04a89ede3119341e2a86ff96e1737b27",
+          "lines": 6,
+          "deep_review": "inventory_only",
+          "bytes": 80
+        },
+        {
+          "path": "scripts/sync_sheet.py",
+          "role": "source",
+          "sha256": "671f6c1acf72c557d8c587c7c423b11b00432b5df7a00554a2eaad28e856886a",
+          "lines": 149,
+          "deep_review": "inventory_only",
+          "bytes": 5046
+        },
+        {
+          "path": "scripts/sync_sheet.sh",
+          "role": "source",
+          "sha256": "3bea01587dac39d2b76edbb6195ffbfdb8cfaecf6098e6f4ca6527a2e4ff8022",
+          "lines": 19,
+          "deep_review": "inventory_only",
+          "bytes": 511
+        },
+        {
+          "path": "src/App.jsx",
+          "role": "source",
+          "sha256": "2cfdbb36440b764b20190494406b4097b29451e77ede4b67c92eef479aec8536",
+          "lines": 4543,
+          "deep_review": "evidence_referenced",
+          "bytes": 315352
+        },
+        {
+          "path": "src/index.css",
+          "role": "source",
+          "sha256": "1ae79239208d4705bdd88e6be59ae66e4497a8243a2d08cf266db26fec9d4f37",
+          "lines": 41,
+          "deep_review": "inventory_only",
+          "bytes": 2134
+        },
+        {
+          "path": "src/main.jsx",
+          "role": "source",
+          "sha256": "acb24feb3540b5ee687f5a65bdbb81fe3644aa19da89256bc24b18d8ee010410",
+          "lines": 10,
+          "deep_review": "inventory_only",
+          "bytes": 235
+        },
+        {
+          "path": "tailwind.config.js",
+          "role": "source",
+          "sha256": "63180b84a9113b988fa914b3d8713e7e7f0d7c287c458fbcab61ab7dac2202e6",
+          "lines": 6,
+          "deep_review": "inventory_only",
+          "bytes": 162
+        },
+        {
+          "path": "vite.config.js",
+          "role": "source",
+          "sha256": "52d3e0ee404818fab2db10d51a33121438def553046e43acdd3e679c0356d852",
+          "lines": 7,
+          "deep_review": "inventory_only",
+          "bytes": 158
+        }
+      ],
+      "all_file_types": {
+        ".yml": 1,
+        "(sin_extension)": 1,
+        ".md": 1,
+        ".gs": 1,
+        ".html": 1,
+        ".json": 2,
+        ".js": 3,
+        ".py": 1,
+        ".sh": 1,
+        ".jsx": 2,
+        ".css": 1
+      },
+      "status": "inventariado",
+      "visibility": "public",
+      "source_basis": "git_HEAD"
+    },
+    {
+      "repo": "yodesarrollomx/board-flujo-yod",
+      "commit": "ef2e6e1fade1b515d10af239bc60519417d906c4",
+      "tracked_files": 6,
+      "source_files": [
+        {
+          "path": "apps-script/portero-auth.gs",
+          "role": "backend",
+          "sha256": "eea3f345628ff83f521f993e470b2b8e0d7e054ba1ac7c75dfab0622c044ec80",
+          "lines": 57,
+          "deep_review": "evidence_referenced",
+          "bytes": 2505
+        },
+        {
+          "path": "index.html",
+          "role": "source",
+          "sha256": "bf6c0c47e0eefbbf72a0c9e8741f05ec7c0f9e29fdcc250e907dbf6baa63e0d2",
+          "lines": 1079,
+          "deep_review": "evidence_referenced",
+          "bytes": 82662
+        }
+      ],
+      "all_file_types": {
+        "(sin_extension)": 1,
+        ".md": 2,
+        ".gs": 1,
+        ".enc": 1,
+        ".html": 1
+      },
+      "status": "inventariado",
+      "visibility": "public",
+      "source_basis": "git_HEAD"
+    },
+    {
+      "repo": "yodesarrollomx/crokiss",
+      "commit": "3d440a21a6902fcefe79a124a804963613d5a31f",
+      "tracked_files": 18,
+      "source_files": [
+        {
+          "path": "Code.gs",
+          "role": "backend",
+          "sha256": "966cc270e5da5a09044727536673b78f4fb8ea7dbd27b9afe73df78b29f977b5",
+          "lines": 927,
+          "deep_review": "evidence_referenced",
+          "bytes": 46552
+        },
+        {
+          "path": "aviso-privacidad.html",
+          "role": "source",
+          "sha256": "8a6ab6912d2120941b4f6985c1e4cf1a1f6ef4fd093d23c4102694a4642681d9",
+          "lines": 84,
+          "deep_review": "inventory_only",
+          "bytes": 5448
+        },
+        {
+          "path": "crokiss-cloud.js",
+          "role": "source",
+          "sha256": "cde5a94b7f6aab50e752215438b6fea21a6065445fc54a03b3659264e51bdfcd",
+          "lines": 788,
+          "deep_review": "inventory_only",
+          "bytes": 42027
+        },
+        {
+          "path": "index.html",
+          "role": "source",
+          "sha256": "b63311d5edc94d8d33af6f4bfca40439f272e926942fe9a0a9f7d9766f23f68a",
+          "lines": 1120,
+          "deep_review": "inventory_only",
+          "bytes": 68090
+        },
+        {
+          "path": "plan-editor.js",
+          "role": "source",
+          "sha256": "77431af50621004a10cc3ed3d0aaa1885ab596f06996a12163da82edd568573d",
+          "lines": 1628,
+          "deep_review": "inventory_only",
+          "bytes": 88870
+        },
+        {
+          "path": "plan-elev-editor.js",
+          "role": "source",
+          "sha256": "4ea2f331bb835481cc8d6fb2a10f2a895b783c6edca8ca1109544fa5f423d8c4",
+          "lines": 281,
+          "deep_review": "inventory_only",
+          "bytes": 15399
+        },
+        {
+          "path": "plan-elev.js",
+          "role": "source",
+          "sha256": "37089cb83f6e37e7ad504dd094a558f85f1a5a8809fcc105544135defe27c407",
+          "lines": 395,
+          "deep_review": "inventory_only",
+          "bytes": 22277
+        },
+        {
+          "path": "plan-furniture.js",
+          "role": "source",
+          "sha256": "2627c5df1e42e7e7d35ff53bb56f1cbb63054a0ed06086dac3be9e487603aaf3",
+          "lines": 181,
+          "deep_review": "inventory_only",
+          "bytes": 10650
+        },
+        {
+          "path": "plan-render.js",
+          "role": "source",
+          "sha256": "d53d8ce813e08da9575e9948130fb330db1f1701299b6f52f6ca135af0b54a05",
+          "lines": 609,
+          "deep_review": "inventory_only",
+          "bytes": 36551
+        },
+        {
+          "path": "plan-sheet.js",
+          "role": "source",
+          "sha256": "a8fb72f13430aabeb1729872fbd263b5a2a6d19c02f3b182f48d46008e257a7d",
+          "lines": 454,
+          "deep_review": "inventory_only",
+          "bytes": 24866
+        },
+        {
+          "path": "pruebas/backend.js",
+          "role": "test",
+          "sha256": "a3d69d740dd2f68e585b0b915ea9734d103a68ad8260b94594eecda1680be8ab",
+          "lines": 907,
+          "deep_review": "inventory_only",
+          "bytes": 49964
+        },
+        {
+          "path": "pruebas/harness.js",
+          "role": "test",
+          "sha256": "ff5b2285d31808f22e95af12bea5fd70e9fb7b98984629da67e45ca6cf22b420",
+          "lines": 816,
+          "deep_review": "inventory_only",
+          "bytes": 45736
+        }
+      ],
+      "all_file_types": {
+        "(sin_extension)": 1,
+        ".md": 3,
+        ".gs": 1,
+        ".png": 1,
+        ".html": 2,
+        ".js": 9,
+        ".json": 1
+      },
+      "status": "inventariado",
+      "visibility": "public",
+      "source_basis": "git_HEAD"
+    },
+    {
+      "repo": "yodesarrollomx/interiores-aurum",
+      "commit": "6722c50b504c2f326d29d187605b2ad126e7ce17",
+      "tracked_files": 7,
+      "source_files": [
+        {
+          "path": "index.html",
+          "role": "source",
+          "sha256": "3fc50a802fc86e9771eaec18231b65080397d71f28da22d13ac0cb620f5799cc",
+          "lines": 20,
+          "deep_review": "inventory_only",
+          "bytes": 932
+        },
+        {
+          "path": "llave-maestra.html",
+          "role": "source",
+          "sha256": "130f1c4026bd9d468c61ceabff1e01d5fba9ee2eeccf0cc4667d9059fae4a54d",
+          "lines": 2169,
+          "deep_review": "inventory_only",
+          "bytes": 203507
+        }
+      ],
+      "all_file_types": {
+        "(sin_extension)": 1,
+        ".md": 3,
+        ".json": 1,
+        ".html": 2
+      },
+      "status": "inventariado",
+      "visibility": "public",
+      "source_basis": "git_HEAD"
+    },
+    {
+      "repo": "yodesarrollomx/pintarron",
+      "commit": "8978b9aa926738c379b9721ea021d59abf193f82",
+      "tracked_files": 2,
+      "source_files": [
+        {
+          "path": "index.html",
+          "role": "source",
+          "sha256": "7f4d6f30b6181d5f8818d6d0f011faf8e57c4543b58ee863fd78cfb5fc8c3ef8",
+          "lines": 948,
+          "deep_review": "inventory_only",
+          "bytes": 35207
+        }
+      ],
+      "all_file_types": {
+        ".md": 1,
+        ".html": 1
+      },
+      "status": "inventariado",
+      "visibility": "public",
+      "source_basis": "git_HEAD"
+    },
+    {
+      "repo": "yodesarrollomx/plan-potencial",
+      "commit": "78e616f858ad593f16891d2f5158cd46d5617bc2",
+      "tracked_files": 10,
+      "source_files": [
+        {
+          "path": "aviso-privacidad.html",
+          "role": "source",
+          "sha256": "abc0f7da8d7b3e0faec52a95ba26789729b9c2be3d3bbedceee3e4655fccac14",
+          "lines": 81,
+          "deep_review": "inventory_only",
+          "bytes": 6304
+        },
+        {
+          "path": "board.html",
+          "role": "source",
+          "sha256": "080cd7b66a07fdb12308d942ede4fc9efe1005390e3f403b688af683ad35e9c5",
+          "lines": 162,
+          "deep_review": "inventory_only",
+          "bytes": 10035
+        },
+        {
+          "path": "index.html",
+          "role": "source",
+          "sha256": "ae17235e067ceabc34ed31ac35357e4ccaf7fe3acaeb9a1b8f26fc74ecc0e691",
+          "lines": 1249,
+          "deep_review": "inventory_only",
+          "bytes": 73651
+        }
+      ],
+      "all_file_types": {
+        "(sin_extension)": 1,
+        ".md": 4,
+        ".html": 3,
+        ".png": 1,
+        ".xml": 1
+      },
+      "status": "inventariado",
+      "visibility": "public",
+      "source_basis": "git_HEAD"
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "commit": "4694f7db9a3de4d5415e711d090140e6a2875f01",
+      "tracked_files": 15,
+      "source_files": [
+        {
+          "path": "accesos.html",
+          "role": "source",
+          "sha256": "b4a585963579239f4a2e3fe52cd200195deda28f0ec2ee11431b6d2546902a33",
+          "lines": 437,
+          "deep_review": "inventory_only",
+          "bytes": 33110
+        },
+        {
+          "path": "index.html",
+          "role": "source",
+          "sha256": "c0fcea23ed2a5079a7e7d96face6879f4b6379a0f2380be068c7fddd69e6704f",
+          "lines": 259,
+          "deep_review": "inventory_only",
+          "bytes": 20447
+        },
+        {
+          "path": "macrolotes.html",
+          "role": "source",
+          "sha256": "d3a55aa3f72977a246bacf30fc0d0dc7769b5c4f6429861dfba872cf54d3408a",
+          "lines": 1982,
+          "deep_review": "inventory_only",
+          "bytes": 290859
+        },
+        {
+          "path": "mapa.html",
+          "role": "source",
+          "sha256": "46d407f7b832ca38d2d4cdbded99cee5c8acf71b73c53bd525a30bffe6bb7684",
+          "lines": 153,
+          "deep_review": "inventory_only",
+          "bytes": 11865
+        },
+        {
+          "path": "mixto.html",
+          "role": "source",
+          "sha256": "268772819086708027e3daa6f1071eb2a1f7d16aa95270613ad970790a033bbd",
+          "lines": 1242,
+          "deep_review": "inventory_only",
+          "bytes": 193478
+        },
+        {
+          "path": "modelos.js",
+          "role": "source",
+          "sha256": "4d5384886f9cee4f2604d5ea6de79ff4e864218c0719d756c3ee33882af54777",
+          "lines": 43,
+          "deep_review": "inventory_only",
+          "bytes": 4013
+        },
+        {
+          "path": "patrimonial.html",
+          "role": "source",
+          "sha256": "7a0489b75e422fce12375f8e3cbaf9362332a14ee194bd78d0f79e6c5b9b541a",
+          "lines": 1194,
+          "deep_review": "inventory_only",
+          "bytes": 146159
+        },
+        {
+          "path": "portero.js",
+          "role": "source",
+          "sha256": "cb19d516351da8b9f332e472e6f7ee18be7b6c37b3440b892e1fda1382dcc2c8",
+          "lines": 405,
+          "deep_review": "inventory_only",
+          "bytes": 29910
+        },
+        {
+          "path": "residencial.html",
+          "role": "source",
+          "sha256": "7822e736931d896d473c2a8177b1670fa1d81b58d8d99bc0114897d2cd4065dd",
+          "lines": 1715,
+          "deep_review": "inventory_only",
+          "bytes": 213080
+        },
+        {
+          "path": "unifamiliar.html",
+          "role": "source",
+          "sha256": "a911c2813b4ed33379ba2411bca97dff8bd4df137719a21607eafc912c3c07b0",
+          "lines": 1082,
+          "deep_review": "inventory_only",
+          "bytes": 138601
+        }
+      ],
+      "all_file_types": {
+        ".json": 1,
+        "(sin_extension)": 2,
+        ".md": 1,
+        ".html": 8,
+        ".png": 1,
+        ".js": 2
+      },
+      "status": "inventariado",
+      "visibility": "public",
+      "source_basis": "git_HEAD"
+    },
+    {
+      "repo": "yodesarrollomx/prueba-dominio",
+      "commit": "957c6cbe4967753bb2f308b4b47096c2c197d76d",
+      "tracked_files": 3,
+      "source_files": [
+        {
+          "path": "index.html",
+          "role": "source",
+          "sha256": "37d4f1ace22c978ec83b9c025817b99742475320a1afbd9eacb3971105e00bf6",
+          "lines": 664,
+          "deep_review": "evidence_referenced",
+          "bytes": 38135
+        }
+      ],
+      "all_file_types": {
+        "(sin_extension)": 1,
+        ".md": 1,
+        ".html": 1
+      },
+      "status": "inventariado",
+      "visibility": "public",
+      "source_basis": "git_HEAD"
+    },
+    {
+      "repo": "yodesarrollomx/real-miramar-board",
+      "commit": "a46e513548ceb188fb631bd123ef9f682eff95bf",
+      "tracked_files": 18,
+      "source_files": [
+        {
+          "path": "apps-script/costos-refresh.gs",
+          "role": "backend",
+          "sha256": "f819ae16c4bd68c840f88e393bec2534a413f89ed8ff88d38855f63e8a8a1714",
+          "lines": 15,
+          "deep_review": "inventory_only",
+          "bytes": 1359
+        },
+        {
+          "path": "apps-script/portero-auth.gs",
+          "role": "backend",
+          "sha256": "42db81fea53f4a500728a7d215cff9f810fdee833c6b5d53116b0819d50c704f",
+          "lines": 69,
+          "deep_review": "evidence_referenced",
+          "bytes": 3241
+        },
+        {
+          "path": "assets/board.js",
+          "role": "source",
+          "sha256": "f167767636cc32c25d77926195e61a62a1727390f92b7b9338e335ec71c2b21a",
+          "lines": 385,
+          "deep_review": "evidence_referenced",
+          "bytes": 24322
+        },
+        {
+          "path": "assets/estilo.css",
+          "role": "source",
+          "sha256": "3f42312166c3a10a4b61247a25d917a86d4ba67745b4258be445bdd4d274db3a",
+          "lines": 355,
+          "deep_review": "inventory_only",
+          "bytes": 31171
+        },
+        {
+          "path": "costos-oficiales.html",
+          "role": "source",
+          "sha256": "c29f04a8135ef0a56658b49226791548bf60067cf52c44e7f26f42b5b77539f4",
+          "lines": 52,
+          "deep_review": "inventory_only",
+          "bytes": 6579
+        },
+        {
+          "path": "cuentas.html",
+          "role": "source",
+          "sha256": "e5d0d77926897b6fc45ab698cebd9e08dda10591708c095006a03086d2272a75",
+          "lines": 234,
+          "deep_review": "inventory_only",
+          "bytes": 11627
+        },
+        {
+          "path": "direccion.html",
+          "role": "source",
+          "sha256": "86dea8ec267ac05126a7c9de4d226e7631b49b84001bc2fc0877ad8d1a945f0e",
+          "lines": 254,
+          "deep_review": "inventory_only",
+          "bytes": 11738
+        },
+        {
+          "path": "evidencia.html",
+          "role": "source",
+          "sha256": "4bd9e4fde72d18b9c9473ad6d67279e9d898fa42de96ca4edb8ed661e4b8b0dc",
+          "lines": 209,
+          "deep_review": "inventory_only",
+          "bytes": 10235
+        },
+        {
+          "path": "index.html",
+          "role": "source",
+          "sha256": "ab6614911364a3d158163282b401370e9a19240de85889102135e5487f99090d",
+          "lines": 443,
+          "deep_review": "inventory_only",
+          "bytes": 69561
+        },
+        {
+          "path": "tramites.html",
+          "role": "source",
+          "sha256": "5fb5d61f893ec398cc99c867c0cbe679dba3026b4336aa74d3170d5b740eb5d7",
+          "lines": 445,
+          "deep_review": "inventory_only",
+          "bytes": 35877
+        }
+      ],
+      "all_file_types": {
+        "(sin_extension)": 2,
+        ".md": 1,
+        ".gs": 2,
+        ".js": 1,
+        ".css": 1,
+        ".html": 6,
+        ".enc": 1,
+        ".ttf": 1,
+        ".png": 3
+      },
+      "status": "inventariado",
+      "visibility": "public",
+      "source_basis": "git_HEAD"
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "commit": "dd62430eda613b73b703a3b9052214cbdd432ea7",
+      "tracked_files": 1302,
+      "source_files": [
+        {
+          "path": ".github/workflows/publicar.yml",
+          "role": "workflow",
+          "sha256": "9c1897b5bb7005c7abfd67327801a3815ac912770a2227cd34bfd6007e3ca599",
+          "bytes": 2251,
+          "lines": 63,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": ".github/workflows/sala-arranque.yml",
+          "role": "workflow",
+          "sha256": "e43f2b6e89568fa3c840a796ac00fa93124b60ee1774cdca3e90499019c43365",
+          "bytes": 5193,
+          "lines": 129,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": ".github/workflows/sala-banco.yml",
+          "role": "workflow",
+          "sha256": "00675b87c75259d5f0bf61a3bf1999abedeaa79dfb78bc21ce79f6f5a231ea7a",
+          "bytes": 2190,
+          "lines": 52,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": ".github/workflows/sala-cada-hora.yml",
+          "role": "workflow",
+          "sha256": "e934edf299ab8064a2535a824de8bb1beaf9469dfaa0d0b99cea52ffb11711f6",
+          "bytes": 4820,
+          "lines": 97,
+          "deep_review": "evidence_referenced"
+        },
+        {
+          "path": ".github/workflows/sala-chinches.yml",
+          "role": "workflow",
+          "sha256": "1dc5fb2120ba871aa2769a7919627a507d72ea554d55638c378b8df9fcb9e1d8",
+          "bytes": 2907,
+          "lines": 71,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": ".github/workflows/sala-diario.yml",
+          "role": "workflow",
+          "sha256": "ba4d7e73345297ba3c1d2b9d7c1caa5d28cc6e7f516af1343605571d53ed3886",
+          "bytes": 1681,
+          "lines": 41,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": ".github/workflows/sala-ejecutor.yml",
+          "role": "workflow",
+          "sha256": "89ca28cf152b8838d59fc3d4ca2cda34a4aef2d57e5390eff2499e0fcd110798",
+          "bytes": 6597,
+          "lines": 146,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": ".github/workflows/sala-llaves.yml",
+          "role": "workflow",
+          "sha256": "5de6b24bc7e472f44f38749c4a2f4ef7ed2e8ce7ba43bebd80ef7201a47926e4",
+          "bytes": 768,
+          "lines": 25,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": ".github/workflows/sala-maquinas.yml",
+          "role": "workflow",
+          "sha256": "990b6558187d31ffcf42aa4d154979e4fd9b646195e2f59b2400236ca17d2ab6",
+          "bytes": 2211,
+          "lines": 61,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": ".github/workflows/sala-mesa.yml",
+          "role": "workflow",
+          "sha256": "11fb54c6fb3c40c463bb3a85266a2a20ad17f2f58b06cf89d38c680a6418a156",
+          "bytes": 5427,
+          "lines": 134,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": ".github/workflows/sala-modal-deploy.yml",
+          "role": "workflow",
+          "sha256": "d485aa9c3568c25decd1cbd8267fc90b7560615a2f4f57b162f4088fa20383d9",
+          "bytes": 1070,
+          "lines": 34,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": ".github/workflows/sala-productor.yml",
+          "role": "workflow",
+          "sha256": "bbd1f62894e7e3e17d2ad52ae88529c585a6cb25dab5e4afa5557d5958c7b82c",
+          "bytes": 3936,
+          "lines": 100,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": ".github/workflows/sala-regla.yml",
+          "role": "workflow",
+          "sha256": "5a51c0da60f16611ce095d4160328a83322e1a2238d64e32266f76afb4661be5",
+          "bytes": 1389,
+          "lines": 44,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": ".github/workflows/sala-relevo.yml",
+          "role": "workflow",
+          "sha256": "75890a9a58e5104f61a055ae6d569cfad16f4d70ee713248b84402c6d4bf707a",
+          "bytes": 4756,
+          "lines": 111,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": ".github/workflows/sala-sonda.yml",
+          "role": "workflow",
+          "sha256": "29e6d4e9b5873bc806c454499d9ab579fc334a5eda1eb4c37260d3df039d4e59",
+          "bytes": 1165,
+          "lines": 35,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": ".github/workflows/verificar.yml",
+          "role": "workflow",
+          "sha256": "0e4e21f72f10cf8d2ad3085777eb1c16b75608b54c1e4e3646b780a38eeb2bda",
+          "bytes": 1362,
+          "lines": 33,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "doc/armar.py",
+          "role": "source",
+          "sha256": "843b199ea76427453f0fc923673f97ba9435bb9509ea9451a141b7dc4a65d968",
+          "bytes": 473,
+          "lines": 11,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "doc/manual.html",
+          "role": "source",
+          "sha256": "870e2cdfd06fee08432ffed5cdb00cd0763212bb67fa73b94cdfbf665d4d596b",
+          "bytes": 341600,
+          "lines": 491,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "doc/plantilla.html",
+          "role": "source",
+          "sha256": "819685063087c11d2d15d4d2862f02e2333f718c1f68eef93d8cfd5ee3dab6a5",
+          "bytes": 32256,
+          "lines": 491,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "docs/auditoria/instrumento.js",
+          "role": "source",
+          "sha256": "36b47fe2cb68d3091f0ab436ffbf582114a5e2abd8f938ad697ebba6d2edc7fc",
+          "bytes": 6486,
+          "lines": 101,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "gas/Code.gs",
+          "role": "backend",
+          "sha256": "acf0bf6ee11d9786b7d1ba212b7a74da1a07e4a5f550b0c0167ee6ec2c2539e6",
+          "bytes": 74209,
+          "lines": 1168,
+          "deep_review": "evidence_referenced"
+        },
+        {
+          "path": "index.html",
+          "role": "source",
+          "sha256": "c1056508de28220a584311079d79295d0aaa1ac81041bd4e7d876667cf717a9a",
+          "bytes": 270461,
+          "lines": 3025,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/banco_escenas.py",
+          "role": "source",
+          "sha256": "4fd0a817ed26a55d890532f64574423d8d0eadff5628970dd76dbe6a20b9f480",
+          "bytes": 6068,
+          "lines": 148,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/limpiar_log.py",
+          "role": "source",
+          "sha256": "68e1e36d14f50490fa9316276c1c46daf291faa77ddc4824c86c2c3929adf4d0",
+          "bytes": 2470,
+          "lines": 62,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/modal_ltx.py",
+          "role": "source",
+          "sha256": "a40b84837adf19b6642b02e60b73707fb122644cbde17bf2fb1d2540f4ce2b09",
+          "bytes": 3226,
+          "lines": 74,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/motores/__init__.py",
+          "role": "source",
+          "sha256": "05ab920bee4083be83f03d5d43b42dfb9929017e3888723c7fc74567b644e4ff",
+          "bytes": 282,
+          "lines": 5,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/motores/_comun.py",
+          "role": "source",
+          "sha256": "b31c78152cfaba654dd0818a5f3c2f661fd9a56a607c0c5b074b55c80063ca6c",
+          "bytes": 4561,
+          "lines": 100,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/motores/cerebro.py",
+          "role": "source",
+          "sha256": "435ac24a86a8a98c05cc9ab6fe3273bb5d3901c785ce614c2b83c1ccef7b89ea",
+          "bytes": 9276,
+          "lines": 189,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/motores/escena_camara.py",
+          "role": "source",
+          "sha256": "8dca9f9892601494b9b11d365db12bd8af481bc0161333147d1e937cde49503c",
+          "bytes": 2715,
+          "lines": 65,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/motores/escena_modal.py",
+          "role": "source",
+          "sha256": "86269fbf5d8f46a8257ee9c8669c1100ee419a460398f143b9a5c4dfef66f55c",
+          "bytes": 4963,
+          "lines": 105,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/motores/escena_parallax.py",
+          "role": "source",
+          "sha256": "01929b09b04e01f6153f3f3256a42cdf0264197bad2d7cac41974329ea4d794c",
+          "bytes": 9700,
+          "lines": 197,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/motores/escena_wan_hf.py",
+          "role": "source",
+          "sha256": "3e8e45a78a1002a69fd5024cb94890e37abf63e856dc11f7773b873bd1ce9cc1",
+          "bytes": 5581,
+          "lines": 123,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/motores/estrategia.py",
+          "role": "source",
+          "sha256": "8af9f40f51710efc22cd7c68e043e12c304d868bffa8272545751108a4e35483",
+          "bytes": 3007,
+          "lines": 42,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/motores/imagen.py",
+          "role": "source",
+          "sha256": "a277caa66893d4e1c04b344f8cbb6032e217f39559c5af85e85f7c0890ea8810",
+          "bytes": 6868,
+          "lines": 145,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/motores/prospecto.py",
+          "role": "source",
+          "sha256": "aead9e2f550d41a3b69953827644253778e12edb0af6f683f9207b96637a53f3",
+          "bytes": 2224,
+          "lines": 52,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/motores/voz_gemini.py",
+          "role": "source",
+          "sha256": "3cb61d0d60f7c396525e567ce0251b8e3a92684e360b703a8ae06d7058438c09",
+          "bytes": 4947,
+          "lines": 121,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/motores/voz_kokoro.py",
+          "role": "source",
+          "sha256": "8c41a553b424aa9e064fff1044f253bec7ca3ec431b0d9a77d11600ee26833ad",
+          "bytes": 4986,
+          "lines": 113,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/probar_llaves.py",
+          "role": "source",
+          "sha256": "f5f1a3f7800a2c7e6e9fcfd894ba7773f22ff57968a233a0540d7a24a9ad109e",
+          "bytes": 2708,
+          "lines": 64,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/pruebas_drive_offline.py",
+          "role": "source",
+          "sha256": "83294c9a4c943b4252861bac0bac0e759442c777d24f3d704668d62a4ab376d2",
+          "bytes": 7296,
+          "lines": 172,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/sala_arranque.py",
+          "role": "source",
+          "sha256": "b2d6126323949573526dcc5037615f6606c439892cb7bf4ad1e526995d42fc58",
+          "bytes": 15691,
+          "lines": 298,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/sala_catalogo.py",
+          "role": "source",
+          "sha256": "d2c700d40a791f040419962dc5edac492e09e80f1fc2b8c8551d6e1f83b1530b",
+          "bytes": 4860,
+          "lines": 116,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/sala_chinches.py",
+          "role": "source",
+          "sha256": "8bc7d21dd1406ec287240243045f3d320731b1a85b5d57aacac399dd1323bbc7",
+          "bytes": 11758,
+          "lines": 245,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/sala_cliente.py",
+          "role": "source",
+          "sha256": "9fe7da9afcd714a8efe6eb129f9e0a31cefaf0e6762d0caa8ed2e08ab50dd0c3",
+          "bytes": 8947,
+          "lines": 206,
+          "deep_review": "evidence_referenced"
+        },
+        {
+          "path": "nube/sala_compositor.py",
+          "role": "source",
+          "sha256": "9c9612db160a6f8825b85f32b8417128a1d5e96ace23a8b24e9c1590368679c7",
+          "bytes": 5376,
+          "lines": 138,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/sala_despertar.py",
+          "role": "source",
+          "sha256": "30a22bdaae69cc998aa0c965ac9508ad19d95693b04f1f769e75629f05d16fdc",
+          "bytes": 2142,
+          "lines": 50,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/sala_drive.py",
+          "role": "source",
+          "sha256": "796ed587facd22c87a6da37fe4d2d1143134392235e4fa5f9cdc6871c9ebfe13",
+          "bytes": 10890,
+          "lines": 248,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/sala_ejecutor.py",
+          "role": "source",
+          "sha256": "87b93d0f4f6469e93175f771b41efd6804eb62242055e47ecc5ac6f44b9fcf4f",
+          "bytes": 20930,
+          "lines": 404,
+          "deep_review": "evidence_referenced"
+        },
+        {
+          "path": "nube/sala_guion.py",
+          "role": "source",
+          "sha256": "a1648defa0a4789e5608746f3ddad8baa6c2ac72d374387c80d2081d2a754a75",
+          "bytes": 4735,
+          "lines": 109,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/sala_maquinas.py",
+          "role": "source",
+          "sha256": "0de7145a9e64e665de604e74eaa9801873ea7ec20441ff46a11af3ea5f4db847",
+          "bytes": 6895,
+          "lines": 158,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/sala_mesa.py",
+          "role": "source",
+          "sha256": "c654b9384fbf2bf50eae548007a5942b48539fbc698cf54c26105b29b3084c8e",
+          "bytes": 15425,
+          "lines": 328,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/sala_montador.py",
+          "role": "source",
+          "sha256": "4a4969660b05e651f3afd3a845021b3008fdb81254b86054234a24f86894f973",
+          "bytes": 8124,
+          "lines": 178,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/sala_motores.py",
+          "role": "source",
+          "sha256": "90d8fd53b7485467318be74d40fe7a8064e43a550cb9aa8b570204260b6cad89",
+          "bytes": 5925,
+          "lines": 125,
+          "deep_review": "evidence_referenced"
+        },
+        {
+          "path": "nube/sala_productor.py",
+          "role": "source",
+          "sha256": "7e61f178ff15e5675bb4441fb35874ecb1fd0a4e74807a66b8d13e8108c37790",
+          "bytes": 17697,
+          "lines": 353,
+          "deep_review": "evidence_referenced"
+        },
+        {
+          "path": "nube/sala_puntajes.py",
+          "role": "source",
+          "sha256": "543b80e80b64152fc5fc91c11f8d13f6e82d449ca633dc8196904e5042ad157e",
+          "bytes": 3338,
+          "lines": 81,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/sala_relevo.py",
+          "role": "source",
+          "sha256": "be153339b51a685ef25a9a36231c20ce9c0845ad3855b9d226aee84348086a4b",
+          "bytes": 5665,
+          "lines": 133,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/sellar_sala.py",
+          "role": "source",
+          "sha256": "d36f60d9954ee0fc3d370881c7f0a03c2c73112c96c4e1f17972085dcb3f201a",
+          "bytes": 2941,
+          "lines": 70,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/sembrar_reglas_nube.py",
+          "role": "source",
+          "sha256": "ddbb3c5e8c34bc734c9bb9a798b17de396251bfb69cfcdd3f03eea3060b41620",
+          "bytes": 4534,
+          "lines": 81,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/sonda.py",
+          "role": "source",
+          "sha256": "33a2bd9e5c3459dc93f51f3754fcaeb64cf30293ede3c3a131c5e927ee6cea02",
+          "bytes": 3441,
+          "lines": 86,
+          "deep_review": "inventory_only"
+        },
+        {
+          "path": "nube/verificar.py",
+          "role": "test",
+          "sha256": "4984491f8971bdbeb05f04201329f05680bef9dc4ed65cfbb91fed7bbd7975fe",
+          "bytes": 16622,
+          "lines": 349,
+          "deep_review": "inventory_only"
+        }
+      ],
+      "all_file_types": {
+        ".yml": 16,
+        "(sin_extension)": 1,
+        ".md": 13,
+        ".json": 133,
+        ".py": 38,
+        ".jpg": 662,
+        ".png": 381,
+        ".html": 3,
+        ".js": 1,
+        ".ico": 1,
+        ".gs": 1,
+        ".webmanifest": 1,
+        ".wav": 17,
+        ".mp4": 28,
+        ".mp3": 5,
+        ".txt": 1
+      },
+      "status": "inventariado",
+      "visibility": "public",
+      "source_basis": "git_HEAD"
+    },
+    {
+      "repo": "yodesarrollomx/sala-operacion",
+      "commit": null,
+      "tracked_files": 161,
+      "all_file_types": {
+        "(sin_extension)": 2,
+        ".xlsx": 1,
+        ".md": 4,
+        ".py": 95,
+        ".json": 28,
+        ".sh": 3,
+        ".ttf": 2,
+        ".woff2": 2,
+        ".log": 4,
+        ".nuevo": 2,
+        ".jsonl": 3,
+        ".plist": 11,
+        ".txt": 1,
+        ".html": 3
+      },
+      "status": "inventariado",
+      "visibility": "private",
+      "source_basis": "git_HEAD",
+      "restricted_source_file_count": 101,
+      "restricted_details_omitted": true,
+      "coverage": "Inventario restringido; no publicar estructura interna"
+    },
+    {
+      "repo": "yodesarrollomx/yod-despacho",
+      "commit": "5ad406a6b8584ee49466b15e03a9a3bf8a9ca4b9",
+      "tracked_files": 18,
+      "source_files": [
+        {
+          "path": "app.js",
+          "role": "source",
+          "sha256": "61fc8642750f88b9a8939944c8a9d50f54e8e6f42282c672a65472ed1cbf58f2",
+          "lines": 328,
+          "deep_review": "inventory_only",
+          "bytes": 27280
+        },
+        {
+          "path": "bandeja.js",
+          "role": "source",
+          "sha256": "b47abba82d3b0c83e45c9f8bab4b697d0855403562645f7a3cf155bec5e812b7",
+          "lines": 158,
+          "deep_review": "inventory_only",
+          "bytes": 12127
+        },
+        {
+          "path": "cabina.js",
+          "role": "source",
+          "sha256": "37c209cbdf3022ae5e75a3f2efaee33b742cb77cdcd22213c95b85e98f8f8c33",
+          "lines": 252,
+          "deep_review": "inventory_only",
+          "bytes": 18867
+        },
+        {
+          "path": "clasico.html",
+          "role": "source",
+          "sha256": "deb0a3f05337822df69cf210213f7302056d98d49f1743476ad512cf70c0b7c5",
+          "lines": 4310,
+          "deep_review": "inventory_only",
+          "bytes": 259347
+        },
+        {
+          "path": "design/lamina.py",
+          "role": "source",
+          "sha256": "2680eb41cec58a01ba2b6b598d4eb33ae754494810d801097da4b4575084d1ea",
+          "lines": 412,
+          "deep_review": "inventory_only",
+          "bytes": 19413
+        },
+        {
+          "path": "hilo.html",
+          "role": "source",
+          "sha256": "0f888e6cc8a8f9b8b1167577b65eaf28b394064639993232b3bda738dc3b5c0e",
+          "lines": 522,
+          "deep_review": "inventory_only",
+          "bytes": 24738
+        },
+        {
+          "path": "index.html",
+          "role": "source",
+          "sha256": "7ddec947966ba526aa9da518918da03be702c7b48eeaacc03f40c20368740f4d",
+          "lines": 109,
+          "deep_review": "inventory_only",
+          "bytes": 8724
+        },
+        {
+          "path": "privacidad.html",
+          "role": "source",
+          "sha256": "42683eef4272f9b6a419061cdd3fd405a4c1fa13e16be02015664180e01dfd48",
+          "lines": 9,
+          "deep_review": "inventory_only",
+          "bytes": 1470
+        }
+      ],
+      "all_file_types": {
+        "(sin_extension)": 1,
+        ".md": 4,
+        ".js": 3,
+        ".html": 4,
+        ".json": 1,
+        ".pdf": 1,
+        ".png": 1,
+        ".py": 1,
+        ".jpg": 2
+      },
+      "status": "inventariado",
+      "visibility": "public",
+      "source_basis": "git_HEAD"
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "commit": "82f597bee316c942e4f631a507c7f8277178fcd3",
+      "tracked_files": 64,
+      "source_files": [
+        {
+          "path": ".github/workflows/verificar.yml",
+          "role": "workflow",
+          "sha256": "9c4b913c6922760d99c5f9ff60fcb667f35087f3436e90c48e0aa5ccef88d5f9",
+          "lines": 27,
+          "deep_review": "inventory_only",
+          "bytes": 890
+        },
+        {
+          "path": ".github/workflows/vigia-diario.yml",
+          "role": "workflow",
+          "sha256": "fbb28804bc1e8b1a376b09624be6b50e1faabc3c9726cf38a109fc1e2edbfd5d",
+          "lines": 222,
+          "deep_review": "inventory_only",
+          "bytes": 11183
+        },
+        {
+          "path": "chinche.js",
+          "role": "source",
+          "sha256": "417beccb30fbfede442f5a722b1f363f143a542b837371626bb81ff20b6cc6c4",
+          "lines": 1215,
+          "deep_review": "inventory_only",
+          "bytes": 67458
+        },
+        {
+          "path": "index.html",
+          "role": "source",
+          "sha256": "441ce63cd723c00bf58a5b2848b5ef20af51407b67ef74fff69942161d010563",
+          "lines": 11,
+          "deep_review": "inventory_only",
+          "bytes": 1064
+        },
+        {
+          "path": "obra-app/app.css",
+          "role": "source",
+          "sha256": "92616888ed0e513f1ed5e0f5f6092d3d3aad8f858337bbe4df243e884db5f889",
+          "lines": 76,
+          "deep_review": "inventory_only",
+          "bytes": 6600
+        },
+        {
+          "path": "obra-app/app.js",
+          "role": "source",
+          "sha256": "5bc70ddfd443a337d114c1060e396be2d017b68c23eb4c04acb94414dda21dd3",
+          "lines": 446,
+          "deep_review": "inventory_only",
+          "bytes": 47221
+        },
+        {
+          "path": "obra-app/calculo.js",
+          "role": "source",
+          "sha256": "88853b2027b11b1b56f90faebfe143bc0819b336efbe45ad15a407b9d4ea6e65",
+          "lines": 124,
+          "deep_review": "inventory_only",
+          "bytes": 6386
+        },
+        {
+          "path": "obra-app/index.html",
+          "role": "source",
+          "sha256": "700de328d85e3a9f7ab4a4d9ee9005ade652ac1951616eb398e7fd7b051f725f",
+          "lines": 41,
+          "deep_review": "inventory_only",
+          "bytes": 1566
+        },
+        {
+          "path": "obra-app/motor/ObraCliente.gs",
+          "role": "backend",
+          "sha256": "1fde942530c5064dd70190e6965d7116c024c1839d7924cf3ac9903ed9e1acbf",
+          "lines": 264,
+          "deep_review": "evidence_referenced",
+          "bytes": 16517
+        },
+        {
+          "path": "obra-app/obras.js",
+          "role": "source",
+          "sha256": "feae2dad8e5fe49fe64a41a98f1ada4a9b50abecaa03f5db34d04667a8d97323",
+          "lines": 18,
+          "deep_review": "evidence_referenced",
+          "bytes": 1142
+        },
+        {
+          "path": "obra-app/tipos.js",
+          "role": "source",
+          "sha256": "94189509ce12c115a906344bc444b2bb14b56fb6eff61e5ce4b2ec32a9d8b964",
+          "lines": 37,
+          "deep_review": "inventory_only",
+          "bytes": 2538
+        },
+        {
+          "path": "obra.html",
+          "role": "source",
+          "sha256": "e0d073ab9eb52c1f35830f1cd19aebb36a64c880d2875138a4118d73a852a34e",
+          "lines": 934,
+          "deep_review": "evidence_referenced",
+          "bytes": 54006
+        },
+        {
+          "path": "os/access-policy.js",
+          "role": "source",
+          "sha256": "6ca1acd9ba7ecdf72133954a5511f77d622b7f1e4bfae653d4a7e58de1ec8719",
+          "lines": 28,
+          "deep_review": "inventory_only",
+          "bytes": 1449
+        },
+        {
+          "path": "os/adapters/finance.js",
+          "role": "source",
+          "sha256": "4f1e58bc580458b4c2d9cef3088032f1ed34266a2ecb5548702c4d94b4116592",
+          "lines": 28,
+          "deep_review": "inventory_only",
+          "bytes": 2297
+        },
+        {
+          "path": "os/adapters/marketing.js",
+          "role": "source",
+          "sha256": "44464bc14fd56b6b84b8e33ea51f7b8ccde44815c162beb28da28848eb293c71",
+          "lines": 27,
+          "deep_review": "inventory_only",
+          "bytes": 1977
+        },
+        {
+          "path": "os/adapters/operations.js",
+          "role": "source",
+          "sha256": "2809f2b91cda765446225922eeea2c539b0abd08fecacc1896b03e1f5ea4634a",
+          "lines": 98,
+          "deep_review": "inventory_only",
+          "bytes": 6314
+        },
+        {
+          "path": "os/app.js",
+          "role": "source",
+          "sha256": "2f7e3cd8f2d5528df208ba65ca8ac2bba63f5a7b040addea54e201a15eb74275",
+          "lines": 911,
+          "deep_review": "inventory_only",
+          "bytes": 76045
+        },
+        {
+          "path": "os/catalogo.js",
+          "role": "source",
+          "sha256": "b891024d4b1a18101d90f750c06dffa863c4bc288b318c85d53e46bcfe69ee64",
+          "lines": 30,
+          "deep_review": "evidence_referenced",
+          "bytes": 2832
+        },
+        {
+          "path": "os/index.html",
+          "role": "source",
+          "sha256": "f3e5eca35088e41e12082b4651f2886321caf9529a11571641f4ae6b113aa0f6",
+          "lines": 255,
+          "deep_review": "inventory_only",
+          "bytes": 18736
+        },
+        {
+          "path": "os/maquinas.js",
+          "role": "source",
+          "sha256": "88cf6cd38f0fbe65b9653a75a02a24a9180c2085641032a799df5f378ccbf868",
+          "lines": 67,
+          "deep_review": "inventory_only",
+          "bytes": 4364
+        },
+        {
+          "path": "os/proyectos.js",
+          "role": "source",
+          "sha256": "1247e2ac3f3bdb743215317adc94081c71edb7bb3c75cd390f60187d3ebe5a8c",
+          "lines": 94,
+          "deep_review": "evidence_referenced",
+          "bytes": 6480
+        },
+        {
+          "path": "os/shell.css",
+          "role": "source",
+          "sha256": "eeeebfc6eb6dfa03934aed5e4d4faa3f3093d0e2c20373431649a2c8222f7557",
+          "lines": 191,
+          "deep_review": "inventory_only",
+          "bytes": 13692
+        },
+        {
+          "path": "os/shell.js",
+          "role": "source",
+          "sha256": "c49710156c4d96ddd5c9f8985c5b831814c27f95f4783dae02363b8d6cbc7d9a",
+          "lines": 498,
+          "deep_review": "inventory_only",
+          "bytes": 32083
+        },
+        {
+          "path": "os/styles.css",
+          "role": "source",
+          "sha256": "785e24315af640d42668ec965325190d004635330cb54d65e50bf370b44e840a",
+          "lines": 186,
+          "deep_review": "inventory_only",
+          "bytes": 27691
+        },
+        {
+          "path": "os/yod-acceso.js",
+          "role": "source",
+          "sha256": "c8874115e71ef235b6fa4146f4053fc41283ecd973e8e132d1ffc8eae43a46f9",
+          "lines": 19,
+          "deep_review": "evidence_referenced",
+          "bytes": 1328
+        },
+        {
+          "path": "portal-core.js",
+          "role": "source",
+          "sha256": "57fc2c57851328270be01bcbe44b872ca1cc27e306f448637786d147585b8401",
+          "lines": 117,
+          "deep_review": "inventory_only",
+          "bytes": 7820
+        },
+        {
+          "path": "scripts/catalogo.cjs",
+          "role": "source",
+          "sha256": "90a24613b7f875f401168553dcc94b0a3dcadbeb0c3a6de7d592dd3c75c67821",
+          "lines": 35,
+          "deep_review": "inventory_only",
+          "bytes": 2457
+        },
+        {
+          "path": "tablero.html",
+          "role": "source",
+          "sha256": "f6f985a99dac4a76261df7877600d394fa44c50c5a8b370b4473f0b3a5856043",
+          "lines": 2010,
+          "deep_review": "evidence_referenced",
+          "bytes": 108811
+        },
+        {
+          "path": "track-alysa.html",
+          "role": "source",
+          "sha256": "62d9169ea86237623ddd1fe2de5fb45444bf34a8efcc0bd302025405e7eb7fa3",
+          "lines": 157,
+          "deep_review": "inventory_only",
+          "bytes": 12485
+        },
+        {
+          "path": "track-codesarrollos.html",
+          "role": "source",
+          "sha256": "2e4ceb6b096ad9b5af2826d1a39c1b7e630529ddf401a3f5594d0a02b2d38d8c",
+          "lines": 117,
+          "deep_review": "evidence_referenced",
+          "bytes": 9573
+        },
+        {
+          "path": "track-maintenance.css",
+          "role": "source",
+          "sha256": "0cb0fb8b7f7e19d905dd154ba3f47d6ef692ee750c0ba9110bd57242939f4ddc",
+          "lines": 1,
+          "deep_review": "inventory_only",
+          "bytes": 978
+        },
+        {
+          "path": "track-maria.html",
+          "role": "source",
+          "sha256": "60aeeef1e84861ef7001ba4bd939235fe991c14fefb68597402787a9ad64854f",
+          "lines": 157,
+          "deep_review": "inventory_only",
+          "bytes": 12463
+        },
+        {
+          "path": "verify-accesos.cjs",
+          "role": "test",
+          "sha256": "20c3f7c3d96e49126c87bd27b1068fd28f80ebb6028a07b1e830e95b02e83f04",
+          "lines": 18,
+          "deep_review": "inventory_only",
+          "bytes": 1180
+        },
+        {
+          "path": "verify-obra-app.cjs",
+          "role": "test",
+          "sha256": "085154ba3671eda59f6b69e06b36e04d740b5f39fe2c71edcc303464a72fdf35",
+          "lines": 49,
+          "deep_review": "inventory_only",
+          "bytes": 4012
+        },
+        {
+          "path": "verify-os.cjs",
+          "role": "test",
+          "sha256": "ceaf3d92714bf57922520aa124526b3f5a9b32f876c5873473ac58043e4de109",
+          "lines": 173,
+          "deep_review": "inventory_only",
+          "bytes": 11176
+        },
+        {
+          "path": "verify-portal.cjs",
+          "role": "test",
+          "sha256": "bc6834dd48d461ed3fa605056ce186d65813e6e63c99cb82adcf5517defac8d4",
+          "lines": 29,
+          "deep_review": "inventory_only",
+          "bytes": 2196
+        }
+      ],
+      "all_file_types": {
+        ".yml": 2,
+        "(sin_extension)": 1,
+        ".md": 6,
+        ".js": 16,
+        ".html": 8,
+        ".png": 11,
+        ".css": 4,
+        ".gs": 1,
+        ".webmanifest": 1,
+        ".cjs": 5,
+        ".jpg": 7,
+        ".svg": 2
+      },
+      "status": "inventariado",
+      "visibility": "public",
+      "source_basis": "git_HEAD"
+    },
+    {
+      "repo": "yodesarrollomx/yodesarrollo-board",
+      "commit": "4774888ede9caf53684ed7509d36ef7ffe1e126e",
+      "tracked_files": 28,
+      "source_files": [
+        {
+          "path": "app.jsx",
+          "role": "source",
+          "sha256": "4d4bd9b261bd237cd50a61ef96d02157a83866942ec53913c44263d9473f672a",
+          "lines": 603,
+          "deep_review": "inventory_only",
+          "bytes": 24617
+        },
+        {
+          "path": "data-loader.jsx",
+          "role": "source",
+          "sha256": "832e6ac20b0b3ba10061627c1f1087190a0e708ab18f8a2c7e9d80d87c32ec73",
+          "lines": 518,
+          "deep_review": "evidence_referenced",
+          "bytes": 24291
+        },
+        {
+          "path": "edit-mode.jsx",
+          "role": "source",
+          "sha256": "0c305daee8b1b1d04858d50cc88d32073b5d03fd5de1970d6367f2130c846b46",
+          "lines": 291,
+          "deep_review": "inventory_only",
+          "bytes": 13015
+        },
+        {
+          "path": "icons.jsx",
+          "role": "source",
+          "sha256": "f2f53644b6051d81b7b5281f45a8d08292febd65db2487cda64407d6c15e64c4",
+          "lines": 182,
+          "deep_review": "inventory_only",
+          "bytes": 5561
+        },
+        {
+          "path": "index.html",
+          "role": "source",
+          "sha256": "4cc061bdccb9f8dce4071bc95b2e17c60d14058de83552c67856f6936a75322a",
+          "lines": 69,
+          "deep_review": "evidence_referenced",
+          "bytes": 3647
+        },
+        {
+          "path": "lote-selector.css",
+          "role": "source",
+          "sha256": "dd63cc038debb47cd921395b3ad4cfb483fa067a55a87a25fdc2f526ab7b4129",
+          "lines": 525,
+          "deep_review": "inventory_only",
+          "bytes": 16995
+        },
+        {
+          "path": "lote-selector.jsx",
+          "role": "source",
+          "sha256": "63dda3480bcf85a66252c541fad5064d84f9e5341fc6e06a0a378e4350e64019",
+          "lines": 445,
+          "deep_review": "inventory_only",
+          "bytes": 20762
+        },
+        {
+          "path": "sections.jsx",
+          "role": "source",
+          "sha256": "8798b8002ccef4cf2298ffe29c0e9500b7f5e88e28bbfb47876d0975566d8022",
+          "lines": 2000,
+          "deep_review": "inventory_only",
+          "bytes": 105573
+        },
+        {
+          "path": "styles-data.css",
+          "role": "source",
+          "sha256": "a8c56e3b3cb5cc0b2553a02e0e0218a1c0a4ebe94b637fce54af00505692fe99",
+          "lines": 1063,
+          "deep_review": "inventory_only",
+          "bytes": 41749
+        },
+        {
+          "path": "styles.css",
+          "role": "source",
+          "sha256": "c492964db7134271ed9a35bbbd49d102ca9932e227a1d155fd46de1f2fbb1b36",
+          "lines": 1471,
+          "deep_review": "inventory_only",
+          "bytes": 56445
+        },
+        {
+          "path": "tweaks-panel.jsx",
+          "role": "source",
+          "sha256": "22c052960f83ac314fa6170384f19bbdeefda516fdddc6a917a5a72797171d8d",
+          "lines": 568,
+          "deep_review": "inventory_only",
+          "bytes": 25802
+        }
+      ],
+      "all_file_types": {
+        "(sin_extension)": 1,
+        ".md": 3,
+        ".jsx": 7,
+        ".png": 3,
+        ".mp4": 1,
+        ".pdf": 5,
+        ".jpg": 3,
+        ".enc": 1,
+        ".html": 1,
+        ".css": 3
+      },
+      "status": "inventariado",
+      "visibility": "public",
+      "source_basis": "git_HEAD"
+    },
+    {
+      "repo": "yodesarrollomx/yodesarrollomx.github.io",
+      "commit": "1835fbfc699ab17a6715576670f82f1fd474683c",
+      "tracked_files": 7,
+      "source_files": [
+        {
+          "path": "index.html",
+          "role": "source",
+          "sha256": "5b8d199adc52a1dbdeb670a7cd44c7e901e5d56ee807369954fc63ab7c4be5f0",
+          "lines": 86,
+          "deep_review": "inventory_only",
+          "bytes": 3602
+        },
+        {
+          "path": "propuestas/inicio/index.html",
+          "role": "source",
+          "sha256": "f038457684c4d12ce5e6ee94640af61f0aba5171b959be0a24621d63d64e9f70",
+          "lines": 747,
+          "deep_review": "inventory_only",
+          "bytes": 48784
+        }
+      ],
+      "all_file_types": {
+        "(sin_extension)": 1,
+        ".md": 2,
+        ".html": 2,
+        ".png": 2
+      },
+      "status": "inventariado",
+      "visibility": "public",
+      "source_basis": "git_HEAD"
+    }
+  ]
+}
