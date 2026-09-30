@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-09-30.2",
+  "revision": "2026-09-30.3",
   "checked_at": "2026-09-30",
   "priorities": [
     "vender_mas",
@@ -8,14 +8,15 @@
     "cobrar_antes"
   ],
   "coverage": {
-    "summary": "Inventario de repositorios y conexiones comprobadas en fuente; lecturas directas de Control Maestro y Tesorería. Auditoría de producción abierta: Apps Script requiere acceso y contraste de versiones.",
+    "summary": "Inventario de 20 repositorios; fuentes y versiones activas de ocho motores contrastadas mediante API y coincidencia exacta con endpoints. Auditoría funcional de producción abierta.",
     "production_verified": false,
     "limitations": [
       "No se ha comprobado la versión activa de todos los Apps Script",
-      "La sesión de Google está vigente; faltan permisos OAuth específicos de Apps Script para consultar fuente desplegada",
       "No se probaron escrituras sobre datos de producción",
       "Los detalles privados de seguridad y reconciliación no forman parte de este atlas público",
-      "Inventariar un archivo no equivale a revisar cada rama de su implementación"
+      "Inventariar un archivo no equivale a revisar cada rama de su implementación",
+      "La lista de proyectos independientes no acredita cobertura de todos los scripts vinculados a Sheets.",
+      "Portero conserva cambios de editor posteriores a la versión activa; no se desplegaron."
     ]
   },
   "repositories": [
@@ -954,6 +955,13 @@
           "claim": "Tipo de fuente disponible: ausente",
           "status": "declarado",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/backends-verificados.json",
+          "claim": "Fuente de versión activa 50 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente.",
+          "status": "codigo",
+          "source_revision": "Apps Script version 50"
         }
       ],
       "data_entities": [
@@ -964,12 +972,13 @@
         "track"
       ],
       "risks_sanitized": [
-        "Código desplegado y permisos reales no contrastados"
+        "Permisos por operación y recorridos por rol pendientes de prueba",
+        "El editor contiene cambios posteriores a la versión activa; publicar requiere revisión separada."
       ],
-      "backend_source_status": "ausente",
-      "source_of_truth": "Fuente de GitHub; despliegue y datos reales por verificar",
-      "status": "declarado",
-      "runtime_status": "No verificado en despliegue"
+      "backend_source_status": "fuente_api_version_activa_contrastada",
+      "source_of_truth": "Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos.",
+      "status": "codigo",
+      "runtime_status": "Versión 50 obtenida por API y vinculada al endpoint del cliente. Operaciones de negocio y roles no probados."
     },
     {
       "id": "SHEET-PORTERO",
@@ -1016,6 +1025,13 @@
           "claim": "Tipo de fuente disponible: ausente",
           "status": "declarado",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/backends-verificados.json",
+          "claim": "Fuente de versión activa 8 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente.",
+          "status": "codigo",
+          "source_revision": "Apps Script version 8"
         }
       ],
       "data_entities": [
@@ -1023,12 +1039,12 @@
         "portal"
       ],
       "risks_sanitized": [
-        "Código desplegado y permisos reales no contrastados"
+        "Permisos por operación y recorridos por rol pendientes de prueba"
       ],
-      "backend_source_status": "ausente",
-      "source_of_truth": "Fuente de GitHub; despliegue y datos reales por verificar",
-      "status": "declarado",
-      "runtime_status": "No verificado en despliegue"
+      "backend_source_status": "fuente_api_version_activa_contrastada",
+      "source_of_truth": "Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos.",
+      "status": "codigo",
+      "runtime_status": "Versión 8 obtenida por API y vinculada al endpoint del cliente. Operaciones de negocio y roles no probados."
     },
     {
       "id": "SHEET-CATALOGO",
@@ -1146,6 +1162,13 @@
           "claim": "Tipo de fuente disponible: fragmento_autenticacion",
           "status": "codigo",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/backends-verificados.json",
+          "claim": "Fuente de versión activa 14 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente.",
+          "status": "codigo",
+          "source_revision": "Apps Script version 14"
         }
       ],
       "data_entities": [
@@ -1156,12 +1179,12 @@
         "historial"
       ],
       "risks_sanitized": [
-        "Código desplegado y permisos reales no contrastados"
+        "Permisos por operación y recorridos por rol pendientes de prueba"
       ],
-      "backend_source_status": "fragmento_autenticacion",
-      "source_of_truth": "Fuente de GitHub; despliegue y datos reales por verificar",
+      "backend_source_status": "fuente_api_version_activa_contrastada",
+      "source_of_truth": "Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos.",
       "status": "codigo",
-      "runtime_status": "No verificado en despliegue"
+      "runtime_status": "Versión 14 obtenida por API y vinculada al endpoint del cliente. Operaciones de negocio y roles no probados."
     },
     {
       "id": "SHEET-FLUJO",
@@ -1272,6 +1295,13 @@
           "claim": "Tipo de fuente disponible: ausente",
           "status": "declarado",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/backends-verificados.json",
+          "claim": "Fuente de versión activa 16 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente.",
+          "status": "codigo",
+          "source_revision": "Apps Script version 16"
         }
       ],
       "data_entities": [
@@ -1280,12 +1310,12 @@
         "cita"
       ],
       "risks_sanitized": [
-        "Código desplegado y permisos reales no contrastados"
+        "Permisos por operación y recorridos por rol pendientes de prueba"
       ],
-      "backend_source_status": "ausente",
-      "source_of_truth": "Fuente de GitHub; despliegue y datos reales por verificar",
-      "status": "declarado",
-      "runtime_status": "No verificado en despliegue"
+      "backend_source_status": "fuente_api_version_activa_contrastada",
+      "source_of_truth": "Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos.",
+      "status": "codigo",
+      "runtime_status": "Versión 16 obtenida por API y vinculada al endpoint del cliente. Operaciones de negocio y roles no probados."
     },
     {
       "id": "SHEET-PLAN-POTENCIAL",
@@ -1388,6 +1418,13 @@
           "claim": "Tipo de fuente disponible: fuente_repositorio_despliegue_no_verificado",
           "status": "codigo",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/backends-verificados.json",
+          "claim": "Fuente de versión activa 40 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente.",
+          "status": "codigo",
+          "source_revision": "Apps Script version 40"
         }
       ],
       "data_entities": [
@@ -1397,14 +1434,14 @@
         "referido"
       ],
       "risks_sanitized": [
-        "Código desplegado y permisos reales no contrastados",
+        "Permisos por operación y recorridos por rol pendientes de prueba",
         "Autenticación propia por rol; token Portero no equivale a credencial administrativa",
         "resumenPublico no aparece entre acciones versionadas; parche/despliegue pendiente de contraste"
       ],
-      "backend_source_status": "fuente_repositorio_despliegue_no_verificado",
-      "source_of_truth": "Fuente de GitHub; despliegue y datos reales por verificar",
+      "backend_source_status": "fuente_api_version_activa_contrastada",
+      "source_of_truth": "Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos.",
       "status": "codigo",
-      "runtime_status": "No verificado en despliegue"
+      "runtime_status": "Versión 40 obtenida por API y vinculada al endpoint del cliente. Operaciones de negocio y roles no probados."
     },
     {
       "id": "SHEET-CODES",
@@ -1570,6 +1607,13 @@
           "claim": "Tipo de fuente disponible: ausente",
           "status": "declarado",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/backends-verificados.json",
+          "claim": "Fuente de versión activa 26 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente.",
+          "status": "codigo",
+          "source_revision": "Apps Script version 26"
         }
       ],
       "data_entities": [
@@ -1578,12 +1622,12 @@
         "hito"
       ],
       "risks_sanitized": [
-        "Código desplegado y permisos reales no contrastados"
+        "Permisos por operación y recorridos por rol pendientes de prueba"
       ],
-      "backend_source_status": "ausente",
-      "source_of_truth": "Fuente de GitHub; despliegue y datos reales por verificar",
-      "status": "declarado",
-      "runtime_status": "No verificado en despliegue"
+      "backend_source_status": "fuente_api_version_activa_contrastada",
+      "source_of_truth": "Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos.",
+      "status": "codigo",
+      "runtime_status": "Versión 26 obtenida por API y vinculada al endpoint del cliente. Operaciones de negocio y roles no probados."
     },
     {
       "id": "SHEET-ALQUIMIA",
@@ -1628,6 +1672,13 @@
           "claim": "Tipo de fuente disponible: ausente",
           "status": "codigo",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/backends-verificados.json",
+          "claim": "Fuente de versión activa 16 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente.",
+          "status": "codigo",
+          "source_revision": "Apps Script version 16"
         }
       ],
       "data_entities": [
@@ -1636,12 +1687,12 @@
         "rol"
       ],
       "risks_sanitized": [
-        "Código desplegado y permisos reales no contrastados"
+        "Permisos por operación y recorridos por rol pendientes de prueba"
       ],
-      "backend_source_status": "ausente",
-      "source_of_truth": "Fuente de GitHub; despliegue y datos reales por verificar",
+      "backend_source_status": "fuente_api_version_activa_contrastada",
+      "source_of_truth": "Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos.",
       "status": "codigo",
-      "runtime_status": "No verificado en despliegue"
+      "runtime_status": "Versión 16 obtenida por API y vinculada al endpoint del cliente. Operaciones de negocio y roles no probados."
     },
     {
       "id": "SHEET-OBRA",
@@ -1990,6 +2041,13 @@
           "claim": "Endpoint específico del CRM",
           "status": "codigo",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/backends-verificados.json",
+          "claim": "Fuente de versión activa 19 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente.",
+          "status": "codigo",
+          "source_revision": "Apps Script version 19"
         }
       ],
       "data_entities": [
@@ -2000,10 +2058,10 @@
       "risks_sanitized": [
         "No se ha obtenido fuente desplegada ni contrato completo"
       ],
-      "source_of_truth": "Código desplegado no disponible",
-      "backend_source_status": "ausente",
+      "source_of_truth": "Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos.",
+      "backend_source_status": "fuente_api_version_activa_contrastada",
       "status": "codigo",
-      "runtime_status": "No verificado en despliegue"
+      "runtime_status": "Versión 19 obtenida por API y vinculada al endpoint del cliente. Operaciones de negocio y roles no probados."
     },
     {
       "id": "SHEET-CRM",
@@ -5638,14 +5696,14 @@
         "EXT-MOTORES-MEDIA"
       ],
       "proposal": "Crear mapa versionado, diagramas, visor sin red, fichas por tablero y propuestas A–L; exigir referencia de impacto en cambios posteriores.",
-      "status": "implementado_local",
+      "status": "publicado",
       "tests": [
         "Validación de esquema y referencias",
         "Regeneración determinista",
         "Pruebas del registro de impacto",
         "Navegación local escritorio/móvil sin red"
       ],
-      "deployment": "Pendiente integración y publicación del atlas"
+      "deployment": "Integrado mediante PR del portal y 19 PR consumidores; atlas publicado. Check obligatorio en 17 repositorios; dos privados limitados por el plan y Prueba Dominio fuera del alcance funcional."
     },
     {
       "id": "CHG-PORTAL-DATOS-001",
@@ -5656,11 +5714,11 @@
         "EXT-ACTIONS"
       ],
       "proposal": "Alinear estado/estatus financiero y distinguir éxito, rechazo, vacío, caché, error y antigüedad de automatizaciones.",
-      "status": "implementado_local",
+      "status": "publicado",
       "tests": [
         "Pruebas sintéticas de adaptadores, fuentes y automatizaciones"
       ],
-      "deployment": "Frontend pendiente de publicación; backends sin modificar"
+      "deployment": "Frontend integrado y publicado mediante PR y CI. No modifica Sheets."
     },
     {
       "id": "CHG-SESION-001",
@@ -5670,11 +5728,11 @@
         "GAS-PORTERO"
       ],
       "proposal": "Evitar restaurar identidad o datos de una sesión anterior; canje obligatorio y descarte de respuestas tardías.",
-      "status": "implementado_local",
+      "status": "publicado",
       "tests": [
         "Cambio de usuario, rechazo y respuesta tardía"
       ],
-      "deployment": "Frontend probado localmente; pendiente publicación"
+      "deployment": "Frontend integrado y publicado mediante PR y CI; recorridos reales por rol pendientes."
     },
     {
       "id": "CHG-OBRA-001",
@@ -5697,11 +5755,11 @@
         "GAS-FLUJO"
       ],
       "proposal": "Renderizado seguro y recuperación explícita ante guardado incompleto; operación transaccional requiere fuente de servidor vigente.",
-      "status": "implementado_local",
+      "status": "publicado",
       "tests": [
         "Contenido sintético hostil y fallo entre dos escrituras"
       ],
-      "deployment": "Frontend en revisión; cambio de servidor pendiente de acceso"
+      "deployment": "Frontend integrado mediante PR con pruebas aprobadas; no modifica el backend ni garantiza atomicidad de transferencias."
     },
     {
       "id": "CHG-METRICS-001",
@@ -5711,11 +5769,11 @@
         "SHEET-MARKETING"
       ],
       "proposal": "Refresco recurrente de datos públicos mediante rama y PR, comprobación del commit exacto y publicación Pages después de integrar. Sin push directo a main.",
-      "status": "implementado_local",
+      "status": "publicado",
       "tests": [
         "Simulación de publicación correcta, checks fallidos y merge rechazado"
       ],
-      "deployment": "Pendiente de activar tras verificación de CI y permisos del productor"
+      "deployment": "Código integrado, CI aprobada, Pages publicado, permisos de PR y check obligatorio habilitados. Primera ejecución operativa del publicador adaptado por observar."
     },
     {
       "id": "CHG-SALA-PUBLICACION-001",
@@ -5724,11 +5782,32 @@
         "GAS-SALA"
       ],
       "proposal": "Publicar datos y recursos automáticos mediante PR y check del commit exacto antes de montar referencias en el backend.",
-      "status": "implementado_local",
+      "status": "publicado",
       "tests": [
         "Simulación del publicador y rechazo de fallos o resultados inciertos"
       ],
-      "deployment": "Pendiente verificar CI, permisos y primera ejecución controlada"
+      "deployment": "Código integrado, CI aprobada y publicación verificada. Permisos de PR y check obligatorio habilitados; recursos recientes preservados. Primera ejecución operativa adaptada por observar."
+    },
+    {
+      "id": "CHG-BACKENDS-VERIFY-001",
+      "components": [
+        "GAS-PORTERO",
+        "GAS-FLUJO",
+        "GAS-CODES",
+        "GAS-ALQUIMIA",
+        "GAS-CATALOGO",
+        "GAS-OBRA",
+        "GAS-PLAN-POTENCIAL",
+        "GAS-CRM"
+      ],
+      "proposal": "Registrar fuentes y versiones activas contrastadas por API y corregir el alcance de autenticación y despliegue del atlas.",
+      "status": "verificado",
+      "tests": [
+        "Identidad por coincidencia exacta de deployment ID con endpoint versionado",
+        "Comparación de fuente del editor y fuente de versión activa",
+        "Validación del esquema y generación determinista del atlas"
+      ],
+      "deployment": "Solo documentación pública; no modifica Apps Script ni registros de negocio."
     },
     {
       "id": "CHG-PPP-SHEETS-001",
@@ -6139,4 +6218,3 @@
     }
   ]
 }
-
