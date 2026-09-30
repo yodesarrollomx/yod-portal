@@ -52,3 +52,5 @@ test('propuestas publican tareas, requisitos, aceptación y dependencias vacías
 });
 test('dependencias de propuestas deben existir',()=>{const m=load();m.proposals[0].dependencies=['ZZ'];assert.throws(()=>validate(m,schema),/dependencia/);});
 test('IDs legales que colisionan en Mermaid son rechazados',()=>{const m=load(),copy=structuredClone(m.components[0]);copy.id=copy.id.replace(/-/g,'_');m.components.push(copy);assert.throws(()=>validate(m,schema),/colisionan/);});
+
+test('actualizar el lockfile también exige declarar impacto',()=>{const f=fixture();f.changed=['package-lock.json'];assert.throws(()=>verify(f),/sin actualizar/);f.changed.push('architecture-impact.json');assert.equal(verify(f).behavioral.length,1);});
