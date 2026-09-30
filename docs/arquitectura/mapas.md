@@ -30,6 +30,7 @@ flowchart LR
   n_GAS_MOAC_METAS -->|Lee y vincula estrategia| n_SHEET_MOAC_METAS
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
+  class n_GAS_PORTERO pendiente;
   class n_SHEET_OPERACION pendiente;
   class n_EXT_GMAIL pendiente;
   class n_SHEET_MOAC_METAS pendiente;
@@ -50,6 +51,7 @@ flowchart LR
   n_SYS_SALA_OPERACION["Herramientas de producción"]
   n_SYS_AURUM_EXPERIENCIA["Experiencia Aurum"]
   n_GAS_PORTERO["Portero y Potenciales"]
+  n_SHEET_PORTERO["Datos de Portero y Potenciales"]
   n_GAS_MARKETING["Métricas y CRM de captación"]
   n_SHEET_MARKETING["Datos de Métricas y CRM de captación"]
   n_GAS_PLAN_POTENCIAL["Captación de Plan Potencial"]
@@ -74,6 +76,7 @@ flowchart LR
   n_SVC_SALA_PRODUCTOR["Productor de Sala"]
   n_SVC_SALA_EJECUTOR["Ejecutor de Sala"]
   n_EXT_MOTORES_MEDIA["Motores de generación de contenido"]
+  n_SHEET_PPP_MODELOS["PPP · Libros de cálculo por caso"]
   n_GAS_MARKETING -->|Lee/escribe registros del dominio| n_SHEET_MARKETING
   n_GAS_PLAN_POTENCIAL -.->|Lee/escribe registros del dominio| n_SHEET_PLAN_POTENCIAL
   n_GAS_CROKISS -->|Lee/escribe registros del dominio| n_SHEET_CROKISS
@@ -115,12 +118,17 @@ flowchart LR
   n_SVC_SALA_EJECUTOR -->|Sube activos producidos| n_EXT_DRIVE
   n_GAS_SALA -->|Valida credencial del OS desde servidor| n_GAS_PORTERO
   n_GAS_SALA -->|Consulta respaldo de identidad| n_GAS_PORTERO_RESPALDO
+  n_GAS_PORTERO -.->|Lee resultados nativos; escribe cantidades permitidas| n_SHEET_PPP_MODELOS
+  n_SHEET_PORTERO -.->|Registra caso, libro, carpeta y revisión del modelo| n_SHEET_PPP_MODELOS
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PLAN_POTENCIAL pendiente;
   class n_SYS_CROKISS pendiente;
   class n_SYS_SALA_OPERACION pendiente;
+  class n_GAS_PORTERO pendiente;
+  class n_SHEET_PORTERO pendiente;
   class n_SHEET_MARKETING pendiente;
+  class n_GAS_PLAN_POTENCIAL pendiente;
   class n_SHEET_PLAN_POTENCIAL pendiente;
   class n_SHEET_CROKISS pendiente;
   class n_SHEET_CODES pendiente;
@@ -169,9 +177,12 @@ flowchart LR
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_ALQUIMIA pendiente;
+  class n_GAS_PORTERO pendiente;
+  class n_GAS_CATALOGO pendiente;
   class n_SHEET_MIRAMAR pendiente;
   class n_GAS_INTERIORES pendiente;
   class n_SHEET_INTERIORES pendiente;
+  class n_GAS_ALQUIMIA pendiente;
   class n_SHEET_ALQUIMIA pendiente;
 ```
 
@@ -190,6 +201,7 @@ flowchart LR
   n_SYS_FLUJO -.->|Canje de sesión y permisos| n_GAS_PORTERO
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
+  class n_GAS_PORTERO pendiente;
 ```
 
 ## Obra
@@ -214,6 +226,7 @@ flowchart LR
   n_GAS_OBRA_CLIENTE -->|Consulta avance por folio mediante servicio| n_GAS_OBRA
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
+  class n_GAS_PORTERO pendiente;
   class n_SHEET_OBRA pendiente;
   class n_SHEET_OBRA_CLIENTE pendiente;
 ```
@@ -267,9 +280,13 @@ flowchart LR
   n_SYS_YOD_OS -->|Consulta leads del CRM| n_GAS_CRM
   n_SYS_TRACK -->|Consulta resource Track para codesarrollos| n_GAS_CATALOGO
   n_SYS_YOD_OS -->|Respaldo de identidad| n_GAS_PORTERO_RESPALDO
+  n_GAS_PORTERO -.->|Registra antes, después, actor y siguiente paso| n_SYS_CONTROL
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PINTARRON pendiente;
+  class n_GAS_PORTERO pendiente;
+  class n_GAS_CATALOGO pendiente;
+  class n_GAS_PLAN_POTENCIAL pendiente;
 ```
 
 ## Personas
@@ -315,6 +332,7 @@ flowchart LR
   n_SVC_SALA_EJECUTOR -->|Sube activos producidos| n_EXT_DRIVE
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_SITIO_ORG pendiente;
+  class n_GAS_PLAN_POTENCIAL pendiente;
   class n_EXT_DRIVE pendiente;
   class n_EXT_CALENDAR pendiente;
   class n_EXT_META pendiente;
@@ -336,11 +354,13 @@ flowchart LR
   n_SYS_INVERSION["Presentación a inversionistas"]
   n_SYS_MARKETING["Embudo comercial"]
   n_SYS_OBRA["Obra en vivo"]
+  n_SYS_CONTROL["Control Maestro"]
   n_SYS_YOD_OS["YOD OS"]
   n_GAS_PORTERO["Portero y Potenciales"]
   n_SHEET_PORTERO["Datos de Portero y Potenciales"]
   n_GAS_SALA["Sala de Edición"]
   n_GAS_PORTERO_RESPALDO["Portero de respaldo"]
+  n_SHEET_PPP_MODELOS["PPP · Libros de cálculo por caso"]
   n_GAS_PORTERO -.->|Lee/escribe registros del dominio| n_SHEET_PORTERO
   n_SYS_POTENCIALES -.->|Consume contrato del backend| n_GAS_PORTERO
   n_SYS_TRACK -->|Consume contrato del backend| n_GAS_PORTERO
@@ -357,8 +377,12 @@ flowchart LR
   n_SYS_YOD_OS -->|Respaldo de identidad| n_GAS_PORTERO_RESPALDO
   n_GAS_SALA -->|Valida credencial del OS desde servidor| n_GAS_PORTERO
   n_GAS_SALA -->|Consulta respaldo de identidad| n_GAS_PORTERO_RESPALDO
+  n_GAS_PORTERO -.->|Lee resultados nativos; escribe cantidades permitidas| n_SHEET_PPP_MODELOS
+  n_SHEET_PORTERO -.->|Registra caso, libro, carpeta y revisión del modelo| n_SHEET_PPP_MODELOS
+  n_GAS_PORTERO -.->|Registra antes, después, actor y siguiente paso| n_SYS_CONTROL
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
+  class n_GAS_PORTERO pendiente;
   class n_SHEET_PORTERO pendiente;
 ```
 
@@ -452,3 +476,6 @@ flowchart LR
 | CON-084 | SVC-SALA-EJECUTOR → EXT-DRIVE | documentos: Sube activos producidos. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_ejecutor.py#L67) — Publicación de resultado en Drive |
 | CON-085 | GAS-SALA → GAS-PORTERO | autenticacion: Valida credencial del OS desde servidor. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [sala-edicion/gas/Code.gs](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/gas/Code.gs#L193) — Valida credencial del OS desde servidor |
 | CON-086 | GAS-SALA → GAS-PORTERO-RESPALDO | autenticacion: Consulta respaldo de identidad. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [sala-edicion/gas/Code.gs](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/gas/Code.gs#L191) — Consulta respaldo de identidad |
+| CON-PPP-MODELO | GAS-PORTERO → SHEET-PPP-MODELOS | persistencia: Lee resultados nativos; escribe cantidades permitidas. Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente. | propuesto | Transporte preparado y probado con dobles; lectura del piloto desde editor verificada; implementación pública no actualizada. |
+| CON-PPP-REGISTRO | SHEET-PORTERO → SHEET-PPP-MODELOS | registro: Registra caso, libro, carpeta y revisión del modelo. IDs estables; un libro por caso y hoja por versión; no sustituir historial ni compartir archivos por efecto de registrar un enlace. | propuesto | Registro del piloto creado; organización y generación para todos los casos pendientes. |
+| CON-PPP-AUDITORIA | GAS-PORTERO → SYS-CONTROL | auditoria: Registra antes, después, actor y siguiente paso. Auditoría en libro y Control Maestro con actor autenticado, entidad, versión, revisión, campo/rango, fuente y validación. No inventar valores previos ausentes ni declarar publicada una operación no confirmada. | propuesto | Registro operativo privado actualizado; transporte auditado con dobles; activadores y despliegue público pendientes. |
