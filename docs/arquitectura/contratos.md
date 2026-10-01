@@ -150,3 +150,6 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Conservar implementación, URL, roles, 28 preguntas, escala, matriz y asignaciones; reutilizar autorización Drive existente
 - La reversión de código no borra ni restaura datos de perfil o evaluación
 - Drive y metadatos no forman una transacción atómica: preservar foto anterior hasta confirmación y documentar recuperación de escrituras parciales y archivos huérfanos
+- La consulta no crea carpetas, archivos ni metadatos; solo una carga propia autorizada puede inicializarlos
+- Verificar propietario, privacidad y ausencia de lectores/editores explícitos en ancestros; rechazar unidades compartidas y revalidar privacidad antes de confirmar un reintento
+- La identidad de mutación vincula propietario, revisión base, MIME y bytes normalizados mediante digest
