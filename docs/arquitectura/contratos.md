@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.12-ppp-interfaz · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.13-emd-contactos · 2026-10-01.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -176,3 +176,19 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Ediciones hechas durante un envío sobreviven a su confirmación; cambios de identidad/evaluación invalidan callbacks anteriores
 - Fallo o ausencia de IndexedDB/criptografía se informa sin bloquear memoria ni envío al servidor; nunca mostrar cierre confirmado por persistencia local
 - Copia del mismo navegador y enlace únicamente; no prometer recuperación en otro dispositivo ni cambiar 28 preguntas, escala, asignaciones, permisos o backend
+
+## CTR-EMD-CONTACTS
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD.
+- Evidencia: Diseño propuesto del sistema privado; el atlas no contiene nombres, correos, enlaces ni archivos..
+- Entrada/campos: `Sesión de revisor autorizada y separación normal/QA`, `Archivo CSV, TSV o XLSX acotado a 250 filas`, `Identificador de persona exacto o nombre normalizado único y correo`, `Revisión esperada e identificador de mutación del lote`.
+- Salida: Vista previa por fila sin escritura, Confirmación exacta del lote o conflicto sin sobrescritura, Asunto y recordatorio copiable sin envío.
+
+- La lectura de preparación no crea pestañas ni lee respuestas o notas; solo usa asignaciones activas autorizadas
+- Un nombre ambiguo, persona inexistente, correo inválido o duplicado bloquea el guardado completo
+- Revisor normal y QA no comparten catálogos ni contactos
+- La escritura exige revisión vigente; el reintento de ACK perdido reutiliza la misma mutación y contenido
+- Una mutación reutilizada con otro contenido falla de forma explícita
+- No emitir accesos, regenerar enlaces, reiniciar evaluaciones, enviar correos ni exponer enlaces personales
+- No modificar 28 preguntas, escala, matriz, asignaciones, permisos, respuestas o estados de evaluación
+- La reversión de código conserva contactos y registros de negocio; no borrar datos como parte del rollback

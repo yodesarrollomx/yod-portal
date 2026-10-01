@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.12-ppp-interfaz",
+  "revision": "2026-10-01.13-emd-contactos",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -873,7 +873,8 @@
       "data_entities": [
         "evaluacion",
         "revision",
-        "chinche"
+        "chinche",
+        "contacto_preparado"
       ],
       "risks_sanitized": [
         "No hay evidencia de integración transaccional con YOD OS; mantener datos y permisos privados"
@@ -1909,7 +1910,8 @@
       ],
       "data_entities": [
         "evaluacion",
-        "revision"
+        "revision",
+        "contacto_preparado"
       ],
       "risks_sanitized": [
         "Código desplegado y permisos reales no contrastados"
@@ -1937,7 +1939,8 @@
       ],
       "data_entities": [
         "evaluacion",
-        "revision"
+        "revision",
+        "contacto_preparado"
       ],
       "risks_sanitized": [
         "Esquema y calidad de datos vivos no inspeccionados"
@@ -5543,6 +5546,67 @@
           "status": "propuesto"
         }
       ]
+    },
+    {
+      "id": "PROC-EMD-CONTACTS",
+      "nombre": "Preparación privada de contactos y recordatorios",
+      "status": "propuesto",
+      "steps": [
+        {
+          "label": "Elegir archivo y revisar vista previa",
+          "role": "Coordinación autorizada",
+          "components": [
+            "SYS-EMD"
+          ],
+          "input": "CSV, TSV o XLSX local de hasta 250 filas",
+          "output": "Vista previa sin escritura",
+          "mode": "manual"
+        },
+        {
+          "label": "Validar personas y correos",
+          "role": "Backend autorizado",
+          "components": [
+            "GAS-EMD",
+            "SHEET-EMD"
+          ],
+          "input": "Identificador exacto o nombre único y correo",
+          "output": "Coincidencias activas o errores por fila",
+          "mode": "pendiente"
+        },
+        {
+          "label": "Confirmar y guardar contactos",
+          "role": "Coordinación autorizada",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD"
+          ],
+          "input": "Filas revisadas, revisión esperada e identificador de mutación",
+          "output": "Contactos confirmados o conflicto sin sobrescritura",
+          "mode": "manual"
+        },
+        {
+          "label": "Preparar recordatorio individual",
+          "role": "Coordinación autorizada",
+          "components": [
+            "SYS-EMD"
+          ],
+          "input": "Persona pendiente y correo confirmado",
+          "output": "Asunto y texto copiable sin envío ni enlace personal",
+          "mode": "manual"
+        }
+      ],
+      "manual_gaps": [
+        "El envío real requiere destinatarios verificados y autorización específica; no forma parte de esta propuesta",
+        "La vista previa y las pruebas sintéticas no sustituyen revisión humana de nombres y correos",
+        "No emitir ni reemitir accesos y no reiniciar evaluaciones al preparar un recordatorio"
+      ],
+      "evidence": [
+        {
+          "claim": "Proceso propuesto; detalle operativo y datos personales permanecen en el sistema privado",
+          "status": "propuesto"
+        }
+      ]
     }
   ],
   "proposals": [
@@ -6456,6 +6520,24 @@
         "20 recorridos de acceso en siete plantillas y dos navegadores; 124 pruebas y verificadores del atlas aprobados; sin escrituras de prueba de negocio"
       ],
       "deployment": "Implementación local validada; publicación mediante PR de potenciales-yod con referencia fija a este atlas. La validación usa datos y transporte sintéticos, no acredita OAuth ni escrituras reales de Sheets en iPhone físico. Revertir la interfaz y referencia de atlas mediante PR; conservar datos, sesiones y libros."
+    },
+    {
+      "id": "CHG-EMD-CONTACTS-001",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Preparar importación privada de contactos desde CSV, TSV o XLSX con vista previa, coincidencia por identificador exacto o nombre único, validación de correo, revisión optimista e idempotencia. Permitir preparar y copiar un recordatorio individual sin enviar mensajes, mostrar enlaces personales, emitir accesos, leer respuestas o alterar preguntas, escala, matriz y asignaciones. SYS-YOD-OS participa solo por el atlas documental.",
+      "status": "propuesto",
+      "tests": [
+        "Dobles sintéticos: archivo inválido, nombre ambiguo, identificador inexistente, correo inválido, duplicados y separación QA",
+        "Conflicto de revisión, ACK perdido y repetición exacta sin duplicar ni aceptar una mutación con contenido distinto",
+        "Chromium sintético móvil y escritorio: vista previa, guardado, destinatario, copia y ausencia de envío o enlace personal",
+        "Respaldo privado, pruebas del HEAD exacto y comprobación de la implementación existente antes de publicar"
+      ],
+      "deployment": "Propuesta previa a implementación; no acredita publicación ni envío. Conservar URL, permisos, accesos, respuestas, 28 preguntas, escala, matriz y asignaciones. La pestaña privada de contactos se crea solo al guardar explícitamente; reversión de código no borra contactos. El envío permanece bloqueado hasta contar con destinatarios verificados y autorización específica."
     }
   ],
   "data_contracts": [
@@ -6833,6 +6915,36 @@
         "Ediciones hechas durante un envío sobreviven a su confirmación; cambios de identidad/evaluación invalidan callbacks anteriores",
         "Fallo o ausencia de IndexedDB/criptografía se informa sin bloquear memoria ni envío al servidor; nunca mostrar cierre confirmado por persistencia local",
         "Copia del mismo navegador y enlace únicamente; no prometer recuperación en otro dispositivo ni cambiar 28 preguntas, escala, asignaciones, permisos o backend"
+      ]
+    },
+    {
+      "id": "CTR-EMD-CONTACTS",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD"
+      ],
+      "source": "Diseño propuesto del sistema privado; el atlas no contiene nombres, correos, enlaces ni archivos.",
+      "input": [
+        "Sesión de revisor autorizada y separación normal/QA",
+        "Archivo CSV, TSV o XLSX acotado a 250 filas",
+        "Identificador de persona exacto o nombre normalizado único y correo",
+        "Revisión esperada e identificador de mutación del lote"
+      ],
+      "output": [
+        "Vista previa por fila sin escritura",
+        "Confirmación exacta del lote o conflicto sin sobrescritura",
+        "Asunto y recordatorio copiable sin envío"
+      ],
+      "invariants": [
+        "La lectura de preparación no crea pestañas ni lee respuestas o notas; solo usa asignaciones activas autorizadas",
+        "Un nombre ambiguo, persona inexistente, correo inválido o duplicado bloquea el guardado completo",
+        "Revisor normal y QA no comparten catálogos ni contactos",
+        "La escritura exige revisión vigente; el reintento de ACK perdido reutiliza la misma mutación y contenido",
+        "Una mutación reutilizada con otro contenido falla de forma explícita",
+        "No emitir accesos, regenerar enlaces, reiniciar evaluaciones, enviar correos ni exponer enlaces personales",
+        "No modificar 28 preguntas, escala, matriz, asignaciones, permisos, respuestas o estados de evaluación",
+        "La reversión de código conserva contactos y registros de negocio; no borrar datos como parte del rollback"
       ]
     }
   ],

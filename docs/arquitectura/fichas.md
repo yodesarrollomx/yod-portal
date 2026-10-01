@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.12-ppp-interfaz · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.13-emd-contactos · 2026-10-01.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -258,7 +258,7 @@ Evaluación privada y seguimiento de revisiones
 
 - Tipo: aplicacion_auxiliar. Dominio: Personas. Responsable: Responsable del proceso por confirmar.
 - Evidencia: pendiente. Producción: No verificado en despliegue.
-- Entidades: evaluacion, revision, chinche.
+- Entidades: evaluacion, revision, chinche, contacto_preparado.
 - Fuente de verdad: Sistema privado; detalle técnico restringido.
 - Evidencia: Integración pendiente de verificar.
 - Conexiones: CON-032 (SYS-EMD → GAS-EMD); CON-EMD-DRAFTS-LOCAL (SYS-EMD → STORE-EMD-DRAFTS).
@@ -674,7 +674,7 @@ Servir el contrato de Evaluación privada
 
 - Tipo: apps_script. Dominio: Personas. Responsable: Responsable técnico del backend.
 - Evidencia: pendiente. Producción: No verificado en despliegue.
-- Entidades: evaluacion, revision.
+- Entidades: evaluacion, revision, contacto_preparado.
 - Fuente de verdad: Sistema privado; detalle técnico restringido.
 - Evidencia: Integración pendiente de verificar.
 - Conexiones: CON-015 (GAS-EMD → SHEET-EMD); CON-032 (SYS-EMD → GAS-EMD); CON-EMD-PROFILES-DRIVE (GAS-EMD → EXT-DRIVE).
@@ -687,7 +687,7 @@ Almacenar registros del dominio personas
 
 - Tipo: google_sheets. Dominio: Personas. Responsable: Dueño del dato por confirmar.
 - Evidencia: declarado. Producción: No verificado en despliegue.
-- Entidades: evaluacion, revision.
+- Entidades: evaluacion, revision, contacto_preparado.
 - Fuente de verdad: Sistema privado; detalle técnico restringido.
 - Evidencia: Integración pendiente de verificar.
 - Conexiones: CON-015 (GAS-EMD → SHEET-EMD).

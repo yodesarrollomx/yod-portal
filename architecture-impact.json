@@ -1,16 +1,17 @@
 {
-  "model_revision": "2026-10-01.12-ppp-interfaz",
-  "proposal_id": "CHG-PPP-UI-001",
+  "model_revision": "2026-10-01.13-emd-contactos",
+  "proposal_id": "CHG-EMD-CONTACTS-001",
   "components": [
-    "SYS-POTENCIALES",
-    "SYS-YOD-OS",
-    "SHEET-PPP-MODELOS",
-    "GAS-PORTERO"
+    "SYS-EMD",
+    "GAS-EMD",
+    "SHEET-EMD",
+    "SYS-YOD-OS"
   ],
-  "summary": "Registrar propuesta de interfaz del PPP vertical. Sin nuevas conexiones ni cambio del contrato financiero. SYS-YOD-OS se referencia por cabecera compartida; personalización limitada a PPP.",
+  "summary": "Registrar la preparación privada de contactos y recordatorios de EMD360: vista previa, validación, concurrencia e idempotencia; sin envío, enlaces personales, accesos nuevos ni lectura de respuestas.",
   "tests": [
+    "node scripts/arquitectura.cjs --validate",
     "node scripts/arquitectura.cjs --check",
-    "Regeneración de mapas y fichas; invariantes de contratos"
+    "Regeneración determinista de procesos, contratos, fichas, mapas e índice"
   ],
-  "rollback": "Revertir registro documental y regenerar vistas; preservar historia y registros privados."
+  "rollback": "Revertir el registro documental y regenerar vistas; no borrar contactos, respuestas, accesos ni otros registros privados."
 }
