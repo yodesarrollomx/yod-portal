@@ -11,13 +11,13 @@
 
 Los resultados reproducibles y su commit quedan registrados en GitHub Actions. Una comprobación verde valida los comandos de esa corrida; no acredita actividades ajenas a esos comandos.
 
-Se obtuvieron por API las versiones activas de Portero, Tesorería, Codesarrolladores, Alquimia, Catálogo, Obra, Plan de Potencial y CRM. Las implementaciones coinciden exactamente con las direcciones usadas por sus clientes. El [registro de verificación](backends-verificados.json) contiene versiones y hashes de fuente, sin identificadores privados ni código de servidor. Esto acredita fuente y versión, no pruebas de operaciones por rol. Portero tiene cambios adicionales en el editor que se conservaron sin desplegar.
+Se obtuvieron por API las versiones activas de Portero, Tesorería, Codesarrolladores, Alquimia, Catálogo, Obra, Plan de Potencial, CRM y Obra Cliente. Las implementaciones coinciden exactamente con las direcciones usadas por sus clientes. El [registro de verificación](backends-verificados.json) contiene versiones y hashes de fuente, sin identificadores privados ni código de servidor. Esto acredita fuente y versión, no pruebas de operaciones por rol. Portero tiene cambios adicionales en el editor que se conservaron sin desplegar.
 
 ## Pendiente para cerrar producción
 
-1. Completar el inventario de motores restantes y de scripts vinculados. La autenticación de Apps Script ya está concedida: se recuperaron las fuentes y versiones activas de ocho motores con identidad contrastada; el proyecto vinculado de Obra Cliente requiere su identificador exacto.
+1. Completar el inventario de motores restantes y de scripts vinculados. La autenticación de Apps Script ya está concedida: se recuperaron las fuentes y versiones activas de nueve motores con identidad contrastada; Obra Cliente ya está identificado y contrastado.
 2. Contrastar los motores de identidad, catálogo, finanzas y Obra con los clientes actuales. Los motores sin fuente accesible no se consideran auditados por estar referenciados en JavaScript.
-3. Aplicar y verificar la corrección preparada de Obra en el despliegue correcto mediante un escenario aislado. Los detalles se conservan en el registro restringido.
+3. Completar los recorridos funcionales de Obra por rol en un entorno aislado. La corrección acotada de Obra Cliente ya pasó diez escenarios sintéticos con los siete esquemas reales comprobados y se verificó su versión activa 2 por API, conservando implementación, URL y permisos. No se realizaron escrituras en hojas de producción.
 4. Conciliar privadamente registros financieros y referencias de bolsas antes de cualquier corrección. Un ID repetido no acredita un pago duplicado; no se eliminan movimientos por inferencia.
 5. Verificar inicio de sesión real y recorridos por rol en un entorno de prueba; confirmar que cada backend autoriza las operaciones. Ocultar una tarjeta en el navegador no sustituye autorización del servidor.
 6. Observar la primera corrida de los publicadores adaptados y confirmar recursos publicados antes de montar referencias en el motor. Las pruebas de publicación usan dobles y no disparan procesos operativos reales.
@@ -35,4 +35,4 @@ node verify-accesos.cjs
 node verify-obra-app.cjs
 ```
 
-Las pruebas reservadas del servidor Obra se mantienen fuera del árbol publicado hasta contrastar el despliegue. Los repositorios consumidores verifican impacto contra una versión inmutable del atlas. Sus pruebas funcionales propias se ejecutan además del control de arquitectura.
+Las diez pruebas sintéticas de Obra Cliente acompañan ahora la fuente corregida, después de contrastar y verificar el despliegue. Los repositorios consumidores verifican impacto contra una versión inmutable del atlas. Sus pruebas funcionales propias se ejecutan además del control de arquitectura.

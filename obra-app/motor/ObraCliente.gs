@@ -45,11 +45,12 @@ function hoja_(nombre){
 }
 function filas_(nombre){
   var v = hoja_(nombre).getDataRange().getValues(), h = v.shift() || [];
-  return v.filter(function(r){ return r.join('') !== ''; }).map(function(r, i){
+  return v.map(function(r, i){
+    if (r.join('') === '') return null;
     var o = { _fila: i + 2 };
     h.forEach(function(k, j){ var x = r[j]; o[k] = (x instanceof Date) ? Utilities.formatDate(x,'America/Hermosillo','yyyy-MM-dd') : x; });
     return o;
-  });
+  }).filter(function(r){ return r !== null; });
 }
 function agrega_(nombre, o){
   var cols = HOJAS[nombre];
@@ -99,8 +100,9 @@ function puedeVer_(s, folio, unidad){
 function autoriza_(s){
   if (!s) return false;
   if (s.rol === 'admin') return true;
-  var l = low_(config_().AUTORIZA_CORREOS).split(/[,; ]+/);
-  return l.indexOf(s.correo) >= 0;
+  var correo = low_(s.correo); if (!correo) return false;
+  var l = low_(config_().AUTORIZA_CORREOS).split(/[,; ]+/).filter(function(c){ return c !== ''; });
+  return l.indexOf(correo) >= 0;
 }
 
 /* ── el motor de obra, leído con la credencial de servicio ── */
@@ -197,6 +199,7 @@ function accion_(s, b){
       if (!puedeVer_(s, folio, unidad)) return { ok: false, error: 'sin acceso' };
       var pg = filas_('PAGOS').find(function(x){ return x.id === b.id && x.folio === folio && String(x.unidad) === unidad; });
       if (!pg) return { ok: false, error: 'no existe' };
+      if (String(pg.estado).trim().toUpperCase() === 'RECIBIDO') return { ok: false, error: 'El pago ya está recibido.' };
       cambia_('PAGOS', pg._fila, { estado: 'AVISADO', comprobante: String(b.comprobante || ''), metodo: String(b.metodo || 'SPEI') });
       return { ok: true };
     case 'pago':

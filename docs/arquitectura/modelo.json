@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-09-30.3",
+  "revision": "2026-09-30.5",
   "checked_at": "2026-09-30",
   "priorities": [
     "vender_mas",
@@ -8,7 +8,7 @@
     "cobrar_antes"
   ],
   "coverage": {
-    "summary": "Inventario de 20 repositorios; fuentes y versiones activas de ocho motores contrastadas mediante API y coincidencia exacta con endpoints. Auditoría funcional de producción abierta.",
+    "summary": "Inventario de 20 repositorios; fuentes y versiones activas de nueve motores contrastadas por API. Corrección acotada del módulo cliente de Obra desplegada y verificada; auditoría funcional de producción abierta.",
     "production_verified": false,
     "limitations": [
       "No se ha comprobado la versión activa de todos los Apps Script",
@@ -235,7 +235,9 @@
         "variable_calculo",
         "flujo_proyectado"
       ],
-      "risks_sanitized": [],
+      "risks_sanitized": [
+        "Migración autorizada a fórmulas nativas por caso; frontend preparado en PR, todavía sin publicar. Los casos no migrados conservan cálculo cliente."
+      ],
       "source_of_truth": "SHEET-PORTERO para casos; modelos de cálculo del frontend; fuente GAS desplegada por verificar",
       "status": "codigo",
       "runtime_status": "No verificado en despliegue"
@@ -1735,6 +1737,13 @@
           "claim": "Tipo de fuente disponible: fuente_repositorio_despliegue_no_verificado",
           "status": "codigo",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/backends-verificados.json",
+          "claim": "Versión activa 2 contrastada con la implementación existente y el cliente; siete esquemas reales verificados y diez pruebas sintéticas aprobadas.",
+          "status": "codigo",
+          "source_revision": "Apps Script version 2"
         }
       ],
       "data_entities": [
@@ -1743,12 +1752,12 @@
         "cliente_unidad"
       ],
       "risks_sanitized": [
-        "Código desplegado y permisos reales no contrastados"
+        "Permisos por operación y recorridos por rol pendientes de prueba"
       ],
-      "backend_source_status": "fuente_repositorio_despliegue_no_verificado",
-      "source_of_truth": "Fuente de GitHub; despliegue y datos reales por verificar",
+      "backend_source_status": "fuente_api_version_activa_contrastada",
+      "source_of_truth": "Fuente de Apps Script versión 2 y libro vinculado con encabezados verificados; las hojas conservan los datos operativos.",
       "status": "codigo",
-      "runtime_status": "No verificado en despliegue"
+      "runtime_status": "Versión 2 activa verificada por API. Diez pruebas aisladas con esquema real; operaciones de negocio en producción no ejecutadas."
     },
     {
       "id": "SHEET-OBRA-CLIENTE",
@@ -2378,6 +2387,41 @@
       "source_of_truth": "Configuración de reglas/motores y código de ejecución; ejecución viva pendiente",
       "status": "codigo",
       "runtime_status": "No verificado en despliegue"
+    },
+    {
+      "id": "SHEET-PPP-MODELOS",
+      "nombre": "PPP · Libros de cálculo por caso",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/potenciales-yod",
+      "proposito": "Conservar entradas, fórmulas nativas, versiones, flujos y datos de diagramas del mismo modelo por caso",
+      "dominio": "Ventas",
+      "owner_role": "Dirección / propietario del libro",
+      "status": "ejecucion",
+      "runtime_status": "Modelo piloto leído y conciliado en Sheets; conexión pública y migración general pendientes",
+      "evidence": [
+        {
+          "claim": "Lectura directa autorizada de un libro piloto; fórmulas nativas y versiones contrastadas. Evidencia detallada en registro operativo privado, sin publicar identificadores ni cifras.",
+          "status": "ejecucion",
+          "source_revision": "2026-09-30"
+        }
+      ],
+      "data_entities": [
+        "caso",
+        "version",
+        "entrada",
+        "formula",
+        "flujo",
+        "geometria",
+        "etapa",
+        "fuente",
+        "revision",
+        "cambio"
+      ],
+      "risks_sanitized": [
+        "La existencia del libro no acredita la conexión pública del tablero",
+        "Faltan otros motores, nuevas altas y flujos completos de operación y etapas"
+      ],
+      "source_of_truth": "Libro privado por caso registrado en SHEET-PORTERO; entradas y fórmulas canónicas. El tablero transporta y presenta resultados; no replica un motor financiero."
     }
   ],
   "connections": [
@@ -4092,6 +4136,54 @@
       "status": "codigo",
       "runtime_verified": false,
       "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+    },
+    {
+      "id": "CON-PPP-MODELO",
+      "from": "GAS-PORTERO",
+      "to": "SHEET-PPP-MODELOS",
+      "label": "Lee resultados nativos; escribe cantidades permitidas",
+      "kind": "persistencia",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "Transporte preparado y probado con dobles; lectura del piloto desde editor verificada; implementación pública no actualizada.",
+          "status": "declarado"
+        }
+      ],
+      "contract": "Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente."
+    },
+    {
+      "id": "CON-PPP-REGISTRO",
+      "from": "SHEET-PORTERO",
+      "to": "SHEET-PPP-MODELOS",
+      "label": "Registra caso, libro, carpeta y revisión del modelo",
+      "kind": "registro",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "Registro del piloto creado; organización y generación para todos los casos pendientes.",
+          "status": "declarado"
+        }
+      ],
+      "contract": "IDs estables; un libro por caso y hoja por versión; no sustituir historial ni compartir archivos por efecto de registrar un enlace."
+    },
+    {
+      "id": "CON-PPP-AUDITORIA",
+      "from": "GAS-PORTERO",
+      "to": "SYS-CONTROL",
+      "label": "Registra antes, después, actor y siguiente paso",
+      "kind": "auditoria",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "Registro operativo privado actualizado; transporte auditado con dobles; activadores y despliegue público pendientes.",
+          "status": "declarado"
+        }
+      ],
+      "contract": "Auditoría en libro y Control Maestro con actor autenticado, entidad, versión, revisión, campo/rango, fuente y validación. No inventar valores previos ausentes ni declarar publicada una operación no confirmada."
     }
   ],
   "processes": [
@@ -5490,6 +5582,48 @@
         "Permisos de repositorios y Apps Script",
         "Cerrar los vacíos de evidencia registrados"
       ]
+    },
+    {
+      "id": "PPP",
+      "titulo": "Unificar tablero y fórmulas de potencial en Sheets",
+      "boards": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SYS-CONTROL"
+      ],
+      "problem": "Entradas y escenarios se guardan en Sheets mientras los motores HTML calculan; una lectura de cada superficie puede reflejar motores distintos.",
+      "benefit": "Una sola fuente de cálculo, versiones trazables y resultados comparables para venta, renta y lotificación.",
+      "metric": "Cobertura de libros; igualdad de cantidades/resultados/flujos por revisión; escrituras con auditoría y rechazos de conflicto.",
+      "dependencies": [],
+      "effort": "L",
+      "decision": "aprobada",
+      "approval": {
+        "fecha": "2026-09-30",
+        "rol": "Dirección",
+        "alcance": "Instrucción explícita de mantener datos y fórmulas en Sheets, conectar tableros, preservar versiones y registrar cambios; autorización posterior para continuar con todo el trabajo."
+      },
+      "tasks": [
+        "Mapear y validar fórmulas nativas de cada motor con escenarios conservados",
+        "Registrar libro/carpeta por caso y proteger fórmulas para propietario",
+        "Conectar cantidades, resultados, versiones y diagramas con revisión esperada",
+        "Completar flujos operativos y por etapas sin inventar datos ausentes",
+        "Integrar casos existentes y fábrica de altas",
+        "Auditar escrituras y ediciones directas; resolver conflicto sin sobrescribir"
+      ],
+      "acceptance": [
+        "Leer tablero o Sheets da los mismos resultados y revisión",
+        "Cambiar cantidad actualiza fórmulas nativas; ninguna fórmula financiera paralela en cliente/servidor",
+        "No mostrar datos locales como sincronizados ni confirmar una escritura fallida",
+        "Cada versión conserva identidad, fuente e historial; datos faltantes permanecen pendientes"
+      ],
+      "prerequisites": [
+        "Backend vivo contrastado y pruebas aisladas",
+        "Integrar propuesta central y fijar commit del atlas antes de integrar frontend",
+        "Actualizar únicamente implementación existente después de frontend compatible",
+        "Registrar despliegue y verificar conexión pública por separado del modelo nativo"
+      ]
     }
   ],
   "changes": [
@@ -5615,11 +5749,13 @@
         "SHEET-OBRA-CLIENTE"
       ],
       "proposal": "Fortalecer invariantes de autorización, direccionamiento de registros y transiciones de pago; detalles en registro privado.",
-      "status": "pendiente_acceso",
+      "status": "publicado",
       "tests": [
-        "Pruebas sintéticas de servidor con dobles de hojas"
+        "Diez escenarios de coordenadas de filas, autorización y conservación de pagos recibidos con datos sintéticos",
+        "Siete encabezados del libro real coinciden con HOJAS",
+        "Fuente de versión 2, deployment ID y permisos comprobados por API"
       ],
-      "deployment": "Corrección preparada localmente; requiere contrastar y actualizar Apps Script activo"
+      "deployment": "GAS-OBRA-CLIENTE actualizado de versión 1 a 2 en la misma implementación, con endpoint y permisos conservados. Fuente activa verificada por API; reversión a versión 1 disponible. No se modificaron celdas operativas."
     },
     {
       "id": "CHG-FLUJO-001",
@@ -5683,6 +5819,26 @@
       "deployment": "Solo documentación pública; no modifica Apps Script ni registros de negocio."
     },
     {
+      "id": "CHG-PPP-SHEETS-001",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SYS-CONTROL"
+      ],
+      "proposal": "Migrar PPP a libros privados con fórmulas nativas y versiones por caso; transporte de cantidades con autorización/revisión, diagramas desde el mismo modelo y auditoría coordinada. Autorización explícita de Dirección registrada en propuesta PPP.",
+      "status": "implementado_local",
+      "tests": [
+        "Comparación de ocho escenarios del piloto con fórmulas nativas",
+        "Diez pruebas con dobles de transporte/autorización/revisión/rechazo/recuperación",
+        "Cinco pruebas de interfaz de fuente nativa y desconexión",
+        "Lectura real del modelo y ruta desde editor; sin POST de prueba en producción",
+        "Validación de esquema, referencias y regeneración de vistas del atlas"
+      ],
+      "deployment": "Frontend preparado en potenciales-yod PR3, sin integrar; backend candidato privado no desplegado. Modelo piloto nativo validado; activador de trazabilidad, interfaz pública y migración general pendientes."
+    },
+    {
       "id": "CHG-EMD-UI-001",
       "components": [
         "SYS-YOD-OS",
@@ -5690,11 +5846,12 @@
         "GAS-EMD",
         "SHEET-EMD"
       ],
-      "proposal": "Registrar en el atlas la interfaz compacta de evaluación: lista propia por persona, siete etapas y confirmación de guardado/avance del servidor; chinches desde el enlace personal. Mantener los 28 textos, escala admitida, asignaciones, permisos, control de conflictos y fuente de verdad privada; sin nuevas conexiones ni migraciones.",
+      "proposal": "Registrar en el atlas la interfaz compacta de evaluación: lista propia por persona, siete etapas y confirmación de guardado/avance del servidor; chinches desde el enlace personal. Mantener los 28 textos, escala admitida, asignaciones, permisos, control de conflictos y fuente de verdad privada; sin nuevas conexiones ni migraciones. Corregir recuperación de cierre pendiente y foco/avisos accesibles sin cambiar el servidor.",
       "status": "implementado_local",
       "tests": [
-        "67 pruebas sintéticas de lógica/importador del portal; no corresponden a participantes humanos",
-        "Recorrido Chromium sintético: 320/390 px, teclado, guardado, chinches, cierre y recarga",
+        "70 pruebas sintéticas de lógica/importador del portal; no corresponden a participantes humanos",
+        "Regresiones de cierre rechazado/ACK perdido, cierre remoto y conservación de respuestas",
+        "Chromium sintético: 320/390 px, navegación por teclado, foco tras autosave, diálogo, guardado, chinches, cierre y recarga",
         "Validación del modelo, vistas deterministas e impacto contra el commit exacto del atlas"
       ],
       "deployment": "Registro y frontend preparados en ramas/PR separados; no acredita integración o publicación. Publicar exige preservar la implementación y datos existentes, verificar el recorrido publicado y otro dispositivo. Reversión por revisión del commit de interfaz y referencia de atlas; no restaurar ni borrar registros privados."
@@ -5840,6 +5997,42 @@
         "Un system_id identifica el sistema; resolver alias de portal explícitamente",
         "El catálogo no concede permisos de backend",
         "Dependencias institucionales de Sheets no equivalen al grafo de software"
+      ]
+    },
+    {
+      "id": "CTR-PPP-SHEETS",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SYS-CONTROL"
+      ],
+      "source": "Decisión explícita de Dirección y contrato público de cálculo nativo; pruebas aisladas y lectura de piloto documentadas en registro privado.",
+      "input": [
+        "caso_id",
+        "escenario_id",
+        "campos de cantidad permitidos",
+        "revision_esperada",
+        "request_id",
+        "actor autenticado"
+      ],
+      "output": [
+        "revision",
+        "versión activa",
+        "entradas canónicas",
+        "resultados calculados",
+        "flujo mensual",
+        "geometría y etapas",
+        "fuentes y auditoría"
+      ],
+      "invariants": [
+        "Datos y fórmulas viven en el libro privado por caso; no mantener motor financiero paralelo",
+        "Las fórmulas están protegidas para propietario; AI actúa con su autorización y registra cambios",
+        "Servidor resuelve el destino y verifica permisos, límites y revisión antes de escribir",
+        "Una respuesta pendiente, conflicto o desconexión conserva el último dato confirmado con estado explícito",
+        "Auditar antes/después y no marcar producción comprobada sin lectura pública final",
+        "No modificar Portero ni crear otra implementación; conservar contratos y URL existentes"
       ]
     }
   ],
@@ -6048,6 +6241,13 @@
       "prefix": "tablero.html",
       "components": [
         "SYS-YOD-OS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/obra-cliente.test.cjs",
+      "components": [
+        "GAS-OBRA-CLIENTE"
       ]
     }
   ]
