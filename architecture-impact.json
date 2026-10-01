@@ -1,17 +1,18 @@
 {
-  "model_revision": "2026-09-30.5",
-  "proposal_id": "CHG-EMD-UI-001",
+  "model_revision": "2026-10-01.1",
+  "proposal_id": "CHG-PPP-FRONT-001",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-EMD",
-    "GAS-EMD",
-    "SHEET-EMD"
+    "SYS-POTENCIALES",
+    "GAS-PORTERO",
+    "SHEET-PORTERO",
+    "SHEET-PPP-MODELOS",
+    "SYS-CONTROL"
   ],
-  "summary": "Registrar la propuesta de interfaz compacta EMD y regenerar las vistas del atlas sin cambiar conexiones, permisos, contratos ni estados de producción.",
+  "summary": "Registrar frontend PPP publicado y programa/flujo por cuerpos nativos; conservar cambios concurrentes de revisión2026-09-30.5 y límites de backend pendiente.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "node --test tests/arquitectura.test.cjs",
-    "Comprobación de impacto de documentación con propuesta registrada"
+    "Preservación de cambios concurrentes y referencias de evidencia",
+    "Verificación documental de impacto"
   ],
-  "rollback": "Revertir mediante revisión este registro y sus vistas; conservar datos y despliegues privados. Coordinar la referencia fija de atlas del portal antes de integrar."
+  "rollback": "Revertir esta actualización documental y regenerar vistas; no cambiar backends, permisos, libros ni otros estados verificados."
 }
