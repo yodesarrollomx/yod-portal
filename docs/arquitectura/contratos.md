@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.20-emd-directory · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.21-ppp-identidad-graficas · 2026-10-01.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.20-emd-directory",
+  "revision": "2026-10-01.21-ppp-identidad-graficas",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -6644,6 +6644,24 @@
         "HEAD exacto y CI, respaldo antes de publicar, fuente/versión y recorrido real sin preguntas humanas"
       ],
       "deployment": "Propuesta autorizada; no acredita publicación. Padrón nominal privado fuera de Git. Reversión de código conserva directorio y datos de negocio."
+    },
+    {
+      "id": "CHG-PPP-LECTURA-002",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Cambio autorizado: abrir el proyecto solicitado sin depender del catálogo, conservar identidad y versión visibles, presentar carga/error/reintento sin sustituir datos por referencias; gráficas específicas de capacidad, ingresos, costos, deuda mensual y dotaciones basadas en el estado confirmado. Mantener controles, datos, contratos y motor existente; faltantes explícitos, escalas y unidades visibles, animación reducida accesible.",
+      "status": "implementado_local",
+      "tests": [
+        "27 pruebas unitarias PPP aprobadas: entradas, motor original, resultados, lectura nativa, concurrencia de selección y timeout.",
+        "Chromium/WebKit: carga directa con catálogo fallido, proyecto demorado, error, modelo ausente y reintento, copia con cantidades pendientes; sin POST de negocio.",
+        "Cinco gráficas específicas con escalas, composición, deuda mensual y reservas; acceso a cuerpos/etapas/rentas y flujo, 81 controles y 40 KPI conservados.",
+        "Regresiones de interfaz, mapa/catálogo, acceso, tamaño 320/390/430/1280 y movimiento reducido; atlas y verificadores aprobados."
+      ],
+      "deployment": "Implementar en rama, integrar por PR y comparar archivos publicados. Revertir frontend y referencia fija mediante PR; no tocar libros ni registros privados."
     }
   ],
   "data_contracts": [
