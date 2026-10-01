@@ -1,16 +1,17 @@
 {
-  "model_revision": "2026-10-01.19-ppp-mapa-catalogo",
-  "proposal_id": "CHG-PPP-MAPA-001",
+  "model_revision": "2026-10-01.20-emd-directory",
+  "proposal_id": "CHG-EMD-DIRECTORY-001",
   "components": [
-    "SYS-POTENCIALES",
-    "SYS-YOD-OS",
-    "GAS-PORTERO"
+    "SYS-EMD",
+    "GAS-EMD",
+    "SHEET-EMD",
+    "SYS-YOD-OS"
   ],
-  "summary": "Registrar corrección PPP de mapa, sidebar y catálogo con pruebas locales aprobadas; mismas conexiones y contratos. Implementación limitada al repositorio PPP.",
+  "summary": "Propuesta de padrón privado verificado para cargos y organigrama de coordinación, sin datos personales en el atlas.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
     "node verify-os.cjs; node verify-portal.cjs; node verify-accesos.cjs; node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir propuesta y regenerar vistas mediante PR; no tocar registros privados."
+  "rollback": "Revertir propuesta y regenerar vistas mediante PR; no modificar datos privados."
 }
