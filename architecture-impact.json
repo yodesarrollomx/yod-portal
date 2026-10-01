@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-01.15-emd-profile-auto-align",
+  "model_revision": "2026-10-01.16-emd-profile-jpeg",
   "proposal_id": "CHG-EMD-PROFILES-001",
   "components": [
     "SYS-EMD",
@@ -7,12 +7,12 @@
     "SHEET-EMD",
     "SYS-YOD-OS"
   ],
-  "summary": "Registrar la alineación local y opcional de un solo rostro como mejora progresiva de perfiles EMD360, sin carga externa, sin cambiar persistencia o permisos y conservando el recorte manual cuando la API no exista o el resultado sea ambiguo.",
+  "summary": "Normalizar el recorte fotográfico con un codificador JPEG baseline local incorporado, preservando servidor estricto y sin foto ni datos privados en atlas público.",
   "tests": [
     "node scripts/arquitectura.cjs --validate",
     "node scripts/arquitectura.cjs --check",
-    "Regeneración determinista de procesos, contratos, fichas, mapas e índice",
-    "Pruebas sintéticas móvil/escritorio: un rostro, cero/varios rostros, error y resultado tardío conservan el recorte manual y permiten cerrar"
+    "Regeneración determinista del atlas",
+    "Pruebas sintéticas de codificación, guardado y reintento en Chromium/WebKit Linux, distinguiendo Safari físico"
   ],
-  "rollback": "Revertir el registro documental y regenerar vistas; no borrar fotos, perfiles, respuestas, accesos ni otros registros privados."
+  "rollback": "Revertir el cambio documental y regenerar; revertir solo cliente privado sin borrar fotos, metadatos, respuestas o accesos."
 }

@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.15-emd-profile-auto-align · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.16-emd-profile-jpeg · 2026-10-01.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
@@ -375,7 +375,7 @@ flowchart TD
 
 | Paso | Responsable | Componentes | Entrada → salida | Ejecución |
 |---|---|---|---|---|
-| 1. Elegir y recortar foto propia | Participante | SYS-EMD | Imagen local elegida por la persona → Imagen normalizada sin EXIF y recorte manual | manual |
+| 1. Elegir y recortar foto propia | Participante | SYS-EMD | Imagen local elegida por la persona → Recorte sRGB convertido localmente a JPEG baseline sin metadatos personales; alineación progresiva y ajuste manual disponibles | manual |
 | 2. Validar y guardar perfil | Backend autorizado | GAS-EMD, SHEET-EMD, EXT-DRIVE | Imagen validable, revisión e identificador de mutación → Archivo privado y metadatos mínimos con confirmación | pendiente |
 | 3. Consultar foto autorizada | Participante asignado o revisor | SYS-EMD, GAS-EMD, EXT-DRIVE | Sesión y relación autorizadas → Imagen permitida o perfil sin foto | pendiente |
 | 4. Representar avance confirmado | Interfaz | SYS-EMD | Perfil autorizado o silueta y estado confirmado ya disponible → Retrato gris, en proceso o completo con texto y foco accesibles | automatico |
