@@ -1,19 +1,16 @@
 {
-  "model_revision": "2026-10-01.18-emd-profile-cards",
-  "proposal_id": "CHG-EMD-PROFILE-CARDS-001",
+  "model_revision": "2026-10-01.19-ppp-mapa-catalogo",
+  "proposal_id": "CHG-PPP-MAPA-001",
   "components": [
-    "SYS-EMD",
-    "GAS-EMD",
-    "SHEET-EMD",
-    "EXT-DRIVE",
-    "SYS-YOD-OS"
+    "SYS-POTENCIALES",
+    "SYS-YOD-OS",
+    "GAS-PORTERO"
   ],
-  "summary": "Proponer tarjetas simplificadas y derivados internos PNG estrictos; conservar originalJPEG, publicación privada CAS/ACL y todos los contratos existentes. SYS-YOD-OS solo documental.",
+  "summary": "Registrar corrección PPP de mapa, sidebar y catálogo con pruebas locales aprobadas; mismas conexiones y contratos. Implementación limitada al repositorio PPP.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "Privacidad y preservación de contratos/IDs",
-    "Vistas deterministas y CI del HEAD exacto"
+    "node --test tests/*.cjs",
+    "node verify-os.cjs; node verify-portal.cjs; node verify-accesos.cjs; node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir actualización documental y regenerar vistas. Reversión privada solo de código conserva fotos y respuestas, sin exponer originales."
+  "rollback": "Revertir propuesta y regenerar vistas mediante PR; no tocar registros privados."
 }
-
