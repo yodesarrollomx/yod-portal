@@ -252,7 +252,7 @@
       "risks_sanitized": [
         "Backend de transporte v53 publicado en implementación existente. GET de caso y lista contrastados con el mismo libro y revisión; edición en pantalla y demás casos pendientes. Los casos no migrados conservan cálculo cliente."
       ],
-      "source_of_truth": "SHEET-PORTERO para casos; modelos de cálculo del frontend; fuente GAS desplegada por verificar",
+      "source_of_truth": "SHEET-PORTERO registra casos; libro canónico Sheets para el piloto con lectura pública verificada en v53. Los casos pendientes de migrar aún usan modelos del frontend.",
       "status": "codigo",
       "runtime_status": "Frontend publicado y lectura pública del piloto conciliada con Sheets; sesión de pantalla y recorrido de edición aún pendientes"
     },

@@ -21,7 +21,7 @@ Evaluar alternativas y escenarios de desarrollo
 - Tipo: tablero. Dominio: Ventas. Responsable: Desarrollo y Comercial.
 - Evidencia: codigo. Producción: Frontend publicado y lectura pública del piloto conciliada con Sheets; sesión de pantalla y recorrido de edición aún pendientes.
 - Entidades: caso, escenario, variable_calculo, flujo_proyectado.
-- Fuente de verdad: SHEET-PORTERO para casos; modelos de cálculo del frontend; fuente GAS desplegada por verificar.
+- Fuente de verdad: SHEET-PORTERO registra casos; libro canónico Sheets para el piloto con lectura pública verificada en v53. Los casos pendientes de migrar aún usan modelos del frontend..
 - Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L17) — Sistema presente en el catálogo canónico; [potenciales-yod/mixto.html](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/mixto.html) — Frontend integrado por PR3 y publicado por Pages; código público incluye lectura del modelo nativo, cuerpos y flujo por etapas. Sesión y backend pendientes de verificación conjunta.; Lectura pública del caso y la lista del piloto comparadas con entradas, resultados, cuerpos y flujo nativos; coinciden. Evidencia operativa privada; no se ejecutaron POST de prueba..
 - Conexiones: CON-019 (SYS-POTENCIALES → GAS-PORTERO); CON-034 (SYS-YOD-OS → SYS-POTENCIALES).
 - Mejoras: C · Cotización, plan y siguiente paso comercial; PPP · Unificar tablero y fórmulas de potencial en Sheets.
