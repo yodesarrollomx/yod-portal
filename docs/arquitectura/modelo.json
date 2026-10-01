@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.9-emd-timing",
+  "revision": "2026-10-01.10-emd-profiles",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -4342,6 +4342,23 @@
         }
       ],
       "contract": "CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada."
+    },
+    {
+      "id": "CON-EMD-PROFILES-DRIVE",
+      "from": "GAS-EMD",
+      "to": "EXT-DRIVE",
+      "label": "Propuesta: fotos privadas de perfil",
+      "kind": "persistencia",
+      "evidence": [
+        {
+          "claim": "Propuesta registrada; implementación y despliegue privados pendientes de pruebas",
+          "status": "propuesto"
+        }
+      ],
+      "status": "propuesto",
+      "runtime_verified": false,
+      "restricted_evidence_omitted": true,
+      "contract": "CTR-EMD-PROFILES: carpeta dedicada privada, carga y retirada propias, lectura autorizada y confirmación por revisión/mutación; sin nuevas autorizaciones OAuth."
     }
   ],
   "processes": [
@@ -5351,6 +5368,71 @@
           "source_revision": "HEAD_baseline"
         }
       ]
+    },
+    {
+      "id": "PROC-EMD-PROFILES",
+      "nombre": "Perfil fotográfico privado de evaluación",
+      "status": "propuesto",
+      "steps": [
+        {
+          "label": "Elegir y recortar foto propia",
+          "role": "Participante",
+          "components": [
+            "SYS-EMD"
+          ],
+          "input": "Imagen local elegida por la persona",
+          "output": "Imagen normalizada sin EXIF y recorte manual",
+          "mode": "manual"
+        },
+        {
+          "label": "Validar y guardar perfil",
+          "role": "Backend autorizado",
+          "components": [
+            "GAS-EMD",
+            "SHEET-EMD",
+            "EXT-DRIVE"
+          ],
+          "input": "Imagen validable, revisión e identificador de mutación",
+          "output": "Archivo privado y metadatos mínimos con confirmación",
+          "mode": "pendiente"
+        },
+        {
+          "label": "Consultar foto autorizada",
+          "role": "Participante asignado o revisor",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "EXT-DRIVE"
+          ],
+          "input": "Sesión y relación autorizadas",
+          "output": "Imagen permitida o perfil sin foto",
+          "mode": "pendiente"
+        },
+        {
+          "label": "Quitar foto propia",
+          "role": "Participante",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD",
+            "EXT-DRIVE"
+          ],
+          "input": "Revisión vigente y mutación propia",
+          "output": "Perfil sin foto confirmado, con reintento seguro",
+          "mode": "manual"
+        }
+      ],
+      "manual_gaps": [
+        "Selección y recorte requieren decisión de la persona",
+        "Uniformar fondo y altura de ojos automáticamente no está implementado ni aprobado mediante un proveedor externo",
+        "Pruebas aisladas, respaldo y publicación privada pendientes; el atlas no contiene fotos ni metadatos personales"
+      ],
+      "evidence": [
+        {
+          "claim": "Proceso propuesto; no acredita operación publicada",
+          "status": "propuesto"
+        }
+      ]
     }
   ],
   "proposals": [
@@ -6200,6 +6282,28 @@
         "Respaldo y comprobación de versión existente antes de publicar; no escribir respuestas humanas de prueba"
       ],
       "deployment": "Propuesta de alcance; no acredita implementación ni publicación. Requiere pruebas del HEAD exacto y verificación aislada de persistencia antes de activar. Rollback del código preserva registros privados."
+    },
+    {
+      "id": "CHG-EMD-PROFILES-001",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "EXT-DRIVE",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Proponer perfil fotográfico propio con identidad canónica autorizada, recorte manual y normalización local; persistencia privada de imágenes y metadatos mínimos, lectura limitada a personas asignadas o revisión autorizada. Preservar contratos de evaluación y permisos existentes. SYS-YOD-OS participa solo por documentación del atlas, sin modificar su cabina.",
+      "status": "propuesto",
+      "tests": [
+        "Dobles aislados: identidad canónica y legado compatible; rechazo de escritura ajena y lectura sin asignación",
+        "Validación de MIME, firma, tamaño y carpeta privada; rechazo de destinos compartidos",
+        "Revisión optimista, identificador de mutación, repetición exacta y confirmación perdida; conservación ante fallo parcial",
+        "Normalización y recorte manual en móvil y escritorio, sin EXIF ni servicios terceros",
+        "Regresiones de acceso, 28 preguntas, escala, matriz y asignaciones sin cambios",
+        "Comprobaciones del atlas y pruebas del HEAD exacto antes de publicación privada",
+        "Fallos separados de Drive/metadatos y ACK perdido: preservar versión confirmada y documentar huérfanos"
+      ],
+      "deployment": "Propuesta previa a implementación; no acredita publicación. Respaldo privado y contraste de la implementación existente antes de activar. Reversión solo de código preserva fotos, metadatos, respuestas y permisos; no restaurar datos antiguos ni borrar archivos como parte del rollback. Uniformar fondo y altura de ojos automáticamente sigue pendiente."
     }
   ],
   "data_contracts": [
@@ -6504,6 +6608,39 @@
         "El cliente solo inicia medición cuando el servidor declara instrumentación compatible; QA no habilita instrumentación",
         "La estimación exige al menos cinco cuestionarios completos de tres evaluadores de una misma campaña",
         "Los reintentos validan la misma secuencia, acumulado y flags de cierre/pausa; no mezclan solicitudes diferentes"
+      ]
+    },
+    {
+      "id": "CTR-EMD-PROFILES",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "EXT-DRIVE"
+      ],
+      "source": "Propuesta del sistema privado; detalles físicos y evidencia restringidos al repositorio privado.",
+      "input": [
+        "Sesión autorizada e identidad canónica propia",
+        "JPEG normalizado localmente a 512 × 512 píxeles, máximo 256 KiB, con recorte manual",
+        "Revisión esperada e identificador de mutación",
+        "Consulta de hasta 30 asignaciones autorizadas por solicitud"
+      ],
+      "output": [
+        "Confirmación de revisión y mutación sin exponer ubicación privada",
+        "Imagen autenticada en memoria, sin URL de Drive, o perfil sin foto",
+        "Conflicto o error explícito que conserva el estado confirmado"
+      ],
+      "invariants": [
+        "Carga y retirada derivan propietario de la identidad canónica del servidor, incluida compatibilidad de acceso legado; no aceptar identidad del cliente ni inventar personas o cargos",
+        "Lectura de evaluador y evaluado solo para asignaciones propias autorizadas; revisor limitado a asignaciones activas y QA separado, sin leer respuestas",
+        "Carpeta dedicada dentro de carpeta existente, ambas privadas y sin editores/lectores explícitos; verificar también privacidad del archivo y rechazar destinos compartidos",
+        "Pestaña privada de perfiles con identidad, archivo, revisión, mutación, digest, MIME, bytes y actualización; nunca guardar base64 en metadatos ni mezclar respuestas",
+        "Servidor valida JPEG baseline, firma, dimensiones, cierre y máximo de 256 KiB; rechaza EXIF, comentarios y segmentos no permitidos tras normalización local",
+        "No integrar proveedores terceros ni prometer normalización automática de fondo o altura de ojos",
+        "Revisión, mutación y digest deben coincidir para repetir resultado; conflicto o ACK inválido conserva el estado confirmado y no anuncia éxito",
+        "Conservar implementación, URL, roles, 28 preguntas, escala, matriz y asignaciones; reutilizar autorización Drive existente",
+        "La reversión de código no borra ni restaura datos de perfil o evaluación",
+        "Drive y metadatos no forman una transacción atómica: preservar foto anterior hasta confirmación y documentar recuperación de escrituras parciales y archivos huérfanos"
       ]
     }
   ],

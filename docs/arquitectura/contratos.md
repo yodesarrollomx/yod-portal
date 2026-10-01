@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.9-emd-timing · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.10-emd-profiles · 2026-10-01.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -132,3 +132,21 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - El cliente solo inicia medición cuando el servidor declara instrumentación compatible; QA no habilita instrumentación
 - La estimación exige al menos cinco cuestionarios completos de tres evaluadores de una misma campaña
 - Los reintentos validan la misma secuencia, acumulado y flags de cierre/pausa; no mezclan solicitudes diferentes
+
+## CTR-EMD-PROFILES
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD, EXT-DRIVE.
+- Evidencia: Propuesta del sistema privado; detalles físicos y evidencia restringidos al repositorio privado..
+- Entrada/campos: `Sesión autorizada e identidad canónica propia`, `JPEG normalizado localmente a 512 × 512 píxeles, máximo 256 KiB, con recorte manual`, `Revisión esperada e identificador de mutación`, `Consulta de hasta 30 asignaciones autorizadas por solicitud`.
+- Salida: Confirmación de revisión y mutación sin exponer ubicación privada, Imagen autenticada en memoria, sin URL de Drive, o perfil sin foto, Conflicto o error explícito que conserva el estado confirmado.
+
+- Carga y retirada derivan propietario de la identidad canónica del servidor, incluida compatibilidad de acceso legado; no aceptar identidad del cliente ni inventar personas o cargos
+- Lectura de evaluador y evaluado solo para asignaciones propias autorizadas; revisor limitado a asignaciones activas y QA separado, sin leer respuestas
+- Carpeta dedicada dentro de carpeta existente, ambas privadas y sin editores/lectores explícitos; verificar también privacidad del archivo y rechazar destinos compartidos
+- Pestaña privada de perfiles con identidad, archivo, revisión, mutación, digest, MIME, bytes y actualización; nunca guardar base64 en metadatos ni mezclar respuestas
+- Servidor valida JPEG baseline, firma, dimensiones, cierre y máximo de 256 KiB; rechaza EXIF, comentarios y segmentos no permitidos tras normalización local
+- No integrar proveedores terceros ni prometer normalización automática de fondo o altura de ojos
+- Revisión, mutación y digest deben coincidir para repetir resultado; conflicto o ACK inválido conserva el estado confirmado y no anuncia éxito
+- Conservar implementación, URL, roles, 28 preguntas, escala, matriz y asignaciones; reutilizar autorización Drive existente
+- La reversión de código no borra ni restaura datos de perfil o evaluación
+- Drive y metadatos no forman una transacción atómica: preservar foto anterior hasta confirmación y documentar recuperación de escrituras parciales y archivos huérfanos

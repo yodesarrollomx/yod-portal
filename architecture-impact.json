@@ -1,18 +1,20 @@
 {
-  "model_revision": "2026-10-01.9-emd-timing",
-  "proposal_id": "CHG-EMD-TIMING-001",
+  "model_revision": "2026-10-01.10-emd-profiles",
+  "proposal_id": "CHG-EMD-PROFILES-001",
   "components": [
     "SYS-EMD",
     "GAS-EMD",
     "SHEET-EMD",
+    "EXT-DRIVE",
     "SYS-YOD-OS"
   ],
-  "summary": "Proponer duración activa agregada, negociación explícita de instrumentación y reintentos exactos; preservar CHG-EMD-PINS-002 y contratos previos. SYS-YOD-OS participa únicamente por el atlas documental.",
+  "summary": "Registrar propuesta de perfil fotográfico propio en Drive privado y metadatos separados, con autorización canónica, revisión y reintentos; sin modificar evaluación ni otros sistemas. Atlas documental de SYS-YOD-OS únicamente.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "Esquema, referencias y vistas deterministas",
-    "Preservación de cambios concurrentes y privacidad"
+    "Esquema, IDs y vistas deterministas",
+    "Preservación de propuestas y contratos anteriores",
+    "Modelo público sin datos personales o identificadores físicos"
   ],
-  "rollback": "Revertir esta propuesta documental y regenerar vistas. Publicación privada requiere sus pruebas y respaldo; no borrar mediciones ni respuestas."
+  "rollback": "Revertir propuesta documental y regenerar vistas. Rollback privado solo de código conserva imágenes, metadatos y respuestas; recuperación de archivos huérfanos se documenta sin borrar la foto confirmada."
 }
 
