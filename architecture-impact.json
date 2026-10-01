@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-01.3",
+  "model_revision": "2026-10-01.4",
   "proposal_id": "CHG-BACKENDS-AUTORIZACION-001",
   "components": [
     "SYS-YOD-OS",
@@ -14,7 +14,7 @@
     "SHEET-PORTERO",
     "SHEET-CATALOGO"
   ],
-  "summary": "Registrar contrato y pruebas de autorización por operación; preparar correcciones fuera de producción y preservar evidencia sensible en privado.",
+  "summary": "Registrar cuatro correcciones de backend publicadas, sus versiones y tres dependencias de autenticación observadas; conservar pendientes de negocio e instalación App.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",

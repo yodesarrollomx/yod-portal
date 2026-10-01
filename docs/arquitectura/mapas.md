@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.3 · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.4 · 2026-10-01.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -122,6 +122,7 @@ flowchart LR
   n_SHEET_PORTERO -.->|Registra caso, libro, carpeta y revisión del modelo| n_SHEET_PPP_MODELOS
   n_EXT_GITHUB_PUBLISHER_APP -.->|Crea PR del commit preparado de Sala| n_SYS_SALA
   n_EXT_GITHUB_PUBLISHER_APP -.->|Crea PR del commit preparado de Marketing| n_SYS_MARKETING
+  n_GAS_CRM -->|Consulta identidad y alcance de lectura| n_GAS_PORTERO
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PLAN_POTENCIAL pendiente;
@@ -196,6 +197,7 @@ flowchart LR
   n_SYS_FLUJO -->|Consume contrato del backend| n_GAS_FLUJO
   n_SYS_YOD_OS -->|Navega al sistema autorizado| n_SYS_FLUJO
   n_SYS_FLUJO -.->|Canje de sesión y permisos| n_GAS_PORTERO
+  n_GAS_FLUJO -->|Verifica credencial y acceso al módulo| n_GAS_PORTERO
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
 ```
@@ -220,6 +222,7 @@ flowchart LR
   n_SYS_OBRA -.->|Canje de sesión y permisos| n_GAS_PORTERO
   n_GAS_OBRA -->|Agrega indicadores en tablero cenital| n_SYS_YOD_OS
   n_GAS_OBRA_CLIENTE -->|Consulta avance por folio mediante servicio| n_GAS_OBRA
+  n_GAS_OBRA -->|Verifica credencial para operar| n_GAS_PORTERO
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SHEET_OBRA pendiente;
@@ -353,7 +356,10 @@ flowchart LR
   n_SYS_YOD_OS["YOD OS"]
   n_GAS_PORTERO["Portero y Potenciales"]
   n_SHEET_PORTERO["Datos de Portero y Potenciales"]
+  n_GAS_FLUJO["Tesorería"]
+  n_GAS_OBRA["Motor de obra"]
   n_GAS_SALA["Sala de Edición"]
+  n_GAS_CRM["CRM comercial"]
   n_GAS_PORTERO_RESPALDO["Portero de respaldo"]
   n_SHEET_PPP_MODELOS["PPP · Libros de cálculo por caso"]
   n_GAS_PORTERO -.->|Lee/escribe registros del dominio| n_SHEET_PORTERO
@@ -375,6 +381,9 @@ flowchart LR
   n_GAS_PORTERO -.->|Lee resultados nativos; escribe cantidades permitidas| n_SHEET_PPP_MODELOS
   n_SHEET_PORTERO -.->|Registra caso, libro, carpeta y revisión del modelo| n_SHEET_PPP_MODELOS
   n_GAS_PORTERO -.->|Registra antes, después, actor y siguiente paso| n_SYS_CONTROL
+  n_GAS_FLUJO -->|Verifica credencial y acceso al módulo| n_GAS_PORTERO
+  n_GAS_CRM -->|Consulta identidad y alcance de lectura| n_GAS_PORTERO
+  n_GAS_OBRA -->|Verifica credencial para operar| n_GAS_PORTERO
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SHEET_PORTERO pendiente;
@@ -476,3 +485,6 @@ flowchart LR
 | CON-PUBLICADOR-IDENTIDAD | EXT-ACTIONS → EXT-GITHUB-PUBLISHER-APP | autenticacion: Solicita identidad temporal limitada al repositorio. CTR-PUBLICADOR-GITHUB. App con contents:read y pull_requests:write, exclusivamente para crear el PR. Las revisiones requeridas deben pasar antes del merge normal. | propuesto | Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB_TOKEN; requiere registro e instalación personal de una App privada de la organización. |
 | CON-PUBLICADOR-SALA | EXT-GITHUB-PUBLISHER-APP → SYS-SALA | automatizacion: Crea PR del commit preparado de Sala. CTR-PUBLICADOR-GITHUB. App con contents:read y pull_requests:write, exclusivamente para crear el PR. Las revisiones requeridas deben pasar antes del merge normal. | propuesto | Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB_TOKEN; requiere registro e instalación personal de una App privada de la organización. |
 | CON-PUBLICADOR-MARKETING | EXT-GITHUB-PUBLISHER-APP → SYS-MARKETING | automatizacion: Crea PR del commit preparado de Marketing. CTR-PUBLICADOR-GITHUB. App con contents:read y pull_requests:write, exclusivamente para crear el PR. Las revisiones requeridas deben pasar antes del merge normal. | propuesto | Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB_TOKEN; requiere registro e instalación personal de una App privada de la organización. |
+| CON-AUTH-FLUJO | GAS-FLUJO → GAS-PORTERO | autenticacion: Verifica credencial y acceso al módulo. CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada. | codigo | Revisión de fuente activa GAS-FLUJO, versión 15; dependencia de Portero contrastada en código y mediante dobles. No acredita recorrido completo de un usuario real. |
+| CON-AUTH-CRM | GAS-CRM → GAS-PORTERO | autenticacion: Consulta identidad y alcance de lectura. CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada. | codigo | Revisión de fuente activa GAS-CRM, versión 20; dependencia de Portero contrastada en código y mediante dobles. No acredita recorrido completo de un usuario real. |
+| CON-AUTH-OBRA | GAS-OBRA → GAS-PORTERO | autenticacion: Verifica credencial para operar. CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada. | codigo | Revisión de fuente activa GAS-OBRA, versión 16; dependencia de Portero contrastada en código y mediante dobles. No acredita recorrido completo de un usuario real. |

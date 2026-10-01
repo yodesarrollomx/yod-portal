@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.3 · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.4 · 2026-10-01.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -309,13 +309,13 @@ Ensayo técnico de migración de dominio y acceso
 Servir el contrato de Portero y Potenciales
 
 - Tipo: apps_script. Dominio: Identidad. Responsable: Responsable técnico del backend.
-- Evidencia: codigo. Producción: Versión 50 obtenida por API y vinculada al endpoint del cliente. Operaciones de negocio y roles no probados..
+- Evidencia: codigo. Producción: Versión 51 desplegada en la implementación existente y fuente contrastada por API. Correcciones acotadas probadas con dobles; recorrido real de negocio por rol pendiente..
 - Entidades: acceso, sesion, caso, escenario, track.
 - Fuente de verdad: Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos..
-- Evidencia: [potenciales-yod/CLAUDE.md](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/CLAUDE.md#L35) — Tipo de fuente disponible: ausente; [yod-portal/docs/arquitectura/backends-verificados.json](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/backends-verificados.json) — Fuente de versión activa 50 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente..
-- Conexiones: CON-001 (GAS-PORTERO → SHEET-PORTERO); CON-019 (SYS-POTENCIALES → GAS-PORTERO); CON-020 (SYS-TRACK → GAS-PORTERO); CON-044 (SYS-YOD-OS → GAS-PORTERO); CON-045 (SYS-TAREAS → GAS-PORTERO); CON-046 (SYS-FLUJO → GAS-PORTERO); CON-047 (SYS-DESPACHO → GAS-PORTERO); CON-048 (SYS-INTERIORES → GAS-PORTERO); CON-049 (SYS-MARKETING → GAS-PORTERO); CON-050 (SYS-MIRAMAR → GAS-PORTERO); CON-051 (SYS-OBRA → GAS-PORTERO); CON-054 (GAS-PORTERO → SYS-YOD-OS); CON-071 (SYS-INVERSION → GAS-PORTERO); CON-085 (GAS-SALA → GAS-PORTERO); CON-PPP-MODELO (GAS-PORTERO → SHEET-PPP-MODELOS); CON-PPP-AUDITORIA (GAS-PORTERO → SYS-CONTROL).
+- Evidencia: [potenciales-yod/CLAUDE.md](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/CLAUDE.md#L35) — Tipo de fuente disponible: ausente; Registro backends-verificados.json: versión activa 51 comprobada por API el 2026-10-01, con misma implementación, URL y permisos; pruebas aisladas de la corrección..
+- Conexiones: CON-001 (GAS-PORTERO → SHEET-PORTERO); CON-019 (SYS-POTENCIALES → GAS-PORTERO); CON-020 (SYS-TRACK → GAS-PORTERO); CON-044 (SYS-YOD-OS → GAS-PORTERO); CON-045 (SYS-TAREAS → GAS-PORTERO); CON-046 (SYS-FLUJO → GAS-PORTERO); CON-047 (SYS-DESPACHO → GAS-PORTERO); CON-048 (SYS-INTERIORES → GAS-PORTERO); CON-049 (SYS-MARKETING → GAS-PORTERO); CON-050 (SYS-MIRAMAR → GAS-PORTERO); CON-051 (SYS-OBRA → GAS-PORTERO); CON-054 (GAS-PORTERO → SYS-YOD-OS); CON-071 (SYS-INVERSION → GAS-PORTERO); CON-085 (GAS-SALA → GAS-PORTERO); CON-PPP-MODELO (GAS-PORTERO → SHEET-PPP-MODELOS); CON-PPP-AUDITORIA (GAS-PORTERO → SYS-CONTROL); CON-AUTH-FLUJO (GAS-FLUJO → GAS-PORTERO); CON-AUTH-CRM (GAS-CRM → GAS-PORTERO); CON-AUTH-OBRA (GAS-OBRA → GAS-PORTERO).
 - Mejoras: PPP · Unificar tablero y fórmulas de potencial en Sheets.
-- Pendientes: Permisos por operación y recorridos por rol pendientes de prueba; El editor contiene cambios posteriores a la versión activa; publicar requiere revisión separada..
+- Pendientes: Quedan reglas de autorización y recorridos de negocio por comprobar; las pruebas aisladas no acreditan todos los permisos en producción.; Los cambios adicionales del editor se conservaron, con la corrección aplicada también a ese borrador; el resto del borrador no fue desplegado..
 
 ## SHEET-PORTERO · Datos de Portero y Potenciales
 
@@ -335,13 +335,13 @@ Almacenar registros del dominio identidad
 Servir el contrato de Catálogo del OS
 
 - Tipo: apps_script. Dominio: Gobierno. Responsable: Responsable técnico del backend.
-- Evidencia: codigo. Producción: Versión 8 obtenida por API y vinculada al endpoint del cliente. Operaciones de negocio y roles no probados..
+- Evidencia: codigo. Producción: Versión 9 desplegada en la implementación existente y fuente contrastada por API. Correcciones acotadas probadas con dobles; recorrido real de negocio por rol pendiente..
 - Entidades: sistema, portal.
 - Fuente de verdad: Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos..
-- Evidencia: [yod-portal/CLAUDE.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/CLAUDE.md#L103) — Tipo de fuente disponible: ausente; [yod-portal/docs/arquitectura/backends-verificados.json](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/backends-verificados.json) — Fuente de versión activa 8 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente..
+- Evidencia: [yod-portal/CLAUDE.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/CLAUDE.md#L103) — Tipo de fuente disponible: ausente; Registro backends-verificados.json: versión activa 9 comprobada por API el 2026-10-01, con misma implementación, URL y permisos; pruebas aisladas de la corrección..
 - Conexiones: CON-002 (GAS-CATALOGO → SHEET-CATALOGO); CON-072 (SYS-TRACK → GAS-CATALOGO).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
-- Pendientes: Permisos por operación y recorridos por rol pendientes de prueba.
+- Pendientes: Quedan reglas de autorización y recorridos de negocio por comprobar; las pruebas aisladas no acreditan todos los permisos en producción.; Las escrituras y su auditoría no constituyen una transacción entre libros; un error parcial se informa y requiere revisión..
 
 ## SHEET-CATALOGO · Datos de Catálogo del OS
 
@@ -387,13 +387,13 @@ Almacenar registros del dominio operacion
 Servir el contrato de Tesorería
 
 - Tipo: apps_script. Dominio: Finanzas. Responsable: Responsable técnico del backend.
-- Evidencia: codigo. Producción: Versión 14 obtenida por API y vinculada al endpoint del cliente. Operaciones de negocio y roles no probados..
+- Evidencia: codigo. Producción: Versión 15 desplegada en la implementación existente y fuente contrastada por API. Correcciones acotadas probadas con dobles; recorrido real de negocio por rol pendiente..
 - Entidades: bolsa, movimiento, pago_planificado, ingreso_esperado, historial.
 - Fuente de verdad: Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos..
-- Evidencia: [board-flujo-yod/apps-script/portero-auth.gs](https://github.com/yodesarrollomx/board-flujo-yod/blob/ef2e6e1fade1b515d10af239bc60519417d906c4/apps-script/portero-auth.gs#L36) — Tipo de fuente disponible: fragmento_autenticacion; [yod-portal/docs/arquitectura/backends-verificados.json](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/backends-verificados.json) — Fuente de versión activa 14 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente..
-- Conexiones: CON-004 (GAS-FLUJO → SHEET-FLUJO); CON-018 (SYS-FLUJO → GAS-FLUJO).
+- Evidencia: [board-flujo-yod/apps-script/portero-auth.gs](https://github.com/yodesarrollomx/board-flujo-yod/blob/ef2e6e1fade1b515d10af239bc60519417d906c4/apps-script/portero-auth.gs#L36) — Tipo de fuente disponible: fragmento_autenticacion; Registro backends-verificados.json: versión activa 15 comprobada por API el 2026-10-01, con misma implementación, URL y permisos; pruebas aisladas de la corrección..
+- Conexiones: CON-004 (GAS-FLUJO → SHEET-FLUJO); CON-018 (SYS-FLUJO → GAS-FLUJO); CON-AUTH-FLUJO (GAS-FLUJO → GAS-PORTERO).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
-- Pendientes: Permisos por operación y recorridos por rol pendientes de prueba.
+- Pendientes: Quedan reglas de autorización y recorridos de negocio por comprobar; las pruebas aisladas no acreditan todos los permisos en producción.; La idempotencia completa de pagos y la recuperación de fallos entre escrituras requieren persistencia y adaptación del cliente; no forman parte de esta corrección acotada..
 
 ## SHEET-FLUJO · Datos de Tesorería
 
@@ -442,7 +442,7 @@ Servir el contrato de Captación de Plan Potencial
 - Evidencia: codigo. Producción: Versión 16 obtenida por API y vinculada al endpoint del cliente. Operaciones de negocio y roles no probados..
 - Entidades: lead, actividad, cita.
 - Fuente de verdad: Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos..
-- Evidencia: [plan-potencial/CLAUDE.md](https://github.com/yodesarrollomx/plan-potencial/blob/78e616f858ad593f16891d2f5158cd46d5617bc2/CLAUDE.md#L95) — Tipo de fuente disponible: ausente; [yod-portal/docs/arquitectura/backends-verificados.json](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/backends-verificados.json) — Fuente de versión activa 16 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente..
+- Evidencia: [plan-potencial/CLAUDE.md](https://github.com/yodesarrollomx/plan-potencial/blob/78e616f858ad593f16891d2f5158cd46d5617bc2/CLAUDE.md#L95) — Tipo de fuente disponible: ausente; Registro backends-verificados.json: Fuente de versión activa 16 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente..
 - Conexiones: CON-006 (GAS-PLAN-POTENCIAL → SHEET-PLAN-POTENCIAL); CON-022 (SYS-MARKETING → GAS-PLAN-POTENCIAL); CON-023 (SYS-PLAN-POTENCIAL → GAS-PLAN-POTENCIAL); CON-052 (GAS-PLAN-POTENCIAL → SYS-YOD-OS); CON-059 (GAS-PLAN-POTENCIAL → EXT-CALENDAR); CON-076 (GAS-PLAN-POTENCIAL → SYS-MARKETING).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Permisos por operación y recorridos por rol pendientes de prueba.
@@ -494,7 +494,7 @@ Servir el contrato de Portal de codesarrolladores
 - Evidencia: codigo. Producción: Versión 40 obtenida por API y vinculada al endpoint del cliente. Operaciones de negocio y roles no probados..
 - Entidades: inversion, aportacion, documento, referido.
 - Fuente de verdad: Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos..
-- Evidencia: [Co-desarrolladores-Yod/apps_script/Código.js](https://github.com/yodesarrollomx/Co-desarrolladores-Yod/blob/f15154f784f204b60946985524e83a2539f40732/apps_script/C%C3%B3digo.js#L517) — Tipo de fuente disponible: fuente_repositorio_despliegue_no_verificado; [yod-portal/docs/arquitectura/backends-verificados.json](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/backends-verificados.json) — Fuente de versión activa 40 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente..
+- Evidencia: [Co-desarrolladores-Yod/apps_script/Código.js](https://github.com/yodesarrollomx/Co-desarrolladores-Yod/blob/f15154f784f204b60946985524e83a2539f40732/apps_script/C%C3%B3digo.js#L517) — Tipo de fuente disponible: fuente_repositorio_despliegue_no_verificado; Registro backends-verificados.json: Fuente de versión activa 40 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente..
 - Conexiones: CON-008 (GAS-CODES → SHEET-CODES); CON-025 (SYS-CODES-PORTAL → GAS-CODES); CON-056 (GAS-CODES → SYS-YOD-OS); CON-062 (GAS-CODES → EXT-DRIVE).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Permisos por operación y recorridos por rol pendientes de prueba; Autenticación propia por rol; token Portero no equivale a credencial administrativa; resumenPublico no aparece entre acciones versionadas; parche/despliegue pendiente de contraste.
@@ -572,7 +572,7 @@ Servir el contrato de Registro del grupo
 - Evidencia: codigo. Producción: Versión 26 obtenida por API y vinculada al endpoint del cliente. Operaciones de negocio y roles no probados..
 - Entidades: proyecto, tramite, hito.
 - Fuente de verdad: Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos..
-- Evidencia: [alquimia-urbana/CLAUDE.md](https://github.com/yodesarrollomx/alquimia-urbana/blob/bf295e2970ad008e58fa3f216a8cfc14353cf7e8/CLAUDE.md#L63) — Tipo de fuente disponible: ausente; [yod-portal/docs/arquitectura/backends-verificados.json](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/backends-verificados.json) — Fuente de versión activa 26 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente..
+- Evidencia: [alquimia-urbana/CLAUDE.md](https://github.com/yodesarrollomx/alquimia-urbana/blob/bf295e2970ad008e58fa3f216a8cfc14353cf7e8/CLAUDE.md#L63) — Tipo de fuente disponible: ausente; Registro backends-verificados.json: Fuente de versión activa 26 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente..
 - Conexiones: CON-011 (GAS-ALQUIMIA → SHEET-ALQUIMIA); CON-028 (SYS-ALQUIMIA → GAS-ALQUIMIA).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Permisos por operación y recorridos por rol pendientes de prueba.
@@ -598,8 +598,8 @@ Servir el contrato de Motor de obra
 - Evidencia: codigo. Producción: Versión 16 obtenida por API y vinculada al endpoint del cliente. Operaciones de negocio y roles no probados..
 - Entidades: concepto, avance, rol.
 - Fuente de verdad: Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos..
-- Evidencia: [yod-portal/obra.html](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/obra.html#L259) — Tipo de fuente disponible: ausente; [yod-portal/docs/arquitectura/backends-verificados.json](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/backends-verificados.json) — Fuente de versión activa 16 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente..
-- Conexiones: CON-012 (GAS-OBRA → SHEET-OBRA); CON-029 (SYS-OBRA → GAS-OBRA); CON-057 (GAS-OBRA → SYS-YOD-OS); CON-058 (GAS-OBRA-CLIENTE → GAS-OBRA).
+- Evidencia: [yod-portal/obra.html](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/obra.html#L259) — Tipo de fuente disponible: ausente; Registro backends-verificados.json: Fuente de versión activa 16 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente..
+- Conexiones: CON-012 (GAS-OBRA → SHEET-OBRA); CON-029 (SYS-OBRA → GAS-OBRA); CON-057 (GAS-OBRA → SYS-YOD-OS); CON-058 (GAS-OBRA-CLIENTE → GAS-OBRA); CON-AUTH-OBRA (GAS-OBRA → GAS-PORTERO).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Permisos por operación y recorridos por rol pendientes de prueba.
 
@@ -624,7 +624,7 @@ Servir el contrato de Módulo cliente de obra
 - Evidencia: codigo. Producción: Versión 2 activa verificada por API. Diez pruebas aisladas con esquema real; operaciones de negocio en producción no ejecutadas..
 - Entidades: pago, gasto, cliente_unidad.
 - Fuente de verdad: Fuente de Apps Script versión 2 y libro vinculado con encabezados verificados; las hojas conservan los datos operativos..
-- Evidencia: [yod-portal/obra-app/motor/ObraCliente.gs](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/obra-app/motor/ObraCliente.gs#L175) — Tipo de fuente disponible: fuente_repositorio_despliegue_no_verificado; [yod-portal/docs/arquitectura/backends-verificados.json](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/backends-verificados.json) — Versión activa 2 contrastada con la implementación existente y el cliente; siete esquemas reales verificados y diez pruebas sintéticas aprobadas..
+- Evidencia: [yod-portal/obra-app/motor/ObraCliente.gs](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/obra-app/motor/ObraCliente.gs#L175) — Tipo de fuente disponible: fuente_repositorio_despliegue_no_verificado; Registro backends-verificados.json: Versión activa 2 contrastada con la implementación existente y el cliente; siete esquemas reales verificados y diez pruebas sintéticas aprobadas..
 - Conexiones: CON-013 (GAS-OBRA-CLIENTE → SHEET-OBRA-CLIENTE); CON-030 (SYS-OBRA-CLIENTE → GAS-OBRA-CLIENTE); CON-058 (GAS-OBRA-CLIENTE → GAS-OBRA).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Permisos por operación y recorridos por rol pendientes de prueba.
@@ -764,13 +764,13 @@ Dependencia externa de procesos YOD OS
 Servir leads y etapas del CRM al tablero cenital
 
 - Tipo: apps_script. Dominio: Ventas. Responsable: Responsable técnico.
-- Evidencia: codigo. Producción: Versión 19 obtenida por API y vinculada al endpoint del cliente. Operaciones de negocio y roles no probados..
+- Evidencia: codigo. Producción: Versión 20 desplegada en la implementación existente y fuente contrastada por API. Correcciones acotadas probadas con dobles; recorrido real de negocio por rol pendiente. Salud técnica pública comprobada por HTTP 200 sin datos de negocio..
 - Entidades: lead, etapa, seguimiento.
 - Fuente de verdad: Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos..
-- Evidencia: [yod-portal/tablero.html](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/tablero.html#L1800) — Endpoint específico del CRM; [yod-portal/docs/arquitectura/backends-verificados.json](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/backends-verificados.json) — Fuente de versión activa 19 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente..
-- Conexiones: CON-065 (SYS-YOD-OS → GAS-CRM); CON-066 (GAS-CRM → SHEET-CRM).
+- Evidencia: [yod-portal/tablero.html](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/tablero.html#L1800) — Endpoint específico del CRM; Registro backends-verificados.json: versión activa 20 comprobada por API el 2026-10-01, con misma implementación, URL y permisos; pruebas aisladas de la corrección..
+- Conexiones: CON-065 (SYS-YOD-OS → GAS-CRM); CON-066 (GAS-CRM → SHEET-CRM); CON-AUTH-CRM (GAS-CRM → GAS-PORTERO).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
-- Pendientes: No se ha obtenido fuente desplegada ni contrato completo.
+- Pendientes: Quedan reglas de autorización y recorridos de negocio por comprobar; las pruebas aisladas no acreditan todos los permisos en producción..
 
 ## SHEET-CRM · Datos de CRM comercial
 

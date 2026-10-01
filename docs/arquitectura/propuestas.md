@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.3 · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.4 · 2026-10-01.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 
@@ -188,12 +188,17 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 
 - Fuente y despliegue activo de motores financieros
 - Matriz de autorización aprobada
+- LIBRO_ID efectivo de Obra y cobertura de su tabla de roles
+- Contrato de pagos que distinga operación incompleta, confirmada y repetida, compatible con datos históricos
 
 ### Tareas
 
 1. Documentar quién propone, autoriza y confirma cada operación
 2. Implementar validación del servidor e idempotencia donde corresponda
 3. Probar reintentos, duplicados y transiciones fuera de orden
+4. Confirmar libro efectivo de Obra y vinculación de identidad; definir cuándo se permite representar a otra persona y cómo se registra al firmante
+5. Definir permisos de lectura, captura, ajustes de saldo, importación y mantenimiento por acción
+6. Diseñar registro persistente de pago, referencias de cada efecto y respuesta canónica del servidor; probar recuperación tras fallo o respuesta perdida
 
 ### Criterios de aceptación
 

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.3",
+  "revision": "2026-10-01.4",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -8,7 +8,7 @@
     "cobrar_antes"
   ],
   "coverage": {
-    "summary": "Inventario de 20 repositorios; fuentes y versiones activas de nueve motores contrastadas por API. Corrección acotada del módulo cliente de Obra desplegada y verificada; auditoría funcional de producción abierta.",
+    "summary": "Inventario de 20 repositorios; nueve fuentes activas contrastadas y revisión aislada de autorización de cinco motores. Obra Cliente y cuatro correcciones acotadas de backend publicadas con versiones verificadas; auditoría funcional de producción abierta.",
     "production_verified": false,
     "limitations": [
       "No se ha comprobado la versión activa de todos los Apps Script",
@@ -16,7 +16,9 @@
       "Los detalles privados de seguridad y reconciliación no forman parte de este atlas público",
       "Inventariar un archivo no equivale a revisar cada rama de su implementación",
       "La lista de proyectos independientes no acredita cobertura de todos los scripts vinculados a Sheets.",
-      "Portero conserva cambios de editor posteriores a la versión activa; no se desplegaron."
+      "El editor de Portero conserva funciones adicionales no publicadas; no confundirlo con la versión 51 activa.",
+      "Obra requiere confirmar su libro efectivo y reglas de delegación antes de integrar el prototipo de identidad.",
+      "La App publicadora y los recorridos operativos de Sala/Marketing corregidos siguen pendientes de configuración y verificación."
     ]
   },
   "repositories": [
@@ -964,11 +966,9 @@
           "source_revision": "HEAD_baseline"
         },
         {
-          "repo": "yodesarrollomx/yod-portal",
-          "path": "docs/arquitectura/backends-verificados.json",
-          "claim": "Fuente de versión activa 50 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente.",
+          "claim": "Registro backends-verificados.json: versión activa 51 comprobada por API el 2026-10-01, con misma implementación, URL y permisos; pruebas aisladas de la corrección.",
           "status": "codigo",
-          "source_revision": "Apps Script version 50"
+          "source_revision": "Apps Script version 51"
         }
       ],
       "data_entities": [
@@ -979,13 +979,13 @@
         "track"
       ],
       "risks_sanitized": [
-        "Permisos por operación y recorridos por rol pendientes de prueba",
-        "El editor contiene cambios posteriores a la versión activa; publicar requiere revisión separada."
+        "Quedan reglas de autorización y recorridos de negocio por comprobar; las pruebas aisladas no acreditan todos los permisos en producción.",
+        "Los cambios adicionales del editor se conservaron, con la corrección aplicada también a ese borrador; el resto del borrador no fue desplegado."
       ],
       "backend_source_status": "fuente_api_version_activa_contrastada",
       "source_of_truth": "Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos.",
       "status": "codigo",
-      "runtime_status": "Versión 50 obtenida por API y vinculada al endpoint del cliente. Operaciones de negocio y roles no probados."
+      "runtime_status": "Versión 51 desplegada en la implementación existente y fuente contrastada por API. Correcciones acotadas probadas con dobles; recorrido real de negocio por rol pendiente."
     },
     {
       "id": "SHEET-PORTERO",
@@ -1034,11 +1034,9 @@
           "source_revision": "HEAD_baseline"
         },
         {
-          "repo": "yodesarrollomx/yod-portal",
-          "path": "docs/arquitectura/backends-verificados.json",
-          "claim": "Fuente de versión activa 8 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente.",
+          "claim": "Registro backends-verificados.json: versión activa 9 comprobada por API el 2026-10-01, con misma implementación, URL y permisos; pruebas aisladas de la corrección.",
           "status": "codigo",
-          "source_revision": "Apps Script version 8"
+          "source_revision": "Apps Script version 9"
         }
       ],
       "data_entities": [
@@ -1046,12 +1044,13 @@
         "portal"
       ],
       "risks_sanitized": [
-        "Permisos por operación y recorridos por rol pendientes de prueba"
+        "Quedan reglas de autorización y recorridos de negocio por comprobar; las pruebas aisladas no acreditan todos los permisos en producción.",
+        "Las escrituras y su auditoría no constituyen una transacción entre libros; un error parcial se informa y requiere revisión."
       ],
       "backend_source_status": "fuente_api_version_activa_contrastada",
       "source_of_truth": "Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos.",
       "status": "codigo",
-      "runtime_status": "Versión 8 obtenida por API y vinculada al endpoint del cliente. Operaciones de negocio y roles no probados."
+      "runtime_status": "Versión 9 desplegada en la implementación existente y fuente contrastada por API. Correcciones acotadas probadas con dobles; recorrido real de negocio por rol pendiente."
     },
     {
       "id": "SHEET-CATALOGO",
@@ -1171,11 +1170,9 @@
           "source_revision": "HEAD_baseline"
         },
         {
-          "repo": "yodesarrollomx/yod-portal",
-          "path": "docs/arquitectura/backends-verificados.json",
-          "claim": "Fuente de versión activa 14 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente.",
+          "claim": "Registro backends-verificados.json: versión activa 15 comprobada por API el 2026-10-01, con misma implementación, URL y permisos; pruebas aisladas de la corrección.",
           "status": "codigo",
-          "source_revision": "Apps Script version 14"
+          "source_revision": "Apps Script version 15"
         }
       ],
       "data_entities": [
@@ -1186,12 +1183,13 @@
         "historial"
       ],
       "risks_sanitized": [
-        "Permisos por operación y recorridos por rol pendientes de prueba"
+        "Quedan reglas de autorización y recorridos de negocio por comprobar; las pruebas aisladas no acreditan todos los permisos en producción.",
+        "La idempotencia completa de pagos y la recuperación de fallos entre escrituras requieren persistencia y adaptación del cliente; no forman parte de esta corrección acotada."
       ],
       "backend_source_status": "fuente_api_version_activa_contrastada",
       "source_of_truth": "Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos.",
       "status": "codigo",
-      "runtime_status": "Versión 14 obtenida por API y vinculada al endpoint del cliente. Operaciones de negocio y roles no probados."
+      "runtime_status": "Versión 15 desplegada en la implementación existente y fuente contrastada por API. Correcciones acotadas probadas con dobles; recorrido real de negocio por rol pendiente."
     },
     {
       "id": "SHEET-FLUJO",
@@ -1304,9 +1302,7 @@
           "source_revision": "HEAD_baseline"
         },
         {
-          "repo": "yodesarrollomx/yod-portal",
-          "path": "docs/arquitectura/backends-verificados.json",
-          "claim": "Fuente de versión activa 16 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente.",
+          "claim": "Registro backends-verificados.json: Fuente de versión activa 16 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente.",
           "status": "codigo",
           "source_revision": "Apps Script version 16"
         }
@@ -1427,9 +1423,7 @@
           "source_revision": "HEAD_baseline"
         },
         {
-          "repo": "yodesarrollomx/yod-portal",
-          "path": "docs/arquitectura/backends-verificados.json",
-          "claim": "Fuente de versión activa 40 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente.",
+          "claim": "Registro backends-verificados.json: Fuente de versión activa 40 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente.",
           "status": "codigo",
           "source_revision": "Apps Script version 40"
         }
@@ -1616,9 +1610,7 @@
           "source_revision": "HEAD_baseline"
         },
         {
-          "repo": "yodesarrollomx/yod-portal",
-          "path": "docs/arquitectura/backends-verificados.json",
-          "claim": "Fuente de versión activa 26 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente.",
+          "claim": "Registro backends-verificados.json: Fuente de versión activa 26 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente.",
           "status": "codigo",
           "source_revision": "Apps Script version 26"
         }
@@ -1681,9 +1673,7 @@
           "source_revision": "HEAD_baseline"
         },
         {
-          "repo": "yodesarrollomx/yod-portal",
-          "path": "docs/arquitectura/backends-verificados.json",
-          "claim": "Fuente de versión activa 16 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente.",
+          "claim": "Registro backends-verificados.json: Fuente de versión activa 16 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente.",
           "status": "codigo",
           "source_revision": "Apps Script version 16"
         }
@@ -1746,9 +1736,7 @@
           "source_revision": "HEAD_baseline"
         },
         {
-          "repo": "yodesarrollomx/yod-portal",
-          "path": "docs/arquitectura/backends-verificados.json",
-          "claim": "Versión activa 2 contrastada con la implementación existente y el cliente; siete esquemas reales verificados y diez pruebas sintéticas aprobadas.",
+          "claim": "Registro backends-verificados.json: Versión activa 2 contrastada con la implementación existente y el cliente; siete esquemas reales verificados y diez pruebas sintéticas aprobadas.",
           "status": "codigo",
           "source_revision": "Apps Script version 2"
         }
@@ -2057,11 +2045,9 @@
           "source_revision": "HEAD_baseline"
         },
         {
-          "repo": "yodesarrollomx/yod-portal",
-          "path": "docs/arquitectura/backends-verificados.json",
-          "claim": "Fuente de versión activa 19 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente.",
+          "claim": "Registro backends-verificados.json: versión activa 20 comprobada por API el 2026-10-01, con misma implementación, URL y permisos; pruebas aisladas de la corrección.",
           "status": "codigo",
-          "source_revision": "Apps Script version 19"
+          "source_revision": "Apps Script version 20"
         }
       ],
       "data_entities": [
@@ -2070,12 +2056,12 @@
         "seguimiento"
       ],
       "risks_sanitized": [
-        "No se ha obtenido fuente desplegada ni contrato completo"
+        "Quedan reglas de autorización y recorridos de negocio por comprobar; las pruebas aisladas no acreditan todos los permisos en producción."
       ],
       "source_of_truth": "Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos.",
       "backend_source_status": "fuente_api_version_activa_contrastada",
       "status": "codigo",
-      "runtime_status": "Versión 19 obtenida por API y vinculada al endpoint del cliente. Operaciones de negocio y roles no probados."
+      "runtime_status": "Versión 20 desplegada en la implementación existente y fuente contrastada por API. Correcciones acotadas probadas con dobles; recorrido real de negocio por rol pendiente. Salud técnica pública comprobada por HTTP 200 sin datos de negocio."
     },
     {
       "id": "SHEET-CRM",
@@ -4271,6 +4257,57 @@
         }
       ],
       "contract": "CTR-PUBLICADOR-GITHUB. App con contents:read y pull_requests:write, exclusivamente para crear el PR. Las revisiones requeridas deben pasar antes del merge normal."
+    },
+    {
+      "id": "CON-AUTH-FLUJO",
+      "from": "GAS-FLUJO",
+      "to": "GAS-PORTERO",
+      "label": "Verifica credencial y acceso al módulo",
+      "kind": "autenticacion",
+      "status": "codigo",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "Revisión de fuente activa GAS-FLUJO, versión 15; dependencia de Portero contrastada en código y mediante dobles. No acredita recorrido completo de un usuario real.",
+          "status": "codigo",
+          "source_revision": "Apps Script version 15"
+        }
+      ],
+      "contract": "CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada."
+    },
+    {
+      "id": "CON-AUTH-CRM",
+      "from": "GAS-CRM",
+      "to": "GAS-PORTERO",
+      "label": "Consulta identidad y alcance de lectura",
+      "kind": "autenticacion",
+      "status": "codigo",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "Revisión de fuente activa GAS-CRM, versión 20; dependencia de Portero contrastada en código y mediante dobles. No acredita recorrido completo de un usuario real.",
+          "status": "codigo",
+          "source_revision": "Apps Script version 20"
+        }
+      ],
+      "contract": "CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada."
+    },
+    {
+      "id": "CON-AUTH-OBRA",
+      "from": "GAS-OBRA",
+      "to": "GAS-PORTERO",
+      "label": "Verifica credencial para operar",
+      "kind": "autenticacion",
+      "status": "codigo",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "Revisión de fuente activa GAS-OBRA, versión 16; dependencia de Portero contrastada en código y mediante dobles. No acredita recorrido completo de un usuario real.",
+          "status": "codigo",
+          "source_revision": "Apps Script version 16"
+        }
+      ],
+      "contract": "CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada."
     }
   ],
   "processes": [
@@ -5529,11 +5566,14 @@
       "effort": "M",
       "decision": "pendiente",
       "priority": "margen_y_control",
-      "note": "Propuesta; requiere línea base y validación del proceso. No promete aumento monetario sin medición.",
+      "note": "Las correcciones técnicas acotadas ya autorizadas se publicaron y están registradas. Esta decisión conserva las reglas nuevas de roles/delegación y la recuperación completa de operaciones; requiere línea base y validación del proceso.",
       "tasks": [
         "Documentar quién propone, autoriza y confirma cada operación",
         "Implementar validación del servidor e idempotencia donde corresponda",
-        "Probar reintentos, duplicados y transiciones fuera de orden"
+        "Probar reintentos, duplicados y transiciones fuera de orden",
+        "Confirmar libro efectivo de Obra y vinculación de identidad; definir cuándo se permite representar a otra persona y cómo se registra al firmante",
+        "Definir permisos de lectura, captura, ajustes de saldo, importación y mantenimiento por acción",
+        "Diseñar registro persistente de pago, referencias de cada efecto y respuesta canónica del servidor; probar recuperación tras fallo o respuesta perdida"
       ],
       "acceptance": [
         "Un reintento no produce un segundo efecto monetario",
@@ -5541,7 +5581,9 @@
       ],
       "prerequisites": [
         "Fuente y despliegue activo de motores financieros",
-        "Matriz de autorización aprobada"
+        "Matriz de autorización aprobada",
+        "LIBRO_ID efectivo de Obra y cobertura de su tabla de roles",
+        "Contrato de pagos que distinga operación incompleta, confirmada y repetida, compatible con datos históricos"
       ]
     },
     {
@@ -5974,7 +6016,7 @@
         "EXT-GITHUB-PUBLISHER-APP"
       ],
       "proposal": "Corregir publicación automática de Sala y Marketing mediante App privada limitada para crear PR; preservar protección, checks completos del commit exacto y publicación previa al montaje. Preparar registro local seguro, pruebas aisladas y configuración pendiente de consentimiento personal en GitHub.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "tests": [
         "Separación de identidades, rechazo de credencial ausente o reutilizada y ausencia de push previo a configuración",
         "Checks vacíos esperan; fallo, timeout o SHA distinto detienen publicación",
@@ -5982,7 +6024,7 @@
         "Registro local: estado de un solo uso, caducidad, permisos privados y errores sin credenciales",
         "Pruebas existentes de ambos repositorios y verificaciones completas del portal"
       ],
-      "deployment": "No instalado ni verificado en operación. Requiere registrar App e instalarla solo en los dos repositorios; después configurar secretos y observar PR, checks, merge y publicación."
+      "deployment": "Registro local publicado en Portal PR11. Sala PR53 y Marketing PR27 preparados con checks aprobados; no integrados. App pendiente de registro e instalación personal en los dos repositorios, configuración de secretos y verificación operativa."
     },
     {
       "id": "CHG-BACKENDS-AUTORIZACION-001",
@@ -6000,16 +6042,45 @@
         "SHEET-CATALOGO"
       ],
       "proposal": "Completar matriz de autorización por operación sobre fuentes activas; preparar correcciones técnicas de identidad, caché y coherencia de escrituras con regresiones aisladas. Mantener reglas comerciales, endpoints y trabajo concurrente. Los detalles de seguridad permanecen restringidos hasta corregir y verificar.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "tests": [
         "Controles positivos y negativos de identidad, rol y recurso con dobles de Apps Script",
         "Ausencia de permisos y caché previa no amplían acceso",
         "La identidad declarada por el cliente no cambia a quien autoriza",
         "Salud técnica pública sin datos de negocio",
         "Reintentos y errores de validación sin escrituras parciales silenciosas",
-        "Comparar fuente candidata, editor y versión activa antes de cualquier despliegue"
+        "Comparar fuente candidata, editor y versión activa antes de cualquier despliegue",
+        "22 regresiones de Portero sobre candidato activo y editor conservado",
+        "Flujo: 12 regresiones de backend y 5 integraciones con el cliente vigente",
+        "38 pruebas compartidas de CRM/Catálogo; 21 del prototipo de identidad de Obra sin integrar"
       ],
-      "deployment": "Auditoría y reproducciones aisladas en curso. Ningún despliegue ni dato de negocio modificado por esta propuesta. Separar correcciones inequívocas de cambios que requieren definición de reglas o migración de identidades."
+      "deployment": "Matriz de cinco motores y prototipos privados comprobados. Cuatro correcciones acotadas desplegadas y registradas en CHG-BACKENDS-HOTFIX-001. Obra requiere confirmar el libro activo y la delegación; quedan decisiones de roles, idempotencia completa y recorridos reales pendientes. No hubo escrituras de datos de negocio."
+    },
+    {
+      "id": "CHG-BACKENDS-HOTFIX-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-POTENCIALES",
+        "SYS-OBRA",
+        "SYS-FLUJO",
+        "GAS-PORTERO",
+        "GAS-OBRA",
+        "GAS-FLUJO",
+        "GAS-CRM",
+        "GAS-CATALOGO",
+        "SHEET-PORTERO",
+        "SHEET-CATALOGO"
+      ],
+      "proposal": "Registrar la publicación acotada de correcciones ya propuestas en CHG-BACKENDS-AUTORIZACION-001: identidad y caché de Portero; integridad de campos y pago existente en Flujo; lectura autorizada y salud técnica de CRM; prevalidación y correspondencia de reintentos en Catálogo. Mantener el resto de reglas pendiente de decisión.",
+      "status": "publicado",
+      "tests": [
+        "Portero: 22 regresiones sobre versión candidata y sobre editor conservado",
+        "Flujo: 12 pruebas de backend y 5 de integración con llamadas reales del cliente; 9 pruebas del cliente vigente",
+        "CRM/Catálogo: 38 pruebas sintéticas; compatibilidad del payload CRM y dependencia de Portero",
+        "Procedimiento: 6 pruebas de respaldo, recuperación y verificación tras respuesta incierta",
+        "Fuente de cada versión publicada, implementación, URL y permisos contrastados por API; salud pública CRM HTTP 200 con campos técnicos únicamente"
+      ],
+      "deployment": "Portero 50→51, Flujo 14→15, CRM 19→20 y Catálogo 8→9. Misma implementación, URL y permisos. Editor pendiente de Portero conservado con el parche; no se publicaron sus funciones adicionales. Catálogo se confirmó con lecturas posteriores sin repetir escritura. Cero escrituras en registros operativos. Obra sigue en versión 16 y el prototipo no se integró."
     }
   ],
   "data_contracts": [
