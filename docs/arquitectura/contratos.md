@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.22-ppp-terreno-catalogo · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.23-ppp-versiones-lectura · 2026-10-01.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -72,6 +72,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Una respuesta pendiente, conflicto o desconexión conserva el último dato confirmado con estado explícito
 - Auditar antes/después y no marcar producción comprobada sin lectura pública final
 - No modificar Portero ni crear otra implementación; conservar contratos y URL existentes
+- El transporte leído conserva entradas y resultados de todas las versiones; el flujo mensual puede enviarse solo para la activa. Validar ese flujo al abrirla y no exigir ni inventar flujo de versiones inactivas.
 
 ## CTR-PUBLICADOR-GITHUB
 
