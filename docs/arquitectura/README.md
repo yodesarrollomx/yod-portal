@@ -14,6 +14,8 @@ Esta es la entrada para entender y modificar YOD OS. Prioridad de mejora acordad
 - [Cobertura y verificación](verificacion.md), [reglas de cambio](cambios.md) y [evolución](evolucion.md).
 - [Identidad del publicador automático](publicador-github.md): causa del bloqueo, permisos mínimos y registro pendiente.
 
+- [Entrega técnica de Control Maestro](control-maestro.md): versiones, aceptación, mantenimiento y reversión.
+
 ## Qué significa cada evidencia
 
 **Código** acredita lo leído en una versión concreta de GitHub. **Ejecución** exige una comprobación registrada en el entorno identificado. **Declarado** proviene de documentación o una configuración cuyo comportamiento no se ha verificado. **Pendiente** identifica un vacío. **Propuesto** describe una mejora que aún no existe.

@@ -92,7 +92,7 @@
   // 14 caracteres, la otra ni siquiera eso) nunca conceden permisos.
   function bloquearSesion(validando){
     purgarDatosSensibles();state.profileReady=false;state.role='vista';state.boards='';
-    state.personName='';state.sessionToken='';state.rawRows=[];state.modules=[];
+    state.personName='';state.sessionToken='';state.rawRows=[];state.catalogIds=null;state.modules=[];
     ['finance-panel','marketing-panel','decision-panel','reconcile-panel','search-results'].forEach(function(id){var p=$(id);if(p)p.replaceChildren();});
     ['pulso','reconcile','quick-section'].forEach(function(id){var p=$(id);if(p)p.classList.add('hidden');});
     var inicio=$('miInicio');if(inicio){inicio.hidden=true;inicio.replaceChildren();}
@@ -155,6 +155,7 @@
     // se muestra pero NO se convierte en enlace (antes siempre decía "Disponible" y abría).
     var on=window.PortalCore.enabled(row),b=window.PortalCore.badge(row);
     var link=document.createElement(on?'a':'div');link.className='module-card'+(on?'':' module-card-off');
+    link.dataset.systemId=row.system_id;
     if(on){link.href=url;link.rel='noopener';if(!esPropio(url))link.target='_blank';}else{link.setAttribute('aria-disabled','true');}
     var top=document.createElement('div');top.className='module-top';
     var icon=document.createElement('span');icon.className='module-icon';icon.innerHTML='<i class="ti ti-'+(ICONS[row.system_id]||window.PortalCore.safeIcon(row.icono))+'"></i>';
@@ -424,6 +425,7 @@
      decisión de Dirección y se respeta tal cual — solo se rellena lo AUSENTE. */
   function conAltasNuevas(rows){
     var vistos={};(rows||[]).forEach(function(r){if(r&&r.system_id)vistos[r.system_id]=1;});
+    (state.catalogIds||[]).forEach(function(id){if(id)vistos[id]=1;});
     var faltan=CAT_RESPALDO.filter(function(r){return !vistos[r.system_id];});
     return faltan.length?(rows||[]).concat(faltan):(rows||[]);
   }
@@ -450,7 +452,7 @@
   function catalogoSinAcceso(){
     // El catálogo es una fuente independiente: su rechazo no revoca el canje
     // del Portero ni conserva filas antiguas. El respaldo sigue sus permisos.
-    state.rawRows=[];state.catRetry=0;renderModules(CAT_RESPALDO);nombrarAccionesRapidas();
+    state.rawRows=[];state.catalogIds=null;state.catRetry=0;renderModules(CAT_RESPALDO);nombrarAccionesRapidas();
     setConnection('error','Catálogo sin acceso');$('updated-at').textContent='Lista de respaldo según tus permisos';
   }
   async function loadCatalog(){
@@ -481,15 +483,16 @@
          contra el backend vivo: con la credencial contesta actor='SESSION' y 8
          filas; sin ella, actor='PUBLIC' y 2.
          Ahora se le pregunta al backend, que es quien sabe: él firma la respuesta
-         con `actor`. 'PUBLIC' = no pudo canjear la credencial (eso SÍ es no
-         autenticar); cualquier otra cosa ('SESSION' o el person_id) = autenticó.
+         con `actor`. Solo 'SESSION' confirma el canje de esta fuente; un actor
+         ausente, desconocido o 'PUBLIC' exige usar el respaldo autorizado.
          Los tableros que el Sheet no trae los rellena conAltasNuevas(), no esta
          guarda: el largo de la lista dejó de ser un semáforo. */
-      var _autenticado=String(data.actor||'')!=='PUBLIC';
+      var _autenticado=data.actor==='SESSION';
       var _tokenVivo=!!_tk&&state.profileReady;
       if(_tokenVivo&&!_autenticado){
         catalogoSinAcceso();return;
       }
+      state.catalogIds=Array.isArray(data.known_system_ids)?data.known_system_ids.filter(function(id){return typeof id==='string';}):null;
       state.catRetry=0;renderModules(data.rows);nombrarAccionesRapidas();$('updated-at').textContent=selloDato(data);setConnection('ok','En línea');
       // El catálogo solo se conserva en memoria de esta sesión.
     }catch(error){
@@ -591,7 +594,7 @@
     try{
       var data=await canjearConRelevo_(token);
       if(!vigente())return;
-      if(!data||!data.ok){var diag='canje:'+((data&&data.error)||'sin-respuesta');var err=new Error(diag);err._diag=diag;throw err;}
+      if(!data||data.ok!==true||data.token!==token||typeof data.rol!=='string'||!data.rol.trim()||typeof data.boards!=='string'){var diag='canje:'+((data&&data.error)||'sin-respuesta');var err=new Error(diag);err._diag=diag;throw err;}
       try{localStorage.removeItem('yod_canje_fail');}catch(_e){}
       state.canjeRetry=0;state.sessionToken=token;applyIdentity(data);
       await Promise.allSettled([loadCatalog(),startData(token)]);

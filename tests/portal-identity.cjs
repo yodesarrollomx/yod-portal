@@ -42,7 +42,7 @@ function appHarness(token = 'prefix-shared--A') {
     setConnection() {}, frasePendiente: x => x,
     applyIdentity(data) { state.profileReady = true;state.role = data.rol;state.boards = data.boards;applied.push(data.nombre); },
     loadCatalog: async () => { loads.push('catalog'); }, startData: async t => { loads.push(t); },
-    canjearConRelevo_: async () => ({ ok: true, rol: 'vista', boards: 'TA', nombre: 'Current' }),
+    canjearConRelevo_: async t => ({ ok: true, token:t, rol: 'vista', boards: 'TA', nombre: 'Current' }),
     renderFinance: x => renders.push(['finance', x]), renderMarketing: x => renders.push(['marketing', x]),
     renderPulseError: id => renders.push(['error', id]), marcaNuevo() {}, marcarCache() {}, marcarCacheFallo: id => renders.push(['offline', id]),
     sinSaldo: () => false, sinKpis: () => false,
@@ -60,7 +60,7 @@ test('App no aplica admin legacy ni inicia datos antes del canje fresco', async 
   assert.equal(h.state.profileReady, false);
   assert.equal(h.applied.length, 0);assert.equal(h.loads.length, 0);
   assert.equal(h.sessionStorage.getItem('yod_id_v1'), null);
-  pending.resolve({ ok: true, rol: 'vista', boards: 'TA', nombre: 'New person' });await loading;
+  pending.resolve({ ok: true, token:'prefix-shared--A', rol: 'vista', boards: 'TA', nombre: 'New person' });await loading;
   assert.deepEqual(h.applied, ['New person']);assert.equal(h.state.role, 'vista');
 });
 
@@ -75,8 +75,8 @@ test('App ignora canje tardío de A después de validar B', async () => {
   const h = appHarness('A'), a = deferred(), b = deferred();
   h.c.canjearConRelevo_ = token => token === 'A' ? a.promise : b.promise;
   const first = h.c.loadIdentity();h.localStorage.setItem('pyod_clave_v1','B');const second = h.c.loadIdentity();
-  b.resolve({ ok: true, rol: 'vista', boards: 'TA', nombre: 'B' });await second;
-  a.resolve({ ok: true, rol: 'admin', boards: '*', nombre: 'A' });await first;
+  b.resolve({ ok: true, token:'B', rol: 'vista', boards: 'TA', nombre: 'B' });await second;
+  a.resolve({ ok: true, token:'A', rol: 'admin', boards: '*', nombre: 'A' });await first;
   assert.deepEqual(h.applied, ['B']);assert.equal(h.state.sessionToken, 'B');
 });
 
@@ -174,7 +174,7 @@ function shellHarness(token = 'A') {
     canOpen:()=>state.identity==='ok'&&(state.boards==='TA'||state.role==='admin'),
     location:{reload(){reloads.push(true);}},
     aplicaIdentidad(j){state.role=j.rol;state.boards=j.boards;state.identity='ok';applied.push(j.nombre);c.maybeLock();},
-    loadCatalog:async()=>{},canjeConRelevo:async()=>({ok:true,rol:'vista',boards:'TA',nombre:'Current'})
+    loadCatalog:async()=>{},canjeConRelevo:async t=>({ok:true,token:t,rol:'vista',boards:'TA',nombre:'Current'})
   });
   vm.runInContext(['tok','purgeCaches','purgeAll','maybeLock','loadIdentity'].map(n=>fn(shellSource,n)).join('\n'),c);
   return {c,state,localStorage,sessionStorage,applied,canvas,reloads};
@@ -184,7 +184,7 @@ test('Shell oculta lienzo mientras valida y no toma rol de yod_id_v1',async()=>{
   const h=shellHarness(),pending=deferred();h.c.canjeConRelevo=()=>pending.promise;
   const loading=h.c.loadIdentity();assert.equal(h.canvas.style.display,'none');assert.equal(h.applied.length,0);
   assert.equal(h.sessionStorage.getItem('yod_id_v1'),null);
-  pending.resolve({ok:true,rol:'vista',boards:'TA',nombre:'Current'});await loading;
+  pending.resolve({ok:true,token:'A',rol:'vista',boards:'TA',nombre:'Current'});await loading;
   assert.equal(h.state.role,'vista');assert.equal(h.canvas.style.display,'');
 });
 
@@ -197,8 +197,8 @@ test('Shell conserva lienzo oculto después de revocación y sin token',async()=
 test('Shell ignora canje de A recibido después de validar B',async()=>{
   const h=shellHarness(),a=deferred(),b=deferred();h.c.canjeConRelevo=t=>t==='A'?a.promise:b.promise;
   const first=h.c.loadIdentity();h.localStorage.setItem('pyod_clave_v1','B');const second=h.c.loadIdentity();
-  b.resolve({ok:true,rol:'vista',boards:'TA',nombre:'B'});await second;
-  a.resolve({ok:true,rol:'admin',boards:'*',nombre:'A'});await first;
+  b.resolve({ok:true,token:'B',rol:'vista',boards:'TA',nombre:'B'});await second;
+  a.resolve({ok:true,token:'A',rol:'admin',boards:'*',nombre:'A'});await first;
   assert.deepEqual(h.applied,['B']);assert.equal(h.state.role,'vista');
 });
 
@@ -206,7 +206,7 @@ test('Shell recarga board con estado propio tras cambiar persona o permisos',asy
   const h=shellHarness();await h.c.loadIdentity();h.localStorage.setItem('pyod_clave_v1','B');
   await h.c.loadIdentity();assert.equal(h.reloads.length,1);assert.equal(h.canvas.style.display,'none');
   const same=shellHarness();await same.c.loadIdentity();
-  same.c.canjeConRelevo=async()=>({ok:true,rol:'vista',boards:'TA,IN',nombre:'Changed'});
+  same.c.canjeConRelevo=async()=>({ok:true,token:'A',rol:'vista',boards:'TA,IN',nombre:'Changed'});
   await same.c.loadIdentity();assert.equal(same.reloads.length,1);assert.equal(same.canvas.style.display,'none');
 });
 
@@ -223,6 +223,8 @@ test('Catálogo del app ignora respuesta tardía y no persiste filas de otra cre
 test('Catálogo PUBLIC/403 del app descarta filas de esa fuente y conserva sesión Portero y otros datos',async()=>{
   for(const response of [
     {ok:true,status:200,json:async()=>({ok:true,actor:'PUBLIC',rows:[]})},
+    {ok:true,status:200,json:async()=>({ok:true,rows:[{system_id:'SYNTH-UNVERIFIED'}]})},
+    {ok:true,status:200,json:async()=>({ok:true,actor:'UNKNOWN',rows:[{system_id:'SYNTH-UNVERIFIED'}]})},
     {ok:false,status:403,json:async()=>{throw new Error('no debe interpretar cuerpo 403');}},
     {ok:true,status:200,json:async()=>({ok:false,error:'liga'})}
   ]){
@@ -272,6 +274,8 @@ test('Catálogo del shell ignora respuesta de identidad invalidada',async()=>{
 test('Catálogo PUBLIC/403 del shell conserva identidad y elimina únicamente su catálogo anterior',async()=>{
   for(const response of [
     {ok:true,status:200,json:async()=>({ok:true,actor:'PUBLIC',rows:[]})},
+    {ok:true,status:200,json:async()=>({ok:true,rows:[{system_id:'SYNTH-UNVERIFIED'}]})},
+    {ok:true,status:200,json:async()=>({ok:true,actor:'UNKNOWN',rows:[{system_id:'SYNTH-UNVERIFIED'}]})},
     {ok:false,status:403,json:async()=>{throw new Error('no debe interpretar cuerpo 403');}},
     {ok:true,status:200,json:async()=>({ok:false,error:'revocado'})}
   ]){
@@ -290,4 +294,13 @@ test('La cola pendiente de Interiores se conserva al limpiar datos visibles',()=
   const h=shellHarness();h.localStorage.setItem('aurum_postq_v1','synthetic pending write');
   vm.runInContext(data,h.c);h.c.purgeAll();
   assert.equal(h.localStorage.getItem('aurum_postq_v1'),'synthetic pending write');
+});
+test('Canje incompleto o de otra credencial no habilita cabina ni marco',async()=>{
+ for(const patch of [{ok:'true'},{token:'B'},{token:null},{rol:''},{rol:null},{boards:null},{boards:undefined}]){
+  const reply={ok:true,token:'A',rol:'admin',boards:'*',nombre:'Synthetic',...patch};
+  const app=appHarness('A');app.c.canjearConRelevo_=async()=>reply;await app.c.loadIdentity();
+  assert.equal(app.state.profileReady,false);assert.equal(app.loads.length,0);
+  const sh=shellHarness();sh.c.canjeConRelevo=async()=>reply;await sh.c.loadIdentity();
+  assert.equal(sh.state.identity,'fail');assert.equal(sh.canvas.style.display,'none');
+ }
 });

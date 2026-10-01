@@ -116,16 +116,22 @@
   function canOpen(sys) {
     if (state.identity !== 'ok') return false;   // fail-closed: sin sesión validada, el menú no enseña nada
     if (state.role === 'admin') return true;
+    if (sys === 'SYS-CONTROL') return false;
     var l = boardsList();
     if (l.indexOf('*') > -1) return true;
-    // El Control Maestro es el Sheet de Dirección: no se otorga por código.
-    if (sys === 'SYS-CONTROL') return false;
     var req = CODES[sys] || [];
     for (var i = 0; i < req.length; i++) { if (l.indexOf(req[i]) > -1) return true; }
     return false;
   }
 
   function tok() { try { return localStorage.getItem(LSC) || ''; } catch (e) { return ''; } }
+  function canOpenProject(p) {
+    if (state.identity !== 'ok' || !p || !p.tablero) return false;
+    var code = {'PRJ-RM':'RM','PRJ-ALYSA':'AL','PRJ-MARIA':'TM'}[p.folio];
+    if (!code) return false;
+    var list = boardsList();
+    return state.role === 'admin' || list.indexOf('*') >= 0 || list.indexOf(code) >= 0;
+  }
   function el(t, c, h) { var e = document.createElement(t); if (c) e.className = c; if (h != null) e.innerHTML = h; return e; }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function set(id, t) { var e = document.getElementById(id); if (e) e.textContent = t; }
@@ -412,13 +418,13 @@
       })
       .then(function (d) {
         if (request !== state.identityRequest || k !== tok() || state.identity !== 'ok') return;
-        if (d && (d.actor === 'PUBLIC' || (!d.ok && rechazoAcceso(d.error)))) {
+        if (d && ((d.ok === true && d.actor !== 'SESSION') || (!d.ok && rechazoAcceso(d.error)))) {
           state.catalogRows=null;state.catalogIds=null;state.catalogUnavailable=true;applyNav();return;
         }
         if (!d || !d.ok || !Array.isArray(d.rows)) return;
         var rows = d.rows.filter(function (r) { return r && r.visible === 'SI' && r.system_id && DEST[r.system_id]; })
           .sort(function (a, b) { return Number(a.orden) - Number(b.orden); });
-        writeCatIds(d.rows.map(function (r) { return r && r.system_id; }).filter(Boolean));
+        writeCatIds(Array.isArray(d.known_system_ids) ? d.known_system_ids.filter(function(id){return typeof id==='string';}) : d.rows.map(function (r) { return r && r.system_id; }).filter(Boolean));
         writeCatCache(rows);state.catalogUnavailable=false;applyNav();
       }).catch(function () { });
   }
@@ -446,7 +452,7 @@
     if(!k)return Promise.resolve();
     return canjeConRelevo(k).then(function(j){
       if(request !== state.identityRequest || k !== tok())return;
-      if(!j || !j.ok)throw new Error(j && j.error || 'sin-respuesta');
+      if(!j || j.ok!==true || j.token!==k || typeof j.rol!=='string' || !j.rol.trim() || typeof j.boards!=='string')throw new Error(j && j.error || 'sin-respuesta');
       var identity = JSON.stringify([j.correo||'',j.nombre||'',j.rol||'vista',j.boards||'']);
       if(state.sessionIdentity && state.sessionIdentity !== identity){location.reload();return;}
       state.sessionIdentity=identity;
@@ -477,7 +483,7 @@
       // OS-2 · también proyectos por folio o nombre (registro os/proyectos.js)
       var RP = window.YodProyectos;
       if (RP && t) RP.lista.filter(function (p) {
-        return p.tablero && [p.folio, p.codigo, p.nombre].concat(p.alias || []).join(' ').toLowerCase().indexOf(t) >= 0;
+        return canOpenProject(p) && [p.folio, p.codigo, p.nombre].concat(p.alias || []).join(' ').toLowerCase().indexOf(t) >= 0;
       }).forEach(function (p) {
         var a = el('a'); a.href = p.tablero;
         a.innerHTML = '<i class="ti ti-folder"></i><span><strong>' + esc(p.nombre) + '</strong> <small style="opacity:.6">' + esc(p.folio) + ' · ' + esc(p.etapa_actual || '') + '</small></span>';

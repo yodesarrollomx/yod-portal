@@ -18,9 +18,10 @@
   function codes(value){var raw=String(value||'').trim();if(!raw)return [];if(raw==='*')return ['*'];return raw.toUpperCase().split(/[,|; ]+/).filter(Boolean);}
   function hasCode(boards,code){var list=codes(boards);return list.includes('*')||list.includes(String(code||'').toUpperCase());}
   function canOpen(boards,systemId,role){
-    if(String(role||'').toLowerCase()==='admin'||codes(boards).includes('*'))return true;
+    if(String(role||'').toLowerCase()==='admin')return true;
     // El Control Maestro (Sheet de Dirección) no se otorga por código: solo rol admin.
     if(String(systemId||'')==='SYS-CONTROL')return false;
+    if(codes(boards).includes('*'))return true;
     var required=SYSTEM_CODES[String(systemId||'')];if(!required)return false;
     return required.some(function(code){return hasCode(boards,code);});
   }
