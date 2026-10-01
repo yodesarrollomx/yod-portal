@@ -1,19 +1,16 @@
 {
-  "model_revision": "2026-10-01.11-emd-drafts",
-  "proposal_id": "CHG-EMD-DRAFTS-001",
+  "model_revision": "2026-10-01.12-ppp-interfaz",
+  "proposal_id": "CHG-PPP-UI-001",
   "components": [
-    "SYS-EMD",
-    "STORE-EMD-DRAFTS",
-    "GAS-EMD",
-    "SHEET-EMD",
-    "SYS-YOD-OS"
+    "SYS-POTENCIALES",
+    "SYS-YOD-OS",
+    "SHEET-PPP-MODELOS",
+    "GAS-PORTERO"
   ],
-  "summary": "Proponer borradores cifrados locales y recuperación explícita; registrar nuevo límite del navegador sin cambiar backend ni contratos previos. SYS-YOD-OS solo documental.",
+  "summary": "Registrar propuesta de interfaz del PPP vertical. Sin nuevas conexiones ni cambio del contrato financiero. SYS-YOD-OS se referencia por cabecera compartida; personalización limitada a PPP.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "Validación de esquema, IDs y vistas",
-    "Preservación de contratos previos y privacidad pública"
+    "Regeneración de mapas y fichas; invariantes de contratos"
   ],
-  "rollback": "Revertir actualización documental y regenerar vistas; reversión privada solo de código conserva borradores y respuestas sin recuperación automática."
+  "rollback": "Revertir registro documental y regenerar vistas; preservar historia y registros privados."
 }
-
