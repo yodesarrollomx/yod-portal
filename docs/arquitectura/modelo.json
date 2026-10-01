@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.21-ppp-identidad-graficas",
+  "revision": "2026-10-01.22-ppp-terreno-catalogo",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -6662,6 +6662,23 @@
         "Regresiones de interfaz, mapa/catálogo, acceso, tamaño 320/390/430/1280 y movimiento reducido; atlas y verificadores aprobados."
       ],
       "deployment": "Implementar en rama, integrar por PR y comparar archivos publicados. Revertir frontend y referencia fija mediante PR; no tocar libros ni registros privados."
+    },
+    {
+      "id": "CHG-PPP-TERRENO-003",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-YOD-OS",
+        "GAS-PORTERO",
+        "SHEET-PORTERO"
+      ],
+      "proposal": "Recuperación autorizada de acceso a un proyecto existente: todas las categorías permanecen visibles con su estado; advertencia y reintento antes de las filas. Usar enlaces de pines recibidos por la misma sesión como acceso provisional cuando una lista carga o falla por transporte, nunca ante rechazo ni lista vacía confirmada; normalizar casas antiguas a la ruta canónica sin copiar cifras históricas como resultados. Mostrar terreno en la tarjeta cerrada de arquitectura e implantación conceptual desde retícula nativa, áreas y condiciones de etapas. Mantener datos, controles, versiones, fórmulas y backend.",
+      "status": "implementado_local",
+      "tests": [
+        "Verificado en Chromium y WebKit: acceso del mapa con lista fallida, enlace canónico, ausencia de duplicados y cifras históricas, aviso fijo y reintento por categoría; rechazo, vacío y sesión distinta respetados.",
+        "Terreno visible con tarjetas cerradas; detalle desde retícula nativa con leyenda, áreas y diferencia vs proforma; condiciones pendientes explícitas. 81 controles y 40 KPI conservados, 320/390/430/1280 px, sin escrituras de negocio de prueba.",
+        "29 pruebas unitarias PPP, recorridos de interfaz/identidad/mapa/acceso; 124 pruebas del atlas y cuatro verificadores completos. Publicación por PR y comprobación de assets pendientes."
+      ],
+      "deployment": "Implementar y verificar en rama; PR con atlas fijado, comprobar archivos publicados. Rollback por PR conserva libros, versiones, expedientes y registros privados."
     }
   ],
   "data_contracts": [

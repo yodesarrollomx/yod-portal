@@ -1,13 +1,13 @@
 {
-  "model_revision": "2026-10-01.21-ppp-identidad-graficas",
-  "proposal_id": "CHG-PPP-LECTURA-002",
+  "model_revision": "2026-10-01.22-ppp-terreno-catalogo",
+  "proposal_id": "CHG-PPP-TERRENO-003",
   "components": [
     "SYS-POTENCIALES",
+    "SYS-YOD-OS",
     "GAS-PORTERO",
-    "SHEET-PORTERO",
-    "SYS-YOD-OS"
+    "SHEET-PORTERO"
   ],
-  "summary": "Registrar recuperación de identidad y lectura del proyecto con gráficas específicas de la proforma confirmada; implementación en PPP, mismas conexiones y fórmulas.",
+  "summary": "Registrar recuperación de catálogo desde enlaces del mapa de la misma sesión y lectura del terreno/implantación nativa, sin duplicar cálculos ni modificar backend.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
