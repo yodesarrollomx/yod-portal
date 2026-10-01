@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.10-emd-profiles · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.11-emd-drafts · 2026-10-01.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -261,7 +261,7 @@ Evaluación privada y seguimiento de revisiones
 - Entidades: evaluacion, revision, chinche.
 - Fuente de verdad: Sistema privado; detalle técnico restringido.
 - Evidencia: Integración pendiente de verificar.
-- Conexiones: CON-032 (SYS-EMD → GAS-EMD).
+- Conexiones: CON-032 (SYS-EMD → GAS-EMD); CON-EMD-DRAFTS-LOCAL (SYS-EMD → STORE-EMD-DRAFTS).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: No hay evidencia de integración transaccional con YOD OS; mantener datos y permisos privados.
 
@@ -935,3 +935,16 @@ Crear PR automáticos con identidad propia para que se ejecuten sus revisiones o
 - Conexiones: CON-PUBLICADOR-IDENTIDAD (EXT-ACTIONS → EXT-GITHUB-PUBLISHER-APP); CON-PUBLICADOR-SALA (EXT-GITHUB-PUBLISHER-APP → SYS-SALA); CON-PUBLICADOR-MARKETING (EXT-GITHUB-PUBLISHER-APP → SYS-MARKETING).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: La instalación se limita a Sala de Edición y Marketing; no usar credenciales personales en CI; Código probado no acredita una instalación ni publicación correcta.
+
+## STORE-EMD-DRAFTS · Borradores locales cifrados de evaluación
+
+Conservar copia recuperable en el mismo navegador sin sustituir la confirmación del servidor
+
+- Tipo: almacen_navegador. Dominio: Personas. Responsable: Participante autorizado del enlace vigente.
+- Evidencia: propuesto. Producción: Propuesta; implementación y publicación pendientes de evidencia privada.
+- Entidades: borrador_cifrado, mutacion_pendiente.
+- Fuente de verdad: Copia local no confirmada; el backend conserva autoridad sobre revisiones y cierre.
+- Evidencia: Diseño de recuperación local y pruebas sintéticas propuestos.
+- Conexiones: CON-EMD-DRAFTS-LOCAL (SYS-EMD → STORE-EMD-DRAFTS).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Pendientes: Copia limitada al navegador y enlace vigentes; borrar datos del navegador o cambiar enlace puede impedir recuperación; Almacenamiento o criptografía pueden fallar; el servidor sigue siendo fuente de verdad; Concurrencia entre pestañas y confirmaciones tardías exige aislamiento y revisión explícita.

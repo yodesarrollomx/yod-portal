@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.10-emd-profiles · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.11-emd-drafts · 2026-10-01.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
@@ -381,3 +381,29 @@ flowchart TD
 Vacíos: Selección y recorte requieren decisión de la persona; Uniformar fondo y altura de ojos automáticamente no está implementado ni aprobado mediante un proveedor externo; Pruebas aisladas, respaldo y publicación privada pendientes; el atlas no contiene fotos ni metadatos personales; Habilitar y verificar servicio avanzado Drive v3/API; si falta, el recorrido rechaza operación sin alternativa permisiva.
 
 Evidencia: Proceso propuesto; no acredita operación publicada.
+
+## PROC-EMD-DRAFTS · Recuperación revisada de borrador local
+
+Estado: propuesto.
+
+```mermaid
+flowchart TD
+  p0["Conservar copia local · Cliente autenticado"]
+  p1["Consultar estado vigente · Participante autorizado"]
+  p0 -.-> p1
+  p2["Revisar diferencias · Participante"]
+  p1 -.-> p2
+  p3["Confirmar envío o cierre · Participante y backend"]
+  p2 -.-> p3
+```
+
+| Paso | Responsable | Componentes | Entrada → salida | Ejecución |
+|---|---|---|---|---|
+| 1. Conservar copia local | Cliente autenticado | SYS-EMD, STORE-EMD-DRAFTS | Snapshot de edición o mutación pendiente → Copia cifrada durable o aviso explícito de indisponibilidad | pendiente |
+| 2. Consultar estado vigente | Participante autorizado | SYS-EMD, GAS-EMD | Sesión vigente y asignación propia → Revisión y cierre confirmados por servidor | pendiente |
+| 3. Revisar diferencias | Participante | SYS-EMD, STORE-EMD-DRAFTS | Copia local descifrada y versión del servidor → Decisión explícita de recuperación, modificación o descarte | manual |
+| 4. Confirmar envío o cierre | Participante y backend | SYS-EMD, GAS-EMD, SHEET-EMD | Mutación exacta revisada o nueva modificación autorizada; cierre con consentimiento nuevo → Confirmación real o conflicto sin sobrescritura automática | manual |
+
+Vacíos: Revisión y decisión de recuperar requieren consentimiento; no hay recuperación ni cierre automáticos; Persistencia limitada al navegador y enlace; no garantiza recuperación tras borrar almacenamiento; Pruebas táctiles y escritorio sintéticos no certifican Safari ni un teléfono físico.
+
+Evidencia: Proceso propuesto; sin datos humanos ni publicación acreditada.

@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.10-emd-profiles · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.11-emd-drafts · 2026-10-01.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -292,9 +292,11 @@ flowchart LR
   n_GAS_EMD["Evaluación privada"]
   n_SHEET_EMD["Datos de Evaluación privada"]
   n_EXT_DRIVE["Google Drive"]
+  n_STORE_EMD_DRAFTS["Borradores locales cifrados de evaluación"]
   n_GAS_EMD -.->|Lee/escribe registros del dominio| n_SHEET_EMD
   n_SYS_EMD -.->|Consume contrato del backend| n_GAS_EMD
   n_GAS_EMD -.->|Propuesta: fotos privadas de perfil| n_EXT_DRIVE
+  n_SYS_EMD -.->|Propuesta: copia cifrada local| n_STORE_EMD_DRAFTS
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_EMD pendiente;
   class n_GAS_EMD pendiente;
@@ -495,3 +497,4 @@ flowchart LR
 | CON-AUTH-CRM | GAS-CRM → GAS-PORTERO | autenticacion: Consulta identidad y alcance de lectura. CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada. | codigo | Revisión de fuente activa GAS-CRM, versión 20; dependencia de Portero contrastada en código y mediante dobles. No acredita recorrido completo de un usuario real. |
 | CON-AUTH-OBRA | GAS-OBRA → GAS-PORTERO | autenticacion: Verifica credencial para operar. CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada. | codigo | Revisión de fuente activa GAS-OBRA, versión 16; dependencia de Portero contrastada en código y mediante dobles. No acredita recorrido completo de un usuario real. |
 | CON-EMD-PROFILES-DRIVE | GAS-EMD → EXT-DRIVE | persistencia: Propuesta: fotos privadas de perfil. CTR-EMD-PROFILES: carpeta dedicada privada, carga y retirada propias, lectura autorizada y confirmación por revisión/mutación; sin nuevas autorizaciones OAuth. | propuesto | Propuesta registrada; implementación y despliegue privados pendientes de pruebas |
+| CON-EMD-DRAFTS-LOCAL | SYS-EMD → STORE-EMD-DRAFTS | persistencia_local: Propuesta: copia cifrada local. CTR-EMD-DRAFTS: cifrado por enlace vigente, aislamiento de pestañas, confirmación transaccional local y recuperación explícita; el servidor mantiene revisión y cierre. | propuesto | Diseño propuesto de persistencia local; sin evidencia de publicación |
