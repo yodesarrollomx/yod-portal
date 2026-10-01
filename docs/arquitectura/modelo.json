@@ -5851,6 +5851,24 @@
       "deployment": "Frontend integrado en potenciales-yod PR3 y publicado por Pages, commit d446b637f408124f224afadc6c674e3675c62f38. Backend candidato privado sin desplegar por falta de sesión autorizada. Modelo piloto, cuerpos y flujo parcial nativos leídos; activador, conexión pública y migración general pendientes."
     },
     {
+      "id": "CHG-EMD-UI-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD"
+      ],
+      "proposal": "Registrar en el atlas la interfaz compacta de evaluación: lista propia por persona, siete etapas y confirmación de guardado/avance del servidor; chinches desde el enlace personal. Mantener los 28 textos, escala admitida, asignaciones, permisos, control de conflictos y fuente de verdad privada; sin nuevas conexiones ni migraciones. Corregir recuperación de cierre pendiente y foco/avisos accesibles sin cambiar el servidor.",
+      "status": "implementado_local",
+      "tests": [
+        "70 pruebas sintéticas de lógica/importador del portal; no corresponden a participantes humanos",
+        "Regresiones de cierre rechazado/ACK perdido, cierre remoto y conservación de respuestas",
+        "Chromium sintético: 320/390 px, navegación por teclado, foco tras autosave, diálogo, guardado, chinches, cierre y recarga",
+        "Validación del modelo, vistas deterministas e impacto contra el commit exacto del atlas"
+      ],
+      "deployment": "Registro y frontend preparados en ramas/PR separados; no acredita integración o publicación. Publicar exige preservar la implementación y datos existentes, verificar el recorrido publicado y otro dispositivo. Reversión por revisión del commit de interfaz y referencia de atlas; no restaurar ni borrar registros privados."
+    },
+    {
       "id": "CHG-PPP-FRONT-001",
       "components": [
         "SYS-POTENCIALES",
