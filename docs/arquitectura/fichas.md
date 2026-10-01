@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-09-30.5 · 2026-09-30.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.1 · 2026-10-01.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -19,13 +19,13 @@ Priorizar y aprobar trabajo de Dirección
 Evaluar alternativas y escenarios de desarrollo
 
 - Tipo: tablero. Dominio: Ventas. Responsable: Desarrollo y Comercial.
-- Evidencia: codigo. Producción: No verificado en despliegue.
+- Evidencia: codigo. Producción: Frontend publicado; vínculo de cálculo nativo y permisos del recorrido todavía sin verificar en sesión.
 - Entidades: caso, escenario, variable_calculo, flujo_proyectado.
 - Fuente de verdad: SHEET-PORTERO para casos; modelos de cálculo del frontend; fuente GAS desplegada por verificar.
-- Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L17) — Sistema presente en el catálogo canónico.
+- Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L17) — Sistema presente en el catálogo canónico; [potenciales-yod/mixto.html](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/mixto.html) — Frontend integrado por PR3 y publicado por Pages; código público incluye lectura del modelo nativo, cuerpos y flujo por etapas. Sesión y backend pendientes de verificación conjunta..
 - Conexiones: CON-019 (SYS-POTENCIALES → GAS-PORTERO); CON-034 (SYS-YOD-OS → SYS-POTENCIALES).
 - Mejoras: C · Cotización, plan y siguiente paso comercial; PPP · Unificar tablero y fórmulas de potencial en Sheets.
-- Pendientes: Migración autorizada a fórmulas nativas por caso; frontend preparado en PR, todavía sin publicar. Los casos no migrados conservan cálculo cliente..
+- Pendientes: Frontend de lectura nativa publicado y contrastado por código. Backend de transporte sin desplegar; conexión pública del piloto y migración de otros casos pendientes. Los casos no migrados conservan cálculo cliente..
 
 ## SYS-TRACK · Tracks de codesarrollo
 
@@ -918,7 +918,7 @@ Conservar entradas, fórmulas nativas, versiones, flujos y datos de diagramas de
 - Evidencia: ejecucion. Producción: Modelo piloto leído y conciliado en Sheets; conexión pública y migración general pendientes.
 - Entidades: caso, version, entrada, formula, flujo, geometria, etapa, fuente, revision, cambio.
 - Fuente de verdad: Libro privado por caso registrado en SHEET-PORTERO; entradas y fórmulas canónicas. El tablero transporta y presenta resultados; no replica un motor financiero..
-- Evidencia: Lectura directa autorizada de un libro piloto; fórmulas nativas y versiones contrastadas. Evidencia detallada en registro operativo privado, sin publicar identificadores ni cifras..
+- Evidencia: Lectura directa autorizada de un libro piloto; fórmulas nativas y versiones contrastadas. Evidencia detallada en registro operativo privado, sin publicar identificadores ni cifras.; Lectura nativa de programa por cuerpos y flujo por etapas. Campos ausentes quedan pendientes; comparación con proforma activa sin sustituir datos globales. Detalle en registro privado..
 - Conexiones: CON-PPP-MODELO (GAS-PORTERO → SHEET-PPP-MODELOS); CON-PPP-REGISTRO (SHEET-PORTERO → SHEET-PPP-MODELOS).
 - Mejoras: PPP · Unificar tablero y fórmulas de potencial en Sheets.
-- Pendientes: La existencia del libro no acredita la conexión pública del tablero; Faltan otros motores, nuevas altas y flujos completos de operación y etapas.
+- Pendientes: La existencia del libro no acredita la conexión pública del tablero; Faltan otros motores, nuevas altas, capturas por cuerpos y renta neta completa; el presupuesto mensual por etapas es preparación parcial.

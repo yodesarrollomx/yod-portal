@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": "2026-09-30.5",
-  "checked_at": "2026-09-30",
+  "revision": "2026-10-01.1",
+  "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
     "margen_y_control",
@@ -227,6 +227,13 @@
           "claim": "Sistema presente en el catálogo canónico",
           "status": "codigo",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "mixto.html",
+          "claim": "Frontend integrado por PR3 y publicado por Pages; código público incluye lectura del modelo nativo, cuerpos y flujo por etapas. Sesión y backend pendientes de verificación conjunta.",
+          "status": "codigo",
+          "source_revision": "d446b637f408124f224afadc6c674e3675c62f38"
         }
       ],
       "data_entities": [
@@ -236,11 +243,11 @@
         "flujo_proyectado"
       ],
       "risks_sanitized": [
-        "Migración autorizada a fórmulas nativas por caso; frontend preparado en PR, todavía sin publicar. Los casos no migrados conservan cálculo cliente."
+        "Frontend de lectura nativa publicado y contrastado por código. Backend de transporte sin desplegar; conexión pública del piloto y migración de otros casos pendientes. Los casos no migrados conservan cálculo cliente."
       ],
       "source_of_truth": "SHEET-PORTERO para casos; modelos de cálculo del frontend; fuente GAS desplegada por verificar",
       "status": "codigo",
-      "runtime_status": "No verificado en despliegue"
+      "runtime_status": "Frontend publicado; vínculo de cálculo nativo y permisos del recorrido todavía sin verificar en sesión"
     },
     {
       "id": "SYS-TRACK",
@@ -2403,6 +2410,11 @@
           "claim": "Lectura directa autorizada de un libro piloto; fórmulas nativas y versiones contrastadas. Evidencia detallada en registro operativo privado, sin publicar identificadores ni cifras.",
           "status": "ejecucion",
           "source_revision": "2026-09-30"
+        },
+        {
+          "claim": "Lectura nativa de programa por cuerpos y flujo por etapas. Campos ausentes quedan pendientes; comparación con proforma activa sin sustituir datos globales. Detalle en registro privado.",
+          "status": "ejecucion",
+          "source_revision": "2026-10-01"
         }
       ],
       "data_entities": [
@@ -2419,7 +2431,7 @@
       ],
       "risks_sanitized": [
         "La existencia del libro no acredita la conexión pública del tablero",
-        "Faltan otros motores, nuevas altas y flujos completos de operación y etapas"
+        "Faltan otros motores, nuevas altas, capturas por cuerpos y renta neta completa; el presupuesto mensual por etapas es preparación parcial"
       ],
       "source_of_truth": "Libro privado por caso registrado en SHEET-PORTERO; entradas y fórmulas canónicas. El tablero transporta y presenta resultados; no replica un motor financiero."
     }
@@ -5836,7 +5848,7 @@
         "Lectura real del modelo y ruta desde editor; sin POST de prueba en producción",
         "Validación de esquema, referencias y regeneración de vistas del atlas"
       ],
-      "deployment": "Frontend preparado en potenciales-yod PR3, sin integrar; backend candidato privado no desplegado. Modelo piloto nativo validado; activador de trazabilidad, interfaz pública y migración general pendientes."
+      "deployment": "Frontend integrado en potenciales-yod PR3 y publicado por Pages, commit d446b637f408124f224afadc6c674e3675c62f38. Backend candidato privado sin desplegar por falta de sesión autorizada. Modelo piloto, cuerpos y flujo parcial nativos leídos; activador, conexión pública y migración general pendientes."
     },
     {
       "id": "CHG-EMD-UI-001",
@@ -5855,6 +5867,26 @@
         "Validación del modelo, vistas deterministas e impacto contra el commit exacto del atlas"
       ],
       "deployment": "Registro y frontend preparados en ramas/PR separados; no acredita integración o publicación. Publicar exige preservar la implementación y datos existentes, verificar el recorrido publicado y otro dispositivo. Reversión por revisión del commit de interfaz y referencia de atlas; no restaurar ni borrar registros privados."
+    },
+    {
+      "id": "CHG-PPP-FRONT-001",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SYS-CONTROL"
+      ],
+      "proposal": "Registrar el frontend compatible ya publicado y la ampliación del piloto con cuerpos, presupuesto por etapas y renta familiar separada. Conservar estados reales y cambios concurrentes.",
+      "status": "publicado",
+      "tests": [
+        "Arquitectura YOD aprobada en PR3 y commit integrado",
+        "Cinco pruebas de restauración de borrador nativo sin conexión",
+        "Comparación exacta del archivo integrado con candidato",
+        "Publicación Pages aprobada y código DOM público contrastado",
+        "Lectura nativa y exportación del libro ampliado, sin errores cacheados"
+      ],
+      "deployment": "Publicado únicamente frontend en d446b637f408124f224afadc6c674e3675c62f38. Backend existente aún sin actualizar; no confirma conexión nativa completa ni todos los casos."
     }
   ],
   "data_contracts": [
