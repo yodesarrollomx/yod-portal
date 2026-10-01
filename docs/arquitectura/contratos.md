@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.17-emd-profile-review · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.18-emd-profile-cards · 2026-10-01.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -137,7 +137,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 - Componentes: SYS-EMD, GAS-EMD, SHEET-EMD, EXT-DRIVE.
 - Evidencia: Propuesta del sistema privado; detalles físicos y evidencia restringidos al repositorio privado..
-- Entrada/campos: `Sesión autorizada e identidad canónica propia`, `JPEG normalizado localmente a 512 × 512 píxeles, máximo 256 KiB, con recorte manual`, `Revisión esperada e identificador de mutación`, `Consulta de hasta 30 asignaciones autorizadas por solicitud`, `Estado de evaluación ya confirmado: off, yellow o green`, `Publicación interna del agente: identidad canónica, revisión/hash/archivo del original y archivo derivado privado verificado`.
+- Entrada/campos: `Sesión autorizada e identidad canónica propia`, `JPEG normalizado localmente a 512 × 512 píxeles, máximo 256 KiB, con recorte manual`, `Revisión esperada e identificador de mutación`, `Consulta de hasta 30 asignaciones autorizadas por solicitud`, `Estado de evaluación ya confirmado: off, yellow o green`, `Publicación interna del agente: identidad canónica, revisión/hash/archivo del original y archivo derivado privado verificado`, `Derivado homologado interno JPEG existente o PNG estricto de 512 × 512 con transparencia; nunca PNG como original subido por participante`.
 - Salida: Confirmación de revisión y mutación sin exponer ubicación privada, Imagen autenticada en memoria, sin URL de Drive, o perfil sin foto, Foto o silueta con apariencia derivada del estado confirmado y respaldo textual accesible, Conflicto o error explícito que conserva el estado confirmado, Original visible exclusivamente en Mi foto de su propietario; tableros reciben solo derivado homologado vigente o silueta.
 
 - Carga y retirada derivan propietario de la identidad canónica del servidor, incluida compatibilidad de acceso legado; no aceptar identidad del cliente ni inventar personas o cargos
@@ -145,7 +145,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Carpeta dedicada dentro de carpeta existente, ambas privadas y sin editores/lectores explícitos; verificar también privacidad del archivo y rechazar destinos compartidos
 - Pestaña privada de perfiles con identidad, archivo, revisión, mutación, digest, MIME, bytes y actualización; nunca guardar base64 en metadatos ni mezclar respuestas
 - Servidor valida JPEG baseline, firma, dimensiones, cierre y máximo de 256 KiB; rechaza EXIF, comentarios y segmentos no permitidos tras normalización local
-- La apariencia del perfil no crea ni infiere estados: usa exclusivamente off/yellow/green ya recibidos; conservar texto, foco y aria-label para no depender solo del color
+- La apariencia del perfil no crea ni infiere estados: usa exclusivamente off/yellow/green ya recibidos; conservar foco y nombre/estado accesibles sin depender solo del color, aunque no haya etiqueta visible de estado o relación.
 - Revisión, mutación y digest deben coincidir para repetir resultado; conflicto o ACK inválido conserva el estado confirmado y no anuncia éxito
 - Conservar implementación, URL, roles, 28 preguntas, escala, matriz y asignaciones; reutilizar autorización Drive existente
 - La reversión de código no borra ni restaura datos de perfil o evaluación
@@ -162,6 +162,10 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Publicar únicamente por función interna privada, con ACL e integridad comprobadas, respaldo y comparación de identidad, revisión, hash y archivo fuente bajo bloqueo; upload posterior invalida derivado obsoleto.
 - Reintento de publicación vincula mutación, fuente y derivado mediante digest; no duplica revisión y no puede sustituir una foto más reciente.
 - Lecturas de originales/derivados vacías no crean archivos, carpetas ni tablas; el tratamiento del agente no altera respuestas, instrumento, matriz o accesos.
+- Permitir PNG únicamente en publicación interna de derivados: validar formato íntegro, dimensiones exactas, tamaño acotado y ausencia de metadatos no permitidos; conservar JPEG baseline para originales y derivados existentes
+- El formato del derivado no amplía RPC, acceso, ACL, revisión, comparación de fuente o repetición idempotente; MIME y digest deben corresponder a bytes validados
+- Nombre completo y cargo solo desde fuente verificada; no inventar cargos ni identidades. El borde usa exclusivamente estado confirmado, con alternativa accesible aunque se retiren etiquetas visibles de estado/relación
+- Sin cargo verificado, la segunda línea puede mostrar el marcador Puesto identificado de forma accesible como pendiente; no representa un cargo real ni modifica matriz o asignaciones
 
 ## CTR-EMD-DRAFTS
 

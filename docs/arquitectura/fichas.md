@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.17-emd-profile-review · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.18-emd-profile-cards · 2026-10-01.
 
 ## SYS-DESPACHO · El Despacho
 

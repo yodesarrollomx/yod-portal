@@ -1,18 +1,19 @@
 {
-  "model_revision": "2026-10-01.17-emd-profile-review",
-  "proposal_id": "CHG-EMD-PROFILE-REVIEW-001",
+  "model_revision": "2026-10-01.18-emd-profile-cards",
+  "proposal_id": "CHG-EMD-PROFILE-CARDS-001",
   "components": [
     "SYS-EMD",
     "GAS-EMD",
     "SHEET-EMD",
+    "EXT-DRIVE",
     "SYS-YOD-OS"
   ],
-  "summary": "Separar originales propios y derivados homologados; tratamiento por agente fuera del portal y publicación privada con comparación de revisión/hash.",
+  "summary": "Proponer tarjetas simplificadas y derivados internos PNG estrictos; conservar originalJPEG, publicación privada CAS/ACL y todos los contratos existentes. SYS-YOD-OS solo documental.",
   "tests": [
-    "node scripts/arquitectura.cjs --validate",
     "node scripts/arquitectura.cjs --check",
-    "Regeneración determinista",
-    "Pruebas sintéticas de privacidad, publicación y concurrencia con auditorías móvil/escritorio"
+    "Privacidad y preservación de contratos/IDs",
+    "Vistas deterministas y CI del HEAD exacto"
   ],
-  "rollback": "Revertir documentalmente y regenerar; no reexponer originales pendientes ni borrar datos privados."
+  "rollback": "Revertir actualización documental y regenerar vistas. Reversión privada solo de código conserva fotos y respuestas, sin exponer originales."
 }
+

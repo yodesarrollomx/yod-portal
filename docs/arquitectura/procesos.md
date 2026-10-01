@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.17-emd-profile-review · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.18-emd-profile-cards · 2026-10-01.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
@@ -382,9 +382,9 @@ flowchart TD
 | 1. Elegir y recortar foto propia | Participante | SYS-EMD | Imagen local elegida por la persona → Recorte sRGB convertido localmente a JPEG baseline sin metadatos personales; alineación progresiva y ajuste manual disponibles | manual |
 | 2. Validar y guardar perfil | Backend autorizado | GAS-EMD, SHEET-EMD, EXT-DRIVE | Imagen validable, revisión e identificador de mutación → Original privado confirmado, visible solo en Mi foto, pendiente de homologación | pendiente |
 | 3. Editar y homologar en recorrido | Agente autorizado | GAS-EMD, SHEET-EMD, EXT-DRIVE | Original privado y metadata de revisión capturada → Derivado editado uniforme, original conservado y evidencia privada | pendiente |
-| 4. Publicar derivado verificado | Propietario mediante función interna | GAS-EMD, SHEET-EMD, EXT-DRIVE | Archivo privado editado e identidad/revisión/hash/archivo fuente esperados → Derivado publicado solo si fuente sigue vigente; conflicto conserva upload posterior | pendiente |
+| 4. Publicar derivado verificado | Propietario mediante función interna | GAS-EMD, SHEET-EMD, EXT-DRIVE | JPEG o PNG transparente estricto privado de 512 × 512 e identidad/revisión/hash/archivo fuente esperados → Derivado publicado solo si fuente sigue vigente; conflicto conserva upload posterior | pendiente |
 | 5. Consultar foto autorizada | Participante asignado o revisor | SYS-EMD, GAS-EMD, EXT-DRIVE | Sesión y relación autorizadas → Derivado homologado vigente autorizado o silueta; nunca original pendiente | pendiente |
-| 6. Representar avance confirmado | Interfaz | SYS-EMD | Perfil autorizado o silueta y estado confirmado ya disponible → Retrato gris, en proceso o completo con texto y foco accesibles | automatico |
+| 6. Representar avance confirmado | Interfaz | SYS-EMD | Perfil autorizado o silueta y estado confirmado ya disponible → Tarjeta en tres columnas con nombre completo, cargo verificado opcional y retrato mayor; borde gris/naranja/verde y estado accesible sin etiquetas visibles | automatico |
 | 7. Quitar foto propia | Participante | SYS-EMD, GAS-EMD, SHEET-EMD, EXT-DRIVE | Revisión vigente y mutación propia → Perfil sin foto confirmado, con reintento seguro | manual |
 
 Vacíos: Selección y recorte requieren decisión de la persona; La apariencia por estado no sustituye el texto, el foco ni el estado confirmado del servidor; el atlas no contiene fotos ni metadatos personales; Habilitar y verificar servicio avanzado Drive v3/API; si falta, el recorrido rechaza operación sin alternativa permisiva; Circuito privado del agente y tratamiento uniforme están propuestos; no publicados por documentarlos; No usar una foto real como fixture ni copiar originales/derivados o metadata privada al atlas público.

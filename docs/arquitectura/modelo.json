@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.17-emd-profile-review",
+  "revision": "2026-10-01.18-emd-profile-cards",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -5465,7 +5465,7 @@
             "SHEET-EMD",
             "EXT-DRIVE"
           ],
-          "input": "Archivo privado editado e identidad/revisión/hash/archivo fuente esperados",
+          "input": "JPEG o PNG transparente estricto privado de 512 × 512 e identidad/revisión/hash/archivo fuente esperados",
           "output": "Derivado publicado solo si fuente sigue vigente; conflicto conserva upload posterior",
           "mode": "pendiente"
         },
@@ -5488,7 +5488,7 @@
             "SYS-EMD"
           ],
           "input": "Perfil autorizado o silueta y estado confirmado ya disponible",
-          "output": "Retrato gris, en proceso o completo con texto y foco accesibles",
+          "output": "Tarjeta en tres columnas con nombre completo, cargo verificado opcional y retrato mayor; borde gris/naranja/verde y estado accesible sin etiquetas visibles",
           "mode": "automatico"
         },
         {
@@ -6590,6 +6590,26 @@
         "Pruebas y CI del HEAD exacto, respaldo privado del código y verificación de fuente/recorrido en la implementación existente"
       ],
       "deployment": "Propuesta registrada antes de implementar. No se presenta como editada/publicada una foto por subirla, crear metadata o guardar prompt. Cambiar servidor e interfaz en la implementación existente con respaldo y verificación; no escrituras de prueba en producción. Reversión no debe reexponer originales pendientes ni borrar perfiles/respuestas."
+    },
+    {
+      "id": "CHG-EMD-PROFILE-CARDS-001",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "EXT-DRIVE",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Proponer tarjetas en tres columnas con nombre completo en negrita en primera línea, cargo debajo únicamente si verificado, retrato homologado transparente 35 % mayor que sobresale de la tarjeta y borde gris/naranja/verde según estado confirmado. Retirar etiquetas visibles de estado y relación conservando nombre accesible. Admitir PNG estricto de 512 × 512 exclusivamente en derivados homologados internos, además del JPEG existente; original propio continúa JPEG sin cambios de permisos, revisión o mutación. SYS-YOD-OS solo aporta atlas documental.",
+      "status": "propuesto",
+      "tests": [
+        "PNG derivado: firma, dimensiones, estructura, integridad, tamaño, transparencia y rechazo de metadatos/no permitidos",
+        "Original propio sigue rechazando PNG; CAS, ACL, digest, fuente vigente e idempotencia de publicación preservados",
+        "Tarjetas sintéticas táctiles/escritorio: tres columnas, nombre completo, cargo verificado o ausente, retrato y borde por estado; etiquetas accesibles sin duplicación visible",
+        "No exponer originales pendientes ni fotos reales en pruebas; conservar 28 preguntas, escala, asignaciones y respuestas",
+        "Pruebas del HEAD exacto, respaldo privado y comparación de versión/recorrido publicado"
+      ],
+      "deployment": "Propuesta registrada antes de implementar. No acredita tarjetas publicadas ni derivados homologados. Publicar en implementación existente después de pruebas y respaldo; reversión de código conserva archivos privados y respuestas, sin volver a exponer originales."
     }
   ],
   "data_contracts": [
@@ -6911,7 +6931,8 @@
         "Revisión esperada e identificador de mutación",
         "Consulta de hasta 30 asignaciones autorizadas por solicitud",
         "Estado de evaluación ya confirmado: off, yellow o green",
-        "Publicación interna del agente: identidad canónica, revisión/hash/archivo del original y archivo derivado privado verificado"
+        "Publicación interna del agente: identidad canónica, revisión/hash/archivo del original y archivo derivado privado verificado",
+        "Derivado homologado interno JPEG existente o PNG estricto de 512 × 512 con transparencia; nunca PNG como original subido por participante"
       ],
       "output": [
         "Confirmación de revisión y mutación sin exponer ubicación privada",
@@ -6926,7 +6947,7 @@
         "Carpeta dedicada dentro de carpeta existente, ambas privadas y sin editores/lectores explícitos; verificar también privacidad del archivo y rechazar destinos compartidos",
         "Pestaña privada de perfiles con identidad, archivo, revisión, mutación, digest, MIME, bytes y actualización; nunca guardar base64 en metadatos ni mezclar respuestas",
         "Servidor valida JPEG baseline, firma, dimensiones, cierre y máximo de 256 KiB; rechaza EXIF, comentarios y segmentos no permitidos tras normalización local",
-        "La apariencia del perfil no crea ni infiere estados: usa exclusivamente off/yellow/green ya recibidos; conservar texto, foco y aria-label para no depender solo del color",
+        "La apariencia del perfil no crea ni infiere estados: usa exclusivamente off/yellow/green ya recibidos; conservar foco y nombre/estado accesibles sin depender solo del color, aunque no haya etiqueta visible de estado o relación.",
         "Revisión, mutación y digest deben coincidir para repetir resultado; conflicto o ACK inválido conserva el estado confirmado y no anuncia éxito",
         "Conservar implementación, URL, roles, 28 preguntas, escala, matriz y asignaciones; reutilizar autorización Drive existente",
         "La reversión de código no borra ni restaura datos de perfil o evaluación",
@@ -6942,7 +6963,11 @@
         "Separar original y derivado: original solo en Mi foto del propietario, nunca en tableros de participante/coordinación ni compartido con evaluadores. Un upload no equivale a homologación.",
         "Publicar únicamente por función interna privada, con ACL e integridad comprobadas, respaldo y comparación de identidad, revisión, hash y archivo fuente bajo bloqueo; upload posterior invalida derivado obsoleto.",
         "Reintento de publicación vincula mutación, fuente y derivado mediante digest; no duplica revisión y no puede sustituir una foto más reciente.",
-        "Lecturas de originales/derivados vacías no crean archivos, carpetas ni tablas; el tratamiento del agente no altera respuestas, instrumento, matriz o accesos."
+        "Lecturas de originales/derivados vacías no crean archivos, carpetas ni tablas; el tratamiento del agente no altera respuestas, instrumento, matriz o accesos.",
+        "Permitir PNG únicamente en publicación interna de derivados: validar formato íntegro, dimensiones exactas, tamaño acotado y ausencia de metadatos no permitidos; conservar JPEG baseline para originales y derivados existentes",
+        "El formato del derivado no amplía RPC, acceso, ACL, revisión, comparación de fuente o repetición idempotente; MIME y digest deben corresponder a bytes validados",
+        "Nombre completo y cargo solo desde fuente verificada; no inventar cargos ni identidades. El borde usa exclusivamente estado confirmado, con alternativa accesible aunque se retiren etiquetas visibles de estado/relación",
+        "Sin cargo verificado, la segunda línea puede mostrar el marcador Puesto identificado de forma accesible como pendiente; no representa un cargo real ni modifica matriz o asignaciones"
       ]
     },
     {
