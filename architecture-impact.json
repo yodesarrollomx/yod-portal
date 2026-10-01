@@ -1,17 +1,12 @@
 {
-  "model_revision": "2026-09-30.2",
-  "proposal_id": "CHG-BACKENDS-VERIFY-001",
+  "model_revision": "2026-09-30.3",
+  "proposal_id": "CHG-OBRA-001",
   "components": [
-    "GAS-PORTERO",
-    "GAS-FLUJO",
-    "GAS-CODES",
-    "GAS-ALQUIMIA",
-    "GAS-CATALOGO",
-    "GAS-OBRA",
-    "GAS-PLAN-POTENCIAL",
-    "GAS-CRM"
+    "SYS-OBRA-CLIENTE",
+    "GAS-OBRA-CLIENTE",
+    "SHEET-OBRA-CLIENTE"
   ],
-  "summary": "Ocho motores contrastados por fuente y versión activa; se conserva la distinción entre auditoría de fuente y pruebas funcionales.",
+  "summary": "Corregir filas físicas, autorización explícita y conservación de pagos recibidos del módulo cliente de Obra; versión 2 verificada en la misma implementación.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -20,5 +15,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir la actualización documental; no modifica Apps Script ni datos operativos."
+  "rollback": "Revertir el commit de referencia y seleccionar versión 1 en la implementación existente de Apps Script. No restaurar ni borrar registros de negocio."
 }
