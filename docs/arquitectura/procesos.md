@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.12-ppp-interfaz · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.13-emd-contactos · 2026-10-01.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
@@ -407,3 +407,29 @@ flowchart TD
 Vacíos: Revisión y decisión de recuperar requieren consentimiento; no hay recuperación ni cierre automáticos; Persistencia limitada al navegador y enlace; no garantiza recuperación tras borrar almacenamiento; Pruebas táctiles y escritorio sintéticos no certifican Safari ni un teléfono físico.
 
 Evidencia: Proceso propuesto; sin datos humanos ni publicación acreditada.
+
+## PROC-EMD-CONTACTS · Preparación privada de contactos y recordatorios
+
+Estado: propuesto.
+
+```mermaid
+flowchart TD
+  p0["Elegir archivo y revisar vista previa · Coordinación autorizada"]
+  p1["Validar personas y correos · Backend autorizado"]
+  p0 -.-> p1
+  p2["Confirmar y guardar contactos · Coordinación autorizada"]
+  p1 -.-> p2
+  p3["Preparar recordatorio individual · Coordinación autorizada"]
+  p2 -.-> p3
+```
+
+| Paso | Responsable | Componentes | Entrada → salida | Ejecución |
+|---|---|---|---|---|
+| 1. Elegir archivo y revisar vista previa | Coordinación autorizada | SYS-EMD | CSV, TSV o XLSX local de hasta 250 filas → Vista previa sin escritura | manual |
+| 2. Validar personas y correos | Backend autorizado | GAS-EMD, SHEET-EMD | Identificador exacto o nombre único y correo → Coincidencias activas o errores por fila | pendiente |
+| 3. Confirmar y guardar contactos | Coordinación autorizada | SYS-EMD, GAS-EMD, SHEET-EMD | Filas revisadas, revisión esperada e identificador de mutación → Contactos confirmados o conflicto sin sobrescritura | manual |
+| 4. Preparar recordatorio individual | Coordinación autorizada | SYS-EMD | Persona pendiente y correo confirmado → Asunto y texto copiable sin envío ni enlace personal | manual |
+
+Vacíos: El envío real requiere destinatarios verificados y autorización específica; no forma parte de esta propuesta; La vista previa y las pruebas sintéticas no sustituyen revisión humana de nombres y correos; No emitir ni reemitir accesos y no reiniciar evaluaciones al preparar un recordatorio.
+
+Evidencia: Proceso propuesto; detalle operativo y datos personales permanecen en el sistema privado.
