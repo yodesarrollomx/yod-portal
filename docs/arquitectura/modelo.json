@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.7",
+  "revision": "2026-10-01.8-emd-pins",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -6162,6 +6162,26 @@
         "Esquema, impacto y vistas del atlas sincronizados"
       ],
       "deployment": "Versión53 publicada conservando implementación, URL y permisos. Lectura pública del piloto verificada; sesión de pantalla, edición real, primer evento de auditoría y migración general pendientes. Reversión técnica a versión52 preservando libros y registros."
+    },
+    {
+      "id": "CHG-EMD-PINS-002",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "EXT-ACTIONS"
+      ],
+      "proposal": "Corregir selección táctil de chinches con dianas estructurales precisas; aislar rechazos y confirmaciones de la cola sin ocultar errores. Convertir el puente de issues a ejecución manual, retirar disparadores schedule/push y fallar explícitamente si falta configuración. La revisión horaria del agente será la única ronda programada de este sistema; su configuración no acredita una ejecución terminada.",
+      "status": "propuesto",
+      "tests": [
+        "Selección táctil y escritorio de elementos concretos, sin capturar contenedores globales",
+        "Cola: rechazo de una nota no bloquea otras; confirmación inválida no elimina la nota ni oculta el fallo",
+        "Puente manual: configuración ausente produce fallo; sin ejecución por schedule ni push",
+        "Preservar contratos de respuestas, 28 preguntas, escala y asignaciones; pruebas con datos sintéticos",
+        "Registrar inicio y cierre verificables por ejecución; no certificar recuperación periódica sin cierre posterior",
+        "Esquema, IDs y vistas del atlas regeneradas y comprobadas"
+      ],
+      "deployment": "Propuesta previa a implementación. Integración y despliegue pendientes de pruebas y evidencia privada. Conservar implementación, URL, permisos y datos existentes; respaldo privado antes de publicar. Reversión al código previo sin borrar notas ni respuestas."
     }
   ],
   "data_contracts": [
@@ -6408,6 +6428,34 @@
         "Prevalidar todas las columnas y valores antes de escribir; conservar semántica de reintento y detectar otra solicitud con la misma clave",
         "Preservar endpoints e implementaciones existentes y cualquier trabajo concurrente del editor",
         "No probar operaciones financieras ni permisos escribiendo en producción; usar dobles y contraste de esquema autorizado"
+      ]
+    },
+    {
+      "id": "CTR-EMD-PINS-ACK",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "EXT-ACTIONS"
+      ],
+      "source": "Propuesta de corrección del sistema privado; evidencia técnica y operativa restringida.",
+      "input": [
+        "Diana estructural de pantalla y nota de mejora",
+        "Identificador de nota para repetición segura",
+        "Configuración explícita del puente manual"
+      ],
+      "output": [
+        "Confirmación válida por nota o error visible",
+        "Cola conservada ante rechazo o confirmación inválida",
+        "Resultado final de revisión con pruebas y bloqueos"
+      ],
+      "invariants": [
+        "La diana no depende del texto de respuestas ni contiene datos personales",
+        "Una nota rechazada no detiene el envío de otras; solo una confirmación válida permite retirarla de la cola",
+        "Configuración ausente nunca se informa como éxito de revisión",
+        "El puente manual no compite con la ronda programada del agente",
+        "Inicio y configuración no equivalen a ejecución terminada ni a recuperación validada",
+        "No se alteran respuestas, 28 preguntas, escala, matriz, asignaciones ni permisos existentes"
       ]
     }
   ],
@@ -6659,3 +6707,4 @@
     }
   ]
 }
+

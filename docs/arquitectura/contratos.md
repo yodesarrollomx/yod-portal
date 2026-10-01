@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.7 · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.8-emd-pins · 2026-10-01.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -102,3 +102,17 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Prevalidar todas las columnas y valores antes de escribir; conservar semántica de reintento y detectar otra solicitud con la misma clave
 - Preservar endpoints e implementaciones existentes y cualquier trabajo concurrente del editor
 - No probar operaciones financieras ni permisos escribiendo en producción; usar dobles y contraste de esquema autorizado
+
+## CTR-EMD-PINS-ACK
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD, EXT-ACTIONS.
+- Evidencia: Propuesta de corrección del sistema privado; evidencia técnica y operativa restringida..
+- Entrada/campos: `Diana estructural de pantalla y nota de mejora`, `Identificador de nota para repetición segura`, `Configuración explícita del puente manual`.
+- Salida: Confirmación válida por nota o error visible, Cola conservada ante rechazo o confirmación inválida, Resultado final de revisión con pruebas y bloqueos.
+
+- La diana no depende del texto de respuestas ni contiene datos personales
+- Una nota rechazada no detiene el envío de otras; solo una confirmación válida permite retirarla de la cola
+- Configuración ausente nunca se informa como éxito de revisión
+- El puente manual no compite con la ronda programada del agente
+- Inicio y configuración no equivalen a ejecución terminada ni a recuperación validada
+- No se alteran respuestas, 28 preguntas, escala, matriz, asignaciones ni permisos existentes
