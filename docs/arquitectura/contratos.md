@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.2 · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.3 · 2026-10-01.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -87,3 +87,18 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Sala confirma publicación de recursos antes de montar sus referencias en Apps Script
 - Sin cambios o en simulación no se necesita ni se crea token App
 - Llave privada solo en secretos cifrados y registro privado; ninguna credencial personal en CI
+
+## CTR-AUTORIZACION-OPERACIONES
+
+- Componentes: SYS-YOD-OS, SYS-POTENCIALES, SYS-OBRA, SYS-FLUJO, GAS-PORTERO, GAS-OBRA, GAS-FLUJO, GAS-CRM, GAS-CATALOGO, SHEET-PORTERO, SHEET-CATALOGO.
+- Evidencia: Revisión de fuentes activas y pruebas aisladas con datos sintéticos; evidencia sensible preservada en el registro privado..
+- Entrada/campos: `credencial vigente`, `operación y recurso explícitos`, `identidad canónica del servidor`, `solicitud y clave de repetición cuando corresponde`.
+- Salida: resultado permitido o rechazo explícito, actor comprobado y revisión para auditoría, estado parcial explícito ante fallo de escritura.
+
+- La caché conserva permisos explícitos y jamás amplía una autorización; vacío no equivale a acceso universal
+- Leer todos los tableros no concede administración de identidades
+- Autorizar una operación requiere identidad y rol comprobados por el servidor; un nombre enviado por el cliente no acredita a quien firma
+- Los datos de negocio exigen el recurso autorizado; salud pública solo informa estado técnico general
+- Prevalidar todas las columnas y valores antes de escribir; conservar semántica de reintento y detectar otra solicitud con la misma clave
+- Preservar endpoints e implementaciones existentes y cualquier trabajo concurrente del editor
+- No probar operaciones financieras ni permisos escribiendo en producción; usar dobles y contraste de esquema autorizado

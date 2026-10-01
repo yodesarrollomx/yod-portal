@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.2",
+  "revision": "2026-10-01.3",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -5983,6 +5983,33 @@
         "Pruebas existentes de ambos repositorios y verificaciones completas del portal"
       ],
       "deployment": "No instalado ni verificado en operación. Requiere registrar App e instalarla solo en los dos repositorios; después configurar secretos y observar PR, checks, merge y publicación."
+    },
+    {
+      "id": "CHG-BACKENDS-AUTORIZACION-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-POTENCIALES",
+        "SYS-OBRA",
+        "SYS-FLUJO",
+        "GAS-PORTERO",
+        "GAS-OBRA",
+        "GAS-FLUJO",
+        "GAS-CRM",
+        "GAS-CATALOGO",
+        "SHEET-PORTERO",
+        "SHEET-CATALOGO"
+      ],
+      "proposal": "Completar matriz de autorización por operación sobre fuentes activas; preparar correcciones técnicas de identidad, caché y coherencia de escrituras con regresiones aisladas. Mantener reglas comerciales, endpoints y trabajo concurrente. Los detalles de seguridad permanecen restringidos hasta corregir y verificar.",
+      "status": "propuesto",
+      "tests": [
+        "Controles positivos y negativos de identidad, rol y recurso con dobles de Apps Script",
+        "Ausencia de permisos y caché previa no amplían acceso",
+        "La identidad declarada por el cliente no cambia a quien autoriza",
+        "Salud técnica pública sin datos de negocio",
+        "Reintentos y errores de validación sin escrituras parciales silenciosas",
+        "Comparar fuente candidata, editor y versión activa antes de cualquier despliegue"
+      ],
+      "deployment": "Auditoría y reproducciones aisladas en curso. Ningún despliegue ni dato de negocio modificado por esta propuesta. Separar correcciones inequívocas de cambios que requieren definición de reglas o migración de identidades."
     }
   ],
   "data_contracts": [
@@ -6192,6 +6219,43 @@
         "Sala confirma publicación de recursos antes de montar sus referencias en Apps Script",
         "Sin cambios o en simulación no se necesita ni se crea token App",
         "Llave privada solo en secretos cifrados y registro privado; ninguna credencial personal en CI"
+      ]
+    },
+    {
+      "id": "CTR-AUTORIZACION-OPERACIONES",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-POTENCIALES",
+        "SYS-OBRA",
+        "SYS-FLUJO",
+        "GAS-PORTERO",
+        "GAS-OBRA",
+        "GAS-FLUJO",
+        "GAS-CRM",
+        "GAS-CATALOGO",
+        "SHEET-PORTERO",
+        "SHEET-CATALOGO"
+      ],
+      "source": "Revisión de fuentes activas y pruebas aisladas con datos sintéticos; evidencia sensible preservada en el registro privado.",
+      "input": [
+        "credencial vigente",
+        "operación y recurso explícitos",
+        "identidad canónica del servidor",
+        "solicitud y clave de repetición cuando corresponde"
+      ],
+      "output": [
+        "resultado permitido o rechazo explícito",
+        "actor comprobado y revisión para auditoría",
+        "estado parcial explícito ante fallo de escritura"
+      ],
+      "invariants": [
+        "La caché conserva permisos explícitos y jamás amplía una autorización; vacío no equivale a acceso universal",
+        "Leer todos los tableros no concede administración de identidades",
+        "Autorizar una operación requiere identidad y rol comprobados por el servidor; un nombre enviado por el cliente no acredita a quien firma",
+        "Los datos de negocio exigen el recurso autorizado; salud pública solo informa estado técnico general",
+        "Prevalidar todas las columnas y valores antes de escribir; conservar semántica de reintento y detectar otra solicitud con la misma clave",
+        "Preservar endpoints e implementaciones existentes y cualquier trabajo concurrente del editor",
+        "No probar operaciones financieras ni permisos escribiendo en producción; usar dobles y contraste de esquema autorizado"
       ]
     }
   ],
