@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.1 · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.2 · 2026-10-01.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -76,6 +76,7 @@ flowchart LR
   n_SVC_SALA_EJECUTOR["Ejecutor de Sala"]
   n_EXT_MOTORES_MEDIA["Motores de generación de contenido"]
   n_SHEET_PPP_MODELOS["PPP · Libros de cálculo por caso"]
+  n_EXT_GITHUB_PUBLISHER_APP["Identidad de publicación GitHub"]
   n_GAS_MARKETING -->|Lee/escribe registros del dominio| n_SHEET_MARKETING
   n_GAS_PLAN_POTENCIAL -.->|Lee/escribe registros del dominio| n_SHEET_PLAN_POTENCIAL
   n_GAS_CROKISS -->|Lee/escribe registros del dominio| n_SHEET_CROKISS
@@ -119,6 +120,8 @@ flowchart LR
   n_GAS_SALA -->|Consulta respaldo de identidad| n_GAS_PORTERO_RESPALDO
   n_GAS_PORTERO -.->|Lee resultados nativos; escribe cantidades permitidas| n_SHEET_PPP_MODELOS
   n_SHEET_PORTERO -.->|Registra caso, libro, carpeta y revisión del modelo| n_SHEET_PPP_MODELOS
+  n_EXT_GITHUB_PUBLISHER_APP -.->|Crea PR del commit preparado de Sala| n_SYS_SALA
+  n_EXT_GITHUB_PUBLISHER_APP -.->|Crea PR del commit preparado de Marketing| n_SYS_MARKETING
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PLAN_POTENCIAL pendiente;
@@ -311,6 +314,7 @@ flowchart LR
   n_EXT_ACTIONS["GitHub Actions"]
   n_SVC_SALA_PRODUCTOR["Productor de Sala"]
   n_SVC_SALA_EJECUTOR["Ejecutor de Sala"]
+  n_EXT_GITHUB_PUBLISHER_APP["Identidad de publicación GitHub"]
   n_GAS_PLAN_POTENCIAL -.->|Confirma cita agendada| n_EXT_CALENDAR
   n_EXT_META -.->|Obtiene métricas mediante Actions| n_SYS_MARKETING
   n_SYS_DESPACHO -.->|Aprobación de borradores por protocolo BANDEJA| n_EXT_GMAIL
@@ -319,6 +323,9 @@ flowchart LR
   n_EXT_ACTIONS -->|Programa productor cada veinte minutos| n_SVC_SALA_PRODUCTOR
   n_EXT_ACTIONS -->|Programa ejecución de etapas habilitadas| n_SVC_SALA_EJECUTOR
   n_SVC_SALA_EJECUTOR -->|Sube activos producidos| n_EXT_DRIVE
+  n_EXT_ACTIONS -.->|Solicita identidad temporal limitada al repositorio| n_EXT_GITHUB_PUBLISHER_APP
+  n_EXT_GITHUB_PUBLISHER_APP -.->|Crea PR del commit preparado de Sala| n_SYS_SALA
+  n_EXT_GITHUB_PUBLISHER_APP -.->|Crea PR del commit preparado de Marketing| n_SYS_MARKETING
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_SITIO_ORG pendiente;
   class n_EXT_DRIVE pendiente;
@@ -466,3 +473,6 @@ flowchart LR
 | CON-PPP-MODELO | GAS-PORTERO → SHEET-PPP-MODELOS | persistencia: Lee resultados nativos; escribe cantidades permitidas. Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente. | propuesto | Transporte preparado y probado con dobles; lectura del piloto desde editor verificada; implementación pública no actualizada. |
 | CON-PPP-REGISTRO | SHEET-PORTERO → SHEET-PPP-MODELOS | registro: Registra caso, libro, carpeta y revisión del modelo. IDs estables; un libro por caso y hoja por versión; no sustituir historial ni compartir archivos por efecto de registrar un enlace. | propuesto | Registro del piloto creado; organización y generación para todos los casos pendientes. |
 | CON-PPP-AUDITORIA | GAS-PORTERO → SYS-CONTROL | auditoria: Registra antes, después, actor y siguiente paso. Auditoría en libro y Control Maestro con actor autenticado, entidad, versión, revisión, campo/rango, fuente y validación. No inventar valores previos ausentes ni declarar publicada una operación no confirmada. | propuesto | Registro operativo privado actualizado; transporte auditado con dobles; activadores y despliegue público pendientes. |
+| CON-PUBLICADOR-IDENTIDAD | EXT-ACTIONS → EXT-GITHUB-PUBLISHER-APP | autenticacion: Solicita identidad temporal limitada al repositorio. CTR-PUBLICADOR-GITHUB. App con contents:read y pull_requests:write, exclusivamente para crear el PR. Las revisiones requeridas deben pasar antes del merge normal. | propuesto | Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB_TOKEN; requiere registro e instalación personal de una App privada de la organización. |
+| CON-PUBLICADOR-SALA | EXT-GITHUB-PUBLISHER-APP → SYS-SALA | automatizacion: Crea PR del commit preparado de Sala. CTR-PUBLICADOR-GITHUB. App con contents:read y pull_requests:write, exclusivamente para crear el PR. Las revisiones requeridas deben pasar antes del merge normal. | propuesto | Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB_TOKEN; requiere registro e instalación personal de una App privada de la organización. |
+| CON-PUBLICADOR-MARKETING | EXT-GITHUB-PUBLISHER-APP → SYS-MARKETING | automatizacion: Crea PR del commit preparado de Marketing. CTR-PUBLICADOR-GITHUB. App con contents:read y pull_requests:write, exclusivamente para crear el PR. Las revisiones requeridas deben pasar antes del merge normal. | propuesto | Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB_TOKEN; requiere registro e instalación personal de una App privada de la organización. |

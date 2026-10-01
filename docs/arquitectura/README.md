@@ -12,6 +12,7 @@ Esta es la entrada para entender y modificar YOD OS. Prioridad de mejora acordad
 - [Mejoras A–L para decidir](propuestas.md) y [plan de tres entregas](plan-entregas.md).
 - [Modelo JSON](modelo.json) y [esquema](modelo.schema.json): fuente de las vistas y entrada para agentes.
 - [Cobertura y verificación](verificacion.md), [reglas de cambio](cambios.md) y [evolución](evolucion.md).
+- [Identidad del publicador automático](publicador-github.md): causa del bloqueo, permisos mínimos y registro pendiente.
 
 ## Qué significa cada evidencia
 
