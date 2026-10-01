@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.6 · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.7 · 2026-10-01.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -118,7 +118,7 @@ flowchart LR
   n_SVC_SALA_EJECUTOR -->|Sube activos producidos| n_EXT_DRIVE
   n_GAS_SALA -->|Valida credencial del OS desde servidor| n_GAS_PORTERO
   n_GAS_SALA -->|Consulta respaldo de identidad| n_GAS_PORTERO_RESPALDO
-  n_GAS_PORTERO -.->|Lee resultados nativos; escribe cantidades permitidas| n_SHEET_PPP_MODELOS
+  n_GAS_PORTERO -->|Lee resultados nativos; escribe cantidades permitidas| n_SHEET_PPP_MODELOS
   n_SHEET_PORTERO -.->|Registra caso, libro, carpeta y revisión del modelo| n_SHEET_PPP_MODELOS
   n_EXT_GITHUB_PUBLISHER_APP -.->|Crea PR del commit preparado de Sala| n_SYS_SALA
   n_EXT_GITHUB_PUBLISHER_APP -.->|Crea PR del commit preparado de Marketing| n_SYS_MARKETING
@@ -278,7 +278,7 @@ flowchart LR
   n_SYS_YOD_OS -->|Consulta leads del CRM| n_GAS_CRM
   n_SYS_TRACK -->|Consulta resource Track para codesarrollos| n_GAS_CATALOGO
   n_SYS_YOD_OS -->|Respaldo de identidad| n_GAS_PORTERO_RESPALDO
-  n_GAS_PORTERO -.->|Registra antes, después, actor y siguiente paso| n_SYS_CONTROL
+  n_GAS_PORTERO -->|Registra antes, después, actor y siguiente paso| n_SYS_CONTROL
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PINTARRON pendiente;
@@ -378,9 +378,9 @@ flowchart LR
   n_SYS_YOD_OS -->|Respaldo de identidad| n_GAS_PORTERO_RESPALDO
   n_GAS_SALA -->|Valida credencial del OS desde servidor| n_GAS_PORTERO
   n_GAS_SALA -->|Consulta respaldo de identidad| n_GAS_PORTERO_RESPALDO
-  n_GAS_PORTERO -.->|Lee resultados nativos; escribe cantidades permitidas| n_SHEET_PPP_MODELOS
+  n_GAS_PORTERO -->|Lee resultados nativos; escribe cantidades permitidas| n_SHEET_PPP_MODELOS
   n_SHEET_PORTERO -.->|Registra caso, libro, carpeta y revisión del modelo| n_SHEET_PPP_MODELOS
-  n_GAS_PORTERO -.->|Registra antes, después, actor y siguiente paso| n_SYS_CONTROL
+  n_GAS_PORTERO -->|Registra antes, después, actor y siguiente paso| n_SYS_CONTROL
   n_GAS_FLUJO -->|Verifica credencial y acceso al módulo| n_GAS_PORTERO
   n_GAS_CRM -->|Consulta identidad y alcance de lectura| n_GAS_PORTERO
   n_GAS_OBRA -->|Verifica credencial para operar| n_GAS_PORTERO
@@ -479,9 +479,9 @@ flowchart LR
 | CON-084 | SVC-SALA-EJECUTOR → EXT-DRIVE | documentos: Sube activos producidos. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_ejecutor.py#L67) — Publicación de resultado en Drive |
 | CON-085 | GAS-SALA → GAS-PORTERO | autenticacion: Valida credencial del OS desde servidor. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [sala-edicion/gas/Code.gs](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/gas/Code.gs#L193) — Valida credencial del OS desde servidor |
 | CON-086 | GAS-SALA → GAS-PORTERO-RESPALDO | autenticacion: Consulta respaldo de identidad. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [sala-edicion/gas/Code.gs](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/gas/Code.gs#L191) — Consulta respaldo de identidad |
-| CON-PPP-MODELO | GAS-PORTERO → SHEET-PPP-MODELOS | persistencia: Lee resultados nativos; escribe cantidades permitidas. Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente. | propuesto | Transporte preparado y probado con dobles; lectura del piloto desde editor verificada; implementación pública no actualizada. |
+| CON-PPP-MODELO | GAS-PORTERO → SHEET-PPP-MODELOS | persistencia: Lee resultados nativos; escribe cantidades permitidas. Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente. | ejecucion | Versión53 publicada; lectura HTTP de caso y lista conciliada con el libro piloto. Escritura permitida desplegada y probada con dobles; recorrido público de edición pendiente. |
 | CON-PPP-REGISTRO | SHEET-PORTERO → SHEET-PPP-MODELOS | registro: Registra caso, libro, carpeta y revisión del modelo. IDs estables; un libro por caso y hoja por versión; no sustituir historial ni compartir archivos por efecto de registrar un enlace. | propuesto | Registro del piloto creado; organización y generación para todos los casos pendientes. |
-| CON-PPP-AUDITORIA | GAS-PORTERO → SYS-CONTROL | auditoria: Registra antes, después, actor y siguiente paso. Auditoría en libro y Control Maestro con actor autenticado, entidad, versión, revisión, campo/rango, fuente y validación. No inventar valores previos ausentes ni declarar publicada una operación no confirmada. | propuesto | Registro operativo privado actualizado; transporte auditado con dobles; activadores y despliegue público pendientes. |
+| CON-PPP-AUDITORIA | GAS-PORTERO → SYS-CONTROL | auditoria: Registra antes, después, actor y siguiente paso. Auditoría en libro y Control Maestro con actor autenticado, entidad, versión, revisión, campo/rango, fuente y validación. No inventar valores previos ausentes ni declarar publicada una operación no confirmada. | codigo | Registro operativo privado actualizado; auditoría de transporte desplegada y activador de edición directa instalado. Primer evento real y recorrido de edición todavía sin observar. |
 | CON-PUBLICADOR-IDENTIDAD | EXT-ACTIONS → EXT-GITHUB-PUBLISHER-APP | autenticacion: Solicita identidad temporal limitada al repositorio. CTR-PUBLICADOR-GITHUB. App con contents:read y pull_requests:write, exclusivamente para crear el PR. Las revisiones requeridas deben pasar antes del merge normal. | propuesto | Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB_TOKEN; requiere registro e instalación personal de una App privada de la organización. |
 | CON-PUBLICADOR-SALA | EXT-GITHUB-PUBLISHER-APP → SYS-SALA | automatizacion: Crea PR del commit preparado de Sala. CTR-PUBLICADOR-GITHUB. App con contents:read y pull_requests:write, exclusivamente para crear el PR. Las revisiones requeridas deben pasar antes del merge normal. | propuesto | Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB_TOKEN; requiere registro e instalación personal de una App privada de la organización. |
 | CON-PUBLICADOR-MARKETING | EXT-GITHUB-PUBLISHER-APP → SYS-MARKETING | automatizacion: Crea PR del commit preparado de Marketing. CTR-PUBLICADOR-GITHUB. App con contents:read y pull_requests:write, exclusivamente para crear el PR. Las revisiones requeridas deben pasar antes del merge normal. | propuesto | Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB_TOKEN; requiere registro e instalación personal de una App privada de la organización. |

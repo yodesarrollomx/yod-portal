@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.6",
+  "revision": "2026-10-01.7",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -236,6 +236,11 @@
           "claim": "Frontend integrado por PR3 y publicado por Pages; código público incluye lectura del modelo nativo, cuerpos y flujo por etapas. Sesión y backend pendientes de verificación conjunta.",
           "status": "codigo",
           "source_revision": "d446b637f408124f224afadc6c674e3675c62f38"
+        },
+        {
+          "claim": "Lectura pública del caso y la lista del piloto comparadas con entradas, resultados, cuerpos y flujo nativos; coinciden. Evidencia operativa privada; no se ejecutaron POST de prueba.",
+          "status": "ejecucion",
+          "source_revision": "Apps Script version 53"
         }
       ],
       "data_entities": [
@@ -245,11 +250,11 @@
         "flujo_proyectado"
       ],
       "risks_sanitized": [
-        "Frontend de lectura nativa publicado y contrastado por código. Backend de transporte sin desplegar; conexión pública del piloto y migración de otros casos pendientes. Los casos no migrados conservan cálculo cliente."
+        "Backend de transporte v53 publicado en implementación existente. GET de caso y lista contrastados con el mismo libro y revisión; edición en pantalla y demás casos pendientes. Los casos no migrados conservan cálculo cliente."
       ],
-      "source_of_truth": "SHEET-PORTERO para casos; modelos de cálculo del frontend; fuente GAS desplegada por verificar",
+      "source_of_truth": "SHEET-PORTERO registra casos; libro canónico Sheets para el piloto con lectura pública verificada en v53. Los casos pendientes de migrar aún usan modelos del frontend.",
       "status": "codigo",
-      "runtime_status": "Frontend publicado; vínculo de cálculo nativo y permisos del recorrido todavía sin verificar en sesión"
+      "runtime_status": "Frontend publicado y lectura pública del piloto conciliada con Sheets; sesión de pantalla y recorrido de edición aún pendientes"
     },
     {
       "id": "SYS-TRACK",
@@ -985,6 +990,11 @@
           "claim": "CHG-CONTROL-MAESTRO-001: versión 52; publicación contrastada por API y pruebas HTTP de lectura y rechazo el 2026-10-01. Detalle en control-maestro.md y registro de backends.",
           "status": "ejecucion",
           "source_revision": "Apps Script version 52"
+        },
+        {
+          "claim": "CHG-PPP-BACKEND-001: versión53 observada tras actualizar la implementación existente; fuente de editor releída idéntica, configuración conservada y lectura HTTP autorizada de caso/lista conciliada. Activador directo instalado; sin POST de prueba.",
+          "status": "ejecucion",
+          "source_revision": "Apps Script version 53"
         }
       ],
       "data_entities": [
@@ -998,10 +1008,10 @@
         "La revisión acotada no certifica todas las operaciones de negocio ni sustituye la aceptación con usuarios reales.",
         "Las cachés de consumidores ajenos a esta entrega pueden conservar permisos temporalmente; revisarlos al continuar cada tablero."
       ],
-      "backend_source_status": "fuente_api_version_activa_contrastada",
-      "source_of_truth": "Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos.",
+      "backend_source_status": "fuente_editor_y_lectura_publica_contrastadas",
+      "source_of_truth": "Versión53 de implementación existente observada en editor; lectura HTTP PPP contrastada con libro canónico. Evidencia API de versiones51/52 histórica; los datos operativos siguen en sus hojas.",
       "status": "codigo",
-      "runtime_status": "Versión 52 publicada en la implementación existente; fuente inmutable y configuración comprobadas por API. Salud y rechazos sin credencial comprobados por HTTP. Autorización y recuperación probadas con registros sintéticos; no se ejecutaron escrituras operativas ni un recorrido autenticado real."
+      "runtime_status": "Versión53 publicada en la implementación existente. Código leído del editor coincide con el cambio guardado; configuración conservada. Lectura pública PPP de caso/lista conciliada con Sheets; activador directo instalado. Edición real, sesión de pantalla y aceptación por rol pendientes."
     },
     {
       "id": "SHEET-PORTERO",
@@ -2412,7 +2422,7 @@
       "dominio": "Ventas",
       "owner_role": "Dirección / propietario del libro",
       "status": "ejecucion",
-      "runtime_status": "Modelo piloto leído y conciliado en Sheets; conexión pública y migración general pendientes",
+      "runtime_status": "Piloto y lectura pública de caso/lista conciliados; migración general y edición en pantalla pendientes",
       "evidence": [
         {
           "claim": "Lectura directa autorizada de un libro piloto; fórmulas nativas y versiones contrastadas. Evidencia detallada en registro operativo privado, sin publicar identificadores ni cifras.",
@@ -2438,7 +2448,7 @@
         "cambio"
       ],
       "risks_sanitized": [
-        "La existencia del libro no acredita la conexión pública del tablero",
+        "La lectura pública verificada del piloto no acredita la edición completa ni otros casos",
         "Faltan otros motores, nuevas altas, capturas por cuerpos y renta neta completa; el presupuesto mensual por etapas es preparación parcial"
       ],
       "source_of_truth": "Libro privado por caso registrado en SHEET-PORTERO; entradas y fórmulas canónicas. El tablero transporta y presenta resultados; no replica un motor financiero."
@@ -4190,12 +4200,13 @@
       "to": "SHEET-PPP-MODELOS",
       "label": "Lee resultados nativos; escribe cantidades permitidas",
       "kind": "persistencia",
-      "status": "propuesto",
+      "status": "ejecucion",
       "runtime_verified": false,
       "evidence": [
         {
-          "claim": "Transporte preparado y probado con dobles; lectura del piloto desde editor verificada; implementación pública no actualizada.",
-          "status": "declarado"
+          "claim": "Versión53 publicada; lectura HTTP de caso y lista conciliada con el libro piloto. Escritura permitida desplegada y probada con dobles; recorrido público de edición pendiente.",
+          "status": "ejecucion",
+          "source_revision": "Apps Script version 53"
         }
       ],
       "contract": "Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente."
@@ -4222,12 +4233,13 @@
       "to": "SYS-CONTROL",
       "label": "Registra antes, después, actor y siguiente paso",
       "kind": "auditoria",
-      "status": "propuesto",
+      "status": "codigo",
       "runtime_verified": false,
       "evidence": [
         {
-          "claim": "Registro operativo privado actualizado; transporte auditado con dobles; activadores y despliegue público pendientes.",
-          "status": "declarado"
+          "claim": "Registro operativo privado actualizado; auditoría de transporte desplegada y activador de edición directa instalado. Primer evento real y recorrido de edición todavía sin observar.",
+          "status": "codigo",
+          "source_revision": "Apps Script version 53"
         }
       ],
       "contract": "Auditoría en libro y Control Maestro con actor autenticado, entidad, versión, revisión, campo/rango, fuente y validación. No inventar valores previos ausentes ni declarar publicada una operación no confirmada."
@@ -5987,7 +5999,7 @@
         "Lectura real del modelo y ruta desde editor; sin POST de prueba en producción",
         "Validación de esquema, referencias y regeneración de vistas del atlas"
       ],
-      "deployment": "Frontend integrado en potenciales-yod PR3 y publicado por Pages, commit d446b637f408124f224afadc6c674e3675c62f38. Backend candidato privado sin desplegar por falta de sesión autorizada. Modelo piloto, cuerpos y flujo parcial nativos leídos; activador, conexión pública y migración general pendientes."
+      "deployment": "Frontend PR3 publicado; backend v53 de la implementación existente actualizado y lectura HTTP del piloto conciliada con Sheets. Activador directo instalado. Edición en pantalla, aceptación por rol, fábrica y migración general pendientes."
     },
     {
       "id": "CHG-EMD-UI-001",
@@ -6025,7 +6037,7 @@
         "Publicación Pages aprobada y código DOM público contrastado",
         "Lectura nativa y exportación del libro ampliado, sin errores cacheados"
       ],
-      "deployment": "Publicado únicamente frontend en d446b637f408124f224afadc6c674e3675c62f38. Backend existente aún sin actualizar; no confirma conexión nativa completa ni todos los casos."
+      "deployment": "Frontend publicado en d446b637f408124f224afadc6c674e3675c62f38. Actualización posterior: backend v53 publicado y lectura del piloto conciliada; no confirma edición completa ni todos los casos."
     },
     {
       "id": "CHG-PUBLICADORES-APP-001",
@@ -6129,6 +6141,27 @@
         "Fuente de versiones 52/10 y configuración contrastadas por API; respaldo 51/9"
       ],
       "deployment": "Portero 52 y Catálogo 10/API 1.6.0 publicados y contrastados por API y HTTP; editor adicional preservado. Frontend integrado por PR #14, commit 7e9094bf2a70ea1ee4e790299370fe28cfc4d89b; sus doce archivos servidos y atlas 2026-10-01.5 coinciden byte a byte con el commit integrado. Aceptación sintética local y sobre archivos publicados, con motores interceptados. No hubo escrituras de negocio ni sesiones personales."
+    },
+    {
+      "id": "CHG-PPP-BACKEND-001",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SYS-CONTROL"
+      ],
+      "proposal": "Registrar versión53 del transporte PPP, lectura pública nativa verificada y activador instalado; preservar cambios concurrentes de autorización y documentar el alcance pendiente.",
+      "status": "publicado",
+      "tests": [
+        "Sintaxis del backend y cinco regresiones de borrador nativo aprobadas",
+        "Diez funciones concurrentes de autorización conservadas exactamente",
+        "Fuente guardada releída idéntica y configuración conservada",
+        "GET público de caso/lista: entradas, versiones, resultados, cuerpos, flujo y revisión conciliados con Sheets",
+        "Activador directo observado en proyecto; sin POST de prueba ni cambios financieros",
+        "Esquema, impacto y vistas del atlas sincronizados"
+      ],
+      "deployment": "Versión53 publicada conservando implementación, URL y permisos. Lectura pública del piloto verificada; sesión de pantalla, edición real, primer evento de auditoría y migración general pendientes. Reversión técnica a versión52 preservando libros y registros."
     }
   ],
   "data_contracts": [
