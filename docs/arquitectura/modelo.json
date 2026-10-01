@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.11-emd-drafts",
+  "revision": "2026-10-01.12-ppp-interfaz",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -6437,6 +6437,25 @@
         "Auditoría independiente de interacción táctil y escritorio sintéticos; no acredita Safari o dispositivo físico"
       ],
       "deployment": "Propuesta previa a implementación; sin afirmar publicación. Pruebas del HEAD exacto, respaldo privado y comprobación de la implementación existente antes de activar. Reversión solo de código conserva registros locales y respuestas; no descifrar ni exportar datos humanos para auditar. La disponibilidad local no acredita guardado en servidor."
+    },
+    {
+      "id": "CHG-PPP-UI-001",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-YOD-OS",
+        "SHEET-PPP-MODELOS",
+        "GAS-PORTERO"
+      ],
+      "proposal": "Interfaz PPP vertical autorizada: resumen de cinco tarjetas, detalle desplegado en el mismo lugar y ajustes originales. Infografías volumétricas desde la misma revisión de resultados; cabecera con símbolo YoDesarrollo y OS, sin selector superior de modelos. Preservar casos, versiones, conectores, permisos, documentos, fórmulas y flujo; sin modificar backend ni crear motor financiero.",
+      "status": "implementado_local",
+      "tests": [
+        "23 pruebas unitarias PPP: 81 controles, todos los IDs de indicadores, motor idéntico a 12213ec y siete variantes sintéticas; acceso y copia nativa sin conexión",
+        "Chromium y WebKit: 40 celdas KPI, cinco tarjetas, detalle/ajustes, fórmulas, guardado simulado sin correo, versiones y movimiento reducido",
+        "Modelo nativo sintético: relectura al entrar, resultados confirmados, cantidades pendientes, conflicto y recarga sin escritura automática",
+        "320, 390, 430 y 1280 px sin desbordamiento; entrada con selector de casos, logo OS y expansión animada",
+        "20 recorridos de acceso en siete plantillas y dos navegadores; 124 pruebas y verificadores del atlas aprobados; sin escrituras de prueba de negocio"
+      ],
+      "deployment": "Implementación local validada; publicación mediante PR de potenciales-yod con referencia fija a este atlas. La validación usa datos y transporte sintéticos, no acredita OAuth ni escrituras reales de Sheets en iPhone físico. Revertir la interfaz y referencia de atlas mediante PR; conservar datos, sesiones y libros."
     }
   ],
   "data_contracts": [
@@ -7065,4 +7084,3 @@
     }
   ]
 }
-
