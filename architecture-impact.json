@@ -1,18 +1,19 @@
 {
-  "model_revision": "2026-10-01.7",
-  "proposal_id": "CHG-PPP-BACKEND-001",
+  "model_revision": "2026-10-01.8-emd-pins",
+  "proposal_id": "CHG-EMD-PINS-002",
   "components": [
-    "SYS-POTENCIALES",
-    "GAS-PORTERO",
-    "SHEET-PORTERO",
-    "SHEET-PPP-MODELOS",
-    "SYS-CONTROL"
+    "SYS-EMD",
+    "GAS-EMD",
+    "SHEET-EMD",
+    "EXT-ACTIONS",
+    "SYS-YOD-OS"
   ],
-  "summary": "Registrar publicación v53, lectura pública nativa del piloto y activador instalado; preservar revisión2026-10-01.6 y distinguir edición/generalización pendientes.",
+  "summary": "Registrar propuesta privada de selección precisa, cola con confirmación segura y puente exclusivamente manual con fallos explícitos; no afirmar implementación ni recuperación. SYS-YOD-OS participa solo por su atlas documental.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "Preservación de cambios concurrentes y referencias",
-    "Verificación documental de impacto"
+    "Preservación de componentes, contratos e IDs existentes",
+    "Verificación documental sin datos privados"
   ],
-  "rollback": "Revertir esta actualización documental y regenerar vistas; reversión técnica posible a v52 de la misma implementación, preservando libros y registros privados."
+  "rollback": "Revertir esta propuesta documental y regenerar vistas; el despliegue privado requiere respaldo y reversión propios, sin borrar notas ni respuestas."
 }
+
