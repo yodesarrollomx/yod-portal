@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.22-ppp-terreno-catalogo",
+  "revision": "2026-10-01.23-ppp-versiones-lectura",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -6679,6 +6679,25 @@
         "29 pruebas unitarias PPP, recorridos de interfaz/identidad/mapa/acceso; 124 pruebas del atlas y cuatro verificadores completos. Publicación por PR y comprobación de assets pendientes."
       ],
       "deployment": "Implementar y verificar en rama; PR con atlas fijado, comprobar archivos publicados. Rollback por PR conserva libros, versiones, expedientes y registros privados."
+    },
+    {
+      "id": "CHG-PPP-VERSIONES-004",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-YOD-OS",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS"
+      ],
+      "proposal": "Lectura nativa comprobada: el transporte conserva entradas y resultados de todas las versiones y envía flujo mensual solo de la activa. Corregir el frontend que rechaza el caso al exigir flujo en cada versión. Validar identidad, revisión, IDs únicos, resultados de todas y flujo de la activa; nunca inventar flujos históricos. Adoptar la activa confirmada si la selección anterior carece de flujo. Validar respuestas antes de aplicarlas, preservar borradores y cantidades pendientes, y ordenar visualmente todas las versiones con nombre completo, activa, base y conteo. Lectura acotada para libros grandes; conservar fórmulas, cantidades, hojas, IDs, permisos y operaciones nativas existentes.",
+      "status": "implementado_local",
+      "tests": [
+        "31 pruebas unitarias PPP aprobadas; contrato con resultados de todas las versiones y flujo solo activo, IDs únicos, faltantes y selección confirmada.",
+        "Chromium/WebKit: ocho nombres completos, base/activa y ocho columnas de comparación; activación sintética, respuesta incompleta conserva modelo, recarga con activa externa distinta y cantidades pendientes intactas. 320/390/430/1280 px.",
+        "Respuesta HTTP real autorizada comparada con índice Versiones y renderizada con frontend corregido en ambos motores, sin escrituras de negocio. Se confirma el desfase de contrato que impedía cargar.",
+        "Regresiones de interfaz, identidad, terreno, catálogo y accesos; atlas y publicación por PR. Fuente y datos privados excluidos de Git."
+      ],
+      "deployment": "PR coordinado con atlas fijado y checks completos; verificar archivos públicos. Solo frontend, sin cambios de backend ni datos. Revertir por PR conserva libros y versiones."
     }
   ],
   "data_contracts": [
@@ -6856,7 +6875,8 @@
         "Servidor resuelve el destino y verifica permisos, límites y revisión antes de escribir",
         "Una respuesta pendiente, conflicto o desconexión conserva el último dato confirmado con estado explícito",
         "Auditar antes/después y no marcar producción comprobada sin lectura pública final",
-        "No modificar Portero ni crear otra implementación; conservar contratos y URL existentes"
+        "No modificar Portero ni crear otra implementación; conservar contratos y URL existentes",
+        "El transporte leído conserva entradas y resultados de todas las versiones; el flujo mensual puede enviarse solo para la activa. Validar ese flujo al abrirla y no exigir ni inventar flujo de versiones inactivas."
       ]
     },
     {
