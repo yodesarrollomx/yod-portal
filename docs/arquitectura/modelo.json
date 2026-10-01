@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.7",
+  "revision": "2026-10-01.8-emd",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -6162,6 +6162,22 @@
         "Esquema, impacto y vistas del atlas sincronizados"
       ],
       "deployment": "Versión53 publicada conservando implementación, URL y permisos. Lectura pública del piloto verificada; sesión de pantalla, edición real, primer evento de auditoría y migración general pendientes. Reversión técnica a versión52 preservando libros y registros."
+    },
+    {
+      "id": "CHG-EMD-TIMING-001",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD"
+      ],
+      "proposal": "Proponer estimación de duración activa por cuestionario basada en mediciones agregadas y separadas de las respuestas. Pausar ocultación e inactividad, impedir doble conteo entre sesiones y reintentos, excluir muestras incompletas y QA y no divulgar tiempos individuales. Conservar instrumento, asignaciones y controles de acceso. El detalle técnico y las pruebas viven en el repositorio privado.",
+      "status": "propuesto",
+      "tests": [
+        "Dobles sintéticos: autorización, idempotencia, sesiones concurrentes, reloj, pausas, abandono y cierre",
+        "Interfaz sintética móvil y escritorio: estimación sin muestra, promedio elegible y fallo de medición que no bloquea guardado",
+        "Respaldo y comprobación de versión existente antes de publicar; no escribir respuestas humanas de prueba"
+      ],
+      "deployment": "Propuesta de alcance; no acredita implementación ni publicación. Requiere pruebas del HEAD exacto y verificación aislada de persistencia antes de activar. Rollback del código preserva registros privados."
     }
   ],
   "data_contracts": [
@@ -6408,6 +6424,32 @@
         "Prevalidar todas las columnas y valores antes de escribir; conservar semántica de reintento y detectar otra solicitud con la misma clave",
         "Preservar endpoints e implementaciones existentes y cualquier trabajo concurrente del editor",
         "No probar operaciones financieras ni permisos escribiendo en producción; usar dobles y contraste de esquema autorizado"
+      ]
+    },
+    {
+      "id": "CTR-EMD-TIMING",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD"
+      ],
+      "source": "Propuesto; contrato y evidencia restringidos al repositorio privado",
+      "input": [
+        "sesión autorizada",
+        "asignación propia",
+        "duración activa acumulada",
+        "secuencia idempotente"
+      ],
+      "output": [
+        "confirmación sin respuestas",
+        "estimación agregada cuando exista muestra suficiente"
+      ],
+      "invariants": [
+        "No altera preguntas, escala, asignaciones o respuestas",
+        "La medición no bloquea el recorrido de evaluación",
+        "Pausas, sesiones concurrentes, QA y observaciones incompletas no contaminan el promedio",
+        "No publica tiempos individuales ni permite acceso anónimo al agregado",
+        "No infiere duración a partir de marcas de última modificación"
       ]
     }
   ],
@@ -6659,3 +6701,4 @@
     }
   ]
 }
+

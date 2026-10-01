@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.7 · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.8-emd · 2026-10-01.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -102,3 +102,16 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Prevalidar todas las columnas y valores antes de escribir; conservar semántica de reintento y detectar otra solicitud con la misma clave
 - Preservar endpoints e implementaciones existentes y cualquier trabajo concurrente del editor
 - No probar operaciones financieras ni permisos escribiendo en producción; usar dobles y contraste de esquema autorizado
+
+## CTR-EMD-TIMING
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD.
+- Evidencia: Propuesto; contrato y evidencia restringidos al repositorio privado.
+- Entrada/campos: `sesión autorizada`, `asignación propia`, `duración activa acumulada`, `secuencia idempotente`.
+- Salida: confirmación sin respuestas, estimación agregada cuando exista muestra suficiente.
+
+- No altera preguntas, escala, asignaciones o respuestas
+- La medición no bloquea el recorrido de evaluación
+- Pausas, sesiones concurrentes, QA y observaciones incompletas no contaminan el promedio
+- No publica tiempos individuales ni permite acceso anónimo al agregado
+- No infiere duración a partir de marcas de última modificación
