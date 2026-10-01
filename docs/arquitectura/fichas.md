@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.5 · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.6 · 2026-10-01.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -128,7 +128,7 @@ Capturar, verificar y autorizar avances de obra
 Administrar catálogo y registro de proyectos
 
 - Tipo: tablero. Dominio: Gobierno. Responsable: Dirección.
-- Evidencia: ejecucion. Producción: Catálogo, fuentes activas y configuración de roles contrastados con lecturas acotadas. Correcciones de servidor 52/10 publicadas; interfaz preparada y aceptación sintética comprobada. La sesión Google y las modificaciones operativas reales quedan fuera de esta aceptación..
+- Evidencia: ejecucion. Producción: Corrección técnica publicada: servidores 52/10 y frontend de PR #14 comprobados. Catálogo y permisos contrastados con lecturas acotadas; aceptación sintética y rechazo real sin credencial. Sesión Google y modificaciones operativas reales no incluidas..
 - Entidades: sistema, portal, proyecto, folio.
 - Fuente de verdad: Control Maestro en Google Sheets; catálogo técnico local puede divergir.
 - Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L26) — Sistema presente en el catálogo canónico; Lecturas acotadas de Portal, registro Sistemas, esquema de Bitácora y configuración de roles/permisos, sin correos ni exportación de Accesos. Pruebas descritas en control-maestro.md..
@@ -144,7 +144,7 @@ Integrar navegación, identidad y síntesis de tableros
 - Evidencia: declarado. Producción: No verificado en despliegue.
 - Entidades: sistema, sesion, resumen, proyecto.
 - Fuente de verdad: Catálogo de código y Control Maestro; cada indicador hereda el almacén de su dominio.
-- Evidencia: [yod-portal/CLAUDE.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/CLAUDE.md#L7) — El portal integra tableros.
+- Evidencia: [yod-portal/CLAUDE.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/CLAUDE.md#L7) — El portal integra tableros; [yod-portal/docs/arquitectura/control-maestro.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/control-maestro.md) — PR #14 integrado; doce archivos servidos comparados exactamente con commit 7e9094b y perfiles sintéticos sobre la publicación. No acredita sesiones ni escrituras reales..
 - Conexiones: CON-033 (SYS-YOD-OS → SYS-DESPACHO); CON-034 (SYS-YOD-OS → SYS-POTENCIALES); CON-035 (SYS-YOD-OS → SYS-TRACK); CON-036 (SYS-YOD-OS → SYS-MIRAMAR); CON-037 (SYS-YOD-OS → SYS-TAREAS); CON-038 (SYS-YOD-OS → SYS-FLUJO); CON-039 (SYS-YOD-OS → SYS-INTERIORES); CON-040 (SYS-YOD-OS → SYS-INVERSION); CON-041 (SYS-YOD-OS → SYS-MARKETING); CON-042 (SYS-YOD-OS → SYS-OBRA); CON-043 (SYS-YOD-OS → SYS-CONTROL); CON-044 (SYS-YOD-OS → GAS-PORTERO); CON-052 (GAS-PLAN-POTENCIAL → SYS-YOD-OS); CON-053 (GAS-MIRAMAR → SYS-YOD-OS); CON-054 (GAS-PORTERO → SYS-YOD-OS); CON-055 (GAS-OPERACION → SYS-YOD-OS); CON-056 (GAS-CODES → SYS-YOD-OS); CON-057 (GAS-OBRA → SYS-YOD-OS); CON-065 (SYS-YOD-OS → GAS-CRM); CON-073 (SYS-YOD-OS → GAS-PORTERO-RESPALDO).
 - Mejoras: K · Indicadores confiables y rendimiento medido; L · Mapa vivo, contratos y cambios verificables.
 
