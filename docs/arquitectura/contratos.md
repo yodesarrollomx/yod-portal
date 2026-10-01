@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.8-emd · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.9-emd-timing · 2026-10-01.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -103,15 +103,32 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Preservar endpoints e implementaciones existentes y cualquier trabajo concurrente del editor
 - No probar operaciones financieras ni permisos escribiendo en producción; usar dobles y contraste de esquema autorizado
 
+## CTR-EMD-PINS-ACK
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD, EXT-ACTIONS.
+- Evidencia: Propuesta de corrección del sistema privado; evidencia técnica y operativa restringida..
+- Entrada/campos: `Diana estructural de pantalla y nota de mejora`, `Identificador de nota para repetición segura`, `Configuración explícita del puente manual`.
+- Salida: Confirmación válida por nota o error visible, Cola conservada ante rechazo o confirmación inválida, Resultado final de revisión con pruebas y bloqueos.
+
+- La diana no depende del texto de respuestas ni contiene datos personales
+- Una nota rechazada no detiene el envío de otras; solo una confirmación válida permite retirarla de la cola
+- Configuración ausente nunca se informa como éxito de revisión
+- El puente manual no compite con la ronda programada del agente
+- Inicio y configuración no equivalen a ejecución terminada ni a recuperación validada
+- No se alteran respuestas, 28 preguntas, escala, matriz, asignaciones ni permisos existentes
+
 ## CTR-EMD-TIMING
 
 - Componentes: SYS-EMD, GAS-EMD, SHEET-EMD.
 - Evidencia: Propuesto; contrato y evidencia restringidos al repositorio privado.
 - Entrada/campos: `sesión autorizada`, `asignación propia`, `duración activa acumulada`, `secuencia idempotente`.
-- Salida: confirmación sin respuestas, estimación agregada cuando exista muestra suficiente.
+- Salida: confirmación sin respuestas, estimación agregada cuando exista muestra suficiente, Disponibilidad explícita de instrumentación y muestra agregada.
 
 - No altera preguntas, escala, asignaciones o respuestas
 - La medición no bloquea el recorrido de evaluación
 - Pausas, sesiones concurrentes, QA y observaciones incompletas no contaminan el promedio
 - No publica tiempos individuales ni permite acceso anónimo al agregado
 - No infiere duración a partir de marcas de última modificación
+- El cliente solo inicia medición cuando el servidor declara instrumentación compatible; QA no habilita instrumentación
+- La estimación exige al menos cinco cuestionarios completos de tres evaluadores de una misma campaña
+- Los reintentos validan la misma secuencia, acumulado y flags de cierre/pausa; no mezclan solicitudes diferentes

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.8-emd",
+  "revision": "2026-10-01.9-emd-timing",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -6164,13 +6164,35 @@
       "deployment": "Versión53 publicada conservando implementación, URL y permisos. Lectura pública del piloto verificada; sesión de pantalla, edición real, primer evento de auditoría y migración general pendientes. Reversión técnica a versión52 preservando libros y registros."
     },
     {
+      "id": "CHG-EMD-PINS-002",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "EXT-ACTIONS",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Corregir selección táctil de chinches con dianas estructurales precisas; aislar rechazos y confirmaciones de la cola sin ocultar errores. Convertir el puente de issues a ejecución manual, retirar disparadores schedule/push y fallar explícitamente si falta configuración. La revisión horaria del agente será la única ronda programada de este sistema; su configuración no acredita una ejecución terminada. Actualizar únicamente el atlas documental de YOD OS; sin cambios funcionales a su cabina.",
+      "status": "propuesto",
+      "tests": [
+        "Selección táctil y escritorio de elementos concretos, sin capturar contenedores globales",
+        "Cola: rechazo de una nota no bloquea otras; confirmación inválida no elimina la nota ni oculta el fallo",
+        "Puente manual: configuración ausente produce fallo; sin ejecución por schedule ni push",
+        "Preservar contratos de respuestas, 28 preguntas, escala y asignaciones; pruebas con datos sintéticos",
+        "Registrar inicio y cierre verificables por ejecución; no certificar recuperación periódica sin cierre posterior",
+        "Esquema, IDs y vistas del atlas regeneradas y comprobadas"
+      ],
+      "deployment": "Propuesta previa a implementación. Integración y despliegue pendientes de pruebas y evidencia privada. Conservar implementación, URL, permisos y datos existentes; respaldo privado antes de publicar. Reversión al código previo sin borrar notas ni respuestas."
+    },
+    {
       "id": "CHG-EMD-TIMING-001",
       "components": [
         "SYS-EMD",
         "GAS-EMD",
-        "SHEET-EMD"
+        "SHEET-EMD",
+        "SYS-YOD-OS"
       ],
-      "proposal": "Proponer estimación de duración activa por cuestionario basada en mediciones agregadas y separadas de las respuestas. Pausar ocultación e inactividad, impedir doble conteo entre sesiones y reintentos, excluir muestras incompletas y QA y no divulgar tiempos individuales. Conservar instrumento, asignaciones y controles de acceso. El detalle técnico y las pruebas viven en el repositorio privado.",
+      "proposal": "Proponer estimación de duración activa por cuestionario basada en mediciones agregadas y separadas de las respuestas. Pausar ocultación e inactividad, impedir doble conteo entre sesiones y reintentos, excluir muestras incompletas y QA y no divulgar tiempos individuales. Conservar instrumento, asignaciones y controles de acceso. El detalle técnico y las pruebas viven en el repositorio privado. Actualizar solo el atlas documental de YOD OS, sin modificar la cabina.",
       "status": "propuesto",
       "tests": [
         "Dobles sintéticos: autorización, idempotencia, sesiones concurrentes, reloj, pausas, abandono y cierre",
@@ -6427,6 +6449,34 @@
       ]
     },
     {
+      "id": "CTR-EMD-PINS-ACK",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "EXT-ACTIONS"
+      ],
+      "source": "Propuesta de corrección del sistema privado; evidencia técnica y operativa restringida.",
+      "input": [
+        "Diana estructural de pantalla y nota de mejora",
+        "Identificador de nota para repetición segura",
+        "Configuración explícita del puente manual"
+      ],
+      "output": [
+        "Confirmación válida por nota o error visible",
+        "Cola conservada ante rechazo o confirmación inválida",
+        "Resultado final de revisión con pruebas y bloqueos"
+      ],
+      "invariants": [
+        "La diana no depende del texto de respuestas ni contiene datos personales",
+        "Una nota rechazada no detiene el envío de otras; solo una confirmación válida permite retirarla de la cola",
+        "Configuración ausente nunca se informa como éxito de revisión",
+        "El puente manual no compite con la ronda programada del agente",
+        "Inicio y configuración no equivalen a ejecución terminada ni a recuperación validada",
+        "No se alteran respuestas, 28 preguntas, escala, matriz, asignaciones ni permisos existentes"
+      ]
+    },
+    {
       "id": "CTR-EMD-TIMING",
       "components": [
         "SYS-EMD",
@@ -6442,14 +6492,18 @@
       ],
       "output": [
         "confirmación sin respuestas",
-        "estimación agregada cuando exista muestra suficiente"
+        "estimación agregada cuando exista muestra suficiente",
+        "Disponibilidad explícita de instrumentación y muestra agregada"
       ],
       "invariants": [
         "No altera preguntas, escala, asignaciones o respuestas",
         "La medición no bloquea el recorrido de evaluación",
         "Pausas, sesiones concurrentes, QA y observaciones incompletas no contaminan el promedio",
         "No publica tiempos individuales ni permite acceso anónimo al agregado",
-        "No infiere duración a partir de marcas de última modificación"
+        "No infiere duración a partir de marcas de última modificación",
+        "El cliente solo inicia medición cuando el servidor declara instrumentación compatible; QA no habilita instrumentación",
+        "La estimación exige al menos cinco cuestionarios completos de tres evaluadores de una misma campaña",
+        "Los reintentos validan la misma secuencia, acumulado y flags de cierre/pausa; no mezclan solicitudes diferentes"
       ]
     }
   ],
