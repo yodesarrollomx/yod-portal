@@ -1,26 +1,18 @@
 {
-  "model_revision": "2026-10-01.6",
-  "proposal_id": "CHG-CONTROL-MAESTRO-001",
+  "model_revision": "2026-10-01.7",
+  "proposal_id": "CHG-PPP-BACKEND-001",
   "components": [
-    "SYS-CONTROL",
-    "SYS-YOD-OS",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
     "SYS-POTENCIALES",
-    "GAS-CATALOGO",
     "GAS-PORTERO",
-    "SHEET-CATALOGO",
-    "SHEET-PORTERO"
+    "SHEET-PORTERO",
+    "SHEET-PPP-MODELOS",
+    "SYS-CONTROL"
   ],
-  "summary": "Registrar comprobación de Pages del PR #14: fuente integrada y doce archivos publicados coincidentes; mantener límites de aceptación sintética y reversión de servidores 52/10.",
+  "summary": "Registrar publicación v53, lectura pública nativa del piloto y activador instalado; preservar revisión2026-10-01.6 y distinguir edición/generalización pendientes.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs"
+    "Preservación de cambios concurrentes y referencias",
+    "Verificación documental de impacto"
   ],
-  "rollback": "Revertir PR de frontend; restaurar versiones anteriores de las implementaciones existentes usando respaldos privados, sin restaurar filas de negocio ni sobrescribir editor ajeno."
+  "rollback": "Revertir esta actualización documental y regenerar vistas; reversión técnica posible a v52 de la misma implementación, preservando libros y registros privados."
 }
