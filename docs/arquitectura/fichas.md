@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-09-30.3 · 2026-09-30.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-09-30.4 · 2026-09-30.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -621,13 +621,13 @@ Almacenar registros del dominio obra
 Servir el contrato de Módulo cliente de obra
 
 - Tipo: apps_script. Dominio: Obra. Responsable: Responsable técnico del backend.
-- Evidencia: codigo. Producción: No verificado en despliegue.
+- Evidencia: codigo. Producción: Versión 2 activa verificada por API. Diez pruebas aisladas con esquema real; operaciones de negocio en producción no ejecutadas..
 - Entidades: pago, gasto, cliente_unidad.
-- Fuente de verdad: Fuente de GitHub; despliegue y datos reales por verificar.
-- Evidencia: [yod-portal/obra-app/motor/ObraCliente.gs](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/obra-app/motor/ObraCliente.gs#L175) — Tipo de fuente disponible: fuente_repositorio_despliegue_no_verificado.
+- Fuente de verdad: Fuente de Apps Script versión 2 y libro vinculado con encabezados verificados; las hojas conservan los datos operativos..
+- Evidencia: [yod-portal/obra-app/motor/ObraCliente.gs](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/obra-app/motor/ObraCliente.gs#L175) — Tipo de fuente disponible: fuente_repositorio_despliegue_no_verificado; [yod-portal/docs/arquitectura/backends-verificados.json](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/backends-verificados.json) — Versión activa 2 contrastada con la implementación existente y el cliente; siete esquemas reales verificados y diez pruebas sintéticas aprobadas..
 - Conexiones: CON-013 (GAS-OBRA-CLIENTE → SHEET-OBRA-CLIENTE); CON-030 (SYS-OBRA-CLIENTE → GAS-OBRA-CLIENTE); CON-058 (GAS-OBRA-CLIENTE → GAS-OBRA).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
-- Pendientes: Código desplegado y permisos reales no contrastados.
+- Pendientes: Permisos por operación y recorridos por rol pendientes de prueba.
 
 ## SHEET-OBRA-CLIENTE · Datos de Módulo cliente de obra
 

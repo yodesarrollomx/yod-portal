@@ -1,18 +1,19 @@
 {
-  "model_revision": "2026-09-30.3",
-  "proposal_id": "CHG-PPP-SHEETS-001",
+  "model_revision": "2026-09-30.4",
+  "proposal_id": "CHG-OBRA-001",
   "components": [
-    "SYS-POTENCIALES",
-    "GAS-PORTERO",
-    "SHEET-PORTERO",
-    "SHEET-PPP-MODELOS",
-    "SYS-CONTROL"
+    "SYS-OBRA-CLIENTE",
+    "GAS-OBRA-CLIENTE",
+    "SHEET-OBRA-CLIENTE"
   ],
-  "summary": "Registrar la migración autorizada de PPP a libros nativos de Sheets, conexiones propuestas y estado real de publicación. Preservar verificaciones concurrentes de backends y publicaciones de otros sistemas.",
+  "summary": "Corregir filas físicas, autorización explícita y conservación de pagos recibidos del módulo cliente de Obra; versión 2 verificada en la misma implementación.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "Validación de referencias y privacidad del modelo",
-    "Verificación de impacto sobre cambio documental y vistas regeneradas"
+    "node --test tests/*.cjs",
+    "node verify-os.cjs",
+    "node verify-portal.cjs",
+    "node verify-accesos.cjs",
+    "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir este cambio documental mediante PR y regenerar vistas. Conservar las verificaciones concurrentes; no borrar datos ni cambiar implementaciones de Apps Script."
+  "rollback": "Revertir el commit de referencia y seleccionar versión 1 en la implementación existente de Apps Script. No restaurar ni borrar registros de negocio."
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-09-30.3",
+  "revision": "2026-09-30.4",
   "checked_at": "2026-09-30",
   "priorities": [
     "vender_mas",
@@ -8,7 +8,7 @@
     "cobrar_antes"
   ],
   "coverage": {
-    "summary": "Inventario de 20 repositorios; fuentes y versiones activas de ocho motores contrastadas mediante API y coincidencia exacta con endpoints. Auditoría funcional de producción abierta.",
+    "summary": "Inventario de 20 repositorios; fuentes y versiones activas de nueve motores contrastadas por API. Corrección acotada del módulo cliente de Obra desplegada y verificada; auditoría funcional de producción abierta.",
     "production_verified": false,
     "limitations": [
       "No se ha comprobado la versión activa de todos los Apps Script",
@@ -1737,6 +1737,13 @@
           "claim": "Tipo de fuente disponible: fuente_repositorio_despliegue_no_verificado",
           "status": "codigo",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/backends-verificados.json",
+          "claim": "Versión activa 2 contrastada con la implementación existente y el cliente; siete esquemas reales verificados y diez pruebas sintéticas aprobadas.",
+          "status": "codigo",
+          "source_revision": "Apps Script version 2"
         }
       ],
       "data_entities": [
@@ -1745,12 +1752,12 @@
         "cliente_unidad"
       ],
       "risks_sanitized": [
-        "Código desplegado y permisos reales no contrastados"
+        "Permisos por operación y recorridos por rol pendientes de prueba"
       ],
-      "backend_source_status": "fuente_repositorio_despliegue_no_verificado",
-      "source_of_truth": "Fuente de GitHub; despliegue y datos reales por verificar",
+      "backend_source_status": "fuente_api_version_activa_contrastada",
+      "source_of_truth": "Fuente de Apps Script versión 2 y libro vinculado con encabezados verificados; las hojas conservan los datos operativos.",
       "status": "codigo",
-      "runtime_status": "No verificado en despliegue"
+      "runtime_status": "Versión 2 activa verificada por API. Diez pruebas aisladas con esquema real; operaciones de negocio en producción no ejecutadas."
     },
     {
       "id": "SHEET-OBRA-CLIENTE",
@@ -5742,11 +5749,13 @@
         "SHEET-OBRA-CLIENTE"
       ],
       "proposal": "Fortalecer invariantes de autorización, direccionamiento de registros y transiciones de pago; detalles en registro privado.",
-      "status": "pendiente_acceso",
+      "status": "publicado",
       "tests": [
-        "Pruebas sintéticas de servidor con dobles de hojas"
+        "Diez escenarios de coordenadas de filas, autorización y conservación de pagos recibidos con datos sintéticos",
+        "Siete encabezados del libro real coinciden con HOJAS",
+        "Fuente de versión 2, deployment ID y permisos comprobados por API"
       ],
-      "deployment": "Corrección preparada localmente; requiere contrastar y actualizar Apps Script activo"
+      "deployment": "GAS-OBRA-CLIENTE actualizado de versión 1 a 2 en la misma implementación, con endpoint y permisos conservados. Fuente activa verificada por API; reversión a versión 1 disponible. No se modificaron celdas operativas."
     },
     {
       "id": "CHG-FLUJO-001",
@@ -6214,6 +6223,13 @@
       "prefix": "tablero.html",
       "components": [
         "SYS-YOD-OS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/obra-cliente.test.cjs",
+      "components": [
+        "GAS-OBRA-CLIENTE"
       ]
     }
   ]
