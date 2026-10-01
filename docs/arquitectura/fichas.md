@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.1 · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.2 · 2026-10-01.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -108,7 +108,7 @@ Medir adquisición, citas, clientes y pauta
 - Entidades: lead_agregado, cita_agregada, campaña, pieza, gasto, conversion.
 - Fuente de verdad: GAS-MARKETING y GAS-PLAN-POTENCIAL para embudos; API Meta y archivos generados para publicaciones.
 - Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L24) — Sistema presente en el catálogo canónico.
-- Conexiones: CON-021 (SYS-MARKETING → GAS-MARKETING); CON-022 (SYS-MARKETING → GAS-PLAN-POTENCIAL); CON-041 (SYS-YOD-OS → SYS-MARKETING); CON-049 (SYS-MARKETING → GAS-PORTERO); CON-060 (EXT-META → SYS-MARKETING); CON-076 (GAS-PLAN-POTENCIAL → SYS-MARKETING); CON-077 (SYS-SALA-OPERACION → SYS-MARKETING).
+- Conexiones: CON-021 (SYS-MARKETING → GAS-MARKETING); CON-022 (SYS-MARKETING → GAS-PLAN-POTENCIAL); CON-041 (SYS-YOD-OS → SYS-MARKETING); CON-049 (SYS-MARKETING → GAS-PORTERO); CON-060 (EXT-META → SYS-MARKETING); CON-076 (GAS-PLAN-POTENCIAL → SYS-MARKETING); CON-077 (SYS-SALA-OPERACION → SYS-MARKETING); CON-PUBLICADOR-MARKETING (EXT-GITHUB-PUBLISHER-APP → SYS-MARKETING).
 - Mejoras: A · Atención comercial sin leads olvidados; B · Atribución desde campaña hasta venta; K · Indicadores confiables y rendimiento medido.
 
 ## SYS-OBRA · Obra en vivo
@@ -209,7 +209,7 @@ Proponer, decidir y producir contenido con compuertas humanas
 - Entidades: pieza, version, propuesta, decision, peticion, produccion, regla, motor, trabajo_cola.
 - Fuente de verdad: SHEET-SALA: propuestas, decisiones, producción, reglas, motores y cola; archivos de repositorio son superficie o respaldo.
 - Evidencia: [sala-edicion/CLAUDE.md](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/CLAUDE.md#L29) — Decisiones reservadas a editores; [sala-edicion/nube/sala_cliente.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_cliente.py#L42) — El cliente automático impide decisiones editoriales antes de la red; [sala-edicion/nube/sala_productor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_productor.py#L130) — El productor planifica compuertas de producción; [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_ejecutor.py#L48) — El ejecutor solo admite etapas habilitadas por configuración.
-- Conexiones: CON-031 (SYS-SALA → GAS-SALA); CON-063 (SYS-SALA → EXT-ACTIONS); CON-064 (SYS-SALA-OPERACION → SYS-SALA).
+- Conexiones: CON-031 (SYS-SALA → GAS-SALA); CON-063 (SYS-SALA → EXT-ACTIONS); CON-064 (SYS-SALA-OPERACION → SYS-SALA); CON-PUBLICADOR-SALA (EXT-GITHUB-PUBLISHER-APP → SYS-SALA).
 - Mejoras: B · Atribución desde campaña hasta venta.
 - Pendientes: Cambios de infraestructura y documentos históricos requieren reconciliación.
 
@@ -755,7 +755,7 @@ Dependencia externa de procesos YOD OS
 - Entidades: .
 - Fuente de verdad: Datos del servicio externo; no inspeccionados.
 - Evidencia: Integración pendiente de verificar.
-- Conexiones: CON-063 (SYS-SALA → EXT-ACTIONS); CON-079 (EXT-ACTIONS → SVC-SALA-PRODUCTOR); CON-081 (EXT-ACTIONS → SVC-SALA-EJECUTOR).
+- Conexiones: CON-063 (SYS-SALA → EXT-ACTIONS); CON-079 (EXT-ACTIONS → SVC-SALA-PRODUCTOR); CON-081 (EXT-ACTIONS → SVC-SALA-EJECUTOR); CON-PUBLICADOR-IDENTIDAD (EXT-ACTIONS → EXT-GITHUB-PUBLISHER-APP).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Estado y permisos no comprobados.
 
@@ -922,3 +922,16 @@ Conservar entradas, fórmulas nativas, versiones, flujos y datos de diagramas de
 - Conexiones: CON-PPP-MODELO (GAS-PORTERO → SHEET-PPP-MODELOS); CON-PPP-REGISTRO (SHEET-PORTERO → SHEET-PPP-MODELOS).
 - Mejoras: PPP · Unificar tablero y fórmulas de potencial en Sheets.
 - Pendientes: La existencia del libro no acredita la conexión pública del tablero; Faltan otros motores, nuevas altas, capturas por cuerpos y renta neta completa; el presupuesto mensual por etapas es preparación parcial.
+
+## EXT-GITHUB-PUBLISHER-APP · Identidad de publicación GitHub
+
+Crear PR automáticos con identidad propia para que se ejecuten sus revisiones obligatorias
+
+- Tipo: servicio_externo. Dominio: Infraestructura. Responsable: Dirección técnica.
+- Evidencia: propuesto. Producción: Pendiente de registro, instalación y comprobación operativa.
+- Entidades: identidad temporal, pull request, repositorio autorizado.
+- Fuente de verdad: GitHub App privada propiedad de la organización; configuración y llave permanecen fuera del atlas público..
+- Evidencia: Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB_TOKEN; requiere registro e instalación personal de una App privada de la organización..
+- Conexiones: CON-PUBLICADOR-IDENTIDAD (EXT-ACTIONS → EXT-GITHUB-PUBLISHER-APP); CON-PUBLICADOR-SALA (EXT-GITHUB-PUBLISHER-APP → SYS-SALA); CON-PUBLICADOR-MARKETING (EXT-GITHUB-PUBLISHER-APP → SYS-MARKETING).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Pendientes: La instalación se limita a Sala de Edición y Marketing; no usar credenciales personales en CI; Código probado no acredita una instalación ni publicación correcta.

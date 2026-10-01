@@ -1,18 +1,22 @@
 {
-  "model_revision": "2026-10-01.1",
-  "proposal_id": "CHG-PPP-FRONT-001",
+  "model_revision": "2026-10-01.2",
+  "proposal_id": "CHG-PUBLICADORES-APP-001",
   "components": [
-    "SYS-POTENCIALES",
-    "GAS-PORTERO",
-    "SHEET-PORTERO",
-    "SHEET-PPP-MODELOS",
-    "SYS-CONTROL"
+    "SYS-YOD-OS",
+    "SYS-SALA",
+    "GAS-SALA",
+    "SYS-MARKETING",
+    "EXT-ACTIONS",
+    "EXT-GITHUB-PUBLISHER-APP"
   ],
-  "summary": "Registrar frontend PPP publicado y programa/flujo por cuerpos nativos; conservar cambios concurrentes de revisión2026-09-30.5 y límites de backend pendiente.",
+  "summary": "Corregir el contrato de publicación automática con una GitHub App privada y conservar comprobaciones obligatorias. Registrar causa observada y configuración pendiente sin afirmar despliegue.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "Preservación de cambios concurrentes y referencias de evidencia",
-    "Verificación documental de impacto"
+    "node --test tests/*.cjs",
+    "node verify-os.cjs",
+    "node verify-portal.cjs",
+    "node verify-accesos.cjs",
+    "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir esta actualización documental y regenerar vistas; no cambiar backends, permisos, libros ni otros estados verificados."
+  "rollback": "Revertir por PR, revocar instalación y llave de la App si se configuraron; conservar recursos y registros de negocio."
 }

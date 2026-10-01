@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.1 · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.2 · 2026-10-01.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -72,3 +72,18 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Una respuesta pendiente, conflicto o desconexión conserva el último dato confirmado con estado explícito
 - Auditar antes/después y no marcar producción comprobada sin lectura pública final
 - No modificar Portero ni crear otra implementación; conservar contratos y URL existentes
+
+## CTR-PUBLICADOR-GITHUB
+
+- Componentes: SYS-YOD-OS, SYS-SALA, GAS-SALA, SYS-MARKETING, EXT-ACTIONS, EXT-GITHUB-PUBLISHER-APP.
+- Evidencia: Fallo observado de PR automáticos y política oficial de GitHub para GITHUB_TOKEN; diseño de identidad propia con privilegios limitados..
+- Entrada/campos: `commit de rama preparado`, `repositorio permitido`, `identidad temporal de App`.
+- Salida: PR revisable, checks del commit exacto, publicación confirmada o fallo explícito.
+
+- App privada instalada solamente en sala-edicion y aurum-board; contents:read y pull_requests:write
+- La identidad App se usa exclusivamente en POST /pulls; push, comprobación y merge conservan GITHUB_TOKEN
+- Nunca reemplazar revisiones requeridas por checks sintéticos, quitar protección ni omitir aprobación de GitHub
+- Verificar SHA exacto, comprobaciones completas y merge permitido por el proveedor; espera limitada ante checks vacíos
+- Sala confirma publicación de recursos antes de montar sus referencias en Apps Script
+- Sin cambios o en simulación no se necesita ni se crea token App
+- Llave privada solo en secretos cifrados y registro privado; ninguna credencial personal en CI
