@@ -1,15 +1,20 @@
 {
-  "model_revision": "2026-10-01.2",
-  "proposal_id": "CHG-PUBLICADORES-APP-001",
+  "model_revision": "2026-10-01.3",
+  "proposal_id": "CHG-BACKENDS-AUTORIZACION-001",
   "components": [
     "SYS-YOD-OS",
-    "SYS-SALA",
-    "GAS-SALA",
-    "SYS-MARKETING",
-    "EXT-ACTIONS",
-    "EXT-GITHUB-PUBLISHER-APP"
+    "SYS-POTENCIALES",
+    "SYS-OBRA",
+    "SYS-FLUJO",
+    "GAS-PORTERO",
+    "GAS-OBRA",
+    "GAS-FLUJO",
+    "GAS-CRM",
+    "GAS-CATALOGO",
+    "SHEET-PORTERO",
+    "SHEET-CATALOGO"
   ],
-  "summary": "Corregir el contrato de publicación automática con una GitHub App privada y conservar comprobaciones obligatorias. Registrar causa observada y configuración pendiente sin afirmar despliegue.",
+  "summary": "Registrar contrato y pruebas de autorización por operación; preparar correcciones fuera de producción y preservar evidencia sensible en privado.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -18,5 +23,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir por PR, revocar instalación y llave de la App si se configuraron; conservar recursos y registros de negocio."
+  "rollback": "Revertir la documentación por PR; cualquier candidato requiere respaldo privado y conservación de implementación/editor antes de desplegar. No restaurar datos de negocio."
 }
