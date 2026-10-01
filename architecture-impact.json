@@ -1,19 +1,18 @@
 {
-  "model_revision": "2026-10-01.8-emd-pins",
-  "proposal_id": "CHG-EMD-PINS-002",
+  "model_revision": "2026-10-01.9-emd-timing",
+  "proposal_id": "CHG-EMD-TIMING-001",
   "components": [
     "SYS-EMD",
     "GAS-EMD",
     "SHEET-EMD",
-    "EXT-ACTIONS",
     "SYS-YOD-OS"
   ],
-  "summary": "Registrar propuesta privada de selección precisa, cola con confirmación segura y puente exclusivamente manual con fallos explícitos; no afirmar implementación ni recuperación. SYS-YOD-OS participa solo por su atlas documental.",
+  "summary": "Proponer duración activa agregada, negociación explícita de instrumentación y reintentos exactos; preservar CHG-EMD-PINS-002 y contratos previos. SYS-YOD-OS participa únicamente por el atlas documental.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "Preservación de componentes, contratos e IDs existentes",
-    "Verificación documental sin datos privados"
+    "Esquema, referencias y vistas deterministas",
+    "Preservación de cambios concurrentes y privacidad"
   ],
-  "rollback": "Revertir esta propuesta documental y regenerar vistas; el despliegue privado requiere respaldo y reversión propios, sin borrar notas ni respuestas."
+  "rollback": "Revertir esta propuesta documental y regenerar vistas. Publicación privada requiere sus pruebas y respaldo; no borrar mediciones ni respuestas."
 }
 
