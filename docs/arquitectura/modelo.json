@@ -6169,9 +6169,10 @@
         "SYS-EMD",
         "GAS-EMD",
         "SHEET-EMD",
-        "EXT-ACTIONS"
+        "EXT-ACTIONS",
+        "SYS-YOD-OS"
       ],
-      "proposal": "Corregir selección táctil de chinches con dianas estructurales precisas; aislar rechazos y confirmaciones de la cola sin ocultar errores. Convertir el puente de issues a ejecución manual, retirar disparadores schedule/push y fallar explícitamente si falta configuración. La revisión horaria del agente será la única ronda programada de este sistema; su configuración no acredita una ejecución terminada.",
+      "proposal": "Corregir selección táctil de chinches con dianas estructurales precisas; aislar rechazos y confirmaciones de la cola sin ocultar errores. Convertir el puente de issues a ejecución manual, retirar disparadores schedule/push y fallar explícitamente si falta configuración. La revisión horaria del agente será la única ronda programada de este sistema; su configuración no acredita una ejecución terminada. Actualizar únicamente el atlas documental de YOD OS; sin cambios funcionales a su cabina.",
       "status": "propuesto",
       "tests": [
         "Selección táctil y escritorio de elementos concretos, sin capturar contenedores globales",

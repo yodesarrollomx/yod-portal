@@ -5,9 +5,10 @@
     "SYS-EMD",
     "GAS-EMD",
     "SHEET-EMD",
-    "EXT-ACTIONS"
+    "EXT-ACTIONS",
+    "SYS-YOD-OS"
   ],
-  "summary": "Registrar propuesta privada de selección precisa, cola con confirmación segura y puente exclusivamente manual con fallos explícitos; no afirmar implementación ni recuperación.",
+  "summary": "Registrar propuesta privada de selección precisa, cola con confirmación segura y puente exclusivamente manual con fallos explícitos; no afirmar implementación ni recuperación. SYS-YOD-OS participa solo por su atlas documental.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "Preservación de componentes, contratos e IDs existentes",
