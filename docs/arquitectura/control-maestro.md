@@ -1,6 +1,6 @@
 # Control Maestro · entrega técnica
 
-Registro `CHG-CONTROL-MAESTRO-001`, revisión del atlas `2026-10-01.5`.
+Registro `CHG-CONTROL-MAESTRO-001`, revisión del atlas `2026-10-01.6`.
 Esta entrega cierra correcciones técnicas de catálogo, navegación y autorización de sus dependencias; no habilita roles pendientes ni certifica todos los tableros de YOD OS.
 
 ## Estado comprobado
@@ -10,7 +10,7 @@ Esta entrega cierra correcciones técnicas de catálogo, navegación y autorizac
 | Portero | Versión 52 publicada; anterior 51 | Fuente inmutable y configuración contrastadas por API; salud pública y rechazo de credenciales ausentes/no válidas por HTTP |
 | Catálogo | Versión 10 publicada; anterior 9; API 1.6.0 habilitada | Fuente inmutable y configuración por API; directorio público y rechazo de lectura protegida por HTTP |
 | Editor de Portero | Borrador adicional conservado | Solo el parche revisado se aplicó también al editor; sus funciones adicionales no se publicaron |
-| Portal | Implementado y probado; publicación se contrasta después de integrar el PR | Verificadores, casos de contrato y aceptación sintética en Chromium |
+| Portal | Integrado por PR #14 y publicado en Pages | Doce archivos comparados byte a byte con `7e9094bf2a70ea1ee4e790299370fe28cfc4d89b`; aceptación sintética local y sobre publicación |
 | Hojas | Conservadas, sin escrituras operativas | Lecturas acotadas de estructura, catálogo y configuración; no se exportaron identidades |
 
 La lectura pública devuelve dos módulos internos y diez IDs técnicos conocidos. Los IDs permiten distinguir un módulo ausente de una fila ocultada expresamente. No contienen nombres de personas, credenciales ni derechos de escritura.
@@ -58,3 +58,7 @@ Las capturas son sintéticas y lo indican en la imagen. No son sesiones de perso
 - CRM conserva su despliegue 20. Revisar su caché de autorización y su recorrido comercial al continuar con CRM; la actualización de Portero no garantiza la frescura de todos sus consumidores.
 
 El informe privado de entrega conserva hashes, diarios de API, referencias de reversión, resultados y capturas. El atlas público omite datos reales, identificadores de infraestructura y fuentes privadas.
+
+## Publicación del frontend comprobada
+
+[PR #14](https://github.com/yodesarrollomx/yod-portal/pull/14) integrado el 2026-10-01 a las 02:17:47 UTC. Head revisado `8759abcebffd4fc44d5eaa849f6b94e6aced9940`; integración `7e9094bf2a70ea1ee4e790299370fe28cfc4d89b`. Los checks obligatorios Arquitectura YOD y verificar aprobaron ese head exacto; también aprobaron la integración. La comparación HTTP de doce archivos públicos resultó idéntica al commit integrado. El registro privado conserva las marcas UTC y SHA-256 por archivo. Las pruebas de navegador sobre la publicación interceptan todos los motores: certifican la interfaz servida, sin confundirla con una sesión real.

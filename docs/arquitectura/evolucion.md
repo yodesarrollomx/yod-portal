@@ -51,3 +51,7 @@ Las decisiones A–L se documentan con la instrucción del propietario, dependen
 ## Revisión 2026-10-01.5 · Control Maestro
 
 Registro CHG-CONTROL-MAESTRO-001. Portero 52 y Catálogo 10 (API 1.6.0) publicados en sus implementaciones existentes; configuración y borrador adicional conservados. Se contrastó el catálogo vivo y se corrigieron navegación, visibilidad y autorización. La aceptación sintética, las comprobaciones HTTP y los límites se detallan en [control-maestro.md](control-maestro.md). La publicación del frontend se contrasta tras integrar su PR; no se hicieron escrituras de negocio ni sesiones personales.
+
+## Revisión 2026-10-01.6 · evidencia de publicación de Control Maestro
+
+PR #14 integrado en 7e9094bf2a70ea1ee4e790299370fe28cfc4d89b, con checks aprobados del head exacto y de la integración. Doce archivos publicados coinciden byte a byte. El atlas actualiza el estado a publicado manteniendo el límite entre aceptación sintética y uso autenticado real.

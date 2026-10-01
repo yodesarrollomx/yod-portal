@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-01.5",
+  "model_revision": "2026-10-01.6",
   "proposal_id": "CHG-CONTROL-MAESTRO-001",
   "components": [
     "SYS-CONTROL",
@@ -13,7 +13,7 @@
     "SHEET-CATALOGO",
     "SHEET-PORTERO"
   ],
-  "summary": "Control Maestro: catálogo contrastado y autorización coherente con configuración vigente, pruebas sintéticas y publicación comprobada.",
+  "summary": "Registrar comprobación de Pages del PR #14: fuente integrada y doce archivos publicados coincidentes; mantener límites de aceptación sintética y reversión de servidores 52/10.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",

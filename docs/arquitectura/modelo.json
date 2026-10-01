@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.5",
+  "revision": "2026-10-01.6",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -526,7 +526,7 @@
       ],
       "source_of_truth": "Control Maestro en Google Sheets; catálogo técnico local puede divergir",
       "status": "ejecucion",
-      "runtime_status": "Catálogo, fuentes activas y configuración de roles contrastados con lecturas acotadas. Correcciones de servidor 52/10 publicadas; interfaz preparada y aceptación sintética comprobada. La sesión Google y las modificaciones operativas reales quedan fuera de esta aceptación."
+      "runtime_status": "Corrección técnica publicada: servidores 52/10 y frontend de PR #14 comprobados. Catálogo y permisos contrastados con lecturas acotadas; aceptación sintética y rechazo real sin credencial. Sesión Google y modificaciones operativas reales no incluidas."
     },
     {
       "id": "SYS-YOD-OS",
@@ -544,6 +544,13 @@
           "claim": "El portal integra tableros",
           "status": "declarado",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/control-maestro.md",
+          "claim": "PR #14 integrado; doce archivos servidos comparados exactamente con commit 7e9094b y perfiles sintéticos sobre la publicación. No acredita sesiones ni escrituras reales.",
+          "status": "ejecucion",
+          "source_revision": "7e9094bf2a70ea1ee4e790299370fe28cfc4d89b"
         }
       ],
       "data_entities": [
@@ -6112,7 +6119,7 @@
         "SHEET-PORTERO"
       ],
       "proposal": "Cerrar la revisión técnica de Control Maestro: coherencia del catálogo, navegación y autorización vigente de sus dependencias. Conservar IDs, hojas y permisos configurados; los detalles restringidos y fuentes de backend quedan en evidencia privada.",
-      "status": "implementado_local",
+      "status": "publicado",
       "tests": [
         "124 pruebas locales del portal y sus verificadores obligatorios",
         "33 escenarios de Portero sobre versión revisada y editor preservado",
@@ -6121,7 +6128,7 @@
         "Seis comprobaciones HTTP reales de salud, catálogo público y rechazo; cero escrituras de negocio",
         "Fuente de versiones 52/10 y configuración contrastadas por API; respaldo 51/9"
       ],
-      "deployment": "Portero 51→52 y Catálogo 9→10 (API 1.6.0), en las mismas implementaciones. Editor adicional de Portero conservado sin publicar. Frontend preparado en esta rama, pendiente integración por PR y comparación de archivos publicados. La aceptación con cuentas Google reales y escrituras operativas no fue realizada."
+      "deployment": "Portero 52 y Catálogo 10/API 1.6.0 publicados y contrastados por API y HTTP; editor adicional preservado. Frontend integrado por PR #14, commit 7e9094bf2a70ea1ee4e790299370fe28cfc4d89b; sus doce archivos servidos y atlas 2026-10-01.5 coinciden byte a byte con el commit integrado. Aceptación sintética local y sobre archivos publicados, con motores interceptados. No hubo escrituras de negocio ni sesiones personales."
     }
   ],
   "data_contracts": [
