@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.19-ppp-mapa-catalogo",
+  "revision": "2026-10-01.20-emd-directory",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -6627,6 +6627,23 @@
         "124 pruebas y verificadores del atlas aprobados; sintaxis y diff; sin POST de negocio ni cambios de cálculos/backend"
       ],
       "deployment": "Implementación local validada; integrar por PR del PPP con este atlas fijado. Comparar archivos estáticos servidos con el commit integrado. No acredita un iPhone físico ni acceso a filas reales; transporte de prueba sintético. Revertir portada, mapa, catálogo y referencia del atlas mediante PR sin tocar sesiones ni registros."
+    },
+    {
+      "id": "CHG-EMD-DIRECTORY-001",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Conectar padrón privado de puestos, niveles y jefe directo procedente de archivos aportados. Importación interna con coincidencia exacta del padrón, validación de referencias/ciclos, CAS e idempotencia y respaldo privado previo. Participante recibe únicamente cargo de sus asignaciones; organigrama de solo lectura exclusivo de coordinación de negocio. Sin cambiar matriz, preguntas, accesos o respuestas.",
+      "status": "propuesto",
+      "tests": [
+        "Importación sintética exacta, desconocidos/ciclos/cargos vacíos, CAS, idempotencia y ACL; cero escritura a respuestas/accesos/asignaciones",
+        "Coordinación vs QA/participante; lista propia con cargo y organigrama en móvil/escritorio; error/ausencia sin inventar cargos",
+        "HEAD exacto y CI, respaldo antes de publicar, fuente/versión y recorrido real sin preguntas humanas"
+      ],
+      "deployment": "Propuesta autorizada; no acredita publicación. Padrón nominal privado fuera de Git. Reversión de código conserva directorio y datos de negocio."
     }
   ],
   "data_contracts": [
@@ -7050,6 +7067,30 @@
         "No emitir accesos, regenerar enlaces, reiniciar evaluaciones, enviar correos ni exponer enlaces personales",
         "No modificar 28 preguntas, escala, matriz, asignaciones, permisos, respuestas o estados de evaluación",
         "La reversión de código conserva contactos y registros de negocio; no borrar datos como parte del rollback"
+      ]
+    },
+    {
+      "id": "CTR-EMD-DIRECTORY",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD"
+      ],
+      "source": "Excel aportado, coincidencias y detalles privados fuera del atlas.",
+      "input": [
+        "Padrón nominal con identificador canónico, nombre exacto, puesto, nivel y jefe canónico",
+        "Hash esperado del directorio privado vigente"
+      ],
+      "output": [
+        "Cargo solo de asignación propia",
+        "Organigrama de negocio únicamente para coordinación autorizada",
+        "ACK de importación verificado o conflicto"
+      ],
+      "invariants": [
+        "No inferir cargos/jerarquía de letras de matriz, ni inventar integrantes",
+        "Rechazar identidad distinta, jefe desconocido, ciclo y ausencia de cargo/nivel",
+        "Respaldar privado antes de escribir; lectura no crea recursos; reintento exacto no duplica",
+        "Separar QA y negocio; no leer respuestas para directorio ni escribir asignaciones, accesos, cuestionarios o estados"
       ]
     }
   ],

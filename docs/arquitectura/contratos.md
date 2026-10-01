@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.19-ppp-mapa-catalogo · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.20-emd-directory · 2026-10-01.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -203,3 +203,15 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - No emitir accesos, regenerar enlaces, reiniciar evaluaciones, enviar correos ni exponer enlaces personales
 - No modificar 28 preguntas, escala, matriz, asignaciones, permisos, respuestas o estados de evaluación
 - La reversión de código conserva contactos y registros de negocio; no borrar datos como parte del rollback
+
+## CTR-EMD-DIRECTORY
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD.
+- Evidencia: Excel aportado, coincidencias y detalles privados fuera del atlas..
+- Entrada/campos: `Padrón nominal con identificador canónico, nombre exacto, puesto, nivel y jefe canónico`, `Hash esperado del directorio privado vigente`.
+- Salida: Cargo solo de asignación propia, Organigrama de negocio únicamente para coordinación autorizada, ACK de importación verificado o conflicto.
+
+- No inferir cargos/jerarquía de letras de matriz, ni inventar integrantes
+- Rechazar identidad distinta, jefe desconocido, ciclo y ausencia de cargo/nivel
+- Respaldar privado antes de escribir; lectura no crea recursos; reintento exacto no duplica
+- Separar QA y negocio; no leer respuestas para directorio ni escribir asignaciones, accesos, cuestionarios o estados
