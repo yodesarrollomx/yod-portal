@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.4 · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.5 · 2026-10-01.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -128,10 +128,10 @@ Capturar, verificar y autorizar avances de obra
 Administrar catálogo y registro de proyectos
 
 - Tipo: tablero. Dominio: Gobierno. Responsable: Dirección.
-- Evidencia: codigo. Producción: No verificado en despliegue.
+- Evidencia: ejecucion. Producción: Catálogo, fuentes activas y configuración de roles contrastados con lecturas acotadas. Correcciones de servidor 52/10 publicadas; interfaz preparada y aceptación sintética comprobada. La sesión Google y las modificaciones operativas reales quedan fuera de esta aceptación..
 - Entidades: sistema, portal, proyecto, folio.
 - Fuente de verdad: Control Maestro en Google Sheets; catálogo técnico local puede divergir.
-- Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L26) — Sistema presente en el catálogo canónico.
+- Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L26) — Sistema presente en el catálogo canónico; Lecturas acotadas de Portal, registro Sistemas, esquema de Bitácora y configuración de roles/permisos, sin correos ni exportación de Accesos. Pruebas descritas en control-maestro.md..
 - Conexiones: CON-043 (SYS-YOD-OS → SYS-CONTROL); CON-PPP-AUDITORIA (GAS-PORTERO → SYS-CONTROL).
 - Mejoras: E · Folio común de proyecto y datos conciliados; L · Mapa vivo, contratos y cambios verificables; PPP · Unificar tablero y fórmulas de potencial en Sheets.
 - Pendientes: Catálogo local y Control Maestro deben reconciliarse sin editar silenciosamente datos operativos.
@@ -309,13 +309,13 @@ Ensayo técnico de migración de dominio y acceso
 Servir el contrato de Portero y Potenciales
 
 - Tipo: apps_script. Dominio: Identidad. Responsable: Responsable técnico del backend.
-- Evidencia: codigo. Producción: Versión 51 desplegada en la implementación existente y fuente contrastada por API. Correcciones acotadas probadas con dobles; recorrido real de negocio por rol pendiente..
+- Evidencia: codigo. Producción: Versión 52 publicada en la implementación existente; fuente inmutable y configuración comprobadas por API. Salud y rechazos sin credencial comprobados por HTTP. Autorización y recuperación probadas con registros sintéticos; no se ejecutaron escrituras operativas ni un recorrido autenticado real..
 - Entidades: acceso, sesion, caso, escenario, track.
 - Fuente de verdad: Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos..
-- Evidencia: [potenciales-yod/CLAUDE.md](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/CLAUDE.md#L35) — Tipo de fuente disponible: ausente; Registro backends-verificados.json: versión activa 51 comprobada por API el 2026-10-01, con misma implementación, URL y permisos; pruebas aisladas de la corrección..
+- Evidencia: [potenciales-yod/CLAUDE.md](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/CLAUDE.md#L35) — Tipo de fuente disponible: ausente; Registro backends-verificados.json: versión activa 51 comprobada por API el 2026-10-01, con misma implementación, URL y permisos; pruebas aisladas de la corrección.; CHG-CONTROL-MAESTRO-001: versión 52; publicación contrastada por API y pruebas HTTP de lectura y rechazo el 2026-10-01. Detalle en control-maestro.md y registro de backends..
 - Conexiones: CON-001 (GAS-PORTERO → SHEET-PORTERO); CON-019 (SYS-POTENCIALES → GAS-PORTERO); CON-020 (SYS-TRACK → GAS-PORTERO); CON-044 (SYS-YOD-OS → GAS-PORTERO); CON-045 (SYS-TAREAS → GAS-PORTERO); CON-046 (SYS-FLUJO → GAS-PORTERO); CON-047 (SYS-DESPACHO → GAS-PORTERO); CON-048 (SYS-INTERIORES → GAS-PORTERO); CON-049 (SYS-MARKETING → GAS-PORTERO); CON-050 (SYS-MIRAMAR → GAS-PORTERO); CON-051 (SYS-OBRA → GAS-PORTERO); CON-054 (GAS-PORTERO → SYS-YOD-OS); CON-071 (SYS-INVERSION → GAS-PORTERO); CON-085 (GAS-SALA → GAS-PORTERO); CON-PPP-MODELO (GAS-PORTERO → SHEET-PPP-MODELOS); CON-PPP-AUDITORIA (GAS-PORTERO → SYS-CONTROL); CON-AUTH-FLUJO (GAS-FLUJO → GAS-PORTERO); CON-AUTH-CRM (GAS-CRM → GAS-PORTERO); CON-AUTH-OBRA (GAS-OBRA → GAS-PORTERO).
 - Mejoras: PPP · Unificar tablero y fórmulas de potencial en Sheets.
-- Pendientes: Quedan reglas de autorización y recorridos de negocio por comprobar; las pruebas aisladas no acreditan todos los permisos en producción.; Los cambios adicionales del editor se conservaron, con la corrección aplicada también a ese borrador; el resto del borrador no fue desplegado..
+- Pendientes: La revisión acotada no certifica todas las operaciones de negocio ni sustituye la aceptación con usuarios reales.; Las cachés de consumidores ajenos a esta entrega pueden conservar permisos temporalmente; revisarlos al continuar cada tablero..
 
 ## SHEET-PORTERO · Datos de Portero y Potenciales
 
@@ -335,26 +335,26 @@ Almacenar registros del dominio identidad
 Servir el contrato de Catálogo del OS
 
 - Tipo: apps_script. Dominio: Gobierno. Responsable: Responsable técnico del backend.
-- Evidencia: codigo. Producción: Versión 9 desplegada en la implementación existente y fuente contrastada por API. Correcciones acotadas probadas con dobles; recorrido real de negocio por rol pendiente..
+- Evidencia: codigo. Producción: Versión 10 publicada en la implementación existente; fuente inmutable y configuración comprobadas por API. Salud y rechazos sin credencial comprobados por HTTP. Autorización y recuperación probadas con registros sintéticos; no se ejecutaron escrituras operativas ni un recorrido autenticado real..
 - Entidades: sistema, portal.
 - Fuente de verdad: Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos..
-- Evidencia: [yod-portal/CLAUDE.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/CLAUDE.md#L103) — Tipo de fuente disponible: ausente; Registro backends-verificados.json: versión activa 9 comprobada por API el 2026-10-01, con misma implementación, URL y permisos; pruebas aisladas de la corrección..
+- Evidencia: [yod-portal/CLAUDE.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/CLAUDE.md#L103) — Tipo de fuente disponible: ausente; Registro backends-verificados.json: versión activa 9 comprobada por API el 2026-10-01, con misma implementación, URL y permisos; pruebas aisladas de la corrección.; CHG-CONTROL-MAESTRO-001: versión 10; publicación contrastada por API y pruebas HTTP de lectura y rechazo el 2026-10-01. Detalle en control-maestro.md y registro de backends..
 - Conexiones: CON-002 (GAS-CATALOGO → SHEET-CATALOGO); CON-072 (SYS-TRACK → GAS-CATALOGO).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
-- Pendientes: Quedan reglas de autorización y recorridos de negocio por comprobar; las pruebas aisladas no acreditan todos los permisos en producción.; Las escrituras y su auditoría no constituyen una transacción entre libros; un error parcial se informa y requiere revisión..
+- Pendientes: La revisión acotada no certifica todas las operaciones de negocio ni sustituye la aceptación con usuarios reales.; Las cachés de consumidores ajenos a esta entrega pueden conservar permisos temporalmente; revisarlos al continuar cada tablero.; Las escrituras y auditoría entre libros no son una transacción; un fallo parcial exige revisión sin reintento automático..
 
 ## SHEET-CATALOGO · Datos de Catálogo del OS
 
 Almacenar registros del dominio gobierno
 
 - Tipo: google_sheets. Dominio: Gobierno. Responsable: Dueño del dato por confirmar.
-- Evidencia: ejecucion. Producción: Lectura directa de estructura en Sheets el 2026-09-30; no certifica backend.
+- Evidencia: ejecucion. Producción: Metadatos, catálogo, registro y configuración de permisos contrastados el 2026-10-01 mediante lecturas acotadas. Sin escrituras, migraciones ni exportación de identidades..
 - Entidades: Sistemas, Portal, Track, Proyectos, Personas, Roles, Accesos, Dependencias institucionales, Permisos, Documentos, Tareas, Hitos, Reglas, Bitácora.
 - Fuente de verdad: Almacén lógico Google Sheets; correspondencia con archivo vivo por verificar.
 - Evidencia: Integración pendiente de verificar; Metadatos y encabezados leídos mediante conector autorizado el 2026-09-30. Identificadores y registros reales omitidos de la versión pública..
 - Conexiones: CON-002 (GAS-CATALOGO → SHEET-CATALOGO).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
-- Pendientes: Esquema y calidad de datos vivos no inspeccionados; Registro Sistemas y catálogo técnico no son idénticos: reconciliar Despacho y el alias del portal sin cambiar permisos automáticamente; La pestaña Dependencias registra organismos/contactos; no representa dependencias de software.
+- Pendientes: Despacho sigue ausente del registro vivo; su respaldo técnico se conserva.; SYS-PORTAL y SYS-YOD-OS mantienen sus identificadores; el alias no se migró.; El catálogo de roles no concede derechos por sí solo: se aplican los recursos y banderas explícitas de Accesos..
 
 ## GAS-OPERACION · Operación y tareas
 

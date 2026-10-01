@@ -1,20 +1,19 @@
 {
-  "model_revision": "2026-10-01.4",
-  "proposal_id": "CHG-BACKENDS-AUTORIZACION-001",
+  "model_revision": "2026-10-01.5",
+  "proposal_id": "CHG-CONTROL-MAESTRO-001",
   "components": [
+    "SYS-CONTROL",
     "SYS-YOD-OS",
-    "SYS-POTENCIALES",
+    "SYS-TRACK",
     "SYS-OBRA",
-    "SYS-FLUJO",
-    "GAS-PORTERO",
-    "GAS-OBRA",
-    "GAS-FLUJO",
-    "GAS-CRM",
+    "SYS-OBRA-CLIENTE",
+    "SYS-POTENCIALES",
     "GAS-CATALOGO",
-    "SHEET-PORTERO",
-    "SHEET-CATALOGO"
+    "GAS-PORTERO",
+    "SHEET-CATALOGO",
+    "SHEET-PORTERO"
   ],
-  "summary": "Registrar cuatro correcciones de backend publicadas, sus versiones y tres dependencias de autenticación observadas; conservar pendientes de negocio e instalación App.",
+  "summary": "Control Maestro: catálogo contrastado y autorización coherente con configuración vigente, pruebas sintéticas y publicación comprobada.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -23,5 +22,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir la documentación por PR; cualquier candidato requiere respaldo privado y conservación de implementación/editor antes de desplegar. No restaurar datos de negocio."
+  "rollback": "Revertir PR de frontend; restaurar versiones anteriores de las implementaciones existentes usando respaldos privados, sin restaurar filas de negocio ni sobrescribir editor ajeno."
 }

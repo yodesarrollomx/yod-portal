@@ -47,3 +47,7 @@ Permanecen pendientes la instalación personal de la App publicadora, los recorr
 Cada propuesta nueva obtiene un ID estable en `modelo.json` y declara componentes, contratos, pruebas y reversión. El PR explica el problema concreto y el resultado. Al integrar, registrar el commit, las comprobaciones y el entorno; al desplegar un motor, registrar también la versión y la evidencia de ejecución. Una reversión se registra como un evento nuevo y conserva la trazabilidad anterior.
 
 Las decisiones A–L se documentan con la instrucción del propietario, dependencias, criterio de aceptación y estado. No convertir una hipótesis comercial en automatización activa sin esa decisión.
+
+## Revisión 2026-10-01.5 · Control Maestro
+
+Registro CHG-CONTROL-MAESTRO-001. Portero 52 y Catálogo 10 (API 1.6.0) publicados en sus implementaciones existentes; configuración y borrador adicional conservados. Se contrastó el catálogo vivo y se corrigieron navegación, visibilidad y autorización. La aceptación sintética, las comprobaciones HTTP y los límites se detallan en [control-maestro.md](control-maestro.md). La publicación del frontend se contrasta tras integrar su PR; no se hicieron escrituras de negocio ni sesiones personales.

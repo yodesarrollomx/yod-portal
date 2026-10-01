@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.4",
+  "revision": "2026-10-01.5",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -509,6 +509,10 @@
           "claim": "Sistema presente en el catálogo canónico",
           "status": "codigo",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "claim": "Lecturas acotadas de Portal, registro Sistemas, esquema de Bitácora y configuración de roles/permisos, sin correos ni exportación de Accesos. Pruebas descritas en control-maestro.md.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -521,8 +525,8 @@
         "Catálogo local y Control Maestro deben reconciliarse sin editar silenciosamente datos operativos"
       ],
       "source_of_truth": "Control Maestro en Google Sheets; catálogo técnico local puede divergir",
-      "status": "codigo",
-      "runtime_status": "No verificado en despliegue"
+      "status": "ejecucion",
+      "runtime_status": "Catálogo, fuentes activas y configuración de roles contrastados con lecturas acotadas. Correcciones de servidor 52/10 publicadas; interfaz preparada y aceptación sintética comprobada. La sesión Google y las modificaciones operativas reales quedan fuera de esta aceptación."
     },
     {
       "id": "SYS-YOD-OS",
@@ -969,6 +973,11 @@
           "claim": "Registro backends-verificados.json: versión activa 51 comprobada por API el 2026-10-01, con misma implementación, URL y permisos; pruebas aisladas de la corrección.",
           "status": "codigo",
           "source_revision": "Apps Script version 51"
+        },
+        {
+          "claim": "CHG-CONTROL-MAESTRO-001: versión 52; publicación contrastada por API y pruebas HTTP de lectura y rechazo el 2026-10-01. Detalle en control-maestro.md y registro de backends.",
+          "status": "ejecucion",
+          "source_revision": "Apps Script version 52"
         }
       ],
       "data_entities": [
@@ -979,13 +988,13 @@
         "track"
       ],
       "risks_sanitized": [
-        "Quedan reglas de autorización y recorridos de negocio por comprobar; las pruebas aisladas no acreditan todos los permisos en producción.",
-        "Los cambios adicionales del editor se conservaron, con la corrección aplicada también a ese borrador; el resto del borrador no fue desplegado."
+        "La revisión acotada no certifica todas las operaciones de negocio ni sustituye la aceptación con usuarios reales.",
+        "Las cachés de consumidores ajenos a esta entrega pueden conservar permisos temporalmente; revisarlos al continuar cada tablero."
       ],
       "backend_source_status": "fuente_api_version_activa_contrastada",
       "source_of_truth": "Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos.",
       "status": "codigo",
-      "runtime_status": "Versión 51 desplegada en la implementación existente y fuente contrastada por API. Correcciones acotadas probadas con dobles; recorrido real de negocio por rol pendiente."
+      "runtime_status": "Versión 52 publicada en la implementación existente; fuente inmutable y configuración comprobadas por API. Salud y rechazos sin credencial comprobados por HTTP. Autorización y recuperación probadas con registros sintéticos; no se ejecutaron escrituras operativas ni un recorrido autenticado real."
     },
     {
       "id": "SHEET-PORTERO",
@@ -1037,6 +1046,11 @@
           "claim": "Registro backends-verificados.json: versión activa 9 comprobada por API el 2026-10-01, con misma implementación, URL y permisos; pruebas aisladas de la corrección.",
           "status": "codigo",
           "source_revision": "Apps Script version 9"
+        },
+        {
+          "claim": "CHG-CONTROL-MAESTRO-001: versión 10; publicación contrastada por API y pruebas HTTP de lectura y rechazo el 2026-10-01. Detalle en control-maestro.md y registro de backends.",
+          "status": "ejecucion",
+          "source_revision": "Apps Script version 10"
         }
       ],
       "data_entities": [
@@ -1044,13 +1058,14 @@
         "portal"
       ],
       "risks_sanitized": [
-        "Quedan reglas de autorización y recorridos de negocio por comprobar; las pruebas aisladas no acreditan todos los permisos en producción.",
-        "Las escrituras y su auditoría no constituyen una transacción entre libros; un error parcial se informa y requiere revisión."
+        "La revisión acotada no certifica todas las operaciones de negocio ni sustituye la aceptación con usuarios reales.",
+        "Las cachés de consumidores ajenos a esta entrega pueden conservar permisos temporalmente; revisarlos al continuar cada tablero.",
+        "Las escrituras y auditoría entre libros no son una transacción; un fallo parcial exige revisión sin reintento automático."
       ],
       "backend_source_status": "fuente_api_version_activa_contrastada",
       "source_of_truth": "Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos.",
       "status": "codigo",
-      "runtime_status": "Versión 9 desplegada en la implementación existente y fuente contrastada por API. Correcciones acotadas probadas con dobles; recorrido real de negocio por rol pendiente."
+      "runtime_status": "Versión 10 publicada en la implementación existente; fuente inmutable y configuración comprobadas por API. Salud y rechazos sin credencial comprobados por HTTP. Autorización y recuperación probadas con registros sintéticos; no se ejecutaron escrituras operativas ni un recorrido autenticado real."
     },
     {
       "id": "SHEET-CATALOGO",
@@ -1087,14 +1102,14 @@
         "Bitácora"
       ],
       "risks_sanitized": [
-        "Esquema y calidad de datos vivos no inspeccionados",
-        "Registro Sistemas y catálogo técnico no son idénticos: reconciliar Despacho y el alias del portal sin cambiar permisos automáticamente",
-        "La pestaña Dependencias registra organismos/contactos; no representa dependencias de software"
+        "Despacho sigue ausente del registro vivo; su respaldo técnico se conserva.",
+        "SYS-PORTAL y SYS-YOD-OS mantienen sus identificadores; el alias no se migró.",
+        "El catálogo de roles no concede derechos por sí solo: se aplican los recursos y banderas explícitas de Accesos."
       ],
       "source_of_truth": "Almacén lógico Google Sheets; correspondencia con archivo vivo por verificar",
       "physical_mapping_status": "pendiente_no_contar_como_archivos_distintos_confirmados",
       "status": "ejecucion",
-      "runtime_status": "Lectura directa de estructura en Sheets el 2026-09-30; no certifica backend"
+      "runtime_status": "Metadatos, catálogo, registro y configuración de permisos contrastados el 2026-10-01 mediante lecturas acotadas. Sin escrituras, migraciones ni exportación de identidades."
     },
     {
       "id": "GAS-OPERACION",
@@ -6081,6 +6096,32 @@
         "Fuente de cada versión publicada, implementación, URL y permisos contrastados por API; salud pública CRM HTTP 200 con campos técnicos únicamente"
       ],
       "deployment": "Portero 50→51, Flujo 14→15, CRM 19→20 y Catálogo 8→9. Misma implementación, URL y permisos. Editor pendiente de Portero conservado con el parche; no se publicaron sus funciones adicionales. Catálogo se confirmó con lecturas posteriores sin repetir escritura. Cero escrituras en registros operativos. Obra sigue en versión 16 y el prototipo no se integró."
+    },
+    {
+      "id": "CHG-CONTROL-MAESTRO-001",
+      "components": [
+        "SYS-CONTROL",
+        "SYS-YOD-OS",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-POTENCIALES",
+        "GAS-CATALOGO",
+        "GAS-PORTERO",
+        "SHEET-CATALOGO",
+        "SHEET-PORTERO"
+      ],
+      "proposal": "Cerrar la revisión técnica de Control Maestro: coherencia del catálogo, navegación y autorización vigente de sus dependencias. Conservar IDs, hojas y permisos configurados; los detalles restringidos y fuentes de backend quedan en evidencia privada.",
+      "status": "implementado_local",
+      "tests": [
+        "124 pruebas locales del portal y sus verificadores obligatorios",
+        "33 escenarios de Portero sobre versión revisada y editor preservado",
+        "50 escenarios privados CRM/Catálogo y su integración sintética con Portero",
+        "Cinco perfiles en Chromium, escritorio y 390 px; motores interceptados",
+        "Seis comprobaciones HTTP reales de salud, catálogo público y rechazo; cero escrituras de negocio",
+        "Fuente de versiones 52/10 y configuración contrastadas por API; respaldo 51/9"
+      ],
+      "deployment": "Portero 51→52 y Catálogo 9→10 (API 1.6.0), en las mismas implementaciones. Editor adicional de Portero conservado sin publicar. Frontend preparado en esta rama, pendiente integración por PR y comparación de archivos publicados. La aceptación con cuentas Google reales y escrituras operativas no fue realizada."
     }
   ],
   "data_contracts": [

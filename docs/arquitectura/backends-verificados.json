@@ -4,7 +4,7 @@
   "confirmed_components": [
     {
       "component_id": "GAS-PORTERO",
-      "version": 51,
+      "version": 52,
       "editor_equals_deployed_version": false,
       "source_files": [
         {
@@ -13,13 +13,13 @@
         },
         {
           "name": "Code",
-          "sha256": "34ea9d86778102a32c33f62310fcc97bbcb7a9c6d8688c9cd556d90bc0972976"
+          "sha256": "92c49db471f966553552212c5167f3f79d35c69838516429145548606b0629ce"
         }
       ],
-      "verification": "Versión de la misma implementación actualizada y comprobada por API; fuente inmutable, URL y permisos conservados. Sin escrituras de datos de negocio.",
+      "verification": "Fuente inmutable, implementación, URL y permisos contrastados por API. Salud pública y rechazos sin credencial comprobados por HTTP; ninguna escritura de negocio.",
       "functional_runtime_tested": false,
-      "technical_health_verified": false,
-      "isolated_test_scope": "22 regresiones, ejecutadas sobre versión publicada y sobre borrador de editor conservado"
+      "technical_health_verified": true,
+      "isolated_test_scope": "33 escenarios Portero sobre fuente activa revisada y editor conservado"
     },
     {
       "component_id": "GAS-FLUJO",
@@ -80,7 +80,7 @@
     },
     {
       "component_id": "GAS-CATALOGO",
-      "version": 9,
+      "version": 10,
       "editor_equals_deployed_version": true,
       "source_files": [
         {
@@ -89,13 +89,13 @@
         },
         {
           "name": "Código",
-          "sha256": "513c6e76d4e6ec14805a49979186e65a36b784d95baa8ecff4ac5e6199b22d9e"
+          "sha256": "7343df3bd6e2f8456dd2ca187ad923e2d13f3613cb7a20b29c628ffef7ca2d44"
         }
       ],
-      "verification": "Versión de la misma implementación actualizada y comprobada por API; fuente inmutable, URL y permisos conservados. Sin escrituras de datos de negocio.",
+      "verification": "Fuente inmutable, implementación, URL y permisos contrastados por API. Salud pública y rechazos sin credencial comprobados por HTTP; ninguna escritura de negocio.",
       "functional_runtime_tested": false,
-      "technical_health_verified": false,
-      "isolated_test_scope": "Suite compartida CRM/Catálogo: 38 pruebas; sin garantía transaccional entre libros"
+      "technical_health_verified": true,
+      "isolated_test_scope": "50 escenarios compartidos CRM/Catálogo, incluidos integración sintética con Portero, ACL, catálogo, idempotencia y fallos parciales"
     },
     {
       "component_id": "GAS-OBRA",
