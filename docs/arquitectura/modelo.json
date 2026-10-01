@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.14-emd-profile-state",
+  "revision": "2026-10-01.15-emd-profile-auto-align",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -6476,20 +6476,22 @@
         "EXT-DRIVE",
         "SYS-YOD-OS"
       ],
-      "proposal": "Proponer perfil fotográfico propio con identidad canónica autorizada, recorte manual y normalización local; persistencia privada de imágenes y metadatos mínimos, lectura limitada a personas asignadas o revisión autorizada. Representar la foto o silueta en gris cuando la evaluación no se ha abierto, neutral durante el proceso y con confirmación verde al terminar, siempre acompañada de texto/foco accesible y derivada únicamente del estado confirmado existente. Preservar contratos de evaluación y permisos existentes. SYS-YOD-OS participa solo por documentación del atlas, sin modificar su cabina.",
+      "proposal": "Ampliar el perfil fotográfico propio ya publicado con alineación automática opcional del rostro mediante la API nativa FaceDetector cuando el navegador la ofrezca. La detección recibe únicamente la imagen decodificada local, ajusta el recorte/zoom y no envía bytes adicionales ni cambia persistencia. Si la API falta, devuelve cero, detecta múltiples rostros o falla, se conserva el recorte manual vigente sin bloquear el guardado. La foto o silueta mantiene la representación off/yellow/green derivada del estado confirmado, texto y foco accesibles. La eliminación automática de fondo y puestos/organigrama siguen fuera de este lote.",
       "status": "propuesto",
       "tests": [
         "Dobles aislados: identidad canónica y legado compatible; rechazo de escritura ajena y lectura sin asignación",
         "Validación de MIME, firma, tamaño y carpeta privada; rechazo de destinos compartidos",
         "Revisión optimista, identificador de mutación, repetición exacta y confirmación perdida; conservación ante fallo parcial",
-        "Normalización y recorte manual en móvil y escritorio, sin EXIF ni servicios terceros",
+        "Alineación automática: un rostro ajusta zoom y posición dentro de límites; cero, múltiples, error o API ausente conservan el recorte manual",
+        "Cambio de enlace o cierre de diálogo invalida detecciones tardías; el guardado espera a que termine la alineación",
+        "Normalización y recorte manual siguen operativos en móvil y escritorio, sin EXIF ni servicios terceros",
         "Móvil y escritorio: foto y silueta cambian de apariencia solo con off/yellow/green confirmado; texto, foco y aria-label permanecen",
         "Regresiones de acceso, 28 preguntas, escala, matriz y asignaciones sin cambios",
         "Comprobaciones del atlas y pruebas del HEAD exacto antes de publicación privada",
         "Fallos separados de Drive/metadatos y ACK perdido: preservar versión confirmada y documentar huérfanos",
         "Drive v3: paginación completa, permisos heredados/de grupo, propietario de ejecución, raíz, unidad compartida y servicio ausente; rechazo sin fallback"
       ],
-      "deployment": "El perfil básico y su almacenamiento privado se publicaron previamente; esta revisión propone únicamente la apariencia por estado confirmado. No acredita integración ni nueva publicación. Respaldar y contrastar la implementación existente antes de activar. Reversión solo de CSS/cliente preserva fotos, metadatos, respuestas y permisos; no restaurar datos antiguos ni borrar archivos. Uniformar fondo y altura de ojos automáticamente sigue pendiente."
+      "deployment": "La foto privada, el recorte manual y la apariencia por estado confirmado ya están publicados. Esta revisión propone solo la alineación automática progresiva cuando FaceDetector esté disponible; no acredita integración o publicación ni promete compatibilidad Safari. Respaldar y contrastar la implementación existente antes de activar. Reversión del cliente conserva fotos, metadatos, respuestas y permisos; no borrar archivos. Uniformar fondo automáticamente y cargos/organigrama permanecen pendientes."
     },
     {
       "id": "CHG-EMD-DRAFTS-001",
@@ -6868,8 +6870,8 @@
         "Sesión autorizada e identidad canónica propia",
         "JPEG normalizado localmente a 512 × 512 píxeles, máximo 256 KiB, con recorte manual",
         "Revisión esperada e identificador de mutación",
-        "Consulta de hasta 30 asignaciones autorizadas por solicitud"
-        ,"Estado de evaluación ya confirmado: off, yellow o green"
+        "Consulta de hasta 30 asignaciones autorizadas por solicitud",
+        "Estado de evaluación ya confirmado: off, yellow o green"
       ],
       "output": [
         "Confirmación de revisión y mutación sin exponer ubicación privada",
