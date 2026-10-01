@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-09-30.3",
+  "revision": "2026-09-30.4",
   "checked_at": "2026-09-30",
   "priorities": [
     "vender_mas",
@@ -235,7 +235,9 @@
         "variable_calculo",
         "flujo_proyectado"
       ],
-      "risks_sanitized": [],
+      "risks_sanitized": [
+        "Migración autorizada a fórmulas nativas por caso; frontend preparado en PR, todavía sin publicar. Los casos no migrados conservan cálculo cliente."
+      ],
       "source_of_truth": "SHEET-PORTERO para casos; modelos de cálculo del frontend; fuente GAS desplegada por verificar",
       "status": "codigo",
       "runtime_status": "No verificado en despliegue"
@@ -2385,6 +2387,41 @@
       "source_of_truth": "Configuración de reglas/motores y código de ejecución; ejecución viva pendiente",
       "status": "codigo",
       "runtime_status": "No verificado en despliegue"
+    },
+    {
+      "id": "SHEET-PPP-MODELOS",
+      "nombre": "PPP · Libros de cálculo por caso",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/potenciales-yod",
+      "proposito": "Conservar entradas, fórmulas nativas, versiones, flujos y datos de diagramas del mismo modelo por caso",
+      "dominio": "Ventas",
+      "owner_role": "Dirección / propietario del libro",
+      "status": "ejecucion",
+      "runtime_status": "Modelo piloto leído y conciliado en Sheets; conexión pública y migración general pendientes",
+      "evidence": [
+        {
+          "claim": "Lectura directa autorizada de un libro piloto; fórmulas nativas y versiones contrastadas. Evidencia detallada en registro operativo privado, sin publicar identificadores ni cifras.",
+          "status": "ejecucion",
+          "source_revision": "2026-09-30"
+        }
+      ],
+      "data_entities": [
+        "caso",
+        "version",
+        "entrada",
+        "formula",
+        "flujo",
+        "geometria",
+        "etapa",
+        "fuente",
+        "revision",
+        "cambio"
+      ],
+      "risks_sanitized": [
+        "La existencia del libro no acredita la conexión pública del tablero",
+        "Faltan otros motores, nuevas altas y flujos completos de operación y etapas"
+      ],
+      "source_of_truth": "Libro privado por caso registrado en SHEET-PORTERO; entradas y fórmulas canónicas. El tablero transporta y presenta resultados; no replica un motor financiero."
     }
   ],
   "connections": [
@@ -4099,6 +4136,54 @@
       "status": "codigo",
       "runtime_verified": false,
       "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+    },
+    {
+      "id": "CON-PPP-MODELO",
+      "from": "GAS-PORTERO",
+      "to": "SHEET-PPP-MODELOS",
+      "label": "Lee resultados nativos; escribe cantidades permitidas",
+      "kind": "persistencia",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "Transporte preparado y probado con dobles; lectura del piloto desde editor verificada; implementación pública no actualizada.",
+          "status": "declarado"
+        }
+      ],
+      "contract": "Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente."
+    },
+    {
+      "id": "CON-PPP-REGISTRO",
+      "from": "SHEET-PORTERO",
+      "to": "SHEET-PPP-MODELOS",
+      "label": "Registra caso, libro, carpeta y revisión del modelo",
+      "kind": "registro",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "Registro del piloto creado; organización y generación para todos los casos pendientes.",
+          "status": "declarado"
+        }
+      ],
+      "contract": "IDs estables; un libro por caso y hoja por versión; no sustituir historial ni compartir archivos por efecto de registrar un enlace."
+    },
+    {
+      "id": "CON-PPP-AUDITORIA",
+      "from": "GAS-PORTERO",
+      "to": "SYS-CONTROL",
+      "label": "Registra antes, después, actor y siguiente paso",
+      "kind": "auditoria",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "Registro operativo privado actualizado; transporte auditado con dobles; activadores y despliegue público pendientes.",
+          "status": "declarado"
+        }
+      ],
+      "contract": "Auditoría en libro y Control Maestro con actor autenticado, entidad, versión, revisión, campo/rango, fuente y validación. No inventar valores previos ausentes ni declarar publicada una operación no confirmada."
     }
   ],
   "processes": [
@@ -5497,6 +5582,48 @@
         "Permisos de repositorios y Apps Script",
         "Cerrar los vacíos de evidencia registrados"
       ]
+    },
+    {
+      "id": "PPP",
+      "titulo": "Unificar tablero y fórmulas de potencial en Sheets",
+      "boards": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SYS-CONTROL"
+      ],
+      "problem": "Entradas y escenarios se guardan en Sheets mientras los motores HTML calculan; una lectura de cada superficie puede reflejar motores distintos.",
+      "benefit": "Una sola fuente de cálculo, versiones trazables y resultados comparables para venta, renta y lotificación.",
+      "metric": "Cobertura de libros; igualdad de cantidades/resultados/flujos por revisión; escrituras con auditoría y rechazos de conflicto.",
+      "dependencies": [],
+      "effort": "L",
+      "decision": "aprobada",
+      "approval": {
+        "fecha": "2026-09-30",
+        "rol": "Dirección",
+        "alcance": "Instrucción explícita de mantener datos y fórmulas en Sheets, conectar tableros, preservar versiones y registrar cambios; autorización posterior para continuar con todo el trabajo."
+      },
+      "tasks": [
+        "Mapear y validar fórmulas nativas de cada motor con escenarios conservados",
+        "Registrar libro/carpeta por caso y proteger fórmulas para propietario",
+        "Conectar cantidades, resultados, versiones y diagramas con revisión esperada",
+        "Completar flujos operativos y por etapas sin inventar datos ausentes",
+        "Integrar casos existentes y fábrica de altas",
+        "Auditar escrituras y ediciones directas; resolver conflicto sin sobrescribir"
+      ],
+      "acceptance": [
+        "Leer tablero o Sheets da los mismos resultados y revisión",
+        "Cambiar cantidad actualiza fórmulas nativas; ninguna fórmula financiera paralela en cliente/servidor",
+        "No mostrar datos locales como sincronizados ni confirmar una escritura fallida",
+        "Cada versión conserva identidad, fuente e historial; datos faltantes permanecen pendientes"
+      ],
+      "prerequisites": [
+        "Backend vivo contrastado y pruebas aisladas",
+        "Integrar propuesta central y fijar commit del atlas antes de integrar frontend",
+        "Actualizar únicamente implementación existente después de frontend compatible",
+        "Registrar despliegue y verificar conexión pública por separado del modelo nativo"
+      ]
     }
   ],
   "changes": [
@@ -5690,6 +5817,26 @@
         "Validación del esquema y generación determinista del atlas"
       ],
       "deployment": "Solo documentación pública; no modifica Apps Script ni registros de negocio."
+    },
+    {
+      "id": "CHG-PPP-SHEETS-001",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SYS-CONTROL"
+      ],
+      "proposal": "Migrar PPP a libros privados con fórmulas nativas y versiones por caso; transporte de cantidades con autorización/revisión, diagramas desde el mismo modelo y auditoría coordinada. Autorización explícita de Dirección registrada en propuesta PPP.",
+      "status": "implementado_local",
+      "tests": [
+        "Comparación de ocho escenarios del piloto con fórmulas nativas",
+        "Diez pruebas con dobles de transporte/autorización/revisión/rechazo/recuperación",
+        "Cinco pruebas de interfaz de fuente nativa y desconexión",
+        "Lectura real del modelo y ruta desde editor; sin POST de prueba en producción",
+        "Validación de esquema, referencias y regeneración de vistas del atlas"
+      ],
+      "deployment": "Frontend preparado en potenciales-yod PR3, sin integrar; backend candidato privado no desplegado. Modelo piloto nativo validado; activador de trazabilidad, interfaz pública y migración general pendientes."
     }
   ],
   "data_contracts": [
@@ -5832,6 +5979,42 @@
         "Un system_id identifica el sistema; resolver alias de portal explícitamente",
         "El catálogo no concede permisos de backend",
         "Dependencias institucionales de Sheets no equivalen al grafo de software"
+      ]
+    },
+    {
+      "id": "CTR-PPP-SHEETS",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SYS-CONTROL"
+      ],
+      "source": "Decisión explícita de Dirección y contrato público de cálculo nativo; pruebas aisladas y lectura de piloto documentadas en registro privado.",
+      "input": [
+        "caso_id",
+        "escenario_id",
+        "campos de cantidad permitidos",
+        "revision_esperada",
+        "request_id",
+        "actor autenticado"
+      ],
+      "output": [
+        "revision",
+        "versión activa",
+        "entradas canónicas",
+        "resultados calculados",
+        "flujo mensual",
+        "geometría y etapas",
+        "fuentes y auditoría"
+      ],
+      "invariants": [
+        "Datos y fórmulas viven en el libro privado por caso; no mantener motor financiero paralelo",
+        "Las fórmulas están protegidas para propietario; AI actúa con su autorización y registra cambios",
+        "Servidor resuelve el destino y verifica permisos, límites y revisión antes de escribir",
+        "Una respuesta pendiente, conflicto o desconexión conserva el último dato confirmado con estado explícito",
+        "Auditar antes/después y no marcar producción comprobada sin lectura pública final",
+        "No modificar Portero ni crear otra implementación; conservar contratos y URL existentes"
       ]
     }
   ],

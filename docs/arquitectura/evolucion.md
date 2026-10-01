@@ -22,9 +22,9 @@ Los commits y PR constituyen la cronología técnica. Los estados de esta tabla 
 
 Se concedieron los permisos de Apps Script y se contrastaron ocho motores mediante fuente versionada y coincidencia exacta de implementación con sus clientes. El atlas registra las versiones activas y conserva pendientes las pruebas funcionales y la cobertura de otros proyectos vinculados. Los cambios adicionales del editor de Portero no se desplegaron. No se modificaron motores ni datos operativos.
 
-## Revisión 2026-09-30.3
+## Revisión 2026-09-30.4
 
-Se identificó el proyecto vinculado de Obra Cliente y se comprobó que la versión activa 1 coincidía con la referencia. La corrección de filas físicas, autorización explícita y pagos recibidos pasó diez pruebas aisladas usando los siete esquemas reales. Se actualizó la misma implementación a versión 2 y se verificaron fuente, URL y permisos por API. Se conserva la reversión a versión 1; no se modificaron celdas operativas.
+Se conserva la migración PPP registrada en la revisión 2026-09-30.3. Se identificó el proyecto vinculado de Obra Cliente y se comprobó que la versión activa 1 coincidía con la referencia. La corrección de filas físicas, autorización explícita y pagos recibidos pasó diez pruebas aisladas usando los siete esquemas reales. Se actualizó la misma implementación a versión 2 y se verificaron fuente, URL y permisos por API. Se conserva la reversión a versión 1; no se modificaron celdas operativas.
 
 ## Próximas revisiones
 

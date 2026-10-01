@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-09-30.3 · 2026-09-30.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-09-30.4 · 2026-09-30.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -24,7 +24,8 @@ Evaluar alternativas y escenarios de desarrollo
 - Fuente de verdad: SHEET-PORTERO para casos; modelos de cálculo del frontend; fuente GAS desplegada por verificar.
 - Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L17) — Sistema presente en el catálogo canónico.
 - Conexiones: CON-019 (SYS-POTENCIALES → GAS-PORTERO); CON-034 (SYS-YOD-OS → SYS-POTENCIALES).
-- Mejoras: C · Cotización, plan y siguiente paso comercial.
+- Mejoras: C · Cotización, plan y siguiente paso comercial; PPP · Unificar tablero y fórmulas de potencial en Sheets.
+- Pendientes: Migración autorizada a fórmulas nativas por caso; frontend preparado en PR, todavía sin publicar. Los casos no migrados conservan cálculo cliente..
 
 ## SYS-TRACK · Tracks de codesarrollo
 
@@ -131,8 +132,8 @@ Administrar catálogo y registro de proyectos
 - Entidades: sistema, portal, proyecto, folio.
 - Fuente de verdad: Control Maestro en Google Sheets; catálogo técnico local puede divergir.
 - Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L26) — Sistema presente en el catálogo canónico.
-- Conexiones: CON-043 (SYS-YOD-OS → SYS-CONTROL).
-- Mejoras: E · Folio común de proyecto y datos conciliados; L · Mapa vivo, contratos y cambios verificables.
+- Conexiones: CON-043 (SYS-YOD-OS → SYS-CONTROL); CON-PPP-AUDITORIA (GAS-PORTERO → SYS-CONTROL).
+- Mejoras: E · Folio común de proyecto y datos conciliados; L · Mapa vivo, contratos y cambios verificables; PPP · Unificar tablero y fórmulas de potencial en Sheets.
 - Pendientes: Catálogo local y Control Maestro deben reconciliarse sin editar silenciosamente datos operativos.
 
 ## SYS-YOD-OS · YOD OS
@@ -312,8 +313,8 @@ Servir el contrato de Portero y Potenciales
 - Entidades: acceso, sesion, caso, escenario, track.
 - Fuente de verdad: Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos..
 - Evidencia: [potenciales-yod/CLAUDE.md](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/CLAUDE.md#L35) — Tipo de fuente disponible: ausente; [yod-portal/docs/arquitectura/backends-verificados.json](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/backends-verificados.json) — Fuente de versión activa 50 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente..
-- Conexiones: CON-001 (GAS-PORTERO → SHEET-PORTERO); CON-019 (SYS-POTENCIALES → GAS-PORTERO); CON-020 (SYS-TRACK → GAS-PORTERO); CON-044 (SYS-YOD-OS → GAS-PORTERO); CON-045 (SYS-TAREAS → GAS-PORTERO); CON-046 (SYS-FLUJO → GAS-PORTERO); CON-047 (SYS-DESPACHO → GAS-PORTERO); CON-048 (SYS-INTERIORES → GAS-PORTERO); CON-049 (SYS-MARKETING → GAS-PORTERO); CON-050 (SYS-MIRAMAR → GAS-PORTERO); CON-051 (SYS-OBRA → GAS-PORTERO); CON-054 (GAS-PORTERO → SYS-YOD-OS); CON-071 (SYS-INVERSION → GAS-PORTERO); CON-085 (GAS-SALA → GAS-PORTERO).
-- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Conexiones: CON-001 (GAS-PORTERO → SHEET-PORTERO); CON-019 (SYS-POTENCIALES → GAS-PORTERO); CON-020 (SYS-TRACK → GAS-PORTERO); CON-044 (SYS-YOD-OS → GAS-PORTERO); CON-045 (SYS-TAREAS → GAS-PORTERO); CON-046 (SYS-FLUJO → GAS-PORTERO); CON-047 (SYS-DESPACHO → GAS-PORTERO); CON-048 (SYS-INTERIORES → GAS-PORTERO); CON-049 (SYS-MARKETING → GAS-PORTERO); CON-050 (SYS-MIRAMAR → GAS-PORTERO); CON-051 (SYS-OBRA → GAS-PORTERO); CON-054 (GAS-PORTERO → SYS-YOD-OS); CON-071 (SYS-INVERSION → GAS-PORTERO); CON-085 (GAS-SALA → GAS-PORTERO); CON-PPP-MODELO (GAS-PORTERO → SHEET-PPP-MODELOS); CON-PPP-AUDITORIA (GAS-PORTERO → SYS-CONTROL).
+- Mejoras: PPP · Unificar tablero y fórmulas de potencial en Sheets.
 - Pendientes: Permisos por operación y recorridos por rol pendientes de prueba; El editor contiene cambios posteriores a la versión activa; publicar requiere revisión separada..
 
 ## SHEET-PORTERO · Datos de Portero y Potenciales
@@ -325,8 +326,8 @@ Almacenar registros del dominio identidad
 - Entidades: acceso, sesion, caso, escenario, track.
 - Fuente de verdad: Almacén lógico Google Sheets; correspondencia con archivo vivo por verificar.
 - Evidencia: Integración pendiente de verificar.
-- Conexiones: CON-001 (GAS-PORTERO → SHEET-PORTERO).
-- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Conexiones: CON-001 (GAS-PORTERO → SHEET-PORTERO); CON-PPP-REGISTRO (SHEET-PORTERO → SHEET-PPP-MODELOS).
+- Mejoras: PPP · Unificar tablero y fórmulas de potencial en Sheets.
 - Pendientes: Esquema y calidad de datos vivos no inspeccionados.
 
 ## GAS-CATALOGO · Catálogo del OS
@@ -908,3 +909,16 @@ Generar texto, imagen, escena o voz según motor configurado
 - Conexiones: CON-083 (SVC-SALA-EJECUTOR → EXT-MOTORES-MEDIA).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Uso efectivo, configuración y costo en producción no comprobados.
+
+## SHEET-PPP-MODELOS · PPP · Libros de cálculo por caso
+
+Conservar entradas, fórmulas nativas, versiones, flujos y datos de diagramas del mismo modelo por caso
+
+- Tipo: google_sheets. Dominio: Ventas. Responsable: Dirección / propietario del libro.
+- Evidencia: ejecucion. Producción: Modelo piloto leído y conciliado en Sheets; conexión pública y migración general pendientes.
+- Entidades: caso, version, entrada, formula, flujo, geometria, etapa, fuente, revision, cambio.
+- Fuente de verdad: Libro privado por caso registrado en SHEET-PORTERO; entradas y fórmulas canónicas. El tablero transporta y presenta resultados; no replica un motor financiero..
+- Evidencia: Lectura directa autorizada de un libro piloto; fórmulas nativas y versiones contrastadas. Evidencia detallada en registro operativo privado, sin publicar identificadores ni cifras..
+- Conexiones: CON-PPP-MODELO (GAS-PORTERO → SHEET-PPP-MODELOS); CON-PPP-REGISTRO (SHEET-PORTERO → SHEET-PPP-MODELOS).
+- Mejoras: PPP · Unificar tablero y fórmulas de potencial en Sheets.
+- Pendientes: La existencia del libro no acredita la conexión pública del tablero; Faltan otros motores, nuevas altas y flujos completos de operación y etapas.
