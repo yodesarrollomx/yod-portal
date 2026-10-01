@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.15-emd-profile-auto-align",
+  "revision": "2026-10-01.16-emd-profile-jpeg",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -5430,7 +5430,7 @@
             "SYS-EMD"
           ],
           "input": "Imagen local elegida por la persona",
-          "output": "Imagen normalizada sin EXIF y recorte manual",
+          "output": "Recorte sRGB convertido localmente a JPEG baseline sin metadatos personales; alineación progresiva y ajuste manual disponibles",
           "mode": "manual"
         },
         {
@@ -6476,22 +6476,16 @@
         "EXT-DRIVE",
         "SYS-YOD-OS"
       ],
-      "proposal": "Ampliar el perfil fotográfico propio ya publicado con alineación automática opcional del rostro mediante la API nativa FaceDetector cuando el navegador la ofrezca. La detección recibe únicamente la imagen decodificada local, ajusta el recorte/zoom y no envía bytes adicionales ni cambia persistencia. Si la API falta, devuelve cero, detecta múltiples rostros o falla, se conserva el recorte manual vigente sin bloquear el guardado. La foto o silueta mantiene la representación off/yellow/green derivada del estado confirmado, texto y foco accesibles. La eliminación automática de fondo y puestos/organigrama siguen fuera de este lote.",
+      "proposal": "Corregir el guardado de fotos propias produciendo un JPEG baseline de 512 × 512 desde los píxeles sRGB del recorte mediante un codificador local incorporado y versionado. Evitar dependencia del formato o metadatos que añada el codificador nativo de cada navegador. No hay llamadas externas, transmisión adicional de fotos ni cambio de servidor, permisos, revisión, mutación o persistencia. Se conserva alineación progresiva, recorte manual y apariencia por estado confirmado. El retiro de fondo y cargos/organigrama siguen pendientes.",
       "status": "propuesto",
       "tests": [
-        "Dobles aislados: identidad canónica y legado compatible; rechazo de escritura ajena y lectura sin asignación",
-        "Validación de MIME, firma, tamaño y carpeta privada; rechazo de destinos compartidos",
-        "Revisión optimista, identificador de mutación, repetición exacta y confirmación perdida; conservación ante fallo parcial",
-        "Alineación automática: un rostro ajusta zoom y posición dentro de límites; cero, múltiples, error o API ausente conservan el recorte manual",
-        "Cambio de enlace o cierre de diálogo invalida detecciones tardías; el guardado espera a que termine la alineación",
-        "Normalización y recorte manual siguen operativos en móvil y escritorio, sin EXIF ni servicios terceros",
-        "Móvil y escritorio: foto y silueta cambian de apariencia solo con off/yellow/green confirmado; texto, foco y aria-label permanecen",
-        "Regresiones de acceso, 28 preguntas, escala, matriz y asignaciones sin cambios",
-        "Comprobaciones del atlas y pruebas del HEAD exacto antes de publicación privada",
-        "Fallos separados de Drive/metadatos y ACK perdido: preservar versión confirmada y documentar huérfanos",
-        "Drive v3: paginación completa, permisos heredados/de grupo, propietario de ejecución, raíz, unidad compartida y servicio ausente; rechazo sin fallback"
+        "Codificador local: geometría y ruido sintéticos, JPEG baseline compatible con validación estricta del servidor, dimensiones/tamaño y ausencia de EXIF/ICC/comentarios",
+        "Canvas Chromium y WebKit Linux: normalización del recorte, guardado confirmado, ACK perdido/reintento exacto; no equivalen a Safari físico",
+        "Rechazo de payload corrupto y permanencia de revisión, mutación, permisos y fotos previas",
+        "Regresiones vigentes y comprobaciones del HEAD exacto antes de publicar",
+        "Auditorías independientes móvil/escritorio del recorrido afectado, sin fotos o respuestas humanas"
       ],
-      "deployment": "La foto privada, el recorte manual y la apariencia por estado confirmado ya están publicados. Esta revisión propone solo la alineación automática progresiva cuando FaceDetector esté disponible; no acredita integración o publicación ni promete compatibilidad Safari. Respaldar y contrastar la implementación existente antes de activar. Reversión del cliente conserva fotos, metadatos, respuestas y permisos; no borrar archivos. Uniformar fondo automáticamente y cargos/organigrama permanecen pendientes."
+      "deployment": "Propuesta registrada antes de implementar: sustituir únicamente la codificación del recorte en el cliente. El validador del servidor seguirá estricto. Publicación privada exige respaldo, pruebas del HEAD y comparación de fuente servida; sin escrituras de prueba en producción. No atribuir la causa exacta de una captura de iPhone sin inspección de bytes o prueba física. Reversión del cliente conserva fotos, respuestas y permisos."
     },
     {
       "id": "CHG-EMD-DRAFTS-001",
@@ -6896,7 +6890,8 @@
         "La identidad de mutación vincula propietario, revisión base, MIME y bytes normalizados mediante digest",
         "Servicio avanzado Drive v3 obligatorio: listar permisos con paginación en archivo, carpeta y todos los ancestros hasta la raíz de Mi unidad; admitir únicamente el propietario esperado, coincidente con la identidad de ejecución",
         "Rechazar permisos de usuario, grupo, dominio o cualquiera distintos del único propietario, unidades compartidas y recursos sin propietario; Access.PRIVATE por sí solo no prueba ausencia de permisos heredados o de grupo",
-        "Si el servicio avanzado o la inspección completa de ACL no están disponibles, mostrar error y rechazar operación sin fallback a DriveApp; habilitar servicio/API requiere comprobación de configuración y reutiliza el alcance Drive existente"
+        "Si el servicio avanzado o la inspección completa de ACL no están disponibles, mostrar error y rechazar operación sin fallback a DriveApp; habilitar servicio/API requiere comprobación de configuración y reutiliza el alcance Drive existente",
+        "La codificación JPEG del recorte usa solo píxeles RGBA sRGB de 512 × 512, con calidad acotada; no copia EXIF, ICC, comentarios ni metadatos del archivo o del codificador del navegador. El código versionado se incorpora al cliente; sin ejecución o envío a un servicio tercero."
       ]
     },
     {
