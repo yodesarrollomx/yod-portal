@@ -26,6 +26,22 @@ Se concedieron los permisos de Apps Script y se contrastaron ocho motores median
 
 Se conserva la migración PPP registrada en la revisión 2026-09-30.3. Se identificó el proyecto vinculado de Obra Cliente y se comprobó que la versión activa 1 coincidía con la referencia. La corrección de filas físicas, autorización explícita y pagos recibidos pasó diez pruebas aisladas usando los siete esquemas reales. Se actualizó la misma implementación a versión 2 y se verificaron fuente, URL y permisos por API. Se conserva la reversión a versión 1; no se modificaron celdas operativas.
 
+## Revisión 2026-10-01.2
+
+El [PR #11](https://github.com/yodesarrollomx/yod-portal/pull/11) registró una identidad propia para los publicadores y el formulario local de consentimiento, con permisos limitados a crear PR en Sala y Marketing. Conservó los cambios concurrentes de PPP y EMD. Los dos checks del portal aprobaron; el modelo y el visor publicados contienen 73 componentes y 92 conexiones. La App sigue propuesta hasta verificar su instalación; los PR consumidores aprobados aún no acreditan publicación operativa.
+
+## Revisión 2026-10-01.3
+
+El [PR #12](https://github.com/yodesarrollomx/yod-portal/pull/12) registró `CTR-AUTORIZACION-OPERACIONES` y la propuesta de correcciones `CHG-BACKENDS-AUTORIZACION-001` antes de preparar candidatos. La revisión de fuentes activas se amplió a cinco motores y se contrastaron comportamientos mediante dobles. Evidencias y candidatos sensibles permanecen privados. No se modificó ningún dato de negocio ni se desplegó un motor como parte de esa propuesta.
+
+## Revisión 2026-10-01.4
+
+Se registraron cuatro correcciones acotadas en las implementaciones existentes: Portero 50→51, Flujo 14→15, CRM 19→20 y Catálogo 8→9. La verificación por API confirmó fuente, versión, URL y permisos. El borrador de Portero conservó sus funciones adicionales y recibió el mismo parche; esas funciones adicionales no se desplegaron. Catálogo requirió una lectura posterior para confirmar el resultado; no se repitió la escritura.
+
+La evidencia aislada comprende 22 regresiones de Portero en ambas variantes, 12 del backend de Flujo y 5 de integración con su cliente, 38 de CRM/Catálogo y 21 del prototipo de Obra. Se añadieron al diagrama tres dependencias de autenticación constatadas en código, para un total de 95 conexiones. La salud pública de CRM devolvió sólo campos técnicos. No hubo escrituras en registros de negocio.
+
+Permanecen pendientes la instalación personal de la App publicadora, los recorridos reales por rol y las decisiones señaladas en H. Obra conserva su versión 16: antes de integrar el prototipo se necesita confirmar el libro efectivo y la delegación. La idempotencia completa de pagos requiere persistencia y cambios coordinados del cliente; no forma parte de los dos ajustes acotados de Flujo.
+
 ## Próximas revisiones
 
 Cada propuesta nueva obtiene un ID estable en `modelo.json` y declara componentes, contratos, pruebas y reversión. El PR explica el problema concreto y el resultado. Al integrar, registrar el commit, las comprobaciones y el entorno; al desplegar un motor, registrar también la versión y la evidencia de ejecución. Una reversión se registra como un evento nuevo y conserva la trazabilidad anterior.

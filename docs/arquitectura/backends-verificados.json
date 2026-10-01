@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-09-30",
+  "checked_at": "2026-10-01",
   "method": "Lectura autenticada de metadatos, fuente del editor, implementaciones y fuente de versiones. Identidad acreditada por coincidencia exacta con el endpoint del cliente.",
   "confirmed_components": [
     {
       "component_id": "GAS-PORTERO",
-      "version": 50,
+      "version": 51,
       "editor_equals_deployed_version": false,
       "source_files": [
         {
@@ -13,15 +13,17 @@
         },
         {
           "name": "Code",
-          "sha256": "48772bbf293addbef7e26f9c8e2560c35e66d011dbf3f0a24da3bdb6fd90fc10"
+          "sha256": "34ea9d86778102a32c33f62310fcc97bbcb7a9c6d8688c9cd556d90bc0972976"
         }
       ],
-      "verification": "Fuente de la versión activa obtenida por Apps Script API; deployment ID coincide exactamente con el endpoint del cliente versionado.",
-      "functional_runtime_tested": false
+      "verification": "Versión de la misma implementación actualizada y comprobada por API; fuente inmutable, URL y permisos conservados. Sin escrituras de datos de negocio.",
+      "functional_runtime_tested": false,
+      "technical_health_verified": false,
+      "isolated_test_scope": "22 regresiones, ejecutadas sobre versión publicada y sobre borrador de editor conservado"
     },
     {
       "component_id": "GAS-FLUJO",
-      "version": 14,
+      "version": 15,
       "editor_equals_deployed_version": true,
       "source_files": [
         {
@@ -30,11 +32,13 @@
         },
         {
           "name": "Código",
-          "sha256": "909ff4fd05072979baf1e56bf94b40036300568e571ff1fc2b23c58b6e9ec612"
+          "sha256": "0fb802009b0d6164cb10f13a85173ed0d615cba70a1d37d9663669edfe9e0813"
         }
       ],
-      "verification": "Fuente de la versión activa obtenida por Apps Script API; deployment ID coincide exactamente con el endpoint del cliente versionado.",
-      "functional_runtime_tested": false
+      "verification": "Versión de la misma implementación actualizada y comprobada por API; fuente inmutable, URL y permisos conservados. Sin escrituras de datos de negocio.",
+      "functional_runtime_tested": false,
+      "technical_health_verified": false,
+      "isolated_test_scope": "12 regresiones de backend y 5 integraciones con cliente; idempotencia completa pendiente"
     },
     {
       "component_id": "GAS-CODES",
@@ -76,7 +80,7 @@
     },
     {
       "component_id": "GAS-CATALOGO",
-      "version": 8,
+      "version": 9,
       "editor_equals_deployed_version": true,
       "source_files": [
         {
@@ -85,11 +89,13 @@
         },
         {
           "name": "Código",
-          "sha256": "408efa24eea2fbde07b2b767bfb7e868f1484bf34c72f0dc890f85687e77e1bc"
+          "sha256": "513c6e76d4e6ec14805a49979186e65a36b784d95baa8ecff4ac5e6199b22d9e"
         }
       ],
-      "verification": "Fuente de la versión activa obtenida por Apps Script API; deployment ID coincide exactamente con el endpoint del cliente versionado.",
-      "functional_runtime_tested": false
+      "verification": "Versión de la misma implementación actualizada y comprobada por API; fuente inmutable, URL y permisos conservados. Sin escrituras de datos de negocio.",
+      "functional_runtime_tested": false,
+      "technical_health_verified": false,
+      "isolated_test_scope": "Suite compartida CRM/Catálogo: 38 pruebas; sin garantía transaccional entre libros"
     },
     {
       "component_id": "GAS-OBRA",
@@ -131,7 +137,7 @@
     },
     {
       "component_id": "GAS-CRM",
-      "version": 19,
+      "version": 20,
       "editor_equals_deployed_version": true,
       "source_files": [
         {
@@ -140,11 +146,13 @@
         },
         {
           "name": "Code",
-          "sha256": "ebe8443012c36da229282ee38033457680787df643e04a1fa32f90b2b52cb01f"
+          "sha256": "09e67d1bb87377cffb7592b0896bd088d8f802673ee2a9f95a02fd98a40a03f7"
         }
       ],
-      "verification": "Fuente de la versión activa obtenida por Apps Script API; deployment ID coincide exactamente con el endpoint del cliente versionado.",
-      "functional_runtime_tested": false
+      "verification": "Versión de la misma implementación actualizada y comprobada por API; fuente inmutable, URL y permisos conservados. Sin escrituras de datos de negocio.",
+      "functional_runtime_tested": false,
+      "technical_health_verified": true,
+      "isolated_test_scope": "Suite compartida CRM/Catálogo: 38 pruebas"
     },
     {
       "component_id": "GAS-OBRA-CLIENTE",
@@ -170,8 +178,10 @@
   "backend_deployments_modified": true,
   "limitations": [
     "No se afirma cobertura exhaustiva de los scripts vinculados a Sheets.",
-    "Los permisos por operación y recorridos por rol siguen pendientes de pruebas aisladas.",
-    "Portero contiene cambios adicionales en el editor respecto a la versión activa; no se publicaron."
+    "Los recorridos reales por rol y decisiones de autorización de negocio siguen pendientes; se comprobaron correcciones técnicas acotadas con dobles.",
+    "Las funciones adicionales del editor de Portero se conservaron sin desplegar; el parche de seguridad también queda aplicado en ese borrador.",
+    "Obra: falta confirmar LIBRO_ID y la regla de delegación antes de integrar su prototipo.",
+    "Flujo: la idempotencia completa y recuperación de pagos requieren diseño adicional; no se corrigieron registros financieros por inferencia."
   ],
-  "backend_deployments_modified_scope": "Únicamente GAS-OBRA-CLIENTE: versión 1 a 2 en la implementación existente; mismo endpoint y permisos."
+  "backend_deployments_modified_scope": "GAS-OBRA-CLIENTE:1→2; GAS-PORTERO:50→51; GAS-FLUJO:14→15; GAS-CRM:19→20; GAS-CATALOGO:8→9. Siempre misma implementación, URL y permisos."
 }
