@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.9-emd-timing · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.10-emd-profiles · 2026-10-01.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
@@ -355,3 +355,29 @@ flowchart TD
 Vacíos: Hay dos motores distintos; comprobar consistencia e IDs al mover, archivar o eliminar tareas; No se comprobó que el cierre de tarea dispare automáticamente cierre de objetivo.
 
 Evidencia: [board-aurum/src/App.jsx](https://github.com/yodesarrollomx/board-aurum/blob/096550e5647a63048450b9be848be71901a32a3a/src/App.jsx#L854) — Vinculación de tarea a objetivo; [board-aurum/src/App.jsx](https://github.com/yodesarrollomx/board-aurum/blob/096550e5647a63048450b9be848be71901a32a3a/src/App.jsx#L858) — Cambio explícito de estado del objetivo.
+
+## PROC-EMD-PROFILES · Perfil fotográfico privado de evaluación
+
+Estado: propuesto.
+
+```mermaid
+flowchart TD
+  p0["Elegir y recortar foto propia · Participante"]
+  p1["Validar y guardar perfil · Backend autorizado"]
+  p0 -.-> p1
+  p2["Consultar foto autorizada · Participante asignado o revisor"]
+  p1 -.-> p2
+  p3["Quitar foto propia · Participante"]
+  p2 -.-> p3
+```
+
+| Paso | Responsable | Componentes | Entrada → salida | Ejecución |
+|---|---|---|---|---|
+| 1. Elegir y recortar foto propia | Participante | SYS-EMD | Imagen local elegida por la persona → Imagen normalizada sin EXIF y recorte manual | manual |
+| 2. Validar y guardar perfil | Backend autorizado | GAS-EMD, SHEET-EMD, EXT-DRIVE | Imagen validable, revisión e identificador de mutación → Archivo privado y metadatos mínimos con confirmación | pendiente |
+| 3. Consultar foto autorizada | Participante asignado o revisor | SYS-EMD, GAS-EMD, EXT-DRIVE | Sesión y relación autorizadas → Imagen permitida o perfil sin foto | pendiente |
+| 4. Quitar foto propia | Participante | SYS-EMD, GAS-EMD, SHEET-EMD, EXT-DRIVE | Revisión vigente y mutación propia → Perfil sin foto confirmado, con reintento seguro | manual |
+
+Vacíos: Selección y recorte requieren decisión de la persona; Uniformar fondo y altura de ojos automáticamente no está implementado ni aprobado mediante un proveedor externo; Pruebas aisladas, respaldo y publicación privada pendientes; el atlas no contiene fotos ni metadatos personales; Habilitar y verificar servicio avanzado Drive v3/API; si falta, el recorrido rechaza operación sin alternativa permisiva.
+
+Evidencia: Proceso propuesto; no acredita operación publicada.
