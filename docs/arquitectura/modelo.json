@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.13-emd-contactos",
+  "revision": "2026-10-01.14-emd-profile-state",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -5458,6 +5458,16 @@
           "mode": "pendiente"
         },
         {
+          "label": "Representar avance confirmado",
+          "role": "Interfaz",
+          "components": [
+            "SYS-EMD"
+          ],
+          "input": "Perfil autorizado o silueta y estado confirmado ya disponible",
+          "output": "Retrato gris, en proceso o completo con texto y foco accesibles",
+          "mode": "automatico"
+        },
+        {
           "label": "Quitar foto propia",
           "role": "Participante",
           "components": [
@@ -5474,7 +5484,7 @@
       "manual_gaps": [
         "Selección y recorte requieren decisión de la persona",
         "Uniformar fondo y altura de ojos automáticamente no está implementado ni aprobado mediante un proveedor externo",
-        "Pruebas aisladas, respaldo y publicación privada pendientes; el atlas no contiene fotos ni metadatos personales",
+        "La apariencia por estado no sustituye el texto, el foco ni el estado confirmado del servidor; el atlas no contiene fotos ni metadatos personales",
         "Habilitar y verificar servicio avanzado Drive v3/API; si falta, el recorrido rechaza operación sin alternativa permisiva"
       ],
       "evidence": [
@@ -6466,19 +6476,20 @@
         "EXT-DRIVE",
         "SYS-YOD-OS"
       ],
-      "proposal": "Proponer perfil fotográfico propio con identidad canónica autorizada, recorte manual y normalización local; persistencia privada de imágenes y metadatos mínimos, lectura limitada a personas asignadas o revisión autorizada. Preservar contratos de evaluación y permisos existentes. SYS-YOD-OS participa solo por documentación del atlas, sin modificar su cabina.",
+      "proposal": "Proponer perfil fotográfico propio con identidad canónica autorizada, recorte manual y normalización local; persistencia privada de imágenes y metadatos mínimos, lectura limitada a personas asignadas o revisión autorizada. Representar la foto o silueta en gris cuando la evaluación no se ha abierto, neutral durante el proceso y con confirmación verde al terminar, siempre acompañada de texto/foco accesible y derivada únicamente del estado confirmado existente. Preservar contratos de evaluación y permisos existentes. SYS-YOD-OS participa solo por documentación del atlas, sin modificar su cabina.",
       "status": "propuesto",
       "tests": [
         "Dobles aislados: identidad canónica y legado compatible; rechazo de escritura ajena y lectura sin asignación",
         "Validación de MIME, firma, tamaño y carpeta privada; rechazo de destinos compartidos",
         "Revisión optimista, identificador de mutación, repetición exacta y confirmación perdida; conservación ante fallo parcial",
         "Normalización y recorte manual en móvil y escritorio, sin EXIF ni servicios terceros",
+        "Móvil y escritorio: foto y silueta cambian de apariencia solo con off/yellow/green confirmado; texto, foco y aria-label permanecen",
         "Regresiones de acceso, 28 preguntas, escala, matriz y asignaciones sin cambios",
         "Comprobaciones del atlas y pruebas del HEAD exacto antes de publicación privada",
         "Fallos separados de Drive/metadatos y ACK perdido: preservar versión confirmada y documentar huérfanos",
         "Drive v3: paginación completa, permisos heredados/de grupo, propietario de ejecución, raíz, unidad compartida y servicio ausente; rechazo sin fallback"
       ],
-      "deployment": "Propuesta previa a implementación; no acredita publicación. Respaldo privado y contraste de la implementación existente antes de activar. Reversión solo de código preserva fotos, metadatos, respuestas y permisos; no restaurar datos antiguos ni borrar archivos como parte del rollback. Uniformar fondo y altura de ojos automáticamente sigue pendiente. Dependencia nueva de servicio avanzado Drive v3 y API habilitada: comprobar en editor/configuración antes de publicar, sin nuevos alcances OAuth."
+      "deployment": "El perfil básico y su almacenamiento privado se publicaron previamente; esta revisión propone únicamente la apariencia por estado confirmado. No acredita integración ni nueva publicación. Respaldar y contrastar la implementación existente antes de activar. Reversión solo de CSS/cliente preserva fotos, metadatos, respuestas y permisos; no restaurar datos antiguos ni borrar archivos. Uniformar fondo y altura de ojos automáticamente sigue pendiente."
     },
     {
       "id": "CHG-EMD-DRAFTS-001",
@@ -6858,10 +6869,12 @@
         "JPEG normalizado localmente a 512 × 512 píxeles, máximo 256 KiB, con recorte manual",
         "Revisión esperada e identificador de mutación",
         "Consulta de hasta 30 asignaciones autorizadas por solicitud"
+        ,"Estado de evaluación ya confirmado: off, yellow o green"
       ],
       "output": [
         "Confirmación de revisión y mutación sin exponer ubicación privada",
         "Imagen autenticada en memoria, sin URL de Drive, o perfil sin foto",
+        "Foto o silueta con apariencia derivada del estado confirmado y respaldo textual accesible",
         "Conflicto o error explícito que conserva el estado confirmado"
       ],
       "invariants": [
@@ -6871,6 +6884,7 @@
         "Pestaña privada de perfiles con identidad, archivo, revisión, mutación, digest, MIME, bytes y actualización; nunca guardar base64 en metadatos ni mezclar respuestas",
         "Servidor valida JPEG baseline, firma, dimensiones, cierre y máximo de 256 KiB; rechaza EXIF, comentarios y segmentos no permitidos tras normalización local",
         "No integrar proveedores terceros ni prometer normalización automática de fondo o altura de ojos",
+        "La apariencia del perfil no crea ni infiere estados: usa exclusivamente off/yellow/green ya recibidos; conservar texto, foco y aria-label para no depender solo del color",
         "Revisión, mutación y digest deben coincidir para repetir resultado; conflicto o ACK inválido conserva el estado confirmado y no anuncia éxito",
         "Conservar implementación, URL, roles, 28 preguntas, escala, matriz y asignaciones; reutilizar autorización Drive existente",
         "La reversión de código no borra ni restaura datos de perfil o evaluación",
