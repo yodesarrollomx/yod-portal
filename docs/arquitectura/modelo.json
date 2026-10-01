@@ -6224,6 +6224,13 @@
       "components": [
         "SYS-YOD-OS"
       ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/obra-cliente.test.cjs",
+      "components": [
+        "GAS-OBRA-CLIENTE"
+      ]
     }
   ]
 }
