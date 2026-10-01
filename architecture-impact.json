@@ -1,17 +1,18 @@
 {
-  "model_revision": "2026-10-01.13-emd-contactos",
-  "proposal_id": "CHG-EMD-CONTACTS-001",
+  "model_revision": "2026-10-01.14-emd-profile-state",
+  "proposal_id": "CHG-EMD-PROFILES-001",
   "components": [
     "SYS-EMD",
     "GAS-EMD",
     "SHEET-EMD",
     "SYS-YOD-OS"
   ],
-  "summary": "Registrar la preparación privada de contactos y recordatorios de EMD360: vista previa, validación, concurrencia e idempotencia; sin envío, enlaces personales, accesos nuevos ni lectura de respuestas.",
+  "summary": "Registrar la apariencia del perfil o silueta según el estado confirmado de EMD360: gris sin abrir, neutral en proceso y confirmación verde al terminar, sin cambiar estados, respuestas, permisos ni datos de perfil.",
   "tests": [
     "node scripts/arquitectura.cjs --validate",
     "node scripts/arquitectura.cjs --check",
-    "Regeneración determinista de procesos, contratos, fichas, mapas e índice"
+    "Regeneración determinista de procesos, contratos, fichas, mapas e índice",
+    "Pruebas sintéticas móvil/escritorio: estado visual y respaldo textual/aria sin depender solo del color"
   ],
-  "rollback": "Revertir el registro documental y regenerar vistas; no borrar contactos, respuestas, accesos ni otros registros privados."
+  "rollback": "Revertir el registro documental y regenerar vistas; no borrar fotos, perfiles, respuestas, accesos ni otros registros privados."
 }
