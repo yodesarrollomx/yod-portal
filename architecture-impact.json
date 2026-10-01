@@ -1,19 +1,17 @@
 {
-  "model_revision": "2026-09-30.4",
-  "proposal_id": "CHG-OBRA-001",
+  "model_revision": "2026-09-30.5",
+  "proposal_id": "CHG-EMD-UI-001",
   "components": [
-    "SYS-OBRA-CLIENTE",
-    "GAS-OBRA-CLIENTE",
-    "SHEET-OBRA-CLIENTE"
+    "SYS-YOD-OS",
+    "SYS-EMD",
+    "GAS-EMD",
+    "SHEET-EMD"
   ],
-  "summary": "Corregir filas físicas, autorización explícita y conservación de pagos recibidos del módulo cliente de Obra; versión 2 verificada en la misma implementación.",
+  "summary": "Registrar la propuesta de interfaz compacta EMD y regenerar las vistas del atlas sin cambiar conexiones, permisos, contratos ni estados de producción.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs"
+    "node --test tests/arquitectura.test.cjs",
+    "Comprobación de impacto de documentación con propuesta registrada"
   ],
-  "rollback": "Revertir el commit de referencia y seleccionar versión 1 en la implementación existente de Apps Script. No restaurar ni borrar registros de negocio."
+  "rollback": "Revertir mediante revisión este registro y sus vistas; conservar datos y despliegues privados. Coordinar la referencia fija de atlas del portal antes de integrar."
 }
