@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.16-emd-profile-jpeg",
+  "revision": "2026-10-01.17-emd-profile-review",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -5442,7 +5442,31 @@
             "EXT-DRIVE"
           ],
           "input": "Imagen validable, revisión e identificador de mutación",
-          "output": "Archivo privado y metadatos mínimos con confirmación",
+          "output": "Original privado confirmado, visible solo en Mi foto, pendiente de homologación",
+          "mode": "pendiente"
+        },
+        {
+          "label": "Editar y homologar en recorrido",
+          "role": "Agente autorizado",
+          "components": [
+            "GAS-EMD",
+            "SHEET-EMD",
+            "EXT-DRIVE"
+          ],
+          "input": "Original privado y metadata de revisión capturada",
+          "output": "Derivado editado uniforme, original conservado y evidencia privada",
+          "mode": "pendiente"
+        },
+        {
+          "label": "Publicar derivado verificado",
+          "role": "Propietario mediante función interna",
+          "components": [
+            "GAS-EMD",
+            "SHEET-EMD",
+            "EXT-DRIVE"
+          ],
+          "input": "Archivo privado editado e identidad/revisión/hash/archivo fuente esperados",
+          "output": "Derivado publicado solo si fuente sigue vigente; conflicto conserva upload posterior",
           "mode": "pendiente"
         },
         {
@@ -5454,7 +5478,7 @@
             "EXT-DRIVE"
           ],
           "input": "Sesión y relación autorizadas",
-          "output": "Imagen permitida o perfil sin foto",
+          "output": "Derivado homologado vigente autorizado o silueta; nunca original pendiente",
           "mode": "pendiente"
         },
         {
@@ -5483,9 +5507,10 @@
       ],
       "manual_gaps": [
         "Selección y recorte requieren decisión de la persona",
-        "Uniformar fondo y altura de ojos automáticamente no está implementado ni aprobado mediante un proveedor externo",
         "La apariencia por estado no sustituye el texto, el foco ni el estado confirmado del servidor; el atlas no contiene fotos ni metadatos personales",
-        "Habilitar y verificar servicio avanzado Drive v3/API; si falta, el recorrido rechaza operación sin alternativa permisiva"
+        "Habilitar y verificar servicio avanzado Drive v3/API; si falta, el recorrido rechaza operación sin alternativa permisiva",
+        "Circuito privado del agente y tratamiento uniforme están propuestos; no publicados por documentarlos",
+        "No usar una foto real como fixture ni copiar originales/derivados o metadata privada al atlas público"
       ],
       "evidence": [
         {
@@ -6545,6 +6570,26 @@
         "Respaldo privado, pruebas del HEAD exacto y comprobación de la implementación existente antes de publicar"
       ],
       "deployment": "Propuesta previa a implementación; no acredita publicación ni envío. Conservar URL, permisos, accesos, respuestas, 28 preguntas, escala, matriz y asignaciones. La pestaña privada de contactos se crea solo al guardar explícitamente; reversión de código no borra contactos. El envío permanece bloqueado hasta contar con destinatarios verificados y autorización específica."
+    },
+    {
+      "id": "CHG-EMD-PROFILE-REVIEW-001",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "EXT-DRIVE",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Separar foto recibida de foto homologada. Mostrar el original solo en Mi foto, conservar siluetas en tableros hasta edición uniforme realizada por el agente en recorridos. Preparar publicación privada de derivados por función interna con revisión/hash/archivo fuente y reintento idempotente; sin eliminación de fondo dentro del portal ni ampliación de RPC/permisos.",
+      "status": "propuesto",
+      "tests": [
+        "Original confirmado visible solo al dueño en Mi foto; tableros y otros usuarios no reciben sus bytes",
+        "Derivado publicado visible solo con fuente/revisión/hash/archivo vigentes; upload/remoción concurrente lo invalida",
+        "Publicación privada: permisos e integridad, idempotencia tras ACK perdido, conflicto y conservación de original",
+        "Regresiones JPEG, perfiles, preguntas, guardado, chinches y accesibilidad; UI sintética móvil/escritorio",
+        "Pruebas y CI del HEAD exacto, respaldo privado del código y verificación de fuente/recorrido en la implementación existente"
+      ],
+      "deployment": "Propuesta registrada antes de implementar. No se presenta como editada/publicada una foto por subirla, crear metadata o guardar prompt. Cambiar servidor e interfaz en la implementación existente con respaldo y verificación; no escrituras de prueba en producción. Reversión no debe reexponer originales pendientes ni borrar perfiles/respuestas."
     }
   ],
   "data_contracts": [
@@ -6865,13 +6910,15 @@
         "JPEG normalizado localmente a 512 × 512 píxeles, máximo 256 KiB, con recorte manual",
         "Revisión esperada e identificador de mutación",
         "Consulta de hasta 30 asignaciones autorizadas por solicitud",
-        "Estado de evaluación ya confirmado: off, yellow o green"
+        "Estado de evaluación ya confirmado: off, yellow o green",
+        "Publicación interna del agente: identidad canónica, revisión/hash/archivo del original y archivo derivado privado verificado"
       ],
       "output": [
         "Confirmación de revisión y mutación sin exponer ubicación privada",
         "Imagen autenticada en memoria, sin URL de Drive, o perfil sin foto",
         "Foto o silueta con apariencia derivada del estado confirmado y respaldo textual accesible",
-        "Conflicto o error explícito que conserva el estado confirmado"
+        "Conflicto o error explícito que conserva el estado confirmado",
+        "Original visible exclusivamente en Mi foto de su propietario; tableros reciben solo derivado homologado vigente o silueta"
       ],
       "invariants": [
         "Carga y retirada derivan propietario de la identidad canónica del servidor, incluida compatibilidad de acceso legado; no aceptar identidad del cliente ni inventar personas o cargos",
@@ -6879,7 +6926,6 @@
         "Carpeta dedicada dentro de carpeta existente, ambas privadas y sin editores/lectores explícitos; verificar también privacidad del archivo y rechazar destinos compartidos",
         "Pestaña privada de perfiles con identidad, archivo, revisión, mutación, digest, MIME, bytes y actualización; nunca guardar base64 en metadatos ni mezclar respuestas",
         "Servidor valida JPEG baseline, firma, dimensiones, cierre y máximo de 256 KiB; rechaza EXIF, comentarios y segmentos no permitidos tras normalización local",
-        "No integrar proveedores terceros ni prometer normalización automática de fondo o altura de ojos",
         "La apariencia del perfil no crea ni infiere estados: usa exclusivamente off/yellow/green ya recibidos; conservar texto, foco y aria-label para no depender solo del color",
         "Revisión, mutación y digest deben coincidir para repetir resultado; conflicto o ACK inválido conserva el estado confirmado y no anuncia éxito",
         "Conservar implementación, URL, roles, 28 preguntas, escala, matriz y asignaciones; reutilizar autorización Drive existente",
@@ -6891,7 +6937,12 @@
         "Servicio avanzado Drive v3 obligatorio: listar permisos con paginación en archivo, carpeta y todos los ancestros hasta la raíz de Mi unidad; admitir únicamente el propietario esperado, coincidente con la identidad de ejecución",
         "Rechazar permisos de usuario, grupo, dominio o cualquiera distintos del único propietario, unidades compartidas y recursos sin propietario; Access.PRIVATE por sí solo no prueba ausencia de permisos heredados o de grupo",
         "Si el servicio avanzado o la inspección completa de ACL no están disponibles, mostrar error y rechazar operación sin fallback a DriveApp; habilitar servicio/API requiere comprobación de configuración y reutiliza el alcance Drive existente",
-        "La codificación JPEG del recorte usa solo píxeles RGBA sRGB de 512 × 512, con calidad acotada; no copia EXIF, ICC, comentarios ni metadatos del archivo o del codificador del navegador. El código versionado se incorpora al cliente; sin ejecución o envío a un servicio tercero."
+        "La codificación JPEG del recorte usa solo píxeles RGBA sRGB de 512 × 512, con calidad acotada; no copia EXIF, ICC, comentarios ni metadatos del archivo o del codificador del navegador. El código versionado se incorpora al cliente; sin ejecución o envío a un servicio tercero.",
+        "El portal no ejecuta eliminación de fondo ni envía imágenes a editores externos. El tratamiento solicitado corresponde al agente en recorridos autorizados, usando su herramienta de imagen y preservando identidad; no inventar rostro, ropa o pose ausente.",
+        "Separar original y derivado: original solo en Mi foto del propietario, nunca en tableros de participante/coordinación ni compartido con evaluadores. Un upload no equivale a homologación.",
+        "Publicar únicamente por función interna privada, con ACL e integridad comprobadas, respaldo y comparación de identidad, revisión, hash y archivo fuente bajo bloqueo; upload posterior invalida derivado obsoleto.",
+        "Reintento de publicación vincula mutación, fuente y derivado mediante digest; no duplica revisión y no puede sustituir una foto más reciente.",
+        "Lecturas de originales/derivados vacías no crean archivos, carpetas ni tablas; el tratamiento del agente no altera respuestas, instrumento, matriz o accesos."
       ]
     },
     {
