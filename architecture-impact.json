@@ -1,17 +1,16 @@
 {
-  "model_revision": "2026-10-01.20-emd-directory",
-  "proposal_id": "CHG-EMD-DIRECTORY-001",
+  "model_revision": "2026-10-01.21-ppp-identidad-graficas",
+  "proposal_id": "CHG-PPP-LECTURA-002",
   "components": [
-    "SYS-EMD",
-    "GAS-EMD",
-    "SHEET-EMD",
-    "SYS-YOD-OS"
+    "SYS-POTENCIALES",
+    "GAS-PORTERO",
+    "SHEET-PORTERO"
   ],
-  "summary": "Propuesta de padrón privado verificado para cargos y organigrama de coordinación, sin datos personales en el atlas.",
+  "summary": "Registrar recuperación de identidad y lectura del proyecto con gráficas específicas de la proforma confirmada; implementación en PPP, mismas conexiones y fórmulas.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
     "node verify-os.cjs; node verify-portal.cjs; node verify-accesos.cjs; node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir propuesta y regenerar vistas mediante PR; no modificar datos privados."
+  "rollback": "Revertir propuesta mediante PR y regenerar vistas; conservar registros y libros privados."
 }
