@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.18-emd-profile-cards",
+  "revision": "2026-10-01.19-ppp-mapa-catalogo",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -6610,6 +6610,23 @@
         "Pruebas del HEAD exacto, respaldo privado y comparación de versión/recorrido publicado"
       ],
       "deployment": "Propuesta registrada antes de implementar. No acredita tarjetas publicadas ni derivados homologados. Publicar en implementación existente después de pruebas y respaldo; reversión de código conserva archivos privados y respuestas, sin volver a exponer originales."
+    },
+    {
+      "id": "CHG-PPP-MAPA-001",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-YOD-OS",
+        "GAS-PORTERO"
+      ],
+      "proposal": "Corrección autorizada de la portada PPP: aislar las capas Leaflet para que el sidebar permanezca delante; listado desplegable de todos los casos desde las cinco listas existentes con progreso, timeout, errores y reintento independiente del mapa. Planificadores en cuadrícula compacta con iconos SVG locales y descripción conservada en detalles. Aplicar lista y aislamiento también al mapa completo; sin modificar permisos, cálculos, backend ni datos.",
+      "status": "implementado_local",
+      "tests": [
+        "Chromium y WebKit: seis grupos aprobados con Leaflet/shell reales y 15 casos sintéticos; cinco destinos, scroll independiente, sidebar y velo delante del mapa sin paneo",
+        "Mapa fallido, progreso parcial, consulta malformada, reintento solo de listas fallidas, timeout acotado y vacío real; cambio de sesión descarta respuestas tardías",
+        "320/390/430/1280 px, cinco SVG locales y descripciones completas conservadas; seis regresiones de interfaz vertical y 23 unitarias PPP",
+        "124 pruebas y verificadores del atlas aprobados; sintaxis y diff; sin POST de negocio ni cambios de cálculos/backend"
+      ],
+      "deployment": "Implementación local validada; integrar por PR del PPP con este atlas fijado. Comparar archivos estáticos servidos con el commit integrado. No acredita un iPhone físico ni acceso a filas reales; transporte de prueba sintético. Revertir portada, mapa, catálogo y referencia del atlas mediante PR sin tocar sesiones ni registros."
     }
   ],
   "data_contracts": [
