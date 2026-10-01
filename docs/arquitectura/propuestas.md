@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-09-30.2 · 2026-09-30.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-09-30.3 · 2026-09-30.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 
@@ -298,3 +298,35 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 
 - Los cambios funcionales requieren impacto y propuesta registrada
 - El atlas distingue commit integrado y backend desplegado
+
+## PPP · Unificar tablero y fórmulas de potencial en Sheets
+
+- Tableros: SYS-POTENCIALES, GAS-PORTERO, SHEET-PORTERO, SHEET-PPP-MODELOS, SYS-CONTROL.
+- Problema: Entradas y escenarios se guardan en Sheets mientras los motores HTML calculan; una lectura de cada superficie puede reflejar motores distintos.
+- Beneficio esperado: Una sola fuente de cálculo, versiones trazables y resultados comparables para venta, renta y lotificación.
+- Medición: Cobertura de libros; igualdad de cantidades/resultados/flujos por revisión; escrituras con auditoría y rechazos de conflicto.
+- Dependencias: Sin dependencias previas.
+- Esfuerzo: L. Decisión: **aprobada**.
+
+### Requisitos previos
+
+- Backend vivo contrastado y pruebas aisladas
+- Integrar propuesta central y fijar commit del atlas antes de integrar frontend
+- Actualizar únicamente implementación existente después de frontend compatible
+- Registrar despliegue y verificar conexión pública por separado del modelo nativo
+
+### Tareas
+
+1. Mapear y validar fórmulas nativas de cada motor con escenarios conservados
+2. Registrar libro/carpeta por caso y proteger fórmulas para propietario
+3. Conectar cantidades, resultados, versiones y diagramas con revisión esperada
+4. Completar flujos operativos y por etapas sin inventar datos ausentes
+5. Integrar casos existentes y fábrica de altas
+6. Auditar escrituras y ediciones directas; resolver conflicto sin sobrescribir
+
+### Criterios de aceptación
+
+- Leer tablero o Sheets da los mismos resultados y revisión
+- Cambiar cantidad actualiza fórmulas nativas; ninguna fórmula financiera paralela en cliente/servidor
+- No mostrar datos locales como sincronizados ni confirmar una escritura fallida
+- Cada versión conserva identidad, fuente e historial; datos faltantes permanecen pendientes

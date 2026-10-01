@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-09-30.2 · 2026-09-30.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-09-30.3 · 2026-09-30.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -58,3 +58,17 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Un system_id identifica el sistema; resolver alias de portal explícitamente
 - El catálogo no concede permisos de backend
 - Dependencias institucionales de Sheets no equivalen al grafo de software
+
+## CTR-PPP-SHEETS
+
+- Componentes: SYS-POTENCIALES, GAS-PORTERO, SHEET-PORTERO, SHEET-PPP-MODELOS, SYS-CONTROL.
+- Evidencia: Decisión explícita de Dirección y contrato público de cálculo nativo; pruebas aisladas y lectura de piloto documentadas en registro privado..
+- Entrada/campos: `caso_id`, `escenario_id`, `campos de cantidad permitidos`, `revision_esperada`, `request_id`, `actor autenticado`.
+- Salida: revision, versión activa, entradas canónicas, resultados calculados, flujo mensual, geometría y etapas, fuentes y auditoría.
+
+- Datos y fórmulas viven en el libro privado por caso; no mantener motor financiero paralelo
+- Las fórmulas están protegidas para propietario; AI actúa con su autorización y registra cambios
+- Servidor resuelve el destino y verifica permisos, límites y revisión antes de escribir
+- Una respuesta pendiente, conflicto o desconexión conserva el último dato confirmado con estado explícito
+- Auditar antes/después y no marcar producción comprobada sin lectura pública final
+- No modificar Portero ni crear otra implementación; conservar contratos y URL existentes
