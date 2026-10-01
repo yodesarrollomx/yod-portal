@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.10-emd-profiles",
+  "revision": "2026-10-01.11-emd-drafts",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -2479,6 +2479,35 @@
         "Código probado no acredita una instalación ni publicación correcta"
       ],
       "source_of_truth": "GitHub App privada propiedad de la organización; configuración y llave permanecen fuera del atlas público."
+    },
+    {
+      "id": "STORE-EMD-DRAFTS",
+      "nombre": "Borradores locales cifrados de evaluación",
+      "tipo": "almacen_navegador",
+      "repo": "yodesarrollomx/EMDevaluacion360",
+      "proposito": "Conservar copia recuperable en el mismo navegador sin sustituir la confirmación del servidor",
+      "dominio": "Personas",
+      "owner_role": "Participante autorizado del enlace vigente",
+      "status": "propuesto",
+      "runtime_status": "Propuesta; implementación y publicación pendientes de evidencia privada",
+      "evidence": [
+        {
+          "claim": "Diseño de recuperación local y pruebas sintéticas propuestos",
+          "status": "propuesto"
+        }
+      ],
+      "data_entities": [
+        "borrador_cifrado",
+        "mutacion_pendiente"
+      ],
+      "risks_sanitized": [
+        "Copia limitada al navegador y enlace vigentes; borrar datos del navegador o cambiar enlace puede impedir recuperación",
+        "Almacenamiento o criptografía pueden fallar; el servidor sigue siendo fuente de verdad",
+        "Concurrencia entre pestañas y confirmaciones tardías exige aislamiento y revisión explícita"
+      ],
+      "source_of_truth": "Copia local no confirmada; el backend conserva autoridad sobre revisiones y cierre",
+      "visibility": "restricted_summary",
+      "restricted_evidence_omitted": true
     }
   ],
   "connections": [
@@ -4359,6 +4388,23 @@
       "runtime_verified": false,
       "restricted_evidence_omitted": true,
       "contract": "CTR-EMD-PROFILES: carpeta dedicada privada, carga y retirada propias, lectura autorizada y confirmación por revisión/mutación; sin nuevas autorizaciones OAuth."
+    },
+    {
+      "id": "CON-EMD-DRAFTS-LOCAL",
+      "from": "SYS-EMD",
+      "to": "STORE-EMD-DRAFTS",
+      "label": "Propuesta: copia cifrada local",
+      "kind": "persistencia_local",
+      "evidence": [
+        {
+          "claim": "Diseño propuesto de persistencia local; sin evidencia de publicación",
+          "status": "propuesto"
+        }
+      ],
+      "status": "propuesto",
+      "runtime_verified": false,
+      "restricted_evidence_omitted": true,
+      "contract": "CTR-EMD-DRAFTS: cifrado por enlace vigente, aislamiento de pestañas, confirmación transaccional local y recuperación explícita; el servidor mantiene revisión y cierre."
     }
   ],
   "processes": [
@@ -5434,6 +5480,69 @@
           "status": "propuesto"
         }
       ]
+    },
+    {
+      "id": "PROC-EMD-DRAFTS",
+      "nombre": "Recuperación revisada de borrador local",
+      "status": "propuesto",
+      "steps": [
+        {
+          "label": "Conservar copia local",
+          "role": "Cliente autenticado",
+          "components": [
+            "SYS-EMD",
+            "STORE-EMD-DRAFTS"
+          ],
+          "input": "Snapshot de edición o mutación pendiente",
+          "output": "Copia cifrada durable o aviso explícito de indisponibilidad",
+          "mode": "pendiente"
+        },
+        {
+          "label": "Consultar estado vigente",
+          "role": "Participante autorizado",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD"
+          ],
+          "input": "Sesión vigente y asignación propia",
+          "output": "Revisión y cierre confirmados por servidor",
+          "mode": "pendiente"
+        },
+        {
+          "label": "Revisar diferencias",
+          "role": "Participante",
+          "components": [
+            "SYS-EMD",
+            "STORE-EMD-DRAFTS"
+          ],
+          "input": "Copia local descifrada y versión del servidor",
+          "output": "Decisión explícita de recuperación, modificación o descarte",
+          "mode": "manual"
+        },
+        {
+          "label": "Confirmar envío o cierre",
+          "role": "Participante y backend",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD"
+          ],
+          "input": "Mutación exacta revisada o nueva modificación autorizada; cierre con consentimiento nuevo",
+          "output": "Confirmación real o conflicto sin sobrescritura automática",
+          "mode": "manual"
+        }
+      ],
+      "manual_gaps": [
+        "Revisión y decisión de recuperar requieren consentimiento; no hay recuperación ni cierre automáticos",
+        "Persistencia limitada al navegador y enlace; no garantiza recuperación tras borrar almacenamiento",
+        "Pruebas táctiles y escritorio sintéticos no certifican Safari ni un teléfono físico"
+      ],
+      "evidence": [
+        {
+          "claim": "Proceso propuesto; sin datos humanos ni publicación acreditada",
+          "status": "propuesto"
+        }
+      ]
     }
   ],
   "proposals": [
@@ -6306,6 +6415,28 @@
         "Drive v3: paginación completa, permisos heredados/de grupo, propietario de ejecución, raíz, unidad compartida y servicio ausente; rechazo sin fallback"
       ],
       "deployment": "Propuesta previa a implementación; no acredita publicación. Respaldo privado y contraste de la implementación existente antes de activar. Reversión solo de código preserva fotos, metadatos, respuestas y permisos; no restaurar datos antiguos ni borrar archivos como parte del rollback. Uniformar fondo y altura de ojos automáticamente sigue pendiente. Dependencia nueva de servicio avanzado Drive v3 y API habilitada: comprobar en editor/configuración antes de publicar, sin nuevos alcances OAuth."
+    },
+    {
+      "id": "CHG-EMD-DRAFTS-001",
+      "components": [
+        "SYS-EMD",
+        "STORE-EMD-DRAFTS",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Proponer persistencia cifrada de borradores del cliente para evitar pérdida al recargar antes del envío, tras rechazo y durante confirmaciones con nuevas ediciones. Recuperación explícita tras autenticar y consultar la evaluación asignada; jamás sobrescribir ni cerrar automáticamente. Backend y contrato de respuestas permanecen intactos. SYS-YOD-OS participa únicamente por el atlas documental.",
+      "status": "propuesto",
+      "tests": [
+        "Reproducción sintética de recarga antes del envío, rechazo y edición nueva durante confirmación de otro snapshot",
+        "IndexedDB real y RPC sintético: escritura completada, falta de cuota/crypto, transacción fallida y recarga",
+        "Dos pestañas, snapshots asíncronos fuera de orden, compare-and-swap y eliminación condicionada",
+        "Aislamiento por enlace, evaluación y época de sesión; callbacks tardíos no cruzan identidad",
+        "Recuperación revisada, ACK perdido con mutación exacta, conflicto sin rebase y cierre con nuevo consentimiento",
+        "Servidor cerrado no reabre; 28 preguntas, escala, asignaciones y backend intactos",
+        "Auditoría independiente de interacción táctil y escritorio sintéticos; no acredita Safari o dispositivo físico"
+      ],
+      "deployment": "Propuesta previa a implementación; sin afirmar publicación. Pruebas del HEAD exacto, respaldo privado y comprobación de la implementación existente antes de activar. Reversión solo de código conserva registros locales y respuestas; no descifrar ni exportar datos humanos para auditar. La disponibilidad local no acredita guardado en servidor."
     }
   ],
   "data_contracts": [
@@ -6650,6 +6781,40 @@
         "Rechazar permisos de usuario, grupo, dominio o cualquiera distintos del único propietario, unidades compartidas y recursos sin propietario; Access.PRIVATE por sí solo no prueba ausencia de permisos heredados o de grupo",
         "Si el servicio avanzado o la inspección completa de ACL no están disponibles, mostrar error y rechazar operación sin fallback a DriveApp; habilitar servicio/API requiere comprobación de configuración y reutiliza el alcance Drive existente"
       ]
+    },
+    {
+      "id": "CTR-EMD-DRAFTS",
+      "components": [
+        "SYS-EMD",
+        "STORE-EMD-DRAFTS",
+        "GAS-EMD",
+        "SHEET-EMD"
+      ],
+      "source": "Diseño propuesto con fallos reproducidos mediante datos sintéticos; evidencia y detalle operativo privados.",
+      "input": [
+        "Sesión actualmente autenticada y evaluación asignada",
+        "Snapshot clonado sincrónicamente de revisión base, respuestas confirmadas, borrador y mutación pendiente",
+        "Decisión explícita de revisar y recuperar una copia local"
+      ],
+      "output": [
+        "Copia cifrada confirmada únicamente al completar la transacción local",
+        "Comparación local/servidor para revisión de la persona",
+        "Aviso de copia local indisponible, conflicto o confirmación real del servidor"
+      ],
+      "invariants": [
+        "Alcance de base local derivado con SHA-256 del enlace vigente, con separación de dominio; nunca persistir la credencial",
+        "AES-GCM de 256 bits con clave no exportable derivada por HKDF-SHA256 en memoria; IV aleatorio nuevo por escritura y datos autenticados que vinculan esquema, alcance, evaluación, escritor y versión",
+        "Campos de respuestas y mutación permanecen cifrados; la credencial y la clave no se almacenan en el payload ni en registros locales",
+        "Identificador aleatorio nuevo por carga/pestaña y control atómico de versión evitan que otra pestaña o snapshot atrasado reemplace el borrador",
+        "Clonar snapshot antes de operaciones asíncronas; cifrar fuera de la transacción y confirmar durabilidad solo en oncomplete",
+        "Recuperar solo después de autenticar y obtener la evaluación propia vigente; revisar local frente a servidor antes de enviar, sin recuperación automática ni rebase ciego",
+        "Mutación con confirmación perdida se repite con el mismo identificador y payload solo tras revisión; un cierre pendiente requiere consentimiento nuevo y explícito",
+        "Evaluación cerrada en servidor permanece cerrada; copia local solo se puede inspeccionar o descartar, sin reabrir ni escribir",
+        "Restaurar como copia independiente y retirar el original solo con revisión/confirmación exactas y compare-and-swap; no borrar otra pestaña a ciegas",
+        "Ediciones hechas durante un envío sobreviven a su confirmación; cambios de identidad/evaluación invalidan callbacks anteriores",
+        "Fallo o ausencia de IndexedDB/criptografía se informa sin bloquear memoria ni envío al servidor; nunca mostrar cierre confirmado por persistencia local",
+        "Copia del mismo navegador y enlace únicamente; no prometer recuperación en otro dispositivo ni cambiar 28 preguntas, escala, asignaciones, permisos o backend"
+      ]
     }
   ],
   "path_ownership": [
@@ -6900,3 +7065,4 @@
     }
   ]
 }
+

@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.10-emd-profiles · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.11-emd-drafts · 2026-10-01.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -156,3 +156,23 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Servicio avanzado Drive v3 obligatorio: listar permisos con paginación en archivo, carpeta y todos los ancestros hasta la raíz de Mi unidad; admitir únicamente el propietario esperado, coincidente con la identidad de ejecución
 - Rechazar permisos de usuario, grupo, dominio o cualquiera distintos del único propietario, unidades compartidas y recursos sin propietario; Access.PRIVATE por sí solo no prueba ausencia de permisos heredados o de grupo
 - Si el servicio avanzado o la inspección completa de ACL no están disponibles, mostrar error y rechazar operación sin fallback a DriveApp; habilitar servicio/API requiere comprobación de configuración y reutiliza el alcance Drive existente
+
+## CTR-EMD-DRAFTS
+
+- Componentes: SYS-EMD, STORE-EMD-DRAFTS, GAS-EMD, SHEET-EMD.
+- Evidencia: Diseño propuesto con fallos reproducidos mediante datos sintéticos; evidencia y detalle operativo privados..
+- Entrada/campos: `Sesión actualmente autenticada y evaluación asignada`, `Snapshot clonado sincrónicamente de revisión base, respuestas confirmadas, borrador y mutación pendiente`, `Decisión explícita de revisar y recuperar una copia local`.
+- Salida: Copia cifrada confirmada únicamente al completar la transacción local, Comparación local/servidor para revisión de la persona, Aviso de copia local indisponible, conflicto o confirmación real del servidor.
+
+- Alcance de base local derivado con SHA-256 del enlace vigente, con separación de dominio; nunca persistir la credencial
+- AES-GCM de 256 bits con clave no exportable derivada por HKDF-SHA256 en memoria; IV aleatorio nuevo por escritura y datos autenticados que vinculan esquema, alcance, evaluación, escritor y versión
+- Campos de respuestas y mutación permanecen cifrados; la credencial y la clave no se almacenan en el payload ni en registros locales
+- Identificador aleatorio nuevo por carga/pestaña y control atómico de versión evitan que otra pestaña o snapshot atrasado reemplace el borrador
+- Clonar snapshot antes de operaciones asíncronas; cifrar fuera de la transacción y confirmar durabilidad solo en oncomplete
+- Recuperar solo después de autenticar y obtener la evaluación propia vigente; revisar local frente a servidor antes de enviar, sin recuperación automática ni rebase ciego
+- Mutación con confirmación perdida se repite con el mismo identificador y payload solo tras revisión; un cierre pendiente requiere consentimiento nuevo y explícito
+- Evaluación cerrada en servidor permanece cerrada; copia local solo se puede inspeccionar o descartar, sin reabrir ni escribir
+- Restaurar como copia independiente y retirar el original solo con revisión/confirmación exactas y compare-and-swap; no borrar otra pestaña a ciegas
+- Ediciones hechas durante un envío sobreviven a su confirmación; cambios de identidad/evaluación invalidan callbacks anteriores
+- Fallo o ausencia de IndexedDB/criptografía se informa sin bloquear memoria ni envío al servidor; nunca mostrar cierre confirmado por persistencia local
+- Copia del mismo navegador y enlace únicamente; no prometer recuperación en otro dispositivo ni cambiar 28 preguntas, escala, asignaciones, permisos o backend
