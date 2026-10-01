@@ -378,6 +378,6 @@ flowchart TD
 | 3. Consultar foto autorizada | Participante asignado o revisor | SYS-EMD, GAS-EMD, EXT-DRIVE | Sesión y relación autorizadas → Imagen permitida o perfil sin foto | pendiente |
 | 4. Quitar foto propia | Participante | SYS-EMD, GAS-EMD, SHEET-EMD, EXT-DRIVE | Revisión vigente y mutación propia → Perfil sin foto confirmado, con reintento seguro | manual |
 
-Vacíos: Selección y recorte requieren decisión de la persona; Uniformar fondo y altura de ojos automáticamente no está implementado ni aprobado mediante un proveedor externo; Pruebas aisladas, respaldo y publicación privada pendientes; el atlas no contiene fotos ni metadatos personales.
+Vacíos: Selección y recorte requieren decisión de la persona; Uniformar fondo y altura de ojos automáticamente no está implementado ni aprobado mediante un proveedor externo; Pruebas aisladas, respaldo y publicación privada pendientes; el atlas no contiene fotos ni metadatos personales; Habilitar y verificar servicio avanzado Drive v3/API; si falta, el recorrido rechaza operación sin alternativa permisiva.
 
 Evidencia: Proceso propuesto; no acredita operación publicada.

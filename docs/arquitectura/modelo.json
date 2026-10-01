@@ -5425,7 +5425,8 @@
       "manual_gaps": [
         "Selección y recorte requieren decisión de la persona",
         "Uniformar fondo y altura de ojos automáticamente no está implementado ni aprobado mediante un proveedor externo",
-        "Pruebas aisladas, respaldo y publicación privada pendientes; el atlas no contiene fotos ni metadatos personales"
+        "Pruebas aisladas, respaldo y publicación privada pendientes; el atlas no contiene fotos ni metadatos personales",
+        "Habilitar y verificar servicio avanzado Drive v3/API; si falta, el recorrido rechaza operación sin alternativa permisiva"
       ],
       "evidence": [
         {
@@ -6301,9 +6302,10 @@
         "Normalización y recorte manual en móvil y escritorio, sin EXIF ni servicios terceros",
         "Regresiones de acceso, 28 preguntas, escala, matriz y asignaciones sin cambios",
         "Comprobaciones del atlas y pruebas del HEAD exacto antes de publicación privada",
-        "Fallos separados de Drive/metadatos y ACK perdido: preservar versión confirmada y documentar huérfanos"
+        "Fallos separados de Drive/metadatos y ACK perdido: preservar versión confirmada y documentar huérfanos",
+        "Drive v3: paginación completa, permisos heredados/de grupo, propietario de ejecución, raíz, unidad compartida y servicio ausente; rechazo sin fallback"
       ],
-      "deployment": "Propuesta previa a implementación; no acredita publicación. Respaldo privado y contraste de la implementación existente antes de activar. Reversión solo de código preserva fotos, metadatos, respuestas y permisos; no restaurar datos antiguos ni borrar archivos como parte del rollback. Uniformar fondo y altura de ojos automáticamente sigue pendiente."
+      "deployment": "Propuesta previa a implementación; no acredita publicación. Respaldo privado y contraste de la implementación existente antes de activar. Reversión solo de código preserva fotos, metadatos, respuestas y permisos; no restaurar datos antiguos ni borrar archivos como parte del rollback. Uniformar fondo y altura de ojos automáticamente sigue pendiente. Dependencia nueva de servicio avanzado Drive v3 y API habilitada: comprobar en editor/configuración antes de publicar, sin nuevos alcances OAuth."
     }
   ],
   "data_contracts": [
@@ -6643,7 +6645,10 @@
         "Drive y metadatos no forman una transacción atómica: preservar foto anterior hasta confirmación y documentar recuperación de escrituras parciales y archivos huérfanos",
         "La consulta no crea carpetas, archivos ni metadatos; solo una carga propia autorizada puede inicializarlos",
         "Verificar propietario, privacidad y ausencia de lectores/editores explícitos en ancestros; rechazar unidades compartidas y revalidar privacidad antes de confirmar un reintento",
-        "La identidad de mutación vincula propietario, revisión base, MIME y bytes normalizados mediante digest"
+        "La identidad de mutación vincula propietario, revisión base, MIME y bytes normalizados mediante digest",
+        "Servicio avanzado Drive v3 obligatorio: listar permisos con paginación en archivo, carpeta y todos los ancestros hasta la raíz de Mi unidad; admitir únicamente el propietario esperado, coincidente con la identidad de ejecución",
+        "Rechazar permisos de usuario, grupo, dominio o cualquiera distintos del único propietario, unidades compartidas y recursos sin propietario; Access.PRIVATE por sí solo no prueba ausencia de permisos heredados o de grupo",
+        "Si el servicio avanzado o la inspección completa de ACL no están disponibles, mostrar error y rechazar operación sin fallback a DriveApp; habilitar servicio/API requiere comprobación de configuración y reutiliza el alcance Drive existente"
       ]
     }
   ],
