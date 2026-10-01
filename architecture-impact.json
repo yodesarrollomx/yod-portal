@@ -4,7 +4,8 @@
   "components": [
     "SYS-POTENCIALES",
     "GAS-PORTERO",
-    "SHEET-PORTERO"
+    "SHEET-PORTERO",
+    "SYS-YOD-OS"
   ],
   "summary": "Registrar recuperación de identidad y lectura del proyecto con gráficas específicas de la proforma confirmada; implementación en PPP, mismas conexiones y fórmulas.",
   "tests": [

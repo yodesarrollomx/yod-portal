@@ -6650,7 +6650,8 @@
       "components": [
         "SYS-POTENCIALES",
         "GAS-PORTERO",
-        "SHEET-PORTERO"
+        "SHEET-PORTERO",
+        "SYS-YOD-OS"
       ],
       "proposal": "Cambio autorizado: abrir el proyecto solicitado sin depender del catálogo, conservar identidad y versión visibles, presentar carga/error/reintento sin sustituir datos por referencias; gráficas específicas de capacidad, ingresos, costos, deuda mensual y dotaciones basadas en el estado confirmado. Mantener controles, datos, contratos y motor existente; faltantes explícitos, escalas y unidades visibles, animación reducida accesible.",
       "status": "implementado_local",
