@@ -1,18 +1,34 @@
 {
-  "model_revision": "2026-10-01.29-corcho-privado",
-  "proposal_id": "CHG-DESPACHO-CHINCHES-001",
+  "model_revision": "2026-10-01.30-emd-invitaciones",
+  "proposal_id": "CHG-CHINCHES-CIERRE-001",
   "components": [
-    "SYS-DESPACHO",
-    "SYS-TAREAS",
-    "GAS-OPERACION",
-    "STORE-DESPACHO-CORCHO",
-    "GAS-PORTERO",
     "SYS-YOD-OS",
+    "SYS-DESPACHO",
+    "SYS-POTENCIALES",
+    "SYS-TAREAS",
+    "SYS-SALA",
+    "SYS-EMD",
     "GAS-CATALOGO",
     "SHEET-CATALOGO",
-    "EXT-DRIVE"
+    "GAS-OPERACION",
+    "SHEET-OPERACION",
+    "GAS-MOAC-METAS",
+    "SHEET-MOAC-METAS",
+    "GAS-SALA",
+    "SHEET-SALA",
+    "GAS-EMD",
+    "SHEET-EMD",
+    "GAS-PORTERO",
+    "SHEET-PORTERO",
+    "SHEET-PPP-MODELOS",
+    "EXT-DRIVE",
+    "EXT-GMAIL",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-MOTORES-MEDIA",
+    "STORE-DESPACHO-CORCHO"
   ],
-  "summary": "Precisar almacenamiento privado independiente y verificación de principal, archivo, ancestros y permisos para Mi Corcho; preservar datos y permisos generales de Operación.",
+  "summary": "Registrar preparación privada de invitaciones/recibos con envío deshabilitado y entrada corporativa condicionada al dominio real, preservando respuestas, enlaces y permisos.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -21,5 +37,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir registro y código por PR/version previa; conservar archivo privado, notas e historial y permisos existentes."
+  "rollback": "Revertir propuestas y código por PR/version previa; conservar ledger, borradores, accesos y respuestas. Entrada corporativa sin modificar backend."
 }

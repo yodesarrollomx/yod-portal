@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.29-corcho-privado · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.30-emd-invitaciones · 2026-10-01.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -294,3 +294,34 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Mantener endpoint, ACL PT/PA, IDs, caso_id, palabra, históricos, CAS y revisión. No cambiar lectura vertical ni datos de otros casos.
 - Lectura tipada en pppLeerLibro_/sheet-cantidades conserva compatibilidad vertical. Registro y creación de modelo canónico documentados con fuente y rollback.
 - Pruebas mixtas vivienda/comercio, CUS cero/ausente, pasillos 0/20, 1/N puertas, rentas distintas y exceso; cero POST de prueba de negocio.
+
+## CTR-EMD-INVITES
+
+- Componentes: GAS-EMD, SHEET-EMD, EXT-DRIVE, EXT-GMAIL.
+- Evidencia: Propuesta de preparación privada y entrega controlada de invitaciones con enlaces existentes; consentimiento y lote real se acreditan antes de activar envío..
+- Entrada/campos: `Coordinación reviewer vigente, catálogo y asignaciones autorizados con segregación QA/normal`, `Personas únicas 1..25, finalidad welcome/reminder/photo, ronda explícita estable y contactos verificados con revisión`, `Enlace participante existente, vigente y vinculado a identidad desde archivo privado autorizado; no emitir ni reiniciar accesos`, `Review HMAC privado con actor, personas, finalidad, ronda, digest y expiración15min; mutation estable; confirmación humana del lote exacto para enviar`.
+- Salida: Preview con asunto, destinatario y cuerpo con enlace enmascarado; sin crear recursos, Borrador privado con enlaces existentes solo tras mutación explícita, Recibo por actor y mutation para consultar incluso tras expiración; submitted no acredita entrega, Ubicación privada de borrador confirmado sin compartir ni publicar enlaces.
+
+- Preparación y envío deshabilitados por defecto; secreto de firma y configuración se preparan por el propietario. No añadir scopes ni consentimiento automáticamente.
+- Coordinación vigente en cada llamada y separación QA/normal. QA nunca envía correos reales. No leer ni convertir respuestas o puntajes como parte de esta propuesta.
+- Validar correo, contacto/revisión, nombre e identidad del enlace existente antes de efectos. Dato ausente, formato legado incompatible, enlace vencido o revocado se rechazan, no se adivinan ni reemiten.
+- Certificar privacidad y propietario único de archivo, carpeta, ancestros y libro de ledger mediante Drive con permisos exhaustivos antes de leer/escribir; fallar cerrado ante datos incompletos, otros permisos o unidades compartidas. No modificar permisos de almacenes de negocio para acomodar este contrato.
+- Ledger InvitacionesLotes preserva MUTATION,DIGEST,ACTOR,OPERATION,STATUS,RECIPIENTS,DRAFT_FILE,UPDATED. Crear recurso solo por mutación explícita; reserva y flush antes de Mail; lecturas y preview sin creación.
+- Mutation/digest/actor/operación inmutables y deduplicación por persona/correo/hash enlace/finalidad/ronda; reserva/resultado incierto o ACK perdido no permiten reenvío automático. Consultar y conciliar recibo. Nueva ronda exige elección humana.
+- Borrador nuevo se crea vacío, se certifica privacidad antes de contenido y se revalida después; no reparar ACL silenciosamente. Drive y Sheets no ofrecen transacción conjunta de permisos y datos.
+- Máximo25 y cuota suficiente para todo lote con reserva5; revalidar por destinatario y pausar restantes not_attempted si cae la cuota. No afirmar entrega por aceptación MailApp.
+- Enviar exige scope script.send_mail consentido personalmente, configuración habilitada y aprobación humana explícita del lote concreto revisado. Ningún envío desde auditoría o pruebas.
+- Sin tokens en tableros generales, Git, Atlas, logs o almacenamiento persistente del navegador. Limpiar UI al cambiar sesión y conservar mutation para conciliar ACK perdido.
+- Publicar fuente con funciones deshabilitadas no acredita activación ni envío. Mantener manifest, endpoint, identidad y permisos actuales salvo consentimiento específico posterior.
+
+## CTR-EMD-ENTRADA-CORPORATIVA
+
+- Componentes: GAS-EMD.
+- Evidencia: Propuesta de entrada HTTPS corporativa para #9, condicionada a dominio/ruta y alojamiento reales..
+- Entrada/campos: `Ruta HTTPS corporativa elegida por propietario y endpoint GAS existente confirmado`, `Fragmento personal recibido en navegador sin trasladarlo a querystrings`.
+- Salida: Redirección al portal Apps Script existente conservando fragmento personal.
+
+- No copiar HTMLService a una web estática ni reemplazar google.script.run. No emitir/reiniciar enlaces.
+- No publicar dominio inventado; configuración de DNS/alojamiento/certificado se verifica antes de activar.
+- Enlace corporativo de entrada redirige a GAS: mantener toda sesión bajo dominio corporativo requeriría otra migración y contrato.
+- No registrar ni publicar fragmentos personales o tokens; no ampliar permisos ni cambiar endpoint.
