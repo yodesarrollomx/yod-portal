@@ -1,20 +1,41 @@
 {
-  "model_revision": "2026-10-01.30-emd-invitaciones",
-  "proposal_id": "CHG-ATLAS-001",
+  "model_revision": "2026-10-01.31-sala-produccion-acotada",
+  "proposal_id": "CHG-CHINCHES-CIERRE-001",
   "components": [
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-CONTROL",
     "SYS-YOD-OS",
-    "SYS-OBRA-CLIENTE"
+    "SYS-DESPACHO",
+    "SYS-POTENCIALES",
+    "SYS-TAREAS",
+    "SYS-SALA",
+    "SYS-EMD",
+    "GAS-CATALOGO",
+    "SHEET-CATALOGO",
+    "GAS-OPERACION",
+    "SHEET-OPERACION",
+    "GAS-MOAC-METAS",
+    "SHEET-MOAC-METAS",
+    "GAS-SALA",
+    "SHEET-SALA",
+    "GAS-EMD",
+    "SHEET-EMD",
+    "GAS-PORTERO",
+    "SHEET-PORTERO",
+    "SHEET-PPP-MODELOS",
+    "EXT-DRIVE",
+    "EXT-GMAIL",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-MOTORES-MEDIA",
+    "STORE-DESPACHO-CORCHO"
   ],
-  "summary": "Ajustar modo Señalar para seleccionar la unidad visual concreta bajo el toque, priorizar controles y evitar capturas de secciones completas en móvil.",
+  "summary": "Registrar recuperación acotada/offline de medios de Sala y precisar metadata privada de habilitación de invitaciones, sin efectos globales ni envío.",
   "tests": [
+    "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir por PR la selección precisa de chinche.js y conservar la lógica anterior de señalamiento."
+  "rollback": "Revertir propuesta/código por PR; conservar cola, decisiones, medios, registros de invitación e historial."
 }
