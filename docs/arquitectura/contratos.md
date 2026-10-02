@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.31-sala-produccion-acotada · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-02.32-emd-sys-impacto · 2026-10-02.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 

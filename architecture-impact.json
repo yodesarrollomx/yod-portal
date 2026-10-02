@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-01.31-sala-produccion-acotada",
+  "model_revision": "2026-10-02.32-emd-sys-impacto",
   "proposal_id": "CHG-CHINCHES-CIERRE-001",
   "components": [
     "SYS-YOD-OS",
@@ -28,7 +28,7 @@
     "EXT-MOTORES-MEDIA",
     "STORE-DESPACHO-CORCHO"
   ],
-  "summary": "Registrar recuperación acotada/offline de medios de Sala y precisar metadata privada de habilitación de invitaciones, sin efectos globales ni envío.",
+  "summary": "Precisar que el candidato de invitaciones EMD impacta su tablero además de identidad, backend y almacenamiento; conservar envío deshabilitado y controles privados.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
