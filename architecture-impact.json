@@ -1,41 +1,20 @@
 {
   "model_revision": "2026-10-01.30-emd-invitaciones",
-  "proposal_id": "CHG-CHINCHES-CIERRE-001",
+  "proposal_id": "CHG-ATLAS-001",
   "components": [
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-CONTROL",
     "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "SYS-POTENCIALES",
-    "SYS-TAREAS",
-    "SYS-SALA",
-    "SYS-EMD",
-    "GAS-CATALOGO",
-    "SHEET-CATALOGO",
-    "GAS-OPERACION",
-    "SHEET-OPERACION",
-    "GAS-MOAC-METAS",
-    "SHEET-MOAC-METAS",
-    "GAS-SALA",
-    "SHEET-SALA",
-    "GAS-EMD",
-    "SHEET-EMD",
-    "GAS-PORTERO",
-    "SHEET-PORTERO",
-    "SHEET-PPP-MODELOS",
-    "EXT-DRIVE",
-    "EXT-GMAIL",
-    "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
-    "EXT-MOTORES-MEDIA",
-    "STORE-DESPACHO-CORCHO"
+    "SYS-OBRA-CLIENTE"
   ],
-  "summary": "Registrar preparación privada de invitaciones/recibos con envío deshabilitado y entrada corporativa condicionada al dominio real, preservando respuestas, enlaces y permisos.",
+  "summary": "Ajustar modo Señalar para seleccionar la unidad visual concreta bajo el toque, priorizar controles y evitar capturas de secciones completas en móvil.",
   "tests": [
-    "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir propuestas y código por PR/version previa; conservar ledger, borradores, accesos y respuestas. Entrada corporativa sin modificar backend."
+  "rollback": "Revertir por PR la selección precisa de chinche.js y conservar la lógica anterior de señalamiento."
 }
