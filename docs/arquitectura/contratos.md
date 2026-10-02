@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.26-moac-amalaya-chinches · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.27-emd-seguimiento-fotos · 2026-10-01.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -139,7 +139,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Componentes: SYS-EMD, GAS-EMD, SHEET-EMD, EXT-DRIVE.
 - Evidencia: Propuesta del sistema privado; detalles físicos y evidencia restringidos al repositorio privado..
 - Entrada/campos: `Sesión autorizada e identidad canónica propia`, `JPEG normalizado localmente a 512 × 512 píxeles, máximo 256 KiB, con recorte manual`, `Revisión esperada e identificador de mutación`, `Consulta de hasta 30 asignaciones autorizadas por solicitud`, `Estado de evaluación ya confirmado: off, yellow o green`, `Publicación interna del agente: identidad canónica, revisión/hash/archivo del original y archivo derivado privado verificado`, `Derivado homologado interno JPEG existente o PNG estricto de 512 × 512 con transparencia; nunca PNG como original subido por participante`.
-- Salida: Confirmación de revisión y mutación sin exponer ubicación privada, Imagen autenticada en memoria, sin URL de Drive, o perfil sin foto, Foto o silueta con apariencia derivada del estado confirmado y respaldo textual accesible, Conflicto o error explícito que conserva el estado confirmado, Original visible exclusivamente en Mi foto de su propietario; tableros reciben solo derivado homologado vigente o silueta.
+- Salida: Confirmación de revisión y mutación sin exponer ubicación privada, Imagen autenticada en memoria, sin URL de Drive, o perfil sin foto, Foto o silueta con apariencia derivada del estado confirmado y respaldo textual accesible, Conflicto o error explícito que conserva el estado confirmado, Original visible exclusivamente en Mi foto de su propietario; tableros reciben solo derivado homologado vigente o silueta, Extensión propuesta getProfiles: indicadores hasOriginal y hasPublishedDerivative para identidades ya autorizadas; coordinación distingue foto faltante de original pendiente de homologación..
 
 - Carga y retirada derivan propietario de la identidad canónica del servidor, incluida compatibilidad de acceso legado; no aceptar identidad del cliente ni inventar personas o cargos
 - Lectura de evaluador y evaluado solo para asignaciones propias autorizadas; revisor limitado a asignaciones activas y QA separado, sin leer respuestas
@@ -168,6 +168,8 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Nombre completo y cargo solo desde fuente verificada; no inventar cargos ni identidades. El borde usa exclusivamente estado confirmado, con alternativa accesible aunque se retiren etiquetas visibles de estado/relación
 - Sin cargo verificado, la segunda línea puede mostrar el marcador Puesto identificado de forma accesible como pendiente; no representa un cargo real ni modifica matriz o asignaciones
 - PNG interno: estático 512 × 512, 8 bits RGB/RGBA, sin interlazado, máximo 256 KiB; solo IHDR inicial, IDAT consecutivos e IEND final. Verificar CRC, zlib/DEFLATE completo sin diccionario, expansión exacta y Adler32; rechazar metadatos auxiliares, animación, paleta y bytes sobrantes. Límites de chunks/bloques acotan validación. MIME y extensión privados deben coincidir con bytes y digest
+- Los indicadores de seguimiento respetan la misma ACL y segregación QA; no revelan original, archivo, hash ni respuesta de otra persona. Originales retirados y derivados invalidados no se presentan como vigentes.
+- Lectura de seguimiento no crea recursos ni implica envío de recordatorios. Foto subida y foto publicada son estados diferentes; no inferirlos únicamente de image:null.
 
 ## CTR-EMD-DRAFTS
 

@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.26-moac-amalaya-chinches · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.27-emd-seguimiento-fotos · 2026-10-01.
 
 ## SYS-DESPACHO · El Despacho
 
