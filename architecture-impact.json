@@ -1,13 +1,14 @@
 {
-  "model_revision": "2026-10-01.26-moac-amalaya-chinches",
-  "proposal_id": "CHG-AMALAYA-CHINCHES-001",
+  "model_revision": "2026-10-01.27-emd-seguimiento-fotos",
+  "proposal_id": "CHG-EMD-SEGUIMIENTO-001",
   "components": [
     "SYS-YOD-OS",
-    "SYS-AMALAYA",
-    "GAS-AMALAYA",
-    "SHEET-AMALAYA"
+    "SYS-EMD",
+    "GAS-EMD",
+    "SHEET-EMD",
+    "EXT-DRIVE"
   ],
-  "summary": "Registrar conciliación compatible de chinches Amalaya y mejora MOAC de encargos, sin convertir supuestos en datos definitivos ni ampliar permisos.",
+  "summary": "Registrar seguimiento compatible de fotos vigentes con ACL existente y estados distinguibles; ninguna lectura crea recursos o implica envío.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -16,5 +17,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir registro por PR. Implementaciones: versión previa, conservando tareas, chinches, IDs, notas e historial; no borrar registros de negocio."
+  "rollback": "Revertir propuesta y versión previa de implementación conservando perfiles, fotos, permisos, asignaciones e historial."
 }
