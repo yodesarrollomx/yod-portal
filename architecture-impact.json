@@ -3,7 +3,10 @@
   "proposal_id": "CHG-ATLAS-001",
   "components": [
     "SYS-TRACK",
-    "SYS-YOD-OS"
+    "SYS-OBRA",
+    "SYS-CONTROL",
+    "SYS-YOD-OS",
+    "SYS-OBRA-CLIENTE"
   ],
   "summary": "Ajustar modo Señalar para seleccionar la unidad visual concreta bajo el toque, priorizar controles y evitar capturas de secciones completas en móvil.",
   "tests": [
