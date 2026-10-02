@@ -1,33 +1,18 @@
 {
-  "model_revision": "2026-10-01.28-chinches-complementos",
-  "proposal_id": "CHG-CHINCHES-CIERRE-001",
+  "model_revision": "2026-10-01.29-corcho-privado",
+  "proposal_id": "CHG-DESPACHO-CHINCHES-001",
   "components": [
-    "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-POTENCIALES",
     "SYS-TAREAS",
-    "SYS-SALA",
-    "SYS-EMD",
+    "GAS-OPERACION",
+    "STORE-DESPACHO-CORCHO",
+    "GAS-PORTERO",
+    "SYS-YOD-OS",
     "GAS-CATALOGO",
     "SHEET-CATALOGO",
-    "GAS-OPERACION",
-    "SHEET-OPERACION",
-    "GAS-MOAC-METAS",
-    "SHEET-MOAC-METAS",
-    "GAS-SALA",
-    "SHEET-SALA",
-    "GAS-EMD",
-    "SHEET-EMD",
-    "GAS-PORTERO",
-    "SHEET-PORTERO",
-    "SHEET-PPP-MODELOS",
-    "EXT-DRIVE",
-    "EXT-GMAIL",
-    "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
-    "EXT-MOTORES-MEDIA"
+    "EXT-DRIVE"
   ],
-  "summary": "Completar contratos de veto Sala, modelo nativo Patrimonial y consulta GitHub efímera en conciliación Amalaya; declarar productores y motores afectados.",
+  "summary": "Precisar almacenamiento privado independiente y verificación de principal, archivo, ancestros y permisos para Mi Corcho; preservar datos y permisos generales de Operación.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -36,5 +21,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir registro por PR; implementaciones con fuente/versión previa y mismo endpoint, preservando reglas, libros, casos, estados, decisiones e historial."
+  "rollback": "Revertir registro y código por PR/version previa; conservar archivo privado, notas e historial y permisos existentes."
 }

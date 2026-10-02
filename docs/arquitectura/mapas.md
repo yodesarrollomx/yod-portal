@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.28-chinches-complementos · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.29-corcho-privado · 2026-10-01.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -17,6 +17,7 @@ flowchart LR
   n_EXT_GMAIL["Gmail"]
   n_GAS_MOAC_METAS["Metas y objetivos de MOAC"]
   n_SHEET_MOAC_METAS["Metas, objetivos y acciones"]
+  n_STORE_DESPACHO_CORCHO["Mi Corcho · almacén privado de Dirección"]
   n_GAS_OPERACION -->|Lee/escribe registros del dominio| n_SHEET_OPERACION
   n_SYS_DESPACHO -.->|Consume contrato del backend| n_GAS_OPERACION
   n_SYS_TAREAS -.->|Consume contrato del backend| n_GAS_OPERACION
@@ -28,6 +29,7 @@ flowchart LR
   n_SYS_DESPACHO -.->|Aprobación de borradores por protocolo BANDEJA| n_EXT_GMAIL
   n_SYS_TAREAS -->|Enruta moac/moacSet/moacObjetivo a motor separado| n_GAS_MOAC_METAS
   n_GAS_MOAC_METAS -->|Lee y vincula estrategia| n_SHEET_MOAC_METAS
+  n_GAS_OPERACION -.->|Persiste Corcho privado con revisión y control de acceso| n_STORE_DESPACHO_CORCHO
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SHEET_OPERACION pendiente;
@@ -410,6 +412,16 @@ flowchart LR
   class n_SHEET_AMALAYA pendiente;
 ```
 
+## Dirección
+
+```mermaid
+flowchart LR
+  n_GAS_OPERACION["Operación y tareas"]
+  n_STORE_DESPACHO_CORCHO["Mi Corcho · almacén privado de Dirección"]
+  n_GAS_OPERACION -.->|Persiste Corcho privado con revisión y control de acceso| n_STORE_DESPACHO_CORCHO
+  classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
+```
+
 ## Contratos y evidencia de cada conexión
 
 | ID | Origen → destino | Mecanismo y datos | Estado | Evidencia |
@@ -513,3 +525,4 @@ flowchart LR
 | CON-EMD-DRAFTS-LOCAL | SYS-EMD → STORE-EMD-DRAFTS | persistencia_local: Propuesta: copia cifrada local. CTR-EMD-DRAFTS: cifrado por enlace vigente, aislamiento de pestañas, confirmación transaccional local y recuperación explícita; el servidor mantiene revisión y cierre. | propuesto | Diseño propuesto de persistencia local; sin evidencia de publicación |
 | CON-AMALAYA-CLIENT | SYS-AMALAYA → GAS-AMALAYA | api: Consume contrato autenticado del tablero. CTR-AMALAYA-CHINCHES-ESTADO registra la extensión propuesta. Identidad, token, roles, implementación y URL actuales se conservan. | codigo | [amalaya-board/apps-script/Code.gs](https://github.com/yodesarrollo/amalaya-board/blob/a3cf36f508015d288a04288fef040130f30ec3b7/apps-script/Code.gs) — Contratos de chinches existentes y extensión de estado propuesta. |
 | CON-AMALAYA-STORE | GAS-AMALAYA → SHEET-AMALAYA | persistencia: Conserva chinches y su historial. CTR-AMALAYA-CHINCHES-ESTADO registra la extensión propuesta. Identidad, token, roles, implementación y URL actuales se conservan. | codigo | [amalaya-board/apps-script/Code.gs](https://github.com/yodesarrollo/amalaya-board/blob/a3cf36f508015d288a04288fef040130f30ec3b7/apps-script/Code.gs) — Contratos de chinches existentes y extensión de estado propuesta. |
+| CON-DESPACHO-CORCHO-STORE | GAS-OPERACION → STORE-DESPACHO-CORCHO | persistencia: Persiste Corcho privado con revisión y control de acceso. CTR-DESPACHO-CORCHO; identidad exacta, verificación fresca de privacidad de archivo y ancestros, CAS y archivo sin borrado. | propuesto | [board-aurum/apps-script/corcho.gs](https://github.com/yodesarrollomx/board-aurum/blob/096550e5647a63048450b9be848be71901a32a3a/apps-script/corcho.gs) — Almacén privado propuesto, fuera de datos generales de Operación |

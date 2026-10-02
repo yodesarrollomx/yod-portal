@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.28-chinches-complementos",
+  "revision": "2026-10-01.29-corcho-privado",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -2609,6 +2609,35 @@
         "La calidad visual no valida datos comerciales definitivos; no convertir supuestos en hechos."
       ],
       "source_of_truth": "Registros privados del desarrollo y contratos actuales del tablero; historial de chinches por ID."
+    },
+    {
+      "id": "STORE-DESPACHO-CORCHO",
+      "nombre": "Mi Corcho · almacén privado de Dirección",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/board-aurum",
+      "proposito": "Persistir notas y ejes del Corcho en un archivo privado independiente, autorizado solo al propietario exacto",
+      "dominio": "Dirección",
+      "owner_role": "Dirección / propietario único del archivo",
+      "status": "propuesto",
+      "runtime_status": "Preparación de infraestructura privada; integración y publicación pendientes",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/board-aurum",
+          "path": "apps-script/corcho.gs",
+          "claim": "Contrato propuesto de almacenamiento por propiedad privada; archivo físico e identidad de ejecución por verificar en registro privado",
+          "status": "propuesto"
+        }
+      ],
+      "data_entities": [
+        "nota",
+        "configuracion",
+        "revision"
+      ],
+      "risks_sanitized": [
+        "Dependencia de identidad de ejecución y consentimiento vigentes para verificar privacidad antes de acceder a datos"
+      ],
+      "source_of_truth": "Archivo privado independiente configurado por propiedad de script; no publicar identificadores ni notas",
+      "physical_mapping_status": "pendiente"
     }
   ],
   "connections": [
@@ -4544,6 +4573,24 @@
       "status": "codigo",
       "runtime_verified": false,
       "contract": "CTR-AMALAYA-CHINCHES-ESTADO registra la extensión propuesta. Identidad, token, roles, implementación y URL actuales se conservan."
+    },
+    {
+      "id": "CON-DESPACHO-CORCHO-STORE",
+      "from": "GAS-OPERACION",
+      "to": "STORE-DESPACHO-CORCHO",
+      "label": "Persiste Corcho privado con revisión y control de acceso",
+      "kind": "persistencia",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/board-aurum",
+          "path": "apps-script/corcho.gs",
+          "claim": "Almacén privado propuesto, fuera de datos generales de Operación",
+          "status": "propuesto"
+        }
+      ],
+      "contract": "CTR-DESPACHO-CORCHO; identidad exacta, verificación fresca de privacidad de archivo y ancestros, CAS y archivo sin borrado."
     }
   ],
   "processes": [
@@ -6861,7 +6908,8 @@
         "EXT-GMAIL",
         "SVC-SALA-PRODUCTOR",
         "SVC-SALA-EJECUTOR",
-        "EXT-MOTORES-MEDIA"
+        "EXT-MOTORES-MEDIA",
+        "STORE-DESPACHO-CORCHO"
       ],
       "proposal": "Resolver y conciliar el inventario autorizado de chinches mediante equipos por área: recuperar recorridos y datos confirmados en PPP/Despacho, compactar MOAC y desglosar encargos con trazabilidad, aplicar reglas de producción y completar claridad/seguimiento de evaluación privada. Registrar Despacho en catálogo vivo conservando código DP y permisos; conciliar prueba sintética y cierres solo con evidencia. Mantener fuente de verdad, IDs, contratos, instrumento de evaluación, datos privados y estados concurrentes. Nuevos contratos se registrarán de forma acotada antes de su publicación.",
       "status": "propuesto",
@@ -6878,20 +6926,23 @@
         "SYS-DESPACHO",
         "SYS-TAREAS",
         "GAS-OPERACION",
-        "SHEET-OPERACION",
+        "STORE-DESPACHO-CORCHO",
         "GAS-PORTERO",
         "SYS-YOD-OS",
         "GAS-CATALOGO",
-        "SHEET-CATALOGO"
+        "SHEET-CATALOGO",
+        "EXT-DRIVE"
       ],
-      "proposal": "Completar lectura de tareas de Dirección y Corcho privado persistente conforme CTR-DESPACHO-CORCHO. Mostrar vencidas reales y recuperación de carga; coordinación MOAC es único dueño del backend y Despacho del frontend.",
+      "proposal": "Implementar Corcho privado persistente con ejes y notas archivables en archivo independiente; mantener identidad Portero exacta, CAS y verificación fresca de privacidad por Drive. Despliegue condicionado a proyecto y consentimiento vigentes.",
       "status": "propuesto",
       "tests": [
         "Dobles de servidor: propietario/no propietario, DP revocado, payload inválido, versiones y conflictos, archivar/restaurar, lectura sin creación ni fuga por getAll.",
         "Frontend sintético: tareas ordinarias visibles, fechas no inventadas, red lenta/error recuperable, guardado confirmado por ACK.",
-        "Contrastar fuente activa y publicación por separado; conservar implementación/configuración e historial."
+        "Contrastar fuente activa y publicación por separado; conservar implementación/configuración e historial.",
+        "Archivo privado, propietario/principal único, paginación de permisos y ancestros; rechazo de permisos incompletos, públicos, dominios, otros usuarios y unidades compartidas.",
+        "Revalidación antes de lectura/escritura y fallo cerrado sin API/scopes; ningún cambio automático de ACL o consentimiento."
       ],
-      "deployment": "Propuesta registrada antes de implementar/publicar. Reversión frontend y versión anterior del backend; conservar Corcho y registros de negocio."
+      "deployment": "Infraestructura privada vacía primero; configurar solo proyecto y principal contrastados. Desplegar en endpoint vigente tras consentimiento si falta; revertir código/versión conserva archivo, notas, ejes, ACL e historial."
     },
     {
       "id": "CHG-AMALAYA-CHINCHES-001",
@@ -7421,10 +7472,11 @@
         "SYS-DESPACHO",
         "SYS-TAREAS",
         "GAS-OPERACION",
-        "SHEET-OPERACION",
-        "GAS-PORTERO"
+        "STORE-DESPACHO-CORCHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
       ],
-      "source": "Propuesta de chinche Corcho privado; implementación y publicación pendientes. Detalles de identidad y almacenamiento físico permanecen privados.",
+      "source": "Propuesta de Corcho privado en archivo independiente; infraestructura, consentimiento e identidad de ejecución se acreditan por separado antes de publicar.",
       "input": [
         "Sesión canjeada y validada servidor a servidor por Portero; identidad de propietario exacta con permiso DP vigente",
         "Acción corchoGet o corchoSave; ID estable, versión esperada y payload JSON validado",
@@ -7439,10 +7491,14 @@
         "El servidor deriva la identidad real de Portero; ignora identidad/rol enviados por el cliente. No amplía accesos de otros tableros ni sustituye getAll/update.",
         "Las lecturas no crean recursos ni exponen notas en getAll, catálogos, frontend estático, logs públicos u otros usuarios.",
         "La escritura exige LockService y versión esperada exacta. Rechaza conflicto, dato inválido o ID inconsistente antes de modificar el almacén.",
-        "SHEET-OPERACION/Corcho contiene ID, versión y payload_json; @config conserva los ejes. JSON neutraliza fórmulas. No borrar notas ni filas.",
+        "STORE-DESPACHO-CORCHO/Corcho contiene ID, versión y payload_json; @config conserva los ejes. JSON neutraliza fórmulas. No borrar notas ni filas.",
         "Archivo y restauración mantienen createdAt/updatedAt y versión; posiciones y ejes se validan con límites explícitos.",
         "No declarar guardado hasta ACK; fallos de red/carga muestran recuperación. No enviar borradores a terceros desde este contrato.",
-        "Deploy usa implementación y permisos existentes, respaldando fuente y versión previa. Revert de código conserva notas y registros."
+        "Deploy usa implementación y permisos existentes, respaldando fuente y versión previa. Revert de código conserva notas y registros.",
+        "CORCHO_SPREADSHEET_ID identifica un archivo independiente privado; no almacenar notas en el libro general de Operación ni alterar sus permisos.",
+        "Antes de toda lectura/escritura comprobar principal de ejecución y propiedad única exacta del archivo y sus ancestros; revisar permissions.list paginado incl permisos publicados. Rechazar anyone, domain, otros usuarios, unidades compartidas, herencia no verificada o metadatos incompletos.",
+        "Validación fresca sin caché ni fallback; las consultas de metadatos y permisos son solo GET. Si Drive o scopes no permiten certificar acceso, fallar cerrado con consentimiento_requerido sin añadir scopes, compartir archivos ni degradar protección automáticamente.",
+        "Preparación del archivo puede crear únicamente pestaña Corcho y encabezados id/version/payload_json; cero notas de prueba, cero lecturas que creen recursos. La configuración del backend requiere identificar el proyecto vigente y su principal de ejecución."
       ]
     },
     {
@@ -7556,6 +7612,15 @@
     }
   ],
   "path_ownership": [
+    {
+      "repo": "yodesarrollomx/board-aurum",
+      "prefix": "apps-script/corcho.gs",
+      "components": [
+        "GAS-OPERACION",
+        "STORE-DESPACHO-CORCHO",
+        "EXT-DRIVE"
+      ]
+    },
     {
       "repo": "yodesarrollomx/board-aurum",
       "prefix": "",

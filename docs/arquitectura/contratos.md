@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.28-chinches-complementos · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.29-corcho-privado · 2026-10-01.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -221,18 +221,22 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 ## CTR-DESPACHO-CORCHO
 
-- Componentes: SYS-DESPACHO, SYS-TAREAS, GAS-OPERACION, SHEET-OPERACION, GAS-PORTERO.
-- Evidencia: Propuesta de chinche Corcho privado; implementación y publicación pendientes. Detalles de identidad y almacenamiento físico permanecen privados..
+- Componentes: SYS-DESPACHO, SYS-TAREAS, GAS-OPERACION, STORE-DESPACHO-CORCHO, GAS-PORTERO, EXT-DRIVE.
+- Evidencia: Propuesta de Corcho privado en archivo independiente; infraestructura, consentimiento e identidad de ejecución se acreditan por separado antes de publicar..
 - Entrada/campos: `Sesión canjeada y validada servidor a servidor por Portero; identidad de propietario exacta con permiso DP vigente`, `Acción corchoGet o corchoSave; ID estable, versión esperada y payload JSON validado`, `Ejes configurables, notas con título/cuerpo, posición, color y estado activo o archivado`.
 - Salida: Configuración y notas solo del propietario autorizado, ACK con versión confirmada o conflicto sin sobrescritura, Archivo/restauración con historial y sin borrado físico.
 
 - El servidor deriva la identidad real de Portero; ignora identidad/rol enviados por el cliente. No amplía accesos de otros tableros ni sustituye getAll/update.
 - Las lecturas no crean recursos ni exponen notas en getAll, catálogos, frontend estático, logs públicos u otros usuarios.
 - La escritura exige LockService y versión esperada exacta. Rechaza conflicto, dato inválido o ID inconsistente antes de modificar el almacén.
-- SHEET-OPERACION/Corcho contiene ID, versión y payload_json; @config conserva los ejes. JSON neutraliza fórmulas. No borrar notas ni filas.
+- STORE-DESPACHO-CORCHO/Corcho contiene ID, versión y payload_json; @config conserva los ejes. JSON neutraliza fórmulas. No borrar notas ni filas.
 - Archivo y restauración mantienen createdAt/updatedAt y versión; posiciones y ejes se validan con límites explícitos.
 - No declarar guardado hasta ACK; fallos de red/carga muestran recuperación. No enviar borradores a terceros desde este contrato.
 - Deploy usa implementación y permisos existentes, respaldando fuente y versión previa. Revert de código conserva notas y registros.
+- CORCHO_SPREADSHEET_ID identifica un archivo independiente privado; no almacenar notas en el libro general de Operación ni alterar sus permisos.
+- Antes de toda lectura/escritura comprobar principal de ejecución y propiedad única exacta del archivo y sus ancestros; revisar permissions.list paginado incl permisos publicados. Rechazar anyone, domain, otros usuarios, unidades compartidas, herencia no verificada o metadatos incompletos.
+- Validación fresca sin caché ni fallback; las consultas de metadatos y permisos son solo GET. Si Drive o scopes no permiten certificar acceso, fallar cerrado con consentimiento_requerido sin añadir scopes, compartir archivos ni degradar protección automáticamente.
+- Preparación del archivo puede crear únicamente pestaña Corcho y encabezados id/version/payload_json; cero notas de prueba, cero lecturas que creen recursos. La configuración del backend requiere identificar el proyecto vigente y su principal de ejecución.
 
 ## CTR-AMALAYA-CHINCHES-ESTADO
 
