@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-02.32-emd-sys-impacto · 2026-10-02.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-02.33-despacho-3d-section · 2026-10-02.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -339,3 +339,19 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - No marcar HECHO por generación local, prueba sintética o estado antiguo. Exigir archivo durable, integridad y acceso del ejecutor verificados; si falta credencial/ubicación, conservar pendiente y entregar evidencia privada.
 - No alterar ACL de archivos o almacenes de negocio para acomodar recuperación. Cualquier actualización real requiere estado esperado fresco y manejo de conflicto, no reemplazo del historial.
 - Pruebas usan fuentes sintéticas/dobles sin endpoints de negocio; una producción real específicamente autorizada se registra aparte y nunca se llama prueba. No lanzar workflows globales ni publicar a redes sociales.
+
+## CTR-DESPACHO-3D-SECTION
+
+- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, SYS-SALA, GAS-SALA, SHEET-SALA.
+- Evidencia: Petición del propietario del 2 de octubre de 2026: entrada interna a la oficina 3D y misma metodología de Chinches. Candidato frontend en rama con pruebas sintéticas; publicación y aceptación reales pendientes..
+- Entrada/campos: `Ruta exacta #/despacho y perfil confirmado por Portero con permiso DP vigente`, `Destino fijo de oficina privada; autenticación del Site independiente`, `Evento yod:despacho:pin version 1 de la ventana/origen exactos del iframe activo: requestId UUID, target id/zone/kind/point, view position/quaternion/fov/mode, modelVersion y viewport`.
+- Salida: Sección Despacho con recorrido, pantalla completa y enlace a Bandeja canónica, Iframe desmontado al salir, cerrar, cambiar usuario o invalidar autorización, Chinche revisable con ancla/cámara/versiones geométricas y encargo humano; contexto técnico en campo codigo existente.
+
+- Conservar SYS-DESPACHO, DP, catálogo, allowlists y todos los destinos canónicos. El permiso de navegación no concede acceso al Site ni amplía backend.
+- No añadir credenciales al iframe, URLs, hashes o mensajes. No copiar tokens o almacenamiento entre orígenes. Site privado conserva su autenticación propia.
+- No cargar contenido privado antes de perfil confirmado, ni después de cambiar sesión, negar DP o abandonar la ruta. Ignorar mensajes de ventanas anteriores.
+- Aceptar solo metadatos geométricos con claves, tipos, valores finitos y límites explícitos; rechazar campos extra, identidad, casos, nombres, hojas, URLs y credenciales.
+- Un evento geométrico prepara un encargo revisable; no crea aprobación comercial ni escribe automáticamente en negocio. Reutilizar Chinches y el canal existente, con deduplicación por requestId.
+- Cada borrador 3D conserva un guard efímero de ventana y sesión vigentes; al salir o invalidar autorización se cierra el compositor y se cancela su guard. Tras recargar o cambiar persona no se autoenvía un borrador 3D antiguo; su exportación manual conserva el contexto. Las Chinches generales mantienen su comportamiento existente.
+- No copiar el frontend privado con datos reales al repositorio público. Catálogo, tareas, memoria y expedientes siguen en sus fuentes existentes.
+- Probar mediante dobles y red interceptada; ninguna prueba escribe en endpoints de negocio.

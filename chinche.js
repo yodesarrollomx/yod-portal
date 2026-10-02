@@ -25,6 +25,19 @@ if (window.YODChinche) return;
 
 var BD = "yodChinche", VER = 1, LSN = "yod_chinche_n";
 var db = null, PANT = "os", CTX = {}, abierta = false;
+// Guards are ephemeral callbacks, never stored or transmitted. A 3D draft cannot
+// auto-send after reload or under another person without its live composer guard.
+var despachoGuards = new Map();
+function guardDespacho(ch){
+  if (!ch || !ch.objeto || !ch.objeto.despacho3d) return true;
+  var guard = despachoGuards.get(ch.id);
+  try { return typeof guard === "function" && guard() === true; } catch (e) { return false; }
+}
+function codigoDespacho(objeto){
+  if (!objeto || objeto.tipo !== "despacho3d" || !objeto.despacho3d) return "";
+  var api = window.YodDespachoChinches;
+  return api && typeof api.formatContext === "function" ? api.formatContext(objeto.despacho3d) : "";
+}
 
 /* ── el número de la pastilla se lee de localStorage para pintarlo YA,
       sin esperar a que IndexedDB abra ── */
@@ -87,6 +100,7 @@ async function foto(id){
 }
 async function guardar(ch, blobFull, blobMini){
   await abrirBD();
+  if (!guardDespacho(ch)) throw new Error("La sesión del Despacho cambió");
   var t = tx(["chinches", "fotos"], "readwrite");
   t.objectStore("chinches").put(ch);
   if (blobFull || blobMini) t.objectStore("fotos").put({ id: ch.id, full: blobFull, mini: blobMini });
@@ -126,6 +140,7 @@ async function marcar(id, campos){
   });
 }
 async function enviarDirecto(ch){
+  if (!guardDespacho(ch)) { enviarDirecto.motivo = "el borrador 3D necesita revisión en su sesión autorizada"; return false; }
   var llave = llaveOS();
   if (!ch || ch.estado === "mandada") return false;
   if (!llave) { enviarDirecto.motivo = "no hay llave del YOD OS en este navegador"; return false; }
@@ -139,9 +154,11 @@ async function enviarDirecto(ch){
     pieza: "ENCARGO · chinche · " + (ch.repo || "") + "/" + (ch.pantalla || ""), estado: "pendiente", detalle: detalle, enlace: ch.url || "" };
   try {
     var ctl = new AbortController(), tt = setTimeout(function(){ ctl.abort(); }, 20000);
+    if (!guardDespacho(ch)) { clearTimeout(tt); return false; }
     var r = await fetch(GAS_SALA, { method: "POST", headers: { "Content-Type": "text/plain" }, body: JSON.stringify(envio), signal: ctl.signal });
     clearTimeout(tt);
     var j = null; try { j = JSON.parse(await r.text()); } catch (e) {}
+    if (!guardDespacho(ch)) return false;
     if (!r.ok || !j || j.error) { enviarDirecto.motivo = "la Sala contestó: " + ((j && j.error) || ("HTTP " + r.status)); return false; }
     if (db) try { await conTopeError(marcar(ch.id, { estado: "mandada", mandada: new Date().toISOString(), via: "directo" }), 4000, "base"); } catch (e) {}
     return true;
@@ -363,10 +380,16 @@ function aviso(t){
    en cualquier otra pantalla. */
 async function anotar(op){
   op = op || {};
+  var esDespacho = op.clase === "despacho3d", cancelada = false, guardId = null;
+  function vigente(){
+    if (!esDespacho) return true;
+    try { return !cancelada && typeof op.puedeGuardar === "function" && op.puedeGuardar() === true; } catch (e) { return false; }
+  }
+  if (esDespacho && (!vigente() || !codigoDespacho(op.objeto))) return null;
   var d = new Date();
-  var esLienzo = !!(CTX.canvas && op.x != null && op.y != null);
+  var esLienzo = !op.sinCaptura && !!(CTX.canvas && op.x != null && op.y != null);
   var cap = esLienzo ? capturarLienzo(op.x, op.y) : null;
-  var lienzo = cap ? cap.canvas : tarjetaContexto({
+  var lienzo = op.sinCaptura ? null : cap ? cap.canvas : tarjetaContexto({
     pantalla: PANT, seccion: op.seccion || (CTX.seccion ? CTX.seccion() : ""),
     css: op.css || "", texto: op.texto || "", valores: op.valores || (CTX.valores ? CTX.valores() : {})
   });
@@ -389,7 +412,8 @@ async function anotar(op){
   var ta = v.querySelector(".chn-txt"), tipo = "";
   try { ta.focus(); } catch(e){}
   dictado(v.querySelector("[data-mic]"), ta, v);
-  aBlob(lienzo, 0.72).then(function (b) {
+  if (op.sinCaptura) v.querySelector(".chn-foto").remove();
+  else aBlob(lienzo, 0.72).then(function (b) {
     if (!b) { v.querySelector(".chn-foto").remove(); return; }   /* toBlob puede dar null */
     var u = URL.createObjectURL(b);
     v._urls.push(u);
@@ -403,8 +427,10 @@ async function anotar(op){
       ta.focus();
     };
   });
-  v.querySelector("[data-x]").onclick = function(){ cerrar(v); };
+  function cancelar(){ cancelada = true; if (guardId) despachoGuards.delete(guardId); cerrar(v); }
+  v.querySelector("[data-x]").onclick = cancelar;
   v.querySelector("[data-ok]").onclick = async function () {
+    if (!vigente()) { cancelar(); aviso("La sesión del Despacho cambió; abre de nuevo la petición"); return; }
     var texto = ta.value.trim();
     if (!texto) { ta.focus(); ta.placeholder = "Escribe qué quieres que cambie…"; return; }
     var btn = this;
@@ -425,17 +451,21 @@ async function anotar(op){
         seccion: op.seccion || (CTX.seccion ? CTX.seccion() : ""),
         valores: op.valores || (CTX.valores ? CTX.valores() : {})
       },
-      codigo: dondeVive(PANT, op.clase || "")
+      codigo: [dondeVive(PANT, op.clase || ""), codigoDespacho(op.objeto)].filter(Boolean).join(" · ")
     };
+    if (esDespacho) { guardId = ch.id; despachoGuards.set(ch.id, vigente); }
     try {
-      var full = await aBlob(lienzo, 0.7), chica = full ? await aBlob(mini(lienzo), 0.6) : null;
+      var full = op.sinCaptura ? null : await aBlob(lienzo, 0.7), chica = full ? await aBlob(mini(lienzo), 0.6) : null;
+      if (!vigente()) { cancelar(); return; }
       try {
         await conTopeError(guardar(ch, full, chica), 6000, "la base del aparato no contestó");
       } catch (e1) {
         /* segundo intento sin fotos: el texto es lo que importa (si la base ni abrió, no se insiste) */
         if (!db) throw e1;
+        if (!vigente()) { cancelar(); return; }
         await conTopeError(guardar(ch, null, null), 6000, "la base del aparato no contestó");
       }
+      if (!vigente()) { cancelar(); return; }
       cerrar(v);
       aviso("Clavado · llevas " + leerN());
       /* 15-sep: la página que hospeda la Chinche puede querer enterarse al instante (la Sala de
@@ -444,17 +474,20 @@ async function anotar(op){
       try { if (typeof CTX.alClavar === "function") CTX.alClavar(ch); } catch (e) {}
       if (typeof CTX.alClavar !== "function") {
         enviarDirecto(ch).then(function (ok) {
+          if (!vigente()) return;
           aviso(ok ? "Clavado y enviado a Claude · lo revisa en la ronda diaria"
                    : "Clavado · se manda solo en cuanto haya señal (o con «Mandar a Claude»)");
         });
       }
     } catch (e) {
+      if (!vigente()) { cancelar(); return; }
       /* La base del aparato falló (iPhone dentro del marco): el destino real es la Sala,
          así que se manda DIRECTO. Solo si eso también falla se avisa que no quedó. */
       db = null;
       btn.textContent = "Mandando directo…";
       var ok = false;
       try { ch.estado = "nueva"; ok = await enviarDirecto(ch); } catch (e2) {}
+      if (!vigente()) { cancelar(); return; }
       if (ok) { cerrar(v); aviso("Enviado directo a Claude · lo revisa en la ronda diaria"); return; }
       /* cuota llena o base cerrada y sin red: NO fingir que quedó. El texto sigue en la
          hoja para copiarlo a mano. */
@@ -472,6 +505,7 @@ async function anotar(op){
       }
     }
   };
+  return { cancel:cancelar };
 }
 
 /* ═══ SEÑALAR · para las pantallas que no son lienzo ═══
@@ -821,6 +855,8 @@ async function armarTexto(ids, amarre){
       if (ks.length) L.push("- **Lo que estaba escrito:** " + ks.map(function(k){ return k + "=" + JSON.stringify(vs[k]); }).join(" · "));
       L.push("- **Sin captura de píxeles** (esta pantalla no es lienzo; el contexto de arriba es el dato real)");
     }
+    var geometria = codigoDespacho(c.objeto);
+    if (geometria) L.push("- **Contexto geométrico del Despacho:** " + geometria);
     if (c.codigo) L.push("- **Dónde vive eso en el código:** " + c.codigo);
     L.push("- Clavado el " + c.sello + " · desde " + c.aparato + " · id " + c.id);
     L.push("");
