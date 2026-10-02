@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.6",
+  "revision": "2026-10-01.30-emd-invitaciones",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -181,6 +181,13 @@
       "scope": "Inventario completo de archivos; revisión de entradas, contratos y automatizaciones. Fuentes de negocio no se publican.",
       "runtime_status": "Despliegue y funcionamiento integrado no verificados",
       "file_count": 24
+    },
+    {
+      "repo": "yodesarrollo/amalaya-board",
+      "commit": "a3cf36f508015d288a04288fef040130f30ec3b7",
+      "visibility": "public",
+      "scope": "Registro acotado de tablero, fuente Apps Script y conciliación de chinches. No añade navegación ni permisos en el OS.",
+      "runtime_status": "Publicación actual y extensión de conciliación pendientes de verificar en esta entrega."
     }
   ],
   "components": [
@@ -200,6 +207,10 @@
           "claim": "Sistema presente en el catálogo canónico",
           "status": "codigo",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "claim": "Catálogo vivo conciliado el 1-oct-2026: SYS-DESPACHO en Portal y Sistemas, destino canónico, fórmulas/validaciones comprobadas, permisos DP conservados. Seguimiento yod-portal#3 completado.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -211,7 +222,7 @@
       "risks_sanitized": [],
       "source_of_truth": "SHEET-OPERACION mediante GAS-OPERACION; protocolo BANDEJA en comentarios",
       "status": "codigo",
-      "runtime_status": "No verificado en despliegue"
+      "runtime_status": "Registro en catálogo vivo verificado; frontend y nuevo Corcho requieren verificación independiente."
     },
     {
       "id": "SYS-POTENCIALES",
@@ -236,6 +247,11 @@
           "claim": "Frontend integrado por PR3 y publicado por Pages; código público incluye lectura del modelo nativo, cuerpos y flujo por etapas. Sesión y backend pendientes de verificación conjunta.",
           "status": "codigo",
           "source_revision": "d446b637f408124f224afadc6c674e3675c62f38"
+        },
+        {
+          "claim": "Lectura pública del caso y la lista del piloto comparadas con entradas, resultados, cuerpos y flujo nativos; coinciden. Evidencia operativa privada; no se ejecutaron POST de prueba.",
+          "status": "ejecucion",
+          "source_revision": "Apps Script version 53"
         }
       ],
       "data_entities": [
@@ -245,11 +261,11 @@
         "flujo_proyectado"
       ],
       "risks_sanitized": [
-        "Frontend de lectura nativa publicado y contrastado por código. Backend de transporte sin desplegar; conexión pública del piloto y migración de otros casos pendientes. Los casos no migrados conservan cálculo cliente."
+        "Backend de transporte v53 publicado en implementación existente. GET de caso y lista contrastados con el mismo libro y revisión; edición en pantalla y demás casos pendientes. Los casos no migrados conservan cálculo cliente."
       ],
-      "source_of_truth": "SHEET-PORTERO para casos; modelos de cálculo del frontend; fuente GAS desplegada por verificar",
+      "source_of_truth": "SHEET-PORTERO registra casos; libro canónico Sheets para el piloto con lectura pública verificada en v53. Los casos pendientes de migrar aún usan modelos del frontend.",
       "status": "codigo",
-      "runtime_status": "Frontend publicado; vínculo de cálculo nativo y permisos del recorrido todavía sin verificar en sesión"
+      "runtime_status": "Frontend publicado y lectura pública del piloto conciliada con Sheets; sesión de pantalla y recorrido de edición aún pendientes"
     },
     {
       "id": "SYS-TRACK",
@@ -868,7 +884,8 @@
       "data_entities": [
         "evaluacion",
         "revision",
-        "chinche"
+        "chinche",
+        "contacto_preparado"
       ],
       "risks_sanitized": [
         "No hay evidencia de integración transaccional con YOD OS; mantener datos y permisos privados"
@@ -985,6 +1002,11 @@
           "claim": "CHG-CONTROL-MAESTRO-001: versión 52; publicación contrastada por API y pruebas HTTP de lectura y rechazo el 2026-10-01. Detalle en control-maestro.md y registro de backends.",
           "status": "ejecucion",
           "source_revision": "Apps Script version 52"
+        },
+        {
+          "claim": "CHG-PPP-BACKEND-001: versión53 observada tras actualizar la implementación existente; fuente de editor releída idéntica, configuración conservada y lectura HTTP autorizada de caso/lista conciliada. Activador directo instalado; sin POST de prueba.",
+          "status": "ejecucion",
+          "source_revision": "Apps Script version 53"
         }
       ],
       "data_entities": [
@@ -998,10 +1020,10 @@
         "La revisión acotada no certifica todas las operaciones de negocio ni sustituye la aceptación con usuarios reales.",
         "Las cachés de consumidores ajenos a esta entrega pueden conservar permisos temporalmente; revisarlos al continuar cada tablero."
       ],
-      "backend_source_status": "fuente_api_version_activa_contrastada",
-      "source_of_truth": "Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos.",
+      "backend_source_status": "fuente_editor_y_lectura_publica_contrastadas",
+      "source_of_truth": "Versión53 de implementación existente observada en editor; lectura HTTP PPP contrastada con libro canónico. Evidencia API de versiones51/52 histórica; los datos operativos siguen en sus hojas.",
       "status": "codigo",
-      "runtime_status": "Versión 52 publicada en la implementación existente; fuente inmutable y configuración comprobadas por API. Salud y rechazos sin credencial comprobados por HTTP. Autorización y recuperación probadas con registros sintéticos; no se ejecutaron escrituras operativas ni un recorrido autenticado real."
+      "runtime_status": "Versión53 publicada en la implementación existente. Código leído del editor coincide con el cambio guardado; configuración conservada. Lectura pública PPP de caso/lista conciliada con Sheets; activador directo instalado. Edición real, sesión de pantalla y aceptación por rol pendientes."
     },
     {
       "id": "SHEET-PORTERO",
@@ -1899,7 +1921,8 @@
       ],
       "data_entities": [
         "evaluacion",
-        "revision"
+        "revision",
+        "contacto_preparado"
       ],
       "risks_sanitized": [
         "Código desplegado y permisos reales no contrastados"
@@ -1927,7 +1950,8 @@
       ],
       "data_entities": [
         "evaluacion",
-        "revision"
+        "revision",
+        "contacto_preparado"
       ],
       "risks_sanitized": [
         "Esquema y calidad de datos vivos no inspeccionados"
@@ -2412,7 +2436,7 @@
       "dominio": "Ventas",
       "owner_role": "Dirección / propietario del libro",
       "status": "ejecucion",
-      "runtime_status": "Modelo piloto leído y conciliado en Sheets; conexión pública y migración general pendientes",
+      "runtime_status": "Piloto y lectura pública de caso/lista conciliados; migración general y edición en pantalla pendientes",
       "evidence": [
         {
           "claim": "Lectura directa autorizada de un libro piloto; fórmulas nativas y versiones contrastadas. Evidencia detallada en registro operativo privado, sin publicar identificadores ni cifras.",
@@ -2438,7 +2462,7 @@
         "cambio"
       ],
       "risks_sanitized": [
-        "La existencia del libro no acredita la conexión pública del tablero",
+        "La lectura pública verificada del piloto no acredita la edición completa ni otros casos",
         "Faltan otros motores, nuevas altas, capturas por cuerpos y renta neta completa; el presupuesto mensual por etapas es preparación parcial"
       ],
       "source_of_truth": "Libro privado por caso registrado en SHEET-PORTERO; entradas y fórmulas canónicas. El tablero transporta y presenta resultados; no replica un motor financiero."
@@ -2469,6 +2493,151 @@
         "Código probado no acredita una instalación ni publicación correcta"
       ],
       "source_of_truth": "GitHub App privada propiedad de la organización; configuración y llave permanecen fuera del atlas público."
+    },
+    {
+      "id": "STORE-EMD-DRAFTS",
+      "nombre": "Borradores locales cifrados de evaluación",
+      "tipo": "almacen_navegador",
+      "repo": "yodesarrollomx/EMDevaluacion360",
+      "proposito": "Conservar copia recuperable en el mismo navegador sin sustituir la confirmación del servidor",
+      "dominio": "Personas",
+      "owner_role": "Participante autorizado del enlace vigente",
+      "status": "propuesto",
+      "runtime_status": "Propuesta; implementación y publicación pendientes de evidencia privada",
+      "evidence": [
+        {
+          "claim": "Diseño de recuperación local y pruebas sintéticas propuestos",
+          "status": "propuesto"
+        }
+      ],
+      "data_entities": [
+        "borrador_cifrado",
+        "mutacion_pendiente"
+      ],
+      "risks_sanitized": [
+        "Copia limitada al navegador y enlace vigentes; borrar datos del navegador o cambiar enlace puede impedir recuperación",
+        "Almacenamiento o criptografía pueden fallar; el servidor sigue siendo fuente de verdad",
+        "Concurrencia entre pestañas y confirmaciones tardías exige aislamiento y revisión explícita"
+      ],
+      "source_of_truth": "Copia local no confirmada; el backend conserva autoridad sobre revisiones y cierre",
+      "visibility": "restricted_summary",
+      "restricted_evidence_omitted": true
+    },
+    {
+      "id": "SYS-AMALAYA",
+      "nombre": "Amalaya",
+      "tipo": "tablero",
+      "repo": "yodesarrollo/amalaya-board",
+      "proposito": "Seguimiento de espacios, modelos y datos del desarrollo",
+      "dominio": "Desarrollos",
+      "owner_role": "Dirección y responsable del desarrollo",
+      "status": "codigo",
+      "runtime_status": "Verificación independiente de esta entrega pendiente.",
+      "evidence": [
+        {
+          "repo": "yodesarrollo/amalaya-board",
+          "path": "src/componentes/FichaEspacio.jsx",
+          "claim": "Fuente de interfaz revisada para estados vacíos y aviso de supuestos.",
+          "status": "codigo",
+          "source_revision": "a3cf36f508015d288a04288fef040130f30ec3b7"
+        }
+      ],
+      "data_entities": [
+        "espacio",
+        "modelo",
+        "supuesto",
+        "chinche"
+      ],
+      "risks_sanitized": [
+        "La calidad visual no valida datos comerciales definitivos; no convertir supuestos en hechos."
+      ],
+      "source_of_truth": "Registros privados del desarrollo y contratos actuales del tablero; historial de chinches por ID."
+    },
+    {
+      "id": "GAS-AMALAYA",
+      "nombre": "Motor Amalaya",
+      "tipo": "apps_script",
+      "repo": "yodesarrollo/amalaya-board",
+      "proposito": "Servir contratos actuales y conciliar estados de chinches",
+      "dominio": "Desarrollos",
+      "owner_role": "Dirección y responsable del desarrollo",
+      "status": "codigo",
+      "runtime_status": "Verificación independiente de esta entrega pendiente.",
+      "evidence": [
+        {
+          "repo": "yodesarrollo/amalaya-board",
+          "path": "apps-script/Code.gs",
+          "claim": "Fuente contiene lectura de chinches y chincheTomada; extensión compatible propuesta.",
+          "status": "codigo",
+          "source_revision": "a3cf36f508015d288a04288fef040130f30ec3b7"
+        }
+      ],
+      "data_entities": [
+        "chinche",
+        "historial"
+      ],
+      "risks_sanitized": [
+        "La calidad visual no valida datos comerciales definitivos; no convertir supuestos en hechos."
+      ],
+      "source_of_truth": "Registros privados del desarrollo y contratos actuales del tablero; historial de chinches por ID."
+    },
+    {
+      "id": "SHEET-AMALAYA",
+      "nombre": "Datos de Amalaya",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollo/amalaya-board",
+      "proposito": "Conservar registros operativos y chinches del desarrollo",
+      "dominio": "Desarrollos",
+      "owner_role": "Dirección y responsable del desarrollo",
+      "status": "declarado",
+      "runtime_status": "Verificación independiente de esta entrega pendiente.",
+      "evidence": [
+        {
+          "repo": "yodesarrollo/amalaya-board",
+          "path": "README.md",
+          "claim": "Almacén lógico del tablero; evidencia de correspondencia física y detalles permanecen privados.",
+          "status": "declarado",
+          "source_revision": "a3cf36f508015d288a04288fef040130f30ec3b7"
+        }
+      ],
+      "data_entities": [
+        "espacio",
+        "chinche",
+        "historial"
+      ],
+      "risks_sanitized": [
+        "La calidad visual no valida datos comerciales definitivos; no convertir supuestos en hechos."
+      ],
+      "source_of_truth": "Registros privados del desarrollo y contratos actuales del tablero; historial de chinches por ID."
+    },
+    {
+      "id": "STORE-DESPACHO-CORCHO",
+      "nombre": "Mi Corcho · almacén privado de Dirección",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/board-aurum",
+      "proposito": "Persistir notas y ejes del Corcho en un archivo privado independiente, autorizado solo al propietario exacto",
+      "dominio": "Dirección",
+      "owner_role": "Dirección / propietario único del archivo",
+      "status": "propuesto",
+      "runtime_status": "Preparación de infraestructura privada; integración y publicación pendientes",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/board-aurum",
+          "path": "apps-script/corcho.gs",
+          "claim": "Contrato propuesto de almacenamiento por propiedad privada; archivo físico e identidad de ejecución por verificar en registro privado",
+          "status": "propuesto"
+        }
+      ],
+      "data_entities": [
+        "nota",
+        "configuracion",
+        "revision"
+      ],
+      "risks_sanitized": [
+        "Dependencia de identidad de ejecución y consentimiento vigentes para verificar privacidad antes de acceder a datos"
+      ],
+      "source_of_truth": "Archivo privado independiente configurado por propiedad de script; no publicar identificadores ni notas",
+      "physical_mapping_status": "pendiente"
     }
   ],
   "connections": [
@@ -4190,12 +4359,13 @@
       "to": "SHEET-PPP-MODELOS",
       "label": "Lee resultados nativos; escribe cantidades permitidas",
       "kind": "persistencia",
-      "status": "propuesto",
+      "status": "ejecucion",
       "runtime_verified": false,
       "evidence": [
         {
-          "claim": "Transporte preparado y probado con dobles; lectura del piloto desde editor verificada; implementación pública no actualizada.",
-          "status": "declarado"
+          "claim": "Versión53 publicada; lectura HTTP de caso y lista conciliada con el libro piloto. Escritura permitida desplegada y probada con dobles; recorrido público de edición pendiente.",
+          "status": "ejecucion",
+          "source_revision": "Apps Script version 53"
         }
       ],
       "contract": "Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente."
@@ -4222,12 +4392,13 @@
       "to": "SYS-CONTROL",
       "label": "Registra antes, después, actor y siguiente paso",
       "kind": "auditoria",
-      "status": "propuesto",
+      "status": "codigo",
       "runtime_verified": false,
       "evidence": [
         {
-          "claim": "Registro operativo privado actualizado; transporte auditado con dobles; activadores y despliegue público pendientes.",
-          "status": "declarado"
+          "claim": "Registro operativo privado actualizado; auditoría de transporte desplegada y activador de edición directa instalado. Primer evento real y recorrido de edición todavía sin observar.",
+          "status": "codigo",
+          "source_revision": "Apps Script version 53"
         }
       ],
       "contract": "Auditoría en libro y Control Maestro con actor autenticado, entidad, versión, revisión, campo/rango, fuente y validación. No inventar valores previos ausentes ni declarar publicada una operación no confirmada."
@@ -4330,6 +4501,96 @@
         }
       ],
       "contract": "CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada."
+    },
+    {
+      "id": "CON-EMD-PROFILES-DRIVE",
+      "from": "GAS-EMD",
+      "to": "EXT-DRIVE",
+      "label": "Propuesta: fotos privadas de perfil",
+      "kind": "persistencia",
+      "evidence": [
+        {
+          "claim": "Propuesta registrada; implementación y despliegue privados pendientes de pruebas",
+          "status": "propuesto"
+        }
+      ],
+      "status": "propuesto",
+      "runtime_verified": false,
+      "restricted_evidence_omitted": true,
+      "contract": "CTR-EMD-PROFILES: carpeta dedicada privada, carga y retirada propias, lectura autorizada y confirmación por revisión/mutación; sin nuevas autorizaciones OAuth."
+    },
+    {
+      "id": "CON-EMD-DRAFTS-LOCAL",
+      "from": "SYS-EMD",
+      "to": "STORE-EMD-DRAFTS",
+      "label": "Propuesta: copia cifrada local",
+      "kind": "persistencia_local",
+      "evidence": [
+        {
+          "claim": "Diseño propuesto de persistencia local; sin evidencia de publicación",
+          "status": "propuesto"
+        }
+      ],
+      "status": "propuesto",
+      "runtime_verified": false,
+      "restricted_evidence_omitted": true,
+      "contract": "CTR-EMD-DRAFTS: cifrado por enlace vigente, aislamiento de pestañas, confirmación transaccional local y recuperación explícita; el servidor mantiene revisión y cierre."
+    },
+    {
+      "id": "CON-AMALAYA-CLIENT",
+      "from": "SYS-AMALAYA",
+      "to": "GAS-AMALAYA",
+      "label": "Consume contrato autenticado del tablero",
+      "kind": "api",
+      "evidence": [
+        {
+          "repo": "yodesarrollo/amalaya-board",
+          "path": "apps-script/Code.gs",
+          "claim": "Contratos de chinches existentes y extensión de estado propuesta.",
+          "status": "codigo",
+          "source_revision": "a3cf36f508015d288a04288fef040130f30ec3b7"
+        }
+      ],
+      "status": "codigo",
+      "runtime_verified": false,
+      "contract": "CTR-AMALAYA-CHINCHES-ESTADO registra la extensión propuesta. Identidad, token, roles, implementación y URL actuales se conservan."
+    },
+    {
+      "id": "CON-AMALAYA-STORE",
+      "from": "GAS-AMALAYA",
+      "to": "SHEET-AMALAYA",
+      "label": "Conserva chinches y su historial",
+      "kind": "persistencia",
+      "evidence": [
+        {
+          "repo": "yodesarrollo/amalaya-board",
+          "path": "apps-script/Code.gs",
+          "claim": "Contratos de chinches existentes y extensión de estado propuesta.",
+          "status": "codigo",
+          "source_revision": "a3cf36f508015d288a04288fef040130f30ec3b7"
+        }
+      ],
+      "status": "codigo",
+      "runtime_verified": false,
+      "contract": "CTR-AMALAYA-CHINCHES-ESTADO registra la extensión propuesta. Identidad, token, roles, implementación y URL actuales se conservan."
+    },
+    {
+      "id": "CON-DESPACHO-CORCHO-STORE",
+      "from": "GAS-OPERACION",
+      "to": "STORE-DESPACHO-CORCHO",
+      "label": "Persiste Corcho privado con revisión y control de acceso",
+      "kind": "persistencia",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/board-aurum",
+          "path": "apps-script/corcho.gs",
+          "claim": "Almacén privado propuesto, fuera de datos generales de Operación",
+          "status": "propuesto"
+        }
+      ],
+      "contract": "CTR-DESPACHO-CORCHO; identidad exacta, verificación fresca de privacidad de archivo y ancestros, CAS y archivo sin borrado."
     }
   ],
   "processes": [
@@ -5339,6 +5600,231 @@
           "source_revision": "HEAD_baseline"
         }
       ]
+    },
+    {
+      "id": "PROC-EMD-PROFILES",
+      "nombre": "Perfil fotográfico privado de evaluación",
+      "status": "propuesto",
+      "steps": [
+        {
+          "label": "Elegir y recortar foto propia",
+          "role": "Participante",
+          "components": [
+            "SYS-EMD"
+          ],
+          "input": "Imagen local elegida por la persona",
+          "output": "Recorte sRGB convertido localmente a JPEG baseline sin metadatos personales; alineación progresiva y ajuste manual disponibles",
+          "mode": "manual"
+        },
+        {
+          "label": "Validar y guardar perfil",
+          "role": "Backend autorizado",
+          "components": [
+            "GAS-EMD",
+            "SHEET-EMD",
+            "EXT-DRIVE"
+          ],
+          "input": "Imagen validable, revisión e identificador de mutación",
+          "output": "Original privado confirmado, visible solo en Mi foto, pendiente de homologación",
+          "mode": "pendiente"
+        },
+        {
+          "label": "Editar y homologar en recorrido",
+          "role": "Agente autorizado",
+          "components": [
+            "GAS-EMD",
+            "SHEET-EMD",
+            "EXT-DRIVE"
+          ],
+          "input": "Original privado y metadata de revisión capturada",
+          "output": "Derivado editado uniforme, original conservado y evidencia privada",
+          "mode": "pendiente"
+        },
+        {
+          "label": "Publicar derivado verificado",
+          "role": "Propietario mediante función interna",
+          "components": [
+            "GAS-EMD",
+            "SHEET-EMD",
+            "EXT-DRIVE"
+          ],
+          "input": "JPEG o PNG transparente estricto privado de 512 × 512 e identidad/revisión/hash/archivo fuente esperados",
+          "output": "Derivado publicado solo si fuente sigue vigente; conflicto conserva upload posterior",
+          "mode": "pendiente"
+        },
+        {
+          "label": "Consultar foto autorizada",
+          "role": "Participante asignado o revisor",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "EXT-DRIVE"
+          ],
+          "input": "Sesión y relación autorizadas",
+          "output": "Derivado homologado vigente autorizado o silueta; nunca original pendiente",
+          "mode": "pendiente"
+        },
+        {
+          "label": "Representar avance confirmado",
+          "role": "Interfaz",
+          "components": [
+            "SYS-EMD"
+          ],
+          "input": "Perfil autorizado o silueta y estado confirmado ya disponible",
+          "output": "Tarjeta en tres columnas con nombre completo, cargo verificado opcional y retrato mayor; borde gris/naranja/verde y estado accesible sin etiquetas visibles",
+          "mode": "automatico"
+        },
+        {
+          "label": "Quitar foto propia",
+          "role": "Participante",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD",
+            "EXT-DRIVE"
+          ],
+          "input": "Revisión vigente y mutación propia",
+          "output": "Perfil sin foto confirmado, con reintento seguro",
+          "mode": "manual"
+        }
+      ],
+      "manual_gaps": [
+        "Selección y recorte requieren decisión de la persona",
+        "La apariencia por estado no sustituye el texto, el foco ni el estado confirmado del servidor; el atlas no contiene fotos ni metadatos personales",
+        "Habilitar y verificar servicio avanzado Drive v3/API; si falta, el recorrido rechaza operación sin alternativa permisiva",
+        "Circuito privado del agente y tratamiento uniforme están propuestos; no publicados por documentarlos",
+        "No usar una foto real como fixture ni copiar originales/derivados o metadata privada al atlas público"
+      ],
+      "evidence": [
+        {
+          "claim": "Proceso propuesto; no acredita operación publicada",
+          "status": "propuesto"
+        }
+      ]
+    },
+    {
+      "id": "PROC-EMD-DRAFTS",
+      "nombre": "Recuperación revisada de borrador local",
+      "status": "propuesto",
+      "steps": [
+        {
+          "label": "Conservar copia local",
+          "role": "Cliente autenticado",
+          "components": [
+            "SYS-EMD",
+            "STORE-EMD-DRAFTS"
+          ],
+          "input": "Snapshot de edición o mutación pendiente",
+          "output": "Copia cifrada durable o aviso explícito de indisponibilidad",
+          "mode": "pendiente"
+        },
+        {
+          "label": "Consultar estado vigente",
+          "role": "Participante autorizado",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD"
+          ],
+          "input": "Sesión vigente y asignación propia",
+          "output": "Revisión y cierre confirmados por servidor",
+          "mode": "pendiente"
+        },
+        {
+          "label": "Revisar diferencias",
+          "role": "Participante",
+          "components": [
+            "SYS-EMD",
+            "STORE-EMD-DRAFTS"
+          ],
+          "input": "Copia local descifrada y versión del servidor",
+          "output": "Decisión explícita de recuperación, modificación o descarte",
+          "mode": "manual"
+        },
+        {
+          "label": "Confirmar envío o cierre",
+          "role": "Participante y backend",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD"
+          ],
+          "input": "Mutación exacta revisada o nueva modificación autorizada; cierre con consentimiento nuevo",
+          "output": "Confirmación real o conflicto sin sobrescritura automática",
+          "mode": "manual"
+        }
+      ],
+      "manual_gaps": [
+        "Revisión y decisión de recuperar requieren consentimiento; no hay recuperación ni cierre automáticos",
+        "Persistencia limitada al navegador y enlace; no garantiza recuperación tras borrar almacenamiento",
+        "Pruebas táctiles y escritorio sintéticos no certifican Safari ni un teléfono físico"
+      ],
+      "evidence": [
+        {
+          "claim": "Proceso propuesto; sin datos humanos ni publicación acreditada",
+          "status": "propuesto"
+        }
+      ]
+    },
+    {
+      "id": "PROC-EMD-CONTACTS",
+      "nombre": "Preparación privada de contactos y recordatorios",
+      "status": "propuesto",
+      "steps": [
+        {
+          "label": "Elegir archivo y revisar vista previa",
+          "role": "Coordinación autorizada",
+          "components": [
+            "SYS-EMD"
+          ],
+          "input": "CSV, TSV o XLSX local de hasta 250 filas",
+          "output": "Vista previa sin escritura",
+          "mode": "manual"
+        },
+        {
+          "label": "Validar personas y correos",
+          "role": "Backend autorizado",
+          "components": [
+            "GAS-EMD",
+            "SHEET-EMD"
+          ],
+          "input": "Identificador exacto o nombre único y correo",
+          "output": "Coincidencias activas o errores por fila",
+          "mode": "pendiente"
+        },
+        {
+          "label": "Confirmar y guardar contactos",
+          "role": "Coordinación autorizada",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD"
+          ],
+          "input": "Filas revisadas, revisión esperada e identificador de mutación",
+          "output": "Contactos confirmados o conflicto sin sobrescritura",
+          "mode": "manual"
+        },
+        {
+          "label": "Preparar recordatorio individual",
+          "role": "Coordinación autorizada",
+          "components": [
+            "SYS-EMD"
+          ],
+          "input": "Persona pendiente y correo confirmado",
+          "output": "Asunto y texto copiable sin envío ni enlace personal",
+          "mode": "manual"
+        }
+      ],
+      "manual_gaps": [
+        "El envío real requiere destinatarios verificados y autorización específica; no forma parte de esta propuesta",
+        "La vista previa y las pruebas sintéticas no sustituyen revisión humana de nombres y correos",
+        "No emitir ni reemitir accesos y no reiniciar evaluaciones al preparar un recordatorio"
+      ],
+      "evidence": [
+        {
+          "claim": "Proceso propuesto; detalle operativo y datos personales permanecen en el sistema privado",
+          "status": "propuesto"
+        }
+      ]
     }
   ],
   "proposals": [
@@ -5987,7 +6473,7 @@
         "Lectura real del modelo y ruta desde editor; sin POST de prueba en producción",
         "Validación de esquema, referencias y regeneración de vistas del atlas"
       ],
-      "deployment": "Frontend integrado en potenciales-yod PR3 y publicado por Pages, commit d446b637f408124f224afadc6c674e3675c62f38. Backend candidato privado sin desplegar por falta de sesión autorizada. Modelo piloto, cuerpos y flujo parcial nativos leídos; activador, conexión pública y migración general pendientes."
+      "deployment": "Frontend PR3 publicado; backend v53 de la implementación existente actualizado y lectura HTTP del piloto conciliada con Sheets. Activador directo instalado. Edición en pantalla, aceptación por rol, fábrica y migración general pendientes."
     },
     {
       "id": "CHG-EMD-UI-001",
@@ -6025,7 +6511,7 @@
         "Publicación Pages aprobada y código DOM público contrastado",
         "Lectura nativa y exportación del libro ampliado, sin errores cacheados"
       ],
-      "deployment": "Publicado únicamente frontend en d446b637f408124f224afadc6c674e3675c62f38. Backend existente aún sin actualizar; no confirma conexión nativa completa ni todos los casos."
+      "deployment": "Frontend publicado en d446b637f408124f224afadc6c674e3675c62f38. Actualización posterior: backend v53 publicado y lectura del piloto conciliada; no confirma edición completa ni todos los casos."
     },
     {
       "id": "CHG-PUBLICADORES-APP-001",
@@ -6129,6 +6615,436 @@
         "Fuente de versiones 52/10 y configuración contrastadas por API; respaldo 51/9"
       ],
       "deployment": "Portero 52 y Catálogo 10/API 1.6.0 publicados y contrastados por API y HTTP; editor adicional preservado. Frontend integrado por PR #14, commit 7e9094bf2a70ea1ee4e790299370fe28cfc4d89b; sus doce archivos servidos y atlas 2026-10-01.5 coinciden byte a byte con el commit integrado. Aceptación sintética local y sobre archivos publicados, con motores interceptados. No hubo escrituras de negocio ni sesiones personales."
+    },
+    {
+      "id": "CHG-PPP-BACKEND-001",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SYS-CONTROL"
+      ],
+      "proposal": "Registrar versión53 del transporte PPP, lectura pública nativa verificada y activador instalado; preservar cambios concurrentes de autorización y documentar el alcance pendiente.",
+      "status": "publicado",
+      "tests": [
+        "Sintaxis del backend y cinco regresiones de borrador nativo aprobadas",
+        "Diez funciones concurrentes de autorización conservadas exactamente",
+        "Fuente guardada releída idéntica y configuración conservada",
+        "GET público de caso/lista: entradas, versiones, resultados, cuerpos, flujo y revisión conciliados con Sheets",
+        "Activador directo observado en proyecto; sin POST de prueba ni cambios financieros",
+        "Esquema, impacto y vistas del atlas sincronizados"
+      ],
+      "deployment": "Versión53 publicada conservando implementación, URL y permisos. Lectura pública del piloto verificada; sesión de pantalla, edición real, primer evento de auditoría y migración general pendientes. Reversión técnica a versión52 preservando libros y registros."
+    },
+    {
+      "id": "CHG-EMD-PINS-002",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "EXT-ACTIONS",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Corregir selección táctil de chinches con dianas estructurales precisas; aislar rechazos y confirmaciones de la cola sin ocultar errores. Convertir el puente de issues a ejecución manual, retirar disparadores schedule/push y fallar explícitamente si falta configuración. La revisión horaria del agente será la única ronda programada de este sistema; su configuración no acredita una ejecución terminada. Actualizar únicamente el atlas documental de YOD OS; sin cambios funcionales a su cabina.",
+      "status": "propuesto",
+      "tests": [
+        "Selección táctil y escritorio de elementos concretos, sin capturar contenedores globales",
+        "Cola: rechazo de una nota no bloquea otras; confirmación inválida no elimina la nota ni oculta el fallo",
+        "Puente manual: configuración ausente produce fallo; sin ejecución por schedule ni push",
+        "Preservar contratos de respuestas, 28 preguntas, escala y asignaciones; pruebas con datos sintéticos",
+        "Registrar inicio y cierre verificables por ejecución; no certificar recuperación periódica sin cierre posterior",
+        "Esquema, IDs y vistas del atlas regeneradas y comprobadas"
+      ],
+      "deployment": "Propuesta previa a implementación. Integración y despliegue pendientes de pruebas y evidencia privada. Conservar implementación, URL, permisos y datos existentes; respaldo privado antes de publicar. Reversión al código previo sin borrar notas ni respuestas."
+    },
+    {
+      "id": "CHG-EMD-TIMING-001",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Proponer estimación de duración activa por cuestionario basada en mediciones agregadas y separadas de las respuestas. Pausar ocultación e inactividad, impedir doble conteo entre sesiones y reintentos, excluir muestras incompletas y QA y no divulgar tiempos individuales. Conservar instrumento, asignaciones y controles de acceso. El detalle técnico y las pruebas viven en el repositorio privado. Actualizar solo el atlas documental de YOD OS, sin modificar la cabina.",
+      "status": "propuesto",
+      "tests": [
+        "Dobles sintéticos: autorización, idempotencia, sesiones concurrentes, reloj, pausas, abandono y cierre",
+        "Interfaz sintética móvil y escritorio: estimación sin muestra, promedio elegible y fallo de medición que no bloquea guardado",
+        "Respaldo y comprobación de versión existente antes de publicar; no escribir respuestas humanas de prueba"
+      ],
+      "deployment": "Propuesta de alcance; no acredita implementación ni publicación. Requiere pruebas del HEAD exacto y verificación aislada de persistencia antes de activar. Rollback del código preserva registros privados."
+    },
+    {
+      "id": "CHG-EMD-PROFILES-001",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "EXT-DRIVE",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Corregir el guardado de fotos propias produciendo un JPEG baseline de 512 × 512 desde los píxeles sRGB del recorte mediante un codificador local incorporado y versionado. Evitar dependencia del formato o metadatos que añada el codificador nativo de cada navegador. No hay llamadas externas, transmisión adicional de fotos ni cambio de servidor, permisos, revisión, mutación o persistencia. Se conserva alineación progresiva, recorte manual y apariencia por estado confirmado. El retiro de fondo y cargos/organigrama siguen pendientes.",
+      "status": "propuesto",
+      "tests": [
+        "Codificador local: geometría y ruido sintéticos, JPEG baseline compatible con validación estricta del servidor, dimensiones/tamaño y ausencia de EXIF/ICC/comentarios",
+        "Canvas Chromium y WebKit Linux: normalización del recorte, guardado confirmado, ACK perdido/reintento exacto; no equivalen a Safari físico",
+        "Rechazo de payload corrupto y permanencia de revisión, mutación, permisos y fotos previas",
+        "Regresiones vigentes y comprobaciones del HEAD exacto antes de publicar",
+        "Auditorías independientes móvil/escritorio del recorrido afectado, sin fotos o respuestas humanas"
+      ],
+      "deployment": "Propuesta registrada antes de implementar: sustituir únicamente la codificación del recorte en el cliente. El validador del servidor seguirá estricto. Publicación privada exige respaldo, pruebas del HEAD y comparación de fuente servida; sin escrituras de prueba en producción. No atribuir la causa exacta de una captura de iPhone sin inspección de bytes o prueba física. Reversión del cliente conserva fotos, respuestas y permisos."
+    },
+    {
+      "id": "CHG-EMD-DRAFTS-001",
+      "components": [
+        "SYS-EMD",
+        "STORE-EMD-DRAFTS",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Proponer persistencia cifrada de borradores del cliente para evitar pérdida al recargar antes del envío, tras rechazo y durante confirmaciones con nuevas ediciones. Recuperación explícita tras autenticar y consultar la evaluación asignada; jamás sobrescribir ni cerrar automáticamente. Backend y contrato de respuestas permanecen intactos. SYS-YOD-OS participa únicamente por el atlas documental.",
+      "status": "propuesto",
+      "tests": [
+        "Reproducción sintética de recarga antes del envío, rechazo y edición nueva durante confirmación de otro snapshot",
+        "IndexedDB real y RPC sintético: escritura completada, falta de cuota/crypto, transacción fallida y recarga",
+        "Dos pestañas, snapshots asíncronos fuera de orden, compare-and-swap y eliminación condicionada",
+        "Aislamiento por enlace, evaluación y época de sesión; callbacks tardíos no cruzan identidad",
+        "Recuperación revisada, ACK perdido con mutación exacta, conflicto sin rebase y cierre con nuevo consentimiento",
+        "Servidor cerrado no reabre; 28 preguntas, escala, asignaciones y backend intactos",
+        "Auditoría independiente de interacción táctil y escritorio sintéticos; no acredita Safari o dispositivo físico"
+      ],
+      "deployment": "Propuesta previa a implementación; sin afirmar publicación. Pruebas del HEAD exacto, respaldo privado y comprobación de la implementación existente antes de activar. Reversión solo de código conserva registros locales y respuestas; no descifrar ni exportar datos humanos para auditar. La disponibilidad local no acredita guardado en servidor."
+    },
+    {
+      "id": "CHG-PPP-UI-001",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-YOD-OS",
+        "SHEET-PPP-MODELOS",
+        "GAS-PORTERO"
+      ],
+      "proposal": "Interfaz PPP vertical autorizada: resumen de cinco tarjetas, detalle desplegado en el mismo lugar y ajustes originales. Infografías volumétricas desde la misma revisión de resultados; cabecera con símbolo YoDesarrollo y OS, sin selector superior de modelos. Preservar casos, versiones, conectores, permisos, documentos, fórmulas y flujo; sin modificar backend ni crear motor financiero.",
+      "status": "implementado_local",
+      "tests": [
+        "23 pruebas unitarias PPP: 81 controles, todos los IDs de indicadores, motor idéntico a 12213ec y siete variantes sintéticas; acceso y copia nativa sin conexión",
+        "Chromium y WebKit: 40 celdas KPI, cinco tarjetas, detalle/ajustes, fórmulas, guardado simulado sin correo, versiones y movimiento reducido",
+        "Modelo nativo sintético: relectura al entrar, resultados confirmados, cantidades pendientes, conflicto y recarga sin escritura automática",
+        "320, 390, 430 y 1280 px sin desbordamiento; entrada con selector de casos, logo OS y expansión animada",
+        "20 recorridos de acceso en siete plantillas y dos navegadores; 124 pruebas y verificadores del atlas aprobados; sin escrituras de prueba de negocio"
+      ],
+      "deployment": "Implementación local validada; publicación mediante PR de potenciales-yod con referencia fija a este atlas. La validación usa datos y transporte sintéticos, no acredita OAuth ni escrituras reales de Sheets en iPhone físico. Revertir la interfaz y referencia de atlas mediante PR; conservar datos, sesiones y libros."
+    },
+    {
+      "id": "CHG-EMD-CONTACTS-001",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Preparar importación privada de contactos desde CSV, TSV o XLSX con vista previa, coincidencia por identificador exacto o nombre único, validación de correo, revisión optimista e idempotencia. Permitir preparar y copiar un recordatorio individual sin enviar mensajes, mostrar enlaces personales, emitir accesos, leer respuestas o alterar preguntas, escala, matriz y asignaciones. SYS-YOD-OS participa solo por el atlas documental.",
+      "status": "propuesto",
+      "tests": [
+        "Dobles sintéticos: archivo inválido, nombre ambiguo, identificador inexistente, correo inválido, duplicados y separación QA",
+        "Conflicto de revisión, ACK perdido y repetición exacta sin duplicar ni aceptar una mutación con contenido distinto",
+        "Chromium sintético móvil y escritorio: vista previa, guardado, destinatario, copia y ausencia de envío o enlace personal",
+        "Respaldo privado, pruebas del HEAD exacto y comprobación de la implementación existente antes de publicar"
+      ],
+      "deployment": "Propuesta previa a implementación; no acredita publicación ni envío. Conservar URL, permisos, accesos, respuestas, 28 preguntas, escala, matriz y asignaciones. La pestaña privada de contactos se crea solo al guardar explícitamente; reversión de código no borra contactos. El envío permanece bloqueado hasta contar con destinatarios verificados y autorización específica."
+    },
+    {
+      "id": "CHG-EMD-PROFILE-REVIEW-001",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "EXT-DRIVE",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Separar foto recibida de foto homologada. Mostrar el original solo en Mi foto, conservar siluetas en tableros hasta edición uniforme realizada por el agente en recorridos. Preparar publicación privada de derivados por función interna con revisión/hash/archivo fuente y reintento idempotente; sin eliminación de fondo dentro del portal ni ampliación de RPC/permisos.",
+      "status": "propuesto",
+      "tests": [
+        "Original confirmado visible solo al dueño en Mi foto; tableros y otros usuarios no reciben sus bytes",
+        "Derivado publicado visible solo con fuente/revisión/hash/archivo vigentes; upload/remoción concurrente lo invalida",
+        "Publicación privada: permisos e integridad, idempotencia tras ACK perdido, conflicto y conservación de original",
+        "Regresiones JPEG, perfiles, preguntas, guardado, chinches y accesibilidad; UI sintética móvil/escritorio",
+        "Pruebas y CI del HEAD exacto, respaldo privado del código y verificación de fuente/recorrido en la implementación existente"
+      ],
+      "deployment": "Propuesta registrada antes de implementar. No se presenta como editada/publicada una foto por subirla, crear metadata o guardar prompt. Cambiar servidor e interfaz en la implementación existente con respaldo y verificación; no escrituras de prueba en producción. Reversión no debe reexponer originales pendientes ni borrar perfiles/respuestas."
+    },
+    {
+      "id": "CHG-EMD-PROFILE-CARDS-001",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "EXT-DRIVE",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Proponer tarjetas en tres columnas con nombre completo en negrita en primera línea, cargo debajo únicamente si verificado, retrato homologado transparente 35 % mayor que sobresale de la tarjeta y borde gris/naranja/verde según estado confirmado. Retirar etiquetas visibles de estado y relación conservando nombre accesible. Admitir PNG estricto de 512 × 512 exclusivamente en derivados homologados internos, además del JPEG existente; original propio continúa JPEG sin cambios de permisos, revisión o mutación. SYS-YOD-OS solo aporta atlas documental.",
+      "status": "propuesto",
+      "tests": [
+        "PNG derivado: firma, dimensiones, estructura, integridad, tamaño, transparencia y rechazo de metadatos/no permitidos",
+        "Original propio sigue rechazando PNG; CAS, ACL, digest, fuente vigente e idempotencia de publicación preservados",
+        "Tarjetas sintéticas táctiles/escritorio: tres columnas, nombre completo, cargo verificado o ausente, retrato y borde por estado; etiquetas accesibles sin duplicación visible",
+        "No exponer originales pendientes ni fotos reales en pruebas; conservar 28 preguntas, escala, asignaciones y respuestas",
+        "Pruebas del HEAD exacto, respaldo privado y comparación de versión/recorrido publicado"
+      ],
+      "deployment": "Propuesta registrada antes de implementar. No acredita tarjetas publicadas ni derivados homologados. Publicar en implementación existente después de pruebas y respaldo; reversión de código conserva archivos privados y respuestas, sin volver a exponer originales."
+    },
+    {
+      "id": "CHG-PPP-MAPA-001",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-YOD-OS",
+        "GAS-PORTERO"
+      ],
+      "proposal": "Corrección autorizada de la portada PPP: aislar las capas Leaflet para que el sidebar permanezca delante; listado desplegable de todos los casos desde las cinco listas existentes con progreso, timeout, errores y reintento independiente del mapa. Planificadores en cuadrícula compacta con iconos SVG locales y descripción conservada en detalles. Aplicar lista y aislamiento también al mapa completo; sin modificar permisos, cálculos, backend ni datos.",
+      "status": "implementado_local",
+      "tests": [
+        "Chromium y WebKit: seis grupos aprobados con Leaflet/shell reales y 15 casos sintéticos; cinco destinos, scroll independiente, sidebar y velo delante del mapa sin paneo",
+        "Mapa fallido, progreso parcial, consulta malformada, reintento solo de listas fallidas, timeout acotado y vacío real; cambio de sesión descarta respuestas tardías",
+        "320/390/430/1280 px, cinco SVG locales y descripciones completas conservadas; seis regresiones de interfaz vertical y 23 unitarias PPP",
+        "124 pruebas y verificadores del atlas aprobados; sintaxis y diff; sin POST de negocio ni cambios de cálculos/backend"
+      ],
+      "deployment": "Implementación local validada; integrar por PR del PPP con este atlas fijado. Comparar archivos estáticos servidos con el commit integrado. No acredita un iPhone físico ni acceso a filas reales; transporte de prueba sintético. Revertir portada, mapa, catálogo y referencia del atlas mediante PR sin tocar sesiones ni registros."
+    },
+    {
+      "id": "CHG-EMD-DIRECTORY-001",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Conectar padrón privado de puestos, niveles y jefe directo procedente de archivos aportados. Importación interna con coincidencia exacta del padrón, validación de referencias/ciclos, CAS e idempotencia y respaldo privado previo. Participante recibe únicamente cargo de sus asignaciones; organigrama de solo lectura exclusivo de coordinación de negocio. Sin cambiar matriz, preguntas, accesos o respuestas.",
+      "status": "propuesto",
+      "tests": [
+        "Importación sintética exacta, desconocidos/ciclos/cargos vacíos, CAS, idempotencia y ACL; cero escritura a respuestas/accesos/asignaciones",
+        "Coordinación vs QA/participante; lista propia con cargo y organigrama en móvil/escritorio; error/ausencia sin inventar cargos",
+        "HEAD exacto y CI, respaldo antes de publicar, fuente/versión y recorrido real sin preguntas humanas"
+      ],
+      "deployment": "Propuesta autorizada; no acredita publicación. Padrón nominal privado fuera de Git. Reversión de código conserva directorio y datos de negocio."
+    },
+    {
+      "id": "CHG-PPP-LECTURA-002",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Cambio autorizado: abrir el proyecto solicitado sin depender del catálogo, conservar identidad y versión visibles, presentar carga/error/reintento sin sustituir datos por referencias; gráficas específicas de capacidad, ingresos, costos, deuda mensual y dotaciones basadas en el estado confirmado. Mantener controles, datos, contratos y motor existente; faltantes explícitos, escalas y unidades visibles, animación reducida accesible.",
+      "status": "implementado_local",
+      "tests": [
+        "27 pruebas unitarias PPP aprobadas: entradas, motor original, resultados, lectura nativa, concurrencia de selección y timeout.",
+        "Chromium/WebKit: carga directa con catálogo fallido, proyecto demorado, error, modelo ausente y reintento, copia con cantidades pendientes; sin POST de negocio.",
+        "Cinco gráficas específicas con escalas, composición, deuda mensual y reservas; acceso a cuerpos/etapas/rentas y flujo, 81 controles y 40 KPI conservados.",
+        "Regresiones de interfaz, mapa/catálogo, acceso, tamaño 320/390/430/1280 y movimiento reducido; atlas y verificadores aprobados."
+      ],
+      "deployment": "Implementar en rama, integrar por PR y comparar archivos publicados. Revertir frontend y referencia fija mediante PR; no tocar libros ni registros privados."
+    },
+    {
+      "id": "CHG-PPP-TERRENO-003",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-YOD-OS",
+        "GAS-PORTERO",
+        "SHEET-PORTERO"
+      ],
+      "proposal": "Recuperación autorizada de acceso a un proyecto existente: todas las categorías permanecen visibles con su estado; advertencia y reintento antes de las filas. Usar enlaces de pines recibidos por la misma sesión como acceso provisional cuando una lista carga o falla por transporte, nunca ante rechazo ni lista vacía confirmada; normalizar casas antiguas a la ruta canónica sin copiar cifras históricas como resultados. Mostrar terreno en la tarjeta cerrada de arquitectura e implantación conceptual desde retícula nativa, áreas y condiciones de etapas. Mantener datos, controles, versiones, fórmulas y backend.",
+      "status": "implementado_local",
+      "tests": [
+        "Verificado en Chromium y WebKit: acceso del mapa con lista fallida, enlace canónico, ausencia de duplicados y cifras históricas, aviso fijo y reintento por categoría; rechazo, vacío y sesión distinta respetados.",
+        "Terreno visible con tarjetas cerradas; detalle desde retícula nativa con leyenda, áreas y diferencia vs proforma; condiciones pendientes explícitas. 81 controles y 40 KPI conservados, 320/390/430/1280 px, sin escrituras de negocio de prueba.",
+        "29 pruebas unitarias PPP, recorridos de interfaz/identidad/mapa/acceso; 124 pruebas del atlas y cuatro verificadores completos. Publicación por PR y comprobación de assets pendientes."
+      ],
+      "deployment": "Implementar y verificar en rama; PR con atlas fijado, comprobar archivos publicados. Rollback por PR conserva libros, versiones, expedientes y registros privados."
+    },
+    {
+      "id": "CHG-PPP-VERSIONES-004",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-YOD-OS",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS"
+      ],
+      "proposal": "Lectura nativa comprobada: el transporte conserva entradas y resultados de todas las versiones y envía flujo mensual solo de la activa. Corregir el frontend que rechaza el caso al exigir flujo en cada versión. Validar identidad, revisión, IDs únicos, resultados de todas y flujo de la activa; nunca inventar flujos históricos. Adoptar la activa confirmada si la selección anterior carece de flujo. Validar respuestas antes de aplicarlas, preservar borradores y cantidades pendientes, y ordenar visualmente todas las versiones con nombre completo, activa, base y conteo. Lectura acotada para libros grandes; conservar fórmulas, cantidades, hojas, IDs, permisos y operaciones nativas existentes.",
+      "status": "implementado_local",
+      "tests": [
+        "31 pruebas unitarias PPP aprobadas; contrato con resultados de todas las versiones y flujo solo activo, IDs únicos, faltantes y selección confirmada.",
+        "Chromium/WebKit: ocho nombres completos, base/activa y ocho columnas de comparación; activación sintética, respuesta incompleta conserva modelo, recarga con activa externa distinta y cantidades pendientes intactas. 320/390/430/1280 px.",
+        "Respuesta HTTP real autorizada comparada con índice Versiones y renderizada con frontend corregido en ambos motores, sin escrituras de negocio. Se confirma el desfase de contrato que impedía cargar.",
+        "Regresiones de interfaz, identidad, terreno, catálogo y accesos; atlas y publicación por PR. Fuente y datos privados excluidos de Git."
+      ],
+      "deployment": "PR coordinado con atlas fijado y checks completos; verificar archivos públicos. Solo frontend, sin cambios de backend ni datos. Revertir por PR conserva libros y versiones."
+    },
+    {
+      "id": "CHG-CHINCHES-CIERRE-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES",
+        "SYS-TAREAS",
+        "SYS-SALA",
+        "SYS-EMD",
+        "GAS-CATALOGO",
+        "SHEET-CATALOGO",
+        "GAS-OPERACION",
+        "SHEET-OPERACION",
+        "GAS-MOAC-METAS",
+        "SHEET-MOAC-METAS",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "EXT-DRIVE",
+        "EXT-GMAIL",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-MOTORES-MEDIA",
+        "STORE-DESPACHO-CORCHO"
+      ],
+      "proposal": "Resolver y conciliar el inventario autorizado de chinches mediante equipos por área: recuperar recorridos y datos confirmados en PPP/Despacho, compactar MOAC y desglosar encargos con trazabilidad, aplicar reglas de producción y completar claridad/seguimiento de evaluación privada. Registrar Despacho en catálogo vivo conservando código DP y permisos; conciliar prueba sintética y cierres solo con evidencia. Mantener fuente de verdad, IDs, contratos, instrumento de evaluación, datos privados y estados concurrentes. Nuevos contratos se registrarán de forma acotada antes de su publicación.",
+      "status": "propuesto",
+      "tests": [
+        "Checks de cada repositorio y regresiones sintéticas de las chinches reproducidas; CI del commit exacto, publicación frontend y backend contrastadas por separado.",
+        "Conciliación por ID con lectura previa y posterior; distinguir duplicados/descartados de completados. Casos humanos y datos privados excluidos de repositorios públicos.",
+        "Verificar destino canónico Despacho, allowlist y código DP sin ampliar Accesos; comprobar catálogo vivo y tarjeta sintética dentro del alcance autorizado."
+      ],
+      "deployment": "Autorización explícita del propietario de resolver y cerrar todas las chinches el 1 octubre 2026. Propuesta de coordinación; no acredita implementación ni publicación. Reversión por PR y respaldo previo de cambios puntuales de registros; conservar eventos originales y datos de negocio."
+    },
+    {
+      "id": "CHG-DESPACHO-CHINCHES-001",
+      "components": [
+        "SYS-DESPACHO",
+        "SYS-TAREAS",
+        "GAS-OPERACION",
+        "STORE-DESPACHO-CORCHO",
+        "GAS-PORTERO",
+        "SYS-YOD-OS",
+        "GAS-CATALOGO",
+        "SHEET-CATALOGO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Implementar Corcho privado persistente con ejes y notas archivables en archivo independiente; mantener identidad Portero exacta, CAS y verificación fresca de privacidad por Drive. Despliegue condicionado a proyecto y consentimiento vigentes.",
+      "status": "propuesto",
+      "tests": [
+        "Dobles de servidor: propietario/no propietario, DP revocado, payload inválido, versiones y conflictos, archivar/restaurar, lectura sin creación ni fuga por getAll.",
+        "Frontend sintético: tareas ordinarias visibles, fechas no inventadas, red lenta/error recuperable, guardado confirmado por ACK.",
+        "Contrastar fuente activa y publicación por separado; conservar implementación/configuración e historial.",
+        "Archivo privado, propietario/principal único, paginación de permisos y ancestros; rechazo de permisos incompletos, públicos, dominios, otros usuarios y unidades compartidas.",
+        "Revalidación antes de lectura/escritura y fallo cerrado sin API/scopes; ningún cambio automático de ACL o consentimiento."
+      ],
+      "deployment": "Infraestructura privada vacía primero; configurar solo proyecto y principal contrastados. Desplegar en endpoint vigente tras consentimiento si falta; revertir código/versión conserva archivo, notas, ejes, ACL e historial."
+    },
+    {
+      "id": "CHG-AMALAYA-CHINCHES-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-AMALAYA",
+        "GAS-AMALAYA",
+        "SHEET-AMALAYA"
+      ],
+      "proposal": "Conciliar chinches terminadas/descartadas mediante contrato compatible por ID y cierre GitHub confirmado; aclarar supuestos y estados vacíos sin modificar datos definitivos. Complemento: consulta GitHub autoritativa con token efímero restringido para evitar rechazo/rate-limit anónimo; transporte y diagnóstico sin credenciales en logs.",
+      "status": "propuesto",
+      "tests": [
+        "Lecturas nuevas/tomadas, token, repo/URL/ID, cierre/motivo GitHub, CAS, idempotencia, historial y ACK con dobles.",
+        "Pruebas de estados vacíos y supuestos, build y publicación contrastada; conciliación real por IDs revisados.",
+        "Token efímero/headers solo a URL canónica, rechazo de token malformado, errores HTTP controlados y transporte sin logs secretos."
+      ],
+      "deployment": "Propuesta registrada antes de publicar. Reversión por PR y versión previa del backend cuando aplique, conservando datos, IDs e historial."
+    },
+    {
+      "id": "CHG-MOAC-CHINCHES-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-TAREAS",
+        "GAS-OPERACION",
+        "SHEET-OPERACION",
+        "GAS-MOAC-METAS",
+        "SHEET-MOAC-METAS"
+      ],
+      "proposal": "Corregir flags y clasificación de tareas, compactar indicadores y preparar encargos como acciones ligadas explícitamente a objetivos existentes, con confirmación parcial real.",
+      "status": "propuesto",
+      "tests": [
+        "Pruebas de TRUE/FALSE, datos ambiguos, semana, create/ACK perdido y vínculo parcial; build.",
+        "Pantalla sintética desktop/mobile y errores de red; comprobar publicación por separado."
+      ],
+      "deployment": "Propuesta registrada antes de publicar. Reversión por PR y versión previa del backend cuando aplique, conservando datos, IDs e historial."
+    },
+    {
+      "id": "CHG-EMD-SEGUIMIENTO-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Extender de forma compatible el seguimiento de fotos autorizado para distinguir original vigente, foto publicada y foto pendiente. Mantener imágenes y permisos actuales; UI de coordinación presenta estado verificable sin enviar mensajes.",
+      "status": "propuesto",
+      "tests": [
+        "Dobles de getProfiles: original vigente/retirado, derivado vigente/invalidado, ACL por asignación y segregación QA; lectura sin creación ni fuga.",
+        "UI sintética con silueta y estados de seguimiento, sin leer respuestas o accesos reales.",
+        "Pruebas de portal y perfiles; fuente activa/publicación contrastadas por separado."
+      ],
+      "deployment": "Propuesta registrada antes de publicar. No añade alcance de correo ni concede permisos. Revertir versión previa conserva perfiles, fotos, asignaciones e historial."
+    },
+    {
+      "id": "CHG-PPP-PATRIMONIAL-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS"
+      ],
+      "proposal": "Extender modelo nativo Patrimonial por caso con CUS como máximo, pasillos porcentuales y puertas/rentas independientes conforme CTR-PPP-PATRIMONIAL-NATIVO; conservar motor vertical y contratos de identidad/transporte.",
+      "status": "propuesto",
+      "tests": [
+        "Pruebas sintéticas de cantidades, mezcla, capacidad, faltantes y rentas; relectura de fórmulas.",
+        "Regresión vertical y aislamiento de datos/permisos, CI exacto y fuentes/publicación contrastadas."
+      ],
+      "deployment": "Propuesta antes de publicar. Mantener registro canónico y fuente comprobada; reversión a versión previa sin borrar libros, casos o historial."
+    },
+    {
+      "id": "CHG-EMD-INVITACIONES-001",
+      "components": [
+        "SYS-YOD-OS",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "EXT-DRIVE",
+        "EXT-GMAIL"
+      ],
+      "proposal": "Preparar integración de preview, borrador y recibos privados para invitaciones y recordatorios sobre enlaces existentes, con MailApp deshabilitado hasta consentimiento y aprobación de lote concreto.",
+      "status": "propuesto",
+      "tests": [
+        "Dobles de Mail/Drive/Sheets: ACL, QA, contactos/revisión e identidad, firma/expiración, cuota, deduplicación y ACK perdido.",
+        "Libro público rechazado antes de lectura, STORE explícito privado y nuevo borrador compartido bloqueado antes de contenido.",
+        "UI sintética en móvil/escritorio sin sesión real, storage ni autoenvío; cero correos o escrituras de negocio de prueba."
+      ],
+      "deployment": "Propuesta antes de integración. Conservar manifest/scopes y URL/permisos actuales; flags false por defecto. Activación depende de recursos verificados, consentimiento personal y aprobación del lote exacto. Reversión de código conserva ledger, borradores, accesos y respuestas."
+    },
+    {
+      "id": "CHG-EMD-ENTRADA-001",
+      "components": [
+        "SYS-YOD-OS",
+        "GAS-EMD"
+      ],
+      "proposal": "Preparar una entrada corporativa HTTPS que redirige al portal existente conservando fragmento, sin migrar HTMLService ni identidad.",
+      "status": "propuesto",
+      "tests": [
+        "Redirección con/sin fragmento, HTTPS, endpoint fijado, sin query ni storage; dobles sintéticos.",
+        "Contrastar dominio, certificado, ruta y alojamiento reales antes de publicar."
+      ],
+      "deployment": "Candidato privado sin activar; requiere dominio/ruta y acceso a alojamiento del propietario. Revertir entrada conserva endpoint y enlaces existentes."
     }
   ],
   "data_contracts": [
@@ -6306,7 +7222,8 @@
         "Servidor resuelve el destino y verifica permisos, límites y revisión antes de escribir",
         "Una respuesta pendiente, conflicto o desconexión conserva el último dato confirmado con estado explícito",
         "Auditar antes/después y no marcar producción comprobada sin lectura pública final",
-        "No modificar Portero ni crear otra implementación; conservar contratos y URL existentes"
+        "No modificar Portero ni crear otra implementación; conservar contratos y URL existentes",
+        "El transporte leído conserva entradas y resultados de todas las versiones; el flujo mensual puede enviarse solo para la activa. Validar ese flujo al abrirla y no exigir ni inventar flujo de versiones inactivas."
       ]
     },
     {
@@ -6376,9 +7293,421 @@
         "Preservar endpoints e implementaciones existentes y cualquier trabajo concurrente del editor",
         "No probar operaciones financieras ni permisos escribiendo en producción; usar dobles y contraste de esquema autorizado"
       ]
+    },
+    {
+      "id": "CTR-EMD-PINS-ACK",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "EXT-ACTIONS"
+      ],
+      "source": "Propuesta de corrección del sistema privado; evidencia técnica y operativa restringida.",
+      "input": [
+        "Diana estructural de pantalla y nota de mejora",
+        "Identificador de nota para repetición segura",
+        "Configuración explícita del puente manual"
+      ],
+      "output": [
+        "Confirmación válida por nota o error visible",
+        "Cola conservada ante rechazo o confirmación inválida",
+        "Resultado final de revisión con pruebas y bloqueos"
+      ],
+      "invariants": [
+        "La diana no depende del texto de respuestas ni contiene datos personales",
+        "Una nota rechazada no detiene el envío de otras; solo una confirmación válida permite retirarla de la cola",
+        "Configuración ausente nunca se informa como éxito de revisión",
+        "El puente manual no compite con la ronda programada del agente",
+        "Inicio y configuración no equivalen a ejecución terminada ni a recuperación validada",
+        "No se alteran respuestas, 28 preguntas, escala, matriz, asignaciones ni permisos existentes"
+      ]
+    },
+    {
+      "id": "CTR-EMD-TIMING",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD"
+      ],
+      "source": "Propuesto; contrato y evidencia restringidos al repositorio privado",
+      "input": [
+        "sesión autorizada",
+        "asignación propia",
+        "duración activa acumulada",
+        "secuencia idempotente"
+      ],
+      "output": [
+        "confirmación sin respuestas",
+        "estimación agregada cuando exista muestra suficiente",
+        "Disponibilidad explícita de instrumentación y muestra agregada"
+      ],
+      "invariants": [
+        "No altera preguntas, escala, asignaciones o respuestas",
+        "La medición no bloquea el recorrido de evaluación",
+        "Pausas, sesiones concurrentes, QA y observaciones incompletas no contaminan el promedio",
+        "No publica tiempos individuales ni permite acceso anónimo al agregado",
+        "No infiere duración a partir de marcas de última modificación",
+        "El cliente solo inicia medición cuando el servidor declara instrumentación compatible; QA no habilita instrumentación",
+        "La estimación exige al menos cinco cuestionarios completos de tres evaluadores de una misma campaña",
+        "Los reintentos validan la misma secuencia, acumulado y flags de cierre/pausa; no mezclan solicitudes diferentes"
+      ]
+    },
+    {
+      "id": "CTR-EMD-PROFILES",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "EXT-DRIVE"
+      ],
+      "source": "Propuesta del sistema privado; detalles físicos y evidencia restringidos al repositorio privado.",
+      "input": [
+        "Sesión autorizada e identidad canónica propia",
+        "JPEG normalizado localmente a 512 × 512 píxeles, máximo 256 KiB, con recorte manual",
+        "Revisión esperada e identificador de mutación",
+        "Consulta de hasta 30 asignaciones autorizadas por solicitud",
+        "Estado de evaluación ya confirmado: off, yellow o green",
+        "Publicación interna del agente: identidad canónica, revisión/hash/archivo del original y archivo derivado privado verificado",
+        "Derivado homologado interno JPEG existente o PNG estricto de 512 × 512 con transparencia; nunca PNG como original subido por participante"
+      ],
+      "output": [
+        "Confirmación de revisión y mutación sin exponer ubicación privada",
+        "Imagen autenticada en memoria, sin URL de Drive, o perfil sin foto",
+        "Foto o silueta con apariencia derivada del estado confirmado y respaldo textual accesible",
+        "Conflicto o error explícito que conserva el estado confirmado",
+        "Original visible exclusivamente en Mi foto de su propietario; tableros reciben solo derivado homologado vigente o silueta",
+        "Extensión propuesta getProfiles: indicadores hasOriginal y hasPublishedDerivative para identidades ya autorizadas; coordinación distingue foto faltante de original pendiente de homologación."
+      ],
+      "invariants": [
+        "Carga y retirada derivan propietario de la identidad canónica del servidor, incluida compatibilidad de acceso legado; no aceptar identidad del cliente ni inventar personas o cargos",
+        "Lectura de evaluador y evaluado solo para asignaciones propias autorizadas; revisor limitado a asignaciones activas y QA separado, sin leer respuestas",
+        "Carpeta dedicada dentro de carpeta existente, ambas privadas y sin editores/lectores explícitos; verificar también privacidad del archivo y rechazar destinos compartidos",
+        "Pestaña privada de perfiles con identidad, archivo, revisión, mutación, digest, MIME, bytes y actualización; nunca guardar base64 en metadatos ni mezclar respuestas",
+        "Servidor valida JPEG baseline, firma, dimensiones, cierre y máximo de 256 KiB; rechaza EXIF, comentarios y segmentos no permitidos tras normalización local",
+        "La apariencia del perfil no crea ni infiere estados: usa exclusivamente off/yellow/green ya recibidos; conservar foco y nombre/estado accesibles sin depender solo del color, aunque no haya etiqueta visible de estado o relación.",
+        "Revisión, mutación y digest deben coincidir para repetir resultado; conflicto o ACK inválido conserva el estado confirmado y no anuncia éxito",
+        "Conservar implementación, URL, roles, 28 preguntas, escala, matriz y asignaciones; reutilizar autorización Drive existente",
+        "La reversión de código no borra ni restaura datos de perfil o evaluación",
+        "Drive y metadatos no forman una transacción atómica: preservar foto anterior hasta confirmación y documentar recuperación de escrituras parciales y archivos huérfanos",
+        "La consulta no crea carpetas, archivos ni metadatos; solo una carga propia autorizada puede inicializarlos",
+        "Verificar propietario, privacidad y ausencia de lectores/editores explícitos en ancestros; rechazar unidades compartidas y revalidar privacidad antes de confirmar un reintento",
+        "La identidad de mutación vincula propietario, revisión base, MIME y bytes normalizados mediante digest",
+        "Servicio avanzado Drive v3 obligatorio: listar permisos con paginación en archivo, carpeta y todos los ancestros hasta la raíz de Mi unidad; admitir únicamente el propietario esperado, coincidente con la identidad de ejecución",
+        "Rechazar permisos de usuario, grupo, dominio o cualquiera distintos del único propietario, unidades compartidas y recursos sin propietario; Access.PRIVATE por sí solo no prueba ausencia de permisos heredados o de grupo",
+        "Si el servicio avanzado o la inspección completa de ACL no están disponibles, mostrar error y rechazar operación sin fallback a DriveApp; habilitar servicio/API requiere comprobación de configuración y reutiliza el alcance Drive existente",
+        "La codificación JPEG del recorte usa solo píxeles RGBA sRGB de 512 × 512, con calidad acotada; no copia EXIF, ICC, comentarios ni metadatos del archivo o del codificador del navegador. El código versionado se incorpora al cliente; sin ejecución o envío a un servicio tercero.",
+        "El portal no ejecuta eliminación de fondo ni envía imágenes a editores externos. El tratamiento solicitado corresponde al agente en recorridos autorizados, usando su herramienta de imagen y preservando identidad; no inventar rostro, ropa o pose ausente.",
+        "Separar original y derivado: original solo en Mi foto del propietario, nunca en tableros de participante/coordinación ni compartido con evaluadores. Un upload no equivale a homologación.",
+        "Publicar únicamente por función interna privada, con ACL e integridad comprobadas, respaldo y comparación de identidad, revisión, hash y archivo fuente bajo bloqueo; upload posterior invalida derivado obsoleto.",
+        "Reintento de publicación vincula mutación, fuente y derivado mediante digest; no duplica revisión y no puede sustituir una foto más reciente.",
+        "Lecturas de originales/derivados vacías no crean archivos, carpetas ni tablas; el tratamiento del agente no altera respuestas, instrumento, matriz o accesos.",
+        "Permitir PNG únicamente en publicación interna de derivados: validar formato íntegro, dimensiones exactas, tamaño acotado y ausencia de metadatos no permitidos; conservar JPEG baseline para originales y derivados existentes",
+        "El formato del derivado no amplía RPC, acceso, ACL, revisión, comparación de fuente o repetición idempotente; MIME y digest deben corresponder a bytes validados",
+        "Nombre completo y cargo solo desde fuente verificada; no inventar cargos ni identidades. El borde usa exclusivamente estado confirmado, con alternativa accesible aunque se retiren etiquetas visibles de estado/relación",
+        "Sin cargo verificado, la segunda línea puede mostrar el marcador Puesto identificado de forma accesible como pendiente; no representa un cargo real ni modifica matriz o asignaciones",
+        "PNG interno: estático 512 × 512, 8 bits RGB/RGBA, sin interlazado, máximo 256 KiB; solo IHDR inicial, IDAT consecutivos e IEND final. Verificar CRC, zlib/DEFLATE completo sin diccionario, expansión exacta y Adler32; rechazar metadatos auxiliares, animación, paleta y bytes sobrantes. Límites de chunks/bloques acotan validación. MIME y extensión privados deben coincidir con bytes y digest",
+        "Los indicadores de seguimiento respetan la misma ACL y segregación QA; no revelan original, archivo, hash ni respuesta de otra persona. Originales retirados y derivados invalidados no se presentan como vigentes.",
+        "Lectura de seguimiento no crea recursos ni implica envío de recordatorios. Foto subida y foto publicada son estados diferentes; no inferirlos únicamente de image:null."
+      ]
+    },
+    {
+      "id": "CTR-EMD-DRAFTS",
+      "components": [
+        "SYS-EMD",
+        "STORE-EMD-DRAFTS",
+        "GAS-EMD",
+        "SHEET-EMD"
+      ],
+      "source": "Diseño propuesto con fallos reproducidos mediante datos sintéticos; evidencia y detalle operativo privados.",
+      "input": [
+        "Sesión actualmente autenticada y evaluación asignada",
+        "Snapshot clonado sincrónicamente de revisión base, respuestas confirmadas, borrador y mutación pendiente",
+        "Decisión explícita de revisar y recuperar una copia local"
+      ],
+      "output": [
+        "Copia cifrada confirmada únicamente al completar la transacción local",
+        "Comparación local/servidor para revisión de la persona",
+        "Aviso de copia local indisponible, conflicto o confirmación real del servidor"
+      ],
+      "invariants": [
+        "Alcance de base local derivado con SHA-256 del enlace vigente, con separación de dominio; nunca persistir la credencial",
+        "AES-GCM de 256 bits con clave no exportable derivada por HKDF-SHA256 en memoria; IV aleatorio nuevo por escritura y datos autenticados que vinculan esquema, alcance, evaluación, escritor y versión",
+        "Campos de respuestas y mutación permanecen cifrados; la credencial y la clave no se almacenan en el payload ni en registros locales",
+        "Identificador aleatorio nuevo por carga/pestaña y control atómico de versión evitan que otra pestaña o snapshot atrasado reemplace el borrador",
+        "Clonar snapshot antes de operaciones asíncronas; cifrar fuera de la transacción y confirmar durabilidad solo en oncomplete",
+        "Recuperar solo después de autenticar y obtener la evaluación propia vigente; revisar local frente a servidor antes de enviar, sin recuperación automática ni rebase ciego",
+        "Mutación con confirmación perdida se repite con el mismo identificador y payload solo tras revisión; un cierre pendiente requiere consentimiento nuevo y explícito",
+        "Evaluación cerrada en servidor permanece cerrada; copia local solo se puede inspeccionar o descartar, sin reabrir ni escribir",
+        "Restaurar como copia independiente y retirar el original solo con revisión/confirmación exactas y compare-and-swap; no borrar otra pestaña a ciegas",
+        "Ediciones hechas durante un envío sobreviven a su confirmación; cambios de identidad/evaluación invalidan callbacks anteriores",
+        "Fallo o ausencia de IndexedDB/criptografía se informa sin bloquear memoria ni envío al servidor; nunca mostrar cierre confirmado por persistencia local",
+        "Copia del mismo navegador y enlace únicamente; no prometer recuperación en otro dispositivo ni cambiar 28 preguntas, escala, asignaciones, permisos o backend"
+      ]
+    },
+    {
+      "id": "CTR-EMD-CONTACTS",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD"
+      ],
+      "source": "Diseño propuesto del sistema privado; el atlas no contiene nombres, correos, enlaces ni archivos.",
+      "input": [
+        "Sesión de revisor autorizada y separación normal/QA",
+        "Archivo CSV, TSV o XLSX acotado a 250 filas",
+        "Identificador de persona exacto o nombre normalizado único y correo",
+        "Revisión esperada e identificador de mutación del lote"
+      ],
+      "output": [
+        "Vista previa por fila sin escritura",
+        "Confirmación exacta del lote o conflicto sin sobrescritura",
+        "Asunto y recordatorio copiable sin envío"
+      ],
+      "invariants": [
+        "La lectura de preparación no crea pestañas ni lee respuestas o notas; solo usa asignaciones activas autorizadas",
+        "Un nombre ambiguo, persona inexistente, correo inválido o duplicado bloquea el guardado completo",
+        "Revisor normal y QA no comparten catálogos ni contactos",
+        "La escritura exige revisión vigente; el reintento de ACK perdido reutiliza la misma mutación y contenido",
+        "Una mutación reutilizada con otro contenido falla de forma explícita",
+        "No emitir accesos, regenerar enlaces, reiniciar evaluaciones, enviar correos ni exponer enlaces personales",
+        "No modificar 28 preguntas, escala, matriz, asignaciones, permisos, respuestas o estados de evaluación",
+        "La reversión de código conserva contactos y registros de negocio; no borrar datos como parte del rollback"
+      ]
+    },
+    {
+      "id": "CTR-EMD-DIRECTORY",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD"
+      ],
+      "source": "Excel aportado, coincidencias y detalles privados fuera del atlas.",
+      "input": [
+        "Padrón nominal con identificador canónico, nombre exacto, puesto, nivel y jefe canónico",
+        "Hash esperado del directorio privado vigente"
+      ],
+      "output": [
+        "Cargo solo de asignación propia",
+        "Organigrama de negocio únicamente para coordinación autorizada",
+        "ACK de importación verificado o conflicto"
+      ],
+      "invariants": [
+        "No inferir cargos/jerarquía de letras de matriz, ni inventar integrantes",
+        "Rechazar identidad distinta, jefe desconocido, ciclo y ausencia de cargo/nivel",
+        "Respaldar privado antes de escribir; lectura no crea recursos; reintento exacto no duplica",
+        "Separar QA y negocio; no leer respuestas para directorio ni escribir asignaciones, accesos, cuestionarios o estados"
+      ]
+    },
+    {
+      "id": "CTR-DESPACHO-CORCHO",
+      "components": [
+        "SYS-DESPACHO",
+        "SYS-TAREAS",
+        "GAS-OPERACION",
+        "STORE-DESPACHO-CORCHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "source": "Propuesta de Corcho privado en archivo independiente; infraestructura, consentimiento e identidad de ejecución se acreditan por separado antes de publicar.",
+      "input": [
+        "Sesión canjeada y validada servidor a servidor por Portero; identidad de propietario exacta con permiso DP vigente",
+        "Acción corchoGet o corchoSave; ID estable, versión esperada y payload JSON validado",
+        "Ejes configurables, notas con título/cuerpo, posición, color y estado activo o archivado"
+      ],
+      "output": [
+        "Configuración y notas solo del propietario autorizado",
+        "ACK con versión confirmada o conflicto sin sobrescritura",
+        "Archivo/restauración con historial y sin borrado físico"
+      ],
+      "invariants": [
+        "El servidor deriva la identidad real de Portero; ignora identidad/rol enviados por el cliente. No amplía accesos de otros tableros ni sustituye getAll/update.",
+        "Las lecturas no crean recursos ni exponen notas en getAll, catálogos, frontend estático, logs públicos u otros usuarios.",
+        "La escritura exige LockService y versión esperada exacta. Rechaza conflicto, dato inválido o ID inconsistente antes de modificar el almacén.",
+        "STORE-DESPACHO-CORCHO/Corcho contiene ID, versión y payload_json; @config conserva los ejes. JSON neutraliza fórmulas. No borrar notas ni filas.",
+        "Archivo y restauración mantienen createdAt/updatedAt y versión; posiciones y ejes se validan con límites explícitos.",
+        "No declarar guardado hasta ACK; fallos de red/carga muestran recuperación. No enviar borradores a terceros desde este contrato.",
+        "Deploy usa implementación y permisos existentes, respaldando fuente y versión previa. Revert de código conserva notas y registros.",
+        "CORCHO_SPREADSHEET_ID identifica un archivo independiente privado; no almacenar notas en el libro general de Operación ni alterar sus permisos.",
+        "Antes de toda lectura/escritura comprobar principal de ejecución y propiedad única exacta del archivo y sus ancestros; revisar permissions.list paginado incl permisos publicados. Rechazar anyone, domain, otros usuarios, unidades compartidas, herencia no verificada o metadatos incompletos.",
+        "Validación fresca sin caché ni fallback; las consultas de metadatos y permisos son solo GET. Si Drive o scopes no permiten certificar acceso, fallar cerrado con consentimiento_requerido sin añadir scopes, compartir archivos ni degradar protección automáticamente.",
+        "Preparación del archivo puede crear únicamente pestaña Corcho y encabezados id/version/payload_json; cero notas de prueba, cero lecturas que creen recursos. La configuración del backend requiere identificar el proyecto vigente y su principal de ejecución."
+      ]
+    },
+    {
+      "id": "CTR-AMALAYA-CHINCHES-ESTADO",
+      "components": [
+        "SYS-AMALAYA",
+        "GAS-AMALAYA",
+        "SHEET-AMALAYA"
+      ],
+      "source": "Extensión compatible propuesta para conciliar chinches con el cierre real de GitHub.",
+      "input": [
+        "Token del puente existente; lectura accion=chinches con incluirTomadas=si",
+        "POST action=chincheEstado con ID, URL canónica de issue, estado previo, destino terminada/descartada y evidencia del cierre GitHub",
+        "Consulta GitHub puede usar github_token efímero del job de conciliación con contents:read/issues:read, además del token actual que autoriza CAS."
+      ],
+      "output": [
+        "Lectura acotada de nuevas/tomadas para conciliación; consulta original mantiene solo nuevas",
+        "Cambio confirmado por ID con historial o conflicto sin sobrescritura; reintento idéntico idempotente"
+      ],
+      "invariants": [
+        "No confiar en un estado GitHub inventado por cliente: comprobar cierre y motivo autoritativos. Solo CLOSED/completed permite terminada y CLOSED/not_planned permite descartada.",
+        "Validar repositorio canónico, issue, ID y estado previo bajo candado. Rechazar identidad distinta, URL arbitraria, conflicto o transición inválida.",
+        "No editar texto original, roles, permisos, datos comerciales ni cerrar issues desde el puente. Lectura no crea datos.",
+        "Registrar cambio en Historial y comprobar ok de la respuesta; HTTP 200 por sí solo no acredita éxito.",
+        "Preservar token, implementación, URL, configuración y trabajo pendiente del editor. Revertir código conserva historial y registros.",
+        "Pruebas aisladas; conciliación real limitada a IDs revisados y autorizados. Supuestos financieros y estados vacíos se muestran como tales sin inventar datos.",
+        "github_token solo en Authorization hacia api.github.com/repos/yodesarrollo/amalaya-board/issues/<n> canónico. No almacenar, registrar, devolver ni reenviar a otro host. No reemplaza CHINCHES_TOKEN ni amplía autorización de estados.",
+        "Separar conciliación de creación de issues; errores HTTP GitHub se devuelven como códigos controlados sin cuerpos privados ni credenciales. No imprimir payload ni URL con token."
+      ]
+    },
+    {
+      "id": "CTR-MOAC-ENCARGOS",
+      "components": [
+        "SYS-TAREAS",
+        "GAS-OPERACION",
+        "SHEET-OPERACION",
+        "GAS-MOAC-METAS",
+        "SHEET-MOAC-METAS"
+      ],
+      "source": "Mejora de interfaz sobre contratos de tareas y objetivos existentes; implementación pendiente de integración.",
+      "input": [
+        "Encargo original y acciones editables con título conciso",
+        "Proyecto y objetivo existentes elegidos explícitamente; identidad actual autorizada"
+      ],
+      "output": [
+        "Creación de acción confirmada con ID y posterior vínculo confirmado a objetivo",
+        "Resultado parcial explícito si creación o vínculo no se confirma; conservación de texto original y trazabilidad"
+      ],
+      "invariants": [
+        "No inferir ni crear proyectos/objetivos para resolver una referencia ambigua. Conservar IDs, historia y fuente original.",
+        "Interpretar TRUE/FALSE explícitamente: borrada siempre se excluye y archivada se oculta por defecto; no usar truthiness de strings.",
+        "Datos sin clasificación quedan visibles para corregir y fuera de indicadores semanales válidos; no inventar fecha o pertenencia.",
+        "No anunciar guardado completo hasta confirmación de tarea y vínculo. Con ACK perdido, conciliar marcador exacto antes de crear otra vez; ambigüedad permanece pendiente.",
+        "Fallo de vínculo conserva el ID ya creado y permite completar ese vínculo sin duplicar la acción.",
+        "Pruebas sintéticas fuera de producción; no modificar catálogo central ni permisos. Revertir frontend conserva registros de negocio."
+      ]
+    },
+    {
+      "id": "CTR-SALA-CONTENIDO-VETADO",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-MOTORES-MEDIA"
+      ],
+      "source": "Instrucción editorial y propuesta de cierre #49. Usa REGLAS existente sin nuevas pestañas, columnas, roles o endpoints.",
+      "input": [
+        "Regla contenido_ubicaciones_vetadas como lista CSV aditiva en nombre/valor/descripcion",
+        "Textos nuevos de ideas, premisas, promesas, guiones, láminas, recetas y candidatas"
+      ],
+      "output": [
+        "Rechazo de contenido o lote inválido antes de motores, red, montaje o escritura",
+        "Salida validada para etapas existentes sin alterar notas, IDs ni historial"
+      ],
+      "invariants": [
+        "Hermosillo, Sonora y México son el mínimo solicitado; configuración añade vetos y no retira ese mínimo. Comparación por palabra completa, sin distinguir mayúsculas o acentos.",
+        "No inspeccionar ni reescribir URLs, IDs, zona horaria, notas editoriales, bitácora o historial como contenido editorial nuevo.",
+        "Recepción proponer/ideas/arbol y compuertas nube frenan el lote completo antes de efectos. No producir primero y validar después.",
+        "Conservar autorización y contratos de REGLAS y escritura actuales. No aprobar decisiones humanas ni publicar marketing como parte de una prueba.",
+        "Código integrado, workflows, frontend y GAS se verifican por separado; fuente GAS versionada no prueba instalación."
+      ]
+    },
+    {
+      "id": "CTR-PPP-PATRIMONIAL-NATIVO",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS"
+      ],
+      "source": "Propuesta de extensión nativa Patrimonial para #47; fórmulas, campos y datos se contrastan con fuente canónica antes de publicar.",
+      "input": [
+        "Modelo Patrimonial tipado por caso registrado en PPP_LIBROS",
+        "Entradas allowlisted en tabla Campos; CUS máximo, pasillos en porcentaje y puertas Depa/Local con rentas independientes",
+        "Identidad PT/PA vigente, caso_id, revisión esperada y CAS existente"
+      ],
+      "output": [
+        "Resultados, conciliación de áreas y años calculados por fórmulas protegidas en Sheets",
+        "Resultados confirmados conservados al editar; ausencia y demanda sobre capacidad informadas explícitamente"
+      ],
+      "invariants": [
+        "Frontend no calcula financieramente estas magnitudes ni sustituye fórmulas por resultados hardcodeados. No inventar reglas comerciales o límites normativos.",
+        "CUS rige también en Profundizar; pasillos usan solo porcentaje. Mezcla de puertas conserva cantidades, áreas y rentas distintas.",
+        "Dato ausente permanece pendiente, no se convierte en cero. Demanda que excede capacidad conserva el número y muestra discrepancia, sin recorte silencioso.",
+        "Mantener endpoint, ACL PT/PA, IDs, caso_id, palabra, históricos, CAS y revisión. No cambiar lectura vertical ni datos de otros casos.",
+        "Lectura tipada en pppLeerLibro_/sheet-cantidades conserva compatibilidad vertical. Registro y creación de modelo canónico documentados con fuente y rollback.",
+        "Pruebas mixtas vivienda/comercio, CUS cero/ausente, pasillos 0/20, 1/N puertas, rentas distintas y exceso; cero POST de prueba de negocio."
+      ]
+    },
+    {
+      "id": "CTR-EMD-INVITES",
+      "components": [
+        "GAS-EMD",
+        "SHEET-EMD",
+        "EXT-DRIVE",
+        "EXT-GMAIL"
+      ],
+      "source": "Propuesta de preparación privada y entrega controlada de invitaciones con enlaces existentes; consentimiento y lote real se acreditan antes de activar envío.",
+      "input": [
+        "Coordinación reviewer vigente, catálogo y asignaciones autorizados con segregación QA/normal",
+        "Personas únicas 1..25, finalidad welcome/reminder/photo, ronda explícita estable y contactos verificados con revisión",
+        "Enlace participante existente, vigente y vinculado a identidad desde archivo privado autorizado; no emitir ni reiniciar accesos",
+        "Review HMAC privado con actor, personas, finalidad, ronda, digest y expiración15min; mutation estable; confirmación humana del lote exacto para enviar"
+      ],
+      "output": [
+        "Preview con asunto, destinatario y cuerpo con enlace enmascarado; sin crear recursos",
+        "Borrador privado con enlaces existentes solo tras mutación explícita",
+        "Recibo por actor y mutation para consultar incluso tras expiración; submitted no acredita entrega",
+        "Ubicación privada de borrador confirmado sin compartir ni publicar enlaces"
+      ],
+      "invariants": [
+        "Preparación y envío deshabilitados por defecto; secreto de firma y configuración se preparan por el propietario. No añadir scopes ni consentimiento automáticamente.",
+        "Coordinación vigente en cada llamada y separación QA/normal. QA nunca envía correos reales. No leer ni convertir respuestas o puntajes como parte de esta propuesta.",
+        "Validar correo, contacto/revisión, nombre e identidad del enlace existente antes de efectos. Dato ausente, formato legado incompatible, enlace vencido o revocado se rechazan, no se adivinan ni reemiten.",
+        "Certificar privacidad y propietario único de archivo, carpeta, ancestros y libro de ledger mediante Drive con permisos exhaustivos antes de leer/escribir; fallar cerrado ante datos incompletos, otros permisos o unidades compartidas. No modificar permisos de almacenes de negocio para acomodar este contrato.",
+        "Ledger InvitacionesLotes preserva MUTATION,DIGEST,ACTOR,OPERATION,STATUS,RECIPIENTS,DRAFT_FILE,UPDATED. Crear recurso solo por mutación explícita; reserva y flush antes de Mail; lecturas y preview sin creación.",
+        "Mutation/digest/actor/operación inmutables y deduplicación por persona/correo/hash enlace/finalidad/ronda; reserva/resultado incierto o ACK perdido no permiten reenvío automático. Consultar y conciliar recibo. Nueva ronda exige elección humana.",
+        "Borrador nuevo se crea vacío, se certifica privacidad antes de contenido y se revalida después; no reparar ACL silenciosamente. Drive y Sheets no ofrecen transacción conjunta de permisos y datos.",
+        "Máximo25 y cuota suficiente para todo lote con reserva5; revalidar por destinatario y pausar restantes not_attempted si cae la cuota. No afirmar entrega por aceptación MailApp.",
+        "Enviar exige scope script.send_mail consentido personalmente, configuración habilitada y aprobación humana explícita del lote concreto revisado. Ningún envío desde auditoría o pruebas.",
+        "Sin tokens en tableros generales, Git, Atlas, logs o almacenamiento persistente del navegador. Limpiar UI al cambiar sesión y conservar mutation para conciliar ACK perdido.",
+        "Publicar fuente con funciones deshabilitadas no acredita activación ni envío. Mantener manifest, endpoint, identidad y permisos actuales salvo consentimiento específico posterior."
+      ]
+    },
+    {
+      "id": "CTR-EMD-ENTRADA-CORPORATIVA",
+      "components": [
+        "GAS-EMD"
+      ],
+      "source": "Propuesta de entrada HTTPS corporativa para #9, condicionada a dominio/ruta y alojamiento reales.",
+      "input": [
+        "Ruta HTTPS corporativa elegida por propietario y endpoint GAS existente confirmado",
+        "Fragmento personal recibido en navegador sin trasladarlo a querystrings"
+      ],
+      "output": [
+        "Redirección al portal Apps Script existente conservando fragmento personal"
+      ],
+      "invariants": [
+        "No copiar HTMLService a una web estática ni reemplazar google.script.run. No emitir/reiniciar enlaces.",
+        "No publicar dominio inventado; configuración de DNS/alojamiento/certificado se verifica antes de activar.",
+        "Enlace corporativo de entrada redirige a GAS: mantener toda sesión bajo dominio corporativo requeriría otra migración y contrato.",
+        "No registrar ni publicar fragmentos personales o tokens; no ampliar permisos ni cambiar endpoint."
+      ]
     }
   ],
   "path_ownership": [
+    {
+      "repo": "yodesarrollomx/board-aurum",
+      "prefix": "apps-script/corcho.gs",
+      "components": [
+        "GAS-OPERACION",
+        "STORE-DESPACHO-CORCHO",
+        "EXT-DRIVE"
+      ]
+    },
     {
       "repo": "yodesarrollomx/board-aurum",
       "prefix": "",
@@ -6622,6 +7951,21 @@
       "components": [
         "SYS-YOD-OS",
         "EXT-GITHUB-PUBLISHER-APP"
+      ]
+    },
+    {
+      "repo": "yodesarrollo/amalaya-board",
+      "prefix": "",
+      "components": [
+        "SYS-AMALAYA"
+      ]
+    },
+    {
+      "repo": "yodesarrollo/amalaya-board",
+      "prefix": "apps-script/",
+      "components": [
+        "GAS-AMALAYA",
+        "SHEET-AMALAYA"
       ]
     }
   ]

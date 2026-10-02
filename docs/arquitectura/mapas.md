@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.6 · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.30-emd-invitaciones · 2026-10-01.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -17,6 +17,7 @@ flowchart LR
   n_EXT_GMAIL["Gmail"]
   n_GAS_MOAC_METAS["Metas y objetivos de MOAC"]
   n_SHEET_MOAC_METAS["Metas, objetivos y acciones"]
+  n_STORE_DESPACHO_CORCHO["Mi Corcho · almacén privado de Dirección"]
   n_GAS_OPERACION -->|Lee/escribe registros del dominio| n_SHEET_OPERACION
   n_SYS_DESPACHO -.->|Consume contrato del backend| n_GAS_OPERACION
   n_SYS_TAREAS -.->|Consume contrato del backend| n_GAS_OPERACION
@@ -28,6 +29,7 @@ flowchart LR
   n_SYS_DESPACHO -.->|Aprobación de borradores por protocolo BANDEJA| n_EXT_GMAIL
   n_SYS_TAREAS -->|Enruta moac/moacSet/moacObjetivo a motor separado| n_GAS_MOAC_METAS
   n_GAS_MOAC_METAS -->|Lee y vincula estrategia| n_SHEET_MOAC_METAS
+  n_GAS_OPERACION -.->|Persiste Corcho privado con revisión y control de acceso| n_STORE_DESPACHO_CORCHO
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SHEET_OPERACION pendiente;
@@ -118,7 +120,7 @@ flowchart LR
   n_SVC_SALA_EJECUTOR -->|Sube activos producidos| n_EXT_DRIVE
   n_GAS_SALA -->|Valida credencial del OS desde servidor| n_GAS_PORTERO
   n_GAS_SALA -->|Consulta respaldo de identidad| n_GAS_PORTERO_RESPALDO
-  n_GAS_PORTERO -.->|Lee resultados nativos; escribe cantidades permitidas| n_SHEET_PPP_MODELOS
+  n_GAS_PORTERO -->|Lee resultados nativos; escribe cantidades permitidas| n_SHEET_PPP_MODELOS
   n_SHEET_PORTERO -.->|Registra caso, libro, carpeta y revisión del modelo| n_SHEET_PPP_MODELOS
   n_EXT_GITHUB_PUBLISHER_APP -.->|Crea PR del commit preparado de Sala| n_SYS_SALA
   n_EXT_GITHUB_PUBLISHER_APP -.->|Crea PR del commit preparado de Marketing| n_SYS_MARKETING
@@ -278,7 +280,7 @@ flowchart LR
   n_SYS_YOD_OS -->|Consulta leads del CRM| n_GAS_CRM
   n_SYS_TRACK -->|Consulta resource Track para codesarrollos| n_GAS_CATALOGO
   n_SYS_YOD_OS -->|Respaldo de identidad| n_GAS_PORTERO_RESPALDO
-  n_GAS_PORTERO -.->|Registra antes, después, actor y siguiente paso| n_SYS_CONTROL
+  n_GAS_PORTERO -->|Registra antes, después, actor y siguiente paso| n_SYS_CONTROL
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PINTARRON pendiente;
@@ -291,12 +293,17 @@ flowchart LR
   n_SYS_EMD["Evaluación de personas"]
   n_GAS_EMD["Evaluación privada"]
   n_SHEET_EMD["Datos de Evaluación privada"]
+  n_EXT_DRIVE["Google Drive"]
+  n_STORE_EMD_DRAFTS["Borradores locales cifrados de evaluación"]
   n_GAS_EMD -.->|Lee/escribe registros del dominio| n_SHEET_EMD
   n_SYS_EMD -.->|Consume contrato del backend| n_GAS_EMD
+  n_GAS_EMD -.->|Propuesta: fotos privadas de perfil| n_EXT_DRIVE
+  n_SYS_EMD -.->|Propuesta: copia cifrada local| n_STORE_EMD_DRAFTS
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_EMD pendiente;
   class n_GAS_EMD pendiente;
   class n_SHEET_EMD pendiente;
+  class n_EXT_DRIVE pendiente;
 ```
 
 ## Infraestructura
@@ -310,6 +317,7 @@ flowchart LR
   n_SYS_PRUEBA_DOMINIO["Prueba de dominio"]
   n_GAS_PLAN_POTENCIAL["Captación de Plan Potencial"]
   n_GAS_CODES["Portal de codesarrolladores"]
+  n_GAS_EMD["Evaluación privada"]
   n_EXT_DRIVE["Google Drive"]
   n_EXT_CALENDAR["Google Calendar"]
   n_EXT_META["Meta"]
@@ -329,8 +337,10 @@ flowchart LR
   n_EXT_ACTIONS -.->|Solicita identidad temporal limitada al repositorio| n_EXT_GITHUB_PUBLISHER_APP
   n_EXT_GITHUB_PUBLISHER_APP -.->|Crea PR del commit preparado de Sala| n_SYS_SALA
   n_EXT_GITHUB_PUBLISHER_APP -.->|Crea PR del commit preparado de Marketing| n_SYS_MARKETING
+  n_GAS_EMD -.->|Propuesta: fotos privadas de perfil| n_EXT_DRIVE
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_SITIO_ORG pendiente;
+  class n_GAS_EMD pendiente;
   class n_EXT_DRIVE pendiente;
   class n_EXT_CALENDAR pendiente;
   class n_EXT_META pendiente;
@@ -378,15 +388,38 @@ flowchart LR
   n_SYS_YOD_OS -->|Respaldo de identidad| n_GAS_PORTERO_RESPALDO
   n_GAS_SALA -->|Valida credencial del OS desde servidor| n_GAS_PORTERO
   n_GAS_SALA -->|Consulta respaldo de identidad| n_GAS_PORTERO_RESPALDO
-  n_GAS_PORTERO -.->|Lee resultados nativos; escribe cantidades permitidas| n_SHEET_PPP_MODELOS
+  n_GAS_PORTERO -->|Lee resultados nativos; escribe cantidades permitidas| n_SHEET_PPP_MODELOS
   n_SHEET_PORTERO -.->|Registra caso, libro, carpeta y revisión del modelo| n_SHEET_PPP_MODELOS
-  n_GAS_PORTERO -.->|Registra antes, después, actor y siguiente paso| n_SYS_CONTROL
+  n_GAS_PORTERO -->|Registra antes, después, actor y siguiente paso| n_SYS_CONTROL
   n_GAS_FLUJO -->|Verifica credencial y acceso al módulo| n_GAS_PORTERO
   n_GAS_CRM -->|Consulta identidad y alcance de lectura| n_GAS_PORTERO
   n_GAS_OBRA -->|Verifica credencial para operar| n_GAS_PORTERO
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SHEET_PORTERO pendiente;
+```
+
+## Desarrollos
+
+```mermaid
+flowchart LR
+  n_SYS_AMALAYA["Amalaya"]
+  n_GAS_AMALAYA["Motor Amalaya"]
+  n_SHEET_AMALAYA["Datos de Amalaya"]
+  n_SYS_AMALAYA -->|Consume contrato autenticado del tablero| n_GAS_AMALAYA
+  n_GAS_AMALAYA -->|Conserva chinches y su historial| n_SHEET_AMALAYA
+  classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
+  class n_SHEET_AMALAYA pendiente;
+```
+
+## Dirección
+
+```mermaid
+flowchart LR
+  n_GAS_OPERACION["Operación y tareas"]
+  n_STORE_DESPACHO_CORCHO["Mi Corcho · almacén privado de Dirección"]
+  n_GAS_OPERACION -.->|Persiste Corcho privado con revisión y control de acceso| n_STORE_DESPACHO_CORCHO
+  classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
 ```
 
 ## Contratos y evidencia de cada conexión
@@ -479,12 +512,17 @@ flowchart LR
 | CON-084 | SVC-SALA-EJECUTOR → EXT-DRIVE | documentos: Sube activos producidos. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_ejecutor.py#L67) — Publicación de resultado en Drive |
 | CON-085 | GAS-SALA → GAS-PORTERO | autenticacion: Valida credencial del OS desde servidor. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [sala-edicion/gas/Code.gs](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/gas/Code.gs#L193) — Valida credencial del OS desde servidor |
 | CON-086 | GAS-SALA → GAS-PORTERO-RESPALDO | autenticacion: Consulta respaldo de identidad. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [sala-edicion/gas/Code.gs](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/gas/Code.gs#L191) — Consulta respaldo de identidad |
-| CON-PPP-MODELO | GAS-PORTERO → SHEET-PPP-MODELOS | persistencia: Lee resultados nativos; escribe cantidades permitidas. Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente. | propuesto | Transporte preparado y probado con dobles; lectura del piloto desde editor verificada; implementación pública no actualizada. |
+| CON-PPP-MODELO | GAS-PORTERO → SHEET-PPP-MODELOS | persistencia: Lee resultados nativos; escribe cantidades permitidas. Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente. | ejecucion | Versión53 publicada; lectura HTTP de caso y lista conciliada con el libro piloto. Escritura permitida desplegada y probada con dobles; recorrido público de edición pendiente. |
 | CON-PPP-REGISTRO | SHEET-PORTERO → SHEET-PPP-MODELOS | registro: Registra caso, libro, carpeta y revisión del modelo. IDs estables; un libro por caso y hoja por versión; no sustituir historial ni compartir archivos por efecto de registrar un enlace. | propuesto | Registro del piloto creado; organización y generación para todos los casos pendientes. |
-| CON-PPP-AUDITORIA | GAS-PORTERO → SYS-CONTROL | auditoria: Registra antes, después, actor y siguiente paso. Auditoría en libro y Control Maestro con actor autenticado, entidad, versión, revisión, campo/rango, fuente y validación. No inventar valores previos ausentes ni declarar publicada una operación no confirmada. | propuesto | Registro operativo privado actualizado; transporte auditado con dobles; activadores y despliegue público pendientes. |
+| CON-PPP-AUDITORIA | GAS-PORTERO → SYS-CONTROL | auditoria: Registra antes, después, actor y siguiente paso. Auditoría en libro y Control Maestro con actor autenticado, entidad, versión, revisión, campo/rango, fuente y validación. No inventar valores previos ausentes ni declarar publicada una operación no confirmada. | codigo | Registro operativo privado actualizado; auditoría de transporte desplegada y activador de edición directa instalado. Primer evento real y recorrido de edición todavía sin observar. |
 | CON-PUBLICADOR-IDENTIDAD | EXT-ACTIONS → EXT-GITHUB-PUBLISHER-APP | autenticacion: Solicita identidad temporal limitada al repositorio. CTR-PUBLICADOR-GITHUB. App con contents:read y pull_requests:write, exclusivamente para crear el PR. Las revisiones requeridas deben pasar antes del merge normal. | propuesto | Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB_TOKEN; requiere registro e instalación personal de una App privada de la organización. |
 | CON-PUBLICADOR-SALA | EXT-GITHUB-PUBLISHER-APP → SYS-SALA | automatizacion: Crea PR del commit preparado de Sala. CTR-PUBLICADOR-GITHUB. App con contents:read y pull_requests:write, exclusivamente para crear el PR. Las revisiones requeridas deben pasar antes del merge normal. | propuesto | Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB_TOKEN; requiere registro e instalación personal de una App privada de la organización. |
 | CON-PUBLICADOR-MARKETING | EXT-GITHUB-PUBLISHER-APP → SYS-MARKETING | automatizacion: Crea PR del commit preparado de Marketing. CTR-PUBLICADOR-GITHUB. App con contents:read y pull_requests:write, exclusivamente para crear el PR. Las revisiones requeridas deben pasar antes del merge normal. | propuesto | Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB_TOKEN; requiere registro e instalación personal de una App privada de la organización. |
 | CON-AUTH-FLUJO | GAS-FLUJO → GAS-PORTERO | autenticacion: Verifica credencial y acceso al módulo. CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada. | codigo | Revisión de fuente activa GAS-FLUJO, versión 15; dependencia de Portero contrastada en código y mediante dobles. No acredita recorrido completo de un usuario real. |
 | CON-AUTH-CRM | GAS-CRM → GAS-PORTERO | autenticacion: Consulta identidad y alcance de lectura. CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada. | codigo | Revisión de fuente activa GAS-CRM, versión 20; dependencia de Portero contrastada en código y mediante dobles. No acredita recorrido completo de un usuario real. |
 | CON-AUTH-OBRA | GAS-OBRA → GAS-PORTERO | autenticacion: Verifica credencial para operar. CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada. | codigo | Revisión de fuente activa GAS-OBRA, versión 16; dependencia de Portero contrastada en código y mediante dobles. No acredita recorrido completo de un usuario real. |
+| CON-EMD-PROFILES-DRIVE | GAS-EMD → EXT-DRIVE | persistencia: Propuesta: fotos privadas de perfil. CTR-EMD-PROFILES: carpeta dedicada privada, carga y retirada propias, lectura autorizada y confirmación por revisión/mutación; sin nuevas autorizaciones OAuth. | propuesto | Propuesta registrada; implementación y despliegue privados pendientes de pruebas |
+| CON-EMD-DRAFTS-LOCAL | SYS-EMD → STORE-EMD-DRAFTS | persistencia_local: Propuesta: copia cifrada local. CTR-EMD-DRAFTS: cifrado por enlace vigente, aislamiento de pestañas, confirmación transaccional local y recuperación explícita; el servidor mantiene revisión y cierre. | propuesto | Diseño propuesto de persistencia local; sin evidencia de publicación |
+| CON-AMALAYA-CLIENT | SYS-AMALAYA → GAS-AMALAYA | api: Consume contrato autenticado del tablero. CTR-AMALAYA-CHINCHES-ESTADO registra la extensión propuesta. Identidad, token, roles, implementación y URL actuales se conservan. | codigo | [amalaya-board/apps-script/Code.gs](https://github.com/yodesarrollo/amalaya-board/blob/a3cf36f508015d288a04288fef040130f30ec3b7/apps-script/Code.gs) — Contratos de chinches existentes y extensión de estado propuesta. |
+| CON-AMALAYA-STORE | GAS-AMALAYA → SHEET-AMALAYA | persistencia: Conserva chinches y su historial. CTR-AMALAYA-CHINCHES-ESTADO registra la extensión propuesta. Identidad, token, roles, implementación y URL actuales se conservan. | codigo | [amalaya-board/apps-script/Code.gs](https://github.com/yodesarrollo/amalaya-board/blob/a3cf36f508015d288a04288fef040130f30ec3b7/apps-script/Code.gs) — Contratos de chinches existentes y extensión de estado propuesta. |
+| CON-DESPACHO-CORCHO-STORE | GAS-OPERACION → STORE-DESPACHO-CORCHO | persistencia: Persiste Corcho privado con revisión y control de acceso. CTR-DESPACHO-CORCHO; identidad exacta, verificación fresca de privacidad de archivo y ancestros, CAS y archivo sin borrado. | propuesto | [board-aurum/apps-script/corcho.gs](https://github.com/yodesarrollomx/board-aurum/blob/096550e5647a63048450b9be848be71901a32a3a/apps-script/corcho.gs) — Almacén privado propuesto, fuera de datos generales de Operación |

@@ -1,10 +1,10 @@
 {
   "checked_at": "2026-10-01",
-  "method": "Lectura autenticada de metadatos, fuente del editor, implementaciones y fuente de versiones. Identidad acreditada por coincidencia exacta con el endpoint del cliente.",
+  "method": "Lecturas autenticadas de API históricas; actualización PPP v53 contrastada por lectura del editor, interfaz de implementación y GET autorizado contra el endpoint del cliente. Cada componente declara su alcance.",
   "confirmed_components": [
     {
       "component_id": "GAS-PORTERO",
-      "version": 52,
+      "version": 53,
       "editor_equals_deployed_version": false,
       "source_files": [
         {
@@ -13,13 +13,37 @@
         },
         {
           "name": "Code",
-          "sha256": "92c49db471f966553552212c5167f3f79d35c69838516429145548606b0629ce"
+          "sha256": "c60b738edcec4545fe52ebdbd28ba37a1d4c2d9638542a93a593685e62d4d239"
         }
       ],
-      "verification": "Fuente inmutable, implementación, URL y permisos contrastados por API. Salud pública y rechazos sin credencial comprobados por HTTP; ninguna escritura de negocio.",
+      "verification": "Versión53 publicada conservando implementación, URL y permisos; configuración coincide con hash previo. GET autorizado caso/lista PPP comparado con libro canónico: entradas, versiones, resultados, cuerpos, flujo y revisión iguales. Activador directo instalado.",
       "functional_runtime_tested": false,
       "technical_health_verified": true,
-      "isolated_test_scope": "33 escenarios Portero sobre fuente activa revisada y editor conservado"
+      "isolated_test_scope": "33 escenarios Portero sobre fuente activa revisada y editor conservado",
+      "previous_verified_versions": [
+        {
+          "component_id": "GAS-PORTERO",
+          "version": 52,
+          "editor_equals_deployed_version": false,
+          "source_files": [
+            {
+              "name": "appsscript",
+              "sha256": "0f96e341f2b96d0d1ba0b3a42f15b5ce0582e2dd3e36040b9151ce7c54f0c8fa"
+            },
+            {
+              "name": "Code",
+              "sha256": "92c49db471f966553552212c5167f3f79d35c69838516429145548606b0629ce"
+            }
+          ],
+          "verification": "Fuente inmutable, implementación, URL y permisos contrastados por API. Salud pública y rechazos sin credencial comprobados por HTTP; ninguna escritura de negocio.",
+          "functional_runtime_tested": false,
+          "technical_health_verified": true,
+          "isolated_test_scope": "33 escenarios Portero sobre fuente activa revisada y editor conservado"
+        }
+      ],
+      "source_verification_method": "Fuente guardada releída del editor y versión observada en interfaz; no se obtuvo fuente inmutable v53 por API. Un archivo de diagnóstico posterior existe sólo en editor.",
+      "read_runtime_verified": true,
+      "read_runtime_scope": "Piloto nativo PPP: caso y lista. No certifica pantalla autenticada, escrituras, aceptación por rol ni todos los casos."
     },
     {
       "component_id": "GAS-FLUJO",
@@ -179,9 +203,9 @@
   "limitations": [
     "No se afirma cobertura exhaustiva de los scripts vinculados a Sheets.",
     "Los recorridos reales por rol y decisiones de autorización de negocio siguen pendientes; se comprobaron correcciones técnicas acotadas con dobles.",
-    "Las funciones adicionales del editor de Portero se conservaron sin desplegar; el parche de seguridad también queda aplicado en ese borrador.",
+    "Las funciones PPP del editor se integraron en versión53; un archivo diagnóstico posterior quedó sólo en editor. Lectura HTTP piloto verificada; edición y aceptación por rol pendientes.",
     "Obra: falta confirmar LIBRO_ID y la regla de delegación antes de integrar su prototipo.",
     "Flujo: la idempotencia completa y recuperación de pagos requieren diseño adicional; no se corrigieron registros financieros por inferencia."
   ],
-  "backend_deployments_modified_scope": "GAS-OBRA-CLIENTE:1→2; GAS-PORTERO:50→51; GAS-FLUJO:14→15; GAS-CRM:19→20; GAS-CATALOGO:8→9. Siempre misma implementación, URL y permisos."
+  "backend_deployments_modified_scope": "GAS-OBRA-CLIENTE:1→2; GAS-PORTERO:50→51; GAS-FLUJO:14→15; GAS-CRM:19→20; GAS-CATALOGO:8→9. Siempre misma implementación, URL y permisos. GAS-PORTERO:52→53 (transporte PPP y lectura nativa); implementación, URL y permisos conservados."
 }

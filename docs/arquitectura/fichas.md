@@ -1,16 +1,16 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.6 · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.30-emd-invitaciones · 2026-10-01.
 
 ## SYS-DESPACHO · El Despacho
 
 Priorizar y aprobar trabajo de Dirección
 
 - Tipo: tablero. Dominio: Operación. Responsable: Dirección.
-- Evidencia: codigo. Producción: No verificado en despliegue.
+- Evidencia: codigo. Producción: Registro en catálogo vivo verificado; frontend y nuevo Corcho requieren verificación independiente..
 - Entidades: tarea, comentario, borrador, decision.
 - Fuente de verdad: SHEET-OPERACION mediante GAS-OPERACION; protocolo BANDEJA en comentarios.
-- Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L16) — Sistema presente en el catálogo canónico.
+- Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L16) — Sistema presente en el catálogo canónico; Catálogo vivo conciliado el 1-oct-2026: SYS-DESPACHO en Portal y Sistemas, destino canónico, fórmulas/validaciones comprobadas, permisos DP conservados. Seguimiento yod-portal#3 completado..
 - Conexiones: CON-016 (SYS-DESPACHO → GAS-OPERACION); CON-033 (SYS-YOD-OS → SYS-DESPACHO); CON-047 (SYS-DESPACHO → GAS-PORTERO); CON-061 (SYS-DESPACHO → EXT-GMAIL).
 - Mejoras: A · Atención comercial sin leads olvidados; D · Referidos y reactivación con control humano; G · Bloqueos y decisiones que frenan ventas y obra.
 
@@ -19,13 +19,13 @@ Priorizar y aprobar trabajo de Dirección
 Evaluar alternativas y escenarios de desarrollo
 
 - Tipo: tablero. Dominio: Ventas. Responsable: Desarrollo y Comercial.
-- Evidencia: codigo. Producción: Frontend publicado; vínculo de cálculo nativo y permisos del recorrido todavía sin verificar en sesión.
+- Evidencia: codigo. Producción: Frontend publicado y lectura pública del piloto conciliada con Sheets; sesión de pantalla y recorrido de edición aún pendientes.
 - Entidades: caso, escenario, variable_calculo, flujo_proyectado.
-- Fuente de verdad: SHEET-PORTERO para casos; modelos de cálculo del frontend; fuente GAS desplegada por verificar.
-- Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L17) — Sistema presente en el catálogo canónico; [potenciales-yod/mixto.html](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/mixto.html) — Frontend integrado por PR3 y publicado por Pages; código público incluye lectura del modelo nativo, cuerpos y flujo por etapas. Sesión y backend pendientes de verificación conjunta..
+- Fuente de verdad: SHEET-PORTERO registra casos; libro canónico Sheets para el piloto con lectura pública verificada en v53. Los casos pendientes de migrar aún usan modelos del frontend..
+- Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L17) — Sistema presente en el catálogo canónico; [potenciales-yod/mixto.html](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/mixto.html) — Frontend integrado por PR3 y publicado por Pages; código público incluye lectura del modelo nativo, cuerpos y flujo por etapas. Sesión y backend pendientes de verificación conjunta.; Lectura pública del caso y la lista del piloto comparadas con entradas, resultados, cuerpos y flujo nativos; coinciden. Evidencia operativa privada; no se ejecutaron POST de prueba..
 - Conexiones: CON-019 (SYS-POTENCIALES → GAS-PORTERO); CON-034 (SYS-YOD-OS → SYS-POTENCIALES).
 - Mejoras: C · Cotización, plan y siguiente paso comercial; PPP · Unificar tablero y fórmulas de potencial en Sheets.
-- Pendientes: Frontend de lectura nativa publicado y contrastado por código. Backend de transporte sin desplegar; conexión pública del piloto y migración de otros casos pendientes. Los casos no migrados conservan cálculo cliente..
+- Pendientes: Backend de transporte v53 publicado en implementación existente. GET de caso y lista contrastados con el mismo libro y revisión; edición en pantalla y demás casos pendientes. Los casos no migrados conservan cálculo cliente..
 
 ## SYS-TRACK · Tracks de codesarrollo
 
@@ -258,10 +258,10 @@ Evaluación privada y seguimiento de revisiones
 
 - Tipo: aplicacion_auxiliar. Dominio: Personas. Responsable: Responsable del proceso por confirmar.
 - Evidencia: pendiente. Producción: No verificado en despliegue.
-- Entidades: evaluacion, revision, chinche.
+- Entidades: evaluacion, revision, chinche, contacto_preparado.
 - Fuente de verdad: Sistema privado; detalle técnico restringido.
 - Evidencia: Integración pendiente de verificar.
-- Conexiones: CON-032 (SYS-EMD → GAS-EMD).
+- Conexiones: CON-032 (SYS-EMD → GAS-EMD); CON-EMD-DRAFTS-LOCAL (SYS-EMD → STORE-EMD-DRAFTS).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: No hay evidencia de integración transaccional con YOD OS; mantener datos y permisos privados.
 
@@ -309,10 +309,10 @@ Ensayo técnico de migración de dominio y acceso
 Servir el contrato de Portero y Potenciales
 
 - Tipo: apps_script. Dominio: Identidad. Responsable: Responsable técnico del backend.
-- Evidencia: codigo. Producción: Versión 52 publicada en la implementación existente; fuente inmutable y configuración comprobadas por API. Salud y rechazos sin credencial comprobados por HTTP. Autorización y recuperación probadas con registros sintéticos; no se ejecutaron escrituras operativas ni un recorrido autenticado real..
+- Evidencia: codigo. Producción: Versión53 publicada en la implementación existente. Código leído del editor coincide con el cambio guardado; configuración conservada. Lectura pública PPP de caso/lista conciliada con Sheets; activador directo instalado. Edición real, sesión de pantalla y aceptación por rol pendientes..
 - Entidades: acceso, sesion, caso, escenario, track.
-- Fuente de verdad: Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos..
-- Evidencia: [potenciales-yod/CLAUDE.md](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/CLAUDE.md#L35) — Tipo de fuente disponible: ausente; Registro backends-verificados.json: versión activa 51 comprobada por API el 2026-10-01, con misma implementación, URL y permisos; pruebas aisladas de la corrección.; CHG-CONTROL-MAESTRO-001: versión 52; publicación contrastada por API y pruebas HTTP de lectura y rechazo el 2026-10-01. Detalle en control-maestro.md y registro de backends..
+- Fuente de verdad: Versión53 de implementación existente observada en editor; lectura HTTP PPP contrastada con libro canónico. Evidencia API de versiones51/52 histórica; los datos operativos siguen en sus hojas..
+- Evidencia: [potenciales-yod/CLAUDE.md](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/CLAUDE.md#L35) — Tipo de fuente disponible: ausente; Registro backends-verificados.json: versión activa 51 comprobada por API el 2026-10-01, con misma implementación, URL y permisos; pruebas aisladas de la corrección.; CHG-CONTROL-MAESTRO-001: versión 52; publicación contrastada por API y pruebas HTTP de lectura y rechazo el 2026-10-01. Detalle en control-maestro.md y registro de backends.; CHG-PPP-BACKEND-001: versión53 observada tras actualizar la implementación existente; fuente de editor releída idéntica, configuración conservada y lectura HTTP autorizada de caso/lista conciliada. Activador directo instalado; sin POST de prueba..
 - Conexiones: CON-001 (GAS-PORTERO → SHEET-PORTERO); CON-019 (SYS-POTENCIALES → GAS-PORTERO); CON-020 (SYS-TRACK → GAS-PORTERO); CON-044 (SYS-YOD-OS → GAS-PORTERO); CON-045 (SYS-TAREAS → GAS-PORTERO); CON-046 (SYS-FLUJO → GAS-PORTERO); CON-047 (SYS-DESPACHO → GAS-PORTERO); CON-048 (SYS-INTERIORES → GAS-PORTERO); CON-049 (SYS-MARKETING → GAS-PORTERO); CON-050 (SYS-MIRAMAR → GAS-PORTERO); CON-051 (SYS-OBRA → GAS-PORTERO); CON-054 (GAS-PORTERO → SYS-YOD-OS); CON-071 (SYS-INVERSION → GAS-PORTERO); CON-085 (GAS-SALA → GAS-PORTERO); CON-PPP-MODELO (GAS-PORTERO → SHEET-PPP-MODELOS); CON-PPP-AUDITORIA (GAS-PORTERO → SYS-CONTROL); CON-AUTH-FLUJO (GAS-FLUJO → GAS-PORTERO); CON-AUTH-CRM (GAS-CRM → GAS-PORTERO); CON-AUTH-OBRA (GAS-OBRA → GAS-PORTERO).
 - Mejoras: PPP · Unificar tablero y fórmulas de potencial en Sheets.
 - Pendientes: La revisión acotada no certifica todas las operaciones de negocio ni sustituye la aceptación con usuarios reales.; Las cachés de consumidores ajenos a esta entrega pueden conservar permisos temporalmente; revisarlos al continuar cada tablero..
@@ -365,7 +365,7 @@ Servir el contrato de Operación y tareas
 - Entidades: tarea, comentario.
 - Fuente de verdad: Fuente de GitHub; despliegue y datos reales por verificar.
 - Evidencia: [board-aurum/apps-script/portero-auth.gs](https://github.com/yodesarrollomx/board-aurum/blob/096550e5647a63048450b9be848be71901a32a3a/apps-script/portero-auth.gs#L63) — Tipo de fuente disponible: fragmento_autenticacion.
-- Conexiones: CON-003 (GAS-OPERACION → SHEET-OPERACION); CON-016 (SYS-DESPACHO → GAS-OPERACION); CON-017 (SYS-TAREAS → GAS-OPERACION); CON-055 (GAS-OPERACION → SYS-YOD-OS).
+- Conexiones: CON-003 (GAS-OPERACION → SHEET-OPERACION); CON-016 (SYS-DESPACHO → GAS-OPERACION); CON-017 (SYS-TAREAS → GAS-OPERACION); CON-055 (GAS-OPERACION → SYS-YOD-OS); CON-DESPACHO-CORCHO-STORE (GAS-OPERACION → STORE-DESPACHO-CORCHO).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Código desplegado y permisos reales no contrastados.
 
@@ -674,10 +674,10 @@ Servir el contrato de Evaluación privada
 
 - Tipo: apps_script. Dominio: Personas. Responsable: Responsable técnico del backend.
 - Evidencia: pendiente. Producción: No verificado en despliegue.
-- Entidades: evaluacion, revision.
+- Entidades: evaluacion, revision, contacto_preparado.
 - Fuente de verdad: Sistema privado; detalle técnico restringido.
 - Evidencia: Integración pendiente de verificar.
-- Conexiones: CON-015 (GAS-EMD → SHEET-EMD); CON-032 (SYS-EMD → GAS-EMD).
+- Conexiones: CON-015 (GAS-EMD → SHEET-EMD); CON-032 (SYS-EMD → GAS-EMD); CON-EMD-PROFILES-DRIVE (GAS-EMD → EXT-DRIVE).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Código desplegado y permisos reales no contrastados.
 
@@ -687,7 +687,7 @@ Almacenar registros del dominio personas
 
 - Tipo: google_sheets. Dominio: Personas. Responsable: Dueño del dato por confirmar.
 - Evidencia: declarado. Producción: No verificado en despliegue.
-- Entidades: evaluacion, revision.
+- Entidades: evaluacion, revision, contacto_preparado.
 - Fuente de verdad: Sistema privado; detalle técnico restringido.
 - Evidencia: Integración pendiente de verificar.
 - Conexiones: CON-015 (GAS-EMD → SHEET-EMD).
@@ -703,7 +703,7 @@ Dependencia externa de procesos YOD OS
 - Entidades: .
 - Fuente de verdad: Datos del servicio externo; no inspeccionados.
 - Evidencia: Integración pendiente de verificar.
-- Conexiones: CON-062 (GAS-CODES → EXT-DRIVE); CON-084 (SVC-SALA-EJECUTOR → EXT-DRIVE).
+- Conexiones: CON-062 (GAS-CODES → EXT-DRIVE); CON-084 (SVC-SALA-EJECUTOR → EXT-DRIVE); CON-EMD-PROFILES-DRIVE (GAS-EMD → EXT-DRIVE).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Estado y permisos no comprobados.
 
@@ -915,13 +915,13 @@ Generar texto, imagen, escena o voz según motor configurado
 Conservar entradas, fórmulas nativas, versiones, flujos y datos de diagramas del mismo modelo por caso
 
 - Tipo: google_sheets. Dominio: Ventas. Responsable: Dirección / propietario del libro.
-- Evidencia: ejecucion. Producción: Modelo piloto leído y conciliado en Sheets; conexión pública y migración general pendientes.
+- Evidencia: ejecucion. Producción: Piloto y lectura pública de caso/lista conciliados; migración general y edición en pantalla pendientes.
 - Entidades: caso, version, entrada, formula, flujo, geometria, etapa, fuente, revision, cambio.
 - Fuente de verdad: Libro privado por caso registrado en SHEET-PORTERO; entradas y fórmulas canónicas. El tablero transporta y presenta resultados; no replica un motor financiero..
 - Evidencia: Lectura directa autorizada de un libro piloto; fórmulas nativas y versiones contrastadas. Evidencia detallada en registro operativo privado, sin publicar identificadores ni cifras.; Lectura nativa de programa por cuerpos y flujo por etapas. Campos ausentes quedan pendientes; comparación con proforma activa sin sustituir datos globales. Detalle en registro privado..
 - Conexiones: CON-PPP-MODELO (GAS-PORTERO → SHEET-PPP-MODELOS); CON-PPP-REGISTRO (SHEET-PORTERO → SHEET-PPP-MODELOS).
 - Mejoras: PPP · Unificar tablero y fórmulas de potencial en Sheets.
-- Pendientes: La existencia del libro no acredita la conexión pública del tablero; Faltan otros motores, nuevas altas, capturas por cuerpos y renta neta completa; el presupuesto mensual por etapas es preparación parcial.
+- Pendientes: La lectura pública verificada del piloto no acredita la edición completa ni otros casos; Faltan otros motores, nuevas altas, capturas por cuerpos y renta neta completa; el presupuesto mensual por etapas es preparación parcial.
 
 ## EXT-GITHUB-PUBLISHER-APP · Identidad de publicación GitHub
 
@@ -935,3 +935,68 @@ Crear PR automáticos con identidad propia para que se ejecuten sus revisiones o
 - Conexiones: CON-PUBLICADOR-IDENTIDAD (EXT-ACTIONS → EXT-GITHUB-PUBLISHER-APP); CON-PUBLICADOR-SALA (EXT-GITHUB-PUBLISHER-APP → SYS-SALA); CON-PUBLICADOR-MARKETING (EXT-GITHUB-PUBLISHER-APP → SYS-MARKETING).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: La instalación se limita a Sala de Edición y Marketing; no usar credenciales personales en CI; Código probado no acredita una instalación ni publicación correcta.
+
+## STORE-EMD-DRAFTS · Borradores locales cifrados de evaluación
+
+Conservar copia recuperable en el mismo navegador sin sustituir la confirmación del servidor
+
+- Tipo: almacen_navegador. Dominio: Personas. Responsable: Participante autorizado del enlace vigente.
+- Evidencia: propuesto. Producción: Propuesta; implementación y publicación pendientes de evidencia privada.
+- Entidades: borrador_cifrado, mutacion_pendiente.
+- Fuente de verdad: Copia local no confirmada; el backend conserva autoridad sobre revisiones y cierre.
+- Evidencia: Diseño de recuperación local y pruebas sintéticas propuestos.
+- Conexiones: CON-EMD-DRAFTS-LOCAL (SYS-EMD → STORE-EMD-DRAFTS).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Pendientes: Copia limitada al navegador y enlace vigentes; borrar datos del navegador o cambiar enlace puede impedir recuperación; Almacenamiento o criptografía pueden fallar; el servidor sigue siendo fuente de verdad; Concurrencia entre pestañas y confirmaciones tardías exige aislamiento y revisión explícita.
+
+## SYS-AMALAYA · Amalaya
+
+Seguimiento de espacios, modelos y datos del desarrollo
+
+- Tipo: tablero. Dominio: Desarrollos. Responsable: Dirección y responsable del desarrollo.
+- Evidencia: codigo. Producción: Verificación independiente de esta entrega pendiente..
+- Entidades: espacio, modelo, supuesto, chinche.
+- Fuente de verdad: Registros privados del desarrollo y contratos actuales del tablero; historial de chinches por ID..
+- Evidencia: [amalaya-board/src/componentes/FichaEspacio.jsx](https://github.com/yodesarrollo/amalaya-board/blob/a3cf36f508015d288a04288fef040130f30ec3b7/src/componentes/FichaEspacio.jsx) — Fuente de interfaz revisada para estados vacíos y aviso de supuestos..
+- Conexiones: CON-AMALAYA-CLIENT (SYS-AMALAYA → GAS-AMALAYA).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Pendientes: La calidad visual no valida datos comerciales definitivos; no convertir supuestos en hechos..
+
+## GAS-AMALAYA · Motor Amalaya
+
+Servir contratos actuales y conciliar estados de chinches
+
+- Tipo: apps_script. Dominio: Desarrollos. Responsable: Dirección y responsable del desarrollo.
+- Evidencia: codigo. Producción: Verificación independiente de esta entrega pendiente..
+- Entidades: chinche, historial.
+- Fuente de verdad: Registros privados del desarrollo y contratos actuales del tablero; historial de chinches por ID..
+- Evidencia: [amalaya-board/apps-script/Code.gs](https://github.com/yodesarrollo/amalaya-board/blob/a3cf36f508015d288a04288fef040130f30ec3b7/apps-script/Code.gs) — Fuente contiene lectura de chinches y chincheTomada; extensión compatible propuesta..
+- Conexiones: CON-AMALAYA-CLIENT (SYS-AMALAYA → GAS-AMALAYA); CON-AMALAYA-STORE (GAS-AMALAYA → SHEET-AMALAYA).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Pendientes: La calidad visual no valida datos comerciales definitivos; no convertir supuestos en hechos..
+
+## SHEET-AMALAYA · Datos de Amalaya
+
+Conservar registros operativos y chinches del desarrollo
+
+- Tipo: google_sheets. Dominio: Desarrollos. Responsable: Dirección y responsable del desarrollo.
+- Evidencia: declarado. Producción: Verificación independiente de esta entrega pendiente..
+- Entidades: espacio, chinche, historial.
+- Fuente de verdad: Registros privados del desarrollo y contratos actuales del tablero; historial de chinches por ID..
+- Evidencia: [amalaya-board/README.md](https://github.com/yodesarrollo/amalaya-board/blob/a3cf36f508015d288a04288fef040130f30ec3b7/README.md) — Almacén lógico del tablero; evidencia de correspondencia física y detalles permanecen privados..
+- Conexiones: CON-AMALAYA-STORE (GAS-AMALAYA → SHEET-AMALAYA).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Pendientes: La calidad visual no valida datos comerciales definitivos; no convertir supuestos en hechos..
+
+## STORE-DESPACHO-CORCHO · Mi Corcho · almacén privado de Dirección
+
+Persistir notas y ejes del Corcho en un archivo privado independiente, autorizado solo al propietario exacto
+
+- Tipo: google_sheets. Dominio: Dirección. Responsable: Dirección / propietario único del archivo.
+- Evidencia: propuesto. Producción: Preparación de infraestructura privada; integración y publicación pendientes.
+- Entidades: nota, configuracion, revision.
+- Fuente de verdad: Archivo privado independiente configurado por propiedad de script; no publicar identificadores ni notas.
+- Evidencia: [board-aurum/apps-script/corcho.gs](https://github.com/yodesarrollomx/board-aurum/blob/096550e5647a63048450b9be848be71901a32a3a/apps-script/corcho.gs) — Contrato propuesto de almacenamiento por propiedad privada; archivo físico e identidad de ejecución por verificar en registro privado.
+- Conexiones: CON-DESPACHO-CORCHO-STORE (GAS-OPERACION → STORE-DESPACHO-CORCHO).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Pendientes: Dependencia de identidad de ejecución y consentimiento vigentes para verificar privacidad antes de acceder a datos.

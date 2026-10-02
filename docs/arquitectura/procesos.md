@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.6 · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.30-emd-invitaciones · 2026-10-01.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
@@ -355,3 +355,90 @@ flowchart TD
 Vacíos: Hay dos motores distintos; comprobar consistencia e IDs al mover, archivar o eliminar tareas; No se comprobó que el cierre de tarea dispare automáticamente cierre de objetivo.
 
 Evidencia: [board-aurum/src/App.jsx](https://github.com/yodesarrollomx/board-aurum/blob/096550e5647a63048450b9be848be71901a32a3a/src/App.jsx#L854) — Vinculación de tarea a objetivo; [board-aurum/src/App.jsx](https://github.com/yodesarrollomx/board-aurum/blob/096550e5647a63048450b9be848be71901a32a3a/src/App.jsx#L858) — Cambio explícito de estado del objetivo.
+
+## PROC-EMD-PROFILES · Perfil fotográfico privado de evaluación
+
+Estado: propuesto.
+
+```mermaid
+flowchart TD
+  p0["Elegir y recortar foto propia · Participante"]
+  p1["Validar y guardar perfil · Backend autorizado"]
+  p0 -.-> p1
+  p2["Editar y homologar en recorrido · Agente autorizado"]
+  p1 -.-> p2
+  p3["Publicar derivado verificado · Propietario mediante función interna"]
+  p2 -.-> p3
+  p4["Consultar foto autorizada · Participante asignado o revisor"]
+  p3 -.-> p4
+  p5["Representar avance confirmado · Interfaz"]
+  p4 --> p5
+  p6["Quitar foto propia · Participante"]
+  p5 -.-> p6
+```
+
+| Paso | Responsable | Componentes | Entrada → salida | Ejecución |
+|---|---|---|---|---|
+| 1. Elegir y recortar foto propia | Participante | SYS-EMD | Imagen local elegida por la persona → Recorte sRGB convertido localmente a JPEG baseline sin metadatos personales; alineación progresiva y ajuste manual disponibles | manual |
+| 2. Validar y guardar perfil | Backend autorizado | GAS-EMD, SHEET-EMD, EXT-DRIVE | Imagen validable, revisión e identificador de mutación → Original privado confirmado, visible solo en Mi foto, pendiente de homologación | pendiente |
+| 3. Editar y homologar en recorrido | Agente autorizado | GAS-EMD, SHEET-EMD, EXT-DRIVE | Original privado y metadata de revisión capturada → Derivado editado uniforme, original conservado y evidencia privada | pendiente |
+| 4. Publicar derivado verificado | Propietario mediante función interna | GAS-EMD, SHEET-EMD, EXT-DRIVE | JPEG o PNG transparente estricto privado de 512 × 512 e identidad/revisión/hash/archivo fuente esperados → Derivado publicado solo si fuente sigue vigente; conflicto conserva upload posterior | pendiente |
+| 5. Consultar foto autorizada | Participante asignado o revisor | SYS-EMD, GAS-EMD, EXT-DRIVE | Sesión y relación autorizadas → Derivado homologado vigente autorizado o silueta; nunca original pendiente | pendiente |
+| 6. Representar avance confirmado | Interfaz | SYS-EMD | Perfil autorizado o silueta y estado confirmado ya disponible → Tarjeta en tres columnas con nombre completo, cargo verificado opcional y retrato mayor; borde gris/naranja/verde y estado accesible sin etiquetas visibles | automatico |
+| 7. Quitar foto propia | Participante | SYS-EMD, GAS-EMD, SHEET-EMD, EXT-DRIVE | Revisión vigente y mutación propia → Perfil sin foto confirmado, con reintento seguro | manual |
+
+Vacíos: Selección y recorte requieren decisión de la persona; La apariencia por estado no sustituye el texto, el foco ni el estado confirmado del servidor; el atlas no contiene fotos ni metadatos personales; Habilitar y verificar servicio avanzado Drive v3/API; si falta, el recorrido rechaza operación sin alternativa permisiva; Circuito privado del agente y tratamiento uniforme están propuestos; no publicados por documentarlos; No usar una foto real como fixture ni copiar originales/derivados o metadata privada al atlas público.
+
+Evidencia: Proceso propuesto; no acredita operación publicada.
+
+## PROC-EMD-DRAFTS · Recuperación revisada de borrador local
+
+Estado: propuesto.
+
+```mermaid
+flowchart TD
+  p0["Conservar copia local · Cliente autenticado"]
+  p1["Consultar estado vigente · Participante autorizado"]
+  p0 -.-> p1
+  p2["Revisar diferencias · Participante"]
+  p1 -.-> p2
+  p3["Confirmar envío o cierre · Participante y backend"]
+  p2 -.-> p3
+```
+
+| Paso | Responsable | Componentes | Entrada → salida | Ejecución |
+|---|---|---|---|---|
+| 1. Conservar copia local | Cliente autenticado | SYS-EMD, STORE-EMD-DRAFTS | Snapshot de edición o mutación pendiente → Copia cifrada durable o aviso explícito de indisponibilidad | pendiente |
+| 2. Consultar estado vigente | Participante autorizado | SYS-EMD, GAS-EMD | Sesión vigente y asignación propia → Revisión y cierre confirmados por servidor | pendiente |
+| 3. Revisar diferencias | Participante | SYS-EMD, STORE-EMD-DRAFTS | Copia local descifrada y versión del servidor → Decisión explícita de recuperación, modificación o descarte | manual |
+| 4. Confirmar envío o cierre | Participante y backend | SYS-EMD, GAS-EMD, SHEET-EMD | Mutación exacta revisada o nueva modificación autorizada; cierre con consentimiento nuevo → Confirmación real o conflicto sin sobrescritura automática | manual |
+
+Vacíos: Revisión y decisión de recuperar requieren consentimiento; no hay recuperación ni cierre automáticos; Persistencia limitada al navegador y enlace; no garantiza recuperación tras borrar almacenamiento; Pruebas táctiles y escritorio sintéticos no certifican Safari ni un teléfono físico.
+
+Evidencia: Proceso propuesto; sin datos humanos ni publicación acreditada.
+
+## PROC-EMD-CONTACTS · Preparación privada de contactos y recordatorios
+
+Estado: propuesto.
+
+```mermaid
+flowchart TD
+  p0["Elegir archivo y revisar vista previa · Coordinación autorizada"]
+  p1["Validar personas y correos · Backend autorizado"]
+  p0 -.-> p1
+  p2["Confirmar y guardar contactos · Coordinación autorizada"]
+  p1 -.-> p2
+  p3["Preparar recordatorio individual · Coordinación autorizada"]
+  p2 -.-> p3
+```
+
+| Paso | Responsable | Componentes | Entrada → salida | Ejecución |
+|---|---|---|---|---|
+| 1. Elegir archivo y revisar vista previa | Coordinación autorizada | SYS-EMD | CSV, TSV o XLSX local de hasta 250 filas → Vista previa sin escritura | manual |
+| 2. Validar personas y correos | Backend autorizado | GAS-EMD, SHEET-EMD | Identificador exacto o nombre único y correo → Coincidencias activas o errores por fila | pendiente |
+| 3. Confirmar y guardar contactos | Coordinación autorizada | SYS-EMD, GAS-EMD, SHEET-EMD | Filas revisadas, revisión esperada e identificador de mutación → Contactos confirmados o conflicto sin sobrescritura | manual |
+| 4. Preparar recordatorio individual | Coordinación autorizada | SYS-EMD | Persona pendiente y correo confirmado → Asunto y texto copiable sin envío ni enlace personal | manual |
+
+Vacíos: El envío real requiere destinatarios verificados y autorización específica; no forma parte de esta propuesta; La vista previa y las pruebas sintéticas no sustituyen revisión humana de nombres y correos; No emitir ni reemitir accesos y no reiniciar evaluaciones al preparar un recordatorio.
+
+Evidencia: Proceso propuesto; detalle operativo y datos personales permanecen en el sistema privado.
