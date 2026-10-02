@@ -559,85 +559,51 @@ function marcosHijos(){
 }
 function modoSenalar(){
   if (senalando) return;
-  var hijos = marcosHijos();
-  hijos.forEach(function (w) { try { w.YODChinche.senalar(); } catch (e) {} });
-  var marco = document.createElement("div");
-  marco.className = "chn-marco";
-  var pista = document.createElement("button");
-  pista.type = "button";
-  pista.className = "chn-pista";
-  pista.textContent = "Toca lo que quieres cambiar · aquí para salir";
-  document.body.appendChild(marco); document.body.appendChild(pista);
-
-  function bajo(ev){
-    /* en touchend el dedo ya se levantó: lo que queda vive en changedTouches */
-    var t = (ev.changedTouches && ev.changedTouches[0]) || (ev.touches && ev.touches[0]);
-    var x = t ? t.clientX : ev.clientX, y = t ? t.clientY : ev.clientY;
-    if (x == null || y == null || isNaN(x)) return null;
-    return document.elementFromPoint(x, y);
+  var hijos=marcosHijos(); hijos.forEach(function(w){try{w.YODChinche.senalar();}catch(e){}});
+  var marco=document.createElement("div"); marco.className="chn-marco";
+  var pista=document.createElement("button"); pista.type="button"; pista.className="chn-pista";
+  pista.textContent="Toca exactamente lo que quieres cambiar · aquí para salir";
+  document.body.appendChild(marco);document.body.appendChild(pista);
+  function punto(ev){var t=(ev.changedTouches&&ev.changedTouches[0])||(ev.touches&&ev.touches[0]);return{x:t?t.clientX:ev.clientX,y:t?t.clientY:ev.clientY};}
+  function bajo(ev){var p=punto(ev);if(p.x==null||p.y==null||isNaN(p.x))return null;return document.elementFromPoint(p.x,p.y);}
+  function mio(el){return!!(el&&el.closest&&el.closest('[class*="chn-"]'));}
+  function area(r){return Math.max(0,r.width)*Math.max(0,r.height);}
+  function visible(el){if(!el||el.nodeType!==1)return false;var r=el.getBoundingClientRect(),s=getComputedStyle(el);return r.width>=8&&r.height>=8&&s.display!=="none"&&s.visibility!=="hidden"&&s.pointerEvents!=="none";}
+  /* Elegir la unidad visual útil evita seleccionar una tarjeta/sección completa
+     cuando el dedo cayó sobre un texto, KPI, renglón o control concreto. */
+  function unidad(el,x,y){
+    if(!el||mio(el))return el;
+    var sel='button,a,input,select,textarea,label,summary,td,th,li,[role="button"],[role="tab"],[data-card],[data-k],[data-v],.card,.kpi,.stat,.metric,.tile,.chip,.pill,.row,.fila,.item';
+    var directo=el.closest&&el.closest(sel);
+    if(directo&&visible(directo)){var rd=directo.getBoundingClientRect();if(rd.width<=Math.max(520,innerWidth*.94)&&rd.height<=Math.max(240,innerHeight*.42))return directo;}
+    var cur=el,viewport=Math.max(1,innerWidth*innerHeight),mejor=el;
+    while(cur&&cur!==document.body&&cur!==document.documentElement){
+      if(visible(cur)){var r=cur.getBoundingClientRect(),a=area(r);if(a<=viewport*.28&&r.height<=Math.max(260,innerHeight*.45))mejor=cur;else break;}
+      cur=cur.parentElement;
+    }
+    var rb=mejor&&mejor.getBoundingClientRect();
+    if(rb&&area(rb)>viewport*.28){
+      var candidatos=[].slice.call(mejor.querySelectorAll(sel)).filter(visible).filter(function(n){var r=n.getBoundingClientRect();return x>=r.left-8&&x<=r.right+8&&y>=r.top-8&&y<=r.bottom+8;}).sort(function(a,b){return area(a.getBoundingClientRect())-area(b.getBoundingClientRect());});
+      if(candidatos[0])mejor=candidatos[0];
+    }
+    return mejor||el;
   }
-  /* la propia Chinche nunca es señalable: sin esto, la pastilla —el único
-     control visible— se clavaba a sí misma al buscar la salida */
-  function mio(el){ return !!(el && el.closest && el.closest('[class*="chn-"]')); }
-  function mover(ev){
-    var el = bajo(ev);
-    if (!el || mio(el)) return;
-    var r = el.getBoundingClientRect();
-    marco.style.cssText += ";top:" + r.top + "px;left:" + r.left + "px;width:" +
-      r.width + "px;height:" + r.height + "px";
-    marco._el = el;
-  }
-  var t0 = null;
-  function marcar(ev){
-    var t = ev.touches && ev.touches[0];
-    t0 = t ? { x: t.clientX, y: t.clientY, ms: Date.now() } : null;
-  }
+  function objetivo(ev){var raw=bajo(ev);if(!raw)return null;var p=punto(ev);return unidad(raw,p.x,p.y);}
+  function resaltar(el){if(!el||mio(el))return;var r=el.getBoundingClientRect();marco.style.top=r.top+"px";marco.style.left=r.left+"px";marco.style.width=r.width+"px";marco.style.height=r.height+"px";marco._el=el;}
+  function mover(ev){resaltar(objetivo(ev));}
+  var t0=null;
+  function marcar(ev){var t=ev.touches&&ev.touches[0];t0=t?{x:t.clientX,y:t.clientY,ms:Date.now()}:null;resaltar(objetivo(ev));}
   function tomar(ev){
-    /* en el cel, arrastrar para llegar al renglón NO es señalar: si el dedo
-       se movió o se tardó, era scroll y no se clava lo que quedó debajo */
-    if (ev.type === "touchend") {
-      var t = ev.changedTouches && ev.changedTouches[0];
-      if (!t0 || !t || Math.abs(t.clientX - t0.x) > 10 || Math.abs(t.clientY - t0.y) > 10 ||
-          Date.now() - t0.ms > 900) { t0 = null; return; }
-      t0 = null;
-    }
-    var el = bajo(ev);
-    if (!el) return;                              /* barra de scroll: no adivinar */
-    if (el.closest && el.closest(".chn-pista")) { ev.preventDefault(); salir(); return; }
-    if (mio(el)) return;
-    if (el.tagName === "IFRAME") {
-      /* elementFromPoint no cruza al tablero embebido: adentro se pica la canica */
-      ev.preventDefault(); ev.stopPropagation(); salir();
-      aviso("Dentro del tablero pica la canica y usa ✎ Pedir cambio aquí");
-      return;
-    }
-    ev.preventDefault(); ev.stopPropagation();   /* que no dispare lo de la página */
-    salir();
-    anotar({ css: ruta(el), texto: legible(el).slice(0, 160),
-             seccion: seccionDe(el), valores: valoresDe(el), clase: el.tagName.toLowerCase() });
+    if(ev.type==="touchend"){var t=ev.changedTouches&&ev.changedTouches[0];if(!t0||!t||Math.abs(t.clientX-t0.x)>10||Math.abs(t.clientY-t0.y)>10||Date.now()-t0.ms>900){t0=null;return;}t0=null;}
+    var raw=bajo(ev);if(!raw)return;if(raw.closest&&raw.closest(".chn-pista")){ev.preventDefault();salir();return;}if(mio(raw))return;
+    if(raw.tagName==="IFRAME"){ev.preventDefault();ev.stopPropagation();salir();aviso("La chinche de ese tablero se activa dentro del marco");return;}
+    var p=punto(ev),el=unidad(raw,p.x,p.y);if(!el||mio(el))return;
+    ev.preventDefault();ev.stopPropagation();salir();
+    anotar({css:ruta(el),texto:legible(el).slice(0,160),seccion:seccionDe(el),valores:valoresDe(el),clase:el.tagName.toLowerCase()});
   }
-  function tecla(ev){ if (ev.key === "Escape") salir(); }
-  function salir(){
-    senalando = null;
-    hijos.forEach(function (w) { try { w.YODChinche.salirSenalar(); } catch (e) {} });
-    hijos = [];
-    /* si esta Chinche vive embebida, que el marco de afuera también suelte su modo */
-    try { if (window.parent !== window && window.parent.YODChinche) window.parent.YODChinche.salirSenalar(); } catch (e) {}
-    document.removeEventListener("mousemove", mover, true);
-    document.removeEventListener("touchmove", mover, true);
-    document.removeEventListener("touchstart", marcar, true);
-    document.removeEventListener("click", tomar, true);
-    document.removeEventListener("touchend", tomar, true);
-    document.removeEventListener("keydown", tecla, true);
-    marco.remove(); pista.remove();
-  }
-  senalando = salir;
-  document.addEventListener("mousemove", mover, true);
-  document.addEventListener("touchmove", mover, true);
-  document.addEventListener("touchstart", marcar, true);
-  document.addEventListener("click", tomar, true);
-  document.addEventListener("touchend", tomar, true);
-  document.addEventListener("keydown", tecla, true);
+  function tecla(ev){if(ev.key==="Escape")salir();}
+  function salir(){senalando=null;hijos.forEach(function(w){try{w.YODChinche.salirSenalar();}catch(e){}});hijos=[];try{if(window.parent!==window&&window.parent.YODChinche)window.parent.YODChinche.salirSenalar();}catch(e){}document.removeEventListener("mousemove",mover,true);document.removeEventListener("touchmove",mover,true);document.removeEventListener("touchstart",marcar,true);document.removeEventListener("click",tomar,true);document.removeEventListener("touchend",tomar,true);document.removeEventListener("keydown",tecla,true);marco.remove();pista.remove();}
+  senalando=salir;document.addEventListener("mousemove",mover,true);document.addEventListener("touchmove",mover,true);document.addEventListener("touchstart",marcar,true);document.addEventListener("click",tomar,true);document.addEventListener("touchend",tomar,true);document.addEventListener("keydown",tecla,true);
 }
 
 /* ═══ DICTAR · voz a texto con el reconocimiento del navegador (Chrome/Android,
