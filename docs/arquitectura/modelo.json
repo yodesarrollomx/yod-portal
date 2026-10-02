@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.31-sala-produccion-acotada",
-  "checked_at": "2026-10-01",
+  "revision": "2026-10-02.32-emd-sys-impacto",
+  "checked_at": "2026-10-02",
   "priorities": [
     "vender_mas",
     "margen_y_control",
@@ -7018,6 +7018,7 @@
       "id": "CHG-EMD-INVITACIONES-001",
       "components": [
         "SYS-YOD-OS",
+        "SYS-EMD",
         "GAS-EMD",
         "SHEET-EMD",
         "EXT-DRIVE",
