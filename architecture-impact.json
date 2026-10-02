@@ -1,30 +1,14 @@
 {
-  "model_revision": "2026-10-01.24-chinches-cierre",
-  "proposal_id": "CHG-CHINCHES-CIERRE-001",
+  "model_revision": "2026-10-01.25-despacho-corcho",
+  "proposal_id": "CHG-DESPACHO-CHINCHES-001",
   "components": [
-    "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-POTENCIALES",
     "SYS-TAREAS",
-    "SYS-SALA",
-    "SYS-EMD",
-    "GAS-CATALOGO",
-    "SHEET-CATALOGO",
     "GAS-OPERACION",
     "SHEET-OPERACION",
-    "GAS-MOAC-METAS",
-    "SHEET-MOAC-METAS",
-    "GAS-SALA",
-    "SHEET-SALA",
-    "GAS-EMD",
-    "SHEET-EMD",
-    "GAS-PORTERO",
-    "SHEET-PORTERO",
-    "SHEET-PPP-MODELOS",
-    "EXT-DRIVE",
-    "EXT-GMAIL"
+    "GAS-PORTERO"
   ],
-  "summary": "Coordinar resolución y conciliación autorizadas del inventario de chinches, manteniendo IDs, permisos, fuentes e instrumento privado.",
+  "summary": "Registrar contrato de Corcho privado con identidad DP validada en servidor, concurrencia por versión y archivo sin borrar; conciliar registro vivo Despacho.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -33,5 +17,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir registro de coordinación mediante PR y regenerar vistas. Deshacer cambios puntuales de catálogo con respaldo y sin borrar datos de negocio; conservar historia de eventos."
+  "rollback": "Revertir propuesta mediante PR. Implementación: frontend anterior y versión previa de Apps Script conservando notas, historial y registros; catálogo con respaldo privado."
 }
