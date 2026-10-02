@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.28-chinches-complementos · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.29-corcho-privado · 2026-10-01.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -365,7 +365,7 @@ Servir el contrato de Operación y tareas
 - Entidades: tarea, comentario.
 - Fuente de verdad: Fuente de GitHub; despliegue y datos reales por verificar.
 - Evidencia: [board-aurum/apps-script/portero-auth.gs](https://github.com/yodesarrollomx/board-aurum/blob/096550e5647a63048450b9be848be71901a32a3a/apps-script/portero-auth.gs#L63) — Tipo de fuente disponible: fragmento_autenticacion.
-- Conexiones: CON-003 (GAS-OPERACION → SHEET-OPERACION); CON-016 (SYS-DESPACHO → GAS-OPERACION); CON-017 (SYS-TAREAS → GAS-OPERACION); CON-055 (GAS-OPERACION → SYS-YOD-OS).
+- Conexiones: CON-003 (GAS-OPERACION → SHEET-OPERACION); CON-016 (SYS-DESPACHO → GAS-OPERACION); CON-017 (SYS-TAREAS → GAS-OPERACION); CON-055 (GAS-OPERACION → SYS-YOD-OS); CON-DESPACHO-CORCHO-STORE (GAS-OPERACION → STORE-DESPACHO-CORCHO).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Código desplegado y permisos reales no contrastados.
 
@@ -987,3 +987,16 @@ Conservar registros operativos y chinches del desarrollo
 - Conexiones: CON-AMALAYA-STORE (GAS-AMALAYA → SHEET-AMALAYA).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: La calidad visual no valida datos comerciales definitivos; no convertir supuestos en hechos..
+
+## STORE-DESPACHO-CORCHO · Mi Corcho · almacén privado de Dirección
+
+Persistir notas y ejes del Corcho en un archivo privado independiente, autorizado solo al propietario exacto
+
+- Tipo: google_sheets. Dominio: Dirección. Responsable: Dirección / propietario único del archivo.
+- Evidencia: propuesto. Producción: Preparación de infraestructura privada; integración y publicación pendientes.
+- Entidades: nota, configuracion, revision.
+- Fuente de verdad: Archivo privado independiente configurado por propiedad de script; no publicar identificadores ni notas.
+- Evidencia: [board-aurum/apps-script/corcho.gs](https://github.com/yodesarrollomx/board-aurum/blob/096550e5647a63048450b9be848be71901a32a3a/apps-script/corcho.gs) — Contrato propuesto de almacenamiento por propiedad privada; archivo físico e identidad de ejecución por verificar en registro privado.
+- Conexiones: CON-DESPACHO-CORCHO-STORE (GAS-OPERACION → STORE-DESPACHO-CORCHO).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Pendientes: Dependencia de identidad de ejecución y consentimiento vigentes para verificar privacidad antes de acceder a datos.
