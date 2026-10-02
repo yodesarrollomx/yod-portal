@@ -6,7 +6,10 @@
     "SYS-TAREAS",
     "GAS-OPERACION",
     "SHEET-OPERACION",
-    "GAS-PORTERO"
+    "GAS-PORTERO",
+    "SYS-YOD-OS",
+    "GAS-CATALOGO",
+    "SHEET-CATALOGO"
   ],
   "summary": "Registrar contrato de Corcho privado con identidad DP validada en servidor, concurrencia por versión y archivo sin borrar; conciliar registro vivo Despacho.",
   "tests": [

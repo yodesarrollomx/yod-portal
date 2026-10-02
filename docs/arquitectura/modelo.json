@@ -6744,7 +6744,10 @@
         "SYS-TAREAS",
         "GAS-OPERACION",
         "SHEET-OPERACION",
-        "GAS-PORTERO"
+        "GAS-PORTERO",
+        "SYS-YOD-OS",
+        "GAS-CATALOGO",
+        "SHEET-CATALOGO"
       ],
       "proposal": "Completar lectura de tareas de Dirección y Corcho privado persistente conforme CTR-DESPACHO-CORCHO. Mostrar vencidas reales y recuperación de carga; coordinación MOAC es único dueño del backend y Despacho del frontend.",
       "status": "propuesto",
