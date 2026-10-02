@@ -1,18 +1,37 @@
 {
-  "model_revision": "2026-10-01.23-ppp-versiones-lectura",
-  "proposal_id": "CHG-PPP-VERSIONES-004",
+  "model_revision": "2026-10-01.24-chinches-cierre",
+  "proposal_id": "CHG-CHINCHES-CIERRE-001",
   "components": [
-    "SYS-POTENCIALES",
     "SYS-YOD-OS",
+    "SYS-DESPACHO",
+    "SYS-POTENCIALES",
+    "SYS-TAREAS",
+    "SYS-SALA",
+    "SYS-EMD",
+    "GAS-CATALOGO",
+    "SHEET-CATALOGO",
+    "GAS-OPERACION",
+    "SHEET-OPERACION",
+    "GAS-MOAC-METAS",
+    "SHEET-MOAC-METAS",
+    "GAS-SALA",
+    "SHEET-SALA",
+    "GAS-EMD",
+    "SHEET-EMD",
     "GAS-PORTERO",
     "SHEET-PORTERO",
-    "SHEET-PPP-MODELOS"
+    "SHEET-PPP-MODELOS",
+    "EXT-DRIVE",
+    "EXT-GMAIL"
   ],
-  "summary": "Registrar corrección del contrato de lectura: resultados de todas las versiones y flujo solo activo; preservar datos y ordenar índice visual. Sin cambios de backend ni hojas privadas.",
+  "summary": "Coordinar resolución y conciliación autorizadas del inventario de chinches, manteniendo IDs, permisos, fuentes e instrumento privado.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
-    "node verify-os.cjs; node verify-portal.cjs; node verify-accesos.cjs; node verify-obra-app.cjs"
+    "node verify-os.cjs",
+    "node verify-portal.cjs",
+    "node verify-accesos.cjs",
+    "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir propuesta mediante PR y regenerar vistas; conservar registros y libros privados."
+  "rollback": "Revertir registro de coordinación mediante PR y regenerar vistas. Deshacer cambios puntuales de catálogo con respaldo y sin borrar datos de negocio; conservar historia de eventos."
 }

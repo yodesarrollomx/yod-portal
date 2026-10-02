@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.23-ppp-versiones-lectura",
+  "revision": "2026-10-01.24-chinches-cierre",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -6698,6 +6698,40 @@
         "Regresiones de interfaz, identidad, terreno, catálogo y accesos; atlas y publicación por PR. Fuente y datos privados excluidos de Git."
       ],
       "deployment": "PR coordinado con atlas fijado y checks completos; verificar archivos públicos. Solo frontend, sin cambios de backend ni datos. Revertir por PR conserva libros y versiones."
+    },
+    {
+      "id": "CHG-CHINCHES-CIERRE-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES",
+        "SYS-TAREAS",
+        "SYS-SALA",
+        "SYS-EMD",
+        "GAS-CATALOGO",
+        "SHEET-CATALOGO",
+        "GAS-OPERACION",
+        "SHEET-OPERACION",
+        "GAS-MOAC-METAS",
+        "SHEET-MOAC-METAS",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "EXT-DRIVE",
+        "EXT-GMAIL"
+      ],
+      "proposal": "Resolver y conciliar el inventario autorizado de chinches mediante equipos por área: recuperar recorridos y datos confirmados en PPP/Despacho, compactar MOAC y desglosar encargos con trazabilidad, aplicar reglas de producción y completar claridad/seguimiento de evaluación privada. Registrar Despacho en catálogo vivo conservando código DP y permisos; conciliar prueba sintética y cierres solo con evidencia. Mantener fuente de verdad, IDs, contratos, instrumento de evaluación, datos privados y estados concurrentes. Nuevos contratos se registrarán de forma acotada antes de su publicación.",
+      "status": "propuesto",
+      "tests": [
+        "Checks de cada repositorio y regresiones sintéticas de las chinches reproducidas; CI del commit exacto, publicación frontend y backend contrastadas por separado.",
+        "Conciliación por ID con lectura previa y posterior; distinguir duplicados/descartados de completados. Casos humanos y datos privados excluidos de repositorios públicos.",
+        "Verificar destino canónico Despacho, allowlist y código DP sin ampliar Accesos; comprobar catálogo vivo y tarjeta sintética dentro del alcance autorizado."
+      ],
+      "deployment": "Autorización explícita del propietario de resolver y cerrar todas las chinches el 1 octubre 2026. Propuesta de coordinación; no acredita implementación ni publicación. Reversión por PR y respaldo previo de cambios puntuales de registros; conservar eventos originales y datos de negocio."
     }
   ],
   "data_contracts": [
