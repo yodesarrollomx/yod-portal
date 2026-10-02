@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.25-despacho-corcho · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.26-moac-amalaya-chinches · 2026-10-01.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -948,3 +948,42 @@ Conservar copia recuperable en el mismo navegador sin sustituir la confirmación
 - Conexiones: CON-EMD-DRAFTS-LOCAL (SYS-EMD → STORE-EMD-DRAFTS).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Copia limitada al navegador y enlace vigentes; borrar datos del navegador o cambiar enlace puede impedir recuperación; Almacenamiento o criptografía pueden fallar; el servidor sigue siendo fuente de verdad; Concurrencia entre pestañas y confirmaciones tardías exige aislamiento y revisión explícita.
+
+## SYS-AMALAYA · Amalaya
+
+Seguimiento de espacios, modelos y datos del desarrollo
+
+- Tipo: tablero. Dominio: Desarrollos. Responsable: Dirección y responsable del desarrollo.
+- Evidencia: codigo. Producción: Verificación independiente de esta entrega pendiente..
+- Entidades: espacio, modelo, supuesto, chinche.
+- Fuente de verdad: Registros privados del desarrollo y contratos actuales del tablero; historial de chinches por ID..
+- Evidencia: [amalaya-board/src/componentes/FichaEspacio.jsx](https://github.com/yodesarrollo/amalaya-board/blob/a3cf36f508015d288a04288fef040130f30ec3b7/src/componentes/FichaEspacio.jsx) — Fuente de interfaz revisada para estados vacíos y aviso de supuestos..
+- Conexiones: CON-AMALAYA-CLIENT (SYS-AMALAYA → GAS-AMALAYA).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Pendientes: La calidad visual no valida datos comerciales definitivos; no convertir supuestos en hechos..
+
+## GAS-AMALAYA · Motor Amalaya
+
+Servir contratos actuales y conciliar estados de chinches
+
+- Tipo: apps_script. Dominio: Desarrollos. Responsable: Dirección y responsable del desarrollo.
+- Evidencia: codigo. Producción: Verificación independiente de esta entrega pendiente..
+- Entidades: chinche, historial.
+- Fuente de verdad: Registros privados del desarrollo y contratos actuales del tablero; historial de chinches por ID..
+- Evidencia: [amalaya-board/apps-script/Code.gs](https://github.com/yodesarrollo/amalaya-board/blob/a3cf36f508015d288a04288fef040130f30ec3b7/apps-script/Code.gs) — Fuente contiene lectura de chinches y chincheTomada; extensión compatible propuesta..
+- Conexiones: CON-AMALAYA-CLIENT (SYS-AMALAYA → GAS-AMALAYA); CON-AMALAYA-STORE (GAS-AMALAYA → SHEET-AMALAYA).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Pendientes: La calidad visual no valida datos comerciales definitivos; no convertir supuestos en hechos..
+
+## SHEET-AMALAYA · Datos de Amalaya
+
+Conservar registros operativos y chinches del desarrollo
+
+- Tipo: google_sheets. Dominio: Desarrollos. Responsable: Dirección y responsable del desarrollo.
+- Evidencia: declarado. Producción: Verificación independiente de esta entrega pendiente..
+- Entidades: espacio, chinche, historial.
+- Fuente de verdad: Registros privados del desarrollo y contratos actuales del tablero; historial de chinches por ID..
+- Evidencia: [amalaya-board/README.md](https://github.com/yodesarrollo/amalaya-board/blob/a3cf36f508015d288a04288fef040130f30ec3b7/README.md) — Almacén lógico del tablero; evidencia de correspondencia física y detalles permanecen privados..
+- Conexiones: CON-AMALAYA-STORE (GAS-AMALAYA → SHEET-AMALAYA).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Pendientes: La calidad visual no valida datos comerciales definitivos; no convertir supuestos en hechos..

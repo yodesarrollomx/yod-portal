@@ -1,17 +1,13 @@
 {
-  "model_revision": "2026-10-01.25-despacho-corcho",
-  "proposal_id": "CHG-DESPACHO-CHINCHES-001",
+  "model_revision": "2026-10-01.26-moac-amalaya-chinches",
+  "proposal_id": "CHG-AMALAYA-CHINCHES-001",
   "components": [
-    "SYS-DESPACHO",
-    "SYS-TAREAS",
-    "GAS-OPERACION",
-    "SHEET-OPERACION",
-    "GAS-PORTERO",
     "SYS-YOD-OS",
-    "GAS-CATALOGO",
-    "SHEET-CATALOGO"
+    "SYS-AMALAYA",
+    "GAS-AMALAYA",
+    "SHEET-AMALAYA"
   ],
-  "summary": "Registrar contrato de Corcho privado con identidad DP validada en servidor, concurrencia por versión y archivo sin borrar; conciliar registro vivo Despacho.",
+  "summary": "Registrar conciliación compatible de chinches Amalaya y mejora MOAC de encargos, sin convertir supuestos en datos definitivos ni ampliar permisos.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -20,5 +16,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir propuesta mediante PR. Implementación: frontend anterior y versión previa de Apps Script conservando notas, historial y registros; catálogo con respaldo privado."
+  "rollback": "Revertir registro por PR. Implementaciones: versión previa, conservando tareas, chinches, IDs, notas e historial; no borrar registros de negocio."
 }

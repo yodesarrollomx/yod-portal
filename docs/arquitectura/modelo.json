@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-01.25-despacho-corcho",
+  "revision": "2026-10-01.26-moac-amalaya-chinches",
   "checked_at": "2026-10-01",
   "priorities": [
     "vender_mas",
@@ -181,6 +181,13 @@
       "scope": "Inventario completo de archivos; revisión de entradas, contratos y automatizaciones. Fuentes de negocio no se publican.",
       "runtime_status": "Despliegue y funcionamiento integrado no verificados",
       "file_count": 24
+    },
+    {
+      "repo": "yodesarrollo/amalaya-board",
+      "commit": "a3cf36f508015d288a04288fef040130f30ec3b7",
+      "visibility": "public",
+      "scope": "Registro acotado de tablero, fuente Apps Script y conciliación de chinches. No añade navegación ni permisos en el OS.",
+      "runtime_status": "Publicación actual y extensión de conciliación pendientes de verificar en esta entrega."
     }
   ],
   "components": [
@@ -2515,6 +2522,93 @@
       "source_of_truth": "Copia local no confirmada; el backend conserva autoridad sobre revisiones y cierre",
       "visibility": "restricted_summary",
       "restricted_evidence_omitted": true
+    },
+    {
+      "id": "SYS-AMALAYA",
+      "nombre": "Amalaya",
+      "tipo": "tablero",
+      "repo": "yodesarrollo/amalaya-board",
+      "proposito": "Seguimiento de espacios, modelos y datos del desarrollo",
+      "dominio": "Desarrollos",
+      "owner_role": "Dirección y responsable del desarrollo",
+      "status": "codigo",
+      "runtime_status": "Verificación independiente de esta entrega pendiente.",
+      "evidence": [
+        {
+          "repo": "yodesarrollo/amalaya-board",
+          "path": "src/componentes/FichaEspacio.jsx",
+          "claim": "Fuente de interfaz revisada para estados vacíos y aviso de supuestos.",
+          "status": "codigo",
+          "source_revision": "a3cf36f508015d288a04288fef040130f30ec3b7"
+        }
+      ],
+      "data_entities": [
+        "espacio",
+        "modelo",
+        "supuesto",
+        "chinche"
+      ],
+      "risks_sanitized": [
+        "La calidad visual no valida datos comerciales definitivos; no convertir supuestos en hechos."
+      ],
+      "source_of_truth": "Registros privados del desarrollo y contratos actuales del tablero; historial de chinches por ID."
+    },
+    {
+      "id": "GAS-AMALAYA",
+      "nombre": "Motor Amalaya",
+      "tipo": "apps_script",
+      "repo": "yodesarrollo/amalaya-board",
+      "proposito": "Servir contratos actuales y conciliar estados de chinches",
+      "dominio": "Desarrollos",
+      "owner_role": "Dirección y responsable del desarrollo",
+      "status": "codigo",
+      "runtime_status": "Verificación independiente de esta entrega pendiente.",
+      "evidence": [
+        {
+          "repo": "yodesarrollo/amalaya-board",
+          "path": "apps-script/Code.gs",
+          "claim": "Fuente contiene lectura de chinches y chincheTomada; extensión compatible propuesta.",
+          "status": "codigo",
+          "source_revision": "a3cf36f508015d288a04288fef040130f30ec3b7"
+        }
+      ],
+      "data_entities": [
+        "chinche",
+        "historial"
+      ],
+      "risks_sanitized": [
+        "La calidad visual no valida datos comerciales definitivos; no convertir supuestos en hechos."
+      ],
+      "source_of_truth": "Registros privados del desarrollo y contratos actuales del tablero; historial de chinches por ID."
+    },
+    {
+      "id": "SHEET-AMALAYA",
+      "nombre": "Datos de Amalaya",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollo/amalaya-board",
+      "proposito": "Conservar registros operativos y chinches del desarrollo",
+      "dominio": "Desarrollos",
+      "owner_role": "Dirección y responsable del desarrollo",
+      "status": "declarado",
+      "runtime_status": "Verificación independiente de esta entrega pendiente.",
+      "evidence": [
+        {
+          "repo": "yodesarrollo/amalaya-board",
+          "path": "README.md",
+          "claim": "Almacén lógico del tablero; evidencia de correspondencia física y detalles permanecen privados.",
+          "status": "declarado",
+          "source_revision": "a3cf36f508015d288a04288fef040130f30ec3b7"
+        }
+      ],
+      "data_entities": [
+        "espacio",
+        "chinche",
+        "historial"
+      ],
+      "risks_sanitized": [
+        "La calidad visual no valida datos comerciales definitivos; no convertir supuestos en hechos."
+      ],
+      "source_of_truth": "Registros privados del desarrollo y contratos actuales del tablero; historial de chinches por ID."
     }
   ],
   "connections": [
@@ -4412,6 +4506,44 @@
       "runtime_verified": false,
       "restricted_evidence_omitted": true,
       "contract": "CTR-EMD-DRAFTS: cifrado por enlace vigente, aislamiento de pestañas, confirmación transaccional local y recuperación explícita; el servidor mantiene revisión y cierre."
+    },
+    {
+      "id": "CON-AMALAYA-CLIENT",
+      "from": "SYS-AMALAYA",
+      "to": "GAS-AMALAYA",
+      "label": "Consume contrato autenticado del tablero",
+      "kind": "api",
+      "evidence": [
+        {
+          "repo": "yodesarrollo/amalaya-board",
+          "path": "apps-script/Code.gs",
+          "claim": "Contratos de chinches existentes y extensión de estado propuesta.",
+          "status": "codigo",
+          "source_revision": "a3cf36f508015d288a04288fef040130f30ec3b7"
+        }
+      ],
+      "status": "codigo",
+      "runtime_verified": false,
+      "contract": "CTR-AMALAYA-CHINCHES-ESTADO registra la extensión propuesta. Identidad, token, roles, implementación y URL actuales se conservan."
+    },
+    {
+      "id": "CON-AMALAYA-STORE",
+      "from": "GAS-AMALAYA",
+      "to": "SHEET-AMALAYA",
+      "label": "Conserva chinches y su historial",
+      "kind": "persistencia",
+      "evidence": [
+        {
+          "repo": "yodesarrollo/amalaya-board",
+          "path": "apps-script/Code.gs",
+          "claim": "Contratos de chinches existentes y extensión de estado propuesta.",
+          "status": "codigo",
+          "source_revision": "a3cf36f508015d288a04288fef040130f30ec3b7"
+        }
+      ],
+      "status": "codigo",
+      "runtime_verified": false,
+      "contract": "CTR-AMALAYA-CHINCHES-ESTADO registra la extensión propuesta. Identidad, token, roles, implementación y URL actuales se conservan."
     }
   ],
   "processes": [
@@ -6757,6 +6889,40 @@
         "Contrastar fuente activa y publicación por separado; conservar implementación/configuración e historial."
       ],
       "deployment": "Propuesta registrada antes de implementar/publicar. Reversión frontend y versión anterior del backend; conservar Corcho y registros de negocio."
+    },
+    {
+      "id": "CHG-AMALAYA-CHINCHES-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-AMALAYA",
+        "GAS-AMALAYA",
+        "SHEET-AMALAYA"
+      ],
+      "proposal": "Conciliar chinches terminadas/descartadas mediante contrato compatible por ID y cierre GitHub confirmado; aclarar supuestos y estados vacíos sin modificar datos definitivos.",
+      "status": "propuesto",
+      "tests": [
+        "Lecturas nuevas/tomadas, token, repo/URL/ID, cierre/motivo GitHub, CAS, idempotencia, historial y ACK con dobles.",
+        "Pruebas de estados vacíos y supuestos, build y publicación contrastada; conciliación real por IDs revisados."
+      ],
+      "deployment": "Propuesta registrada antes de publicar. Reversión por PR y versión previa del backend cuando aplique, conservando datos, IDs e historial."
+    },
+    {
+      "id": "CHG-MOAC-CHINCHES-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-TAREAS",
+        "GAS-OPERACION",
+        "SHEET-OPERACION",
+        "GAS-MOAC-METAS",
+        "SHEET-MOAC-METAS"
+      ],
+      "proposal": "Corregir flags y clasificación de tareas, compactar indicadores y preparar encargos como acciones ligadas explícitamente a objetivos existentes, con confirmación parcial real.",
+      "status": "propuesto",
+      "tests": [
+        "Pruebas de TRUE/FALSE, datos ambiguos, semana, create/ACK perdido y vínculo parcial; build.",
+        "Pantalla sintética desktop/mobile y errores de red; comprobar publicación por separado."
+      ],
+      "deployment": "Propuesta registrada antes de publicar. Reversión por PR y versión previa del backend cuando aplique, conservando datos, IDs e historial."
     }
   ],
   "data_contracts": [
@@ -7236,6 +7402,58 @@
         "No declarar guardado hasta ACK; fallos de red/carga muestran recuperación. No enviar borradores a terceros desde este contrato.",
         "Deploy usa implementación y permisos existentes, respaldando fuente y versión previa. Revert de código conserva notas y registros."
       ]
+    },
+    {
+      "id": "CTR-AMALAYA-CHINCHES-ESTADO",
+      "components": [
+        "SYS-AMALAYA",
+        "GAS-AMALAYA",
+        "SHEET-AMALAYA"
+      ],
+      "source": "Extensión compatible propuesta para conciliar chinches con el cierre real de GitHub.",
+      "input": [
+        "Token del puente existente; lectura accion=chinches con incluirTomadas=si",
+        "POST action=chincheEstado con ID, URL canónica de issue, estado previo, destino terminada/descartada y evidencia del cierre GitHub"
+      ],
+      "output": [
+        "Lectura acotada de nuevas/tomadas para conciliación; consulta original mantiene solo nuevas",
+        "Cambio confirmado por ID con historial o conflicto sin sobrescritura; reintento idéntico idempotente"
+      ],
+      "invariants": [
+        "No confiar en un estado GitHub inventado por cliente: comprobar cierre y motivo autoritativos. Solo CLOSED/completed permite terminada y CLOSED/not_planned permite descartada.",
+        "Validar repositorio canónico, issue, ID y estado previo bajo candado. Rechazar identidad distinta, URL arbitraria, conflicto o transición inválida.",
+        "No editar texto original, roles, permisos, datos comerciales ni cerrar issues desde el puente. Lectura no crea datos.",
+        "Registrar cambio en Historial y comprobar ok de la respuesta; HTTP 200 por sí solo no acredita éxito.",
+        "Preservar token, implementación, URL, configuración y trabajo pendiente del editor. Revertir código conserva historial y registros.",
+        "Pruebas aisladas; conciliación real limitada a IDs revisados y autorizados. Supuestos financieros y estados vacíos se muestran como tales sin inventar datos."
+      ]
+    },
+    {
+      "id": "CTR-MOAC-ENCARGOS",
+      "components": [
+        "SYS-TAREAS",
+        "GAS-OPERACION",
+        "SHEET-OPERACION",
+        "GAS-MOAC-METAS",
+        "SHEET-MOAC-METAS"
+      ],
+      "source": "Mejora de interfaz sobre contratos de tareas y objetivos existentes; implementación pendiente de integración.",
+      "input": [
+        "Encargo original y acciones editables con título conciso",
+        "Proyecto y objetivo existentes elegidos explícitamente; identidad actual autorizada"
+      ],
+      "output": [
+        "Creación de acción confirmada con ID y posterior vínculo confirmado a objetivo",
+        "Resultado parcial explícito si creación o vínculo no se confirma; conservación de texto original y trazabilidad"
+      ],
+      "invariants": [
+        "No inferir ni crear proyectos/objetivos para resolver una referencia ambigua. Conservar IDs, historia y fuente original.",
+        "Interpretar TRUE/FALSE explícitamente: borrada siempre se excluye y archivada se oculta por defecto; no usar truthiness de strings.",
+        "Datos sin clasificación quedan visibles para corregir y fuera de indicadores semanales válidos; no inventar fecha o pertenencia.",
+        "No anunciar guardado completo hasta confirmación de tarea y vínculo. Con ACK perdido, conciliar marcador exacto antes de crear otra vez; ambigüedad permanece pendiente.",
+        "Fallo de vínculo conserva el ID ya creado y permite completar ese vínculo sin duplicar la acción.",
+        "Pruebas sintéticas fuera de producción; no modificar catálogo central ni permisos. Revertir frontend conserva registros de negocio."
+      ]
     }
   ],
   "path_ownership": [
@@ -7482,6 +7700,21 @@
       "components": [
         "SYS-YOD-OS",
         "EXT-GITHUB-PUBLISHER-APP"
+      ]
+    },
+    {
+      "repo": "yodesarrollo/amalaya-board",
+      "prefix": "",
+      "components": [
+        "SYS-AMALAYA"
+      ]
+    },
+    {
+      "repo": "yodesarrollo/amalaya-board",
+      "prefix": "apps-script/",
+      "components": [
+        "GAS-AMALAYA",
+        "SHEET-AMALAYA"
       ]
     }
   ]
