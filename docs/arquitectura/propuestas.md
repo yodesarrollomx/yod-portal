@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.27-emd-seguimiento-fotos · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.28-chinches-complementos · 2026-10-01.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 

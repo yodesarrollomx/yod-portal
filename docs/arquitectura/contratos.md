@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.27-emd-seguimiento-fotos · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.28-chinches-complementos · 2026-10-01.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -238,7 +238,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 - Componentes: SYS-AMALAYA, GAS-AMALAYA, SHEET-AMALAYA.
 - Evidencia: Extensión compatible propuesta para conciliar chinches con el cierre real de GitHub..
-- Entrada/campos: `Token del puente existente; lectura accion=chinches con incluirTomadas=si`, `POST action=chincheEstado con ID, URL canónica de issue, estado previo, destino terminada/descartada y evidencia del cierre GitHub`.
+- Entrada/campos: `Token del puente existente; lectura accion=chinches con incluirTomadas=si`, `POST action=chincheEstado con ID, URL canónica de issue, estado previo, destino terminada/descartada y evidencia del cierre GitHub`, `Consulta GitHub puede usar github_token efímero del job de conciliación con contents:read/issues:read, además del token actual que autoriza CAS.`.
 - Salida: Lectura acotada de nuevas/tomadas para conciliación; consulta original mantiene solo nuevas, Cambio confirmado por ID con historial o conflicto sin sobrescritura; reintento idéntico idempotente.
 
 - No confiar en un estado GitHub inventado por cliente: comprobar cierre y motivo autoritativos. Solo CLOSED/completed permite terminada y CLOSED/not_planned permite descartada.
@@ -247,6 +247,8 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Registrar cambio en Historial y comprobar ok de la respuesta; HTTP 200 por sí solo no acredita éxito.
 - Preservar token, implementación, URL, configuración y trabajo pendiente del editor. Revertir código conserva historial y registros.
 - Pruebas aisladas; conciliación real limitada a IDs revisados y autorizados. Supuestos financieros y estados vacíos se muestran como tales sin inventar datos.
+- github_token solo en Authorization hacia api.github.com/repos/yodesarrollo/amalaya-board/issues/<n> canónico. No almacenar, registrar, devolver ni reenviar a otro host. No reemplaza CHINCHES_TOKEN ni amplía autorización de estados.
+- Separar conciliación de creación de issues; errores HTTP GitHub se devuelven como códigos controlados sin cuerpos privados ni credenciales. No imprimir payload ni URL con token.
 
 ## CTR-MOAC-ENCARGOS
 
@@ -261,3 +263,30 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - No anunciar guardado completo hasta confirmación de tarea y vínculo. Con ACK perdido, conciliar marcador exacto antes de crear otra vez; ambigüedad permanece pendiente.
 - Fallo de vínculo conserva el ID ya creado y permite completar ese vínculo sin duplicar la acción.
 - Pruebas sintéticas fuera de producción; no modificar catálogo central ni permisos. Revertir frontend conserva registros de negocio.
+
+## CTR-SALA-CONTENIDO-VETADO
+
+- Componentes: SYS-SALA, GAS-SALA, SHEET-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-MOTORES-MEDIA.
+- Evidencia: Instrucción editorial y propuesta de cierre #49. Usa REGLAS existente sin nuevas pestañas, columnas, roles o endpoints..
+- Entrada/campos: `Regla contenido_ubicaciones_vetadas como lista CSV aditiva en nombre/valor/descripcion`, `Textos nuevos de ideas, premisas, promesas, guiones, láminas, recetas y candidatas`.
+- Salida: Rechazo de contenido o lote inválido antes de motores, red, montaje o escritura, Salida validada para etapas existentes sin alterar notas, IDs ni historial.
+
+- Hermosillo, Sonora y México son el mínimo solicitado; configuración añade vetos y no retira ese mínimo. Comparación por palabra completa, sin distinguir mayúsculas o acentos.
+- No inspeccionar ni reescribir URLs, IDs, zona horaria, notas editoriales, bitácora o historial como contenido editorial nuevo.
+- Recepción proponer/ideas/arbol y compuertas nube frenan el lote completo antes de efectos. No producir primero y validar después.
+- Conservar autorización y contratos de REGLAS y escritura actuales. No aprobar decisiones humanas ni publicar marketing como parte de una prueba.
+- Código integrado, workflows, frontend y GAS se verifican por separado; fuente GAS versionada no prueba instalación.
+
+## CTR-PPP-PATRIMONIAL-NATIVO
+
+- Componentes: SYS-POTENCIALES, GAS-PORTERO, SHEET-PORTERO, SHEET-PPP-MODELOS.
+- Evidencia: Propuesta de extensión nativa Patrimonial para #47; fórmulas, campos y datos se contrastan con fuente canónica antes de publicar..
+- Entrada/campos: `Modelo Patrimonial tipado por caso registrado en PPP_LIBROS`, `Entradas allowlisted en tabla Campos; CUS máximo, pasillos en porcentaje y puertas Depa/Local con rentas independientes`, `Identidad PT/PA vigente, caso_id, revisión esperada y CAS existente`.
+- Salida: Resultados, conciliación de áreas y años calculados por fórmulas protegidas en Sheets, Resultados confirmados conservados al editar; ausencia y demanda sobre capacidad informadas explícitamente.
+
+- Frontend no calcula financieramente estas magnitudes ni sustituye fórmulas por resultados hardcodeados. No inventar reglas comerciales o límites normativos.
+- CUS rige también en Profundizar; pasillos usan solo porcentaje. Mezcla de puertas conserva cantidades, áreas y rentas distintas.
+- Dato ausente permanece pendiente, no se convierte en cero. Demanda que excede capacidad conserva el número y muestra discrepancia, sin recorte silencioso.
+- Mantener endpoint, ACL PT/PA, IDs, caso_id, palabra, históricos, CAS y revisión. No cambiar lectura vertical ni datos de otros casos.
+- Lectura tipada en pppLeerLibro_/sheet-cantidades conserva compatibilidad vertical. Registro y creación de modelo canónico documentados con fuente y rollback.
+- Pruebas mixtas vivienda/comercio, CUS cero/ausente, pasillos 0/20, 1/N puertas, rentas distintas y exceso; cero POST de prueba de negocio.

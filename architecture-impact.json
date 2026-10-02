@@ -1,14 +1,33 @@
 {
-  "model_revision": "2026-10-01.27-emd-seguimiento-fotos",
-  "proposal_id": "CHG-EMD-SEGUIMIENTO-001",
+  "model_revision": "2026-10-01.28-chinches-complementos",
+  "proposal_id": "CHG-CHINCHES-CIERRE-001",
   "components": [
     "SYS-YOD-OS",
+    "SYS-DESPACHO",
+    "SYS-POTENCIALES",
+    "SYS-TAREAS",
+    "SYS-SALA",
     "SYS-EMD",
+    "GAS-CATALOGO",
+    "SHEET-CATALOGO",
+    "GAS-OPERACION",
+    "SHEET-OPERACION",
+    "GAS-MOAC-METAS",
+    "SHEET-MOAC-METAS",
+    "GAS-SALA",
+    "SHEET-SALA",
     "GAS-EMD",
     "SHEET-EMD",
-    "EXT-DRIVE"
+    "GAS-PORTERO",
+    "SHEET-PORTERO",
+    "SHEET-PPP-MODELOS",
+    "EXT-DRIVE",
+    "EXT-GMAIL",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-MOTORES-MEDIA"
   ],
-  "summary": "Registrar seguimiento compatible de fotos vigentes con ACL existente y estados distinguibles; ninguna lectura crea recursos o implica envío.",
+  "summary": "Completar contratos de veto Sala, modelo nativo Patrimonial y consulta GitHub efímera en conciliación Amalaya; declarar productores y motores afectados.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -17,5 +36,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir propuesta y versión previa de implementación conservando perfiles, fotos, permisos, asignaciones e historial."
+  "rollback": "Revertir registro por PR; implementaciones con fuente/versión previa y mismo endpoint, preservando reglas, libros, casos, estados, decisiones e historial."
 }
