@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
-  <link rel="stylesheet" href="styles.css?v=relevo22">
+  <link rel="stylesheet" href="styles.css?v=despacho-20261002">
 </head>
 <body>
   <div class="app-shell">
@@ -119,10 +119,24 @@
               <div class="pulse-body" id="decision-panel"><div class="pulse-message"><i class="ti ti-loader-2 spin"></i> Consultando MOAC…</div></div>
             </article>
             <article class="pulse-card hidden" id="despacho-card" data-system-id="SYS-DESPACHO">
-              <header><span class="pulse-icon"><i class="ti ti-message-2"></i></span><div><p>Tu pantalla</p><h3>El Despacho</h3></div><a href="https://yodesarrollomx.github.io/yod-despacho/" target="_blank" rel="noopener" aria-label="Abrir El Despacho"><i class="ti ti-arrow-up-right"></i></a></header>
+              <header><span class="pulse-icon"><i class="ti ti-message-2"></i></span><div><p>Tu pantalla</p><h3>El Despacho</h3></div><a href="https://yodesarrollomx.github.io/yod-despacho/" rel="noopener" aria-label="Abrir El Despacho"><i class="ti ti-arrow-up-right"></i></a></header>
               <div class="pulse-body"><p class="pulse-message">Por cada frente del negocio, qui&eacute;n te est&aacute; esperando m&aacute;s. Se firma ah&iacute; y se escribe en tu tablero de siempre. Solo t&uacute; lo ves.</p></div>
             </article>
           </div>
+        </section>
+
+        <section class="section despacho-section" id="seccionDespacho" aria-labelledby="despachoTitulo" hidden>
+          <div class="section-head">
+            <div><p class="eyebrow">Tu espacio de trabajo</p><h2 id="despachoTitulo">El Despacho</h2></div>
+            <a class="section-link" href="#inicio" aria-label="Cerrar El Despacho y volver a Inicio">Volver a Inicio <i class="ti ti-x"></i></a>
+          </div>
+          <div class="despacho-actions">
+            <a class="section-link" id="despachoAbrir" target="_blank" rel="noopener noreferrer" hidden>Pantalla completa <i class="ti ti-arrow-up-right"></i></a>
+            <a class="section-link" id="despachoBandeja" href="https://yodesarrollomx.github.io/yod-despacho/" target="_blank" rel="noopener noreferrer" hidden>Bandeja actual <i class="ti ti-inbox"></i></a>
+          </div>
+          <p class="operation-message" id="despachoEstado" role="status">Validando tu acceso…</p>
+          <div class="despacho-canvas" id="despachoCanvas"></div>
+          <p class="despacho-help">Si la oficina te pide iniciar sesión o no abre aquí, usa Pantalla completa para entrar con tu acceso privado de la oficina.</p>
         </section>
 
         <!-- Embudo comercial como SECCIÓN del tablero: al cerrar la Sala te deja aquí -->
@@ -231,17 +245,19 @@
   <script src="adapters/operations.js?v=audit-20260930"></script>
   <script src="adapters/finance.js?v=audit-20260930"></script>
   <script src="adapters/marketing.js?v=0.1.0"></script>
-  <script src="app.js?v=control-20261001"></script>
+  <script src="despacho-section.js?v=20261002"></script>
+  <script src="despacho-chinches.js?v=20261002"></script>
+  <script src="app.js?v=despacho-20261002"></script>
   <script src="maquinas.js?v=audit-20260930"></script>
   <script src="https://yodesarrollomx.github.io/potenciales-yod/portero.js?v=relevo9"></script>
-  <script src="../chinche.js?v=ch9"></script>
+  <script src="../chinche.js?v=despacho-20261002"></script>
   <script>if(window.YODChinche) YODChinche.init({pantalla:"os"});</script>
 
   <script>
 /* Fase 4 · «Dónde estoy»: las mismas migas que el marco de los tableros (shell.js) */
 (function(){
   var SUB={sala:'Sala de Edición',metricas:'Métricas',ppp:'Plan de Potencial'};
-  var SEC={pulso:'Pulso del negocio',operacion:'Operación',modulos:'Tableros',tablero:'Tablero'};
+  var SEC={despacho:'El Despacho',pulso:'Pulso del negocio',operacion:'Operación',modulos:'Tableros',tablero:'Tablero'};
   function pinta(){
     var h=location.hash||'', b=document.getElementById('osCrumbHere'); if(!b) return;
     var m=/^#\/embudo(?:\/([\w-]+))?/.exec(h);

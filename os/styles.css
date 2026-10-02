@@ -184,3 +184,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,[tabindex]:focus-visibl
 .mq-rojo .mq-luz{background:#d23b2e;box-shadow:0 0 0 3px rgba(210,59,46,.2)}
 .mq-rojo{border-color:rgba(210,59,46,.45)}
 .mq-ambar .mq-luz{background:#d4a017;box-shadow:0 0 0 3px rgba(212,160,23,.2)}
+
+/* Despacho ocupa el contenido sin alterar el estado de las secciones de Inicio. */
+body[data-workspace-route="despacho"] .content > :not(#seccionDespacho){display:none!important}
+.despacho-actions{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:16px}
+.despacho-canvas iframe{display:block;width:100%;height:calc(100dvh - 240px);min-height:420px;border:1px solid var(--line,#303034);border-radius:16px;background:#111}
+.despacho-help{margin:14px 0 0;font-size:13px;color:var(--muted,#a1a1aa)}
+@media(max-width:600px){.despacho-canvas iframe{height:calc(100dvh - 250px);min-height:340px}.despacho-actions{gap:14px}}

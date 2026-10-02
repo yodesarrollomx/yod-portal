@@ -85,6 +85,7 @@
   function mismaSesion(token,ep){return state.profileReady&&state.sessionToken===token&&tokenActual()===token&&state.sesionEpoch===ep;}
   function purgarDatosSensibles(){
     state.sesionEpoch++;state.pulseCache={};state.opsCache=null;state.allTasks=[];
+    if(window.cerrarDespachoPrivado)window.cerrarDespachoPrivado();
     SENSITIVE_CACHES.forEach(function(k){try{localStorage.removeItem(k);}catch(_e){}});
     try{sessionStorage.removeItem('yod_id_v1');}catch(_e){}
   }
@@ -106,6 +107,7 @@
       var aviso=$('board-locked-t');if(aviso)aviso.textContent='Validando tu acceso para abrir el tablero…';
     }
     if(window.revisarPuertaEmbudo)window.revisarPuertaEmbudo();
+    if(window.revisarPuertaDespacho)window.revisarPuertaDespacho();
   }
   // Solo memoria de esta página y sesión, con sello; nunca se persiste el token.
   function pulseCacheRead(k,token){var c=state.pulseCache[k];return c&&mismaSesion(token,c.ep)?c:null;}
@@ -145,9 +147,10 @@
 
   // Un destino que no vive en nuestros dominios (p.ej. un artifact de claude.ai)
   // se abre en pestana nueva: si no, el clic reemplaza YOD OS y se pierde el menu.
-  function esPropio(u){return /^https:\/\/(yodesarrollomx\.github\.io|tableros\.yodesarrollo\.mx|alexpueblag\.github\.io|aurumarquitectos\.github\.io)\//.test(String(u||''));}
+  function esPropio(u){return /^#\//.test(String(u||''))||/^https:\/\/(yodesarrollomx\.github\.io|tableros\.yodesarrollo\.mx|alexpueblag\.github\.io|aurumarquitectos\.github\.io)\//.test(String(u||''));}
   function hrefDe(url){
     // el embudo se abre DENTRO del OS: su enlace es la propia ruta de la mascara
+    if(window.PortalCore.safeUrl(url,'SYS-DESPACHO'))return '#/despacho';
     return esEmbudo(url) ? '#/embudo/'+vistaDe(url) : url;
   }  function moduleNode(row){
     var url=hrefDe(window.PortalCore.resolveUrl(row));if(!url)return null;
@@ -192,7 +195,7 @@
     function t(ic,h,p,href){return '<a class="mi-card" href="'+href+'"><i class="ti ti-'+ic+'"></i><b>'+h+'</b><span>'+p+'</span></a>';}
     if(persona==='direccion'){
       titulo='Dinero y decisiones';sube=$('pulso');
-      tarjetas=t('wallet','Tesorería','Saldo, pagos y lo que entra','#pulso')+t('gavel','Decisiones','Lo que espera tu palabra','#pulso')+t('layout-grid','El Despacho','Tu pantalla de trabajo','https://yodesarrollomx.github.io/yod-despacho/');
+      tarjetas=t('wallet','Tesorería','Saldo, pagos y lo que entra','#pulso')+t('gavel','Decisiones','Lo que espera tu palabra','#pulso')+t('layout-grid','El Despacho','Tu pantalla de trabajo','#/despacho');
     }else if(/sayri/.test(quien)){
       titulo='La Sala y tus pendientes';sube=$('operacion');
       try{if(!localStorage.getItem('yod_ops_me')&&data.nombre)localStorage.setItem('yod_ops_me',data.nombre);}catch(_e){}
@@ -231,6 +234,22 @@
     document.addEventListener('keydown',onKey,true);
     return function(){document.removeEventListener('keydown',onKey,true);};
   }
+
+  // La sección privada solo conoce autorización/época; ninguna credencial sale del OS.
+  var despachoPins=null;
+  var despachoSection=window.YodDespachoSection.create({
+    window:window,document:document,
+    readAccess:function(){return {ready:Boolean(state.sessionToken)&&mismaSesion(state.sessionToken,state.sesionEpoch),allowed:window.YodAccessPolicy.canOpen(state.boards,'SYS-DESPACHO',state.role),epoch:state.sesionEpoch};},
+    onTeardown:function(){if(despachoPins)despachoPins.clear();},
+    revalidate:function(){loadIdentity();}
+  });
+  window.revisarPuertaDespacho=function(){despachoSection.refresh();};
+  window.cerrarDespachoPrivado=function(){despachoSection.teardown();};
+  if(window.YodDespachoChinches)despachoPins=window.YodDespachoChinches.bindDespachoChinches({
+    isAuthorized:function(){return despachoSection.isAuthorized();},
+    getIframeWindow:function(){return despachoSection.getIframeWindow();},
+    getSessionEpoch:function(){return state.sesionEpoch;}
+  });
 
   /* ══ Máscara del Embudo comercial ═══════════════════════════════════════
      Alejandro pidió que picarle NO lo saque del OS: una máscara de pantalla
@@ -374,6 +393,7 @@
         if(/#inicio|^#$/.test(a.getAttribute('href')||'')) a.classList.toggle('activo-no', enEmbudo);
       });
       if(enEmbudo) window.scrollTo(0,0);
+      if(window.revisarPuertaDespacho)window.revisarPuertaDespacho();
     }
     window.pintarSeccionEmbudo=pintarSeccionEmbudo;
     addEventListener('hashchange',pintarSeccionEmbudo);
@@ -560,6 +580,7 @@
     if(opLink)opLink.classList.toggle('hidden',!window.YodAccessPolicy.canOpen(state.boards,'SYS-TAREAS',state.role));
     montarTablero();
     if(window.revisarPuertaEmbudo)window.revisarPuertaEmbudo();
+    if(window.revisarPuertaDespacho)window.revisarPuertaDespacho();
     if(state.rawRows.length)renderModules(state.rawRows);
   }
   // OTROS-6: las Acciones rápidas se llaman como el catálogo del Sheet (MOAC, PPP…);
@@ -907,6 +928,7 @@
   addEventListener('focus',function(){if(state.sessionToken!==tokenActual())loadIdentity();});
   document.addEventListener('click',function(e){
     var a=e.target.closest('a[href]');if(!a)return;
+    if(a.closest('#despacho-card')&&window.PortalCore.safeUrl(a.href,'SYS-DESPACHO')){e.preventDefault();location.hash='#/despacho';return;}
     if(a.closest('#embudoMask')||a.target==='_blank')return;
     if(esEmbudo(a.href)&&window.abrirEmbudo){e.preventDefault();window.abrirEmbudo(vistaDe(a.href));}
   },true);

@@ -1,41 +1,23 @@
 {
-  "model_revision": "2026-10-02.32-emd-sys-impacto",
-  "proposal_id": "CHG-CHINCHES-CIERRE-001",
+  "model_revision": "2026-10-02.33-despacho-3d-section",
+  "proposal_id": "CHG-DESPACHO-3D-SECTION-001",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-POTENCIALES",
-    "SYS-TAREAS",
-    "SYS-SALA",
-    "SYS-EMD",
-    "GAS-CATALOGO",
-    "SHEET-CATALOGO",
-    "GAS-OPERACION",
-    "SHEET-OPERACION",
-    "GAS-MOAC-METAS",
-    "SHEET-MOAC-METAS",
-    "GAS-SALA",
-    "SHEET-SALA",
-    "GAS-EMD",
-    "SHEET-EMD",
     "GAS-PORTERO",
-    "SHEET-PORTERO",
-    "SHEET-PPP-MODELOS",
-    "EXT-DRIVE",
-    "EXT-GMAIL",
-    "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
-    "EXT-MOTORES-MEDIA",
-    "STORE-DESPACHO-CORCHO"
+    "SYS-SALA",
+    "GAS-SALA",
+    "SHEET-SALA"
   ],
-  "summary": "Precisar que el candidato de invitaciones EMD impacta su tablero además de identidad, backend y almacenamiento; conservar envío deshabilitado y controles privados.",
+  "summary": "Entrada interna Despacho con permiso DP, iframe privado fijo y autenticación propia; Chinches de contexto geométrico validado por origen/ventana/esquema. Conservar catálogo, códigos, Bandeja y backends; no transmitir credenciales ni datos reales.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs"
+    "ACCESOS_REF=3ee8ca50bf14ef17d95e72523e54506eb996f262 node verify-accesos.cjs",
+    "node verify-obra-app.cjs",
+    "git diff --check"
   ],
-  "rollback": "Revertir propuesta/código por PR; conservar cola, decisiones, medios, registros de invitación e historial."
+  "rollback": "Revertir el PR y repetir las comprobaciones. Restaurar enlaces de navegación anteriores; conservar datos, notas, modelos, permisos, sesiones y despliegues existentes. No borrar archivos privados ni registros de negocio."
 }
