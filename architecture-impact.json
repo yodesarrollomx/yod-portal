@@ -2,6 +2,7 @@
   "model_revision": "2026-10-01.30-emd-invitaciones",
   "proposal_id": "CHG-CHINCHES-CIERRE-001",
   "components": [
+    "SYS-TRACK",
     "SYS-YOD-OS"
   ],
   "summary": "Ajustar modo Señalar para seleccionar la unidad visual concreta bajo el toque, priorizar controles y evitar capturas de secciones completas en móvil.",
