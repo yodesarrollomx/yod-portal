@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.25-despacho-corcho · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.26-moac-amalaya-chinches · 2026-10-01.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -397,6 +397,19 @@ flowchart LR
   class n_SHEET_PORTERO pendiente;
 ```
 
+## Desarrollos
+
+```mermaid
+flowchart LR
+  n_SYS_AMALAYA["Amalaya"]
+  n_GAS_AMALAYA["Motor Amalaya"]
+  n_SHEET_AMALAYA["Datos de Amalaya"]
+  n_SYS_AMALAYA -->|Consume contrato autenticado del tablero| n_GAS_AMALAYA
+  n_GAS_AMALAYA -->|Conserva chinches y su historial| n_SHEET_AMALAYA
+  classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
+  class n_SHEET_AMALAYA pendiente;
+```
+
 ## Contratos y evidencia de cada conexión
 
 | ID | Origen → destino | Mecanismo y datos | Estado | Evidencia |
@@ -498,3 +511,5 @@ flowchart LR
 | CON-AUTH-OBRA | GAS-OBRA → GAS-PORTERO | autenticacion: Verifica credencial para operar. CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada. | codigo | Revisión de fuente activa GAS-OBRA, versión 16; dependencia de Portero contrastada en código y mediante dobles. No acredita recorrido completo de un usuario real. |
 | CON-EMD-PROFILES-DRIVE | GAS-EMD → EXT-DRIVE | persistencia: Propuesta: fotos privadas de perfil. CTR-EMD-PROFILES: carpeta dedicada privada, carga y retirada propias, lectura autorizada y confirmación por revisión/mutación; sin nuevas autorizaciones OAuth. | propuesto | Propuesta registrada; implementación y despliegue privados pendientes de pruebas |
 | CON-EMD-DRAFTS-LOCAL | SYS-EMD → STORE-EMD-DRAFTS | persistencia_local: Propuesta: copia cifrada local. CTR-EMD-DRAFTS: cifrado por enlace vigente, aislamiento de pestañas, confirmación transaccional local y recuperación explícita; el servidor mantiene revisión y cierre. | propuesto | Diseño propuesto de persistencia local; sin evidencia de publicación |
+| CON-AMALAYA-CLIENT | SYS-AMALAYA → GAS-AMALAYA | api: Consume contrato autenticado del tablero. CTR-AMALAYA-CHINCHES-ESTADO registra la extensión propuesta. Identidad, token, roles, implementación y URL actuales se conservan. | codigo | [amalaya-board/apps-script/Code.gs](https://github.com/yodesarrollo/amalaya-board/blob/a3cf36f508015d288a04288fef040130f30ec3b7/apps-script/Code.gs) — Contratos de chinches existentes y extensión de estado propuesta. |
+| CON-AMALAYA-STORE | GAS-AMALAYA → SHEET-AMALAYA | persistencia: Conserva chinches y su historial. CTR-AMALAYA-CHINCHES-ESTADO registra la extensión propuesta. Identidad, token, roles, implementación y URL actuales se conservan. | codigo | [amalaya-board/apps-script/Code.gs](https://github.com/yodesarrollo/amalaya-board/blob/a3cf36f508015d288a04288fef040130f30ec3b7/apps-script/Code.gs) — Contratos de chinches existentes y extensión de estado propuesta. |

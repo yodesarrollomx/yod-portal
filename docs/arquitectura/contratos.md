@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.25-despacho-corcho · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.26-moac-amalaya-chinches · 2026-10-01.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -231,3 +231,31 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Archivo y restauración mantienen createdAt/updatedAt y versión; posiciones y ejes se validan con límites explícitos.
 - No declarar guardado hasta ACK; fallos de red/carga muestran recuperación. No enviar borradores a terceros desde este contrato.
 - Deploy usa implementación y permisos existentes, respaldando fuente y versión previa. Revert de código conserva notas y registros.
+
+## CTR-AMALAYA-CHINCHES-ESTADO
+
+- Componentes: SYS-AMALAYA, GAS-AMALAYA, SHEET-AMALAYA.
+- Evidencia: Extensión compatible propuesta para conciliar chinches con el cierre real de GitHub..
+- Entrada/campos: `Token del puente existente; lectura accion=chinches con incluirTomadas=si`, `POST action=chincheEstado con ID, URL canónica de issue, estado previo, destino terminada/descartada y evidencia del cierre GitHub`.
+- Salida: Lectura acotada de nuevas/tomadas para conciliación; consulta original mantiene solo nuevas, Cambio confirmado por ID con historial o conflicto sin sobrescritura; reintento idéntico idempotente.
+
+- No confiar en un estado GitHub inventado por cliente: comprobar cierre y motivo autoritativos. Solo CLOSED/completed permite terminada y CLOSED/not_planned permite descartada.
+- Validar repositorio canónico, issue, ID y estado previo bajo candado. Rechazar identidad distinta, URL arbitraria, conflicto o transición inválida.
+- No editar texto original, roles, permisos, datos comerciales ni cerrar issues desde el puente. Lectura no crea datos.
+- Registrar cambio en Historial y comprobar ok de la respuesta; HTTP 200 por sí solo no acredita éxito.
+- Preservar token, implementación, URL, configuración y trabajo pendiente del editor. Revertir código conserva historial y registros.
+- Pruebas aisladas; conciliación real limitada a IDs revisados y autorizados. Supuestos financieros y estados vacíos se muestran como tales sin inventar datos.
+
+## CTR-MOAC-ENCARGOS
+
+- Componentes: SYS-TAREAS, GAS-OPERACION, SHEET-OPERACION, GAS-MOAC-METAS, SHEET-MOAC-METAS.
+- Evidencia: Mejora de interfaz sobre contratos de tareas y objetivos existentes; implementación pendiente de integración..
+- Entrada/campos: `Encargo original y acciones editables con título conciso`, `Proyecto y objetivo existentes elegidos explícitamente; identidad actual autorizada`.
+- Salida: Creación de acción confirmada con ID y posterior vínculo confirmado a objetivo, Resultado parcial explícito si creación o vínculo no se confirma; conservación de texto original y trazabilidad.
+
+- No inferir ni crear proyectos/objetivos para resolver una referencia ambigua. Conservar IDs, historia y fuente original.
+- Interpretar TRUE/FALSE explícitamente: borrada siempre se excluye y archivada se oculta por defecto; no usar truthiness de strings.
+- Datos sin clasificación quedan visibles para corregir y fuera de indicadores semanales válidos; no inventar fecha o pertenencia.
+- No anunciar guardado completo hasta confirmación de tarea y vínculo. Con ACK perdido, conciliar marcador exacto antes de crear otra vez; ambigüedad permanece pendiente.
+- Fallo de vínculo conserva el ID ya creado y permite completar ese vínculo sin duplicar la acción.
+- Pruebas sintéticas fuera de producción; no modificar catálogo central ni permisos. Revertir frontend conserva registros de negocio.
