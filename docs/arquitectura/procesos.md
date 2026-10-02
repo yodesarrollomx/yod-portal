@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.30-emd-invitaciones · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.31-sala-produccion-acotada · 2026-10-01.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 

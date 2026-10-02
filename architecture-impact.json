@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-01.30-emd-invitaciones",
+  "model_revision": "2026-10-01.31-sala-produccion-acotada",
   "proposal_id": "CHG-CHINCHES-CIERRE-001",
   "components": [
     "SYS-YOD-OS",
@@ -28,7 +28,7 @@
     "EXT-MOTORES-MEDIA",
     "STORE-DESPACHO-CORCHO"
   ],
-  "summary": "Registrar preparación privada de invitaciones/recibos con envío deshabilitado y entrada corporativa condicionada al dominio real, preservando respuestas, enlaces y permisos.",
+  "summary": "Registrar recuperación acotada/offline de medios de Sala y precisar metadata privada de habilitación de invitaciones, sin efectos globales ni envío.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -37,5 +37,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir propuestas y código por PR/version previa; conservar ledger, borradores, accesos y respuestas. Entrada corporativa sin modificar backend."
+  "rollback": "Revertir propuesta/código por PR; conservar cola, decisiones, medios, registros de invitación e historial."
 }

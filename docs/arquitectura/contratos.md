@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.30-emd-invitaciones · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.31-sala-produccion-acotada · 2026-10-01.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -300,7 +300,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Componentes: GAS-EMD, SHEET-EMD, EXT-DRIVE, EXT-GMAIL.
 - Evidencia: Propuesta de preparación privada y entrega controlada de invitaciones con enlaces existentes; consentimiento y lote real se acreditan antes de activar envío..
 - Entrada/campos: `Coordinación reviewer vigente, catálogo y asignaciones autorizados con segregación QA/normal`, `Personas únicas 1..25, finalidad welcome/reminder/photo, ronda explícita estable y contactos verificados con revisión`, `Enlace participante existente, vigente y vinculado a identidad desde archivo privado autorizado; no emitir ni reiniciar accesos`, `Review HMAC privado con actor, personas, finalidad, ronda, digest y expiración15min; mutation estable; confirmación humana del lote exacto para enviar`.
-- Salida: Preview con asunto, destinatario y cuerpo con enlace enmascarado; sin crear recursos, Borrador privado con enlaces existentes solo tras mutación explícita, Recibo por actor y mutation para consultar incluso tras expiración; submitted no acredita entrega, Ubicación privada de borrador confirmado sin compartir ni publicar enlaces.
+- Salida: Preview con asunto, destinatario y cuerpo con enlace enmascarado; sin crear recursos, Borrador privado con enlaces existentes solo tras mutación explícita, Recibo por actor y mutation para consultar incluso tras expiración; submitted no acredita entrega, Ubicación privada de borrador confirmado sin compartir ni publicar enlaces, getInvitationPreparationStatus(admin) solo declara flags de preparación/envío, QA y maxBatch25 bajo ACL reviewer; sin leer ledger, participantes, enlaces o respuestas y sin crear recursos..
 
 - Preparación y envío deshabilitados por defecto; secreto de firma y configuración se preparan por el propietario. No añadir scopes ni consentimiento automáticamente.
 - Coordinación vigente en cada llamada y separación QA/normal. QA nunca envía correos reales. No leer ni convertir respuestas o puntajes como parte de esta propuesta.
@@ -325,3 +325,17 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - No publicar dominio inventado; configuración de DNS/alojamiento/certificado se verifica antes de activar.
 - Enlace corporativo de entrada redirige a GAS: mantener toda sesión bajo dominio corporativo requeriría otra migración y contrato.
 - No registrar ni publicar fragmentos personales o tokens; no ampliar permisos ni cambiar endpoint.
+
+## CTR-SALA-PRODUCCION-ACOTADA
+
+- Componentes: SYS-SALA, GAS-SALA, SHEET-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-MOTORES-MEDIA, EXT-DRIVE.
+- Evidencia: Propuesta de recuperación acotada de medio faltante para el encargo editorial #44; no ejecutar rescate global ni publicar marketing como parte del cierre..
+- Entrada/campos: `ID exacto de trabajo existente y hash de fuente aprobado, con estado y evidencia vigentes contrastados`, `Fuentes canónicas existentes, decisiones editoriales y regla de contenido vigente`, `Modo offline explícito sin descargas, motores remotos ni cargos; dependencias locales aisladas`.
+- Salida: Artefacto local privado verificado por hash, duración e integridad, o dependencia real explícita, Evidencia de producción real y durable solo cuando acceso y ubicación se acreditan; sin inventar IDs, rutas o marcas de completado.
+
+- Filtrar objetivo antes de todo rescate, reintento, red, montaje o escritura. ID/hash no coincidentes se rechazan; no ampliar objetivo por --limite ni activar trabajos ajenos.
+- Conservar decisiones del editor, versiones y contenido histórico; solo producir material vigente aprobado y que cumple CTR-SALA-CONTENIDO-VETADO. No reaprobar ni sobrescribir no.
+- Offline prohíbe descargas de modelos y motores remotos; no sustituir silenciosamente el motor por otro no autorizado. Artefactos nuevos se mantienen privados y trazables a fuente aprobada.
+- No marcar HECHO por generación local, prueba sintética o estado antiguo. Exigir archivo durable, integridad y acceso del ejecutor verificados; si falta credencial/ubicación, conservar pendiente y entregar evidencia privada.
+- No alterar ACL de archivos o almacenes de negocio para acomodar recuperación. Cualquier actualización real requiere estado esperado fresco y manejo de conflicto, no reemplazo del historial.
+- Pruebas usan fuentes sintéticas/dobles sin endpoints de negocio; una producción real específicamente autorizada se registra aparte y nunca se llama prueba. No lanzar workflows globales ni publicar a redes sociales.
