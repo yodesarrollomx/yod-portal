@@ -1,16 +1,16 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.24-chinches-cierre · 2026-10-01.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-01.25-despacho-corcho · 2026-10-01.
 
 ## SYS-DESPACHO · El Despacho
 
 Priorizar y aprobar trabajo de Dirección
 
 - Tipo: tablero. Dominio: Operación. Responsable: Dirección.
-- Evidencia: codigo. Producción: No verificado en despliegue.
+- Evidencia: codigo. Producción: Registro en catálogo vivo verificado; frontend y nuevo Corcho requieren verificación independiente..
 - Entidades: tarea, comentario, borrador, decision.
 - Fuente de verdad: SHEET-OPERACION mediante GAS-OPERACION; protocolo BANDEJA en comentarios.
-- Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L16) — Sistema presente en el catálogo canónico.
+- Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L16) — Sistema presente en el catálogo canónico; Catálogo vivo conciliado el 1-oct-2026: SYS-DESPACHO en Portal y Sistemas, destino canónico, fórmulas/validaciones comprobadas, permisos DP conservados. Seguimiento yod-portal#3 completado..
 - Conexiones: CON-016 (SYS-DESPACHO → GAS-OPERACION); CON-033 (SYS-YOD-OS → SYS-DESPACHO); CON-047 (SYS-DESPACHO → GAS-PORTERO); CON-061 (SYS-DESPACHO → EXT-GMAIL).
 - Mejoras: A · Atención comercial sin leads olvidados; D · Referidos y reactivación con control humano; G · Bloqueos y decisiones que frenan ventas y obra.
 
