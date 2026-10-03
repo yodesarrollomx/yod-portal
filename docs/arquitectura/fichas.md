@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.50-metas-durables · 2026-10-03.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.51-jev-consultas · 2026-10-03.
 
 ## SYS-DESPACHO · El Despacho
 
