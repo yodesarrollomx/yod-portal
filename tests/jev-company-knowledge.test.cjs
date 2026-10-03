@@ -35,7 +35,7 @@ test('registra todas las fuentes lógicas del atlas, incluidas altas futuras', a
   const {atlasSources} = await modulePromise;
   const model = JSON.parse(fs.readFileSync('docs/arquitectura/modelo.json', 'utf8'));
   assert.deepEqual(atlasSources(model).sources.map(s => s.source_id),
-    model.components.filter(c => c.id.startsWith('SHEET-')).map(c => c.id));
+    model.components.filter(c => c.id.startsWith('SHEET-') || c.id === 'EXT-DRIVE').map(c => c.id));
   model.components.push({id: 'SHEET-NUEVA', nombre: 'Nueva'});
   assert.ok(atlasSources(model).sources.some(s => s.source_id === 'SHEET-NUEVA'));
 });

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.51-jev-consultas",
+  "revision": "2026-10-03.52-jev-piloto",
   "checked_at": "2026-10-03",
   "priorities": [
     "vender_mas",
@@ -7488,13 +7488,13 @@
         "SHEET-PPP-MODELOS",
         "SHEET-AMALAYA"
       ],
-      "proposal": "Capacidad común para descubrir todas las fuentes Sheets del atlas, consultar datos recientes mediante adaptadores autorizados y evaluar opciones con Jev conservando referencias directas. Fuentes, permisos, frescura y procesamiento externo verificados antes de inferencia; instalación productiva por agente pendiente.",
+      "proposal": "Piloto de consulta con Jev para comparar PPP y responder uso de suelo de Gastón Madrid: hojas actuales por lecturas acotadas y textos de Drive recuperados con fuentes directas. Umbral fijo de confianza y respaldo de 0.92, revalidación previa/posterior y ausencia de respuesta bajo el mínimo. El atlas mantiene las fuentes lógicas de empresa; conexiones privadas y activación por puesto siguen pendientes.",
       "status": "implementado_local",
       "tests": [
-        "18 pruebas específicas aprobadas: lectura nueva, aislamiento, revocación, cambios de datos, fuentes pendientes, procedencia y respuestas Jev inválidas.",
-        "Regresión del portal y verificadores aprobados; consulta real a Jev 1.13.0 únicamente con datos sintéticos."
+        "24 pruebas sintéticas: lecturas actuales de Sheets/Drive, procedencia de archivo, alcance fijo de flujos y abstención bajo 0.92.",
+        "Jev 1.13.0 con datos sintéticos eligió confianza 0.47; el piloto devolvió needs_review sin selección."
       ],
-      "deployment": "Módulo y skill compartido preparados en rama; sin adaptadores privados instalados, cambios operativos en Sheets ni activación de agentes. La consulta sintética verifica la API de Jev, no la conexión de las fuentes de la empresa.",
+      "deployment": "Código local en rama con dos flujos habilitados y confianza/respaldo mínimos de 0.92. No hay IDs físicos en el repositorio, adaptadores privados instalados, cambios en Sheets ni activación de agentes. Pruebas sintéticas no acreditan una conexión operativa.",
       "rollback": "Retirar la capacidad opcional del agente y revertir este PR; conservar los libros, permisos, sesiones, tareas y datos existentes."
     }
   ],
@@ -8253,6 +8253,39 @@
       ]
     },
     {
+      "id": "CTR-JEV-CONSULTAS",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS"
+      ],
+      "source": "Prueba inicial local del asistente de conocimiento. Adaptadores con IDs físicos y ACL privados pendientes de instalación",
+      "input": [
+        "Actor autenticado y flujo permitido: comparación PPP o uso de suelo de Gastón Madrid",
+        "Hojas de cálculo acotadas o documentos Drive autorizados; revisión y timestamp de cada fragmento",
+        "Pregunta, contexto y alternativas preparadas por el host"
+      ],
+      "output": [
+        "Evidencia recuperada con enlace, revisión, fecha y huella de contenido",
+        "Elección de Jev sólo si confianza y respaldo alcanzan 0.92; bajo el umbral se devuelve revisión sin selección",
+        "Dato faltante, falta de permiso o fuente caducada, diferenciados de una respuesta"
+      ],
+      "invariants": [
+        "El catálogo lógico de veinte fuentes Sheets y EXT-DRIVE no acredita mapping físico, ACL ni instalación; el piloto sólo habilita los dos flujos registrados.",
+        "Leer fuentes de nuevo por consulta, limitar la frescura a cinco minutos y revalidar permisos, contenido y revisión antes y después de llamar a Jev.",
+        "Enviar a Jev sólo filas/texto pertinente de fuentes autorizadas; nunca IDs de acceso, credenciales ni tablas de permisos.",
+        "La comparación de importes/porcentajes respeta las métricas nativas; Jev decide criterios semánticos y no sustituye fórmulas o ranking determinista.",
+        "El uso de suelo sólo se afirma con documento normativo vigente vinculado al predio; un título de escenario PPP no equivale a autorización.",
+        "Confianza y respaldo menores a 0.92 producen needs_review sin candidato seleccionado. No repetir la misma pregunta para forzar confianza.",
+        "Choice confidence resume la concentración de alternativas y no equivale a exactitud empírica; Noul mide apoyo probabilístico del fragmento, no valida por sí solo la cita.",
+        "Pruebas sintéticas y una consulta sintética a Jev no acreditan conexión Google privada ni disponibilidad en otros agentes.",
+        "Reversión: retirar el módulo/política opcional; conservar intactas las fuentes, libros, permisos, historial y operación existentes."
+      ]
+    },
+    {
       "id": "CTR-DESPACHO-CONVERSACION",
       "components": [
         "SYS-YOD-OS",
@@ -8847,6 +8880,36 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/jev-company-knowledge.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/jev-office-pilot.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": ".agents/skills/typesafe-ai/",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "skills-lock.json",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",
