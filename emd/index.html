@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; frame-src https://script.google.com https://*.googleusercontent.com; connect-src 'none'; img-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Evaluación 360° EMD</title>
+  <link rel="canonical" href="https://yodesarrollomx.github.io/yod-portal/emd/">
+  <link rel="stylesheet" href="wrapper.css">
+  <script defer src="endpoint.js"></script>
+  <script defer src="protocol.js"></script>
+  <script defer src="wrapper.js"></script>
+</head>
+<body hidden>
+  <main id="status" aria-live="polite" aria-atomic="true">
+    <h1>Evaluación 360° EMD</h1>
+    <p id="message">Cargando tu evaluación…</p>
+    <button id="retry" type="button" hidden>Reintentar conexión</button>
+  </main>
+  <iframe id="portal" title="Portal de evaluación 360° EMD" hidden referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-forms allow-downloads allow-popups allow-modals"></iframe>
+</body>
+</html>
