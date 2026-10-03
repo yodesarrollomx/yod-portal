@@ -5,33 +5,30 @@ import {createRoot} from 'react-dom/client';
 import {MessageBox} from './vendor/cubefarm/MessageBox';
 import {Markdown} from './vendor/cubefarm/Markdown';
 import {validateDriveSelection} from '../despacho3d/drive-selection.mjs';
+import {Conversation,createFrameTransport} from '../despacho3d/conversation.mjs';
 
-const CASE_ID='';
+const labels:Record<string,string>={disconnected:'Conexión pendiente',loading:'Cargando expediente…',ready:'Historial recuperado',processing:'Mensaje guardado · esperando respuesta',sending:'Guardando mensaje…',unconfirmed:'Guardado sin confirmar',conflict:'El expediente cambió · vuelve a leerlo',unavailable:'No se pudo conectar con el expediente'};
 
 type Tab='chat'|'activity'|'plan';
 let overlayOpen=false;
 function inertWorld(value:boolean){const header=document.querySelector('header'),world=document.getElementById('workspace');if(header)header.inert=value;if(world)world.inert=value;}
 type RecordRow={id:string,title:string,body:string,url?:string};
-type Snapshot={case_id:string,revision:string,updated_at:string,events:RecordRow[],decisions:RecordRow[]};
-type Reader={read:(input:{case_id:string})=>Promise<unknown>};
-declare global {interface Window {YODCaseTransport?:Reader;CubefarmYOD?:{open:(tab?:Tab)=>void,close:()=>void,isOpen:()=>boolean}}}
-function rows(v:unknown):v is RecordRow[]{return Array.isArray(v)&&v.length<=500&&v.every(r=>r&&typeof r.id==='string'&&typeof r.title==='string'&&typeof r.body==='string'&&r.id.length<=200&&r.title.length<=1000&&r.body.length<=12000);}
-function validSnapshot(v:unknown):v is Snapshot{const s=v as Snapshot&{ok?:boolean};return !!s&&s.ok===true&&s.case_id===CASE_ID&&typeof s.revision==='string'&&s.revision.length>0&&typeof s.updated_at==='string'&&Number.isFinite(Date.parse(s.updated_at))&&rows(s.events)&&rows(s.decisions);}
+type Snapshot={case_id:string,revision:string,updated_at:string,events:RecordRow[],decisions:RecordRow[],messages:{id:string,role:string,body:string,created_at:string}[],processing:boolean};
+declare global {interface Window {CubefarmYOD?:{open:(tab?:Tab)=>void,close:()=>void,isOpen:()=>boolean}}}
 const tabs:[Tab,string,string][]=[['chat','◉','Conversación'],['activity','⌨','Actividad'],['plan','▦','Plan']];
 function App(){
  const [selection,setSelection]=useState<{name:string,url:string}|null>(null),[choosing,setChoosing]=useState(false),[selectionError,setSelectionError]=useState('');
  const links={chat:selection?.url||'terreno.html',activity:selection?.url||'terreno.html',plan:selection?.url||'terreno.html',decisions:selection?.url||'terreno.html'};
  const name=selection?.name||'Mi terreno';
- const [opened,setOpened]=useState(false),[tab,setTab]=useState<Tab>('chat'),[status,setStatus]=useState('Conexión pendiente'),[model,setModel]=useState<Snapshot|null>(null),[busy,setBusy]=useState(false);
- const rootRef=useRef<HTMLDivElement>(null),generation=useRef(0),focusRef=useRef<HTMLElement|null>(null);
- const read=async()=>{
-  const transport=window.YODCaseTransport;if(!CASE_ID||!transport||typeof transport.read!=='function')return;
-  const own=++generation.current;setBusy(true);setStatus('Leyendo en Sheets…');
-  try{const result=await transport.read({case_id:CASE_ID});if(own!==generation.current)return;if(!validSnapshot(result))throw Error('Unconfirmed snapshot');setModel(result);setStatus('Lectura confirmada');}
-  catch{if(own===generation.current){setModel(null);setStatus('No se pudo confirmar la lectura');}}
-  finally{if(own===generation.current)setBusy(false);}
- };
- const close=()=>{overlayOpen=false;inertWorld(false);generation.current++;setOpened(false);setChoosing(false);setModel(null);setBusy(false);setStatus('Conexión pendiente');window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:false}));(focusRef.current?.isConnected&&focusRef.current.getClientRects().length?focusRef.current:document.getElementById('agents-open'))?.focus();};
+ const [opened,setOpened]=useState(false),[tab,setTab]=useState<Tab>('chat'),[status,setStatus]=useState('disconnected'),[model,setModel]=useState<Snapshot|null>(null),[busy,setBusy]=useState(false);
+ const [message,setMessage]=useState('');
+ const rootRef=useRef<HTMLDivElement>(null),focusRef=useRef<HTMLElement|null>(null),transportRef=useRef<any>(null),conversation=useRef<any>(null);
+ if(!conversation.current)conversation.current=new Conversation({transport:()=>transportRef.current,notify:(c:any)=>{setModel(c.model);setBusy(c.busy);setStatus(c.status);if(c.selection)setSelection(c.selection);}});
+ const read=()=>conversation.current.selection?conversation.current.refresh():conversation.current.open();
+ const send=async(e:React.FormEvent)=>{e.preventDefault();if(await conversation.current.send(message))setMessage('');};
+ const close=()=>{overlayOpen=false;inertWorld(false);conversation.current.close();setOpened(false);setChoosing(false);setSelection(null);setMessage('');window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:false}));(focusRef.current?.isConnected&&focusRef.current.getClientRects().length?focusRef.current:document.getElementById('agents-open'))?.focus();};
+ useEffect(()=>{transportRef.current=createFrameTransport(window);return()=>{conversation.current.close();transportRef.current?.dispose();};},[]);
+ useEffect(()=>{if(!opened||!model?.processing)return;let attempts=0;const timer=setInterval(()=>{if(++attempts>12){clearInterval(timer);return;}void conversation.current.refresh();},5000);return()=>clearInterval(timer);},[opened,model?.processing]);
  useEffect(()=>{
   window.CubefarmYOD={open:(next='chat')=>{focusRef.current=document.activeElement as HTMLElement;overlayOpen=true;inertWorld(true);setTab(next);setOpened(true);window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:true}));void read();},close,isOpen:()=>overlayOpen};
   const trigger=document.getElementById('agents-open') as HTMLButtonElement|null;if(trigger){trigger.disabled=false;trigger.onclick=()=>window.CubefarmYOD?.open();}
@@ -49,8 +46,20 @@ function App(){
   <div className={tab==='chat'?'phone':'panel panel-wide'}>
    {tab==='chat'?<div className="phone-status"><span>YoDesarrollo</span><span className="phone-notch"/><button className="panel-x" aria-label="Cerrar agentes" onClick={close}>×</button></div>:<div className="panel-head"><div className="panel-title">{name}</div><button className="panel-x" aria-label="Cerrar agentes" onClick={close}>×</button></div>}
    <div className={tab==='chat'?'phone-screen':'panel-body'}>
-    {tab==='chat'&&<div className="phone-chat"><div className="chat-head"><span className="avatar">T</span><div className="grow"><b>{name}</b><div className="muted small">Terreno · Plan de Potencial</div></div><span className="connection-label">Sheets</span></div><div className="chat-log"><div className="phone-empty"><p>Mi conversación y mi memoria se conservan en Drive.</p><p className="muted">Elige mi expediente privado para abrir la conversación de Sheets.</p><button className="btn" onClick={()=>setChoosing(true)}>Elegir expediente privado</button><a className="btn btn-good sheet-link" href={links.chat} target="_blank" rel="noopener noreferrer">Abrir mi conversación</a><p className="muted small">Este panel todavía no carga el historial ni envía mensajes directamente.</p></div></div><form className="chat-input" onSubmit={e=>e.preventDefault()}><MessageBox value="" onChange={()=>{}} disabled placeholder="Envío directo pendiente de conexión" aria-label="Mensaje directo al terreno"/><button className="btn btn-small" disabled>Enviar</button></form></div>}
-    {tab==='activity'&&<><div className="term-meta"><span className="avatar">T</span><span>{name}</span><span className="chip">{status}</span></div><div className="term-split"><div className="term" role="log" aria-label="Actividad del expediente">{!model&&<div className="term-line term-system">La actividad se consulta en Sheets. No hay una terminal de ejecución conectada.</div>}{model&&model.events.length===0&&<div className="term-line">Sin eventos en la lectura recibida.</div>}{model?.events.map(r=><div className="term-line" key={r.id}><b>{r.title}</b><div>{r.body}</div></div>)}</div></div><div className="term-actions"><a className="btn" href={links.activity} target="_blank" rel="noopener noreferrer">Ver actividad en Sheets</a><button className="btn" disabled={!CASE_ID||!window.YODCaseTransport||busy} onClick={()=>void read()}>Releer expediente</button></div><p className="muted small">Revisión automática por hora pausada. La ejecución debe comprobarse antes de activarla.</p>{model&&<p className="muted small">Revisión {model.revision} · {model.updated_at}</p>}</>}
+    {tab==='chat'&&<div className="phone-chat">
+     <div className="chat-head"><span className="avatar">T</span><div className="grow"><b>{name}</b><div className="muted small">Terreno · Plan de Potencial</div></div><span className="connection-label">Sheets</span></div>
+     <div className="conversation-status" role="status">{labels[status]||status}</div>
+     <div className="chat-log" role="log" aria-label="Conversación del expediente">
+      {model?.messages.map(row=><article className={`case-message case-message-${row.role}`} key={row.id}><b>{row.role==='user'?'Tú':name}</b><p>{row.body}</p><time dateTime={row.created_at}>{new Date(row.created_at).toLocaleString('es-MX')}</time></article>)}
+      {model&&!model.messages.length&&<p className="phone-empty">Todavía no hay mensajes guardados en este expediente.</p>}
+      {!model&&<div className="phone-empty"><p>{busy?'Estoy cargando el expediente privado y su conversación.':'La conexión privada del expediente todavía no está disponible.'}</p><p className="muted">Al conectarse, la conversación se recuperará aquí desde Sheets.</p><button className="btn" disabled={busy} onClick={()=>void read()}>Reintentar conexión</button><button className="btn" onClick={()=>setChoosing(true)}>Abrir expediente manualmente</button>{selection&&<a className="btn sheet-link" href={links.chat} target="_blank" rel="noopener noreferrer">Abrir en Sheets</a>}</div>}
+     </div>
+     {model&&<div className="conversation-tools"><button type="button" className="btn" disabled={busy} onClick={()=>void read()}>Actualizar</button><a className="btn" href={links.chat} target="_blank" rel="noopener noreferrer">Ver en Sheets</a></div>}
+     {status==='unconfirmed'&&<p className="conversation-notice" role="alert">No se ha confirmado el guardado. Reintentar conserva el mismo mensaje y su identificador.</p>}
+     {model&&!conversation.current.selection?.agent_ready&&<p className="conversation-notice">El motor necesita conectarse antes de enviar mensajes.</p>}
+     <form className="chat-input" onSubmit={send}><MessageBox value={message} onChange={setMessage} maxLength={8000} disabled={busy||status!=='ready'||!conversation.current.selection?.agent_ready||!conversation.current.selection?.can_enqueue} placeholder={status==='processing'?'Esperando la respuesta…':'Escribe al terreno'} aria-label="Mensaje directo al terreno"/><button className="btn btn-small" disabled={busy||(!conversation.current.pending&&(!message.trim()||status!=='ready'))||!conversation.current.selection?.agent_ready||!conversation.current.selection?.can_enqueue}>{status==='unconfirmed'?'Reintentar':'Enviar'}</button></form>
+    </div>}
+    {tab==='activity'&&<><div className="term-meta"><span className="avatar">T</span><span>{name}</span><span className="chip">{labels[status]||status}</span></div><div className="term-split"><div className="term" role="log" aria-label="Actividad del expediente">{!model&&<div className="term-line term-system">La actividad se consulta en Sheets. No hay una terminal de ejecución conectada.</div>}{model&&model.events.length===0&&<div className="term-line">Sin eventos en la lectura recibida.</div>}{model?.events.map(r=><div className="term-line" key={r.id}><b>{r.title}</b><div>{r.body}</div></div>)}</div></div><div className="term-actions"><a className="btn" href={links.activity} target="_blank" rel="noopener noreferrer">Ver actividad en Sheets</a><button className="btn" disabled={busy} onClick={()=>void read()}>Releer expediente</button></div><p className="muted small">Revisión automática por hora pausada. La ejecución debe comprobarse antes de activarla.</p>{model&&<p className="muted small">Revisión {model.revision} · {model.updated_at}</p>}</>}
     {tab==='plan'&&<><div className="kanban-toolbar"><a className="btn btn-good" href={links.plan} target="_blank" rel="noopener noreferrer">Abrir control del caso en Sheets</a><span className="muted">{model?'Decisiones recibidas del expediente':'Estados pendientes de lectura directa'}</span></div><div className="kanban">{[['Por aclarar','backlog'],['Preparado','progress'],['En curso','qa'],['Tu revisión','review']].map(([title,style])=><div className={`kcol kcol-${style}`} key={title}><div className="kcol-head">{title} <span className="count">{title==='Tu revisión'&&model?model.decisions.length:'—'}</span></div><div className="kcol-body">{title==='Tu revisión'&&model?model.decisions.length?model.decisions.map(r=><div className="kcard" key={r.id}><div className="kcard-title">{r.title}</div><Markdown text={r.body}/></div>):<div className="muted kempty">Sin decisiones en la lectura recibida.</div>:<div className="muted kempty">Consulta el estado registrado en Sheets.</div>}</div></div>)}</div><p className="muted small">El panel muestra decisiones para revisión. No aprueba ni ejecuta acciones al abrirlas.</p></>}
    </div>
    <nav className="phone-tabs" aria-label="Paneles del terreno">{tabs.map(([key,icon,label])=><button key={key} className={`phone-tab ${tab===key?'phone-tab-on':''}`} aria-pressed={tab===key} onClick={()=>setTab(key)}><span className="phone-tab-icon" aria-hidden="true">{icon}</span><span>{label}</span></button>)}</nav>

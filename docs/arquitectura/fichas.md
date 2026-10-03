@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.35-emd-escala-039 · 2026-10-02.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.37-despacho-conexion · 2026-10-02.
 
 ## SYS-DESPACHO · El Despacho
 

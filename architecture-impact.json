@@ -1,22 +1,21 @@
 {
-  "model_revision": "2026-10-03.35-emd-escala-039",
-  "proposal_id": "CHG-EMD-ESCALA-039",
+  "model_revision": "2026-10-03.37-despacho-conexion",
+  "proposal_id": "CHG-DESPACHO-CONVERSACION-001",
   "components": [
-    "SYS-EMD",
-    "GAS-EMD",
-    "SHEET-EMD",
-    "SYS-YOD-OS"
+    "SYS-YOD-OS",
+    "SYS-DESPACHO",
+    "GAS-PORTERO",
+    "EXT-DRIVE"
   ],
-  "summary": "Atlas únicamente: registrar aprobación acotada de captura 1..5, NA histórico confirmado por pregunta y colores rojo→verde bajo CTR-EMD-ESCALA-CAPTURA; implementación y despliegue privados pendientes.",
+  "summary": "Conectar el panel al Portero existente con POST autenticado, expediente privado e historial durable. Servidor publicado manualmente y motor autenticado vinculado; publicar el cliente para aceptación desde la sala. Incorporar la propuesta EMD concurrente conservando sus reglas y contratos. Disponibilidad permanente del worker pendiente.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "TMPDIR=/dev/shm node --test tests/*.cjs",
+    "node --test tests/*.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
-    "ACCESOS_REF=3ee8ca50bf14ef17d95e72523e54506eb996f262 node verify-accesos.cjs",
+    "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "node scripts/verificar-impacto.cjs --base 193014c8055454ecb67e9f6675a0c71c768a3d1b --repo yodesarrollomx/yod-portal",
     "git diff --check"
   ],
-  "rollback": "Revertir este PR del atlas y regenerar vistas preservando propuestas concurrentes. EMD: frontend anterior con guard de NA nuevos conservado; GAS solo a versión con guard equivalente, o suspender captura afectada hasta parche. Sin migración, borrado, reescritura ni recálculo de históricos."
+  "rollback": "Revertir el PR para recuperar el panel anterior; conservar hojas, historial, permisos y despliegues del servidor."
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.35-emd-escala-039",
+  "revision": "2026-10-03.37-despacho-conexion",
   "checked_at": "2026-10-02",
   "priorities": [
     "vender_mas",
@@ -7131,6 +7131,25 @@
         "Implementación privada pendiente: móvil, escritorio y teclado muestran 1 rojo, 2 naranja, 3 amarillo, 4 verde claro y 5 verde, con número/etiqueta accesibles; 28 textos, cálculos, asignaciones y accesos intactos. Usar solo datos sintéticos."
       ],
       "deployment": "Solo propuesta/contrato del atlas; no acredita implementación, publicación del frontend ni despliegue de GAS. Implementación privada a cargo del agente principal, con pruebas del HEAD exacto, respaldo privado y actualización de la implementación existente. Rollback documental: revertir este PR y regenerar vistas preservando cambios concurrentes. Rollback funcional: restaurar frontend anterior manteniendo guard que bloquea NA nuevos; revertir versión GAS solo a una versión con guard equivalente. Si no existe, suspender captura afectada hasta parche compatible; conservar lectura e historial. Nunca migrar, reescribir o borrar respuestas. Detalle de aceptación y reversión en docs/arquitectura/emd-escala-captura.md."
+    },
+    {
+      "id": "CHG-DESPACHO-CONVERSACION-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Conectar el panel preparado al Portero existente mediante POST autenticado. Resolver caso y hoja en servidor, conservar el historial e instalar el adaptador privado con cola durable. El usuario pegará el código privado y actualizará la implementación existente. El motor se vincula con autorización acotada y sólo anuncia disponibilidad tras una ejecución real. No publicar fuentes ni identidades privadas.",
+      "status": "implementado_local",
+      "tests": [
+        "Resolución autorizada sin identificadores privados en cliente; recuperar historial en otra instancia.",
+        "Envío explícito, ACK durable, reintento con el mismo ID y rechazo de respuestas tardías/conflictos.",
+        "Puente de origen, ventana y época de sesión exactos; fallo cerrado sin adaptador.",
+        "Verificaciones completas del portal y prueba de navegador con transporte sintético.",
+        "Transporte HTTP: credencial sólo en cuerpo al endpoint autorizado, invalidación de sesión y ninguna conmutación de servidor al enviar."
+      ],
+      "deployment": "Cliente, puente y transporte HTTP implementados localmente. 166 pruebas del portal y QA 390/1280 con HTTP interceptado. Paquete privado de servidor preparado y probado; despliegue manual, vinculación del worker y aceptación desde la sala pendientes."
     }
   ],
   "data_contracts": [
@@ -7876,6 +7895,32 @@
         "Pruebas funcionales y versión activa pendientes en sistema privado; usar dobles sintéticos, no endpoints de negocio ni datos Google para probar. La integración del atlas no acredita despliegue de EMD.",
         "Rollback conserva datos e historial: revertir documentación por PR y regenerar vistas; restaurar frontend sin quitar el guard. Solo volver a GAS con guard equivalente; si no existe versión compatible, suspender captura afectada hasta parche. No restaurar NA como opción nueva ni reescribir históricos."
       ]
+    },
+    {
+      "id": "CTR-DESPACHO-CONVERSACION",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "source": "Continuación autorizada del bloque de conversación del Despacho. Contrato local por instalar sobre el backend existente, no nuevas rutas HTTP supuestas.",
+      "input": [
+        "resolveCurrent sin selector: el servidor resuelve expediente y permiso del actor autenticado.",
+        "read con case_id previamente resuelto; enqueue con case_id, expected_revision, request_id y message."
+      ],
+      "output": [
+        "Identidad y enlace privado procedentes del servidor; historial y estado desde Sheets.",
+        "Recibo de encolado confirmado; respuesta recuperada por lectura posterior, sin regenerar resultados al abrir."
+      ],
+      "invariants": [
+        "Cada operación exige autorización fresca de servidor; el puente de navegador no sustituye Portero.",
+        "Origen y ventana exactos, método permitido y época de sesión conservada. Credenciales sólo en adaptador autorizado del OS.",
+        "Sin datos privados estáticos, sin almacenamiento local de conversaciones ni inferencia de guardado a partir del eco visual.",
+        "Cierre o revocación descartan datos en memoria y respuestas tardías; toda reapertura relee Sheets.",
+        "Un fallo de ACK conserva el mismo request_id para reconciliar, nunca encola con ID nuevo automáticamente.",
+        "Sin adaptador verificado no se habilita envío. Pruebas sintéticas no acreditan conexión productiva."
+      ]
     }
   ],
   "path_ownership": [
@@ -8234,6 +8279,46 @@
         "SYS-SALA",
         "GAS-SALA",
         "SHEET-SALA"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/despacho-conversation.js",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-conversation.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/despacho-transport.js",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-transport.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
       ]
     }
   ]

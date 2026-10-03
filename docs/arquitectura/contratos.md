@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.35-emd-escala-039 · 2026-10-02.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.37-despacho-conexion · 2026-10-02.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -373,3 +373,17 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Esta excepción acotada precisa las menciones previas a escala intacta en propuestas/contratos EMD; todos sus demás límites permanecen. No ampliar el instrumento a preguntas desfavorables por inferencia.
 - Pruebas funcionales y versión activa pendientes en sistema privado; usar dobles sintéticos, no endpoints de negocio ni datos Google para probar. La integración del atlas no acredita despliegue de EMD.
 - Rollback conserva datos e historial: revertir documentación por PR y regenerar vistas; restaurar frontend sin quitar el guard. Solo volver a GAS con guard equivalente; si no existe versión compatible, suspender captura afectada hasta parche. No restaurar NA como opción nueva ni reescribir históricos.
+
+## CTR-DESPACHO-CONVERSACION
+
+- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, EXT-DRIVE.
+- Evidencia: Continuación autorizada del bloque de conversación del Despacho. Contrato local por instalar sobre el backend existente, no nuevas rutas HTTP supuestas..
+- Entrada/campos: `resolveCurrent sin selector: el servidor resuelve expediente y permiso del actor autenticado.`, `read con case_id previamente resuelto; enqueue con case_id, expected_revision, request_id y message.`.
+- Salida: Identidad y enlace privado procedentes del servidor; historial y estado desde Sheets., Recibo de encolado confirmado; respuesta recuperada por lectura posterior, sin regenerar resultados al abrir..
+
+- Cada operación exige autorización fresca de servidor; el puente de navegador no sustituye Portero.
+- Origen y ventana exactos, método permitido y época de sesión conservada. Credenciales sólo en adaptador autorizado del OS.
+- Sin datos privados estáticos, sin almacenamiento local de conversaciones ni inferencia de guardado a partir del eco visual.
+- Cierre o revocación descartan datos en memoria y respuestas tardías; toda reapertura relee Sheets.
+- Un fallo de ACK conserva el mismo request_id para reconciliar, nunca encola con ID nuevo automáticamente.
+- Sin adaptador verificado no se habilita envío. Pruebas sintéticas no acreditan conexión productiva.
