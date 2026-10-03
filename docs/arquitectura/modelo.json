@@ -7465,7 +7465,8 @@
       "components": [
         "SYS-EMD",
         "GAS-EMD",
-        "SHEET-EMD"
+        "SHEET-EMD",
+        "SYS-YOD-OS"
       ],
       "proposal": "Barra de avance confirmada ocupa primera fila completa del encabezado; identidad y botones debajo. Porcentaje único dentro del sol, sin marcas numéricas. Montaña de arena ampliada y detallada; maquinaria y granos se animan solo al aumentar avance confirmado. Logo intacto al cero. Cambio exclusivamente visual con contratos existentes.",
       "status": "propuesto",

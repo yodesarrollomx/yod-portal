@@ -4,7 +4,8 @@
   "components": [
     "SYS-EMD",
     "GAS-EMD",
-    "SHEET-EMD"
+    "SHEET-EMD",
+    "SYS-YOD-OS"
   ],
   "summary": "Registrar cambio visual EMD en encabezado con porcentaje único y tierra ampliada; contratos existentes intactos.",
   "tests": [
