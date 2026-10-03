@@ -7384,9 +7384,14 @@
       "id": "CHG-DESPACHO-AVATARES-001",
       "components": [
         "SYS-YOD-OS",
-        "SYS-DESPACHO"
+        "SYS-DESPACHO",
+        "SYS-TAREAS",
+        "GAS-OPERACION",
+        "GAS-PORTERO",
+        "STORE-DESPACHO-CORCHO",
+        "EXT-DRIVE"
       ],
-      "proposal": "Homologar la identidad de personas, expedientes y herramientas en un registro privado con alias confirmados; preparar una familia de personajes caricaturescos 3D con rostro, ropa, accesorios y animación articulada. Entregar módulo reutilizable y adaptador desacoplado para instalación por el agente del Despacho, conservando conversación, permisos y expediente canónico.",
+      "proposal": "Homologar la identidad de personas, expedientes y herramientas en un registro privado con alias confirmados; preparar una familia de personajes caricaturescos 3D con rostro, ropa, accesorios y animación articulada. Entregar módulo reutilizable y adaptador desacoplado para instalación por el agente del Despacho, conservando conversación, permisos y expediente canónico. Se desacopla una regresión histórica de Corcho del manifiesto del PR actual; los componentes de Corcho tienen impacto sólo de pruebas, sin cambios de backend.",
       "status": "implementado_local",
       "authorization": {
         "date": "2026-10-03",
