@@ -1,0 +1,55 @@
+diff --git a/despacho-agents/Agents.tsx b/despacho-agents/Agents.tsx
+index df9ee07..af962f7 100644
+--- a/despacho-agents/Agents.tsx
++++ b/despacho-agents/Agents.tsx
+@@ -33,7 +33,7 @@ type DocumentRow={id:string,source_id:string,title:string,source:string,role:str
+ type Snapshot={case_id:string,revision:string,updated_at:string,events:RecordRow[],memory:MemoryRow[],documents:DocumentRow[],jobs:{id:string,request_id:string,status:string}[],messages:{id:string,role:string,body:string,created_at:string}[],processing:boolean};
+ type AgentAPI={open:(tab?:Tab)=>boolean,close:()=>void,isOpen:()=>boolean,getProfile:()=>Profile|null,subscribeProfile:(fn:(profile:Profile|null)=>void)=>()=>void,openForCase:(id:string)=>boolean};
+ declare global {interface Window {CubefarmYOD?:AgentAPI}}
+-const tabs:[Tab,string,string][]=[['chat','◉','Conversación'],['dossier','▤','Expediente'],['plan','▦','Tareas'],['activity','⌨','Actividad']];
++const tabs:[Tab,string,string][]=[['chat','◉','Conversación'],['dossier','▤','Expediente'],['plan','▦','Tareas'],['terminal','⌨','Terminal'],['activity','≡','Actividad']];
+ let overlayOpen=false;
+ function inertWorld(value:boolean){const header=document.querySelector('header'),world=document.getElementById('workspace');if(header)header.inert=value;if(world)world.inert=value;}
+ function App(){
+@@ -92,7 +92,7 @@ function App(){
+  const name=selection?.name||conversation.current.getProfile()?.name||'Expediente del caso';
+  const sheetLink=selection?.url;
+  return <div ref={rootRef} className="overlay dossier-overlay" role="dialog" aria-modal="true" aria-label="Agentes del Despacho" onMouseDown={e=>{if(e.target===e.currentTarget)close();}}>
+-  <div className={`panel dossier-panel ${tab==='terminal'?'terminal-wide':''}`}>
++  <div className={`panel dossier-panel ${tab==='terminal'?'terminal-wide':tab==='plan'?'tasks-wide':''}`}>
+    <div className="panel-head"><div className="panel-title"><span className="muted small">YoDesarrollo · Despacho</span><strong>{name}</strong></div><button className="panel-x" aria-label="Cerrar agentes" onClick={close}>×</button></div>
+    <nav className="phone-tabs" aria-label="Paneles del caso">{tabs.map(([key,icon,label])=><button key={key} className={`phone-tab ${tab===key?'phone-tab-on':''}`} aria-pressed={tab===key} onClick={()=>setTab(key)}><span className="phone-tab-icon" aria-hidden="true">{icon}</span><span>{label}</span></button>)}</nav>
+    <div className="conversation-status" role="status">{labels[status]||status}</div>
+@@ -131,7 +131,7 @@ function App(){
+     {tab==='plan'&&(selection?.goals?.ready===true?<DurableGoalsPanel controller={goals.current} active={opened&&tab==='plan'} workerReady={selection.goals.worker_ready}/>:<section className="dossier-section"><h2>Tareas del agente</h2><p>El seguimiento automático de metas y evidencias en Sheets todavía no está activado en el motor.</p><p className="muted">La conversación y su historial están en la pestaña Conversación.</p></section>)}
+    </div>
+    <div className="conversation-tools"><button type="button" className="btn" disabled={busy} onClick={()=>void read()}>{model?'Actualizar':'Reintentar conexión'}</button>{sheetLink&&<a className="btn" href={sheetLink} target="_blank" rel="noopener noreferrer">Ver en Sheets</a>}</div>
+-   <div className="phone-hint"><button className="attribution-close" onClick={()=>setTab(tab==='terminal'?'chat':'terminal')}>{tab==='terminal'?'Volver a la conversación':'Diagnóstico'}</button><span> · </span><a href="third-party/cubefarm/LICENSE.txt" target="_blank" rel="noopener noreferrer">Interfaz basada en Cubefarm</a><span> · </span><button className="attribution-close" onClick={close}>Volver al Despacho</button></div>
++   <div className="phone-hint"><a href="third-party/cubefarm/LICENSE.txt" target="_blank" rel="noopener noreferrer">Interfaz basada en Cubefarm</a><span> · </span><button className="attribution-close" onClick={close}>Volver al Despacho</button></div>
+   </div>
+  </div>;
+ }
+diff --git a/despacho-agents/aurum.css b/despacho-agents/aurum.css
+index 0c9bad5..37e85dc 100644
+--- a/despacho-agents/aurum.css
++++ b/despacho-agents/aurum.css
+@@ -84,15 +84,16 @@ header #agents-open{min-height:44px;background:#263d40;color:#faf7f0;border:1px
+  #cubefarm-agents .dossier-panel .phone-tab{font-size:11px}
+ }
+
+-#cubefarm-agents .dossier-panel.terminal-wide{width:min(1100px,calc(100vw - 24px));max-width:none}
++#cubefarm-agents .dossier-panel.terminal-wide,#cubefarm-agents .dossier-panel.tasks-wide{width:min(1100px,calc(100vw - 24px));max-width:none}
+ #cubefarm-agents .terminal-puesto{display:flex;flex-direction:column;height:100%;min-height:350px;gap:8px}
+ #cubefarm-agents .terminal-screen{flex:1;min-height:240px;background:#101b20;padding:8px;border-radius:6px;overflow:hidden}
+ #cubefarm-agents .terminal-controls{display:flex;gap:6px;flex-wrap:wrap}
+ #cubefarm-agents .terminal-controls .btn{font-size:13px;padding:7px 10px}
+ #cubefarm-agents .terminal-notice{font-size:14px;margin:2px 0}
+-#cubefarm-agents .dossier-panel .phone-tabs{grid-template-columns:repeat(4,minmax(0,1fr))}
++#cubefarm-agents .dossier-panel .phone-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+ #cubefarm-agents .dossier-panel .phone-tab{min-width:0;font-size:11px}
+-@media(max-width:700px){#cubefarm-agents .dossier-panel.terminal-wide{width:100%;height:100dvh;border-radius:0}#cubefarm-agents .terminal-puesto{min-height:250px}#cubefarm-agents .terminal-screen{min-height:170px}}
++@media(max-width:700px){#cubefarm-agents .dossier-panel.terminal-wide,#cubefarm-agents .dossier-panel.tasks-wide{width:100%;height:100dvh;border-radius:0}#cubefarm-agents .terminal-puesto{min-height:250px}#cubefarm-agents .terminal-screen{min-height:170px}}
++@media(max-width:360px){#cubefarm-agents .dossier-panel .phone-tabs{display:flex;overflow-x:auto;scroll-snap-type:x proximity}#cubefarm-agents .dossier-panel .phone-tab{flex:0 0 76px;scroll-snap-align:start}}
+
+ #cubefarm-agents .goal-panel-container[hidden]{display:none!important}
+ #cubefarm-agents .goal-panel p{margin:0 0 12px;font-size:14px}
