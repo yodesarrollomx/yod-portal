@@ -1,22 +1,28 @@
 {
-  "model_revision": "2026-10-03.43-despacho-r2",
-  "proposal_id": "CHG-DESPACHO-CONVERSACION-001",
+  "model_revision": "2026-10-03.44-corcho-provisional-035",
+  "proposal_id": "CHG-DESPACHO-CORCHO-PROVISIONAL-035",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
+    "SYS-TAREAS",
+    "GAS-OPERACION",
     "GAS-PORTERO",
+    "STORE-DESPACHO-CORCHO",
     "EXT-DRIVE"
   ],
-  "summary": "Registrar despliegue r2 del servidor privado: etiqueta publicada, código guardado cotejado y lecturas del motor verificadas. Latencia de un nuevo turno y disponibilidad permanente pendientes.",
+  "summary": "Registrar provisional Sala #35 en Portero V57 existente, routing exclusivo de Corcho, auth owner exacto con DP y full guard Drive, Mi Corcho privado preparado, migración Ops sólo endpoint/adapter y rollback sin borrar Sheet. Atlas sin despliegue de producto.",
+  "contracts": [
+    "CTR-DESPACHO-CORCHO"
+  ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
-    "node verify-accesos.cjs",
+    "ACCESOS_REF=3ee8ca50bf14ef17d95e72523e54506eb996f262 node verify-accesos.cjs",
     "node verify-obra-app.cjs",
     "node scripts/verificar-impacto.cjs --base origin/main --repo yodesarrollomx/yod-portal",
     "git diff --check"
   ],
-  "rollback": "Revertir únicamente este PR; conservar historial, permisos, servidor y aportes EMD concurrentes."
+  "rollback": "Revertir PR atlas. En consumidores: frontend a versión anterior por PR, backend a versión anterior respaldada en misma implementación Portero conservando editor concurrente y URL; preservar Sheet, notas, ejes, IDs, versiones, ACL e historial. No product deploy desde atlas."
 }

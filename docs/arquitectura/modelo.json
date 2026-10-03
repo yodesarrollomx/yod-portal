@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.43-despacho-r2",
+  "revision": "2026-10-03.44-corcho-provisional-035",
   "checked_at": "2026-10-03",
   "priorities": [
     "vender_mas",
@@ -211,6 +211,14 @@
         {
           "claim": "Catálogo vivo conciliado el 1-oct-2026: SYS-DESPACHO en Portal y Sistemas, destino canónico, fórmulas/validaciones comprobadas, permisos DP conservados. Seguimiento yod-portal#3 completado.",
           "status": "ejecucion"
+        },
+        {
+          "repo": "yodesarrollomx/yod-despacho",
+          "path": "corcho.js",
+          "commit": "32330badba66dd9b23a7413498f421aeb628c9cb",
+          "source_revision": "32330badba66dd9b23a7413498f421aeb628c9cb",
+          "claim": "Frontend Corcho integrado con CAS global, archivo/restauración y ACK; no acredita persistencia en servidor.",
+          "status": "codigo"
         }
       ],
       "data_entities": [
@@ -220,9 +228,9 @@
         "decision"
       ],
       "risks_sanitized": [],
-      "source_of_truth": "SHEET-OPERACION mediante GAS-OPERACION; protocolo BANDEJA en comentarios",
+      "source_of_truth": "Tareas/BANDEJA: SHEET-OPERACION mediante GAS-OPERACION. Corcho: STORE-DESPACHO-CORCHO privado; adapter provisional propuesto en GAS-PORTERO conforme CTR-DESPACHO-CORCHO.",
       "status": "codigo",
-      "runtime_status": "Registro en catálogo vivo verificado; frontend y nuevo Corcho requieren verificación independiente."
+      "runtime_status": "Registro en catálogo vivo verificado. Frontend Corcho integrado; routing exclusivo corchoGet/corchoSave a Portero propuesto bajo CHG-DESPACHO-CORCHO-PROVISIONAL-035; persistencia y aceptación autenticada pendientes."
     },
     {
       "id": "SYS-POTENCIALES",
@@ -1007,6 +1015,11 @@
           "claim": "CHG-PPP-BACKEND-001: versión53 observada tras actualizar la implementación existente; fuente de editor releída idéntica, configuración conservada y lectura HTTP autorizada de caso/lista conciliada. Activador directo instalado; sin POST de prueba.",
           "status": "ejecucion",
           "source_revision": "Apps Script version 53"
+        },
+        {
+          "claim": "Preflight privado de Corcho comunicado por el coordinador: implementación existente V57, editor igual a fuente activa, principal de Dirección y scopes Drive completos ya autorizados. No acredita adapter Corcho desplegado.",
+          "status": "declarado",
+          "source_revision": "Apps Script version 57"
         }
       ],
       "data_entities": [
@@ -1023,7 +1036,7 @@
       "backend_source_status": "fuente_editor_y_lectura_publica_contrastadas",
       "source_of_truth": "Versión53 de implementación existente observada en editor; lectura HTTP PPP contrastada con libro canónico. Evidencia API de versiones51/52 histórica; los datos operativos siguen en sus hojas.",
       "status": "codigo",
-      "runtime_status": "Versión53 publicada en la implementación existente. Código leído del editor coincide con el cambio guardado; configuración conservada. Lectura pública PPP de caso/lista conciliada con Sheets; activador directo instalado. Edición real, sesión de pantalla y aceptación por rol pendientes."
+      "runtime_status": "Versión53 publicada en la implementación existente. Código leído del editor coincide con el cambio guardado; configuración conservada. Lectura pública PPP de caso/lista conciliada con Sheets; activador directo instalado. Edición real, sesión de pantalla y aceptación por rol pendientes. Preflight Corcho V57 registrado por separado; adapter provisional CHG-DESPACHO-CORCHO-PROVISIONAL-035 propuesto, sin despliegue de producto en este PR."
     },
     {
       "id": "SHEET-PORTERO",
@@ -1163,7 +1176,8 @@
         "comentario"
       ],
       "risks_sanitized": [
-        "Código desplegado y permisos reales no contrastados"
+        "Código desplegado y permisos reales no contrastados",
+        "Proyecto editable de Operación no identificado tras comparar 13 proyectos; no modificar getAll/update ni atribuir el Corcho provisional a este despliegue."
       ],
       "backend_source_status": "fragmento_autenticacion",
       "source_of_truth": "Fuente de GitHub; despliegue y datos reales por verificar",
@@ -2618,14 +2632,20 @@
       "proposito": "Persistir notas y ejes del Corcho en un archivo privado independiente, autorizado solo al propietario exacto",
       "dominio": "Dirección",
       "owner_role": "Dirección / propietario único del archivo",
-      "status": "propuesto",
-      "runtime_status": "Preparación de infraestructura privada; integración y publicación pendientes",
+      "status": "declarado",
+      "runtime_status": "Mi Corcho privado vacío ya preparado, pestaña Corcho con encabezados id/version/payload_json; ACL actual de archivo y raíz owner-only verificadas por coordinador. Integración y persistencia autenticada pendientes; revalidar principal y ACL en cada operación.",
       "evidence": [
         {
           "repo": "yodesarrollomx/board-aurum",
           "path": "apps-script/corcho.gs",
-          "claim": "Contrato propuesto de almacenamiento por propiedad privada; archivo físico e identidad de ejecución por verificar en registro privado",
-          "status": "propuesto"
+          "commit": "388ff869325bd9ea47ba8a2acccf00807fd85f4c",
+          "source_revision": "388ff869325bd9ea47ba8a2acccf00807fd85f4c",
+          "claim": "Fuente integrada de almacenamiento separado, CAS, principal efectivo y ACL Drive exhaustiva; integración runtime pendiente.",
+          "status": "codigo"
+        },
+        {
+          "claim": "Registro privado previo de infraestructura: archivo independiente vacío con Corcho y encabezados, cero notas de prueba. Coordinador acredita ACL vigente owner-only de archivo y raíz; IDs y principal permanecen privados.",
+          "status": "declarado"
         }
       ],
       "data_entities": [
@@ -2636,8 +2656,8 @@
       "risks_sanitized": [
         "Dependencia de identidad de ejecución y consentimiento vigentes para verificar privacidad antes de acceder a datos"
       ],
-      "source_of_truth": "Archivo privado independiente configurado por propiedad de script; no publicar identificadores ni notas",
-      "physical_mapping_status": "pendiente"
+      "source_of_truth": "Mi Corcho privado independiente ya preparado; propiedades privadas o fallback de módulo privado, sin publicar identificadores ni notas. Mismo archivo durante provisional y futura migración Ops.",
+      "physical_mapping_status": "preparado_en_registro_privado"
     }
   ],
   "connections": [
@@ -2942,7 +2962,7 @@
       "id": "CON-016",
       "from": "SYS-DESPACHO",
       "to": "GAS-OPERACION",
-      "label": "Consume contrato del backend",
+      "label": "Tareas ordinarias getAll/update en Operación",
       "kind": "api",
       "evidence": [
         {
@@ -2952,11 +2972,19 @@
           "claim": "Conexión cliente/backend",
           "status": "declarado",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/yod-despacho",
+          "path": "app.js",
+          "commit": "32330badba66dd9b23a7413498f421aeb628c9cb",
+          "source_revision": "32330badba66dd9b23a7413498f421aeb628c9cb",
+          "claim": "Cliente existente de tareas; separación de Corcho preparada por coordinador, todavía no integrada en el frontend publicado.",
+          "status": "codigo"
         }
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "getAll/update siguen en GAS-OPERACION, con contrato y autorización existentes. CHG-DESPACHO-CORCHO-PROVISIONAL-035 propone separar exclusivamente corchoGet/corchoSave hacia GAS-PORTERO; ninguna otra acción cambia de endpoint."
     },
     {
       "id": "CON-017",
@@ -4578,19 +4606,17 @@
       "id": "CON-DESPACHO-CORCHO-STORE",
       "from": "GAS-OPERACION",
       "to": "STORE-DESPACHO-CORCHO",
-      "label": "Persiste Corcho privado con revisión y control de acceso",
+      "label": "Futuro Ops: mismo almacén Corcho tras identificar proyecto",
       "kind": "persistencia",
       "status": "propuesto",
       "runtime_verified": false,
       "evidence": [
         {
-          "repo": "yodesarrollomx/board-aurum",
-          "path": "apps-script/corcho.gs",
-          "claim": "Almacén privado propuesto, fuera de datos generales de Operación",
+          "claim": "CHG-DESPACHO-CORCHO-PROVISIONAL-035: Migración futura condicionada a identificar editor/implementación Ops y validar el mismo principal, ACL y contrato; conservar archivo e IDs.",
           "status": "propuesto"
         }
       ],
-      "contract": "CTR-DESPACHO-CORCHO; identidad exacta, verificación fresca de privacidad de archivo y ancestros, CAS y archivo sin borrado."
+      "contract": "CTR-DESPACHO-CORCHO; futuro adapter en GAS-OPERACION. Sólo cambiar endpoint/adapter, sin mover ni recrear Sheet, notas, ejes o versiones; nunca dos escritores con locks independientes."
     },
     {
       "id": "CON-EMD-GITHUB-EMBED",
@@ -4607,6 +4633,54 @@
         }
       ],
       "contract": "CTR-EMD-GITHUB-EMBED: wrapper top GitHub y handshake nonce/ready con origen exacto antes de arranque; RPC y datos permanecen en Google."
+    },
+    {
+      "id": "CON-DESPACHO-CORCHO-PORTERO",
+      "from": "SYS-DESPACHO",
+      "to": "GAS-PORTERO",
+      "label": "Provisional: sólo corchoGet/corchoSave",
+      "kind": "api",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "CHG-DESPACHO-CORCHO-PROVISIONAL-035: Integración provisional autorizada, pendiente en PR consumidores; preflight V57 no acredita despliegue del adapter.",
+          "status": "propuesto"
+        }
+      ],
+      "contract": "POST text/plain; {action,k} para corchoGet y {action,k,version,data} para corchoSave. CTR-DESPACHO-CORCHO; URL Portero conocida actual, sin fallback de servidor ni desvío de getAll/update."
+    },
+    {
+      "id": "CON-PORTERO-CORCHO-STORE",
+      "from": "GAS-PORTERO",
+      "to": "STORE-DESPACHO-CORCHO",
+      "label": "Provisional: CAS en Mi Corcho privado",
+      "kind": "persistencia",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "CHG-DESPACHO-CORCHO-PROVISIONAL-035: Integración provisional autorizada, pendiente en PR consumidores; preflight V57 no acredita despliegue del adapter.",
+          "status": "propuesto"
+        }
+      ],
+      "contract": "CTR-DESPACHO-CORCHO; canjearLigaLento_(key,'DP') local fresco, owner exacto, principal efectivo y ACL Drive exhaustiva, LockService, CAS global y ACK con snapshot; no renovar/cache ni publicar notas."
+    },
+    {
+      "id": "CON-PORTERO-CORCHO-DRIVE",
+      "from": "GAS-PORTERO",
+      "to": "EXT-DRIVE",
+      "label": "Corcho: principal y ACL completos por GET",
+      "kind": "autorizacion",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "CHG-DESPACHO-CORCHO-PROVISIONAL-035: Integración provisional autorizada, pendiente en PR consumidores; preflight V57 no acredita despliegue del adapter.",
+          "status": "propuesto"
+        }
+      ],
+      "contract": "Drive full guard en cada operación: about.user del token de ejecución, propietario único exacto, archivo y todos los ancestros hasta raíz, permissions.list paginado incluidos permisos publicados; scopes Drive existentes completos, fail-closed sin fallback."
     }
   ],
   "processes": [
@@ -7209,6 +7283,102 @@
         "Terminal, tareas, QA y entregas verificadas contra ejecución real; no usar el demo como evidencia productiva."
       ],
       "deployment": "Referencia original compilada e inspeccionada en demo aislado. Conversación del piloto parcialmente comprobada; terminal interactiva, gestor de tareas, QA, entregas, coordinación y servicio permanente pendientes de conexión. Véase despacho-capacidades.md."
+    },
+    {
+      "id": "CHG-DESPACHO-CORCHO-PROVISIONAL-035",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-TAREAS",
+        "GAS-OPERACION",
+        "GAS-PORTERO",
+        "STORE-DESPACHO-CORCHO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Resolver Sala #35 con adapter Corcho provisional en GAS-PORTERO existente mientras Ops editable no se identifica. Mantener CTR-DESPACHO-CORCHO, owner exacto con DP y full guard Drive. Separar únicamente corchoGet/corchoSave a URL Portero conocida actual; conservar getAll/update en GAS-OPERACION y Mi Corcho privado ya preparado. Propuesta concreta, documentación, diagramas y pruebas del atlas; consumidores y producto en entregas separadas.",
+      "status": "propuesto",
+      "authorization": {
+        "date": "2026-10-02",
+        "scope": "Provisional existente ya autorizado; preparar/integrar PR atlas y entregar referencia inmutable. Sin product deploy ni cambios a otros issues/backends."
+      },
+      "baseline": {
+        "atlas_commit": "7843040d40e67679c3ea0b52bc09f5052d5cbbe8",
+        "board_aurum_commit": "388ff869325bd9ea47ba8a2acccf00807fd85f4c",
+        "yod_despacho_commit": "32330badba66dd9b23a7413498f421aeb628c9cb",
+        "portero_version": 57,
+        "ops_projects_compared": 13,
+        "ops_editable_identified": false,
+        "preflight": "Coordinador: editor=active V57, owner Dirección, scopes Drive completos ya autorizados, ACL actuales archivo/root owner-only; evidencia privada, sin nuevo despliegue."
+      },
+      "routing": [
+        {
+          "from": "SYS-DESPACHO",
+          "to": "GAS-PORTERO",
+          "actions": [
+            "corchoGet",
+            "corchoSave"
+          ],
+          "status": "propuesto",
+          "endpoint": "PORTERO_EXEC_EXISTENTE"
+        },
+        {
+          "from": "SYS-DESPACHO",
+          "to": "GAS-OPERACION",
+          "actions": [
+            "getAll",
+            "update"
+          ],
+          "status": "existente",
+          "endpoint": "OPERACION_EXEC_EXISTENTE"
+        }
+      ],
+      "backend_adapter": {
+        "identity_resolver": "canjearLigaLento_(key,'DP')",
+        "identity_owner": "exacto",
+        "permission": "DP",
+        "renew_session": false,
+        "positive_cache": false,
+        "self_http": false,
+        "drive_guard": "principal_efectivo_y_ACL_completa_archivo_y_ancestros",
+        "configuration": "propiedades_existentes_o_modulo_privado",
+        "configuration_writes": false,
+        "storage_creation": false
+      },
+      "migration": {
+        "target": "GAS-OPERACION",
+        "changes": [
+          "endpoint",
+          "adapter"
+        ],
+        "preserve": [
+          "CTR-DESPACHO-CORCHO",
+          "STORE-DESPACHO-CORCHO",
+          "owner_exacto",
+          "DP",
+          "Drive_full_guard",
+          "IDs",
+          "version_global",
+          "notas",
+          "ejes",
+          "archivo_restauracion"
+        ],
+        "single_writer": true,
+        "status": "futuro_condicionado_a_proyecto_ops_identificado"
+      },
+      "rollback": {
+        "frontend": "Restaurar versión anterior por PR en yod-despacho; frontend base 32330badba66dd9b23a7413498f421aeb628c9cb.",
+        "backend": "Volver a versión inmediatamente anterior respaldada en la misma implementación Portero; V57 es el preflight, releer versión vigente antes de cualquier publicación futura. Conservar editor concurrente y configuración.",
+        "storage": "Conservar Sheet, notas, ejes, IDs, versiones, ACL e historial; no borrar ni restaurar datos."
+      },
+      "tests": [
+        "Registro: esquema, referencia de propuesta/impacto, routing exclusivo y conexiones propuestas sin runtime_verified.",
+        "Evidencia/diagramas: enlaces por commit completo por evidencia, vistas deterministas y privacidad pública.",
+        "Backend consumidor: propietario exacto/otro owner aun con admin, DP revocado, sesión expirada, canje fresco local sin renovar/cache; principal/ACL, ancestros, paginación/published, scopes insuficientes y fallo cerrado; sin escrituras de configuración ni creación.",
+        "Contrato consumidor: CAS global, LockService, conflicto, ACK incompleto y respuesta incierta, JSON neutraliza fórmulas, archivo/restauración y conservación de omitidas.",
+        "Frontend consumidor: routing exacto corchoGet/corchoSave frente getAll/update, red interceptada, sin fallback ni datos privados; regresiones y móvil/escritorio.",
+        "node scripts/arquitectura.cjs --check; node --test tests/*.cjs; node verify-os.cjs; node verify-portal.cjs; node verify-accesos.cjs; node verify-obra-app.cjs; node scripts/verificar-impacto.cjs; git diff --check"
+      ],
+      "deployment": "Este PR integra sólo atlas/propuesta, pruebas y generador de enlaces por commit. Frontend coordinado en worktree aislado; backend adapter pendiente de PR consumidor y publicación separada. No product deploy, no escrituras de negocio, no cierre de Sala #35 por integrar documentación. Promoción futura: respaldo privado/relectura, backend compatible en misma implementación, después frontend, aceptación autenticada y registro independiente. Rollback de frontend/backend conserva Mi Corcho; futura migración Ops sólo endpoint/adapter con escritor único."
     }
   ],
   "data_contracts": [
@@ -7672,16 +7842,19 @@
         "GAS-PORTERO",
         "EXT-DRIVE"
       ],
-      "source": "Propuesta de Corcho privado en archivo independiente; infraestructura, consentimiento e identidad de ejecución se acreditan por separado antes de publicar.",
+      "source": "Fuente Corcho integrada en board-aurum PR #4 y frontend en yod-despacho PR #3; CHG-DESPACHO-CORCHO-PROVISIONAL-035 autoriza adapter provisional en Portero existente. Infraestructura privada preparada y preflight V57 comunicado; persistencia autenticada aún pendiente.",
       "input": [
         "Sesión canjeada y validada servidor a servidor por Portero; identidad de propietario exacta con permiso DP vigente",
         "Acción corchoGet o corchoSave; ID estable, versión esperada y payload JSON validado",
-        "Ejes configurables, notas con título/cuerpo, posición, color y estado activo o archivado"
+        "Ejes configurables, notas con título/cuerpo, posición, color y estado activo o archivado",
+        "corchoGet: POST {action:corchoGet,k}; corchoSave: POST {action:corchoSave,k,version,data}",
+        "data:{axes:{ejeX,ejeY},notes}; versión CAS global, no versión independiente por nota"
       ],
       "output": [
         "Configuración y notas solo del propietario autorizado",
         "ACK con versión confirmada o conflicto sin sobrescritura",
-        "Archivo/restauración con historial y sin borrado físico"
+        "Archivo/restauración con historial y sin borrado físico",
+        "Éxito sólo {ok:true,version,data:{axes:{ejeX,ejeY},notes}}; Save exige versión nueva y snapshot válido confirmado. Conflicto o ACK incompleto conserva el editor."
       ],
       "invariants": [
         "El servidor deriva la identidad real de Portero; ignora identidad/rol enviados por el cliente. No amplía accesos de otros tableros ni sustituye getAll/update.",
@@ -7694,7 +7867,14 @@
         "CORCHO_SPREADSHEET_ID identifica un archivo independiente privado; no almacenar notas en el libro general de Operación ni alterar sus permisos.",
         "Antes de toda lectura/escritura comprobar principal de ejecución y propiedad única exacta del archivo y sus ancestros; revisar permissions.list paginado incl permisos publicados. Rechazar anyone, domain, otros usuarios, unidades compartidas, herencia no verificada o metadatos incompletos.",
         "Validación fresca sin caché ni fallback; las consultas de metadatos y permisos son solo GET. Si Drive o scopes no permiten certificar acceso, fallar cerrado con consentimiento_requerido sin añadir scopes, compartir archivos ni degradar protección automáticamente.",
-        "Preparación del archivo puede crear únicamente pestaña Corcho y encabezados id/version/payload_json; cero notas de prueba, cero lecturas que creen recursos. La configuración del backend requiere identificar el proyecto vigente y su principal de ejecución."
+        "Preparación del archivo puede crear únicamente pestaña Corcho y encabezados id/version/payload_json; cero notas de prueba, cero lecturas que creen recursos. La configuración del backend requiere identificar el proyecto vigente y su principal de ejecución.",
+        "Provisional autorizado: sólo corchoGet/corchoSave de SYS-DESPACHO usan la URL Portero conocida actual. getAll/update y demás acciones conservan GAS-OPERACION; sin fallback de servidor para lectura ni escritura de Corcho.",
+        "En GAS-PORTERO resolver localmente con canjearLigaLento_(key,'DP'): sin canje HTTP a sí mismo, sin renovar sesión y sin caché positiva. Exigir ok, correo de servidor igual al owner configurado y DP vigente según política existente; un rol administrativo de otro owner no basta.",
+        "Mantener el Drive full guard existente: about.user del token efectivo, permissionId y correo coincidentes con owner único de archivo y ancestros; ACL completa paginada incluida vista published y raíz de Mi unidad. No sustituirlo por shared:false ni por una ACL histórica owner-only.",
+        "La configuración puede usar propiedades existentes o fallback de módulo privado ya autorizado. Su resolución no escribe PropertiesService, no crea ni inicializa Sheet y no incluye IDs/correos/credenciales en fuentes o logs públicos.",
+        "El dispatcher Corcho se integra antes del lock y de guards/caches genéricos sin alterar otras rutas; conserva JSON, límites, respuesta y semántica de error. LockService y CAS pertenecen al handler Corcho.",
+        "Migración futura a Ops cambia sólo endpoint/adapter y conserva CTR-DESPACHO-CORCHO, identidad, full guard, archivo, IDs, versiones y archivo/restauración. Cortar el escritor provisional antes de habilitar Ops: locks de proyectos distintos no serializan entre sí.",
+        "Rollback restaura frontend anterior por PR y versión activa anterior del backend en la misma implementación/URL, conservando cambios concurrentes del editor, configuración y ACL. Nunca borrar, recrear, limpiar ni restaurar Sheet/notas/ejes/versiones. Ante escritura incierta conciliar con corchoGet autenticado sin repetir Save a ciegas."
       ]
     },
     {
@@ -8017,6 +8197,7 @@
       "prefix": "apps-script/corcho.gs",
       "components": [
         "GAS-OPERACION",
+        "GAS-PORTERO",
         "STORE-DESPACHO-CORCHO",
         "EXT-DRIVE"
       ]
@@ -8424,6 +8605,26 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO",
         "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/arquitectura.cjs",
+      "components": [
+        "SYS-YOD-OS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/corcho-provisional-atlas.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-TAREAS",
+        "GAS-OPERACION",
+        "GAS-PORTERO",
+        "STORE-DESPACHO-CORCHO",
         "EXT-DRIVE"
       ]
     }

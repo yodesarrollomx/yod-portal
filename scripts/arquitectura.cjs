@@ -55,6 +55,7 @@ function validate(model, schema) {
       if (e.repo && !repos.has(e.repo)) throw new Error(item.id + ': repositorio de evidencia desconocido');
       if (e.path && (e.path.startsWith('/') || e.path.split('/').includes('..') || e.path.includes('\\'))) throw new Error(item.id + ': ruta insegura');
       if (e.lines && !/^\d+$/.test(e.lines)) throw new Error(item.id + ': línea de evidencia inválida');
+      if (e.commit !== undefined && !/^[a-f0-9]{40}$/.test(e.commit)) throw new Error(item.id + ': commit de evidencia debe ser SHA completo');
     }
     if (item.status === 'codigo' && !item.evidence.some(e => e.status === 'codigo')) throw new Error(item.id + ': estado código sin evidencia de código');
     if (item.status === 'ejecucion' && !item.evidence.some(e => e.status === 'ejecucion')) throw new Error(item.id + ': ejecución sin evidencia');
@@ -84,7 +85,7 @@ function evidenceText(items, model) {
   return items.map(e => {
     const r = model.repositories.find(r => r.repo === e.repo);
     if (e.repo && e.path && r && r.visibility === 'public') {
-      const url = 'https://github.com/' + e.repo + '/blob/' + r.commit + '/' + e.path.split('/').map(encodeURIComponent).join('/') + (e.lines ? '#L' + String(e.lines).split(/[-–:]/)[0] : '');
+      const url = 'https://github.com/' + e.repo + '/blob/' + (e.commit || r.commit) + '/' + e.path.split('/').map(encodeURIComponent).join('/') + (e.lines ? '#L' + String(e.lines).split(/[-–:]/)[0] : '');
       return '[' + cell(e.repo.split('/')[1] + '/' + e.path) + '](' + url + ') — ' + cell(e.claim);
     }
     return cell(e.claim || 'Evidencia restringida; ver registro interno');

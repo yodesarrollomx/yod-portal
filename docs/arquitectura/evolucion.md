@@ -1,5 +1,18 @@
 # Evolución del sistema
 
+## Sala #35 · provisional autorizado del 2 de octubre de 2026
+
+Se registra `CHG-DESPACHO-CORCHO-PROVISIONAL-035` preservando
+`CTR-DESPACHO-CORCHO` y el mapping privado de Mi Corcho ya preparado. Sólo
+`corchoGet/corchoSave` se proponen hacia Portero existente; `getAll/update`
+continúan en Operación. El adapter local exige owner exacto y DP mediante
+`canjearLigaLento_(key,'DP')`, sin renovación/caché, y full guard de principal y
+ACL Drive. El coordinador acredita preflight V57, editor=active y permisos
+vigentes; ello no acredita despliegue del adapter. La [propuesta concreta](despacho-corcho-provisional.md)
+documenta tests, reversión sin borrar Sheet y migración futura sólo
+endpoint/adapter con escritor único. Este PR integra atlas, sin product deploy
+ni cierre de Sala #35. Los manifests fijan el SHA de integración por separado.
+
 ## EMD issue #39 · aprobación del 2 de octubre de 2026
 
 Se registra `CHG-EMD-ESCALA-039` y `CTR-EMD-ESCALA-CAPTURA` para `SYS-EMD`,

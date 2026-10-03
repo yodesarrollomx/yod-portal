@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.43-despacho-r2 · 2026-10-03.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.44-corcho-provisional-035 · 2026-10-03.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -222,9 +222,9 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 ## CTR-DESPACHO-CORCHO
 
 - Componentes: SYS-DESPACHO, SYS-TAREAS, GAS-OPERACION, STORE-DESPACHO-CORCHO, GAS-PORTERO, EXT-DRIVE.
-- Evidencia: Propuesta de Corcho privado en archivo independiente; infraestructura, consentimiento e identidad de ejecución se acreditan por separado antes de publicar..
-- Entrada/campos: `Sesión canjeada y validada servidor a servidor por Portero; identidad de propietario exacta con permiso DP vigente`, `Acción corchoGet o corchoSave; ID estable, versión esperada y payload JSON validado`, `Ejes configurables, notas con título/cuerpo, posición, color y estado activo o archivado`.
-- Salida: Configuración y notas solo del propietario autorizado, ACK con versión confirmada o conflicto sin sobrescritura, Archivo/restauración con historial y sin borrado físico.
+- Evidencia: Fuente Corcho integrada en board-aurum PR #4 y frontend en yod-despacho PR #3; CHG-DESPACHO-CORCHO-PROVISIONAL-035 autoriza adapter provisional en Portero existente. Infraestructura privada preparada y preflight V57 comunicado; persistencia autenticada aún pendiente..
+- Entrada/campos: `Sesión canjeada y validada servidor a servidor por Portero; identidad de propietario exacta con permiso DP vigente`, `Acción corchoGet o corchoSave; ID estable, versión esperada y payload JSON validado`, `Ejes configurables, notas con título/cuerpo, posición, color y estado activo o archivado`, `corchoGet: POST {action:corchoGet,k}; corchoSave: POST {action:corchoSave,k,version,data}`, `data:{axes:{ejeX,ejeY},notes}; versión CAS global, no versión independiente por nota`.
+- Salida: Configuración y notas solo del propietario autorizado, ACK con versión confirmada o conflicto sin sobrescritura, Archivo/restauración con historial y sin borrado físico, Éxito sólo {ok:true,version,data:{axes:{ejeX,ejeY},notes}}; Save exige versión nueva y snapshot válido confirmado. Conflicto o ACK incompleto conserva el editor..
 
 - El servidor deriva la identidad real de Portero; ignora identidad/rol enviados por el cliente. No amplía accesos de otros tableros ni sustituye getAll/update.
 - Las lecturas no crean recursos ni exponen notas en getAll, catálogos, frontend estático, logs públicos u otros usuarios.
@@ -237,6 +237,13 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Antes de toda lectura/escritura comprobar principal de ejecución y propiedad única exacta del archivo y sus ancestros; revisar permissions.list paginado incl permisos publicados. Rechazar anyone, domain, otros usuarios, unidades compartidas, herencia no verificada o metadatos incompletos.
 - Validación fresca sin caché ni fallback; las consultas de metadatos y permisos son solo GET. Si Drive o scopes no permiten certificar acceso, fallar cerrado con consentimiento_requerido sin añadir scopes, compartir archivos ni degradar protección automáticamente.
 - Preparación del archivo puede crear únicamente pestaña Corcho y encabezados id/version/payload_json; cero notas de prueba, cero lecturas que creen recursos. La configuración del backend requiere identificar el proyecto vigente y su principal de ejecución.
+- Provisional autorizado: sólo corchoGet/corchoSave de SYS-DESPACHO usan la URL Portero conocida actual. getAll/update y demás acciones conservan GAS-OPERACION; sin fallback de servidor para lectura ni escritura de Corcho.
+- En GAS-PORTERO resolver localmente con canjearLigaLento_(key,'DP'): sin canje HTTP a sí mismo, sin renovar sesión y sin caché positiva. Exigir ok, correo de servidor igual al owner configurado y DP vigente según política existente; un rol administrativo de otro owner no basta.
+- Mantener el Drive full guard existente: about.user del token efectivo, permissionId y correo coincidentes con owner único de archivo y ancestros; ACL completa paginada incluida vista published y raíz de Mi unidad. No sustituirlo por shared:false ni por una ACL histórica owner-only.
+- La configuración puede usar propiedades existentes o fallback de módulo privado ya autorizado. Su resolución no escribe PropertiesService, no crea ni inicializa Sheet y no incluye IDs/correos/credenciales en fuentes o logs públicos.
+- El dispatcher Corcho se integra antes del lock y de guards/caches genéricos sin alterar otras rutas; conserva JSON, límites, respuesta y semántica de error. LockService y CAS pertenecen al handler Corcho.
+- Migración futura a Ops cambia sólo endpoint/adapter y conserva CTR-DESPACHO-CORCHO, identidad, full guard, archivo, IDs, versiones y archivo/restauración. Cortar el escritor provisional antes de habilitar Ops: locks de proyectos distintos no serializan entre sí.
+- Rollback restaura frontend anterior por PR y versión activa anterior del backend en la misma implementación/URL, conservando cambios concurrentes del editor, configuración y ACL. Nunca borrar, recrear, limpiar ni restaurar Sheet/notas/ejes/versiones. Ante escritura incierta conciliar con corchoGet autenticado sin repetir Save a ciegas.
 
 ## CTR-AMALAYA-CHINCHES-ESTADO
 
