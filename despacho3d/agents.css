@@ -2547,6 +2547,289 @@
   }
 }
 
+/**
+ * Copyright (c) 2014 The xterm.js authors. All rights reserved.
+ * Copyright (c) 2012-2013, Christopher Jeffrey (MIT License)
+ * https://github.com/chjj/term.js
+ * @license MIT
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * Originally forked from (with the author's permission):
+ *   Fabrice Bellard's javascript vt100 for jslinux:
+ *   http://bellard.org/jslinux/
+ *   Copyright (c) 2011 Fabrice Bellard
+ *   The original design remains. The terminal itself
+ *   has been extended to include xterm CSI codes, among
+ *   other features.
+ */
+
+/**
+ *  Default styles for xterm.js
+ */
+
+#cubefarm-agents .xterm {
+    cursor: text;
+    position: relative;
+    user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}
+
+#cubefarm-agents .xterm.focus, #cubefarm-agents .xterm:focus {
+    outline: none;
+}
+
+#cubefarm-agents .xterm .xterm-helpers {
+    position: absolute;
+    top: 0;
+    /**
+     * The z-index of the helpers must be higher than the canvases in order for
+     * IMEs to appear on top.
+     */
+    z-index: 5;
+}
+
+#cubefarm-agents .xterm .xterm-helper-textarea {
+    padding: 0;
+    border: 0;
+    margin: 0;
+    /* Move textarea out of the screen to the far left, so that the cursor is not visible */
+    position: absolute;
+    opacity: 0;
+    left: -9999em;
+    top: 0;
+    width: 0;
+    height: 0;
+    z-index: -5;
+    /** Prevent wrapping so the IME appears against the textarea at the correct position */
+    white-space: nowrap;
+    overflow: hidden;
+    resize: none;
+}
+
+#cubefarm-agents .xterm .composition-view {
+    /* TODO: Composition position got messed up somewhere */
+    background: #000;
+    color: #FFF;
+    display: none;
+    position: absolute;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+#cubefarm-agents .xterm .composition-view.active {
+    display: block;
+}
+
+#cubefarm-agents .xterm .xterm-viewport {
+    /* On OS X this is required in order for the scroll bar to appear fully opaque */
+    background-color: #000;
+    overflow-y: scroll;
+    cursor: default;
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+
+#cubefarm-agents .xterm .xterm-screen {
+    position: relative;
+}
+
+#cubefarm-agents .xterm .xterm-screen canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+#cubefarm-agents .xterm-char-measure-element {
+    display: inline-block;
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: -9999em;
+    line-height: normal;
+}
+
+#cubefarm-agents .xterm.enable-mouse-events {
+    /* When mouse events are enabled (eg. tmux), revert to the standard pointer cursor */
+    cursor: default;
+}
+
+#cubefarm-agents .xterm.xterm-cursor-pointer, #cubefarm-agents .xterm .xterm-cursor-pointer {
+    cursor: pointer;
+}
+
+#cubefarm-agents .xterm.column-select.focus {
+    /* Column selection mode */
+    cursor: crosshair;
+}
+
+#cubefarm-agents .xterm .xterm-accessibility:not(.debug), #cubefarm-agents .xterm .xterm-message {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 10;
+    color: transparent;
+    pointer-events: none;
+}
+
+#cubefarm-agents .xterm .xterm-accessibility-tree:not(.debug) *::selection {
+  color: transparent;
+}
+
+#cubefarm-agents .xterm .xterm-accessibility-tree {
+  font-family: monospace;
+  user-select: text;
+  white-space: pre;
+}
+
+#cubefarm-agents .xterm .xterm-accessibility-tree > div {
+  transform-origin: left;
+  width: fit-content;
+}
+
+#cubefarm-agents .xterm .live-region {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+#cubefarm-agents .xterm-dim {
+    /* Dim should not apply to background, so the opacity of the foreground color is applied
+     * explicitly in the generated class and reset to 1 here */
+    opacity: 1 !important;
+}
+
+#cubefarm-agents .xterm-underline-1 { text-decoration: underline; }
+#cubefarm-agents .xterm-underline-2 { text-decoration: double underline; }
+#cubefarm-agents .xterm-underline-3 { text-decoration: wavy underline; }
+#cubefarm-agents .xterm-underline-4 { text-decoration: dotted underline; }
+#cubefarm-agents .xterm-underline-5 { text-decoration: dashed underline; }
+
+#cubefarm-agents .xterm-overline {
+    text-decoration: overline;
+}
+
+#cubefarm-agents .xterm-overline.xterm-underline-1 { text-decoration: overline underline; }
+#cubefarm-agents .xterm-overline.xterm-underline-2 { text-decoration: overline double underline; }
+#cubefarm-agents .xterm-overline.xterm-underline-3 { text-decoration: overline wavy underline; }
+#cubefarm-agents .xterm-overline.xterm-underline-4 { text-decoration: overline dotted underline; }
+#cubefarm-agents .xterm-overline.xterm-underline-5 { text-decoration: overline dashed underline; }
+
+#cubefarm-agents .xterm-strikethrough {
+    text-decoration: line-through;
+}
+
+#cubefarm-agents .xterm-screen .xterm-decoration-container .xterm-decoration {
+	z-index: 6;
+	position: absolute;
+}
+
+#cubefarm-agents .xterm-screen .xterm-decoration-container .xterm-decoration.xterm-decoration-top-layer {
+	z-index: 7;
+}
+
+#cubefarm-agents .xterm-decoration-overview-ruler {
+    z-index: 8;
+    position: absolute;
+    top: 0;
+    right: 0;
+    pointer-events: none;
+}
+
+#cubefarm-agents .xterm-decoration-top {
+    z-index: 2;
+    position: relative;
+}
+
+
+
+/* Derived from vs/base/browser/ui/scrollbar/media/scrollbar.css */
+
+/* xterm.js customization: Override xterm's cursor style */
+#cubefarm-agents .xterm .xterm-scrollable-element > .scrollbar {
+    cursor: default;
+}
+
+/* Arrows */
+#cubefarm-agents .xterm .xterm-scrollable-element > .scrollbar > .scra {
+	cursor: pointer;
+	font-size: 11px !important;
+}
+
+#cubefarm-agents .xterm .xterm-scrollable-element > .visible {
+	opacity: 1;
+
+	/* Background rule added for IE9 - to allow clicks on dom node */
+	background:rgba(0,0,0,0);
+
+	transition: opacity 100ms linear;
+	/* In front of peek view */
+	z-index: 11;
+}
+#cubefarm-agents .xterm .xterm-scrollable-element > .invisible {
+	opacity: 0;
+	pointer-events: none;
+}
+#cubefarm-agents .xterm .xterm-scrollable-element > .invisible.fade {
+	transition: opacity 800ms linear;
+}
+
+/* Scrollable Content Inset Shadow */
+#cubefarm-agents .xterm .xterm-scrollable-element > .shadow {
+	position: absolute;
+	display: none;
+}
+#cubefarm-agents .xterm .xterm-scrollable-element > .shadow.top {
+	display: block;
+	top: 0;
+	left: 3px;
+	height: 3px;
+	width: 100%;
+	box-shadow: var(--vscode-scrollbar-shadow, #000) 0 6px 6px -6px inset;
+}
+#cubefarm-agents .xterm .xterm-scrollable-element > .shadow.left {
+	display: block;
+	top: 3px;
+	left: 0;
+	height: 100%;
+	width: 3px;
+	box-shadow: var(--vscode-scrollbar-shadow, #000) 6px 0 6px -6px inset;
+}
+#cubefarm-agents .xterm .xterm-scrollable-element > .shadow.top-left-corner {
+	display: block;
+	top: 0;
+	left: 0;
+	height: 3px;
+	width: 3px;
+}
+#cubefarm-agents .xterm .xterm-scrollable-element > .shadow.top.left {
+	box-shadow: var(--vscode-scrollbar-shadow, #000) 6px 0 6px -6px inset;
+}
+
 #cubefarm-agents{--ink:#263d40;--paper:#faf7f0;--muted:#65706a;--good:#b69a65;--accent:#bca477;--font:Arial,Helvetica,sans-serif;--mono:Consolas,monospace;font-family:var(--font);color:var(--ink);font-size:16px}
 #cubefarm-agents .overlay{z-index:40;background:#12252d73;backdrop-filter:blur(3px);padding:max(14px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
 #cubefarm-agents .panel{border:1px solid #c0aa81;border-radius:18px;box-shadow:0 20px 80px #0c22264d;max-height:calc(100dvh - 40px)}
@@ -2632,3 +2915,13 @@ header #agents-open{min-height:44px;background:#263d40;color:#faf7f0;border:1px 
  #cubefarm-agents .dossier-panel .panel-title{font-size:17px}
  #cubefarm-agents .dossier-panel .phone-tab{font-size:11px}
 }
+
+#cubefarm-agents .dossier-panel.terminal-wide{width:min(1100px,calc(100vw - 24px));max-width:none}
+#cubefarm-agents .terminal-puesto{display:flex;flex-direction:column;height:100%;min-height:350px;gap:8px}
+#cubefarm-agents .terminal-screen{flex:1;min-height:240px;background:#101b20;padding:8px;border-radius:6px;overflow:hidden}
+#cubefarm-agents .terminal-controls{display:flex;gap:6px;flex-wrap:wrap}
+#cubefarm-agents .terminal-controls .btn{font-size:13px;padding:7px 10px}
+#cubefarm-agents .terminal-notice{font-size:14px;margin:2px 0}
+#cubefarm-agents .dossier-panel .phone-tabs{grid-template-columns:repeat(5,minmax(0,1fr))}
+#cubefarm-agents .dossier-panel .phone-tab{min-width:0;font-size:11px}
+@media(max-width:700px){#cubefarm-agents .dossier-panel.terminal-wide{width:100%;height:100dvh;border-radius:0}#cubefarm-agents .terminal-puesto{min-height:250px}#cubefarm-agents .terminal-screen{min-height:170px}}

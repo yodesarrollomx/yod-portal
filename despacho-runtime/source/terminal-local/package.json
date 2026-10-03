@@ -1,0 +1,18 @@
+{
+  "name": "yod-terminal-local",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@lydell/node-pty": "1.2.0-beta.15",
+    "@xterm/headless": "6.0.0",
+    "@xterm/addon-serialize": "0.14.0",
+    "ws": "8.22.0"
+  }
+}

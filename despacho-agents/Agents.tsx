@@ -5,6 +5,8 @@ import {createRoot} from 'react-dom/client';
 import {MessageBox} from './vendor/cubefarm/MessageBox';
 import {Conversation,createFrameTransport} from '../despacho3d/conversation.mjs';
 import {createProfileSession} from '../despacho3d/profile-session.mjs';
+import {TerminalLink} from '../despacho3d/terminal-link.mjs';
+import {TerminalPanel} from './TerminalPanel';
 import {watchConversation} from '../despacho3d/conversation-watch.mjs';
 
 const labels:Record<string,string>={disconnected:'Conexión pendiente',loading:'Cargando expediente…',ready:'Historial recuperado',processing:'Mensaje guardado · esperando respuesta',sending:'Guardando mensaje…',unconfirmed:'Guardado sin confirmar',conflict:'El expediente cambió · vuelve a leerlo',unavailable:'No se pudo conectar con el expediente'};
@@ -19,7 +21,7 @@ function connectionNotice(d:any){
  return 'La conexión con YOD OS no respondió. Pulsa Reintentar conexión.';
 }
 
-type Tab='chat'|'dossier'|'activity'|'plan';
+type Tab='chat'|'dossier'|'activity'|'plan'|'terminal';
 type Profile={id:string,case_id:string,entity_kind:'case',name:string,form:string,color:string,visual:Record<string,string>};
 type RecordRow={id:string,title:string,body:string};
 type MemoryRow={id:string,title:string,body:string,evidence:string,next:string,url:string|null};
@@ -27,15 +29,18 @@ type DocumentRow={id:string,source_id:string,title:string,source:string,role:str
 type Snapshot={case_id:string,revision:string,updated_at:string,events:RecordRow[],memory:MemoryRow[],documents:DocumentRow[],messages:{id:string,role:string,body:string,created_at:string}[],processing:boolean};
 type AgentAPI={open:(tab?:Tab)=>boolean,close:()=>void,isOpen:()=>boolean,getProfile:()=>Profile|null,subscribeProfile:(fn:(profile:Profile|null)=>void)=>()=>void,openForCase:(id:string)=>boolean};
 declare global {interface Window {CubefarmYOD?:AgentAPI}}
-const tabs:[Tab,string,string][]=[['chat','◉','Conversación'],['dossier','▤','Expediente'],['activity','⌨','Actividad'],['plan','▦','Plan']];
+const tabs:[Tab,string,string][]=[['chat','◉','Conversación'],['dossier','▤','Expediente'],['activity','⌨','Actividad'],['terminal','>_','Terminal'],['plan','▦','Plan']];
 let overlayOpen=false;
 function inertWorld(value:boolean){const header=document.querySelector('header'),world=document.getElementById('workspace');if(header)header.inert=value;if(world)world.inert=value;}
 function App(){
  const [selection,setSelection]=useState<{name:string,url:string}|null>(null);
  const [opened,setOpened]=useState(false),[tab,setTab]=useState<Tab>('chat'),[status,setStatus]=useState('disconnected'),[model,setModel]=useState<Snapshot|null>(null),[busy,setBusy]=useState(false);
+ const [terminalState,setTerminalState]=useState<any>({status:'disconnected',runtime:null,error:''});
+ const terminalLink=useRef<any>(null);
  const [message,setMessage]=useState(''),[waitingLong,setWaitingLong]=useState(false);
  const rootRef=useRef<HTMLDivElement>(null),focusRef=useRef<HTMLElement|null>(null),transportRef=useRef<any>(null),conversation=useRef<any>(null),session=useRef<any>(null);
  if(!conversation.current)conversation.current=new Conversation({transport:()=>transportRef.current,notify:(c:any)=>{setModel(c.model);setBusy(c.busy);setStatus(c.status);setSelection(c.selection);}});
+ if(!terminalLink.current)terminalLink.current=new TerminalLink({getProfile:()=>conversation.current.getProfile(),notify:setTerminalState});
  const read=()=>session.current?.read();
  const send=async(e:React.FormEvent)=>{e.preventDefault();if(await conversation.current.send(message))setMessage('');};
  const close=()=>session.current?.close();
@@ -46,19 +51,21 @@ function App(){
    hide:()=>{const wasOpen=overlayOpen;overlayOpen=false;inertWorld(false);setOpened(false);setSelection(null);setMessage('');window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:false}));if(wasOpen)(focusRef.current?.isConnected&&focusRef.current.getClientRects().length?focusRef.current:document.getElementById('agents-open'))?.focus();}
   });
   session.current=current;window.CubefarmYOD=current;
+  const stopProfile=current.subscribeProfile(()=>terminalLink.current.revoke());
   const trigger=document.getElementById('agents-open') as HTMLButtonElement|null;
   if(trigger){trigger.disabled=false;trigger.onclick=()=>current.open();}
   window.dispatchEvent(new CustomEvent('yod-agents-ready'));
   void current.hydrate();
-  const stop=()=>current.dispose();
+  const stop=()=>{current.dispose();terminalLink.current.dispose();};
   const restore=(event:PageTransitionEvent)=>{if(event.persisted)window.location.reload();};
   window.addEventListener('pagehide',stop);window.addEventListener('pageshow',restore);
-  return()=>{window.removeEventListener('pagehide',stop);window.removeEventListener('pageshow',restore);current.dispose();transportRef.current?.dispose();delete window.CubefarmYOD;if(trigger){trigger.disabled=true;trigger.onclick=null;}};
+  return()=>{stopProfile();terminalLink.current.dispose();window.removeEventListener('pagehide',stop);window.removeEventListener('pageshow',restore);current.dispose();transportRef.current?.dispose();delete window.CubefarmYOD;if(trigger){trigger.disabled=true;trigger.onclick=null;}};
  },[]);
  useEffect(()=>{setWaitingLong(false);if(!opened||!model?.processing)return;return watchConversation(conversation.current,{visible:()=>document.visibilityState!=='hidden',onLimit:()=>setWaitingLong(true)});},[opened,model?.processing]);
  useEffect(()=>{
   if(!opened)return;rootRef.current?.querySelector<HTMLButtonElement>('.panel-x')?.focus();
   const key=(e:KeyboardEvent)=>{
+   if(tab==='terminal'&&(e.target as HTMLElement)?.closest('.xterm')){if(e.ctrlKey&&e.shiftKey&&e.code==='KeyX'){e.preventDefault();close();}return;}
    if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();close();return;}
    if(['w','a','s','d','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key.toLowerCase().startsWith('arrow')?e.key:e.key.toLowerCase()))e.stopImmediatePropagation();
    if(e.key!=='Tab')return;
@@ -72,7 +79,7 @@ function App(){
  const name=selection?.name||conversation.current.getProfile()?.name||'Expediente del caso';
  const sheetLink=selection?.url;
  return <div ref={rootRef} className="overlay dossier-overlay" role="dialog" aria-modal="true" aria-label="Agentes del Despacho" onMouseDown={e=>{if(e.target===e.currentTarget)close();}}>
-  <div className="panel dossier-panel">
+  <div className={`panel dossier-panel ${tab==='terminal'?'terminal-wide':''}`}>
    <div className="panel-head"><div className="panel-title"><span className="muted small">YoDesarrollo · Despacho</span><strong>{name}</strong></div><button className="panel-x" aria-label="Cerrar agentes" onClick={close}>×</button></div>
    <nav className="phone-tabs" aria-label="Paneles del caso">{tabs.map(([key,icon,label])=><button key={key} className={`phone-tab ${tab===key?'phone-tab-on':''}`} aria-pressed={tab===key} onClick={()=>setTab(key)}><span className="phone-tab-icon" aria-hidden="true">{icon}</span><span>{label}</span></button>)}</nav>
    <div className="conversation-status" role="status">{labels[status]||status}</div>
@@ -103,7 +110,8 @@ function App(){
       {model?.documents.map(row=><article className="dossier-record" key={row.id}><h3>{row.title||'Documento sin nombre'}</h3>{row.role&&<p>{row.role}</p>}{row.url?<a className="btn" href={row.url} target="_blank" rel="noopener noreferrer">Abrir documento</a>:<p className="dossier-meta"><b>Fuente registrada: </b>{row.source||'Sin enlace registrado.'}</p>}</article>)}
      </section>
     </>}
-    {tab==='activity'&&<><div className="term" role="log" aria-label="Actividad del expediente">{!model&&<div className="term-line term-system">Conecta el expediente para consultar su actividad.</div>}{model&&model.events.length===0&&<div className="term-line">Sin eventos en la lectura recibida.</div>}{model?.events.map(r=><div className="term-line" key={r.id}><b>{r.title}</b><div>{r.body}</div></div>)}</div><p className="muted small">Eventos registrados en Sheets. La terminal de ejecución todavía no está integrada en este panel.</p></>}
+    {tab==='activity'&&<><div className="term" role="log" aria-label="Actividad del expediente">{!model&&<div className="term-line term-system">Conecta el expediente para consultar su actividad.</div>}{model&&model.events.length===0&&<div className="term-line">Sin eventos en la lectura recibida.</div>}{model?.events.map(r=><div className="term-line" key={r.id}><b>{r.title}</b><div>{r.body}</div></div>)}</div><p className="muted small">Eventos registrados en Sheets. La pestaña Terminal permite conectar la sesión local de la Chromebook.</p></>}
+    {tab==='terminal'&&<TerminalPanel link={terminalLink.current} state={terminalState} authorized={!!conversation.current.getProfile()&&!!selection&&!busy}/>}
     {tab==='plan'&&<section className="dossier-section"><h2>Plan y tareas</h2><p>El tablero de tareas del caso todavía no está conectado a este panel.</p><p className="muted">Consulta el control vigente en Sheets. Las siguientes acciones de la pestaña Expediente son referencias registradas; abrirlas no ejecuta ni aprueba trabajo.</p><p className="muted small">La conversación por voz y la edición de apariencia siguen pendientes de integración.</p></section>}
    </div>
    <div className="conversation-tools"><button type="button" className="btn" disabled={busy} onClick={()=>void read()}>{model?'Actualizar':'Reintentar conexión'}</button>{sheetLink&&<a className="btn" href={sheetLink} target="_blank" rel="noopener noreferrer">Ver en Sheets</a>}</div>

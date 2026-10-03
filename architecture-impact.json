@@ -1,15 +1,17 @@
 {
-  "model_revision": "2026-10-03.45-emd-dominio-propio",
-  "proposal_id": "CHG-EMD-DOMINIO-045",
+  "model_revision": "2026-10-03.48-terminal-puesto",
+  "proposal_id": "CHG-DESPACHO-TERMINAL-PUESTO-001",
   "components": [
     "SYS-YOD-OS",
-    "SYS-EMD",
-    "GAS-EMD",
-    "SHEET-EMD"
+    "SYS-DESPACHO",
+    "GAS-PORTERO",
+    "EXT-DRIVE"
   ],
-  "summary": "Registrar dominio GitHub exclusivo EMD y compatibilidad exacta del handshake; publicación separada, datos privados conservados.",
+  "summary": "Conectar el panel autorizado del piloto a la terminal local existente mediante ventana local consentida y MessageChannel acotado. Ver pantalla PTY, escribir en sesión manual y controles explícitos, conservando una sesión y modo de cola Sheets.",
   "contracts": [
-    "CTR-DESPACHO-CORCHO"
+    "CTR-DESPACHO-CONVERSACION",
+    "CTR-DESPACHO-AVATARES",
+    "CTR-DESPACHO-TERMINAL-LOCAL"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -21,5 +23,5 @@
     "node scripts/verificar-impacto.cjs --base origin/main --repo yodesarrollomx/yod-portal",
     "git diff --check"
   ],
-  "rollback": "Revertir PR documental y regenerar vistas. Backend vuelve a versión32 en implementación existente, sin tocar datos ni accesos."
+  "rollback": "Revertir panel y actualizar launcher a runtime0.2.0. Conservar keeper, workspace, vínculo y checkpoint; no detener agente ni borrar datos para revertir."
 }

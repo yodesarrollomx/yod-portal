@@ -16,6 +16,8 @@ css.walkRules(rule=>{
  rule.selector=rule.selectors.map(s=>'#cubefarm-agents '+s.trim()).join(', ');
 });
 css.walkDecls(d=>{if(/^animation/.test(d.prop))d.value=d.value.replace(/\b(fadein|pop|blink|slideup)\b/g,'cf-$1');});
+const terminalCss=await readFile(path.join(dependencyRoot,'node_modules/@xterm/xterm/css/xterm.css'),'utf8');
+const scopedTerminal=postcss.parse(terminalCss);scopedTerminal.walkRules(rule=>{if(rule.parent.type==='atrule'&&rule.parent.name.includes('keyframes'))return;rule.selector=rule.selectors.map(s=>'#cubefarm-agents '+s.trim()).join(', ');});
 const override=await readFile(root+'/despacho-agents/aurum.css','utf8');
-await writeFile(root+'/despacho3d/agents.css','/* Scoped original Cubefarm 0.3.2 CSS, MIT © Leon van Zyl. */\n'+css.toString()+'\n'+override);
+await writeFile(root+'/despacho3d/agents.css','/* Scoped original Cubefarm 0.3.2 CSS, MIT © Leon van Zyl. */\n'+css.toString()+'\n'+scopedTerminal.toString()+'\n'+override);
 console.log('Built original Cubefarm-derived overlay and scoped Aurum theme.');

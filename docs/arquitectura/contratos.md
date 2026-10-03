@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.45-emd-dominio-propio · 2026-10-03.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.48-terminal-puesto · 2026-10-03.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -410,3 +410,17 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - google.script.run, tokens, ACL, CAS, idempotencia, Sheets, cierre y contratos EMD vigentes sin cambios. Sin preguntas o fuentes privadas en repo público.
 - Hosting yod-portal main/raíz y ruta /yod-portal/emd/ confirmados por propietario; origen compartido GitHub no autentica pathname. Contrato de redirección anterior se conserva como historia y no satisface #9.
 - Propuesta local previa; implementación EMD a cargo del agente principal. Tests del atlas no acreditan pruebas privadas, Pages o GAS desplegados.
+
+## CTR-DESPACHO-TERMINAL-LOCAL
+
+- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, EXT-DRIVE.
+- Evidencia: Continuación autorizada del propietario tras r4; terminal y herramientas reales por puesto..
+- Entrada/campos: `Perfil vigente resuelto por servidor; acción explícita Conectar mi terminal.`, `Ventana de127.0.0.1 con cookie HttpOnly, aprobación local para caso configurado y origenYOD fijo.`.
+- Salida: MessageChannel efímero para pantalla PTY, tamaño, estado y controles de sesión locales., Cierre/revocación corta el canal, conserva proceso y memoria en sus almacenes existentes..
+
+- No abrir listener externo, CORS global, URL con token ni copiar loginCodex.
+- Origen, ventana, nonce y caso exactos; datos privados sin localStorage.
+- Consentimiento local antes de emitir pantalla. Sólo acciones start/resume/stop/room y mensajesinput/resize; sin shell HTTP arbitrario.
+- Room sigue siendo ejecutor acotado y no acepta teclado; terminal manual es interactiva y sus cambios no se guardan automáticamente en Sheets.
+- Un proceso activo; no stop automático al conectar/desconectar; heartbeat y revocación cierran el canal.
+- Ventana local debe permanecer abierta para el puente; móvil en otro equipo conserva chat pero no tiene acceso a localhostChromebook.
