@@ -1,5 +1,15 @@
 # Evolución del sistema
 
+## EMD issue #39 · aprobación del 2 de octubre de 2026
+
+Se registra `CHG-EMD-ESCALA-039` y `CTR-EMD-ESCALA-CAPTURA` para `SYS-EMD`,
+`GAS-EMD` y `SHEET-EMD`: nuevas capturas 1..5, NA histórico confirmado en la
+misma evaluación y pregunta y colores ascendentes rojo→verde. La propuesta
+cuenta con aprobación explícita; implementación y despliegue privados quedan
+pendientes del agente principal. No se alteran preguntas, asignaciones,
+ponderación, accesos ni datos Google. La [matriz de aceptación y reversión](emd-escala-captura.md)
+exige conservar historia y mantener el guard incluso al revertir frontend.
+
 ## Revisión 2026-09-30.1
 
 Se construyó el primer atlas de los 20 repositorios, con fichas de componentes, conexiones con evidencia, contratos y procesos. El JSON genera los diagramas y el visor; las propuestas A–L quedan pendientes de decisión comercial.

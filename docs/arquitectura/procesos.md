@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.34-despacho-github-directo · 2026-10-02.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.35-emd-escala-039 · 2026-10-02.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 

@@ -1,23 +1,22 @@
 {
-  "model_revision": "2026-10-03.34-despacho-github-directo",
-  "proposal_id": "CHG-DESPACHO-GITHUB-DIRECTO-001",
+  "model_revision": "2026-10-03.35-emd-escala-039",
+  "proposal_id": "CHG-EMD-ESCALA-039",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "GAS-PORTERO",
-    "SYS-SALA",
-    "GAS-SALA",
-    "SHEET-SALA"
+    "SYS-EMD",
+    "GAS-EMD",
+    "SHEET-EMD",
+    "SYS-YOD-OS"
   ],
-  "summary": "Alojar en el portal GitHub el frontend neutro de la oficina 3D y los paneles adaptados de Cubefarm. Abrir #/despacho de forma inmersiva bajo la cabecera existente, con Portero y DP, sin iniciar sesión en ChatGPT. El destino fijo relativo no contiene identidad ni credenciales; datos operativos y conexiones privadas sólo desde las fuentes autorizadas existentes. Conservar Bandeja y Chinches geométricas validadas por origen y ventana exactos. Usar el atlas actual como mapa de conexiones, no como registros de negocio.",
+  "summary": "Atlas únicamente: registrar aprobación acotada de captura 1..5, NA histórico confirmado por pregunta y colores rojo→verde bajo CTR-EMD-ESCALA-CAPTURA; implementación y despliegue privados pendientes.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
+    "TMPDIR=/dev/shm node --test tests/*.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
     "ACCESOS_REF=3ee8ca50bf14ef17d95e72523e54506eb996f262 node verify-accesos.cjs",
     "node verify-obra-app.cjs",
+    "node scripts/verificar-impacto.cjs --base 193014c8055454ecb67e9f6675a0c71c768a3d1b --repo yodesarrollomx/yod-portal",
     "git diff --check"
   ],
-  "rollback": "Revertir este PR para restaurar el iframe privado anterior. Conservar hojas, datos, permisos, sesiones, chinches y motores existentes."
+  "rollback": "Revertir este PR del atlas y regenerar vistas preservando propuestas concurrentes. EMD: frontend anterior con guard de NA nuevos conservado; GAS solo a versión con guard equivalente, o suspender captura afectada hasta parche. Sin migración, borrado, reescritura ni recálculo de históricos."
 }
