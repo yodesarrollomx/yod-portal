@@ -96,5 +96,5 @@ test('bridge discards old-session replies and requires current authorization',as
  const b=bridge();let release;b.setTransport({resolveCurrent:()=>new Promise(resolve=>release=resolve)});const promise=b.request();b.setEpoch(2);release(current);await promise;assert.equal(b.posts.length,0);b.setAllowed(false);await b.request();assert.equal(b.posts.length,0);
 });
 test('bridge fails closed without a server adapter and recovers a stalled request',async()=>{
- const b=bridge();b.setTransport(null);await b.request();assert.equal(b.posts[0].error,'unavailable');b.setTransport({resolveCurrent:()=>new Promise(()=>{})});await b.request();assert.equal(b.posts[1].error,'unavailable');b.setTransport(server());await b.request();assert.equal(b.posts[2].result.case_id,current.case_id);
+ const b=bridge();b.setTransport(null);await b.request();assert.equal(b.posts[0].error,'unavailable');b.setTransport({resolveCurrent:()=>new Promise(()=>{})});await b.request();assert.equal(b.posts[1].error,'timeout');b.setTransport(server());await b.request();assert.equal(b.posts[2].result.case_id,current.case_id);
 });

@@ -15,10 +15,11 @@ test('hidden pages and busy panels do not issue reads or overlapping requests',a
  const stop=watchConversation(conversation,{...c,visible:()=>visible});await c.fire();assert.equal(reads,0);
  visible=true;conversation.busy=true;await c.fire();assert.equal(reads,0);conversation.busy=false;await c.fire();assert.equal(reads,1);stop();
 });
-test('the wait limit reports an explicit notice without sending or reading again',async()=>{
+test('the wait limit reports one notice and keeps consulting every thirty seconds without sending',async()=>{
  const {watchConversation}=await load(),c=clock();let notices=0,reads=0;
- const conversation={model:{processing:true},busy:false,refresh:async()=>{reads++;}};
- watchConversation(conversation,{...c,onLimit:()=>notices++});c.advance(180000);await c.fire();assert.equal(notices,1);assert.equal(reads,0);assert.equal(c.delay,undefined);
+ const conversation={model:{processing:true},busy:false,refresh:async()=>{reads++;},send:()=>assert.fail('a follower must never send')};
+ const stop=watchConversation(conversation,{...c,onLimit:()=>notices++});c.advance(180000);await c.fire();assert.equal(notices,1);assert.equal(reads,1);assert.equal(c.delay,30000);
+ await c.fire();assert.equal(notices,1);assert.equal(reads,2);assert.equal(c.delay,30000);stop();
 });
 test('closing during a read cancels every future read and late notice',async()=>{
  const {watchConversation}=await load(),c=clock();let release;

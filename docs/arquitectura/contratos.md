@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.49-metas-terminal · 2026-10-03.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.50-metas-durables · 2026-10-03.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -394,6 +394,8 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Cierre o revocación descartan datos en memoria y respuestas tardías; toda reapertura relee Sheets.
 - Un fallo de ACK conserva el mismo request_id para reconciliar, nunca encola con ID nuevo automáticamente.
 - Sin adaptador verificado no se habilita envío. Pruebas sintéticas no acreditan conexión productiva.
+- Un fallo transitorio de red conserva sólo la lectura ya visible, marcada desactualizada; bloquea nuevos envíos hasta revalidar. Revocación o cambio de caso limpia datos. Recuperación consulta Sheets sin reenviar inferencia.
+- La voz del navegador dicta un borrador y lee una respuesta ya guardada por acción del usuario; no escucha al cerrar ni se presenta como voz realtime.
 
 ## CTR-EMD-GITHUB-EMBED
 

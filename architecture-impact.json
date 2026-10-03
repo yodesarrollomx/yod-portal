@@ -1,13 +1,13 @@
 {
-  "model_revision": "2026-10-03.49-metas-terminal",
-  "proposal_id": "CHG-DESPACHO-META-TERMINAL-001",
+  "model_revision": "2026-10-03.50-metas-durables",
+  "proposal_id": "CHG-DESPACHO-METAS-DURABLES-001",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "GAS-PORTERO",
     "EXT-DRIVE"
   ],
-  "summary": "Preparar una meta explícita en la sesión nativa de Codex desde Plan, sin copiar código ni actualizar runtime. Requiere terminal manual vinculada y confirmación de entrada disponible; pegado acotado sin Enter. El agente puede planear, leer su expediente local y producir tareas/evidencia locales bajo permisos existentes; sin simular scheduler ni sincronización Sheets.",
+  "summary": "Conversación única como entrada principal, recuperación automática tras fallos temporales sin borrar el historial visible ni repetir mensajes, dictado y lectura de respuestas con capacidades del navegador. Terminal queda como diagnóstico opcional. Base separada de metas/tareas/evidencias en Sheets, habilitada sólo cuando backend la acredita; motor permanente y transmisión progresiva requieren verificación aparte.",
   "contracts": [
     "CTR-DESPACHO-CONVERSACION",
     "CTR-DESPACHO-AVATARES",
@@ -23,5 +23,5 @@
     "node scripts/verificar-impacto.cjs --base origin/main --repo yodesarrollomx/yod-portal",
     "git diff --check"
   ],
-  "rollback": "Revertir frontend conserva procesos, metas locales e historial."
+  "rollback": "Revertir frontend y backend de la misma implementación; conservar pestañas de metas, recibos, workspace, vínculo y checkpoints. No reiniciar tareas inciertas."
 }
