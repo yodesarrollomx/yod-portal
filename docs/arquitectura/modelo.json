@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.50-metas-durables",
+  "revision": "2026-10-03.51-jev-consultas",
   "checked_at": "2026-10-03",
   "priorities": [
     "vender_mas",
@@ -7459,6 +7459,43 @@
       ],
       "deployment": "Frontend compatible con r4 listo para PR y Pages: recuperación automática, historial visible durante cortes, dictado/lectura del navegador y diagnóstico secundario. Backend r5, ejecución de metas y motor persistente todavía no publicados ni instalados. La negociación WebRTC se verificó aparte en entorno de desarrollo; no acredita voz productiva.",
       "rollback": "Revertir frontend y backend de la misma implementación; conservar pestañas de metas, recibos, workspace, vínculo y checkpoints. No reiniciar tareas inciertas."
+    },
+    {
+      "id": "CHG-JEV-CONSULTAS-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE",
+        "SHEET-PORTERO",
+        "SHEET-CATALOGO",
+        "SHEET-OPERACION",
+        "SHEET-FLUJO",
+        "SHEET-MARKETING",
+        "SHEET-PLAN-POTENCIAL",
+        "SHEET-CROKISS",
+        "SHEET-CODES",
+        "SHEET-MIRAMAR",
+        "SHEET-INTERIORES",
+        "SHEET-ALQUIMIA",
+        "SHEET-OBRA",
+        "SHEET-OBRA-CLIENTE",
+        "SHEET-SALA",
+        "SHEET-EMD",
+        "SHEET-CRM",
+        "SHEET-MOAC-METAS",
+        "SHEET-INVERSION",
+        "SHEET-PPP-MODELOS",
+        "SHEET-AMALAYA"
+      ],
+      "proposal": "Capacidad común para descubrir todas las fuentes Sheets del atlas, consultar datos recientes mediante adaptadores autorizados y evaluar opciones con Jev conservando referencias directas. Fuentes, permisos, frescura y procesamiento externo verificados antes de inferencia; instalación productiva por agente pendiente.",
+      "status": "implementado_local",
+      "tests": [
+        "18 pruebas específicas aprobadas: lectura nueva, aislamiento, revocación, cambios de datos, fuentes pendientes, procedencia y respuestas Jev inválidas.",
+        "Regresión del portal y verificadores aprobados; consulta real a Jev 1.13.0 únicamente con datos sintéticos."
+      ],
+      "deployment": "Módulo y skill compartido preparados en rama; sin adaptadores privados instalados, cambios operativos en Sheets ni activación de agentes. La consulta sintética verifica la API de Jev, no la conexión de las fuentes de la empresa.",
+      "rollback": "Retirar la capacidad opcional del agente y revertir este PR; conservar los libros, permisos, sesiones, tareas y datos existentes."
     }
   ],
   "data_contracts": [
@@ -8800,6 +8837,16 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/despacho-voice.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/jev-company-knowledge.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",
