@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.40-despacho-reintento",
-  "checked_at": "2026-10-02",
+  "revision": "2026-10-03.41-despacho-espera",
+  "checked_at": "2026-10-03",
   "priorities": [
     "vender_mas",
     "margen_y_control",
@@ -7163,9 +7163,10 @@
         "Envío explícito, ACK durable, reintento con el mismo ID y rechazo de respuestas tardías/conflictos.",
         "Puente de origen, ventana y época de sesión exactos; fallo cerrado sin adaptador.",
         "Verificaciones completas del portal y prueba de navegador con transporte sintético.",
-        "Transporte HTTP: credencial sólo en cuerpo al endpoint autorizado, invalidación de sesión y ninguna conmutación de servidor al enviar."
+        "Transporte HTTP: credencial sólo en cuerpo al endpoint autorizado, invalidación de sesión y ninguna conmutación de servidor al enviar.",
+        "Seguimiento secuencial sin lecturas superpuestas, pausa en pestaña oculta, límite de espera visible y cancelación al cerrar."
       ],
-      "deployment": "Cliente, puente y transporte HTTP implementados localmente. 166 pruebas del portal y QA 390/1280 con HTTP interceptado. Paquete privado de servidor preparado y probado; despliegue manual, vinculación del worker y aceptación desde la sala pendientes."
+      "deployment": "Servidor privado instalado en implementación existente y worker vinculado. Primer envío explícito desde la sala, respuesta autenticada y lectura de su persistencia en Sheets comprobados. Recuperación de memoria en un segundo turno desde la sala y disponibilidad permanente pendientes. Frontend publicado con recuperación explícita de mensajes detenidos. Optimización de seguimiento en rama, por publicar."
     },
     {
       "id": "CHG-EMD-GITHUB-009",
@@ -7192,6 +7193,22 @@
         "Pendiente EMD: matriz de orígenes/ventanas/nonce/ready, normal DEFAULT, frames Google reales, token, CAS, ACK perdido, cierre y recorrido móvil/escritorio sintético."
       ],
       "deployment": "No implementado ni publicado por este registro. Origen y ruta GitHub autorizados; hosting Pages main/raíz confirmado por propietario, wrapper todavía pendiente en PR separado. Integrar atlas por PR tras checks y coordinación; manifest EMD referencia commit exacto del atlas. Rollback en emd-github-embed.md conserva guards vigentes, enlaces y Sheets."
+    },
+    {
+      "id": "CHG-DESPACHO-CAPACIDADES-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Compartir un paquete de capacidades por agente inspirado en Cubefarm: identidad/expediente, conversación/memoria, ejecución observable y controlable, tareas, revisión QA, entregas y coordinación. Cada capacidad requiere adaptador autorizado, estado durable y evidencia de aceptación. Perfil común con especialidades y permisos propios; sin declarar instalado un control por su sola presencia visual.",
+      "status": "propuesto",
+      "tests": [
+        "Aislamiento entre agentes, expediente y permisos; cierre/reapertura y reintentos sin duplicación.",
+        "Terminal, tareas, QA y entregas verificadas contra ejecución real; no usar el demo como evidencia productiva."
+      ],
+      "deployment": "Referencia original compilada e inspeccionada en demo aislado. Conversación del piloto parcialmente comprobada; terminal interactiva, gestor de tareas, QA, entregas, coordinación y servicio permanente pendientes de conexión. Véase despacho-capacidades.md."
     }
   ],
   "data_contracts": [
@@ -8398,6 +8415,16 @@
       "components": [
         "SYS-YOD-OS",
         "SYS-EMD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-conversation-watch.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
       ]
     }
   ]

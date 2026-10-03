@@ -6,6 +6,7 @@ import {MessageBox} from './vendor/cubefarm/MessageBox';
 import {Markdown} from './vendor/cubefarm/Markdown';
 import {validateDriveSelection} from '../despacho3d/drive-selection.mjs';
 import {Conversation,createFrameTransport} from '../despacho3d/conversation.mjs';
+import {watchConversation} from '../despacho3d/conversation-watch.mjs';
 
 const labels:Record<string,string>={disconnected:'Conexión pendiente',loading:'Cargando expediente…',ready:'Historial recuperado',processing:'Mensaje guardado · esperando respuesta',sending:'Guardando mensaje…',unconfirmed:'Guardado sin confirmar',conflict:'El expediente cambió · vuelve a leerlo',unavailable:'No se pudo conectar con el expediente'};
 function connectionNotice(d:any){
@@ -32,13 +33,14 @@ function App(){
  const name=selection?.name||'Mi terreno';
  const [opened,setOpened]=useState(false),[tab,setTab]=useState<Tab>('chat'),[status,setStatus]=useState('disconnected'),[model,setModel]=useState<Snapshot|null>(null),[busy,setBusy]=useState(false);
  const [message,setMessage]=useState('');
+ const [waitingLong,setWaitingLong]=useState(false);
  const rootRef=useRef<HTMLDivElement>(null),focusRef=useRef<HTMLElement|null>(null),transportRef=useRef<any>(null),conversation=useRef<any>(null);
  if(!conversation.current)conversation.current=new Conversation({transport:()=>transportRef.current,notify:(c:any)=>{setModel(c.model);setBusy(c.busy);setStatus(c.status);if(c.selection)setSelection(c.selection);}});
  const read=()=>conversation.current.selection?conversation.current.refresh():conversation.current.open();
  const send=async(e:React.FormEvent)=>{e.preventDefault();if(await conversation.current.send(message))setMessage('');};
  const close=()=>{overlayOpen=false;inertWorld(false);conversation.current.close();setOpened(false);setChoosing(false);setSelection(null);setMessage('');window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:false}));(focusRef.current?.isConnected&&focusRef.current.getClientRects().length?focusRef.current:document.getElementById('agents-open'))?.focus();};
  useEffect(()=>{transportRef.current=createFrameTransport(window);return()=>{conversation.current.close();transportRef.current?.dispose();};},[]);
- useEffect(()=>{if(!opened||!model?.processing)return;let attempts=0;const timer=setInterval(()=>{if(++attempts>12){clearInterval(timer);return;}void conversation.current.refresh();},5000);return()=>clearInterval(timer);},[opened,model?.processing]);
+ useEffect(()=>{setWaitingLong(false);if(!opened||!model?.processing)return;return watchConversation(conversation.current,{visible:()=>document.visibilityState!=='hidden',onLimit:()=>setWaitingLong(true)});},[opened,model?.processing]);
  useEffect(()=>{
   window.CubefarmYOD={open:(next='chat')=>{focusRef.current=document.activeElement as HTMLElement;overlayOpen=true;inertWorld(true);setTab(next);setOpened(true);window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:true}));void read();},close,isOpen:()=>overlayOpen};
   const trigger=document.getElementById('agents-open') as HTMLButtonElement|null;if(trigger){trigger.disabled=false;trigger.onclick=()=>window.CubefarmYOD?.open();}
@@ -67,6 +69,7 @@ function App(){
      </div>
      {model&&<div className="conversation-tools"><button type="button" className="btn" disabled={busy} onClick={()=>void read()}>Actualizar</button><a className="btn" href={links.chat} target="_blank" rel="noopener noreferrer">Ver en Sheets</a></div>}
      {status==='ready'&&conversation.current.stoppedMessage&&<div className="conversation-notice" role="alert"><p>Tu último mensaje se detuvo y quedó sin respuesta.</p><button type="button" className="btn" disabled={busy||!conversation.current.selection?.agent_ready||!conversation.current.selection?.can_enqueue} onClick={()=>void conversation.current.retryStopped()}>Volver a enviar</button></div>}
+     {waitingLong&&status==='processing'&&<p className="conversation-notice" role="alert">La respuesta tarda más de lo esperado. Tu mensaje está guardado. Pulsa Actualizar para consultar su estado; no hace falta enviarlo otra vez.</p>}
      {status==='unconfirmed'&&<p className="conversation-notice" role="alert">No se ha confirmado el guardado. Reintentar conserva el mismo mensaje y su identificador.</p>}
      {model&&!conversation.current.selection?.agent_ready&&<p className="conversation-notice">El motor necesita conectarse antes de enviar mensajes.</p>}
      <form className="chat-input" onSubmit={send}><MessageBox value={message} onChange={setMessage} maxLength={8000} disabled={busy||status!=='ready'||!conversation.current.selection?.agent_ready||!conversation.current.selection?.can_enqueue} placeholder={status==='processing'?'Esperando la respuesta…':'Escribe al terreno'} aria-label="Mensaje directo al terreno"/><button className="btn btn-small" disabled={busy||(!conversation.current.pending&&(!message.trim()||status!=='ready'))||!conversation.current.selection?.agent_ready||!conversation.current.selection?.can_enqueue}>{status==='unconfirmed'?'Reintentar':'Enviar'}</button></form>

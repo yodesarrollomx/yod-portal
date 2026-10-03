@@ -31,11 +31,10 @@
   },
   "case_data_source": "Existing authorized Sheets/Drive transport only, no design snapshot as live state",
   "limitations": [
-    "Cliente de conversación y puente implementados; requieren adaptador autenticado real en el OS.",
-    "Sin ejecución del motor ni persistencia productiva comprobadas desde esta interfaz.",
-    "Sin terminal de ejecución ni conexión /ws/term.",
-    "Revisión automática por hora permanece pausada; sin API de pago activada.",
-    "Sin adaptador, el envío falla cerrado y se mantiene la selección manual de Drive."
+    "Conversación autenticada, primer turno desde la sala y persistencia comprobados; recuperación de memoria en un segundo turno desde la sala pendiente.",
+    "Motor disponible durante bloques optativos de 30 minutos; servicio permanente pendiente.",
+    "Sin terminal interactiva /ws/term, gestor de tareas, QA automatizada, vista previa de entregas o coordinación multiagente conectados.",
+    "Revisión horaria pausada; sin API de pago ni voz activadas."
   ],
   "public_frontend": "Interfaz neutra sin identidad de cliente ni enlace de hoja privada",
   "hosting": "GitHub Pages, yodesarrollomx/yod-portal/despacho3d"

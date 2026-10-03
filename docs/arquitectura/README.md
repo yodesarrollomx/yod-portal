@@ -14,6 +14,8 @@ Esta es la entrada para entender y modificar YOD OS. Prioridad de mejora acordad
 - [Cobertura y verificación](verificacion.md), [reglas de cambio](cambios.md) y [evolución](evolucion.md).
 - [Identidad del publicador automático](publicador-github.md): causa del bloqueo, permisos mínimos y registro pendiente.
 
+- [Capacidades compartidas de los agentes](despacho-capacidades.md): referencia Cubefarm, funciones conectadas y plan de instalación por agente.
+
 - [Entrega técnica de Control Maestro](control-maestro.md): versiones, aceptación, mantenimiento y reversión.
 
 - [EMD #9 · cuestionario completo bajo URL GitHub](emd-github-embed.md): propuesta, handshake y matriz de aceptación; implementación en PR separado.
