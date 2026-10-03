@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.50-metas-durables",
+  "revision": "2026-10-03.51-emd-encabezado-avance",
   "checked_at": "2026-10-03",
   "priorities": [
     "vender_mas",
@@ -7459,6 +7459,30 @@
       ],
       "deployment": "Frontend compatible con r4 listo para PR y Pages: recuperación automática, historial visible durante cortes, dictado/lectura del navegador y diagnóstico secundario. Backend r5, ejecución de metas y motor persistente todavía no publicados ni instalados. La negociación WebRTC se verificó aparte en entorno de desarrollo; no acredita voz productiva.",
       "rollback": "Revertir frontend y backend de la misma implementación; conservar pestañas de metas, recibos, workspace, vínculo y checkpoints. No reiniciar tareas inciertas."
+    },
+    {
+      "id": "CHG-EMD-ENCABEZADO-046",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Barra de avance confirmada ocupa primera fila completa del encabezado; identidad y botones debajo. Porcentaje único dentro del sol, sin marcas numéricas. Montaña de arena ampliada y detallada; maquinaria y granos se animan solo al aumentar avance confirmado. Logo intacto al cero. Cambio exclusivamente visual con contratos existentes.",
+      "status": "propuesto",
+      "approval": {
+        "date": "2026-10-03",
+        "scope": "Propietario solicita ejecutar ambas mejoras registradas en chinches."
+      },
+      "tests": [
+        "npm test en EMD privado",
+        "npm run test:ui sintético Chromium/WebKit; anchos320/390/1440, ACK fallido y válido, reposo y movimiento reducido",
+        "git diff --check",
+        "node scripts/arquitectura.cjs --check",
+        "Lectura de lista personal y coordinación desplegadas sin guardar respuestas"
+      ],
+      "deployment": "Pendiente implementar, integrar por PR y actualizar solo Index en implementación existente. URLs, tokens, permisos, preguntas, escala, matriz y cierre conservados.",
+      "rollback": "Seleccionar versión GAS33 en implementación existente y revertir commit visual; conservar datos y chinches."
     }
   ],
   "data_contracts": [
