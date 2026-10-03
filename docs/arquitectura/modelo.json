@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.39-despacho-diagnostico",
+  "revision": "2026-10-03.40-despacho-reintento",
   "checked_at": "2026-10-02",
   "priorities": [
     "vender_mas",

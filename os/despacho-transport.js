@@ -7,7 +7,7 @@
   async function call(operation,payload){
    var session=options.getSession();
    if(!session||session.ready!==true||session.allowed!==true||!session.token)throw Error('unauthorized');
-   var controller=new AbortController(),timer=setTimeout(function(){controller.abort();},options.timeout||23000);
+   var controller=new AbortController(),timer=setTimeout(function(){controller.abort();},options.timeout||45000);
    try{
     var response=await (options.fetch||root.fetch)(endpoint,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},
      body:JSON.stringify({tipo:'despacho-v1',operation:operation,payload:payload,k:session.token}),
