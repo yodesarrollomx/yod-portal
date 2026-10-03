@@ -11,9 +11,9 @@ function server(){
  return {state,calls,resolveCurrent:async()=>current,read:async()=>structuredClone(state),enqueue:async p=>{
   calls.push(p);if(receipts.has(p.request_id))return receipts.get(p.request_id);
   if(p.expected_revision!==state.source_revision)return {ok:false,error:'stale_revision'};
-  const ack={ok:true,state:'queued',case_id:p.case_id,request_id:p.request_id,job_id:'job-1',source_revision:p.expected_revision};
+  const ack={ok:true,state:'queued',case_id:p.case_id,request_id:p.request_id,job_id:'job-'+(receipts.size+1),source_revision:p.expected_revision};
   receipts.set(p.request_id,ack);state.jobs.push({case_id:p.case_id,job_id:ack.job_id,enqueue_request_id:p.request_id,status:'queued'});
-  state.conversation.push({case_id:p.case_id,message_id:'message-1',role:'user',created_at:state.state.updated_at,body_json:JSON.stringify({message:p.message})});return ack;
+  state.conversation.push({case_id:p.case_id,message_id:'message-'+(state.conversation.length+1),job_id:ack.job_id,role:'user',created_at:state.state.updated_at,body_json:JSON.stringify({message:p.message})});return ack;
  }};
 }
 test('resolves a private case without a browser selector and rereads persisted conversation after closing',async()=>{
@@ -28,6 +28,15 @@ test('lost durable ACK retries the original ID and message without a duplicate',
  backend.enqueue=async p=>{const result=await enqueue(p);if(fail){fail=false;throw Error('lost ACK');}return result;};
  const c=new Conversation({transport:backend,uuid:()=> 'request-1'});await c.open();assert.equal(await c.send('Mensaje'),false);assert.equal(c.status,'unconfirmed');
  assert.equal(await c.send('texto distinto que no se enviará'),true);assert.deepEqual(backend.calls[0],backend.calls[1]);assert.equal(backend.state.conversation.length,1);
+});
+test('a stopped turn is only resent by explicit action, with a new ID and the original text',async()=>{
+ const {Conversation}=await load(),backend=server();let id=0;
+ const c=new Conversation({transport:backend,uuid:()=> 'retry-'+(++id)});
+ await c.open();await c.send('Mensaje original detenido');backend.state.jobs[0].status='stopped';await c.refresh();
+ assert.equal(c.stoppedMessage,'Mensaje original detenido');assert.equal(backend.calls.length,1);
+ assert.equal(await c.retryStopped(),true);assert.equal(backend.calls.length,2);
+ assert.notEqual(backend.calls[1].request_id,backend.calls[0].request_id);assert.equal(backend.calls[1].message,backend.calls[0].message);
+ assert.equal(backend.state.jobs[0].status,'stopped');assert.equal(await c.retryStopped(),false);assert.equal(backend.calls.length,2);
 });
 test('reread reconciles a lost ACK without any second enqueue',async()=>{
  const {Conversation}=await load(),backend=server(),enqueue=backend.enqueue;backend.enqueue=async p=>{await enqueue(p);throw Error('offline');};

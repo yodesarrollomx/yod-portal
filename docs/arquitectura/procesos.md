@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.39-despacho-diagnostico · 2026-10-02.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.40-despacho-reintento · 2026-10-02.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 

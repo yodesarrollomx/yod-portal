@@ -19,7 +19,7 @@ export function validateConversation(v,id){
   if(row.case_id!==id||!text(row.message_id)||ids.has(row.message_id)||!['user','assistant'].includes(row.role)||!text(row.body_json,16000)||!date(row.created_at))throw Error('invalid_message');
   ids.add(row.message_id);const body=JSON.parse(row.body_json),content=row.role==='user'?body.message:body.reply;
   if(!text(content,12000))throw Error('invalid_message');
-  return {id:row.message_id,role:row.role,body:content,created_at:row.created_at};
+  return {id:row.message_id,job_id:text(row.job_id)?row.job_id:undefined,role:row.role,body:content,created_at:row.created_at};
  });
  const jobs=v.jobs.map(j=>{
   if(j.case_id!==id||!text(j.job_id)||!text(j.enqueue_request_id)||!text(j.status))throw Error('invalid_job');
@@ -32,7 +32,12 @@ export function validateConversation(v,id){
  return {case_id:id,revision:v.source_revision,updated_at:v.state.updated_at,messages,jobs,events,decisions:[],processing:jobs.some(j=>active.has(j.status))};
 }
 export class Conversation {
- constructor({transport,notify=()=>{},uuid=()=>crypto.randomUUID(),timeout=30000}){Object.assign(this,{transport,notify,uuid,timeout,selection:null,model:null,pending:null,status:'disconnected',busy:false,epoch:0});}
+ constructor({transport,notify=()=>{},uuid=()=>crypto.randomUUID(),timeout=55000}){Object.assign(this,{transport,notify,uuid,timeout,selection:null,model:null,pending:null,status:'disconnected',busy:false,epoch:0});}
+ get stoppedMessage(){
+  const job=this.model?.jobs.at(-1);
+  return job?.status==='stopped'?this.model.messages.filter(m=>m.role==='user'&&m.job_id===job.id).at(-1)?.body||null:null;
+ }
+ async retryStopped(){const message=this.stoppedMessage;return message?this.send(message):false;}
  emit(){this.notify(this);}
  async call(method,payload){
   const transport=typeof this.transport==='function'?this.transport():this.transport;
@@ -89,7 +94,7 @@ export class Conversation {
  }
 }
 
-export function createFrameTransport(win,timeout=30000){
+export function createFrameTransport(win,timeout=55000){
  let alive=true;const waiting=new Map();
  const receive=e=>{
   if(e.origin!==win.location.origin||e.source!==win.parent||e.data?.type!=='yod:case:result'||e.data.version!==1)return;
