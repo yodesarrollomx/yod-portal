@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.36-despacho-transporte",
+  "revision": "2026-10-03.37-despacho-conexion",
   "checked_at": "2026-10-02",
   "priorities": [
     "vender_mas",
@@ -7109,6 +7109,30 @@
       "deployment": "Candidato implementado en rama: interfaz neutra alojable en GitHub, superficie inmersiva, acceso DP, Chinches y selección privada efímera de Drive. Verificadores y pruebas locales pasan; publicación en Pages y aceptación del propietario se registran por separado. Motor autónomo, voz y lectura directa del expediente no están conectados."
     },
     {
+      "id": "CHG-EMD-ESCALA-039",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Aprobación explícita del propietario del 2 de octubre de 2026 para EMD issue #39: retirar NA de nuevas capturas y conservar NA históricos; mostrar 1 rojo → 5 verde porque las 28 preguntas actuales son favorables. CTR-EMD-ESCALA-CAPTURA limita la excepción a la captura y presentación; sin cambiar textos, cantidad de preguntas, asignaciones, ponderación, accesos ni registros históricos. El agente principal implementará frontend y guard de backend en el sistema privado; este cambio registra únicamente el atlas. SYS-YOD-OS participa únicamente como repositorio del atlas documental, sin cambio funcional del portal.",
+      "status": "propuesto",
+      "approval": {
+        "date": "2026-10-02",
+        "scope": "Nuevas capturas 1..5; NA histórico confirmado en la misma evaluación y pregunta; colores ascendentes rojo a verde. PR y merge del atlas autorizados si pasan checks."
+      },
+      "tests": [
+        "Atlas: esquema, IDs, regeneración determinista, revisión de compatibilidad e impacto y los seis verificadores requeridos; git diff --check.",
+        "Implementación privada pendiente: nueva captura acepta enteros 1..5 y rechaza NA antes de cualquier escritura; cliente antiguo tampoco puede introducir NA.",
+        "Implementación privada pendiente: NA confirmado se conserva solo en la misma evaluación y pregunta; otro campo, evaluación o copia local no habilita la excepción.",
+        "Implementación privada pendiente: edición de otra respuesta, guardado y cierre conservan NA históricos sin normalización ni reescritura; tras sustituir NA por 1..5 no se permite reintroducir NA.",
+        "Implementación privada pendiente: conflictos de revisión, solicitudes concurrentes, reintentos exactos tras ACK perdido, validación de lote antes de persistir y cierre remoto no eluden el guard.",
+        "Implementación privada pendiente: móvil, escritorio y teclado muestran 1 rojo, 2 naranja, 3 amarillo, 4 verde claro y 5 verde, con número/etiqueta accesibles; 28 textos, cálculos, asignaciones y accesos intactos. Usar solo datos sintéticos."
+      ],
+      "deployment": "Solo propuesta/contrato del atlas; no acredita implementación, publicación del frontend ni despliegue de GAS. Implementación privada a cargo del agente principal, con pruebas del HEAD exacto, respaldo privado y actualización de la implementación existente. Rollback documental: revertir este PR y regenerar vistas preservando cambios concurrentes. Rollback funcional: restaurar frontend anterior manteniendo guard que bloquea NA nuevos; revertir versión GAS solo a una versión con guard equivalente. Si no existe, suspender captura afectada hasta parche compatible; conservar lectura e historial. Nunca migrar, reescribir o borrar respuestas. Detalle de aceptación y reversión en docs/arquitectura/emd-escala-captura.md."
+    },
+    {
       "id": "CHG-DESPACHO-CONVERSACION-001",
       "components": [
         "SYS-YOD-OS",
@@ -7839,6 +7863,37 @@
         "Cada borrador 3D conserva un guard efímero de ventana y sesión vigentes; al salir o invalidar autorización se cierra el compositor y se cancela su guard. Tras recargar o cambiar persona no se autoenvía un borrador 3D antiguo; su exportación manual conserva el contexto. Las Chinches generales mantienen su comportamiento existente.",
         "Sólo copiar interfaz, modelos y recursos visuales neutros al repositorio público. Datos, memoria, documentos, nombres de casos e identificadores privados permanecen en Drive y sus transportes autorizados.",
         "Probar mediante dobles y red interceptada; ninguna prueba escribe en endpoints de negocio."
+      ]
+    },
+    {
+      "id": "CTR-EMD-ESCALA-CAPTURA",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD"
+      ],
+      "source": "Aprobación explícita del propietario del 2 de octubre de 2026 para EMD issue #39; propuesta compatible, no evidencia de código ni producción. Detalle público y matriz sintética en emd-escala-captura.md.",
+      "input": [
+        "Sesión y asignación vigentes, misma evaluación y pregunta canónicas, revisión y mutación conforme al contrato privado existente",
+        "Nueva respuesta numérica entera 1..5; NA solo como conservación de NA ya confirmado por servidor en esa misma evaluación y pregunta",
+        "Estado confirmado vigente del servidor; borradores locales y payload del cliente no acreditan NA histórico"
+      ],
+      "output": [
+        "Captura nueva limitada a 1..5; representación ascendente 1 rojo, 2 naranja, 3 amarillo, 4 verde claro, 5 verde con número/etiqueta accesibles",
+        "NA histórico legible y conservado con su representación existente, sin ofrecerlo como opción nueva; confirmación real o rechazo explícito sin escritura parcial",
+        "Guard de servidor también frente a clientes antiguos; no se introducen campos, endpoints, recursos ni permisos nuevos"
+      ],
+      "invariants": [
+        "La aprobación autoriza únicamente retirar NA de nuevas capturas y orientar colores 1 rojo → 5 verde para las 28 preguntas actuales favorables. No cambia textos, IDs ni cantidad de preguntas, asignaciones, ponderación, cálculo, accesos o cierre.",
+        "NA no se admite en preguntas vacías ni en respuestas numéricas. Solo se puede conservar cuando el valor confirmado vigente de esa misma evaluación y pregunta ya es NA; un NA de otra pregunta, evaluación, usuario, borrador o snapshot obsoleto no autoriza introducirlo.",
+        "El backend valida la excepción con su estado autorizado y revisión vigentes, antes de persistir el lote. Cliente, restauración local, payload manipulado y cliente antiguo no pueden concederla. Conservar controles de autorización, concurrencia e idempotencia existentes.",
+        "Conservar un NA histórico no es una migración: no normalizar, convertir a cero o vacío, imputar puntaje ni reescribir su registro al guardar otras preguntas o cerrar. No recalcular historia ni modificar el tratamiento existente de NA en cálculos.",
+        "Una edición autorizada de NA a 1..5 en evaluación abierta puede confirmarse bajo las reglas existentes; después, la misma pregunta ya no tiene NA confirmado y no puede volver a NA. Una evaluación cerrada no se reabre.",
+        "Las opciones nuevas son los enteros 1..5; vacío y validación de obligatoriedad conservan las reglas existentes. El color es presentación y no invierte, transforma ni pondera respuestas; mantener texto, foco y accesibilidad sin depender solo del color.",
+        "NA histórico debe poder cargarse, verse y conservarse incluso en payloads completos o reintentos exactos válidos. El guard no debe rechazar una edición de otra pregunta por contener NA confirmado sin cambios; tampoco aceptar nuevos NA mezclados en ese lote.",
+        "Esta excepción acotada precisa las menciones previas a escala intacta en propuestas/contratos EMD; todos sus demás límites permanecen. No ampliar el instrumento a preguntas desfavorables por inferencia.",
+        "Pruebas funcionales y versión activa pendientes en sistema privado; usar dobles sintéticos, no endpoints de negocio ni datos Google para probar. La integración del atlas no acredita despliegue de EMD.",
+        "Rollback conserva datos e historial: revertir documentación por PR y regenerar vistas; restaurar frontend sin quitar el guard. Solo volver a GAS con guard equivalente; si no existe versión compatible, suspender captura afectada hasta parche. No restaurar NA como opción nueva ni reescribir históricos."
       ]
     },
     {

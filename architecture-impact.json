@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-03.36-despacho-transporte",
+  "model_revision": "2026-10-03.37-despacho-conexion",
   "proposal_id": "CHG-DESPACHO-CONVERSACION-001",
   "components": [
     "SYS-YOD-OS",
@@ -7,7 +7,7 @@
     "GAS-PORTERO",
     "EXT-DRIVE"
   ],
-  "summary": "Conectar el panel preparado al Portero existente mediante POST autenticado. Resolver caso y hoja en servidor, conservar el historial e instalar el adaptador privado con cola durable. El usuario pegará el código privado y actualizará la implementación existente. El motor se vincula con autorización acotada y sólo anuncia disponibilidad tras una ejecución real. No publicar fuentes ni identidades privadas.",
+  "summary": "Conectar el panel al Portero existente con POST autenticado, expediente privado e historial durable. Servidor publicado manualmente y motor autenticado vinculado; publicar el cliente para aceptación desde la sala. Incorporar la propuesta EMD concurrente conservando sus reglas y contratos. Disponibilidad permanente del worker pendiente.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",

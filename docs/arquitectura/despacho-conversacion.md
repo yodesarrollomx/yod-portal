@@ -1,6 +1,6 @@
 # Conversación del expediente en el Despacho
 
-Estado: cliente, puente y transporte HTTP implementados y probados con datos sintéticos. La integración productiva sigue pendiente. Este cambio no acredita el recorrido real desde la sala; la prueba privada del ejecutor y Sheets se registra por separado.
+Estado: cliente, puente y transporte HTTP implementados y probados con datos sintéticos. La implementación existente del servidor privado ya publica la etiqueta esperada. El worker está vinculado, pasó una ejecución autenticada real y confirmó lectura de la cola sin trabajos pendientes. El recorrido de un mensaje desde la sala sigue pendiente; la prueba privada del ejecutor y Sheets se registra por separado.
 
 Al abrir Agentes, el cliente pide el expediente autorizado al OS. Con un adaptador conectado, recupera nombre, enlace, conversación y actividad desde el servidor. El envío explícito conserva un identificador durante reintentos y sólo confirma recepción después del recibo persistido. La respuesta aparece mediante una lectura posterior; reabrir no ejecuta otra inferencia.
 
@@ -32,6 +32,6 @@ El cliente no activa horarios, voz, contactos, cálculos ni acciones de negocio.
 
 Las pruebas cubren recuperación en una nueva instancia, respuesta tardía, recibo perdido, conflicto, límites de datos, origen, ventana y sesión. Las pruebas de navegador usan transporte sintético y bloquean conexiones externas. No acreditan persistencia en Sheets productivo.
 
-La aceptación pendiente es una instrucción real desde la sala, respuesta de un ejecutor autenticado, lectura posterior de su registro en la misma hoja y recuperación tras cerrar y volver a entrar. El propietario pegará el paquete privado y actualizará la implementación existente; después se vinculará el motor y se comprobará la etiqueta publicada. La disponibilidad permanente del worker no queda acreditada por este PR.
+La aceptación pendiente es una instrucción real desde la sala, respuesta de un ejecutor autenticado, lectura posterior de su registro en la misma hoja y recuperación tras cerrar y volver a entrar. El propietario ya pegó el paquete privado y actualizó la implementación existente; se comprobaron la etiqueta publicada y el vínculo del motor. La aceptación desde la sala se realizará después de publicar el cliente, con la sesión real del propietario. El launcher atiende bloques de 30 minutos y no acredita disponibilidad permanente.
 
 Reversión: revertir el PR del cliente. Conservar hojas, historial, identificadores, permisos y despliegues del servidor.
