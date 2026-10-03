@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.37-despacho-conexion · 2026-10-02.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-02.38-emd-github-embed-propuesta · 2026-10-02.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -387,3 +387,19 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Cierre o revocación descartan datos en memoria y respuestas tardías; toda reapertura relee Sheets.
 - Un fallo de ACK conserva el mismo request_id para reconciliar, nunca encola con ID nuevo automáticamente.
 - Sin adaptador verificado no se habilita envío. Pruebas sintéticas no acreditan conexión productiva.
+
+## CTR-EMD-GITHUB-EMBED
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD, SYS-YOD-OS.
+- Evidencia: Autorización del propietario del 2 de octubre de 2026 y plan EMD #9; propuesta local, no evidencia de despliegue. Detalle en emd-github-embed.md..
+- Entrada/campos: `Modo embed explícito del doGet existente; origen top autorizado https://yodesarrollomx.github.io`, `Handshake versionado, nonce efímero y ready del frame Google activo; fragmento personal solo después de canal confirmado`, `Wrapper en https://yodesarrollomx.github.io/yod-portal/emd/, publicado por yod-portal main/raíz en PR separado`.
+- Salida: Cuestionario real fullscreen desde Google manteniendo dirección GitHub, Entrada normal DEFAULT intacta y confirmaciones de backend existentes.
+
+- Wrapper público mínimo fullscreen de HTMLService real; URL GitHub persistente, sin redirección ni copia estática del cuestionario.
+- doGet normal conserva XFrameOptions DEFAULT; únicamente embed explícito permite enmarcado con UI oculta y portalboot bloqueado hasta handshake.
+- Origen exacto https://yodesarrollomx.github.io, event.source igual a window.top en cliente embed y wrapper ejecutado solo como top; nonce criptográfico fresco, timeout, ready y confirmación antes del acceso.
+- Wrapper fija origen Google efectivo y ventana del montaje activo incluso con frames HTMLService intermedios; validar esquema/estado/nonce y rechazar mensajes obsoletos. Nunca targetOrigin wildcard ni confianza por sufijo.
+- Fragmento personal existente solo en memoria y canal confirmado; no tokens en query, iframe src, logs, analytics o almacenamiento del wrapper. Backend conserva autorización.
+- google.script.run, tokens, ACL, CAS, idempotencia, Sheets, cierre y contratos EMD vigentes sin cambios. Sin preguntas o fuentes privadas en repo público.
+- Hosting yod-portal main/raíz y ruta /yod-portal/emd/ confirmados por propietario; origen compartido GitHub no autentica pathname. Contrato de redirección anterior se conserva como historia y no satisface #9.
+- Propuesta local previa; implementación EMD a cargo del agente principal. Tests del atlas no acreditan pruebas privadas, Pages o GAS desplegados.

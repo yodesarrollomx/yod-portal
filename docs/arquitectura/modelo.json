@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.37-despacho-conexion",
+  "revision": "2026-10-02.38-emd-github-embed-propuesta",
   "checked_at": "2026-10-02",
   "priorities": [
     "vender_mas",
@@ -4591,6 +4591,22 @@
         }
       ],
       "contract": "CTR-DESPACHO-CORCHO; identidad exacta, verificación fresca de privacidad de archivo y ancestros, CAS y archivo sin borrado."
+    },
+    {
+      "id": "CON-EMD-GITHUB-EMBED",
+      "from": "SYS-YOD-OS",
+      "to": "SYS-EMD",
+      "label": "Propuesta: wrapper público mínimo del cuestionario Google en emd/",
+      "kind": "embed",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "Propietario confirma Pages main/raíz y ruta canónica /yod-portal/emd/; wrapper pendiente en PR separado, no evidencia de despliegue.",
+          "status": "declarado"
+        }
+      ],
+      "contract": "CTR-EMD-GITHUB-EMBED: wrapper top GitHub y handshake nonce/ready con origen exacto antes de arranque; RPC y datos permanecen en Google."
     }
   ],
   "processes": [
@@ -7150,6 +7166,32 @@
         "Transporte HTTP: credencial sólo en cuerpo al endpoint autorizado, invalidación de sesión y ninguna conmutación de servidor al enviar."
       ],
       "deployment": "Cliente, puente y transporte HTTP implementados localmente. 166 pruebas del portal y QA 390/1280 con HTTP interceptado. Paquete privado de servidor preparado y probado; despliegue manual, vinculación del worker y aceptación desde la sala pendientes."
+    },
+    {
+      "id": "CHG-EMD-GITHUB-009",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Cuestionario completo bajo URL GitHub mediante wrapper público mínimo y HTMLService existente; CTR-EMD-GITHUB-EMBED exige top/origen exactos y nonce/ready antes de acceso. Registro local previo en emd-github-embed.md. Ruta canónica https://yodesarrollomx.github.io/yod-portal/emd/; SYS-YOD-OS publica wrapper neutro en PR separado de Popper. Conserva contratos y datos privados.",
+      "status": "propuesto",
+      "approval": {
+        "date": "2026-10-02",
+        "scope": "Cuestionario real completo bajo GitHub; implementación privada del agente principal tras registro previo. PR/merge documental autorizado con checks, ruta concreta y coordinación."
+      },
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "ACCESOS_REF=3ee8ca50bf14ef17d95e72523e54506eb996f262 node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "git diff --check",
+        "Pendiente EMD: matriz de orígenes/ventanas/nonce/ready, normal DEFAULT, frames Google reales, token, CAS, ACK perdido, cierre y recorrido móvil/escritorio sintético."
+      ],
+      "deployment": "No implementado ni publicado por este registro. Origen y ruta GitHub autorizados; hosting Pages main/raíz confirmado por propietario, wrapper todavía pendiente en PR separado. Integrar atlas por PR tras checks y coordinación; manifest EMD referencia commit exacto del atlas. Rollback en emd-github-embed.md conserva guards vigentes, enlaces y Sheets."
     }
   ],
   "data_contracts": [
@@ -7921,6 +7963,35 @@
         "Un fallo de ACK conserva el mismo request_id para reconciliar, nunca encola con ID nuevo automáticamente.",
         "Sin adaptador verificado no se habilita envío. Pruebas sintéticas no acreditan conexión productiva."
       ]
+    },
+    {
+      "id": "CTR-EMD-GITHUB-EMBED",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "SYS-YOD-OS"
+      ],
+      "source": "Autorización del propietario del 2 de octubre de 2026 y plan EMD #9; propuesta local, no evidencia de despliegue. Detalle en emd-github-embed.md.",
+      "input": [
+        "Modo embed explícito del doGet existente; origen top autorizado https://yodesarrollomx.github.io",
+        "Handshake versionado, nonce efímero y ready del frame Google activo; fragmento personal solo después de canal confirmado",
+        "Wrapper en https://yodesarrollomx.github.io/yod-portal/emd/, publicado por yod-portal main/raíz en PR separado"
+      ],
+      "output": [
+        "Cuestionario real fullscreen desde Google manteniendo dirección GitHub",
+        "Entrada normal DEFAULT intacta y confirmaciones de backend existentes"
+      ],
+      "invariants": [
+        "Wrapper público mínimo fullscreen de HTMLService real; URL GitHub persistente, sin redirección ni copia estática del cuestionario.",
+        "doGet normal conserva XFrameOptions DEFAULT; únicamente embed explícito permite enmarcado con UI oculta y portalboot bloqueado hasta handshake.",
+        "Origen exacto https://yodesarrollomx.github.io, event.source igual a window.top en cliente embed y wrapper ejecutado solo como top; nonce criptográfico fresco, timeout, ready y confirmación antes del acceso.",
+        "Wrapper fija origen Google efectivo y ventana del montaje activo incluso con frames HTMLService intermedios; validar esquema/estado/nonce y rechazar mensajes obsoletos. Nunca targetOrigin wildcard ni confianza por sufijo.",
+        "Fragmento personal existente solo en memoria y canal confirmado; no tokens en query, iframe src, logs, analytics o almacenamiento del wrapper. Backend conserva autorización.",
+        "google.script.run, tokens, ACL, CAS, idempotencia, Sheets, cierre y contratos EMD vigentes sin cambios. Sin preguntas o fuentes privadas en repo público.",
+        "Hosting yod-portal main/raíz y ruta /yod-portal/emd/ confirmados por propietario; origen compartido GitHub no autentica pathname. Contrato de redirección anterior se conserva como historia y no satisface #9.",
+        "Propuesta local previa; implementación EMD a cargo del agente principal. Tests del atlas no acreditan pruebas privadas, Pages o GAS desplegados."
+      ]
     }
   ],
   "path_ownership": [
@@ -8319,6 +8390,14 @@
         "SYS-DESPACHO",
         "GAS-PORTERO",
         "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "emd/",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-EMD"
       ]
     }
   ]
