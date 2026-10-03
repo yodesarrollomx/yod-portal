@@ -21,7 +21,7 @@ test('resolves a private case without a browser selector and rereads persisted c
  const c=new Conversation({transport:backend,uuid:()=> 'request-1'});assert.equal(await c.open(),true);assert.equal(await c.send('Mensaje sintético'),true);
  backend.state.jobs[0].status='completed';backend.state.conversation.push({case_id:current.case_id,message_id:'message-2',role:'assistant',created_at:backend.state.state.updated_at,body_json:JSON.stringify({reply:'Respuesta sintética conservada'})});
  c.close();assert.equal(c.model,null);assert.equal(c.selection,null);
- const reopened=new Conversation({transport:backend});assert.equal(await reopened.open(),true);assert.equal(reopened.model.messages[1].body,'Respuesta sintética conservada');assert.equal(backend.calls.length,1);assert.equal(resolves,2);
+ const reopened=new Conversation({transport:backend});assert.equal(await reopened.open(),true);assert.equal(reopened.model.messages[1].body,'Respuesta sintética conservada');assert.equal(backend.calls.length,1);assert.equal(resolves,3);
 });
 test('lost durable ACK retries the original ID and message without a duplicate',async()=>{
  const {Conversation}=await load(),backend=server(),enqueue=backend.enqueue;let fail=true;
@@ -36,6 +36,14 @@ test('reread reconciles a lost ACK without any second enqueue',async()=>{
 test('missing transport or disconnected engine never enables writes',async()=>{
  const {Conversation}=await load();const missing=new Conversation({transport:null});assert.equal(await missing.open(),false);assert.equal(await missing.send('Hola'),false);
  const backend=server();backend.resolveCurrent=async()=>({...current,agent_ready:false});const c=new Conversation({transport:backend});await c.open();assert.equal(await c.send('Hola'),false);assert.equal(backend.calls.length,0);
+});
+test('refresh revalidates worker availability and never changes the selected case silently',async()=>{
+ const {Conversation}=await load(),backend=server();let ready=false,caseId=current.case_id;
+ backend.resolveCurrent=async()=>({...current,case_id:caseId,agent_ready:ready,can_enqueue:ready});
+ const c=new Conversation({transport:backend});await c.open();assert.equal(await c.send('Hola'),false);
+ ready=true;await c.refresh();assert.equal(c.selection.agent_ready,true);
+ ready=false;await c.refresh();assert.equal(await c.send('Hola'),false);
+ caseId='another-case';assert.equal(await c.refresh(),false);assert.equal(c.model,null);assert.equal(backend.calls.length,0);
 });
 test('late read cannot restore private data after closing',async()=>{
  const {Conversation}=await load(),backend=server();let release;backend.read=()=>new Promise(resolve=>release=resolve);

@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-03.35-despacho-conversacion",
+  "model_revision": "2026-10-03.36-despacho-transporte",
   "proposal_id": "CHG-DESPACHO-CONVERSACION-001",
   "components": [
     "SYS-YOD-OS",
@@ -7,7 +7,7 @@
     "GAS-PORTERO",
     "EXT-DRIVE"
   ],
-  "summary": "Preparar la conversación del expediente con resolución privada del caso autorizado, lectura de historial y envío idempotente. El puente de mismo origen conserva sesión y credenciales en el adaptador del OS; no incluye identidad, URL de hoja ni datos operativos en la publicación. Integración productiva pendiente de autenticar ejecutor y adaptar el servidor existente.",
+  "summary": "Conectar el panel preparado al Portero existente mediante POST autenticado. Resolver caso y hoja en servidor, conservar el historial e instalar el adaptador privado con cola durable. El usuario pegará el código privado y actualizará la implementación existente. El motor se vincula con autorización acotada y sólo anuncia disponibilidad tras una ejecución real. No publicar fuentes ni identidades privadas.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",

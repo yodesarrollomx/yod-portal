@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.35-despacho-conversacion",
+  "revision": "2026-10-03.36-despacho-transporte",
   "checked_at": "2026-10-02",
   "priorities": [
     "vender_mas",
@@ -7116,15 +7116,16 @@
         "GAS-PORTERO",
         "EXT-DRIVE"
       ],
-      "proposal": "Preparar la conversación del expediente con resolución privada del caso autorizado, lectura de historial y envío idempotente. El puente de mismo origen conserva sesión y credenciales en el adaptador del OS; no incluye identidad, URL de hoja ni datos operativos en la publicación. Integración productiva pendiente de autenticar ejecutor y adaptar el servidor existente.",
+      "proposal": "Conectar el panel preparado al Portero existente mediante POST autenticado. Resolver caso y hoja en servidor, conservar el historial e instalar el adaptador privado con cola durable. El usuario pegará el código privado y actualizará la implementación existente. El motor se vincula con autorización acotada y sólo anuncia disponibilidad tras una ejecución real. No publicar fuentes ni identidades privadas.",
       "status": "implementado_local",
       "tests": [
         "Resolución autorizada sin identificadores privados en cliente; recuperar historial en otra instancia.",
         "Envío explícito, ACK durable, reintento con el mismo ID y rechazo de respuestas tardías/conflictos.",
         "Puente de origen, ventana y época de sesión exactos; fallo cerrado sin adaptador.",
-        "Verificaciones completas del portal y prueba de navegador con transporte sintético."
+        "Verificaciones completas del portal y prueba de navegador con transporte sintético.",
+        "Transporte HTTP: credencial sólo en cuerpo al endpoint autorizado, invalidación de sesión y ninguna conmutación de servidor al enviar."
       ],
-      "deployment": "Preparado para revisión. Cliente y puente probados con transporte sintético; adaptador del servidor y autenticación del ejecutor pendientes. No se acredita conversación real desde sala ni publicación del backend."
+      "deployment": "Cliente, puente y transporte HTTP implementados localmente. 166 pruebas del portal y QA 390/1280 con HTTP interceptado. Paquete privado de servidor preparado y probado; despliegue manual, vinculación del worker y aceptación desde la sala pendientes."
     }
   ],
   "data_contracts": [
@@ -8238,6 +8239,26 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/despacho-conversation.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/despacho-transport.js",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-transport.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",

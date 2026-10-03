@@ -243,6 +243,10 @@
     onTeardown:function(){if(despachoPins)despachoPins.clear();if(despachoConversation)despachoConversation.clear();},
     revalidate:function(){loadIdentity();}
   });
+  if(window.YodDespachoTransport)window.YODCaseTransport=window.YodDespachoTransport.create({
+    endpoint:PORTERO_ORIGINAL,
+    getSession:function(){return {ready:Boolean(state.sessionToken)&&mismaSesion(state.sessionToken,state.sesionEpoch),allowed:window.YodAccessPolicy.canOpen(state.boards,'SYS-DESPACHO',state.role),token:state.sessionToken,epoch:state.sesionEpoch};}
+  });
   if(window.YodDespachoConversation)despachoConversation=window.YodDespachoConversation.bind({
     isAuthorized:function(){return despachoSection.isAuthorized();},
     getIframeWindow:function(){return despachoSection.getIframeWindow();},

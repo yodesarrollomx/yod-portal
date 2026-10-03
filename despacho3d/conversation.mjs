@@ -52,8 +52,12 @@ export class Conversation {
   if(this.busy||!this.selection)return false;
   const epoch=this.epoch;this.busy=true;this.emit();
   try{
+   const selection=validateSelection(await this.call('resolveCurrent',{}));
+   if(epoch!==this.epoch)return false;
+   if(selection.case_id!==this.selection.case_id)throw Error('case_changed');
    const model=validateConversation(await this.call('read',{case_id:this.selection.case_id}),this.selection.case_id);
    if(epoch!==this.epoch)return false;
+   this.selection=selection;
    this.model=model;
    if(this.pending&&model.jobs.some(j=>j.request_id===this.pending.request_id))this.pending=null;
    this.status=this.pending?'unconfirmed':model.processing?'processing':'ready';return true;

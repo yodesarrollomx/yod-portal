@@ -1,12 +1,12 @@
 # Conversación del expediente en el Despacho
 
-Estado: cliente y puente implementados y probados con datos sintéticos. La integración productiva sigue pendiente. No hay inferencia, autenticación del ejecutor ni escritura real en Sheets acreditadas por este cambio.
+Estado: cliente, puente y transporte HTTP implementados y probados con datos sintéticos. La integración productiva sigue pendiente. Este cambio no acredita el recorrido real desde la sala; la prueba privada del ejecutor y Sheets se registra por separado.
 
 Al abrir Agentes, el cliente pide el expediente autorizado al OS. Con un adaptador conectado, recupera nombre, enlace, conversación y actividad desde el servidor. El envío explícito conserva un identificador durante reintentos y sólo confirma recepción después del recibo persistido. La respuesta aparece mediante una lectura posterior; reabrir no ejecuta otra inferencia.
 
-## Adaptador pendiente
+## Transporte y servidor
 
-El servidor existente debe instalar `window.YODCaseTransport` en el OS. Estos nombres son operaciones locales; este PR no inventa ni publica rutas HTTP. Cada operación debe autorizar la sesión vigente y resolver las fuentes canónicas en servidor. El puente verifica origen, ventana y época de sesión, pero no reemplaza la autorización del servidor.
+El OS instala `window.YODCaseTransport` mediante `os/despacho-transport.js`. Envía POST al Portero original ya configurado con `tipo=despacho-v1`, `operation`, `payload` y la sesión en el cuerpo. No conmuta al servidor de respaldo al enviar. El servidor requiere el adaptador privado preparado para instalación manual; la presencia de este cliente no acredita que esa ruta ya esté publicada. Cada operación debe autorizar la sesión vigente y resolver las fuentes canónicas en servidor. El puente verifica origen, ventana y época de sesión, pero no reemplaza la autorización del servidor.
 
 | Operación | Entrada | Salida |
 | --- | --- | --- |
@@ -14,9 +14,9 @@ El servidor existente debe instalar `window.YODCaseTransport` en el OS. Estos no
 | `read` | `case_id` | `ok`, `case_id`, `source_revision`, `context.identity`, `state.updated_at`, `conversation`, `jobs`, `events` |
 | `enqueue` | `case_id`, `expected_revision`, `request_id`, `message` | Recibo durable con `ok`, `state=queued`, `case_id`, `source_revision`, `request_id`, `job_id` |
 
-`resolveCurrent` no recibe nombres, libros o rangos desde el navegador. Los permisos provienen del servidor y `agent_ready` sólo puede ser verdadero después de comprobar ejecución autenticada real. Un estado de sesión guardada no es evidencia suficiente.
+`resolveCurrent` no recibe nombres, libros o rangos desde el navegador. Los permisos provienen del servidor y `agent_ready` requiere señal reciente de un worker vinculado que haya comprobado ejecución autenticada real. Un estado de sesión guardada no es evidencia suficiente. Actualizar relee también la disponibilidad y no cambia silenciosamente de caso.
 
-El formato de `read` y `enqueue` corresponde al módulo privado de cola ya preparado. El adaptador debe conservar la hoja operacional existente y mapear su historial anterior, sin duplicar casos ni reiniciar conversaciones. Las filas previas de la mesa provisional no quedan importadas automáticamente por este cliente.
+El formato de `read` y `enqueue` corresponde al módulo privado de cola. El adaptador preparado combina el historial anterior con las nuevas conversaciones conservando IDs y la hoja operacional. Las filas previas no se reencolan y un mensaje previo pendiente impide avanzar hasta resolverlo. El despliegue sigue siendo manual. Un mensaje explícito puede reanudar una espera de datos; una aprobación no se infiere del texto.
 
 Las filas de conversación usan `message_id`, `case_id`, `job_id`, `role`, `body_json` y `created_at`; el cuerpo conserva texto literal (`message` para usuario, `reply` para agente). Los trabajos incluyen `job_id`, `case_id`, `enqueue_request_id` y `status`. Los eventos usan `event_id`, `case_id`, `kind` y `created_at`.
 
@@ -32,6 +32,6 @@ El cliente no activa horarios, voz, contactos, cálculos ni acciones de negocio.
 
 Las pruebas cubren recuperación en una nueva instancia, respuesta tardía, recibo perdido, conflicto, límites de datos, origen, ventana y sesión. Las pruebas de navegador usan transporte sintético y bloquean conexiones externas. No acreditan persistencia en Sheets productivo.
 
-La aceptación pendiente es una instrucción real desde la sala, respuesta de un ejecutor autenticado, lectura posterior de su registro en la misma hoja y recuperación tras cerrar y volver a entrar. Antes de integrar el servidor hay que recuperar su fuente activa, conservar la implementación y comprobar el ejecutor en su entorno autorizado.
+La aceptación pendiente es una instrucción real desde la sala, respuesta de un ejecutor autenticado, lectura posterior de su registro en la misma hoja y recuperación tras cerrar y volver a entrar. El propietario pegará el paquete privado y actualizará la implementación existente; después se vinculará el motor y se comprobará la etiqueta publicada. La disponibilidad permanente del worker no queda acreditada por este PR.
 
 Reversión: revertir el PR del cliente. Conservar hojas, historial, identificadores, permisos y despliegues del servidor.
