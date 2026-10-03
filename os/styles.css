@@ -187,7 +187,22 @@ a:focus-visible,button:focus-visible,input:focus-visible,[tabindex]:focus-visibl
 
 /* Despacho ocupa el contenido sin alterar el estado de las secciones de Inicio. */
 body[data-workspace-route="despacho"] .content > :not(#seccionDespacho){display:none!important}
-.despacho-actions{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:16px}
-.despacho-canvas iframe{display:block;width:100%;height:calc(100dvh - 240px);min-height:420px;border:1px solid var(--line,#303034);border-radius:16px;background:#111}
-.despacho-help{margin:14px 0 0;font-size:13px;color:var(--muted,#a1a1aa)}
-@media(max-width:600px){.despacho-canvas iframe{height:calc(100dvh - 250px);min-height:340px}.despacho-actions{gap:14px}}
+body[data-workspace-route="despacho"]{--despacho-topbar-height:68px;overflow:hidden}
+body[data-workspace-route="despacho"] .main{height:100vh;height:100dvh;display:flex;flex-direction:column}
+body[data-workspace-route="despacho"] .topbar{flex:none}
+body[data-workspace-route="despacho"] .content{width:100%;max-width:none;min-height:0;flex:1;margin:0;padding:0;overflow:hidden}
+.despacho-section{position:relative;width:100%;height:calc(100vh - var(--despacho-topbar-height,68px));height:calc(100dvh - var(--despacho-topbar-height,68px));margin:0;overflow:hidden;background:#e9e7de}
+.despacho-canvas{position:absolute;inset:0}
+.despacho-canvas iframe{display:block;width:100%;height:100%;border:0;background:#e9e7de}
+#despachoEstado{position:absolute;inset:0;z-index:1;margin:0;text-align:center;pointer-events:none;background:var(--paper)}
+.despacho-tools{position:relative;display:none;z-index:65;color:var(--ink)}
+body[data-workspace-route="despacho"] .despacho-tools{display:block}
+body[data-workspace-route="despacho"] #role-chip{display:none!important}
+.despacho-tools summary{display:grid;place-items:center;width:44px;height:44px;list-style:none;border:1px solid var(--line);border-radius:12px;background:rgba(246,243,237,.94);box-shadow:0 3px 15px rgba(35,29,20,.1);cursor:pointer;font-size:21px}
+.despacho-tools summary::-webkit-details-marker{display:none}
+.despacho-tools summary:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.despacho-tools[open] summary{margin-left:auto;background:var(--gold-soft)}
+.despacho-tools nav{position:absolute;top:100%;right:0;display:flex;flex-direction:column;gap:4px;min-width:175px;margin-top:6px;padding:8px;border:1px solid var(--line);border-radius:12px;background:var(--paper);box-shadow:var(--shadow)}
+.despacho-tools .section-link{min-height:44px;padding:0 10px;font-size:12px;color:var(--ink)}
+.despacho-tools .section-link:hover{background:var(--gold-soft);border-radius:8px}
+@media(max-width:680px){body[data-workspace-route="despacho"]{--despacho-topbar-height:calc(60px + env(safe-area-inset-top))}}

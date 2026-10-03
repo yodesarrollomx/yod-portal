@@ -1,0 +1,43 @@
+{
+  "source": "https://github.com/leonvanzyl/cubefarm",
+  "revision": "11237cf554f21312a2aecd9758d611f2817fc71e",
+  "license": "MIT ©2026 Leon van Zyl",
+  "source_video": "https://www.youtube.com/watch?v=NBZmxhcz5lo",
+  "video_evidence": "Description lists this source repo; spoken transcript unavailable",
+  "verbatim_sources_sha256": {
+    "styles.css": "137c0bda4a868879df290fd3d60b062ea2b7c12022b8a71d0359880fae57c1d2",
+    "Markdown.tsx": "01fede0ad5fa514d4a65098233b1f1135d525743a8b83589512aa03c047348f9",
+    "TerminalView.tsx": "a63800bcf93a521a87c59631512647ed2b68ac0a9bec3cdd8182490235e0ceca",
+    "Phone.tsx": "a6c908ea775e33e5917ac98d566980c2b843b70e289d84cc3e03c47bebb941a1",
+    "KanbanView.tsx": "af999e2172415f25d790f8d04b5e95d9312d7741ca16d9a731da254c4dd972a8",
+    "Overlays.tsx": "7ea716f2768fd1dae9b9755714f53199572743826a0763f0602a448fe790ea28",
+    "MessageBox.tsx": "39549037c611a04ef29d098c4a1c8eb4515d1f54a59b03fc3d252e8cf0d5f53a",
+    "LICENSE": "339b8717977a03761c337f75834904d2070df1074400471811b848aea5a0567a"
+  },
+  "adaptations": {
+    "despacho-agents/Agents.tsx": [
+      "Phone.tsx phone/chat markup and component structure",
+      "TerminalView.tsx metadata, terminal/log structure",
+      "KanbanView.tsx column/card structure"
+    ],
+    "despacho3d/agents.css": [
+      "Scoped original styles.css",
+      "agents/aurum.css theme overrides"
+    ],
+    "unchanged_helpers": [
+      "MessageBox.tsx",
+      "Markdown.tsx"
+    ]
+  },
+  "case_data_source": "Existing authorized Sheets/Drive transport only, no design snapshot as live state",
+  "limitations": [
+    "Direct chat send disabled; real conversation available through the existing Sheet",
+    "No real terminal mounted and no /ws/term connection",
+    "Backend standalone local Node is installed but not hosted in the static Site",
+    "No agent swarm or paid API activated",
+    "No completed hourly inference evidenced",
+    "Selección manual de expediente privado hasta conectar el transporte autorizado"
+  ],
+  "public_frontend": "Interfaz neutra sin identidad de cliente ni enlace de hoja privada",
+  "hosting": "GitHub Pages, yodesarrollomx/yod-portal/despacho3d"
+}

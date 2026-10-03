@@ -1,7 +1,7 @@
 (function(root){
   'use strict';
-  // Recurso privado independiente: no recibe sesión, rutas ni datos del OS.
-  var PRIVATE_URL='https://yod-despacho-revision-bloque-1.sayri-fraijo.chatgpt.site/';
+  // Escena estática del mismo portal: no recibe sesión, rutas ni datos del OS.
+  var FRAME_PATH='../despacho3d/index.html';
   function create(options){
     var win=options.window,doc=options.document,host=doc.getElementById('seccionDespacho'),
         canvas=doc.getElementById('despachoCanvas'),status=doc.getElementById('despachoEstado'),
@@ -12,6 +12,7 @@
     function access(){return options.readAccess();}
     function authorized(){var a=access();return !suspended&&active()&&a.ready===true&&a.allowed===true;}
     function teardown(){
+      var tools=doc.getElementById('despachoTools');if(tools)tools.removeAttribute('open');
       if(frame){frame.removeAttribute('src');frame.remove();frame=null;}
       mountedEpoch=null;
       if(options.onTeardown)options.onTeardown();
@@ -30,7 +31,7 @@
         status.hidden=false;status.textContent=a.ready?'El Despacho no está incluido en los permisos de esta cuenta.':'Valida tu acceso a YOD OS para abrir El Despacho.';
         return;
       }
-      open.href=PRIVATE_URL;
+      open.href=FRAME_PATH;
       if(frame&&mountedEpoch!==a.epoch)teardown();
       if(!frame){
         status.hidden=false;status.textContent='Abriendo la oficina…';
@@ -39,7 +40,7 @@
         frame.setAttribute('referrerpolicy','no-referrer');frame.setAttribute('allow','fullscreen');
         var current=frame;
         frame.addEventListener('load',function(){if(frame===current&&authorized())status.hidden=true;});
-        frame.setAttribute('src',PRIVATE_URL);canvas.appendChild(frame);mountedEpoch=a.epoch;
+        frame.setAttribute('src',FRAME_PATH);canvas.appendChild(frame);mountedEpoch=a.epoch;
       }
     }
     [open,tray].forEach(function(link){link.addEventListener('click',function(event){if(!authorized()){event.preventDefault();paint();}});});

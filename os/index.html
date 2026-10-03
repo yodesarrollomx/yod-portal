@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
-  <link rel="stylesheet" href="styles.css?v=despacho-20261002">
+  <link rel="stylesheet" href="styles.css?v=despacho-github-20261003">
 </head>
 <body>
   <div class="app-shell">
@@ -55,6 +55,14 @@
           <i class="ti ti-search"></i><span>Buscar un módulo…</span><kbd>⌘ K</kbd>
         </button>
         <div class="top-actions">
+          <details class="despacho-tools" id="despachoTools">
+            <summary aria-label="Opciones del Despacho"><i class="ti ti-dots" aria-hidden="true"></i><span class="sr-only">Opciones del Despacho</span></summary>
+            <nav aria-label="Acciones del Despacho">
+              <a class="section-link" href="#inicio" aria-label="Cerrar El Despacho y volver a Inicio"><i class="ti ti-arrow-left" aria-hidden="true"></i>Volver a Inicio</a>
+              <a class="section-link" id="despachoBandeja" href="https://yodesarrollomx.github.io/yod-despacho/" target="_blank" rel="noopener noreferrer" hidden><i class="ti ti-inbox" aria-hidden="true"></i>Bandeja actual</a>
+              <a class="section-link" id="despachoAbrir" target="_blank" rel="noopener noreferrer" hidden><i class="ti ti-arrow-up-right" aria-hidden="true"></i>Abrir aparte</a>
+            </nav>
+          </details>
           <span class="role-chip hidden" id="role-chip"></span>
           <span class="connection" id="connection" aria-live="polite" aria-atomic="true"><i class="ti ti-loader-2 spin"></i> Conectando</span>
           <button class="icon-button" id="refresh" type="button" title="Actualizar datos" aria-label="Actualizar datos"><i class="ti ti-refresh"></i></button>
@@ -126,17 +134,10 @@
         </section>
 
         <section class="section despacho-section" id="seccionDespacho" aria-labelledby="despachoTitulo" hidden>
-          <div class="section-head">
-            <div><p class="eyebrow">Tu espacio de trabajo</p><h2 id="despachoTitulo">El Despacho</h2></div>
-            <a class="section-link" href="#inicio" aria-label="Cerrar El Despacho y volver a Inicio">Volver a Inicio <i class="ti ti-x"></i></a>
-          </div>
-          <div class="despacho-actions">
-            <a class="section-link" id="despachoAbrir" target="_blank" rel="noopener noreferrer" hidden>Pantalla completa <i class="ti ti-arrow-up-right"></i></a>
-            <a class="section-link" id="despachoBandeja" href="https://yodesarrollomx.github.io/yod-despacho/" target="_blank" rel="noopener noreferrer" hidden>Bandeja actual <i class="ti ti-inbox"></i></a>
-          </div>
+          <h2 class="sr-only" id="despachoTitulo">El Despacho</h2>
+
           <p class="operation-message" id="despachoEstado" role="status">Validando tu acceso…</p>
           <div class="despacho-canvas" id="despachoCanvas"></div>
-          <p class="despacho-help">Si la oficina te pide iniciar sesión o no abre aquí, usa Pantalla completa para entrar con tu acceso privado de la oficina.</p>
         </section>
 
         <!-- Embudo comercial como SECCIÓN del tablero: al cerrar la Sala te deja aquí -->
@@ -245,9 +246,9 @@
   <script src="adapters/operations.js?v=audit-20260930"></script>
   <script src="adapters/finance.js?v=audit-20260930"></script>
   <script src="adapters/marketing.js?v=0.1.0"></script>
-  <script src="despacho-section.js?v=20261002"></script>
-  <script src="despacho-chinches.js?v=20261002"></script>
-  <script src="app.js?v=despacho-20261002"></script>
+  <script src="despacho-section.js?v=github-20261003"></script>
+  <script src="despacho-chinches.js?v=github-20261003"></script>
+  <script src="app.js?v=despacho-github-20261003"></script>
   <script src="maquinas.js?v=audit-20260930"></script>
   <script src="https://yodesarrollomx.github.io/potenciales-yod/portero.js?v=relevo9"></script>
   <script src="../chinche.js?v=despacho-20261002"></script>

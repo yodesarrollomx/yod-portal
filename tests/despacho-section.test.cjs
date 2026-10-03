@@ -3,7 +3,7 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 require('../os/access-policy.js');
 const source=fs.readFileSync(require.resolve('../os/despacho-section.js'),'utf8');
 const app=fs.readFileSync(require.resolve('../os/app.js'),'utf8');
-const PRIVATE_URL='https://yod-despacho-revision-bloque-1.sayri-fraijo.chatgpt.site/';
+const FRAME_PATH='../despacho3d/index.html';
 function node(){
   const attrs=new Map(),listeners={},classes=new Set();
   return {hidden:false,children:[],textContent:'',contentWindow:{},
@@ -29,13 +29,14 @@ function harness(hash='#/despacho'){
   function route(hash){win.location.hash=hash;event('hashchange');}
   return {section,identity,nodes,body,home,nav,frames,event,route,get clear(){return clear;},get revalidations(){return revalidations;}};
 }
-test('Cold Despacho route and unconfirmed cached DP never load a private frame',()=>{
+test('Cold Despacho route and unconfirmed cached DP never load the same-origin scene',()=>{
   const h=harness();assert.equal(h.frames.length,0);assert.equal(h.section.getIframeWindow(),null);
   h.section.refresh();assert.equal(h.frames.length,0);assert.equal(h.nodes.get('despachoAbrir').hidden,true);
   h.identity.ready=true;h.section.refresh();assert.equal(h.frames.length,1);
-  assert.equal(h.frames[0].getAttribute('src'),PRIVATE_URL);
+  assert.equal(h.frames[0].getAttribute('src'),FRAME_PATH);
   assert.equal(h.frames[0].getAttribute('referrerpolicy'),'no-referrer');
-  assert.equal(h.nodes.get('despachoAbrir').href,PRIVATE_URL);
+  assert.equal(h.nodes.get('despachoAbrir').href,FRAME_PATH);
+  assert.equal(new URL(FRAME_PATH,'https://yodesarrollomx.github.io/yod-portal/os/').href,'https://yodesarrollomx.github.io/yod-portal/despacho3d/index.html');
 });
 test('DP policy matches the existing contract; absent DP denied, admin and star preserved',()=>{
   for(const [boards,role,allowed] of [['TA','vista',false],['','vista',false],['DP','vista',true],['*','vista',true],['','admin',true]]){
@@ -76,7 +77,7 @@ test('A visible outbound action checks current access again at the human click',
   h.nodes.get('despachoAbrir').emit('click',{preventDefault(){blocked++;}});
   assert.equal(blocked,1);assert.equal(h.nodes.get('despachoCanvas').children.length,0);assert.equal(h.nodes.get('despachoAbrir').hidden,true);
 });
-test('bfcache freezes with no private frame, and restoration requires a fresh identity check',()=>{
+test('bfcache freezes with no scene frame, and restoration requires a fresh identity check',()=>{
   const h=harness();h.identity.ready=true;h.section.refresh();h.event('pagehide');
   assert.equal(h.section.isAuthorized(),false);assert.equal(h.section.getIframeWindow(),null);
   h.event('pageshow',{persisted:true});assert.equal(h.revalidations,1);assert.equal(h.frames.length,1);
@@ -89,11 +90,26 @@ test('Production session purge invokes teardown before reload and blocking invok
   vm.runInContext(fn('purgarDatosSensibles')+'\n'+fn('cerrarSesion'),c);c.cerrarSesion();assert.deepEqual(order,['teardown','reload']);
   assert.match(app,/if\(window\.revisarPuertaDespacho\)window\.revisarPuertaDespacho\(\);/);
 });
-test('Private section transports no credentials; CSS hides Inicio without mutating authorization state',()=>{
+test('Scene uses only its fixed relative path with no credential transport or ChatGPT gateway',()=>{
   assert.doesNotMatch(source,/localStorage|sessionStorage|postMessage|encodeURIComponent|URLSearchParams|tokenActual/);
-  assert.equal((source.match(/https:\/\//g)||[]).length,1);assert.doesNotMatch(source,/PRIVATE_URL\s*\+/);
+  assert.equal((source.match(/https:\/\//g)||[]).length,0);assert.doesNotMatch(source,/FRAME_PATH\s*\+|chatgpt\.site|requestFullscreen/);
+  assert.match(source,/var FRAME_PATH='\.\.\/despacho3d\/index\.html'/);
+});
+test('Immersive surface fills available height and retains compact controls and Inicio state',()=>{
   const html=fs.readFileSync(require.resolve('../os/index.html'),'utf8'),css=fs.readFileSync(require.resolve('../os/styles.css'),'utf8');
   assert.match(css,/body\[data-workspace-route="despacho"\] \.content > :not\(#seccionDespacho\)/);
+  assert.match(css,/height:calc\(100dvh - var\(--despacho-topbar-height,68px\)\)/);
+  assert.match(css,/\.despacho-canvas iframe\{[^}]*height:100%;border:0/);
+  assert.match(css,/\.content\{[^}]*padding:0;overflow:hidden/);
+  assert.match(css,/--despacho-topbar-height:calc\(60px \+ env\(safe-area-inset-top\)\)/);
   assert.match(html,/id="despachoBandeja" href="https:\/\/yodesarrollomx\.github\.io\/yod-despacho\/"/);
   assert.match(html,/despacho:'El Despacho'/);
+  const section=html.split('<section class="section despacho-section"')[1].split('</section>')[0];
+  assert.match(section,/<h2 class="sr-only"/);
+  assert.match(html,/<details class="despacho-tools" id="despachoTools">/);
+  assert.match(html,/<nav aria-label="Acciones del Despacho">[\s\S]*?href="#inicio"/);
+  assert.doesNotMatch(section,/class="section-head"|despacho-actions|despacho-help|Pantalla completa|iniciar sesi/);
+  const h=harness();h.identity.ready=true;h.section.refresh();
+  assert.equal(h.body.getAttribute('data-workspace-route'),'despacho');
+  assert.equal(h.nodes.get('despachoBandeja').hidden,false);
 });

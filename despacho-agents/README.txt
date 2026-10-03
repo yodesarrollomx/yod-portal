@@ -1,0 +1,1 @@
+Interfaz adaptada de Cubefarm 0.3.2 (MIT). Compilar con node despacho-agents/build.mjs RUTA_ABSOLUTA_CUBEFARM_INSTALADO. Salida estática en despacho3d. Sin casos reales, identificadores privados ni motor de inferencia incluidos. El expediente pertenece a Drive; selección provisional en memoria del navegador, sin persistencia local ni llamadas a APIs nuevas.
