@@ -1,16 +1,13 @@
 {
-  "model_revision": "2026-10-03.45-avatares-caracter",
-  "proposal_id": "CHG-DESPACHO-AVATARES-001",
+  "model_revision": "2026-10-03.46-avatar-piloto",
+  "proposal_id": "CHG-DESPACHO-AVATAR-PILOTO-001",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-TAREAS",
-    "GAS-OPERACION",
     "GAS-PORTERO",
-    "STORE-DESPACHO-CORCHO",
     "EXT-DRIVE"
   ],
-  "summary": "Homologar la identidad de personas, expedientes y herramientas en un registro privado con alias confirmados; preparar una familia de personajes caricaturescos 3D con rostro, ropa, accesorios y animación articulada. Entregar módulo reutilizable y adaptador desacoplado para instalación por el agente del Despacho, conservando conversación, permisos y expediente canónico. Se desacopla una regresión histórica de Corcho del manifiesto del PR actual; los componentes de Corcho tienen impacto sólo de pruebas, sin cambios de backend.",
+  "summary": "Montar un personaje del caso autorizado en la oficina y abrir su panel lateral con conversación, documentos y memoria leídos desde Sheets. Perfil visual opcional procedente del servidor privado; cero padrón público, sin cambiar cola, terminal, identidad ni registros del negocio.",
   "contracts": [
     "CTR-DESPACHO-AVATARES",
     "CTR-DESPACHO-CONVERSACION",
@@ -26,5 +23,5 @@
     "node scripts/verificar-impacto.cjs --base origin/main --repo yodesarrollomx/yod-portal",
     "git diff --check"
   ],
-  "rollback": "Revertir sólo el módulo y su uso visual por PR. Conservar IDs, aliases confirmados, expedientes, permisos e historial."
+  "rollback": "Revertir el montaje y panel de este PR; conservar el módulo visual, IDs, permisos, cola y expedientes. El servidor sin avatar sigue siendo compatible."
 }
