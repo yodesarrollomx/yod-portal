@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.45-emd-dominio-propio",
+  "revision": "2026-10-03.48-terminal-puesto",
   "checked_at": "2026-10-03",
   "priorities": [
     "vender_mas",
@@ -7401,6 +7401,26 @@
         "CI de atlas y EMD; lectura de accesos reales sin guardar respuestas"
       ],
       "deployment": "Organización y repositorio mínimo creados. Publicación y backend pendientes. Rollback: volver a GAS32 en implementación existente y wrapper anterior, preservando respuestas y accesos."
+    },
+    {
+      "id": "CHG-DESPACHO-TERMINAL-PUESTO-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Conectar el panel autorizado del piloto a la terminal local existente mediante ventana local consentida y MessageChannel acotado. Ver pantalla PTY, escribir en sesión manual y controles explícitos, conservando una sesión y modo de cola Sheets.",
+      "status": "implementado_local",
+      "tests": [
+        "Vinculación explícita en loopback, origen/ventana/nonce/caso exactos, puerto efímero y revocación.",
+        "Ningún proceso se inicia al conectar; teclado sólo manual, controles explícitos y una sesión.",
+        "Salida real de PTY, reapertura sin duplicar proceso y cierre del panel sin detener el trabajo.",
+        "Navegador con red aislada, rechazo de mensajes falsificados, desconexión visible y frontend antiguo compatible.",
+        "206 pruebas de portal y 102 del motor privado; 11 comprobaciones del puente en navegador, 7 de terminal nativa, 6 de modo sala y 7 de actualización conservando datos. PTY real con ejecutor sintético; no acredita instalación en Chromebook."
+      ],
+      "deployment": "Panel y runtime0.3 implementados y probados con PTY real y datos sintéticos. Publicación por PR y actualización de Chromebook pendientes de verificación separada. El backend r4 ya responde y su fuente coincide con la entrega privada; no se requiere nuevo Apps Script.",
+      "rollback": "Revertir panel y actualizar launcher a runtime0.2.0. Conservar keeper, workspace, vínculo y checkpoint; no detener agente ni borrar datos para revertir."
     }
   ],
   "data_contracts": [
@@ -8212,6 +8232,32 @@
         "Hosting yod-portal main/raíz y ruta /yod-portal/emd/ confirmados por propietario; origen compartido GitHub no autentica pathname. Contrato de redirección anterior se conserva como historia y no satisface #9.",
         "Propuesta local previa; implementación EMD a cargo del agente principal. Tests del atlas no acreditan pruebas privadas, Pages o GAS desplegados."
       ]
+    },
+    {
+      "id": "CTR-DESPACHO-TERMINAL-LOCAL",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "source": "Continuación autorizada del propietario tras r4; terminal y herramientas reales por puesto.",
+      "input": [
+        "Perfil vigente resuelto por servidor; acción explícita Conectar mi terminal.",
+        "Ventana de127.0.0.1 con cookie HttpOnly, aprobación local para caso configurado y origenYOD fijo."
+      ],
+      "output": [
+        "MessageChannel efímero para pantalla PTY, tamaño, estado y controles de sesión locales.",
+        "Cierre/revocación corta el canal, conserva proceso y memoria en sus almacenes existentes."
+      ],
+      "invariants": [
+        "No abrir listener externo, CORS global, URL con token ni copiar loginCodex.",
+        "Origen, ventana, nonce y caso exactos; datos privados sin localStorage.",
+        "Consentimiento local antes de emitir pantalla. Sólo acciones start/resume/stop/room y mensajesinput/resize; sin shell HTTP arbitrario.",
+        "Room sigue siendo ejecutor acotado y no acepta teclado; terminal manual es interactiva y sus cambios no se guardan automáticamente en Sheets.",
+        "Un proceso activo; no stop automático al conectar/desconectar; heartbeat y revocación cierran el canal.",
+        "Ventana local debe permanecer abierta para el puente; móvil en otro equipo conserva chat pero no tiene acceso a localhostChromebook."
+      ]
     }
   ],
   "path_ownership": [
@@ -8648,6 +8694,26 @@
         "GAS-OPERACION",
         "GAS-PORTERO",
         "STORE-DESPACHO-CORCHO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho-runtime/",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-terminal-link.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
         "EXT-DRIVE"
       ]
     }
