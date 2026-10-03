@@ -1,6 +1,6 @@
 # Conversación del expediente en el Despacho
 
-Estado: cliente, puente y transporte HTTP implementados y probados con datos sintéticos. La implementación existente del servidor privado ya publica la etiqueta esperada. El worker está vinculado, pasó una ejecución autenticada real y confirmó lectura de la cola sin trabajos pendientes. El recorrido de un mensaje desde la sala sigue pendiente; la prueba privada del ejecutor y Sheets se registra por separado.
+Estado: cliente, puente y servidor publicados. Primer mensaje real desde la sala, respuesta de un ejecutor autenticado y persistencia en la misma hoja comprobados en registro privado. La recuperación de memoria en un segundo turno desde la sala y el servicio permanente siguen pendientes.
 
 Al abrir Agentes, el cliente pide el expediente autorizado al OS. Con un adaptador conectado, recupera nombre, enlace, conversación y actividad desde el servidor. El envío explícito conserva un identificador durante reintentos y sólo confirma recepción después del recibo persistido. La respuesta aparece mediante una lectura posterior; reabrir no ejecuta otra inferencia.
 
@@ -20,7 +20,7 @@ El formato de `read` y `enqueue` corresponde al módulo privado de cola. El adap
 
 Las filas de conversación usan `message_id`, `case_id`, `job_id`, `role`, `body_json` y `created_at`; el cuerpo conserva texto literal (`message` para usuario, `reply` para agente). Los trabajos incluyen `job_id`, `case_id`, `enqueue_request_id` y `status`. Los eventos usan `event_id`, `case_id`, `kind` y `created_at`.
 
-Un conflicto de revisión exige releer. Un recibo perdido conserva el mismo mensaje e identificador. El servidor debe ofrecer idempotencia durable y rechazar la reutilización con otro contenido. Leer el trabajo por `enqueue_request_id` también permite reconciliar el guardado sin reenviar. Mientras el trabajo está activo, el panel relee cada cinco segundos durante un máximo de un minuto; después permite actualizar manualmente. Estas lecturas nunca ejecutan inferencia.
+Un conflicto de revisión exige releer. Un recibo perdido conserva el mismo mensaje e identificador. El servidor debe ofrecer idempotencia durable y rechazar la reutilización con otro contenido. Leer el trabajo por `enqueue_request_id` también permite reconciliar el guardado sin reenviar. Mientras el trabajo está activo, el panel programa la siguiente lectura después de terminar la anterior: espera cinco segundos durante los primeros 30 segundos y diez después. Omite consultas mientras la pestaña está oculta o existe otra operación. A los tres minutos muestra un aviso explícito para consultar con Actualizar; no vuelve a enviar el mensaje. Estas lecturas nunca ejecutan inferencia.
 
 ## Privacidad y cierre
 
@@ -32,10 +32,10 @@ El cliente no activa horarios, voz, contactos, cálculos ni acciones de negocio.
 
 Las pruebas cubren recuperación en una nueva instancia, respuesta tardía, recibo perdido, conflicto, límites de datos, origen, ventana y sesión. Las pruebas de navegador usan transporte sintético y bloquean conexiones externas. No acreditan persistencia en Sheets productivo.
 
-La aceptación pendiente es una instrucción real desde la sala, respuesta de un ejecutor autenticado, lectura posterior de su registro en la misma hoja y recuperación tras cerrar y volver a entrar. El propietario ya pegó el paquete privado y actualizó la implementación existente; se comprobaron la etiqueta publicada y el vínculo del motor. La aceptación desde la sala se realizará después de publicar el cliente, con la sesión real del propietario. El launcher atiende bloques de 30 minutos y no acredita disponibilidad permanente.
+La instrucción real desde la sala, la respuesta autenticada y la lectura posterior de su registro en la misma hoja ya fueron comprobadas. El segundo turno para recuperar memoria tras cerrar y volver a entrar sigue pendiente: un intento quedó detenido por espera agotada de lectura y el runtime se corrigió después. El launcher atiende bloques optativos de 30 minutos y no acredita disponibilidad permanente.
 
 Reversión: revertir el PR del cliente. Conservar hojas, historial, identificadores, permisos y despliegues del servidor.
 
-El panel distingue autorización denegada, cambio de sesión, espera agotada, formato inválido y apertura fuera de YOD OS. Solo propaga códigos permitidos y el paso fallido; descarta mensajes crudos del proveedor. El propietario reportó fallo de carga antes de guardar: su causa y la aceptación completa siguen pendientes.
+El panel distingue autorización denegada, cambio de sesión, espera agotada, formato inválido y apertura fuera de YOD OS. Solo propaga códigos permitidos y el paso fallido; descarta mensajes crudos del proveedor. El propietario reportó un fallo inicial de carga que se recuperó; su causa no se confirmó. La aceptación completa de memoria y reapertura sigue pendiente.
 
 Cuando el último mensaje aparece detenido en el servidor, el panel muestra que quedó sin respuesta y ofrece «Volver a enviar». Solo ese clic explícito crea un turno nuevo con el mismo texto y un identificador nuevo; la recuperación de un recibo perdido conserva el identificador anterior. Ninguna lectura reencola mensajes. Las esperas acotadas son 45 segundos en HTTP, 50 en el puente y 55 en el cliente; cerrar o cambiar sesión sigue descartando respuestas tardías.
