@@ -8,6 +8,16 @@ import {validateDriveSelection} from '../despacho3d/drive-selection.mjs';
 import {Conversation,createFrameTransport} from '../despacho3d/conversation.mjs';
 
 const labels:Record<string,string>={disconnected:'Conexión pendiente',loading:'Cargando expediente…',ready:'Historial recuperado',processing:'Mensaje guardado · esperando respuesta',sending:'Guardando mensaje…',unconfirmed:'Guardado sin confirmar',conflict:'El expediente cambió · vuelve a leerlo',unavailable:'No se pudo conectar con el expediente'};
+function connectionNotice(d:any){
+ if(!d)return '';
+ if(d.code==='unauthorized')return 'Tu sesión no autoriza este expediente. Revisa la cuenta con la que entraste a YOD OS.';
+ if(d.code==='outside_os')return 'Abre la oficina dentro de YOD OS para usar su sesión.';
+ if(d.code==='session_changed')return 'La sesión cambió. Vuelve a entrar a la oficina desde YOD OS.';
+ if(d.code==='timeout')return 'La conexión tardó demasiado. Pulsa Reintentar conexión.';
+ if(d.code==='despacho_not_ready')return 'El servidor aún no puede cargar el expediente. Falta revisar su preparación.';
+ if(['invalid_selection','invalid_snapshot','invalid_message','invalid_job','invalid_event','seleccion_invalida','enlace_invalido'].includes(d.code))return 'El servidor respondió, pero el expediente o historial no tiene el formato esperado.';
+ return 'La conexión con YOD OS no respondió. Pulsa Reintentar conexión.';
+}
 
 type Tab='chat'|'activity'|'plan';
 let overlayOpen=false;
@@ -49,6 +59,7 @@ function App(){
     {tab==='chat'&&<div className="phone-chat">
      <div className="chat-head"><span className="avatar">T</span><div className="grow"><b>{name}</b><div className="muted small">Terreno · Plan de Potencial</div></div><span className="connection-label">Sheets</span></div>
      <div className="conversation-status" role="status">{labels[status]||status}</div>
+     {status==='unavailable'&&<p className="conversation-notice" role="alert">{connectionNotice(conversation.current.diagnostic)} <span className="muted small">Paso: {conversation.current.diagnostic?.step||'conexión'}.</span></p>}
      <div className="chat-log" role="log" aria-label="Conversación del expediente">
       {model?.messages.map(row=><article className={`case-message case-message-${row.role}`} key={row.id}><b>{row.role==='user'?'Tú':name}</b><p>{row.body}</p><time dateTime={row.created_at}>{new Date(row.created_at).toLocaleString('es-MX')}</time></article>)}
       {model&&!model.messages.length&&<p className="phone-empty">Todavía no hay mensajes guardados en este expediente.</p>}

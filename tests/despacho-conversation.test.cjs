@@ -37,6 +37,20 @@ test('missing transport or disconnected engine never enables writes',async()=>{
  const {Conversation}=await load();const missing=new Conversation({transport:null});assert.equal(await missing.open(),false);assert.equal(await missing.send('Hola'),false);
  const backend=server();backend.resolveCurrent=async()=>({...current,agent_ready:false});const c=new Conversation({transport:backend});await c.open();assert.equal(await c.send('Hola'),false);assert.equal(backend.calls.length,0);
 });
+test('authorization and malformed history have distinct safe diagnostics, without reading or sending after denial',async()=>{
+ const {Conversation}=await load(),backend=server();let reads=0;
+ backend.resolveCurrent=async()=>({ok:false,error:'unauthorized',detail:'private provider detail'});
+ backend.read=async()=>{reads++;return snapshot();};
+ const c=new Conversation({transport:backend});assert.equal(await c.open(),false);
+ assert.deepEqual(c.diagnostic,{step:'expediente',code:'unauthorized'});assert.equal(reads,0);assert.equal(await c.send('Hola'),false);
+ backend.resolveCurrent=async()=>current;backend.read=async()=>({...snapshot(),context:{}});
+ assert.equal(await c.open(),false);assert.deepEqual(c.diagnostic,{step:'historial',code:'invalid_snapshot'});
+ c.close();assert.equal(c.diagnostic,null);
+});
+test('unknown provider exceptions are never exposed through connection diagnostics',async()=>{
+ const {Conversation}=await load(),backend=server();backend.resolveCurrent=async()=>{throw Error('private token or transcript');};
+ const c=new Conversation({transport:backend});await c.open();assert.deepEqual(c.diagnostic,{step:'expediente',code:'unavailable'});
+});
 test('refresh revalidates worker availability and never changes the selected case silently',async()=>{
  const {Conversation}=await load(),backend=server();let ready=false,caseId=current.case_id;
  backend.resolveCurrent=async()=>({...current,case_id:caseId,agent_ready:ready,can_enqueue:ready});

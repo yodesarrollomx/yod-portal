@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-02.38-emd-github-embed-propuesta",
+  "model_revision": "2026-10-03.39-despacho-diagnostico",
   "proposal_id": "CHG-EMD-GITHUB-009",
   "components": [
     "SYS-EMD",
@@ -7,7 +7,7 @@
     "SHEET-EMD",
     "SYS-YOD-OS"
   ],
-  "summary": "Implementación local del wrapper público emd/ para CHG-EMD-GITHUB-009, con atlas consultado en 38ea095dfd0f706667ece2a4fcdc4240251cea58 (PR47). SYS-YOD-OS publica solo el wrapper y el endpoint autorizado; SYS-EMD y GAS-EMD conservan cuestionario, código privado, identidad y google.script.run en Google. SHEET-EMD conserva datos y permisos sin cambios. El padre envía acceso por postMessage tras ready con nonce y origen permitidos, fija fuente/origen y revela el iframe tras authorized. Timeout 35s y reintento manual; fragmento solo en padre. Backend y E2E coordinados por agente principal; este PR no acredita despliegue ni aceptación final.",
+  "summary": "Implementación local del wrapper público emd/ para CHG-EMD-GITHUB-009, con atlas consultado en 38ea095dfd0f706667ece2a4fcdc4240251cea58 (PR47). SYS-YOD-OS publica solo el wrapper y el endpoint autorizado; SYS-EMD y GAS-EMD conservan cuestionario, código privado, identidad y google.script.run en Google. SHEET-EMD conserva datos y permisos sin cambios. El padre envía acceso por postMessage tras ready con nonce y origen permitidos, fija fuente/origen y revela el iframe tras authorized. Timeout 35s y reintento manual; fragmento solo en padre. Backend y E2E coordinados por agente principal; este PR no acredita despliegue ni aceptación final. Resolución de integración sobre main 0e5c8f30e5d89bc3b26fa37708e7303d81671904; se conserva el modelo y toda la documentación vigentes de otros agentes, con propuesta EMD original registrada en atlas38ea095.",
   "tests": [
     "node --test emd/protocol.test.cjs",
     "sha256sum -c emd/SHA256SUMS",
@@ -17,8 +17,8 @@
     "node verify-portal.cjs",
     "ACCESOS_REF=3ee8ca50bf14ef17d95e72523e54506eb996f262 node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "node scripts/verificar-impacto.cjs --base 38ea095dfd0f706667ece2a4fcdc4240251cea58 --head HEAD --repo yodesarrollomx/yod-portal",
-    "git diff --check 38ea095dfd0f706667ece2a4fcdc4240251cea58...HEAD"
+    "node scripts/verificar-impacto.cjs --base 0e5c8f30e5d89bc3b26fa37708e7303d81671904 --head HEAD --repo yodesarrollomx/yod-portal",
+    "git diff --check 0e5c8f30e5d89bc3b26fa37708e7303d81671904...HEAD"
   ],
   "rollback": "Revertir por PR solo wrapper emd/ y registro de impacto de esta entrega, preservando atlas38ea095 y aportes concurrentes. Mantener endpoint existente, entrada Google normal, guards privados, enlaces personales, Sheets, respuestas e historial. No revertir datos ni reintentar escrituras. No integrar ni publicar hasta E2E del agente principal y revisión coordinada."
 }
