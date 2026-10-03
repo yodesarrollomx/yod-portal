@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.46-avatar-piloto",
+  "revision": "2026-10-03.45-emd-dominio-propio",
   "checked_at": "2026-10-03",
   "priorities": [
     "vender_mas",
@@ -4622,7 +4622,7 @@
       "id": "CON-EMD-GITHUB-EMBED",
       "from": "SYS-YOD-OS",
       "to": "SYS-EMD",
-      "label": "Propuesta: wrapper público mínimo del cuestionario Google en emd/",
+      "label": "Wrapper EMD en dominio GitHub propio; legado compatible",
       "kind": "embed",
       "status": "propuesto",
       "runtime_verified": false,
@@ -7381,54 +7381,26 @@
       "deployment": "Este PR integra sólo atlas/propuesta, pruebas y generador de enlaces por commit. Frontend coordinado en worktree aislado; backend adapter pendiente de PR consumidor y publicación separada. No product deploy, no escrituras de negocio, no cierre de Sala #35 por integrar documentación. Promoción futura: respaldo privado/relectura, backend compatible en misma implementación, después frontend, aceptación autenticada y registro independiente. Rollback de frontend/backend conserva Mi Corcho; futura migración Ops sólo endpoint/adapter con escritor único."
     },
     {
-      "id": "CHG-DESPACHO-AVATARES-001",
+      "id": "CHG-EMD-DOMINIO-045",
       "components": [
-        "SYS-YOD-OS",
-        "SYS-DESPACHO",
-        "SYS-TAREAS",
-        "GAS-OPERACION",
-        "GAS-PORTERO",
-        "STORE-DESPACHO-CORCHO",
-        "EXT-DRIVE"
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "SYS-YOD-OS"
       ],
-      "proposal": "Homologar la identidad de personas, expedientes y herramientas en un registro privado con alias confirmados; preparar una familia de personajes caricaturescos 3D con rostro, ropa, accesorios y animación articulada. Entregar módulo reutilizable y adaptador desacoplado para instalación por el agente del Despacho, conservando conversación, permisos y expediente canónico. Se desacopla una regresión histórica de Corcho del manifiesto del PR actual; los componentes de Corcho tienen impacto sólo de pruebas, sin cambios de backend.",
-      "status": "implementado_local",
-      "authorization": {
+      "proposal": "Entrada propia https://emd-evaluacion-360.github.io/ bajo organización EMD del propietario. Añadir origen exacto al handshake vigente; conservar el origen anterior para compatibilidad. Solo wrapper neutro público, sin cambios de tokens, ACL, RPC o Sheets.",
+      "status": "propuesto",
+      "approval": {
         "date": "2026-10-03",
-        "scope": "Propietario solicita mejora visual sustancial, homologación y relevo coordinado en GitHub. Preparar paquete e integración revisable; sin publicar datos privados ni reemplazar backend."
+        "scope": "Propietario exige quitar YoDesarrollo de toda la URL y creó organización emd-evaluacion-360."
       },
       "tests": [
-        "Identidades canónicas y alias: colisiones/ciclos rechazados; alias no crea doble residente.",
-        "Separación de identidad, apariencia y autorización; callbacks por entidad; dispose y revocación limpian figuras.",
-        "Rigs humano/robot/alma; sentado, caminando, hablando y saludando; presupuesto de geometría.",
-        "Revisión visual de familias y galería; navegación local, móvil y conservación de historial de ejemplo.",
-        "Regresiones del portal y atlas con datos sintéticos; cero escrituras de prueba en negocio."
+        "node scripts/arquitectura.cjs --check",
+        "npm test en EMD privado",
+        "git diff --check",
+        "CI de atlas y EMD; lectura de accesos reales sin guardar respuestas"
       ],
-      "deployment": "Módulo v3, adaptador y muestra sintética implementados en rama. Seis pruebas locales de geometría, identidad, historial, selección y revocación aprobadas. Pendientes montaje en office.js, carga de registro privado autorizado y validación de cada expediente en producción. No modifica el piloto de conversación existente.",
-      "rollback": "Revertir sólo el módulo y su uso visual por PR. Conservar IDs, aliases confirmados, expedientes, permisos e historial."
-    },
-    {
-      "id": "CHG-DESPACHO-AVATAR-PILOTO-001",
-      "components": [
-        "SYS-YOD-OS",
-        "SYS-DESPACHO",
-        "GAS-PORTERO",
-        "EXT-DRIVE"
-      ],
-      "proposal": "Montar un personaje del caso autorizado en la oficina y abrir su panel lateral con conversación, documentos y memoria leídos desde Sheets. Perfil visual opcional procedente del servidor privado; cero padrón público, sin cambiar cola, terminal, identidad ni registros del negocio.",
-      "status": "implementado_local",
-      "authorization": {
-        "date": "2026-10-03",
-        "scope": "Propietario solicita integrar el relevo completo y continuar el Despacho; backend se prepara para publicación por el propietario si no existe acceso de escritura."
-      },
-      "tests": [
-        "Perfil vinculado sólo al caso resuelto por servidor; respuesta tardía y revocación limpian identidad.",
-        "Una figura sin duplicado estático, raycast correcto, pausa por overlay/visibilidad/movimiento reducido.",
-        "Panel lateral y móvil, memoria/documentos con texto escapado y enlaces validados; misma conversación y relectura al abrir.",
-        "Regresiones completas del portal y navegador con transporte sintético; ninguna escritura de prueba en negocio."
-      ],
-      "deployment": "Integración del piloto implementada con perfil opcional autorizado, panel lateral, memoria/documentos de Sheets, cierre/reapertura y revocación. Pruebas sintéticas y verificadores locales; revisión de navegador y publicación frontend se registran al completar. Extensión privada r4 preparada y comprobada (102 pruebas); no guardada ni desplegada. Servidor anterior conserva conversación sin perfil visual. Aceptación real del avatar y rendimiento en Chromebook pendientes.",
-      "rollback": "Revertir frontend por PR; omitir campo avatar conserva conversación. No modificar ni restaurar datos de Sheets."
+      "deployment": "Organización y repositorio mínimo creados. Publicación y backend pendientes. Rollback: volver a GAS32 en implementación existente y wrapper anterior, preservando respuestas y accesos."
     }
   ],
   "data_contracts": [
@@ -8206,7 +8178,7 @@
         "Cada operación exige autorización fresca de servidor; el puente de navegador no sustituye Portero.",
         "Origen y ventana exactos, método permitido y época de sesión conservada. Credenciales sólo en adaptador autorizado del OS.",
         "Sin datos privados estáticos, sin almacenamiento local de conversaciones ni inferencia de guardado a partir del eco visual.",
-        "Cerrar el panel descarta historial, borradores y respuestas tardías; conserva únicamente el perfil visual autorizado mientras la oficina siga abierta. Toda reapertura relee Sheets. Cerrar la oficina o revocar acceso elimina también ese perfil.",
+        "Cierre o revocación descartan datos en memoria y respuestas tardías; toda reapertura relee Sheets.",
         "Un fallo de ACK conserva el mismo request_id para reconciliar, nunca encola con ID nuevo automáticamente.",
         "Sin adaptador verificado no se habilita envío. Pruebas sintéticas no acreditan conexión productiva."
       ]
@@ -8223,7 +8195,8 @@
       "input": [
         "Modo embed explícito del doGet existente; origen top autorizado https://yodesarrollomx.github.io",
         "Handshake versionado, nonce efímero y ready del frame Google activo; fragmento personal solo después de canal confirmado",
-        "Wrapper en https://yodesarrollomx.github.io/yod-portal/emd/, publicado por yod-portal main/raíz en PR separado"
+        "Wrapper en https://yodesarrollomx.github.io/yod-portal/emd/, publicado por yod-portal main/raíz en PR separado",
+        "CHG-EMD-DOMINIO-045: nueva entrada https://emd-evaluacion-360.github.io/; lista cerrada de este origen y https://yodesarrollomx.github.io por compatibilidad. Conservar source top, nonce y destinos exactos."
       ],
       "output": [
         "Cuestionario real fullscreen desde Google manteniendo dirección GitHub",
@@ -8232,38 +8205,12 @@
       "invariants": [
         "Wrapper público mínimo fullscreen de HTMLService real; URL GitHub persistente, sin redirección ni copia estática del cuestionario.",
         "doGet normal conserva XFrameOptions DEFAULT; únicamente embed explícito permite enmarcado con UI oculta y portalboot bloqueado hasta handshake.",
-        "Origen exacto https://yodesarrollomx.github.io, event.source igual a window.top en cliente embed y wrapper ejecutado solo como top; nonce criptográfico fresco, timeout, ready y confirmación antes del acceso.",
+        "Orígenes exactos https://yodesarrollomx.github.io y https://emd-evaluacion-360.github.io (CHG-EMD-DOMINIO-045), event.source igual a window.top en cliente embed y wrapper ejecutado solo como top; nonce criptográfico fresco, timeout, ready y confirmación antes del acceso.",
         "Wrapper fija origen Google efectivo y ventana del montaje activo incluso con frames HTMLService intermedios; validar esquema/estado/nonce y rechazar mensajes obsoletos. Nunca targetOrigin wildcard ni confianza por sufijo.",
         "Fragmento personal existente solo en memoria y canal confirmado; no tokens en query, iframe src, logs, analytics o almacenamiento del wrapper. Backend conserva autorización.",
         "google.script.run, tokens, ACL, CAS, idempotencia, Sheets, cierre y contratos EMD vigentes sin cambios. Sin preguntas o fuentes privadas en repo público.",
         "Hosting yod-portal main/raíz y ruta /yod-portal/emd/ confirmados por propietario; origen compartido GitHub no autentica pathname. Contrato de redirección anterior se conserva como historia y no satisface #9.",
         "Propuesta local previa; implementación EMD a cargo del agente principal. Tests del atlas no acreditan pruebas privadas, Pages o GAS desplegados."
-      ]
-    },
-    {
-      "id": "CTR-DESPACHO-AVATARES",
-      "components": [
-        "SYS-YOD-OS",
-        "SYS-DESPACHO"
-      ],
-      "source": "Petición explícita del propietario para homologar personajes y mejorar su calidad visual; coordinación con el agente que instala el Despacho.",
-      "input": [
-        "Perfiles privados autorizados: id canónico estable, aliases confirmados, entidad, tipo de avatar, apariencia y referencia de expediente.",
-        "Capa pública sólo recibe parámetros de dibujo y callback de selección; nunca obtiene credenciales, carga una hoja ni decide permisos.",
-        "Para el piloto, resolveCurrent devuelve avatar opcional unido a su case_id y nombre; sólo se monta tras validar también la lectura autorizada del expediente. Un servidor anterior sin avatar conserva conversación sin montar una figura privada."
-      ],
-      "output": [
-        "Personaje 3D articulado con identidad estable, apariencia modificable y estados visuales explícitos.",
-        "Selección devuelve exactamente el id autorizado al integrador; un cambio de forma conserva su relación con el expediente."
-      ],
-      "invariants": [
-        "No publicar padrón, nombres de clientes, IDs de hojas, conversaciones ni registros privados. Demostrador público utiliza identidades sintéticas.",
-        "Alias exige evidencia explícita; duplicados/ciclos y enlaces a identidades inexistentes se rechazan. Un contacto humano es distinto del expediente con su nombre.",
-        "La edad o figura visual no certifica avance del proyecto, codesarrollo, salud de conexión ni autoridad para actuar.",
-        "Conservar CTR-DESPACHO-CONVERSACION y CTR-DESPACHO-3D-SECTION; múltiples expedientes necesitan resolución y autorización de servidor, no extender resolveCurrent desde el cliente.",
-        "Al revocar o salir, eliminar modelos y datos efímeros. No usar localStorage para registros ni conversaciones de producción.",
-        "Instalación y aceptación de cada agente se verifican por separado; módulo dibujable no significa herramienta conectada.",
-        "Cerrar sólo el panel conserva el perfil mínimo, sin historial. La oficina comparte esa lectura con el panel, evita otro sondeo, usa placement fijo y no interpreta apariencia como progreso. Todo fallo de lectura o revocación borra perfil y mallas; OS desmonta el iframe al cambiar sesión."
       ]
     }
   ],
@@ -8702,40 +8649,6 @@
         "GAS-PORTERO",
         "STORE-DESPACHO-CORCHO",
         "EXT-DRIVE"
-      ]
-    },
-    {
-      "repo": "yodesarrollomx/yod-portal",
-      "prefix": "despacho3d/avatars/",
-      "components": [
-        "SYS-YOD-OS",
-        "SYS-DESPACHO"
-      ]
-    },
-    {
-      "repo": "yodesarrollomx/yod-portal",
-      "prefix": "tests/despacho-avatars.test.cjs",
-      "components": [
-        "SYS-YOD-OS",
-        "SYS-DESPACHO"
-      ]
-    },
-    {
-      "repo": "yodesarrollomx/yod-portal",
-      "prefix": "tests/despacho-authorized-profile.test.cjs",
-      "components": [
-        "SYS-YOD-OS",
-        "SYS-DESPACHO",
-        "GAS-PORTERO",
-        "EXT-DRIVE"
-      ]
-    },
-    {
-      "repo": "yodesarrollomx/yod-portal",
-      "prefix": "tests/despacho-avatar-office.test.cjs",
-      "components": [
-        "SYS-YOD-OS",
-        "SYS-DESPACHO"
       ]
     }
   ]

@@ -1,17 +1,15 @@
 {
-  "model_revision": "2026-10-03.46-avatar-piloto",
-  "proposal_id": "CHG-DESPACHO-AVATAR-PILOTO-001",
+  "model_revision": "2026-10-03.45-emd-dominio-propio",
+  "proposal_id": "CHG-EMD-DOMINIO-045",
   "components": [
     "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "GAS-PORTERO",
-    "EXT-DRIVE"
+    "SYS-EMD",
+    "GAS-EMD",
+    "SHEET-EMD"
   ],
-  "summary": "Montar un personaje del caso autorizado en la oficina y abrir su panel lateral con conversación, documentos y memoria leídos desde Sheets. Perfil visual opcional procedente del servidor privado; cero padrón público, sin cambiar cola, terminal, identidad ni registros del negocio.",
+  "summary": "Registrar dominio GitHub exclusivo EMD y compatibilidad exacta del handshake; publicación separada, datos privados conservados.",
   "contracts": [
-    "CTR-DESPACHO-AVATARES",
-    "CTR-DESPACHO-CONVERSACION",
-    "CTR-DESPACHO-3D-SECTION"
+    "CTR-DESPACHO-CORCHO"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -23,5 +21,5 @@
     "node scripts/verificar-impacto.cjs --base origin/main --repo yodesarrollomx/yod-portal",
     "git diff --check"
   ],
-  "rollback": "Revertir el montaje y panel de este PR; conservar el módulo visual, IDs, permisos, cola y expedientes. El servidor sin avatar sigue siendo compatible."
+  "rollback": "Revertir PR documental y regenerar vistas. Backend vuelve a versión32 en implementación existente, sin tocar datos ni accesos."
 }

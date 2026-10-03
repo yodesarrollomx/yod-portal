@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.46-avatar-piloto · 2026-10-03.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.45-emd-dominio-propio · 2026-10-03.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -391,7 +391,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Cada operación exige autorización fresca de servidor; el puente de navegador no sustituye Portero.
 - Origen y ventana exactos, método permitido y época de sesión conservada. Credenciales sólo en adaptador autorizado del OS.
 - Sin datos privados estáticos, sin almacenamiento local de conversaciones ni inferencia de guardado a partir del eco visual.
-- Cerrar el panel descarta historial, borradores y respuestas tardías; conserva únicamente el perfil visual autorizado mientras la oficina siga abierta. Toda reapertura relee Sheets. Cerrar la oficina o revocar acceso elimina también ese perfil.
+- Cierre o revocación descartan datos en memoria y respuestas tardías; toda reapertura relee Sheets.
 - Un fallo de ACK conserva el mismo request_id para reconciliar, nunca encola con ID nuevo automáticamente.
 - Sin adaptador verificado no se habilita envío. Pruebas sintéticas no acreditan conexión productiva.
 
@@ -399,29 +399,14 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 - Componentes: SYS-EMD, GAS-EMD, SHEET-EMD, SYS-YOD-OS.
 - Evidencia: Autorización del propietario del 2 de octubre de 2026 y plan EMD #9; propuesta local, no evidencia de despliegue. Detalle en emd-github-embed.md..
-- Entrada/campos: `Modo embed explícito del doGet existente; origen top autorizado https://yodesarrollomx.github.io`, `Handshake versionado, nonce efímero y ready del frame Google activo; fragmento personal solo después de canal confirmado`, `Wrapper en https://yodesarrollomx.github.io/yod-portal/emd/, publicado por yod-portal main/raíz en PR separado`.
+- Entrada/campos: `Modo embed explícito del doGet existente; origen top autorizado https://yodesarrollomx.github.io`, `Handshake versionado, nonce efímero y ready del frame Google activo; fragmento personal solo después de canal confirmado`, `Wrapper en https://yodesarrollomx.github.io/yod-portal/emd/, publicado por yod-portal main/raíz en PR separado`, `CHG-EMD-DOMINIO-045: nueva entrada https://emd-evaluacion-360.github.io/; lista cerrada de este origen y https://yodesarrollomx.github.io por compatibilidad. Conservar source top, nonce y destinos exactos.`.
 - Salida: Cuestionario real fullscreen desde Google manteniendo dirección GitHub, Entrada normal DEFAULT intacta y confirmaciones de backend existentes.
 
 - Wrapper público mínimo fullscreen de HTMLService real; URL GitHub persistente, sin redirección ni copia estática del cuestionario.
 - doGet normal conserva XFrameOptions DEFAULT; únicamente embed explícito permite enmarcado con UI oculta y portalboot bloqueado hasta handshake.
-- Origen exacto https://yodesarrollomx.github.io, event.source igual a window.top en cliente embed y wrapper ejecutado solo como top; nonce criptográfico fresco, timeout, ready y confirmación antes del acceso.
+- Orígenes exactos https://yodesarrollomx.github.io y https://emd-evaluacion-360.github.io (CHG-EMD-DOMINIO-045), event.source igual a window.top en cliente embed y wrapper ejecutado solo como top; nonce criptográfico fresco, timeout, ready y confirmación antes del acceso.
 - Wrapper fija origen Google efectivo y ventana del montaje activo incluso con frames HTMLService intermedios; validar esquema/estado/nonce y rechazar mensajes obsoletos. Nunca targetOrigin wildcard ni confianza por sufijo.
 - Fragmento personal existente solo en memoria y canal confirmado; no tokens en query, iframe src, logs, analytics o almacenamiento del wrapper. Backend conserva autorización.
 - google.script.run, tokens, ACL, CAS, idempotencia, Sheets, cierre y contratos EMD vigentes sin cambios. Sin preguntas o fuentes privadas en repo público.
 - Hosting yod-portal main/raíz y ruta /yod-portal/emd/ confirmados por propietario; origen compartido GitHub no autentica pathname. Contrato de redirección anterior se conserva como historia y no satisface #9.
 - Propuesta local previa; implementación EMD a cargo del agente principal. Tests del atlas no acreditan pruebas privadas, Pages o GAS desplegados.
-
-## CTR-DESPACHO-AVATARES
-
-- Componentes: SYS-YOD-OS, SYS-DESPACHO.
-- Evidencia: Petición explícita del propietario para homologar personajes y mejorar su calidad visual; coordinación con el agente que instala el Despacho..
-- Entrada/campos: `Perfiles privados autorizados: id canónico estable, aliases confirmados, entidad, tipo de avatar, apariencia y referencia de expediente.`, `Capa pública sólo recibe parámetros de dibujo y callback de selección; nunca obtiene credenciales, carga una hoja ni decide permisos.`, `Para el piloto, resolveCurrent devuelve avatar opcional unido a su case_id y nombre; sólo se monta tras validar también la lectura autorizada del expediente. Un servidor anterior sin avatar conserva conversación sin montar una figura privada.`.
-- Salida: Personaje 3D articulado con identidad estable, apariencia modificable y estados visuales explícitos., Selección devuelve exactamente el id autorizado al integrador; un cambio de forma conserva su relación con el expediente..
-
-- No publicar padrón, nombres de clientes, IDs de hojas, conversaciones ni registros privados. Demostrador público utiliza identidades sintéticas.
-- Alias exige evidencia explícita; duplicados/ciclos y enlaces a identidades inexistentes se rechazan. Un contacto humano es distinto del expediente con su nombre.
-- La edad o figura visual no certifica avance del proyecto, codesarrollo, salud de conexión ni autoridad para actuar.
-- Conservar CTR-DESPACHO-CONVERSACION y CTR-DESPACHO-3D-SECTION; múltiples expedientes necesitan resolución y autorización de servidor, no extender resolveCurrent desde el cliente.
-- Al revocar o salir, eliminar modelos y datos efímeros. No usar localStorage para registros ni conversaciones de producción.
-- Instalación y aceptación de cada agente se verifican por separado; módulo dibujable no significa herramienta conectada.
-- Cerrar sólo el panel conserva el perfil mínimo, sin historial. La oficina comparte esa lectura con el panel, evita otro sondeo, usa placement fijo y no interpreta apariencia como progreso. Todo fallo de lectura o revocación borra perfil y mallas; OS desmonta el iframe al cambiar sesión.
