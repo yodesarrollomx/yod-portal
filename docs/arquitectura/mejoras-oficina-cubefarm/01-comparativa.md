@@ -1,0 +1,42 @@
+# Comparativa con la referencia
+
+Corte YOD: `e1ae96e02efd4e6d45d77dfad14eefdc69d4a3ef`. Fuente visual: [NBZmxhcz5lo](https://www.youtube.com/watch?v=NBZmxhcz5lo). Las marcas son aproximadas y proceden de los fotogramas recuperados; no de una nueva reproducción con audio. «Existe» en esta tabla significa código inspeccionado, salvo indicación explícita de ejecución local.
+
+| ID | Referencia y evidencia | YOD en este corte | Cambio necesario y criterio de cierre |
+| --- | --- | --- | --- |
+| R01 | 01:00–01:15: oficina recorrible, agentes en puestos, nombres/tareas y resumen de actividad. | `despacho3d/office.js` presenta el edificio; `avatars/office-pilot.mjs` coloca un perfil autorizado, con estado visual `idle`. | Entrada cercana al trabajo, etiquetas y resumen derivados de eventos; varios puestos únicamente cuando el servidor autorice sus perfiles. Seleccionar avatar, puesto o tarea debe abrir la misma identidad. |
+| R02 | 01:45: consola con proveedor Claude/Codex/OpenCode, modelo, esfuerzo y límites de sesión. | No hay consola equivalente conectada al piloto. Tener un chat no acredita selección de motor. | Capacidades y configuración por adaptador. Cada opción debe producir una ejecución identificable con ese motor; las opciones sin instalación se muestran como no disponibles. |
+| R03 | 02:30: consola del director y resumen de la compañía. | Hay navegación YOD OS y expediente del caso; no un coordinador equivalente con resultados globales de los agentes. | Resumen autorizado de trabajos, bloqueos y entregas; instrucciones del director convertidas en encargos trazables. |
+| R04 | 03:25: teléfono lateral con CEO Chat, Hires, Company y Games. | El overlay reutiliza componentes de Cubefarm y ofrece conversación/expediente/tareas/actividad. No reproduce el recorrido de director, contratación y compañía. | Teléfono rápido para dirección y gestión; terminal y tablero conservan superficies amplias. Todas las acciones deben utilizar los mismos registros canónicos. |
+| R05 | 04:15: sala de espera y contratación de agentes con rol/modelo. | El perfil visible depende de `resolveCurrent`; no existe en este recorrido un catálogo de candidatos ni alta de trabajadores. | Flujo de habilitar agente con rol, herramientas, permisos y límite de ejecución. Solo aparece ocupado al existir una sesión autorizada. |
+| R06 | 04:45–05:00: pisos/proyectos y navegación por ascensor. | Existen áreas y fichas de la oficina, pero no equivalen a pisos con repositorios, tareas y trabajadores independientes. | Vincular área/proyecto con su ámbito de trabajo autorizado y filtrar sus tareas, terminales y entregas. Conservar navegación «Áreas» y «Ver todo». |
+| R07 | 05:15–05:30: terminal interactiva con controles del agente y «Latest Playwright screenshot». | `TerminalPanel.tsx` y el puente local PTY existen; se descubren mediante «Diagnóstico». No hay panel conectado de última captura de navegador. | Aplicar parche 001 y después agregar captura con fecha, revisión y tarea. Cambiar de pestaña no debe crear otra sesión. Una captura no se rotula como navegador en vivo. |
+| R08 | 07:15–08:00: tablero Backlog / In progress / In QA / Ready to merge / Merged. | `DurableGoalsPanel.tsx` muestra metas/tareas como lista. `goals.mjs` no define esos cinco estados ni revisión independiente. El `KanbanView.tsx` original está conservado, pero no montado como tablero operativo. | Tablero compartido con cinco etapas respaldadas por el servidor, filtros y contadores; sin cambios de columna ficticios en el navegador. |
+| R09 | 07:30–08:30: tarjetas con responsables, avance y accesos a terminal, reporte, vista previa y PR. | Las tareas de metas contienen título, criterio, estado, resumen y referencias de evidencia. No contienen asignación, revisión ni entrega como entidades propias. | Añadir un contrato versionado de tareas y adaptadores; desde cada tarjeta abrir su agente, evidencia y entrega correctos. |
+| R10 | 08:00–08:30: revisión QA, comandos/pruebas, hallazgos y devolución al ejecutor. | `reviewGoal('approve')` es una revisión de meta; no acredita QA independiente ni rondas de reparación. | Revisor identificado, informe para la revisión exacta del artefacto y devolución con hallazgos. Fallar una prueba impide aprobar esa entrega. |
+| R11 | 08:45–09:15: paso a integración condicionado por QA y comprobaciones GitHub. | El piloto no tiene este circuito enlazado desde sus tareas. Los checks del propio repositorio son un mecanismo distinto. | Para trabajo de código, revisión y checks sobre el SHA entregado. Para negocio, conservar la autorización humana y las reglas vigentes del proceso. Terminar una respuesta o meta no cierra un proyecto comercial. |
+| R12 | 09:45–10:00: vista previa de la aplicación con iniciar/reiniciar/detener/recargar y escritorio/teléfono. | No hay `AppViewer` operativo conectado al expediente. El iframe de la oficina no es una vista previa de una entrega. | Vista previa por trabajo/revisión con estado de proceso, dirección válida para el usuario y acceso desde la tarjeta. Separarla de la captura estática de R07. |
+| R13 | 10:15 y posteriores: minijuegos y objetos interactivos. | El recorrido YOD inspeccionado no ofrece el conjunto equivalente. | Recreación aislada del trabajo, activable por preferencia y accesible desde el teléfono. Se implementa después del circuito operativo, pero sigue dentro del mínimo solicitado. |
+| R14 | 13:15–14:30: configuración inicial, origen del proyecto y recorrido guiado de nueve pasos. | Ayuda textual de navegación; además contiene afirmaciones desactualizadas sobre terminal/tareas/voz. | Guía de inicio y recorrido por puesto, conversación, tareas, terminal, revisión y entregas. Rutas distintas para repositorio de software y expediente de negocio. |
+| R15 | Continuidad de sesiones: respaldada por la arquitectura del código original (`ptyHost.ts`, `swarm.ts` y almacenamiento), no demostrable con un fotograma aislado. | Existen persistencia de conversación/metas y terminal local. La documentación recoge pruebas anteriores; esta revisión no volvió a comprobar reinicios reales ni disponibilidad continua. | Cerrar panel, recargar, cortar conexión y reiniciar worker en un entorno de ensayo: recuperar la misma tarea/sesión, resultado único y estado verificable. Medir disponibilidad por entorno, sin inferir 24/7 de un indicador verde. |
+
+## Capacidades que ya hay que reconocer
+
+- **Conversación y expediente:** `despacho-agents/Agents.tsx`, transporte autorizado del OS y registros en Sheets. Su existencia no acredita una plantilla multiagente.
+- **Metas durables:** `DurableGoalsPanel.tsx` y `despacho3d/goals.mjs` usan `readGoals`, `createGoal` y `reviewGoal` cuando `selection.goals.ready` lo habilita. El alcance vigente es `local_analysis_v1`, con hasta ocho tareas y ocho evidencias por meta. No describirlas como simples decisiones locales ni como Kanban terminado.
+- **Terminal local:** `TerminalPanel.tsx`, `despacho3d/terminal-link.mjs` y `despacho-runtime/source/terminal-local/`. La interfaz y el runtime existen; la conexión desde el dispositivo del usuario requiere su instalación y emparejamiento. Esta revisión no inició una sesión real en ese dispositivo.
+- **Voz:** `VoiceControls.tsx` y `despacho3d/conversation-voice.mjs` incluyen dictado y lectura de la respuesta guardada. El dictado prepara texto; el envío sigue siendo explícito. La disponibilidad depende del navegador y sus permisos, y no se comprobó aquí con micrófono real.
+
+## Fuentes de código para adaptar
+
+En [Cubefarm `11237cf`](https://github.com/leonvanzyl/cubefarm/tree/11237cf554f21312a2aecd9758d611f2817fc71e):
+
+| Función | Punto de lectura |
+| --- | --- |
+| Puesto y terminal | `client/src/ui/TerminalView.tsx`, `LiveTerminal.tsx`, `server/terminal.ts`, `server/ptyHost.ts` |
+| Tablero y revisión | `client/src/ui/KanbanView.tsx`, `server/swarm.ts`, `server/mergeGate.ts`, `shared/types.ts` |
+| Aplicación en ejecución | `client/src/ui/AppViewer.tsx`, `server/previews.ts`, `server/previewRunner.ts` |
+| Teléfono y coordinación | `client/src/ui/Phone.tsx`, `ManagerConsole.tsx`, `server/ceo.ts` |
+| Inicio, navegación y juegos | `SetupWizard.tsx`, `Tutorial.tsx`, `ElevatorPanel.tsx`, `client/src/ui/games/` |
+
+Adaptar el contrato y el ciclo de vida de cada componente antes de montarlo. Copiar JSX sin su estado, procesos y persistencia deja una interfaz incompleta. GitHub Pages sirve el frontend; el servidor Node/PTY y los procesos de vista previa necesitan un runtime separado.
