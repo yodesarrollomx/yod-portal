@@ -1,18 +1,15 @@
 {
-  "model_revision": "2026-10-03.44-corcho-provisional-035",
-  "proposal_id": "CHG-DESPACHO-CORCHO-PROVISIONAL-035",
+  "model_revision": "2026-10-03.45-avatares-caracter",
+  "proposal_id": "CHG-DESPACHO-AVATARES-001",
   "components": [
     "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "SYS-TAREAS",
-    "GAS-OPERACION",
-    "GAS-PORTERO",
-    "STORE-DESPACHO-CORCHO",
-    "EXT-DRIVE"
+    "SYS-DESPACHO"
   ],
-  "summary": "Registrar provisional Sala #35 en Portero V57 existente, routing exclusivo de Corcho, auth owner exacto con DP y full guard Drive, Mi Corcho privado preparado, migración Ops sólo endpoint/adapter y rollback sin borrar Sheet. Atlas sin despliegue de producto.",
+  "summary": "Homologar la identidad de personas, expedientes y herramientas en un registro privado con alias confirmados; preparar una familia de personajes caricaturescos 3D con rostro, ropa, accesorios y animación articulada. Entregar módulo reutilizable y adaptador desacoplado para instalación por el agente del Despacho, conservando conversación, permisos y expediente canónico.",
   "contracts": [
-    "CTR-DESPACHO-CORCHO"
+    "CTR-DESPACHO-AVATARES",
+    "CTR-DESPACHO-CONVERSACION",
+    "CTR-DESPACHO-3D-SECTION"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -24,5 +21,5 @@
     "node scripts/verificar-impacto.cjs --base origin/main --repo yodesarrollomx/yod-portal",
     "git diff --check"
   ],
-  "rollback": "Revertir PR atlas. En consumidores: frontend a versión anterior por PR, backend a versión anterior respaldada en misma implementación Portero conservando editor concurrente y URL; preservar Sheet, notas, ejes, IDs, versiones, ACL e historial. No product deploy desde atlas."
+  "rollback": "Revertir sólo el módulo y su uso visual por PR. Conservar IDs, aliases confirmados, expedientes, permisos e historial."
 }

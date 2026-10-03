@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.44-corcho-provisional-035 · 2026-10-03.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.45-avatares-caracter · 2026-10-03.
 
 ## SYS-DESPACHO · El Despacho
 

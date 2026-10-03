@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.44-corcho-provisional-035",
+  "revision": "2026-10-03.45-avatares-caracter",
   "checked_at": "2026-10-03",
   "priorities": [
     "vender_mas",
@@ -7379,6 +7379,28 @@
         "node scripts/arquitectura.cjs --check; node --test tests/*.cjs; node verify-os.cjs; node verify-portal.cjs; node verify-accesos.cjs; node verify-obra-app.cjs; node scripts/verificar-impacto.cjs; git diff --check"
       ],
       "deployment": "Este PR integra sólo atlas/propuesta, pruebas y generador de enlaces por commit. Frontend coordinado en worktree aislado; backend adapter pendiente de PR consumidor y publicación separada. No product deploy, no escrituras de negocio, no cierre de Sala #35 por integrar documentación. Promoción futura: respaldo privado/relectura, backend compatible en misma implementación, después frontend, aceptación autenticada y registro independiente. Rollback de frontend/backend conserva Mi Corcho; futura migración Ops sólo endpoint/adapter con escritor único."
+    },
+    {
+      "id": "CHG-DESPACHO-AVATARES-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ],
+      "proposal": "Homologar la identidad de personas, expedientes y herramientas en un registro privado con alias confirmados; preparar una familia de personajes caricaturescos 3D con rostro, ropa, accesorios y animación articulada. Entregar módulo reutilizable y adaptador desacoplado para instalación por el agente del Despacho, conservando conversación, permisos y expediente canónico.",
+      "status": "implementado_local",
+      "authorization": {
+        "date": "2026-10-03",
+        "scope": "Propietario solicita mejora visual sustancial, homologación y relevo coordinado en GitHub. Preparar paquete e integración revisable; sin publicar datos privados ni reemplazar backend."
+      },
+      "tests": [
+        "Identidades canónicas y alias: colisiones/ciclos rechazados; alias no crea doble residente.",
+        "Separación de identidad, apariencia y autorización; callbacks por entidad; dispose y revocación limpian figuras.",
+        "Rigs humano/robot/alma; sentado, caminando, hablando y saludando; presupuesto de geometría.",
+        "Revisión visual de familias y galería; navegación local, móvil y conservación de historial de ejemplo.",
+        "Regresiones del portal y atlas con datos sintéticos; cero escrituras de prueba en negocio."
+      ],
+      "deployment": "Módulo v3, adaptador y muestra sintética implementados en rama. Seis pruebas locales de geometría, identidad, historial, selección y revocación aprobadas. Pendientes montaje en office.js, carga de registro privado autorizado y validación de cada expediente en producción. No modifica el piloto de conversación existente.",
+      "rollback": "Revertir sólo el módulo y su uso visual por PR. Conservar IDs, aliases confirmados, expedientes, permisos e historial."
     }
   ],
   "data_contracts": [
@@ -8189,6 +8211,30 @@
         "Hosting yod-portal main/raíz y ruta /yod-portal/emd/ confirmados por propietario; origen compartido GitHub no autentica pathname. Contrato de redirección anterior se conserva como historia y no satisface #9.",
         "Propuesta local previa; implementación EMD a cargo del agente principal. Tests del atlas no acreditan pruebas privadas, Pages o GAS desplegados."
       ]
+    },
+    {
+      "id": "CTR-DESPACHO-AVATARES",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ],
+      "source": "Petición explícita del propietario para homologar personajes y mejorar su calidad visual; coordinación con el agente que instala el Despacho.",
+      "input": [
+        "Perfiles privados autorizados: id canónico estable, aliases confirmados, entidad, tipo de avatar, apariencia y referencia de expediente.",
+        "Capa pública sólo recibe parámetros de dibujo y callback de selección; nunca obtiene credenciales, carga una hoja ni decide permisos."
+      ],
+      "output": [
+        "Personaje 3D articulado con identidad estable, apariencia modificable y estados visuales explícitos.",
+        "Selección devuelve exactamente el id autorizado al integrador; un cambio de forma conserva su relación con el expediente."
+      ],
+      "invariants": [
+        "No publicar padrón, nombres de clientes, IDs de hojas, conversaciones ni registros privados. Demostrador público utiliza identidades sintéticas.",
+        "Alias exige evidencia explícita; duplicados/ciclos y enlaces a identidades inexistentes se rechazan. Un contacto humano es distinto del expediente con su nombre.",
+        "La edad o figura visual no certifica avance del proyecto, codesarrollo, salud de conexión ni autoridad para actuar.",
+        "Conservar CTR-DESPACHO-CONVERSACION y CTR-DESPACHO-3D-SECTION; múltiples expedientes necesitan resolución y autorización de servidor, no extender resolveCurrent desde el cliente.",
+        "Al revocar o salir, eliminar modelos y datos efímeros. No usar localStorage para registros ni conversaciones de producción.",
+        "Instalación y aceptación de cada agente se verifican por separado; módulo dibujable no significa herramienta conectada."
+      ]
     }
   ],
   "path_ownership": [
@@ -8626,6 +8672,22 @@
         "GAS-PORTERO",
         "STORE-DESPACHO-CORCHO",
         "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/avatars/",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-avatars.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
       ]
     }
   ]
