@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-03.41-despacho-espera",
+  "model_revision": "2026-10-03.42-despacho-memoria",
   "proposal_id": "CHG-DESPACHO-CONVERSACION-001",
   "components": [
     "SYS-YOD-OS",
@@ -7,7 +7,7 @@
     "GAS-PORTERO",
     "EXT-DRIVE"
   ],
-  "summary": "Optimizar seguimiento común de conversación: lecturas secuenciales, pausa al ocultar la pestaña, menos consultas tras los primeros 30 segundos y aviso explícito después de tres minutos. Registrar matriz de capacidades de Cubefarm y estado real de integración por agente; preservar aportes EMD.",
+  "summary": "Conciliar evidencia: segundo turno auténtico con memoria desde la sala, persistencia y coincidencia visual. Registrar mejora privada de lecturas agrupadas como preparada y no desplegada; mantener servicio permanente y capacidades restantes pendientes.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
