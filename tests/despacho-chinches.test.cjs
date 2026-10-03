@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const bridgeSource = fs.readFileSync(require.resolve('../os/despacho-chinches.js'),'utf8');
 const chincheSource = fs.readFileSync(require.resolve('../chinche.js'),'utf8');
-const CHILD = 'https://yod-despacho-revision-bloque-1.sayri-fraijo.chatgpt.site';
+const CHILD = 'https://yodesarrollomx.github.io';
 const ID = '84a1d4c3-b1a2-4f67-85dc-5d941f3ca900';
 function pin(index = 0) {
   return { type:'yod:despacho:pin', version:1, requestId:ID.slice(0,-3)+index.toString(16).padStart(3,'0'),
@@ -18,7 +18,7 @@ function deferred() { let resolve;const promise = new Promise(r=>{resolve=r;});r
 function harness() {
   const listeners = new Map(), posts=[], calls=[], cancelled=[];
   let enabled=true, epoch=1, frame={ postMessage:(payload,origin)=>posts.push({payload,origin}) };
-  const window={ addEventListener:(type,fn)=>listeners.set(type,fn), removeEventListener:(type,fn)=>{if(listeners.get(type)===fn)listeners.delete(type);},
+  const window={ location:{origin:CHILD}, addEventListener:(type,fn)=>listeners.set(type,fn), removeEventListener:(type,fn)=>{if(listeners.get(type)===fn)listeners.delete(type);},
     YODChinche:{ anotar:async options=>{calls.push(options);return {cancel:()=>cancelled.push(true)};} } };
   const context=vm.createContext({window});vm.runInContext(bridgeSource,context);
   const api=window.YodDespachoChinches;
@@ -31,9 +31,19 @@ test('Trusted hello returns only protocol metadata; other origin/window/auth rec
   const h=harness();await h.hello();assert.deepEqual(JSON.parse(JSON.stringify(h.posts)),[{payload:{type:'yod:despacho:ready',version:1},origin:CHILD}]);
   h.posts.length=0;
   await h.emit({type:'yod:despacho:hello',version:1},{origin:'https://forged.invalid'});
+  await h.emit({type:'yod:despacho:hello',version:1},{origin:'https://yod-despacho-revision-bloque-1.sayri-fraijo.chatgpt.site'});
   await h.emit({type:'yod:despacho:hello',version:1},{source:{postMessage(){throw Error('forged');}}});
   await h.emit({type:'yod:despacho:hello',version:1,token:'synthetic-secret'});
   h.setEnabled(false);await h.hello();assert.equal(h.posts.length,0);
+});
+test('Bridge follows the portal origin without a wildcard or a remote ChatGPT site',async()=>{
+  const listeners=new Map(),posts=[],frame={postMessage:(payload,origin)=>posts.push({payload,origin})};
+  const window={location:{origin:'http://localhost:8787'},addEventListener:(type,fn)=>listeners.set(type,fn),removeEventListener(){}};
+  vm.runInContext(bridgeSource,vm.createContext({window}));
+  window.YodDespachoChinches.bindDespachoChinches({isAuthorized:()=>true,getIframeWindow:()=>frame});
+  await listeners.get('message')({data:{type:'yod:despacho:hello',version:1},origin:'http://localhost:8787',source:frame});
+  assert.equal(posts.length,1);assert.equal(posts[0].origin,'http://localhost:8787');
+  assert.doesNotMatch(bridgeSource,/chatgpt\.site|postMessage\([^\n]*['"]\*['"]/);
 });
 test('Strict schema rejects private fields, mismatched IDs, malformed geometry and oversized values',()=>{
   const h=harness();assert.equal(h.api.validPin(pin()),true);

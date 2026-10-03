@@ -903,7 +903,7 @@
       if(a&&!soltar)soltar=trapFocus(lateral);
       if(!a&&soltar){soltar();soltar=null;if(disparador&&disparador.focus)disparador.focus();disparador=null;}
     }
-    if(window.matchMedia&&window.matchMedia('(max-width:900px)').matches){var seen=false;try{seen=sessionStorage.getItem('yod_drawer_seen')==='1';}catch(e){}if(!seen){shell.classList.add('nav-open');try{sessionStorage.setItem('yod_drawer_seen','1');}catch(e){}}}
+    if(location.hash!=='#/despacho'&&window.matchMedia&&window.matchMedia('(max-width:900px)').matches){var seen=false;try{seen=sessionStorage.getItem('yod_drawer_seen')==='1';}catch(e){}if(!seen){shell.classList.add('nav-open');try{sessionStorage.setItem('yod_drawer_seen','1');}catch(e){}}}
     sync();
     function closeNav(){shell.classList.remove('nav-open');sync();}
     if(burger)burger.addEventListener('click',function(){disparador=burger;shell.classList.toggle('nav-open');sync();});

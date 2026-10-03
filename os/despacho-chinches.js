@@ -1,9 +1,9 @@
-/* Geometric requests from the private office open the existing human composer.
+/* Geometric requests from the same-origin office open the existing human composer.
    No credentials, business records, captures or submission cross this bridge. */
 (function (root) {
   'use strict';
   if (root.YodDespachoChinches) return;
-  var CHILD_ORIGIN = 'https://yod-despacho-revision-bloque-1.sayri-fraijo.chatgpt.site';
+  var CHILD_ORIGIN = root.location.origin;
   var ZONES = ['editing','editorial','funnel','entry','reception','patio','potential','case','projects','delivery','decisions','lounge'];
   var MAX_REQUESTS = 200;
   function keys(value, expected) {

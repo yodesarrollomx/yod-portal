@@ -1,0 +1,49 @@
+#cubefarm-agents{--ink:#263d40;--paper:#faf7f0;--muted:#65706a;--good:#b69a65;--accent:#bca477;--font:Arial,Helvetica,sans-serif;--mono:Consolas,monospace;font-family:var(--font);color:var(--ink);font-size:16px}
+#cubefarm-agents .overlay{z-index:40;background:#12252d73;backdrop-filter:blur(3px);padding:max(14px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+#cubefarm-agents .panel{border:1px solid #c0aa81;border-radius:18px;box-shadow:0 20px 80px #0c22264d;max-height:calc(100dvh - 40px)}
+#cubefarm-agents .panel-head{background:#e8dfcf;border-bottom:1px solid #c0aa8170;min-height:64px}
+#cubefarm-agents .panel-x{min-width:44px;min-height:44px;border:1px solid #bba887;border-radius:10px;background:#faf7f0;color:#263d40;font-size:24px}
+#cubefarm-agents .phone{width:min(430px,100%);height:min(790px,calc(100dvh - 42px));border:1px solid #c0aa81;background:#20343c;box-shadow:0 22px 80px #0c222670,inset 0 0 0 2px #41534f;padding:10px 10px 12px}
+#cubefarm-agents .phone-status{color:#eee8dc;padding:0 6px 8px;font-size:14px}
+#cubefarm-agents .phone-notch{background:#10242b}
+#cubefarm-agents .phone-status .panel-x{background:#20343c;color:#eee8dc;border-color:#607069}
+#cubefarm-agents .chat-head{padding:16px 14px;gap:10px;border-bottom:1px solid #ddd5c7}
+#cubefarm-agents .avatar{border:1px solid #bba887;background:#315055;width:40px;height:40px}
+#cubefarm-agents .connection-label{border:1px solid #cfbb95;background:#efe5d1;color:#765e31;padding:6px 8px;border-radius:7px;font-size:14px}
+#cubefarm-agents .phone-empty{padding:14px 7px;line-height:1.6;font-size:16px}
+#cubefarm-agents .chat-log{background:#eee9df}
+#cubefarm-agents .btn{min-height:46px;border:1px solid #b39d75;border-radius:8px;box-shadow:none;font-size:15px;padding:12px 14px;white-space:normal;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;text-align:center}
+#cubefarm-agents .btn:hover:not(:disabled){box-shadow:none;transform:none;background:#e8dfce}
+#cubefarm-agents .btn-good{background:#263d40;color:#faf7f0;border-color:#263d40}
+#cubefarm-agents .btn:disabled,#cubefarm-agents textarea:disabled{opacity:.55;cursor:not-allowed}
+#cubefarm-agents .chat-input{border-top:1px solid #ded5c5;padding:12px;gap:8px;flex-shrink:0}
+#cubefarm-agents .msg-box{font-family:var(--font);font-size:16px;min-height:48px;border:1px solid #b5baae;box-shadow:none;border-radius:8px;background:#f9f6ef;min-width:0}
+#cubefarm-agents .phone-tabs{background:#20343c;padding:8px 4px;gap:6px;flex-shrink:0}
+#cubefarm-agents .phone-tab{font-size:14px;min-height:58px;color:#e1dbcb}
+#cubefarm-agents .phone-tab-on{background:#415751;color:#fff}
+#cubefarm-agents .phone-hint{font-size:12px;color:#dad4c6;padding:8px 4px 0}
+#cubefarm-agents .phone-hint a{color:inherit}
+#cubefarm-agents .attribution-close{border:0;background:none;color:inherit;min-height:32px;font-size:12px;cursor:pointer;padding:0 5px}
+#cubefarm-agents .small{font-size:14px}
+#cubefarm-agents .term{font-size:15px;background:#172e35;border:1px solid #49615c;border-radius:10px;min-height:240px}
+#cubefarm-agents .term-line{margin-bottom:14px}
+#cubefarm-agents .term-system{color:#d9c79f}
+#cubefarm-agents .chip{font-size:14px;border-width:1px;background:#ece4d5}
+#cubefarm-agents .kcol{border:1px solid #c6bda9;border-radius:12px;background:#eee9de}
+#cubefarm-agents .kcol-head{border-bottom:1px solid #c6bda9;font-size:16px;background:#dcd1bb}
+#cubefarm-agents .kcol-progress .kcol-head{background:#d7dfd7}
+#cubefarm-agents .kcol-qa .kcol-head{background:#eee0c9}
+#cubefarm-agents .kcol-review .kcol-head{background:#cfddd1}
+#cubefarm-agents .count{font-size:14px;border-width:1px}
+#cubefarm-agents .kcard{border:1px solid #c6bda9;box-shadow:none;border-radius:8px}
+#cubefarm-agents .kcard-title{font-size:16px}
+#cubefarm-agents .kanban{min-height:260px;grid-template-columns:repeat(4,minmax(210px,1fr))}
+#cubefarm-agents :focus-visible{outline:3px solid #a88a4d;outline-offset:3px}
+header #agents-open{min-height:44px;background:#263d40;color:#faf7f0;border:1px solid #bc9f6d;border-radius:4px;padding:9px 16px;font-size:15px;margin-left:auto}
+@media(max-width:700px){header{gap:8px;padding-left:12px;padding-right:12px}header .brand img{width:min(120px,30vw)}header .reference{display:inline-flex;margin-left:0;max-width:88px;white-space:normal;font-size:14px;line-height:1.25}header #agents-open{padding:8px 12px}.bottom nav{max-width:100%}#cubefarm-agents .phone-overlay{place-items:center}#cubefarm-agents .phone{height:calc(100dvh - 36px);width:100%;max-width:430px}#cubefarm-agents .panel-wide{height:calc(100dvh - 40px)}#cubefarm-agents .panel-body{padding:12px}#cubefarm-agents .panel-title{white-space:normal;font-size:18px}#cubefarm-agents .term-meta{font-size:15px}#cubefarm-agents .kanban{display:flex;overflow:auto;scroll-snap-type:x proximity}#cubefarm-agents .kcol{flex:0 0 86%;scroll-snap-align:start}#cubefarm-agents .phone-notch{width:64px}}
+@media(prefers-reduced-motion:reduce){#cubefarm-agents *,#cubefarm-agents *::before,#cubefarm-agents *::after{animation:none!important;transition:none!important}}
+
+#cubefarm-agents .kcol-backlog .kcol-head{background:#dcd1bb}
+#cubefarm-agents .panel>.phone-hint{background:#20343c;padding:9px 4px;color:#e1dbcb}
+
+#cubefarm-agents .drive-choice{padding:16px;background:#f7f4ec;display:grid;gap:10px;max-height:55dvh;overflow:auto;border-top:1px solid #cbbb9b}#cubefarm-agents .drive-choice label{display:grid;gap:4px;font-size:14px}#cubefarm-agents .drive-choice input{font:inherit;border:1px solid #a89982;padding:10px;min-width:0;width:100%;color:#20343c;background:white}
