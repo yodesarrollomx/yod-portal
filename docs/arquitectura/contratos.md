@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.37-despacho-conexion · 2026-10-02.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.38-despacho-diagnostico · 2026-10-02.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 

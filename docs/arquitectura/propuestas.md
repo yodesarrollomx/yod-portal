@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.37-despacho-conexion · 2026-10-02.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.38-despacho-diagnostico · 2026-10-02.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 

@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-03.37-despacho-conexion",
+  "model_revision": "2026-10-03.38-despacho-diagnostico",
   "proposal_id": "CHG-DESPACHO-CONVERSACION-001",
   "components": [
     "SYS-YOD-OS",
@@ -7,7 +7,7 @@
     "GAS-PORTERO",
     "EXT-DRIVE"
   ],
-  "summary": "Conectar el panel al Portero existente con POST autenticado, expediente privado e historial durable. Servidor publicado manualmente y motor autenticado vinculado; publicar el cliente para aceptación desde la sala. Incorporar la propuesta EMD concurrente conservando sus reglas y contratos. Disponibilidad permanente del worker pendiente.",
+  "summary": "Diagnosticar el fallo real al cargar el expediente: propagar solo códigos permitidos entre transporte y marco y mostrar orientación concreta. No cambiar permisos ni operaciones de escritura. Conservar los contratos EMD concurrentes.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
