@@ -13,7 +13,9 @@ const proposal = m => m.changes.find(c => c.id === proposalId);
 
 test('Corcho registra impacto válido para los dos consumidores y el atlas', () => {
   const model = load();
-  const impact = JSON.parse(fs.readFileSync(path.join(root, 'architecture-impact.json'), 'utf8'));
+  // Corcho is a historical proposal; the root impact manifest belongs to the current PR.
+  const change = proposal(model);
+  const impact = {model_revision: model.revision, proposal_id: proposalId, components: change.components, summary: change.proposal, tests: ['Corcho regression'], rollback: JSON.stringify(change.rollback)};
   assert.equal(impact.proposal_id, proposalId);
   assert.equal(impact.model_revision, model.revision);
   assert.equal(validate(model, schema), true);

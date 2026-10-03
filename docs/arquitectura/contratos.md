@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.44-corcho-provisional-035 · 2026-10-03.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.45-avatares-caracter · 2026-10-03.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -410,3 +410,17 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - google.script.run, tokens, ACL, CAS, idempotencia, Sheets, cierre y contratos EMD vigentes sin cambios. Sin preguntas o fuentes privadas en repo público.
 - Hosting yod-portal main/raíz y ruta /yod-portal/emd/ confirmados por propietario; origen compartido GitHub no autentica pathname. Contrato de redirección anterior se conserva como historia y no satisface #9.
 - Propuesta local previa; implementación EMD a cargo del agente principal. Tests del atlas no acreditan pruebas privadas, Pages o GAS desplegados.
+
+## CTR-DESPACHO-AVATARES
+
+- Componentes: SYS-YOD-OS, SYS-DESPACHO.
+- Evidencia: Petición explícita del propietario para homologar personajes y mejorar su calidad visual; coordinación con el agente que instala el Despacho..
+- Entrada/campos: `Perfiles privados autorizados: id canónico estable, aliases confirmados, entidad, tipo de avatar, apariencia y referencia de expediente.`, `Capa pública sólo recibe parámetros de dibujo y callback de selección; nunca obtiene credenciales, carga una hoja ni decide permisos.`.
+- Salida: Personaje 3D articulado con identidad estable, apariencia modificable y estados visuales explícitos., Selección devuelve exactamente el id autorizado al integrador; un cambio de forma conserva su relación con el expediente..
+
+- No publicar padrón, nombres de clientes, IDs de hojas, conversaciones ni registros privados. Demostrador público utiliza identidades sintéticas.
+- Alias exige evidencia explícita; duplicados/ciclos y enlaces a identidades inexistentes se rechazan. Un contacto humano es distinto del expediente con su nombre.
+- La edad o figura visual no certifica avance del proyecto, codesarrollo, salud de conexión ni autoridad para actuar.
+- Conservar CTR-DESPACHO-CONVERSACION y CTR-DESPACHO-3D-SECTION; múltiples expedientes necesitan resolución y autorización de servidor, no extender resolveCurrent desde el cliente.
+- Al revocar o salir, eliminar modelos y datos efímeros. No usar localStorage para registros ni conversaciones de producción.
+- Instalación y aceptación de cada agente se verifican por separado; módulo dibujable no significa herramienta conectada.
