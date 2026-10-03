@@ -1,18 +1,12 @@
 {
-  "model_revision": "2026-10-03.50-metas-durables",
-  "proposal_id": "CHG-DESPACHO-METAS-DURABLES-001",
+  "model_revision": "2026-10-03.51-emd-encabezado-avance",
+  "proposal_id": "CHG-EMD-ENCABEZADO-046",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "GAS-PORTERO",
-    "EXT-DRIVE"
+    "SYS-EMD",
+    "GAS-EMD",
+    "SHEET-EMD"
   ],
-  "summary": "Conversación única como entrada principal, recuperación automática tras fallos temporales sin borrar el historial visible ni repetir mensajes, dictado y lectura de respuestas con capacidades del navegador. Terminal queda como diagnóstico opcional. Base separada de metas/tareas/evidencias en Sheets, habilitada sólo cuando backend la acredita; motor permanente y transmisión progresiva requieren verificación aparte.",
-  "contracts": [
-    "CTR-DESPACHO-CONVERSACION",
-    "CTR-DESPACHO-AVATARES",
-    "CTR-DESPACHO-TERMINAL-LOCAL"
-  ],
+  "summary": "Registrar cambio visual EMD en encabezado con porcentaje único y tierra ampliada; contratos existentes intactos.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -20,8 +14,7 @@
     "node verify-portal.cjs",
     "ACCESOS_REF=3ee8ca50bf14ef17d95e72523e54506eb996f262 node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "node scripts/verificar-impacto.cjs --base origin/main --repo yodesarrollomx/yod-portal",
     "git diff --check"
   ],
-  "rollback": "Revertir frontend y backend de la misma implementación; conservar pestañas de metas, recibos, workspace, vínculo y checkpoints. No reiniciar tareas inciertas."
+  "rollback": "Revertir registro; EMD vuelve a GAS33 en misma implementación sin restaurar datos."
 }
