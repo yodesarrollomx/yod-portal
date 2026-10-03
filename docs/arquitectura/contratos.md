@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.34-despacho-github-directo · 2026-10-02.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.35-emd-escala-039 · 2026-10-02.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -355,3 +355,21 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Cada borrador 3D conserva un guard efímero de ventana y sesión vigentes; al salir o invalidar autorización se cierra el compositor y se cancela su guard. Tras recargar o cambiar persona no se autoenvía un borrador 3D antiguo; su exportación manual conserva el contexto. Las Chinches generales mantienen su comportamiento existente.
 - Sólo copiar interfaz, modelos y recursos visuales neutros al repositorio público. Datos, memoria, documentos, nombres de casos e identificadores privados permanecen en Drive y sus transportes autorizados.
 - Probar mediante dobles y red interceptada; ninguna prueba escribe en endpoints de negocio.
+
+## CTR-EMD-ESCALA-CAPTURA
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD.
+- Evidencia: Aprobación explícita del propietario del 2 de octubre de 2026 para EMD issue #39; propuesta compatible, no evidencia de código ni producción. Detalle público y matriz sintética en emd-escala-captura.md..
+- Entrada/campos: `Sesión y asignación vigentes, misma evaluación y pregunta canónicas, revisión y mutación conforme al contrato privado existente`, `Nueva respuesta numérica entera 1..5; NA solo como conservación de NA ya confirmado por servidor en esa misma evaluación y pregunta`, `Estado confirmado vigente del servidor; borradores locales y payload del cliente no acreditan NA histórico`.
+- Salida: Captura nueva limitada a 1..5; representación ascendente 1 rojo, 2 naranja, 3 amarillo, 4 verde claro, 5 verde con número/etiqueta accesibles, NA histórico legible y conservado con su representación existente, sin ofrecerlo como opción nueva; confirmación real o rechazo explícito sin escritura parcial, Guard de servidor también frente a clientes antiguos; no se introducen campos, endpoints, recursos ni permisos nuevos.
+
+- La aprobación autoriza únicamente retirar NA de nuevas capturas y orientar colores 1 rojo → 5 verde para las 28 preguntas actuales favorables. No cambia textos, IDs ni cantidad de preguntas, asignaciones, ponderación, cálculo, accesos o cierre.
+- NA no se admite en preguntas vacías ni en respuestas numéricas. Solo se puede conservar cuando el valor confirmado vigente de esa misma evaluación y pregunta ya es NA; un NA de otra pregunta, evaluación, usuario, borrador o snapshot obsoleto no autoriza introducirlo.
+- El backend valida la excepción con su estado autorizado y revisión vigentes, antes de persistir el lote. Cliente, restauración local, payload manipulado y cliente antiguo no pueden concederla. Conservar controles de autorización, concurrencia e idempotencia existentes.
+- Conservar un NA histórico no es una migración: no normalizar, convertir a cero o vacío, imputar puntaje ni reescribir su registro al guardar otras preguntas o cerrar. No recalcular historia ni modificar el tratamiento existente de NA en cálculos.
+- Una edición autorizada de NA a 1..5 en evaluación abierta puede confirmarse bajo las reglas existentes; después, la misma pregunta ya no tiene NA confirmado y no puede volver a NA. Una evaluación cerrada no se reabre.
+- Las opciones nuevas son los enteros 1..5; vacío y validación de obligatoriedad conservan las reglas existentes. El color es presentación y no invierte, transforma ni pondera respuestas; mantener texto, foco y accesibilidad sin depender solo del color.
+- NA histórico debe poder cargarse, verse y conservarse incluso en payloads completos o reintentos exactos válidos. El guard no debe rechazar una edición de otra pregunta por contener NA confirmado sin cambios; tampoco aceptar nuevos NA mezclados en ese lote.
+- Esta excepción acotada precisa las menciones previas a escala intacta en propuestas/contratos EMD; todos sus demás límites permanecen. No ampliar el instrumento a preguntas desfavorables por inferencia.
+- Pruebas funcionales y versión activa pendientes en sistema privado; usar dobles sintéticos, no endpoints de negocio ni datos Google para probar. La integración del atlas no acredita despliegue de EMD.
+- Rollback conserva datos e historial: revertir documentación por PR y regenerar vistas; restaurar frontend sin quitar el guard. Solo volver a GAS con guard equivalente; si no existe versión compatible, suspender captura afectada hasta parche. No restaurar NA como opción nueva ni reescribir históricos.
