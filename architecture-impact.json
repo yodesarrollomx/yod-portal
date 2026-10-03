@@ -1,13 +1,13 @@
 {
-  "model_revision": "2026-10-03.52-emd-tierra-pala",
-  "proposal_id": "CHG-EMD-TIERRA-PALA-047",
+  "model_revision": "2026-10-03.53-emd-carga",
+  "proposal_id": "CHG-EMD-CARGA-048",
   "components": [
     "SYS-YOD-OS",
     "SYS-EMD",
     "GAS-EMD",
     "SHEET-EMD"
   ],
-  "summary": "Registrar antes de implementación el porcentaje descubierto por la máquina y tierra alimentada por la pala. Reinicio operativo autorizado por separado, con respaldo privado y perfiles conservados.",
+  "summary": "Registrar carga ligera, arranque autenticado y recuperación de esperas antes de implementación; sin alterar respuestas o permisos.",
   "contracts": [
     "CTR-DESPACHO-CORCHO"
   ],
@@ -21,5 +21,5 @@
     "node scripts/verificar-impacto.cjs --base origin/main --repo yodesarrollomx/yod-portal",
     "git diff --check"
   ],
-  "rollback": "Revertir PR documental y regenerar vistas; frontend vuelve a GAS34. El reinicio operativo no es rollback de código ni restaura otros datos."
+  "rollback": "Revertir PR documental y regenerar vistas; regresar GAS36 y wrapper previo sin alterar datos."
 }

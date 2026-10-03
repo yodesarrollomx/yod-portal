@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.52-emd-tierra-pala · 2026-10-03.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.53-emd-carga · 2026-10-03.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 

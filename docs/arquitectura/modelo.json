@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.52-emd-tierra-pala",
+  "revision": "2026-10-03.53-emd-carga",
   "checked_at": "2026-10-03",
   "priorities": [
     "vender_mas",
@@ -5915,6 +5915,55 @@
           "status": "propuesto"
         }
       ]
+    },
+    {
+      "id": "PROC-EMD-LOAD",
+      "nombre": "Carga ligera y espera orientativa de evaluación",
+      "status": "propuesto",
+      "steps": [
+        {
+          "label": "Abrir enlace personal",
+          "role": "Participante o coordinación",
+          "components": [
+            "SYS-EMD"
+          ],
+          "input": "Fragmento personal en el dominio EMD autorizado",
+          "output": "Espera animada ligera con escala 1 a 5, foto, guardado y finalidad de educación continua; sin promesa de anonimato no implementado",
+          "mode": "automatico"
+        },
+        {
+          "label": "Validar conexión y consultar acceso",
+          "role": "Backend autorizado",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD"
+          ],
+          "input": "Handshake nonce y credencial vigente",
+          "output": "Rol y, al solicitar arranque, lista propia sin respuestas en una sola llamada autenticada; fotos después",
+          "mode": "automatico"
+        },
+        {
+          "label": "Recuperar carga lenta",
+          "role": "Persona usuaria",
+          "components": [
+            "SYS-EMD"
+          ],
+          "input": "Aviso de demora o error con plazo finito",
+          "output": "Reintento explícito conservando enlace, respuestas y permisos",
+          "mode": "manual"
+        }
+      ],
+      "manual_gaps": [
+        "La duración depende también del arranque de Google y la conexión. La medición de peso no garantiza una latencia universal.",
+        "El almacén permite vincular identidad y respuestas: confidencialidad y acceso restringido no equivalen a anonimato."
+      ],
+      "evidence": [
+        {
+          "claim": "Diseño autorizado; publicación y prueba real pendientes",
+          "status": "propuesto"
+        }
+      ]
     }
   ],
   "proposals": [
@@ -7507,6 +7556,31 @@
       ],
       "deployment": "Pendiente implementación, CI y publicación en implementación existente. El reinicio operativo se realiza por separado, con respaldo privado, revisión incrementada y perfiles conservados; no es una escritura QA.",
       "rollback": "Volver a GAS34 en la implementación existente y revertir el cambio visual. El reinicio de respuestas solo se revierte desde el respaldo privado de las filas afectadas, con autorización; no restaurar todo el almacén."
+    },
+    {
+      "id": "CHG-EMD-CARGA-048",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Aligerar HTML sin alterar imágenes aprobadas; arranque participante con una sola lectura autenticada opcional; espera animada y orientación sobre escala, foto y finalidad. Dar margen al arranque lento y reintento explícito. Verificar accesos reportados sin cambiar datos.",
+      "status": "propuesto",
+      "approval": {
+        "date": "2026-10-03",
+        "scope": "Propietario solicita reducir carga, orientar durante la espera y corregir un acceso participante que no abrió."
+      },
+      "tests": [
+        "npm test en EMD privado",
+        "npm run test:ui con datos sintéticos: inicio lento, reintento, aislamiento, Chromium y WebKit",
+        "python3 -m unittest discover -s tests -p test_*.py",
+        "node scripts/arquitectura.cjs --check",
+        "git diff --check",
+        "Verificación de lectura en enlaces existentes de participante y coordinación, sin guardar respuestas"
+      ],
+      "deployment": "Pendiente CI y publicación en implementación GAS existente y wrapper GitHub EMD. No crear accesos ni reiniciar respuestas.",
+      "rollback": "Restaurar GAS36 en la implementación existente y revertir PR del wrapper. Conservar todas las respuestas, permisos y fotos."
     }
   ],
   "data_contracts": [

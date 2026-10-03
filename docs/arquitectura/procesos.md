@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.52-emd-tierra-pala · 2026-10-03.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.53-emd-carga · 2026-10-03.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
@@ -442,3 +442,26 @@ flowchart TD
 Vacíos: El envío real requiere destinatarios verificados y autorización específica; no forma parte de esta propuesta; La vista previa y las pruebas sintéticas no sustituyen revisión humana de nombres y correos; No emitir ni reemitir accesos y no reiniciar evaluaciones al preparar un recordatorio.
 
 Evidencia: Proceso propuesto; detalle operativo y datos personales permanecen en el sistema privado.
+
+## PROC-EMD-LOAD · Carga ligera y espera orientativa de evaluación
+
+Estado: propuesto.
+
+```mermaid
+flowchart TD
+  p0["Abrir enlace personal · Participante o coordinación"]
+  p1["Validar conexión y consultar acceso · Backend autorizado"]
+  p0 --> p1
+  p2["Recuperar carga lenta · Persona usuaria"]
+  p1 -.-> p2
+```
+
+| Paso | Responsable | Componentes | Entrada → salida | Ejecución |
+|---|---|---|---|---|
+| 1. Abrir enlace personal | Participante o coordinación | SYS-EMD | Fragmento personal en el dominio EMD autorizado → Espera animada ligera con escala 1 a 5, foto, guardado y finalidad de educación continua; sin promesa de anonimato no implementado | automatico |
+| 2. Validar conexión y consultar acceso | Backend autorizado | SYS-EMD, GAS-EMD, SHEET-EMD | Handshake nonce y credencial vigente → Rol y, al solicitar arranque, lista propia sin respuestas en una sola llamada autenticada; fotos después | automatico |
+| 3. Recuperar carga lenta | Persona usuaria | SYS-EMD | Aviso de demora o error con plazo finito → Reintento explícito conservando enlace, respuestas y permisos | manual |
+
+Vacíos: La duración depende también del arranque de Google y la conexión. La medición de peso no garantiza una latencia universal.; El almacén permite vincular identidad y respuestas: confidencialidad y acceso restringido no equivalen a anonimato..
+
+Evidencia: Diseño autorizado; publicación y prueba real pendientes.

@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.52-emd-tierra-pala · 2026-10-03.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.53-emd-carga · 2026-10-03.
 
 ## SYS-DESPACHO · El Despacho
 
