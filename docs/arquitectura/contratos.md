@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.48-terminal-puesto · 2026-10-03.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.49-metas-terminal · 2026-10-03.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 

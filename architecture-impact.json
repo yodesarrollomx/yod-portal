@@ -1,13 +1,13 @@
 {
-  "model_revision": "2026-10-03.48-terminal-puesto",
-  "proposal_id": "CHG-DESPACHO-TERMINAL-PUESTO-001",
+  "model_revision": "2026-10-03.49-metas-terminal",
+  "proposal_id": "CHG-DESPACHO-META-TERMINAL-001",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "GAS-PORTERO",
     "EXT-DRIVE"
   ],
-  "summary": "Conectar el panel autorizado del piloto a la terminal local existente mediante ventana local consentida y MessageChannel acotado. Ver pantalla PTY, escribir en sesión manual y controles explícitos, conservando una sesión y modo de cola Sheets.",
+  "summary": "Preparar una meta explícita en la sesión nativa de Codex desde Plan, sin copiar código ni actualizar runtime. Requiere terminal manual vinculada y confirmación de entrada disponible; pegado acotado sin Enter. El agente puede planear, leer su expediente local y producir tareas/evidencia locales bajo permisos existentes; sin simular scheduler ni sincronización Sheets.",
   "contracts": [
     "CTR-DESPACHO-CONVERSACION",
     "CTR-DESPACHO-AVATARES",
@@ -23,5 +23,5 @@
     "node scripts/verificar-impacto.cjs --base origin/main --repo yodesarrollomx/yod-portal",
     "git diff --check"
   ],
-  "rollback": "Revertir panel y actualizar launcher a runtime0.2.0. Conservar keeper, workspace, vínculo y checkpoint; no detener agente ni borrar datos para revertir."
+  "rollback": "Revertir frontend conserva procesos, metas locales e historial."
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.48-terminal-puesto",
+  "revision": "2026-10-03.49-metas-terminal",
   "checked_at": "2026-10-03",
   "priorities": [
     "vender_mas",
@@ -7421,6 +7421,25 @@
       ],
       "deployment": "Panel y runtime0.3 implementados y probados con PTY real y datos sintéticos. Publicación por PR y actualización de Chromebook pendientes de verificación separada. El backend r4 ya responde y su fuente coincide con la entrega privada; no se requiere nuevo Apps Script.",
       "rollback": "Revertir panel y actualizar launcher a runtime0.2.0. Conservar keeper, workspace, vínculo y checkpoint; no detener agente ni borrar datos para revertir."
+    },
+    {
+      "id": "CHG-DESPACHO-META-TERMINAL-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Preparar una meta explícita en la sesión nativa de Codex desde Plan, sin copiar código ni actualizar runtime. Requiere terminal manual vinculada y confirmación de entrada disponible; pegado acotado sin Enter. El agente puede planear, leer su expediente local y producir tareas/evidencia locales bajo permisos existentes; sin simular scheduler ni sincronización Sheets.",
+      "status": "implementado_local",
+      "tests": [
+        "Rechazar controles de terminal en contenido y límites de bytes; identidad exacta y una preparación por meta.",
+        "Nunca enviar Enter, iniciar procesos, detener sala o dar por ejecutada una meta preparada.",
+        "UI escritorio/móvil; preservar terminal y memoria; CI de portal y arquitectura.",
+        "215 pruebas públicas y 27 comprobaciones de navegador aprobadas; PTY real con receptor y expediente sintéticos. Entrada real de herramienta/modelo comprobada por separado en entorno de preparación, no en la Chromebook."
+      ],
+      "deployment": "Frontend implementado y probado para runtime0.3 existente; publicación por PR. Ejecución real con herramientas locales acreditada en entorno separado: diagnóstico, tareas y evidencia guardados y relectura exacta en Drive privado. No acredita ejecución en la Chromebook ni autonomía continua.",
+      "rollback": "Revertir frontend conserva procesos, metas locales e historial."
     }
   ],
   "data_contracts": [
@@ -8716,6 +8735,16 @@
         "GAS-PORTERO",
         "EXT-DRIVE"
       ]
+    },
+    {
+      "prefix": "tests/despacho-goal-handoff.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "repo": "yodesarrollomx/yod-portal"
     }
   ]
 }

@@ -7,6 +7,8 @@ import {Conversation,createFrameTransport} from '../despacho3d/conversation.mjs'
 import {createProfileSession} from '../despacho3d/profile-session.mjs';
 import {TerminalLink} from '../despacho3d/terminal-link.mjs';
 import {TerminalPanel} from './TerminalPanel';
+import {GoalPanel} from './GoalPanel';
+import {GoalHandoff} from '../despacho3d/goal-handoff.mjs';
 import {watchConversation} from '../despacho3d/conversation-watch.mjs';
 
 const labels:Record<string,string>={disconnected:'Conexión pendiente',loading:'Cargando expediente…',ready:'Historial recuperado',processing:'Mensaje guardado · esperando respuesta',sending:'Guardando mensaje…',unconfirmed:'Guardado sin confirmar',conflict:'El expediente cambió · vuelve a leerlo',unavailable:'No se pudo conectar con el expediente'};
@@ -37,10 +39,14 @@ function App(){
  const [opened,setOpened]=useState(false),[tab,setTab]=useState<Tab>('chat'),[status,setStatus]=useState('disconnected'),[model,setModel]=useState<Snapshot|null>(null),[busy,setBusy]=useState(false);
  const [terminalState,setTerminalState]=useState<any>({status:'disconnected',runtime:null,error:''});
  const terminalLink=useRef<any>(null);
+ const goalHandoff=useRef<any>(null),profileCase=useRef<string|null>(null);
+ const [preparedGoal,setPreparedGoal]=useState<string|null>(null),[goalReset,setGoalReset]=useState(0);
  const [message,setMessage]=useState(''),[waitingLong,setWaitingLong]=useState(false);
  const rootRef=useRef<HTMLDivElement>(null),focusRef=useRef<HTMLElement|null>(null),transportRef=useRef<any>(null),conversation=useRef<any>(null),session=useRef<any>(null);
  if(!conversation.current)conversation.current=new Conversation({transport:()=>transportRef.current,notify:(c:any)=>{setModel(c.model);setBusy(c.busy);setStatus(c.status);setSelection(c.selection);}});
+ const resetGoal=()=>{goalHandoff.current?.reset();setPreparedGoal(null);setGoalReset(value=>value+1);};
  if(!terminalLink.current)terminalLink.current=new TerminalLink({getProfile:()=>conversation.current.getProfile(),notify:setTerminalState});
+ if(!goalHandoff.current)goalHandoff.current=new GoalHandoff({link:terminalLink.current,getContext:()=>({opened:session.current?.isOpen()===true,profile:conversation.current.getProfile(),selection:conversation.current.selection,snapshot:conversation.current.model,busy:conversation.current.busy,status:conversation.current.status})});
  const read=()=>session.current?.read();
  const send=async(e:React.FormEvent)=>{e.preventDefault();if(await conversation.current.send(message))setMessage('');};
  const close=()=>session.current?.close();
@@ -48,10 +54,10 @@ function App(){
   transportRef.current=createFrameTransport(window);
   const current=createProfileSession(conversation.current,{
    show:(next:Tab)=>{if(!overlayOpen)focusRef.current=document.activeElement as HTMLElement;overlayOpen=true;inertWorld(true);setTab(tabs.some(([key])=>key===next)?next:'chat');setOpened(true);window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:true}));},
-   hide:()=>{const wasOpen=overlayOpen;overlayOpen=false;inertWorld(false);setOpened(false);setSelection(null);setMessage('');window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:false}));if(wasOpen)(focusRef.current?.isConnected&&focusRef.current.getClientRects().length?focusRef.current:document.getElementById('agents-open'))?.focus();}
+   hide:()=>{const wasOpen=overlayOpen;overlayOpen=false;inertWorld(false);setOpened(false);setSelection(null);setMessage('');setGoalReset(value=>value+1);window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:false}));if(wasOpen)(focusRef.current?.isConnected&&focusRef.current.getClientRects().length?focusRef.current:document.getElementById('agents-open'))?.focus();}
   });
   session.current=current;window.CubefarmYOD=current;
-  const stopProfile=current.subscribeProfile(()=>terminalLink.current.revoke());
+  const stopProfile=current.subscribeProfile((profile:Profile|null)=>{terminalLink.current.revoke();if(profileCase.current!==(profile?.case_id||null)){profileCase.current=profile?.case_id||null;resetGoal();}});
   const trigger=document.getElementById('agents-open') as HTMLButtonElement|null;
   if(trigger){trigger.disabled=false;trigger.onclick=()=>current.open();}
   window.dispatchEvent(new CustomEvent('yod-agents-ready'));
@@ -63,7 +69,7 @@ function App(){
  },[]);
  useEffect(()=>{setWaitingLong(false);if(!opened||!model?.processing)return;return watchConversation(conversation.current,{visible:()=>document.visibilityState!=='hidden',onLimit:()=>setWaitingLong(true)});},[opened,model?.processing]);
  useEffect(()=>{
-  if(!opened)return;rootRef.current?.querySelector<HTMLButtonElement>('.panel-x')?.focus();
+  if(!opened)return;if(!(tab==='terminal'&&preparedGoal))rootRef.current?.querySelector<HTMLButtonElement>('.panel-x')?.focus();
   const key=(e:KeyboardEvent)=>{
    if(tab==='terminal'&&(e.target as HTMLElement)?.closest('.xterm')){if(e.ctrlKey&&e.shiftKey&&e.code==='KeyX'){e.preventDefault();close();}return;}
    if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();close();return;}
@@ -74,7 +80,7 @@ function App(){
    if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}
   };
   window.addEventListener('keydown',key,true);return()=>window.removeEventListener('keydown',key,true);
- },[opened,tab]);
+ },[opened,tab,preparedGoal]);
  if(!opened)return null;
  const name=selection?.name||conversation.current.getProfile()?.name||'Expediente del caso';
  const sheetLink=selection?.url;
@@ -111,8 +117,8 @@ function App(){
      </section>
     </>}
     {tab==='activity'&&<><div className="term" role="log" aria-label="Actividad del expediente">{!model&&<div className="term-line term-system">Conecta el expediente para consultar su actividad.</div>}{model&&model.events.length===0&&<div className="term-line">Sin eventos en la lectura recibida.</div>}{model?.events.map(r=><div className="term-line" key={r.id}><b>{r.title}</b><div>{r.body}</div></div>)}</div><p className="muted small">Eventos registrados en Sheets. La pestaña Terminal permite conectar la sesión local de la Chromebook.</p></>}
-    {tab==='terminal'&&<TerminalPanel link={terminalLink.current} state={terminalState} authorized={!!conversation.current.getProfile()&&!!selection&&!busy}/>}
-    {tab==='plan'&&<section className="dossier-section"><h2>Plan y tareas</h2><p>El tablero de tareas del caso todavía no está conectado a este panel.</p><p className="muted">Consulta el control vigente en Sheets. Las siguientes acciones de la pestaña Expediente son referencias registradas; abrirlas no ejecuta ni aprueba trabajo.</p><p className="muted small">La conversación por voz y la edición de apariencia siguen pendientes de integración.</p></section>}
+    {tab==='terminal'&&<TerminalPanel link={terminalLink.current} state={terminalState} authorized={!!conversation.current.getProfile()&&!!selection&&!busy} preparedGoalId={preparedGoal}/>}
+    <div hidden={tab!=='plan'} className="goal-panel-container"><GoalPanel key={goalReset} handoff={goalHandoff.current} revision={model?.revision} connectionKey={`${terminalState.status}:${terminalState.runtime?.live}:${terminalState.runtime?.mode}:${model?.processing}:${busy}`} onTerminal={()=>setTab('terminal')} onPrepared={(id:string)=>{setPreparedGoal(id);setTab('terminal');}} onNew={()=>setPreparedGoal(null)}/></div>
    </div>
    <div className="conversation-tools"><button type="button" className="btn" disabled={busy} onClick={()=>void read()}>{model?'Actualizar':'Reintentar conexión'}</button>{sheetLink&&<a className="btn" href={sheetLink} target="_blank" rel="noopener noreferrer">Ver en Sheets</a>}</div>
    <div className="phone-hint"><a href="third-party/cubefarm/LICENSE.txt" target="_blank" rel="noopener noreferrer">Interfaz basada en Cubefarm</a><span> · </span><button className="attribution-close" onClick={close}>Volver al Despacho</button></div>
