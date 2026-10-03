@@ -1,6 +1,6 @@
 import * as T from 'three';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
-export async function createOffice(){
+export async function createOffice({pilotFigure=true}={}){
  const root=new T.Group();root.name='YoDesarrollo Despacho V2';const collisions=[];let seed=751;
  const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
  const material=(color,roughness=.7,extra={})=>new T.MeshStandardMaterial({color,roughness,...extra});
@@ -62,7 +62,7 @@ export async function createOffice(){
    block(5.45,z-.35,.16,3.85);
  }
  // Individual identity for the pilot: one character, no invented active tasks.
- const avatar=new T.Group();avatar.position.set(6.65,0,-4.42);root.add(avatar);cylinder(.18,.22,.62,0,.90,0,m.navy,avatar);const skin=material('#bc9474',.85);mesh(new T.SphereGeometry(.16,16,12),skin,0,1.41,0,avatar);mesh(new T.SphereGeometry(.16,16,8,0,Math.PI*2,0,Math.PI*.42),m.bark,0,1.44,0,avatar);for(const x of [-.105,.105]){rounded(.135,.15,.47,.035,x,.34,0,m.steel,avatar);rounded(.15,.28,.08,.05,x,.07,.06,m.black,avatar);}branch(new T.Vector3(-.19,1.1,0),new T.Vector3(-.25,.72,.07),.06,m.navy,avatar);branch(new T.Vector3(.19,1.1,0),new T.Vector3(.27,.85,.2),.06,m.navy,avatar);box(.27,.35,.035,.15,.89,.25,m.oakPlain,avatar);cylinder(.36,.36,.025,6.65,.04,-4.42,m.brass);
+ if(pilotFigure){const avatar=new T.Group();avatar.position.set(6.65,0,-4.42);root.add(avatar);cylinder(.18,.22,.62,0,.90,0,m.navy,avatar);const skin=material('#bc9474',.85);mesh(new T.SphereGeometry(.16,16,12),skin,0,1.41,0,avatar);mesh(new T.SphereGeometry(.16,16,8,0,Math.PI*2,0,Math.PI*.42),m.bark,0,1.44,0,avatar);for(const x of [-.105,.105]){rounded(.135,.15,.47,.035,x,.34,0,m.steel,avatar);rounded(.15,.28,.08,.05,x,.07,.06,m.black,avatar);}branch(new T.Vector3(-.19,1.1,0),new T.Vector3(-.25,.72,.07),.06,m.navy,avatar);branch(new T.Vector3(.19,1.1,0),new T.Vector3(.27,.85,.2),.06,m.navy,avatar);box(.27,.35,.035,.15,.89,.25,m.oakPlain,avatar);}cylinder(.36,.36,.025,6.65,.04,-4.42,m.brass);
  // A soft reception lounge, low cabinetry and a project library.
  function sofa(x,z){rounded(3.25,1.2,.4,.20,x,.4,z,m.oakPlain);for(const dx of [-1,0,1]){rounded(.97,1.04,.25,.17,x+dx,.7,z+.04,m.fabric);rounded(.97,.28,.55,.12,x+dx,.98,z-.42,m.fabric);}for(const dx of [-1.55,1.55])rounded(.20,1.23,.54,.09,x+dx,.8,z,m.fabric);block(x,z,3.45,1.3);}
  box(5.7,.022,4.4,-8.4,.04,3.2,m.rug);sofa(-8.55,2.0);chair(-9.9,4.3,Math.PI);chair(-7.0,4.3,Math.PI);rounded(2.0,1.0,.07,.48,-8.45,.51,3.4,m.stone);for(const x of [-9,-7.9])cylinder(.07,.07,.43,x,.26,3.4,m.brass);vase(-8.35,.55,3.4,.45);block(-8.45,3.4,2.15,1.15);

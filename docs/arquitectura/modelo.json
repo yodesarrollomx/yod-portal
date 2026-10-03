@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.45-avatares-caracter",
+  "revision": "2026-10-03.46-avatar-piloto",
   "checked_at": "2026-10-03",
   "priorities": [
     "vender_mas",
@@ -7406,6 +7406,29 @@
       ],
       "deployment": "Módulo v3, adaptador y muestra sintética implementados en rama. Seis pruebas locales de geometría, identidad, historial, selección y revocación aprobadas. Pendientes montaje en office.js, carga de registro privado autorizado y validación de cada expediente en producción. No modifica el piloto de conversación existente.",
       "rollback": "Revertir sólo el módulo y su uso visual por PR. Conservar IDs, aliases confirmados, expedientes, permisos e historial."
+    },
+    {
+      "id": "CHG-DESPACHO-AVATAR-PILOTO-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Montar un personaje del caso autorizado en la oficina y abrir su panel lateral con conversación, documentos y memoria leídos desde Sheets. Perfil visual opcional procedente del servidor privado; cero padrón público, sin cambiar cola, terminal, identidad ni registros del negocio.",
+      "status": "implementado_local",
+      "authorization": {
+        "date": "2026-10-03",
+        "scope": "Propietario solicita integrar el relevo completo y continuar el Despacho; backend se prepara para publicación por el propietario si no existe acceso de escritura."
+      },
+      "tests": [
+        "Perfil vinculado sólo al caso resuelto por servidor; respuesta tardía y revocación limpian identidad.",
+        "Una figura sin duplicado estático, raycast correcto, pausa por overlay/visibilidad/movimiento reducido.",
+        "Panel lateral y móvil, memoria/documentos con texto escapado y enlaces validados; misma conversación y relectura al abrir.",
+        "Regresiones completas del portal y navegador con transporte sintético; ninguna escritura de prueba en negocio."
+      ],
+      "deployment": "Integración del piloto implementada con perfil opcional autorizado, panel lateral, memoria/documentos de Sheets, cierre/reapertura y revocación. Pruebas sintéticas y verificadores locales; revisión de navegador y publicación frontend se registran al completar. Extensión privada r4 preparada y comprobada (102 pruebas); no guardada ni desplegada. Servidor anterior conserva conversación sin perfil visual. Aceptación real del avatar y rendimiento en Chromebook pendientes.",
+      "rollback": "Revertir frontend por PR; omitir campo avatar conserva conversación. No modificar ni restaurar datos de Sheets."
     }
   ],
   "data_contracts": [
@@ -8183,7 +8206,7 @@
         "Cada operación exige autorización fresca de servidor; el puente de navegador no sustituye Portero.",
         "Origen y ventana exactos, método permitido y época de sesión conservada. Credenciales sólo en adaptador autorizado del OS.",
         "Sin datos privados estáticos, sin almacenamiento local de conversaciones ni inferencia de guardado a partir del eco visual.",
-        "Cierre o revocación descartan datos en memoria y respuestas tardías; toda reapertura relee Sheets.",
+        "Cerrar el panel descarta historial, borradores y respuestas tardías; conserva únicamente el perfil visual autorizado mientras la oficina siga abierta. Toda reapertura relee Sheets. Cerrar la oficina o revocar acceso elimina también ese perfil.",
         "Un fallo de ACK conserva el mismo request_id para reconciliar, nunca encola con ID nuevo automáticamente.",
         "Sin adaptador verificado no se habilita envío. Pruebas sintéticas no acreditan conexión productiva."
       ]
@@ -8226,7 +8249,8 @@
       "source": "Petición explícita del propietario para homologar personajes y mejorar su calidad visual; coordinación con el agente que instala el Despacho.",
       "input": [
         "Perfiles privados autorizados: id canónico estable, aliases confirmados, entidad, tipo de avatar, apariencia y referencia de expediente.",
-        "Capa pública sólo recibe parámetros de dibujo y callback de selección; nunca obtiene credenciales, carga una hoja ni decide permisos."
+        "Capa pública sólo recibe parámetros de dibujo y callback de selección; nunca obtiene credenciales, carga una hoja ni decide permisos.",
+        "Para el piloto, resolveCurrent devuelve avatar opcional unido a su case_id y nombre; sólo se monta tras validar también la lectura autorizada del expediente. Un servidor anterior sin avatar conserva conversación sin montar una figura privada."
       ],
       "output": [
         "Personaje 3D articulado con identidad estable, apariencia modificable y estados visuales explícitos.",
@@ -8238,7 +8262,8 @@
         "La edad o figura visual no certifica avance del proyecto, codesarrollo, salud de conexión ni autoridad para actuar.",
         "Conservar CTR-DESPACHO-CONVERSACION y CTR-DESPACHO-3D-SECTION; múltiples expedientes necesitan resolución y autorización de servidor, no extender resolveCurrent desde el cliente.",
         "Al revocar o salir, eliminar modelos y datos efímeros. No usar localStorage para registros ni conversaciones de producción.",
-        "Instalación y aceptación de cada agente se verifican por separado; módulo dibujable no significa herramienta conectada."
+        "Instalación y aceptación de cada agente se verifican por separado; módulo dibujable no significa herramienta conectada.",
+        "Cerrar sólo el panel conserva el perfil mínimo, sin historial. La oficina comparte esa lectura con el panel, evita otro sondeo, usa placement fijo y no interpreta apariencia como progreso. Todo fallo de lectura o revocación borra perfil y mallas; OS desmonta el iframe al cambiar sesión."
       ]
     }
   ],
@@ -8690,6 +8715,24 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/despacho-avatars.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-authorized-profile.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-avatar-office.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO"

@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.45-avatares-caracter · 2026-10-03.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.46-avatar-piloto · 2026-10-03.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -391,7 +391,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Cada operación exige autorización fresca de servidor; el puente de navegador no sustituye Portero.
 - Origen y ventana exactos, método permitido y época de sesión conservada. Credenciales sólo en adaptador autorizado del OS.
 - Sin datos privados estáticos, sin almacenamiento local de conversaciones ni inferencia de guardado a partir del eco visual.
-- Cierre o revocación descartan datos en memoria y respuestas tardías; toda reapertura relee Sheets.
+- Cerrar el panel descarta historial, borradores y respuestas tardías; conserva únicamente el perfil visual autorizado mientras la oficina siga abierta. Toda reapertura relee Sheets. Cerrar la oficina o revocar acceso elimina también ese perfil.
 - Un fallo de ACK conserva el mismo request_id para reconciliar, nunca encola con ID nuevo automáticamente.
 - Sin adaptador verificado no se habilita envío. Pruebas sintéticas no acreditan conexión productiva.
 
@@ -415,7 +415,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 - Componentes: SYS-YOD-OS, SYS-DESPACHO.
 - Evidencia: Petición explícita del propietario para homologar personajes y mejorar su calidad visual; coordinación con el agente que instala el Despacho..
-- Entrada/campos: `Perfiles privados autorizados: id canónico estable, aliases confirmados, entidad, tipo de avatar, apariencia y referencia de expediente.`, `Capa pública sólo recibe parámetros de dibujo y callback de selección; nunca obtiene credenciales, carga una hoja ni decide permisos.`.
+- Entrada/campos: `Perfiles privados autorizados: id canónico estable, aliases confirmados, entidad, tipo de avatar, apariencia y referencia de expediente.`, `Capa pública sólo recibe parámetros de dibujo y callback de selección; nunca obtiene credenciales, carga una hoja ni decide permisos.`, `Para el piloto, resolveCurrent devuelve avatar opcional unido a su case_id y nombre; sólo se monta tras validar también la lectura autorizada del expediente. Un servidor anterior sin avatar conserva conversación sin montar una figura privada.`.
 - Salida: Personaje 3D articulado con identidad estable, apariencia modificable y estados visuales explícitos., Selección devuelve exactamente el id autorizado al integrador; un cambio de forma conserva su relación con el expediente..
 
 - No publicar padrón, nombres de clientes, IDs de hojas, conversaciones ni registros privados. Demostrador público utiliza identidades sintéticas.
@@ -424,3 +424,4 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Conservar CTR-DESPACHO-CONVERSACION y CTR-DESPACHO-3D-SECTION; múltiples expedientes necesitan resolución y autorización de servidor, no extender resolveCurrent desde el cliente.
 - Al revocar o salir, eliminar modelos y datos efímeros. No usar localStorage para registros ni conversaciones de producción.
 - Instalación y aceptación de cada agente se verifican por separado; módulo dibujable no significa herramienta conectada.
+- Cerrar sólo el panel conserva el perfil mínimo, sin historial. La oficina comparte esa lectura con el panel, evita otro sondeo, usa placement fijo y no interpreta apariencia como progreso. Todo fallo de lectura o revocación borra perfil y mallas; OS desmonta el iframe al cambiar sesión.

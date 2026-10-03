@@ -2,13 +2,14 @@
 
 Módulo de figuras caricaturescas para instalar en la oficina existente. Añade once familias con rostro expresivo, cabello, prendas, accesorios y articulación; conserva los identificadores del expediente durante cambios visuales. No cambia el agente, transporte, memoria ni permisos ya implementados.
 
-**Entrega:** código preparado para integración; aún no montado en `office.js` ni verificado en producción. El piloto de conversación/memoria existente conserva su estado descrito en `docs/arquitectura/despacho-capacidades.md`.
+**Entrega:** montaje del piloto implementado en `office.js` y conectado al panel lateral mediante el mismo transporte autorizado de conversación. Requiere un perfil opcional `avatar` en `resolveCurrent`; sin él, la conversación sigue disponible y no se monta una figura privada. La publicación de la extensión privada de Apps Script y la aceptación en el dispositivo se registran por separado. Ver `docs/arquitectura/despacho-capacidades.md`.
 
 ## Archivos
 
 - `avatar.mjs`: `createAvatar`, `animateAvatar`, `disposeAvatar`, `FORMS`, `AVATAR_VERSION`.
 - `identity.mjs`: alias explícitos, detección de conflictos y migración de estado local con archivo de datos anteriores.
 - `adapter.mjs`: capa visual de perfiles autorizados, selección canónica, movimiento, cambio de apariencia y revocación.
+- `office-pilot.mjs`: montaje único en posición fija, selección por malla, suscripción al perfil autorizado y cadencia limitada de animación.
 - `demo.html`: muestra sintética de las once familias. Abrir mediante servidor local en la raíz del repo. Importa la misma versión vendorizada de Three que usa el despacho.
 - `tests/despacho-avatars.test.cjs`: identidad, memoria, geometría, animaciones, revocación y selección.
 
@@ -61,6 +62,14 @@ avatars.selectIntersection(raycaster.intersectObjects(avatars.pickables(), true)
 ```
 
 La v3 es procedural y editable. Calidad `office` reduce segmentos respecto al estudio; instanciar sólo habitantes autorizados y necesarios, ocultar o descargar pisos no visibles. No se ha certificado un objetivo de FPS para el dispositivo final ni equivalencia técnica a una consola. El siguiente paso de optimización es agrupar geometría/materiales de partes estáticas tras medir en la oficina real, sin perder articulaciones ni selección.
+
+## Montaje del piloto
+
+`Conversation` valida el perfil opcional y la lectura del mismo caso antes de notificarlo. `CubefarmYOD.getProfile/subscribeProfile/openForCase` comparten esa lectura con la oficina; no consultan otra hoja ni aceptan un selector arbitrario. `avatar-profile.mjs` limita tipos, valores y campos; la posición la fija la escena. `undefined` y `null` significan que no hay perfil visual disponible.
+
+El cierre del panel descarta historial y borrador. Conserva sólo el perfil mínimo para mantener al personaje en su puesto; al volver a abrir se relee el expediente. Revocación y cierre de oficina limpian también el perfil y las mallas. La restauración desde BFCache recarga el iframe para rehacer la autorización. No se persisten datos privados en almacenamiento del navegador.
+
+La figura provisional se omite antes de fusionar las geometrías estáticas. El personaje usa el renderer existente, idle con un máximo de 15 actualizaciones por segundo y sombras a un máximo de 2,5 por segundo; se pausa con panel abierto, pestaña oculta o movimiento reducido. Estos límites no son una medición de FPS de la Chromebook. La selección respeta Chinches, paredes y controles cercanos. Sentarse, hablar y entregar permanecen disponibles en el módulo, pero el montaje no las dispara como evidencia de una actividad que todavía no recibe del motor.
 
 ## Aceptación y reversión
 
