@@ -7,7 +7,7 @@ Referencia: [video de Leon van Zyl](https://www.youtube.com/watch?v=NBZmxhcz5lo)
 | Capacidad común | Función de la referencia | Estado YOD comprobado |
 | --- | --- | --- |
 | Identidad y expediente | Agente con rol, instrucciones y proyecto propios | Resolución privada del expediente del piloto; registro de múltiples agentes pendiente |
-| Chat y memoria | Instrucciones directas e historial | Dos turnos desde la sala, memoria recuperada y persistencia comprobados; último cierre/reapertura pendiente de confirmación |
+| Chat y memoria | Instrucciones directas e historial | Dos turnos desde la sala, memoria recuperada y persistencia comprobados; cierre/reapertura confirmado por el propietario |
 | Ejecución y control | Terminal en vivo, instrucción adicional y detener | Ejecutor acotado y eventos durables conectados; terminal interactiva y detener desde la sala pendientes |
 | Tareas | Kanban con asignación y avance real | Columnas visuales y lectura de decisiones; gestor de tareas y asignación pendientes |
 | Revisión QA | Verificación, captura, informe y devolución para corregir | No conectado al agente del expediente |
@@ -28,7 +28,7 @@ La terminal original controla agentes de programación en worktrees; para agente
 
 ## Orden de instalación y aceptación
 
-1. Confirmar el último cierre/reapertura sin enviar otra vez. Dos turnos del piloto, memoria y guardado ya están comprobados.
+1. Conversación, memoria, guardado y cierre/reapertura del piloto completados y confirmados por el propietario. Medir la optimización del servidor cuando se publique.
 2. Establecer un servicio privado persistente para el motor y su transporte de eventos. Así su disponibilidad no depende de esta sesión de trabajo.
 3. Conectar ejecución/control, tareas, QA y entregas a ese servicio, preservando los registros en Sheets y Drive.
 4. Registrar cada agente con el mismo paquete, expediente, especialidad y límites propios. Comprobar que no lee ni ejecuta trabajos de otro agente.

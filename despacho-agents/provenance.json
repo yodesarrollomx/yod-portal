@@ -31,7 +31,7 @@
   },
   "case_data_source": "Existing authorized Sheets/Drive transport only, no design snapshot as live state",
   "limitations": [
-    "Dos turnos desde la sala, memoria entre turnos y persistencia comprobados; último cierre/reapertura pendiente de confirmación.",
+    "Conversación, memoria entre turnos, persistencia y cierre/reapertura del piloto comprobados; instalación multiagente pendiente.",
     "Motor disponible durante bloques optativos de 30 minutos; servicio permanente pendiente.",
     "Sin terminal interactiva /ws/term, gestor de tareas, QA automatizada, vista previa de entregas o coordinación multiagente conectados.",
     "Revisión horaria pausada; sin API de pago ni voz activadas."
