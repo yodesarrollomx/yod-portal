@@ -35,3 +35,5 @@ Las pruebas cubren recuperación en una nueva instancia, respuesta tardía, reci
 La aceptación pendiente es una instrucción real desde la sala, respuesta de un ejecutor autenticado, lectura posterior de su registro en la misma hoja y recuperación tras cerrar y volver a entrar. El propietario ya pegó el paquete privado y actualizó la implementación existente; se comprobaron la etiqueta publicada y el vínculo del motor. La aceptación desde la sala se realizará después de publicar el cliente, con la sesión real del propietario. El launcher atiende bloques de 30 minutos y no acredita disponibilidad permanente.
 
 Reversión: revertir el PR del cliente. Conservar hojas, historial, identificadores, permisos y despliegues del servidor.
+
+El panel distingue autorización denegada, cambio de sesión, espera agotada, formato inválido y apertura fuera de YOD OS. Solo propaga códigos permitidos y el paso fallido; descarta mensajes crudos del proveedor. El propietario reportó fallo de carga antes de guardar: su causa y la aceptación completa siguen pendientes.

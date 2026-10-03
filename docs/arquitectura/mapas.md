@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-02.38-emd-github-embed-propuesta · 2026-10-02.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.39-despacho-diagnostico · 2026-10-02.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 

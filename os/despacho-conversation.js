@@ -20,7 +20,7 @@
    busy=true;
    var timer;
    try{var result=await Promise.race([transport[m.method](JSON.parse(JSON.stringify(p))),new Promise(function(_,reject){timer=setTimeout(function(){reject(Error('timeout'));},options.timeout||25000);})]);reply(result,null);}
-   catch(_){reply(null,'unavailable');}
+   catch(error){reply(null,['unauthorized','session_changed'].includes(error&&error.message)?error.message:error&&error.name==='AbortError'?'timeout':'unavailable');}
    finally{clearTimeout(timer);if(own===generation)busy=false;}
   }
   function clear(){generation++;busy=false;}
