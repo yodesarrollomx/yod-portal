@@ -1,21 +1,21 @@
 {
-  "model_revision": "2026-10-03.37-despacho-conexion",
-  "proposal_id": "CHG-DESPACHO-CONVERSACION-001",
+  "model_revision": "2026-10-02.38-emd-github-embed-propuesta",
+  "proposal_id": "CHG-EMD-GITHUB-009",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "GAS-PORTERO",
-    "EXT-DRIVE"
+    "SYS-EMD",
+    "GAS-EMD",
+    "SHEET-EMD",
+    "SYS-YOD-OS"
   ],
-  "summary": "Conectar el panel al Portero existente con POST autenticado, expediente privado e historial durable. Servidor publicado manualmente y motor autenticado vinculado; publicar el cliente para aceptación desde la sala. Incorporar la propuesta EMD concurrente conservando sus reglas y contratos. Disponibilidad permanente del worker pendiente.",
+  "summary": "Propuesta documental local previa para wrapper mínimo en https://yodesarrollomx.github.io/yod-portal/emd/, Pages main/raíz confirmado por propietario. SYS-YOD-OS publicador; embed opcional exige handshake top/origen/nonce/ready antes de arranque. Popper implementa emd/ en PR separado; esta rama solo atlas.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
-    "node verify-accesos.cjs",
+    "ACCESOS_REF=3ee8ca50bf14ef17d95e72523e54506eb996f262 node verify-accesos.cjs",
     "node verify-obra-app.cjs",
     "git diff --check"
   ],
-  "rollback": "Revertir el PR para recuperar el panel anterior; conservar hojas, historial, permisos y despliegues del servidor."
+  "rollback": "Revertir documentación por PR y regenerar vistas preservando aportes concurrentes; rollback funcional privado conserva guards, entrada normal, enlaces, Sheets e historial."
 }
