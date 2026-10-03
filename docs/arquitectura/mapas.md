@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.38-despacho-diagnostico · 2026-10-02.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.39-despacho-diagnostico · 2026-10-02.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -247,6 +247,7 @@ flowchart LR
   n_SYS_OBRA["Obra en vivo"]
   n_SYS_CONTROL["Control Maestro"]
   n_SYS_YOD_OS["YOD OS"]
+  n_SYS_EMD["Evaluación de personas"]
   n_SYS_PINTARRON["Pintarrón"]
   n_GAS_PORTERO["Portero y Potenciales"]
   n_GAS_CATALOGO["Catálogo del OS"]
@@ -281,8 +282,10 @@ flowchart LR
   n_SYS_TRACK -->|Consulta resource Track para codesarrollos| n_GAS_CATALOGO
   n_SYS_YOD_OS -->|Respaldo de identidad| n_GAS_PORTERO_RESPALDO
   n_GAS_PORTERO -->|Registra antes, después, actor y siguiente paso| n_SYS_CONTROL
+  n_SYS_YOD_OS -.->|Propuesta: wrapper público mínimo del cuestionario Google en emd/| n_SYS_EMD
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
+  class n_SYS_EMD pendiente;
   class n_SYS_PINTARRON pendiente;
 ```
 
@@ -290,6 +293,7 @@ flowchart LR
 
 ```mermaid
 flowchart LR
+  n_SYS_YOD_OS["YOD OS"]
   n_SYS_EMD["Evaluación de personas"]
   n_GAS_EMD["Evaluación privada"]
   n_SHEET_EMD["Datos de Evaluación privada"]
@@ -299,7 +303,9 @@ flowchart LR
   n_SYS_EMD -.->|Consume contrato del backend| n_GAS_EMD
   n_GAS_EMD -.->|Propuesta: fotos privadas de perfil| n_EXT_DRIVE
   n_SYS_EMD -.->|Propuesta: copia cifrada local| n_STORE_EMD_DRAFTS
+  n_SYS_YOD_OS -.->|Propuesta: wrapper público mínimo del cuestionario Google en emd/| n_SYS_EMD
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
+  class n_SYS_YOD_OS pendiente;
   class n_SYS_EMD pendiente;
   class n_GAS_EMD pendiente;
   class n_SHEET_EMD pendiente;
@@ -526,3 +532,4 @@ flowchart LR
 | CON-AMALAYA-CLIENT | SYS-AMALAYA → GAS-AMALAYA | api: Consume contrato autenticado del tablero. CTR-AMALAYA-CHINCHES-ESTADO registra la extensión propuesta. Identidad, token, roles, implementación y URL actuales se conservan. | codigo | [amalaya-board/apps-script/Code.gs](https://github.com/yodesarrollo/amalaya-board/blob/a3cf36f508015d288a04288fef040130f30ec3b7/apps-script/Code.gs) — Contratos de chinches existentes y extensión de estado propuesta. |
 | CON-AMALAYA-STORE | GAS-AMALAYA → SHEET-AMALAYA | persistencia: Conserva chinches y su historial. CTR-AMALAYA-CHINCHES-ESTADO registra la extensión propuesta. Identidad, token, roles, implementación y URL actuales se conservan. | codigo | [amalaya-board/apps-script/Code.gs](https://github.com/yodesarrollo/amalaya-board/blob/a3cf36f508015d288a04288fef040130f30ec3b7/apps-script/Code.gs) — Contratos de chinches existentes y extensión de estado propuesta. |
 | CON-DESPACHO-CORCHO-STORE | GAS-OPERACION → STORE-DESPACHO-CORCHO | persistencia: Persiste Corcho privado con revisión y control de acceso. CTR-DESPACHO-CORCHO; identidad exacta, verificación fresca de privacidad de archivo y ancestros, CAS y archivo sin borrado. | propuesto | [board-aurum/apps-script/corcho.gs](https://github.com/yodesarrollomx/board-aurum/blob/096550e5647a63048450b9be848be71901a32a3a/apps-script/corcho.gs) — Almacén privado propuesto, fuera de datos generales de Operación |
+| CON-EMD-GITHUB-EMBED | SYS-YOD-OS → SYS-EMD | embed: Propuesta: wrapper público mínimo del cuestionario Google en emd/. CTR-EMD-GITHUB-EMBED: wrapper top GitHub y handshake nonce/ready con origen exacto antes de arranque; RPC y datos permanecen en Google. | propuesto | Propietario confirma Pages main/raíz y ruta canónica /yod-portal/emd/; wrapper pendiente en PR separado, no evidencia de despliegue. |

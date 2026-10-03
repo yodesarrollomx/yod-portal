@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-03.38-despacho-diagnostico",
+  "model_revision": "2026-10-03.39-despacho-diagnostico",
   "proposal_id": "CHG-DESPACHO-CONVERSACION-001",
   "components": [
     "SYS-YOD-OS",
@@ -7,7 +7,7 @@
     "GAS-PORTERO",
     "EXT-DRIVE"
   ],
-  "summary": "Diagnosticar el fallo real al cargar el expediente: propagar solo códigos permitidos entre transporte y marco y mostrar orientación concreta. No cambiar permisos ni operaciones de escritura. Conservar los contratos EMD concurrentes.",
+  "summary": "Diagnosticar el fallo real al cargar el expediente: propagar solo códigos permitidos entre transporte y marco y mostrar orientación concreta. No cambiar permisos ni operaciones de escritura. Conservar los contratos EMD concurrentes. Conservar también la propuesta EMD de integración GitHub recién incorporada.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",

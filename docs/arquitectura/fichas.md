@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.38-despacho-diagnostico · 2026-10-02.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.39-despacho-diagnostico · 2026-10-02.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -145,7 +145,7 @@ Integrar navegación, identidad y síntesis de tableros
 - Entidades: sistema, sesion, resumen, proyecto.
 - Fuente de verdad: Catálogo de código y Control Maestro; cada indicador hereda el almacén de su dominio.
 - Evidencia: [yod-portal/CLAUDE.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/CLAUDE.md#L7) — El portal integra tableros; [yod-portal/docs/arquitectura/control-maestro.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/control-maestro.md) — PR #14 integrado; doce archivos servidos comparados exactamente con commit 7e9094b y perfiles sintéticos sobre la publicación. No acredita sesiones ni escrituras reales..
-- Conexiones: CON-033 (SYS-YOD-OS → SYS-DESPACHO); CON-034 (SYS-YOD-OS → SYS-POTENCIALES); CON-035 (SYS-YOD-OS → SYS-TRACK); CON-036 (SYS-YOD-OS → SYS-MIRAMAR); CON-037 (SYS-YOD-OS → SYS-TAREAS); CON-038 (SYS-YOD-OS → SYS-FLUJO); CON-039 (SYS-YOD-OS → SYS-INTERIORES); CON-040 (SYS-YOD-OS → SYS-INVERSION); CON-041 (SYS-YOD-OS → SYS-MARKETING); CON-042 (SYS-YOD-OS → SYS-OBRA); CON-043 (SYS-YOD-OS → SYS-CONTROL); CON-044 (SYS-YOD-OS → GAS-PORTERO); CON-052 (GAS-PLAN-POTENCIAL → SYS-YOD-OS); CON-053 (GAS-MIRAMAR → SYS-YOD-OS); CON-054 (GAS-PORTERO → SYS-YOD-OS); CON-055 (GAS-OPERACION → SYS-YOD-OS); CON-056 (GAS-CODES → SYS-YOD-OS); CON-057 (GAS-OBRA → SYS-YOD-OS); CON-065 (SYS-YOD-OS → GAS-CRM); CON-073 (SYS-YOD-OS → GAS-PORTERO-RESPALDO).
+- Conexiones: CON-033 (SYS-YOD-OS → SYS-DESPACHO); CON-034 (SYS-YOD-OS → SYS-POTENCIALES); CON-035 (SYS-YOD-OS → SYS-TRACK); CON-036 (SYS-YOD-OS → SYS-MIRAMAR); CON-037 (SYS-YOD-OS → SYS-TAREAS); CON-038 (SYS-YOD-OS → SYS-FLUJO); CON-039 (SYS-YOD-OS → SYS-INTERIORES); CON-040 (SYS-YOD-OS → SYS-INVERSION); CON-041 (SYS-YOD-OS → SYS-MARKETING); CON-042 (SYS-YOD-OS → SYS-OBRA); CON-043 (SYS-YOD-OS → SYS-CONTROL); CON-044 (SYS-YOD-OS → GAS-PORTERO); CON-052 (GAS-PLAN-POTENCIAL → SYS-YOD-OS); CON-053 (GAS-MIRAMAR → SYS-YOD-OS); CON-054 (GAS-PORTERO → SYS-YOD-OS); CON-055 (GAS-OPERACION → SYS-YOD-OS); CON-056 (GAS-CODES → SYS-YOD-OS); CON-057 (GAS-OBRA → SYS-YOD-OS); CON-065 (SYS-YOD-OS → GAS-CRM); CON-073 (SYS-YOD-OS → GAS-PORTERO-RESPALDO); CON-EMD-GITHUB-EMBED (SYS-YOD-OS → SYS-EMD).
 - Mejoras: K · Indicadores confiables y rendimiento medido; L · Mapa vivo, contratos y cambios verificables.
 
 ## SYS-PLAN-POTENCIAL · Plan de Potencial
@@ -261,7 +261,7 @@ Evaluación privada y seguimiento de revisiones
 - Entidades: evaluacion, revision, chinche, contacto_preparado.
 - Fuente de verdad: Sistema privado; detalle técnico restringido.
 - Evidencia: Integración pendiente de verificar.
-- Conexiones: CON-032 (SYS-EMD → GAS-EMD); CON-EMD-DRAFTS-LOCAL (SYS-EMD → STORE-EMD-DRAFTS).
+- Conexiones: CON-032 (SYS-EMD → GAS-EMD); CON-EMD-DRAFTS-LOCAL (SYS-EMD → STORE-EMD-DRAFTS); CON-EMD-GITHUB-EMBED (SYS-YOD-OS → SYS-EMD).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: No hay evidencia de integración transaccional con YOD OS; mantener datos y permisos privados.
 
