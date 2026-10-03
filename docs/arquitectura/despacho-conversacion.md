@@ -1,6 +1,6 @@
 # Conversación del expediente en el Despacho
 
-Estado: cliente, puente y servidor publicados. Primer mensaje real desde la sala, respuesta de un ejecutor autenticado y persistencia en la misma hoja comprobados en registro privado. La recuperación de memoria en un segundo turno desde la sala y el servicio permanente siguen pendientes.
+Estado: cliente, puente y servidor publicados. Dos turnos auténticos desde la sala, respuesta autenticada, memoria recuperada desde el historial, persistencia en la misma hoja y coincidencia visual comprobados. Último cierre/reapertura sin nuevo envío pendiente de confirmación. El servicio permanente sigue pendiente.
 
 Al abrir Agentes, el cliente pide el expediente autorizado al OS. Con un adaptador conectado, recupera nombre, enlace, conversación y actividad desde el servidor. El envío explícito conserva un identificador durante reintentos y sólo confirma recepción después del recibo persistido. La respuesta aparece mediante una lectura posterior; reabrir no ejecuta otra inferencia.
 
@@ -32,10 +32,10 @@ El cliente no activa horarios, voz, contactos, cálculos ni acciones de negocio.
 
 Las pruebas cubren recuperación en una nueva instancia, respuesta tardía, recibo perdido, conflicto, límites de datos, origen, ventana y sesión. Las pruebas de navegador usan transporte sintético y bloquean conexiones externas. No acreditan persistencia en Sheets productivo.
 
-La instrucción real desde la sala, la respuesta autenticada y la lectura posterior de su registro en la misma hoja ya fueron comprobadas. El segundo turno para recuperar memoria tras cerrar y volver a entrar sigue pendiente: un intento quedó detenido por espera agotada de lectura y el runtime se corrigió después. El launcher atiende bloques optativos de 30 minutos y no acredita disponibilidad permanente.
+La instrucción real desde la sala, dos respuestas autenticadas, memoria entre turnos y lectura posterior de sus registros en la misma hoja ya fueron comprobadas. La segunda respuesta visible coincide con la guardada. Se pide confirmar el último cierre/reapertura sin enviar otro turno. Dos intentos intermedios quedaron detenidos por espera agotada; se conservan en el historial. El servidor con lecturas agrupadas está probado y preparado para publicación manual, sin aceptación de latencia aún. El launcher atiende bloques optativos de30minutos y no acredita disponibilidad permanente.
 
 Reversión: revertir el PR del cliente. Conservar hojas, historial, identificadores, permisos y despliegues del servidor.
 
-El panel distingue autorización denegada, cambio de sesión, espera agotada, formato inválido y apertura fuera de YOD OS. Solo propaga códigos permitidos y el paso fallido; descarta mensajes crudos del proveedor. El propietario reportó un fallo inicial de carga que se recuperó; su causa no se confirmó. La aceptación completa de memoria y reapertura sigue pendiente.
+El panel distingue autorización denegada, cambio de sesión, espera agotada, formato inválido y apertura fuera de YOD OS. Solo propaga códigos permitidos y el paso fallido; descarta mensajes crudos del proveedor. El propietario reportó un fallo inicial de carga que se recuperó; su causa no se confirmó. La memoria entre turnos ya se comprobó; la confirmación del último cierre/reapertura sigue pendiente.
 
 Cuando el último mensaje aparece detenido en el servidor, el panel muestra que quedó sin respuesta y ofrece «Volver a enviar». Solo ese clic explícito crea un turno nuevo con el mismo texto y un identificador nuevo; la recuperación de un recibo perdido conserva el identificador anterior. Ninguna lectura reencola mensajes. Las esperas acotadas son 45 segundos en HTTP, 50 en el puente y 55 en el cliente; cerrar o cambiar sesión sigue descartando respuestas tardías.

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.41-despacho-espera",
+  "revision": "2026-10-03.42-despacho-memoria",
   "checked_at": "2026-10-03",
   "priorities": [
     "vender_mas",
@@ -7166,7 +7166,7 @@
         "Transporte HTTP: credencial sólo en cuerpo al endpoint autorizado, invalidación de sesión y ninguna conmutación de servidor al enviar.",
         "Seguimiento secuencial sin lecturas superpuestas, pausa en pestaña oculta, límite de espera visible y cancelación al cerrar."
       ],
-      "deployment": "Servidor privado instalado en implementación existente y worker vinculado. Primer envío explícito desde la sala, respuesta autenticada y lectura de su persistencia en Sheets comprobados. Recuperación de memoria en un segundo turno desde la sala y disponibilidad permanente pendientes. Frontend publicado con recuperación explícita de mensajes detenidos. Optimización de seguimiento en rama, por publicar."
+      "deployment": "Cliente, puente y servidor publicados. Dos turnos auténticos desde la sala: primera respuesta y segunda recuperación de una clave del historial, persistencia en la misma hoja y coincidencia visual comprobadas. Último cierre/reapertura sin nuevo envío pendiente de confirmación. Hubo lecturas lentas detenidas, preservadas en el historial; lectura agrupada del servidor probada y preparada para despliegue manual. Seguimiento secuencial y reenvío explícito publicados. Servicio permanente pendiente."
     },
     {
       "id": "CHG-EMD-GITHUB-009",

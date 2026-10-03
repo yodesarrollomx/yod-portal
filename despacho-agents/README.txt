@@ -4,7 +4,7 @@ Fuente: https://github.com/leonvanzyl/cubefarm, versión0.3.2, revisión11237cf5
 
 El botón Agentes abre conversación, actividad y plan sobre la oficina YOD/Aurum. La identidad y los registros privados vienen del transporte autorizado del OS, nunca del bundle público. Cada operación requiere autorización del servidor.
 
-El primer mensaje real desde la sala, su respuesta autenticada y su guardado en Sheets están comprobados. La memoria en un segundo turno desde la sala sigue pendiente. El runtime atiende bloques optativos de30minutos; no está establecido un servicio permanente.
+Dos turnos reales desde la sala, respuestas autenticadas, memoria entre turnos y guardado en Sheets están comprobados. El último cierre/reapertura sin otro envío está pendiente de confirmación. El runtime atiende bloques optativos de30minutos; no está establecido un servicio permanente.
 
 La actividad es un registro de eventos, no una terminal interactiva. Plan muestra decisiones, no un gestor de tareas conectado. Terminal, tareas, QA, entregas y coordinación están pendientes; consultar docs/arquitectura/despacho-capacidades.md. El demo original sirve solo para inspeccionar la referencia y nunca alimenta el expediente.
 
