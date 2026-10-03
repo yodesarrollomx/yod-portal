@@ -1,23 +1,21 @@
 {
-  "model_revision": "2026-10-03.34-despacho-github-directo",
-  "proposal_id": "CHG-DESPACHO-GITHUB-DIRECTO-001",
+  "model_revision": "2026-10-03.35-despacho-conversacion",
+  "proposal_id": "CHG-DESPACHO-CONVERSACION-001",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "GAS-PORTERO",
-    "SYS-SALA",
-    "GAS-SALA",
-    "SHEET-SALA"
+    "EXT-DRIVE"
   ],
-  "summary": "Alojar en el portal GitHub el frontend neutro de la oficina 3D y los paneles adaptados de Cubefarm. Abrir #/despacho de forma inmersiva bajo la cabecera existente, con Portero y DP, sin iniciar sesión en ChatGPT. El destino fijo relativo no contiene identidad ni credenciales; datos operativos y conexiones privadas sólo desde las fuentes autorizadas existentes. Conservar Bandeja y Chinches geométricas validadas por origen y ventana exactos. Usar el atlas actual como mapa de conexiones, no como registros de negocio.",
+  "summary": "Preparar la conversación del expediente con resolución privada del caso autorizado, lectura de historial y envío idempotente. El puente de mismo origen conserva sesión y credenciales en el adaptador del OS; no incluye identidad, URL de hoja ni datos operativos en la publicación. Integración productiva pendiente de autenticar ejecutor y adaptar el servidor existente.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
-    "ACCESOS_REF=3ee8ca50bf14ef17d95e72523e54506eb996f262 node verify-accesos.cjs",
+    "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
     "git diff --check"
   ],
-  "rollback": "Revertir este PR para restaurar el iframe privado anterior. Conservar hojas, datos, permisos, sesiones, chinches y motores existentes."
+  "rollback": "Revertir el PR para recuperar el panel anterior; conservar hojas, historial, permisos y despliegues del servidor."
 }

@@ -2596,3 +2596,12 @@ header #agents-open{min-height:44px;background:#263d40;color:#faf7f0;border:1px 
 #cubefarm-agents .panel>.phone-hint{background:#20343c;padding:9px 4px;color:#e1dbcb}
 
 #cubefarm-agents .drive-choice{padding:16px;background:#f7f4ec;display:grid;gap:10px;max-height:55dvh;overflow:auto;border-top:1px solid #cbbb9b}#cubefarm-agents .drive-choice label{display:grid;gap:4px;font-size:14px}#cubefarm-agents .drive-choice input{font:inherit;border:1px solid #a89982;padding:10px;min-width:0;width:100%;color:#20343c;background:white}
+
+#cubefarm-agents .conversation-status{padding:8px 12px;background:#e5ddcc;font-size:14px;line-height:1.4}
+#cubefarm-agents .conversation-notice{padding:8px 12px;margin:0;background:#fff0cb;font-size:14px;line-height:1.4}
+#cubefarm-agents .conversation-tools{display:flex;gap:8px;padding:6px 12px;background:#f7f4ec}
+#cubefarm-agents .conversation-tools .btn{min-height:36px;padding:6px 10px;font-size:14px}
+#cubefarm-agents .case-message{margin:12px 0;padding:12px;background:#fffdf7;border:1px solid #d6cbb8;border-radius:10px;max-width:95%;overflow-wrap:anywhere}
+#cubefarm-agents .case-message-user{margin-left:auto;background:#e0e8de}
+#cubefarm-agents .case-message p{white-space:pre-wrap;line-height:1.55;margin:8px 0}
+#cubefarm-agents .case-message time{font-size:12px;color:#57675d}

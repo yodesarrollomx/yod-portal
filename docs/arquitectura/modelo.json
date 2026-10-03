@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.34-despacho-github-directo",
+  "revision": "2026-10-03.35-despacho-conversacion",
   "checked_at": "2026-10-02",
   "priorities": [
     "vender_mas",
@@ -7107,6 +7107,24 @@
         "Esquema, vistas, impacto, regresiones y verificadores completos del portal."
       ],
       "deployment": "Candidato implementado en rama: interfaz neutra alojable en GitHub, superficie inmersiva, acceso DP, Chinches y selección privada efímera de Drive. Verificadores y pruebas locales pasan; publicación en Pages y aceptación del propietario se registran por separado. Motor autónomo, voz y lectura directa del expediente no están conectados."
+    },
+    {
+      "id": "CHG-DESPACHO-CONVERSACION-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Preparar la conversación del expediente con resolución privada del caso autorizado, lectura de historial y envío idempotente. El puente de mismo origen conserva sesión y credenciales en el adaptador del OS; no incluye identidad, URL de hoja ni datos operativos en la publicación. Integración productiva pendiente de autenticar ejecutor y adaptar el servidor existente.",
+      "status": "implementado_local",
+      "tests": [
+        "Resolución autorizada sin identificadores privados en cliente; recuperar historial en otra instancia.",
+        "Envío explícito, ACK durable, reintento con el mismo ID y rechazo de respuestas tardías/conflictos.",
+        "Puente de origen, ventana y época de sesión exactos; fallo cerrado sin adaptador.",
+        "Verificaciones completas del portal y prueba de navegador con transporte sintético."
+      ],
+      "deployment": "Preparado para revisión. Cliente y puente probados con transporte sintético; adaptador del servidor y autenticación del ejecutor pendientes. No se acredita conversación real desde sala ni publicación del backend."
     }
   ],
   "data_contracts": [
@@ -7821,6 +7839,32 @@
         "Sólo copiar interfaz, modelos y recursos visuales neutros al repositorio público. Datos, memoria, documentos, nombres de casos e identificadores privados permanecen en Drive y sus transportes autorizados.",
         "Probar mediante dobles y red interceptada; ninguna prueba escribe en endpoints de negocio."
       ]
+    },
+    {
+      "id": "CTR-DESPACHO-CONVERSACION",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "source": "Continuación autorizada del bloque de conversación del Despacho. Contrato local por instalar sobre el backend existente, no nuevas rutas HTTP supuestas.",
+      "input": [
+        "resolveCurrent sin selector: el servidor resuelve expediente y permiso del actor autenticado.",
+        "read con case_id previamente resuelto; enqueue con case_id, expected_revision, request_id y message."
+      ],
+      "output": [
+        "Identidad y enlace privado procedentes del servidor; historial y estado desde Sheets.",
+        "Recibo de encolado confirmado; respuesta recuperada por lectura posterior, sin regenerar resultados al abrir."
+      ],
+      "invariants": [
+        "Cada operación exige autorización fresca de servidor; el puente de navegador no sustituye Portero.",
+        "Origen y ventana exactos, método permitido y época de sesión conservada. Credenciales sólo en adaptador autorizado del OS.",
+        "Sin datos privados estáticos, sin almacenamiento local de conversaciones ni inferencia de guardado a partir del eco visual.",
+        "Cierre o revocación descartan datos en memoria y respuestas tardías; toda reapertura relee Sheets.",
+        "Un fallo de ACK conserva el mismo request_id para reconciliar, nunca encola con ID nuevo automáticamente.",
+        "Sin adaptador verificado no se habilita envío. Pruebas sintéticas no acreditan conexión productiva."
+      ]
     }
   ],
   "path_ownership": [
@@ -8179,6 +8223,26 @@
         "SYS-SALA",
         "GAS-SALA",
         "SHEET-SALA"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/despacho-conversation.js",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-conversation.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
       ]
     }
   ]

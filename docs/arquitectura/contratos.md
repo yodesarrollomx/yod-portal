@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.34-despacho-github-directo · 2026-10-02.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.35-despacho-conversacion · 2026-10-02.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -355,3 +355,17 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Cada borrador 3D conserva un guard efímero de ventana y sesión vigentes; al salir o invalidar autorización se cierra el compositor y se cancela su guard. Tras recargar o cambiar persona no se autoenvía un borrador 3D antiguo; su exportación manual conserva el contexto. Las Chinches generales mantienen su comportamiento existente.
 - Sólo copiar interfaz, modelos y recursos visuales neutros al repositorio público. Datos, memoria, documentos, nombres de casos e identificadores privados permanecen en Drive y sus transportes autorizados.
 - Probar mediante dobles y red interceptada; ninguna prueba escribe en endpoints de negocio.
+
+## CTR-DESPACHO-CONVERSACION
+
+- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, EXT-DRIVE.
+- Evidencia: Continuación autorizada del bloque de conversación del Despacho. Contrato local por instalar sobre el backend existente, no nuevas rutas HTTP supuestas..
+- Entrada/campos: `resolveCurrent sin selector: el servidor resuelve expediente y permiso del actor autenticado.`, `read con case_id previamente resuelto; enqueue con case_id, expected_revision, request_id y message.`.
+- Salida: Identidad y enlace privado procedentes del servidor; historial y estado desde Sheets., Recibo de encolado confirmado; respuesta recuperada por lectura posterior, sin regenerar resultados al abrir..
+
+- Cada operación exige autorización fresca de servidor; el puente de navegador no sustituye Portero.
+- Origen y ventana exactos, método permitido y época de sesión conservada. Credenciales sólo en adaptador autorizado del OS.
+- Sin datos privados estáticos, sin almacenamiento local de conversaciones ni inferencia de guardado a partir del eco visual.
+- Cierre o revocación descartan datos en memoria y respuestas tardías; toda reapertura relee Sheets.
+- Un fallo de ACK conserva el mismo request_id para reconciliar, nunca encola con ID nuevo automáticamente.
+- Sin adaptador verificado no se habilita envío. Pruebas sintéticas no acreditan conexión productiva.

@@ -31,12 +31,11 @@
   },
   "case_data_source": "Existing authorized Sheets/Drive transport only, no design snapshot as live state",
   "limitations": [
-    "Direct chat send disabled; real conversation available through the existing Sheet",
-    "No real terminal mounted and no /ws/term connection",
-    "Backend standalone local Node is installed but not hosted in the static Site",
-    "No agent swarm or paid API activated",
-    "No completed hourly inference evidenced",
-    "Selección manual de expediente privado hasta conectar el transporte autorizado"
+    "Cliente de conversación y puente implementados; requieren adaptador autenticado real en el OS.",
+    "Sin ejecución del motor ni persistencia productiva comprobadas desde esta interfaz.",
+    "Sin terminal de ejecución ni conexión /ws/term.",
+    "Revisión automática por hora permanece pausada; sin API de pago activada.",
+    "Sin adaptador, el envío falla cerrado y se mantiene la selección manual de Drive."
   ],
   "public_frontend": "Interfaz neutra sin identidad de cliente ni enlace de hoja privada",
   "hosting": "GitHub Pages, yodesarrollomx/yod-portal/despacho3d"

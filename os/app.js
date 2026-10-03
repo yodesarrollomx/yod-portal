@@ -236,12 +236,18 @@
   }
 
   // La sección privada solo conoce autorización/época; ninguna credencial sale del OS.
-  var despachoPins=null;
+  var despachoPins=null,despachoConversation=null;
   var despachoSection=window.YodDespachoSection.create({
     window:window,document:document,
     readAccess:function(){return {ready:Boolean(state.sessionToken)&&mismaSesion(state.sessionToken,state.sesionEpoch),allowed:window.YodAccessPolicy.canOpen(state.boards,'SYS-DESPACHO',state.role),epoch:state.sesionEpoch};},
-    onTeardown:function(){if(despachoPins)despachoPins.clear();},
+    onTeardown:function(){if(despachoPins)despachoPins.clear();if(despachoConversation)despachoConversation.clear();},
     revalidate:function(){loadIdentity();}
+  });
+  if(window.YodDespachoConversation)despachoConversation=window.YodDespachoConversation.bind({
+    isAuthorized:function(){return despachoSection.isAuthorized();},
+    getIframeWindow:function(){return despachoSection.getIframeWindow();},
+    getEpoch:function(){return state.sesionEpoch;},
+    getTransport:function(){return window.YODCaseTransport;}
   });
   window.revisarPuertaDespacho=function(){despachoSection.refresh();};
   window.cerrarDespachoPrivado=function(){despachoSection.teardown();};

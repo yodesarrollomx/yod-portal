@@ -1,0 +1,37 @@
+# Conversación del expediente en el Despacho
+
+Estado: cliente y puente implementados y probados con datos sintéticos. La integración productiva sigue pendiente. No hay inferencia, autenticación del ejecutor ni escritura real en Sheets acreditadas por este cambio.
+
+Al abrir Agentes, el cliente pide el expediente autorizado al OS. Con un adaptador conectado, recupera nombre, enlace, conversación y actividad desde el servidor. El envío explícito conserva un identificador durante reintentos y sólo confirma recepción después del recibo persistido. La respuesta aparece mediante una lectura posterior; reabrir no ejecuta otra inferencia.
+
+## Adaptador pendiente
+
+El servidor existente debe instalar `window.YODCaseTransport` en el OS. Estos nombres son operaciones locales; este PR no inventa ni publica rutas HTTP. Cada operación debe autorizar la sesión vigente y resolver las fuentes canónicas en servidor. El puente verifica origen, ventana y época de sesión, pero no reemplaza la autorización del servidor.
+
+| Operación | Entrada | Salida |
+| --- | --- | --- |
+| `resolveCurrent` | `{}` | `ok`, `case_id`, `name`, `url`, `can_enqueue`, `agent_ready` |
+| `read` | `case_id` | `ok`, `case_id`, `source_revision`, `context.identity`, `state.updated_at`, `conversation`, `jobs`, `events` |
+| `enqueue` | `case_id`, `expected_revision`, `request_id`, `message` | Recibo durable con `ok`, `state=queued`, `case_id`, `source_revision`, `request_id`, `job_id` |
+
+`resolveCurrent` no recibe nombres, libros o rangos desde el navegador. Los permisos provienen del servidor y `agent_ready` sólo puede ser verdadero después de comprobar ejecución autenticada real. Un estado de sesión guardada no es evidencia suficiente.
+
+El formato de `read` y `enqueue` corresponde al módulo privado de cola ya preparado. El adaptador debe conservar la hoja operacional existente y mapear su historial anterior, sin duplicar casos ni reiniciar conversaciones. Las filas previas de la mesa provisional no quedan importadas automáticamente por este cliente.
+
+Las filas de conversación usan `message_id`, `case_id`, `job_id`, `role`, `body_json` y `created_at`; el cuerpo conserva texto literal (`message` para usuario, `reply` para agente). Los trabajos incluyen `job_id`, `case_id`, `enqueue_request_id` y `status`. Los eventos usan `event_id`, `case_id`, `kind` y `created_at`.
+
+Un conflicto de revisión exige releer. Un recibo perdido conserva el mismo mensaje e identificador. El servidor debe ofrecer idempotencia durable y rechazar la reutilización con otro contenido. Leer el trabajo por `enqueue_request_id` también permite reconciliar el guardado sin reenviar. Mientras el trabajo está activo, el panel relee cada cinco segundos durante un máximo de un minuto; después permite actualizar manualmente. Estas lecturas nunca ejecutan inferencia.
+
+## Privacidad y cierre
+
+Los datos y credenciales no se incluyen en la publicación. El puente no añade tokens a mensajes, URLs o código. Cerrar el panel elimina selección, historial y borrador de su memoria. Cambiar sesión o desmontar el iframe descarta respuestas tardías. Toda reapertura lee de nuevo; no usa almacenamiento del navegador como historial.
+
+El cliente no activa horarios, voz, contactos, cálculos ni acciones de negocio. Sin adaptador verificado, mantiene el envío deshabilitado y muestra el fallo de conexión.
+
+## Validación y entrega
+
+Las pruebas cubren recuperación en una nueva instancia, respuesta tardía, recibo perdido, conflicto, límites de datos, origen, ventana y sesión. Las pruebas de navegador usan transporte sintético y bloquean conexiones externas. No acreditan persistencia en Sheets productivo.
+
+La aceptación pendiente es una instrucción real desde la sala, respuesta de un ejecutor autenticado, lectura posterior de su registro en la misma hoja y recuperación tras cerrar y volver a entrar. Antes de integrar el servidor hay que recuperar su fuente activa, conservar la implementación y comprobar el ejecutor en su entorno autorizado.
+
+Reversión: revertir el PR del cliente. Conservar hojas, historial, identificadores, permisos y despliegues del servidor.
