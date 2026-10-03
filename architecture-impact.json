@@ -1,13 +1,16 @@
 {
-  "model_revision": "2026-10-03.51-emd-encabezado-avance",
-  "proposal_id": "CHG-EMD-ENCABEZADO-046",
+  "model_revision": "2026-10-03.52-emd-tierra-pala",
+  "proposal_id": "CHG-EMD-TIERRA-PALA-047",
   "components": [
+    "SYS-YOD-OS",
     "SYS-EMD",
     "GAS-EMD",
-    "SHEET-EMD",
-    "SYS-YOD-OS"
+    "SHEET-EMD"
   ],
-  "summary": "Registrar cambio visual EMD en encabezado con porcentaje único y tierra ampliada; contratos existentes intactos.",
+  "summary": "Registrar antes de implementación el porcentaje descubierto por la máquina y tierra alimentada por la pala. Reinicio operativo autorizado por separado, con respaldo privado y perfiles conservados.",
+  "contracts": [
+    "CTR-DESPACHO-CORCHO"
+  ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -15,7 +18,8 @@
     "node verify-portal.cjs",
     "ACCESOS_REF=3ee8ca50bf14ef17d95e72523e54506eb996f262 node verify-accesos.cjs",
     "node verify-obra-app.cjs",
+    "node scripts/verificar-impacto.cjs --base origin/main --repo yodesarrollomx/yod-portal",
     "git diff --check"
   ],
-  "rollback": "Revertir registro; EMD vuelve a GAS33 en misma implementación sin restaurar datos."
+  "rollback": "Revertir PR documental y regenerar vistas; frontend vuelve a GAS34. El reinicio operativo no es rollback de código ni restaura otros datos."
 }

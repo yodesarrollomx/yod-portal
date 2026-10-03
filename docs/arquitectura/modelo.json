@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.51-emd-encabezado-avance",
+  "revision": "2026-10-03.52-emd-tierra-pala",
   "checked_at": "2026-10-03",
   "priorities": [
     "vender_mas",
@@ -7483,6 +7483,30 @@
       ],
       "deployment": "Pendiente implementar, integrar por PR y actualizar solo Index en implementación existente. URLs, tokens, permisos, preguntas, escala, matriz y cierre conservados.",
       "rollback": "Seleccionar versión GAS33 en implementación existente y revertir commit visual; conservar datos y chinches."
+    },
+    {
+      "id": "CHG-EMD-TIERRA-PALA-047",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Porcentaje único blanco sobre rojo, detrás de la maquinaria y descubierto al avanzar desde el logo intacto al cero. Tierra en contacto continuo con la pala: alimentación desde el borde, rodamiento, caída granular por el talud y crecimiento hasta apenas superar la máquina al 100%. Sin cambios de contratos o reglas del instrumento.",
+      "status": "propuesto",
+      "approval": {
+        "date": "2026-10-03",
+        "scope": "Propietario solicita corregir el gráfico y reiniciar exclusivamente las respuestas de su cuenta conservando el perfil editado."
+      },
+      "tests": [
+        "npm test en EMD privado",
+        "npm run test:ui sintético Chromium/WebKit; contacto pala/tierra, capas del porcentaje, crecimiento y contención 0/4/10/50/100; ACK válido/fallido y movimiento reducido",
+        "git diff --check",
+        "node scripts/arquitectura.cjs --check",
+        "Lectura real del frontend publicado y comprobación privada del reinicio autorizado; pruebas sintéticas separadas de los datos de negocio"
+      ],
+      "deployment": "Pendiente implementación, CI y publicación en implementación existente. El reinicio operativo se realiza por separado, con respaldo privado, revisión incrementada y perfiles conservados; no es una escritura QA.",
+      "rollback": "Volver a GAS34 en la implementación existente y revertir el cambio visual. El reinicio de respuestas solo se revierte desde el respaldo privado de las filas afectadas, con autorización; no restaurar todo el almacén."
     }
   ],
   "data_contracts": [
