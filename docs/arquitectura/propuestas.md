@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.49-metas-terminal · 2026-10-03.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.50-metas-durables · 2026-10-03.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 

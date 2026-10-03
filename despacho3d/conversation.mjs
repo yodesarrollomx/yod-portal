@@ -6,13 +6,15 @@ import {validateAvatarProfile} from './avatar-profile.mjs';
 const text=(v,max=256)=>typeof v==='string'&&v.length>0&&v.length<=max;
 const date=v=>typeof v==='string'&&Number.isFinite(Date.parse(v));
 const active=new Set(['queued','running','claimed']);
-const diagnosticCodes=new Set(['unauthorized','session_changed','timeout','unavailable','despacho_not_ready','invalid_selection','invalid_snapshot','invalid_message','invalid_job','invalid_event','seleccion_invalida','enlace_invalido','outside_os']);
+const diagnosticCodes=new Set(['unauthorized','session_changed','timeout','unavailable','despacho_not_ready','invalid_selection','invalid_snapshot','invalid_message','invalid_job','invalid_event','seleccion_invalida','enlace_invalido','outside_os','case_changed','session_pending','transport_busy']);
+const transientCodes=new Set(['timeout','unavailable','transport_busy','session_pending']);
 const diagnosticCode=e=>diagnosticCodes.has(e?.message)?e.message:'unavailable';
 function checked(v){if(v?.ok===false)throw Error(diagnosticCodes.has(v.error)?v.error:'unavailable');return v;}
 export function validateSelection(v){
  if(!v||v.ok!==true||!text(v.case_id)||!text(v.name,120)||typeof v.can_enqueue!=='boolean'||typeof v.agent_ready!=='boolean')throw Error('invalid_selection');
  const selection={...validateDriveSelection(v),case_id:v.case_id,can_enqueue:v.can_enqueue,agent_ready:v.agent_ready};
- return {...selection,avatar:validateAvatarProfile(v.avatar,selection)};
+ const goals=v.goals?.schema===1&&typeof v.goals.ready==='boolean'&&typeof v.goals.worker_ready==='boolean'?{schema:1,ready:v.goals.ready,worker_ready:v.goals.worker_ready}:null;
+ return {...selection,avatar:validateAvatarProfile(v.avatar,selection),goals};
 }
 export function safeDocumentUrl(value){
  try{return validateDriveSelection({name:'Documento',url:value}).url;}catch{return null;}
@@ -47,11 +49,12 @@ export function validateConversation(v,id){
  return {case_id:id,revision:v.source_revision,updated_at:v.state.updated_at,messages,jobs,events,memory,documents,decisions:[],processing:jobs.some(j=>active.has(j.status))};
 }
 export class Conversation {
- constructor({transport,notify=()=>{},uuid=()=>crypto.randomUUID(),timeout=55000}){Object.assign(this,{transport,notify,uuid,timeout,selection:null,model:null,pending:null,status:'disconnected',busy:false,epoch:0,profile:null,profileListeners:new Set()});}
+ constructor({transport,notify=()=>{},uuid=()=>crypto.randomUUID(),timeout=55000}){Object.assign(this,{transport,notify,uuid,timeout,selection:null,model:null,pending:null,accepted:null,status:'disconnected',busy:false,epoch:0,profile:null,stale:false,profileListeners:new Set()});}
  getProfile(){return this.profile?structuredClone(this.profile):null;}
  subscribeProfile(fn){if(typeof fn!=='function')throw TypeError('A listener is required');this.profileListeners.add(fn);fn(this.getProfile());return()=>this.profileListeners.delete(fn);}
  setProfile(profile){if(JSON.stringify(this.profile)===JSON.stringify(profile))return;this.profile=profile?structuredClone(profile):null;for(const fn of this.profileListeners){try{fn(this.getProfile());}catch{/* A renderer failure must not alter server authorization. */}}}
  forgetProfile(){this.setProfile(null);}
+ get recoverable(){return this.status==='reconnecting'||(this.status==='unavailable'&&transientCodes.has(this.diagnostic?.code));}
  get stoppedMessage(){
   const job=this.model?.jobs.at(-1);
   return job?.status==='stopped'?this.model.messages.filter(m=>m.role==='user'&&m.job_id===job.id).at(-1)?.body||null:null;
@@ -63,7 +66,7 @@ export class Conversation {
   if(!transport||typeof transport[method]!=='function')throw Error('unavailable');
   let timer;try{return await Promise.race([transport[method](structuredClone(payload)),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('timeout')),this.timeout);})]);}finally{clearTimeout(timer);}
  }
- close(){this.epoch++;this.selection=null;this.model=null;this.pending=null;this.diagnostic=null;this.status='disconnected';this.busy=false;this.emit();}
+ close(){this.epoch++;this.selection=null;this.model=null;this.pending=null;this.accepted=null;this.diagnostic=null;this.stale=false;this.status='disconnected';this.busy=false;this.emit();}
  async open(){
   this.close();const epoch=this.epoch;this.busy=true;this.status='loading';this.emit();
   let step='expediente';
@@ -73,8 +76,8 @@ export class Conversation {
    step='historial';
    const model=validateConversation(checked(await this.call('read',{case_id:selection.case_id})),selection.case_id);
    if(epoch!==this.epoch)return false;
-   this.selection=selection;this.model=model;this.setProfile(selection.avatar);this.status=model.processing?'processing':'ready';return true;
-  }catch(error){if(epoch===this.epoch){this.selection=null;this.model=null;this.forgetProfile();this.diagnostic={step,code:diagnosticCode(error)};this.status='unavailable';}return false;}
+   this.selection=selection;this.model=model;this.stale=false;this.setProfile(selection.avatar);this.status=model.processing?'processing':'ready';return true;
+  }catch(error){if(epoch===this.epoch){this.selection=null;this.model=null;if(!transientCodes.has(diagnosticCode(error)))this.forgetProfile();this.diagnostic={step,code:diagnosticCode(error)};this.status='unavailable';}return false;}
   finally{if(epoch===this.epoch){this.busy=false;this.emit();}}
  }
  async refresh(){
@@ -86,19 +89,25 @@ export class Conversation {
    if(selection.case_id!==this.selection.case_id)throw Error('case_changed');
    const model=validateConversation(checked(await this.call('read',{case_id:this.selection.case_id})),this.selection.case_id);
    if(epoch!==this.epoch)return false;
-   this.selection=selection;this.setProfile(selection.avatar);this.diagnostic=null;
+   this.selection=selection;this.setProfile(selection.avatar);this.diagnostic=null;this.stale=false;
    this.model=model;
    if(this.pending&&model.jobs.some(j=>j.request_id===this.pending.request_id))this.pending=null;
-   this.status=this.pending?'unconfirmed':model.processing?'processing':'ready';return true;
+   if(this.accepted&&model.messages.some(m=>m.job_id===this.accepted.job_id))this.accepted=null;
+   this.status=this.pending?'unconfirmed':this.accepted||model.processing?'processing':'ready';return true;
   }catch(error){if(epoch===this.epoch){
-   this.model=null;this.forgetProfile();
-   if(['unauthorized','session_changed','case_changed'].includes(error?.message)){this.selection=null;this.pending=null;}
-   this.diagnostic={step:'actualización',code:diagnosticCode(error)};this.status='unavailable';
+   const code=diagnosticCode(error);
+   if(transientCodes.has(code)){
+    // This is the last authorized view, not permission to send while offline.
+    this.stale=true;this.status='reconnecting';
+   }else{
+    this.model=null;this.forgetProfile();this.selection=null;this.pending=null;this.accepted=null;this.stale=false;this.status='unavailable';
+   }
+   this.diagnostic={step:'actualización',code};
   }return false;}
   finally{if(epoch===this.epoch){this.busy=false;this.emit();}}
  }
  async send(message){
-  if(this.busy||!this.selection?.can_enqueue||!this.selection?.agent_ready)return false;
+  if(this.busy||this.stale||!['ready','unconfirmed'].includes(this.status)||!this.selection?.can_enqueue||!this.selection?.agent_ready)return false;
   if(!this.pending){
    if(this.status!=='ready'||!this.model||this.model.processing||typeof message!=='string'||!message.trim()||message.length>8000)return false;
    this.pending={case_id:this.selection.case_id,expected_revision:this.model.revision,request_id:this.uuid(),message:message.trim()};
@@ -111,9 +120,9 @@ export class Conversation {
    if(epoch!==this.epoch)return false;
    if(ack?.ok===false&&['stale_revision','case_busy','request_id_reused'].includes(ack.error)){this.pending=null;this.status='conflict';return false;}
    if(ack?.ok!==true||ack.case_id!==this.pending.case_id||ack.request_id!==this.pending.request_id||ack.source_revision!==this.pending.expected_revision||!text(ack.job_id)||ack.state!=='queued')throw Error('unconfirmed');
-   this.pending=null;this.status='processing';confirmed=true;
+   this.accepted={job_id:ack.job_id,message:this.pending.message};this.pending=null;this.status='processing';confirmed=true;
   }catch(error){if(epoch===this.epoch){
-   if(['unauthorized','session_changed'].includes(error?.message)){this.forgetProfile();this.selection=null;this.model=null;this.pending=null;this.diagnostic={step:'envío',code:error.message};this.status='unavailable';}
+   if(['unauthorized','session_changed'].includes(error?.message)){this.forgetProfile();this.selection=null;this.model=null;this.pending=null;this.accepted=null;this.diagnostic={step:'envío',code:error.message};this.status='unavailable';}
    else this.status='unconfirmed';
   }}
   finally{if(epoch===this.epoch){this.busy=false;this.emit();}}
@@ -134,5 +143,5 @@ export function createFrameTransport(win,timeout=55000){
   const id=win.crypto.randomUUID();const timer=setTimeout(()=>{waiting.delete(id);reject(Error('timeout'));},timeout);
   waiting.set(id,{resolve,reject,timer});win.parent.postMessage({type:'yod:case:request',version:1,id,method,payload},win.location.origin);
  });
- return {resolveCurrent:p=>request('resolveCurrent',p),read:p=>request('read',p),enqueue:p=>request('enqueue',p),dispose(){alive=false;win.removeEventListener('message',receive);for(const item of waiting.values()){clearTimeout(item.timer);item.reject(Error('closed'));}waiting.clear();}};
+ return {resolveCurrent:p=>request('resolveCurrent',p),read:p=>request('read',p),enqueue:p=>request('enqueue',p),readGoals:p=>request('readGoals',p),createGoal:p=>request('createGoal',p),reviewGoal:p=>request('reviewGoal',p),dispose(){alive=false;win.removeEventListener('message',receive);for(const item of waiting.values()){clearTimeout(item.timer);item.reject(Error('closed'));}waiting.clear();}};
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.49-metas-terminal",
+  "revision": "2026-10-03.50-metas-durables",
   "checked_at": "2026-10-03",
   "priorities": [
     "vender_mas",
@@ -7440,6 +7440,25 @@
       ],
       "deployment": "Frontend implementado y probado para runtime0.3 existente; publicación por PR. Ejecución real con herramientas locales acreditada en entorno separado: diagnóstico, tareas y evidencia guardados y relectura exacta en Drive privado. No acredita ejecución en la Chromebook ni autonomía continua.",
       "rollback": "Revertir frontend conserva procesos, metas locales e historial."
+    },
+    {
+      "id": "CHG-DESPACHO-METAS-DURABLES-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Conversación única como entrada principal, recuperación automática tras fallos temporales sin borrar el historial visible ni repetir mensajes, dictado y lectura de respuestas con capacidades del navegador. Terminal queda como diagnóstico opcional. Base separada de metas/tareas/evidencias en Sheets, habilitada sólo cuando backend la acredita; motor permanente y transmisión progresiva requieren verificación aparte.",
+      "status": "implementado_local",
+      "tests": [
+        "255 pruebas Node del portal aprobadas; verificadores de arquitectura, OS, portal, accesos y obra aprobados.",
+        "35 comprobaciones de navegador con transporte y voz sintéticos: reconexión, ACK perdido sin duplicación, conservación de borrador nuevo, revocación, cuatro pestañas y anchos 320/390/escritorio.",
+        "14 pruebas de controlador de dictado/lectura; el audio real y el motor persistente de la Chromebook quedan pendientes.",
+        "Metas durables con UI condicionada a capacidad de servidor; backend/runtime nuevos preparados en privado, sin activación productiva."
+      ],
+      "deployment": "Frontend compatible con r4 listo para PR y Pages: recuperación automática, historial visible durante cortes, dictado/lectura del navegador y diagnóstico secundario. Backend r5, ejecución de metas y motor persistente todavía no publicados ni instalados. La negociación WebRTC se verificó aparte en entorno de desarrollo; no acredita voz productiva.",
+      "rollback": "Revertir frontend y backend de la misma implementación; conservar pestañas de metas, recibos, workspace, vínculo y checkpoints. No reiniciar tareas inciertas."
     }
   ],
   "data_contracts": [
@@ -8219,7 +8238,9 @@
         "Sin datos privados estáticos, sin almacenamiento local de conversaciones ni inferencia de guardado a partir del eco visual.",
         "Cierre o revocación descartan datos en memoria y respuestas tardías; toda reapertura relee Sheets.",
         "Un fallo de ACK conserva el mismo request_id para reconciliar, nunca encola con ID nuevo automáticamente.",
-        "Sin adaptador verificado no se habilita envío. Pruebas sintéticas no acreditan conexión productiva."
+        "Sin adaptador verificado no se habilita envío. Pruebas sintéticas no acreditan conexión productiva.",
+        "Un fallo transitorio de red conserva sólo la lectura ya visible, marcada desactualizada; bloquea nuevos envíos hasta revalidar. Revocación o cambio de caso limpia datos. Recuperación consulta Sheets sin reenviar inferencia.",
+        "La voz del navegador dicta un borrador y lee una respuesta ya guardada por acción del usuario; no escucha al cerrar ni se presenta como voz realtime."
       ]
     },
     {
@@ -8745,6 +8766,46 @@
         "EXT-DRIVE"
       ],
       "repo": "yodesarrollomx/yod-portal"
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-authorized-profile.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-recovery.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-goals.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-voice.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
     }
   ]
 }

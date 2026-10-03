@@ -72,7 +72,7 @@ test('refresh revocation clears the previous identity and pending write; network
  }
  const server=backend(),c=new Conversation({transport:server,uuid:()=> 'request-1'});
  server.enqueue=async()=>{throw Error('network unavailable');};await c.open();await c.send('Mensaje');
- const pending=structuredClone(c.pending);server.read=async()=>{throw Error('network unavailable');};assert.equal(await c.refresh(),false);assert.deepEqual(c.pending,pending);assert.equal(c.selection.case_id,current.case_id);assert.equal(c.getProfile(),null);
+ const pending=structuredClone(c.pending);server.read=async()=>{throw Error('network unavailable');};assert.equal(await c.refresh(),false);assert.deepEqual(c.pending,pending);assert.equal(c.selection.case_id,current.case_id);assert.deepEqual(c.getProfile(),profile);assert.equal(c.stale,true);assert.equal(await c.send('No enviar con lectura vieja'),false);
 });
 test('an enqueue authorization rejection revokes profile while uncertain ACKs keep the original request',async()=>{
  const {Conversation}=await load();

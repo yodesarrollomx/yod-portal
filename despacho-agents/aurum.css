@@ -90,7 +90,7 @@ header #agents-open{min-height:44px;background:#263d40;color:#faf7f0;border:1px 
 #cubefarm-agents .terminal-controls{display:flex;gap:6px;flex-wrap:wrap}
 #cubefarm-agents .terminal-controls .btn{font-size:13px;padding:7px 10px}
 #cubefarm-agents .terminal-notice{font-size:14px;margin:2px 0}
-#cubefarm-agents .dossier-panel .phone-tabs{grid-template-columns:repeat(5,minmax(0,1fr))}
+#cubefarm-agents .dossier-panel .phone-tabs{grid-template-columns:repeat(4,minmax(0,1fr))}
 #cubefarm-agents .dossier-panel .phone-tab{min-width:0;font-size:11px}
 @media(max-width:700px){#cubefarm-agents .dossier-panel.terminal-wide{width:100%;height:100dvh;border-radius:0}#cubefarm-agents .terminal-puesto{min-height:250px}#cubefarm-agents .terminal-screen{min-height:170px}}
 
@@ -110,3 +110,36 @@ header #agents-open{min-height:44px;background:#263d40;color:#faf7f0;border:1px 
 #cubefarm-agents .goal-preview pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:220px;overflow:auto;padding:10px;background:#fffdf7;border:1px solid #d6cbb8;border-radius:8px;font:12px/1.5 var(--font)}
 #cubefarm-agents .goal-prepare{background:#314c43;color:#fffdf7}
 #cubefarm-agents .goal-prepared{margin:0;padding:9px 12px;border:1px solid #b5c1a8;border-radius:6px;background:#e4ecdc;font-size:14px;line-height:1.45}
+
+#cubefarm-agents .durable-goals{min-width:0;overflow-wrap:anywhere}
+#cubefarm-agents .durable-goals-head,#cubefarm-agents .durable-goal-heading{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+#cubefarm-agents .durable-goals-head .btn{font-size:13px;padding:7px 10px}
+#cubefarm-agents .durable-goals p{font-size:14px;line-height:1.55}
+#cubefarm-agents .durable-goals .durable-tools{color:#52615b;font-size:13px}
+#cubefarm-agents .durable-goal-list{margin:14px 0}
+#cubefarm-agents .durable-state{display:inline-flex;max-width:100%;border-radius:6px;padding:4px 7px;background:#e8e1d4;color:#314d44;font-size:12px;white-space:normal}
+#cubefarm-agents .durable-state-running{background:#d9e9e0}
+#cubefarm-agents .durable-state-ready_for_review{background:#efe1bc}
+#cubefarm-agents .durable-state-completed{background:#d9e9d4}
+#cubefarm-agents .durable-goals .durable-progress-note{font-size:13px;color:#52615b}
+#cubefarm-agents .durable-summary{background:#eaf0e6;border-left:3px solid #667c64;padding:10px;margin:12px 0}
+#cubefarm-agents .durable-goals h4{font-size:14px;line-height:1.45;margin:0 0 6px}
+#cubefarm-agents .durable-tasks{padding-left:22px;margin:14px 0}
+#cubefarm-agents .durable-tasks>li{padding:10px 0;border-top:1px solid #ddd5c5}
+#cubefarm-agents .durable-actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+#cubefarm-agents .durable-actions .btn{padding:8px 10px;font-size:13px}
+#cubefarm-agents .durable-evidence{font-size:13px;margin:8px 0}
+#cubefarm-agents .durable-evidence summary,#cubefarm-agents .durable-create>summary{padding:10px 0;cursor:pointer;line-height:1.5}
+#cubefarm-agents .durable-evidence pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:260px;overflow:auto;padding:10px;background:#f3eee4;border-radius:6px;font:13px/1.55 var(--font)}
+#cubefarm-agents .durable-review,#cubefarm-agents .durable-pending{background:#fff0cb;border:1px solid #d5c18d;border-radius:8px;padding:10px;margin:10px 0}
+#cubefarm-agents .durable-create{border-top:1px solid #d6cbb8;padding-top:4px}
+#cubefarm-agents .durable-create .goal-form{margin-top:10px}
+#cubefarm-agents .durable-create input{width:100%;min-width:0;box-sizing:border-box;padding:10px;border:1px solid #b5b9ad;border-radius:8px;background:#fffdf7;color:#263d40;font:inherit}
+#cubefarm-agents .conversation-voice{flex-shrink:0;padding:6px 12px 8px;background:#faf7f0;border-top:1px solid #e6decf}
+#cubefarm-agents .conversation-voice-buttons{display:flex;gap:8px;flex-wrap:wrap}
+#cubefarm-agents .conversation-voice .btn{padding:7px 10px;font-size:13px}
+#cubefarm-agents .conversation-voice p{margin:5px 0 0;line-height:1.35;font-size:11px}
+#cubefarm-agents .conversation-voice [aria-pressed="true"]{background:#314c43;color:#fffdf7}
+#cubefarm-agents .chat-input{flex-shrink:0}
+
+@media(max-width:360px){#cubefarm-agents .dossier-panel .phone-tab{padding:6px 2px;font-size:10px;letter-spacing:0}}
