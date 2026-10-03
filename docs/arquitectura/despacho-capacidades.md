@@ -28,12 +28,12 @@ La terminal original controla agentes de programación en worktrees; para agente
 
 ## Orden de instalación y aceptación
 
-1. Conversación, memoria, guardado y cierre/reapertura del piloto completados y confirmados por el propietario. Medir la optimización del servidor cuando se publique.
+1. Conversación, memoria, guardado y cierre/reapertura del piloto completados y confirmados por el propietario. Medir un turno después de publicar r2; despliegue y lecturas ya verificados.
 2. Establecer un servicio privado persistente para el motor y su transporte de eventos. Así su disponibilidad no depende de esta sesión de trabajo.
 3. Conectar ejecución/control, tareas, QA y entregas a ese servicio, preservando los registros en Sheets y Drive.
 4. Registrar cada agente con el mismo paquete, expediente, especialidad y límites propios. Comprobar que no lee ni ejecuta trabajos de otro agente.
 5. Incorporar voz y acercamiento a los personajes.
 
-La optimización de servidor agrupa las cuatro pestañas de fuentes en una llamada a Sheets, conservando los valores mostrados y la revisión del expediente. Se comprobaron equivalencia de revisión, frescura sin caché, límites y permisos. El paquete privado r2 está preparado para publicación manual; su latencia productiva aún no se ha medido.
+La optimización de servidor agrupa las cuatro pestañas de fuentes en una llamada a Sheets, conservando los valores mostrados y la revisión del expediente. Se comprobaron equivalencia de revisión, frescura sin caché, límites y permisos. El propietario publicó r2 en la implementación existente. La etiqueta pública, la coincidencia del código y las lecturas del motor se verificaron; la latencia de un nuevo turno aún no se ha medido.
 
 La aceptación por agente exige una tarea auténtica: recibirla, ejecutarla con sus herramientas, mostrar la evidencia, guardar el resultado y recuperarlo al volver a entrar. Mientras falte cualquiera de esos pasos, la capacidad permanece pendiente. La propuesta se registra como `CHG-DESPACHO-CAPACIDADES-001`; este documento no acredita su instalación.

@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-03.42-despacho-memoria",
+  "model_revision": "2026-10-03.43-despacho-r2",
   "proposal_id": "CHG-DESPACHO-CONVERSACION-001",
   "components": [
     "SYS-YOD-OS",
@@ -7,7 +7,7 @@
     "GAS-PORTERO",
     "EXT-DRIVE"
   ],
-  "summary": "Conciliar evidencia: segundo turno auténtico con memoria desde la sala, persistencia y coincidencia visual. Registrar mejora privada de lecturas agrupadas como preparada y no desplegada; mantener servicio permanente y capacidades restantes pendientes.",
+  "summary": "Registrar despliegue r2 del servidor privado: etiqueta publicada, código guardado cotejado y lecturas del motor verificadas. Latencia de un nuevo turno y disponibilidad permanente pendientes.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
