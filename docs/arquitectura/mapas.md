@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.43-despacho-r2 · 2026-10-03.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.44-corcho-provisional-035 · 2026-10-03.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -19,7 +19,7 @@ flowchart LR
   n_SHEET_MOAC_METAS["Metas, objetivos y acciones"]
   n_STORE_DESPACHO_CORCHO["Mi Corcho · almacén privado de Dirección"]
   n_GAS_OPERACION -->|Lee/escribe registros del dominio| n_SHEET_OPERACION
-  n_SYS_DESPACHO -.->|Consume contrato del backend| n_GAS_OPERACION
+  n_SYS_DESPACHO -.->|Tareas ordinarias getAll/update en Operación| n_GAS_OPERACION
   n_SYS_TAREAS -.->|Consume contrato del backend| n_GAS_OPERACION
   n_SYS_YOD_OS -->|Navega al sistema autorizado| n_SYS_DESPACHO
   n_SYS_YOD_OS -->|Navega al sistema autorizado| n_SYS_TAREAS
@@ -29,12 +29,14 @@ flowchart LR
   n_SYS_DESPACHO -.->|Aprobación de borradores por protocolo BANDEJA| n_EXT_GMAIL
   n_SYS_TAREAS -->|Enruta moac/moacSet/moacObjetivo a motor separado| n_GAS_MOAC_METAS
   n_GAS_MOAC_METAS -->|Lee y vincula estrategia| n_SHEET_MOAC_METAS
-  n_GAS_OPERACION -.->|Persiste Corcho privado con revisión y control de acceso| n_STORE_DESPACHO_CORCHO
+  n_GAS_OPERACION -.->|Futuro Ops: mismo almacén Corcho tras identificar proyecto| n_STORE_DESPACHO_CORCHO
+  n_SYS_DESPACHO -.->|Provisional: sólo corchoGet/corchoSave| n_GAS_PORTERO
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SHEET_OPERACION pendiente;
   class n_EXT_GMAIL pendiente;
   class n_SHEET_MOAC_METAS pendiente;
+  class n_STORE_DESPACHO_CORCHO pendiente;
 ```
 
 ## Ventas
@@ -321,6 +323,7 @@ flowchart LR
   n_SYS_SALA["Sala de Edición"]
   n_SYS_SITIO_ORG["Sitio de organización"]
   n_SYS_PRUEBA_DOMINIO["Prueba de dominio"]
+  n_GAS_PORTERO["Portero y Potenciales"]
   n_GAS_PLAN_POTENCIAL["Captación de Plan Potencial"]
   n_GAS_CODES["Portal de codesarrolladores"]
   n_GAS_EMD["Evaluación privada"]
@@ -344,6 +347,7 @@ flowchart LR
   n_EXT_GITHUB_PUBLISHER_APP -.->|Crea PR del commit preparado de Sala| n_SYS_SALA
   n_EXT_GITHUB_PUBLISHER_APP -.->|Crea PR del commit preparado de Marketing| n_SYS_MARKETING
   n_GAS_EMD -.->|Propuesta: fotos privadas de perfil| n_EXT_DRIVE
+  n_GAS_PORTERO -.->|Corcho: principal y ACL completos por GET| n_EXT_DRIVE
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_SITIO_ORG pendiente;
   class n_GAS_EMD pendiente;
@@ -375,9 +379,11 @@ flowchart LR
   n_GAS_FLUJO["Tesorería"]
   n_GAS_OBRA["Motor de obra"]
   n_GAS_SALA["Sala de Edición"]
+  n_EXT_DRIVE["Google Drive"]
   n_GAS_CRM["CRM comercial"]
   n_GAS_PORTERO_RESPALDO["Portero de respaldo"]
   n_SHEET_PPP_MODELOS["PPP · Libros de cálculo por caso"]
+  n_STORE_DESPACHO_CORCHO["Mi Corcho · almacén privado de Dirección"]
   n_GAS_PORTERO -.->|Lee/escribe registros del dominio| n_SHEET_PORTERO
   n_SYS_POTENCIALES -.->|Consume contrato del backend| n_GAS_PORTERO
   n_SYS_TRACK -->|Consume contrato del backend| n_GAS_PORTERO
@@ -400,9 +406,14 @@ flowchart LR
   n_GAS_FLUJO -->|Verifica credencial y acceso al módulo| n_GAS_PORTERO
   n_GAS_CRM -->|Consulta identidad y alcance de lectura| n_GAS_PORTERO
   n_GAS_OBRA -->|Verifica credencial para operar| n_GAS_PORTERO
+  n_SYS_DESPACHO -.->|Provisional: sólo corchoGet/corchoSave| n_GAS_PORTERO
+  n_GAS_PORTERO -.->|Provisional: CAS en Mi Corcho privado| n_STORE_DESPACHO_CORCHO
+  n_GAS_PORTERO -.->|Corcho: principal y ACL completos por GET| n_EXT_DRIVE
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SHEET_PORTERO pendiente;
+  class n_EXT_DRIVE pendiente;
+  class n_STORE_DESPACHO_CORCHO pendiente;
 ```
 
 ## Desarrollos
@@ -422,10 +433,13 @@ flowchart LR
 
 ```mermaid
 flowchart LR
+  n_GAS_PORTERO["Portero y Potenciales"]
   n_GAS_OPERACION["Operación y tareas"]
   n_STORE_DESPACHO_CORCHO["Mi Corcho · almacén privado de Dirección"]
-  n_GAS_OPERACION -.->|Persiste Corcho privado con revisión y control de acceso| n_STORE_DESPACHO_CORCHO
+  n_GAS_OPERACION -.->|Futuro Ops: mismo almacén Corcho tras identificar proyecto| n_STORE_DESPACHO_CORCHO
+  n_GAS_PORTERO -.->|Provisional: CAS en Mi Corcho privado| n_STORE_DESPACHO_CORCHO
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
+  class n_STORE_DESPACHO_CORCHO pendiente;
 ```
 
 ## Contratos y evidencia de cada conexión
@@ -447,7 +461,7 @@ flowchart LR
 | CON-013 | GAS-OBRA-CLIENTE → SHEET-OBRA-CLIENTE | persistencia: Lee/escribe registros del dominio. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [yod-portal/obra-app/motor/ObraCliente.gs](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/obra-app/motor/ObraCliente.gs#L175) — Backend asociado al almacén de su dominio |
 | CON-014 | GAS-SALA → SHEET-SALA | persistencia: Lee/escribe registros del dominio. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [sala-edicion/gas/Code.gs](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/gas/Code.gs#L713) — Backend asociado al almacén de su dominio |
 | CON-015 | GAS-EMD → SHEET-EMD | persistencia: Lee/escribe registros del dominio. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | pendiente | Integración pendiente de verificar |
-| CON-016 | SYS-DESPACHO → GAS-OPERACION | api: Consume contrato del backend. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | declarado | [yod-despacho/README.md](https://github.com/yodesarrollomx/yod-despacho/blob/5ad406a6b8584ee49466b15e03a9a3bf8a9ca4b9/README.md#L13) — Conexión cliente/backend |
+| CON-016 | SYS-DESPACHO → GAS-OPERACION | api: Tareas ordinarias getAll/update en Operación. getAll/update siguen en GAS-OPERACION, con contrato y autorización existentes. CHG-DESPACHO-CORCHO-PROVISIONAL-035 propone separar exclusivamente corchoGet/corchoSave hacia GAS-PORTERO; ninguna otra acción cambia de endpoint. | declarado | [yod-despacho/README.md](https://github.com/yodesarrollomx/yod-despacho/blob/5ad406a6b8584ee49466b15e03a9a3bf8a9ca4b9/README.md#L13) — Conexión cliente/backend; [yod-despacho/app.js](https://github.com/yodesarrollomx/yod-despacho/blob/32330badba66dd9b23a7413498f421aeb628c9cb/app.js) — Cliente existente de tareas; separación de Corcho preparada por coordinador, todavía no integrada en el frontend publicado. |
 | CON-017 | SYS-TAREAS → GAS-OPERACION | api: Consume contrato del backend. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | declarado | [board-aurum/README.md](https://github.com/yodesarrollomx/board-aurum/blob/096550e5647a63048450b9be848be71901a32a3a/README.md#L11) — Conexión cliente/backend |
 | CON-018 | SYS-FLUJO → GAS-FLUJO | api: Consume contrato del backend. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [board-flujo-yod/index.html](https://github.com/yodesarrollomx/board-flujo-yod/blob/ef2e6e1fade1b515d10af239bc60519417d906c4/index.html#L379) — Conexión cliente/backend |
 | CON-019 | SYS-POTENCIALES → GAS-PORTERO | api: Consume contrato del backend. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | declarado | [potenciales-yod/CLAUDE.md](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/CLAUDE.md#L47) — Conexión cliente/backend |
@@ -531,5 +545,8 @@ flowchart LR
 | CON-EMD-DRAFTS-LOCAL | SYS-EMD → STORE-EMD-DRAFTS | persistencia_local: Propuesta: copia cifrada local. CTR-EMD-DRAFTS: cifrado por enlace vigente, aislamiento de pestañas, confirmación transaccional local y recuperación explícita; el servidor mantiene revisión y cierre. | propuesto | Diseño propuesto de persistencia local; sin evidencia de publicación |
 | CON-AMALAYA-CLIENT | SYS-AMALAYA → GAS-AMALAYA | api: Consume contrato autenticado del tablero. CTR-AMALAYA-CHINCHES-ESTADO registra la extensión propuesta. Identidad, token, roles, implementación y URL actuales se conservan. | codigo | [amalaya-board/apps-script/Code.gs](https://github.com/yodesarrollo/amalaya-board/blob/a3cf36f508015d288a04288fef040130f30ec3b7/apps-script/Code.gs) — Contratos de chinches existentes y extensión de estado propuesta. |
 | CON-AMALAYA-STORE | GAS-AMALAYA → SHEET-AMALAYA | persistencia: Conserva chinches y su historial. CTR-AMALAYA-CHINCHES-ESTADO registra la extensión propuesta. Identidad, token, roles, implementación y URL actuales se conservan. | codigo | [amalaya-board/apps-script/Code.gs](https://github.com/yodesarrollo/amalaya-board/blob/a3cf36f508015d288a04288fef040130f30ec3b7/apps-script/Code.gs) — Contratos de chinches existentes y extensión de estado propuesta. |
-| CON-DESPACHO-CORCHO-STORE | GAS-OPERACION → STORE-DESPACHO-CORCHO | persistencia: Persiste Corcho privado con revisión y control de acceso. CTR-DESPACHO-CORCHO; identidad exacta, verificación fresca de privacidad de archivo y ancestros, CAS y archivo sin borrado. | propuesto | [board-aurum/apps-script/corcho.gs](https://github.com/yodesarrollomx/board-aurum/blob/096550e5647a63048450b9be848be71901a32a3a/apps-script/corcho.gs) — Almacén privado propuesto, fuera de datos generales de Operación |
+| CON-DESPACHO-CORCHO-STORE | GAS-OPERACION → STORE-DESPACHO-CORCHO | persistencia: Futuro Ops: mismo almacén Corcho tras identificar proyecto. CTR-DESPACHO-CORCHO; futuro adapter en GAS-OPERACION. Sólo cambiar endpoint/adapter, sin mover ni recrear Sheet, notas, ejes o versiones; nunca dos escritores con locks independientes. | propuesto | CHG-DESPACHO-CORCHO-PROVISIONAL-035: Migración futura condicionada a identificar editor/implementación Ops y validar el mismo principal, ACL y contrato; conservar archivo e IDs. |
 | CON-EMD-GITHUB-EMBED | SYS-YOD-OS → SYS-EMD | embed: Propuesta: wrapper público mínimo del cuestionario Google en emd/. CTR-EMD-GITHUB-EMBED: wrapper top GitHub y handshake nonce/ready con origen exacto antes de arranque; RPC y datos permanecen en Google. | propuesto | Propietario confirma Pages main/raíz y ruta canónica /yod-portal/emd/; wrapper pendiente en PR separado, no evidencia de despliegue. |
+| CON-DESPACHO-CORCHO-PORTERO | SYS-DESPACHO → GAS-PORTERO | api: Provisional: sólo corchoGet/corchoSave. POST text/plain; {action,k} para corchoGet y {action,k,version,data} para corchoSave. CTR-DESPACHO-CORCHO; URL Portero conocida actual, sin fallback de servidor ni desvío de getAll/update. | propuesto | CHG-DESPACHO-CORCHO-PROVISIONAL-035: Integración provisional autorizada, pendiente en PR consumidores; preflight V57 no acredita despliegue del adapter. |
+| CON-PORTERO-CORCHO-STORE | GAS-PORTERO → STORE-DESPACHO-CORCHO | persistencia: Provisional: CAS en Mi Corcho privado. CTR-DESPACHO-CORCHO; canjearLigaLento_(key,'DP') local fresco, owner exacto, principal efectivo y ACL Drive exhaustiva, LockService, CAS global y ACK con snapshot; no renovar/cache ni publicar notas. | propuesto | CHG-DESPACHO-CORCHO-PROVISIONAL-035: Integración provisional autorizada, pendiente en PR consumidores; preflight V57 no acredita despliegue del adapter. |
+| CON-PORTERO-CORCHO-DRIVE | GAS-PORTERO → EXT-DRIVE | autorizacion: Corcho: principal y ACL completos por GET. Drive full guard en cada operación: about.user del token de ejecución, propietario único exacto, archivo y todos los ancestros hasta raíz, permissions.list paginado incluidos permisos publicados; scopes Drive existentes completos, fail-closed sin fallback. | propuesto | CHG-DESPACHO-CORCHO-PROVISIONAL-035: Integración provisional autorizada, pendiente en PR consumidores; preflight V57 no acredita despliegue del adapter. |

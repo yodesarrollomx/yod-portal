@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.43-despacho-r2 · 2026-10-03.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.44-corcho-provisional-035 · 2026-10-03.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 

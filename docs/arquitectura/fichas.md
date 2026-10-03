@@ -1,17 +1,17 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.43-despacho-r2 · 2026-10-03.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.44-corcho-provisional-035 · 2026-10-03.
 
 ## SYS-DESPACHO · El Despacho
 
 Priorizar y aprobar trabajo de Dirección
 
 - Tipo: tablero. Dominio: Operación. Responsable: Dirección.
-- Evidencia: codigo. Producción: Registro en catálogo vivo verificado; frontend y nuevo Corcho requieren verificación independiente..
+- Evidencia: codigo. Producción: Registro en catálogo vivo verificado. Frontend Corcho integrado; routing exclusivo corchoGet/corchoSave a Portero propuesto bajo CHG-DESPACHO-CORCHO-PROVISIONAL-035; persistencia y aceptación autenticada pendientes..
 - Entidades: tarea, comentario, borrador, decision.
-- Fuente de verdad: SHEET-OPERACION mediante GAS-OPERACION; protocolo BANDEJA en comentarios.
-- Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L16) — Sistema presente en el catálogo canónico; Catálogo vivo conciliado el 1-oct-2026: SYS-DESPACHO en Portal y Sistemas, destino canónico, fórmulas/validaciones comprobadas, permisos DP conservados. Seguimiento yod-portal#3 completado..
-- Conexiones: CON-016 (SYS-DESPACHO → GAS-OPERACION); CON-033 (SYS-YOD-OS → SYS-DESPACHO); CON-047 (SYS-DESPACHO → GAS-PORTERO); CON-061 (SYS-DESPACHO → EXT-GMAIL).
+- Fuente de verdad: Tareas/BANDEJA: SHEET-OPERACION mediante GAS-OPERACION. Corcho: STORE-DESPACHO-CORCHO privado; adapter provisional propuesto en GAS-PORTERO conforme CTR-DESPACHO-CORCHO..
+- Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L16) — Sistema presente en el catálogo canónico; Catálogo vivo conciliado el 1-oct-2026: SYS-DESPACHO en Portal y Sistemas, destino canónico, fórmulas/validaciones comprobadas, permisos DP conservados. Seguimiento yod-portal#3 completado.; [yod-despacho/corcho.js](https://github.com/yodesarrollomx/yod-despacho/blob/32330badba66dd9b23a7413498f421aeb628c9cb/corcho.js) — Frontend Corcho integrado con CAS global, archivo/restauración y ACK; no acredita persistencia en servidor..
+- Conexiones: CON-016 (SYS-DESPACHO → GAS-OPERACION); CON-033 (SYS-YOD-OS → SYS-DESPACHO); CON-047 (SYS-DESPACHO → GAS-PORTERO); CON-061 (SYS-DESPACHO → EXT-GMAIL); CON-DESPACHO-CORCHO-PORTERO (SYS-DESPACHO → GAS-PORTERO).
 - Mejoras: A · Atención comercial sin leads olvidados; D · Referidos y reactivación con control humano; G · Bloqueos y decisiones que frenan ventas y obra.
 
 ## SYS-POTENCIALES · PPP · Potenciales
@@ -309,11 +309,11 @@ Ensayo técnico de migración de dominio y acceso
 Servir el contrato de Portero y Potenciales
 
 - Tipo: apps_script. Dominio: Identidad. Responsable: Responsable técnico del backend.
-- Evidencia: codigo. Producción: Versión53 publicada en la implementación existente. Código leído del editor coincide con el cambio guardado; configuración conservada. Lectura pública PPP de caso/lista conciliada con Sheets; activador directo instalado. Edición real, sesión de pantalla y aceptación por rol pendientes..
+- Evidencia: codigo. Producción: Versión53 publicada en la implementación existente. Código leído del editor coincide con el cambio guardado; configuración conservada. Lectura pública PPP de caso/lista conciliada con Sheets; activador directo instalado. Edición real, sesión de pantalla y aceptación por rol pendientes. Preflight Corcho V57 registrado por separado; adapter provisional CHG-DESPACHO-CORCHO-PROVISIONAL-035 propuesto, sin despliegue de producto en este PR..
 - Entidades: acceso, sesion, caso, escenario, track.
 - Fuente de verdad: Versión53 de implementación existente observada en editor; lectura HTTP PPP contrastada con libro canónico. Evidencia API de versiones51/52 histórica; los datos operativos siguen en sus hojas..
-- Evidencia: [potenciales-yod/CLAUDE.md](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/CLAUDE.md#L35) — Tipo de fuente disponible: ausente; Registro backends-verificados.json: versión activa 51 comprobada por API el 2026-10-01, con misma implementación, URL y permisos; pruebas aisladas de la corrección.; CHG-CONTROL-MAESTRO-001: versión 52; publicación contrastada por API y pruebas HTTP de lectura y rechazo el 2026-10-01. Detalle en control-maestro.md y registro de backends.; CHG-PPP-BACKEND-001: versión53 observada tras actualizar la implementación existente; fuente de editor releída idéntica, configuración conservada y lectura HTTP autorizada de caso/lista conciliada. Activador directo instalado; sin POST de prueba..
-- Conexiones: CON-001 (GAS-PORTERO → SHEET-PORTERO); CON-019 (SYS-POTENCIALES → GAS-PORTERO); CON-020 (SYS-TRACK → GAS-PORTERO); CON-044 (SYS-YOD-OS → GAS-PORTERO); CON-045 (SYS-TAREAS → GAS-PORTERO); CON-046 (SYS-FLUJO → GAS-PORTERO); CON-047 (SYS-DESPACHO → GAS-PORTERO); CON-048 (SYS-INTERIORES → GAS-PORTERO); CON-049 (SYS-MARKETING → GAS-PORTERO); CON-050 (SYS-MIRAMAR → GAS-PORTERO); CON-051 (SYS-OBRA → GAS-PORTERO); CON-054 (GAS-PORTERO → SYS-YOD-OS); CON-071 (SYS-INVERSION → GAS-PORTERO); CON-085 (GAS-SALA → GAS-PORTERO); CON-PPP-MODELO (GAS-PORTERO → SHEET-PPP-MODELOS); CON-PPP-AUDITORIA (GAS-PORTERO → SYS-CONTROL); CON-AUTH-FLUJO (GAS-FLUJO → GAS-PORTERO); CON-AUTH-CRM (GAS-CRM → GAS-PORTERO); CON-AUTH-OBRA (GAS-OBRA → GAS-PORTERO).
+- Evidencia: [potenciales-yod/CLAUDE.md](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/CLAUDE.md#L35) — Tipo de fuente disponible: ausente; Registro backends-verificados.json: versión activa 51 comprobada por API el 2026-10-01, con misma implementación, URL y permisos; pruebas aisladas de la corrección.; CHG-CONTROL-MAESTRO-001: versión 52; publicación contrastada por API y pruebas HTTP de lectura y rechazo el 2026-10-01. Detalle en control-maestro.md y registro de backends.; CHG-PPP-BACKEND-001: versión53 observada tras actualizar la implementación existente; fuente de editor releída idéntica, configuración conservada y lectura HTTP autorizada de caso/lista conciliada. Activador directo instalado; sin POST de prueba.; Preflight privado de Corcho comunicado por el coordinador: implementación existente V57, editor igual a fuente activa, principal de Dirección y scopes Drive completos ya autorizados. No acredita adapter Corcho desplegado..
+- Conexiones: CON-001 (GAS-PORTERO → SHEET-PORTERO); CON-019 (SYS-POTENCIALES → GAS-PORTERO); CON-020 (SYS-TRACK → GAS-PORTERO); CON-044 (SYS-YOD-OS → GAS-PORTERO); CON-045 (SYS-TAREAS → GAS-PORTERO); CON-046 (SYS-FLUJO → GAS-PORTERO); CON-047 (SYS-DESPACHO → GAS-PORTERO); CON-048 (SYS-INTERIORES → GAS-PORTERO); CON-049 (SYS-MARKETING → GAS-PORTERO); CON-050 (SYS-MIRAMAR → GAS-PORTERO); CON-051 (SYS-OBRA → GAS-PORTERO); CON-054 (GAS-PORTERO → SYS-YOD-OS); CON-071 (SYS-INVERSION → GAS-PORTERO); CON-085 (GAS-SALA → GAS-PORTERO); CON-PPP-MODELO (GAS-PORTERO → SHEET-PPP-MODELOS); CON-PPP-AUDITORIA (GAS-PORTERO → SYS-CONTROL); CON-AUTH-FLUJO (GAS-FLUJO → GAS-PORTERO); CON-AUTH-CRM (GAS-CRM → GAS-PORTERO); CON-AUTH-OBRA (GAS-OBRA → GAS-PORTERO); CON-DESPACHO-CORCHO-PORTERO (SYS-DESPACHO → GAS-PORTERO); CON-PORTERO-CORCHO-STORE (GAS-PORTERO → STORE-DESPACHO-CORCHO); CON-PORTERO-CORCHO-DRIVE (GAS-PORTERO → EXT-DRIVE).
 - Mejoras: PPP · Unificar tablero y fórmulas de potencial en Sheets.
 - Pendientes: La revisión acotada no certifica todas las operaciones de negocio ni sustituye la aceptación con usuarios reales.; Las cachés de consumidores ajenos a esta entrega pueden conservar permisos temporalmente; revisarlos al continuar cada tablero..
 
@@ -367,7 +367,7 @@ Servir el contrato de Operación y tareas
 - Evidencia: [board-aurum/apps-script/portero-auth.gs](https://github.com/yodesarrollomx/board-aurum/blob/096550e5647a63048450b9be848be71901a32a3a/apps-script/portero-auth.gs#L63) — Tipo de fuente disponible: fragmento_autenticacion.
 - Conexiones: CON-003 (GAS-OPERACION → SHEET-OPERACION); CON-016 (SYS-DESPACHO → GAS-OPERACION); CON-017 (SYS-TAREAS → GAS-OPERACION); CON-055 (GAS-OPERACION → SYS-YOD-OS); CON-DESPACHO-CORCHO-STORE (GAS-OPERACION → STORE-DESPACHO-CORCHO).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
-- Pendientes: Código desplegado y permisos reales no contrastados.
+- Pendientes: Código desplegado y permisos reales no contrastados; Proyecto editable de Operación no identificado tras comparar 13 proyectos; no modificar getAll/update ni atribuir el Corcho provisional a este despliegue..
 
 ## SHEET-OPERACION · Datos de Operación y tareas
 
@@ -703,7 +703,7 @@ Dependencia externa de procesos YOD OS
 - Entidades: .
 - Fuente de verdad: Datos del servicio externo; no inspeccionados.
 - Evidencia: Integración pendiente de verificar.
-- Conexiones: CON-062 (GAS-CODES → EXT-DRIVE); CON-084 (SVC-SALA-EJECUTOR → EXT-DRIVE); CON-EMD-PROFILES-DRIVE (GAS-EMD → EXT-DRIVE).
+- Conexiones: CON-062 (GAS-CODES → EXT-DRIVE); CON-084 (SVC-SALA-EJECUTOR → EXT-DRIVE); CON-EMD-PROFILES-DRIVE (GAS-EMD → EXT-DRIVE); CON-PORTERO-CORCHO-DRIVE (GAS-PORTERO → EXT-DRIVE).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Estado y permisos no comprobados.
 
@@ -993,10 +993,10 @@ Conservar registros operativos y chinches del desarrollo
 Persistir notas y ejes del Corcho en un archivo privado independiente, autorizado solo al propietario exacto
 
 - Tipo: google_sheets. Dominio: Dirección. Responsable: Dirección / propietario único del archivo.
-- Evidencia: propuesto. Producción: Preparación de infraestructura privada; integración y publicación pendientes.
+- Evidencia: declarado. Producción: Mi Corcho privado vacío ya preparado, pestaña Corcho con encabezados id/version/payload_json; ACL actual de archivo y raíz owner-only verificadas por coordinador. Integración y persistencia autenticada pendientes; revalidar principal y ACL en cada operación..
 - Entidades: nota, configuracion, revision.
-- Fuente de verdad: Archivo privado independiente configurado por propiedad de script; no publicar identificadores ni notas.
-- Evidencia: [board-aurum/apps-script/corcho.gs](https://github.com/yodesarrollomx/board-aurum/blob/096550e5647a63048450b9be848be71901a32a3a/apps-script/corcho.gs) — Contrato propuesto de almacenamiento por propiedad privada; archivo físico e identidad de ejecución por verificar en registro privado.
-- Conexiones: CON-DESPACHO-CORCHO-STORE (GAS-OPERACION → STORE-DESPACHO-CORCHO).
+- Fuente de verdad: Mi Corcho privado independiente ya preparado; propiedades privadas o fallback de módulo privado, sin publicar identificadores ni notas. Mismo archivo durante provisional y futura migración Ops..
+- Evidencia: [board-aurum/apps-script/corcho.gs](https://github.com/yodesarrollomx/board-aurum/blob/388ff869325bd9ea47ba8a2acccf00807fd85f4c/apps-script/corcho.gs) — Fuente integrada de almacenamiento separado, CAS, principal efectivo y ACL Drive exhaustiva; integración runtime pendiente.; Registro privado previo de infraestructura: archivo independiente vacío con Corcho y encabezados, cero notas de prueba. Coordinador acredita ACL vigente owner-only de archivo y raíz; IDs y principal permanecen privados..
+- Conexiones: CON-DESPACHO-CORCHO-STORE (GAS-OPERACION → STORE-DESPACHO-CORCHO); CON-PORTERO-CORCHO-STORE (GAS-PORTERO → STORE-DESPACHO-CORCHO).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Dependencia de identidad de ejecución y consentimiento vigentes para verificar privacidad antes de acceder a datos.
