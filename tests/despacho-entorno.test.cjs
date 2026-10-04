@@ -1,0 +1,164 @@
+'use strict';
+const test=require('node:test');
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const root=path.resolve(__dirname,'..');
+const load=n=>import('../despacho3d/'+n);
+const leerArchivo=n=>fs.readFileSync(path.join(root,'despacho3d',n),'utf8');
+
+// DOM mínimo (el mismo que usan las pruebas del círculo).
+class Nodo{
+ constructor(tag){this.tag=tag;this.children=[];this.attrs={};this.listeners={};this.parentNode=null;this.hidden=false;this.disabled=false;this._text='';}
+ setAttribute(k,v){this.attrs[k]=String(v);}
+ getAttribute(k){return this.attrs[k];}
+ appendChild(n){n.parentNode=this;this.children.push(n);return n;}
+ removeChild(n){this.children=this.children.filter(c=>c!==n);n.parentNode=null;return n;}
+ get firstChild(){return this.children[0]||null;}
+ addEventListener(ev,fn){(this.listeners[ev]||(this.listeners[ev]=[])).push(fn);}
+ removeEventListener(ev,fn){this.listeners[ev]=(this.listeners[ev]||[]).filter(f=>f!==fn);}
+ emit(ev,data={}){const r=[];for(const fn of this.listeners[ev]||[])r.push(fn(data));return Promise.all(r);}
+ set textContent(v){this._text=String(v);this.children=[];}
+ get textContent(){return this._text+this.children.map(c=>c.textContent).join('');}
+ focus(){this.enfocado=true;}
+ all(fn,out=[]){if(fn(this))out.push(this);for(const c of this.children)c.all(fn,out);return out;}
+}
+function crearDoc(){
+ const doc=new Nodo('#doc');
+ doc.createElement=t=>new Nodo(t);doc.createElementNS=(ns,t)=>new Nodo(t);
+ doc.body=new Nodo('body');
+ const boton=new Nodo('button');boton.attrs.id='entorno-open';boton.hidden=true;
+ doc.getElementById=id=>id==='entorno-open'?boton:null;
+ return {doc,boton};
+}
+function crearWin(search=''){const win=new Nodo('#win');win.location={search};win.CubefarmYOD=null;return win;}
+function sesionFalsa(){
+ const oyentes=new Set();let perfil=null;
+ return {subscribeProfile(fn){oyentes.add(fn);fn(perfil);return()=>oyentes.delete(fn);},poner(p){perfil=p;for(const fn of oyentes)fn(p);}};
+}
+const PERFIL={case_id:'caso-sintetico',name:'Caso de prueba'};
+const textos=n=>n.all(()=>true).map(x=>x._text).join(' ');
+
+test('catálogo: nueve espacios, todos en solo observar y sin permisos de acción',async()=>{
+ const {ESPACIOS,PERMISOS,puedeActuar,espacioDe}=await load('entorno.mjs');
+ assert.equal(ESPACIOS.length,9);
+ assert.equal(new Set(ESPACIOS.map(e=>e.id)).size,9);
+ for(const e of ESPACIOS){
+  assert.equal(e.permiso,'observar');
+  assert.ok(Object.hasOwn(PERMISOS,e.tope));
+  assert.equal(puedeActuar(e.id,'observar'),true);
+  assert.equal(puedeActuar(e.id,'borrador'),false);
+  assert.equal(puedeActuar(e.id,'accion'),false);
+  assert.ok(Object.isFrozen(e));
+ }
+ assert.equal(puedeActuar('no-existe','observar'),false);
+ assert.equal(puedeActuar('juntas','otro'),false);
+ assert.equal(espacioDe('museo').nombre,'Museo de maquetas de Aurum');
+ assert.equal(espacioDe('x'),null);
+});
+
+test('los espacios con lugar apuntan a lugares reales del Despacho',async()=>{
+ const {ESPACIOS}=await load('entorno.mjs');
+ const office=leerArchivo('office.js');
+ const lugares=[...office.slice(office.indexOf('const places={'),office.indexOf('};',office.indexOf('const places={'))).matchAll(/^\s*(\w+):\{label:/gm)].map(m=>m[1]);
+ assert.ok(lugares.length>=10);
+ const conLugar=ESPACIOS.filter(e=>e.lugar);
+ assert.ok(conLugar.length>=3);
+ for(const e of conLugar)assert.ok(lugares.includes(e.lugar),e.id+' -> '+e.lugar);
+});
+
+test('registro: guarda en memoria, valida y limita',async()=>{
+ const {crearRegistro}=await load('entorno.mjs');
+ let t=0;
+ const r=crearRegistro({reloj:()=>'2026-10-04T10:0'+(t++)+':00Z',max:3});
+ const v=r.registrar({espacio:'juntas',quien:'agente',motivo:'  Presentar\nentrega  '});
+ assert.equal(v.motivo,'Presentar entrega');
+ assert.equal(r.cuantas('juntas'),1);
+ assert.throws(()=>r.registrar({espacio:'nada'}),/visita_invalida/);
+ assert.throws(()=>r.registrar({espacio:'juntas',quien:'desconocido'}),/visita_invalida/);
+ assert.throws(()=>r.registrar(),/visita_invalida/);
+ for(let i=0;i<4;i++)r.registrar({espacio:'museo'});
+ assert.equal(r.lista().length,3);
+ assert.equal(r.cuantas('juntas'),0);
+ const copia=r.lista();copia[0].espacio='juntas';
+ assert.equal(r.cuantas('juntas'),0);
+ assert.equal(r.registrar({espacio:'museo',motivo:'x'.repeat(500)}).motivo.length,120);
+});
+
+test('apagado: no monta nada ni toca el botón',async()=>{
+ const {montarEntorno}=await load('entorno.mjs');
+ const {doc,boton}=crearDoc();const win=crearWin();
+ assert.equal(montarEntorno({win,doc}),false);
+ assert.equal(boton.hidden,true);
+ assert.equal((boton.listeners.click||[]).length,0);
+ const config=await load('entorno-config.mjs');
+ assert.equal(config.ENTORNO_ACTIVO,false);
+});
+
+test('?entorno=1 muestra el botón solo con perfil autorizado y abre/cierra la hoja',async()=>{
+ const {montarEntorno,crearRegistro}=await load('entorno.mjs');
+ const {doc,boton}=crearDoc();const win=crearWin('?entorno=1');
+ const sesion=sesionFalsa();win.CubefarmYOD=sesion;
+ const registro=crearRegistro();
+ assert.equal(montarEntorno({win,doc,registro}),true);
+ assert.equal(boton.hidden,true);
+ await boton.emit('click');
+ assert.equal(doc.body.children.length,0,'sin perfil no abre');
+ sesion.poner(PERFIL);
+ assert.equal(boton.hidden,false);
+ await boton.emit('click');await boton.emit('click');
+ assert.equal(doc.body.children.length,1,'no se duplica');
+ const hoja=doc.body.children[0];
+ assert.match(textos(hoja),/Entorno del agente/);
+ assert.equal(hoja.all(n=>n.attrs['data-espacio']).length,9);
+ assert.match(textos(hoja),/Todavía no hay visitas/);
+ doc.emit('keydown',{key:'Escape'});
+ assert.equal(doc.body.children.length,0);
+ await boton.emit('click');
+ sesion.poner(null);
+ assert.equal(boton.hidden,true);
+ assert.equal(doc.body.children.length,0,'al retirar el perfil se cierra');
+});
+
+test('ir a un espacio registra la visita y mueve la vista; sin lugar no hay botón',async()=>{
+ const {montarEntorno,crearRegistro}=await load('entorno.mjs');
+ const {doc,boton}=crearDoc();const win=crearWin('?entorno=1');
+ const sesion=sesionFalsa();win.CubefarmYOD=sesion;sesion.poner(PERFIL);
+ const idas=[];win.despacho={visit:id=>idas.push(id)};
+ const registro=crearRegistro();
+ montarEntorno({win,doc,registro});
+ await boton.emit('click');
+ const hoja=doc.body.children[0];
+ const botones=hoja.all(n=>n.tag==='button'&&n.attrs.class==='entorno-ir');
+ const conLugar=(await load('entorno.mjs')).ESPACIOS.filter(e=>e.lugar).length;
+ assert.equal(botones.length,conLugar);
+ await botones[0].emit('click');
+ assert.deepEqual(idas,['decisions']);
+ assert.equal(registro.cuantas('juntas'),1);
+ assert.equal(registro.lista()[0].quien,'direccion');
+ assert.equal(doc.body.children.length,0,'la hoja se cierra al ir');
+});
+
+test('sin la oficina disponible no registra visitas falsas',async()=>{
+ const {montarEntorno,crearRegistro}=await load('entorno.mjs');
+ const {doc,boton}=crearDoc();const win=crearWin('?entorno=1');
+ const sesion=sesionFalsa();win.CubefarmYOD=sesion;sesion.poner(PERFIL);
+ const registro=crearRegistro();
+ montarEntorno({win,doc,registro});
+ await boton.emit('click');
+ const b=doc.body.children[0].all(n=>n.attrs.class==='entorno-ir')[0];
+ await b.emit('click');
+ assert.equal(registro.lista().length,0);
+ assert.equal(doc.body.children.length,1);
+});
+
+test('solo lectura: sin red, sin Sheets, sin almacenamiento y sin identificadores reales',()=>{
+ for(const n of ['entorno.mjs','entorno-config.mjs','entorno-boot.mjs','entorno.css']){
+  const s=leerArchivo(n);
+  assert.doesNotMatch(s,/fetch\(|XMLHttpRequest|sendBeacon|WebSocket|localStorage|sessionStorage|indexedDB|postMessage|eval\(|innerHTML/,n);
+  assert.doesNotMatch(s,/script\.google|docs\.google|spreadsheets|@[a-z0-9-]+\.[a-z]{2,}|\+?\d{10,}/i,n);
+ }
+ const html=leerArchivo('index.html');
+ assert.match(html,/id="entorno-open" hidden/);
+ assert.match(html,/entorno-boot\.mjs/);
+});
