@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-04.59-despacho-entorno-base",
+  "revision": "2026-10-04.60-despacho-entorno-movimiento",
   "checked_at": "2026-10-04",
   "priorities": [
     "vender_mas",
@@ -7699,6 +7699,32 @@
       ],
       "deployment": "Publicar con ENTORNO_ACTIVO=false: nada cambia para los usuarios (el botón queda oculto). Dirección lo revisa con ?entorno=1 abierto desde YOD OS; encenderlo es un cambio de una línea en despacho3d/entorno-config.mjs.",
       "rollback": "Poner ENTORNO_ACTIVO en false, o revertir este PR. No se tocan datos, permisos ni backends."
+    },
+    {
+      "id": "CHG-DESPACHO-ENTORNO-MOVIMIENTO-060",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ],
+      "proposal": "Bloque C, etapa 2 del entorno del agente: la figura del agente camina entre los espacios del Despacho 3D. Un módulo nuevo (despacho3d/entorno-ruta.mjs) calcula un camino que esquiva muebles y paredes con la misma función de colisiones con la que camina una persona (cuadrícula con A* y suavizado comprobado punto a punto), y el piloto de la oficina (avatars/office-pilot.mjs) recorre esa ruta con la animación de caminar, a velocidad constante, y se detiene mirando hacia quien llega; con movimiento reducido el traslado es inmediato y con el panel de agentes abierto o la pestaña oculta se pausa. La hoja del entorno suma «Enviar al agente» en los espacios que ya tienen lugar y «Que el agente vuelva a su lugar»; enviar registra la visita del agente en la bitácora de la sesión. Es solo movimiento visual de la figura: no abre paneles, no envía mensajes, no crea documentos, no cambia permisos y no escribe en Sheets; la posición no la puede fijar ningún expediente. Apagado por defecto con su propio interruptor (ENTORNO_AGENTE_CAMINA=false); vista previa con ?entorno=1&camina=1 y perfil autorizado.",
+      "status": "propuesto",
+      "approval": {
+        "date": "2026-10-04",
+        "scope": "El propietario pidió el entorno del agente y la versión de oficina y autorizó continuar con la siguiente etapa del bloque C tras publicar la base apagada."
+      },
+      "tests": [
+        "node --test tests/despacho-entorno-ruta.test.cjs",
+        "node --test tests/despacho-entorno.test.cjs",
+        "node --test tests/despacho-avatar-office.test.cjs",
+        "node --test tests/*.cjs",
+        "node scripts/arquitectura.cjs --check",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-obra-app.cjs",
+        "git diff --check"
+      ],
+      "deployment": "Publicar con ENTORNO_ACTIVO=false y ENTORNO_AGENTE_CAMINA=false: nada cambia para los usuarios. Dirección lo revisa con ?entorno=1&camina=1 abierto desde YOD OS; encender el movimiento es un cambio de una línea en despacho3d/entorno-config.mjs.",
+      "rollback": "Poner ENTORNO_AGENTE_CAMINA en false, o revertir este PR. No se tocan datos, permisos ni backends."
     }
   ],
   "data_contracts": [
@@ -9076,6 +9102,14 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/despacho-entorno.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-entorno-ruta.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO"
