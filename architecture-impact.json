@@ -1,11 +1,11 @@
 {
-  "model_revision": "2026-10-04.57-despacho-circulo-pendientes",
-  "proposal_id": "CHG-DESPACHO-CIRCULO-PENDIENTES-057",
+  "model_revision": "2026-10-04.58-despacho-circulo-lectura-metas",
+  "proposal_id": "CHG-DESPACHO-CIRCULO-LECTURA-058",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO"
   ],
-  "summary": "Círculo del Despacho: el sector Pendientes lee las acciones abiertas de las metas del caso (solo lectura, categoría de Jev), apagado por defecto con interruptor propio.",
+  "summary": "Círculo del Despacho: la lectura de metas espera hasta 45 s por el arranque en frío de Apps Script y el botón muestra «Leyendo…»; sigue apagado y de solo lectura.",
   "tests": [
     "node --test tests/despacho-circulo-pendientes.test.cjs",
     "node scripts/arquitectura.cjs --check",
@@ -15,5 +15,5 @@
     "node scripts/verificar-impacto.cjs --base origin/main --repo yodesarrollomx/yod-portal",
     "git diff --check"
   ],
-  "rollback": "Poner CIRCULO_PENDIENTES_REALES en false o revertir el PR; sin cambios de datos ni permisos."
+  "rollback": "Revertir el PR; sin cambios de datos ni permisos."
 }
