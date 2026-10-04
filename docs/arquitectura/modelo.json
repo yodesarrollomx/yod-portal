@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-04.56-despacho-circulo",
+  "revision": "2026-10-04.57-despacho-circulo-pendientes",
   "checked_at": "2026-10-04",
   "priorities": [
     "vender_mas",
@@ -7628,6 +7628,30 @@
       ],
       "deployment": "Publicar con el interruptor apagado (CIRCULO_ACTIVO=false): nada cambia para los usuarios. Dirección lo revisa con ?circulo=1 y un perfil autorizado; encenderlo es un cambio de una línea en despacho3d/circulo-config.mjs.",
       "rollback": "Poner CIRCULO_ACTIVO en false, o revertir este PR. No se tocan datos, permisos ni backends."
+    },
+    {
+      "id": "CHG-DESPACHO-CIRCULO-PENDIENTES-057",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ],
+      "proposal": "Primera conexión de datos reales del círculo: el sector Pendientes muestra las acciones abiertas de las metas del caso. Lee solo con readGoals por el transporte autorizado del OS (el mismo que usa el panel de Agentes), valida la respuesta con el esquema de metas existente y convierte cada acción en una tarjeta. La categoría la pone Jev cuando el motor la dejó en el resumen de la meta (JEV_GASTON_CARDS=on); si no, se usa el estado de la acción. No crea, aprueba ni detiene metas y no escribe en Sheets. Los demás sectores se declaran sin conectar. Apagado por defecto con un interruptor propio (CIRCULO_PENDIENTES_REALES=false); vista previa con ?circulo=1&pendientes=1 y perfil autorizado.",
+      "status": "propuesto",
+      "approval": {
+        "date": "2026-10-04",
+        "scope": "El propietario pidió seguir con Pendientes del círculo, conectado a datos reales vía Jev, como siguiente etapa tras publicar el círculo apagado."
+      },
+      "tests": [
+        "node --test tests/despacho-circulo-pendientes.test.cjs",
+        "node --test tests/despacho-circulo.test.cjs",
+        "node --test tests/*.cjs",
+        "node scripts/arquitectura.cjs --check",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "git diff --check"
+      ],
+      "deployment": "Publicar con CIRCULO_ACTIVO=false y CIRCULO_PENDIENTES_REALES=false: nada cambia para los usuarios. Dirección lo revisa con ?circulo=1&pendientes=1 abierto desde YOD OS; encender Pendientes reales es un cambio de una línea en despacho3d/circulo-config.mjs.",
+      "rollback": "Poner CIRCULO_PENDIENTES_REALES en false, o revertir este PR. No se tocan datos, permisos ni backends."
     }
   ],
   "data_contracts": [
@@ -8989,6 +9013,14 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/despacho-circulo.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-circulo-pendientes.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO"
