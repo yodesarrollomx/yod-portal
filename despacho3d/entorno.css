@@ -19,3 +19,10 @@
 .entorno-acciones{display:flex;flex-wrap:wrap;gap:8px}
 .entorno-enviar,.entorno-volver{min-height:40px;padding:0 14px;border:1px solid var(--c-ink);border-radius:6px;background:transparent;color:var(--c-ink);font:inherit;cursor:pointer}
 .entorno-volver{margin:0 0 14px}
+.entorno-entregas{margin-top:10px;padding-top:8px;border-top:1px solid var(--c-line);font-size:14px}
+.entorno-entregas p{margin:0 0 6px}
+.entorno-entregas-lista{margin:0 0 8px;padding-left:18px}
+.entorno-entregas-lista li{margin-bottom:8px}
+.entorno-entregas-lista li p{color:var(--c-mut);margin:2px 0 0}
+.entorno-entregas-ver{min-height:40px;padding:0 14px;border:1px solid var(--c-ink);border-radius:6px;background:transparent;color:var(--c-ink);font:inherit;cursor:pointer}
+.entorno-nota{color:var(--c-warn);font-size:13px}
