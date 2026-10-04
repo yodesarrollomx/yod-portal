@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.52-jev-piloto",
+  "revision": "2026-10-03.55-jev-piloto",
   "checked_at": "2026-10-03",
   "priorities": [
     "vender_mas",
@@ -5915,6 +5915,55 @@
           "status": "propuesto"
         }
       ]
+    },
+    {
+      "id": "PROC-EMD-LOAD",
+      "nombre": "Carga ligera y espera orientativa de evaluación",
+      "status": "propuesto",
+      "steps": [
+        {
+          "label": "Abrir enlace personal",
+          "role": "Participante o coordinación",
+          "components": [
+            "SYS-EMD"
+          ],
+          "input": "Fragmento personal en el dominio EMD autorizado",
+          "output": "Espera animada ligera con escala 1 a 5, foto, guardado y finalidad de educación continua; sin promesa de anonimato no implementado",
+          "mode": "automatico"
+        },
+        {
+          "label": "Validar conexión y consultar acceso",
+          "role": "Backend autorizado",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD"
+          ],
+          "input": "Handshake nonce y credencial vigente",
+          "output": "Rol y, al solicitar arranque, lista propia sin respuestas en una sola llamada autenticada; fotos después",
+          "mode": "automatico"
+        },
+        {
+          "label": "Recuperar carga lenta",
+          "role": "Persona usuaria",
+          "components": [
+            "SYS-EMD"
+          ],
+          "input": "Aviso de demora o error con plazo finito",
+          "output": "Reintento explícito conservando enlace, respuestas y permisos",
+          "mode": "manual"
+        }
+      ],
+      "manual_gaps": [
+        "La duración depende también del arranque de Google y la conexión. La medición de peso no garantiza una latencia universal.",
+        "El almacén permite vincular identidad y respuestas: confidencialidad y acceso restringido no equivalen a anonimato."
+      ],
+      "evidence": [
+        {
+          "claim": "Diseño autorizado; publicación y prueba real pendientes",
+          "status": "propuesto"
+        }
+      ]
     }
   ],
   "proposals": [
@@ -7461,6 +7510,103 @@
       "rollback": "Revertir frontend y backend de la misma implementación; conservar pestañas de metas, recibos, workspace, vínculo y checkpoints. No reiniciar tareas inciertas."
     },
     {
+      "id": "CHG-EMD-ENCABEZADO-046",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Barra de avance confirmada ocupa primera fila completa del encabezado; identidad y botones debajo. Porcentaje único dentro del sol, sin marcas numéricas. Montaña de arena ampliada y detallada; maquinaria y granos se animan solo al aumentar avance confirmado. Logo intacto al cero. Cambio exclusivamente visual con contratos existentes.",
+      "status": "propuesto",
+      "approval": {
+        "date": "2026-10-03",
+        "scope": "Propietario solicita ejecutar ambas mejoras registradas en chinches."
+      },
+      "tests": [
+        "npm test en EMD privado",
+        "npm run test:ui sintético Chromium/WebKit; anchos320/390/1440, ACK fallido y válido, reposo y movimiento reducido",
+        "git diff --check",
+        "node scripts/arquitectura.cjs --check",
+        "Lectura de lista personal y coordinación desplegadas sin guardar respuestas"
+      ],
+      "deployment": "Pendiente implementar, integrar por PR y actualizar solo Index en implementación existente. URLs, tokens, permisos, preguntas, escala, matriz y cierre conservados.",
+      "rollback": "Seleccionar versión GAS33 en implementación existente y revertir commit visual; conservar datos y chinches."
+    },
+    {
+      "id": "CHG-EMD-TIERRA-PALA-047",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Porcentaje único blanco sobre rojo, detrás de la maquinaria y descubierto al avanzar desde el logo intacto al cero. Tierra en contacto continuo con la pala: alimentación desde el borde, rodamiento, caída granular por el talud y crecimiento hasta apenas superar la máquina al 100%. Sin cambios de contratos o reglas del instrumento.",
+      "status": "propuesto",
+      "approval": {
+        "date": "2026-10-03",
+        "scope": "Propietario solicita corregir el gráfico y reiniciar exclusivamente las respuestas de su cuenta conservando el perfil editado."
+      },
+      "tests": [
+        "npm test en EMD privado",
+        "npm run test:ui sintético Chromium/WebKit; contacto pala/tierra, capas del porcentaje, crecimiento y contención 0/4/10/50/100; ACK válido/fallido y movimiento reducido",
+        "git diff --check",
+        "node scripts/arquitectura.cjs --check",
+        "Lectura real del frontend publicado y comprobación privada del reinicio autorizado; pruebas sintéticas separadas de los datos de negocio"
+      ],
+      "deployment": "Pendiente implementación, CI y publicación en implementación existente. El reinicio operativo se realiza por separado, con respaldo privado, revisión incrementada y perfiles conservados; no es una escritura QA.",
+      "rollback": "Volver a GAS34 en la implementación existente y revertir el cambio visual. El reinicio de respuestas solo se revierte desde el respaldo privado de las filas afectadas, con autorización; no restaurar todo el almacén."
+    },
+    {
+      "id": "CHG-EMD-CARGA-048",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Aligerar HTML sin alterar imágenes aprobadas; arranque participante con una sola lectura autenticada opcional; espera animada y orientación sobre escala, foto y finalidad. Dar margen al arranque lento y reintento explícito. Verificar accesos reportados sin cambiar datos.",
+      "status": "propuesto",
+      "approval": {
+        "date": "2026-10-03",
+        "scope": "Propietario solicita reducir carga, orientar durante la espera y corregir un acceso participante que no abrió."
+      },
+      "tests": [
+        "npm test en EMD privado",
+        "npm run test:ui con datos sintéticos: inicio lento, reintento, aislamiento, Chromium y WebKit",
+        "python3 -m unittest discover -s tests -p test_*.py",
+        "node scripts/arquitectura.cjs --check",
+        "git diff --check",
+        "Verificación de lectura en enlaces existentes de participante y coordinación, sin guardar respuestas"
+      ],
+      "deployment": "Pendiente CI y publicación en implementación GAS existente y wrapper GitHub EMD. No crear accesos ni reiniciar respuestas.",
+      "rollback": "Restaurar GAS36 en la implementación existente y revertir PR del wrapper. Conservar todas las respuestas, permisos y fotos."
+    },
+    {
+      "id": "CHG-DESPACHO-FAST-049",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Carril rápido del Despacho: el navegador pide al Portero una credencial corta ligada al expediente (mintFastSession) y conversa por streaming con el motor en la nube, que elige modelo por pregunta y guarda el turno en Sheets en segundo plano con recibo idempotente. Si el carril no está disponible se conserva la cola actual sin cambios.",
+      "status": "propuesto",
+      "approval": {
+        "date": "2026-10-03",
+        "scope": "El propietario pidió respuestas inmediatas, elección de modelo por Jev y autorizó el piloto con un expediente."
+      },
+      "tests": [
+        "node --test tests/despacho-fast-lane.test.cjs",
+        "node --test tests/*.cjs",
+        "node scripts/arquitectura.cjs --check",
+        "node verify-os.cjs",
+        "git diff --check"
+      ],
+      "deployment": "Backend Apps Script r6-fast y motor en la nube verificados antes; este PR solo cambia la interfaz pública. Publicar tras revisión y comprobar una conversación real en el piloto.",
+      "rollback": "Revertir este PR: la interfaz vuelve a la cola de Sheets (el backend y el motor conservan ambos caminos). No se tocan datos."
+    },
+    {
       "id": "CHG-JEV-CONSULTAS-001",
       "components": [
         "SYS-YOD-OS",
@@ -8870,6 +9016,16 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/despacho-voice.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-fast-lane.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",

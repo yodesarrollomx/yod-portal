@@ -2,10 +2,13 @@
 // No endpoint, credential, business record or browser persistence lives here.
 import {validateDriveSelection} from './drive-selection.mjs';
 import {validateAvatarProfile} from './avatar-profile.mjs';
+import {createFastLaneClient} from './fast-lane.mjs';
 
 const text=(v,max=256)=>typeof v==='string'&&v.length>0&&v.length<=max;
 const date=v=>typeof v==='string'&&Number.isFinite(Date.parse(v));
 const active=new Set(['queued','running','claimed']);
+const FAST_FALLBACK=new Set(['unavailable','unauthorized','fast_lane_unavailable','model_unavailable','context_unavailable']);
+const FAST_NOTICES={busy:'Gastón sigue respondiendo el mensaje anterior. Espera un momento y vuelve a enviar.',rate_limited:'Demasiados mensajes seguidos. Espera unos minutos.',model_failed:'La respuesta no se completó. Tu mensaje no se guardó; puedes volver a enviarlo.',auth_unavailable:'El servicio del modelo rechazó la conexión. Tu mensaje no se guardó.',provider_busy:'El modelo está saturado. Tu mensaje no se guardó; vuelve a intentarlo.',cancelled:'',invalid_request:'No se pudo enviar ese mensaje.'};
 const diagnosticCodes=new Set(['unauthorized','session_changed','timeout','unavailable','despacho_not_ready','invalid_selection','invalid_snapshot','invalid_message','invalid_job','invalid_event','seleccion_invalida','enlace_invalido','outside_os','case_changed','session_pending','transport_busy']);
 const transientCodes=new Set(['timeout','unavailable','transport_busy','session_pending']);
 const diagnosticCode=e=>diagnosticCodes.has(e?.message)?e.message:'unavailable';
@@ -49,11 +52,27 @@ export function validateConversation(v,id){
  return {case_id:id,revision:v.source_revision,updated_at:v.state.updated_at,messages,jobs,events,memory,documents,decisions:[],processing:jobs.some(j=>active.has(j.status))};
 }
 export class Conversation {
- constructor({transport,notify=()=>{},uuid=()=>crypto.randomUUID(),timeout=55000}){Object.assign(this,{transport,notify,uuid,timeout,selection:null,model:null,pending:null,accepted:null,status:'disconnected',busy:false,epoch:0,profile:null,stale:false,profileListeners:new Set()});}
+ constructor({transport,notify=()=>{},uuid=()=>crypto.randomUUID(),timeout=55000,fast=null,now=()=>Date.now()}){Object.assign(this,{transport,notify,uuid,timeout,now,fastOverride:fast,fastClientRef:null,fastTurns:[],fastNotice:'',fastDownUntil:0,fastAbort:null,selection:null,model:null,pending:null,accepted:null,status:'disconnected',busy:false,epoch:0,profile:null,stale:false,profileListeners:new Set()});}
  getProfile(){return this.profile?structuredClone(this.profile):null;}
  subscribeProfile(fn){if(typeof fn!=='function')throw TypeError('A listener is required');this.profileListeners.add(fn);fn(this.getProfile());return()=>this.profileListeners.delete(fn);}
  setProfile(profile){if(JSON.stringify(this.profile)===JSON.stringify(profile))return;this.profile=profile?structuredClone(profile):null;for(const fn of this.profileListeners){try{fn(this.getProfile());}catch{/* A renderer failure must not alter server authorization. */}}}
  forgetProfile(){this.setProfile(null);}
+ fastClient(){
+  if(this.fastOverride)return this.fastOverride;
+  const transport=typeof this.transport==='function'?this.transport():this.transport;
+  if(!transport||typeof transport.mintFastSession!=='function')return null;
+  if(!this.fastClientRef||this.fastClientRef.transport!==transport)this.fastClientRef={transport,client:createFastLaneClient({mint:p=>transport.mintFastSession(p)})};
+  return this.fastClientRef.client;
+ }
+ get fastPending(){return this.fastTurns.some(t=>t.phase==='done');}
+ reconcileFast(){
+  const messages=this.model?.messages||[],cutoff=this.now()-10*60000;
+  this.fastTurns=this.fastTurns.filter(t=>{
+   if(t.phase!=='done')return true;
+   const at=messages.findIndex((m,i)=>m.role==='user'&&m.body===t.message&&messages[i+1]?.role==='assistant'&&messages[i+1].body===t.reply);
+   return at===-1&&!(t.saved&&t.finished<cutoff);
+  });
+ }
  get recoverable(){return this.status==='reconnecting'||(this.status==='unavailable'&&transientCodes.has(this.diagnostic?.code));}
  get stoppedMessage(){
   const job=this.model?.jobs.at(-1);
@@ -66,7 +85,7 @@ export class Conversation {
   if(!transport||typeof transport[method]!=='function')throw Error('unavailable');
   let timer;try{return await Promise.race([transport[method](structuredClone(payload)),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('timeout')),this.timeout);})]);}finally{clearTimeout(timer);}
  }
- close(){this.epoch++;this.selection=null;this.model=null;this.pending=null;this.accepted=null;this.diagnostic=null;this.stale=false;this.status='disconnected';this.busy=false;this.emit();}
+ close(){this.epoch++;this.fastAbort?.abort();this.fastAbort=null;this.fastTurns=[];this.fastNotice='';this.fastClientRef=null;this.selection=null;this.model=null;this.pending=null;this.accepted=null;this.diagnostic=null;this.stale=false;this.status='disconnected';this.busy=false;this.emit();}
  async open(){
   this.close();const epoch=this.epoch;this.busy=true;this.status='loading';this.emit();
   let step='expediente';
@@ -76,7 +95,8 @@ export class Conversation {
    step='historial';
    const model=validateConversation(checked(await this.call('read',{case_id:selection.case_id})),selection.case_id);
    if(epoch!==this.epoch)return false;
-   this.selection=selection;this.model=model;this.stale=false;this.setProfile(selection.avatar);this.status=model.processing?'processing':'ready';return true;
+   this.selection=selection;this.model=model;this.stale=false;this.setProfile(selection.avatar);this.status=model.processing?'processing':'ready';this.reconcileFast();
+   if(selection.can_enqueue&&selection.agent_ready)void this.fastClient()?.warm(selection.case_id);return true;
   }catch(error){if(epoch===this.epoch){this.selection=null;this.model=null;if(!transientCodes.has(diagnosticCode(error)))this.forgetProfile();this.diagnostic={step,code:diagnosticCode(error)};this.status='unavailable';}return false;}
   finally{if(epoch===this.epoch){this.busy=false;this.emit();}}
  }
@@ -90,7 +110,7 @@ export class Conversation {
    const model=validateConversation(checked(await this.call('read',{case_id:this.selection.case_id})),this.selection.case_id);
    if(epoch!==this.epoch)return false;
    this.selection=selection;this.setProfile(selection.avatar);this.diagnostic=null;this.stale=false;
-   this.model=model;
+   this.model=model;this.reconcileFast();
    if(this.pending&&model.jobs.some(j=>j.request_id===this.pending.request_id))this.pending=null;
    if(this.accepted&&model.messages.some(m=>m.job_id===this.accepted.job_id))this.accepted=null;
    this.status=this.pending?'unconfirmed':this.accepted||model.processing?'processing':'ready';return true;
@@ -106,7 +126,39 @@ export class Conversation {
   }return false;}
   finally{if(epoch===this.epoch){this.busy=false;this.emit();}}
  }
+ async sendFast(message){
+  const client=this.fastClient(),text=message.trim(),epoch=this.epoch,caseId=this.selection.case_id;
+  const turn={id:'fast-'+this.uuid(),message:text,reply:'',phase:'thinking',saved:false,meta:null,created_at:new Date(this.now()).toISOString(),finished:0};
+  turn.request_id=turn.id;
+  const controller=new AbortController();this.fastAbort=controller;
+  this.fastTurns.push(turn);this.fastNotice='';this.busy=true;this.status='streaming';this.emit();
+  try{
+   const result=await client.turn({case_id:caseId,message:text,request_id:turn.request_id,signal:controller.signal,onEvent:(name,data)=>{
+    if(epoch!==this.epoch)return;
+    if(name==='route')turn.meta={model:data.model,tier:data.tier,effort:data.effort,router:data.router};
+    else if(name==='delta'&&typeof data?.text==='string'){turn.reply+=data.text;turn.phase='streaming';}
+    else return;
+    this.emit();
+   }});
+   if(epoch!==this.epoch)return false;
+   turn.reply=result.final.reply;turn.phase='done';turn.finished=this.now();turn.saved=result.saved===true;
+   turn.meta={...turn.meta,model:result.final.model,tier:result.final.tier,ttft_ms:result.final.ttft_ms,total_ms:result.final.total_ms};
+   this.status='ready';return true;
+  }catch(error){
+   if(epoch!==this.epoch)return false;
+   this.fastTurns=this.fastTurns.filter(t=>t!==turn);this.status='ready';
+   if(FAST_FALLBACK.has(error?.code)&&!error.started){this.fastDownUntil=this.now()+60000;return 'fallback';}
+   this.fastNotice=FAST_NOTICES[error?.code]??'No se pudo completar la respuesta. Tu mensaje no se guardó.';return false;
+  }finally{
+   if(this.fastAbort===controller)this.fastAbort=null;
+   if(epoch===this.epoch){this.busy=false;this.emit();if(turn.phase==='done'&&turn.saved)setTimeout(()=>{if(epoch===this.epoch)void this.refresh();},0);}
+  }
+ }
  async send(message){
+  if(!this.pending&&this.status==='ready'&&!this.busy&&!this.stale&&this.selection?.can_enqueue&&this.selection?.agent_ready&&this.model&&!this.model.processing&&typeof message==='string'&&message.trim()&&message.length<=8000&&this.now()>=this.fastDownUntil&&this.fastClient()){
+   const outcome=await this.sendFast(message);
+   if(outcome!=='fallback')return outcome;
+  }
   if(this.busy||this.stale||!['ready','unconfirmed'].includes(this.status)||!this.selection?.can_enqueue||!this.selection?.agent_ready)return false;
   if(!this.pending){
    if(this.status!=='ready'||!this.model||this.model.processing||typeof message!=='string'||!message.trim()||message.length>8000)return false;
@@ -143,5 +195,5 @@ export function createFrameTransport(win,timeout=55000){
   const id=win.crypto.randomUUID();const timer=setTimeout(()=>{waiting.delete(id);reject(Error('timeout'));},timeout);
   waiting.set(id,{resolve,reject,timer});win.parent.postMessage({type:'yod:case:request',version:1,id,method,payload},win.location.origin);
  });
- return {resolveCurrent:p=>request('resolveCurrent',p),read:p=>request('read',p),enqueue:p=>request('enqueue',p),readGoals:p=>request('readGoals',p),createGoal:p=>request('createGoal',p),reviewGoal:p=>request('reviewGoal',p),dispose(){alive=false;win.removeEventListener('message',receive);for(const item of waiting.values()){clearTimeout(item.timer);item.reject(Error('closed'));}waiting.clear();}};
+ return {mintFastSession:p=>request('mintFastSession',p),resolveCurrent:p=>request('resolveCurrent',p),read:p=>request('read',p),enqueue:p=>request('enqueue',p),readGoals:p=>request('readGoals',p),createGoal:p=>request('createGoal',p),reviewGoal:p=>request('reviewGoal',p),dispose(){alive=false;win.removeEventListener('message',receive);for(const item of waiting.values()){clearTimeout(item.timer);item.reject(Error('closed'));}waiting.clear();}};
 }

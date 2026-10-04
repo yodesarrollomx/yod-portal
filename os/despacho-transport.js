@@ -3,11 +3,11 @@
  function create(options){
   var endpoint=options.endpoint;
   if(typeof endpoint!=='string'||!/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(endpoint))throw Error('invalid_endpoint');
-  var methods=['resolveCurrent','read','enqueue','createGoal','readGoals','reviewGoal'];
+  var methods=['resolveCurrent','read','enqueue','createGoal','readGoals','reviewGoal','mintFastSession'];
   function keys(value,names){return !!value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).length===names.length&&names.every(function(key){return Object.prototype.hasOwnProperty.call(value,key);});}
   function str(value,max){return typeof value==='string'&&value.trim().length>0&&value.length<=max;}
   function validGoalPayload(operation,p){
-   if(operation==='readGoals')return keys(p,['case_id'])&&str(p.case_id,256);
+   if(operation==='readGoals'||operation==='mintFastSession')return keys(p,['case_id'])&&str(p.case_id,256);
    if(operation==='createGoal')return keys(p,['case_id','request_id','expected_revision','title','instruction','criterion','scope'])&&str(p.case_id,256)&&str(p.request_id,256)&&str(p.expected_revision,256)&&str(p.title,160)&&str(p.instruction,4000)&&str(p.criterion,1000)&&p.scope==='local_analysis_v1';
    if(operation==='reviewGoal')return keys(p,['case_id','goal_id','request_id','expected_revision','action'])&&str(p.case_id,256)&&str(p.goal_id,256)&&str(p.request_id,256)&&str(p.expected_revision,256)&&['approve','resume','stop'].includes(p.action);
    return true;
