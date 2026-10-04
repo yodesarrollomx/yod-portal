@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-04.62-despacho-entorno-juntas",
+  "revision": "2026-10-04.63-despacho-entorno-juntas-encendida",
   "checked_at": "2026-10-04",
   "priorities": [
     "vender_mas",
@@ -7775,6 +7775,31 @@
       ],
       "deployment": "Publicar con ENTORNO_JUNTAS=false: nada cambia para los usuarios. Dirección lo revisa con ?entorno=1&juntas=1 abierto desde YOD OS; encenderlo es un cambio de una línea en despacho3d/entorno-config.mjs.",
       "rollback": "Poner ENTORNO_JUNTAS en false o revertir el PR. No se tocan datos, permisos ni backends."
+    },
+    {
+      "id": "CHG-DESPACHO-ENTORNO-JUNTAS-ENCENDIDA-063",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ],
+      "proposal": "Dirección pidió dejar encendida la sala de juntas del entorno del agente. ENTORNO_JUNTAS pasa a true en despacho3d/entorno-config.mjs: la tarjeta de la sala de juntas ofrece «Ver entregas por aprobar», que lee con readGoals (solo lectura) lo que espera aprobación o decisión. Sin cambios de alcance respecto a CHG-DESPACHO-ENTORNO-JUNTAS-062: no aprueba, no avisa y no escribe en Sheets. Se añade docs/ENTORNO-AGENTE-RELEVO.md (estado, interruptores y dónde apagarlos, reglas, método de entrega y siguientes etapas) y una referencia en AGENTS.md para que otro agente continúe el trabajo.",
+      "status": "propuesto",
+      "approval": {
+        "date": "2026-10-04",
+        "scope": "El propietario pidió en el chat encender la sala de juntas, dejarlo así, y dejar en GitHub las instrucciones para que otro agente continúe."
+      },
+      "tests": [
+        "node --test tests/despacho-entorno.test.cjs",
+        "node --test tests/*.cjs",
+        "node scripts/arquitectura.cjs --check",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "git diff --check"
+      ],
+      "deployment": "Publicar encendido. La sala de juntas solo lee con el transporte autorizado del OS.",
+      "rollback": "Poner ENTORNO_JUNTAS en false o revertir el PR; sin cambios de datos ni permisos."
     }
   ],
   "data_contracts": [
