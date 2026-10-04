@@ -1,13 +1,13 @@
 {
-  "model_revision": "2026-10-04.60-despacho-entorno-movimiento",
-  "proposal_id": "CHG-DESPACHO-ENTORNO-MOVIMIENTO-060",
+  "model_revision": "2026-10-04.61-despacho-entorno-encendido",
+  "proposal_id": "CHG-DESPACHO-ENTORNO-ENCENDIDO-061",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO"
   ],
-  "summary": "Despacho 3D: la figura del agente camina entre los espacios por una ruta que esquiva muebles; solo movimiento visual, apagado por defecto (ENTORNO_AGENTE_CAMINA=false).",
+  "summary": "Despacho 3D: se enciende el entorno del agente (hoja Entorno y movimiento de la figura) por indicación de Dirección; sin cambios de alcance ni de permisos.",
   "tests": [
-    "node --test tests/despacho-entorno-ruta.test.cjs",
+    "node --test tests/despacho-entorno.test.cjs",
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
     "node verify-os.cjs",
@@ -15,5 +15,5 @@
     "node scripts/verificar-impacto.cjs --base origin/main --repo yodesarrollomx/yod-portal",
     "git diff --check"
   ],
-  "rollback": "Poner ENTORNO_AGENTE_CAMINA en false o revertir el PR; sin cambios de datos ni permisos."
+  "rollback": "Volver ENTORNO_ACTIVO y ENTORNO_AGENTE_CAMINA a false o revertir el PR; sin cambios de datos ni permisos."
 }

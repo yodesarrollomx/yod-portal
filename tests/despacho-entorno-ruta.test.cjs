@@ -132,7 +132,7 @@ test('crearAgenteIr valida el espacio, calcula la ruta y avisa si no puede',asyn
 
 test('la oficina solo ofrece caminar con su interruptor y la hoja muestra los botones solo entonces',async()=>{
  const config=fs.readFileSync(path.join(base,'entorno-config.mjs'),'utf8');
- assert.match(config,/ENTORNO_AGENTE_CAMINA=false/);
+ assert.match(config,/ENTORNO_AGENTE_CAMINA=true/);
  const office=fs.readFileSync(path.join(base,'office.js'),'utf8');
  assert.match(office,/ENTORNO_AGENTE_CAMINA\|\|\/\(\?:\^\|\[\?&\]\)camina=1/);
  for(const f of ['entorno-ruta.mjs','entorno.mjs']){

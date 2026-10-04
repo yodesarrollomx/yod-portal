@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-04.60-despacho-entorno-movimiento",
+  "revision": "2026-10-04.61-despacho-entorno-encendido",
   "checked_at": "2026-10-04",
   "priorities": [
     "vender_mas",
@@ -7725,6 +7725,31 @@
       ],
       "deployment": "Publicar con ENTORNO_ACTIVO=false y ENTORNO_AGENTE_CAMINA=false: nada cambia para los usuarios. Dirección lo revisa con ?entorno=1&camina=1 abierto desde YOD OS; encender el movimiento es un cambio de una línea en despacho3d/entorno-config.mjs.",
       "rollback": "Poner ENTORNO_AGENTE_CAMINA en false, o revertir este PR. No se tocan datos, permisos ni backends."
+    },
+    {
+      "id": "CHG-DESPACHO-ENTORNO-ENCENDIDO-061",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ],
+      "proposal": "Dirección pidió dejar encendido el entorno del agente para verlo en acción. Se cambian a true, en despacho3d/entorno-config.mjs, ENTORNO_ACTIVO (botón y hoja «Entorno», visibles solo con un perfil autorizado por el servidor) y ENTORNO_AGENTE_CAMINA (la figura del agente camina entre espacios al enviarla). Sin cambios de alcance respecto a CHG-DESPACHO-ENTORNO-059 y CHG-DESPACHO-ENTORNO-MOVIMIENTO-060: todos los espacios siguen en «solo observar»; no se envía nada, no se crea nada y no se escribe en Sheets.",
+      "status": "propuesto",
+      "approval": {
+        "date": "2026-10-04",
+        "scope": "El propietario pidió en el chat dejar el entorno encendido para verlo en acción."
+      },
+      "tests": [
+        "node --test tests/despacho-entorno.test.cjs",
+        "node --test tests/despacho-entorno-ruta.test.cjs",
+        "node --test tests/*.cjs",
+        "node scripts/arquitectura.cjs --check",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-obra-app.cjs",
+        "git diff --check"
+      ],
+      "deployment": "Publicar encendido. El botón «Entorno» aparece en el Despacho solo para quien tenga perfil autorizado.",
+      "rollback": "Volver ENTORNO_ACTIVO y ENTORNO_AGENTE_CAMINA a false en despacho3d/entorno-config.mjs o revertir el PR; sin cambios de datos ni permisos."
     }
   ],
   "data_contracts": [
