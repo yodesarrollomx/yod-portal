@@ -162,3 +162,41 @@ test('solo lectura: sin red, sin Sheets, sin almacenamiento y sin identificadore
  assert.match(html,/id="entorno-open" hidden/);
  assert.match(html,/entorno-boot\.mjs/);
 });
+
+test('con el movimiento disponible aparecen Enviar y Volver, y enviar registra la visita del agente',async()=>{
+ const {montarEntorno,crearRegistro,ESPACIOS}=await load('entorno.mjs');
+ const {doc,boton}=crearDoc();const win=crearWin('?entorno=1');
+ const sesion=sesionFalsa();win.CubefarmYOD=sesion;sesion.poner(PERFIL);
+ const idas=[],modos=[];let acepta=true;
+ win.despacho={visit(){},setMode:m=>modos.push(m),agenteIr:id=>{idas.push(id);return acepta;}};
+ const registro=crearRegistro();
+ montarEntorno({win,doc,registro});
+ await boton.emit('click');
+ let hoja=doc.body.children[0];
+ const conLugar=ESPACIOS.filter(e=>e.lugar).length;
+ assert.equal(hoja.all(n=>n.attrs.class==='entorno-enviar').length,conLugar);
+ assert.equal(hoja.all(n=>n.attrs.class==='entorno-volver').length,1);
+ // Si la ruta falla no se registra nada y la hoja sigue abierta.
+ acepta=false;
+ await hoja.all(n=>n.attrs.class==='entorno-enviar')[0].emit('click');
+ assert.equal(registro.lista().length,0);assert.equal(doc.body.children.length,1);
+ acepta=true;
+ await hoja.all(n=>n.attrs.class==='entorno-enviar')[0].emit('click');
+ assert.deepEqual(idas,['decisions','decisions']);
+ assert.equal(registro.lista()[0].quien,'agente');assert.equal(registro.lista()[0].espacio,'juntas');
+ assert.deepEqual(modos,['overview']);assert.equal(doc.body.children.length,0);
+ await boton.emit('click');hoja=doc.body.children[0];
+ await hoja.all(n=>n.attrs.class==='entorno-volver')[0].emit('click');
+ assert.equal(idas.at(-1),'inicio');assert.equal(registro.lista().length,1,'volver no cuenta como visita');
+});
+
+test('sin el movimiento de la oficina no hay botones de enviar',async()=>{
+ const {montarEntorno,crearRegistro}=await load('entorno.mjs');
+ const {doc,boton}=crearDoc();const win=crearWin('?entorno=1');
+ const sesion=sesionFalsa();win.CubefarmYOD=sesion;sesion.poner(PERFIL);win.despacho={visit(){}};
+ montarEntorno({win,doc,registro:crearRegistro()});
+ await boton.emit('click');
+ const hoja=doc.body.children[0];
+ assert.equal(hoja.all(n=>n.attrs.class==='entorno-enviar').length,0);
+ assert.equal(hoja.all(n=>n.attrs.class==='entorno-volver').length,0);
+});
