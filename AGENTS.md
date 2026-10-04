@@ -12,3 +12,5 @@ Antes de modificar código, leer `docs/arquitectura/README.md`, el componente y 
 El repositorio es público. Nunca publicar datos reales de clientes, secretos, exportaciones de hojas privadas o detalles de vulnerabilidades pendientes. Usar ejemplos sintéticos y avisos privados de seguridad para los hallazgos restringidos.
 
 Prioridad del propietario: vender más, luego mejorar margen/control y después acelerar cobros. Seguridad e integridad de datos no se sacrifican por ese orden.
+
+Relevo del Despacho 3D (entorno del agente y versión de oficina): `docs/ENTORNO-AGENTE-RELEVO.md` (estado, interruptores, reglas, método de entrega y lo que sigue).
