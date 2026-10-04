@@ -1,5 +1,5 @@
 // Entorno del agente: los espacios donde trabaja, qué puede hacer en cada uno y quién los ha visitado.
-// Etapa 1: solo catálogo, permisos y registro en memoria de esta sesión. No hace peticiones de red,
+// Etapas 1 y 2: catálogo, permisos, registro en memoria y (con su propio interruptor) mover la figura del agente. No hace peticiones de red,
 // no envía mensajes, no crea documentos y no escribe en Sheets. Todo espacio está en "solo observar".
 // El repositorio es público: aquí no hay nombres de casos, clientes ni contactos.
 import {ENTORNO_ACTIVO} from './entorno-config.mjs';
@@ -66,12 +66,12 @@ function crear(doc,tag,props={},hijos=[]){
 }
 const hora=iso=>{const d=new Date(iso);return Number.isNaN(d.getTime())?'':d.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});};
 
-export function crearEntorno({doc=document,registro,ir=()=>false,alCerrar=()=>{}}={}){
+export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,volver=null,alCerrar=()=>{}}={}){
  const h=(tag,props,hijos)=>crear(doc,tag,props,hijos);
  const raiz=h('section',{class:'entorno-hoja',role:'dialog','aria-modal':'true','aria-labelledby':'entorno-titulo'});
  raiz.appendChild(h('button',{type:'button',class:'entorno-cerrar','aria-label':'Cerrar el entorno',texto:'×',on:{click:()=>alCerrar()}}));
  raiz.appendChild(h('h1',{id:'entorno-titulo',texto:'Entorno del agente'}));
- raiz.appendChild(h('p',{class:'entorno-aviso',texto:'Etapa 1: aquí se ven los espacios, lo que el agente puede hacer en cada uno y quién los ha visitado en esta sesión. Todo está en solo observar: no se envía nada, no se crea nada y no se escribe en Sheets.'}));
+ raiz.appendChild(h('p',{class:'entorno-aviso',texto:'Etapas 1 y 2: aquí se ven los espacios, lo que el agente puede hacer en cada uno y quién los ha visitado en esta sesión. Todo está en solo observar: no se envía nada, no se crea nada y no se escribe en Sheets.'}));
  const lista=h('div',{class:'entorno-lista'});
  const bitacora=h('ol',{class:'entorno-bitacora','aria-live':'polite'});
  const limpiar=n=>{while(n.firstChild)n.removeChild(n.firstChild);};
@@ -84,15 +84,22 @@ export function crearEntorno({doc=document,registro,ir=()=>false,alCerrar=()=>{}
     h('span',{class:'entorno-chip',texto:PERMISOS[e.permiso]}),
     h('span',{class:'entorno-chip',texto:'Visitas: '+n})];
    const hijos=[h('h2',{texto:e.nombre}),h('p',{texto:e.funcion}),h('div',{class:'entorno-chips'},pie)];
-   if(hay)hijos.push(h('button',{type:'button',class:'entorno-ir',texto:'Ir a este espacio',on:{click:()=>{
-    if(ir(e)!==false)pintar();
-   }}}));
+   if(hay){
+    const acciones=[h('button',{type:'button',class:'entorno-ir',texto:'Ir a este espacio',on:{click:()=>{
+     if(ir(e)!==false)pintar();
+    }}})];
+    if(typeof enviar==='function')acciones.push(h('button',{type:'button',class:'entorno-enviar',texto:'Enviar al agente',on:{click:()=>{
+     if(enviar(e)!==false)pintar();
+    }}}));
+    hijos.push(h('div',{class:'entorno-acciones'},acciones));
+   }
    lista.appendChild(h('article',{class:'entorno-espacio','data-espacio':e.id},hijos));
   }
   const recientes=registro.lista().slice(-8).reverse();
   if(!recientes.length)bitacora.appendChild(h('li',{texto:'Todavía no hay visitas en esta sesión.'}));
   for(const v of recientes)bitacora.appendChild(h('li',{texto:[hora(v.en),QUIENES[v.quien],espacioDe(v.espacio)?.nombre].filter(Boolean).join(' · ')}));
  }
+ if(typeof volver==='function')raiz.appendChild(h('button',{type:'button',class:'entorno-volver',texto:'Que el agente vuelva a su lugar',on:{click:()=>{volver();}}}));
  raiz.appendChild(lista);
  raiz.appendChild(h('h2',{class:'entorno-sub',texto:'Visitas de esta sesión'}));
  raiz.appendChild(bitacora);
@@ -123,9 +130,25 @@ export function montarEntorno({win=globalThis.window,doc=globalThis.document,act
   oficina.visit(espacio.lugar);
   return false;
  };
+ // Solo si la oficina ofrece el movimiento del agente (interruptor de caminar o ?camina=1).
+ const caminar=()=>typeof win.despacho?.agenteIr==='function';
+ const enviar=espacio=>{
+  if(!espacio.lugar||!caminar())return false;
+  if(!win.despacho.agenteIr(espacio.lugar))return false;
+  registro.registrar({espacio:espacio.id,quien:'agente',motivo:'Enviado desde el entorno'});
+  cerrar();
+  win.despacho.setMode?.('overview');
+  return false;
+ };
+ const volver=()=>{
+  if(!caminar()||!win.despacho.agenteIr('inicio'))return false;
+  cerrar();
+  win.despacho.setMode?.('overview');
+  return false;
+ };
  const abrir=()=>{
   if(hoja||!perfil)return;
-  hoja=crearEntorno({doc,registro,ir,alCerrar:cerrar});
+  hoja=crearEntorno({doc,registro,ir,enviar:caminar()?enviar:null,volver:caminar()?volver:null,alCerrar:cerrar});
   doc.body.appendChild(hoja.raiz);
   doc.addEventListener?.('keydown',alTeclear);
  };
