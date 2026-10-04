@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-04.58-despacho-circulo-lectura-metas",
+  "revision": "2026-10-04.59-despacho-entorno-base",
   "checked_at": "2026-10-04",
   "priorities": [
     "vender_mas",
@@ -7675,6 +7675,30 @@
       ],
       "deployment": "Publicar apagado (CIRCULO_ACTIVO=false y CIRCULO_PENDIENTES_REALES=false): nada cambia para los usuarios.",
       "rollback": "Revertir este PR; se vuelve a la espera de 12 s. No se tocan datos, permisos ni backends."
+    },
+    {
+      "id": "CHG-DESPACHO-ENTORNO-059",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ],
+      "proposal": "Base del entorno del agente (bloque C del plan del Despacho, etapa 1). Un módulo nuevo (despacho3d/entorno.mjs) define los nueve espacios donde trabajará Gastón (sala de juntas, centro de comunicación, biblioteca, sala de navegación, suite de Drive, sala de edición y embudo comercial, oficina de Dirección, salón de usos múltiples y museo de maquetas), el permiso de cada uno y un registro de visitas en memoria. Todos los espacios arrancan en «solo observar»; subir a borradores o a acciones es una etapa aparte que autoriza Dirección. Tres espacios ya tienen lugar en el Despacho 3D (decisiones, sala de encuentro y sala de edición) y desde la hoja se puede ir a ellos; el resto aparece como «por construir» con su etapa. No hace peticiones de red, no envía mensajes, no crea documentos y no escribe en Sheets. Apagado por defecto con un interruptor propio (ENTORNO_ACTIVO=false); vista previa con ?entorno=1 y perfil autorizado por el servidor. El movimiento del avatar de Gastón entre espacios y el registro de visitas en Sheets son las etapas siguientes.",
+      "status": "propuesto",
+      "approval": {
+        "date": "2026-10-04",
+        "scope": "El propietario pidió pasar de las metas al entorno del agente y a la versión de oficina (bloques C a G del plan)."
+      },
+      "tests": [
+        "node --test tests/despacho-entorno.test.cjs",
+        "node --test tests/*.cjs",
+        "node scripts/arquitectura.cjs --check",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-obra-app.cjs",
+        "git diff --check"
+      ],
+      "deployment": "Publicar con ENTORNO_ACTIVO=false: nada cambia para los usuarios (el botón queda oculto). Dirección lo revisa con ?entorno=1 abierto desde YOD OS; encenderlo es un cambio de una línea en despacho3d/entorno-config.mjs.",
+      "rollback": "Poner ENTORNO_ACTIVO en false, o revertir este PR. No se tocan datos, permisos ni backends."
     }
   ],
   "data_contracts": [
