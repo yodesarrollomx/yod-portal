@@ -1,0 +1,147 @@
+// Entorno del agente: los espacios donde trabaja, qué puede hacer en cada uno y quién los ha visitado.
+// Etapa 1: solo catálogo, permisos y registro en memoria de esta sesión. No hace peticiones de red,
+// no envía mensajes, no crea documentos y no escribe en Sheets. Todo espacio está en "solo observar".
+// El repositorio es público: aquí no hay nombres de casos, clientes ni contactos.
+import {ENTORNO_ACTIVO} from './entorno-config.mjs';
+
+export const PERMISOS={
+ observar:'Solo observar',
+ borrador:'Borradores, con visto bueno de Dirección',
+ accion:'Acción aprobada por Dirección'
+};
+// Nada se concede por defecto: cada espacio arranca en "observar". Subir de nivel es una etapa
+// aparte y la autoriza Dirección (matriz de Accesos, código DP).
+const NIVELES=Object.keys(PERMISOS);
+
+export const ESPACIOS=Object.freeze([
+ {id:'juntas',nombre:'Sala de juntas',funcion:'Entregas y aprobaciones. Avisa por WhatsApp y presenta lo que espera una decisión.',lugar:'decisions',permiso:'observar',tope:'borrador',etapa:'D'},
+ {id:'comunicacion',nombre:'Centro de comunicación',funcion:'WhatsApp con número de prueba y Gmail, solo con contactos autorizados y siempre borrador primero.',lugar:null,permiso:'observar',tope:'borrador',etapa:'D'},
+ {id:'biblioteca',nombre:'Biblioteca',funcion:'Consulta de conocimiento (NotebookLM). Falta verificar si solo puede abrirse.',lugar:'lounge',permiso:'observar',tope:'observar',etapa:'E'},
+ {id:'navegacion',nombre:'Sala de navegación',funcion:'Pantallas que muestran lo que consulta el agente.',lugar:null,permiso:'observar',tope:'observar',etapa:'E'},
+ {id:'drive',nombre:'Suite de Drive',funcion:'Crear documentos, presentaciones y hojas.',lugar:null,permiso:'observar',tope:'borrador',etapa:'E'},
+ {id:'edicion',nombre:'Sala de edición y embudo comercial',funcion:'Producción de contenido y seguimiento comercial con los tableros de YOD OS.',lugar:'editing',permiso:'observar',tope:'borrador',etapa:'F'},
+ {id:'direccion',nombre:'Oficina de Dirección',funcion:'Control, datos, programaciones y clientes.',lugar:null,permiso:'observar',tope:'observar',etapa:'F'},
+ {id:'usos',nombre:'Salón de usos múltiples',funcion:'Espacio flexible para reuniones y presentaciones.',lugar:null,permiso:'observar',tope:'observar',etapa:'F'},
+ {id:'museo',nombre:'Museo de maquetas de Aurum',funcion:'Recorrido y cuestionario sobre las maquetas.',lugar:null,permiso:'observar',tope:'observar',etapa:'F'}
+].map(e=>Object.freeze(e)));
+
+const POR_ID=new Map(ESPACIOS.map(e=>[e.id,e]));
+export const espacioDe=id=>POR_ID.get(id)||null;
+
+// En esta etapa nada puede ejecutar acciones: solo se pregunta, nunca se concede.
+export function puedeActuar(espacioId,nivel='accion'){
+ const e=POR_ID.get(espacioId);
+ if(!e||!NIVELES.includes(nivel))return false;
+ return NIVELES.indexOf(e.permiso)>=NIVELES.indexOf(nivel);
+}
+
+const QUIENES={direccion:'Dirección (recorrido)',agente:'El agente'};
+// Registro en memoria de esta sesión. Pasar a Sheets es una etapa posterior.
+export function crearRegistro({reloj=()=>new Date().toISOString(),max=200}={}){
+ const visitas=[];
+ return {
+  registrar({espacio,quien='direccion',motivo=''}={}){
+   if(!POR_ID.has(espacio)||!Object.hasOwn(QUIENES,quien))throw Error('visita_invalida');
+   const nota=typeof motivo==='string'?motivo.replace(/[\x00-\x1f\x7f]/g,' ').trim().slice(0,120):'';
+   const visita={espacio,quien,motivo:nota,en:String(reloj())};
+   visitas.push(visita);
+   if(visitas.length>max)visitas.shift();
+   return {...visita};
+  },
+  lista:()=>visitas.map(v=>({...v})),
+  cuantas:id=>visitas.filter(v=>v.espacio===id).length
+ };
+}
+
+function crear(doc,tag,props={},hijos=[]){
+ const e=doc.createElement(tag);
+ for(const [k,v] of Object.entries(props)){
+  if(k==='texto')e.textContent=v;
+  else if(k==='on')for(const [ev,fn] of Object.entries(v))e.addEventListener(ev,fn);
+  else if(v===false||v===null||v===undefined)continue;
+  else e.setAttribute(k,String(v));
+ }
+ for(const h of hijos)e.appendChild(h);
+ return e;
+}
+const hora=iso=>{const d=new Date(iso);return Number.isNaN(d.getTime())?'':d.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});};
+
+export function crearEntorno({doc=document,registro,ir=()=>false,alCerrar=()=>{}}={}){
+ const h=(tag,props,hijos)=>crear(doc,tag,props,hijos);
+ const raiz=h('section',{class:'entorno-hoja',role:'dialog','aria-modal':'true','aria-labelledby':'entorno-titulo'});
+ raiz.appendChild(h('button',{type:'button',class:'entorno-cerrar','aria-label':'Cerrar el entorno',texto:'×',on:{click:()=>alCerrar()}}));
+ raiz.appendChild(h('h1',{id:'entorno-titulo',texto:'Entorno del agente'}));
+ raiz.appendChild(h('p',{class:'entorno-aviso',texto:'Etapa 1: aquí se ven los espacios, lo que el agente puede hacer en cada uno y quién los ha visitado en esta sesión. Todo está en solo observar: no se envía nada, no se crea nada y no se escribe en Sheets.'}));
+ const lista=h('div',{class:'entorno-lista'});
+ const bitacora=h('ol',{class:'entorno-bitacora','aria-live':'polite'});
+ const limpiar=n=>{while(n.firstChild)n.removeChild(n.firstChild);};
+ function pintar(){
+  limpiar(lista);limpiar(bitacora);
+  for(const e of ESPACIOS){
+   const hay=e.lugar!==null;
+   const n=registro.cuantas(e.id);
+   const pie=[h('span',{class:'entorno-chip '+(hay?'ok':'espera'),texto:hay?'Con lugar en el Despacho':'Por construir · etapa '+e.etapa}),
+    h('span',{class:'entorno-chip',texto:PERMISOS[e.permiso]}),
+    h('span',{class:'entorno-chip',texto:'Visitas: '+n})];
+   const hijos=[h('h2',{texto:e.nombre}),h('p',{texto:e.funcion}),h('div',{class:'entorno-chips'},pie)];
+   if(hay)hijos.push(h('button',{type:'button',class:'entorno-ir',texto:'Ir a este espacio',on:{click:()=>{
+    if(ir(e)!==false)pintar();
+   }}}));
+   lista.appendChild(h('article',{class:'entorno-espacio','data-espacio':e.id},hijos));
+  }
+  const recientes=registro.lista().slice(-8).reverse();
+  if(!recientes.length)bitacora.appendChild(h('li',{texto:'Todavía no hay visitas en esta sesión.'}));
+  for(const v of recientes)bitacora.appendChild(h('li',{texto:[hora(v.en),QUIENES[v.quien],espacioDe(v.espacio)?.nombre].filter(Boolean).join(' · ')}));
+ }
+ raiz.appendChild(lista);
+ raiz.appendChild(h('h2',{class:'entorno-sub',texto:'Visitas de esta sesión'}));
+ raiz.appendChild(bitacora);
+ pintar();
+ return {raiz,pintar};
+}
+
+// Monta el botón y la hoja. Devuelve false si el entorno no debe aparecer.
+export function montarEntorno({win=globalThis.window,doc=globalThis.document,activo=ENTORNO_ACTIVO,registro=crearRegistro()}={}){
+ if(!win||!doc)return false;
+ const vistaPrevia=/(?:^|[?&])entorno=1(?:&|$)/.test(String(win.location?.search||''));
+ if(!activo&&!vistaPrevia)return false;
+ const boton=doc.getElementById('entorno-open');
+ if(!boton)return false;
+ let hoja=null,desuscribir=null,perfil=null;
+ const cerrar=()=>{
+  if(!hoja)return;
+  hoja.raiz.parentNode?.removeChild(hoja.raiz);hoja=null;
+  doc.removeEventListener?.('keydown',alTeclear);
+  boton.focus?.();
+ };
+ function alTeclear(e){if(e.key==='Escape')cerrar();}
+ const ir=espacio=>{
+  const oficina=win.despacho;
+  if(!espacio.lugar||typeof oficina?.visit!=='function')return false;
+  registro.registrar({espacio:espacio.id,quien:'direccion',motivo:'Recorrido desde el entorno'});
+  cerrar();
+  oficina.visit(espacio.lugar);
+  return false;
+ };
+ const abrir=()=>{
+  if(hoja||!perfil)return;
+  hoja=crearEntorno({doc,registro,ir,alCerrar:cerrar});
+  doc.body.appendChild(hoja.raiz);
+  doc.addEventListener?.('keydown',alTeclear);
+ };
+ const alPerfil=p=>{
+  perfil=p&&typeof p==='object'?p:null;
+  boton.hidden=!perfil;
+  if(!perfil)cerrar();
+ };
+ const conectar=()=>{
+  const sesion=win.CubefarmYOD;
+  if(!sesion||desuscribir||typeof sesion.subscribeProfile!=='function')return;
+  desuscribir=sesion.subscribeProfile(alPerfil);
+ };
+ boton.hidden=true;
+ boton.addEventListener('click',abrir);
+ win.addEventListener('yod-agents-ready',conectar);
+ conectar();
+ return true;
+}

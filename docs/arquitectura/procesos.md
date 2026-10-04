@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-04.58-despacho-circulo-lectura-metas · 2026-10-04.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-04.59-despacho-entorno-base · 2026-10-04.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
