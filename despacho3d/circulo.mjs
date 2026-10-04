@@ -1,8 +1,9 @@
 // Círculo de seis sectores del caso, en primera persona.
 // Solo lectura: no hace peticiones de red ni escribe en Sheets. Sale a la vista únicamente
 // si el interruptor está encendido (o ?circulo=1) y el servidor autorizó el perfil del caso.
-import {CIRCULO_ACTIVO} from './circulo-config.mjs';
+import {CIRCULO_ACTIVO,CIRCULO_PENDIENTES_REALES} from './circulo-config.mjs';
 import {CATEGORIAS,datosDeEjemplo,validarDatos} from './circulo-datos.mjs';
+import {datosReales,leerMetas} from './circulo-pendientes.mjs';
 
 export const SECTORES=[
  {id:'pendientes',etiqueta:'Pendientes',voz:'Esto es lo que me falta resolver y con quién está.'},
@@ -23,8 +24,10 @@ export function trayecto(i){
 }
 export const centro=i=>punto((R+r)/2,(i*Math.PI/3+(i+1)*Math.PI/3)/2);
 export function cuentas(datos,estado={}){
+ const pendientes=String(datos.pendientes.length);
+ if(datos.parcial)return {pendientes,ppp:'—',historial:'—',moac:'—',documentos:'—',conversaciones:'—'};
  return {
-  pendientes:String(datos.pendientes.length),
+  pendientes,
   ppp:datos.ppp.borrador?'1 propuesta':'al día',
   historial:String(datos.historial.length),
   moac:String(datos.moac.filter(m=>m[2]!=='ok').length),
@@ -53,12 +56,13 @@ export function crearCirculo({doc=document,datos=datosDeEjemplo(),perfil={name:'
  const raiz=h('section',{class:'circulo-hoja',role:'dialog','aria-modal':'true','aria-labelledby':'circulo-titulo'});
  const cerrar=h('button',{type:'button',class:'circulo-cerrar','aria-label':'Cerrar el círculo',texto:'×',on:{click:()=>alCerrar()}});
  const svg=crear(doc,'svg',{viewBox:'0 0 400 400',role:'group','aria-label':'Sectores del círculo'},[],true);
- const nucleo=h('div',{class:'circulo-nucleo'},[h('b',{texto:nombre}),h('span',{texto:model.ejemplo?'Datos de ejemplo':'Datos del expediente'})]);
+ const nucleo=h('div',{class:'circulo-nucleo'},[h('b',{texto:nombre}),h('span',{texto:model.ejemplo?'Datos de ejemplo':model.parcial?'Pendientes reales':'Datos del expediente'})]);
  const voz=h('p',{class:'circulo-voz'});
  const panel=h('div',{class:'circulo-panel','aria-live':'polite'});
  raiz.appendChild(cerrar);
  raiz.appendChild(h('h1',{id:'circulo-titulo',texto:'Círculo de '+nombre}));
  if(model.ejemplo)raiz.appendChild(h('p',{class:'circulo-aviso',texto:'Vista de ejemplo. Los datos reales se conectan en una etapa posterior; nada de aquí escribe en Sheets.'}));
+ if(model.parcial)raiz.appendChild(h('p',{class:'circulo-aviso',texto:'Datos reales: por ahora solo Pendientes está conectado, en solo lectura. Los demás sectores se conectan por etapas y nada de aquí escribe en Sheets.'}));
  raiz.appendChild(h('div',{class:'circulo-cuerpo'},[h('div',{class:'circulo-anillo'},[h('div',{class:'circulo-figura'},[svg,nucleo]),voz]),panel]));
 
  const limpiar=n=>{while(n.firstChild)n.removeChild(n.firstChild);};
@@ -80,6 +84,8 @@ export function crearCirculo({doc=document,datos=datosDeEjemplo(),perfil={name:'
  const chip=(t,clase)=>h('span',{class:'circulo-chip '+clase,texto:t});
  const tarjeta=(titulo,detalle,pie)=>h('div',{class:'circulo-tarjeta'},[h('h3',{texto:titulo}),detalle?h('p',{texto:detalle}):h('span'),h('div',{class:'circulo-pie'},pie)]);
  const lista=hijos=>h('div',{class:'circulo-lista'},hijos);
+ const sinConectar='Este sector todavía no está conectado a datos reales.';
+ const vacio=t=>h('p',{class:'circulo-nota',texto:t});
  const segmentos=(opciones,actual,fn)=>h('div',{class:'circulo-seg'},opciones.map(([v,t])=>h('button',{type:'button',texto:t,'aria-pressed':String(actual===v),on:{click:()=>fn(v)}})));
  const dl=filasDatos=>{
   const d=h('dl');
@@ -90,7 +96,9 @@ export function crearCirculo({doc=document,datos=datosDeEjemplo(),perfil={name:'
   pendientes(){
    encabezado('Pendientes','Mensajes y resultados por resolver, con Dirección o con otros integrantes. Cada tarjeta lleva la categoría de Jev.');
    panel.appendChild(segmentos([['todos','Todos'],['dir','Con Dirección'],['otros','Con otros']],estado.filtro,v=>{estado.filtro=v;pintar();}));
-   panel.appendChild(lista(model.pendientes.filter(p=>estado.filtro==='todos'||p.con===estado.filtro).map(p=>tarjeta(p.titulo,p.detalle,[chip(CATEGORIAS[p.categoria],'c-'+p.categoria),h('span',{texto:p.de}),h('span',{texto:'· '+p.origen})]))));
+   const visibles=model.pendientes.filter(p=>estado.filtro==='todos'||p.con===estado.filtro);
+   if(!visibles.length)panel.appendChild(vacio(model.avisoPendientes||'No hay pendientes en este filtro.'));
+   panel.appendChild(lista(visibles.map(p=>tarjeta(p.titulo,p.detalle,[chip(CATEGORIAS[p.categoria],'c-'+p.categoria),h('span',{texto:p.de}),h('span',{texto:'· '+p.origen})]))));
   },
   ppp(){
    encabezado('Tablero PPP','El mismo tablero del portal. Lo editan Dirección y el caso: el caso trabaja en su versión y propone cambios; la vigente es siempre la última aprobada por Dirección.');
@@ -104,18 +112,22 @@ export function crearCirculo({doc=document,datos=datosDeEjemplo(),perfil={name:'
   },
   historial(){
    encabezado('Historial','Línea de tiempo desde el primer registro.');
+   if(!model.historial.length)panel.appendChild(vacio(sinConectar));
    panel.appendChild(h('ul',{class:'circulo-linea'},model.historial.map(([f,t])=>h('li',{},[h('time',{texto:f}),h('p',{texto:t})]))));
   },
   moac(){
    encabezado('MOAC interno','Mis trabajos y lo que tengo que resolver.');
+   if(!model.moac.length)panel.appendChild(vacio(sinConectar));
    panel.appendChild(lista(model.moac.map(([t,e,tono])=>tarjeta(t,'',[chip(e,'t-'+tono)]))));
   },
   documentos(){
    encabezado('Documentos','Versiones definitivas, actualizadas. Lo recibido no se confunde con lo comprobado.');
+   if(!model.documentos.length)panel.appendChild(vacio(sinConectar));
    panel.appendChild(lista(model.documentos.map(([t,e,tono,nota])=>tarjeta(t,nota,[chip(e,'t-'+tono)]))));
   },
   conversaciones(){
    encabezado('Conversaciones','Con quién hablo, qué me piden y de dónde viene.');
+   if(!model.conversaciones.length){panel.appendChild(vacio(sinConectar));return;}
    const sel=Math.min(estado.chat,model.conversaciones.length-1);
    const botones=model.conversaciones.map((c,i)=>h('button',{type:'button','aria-pressed':String(i===sel),on:{click:()=>{estado.chat=i;pintar();}}},[h('span',{texto:c.nombre}),h('small',{texto:c.detalle})]));
    const msgs=h('div',{class:'circulo-msgs'},(model.conversaciones[sel]?.mensajes||[]).map(([q,t,hora])=>h('div',{class:'circulo-burbuja '+q},[h('span',{texto:t}),hora?h('small',{texto:hora}):h('span')])));
@@ -134,13 +146,14 @@ export function crearCirculo({doc=document,datos=datosDeEjemplo(),perfil={name:'
 }
 
 // Monta el botón y la hoja. Devuelve false si el círculo no debe aparecer.
-export function montarCirculo({win=globalThis.window,doc=globalThis.document,activo=CIRCULO_ACTIVO}={}){
+export function montarCirculo({win=globalThis.window,doc=globalThis.document,activo=CIRCULO_ACTIVO,pendientesReales=CIRCULO_PENDIENTES_REALES,leer=leerMetas}={}){
  if(!win||!doc)return false;
  const vistaPrevia=/(?:^|[?&])circulo=1(?:&|$)/.test(String(win.location?.search||''));
  if(!activo&&!vistaPrevia)return false;
+ const reales=pendientesReales||/(?:^|[?&])pendientes=1(?:&|$)/.test(String(win.location?.search||''));
  const boton=doc.getElementById('circulo-open');
  if(!boton)return false;
- let hoja=null,desuscribir=null,perfil=null;
+ let hoja=null,desuscribir=null,perfil=null,abriendo=false;
  const cerrar=()=>{
   if(!hoja)return;
   hoja.raiz.parentNode?.removeChild(hoja.raiz);hoja=null;
@@ -148,9 +161,18 @@ export function montarCirculo({win=globalThis.window,doc=globalThis.document,act
   boton.focus?.();
  };
  function alTeclear(e){if(e.key==='Escape')cerrar();}
- const abrir=()=>{
-  if(hoja||!perfil)return;
-  hoja=crearCirculo({doc,perfil,alCerrar:cerrar});
+ const abrir=async()=>{
+  if(hoja||abriendo||!perfil)return;
+  const actual=perfil;
+  let datos;
+  if(reales){
+   abriendo=true;boton.disabled=true;
+   const metas=await leer({win,caseId:actual.case_id});
+   abriendo=false;boton.disabled=false;
+   if(hoja||perfil!==actual)return;
+   datos=datosReales(actual,metas);
+  }
+  hoja=crearCirculo({doc,perfil:actual,datos,alCerrar:cerrar});
   doc.body.appendChild(hoja.raiz);
   doc.addEventListener?.('keydown',alTeclear);
  };
