@@ -166,9 +166,10 @@ export function montarCirculo({win=globalThis.window,doc=globalThis.document,act
   const actual=perfil;
   let datos;
   if(reales){
-   abriendo=true;boton.disabled=true;
+   const etiqueta=boton.textContent;
+   abriendo=true;boton.disabled=true;boton.textContent='Leyendo…';
    const metas=await leer({win,caseId:actual.case_id});
-   abriendo=false;boton.disabled=false;
+   abriendo=false;boton.disabled=false;boton.textContent=etiqueta;
    if(hoja||perfil!==actual)return;
    datos=datosReales(actual,metas);
   }

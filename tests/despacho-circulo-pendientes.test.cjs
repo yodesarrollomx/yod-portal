@@ -102,6 +102,7 @@ test('una meta sin acciones se resume por su estado, y los textos largos se acot
 
 test('leer metas pide solo readGoals, valida la respuesta y siempre cierra el transporte; ante cualquier falla devuelve null',async()=>{
  const {leerMetas}=await load('circulo-pendientes.mjs');
+ assert.ok(/tiempoMs=45000/.test(leerArchivo('circulo-pendientes.mjs')),'margen para el arranque en frío de Apps Script');
  const llamadas=[];let cerrado=0;
  const crear=impl=>()=>new Proxy({dispose(){cerrado++;}},{get(t,k){if(k in t)return t[k];return(...a)=>{llamadas.push(String(k));return k==='readGoals'?impl(...a):Promise.reject(Error('no permitido'));};}});
  const bien=await leerMetas({win:{},caseId:PERFIL.case_id,crearTransporte:crear(async p=>{assert.deepEqual(p,{case_id:PERFIL.case_id});return respuesta([meta()]);})});
@@ -153,14 +154,15 @@ test('el interruptor de pendientes reales viene apagado: sin él el círculo sig
 test('con ?pendientes=1 abrir lee las metas del caso autorizado, muestra la hoja una vez y no abre doble',async()=>{
  const {montarCirculo}=await load('circulo.mjs');
  const {validateGoals}=await load('goals.mjs');
- const {doc,boton}=crearDoc(),win=crearWin('?circulo=1&pendientes=1'),s=sesionFalsa();win.CubefarmYOD=s;
+ const {doc,boton}=crearDoc(),win=crearWin('?circulo=1&pendientes=1'),s=sesionFalsa();win.CubefarmYOD=s;boton.textContent='Círculo';
  const pedidos=[];let soltar;
  const leer=async a=>{pedidos.push(a.caseId);await new Promise(r=>{soltar=r;});return validateGoals(respuesta([meta({tasks:[tarea(1,'blocked')]})]),PERFIL.case_id);};
  montarCirculo({win,doc,activo:false,leer});
  s.poner(PERFIL);
  const p1=boton.emit('click'),p2=boton.emit('click');
- assert.equal(boton.disabled,true);assert.equal(doc.body.children.length,0);
+ assert.equal(boton.disabled,true);assert.equal(boton.textContent,'Leyendo…');assert.equal(doc.body.children.length,0);
  soltar();await p1;await p2;
+ assert.equal(boton.textContent,'Círculo');
  assert.deepEqual(pedidos,[PERFIL.case_id]);
  assert.equal(doc.body.children.length,1);assert.equal(boton.disabled,false);
  assert.match(doc.body.children[0].textContent,/Acción 1/);assert.match(doc.body.children[0].textContent,/Pendientes reales/);

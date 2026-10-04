@@ -61,7 +61,7 @@ export function pendientesDeMetas(modelo,{de='Caso'}={}){
 }
 
 // Devuelve las metas validadas, o null ante cualquier falla (sin sesión, sin permiso, tiempo, datos raros).
-export async function leerMetas({win,caseId,crearTransporte=createFrameTransport,tiempoMs=12000}={}){
+export async function leerMetas({win,caseId,crearTransporte=createFrameTransport,tiempoMs=45000}={}){
  if(typeof caseId!=='string'||!caseId)return null;
  let transporte,reloj;
  try{
