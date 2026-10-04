@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-04.61-despacho-entorno-encendido · 2026-10-04.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-04.62-despacho-entorno-juntas · 2026-10-04.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-04.61-despacho-entorno-encendido",
+  "revision": "2026-10-04.62-despacho-entorno-juntas",
   "checked_at": "2026-10-04",
   "priorities": [
     "vender_mas",
@@ -7750,6 +7750,31 @@
       ],
       "deployment": "Publicar encendido. El botón «Entorno» aparece en el Despacho solo para quien tenga perfil autorizado.",
       "rollback": "Volver ENTORNO_ACTIVO y ENTORNO_AGENTE_CAMINA a false en despacho3d/entorno-config.mjs o revertir el PR; sin cambios de datos ni permisos."
+    },
+    {
+      "id": "CHG-DESPACHO-ENTORNO-JUNTAS-062",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ],
+      "proposal": "Bloque D, etapa 1 del entorno del agente: en la tarjeta de la sala de juntas aparece «Ver entregas por aprobar», que presenta lo que espera una aprobación o una decisión de Dirección. Lee solo con readGoals por el transporte autorizado del OS (el mismo que usan el panel de Agentes y el círculo), valida con el esquema existente, reutiliza la clasificación de despacho3d/circulo-pendientes.mjs y muestra únicamente las tarjetas «por aprobar» y «por decidir», con aviso de que la aprobación se hace en YOD OS. No aprueba, no crea ni detiene nada, no envía avisos por WhatsApp o Gmail y no escribe en Sheets; los avisos son una etapa posterior, siempre con borrador y solo a números autorizados. Si el perfil se retira durante la lectura no muestra datos. Apagado por defecto con su propio interruptor (ENTORNO_JUNTAS=false); vista previa con ?entorno=1&juntas=1 y perfil autorizado.",
+      "status": "propuesto",
+      "approval": {
+        "date": "2026-10-04",
+        "scope": "El propietario pidió seguir con el bloque D (sala de juntas) del plan del entorno del agente."
+      },
+      "tests": [
+        "node --test tests/despacho-entorno.test.cjs",
+        "node --test tests/despacho-circulo-pendientes.test.cjs",
+        "node --test tests/*.cjs",
+        "node scripts/arquitectura.cjs --check",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-obra-app.cjs",
+        "git diff --check"
+      ],
+      "deployment": "Publicar con ENTORNO_JUNTAS=false: nada cambia para los usuarios. Dirección lo revisa con ?entorno=1&juntas=1 abierto desde YOD OS; encenderlo es un cambio de una línea en despacho3d/entorno-config.mjs.",
+      "rollback": "Poner ENTORNO_JUNTAS en false o revertir el PR. No se tocan datos, permisos ni backends."
     }
   ],
   "data_contracts": [
