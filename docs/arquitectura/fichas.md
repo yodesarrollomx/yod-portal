@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-04.59-despacho-entorno-base · 2026-10-04.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-04.60-despacho-entorno-movimiento · 2026-10-04.
 
 ## SYS-DESPACHO · El Despacho
 

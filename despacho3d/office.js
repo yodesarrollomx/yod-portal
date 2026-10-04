@@ -5,6 +5,8 @@ import {createOffice} from './scene.js?v=3';
 import {panels} from './panels.js?v=7';
 import {createChinches3D} from './chinches3d.mjs?v=1';
 import {createOfficePilot,chooseOfficeHit} from './avatars/office-pilot.mjs';
+import {ENTORNO_AGENTE_CAMINA} from './entorno-config.mjs';
+import {crearAgenteIr} from './entorno-ruta.mjs';
 const $=s=>document.querySelector(s),mount=$('#scene'),coarse=matchMedia('(pointer:coarse)').matches;
 let renderer;try{renderer=new T.WebGLRenderer({antialias:true,powerPreference:'high-performance'});}catch(e){$('#loading').hidden=true;$('#fallback').hidden=false;throw e;}
 renderer.setPixelRatio(Math.min(devicePixelRatio,coarse?1.25:1.65));renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.10;mount.appendChild(renderer.domElement);
@@ -80,6 +82,7 @@ function resize(){const width=mount.clientWidth,height=mount.clientHeight;render
 let shadowBaked=false;function animate(now){requestAnimationFrame(animate);const dt=Math.min((now-last)/1000,.1);last=now;const avatarChanged=pilot.update(now,{hidden:document.hidden,overlay:agentOverlay,reducedMotion:reducedMotion.matches});if(avatarChanged){dirty=true;if(now-avatarShadowAt>=400){renderer.shadowMap.needsUpdate=true;avatarShadowAt=now;}}if(document.hidden)return;if(mode==='walk'&&!sheet&&!agentOverlay){dirty=movement(dt)||dirty;updateNear();}else if(mode==='overview'&&!sheet&&!agentOverlay)orbit.update();if(dirty){renderer.render(scene,camera);frames++;dirty=false;if(!shadowBaked){renderer.shadowMap.autoUpdate=false;shadowBaked=true;}}}
 requestAnimationFrame(animate);$('#loading').hidden=true;window.officeReady=true;renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();clearMovement();$('#fallback').hidden=false;});
 window.despacho={model:office.model,scene,visit,setMode,openPanel,closeSheets,getState:()=>({mode,selected,near,sheet,position:camera.position.toArray(),rotation:camera.rotation.toArray(),frames,stick:{...stick},triangles:renderer.info.render.triangles,drawCalls:renderer.info.render.calls,allowed:allowed(camera.position.x,camera.position.z),mobile:isMobile(),colliders:office.collisions.length,avatar:pilot.getState()}),allowed};
+if(ENTORNO_AGENTE_CAMINA||/(?:^|[?&])camina=1(?:&|$)/.test(location.search))window.despacho.agenteIr=crearAgenteIr({lugares:places,piloto:pilot,permitido:allowed,limites:[office.bounds,office.annex],reducido:()=>reducedMotion.matches});
 
 chinches=createChinches3D({readView:()=>({position:camera.position.toArray(),quaternion:camera.quaternion.toArray(),fov:camera.fov,mode}),closeSheets:()=>closeSheets(),onChange:active=>{clearMovement();$('#scene').classList.toggle('pin-selecting',active);}});
 

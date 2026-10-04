@@ -16,3 +16,6 @@
 .entorno-ir{min-height:40px;padding:0 14px;border:1px solid var(--c-ink);border-radius:6px;background:var(--c-ink);color:#fff;font:inherit;cursor:pointer}
 .entorno-sub{font:600 17px/1.3 Georgia,"Times New Roman",serif;margin:20px 0 6px}
 .entorno-bitacora{margin:0;padding-left:20px;max-width:720px;color:var(--c-mut);font-size:14px}
+.entorno-acciones{display:flex;flex-wrap:wrap;gap:8px}
+.entorno-enviar,.entorno-volver{min-height:40px;padding:0 14px;border:1px solid var(--c-ink);border-radius:6px;background:transparent;color:var(--c-ink);font:inherit;cursor:pointer}
+.entorno-volver{margin:0 0 14px}
