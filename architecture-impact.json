@@ -1,13 +1,38 @@
 {
-  "model_revision": "2026-10-03.54-despacho-carril-rapido",
-  "proposal_id": "CHG-DESPACHO-FAST-049",
+  "model_revision": "2026-10-03.55-jev-piloto",
+  "proposal_id": "CHG-JEV-CONSULTAS-001",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "GAS-PORTERO",
-    "EXT-DRIVE"
+    "EXT-DRIVE",
+    "SHEET-PORTERO",
+    "SHEET-CATALOGO",
+    "SHEET-OPERACION",
+    "SHEET-FLUJO",
+    "SHEET-MARKETING",
+    "SHEET-PLAN-POTENCIAL",
+    "SHEET-CROKISS",
+    "SHEET-CODES",
+    "SHEET-MIRAMAR",
+    "SHEET-INTERIORES",
+    "SHEET-ALQUIMIA",
+    "SHEET-OBRA",
+    "SHEET-OBRA-CLIENTE",
+    "SHEET-SALA",
+    "SHEET-EMD",
+    "SHEET-CRM",
+    "SHEET-MOAC-METAS",
+    "SHEET-INVERSION",
+    "SHEET-PPP-MODELOS",
+    "SHEET-AMALAYA"
   ],
-  "summary": "Interfaz del Despacho con carril rápido: credencial corta por Portero, respuesta en streaming del motor en la nube y respaldo diferido en Sheets; la cola actual queda como respaldo.",
+  "summary": "Prueba inicial de Jev para comparar PPP y consultar el uso de suelo de Gastón Madrid. Lee rangos autorizados de Sheets y texto recuperado de Drive al momento de la consulta; conserva enlaces y revisión. Confianza mínima fija de 0.92. El atlas conserva todas las fuentes lógicas, pero sólo estos flujos quedan habilitados en el piloto; IDs físicos, adaptadores privados y activación por puesto no se publican ni se presumen instalados.",
+  "contracts": [
+    "CTR-DESPACHO-CONVERSACION",
+    "CTR-DESPACHO-TERMINAL-LOCAL",
+    "CTR-JEV-CONSULTAS"
+  ],
   "tests": [
     "node --test tests/despacho-fast-lane.test.cjs",
     "node scripts/arquitectura.cjs --check",
@@ -17,5 +42,5 @@
     "node scripts/verificar-impacto.cjs --base origin/main --repo yodesarrollomx/yod-portal",
     "git diff --check"
   ],
-  "rollback": "Revertir el PR; la interfaz usa de nuevo la cola de Sheets. Sin cambios de datos ni permisos."
+  "rollback": "Retirar la capacidad opcional del agente y revertir el PR. Sin cambios de datos, permisos, sesiones o despliegues existentes."
 }

@@ -16,6 +16,8 @@ Esta es la entrada para entender y modificar YOD OS. Prioridad de mejora acordad
 
 - [Capacidades compartidas de los agentes](despacho-capacidades.md): referencia Cubefarm, funciones conectadas y plan de instalación por agente.
 
+- [Consultas de las hojas y decisiones con Jev](jev-consultas.md): catálogo completo del atlas, lecturas recientes, fuentes directas y adaptadores privados por puesto.
+
 - [Entrega técnica de Control Maestro](control-maestro.md): versiones, aceptación, mantenimiento y reversión.
 
 - [EMD #9 · cuestionario completo bajo URL GitHub](emd-github-embed.md): propuesta, handshake y matriz de aceptación; implementación en PR separado.

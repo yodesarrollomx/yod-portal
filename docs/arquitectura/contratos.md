@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.54-despacho-carril-rapido · 2026-10-03.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.55-jev-piloto · 2026-10-03.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -380,6 +380,23 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Esta excepción acotada precisa las menciones previas a escala intacta en propuestas/contratos EMD; todos sus demás límites permanecen. No ampliar el instrumento a preguntas desfavorables por inferencia.
 - Pruebas funcionales y versión activa pendientes en sistema privado; usar dobles sintéticos, no endpoints de negocio ni datos Google para probar. La integración del atlas no acredita despliegue de EMD.
 - Rollback conserva datos e historial: revertir documentación por PR y regenerar vistas; restaurar frontend sin quitar el guard. Solo volver a GAS con guard equivalente; si no existe versión compatible, suspender captura afectada hasta parche. No restaurar NA como opción nueva ni reescribir históricos.
+
+## CTR-JEV-CONSULTAS
+
+- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, EXT-DRIVE, SHEET-PORTERO, SHEET-PPP-MODELOS.
+- Evidencia: Prueba inicial local del asistente de conocimiento. Adaptadores con IDs físicos y ACL privados pendientes de instalación.
+- Entrada/campos: `Actor autenticado y flujo permitido: comparación PPP o uso de suelo de Gastón Madrid`, `Hojas de cálculo acotadas o documentos Drive autorizados; revisión y timestamp de cada fragmento`, `Pregunta, contexto y alternativas preparadas por el host`.
+- Salida: Evidencia recuperada con enlace, revisión, fecha y huella de contenido, Elección de Jev sólo si confianza y respaldo alcanzan 0.92; bajo el umbral se devuelve revisión sin selección, Dato faltante, falta de permiso o fuente caducada, diferenciados de una respuesta.
+
+- El catálogo lógico de veinte fuentes Sheets y EXT-DRIVE no acredita mapping físico, ACL ni instalación; el piloto sólo habilita los dos flujos registrados.
+- Leer fuentes de nuevo por consulta, limitar la frescura a cinco minutos y revalidar permisos, contenido y revisión antes y después de llamar a Jev.
+- Enviar a Jev sólo filas/texto pertinente de fuentes autorizadas; nunca IDs de acceso, credenciales ni tablas de permisos.
+- La comparación de importes/porcentajes respeta las métricas nativas; Jev decide criterios semánticos y no sustituye fórmulas o ranking determinista.
+- El uso de suelo sólo se afirma con documento normativo vigente vinculado al predio; un título de escenario PPP no equivale a autorización.
+- Confianza y respaldo menores a 0.92 producen needs_review sin candidato seleccionado. No repetir la misma pregunta para forzar confianza.
+- Choice confidence resume la concentración de alternativas y no equivale a exactitud empírica; Noul mide apoyo probabilístico del fragmento, no valida por sí solo la cita.
+- Pruebas sintéticas y una consulta sintética a Jev no acreditan conexión Google privada ni disponibilidad en otros agentes.
+- Reversión: retirar el módulo/política opcional; conservar intactas las fuentes, libros, permisos, historial y operación existentes.
 
 ## CTR-DESPACHO-CONVERSACION
 
