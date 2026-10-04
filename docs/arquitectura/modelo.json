@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.54-despacho-carril-rapido",
-  "checked_at": "2026-10-03",
+  "revision": "2026-10-04.56-despacho-circulo",
+  "checked_at": "2026-10-04",
   "priorities": [
     "vender_mas",
     "margen_y_control",
@@ -7605,6 +7605,29 @@
       ],
       "deployment": "Backend Apps Script r6-fast y motor en la nube verificados antes; este PR solo cambia la interfaz pública. Publicar tras revisión y comprobar una conversación real en el piloto.",
       "rollback": "Revertir este PR: la interfaz vuelve a la cola de Sheets (el backend y el motor conservan ambos caminos). No se tocan datos."
+    },
+    {
+      "id": "CHG-DESPACHO-CIRCULO-056",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ],
+      "proposal": "Círculo de seis sectores del caso (Pendientes, Tablero PPP, Historial, MOAC interno, Documentos, Conversaciones) como hoja de solo lectura en el Despacho 3D. Se muestra únicamente con el interruptor encendido (o ?circulo=1) y un perfil autorizado por el servidor; el nombre viene de ese perfil. Primera etapa: contenido de ejemplo sintético, sin peticiones de red ni escrituras. La conexión a datos reales (tarjetas con Jev, aprobación de versiones PPP, historial y conversaciones) queda para etapas siguientes, cada una con su propuesta.",
+      "status": "propuesto",
+      "approval": {
+        "date": "2026-10-04",
+        "scope": "El propietario pidió que el círculo de seis sectores quedara listo en el portal antes de la versión de oficina y autorizó construirlo desde el plan escrito en el documento 15, punto 13."
+      },
+      "tests": [
+        "node --test tests/despacho-circulo.test.cjs",
+        "node --test tests/*.cjs",
+        "node scripts/arquitectura.cjs --check",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "git diff --check"
+      ],
+      "deployment": "Publicar con el interruptor apagado (CIRCULO_ACTIVO=false): nada cambia para los usuarios. Dirección lo revisa con ?circulo=1 y un perfil autorizado; encenderlo es un cambio de una línea en despacho3d/circulo-config.mjs.",
+      "rollback": "Poner CIRCULO_ACTIVO en false, o revertir este PR. No se tocan datos, permisos ni backends."
     }
   ],
   "data_contracts": [
@@ -8961,6 +8984,14 @@
         "SYS-DESPACHO",
         "GAS-PORTERO",
         "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-circulo.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
       ]
     }
   ]
