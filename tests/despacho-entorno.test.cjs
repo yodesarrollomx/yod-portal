@@ -200,3 +200,76 @@ test('sin el movimiento de la oficina no hay botones de enviar',async()=>{
  assert.equal(hoja.all(n=>n.attrs.class==='entorno-enviar').length,0);
  assert.equal(hoja.all(n=>n.attrs.class==='entorno-volver').length,0);
 });
+
+// ---- Sala de juntas: entregas por aprobar (solo lectura) ----
+const HASH64='a'.repeat(64);
+function metaDe(tareas,extra={}){
+ return {goal_id:'meta-1',case_id:PERFIL.case_id,title:'Meta sintética',instruction:'Instrucción',criterion:'Criterio',scope:'local_analysis_v1',status:'ready_for_review',
+  source_revision:'rev-1',revision:'rev-1',sequence:1,created_at:'2026-10-01T10:00:00Z',updated_at:'2026-10-01T11:00:00Z',summary:'Resumen',tasks:tareas,evidence:[],...extra};
+}
+const tareaDe=(n,status)=>({id:'task-'+n,title:'Acción '+n,criterion:'Criterio '+n,status,summary:'Resumen '+n,evidence_ids:status==='ready_for_review'?['ev-'+n]:[]});
+const evidenciaDe=n=>({id:'ev-'+n,task_id:'task-'+n,title:'Evidencia',text:'abc',sha256:HASH64,bytes:3});
+async function montarJuntas({search='?entorno=1&juntas=1',leer,juntas}={}){
+ const {montarEntorno,crearRegistro}=await load('entorno.mjs');
+ const {doc,boton}=crearDoc();const win=crearWin(search);
+ const sesion=sesionFalsa();win.CubefarmYOD=sesion;sesion.poner(PERFIL);
+ montarEntorno({win,doc,registro:crearRegistro(),leer,juntas});
+ await boton.emit('click');
+ return {doc,boton,sesion,hoja:doc.body.children[0]};
+}
+const botonEntregas=h=>h.all(n=>n.attrs.class==='entorno-entregas-ver')[0];
+
+test('juntas: sin el interruptor no hay botón de entregas ni lecturas',async()=>{
+ let llamadas=0;
+ const {hoja}=await montarJuntas({search:'?entorno=1',leer:async()=>{llamadas++;return null;}});
+ assert.equal(botonEntregas(hoja),undefined);assert.equal(llamadas,0);
+ const config=await load('entorno-config.mjs');
+ assert.equal(config.ENTORNO_JUNTAS,false);
+});
+
+test('juntas: lee en solo lectura y muestra solo lo que espera aprobación o decisión',async()=>{
+ const pedidos=[];
+ const modelo={ok:true,schema:1,source_revision:'rev-1',goals:[metaDe([tareaDe(1,'ready_for_review'),tareaDe(2,'pending'),tareaDe(3,'blocked')],{evidence:[evidenciaDe(1)],summary:'Jev ordeno las 3 acciones. Seguras: 3 (listas para aprobar: task-1; esperan tu decision: task-2; bloqueadas por falta de datos: task-3). A revisar a mano: 0. Es solo una guia.'})]};
+ const {hoja}=await montarJuntas({leer:async args=>{pedidos.push(args);return modelo.goals.length?{goals:modelo.goals}:null;}});
+ const b=botonEntregas(hoja);assert.ok(b);
+ await b.emit('click');
+ assert.deepEqual(pedidos.map(p=>p.caseId),[PERFIL.case_id]);
+ const texto=textos(hoja);
+ assert.match(texto,/Acción 1/);assert.match(texto,/Acción 2/);
+ assert.doesNotMatch(texto,/Acción 3/,'bloqueada por datos no espera aprobación');
+ assert.match(texto,/Por aprobar/);assert.match(texto,/Por decidir/);
+ assert.match(texto,/no se aprueba nada/);
+});
+
+test('juntas: vacío, error y lectura repetida con el botón ocupado',async()=>{
+ let modo='vacio',n=0,liberar;
+ const leer=async()=>{n++;if(modo==='error')return null;if(modo==='espera')await new Promise(r=>{liberar=r;});return {goals:[]};};
+ const {hoja}=await montarJuntas({leer});
+ await botonEntregas(hoja).emit('click');
+ assert.match(textos(hoja),/No hay nada esperando/);
+ modo='error';await botonEntregas(hoja).emit('click');
+ assert.match(textos(hoja),/No pude leerlo ahora/);
+ modo='espera';
+ const p1=botonEntregas(hoja).emit('click');
+ assert.match(textos(hoja),/Leyendo/);
+ await botonEntregas(hoja).emit('click');
+ assert.equal(n,3,'no lanza una segunda lectura mientras lee');
+ liberar();await p1;
+ assert.match(textos(hoja),/No hay nada esperando/);
+});
+
+test('juntas: si se retira el perfil mientras lee, no muestra nada del caso anterior',async()=>{
+ let liberar;
+ const leer=async()=>{await new Promise(r=>{liberar=r;});return {goals:[metaDe([tareaDe(1,'ready_for_review')],{evidence:[evidenciaDe(1)]})]};};
+ const {hoja,sesion}=await montarJuntas({leer});
+ const p=botonEntregas(hoja).emit('click');
+ sesion.poner(null);liberar();await p;
+ assert.doesNotMatch(textos(hoja),/Acción 1/);
+});
+
+test('juntas: la lectura es solo readGoals; no crea, aprueba ni detiene nada',()=>{
+ const s=leerArchivo('entorno.mjs');
+ assert.doesNotMatch(s,/createGoal|reviewGoal|enqueue|mintFastSession|stopGoal|approve\(/);
+ const p=leerArchivo('circulo-pendientes.mjs');
+ assert.match(p,/readGoals/);assert.doesNotMatch(p,/createGoal|reviewGoal|enqueue/);
+});
