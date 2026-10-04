@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-04.57-despacho-circulo-pendientes",
+  "revision": "2026-10-04.58-despacho-circulo-lectura-metas",
   "checked_at": "2026-10-04",
   "priorities": [
     "vender_mas",
@@ -7652,6 +7652,29 @@
       ],
       "deployment": "Publicar con CIRCULO_ACTIVO=false y CIRCULO_PENDIENTES_REALES=false: nada cambia para los usuarios. Dirección lo revisa con ?circulo=1&pendientes=1 abierto desde YOD OS; encender Pendientes reales es un cambio de una línea en despacho3d/circulo-config.mjs.",
       "rollback": "Poner CIRCULO_PENDIENTES_REALES en false, o revertir este PR. No se tocan datos, permisos ni backends."
+    },
+    {
+      "id": "CHG-DESPACHO-CIRCULO-LECTURA-058",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ],
+      "proposal": "Ajuste de CHG-DESPACHO-CIRCULO-PENDIENTES-057 tras probarla con datos reales desde YOD OS: la lectura de metas del círculo funcionó, pero el primer intento falló porque Apps Script tardó más de 12 s en arrancar. La lectura espera ahora hasta 45 s (el panel de Agentes espera 55 s) y el botón muestra «Leyendo…» mientras tanto. Sin cambios de alcance: sigue siendo solo lectura con readGoals, apagado por defecto y sin datos reales en el repositorio.",
+      "status": "propuesto",
+      "approval": {
+        "date": "2026-10-04",
+        "scope": "El propietario pidió seguir con Pendientes del círculo conectado a datos reales; este ajuste corrige la lentitud observada en la primera prueba real."
+      },
+      "tests": [
+        "node --test tests/despacho-circulo-pendientes.test.cjs",
+        "node --test tests/*.cjs",
+        "node scripts/arquitectura.cjs --check",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "git diff --check"
+      ],
+      "deployment": "Publicar apagado (CIRCULO_ACTIVO=false y CIRCULO_PENDIENTES_REALES=false): nada cambia para los usuarios.",
+      "rollback": "Revertir este PR; se vuelve a la espera de 12 s. No se tocan datos, permisos ni backends."
     }
   ],
   "data_contracts": [
