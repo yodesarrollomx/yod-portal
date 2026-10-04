@@ -219,12 +219,12 @@ async function montarJuntas({search='?entorno=1&juntas=1',leer,juntas}={}){
 }
 const botonEntregas=h=>h.all(n=>n.attrs.class==='entorno-entregas-ver')[0];
 
-test('juntas: sin el interruptor no hay botón de entregas ni lecturas',async()=>{
+test('juntas: sin el interruptor (?juntas=1 ausente y juntas:false) no hay botón de entregas ni lecturas',async()=>{
  let llamadas=0;
- const {hoja}=await montarJuntas({search:'?entorno=1',leer:async()=>{llamadas++;return null;}});
+ const {hoja}=await montarJuntas({search:'?entorno=1',juntas:false,leer:async()=>{llamadas++;return null;}});
  assert.equal(botonEntregas(hoja),undefined);assert.equal(llamadas,0);
  const config=await load('entorno-config.mjs');
- assert.equal(config.ENTORNO_JUNTAS,false);
+ assert.equal(config.ENTORNO_JUNTAS,true,'encendido por indicación de Dirección');
 });
 
 test('juntas: lee en solo lectura y muestra solo lo que espera aprobación o decisión',async()=>{
