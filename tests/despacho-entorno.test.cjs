@@ -85,14 +85,14 @@ test('registro: guarda en memoria, valida y limita',async()=>{
  assert.equal(r.registrar({espacio:'museo',motivo:'x'.repeat(500)}).motivo.length,120);
 });
 
-test('apagado: no monta nada ni toca el botón',async()=>{
+test('con el interruptor apagado: no monta nada ni toca el botón',async()=>{
  const {montarEntorno}=await load('entorno.mjs');
  const {doc,boton}=crearDoc();const win=crearWin();
- assert.equal(montarEntorno({win,doc}),false);
+ assert.equal(montarEntorno({win,doc,activo:false}),false);
  assert.equal(boton.hidden,true);
  assert.equal((boton.listeners.click||[]).length,0);
  const config=await load('entorno-config.mjs');
- assert.equal(config.ENTORNO_ACTIVO,false);
+ assert.equal(config.ENTORNO_ACTIVO,true,'encendido por indicación de Dirección');
 });
 
 test('?entorno=1 muestra el botón solo con perfil autorizado y abre/cierra la hoja',async()=>{
