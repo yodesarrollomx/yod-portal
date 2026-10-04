@@ -1,13 +1,13 @@
 {
-  "model_revision": "2026-10-04.59-despacho-entorno-base",
-  "proposal_id": "CHG-DESPACHO-ENTORNO-059",
+  "model_revision": "2026-10-04.60-despacho-entorno-movimiento",
+  "proposal_id": "CHG-DESPACHO-ENTORNO-MOVIMIENTO-060",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO"
   ],
-  "summary": "Despacho 3D: base del entorno del agente (nueve espacios, permisos en solo observar y registro de visitas en memoria); apagado por defecto y sin escritura en Sheets.",
+  "summary": "Despacho 3D: la figura del agente camina entre los espacios por una ruta que esquiva muebles; solo movimiento visual, apagado por defecto (ENTORNO_AGENTE_CAMINA=false).",
   "tests": [
-    "node --test tests/despacho-entorno.test.cjs",
+    "node --test tests/despacho-entorno-ruta.test.cjs",
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
     "node verify-os.cjs",
@@ -15,5 +15,5 @@
     "node scripts/verificar-impacto.cjs --base origin/main --repo yodesarrollomx/yod-portal",
     "git diff --check"
   ],
-  "rollback": "Poner ENTORNO_ACTIVO en false o revertir el PR; sin cambios de datos ni permisos."
+  "rollback": "Poner ENTORNO_AGENTE_CAMINA en false o revertir el PR; sin cambios de datos ni permisos."
 }
