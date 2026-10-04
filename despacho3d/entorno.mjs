@@ -2,7 +2,8 @@
 // Etapas 1 y 2: catálogo, permisos, registro en memoria y (con su propio interruptor) mover la figura del agente. No hace peticiones de red,
 // no envía mensajes, no crea documentos y no escribe en Sheets. Todo espacio está en "solo observar".
 // El repositorio es público: aquí no hay nombres de casos, clientes ni contactos.
-import {ENTORNO_ACTIVO} from './entorno-config.mjs';
+import {ENTORNO_ACTIVO,ENTORNO_JUNTAS} from './entorno-config.mjs';
+import {leerMetas,pendientesDeMetas} from './circulo-pendientes.mjs';
 
 export const PERMISOS={
  observar:'Solo observar',
@@ -66,7 +67,7 @@ function crear(doc,tag,props={},hijos=[]){
 }
 const hora=iso=>{const d=new Date(iso);return Number.isNaN(d.getTime())?'':d.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});};
 
-export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,volver=null,alCerrar=()=>{}}={}){
+export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,volver=null,entregas=null,alCerrar=()=>{}}={}){
  const h=(tag,props,hijos)=>crear(doc,tag,props,hijos);
  const raiz=h('section',{class:'entorno-hoja',role:'dialog','aria-modal':'true','aria-labelledby':'entorno-titulo'});
  raiz.appendChild(h('button',{type:'button',class:'entorno-cerrar','aria-label':'Cerrar el entorno',texto:'×',on:{click:()=>alCerrar()}}));
@@ -75,6 +76,32 @@ export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,vol
  const lista=h('div',{class:'entorno-lista'});
  const bitacora=h('ol',{class:'entorno-bitacora','aria-live':'polite'});
  const limpiar=n=>{while(n.firstChild)n.removeChild(n.firstChild);};
+ // Entregas por aprobar de la sala de juntas (solo lectura).
+ let porAprobar={fase:'inicio',tarjetas:[]};
+ async function verEntregas(){
+  if(porAprobar.fase==='leyendo'||typeof entregas!=='function')return;
+  porAprobar={fase:'leyendo',tarjetas:[]};pintar();
+  let r;
+  try{r=await entregas();}catch{r=null;}
+  if(!r||r.estado==='error')porAprobar={fase:'error',tarjetas:[]};
+  else porAprobar={fase:r.tarjetas.length?'ok':'vacio',tarjetas:r.tarjetas};
+  pintar();
+ }
+ function pintarEntregas(){
+  const caja=h('div',{class:'entorno-entregas','aria-live':'polite'});
+  const f=porAprobar.fase;
+  if(f==='leyendo')caja.appendChild(h('p',{texto:'Leyendo lo que espera tu decisión…'}));
+  else if(f==='vacio')caja.appendChild(h('p',{texto:'No hay nada esperando tu aprobación o decisión ahora.'}));
+  else if(f==='error')caja.appendChild(h('p',{texto:'No pude leerlo ahora. Vuelve a intentarlo; no se cambió nada.'}));
+  else if(f==='ok'){
+   const ul=h('ul',{class:'entorno-entregas-lista'});
+   for(const t of porAprobar.tarjetas.slice(0,10))ul.appendChild(h('li',{},[h('b',{texto:t.titulo}),h('span',{texto:' · '+(t.categoria==='aprobar'?'Por aprobar':'Por decidir')+' · '+t.origen}),h('p',{texto:t.detalle})]));
+   caja.appendChild(ul);
+   if(porAprobar.tarjetas.length>10)caja.appendChild(h('p',{texto:'y '+(porAprobar.tarjetas.length-10)+' más'}));
+   caja.appendChild(h('p',{class:'entorno-nota',texto:'Aquí no se aprueba nada: la aprobación se hace en YOD OS.'}));
+  }
+  return caja;
+ }
  function pintar(){
   limpiar(lista);limpiar(bitacora);
   for(const e of ESPACIOS){
@@ -91,7 +118,9 @@ export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,vol
     if(typeof enviar==='function')acciones.push(h('button',{type:'button',class:'entorno-enviar',texto:'Enviar al agente',on:{click:()=>{
      if(enviar(e)!==false)pintar();
     }}}));
+    if(e.id==='juntas'&&typeof entregas==='function')acciones.push(h('button',{type:'button',class:'entorno-entregas-ver',texto:'Ver entregas por aprobar',on:{click:()=>verEntregas()}}));
     hijos.push(h('div',{class:'entorno-acciones'},acciones));
+    if(e.id==='juntas'&&porAprobar.fase!=='inicio')hijos.push(pintarEntregas());
    }
    lista.appendChild(h('article',{class:'entorno-espacio','data-espacio':e.id},hijos));
   }
@@ -108,7 +137,7 @@ export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,vol
 }
 
 // Monta el botón y la hoja. Devuelve false si el entorno no debe aparecer.
-export function montarEntorno({win=globalThis.window,doc=globalThis.document,activo=ENTORNO_ACTIVO,registro=crearRegistro()}={}){
+export function montarEntorno({win=globalThis.window,doc=globalThis.document,activo=ENTORNO_ACTIVO,juntas=ENTORNO_JUNTAS,leer=leerMetas,registro=crearRegistro()}={}){
  if(!win||!doc)return false;
  const vistaPrevia=/(?:^|[?&])entorno=1(?:&|$)/.test(String(win.location?.search||''));
  if(!activo&&!vistaPrevia)return false;
@@ -146,9 +175,18 @@ export function montarEntorno({win=globalThis.window,doc=globalThis.document,act
   win.despacho.setMode?.('overview');
   return false;
  };
+ const conJuntas=juntas||/(?:^|[?&])juntas=1(?:&|$)/.test(String(win.location?.search||''));
+ const entregas=async()=>{
+  const actual=perfil;
+  if(!actual?.case_id)return {estado:'error'};
+  const metas=await leer({win,caseId:actual.case_id});
+  if(!metas||perfil!==actual)return {estado:'error'};
+  const tarjetas=pendientesDeMetas(metas,{de:typeof actual.name==='string'?actual.name:'Caso'}).filter(t=>t.categoria==='aprobar'||t.categoria==='decidir');
+  return {estado:'ok',tarjetas};
+ };
  const abrir=()=>{
   if(hoja||!perfil)return;
-  hoja=crearEntorno({doc,registro,ir,enviar:caminar()?enviar:null,volver:caminar()?volver:null,alCerrar:cerrar});
+  hoja=crearEntorno({doc,registro,ir,enviar:caminar()?enviar:null,volver:caminar()?volver:null,entregas:conJuntas?entregas:null,alCerrar:cerrar});
   doc.body.appendChild(hoja.raiz);
   doc.addEventListener?.('keydown',alTeclear);
  };
