@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-03.53-emd-carga",
+  "revision": "2026-10-03.54-despacho-carril-rapido",
   "checked_at": "2026-10-03",
   "priorities": [
     "vender_mas",
@@ -7581,6 +7581,30 @@
       ],
       "deployment": "Pendiente CI y publicación en implementación GAS existente y wrapper GitHub EMD. No crear accesos ni reiniciar respuestas.",
       "rollback": "Restaurar GAS36 en la implementación existente y revertir PR del wrapper. Conservar todas las respuestas, permisos y fotos."
+    },
+    {
+      "id": "CHG-DESPACHO-FAST-049",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Carril rápido del Despacho: el navegador pide al Portero una credencial corta ligada al expediente (mintFastSession) y conversa por streaming con el motor en la nube, que elige modelo por pregunta y guarda el turno en Sheets en segundo plano con recibo idempotente. Si el carril no está disponible se conserva la cola actual sin cambios.",
+      "status": "propuesto",
+      "approval": {
+        "date": "2026-10-03",
+        "scope": "El propietario pidió respuestas inmediatas, elección de modelo por Jev y autorizó el piloto con un expediente."
+      },
+      "tests": [
+        "node --test tests/despacho-fast-lane.test.cjs",
+        "node --test tests/*.cjs",
+        "node scripts/arquitectura.cjs --check",
+        "node verify-os.cjs",
+        "git diff --check"
+      ],
+      "deployment": "Backend Apps Script r6-fast y motor en la nube verificados antes; este PR solo cambia la interfaz pública. Publicar tras revisión y comprobar una conversación real en el piloto.",
+      "rollback": "Revertir este PR: la interfaz vuelve a la cola de Sheets (el backend y el motor conservan ambos caminos). No se tocan datos."
     }
   ],
   "data_contracts": [
@@ -8922,6 +8946,16 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/despacho-voice.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-fast-lane.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",

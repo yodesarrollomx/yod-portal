@@ -1,25 +1,21 @@
 {
-  "model_revision": "2026-10-03.53-emd-carga",
-  "proposal_id": "CHG-EMD-CARGA-048",
+  "model_revision": "2026-10-03.54-despacho-carril-rapido",
+  "proposal_id": "CHG-DESPACHO-FAST-049",
   "components": [
     "SYS-YOD-OS",
-    "SYS-EMD",
-    "GAS-EMD",
-    "SHEET-EMD"
+    "SYS-DESPACHO",
+    "GAS-PORTERO",
+    "EXT-DRIVE"
   ],
-  "summary": "Registrar carga ligera, arranque autenticado y recuperación de esperas antes de implementación; sin alterar respuestas o permisos.",
-  "contracts": [
-    "CTR-DESPACHO-CORCHO"
-  ],
+  "summary": "Interfaz del Despacho con carril rápido: credencial corta por Portero, respuesta en streaming del motor en la nube y respaldo diferido en Sheets; la cola actual queda como respaldo.",
   "tests": [
+    "node --test tests/despacho-fast-lane.test.cjs",
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
-    "ACCESOS_REF=3ee8ca50bf14ef17d95e72523e54506eb996f262 node verify-accesos.cjs",
-    "node verify-obra-app.cjs",
     "node scripts/verificar-impacto.cjs --base origin/main --repo yodesarrollomx/yod-portal",
     "git diff --check"
   ],
-  "rollback": "Revertir PR documental y regenerar vistas; regresar GAS36 y wrapper previo sin alterar datos."
+  "rollback": "Revertir el PR; la interfaz usa de nuevo la cola de Sheets. Sin cambios de datos ni permisos."
 }
