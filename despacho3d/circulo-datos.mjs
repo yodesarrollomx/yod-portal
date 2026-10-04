@@ -25,6 +25,8 @@ export function validarDatos(input){
  if(!ppp||typeof ppp!=='object'||Array.isArray(ppp))throw Error('circulo_datos_invalidos');
  return {
   ejemplo:input.ejemplo===true,
+  parcial:input.parcial===true,
+  avisoPendientes:input.avisoPendientes===undefined||input.avisoPendientes===''?'':texto(input.avisoPendientes),
   pendientes:lista(input.pendientes,p=>{
    if(!p||typeof p!=='object'||!Object.hasOwn(CATEGORIAS,p.categoria)||!['dir','otros'].includes(p.con))throw Error('circulo_datos_invalidos');
    return {titulo:texto(p.titulo,160),detalle:texto(p.detalle),categoria:p.categoria,con:p.con,de:texto(p.de,120),origen:texto(p.origen,120)};
