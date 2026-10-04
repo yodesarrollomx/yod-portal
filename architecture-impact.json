@@ -1,15 +1,13 @@
 {
-  "model_revision": "2026-10-03.54-despacho-carril-rapido",
-  "proposal_id": "CHG-DESPACHO-FAST-049",
+  "model_revision": "2026-10-04.56-despacho-circulo",
+  "proposal_id": "CHG-DESPACHO-CIRCULO-056",
   "components": [
     "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "GAS-PORTERO",
-    "EXT-DRIVE"
+    "SYS-DESPACHO"
   ],
-  "summary": "Interfaz del Despacho con carril rápido: credencial corta por Portero, respuesta en streaming del motor en la nube y respaldo diferido en Sheets; la cola actual queda como respaldo.",
+  "summary": "Círculo de seis sectores del caso en el Despacho 3D: hoja de solo lectura con contenido de ejemplo, apagada por defecto y visible solo con perfil autorizado por el servidor.",
   "tests": [
-    "node --test tests/despacho-fast-lane.test.cjs",
+    "node --test tests/despacho-circulo.test.cjs",
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
     "node verify-os.cjs",
@@ -17,5 +15,5 @@
     "node scripts/verificar-impacto.cjs --base origin/main --repo yodesarrollomx/yod-portal",
     "git diff --check"
   ],
-  "rollback": "Revertir el PR; la interfaz usa de nuevo la cola de Sheets. Sin cambios de datos ni permisos."
+  "rollback": "Poner CIRCULO_ACTIVO en false o revertir el PR; sin cambios de datos ni permisos."
 }
