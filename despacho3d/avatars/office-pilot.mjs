@@ -2,9 +2,9 @@ import {createAvatarLayer} from './adapter.mjs';
 
 // This controller consumes the panel's authorized profile, never a public roster.
 // Placement is local to this room and cannot be supplied by a case record.
-const POSITION=[6.65,0,-4.42], FRAME_MS=1000/15;
+const POSITION=[6.65,0,-4.42], FRAME_MS=1000/15, HOME_ROT=Math.PI/2, WALK_SPEED=1.4;
 export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{}}){
- let api=null,unsubscribe=null,profile=null,fingerprint='',lastFrame=null,time=0,poseTicks=0,disposed=false;
+ let api=null,unsubscribe=null,profile=null,fingerprint='',lastFrame=null,time=0,poseTicks=0,disposed=false,route=null;
  const layer=createAvatarLayer({scene,onSelect(selection){
   if(!api||!profile||selection.id!==profile.id)return;
   // Recheck the current authority immediately before opening the panel.
@@ -20,7 +20,7 @@ export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{}}){
   }
   const key=next?JSON.stringify(next):'';
   if(key===fingerprint)return;
-  profile=null;fingerprint='';lastFrame=null;time=0;poseTicks=0;
+  profile=null;fingerprint='';lastFrame=null;time=0;poseTicks=0;route=null;
   try{layer.replaceAuthorizedProfiles(next?[next]:[]);if(next){layer.update(0);profile=next;fingerprint=key;}}
   catch{layer.clear();}
   onChange();
@@ -44,11 +44,42 @@ export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{}}){
   if(disposed||!profile||hidden||overlay||reducedMotion){lastFrame=null;return false;}
   if(lastFrame===null){lastFrame=now;return false;}
   if(now-lastFrame<FRAME_MS)return false;
-  time+=Math.min((now-lastFrame)/1000,.1);lastFrame=now;
+  const dt=Math.min((now-lastFrame)/1000,.1);
+  time+=dt;lastFrame=now;
+  if(route)advance(dt);
   layer.update(time);poseTicks++;return true;
  }
+ // Movimiento visual del agente entre espacios. Solo mueve la figura: no abre paneles, no envía nada.
+ const model=()=>profile?layer.get(profile.id):null;
+ function finish(){
+  const m=model();
+  if(m&&route){m.position.set(route.end[0],0,route.end[1]);m.rotation.y=route.rot;}
+  route=null;
+  if(profile)layer.setMotion(profile.id,'idle');
+ }
+ function advance(dt){
+  const m=model();if(!m){route=null;return;}
+  let left=WALK_SPEED*dt;
+  while(route&&left>0){
+   const target=route.points[route.next],dx=target[0]-m.position.x,dz=target[1]-m.position.z,d=Math.hypot(dx,dz);
+   if(d>1e-6)m.rotation.y=Math.atan2(dx,dz);
+   if(d<=left){m.position.set(target[0],0,target[1]);left-=d;route.next++;if(route.next>=route.points.length){finish();return;}}
+   else{m.position.x+=dx/d*left;m.position.z+=dz/d*left;left=0;}
+  }
+ }
+ function walk(points,rot,{inmediato=false}={}){
+  if(disposed||!profile||!Array.isArray(points)||points.length<2||!Number.isFinite(rot))return false;
+  if(!points.every(p=>Array.isArray(p)&&p.length===2&&p.every(Number.isFinite)))return false;
+  const m=model();if(!m)return false;
+  route={points:points.slice(1).map(p=>[...p]),next:0,end:[...points[points.length-1]],rot};
+  if(inmediato){finish();onChange();return true;}
+  layer.setMotion(profile.id,'walk');onChange();return true;
+ }
  return {bind,disconnect,update,pickables:()=>layer.pickables(),selectIntersection:hit=>!disposed&&layer.selectIntersection(hit),
-  getState:()=>({count:layer.size(),motion:profile?'idle':null,poseTicks}),
+  recorrer:walk,
+  posicion:()=>{const m=model();return m?[m.position.x,m.position.z]:null;},
+  inicio:{xz:[POSITION[0],POSITION[2]],rot:HOME_ROT},
+  getState:()=>({count:layer.size(),motion:profile?(route?'walk':'idle'):null,poseTicks}),
   dispose(){if(!disposed){disconnect();layer.dispose();disposed=true;}}
  };
 }
