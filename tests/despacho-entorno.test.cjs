@@ -59,8 +59,8 @@ test('catálogo: nueve espacios, todos en solo observar y sin permisos de acció
 
 test('los espacios con lugar apuntan a lugares reales del Despacho',async()=>{
  const {ESPACIOS}=await load('entorno.mjs');
- const office=leerArchivo('office.js');
- const lugares=[...office.slice(office.indexOf('const places={'),office.indexOf('};',office.indexOf('const places={'))).matchAll(/^\s*(\w+):\{label:/gm)].map(m=>m[1]);
+ const office=leerArchivo('office-layout.mjs');
+ const lugares=[...office.slice(office.indexOf('export const places={'),office.indexOf('};',office.indexOf('export const places={'))).matchAll(/^\s*(\w+):\{label:/gm)].map(m=>m[1]);
  assert.ok(lugares.length>=10);
  const conLugar=ESPACIOS.filter(e=>e.lugar);
  assert.ok(conLugar.length>=3);
@@ -120,11 +120,11 @@ test('?entorno=1 muestra el botón solo con perfil autorizado y abre/cierra la h
  assert.equal(doc.body.children.length,0,'al retirar el perfil se cierra');
 });
 
-test('ir a un espacio registra la visita y mueve la vista; sin lugar no hay botón',async()=>{
+test('ir a un espacio registra solo después de confirmar la vista; sin lugar no hay botón',async()=>{
  const {montarEntorno,crearRegistro}=await load('entorno.mjs');
  const {doc,boton}=crearDoc();const win=crearWin('?entorno=1');
  const sesion=sesionFalsa();win.CubefarmYOD=sesion;sesion.poner(PERFIL);
- const idas=[];win.despacho={visit:id=>idas.push(id)};
+ const idas=[];win.despacho={visit:id=>{idas.push(id);return true;}};
  const registro=crearRegistro();
  montarEntorno({win,doc,registro});
  await boton.emit('click');
@@ -163,7 +163,7 @@ test('solo lectura: sin red, sin Sheets, sin almacenamiento y sin identificadore
  assert.match(html,/entorno-boot\.mjs/);
 });
 
-test('con el movimiento disponible aparecen Enviar y Volver, y enviar registra la visita del agente',async()=>{
+test('con movimiento disponible, Enviar inicia la ruta y solo la llegada registra la visita',async()=>{
  const {montarEntorno,crearRegistro,ESPACIOS}=await load('entorno.mjs');
  const {doc,boton}=crearDoc();const win=crearWin('?entorno=1');
  const sesion=sesionFalsa();win.CubefarmYOD=sesion;sesion.poner(PERFIL);
@@ -183,6 +183,8 @@ test('con el movimiento disponible aparecen Enviar y Volver, y enviar registra l
  acepta=true;
  await hoja.all(n=>n.attrs.class==='entorno-enviar')[0].emit('click');
  assert.deepEqual(idas,['decisions','decisions']);
+ assert.equal(registro.lista().length,0,'aceptar una orden no es llegar');
+ await win.emit('yod-agent-arrived',{detail:{lugar:'decisions'}});
  assert.equal(registro.lista()[0].quien,'agente');assert.equal(registro.lista()[0].espacio,'juntas');
  assert.deepEqual(modos,['overview']);assert.equal(doc.body.children.length,0);
  await boton.emit('click');hoja=doc.body.children[0];

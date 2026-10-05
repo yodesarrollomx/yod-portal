@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-04.63-despacho-entorno-juntas-encendida",
+  "revision": "2026-10-04.64-despacho-vista-legible",
   "checked_at": "2026-10-04",
   "priorities": [
     "vender_mas",
@@ -7800,6 +7800,28 @@
       ],
       "deployment": "Publicar encendido. La sala de juntas solo lee con el transporte autorizado del OS.",
       "rollback": "Poner ENTORNO_JUNTAS en false o revertir el PR; sin cambios de datos ni permisos."
+    },
+    {
+      "id": "CHG-DESPACHO-VISTA-LEGIBLE-064",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ],
+      "proposal": "Dirección solicita que un agente pueda observar y operar la oficina. Añadir vista accesible DOM/SVG con los lugares y obstáculos de la escena, estado observable del visitante y del agente, alternativa automática sin WebGL y controles existentes bajo perfil autorizado. Compartir geometría y navegación, registrar visitas solo tras llegada confirmada, cancelar al retirar perfil y distinguir plano/3D de actividad de negocio. Sin nuevos permisos, endpoints, almacenamiento ni datos operativos públicos.",
+      "status": "propuesto",
+      "approval": "Dirección solicita implementar vista operable y legible el 4-oct-2026. Integración mediante PR con checks y clic final de Dirección conforme relevo.",
+      "tests": [
+        "node --test tests/despacho-vista-legible.test.cjs",
+        "node --test tests/*.cjs",
+        "node scripts/arquitectura.cjs --check",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Capturas de alternativa sin WebGL, llegada, cancelación y comparación geométrica con 3D en entorno aislado"
+      ],
+      "deployment": "Implementado y probado en rama: geometría coincidente con scene.js, piloto y componente DOM aislados. Pendiente PR, checks de GitHub, clic de Dirección, Pages y capturas reales de aceptación por HTTPS. No se ha publicado ni probado visualmente en iPhone.",
+      "rollback": "Revertir PR o apagar OFICINA_LEGIBLE. Se conserva motor 3D, permisos DP y fuentes operativas."
     }
   ],
   "data_contracts": [
@@ -9189,6 +9211,14 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO"
       ]
+    },
+    {
+      "prefix": "tests/despacho-vista-legible.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ],
+      "repo": "yodesarrollomx/yod-portal"
     }
   ]
 }

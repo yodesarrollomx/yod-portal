@@ -112,8 +112,8 @@ export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,vol
     h('span',{class:'entorno-chip',texto:'Visitas: '+n})];
    const hijos=[h('h2',{texto:e.nombre}),h('p',{texto:e.funcion}),h('div',{class:'entorno-chips'},pie)];
    if(hay){
-    const acciones=[h('button',{type:'button',class:'entorno-ir',texto:'Ir a este espacio',on:{click:()=>{
-     if(ir(e)!==false)pintar();
+    const acciones=[h('button',{type:'button',class:'entorno-ir',texto:'Ir a este espacio',on:{click:async()=>{
+     if(await ir(e)!==false)pintar();
     }}})];
     if(typeof enviar==='function')acciones.push(h('button',{type:'button',class:'entorno-enviar',texto:'Enviar al agente',on:{click:()=>{
      if(enviar(e)!==false)pintar();
@@ -151,12 +151,12 @@ export function montarEntorno({win=globalThis.window,doc=globalThis.document,act
   boton.focus?.();
  };
  function alTeclear(e){if(e.key==='Escape')cerrar();}
- const ir=espacio=>{
+ const ir=async espacio=>{
   const oficina=win.despacho;
   if(!espacio.lugar||typeof oficina?.visit!=='function')return false;
-  registro.registrar({espacio:espacio.id,quien:'direccion',motivo:'Recorrido desde el entorno'});
-  cerrar();
-  oficina.visit(espacio.lugar);
+  const actual=perfil;cerrar();
+  const llegada=await oficina.visit(espacio.lugar);
+  if(llegada===true&&perfil===actual)registro.registrar({espacio:espacio.id,quien:'direccion',motivo:'Vista situada desde el entorno'});
   return false;
  };
  // Solo si la oficina ofrece el movimiento del agente (interruptor de caminar o ?camina=1).
@@ -164,7 +164,6 @@ export function montarEntorno({win=globalThis.window,doc=globalThis.document,act
  const enviar=espacio=>{
   if(!espacio.lugar||!caminar())return false;
   if(!win.despacho.agenteIr(espacio.lugar))return false;
-  registro.registrar({espacio:espacio.id,quien:'agente',motivo:'Enviado desde el entorno'});
   cerrar();
   win.despacho.setMode?.('overview');
   return false;
@@ -175,6 +174,11 @@ export function montarEntorno({win=globalThis.window,doc=globalThis.document,act
   win.despacho.setMode?.('overview');
   return false;
  };
+ win.addEventListener('yod-agent-arrived',e=>{
+  if(!perfil)return;
+  const espacio=ESPACIOS.find(s=>s.lugar&&s.lugar===e.detail?.lugar);
+  if(espacio){registro.registrar({espacio:espacio.id,quien:'agente',motivo:'Llegada confirmada'});hoja?.pintar();}
+ });
  const conJuntas=juntas||/(?:^|[?&])juntas=1(?:&|$)/.test(String(win.location?.search||''));
  const entregas=async()=>{
   const actual=perfil;
