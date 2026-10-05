@@ -15,10 +15,11 @@
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "Servidor: JSON inicial exacto, contexto demorado/fallido sin bloquear audio, herramientas después de acuses, deduplicación y cancelación de delegaciones, intents durables vinculados a caso/actor.",
-    "Tareas: crear/consultar/reanudar/detener mediante transporte autenticado, IDs estables, conflicto/revocación/respuesta perdida/reinicio, acciones confirmadas sólo con recibo validado del sistema canónico; ningún envío de prueba de negocio.",
-    "Navegador: voz, contexto y tarea integrada con datos sintéticos, círculo real/enlaces/historial y presencia sin abrir Agentes; escritorio/móvil, media real, reconexión y cierre.",
-    "OpenAI real: saludo y habla, instalación de herramientas y ciclo de llamada/resultado/continuación con herramienta sintética aislada; HTTP/publicación separados de aceptación física."
+    "378 pruebas públicas y verificadores obligatorios: runs37344173575/37344173625.",
+    "102 pruebas/sintaxis privadas: contexto demorado/rechazado sin corte, JSON exacto, actor/caso, función Live, intención/payload durables, recuperación de respuesta perdida/reinicio y mismo request_id.",
+    "Chromium1280×800/390×844: micrófono de prueba y MediaStream real; expediente, consulta documental, una creación canónica sintética, evidencia/seguimiento, siete fallos sin corte, cierre exacto y detener/retomar (runs37344177450/37344895756). Transporte/negocio sintéticos; cero errores JS.",
+    "OpenAI real: JSON inicial, saludo aceptado, PCM no silencioso, transcripción, esquemas reales instalados, función sintética/resultado/continuación/cierre; ocho recursos Pages byte a byte (run37345140438).",
+    "Publicación final: ready true, voice available, voice_mode operativo, goals ready y diagnóstico inactive; ocho recursos idénticos (run37345714420). Sin objetivos/escrituras de negocio para probar."
   ],
   "rollback": "Revertir nueva integración; mantener voz básica operativa, JSON y credenciales en servidor, autorizaciones/IDs, expedientes/fuentes/formulas, tareas y evidencias canónicas, historial, journal/outbox. No borrar ni restaurar negocio."
 }
