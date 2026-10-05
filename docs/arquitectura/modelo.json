@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-04.64-despacho-vista-legible",
+  "revision": "2026-10-04.65-despacho-actividad",
   "checked_at": "2026-10-04",
   "priorities": [
     "vender_mas",
@@ -7808,7 +7808,7 @@
         "SYS-DESPACHO"
       ],
       "proposal": "Dirección solicita que un agente pueda observar y operar la oficina. Añadir vista accesible DOM/SVG con los lugares y obstáculos de la escena, estado observable del visitante y del agente, alternativa automática sin WebGL y controles existentes bajo perfil autorizado. Compartir geometría y navegación, registrar visitas solo tras llegada confirmada, cancelar al retirar perfil y distinguir plano/3D de actividad de negocio. Sin nuevos permisos, endpoints, almacenamiento ni datos operativos públicos.",
-      "status": "propuesto",
+      "status": "publicado",
       "approval": "Dirección solicita implementar vista operable y legible el 4-oct-2026. Integración mediante PR con checks y clic final de Dirección conforme relevo.",
       "tests": [
         "node --test tests/despacho-vista-legible.test.cjs",
@@ -7820,8 +7820,30 @@
         "node verify-obra-app.cjs",
         "Capturas de alternativa sin WebGL, llegada, cancelación y comparación geométrica con 3D en entorno aislado"
       ],
-      "deployment": "Implementado y probado en rama: geometría coincidente con scene.js, piloto y componente DOM aislados. Pendiente PR, checks de GitHub, clic de Dirección, Pages y capturas reales de aceptación por HTTPS. No se ha publicado ni probado visualmente en iPhone.",
+      "deployment": "PR #77 integrado con autorización de Dirección. Pages e5162b6166fd352fb5d83700ec8c599af75cc234 comprobado, checks aprobados, prueba autenticada de rutas, llegadas y tres visitas por plano realizada. WebGL y móvil reales siguen pendientes.",
       "rollback": "Revertir PR o apagar OFICINA_LEGIBLE. Se conserva motor 3D, permisos DP y fuentes operativas."
+    },
+    {
+      "id": "CHG-DESPACHO-ACTIVIDAD-065",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ],
+      "proposal": "Acción 1.1 autorizada: contrato versionado de actividad que separa desplazamiento, ejecución y resultado; demostración independiente con datos sintéticos. Validar procedencia, secuencia, estado terminal, identidad y reintento idéntico. Conservar IDs de conversación/trabajos; sin cambiar RPC, conceder permisos, ejecutar herramientas ni persistir visitas.",
+      "status": "implementado_local",
+      "approval": "Dirección autoriza continuar el plan en tandas de media hora el 4-oct-2026. Demostración sintética, sin operaciones ni datos de negocio.",
+      "tests": [
+        "node --test tests/despacho-actividad.test.cjs",
+        "node --test tests/*.cjs",
+        "node scripts/arquitectura.cjs --check",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Capturas HTTPS de solicitud, llegada, resultado y reintento sintéticos"
+      ],
+      "deployment": "Contrato y demostración sintética implementados. 322 pruebas locales y verificaciones de arquitectura/portal/accesos/obra aprobadas. Pendientes PR, checks y capturas HTTPS. Versión activa del motor por contrastar; sin persistencia ni permisos nuevos.",
+      "rollback": "Revertir PR. Demostración aislada sin afectar sala, historial, backend o visitas actuales."
     }
   ],
   "data_contracts": [
@@ -8661,6 +8683,29 @@
         "Un proceso activo; no stop automático al conectar/desconectar; heartbeat y revocación cierran el canal.",
         "Ventana local debe permanecer abierta para el puente; móvil en otro equipo conserva chat pero no tiene acceso a localhostChromebook."
       ]
+    },
+    {
+      "id": "CTR-DESPACHO-ACTIVIDAD-V1",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ],
+      "source": "Plan del Despacho, acción 1.1. Especificación nueva, no RPC del servidor vigente.",
+      "input": [
+        "Actividad con IDs estables y vínculos a IDs canónicos existentes; eventos ligados a actividad y caso.",
+        "Cada evento identifica secuencia, fuente, evidencia y hora; el adaptador deberá autorizar antes de aceptar eventos de servidor."
+      ],
+      "output": [
+        "Proyección de estados validada y reproducción de eventos, con recibo local explícito.",
+        "Reintento idéntico no duplica; identidad distinta, desorden, cambios de contenido y eventos tardíos se rechazan."
+      ],
+      "invariants": [
+        "Llegar confirma desplazamiento, no completa la consulta ni concede aprobación.",
+        "Resultado terminado requiere la misma referencia de entrega presentada para revisión.",
+        "El reductor local no certifica identidad, permisos ni persistencia; fase 1.2 requiere adapter de servidor autorizado.",
+        "Demostración siempre sintética, sin credenciales, red, almacenamiento ni datos privados.",
+        "Mantener message_id, job_id, event_id y request_id existentes; vincular sin migración ni sustitución de historial."
+      ]
     }
   ],
   "path_ownership": [
@@ -9219,6 +9264,14 @@
         "SYS-DESPACHO"
       ],
       "repo": "yodesarrollomx/yod-portal"
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-actividad.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
     }
   ]
 }

@@ -99,8 +99,14 @@ Pruebas locales con navegador: servidor `python3 -m http.server`, Playwright con
 - `node --test tests/*.cjs` y los dos checks del PR en verde.
 
 
-## 8. Vista legible para agentes · cambio en rama, pendiente de publicación
+## 8. Vista legible para agentes · publicada
 
-Dirección pidió que el agente pueda observar y operar la sala aunque WebGL no esté disponible. CHG-DESPACHO-VISTA-LEGIBLE-064 añade «Plano y estado» y una alternativa DOM/SVG sin GPU. Ver `docs/arquitectura/despacho-vista-legible.md` para contrato, pruebas y aceptación visual pendiente.
+Dirección pidió que el agente pueda observar y operar la sala aunque WebGL no esté disponible. CHG-DESPACHO-VISTA-LEGIBLE-064 añade «Plano y estado» y una alternativa DOM/SVG sin GPU. PR #77 integrado con autorización explícita; Pages comprobado en e5162b6166fd352fb5d83700ec8c599af75cc234. Prueba autenticada por plano: tres rutas, llegadas, una visita por espacio, regreso al puesto, navegación y lectura de juntas. Capturas en el plan privado. WebGL y móvil reales siguen pendientes. Ver `docs/arquitectura/despacho-vista-legible.md`.
 
-El nuevo interruptor es `OFICINA_LEGIBLE` en `despacho3d/office-config.mjs`. En la rama está `true` por esta petición. No afirmar que está publicado hasta merge y Pages comprobados. El piloto comparte sus rutas con el 3D; Entorno registra ahora la visita después de la llegada confirmada, en lugar de registrarla al aceptar la orden. Las seis áreas por construir siguen pendientes. Los datos privados siguen llegando por el perfil autorizado.
+El interruptor es `OFICINA_LEGIBLE` en `despacho3d/office-config.mjs`, `true` por esta petición. El piloto comparte sus rutas con el 3D; Entorno registra la visita después de la llegada confirmada. Las seis áreas por construir siguen pendientes. Los datos privados siguen llegando por el perfil autorizado.
+
+## 9. Acción 1.1 contrato de actividad y tandas de trabajo
+
+Dirección pidió continuar el plan en tandas de unos treinta minutos, cerrando cada tanda con avance guardado, evidencia y siguiente acción. CHG-DESPACHO-ACTIVIDAD-065 prepara el contrato y una demostración sintética independiente, accesible desde Entorno. `despacho3d/actividad.mjs` valida estados, identidad, secuencia, evidencia y reintentos de eventos en memoria. No autentica eventos ni implementa RPC o guardado en Sheets. Ver `docs/arquitectura/despacho-actividad.md`.
+
+El contrato existente conserva IDs de conversación y trabajos. La lectura del repositorio privado del motor no estuvo disponible en esta revisión: no afirmar compatibilidad desplegada ni cambiar el servidor basándose solo en el cliente. Después de aprobar pruebas y capturas de 1.1, el siguiente trabajo es contrastar la versión efectiva y diseñar 1.2: registro durable de visitas, recibos, CAS, autorización y recuperación. Reintento de eventos en memoria no acredita idempotencia durable por solicitud.
