@@ -1,5 +1,6 @@
 import {createFrameTransport, validateSelection} from './conversation.mjs';
-import {createLiveVoice} from './live-voice.mjs?v=3';
+import {createLiveVoice} from './live-voice.mjs?v=4';
+import {createVoiceActionExecutor} from './voice-actions.mjs?v=1';
 import {groupTranscriptFragments} from './live-transcript.mjs';
 
 const open = document.getElementById('voice-open');
@@ -13,18 +14,24 @@ if (open) {
     '<audio id="voice-audio" autoplay controls></audio><div class="voice-actions">' +
     '<button id="voice-start" disabled>Iniciar conversación</button><button id="voice-mute" disabled>Silenciar micrófono</button>' +
     '<button id="voice-stop" disabled>Finalizar</button></div>' +
-    '<p class="voice-note">Voz básica: esta conversación todavía no usa tus documentos. Escuchas una voz generada por IA.</p>' +
+    '<p id="voice-context" role="status">Preparando expediente y herramientas…</p><p id="voice-task" role="status"></p><button id="voice-retry-actions" hidden>Comprobar acción pendiente</button><p class="voice-note">Escuchas una voz generada por IA. Los resultados de las tareas quedan para tu revisión.</p>' +
     '<p id="voice-save" role="status">Sin conversación nueva.</p><div id="voice-transcript" role="log" aria-label="Transcripción de voz"></div>' +
     '<p class="voice-note">Puedes interrumpirlo hablando. La transcripción se respalda al finalizar; aquí verás si queda pendiente.</p>';
   document.body.append(dialog);
   const node = id => dialog.querySelector('#' + id);
   const fragments = []; let selection = null, generation = 0, dismissing = false;
   const active = state => !['idle','error'].includes(state.phase);
-  const voice = createLiveVoice({audio: node('voice-audio'), mint: value => transport.mintFastSession(value),
+  const actionExecutor=createVoiceActionExecutor({transport,onChange:event=>{
+    node('voice-task').textContent=event.phase==='running'?'Consultando o guardando el pendiente…':event.phase==='confirmed'?'Solicitud confirmada. Puedes consultar su avance en Pendientes.':event.phase==='rejected'?'La solicitud no se ejecutó. Consulta los pendientes antes de continuar.':'El guardado está pendiente de confirmación. Comprobar conserva la misma solicitud.';
+    node('voice-retry-actions').hidden=event.phase!=='unconfirmed';
+    if(event.phase==='confirmed')window.dispatchEvent(new CustomEvent('yod-goals-changed',{detail:null}));
+  }});
+  const voice = createLiveVoice({actions:actionExecutor,audio: node('voice-audio'), mint: value => transport.mintFastSession(value),
     onChange: state => {
       window.dispatchEvent(new CustomEvent('yod-voice-state',{detail:{phase:state.phase}}));
       const live = active(state);
       node('voice-status').textContent = state.notice;
+      node('voice-context').textContent=state.mode==='basic'?'Conversación básica. Las herramientas del expediente están desactivadas.':state.context_phase==='unavailable'?'Puedes seguir hablando. No se confirmó el contexto; vuelve a iniciar para conectar el expediente.':state.context_phase==='ready'?'Expediente conectado · '+(state.documents_ready?'Biblioteca y Jev disponibles':'Lector documental no disponible')+' · '+(state.tasks_ready?'Pendientes conectados':'Pendientes no disponibles'):'Puedes hablar. Preparando expediente y herramientas en segundo plano…';
       node('voice-start').disabled = live || !selection?.can_enqueue;
       node('voice-stop').disabled = !live || state.phase === 'closing';
       node('voice-mute').disabled = state.phase !== 'listening';
@@ -69,6 +76,7 @@ if (open) {
     if (!selection) return;
     fragments.length = 0; node('voice-transcript').replaceChildren(); void voice.start(selection.case_id);
   });
+  node('voice-retry-actions').addEventListener('click',()=>voice.retryActions());
   node('voice-mute').addEventListener('click', voice.mute);
   node('voice-stop').addEventListener('click', () => {void voice.stop();});
   async function dismiss() {

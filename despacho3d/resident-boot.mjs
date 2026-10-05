@@ -21,6 +21,7 @@ if(host){
  const api={...resident,openForCase(id){
   const selection=resident.getSelection();
   if(!selection||selection.case_id!==id)return false;
+  if(window.YodAgentMenu)return window.YodAgentMenu.openForCase(id);
   const panel=window.CubefarmYOD;if(!panel)return false;
   const current=panel.getProfile?.();
   if(current&&current.case_id!==id){void resident.refresh();return false;}
@@ -29,7 +30,7 @@ if(host){
  window.YodResidentAgents=api;
  window.dispatchEvent(new CustomEvent('yod-residents-ready',{detail:null}));
  talk.onclick=()=>document.getElementById('voice-open')?.click();
- write.onclick=()=>api.openForCase(resident.getSelection()?.case_id);
+ write.onclick=()=>window.CubefarmYOD?.open('chat');
  visit.onclick=async()=>{if(resident.getSelection()?.avatar&&window.despacho)await window.despacho.visit('case');};
  window.addEventListener('yod-voice-state',e=>{
   voicePhase=e.detail?.phase||'idle';paint(resident.snapshot());

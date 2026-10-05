@@ -160,3 +160,12 @@ test('remote audio without streams is attached from the actual incoming track',a
  f.event({type:'session.started'});await tick();assert.equal(f.track.enabled,true);assert.equal(f.voice.snapshot().mode,'basic');
  const stopping=f.voice.stop();await tick();f.event({type:'session.closed'});await stopping;
 });
+
+test('operative voice starts on session.started while context is unavailable and status is failing',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice,{mode:'operativo',failStatus:true});
+ await f.voice.start('synthetic-case');f.event({type:'session.started'});await tick();
+ assert.equal(f.track.enabled,true);assert.equal(f.voice.snapshot().phase,'listening');
+ for(let i=0;i<5;i++)await f.voice.refresh();
+ assert.equal(f.track.stops,0);assert.equal(f.calls.some(c=>c.url.endsWith('/close')),false);
+ const stopping=f.voice.stop();await tick();f.event({type:'session.closed'});await stopping;
+});
