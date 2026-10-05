@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-04.71-despacho-permisos-cierre",
-  "checked_at": "2026-10-04",
+  "revision": "2026-10-05.72-despacho-live",
+  "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
     "margen_y_control",
@@ -7984,6 +7984,28 @@
       ],
       "deployment": "Servidor y consumidor ya comprobados; esta entrega solo sincroniza documentación y vistas.",
       "rollback": "Revertir documentación si hace falta; runtime conserva reversión de070: flagfalse y misma implementación av64, sin borrar historial."
+    },
+    {
+      "id": "CHG-DESPACHO-VOZ-070",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO"
+      ],
+      "proposal": "Adelantar voz por instrucción de Dirección: hablar con Gastón en el Despacho mediante GPT-Live, conservando exactamente el JSON entregado, y revisar después la transcripción por intervalos en el historial. Reutilizar contexto y permisos existentes; interfaz primero, con comprobación del cierre antes de desconectar audio.",
+      "status": "propuesto",
+      "approval": "Dirección autorizó en este chat usar la API OpenAI existente e implementar la voz y el historial.",
+      "tests": [
+        "node --test tests/*.cjs",
+        "node scripts/arquitectura.cjs --check",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Pruebas aisladas GPT-Live: JSON exacto, autenticación, IDs opacos, solapamiento, fragmentos tardíos, respaldo, session.started y session.closed/timeout; conversación real pendiente de dispositivo."
+      ],
+      "deployment": "Servidor privado preparado y comprobado en Actions; portal preparado en rama. Despliegue y micrófono real se registran por separado.",
+      "rollback": "Apagar YOD_VOICE_ENABLED y revertir UI; conservar historial, outbox e IDs."
     }
   ],
   "data_contracts": [
@@ -9517,6 +9539,14 @@
         "SYS-DESPACHO",
         "GAS-PORTERO",
         "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-live.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
       ]
     }
   ]

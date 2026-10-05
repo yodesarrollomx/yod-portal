@@ -1,19 +1,20 @@
 {
-  "model_revision": "2026-10-04.71-despacho-permisos-cierre",
-  "proposal_id": "CHG-DESPACHO-PERMISOS-CIERRE-071",
+  "model_revision": "2026-10-05.72-despacho-live",
+  "proposal_id": "CHG-DESPACHO-VOZ-070",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "GAS-PORTERO",
-    "EXT-DRIVE"
+    "GAS-PORTERO"
   ],
-  "summary": "Registrar aceptación del alcance inicial observar del paso1.3: PR84/85, Portero v65, Pages, matriz y Juntas autenticadas, mismo historial y recibo, prueba sintética de revocación. Actualizar contrato/relevo sin cambiar comportamiento, permisos, motor ni datos.",
+  "summary": "Adelantar voz por instrucción de Dirección: hablar con Gastón en el Despacho mediante GPT-Live, conservando exactamente el JSON entregado, y revisar después la transcripción por intervalos en el historial. Reutilizar contexto y permisos existentes; interfaz primero, con comprobación del cierre antes de desconectar audio.",
   "tests": [
+    "node --test tests/*.cjs",
     "node scripts/arquitectura.cjs --check",
-    "351 pruebas aprobadas en PR85 y checks verdes",
-    "Lectura UI autenticada matriz/Juntas/visitas y cotejo Sheets solo lectura",
-    "git diff --check",
-    "Verificar impacto con --repo"
+    "node verify-os.cjs",
+    "node verify-portal.cjs",
+    "node verify-accesos.cjs",
+    "node verify-obra-app.cjs",
+    "Pruebas aisladas GPT-Live: JSON exacto, autenticación, IDs opacos, solapamiento, fragmentos tardíos, respaldo, session.started y session.closed/timeout; conversación real pendiente de dispositivo."
   ],
-  "rollback": "Revertir documentación si hace falta; runtime conserva reversión de070: flagfalse y misma implementación av64, sin borrar historial."
+  "rollback": "Apagar YOD_VOICE_ENABLED y revertir UI; conservar historial, outbox e IDs."
 }
