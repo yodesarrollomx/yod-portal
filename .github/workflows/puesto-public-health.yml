@@ -1,0 +1,34 @@
+name: Salud pública del puesto
+on:
+  push:
+    branches: [codex/gaston-puesto-public-health]
+permissions:
+  contents: read
+jobs:
+  receipt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Cotejar recursos y salud públicos
+        run: |
+          node --input-type=module <<'CHECK'
+          import assert from 'node:assert/strict';
+          import {createHash} from 'node:crypto';
+          const check = async url => {const r=await fetch(url,{signal:AbortSignal.timeout(30000),cache:'no-store'});assert.equal(r.status,200,url);return r;};
+          const targets=[["yodesarrollomx/yod-portal","9fd6140e566ba72df0ae277aca0ddf7059a9fc59",["despacho3d/index.html","despacho3d/agent-workspace.mjs","despacho3d/agent-workspace-boot.mjs","despacho3d/agent-workspace.css","despacho3d/live-voice.mjs","despacho3d/live-voice-boot.mjs","despacho3d/agent-menu.mjs","despacho3d/circulo-boot.mjs"]],["yodesarrollomx/potenciales-yod","5b84278f4dfb6384f357538e2219ca63e4aa5c0d",["patrimonial.html","ppp-agent-bridge.js","ppp-patrimonial-native.js"]]];
+          const receipts=[];
+          for(const [repo,ref,paths]of targets)for(const path of paths){
+           const expected=await (await check('https://raw.githubusercontent.com/'+repo+'/'+ref+'/'+path)).arrayBuffer();
+           let actual;for(let attempt=0;attempt<8;attempt++){actual=await(await check('https://yodesarrollomx.github.io/'+repo.split('/')[1]+'/'+path+'?verification='+Date.now())).arrayBuffer();if(Buffer.from(actual).equals(Buffer.from(expected)))break;if(attempt<7)await new Promise(r=>setTimeout(r,15000));}
+           assert.ok(Buffer.from(actual).equals(Buffer.from(expected)),path+' differs');
+           receipts.push({repo,path,sha256:createHash('sha256').update(Buffer.from(actual)).digest('hex')});
+          }
+          let health;for(let i=0;i<1;i++){health=await(await check('https://yod-cloud-room.onrender.com/healthz')).json();console.log('PUBLIC_HEALTH='+JSON.stringify(health));if(health.ready&&health.voice==='available'&&health.computer?.available&&health.goals==='ready')break;if(i<0)await new Promise(r=>setTimeout(r,10000));}
+          console.log('ASSETS_CONFIRMED='+JSON.stringify(receipts));
+          assert.equal(health.ready,true);assert.equal(health.voice,'available');assert.equal(health.voice_mode,'operativo');assert.equal(health.computer.available,true);assert.equal(health.goals,'ready');
+          console.log('PUBLICATION_RECEIPT='+JSON.stringify({at:new Date().toISOString(),health,assets:receipts}));
+          
+          CHECK
