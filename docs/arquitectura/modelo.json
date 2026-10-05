@@ -8035,7 +8035,8 @@
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",
-        "GAS-PORTERO"
+        "GAS-PORTERO",
+        "EXT-DRIVE"
       ],
       "proposal": "Mostrar el agente autorizado en el Despacho desde la entrada, con tarjeta de presencia y figura sentada en espera. Preparar credencial de conversación en segundo plano sin abrir micrófono ni sesión Live; evitar lecturas simultáneas duplicadas y que la carga de una imagen bloquee el recorrido. Mantener voz ante ocultación, errores de comando y fallos transitorios de red; cerrar sólo al finalizar o perder conexión de forma persistente, con historial y finalización explícitos.",
       "status": "implementado_local",
@@ -8049,7 +8050,7 @@
         "node verify-obra-app.cjs",
         "Pruebas sintéticas de presencia sin abrir panel, preparación sin micrófono, revocación, lecturas concurrentes, desconexión recuperada, error de comando y cierre incompleto; comprobación de assets publicados."
       ],
-      "deployment": "Implementación en rama con presencia desacoplada del historial, preparación sin micrófono, figura sentada, carga de logo sin bloqueo y recuperación de voz. Actions, integración y HTTP pendientes.",
+      "deployment": "Implementado en rama. Actions ejecutó 366 pruebas con 0 fallos y verificadores OS/portal/accesos/obra; se completa la declaración de impacto Drive antes de integrar. Chromium con transporte sintético: presencia sentada en 612 ms (1280×900) y 399 ms (390×844), sin abrir panel ni micrófono, con historial demorado 5,5 s. Servidor privado publicado con 75 pruebas; publicación HTTP del cliente y conversación sonora en dispositivo pendientes.",
       "rollback": "Revertir los módulos visuales y la tolerancia de conexión; conservar los perfiles, los permisos DP, la configuración Live exacta, las conversaciones y los recibos."
     }
   ],

@@ -4,7 +4,8 @@
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "GAS-PORTERO"
+    "GAS-PORTERO",
+    "EXT-DRIVE"
   ],
   "summary": "Mostrar el agente autorizado en el Despacho desde la entrada, con tarjeta de presencia y figura sentada en espera. Preparar credencial de conversación en segundo plano sin abrir micrófono ni sesión Live; evitar lecturas simultáneas duplicadas y que la carga de una imagen bloquee el recorrido. Mantener voz ante ocultación, errores de comando y fallos transitorios de red; cerrar sólo al finalizar o perder conexión de forma persistente, con historial y finalización explícitos.",
   "tests": [
