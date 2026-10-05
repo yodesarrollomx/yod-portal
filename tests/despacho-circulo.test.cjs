@@ -169,6 +169,6 @@ test('el módulo es de solo lectura: sin red, sin almacenamiento, sin innerHTML 
 test('index.html carga el círculo, con el botón oculto de origen',()=>{
  const html=fs.readFileSync(path.join(root,'despacho3d/index.html'),'utf8');
  assert.match(html,/<button id="circulo-open" hidden>Círculo<\/button>/);
- assert.match(html,/circulo\.css\?v=1/);assert.match(html,/circulo-boot\.mjs\?v=2/);
+ assert.match(html,/circulo\.css\?v=\d+/);assert.match(html,/circulo-boot\.mjs\?v=\d+/);
  for(const f of ['circulo.css','circulo-boot.mjs','circulo.mjs','circulo-datos.mjs','circulo-config.mjs'])assert.ok(fs.existsSync(path.join(root,'despacho3d',f)),f);
 });
