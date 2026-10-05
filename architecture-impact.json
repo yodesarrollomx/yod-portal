@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-05.70-despacho-voz",
+  "model_revision": "2026-10-05.72-despacho-live",
   "proposal_id": "CHG-DESPACHO-VOZ-070",
   "components": [
     "SYS-YOD-OS",

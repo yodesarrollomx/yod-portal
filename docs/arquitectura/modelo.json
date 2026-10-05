@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-05.70-despacho-voz",
-  "checked_at": "2026-10-04",
+  "revision": "2026-10-05.72-despacho-live",
+  "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
     "margen_y_control",
@@ -7924,7 +7924,7 @@
         "EXT-DRIVE"
       ],
       "proposal": "Acción 1.3: política explícita en servidor por sesión, expediente, espacio y operación, con observar como máximo inicial. Matriz de nueve espacios, sin conceder borradores/envíos/aprobación. Revalidar antes y después de lecturas y antes del commit de visitas; rechazar parámetros de identidad o nivel del navegador. Preparar enlace al Portero existente y demostración sintética de la misma política. Activar consumidor solo tras instalación y lectura autorizada; conservación de URL, principal, permisos, datos e IDs.",
-      "status": "propuesto",
+      "status": "publicado",
       "approval": "Dirección autorizó continuar con 1.3 el 4-oct-2026; no autoriza ampliar permisos de usuarios ni enviar mensajes.",
       "tests": [
         "node --test tests/*.cjs",
@@ -7936,8 +7936,54 @@
         "Política real con identidades sintéticas: permitido, denegado, cambio de actor/caso y revocación durante lectura y antes de commit",
         "Capturas de demostración sintética; instalación y aceptación por sesión OS se registran aparte"
       ],
-      "deployment": "Código candidato: 350 pruebas locales aprobadas y verificadores del portal. ENTORNO_PERMISOS_SERVIDOR=false. Portero activo v64 sin cambios; instalación, encendido y aceptación autenticada pendientes. Capturas sintéticas se registran por separado en plan privado.",
+      "deployment": "PR84 integrado y Pages del merge8225c84 comprobado; siete archivos HTTP idénticos. Capturas permitida/denegada/revocada en plan privado. La instalación se registra en CHG-DESPACHO-PERMISOS-ENCENDIDO-070.",
       "rollback": "Mantener o apagar el consumidor nuevo; volver a fuente y versión previa del mismo Portero conservando historial. No borrar visitas ni modificar ACL."
+    },
+    {
+      "id": "CHG-DESPACHO-PERMISOS-ENCENDIDO-070",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Instalar núcleo y adaptador de permisos, visitas actualizadas y dos dispatch de lectura en el mismo Portero. Conservar URL, principal, acceso, scopes, configuración, historial e IDs; probar seis casos sintéticos en runtime, releer fuentes y verificar lectura autenticada antes de dar aceptación. Encender consumidor observe-only después de comprobar instalación; no conceder borradores/envíos/aprobación ni modificar otros protocolos.",
+      "status": "publicado",
+      "approval": "Dirección autorizó continuar paso 1.3; mismo alcance de lectura y registro ya autorizado, sin permisos nuevos ni mensajes.",
+      "tests": [
+        "node --test tests/*.cjs",
+        "node scripts/arquitectura.cjs --check",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "ACCESOS_REF=main node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Cotejo exacto de tres fuentes guardadas y configuración de implementación",
+        "YOD_verificarPermisosAislados: seis casos en memoria",
+        "Lectura OS matriz/Juntas/visitas, sin otra fila ni recorrido"
+      ],
+      "deployment": "Portero v65 en misma implementación y configuración; tres fuentes recargadas idénticas, seis casos runtime sintéticos aprobados. PR85 integrado; Pages del merge02fa4a6 comprobado y cuatro archivos HTTP idénticos. Recarga OS: matriz ready office-observe-v1 de nueve espacios, tres observar/seis sin conexión; consulta Juntas devuelve una entrega real por aprobar. Visitas ready/revisión1 y mismo recibo; conector confirma una fila/revisión1, sin otro recorrido ni registro. Alcance inicial observar aceptado; revocación/cambio de actor comprobados con datos sintéticos, no ACL reales. Móvil/WebGL siguen pendientes.",
+      "rollback": "Consumidor false; volver misma implementación a v64 conservando historial, recibos y ACL. Restaurar HEAD con respaldos si hace falta."
+    },
+    {
+      "id": "CHG-DESPACHO-PERMISOS-CIERRE-071",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Registrar aceptación del alcance inicial observar del paso1.3: PR84/85, Portero v65, Pages, matriz y Juntas autenticadas, mismo historial y recibo, prueba sintética de revocación. Actualizar contrato/relevo sin cambiar comportamiento, permisos, motor ni datos.",
+      "status": "propuesto",
+      "approval": "Dirección autorizó continuar paso1.3; cierre documental con evidencia y siguiente1.4 de recuperación sin repetir acciones.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "351 pruebas aprobadas en PR85 y checks verdes",
+        "Lectura UI autenticada matriz/Juntas/visitas y cotejo Sheets solo lectura",
+        "git diff --check",
+        "Verificar impacto con --repo"
+      ],
+      "deployment": "Servidor y consumidor ya comprobados; esta entrega solo sincroniza documentación y vistas.",
+      "rollback": "Revertir documentación si hace falta; runtime conserva reversión de070: flagfalse y misma implementación av64, sin borrar historial."
     },
     {
       "id": "CHG-DESPACHO-VOZ-070",
