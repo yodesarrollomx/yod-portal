@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-05.72-despacho-live",
+  "revision": "2026-10-05.73-gaston-documentos-jev",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8006,6 +8006,29 @@
       ],
       "deployment": "Servidor privado preparado y comprobado en Actions; portal preparado en rama. Despliegue y micrófono real se registran por separado.",
       "rollback": "Apagar YOD_VOICE_ENABLED y revertir UI; conservar historial, outbox e IDs."
+    },
+    {
+      "id": "CHG-DESPACHO-DOCUMENTOS-JEV-071",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Conectar al chat y a la voz de Gastón la lectura autorizada de Drive, PDF con páginas visuales y OCR, Sheets por pestaña/rango y Jev para orientar y ordenar la investigación. Conservar el JSON inicial Live exacto; añadir herramientas sólo después de session.started. La primera aceptación es lectura de plano con página, posición y legibilidad, sin iniciar estudio inmobiliario.",
+      "status": "propuesto",
+      "approval": "Dirección solicitó revisar los pedidos del agente e instalar capacidades documentales y Jev; lectura y despliegue autorizados en este chat.",
+      "tests": [
+        "node --test tests/*.cjs",
+        "node scripts/arquitectura.cjs --check",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Servidor privado: funciones Responses, continuación Live, duplicados, cierre, errores Drive/Jev, PDF visual, paginación y fuentes; ejemplos sintéticos."
+      ],
+      "deployment": "Propuesta registrada antes del código; despliegue y aceptación de PDF real se acreditan por separado.",
+      "rollback": "Apagar YOD_RESEARCH_ENABLED; conservar voz, expediente, outbox, conversaciones e IDs."
     }
   ],
   "data_contracts": [

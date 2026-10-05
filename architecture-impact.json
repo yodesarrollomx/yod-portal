@@ -1,12 +1,13 @@
 {
-  "model_revision": "2026-10-05.72-despacho-live",
-  "proposal_id": "CHG-DESPACHO-VOZ-070",
+  "model_revision": "2026-10-05.73-gaston-documentos-jev",
+  "proposal_id": "CHG-DESPACHO-DOCUMENTOS-JEV-071",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "GAS-PORTERO"
+    "GAS-PORTERO",
+    "EXT-DRIVE"
   ],
-  "summary": "Adelantar voz por instrucción de Dirección: hablar con Gastón en el Despacho mediante GPT-Live, conservando exactamente el JSON entregado, y revisar después la transcripción por intervalos en el historial. Reutilizar contexto y permisos existentes; interfaz primero, con comprobación del cierre antes de desconectar audio.",
+  "summary": "Conectar al chat y a la voz de Gastón la lectura autorizada de Drive, PDF con páginas visuales y OCR, Sheets por pestaña/rango y Jev para orientar y ordenar la investigación. Conservar el JSON inicial Live exacto; añadir herramientas sólo después de session.started. La primera aceptación es lectura de plano con página, posición y legibilidad, sin iniciar estudio inmobiliario.",
   "tests": [
     "node --test tests/*.cjs",
     "node scripts/arquitectura.cjs --check",
@@ -14,7 +15,7 @@
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "Pruebas aisladas GPT-Live: JSON exacto, autenticación, IDs opacos, solapamiento, fragmentos tardíos, respaldo, session.started y session.closed/timeout; conversación real pendiente de dispositivo."
+    "Servidor privado: funciones Responses, continuación Live, duplicados, cierre, errores Drive/Jev, PDF visual, paginación y fuentes; ejemplos sintéticos."
   ],
-  "rollback": "Apagar YOD_VOICE_ENABLED y revertir UI; conservar historial, outbox e IDs."
+  "rollback": "Apagar YOD_RESEARCH_ENABLED; conservar voz, expediente, outbox, conversaciones e IDs."
 }
