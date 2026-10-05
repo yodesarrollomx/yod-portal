@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.75-despacho-biblioteca-indice · 2026-10-05.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.76-despacho-biblioteca-publicada · 2026-10-05.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 

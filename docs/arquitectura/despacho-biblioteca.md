@@ -19,3 +19,5 @@ Código privado PR9 y PR11 integrado;88 pruebas aprobadas, incluyendo persistenc
 Obsidian y NotebookLM siguen como opciones por verificar; no se instalan ni se contrata otro servicio. El índice reutiliza Drive/Jev/servidor existentes. No activar nuevos agentes, metas, envíos o cálculos al abrir Biblioteca.
 
 Reversión: YOD_KNOWLEDGE_INDEX=off y revertir consumidor/servidor si hace falta; conservar fuentes, cálculos y datos Sheets, permisos, IDs, conversaciones, journal/outbox e historial. La preparación inicial y los cambios de fuente pueden requerir descarga/OCR; abrir la oficina continúa independiente y las consultas de contexto siguen dependiendo del Portero.
+
+Publicación comprobada: portal PR90 integrado en a7cd37a y servidor Render8811ee5 activo. Prueba Chromium sintética en escritorio/móvil aprobada; seis recursos publicados contrastados byte a byte por HTTP. Salud real confirmó preparación y reutilización del índice. La salud es puntual y puede indicar reconexión del Portero; no garantiza disponibilidad continua. Continúa pendiente la aceptación de una pregunta real y audio en dispositivo.
