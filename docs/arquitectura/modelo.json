@@ -9780,6 +9780,16 @@
         "GAS-PORTERO",
         "EXT-DRIVE"
       ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-voice-actions.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
     }
   ]
 }
