@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-05.77-despacho-voz-basica",
+  "revision": "2026-10-05.78-despacho-voz-comprobacion",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8086,7 +8086,7 @@
         "EXT-DRIVE"
       ],
       "proposal": "Priorizar conversación de voz básica: conectar el handoff GPT-Live exacto sin cargar ni anexar contexto/herramientas como condición de escucha. Eliminar el cupo de cuatro intentos de la aplicación que consume fallos. Mantener autenticación efímera y una sola sesión; guardar fragmentos/journal y resolver revisión canónica para historial fuera del inicio. Errores del registro no cortan audio sano. Contexto por expediente queda explícitamente separado y requiere activación comprobada posterior.",
-      "status": "implementado_local",
+      "status": "publicado",
       "approval": "Dirección reportó que no funciona en ningún dispositivo, corte sin respuesta y bloqueo por minutos; autorizó primero voz normal en la página y después contexto y mejoras. Menú circular como referencia visual por revisar, sin datos ficticios operativos.",
       "tests": [
         "node scripts/arquitectura.cjs --check",
@@ -8095,10 +8095,11 @@
         "node verify-portal.cjs",
         "node verify-accesos.cjs",
         "node verify-obra-app.cjs",
-        "Servidor: JSON exacto, voz básica sin comandos de contexto ni espera Sheets, reintento tras fallo, actor/origen/caso, cierre confirmado, journal y revisión canónica diferida.",
-        "Navegador: gesto directo, estado audible/escucha, transcripciones y cierre con transporte sintético; publicación real y audio de dispositivo separados."
+        "Servidor:95 pruebas y sintaxis; JSON exacto, arranque sin Sheets, saludo único sin espera circular, sin cupo de fallos, autorización, journal/outbox y revisión canónica diferida.",
+        "Navegador: Chromium escritorio/móvil, micrófono de prueba y reproducción MediaStream real con transporte sintético; siete errores de registro sin corte, deltas exactos y cierre (37334361935).",
+        "Producción: seis recursos HTTP coinciden byte a byte; OpenAI real con saludo aceptado, PCM no silencioso, transcripción y cierre (37334952547). Prueba física e integración documental/acciones por voz pendientes."
       ],
-      "deployment": "Implementación en PR92 del portal y PR12 del servidor. Portal:373 pruebas y todos los verificadores aprobados. Inicio de voz no espera Sheets ni acuses de contexto: estos dependen del avance del audio y bloqueaban la activación del micrófono. Se retira el cupo de intentos fallidos. Saludo único mediante instrucción posterior a session.started, sin reenviar configuración inicial ni esperar su acuse. Comprobación sintética de audio real acotada y optativa en servidor; prueba de navegador y despliegue pendientes de recibo.",
+      "deployment": "Portal PR92 integrado/publicado en0617a7f,373 pruebas y verificadores aprobados. Servidor PR12/PR14/PR15 integrado en502867a,95 pruebas/sintaxis aprobadas y Render live dep-db1saj6gekts73f86cl0. Chromium1280×800/390×844 con micrófono de prueba y audio remoto MediaStream real, transporte sintético: siete fallos de registro sin corte, deltas exactos y cierre (run37334361935). HTTP: seis recursos de Pages idénticos byte a byte al merge; OpenAI real: inicio, saludo aceptado, PCM no silencioso, transcripción de salida y session.closed confirmados (run37334952547). Diagnóstico desactivado después de comprobar. No acredita conversación física en dispositivo, historial de una conversación de Dirección, aceptación visual, ni documentos/herramientas/acciones automáticas por voz; modo básico explícito.",
       "rollback": "Revertir consumidor/servidor conservando handoff JSON, claves en servidor, autorización, fuentes, índices, IDs, journal/outbox e historial. Contexto ampliado sólo por modo explícito y pruebas."
     }
   ],
