@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.76-despacho-biblioteca-publicada · 2026-10-05.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.77-despacho-voz-basica · 2026-10-05.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -482,3 +482,17 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Límites y truncado explícitos; búsqueda léxica y ranking Jev no demuestran cobertura integral ni verdad de una respuesta.
 - Conservar configuración Live exacta, autorización DP/carril, historial/recibos y fuentes no confiables como datos, nunca instrucciones.
 - modifiedTime no acredita frescura de fórmulas de Sheets: pasajes de hojas marcan datos_vigentes=false; drive_leer siempre relee valores originales, sin responder desde el índice.
+
+## CTR-DESPACHO-VOZ-BASICA
+
+- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, EXT-DRIVE.
+- Evidencia: Prioridad explícita de Dirección el 5-oct-2026: voz básica primero y contexto después..
+- Entrada/campos: `Credencial efímera válida para el expediente autorizado y gesto explícito de Hablar.`, `SDP WebRTC y JSON GPT-Live exacto ya proporcionado; claves sólo servidor.`.
+- Salida: Audio remoto y escucha al recibir session.started; no depende de ACK de contexto/herramientas., Transcripciones exactas por start_ms/end_ms, journal durable y estado de respaldo separado..
+
+- Modo básico predeterminado no anexa contexto, instrucciones ni herramientas adicionales al Live. No presenta respuestas como informadas por documentos del expediente.
+- Mantener controles actor/caso/origen, una conversación activa y bloqueo concurrente; fallos de conexión no consumen cupo artificial de intentos.
+- La revisión del historial se resuelve mediante Portero en segundo plano antes de escribir; sin revisión autorizada el outbox conserva pendiente y no inventa revisión ni recibo.
+- Fallo de consulta de estado del registro no termina una conexión WebRTC sana. Revocación, pérdida real y cierre mantienen reglas de finalización incompleta.
+- Conservar JSON inicial exacto, deltas sin normalizar y transportes/audio hasta session.closed; interrupción natural al hablar, sin comandos adicionales de contexto.
+- Pruebas sintéticas no acreditan audio del dispositivo, conversación real ni aceptación; registrar cada evidencia por separado.
