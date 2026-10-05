@@ -490,7 +490,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Entrada/campos: `Credencial efímera válida para el expediente autorizado y gesto explícito de Hablar.`, `SDP WebRTC y JSON GPT-Live exacto ya proporcionado; claves sólo servidor.`.
 - Salida: Audio remoto y escucha al recibir session.started; no depende de ACK de contexto/herramientas., Transcripciones exactas por start_ms/end_ms, journal durable y estado de respaldo separado..
 
-- Modo básico predeterminado no anexa contexto, instrucciones ni herramientas adicionales al Live. No presenta respuestas como informadas por documentos del expediente.
+- Modo básico predeterminado no anexa contexto documental ni herramientas del expediente. Una única instrucción de identidad/saludo después de session.started no bloquea la escucha ni repite la configuración inicial. No presenta respuestas como informadas por documentos.
 - Mantener controles actor/caso/origen, una conversación activa y bloqueo concurrente; fallos de conexión no consumen cupo artificial de intentos.
 - La revisión del historial se resuelve mediante Portero en segundo plano antes de escribir; sin revisión autorizada el outbox conserva pendiente y no inventa revisión ni recibo.
 - Fallo de consulta de estado del registro no termina una conexión WebRTC sana. Revocación, pérdida real y cierre mantienen reglas de finalización incompleta.

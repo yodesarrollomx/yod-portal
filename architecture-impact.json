@@ -7,7 +7,7 @@
     "GAS-PORTERO",
     "EXT-DRIVE"
   ],
-  "summary": "Priorizar conversación de voz básica: conectar el handoff GPT-Live exacto sin cargar ni anexar contexto/herramientas como condición de escucha. Eliminar el cupo de cuatro intentos de la aplicación que consume fallos. Mantener autenticación efímera y una sola sesión; guardar fragmentos/journal y resolver revisión canónica para historial fuera del inicio. Errores del registro no cortan audio sano. Contexto por expediente queda explícitamente separado y requiere activación comprobada posterior.",
+  "summary": "Priorizar conversación de voz básica: conectar el handoff GPT-Live exacto sin cargar ni anexar contexto/herramientas como condición de escucha. Eliminar el cupo de cuatro intentos de la aplicación que consume fallos. Mantener autenticación efímera y una sola sesión; guardar fragmentos/journal y resolver revisión canónica para historial fuera del inicio. Errores del registro no cortan audio sano. Contexto por expediente queda explícitamente separado y requiere activación comprobada posterior. Saludo único posterior al inicio sin bloquear audio; diagnóstico sintético optativo con la clave existente sólo en servidor.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",

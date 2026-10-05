@@ -8086,7 +8086,7 @@
         "EXT-DRIVE"
       ],
       "proposal": "Priorizar conversación de voz básica: conectar el handoff GPT-Live exacto sin cargar ni anexar contexto/herramientas como condición de escucha. Eliminar el cupo de cuatro intentos de la aplicación que consume fallos. Mantener autenticación efímera y una sola sesión; guardar fragmentos/journal y resolver revisión canónica para historial fuera del inicio. Errores del registro no cortan audio sano. Contexto por expediente queda explícitamente separado y requiere activación comprobada posterior.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "approval": "Dirección reportó que no funciona en ningún dispositivo, corte sin respuesta y bloqueo por minutos; autorizó primero voz normal en la página y después contexto y mejoras. Menú circular como referencia visual por revisar, sin datos ficticios operativos.",
       "tests": [
         "node scripts/arquitectura.cjs --check",
@@ -8098,7 +8098,7 @@
         "Servidor: JSON exacto, voz básica sin comandos de contexto ni espera Sheets, reintento tras fallo, actor/origen/caso, cierre confirmado, journal y revisión canónica diferida.",
         "Navegador: gesto directo, estado audible/escucha, transcripciones y cierre con transporte sintético; publicación real y audio de dispositivo separados."
       ],
-      "deployment": "Propuesta registrada antes de código; logs privados muestran context_error antes del corte. Pendiente implementar, probar y publicar; disponibilidad declarada no demuestra audio real.",
+      "deployment": "Implementación en PR92 del portal y PR12 del servidor. Portal:373 pruebas y todos los verificadores aprobados. Inicio de voz no espera Sheets ni acuses de contexto: estos dependen del avance del audio y bloqueaban la activación del micrófono. Se retira el cupo de intentos fallidos. Saludo único mediante instrucción posterior a session.started, sin reenviar configuración inicial ni esperar su acuse. Comprobación sintética de audio real acotada y optativa en servidor; prueba de navegador y despliegue pendientes de recibo.",
       "rollback": "Revertir consumidor/servidor conservando handoff JSON, claves en servidor, autorización, fuentes, índices, IDs, journal/outbox e historial. Contexto ampliado sólo por modo explícito y pruebas."
     }
   ],
@@ -9060,7 +9060,7 @@
         "Transcripciones exactas por start_ms/end_ms, journal durable y estado de respaldo separado."
       ],
       "invariants": [
-        "Modo básico predeterminado no anexa contexto, instrucciones ni herramientas adicionales al Live. No presenta respuestas como informadas por documentos del expediente.",
+        "Modo básico predeterminado no anexa contexto documental ni herramientas del expediente. Una única instrucción de identidad/saludo después de session.started no bloquea la escucha ni repite la configuración inicial. No presenta respuestas como informadas por documentos.",
         "Mantener controles actor/caso/origen, una conversación activa y bloqueo concurrente; fallos de conexión no consumen cupo artificial de intentos.",
         "La revisión del historial se resuelve mediante Portero en segundo plano antes de escribir; sin revisión autorizada el outbox conserva pendiente y no inventa revisión ni recibo.",
         "Fallo de consulta de estado del registro no termina una conexión WebRTC sana. Revocación, pérdida real y cierre mantienen reglas de finalización incompleta.",
