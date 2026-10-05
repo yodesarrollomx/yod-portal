@@ -1,20 +1,19 @@
 {
-  "model_revision": "2026-10-04.65-despacho-actividad",
-  "proposal_id": "CHG-DESPACHO-ACTIVIDAD-065",
+  "model_revision": "2026-10-04.66-despacho-actividad-cierre",
+  "proposal_id": "CHG-DESPACHO-ACTIVIDAD-CIERRE-066",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO"
   ],
-  "summary": "Acción 1.1 autorizada: contrato versionado de actividad que separa desplazamiento, ejecución y resultado; demostración independiente con datos sintéticos. Validar procedencia, secuencia, estado terminal, identidad y reintento idéntico. Conservar IDs de conversación/trabajos; sin cambiar RPC, conceder permisos, ejecutar herramientas ni persistir visitas.",
+  "summary": "Cierre de 1.1: registrar publicación y aceptación HTTPS de PR78, corregir lectura fallida de README.md (documentación en cloud/README.txt, repositorio accesible) y ajustar singular/estado en avisos de demostración. Sin cambio de contrato, fuentes, permisos o persistencia.",
   "tests": [
-    "node --test tests/despacho-actividad.test.cjs",
     "node --test tests/*.cjs",
     "node scripts/arquitectura.cjs --check",
     "node verify-os.cjs",
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "Capturas HTTPS de solicitud, llegada, resultado y reintento sintéticos"
+    "Aceptación HTTPS de avisos de demostración"
   ],
-  "rollback": "Revertir PR. Demostración aislada sin afectar sala, historial, backend o visitas actuales."
+  "rollback": "Revertir este PR; conserva contrato y publicación de PR78."
 }
