@@ -1,9 +1,11 @@
 // Entorno del agente: los espacios donde trabaja, qué puede hacer en cada uno y quién los ha visitado.
-// Etapas 1 y 2: catálogo, permisos, registro en memoria y (con su propio interruptor) mover la figura del agente. No hace peticiones de red,
-// no envía mensajes, no crea documentos y no escribe en Sheets. Todo espacio está en "solo observar".
+// Catálogo, permisos y visitas de sesión; juntas lee entregas. El registro durable tiene interruptor propio.
+// No envía mensajes ni crea documentos. Todo espacio está en "solo observar".
 // El repositorio es público: aquí no hay nombres de casos, clientes ni contactos.
-import {ENTORNO_ACTIVO,ENTORNO_JUNTAS} from './entorno-config.mjs';
+import {ENTORNO_ACTIVO,ENTORNO_JUNTAS,ENTORNO_VISITAS_PERSISTENTES} from './entorno-config.mjs?v=2';
 import {leerMetas,pendientesDeMetas} from './circulo-pendientes.mjs';
+import {Visitas} from './visitas.mjs?v=1';
+import {createFrameTransport} from './conversation.mjs?v=2';
 
 export const PERMISOS={
  observar:'Solo observar',
@@ -67,15 +69,16 @@ function crear(doc,tag,props={},hijos=[]){
 }
 const hora=iso=>{const d=new Date(iso);return Number.isNaN(d.getTime())?'':d.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});};
 
-export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,volver=null,entregas=null,alCerrar=()=>{}}={}){
+export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,volver=null,entregas=null,visitas=null,alCerrar=()=>{}}={}){
  const h=(tag,props,hijos)=>crear(doc,tag,props,hijos);
  const raiz=h('section',{class:'entorno-hoja',role:'dialog','aria-modal':'true','aria-labelledby':'entorno-titulo'});
  raiz.appendChild(h('button',{type:'button',class:'entorno-cerrar','aria-label':'Cerrar el entorno',texto:'×',on:{click:()=>alCerrar()}}));
  raiz.appendChild(h('h1',{id:'entorno-titulo',texto:'Entorno del agente'}));
- raiz.appendChild(h('p',{class:'entorno-aviso',texto:'Etapas 1 y 2: aquí se ven los espacios, lo que el agente puede hacer en cada uno y quién los ha visitado en esta sesión. Todo está en solo observar: no se envía nada, no se crea nada y no se escribe en Sheets.'}));
+ raiz.appendChild(h('p',{class:'entorno-aviso',texto:visitas?'Aquí se ven los espacios y las visitas de esta sesión. El registro del servidor muestra por separado las visitas con recibo confirmado. Todo espacio está en solo observar; no se envían mensajes ni se crean documentos.':'Etapas 1 y 2: aquí se ven los espacios, lo que el agente puede hacer en cada uno y quién los ha visitado en esta sesión. Todo está en solo observar: no se envía nada, no se crea nada y no se escribe en Sheets.'}));
  raiz.appendChild(h('p',{},[h('a',{href:'actividad-demo.html',target:'_blank',rel:'noopener',texto:'Ver prueba de actividad (datos sintéticos)'})]));
  const lista=h('div',{class:'entorno-lista'});
  const bitacora=h('ol',{class:'entorno-bitacora','aria-live':'polite'});
+ const respaldo=h('section',{class:'entorno-respaldo',role:'region','aria-label':'Visitas guardadas en el servidor'});
  const limpiar=n=>{while(n.firstChild)n.removeChild(n.firstChild);};
  // Entregas por aprobar de la sala de juntas (solo lectura).
  let porAprobar={fase:'inicio',tarjetas:[]};
@@ -104,6 +107,18 @@ export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,vol
   return caja;
  }
  function pintar(){
+  if(visitas){
+   limpiar(respaldo);const s=visitas.state(),count=s.snapshot?.total;
+   const notice=s.status==='reading'?'Leyendo visitas guardadas…':s.status==='saving'?'Guardando la visita…':s.status==='unconfirmed'?'Guardado por confirmar. Reintentar conserva la misma visita.':s.status==='ready'?`${count} visitas guardadas en el servidor.`:'No pude confirmar el historial de visitas. Las visitas de esta sesión siguen abajo.';
+   respaldo.appendChild(h('p',{role:'status',texto:notice}));
+   if(s.queued)respaldo.appendChild(h('p',{texto:`${s.queued} visitas esperando guardado en esta sesión.`}));
+   respaldo.appendChild(h('button',{type:'button',texto:'Actualizar visitas guardadas',on:{click:()=>visitas.refresh()}}));
+   if(s.pending)respaldo.appendChild(h('button',{type:'button',texto:'Reintentar guardado de visita',on:{click:()=>visitas.retry()}}));
+   if(s.pending&&s.error==='stale_revision')respaldo.appendChild(h('button',{type:'button',texto:'Actualizar y guardar la visita rechazada',on:{click:()=>visitas.resolveConflict()}}));
+   const historial=h('ol',{class:'entorno-bitacora'});
+   for(const v of (s.snapshot?.visits||[]).slice(-8).reverse())historial.appendChild(h('li',{'data-visit-id':v.visit_id,'data-receipt-id':v.receipt.receipt_id,texto:[hora(v.created_at),v.visitor_kind==='agent'?'El agente':'Dirección (recorrido)',espacioDe(v.space_id)?.nombre,'Guardada'].join(' · ')}));
+   respaldo.appendChild(historial);if(s.snapshot?.has_more)respaldo.appendChild(h('p',{texto:'Se muestran las últimas visitas; el servidor conserva el historial anterior.'}));
+  }
   limpiar(lista);limpiar(bitacora);
   for(const e of ESPACIOS){
    const hay=e.lugar!==null;
@@ -131,6 +146,7 @@ export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,vol
  }
  if(typeof volver==='function')raiz.appendChild(h('button',{type:'button',class:'entorno-volver',texto:'Que el agente vuelva a su lugar',on:{click:()=>{volver();}}}));
  raiz.appendChild(lista);
+ if(visitas){raiz.appendChild(h('h2',{class:'entorno-sub',texto:'Visitas guardadas'}));raiz.appendChild(respaldo);}
  raiz.appendChild(h('h2',{class:'entorno-sub',texto:'Visitas de esta sesión'}));
  raiz.appendChild(bitacora);
  pintar();
@@ -138,13 +154,15 @@ export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,vol
 }
 
 // Monta el botón y la hoja. Devuelve false si el entorno no debe aparecer.
-export function montarEntorno({win=globalThis.window,doc=globalThis.document,activo=ENTORNO_ACTIVO,juntas=ENTORNO_JUNTAS,leer=leerMetas,registro=crearRegistro()}={}){
+export function montarEntorno({win=globalThis.window,doc=globalThis.document,activo=ENTORNO_ACTIVO,juntas=ENTORNO_JUNTAS,persistentes=ENTORNO_VISITAS_PERSISTENTES,leer=leerMetas,registro=crearRegistro()}={}){
  if(!win||!doc)return false;
  const vistaPrevia=/(?:^|[?&])entorno=1(?:&|$)/.test(String(win.location?.search||''));
  if(!activo&&!vistaPrevia)return false;
  const boton=doc.getElementById('entorno-open');
  if(!boton)return false;
  let hoja=null,desuscribir=null,perfil=null;
+ const visitas=persistentes?new Visitas({transport:createFrameTransport(win),uuid:()=>win.crypto.randomUUID(),notify:()=>hoja?.pintar()}):null;
+ const registrar=datos=>{registro.registrar(datos);if(visitas)void visitas.record(datos);};
  const cerrar=()=>{
   if(!hoja)return;
   hoja.raiz.parentNode?.removeChild(hoja.raiz);hoja=null;
@@ -157,7 +175,7 @@ export function montarEntorno({win=globalThis.window,doc=globalThis.document,act
   if(!espacio.lugar||typeof oficina?.visit!=='function')return false;
   const actual=perfil;cerrar();
   const llegada=await oficina.visit(espacio.lugar);
-  if(llegada===true&&perfil===actual)registro.registrar({espacio:espacio.id,quien:'direccion',motivo:'Vista situada desde el entorno'});
+  if(llegada===true&&perfil===actual)registrar({espacio:espacio.id,quien:'direccion',motivo:'Vista situada desde el entorno'});
   return false;
  };
  // Solo si la oficina ofrece el movimiento del agente (interruptor de caminar o ?camina=1).
@@ -178,7 +196,7 @@ export function montarEntorno({win=globalThis.window,doc=globalThis.document,act
  win.addEventListener('yod-agent-arrived',e=>{
   if(!perfil)return;
   const espacio=ESPACIOS.find(s=>s.lugar&&s.lugar===e.detail?.lugar);
-  if(espacio){registro.registrar({espacio:espacio.id,quien:'agente',motivo:'Llegada confirmada'});hoja?.pintar();}
+  if(espacio){registrar({espacio:espacio.id,quien:'agente',motivo:'Llegada confirmada'});hoja?.pintar();}
  });
  const conJuntas=juntas||/(?:^|[?&])juntas=1(?:&|$)/.test(String(win.location?.search||''));
  const entregas=async()=>{
@@ -191,12 +209,14 @@ export function montarEntorno({win=globalThis.window,doc=globalThis.document,act
  };
  const abrir=()=>{
   if(hoja||!perfil)return;
-  hoja=crearEntorno({doc,registro,ir,enviar:caminar()?enviar:null,volver:caminar()?volver:null,entregas:conJuntas?entregas:null,alCerrar:cerrar});
+  hoja=crearEntorno({doc,registro,ir,enviar:caminar()?enviar:null,volver:caminar()?volver:null,entregas:conJuntas?entregas:null,visitas,alCerrar:cerrar});
   doc.body.appendChild(hoja.raiz);
   doc.addEventListener?.('keydown',alTeclear);
  };
  const alPerfil=p=>{
+  const anterior=perfil?.case_id;
   perfil=p&&typeof p==='object'?p:null;
+  if(visitas&&perfil?.case_id!==anterior){if(perfil?.case_id)void visitas.open(perfil.case_id);else visitas.close();}
   boton.hidden=!perfil;
   if(!perfil)cerrar();
  };
