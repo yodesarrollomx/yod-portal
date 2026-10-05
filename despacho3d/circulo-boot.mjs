@@ -1,2 +1,2 @@
-import {montarCirculo} from './circulo.mjs?v=2';
-montarCirculo();
+import {mountAgentMenu} from './agent-menu.mjs?v=1';
+mountAgentMenu();

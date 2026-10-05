@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.78-despacho-voz-comprobacion · 2026-10-05.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.79-despacho-agente-operativo · 2026-10-05.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 

@@ -13,7 +13,7 @@ const NOTICES = {
 };
 export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   media = globalThis.navigator?.mediaDevices, Peer = globalThis.RTCPeerConnection, Stream = globalThis.MediaStream,
-  audio, onChange = () => {}, onTranscript = () => {}, now = Date.now,
+  audio, onChange = () => {}, actions = null, onTranscript = () => {}, now = Date.now,
   schedule = setInterval, cancel = clearInterval, closeTimeout = 20000, disconnectGrace = 12000, maxStatusFailures = 3} = {}) {
   let epoch = 0, stream = null, peer = null, channel = null, credential = null, sessionId = null,
     poll = null, controller = null, polling = false, closing = null, began = 0, started = false,
@@ -26,7 +26,8 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   async function post(path, data, current = credential, signal) {
     const response = await fetchImpl(current.endpoint + path, {method: 'POST', cache: 'no-store', credentials: 'omit', signal,
       headers: {'Content-Type': 'application/json', Authorization: 'Bearer ' + current.token}, body: JSON.stringify(data)});
-    const value = await response.json();
+    let value;
+    try{value=await response.json();}catch{const error=Error(response.status===401||response.status===403?NOTICES.unauthorized:NOTICES.voice_unavailable);error.code=response.status===401||response.status===403?'unauthorized':'unavailable';throw error;}
     if (!response.ok || value?.ok !== true) {
       const error = Error(NOTICES[value?.error] || 'La conexión de voz se interrumpió.');
       error.code = value?.error; throw error;
@@ -62,7 +63,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   const report = result => publish({fragments: result.fragments, blocks: result.blocks, saved: result.saved,
     pending: result.pending, incomplete: state.incomplete || result.incomplete === true});
   const ready = () => {
-    if (!started || !contextReady || state.phase !== 'starting') return;
+    if (!started || state.phase !== 'starting') return;
     stream?.getAudioTracks().forEach(track => {track.enabled = true;});
     publish({phase: 'listening', notice: 'Habla con Gastón. Puedes interrumpirlo al hablar.'});
   };
@@ -107,7 +108,11 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
       const result = await post('/voice/status', {session_id: sessionId}, credential, AbortSignal.timeout(12000));
       if (token !== epoch || closing) return;
       statusFailures = 0; publish({status_pending: false});
-      report(result); contextReady = mode === 'basic' || result.started === true && result.context_ready === true; ready();
+      report(result); contextReady = result.context_ready === true; ready();
+      publish({context_phase:result.context_phase||'preparing',tools_ready:result.tools_ready===true,documents_ready:result.documents_ready===true,tasks_ready:result.tasks_ready===true,actions_pending:result.actions?.length||0});
+      if(result.tools_ready&&actions&&credential){const auth=credential,id=sessionId,own=epoch;
+        actions.consume(result.actions,{caseId:auth.case_id,active:()=>epoch===own&&!closing&&started&&['listening','reconnecting','starting'].includes(state.phase),post:(path,data)=>post(path,{session_id:id,...data},auth,AbortSignal.timeout(15000))});
+      }
       if (!result.active || now() >= result.expires_at) void stop('La sesión terminó. Puedes iniciar otra.');
       else if (state.phase === 'starting' && connectedAt && now() - connectedAt > 60000) void stop('No se confirmó el inicio. Vuelve a intentar.');
     } catch (error) {
@@ -134,7 +139,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     const token = ++epoch; controller = new AbortController(); began = now();
     mode = null; started = contextReady = finalSeen = disconnected = false; seen.clear(); sequence = 0; polling = false; statusFailures = 0; connectedAt = 0;
     publish({phase: 'starting', notice: 'Abriendo el micrófono…', fragments: 0, blocks: 0, saved: 0,
-      pending: 0, incomplete: false, finalized: false, status_pending: false, mode: null});
+      pending: 0, incomplete: false, finalized: false, status_pending: false, mode: null,context_phase:'preparing',tools_ready:false,documents_ready:false,tasks_ready:false,actions_pending:0});
     try {
       if (typeof media?.getUserMedia !== 'function' || typeof Peer !== 'function' || !audio)
         throw Error('Este navegador no admite voz en tiempo real.');
@@ -188,7 +193,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
         } else if (connection === 'connected') {
           clearTimeout(disconnectTimer); disconnectTimer = null;
           if (state.phase === 'reconnecting') {
-            publish({phase: started && contextReady ? 'listening' : 'starting', notice: started && contextReady ?
+            publish({phase: started ? 'listening' : 'starting', notice: started ?
               'Conexión recuperada. Sigue hablando con Gastón.' : 'Preparando conversación…'});
             ready();
           }
@@ -205,7 +210,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
         await post('/voice/close', {session_id: id}, current, AbortSignal.timeout(closeTimeout)).catch(() => {});
         return false;
       }
-      mode = result.mode === 'basic' ? 'basic' : 'expediente'; contextReady = mode === 'basic';
+      mode = ['basic','operativo','expediente'].includes(result.mode)?result.mode:'basic'; contextReady = mode === 'basic';
       publish({mode});
       sessionId = id; // Opaque; never parse or rebuild.
       await peer.setRemoteDescription({type: 'answer', sdp}); connectedAt = now();
@@ -236,5 +241,5 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     disconnected = true; closedResolve?.(false); publish({incomplete: true});
     void stop('Finalización incompleta al salir de esta pantalla.');
   }
-  return {prepare, start, stop, mute, interrupt, abandon, refresh: () => status(epoch), snapshot: () => ({...state})};
+  return {prepare, start, stop, mute, interrupt, abandon, refresh: () => status(epoch), retryActions:()=>{actions?.retry();void status(epoch);}, snapshot: () => ({...state})};
 }

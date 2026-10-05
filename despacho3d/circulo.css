@@ -63,3 +63,16 @@
 header #circulo-open{min-height:44px;background:transparent;color:#faf7f0;border:1px solid #bc9f6d;border-radius:4px;padding:9px 16px;font-size:15px;margin-left:10px;cursor:pointer}
 header #circulo-open:focus-visible{outline:2px solid #bc9f6d;outline-offset:2px}
 @media(max-width:700px){header #circulo-open{padding:8px 12px;margin-left:6px}}
+
+.agent-menu{width:min(1100px,calc(100% - 24px));max-height:calc(100dvh - 24px);padding:24px;border:1px solid #bcc7c8;border-radius:20px;color:#20343c;background:#f6f5f0;overflow:auto}
+.agent-menu::backdrop{background:#10292d99}
+.agent-menu header{position:static;display:flex;justify-content:space-between;padding:0;background:none;color:inherit}
+.agent-menu h1{font-size:24px;margin:16px 0 8px}.agent-menu-layout{display:grid;grid-template-columns:minmax(280px,400px) minmax(0,1fr);gap:28px;align-items:start}
+.agent-menu-wheel{position:relative}.agent-menu-wheel svg{width:100%;display:block}.agent-menu-center{position:absolute;left:26%;right:26%;top:31%;height:30%;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;text-align:center}
+.agent-menu button{border:1px solid #a3b7b8;border-radius:10px;padding:10px 14px;color:#20343c;background:#fff;cursor:pointer}.agent-menu button:disabled{opacity:.5;cursor:default}
+.agent-menu button:focus-visible,.agent-menu input:focus-visible,.agent-menu textarea:focus-visible{outline:3px solid #b07841;outline-offset:2px}
+.agent-menu-shortcuts,.agent-menu-controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.agent-menu-panel{min-width:0}.agent-menu-panel p{white-space:pre-wrap;overflow-wrap:anywhere}.agent-menu-panel pre{white-space:pre-wrap;overflow-wrap:anywhere;font-family:inherit;font-size:14px}
+.agent-menu .circulo-gajo.selected{fill:#d9e5df;stroke:#637c72;stroke-width:2}
+.agent-menu-goal-form{display:grid;gap:12px;padding:20px 0}.agent-menu-goal-form label{display:grid;gap:6px}.agent-menu-goal-form input,.agent-menu-goal-form textarea{width:100%;box-sizing:border-box;border:1px solid #a3b7b8;border-radius:8px;padding:10px;font:inherit;background:#fff;color:#20343c}.agent-menu-goal-form textarea{min-height:72px}
+@media(max-width:700px){.agent-menu{padding:16px}.agent-menu-layout{grid-template-columns:1fr;gap:16px}.agent-menu-wheel{max-width:360px;width:100%;margin:auto}.agent-menu-center{top:30%;height:29%}.agent-menu h1{font-size:20px}}

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-05.78-despacho-voz-comprobacion",
+  "revision": "2026-10-05.79-despacho-agente-operativo",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8101,6 +8101,32 @@
       ],
       "deployment": "Portal PR92 integrado/publicado en0617a7f,373 pruebas y verificadores aprobados. Servidor PR12/PR14/PR15 integrado en502867a,95 pruebas/sintaxis aprobadas y Render live dep-db1saj6gekts73f86cl0. Chromium1280×800/390×844 con micrófono de prueba y audio remoto MediaStream real, transporte sintético: siete fallos de registro sin corte, deltas exactos y cierre (run37334361935). HTTP: seis recursos de Pages idénticos byte a byte al merge; OpenAI real: inicio, saludo aceptado, PCM no silencioso, transcripción de salida y session.closed confirmados (run37334952547). Diagnóstico desactivado después de comprobar. No acredita conversación física en dispositivo, historial de una conversación de Dirección, aceptación visual, ni documentos/herramientas/acciones automáticas por voz; modo básico explícito.",
       "rollback": "Revertir consumidor/servidor conservando handoff JSON, claves en servidor, autorización, fuentes, índices, IDs, journal/outbox e historial. Contexto ampliado sólo por modo explícito y pruebas."
+    },
+    {
+      "id": "CHG-DESPACHO-AGENTE-OPERATIVO-075",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Completar Gastón por voz: activar micrófono por session.started y cargar expediente/historial en segundo plano; instalar herramientas documentales/Jev tras comprobar contexto y acuses, sin cerrar audio por fallos. Conectar consultas y objetivos automáticos al registro canónico de tareas mediante el transporte autenticado existente; conservar IDs durables, validar caso/actor y reconciliar resultados inciertos sin duplicar trabajo. Exponer avances y recibos en la interacción del agente y círculo con historial/documentos/tareas reales, enlaces a fuentes y Tablero PPP vigente, sin modificar reglas comerciales ni aprobar versiones desde una maqueta.",
+      "status": "propuesto",
+      "approval": "Dirección autorizó seguir adelante y terminar la integración del agente tras la corrección de voz básica. Requisitos explícitos: contexto, Jev, respuestas, herramientas de sala, acciones automáticas de pendientes y agente presente; micrófono por gesto de Hablar.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Servidor: JSON inicial exacto, contexto demorado/fallido sin bloquear audio, herramientas después de acuses, deduplicación y cancelación de delegaciones, intents durables vinculados a caso/actor.",
+        "Tareas: crear/consultar/reanudar/detener mediante transporte autenticado, IDs estables, conflicto/revocación/respuesta perdida/reinicio, acciones confirmadas sólo con recibo validado del sistema canónico; ningún envío de prueba de negocio.",
+        "Navegador: voz, contexto y tarea integrada con datos sintéticos, círculo real/enlaces/historial y presencia sin abrir Agentes; escritorio/móvil, media real, reconexión y cierre.",
+        "OpenAI real: saludo y habla, instalación de herramientas y ciclo de llamada/resultado/continuación con herramienta sintética aislada; HTTP/publicación separados de aceptación física."
+      ],
+      "deployment": "Propuesta e impacto previos al código. Base: portalc6bc544/servidor502867a. Voz básica publicada; biblioteca/documentos y worker de objetivos existentes. Pendiente implementar y comprobar integración; lectura de salud no prueba herramientas por voz.",
+      "rollback": "Revertir nueva integración; mantener voz básica operativa, JSON y credenciales en servidor, autorizaciones/IDs, expedientes/fuentes/formulas, tareas y evidencias canónicas, historial, journal/outbox. No borrar ni restaurar negocio."
     }
   ],
   "data_contracts": [
@@ -9068,6 +9094,35 @@
         "Conservar JSON inicial exacto, deltas sin normalizar y transportes/audio hasta session.closed; interrupción natural al hablar, sin comandos adicionales de contexto.",
         "Pruebas sintéticas no acreditan audio del dispositivo, conversación real ni aceptación; registrar cada evidencia por separado."
       ]
+    },
+    {
+      "id": "CTR-DESPACHO-AGENTE-OPERATIVO",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "source": "Continuidad autorizada por Dirección después de la voz básica.",
+      "input": [
+        "Gesto de Hablar y credencial efímera ligada a caso/actor.",
+        "Expediente/fuentes canónicos y herramientas de lectura existentes.",
+        "Petición hablada de consultar o trabajar un objetivo con criterio de salida, dentro de capacidades instaladas."
+      ],
+      "output": [
+        "Audio independiente de la carga; contexto y herramientas con estado verificable.",
+        "Objetivos/acciones en el registro existente con ID, avance, evidencia, bloqueo y siguiente paso.",
+        "Interacción de Gastón con pendientes/documentos/historial reales y acceso al tablero vigente."
+      ],
+      "invariants": [
+        "No repetir configuración Live ni bloquear micrófono por acuses o lecturas. Fallo de contexto/herramienta queda visible y conserva voz.",
+        "Una autoridad por acción: ejecución documental en servidor; operaciones de objetivo por transporte de YOD OS autenticado. Nunca confiar en un case_id del modelo o del círculo para ampliar permisos.",
+        "Crear/resumir trabajo con IDs estables y journal durable antes de la llamada; respuesta perdida se reconcilia/reintenta con el mismo ID, sin declarar guardado o repetición exitosa.",
+        "La voz no aprueba decisiones financieras, versiones PPP ni envía comunicaciones externas por instrucciones dentro de documentos. El alcance automático existente es análisis, lectura autorizada y evidencia, con revisión final conservada.",
+        "Los seis sectores muestran datos recibidos o enlace a fuente canónica; sin ejemplos operativos ni cifras calculadas paralelas. Revocación borra la vista y deshabilita operaciones.",
+        "Conservar deltas y tiempos exactos, cierre hasta session.closed, historial y resultados/acciones como registros distintos. Cancelar una tarea no cuelga la voz.",
+        "Distinguir pruebas sintéticas, API real, publicación y aceptación en dispositivo; no prometer perfección o conexiones no comprobadas."
+      ]
     }
   ],
   "path_ownership": [
@@ -9722,6 +9777,16 @@
       "components": [
         "SYS-DESPACHO",
         "SYS-YOD-OS",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-voice-actions.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
         "GAS-PORTERO",
         "EXT-DRIVE"
       ]
