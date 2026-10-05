@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-05.80-despacho-contexto-recuperable",
+  "revision": "2026-10-05.81-despacho-contexto-recuperable-publicado",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8137,8 +8137,8 @@
         "GAS-PORTERO",
         "EXT-DRIVE"
       ],
-      "proposal": "Recuperar la carga del expediente dentro de la misma conversación de voz. Compartir sólo lecturas autorizadas simultáneas, reintentar fallos transitorios con espera acotada, separar lectura canónica de confirmación Live y mostrar carga lenta/error/reintento sin cerrar micrófono. Entregar hechos de identidad, memoria y fuentes al agente sin cortar JSON a mitad; conservar historial exacto y capacidades sólo después de autorización/acuse. Añadir diagnóstico seguro de lectura real del servidor y prueba de recuperación en navegador.",
-      "status": "propuesto",
+      "proposal": "Recuperar la carga del expediente dentro de la misma conversación de voz. Adelantar la lectura en paralelo con WebRTC, compartir sólo lecturas autorizadas simultáneas y reintentar fallos transitorios con espera acotada. Separar lectura canónica de confirmación Live y mostrar preparación/reintento/recepción/listo/error sin cerrar micrófono. Entregar memoria y hechos completos sin cortar JSON. expediente_consultar recupera historial disponible, memoria y documentos con autoridad nueva; herramientas habilitadas tras acuses actuales. Durante esa lectura, consultas ociosas y el siguiente respaldo durable ceden paso. Conservar JSON Live exacto, IDs e historial.",
+      "status": "publicado",
       "approval": "Dirección pidió revisar su conversación con Gastón y continuar los ajustes. La conversación guardada muestra expediente no recibido, carga lenta y petición de aviso y recuperación automática. Autoriza corrección de integración y lecturas; no edición financiera ni reinicio de estudios detenidos.",
       "tests": [
         "node scripts/arquitectura.cjs --check",
@@ -8147,11 +8147,13 @@
         "node verify-portal.cjs",
         "node verify-accesos.cjs",
         "node verify-obra-app.cjs",
-        "Servidor: recuperación de lock_busy/timeout, rechazo definitivo, respuestas tardías/acuse y cierre sin activar herramientas ni repetir saludo.",
-        "Navegador: expediente demorado y primer fallo, recuperación en la misma llamada, estado visible y audio activo; aislamiento actor/caso y transcripción exacta.",
-        "Lectura real autorizada desde servidor: fase/tiempo/código seguro, sin contenido ni claves en logs y sin escrituras de negocio."
+        "379 pruebas públicas y verificadores aprobados: runs37352268464/37352268585, head1307867.",
+        "109 pruebas/sintaxis privadas: timeout/reintento sin colgar, revocación, acuses tardíos, memoria/JSON íntegro, historial fresco y consultas ociosas que ceden a contexto (run37353637156, heade2e14a2).",
+        "Chromium1280×800/390×844 con protocolo/negocio sintéticos: recuperación tras timeout en la misma llamada, historial canónico, documentos y objetivos; siete errores sin cortar audio, deltas y cierre exactos, cero errores JS (37353637156).",
+        "OpenAI real a18:10:25UTC: saludo, PCM no silencioso, transcripción, esquemas de documentos/objetivos/historial admitidos, función sintética/resultado/continuación/cierre. No se escribieron objetivos de negocio para probar.",
+        "Lecturas autorizadas del backend real confirmadas; se registraron backend_timeout/lock_busy y lecturas de8–21s. Una lectura exitosa no acredita latencia constante ni entrega de contexto a un dispositivo real."
       ],
-      "deployment": "Propuesto antes del código. Las pruebas previas no acreditan que el expediente llegue a una conversación real.",
+      "deployment": "Portal PR96 integrado en94935ab; servidor PR19/21 integrado en005edad. Recuperación automática/manual dentro de la misma llamada, estados independientes de audio, memoria/JSON completo e historial consultable con límites del contexto canónico. Lectura del backend real y diagnóstico OpenAI real confirmados por separado. El primer cotejo de salud tuvo readyfalse aunque contexto/goals estaban listos; una comprobación posterior recuperó readytrue. Consultas ociosas y respaldo diferible ceden prioridad durante la lectura. No se promete apertura instantánea de Sheets, archivo histórico completo, respuesta documental hablada comprobada ni aceptación visual/física.",
       "rollback": "Revertir integración de recuperación manteniendo JSON Live exacto, claves servidor, autorización, fuentes, fórmulas, IDs, historial/journal/outbox y objetivos confirmados. No restaurar ni borrar datos de negocio."
     }
   ],
