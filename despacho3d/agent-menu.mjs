@@ -57,7 +57,7 @@ export function mountAgentMenu({win=window,doc=document,transport=createFrameTra
    group.prepend(path);svg.append(group);
   });
   wheel.append(svg);const nucleus=el('div',undefined,'agent-menu-center');nucleus.append(el('b','Gastón'),button('Hablar',talk,!selection.can_enqueue));wheel.append(nucleus);
-  const shortcuts=el('div',undefined,'agent-menu-shortcuts');shortcuts.append(button('Escribir',()=>outside('chat')),button('Biblioteca',()=>{close();doc.querySelector('[data-resident-library]')?.click();}),button('Actualizar',()=>void refresh(),loading));wheel.append(shortcuts);frame.append(wheel,panel);dialog.append(frame);
+  const shortcuts=el('div',undefined,'agent-menu-shortcuts');shortcuts.append(button('Escribir',()=>outside('chat')),button('Ver su puesto',()=>{const id=selection.case_id;close();win.YodAgentWorkspace?.openForCase(id);}),button('Biblioteca',()=>{close();doc.querySelector('[data-resident-library]')?.click();}),button('Actualizar',()=>void refresh(),loading));wheel.append(shortcuts);frame.append(wheel,panel);dialog.append(frame);
   panel.append(el('h2',MENU_SECTORS.find(([id])=>id===section)[1]));
   const card=(title,body)=>{const n=el('article',undefined,'circulo-tarjeta');n.append(el('h3',title));if(body)n.append(el('p',body));panel.append(n);return n;};
   if(section==='pendientes'){
@@ -91,6 +91,7 @@ export function mountAgentMenu({win=window,doc=document,transport=createFrameTra
    if(conversation&&!model.history.length)panel.append(el('p','No hay eventos registrados.'));
   }else if(section==='documentos'||section==='ppp'){
    const docs=section==='ppp'?model.ppp:model.documents;
+   if(section==='ppp')panel.append(button('Abrir PPP junto a Gastón',()=>{const id=selection.case_id;close();win.YodAgentWorkspace?.openForCase(id,'ppp');}));
    panel.append(el('p',section==='ppp'?'El PPP se consulta en su fuente registrada. La versión vigente y sus cifras se leen allí.':'Fuentes registradas del expediente, con su función original.'));
    if(!conversation)panel.append(el('p','No se pudieron consultar las fuentes. Puedes actualizar.'));
    for(const d of docs){const c=card(d.title,d.role||'Fuente registrada');if(d.url)c.append(sourceLink(d));else c.append(el('p',d.source||'Sin enlace válido registrado.'));}

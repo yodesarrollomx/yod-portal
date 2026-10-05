@@ -1,5 +1,6 @@
 import {createFrameTransport, validateSelection} from './conversation.mjs';
-import {createLiveVoice} from './live-voice.mjs?v=5';
+import {createLiveVoice} from './live-voice.mjs?v=6';
+import {createWorkspace} from './agent-workspace.mjs?v=1';
 import {DurableGoals,watchGoals} from './goals.mjs';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=1';
 import {groupTranscriptFragments} from './live-transcript.mjs';
@@ -7,7 +8,7 @@ import {groupTranscriptFragments} from './live-transcript.mjs';
 const open = document.getElementById('voice-open');
 if (open) {
   const transport = coalesceGoalReads(createFrameTransport(window)), dialog = document.createElement('dialog');
-  dialog.className = 'realtime-dialog'; dialog.setAttribute('aria-labelledby','voice-title');
+  dialog.className = 'realtime-dialog has-workspace'; dialog.setAttribute('aria-labelledby','voice-title');
   // Private dynamic text always uses textContent.
   dialog.innerHTML = '<button class="voice-close" aria-label="Cerrar conversación de voz">×</button>' +
     '<p class="voice-eyebrow">Tu agente · OpenAI</p><h1 id="voice-title">Hablar con Gastón</h1>' +
@@ -18,6 +19,9 @@ if (open) {
     '<p id="voice-context" role="status">Preparando expediente y herramientas…</p><button id="voice-retry-context" hidden>Recuperar expediente</button><p id="voice-task" role="status"></p><div id="voice-work" role="status"></div><button id="voice-view-tasks">Ver pendientes y evidencia</button><button id="voice-retry-actions" hidden>Comprobar acción pendiente</button><p class="voice-note">Escuchas una voz generada por IA. Los resultados de las tareas quedan para tu revisión.</p>' +
     '<p id="voice-save" role="status">Sin conversación nueva.</p><div id="voice-transcript" role="log" aria-label="Transcripción de voz"></div>' +
     '<p class="voice-note">Puedes interrumpirlo hablando. La transcripción se respalda al finalizar; aquí verás si queda pendiente.</p>';
+  const layout=document.createElement('div'),sidebar=document.createElement('div'),workspaceHost=document.createElement('div');
+  layout.className='voice-layout';sidebar.className='voice-sidebar';workspaceHost.className='voice-workspace';
+  while(dialog.firstChild)sidebar.append(dialog.firstChild);layout.append(sidebar,workspaceHost);dialog.append(layout);
   document.body.append(dialog);
   const node = id => dialog.querySelector('#' + id);
   const fragments = []; let selection = null, generation = 0, dismissing = false;
@@ -27,6 +31,8 @@ if (open) {
     node('voice-retry-actions').hidden=event.phase!=='unconfirmed';
     if(event.phase==='confirmed')window.dispatchEvent(new CustomEvent('yod-goals-changed',{detail:null}));
   }});
+  const workspace=createWorkspace({container:workspaceHost,getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision);}});
+  window.YodVoiceWorkspace={isOpen:()=>dialog.open,show:tab=>{workspace.setTab(tab);workspaceHost.scrollIntoView({block:'nearest'});}};
   let stopWatching=null;
   const goalReader=new DurableGoals({transport,getContext:()=>{
     const current=window.YodResidentAgents?.getSelection?.();
@@ -50,6 +56,7 @@ if (open) {
         state.context_phase==='retrying'?'La carga del expediente falló. Reintentando automáticamente; la voz sigue activa…':
         state.context_phase==='installing'?'Expediente recibido. Confirmando que Gastón pueda consultarlo…':
         'Puedes hablar. Cargando expediente y herramientas en segundo plano…'+(state.context_attempts>1?' Intento '+state.context_attempts+'.':'');
+      if(state.context_phase==='ready'&&dialog.open)workspace.setActive(true);
       node('voice-retry-context').hidden=state.context_phase!=='unavailable'||state.phase!=='listening';
       node('voice-start').disabled = live || !selection?.can_enqueue;
       node('voice-stop').disabled = !live || state.phase === 'closing';
@@ -83,6 +90,7 @@ if (open) {
       const fresh = resident?.getSelection?.() || validateSelection(await transport.resolveCurrent({}));
       if (current !== generation || !dialog.open) return;
       selection = fresh; node('voice-case').textContent = fresh.name;
+      workspace.open(fresh,'browser');
       node('voice-start').disabled = !fresh.can_enqueue;
       node('voice-status').textContent = fresh.can_enqueue ?
         'Preparando conversación de voz…' : 'Tu acceso permite consultar; hablar requiere permiso de conversación.';
@@ -95,7 +103,7 @@ if (open) {
     if (!selection) return;
     fragments.length = 0; node('voice-transcript').replaceChildren(); void voice.start(selection.case_id);
   });
-  node('voice-view-tasks').addEventListener('click',()=>{if(selection)void window.YodAgentMenu?.openForCase(selection.case_id,'pendientes');});
+  node('voice-view-tasks').addEventListener('click',()=>workspace.setTab('tasks'));
   window.addEventListener('yod-goals-changed',()=>{if(stopWatching)void goalReader.read();});
   node('voice-retry-context').addEventListener('click',()=>{void voice.retryContext();});
   node('voice-retry-actions').addEventListener('click',()=>voice.retryActions());
@@ -105,11 +113,11 @@ if (open) {
     if (dismissing) return; dismissing = true;
     const wasLive = active(voice.snapshot()), result = await voice.stop();
     if (wasLive && (result?.incomplete || result?.pending)) {dismissing = false; return;}
-    generation++; selection = null; dialog.close(); open.focus(); dismissing = false;
+    generation++; selection = null; workspace.setActive(false);dialog.close(); open.focus(); dismissing = false;
   }
   dialog.querySelector('.voice-close').addEventListener('click', () => {void dismiss();});
   dialog.addEventListener('cancel', event => {event.preventDefault(); void dismiss();});
-  window.addEventListener('pagehide', () => {generation++; voice.abandon();});
+  window.addEventListener('pagehide', () => {generation++; voice.abandon();workspace.dispose();delete window.YodVoiceWorkspace;});
   // Visibility alone is not a hangup; mobile permission prompts and app switching can hide the page.
   document.addEventListener('visibilitychange', () => {if (!document.hidden) void voice.refresh();});
   let boundResident=null,unbind=null,warming=null;

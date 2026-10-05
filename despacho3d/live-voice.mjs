@@ -238,6 +238,10 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
       return false;
     }
   }
+  async function notifyBoard(revision){
+    if(!credential||!sessionId||closing||!state.context_ready&&state.context_phase!=='ready')return false;
+    try{await post('/voice/board-change',{session_id:sessionId,revision},credential,AbortSignal.timeout(8000));return true;}catch{return false;}
+  }
   function mute() {
     if (!stream || state.phase !== 'listening') return;
     const muted = !state.muted; stream.getAudioTracks().forEach(track => {track.enabled = !muted;});
@@ -254,5 +258,5 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     disconnected = true; closedResolve?.(false); publish({incomplete: true});
     void stop('Finalización incompleta al salir de esta pantalla.');
   }
-  return {prepare, start, stop, mute, retryContext, interrupt, abandon, refresh: () => status(epoch), retryActions:()=>{actions?.retry();void status(epoch);}, snapshot: () => ({...state})};
+  return {prepare, start, stop, mute, retryContext, notifyBoard, interrupt, abandon, refresh: () => status(epoch), retryActions:()=>{actions?.retry();void status(epoch);}, snapshot: () => ({...state})};
 }
