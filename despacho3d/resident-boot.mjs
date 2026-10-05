@@ -14,7 +14,7 @@ if(host){
   label.textContent=active?(voicePhase==='listening'?'Conversando contigo':voicePhase==='reconnecting'?'Recuperando voz…':voicePhase==='closing'?'Guardando conversación…':'Conectando voz…'):notices[state.phase];
   caseName.textContent=sel?.name||'Tu expediente autorizado se prepara al entrar.';
   const operable=!!resident?.getSelection?.();
-  talk.disabled=!(operable&&sel.can_enqueue&&sel.agent_ready)||active;
+  talk.disabled=!(operable&&sel.can_enqueue)||active;
   write.disabled=!operable;visit.disabled=!sel?.avatar||!window.despacho;
  }
  // Use the same canonical profile contract as the scene's pilot.

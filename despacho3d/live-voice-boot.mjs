@@ -1,5 +1,5 @@
 import {createFrameTransport, validateSelection} from './conversation.mjs';
-import {createLiveVoice} from './live-voice.mjs?v=2';
+import {createLiveVoice} from './live-voice.mjs?v=3';
 import {groupTranscriptFragments} from './live-transcript.mjs';
 
 const open = document.getElementById('voice-open');
@@ -9,13 +9,13 @@ if (open) {
   // Private dynamic text always uses textContent.
   dialog.innerHTML = '<button class="voice-close" aria-label="Cerrar conversación de voz">×</button>' +
     '<p class="voice-eyebrow">Tu agente · OpenAI</p><h1 id="voice-title">Hablar con Gastón</h1>' +
-    '<p id="voice-case">Conectando expediente…</p><p id="voice-status" role="status">Preparando conversación.</p>' +
+    '<p id="voice-case">Preparando voz…</p><p id="voice-status" role="status">Preparando conversación.</p>' +
     '<audio id="voice-audio" autoplay controls></audio><div class="voice-actions">' +
     '<button id="voice-start" disabled>Iniciar conversación</button><button id="voice-mute" disabled>Silenciar micrófono</button>' +
-    '<button id="voice-interrupt" disabled>Interrumpir</button><button id="voice-stop" disabled>Finalizar</button></div>' +
-    '<p class="voice-note">Escuchas una voz generada por IA. La transcripción se envía al historial del expediente al finalizar.</p>' +
+    '<button id="voice-stop" disabled>Finalizar</button></div>' +
+    '<p class="voice-note">Voz básica: esta conversación todavía no usa tus documentos. Escuchas una voz generada por IA.</p>' +
     '<p id="voice-save" role="status">Sin conversación nueva.</p><div id="voice-transcript" role="log" aria-label="Transcripción de voz"></div>' +
-    '<p class="voice-note">Los tiempos agrupan fragmentos de voz. Puedes hablar mientras Gastón responde y revisar la conversación en Agentes.</p>';
+    '<p class="voice-note">Puedes interrumpirlo hablando. La transcripción se respalda al finalizar; aquí verás si queda pendiente.</p>';
   document.body.append(dialog);
   const node = id => dialog.querySelector('#' + id);
   const fragments = []; let selection = null, generation = 0, dismissing = false;
@@ -25,13 +25,12 @@ if (open) {
       window.dispatchEvent(new CustomEvent('yod-voice-state',{detail:{phase:state.phase}}));
       const live = active(state);
       node('voice-status').textContent = state.notice;
-      node('voice-start').disabled = live || !selection?.can_enqueue || !selection?.agent_ready;
+      node('voice-start').disabled = live || !selection?.can_enqueue;
       node('voice-stop').disabled = !live || state.phase === 'closing';
       node('voice-mute').disabled = state.phase !== 'listening';
-      node('voice-interrupt').disabled = state.phase !== 'listening';
       node('voice-mute').textContent = state.muted ? 'Activar micrófono' : 'Silenciar micrófono';
       node('voice-mute').setAttribute('aria-pressed', String(state.muted));
-      node('voice-save').textContent = state.incomplete ? 'Finalización o respaldo incompleto. Revisa el historial en Agentes.' :
+      node('voice-save').textContent = state.status_pending && !state.incomplete ? 'Consultando el estado del respaldo. La voz puede continuar.' : state.incomplete ? 'Finalización o respaldo incompleto. Revisa el historial en Agentes.' :
         state.blocks ? state.saved + ' de ' + state.blocks + ' bloques de transcripción guardados en el historial.' +
           (state.pending ? ' Envío pendiente de ' + state.pending + '.' : '') :
           state.fragments ? state.fragments + ' fragmentos recibidos; historial pendiente de finalizar.' : 'Sin fragmentos recibidos todavía.';
@@ -52,18 +51,18 @@ if (open) {
     if (dialog.open) return;
     dialog.showModal();
     const current = ++generation; selection = null; node('voice-start').disabled = true;
-    node('voice-status').textContent = 'Recuperando el expediente autorizado…';
+    node('voice-status').textContent = 'Validando tu acceso a la voz…';
     try {
       const resident = window.YodResidentAgents;
       const fresh = resident?.getSelection?.() || validateSelection(await transport.resolveCurrent({}));
       if (current !== generation || !dialog.open) return;
       selection = fresh; node('voice-case').textContent = fresh.name;
-      node('voice-start').disabled = !fresh.can_enqueue || !fresh.agent_ready;
-      node('voice-status').textContent = fresh.can_enqueue && fresh.agent_ready ?
-        'Preparando conversación de voz…' : 'Gastón está presente. Su conexión todavía se está preparando.';
-      if (fresh.can_enqueue && fresh.agent_ready) {fragments.length=0;node('voice-transcript').replaceChildren();void voice.start(fresh.case_id);}
+      node('voice-start').disabled = !fresh.can_enqueue;
+      node('voice-status').textContent = fresh.can_enqueue ?
+        'Preparando conversación de voz…' : 'Tu acceso permite consultar; hablar requiere permiso de conversación.';
+      if (fresh.can_enqueue) {fragments.length=0;node('voice-transcript').replaceChildren();void voice.start(fresh.case_id);}
     } catch {
-      if (current === generation) node('voice-status').textContent = 'No pudimos conectar el expediente. Recuperando la conexión del despacho…';
+      if (current === generation) node('voice-status').textContent = 'No pudimos validar tu acceso. Vuelve a abrir el despacho.';
     }
   });
   node('voice-start').addEventListener('click', () => {
@@ -71,7 +70,6 @@ if (open) {
     fragments.length = 0; node('voice-transcript').replaceChildren(); void voice.start(selection.case_id);
   });
   node('voice-mute').addEventListener('click', voice.mute);
-  node('voice-interrupt').addEventListener('click', voice.interrupt);
   node('voice-stop').addEventListener('click', () => {void voice.stop();});
   async function dismiss() {
     if (dismissing) return; dismissing = true;
@@ -91,7 +89,7 @@ if (open) {
     unbind?.();boundResident=resident;
     unbind=resident.subscribe(state=>{
       const s=resident.getSelection();
-      if(!s?.can_enqueue||!s.agent_ready||state.prepared||warming===s.case_id)return;
+      if(!s?.can_enqueue||state.prepared||warming===s.case_id)return;
       warming=s.case_id;
       void voice.prepare(s.case_id).then(ok=>resident.markPrepared(s.case_id,ok)).finally(()=>{warming=null;});
     });

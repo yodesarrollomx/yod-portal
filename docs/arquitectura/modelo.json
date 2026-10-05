@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-05.76-despacho-biblioteca-publicada",
+  "revision": "2026-10-05.77-despacho-voz-basica",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8076,6 +8076,30 @@
       ],
       "deployment": "Servidor PR9/PR11 integrado y Render live en8811ee5;88 pruebas privadas aprobadas. Portal PR90 integrado en a7cd37a,371 pruebas y verificadores obligatorios aprobados. Chromium con transporte sintético en1280x900 y390x844 comprobó fuentes, búsqueda, texto exacto, referencia de página y limpieza al perder autorización, sin micrófono/Live ni errores. A las09:28UTC salud real confirmó índice preparado y reutilizado; a las09:37UTC los seis recursos HTTP publicados coincidieron byte a byte con el consumidor revisado. Son comprobaciones puntuales: se observó una reconexión del Portero y no acreditan disponibilidad continua, precisión de una respuesta real, audio del dispositivo ni fase4 completa.",
       "rollback": "Deshabilitar biblioteca indexada/revertir consumidor y servidor; conservar fuentes originales, datos/cálculos Sheets, conversaciones, journal/outbox, IDs y permisos. El índice es derivado y privado."
+    },
+    {
+      "id": "CHG-DESPACHO-VOZ-BASICA-074",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Priorizar conversación de voz básica: conectar el handoff GPT-Live exacto sin cargar ni anexar contexto/herramientas como condición de escucha. Eliminar el cupo de cuatro intentos de la aplicación que consume fallos. Mantener autenticación efímera y una sola sesión; guardar fragmentos/journal y resolver revisión canónica para historial fuera del inicio. Errores del registro no cortan audio sano. Contexto por expediente queda explícitamente separado y requiere activación comprobada posterior.",
+      "status": "implementado_local",
+      "approval": "Dirección reportó que no funciona en ningún dispositivo, corte sin respuesta y bloqueo por minutos; autorizó primero voz normal en la página y después contexto y mejoras. Menú circular como referencia visual por revisar, sin datos ficticios operativos.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Servidor: JSON exacto, voz básica sin comandos de contexto ni espera Sheets, reintento tras fallo, actor/origen/caso, cierre confirmado, journal y revisión canónica diferida.",
+        "Navegador: gesto directo, estado audible/escucha, transcripciones y cierre con transporte sintético; publicación real y audio de dispositivo separados."
+      ],
+      "deployment": "Implementación en PR92 del portal y PR12 del servidor. Portal:373 pruebas y todos los verificadores aprobados. Inicio de voz no espera Sheets ni acuses de contexto: estos dependen del avance del audio y bloqueaban la activación del micrófono. Se retira el cupo de intentos fallidos. Saludo único mediante instrucción posterior a session.started, sin reenviar configuración inicial ni esperar su acuse. Comprobación sintética de audio real acotada y optativa en servidor; prueba de navegador y despliegue pendientes de recibo.",
+      "rollback": "Revertir consumidor/servidor conservando handoff JSON, claves en servidor, autorización, fuentes, índices, IDs, journal/outbox e historial. Contexto ampliado sólo por modo explícito y pruebas."
     }
   ],
   "data_contracts": [
@@ -9016,6 +9040,32 @@
         "Límites y truncado explícitos; búsqueda léxica y ranking Jev no demuestran cobertura integral ni verdad de una respuesta.",
         "Conservar configuración Live exacta, autorización DP/carril, historial/recibos y fuentes no confiables como datos, nunca instrucciones.",
         "modifiedTime no acredita frescura de fórmulas de Sheets: pasajes de hojas marcan datos_vigentes=false; drive_leer siempre relee valores originales, sin responder desde el índice."
+      ]
+    },
+    {
+      "id": "CTR-DESPACHO-VOZ-BASICA",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "source": "Prioridad explícita de Dirección el 5-oct-2026: voz básica primero y contexto después.",
+      "input": [
+        "Credencial efímera válida para el expediente autorizado y gesto explícito de Hablar.",
+        "SDP WebRTC y JSON GPT-Live exacto ya proporcionado; claves sólo servidor."
+      ],
+      "output": [
+        "Audio remoto y escucha al recibir session.started; no depende de ACK de contexto/herramientas.",
+        "Transcripciones exactas por start_ms/end_ms, journal durable y estado de respaldo separado."
+      ],
+      "invariants": [
+        "Modo básico predeterminado no anexa contexto documental ni herramientas del expediente. Una única instrucción de identidad/saludo después de session.started no bloquea la escucha ni repite la configuración inicial. No presenta respuestas como informadas por documentos.",
+        "Mantener controles actor/caso/origen, una conversación activa y bloqueo concurrente; fallos de conexión no consumen cupo artificial de intentos.",
+        "La revisión del historial se resuelve mediante Portero en segundo plano antes de escribir; sin revisión autorizada el outbox conserva pendiente y no inventa revisión ni recibo.",
+        "Fallo de consulta de estado del registro no termina una conexión WebRTC sana. Revocación, pérdida real y cierre mantienen reglas de finalización incompleta.",
+        "Conservar JSON inicial exacto, deltas sin normalizar y transportes/audio hasta session.closed; interrupción natural al hablar, sin comandos adicionales de contexto.",
+        "Pruebas sintéticas no acreditan audio del dispositivo, conversación real ni aceptación; registrar cada evidencia por separado."
       ]
     }
   ],

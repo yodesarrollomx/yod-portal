@@ -3,7 +3,7 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const load=()=>import('../despacho3d/live-voice.mjs');
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
-function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12000,maxStatusFailures=3}={}){
+function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12000,maxStatusFailures=3,mode='expediente',failStatus=false,Stream}={}){
  const calls=[],captions=[],track={enabled:true,stops:0,stop(){this.stops++;}},
    stream={getTracks:()=>[track],getAudioTracks:()=>[track]},
    audio={srcObject:null,pause(){},play:async()=>{}};
@@ -19,18 +19,19 @@ function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12
  }
  const base={ok:true,active:true,started:true,context_ready:true,finalized:false,expires_at:Date.now()+600000,
   fragments:0,blocks:0,saved:0,pending:0,incomplete:false};
- const voice=createLiveVoice({audio,Peer,closeTimeout,disconnectGrace,maxStatusFailures,media:{getUserMedia:async()=>stream},
+ const voice=createLiveVoice({audio,Peer,Stream,closeTimeout,disconnectGrace,maxStatusFailures,media:{getUserMedia:async()=>stream},
   schedule:()=>1,cancel:()=>{},onTranscript:f=>captions.push(f),
   mint:async({case_id})=>({ok:true,case_id,token:'A'.repeat(30)+'.'+'a'.repeat(64),
    endpoint:'https://synthetic-engine.onrender.com',expires_at:Date.now()+600000}),
   fetchImpl:async(url,options)=>{
    calls.push({url,options});
-   const value=url.endsWith('/session')?{ok:true,session:{id:'live:opaque/session'},transport:{type:'webrtc',sdp:'v=0\r\nanswer'}}:
+   if(failStatus && url.endsWith('/status'))throw Error('record unavailable');
+   const value=url.endsWith('/session')?{ok:true,mode,session:{id:'live:opaque/session'},transport:{type:'webrtc',sdp:'v=0\r\nanswer'}}:
     url.endsWith('/close')?{...base,active:false,finalized:closed,fragments:1,blocks:1,saved:closed?1:0,pending:closed?0:1,incomplete:!closed}:base;
    return {ok:true,json:async()=>value};
   }});
  const event=value=>peer.channel.onmessage({data:JSON.stringify(value)});
- return {voice,calls,captions,track,event,get peer(){return peer;}};
+ return {voice,calls,captions,track,audio,event,get peer(){return peer;}};
 }
 test('WebRTC uses remote audio and oai-events, and never enables microphone before session.started',async()=>{
  const {createLiveVoice}=await load(),f=fixture(createLiveVoice);
@@ -139,4 +140,23 @@ test('a single status read failure preserves live audio and a later check recove
  failStatus=true;await voice.refresh();assert.equal(track.stops,0);assert.equal(voice.snapshot().phase,'listening');
  failStatus=false;await voice.refresh();assert.equal(track.stops,0);assert.ok(checks>=3);
  const stopping=voice.stop();await tick();peer.channel.onmessage({data:JSON.stringify({type:'session.closed'})});await stopping;
+});
+
+test('basic voice enables microphone on session.started even if every history status request fails',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice,{mode:'basic',failStatus:true});
+ await f.voice.start('synthetic-case');await tick();assert.equal(f.track.enabled,false);
+ f.event({type:'session.started'});await tick();assert.equal(f.track.enabled,true);assert.equal(f.voice.snapshot().phase,'listening');
+ for(let i=0;i<6;i++)await f.voice.refresh();
+ assert.equal(f.track.stops,0);assert.equal(f.voice.snapshot().status_pending,true);
+ assert.equal(f.calls.some(c=>c.url.endsWith('/close')),false);assert.equal(f.peer.channel.sent.length,0);
+ f.voice.interrupt();assert.equal(f.peer.channel.sent.length,0);
+ const stopping=f.voice.stop();await tick();f.event({type:'session.closed'});await stopping;
+});
+test('remote audio without streams is attached from the actual incoming track',async()=>{
+ class Stream{constructor(tracks){this.tracks=tracks;}}
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice,{mode:'basic',Stream});
+ await f.voice.start('synthetic-case');const incoming={kind:'audio'};f.peer.ontrack({streams:[],track:incoming});
+ assert.deepEqual(f.audio.srcObject.tracks,[incoming]);assert.equal(f.audio.playsInline,true);
+ f.event({type:'session.started'});await tick();assert.equal(f.track.enabled,true);assert.equal(f.voice.snapshot().mode,'basic');
+ const stopping=f.voice.stop();await tick();f.event({type:'session.closed'});await stopping;
 });

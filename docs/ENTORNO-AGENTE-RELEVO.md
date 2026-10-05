@@ -186,3 +186,16 @@ Fórmulas pueden recalcular sin modificar fecha de Drive: pasajes de hojas no so
 88 pruebas privadas y371 de portal aprobadas; pruebas navegador, publicación HTTP e índice real se registran separadas en plan privado. No marcar fase4 completa: Obsidian/NotebookLM/Notion por verificar, cobertura inicial limitada y aceptación de consulta real pendiente. El índice evita OCR completo repetido, no elimina latencia de contexto del Portero. Reversión off/revert sin borrar originales, historial o datos.
 
 Recepción de publicación de Biblioteca: PR90 integrado en a7cd37a; seis recursos HTTP del consumidor coinciden con la versión revisada. Chromium1280×900/390×844 validó fuentes, búsqueda, texto exacto, página y limpieza por pérdida de autorización, sin errores ni micrófono/Live. Render8811ee5 activo; salud real confirmó índice preparado/reutilizado. No certificar disponibilidad continua: la conexión del Portero puede requerir recuperación. Próximo recorrido de Dirección: Biblioteca, pregunta del expediente, abrir referencia original y conversación con Gastón; audio real y precisión de la respuesta pendientes.
+
+
+## 18. Corrección de arranque de voz básica · 5-oct-2026
+
+Dirección reportó que la voz no conecta o se corta sin hablar, seguida de una espera de minutos. PR92 del portal y PR12 del servidor separan conversación y expediente: micrófono activo por session.started, sin esperar acuses de contexto ni Sheets. Live confirma anexos cuando avanza la línea de audio; esperar sus acuses antes de activar audio creaba una dependencia circular.
+
+Modo básico identificado en interfaz: no usa documentos ni herramientas del expediente. Saludo único después del inicio, sin repetir configuración ni bloquear escucha. Biblioteca y conversación escrita mantienen sus capacidades documentales. No presentar voz básica como agente autónomo completo.
+
+Se retira el cupo local de cuatro intentos/10 min; permanece una conversación activa autorizada. Fallo al consultar respaldo no corta WebRTC sano. Conservar claves en servidor, JSON exacto, IDs opacos, deltas, agrupación temporal, journal/outbox y revisión canónica fuera del arranque. Audio/transporte permanecen hasta session.closed; timeout/desconexión significan finalización incompleta.
+
+Portal373 pruebas y verificadores aprobados en18d8ca6; servidor94 pruebas/sintaxis en09cc33b, integrado en9e4837a. Navegador y despliegue pendientes de recibo. Diagnóstico optativo YOD_VOICE_DIAGNOSTIC_ON_START=true: sesión sintética acotada sin expedientes ni escrituras de negocio; clave existente sólo servidor, estados seguros. Desactivar al terminar; no sustituye audio físico del dispositivo.
+
+Orden: voz sonora estable; contexto/documentos Jev en segundo plano sin bloquear audio; herramientas de sala y pendientes/acciones con criterios y recibos. Menú circular pendiente de revisión visual/operativa. No marcar aceptación o todos los agentes operativos por salud.
