@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-04.66-despacho-actividad-cierre · 2026-10-04.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-04.67-despacho-visitas · 2026-10-04.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -439,3 +439,17 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - El reductor local no certifica identidad, permisos ni persistencia; fase 1.2 requiere adapter de servidor autorizado.
 - Demostración siempre sintética, sin credenciales, red, almacenamiento ni datos privados.
 - Mantener message_id, job_id, event_id y request_id existentes; vincular sin migración ni sustitución de historial.
+
+## CTR-DESPACHO-VISITAS-V1
+
+- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, EXT-DRIVE.
+- Evidencia: Registro durable de visitas de la sala; independiente del contrato de conversación..
+- Entrada/campos: `readVisits: case_id; recordVisit: case_id, request_id, visit_id, expected_revision, space_id, visitor_kind, reason_code, arrival_ref.`, `Actor, libro y caso canónico resueltos y reautorizados por servidor. El navegador no elige actor ni destino de almacenamiento.`.
+- Salida: Historial acotado con revisión y recibos persistidos; read no crea pestañas., ACK ligado a visita, caso, solicitud y actor con revision y receipt_id; reintento idéntico recupera el mismo recibo aunque avanzó la revisión..
+
+- ScriptLock, reautorización vigente dentro del bloqueo, CAS y batchUpdate único que conserva visita, recibo y estado.
+- Mismo request_id con otro contenido o actor se rechaza; visit_id ya usado no se reatribuye.
+- Llegada informada por cliente acredita registro, no verificación física por servidor, ejecución de herramientas ni aprobación.
+- Horas del servidor; ningún nombre, secreto, URL o identificador de libro privado en archivos públicos.
+- No modifica conversación, trabajos, metas ni sus IDs; pruebas conectadas usan archivo sintético aislado.
+- Solicitud ambigua conserva IDs; nunca cambia revisión y reintenta automáticamente una escritura sin reconciliar.

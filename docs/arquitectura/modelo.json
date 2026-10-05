@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-04.66-despacho-actividad-cierre",
+  "revision": "2026-10-04.67-despacho-visitas",
   "checked_at": "2026-10-04",
   "priorities": [
     "vender_mas",
@@ -7852,7 +7852,7 @@
         "SYS-DESPACHO"
       ],
       "proposal": "Cierre de 1.1: registrar publicación y aceptación HTTPS de PR78, corregir lectura fallida de README.md (documentación en cloud/README.txt, repositorio accesible) y ajustar singular/estado en avisos de demostración. Sin cambio de contrato, fuentes, permisos o persistencia.",
-      "status": "implementado_local",
+      "status": "publicado",
       "approval": "Continuación y tandas autorizadas por Dirección el 4-oct-2026.",
       "tests": [
         "node --test tests/*.cjs",
@@ -7863,8 +7863,33 @@
         "node verify-obra-app.cjs",
         "Aceptación HTTPS de avisos de demostración"
       ],
-      "deployment": "Ajustes documentales y de texto en rama; pendiente PR y comprobación HTTPS.",
+      "deployment": "PR #79 integrado; Pages 027a7caecb284acd30dd6c29eafdcfdc2b7a0151 y checks comprobados. Avisos HTTPS verificados y captura privada guardada.",
       "rollback": "Revertir este PR; conserva contrato y publicación de PR78."
+    },
+    {
+      "id": "CHG-DESPACHO-VISITAS-067",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Acción 1.2: registro de visitas separado de conversación, autorizado por sesión vigente y DP en Portero. CAS y recibo durable en una escritura atómica de Sheets; mismo ID/contenido/actor reconoce reintento. Restaurar bitácora al abrir perfil, conservar solicitud ambigua, cancelar respuesta tardía y fallar cerrado. Pruebas aisladas; instalación y aceptación productiva se registran por separado.",
+      "status": "implementado_local",
+      "approval": "Dirección autoriza continuar acción 1.2 en tandas de aproximadamente treinta minutos el 4-oct-2026. Sin ampliar permisos ni usar producción para pruebas.",
+      "tests": [
+        "node --test tests/despacho-visitas.test.cjs",
+        "node --test tests/*.cjs",
+        "node scripts/arquitectura.cjs --check",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Prueba aislada Sheets: guardar, recrear adaptador, leer y reintentar sin duplicado; conflicto y revocación",
+        "Capturas de recibo e historial recuperado; ninguna escritura de prueba en libro de negocio"
+      ],
+      "deployment": "Servidor y cliente candidatos preparados; interruptor apagado. Preflight UI de Portero v63 y build r6-fast comprobados. 14 comprobaciones conectadas aprobadas en archivo sintético; conector confirma dos visitas, recibos correlacionados y revisión 2. Instalación de router, implementación Apps Script y encendido pendientes.",
+      "rollback": "Apagar ENTORNO_VISITAS_PERSISTENTES y revertir PR o volver a la versión previa de Portero. Conservar pestañas e historial; no borrar datos."
     }
   ],
   "data_contracts": [
@@ -8727,6 +8752,32 @@
         "Demostración siempre sintética, sin credenciales, red, almacenamiento ni datos privados.",
         "Mantener message_id, job_id, event_id y request_id existentes; vincular sin migración ni sustitución de historial."
       ]
+    },
+    {
+      "id": "CTR-DESPACHO-VISITAS-V1",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "source": "Registro durable de visitas de la sala; independiente del contrato de conversación.",
+      "input": [
+        "readVisits: case_id; recordVisit: case_id, request_id, visit_id, expected_revision, space_id, visitor_kind, reason_code, arrival_ref.",
+        "Actor, libro y caso canónico resueltos y reautorizados por servidor. El navegador no elige actor ni destino de almacenamiento."
+      ],
+      "output": [
+        "Historial acotado con revisión y recibos persistidos; read no crea pestañas.",
+        "ACK ligado a visita, caso, solicitud y actor con revision y receipt_id; reintento idéntico recupera el mismo recibo aunque avanzó la revisión."
+      ],
+      "invariants": [
+        "ScriptLock, reautorización vigente dentro del bloqueo, CAS y batchUpdate único que conserva visita, recibo y estado.",
+        "Mismo request_id con otro contenido o actor se rechaza; visit_id ya usado no se reatribuye.",
+        "Llegada informada por cliente acredita registro, no verificación física por servidor, ejecución de herramientas ni aprobación.",
+        "Horas del servidor; ningún nombre, secreto, URL o identificador de libro privado en archivos públicos.",
+        "No modifica conversación, trabajos, metas ni sus IDs; pruebas conectadas usan archivo sintético aislado.",
+        "Solicitud ambigua conserva IDs; nunca cambia revisión y reintenta automáticamente una escritura sin reconciliar."
+      ]
     }
   ],
   "path_ownership": [
@@ -9292,6 +9343,16 @@
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-visitas.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
       ]
     }
   ]

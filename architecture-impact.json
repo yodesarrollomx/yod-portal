@@ -1,19 +1,23 @@
 {
-  "model_revision": "2026-10-04.66-despacho-actividad-cierre",
-  "proposal_id": "CHG-DESPACHO-ACTIVIDAD-CIERRE-066",
+  "model_revision": "2026-10-04.67-despacho-visitas",
+  "proposal_id": "CHG-DESPACHO-VISITAS-067",
   "components": [
     "SYS-YOD-OS",
-    "SYS-DESPACHO"
+    "SYS-DESPACHO",
+    "GAS-PORTERO",
+    "EXT-DRIVE"
   ],
-  "summary": "Cierre de 1.1: registrar publicación y aceptación HTTPS de PR78, corregir lectura fallida de README.md (documentación en cloud/README.txt, repositorio accesible) y ajustar singular/estado en avisos de demostración. Sin cambio de contrato, fuentes, permisos o persistencia.",
+  "summary": "Acción 1.2: registro de visitas separado de conversación, autorizado por sesión vigente y DP en Portero. CAS y recibo durable en una escritura atómica de Sheets; mismo ID/contenido/actor reconoce reintento. Restaurar bitácora al abrir perfil, conservar solicitud ambigua, cancelar respuesta tardía y fallar cerrado. Pruebas aisladas; instalación y aceptación productiva se registran por separado.",
   "tests": [
+    "node --test tests/despacho-visitas.test.cjs",
     "node --test tests/*.cjs",
     "node scripts/arquitectura.cjs --check",
     "node verify-os.cjs",
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "Aceptación HTTPS de avisos de demostración"
+    "Prueba aislada Sheets: guardar, recrear adaptador, leer y reintentar sin duplicado; conflicto y revocación",
+    "Capturas de recibo e historial recuperado; ninguna escritura de prueba en libro de negocio"
   ],
-  "rollback": "Revertir este PR; conserva contrato y publicación de PR78."
+  "rollback": "Apagar ENTORNO_VISITAS_PERSISTENTES y revertir PR o volver a la versión previa de Portero. Conservar pestañas e historial; no borrar datos."
 }
