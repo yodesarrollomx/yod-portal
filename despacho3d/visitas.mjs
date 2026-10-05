@@ -18,7 +18,7 @@ export function validarVisitas(v,caseId){
  });
  return clone(v);
 }
-const codes=new Set(['unauthorized','session_changed','case_mismatch','schema_not_initialized','stale_revision','request_id_reused','visit_id_reused','lock_busy','storage_capacity','invalid_persistence']);
+const codes=new Set(['backend_unavailable','invalid_snapshot','transport_busy','timeout','session_pending','unauthorized','session_changed','case_mismatch','schema_not_initialized','stale_revision','request_id_reused','visit_id_reused','lock_busy','storage_capacity','invalid_persistence']);
 export class Visitas {
  constructor({transport,uuid=()=>crypto.randomUUID(),notify=()=>{}}){Object.assign(this,{transport,uuid,notify,caseId:null,epoch:0,snapshot:null,pending:null,queue:[],busy:false,status:'off',error:null});}
  state(){return {status:this.status,error:this.error,queued:this.queue.length,snapshot:this.snapshot?clone(this.snapshot):null,pending:this.pending?clone(this.pending):null};}

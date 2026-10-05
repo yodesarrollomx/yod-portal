@@ -7,7 +7,7 @@
     "GAS-PORTERO",
     "EXT-DRIVE"
   ],
-  "summary": "Cerrar acción 1.2: instalar exclusivamente readVisits/recordVisit y preparación de dos pestañas vacías en Portero existente; publicar conservando URL/permisos/configuración. Verificar lectura autorizada antes de encender ENTORNO_VISITAS_PERSISTENTES por PR. Cotejar visita de recorrido autorizado e historial recuperado sin duplicación, con capturas y recibos privados. Sin pruebas sintéticas en libro de negocio.",
+  "summary": "Cerrar acción 1.2: instalar exclusivamente readVisits/recordVisit y preparación de dos pestañas vacías en Portero existente; publicar conservando URL/permisos/configuración. Verificar lectura autorizada antes de encender ENTORNO_VISITAS_PERSISTENTES por PR. Cotejar visita de recorrido autorizado e historial recuperado sin duplicación, con capturas y recibos privados. Sin pruebas sintéticas en libro de negocio. Diagnóstico acotado: exponer estado, código permitido y revisión en DOM, y helper editor-only de lectura sin escritura para contrastar recuperación.",
   "tests": [
     "node --test tests/*.cjs",
     "node scripts/arquitectura.cjs --check",

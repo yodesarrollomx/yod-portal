@@ -55,7 +55,7 @@ test('visitas persistentes leen antes de registrar y muestran solo recibos confi
  assert.deepEqual(pedidos.map(p=>p.method),['readVisits','recordVisit','readVisits']);assert.equal(rows.length,1);
  await boton.emit('click');const hoja=doc.body.children[0];
  assert.equal(hoja.all(n=>n.attrs['data-visit-id']===rows[0].visit_id).length,1);
- assert.match(hoja.textContent,/Guardada/);assert.doesNotMatch(hoja.textContent,/no se escribe en Sheets/);
+ assert.match(hoja.textContent,/Guardada/);const estado=hoja.all(n=>n.attrs['aria-label']==='Visitas guardadas en el servidor')[0];assert.equal(estado.attrs['data-visits-status'],'ready');assert.equal(estado.attrs['data-visits-error'],'');assert.equal(estado.attrs['data-visits-revision'],'1');assert.doesNotMatch(hoja.textContent,/no se escribe en Sheets/);
  sesion.poner(null);assert.equal(doc.body.children.length,0);
 });
 const textos=n=>n.all(()=>true).map(x=>x._text).join(' ');

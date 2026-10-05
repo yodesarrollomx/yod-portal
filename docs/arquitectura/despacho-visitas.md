@@ -40,3 +40,7 @@ Las pruebas Node usan dobles de Sheets: atomicidad, reinicio de adaptador, pérd
 El 4-oct-2026 se ejecutó la comprobación conectada: 14 checks aprobados. La lectura independiente por conector confirmó exactamente dos visitas, dos recibos correlacionados y revisión 2; la pestaña original conserva su marcador. La captura y el archivo sintético quedan en el plan privado. No se instaló el router ni se actualizó la versión activa de Apps Script. Esta prueba acredita una visita y recibo idénticos después de crear otro adaptador, reintento sin duplicado, pérdida de ACK recuperable, CAS y actor ajeno rechazados y revocación sin escritura. Resultado capturado y filas cotejadas por el conector de Sheets. No llamar endpoints de negocio para probar escrituras ni usar clientes reales como datos de prueba.
 
 Reversión: apagar el interruptor y volver a la versión previa de Portero. Conservar archivo, pestañas, visitas, recibos e historial.
+
+## Seguimiento del encendido
+
+PR81 y Pages cc791ad2efc2ad3a18ab79628d7a6066dbfcb19f comprobados. Lectura inicial autenticada devolvió cero visitas. Recorrido autorizado a juntas guardó una visita/recibo, revisión 1, cotejados por conector. La lectura UI posterior no confirmó el historial; no se repitió la escritura. El helper editor-only YOD_verificarLecturaVisitas (preparado en HEAD, no añadido a v64) devolvió el snapshot correcto y pasó el validador cliente. Se prepara diagnóstico DOM con status/error/revision permitidos; no dar 1.2 por cerrado hasta recuperar desde UI tras recargar.

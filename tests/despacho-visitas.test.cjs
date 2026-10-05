@@ -15,8 +15,8 @@ test('Portero visits link resolves canonical book and reauthenticates; setup nee
  assert.deepEqual(copy(captured.resolveCanonicalWorkbook()),{case_id:config.case_id,spreadsheet_id:config.operational_book});
  assert.equal(captured.authorize(request).actor_id,actor.actor_id);assert.equal(calls,2);
  actor=null;assert.equal(captured.authorize(request).allowed,false);assert.equal(link.yodDespachoVisits_(request).error,'unauthorized');
- link.YOD_prepararVisitas();assert.equal(captured.authorize({}).can_setup,true);
- active='another:synthetic';assert.equal(captured.authorize({}).allowed,false);assert.throws(()=>link.YOD_prepararVisitas(),/unauthorized/);
+ link.YOD_verificarLecturaVisitas();assert.equal(captured.authorize({}).allowed,true);link.YOD_prepararVisitas();assert.equal(captured.authorize({}).can_setup,true);
+ active='another:synthetic';assert.equal(captured.authorize({}).allowed,false);assert.throws(()=>link.YOD_prepararVisitas(),/unauthorized/);assert.throws(()=>link.YOD_verificarLecturaVisitas(),/unauthorized/);
 });
 function fixture(){
  const db={spreadsheetId:'BOOK-SYNTHETIC',sheets:[{properties:{sheetId:1,title:'Business untouched',gridProperties:{rowCount:10,columnCount:3}},rows:[['original']]}]};
