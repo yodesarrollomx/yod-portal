@@ -7912,7 +7912,7 @@
         "Contraste exacto de módulos y router guardados; pruebas aisladas del enlace",
         "Lectura autenticada antes de encendido; recorrido autorizado, recarga y cotejo con recibos privados"
       ],
-      "deployment": "PR81 integrado, Pages cc791ad2efc2ad3a18ab79628d7a6066dbfcb19f y checks comprobados; Portero v64 mantiene endpoint/permisos. Lectura OS inicial muestra historial 0; recorrido a juntas conserva una visita y recibo en Sheets, revisión 1. Recuperación UI posterior falló: lectura directa editor-only devuelve snapshot válido aceptado por validador cliente. Diagnóstico DOM preparado y aceptación completa pendiente.",
+      "deployment": "PR81/PR82 y Pages cc791ad2efc2ad3a18ab79628d7a6066dbfcb19f/a2ba410557313beec449f9096c46aa38c7e3f87c comprobados, checks aprobados y fuentes servidas cotejadas. Portero v64 conserva endpoint/permisos. Lectura OS inicial 0; llegada autorizada a juntas conserva exactamente una visita/recibo, revisión 1. Tras fallos de lectura documentados, la recarga recuperó esa misma visita y recibo en UI, sesión nueva vacía; DOM ready, error vacío, revisión 1. Actualización de solo lectura también ready; conector conserva una fila y revisión 1. Recuperación funcional acreditada; causa de fallos previos y estabilidad continua no acreditadas. Helper diagnóstico editor-only en HEAD, no en v64.",
       "rollback": "Apagar ENTORNO_VISITAS_PERSISTENTES y volver a versión previa de la misma implementación Portero; conservar pestañas, filas e historial."
     }
   ],
