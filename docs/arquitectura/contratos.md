@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-04.64-despacho-vista-legible · 2026-10-04.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-04.65-despacho-actividad · 2026-10-04.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -426,3 +426,16 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Room sigue siendo ejecutor acotado y no acepta teclado; terminal manual es interactiva y sus cambios no se guardan automáticamente en Sheets.
 - Un proceso activo; no stop automático al conectar/desconectar; heartbeat y revocación cierran el canal.
 - Ventana local debe permanecer abierta para el puente; móvil en otro equipo conserva chat pero no tiene acceso a localhostChromebook.
+
+## CTR-DESPACHO-ACTIVIDAD-V1
+
+- Componentes: SYS-YOD-OS, SYS-DESPACHO.
+- Evidencia: Plan del Despacho, acción 1.1. Especificación nueva, no RPC del servidor vigente..
+- Entrada/campos: `Actividad con IDs estables y vínculos a IDs canónicos existentes; eventos ligados a actividad y caso.`, `Cada evento identifica secuencia, fuente, evidencia y hora; el adaptador deberá autorizar antes de aceptar eventos de servidor.`.
+- Salida: Proyección de estados validada y reproducción de eventos, con recibo local explícito., Reintento idéntico no duplica; identidad distinta, desorden, cambios de contenido y eventos tardíos se rechazan..
+
+- Llegar confirma desplazamiento, no completa la consulta ni concede aprobación.
+- Resultado terminado requiere la misma referencia de entrega presentada para revisión.
+- El reductor local no certifica identidad, permisos ni persistencia; fase 1.2 requiere adapter de servidor autorizado.
+- Demostración siempre sintética, sin credenciales, red, almacenamiento ni datos privados.
+- Mantener message_id, job_id, event_id y request_id existentes; vincular sin migración ni sustitución de historial.

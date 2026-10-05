@@ -1,20 +1,20 @@
 {
-  "model_revision": "2026-10-04.64-despacho-vista-legible",
-  "proposal_id": "CHG-DESPACHO-VISTA-LEGIBLE-064",
+  "model_revision": "2026-10-04.65-despacho-actividad",
+  "proposal_id": "CHG-DESPACHO-ACTIVIDAD-065",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO"
   ],
-  "summary": "Dirección solicita que un agente pueda observar y operar la oficina. Añadir vista accesible DOM/SVG con los lugares y obstáculos de la escena, estado observable del visitante y del agente, alternativa automática sin WebGL y controles existentes bajo perfil autorizado. Compartir geometría y navegación, registrar visitas solo tras llegada confirmada, cancelar al retirar perfil y distinguir plano/3D de actividad de negocio. Sin nuevos permisos, endpoints, almacenamiento ni datos operativos públicos.",
+  "summary": "Acción 1.1 autorizada: contrato versionado de actividad que separa desplazamiento, ejecución y resultado; demostración independiente con datos sintéticos. Validar procedencia, secuencia, estado terminal, identidad y reintento idéntico. Conservar IDs de conversación/trabajos; sin cambiar RPC, conceder permisos, ejecutar herramientas ni persistir visitas.",
   "tests": [
-    "node --test tests/despacho-vista-legible.test.cjs",
+    "node --test tests/despacho-actividad.test.cjs",
     "node --test tests/*.cjs",
     "node scripts/arquitectura.cjs --check",
     "node verify-os.cjs",
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "Capturas de alternativa sin WebGL, llegada, cancelación y comparación geométrica con 3D en entorno aislado"
+    "Capturas HTTPS de solicitud, llegada, resultado y reintento sintéticos"
   ],
-  "rollback": "Revertir PR o apagar OFICINA_LEGIBLE. Se conserva motor 3D, permisos DP y fuentes operativas."
+  "rollback": "Revertir PR. Demostración aislada sin afectar sala, historial, backend o visitas actuales."
 }

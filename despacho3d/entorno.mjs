@@ -73,6 +73,7 @@ export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,vol
  raiz.appendChild(h('button',{type:'button',class:'entorno-cerrar','aria-label':'Cerrar el entorno',texto:'×',on:{click:()=>alCerrar()}}));
  raiz.appendChild(h('h1',{id:'entorno-titulo',texto:'Entorno del agente'}));
  raiz.appendChild(h('p',{class:'entorno-aviso',texto:'Etapas 1 y 2: aquí se ven los espacios, lo que el agente puede hacer en cada uno y quién los ha visitado en esta sesión. Todo está en solo observar: no se envía nada, no se crea nada y no se escribe en Sheets.'}));
+ raiz.appendChild(h('p',{},[h('a',{href:'actividad-demo.html',target:'_blank',rel:'noopener',texto:'Ver prueba de actividad (datos sintéticos)'})]));
  const lista=h('div',{class:'entorno-lista'});
  const bitacora=h('ol',{class:'entorno-bitacora','aria-live':'polite'});
  const limpiar=n=>{while(n.firstChild)n.removeChild(n.firstChild);};
