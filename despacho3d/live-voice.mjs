@@ -4,7 +4,7 @@ import {transcriptFragment} from './live-transcript.mjs';
 const NOTICES = {
   unauthorized: 'La sesión cambió. Vuelve a abrir el despacho.',
   busy: 'Gastón tiene una conversación en curso. Espera un momento.',
-  rate_limited: 'Espera unos minutos antes de iniciar otra conversación.',
+  rate_limited: 'Vuelve a intentar en un momento.',
   auth_unavailable: 'OpenAI no aceptó la conexión de voz.',
   provider_busy: 'OpenAI está ocupado. Vuelve a intentar en un momento.',
   observer_unavailable: 'No pudimos conectar el registro de conversación. Vuelve a intentar.',
@@ -12,15 +12,15 @@ const NOTICES = {
   context_unavailable: 'No pudimos recuperar el expediente de Gastón.',
 };
 export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
-  media = globalThis.navigator?.mediaDevices, Peer = globalThis.RTCPeerConnection,
+  media = globalThis.navigator?.mediaDevices, Peer = globalThis.RTCPeerConnection, Stream = globalThis.MediaStream,
   audio, onChange = () => {}, onTranscript = () => {}, now = Date.now,
   schedule = setInterval, cancel = clearInterval, closeTimeout = 20000, disconnectGrace = 12000, maxStatusFailures = 3} = {}) {
   let epoch = 0, stream = null, peer = null, channel = null, credential = null, sessionId = null,
     poll = null, controller = null, polling = false, closing = null, began = 0, started = false,
     contextReady = false, finalSeen = false, disconnected = false, closedResolve = null, sequence = 0,
-    disconnectTimer = null, statusFailures = 0, connectedAt = 0, prepared = null, preparing = null;
+    disconnectTimer = null, statusFailures = 0, connectedAt = 0, prepared = null, preparing = null, mode = null;
   let state = {phase: 'idle', notice: '', muted: false, fragments: 0, blocks: 0, saved: 0, pending: 0,
-    incomplete: false, finalized: false};
+    incomplete: false, finalized: false, status_pending: false, mode: null};
   const seen = new Set();
   const publish = patch => {state = {...state, ...patch}; onChange({...state});};
   async function post(path, data, current = credential, signal) {
@@ -106,15 +106,16 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     try {
       const result = await post('/voice/status', {session_id: sessionId}, credential, AbortSignal.timeout(12000));
       if (token !== epoch || closing) return;
-      statusFailures = 0;
-      report(result); contextReady = result.started === true && result.context_ready === true; ready();
+      statusFailures = 0; publish({status_pending: false});
+      report(result); contextReady = mode === 'basic' || result.started === true && result.context_ready === true; ready();
       if (!result.active || now() >= result.expires_at) void stop('La sesión terminó. Puedes iniciar otra.');
       else if (state.phase === 'starting' && connectedAt && now() - connectedAt > 60000) void stop('No se confirmó el inicio. Vuelve a intentar.');
     } catch (error) {
       if (token === epoch && !closing) {
         if (error?.code === 'unauthorized') {prepared = null; void stop('La sesión venció. Vuelve a abrir el despacho.');}
-        else if (++statusFailures >= maxStatusFailures) void stop('No se pudo recuperar el registro de la conversación.');
-        else publish({notice: 'La voz continúa. Recuperando conexión con el registro…'});
+        else if (error?.code === 'session_unavailable') void stop('La sesión de voz terminó. Puedes volver a intentar.');
+        else {statusFailures++;publish({status_pending: true, notice: statusFailures >= maxStatusFailures ?
+          'La voz sigue conectada. El estado del respaldo está pendiente.' : 'La voz continúa. Recuperando conexión con el registro…'});}
       }
     }
     finally {if (token === epoch) polling = false;}
@@ -131,9 +132,9 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   async function start(caseId) {
     if (closing || !['idle','error'].includes(state.phase)) return false;
     const token = ++epoch; controller = new AbortController(); began = now();
-    started = contextReady = finalSeen = disconnected = false; seen.clear(); sequence = 0; polling = false; statusFailures = 0; connectedAt = 0;
-    publish({phase: 'starting', notice: 'Abriendo micrófono y expediente…', fragments: 0, blocks: 0, saved: 0,
-      pending: 0, incomplete: false, finalized: false});
+    mode = null; started = contextReady = finalSeen = disconnected = false; seen.clear(); sequence = 0; polling = false; statusFailures = 0; connectedAt = 0;
+    publish({phase: 'starting', notice: 'Abriendo el micrófono…', fragments: 0, blocks: 0, saved: 0,
+      pending: 0, incomplete: false, finalized: false, status_pending: false, mode: null});
     try {
       if (typeof media?.getUserMedia !== 'function' || typeof Peer !== 'function' || !audio)
         throw Error('Este navegador no admite voz en tiempo real.');
@@ -146,9 +147,13 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
       if (token !== epoch || closing) return false;
       if (minted.error) throw minted.error;
       credential = minted.value; peer = new Peer();
+      audio.autoplay = true; audio.playsInline = true; audio.setAttribute?.('playsinline','');
+      publish({notice: 'Conectando voz…'});
       peer.ontrack = event => {
         if (token !== epoch) return;
-        audio.srcObject = event.streams[0];
+        const remote = event.streams?.[0] || (typeof Stream === 'function' && event.track ? new Stream([event.track]) : null);
+        if (!remote) {publish({notice: 'Esperando el audio de Gastón…'});return;}
+        audio.srcObject = remote;
         Promise.resolve(audio.play?.()).catch(() => publish({notice: 'Pulsa reproducir en el audio para escuchar a Gastón.'}));
       };
       for (const track of stream.getAudioTracks()) {track.enabled = false; peer.addTrack(track, stream);}
@@ -200,6 +205,8 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
         await post('/voice/close', {session_id: id}, current, AbortSignal.timeout(closeTimeout)).catch(() => {});
         return false;
       }
+      mode = result.mode === 'basic' ? 'basic' : 'expediente'; contextReady = mode === 'basic';
+      publish({mode});
       sessionId = id; // Opaque; never parse or rebuild.
       await peer.setRemoteDescription({type: 'answer', sdp}); connectedAt = now();
       poll = schedule(() => {void status(token);}, 2000); void status(token);
@@ -220,9 +227,8 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   }
   function interrupt() {
     if (channel?.readyState !== 'open' || state.phase !== 'listening') return;
-    channel.send(JSON.stringify({type: 'session.instructions.append', event_id: 'interrupt-' + now(),
-      delegation_id: null, content: 'Deja de hablar ahora y escucha al usuario.'}));
-    publish({notice: 'Puedes continuar hablando.'});
+    // GPT-Live handles interruption from incoming speech; do not send extra setup/command messages.
+    publish({notice: 'Interrúmpelo hablando. El micrófono sigue activo.'});
   }
   function abandon() {
     // Navigation cannot guarantee a final event. Never report it as a confirmed close.
