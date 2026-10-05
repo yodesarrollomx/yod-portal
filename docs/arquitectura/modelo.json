@@ -8016,7 +8016,7 @@
         "EXT-DRIVE"
       ],
       "proposal": "Conectar al chat y a la voz de Gastón la lectura autorizada de Drive, PDF con páginas visuales y OCR, Sheets por pestaña/rango y Jev para orientar y ordenar la investigación. Conservar el JSON inicial Live exacto; añadir herramientas sólo después de session.started. La primera aceptación es lectura de plano con página, posición y legibilidad, sin iniciar estudio inmobiliario.",
-      "status": "propuesto",
+      "status": "publicado",
       "approval": "Dirección solicitó revisar los pedidos del agente e instalar capacidades documentales y Jev; lectura y despliegue autorizados en este chat.",
       "tests": [
         "node --test tests/*.cjs",
@@ -8027,7 +8027,7 @@
         "node verify-obra-app.cjs",
         "Servidor privado: funciones Responses, continuación Live, duplicados, cierre, errores Drive/Jev, PDF visual, paginación y fuentes; ejemplos sintéticos."
       ],
-      "deployment": "Propuesta registrada antes del código; despliegue y aceptación de PDF real se acreditan por separado.",
+      "deployment": "Servidor privado PR3/PR5/PR6 integrados y publicados en 9d27b746; 73 pruebas aprobadas. HTTP confirma Drive/PDF/Jev y lectura visual real del PDF con Jev y recibo privado (Actions run37274467241, reintento tras corregir acceso lector). Archivos originales del expediente conservados; permisos lector comprobados. Audio real y aceptación de la respuesta por Dirección siguen pendientes.",
       "rollback": "Apagar YOD_RESEARCH_ENABLED; conservar voz, expediente, outbox, conversaciones e IDs."
     }
   ],
