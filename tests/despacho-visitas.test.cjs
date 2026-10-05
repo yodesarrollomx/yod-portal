@@ -2,6 +2,22 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),crypto=require('node:crypto');
 const context={};vm.runInNewContext(fs.readFileSync('despacho-runtime/source/server/visitas.gs','utf8'),context);
 const copy=v=>JSON.parse(JSON.stringify(v));
+test('Portero visits link resolves canonical book and reauthenticates; setup needs current editor',()=>{
+ let actor={actor_id:'actor:synthetic'},active='editor:synthetic',calls=0,captured;
+ const config={case_id:'CASE-SYNTHETIC',operational_book:'BOOK-SYNTHETIC',editors:[active]};
+ const link={YOD_DESPACHO_CONFIG:config,Sheets:{},LockService:{getScriptLock:()=>({})},Utilities:{getUuid:()=> 'RECEIPT-SYNTHETIC'},
+  Session:{getActiveUser:()=>({getEmail:()=>active})},yodDespachoHash_:()=> 'digest',yodDespachoActor_:()=>{calls++;return actor;},
+  createOfficeVisitsBackend:deps=>{captured=deps;return {readVisits:p=>({ok:true,payload:p}),setup:()=>({ok:true,created:true})};},console:{log:()=>{}}};
+ vm.runInNewContext(fs.readFileSync('despacho-runtime/source/server/visitas-portero.gs','utf8'),link);
+ const request={operation:'readVisits',payload:{case_id:config.case_id},actor_id:'spoofed',spreadsheet_id:'spoofed'};
+ assert.equal(link.yodDespachoVisits_({operation:'setupVisits'}).error,'invalid_operation');assert.equal(calls,0);
+ assert.equal(link.yodDespachoVisits_(request).ok,true);assert.equal(captured.serverContext,request);
+ assert.deepEqual(copy(captured.resolveCanonicalWorkbook()),{case_id:config.case_id,spreadsheet_id:config.operational_book});
+ assert.equal(captured.authorize(request).actor_id,actor.actor_id);assert.equal(calls,2);
+ actor=null;assert.equal(captured.authorize(request).allowed,false);assert.equal(link.yodDespachoVisits_(request).error,'unauthorized');
+ link.YOD_prepararVisitas();assert.equal(captured.authorize({}).can_setup,true);
+ active='another:synthetic';assert.equal(captured.authorize({}).allowed,false);assert.throws(()=>link.YOD_prepararVisitas(),/unauthorized/);
+});
 function fixture(){
  const db={spreadsheetId:'BOOK-SYNTHETIC',sheets:[{properties:{sheetId:1,title:'Business untouched',gridProperties:{rowCount:10,columnCount:3}},rows:[['original']]}]};
  const f={db,allowed:true,actor:'actor:test',canSetup:true,locked:false,batches:0,authCalls:0,fail:null,afterLock:null,beforeCommit:null};

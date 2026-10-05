@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-04.67-despacho-visitas",
+  "revision": "2026-10-04.68-despacho-visitas-encendido",
   "checked_at": "2026-10-04",
   "priorities": [
     "vender_mas",
@@ -7875,7 +7875,7 @@
         "EXT-DRIVE"
       ],
       "proposal": "Acción 1.2: registro de visitas separado de conversación, autorizado por sesión vigente y DP en Portero. CAS y recibo durable en una escritura atómica de Sheets; mismo ID/contenido/actor reconoce reintento. Restaurar bitácora al abrir perfil, conservar solicitud ambigua, cancelar respuesta tardía y fallar cerrado. Pruebas aisladas; instalación y aceptación productiva se registran por separado.",
-      "status": "implementado_local",
+      "status": "publicado",
       "approval": "Dirección autoriza continuar acción 1.2 en tandas de aproximadamente treinta minutos el 4-oct-2026. Sin ampliar permisos ni usar producción para pruebas.",
       "tests": [
         "node --test tests/despacho-visitas.test.cjs",
@@ -7888,8 +7888,32 @@
         "Prueba aislada Sheets: guardar, recrear adaptador, leer y reintentar sin duplicado; conflicto y revocación",
         "Capturas de recibo e historial recuperado; ninguna escritura de prueba en libro de negocio"
       ],
-      "deployment": "Servidor y cliente candidatos preparados; interruptor apagado. Preflight UI de Portero v63 y build r6-fast comprobados. 14 comprobaciones conectadas aprobadas en archivo sintético; conector confirma dos visitas, recibos correlacionados y revisión 2. Instalación de router, implementación Apps Script y encendido pendientes.",
+      "deployment": "PR80 integrado y Pages e4a39c2f35322c5455b63b0aedc70d35a63bed74 comprobados; 334 pruebas locales y 14 comprobaciones Sheets aisladas aprobadas. Dos visitas/recibos y revisión 2 cotejados por conector; flag apagado. Instalación productiva en CHG-DESPACHO-VISITAS-ENCENDIDO-068.",
       "rollback": "Apagar ENTORNO_VISITAS_PERSISTENTES y revertir PR o volver a la versión previa de Portero. Conservar pestañas e historial; no borrar datos."
+    },
+    {
+      "id": "CHG-DESPACHO-VISITAS-ENCENDIDO-068",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Cerrar acción 1.2: instalar exclusivamente readVisits/recordVisit y preparación de dos pestañas vacías en Portero existente; publicar conservando URL/permisos/configuración. Verificar lectura autorizada antes de encender ENTORNO_VISITAS_PERSISTENTES por PR. Cotejar visita de recorrido autorizado e historial recuperado sin duplicación, con capturas y recibos privados. Sin pruebas sintéticas en libro de negocio.",
+      "status": "implementado_local",
+      "approval": "Dirección autorizó continuar el cierre de 1.2 el 4-oct-2026; conserva permisos y contratos existentes.",
+      "tests": [
+        "node --test tests/*.cjs",
+        "node scripts/arquitectura.cjs --check",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Contraste exacto de módulos y router guardados; pruebas aisladas del enlace",
+        "Lectura autenticada antes de encendido; recorrido autorizado, recarga y cotejo con recibos privados"
+      ],
+      "deployment": "Portero v64 publicado en implementación existente, sin cambiar URL/permisos. Módulo releído idéntico; Code.gs conserva todo excepto dispatch exclusivo de visitas. Dos pestañas preparadas: historial vacío, revisión 0, propiedades anteriores conservadas. Encendido cliente preparado; lectura por sesión OS, recorrido y recuperación pendientes de aceptación tras Pages.",
+      "rollback": "Apagar ENTORNO_VISITAS_PERSISTENTES y volver a versión previa de la misma implementación Portero; conservar pestañas, filas e historial."
     }
   ],
   "data_contracts": [

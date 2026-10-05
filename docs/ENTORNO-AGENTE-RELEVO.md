@@ -118,3 +118,9 @@ CHG-DESPACHO-VISITAS-067 añade servidor genérico de visitas, enlace al Portero
 Preflight: implementación activa de Portero v63 comprobada en el editor; build r6-fast y Code.gs actual idéntico a esa versión. Respaldo íntegro en el plan privado. La versión activa aún no acepta readVisits/recordVisit. DespachoVisitas.gs se guardó y ejecutó: 14 comprobaciones conectadas aprobadas en archivo sintético nuevo. Lectura por conector confirma dos visitas, recibos correlacionados y revisión 2, sin alterar pestaña original. Captura y archivo quedan en el plan privado. No se editó el router ni se publicó otra versión de Apps Script en esta tanda.
 
 Siguiente entrega: contrastar de nuevo la fuente del módulo guardado con el repositorio e instalar el enlace, crear solo pestañas vacías, actualizar la implementación existente y comprobar lectura autenticada antes del PR de encendido. Ninguna escritura de prueba en el libro de negocio. La recuperación de visitas reales y aceptación móvil siguen pendientes.
+
+## 11. Instalación y encendido de visitas · 4-oct-2026
+
+CHG-DESPACHO-VISITAS-ENCENDIDO-068: Portero v64 confirmado en la implementación existente; URL, permisos y configuración conservados. Única inserción en Code.gs: dispatch de readVisits/recordVisit tras validar payload y antes del allowlist. Módulo y router guardados releídos idénticos. Preparación tuvo un lock_busy sin escribir; tras comprobar ausencia de pestañas, segundo intento creó ambas vacías. Conector confirma historial sin filas y revisión 0; propiedades anteriores intactas.
+
+Cliente preparado con ENTORNO_VISITAS_PERSISTENTES=true y cache bumps. Tras Pages, comprobar lectura autenticada antes del recorrido; cotejar visita/recibo y recuperar al recargar sin otra fila. La aceptación se registra por separado. Reversión: flag false y, si hace falta, volver Portero a v63 conservando pestañas/datos.
