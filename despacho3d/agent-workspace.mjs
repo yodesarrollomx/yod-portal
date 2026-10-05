@@ -6,7 +6,7 @@ export function boardURL(caseId){if(typeof caseId!=='string'||!/^[A-Za-z0-9_.:-]
 export function createWorkspace({container,getSelection,transport=createFrameTransport(window),win=window,doc=document,onBoard=()=>{}}){
  const el=(tag,text,cls)=>{const n=doc.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
  const button=(label,click)=>{const b=el('button',label);b.type='button';b.addEventListener('click',click);return b;};
- let selected=null,credential=null,minting=null,disposed=false,timer=null,busy=false,tab='browser',frame=null,nonce=null,board=null,boardRevision=null,conversation=null,proposals=[],generation=0,fetching=false,active=true;
+ let selected=null,credential=null,minting=null,disposed=false,timer=null,busy=false,tab='browser',frame=null,nonce=null,board=null,boardRevision=null,conversation=null,proposals=[],generation=0,fetching=false,active=true,lastTaskRead=0;
  const root=el('section',undefined,'agent-workspace');root.setAttribute('aria-label','Puesto de Gastón');
  const nav=el('nav'),notice=el('p','Preparando el puesto…','workspace-status'),body=el('div',undefined,'workspace-body');
  notice.setAttribute('role','status');root.append(nav,notice,body);container.append(root);
@@ -113,14 +113,14 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
    if(getSelection()?.case_id!==selected.case_id){clear();return;}
    if(tab==='browser')paintBrowser(await request('/computer/state'));
    if(tab==='ppp'){postBoard(board?'yod:ppp:read':'yod:ppp:hello');const r=await request('/board/state');proposals=r.proposals||[];paintProposals();}
-   if(tab==='tasks')await tasks.read();
+   if(tab==='tasks'&&Date.now()-lastTaskRead>=12000){lastTaskRead=Date.now();await tasks.read();}
   }catch{notice.textContent='El puesto no respondió. Reintentando; la conversación puede continuar.';}
   finally{fetching=false;}
  }
  function setTab(id){if(!WORKSPACE_TABS.some(([k])=>k===id))return;tab=id;for(const [key,section]of Object.entries(sections)){section.hidden=key!==id;nav.querySelector('[data-tab="'+key+'"]').setAttribute('aria-pressed',String(key===id));}
   if(id==='ppp')mountBoard();void refresh();}
- function clear(){generation++;credential=null;selected=null;board=null;boardRevision=null;conversation=null;proposals=[];frame?.remove();frame=null;image.removeAttribute('src');image.hidden=true;activity.replaceChildren();links.replaceChildren();sections.tasks.replaceChildren();sections.sources.replaceChildren();proposalHost.replaceChildren();pppHost.replaceChildren();tasks.hide();notice.textContent='El acceso cambió. Vuelve a abrir tu despacho.';}
+ function clear(){generation++;lastTaskRead=0;credential=null;selected=null;board=null;boardRevision=null;conversation=null;proposals=[];frame?.remove();frame=null;image.removeAttribute('src');image.hidden=true;activity.replaceChildren();links.replaceChildren();sections.tasks.replaceChildren();sections.sources.replaceChildren();proposalHost.replaceChildren();pppHost.replaceChildren();tasks.hide();notice.textContent='El acceso cambió. Vuelve a abrir tu despacho.';}
  function open(selection,target='browser'){clear();selected=selection;active=true;generation++;notice.textContent='Preparando el puesto de '+selection.name+'…';setTab(target);void readSources();if(!timer)timer=setInterval(()=>void refresh(),tab==='tasks'?12000:4000);}
  win.addEventListener('message',receive);
- return{open,setTab,setActive(value){active=value;if(value)void refresh();},dispose(){disposed=true;clear();clearInterval(timer);win.removeEventListener('message',receive);root.remove();transport.dispose?.();},root};
+ return{open,setTab,setActive(value){if(active===value)return;active=value;if(value)void refresh();},dispose(){disposed=true;clear();clearInterval(timer);win.removeEventListener('message',receive);root.remove();transport.dispose?.();},root};
 }

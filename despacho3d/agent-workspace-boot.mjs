@@ -15,6 +15,6 @@ if(button){
  }
  button.onclick=()=>openForCase(window.YodResidentAgents?.getSelection?.()?.case_id);
  const bind=()=>window.YodResidentAgents?.subscribe(()=>{button.disabled=!window.YodResidentAgents?.getSelection?.();if(dialog.open&&!window.YodResidentAgents?.getSelection?.())dismiss();});
- window.addEventListener('yod-residents-ready',bind);bind();button.disabled=true;
+ button.disabled=true;window.addEventListener('yod-residents-ready',bind);bind();
  window.YodAgentWorkspace={openForCase};window.addEventListener('pagehide',()=>{workspace.dispose();delete window.YodAgentWorkspace;});
 }
