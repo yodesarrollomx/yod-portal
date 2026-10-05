@@ -1,5 +1,5 @@
-import {createFrameTransport, validateSelection, validateConversation} from './conversation.mjs';
-import {createLiveVoice} from './live-voice.mjs?v=1';
+import {createFrameTransport, validateSelection} from './conversation.mjs';
+import {createLiveVoice} from './live-voice.mjs?v=2';
 import {groupTranscriptFragments} from './live-transcript.mjs';
 
 const open = document.getElementById('voice-open');
@@ -22,6 +22,7 @@ if (open) {
   const active = state => !['idle','error'].includes(state.phase);
   const voice = createLiveVoice({audio: node('voice-audio'), mint: value => transport.mintFastSession(value),
     onChange: state => {
+      window.dispatchEvent(new CustomEvent('yod-voice-state',{detail:{phase:state.phase}}));
       const live = active(state);
       node('voice-status').textContent = state.notice;
       node('voice-start').disabled = live || !selection?.can_enqueue || !selection?.agent_ready;
@@ -53,15 +54,16 @@ if (open) {
     const current = ++generation; selection = null; node('voice-start').disabled = true;
     node('voice-status').textContent = 'Recuperando el expediente autorizado…';
     try {
-      const fresh = validateSelection(await transport.resolveCurrent({}));
-      validateConversation(await transport.read({case_id: fresh.case_id}), fresh.case_id);
+      const resident = window.YodResidentAgents;
+      const fresh = resident?.getSelection?.() || validateSelection(await transport.resolveCurrent({}));
       if (current !== generation || !dialog.open) return;
       selection = fresh; node('voice-case').textContent = fresh.name;
       node('voice-start').disabled = !fresh.can_enqueue || !fresh.agent_ready;
       node('voice-status').textContent = fresh.can_enqueue && fresh.agent_ready ?
-        'Pulsa Iniciar conversación para abrir el micrófono.' : 'El agente no está listo para conversar. Puedes revisar Agentes.';
+        'Preparando conversación de voz…' : 'Gastón está presente. Su conexión todavía se está preparando.';
+      if (fresh.can_enqueue && fresh.agent_ready) {fragments.length=0;node('voice-transcript').replaceChildren();void voice.start(fresh.case_id);}
     } catch {
-      if (current === generation) node('voice-status').textContent = 'No pudimos conectar el expediente. Abre Agentes y vuelve a intentar.';
+      if (current === generation) node('voice-status').textContent = 'No pudimos conectar el expediente. Recuperando la conexión del despacho…';
     }
   });
   node('voice-start').addEventListener('click', () => {
@@ -80,5 +82,20 @@ if (open) {
   dialog.querySelector('.voice-close').addEventListener('click', () => {void dismiss();});
   dialog.addEventListener('cancel', event => {event.preventDefault(); void dismiss();});
   window.addEventListener('pagehide', () => {generation++; voice.abandon();});
-  document.addEventListener('visibilitychange', () => {if (document.hidden && active(voice.snapshot())) void voice.stop('La conversación terminó al salir de esta pantalla.');});
+  // Visibility alone is not a hangup; mobile permission prompts and app switching can hide the page.
+  document.addEventListener('visibilitychange', () => {if (!document.hidden) void voice.refresh();});
+  let boundResident=null,unbind=null,warming=null;
+  function bindResident() {
+    const resident=window.YodResidentAgents;
+    if(!resident||resident===boundResident)return;
+    unbind?.();boundResident=resident;
+    unbind=resident.subscribe(state=>{
+      const s=resident.getSelection();
+      if(!s?.can_enqueue||!s.agent_ready||state.prepared||warming===s.case_id)return;
+      warming=s.case_id;
+      void voice.prepare(s.case_id).then(ok=>resident.markPrepared(s.case_id,ok)).finally(()=>{warming=null;});
+    });
+  }
+  window.addEventListener('yod-residents-ready',bindResident);bindResident();
+  window.addEventListener('pagehide',()=>{unbind?.();transport.dispose();});
 }

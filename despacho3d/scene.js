@@ -33,8 +33,8 @@ export async function createOffice({pilotFigure=true}={}){
  // Curved reception counter and layered patterned timber wall.
  for(let i=0;i<6;i++){const x=-11.22+i*1.15;box(1.1,1.55,.12,x,2.74,-9.25,m.oak);const disk=cylinder(.55,.55,.12,x,1.98,-9.25,m.oak);disk.rotation.x=Math.PI/2;}
  box(6.6,1.03,.10,-8.23,2.07,-9.13,m.navy);box(6.3,.02,.06,-8.2,3.46,-9.14,m.light);
- const logo=await new Promise(resolve=>new T.TextureLoader().load('assets/yod.png',resolve,undefined,()=>resolve(null)));
- if(logo){logo.colorSpace=T.SRGBColorSpace;const sign=mesh(new T.PlaneGeometry(5.3,.77),new T.MeshBasicMaterial({map:logo,transparent:true}),-8.2,2.1,-9.05);sign.castShadow=false;}
+ // Decoration must never hold the office's first frame behind an image request.
+ new T.TextureLoader().load('assets/yod.png',logo=>{logo.colorSpace=T.SRGBColorSpace;const sign=mesh(new T.PlaneGeometry(5.3,.77),new T.MeshBasicMaterial({map:logo,transparent:true}),-8.2,2.1,-9.05);sign.castShadow=false;root.userData.needsRender=true;},undefined,()=>{});
  rounded(4.8,1.42,1.0,.64,-8.25,.53,-7.45,m.oak);rounded(4.93,1.54,.095,.66,-8.25,1.09,-7.45,m.stone);box(3.65,.045,.025,-8.25,.12,-6.72,m.brass);
  for(let i=0;i<74;i++){const x=-10.13+i*.052;box(.022,.85,.045,x,.55,-6.73,m.oakPlain);}block(-8.25,-7.45,5.0,1.65);vase(-9.8,1.145,-7.35,.65);box(.52,.32,.055,-7.25,1.35,-7.5,m.black);box(.25,.03,.2,-7.25,1.17,-7.4,m.steel);
  // Patio and stone promenade, enough width to walk around both sides.

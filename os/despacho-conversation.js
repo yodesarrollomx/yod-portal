@@ -6,7 +6,7 @@
  function bind(options){
   // A slow background goals read must not make the conversation look offline.
   // Mutations keep their original IDs; this bridge never retries them.
-  var generation=0,disposed=false,busy={conversation:false,goals:false,fast:false,visits:false,office:false};
+  var readFlights=new Map(),generation=0,disposed=false,busy={conversation:false,goals:false,fast:false,visits:false,office:false};
   function authorized(source,epoch){return !disposed&&options.isAuthorized()&&source===options.getIframeWindow()&&epoch===options.getEpoch();}
   async function receive(event){
    var m=event.data,epoch=options.getEpoch(),source=event.source;
@@ -27,14 +27,19 @@
    function reply(result,error){if(own===generation&&authorized(source,epoch))source.postMessage({type:'yod:case:result',version:1,id:m.id,result:result,error:error},root.location.origin);}
    var transport=options.getTransport(),lane=['readOfficePermissions','readOfficePending'].includes(m.method)?'office':['readVisits','recordVisit'].includes(m.method)?'visits':m.method==='readGoals'?'goals':m.method==='mintFastSession'?'fast':'conversation';
    if(!transport||typeof transport[m.method]!=='function'){reply(null,'unavailable');return;}
+   var readKey=['resolveCurrent','read','mintFastSession'].includes(m.method)?m.method+'|'+JSON.stringify(p):null;
+   if(readKey&&readFlights.has(readKey)){
+    var shared=await readFlights.get(readKey);reply(shared.result,shared.error);return;
+   }
    if(busy[lane]){reply(null,'transport_busy');return;}
    busy[lane]=true;
-   var timer;
-   try{var result=await Promise.race([transport[m.method](JSON.parse(JSON.stringify(p))),new Promise(function(_,reject){timer=setTimeout(function(){reject(Error('timeout'));},options.timeout||50000);})]);reply(result,null);}
-   catch(error){reply(null,['unauthorized','session_changed','session_pending','timeout','transport_busy'].includes(error&&error.message)?error.message:error&&error.name==='AbortError'?'timeout':'unavailable');}
-   finally{clearTimeout(timer);if(own===generation)busy[lane]=false;}
+   var timer,settle;
+   if(readKey)readFlights.set(readKey,new Promise(function(resolve){settle=resolve;}));
+   try{var result=await Promise.race([transport[m.method](JSON.parse(JSON.stringify(p))),new Promise(function(_,reject){timer=setTimeout(function(){reject(Error('timeout'));},options.timeout||50000);})]);if(settle)settle({result:result,error:null});reply(result,null);}
+   catch(error){var failure=['unauthorized','session_changed','session_pending','timeout','transport_busy'].includes(error&&error.message)?error.message:error&&error.name==='AbortError'?'timeout':'unavailable';if(settle)settle({result:null,error:failure});reply(null,failure);}
+   finally{clearTimeout(timer);if(own===generation){busy[lane]=false;if(readKey)readFlights.delete(readKey);}}
   }
-  function clear(){generation++;busy={conversation:false,goals:false,fast:false,visits:false,office:false};}
+  function clear(){generation++;readFlights.clear();busy={conversation:false,goals:false,fast:false,visits:false,office:false};}
   root.addEventListener('message',receive);
   return {clear:clear,dispose:function(){clear();disposed=true;root.removeEventListener('message',receive);}};
  }

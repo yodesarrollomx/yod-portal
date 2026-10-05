@@ -8038,7 +8038,7 @@
         "GAS-PORTERO"
       ],
       "proposal": "Mostrar el agente autorizado en el Despacho desde la entrada, con tarjeta de presencia y figura sentada en espera. Preparar credencial de conversación en segundo plano sin abrir micrófono ni sesión Live; evitar lecturas simultáneas duplicadas y que la carga de una imagen bloquee el recorrido. Mantener voz ante ocultación, errores de comando y fallos transitorios de red; cerrar sólo al finalizar o perder conexión de forma persistente, con historial y finalización explícitos.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "approval": "Dirección solicitó corregir la interfaz, el corte de voz y la carga lenta; agentes siempre presentes y preparados al estar en línea, sin abrir Agentes para activarlos. Implementación y publicación autorizadas en este chat.",
       "tests": [
         "node scripts/arquitectura.cjs --check",
@@ -8049,7 +8049,7 @@
         "node verify-obra-app.cjs",
         "Pruebas sintéticas de presencia sin abrir panel, preparación sin micrófono, revocación, lecturas concurrentes, desconexión recuperada, error de comando y cierre incompleto; comprobación de assets publicados."
       ],
-      "deployment": "Propuesta registrada antes de código. Implementación, Actions, Pages y servidor se registran por separado; audio y experiencia real del dispositivo requieren aceptación.",
+      "deployment": "Implementación en rama con presencia desacoplada del historial, preparación sin micrófono, figura sentada, carga de logo sin bloqueo y recuperación de voz. Actions, integración y HTTP pendientes.",
       "rollback": "Revertir los módulos visuales y la tolerancia de conexión; conservar los perfiles, los permisos DP, la configuración Live exacta, las conversaciones y los recibos."
     }
   ],
@@ -9601,6 +9601,14 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO",
         "GAS-PORTERO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-avatar-office.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
       ]
     }
   ]

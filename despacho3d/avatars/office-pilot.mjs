@@ -2,9 +2,9 @@ import {createAvatarLayer} from './adapter.mjs';
 
 // This controller consumes the panel's authorized profile, never a public roster.
 // Placement is local to this room and cannot be supplied by a case record.
-const POSITION=[6.65,0,-4.42], FRAME_MS=1000/15, HOME_ROT=Math.PI/2, WALK_SPEED=1.4;
+const POSITION=[6.65,0,-4.42], SEAT=[7,0,-7.95], FRAME_MS=1000/15, HOME_ROT=Math.PI/2, WALK_SPEED=1.4;
 export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{}}){
- let api=null,unsubscribe=null,profile=null,fingerprint='',lastFrame=null,time=0,poseTicks=0,disposed=false,route=null,lastPlace='inicio';
+ let activity='sit',api=null,unsubscribe=null,profile=null,fingerprint='',lastFrame=null,time=0,poseTicks=0,disposed=false,route=null,lastPlace='inicio';
  const layer=createAvatarLayer({scene,onSelect(selection){
   if(!api||!profile||selection.id!==profile.id)return;
   // Recheck the current authority immediately before opening the panel.
@@ -16,12 +16,12 @@ export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{}}){
   if(disposed)return;
   let next=null;
   if(value&&typeof value.id==='string'&&value.id&&value.id===value.case_id&&value.entity_kind==='case'){
-   next={id:value.id,case_id:value.case_id,entity_kind:'case',name:value.name,form:value.form,color:value.color,visual:value.visual||{},placement:{position:[...POSITION],rotationY:Math.PI/2}};
+   next={id:value.id,case_id:value.case_id,entity_kind:'case',name:value.name,form:value.form,color:value.color,visual:value.visual||{},placement:{position:[...SEAT],rotationY:0}};
   }
   const key=next?JSON.stringify(next):'';
   if(key===fingerprint)return;
   profile=null;fingerprint='';lastFrame=null;time=0;poseTicks=0;route=null;lastPlace='inicio';
-  try{layer.replaceAuthorizedProfiles(next?[next]:[]);if(next){layer.update(0);profile=next;fingerprint=key;}}
+  try{layer.replaceAuthorizedProfiles(next?[next]:[]);if(next){layer.setMotion(next.id,activity);layer.update(0);profile=next;fingerprint=key;}}
   catch{layer.clear();}
   onChange();
  }
@@ -56,7 +56,7 @@ export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{}}){
   const m=model();
   if(m&&route){m.position.set(route.end[0],0,route.end[1]);m.rotation.y=route.rot;}
   const done=route;route=null;
-  if(profile)layer.setMotion(profile.id,'idle');
+  if(profile){if(done?.destino==='inicio'){m?.position.set(...SEAT);if(m)m.rotation.y=0;layer.setMotion(profile.id,activity);}else layer.setMotion(profile.id,'idle');}
   if(done){lastPlace=done.destino||null;try{done.onArrival?.();}catch{}}
  }
  function advance(dt){
@@ -78,11 +78,12 @@ export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{}}){
   layer.setMotion(profile.id,'walk');onChange();return true;
  }
  return {bind,disconnect,update,pickables:()=>layer.pickables(),selectIntersection:hit=>!disposed&&layer.selectIntersection(hit),
+  setActivity(value){if(!['sit','talk'].includes(value))return false;activity=value;if(profile&&!route&&lastPlace==='inicio'){layer.setMotion(profile.id,value);onChange();}return true;},
   recorrer:walk,
   posicion:()=>{const m=model();return m?[m.position.x,m.position.z]:null;},
-  inicio:{xz:[POSITION[0],POSITION[2]],rot:HOME_ROT},
+  inicio:{xz:[SEAT[0],SEAT[2]],rot:0},
   getMovementState:()=>({place:profile?lastPlace:null,destination:route?.destino||null,motion:profile?(route?'walk':'idle'):null,position:profile?(()=>{const m=model();return m?[m.position.x,m.position.z]:null;})():null}),
-  getState:()=>({count:layer.size(),motion:profile?(route?'walk':'idle'):null,poseTicks}),
+  getState:()=>({count:layer.size(),motion:profile?(route?'walk':lastPlace==='inicio'?activity:'idle'):null,poseTicks}),
   dispose(){if(!disposed){disconnect();layer.dispose();disposed=true;}}
  };
 }

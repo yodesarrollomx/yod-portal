@@ -240,12 +240,13 @@ export function montarEntorno({win=globalThis.window,doc=globalThis.document,act
   if(!perfil)cerrar();
  };
  const conectar=()=>{
-  const sesion=win.CubefarmYOD;
+  const sesion=win.YodResidentAgents||win.CubefarmYOD;
   if(!sesion||desuscribir||typeof sesion.subscribeProfile!=='function')return;
   desuscribir=sesion.subscribeProfile(alPerfil);
  };
  boton.hidden=true;
  boton.addEventListener('click',abrir);
+ win.addEventListener('yod-residents-ready',()=>{desuscribir?.();desuscribir=null;conectar();});
  win.addEventListener('yod-agents-ready',conectar);
  conectar();
  return true;

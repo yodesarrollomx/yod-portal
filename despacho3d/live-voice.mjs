@@ -14,10 +14,11 @@ const NOTICES = {
 export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   media = globalThis.navigator?.mediaDevices, Peer = globalThis.RTCPeerConnection,
   audio, onChange = () => {}, onTranscript = () => {}, now = Date.now,
-  schedule = setInterval, cancel = clearInterval, closeTimeout = 20000} = {}) {
+  schedule = setInterval, cancel = clearInterval, closeTimeout = 20000, disconnectGrace = 12000, maxStatusFailures = 3} = {}) {
   let epoch = 0, stream = null, peer = null, channel = null, credential = null, sessionId = null,
     poll = null, controller = null, polling = false, closing = null, began = 0, started = false,
-    contextReady = false, finalSeen = false, disconnected = false, closedResolve = null, sequence = 0;
+    contextReady = false, finalSeen = false, disconnected = false, closedResolve = null, sequence = 0,
+    disconnectTimer = null, statusFailures = 0, connectedAt = 0, prepared = null, preparing = null;
   let state = {phase: 'idle', notice: '', muted: false, fragments: 0, blocks: 0, saved: 0, pending: 0,
     incomplete: false, finalized: false};
   const seen = new Set();
@@ -26,15 +27,37 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     const response = await fetchImpl(current.endpoint + path, {method: 'POST', cache: 'no-store', credentials: 'omit', signal,
       headers: {'Content-Type': 'application/json', Authorization: 'Bearer ' + current.token}, body: JSON.stringify(data)});
     const value = await response.json();
-    if (!response.ok || value?.ok !== true) throw Error(NOTICES[value?.error] || 'La conexión de voz se interrumpió.');
+    if (!response.ok || value?.ok !== true) {
+      const error = Error(NOTICES[value?.error] || 'La conexión de voz se interrumpió.');
+      error.code = value?.error; throw error;
+    }
     return value;
   }
   function release() {
     if (poll !== null) cancel(poll); poll = null;
+    clearTimeout(disconnectTimer); disconnectTimer = null;
     if (channel) {channel.onmessage = channel.onopen = channel.onclose = null; channel.close?.();} channel = null;
     if (peer) {peer.ontrack = peer.onconnectionstatechange = null; peer.close();} peer = null;
     stream?.getTracks().forEach(track => track.stop()); stream = null;
     if (audio) {audio.pause?.(); audio.srcObject = null;}
+  }
+  async function ensureCredential(caseId) {
+    if (prepared?.case_id === caseId && prepared.expires_at - now() > 60000) return prepared;
+    if (preparing?.caseId === caseId) return preparing.promise;
+    const promise = Promise.resolve().then(() => mint({case_id: caseId}))
+      .then(raw => validateFastSession(raw, caseId, now()));
+    preparing = {caseId, promise};
+    try {const value = await promise; prepared = value; return value;}
+    finally {if (preparing?.promise === promise) preparing = null;}
+  }
+  async function prepare(caseId) {
+    try {
+      const value = await ensureCredential(caseId);
+      const response = await fetchImpl(value.endpoint + '/fast/hello', {headers: {Authorization: 'Bearer ' + value.token},
+        cache: 'no-store', credentials: 'omit', signal: AbortSignal.timeout(15000)});
+      if (response.status === 401) {prepared = null; return false;}
+      return response.ok;
+    } catch {return false;}
   }
   const report = result => publish({fragments: result.fragments, blocks: result.blocks, saved: result.saved,
     pending: result.pending, incomplete: state.incomplete || result.incomplete === true});
@@ -48,6 +71,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     if (!stream && !sessionId && state.phase !== 'starting') return Promise.resolve(state);
     publish({phase: 'closing', notice: 'Finalizando conversación y comprobando el historial…'});
     stream?.getAudioTracks().forEach(track => {track.enabled = false;}); // Silence; retain tracks and playback until final event.
+    clearTimeout(disconnectTimer); disconnectTimer = null;
     controller?.abort(); controller = null;
     const current = credential, id = sessionId;
     closing = Promise.resolve().then(async () => {
@@ -82,11 +106,18 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     try {
       const result = await post('/voice/status', {session_id: sessionId}, credential, AbortSignal.timeout(12000));
       if (token !== epoch || closing) return;
+      statusFailures = 0;
       report(result); contextReady = result.started === true && result.context_ready === true; ready();
       if (!result.active || now() >= result.expires_at) void stop('La sesión terminó. Puedes iniciar otra.');
-      else if (state.phase === 'starting' && now() - began > 30000) void stop('No se confirmó el inicio. Vuelve a intentar.');
-    } catch {if (token === epoch && !closing) void stop('La conexión se interrumpió. Puedes volver a hablar.');}
-    finally {polling = false;}
+      else if (state.phase === 'starting' && connectedAt && now() - connectedAt > 60000) void stop('No se confirmó el inicio. Vuelve a intentar.');
+    } catch (error) {
+      if (token === epoch && !closing) {
+        if (error?.code === 'unauthorized') {prepared = null; void stop('La sesión venció. Vuelve a abrir el despacho.');}
+        else if (++statusFailures >= maxStatusFailures) void stop('No se pudo recuperar el registro de la conversación.');
+        else publish({notice: 'La voz continúa. Recuperando conexión con el registro…'});
+      }
+    }
+    finally {if (token === epoch) polling = false;}
   }
   async function gather(current) {
     if (current.iceGatheringState === 'complete' || !current.addEventListener) return;
@@ -100,18 +131,21 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   async function start(caseId) {
     if (closing || !['idle','error'].includes(state.phase)) return false;
     const token = ++epoch; controller = new AbortController(); began = now();
-    started = contextReady = finalSeen = disconnected = false; seen.clear(); sequence = 0;
+    started = contextReady = finalSeen = disconnected = false; seen.clear(); sequence = 0; polling = false; statusFailures = 0; connectedAt = 0;
     publish({phase: 'starting', notice: 'Abriendo micrófono y expediente…', fragments: 0, blocks: 0, saved: 0,
       pending: 0, incomplete: false, finalized: false});
     try {
       if (typeof media?.getUserMedia !== 'function' || typeof Peer !== 'function' || !audio)
         throw Error('Este navegador no admite voz en tiempo real.');
+      // Prepare authentication in parallel with the browser's microphone permission.
+      const auth = ensureCredential(caseId).then(value => ({value}), error => ({error}));
       const captured = await media.getUserMedia({audio: {echoCancellation: true, noiseSuppression: true}, video: false});
       if (token !== epoch || closing) {captured.getTracks().forEach(track => track.stop()); return false;}
       stream = captured;
-      const raw = await mint({case_id: caseId});
+      const minted = await auth;
       if (token !== epoch || closing) return false;
-      credential = validateFastSession(raw, caseId, now()); peer = new Peer();
+      if (minted.error) throw minted.error;
+      credential = minted.value; peer = new Peer();
       peer.ontrack = event => {
         if (token !== epoch) return;
         audio.srcObject = event.streams[0];
@@ -132,14 +166,28 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
           finalSeen = true; closedResolve?.(true);
           if (!closing) void stop('Conversación finalizada.');
         }
-        if (value.type === 'error' && !closing) void stop('La voz se interrumpió. Comprueba el historial antes de continuar.');
+        // A rejected command is not a closed session. Keep consuming audio and final events.
+        if (value.type === 'error' && !closing) publish({notice: 'No se pudo completar una instrucción. La conversación sigue abierta.'});
       };
       const lost = () => {if (token !== epoch || finalSeen) return;
         disconnected = true; closedResolve?.(false); publish({incomplete: true});
         void stop('Finalización incompleta: la conexión se interrumpió.');};
       channel.onclose = lost; channel.onopen = () => {if (token === epoch) void status(token);};
       peer.onconnectionstatechange = () => {
-        if (['failed','disconnected','closed'].includes(peer?.connectionState)) lost();
+        const connection = peer?.connectionState;
+        if (connection === 'disconnected') {
+          if (disconnectTimer === null) {
+            publish({phase: 'reconnecting', notice: 'Recuperando la conexión de voz…'});
+            disconnectTimer = setTimeout(() => {disconnectTimer = null; if (token === epoch && peer?.connectionState === 'disconnected') lost();}, disconnectGrace);
+          }
+        } else if (connection === 'connected') {
+          clearTimeout(disconnectTimer); disconnectTimer = null;
+          if (state.phase === 'reconnecting') {
+            publish({phase: started && contextReady ? 'listening' : 'starting', notice: started && contextReady ?
+              'Conexión recuperada. Sigue hablando con Gastón.' : 'Preparando conversación…'});
+            ready();
+          }
+        } else if (['failed','closed'].includes(connection)) lost();
       };
       await peer.setLocalDescription(await peer.createOffer()); await gather(peer);
       if (token !== epoch || closing) return false;
@@ -153,7 +201,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
         return false;
       }
       sessionId = id; // Opaque; never parse or rebuild.
-      await peer.setRemoteDescription({type: 'answer', sdp});
+      await peer.setRemoteDescription({type: 'answer', sdp}); connectedAt = now();
       poll = schedule(() => {void status(token);}, 2000); void status(token);
       return true;
     } catch (error) {
@@ -178,8 +226,9 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   }
   function abandon() {
     // Navigation cannot guarantee a final event. Never report it as a confirmed close.
+    prepared = null; preparing = null;
     disconnected = true; closedResolve?.(false); publish({incomplete: true});
     void stop('Finalización incompleta al salir de esta pantalla.');
   }
-  return {start, stop, mute, interrupt, abandon, snapshot: () => ({...state})};
+  return {prepare, start, stop, mute, interrupt, abandon, refresh: () => status(epoch), snapshot: () => ({...state})};
 }

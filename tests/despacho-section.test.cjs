@@ -3,7 +3,7 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 require('../os/access-policy.js');
 const source=fs.readFileSync(require.resolve('../os/despacho-section.js'),'utf8');
 const app=fs.readFileSync(require.resolve('../os/app.js'),'utf8');
-const FRAME_PATH='../despacho3d/index.html';
+const FRAME_PATH='../despacho3d/index.html?v=resident1';
 function node(){
   const attrs=new Map(),listeners={},classes=new Set();
   return {hidden:false,children:[],textContent:'',contentWindow:{},
@@ -36,7 +36,7 @@ test('Cold Despacho route and unconfirmed cached DP never load the same-origin s
   assert.equal(h.frames[0].getAttribute('src'),FRAME_PATH);
   assert.equal(h.frames[0].getAttribute('referrerpolicy'),'no-referrer');
   assert.equal(h.nodes.get('despachoAbrir').href,FRAME_PATH);
-  assert.equal(new URL(FRAME_PATH,'https://yodesarrollomx.github.io/yod-portal/os/').href,'https://yodesarrollomx.github.io/yod-portal/despacho3d/index.html');
+  assert.equal(new URL(FRAME_PATH,'https://yodesarrollomx.github.io/yod-portal/os/').href,'https://yodesarrollomx.github.io/yod-portal/despacho3d/index.html?v=resident1');
 });
 test('DP policy matches the existing contract; absent DP denied, admin and star preserved',()=>{
   for(const [boards,role,allowed] of [['TA','vista',false],['','vista',false],['DP','vista',true],['*','vista',true],['','admin',true]]){
