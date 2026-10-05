@@ -26,7 +26,8 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   async function post(path, data, current = credential, signal) {
     const response = await fetchImpl(current.endpoint + path, {method: 'POST', cache: 'no-store', credentials: 'omit', signal,
       headers: {'Content-Type': 'application/json', Authorization: 'Bearer ' + current.token}, body: JSON.stringify(data)});
-    const value = await response.json();
+    let value;
+    try{value=await response.json();}catch{const error=Error(response.status===401||response.status===403?NOTICES.unauthorized:NOTICES.voice_unavailable);error.code=response.status===401||response.status===403?'unauthorized':'unavailable';throw error;}
     if (!response.ok || value?.ok !== true) {
       const error = Error(NOTICES[value?.error] || 'La conexión de voz se interrumpió.');
       error.code = value?.error; throw error;

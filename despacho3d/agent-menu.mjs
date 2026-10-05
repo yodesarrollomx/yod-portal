@@ -16,7 +16,7 @@ export function mountAgentMenu({win=window,doc=document,transport=createFrameTra
  const el=(tag,text,cls)=>{const n=doc.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
  const button=(text,click,disabled=false)=>{const n=el('button',text);n.type='button';n.disabled=disabled;n.addEventListener('click',click);return n;};
  const goals=new DurableGoals({transport,getContext:()=>selection?{selection,busy:false}:null,onUnauthorized:()=>close()});
- function close(){generation++;selection=null;conversation=null;clearInterval(interval);interval=null;goals.hide();dialog.close();previousFocus?.focus?.();}
+ function close(){generation++;selection=null;conversation=null;draft={title:'',instruction:'',criterion:''};clearInterval(interval);interval=null;goals.hide();dialog.close();previousFocus?.focus?.();}
  function outside(tab){close();win.CubefarmYOD?.open(tab);}
  function talk(){close();doc.getElementById('voice-open')?.click();}
  async function refresh(){
@@ -87,6 +87,7 @@ export function mountAgentMenu({win=window,doc=document,transport=createFrameTra
   }else if(section==='historial'){
    if(!conversation)panel.append(el('p','El historial no está disponible. Puedes actualizar.'));
    for(const event of [...model.history].reverse().slice(0,100))card(event.title,event.body);
+   if(conversation)panel.append(button('Ver actividad del expediente',()=>outside('activity')));
    if(conversation&&!model.history.length)panel.append(el('p','No hay eventos registrados.'));
   }else if(section==='documentos'||section==='ppp'){
    const docs=section==='ppp'?model.ppp:model.documents;
@@ -102,10 +103,11 @@ export function mountAgentMenu({win=window,doc=document,transport=createFrameTra
   }
   if(focused)dialog.querySelector('[data-menu-focus="'+focused+'"]')?.focus();
  }
- async function openMenu(caseId){
+ async function openMenu(caseId,target=null){
   const resident=win.YodResidentAgents,fresh=resident?.getSelection?.();
   if(!fresh||fresh.case_id!==caseId)return false;
-  if(dialog.open)return true;
+  if(target&&MENU_SECTORS.some(([id])=>id===target))section=target;
+  if(dialog.open){render();return true;}
   selection=fresh;conversation=null;loading=false;generation++;previousFocus=doc.activeElement;dialog.showModal();render();void refresh();
   interval=setInterval(()=>{if(!doc.hidden&&!dialog.querySelector('.agent-menu-goal-form')?.contains(doc.activeElement))void refresh();},8000);return true;
  }

@@ -1,5 +1,6 @@
 import {createFrameTransport, validateSelection} from './conversation.mjs';
 import {createLiveVoice} from './live-voice.mjs?v=4';
+import {DurableGoals,watchGoals} from './goals.mjs';
 import {createVoiceActionExecutor} from './voice-actions.mjs?v=1';
 import {groupTranscriptFragments} from './live-transcript.mjs';
 
@@ -14,7 +15,7 @@ if (open) {
     '<audio id="voice-audio" autoplay controls></audio><div class="voice-actions">' +
     '<button id="voice-start" disabled>Iniciar conversación</button><button id="voice-mute" disabled>Silenciar micrófono</button>' +
     '<button id="voice-stop" disabled>Finalizar</button></div>' +
-    '<p id="voice-context" role="status">Preparando expediente y herramientas…</p><p id="voice-task" role="status"></p><button id="voice-retry-actions" hidden>Comprobar acción pendiente</button><p class="voice-note">Escuchas una voz generada por IA. Los resultados de las tareas quedan para tu revisión.</p>' +
+    '<p id="voice-context" role="status">Preparando expediente y herramientas…</p><p id="voice-task" role="status"></p><div id="voice-work" role="status"></div><button id="voice-view-tasks">Ver pendientes y evidencia</button><button id="voice-retry-actions" hidden>Comprobar acción pendiente</button><p class="voice-note">Escuchas una voz generada por IA. Los resultados de las tareas quedan para tu revisión.</p>' +
     '<p id="voice-save" role="status">Sin conversación nueva.</p><div id="voice-transcript" role="log" aria-label="Transcripción de voz"></div>' +
     '<p class="voice-note">Puedes interrumpirlo hablando. La transcripción se respalda al finalizar; aquí verás si queda pendiente.</p>';
   document.body.append(dialog);
@@ -26,10 +27,22 @@ if (open) {
     node('voice-retry-actions').hidden=event.phase!=='unconfirmed';
     if(event.phase==='confirmed')window.dispatchEvent(new CustomEvent('yod-goals-changed',{detail:null}));
   }});
+  let stopWatching=null;
+  const goalReader=new DurableGoals({transport,getContext:()=>{
+    const current=window.YodResidentAgents?.getSelection?.();
+    return current&&selection?.case_id===current.case_id&&active(voice.snapshot())?{selection:current,busy:false}:null;
+  }});
+  goalReader.subscribe(state=>{
+    if(!state.model)return;
+    const labels={queued:'En cola',running:'Trabajando',ready_for_review:'Para tu revisión',awaiting_data:'Faltan datos',stopped:'Detenido',completed:'Revisado'};
+    node('voice-work').replaceChildren(...state.model.goals.filter(g=>g.status!=='completed').slice(0,8).map(g=>{const p=document.createElement('p');p.textContent=g.title+' · '+labels[g.status];return p;}));
+  });
   const voice = createLiveVoice({actions:actionExecutor,audio: node('voice-audio'), mint: value => transport.mintFastSession(value),
     onChange: state => {
       window.dispatchEvent(new CustomEvent('yod-voice-state',{detail:{phase:state.phase}}));
       const live = active(state);
+      if(live&&state.tasks_ready&&!stopWatching)stopWatching=watchGoals(goalReader,{visible:()=>dialog.open&&!document.hidden&&active(voice.snapshot())});
+      else if(!live&&stopWatching){stopWatching();stopWatching=null;goalReader.hide();}
       node('voice-status').textContent = state.notice;
       node('voice-context').textContent=state.mode==='basic'?'Conversación básica. Las herramientas del expediente están desactivadas.':state.context_phase==='unavailable'?'Puedes seguir hablando. No se confirmó el contexto; vuelve a iniciar para conectar el expediente.':state.context_phase==='ready'?'Expediente conectado · '+(state.documents_ready?'Biblioteca y Jev disponibles':'Lector documental no disponible')+' · '+(state.tasks_ready?'Pendientes conectados':'Pendientes no disponibles'):'Puedes hablar. Preparando expediente y herramientas en segundo plano…';
       node('voice-start').disabled = live || !selection?.can_enqueue;
@@ -76,6 +89,8 @@ if (open) {
     if (!selection) return;
     fragments.length = 0; node('voice-transcript').replaceChildren(); void voice.start(selection.case_id);
   });
+  node('voice-view-tasks').addEventListener('click',()=>{if(selection)void window.YodAgentMenu?.openForCase(selection.case_id,'pendientes');});
+  window.addEventListener('yod-goals-changed',()=>{if(stopWatching)void goalReader.read();});
   node('voice-retry-actions').addEventListener('click',()=>voice.retryActions());
   node('voice-mute').addEventListener('click', voice.mute);
   node('voice-stop').addEventListener('click', () => {void voice.stop();});

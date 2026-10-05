@@ -4,7 +4,7 @@ const definitive=new Set(['stale_revision','goal_busy','case_busy','request_id_r
 const names=new Set(['pendientes_consultar','objetivo_crear','objetivo_reanudar','objetivo_detener']);
 export function summarizeGoals(model){
  const sorted=[...model.goals].sort((a,b)=>Number(a.status==='completed')-Number(b.status==='completed')||b.sequence-a.sequence);
- return {ok:true,source_revision:model.source_revision,total:model.goals.length,goals:sorted.slice(0,20).map(g=>({goal_id:g.goal_id,title:g.title,status:g.status,summary:g.summary.slice(0,2000),tasks:g.tasks.map(t=>({id:t.id,title:t.title,status:t.status})),updated_at:g.updated_at}))};
+ return {ok:true,source_revision:model.source_revision,total:model.goals.length,goals:sorted.slice(0,12).map(g=>({goal_id:g.goal_id,title:g.title,status:g.status,summary:g.summary.slice(0,1200),tasks:g.tasks.map(t=>({id:t.id,title:t.title,status:t.status})),updated_at:g.updated_at}))};
 }
 // The cloud owns durable intents; the authenticated OS owns every canonical write.
 // Retries use the already prepared payload and never mint a new request ID.
