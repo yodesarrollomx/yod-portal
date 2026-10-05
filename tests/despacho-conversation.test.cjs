@@ -98,3 +98,16 @@ test('bridge discards old-session replies and requires current authorization',as
 test('bridge fails closed without a server adapter and recovers a stalled request',async()=>{
  const b=bridge();b.setTransport(null);await b.request();assert.equal(b.posts[0].error,'unavailable');b.setTransport({resolveCurrent:()=>new Promise(()=>{})});await b.request();assert.equal(b.posts[1].error,'timeout');b.setTransport(server());await b.request();assert.equal(b.posts[2].result.case_id,current.case_id);
 });
+test('office bridge rejects forged scope, keeps visits independent and suppresses a revoked reply',async()=>{
+ const b=bridge(),calls=[];let release;
+ b.setTransport({readOfficePermissions:async p=>{calls.push(p);await new Promise(r=>release=r);return {ok:true};},readVisits:async()=>({ok:true,visits:[]}),readOfficePending:async p=>{calls.push(p);return {ok:true};}});
+ const data=(id,method,payload)=>({type:'yod:case:request',version:1,id,method,payload});
+ await b.request({origin:'https://other.invalid',data:data('a','readOfficePermissions',{case_id:'synthetic'})});
+ await b.request({source:b.other,data:data('a','readOfficePermissions',{case_id:'synthetic'})});
+ for(const payload of [{case_id:'synthetic',space_id:'drive'},{case_id:'synthetic',space_id:'juntas',level:'accion'},{case_id:'synthetic',space_id:'juntas',actor_id:'forged'}])await b.request({data:data('a','readOfficePending',payload)});
+ assert.equal(calls.length,0);
+ const pending=b.request({data:data('office','readOfficePermissions',{case_id:'synthetic'})});
+ await b.request({data:data('visits','readVisits',{case_id:'synthetic'})});assert.equal(b.posts[0].id,'visits');
+ await b.request({data:data('office-busy','readOfficePending',{case_id:'synthetic',space_id:'juntas'})});assert.equal(b.posts[1].error,'transport_busy');
+ b.setAllowed(false);release();await pending;assert.equal(b.posts.length,2);assert.equal(calls.length,1);
+});

@@ -7,14 +7,16 @@ test('Portero visits link resolves canonical book and reauthenticates; setup nee
  const config={case_id:'CASE-SYNTHETIC',operational_book:'BOOK-SYNTHETIC',editors:[active]};
  const link={YOD_DESPACHO_CONFIG:config,Sheets:{},LockService:{getScriptLock:()=>({})},Utilities:{getUuid:()=> 'RECEIPT-SYNTHETIC'},
   Session:{getActiveUser:()=>({getEmail:()=>active})},yodDespachoHash_:()=> 'digest',yodDespachoActor_:()=>{calls++;return actor;},
-  createOfficeVisitsBackend:deps=>{captured=deps;return {readVisits:p=>({ok:true,payload:p}),setup:()=>({ok:true,created:true})};},console:{log:()=>{}}};
+  createOfficeVisitsBackend:deps=>{captured=deps;return {readVisits:p=>deps.authorize(request,{case_id:config.case_id,action:'readVisits'}).allowed?({ok:true,payload:p}):({ok:false,error:'unauthorized'}),setup:()=>({ok:true,created:true})};},console:{log:()=>{}}};
+ vm.runInNewContext(fs.readFileSync('despacho-runtime/source/shared/office-permissions.js','utf8'),link);
+ vm.runInNewContext(fs.readFileSync('despacho-runtime/source/server/permisos-portero.gs','utf8'),link);
  vm.runInNewContext(fs.readFileSync('despacho-runtime/source/server/visitas-portero.gs','utf8'),link);
  const request={operation:'readVisits',payload:{case_id:config.case_id},actor_id:'spoofed',spreadsheet_id:'spoofed'};
  assert.equal(link.yodDespachoVisits_({operation:'setupVisits'}).error,'invalid_operation');assert.equal(calls,0);
  assert.equal(link.yodDespachoVisits_(request).ok,true);assert.equal(captured.serverContext,request);
  assert.deepEqual(copy(captured.resolveCanonicalWorkbook()),{case_id:config.case_id,spreadsheet_id:config.operational_book});
- assert.equal(captured.authorize(request).actor_id,actor.actor_id);assert.equal(calls,2);
- actor=null;assert.equal(captured.authorize(request).allowed,false);assert.equal(link.yodDespachoVisits_(request).error,'unauthorized');
+ assert.equal(captured.authorize(request,{case_id:config.case_id,action:'readVisits'}).actor_id,actor.actor_id);assert.equal(calls,2);
+ actor=null;assert.equal(captured.authorize(request,{case_id:config.case_id,action:'readVisits'}).allowed,false);assert.equal(link.yodDespachoVisits_(request).error,'unauthorized');
  link.YOD_verificarLecturaVisitas();assert.equal(captured.authorize({}).allowed,true);link.YOD_prepararVisitas();assert.equal(captured.authorize({}).can_setup,true);
  active='another:synthetic';assert.equal(captured.authorize({}).allowed,false);assert.throws(()=>link.YOD_prepararVisitas(),/unauthorized/);assert.throws(()=>link.YOD_verificarLecturaVisitas(),/unauthorized/);
 });
@@ -23,6 +25,7 @@ function fixture(){
  const f={db,allowed:true,actor:'actor:test',canSetup:true,locked:false,batches:0,authCalls:0,fail:null,afterLock:null,beforeCommit:null};
  const Sheets={Spreadsheets:{get:(book,options)=>{
   assert.equal(book,db.spreadsheetId);
+  if(f.duringRead&&options.includeGridData)f.duringRead();
   if(!options.includeGridData)return {spreadsheetId:book,sheets:db.sheets.map(s=>({properties:copy(s.properties)}))};
   return {sheets:options.ranges.map(r=>{const title=r.split("'")[1],s=db.sheets.find(s=>s.properties.title===title);return {properties:{sheetId:s.properties.sheetId,title},data:[{startRow:0,startColumn:0,rowData:s.rows.map(row=>({values:row.map(v=>({userEnteredValue:typeof v==='string'?{stringValue:v}:v}))}))}]};})};
  },batchUpdate:({requests},book)=>{
@@ -46,6 +49,9 @@ test('read never initializes; explicit setup preserves every business row and is
  const f=fixture();assert.equal(f.backend().readVisits({case_id:'CASE-SYNTHETIC'}).error,'schema_not_initialized');assert.equal(f.batches,0);
  f.canSetup=false;assert.equal(f.backend().setup({case_id:'CASE-SYNTHETIC'}).error,'unauthorized');assert.equal(f.batches,0);
  f.canSetup=true;f.setup();assert.deepEqual(f.db.sheets[0].rows,[['original']]);assert.equal(f.backend().setup({case_id:'CASE-SYNTHETIC'}).created,false);assert.equal(f.batches,1);
+});
+test('read reauthorizes after Sheet IO; revocation or changed actor withholds snapshot',()=>{
+ for(const change of ['revoke','actor']){const f=fixture();f.setup();f.backend().recordVisit(f.request());const before=f.batches;f.duringRead=()=>{if(change==='revoke')f.allowed=false;else f.actor='other:actor';};assert.equal(f.backend().readVisits({case_id:'CASE-SYNTHETIC'}).error,'unauthorized');assert.equal(f.batches,before);assert.equal(f.locked,false);}
 });
 test('one atomic batch persists visit, receipt and revision; fresh adapter recovers original ID',()=>{
  const f=fixture();f.setup();const ack=copy(f.backend().recordVisit(f.request()));assert.equal(ack.scope,'server-persisted');assert.equal(f.batches,2);

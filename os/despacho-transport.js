@@ -3,12 +3,13 @@
  function create(options){
   var endpoint=options.endpoint;
   if(typeof endpoint!=='string'||!/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(endpoint))throw Error('invalid_endpoint');
-  var methods=['resolveCurrent','read','enqueue','createGoal','readGoals','reviewGoal','mintFastSession','readVisits','recordVisit'];
+  var methods=['resolveCurrent','read','enqueue','createGoal','readGoals','reviewGoal','mintFastSession','readVisits','recordVisit','readOfficePermissions','readOfficePending'];
   function keys(value,names){return !!value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).length===names.length&&names.every(function(key){return Object.prototype.hasOwnProperty.call(value,key);});}
   function str(value,max){return typeof value==='string'&&value.trim().length>0&&value.length<=max;}
   function validGoalPayload(operation,p){
+   if(operation==='readOfficePending')return keys(p,['case_id','space_id'])&&str(p.case_id,256)&&p.space_id==='juntas';
    if(operation==='recordVisit')return keys(p,['case_id','request_id','visit_id','expected_revision','space_id','visitor_kind','reason_code','arrival_ref'])&&str(p.case_id,256)&&str(p.request_id,256)&&str(p.visit_id,256)&&str(p.arrival_ref,256)&&Number.isSafeInteger(p.expected_revision)&&p.expected_revision>=0&&p.expected_revision<10000&&['juntas','biblioteca','edicion'].includes(p.space_id)&&((p.visitor_kind==='agent'&&p.reason_code==='agent_arrived')||(p.visitor_kind==='direction'&&p.reason_code==='visitor_opened'));
-   if(operation==='readVisits'||operation==='readGoals'||operation==='mintFastSession')return keys(p,['case_id'])&&str(p.case_id,256);
+   if(operation==='readOfficePermissions'||operation==='readVisits'||operation==='readGoals'||operation==='mintFastSession')return keys(p,['case_id'])&&str(p.case_id,256);
    if(operation==='createGoal')return keys(p,['case_id','request_id','expected_revision','title','instruction','criterion','scope'])&&str(p.case_id,256)&&str(p.request_id,256)&&str(p.expected_revision,256)&&str(p.title,160)&&str(p.instruction,4000)&&str(p.criterion,1000)&&p.scope==='local_analysis_v1';
    if(operation==='reviewGoal')return keys(p,['case_id','goal_id','request_id','expected_revision','action'])&&str(p.case_id,256)&&str(p.goal_id,256)&&str(p.request_id,256)&&str(p.expected_revision,256)&&['approve','resume','stop'].includes(p.action);
    return true;

@@ -296,3 +296,27 @@ test('juntas: la lectura es solo readGoals; no crea, aprueba ni detiene nada',()
  const p=leerArchivo('circulo-pendientes.mjs');
  assert.match(p,/readGoals/);assert.doesNotMatch(p,/createGoal|reviewGoal|enqueue/);
 });
+test('server permissions gate pending reads and clear visible results after revocation',async()=>{
+ const vm=require('node:vm'),ctx=vm.createContext({});vm.runInContext(fs.readFileSync(path.join(root,'despacho-runtime/source/shared/office-permissions.js'),'utf8'),ctx);
+ const matrix=JSON.parse(JSON.stringify(ctx.createOfficePermissions({case_id:PERFIL.case_id,authenticate:()=>({allowed:true,actor_id:'ACTOR-SINTETICO',case_id:PERFIL.case_id}),now:()=>Date.UTC(2026,9,4)}).inspect({case_id:PERFIL.case_id})));
+ const {montarEntorno}=await load('entorno.mjs'),{doc,boton}=crearDoc(),win=crearWin();let n=0,metadata,revoked=false;const calls=[];
+ win.location.origin='https://example.test';win.crypto={randomUUID:()=> 'PERM-'+(++n)};
+ const respond=(request,result)=>void win.emit('message',{origin:win.location.origin,source:win.parent,data:{type:'yod:case:result',version:1,id:request.id,result}});
+ win.parent={postMessage(request){calls.push(request);if(request.method==='readOfficePermissions')metadata=request;else {assert.equal(request.method,'readOfficePending');assert.deepEqual(request.payload,{case_id:PERFIL.case_id,space_id:'juntas'});queueMicrotask(()=>respond(request,revoked?{ok:false,error:'unauthorized'}:{ok:true,schema:1,source_revision:'rev-1',goals:[metaDe([tareaDe(1,'ready_for_review')],{evidence:[evidenciaDe(1)]})]}));}}};
+ const sesion=sesionFalsa();win.CubefarmYOD=sesion;montarEntorno({win,doc,politica:true,persistentes:false});sesion.poner(PERFIL);await boton.emit('click');const hoja=doc.body.children[0];
+ assert.equal(botonEntregas(hoja).getAttribute('disabled'),'true');assert.equal(calls.length,1);respond(metadata,matrix);await new Promise(setImmediate);
+ assert.equal(hoja.all(x=>x.attrs['data-permission-space']).length,9);assert.equal(botonEntregas(hoja).getAttribute('disabled'),undefined);
+ await botonEntregas(hoja).emit('click');assert.match(textos(hoja),/Acción 1/);
+ revoked=true;await botonEntregas(hoja).emit('click');assert.doesNotMatch(textos(hoja),/Acción 1/);assert.equal(botonEntregas(hoja).getAttribute('disabled'),'true');
+ const status=hoja.all(x=>x.attrs['aria-label']==='Permisos del expediente')[0];assert.equal(status.attrs['data-permissions-status'],'error');assert.equal(status.attrs['data-permissions-error'],'unauthorized');
+ assert.deepEqual(calls.map(x=>x.method),['readOfficePermissions','readOfficePending','readOfficePending']);
+});
+test('synthetic visual proof executes the shared policy and distinguishes withheld reads from denied-before-read',async()=>{
+ const vm=require('node:vm'),ctx=vm.createContext({});vm.runInContext(fs.readFileSync(path.join(root,'despacho-runtime/source/shared/office-permissions.js'),'utf8'),ctx);
+ const {montarPruebaPermisos}=await load('permisos-demo.mjs'),rootNode=new Nodo('div'),doc={getElementById:()=>rootNode,createElement:t=>new Nodo(t)};montarPruebaPermisos({doc,create:ctx.createOfficePermissions});
+ const buttons=rootNode.all(x=>x.tag==='button');assert.equal(buttons.length,6);
+ for(const [i,scenario,result,read,delivered] of [[0,'permitido','allowed','1','1'],[1,'denegado','denied','0','0'],[2,'ajeno','denied','0','0'],[3,'revocado','denied','1','0'],[4,'suplantado','denied','1','0'],[5,'url','denied','0','0']]){
+  await buttons[i].emit('click');assert.equal(rootNode.attrs['data-scenario'],scenario);assert.equal(rootNode.attrs['data-result'],result);assert.equal(rootNode.attrs['data-read-count'],read);assert.equal(rootNode.attrs['data-delivered-count'],delivered);
+  if(result==='denied')assert.doesNotMatch(rootNode.all(x=>x.tag==='pre')[0].textContent,/ENTREGA-SINTETICA/);
+ }
+});

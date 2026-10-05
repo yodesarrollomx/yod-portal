@@ -10,3 +10,6 @@ export const ENTORNO_AGENTE_CAMINA=true;
 export const ENTORNO_JUNTAS=true;
 // Portero v64 instalado y pestañas vacías comprobadas; encendido autorizado por Dirección (2026-10-04).
 export const ENTORNO_VISITAS_PERSISTENTES=true;
+
+// Política por espacio preparada; encender solo tras instalar y comprobar el enlace servidor.
+export const ENTORNO_PERMISOS_SERVIDOR=false;

@@ -3,12 +3,14 @@
 // to yodDespachoVisits_(request). This handler always reauthenticates the OS session.
 function yodDespachoVisits_(request) {
   if (!request || ['readVisits','recordVisit'].indexOf(request.operation) < 0) return {ok:false,error:'invalid_operation'};
-  var actor = yodDespachoActor_(request);
-  if (!actor) return {ok:false,error:'unauthorized'};
+  // The backend authenticates before any Sheet IO, again inside its lock,
+  // and at the end of reads / before commit. Avoid a redundant outer check.
   var backend = createOfficeVisitsBackend({case_id:YOD_DESPACHO_CONFIG.case_id,serverContext:request,
     Sheets:Sheets,scriptLock:LockService.getScriptLock(),now:function(){return Date.now();},
     newId:function(){return Utilities.getUuid();},digest:yodDespachoHash_,
-    authorize:function(context){var fresh=yodDespachoActor_(context);return fresh ? {allowed:true,actor_id:fresh.actor_id,case_id:YOD_DESPACHO_CONFIG.case_id} : {allowed:false};},
+    authorize:function(context,scope){var decision=yodDespachoOfficeAccess_(context,{case_id:scope.case_id,
+      space_id:scope.action==='readVisits'?'oficina':context.payload.space_id,operation:scope.action});
+      return decision.ok ? {allowed:true,actor_id:decision.actor_id,case_id:decision.case_id} : {allowed:false};},
     resolveCanonicalWorkbook:function(){return {case_id:YOD_DESPACHO_CONFIG.case_id,spreadsheet_id:YOD_DESPACHO_CONFIG.operational_book};}
   });
   return backend[request.operation](request.payload);

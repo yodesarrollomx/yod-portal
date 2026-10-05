@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-04.68-despacho-visitas-encendido",
+  "revision": "2026-10-04.69-despacho-permisos",
   "checked_at": "2026-10-04",
   "priorities": [
     "vender_mas",
@@ -7914,6 +7914,30 @@
       ],
       "deployment": "PR81/PR82 y Pages cc791ad2efc2ad3a18ab79628d7a6066dbfcb19f/a2ba410557313beec449f9096c46aa38c7e3f87c comprobados, checks aprobados y fuentes servidas cotejadas. Portero v64 conserva endpoint/permisos. Lectura OS inicial 0; llegada autorizada a juntas conserva exactamente una visita/recibo, revisión 1. Tras fallos de lectura documentados, la recarga recuperó esa misma visita y recibo en UI, sesión nueva vacía; DOM ready, error vacío, revisión 1. Actualización de solo lectura también ready; conector conserva una fila y revisión 1. Recuperación funcional acreditada; causa de fallos previos y estabilidad continua no acreditadas. Helper diagnóstico editor-only en HEAD, no en v64.",
       "rollback": "Apagar ENTORNO_VISITAS_PERSISTENTES y volver a versión previa de la misma implementación Portero; conservar pestañas, filas e historial."
+    },
+    {
+      "id": "CHG-DESPACHO-PERMISOS-069",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Acción 1.3: política explícita en servidor por sesión, expediente, espacio y operación, con observar como máximo inicial. Matriz de nueve espacios, sin conceder borradores/envíos/aprobación. Revalidar antes y después de lecturas y antes del commit de visitas; rechazar parámetros de identidad o nivel del navegador. Preparar enlace al Portero existente y demostración sintética de la misma política. Activar consumidor solo tras instalación y lectura autorizada; conservación de URL, principal, permisos, datos e IDs.",
+      "status": "propuesto",
+      "approval": "Dirección autorizó continuar con 1.3 el 4-oct-2026; no autoriza ampliar permisos de usuarios ni enviar mensajes.",
+      "tests": [
+        "node --test tests/*.cjs",
+        "node scripts/arquitectura.cjs --check",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Política real con identidades sintéticas: permitido, denegado, cambio de actor/caso y revocación durante lectura y antes de commit",
+        "Capturas de demostración sintética; instalación y aceptación por sesión OS se registran aparte"
+      ],
+      "deployment": "Código candidato: 350 pruebas locales aprobadas y verificadores del portal. ENTORNO_PERMISOS_SERVIDOR=false. Portero activo v64 sin cambios; instalación, encendido y aceptación autenticada pendientes. Capturas sintéticas se registran por separado en plan privado.",
+      "rollback": "Mantener o apagar el consumidor nuevo; volver a fuente y versión previa del mismo Portero conservando historial. No borrar visitas ni modificar ACL."
     }
   ],
   "data_contracts": [
@@ -8802,6 +8826,30 @@
         "No modifica conversación, trabajos, metas ni sus IDs; pruebas conectadas usan archivo sintético aislado.",
         "Solicitud ambigua conserva IDs; nunca cambia revisión y reintenta automáticamente una escritura sin reconciliar."
       ]
+    },
+    {
+      "id": "CTR-DESPACHO-PERMISOS-V1",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "source": "Acción 1.3; política de la oficina preparada para Portero, separada de permisos de otros tableros.",
+      "input": [
+        "Sesión autenticada por Portero y expediente canónico en servidor; nunca actor, libro o nivel elegidos por navegador.",
+        "readOfficePermissions: case_id; readOfficePending: case_id, space_id=juntas. Contratos existentes readVisits/recordVisit conservados."
+      ],
+      "output": [
+        "Matriz de espacios con operaciones y nivel máximo inicial observar; snapshot informativo no es un permiso reutilizable.",
+        "Lecturas reautorizadas al terminar; datos de una respuesta tardía no se entregan tras revocación o cambio de actor."
+      ],
+      "invariants": [
+        "Solo juntas, biblioteca y edición tienen registro de visitas implementado; observar no concede acceso a NotebookLM/Drive ni envíos.",
+        "Borrador y acción aprobada no concedidos por defecto; espacios no conectados y operaciones desconocidas se deniegan.",
+        "Cada mutación verifica autorización vigente antes del commit; se conservan CAS, IDs y recibos.",
+        "Pruebas sintéticas sin endpoints de negocio, credenciales, mensajes ni escrituras de producción."
+      ]
     }
   ],
   "path_ownership": [
@@ -9372,6 +9420,52 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/despacho-visitas.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho-runtime/source/shared/office-permissions.js",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho-runtime/source/server/permisos-portero.gs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/permisos-demo.html",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/permisos-demo.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-permisos.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",

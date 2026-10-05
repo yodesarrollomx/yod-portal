@@ -1,13 +1,13 @@
 {
-  "model_revision": "2026-10-04.68-despacho-visitas-encendido",
-  "proposal_id": "CHG-DESPACHO-VISITAS-ENCENDIDO-068",
+  "model_revision": "2026-10-04.69-despacho-permisos",
+  "proposal_id": "CHG-DESPACHO-PERMISOS-069",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "GAS-PORTERO",
     "EXT-DRIVE"
   ],
-  "summary": "Cerrar acción 1.2: instalar exclusivamente readVisits/recordVisit y preparación de dos pestañas vacías en Portero existente; publicar conservando URL/permisos/configuración. Verificar lectura autorizada antes de encender ENTORNO_VISITAS_PERSISTENTES por PR. Cotejar visita de recorrido autorizado e historial recuperado sin duplicación, con capturas y recibos privados. Sin pruebas sintéticas en libro de negocio. Diagnóstico acotado: exponer estado, código permitido y revisión en DOM, y helper editor-only de lectura sin escritura para contrastar recuperación.",
+  "summary": "Acción 1.3: política explícita en servidor por sesión, expediente, espacio y operación, con observar como máximo inicial. Matriz de nueve espacios, sin conceder borradores/envíos/aprobación. Revalidar antes y después de lecturas y antes del commit de visitas; rechazar parámetros de identidad o nivel del navegador. Preparar enlace al Portero existente y demostración sintética de la misma política. Activar consumidor solo tras instalación y lectura autorizada; conservación de URL, principal, permisos, datos e IDs.",
   "tests": [
     "node --test tests/*.cjs",
     "node scripts/arquitectura.cjs --check",
@@ -15,8 +15,8 @@
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "Contraste exacto de módulos y router guardados; pruebas aisladas del enlace",
-    "Lectura autenticada antes de encendido; recorrido autorizado, recarga y cotejo con recibos privados"
+    "Política real con identidades sintéticas: permitido, denegado, cambio de actor/caso y revocación durante lectura y antes de commit",
+    "Capturas de demostración sintética; instalación y aceptación por sesión OS se registran aparte"
   ],
-  "rollback": "Apagar ENTORNO_VISITAS_PERSISTENTES y volver a versión previa de la misma implementación Portero; conservar pestañas, filas e historial."
+  "rollback": "Mantener o apagar el consumidor nuevo; volver a fuente y versión previa del mismo Portero conservando historial. No borrar visitas ni modificar ACL."
 }
