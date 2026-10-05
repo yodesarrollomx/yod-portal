@@ -61,9 +61,10 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
             .catch(() => null);
           [confirmed, result] = await Promise.all([finalized, saved]);
           if (result) report(result);
-          confirmed = confirmed && result?.finalized === true;
-          publish({finalized: confirmed, incomplete: state.incomplete || !confirmed});
+          // A primary session.closed confirms finalization even if history status could not be read.
+          publish({finalized: confirmed, incomplete: state.incomplete || !confirmed || !result});
           notice = !confirmed ? 'Finalización incompleta: no se confirmó el cierre. Revisa el historial en Agentes.' :
+            !result ? 'Conversación finalizada. No se confirmó el respaldo; revisa Agentes.' :
             state.incomplete ? 'Conversación finalizada. Hay fragmentos del historial por revisar.' :
             result.pending ? 'Conversación finalizada. El envío al historial sigue pendiente.' : notice;
         }

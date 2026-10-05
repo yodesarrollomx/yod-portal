@@ -5,10 +5,10 @@ import {groupTranscriptFragments} from './live-transcript.mjs';
 const open = document.getElementById('voice-open');
 if (open) {
   const transport = createFrameTransport(window), dialog = document.createElement('dialog');
-  dialog.className = 'realtime-dialog';
+  dialog.className = 'realtime-dialog'; dialog.setAttribute('aria-labelledby','voice-title');
   // Private dynamic text always uses textContent.
   dialog.innerHTML = '<button class="voice-close" aria-label="Cerrar conversación de voz">×</button>' +
-    '<p class="voice-eyebrow">Tu agente · OpenAI</p><h1>Hablar con Gastón</h1>' +
+    '<p class="voice-eyebrow">Tu agente · OpenAI</p><h1 id="voice-title">Hablar con Gastón</h1>' +
     '<p id="voice-case">Conectando expediente…</p><p id="voice-status" role="status">Preparando conversación.</p>' +
     '<audio id="voice-audio" autoplay controls></audio><div class="voice-actions">' +
     '<button id="voice-start" disabled>Iniciar conversación</button><button id="voice-mute" disabled>Silenciar micrófono</button>' +
@@ -73,7 +73,9 @@ if (open) {
   node('voice-stop').addEventListener('click', () => {void voice.stop();});
   async function dismiss() {
     if (dismissing) return; dismissing = true;
-    await voice.stop(); generation++; selection = null; dialog.close(); open.focus(); dismissing = false;
+    const wasLive = active(voice.snapshot()), result = await voice.stop();
+    if (wasLive && (result?.incomplete || result?.pending)) {dismissing = false; return;}
+    generation++; selection = null; dialog.close(); open.focus(); dismissing = false;
   }
   dialog.querySelector('.voice-close').addEventListener('click', () => {void dismiss();});
   dialog.addEventListener('cancel', event => {event.preventDefault(); void dismiss();});
