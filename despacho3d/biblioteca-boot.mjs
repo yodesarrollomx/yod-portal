@@ -41,6 +41,7 @@ if(open){
     const card=h('article','','library-passage');card.append(link(p.fuente.nombre,p.fuente.enlace));
     const location=[p.pagina?'Página '+p.pagina:'',p.fuente.pestana?'Pestaña '+p.fuente.pestana:'',p.fuente.rango?'Rango '+p.fuente.rango:''].filter(Boolean).join(' · ');
     card.append(h('small',location||'Fragmento de texto'),h('p',p.texto),h('small','Fuente comprobada '+dates(p.fuente.consultado)));
+    if(p.fuente.pestana)card.append(h('small','Consulta la hoja para obtener cifras actuales.'));
     return card;
    }));
   }

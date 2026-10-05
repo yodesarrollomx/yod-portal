@@ -8074,7 +8074,7 @@
         "Servidor privado: índice persistente, consulta repetida sin OCR, versiones, permisos/revocación, entradas no confiables, límites, preparación en segundo plano y fuentes en chat/voz.",
         "Navegador escritorio/móvil con fuentes sintéticas; lectura real y publicación contrastadas por separado."
       ],
-      "deployment": "Índice y herramientas implementados en rama privada, panel Biblioteca y cliente en rama pública. Pruebas y aceptación/pubicación pendientes.",
+      "deployment": "Servidor PR9/PR11 integrado y Render live en8811ee5;88 pruebas privadas aprobadas. Portal371 pruebas, esquema/vistas/impacto y OS/portal/accesos/obra aprobados en5a6197d. Panel y pruebas de cliente implementados. Comprobación navegador, preparación/reuso de fuentes reales y publicación HTTP del consumidor pendientes; no acredita fase4 completa.",
       "rollback": "Deshabilitar biblioteca indexada/revertir consumidor y servidor; conservar fuentes originales, datos/cálculos Sheets, conversaciones, journal/outbox, IDs y permisos. El índice es derivado y privado."
     }
   ],
@@ -9014,7 +9014,8 @@
         "Reusar contenido sólo si identidad, archivo, selección y versión coinciden; no usar extracción visual de una pregunta como transcripción completa.",
         "Sheets conserva cifras y cálculos canónicos. No tratar índice derivado o respuesta guardada como dato financiero actualizado.",
         "Límites y truncado explícitos; búsqueda léxica y ranking Jev no demuestran cobertura integral ni verdad de una respuesta.",
-        "Conservar configuración Live exacta, autorización DP/carril, historial/recibos y fuentes no confiables como datos, nunca instrucciones."
+        "Conservar configuración Live exacta, autorización DP/carril, historial/recibos y fuentes no confiables como datos, nunca instrucciones.",
+        "modifiedTime no acredita frescura de fórmulas de Sheets: pasajes de hojas marcan datos_vigentes=false; drive_leer siempre relee valores originales, sin responder desde el índice."
       ]
     }
   ],

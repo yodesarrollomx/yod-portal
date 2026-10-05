@@ -173,3 +173,14 @@ Evidencia previa a integración: 366 pruebas de portal aprobadas, verificadores 
 Los próximos agentes usan esta presencia sólo después de tener un perfil autorizado real y capacidades comprobadas. Mantenerlos visibles y preparados no inicia inferencias continuas ni concede herramientas. No generar personajes operativos a partir de un padrón público.
 
 Dirección propuso biblioteca Obsidian/NotebookLM para que Jev investigue documentos y alimente el tablero. Siguiente requisito: índice por expediente, respuestas con fuentes/página y frescura, permisos revalidados y refresco en segundo plano. Sheets conserva datos/cálculos de negocio; no cargar toda la documentación para dibujar el despacho. Inventariar las fuentes y verificar API/sincronización de cada servicio antes de prometer conexión. Este PR no instala Obsidian ni NotebookLM.
+
+
+## 17. Biblioteca indexada · 5-oct-2026
+
+Dirección autorizó continuar con la biblioteca de Jev. CHG-DESPACHO-BIBLIOTECA-073: portal PR90 prepara tarjeta Biblioteca, lista real de fuentes, estado de preparación y búsqueda de pasajes con referencia y fecha. Índice privado en servidor PR9/PR11, sin otro proveedor contratado ni datos estáticos públicos. Ver docs/arquitectura/despacho-biblioteca.md.
+
+Las fuentes vienen sólo de Documentos del expediente actual. La entrada no espera el OCR; preparación y refresco en segundo plano. Consultar compara permisos/versiones y vuelve a revalidar después de Jev; retiradas o desactualizadas no devuelven texto viejo. Sheets con gid/rango conserva selección; sin rango se limita a A1:Z200. PDF/Docs24.000 caracteres; páginas sólo desde extracción. Una consulta visual de plano sigue usando el PDF real, no el índice de texto.
+
+Fórmulas pueden recalcular sin modificar fecha de Drive: pasajes de hojas no son cifras vigentes y drive_leer siempre consulta valores canónicos. No se reemplazan cálculos ni hojas. Chat/voz/cola preservan múltiples referencias con página/versión; JSON Live y deltas intactos.
+
+88 pruebas privadas y371 de portal aprobadas; pruebas navegador, publicación HTTP e índice real se registran separadas en plan privado. No marcar fase4 completa: Obsidian/NotebookLM/Notion por verificar, cobertura inicial limitada y aceptación de consulta real pendiente. El índice evita OCR completo repetido, no elimina latencia de contexto del Portero. Reversión off/revert sin borrar originales, historial o datos.

@@ -481,3 +481,4 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Sheets conserva cifras y cálculos canónicos. No tratar índice derivado o respuesta guardada como dato financiero actualizado.
 - Límites y truncado explícitos; búsqueda léxica y ranking Jev no demuestran cobertura integral ni verdad de una respuesta.
 - Conservar configuración Live exacta, autorización DP/carril, historial/recibos y fuentes no confiables como datos, nunca instrucciones.
+- modifiedTime no acredita frescura de fórmulas de Sheets: pasajes de hojas marcan datos_vigentes=false; drive_leer siempre relee valores originales, sin responder desde el índice.
