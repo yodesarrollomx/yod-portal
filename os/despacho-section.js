@@ -37,7 +37,7 @@
         status.hidden=false;status.textContent='Abriendo la oficina…';
         frame=doc.createElement('iframe');
         frame.id='despachoFrame';frame.title='El Despacho · oficina 3D';
-        frame.setAttribute('referrerpolicy','no-referrer');frame.setAttribute('allow','fullscreen');
+        frame.setAttribute('referrerpolicy','no-referrer');frame.setAttribute('allow','fullscreen; microphone; autoplay');
         var current=frame;
         frame.addEventListener('load',function(){if(frame===current&&authorized())status.hidden=true;});
         frame.setAttribute('src',FRAME_PATH);canvas.appendChild(frame);mountedEpoch=a.epoch;

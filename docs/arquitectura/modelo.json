@@ -7946,7 +7946,7 @@
         "SYS-DESPACHO",
         "GAS-PORTERO"
       ],
-      "proposal": "Adelantar voz por instrucción de Dirección: conversar con Gastón mediante OpenAI Realtime en el servidor existente y conservar transcripción en el historial canónico. Interfaz navegable primero; reutilizar identidad y permisos, sin esperar las fases posteriores ni activar metas pausadas.",
+      "proposal": "Adelantar voz por instrucción de Dirección: hablar con Gastón en el Despacho mediante GPT-Live, conservando exactamente el JSON entregado, y revisar después la transcripción por intervalos en el historial. Reutilizar contexto y permisos existentes; interfaz primero, con comprobación del cierre antes de desconectar audio.",
       "status": "propuesto",
       "approval": "Dirección autorizó en este chat usar la API OpenAI existente e implementar la voz y el historial.",
       "tests": [
@@ -7956,9 +7956,9 @@
         "node verify-portal.cjs",
         "node verify-accesos.cjs",
         "node verify-obra-app.cjs",
-        "Prueba aislada de autenticación, voz, interrupción, transcripción tardía, respaldo y cierre; audio real requiere dispositivo."
+        "Pruebas aisladas GPT-Live: JSON exacto, autenticación, IDs opacos, solapamiento, fragmentos tardíos, respaldo, session.started y session.closed/timeout; conversación real pendiente de dispositivo."
       ],
-      "deployment": "Preparación en ramas separadas del portal y motor; servidor y UI aún sin publicar.",
+      "deployment": "Servidor privado preparado y comprobado en Actions; portal preparado en rama. Despliegue y micrófono real se registran por separado.",
       "rollback": "Apagar YOD_VOICE_ENABLED y revertir UI; conservar historial, outbox e IDs."
     }
   ],
@@ -9497,7 +9497,7 @@
     },
     {
       "repo": "yodesarrollomx/yod-portal",
-      "prefix": "tests/despacho-realtime.test.cjs",
+      "prefix": "tests/despacho-live.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO"
