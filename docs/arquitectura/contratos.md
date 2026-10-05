@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.77-despacho-voz-basica · 2026-10-05.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.78-despacho-voz-comprobacion · 2026-10-05.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
