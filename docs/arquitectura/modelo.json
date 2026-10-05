@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-04.69-despacho-permisos",
+  "revision": "2026-10-05.70-despacho-voz",
   "checked_at": "2026-10-04",
   "priorities": [
     "vender_mas",
@@ -7938,6 +7938,28 @@
       ],
       "deployment": "Código candidato: 350 pruebas locales aprobadas y verificadores del portal. ENTORNO_PERMISOS_SERVIDOR=false. Portero activo v64 sin cambios; instalación, encendido y aceptación autenticada pendientes. Capturas sintéticas se registran por separado en plan privado.",
       "rollback": "Mantener o apagar el consumidor nuevo; volver a fuente y versión previa del mismo Portero conservando historial. No borrar visitas ni modificar ACL."
+    },
+    {
+      "id": "CHG-DESPACHO-VOZ-070",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO"
+      ],
+      "proposal": "Adelantar voz por instrucción de Dirección: conversar con Gastón mediante OpenAI Realtime en el servidor existente y conservar transcripción en el historial canónico. Interfaz navegable primero; reutilizar identidad y permisos, sin esperar las fases posteriores ni activar metas pausadas.",
+      "status": "propuesto",
+      "approval": "Dirección autorizó en este chat usar la API OpenAI existente e implementar la voz y el historial.",
+      "tests": [
+        "node --test tests/*.cjs",
+        "node scripts/arquitectura.cjs --check",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Prueba aislada de autenticación, voz, interrupción, transcripción tardía, respaldo y cierre; audio real requiere dispositivo."
+      ],
+      "deployment": "Preparación en ramas separadas del portal y motor; servidor y UI aún sin publicar.",
+      "rollback": "Apagar YOD_VOICE_ENABLED y revertir UI; conservar historial, outbox e IDs."
     }
   ],
   "data_contracts": [
@@ -9471,6 +9493,14 @@
         "SYS-DESPACHO",
         "GAS-PORTERO",
         "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-realtime.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
       ]
     }
   ]
