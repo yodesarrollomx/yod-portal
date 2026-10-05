@@ -1,6 +1,6 @@
 # Despacho: permisos por operación · acción 1.3
 
-CHG-DESPACHO-PERMISOS-069 / CTR-DESPACHO-PERMISOS-V1. PR84 entregó código y demostración con consumidor apagado. CHG-DESPACHO-PERMISOS-ENCENDIDO-070 instala Portero v65 y prepara `ENTORNO_PERMISOS_SERVIDOR=true` tras comprobar lectura autenticada de visitas. La aceptación de matriz/Juntas después de Pages sigue pendiente. La demostración usa identidades y datos sintéticos; no acredita acceso real.
+CHG-DESPACHO-PERMISOS-069 / CTR-DESPACHO-PERMISOS-V1. PR84 entregó código y demostración con consumidor apagado. CHG-DESPACHO-PERMISOS-ENCENDIDO-070 instala Portero v65 y prepara `ENTORNO_PERMISOS_SERVIDOR=true` tras comprobar lectura autenticada de visitas. PR85 integrado y Pages comprobado; matriz/Juntas autenticadas aceptadas en el alcance inicial observar. La demostración usa identidades y datos sintéticos; no acredita acceso real.
 
 ## Matriz inicial
 
@@ -42,4 +42,8 @@ Reversión: consumidor false y, si se necesita, implementación anterior del mis
 
 ## Instalación · CHG-DESPACHO-PERMISOS-ENCENDIDO-070
 
-Portero v65 publicado en la implementación existente tras recargar y cotejar tres fuentes idénticas. Mismos URL, principal y acceso; ninguna ACL, configuración o scope nuevo. `YOD_verificarPermisosAislados` terminó con seis casos aprobados en memoria. Local: 351 pruebas. La lectura autenticada de visitas y aceptación del consumidor se registran por separado. Respaldos y prueba runtime en plan privado.
+Portero v65 publicado en la implementación existente tras recargar y cotejar tres fuentes idénticas. Mismos URL, principal y acceso; ninguna ACL, configuración o scope nuevo. `YOD_verificarPermisosAislados` terminó con seis casos aprobados en memoria. Local: 351 pruebas. Aceptación de consumidor: recarga OS con matriz ready de nueve espacios (tres observar/seis sin conexión), Juntas devuelve una entrega real por aprobar. Historial ready/revisión1/mismo recibo; conector confirma una fila/revisión1, sin nuevo recorrido ni registro. Respaldos y prueba runtime en plan privado.
+
+## Cierre del alcance inicial observar
+
+PR84/85 integrados y Pages comprobado; cuatro recursos del consumidor servidos idénticos tras PR85. Cada operación nueva reautoriza en servidor; no hay grants de borrador/acción. Revocación y cambio de actor se comprobaron con identidades sintéticas en pruebas locales y runtime; no se retiró acceso a un usuario real para probar. La matriz no cubre globalmente otros protocolos de conversación/metas. Móvil real, WebGL y la causa de incidencias anteriores de conexión siguen pendientes; no se afirma estabilidad continua. Próximo1.4: recuperar contexto/trabajo con lecturas y mostrar estado/fuentes/decisiones sin ejecutar de nuevo una acción.

@@ -1,23 +1,19 @@
 {
-  "model_revision": "2026-10-04.70-despacho-permisos-encendido",
-  "proposal_id": "CHG-DESPACHO-PERMISOS-ENCENDIDO-070",
+  "model_revision": "2026-10-04.71-despacho-permisos-cierre",
+  "proposal_id": "CHG-DESPACHO-PERMISOS-CIERRE-071",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "GAS-PORTERO",
     "EXT-DRIVE"
   ],
-  "summary": "Instalar núcleo y adaptador de permisos, visitas actualizadas y dos dispatch de lectura en el mismo Portero. Conservar URL, principal, acceso, scopes, configuración, historial e IDs; probar seis casos sintéticos en runtime, releer fuentes y verificar lectura autenticada antes de dar aceptación. Encender consumidor observe-only después de comprobar instalación; no conceder borradores/envíos/aprobación ni modificar otros protocolos.",
+  "summary": "Registrar aceptación del alcance inicial observar del paso1.3: PR84/85, Portero v65, Pages, matriz y Juntas autenticadas, mismo historial y recibo, prueba sintética de revocación. Actualizar contrato/relevo sin cambiar comportamiento, permisos, motor ni datos.",
   "tests": [
-    "node --test tests/*.cjs",
     "node scripts/arquitectura.cjs --check",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "ACCESOS_REF=main node verify-accesos.cjs",
-    "node verify-obra-app.cjs",
-    "Cotejo exacto de tres fuentes guardadas y configuración de implementación",
-    "YOD_verificarPermisosAislados: seis casos en memoria",
-    "Lectura OS matriz/Juntas/visitas, sin otra fila ni recorrido"
+    "351 pruebas aprobadas en PR85 y checks verdes",
+    "Lectura UI autenticada matriz/Juntas/visitas y cotejo Sheets solo lectura",
+    "git diff --check",
+    "Verificar impacto con --repo"
   ],
-  "rollback": "Consumidor false; volver misma implementación a v64 conservando historial, recibos y ACL. Restaurar HEAD con respaldos si hace falta."
+  "rollback": "Revertir documentación si hace falta; runtime conserva reversión de070: flagfalse y misma implementación av64, sin borrar historial."
 }
