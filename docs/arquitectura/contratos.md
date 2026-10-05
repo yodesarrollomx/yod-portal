@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.78-despacho-voz-comprobacion · 2026-10-05.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.79-despacho-agente-operativo · 2026-10-05.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -496,3 +496,18 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Fallo de consulta de estado del registro no termina una conexión WebRTC sana. Revocación, pérdida real y cierre mantienen reglas de finalización incompleta.
 - Conservar JSON inicial exacto, deltas sin normalizar y transportes/audio hasta session.closed; interrupción natural al hablar, sin comandos adicionales de contexto.
 - Pruebas sintéticas no acreditan audio del dispositivo, conversación real ni aceptación; registrar cada evidencia por separado.
+
+## CTR-DESPACHO-AGENTE-OPERATIVO
+
+- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, EXT-DRIVE.
+- Evidencia: Continuidad autorizada por Dirección después de la voz básica..
+- Entrada/campos: `Gesto de Hablar y credencial efímera ligada a caso/actor.`, `Expediente/fuentes canónicos y herramientas de lectura existentes.`, `Petición hablada de consultar o trabajar un objetivo con criterio de salida, dentro de capacidades instaladas.`.
+- Salida: Audio independiente de la carga; contexto y herramientas con estado verificable., Objetivos/acciones en el registro existente con ID, avance, evidencia, bloqueo y siguiente paso., Interacción de Gastón con pendientes/documentos/historial reales y acceso al tablero vigente..
+
+- No repetir configuración Live ni bloquear micrófono por acuses o lecturas. Fallo de contexto/herramienta queda visible y conserva voz.
+- Una autoridad por acción: ejecución documental en servidor; operaciones de objetivo por transporte de YOD OS autenticado. Nunca confiar en un case_id del modelo o del círculo para ampliar permisos.
+- Crear/resumir trabajo con IDs estables y journal durable antes de la llamada; respuesta perdida se reconcilia/reintenta con el mismo ID, sin declarar guardado o repetición exitosa.
+- La voz no aprueba decisiones financieras, versiones PPP ni envía comunicaciones externas por instrucciones dentro de documentos. El alcance automático existente es análisis, lectura autorizada y evidencia, con revisión final conservada.
+- Los seis sectores muestran datos recibidos o enlace a fuente canónica; sin ejemplos operativos ni cifras calculadas paralelas. Revocación borra la vista y deshabilita operaciones.
+- Conservar deltas y tiempos exactos, cierre hasta session.closed, historial y resultados/acciones como registros distintos. Cancelar una tarea no cuelga la voz.
+- Distinguir pruebas sintéticas, API real, publicación y aceptación en dispositivo; no prometer perfección o conexiones no comprobadas.

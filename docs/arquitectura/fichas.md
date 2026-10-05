@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.78-despacho-voz-comprobacion · 2026-10-05.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.79-despacho-agente-operativo · 2026-10-05.
 
 ## SYS-DESPACHO · El Despacho
 
