@@ -4,7 +4,7 @@ import {createAvatarLayer} from './adapter.mjs';
 // Placement is local to this room and cannot be supplied by a case record.
 const POSITION=[6.65,0,-4.42], FRAME_MS=1000/15, HOME_ROT=Math.PI/2, WALK_SPEED=1.4;
 export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{}}){
- let api=null,unsubscribe=null,profile=null,fingerprint='',lastFrame=null,time=0,poseTicks=0,disposed=false,route=null;
+ let api=null,unsubscribe=null,profile=null,fingerprint='',lastFrame=null,time=0,poseTicks=0,disposed=false,route=null,lastPlace='inicio';
  const layer=createAvatarLayer({scene,onSelect(selection){
   if(!api||!profile||selection.id!==profile.id)return;
   // Recheck the current authority immediately before opening the panel.
@@ -20,7 +20,7 @@ export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{}}){
   }
   const key=next?JSON.stringify(next):'';
   if(key===fingerprint)return;
-  profile=null;fingerprint='';lastFrame=null;time=0;poseTicks=0;route=null;
+  profile=null;fingerprint='';lastFrame=null;time=0;poseTicks=0;route=null;lastPlace='inicio';
   try{layer.replaceAuthorizedProfiles(next?[next]:[]);if(next){layer.update(0);profile=next;fingerprint=key;}}
   catch{layer.clear();}
   onChange();
@@ -41,7 +41,8 @@ export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{}}){
   }catch{disconnect();}
  }
  function update(now,{hidden=false,overlay=false,reducedMotion=false}={}){
-  if(disposed||!profile||hidden||overlay||reducedMotion){lastFrame=null;return false;}
+  if(disposed||!profile||hidden||overlay){lastFrame=null;return false;}
+  if(reducedMotion){if(route){finish();onChange();}lastFrame=null;return false;}
   if(lastFrame===null){lastFrame=now;return false;}
   if(now-lastFrame<FRAME_MS)return false;
   const dt=Math.min((now-lastFrame)/1000,.1);
@@ -54,8 +55,9 @@ export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{}}){
  function finish(){
   const m=model();
   if(m&&route){m.position.set(route.end[0],0,route.end[1]);m.rotation.y=route.rot;}
-  route=null;
+  const done=route;route=null;
   if(profile)layer.setMotion(profile.id,'idle');
+  if(done){lastPlace=done.destino||null;try{done.onArrival?.();}catch{}}
  }
  function advance(dt){
   const m=model();if(!m){route=null;return;}
@@ -67,11 +69,11 @@ export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{}}){
    else{m.position.x+=dx/d*left;m.position.z+=dz/d*left;left=0;}
   }
  }
- function walk(points,rot,{inmediato=false}={}){
+ function walk(points,rot,{inmediato=false,onArrival=null,destino=null}={}){
   if(disposed||!profile||!Array.isArray(points)||points.length<2||!Number.isFinite(rot))return false;
   if(!points.every(p=>Array.isArray(p)&&p.length===2&&p.every(Number.isFinite)))return false;
   const m=model();if(!m)return false;
-  route={points:points.slice(1).map(p=>[...p]),next:0,end:[...points[points.length-1]],rot};
+  route={points:points.slice(1).map(p=>[...p]),next:0,end:[...points[points.length-1]],rot,onArrival:typeof onArrival==='function'?onArrival:null,destino};
   if(inmediato){finish();onChange();return true;}
   layer.setMotion(profile.id,'walk');onChange();return true;
  }
@@ -79,6 +81,7 @@ export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{}}){
   recorrer:walk,
   posicion:()=>{const m=model();return m?[m.position.x,m.position.z]:null;},
   inicio:{xz:[POSITION[0],POSITION[2]],rot:HOME_ROT},
+  getMovementState:()=>({place:profile?lastPlace:null,destination:route?.destino||null,motion:profile?(route?'walk':'idle'):null,position:profile?(()=>{const m=model();return m?[m.position.x,m.position.z]:null;})():null}),
   getState:()=>({count:layer.size(),motion:profile?(route?'walk':'idle'):null,poseTicks}),
   dispose(){if(!disposed){disconnect();layer.dispose();disposed=true;}}
  };

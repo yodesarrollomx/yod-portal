@@ -58,8 +58,8 @@ test('con los muebles reales: todos los espacios se alcanzan sin atravesar nada'
   const office=await createOffice({pilotFigure:false});
   const dentro=(b,x,z)=>x>=b.minX&&x<=b.maxX&&z>=b.minZ&&z<=b.maxZ;
   const ok=(x,z)=>(dentro(office.bounds,x,z)||dentro(office.annex,x,z))&&!office.collisions.some(c=>x>c.minX-.22&&x<c.maxX+.22&&z>c.minZ-.22&&z<c.maxZ+.22);
-  const src=fs.readFileSync(path.join(base,'office.js'),'utf8');
-  const bloque=src.slice(src.indexOf('const places={'),src.indexOf('};',src.indexOf('const places={')));
+  const src=fs.readFileSync(path.join(base,'office-layout.mjs'),'utf8');
+  const bloque=src.slice(src.indexOf('export const places={'),src.indexOf('};',src.indexOf('export const places={')));
   const lugares=Object.fromEntries([...bloque.matchAll(/^\s*(\w+):\{label:'[^']*',eye:\[([^\]]+)\],target:\[([^\]]+)\]/gm)].map(m=>[m[1],{eye:m[2].split(',').map(Number),target:m[3].split(',').map(Number)}]));
   const ids=Object.keys(lugares);
   assert.ok(ids.length>=10);

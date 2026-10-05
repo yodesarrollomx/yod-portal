@@ -106,7 +106,7 @@ export function rutaEntre(a,b,permitido,limites,{celda=.3,radio=2.5}={}){
 }
 
 // Arma la función que usa la oficina: agenteIr('decisions') o agenteIr('inicio').
-export function crearAgenteIr({lugares,piloto,permitido,limites,reducido=()=>false}){
+export function crearAgenteIr({lugares,piloto,permitido,limites,reducido=()=>false,alLlegar=()=>{}}){
  return function agenteIr(id){
   if(typeof id!=='string'||!piloto||typeof piloto.posicion!=='function')return false;
   const desde=piloto.posicion();
@@ -117,6 +117,6 @@ export function crearAgenteIr({lugares,piloto,permitido,limites,reducido=()=>fal
   if(!puesto)return false;
   const ruta=rutaEntre(desde,puesto.xz,permitido,limites);
   if(!ruta)return false;
-  return piloto.recorrer(ruta,puesto.rot,{inmediato:!!reducido()});
+  return piloto.recorrer(ruta,puesto.rot,{inmediato:!!reducido(),destino:id,onArrival:()=>alLlegar(id)});
  };
 }

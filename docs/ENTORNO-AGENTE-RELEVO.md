@@ -97,3 +97,10 @@ Pruebas locales con navegador: servidor `python3 -m http.server`, Playwright con
 - «Enviar al agente» lleva la figura a su mesa sin atravesar muebles y deja una visita del agente en la bitácora.
 - «Ver entregas por aprobar» muestra solo tarjetas «por aprobar» y «por decidir» y dice que la aprobación se hace en YOD OS; no escribe nada.
 - `node --test tests/*.cjs` y los dos checks del PR en verde.
+
+
+## 8. Vista legible para agentes · cambio en rama, pendiente de publicación
+
+Dirección pidió que el agente pueda observar y operar la sala aunque WebGL no esté disponible. CHG-DESPACHO-VISTA-LEGIBLE-064 añade «Plano y estado» y una alternativa DOM/SVG sin GPU. Ver `docs/arquitectura/despacho-vista-legible.md` para contrato, pruebas y aceptación visual pendiente.
+
+El nuevo interruptor es `OFICINA_LEGIBLE` en `despacho3d/office-config.mjs`. En la rama está `true` por esta petición. No afirmar que está publicado hasta merge y Pages comprobados. El piloto comparte sus rutas con el 3D; Entorno registra ahora la visita después de la llegada confirmada, en lugar de registrarla al aceptar la orden. Las seis áreas por construir siguen pendientes. Los datos privados siguen llegando por el perfil autorizado.
