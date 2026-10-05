@@ -24,3 +24,15 @@ function YOD_prepararVisitas() {
   }).setup({case_id:YOD_DESPACHO_CONFIG.case_id});
   if(!result.ok)throw Error(result.error);console.log(JSON.stringify({ok:true,created:result.created}));
 }
+
+// Editor-only read diagnostic. Never initializes storage or invents a visit.
+function YOD_verificarLecturaVisitas() {
+  var email=String(Session.getActiveUser().getEmail()||'').trim().toLowerCase();
+  if(YOD_DESPACHO_CONFIG.editors.indexOf(email)<0)throw Error('unauthorized');
+  var result=createOfficeVisitsBackend({case_id:YOD_DESPACHO_CONFIG.case_id,serverContext:{},Sheets:Sheets,
+    scriptLock:LockService.getScriptLock(),now:function(){return Date.now();},newId:function(){return Utilities.getUuid();},digest:yodDespachoHash_,
+    authorize:function(){var current=String(Session.getActiveUser().getEmail()||'').trim().toLowerCase();return {allowed:current===email&&YOD_DESPACHO_CONFIG.editors.indexOf(current)>=0,actor_id:current,case_id:YOD_DESPACHO_CONFIG.case_id,can_setup:true};},
+    resolveCanonicalWorkbook:function(){return {case_id:YOD_DESPACHO_CONFIG.case_id,spreadsheet_id:YOD_DESPACHO_CONFIG.operational_book};}
+  }).readVisits({case_id:YOD_DESPACHO_CONFIG.case_id});
+  console.log(JSON.stringify(result));
+}

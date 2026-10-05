@@ -4,7 +4,7 @@
 // El repositorio es público: aquí no hay nombres de casos, clientes ni contactos.
 import {ENTORNO_ACTIVO,ENTORNO_JUNTAS,ENTORNO_VISITAS_PERSISTENTES} from './entorno-config.mjs?v=3';
 import {leerMetas,pendientesDeMetas} from './circulo-pendientes.mjs';
-import {Visitas} from './visitas.mjs?v=1';
+import {Visitas} from './visitas.mjs?v=2';
 import {createFrameTransport} from './conversation.mjs?v=2';
 
 export const PERMISOS={
@@ -109,6 +109,8 @@ export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,vol
  function pintar(){
   if(visitas){
    limpiar(respaldo);const s=visitas.state(),count=s.snapshot?.total;
+   respaldo.setAttribute('data-visits-status',s.status);respaldo.setAttribute('data-visits-error',s.error||'');
+   respaldo.setAttribute('data-visits-revision',s.snapshot?String(s.snapshot.revision):'');
    const notice=s.status==='reading'?'Leyendo visitas guardadas…':s.status==='saving'?'Guardando la visita…':s.status==='unconfirmed'?'Guardado por confirmar. Reintentar conserva la misma visita.':s.status==='ready'?`${count} visitas guardadas en el servidor.`:'No pude confirmar el historial de visitas. Las visitas de esta sesión siguen abajo.';
    respaldo.appendChild(h('p',{role:'status',texto:notice}));
    if(s.queued)respaldo.appendChild(h('p',{texto:`${s.queued} visitas esperando guardado en esta sesión.`}));

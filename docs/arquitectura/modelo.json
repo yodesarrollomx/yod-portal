@@ -7899,8 +7899,8 @@
         "GAS-PORTERO",
         "EXT-DRIVE"
       ],
-      "proposal": "Cerrar acción 1.2: instalar exclusivamente readVisits/recordVisit y preparación de dos pestañas vacías en Portero existente; publicar conservando URL/permisos/configuración. Verificar lectura autorizada antes de encender ENTORNO_VISITAS_PERSISTENTES por PR. Cotejar visita de recorrido autorizado e historial recuperado sin duplicación, con capturas y recibos privados. Sin pruebas sintéticas en libro de negocio.",
-      "status": "implementado_local",
+      "proposal": "Cerrar acción 1.2: instalar exclusivamente readVisits/recordVisit y preparación de dos pestañas vacías en Portero existente; publicar conservando URL/permisos/configuración. Verificar lectura autorizada antes de encender ENTORNO_VISITAS_PERSISTENTES por PR. Cotejar visita de recorrido autorizado e historial recuperado sin duplicación, con capturas y recibos privados. Sin pruebas sintéticas en libro de negocio. Diagnóstico acotado: exponer estado, código permitido y revisión en DOM, y helper editor-only de lectura sin escritura para contrastar recuperación.",
+      "status": "publicado",
       "approval": "Dirección autorizó continuar el cierre de 1.2 el 4-oct-2026; conserva permisos y contratos existentes.",
       "tests": [
         "node --test tests/*.cjs",
@@ -7912,7 +7912,7 @@
         "Contraste exacto de módulos y router guardados; pruebas aisladas del enlace",
         "Lectura autenticada antes de encendido; recorrido autorizado, recarga y cotejo con recibos privados"
       ],
-      "deployment": "Portero v64 publicado en implementación existente, sin cambiar URL/permisos. Módulo releído idéntico; Code.gs conserva todo excepto dispatch exclusivo de visitas. Dos pestañas preparadas: historial vacío, revisión 0, propiedades anteriores conservadas. Encendido cliente preparado; lectura por sesión OS, recorrido y recuperación pendientes de aceptación tras Pages.",
+      "deployment": "PR81 integrado, Pages cc791ad2efc2ad3a18ab79628d7a6066dbfcb19f y checks comprobados; Portero v64 mantiene endpoint/permisos. Lectura OS inicial muestra historial 0; recorrido a juntas conserva una visita y recibo en Sheets, revisión 1. Recuperación UI posterior falló: lectura directa editor-only devuelve snapshot válido aceptado por validador cliente. Diagnóstico DOM preparado y aceptación completa pendiente.",
       "rollback": "Apagar ENTORNO_VISITAS_PERSISTENTES y volver a versión previa de la misma implementación Portero; conservar pestañas, filas e historial."
     }
   ],
