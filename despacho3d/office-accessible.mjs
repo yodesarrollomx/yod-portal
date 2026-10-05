@@ -4,7 +4,7 @@ import {crearAgenteIr} from './entorno-ruta.mjs?v=4';
 import {createOfficePilot} from './avatars/office-pilot.mjs?v=5';
 import * as T from 'three';
 import {panels} from './office-panels.mjs?v=1';
-import {ESPACIOS} from './entorno.mjs?v=4';
+import {ESPACIOS} from './entorno.mjs?v=11';
 
 const el=(tag,text='',attrs={})=>{
  const node=document.createElement(tag);node.textContent=text;
