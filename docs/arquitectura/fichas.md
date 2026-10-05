@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.80-despacho-contexto-recuperable · 2026-10-05.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.81-despacho-contexto-recuperable-publicado · 2026-10-05.
 
 ## SYS-DESPACHO · El Despacho
 
