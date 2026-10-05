@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-05.74-despacho-presencia-voz",
+  "revision": "2026-10-05.75-despacho-biblioteca-indice",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8050,8 +8050,32 @@
         "node verify-obra-app.cjs",
         "Pruebas sintéticas de presencia sin abrir panel, preparación sin micrófono, revocación, lecturas concurrentes, desconexión recuperada, error de comando y cierre incompleto; comprobación de assets publicados."
       ],
-      "deployment": "Implementado en rama. Actions ejecutó 366 pruebas con 0 fallos y verificadores OS/portal/accesos/obra; se completa la declaración de impacto Drive antes de integrar. Chromium con transporte sintético: presencia sentada en 612 ms (1280×900) y 399 ms (390×844), sin abrir panel ni micrófono, con historial demorado 5,5 s. Servidor privado publicado con 75 pruebas; publicación HTTP del cliente y conversación sonora en dispositivo pendientes.",
+      "deployment": "PR89 integrado en5f306b8 y PR7 privado en753b1b9, Render live. 366/75 pruebas aprobadas; Chromium sintético escritorio/móvil;18 assets HTTP idénticos al merge y salud ready comprobados. Audio real en dispositivo y recibo de conversación siguen pendientes.",
       "rollback": "Revertir los módulos visuales y la tolerancia de conexión; conservar los perfiles, los permisos DP, la configuración Live exacta, las conversaciones y los recibos."
+    },
+    {
+      "id": "CHG-DESPACHO-BIBLIOTECA-073",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Crear biblioteca privada indexada a partir de Documentos del expediente autorizado, con fragmentos, página/pestaña/rango, versión y fechas; consultas Jev sobre pasajes y referencias persistidas. Compartir lecturas, reusar contenidos sin repetir OCR y refrescar en segundo plano sin bloquear la entrada. Panel Biblioteca con fuentes reales y estado de preparación; revalidar acceso/versión antes de devolver texto, excluir fuentes retiradas y contenidos obsoletos.",
+      "status": "implementado_local",
+      "approval": "Dirección pidió biblioteca para Jeff, carga rápida del tablero y continuar con la siguiente etapa en este chat. Reutilizar Drive, Jev y servidor privado existentes; sin contratar otro servicio.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Servidor privado: índice persistente, consulta repetida sin OCR, versiones, permisos/revocación, entradas no confiables, límites, preparación en segundo plano y fuentes en chat/voz.",
+        "Navegador escritorio/móvil con fuentes sintéticas; lectura real y publicación contrastadas por separado."
+      ],
+      "deployment": "Servidor PR9/PR11 integrado y Render live en8811ee5;88 pruebas privadas aprobadas. Portal371 pruebas, esquema/vistas/impacto y OS/portal/accesos/obra aprobados en5a6197d. Panel y pruebas de cliente implementados. Comprobación navegador, preparación/reuso de fuentes reales y publicación HTTP del consumidor pendientes; no acredita fase4 completa.",
+      "rollback": "Deshabilitar biblioteca indexada/revertir consumidor y servidor; conservar fuentes originales, datos/cálculos Sheets, conversaciones, journal/outbox, IDs y permisos. El índice es derivado y privado."
     }
   ],
   "data_contracts": [
@@ -8964,6 +8988,35 @@
         "Cada mutación verifica autorización vigente antes del commit; se conservan CAS, IDs y recibos.",
         "Pruebas sintéticas sin endpoints de negocio, credenciales, mensajes ni escrituras de producción."
       ]
+    },
+    {
+      "id": "CTR-DESPACHO-BIBLIOTECA",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "source": "Continuación autorizada 5-oct-2026 de la biblioteca indexada de Jev; Documentos del expediente y lector Drive actuales.",
+      "input": [
+        "Contexto autenticado del expediente y referencias de Documentos; cliente no elige otro actor/expediente o amplía alcance.",
+        "Credencial temporal del carril rápido, consulta acotada y sólo lectura."
+      ],
+      "output": [
+        "Estado de preparación y fuentes reales antes de cargar contenidos.",
+        "Pasajes con fuente/página/pestaña/rango/versión/fecha, cobertura y límites; historial conserva referencias aparte de deltas exactos."
+      ],
+      "invariants": [
+        "El índice vive en volumen privado del servidor, nunca en repositorio público, URL o almacenamiento persistente del navegador.",
+        "Documento accesible por cuenta de servicio no basta: debe seguir registrado en Documentos del expediente actual.",
+        "Revalidar acceso y versión de cada candidato antes de devolver texto; no mostrar contenido obsoleto durante actualización, revocación o error.",
+        "Preparar y refrescar índice en segundo plano; ninguna inferencia Live/micrófono por abrir Biblioteca.",
+        "Reusar contenido sólo si identidad, archivo, selección y versión coinciden; no usar extracción visual de una pregunta como transcripción completa.",
+        "Sheets conserva cifras y cálculos canónicos. No tratar índice derivado o respuesta guardada como dato financiero actualizado.",
+        "Límites y truncado explícitos; búsqueda léxica y ranking Jev no demuestran cobertura integral ni verdad de una respuesta.",
+        "Conservar configuración Live exacta, autorización DP/carril, historial/recibos y fuentes no confiables como datos, nunca instrucciones.",
+        "modifiedTime no acredita frescura de fórmulas de Sheets: pasajes de hojas marcan datos_vigentes=false; drive_leer siempre relee valores originales, sin responder desde el índice."
+      ]
     }
   ],
   "path_ownership": [
@@ -9610,6 +9663,16 @@
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-biblioteca.test.cjs",
+      "components": [
+        "SYS-DESPACHO",
+        "SYS-YOD-OS",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
       ]
     }
   ]

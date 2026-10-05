@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.74-despacho-presencia-voz · 2026-10-05.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.75-despacho-biblioteca-indice · 2026-10-05.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -465,3 +465,20 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Borrador y acción aprobada no concedidos por defecto; espacios no conectados y operaciones desconocidas se deniegan.
 - Cada mutación verifica autorización vigente antes del commit; se conservan CAS, IDs y recibos.
 - Pruebas sintéticas sin endpoints de negocio, credenciales, mensajes ni escrituras de producción.
+
+## CTR-DESPACHO-BIBLIOTECA
+
+- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, EXT-DRIVE.
+- Evidencia: Continuación autorizada 5-oct-2026 de la biblioteca indexada de Jev; Documentos del expediente y lector Drive actuales..
+- Entrada/campos: `Contexto autenticado del expediente y referencias de Documentos; cliente no elige otro actor/expediente o amplía alcance.`, `Credencial temporal del carril rápido, consulta acotada y sólo lectura.`.
+- Salida: Estado de preparación y fuentes reales antes de cargar contenidos., Pasajes con fuente/página/pestaña/rango/versión/fecha, cobertura y límites; historial conserva referencias aparte de deltas exactos..
+
+- El índice vive en volumen privado del servidor, nunca en repositorio público, URL o almacenamiento persistente del navegador.
+- Documento accesible por cuenta de servicio no basta: debe seguir registrado en Documentos del expediente actual.
+- Revalidar acceso y versión de cada candidato antes de devolver texto; no mostrar contenido obsoleto durante actualización, revocación o error.
+- Preparar y refrescar índice en segundo plano; ninguna inferencia Live/micrófono por abrir Biblioteca.
+- Reusar contenido sólo si identidad, archivo, selección y versión coinciden; no usar extracción visual de una pregunta como transcripción completa.
+- Sheets conserva cifras y cálculos canónicos. No tratar índice derivado o respuesta guardada como dato financiero actualizado.
+- Límites y truncado explícitos; búsqueda léxica y ranking Jev no demuestran cobertura integral ni verdad de una respuesta.
+- Conservar configuración Live exacta, autorización DP/carril, historial/recibos y fuentes no confiables como datos, nunca instrucciones.
+- modifiedTime no acredita frescura de fórmulas de Sheets: pasajes de hojas marcan datos_vigentes=false; drive_leer siempre relee valores originales, sin responder desde el índice.
