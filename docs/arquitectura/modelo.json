@@ -8111,7 +8111,7 @@
         "EXT-DRIVE"
       ],
       "proposal": "Completar Gastón por voz: activar micrófono por session.started y cargar expediente/historial en segundo plano; instalar herramientas documentales/Jev tras comprobar contexto y acuses, sin cerrar audio por fallos. Conectar consultas y objetivos automáticos al registro canónico de tareas mediante el transporte autenticado existente; conservar IDs durables, validar caso/actor y reconciliar resultados inciertos sin duplicar trabajo. Exponer avances y recibos en la interacción del agente y círculo con historial/documentos/tareas reales, enlaces a fuentes y Tablero PPP vigente, sin modificar reglas comerciales ni aprobar versiones desde una maqueta.",
-      "status": "propuesto",
+      "status": "publicado",
       "approval": "Dirección autorizó seguir adelante y terminar la integración del agente tras la corrección de voz básica. Requisitos explícitos: contexto, Jev, respuestas, herramientas de sala, acciones automáticas de pendientes y agente presente; micrófono por gesto de Hablar.",
       "tests": [
         "node scripts/arquitectura.cjs --check",
@@ -8120,12 +8120,13 @@
         "node verify-portal.cjs",
         "node verify-accesos.cjs",
         "node verify-obra-app.cjs",
-        "Servidor: JSON inicial exacto, contexto demorado/fallido sin bloquear audio, herramientas después de acuses, deduplicación y cancelación de delegaciones, intents durables vinculados a caso/actor.",
-        "Tareas: crear/consultar/reanudar/detener mediante transporte autenticado, IDs estables, conflicto/revocación/respuesta perdida/reinicio, acciones confirmadas sólo con recibo validado del sistema canónico; ningún envío de prueba de negocio.",
-        "Navegador: voz, contexto y tarea integrada con datos sintéticos, círculo real/enlaces/historial y presencia sin abrir Agentes; escritorio/móvil, media real, reconexión y cierre.",
-        "OpenAI real: saludo y habla, instalación de herramientas y ciclo de llamada/resultado/continuación con herramienta sintética aislada; HTTP/publicación separados de aceptación física."
+        "378 pruebas públicas y verificadores obligatorios: runs37344173575/37344173625.",
+        "102 pruebas/sintaxis privadas: contexto demorado/rechazado sin corte, JSON exacto, actor/caso, función Live, intención/payload durables, recuperación de respuesta perdida/reinicio y mismo request_id.",
+        "Chromium1280×800/390×844: micrófono de prueba y MediaStream real; expediente, consulta documental, una creación canónica sintética, evidencia/seguimiento, siete fallos sin corte, cierre exacto y detener/retomar (runs37344177450/37344895756). Transporte/negocio sintéticos; cero errores JS.",
+        "OpenAI real: JSON inicial, saludo aceptado, PCM no silencioso, transcripción, esquemas reales instalados, función sintética/resultado/continuación/cierre; ocho recursos Pages byte a byte (run37345140438).",
+        "Publicación final: ready true, voice available, voice_mode operativo, goals ready y diagnóstico inactive; ocho recursos idénticos (run37345714420). Sin objetivos/escrituras de negocio para probar."
       ],
-      "deployment": "Propuesta e impacto previos al código. Base: portalc6bc544/servidor502867a. Voz básica publicada; biblioteca/documentos y worker de objetivos existentes. Pendiente implementar y comprobar integración; lectura de salud no prueba herramientas por voz.",
+      "deployment": "Portal PR94 publicado en0ec35cf; servidor PR16/17 publicado en640b6ce. Renderlive dep-db1th9qd0e5s7399v630, diagnóstico apagado y modo operativo confirmado a17:06:28UTC. La actualización de herramientas conserva explícitamente delegation.type responses; el diagnóstico real pasó tras corregir ese rechazo. Micrófono independiente del contexto, herramientas documentales/Jev y objetivos vía OS autenticado; registros durables y recibos diferenciados de transcripción. Menú con fuentes/historial/conversaciones y tareas reales, sin datos de ejemplo. PPP abre fuente registrada y trabajo interno refleja el motor de objetivos: no acredita edición/aprobación PPP, integración global MOAC, canales externos, respuesta documental hablada real, ni aceptación física/visual de Dirección. Referencia Claude inaccesible. Plan nativo actualizado en secuencia28 con estos límites y pendientes.",
       "rollback": "Revertir nueva integración; mantener voz básica operativa, JSON y credenciales en servidor, autorizaciones/IDs, expedientes/fuentes/formulas, tareas y evidencias canónicas, historial, journal/outbox. No borrar ni restaurar negocio."
     }
   ],
