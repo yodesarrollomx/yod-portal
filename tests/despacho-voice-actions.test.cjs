@@ -39,3 +39,12 @@ test('menu projects only canonical documents, conversations and goals; PPP has r
  assert.deepEqual(m.ppp,[doc]);assert.equal(m.messages[0].body,'Texto exacto');assert.equal(m.goals.length,1);
  assert.deepEqual(projectMenu(null,null),{documents:[],history:[],messages:[],goals:[],ppp:[]});
 });
+
+test('simultaneous read requests share one flight and a later request reads again; writes remain separate',async()=>{
+ const {coalesceGoalReads}=await import('../despacho3d/voice-actions.mjs');let resolve,reads=0,writes=0;
+ const transport=coalesceGoalReads({readGoals:()=>{reads++;return new Promise(r=>resolve=r);},createGoal:async()=>writes++});
+ const first=transport.readGoals({case_id:caseId}),second=transport.readGoals({case_id:caseId});await new Promise(r=>setImmediate(r));
+ assert.equal(reads,1);resolve({ok:true});assert.deepEqual(await first,await second);
+ const next=transport.readGoals({case_id:caseId});await new Promise(r=>setImmediate(r));assert.equal(reads,2);resolve({ok:true});await next;
+ await transport.createGoal({});await transport.createGoal({});assert.equal(writes,2);
+});

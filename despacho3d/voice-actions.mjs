@@ -79,3 +79,14 @@ export function createVoiceActionExecutor({transport,onChange=()=>{},now=Date.no
  }
  return {consume,retry(){attempts.clear();},settled:()=>queue};
 }
+
+// Coalesce only concurrent reads in this authorized frame; never cache or merge writes.
+export function coalesceGoalReads(transport){
+ const flights=new Map();
+ return {...transport,readGoals(payload){
+  const key=payload.case_id;
+  if(flights.has(key))return flights.get(key);
+  const promise=Promise.resolve().then(()=>transport.readGoals(payload)).finally(()=>{if(flights.get(key)===promise)flights.delete(key);});
+  flights.set(key,promise);return promise;
+ }};
+}

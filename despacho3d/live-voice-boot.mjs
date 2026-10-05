@@ -1,12 +1,12 @@
 import {createFrameTransport, validateSelection} from './conversation.mjs';
 import {createLiveVoice} from './live-voice.mjs?v=4';
 import {DurableGoals,watchGoals} from './goals.mjs';
-import {createVoiceActionExecutor} from './voice-actions.mjs?v=1';
+import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=1';
 import {groupTranscriptFragments} from './live-transcript.mjs';
 
 const open = document.getElementById('voice-open');
 if (open) {
-  const transport = createFrameTransport(window), dialog = document.createElement('dialog');
+  const transport = coalesceGoalReads(createFrameTransport(window)), dialog = document.createElement('dialog');
   dialog.className = 'realtime-dialog'; dialog.setAttribute('aria-labelledby','voice-title');
   // Private dynamic text always uses textContent.
   dialog.innerHTML = '<button class="voice-close" aria-label="Cerrar conversación de voz">×</button>' +
@@ -41,7 +41,7 @@ if (open) {
     onChange: state => {
       window.dispatchEvent(new CustomEvent('yod-voice-state',{detail:{phase:state.phase}}));
       const live = active(state);
-      if(live&&state.tasks_ready&&!stopWatching)stopWatching=watchGoals(goalReader,{visible:()=>dialog.open&&!document.hidden&&active(voice.snapshot())});
+      if(live&&state.tasks_ready&&!stopWatching)stopWatching=watchGoals(goalReader,{visible:()=>dialog.open&&!document.hidden&&active(voice.snapshot())&&!voice.snapshot().actions_pending});
       else if(!live&&stopWatching){stopWatching();stopWatching=null;goalReader.hide();}
       node('voice-status').textContent = state.notice;
       node('voice-context').textContent=state.mode==='basic'?'Conversación básica. Las herramientas del expediente están desactivadas.':state.context_phase==='unavailable'?'Puedes seguir hablando. No se confirmó el contexto; vuelve a iniciar para conectar el expediente.':state.context_phase==='ready'?'Expediente conectado · '+(state.documents_ready?'Biblioteca y Jev disponibles':'Lector documental no disponible')+' · '+(state.tasks_ready?'Pendientes conectados':'Pendientes no disponibles'):'Puedes hablar. Preparando expediente y herramientas en segundo plano…';
