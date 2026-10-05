@@ -4,4 +4,4 @@
 <main><p class="eyebrow">Fase 1.1 · Datos sintéticos</p><h1>Cómo se confirma una actividad</h1><p class="intro">Recorre una consulta de prueba, desde la solicitud hasta su resultado. Cada paso tiene un ID y evidencia. Llegar a una mesa confirma el desplazamiento; el trabajo se confirma después.</p>
 <p class="scope">Esta prueba funciona en memoria. No usa el expediente, herramientas ni permisos de la sala y no guarda registros en Sheets.</p>
 <div id="activity-demo"></div><details><summary>Qué vamos a comprobar</summary><ul><li>La llegada y el resultado son pasos distintos.</li><li>Reintentar el mismo evento conserva su ID y no añade otro registro.</li><li>Un fallo o cancelación cierra el intento; un evento tardío se rechaza.</li><li>En la integración real, el servidor deberá autorizar y confirmar el respaldo.</li></ul></details></main>
-<script type="module">import {montarDemo} from './actividad-demo.mjs?v=1';montarDemo();</script></body></html>
+<script type="module">import {montarDemo} from './actividad-demo.mjs?v=2';montarDemo();</script></body></html>

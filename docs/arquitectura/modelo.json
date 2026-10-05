@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-04.65-despacho-actividad",
+  "revision": "2026-10-04.66-despacho-actividad-cierre",
   "checked_at": "2026-10-04",
   "priorities": [
     "vender_mas",
@@ -7830,7 +7830,7 @@
         "SYS-DESPACHO"
       ],
       "proposal": "Acción 1.1 autorizada: contrato versionado de actividad que separa desplazamiento, ejecución y resultado; demostración independiente con datos sintéticos. Validar procedencia, secuencia, estado terminal, identidad y reintento idéntico. Conservar IDs de conversación/trabajos; sin cambiar RPC, conceder permisos, ejecutar herramientas ni persistir visitas.",
-      "status": "implementado_local",
+      "status": "publicado",
       "approval": "Dirección autoriza continuar el plan en tandas de media hora el 4-oct-2026. Demostración sintética, sin operaciones ni datos de negocio.",
       "tests": [
         "node --test tests/despacho-actividad.test.cjs",
@@ -7842,8 +7842,29 @@
         "node verify-obra-app.cjs",
         "Capturas HTTPS de solicitud, llegada, resultado y reintento sintéticos"
       ],
-      "deployment": "Contrato y demostración sintética implementados. 322 pruebas locales y verificaciones de arquitectura/portal/accesos/obra aprobadas. Pendientes PR, checks y capturas HTTPS. Versión activa del motor por contrastar; sin persistencia ni permisos nuevos.",
+      "deployment": "PR #78 integrado, Pages cb82fc8791a936388c7544a6e231569c24767ecc y ambos checks comprobados. 322 pruebas; demostración HTTPS de estados, identidad y reintentos, cancelación/fallo y eventos tardíos. Capturas privadas en el plan. Fuente del motor identificada; adapter de visitas y versión activa Apps Script pendientes.",
       "rollback": "Revertir PR. Demostración aislada sin afectar sala, historial, backend o visitas actuales."
+    },
+    {
+      "id": "CHG-DESPACHO-ACTIVIDAD-CIERRE-066",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ],
+      "proposal": "Cierre de 1.1: registrar publicación y aceptación HTTPS de PR78, corregir lectura fallida de README.md (documentación en cloud/README.txt, repositorio accesible) y ajustar singular/estado en avisos de demostración. Sin cambio de contrato, fuentes, permisos o persistencia.",
+      "status": "implementado_local",
+      "approval": "Continuación y tandas autorizadas por Dirección el 4-oct-2026.",
+      "tests": [
+        "node --test tests/*.cjs",
+        "node scripts/arquitectura.cjs --check",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Aceptación HTTPS de avisos de demostración"
+      ],
+      "deployment": "Ajustes documentales y de texto en rama; pendiente PR y comprobación HTTPS.",
+      "rollback": "Revertir este PR; conserva contrato y publicación de PR78."
     }
   ],
   "data_contracts": [

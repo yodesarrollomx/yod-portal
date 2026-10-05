@@ -33,7 +33,7 @@ export function montarDemo({doc=document,root=doc.getElementById('activity-demo'
   const s=ledger.leer(),terminal=['terminado','fallido','cancelado'].includes(s.state),pos=sequence.indexOf(s.state);
   root.setAttribute('data-state',s.state||'inicio');root.setAttribute('data-event-count',String(s.events.length));root.setAttribute('data-receipt-scope','synthetic');
   heading.textContent=s.state?ETIQUETAS[s.state]:'Actividad por iniciar';detail.textContent=explanations[s.state]||'Consulta de ejemplo en Biblioteca.';
-  identity.textContent='Actividad '+s.activity.activity_id+' · '+s.events.length+' eventos · '+backups+' duplicados añadidos';
+  identity.textContent='Actividad '+s.activity.activity_id+' · '+s.events.length+(s.events.length===1?' evento':' eventos')+' · '+backups+' duplicados añadidos';
   backup.textContent='Datos de prueba · Sin respaldo del servidor';live.textContent=notice;
   next.textContent=terminal?'Actividad finalizada':actions[pos+1];next.disabled=terminal;retry.disabled=!last;cancel.disabled=!s.state||terminal;fault.disabled=!s.state||terminal;late.disabled=!terminal;
   while(list.firstChild)list.removeChild(list.firstChild);
@@ -42,7 +42,7 @@ export function montarDemo({doc=document,root=doc.getElementById('activity-demo'
  next.addEventListener('click',avanzar);
  retry.addEventListener('click',()=>{const before=ledger.leer().events.length;const receipt=ledger.aplicar(last);backups+=ledger.leer().events.length-before;notice=receipt.duplicate?'Reintento reconocido: mismo ID, ningún evento duplicado.':'Evento añadido.';pintar();});
  for(const[b,kind]of [[cancel,'cancelado'],[fault,'fallido']])b.addEventListener('click',()=>{last=event(kind);ledger.aplicar(last);notice=explanations[kind];pintar();});
- late.addEventListener('click',()=>{try{ledger.aplicar(event('trabajando'));notice='Evento añadido.';}catch{notice='Evento tardío rechazado: la actividad permanece '+ETIQUETAS[ledger.leer().state].toLowerCase()+'.';}pintar();});
+ late.addEventListener('click',()=>{try{ledger.aplicar(event('trabajando'));notice='Evento añadido.';}catch{notice='Evento tardío rechazado. Estado conservado: '+ETIQUETAS[ledger.leer().state]+'.';}pintar();});
  reset.addEventListener('click',()=>{nuevo();notice='Prueba reiniciada con otro ID. No ejecutó una actividad real.';pintar();});
  nuevo();pintar();return {leer:()=>ledger.leer()};
 }

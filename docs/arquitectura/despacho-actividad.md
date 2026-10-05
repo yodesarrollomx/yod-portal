@@ -2,7 +2,9 @@
 
 Acción 1.1 · CHG-DESPACHO-ACTIVIDAD-065 · CTR-DESPACHO-ACTIVIDAD-V1.
 
-Estado: contrato y demostración sintética implementados en rama. No añade operaciones RPC ni persistencia. La versión activa del servidor privado sigue por contrastar; el acceso al repositorio del motor no estuvo disponible en esta revisión. La compatibilidad se prepara contra el cliente vigente y el contrato de conversación documentado, sin atribuir al servidor una API nueva.
+Estado: contrato y demostración sintética publicados mediante PR #78, Pages cb82fc8791a936388c7544a6e231569c24767ecc comprobado. 322 pruebas locales y ambos checks aprobados. Aceptación HTTPS: solicitud, llegada separada del trabajo, entrega/resultado con la misma referencia, reintentos sin duplicar, cancelación/fallo y rechazo de eventos tardíos. Entorno ofrece el enlace a la prueba. Capturas en el plan privado; móvil real pendiente. No añade operaciones RPC ni persistencia.
+
+La fuente del motor privado se identificó en el commit 15d56201445b3c37640b9699e76a7e652c6a045f. La lectura inicial de README.md falló porque la documentación está en cloud/README.txt; ese fallo no acreditaba ausencia de acceso al repositorio. Se contrastaron manifiesto y fuente del outbox de conversación, que conserva request_id. Esto no acredita un adaptador de visitas ni la versión activa de Apps Script, pendientes en 1.2. La compatibilidad se prepara contra el cliente y contrato de conversación vigentes, sin atribuir al servidor una API nueva.
 
 ## Identidad y eventos
 
