@@ -93,7 +93,7 @@ test('Production session purge invokes teardown before reload and blocking invok
 test('Scene uses only its fixed relative path with no credential transport or ChatGPT gateway',()=>{
   assert.doesNotMatch(source,/localStorage|sessionStorage|postMessage|encodeURIComponent|URLSearchParams|tokenActual/);
   assert.equal((source.match(/https:\/\//g)||[]).length,0);assert.doesNotMatch(source,/FRAME_PATH\s*\+|chatgpt\.site|requestFullscreen/);
-  assert.match(source,/var FRAME_PATH='\.\.\/despacho3d\/index\.html'/);
+  assert.match(source,/var FRAME_PATH='\.\.\/despacho3d\/index\.html\?v=resident1'/);
 });
 test('Immersive surface fills available height and retains compact controls and Inicio state',()=>{
   const html=fs.readFileSync(require.resolve('../os/index.html'),'utf8'),css=fs.readFileSync(require.resolve('../os/styles.css'),'utf8');

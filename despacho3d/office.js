@@ -64,7 +64,7 @@ chinches=createChinches3D({readView:()=>({position:camera.position.toArray(),qua
 async function routeOffice(){const place=location.hash.slice(1);if(!Object.hasOwn(places,place))return;await visit(place);if(panels[place])openPanel(place);}
 window.addEventListener('hashchange',routeOffice);
 await routeOffice();
-window.dispatchEvent(new CustomEvent('yod-office-ready'));
+window.dispatchEvent(new CustomEvent('yod-office-ready',{detail:null}));
 
 function agentsVisibility(open){agentOverlay=open;chinches?.stop();closeSheets(false);clearMovement();document.querySelector('header').inert=agentOverlay;document.getElementById('workspace').inert=agentOverlay;orbit.enabled=!agentOverlay&&mode==='overview';dirty=true;}
 window.addEventListener('yod-agents-visibility',e=>agentsVisibility(e.detail===true));

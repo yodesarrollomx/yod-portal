@@ -71,7 +71,7 @@ export function startAccessibleOffice(){
  agentOverlay=!!window.CubefarmYOD?.isOpen?.();document.getElementById('workspace').inert=agentOverlay;
  const animate=now=>{pilot.update(now,{hidden:document.hidden,overlay:agentOverlay,reducedMotion:matchMedia('(prefers-reduced-motion:reduce)').matches});requestAnimationFrame(animate);};requestAnimationFrame(animate);
  const route=()=>{const id=location.hash.slice(1);if(Object.hasOwn(places,id)){visit(id);openPanel(id);}};window.addEventListener('hashchange',route);route();
- window.officeReady=true;window.dispatchEvent(new CustomEvent('yod-office-ready'));return api;
+ window.officeReady=true;window.dispatchEvent(new CustomEvent('yod-office-ready',{detail:null}));return api;
 }
 
 // DOM visible: el agente lee lo mismo que una persona ve. No expone credenciales ni inventa actividad.

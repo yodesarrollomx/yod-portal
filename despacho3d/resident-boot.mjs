@@ -27,7 +27,7 @@ if(host){
   return panel.open('chat');
  }};
  window.YodResidentAgents=api;
- window.dispatchEvent(new CustomEvent('yod-residents-ready'));
+ window.dispatchEvent(new CustomEvent('yod-residents-ready',{detail:null}));
  talk.onclick=()=>document.getElementById('voice-open')?.click();
  write.onclick=()=>api.openForCase(resident.getSelection()?.case_id);
  visit.onclick=async()=>{if(resident.getSelection()?.avatar&&window.despacho)await window.despacho.visit('case');};
