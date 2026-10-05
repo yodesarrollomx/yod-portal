@@ -8062,7 +8062,7 @@
         "EXT-DRIVE"
       ],
       "proposal": "Crear biblioteca privada indexada a partir de Documentos del expediente autorizado, con fragmentos, página/pestaña/rango, versión y fechas; consultas Jev sobre pasajes y referencias persistidas. Compartir lecturas, reusar contenidos sin repetir OCR y refrescar en segundo plano sin bloquear la entrada. Panel Biblioteca con fuentes reales y estado de preparación; revalidar acceso/versión antes de devolver texto, excluir fuentes retiradas y contenidos obsoletos.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "approval": "Dirección pidió biblioteca para Jeff, carga rápida del tablero y continuar con la siguiente etapa en este chat. Reutilizar Drive, Jev y servidor privado existentes; sin contratar otro servicio.",
       "tests": [
         "node scripts/arquitectura.cjs --check",
@@ -8074,7 +8074,7 @@
         "Servidor privado: índice persistente, consulta repetida sin OCR, versiones, permisos/revocación, entradas no confiables, límites, preparación en segundo plano y fuentes en chat/voz.",
         "Navegador escritorio/móvil con fuentes sintéticas; lectura real y publicación contrastadas por separado."
       ],
-      "deployment": "Propuesta registrada antes del código. Sin instalar Obsidian/NotebookLM ni modificar Sheets, contexto canónico, JSON GPT-Live, claves, permisos o agentes adicionales.",
+      "deployment": "Índice y herramientas implementados en rama privada, panel Biblioteca y cliente en rama pública. Pruebas y aceptación/pubicación pendientes.",
       "rollback": "Deshabilitar biblioteca indexada/revertir consumidor y servidor; conservar fuentes originales, datos/cálculos Sheets, conversaciones, journal/outbox, IDs y permisos. El índice es derivado y privado."
     }
   ],
@@ -9662,6 +9662,16 @@
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-biblioteca.test.cjs",
+      "components": [
+        "SYS-DESPACHO",
+        "SYS-YOD-OS",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
       ]
     }
   ]
