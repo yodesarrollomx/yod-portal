@@ -1,10 +1,10 @@
 import * as T from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {RoomEnvironment} from './vendor/RoomEnvironment.js';
-import {createOffice} from './scene.js?v=3';
+import {createOffice} from './scene.js?v=4';
 import {panels} from './office-panels.mjs?v=1';
 import {createChinches3D} from './chinches3d.mjs?v=1';
-import {createOfficePilot,chooseOfficeHit} from './avatars/office-pilot.mjs?v=4';
+import {createOfficePilot,chooseOfficeHit} from './avatars/office-pilot.mjs?v=5';
 import {ENTORNO_AGENTE_CAMINA} from './entorno-config.mjs';
 import {crearAgenteIr} from './entorno-ruta.mjs?v=4';
 import {places,allowed} from './office-layout.mjs?v=1';
@@ -23,8 +23,9 @@ let mode='overview',selected='entry',yaw=0,pitch=0,near=null,sheet=null,look=nul
 const reducedMotion=matchMedia('(prefers-reduced-motion:reduce)');
 let avatarShadowAt=0;
 const pilot=createOfficePilot({scene,beforeOpen:()=>closeSheets(false),onChange:()=>{dirty=true;renderer.shadowMap.needsUpdate=true;avatarShadowAt=performance.now();}});
-const bindPilot=()=>pilot.bind(window.CubefarmYOD);
+const bindPilot=()=>pilot.bind(window.YodResidentAgents||window.CubefarmYOD);
 window.addEventListener('yod-agents-ready',bindPilot);
+window.addEventListener('yod-residents-ready',bindPilot);
 window.addEventListener('pagehide',()=>pilot.disconnect());
 window.addEventListener('pageshow',bindPilot);
 bindPilot();
@@ -52,9 +53,9 @@ function release(e,cancel=false){pointers.delete(e.pointerId);if(look?.id===e.po
 renderer.domElement.addEventListener('pointerup',e=>release(e));renderer.domElement.addEventListener('pointercancel',e=>release(e,true));renderer.domElement.addEventListener('lostpointercapture',e=>{if(look?.id===e.pointerId)look=null;});
 orbit.addEventListener('change',()=>{dirty=true;});
 function resize(){const width=mount.clientWidth,height=mount.clientHeight;renderer.setSize(width,height);camera.aspect=width/height;camera.updateProjectionMatrix();if(mode==='overview')fitOverview();else updateChrome();dirty=true;}new ResizeObserver(resize).observe(mount);resize();setMode(isMobile()?'walk':'overview');
-let rendererLost=false;let shadowBaked=false;function animate(now){requestAnimationFrame(animate);const dt=Math.min((now-last)/1000,.1);last=now;const avatarChanged=pilot.update(now,{hidden:document.hidden,overlay:agentOverlay,reducedMotion:reducedMotion.matches});if(avatarChanged){dirty=true;if(now-avatarShadowAt>=400){renderer.shadowMap.needsUpdate=true;avatarShadowAt=now;}}if(document.hidden)return;if(mode==='walk'&&!sheet&&!agentOverlay){dirty=movement(dt)||dirty;updateNear();}else if(mode==='overview'&&!sheet&&!agentOverlay)orbit.update();if(dirty&&!rendererLost){renderer.render(scene,camera);frames++;dirty=false;if(!shadowBaked){renderer.shadowMap.autoUpdate=false;shadowBaked=true;}}}
+let rendererLost=false;let shadowBaked=false;function animate(now){requestAnimationFrame(animate);const dt=Math.min((now-last)/1000,.1);last=now;const avatarChanged=pilot.update(now,{hidden:document.hidden,overlay:agentOverlay,reducedMotion:reducedMotion.matches});if(avatarChanged){dirty=true;if(now-avatarShadowAt>=400){renderer.shadowMap.needsUpdate=true;avatarShadowAt=now;}}if(document.hidden)return;if(mode==='walk'&&!sheet&&!agentOverlay){dirty=movement(dt)||dirty;updateNear();}else if(mode==='overview'&&!sheet&&!agentOverlay)orbit.update();if(office.model.userData.needsRender){dirty=true;office.model.userData.needsRender=false;}if(dirty&&!rendererLost){renderer.render(scene,camera);frames++;dirty=false;if(!shadowBaked){renderer.shadowMap.autoUpdate=false;shadowBaked=true;}}}
 requestAnimationFrame(animate);$('#loading').hidden=true;window.officeReady=true;renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();rendererLost=true;clearMovement();$('#fallback').hidden=false;if(window.despacho)window.despacho.view='map';window.dispatchEvent(new CustomEvent('yod-office-view-unavailable'));});
-window.despacho={view:'3d',layout:office,getAgentState:()=>pilot.getMovementState(),model:office.model,scene,visit,setMode,openPanel,closeSheets,getState:()=>({mode,selected,near,sheet,position:camera.position.toArray(),rotation:camera.rotation.toArray(),frames,stick:{...stick},triangles:renderer.info.render.triangles,drawCalls:renderer.info.render.calls,allowed:allowed(camera.position.x,camera.position.z),mobile:isMobile(),colliders:office.collisions.length,avatar:pilot.getState()}),allowed};
+window.despacho={setAgentActivity:pilot.setActivity,view:'3d',layout:office,getAgentState:()=>pilot.getMovementState(),model:office.model,scene,visit,setMode,openPanel,closeSheets,getState:()=>({mode,selected,near,sheet,position:camera.position.toArray(),rotation:camera.rotation.toArray(),frames,stick:{...stick},triangles:renderer.info.render.triangles,drawCalls:renderer.info.render.calls,allowed:allowed(camera.position.x,camera.position.z),mobile:isMobile(),colliders:office.collisions.length,avatar:pilot.getState()}),allowed};
 if(ENTORNO_AGENTE_CAMINA||/(?:^|[?&])camina=1(?:&|$)/.test(location.search))window.despacho.agenteIr=crearAgenteIr({lugares:places,piloto:pilot,permitido:allowed,limites:[office.bounds,office.annex],reducido:()=>reducedMotion.matches,alLlegar:lugar=>window.dispatchEvent(new CustomEvent('yod-agent-arrived',{detail:{lugar}}))});
 
 chinches=createChinches3D({readView:()=>({position:camera.position.toArray(),quaternion:camera.quaternion.toArray(),fov:camera.fov,mode}),closeSheets:()=>closeSheets(),onChange:active=>{clearMovement();$('#scene').classList.toggle('pin-selecting',active);}});
@@ -63,6 +64,7 @@ chinches=createChinches3D({readView:()=>({position:camera.position.toArray(),qua
 async function routeOffice(){const place=location.hash.slice(1);if(!Object.hasOwn(places,place))return;await visit(place);if(panels[place])openPanel(place);}
 window.addEventListener('hashchange',routeOffice);
 await routeOffice();
+window.dispatchEvent(new CustomEvent('yod-office-ready',{detail:null}));
 
 function agentsVisibility(open){agentOverlay=open;chinches?.stop();closeSheets(false);clearMovement();document.querySelector('header').inert=agentOverlay;document.getElementById('workspace').inert=agentOverlay;orbit.enabled=!agentOverlay&&mode==='overview';dirty=true;}
 window.addEventListener('yod-agents-visibility',e=>agentsVisibility(e.detail===true));

@@ -1,10 +1,10 @@
 import {places,bounds,annex,collisions,allowed} from './office-layout.mjs?v=1';
 import {ENTORNO_AGENTE_CAMINA} from './entorno-config.mjs';
 import {crearAgenteIr} from './entorno-ruta.mjs?v=4';
-import {createOfficePilot} from './avatars/office-pilot.mjs?v=4';
+import {createOfficePilot} from './avatars/office-pilot.mjs?v=5';
 import * as T from 'three';
 import {panels} from './office-panels.mjs?v=1';
-import {ESPACIOS} from './entorno.mjs?v=4';
+import {ESPACIOS} from './entorno.mjs?v=11';
 
 const el=(tag,text='',attrs={})=>{
  const node=document.createElement(tag);node.textContent=text;
@@ -21,8 +21,8 @@ export function startAccessibleOffice(){
  const scene=new T.Scene();
  let selected='entry',sheet=null,agentOverlay=false,lastFocus=null;
  const pilot=createOfficePilot({scene,beforeOpen:()=>closeSheets()});
- const bind=()=>pilot.bind(window.CubefarmYOD);
- window.addEventListener('yod-agents-ready',bind);window.addEventListener('pagehide',()=>pilot.disconnect());window.addEventListener('pageshow',bind);bind();
+ const bind=()=>pilot.bind(window.YodResidentAgents||window.CubefarmYOD);
+ window.addEventListener('yod-agents-ready',bind);window.addEventListener('yod-residents-ready',bind);window.addEventListener('pagehide',()=>pilot.disconnect());window.addEventListener('pageshow',bind);bind();
  const closeSheets=()=>{
   document.querySelectorAll('.sheet').forEach(n=>n.hidden=true);document.getElementById('scrim').hidden=true;
   document.querySelector('header').inert=agentOverlay;
@@ -49,7 +49,7 @@ export function startAccessibleOffice(){
   }
   showSheet('panel');return true;
  };
- const api={view:'map',layout:{bounds,annex,collisions},visit,setMode:()=>closeSheets(),openPanel,closeSheets,allowed,
+ const api={setAgentActivity:pilot.setActivity,view:'map',layout:{bounds,annex,collisions},visit,setMode:()=>closeSheets(),openPanel,closeSheets,allowed,
   getAgentState:()=>pilot.getMovementState(),
   getState:()=>({mode:'map',selected,sheet,position:[places[selected].eye[0],1.65,places[selected].eye[2]],avatar:pilot.getState()})};
  if(ENTORNO_AGENTE_CAMINA||/(?:^|[?&])camina=1(?:&|$)/.test(location.search))api.agenteIr=crearAgenteIr({lugares:places,piloto:pilot,permitido:allowed,limites:[bounds,annex],reducido:()=>matchMedia('(prefers-reduced-motion:reduce)').matches,alLlegar:lugar=>window.dispatchEvent(new CustomEvent('yod-agent-arrived',{detail:{lugar}}))});
@@ -71,7 +71,7 @@ export function startAccessibleOffice(){
  agentOverlay=!!window.CubefarmYOD?.isOpen?.();document.getElementById('workspace').inert=agentOverlay;
  const animate=now=>{pilot.update(now,{hidden:document.hidden,overlay:agentOverlay,reducedMotion:matchMedia('(prefers-reduced-motion:reduce)').matches});requestAnimationFrame(animate);};requestAnimationFrame(animate);
  const route=()=>{const id=location.hash.slice(1);if(Object.hasOwn(places,id)){visit(id);openPanel(id);}};window.addEventListener('hashchange',route);route();
- window.officeReady=true;return api;
+ window.officeReady=true;window.dispatchEvent(new CustomEvent('yod-office-ready',{detail:null}));return api;
 }
 
 // DOM visible: el agente lee lo mismo que una persona ve. No expone credenciales ni inventa actividad.
@@ -103,13 +103,13 @@ export function mountAccessibleView(api){
   const info=el('button','Abrir ficha de '+p.label,{type:'button'});info.onclick=()=>api.openPanel(id);card.append(info);
   const space=ESPACIOS.find(e=>e.lugar===id);
   if(space){const send=el('button','Enviar agente a '+space.nombre,{type:'button','data-agent-destination':id});send.onclick=()=>{
-   if(!authorized(window.CubefarmYOD?.getProfile?.()))return;
+   if(!authorized((window.YodResidentAgents||window.CubefarmYOD)?.getProfile?.()))return;
    result.textContent=api.agenteIr?.(id)?'Ruta aceptada hacia '+space.nombre+'. Esperando llegada.':'No se pudo iniciar la ruta.';paint();
   };card.append(send);}
   controls.append(card);
  }
  const home=el('button','Que el agente vuelva a su puesto',{type:'button','data-agent-destination':'inicio'});home.onclick=()=>{
-  if(!authorized(window.CubefarmYOD?.getProfile?.()))return;
+  if(!authorized((window.YodResidentAgents||window.CubefarmYOD)?.getProfile?.()))return;
   result.textContent=api.agenteIr?.('inicio')?'Regreso iniciado. Esperando llegada.':'No se pudo iniciar el regreso.';paint();
  };root.append(home,controls);document.getElementById('workspace').append(root);
  button.setAttribute('aria-controls',root.id);button.setAttribute('aria-expanded',String(!root.hidden));
@@ -117,7 +117,7 @@ export function mountAccessibleView(api){
  const mark=(node,p)=>{node.style.display=p?'':'none';if(p){node.setAttribute('cx',p[0]);node.setAttribute('cy',p[1]);}};
  let fingerprint='';
  function paint(){
-  const s=api.getState(),a=api.getAgentState(),p=window.CubefarmYOD?.getProfile?.(),has=authorized(p)&&!!a.position;
+  const s=api.getState(),a=api.getAgentState(),p=(window.YodResidentAgents||window.CubefarmYOD)?.getProfile?.(),has=authorized(p)&&!!a.position;
   const camera=s.mode==='overview'?null:[s.position[0],s.position[2]];
   mark(visitor,camera);mark(agent,has?a.position:null);
   root.setAttribute('data-renderer',api.view);root.setAttribute('data-selected',s.selected);
@@ -128,11 +128,11 @@ export function mountAccessibleView(api){
   const key=v+'\n'+t;if(key!==fingerprint){visitorText.textContent=v;agentText.textContent=t;fingerprint=key;}
   root.querySelectorAll('[data-agent-destination]').forEach(n=>{n.disabled=!has||typeof api.agenteIr!=='function';});
  }
- function arrived(e){if(!authorized(window.CubefarmYOD?.getProfile?.()))return;result.textContent='Llegada confirmada a '+label(e.detail?.lugar)+'.';paint();}
+ function arrived(e){if(!authorized((window.YodResidentAgents||window.CubefarmYOD)?.getProfile?.()))return;result.textContent='Llegada confirmada a '+label(e.detail?.lugar)+'.';paint();}
  window.addEventListener('yod-agent-arrived',arrived);
  window.addEventListener('yod-office-view-unavailable',()=>{api.view='map';reason.textContent='El recorrido 3D perdió su conexión gráfica. Puedes seguir en el plano.';close.hidden=true;root.hidden=false;document.body.classList.add('office-map-fallback');document.getElementById('fallback').hidden=true;button.setAttribute('aria-expanded','true');paint();});
  let unsubscribe=null;
- const bind=()=>{if(!unsubscribe&&window.CubefarmYOD?.subscribeProfile)unsubscribe=window.CubefarmYOD.subscribeProfile(()=>paint());};
+ const bind=()=>{if(!unsubscribe&&(window.YodResidentAgents||window.CubefarmYOD)?.subscribeProfile)unsubscribe=(window.YodResidentAgents||window.CubefarmYOD).subscribeProfile(()=>paint());};
  window.addEventListener('yod-agents-ready',bind);bind();paint();
  let timer=setInterval(()=>{if(!document.hidden)paint();},250);
  window.addEventListener('pagehide',()=>{clearInterval(timer);unsubscribe?.();unsubscribe=null;});

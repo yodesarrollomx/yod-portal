@@ -16,7 +16,7 @@ test('the pilot stays empty until authorized and ignores placement supplied by a
  const[T,{createOfficePilot}]=await modules,scene=new T.Scene(),p=createOfficePilot({scene});
  p.bind(panel(null));assert.equal(p.getState().count,0);
  const api=panel({...profile,placement:{position:[100,100,100],scale:999,rotationY:0}});p.bind(api);
- assert.deepEqual(p.getState(),{count:1,motion:'idle',poseTicks:0});assert.deepEqual(scene.children[0].position.toArray(),[6.65,0,-4.42]);assert.equal(scene.children[0].rotation.y,Math.PI/2);
+ assert.deepEqual(p.getState(),{count:1,motion:'sit',poseTicks:0});assert.deepEqual(scene.children[0].position.toArray(),[7,0,-7.95]);assert.equal(scene.children[0].rotation.y,0);
  const first=scene.children[0];api.publish({...profile});assert.equal(scene.children[0],first,'unchanged profile must not allocate another model');
  api.publish({...profile,id:'DIFFERENT'});assert.equal(scene.children.length,0,'mismatched identity fails closed');p.dispose();
 });
@@ -44,7 +44,7 @@ test('idle animation is capped at fifteen updates and pauses for overlays, visib
  for(const flags of [{overlay:true},{hidden:true},{reducedMotion:true}])for(const t of [1100,2100,3100])assert.equal(p.update(t,flags),false);
  assert.equal(scene.children[0].userData.body.position.y,pose);
  assert.equal(p.update(50000),false,'resume rebases time instead of making a large jump');assert.equal(p.update(50080),true);
- assert.deepEqual(p.getState(),{count:1,motion:'idle',poseTicks:updates+1});p.dispose();
+ assert.deepEqual(p.getState(),{count:1,motion:'sit',poseTicks:updates+1});p.dispose();
 });
 test('office picking respects opaque geometry and nearer controls while its case box cannot swallow the avatar',async()=>{
  const[,{chooseOfficeHit}]=await modules;

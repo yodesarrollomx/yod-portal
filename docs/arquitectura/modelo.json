@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-05.73-gaston-documentos-jev",
+  "revision": "2026-10-05.74-despacho-presencia-voz",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8029,6 +8029,29 @@
       ],
       "deployment": "Servidor privado PR3/PR5/PR6 integrados y publicados en 9d27b746; 73 pruebas aprobadas. HTTP confirma Drive/PDF/Jev y lectura visual real del PDF con Jev y recibo privado (Actions run37274467241, reintento tras corregir acceso lector). Archivos originales del expediente conservados; permisos lector comprobados. Audio real y aceptación de la respuesta por Dirección siguen pendientes.",
       "rollback": "Apagar YOD_RESEARCH_ENABLED; conservar voz, expediente, outbox, conversaciones e IDs."
+    },
+    {
+      "id": "CHG-DESPACHO-PRESENCIA-VOZ-072",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Mostrar el agente autorizado en el Despacho desde la entrada, con tarjeta de presencia y figura sentada en espera. Preparar credencial de conversación en segundo plano sin abrir micrófono ni sesión Live; evitar lecturas simultáneas duplicadas y que la carga de una imagen bloquee el recorrido. Mantener voz ante ocultación, errores de comando y fallos transitorios de red; cerrar sólo al finalizar o perder conexión de forma persistente, con historial y finalización explícitos.",
+      "status": "implementado_local",
+      "approval": "Dirección solicitó corregir la interfaz, el corte de voz y la carga lenta; agentes siempre presentes y preparados al estar en línea, sin abrir Agentes para activarlos. Implementación y publicación autorizadas en este chat.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Pruebas sintéticas de presencia sin abrir panel, preparación sin micrófono, revocación, lecturas concurrentes, desconexión recuperada, error de comando y cierre incompleto; comprobación de assets publicados."
+      ],
+      "deployment": "Implementado en rama. Actions ejecutó 366 pruebas con 0 fallos y verificadores OS/portal/accesos/obra; se completa la declaración de impacto Drive antes de integrar. Chromium con transporte sintético: presencia sentada en 612 ms (1280×900) y 399 ms (390×844), sin abrir panel ni micrófono, con historial demorado 5,5 s. Servidor privado publicado con 75 pruebas; publicación HTTP del cliente y conversación sonora en dispositivo pendientes.",
+      "rollback": "Revertir los módulos visuales y la tolerancia de conexión; conservar los perfiles, los permisos DP, la configuración Live exacta, las conversaciones y los recibos."
     }
   ],
   "data_contracts": [
@@ -9567,6 +9590,23 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/despacho-live.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-resident.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-avatar-office.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO"

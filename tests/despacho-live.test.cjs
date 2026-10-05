@@ -3,7 +3,7 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const load=()=>import('../despacho3d/live-voice.mjs');
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
-function fixture(createLiveVoice,{closed=true,closeTimeout=50}={}){
+function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12000,maxStatusFailures=3}={}){
  const calls=[],captions=[],track={enabled:true,stops:0,stop(){this.stops++;}},
    stream={getTracks:()=>[track],getAudioTracks:()=>[track]},
    audio={srcObject:null,pause(){},play:async()=>{}};
@@ -19,7 +19,7 @@ function fixture(createLiveVoice,{closed=true,closeTimeout=50}={}){
  }
  const base={ok:true,active:true,started:true,context_ready:true,finalized:false,expires_at:Date.now()+600000,
   fragments:0,blocks:0,saved:0,pending:0,incomplete:false};
- const voice=createLiveVoice({audio,Peer,closeTimeout,media:{getUserMedia:async()=>stream},
+ const voice=createLiveVoice({audio,Peer,closeTimeout,disconnectGrace,maxStatusFailures,media:{getUserMedia:async()=>stream},
   schedule:()=>1,cancel:()=>{},onTranscript:f=>captions.push(f),
   mint:async({case_id})=>({ok:true,case_id,token:'A'.repeat(30)+'.'+'a'.repeat(64),
    endpoint:'https://synthetic-engine.onrender.com',expires_at:Date.now()+600000}),
@@ -66,7 +66,7 @@ test('timeout/disconnect remains incomplete even if the server acknowledged a fi
  assert.equal(f.voice.snapshot().incomplete,true);assert.equal(f.voice.snapshot().finalized,false);
  assert.match(f.voice.snapshot().notice,/Finalización incompleta/);assert.equal(f.track.stops,1);
  const g=fixture(createLiveVoice,{closeTimeout:5});await g.voice.start('synthetic-case');
- g.peer.connectionState='disconnected';g.peer.onconnectionstatechange();await tick();
+ g.peer.connectionState='failed';g.peer.onconnectionstatechange();await tick();
  assert.equal(g.voice.snapshot().incomplete,true);assert.equal(g.voice.snapshot().finalized,false);
 });
 test('cancel before microphone permission resolves releases a late stream and can start again',async()=>{
@@ -88,4 +88,55 @@ test('timing groups permit overlap and late fragments without fabricating turns 
   transcriptFragment({type:'session.input_transcript.delta',delta:' palabra',start_ms:800,end_ms:1000},2)];
  assert.deepEqual(groupTranscriptFragments(fragments).map(g=>[g.role,g.start_ms,g.end_ms,g.text]),
   [['user',800,1200,' palabra palabra'],['assistant',950,1300,' Sí  ']]);
+});
+
+test('temporary peer disconnection recovers without closing or losing transcript',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice,{disconnectGrace:20});
+ await f.voice.start('synthetic-case');f.event({type:'session.started'});await tick();
+ f.peer.connectionState='disconnected';f.peer.onconnectionstatechange();
+ assert.equal(f.voice.snapshot().phase,'reconnecting');assert.equal(f.track.stops,0);
+ f.event({type:'session.input_transcript.delta',event_id:'recover',delta:' todavía aquí ',start_ms:1,end_ms:20});
+ f.peer.connectionState='connected';f.peer.onconnectionstatechange();
+ await new Promise(resolve=>setTimeout(resolve,30));
+ assert.equal(f.voice.snapshot().phase,'listening');assert.equal(f.voice.snapshot().incomplete,false);
+ assert.equal(f.track.stops,0);assert.equal(f.calls.some(c=>c.url.endsWith('/close')),false);
+ assert.equal(f.captions[0].delta,' todavía aquí ');
+ const stopping=f.voice.stop();await tick();f.event({type:'session.closed'});await stopping;
+});
+test('persistent peer disconnection is still finalized as incomplete',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice,{disconnectGrace:5,closeTimeout:5});
+ await f.voice.start('synthetic-case');f.peer.connectionState='disconnected';f.peer.onconnectionstatechange();
+ await new Promise(resolve=>setTimeout(resolve,20));
+ assert.equal(f.voice.snapshot().incomplete,true);assert.equal(f.track.stops,1);
+});
+test('rejected commands do not hang up an otherwise live session',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice);
+ await f.voice.start('synthetic-case');f.event({type:'session.started'});await tick();
+ f.event({type:'error',error:{type:'invalid_request_error',code:'immutable_field_update',message:'synthetic rejection'}});
+ assert.equal(f.voice.snapshot().phase,'listening');assert.equal(f.track.stops,0);
+ assert.equal(f.calls.some(c=>c.url.endsWith('/close')),false);
+ const stopping=f.voice.stop();await tick();f.event({type:'session.closed'});await stopping;
+});
+test('background preparation never captures a microphone or creates a Live session and reuses its credential',async()=>{
+ const {createLiveVoice}=await load();let captures=0,mints=0;const calls=[];
+ const voice=createLiveVoice({audio:{},media:{getUserMedia:async()=>{captures++;}},Peer:class{},
+  mint:async({case_id})=>{mints++;return {ok:true,case_id,token:'A'.repeat(30)+'.'+'a'.repeat(64),endpoint:'https://synthetic-engine.onrender.com',expires_at:Date.now()+600000};},
+  fetchImpl:async(url)=>{calls.push(url);return {ok:true,status:200};}});
+ assert.equal(await voice.prepare('synthetic-case'),true);assert.equal(await voice.prepare('synthetic-case'),true);
+ assert.equal(mints,1);assert.equal(captures,0);assert.deepEqual(calls,['https://synthetic-engine.onrender.com/fast/hello','https://synthetic-engine.onrender.com/fast/hello']);
+ assert.equal(voice.snapshot().phase,'idle');
+});
+test('a single status read failure preserves live audio and a later check recovers',async()=>{
+ const {createLiveVoice}=await load();let failStatus=false,checks=0,peer;
+ const track={enabled:true,stops:0,stop(){this.stops++;}},stream={getTracks:()=>[track],getAudioTracks:()=>[track]};
+ class Peer{constructor(){peer=this;this.iceGatheringState='complete';this.connectionState='connected';this.channel={readyState:'open',close(){},send(){}};}
+  createDataChannel(){return this.channel;}addTrack(){}async createOffer(){return {sdp:'v=0'};}async setLocalDescription(v){this.localDescription=v;}async setRemoteDescription(){}close(){}}
+ const voice=createLiveVoice({audio:{play:async()=>{},pause(){}},media:{getUserMedia:async()=>stream},Peer,schedule:()=>1,cancel(){},
+  mint:async({case_id})=>({ok:true,case_id,token:'A'.repeat(30)+'.'+'a'.repeat(64),endpoint:'https://synthetic-engine.onrender.com',expires_at:Date.now()+600000}),
+  fetchImpl:async(url)=>{if(url.endsWith('/status')){checks++;if(failStatus)throw Error('temporary network');}
+   return {ok:true,json:async()=>url.endsWith('/session')?{ok:true,session:{id:'opaque'},transport:{sdp:'v=0'}}:{ok:true,active:true,started:true,context_ready:true,expires_at:Date.now()+600000,fragments:0,blocks:0,saved:0,pending:0}};}});
+ await voice.start('synthetic-case');await tick();peer.channel.onmessage({data:JSON.stringify({type:'session.started'})});await tick();
+ failStatus=true;await voice.refresh();assert.equal(track.stops,0);assert.equal(voice.snapshot().phase,'listening');
+ failStatus=false;await voice.refresh();assert.equal(track.stops,0);assert.ok(checks>=3);
+ const stopping=voice.stop();await tick();peer.channel.onmessage({data:JSON.stringify({type:'session.closed'})});await stopping;
 });

@@ -1,21 +1,21 @@
 {
-  "model_revision": "2026-10-05.73-gaston-documentos-jev",
-  "proposal_id": "CHG-DESPACHO-DOCUMENTOS-JEV-071",
+  "model_revision": "2026-10-05.74-despacho-presencia-voz",
+  "proposal_id": "CHG-DESPACHO-PRESENCIA-VOZ-072",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "GAS-PORTERO",
     "EXT-DRIVE"
   ],
-  "summary": "Conectar al chat y a la voz de Gastón la lectura autorizada de Drive, PDF con páginas visuales y OCR, Sheets por pestaña/rango y Jev para orientar y ordenar la investigación. Conservar el JSON inicial Live exacto; añadir herramientas sólo después de session.started. La primera aceptación es lectura de plano con página, posición y legibilidad, sin iniciar estudio inmobiliario.",
+  "summary": "Mostrar el agente autorizado en el Despacho desde la entrada, con tarjeta de presencia y figura sentada en espera. Preparar credencial de conversación en segundo plano sin abrir micrófono ni sesión Live; evitar lecturas simultáneas duplicadas y que la carga de una imagen bloquee el recorrido. Mantener voz ante ocultación, errores de comando y fallos transitorios de red; cerrar sólo al finalizar o perder conexión de forma persistente, con historial y finalización explícitos.",
   "tests": [
-    "node --test tests/*.cjs",
     "node scripts/arquitectura.cjs --check",
+    "node --test tests/*.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "Servidor privado: funciones Responses, continuación Live, duplicados, cierre, errores Drive/Jev, PDF visual, paginación y fuentes; ejemplos sintéticos."
+    "Pruebas sintéticas de presencia sin abrir panel, preparación sin micrófono, revocación, lecturas concurrentes, desconexión recuperada, error de comando y cierre incompleto; comprobación de assets publicados."
   ],
-  "rollback": "Apagar YOD_RESEARCH_ENABLED; conservar voz, expediente, outbox, conversaciones e IDs."
+  "rollback": "Revertir los módulos visuales y la tolerancia de conexión; conservar los perfiles, los permisos DP, la configuración Live exacta, las conversaciones y los recibos."
 }
