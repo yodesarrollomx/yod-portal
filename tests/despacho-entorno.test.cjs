@@ -49,7 +49,7 @@ test('visitas persistentes leen antes de registrar y muestran solo recibos confi
   }
   queueMicrotask(()=>void win.emit('message',{origin:win.location.origin,source:win.parent,data:{type:'yod:case:result',version:1,id:request.id,result}}));
  }};
- const sesion=sesionFalsa();win.CubefarmYOD=sesion;montarEntorno({win,doc,persistentes:true});sesion.poner(PERFIL);
+ const sesion=sesionFalsa();win.CubefarmYOD=sesion;montarEntorno({politica:false,win,doc,persistentes:true});sesion.poner(PERFIL);
  await new Promise(setImmediate);assert.deepEqual(pedidos.map(p=>p.method),['readVisits']);
  await win.emit('yod-agent-arrived',{detail:{lugar:'decisions'}});await new Promise(setImmediate);
  assert.deepEqual(pedidos.map(p=>p.method),['readVisits','recordVisit','readVisits']);assert.equal(rows.length,1);
@@ -109,7 +109,7 @@ test('registro: guarda en memoria, valida y limita',async()=>{
 test('con el interruptor apagado: no monta nada ni toca el botón',async()=>{
  const {montarEntorno}=await load('entorno.mjs');
  const {doc,boton}=crearDoc();const win=crearWin();
- assert.equal(montarEntorno({persistentes:false,win,doc,activo:false}),false);
+ assert.equal(montarEntorno({politica:false,persistentes:false,win,doc,activo:false}),false);
  assert.equal(boton.hidden,true);
  assert.equal((boton.listeners.click||[]).length,0);
  const config=await load('entorno-config.mjs');
@@ -121,7 +121,7 @@ test('?entorno=1 muestra el botón solo con perfil autorizado y abre/cierra la h
  const {doc,boton}=crearDoc();const win=crearWin('?entorno=1');
  const sesion=sesionFalsa();win.CubefarmYOD=sesion;
  const registro=crearRegistro();
- assert.equal(montarEntorno({persistentes:false,win,doc,registro}),true);
+ assert.equal(montarEntorno({politica:false,persistentes:false,win,doc,registro}),true);
  assert.equal(boton.hidden,true);
  await boton.emit('click');
  assert.equal(doc.body.children.length,0,'sin perfil no abre');
@@ -147,7 +147,7 @@ test('ir a un espacio registra solo después de confirmar la vista; sin lugar no
  const sesion=sesionFalsa();win.CubefarmYOD=sesion;sesion.poner(PERFIL);
  const idas=[];win.despacho={visit:id=>{idas.push(id);return true;}};
  const registro=crearRegistro();
- montarEntorno({persistentes:false,win,doc,registro});
+ montarEntorno({politica:false,persistentes:false,win,doc,registro});
  await boton.emit('click');
  const hoja=doc.body.children[0];
  const botones=hoja.all(n=>n.tag==='button'&&n.attrs.class==='entorno-ir');
@@ -165,7 +165,7 @@ test('sin la oficina disponible no registra visitas falsas',async()=>{
  const {doc,boton}=crearDoc();const win=crearWin('?entorno=1');
  const sesion=sesionFalsa();win.CubefarmYOD=sesion;sesion.poner(PERFIL);
  const registro=crearRegistro();
- montarEntorno({persistentes:false,win,doc,registro});
+ montarEntorno({politica:false,persistentes:false,win,doc,registro});
  await boton.emit('click');
  const b=doc.body.children[0].all(n=>n.attrs.class==='entorno-ir')[0];
  await b.emit('click');
@@ -191,7 +191,7 @@ test('con movimiento disponible, Enviar inicia la ruta y solo la llegada registr
  const idas=[],modos=[];let acepta=true;
  win.despacho={visit(){},setMode:m=>modos.push(m),agenteIr:id=>{idas.push(id);return acepta;}};
  const registro=crearRegistro();
- montarEntorno({persistentes:false,win,doc,registro});
+ montarEntorno({politica:false,persistentes:false,win,doc,registro});
  await boton.emit('click');
  let hoja=doc.body.children[0];
  const conLugar=ESPACIOS.filter(e=>e.lugar).length;
@@ -217,7 +217,7 @@ test('sin el movimiento de la oficina no hay botones de enviar',async()=>{
  const {montarEntorno,crearRegistro}=await load('entorno.mjs');
  const {doc,boton}=crearDoc();const win=crearWin('?entorno=1');
  const sesion=sesionFalsa();win.CubefarmYOD=sesion;sesion.poner(PERFIL);win.despacho={visit(){}};
- montarEntorno({persistentes:false,win,doc,registro:crearRegistro()});
+ montarEntorno({politica:false,persistentes:false,win,doc,registro:crearRegistro()});
  await boton.emit('click');
  const hoja=doc.body.children[0];
  assert.equal(hoja.all(n=>n.attrs.class==='entorno-enviar').length,0);
@@ -236,7 +236,7 @@ async function montarJuntas({search='?entorno=1&juntas=1',leer,juntas}={}){
  const {montarEntorno,crearRegistro}=await load('entorno.mjs');
  const {doc,boton}=crearDoc();const win=crearWin(search);
  const sesion=sesionFalsa();win.CubefarmYOD=sesion;sesion.poner(PERFIL);
- montarEntorno({persistentes:false,win,doc,registro:crearRegistro(),leer,juntas});
+ montarEntorno({politica:false,persistentes:false,win,doc,registro:crearRegistro(),leer,juntas});
  await boton.emit('click');
  return {doc,boton,sesion,hoja:doc.body.children[0]};
 }
