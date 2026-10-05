@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.75-despacho-biblioteca-indice · 2026-10-05.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.76-despacho-biblioteca-publicada · 2026-10-05.
 
 ## SYS-DESPACHO · El Despacho
 

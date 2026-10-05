@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-05.75-despacho-biblioteca-indice",
+  "model_revision": "2026-10-05.76-despacho-biblioteca-publicada",
   "proposal_id": "CHG-DESPACHO-BIBLIOTECA-073",
   "components": [
     "SYS-YOD-OS",
@@ -7,7 +7,7 @@
     "GAS-PORTERO",
     "EXT-DRIVE"
   ],
-  "summary": "Crear biblioteca privada indexada a partir de Documentos del expediente autorizado, con fragmentos, página/pestaña/rango, versión y fechas; consultas Jev sobre pasajes y referencias persistidas. Compartir lecturas, reusar contenidos sin repetir OCR y refrescar en segundo plano sin bloquear la entrada. Panel Biblioteca con fuentes reales y estado de preparación; revalidar acceso/versión antes de devolver texto, excluir fuentes retiradas y contenidos obsoletos.",
+  "summary": "Registrar evidencia de publicación de CHG-DESPACHO-BIBLIOTECA-073, comprobación HTTP del consumidor, prueba visual y preparación/reutilización del índice real, con límites de cobertura, precisión, dependencia del Portero y audio en dispositivo.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",

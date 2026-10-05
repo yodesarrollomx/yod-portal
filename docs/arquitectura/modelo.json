@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-05.75-despacho-biblioteca-indice",
+  "revision": "2026-10-05.76-despacho-biblioteca-publicada",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8062,7 +8062,7 @@
         "EXT-DRIVE"
       ],
       "proposal": "Crear biblioteca privada indexada a partir de Documentos del expediente autorizado, con fragmentos, página/pestaña/rango, versión y fechas; consultas Jev sobre pasajes y referencias persistidas. Compartir lecturas, reusar contenidos sin repetir OCR y refrescar en segundo plano sin bloquear la entrada. Panel Biblioteca con fuentes reales y estado de preparación; revalidar acceso/versión antes de devolver texto, excluir fuentes retiradas y contenidos obsoletos.",
-      "status": "implementado_local",
+      "status": "publicado",
       "approval": "Dirección pidió biblioteca para Jeff, carga rápida del tablero y continuar con la siguiente etapa en este chat. Reutilizar Drive, Jev y servidor privado existentes; sin contratar otro servicio.",
       "tests": [
         "node scripts/arquitectura.cjs --check",
@@ -8074,7 +8074,7 @@
         "Servidor privado: índice persistente, consulta repetida sin OCR, versiones, permisos/revocación, entradas no confiables, límites, preparación en segundo plano y fuentes en chat/voz.",
         "Navegador escritorio/móvil con fuentes sintéticas; lectura real y publicación contrastadas por separado."
       ],
-      "deployment": "Servidor PR9/PR11 integrado y Render live en8811ee5;88 pruebas privadas aprobadas. Portal371 pruebas, esquema/vistas/impacto y OS/portal/accesos/obra aprobados en5a6197d. Panel y pruebas de cliente implementados. Comprobación navegador, preparación/reuso de fuentes reales y publicación HTTP del consumidor pendientes; no acredita fase4 completa.",
+      "deployment": "Servidor PR9/PR11 integrado y Render live en8811ee5;88 pruebas privadas aprobadas. Portal PR90 integrado en a7cd37a,371 pruebas y verificadores obligatorios aprobados. Chromium con transporte sintético en1280x900 y390x844 comprobó fuentes, búsqueda, texto exacto, referencia de página y limpieza al perder autorización, sin micrófono/Live ni errores. A las09:28UTC salud real confirmó índice preparado y reutilizado; a las09:37UTC los seis recursos HTTP publicados coincidieron byte a byte con el consumidor revisado. Son comprobaciones puntuales: se observó una reconexión del Portero y no acreditan disponibilidad continua, precisión de una respuesta real, audio del dispositivo ni fase4 completa.",
       "rollback": "Deshabilitar biblioteca indexada/revertir consumidor y servidor; conservar fuentes originales, datos/cálculos Sheets, conversaciones, journal/outbox, IDs y permisos. El índice es derivado y privado."
     }
   ],
