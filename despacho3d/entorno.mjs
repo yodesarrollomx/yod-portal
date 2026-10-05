@@ -2,7 +2,7 @@
 // Catálogo, permisos y visitas de sesión; juntas lee entregas. El registro durable tiene interruptor propio.
 // No envía mensajes ni crea documentos. Todo espacio está en "solo observar".
 // El repositorio es público: aquí no hay nombres de casos, clientes ni contactos.
-import {ENTORNO_ACTIVO,ENTORNO_JUNTAS,ENTORNO_VISITAS_PERSISTENTES,ENTORNO_PERMISOS_SERVIDOR} from './entorno-config.mjs?v=4';
+import {ENTORNO_ACTIVO,ENTORNO_JUNTAS,ENTORNO_VISITAS_PERSISTENTES,ENTORNO_PERMISOS_SERVIDOR} from './entorno-config.mjs?v=5';
 import {leerMetas,pendientesDeMetas} from './circulo-pendientes.mjs';
 import {Visitas} from './visitas.mjs?v=2';
 import {createFrameTransport} from './conversation.mjs?v=3';

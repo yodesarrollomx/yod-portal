@@ -56,3 +56,9 @@ test('client blocks before verified read and clears matrix on revoked RPC or lat
 test('late permission snapshot cannot restore a closed or changed case',async()=>{
  const {Permisos}=await import('../despacho3d/permisos.mjs');let finish;const p=new Permisos({transport:{readOfficePermissions:()=>new Promise(r=>{finish=r;})}});const pending=p.open(caseId);p.close();finish(copy(fixture().backend.inspect({case_id:caseId})));assert.equal(await pending,false);assert.equal(p.state().matrix,null);assert.equal(p.state().status,'off');
 });
+test('Apps Script synthetic helper verifies six cases without IO and requires a current editor',()=>{
+ const ctx=vm.createContext({});vm.runInContext(core,ctx);let email='editor@synthetic.invalid';ctx.Session={getActiveUser:()=>({getEmail:()=>email})};ctx.YOD_DESPACHO_CONFIG={editors:['editor@synthetic.invalid']};ctx.console={log:()=>{}};
+ vm.runInContext(fs.readFileSync('despacho-runtime/source/server/permisos-aisladas.gs','utf8'),ctx);
+ const r=ctx.YOD_verificarPermisosAislados();assert.equal(r.checks,6);assert.equal(r.results.find(s=>s.scenario==='revocado').delivered,0);assert.equal(r.results.find(s=>s.scenario==='revocado').reads,1);
+ email='other@synthetic.invalid';assert.throws(()=>ctx.YOD_verificarPermisosAislados(),/unauthorized/);
+});

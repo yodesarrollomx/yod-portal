@@ -1,6 +1,6 @@
 # Despacho: permisos por operación · acción 1.3
 
-CHG-DESPACHO-PERMISOS-069 / CTR-DESPACHO-PERMISOS-V1. Código candidato implementado y pruebas fuera de producción. `ENTORNO_PERMISOS_SERVIDOR=false`: Portero v64 y su consumidor actual continúan activos hasta instalar y comprobar el enlace nuevo. La demostración usa identidades y datos sintéticos; no acredita instalación ni acceso real.
+CHG-DESPACHO-PERMISOS-069 / CTR-DESPACHO-PERMISOS-V1. PR84 entregó código y demostración con consumidor apagado. CHG-DESPACHO-PERMISOS-ENCENDIDO-070 instala Portero v65 y prepara `ENTORNO_PERMISOS_SERVIDOR=true` tras comprobar lectura autenticada de visitas. La aceptación de matriz/Juntas después de Pages sigue pendiente. La demostración usa identidades y datos sintéticos; no acredita acceso real.
 
 ## Matriz inicial
 
@@ -26,10 +26,10 @@ Estos controles comprueban acceso en puntos concretos; no convierten una ACL ext
 ## Instalación pendiente y criterio de encendido
 
 1. Releer y respaldar la implementación activa y HEAD de Apps Script. Conservar URL, principal, acceso y scopes. El helper editor-only de lectura de visitas guardado en HEAD no forma parte de v64.
-2. Crear `DespachoPermisos.gs` concatenando el núcleo exacto y `permisos-portero.gs`. Reemplazar `DespachoVisitas.gs` con visitas.gs + visitas-aisladas.gs + visitas-portero.gs actuales. **Instalar ambos juntos**: el wrapper de visitas nuevo depende de `yodDespachoOfficeAccess_`.
+2. Crear `DespachoPermisos.gs` concatenando el núcleo exacto, `permisos-portero.gs` y el helper editor-only `permisos-aisladas.gs`. Reemplazar `DespachoVisitas.gs` con visitas.gs + visitas-aisladas.gs + visitas-portero.gs actuales. **Instalar ambos juntos**: el wrapper de visitas nuevo depende de `yodDespachoOfficeAccess_`.
 3. En `yodDespachoRequest_`, después de validar payload y antes del allowlist existente, añadir solo el dispatch de `readOfficePermissions/readOfficePending` hacia `yodDespachoOffice_`. Mantener dispatch de visitas y el resto del router. Releer y cotejar exactamente la fuente guardada antes de publicar.
-4. Ejecutar pruebas aisladas/sintéticas y comprobar contrato y ausencia de efectos externos. No cambiar ACL reales para simular revocación ni generar filas de prueba en el libro de negocio.
-5. Actualizar la implementación existente y verificar versión efectiva. Comprobar lectura autenticada de matriz y Juntas, y lectura de la misma visita/recibo sin otra escritura. Solo entonces entregar otro PR con flag true y versiones de caché.
+4. Ejecutar `YOD_verificarPermisosAislados` (seis casos en memoria), pruebas locales y comprobar contrato y ausencia de efectos externos. No cambiar ACL reales para simular revocación ni generar filas de prueba en el libro de negocio.
+5. Actualizar la implementación existente y verificar versión efectiva. Comprobar lectura autenticada de la misma visita/recibo por el wrapper nuevo sin otra escritura. Entregar PR de consumidor con flag true y versiones de caché; tras Pages, comprobar matriz y Juntas autenticadas para aceptar el paso. El encendido del consumidor por sí solo no acredita esas consultas nuevas.
 6. Capturas: matriz autenticada, consulta permitida y demostraciones sintéticas de denegación y revocación (lectura 1, datos entregados 0). Registrar fuente, condiciones, resultado y límites en el plan privado. WebGL/móvil real continúan pendientes en 0.4.
 
 ## Pruebas y reversión
@@ -39,3 +39,7 @@ Pruebas del núcleo y enlace real con dependencias sintéticas: sesión denegada
 `permisos-demo.html` permite seis comprobaciones en memoria y muestra lecturas ejecutadas/datos entregados. Nunca llama Portero, Sheets, Gmail o WhatsApp. Una demostración correcta no acredita el despliegue manual pendiente.
 
 Reversión: consumidor false y, si se necesita, implementación anterior del mismo Portero. Conservar historial y recibos; no borrar pestañas ni cambiar ACL. Fuente nueva preparada con el flag apagado puede publicarse tras checks; instalación y encendido se registran por separado.
+
+## Instalación · CHG-DESPACHO-PERMISOS-ENCENDIDO-070
+
+Portero v65 publicado en la implementación existente tras recargar y cotejar tres fuentes idénticas. Mismos URL, principal y acceso; ninguna ACL, configuración o scope nuevo. `YOD_verificarPermisosAislados` terminó con seis casos aprobados en memoria. Local: 351 pruebas. La lectura autenticada de visitas y aceptación del consumidor se registran por separado. Respaldos y prueba runtime en plan privado.

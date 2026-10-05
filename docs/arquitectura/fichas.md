@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-04.69-despacho-permisos · 2026-10-04.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-04.70-despacho-permisos-encendido · 2026-10-04.
 
 ## SYS-DESPACHO · El Despacho
 

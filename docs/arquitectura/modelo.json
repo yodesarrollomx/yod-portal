@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-04.69-despacho-permisos",
+  "revision": "2026-10-04.70-despacho-permisos-encendido",
   "checked_at": "2026-10-04",
   "priorities": [
     "vender_mas",
@@ -7938,6 +7938,31 @@
       ],
       "deployment": "Código candidato: 350 pruebas locales aprobadas y verificadores del portal. ENTORNO_PERMISOS_SERVIDOR=false. Portero activo v64 sin cambios; instalación, encendido y aceptación autenticada pendientes. Capturas sintéticas se registran por separado en plan privado.",
       "rollback": "Mantener o apagar el consumidor nuevo; volver a fuente y versión previa del mismo Portero conservando historial. No borrar visitas ni modificar ACL."
+    },
+    {
+      "id": "CHG-DESPACHO-PERMISOS-ENCENDIDO-070",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Instalar núcleo y adaptador de permisos, visitas actualizadas y dos dispatch de lectura en el mismo Portero. Conservar URL, principal, acceso, scopes, configuración, historial e IDs; probar seis casos sintéticos en runtime, releer fuentes y verificar lectura autenticada antes de dar aceptación. Encender consumidor observe-only después de comprobar instalación; no conceder borradores/envíos/aprobación ni modificar otros protocolos.",
+      "status": "propuesto",
+      "approval": "Dirección autorizó continuar paso 1.3; mismo alcance de lectura y registro ya autorizado, sin permisos nuevos ni mensajes.",
+      "tests": [
+        "node --test tests/*.cjs",
+        "node scripts/arquitectura.cjs --check",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "ACCESOS_REF=main node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Cotejo exacto de tres fuentes guardadas y configuración de implementación",
+        "YOD_verificarPermisosAislados: seis casos en memoria",
+        "Lectura OS matriz/Juntas/visitas, sin otra fila ni recorrido"
+      ],
+      "deployment": "Portero v65 publicado en la implementación existente: misma URL, principal y acceso, sin nuevos scopes ni ACL. Tres fuentes releídas idénticas después de recargar editor. Seis casos sintéticos runtime aprobados. Lectura autenticada OS ready/error vacío/revisión1 con misma visita y recibo, sin escrituras. Consumidor true preparado; matriz/Juntas tras Pages y aceptación pendientes.",
+      "rollback": "Consumidor false; volver misma implementación a v64 conservando historial, recibos y ACL. Restaurar HEAD con respaldos si hace falta."
     }
   ],
   "data_contracts": [

@@ -1,22 +1,23 @@
 {
-  "model_revision": "2026-10-04.69-despacho-permisos",
-  "proposal_id": "CHG-DESPACHO-PERMISOS-069",
+  "model_revision": "2026-10-04.70-despacho-permisos-encendido",
+  "proposal_id": "CHG-DESPACHO-PERMISOS-ENCENDIDO-070",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "GAS-PORTERO",
     "EXT-DRIVE"
   ],
-  "summary": "Acción 1.3: política explícita en servidor por sesión, expediente, espacio y operación, con observar como máximo inicial. Matriz de nueve espacios, sin conceder borradores/envíos/aprobación. Revalidar antes y después de lecturas y antes del commit de visitas; rechazar parámetros de identidad o nivel del navegador. Preparar enlace al Portero existente y demostración sintética de la misma política. Activar consumidor solo tras instalación y lectura autorizada; conservación de URL, principal, permisos, datos e IDs.",
+  "summary": "Instalar núcleo y adaptador de permisos, visitas actualizadas y dos dispatch de lectura en el mismo Portero. Conservar URL, principal, acceso, scopes, configuración, historial e IDs; probar seis casos sintéticos en runtime, releer fuentes y verificar lectura autenticada antes de dar aceptación. Encender consumidor observe-only después de comprobar instalación; no conceder borradores/envíos/aprobación ni modificar otros protocolos.",
   "tests": [
     "node --test tests/*.cjs",
     "node scripts/arquitectura.cjs --check",
     "node verify-os.cjs",
     "node verify-portal.cjs",
-    "node verify-accesos.cjs",
+    "ACCESOS_REF=main node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "Política real con identidades sintéticas: permitido, denegado, cambio de actor/caso y revocación durante lectura y antes de commit",
-    "Capturas de demostración sintética; instalación y aceptación por sesión OS se registran aparte"
+    "Cotejo exacto de tres fuentes guardadas y configuración de implementación",
+    "YOD_verificarPermisosAislados: seis casos en memoria",
+    "Lectura OS matriz/Juntas/visitas, sin otra fila ni recorrido"
   ],
-  "rollback": "Mantener o apagar el consumidor nuevo; volver a fuente y versión previa del mismo Portero conservando historial. No borrar visitas ni modificar ACL."
+  "rollback": "Consumidor false; volver misma implementación a v64 conservando historial, recibos y ACL. Restaurar HEAD con respaldos si hace falta."
 }
