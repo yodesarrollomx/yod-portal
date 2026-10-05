@@ -35,7 +35,9 @@ function createOfficeVisitsBackend(deps) {
       if (fresh.actor_id !== a.actor_id) fail('unauthorized');
       var target = deps.resolveCanonicalWorkbook(deps.serverContext,{case_id:deps.case_id,actor:fresh,action:action});
       if (!target || target.case_id !== deps.case_id || !id(target.spreadsheet_id)) fail('canonical_workbook_unavailable');
-      return fn(target.spreadsheet_id,fresh);
+      var result=fn(target.spreadsheet_id,fresh);
+      if(action==='readVisits') { var end=auth(action);if(end.actor_id!==fresh.actor_id)fail('unauthorized'); }
+      return result;
     } catch(e) { return {ok:false,error:e && e.officeVisit === true ? e.message : 'backend_unavailable'}; }
     finally { if(locked) deps.scriptLock.releaseLock(); }
   }

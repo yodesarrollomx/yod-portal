@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-04.68-despacho-visitas-encendido · 2026-10-04.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-04.69-despacho-permisos · 2026-10-04.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -453,3 +453,15 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Horas del servidor; ningún nombre, secreto, URL o identificador de libro privado en archivos públicos.
 - No modifica conversación, trabajos, metas ni sus IDs; pruebas conectadas usan archivo sintético aislado.
 - Solicitud ambigua conserva IDs; nunca cambia revisión y reintenta automáticamente una escritura sin reconciliar.
+
+## CTR-DESPACHO-PERMISOS-V1
+
+- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, EXT-DRIVE.
+- Evidencia: Acción 1.3; política de la oficina preparada para Portero, separada de permisos de otros tableros..
+- Entrada/campos: `Sesión autenticada por Portero y expediente canónico en servidor; nunca actor, libro o nivel elegidos por navegador.`, `readOfficePermissions: case_id; readOfficePending: case_id, space_id=juntas. Contratos existentes readVisits/recordVisit conservados.`.
+- Salida: Matriz de espacios con operaciones y nivel máximo inicial observar; snapshot informativo no es un permiso reutilizable., Lecturas reautorizadas al terminar; datos de una respuesta tardía no se entregan tras revocación o cambio de actor..
+
+- Solo juntas, biblioteca y edición tienen registro de visitas implementado; observar no concede acceso a NotebookLM/Drive ni envíos.
+- Borrador y acción aprobada no concedidos por defecto; espacios no conectados y operaciones desconocidas se deniegan.
+- Cada mutación verifica autorización vigente antes del commit; se conservan CAS, IDs y recibos.
+- Pruebas sintéticas sin endpoints de negocio, credenciales, mensajes ni escrituras de producción.

@@ -2,10 +2,11 @@
 // Catálogo, permisos y visitas de sesión; juntas lee entregas. El registro durable tiene interruptor propio.
 // No envía mensajes ni crea documentos. Todo espacio está en "solo observar".
 // El repositorio es público: aquí no hay nombres de casos, clientes ni contactos.
-import {ENTORNO_ACTIVO,ENTORNO_JUNTAS,ENTORNO_VISITAS_PERSISTENTES} from './entorno-config.mjs?v=3';
+import {ENTORNO_ACTIVO,ENTORNO_JUNTAS,ENTORNO_VISITAS_PERSISTENTES,ENTORNO_PERMISOS_SERVIDOR} from './entorno-config.mjs?v=4';
 import {leerMetas,pendientesDeMetas} from './circulo-pendientes.mjs';
 import {Visitas} from './visitas.mjs?v=2';
-import {createFrameTransport} from './conversation.mjs?v=2';
+import {createFrameTransport} from './conversation.mjs?v=3';
+import {Permisos} from './permisos.mjs?v=1';
 
 export const PERMISOS={
  observar:'Solo observar',
@@ -69,16 +70,18 @@ function crear(doc,tag,props={},hijos=[]){
 }
 const hora=iso=>{const d=new Date(iso);return Number.isNaN(d.getTime())?'':d.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});};
 
-export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,volver=null,entregas=null,visitas=null,alCerrar=()=>{}}={}){
+export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,volver=null,entregas=null,visitas=null,permisos=null,alCerrar=()=>{}}={}){
  const h=(tag,props,hijos)=>crear(doc,tag,props,hijos);
  const raiz=h('section',{class:'entorno-hoja',role:'dialog','aria-modal':'true','aria-labelledby':'entorno-titulo'});
  raiz.appendChild(h('button',{type:'button',class:'entorno-cerrar','aria-label':'Cerrar el entorno',texto:'×',on:{click:()=>alCerrar()}}));
  raiz.appendChild(h('h1',{id:'entorno-titulo',texto:'Entorno del agente'}));
  raiz.appendChild(h('p',{class:'entorno-aviso',texto:visitas?'Aquí se ven los espacios y las visitas de esta sesión. El registro del servidor muestra por separado las visitas con recibo confirmado. Todo espacio está en solo observar; no se envían mensajes ni se crean documentos.':'Etapas 1 y 2: aquí se ven los espacios, lo que el agente puede hacer en cada uno y quién los ha visitado en esta sesión. Todo está en solo observar: no se envía nada, no se crea nada y no se escribe en Sheets.'}));
  raiz.appendChild(h('p',{},[h('a',{href:'actividad-demo.html',target:'_blank',rel:'noopener',texto:'Ver prueba de actividad (datos sintéticos)'})]));
+ raiz.appendChild(h('p',{},[h('a',{href:'permisos-demo.html',target:'_blank',rel:'noopener',texto:'Ver prueba de permisos (datos sintéticos)'})]));
  const lista=h('div',{class:'entorno-lista'});
  const bitacora=h('ol',{class:'entorno-bitacora','aria-live':'polite'});
  const respaldo=h('section',{class:'entorno-respaldo',role:'region','aria-label':'Visitas guardadas en el servidor'});
+ const autorizacion=h('section',{class:'entorno-respaldo',role:'region','aria-label':'Permisos del expediente'});
  const limpiar=n=>{while(n.firstChild)n.removeChild(n.firstChild);};
  // Entregas por aprobar de la sala de juntas (solo lectura).
  let porAprobar={fase:'inicio',tarjetas:[]};
@@ -107,6 +110,17 @@ export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,vol
   return caja;
  }
  function pintar(){
+  if(permisos){
+   limpiar(autorizacion);const s=permisos.state();
+   autorizacion.setAttribute('data-permissions-status',s.status);autorizacion.setAttribute('data-permissions-error',s.error||'');autorizacion.setAttribute('data-policy-version',s.matrix?.policy_version||'');
+   autorizacion.appendChild(h('p',{role:'status',texto:s.status==='ready'?'Permisos consultados. Cada operación se autoriza de nuevo.':s.status==='reading'?'Consultando permisos…':'No pude confirmar los permisos. Las consultas del entorno quedan bloqueadas.'}));
+   autorizacion.appendChild(h('button',{type:'button',texto:'Actualizar permisos',on:{click:()=>permisos.refresh()}}));
+   if(s.status!=='ready')porAprobar={fase:'inicio',tarjetas:[]};
+   if(s.matrix){const tabla=h('table',{}),cabecera=h('tr',{},['Espacio','Nivel','Operaciones'].map(texto=>h('th',{scope:'col',texto})));tabla.appendChild(h('thead',{},[cabecera]));const cuerpo=h('tbody',{});
+    for(const row of s.matrix.spaces)cuerpo.appendChild(h('tr',{'data-permission-space':row.space_id},[h('td',{texto:espacioDe(row.space_id)?.nombre||row.space_id}),h('td',{texto:row.level?'Solo observar':'Sin conexión'}),h('td',{texto:row.operations.map(o=>o==='recordVisit'?'Registrar llegada':'Ver entregas por aprobar').join(' · ')||'Ninguna'})]));
+    tabla.appendChild(cuerpo);autorizacion.appendChild(tabla);
+   }
+  }
   if(visitas){
    limpiar(respaldo);const s=visitas.state(),count=s.snapshot?.total;
    respaldo.setAttribute('data-visits-status',s.status);respaldo.setAttribute('data-visits-error',s.error||'');
@@ -126,7 +140,7 @@ export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,vol
    const hay=e.lugar!==null;
    const n=registro.cuantas(e.id);
    const pie=[h('span',{class:'entorno-chip '+(hay?'ok':'espera'),texto:hay?'Con lugar en el Despacho':'Por construir · etapa '+e.etapa}),
-    h('span',{class:'entorno-chip',texto:PERMISOS[e.permiso]}),
+    h('span',{class:'entorno-chip',texto:permisos?(permisos.state().matrix?.spaces.find(s=>s.space_id===e.id)?.level?'Solo observar':permisos.state().status==='ready'?'Sin conexión':'Permiso por confirmar'):PERMISOS[e.permiso]}),
     h('span',{class:'entorno-chip',texto:'Visitas: '+n})];
    const hijos=[h('h2',{texto:e.nombre}),h('p',{texto:e.funcion}),h('div',{class:'entorno-chips'},pie)];
    if(hay){
@@ -136,7 +150,7 @@ export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,vol
     if(typeof enviar==='function')acciones.push(h('button',{type:'button',class:'entorno-enviar',texto:'Enviar al agente',on:{click:()=>{
      if(enviar(e)!==false)pintar();
     }}}));
-    if(e.id==='juntas'&&typeof entregas==='function')acciones.push(h('button',{type:'button',class:'entorno-entregas-ver',texto:'Ver entregas por aprobar',on:{click:()=>verEntregas()}}));
+    if(e.id==='juntas'&&typeof entregas==='function')acciones.push(h('button',{type:'button',class:'entorno-entregas-ver',texto:'Ver entregas por aprobar',disabled:!!permisos&&!permisos.permits('juntas','readPending'),on:{click:()=>verEntregas()}}));
     hijos.push(h('div',{class:'entorno-acciones'},acciones));
     if(e.id==='juntas'&&porAprobar.fase!=='inicio')hijos.push(pintarEntregas());
    }
@@ -147,6 +161,7 @@ export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,vol
   for(const v of recientes)bitacora.appendChild(h('li',{texto:[hora(v.en),QUIENES[v.quien],espacioDe(v.espacio)?.nombre].filter(Boolean).join(' · ')}));
  }
  if(typeof volver==='function')raiz.appendChild(h('button',{type:'button',class:'entorno-volver',texto:'Que el agente vuelva a su lugar',on:{click:()=>{volver();}}}));
+ if(permisos){raiz.appendChild(h('h2',{class:'entorno-sub',texto:'Permisos del expediente'}));raiz.appendChild(autorizacion);}
  raiz.appendChild(lista);
  if(visitas){raiz.appendChild(h('h2',{class:'entorno-sub',texto:'Visitas guardadas'}));raiz.appendChild(respaldo);}
  raiz.appendChild(h('h2',{class:'entorno-sub',texto:'Visitas de esta sesión'}));
@@ -156,7 +171,7 @@ export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,vol
 }
 
 // Monta el botón y la hoja. Devuelve false si el entorno no debe aparecer.
-export function montarEntorno({win=globalThis.window,doc=globalThis.document,activo=ENTORNO_ACTIVO,juntas=ENTORNO_JUNTAS,persistentes=ENTORNO_VISITAS_PERSISTENTES,leer=leerMetas,registro=crearRegistro()}={}){
+export function montarEntorno({win=globalThis.window,doc=globalThis.document,activo=ENTORNO_ACTIVO,juntas=ENTORNO_JUNTAS,persistentes=ENTORNO_VISITAS_PERSISTENTES,politica=ENTORNO_PERMISOS_SERVIDOR,leer=leerMetas,registro=crearRegistro()}={}){
  if(!win||!doc)return false;
  const vistaPrevia=/(?:^|[?&])entorno=1(?:&|$)/.test(String(win.location?.search||''));
  if(!activo&&!vistaPrevia)return false;
@@ -164,6 +179,7 @@ export function montarEntorno({win=globalThis.window,doc=globalThis.document,act
  if(!boton)return false;
  let hoja=null,desuscribir=null,perfil=null;
  const visitas=persistentes?new Visitas({transport:createFrameTransport(win),uuid:()=>win.crypto.randomUUID(),notify:()=>hoja?.pintar()}):null;
+ const permisos=politica?new Permisos({transport:createFrameTransport(win),notify:s=>{if(s.error==='unauthorized'||s.error==='session_changed')visitas?.close();hoja?.pintar();}}):null;
  const registrar=datos=>{registro.registrar(datos);if(visitas)void visitas.record(datos);};
  const cerrar=()=>{
   if(!hoja)return;
@@ -204,14 +220,14 @@ export function montarEntorno({win=globalThis.window,doc=globalThis.document,act
  const entregas=async()=>{
   const actual=perfil;
   if(!actual?.case_id)return {estado:'error'};
-  const metas=await leer({win,caseId:actual.case_id});
+  const metas=await leer({win,caseId:actual.case_id,...(permisos?{crearTransporte:()=>({readGoals:()=>permisos.readPending()})}:{})});
   if(!metas||perfil!==actual)return {estado:'error'};
   const tarjetas=pendientesDeMetas(metas,{de:typeof actual.name==='string'?actual.name:'Caso'}).filter(t=>t.categoria==='aprobar'||t.categoria==='decidir');
   return {estado:'ok',tarjetas};
  };
  const abrir=()=>{
   if(hoja||!perfil)return;
-  hoja=crearEntorno({doc,registro,ir,enviar:caminar()?enviar:null,volver:caminar()?volver:null,entregas:conJuntas?entregas:null,visitas,alCerrar:cerrar});
+  hoja=crearEntorno({doc,registro,ir,enviar:caminar()?enviar:null,volver:caminar()?volver:null,entregas:conJuntas?entregas:null,visitas,permisos,alCerrar:cerrar});
   doc.body.appendChild(hoja.raiz);
   doc.addEventListener?.('keydown',alTeclear);
  };
@@ -219,6 +235,7 @@ export function montarEntorno({win=globalThis.window,doc=globalThis.document,act
   const anterior=perfil?.case_id;
   perfil=p&&typeof p==='object'?p:null;
   if(visitas&&perfil?.case_id!==anterior){if(perfil?.case_id)void visitas.open(perfil.case_id);else visitas.close();}
+  if(permisos&&perfil?.case_id!==anterior){if(perfil?.case_id)void permisos.open(perfil.case_id);else permisos.close();}
   boton.hidden=!perfil;
   if(!perfil)cerrar();
  };
