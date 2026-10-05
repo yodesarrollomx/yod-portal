@@ -1,5 +1,5 @@
 import {createFrameTransport, validateSelection} from './conversation.mjs';
-import {createLiveVoice} from './live-voice.mjs?v=4';
+import {createLiveVoice} from './live-voice.mjs?v=5';
 import {DurableGoals,watchGoals} from './goals.mjs';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=1';
 import {groupTranscriptFragments} from './live-transcript.mjs';
@@ -15,7 +15,7 @@ if (open) {
     '<audio id="voice-audio" autoplay controls></audio><div class="voice-actions">' +
     '<button id="voice-start" disabled>Iniciar conversación</button><button id="voice-mute" disabled>Silenciar micrófono</button>' +
     '<button id="voice-stop" disabled>Finalizar</button></div>' +
-    '<p id="voice-context" role="status">Preparando expediente y herramientas…</p><p id="voice-task" role="status"></p><div id="voice-work" role="status"></div><button id="voice-view-tasks">Ver pendientes y evidencia</button><button id="voice-retry-actions" hidden>Comprobar acción pendiente</button><p class="voice-note">Escuchas una voz generada por IA. Los resultados de las tareas quedan para tu revisión.</p>' +
+    '<p id="voice-context" role="status">Preparando expediente y herramientas…</p><button id="voice-retry-context" hidden>Recuperar expediente</button><p id="voice-task" role="status"></p><div id="voice-work" role="status"></div><button id="voice-view-tasks">Ver pendientes y evidencia</button><button id="voice-retry-actions" hidden>Comprobar acción pendiente</button><p class="voice-note">Escuchas una voz generada por IA. Los resultados de las tareas quedan para tu revisión.</p>' +
     '<p id="voice-save" role="status">Sin conversación nueva.</p><div id="voice-transcript" role="log" aria-label="Transcripción de voz"></div>' +
     '<p class="voice-note">Puedes interrumpirlo hablando. La transcripción se respalda al finalizar; aquí verás si queda pendiente.</p>';
   document.body.append(dialog);
@@ -44,7 +44,13 @@ if (open) {
       if(live&&state.tasks_ready&&!stopWatching)stopWatching=watchGoals(goalReader,{visible:()=>dialog.open&&!document.hidden&&active(voice.snapshot())&&!voice.snapshot().actions_pending});
       else if(!live&&stopWatching){stopWatching();stopWatching=null;goalReader.hide();}
       node('voice-status').textContent = state.notice;
-      node('voice-context').textContent=state.mode==='basic'?'Conversación básica. Las herramientas del expediente están desactivadas.':state.context_phase==='unavailable'?'Puedes seguir hablando. No se confirmó el contexto; vuelve a iniciar para conectar el expediente.':state.context_phase==='ready'?'Expediente conectado · '+(state.documents_ready?'Biblioteca y Jev disponibles':'Lector documental no disponible')+' · '+(state.tasks_ready?'Pendientes conectados':'Pendientes no disponibles'):'Puedes hablar. Preparando expediente y herramientas en segundo plano…';
+      node('voice-context').textContent=state.mode==='basic'?'Conversación básica. Las herramientas del expediente están desactivadas.':
+        state.context_phase==='unavailable'?'El expediente no se confirmó. Puedes seguir hablando y recuperar su acceso aquí.':
+        state.context_phase==='ready'?'Expediente recibido y listo para revisar · '+(state.documents_ready?'Biblioteca y Jev disponibles':'Lector documental no disponible')+' · '+(state.tasks_ready?'Pendientes conectados':'Pendientes no disponibles'):
+        state.context_phase==='retrying'?'La carga del expediente falló. Reintentando automáticamente; la voz sigue activa…':
+        state.context_phase==='installing'?'Expediente recibido. Confirmando que Gastón pueda consultarlo…':
+        'Puedes hablar. Cargando expediente y herramientas en segundo plano…'+(state.context_attempts>1?' Intento '+state.context_attempts+'.':'');
+      node('voice-retry-context').hidden=state.context_phase!=='unavailable'||state.phase!=='listening';
       node('voice-start').disabled = live || !selection?.can_enqueue;
       node('voice-stop').disabled = !live || state.phase === 'closing';
       node('voice-mute').disabled = state.phase !== 'listening';
@@ -91,6 +97,7 @@ if (open) {
   });
   node('voice-view-tasks').addEventListener('click',()=>{if(selection)void window.YodAgentMenu?.openForCase(selection.case_id,'pendientes');});
   window.addEventListener('yod-goals-changed',()=>{if(stopWatching)void goalReader.read();});
+  node('voice-retry-context').addEventListener('click',()=>{void voice.retryContext();});
   node('voice-retry-actions').addEventListener('click',()=>voice.retryActions());
   node('voice-mute').addEventListener('click', voice.mute);
   node('voice-stop').addEventListener('click', () => {void voice.stop();});

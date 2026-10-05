@@ -169,3 +169,13 @@ test('operative voice starts on session.started while context is unavailable and
  assert.equal(f.track.stops,0);assert.equal(f.calls.some(c=>c.url.endsWith('/close')),false);
  const stopping=f.voice.stop();await tick();f.event({type:'session.closed'});await stopping;
 });
+
+test('recovering the case uses the original authenticated voice session and leaves the microphone active',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice,{mode:'operativo'});
+ await f.voice.start('synthetic-case');f.event({type:'session.started'});await tick();
+ await f.voice.retryContext();const call=f.calls.find(c=>c.url.endsWith('/context-retry'));
+ assert.deepEqual(JSON.parse(call.options.body),{session_id:'live:opaque/session'});assert.ok(call.options.headers.Authorization);
+ assert.equal(f.track.enabled,true);assert.equal(f.track.stops,0);assert.equal(f.peer.channel.sent.length,0);
+ assert.equal(f.calls.filter(c=>c.url.endsWith('/session')).length,1);
+ const stopping=f.voice.stop();await tick();f.event({type:'session.closed'});await stopping;
+});

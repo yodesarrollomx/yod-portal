@@ -109,7 +109,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
       if (token !== epoch || closing) return;
       statusFailures = 0; publish({status_pending: false});
       report(result); contextReady = result.context_ready === true; ready();
-      publish({context_phase:result.context_phase||'preparing',tools_ready:result.tools_ready===true,documents_ready:result.documents_ready===true,tasks_ready:result.tasks_ready===true,actions_pending:result.actions?.length||0});
+      publish({context_phase:result.context_phase||'preparing',context_attempts:result.context_attempts||0,context_error:result.context_error||null,tools_ready:result.tools_ready===true,documents_ready:result.documents_ready===true,tasks_ready:result.tasks_ready===true,actions_pending:result.actions?.length||0});
       if(result.tools_ready&&actions&&credential){const auth=credential,id=sessionId,own=epoch;
         actions.consume(result.actions,{caseId:auth.case_id,active:()=>epoch===own&&!closing&&started&&['listening','reconnecting','starting'].includes(state.phase),post:(path,data)=>post(path,{session_id:id,...data},auth,AbortSignal.timeout(15000))});
       }
@@ -139,7 +139,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     const token = ++epoch; controller = new AbortController(); began = now();
     mode = null; started = contextReady = finalSeen = disconnected = false; seen.clear(); sequence = 0; polling = false; statusFailures = 0; connectedAt = 0;
     publish({phase: 'starting', notice: 'Abriendo el micrófono…', fragments: 0, blocks: 0, saved: 0,
-      pending: 0, incomplete: false, finalized: false, status_pending: false, mode: null,context_phase:'preparing',tools_ready:false,documents_ready:false,tasks_ready:false,actions_pending:0});
+      pending: 0, incomplete: false, finalized: false, status_pending: false, mode: null,context_phase:'preparing',context_attempts:0,context_error:null,tools_ready:false,documents_ready:false,tasks_ready:false,actions_pending:0});
     try {
       if (typeof media?.getUserMedia !== 'function' || typeof Peer !== 'function' || !audio)
         throw Error('Este navegador no admite voz en tiempo real.');
@@ -225,6 +225,19 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
       return false;
     }
   }
+  async function retryContext() {
+    if (!credential || !sessionId || closing || state.phase !== 'listening') return false;
+    const token=epoch;
+    try {
+      const result=await post('/voice/context-retry',{session_id:sessionId},credential,AbortSignal.timeout(12000));
+      if(token!==epoch||closing)return false;
+      publish({context_phase:result.context_phase,context_attempts:result.context_attempts||0,context_error:result.context_error||null});
+      void status(token);return result.retrying===true;
+    } catch {
+      if(token===epoch&&!closing)publish({notice:'La voz sigue activa. No se pudo recuperar el expediente; vuelve a intentar.'});
+      return false;
+    }
+  }
   function mute() {
     if (!stream || state.phase !== 'listening') return;
     const muted = !state.muted; stream.getAudioTracks().forEach(track => {track.enabled = !muted;});
@@ -241,5 +254,5 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     disconnected = true; closedResolve?.(false); publish({incomplete: true});
     void stop('Finalización incompleta al salir de esta pantalla.');
   }
-  return {prepare, start, stop, mute, interrupt, abandon, refresh: () => status(epoch), retryActions:()=>{actions?.retry();void status(epoch);}, snapshot: () => ({...state})};
+  return {prepare, start, stop, mute, retryContext, interrupt, abandon, refresh: () => status(epoch), retryActions:()=>{actions?.retry();void status(epoch);}, snapshot: () => ({...state})};
 }

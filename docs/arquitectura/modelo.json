@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-05.79-despacho-agente-operativo",
+  "revision": "2026-10-05.80-despacho-contexto-recuperable",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8128,6 +8128,31 @@
       ],
       "deployment": "Portal PR94 publicado en0ec35cf; servidor PR16/17 publicado en640b6ce. Renderlive dep-db1th9qd0e5s7399v630, diagnóstico apagado y modo operativo confirmado a17:06:28UTC. La actualización de herramientas conserva explícitamente delegation.type responses; el diagnóstico real pasó tras corregir ese rechazo. Micrófono independiente del contexto, herramientas documentales/Jev y objetivos vía OS autenticado; registros durables y recibos diferenciados de transcripción. Menú con fuentes/historial/conversaciones y tareas reales, sin datos de ejemplo. PPP abre fuente registrada y trabajo interno refleja el motor de objetivos: no acredita edición/aprobación PPP, integración global MOAC, canales externos, respuesta documental hablada real, ni aceptación física/visual de Dirección. Referencia Claude inaccesible. Plan nativo actualizado en secuencia28 con estos límites y pendientes.",
       "rollback": "Revertir nueva integración; mantener voz básica operativa, JSON y credenciales en servidor, autorizaciones/IDs, expedientes/fuentes/formulas, tareas y evidencias canónicas, historial, journal/outbox. No borrar ni restaurar negocio."
+    },
+    {
+      "id": "CHG-DESPACHO-CONTEXTO-RECUPERABLE-076",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Recuperar la carga del expediente dentro de la misma conversación de voz. Compartir sólo lecturas autorizadas simultáneas, reintentar fallos transitorios con espera acotada, separar lectura canónica de confirmación Live y mostrar carga lenta/error/reintento sin cerrar micrófono. Entregar hechos de identidad, memoria y fuentes al agente sin cortar JSON a mitad; conservar historial exacto y capacidades sólo después de autorización/acuse. Añadir diagnóstico seguro de lectura real del servidor y prueba de recuperación en navegador.",
+      "status": "propuesto",
+      "approval": "Dirección pidió revisar su conversación con Gastón y continuar los ajustes. La conversación guardada muestra expediente no recibido, carga lenta y petición de aviso y recuperación automática. Autoriza corrección de integración y lecturas; no edición financiera ni reinicio de estudios detenidos.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Servidor: recuperación de lock_busy/timeout, rechazo definitivo, respuestas tardías/acuse y cierre sin activar herramientas ni repetir saludo.",
+        "Navegador: expediente demorado y primer fallo, recuperación en la misma llamada, estado visible y audio activo; aislamiento actor/caso y transcripción exacta.",
+        "Lectura real autorizada desde servidor: fase/tiempo/código seguro, sin contenido ni claves en logs y sin escrituras de negocio."
+      ],
+      "deployment": "Propuesto antes del código. Las pruebas previas no acreditan que el expediente llegue a una conversación real.",
+      "rollback": "Revertir integración de recuperación manteniendo JSON Live exacto, claves servidor, autorización, fuentes, fórmulas, IDs, historial/journal/outbox y objetivos confirmados. No restaurar ni borrar datos de negocio."
     }
   ],
   "data_contracts": [
