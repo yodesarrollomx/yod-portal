@@ -2,7 +2,7 @@
 
 Acción 1.2 · CHG-DESPACHO-VISITAS-067 · CTR-DESPACHO-VISITAS-V1.
 
-Estado: implementación candidata, 334 pruebas locales y 14 comprobaciones conectadas aprobadas en archivo sintético; guardado productivo apagado mediante `ENTORNO_VISITAS_PERSISTENTES=false`. Portero v63 y build `despacho-20261003-r6-fast` contrastados en su editor e implementación activa el 4-oct-2026. La fuente actual de Code.gs coincide con esa versión. El adaptador publicado todavía no incluye operaciones de visitas. El respaldo de preflight queda en el plan privado, nunca en este repositorio.
+Estado: backend instalado y encendido cliente preparado en CHG-DESPACHO-VISITAS-ENCENDIDO-068. Portero v64 publicado el 4-oct-2026 en la implementación existente, manteniendo URL y permisos. Source Code.gs actual conserva la versión63 salvo el dispatch exclusivo de readVisits/recordVisit; módulo guardado releído idéntico al candidato. Dos pestañas preparadas, sin visitas y con revisión 0; propiedades de pestañas anteriores preservadas. La prueba aislada conectada de 14 checks está aprobada; lectura por sesión OS, recorrido real y recuperación se registran después de Pages. Respaldo y capturas privados, nunca en este repositorio.
 
 ## Operaciones y fuente de verdad
 
@@ -21,7 +21,7 @@ El registro utiliza dos pestañas nuevas del libro operacional canónico: `YOD O
 
 El recibo `scope=server-persisted` identifica caso, solicitud, visita, recibo, hora de servidor y revisión. `arrival_evidence=client_report` significa que el cliente informó una llegada. Guardar el registro no acredita que el servidor verificó una posición física, ejecutó una herramienta o aprobó una entrega.
 
-El historial guardado se recupera con lectura al abrir el perfil; reabrir por sí solo no registra otra visita. La cola sin recibo vive en la sesión: cerrar, recargar o retirar el perfil la descarta. Después de recargar solo se muestran registros que ya devolvió el servidor. No hay almacenamiento de identidad, credenciales o recibos inventados en el navegador. Un conflicto CAS queda por resolver; la acción explícita de recuperación conserva visit_id y arrival_ref, lee de nuevo y emite otro request_id para la visita definitivamente rechazada. No activar la interfaz hasta comprobar ese recorrido.
+El historial guardado se recupera con lectura al abrir el perfil; reabrir por sí solo no registra otra visita. La cola sin recibo vive en la sesión: cerrar, recargar o retirar el perfil la descarta. Después de recargar solo se muestran registros que ya devolvió el servidor. No hay almacenamiento de identidad, credenciales o recibos inventados en el navegador. Un conflicto CAS queda por resolver; la acción explícita de recuperación conserva visit_id y arrival_ref, lee de nuevo y emite otro request_id para la visita definitivamente rechazada. Al activar, el cliente debe completar la lectura autorizada antes de guardar. No dar la acción 1.2 por aceptada hasta comprobar ese recorrido.
 
 ## Archivos e instalación
 
@@ -31,7 +31,7 @@ El historial guardado se recupera con lectura al abrir el perfil; reabrir por s�
 - `despacho3d/visitas.mjs`: validación de recibos, recuperación, reintento y descarte de respuestas tardías.
 - `os/despacho-conversation.js` y `despacho-transport.js`: carril de visitas con origen, ventana, época y esquema estrictos; conversación conserva su carril.
 
-Primero comprobar la fuente actual contra la versión activa y conservar respaldo privado. Instalar los módulos sin publicar otra implementación. Ejecutar `YOD_verificarVisitasAisladas` y verificar las filas sintéticas por lectura directa. En el router privado, despachar exclusivamente `readVisits` y `recordVisit` a `yodDespachoVisits_(request)` dentro de su try, después de validar payload y antes del allowlist existente. Verificar que ninguna otra operación cambió. Ejecutar `YOD_prepararVisitas` una vez para crear solo las pestañas vacías. Publicar una versión nueva de la implementación EXISTENTE, conservando URL y permisos. Contrastar versión, fuentes y lectura autenticada antes de encender el interruptor en un PR posterior.
+Primero comprobar la fuente actual contra la versión activa y conservar respaldo privado. Instalar los módulos sin publicar otra implementación. Ejecutar `YOD_verificarVisitasAisladas` y verificar las filas sintéticas por lectura directa. En el router privado, despachar exclusivamente `readVisits` y `recordVisit` a `yodDespachoVisits_(request)` dentro de su try, después de validar payload y antes del allowlist existente. Verificar que ninguna otra operación cambió. Ejecutar `YOD_prepararVisitas` una vez para crear solo las pestañas vacías. Publicar una versión nueva de la implementación EXISTENTE, conservando URL y permisos. Contrastar versión y fuentes antes del PR de encendido. Después de Pages, comprobar primero lectura autenticada, sin desplazar al agente, y luego el recorrido autorizado. Si falla la lectura, no mover ni registrar; mantener visible el error y corregir antes de continuar.
 
 ## Evidencia de aceptación
 

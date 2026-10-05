@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-04.67-despacho-visitas · 2026-10-04.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-04.68-despacho-visitas-encendido · 2026-10-04.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
