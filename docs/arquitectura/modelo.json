@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-05.83-despacho-puesto-ppp",
+  "revision": "2026-10-05.84-despacho-puesto-publicado",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8168,7 +8168,7 @@
         "SHEET-PORTERO"
       ],
       "proposal": "Integrar puesto visible del agente con navegador real de lectura en servidor y capturas fechadas, dirección y actividad por expediente; conectarlo a voz, texto e investigación de objetivos. Montar conversación junto al PPP/fuentes y pendientes recuperables, sin cerrar el audio al cambiar de panel. Guardar el encargo antes de prometer continuidad y mostrar recibos y límites. Revisar referencia Cubefarm y chinches publicadas; mantener permisos, IDs, JSON Live y fuentes canónicas. La conversación solicita PPP junto a voz: enlazar el tablero Patrimonial autenticado con lectura de revisión/escenario/cantidades/resultados confirmados y propuestas del agente aplicables por el propietario mediante el Store y contrato CAS existentes. Cálculos sólo en Sheets; cambios no confirmados no se tratan como resultados vigentes.",
-      "status": "propuesto",
+      "status": "publicado",
       "approval": "Dirección solicitó revisar la conversación reciente, terminar la interacción y ver el navegador mientras el agente trabaja con sus herramientas. Integración y publicación autorizadas; no cambia aprobaciones comerciales ni envía mensajes externos.",
       "tests": [
         "node scripts/arquitectura.cjs --check",
@@ -8178,9 +8178,14 @@
         "node verify-accesos.cjs",
         "node verify-obra-app.cjs",
         "Navegador real aislado: captura/navegación/enlaces y exclusión de redes privadas; revocación, móvil/escritorio, voz al cambiar panel y recibo durable.",
-        "Pruebas del puente PPP: origen/ventana/caso, revisión concurrente, propuesta sin escritura hasta Aplicar, resultados sólo tras recibo y copia local no confirmada."
+        "Pruebas del puente PPP: origen/ventana/caso, revisión concurrente, propuesta sin escritura hasta Aplicar, resultados sólo tras recibo y copia local no confirmada.",
+        "381 pruebas públicas, arquitectura y verificadores aprobados: runs37361914275/37361914348, headc88e92f.",
+        "116 pruebas privadas aprobadas y una prueba real separada; suite de navegador con8 pruebas aprobadas, DNS público fijado, exclusión de destinos privados, captura real y recibos persistentes: runs37361981053/37361981099, head993a7b0.",
+        "Chromium1280×800/390×844: micrófono y audio remoto, recuperación de contexto, historial, documentos, PPP original mediante Store/puente, cambio manual observado por Gastón, propuesta aplicada una sola vez, objetivo confirmado, detener/retomar, siete fallos sin colgar y cierre tardío exacto. Transporte/negocio sintéticos; cero errores JS. Capturas inspeccionadas.",
+        "OpenAI real en Render a19:17:59UTC: saludo, PCM no silencioso, transcripción, esquemas de herramientas admitidos, función sintética, resultado, continuación y cierre. Navegador real del mismo servidor abrió una web pública y confirmó captura a19:18:06UTC. No se escribieron objetivos ni cantidades de negocio para probar.",
+        "Memoria observada durante el diagnóstico: máximo muestreado204693500bytes de536870900 disponibles; no es una prueba de carga general ni garantía para todas las webs."
       ],
-      "deployment": "Propuesta registrada antes de implementar. Dependencias de navegador, servidor y portal pendientes de pruebas y despliegue.",
+      "deployment": "Portal PR98 integrado en9fd6140, PPP PR12 en5b84278 y servidor privado PR22 enf5ae7fd. Renderlive dep-db1vglmk1f9s738hq33g a19:20:37UTC, diagnósticos desactivados tras aprobación y navegador habilitado. Publicación Pages completada en ambos repositorios. Pendiente incorporar el cotejo HTTP final. Historial reciente de voz aislado por caso/actor; registro de objetivos exigido antes de prometer continuidad. PPP se aplica por acción humana usando CAS existente. No acredita revisión audiovisual nueva de YouTube, acceso a NotebookLM, instalación de56 trabajadores, QA independiente ni cierre de chinches172/44/36. Aceptación física de Dirección pendiente.",
       "rollback": "Revertir módulo de puesto y ampliaciones de herramientas; conservar audio, JSON Live, permisos, fuentes, expedientes, outbox, objetivos y evidencias. No restaurar datos de negocio."
     }
   ],

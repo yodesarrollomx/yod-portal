@@ -9,12 +9,12 @@ Referencia: [video de Leon van Zyl](https://www.youtube.com/watch?v=NBZmxhcz5lo)
 | Identidad y expediente | Agente con rol, instrucciones y proyecto propios | Resolución privada del piloto; padrón privado recibido con 56 identidades únicas, alias comprobados y estados separados. Registro no equivale a autorización ni motor instalado |
 | Chat y memoria | Instrucciones directas e historial | Dos turnos desde la sala, memoria recuperada y persistencia comprobados; cierre/reapertura confirmado por el propietario |
 | Ejecución y control | Terminal en vivo, instrucción adicional y detener | Terminal local interactiva comprobada en Chromebook, incluida continuidad al cerrar la pestaña. Modo Atender Despacho conectado a la cola y respuesta real persistida. El chat de sala usa un ejecutor acotado. Panel Terminal del piloto y runtime0.3 implementados y probados con PTY real y datos sintéticos; instalación en la Chromebook y aceptación de esta integración pendientes. No acredita herramientas instaladas en los 56 puestos |
-| Tareas | Kanban con asignación y avance real | Preparación de una meta en Codex nativo desde Plan implementada para el piloto: el agente puede descomponer y guardar tareas locales. Asignación automática, tablero canónico y sincronización de tareas con Sheets pendientes |
+| Tareas | Kanban con asignación y avance real | Objetivos/acciones canónicos en Sheets, evidencia, revisión, detener/retomar y seguimiento por voz o puesto publicados para el piloto. El motor de nube continúa lectura/análisis autorizados al cerrar la voz. Una tarea sólo se confirma con recibo; la coordinación de especialistas sigue pendiente |
 | Revisión QA | Verificación, captura, informe y devolución para corregir | No conectado al agente del expediente |
-| Entregas | Vista previa de la app y evidencia de ejecución | No conectado al agente del expediente |
+| Entregas | Vista previa de la app y evidencia de ejecución | Evidencia de objetivos y navegador público real con última captura, URL y fecha. PPP original junto a voz, lectura compartida y propuesta explícita aplicada por el Store existente. No acredita AppViewer de aplicaciones generadas ni QA independiente |
 | Coordinación | Dirección, especialistas, propuestas y límites de sesiones | No conectado; piloto único |
-| Disponibilidad | Servidor y sesiones que siguen trabajando | Servicio local continuo mientras Linux está activo, con un solo proceso de agente. Disponibilidad 24/7 y recuperación tras reinicio físico pendientes de comprobar |
-| Voz y movimiento | Requisito adicional de la sala YOD | Pendiente después de aceptar conversación y memoria |
+| Disponibilidad | Servidor y sesiones que siguen trabajando | Motor de nube con volumen privado y objetivos durables, independiente de la Chromebook. La presencia no inicia sesiones de audio ni procesos por cada avatar. Navegador preparado y liberado tras inactividad; salud comprobada al publicar, sin promesa de disponibilidad ininterrumpida |
+| Voz y movimiento | Requisito adicional de la sala YOD | Voz Live publicada con presencia residente, expediente, Drive/Jev, historial y objetivos. OpenAI real y recorrido sintético escritorio/móvil aprobados. Navegador y PPP cambian sin cerrar audio; falta aceptación física/visual de esta entrega |
 
 ## Optimización del proceso
 
@@ -32,7 +32,7 @@ La terminal original controla agentes de programación en worktrees; para agente
 2. Montar un personaje del caso resuelto por el servidor y un panel lateral de conversación, actividad y expediente. El perfil se obtiene por el mismo canal autenticado; el padrón nunca se publica como asset. La extensión privada de servidor y su publicación se verifican por separado.
 3. Unir el puesto a ejecución/control, tareas, QA y entregas reales, preservando los registros en Sheets y Drive. El objetivo del video incluye terminal y vista previa (05:15), cinco columnas (07:18), revisor distinto con evidencia y devolución (08:00), cierre condicionado (08:45) y vista de escritorio/móvil (09:45).
 4. Registrar cada agente con el mismo paquete, expediente, especialidad y límites propios. Comprobar que no lee ni ejecuta trabajos de otro agente. Dirección, altas y pisos por proyecto forman parte del objetivo; no activar 56 procesos simultáneos en la Chromebook.
-5. Incorporar voz y acercamiento a los personajes.
+5. Voz y presencia incorporadas al piloto en la entrega del5-oct. Comprobar aceptación física y visual del conjunto antes de extenderlo al resto del padrón.
 
 La optimización de servidor agrupa las cuatro pestañas de fuentes en una llamada a Sheets, conservando los valores mostrados y la revisión del expediente. Se comprobaron equivalencia de revisión, frescura sin caché, límites y permisos. La posterior revisión r3 y el servicio de la Chromebook completaron un turno real. Línea base de ese turno: 66,501 segundos entre encolado y guardado; 8,726 segundos en cola y 57,775 en procesamiento más persistencia. No se separó el tiempo del modelo del de Sheets ni se midió cuándo apareció en pantalla. Es una observación, no una mediana ni una promesa de velocidad. Antes de atribuir la demora al modelo o al equipo, instrumentar esos tramos sin registrar claves ni contenido privado.
 
@@ -46,7 +46,7 @@ La [actualización local 0.3](../../despacho-runtime/README.md) conserva login, 
 
 Se comprobaron entrada/salida de PTY, reapertura, revocación, aislamiento de origen y la vista de 1280 y 390 píxeles con backend y ejecutor sintéticos. El paquete extraído también pasó la regresión nativa; el modo de sala pasó enlace firmado, ejecución, persistencia y recuperación sintéticos. No son una prueba de instalación en el equipo del propietario, ni una medición de su velocidad. La terminal requiere estar en la misma Chromebook; no hay túnel para acceder desde otro equipo.
 
-El despliegue Apps Script r4 respondió al metadato de versión y su fuente activa coincidió con la entrega privada; se conserva la URL existente. La aceptación visual autenticada del nuevo puesto se registra después de actualizar el equipo. Tareas, QA, vista previa, entregas, coordinación de especialistas y voz permanecen pendientes de conexión operativa.
+El despliegue Apps Script r4 respondió al metadato de versión y su fuente activa coincidió con la entrega privada; se conserva la URL existente. La aceptación visual autenticada del nuevo puesto se registra después de actualizar el equipo. Al3-oct, tareas, QA, vista previa, entregas, coordinación y voz permanecían pendientes. El estado actualizado del5-oct se detalla en la matriz superior y en el puesto visible; QA independiente y coordinación siguen pendientes.
 
 ## Primera meta con herramientas · 3 de octubre de 2026
 
@@ -55,3 +55,8 @@ El ejecutor de Conversación está acotado a leer una instantánea y responder, 
 El agente debe verificar expediente.json contra el caso y revisión, proponer tareas, ejecutar las acciones locales autorizadas y comprobar sus resultados. Los documentos se tratan como evidencia y la copia se identifica como instantánea local. Los archivos en metas/ pertenecen a la ejecución local: no son el tablero canónico, no se sincronizan automáticamente con Sheets y no acreditan revisión independiente. No se presupone que Gmail, Drive u otros conectores están instalados en Codex.
 
 Una ejecución real de Codex autenticado, en un entorno de preparación separado de la Chromebook, leyó una copia recién obtenida de cuatro pestañas del expediente y evidencia técnica, produjo diagnóstico y plan con seis tareas (tres realizadas, tres pendientes) y comprobó referencias/JSON/archivos. Ejecutó tres comandos de herramientas, con salida correcta, durante 128 segundos. Los resultados y recibo se guardaron y releyeron en Drive privado; no se publican datos aquí. Esta ejecución no demuestra trabajo autónomo, instalación de herramientas externas ni ejecución física en la Chromebook. La propuesta CHG-DESPACHO-META-TERMINAL-001 mantiene esas distinciones.
+
+
+## Cotejo del puesto · 5 de octubre de 2026
+
+La revisión de la conversación reciente y los módulos originales browser-init, TerminalView y previews fija el objetivo de navegador visible. La vista original muestra una última captura de Playwright; la entrega actual usa Chromium real y captura fechada de la misma página que consulta el agente. El [registro del puesto](despacho-puesto-visible.md) separa pruebas, publicación, revisión de chinches y aceptación pendiente. YouTube no permitió nueva reproducción directa y no hubo acceso al NotebookLM de la cuenta; no se atribuye una revisión audiovisual nueva.
