@@ -54,3 +54,5 @@ Una lectura GET a un backend de negocio puede crear o modificar datos. Las audit
 Este repositorio es público. El modelo no almacena clientes, correos, importes reales, credenciales, URLs completas de Apps Script ni identificadores de hojas privadas. Las fuentes se expresan con IDs lógicos. Los hallazgos de seguridad explotables se tratan en avisos privados de GitHub hasta su corrección. Los ejemplos y pruebas utilizan datos sintéticos.
 
 La auditoría no se considera completa mientras existan componentes críticos o despliegues sin comprobar; consultar siempre el alcance vigente en `modelo.json` y `verificacion.md`.
+
+- [Sala172 · Administración de accesos por sesión vigente](sala-accesos172.md): propuesta, invariantes, regresiones y comprobación real pendiente.
