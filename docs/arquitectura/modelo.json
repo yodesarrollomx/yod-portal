@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-05.84-despacho-puesto-publicado",
+  "revision": "2026-10-05.85-ppp-patrimonial-recovery-propuesta",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8188,6 +8188,33 @@
       ],
       "deployment": "Portal PR98 integrado en9fd6140, PPP PR12 en5b84278 y servidor privado PR22 enf5ae7fd. Renderlive dep-db1vglmk1f9s738hq33g a19:20:37UTC, diagnósticos desactivados tras aprobación y navegador habilitado. Publicación Pages completada en ambos repositorios. Cotejo HTTP run37363146714 a19:30:12UTC: readytrue, voiceavailable/operativo, goalsready, navegadoridle/available y onceassets idénticos a sus commits publicados. Contexto estaba loading; es disponibilidad puntual, no una garantía continua. Historial reciente de voz aislado por caso/actor; registro de objetivos exigido antes de prometer continuidad. PPP se aplica por acción humana usando CAS existente. No acredita revisión audiovisual nueva de YouTube, acceso a NotebookLM, instalación de56 trabajadores, QA independiente ni cierre de chinches172/44/36. Aceptación física de Dirección pendiente.",
       "rollback": "Revertir módulo de puesto y ampliaciones de herramientas; conservar audio, JSON Live, permisos, fuentes, expedientes, outbox, objetivos y evidencias. No restaurar datos de negocio."
+    },
+    {
+      "id": "CHG-PPP-PATRIMONIAL-RECOVERY-047",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS"
+      ],
+      "proposal": "Recuperar exclusivamente transporte PPP Patrimonial aprobado por CTR-PPP-PATRIMONIAL-NATIVO: adaptador pppPat*, números null, rangos integer, CAS, revisiones, auditoría y protecciones. Partir de fuente activa/editor V65 y preservar todos los demás módulos, funciones y archivos; mismo endpoint y ACL PT/PA, sin fórmulas ni reglas de negocio nuevas. Despliegue coordinado con lock y CAS de fuente/configuración. Si editor == active en preflight, editor final == candidato desplegado; no restaurar el editor V53 sin adaptador. Mantener adaptador en versión activa y editor para evitar su pérdida en el siguiente deploy.",
+      "status": "propuesto",
+      "approval": "Dirección autorizó la recuperación quirúrgica del transporte previamente aprobado y el parche documental Atlas; el coordinador implementa/despliega backend por separado. Este PR no toca backend ni consumer Potenciales y no se mergea hasta aviso al propietario.",
+      "observed": "Snapshots privados V65 activo/editor idénticos; ninguna definición pppPat* en sus ocho archivos. Verificación del coordinador del 5-oct: GET sheet-model Patrimonial devuelve ok:false,error:servidor. V54 publicada 2-oct 05:47 UTC contenía el adaptador; el despliegue devolvió el editor a V53 sin él y una publicación posterior lo perdió. Reproducción aislada del coordinador en preparación: ruta Vertical ppEstadoHoja_ lanza horizonte_invalido. No se afirma restauración.",
+      "tests": [
+        "Regresión Vertical y Patrimonial con datos sintéticos; Node/native/backend mock, null y rangos integer, CAS/revisión, auditoría y protección de fórmulas.",
+        "Preservación de funciones ajenas al transporte recuperado y comparación byte a byte de los otros archivos/manifest de Apps Script.",
+        "Preflight y postflight de versión/editor/configuración con lock y CAS; GET sheet-model posterior comparado con lectura directa de Sheets, sin POST de prueba.",
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs"
+      ],
+      "deployment": "Propuesta registrada antes del parche del coordinador. Atlas solamente; recuperación/backend pendiente de pruebas, publicación y GET/Sheets posterior. Conservar implementación/URL/ACL y módulos V65 actuales.",
+      "rollback": "Ante conflicto de fuente/configuración detener antes de escribir. Reversión coordinada de código a snapshot revisado de la misma implementación, sin restaurar editor antiguo por rutina ni datos/fórmulas/libros; registrar si una reversión de emergencia vuelve a degradar Patrimonial."
     }
   ],
   "data_contracts": [
