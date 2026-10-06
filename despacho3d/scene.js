@@ -14,6 +14,17 @@ export async function createOffice({pilotFigure=true}={}){
  const m={floor:material('#ffffff',.66,{map:floorMap}),oak:material('#cab18c',.55,{map:verticalMap}),oakPlain:material('#a27d51',.64),stone:material('#f1ebdb',.82,{map:stoneMap,bumpMap:stoneMap,bumpScale:.035}),plaster:material('#e5e1d7',.94),navy:material('#20343c',.72),steel:material('#263735',.4,{metalness:.45}),brass:material('#bca275',.32,{metalness:.75}),fabric:material('#f2e9d9',.94,{map:weave}),rug:material('#d9d1bc',1,{map:weave}),leaves:material('#748065',.95),bark:material('#7c725c',1),soil:material('#c8bfab',1),glass:new T.MeshPhysicalMaterial({color:'#c4d9ce',metalness:.12,roughness:.09,transparent:true,opacity:.10,depthWrite:false,side:T.DoubleSide}),tableGlass:new T.MeshPhysicalMaterial({color:'#bbd0c4',metalness:.15,roughness:.12,transparent:true,opacity:.46,side:T.DoubleSide}),light:material('#ffedc6',.5,{emissive:'#ffd898',emissiveIntensity:1.5}),black:material('#202825',.6)};
  function mesh(geometry,mat,x=0,y=0,z=0,parent=root){const o=new T.Mesh(geometry,mat);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o;}
  const box=(w,h,d,x,y,z,mat,parent=root)=>mesh(new T.BoxGeometry(w,h,d),mat,x,y,z,parent);
+ // Separate wall materials survive static batching, so cutaway never clips furniture.
+ const partitionMaterials=new Map(),cutPlane=new T.Plane(new T.Vector3(0,-1,0),.95);
+ let cutaway=false;
+ function wall(w,h,d,x,y,z,mat){
+  if(!partitionMaterials.has(mat)){
+   const copy=mat.clone();copy.userData={...copy.userData,officePartition:true};copy.clipShadows=true;
+   partitionMaterials.set(mat,copy);
+  }
+  return box(w,h,d,x,y,z,partitionMaterials.get(mat));
+ }
+ function setCutaway(value){cutaway=!!value;for(const mat of partitionMaterials.values()){mat.clippingPlanes=cutaway?[cutPlane]:null;mat.needsUpdate=true;}root.userData.needsRender=true;}
  const cylinder=(rt,rb,h,x,y,z,mat,parent=root)=>mesh(new T.CylinderGeometry(rt,rb,h,24),mat,x,y,z,parent);
  function rounded(w,d,h,r,x,y,z,mat,parent=root){const s=new T.Shape();s.moveTo(-w/2+r,-d/2);s.lineTo(w/2-r,-d/2);s.quadraticCurveTo(w/2,-d/2,w/2,-d/2+r);s.lineTo(w/2,d/2-r);s.quadraticCurveTo(w/2,d/2,w/2-r,d/2);s.lineTo(-w/2+r,d/2);s.quadraticCurveTo(-w/2,d/2,-w/2,d/2-r);s.lineTo(-w/2,-d/2+r);s.quadraticCurveTo(-w/2,-d/2,-w/2+r,-d/2);const g=new T.ExtrudeGeometry(s,{depth:h-.025,bevelEnabled:true,bevelThickness:.012,bevelSize:.012,bevelSegments:2,curveSegments:12});g.rotateX(-Math.PI/2);return mesh(g,mat,x,y-h/2,z,parent);}
  const block=(x,z,w,d)=>collisions.push({minX:x-w/2,maxX:x+w/2,minZ:z-d/2,maxZ:z+d/2});
@@ -26,10 +37,10 @@ export async function createOffice({pilotFigure=true}={}){
  // A larger connected floorplate: 24 x 19 metres, clear central circulation.
  box(24.4,.35,19.4,0,-.22,0,m.stone);box(24,.06,19,0,-.015,0,m.floor);
  const ground=box(140,.15,140,0,-.51,0,material('#dedbd4'));ground.name='Presentation ground';
- box(24.1,3.7,.18,0,1.85,-9.5,m.plaster);box(7.3,3.7,.09,-8.22,1.85,-9.35,m.navy);
- for(const side of [-1,1]){box(.075,.065,19,side*12,3.45,0,m.steel);if(side===1){box(.16,.45,19,12,.225,0,m.stone);box(.012,2.96,18.95,12,1.96,0,m.glass);for(let z=-9.5;z<=9.6;z+=3.8)box(.06,3.45,.06,12,1.725,z,m.steel);}else{for(const [z,d]of [[-5.75,7.5],[5.35,8.3]]){box(.16,.45,d,-12,.225,z,m.stone);box(.012,2.96,d,-12,1.96,z,m.glass);block(-12,z,.16,d);}for(const z of [-9.5,-5.7,-2,1.2,5.7,9.5])box(.06,3.45,.06,-12,1.725,z,m.steel);}}
- for(const side of [-1,1]){box(8.4,.36,.14,side*7.8,.18,9.5,m.stone);box(8.4,2.8,.01,side*7.8,1.78,9.5,m.glass);box(8.4,.06,.06,side*7.8,3.2,9.5,m.steel);for(const x of [3.6,7.8,12])box(.055,3.2,.055,side*x,1.6,9.5,m.steel);}
- box(24,.09,.12,0,.1,-9.35,m.oakPlain);box(24,.07,.10,0,3.53,-9.34,m.oakPlain);
+ wall(24.1,3.7,.18,0,1.85,-9.5,m.plaster);wall(7.3,3.7,.09,-8.22,1.85,-9.35,m.navy);
+ for(const side of [-1,1]){wall(.075,.065,19,side*12,3.45,0,m.steel);if(side===1){wall(.16,.45,19,12,.225,0,m.stone);wall(.012,2.96,18.95,12,1.96,0,m.glass);for(let z=-9.5;z<=9.6;z+=3.8)wall(.06,3.45,.06,12,1.725,z,m.steel);}else{for(const [z,d]of [[-5.75,7.5],[5.35,8.3]]){wall(.16,.45,d,-12,.225,z,m.stone);wall(.012,2.96,d,-12,1.96,z,m.glass);block(-12,z,.16,d);}for(const z of [-9.5,-5.7,-2,1.2,5.7,9.5])wall(.06,3.45,.06,-12,1.725,z,m.steel);}}
+ for(const side of [-1,1]){wall(8.4,.36,.14,side*7.8,.18,9.5,m.stone);wall(8.4,2.8,.01,side*7.8,1.78,9.5,m.glass);wall(8.4,.06,.06,side*7.8,3.2,9.5,m.steel);for(const x of [3.6,7.8,12])wall(.055,3.2,.055,side*x,1.6,9.5,m.steel);}
+ wall(24,.09,.12,0,.1,-9.35,m.oakPlain);wall(24,.07,.10,0,3.53,-9.34,m.oakPlain);
  // Curved reception counter and layered patterned timber wall.
  for(let i=0;i<6;i++){const x=-11.22+i*1.15;box(1.1,1.55,.12,x,2.74,-9.25,m.oak);const disk=cylinder(.55,.55,.12,x,1.98,-9.25,m.oak);disk.rotation.x=Math.PI/2;}
  box(6.6,1.03,.10,-8.23,2.07,-9.13,m.navy);box(6.3,.02,.06,-8.2,3.46,-9.14,m.light);
@@ -39,8 +50,8 @@ export async function createOffice({pilotFigure=true}={}){
  for(let i=0;i<74;i++){const x=-10.13+i*.052;box(.022,.85,.045,x,.55,-6.73,m.oakPlain);}block(-8.25,-7.45,5.0,1.65);vase(-9.8,1.145,-7.35,.65);box(.52,.32,.055,-7.25,1.35,-7.5,m.black);box(.25,.03,.2,-7.25,1.17,-7.4,m.steel);
  // Patio and stone promenade, enough width to walk around both sides.
  box(7.8,.025,7.8,0,.027,-1,m.stone);box(5.85,.15,5.85,0,.1,-1,m.soil);block(0,-1,6.1,6.1);
- for(const x of [-3.02,3.02]){box(.02,3.5,6.02,x,1.85,-1,m.glass);box(.07,.075,6.1,x,3.6,-1,m.steel);for(const z of [-4.02,2.02])box(.07,3.6,.07,x,1.82,z,m.steel);}
- for(const z of [-4.02,2.02]){box(6.04,3.5,.02,0,1.85,z,m.glass);box(6.1,.075,.07,0,3.6,z,m.steel);box(.05,3.5,.05,0,1.85,z,m.steel);}
+ for(const x of [-3.02,3.02]){wall(.02,3.5,6.02,x,1.85,-1,m.glass);wall(.07,.075,6.1,x,3.6,-1,m.steel);for(const z of [-4.02,2.02])wall(.07,3.6,.07,x,1.82,z,m.steel);}
+ for(const z of [-4.02,2.02]){wall(6.04,3.5,.02,0,1.85,z,m.glass);wall(6.1,.075,.07,0,3.6,z,m.steel);wall(.05,3.5,.05,0,1.85,z,m.steel);}
  const curve=new T.CatmullRomCurve3([new T.Vector3(.1,.2,-1.1),new T.Vector3(-.12,1.5,-1.0),new T.Vector3(.15,2.6,-1.0),new T.Vector3(.3,3.2,-1.3)]);mesh(new T.TubeGeometry(curve,14,.085,9,false),m.bark);
  for(let i=0;i<12;i++){const a=i*2.4,top=new T.Vector3(Math.cos(a)*1.5,2.8+random()*.65,-1+Math.sin(a)*1.2);branch(new T.Vector3(.05,1.45+i*.1,-1),top,.035);foliage(top.x,top.y,top.z,.64,.49,.65,130);}
  for(const [x,z,r] of [[1.5,.6,.58],[-1.6,-2.6,.32],[.8,-2.8,.22]]){const o=mesh(new T.DodecahedronGeometry(r,1),m.stone,x,r*.65,z);o.scale.set(1.2,.72,1);}
@@ -52,13 +63,13 @@ export async function createOffice({pilotFigure=true}={}){
  function desk(x,z,{pilot=false}={}){rounded(1.9,.88,.08,.055,x,.82,z,m.oak);box(1.82,.018,.8,x,.769,z,m.brass);for(const sx of [-.77,.77])box(.045,.75,.62,x+sx,.38,z,m.steel);block(x,z,2.03,1.0);box(.026,.27,.04,x,.985,z-.14,m.steel);box(.27,.025,.2,x,.884,z-.10,m.steel);rounded(.74,.048,.43,.027,x,1.22,z-.15,m.steel);label(pilot?'Caso':'YO DESARROLLO',.68,.355,x,1.23,z-.121,{size:pilot?130:61,color:'#d4c8a7',bg:'#20343c'});rounded(.40,.14,.02,.025,x,.881,z+.17,m.steel);for(let i=0;i<3;i++)for(let j=0;j<10;j++)box(.024,.004,.017,x-.16+j*.035,.895,z+.13+i*.035,m.plaster);box(.19,.018,.26,x-.63,.88,z+.05,m.plaster);box(.018,.012,.20,x-.49,.899,z+.03,m.brass);chair(x,z-.85,0,true);}
  // Three studios share a wide gallery; only the selected tasks will occupy their seats.
  for(const [z,title,num] of [[-6.45,'POTENCIALES','01'],[-.2,'PROYECTOS Y PERMISOS','02'],[5.85,'OBRA Y VENTAS','03']]){
-   box(6.1,.023,4.8,8.65,.045,z,m.rug);box(.10,1.25,3.8,5.45,.64,z-.35,m.oak);box(.14,.07,3.85,5.45,1.30,z-.35,m.stone);for(let k=0;k<35;k++)box(.018,1.14,.025,5.385,.63,z-2.03+k*.098,m.oakPlain);
+   box(6.1,.023,4.8,8.65,.045,z,m.rug);wall(.10,1.25,3.8,5.45,.64,z-.35,m.oak);wall(.14,.07,3.85,5.45,1.30,z-.35,m.stone);for(let k=0;k<35;k++)wall(.018,1.14,.025,5.385,.63,z-2.03+k*.098,m.oakPlain);
    // Large readable signs over the open entry, facing the gallery.
    const sign=label(title,3.8,.36,5.35,2.53,z+.05,{size:72,color:'#263c40'});sign.rotation.y=-Math.PI/2;
    const id=label(num,.55,.42,5.35,2.94,z+.05,{size:180,color:'#9a7b4d'});id.rotation.y=-Math.PI/2;
    desk(7.0,z-.65,{pilot:num==='01'});desk(10.05,z-.65);chair(7,z+.35,Math.PI);chair(10.05,z+.35,Math.PI);
    box(5.9,.68,.42,8.8,.37,z-2.35,m.oak);box(6,.05,.47,8.8,.735,z-2.35,m.stone);vase(10.4,.76,z-2.35,.5);
-   if(num!=='03'){box(6.55,1.25,.10,8.72,.65,z+2.62,m.plaster);box(6.55,1.3,.015,8.72,1.96,z+2.62,m.glass);box(6.55,.045,.045,8.72,2.62,z+2.62,m.steel);block(8.72,z+2.62,6.55,.15);}
+   if(num!=='03'){wall(6.55,1.25,.10,8.72,.65,z+2.62,m.plaster);wall(6.55,1.3,.015,8.72,1.96,z+2.62,m.glass);wall(6.55,.045,.045,8.72,2.62,z+2.62,m.steel);block(8.72,z+2.62,6.55,.15);}
    block(5.45,z-.35,.16,3.85);
  }
  // Individual identity for the pilot: one character, no invented active tasks.
@@ -83,9 +94,9 @@ export async function createOffice({pilotFigure=true}={}){
 
  // Dedicated editing and commercial wing, connected by a broad glazed opening.
  box(12.15,.35,15.5,-18,-.22,-.45,m.stone);box(12,.06,15.3,-18,-.015,-.45,m.floor);
- box(12,3.7,.16,-18,1.85,-8.1,m.navy);box(.16,.40,15.4,-24,.2,-.45,m.stone);box(.015,3.2,15.35,-24,1.94,-.45,m.glass);box(.065,.065,15.4,-24,3.5,-.45,m.steel);
- for(const z of [-8.1,-4.3,-.45,3.35,7.2])box(.06,3.5,.06,-24,1.75,z,m.steel);
- box(12,.4,.16,-18,.2,7.2,m.stone);box(11.9,3.1,.015,-18,1.95,7.2,m.glass);box(12,.07,.07,-18,3.5,7.2,m.steel);for(const x of [-24,-20,-16,-12])box(.06,3.5,.06,x,1.75,7.2,m.steel);
+ wall(12,3.7,.16,-18,1.85,-8.1,m.navy);wall(.16,.40,15.4,-24,.2,-.45,m.stone);wall(.015,3.2,15.35,-24,1.94,-.45,m.glass);wall(.065,.065,15.4,-24,3.5,-.45,m.steel);
+ for(const z of [-8.1,-4.3,-.45,3.35,7.2])wall(.06,3.5,.06,-24,1.75,z,m.steel);
+ wall(12,.4,.16,-18,.2,7.2,m.stone);wall(11.9,3.1,.015,-18,1.95,7.2,m.glass);wall(12,.07,.07,-18,3.5,7.2,m.steel);for(const x of [-24,-20,-16,-12])wall(.06,3.5,.06,x,1.75,7.2,m.steel);
  for(const x of [-23.7,-12.3]){box(.12,3.7,.22,x,1.85,-7.91,m.oak);box(.035,3.35,.04,x,1.78,-7.74,m.light);}
  label('SALA DE EDICIÓN  /  EMBUDO COMERCIAL',10.4,.5,-18,3.16,-7.99,{size:67,color:'#d8c29b'});
  function screen(x,title,lines){rounded(4.65,.12,1.91,.06,x,1.82,-7.91,m.steel);label(title,4.3,.27,x,2.48,-7.82,{size:68,color:'#d5bb86',bg:'#20343c'});lines.forEach((line,i)=>label(line,4.3,.20,x,2.12-i*.32,-7.815,{size:48,color:'#eef0e5',bg:'#20343c'}));label('DISTRIBUCIÓN PROPUESTA · SIN DATOS EN VIVO',4.3,.15,x,1.13,-7.815,{size:34,color:'#b7c2b3',bg:'#20343c'});}
@@ -97,7 +108,7 @@ export async function createOffice({pilotFigure=true}={}){
  const ale=label('ALEJANDRO',1.05,.14,-19.2,1.14,-2.82,{size:105,color:'#d8c299',bg:'#20343c'});const say=label('SAYRI',1.05,.14,-16.8,1.14,-2.82,{size:110,color:'#d8c299',bg:'#20343c'});
  vase(-18,.985,-3.1,.6);for(const x of [-19.2,-18,-16.8])pendant(x,2.9,-3.1);
  for(const [x,title]of [[-21.6,'GUION Y PROPUESTA'],[-18,'PRODUCCIÓN'],[-14.4,'COMERCIAL Y MEDICIÓN']]){desk(x,3.7);label(title,2.3,.30,x,1.80,3.36,{size:76,color:'#273d41',bg:'#ede8dc'});block(x,3.7,2.03,1.05);}
- box(10.25,1.25,.12,-18,.65,5.7,m.oak);box(10.35,.07,.18,-18,1.31,5.7,m.stone);
+ wall(10.25,1.25,.12,-18,.65,5.7,m.oak);wall(10.35,.07,.18,-18,1.31,5.7,m.stone);
  label('Proponer · Revisar · Producir · Medir',8,.25,-18,2.7,5.65,{size:80,color:'#394a43'}).rotation.y=Math.PI;
  potted(-23.0,-6.5,1.2);potted(-23,5.8,1.2);potted(-12.7,5.9,.95);
  const entrance=label('SALA DE EDICIÓN',3,.35,-12,2.8,-.45,{size:86,color:'#34483e'});entrance.rotation.y=Math.PI/2;
@@ -105,5 +116,5 @@ export async function createOffice({pilotFigure=true}={}){
  
  // Static meshes batched by material to keep touch navigation responsive.
  root.updateMatrixWorld(true);const groups=new Map(),remove=[];root.traverse(o=>{if(!o.isMesh||o.isInstancedMesh||o.material.transparent||Array.isArray(o.material))return;const key=o.material.uuid+o.castShadow+o.receiveShadow;if(!groups.has(key))groups.set(key,{material:o.material,cast:o.castShadow,receive:o.receiveShadow,list:[]});let g=o.geometry.clone();if(g.index)g=g.toNonIndexed();g.applyMatrix4(o.matrixWorld);groups.get(key).list.push(g);remove.push(o);});for(const group of groups.values()){const g=mergeGeometries(group.list);if(!g)throw Error('No se pudo preparar la geometría');const o=mesh(g,group.material);o.castShadow=group.cast;o.receiveShadow=group.receive;group.list.forEach(g=>g.dispose());}remove.forEach(o=>o.removeFromParent());
- return {model:root,collisions,bounds:{minX:-11.65,maxX:11.65,minZ:-9.14,maxZ:9.12},annex:{minX:-23.65,maxX:-11.5,minZ:-7.75,maxZ:6.85},pickBoxes:[{id:'editing',min:[-20.6,0,-4],max:[-15.4,1.4,-2.2]},{id:'editorial',min:[-23.1,1,-8],max:[-18.3,2.8,-7.7]},{id:'funnel',min:[-17.7,1,-8],max:[-12.8,2.8,-7.7]},{id:'case',min:[6.1,0,-4.95],max:[7.2,2.1,-3.8]},{id:'reception',min:[-10.75,0,-8.3],max:[-5.75,1.25,-6.6]},{id:'patio',min:[-3,.1,-4],max:[3,3.5,2]},{id:'decisions',min:[-2.7,0,5.45],max:[2.2,1.2,7.15]}]};
+ return {setCutaway,getCutaway:()=>cutaway,model:root,collisions,bounds:{minX:-11.65,maxX:11.65,minZ:-9.14,maxZ:9.12},annex:{minX:-23.65,maxX:-11.5,minZ:-7.75,maxZ:6.85},pickBoxes:[{id:'editing',min:[-20.6,0,-4],max:[-15.4,1.4,-2.2]},{id:'editorial',min:[-23.1,1,-8],max:[-18.3,2.8,-7.7]},{id:'funnel',min:[-17.7,1,-8],max:[-12.8,2.8,-7.7]},{id:'case',min:[6.1,0,-4.95],max:[7.2,2.1,-3.8]},{id:'reception',min:[-10.75,0,-8.3],max:[-5.75,1.25,-6.6]},{id:'patio',min:[-3,.1,-4],max:[3,3.5,2]},{id:'decisions',min:[-2.7,0,5.45],max:[2.2,1.2,7.15]}]};
 }
