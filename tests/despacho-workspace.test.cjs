@@ -43,3 +43,9 @@ test('station resolves the registered PPP type, rejects another case and disting
  assert.equal(stationIdentity({case_id:'b',name:'Proyecto B'}).name,'Proyecto B');
  assert.equal(resolveBoard({...selection,ppp:{case_id:'wrong',url:source}},[]),null);
 });
+
+test('late voice fragments cannot enter a newly selected project while the previous session is closing',()=>{
+ const source=read('despacho3d/live-voice-boot.mjs');
+ assert.match(source,/selection\?\.case_id===voiceCaseId\)renderTranscript/);
+ assert.match(source,/voiceCaseId!==currentSelection\?\.case_id\)return false/);
+});

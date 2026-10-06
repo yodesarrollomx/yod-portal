@@ -28,7 +28,7 @@ if (open) {
   while(dialog.firstChild)sidebar.append(dialog.firstChild);layout.append(sidebar,workspaceHost);dialog.append(layout);
   document.body.append(dialog);
   const node = id => dialog.querySelector('#' + id);
-  const fragments = []; let selection = null, generation = 0, dismissing = false, transcriptCase = null, freshTranscript = false, previousFocus = null;
+  const fragments = []; let selection = null, generation = 0, dismissing = false, transcriptCase = null, freshTranscript = false, previousFocus = null, voiceCaseId = null;
   const agentName=()=>selection?stationIdentity(selection).name:'Autón';
   const visibility=value=>window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:value}));
   const setText = (id,text) => {if(node(id).textContent!==text)node(id).textContent=text;};
@@ -70,7 +70,7 @@ if (open) {
   const voice = createLiveVoice({actions:actionExecutor,audio: node('voice-audio'), mint: value => transport.mintFastSession(value),
     onChange: renderVoiceState,
     onTranscript: fragment => {
-      renderTranscript(fragment);
+      if(selection?.case_id===voiceCaseId)renderTranscript(fragment);
     }});
   function renderVoiceState(state) {
       window.dispatchEvent(new CustomEvent('yod-voice-state',{detail:{phase:state.phase}}));
@@ -119,6 +119,7 @@ if (open) {
   }
   async function openForCase(caseId,tab='ppp',{startVoice=false}={}) {
     const currentSelection=window.YodResidentAgents?.getSelection?.();
+    if(active(voice.snapshot())&&voiceCaseId!==currentSelection?.case_id)return false;
     if(caseId&&(!currentSelection||currentSelection.case_id!==caseId))return false;
     if(dialog.open){
       if(caseId&&selection?.case_id!==caseId)return false;
@@ -159,7 +160,7 @@ if (open) {
       setText('voice-previous','Al cerrar la conversación anterior quedó un guardado sin confirmar. Revisa el historial antes de repetir sus encargos.');
       node('voice-previous').hidden=false;
     }
-    freshTranscript=true;
+    freshTranscript=true;voiceCaseId=selection.case_id;
     void voice.start(selection.case_id);
   }
   node('voice-start').addEventListener('click',begin);
