@@ -8349,7 +8349,7 @@
         "EXT-DRIVE"
       ],
       "proposal": "Abrir Plan de potencial desde el círculo en una sola vista compartida: Gastón a la izquierda, PPP a la derecha; abrirlo no activa micrófono. Comenzar o terminar voz y cambiar pestañas conserva la misma instancia del tablero. Mostrar revisión/escenario confirmado y ajustes antes/después con estado de aplicación; conservar autorización, revisión y recibos, sin modificar fórmulas ni aprobar escenarios por conversación.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "approval": "Dirección pidió llenar el PPP junto a Gastón, ver sus ajustes en el tablero y comparar alternativas para mejorar resultados.",
       "tests": [
         "node scripts/arquitectura.cjs --check",
@@ -8360,7 +8360,7 @@
         "node verify-obra-app.cjs",
         "Navegador aislado escritorio/móvil: círculo→PPP sin micrófono, misma instancia al conversar, propuestas/revisión/recibo, cambios tardíos y sin escrituras de negocio."
       ],
-      "deployment": "Propuesto. Usa puente PPP y herramientas existentes del piloto Patrimonial; no acredita estabilidad del servicio Sheets ni rendimientos de un proyecto.",
+      "deployment": "Código preparado con puente y herramientas existentes. Pruebas aisladas y publicación se registran en PR; no acredita disponibilidad continua de Sheets ni resultados financieros.",
       "rollback": "Revertir navegación, vista compartida y cache bumps conservando los datos PPP, variantes, recibos, voz y contratos existentes."
     }
   ],
@@ -10177,6 +10177,14 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "scripts/probar-voz-ux-browser.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/probar-ppp-colaborativo-browser.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO"

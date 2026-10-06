@@ -1,7 +1,7 @@
 import {createFrameTransport, validateSelection} from './conversation.mjs';
 import {createLiveVoice} from './live-voice.mjs?v=7';
 import {voiceView} from './voice-view.mjs?v=1';
-import {createWorkspace} from './agent-workspace.mjs?v=2';
+import {createWorkspace} from './agent-workspace.mjs?v=3';
 import {DurableGoals,watchGoals} from './goals.mjs';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=1';
 import {groupTranscriptFragments} from './live-transcript.mjs';
@@ -40,7 +40,7 @@ if (open) {
     if(event.phase==='confirmed')window.dispatchEvent(new CustomEvent('yod-goals-changed',{detail:null}));
   }});
   const workspace=createWorkspace({container:workspaceHost,getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision);}});
-  window.YodVoiceWorkspace={isOpen:()=>dialog.open,show:tab=>{workspace.setTab(tab);workspaceHost.scrollIntoView({block:'nearest'});}};
+  window.YodVoiceWorkspace={isOpen:()=>dialog.open,openForCase,show:tab=>{workspace.setTab(tab);workspaceHost.scrollIntoView({block:'nearest'});}};
   let stopWatching=null;
   const goalReader=new DurableGoals({transport,getContext:()=>{
     const current=window.YodResidentAgents?.getSelection?.();
@@ -52,7 +52,11 @@ if (open) {
     node('voice-work').replaceChildren(...state.model.goals.filter(g=>g.status!=='completed').slice(0,8).map(g=>{const p=document.createElement('p');p.textContent=g.title+' · '+labels[g.status];return p;}));
   });
   const voice = createLiveVoice({actions:actionExecutor,audio: node('voice-audio'), mint: value => transport.mintFastSession(value),
-    onChange: state => {
+    onChange: renderVoiceState,
+    onTranscript: fragment => {
+      renderTranscript(fragment);
+    }});
+  function renderVoiceState(state) {
       window.dispatchEvent(new CustomEvent('yod-voice-state',{detail:{phase:state.phase}}));
       const view = voiceView(state), live = view.live;
       dialog.dataset.voicePhase=state.phase;
@@ -78,8 +82,9 @@ if (open) {
       setText('voice-mute',state.muted?'Activar micrófono':'Silenciar micrófono');
       node('voice-mute').setAttribute('aria-pressed',String(state.muted));
       setText('voice-save',view.history);
-    },
-    onTranscript: fragment => {
+  }
+  function renderTranscript(fragment) {
+      if(!selection)return;
       const transcript=node('voice-transcript');
       const following=transcript.scrollHeight-transcript.scrollTop-transcript.clientHeight<64;
       fragments.push(fragment);node('voice-download').disabled=false;
@@ -92,28 +97,40 @@ if (open) {
       });
       node('voice-transcript').replaceChildren(...articles);
       if(following)node('voice-transcript').scrollTop = node('voice-transcript').scrollHeight;
-    }});
-  open.addEventListener('click', async () => {
-    if (dialog.open) return;
+  }
+  async function openForCase(caseId,tab='browser',{startVoice=false}={}) {
+    const currentSelection=window.YodResidentAgents?.getSelection?.();
+    if(caseId&&(!currentSelection||currentSelection.case_id!==caseId))return false;
+    if(dialog.open){
+      if(caseId&&selection?.case_id!==caseId)return false;
+      workspace.setTab(tab);
+      if(startVoice)begin();
+      return true;
+    }
     dialog.showModal();dialog.querySelector('.voice-transcript-details').hidden=true;node('voice-previous').hidden=true;
     const current = ++generation; selection = null; node('voice-start').disabled = true;
     node('voice-status').textContent = 'Validando tu acceso a la voz…';
     try {
       const resident = window.YodResidentAgents;
       const fresh = resident?.getSelection?.() || validateSelection(await transport.resolveCurrent({}));
-      if (current !== generation || !dialog.open) return;
-      selection = fresh; node('voice-case').textContent = fresh.name;
+      if (current !== generation || !dialog.open || caseId&&fresh.case_id!==caseId) return false;
+      selection = fresh; node('voice-audio').muted=false; node('voice-case').textContent = fresh.name;
       if(transcriptCase!==fresh.case_id){fragments.length=0;node('voice-transcript').replaceChildren();node('voice-download').disabled=true;node('voice-previous').hidden=true;transcriptCase=fresh.case_id;}
       dialog.querySelector('.voice-transcript-details').hidden=false;
-      workspace.open(fresh,'browser');
+      workspace.open(fresh,tab);
+      setText('voice-title',tab==='ppp'?'Plan de potencial con Gastón':'Trabajar con Gastón');
+      renderVoiceState(voice.snapshot());
       node('voice-start').disabled = !fresh.can_enqueue;
       node('voice-status').textContent = fresh.can_enqueue ?
-        'Preparando conversación de voz…' : 'Tu acceso permite consultar; hablar requiere permiso de conversación.';
-      if (fresh.can_enqueue) begin();
+        startVoice?'Preparando conversación de voz…':'El puesto está abierto. Pulsa Iniciar conversación cuando quieras hablar.' : 'Tu acceso permite consultar; hablar requiere permiso de conversación.';
+      if (fresh.can_enqueue&&startVoice) begin();
+      return true;
     } catch {
       if (current === generation) node('voice-status').textContent = 'No pudimos validar tu acceso. Vuelve a abrir el despacho.';
+      return false;
     }
-  });
+  }
+  open.addEventListener('click',()=>void openForCase(window.YodResidentAgents?.getSelection?.()?.case_id,workspace.getTab(),{startVoice:true}));
   function begin() {
     if(!selection?.can_enqueue||active(voice.snapshot()))return;
     const previous=voice.snapshot();
@@ -158,6 +175,13 @@ if (open) {
     unbind?.();boundResident=resident;
     unbind=resident.subscribe(state=>{
       const s=resident.getSelection();
+      if(selection&&(!s||s.case_id!==selection.case_id)){
+        generation++;selection=null;workspace.reset();workspace.setActive(false);
+        fragments.length=0;freshTranscript=false;node('voice-transcript').replaceChildren();node('voice-work').replaceChildren();node('voice-task').textContent='';
+        node('voice-download').disabled=true;node('voice-start').disabled=true;node('voice-previous').hidden=true;node('voice-audio').muted=true;
+        setText('voice-case','El acceso al expediente cambió.');
+        void voice.stop().finally(()=>{if(!selection&&dialog.open)dialog.close();});
+      }
       if(!s?.can_enqueue||state.prepared||warming===s.case_id)return;
       warming=s.case_id;
       void voice.prepare(s.case_id).then(ok=>resident.markPrepared(s.case_id,ok)).finally(()=>{warming=null;});
