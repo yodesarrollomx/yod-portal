@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.90-despacho-conocimiento-publicado · 2026-10-05.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.91-chinche-contexto-despacho · 2026-10-05.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -354,7 +354,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 - Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, SYS-SALA, GAS-SALA, SHEET-SALA.
 - Evidencia: Petición del propietario del 3 de octubre de 2026: alojamiento directo GitHub e ingreso inmersivo desde Despacho, eliminando el segundo login del Site privado..
-- Entrada/campos: `Ruta exacta #/despacho y perfil confirmado por Portero con permiso DP vigente`, `Destino fijo ../despacho3d/index.html de mismo origen; frontend neutro sin identidad o registros de negocio incluidos en el código público.`, `Evento yod:despacho:pin version 1 de la ventana/origen exactos del iframe activo: requestId UUID, target id/zone/kind/point, view position/quaternion/fov/mode, modelVersion y viewport`.
+- Entrada/campos: `Ruta exacta #/despacho y perfil confirmado por Portero con permiso DP vigente`, `Destino fijo ../despacho3d/index.html de mismo origen; frontend neutro sin identidad o registros de negocio incluidos en el código público.`, `Evento yod:despacho:pin version 1 de la ventana/origen exactos del iframe activo: requestId UUID, target id/zone/kind/point, view position/quaternion/fov/mode, modelVersion y viewport`, `Evento compatible yod:despacho:pin version 2: mismo envelope/target interface más ui {surface,path,item}. Surface lista fija, path tag:nth-of-type sin atributos/IDs/texto máx600 y item ordinal nullable0..9999. Fallback UI mode map exige position/quaternion/fov null.`.
 - Salida: Sección Despacho inmersiva con recorrido, paneles de agentes, regreso a Inicio y enlace a Bandeja canónica., Iframe desmontado al salir, cerrar, cambiar usuario o invalidar autorización, Chinche revisable con ancla/cámara/versiones geométricas y encargo humano; contexto técnico en campo codigo existente.
 
 - Conservar SYS-DESPACHO, DP, catálogo, allowlists y destinos canónicos. El Portero controla la entrada OS; cada backend sigue validando sus propios permisos.
@@ -365,6 +365,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Cada borrador 3D conserva un guard efímero de ventana y sesión vigentes; al salir o invalidar autorización se cierra el compositor y se cancela su guard. Tras recargar o cambiar persona no se autoenvía un borrador 3D antiguo; su exportación manual conserva el contexto. Las Chinches generales mantienen su comportamiento existente.
 - Sólo copiar interfaz, modelos y recursos visuales neutros al repositorio público. Datos, memoria, documentos, nombres de casos e identificadores privados permanecen en Drive y sus transportes autorizados.
 - Probar mediante dobles y red interceptada; ninguna prueba escribe en endpoints de negocio.
+- Cobertura dinámica de tarjetas de revisión, fuentes, PPP, actividad, objetivos, conocimiento y paneles del agente: abrir/señalar/cancelar no ejecuta sus controles de negocio ni copia su contenido; solamente Clavar del humano usa el envío existente. Vista alternativa sin WebGL sólo referencia UI, jamás punto/cámara inventados.
 
 ## CTR-EMD-ESCALA-CAPTURA
 

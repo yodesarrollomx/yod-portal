@@ -2,7 +2,7 @@
 
 Propuesta CHG-CHINCHE-CONTEXTO-DESPACHO-091, registrada antes de implementar.
 
-La escena conserva punto de intersección, cámara, zona y versión del modelo. Las fichas existentes siguen usando v1. Las superficies de interfaz pueden usar v2 con `ui:{surface,path,item}`: superficie de una lista fija, ruta DOM acotada sin IDs de negocio, índice visible nullable. No incluir textos, valores de formularios, URLs, tokens ni identificadores privados en esa referencia.
+La escena conserva punto de intersección, cámara, zona y versión del modelo. Las fichas existentes siguen usando v1. Las superficies de interfaz pueden usar v2 con `ui:{surface,path,item}`: superficie de una lista fija, ruta DOM acotada sin IDs de negocio, índice visible nullable. En fallback sin WebGL, solo UI v2: modo `map` y cámara/rotación/fov null; nunca inventar geometría. Un `html:nth-of-type` después de `iframe:nth-of-type` indica la frontera de un iframe del mismo origen; el capturador señala dentro sin ejecutar el control ni serializar sus datos. No incluir textos, valores de formularios, URLs, tokens ni identificadores privados en esa referencia.
 
 ```mermaid
 flowchart LR

@@ -8308,13 +8308,14 @@
         "SYS-SALA"
       ],
       "proposal": "Completar captura de chinches sobre escena virtual, tarjetas del agente y superficies del Despacho. Mantener geometría v1 y añadir contexto UI v2 estrictamente técnico (superficie allowlisted, ruta DOM acotada e índice visible); acciones explícitas por tarjeta y señalamiento global. No copiar contenido privado ni credenciales, no enviar sin Clavar y no ampliar autorización; mantener origen/iframe/época vigentes y contratos de producción existentes.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "tests": [
         "Contratos v1/v2 y rechazo de payload privado, origen/iframe/sesión inválidos y geometría malformada.",
         "Recorridos sintéticos móvil/escritorio: punto 3D, tarjetas de revisión dinámicas, control exacto, diálogo abierto, fallback sin WebGL y cancelación sin efectos.",
         "Verificadores completos de portal y Despacho, CI exacto y cotejo HTTP de recursos tras Pages."
       ],
-      "deployment": "Frontend compartido primero; consumidores después con referencia de caché nueva. Misma BD/IDs/routing/servicios y cero cambios backend o datos de negocio. Reversión por PR, conserva borradores y registros."
+      "deployment": "Frontend compartido primero; consumidores después con referencia de caché nueva. Misma BD/IDs/routing/servicios y cero cambios backend o datos de negocio. Reversión por PR, conserva borradores y registros.",
+      "observed": "Integración previa: sólo fichas de espacios virtuales y Corcho detalle. Puente v1 conservado y UI v2 implementado con surface/path/item técnicos, mismo origen/iframe/época. Motor compartido incorpora botón opt-in privado, referencia de control y compositor en modal top-layer. Pruebas preliminares: puente14, suite399 y Chromium desktop/touch compartido; cobertura virtual ampliada/nested PPP y CI/publicación siguen en comprobación. No acredita entrega de tareas ni aprobación editorial ni cambios de Accesos."
     }
   ],
   "data_contracts": [
@@ -9025,7 +9026,8 @@
       "input": [
         "Ruta exacta #/despacho y perfil confirmado por Portero con permiso DP vigente",
         "Destino fijo ../despacho3d/index.html de mismo origen; frontend neutro sin identidad o registros de negocio incluidos en el código público.",
-        "Evento yod:despacho:pin version 1 de la ventana/origen exactos del iframe activo: requestId UUID, target id/zone/kind/point, view position/quaternion/fov/mode, modelVersion y viewport"
+        "Evento yod:despacho:pin version 1 de la ventana/origen exactos del iframe activo: requestId UUID, target id/zone/kind/point, view position/quaternion/fov/mode, modelVersion y viewport",
+        "Evento compatible yod:despacho:pin version 2: mismo envelope/target interface más ui {surface,path,item}. Surface lista fija, path tag:nth-of-type sin atributos/IDs/texto máx600 y item ordinal nullable0..9999. Fallback UI mode map exige position/quaternion/fov null."
       ],
       "output": [
         "Sección Despacho inmersiva con recorrido, paneles de agentes, regreso a Inicio y enlace a Bandeja canónica.",
@@ -9040,7 +9042,8 @@
         "Un evento geométrico prepara un encargo revisable; no crea aprobación comercial ni escribe automáticamente en negocio. Reutilizar Chinches y el canal existente, con deduplicación por requestId.",
         "Cada borrador 3D conserva un guard efímero de ventana y sesión vigentes; al salir o invalidar autorización se cierra el compositor y se cancela su guard. Tras recargar o cambiar persona no se autoenvía un borrador 3D antiguo; su exportación manual conserva el contexto. Las Chinches generales mantienen su comportamiento existente.",
         "Sólo copiar interfaz, modelos y recursos visuales neutros al repositorio público. Datos, memoria, documentos, nombres de casos e identificadores privados permanecen en Drive y sus transportes autorizados.",
-        "Probar mediante dobles y red interceptada; ninguna prueba escribe en endpoints de negocio."
+        "Probar mediante dobles y red interceptada; ninguna prueba escribe en endpoints de negocio.",
+        "Cobertura dinámica de tarjetas de revisión, fuentes, PPP, actividad, objetivos, conocimiento y paneles del agente: abrir/señalar/cancelar no ejecuta sus controles de negocio ni copia su contenido; solamente Clavar del humano usa el envío existente. Vista alternativa sin WebGL sólo referencia UI, jamás punto/cámara inventados."
       ]
     },
     {

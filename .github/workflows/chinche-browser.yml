@@ -1,0 +1,45 @@
+name: Chinches del Despacho
+on:
+  pull_request:
+    paths:
+      - 'chinche.js'
+      - 'os/despacho-chinches.js'
+      - 'despacho3d/**'
+      - 'scripts/probar-chinche*.cjs'
+      - 'scripts/probar-chinches-browser.cjs'
+      - '.github/workflows/chinche-browser.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  navegador:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.55.1-noble
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, webkit]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Dependencia aislada
+        run: npm install --prefix "$RUNNER_TEMP/chinche-browser" --no-package-lock --ignore-scripts playwright@1.55.1
+      - name: Tarjetas, selección, contexto y diálogos con red interceptada
+        env:
+          NODE_PATH: ${{ runner.temp }}/chinche-browser/node_modules
+          CHINCHE_BROWSER: ${{ matrix.browser }}
+          BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/chinche-evidence
+        run: |
+          node scripts/probar-chinche-compartida.cjs
+          node scripts/probar-chinches-browser.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chinche-${{ matrix.browser }}
+          path: ${{ runner.temp }}/chinche-evidence
+          if-no-files-found: ignore
