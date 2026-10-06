@@ -45,3 +45,9 @@ body:has(#workspace > .sheet:not([hidden])) #resident-agent{display:none}
 @media(max-height:550px) and (orientation:landscape){#resident-agent{bottom:72px;width:230px;padding:10px}.resident-case{display:none}.resident-actions [data-resident-visit]{display:none}.resident-status{margin:6px 0}}
 
 @media(max-width:700px){body.office-readable header{height:60px;flex-wrap:nowrap;gap:6px;padding:0 10px}body.office-readable header button{font-size:11px;padding:7px 8px}body.office-readable #workspace{height:calc(100dvh - 60px)}}
+@media(max-width:700px){
+ body{display:flex;flex-direction:column}
+ body>header{height:auto!important;min-height:60px;flex:none;flex-wrap:wrap!important;padding:8px 10px!important}
+ body>header>.chinche-ui-tools{width:100%;padding-top:4px}
+ body>#workspace{height:auto!important;flex:1;min-height:0;width:100%}
+}
