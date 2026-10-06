@@ -178,3 +178,13 @@ test('Manual export preserves validated 3D context for non-canvas notes and reje
     elemento:{seccion:'Despacho3D',texto:'Zona case'},codigo:geometry,aparato:'synthetic',sello:'synthetic',creado:'2026-01-01'}]);
   const result=await h.helper.armarTexto(['synthetic-export'],'');assert.ok(result.texto.includes('Contexto geométrico del Despacho'));assert.ok(result.texto.includes('camara=[8,1.65,-4.45]'));assert.ok(result.texto.includes('viewport=390x844'));
 });
+
+test('orthographic pins preserve actual projection and reject invalid or private projection fields',async()=>{
+ const h=harness(),p=pin();p.view.mode='overview';p.view.fov=null;p.view.orthographic={left:-30,right:30,top:20,bottom:-20,zoom:1.5};
+ assert.equal(h.api.validPin(p),true);await h.hello();await h.emit(p);
+ assert.equal(h.calls.length,1);assert.match(h.calls[0].valores.referencia,/ortografica=/);
+ assert.deepEqual(JSON.parse(JSON.stringify(h.calls[0].objeto.despacho3d.view)),p.view);
+ for(const change of [v=>v.mode='walk',v=>v.mode='map',v=>v.fov=43,v=>v.orthographic.zoom=0,v=>v.orthographic.right=-30,v=>v.orthographic.top=Infinity,v=>v.orthographic.token='secret']){
+  const bad=JSON.parse(JSON.stringify(p));change(bad.view);assert.equal(h.api.validPin(bad),false);
+ }
+});

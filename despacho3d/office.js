@@ -3,7 +3,7 @@ import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {RoomEnvironment} from './vendor/RoomEnvironment.js';
 import {createOffice} from './scene.js?v=5';
 import {panels} from './office-panels.mjs?v=1';
-import {createChinches3D} from './chinches3d.mjs?v=2';
+import {createChinches3D} from './chinches3d.mjs?v=3';
 import {createOfficePilot,chooseOfficeHit} from './avatars/office-pilot.mjs?v=5';
 import {ENTORNO_AGENTE_CAMINA} from './entorno-config.mjs';
 import {crearAgenteIr} from './entorno-ruta.mjs?v=4';
@@ -88,7 +88,7 @@ requestAnimationFrame(animate);$('#loading').hidden=true;window.officeReady=true
 window.despacho={setAgentActivity:pilot.setActivity,view:'3d',layout:office,get camera(){return camera;},getAgentState:()=>pilot.getMovementState(),model:office.model,scene,visit,setMode,openPanel,closeSheets,getState:()=>({projection:camera.isOrthographicCamera?'orthographic':'perspective',cutaway:office.getCutaway(),zoom:camera.zoom,mode,selected,near,sheet,position:camera.position.toArray(),rotation:camera.rotation.toArray(),frames,stick:{...stick},triangles:renderer.info.render.triangles,drawCalls:renderer.info.render.calls,allowed:allowed(camera.position.x,camera.position.z),mobile:isMobile(),colliders:office.collisions.length,avatar:pilot.getState()}),allowed};
 if(ENTORNO_AGENTE_CAMINA||/(?:^|[?&])camina=1(?:&|$)/.test(location.search))window.despacho.agenteIr=crearAgenteIr({lugares:places,piloto:pilot,permitido:allowed,limites:[office.bounds,office.annex],reducido:()=>reducedMotion.matches,alLlegar:lugar=>window.dispatchEvent(new CustomEvent('yod-agent-arrived',{detail:{lugar}}))});
 
-chinches=createChinches3D({readZone:()=>selected,readView:()=>document.getElementById('office-accessible')?.hidden===false||window.despacho?.view==='map'?{position:null,quaternion:null,fov:null,mode:'map'}:({position:camera.position.toArray(),quaternion:camera.quaternion.toArray(),fov:camera.isPerspectiveCamera?camera.fov:null,mode}),closeSheets:()=>closeSheets(),onChange:active=>{clearMovement();$('#scene').classList.toggle('pin-selecting',active);}});
+chinches=createChinches3D({readZone:()=>selected,readView:()=>document.getElementById('office-accessible')?.hidden===false||window.despacho?.view==='map'?{position:null,quaternion:null,fov:null,mode:'map'}:({position:camera.position.toArray(),quaternion:camera.quaternion.toArray(),fov:camera.isPerspectiveCamera?camera.fov:null,mode,...(camera.isOrthographicCamera?{orthographic:{left:camera.left,right:camera.right,top:camera.top,bottom:camera.bottom,zoom:camera.zoom}}:{})}),closeSheets:()=>closeSheets(),onChange:active=>{clearMovement();$('#scene').classList.toggle('pin-selecting',active);}});
 
 // URL contains navigation only; all business state remains in Sheets.
 async function routeOffice(){const place=location.hash.slice(1);if(!Object.hasOwn(places,place))return;await visit(place);if(panels[place])openPanel(place);}
