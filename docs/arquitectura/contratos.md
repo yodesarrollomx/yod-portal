@@ -360,7 +360,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Conservar SYS-DESPACHO, DP, catálogo, allowlists y destinos canónicos. El Portero controla la entrada OS; cada backend sigue validando sus propios permisos.
 - No añadir credenciales al iframe, URLs, hashes o mensajes. Ninguna credencial ni registro operativo se incluye en archivos estáticos públicos.
 - No montar la oficina desde OS antes de perfil confirmado ni después de cambiar sesión, negar DP o abandonar la ruta. Ignorar mensajes de ventanas anteriores. El frontend estático público por sí solo no acredita acceso a datos.
-- Aceptar solo metadatos geométricos con claves, tipos, valores finitos y límites explícitos; rechazar campos extra, identidad, casos, nombres, hojas, URLs y credenciales.
+- Aceptar solo metadatos geométricos v1 o referencias UI v2 de superficie/ruta/ordinal allowlisted, con claves, tipos, valores finitos y límites explícitos; rechazar campos extra, identidad, casos, nombres, hojas, URLs y credenciales.
 - Un evento geométrico prepara un encargo revisable; no crea aprobación comercial ni escribe automáticamente en negocio. Reutilizar Chinches y el canal existente, con deduplicación por requestId.
 - Cada borrador 3D conserva un guard efímero de ventana y sesión vigentes; al salir o invalidar autorización se cierra el compositor y se cancela su guard. Tras recargar o cambiar persona no se autoenvía un borrador 3D antiguo; su exportación manual conserva el contexto. Las Chinches generales mantienen su comportamiento existente.
 - Sólo copiar interfaz, modelos y recursos visuales neutros al repositorio público. Datos, memoria, documentos, nombres de casos e identificadores privados permanecen en Drive y sus transportes autorizados.

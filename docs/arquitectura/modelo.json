@@ -8309,14 +8309,14 @@
         "GAS-PORTERO"
       ],
       "proposal": "Completar captura de chinches sobre escena virtual, tarjetas del agente y superficies del Despacho. Mantener geometría v1 y añadir contexto UI v2 estrictamente técnico (superficie allowlisted, ruta DOM acotada e índice visible); acciones explícitas por tarjeta y señalamiento global. No copiar contenido privado ni credenciales, no enviar sin Clavar y no ampliar autorización; mantener origen/iframe/época vigentes y contratos de producción existentes.",
-      "status": "implementado_local",
+      "status": "verificado",
       "tests": [
         "Contratos v1/v2 y rechazo de payload privado, origen/iframe/sesión inválidos y geometría malformada.",
         "Recorridos sintéticos móvil/escritorio: punto 3D, tarjetas de revisión dinámicas, control exacto, diálogo abierto, fallback sin WebGL y cancelación sin efectos.",
         "Verificadores completos de portal y Despacho, CI exacto y cotejo HTTP de recursos tras Pages."
       ],
       "deployment": "Frontend compartido primero; consumidores después con referencia de caché nueva. Misma BD/IDs/routing/servicios y cero cambios backend o datos de negocio. Reversión por PR, conserva borradores y registros.",
-      "observed": "Integración previa: sólo fichas de espacios virtuales y Corcho detalle. Puente v1 conservado y UI v2 implementado con surface/path/item técnicos, mismo origen/iframe/época. Motor compartido incorpora botón opt-in privado, referencia de control y compositor en modal top-layer. Pruebas preliminares: puente14, suite399 y Chromium desktop/touch compartido; cobertura virtual ampliada/nested PPP y CI/publicación siguen en comprobación. No acredita entrega de tareas ni aprobación editorial ni cambios de Accesos."
+      "observed": "Implementación local congelada. Puente v1 geométrico conservado y UI v2 técnica, origen/iframe/época vigentes, control exacto y tarjetas dinámicas. Captura de control dentro de PPP same-origin conserva guard del Despacho; frame cross-origin sólo se señala como marco. Compositor clickable dentro de modal, sin contenido privado automático, cámara null en mapa y toolbar móvil corregida. Recibo de agentes: portal400/400 y subset11/11, Chromium escritorio/touch y fallback real aprobados; Despacho21/21 shared real y regresión7/7. WebKit local no ejecutable por dependencias; CI exacto Chromium/WebKit y publicación/cotejo público pendientes en PR. No acredita entregas de tareas, aprobación editorial, autorización real de otra persona ni cambios de backend."
     }
   ],
   "data_contracts": [
@@ -9039,7 +9039,7 @@
         "Conservar SYS-DESPACHO, DP, catálogo, allowlists y destinos canónicos. El Portero controla la entrada OS; cada backend sigue validando sus propios permisos.",
         "No añadir credenciales al iframe, URLs, hashes o mensajes. Ninguna credencial ni registro operativo se incluye en archivos estáticos públicos.",
         "No montar la oficina desde OS antes de perfil confirmado ni después de cambiar sesión, negar DP o abandonar la ruta. Ignorar mensajes de ventanas anteriores. El frontend estático público por sí solo no acredita acceso a datos.",
-        "Aceptar solo metadatos geométricos con claves, tipos, valores finitos y límites explícitos; rechazar campos extra, identidad, casos, nombres, hojas, URLs y credenciales.",
+        "Aceptar solo metadatos geométricos v1 o referencias UI v2 de superficie/ruta/ordinal allowlisted, con claves, tipos, valores finitos y límites explícitos; rechazar campos extra, identidad, casos, nombres, hojas, URLs y credenciales.",
         "Un evento geométrico prepara un encargo revisable; no crea aprobación comercial ni escribe automáticamente en negocio. Reutilizar Chinches y el canal existente, con deduplicación por requestId.",
         "Cada borrador 3D conserva un guard efímero de ventana y sesión vigentes; al salir o invalidar autorización se cierra el compositor y se cancela su guard. Tras recargar o cambiar persona no se autoenvía un borrador 3D antiguo; su exportación manual conserva el contexto. Las Chinches generales mantienen su comportamiento existente.",
         "Sólo copiar interfaz, modelos y recursos visuales neutros al repositorio público. Datos, memoria, documentos, nombres de casos e identificadores privados permanecen en Drive y sus transportes autorizados.",

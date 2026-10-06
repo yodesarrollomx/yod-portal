@@ -19,3 +19,7 @@ Alcance: Despacho virtual actual, Mi trabajo y Mi Corcho, y selección compartid
 Pruebas sintéticas y recursos publicados se registrarán separadamente; no acredita entrega de tareas, aprobación editorial ni modificación de permisos.
 
 Reversión: revertir frontend por PR, sin borrar BD, fotos, registros de Sala ni datos de negocio.
+
+## Verificación y publicación
+
+Código congelado para revisión: puente y shared con privado/modal/ubicación; tarjetas y controles dinámicos virtuales, PPP interno, fallback y toolbar móvil; consumer Despacho en PR separado. Recibos locales:400 pruebas portal y11 puntuales,21 Despacho y7 de regresión shared, Chromium escritorio/touch y mapa real. WebKit requiere CI por bibliotecas locales. CI del head exacto y cotejo de archivos públicos se registran en las propuestas de GitHub; este registro local no acredita publicación antes de esas comprobaciones.
