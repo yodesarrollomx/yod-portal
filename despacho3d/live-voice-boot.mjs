@@ -137,6 +137,7 @@ if (open) {
       if(transcriptCase!==fresh.case_id){fragments.length=0;node('voice-transcript').replaceChildren();node('voice-download').disabled=true;node('voice-previous').hidden=true;node('station-message').value='';node('station-messages').replaceChildren();chat.close();transcriptCase=fresh.case_id;}
       dialog.querySelector('.voice-transcript-details').hidden=false;
       workspace.open(fresh,tab);
+      if(!fresh.goals?.ready)node('voice-work').textContent='El seguimiento de objetivos aún no está conectado para este proyecto.';
       if(dialog.querySelector('.station-chat').open&&!chat.selection)void chat.open();
       setText('voice-title',agentName());
       renderVoiceState(voice.snapshot());
@@ -183,7 +184,7 @@ if (open) {
     if (dismissing) return; dismissing = true;
     const wasLive = active(voice.snapshot()), result = await voice.stop();
     if (wasLive && (result?.incomplete || result?.pending)) {dismissing = false; return;}
-    generation++; selection = null; stopWatching?.();stopWatching=null;goalReader.hide();chat.close();workspace.setActive(false);dialog.close();visibility(false);previousFocus?.focus?.(); dismissing = false;
+    generation++; selection = null; stopWatching?.();stopWatching=null;goalReader.hide();workspace.setActive(false);dialog.close();visibility(false);previousFocus?.focus?.(); dismissing = false;
   }
   dialog.querySelector('.voice-close').addEventListener('click', () => {void dismiss();});
   dialog.addEventListener('cancel', event => {event.preventDefault(); void dismiss();});
