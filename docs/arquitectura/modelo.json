@@ -8308,7 +8308,7 @@
         "GAS-PORTERO"
       ],
       "proposal": "Mejora1 autorizada: conversación clara y recuperable. Separar voz, expediente y guardado; recuperar reproducción bloqueada sin otra sesión; conservar transcripción visible ante inicio fallido; impedir doble inicio y confirmaciones prematuras. PPP conserva revisión y resultados canónicos; no ejecutar ni aprobar por indicador visual.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "approval": "Dirección eligió la mejora1 y solicitó revisar UX para reducir errores y ordenar el trabajo del PPP.",
       "tests": [
         "node scripts/arquitectura.cjs --check",
@@ -8319,7 +8319,7 @@
         "node verify-obra-app.cjs",
         "Regresiones de micrófono, audio bloqueado, duplicados, reconexión, contexto y finalización; navegador sintético escritorio/móvil."
       ],
-      "deployment": "En preparación. La contención del servicio de Sheets y la aceptación con micrófono físico siguen abiertas; no se acreditan con una mejora visual.",
+      "deployment": "Implementado en rama para CI y navegador sintético. No acredita micrófono físico ni resuelve la contención interna del servicio de Sheets.",
       "rollback": "Revertir consumidor, estilos y cache bumps; conservar JSON Live, autorizaciones, historial, recibos, PPP y bóvedas."
     }
   ],

@@ -4,6 +4,7 @@ on:
     paths:
       - 'despacho3d/**'
       - 'scripts/probar-conocimiento-browser.cjs'
+      - 'scripts/probar-voz-ux-browser.cjs'
       - '.github/workflows/conocimiento-browser.yml'
   workflow_dispatch:
 permissions:
@@ -27,7 +28,9 @@ jobs:
         env:
           NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
           BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
-        run: node scripts/probar-conocimiento-browser.cjs
+        run: |
+          node scripts/probar-conocimiento-browser.cjs
+          node scripts/probar-voz-ux-browser.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
