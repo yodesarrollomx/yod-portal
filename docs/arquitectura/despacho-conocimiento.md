@@ -1,6 +1,6 @@
 # Conocimiento y versiones del expediente
 
-CHG-DESPACHO-CONOCIMIENTO-078 / CTR-DESPACHO-CONOCIMIENTO. Consumidor preparado en rama; no acredita publicación ni escritura real.
+CHG-DESPACHO-CONOCIMIENTO-078 / CTR-DESPACHO-CONOCIMIENTO. Portal publicado mediante [PR100](https://github.com/yodesarrollomx/yod-portal/pull/100), merge `c45e0f7d8a280b482c865ce80b8c9244e8b7a5e7`. La publicación, las pruebas técnicas y la aceptación operativa se registran por separado.
 
 El puesto añade Conocimiento junto a navegador, PPP, pendientes y fuentes. Muestra hechos con procedencia, versiones/variantes, decisiones y próximos pasos del caso autorizado. No carga al iniciar voz ni consulta periódicamente: abre, actualiza por petición y relee después de un recibo. Un fallo de conocimiento no cierra la conversación.
 
@@ -13,3 +13,11 @@ La exportación tiene dos salidas: Markdown y bóveda ZIP portable, con archivos
 Las pruebas sintéticas cubren contrato, recibo perdido, conflicto, revocación, cambio de caso, comparación, nombres/rutas, integridad ZIP y estados de subtareas interrumpidas. El recorrido Chromium comprueba 1280×900 y 390×844, descarga/error y continuidad de una pista MediaStream sintética al cambiar panel; no acredita micrófono físico ni conversación de Dirección. No contiene datos de negocio.
 
 Reversión por PR conserva voz, navegador, PPP, expedientes, versiones, hechos, fuentes, decisiones y recibos. No borrar registros ni vaults.
+
+## Publicación y evidencia · 5 de octubre, Hermosillo
+
+- [Pages del merge](https://github.com/yodesarrollomx/yod-portal/actions/runs/37399848446) y [Verificar YOD OS](https://github.com/yodesarrollomx/yod-portal/actions/runs/37399848701) completados correctamente.
+- Head `207d14e9e1c56697116e757bfa275fef65a47932`: [393 pruebas y atlas](https://github.com/yodesarrollomx/yod-portal/actions/runs/37398901161), [verificadores OS](https://github.com/yodesarrollomx/yod-portal/actions/runs/37398901195) y [Chromium sintético escritorio/móvil](https://github.com/yodesarrollomx/yod-portal/actions/runs/37398901159) aprobados. Incluye recibo perdido, revocación, recuperación de fuentes al reabrir, descarga, comparación y pista de audio sintética conservada; artifact11384077589 contiene dos capturas.
+- Backend [PR26](https://github.com/alexpueblag/yod-agent-cloud/pull/26) y [PR27](https://github.com/alexpueblag/yod-agent-cloud/pull/27), commit `c9cf174049037ab99e5a086d35c9cb0900969f65`, integrado y publicado según recibo del coordinador. Diagnóstico con proveedor OpenAI real: herramientas, salida de audio y cierre confirmados a **2026-10-06 01:34:59 UTC**. Es evidencia técnica; no acredita micrófono físico, conversación de Dirección ni operación de negocio.
+
+El cotejo HTTP byte a byte de los recursos de esta entrega está pendiente de registrar. La bóveda exportada es portable; esta publicación no instala Obsidian ni acredita Sync o migración total de documentos. Escrituras operativas y aceptación final conservan su comprobación separada.

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-05.85-despacho-conocimiento",
+  "revision": "2026-10-05.86-despacho-conocimiento-publicado",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8201,7 +8201,7 @@
         "SHEET-PORTERO"
       ],
       "proposal": "Añadir panel de conocimiento del expediente al puesto existente: hechos con procedencia, versiones y variantes capturadas desde la lectura PPP confirmada, decisiones y próximos pasos; capacidades Jev, exportación Markdown y conexión Obsidian diferenciadas. Capturar sólo metadatos con revisión esperada e ID estable, sin enviar cifras financieras desde el panel. Exportar Markdown portable mediante descarga explícita sin afirmar sincronización con un vault. Conservar voz, navegador, PPP, autorización y fuentes canónicas. Comparar dos capturas muestra diferencias y faltantes, sin inferir ganador. La bóveda ZIP portable conserva archivos Markdown y enlaces; no instala ni sincroniza Obsidian. Proyectar una subtarea antigua running con objetivo detenido como interrumpida, sin mutar su registro. Incorporar modalidad, escenario, revisión y horizonte únicamente cuando el puente PPP entregue metadatos reales.",
-      "status": "implementado_local",
+      "status": "publicado",
       "approval": "Dirección autorizó implementar capacidades, tablero y memoria/versiones PPP con Jev y Obsidian. Esta entrega de portal prepara consumidor y pruebas; backend, publicación y aceptación se registran por separado.",
       "tests": [
         "node scripts/arquitectura.cjs --check",
@@ -8213,9 +8213,11 @@
         "Pruebas aisladas de contrato, recibo perdido, reintento idéntico, conflicto, cambio de expediente, revocación y exportación Markdown.",
         "Chromium con transporte sintético: panel, captura y descarga, errores sin perder la conversación, escritorio/móvil y cero escrituras de negocio.",
         "Probar ZIP STORE/CRC-32, rutas relativas y límites UTF-8 de la bóveda; rechazar enlaces de fuente inseguros y contenido sin procedencia.",
-        "Comprobar proyección de subtareas interrumpidas y preservación de sus estados canónicos."
+        "Comprobar proyección de subtareas interrumpidas y preservación de sus estados canónicos.",
+        "Publicación Pages del mergec45e0f7 y Verificar YOD OS confirmados: https://github.com/yodesarrollomx/yod-portal/actions/runs/37399848446 y https://github.com/yodesarrollomx/yod-portal/actions/runs/37399848701.",
+        "Head207d14e9: 393 pruebas/atlas (https://github.com/yodesarrollomx/yod-portal/actions/runs/37398901161) y Chromium sintético (https://github.com/yodesarrollomx/yod-portal/actions/runs/37398901159). Diagnóstico del proveedor OpenAI real, herramientas/audio/cierre, recibido a2026-10-06T01:34:59Z; no micrófono físico."
       ],
-      "deployment": "Consumidor preparado en PR100 sobre main466db10. Head a9413239: 390 pruebas y verificadores OS aprobados (runs37398477844/37398477241), Chromium aislado en1280×900/390×844 aprobado (37398478599), dos capturas sintéticas. El registro inicial sin fecha y los metadatos reales de modalidad/modelo/horizonte se conservan sin inferencias. El PR permanece borrador: no acredita backend publicado, escritura de negocio, audio físico, aceptación de Dirección ni sincronización Obsidian.",
+      "deployment": "Portal PR100 integrado en c45e0f7d8a280b482c865ce80b8c9244e8b7a5e7. Pages publicado (run37399848446) y verificadores OS del merge aprobados (37399848701). Head final207d14e9: 393 pruebas y atlas aprobados (37398901161), verificadores OS (37398901195) y Chromium sintético1280×900/390×844 (37398901159), dos capturas en artifact11384077589. Backend PR26/27 integrado y publicado en c9cf174049037ab99e5a086d35c9cb0900969f65; diagnóstico con proveedor OpenAI real confirmó herramientas, salida de audio y cierre a2026-10-06T01:34:59Z según recibo del coordinador. Cotejo HTTP byte a byte de recursos de esta entrega pendiente de registrar. La exportación produce Markdown/bóveda portable: no instala Obsidian, no acredita Sync ni migración total de documentos. Las pruebas de voz no acreditan micrófono físico, conversación de Dirección o aprobación de negocio. Escrituras operativas y aceptación final se comprueban por separado.",
       "rollback": "Revertir panel, imports y caché por PR; conservar voz, PPP, navegador, expediente, IDs, versiones, fuentes, decisiones y recibos. No borrar datos de negocio ni vaults."
     }
   ],
