@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-05.94-accesos-sesion-172",
+  "revision": "2026-10-06.95-accesos-sesion-172",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8382,6 +8382,25 @@
       ],
       "deployment": "Frontend implementado en rama y validado con JavaScript real/VM/DOM/red sintéticos. No se alteró backend ni usuarios. Publicación y sesión real administradora pendientes; pantalla compartida muestra Google y Sin sesión. Sala172 sigue abierto.",
       "rollback": "Revertir frontend y pin de Atlas por PR, preservando usuarios, roles, tableros, sesiones, bitácoras, fórmulas, endpoint y despliegue GAS. No borrar ni restaurar datos."
+    },
+    {
+      "id": "CHG-YOD-INTEGRACIONES-OAUTH-094",
+      "components": [
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Publicar presentación y privacidad de YOD Integraciones para configurar la pantalla OAuth de administración de Apps Script. Páginas estáticas sin sesión, formularios ni acceso a datos operativos; no cambia autorizaciones o despliegues de Google.",
+      "status": "implementado_local",
+      "approval": "Dirección autorizó configurar la integración directa de Apps Script y continuar su habilitación.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs"
+      ],
+      "deployment": "Propuesto para GitHub Pages mediante PR; publicación de la marca en Google y acceso efectivo a la API pendientes de comprobación independiente.",
+      "rollback": "Revertir la incorporación de integraciones/ y el registro del modelo. No modifica los datos, las credenciales ni las implementaciones Apps Script."
     }
   ],
   "data_contracts": [
@@ -10208,6 +10227,13 @@
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "integraciones/",
+      "components": [
+        "SYS-YOD-OS"
       ]
     }
   ]
