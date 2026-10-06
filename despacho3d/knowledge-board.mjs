@@ -158,6 +158,13 @@ export class KnowledgeBoard{
   finally{if(this.current(own,caseId)){this.busy=false;this.emit();}}
  }
 }
+// The caller also checks authority after awaiting the controller: a case change
+// can occur in the microtask between its validated return and a download/render.
+export async function withCurrentKnowledge(controller,operation,consume,isAlive=()=>true){
+ const own=controller.epoch,caseId=controller.caseId,value=await operation();
+ if(!value||!isAlive()||!controller.current(own,caseId))return false;
+ consume(value);return true;
+}
 export function mountKnowledgeBoard({container,request,getCase,onUnauthorized=()=>{},doc=document,win=window}){
  const controller=new KnowledgeBoard({request,getCase,onUnauthorized});
  const el=(tag,text,cls)=>{const n=doc.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
@@ -175,15 +182,16 @@ export function mountKnowledgeBoard({container,request,getCase,onUnauthorized=()
  const compareForm=el('form',undefined,'knowledge-compare'),left=el('select'),right=el('select'),compareButton=el('button','Comparar versiones'),comparison=el('div',undefined,'knowledge-comparison');
  left.setAttribute('aria-label','Primera versión');right.setAttribute('aria-label','Segunda versión');compareButton.type='submit';
  compareForm.append(el('h3','Comparar dos lecturas guardadas'),left,right,compareButton);root.append(compareForm,comparison);
- compareForm.addEventListener('submit',async e=>{e.preventDefault();comparison.replaceChildren();const result=await controller.compare(left.value,right.value);if(result&&!disposed)paintComparison(result);});
+ compareForm.addEventListener('submit',async e=>{e.preventDefault();comparison.replaceChildren();await withCurrentKnowledge(controller,()=>controller.compare(left.value,right.value),paintComparison,()=>!disposed);});
  const grid=el('div',undefined,'knowledge-grid');root.append(grid);container.append(root);
  let downloadURL=null,disposed=false,comparisonRevision=null;
  function revoke(){if(downloadURL){win.URL.revokeObjectURL(downloadURL);downloadURL=null;}}
  async function download(vault){
-  const out=await controller.exportMarkdown();if(!out||disposed)return;
-  let blob;try{blob=vault?createVaultZip(out.files):new Blob([out.markdown],{type:'text/markdown;charset=utf-8'});}catch{notice.textContent='La bóveda no se confirmó; no se descargó un archivo incompleto.';return;}
-  revoke();downloadURL=win.URL.createObjectURL(blob);const a=el('a');a.href=downloadURL;a.download=vault?out.filename.replace(/\.md$/i,'.zip'):out.filename;root.append(a);a.click();a.remove();win.setTimeout(revoke,1000);
-  if(vault)notice.textContent='Bóveda preparada para abrir en Obsidian; sincronización no conectada.';
+  await withCurrentKnowledge(controller,()=>controller.exportMarkdown(),out=>{
+   let blob;try{blob=vault?createVaultZip(out.files):new Blob([out.markdown],{type:'text/markdown;charset=utf-8'});}catch{notice.textContent='La bóveda no se confirmó; no se descargó un archivo incompleto.';return;}
+   revoke();downloadURL=win.URL.createObjectURL(blob);const a=el('a');a.href=downloadURL;a.download=vault?out.filename.replace(/\.md$/i,'.zip'):out.filename;root.append(a);a.click();a.remove();win.setTimeout(revoke,1000);
+   if(vault)notice.textContent='Bóveda preparada para abrir en Obsidian; sincronización no conectada.';
+  },()=>!disposed);
  }
  function paintComparison(value){
   comparisonRevision=value.revision;comparison.replaceChildren();comparison.append(el('h3','Cambios entre las lecturas'),el('p',value.warning||'Comparación de lecturas guardadas. No determina una alternativa ganadora.'),el('p','Revisiones PPP: '+value.source_revisions.join(' / ')+' · Lecturas: '+value.observed_at.map(d=>new Date(d).toLocaleString('es-MX')).join(' / ')));

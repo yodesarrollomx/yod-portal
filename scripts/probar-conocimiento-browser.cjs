@@ -22,6 +22,7 @@ const server=http.createServer((req,res)=>{
    await page.route('**/*',async route=>{
     const request=route.request(),url=new URL(request.url());
     if(url.origin===base)return route.continue();
+    if(url.origin==='https://yodesarrollomx.github.io'&&url.pathname==='/potenciales-yod/patrimonial.html'&&url.searchParams.get('open')===CASE)return route.fulfill({status:200,contentType:'text/html',body:'<!doctype html><html lang="es"><p>PPP sintético aislado</p></html>'});
     if(url.origin!=='https://synthetic-cloud.onrender.com')return route.abort('blockedbyclient');
     let payload={};try{payload=JSON.parse(request.postData()||'{}');}catch{}
     let body={ok:true},status=200;
@@ -44,12 +45,12 @@ const server=http.createServer((req,res)=>{
    await page.evaluate(async()=>{
     const {createWorkspace}=await import('/despacho3d/agent-workspace.mjs');
     const selection={ok:true,case_id:'synthetic-case',name:'Expediente sintético',can_enqueue:true,agent_ready:true,goals:{ready:false}};
-    window.selection=selection;window.mediaRequests=0;
+    window.selection=selection;window.mediaRequests=0;window.sourceReads=0;
     navigator.mediaDevices.getUserMedia=async()=>{window.mediaRequests++;throw Error('Panel must not request a microphone');};
     const audioContext=new AudioContext(),oscillator=audioContext.createOscillator(),gain=audioContext.createGain(),destination=audioContext.createMediaStreamDestination();
     gain.gain.value=.01;oscillator.connect(gain);gain.connect(destination);oscillator.start();await audioContext.resume();
     const audio=document.getElementById('voice-audio');audio.srcObject=destination.stream;await audio.play();window.voiceTrack=destination.stream.getAudioTracks()[0];window.voiceTrackId=window.voiceTrack.id;
-    window.workspace=createWorkspace({container:document.getElementById('panel'),getSelection:()=>window.selection,transport:{mintFastSession:async()=>({ok:true,case_id:selection.case_id,token:'A'.repeat(40)+'.'+'a'.repeat(64),endpoint:'https://synthetic-cloud.onrender.com',expires_at:Date.now()+600000}),read:async()=>({ok:true,case_id:selection.case_id,source_revision:'rev-1',context:{identity:{case_id:selection.case_id,name:selection.name}},state:{updated_at:'2026-10-05T12:00:00Z'},conversation:[],jobs:[],events:[]}),dispose(){}}});
+    window.workspace=createWorkspace({container:document.getElementById('panel'),getSelection:()=>window.selection,transport:{mintFastSession:async()=>({ok:true,case_id:selection.case_id,token:'A'.repeat(40)+'.'+'a'.repeat(64),endpoint:'https://synthetic-cloud.onrender.com',expires_at:Date.now()+600000}),read:async()=>{window.sourceReads++;if(window.sourceReads===1)throw Error('transient-source-failure');return {ok:true,case_id:selection.case_id,source_revision:'rev-1',context:{identity:{case_id:selection.case_id,name:selection.name},documents:[['source-ppp','PPP registrado','https://docs.google.com/spreadsheets/d/SYNTHETIC_ONLY/edit','PPP']]},state:{updated_at:'2026-10-05T12:00:00Z'},conversation:[],jobs:[],events:[]};},dispose(){}}});
     window.workspace.open(selection,'knowledge');
    });
    await page.locator('.knowledge-board[data-state="ready"]').waitFor();
@@ -67,6 +68,8 @@ const server=http.createServer((req,res)=>{
    assert.match(await page.locator('.knowledge-comparison').innerText(),/Sin criterios para evaluar preferencia/);
    const downloadWait=page.waitForEvent('download');await page.getByRole('button',{name:'Descargar bóveda',exact:true}).click();const download=await downloadWait;assert.match(download.suggestedFilename(),/\.zip$/);const downloaded=await download.path();assert.equal(fs.readFileSync(downloaded).readUInt32LE(0),0x04034b50);
    exportFail=true;await page.getByRole('button',{name:'Descargar Markdown',exact:true}).click();await page.locator('.knowledge-notice').filter({hasText:'registro no está disponible'}).waitFor();
+   await page.evaluate(()=>{window.workspace.setActive(false);window.workspace.open(window.selection,'ppp');});
+   await page.locator('.workspace-board iframe').waitFor();assert.equal(await page.evaluate(()=>window.sourceReads),2);
    for(const tab of ['browser','ppp','tasks','knowledge'])await page.locator('[data-tab="'+tab+'"]').click();
    await page.locator('.knowledge-board[data-state="ready"]').waitFor();
    assert.deepEqual(await page.evaluate(()=>({track:window.voiceTrack.readyState,same:window.voiceTrack.id===window.voiceTrackId,paused:document.getElementById('voice-audio').paused,requests:window.mediaRequests})),{track:'live',same:true,paused:false,requests:0});

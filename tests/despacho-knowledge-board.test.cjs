@@ -83,3 +83,24 @@ test('empty case has no invented update time; real model metadata remains distin
  const value=validateKnowledgeBoard(raw,CASE);assert.equal(value.updated_at,null);assert.equal(value.versions[0].kind,'variant');assert.equal(value.versions[0].modality,'Patrimonial');assert.deepEqual(value.versions[0].horizon,{value:8,unit:'year'});
  raw.versions[0].horizon={value:8,unit:'guessed'};assert.throws(()=>validateKnowledgeBoard(raw,CASE),/invalid_knowledge/);
 });
+
+test('final microtask authority guard prevents stale export download and comparison render',async()=>{
+ const {KnowledgeBoard,withCurrentKnowledge}=await knowledge();
+ for(const invalidate of ['case','hide','dispose']){
+  let current=CASE,effects=0,alive=true;
+  const client=new KnowledgeBoard({getCase:()=>current,request:async(path)=>path.endsWith('/board')?board():({ok:true,filename:'case-a.md',markdown:'# A',revision:'0'})});
+  client.open(CASE);await client.load();
+  const result=withCurrentKnowledge(client,()=>client.exportMarkdown(),()=>effects++,()=>alive);
+  Promise.resolve().then(()=>{if(invalidate==='case'){current='another-case';client.open(current);}else if(invalidate==='hide')client.hide();else alive=false;});
+  assert.equal(await result,false);assert.equal(effects,0);
+ }
+ let current=CASE,painted=false;
+ const client=new KnowledgeBoard({getCase:()=>current,request:async()=>board()});client.open(CASE);await client.load();
+ const outcome=withCurrentKnowledge(client,async()=>({changes:[]}),()=>{painted=true;});
+ current='another-case';client.open(current);assert.equal(await outcome,false);assert.equal(painted,false);
+});
+
+test('queued parent labels its old running child as pending resumption without mutating it',async()=>{
+ const {taskDisplay}=await import('../despacho3d/agent-workspace.mjs'),task={status:'running'};
+ assert.equal(taskDisplay(task,'queued'),'Pendiente de reanudación');assert.equal(task.status,'running');
+});
