@@ -84,14 +84,17 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   assert.equal(await frame.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
   await page.screenshot({path:path.join(out,'ppp-compartido-'+viewport.width+'.png'),fullPage:true});
   if(viewport.width>850)console.log('STATION_PREVIEW='+ (await page.screenshot({type:'jpeg',quality:45})).toString('base64'));
-  await frame.locator('.voice-close').click();await frame.evaluate(()=>window.switchProject());
+  await frame.locator('#voice-start').click();await frame.locator('[data-voice-phase="listening"]').waitFor();
+  const reopened=await frame.evaluate(async()=>{window.switchProject();const attempt=window.YodVoiceWorkspace.openForCase('synthetic-second');window.voicePeer.channel.onmessage?.({data:JSON.stringify({type:'session.output_transcript.delta',event_id:'old-case-late',delta:'late fragment from previous project',start_ms:1,end_ms:2})});return attempt;});
+  assert.equal(reopened,false,'another project cannot enter an unfinished voice session');
+  await frame.locator('.realtime-dialog').waitFor({state:'hidden'});
   await frame.locator('#circulo-open').click();
   await frame.locator('#voice-title').filter({hasText:'Ruiseñor de prueba'}).waitFor();
   await frame.locator('.workspace-board iframe[src*="vertical.html?open=synthetic-second"]').waitFor();
   assert.equal(await iframe.evaluate(el=>el.isConnected),false,'previous project frame is removed');
   assert.equal(await frame.locator('#voice-transcript article').count(),0);
   assert.equal(await frame.locator('#station-message').inputValue(),'');
-  assert.equal(sessions,1,'switching projects does not activate microphone');
+  assert.equal(sessions,2,'switching projects does not activate another microphone session');
   await page.screenshot({path:path.join(out,'segundo-proyecto-'+viewport.width+'.png'),fullPage:true});
   assert.deepEqual(errors,[]);await context.close();
  }
