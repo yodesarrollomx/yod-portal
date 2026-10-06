@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-06.94-integraciones-oauth",
+  "revision": "2026-10-06.95-accesos-sesion-172",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8362,6 +8362,26 @@
       ],
       "deployment": "Código preparado con puente y herramientas existentes. Pruebas aisladas y publicación se registran en PR; no acredita disponibilidad continua de Sheets ni resultados financieros.",
       "rollback": "Revertir navegación, vista compartida y cache bumps conservando los datos PPP, variantes, recibos, voz y contratos existentes."
+    },
+    {
+      "id": "CHG-SALA-ACCESOS-SESION-172-094",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-YOD-OS",
+        "GAS-PORTERO",
+        "SHEET-PORTERO"
+      ],
+      "proposal": "Validar administración de accesos sobre la sesión actual y el Portero original: consultar rol en servidor, esperar canje de parámetros de entrada, descartar respuestas de sesiones anteriores y limpiar/inhabilitar la vista al cambiar o cerrar sesión. Eliminar selección persistente de respaldo; conservar autoridad del servidor, usuarios, roles, códigos de tableros y DP existente. Sin cambios de GAS ni datos.",
+      "status": "implementado_local",
+      "approval": "Dirección autorizó resolver Sala172 y continuar autónomamente los pendientes, preservando la autorización real del servidor.",
+      "tests": [
+        "45 regresiones Node PASS:33 nuevas+12 gates;37 adicionales preservadas. Canje/listado/read timeout20s, reintento manual sólo de lecturas y respuestas de sesiones antiguas.",
+        "Conservar DP, códigos no dibujados y parámetros de upsert de rol/nombre/boards; no reintentar automáticamente escrituras.",
+        "git diff --check; sintaxis de scripts HTML y regresiones de acceso existentes; CI sobre head exacto.",
+        "Comprobar publicación por Pages y recursos públicos; verificar sesión real administradora por separado antes de cerrar Sala172."
+      ],
+      "deployment": "Frontend implementado en rama y validado con JavaScript real/VM/DOM/red sintéticos. No se alteró backend ni usuarios. Publicación y sesión real administradora pendientes; pantalla compartida muestra Google y Sin sesión. Sala172 sigue abierto.",
+      "rollback": "Revertir frontend y pin de Atlas por PR, preservando usuarios, roles, tableros, sesiones, bitácoras, fórmulas, endpoint y despliegue GAS. No borrar ni restaurar datos."
     },
     {
       "id": "CHG-YOD-INTEGRACIONES-OAUTH-094",
