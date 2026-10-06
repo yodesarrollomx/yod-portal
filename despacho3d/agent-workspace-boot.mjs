@@ -1,4 +1,4 @@
-import {createWorkspace} from './agent-workspace.mjs?v=1';
+import {createWorkspace} from './agent-workspace.mjs?v=2';
 const button=document.getElementById('computer-open');
 if(button){
  const dialog=document.createElement('dialog');dialog.className='workspace-dialog';dialog.setAttribute('aria-label','Puesto de Gastón');

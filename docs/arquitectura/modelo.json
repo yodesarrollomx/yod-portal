@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-05.84-despacho-puesto-publicado",
+  "revision": "2026-10-05.85-despacho-conocimiento",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8188,6 +8188,35 @@
       ],
       "deployment": "Portal PR98 integrado en9fd6140, PPP PR12 en5b84278 y servidor privado PR22 enf5ae7fd. Renderlive dep-db1vglmk1f9s738hq33g a19:20:37UTC, diagnósticos desactivados tras aprobación y navegador habilitado. Publicación Pages completada en ambos repositorios. Cotejo HTTP run37363146714 a19:30:12UTC: readytrue, voiceavailable/operativo, goalsready, navegadoridle/available y onceassets idénticos a sus commits publicados. Contexto estaba loading; es disponibilidad puntual, no una garantía continua. Historial reciente de voz aislado por caso/actor; registro de objetivos exigido antes de prometer continuidad. PPP se aplica por acción humana usando CAS existente. No acredita revisión audiovisual nueva de YouTube, acceso a NotebookLM, instalación de56 trabajadores, QA independiente ni cierre de chinches172/44/36. Aceptación física de Dirección pendiente.",
       "rollback": "Revertir módulo de puesto y ampliaciones de herramientas; conservar audio, JSON Live, permisos, fuentes, expedientes, outbox, objetivos y evidencias. No restaurar datos de negocio."
+    },
+    {
+      "id": "CHG-DESPACHO-CONOCIMIENTO-078",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE",
+        "SYS-POTENCIALES",
+        "SHEET-PPP-MODELOS",
+        "SHEET-PORTERO"
+      ],
+      "proposal": "Añadir panel de conocimiento del expediente al puesto existente: hechos con procedencia, versiones y variantes capturadas desde la lectura PPP confirmada, decisiones y próximos pasos; capacidades Jev, exportación Markdown y conexión Obsidian diferenciadas. Capturar sólo metadatos con revisión esperada e ID estable, sin enviar cifras financieras desde el panel. Exportar Markdown portable mediante descarga explícita sin afirmar sincronización con un vault. Conservar voz, navegador, PPP, autorización y fuentes canónicas. Comparar dos capturas muestra diferencias y faltantes, sin inferir ganador. La bóveda ZIP portable conserva archivos Markdown y enlaces; no instala ni sincroniza Obsidian. Proyectar una subtarea antigua running con objetivo detenido como interrumpida, sin mutar su registro. Incorporar modalidad, escenario, revisión y horizonte únicamente cuando el puente PPP entregue metadatos reales.",
+      "status": "implementado_local",
+      "approval": "Dirección autorizó implementar capacidades, tablero y memoria/versiones PPP con Jev y Obsidian. Esta entrega de portal prepara consumidor y pruebas; backend, publicación y aceptación se registran por separado.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Pruebas aisladas de contrato, recibo perdido, reintento idéntico, conflicto, cambio de expediente, revocación y exportación Markdown.",
+        "Chromium con transporte sintético: panel, captura y descarga, errores sin perder la conversación, escritorio/móvil y cero escrituras de negocio.",
+        "Probar ZIP STORE/CRC-32, rutas relativas y límites UTF-8 de la bóveda; rechazar enlaces de fuente inseguros y contenido sin procedencia.",
+        "Comprobar proyección de subtareas interrumpidas y preservación de sus estados canónicos."
+      ],
+      "deployment": "Consumidor preparado en PR100 sobre main466db10. Head a9413239: 390 pruebas y verificadores OS aprobados (runs37398477844/37398477241), Chromium aislado en1280×900/390×844 aprobado (37398478599), dos capturas sintéticas. El registro inicial sin fecha y los metadatos reales de modalidad/modelo/horizonte se conservan sin inferencias. El PR permanece borrador: no acredita backend publicado, escritura de negocio, audio físico, aceptación de Dirección ni sincronización Obsidian.",
+      "rollback": "Revertir panel, imports y caché por PR; conservar voz, PPP, navegador, expediente, IDs, versiones, fuentes, decisiones y recibos. No borrar datos de negocio ni vaults."
     }
   ],
   "data_contracts": [
@@ -9184,6 +9213,45 @@
         "Conservar deltas y tiempos exactos, cierre hasta session.closed, historial y resultados/acciones como registros distintos. Cancelar una tarea no cuelga la voz.",
         "Distinguir pruebas sintéticas, API real, publicación y aceptación en dispositivo; no prometer perfección o conexiones no comprobadas."
       ]
+    },
+    {
+      "id": "CTR-DESPACHO-CONOCIMIENTO",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE",
+        "SYS-POTENCIALES",
+        "SHEET-PPP-MODELOS",
+        "SHEET-PORTERO"
+      ],
+      "source": "Continuación autorizada del puesto de Gastón. Contrato de lectura, captura de versiones y exportación portable, con transporte de prueba aislado.",
+      "input": [
+        "Credencial efímera del expediente vigente; servidor resuelve identidad y ámbito.",
+        "POST /fast/knowledge/board y /fast/knowledge/export: cuerpo vacío.",
+        "POST /fast/knowledge/capture: title, kind version|variant, parent_id, request_id y expected_revision. Nunca cantidades ni fórmulas del cliente.",
+        "POST /fast/knowledge/compare: left_id, right_id y criteria vacío para comparación descriptiva."
+      ],
+      "output": [
+        "Panel con revisión, fecha, capacidades, hechos, versiones/variantes, decisiones, próximos pasos y fuentes.",
+        "Captura con recibo exacto de solicitud; conflicto o resultado incierto explícitos.",
+        "Markdown portable con nombre seguro y revisión; conexión Obsidian sólo si existe sincronización comprobada.",
+        "Archivos Markdown portables reunidos en ZIP local tras validar rutas relativas únicas y límite total de dos MB.",
+        "Comparación de snapshots registrados: diferencias de entradas/resultados, unidades, valores ausentes y límites; ninguna recomendación automática."
+      ],
+      "invariants": [
+        "El panel consume datos autorizados reales; vacío, cargando, indisponible y desactualizado se presentan distintos.",
+        "El servidor captura únicamente un PPP confirmado sin cambios pendientes. Sheets conserva fórmulas y autoridad financiera.",
+        "Un reintento de guardado incierto conserva request_id y payload originales; no anunciar éxito sin recibo válido.",
+        "La exportación Markdown no acredita conexión ni sincronización con Obsidian. El navegador descarga sólo por acción explícita.",
+        "Cambiar expediente, revocar o cerrar borra la vista privada y descarta respuestas tardías. No persistir contenido en storage del navegador.",
+        "Los enlaces de fuente admiten sólo HTTP(S) sanitizados. Datos y Markdown se tratan como contenido, nunca instrucciones.",
+        "Cambiar panel o fallar una herramienta de conocimiento no abre ni detiene audio, inferencia o navegación.",
+        "Pruebas sintéticas y CI no acreditan escritura real ni aceptación del propietario.",
+        "La modalidad PPP no es el tipo versión/variante ni una etapa de avance. No inferirla del nombre del escenario.",
+        "Una subtarea running bajo padre detenido se muestra interrumpida y pendiente de conciliación. La presentación no altera su estado canónico.",
+        "Conocimiento se consulta al abrir, por acción de Actualizar y tras recibo; no hace polling ni lecturas concurrentes periódicas de contexto."
+      ]
     }
   ],
   "path_ownership": [
@@ -9878,6 +9946,46 @@
         "SYS-POTENCIALES",
         "GAS-PORTERO",
         "SHEET-PORTERO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/knowledge-board.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/knowledge-board.css",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-knowledge-board.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/probar-conocimiento-browser.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": ".github/workflows/conocimiento-browser.yml",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
       ]
     }
   ]
