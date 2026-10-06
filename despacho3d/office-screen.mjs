@@ -4,7 +4,7 @@ import {workHeadline} from './work-observer.mjs?v=1';
 export function createOfficeScreen(mesh,onChange=()=>{}){
  const canvas=document.createElement('canvas');canvas.width=768;canvas.height=400;const ctx=canvas.getContext('2d');
  const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;mesh.material.map?.dispose();mesh.material.map=texture;
- mesh.userData.agentComputer=true;let generation=0,latest=null,disposed=false;
+ mesh.userData.agentComputer=true;let generation=0,latest=null,disposed=false,lastPaint=null;
  const line=(s,y,size=27)=>{ctx.font='500 '+size+'px Arial';ctx.fillText(String(s||''),24,y,720);};
  function draw(state,picture=null){
   ctx.fillStyle='#162a30';ctx.fillRect(0,0,768,400);ctx.fillStyle='#ded6ba';line('COMPUTADORA · '+workHeadline(state),42,22);
@@ -12,7 +12,7 @@ export function createOfficeScreen(mesh,onChange=()=>{}){
   else{ctx.fillStyle='#eef1e8';line(workHeadline(state),130,34);line(state.work?.title||'Selecciona el puesto para consultar',194,27);line(state.work?.progress?.progress?.tasks?.find(t=>t.status==='running')?.title||'',250,25);ctx.fillStyle='#c1cbb9';line(state.work?'Registro · '+new Date(state.work.updated_at).toLocaleTimeString():'',350,23);}
   texture.needsUpdate=true;onChange();
  }
- function update(state){if(disposed)return;latest=state;const own=++generation;draw(state);
+ function update(state){if(disposed)return;latest=state;const key=JSON.stringify([state.case_id,state.phase,state.work?.run_id,state.work?.updated_at,state.work?.phase,state.work?.current_tool,state.screen,!!state.image]);if(lastPaint===key)return;lastPaint=key;const own=++generation;draw(state);
   if(state.phase==='ready'&&state.image&&state.screen?.owner?.run_id===state.work?.run_id){const image=new Image();image.onload=()=>{if(!disposed&&own===generation)draw(state,image);};image.src=state.image;}
  }
  update({phase:'unauthorized',case_id:null,work:null});

@@ -50,13 +50,15 @@ export function createWorkObserver({request,getSelection,onChange=()=>{},now=Dat
   const valid=()=>!disposed&&own===generation&&getSelection()?.case_id===caseId;
   try{
    const value=validateObservation(await request('/computer/work',{},caseId),caseId);if(!valid())return;
-   const old=state.screen;state={...state,...value,phase:value.available?'ready':'unavailable',checked_at:now(),image:null};
+   const old=state.screen;state={...state,...value,phase:value.available?'ready':'unavailable',checked_at:now(),image:old?.captured_at===value.screen?.captured_at&&old?.owner?.run_id===value.work?.run_id?cachedImage:null};
+   emit();
    // Fetch the JPEG only when its dated capture changes, never on every poll.
    if(value.screen?.captured_at&&value.screen.owner?.run_id===value.work?.run_id){
-    if(old?.captured_at===value.screen.captured_at&&old?.owner?.run_id===value.screen.owner.run_id)state.image=cachedImage;
-    else{const snap=await request('/computer/state',{},caseId);if(!valid())return;
+    if(cachedImage&&old?.captured_at===value.screen.captured_at&&old?.owner?.run_id===value.screen.owner.run_id)state.image=cachedImage;
+    else{try{const snap=await request('/computer/state',{},caseId);if(!valid())return;
      if(snap.capture_work?.case_id===caseId&&snap.capture_work?.run_id===value.work.run_id&&snap.captured_at===value.screen.captured_at&&typeof snap.image==='string'&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(snap.image)&&snap.image.length<=900100)state.image=snap.image;
-    }
+    }catch(error){if(['unauthorized','forbidden'].includes(error?.message))throw error;if(!valid())return;state.image=null;}}
+   
    }
    cachedImage=state.image;emit();
   }catch(error){if(valid()){const denied=['unauthorized','forbidden'].includes(error?.message);state={phase:denied?'unauthorized':'unavailable',case_id:caseId,work:denied?null:state.work,screen:null,image:null};cachedImage=null;emit();}}

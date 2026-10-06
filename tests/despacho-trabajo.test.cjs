@@ -25,3 +25,11 @@ test('capture is retrieved once and never reused for another execution',async()=
  o.select();await new Promise(r=>setImmediate(r));await o.refresh();assert.equal(calls.filter(p=>p==='/computer/state').length,1);assert.ok(o.snapshot().image);
  f.work.run_id='new-run';f.work.sources=[];await o.refresh();assert.equal(o.snapshot().image,null);assert.equal(calls.filter(p=>p==='/computer/state').length,1);o.dispose();
 });
+
+test('slow or failed screenshot does not delay or erase confirmed activity; retry stays read only',async()=>{
+ const {createWorkObserver}=await mod();let f=fixture(),release;
+ f.screen={captured_at:'2026-10-06T10:02:00Z',revision:2,owner:{case_id:f.case_id,run_id:f.work.run_id,goal_id:f.work.goal_id,task_id:'task-1'}};
+ const o=createWorkObserver({getSelection:()=>({case_id:f.case_id}),schedule:()=>1,cancel:()=>{},request:async path=>path==='/computer/work'?f:new Promise((_resolve,reject)=>{release=()=>reject(Error('timeout'));})});
+ o.select();await new Promise(r=>setImmediate(r));assert.equal(o.snapshot().phase,'ready');assert.equal(o.snapshot().work.goal_id,f.work.goal_id);release();await new Promise(r=>setImmediate(r));
+ assert.equal(o.snapshot().phase,'ready');assert.equal(o.snapshot().image,null);o.dispose();
+});
