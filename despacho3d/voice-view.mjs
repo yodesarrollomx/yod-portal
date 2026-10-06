@@ -2,12 +2,12 @@
 export function voiceView(state = {}) {
   const live = !['idle','error'].includes(state.phase);
   const listening = state.phase === 'listening';
-  const titles = {idle:state.finalized?'Conversación finalizada':'Hablar con Gastón',
-    error:'No se pudo conectar',starting:'Conectando con Gastón',listening:state.muted?'Micrófono en pausa':'Listo para hablar',
+  const titles = {idle:state.finalized?'Conversación finalizada':'Disponible para conversar',
+    error:'No se pudo conectar',starting:'Conectando voz',listening:state.muted?'Micrófono en pausa':'Listo para hablar',
     reconnecting:'Recuperando conexión',closing:'Finalizando conversación'};
   let context = !live ? 'El expediente se comprueba al conectar. Las tareas conservan su estado.' :
     state.mode === 'basic' ? 'Conversación básica: sin acceso a datos ni herramientas del expediente.' :
-    state.context_phase === 'ready' && state.tools_ready ? 'Expediente conectado. Gastón puede consultar las herramientas autorizadas.' :
+    state.context_phase === 'ready' && state.tools_ready ? 'Expediente conectado. Herramientas autorizadas disponibles.' :
     state.context_phase === 'unavailable' ? 'Expediente pendiente. Puedes conversar; los datos y acciones del proyecto aún no están disponibles.' :
     state.context_phase === 'installing' ? 'Confirmando acceso a las herramientas del expediente…' :
     'Cargando expediente en segundo plano. Sus datos todavía no están confirmados.';

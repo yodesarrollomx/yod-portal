@@ -227,7 +227,7 @@ test('explicit Escúchame activates the microphone while pausing remote playback
 test('UX keeps voice, authorized tools and durable history independent',async()=>{
  const {voiceView}=await import('../despacho3d/voice-view.mjs');
  let v=voiceView({phase:'starting',context_phase:'preparing'});
- assert.equal(v.title,'Conectando con Gastón');assert.doesNotMatch(v.context,/Puedes hablar/);
+ assert.equal(v.title,'Conectando voz');assert.doesNotMatch(v.context,/Puedes hablar/);
  v=voiceView({phase:'listening',context_phase:'unavailable',pending:2,blocks:2,saved:0});
  assert.equal(v.title,'Listo para hablar');assert.match(v.context,/aún no/);assert.match(v.history,/pendiente/);
  v=voiceView({phase:'idle',finalized:true,blocks:2,saved:1,pending:1});
