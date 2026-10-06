@@ -114,7 +114,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   if(frame||!selected)return;
   boardLink=resolveBoard(selected,conversation?.documents||[]);
   if(!boardLink){pppNote.textContent=conversation?'No se encontró un vínculo único del PPP para este proyecto. Revisa sus fuentes registradas.':'Buscando el PPP registrado…';return;}
-  frame=el('iframe');frame.title='Plan de potencial · '+selected.name;frame.referrerPolicy='no-referrer';frame.src=boardLink.url;frame.allow='';nonce=win.crypto.randomUUID();
+  frame=el('iframe');frame.title='Plan de potencial · '+selected.name;frame.referrerPolicy=boardLink.bridge?'same-origin':'no-referrer';frame.src=boardLink.url;frame.allow='';nonce=win.crypto.randomUUID();
   frame.addEventListener('load',()=>postBoard('yod:ppp:hello'));pppHost.append(frame);
   pppNote.textContent=boardLink.bridge?'Abriendo el modelo registrado…':'Hoja registrada del PPP. Su sesión de Google puede ser necesaria. La edición compartida todavía no está conectada para esta fuente.';
   const a=el('a','Abrir el PPP en otra pestaña ↗');a.href=boardLink.external;a.target='_blank';a.rel='noopener noreferrer';pppHost.append(a);
