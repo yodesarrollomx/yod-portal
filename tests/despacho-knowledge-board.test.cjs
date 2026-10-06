@@ -76,3 +76,10 @@ test('stopped parent never presents an old running task as ongoing execution',as
  for(const parent of ['stopped','awaiting_data','ready_for_review','completed'])assert.equal(taskDisplay(task,parent),'Interrumpida · pendiente de conciliación');
  assert.equal(taskDisplay(task,'running'),'Trabajando');assert.equal(task.status,'running');
 });
+
+test('empty case has no invented update time; real model metadata remains distinct from variant kind',async()=>{
+ const {validateKnowledgeBoard}=await knowledge(),raw=board();
+ raw.updated_at=null;raw.versions[0].kind='variant';raw.versions[0].modality='Patrimonial';raw.versions[0].model_revision='model-r3';raw.versions[0].horizon={value:8,unit:'year'};
+ const value=validateKnowledgeBoard(raw,CASE);assert.equal(value.updated_at,null);assert.equal(value.versions[0].kind,'variant');assert.equal(value.versions[0].modality,'Patrimonial');assert.deepEqual(value.versions[0].horizon,{value:8,unit:'year'});
+ raw.versions[0].horizon={value:8,unit:'guessed'};assert.throws(()=>validateKnowledgeBoard(raw,CASE),/invalid_knowledge/);
+});

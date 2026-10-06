@@ -36,7 +36,8 @@ export function validateKnowledgeBoard(raw,caseId){
   if(key!=='next_steps'||s.updated_at!==undefined){if(!date(s.updated_at))invalid();item.updated_at=s.updated_at;}
   if(key==='versions'){
    if(!['version','variant'].includes(s.kind))invalid();item.kind=s.kind;
-   for(const k of ['scenario_id','source_revision','revision','modality'])if(s[k]!==undefined&&s[k]!==null){if(!text(s[k],200,true))invalid();item[k]=s[k];}
+   for(const k of ['scenario_id','source_revision','revision','modality','model_revision'])if(s[k]!==undefined&&s[k]!==null){if(!text(s[k],200,true))invalid();item[k]=s[k];}
+   if(s.horizon!==undefined&&s.horizon!==null){if(!plain(s.horizon)||!Number.isFinite(s.horizon.value)||s.horizon.value<0||s.horizon.unit!=='year')invalid();item.horizon={value:s.horizon.value,unit:s.horizon.unit};}
    if(s.parent_id!==undefined&&s.parent_id!==null){if(!id(s.parent_id))invalid();item.parent_id=s.parent_id;}
   }
   return item;
@@ -185,7 +186,7 @@ export function mountKnowledgeBoard({container,request,getCase,onUnauthorized=()
   if(vault)notice.textContent='Bóveda preparada para abrir en Obsidian; sincronización no conectada.';
  }
  function paintComparison(value){
-  comparisonRevision=value.revision;comparison.replaceChildren();comparison.append(el('h3','Cambios entre las lecturas'),el('p',value.warning||'Comparación de lecturas guardadas. No determina una alternativa ganadora.'));
+  comparisonRevision=value.revision;comparison.replaceChildren();comparison.append(el('h3','Cambios entre las lecturas'),el('p',value.warning||'Comparación de lecturas guardadas. No determina una alternativa ganadora.'),el('p','Revisiones PPP: '+value.source_revisions.join(' / ')+' · Lecturas: '+value.observed_at.map(d=>new Date(d).toLocaleString('es-MX')).join(' / ')));
   if(!value.changes.length)comparison.append(el('p','No hay diferencias registradas entre estas lecturas.'));
   else{
    const table=el('table'),head=el('tr');for(const label of ['Campo','Primera lectura','Segunda lectura','Diferencia'])head.append(el('th',label));const thead=el('thead');thead.append(head);table.append(thead);
@@ -193,7 +194,7 @@ export function mountKnowledgeBoard({container,request,getCase,onUnauthorized=()
    for(const c of value.changes){const row=el('tr'),format=(present,v,unit)=>!present?'No registrado':v===null?'Pendiente':String(v)+(unit?' '+unit:'');row.append(el('th',(c.section==='inputs'?'Entrada: ':'Resultado: ')+c.field),el('td',format(c.before_present,c.before,c.before_unit)),el('td',format(c.after_present,c.after,c.after_unit)),el('td',c.delta===null?'No comparable':String(c.delta)));body.append(row);}
    table.append(body);comparison.append(table);
   }
-  const gapLabels={missing_value:'Falta un valor',missing_unit:'Falta una unidad',unit_mismatch:'Unidades distintas',different_scenarios:'Escenarios diferentes',criteria_required_for_evaluation:'Sin criterios para evaluar preferencia',feasibility_and_business_approval_not_evaluated:'Viabilidad y aprobación de negocio no evaluadas'};
+  const gapLabels={missing_model_revision:'Falta la revisión del modelo',different_model_revision:'Revisiones de modelo distintas',missing_horizon:'Falta el horizonte',different_horizon:'Horizontes distintos',missing_modality:'Falta la modalidad del modelo',different_modalities:'Modalidades distintas',missing_value:'Falta un valor',missing_unit:'Falta una unidad',unit_mismatch:'Unidades distintas',different_scenarios:'Escenarios diferentes',criteria_required_for_evaluation:'Sin criterios para evaluar preferencia',feasibility_and_business_approval_not_evaluated:'Viabilidad y aprobación de negocio no evaluadas'};
   if(value.gaps.length){comparison.append(el('h4','Faltantes y límites'));const list=el('ul');for(const gap of value.gaps)list.append(el('li',(gapLabels[gap.code]||'Comprobación pendiente')+(gap.field?' · '+gap.field:'')));comparison.append(list);}
  }
 
@@ -230,10 +231,10 @@ export function mountKnowledgeBoard({container,request,getCase,onUnauthorized=()
    if(!m[key].length)section.append(el('p',empty,'knowledge-empty'));
    for(const item of m[key]){
     const card=el('article',undefined,'knowledge-card'),top=el('div',undefined,'knowledge-card-heading');
-    top.append(el('h4',item.title),el('span',phases[item.status],'knowledge-badge'));card.append(top);
+    top.append(el('h4',item.title),el('span',key==='versions'&&item.status==='confirmed'?'Lectura guardada':phases[item.status],'knowledge-badge'));card.append(top);
     if(key==='facts')card.append(el('p',item.value===null?'Dato pendiente':String(item.value)+(item.unit?' '+item.unit:'')));
     else card.append(el('p',item.summary||'Sin resumen registrado.'));
-    if(key==='versions'){const info=[item.kind==='variant'?'Variante':'Versión',item.modality?'Modalidad: '+item.modality:'',item.scenario_id?'Escenario: '+item.scenario_id:'',item.source_revision?'PPP: '+item.source_revision:''];card.append(el('small',info.filter(Boolean).join(' · ')));if(item.parent_id)card.append(el('small','Origen: '+(m.versions.find(v=>v.id===item.parent_id)?.title||item.parent_id)));}
+    if(key==='versions'){const info=[item.kind==='variant'?'Variante':'Versión',item.modality?'Modalidad: '+item.modality:'',item.scenario_id?'Escenario: '+item.scenario_id:'',item.source_revision?'PPP: '+item.source_revision:'',item.model_revision?'Modelo: '+item.model_revision:'',item.horizon?'Horizonte: '+item.horizon.value+' años':''];card.append(el('small',info.filter(Boolean).join(' · ')));if(item.parent_id)card.append(el('small','Origen: '+(m.versions.find(v=>v.id===item.parent_id)?.title||item.parent_id)));}
     if(item.updated_at)card.append(el('small',new Date(item.updated_at).toLocaleString('es-MX')));references(card,item.source_ids,m.sources);section.append(card);
    }grid.append(section);
   }

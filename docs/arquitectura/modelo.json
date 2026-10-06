@@ -8201,7 +8201,7 @@
         "SHEET-PORTERO"
       ],
       "proposal": "Añadir panel de conocimiento del expediente al puesto existente: hechos con procedencia, versiones y variantes capturadas desde la lectura PPP confirmada, decisiones y próximos pasos; capacidades Jev, exportación Markdown y conexión Obsidian diferenciadas. Capturar sólo metadatos con revisión esperada e ID estable, sin enviar cifras financieras desde el panel. Exportar Markdown portable mediante descarga explícita sin afirmar sincronización con un vault. Conservar voz, navegador, PPP, autorización y fuentes canónicas. Comparar dos capturas muestra diferencias y faltantes, sin inferir ganador. La bóveda ZIP portable conserva archivos Markdown y enlaces; no instala ni sincroniza Obsidian. Proyectar una subtarea antigua running con objetivo detenido como interrumpida, sin mutar su registro. Incorporar modalidad, escenario, revisión y horizonte únicamente cuando el puente PPP entregue metadatos reales.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "approval": "Dirección autorizó implementar capacidades, tablero y memoria/versiones PPP con Jev y Obsidian. Esta entrega de portal prepara consumidor y pruebas; backend, publicación y aceptación se registran por separado.",
       "tests": [
         "node scripts/arquitectura.cjs --check",
@@ -8215,7 +8215,7 @@
         "Probar ZIP STORE/CRC-32, rutas relativas y límites UTF-8 de la bóveda; rechazar enlaces de fuente inseguros y contenido sin procedencia.",
         "Comprobar proyección de subtareas interrumpidas y preservación de sus estados canónicos."
       ],
-      "deployment": "Propuesta registrada antes de implementar. Consumidor en rama y backend coordinado pendientes de comprobación y publicación.",
+      "deployment": "Consumidor preparado en PR100 sobre main466db10. Head a9413239: 390 pruebas y verificadores OS aprobados (runs37398477844/37398477241), Chromium aislado en1280×900/390×844 aprobado (37398478599), dos capturas sintéticas. El registro inicial sin fecha y los metadatos reales de modalidad/modelo/horizonte se conservan sin inferencias. El PR permanece borrador: no acredita backend publicado, escritura de negocio, audio físico, aceptación de Dirección ni sincronización Obsidian.",
       "rollback": "Revertir panel, imports y caché por PR; conservar voz, PPP, navegador, expediente, IDs, versiones, fuentes, decisiones y recibos. No borrar datos de negocio ni vaults."
     }
   ],
