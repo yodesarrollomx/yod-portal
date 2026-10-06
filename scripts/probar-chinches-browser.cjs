@@ -36,6 +36,7 @@ function serverFor(){return http.createServer((req,res)=>{
  if(!file.startsWith(root+path.sep)||!fs.existsSync(file)||!fs.statSync(file).isFile()){res.writeHead(404);res.end();return;}
  res.setHeader('Content-Type',/\.m?js$/.test(file)?'text/javascript':file.endsWith('.css')?'text/css':file.endsWith('.html')?'text/html':file.endsWith('.png')?'image/png':'application/octet-stream');res.end(fs.readFileSync(file));
 });}
+async function cancelComposer(page){await page.locator('.chn-hoja [data-x]').click();await page.locator('.chn-velo').waitFor({state:'detached'});}
 async function run(){
  const server=serverFor();await new Promise(r=>server.listen(0,'127.0.0.1',r));const base='http://127.0.0.1:'+server.address().port;
  let browser;
@@ -68,7 +69,7 @@ async function run(){
    let pin=await page.evaluate(()=>pins.at(-1));assert.equal(pin.version,2);assert.equal(pin.target.ui.surface,'tasks');assert.equal(pin.target.ui.item,0);
    assert.equal(await child.evaluate(path=>document.querySelector(path)===document.querySelector('#private-card'),pin.target.ui.path),true);
    assert.equal(await page.evaluate(()=>YodDespachoChinches.validPin(pins.at(-1))),true);
-   await page.locator('.chn-hoja [data-x]').click();await page.locator('.chn-velo').waitFor({state:'detached'});
+   await cancelComposer(page);
    // Exact control, pointer/touch and key activation are all intercepted before application capture.
    for(const target of ['#approve','#disabled','#private-link']){
     if(target==='#approve')await page.evaluate(()=>YODChinche.senalar());else await child.evaluate(()=>YODChinche.senalar());
@@ -79,19 +80,19 @@ async function run(){
     assert.equal(await child.evaluate(({path,target})=>document.querySelector(path)===document.querySelector(target),{path:pin.target.ui.path,target}),true);
     assert.equal(await child.evaluate(()=>effects),0);assert.equal(network.length,0);
     assert.equal(await child.locator('.chinche-ui-hint').isVisible(),false);assert.equal(await page.locator('.chn-pista').count(),0,'Parent delegated selector must also stop');
-    await page.locator('.chn-hoja [data-x]').click();await page.waitForTimeout(710);
+    await cancelComposer(page);await page.waitForTimeout(710);
    }
-   await child.evaluate(()=>{YODChinche.senalar();document.querySelector('#approve').focus()});await page.keyboard.press('Enter');await page.locator('.chn-txt').waitFor();assert.equal(await child.evaluate(()=>effects),0);await page.locator('.chn-hoja [data-x]').click();
+   await child.evaluate(()=>{YODChinche.senalar();document.querySelector('#approve').focus()});await page.keyboard.press('Enter');await page.locator('.chn-txt').waitFor();assert.equal(await child.evaluate(()=>effects),0);await cancelComposer(page);
    await child.evaluate(()=>YODChinche.senalar());await child.locator('#approve').hover();
    if(process.env.BROWSER_EVIDENCE_DIR){fs.mkdirSync(process.env.BROWSER_EVIDENCE_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.BROWSER_EVIDENCE_DIR,`chinches-selection-${browserName}-${mobile?'touch':'desktop'}.png`),fullPage:true});}
    await page.keyboard.press('Escape');
    await child.evaluate(()=>{const card=document.createElement('article');card.id='dynamic';card.innerHTML='<h2>PRIVATE-DYNAMIC</h2><button>Resolver</button>';document.querySelector('[data-panel="tasks"]').append(card)});
-   await child.locator('#dynamic [data-chinche-ui="card"]').waitFor();await child.locator('#dynamic [data-chinche-ui="card"]').click();await page.locator('.chn-txt').waitFor();assert.equal(await page.evaluate(()=>pins.at(-1).target.ui.item),1);await page.locator('.chn-hoja [data-x]').click();
+   await child.locator('#dynamic [data-chinche-ui="card"]').waitFor();await child.locator('#dynamic [data-chinche-ui="card"]').click();await page.locator('.chn-txt').waitFor();assert.equal(await page.evaluate(()=>pins.at(-1).target.ui.item),1);await cancelComposer(page);
    // Independent local surfaces; no application identifiers are copied into references.
    const surfaces=[['knowledge','workspace-dialog','<section class="knowledge-board"><article class="knowledge-card">PRIVATE-KNOWLEDGE</article></section>'],['goals','dossier-overlay','<section class="durable-goals"><article class="durable-goal">PRIVATE-GOAL</article></section>'],['permissions','entorno-hoja','<section class="entorno-permisos" data-permissions-status="ready"><article>PRIVATE-POLICY</article></section>'],['visits','entorno-hoja','<section class="entorno-respaldo"><article>PRIVATE-VISIT</article></section>'],['library','library-dialog','<article class="library-source">PRIVATE-SOURCE</article>'],['chat','dossier-overlay','<article class="case-message">PRIVATE-CHAT</article>'],['activity','dossier-overlay','<div class="term"><div class="term-line">PRIVATE-EVENT</div></div>'],['evidence','workspace-dialog','<details open><summary>PRIVATE-EVIDENCE</summary><pre>PRIVATE-TEXT</pre></details>'],['circle','circulo-hoja','<div class="circulo-tarjeta">PRIVATE-CIRCLE</div>'],['voice','realtime-dialog has-workspace','<article>PRIVATE-VOICE</article>']];
    for(const [surface,cls,html]of surfaces){
     await child.evaluate(({cls,html})=>{document.querySelector('#review').close();document.querySelector('#extra')?.remove();const dialog=document.createElement('dialog');dialog.id='extra';dialog.className=cls;dialog.innerHTML=html;document.body.append(dialog);dialog.showModal()},{cls,html});
-    await child.locator('#extra [data-chinche-ui="card"]').first().click();await page.locator('.chn-txt').waitFor();assert.equal(await page.evaluate(()=>pins.at(-1).target.ui.surface),surface);await page.locator('.chn-hoja [data-x]').click();
+    await child.locator('#extra [data-chinche-ui="card"]').first().click();await page.locator('.chn-txt').waitFor();assert.equal(await page.evaluate(()=>pins.at(-1).target.ui.surface),surface);await cancelComposer(page);
    }
    await child.evaluate(()=>{document.querySelector('#extra').close();document.querySelector('#review').showModal();const panel=document.createElement('section');panel.dataset.panel='ppp';panel.innerHTML='<div class="workspace-board"><iframe title="PPP sintético" src="/nested?token=PRIVATE-IFRAME-TOKEN" style="width:100%;height:190px"></iframe></div>';document.querySelector('.agent-workspace').append(panel)});
    await child.locator('.workspace-board iframe').waitFor();await child.waitForFunction(()=>typeof document.querySelector('.workspace-board iframe').contentWindow.effects==='number');const nested=page.frames().find(f=>f.url().includes('/nested'));assert.ok(nested);await nested.waitForFunction(()=>typeof window.effects==='number');
@@ -102,16 +103,16 @@ async function run(){
     const boundary=nestedPin.target.ui.path.indexOf(' > html:nth-of-type(1)');assert.ok(boundary>0);
     assert.equal(await child.evaluate(path=>document.querySelector(path)===document.querySelector('.workspace-board iframe'),nestedPin.target.ui.path.slice(0,boundary)),true);
     assert.equal(await nested.evaluate(({path,target})=>document.querySelector(path)===document.querySelector(target),{path:nestedPin.target.ui.path.slice(boundary+3),target}),true);
-    assert.equal(await page.evaluate(()=>YodDespachoChinches.validPin(pins.at(-1))),true);await page.locator('.chn-hoja [data-x]').click();await page.waitForTimeout(710);
+    assert.equal(await page.evaluate(()=>YodDespachoChinches.validPin(pins.at(-1))),true);await cancelComposer(page);await page.waitForTimeout(710);
    }
-   await child.evaluate(()=>YODChinche.senalar());await nested.locator('#save').focus();await page.keyboard.press('Enter');await page.locator('.chn-txt').waitFor();assert.equal(await nested.evaluate(()=>effects),0);await page.locator('.chn-hoja [data-x]').click();
+   await child.evaluate(()=>YODChinche.senalar());await nested.locator('#save').focus();await page.keyboard.press('Enter');await page.locator('.chn-txt').waitFor();assert.equal(await nested.evaluate(()=>effects),0);await cancelComposer(page);
    await child.evaluate(()=>document.querySelector('.workspace-board iframe').src='https://synthetic-cross.invalid/nested');
    await page.waitForFunction(()=>frame.contentWindow.document.querySelector('.workspace-board iframe').src.startsWith('https://synthetic-cross.invalid/'));
    await child.waitForFunction(()=>{try{return document.querySelector('.workspace-board iframe').contentWindow.document===null}catch{return true}});
    await page.waitForTimeout(710);await child.evaluate(()=>YODChinche.senalar());
    assert.match(await child.locator('.chinche-ui-hint').innerText(),/otro origen/);
    const outerFrame=await child.locator('.workspace-board iframe').boundingBox();await page.mouse.click(outerFrame.x+outerFrame.width/2,outerFrame.y+outerFrame.height/2);await page.locator('.chn-txt').waitFor();
-   const outerPin=await page.evaluate(()=>pins.at(-1));assert.equal(outerPin.target.ui.surface,'ppp');assert.equal(outerPin.target.ui.path.includes(' > html:nth-of-type(1)'),false);assert.match(outerPin.target.ui.path,/iframe:nth-of-type\(1\)$/);await page.locator('.chn-hoja [data-x]').click();
+   const outerPin=await page.evaluate(()=>pins.at(-1));assert.equal(outerPin.target.ui.surface,'ppp');assert.equal(outerPin.target.ui.path.includes(' > html:nth-of-type(1)'),false);assert.match(outerPin.target.ui.path,/iframe:nth-of-type\(1\)$/);await cancelComposer(page);
    assert.doesNotMatch(await page.evaluate(()=>JSON.stringify(pins)),/PRIVATE-|private\.invalid/);
    assert.equal(network.length,0);assert.deepEqual(errors,[]);
    if(process.env.BROWSER_EVIDENCE_DIR){fs.mkdirSync(process.env.BROWSER_EVIDENCE_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.BROWSER_EVIDENCE_DIR,`chinches-ui-${browserName}-${mobile?'touch':'desktop'}.png`),fullPage:true});}
@@ -141,11 +142,11 @@ async function run(){
   await office.locator('body>header [data-chinche-ui="select"]').click();
   const go=office.locator('[data-place-card="decisions"] button').first();if(mobile)await go.tap();else await go.click();
   await page.locator('.chn-txt').waitFor();assert.equal(await office.evaluate(()=>despacho.getState().selected),initial,'Selection must not navigate the office');
-  await page.locator('.chn-hoja [data-x]').click();await page.waitForTimeout(710);
+  await cancelComposer(page);await page.waitForTimeout(710);
   await office.locator('[data-place-card="decisions"] [data-chinche-ui="card"]').click();
   await page.waitForFunction(()=>pins.length>0);const mapPin=await page.evaluate(()=>pins.at(-1));
   assert.deepEqual(mapPin.view,{position:null,quaternion:null,fov:null,mode:'map'});assert.equal(mapPin.target.zone,'decisions');assert.equal(mapPin.target.point,null);
-  assert.equal(await page.evaluate(()=>YodDespachoChinches.validPin(pins.at(-1))),true,'Parent accepts a truthful camera-free UI reference');await page.locator('.chn-txt').waitFor();await page.locator('.chn-hoja [data-x]').click();
+  assert.equal(await page.evaluate(()=>YodDespachoChinches.validPin(pins.at(-1))),true,'Parent accepts a truthful camera-free UI reference');await page.locator('.chn-txt').waitFor();await cancelComposer(page);
   assert.equal(blocked.length,0);await page.locator('.chn-velo').waitFor({state:'detached'});if(process.env.BROWSER_EVIDENCE_DIR){fs.mkdirSync(process.env.BROWSER_EVIDENCE_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.BROWSER_EVIDENCE_DIR,`chinches-fallback-${browserName}-${mobile?'touch':'desktop'}.png`),fullPage:true});}await context.close();console.log('Real office without WebGL '+(mobile?'touch':'desktop')+': accessible map, authorized UI composer, null camera and toolbar bounds PASS');
   }
  }finally{await browser?.close();await new Promise(r=>server.close(r));}
