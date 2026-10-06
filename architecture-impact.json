@@ -10,7 +10,7 @@
     "SHEET-PPP-MODELOS",
     "SHEET-PORTERO"
   ],
-  "summary": "Registrar publicación comprobada del panel de conocimiento, versiones PPP y exportación portable, con PR100, Pages y verificadores del merge. Conservar límites entre proveedor real, pruebas sintéticas, escritura de negocio, aceptación física y conexión Obsidian; cotejo HTTP final pendiente. Cambio documental sin producto ni datos.",
+  "summary": "Registrar publicación comprobada del panel de conocimiento, versiones PPP y exportación portable, con PR100, Pages y verificadores del merge. Conservar límites entre proveedor real, pruebas sintéticas, escritura de negocio, aceptación física y conexión Obsidian; cotejo HTTP final aprobado con recibo acotado al corte verificado, sin garantía de continuidad. Cambio documental sin producto ni datos.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
