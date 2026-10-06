@@ -1,6 +1,6 @@
 import {createFrameTransport, validateSelection} from './conversation.mjs';
 import {createLiveVoice} from './live-voice.mjs?v=6';
-import {createWorkspace} from './agent-workspace.mjs?v=1';
+import {createWorkspace} from './agent-workspace.mjs?v=2';
 import {DurableGoals,watchGoals} from './goals.mjs';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=1';
 import {groupTranscriptFragments} from './live-transcript.mjs';

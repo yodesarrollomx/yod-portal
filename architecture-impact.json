@@ -7,9 +7,10 @@
     "GAS-PORTERO",
     "EXT-DRIVE",
     "SYS-POTENCIALES",
-    "SHEET-PPP-MODELOS"
+    "SHEET-PPP-MODELOS",
+    "SHEET-PORTERO"
   ],
-  "summary": "Añadir panel de conocimiento del expediente al puesto existente: hechos con procedencia, versiones y variantes capturadas desde la lectura PPP confirmada, decisiones y próximos pasos; capacidades Jev, exportación Markdown y conexión Obsidian diferenciadas. Capturar sólo metadatos con revisión esperada e ID estable, sin enviar cifras financieras desde el panel. Exportar Markdown portable mediante descarga explícita sin afirmar sincronización con un vault. Conservar voz, navegador, PPP, autorización y fuentes canónicas.",
+  "summary": "Añadir panel de conocimiento del expediente al puesto existente: hechos con procedencia, versiones y variantes capturadas desde la lectura PPP confirmada, decisiones y próximos pasos; capacidades Jev, exportación Markdown y conexión Obsidian diferenciadas. Capturar sólo metadatos con revisión esperada e ID estable, sin enviar cifras financieras desde el panel. Exportar Markdown portable mediante descarga explícita sin afirmar sincronización con un vault. Conservar voz, navegador, PPP, autorización y fuentes canónicas. Comparar dos capturas muestra diferencias y faltantes, sin inferir ganador. La bóveda ZIP portable conserva archivos Markdown y enlaces; no instala ni sincroniza Obsidian. Proyectar una subtarea antigua running con objetivo detenido como interrumpida, sin mutar su registro. Incorporar modalidad, escenario, revisión y horizonte únicamente cuando el puente PPP entregue metadatos reales.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -18,7 +19,9 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
     "Pruebas aisladas de contrato, recibo perdido, reintento idéntico, conflicto, cambio de expediente, revocación y exportación Markdown.",
-    "Chromium con transporte sintético: panel, captura y descarga, errores sin perder la conversación, escritorio/móvil y cero escrituras de negocio."
+    "Chromium con transporte sintético: panel, captura y descarga, errores sin perder la conversación, escritorio/móvil y cero escrituras de negocio.",
+    "Probar ZIP STORE/CRC-32, rutas relativas y límites UTF-8 de la bóveda; rechazar enlaces de fuente inseguros y contenido sin procedencia.",
+    "Comprobar proyección de subtareas interrumpidas y preservación de sus estados canónicos."
   ],
   "rollback": "Revertir panel, imports y caché por PR; conservar voz, PPP, navegador, expediente, IDs, versiones, fuentes, decisiones y recibos. No borrar datos de negocio ni vaults."
 }

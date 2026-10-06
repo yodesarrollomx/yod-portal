@@ -1,7 +1,12 @@
+import {mountKnowledgeBoard} from './knowledge-board.mjs?v=1';
 import {createFrameTransport,validateConversation} from './conversation.mjs';
 import {validateFastSession} from './fast-lane.mjs';
 import {DurableGoals} from './goals.mjs';
-export const WORKSPACE_TABS=[['browser','Navegador'],['ppp','PPP compartido'],['tasks','Pendientes'],['sources','Fuentes']];
+export const WORKSPACE_TABS=[['browser','Navegador'],['ppp','PPP compartido'],['tasks','Pendientes'],['sources','Fuentes'],['knowledge','Conocimiento']];
+export function taskDisplay(task,parentStatus){
+ if(task.status==='running'&&['stopped','awaiting_data','ready_for_review','completed'].includes(parentStatus))return 'Interrumpida · pendiente de conciliación';
+ return {pending:'Pendiente',running:'Trabajando',ready_for_review:'Para revisión',blocked:'Bloqueada'}[task.status]||task.status;
+}
 export function boardURL(caseId){if(typeof caseId!=='string'||!/^[A-Za-z0-9_.:-]{1,200}$/.test(caseId))throw Error('invalid_case');return 'https://yodesarrollomx.github.io/potenciales-yod/patrimonial.html?open='+encodeURIComponent(caseId)+'&embed=1&agent=1';}
 export function createWorkspace({container,getSelection,transport=createFrameTransport(window),win=window,doc=document,onBoard=()=>{}}){
  const el=(tag,text,cls)=>{const n=doc.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
@@ -11,6 +16,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
  const nav=el('nav'),notice=el('p','Preparando el puesto…','workspace-status'),body=el('div',undefined,'workspace-body');
  notice.setAttribute('role','status');root.append(nav,notice,body);container.append(root);
  const sections=Object.fromEntries(WORKSPACE_TABS.map(([id,label])=>{const b=button(label,()=>setTab(id));b.dataset.tab=id;nav.append(b);const section=el('section');section.dataset.panel=id;body.append(section);return[id,section];}));
+ const knowledge=mountKnowledgeBoard({container:sections.knowledge,request,getCase:()=>selected&&getSelection()?.case_id===selected.case_id?selected.case_id:null,onUnauthorized:()=>clear(),doc,win});
  const browser=sections.browser,form=el('form',undefined,'workspace-address'),address=el('input');address.type='url';address.placeholder='https://…';address.setAttribute('aria-label','Dirección para el navegador de Gastón');address.required=true;
  const go=el('button','Abrir');go.type='submit';form.append(address,go);
  const location=el('p','Ninguna página abierta.','workspace-location'),image=el('img');image.alt='Última captura del navegador de Gastón';image.hidden=true;
@@ -23,7 +29,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
  const states={queued:'En cola',running:'Trabajando',ready_for_review:'Para tu revisión',awaiting_data:'Faltan datos',stopped:'Detenido',completed:'Revisado'};
  tasks.subscribe(s=>{if(disposed)return;sections.tasks.replaceChildren();if(!s.model){sections.tasks.append(el('p',s.notice||'Consultando pendientes…'));return;}
   for(const g of s.model.goals){const card=el('article',undefined,'workspace-card');card.append(el('h3',g.title),el('p',states[g.status]),el('p',g.summary||g.criterion));
-   for(const t of g.tasks)card.append(el('p',t.title+' · '+t.status));
+   for(const t of g.tasks){card.append(el('p',t.title+' · '+taskDisplay(t,g.status)));if(t.summary)card.append(el('p',t.summary));}
    for(const e of g.evidence){const d=el('details');d.append(el('summary',e.title),el('pre',e.text));card.append(d);}
    for(const [action,label]of g.status==='ready_for_review'?[['approve','Marcar revisado'],['stop','Detener']]:['stopped','awaiting_data'].includes(g.status)?[['resume','Retomar']]:['queued','running'].includes(g.status)?[['stop','Detener']]:[]){
     const b=button(label,async()=>{if(await tasks.read())await tasks.review(g.goal_id,action);win.dispatchEvent(new CustomEvent('yod-goals-changed'));});b.disabled=s.busy||!!s.pending;card.append(b);}
@@ -38,7 +44,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
  }
  async function request(path,data={}){
   const own=generation,c=await session();
-  const r=await fetch(c.endpoint+path,{method:'POST',headers:{Authorization:'Bearer '+c.token,'Content-Type':'application/json'},credentials:'omit',cache:'no-store',signal:AbortSignal.timeout(30000),body:JSON.stringify(data)});
+  const r=await fetch(c.endpoint+path,{method:'POST',headers:{Authorization:'Bearer '+c.token,'Content-Type':'application/json'},credentials:'omit',cache:'no-store',redirect:'error',signal:AbortSignal.timeout(30000),body:JSON.stringify(data)});
   if(own!==generation||disposed)throw Error('session_changed');
   if(r.status===401||r.status===403){credential=null;clear();throw Error('unauthorized');}
   const out=await r.json();if(!r.ok||out.ok!==true)throw Error(out.error||'unavailable');return out;
@@ -117,10 +123,10 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   }catch{notice.textContent='El puesto no respondió. Reintentando; la conversación puede continuar.';}
   finally{fetching=false;}
  }
- function setTab(id){if(!WORKSPACE_TABS.some(([k])=>k===id))return;tab=id;for(const [key,section]of Object.entries(sections)){section.hidden=key!==id;nav.querySelector('[data-tab="'+key+'"]').setAttribute('aria-pressed',String(key===id));}
-  if(id==='ppp')mountBoard();void refresh();}
- function clear(){generation++;lastTaskRead=0;credential=null;selected=null;board=null;boardRevision=null;conversation=null;proposals=[];frame?.remove();frame=null;image.removeAttribute('src');image.hidden=true;activity.replaceChildren();links.replaceChildren();sections.tasks.replaceChildren();sections.sources.replaceChildren();proposalHost.replaceChildren();pppHost.replaceChildren();tasks.hide();notice.textContent='El acceso cambió. Vuelve a abrir tu despacho.';}
- function open(selection,target='browser'){clear();selected=selection;active=true;generation++;notice.textContent='Preparando el puesto de '+selection.name+'…';setTab(target);void readSources();if(!timer)timer=setInterval(()=>void refresh(),tab==='tasks'?12000:4000);}
+ function setTab(id){if(!WORKSPACE_TABS.some(([k])=>k===id))return;if(tab==='knowledge'&&id!=='knowledge')knowledge.hide();tab=id;for(const [key,section]of Object.entries(sections)){section.hidden=key!==id;nav.querySelector('[data-tab="'+key+'"]').setAttribute('aria-pressed',String(key===id));}
+  if(id==='ppp')mountBoard();if(id==='knowledge'&&selected){notice.textContent='Conocimiento y versiones del expediente.';void knowledge.open(selected.case_id);}void refresh();}
+ function clear(){generation++;knowledge.reset();lastTaskRead=0;credential=null;selected=null;board=null;boardRevision=null;conversation=null;proposals=[];frame?.remove();frame=null;image.removeAttribute('src');image.hidden=true;activity.replaceChildren();links.replaceChildren();sections.tasks.replaceChildren();sections.sources.replaceChildren();proposalHost.replaceChildren();pppHost.replaceChildren();tasks.hide();notice.textContent='El acceso cambió. Vuelve a abrir tu despacho.';}
+ function open(selection,target='browser'){if(selected?.case_id===selection.case_id){active=true;setTab(target);return;}clear();selected=selection;active=true;generation++;notice.textContent='Preparando el puesto de '+selection.name+'…';setTab(target);void readSources();if(!timer)timer=setInterval(()=>void refresh(),tab==='tasks'?12000:4000);}
  win.addEventListener('message',receive);
- return{open,setTab,setActive(value){if(active===value)return;active=value;if(value)void refresh();},dispose(){disposed=true;clear();clearInterval(timer);win.removeEventListener('message',receive);root.remove();transport.dispose?.();},root};
+ return{open,setTab,setActive(value){if(active===value)return;active=value;if(!value)knowledge.hide();if(value)void refresh();},dispose(){disposed=true;clear();knowledge.dispose();clearInterval(timer);win.removeEventListener('message',receive);root.remove();transport.dispose?.();},root};
 }

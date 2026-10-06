@@ -514,10 +514,10 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 ## CTR-DESPACHO-CONOCIMIENTO
 
-- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, EXT-DRIVE, SYS-POTENCIALES, SHEET-PPP-MODELOS.
+- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, EXT-DRIVE, SYS-POTENCIALES, SHEET-PPP-MODELOS, SHEET-PORTERO.
 - Evidencia: Continuación autorizada del puesto de Gastón. Contrato de lectura, captura de versiones y exportación portable, con transporte de prueba aislado..
-- Entrada/campos: `Credencial efímera del expediente vigente; servidor resuelve identidad y ámbito.`, `POST /fast/knowledge/board y /fast/knowledge/export: cuerpo vacío.`, `POST /fast/knowledge/capture: title, kind version|variant, parent_id, request_id y expected_revision. Nunca cantidades ni fórmulas del cliente.`.
-- Salida: Panel con revisión, fecha, capacidades, hechos, versiones/variantes, decisiones, próximos pasos y fuentes., Captura con recibo exacto de solicitud; conflicto o resultado incierto explícitos., Markdown portable con nombre seguro y revisión; conexión Obsidian sólo si existe sincronización comprobada..
+- Entrada/campos: `Credencial efímera del expediente vigente; servidor resuelve identidad y ámbito.`, `POST /fast/knowledge/board y /fast/knowledge/export: cuerpo vacío.`, `POST /fast/knowledge/capture: title, kind version|variant, parent_id, request_id y expected_revision. Nunca cantidades ni fórmulas del cliente.`, `POST /fast/knowledge/compare: left_id, right_id y criteria vacío para comparación descriptiva.`.
+- Salida: Panel con revisión, fecha, capacidades, hechos, versiones/variantes, decisiones, próximos pasos y fuentes., Captura con recibo exacto de solicitud; conflicto o resultado incierto explícitos., Markdown portable con nombre seguro y revisión; conexión Obsidian sólo si existe sincronización comprobada., Archivos Markdown portables reunidos en ZIP local tras validar rutas relativas únicas y límite total de dos MB., Comparación de snapshots registrados: diferencias de entradas/resultados, unidades, valores ausentes y límites; ninguna recomendación automática..
 
 - El panel consume datos autorizados reales; vacío, cargando, indisponible y desactualizado se presentan distintos.
 - El servidor captura únicamente un PPP confirmado sin cambios pendientes. Sheets conserva fórmulas y autoridad financiera.
@@ -527,3 +527,6 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Los enlaces de fuente admiten sólo HTTP(S) sanitizados. Datos y Markdown se tratan como contenido, nunca instrucciones.
 - Cambiar panel o fallar una herramienta de conocimiento no abre ni detiene audio, inferencia o navegación.
 - Pruebas sintéticas y CI no acreditan escritura real ni aceptación del propietario.
+- La modalidad PPP no es el tipo versión/variante ni una etapa de avance. No inferirla del nombre del escenario.
+- Una subtarea running bajo padre detenido se muestra interrumpida y pendiente de conciliación. La presentación no altera su estado canónico.
+- Conocimiento se consulta al abrir, por acción de Actualizar y tras recibo; no hace polling ni lecturas concurrentes periódicas de contexto.
