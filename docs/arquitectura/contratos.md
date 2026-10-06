@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.92-despacho-voz-ux · 2026-10-05.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.93-despacho-ppp-colaborativo · 2026-10-05.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-05.92-despacho-voz-ux",
+  "revision": "2026-10-05.93-despacho-ppp-colaborativo",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8339,6 +8339,29 @@
       ],
       "deployment": "Implementado en rama para CI y navegador sintético. No acredita micrófono físico ni resuelve la contención interna del servicio de Sheets.",
       "rollback": "Revertir consumidor, estilos y cache bumps; conservar JSON Live, autorizaciones, historial, recibos, PPP y bóvedas."
+    },
+    {
+      "id": "CHG-DESPACHO-PPP-COLABORATIVO-093",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Abrir Plan de potencial desde el círculo en una sola vista compartida: Gastón a la izquierda, PPP a la derecha; abrirlo no activa micrófono. Comenzar o terminar voz y cambiar pestañas conserva la misma instancia del tablero. Mostrar revisión/escenario confirmado y ajustes antes/después con estado de aplicación; conservar autorización, revisión y recibos, sin modificar fórmulas ni aprobar escenarios por conversación.",
+      "status": "propuesto",
+      "approval": "Dirección pidió llenar el PPP junto a Gastón, ver sus ajustes en el tablero y comparar alternativas para mejorar resultados.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Navegador aislado escritorio/móvil: círculo→PPP sin micrófono, misma instancia al conversar, propuestas/revisión/recibo, cambios tardíos y sin escrituras de negocio."
+      ],
+      "deployment": "Propuesto. Usa puente PPP y herramientas existentes del piloto Patrimonial; no acredita estabilidad del servicio Sheets ni rendimientos de un proyecto.",
+      "rollback": "Revertir navegación, vista compartida y cache bumps conservando los datos PPP, variantes, recibos, voz y contratos existentes."
     }
   ],
   "data_contracts": [

@@ -1,12 +1,13 @@
 {
-  "model_revision": "2026-10-05.92-despacho-voz-ux",
-  "proposal_id": "CHG-DESPACHO-VOZ-UX-079",
+  "model_revision": "2026-10-05.93-despacho-ppp-colaborativo",
+  "proposal_id": "CHG-DESPACHO-PPP-COLABORATIVO-093",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "GAS-PORTERO"
+    "GAS-PORTERO",
+    "EXT-DRIVE"
   ],
-  "summary": "Mejora1 autorizada: conversación clara y recuperable. Separar voz, expediente y guardado; recuperar reproducción bloqueada sin otra sesión; conservar transcripción visible ante inicio fallido; impedir doble inicio y confirmaciones prematuras. PPP conserva revisión y resultados canónicos; no ejecutar ni aprobar por indicador visual.",
+  "summary": "Abrir Plan de potencial desde el círculo en una sola vista compartida: Gastón a la izquierda, PPP a la derecha; abrirlo no activa micrófono. Comenzar o terminar voz y cambiar pestañas conserva la misma instancia del tablero. Mostrar revisión/escenario confirmado y ajustes antes/después con estado de aplicación; conservar autorización, revisión y recibos, sin modificar fórmulas ni aprobar escenarios por conversación.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -14,7 +15,7 @@
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "Regresiones de micrófono, audio bloqueado, duplicados, reconexión, contexto y finalización; navegador sintético escritorio/móvil."
+    "Navegador aislado escritorio/móvil: círculo→PPP sin micrófono, misma instancia al conversar, propuestas/revisión/recibo, cambios tardíos y sin escrituras de negocio."
   ],
-  "rollback": "Revertir consumidor, estilos y cache bumps; conservar JSON Live, autorizaciones, historial, recibos, PPP y bóvedas."
+  "rollback": "Revertir navegación, vista compartida y cache bumps conservando los datos PPP, variantes, recibos, voz y contratos existentes."
 }
