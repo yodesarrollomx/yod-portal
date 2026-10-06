@@ -99,3 +99,5 @@
 .workspace-live-work pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;font-size:13px}
 .workspace-live-work button{min-height:44px}
 .workspace-live-work ol{padding-left:22px}
+
+.workspace-manual{margin-top:16px;border-top:1px solid #c4cfc9;padding-top:8px}.workspace-manual>summary{cursor:pointer;padding:12px 0;font-size:13px}

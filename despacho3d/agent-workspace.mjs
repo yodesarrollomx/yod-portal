@@ -33,7 +33,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
  const location=el('p','Ninguna página abierta.','workspace-location'),image=el('img');image.alt='Última captura del navegador del autón';image.hidden=true;
  const caption=el('p','Pide al autón que abra una página o escribe su dirección.','workspace-caption'),controls=el('div',undefined,'workspace-controls');
  controls.append(button('Subir',()=>void command('navegador_desplazar',{direccion:'arriba'})),button('Bajar',()=>void command('navegador_desplazar',{direccion:'abajo'})),button('Actualizar vista',()=>void refresh()));
- const activity=el('ol',undefined,'workspace-activity'),links=el('div',undefined,'workspace-links');browser.append(form,location,image,caption,controls,links,activity);
+ const activity=el('ol',undefined,'workspace-activity'),links=el('div',undefined,'workspace-links');const manual=el('details',undefined,'workspace-manual');manual.append(el('summary','Navegación manual'),form,controls,links,activity);browser.append(location,image,caption,manual);
  form.addEventListener('submit',e=>{e.preventDefault();void command('navegador_abrir',{url:address.value});});
  const ppp=sections.ppp,pppNote=el('p','Conectando el PPP registrado. Sus resultados se calculan en Sheets.','workspace-ppp-status'),pppHost=el('div',undefined,'workspace-board'),proposalHost=el('div',undefined,'workspace-proposals');
  const boardSummary=el('p','Todavía no hay una lectura compartida.','workspace-ppp-summary'),applyNotice=el('p','','workspace-apply-status');

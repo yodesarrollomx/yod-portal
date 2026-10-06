@@ -56,6 +56,7 @@ const server=http.createServer((req,res)=>{
   await page.waitForFunction(()=>window.__opened?.tab==='browser');
   assert.equal((await page.evaluate(()=>window.__opened)).id,'case-synthetic');
   const panel=page.locator('.workspace-live-work');
+  assert.equal(await page.locator('.workspace-manual').evaluate(e=>e.open),false);
   await panel.getByRole('heading',{name:'Leyendo documento'}).waitFor();
   await panel.getByText('Pasos, fuentes y resultado',{exact:true}).click();await panel.getByRole('link',{name:'Fuente de prueba'}).waitFor();
   assert.ok(await panel.getByText('Ahora: Leer la fuente',{exact:true}).isVisible());
