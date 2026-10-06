@@ -26,7 +26,7 @@ header .reference{margin-left:0;font-size:13px}
 .resident-actions button:disabled{opacity:.45;cursor:default}
 #loading{background:linear-gradient(145deg,#eee9df,#ddd9cf)}
 body:has(#workspace > .sheet:not([hidden])) #resident-agent{display:none}
-#nearby{right:325px}
+body:has(#resident-agent:not([hidden])) #nearby{right:325px}
 @media(max-width:1050px){header{gap:8px;padding:0 14px}header .brand img{width:155px}header .title{display:none}header .reference{display:none!important}header button{padding:7px 9px;font-size:12px}}
 @media(max-width:700px){
  header{height:60px;gap:6px;padding:0 10px}header .brand img{width:123px}
@@ -39,7 +39,7 @@ body:has(#workspace > .sheet:not([hidden])) #resident-agent{display:none}
  .resident-status{font-size:11px;margin-top:10px}.resident-case{font-size:11px;margin-bottom:9px;max-height:2.7em;overflow:hidden}
  .resident-actions{gap:5px}.resident-actions button{font-size:12px;padding:7px 4px;min-height:40px}
  .resident-actions [data-resident-visit]{font-size:11px;min-height:28px}
- #nearby{right:12px;bottom:calc(338px + env(safe-area-inset-bottom));font-size:12px}
+ body:has(#resident-agent:not([hidden])) #nearby{right:12px;bottom:calc(338px + env(safe-area-inset-bottom));font-size:12px}
  #walk-guide{display:none}
 }
 @media(max-height:550px) and (orientation:landscape){#resident-agent{bottom:72px;width:230px;padding:10px}.resident-case{display:none}.resident-actions [data-resident-visit]{display:none}.resident-status{margin:6px 0}}

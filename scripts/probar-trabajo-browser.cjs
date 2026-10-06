@@ -59,7 +59,8 @@ const server=http.createServer((req,res)=>{
   },point);
   assert.equal(pick.hits[0].screen,true,'the visible texture is in front of the monitor case');
   console.log('WORK_SCREENSHOT_PICK_'+(mobile?'MOBILE':'DESKTOP')+':'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'));
-  await page.mouse.click(point.x,point.y);
+  assert.equal(await page.evaluate(p=>document.elementFromPoint(p.x,p.y)?.tagName,point),'CANVAS','the computer is not occluded by floating controls');
+  if(mobile)await page.touchscreen.tap(point.x,point.y);else await page.mouse.click(point.x,point.y);
   await page.waitForFunction(()=>window.__opened?.tab==='browser');
   assert.equal((await page.evaluate(()=>window.__opened)).id,'case-synthetic');
   const panel=page.locator('.workspace-live-work');
