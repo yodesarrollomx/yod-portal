@@ -8429,7 +8429,8 @@
       "id": "CHG-OFICINA-PANORAMICA-097",
       "components": [
         "SYS-YOD-OS",
-        "SYS-DESPACHO"
+        "SYS-DESPACHO",
+        "SYS-SALA"
       ],
       "proposal": "Abrir el despacho con vista elevada ortográfica y paredes recortadas, en escritorio y móvil. Conservar recorrido, rutas, permisos y selección del personaje. Registrar evolución hacia actividad verificable en computadoras, misión PPP y varios autónomos aislados; no simular ejecución ni habilitar una flota desde el frontend. Conservar chinches con la proyección ortográfica real y validación estricta del encuadre.",
       "status": "implementado_local",
