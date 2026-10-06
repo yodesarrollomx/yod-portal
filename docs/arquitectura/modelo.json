@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-06.97-oficina-panoramica",
+  "revision": "2026-10-06.98-trabajo-observable",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8446,6 +8446,28 @@
       ],
       "deployment": "Implementado en PR109: vista ortográfica inicial, paredes recortadas con selección coherente, etiqueta del personaje autorizado y recorrido conservado. Pruebas y publicación por CI; consultar evidencia del PR. La ejecución visible de herramientas y flota siguen pendientes.",
       "rollback": "Revertir frontend por PR. No cambia datos, fórmulas, permisos ni despliegues de Apps Script o servidor de agentes."
+    },
+    {
+      "id": "CHG-TRABAJO-OBSERVABLE-098",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ],
+      "proposal": "Vincular la ejecución autorizada del objetivo con su computadora: identificador de ejecución y tarea, herramienta realmente invocada, fuentes devueltas, avance confirmado y evidencia. Mostrar captura fechada sólo con su procedencia; distinguir análisis preparado de confirmación canónica. Recuperar observación tras recarga, marcar interrupciones y no reiniciar tareas al observar.",
+      "status": "propuesto",
+      "approval": "Dirección pidió y autorizó continuar con una tarea real observable en la computadora del autón el 6-oct-2026.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Servidor: asociación ejecución/tarea/fuente, progreso después de acuse, cancelación, restauración interrumpida, aislamiento y fallos de observación.",
+        "Navegador escritorio/móvil: computadora y puesto comparten estado, captura fechada, errores sin falso éxito, recarga sin ejecutar y revocación inmediata."
+      ],
+      "deployment": "Propuesto; publicación del frontend y servidor se acreditarán por separado. Sigue una sola instalación autorizada; no habilita flota ni escrituras automáticas del PPP.",
+      "rollback": "Revertir módulos de observación y frontend conservando estado privado, tareas, evidencias, permisos y registros canónicos."
     }
   ],
   "data_contracts": [
@@ -10293,6 +10315,55 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/despacho-panorama.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "prefix": "despacho3d/work-observer.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "prefix": "despacho3d/work-observer-boot.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "prefix": "despacho3d/work-view.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "prefix": "despacho3d/office-screen.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "prefix": "tests/despacho-trabajo.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "prefix": "scripts/probar-trabajo-browser.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "prefix": "docs/arquitectura/trabajo-observable.md",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO"
