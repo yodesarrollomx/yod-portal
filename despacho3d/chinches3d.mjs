@@ -22,7 +22,7 @@ export function createChinches3D(options){
     const view=readView();
     return {type:'yod:despacho:pin',version:ui?2:1,requestId:crypto.randomUUID(),
       target:{id:(kind==='interface'?'panel:':'zone:')+zone,zone,kind,point,...(ui?{ui}:{})},
-      view:{position:view.position,quaternion:view.quaternion,fov:view.fov,mode:view.mode},
+      view:{position:view.position,quaternion:view.quaternion,fov:view.fov,mode:view.mode,...(view.orthographic?{orthographic:{...view.orthographic}}:{})},
       modelVersion:MODEL_VERSION,viewport:{width:innerWidth,height:innerHeight}};
   }
   function send(zone,kind,point,ui){

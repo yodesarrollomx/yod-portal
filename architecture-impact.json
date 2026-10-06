@@ -1,13 +1,12 @@
 {
-  "model_revision": "2026-10-06.96-puesto-auton",
-  "proposal_id": "CHG-PUESTO-AUTON-096",
+  "model_revision": "2026-10-06.97-oficina-panoramica",
+  "proposal_id": "CHG-OFICINA-PANORAMICA-097",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "GAS-PORTERO",
-    "EXT-DRIVE"
+    "SYS-SALA"
   ],
-  "summary": "Reunir actividad, conversación y PPP en el puesto del personaje autorizado. Reducir accesos duplicados, selector radial de cuatro acciones, identidad por proyecto, enlace del PPP registrado y pausa local de voz sin colgar ni detener trabajo. Conservar permisos, recibos y revisiones; no presentar el piloto como una flota desplegada.",
+  "summary": "Abrir el despacho con vista elevada ortográfica y paredes recortadas, en escritorio y móvil. Conservar recorrido, rutas, permisos y selección del personaje. Registrar evolución hacia actividad verificable en computadoras, misión PPP y varios autónomos aislados; no simular ejecución ni habilitar una flota desde el frontend. Conservar chinches con la proyección ortográfica real y validación estricta del encuadre.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -15,7 +14,7 @@
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "Navegador escritorio/móvil: abrir desde personaje, enlace registrado, dos identidades sintéticas aisladas, audio pausado sin cierre, recibos y transcripción conservados."
+    "Chromium escritorio/móvil: encuadre, recorte, selección real con raycaster, cambio de cámara, zoom, rutas y ausencia de errores."
   ],
-  "rollback": "Revertir frontend por PR. Conservar PPP, variantes, registros, credenciales y despliegues Apps Script; no restaurar datos."
+  "rollback": "Revertir frontend por PR. No cambia datos, fórmulas, permisos ni despliegues de Apps Script o servidor de agentes."
 }

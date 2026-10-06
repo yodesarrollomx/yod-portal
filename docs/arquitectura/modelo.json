@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-06.96-puesto-auton",
+  "revision": "2026-10-06.97-oficina-panoramica",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8424,6 +8424,28 @@
       ],
       "deployment": "Implementado en rama: puesto compartido, cuatro acciones, PPP por fuente registrada y pausa local de audio. Pendiente CI, publicación y aceptación con voz real. El servidor conserva su piloto autorizado; este cambio no acredita una flota multiagente.",
       "rollback": "Revertir frontend por PR. Conservar PPP, variantes, registros, credenciales y despliegues Apps Script; no restaurar datos."
+    },
+    {
+      "id": "CHG-OFICINA-PANORAMICA-097",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-SALA"
+      ],
+      "proposal": "Abrir el despacho con vista elevada ortográfica y paredes recortadas, en escritorio y móvil. Conservar recorrido, rutas, permisos y selección del personaje. Registrar evolución hacia actividad verificable en computadoras, misión PPP y varios autónomos aislados; no simular ejecución ni habilitar una flota desde el frontend. Conservar chinches con la proyección ortográfica real y validación estricta del encuadre.",
+      "status": "implementado_local",
+      "approval": "Dirección autorizó el 6-oct-2026 la vista completa de oficina y continuar el plan: espacios como herramientas, personajes ligados a PPP y ejecución visible.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Chromium escritorio/móvil: encuadre, recorte, selección real con raycaster, cambio de cámara, zoom, rutas y ausencia de errores."
+      ],
+      "deployment": "Implementado en PR109: vista ortográfica inicial, paredes recortadas con selección coherente, etiqueta del personaje autorizado y recorrido conservado. Pruebas y publicación por CI; consultar evidencia del PR. La ejecución visible de herramientas y flota siguen pendientes.",
+      "rollback": "Revertir frontend por PR. No cambia datos, fórmulas, permisos ni despliegues de Apps Script o servidor de agentes."
     }
   ],
   "data_contracts": [
@@ -9135,7 +9157,8 @@
         "Ruta exacta #/despacho y perfil confirmado por Portero con permiso DP vigente",
         "Destino fijo ../despacho3d/index.html de mismo origen; frontend neutro sin identidad o registros de negocio incluidos en el código público.",
         "Evento yod:despacho:pin version 1 de la ventana/origen exactos del iframe activo: requestId UUID, target id/zone/kind/point, view position/quaternion/fov/mode, modelVersion y viewport",
-        "Evento compatible yod:despacho:pin version 2: mismo envelope/target interface más ui {surface,path,item}. Surface lista fija, path tag:nth-of-type sin atributos/IDs/texto máx600 y item ordinal nullable0..9999. Fallback UI mode map exige position/quaternion/fov null."
+        "Evento compatible yod:despacho:pin version 2: mismo envelope/target interface más ui {surface,path,item}. Surface lista fija, path tag:nth-of-type sin atributos/IDs/texto máx600 y item ordinal nullable0..9999. Fallback UI mode map exige position/quaternion/fov null.",
+        "Extensión de view para panorama ortográfico: mode overview, fov null y orthographic {left,right,top,bottom,zoom} con límites finitos ordenados. Perspectiva v1/v2 y fallback map se conservan; ningún dato privado adicional."
       ],
       "output": [
         "Sección Despacho inmersiva con recorrido, paneles de agentes, regreso a Inicio y enlace a Bandeja canónica.",
@@ -10257,6 +10280,22 @@
       "prefix": "integraciones/",
       "components": [
         "SYS-YOD-OS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/probar-oficina-panoramica-browser.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-panorama.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
       ]
     }
   ]

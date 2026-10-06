@@ -32,13 +32,19 @@
     if (target.kind !== 'zone' && target.kind !== 'interface') return false;
     if (target.id !== (target.kind === 'zone' ? 'zone:' : 'panel:') + target.zone) return false;
     if (target.kind === 'zone' ? !vector(target.point, 3, 250) : target.point !== null) return false;
-    if (!keys(view, ['position','quaternion','fov','mode'])) return false;
+    var ortho = Object.prototype.hasOwnProperty.call(view || {}, 'orthographic');
+    if (!keys(view, ortho ? ['position','quaternion','fov','mode','orthographic'] : ['position','quaternion','fov','mode'])) return false;
     if (view.mode === 'map') {
-      if (!withUI || view.position !== null || view.quaternion !== null || view.fov !== null) return false;
+      if (ortho || !withUI || view.position !== null || view.quaternion !== null || view.fov !== null) return false;
     } else {
       if (!vector(view.position, 3, 250) || !vector(view.quaternion, 4, 1)) return false;
       var norm = view.quaternion.reduce(function (sum, n) { return sum + n*n; }, 0);
-      if (Math.abs(norm - 1) > 0.02 || !number(view.fov, 10, 120) || ['walk','overview'].indexOf(view.mode) === -1) return false;
+      if (Math.abs(norm - 1) > 0.02 || ['walk','overview'].indexOf(view.mode) === -1) return false;
+      if (ortho) {
+        var o=view.orthographic;
+        if (view.mode!=='overview' || view.fov!==null || !keys(o,['left','right','top','bottom','zoom'])) return false;
+        if (!['left','right','top','bottom'].every(function(k){return number(o[k],-1000,1000);}) || o.left>=o.right || o.bottom>=o.top || !number(o.zoom,.5,8)) return false;
+      } else if (!number(view.fov,10,120)) return false;
     }
     return keys(viewport, ['width','height']) && Number.isInteger(viewport.width) && Number.isInteger(viewport.height) && number(viewport.width, 1, 10000) && number(viewport.height, 1, 10000);
   }
@@ -55,6 +61,7 @@
     return 'Despacho 3D | modelo=' + context.modelVersion + ' | objeto=' + context.target.id + ' | zona=' + context.target.zone + ' | tipo=' + context.target.kind +
       ' | punto=' + (context.target.point === null ? 'interfaz' : JSON.stringify(context.target.point)) + ' | camara=' + JSON.stringify(context.view.position) +
       ' | quaternion=' + JSON.stringify(context.view.quaternion) + ' | fov=' + context.view.fov + ' | modo=' + context.view.mode +
+      (context.view.orthographic ? ' | ortografica=' + JSON.stringify(context.view.orthographic) : '') +
       ' | viewport=' + context.viewport.width + 'x' + context.viewport.height +
       (context.target.ui ? ' | superficie=' + context.target.ui.surface + ' | control=' + context.target.ui.path + ' | tarjeta=' + (context.target.ui.item === null ? 'general' : context.target.ui.item) : '');
   }
