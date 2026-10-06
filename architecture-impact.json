@@ -1,16 +1,13 @@
 {
-  "model_revision": "2026-10-05.90-despacho-conocimiento-publicado",
-  "proposal_id": "CHG-DESPACHO-CONOCIMIENTO-078",
+  "model_revision": "2026-10-05.91-chinche-contexto-despacho",
+  "proposal_id": "CHG-CHINCHE-CONTEXTO-DESPACHO-091",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "GAS-PORTERO",
-    "EXT-DRIVE",
-    "SYS-POTENCIALES",
-    "SHEET-PPP-MODELOS",
-    "SHEET-PORTERO"
+    "SYS-SALA",
+    "GAS-PORTERO"
   ],
-  "summary": "Registrar publicación comprobada del panel de conocimiento, versiones PPP y exportación portable, con PR100, Pages y verificadores del merge. Conservar límites entre proveedor real, pruebas sintéticas, escritura de negocio, aceptación física y conexión Obsidian; cotejo HTTP final aprobado con recibo acotado al corte verificado, sin garantía de continuidad. Cambio documental sin producto ni datos. Integra main e108d9e y conserva íntegra la evidencia concurrente PPP #47 de PR101.",
+  "summary": "Completar captura de chinches sobre escena virtual, tarjetas del agente y superficies del Despacho. Mantener geometría v1 y añadir contexto UI v2 estrictamente técnico (superficie allowlisted, ruta DOM acotada e índice visible); acciones explícitas por tarjeta y señalamiento global. No copiar contenido privado ni credenciales, no enviar sin Clavar y no ampliar autorización; mantener origen/iframe/época vigentes y contratos de producción existentes. El cambio al loader de shell conserva completamente el contrato y permisos Portero; su dependencia se declara sin modificar backend.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -18,10 +15,9 @@
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "Pruebas aisladas de contrato, recibo perdido, reintento idéntico, conflicto, cambio de expediente, revocación y exportación Markdown.",
-    "Chromium con transporte sintético: panel, captura y descarga, errores sin perder la conversación, escritorio/móvil y cero escrituras de negocio.",
-    "Probar ZIP STORE/CRC-32, rutas relativas y límites UTF-8 de la bóveda; rechazar enlaces de fuente inseguros y contenido sin procedencia.",
-    "Comprobar proyección de subtareas interrumpidas y preservación de sus estados canónicos."
+    "Contratos v1/v2 y rechazo de payload privado, origen/iframe/sesión inválidos y geometría malformada.",
+    "Recorridos sintéticos móvil/escritorio: punto 3D, tarjetas de revisión dinámicas, control exacto, diálogo abierto, fallback sin WebGL y cancelación sin efectos.",
+    "Verificadores completos de portal y Despacho, CI exacto y cotejo HTTP de recursos tras Pages."
   ],
-  "rollback": "Revertir panel, imports y caché por PR; conservar voz, PPP, navegador, expediente, IDs, versiones, fuentes, decisiones y recibos. No borrar datos de negocio ni vaults."
+  "rollback": "Frontend compartido primero; consumidores después con referencia de caché nueva. Misma BD/IDs/routing/servicios y cero cambios backend o datos de negocio. Reversión por PR, conserva borradores y registros."
 }
