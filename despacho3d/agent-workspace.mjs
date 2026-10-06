@@ -84,7 +84,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
    for(const c of p.cambios)article.append(el('p',c.label+': '+(c.antes??'pendiente')+' → '+(c.valor??'pendiente')));
    const eligibility=proposalState(board,p,application);
    const apply=button(eligibility==='sending'?'Aplicando…':eligibility==='unconfirmed'?'Confirmación pendiente':'Aplicar en el tablero',()=>{
-    if(proposalState(board,p,application)!=='ready')return;
+    if(!getSelection()?.can_enqueue||getSelection()?.case_id!==selected?.case_id||proposalState(board,p,application)!=='ready')return;
     application={request_id:p.request_id,status:'sending'};
     applyNotice.textContent='Ajuste enviado. Esperando guardado y recálculo; no repitas la solicitud.';
     paintProposals();postBoard('yod:ppp:apply',{proposal:p});
@@ -92,9 +92,9 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
     applyTimer=setTimeout(()=>{if(own!==generation||application?.request_id!==p.request_id)return;
      application.status='unconfirmed';applyNotice.textContent='El guardado no se confirmó. Revisa los pendientes del tablero; conserva la misma solicitud.';paintProposals();},35000);
    });
-   apply.disabled=eligibility!=='ready';
+   apply.disabled=eligibility!=='ready'||!getSelection()?.can_enqueue;
    const discard=button('Retirar propuesta',async()=>{try{await request('/board/resolve',{request_id:p.request_id,status:'discarded'});if(application?.request_id===p.request_id){clearTimeout(applyTimer);applyTimer=null;application=null;}applyNotice.textContent='Propuesta retirada. Los cambios ya guardados, si los hay, se conservan.';await refresh();}catch{pppNote.textContent='No se confirmó el descarte. La propuesta sigue pendiente.';}});
-   discard.disabled=eligibility==='sending';
+   discard.disabled=eligibility==='sending'||!getSelection()?.can_enqueue;
    article.append(apply,discard,el('small','Retirar una propuesta no deshace cambios ya guardados.'));
    if(eligibility==='stale')article.append(el('p','Cambió el escenario o su revisión. Pide a Gastón un ajuste sobre la lectura vigente.'));
    if(eligibility==='board_pending')article.append(el('p','Primero confirma o recupera los cambios pendientes del tablero.'));
