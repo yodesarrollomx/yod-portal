@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.89-ppp-patrimonial-evidencia-final · 2026-10-05.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.90-despacho-conocimiento-publicado · 2026-10-05.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
