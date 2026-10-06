@@ -149,7 +149,7 @@ test('basic voice enables microphone on session.started even if every history st
  for(let i=0;i<6;i++)await f.voice.refresh();
  assert.equal(f.track.stops,0);assert.equal(f.voice.snapshot().status_pending,true);
  assert.equal(f.calls.some(c=>c.url.endsWith('/close')),false);assert.equal(f.peer.channel.sent.length,0);
- f.voice.interrupt();assert.equal(f.peer.channel.sent.length,0);
+ f.voice.interrupt();assert.equal(f.peer.channel.sent.length,1);assert.equal(f.peer.channel.sent[0].type,'session.instructions.append');
  const stopping=f.voice.stop();await tick();f.event({type:'session.closed'});await stopping;
 });
 test('remote audio without streams is attached from the actual incoming track',async()=>{
@@ -217,17 +217,17 @@ test('double start and context retry do not create duplicate sessions or concurr
  assert.equal(f.voice.snapshot().context_retry_pending,false);
  const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
 });
-test('interruption guidance respects a muted microphone',async()=>{
+test('explicit Escúchame activates the microphone while pausing remote playback',async()=>{
  const {createLiveVoice}=await load(),f=fixture(createLiveVoice);
  await f.voice.start('synthetic-case');f.event({type:'session.started'});await tick();
  f.voice.mute();f.voice.interrupt();
- assert.equal(f.track.enabled,false);assert.match(f.voice.snapshot().notice,/Activa el micrófono/);
+ assert.equal(f.track.enabled,true);assert.equal(f.audio.muted,true);assert.match(f.voice.snapshot().notice,/sonido está pausado/);
  const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
 });
 test('UX keeps voice, authorized tools and durable history independent',async()=>{
  const {voiceView}=await import('../despacho3d/voice-view.mjs');
  let v=voiceView({phase:'starting',context_phase:'preparing'});
- assert.equal(v.title,'Conectando con Gastón');assert.doesNotMatch(v.context,/Puedes hablar/);
+ assert.equal(v.title,'Conectando voz');assert.doesNotMatch(v.context,/Puedes hablar/);
  v=voiceView({phase:'listening',context_phase:'unavailable',pending:2,blocks:2,saved:0});
  assert.equal(v.title,'Listo para hablar');assert.match(v.context,/aún no/);assert.match(v.history,/pendiente/);
  v=voiceView({phase:'idle',finalized:true,blocks:2,saved:1,pending:1});
@@ -238,4 +238,22 @@ test('UX keeps voice, authorized tools and durable history independent',async()=
  assert.match(v.history,/Conversación respaldada/);
  v=voiceView({phase:'listening',context_phase:'ready',tools_ready:false});
  assert.doesNotMatch(v.context,/Expediente conectado/);
+});
+
+test('Escúchame silences output immediately, keeps input and work alive, correlates acknowledgement and resumes',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice);
+ await f.voice.start('synthetic-case');assert.equal(f.voice.interrupt(),false);
+ f.event({type:'session.started'});await tick();f.voice.mute();assert.equal(f.track.enabled,false);
+ assert.equal(f.voice.interrupt(),true);assert.equal(f.audio.muted,true);assert.equal(f.track.enabled,true);
+ assert.equal(f.voice.snapshot().output_paused,true);assert.equal(f.peer.closed,false);
+ const command=f.peer.channel.sent.at(-1);
+ assert.equal(command.type,'session.instructions.append');assert.equal(command.delegation_id,null);
+ assert.equal(f.calls.some(c=>c.url.endsWith('/close')),false);
+ assert.equal(f.voice.interrupt(),false,'double click cannot duplicate the instruction');
+ f.event({type:'session.instructions.appended',client_event_id:'another'});assert.equal(f.voice.snapshot().interruption_pending,true);
+ f.event({type:'session.instructions.appended',client_event_id:command.event_id});assert.equal(f.voice.snapshot().interruption_pending,false);
+ assert.equal(f.audio.muted,true,'instruction acceptance never claims playback completion');
+ assert.equal(f.voice.resumeAudio(),true);assert.equal(f.audio.muted,false);
+ const stopping=f.voice.stop();await tick();f.event({type:'session.closed'});await stopping;
+ assert.equal(f.voice.snapshot().output_paused,false);
 });

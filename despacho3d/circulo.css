@@ -76,3 +76,23 @@ header #circulo-open:focus-visible{outline:2px solid #bc9f6d;outline-offset:2px}
 .agent-menu .circulo-gajo.selected{fill:#d9e5df;stroke:#637c72;stroke-width:2}
 .agent-menu-goal-form{display:grid;gap:12px;padding:20px 0}.agent-menu-goal-form label{display:grid;gap:6px}.agent-menu-goal-form input,.agent-menu-goal-form textarea{width:100%;box-sizing:border-box;border:1px solid #a3b7b8;border-radius:8px;padding:10px;font:inherit;background:#fff;color:#20343c}.agent-menu-goal-form textarea{min-height:72px}
 @media(max-width:700px){.agent-menu{padding:16px}.agent-menu-layout{grid-template-columns:1fr;gap:16px}.agent-menu-wheel{max-width:360px;width:100%;margin:auto}.agent-menu-center{top:30%;height:29%}.agent-menu h1{font-size:20px}}
+
+/* Four actions around the project's character, with native keyboard controls. */
+.station-radial{width:min(480px,calc(100vw - 24px));padding:24px;box-sizing:border-box;background:#142b28;color:#f4eee0;border:1px solid #ab976b;border-radius:24px;box-shadow:0 30px 90px #08171380}
+.station-radial::backdrop{background:#071815a8;backdrop-filter:blur(4px)}
+.station-radial h1{font:500 24px Georgia,serif;margin:8px 24px 20px 0}
+.radial-eyebrow{font:10px system-ui,sans-serif;letter-spacing:.18em;color:#c4b894}
+.station-radial .radial-close{position:absolute;right:16px;top:14px;border:0;background:transparent;color:#f4eee0;font-size:26px}
+.station-wheel{position:relative;aspect-ratio:1;border:1px solid #b9a47766;border-radius:50%;background:radial-gradient(circle,#304e3e 24%,#142b28 25%,#233d3455 52%,#0e201d 74%);box-shadow:inset 0 0 0 9px #a38e5415,0 0 0 6px #cbb77e10;margin:16px 0}
+.station-wheel::before{content:"";position:absolute;inset:17%;border:1px dashed #b9a47755;border-radius:50%;pointer-events:none}
+.station-wheel-center{position:absolute;inset:32% 28%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center}
+.station-avatar{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;border:1px solid #d0b87c;background:#b7c2a4;color:#203a2c;font:30px Georgia,serif;box-shadow:0 0 0 5px #b7c2a419}
+.station-wheel-center b{font:500 15px Georgia,serif;max-width:130px;overflow-wrap:anywhere}
+.station-wheel button{position:absolute;width:32%;height:23%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:1px solid #ac996655;background:#203b32;color:#f5efdf;border-radius:16px;font:12px system-ui,sans-serif;transition:background .15s,transform .15s}
+.station-wheel button:hover,.station-wheel button:focus-visible{background:#bba473;color:#152b22;outline:2px solid #e5d7a5;outline-offset:4px;transform:scale(1.035)}
+.station-wheel [data-sector=ppp]{top:3%;left:34%}
+.station-wheel [data-sector=conversaciones]{right:2%;top:39%}
+.station-wheel [data-sector=pendientes]{bottom:3%;left:34%}
+.station-wheel [data-sector=documentos]{left:2%;top:39%}
+.radial-icon{font-size:25px;line-height:1}
+.radial-footnote{text-align:center;font:12px system-ui,sans-serif;color:#bdc8ba;margin:20px 0 0}

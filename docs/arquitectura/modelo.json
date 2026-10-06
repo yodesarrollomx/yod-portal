@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-06.95-accesos-sesion-172",
+  "revision": "2026-10-06.96-puesto-auton",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8401,6 +8401,29 @@
       ],
       "deployment": "Propuesto para GitHub Pages mediante PR; publicación de la marca en Google y acceso efectivo a la API pendientes de comprobación independiente.",
       "rollback": "Revertir la incorporación de integraciones/ y el registro del modelo. No modifica los datos, las credenciales ni las implementaciones Apps Script."
+    },
+    {
+      "id": "CHG-PUESTO-AUTON-096",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Reunir actividad, conversación y PPP en el puesto del personaje autorizado. Reducir accesos duplicados, selector radial de cuatro acciones, identidad por proyecto, enlace del PPP registrado y pausa local de voz sin colgar ni detener trabajo. Conservar permisos, recibos y revisiones; no presentar el piloto como una flota desplegada.",
+      "status": "implementado_local",
+      "approval": "Dirección solicitó rediseñar el puesto por proyecto y autorizó continuar con la implementación.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Navegador escritorio/móvil: abrir desde personaje, enlace registrado, dos identidades sintéticas aisladas, audio pausado sin cierre, recibos y transcripción conservados."
+      ],
+      "deployment": "Implementado en rama: puesto compartido, cuatro acciones, PPP por fuente registrada y pausa local de audio. Pendiente CI, publicación y aceptación con voz real. El servidor conserva su piloto autorizado; este cambio no acredita una flota multiagente.",
+      "rollback": "Revertir frontend por PR. Conservar PPP, variantes, registros, credenciales y despliegues Apps Script; no restaurar datos."
     }
   ],
   "data_contracts": [

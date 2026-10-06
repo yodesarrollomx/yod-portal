@@ -10,6 +10,7 @@ if(host){
  const resident=createResidentAgents({transport,onChange:paint,isVisible:()=>!document.hidden});
  function paint(state){
   const active=!['idle','error'].includes(voicePhase),sel=state.selection;
+  host.hidden=true;if(host.querySelector('h2'))host.querySelector('h2').textContent=sel?.avatar?.name||sel?.name||'Autón';
   host.dataset.state=active?'talking':state.phase;
   label.textContent=active?(voicePhase==='listening'?'Conversando contigo':voicePhase==='reconnecting'?'Recuperando voz…':voicePhase==='closing'?'Guardando conversación…':'Conectando voz…'):notices[state.phase];
   caseName.textContent=sel?.name||'Tu expediente autorizado se prepara al entrar.';
@@ -36,7 +37,7 @@ if(host){
   voicePhase=e.detail?.phase||'idle';paint(resident.snapshot());
   window.despacho?.setAgentActivity?.(voicePhase==='listening'?'talk':'sit');
  });
- window.addEventListener('yod-agents-visibility',e=>{panel=e.detail===true;host.hidden=panel;});
+ window.addEventListener('yod-agents-visibility',e=>{panel=e.detail===true;host.hidden=true;});
  window.addEventListener('yod-agents-ready',()=>paint(resident.snapshot()));
  window.addEventListener('yod-office-ready',()=>paint(resident.snapshot()));
  window.addEventListener('online',()=>{void resident.refresh();});
