@@ -149,7 +149,7 @@ test('basic voice enables microphone on session.started even if every history st
  for(let i=0;i<6;i++)await f.voice.refresh();
  assert.equal(f.track.stops,0);assert.equal(f.voice.snapshot().status_pending,true);
  assert.equal(f.calls.some(c=>c.url.endsWith('/close')),false);assert.equal(f.peer.channel.sent.length,0);
- f.voice.interrupt();assert.equal(f.peer.channel.sent.length,0);
+ f.voice.interrupt();assert.equal(f.peer.channel.sent.length,1);assert.equal(f.peer.channel.sent[0].type,'session.instructions.append');
  const stopping=f.voice.stop();await tick();f.event({type:'session.closed'});await stopping;
 });
 test('remote audio without streams is attached from the actual incoming track',async()=>{
@@ -217,11 +217,11 @@ test('double start and context retry do not create duplicate sessions or concurr
  assert.equal(f.voice.snapshot().context_retry_pending,false);
  const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
 });
-test('interruption guidance respects a muted microphone',async()=>{
+test('explicit Escúchame activates the microphone while pausing remote playback',async()=>{
  const {createLiveVoice}=await load(),f=fixture(createLiveVoice);
  await f.voice.start('synthetic-case');f.event({type:'session.started'});await tick();
  f.voice.mute();f.voice.interrupt();
- assert.equal(f.track.enabled,false);assert.match(f.voice.snapshot().notice,/Activa el micrófono/);
+ assert.equal(f.track.enabled,true);assert.equal(f.audio.muted,true);assert.match(f.voice.snapshot().notice,/sonido está pausado/);
  const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
 });
 test('UX keeps voice, authorized tools and durable history independent',async()=>{
