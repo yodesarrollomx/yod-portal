@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-05.86-despacho-conocimiento-publicado",
+  "model_revision": "2026-10-05.90-despacho-conocimiento-publicado",
   "proposal_id": "CHG-DESPACHO-CONOCIMIENTO-078",
   "components": [
     "SYS-YOD-OS",
@@ -10,7 +10,7 @@
     "SHEET-PPP-MODELOS",
     "SHEET-PORTERO"
   ],
-  "summary": "Registrar publicación comprobada del panel de conocimiento, versiones PPP y exportación portable, con PR100, Pages y verificadores del merge. Conservar límites entre proveedor real, pruebas sintéticas, escritura de negocio, aceptación física y conexión Obsidian; cotejo HTTP final aprobado con recibo acotado al corte verificado, sin garantía de continuidad. Cambio documental sin producto ni datos.",
+  "summary": "Registrar publicación comprobada del panel de conocimiento, versiones PPP y exportación portable, con PR100, Pages y verificadores del merge. Conservar límites entre proveedor real, pruebas sintéticas, escritura de negocio, aceptación física y conexión Obsidian; cotejo HTTP final aprobado con recibo acotado al corte verificado, sin garantía de continuidad. Cambio documental sin producto ni datos. Integra main e108d9e y conserva íntegra la evidencia concurrente PPP #47 de PR101.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",

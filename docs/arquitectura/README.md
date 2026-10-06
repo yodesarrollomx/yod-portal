@@ -22,6 +22,8 @@ Esta es la entrada para entender y modificar YOD OS. Prioridad de mejora acordad
 
 - [Sala #35 · Corcho provisional en Portero](despacho-corcho-provisional.md): routing exclusivo, identidad/ACL, archivo privado original, pruebas, reversión y manifests consumidores.
 
+- [Sala #47 · Recuperación Patrimonial](ppp-patrimonial-recovery-047.md): transporte sobre V65, caché por caso, conciliación de ACK perdido y borrador durable; implementación coordinada por separado.
+
 ## Qué significa cada evidencia
 
 **Código** acredita lo leído en una versión concreta de GitHub. **Ejecución** exige una comprobación registrada en el entorno identificado. **Declarado** proviene de documentación o una configuración cuyo comportamiento no se ha verificado. **Pendiente** identifica un vacío. **Propuesto** describe una mejora que aún no existe.

@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.86-despacho-conocimiento-publicado · 2026-10-05.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.90-despacho-conocimiento-publicado · 2026-10-05.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -301,6 +301,9 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Mantener endpoint, ACL PT/PA, IDs, caso_id, palabra, históricos, CAS y revisión. No cambiar lectura vertical ni datos de otros casos.
 - Lectura tipada en pppLeerLibro_/sheet-cantidades conserva compatibilidad vertical. Registro y creación de modelo canónico documentados con fuente y rollback.
 - Pruebas mixtas vivienda/comercio, CUS cero/ausente, pasillos 0/20, 1/N puertas, rentas distintas y exceso; cero POST de prueba de negocio.
+- Recuperación #47 conserva caché y borrador vinculados al caso al navegar A/B/A; persistir metadatos de borrador antes de pintar y no presentar pendientes como confirmados.
+- ACK perdido tras reload: recuperar el job exacto con request_id, payload y revisión originales sólo tras GET fresco autorizado. La caché de recibos de seis horas se consulta antes de CAS; recibo evictado y revisión obsoleta producen conflicto sin overwrite. No sustituir el job ni elevar revisión esperada para forzar escritura.
+- Recuperación sobre activo/editor V65 preserva los otros siete archivos, manifest, URLs, scopes y ACL; adaptador presente en activo y editor final. Pruebas sintéticas y propuesta Atlas no certifican despliegue ni cierre de Sala #47.
 
 ## CTR-EMD-INVITES
 
