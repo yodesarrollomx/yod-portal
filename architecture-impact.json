@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-05.88-ppp-patrimonial-cotejo",
+  "model_revision": "2026-10-05.89-ppp-patrimonial-evidencia-final",
   "proposal_id": "CHG-PPP-PATRIMONIAL-RECOVERY-047",
   "components": [
     "SYS-YOD-OS",
@@ -15,14 +15,14 @@
     "Recibo en caché de seis horas se resuelve antes de CAS sin repetir escritura; recibo evictado y revisión obsoleta dan conflicto sin overwrite. No crear un job nuevo ni actualizar revisión esperada para forzar el reintento.",
     "Persistir metadatos de borrador antes de paint; recarga y repintado conservan su vínculo con caso/job y estado no confirmado; resultados vigentes sólo con recibo confirmado.",
     "Chromium según coordinador: native CUS cero y metadatos pendientes tras repintado/recarga; A/B/A conserva Local, renta cero, CUS null y metadatos. WebKit no verificado localmente por dependencias del sistema; exigir Chromium y WebKit en CI del consumer sin confundirlo con CI del Atlas.",
-    "Regresión visual del consumer: al montar nativo ocultar .sticky-header incluso si es DIV mediante selector/CSS; no mostrar KPIs legacy cero sobre datos nativos. Parche local reportado, Chromium en curso; Atlas no lo considera aprobado todavía.",
-    "Preservación de funciones ajenas y comparación byte a byte de los otros siete archivos/manifest, URLs, scopes, configuración y ACL.",
-    "Preflight/postflight de versión/editor/configuración con lock y CAS; GET Patrimonial V66 y cotejo de 166 celdas con Sheets aprobados según coordinador. Dos escenarios conservan IDs y 269 campos; geometría pendiente. Vertical: primer probe 45 s agotado, segundo 90 s en curso. Sin POST de prueba ni extrapolación a otros casos.",
+    "Regresión visual del consumer: al montar nativo ocultar .sticky-header incluso si es DIV mediante selector/CSS; no mostrar KPIs legacy cero sobre datos nativos. Parche local y regresión Chromium aprobados según coordinador; publicación frontend pendiente.",
+    "Preservación final reportada por coordinador: 99 funciones ajenas a las seis PPP restauradas idénticas por Function.toString; siete archivos idénticos. Conservar manifest, URLs, scopes, configuración y ACL; fuentes privadas fuera de Git.",
+    "Preflight/postflight de versión/editor/configuración con lock y CAS; GET Patrimonial V66 y cotejo de 166 celdas con Sheets aprobados según coordinador. Dos escenarios conservan IDs y 269 campos; geometría pendiente. Runtime Vertical inconcluso: probe 45 s agotado y probe 90 s HTTPError; GET anónimo sin credencial no ejecutado, validación separada. Código conservado, auditoría y mocks aprobados según coordinador; no acreditan runtime. Sin POST de prueba ni extrapolación a otros casos.",
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
-    "node verify-accesos.cjs (ACCESOS_REF=5b84278f4dfb6384f357538e2219ca63e4aa5c0d)",
+    "node verify-accesos.cjs (ACCESOS_REF=58eb8e91a61f30419f3795afeeccdb5997689b57)",
     "node verify-obra-app.cjs",
     "node scripts/verificar-impacto.cjs --base origin/main --head HEAD --repo yodesarrollomx/yod-portal; git diff --check"
   ],
