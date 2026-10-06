@@ -66,6 +66,22 @@ test('Pin opens the existing composer without submission; duplicate ACK never re
   const upper=pin();upper.requestId=upper.requestId.toUpperCase();await h.emit(upper);assert.equal(h.calls.length,1);
   assert.equal(JSON.stringify(h.posts).includes('private'),false);
 });
+test('UI v2 pin identifies a card/control without copying its private text and preserves v1 geometry',async()=>{
+  const h=harness(),p=pin();p.version=2;
+  p.target={id:'panel:case',zone:'case',kind:'interface',point:null,ui:{surface:'tasks',path:'html:nth-of-type(1) > body:nth-of-type(1) > article:nth-of-type(2) > button:nth-of-type(1)',item:1}};
+  assert.equal(h.api.validPin(p),true);await h.hello();await h.emit(p);
+  const op=h.calls[0];assert.equal(op.sinCaptura,true);assert.equal(op.sinFolio,true);assert.equal(op.sinUrlParams,true);
+  assert.match(op.valores.referencia,/superficie=tasks/);assert.match(op.valores.referencia,/tarjeta=1/);
+  assert.equal(op.objeto.despacho3d.target.ui.path,p.target.ui.path);
+  for(const mutate of [x=>x.target.ui.text='private',x=>x.target.ui.case_id='private',x=>x.target.ui.surface='unknown',x=>x.target.ui.path='article#private-person',x=>x.target.ui.path='https://private.invalid',x=>x.target.ui.item=-1,x=>x.target.ui.item=10000,x=>x.version=1,x=>x.target.kind='zone']){
+    const bad=JSON.parse(JSON.stringify(p));mutate(bad);assert.equal(h.api.validPin(bad),false,mutate.toString());
+  }
+  const clean=pin(2);assert.equal(h.api.validPin(clean),true);
+  const fallback=JSON.parse(JSON.stringify(p));fallback.view={position:null,quaternion:null,fov:null,mode:'map'};
+  assert.equal(h.api.validPin(fallback),true);assert.match(h.api.formatContext(metadata(fallback)),/camara=null/);
+  fallback.view.position=[0,0,0];assert.equal(h.api.validPin(fallback),false,'No fictitious camera in fallback');
+  const badWorld=pin();badWorld.view={position:null,quaternion:null,fov:null,mode:'map'};assert.equal(h.api.validPin(badWorld),false);
+});
 test('Forged, unready, unauthorized, invalid and old-frame pins never open a composer',async()=>{
   const h=harness();await h.emit(pin());assert.equal(h.posts.at(-1).payload.status,'rejected');assert.equal(h.calls.length,0);
   await h.hello();const old=h.getFrame();h.setFrame({postMessage(){}});await h.emit(pin(),{source:old});assert.equal(h.calls.length,0);

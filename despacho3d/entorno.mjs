@@ -81,7 +81,7 @@ export function crearEntorno({doc=document,registro,ir=()=>false,enviar=null,vol
  const lista=h('div',{class:'entorno-lista'});
  const bitacora=h('ol',{class:'entorno-bitacora','aria-live':'polite'});
  const respaldo=h('section',{class:'entorno-respaldo',role:'region','aria-label':'Visitas guardadas en el servidor'});
- const autorizacion=h('section',{class:'entorno-respaldo',role:'region','aria-label':'Permisos del expediente'});
+ const autorizacion=h('section',{class:'entorno-respaldo entorno-permisos',role:'region','aria-label':'Permisos del expediente'});
  const limpiar=n=>{while(n.firstChild)n.removeChild(n.firstChild);};
  // Entregas por aprobar de la sala de juntas (solo lectura).
  let porAprobar={fase:'inicio',tarjetas:[]};

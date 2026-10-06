@@ -17,7 +17,7 @@ const coords=p=>Array.isArray(p)&&p.every(Number.isFinite)?p.map(n=>n.toFixed(2)
 const svgEl=(tag,attrs={})=>{const n=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const[k,v]of Object.entries(attrs))n.setAttribute(k,String(v));return n;};
 
 // Alternativa de navegación de la misma oficina. El piloto y A* no necesitan una GPU.
-export function startAccessibleOffice(){
+export function startAccessibleOffice({onPanelOpened=()=>{}}={}){
  const scene=new T.Scene();
  let selected='entry',sheet=null,agentOverlay=false,lastFocus=null;
  const pilot=createOfficePilot({scene,beforeOpen:()=>closeSheets()});
@@ -47,7 +47,7 @@ export function startAccessibleOffice(){
    const b=el('button','Abrir panel de agentes');b.onclick=()=>{closeSheets();window.CubefarmYOD?.open('chat');};
    document.getElementById('panel-body').prepend(b);
   }
-  showSheet('panel');return true;
+  showSheet('panel');onPanelOpened(id);return true;
  };
  const api={setAgentActivity:pilot.setActivity,view:'map',layout:{bounds,annex,collisions},visit,setMode:()=>closeSheets(),openPanel,closeSheets,allowed,
   getAgentState:()=>pilot.getMovementState(),

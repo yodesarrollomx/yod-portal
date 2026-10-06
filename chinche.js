@@ -28,6 +28,35 @@ var db = null, PANT = "os", CTX = {}, abierta = false;
 // Guards are ephemeral callbacks, never stored or transmitted. A 3D draft cannot
 // auto-send after reload or under another person without its live composer guard.
 var despachoGuards = new Map();
+var botonesObservados = false;
+var SUPERFICIES_PRIVADAS = ['despacho-trabajo','despacho-corcho','despacho-hilo'];
+function rutaTecnica(el){
+  var partes = [];
+  while (el && el.nodeType === 1) {
+    var tag = el.tagName.toLowerCase(), index = 1, prev = el.previousElementSibling;
+    while (prev) { if (prev.tagName === el.tagName) index++; prev = prev.previousElementSibling; }
+    if (index > 9999) return '';
+    partes.unshift(tag + ':nth-of-type(' + index + ')');
+    el = el.parentElement;
+  }
+  var ruta = partes.join(' > ');
+  return ruta.length <= 600 ? ruta : '';
+}
+function codigoInterfaz(objeto){
+  if (!objeto || objeto.tipo !== 'interfaz-privada' || SUPERFICIES_PRIVADAS.indexOf(objeto.superficie) === -1 ||
+      typeof objeto.ruta !== 'string' || objeto.ruta.length > 600 ||
+      !/^[a-z][a-z0-9-]*:nth-of-type\([1-9][0-9]{0,3}\)(?: > [a-z][a-z0-9-]*:nth-of-type\([1-9][0-9]{0,3}\))*$/.test(objeto.ruta) ||
+      !(objeto.tarjeta === null || Number.isInteger(objeto.tarjeta) && objeto.tarjeta >= 0 && objeto.tarjeta <= 9999)) return '';
+  return 'Interfaz | superficie=' + objeto.superficie + ' | control=' + objeto.ruta + ' | tarjeta=' + (objeto.tarjeta === null ? 'general' : objeto.tarjeta);
+}
+function etiquetaAnotacion(op){
+  var labels = {'despacho-trabajo':'Mi trabajo','despacho-corcho':'Mi corcho','despacho-hilo':'Detalle del encargo',
+    office:'Oficina',areas:'Áreas',help:'Ayuda',agent:'Agente',chat:'Conversación',tasks:'Revisión del trabajo',evidence:'Evidencia',sources:'Fuentes',browser:'Navegador',ppp:'PPP',knowledge:'Conocimiento',library:'Biblioteca',activity:'Actividad',goals:'Objetivos',permissions:'Permisos',visits:'Visitas',environment:'Entorno',circle:'Círculo',residents:'Puesto del agente',profile:'Perfil',voice:'Voz',terminal:'Terminal'};
+  var obj=op.objeto || {},ui=obj.despacho3d && obj.despacho3d.target.ui;
+  if(ui)return 'Despacho virtual · ' + (labels[ui.surface] || 'Interfaz') + (ui.item === null ? '' : ' · Tarjeta ' + (ui.item+1));
+  if(obj.tipo === 'interfaz-privada')return (labels[obj.superficie] || 'Interfaz') + (obj.tarjeta === null ? '' : ' · Tarjeta ' + (obj.tarjeta+1));
+  return op.seccion || 'El punto señalado';
+}
 function guardDespacho(ch){
   if (!ch || !ch.objeto || !ch.objeto.despacho3d) return true;
   var guard = despachoGuards.get(ch.id);
@@ -341,7 +370,14 @@ function hoja(html, alto){
   var v = document.createElement("div");
   v.className = "chn-velo";
   v.innerHTML = '<div class="chn-hoja" style="max-height:' + (alto || "72vh") + '">' + html + "</div>";
-  document.body.appendChild(v);
+  var modal = Array.from(document.querySelectorAll('dialog[open]')).filter(function(d){ try { return d.matches(':modal'); } catch(e) { return false; } }).pop();
+  v._focus = document.activeElement;
+  (modal || document.body).appendChild(v);
+  if (modal) {
+    v._modal = modal;
+    v._cancelModal = function(e){ e.preventDefault(); var ta=v.querySelector('.chn-txt'); if (ta && ta.value.trim()) ta.focus(); else cerrar(v); };
+    modal.addEventListener('cancel',v._cancelModal);
+  }
   document.body.classList.add("chn-abierto");   // cada pantalla esconde lo suyo
   abierta = true;
   v._urls = [];   /* objectURLs de ESTA hoja: cerrar() los revoca todos */
@@ -360,12 +396,13 @@ function hoja(html, alto){
 }
 function cerrar(v){
   v.classList.remove("on"); abierta = false;
+  if (v._modal) v._modal.removeEventListener('cancel',v._cancelModal);
   (v._urls || []).forEach(function(u){ try { URL.revokeObjectURL(u); } catch(e){} });
   v._urls = [];
   /* si hay otra hoja debajo (entregar encima de la pila), la clase se queda */
   if (document.querySelectorAll(".chn-velo").length <= 1)
     document.body.classList.remove("chn-abierto");
-  setTimeout(function(){ v.remove(); }, 180);
+  setTimeout(function(){ v.remove(); try { if (v._focus && v._focus.isConnected) v._focus.focus(); } catch(e) {} }, 180);
 }
 function aviso(t){
   var a = document.createElement("div");
@@ -399,6 +436,7 @@ async function anotar(op){
      La foto llega un instante después, al <img> ya puesto. */
   var v = hoja(
     '<div class="chn-tit">¿Qué quieres que cambie aquí?</div>' +
+    (op.sinCaptura ? '<p class="chn-nota">Estás señalando: ' + esc(etiquetaAnotacion(op)) + '</p>' : '') +
     '<img class="chn-foto" alt="lo que señalaste">' +
     '<div class="chn-chips">' +
       ['Cambiar','Quitar','Agregar','Está mal'].map(function(t){
@@ -438,7 +476,7 @@ async function anotar(op){
     var ch = {
       id: nuevoId(d), creado: d.toISOString(), sello: sello(d), quien: quien(),
       texto: texto, tipo: tipo, estado: "nueva",
-      pantalla: PANT, repo: repoActual(), url: location.href.split("#")[0], aparato: aparato(), folio: folioActual(),
+      pantalla: PANT, repo: repoActual(), url: op.sinUrlParams ? location.origin + location.pathname : location.href.split("#")[0], aparato: aparato(), folio: op.sinFolio ? '' : folioActual(),
       vista: op.vista || (CTX.vista ? CTX.vista() : ""),
       modo: esLienzo ? "lienzo" : "contexto",
       ancla: esLienzo
@@ -451,7 +489,7 @@ async function anotar(op){
         seccion: op.seccion || (CTX.seccion ? CTX.seccion() : ""),
         valores: op.valores || (CTX.valores ? CTX.valores() : {})
       },
-      codigo: [dondeVive(PANT, op.clase || ""), codigoDespacho(op.objeto)].filter(Boolean).join(" · ")
+      codigo: [dondeVive(PANT, op.clase || ""), codigoDespacho(op.objeto), codigoInterfaz(op.objeto)].filter(Boolean).join(" · ")
     };
     if (esDespacho) { guardId = ch.id; despachoGuards.set(ch.id, vigente); }
     try {
@@ -574,6 +612,46 @@ function valoresDe(el){
   }
   return v;
 }
+/* Shared opt-in cards use a technical anchor. Their private contents never become
+   a context image or an automatic issue attachment. The human writes the request. */
+function anotarElemento(el){
+  if (!el || !el.closest) return Promise.resolve(null);
+  var privado = el.closest('[data-chinche-privado="true"]');
+  if (privado) {
+    var scope = el.closest('[data-chinche-surface]') || privado;
+    var surface = scope.getAttribute('data-chinche-surface');
+    if (SUPERFICIES_PRIVADAS.indexOf(surface) === -1) surface = 'despacho-trabajo';
+    var card = el.closest('[data-chinche-item]'), raw = card && card.getAttribute('data-chinche-item');
+    var item = raw !== null && raw !== '' && /^[0-9]{1,4}$/.test(raw) ? Number(raw) : null;
+    var objeto = {tipo:'interfaz-privada',superficie:surface,ruta:rutaTecnica(el),tarjeta:item};
+    if (!codigoInterfaz(objeto)) { aviso('No pude identificar ese control. Señala de nuevo.'); return Promise.resolve(null); }
+    return anotar({css:objeto.ruta,texto:'Interfaz privada · ' + surface,seccion:surface,valores:{referencia:codigoInterfaz(objeto)},
+      clase:'interfaz-privada',objeto:objeto,vista:surface,sinCaptura:true,sinFolio:true,sinUrlParams:true});
+  }
+  return anotar({css:rutaTecnica(el) || ruta(el),texto:legible(el).slice(0,160),seccion:seccionDe(el),valores:valoresDe(el),clase:el.tagName.toLowerCase()});
+}
+function instalarBotones(){
+  if (botonesObservados) return;
+  botonesObservados = true;
+  function agregar(){
+    document.querySelectorAll('[data-chinche-card]').forEach(function(card){
+      if (card.matches('button,a') || card.closest('[class*="chn-"]') || card.querySelector('[data-chinche-abrir],[data-chinche-personal]')) return;
+      var b = document.createElement('button'); b.type = 'button'; b.setAttribute('data-chinche-abrir','');
+      b.className = 'yod-pin-card'; b.textContent = '📌 Pedir cambio'; b.setAttribute('aria-label','Pedir un cambio en esta tarjeta');
+      card.appendChild(b);
+    });
+  }
+  window.addEventListener('click',function(e){
+    var b = e.target.closest && e.target.closest('[data-chinche-abrir]');
+    if (!b || b.disabled) return;
+    var card = b.closest('[data-chinche-card]'); if (!card) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    if (senalando) senalando();
+    if (!abierta) anotarElemento(card);
+  },true);
+  agregar();
+  if (typeof MutationObserver !== 'undefined') new MutationObserver(agregar).observe(document.body,{childList:true,subtree:true});
+}
 /* Los tableros embebidos (iframe del mismo origen) traen su propia Chinche. Un toque
    dentro del iframe NUNCA llega a este documento: por eso en el cel "no dejaba
    seleccionar" nada. Al señalar aquí, se enciende también el modo señalar adentro. */
@@ -597,10 +675,11 @@ function modoSenalar(){
   var marco=document.createElement("div"); marco.className="chn-marco";
   var pista=document.createElement("button"); pista.type="button"; pista.className="chn-pista";
   pista.textContent="Toca exactamente lo que quieres cambiar · aquí para salir";
-  document.body.appendChild(marco);document.body.appendChild(pista);
+  var modal = Array.from(document.querySelectorAll('dialog[open]')).filter(function(d){ try { return d.matches(':modal'); } catch(e) { return false; } }).pop();
+  (modal || document.body).appendChild(marco);(modal || document.body).appendChild(pista);
   function punto(ev){var t=(ev.changedTouches&&ev.changedTouches[0])||(ev.touches&&ev.touches[0]);return{x:t?t.clientX:ev.clientX,y:t?t.clientY:ev.clientY};}
   function bajo(ev){var p=punto(ev);if(p.x==null||p.y==null||isNaN(p.x))return null;return document.elementFromPoint(p.x,p.y);}
-  function mio(el){return!!(el&&el.closest&&el.closest('[class*="chn-"]'));}
+  function mio(el){return!!(el&&el.closest&&el.closest('[class*="chn-"],[data-chinche-abrir]'));}
   function area(r){return Math.max(0,r.width)*Math.max(0,r.height);}
   function visible(el){if(!el||el.nodeType!==1)return false;var r=el.getBoundingClientRect(),s=getComputedStyle(el);return r.width>=8&&r.height>=8&&s.display!=="none"&&s.visibility!=="hidden"&&s.pointerEvents!=="none";}
   /* Elegir la unidad visual útil evita seleccionar una tarjeta/sección completa
@@ -632,12 +711,12 @@ function modoSenalar(){
     var raw=bajo(ev);if(!raw)return;if(raw.closest&&raw.closest(".chn-pista")){ev.preventDefault();salir();return;}if(mio(raw))return;
     if(raw.tagName==="IFRAME"){ev.preventDefault();ev.stopPropagation();salir();aviso("La chinche de ese tablero se activa dentro del marco");return;}
     var p=punto(ev),el=unidad(raw,p.x,p.y);if(!el||mio(el))return;
-    ev.preventDefault();ev.stopPropagation();salir();
-    anotar({css:ruta(el),texto:legible(el).slice(0,160),seccion:seccionDe(el),valores:valoresDe(el),clase:el.tagName.toLowerCase()});
+    ev.preventDefault();ev.stopImmediatePropagation();salir();
+    anotarElemento(el);
   }
   function tecla(ev){if(ev.key==="Escape")salir();}
-  function salir(){senalando=null;hijos.forEach(function(w){try{w.YODChinche.salirSenalar();}catch(e){}});hijos=[];try{if(window.parent!==window&&window.parent.YODChinche)window.parent.YODChinche.salirSenalar();}catch(e){}document.removeEventListener("mousemove",mover,true);document.removeEventListener("touchmove",mover,true);document.removeEventListener("touchstart",marcar,true);document.removeEventListener("click",tomar,true);document.removeEventListener("touchend",tomar,true);document.removeEventListener("keydown",tecla,true);marco.remove();pista.remove();}
-  senalando=salir;document.addEventListener("mousemove",mover,true);document.addEventListener("touchmove",mover,true);document.addEventListener("touchstart",marcar,true);document.addEventListener("click",tomar,true);document.addEventListener("touchend",tomar,true);document.addEventListener("keydown",tecla,true);
+  function salir(){senalando=null;hijos.forEach(function(w){try{w.YODChinche.salirSenalar();}catch(e){}});hijos=[];try{if(window.parent!==window&&window.parent.YODChinche)window.parent.YODChinche.salirSenalar();}catch(e){}document.removeEventListener("mousemove",mover,true);document.removeEventListener("touchmove",mover,true);document.removeEventListener("touchstart",marcar,true);window.removeEventListener("click",tomar,true);window.removeEventListener("touchend",tomar,true);document.removeEventListener("keydown",tecla,true);marco.remove();pista.remove();}
+  senalando=salir;document.addEventListener("mousemove",mover,true);document.addEventListener("touchmove",mover,true);document.addEventListener("touchstart",marcar,true);window.addEventListener("click",tomar,true);window.addEventListener("touchend",tomar,true);document.addEventListener("keydown",tecla,true);
 }
 
 /* ═══ DICTAR · voz a texto con el reconocimiento del navegador (Chrome/Android,
@@ -1120,6 +1199,7 @@ function estilo(){
 ".chn-hoja{width:min(680px,100%);background:#F6F1E4;border-radius:16px 16px 0 0;padding:18px 18px",
 " calc(18px + env(safe-area-inset-bottom,0px));overflow:auto;transition:transform .18s;",
 " font-family:'Helvetica Neue',Arial,sans-serif;color:#2E2A22}",
+".chn-hoja,.chn-hoja *{box-sizing:border-box}",
 ".chn-velo:not(.on) .chn-hoja{transform:translateY(14px)}",
 ".chn-mic.on{background:#D93A34;color:#fff;border-color:#D93A34}",
 ".chn-marco{position:fixed;z-index:438;pointer-events:none;border:2px solid #D93A34;",
@@ -1131,6 +1211,8 @@ function estilo(){
 " border:1px dashed #8B7A57;border-radius:9px;color:#5A4C30;cursor:pointer;",
 " font:700 14px/1 'Helvetica Neue',Arial}",
 ".chn-senalar:hover{background:#E7DCC2}",
+".yod-pin-card{display:inline-flex;align-items:center;min-height:44px;margin-top:8px;padding:8px 12px;border:1px solid #8B7A57;border-radius:10px;background:#EFE7D4;color:#2E2A22;cursor:pointer;font:600 13px 'Helvetica Neue',Arial,sans-serif}",
+".yod-pin-card:focus-visible{outline:3px solid #D93A34;outline-offset:3px}",
 ".chn-tit{font:700 19px/1.25 'Helvetica Neue',Arial;margin:0 0 12px}",
 ".chn-nota{font-size:14px;color:#6B6151;margin:0 0 12px}",
 ".chn-foto{width:100%;border-radius:8px;border:1px solid rgba(90,76,48,.4);display:block;margin-bottom:12px}",
@@ -1185,6 +1267,7 @@ function init(op){
   PANT = op.pantalla || "os";
   CTX = op;
   estilo();
+  instalarBotones();
   if (op.sinPastilla) { pintarPastilla(); return; }
   addEventListener("message", function (ev) {
     /* solo el conteo, y solo si es un número, y solo del mismo origen */
@@ -1212,6 +1295,6 @@ function init(op){
     });
 }
 
-window.YODChinche = { init: init, anotar: anotar, pila: pila, senalar: modoSenalar, cuantas: leerN,
+window.YODChinche = { init: init, anotar: anotar, anotarElemento: anotarElemento, pila: pila, senalar: modoSenalar, cuantas: leerN,
   salirSenalar: function(){ if (senalando) senalando(); } };
 })();

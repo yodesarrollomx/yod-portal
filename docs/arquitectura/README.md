@@ -24,6 +24,8 @@ Esta es la entrada para entender y modificar YOD OS. Prioridad de mejora acordad
 
 - [Sala #47 · Recuperación Patrimonial](ppp-patrimonial-recovery-047.md): transporte sobre V65, caché por caso, conciliación de ACK perdido y borrador durable; implementación coordinada por separado.
 
+- [Chinche y contexto del Despacho](chinche-contexto-despacho.md): geometría y tarjetas/control exacto con referencia técnica privada.
+
 ## Qué significa cada evidencia
 
 **Código** acredita lo leído en una versión concreta de GitHub. **Ejecución** exige una comprobación registrada en el entorno identificado. **Declarado** proviene de documentación o una configuración cuyo comportamiento no se ha verificado. **Pendiente** identifica un vacío. **Propuesto** describe una mejora que aún no existe.
