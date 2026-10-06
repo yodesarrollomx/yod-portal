@@ -1,27 +1,30 @@
 {
-  "model_revision": "2026-10-05.85-despacho-conocimiento",
-  "proposal_id": "CHG-DESPACHO-CONOCIMIENTO-078",
+  "model_revision": "2026-10-05.89-ppp-patrimonial-evidencia-final",
+  "proposal_id": "CHG-PPP-PATRIMONIAL-RECOVERY-047",
   "components": [
     "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "GAS-PORTERO",
-    "EXT-DRIVE",
     "SYS-POTENCIALES",
-    "SHEET-PPP-MODELOS",
-    "SHEET-PORTERO"
+    "GAS-PORTERO",
+    "SHEET-PORTERO",
+    "SHEET-PPP-MODELOS"
   ],
-  "summary": "Añadir panel de conocimiento del expediente al puesto existente: hechos con procedencia, versiones y variantes capturadas desde la lectura PPP confirmada, decisiones y próximos pasos; capacidades Jev, exportación Markdown y conexión Obsidian diferenciadas. Capturar sólo metadatos con revisión esperada e ID estable, sin enviar cifras financieras desde el panel. Exportar Markdown portable mediante descarga explícita sin afirmar sincronización con un vault. Conservar voz, navegador, PPP, autorización y fuentes canónicas. Comparar dos capturas muestra diferencias y faltantes, sin inferir ganador. La bóveda ZIP portable conserva archivos Markdown y enlaces; no instala ni sincroniza Obsidian. Proyectar una subtarea antigua running con objetivo detenido como interrumpida, sin mutar su registro. Incorporar modalidad, escenario, revisión y horizonte únicamente cuando el puente PPP entregue metadatos reales.",
+  "summary": "Recuperar exclusivamente transporte PPP Patrimonial aprobado por CTR-PPP-PATRIMONIAL-NATIVO sobre activo/editor V65: adaptador pppPat* igual a V54, números null/cero, rangos integer, CAS, revisiones, auditoría, protecciones e idempotencia. Preservar funciones ajenas y los otros siete archivos byte a byte, incluido manifest, URLs, scopes, configuración y ACL PT/PA; sin fórmulas ni reglas de negocio nuevas. El coordinador corrige frontend: caché por caso que conserva A al abrir B y retornar; conciliación de ACK perdido tras reload con el job exacto sólo después de GET fresco; metadatos del borrador durables antes de pintar. El recibo existente en caché de seis horas se recupera antes de CAS; si fue evictado, CAS rechaza revisión obsoleta sin sobrescribir ni emitir otro job. Despliegue coordinado con lock y CAS de fuente/configuración; si editor == active en preflight, editor final == candidato desplegado. Mantener adaptador en activo y editor, sin restaurar V53. Corregir además KPIs legacy falsos sobre el modelo nativo: localizar .sticky-header sin asumir etiqueta header y aplicar ocultación CSS; no mostrar cifras cero legacy como resultado nativo. Alcance visual del mismo defecto #47, sin modificar fórmulas ni otros componentes.",
   "tests": [
+    "Backend coordinado con datos sintéticos: helpers iguales a V54; mock reproduce horizonte_invalido y candidato pasa CAS, null/cero, Vertical e idempotencia según relevo. Auditoría, rangos integer y fórmulas protegidas requieren evidencia del consumer exacto. Actualización: CAS/readback de publicación V66 confirma preservación de siete archivos y editor/candidato/versión iguales; GET real Patrimonial V66 y 166 celdas exactas con Sheets aprobados según coordinador; geometría, otros casos y Vertical no acreditados.",
+    "Frontend coordinado: editar A, abrir B y retornar A sin pérdida ni cruce; reload con ACK perdido conserva job/request_id/payload/revisión originales y sólo concilia después de GET fresco autorizado. P1/P2/P3 locales: 50 Node aprobados (14 native, 4 bridge, 32 legacy) según el coordinador; Chromium native y A/B/A aprobados. WebKit local pendiente por dependencias; CI del consumer verifica ambos navegadores en su contenedor.",
+    "Recibo en caché de seis horas se resuelve antes de CAS sin repetir escritura; recibo evictado y revisión obsoleta dan conflicto sin overwrite. No crear un job nuevo ni actualizar revisión esperada para forzar el reintento.",
+    "Persistir metadatos de borrador antes de paint; recarga y repintado conservan su vínculo con caso/job y estado no confirmado; resultados vigentes sólo con recibo confirmado.",
+    "Chromium según coordinador: native CUS cero y metadatos pendientes tras repintado/recarga; A/B/A conserva Local, renta cero, CUS null y metadatos. WebKit no verificado localmente por dependencias del sistema; exigir Chromium y WebKit en CI del consumer sin confundirlo con CI del Atlas.",
+    "Regresión visual del consumer: al montar nativo ocultar .sticky-header incluso si es DIV mediante selector/CSS; no mostrar KPIs legacy cero sobre datos nativos. Parche local y regresión Chromium aprobados según coordinador; publicación frontend pendiente.",
+    "Preservación final reportada por coordinador: 99 funciones ajenas a las seis PPP restauradas idénticas por Function.toString; siete archivos idénticos. Conservar manifest, URLs, scopes, configuración y ACL; fuentes privadas fuera de Git.",
+    "Preflight/postflight de versión/editor/configuración con lock y CAS; GET Patrimonial V66 y cotejo de 166 celdas con Sheets aprobados según coordinador. Dos escenarios conservan IDs y 269 campos; geometría pendiente. Runtime Vertical inconcluso: probe 45 s agotado y probe 90 s HTTPError; GET anónimo sin credencial no ejecutado, validación separada. Código conservado, auditoría y mocks aprobados según coordinador; no acreditan runtime. Sin POST de prueba ni extrapolación a otros casos.",
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
-    "node verify-accesos.cjs",
+    "node verify-accesos.cjs (ACCESOS_REF=58eb8e91a61f30419f3795afeeccdb5997689b57)",
     "node verify-obra-app.cjs",
-    "Pruebas aisladas de contrato, recibo perdido, reintento idéntico, conflicto, cambio de expediente, revocación y exportación Markdown.",
-    "Chromium con transporte sintético: panel, captura y descarga, errores sin perder la conversación, escritorio/móvil y cero escrituras de negocio.",
-    "Probar ZIP STORE/CRC-32, rutas relativas y límites UTF-8 de la bóveda; rechazar enlaces de fuente inseguros y contenido sin procedencia.",
-    "Comprobar proyección de subtareas interrumpidas y preservación de sus estados canónicos."
+    "node scripts/verificar-impacto.cjs --base origin/main --head HEAD --repo yodesarrollomx/yod-portal; git diff --check"
   ],
-  "rollback": "Revertir panel, imports y caché por PR; conservar voz, PPP, navegador, expediente, IDs, versiones, fuentes, decisiones y recibos. No borrar datos de negocio ni vaults."
+  "rollback": "Ante conflicto de fuente/configuración detener antes de escribir. Reversión documental: revertir este PR y regenerar vistas conservando cambios concurrentes. Reversión funcional del coordinador: snapshot revisado de la misma implementación y frontend compatible, conservando jobs, borradores, recibos, historial, datos/fórmulas/libros y CAS. No restaurar editor antiguo por rutina; registrar si una reversión de emergencia vuelve a degradar Patrimonial. No reemitir jobs ni sobrescribir para resolver un conflicto."
 }

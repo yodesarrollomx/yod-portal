@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-05.85-despacho-conocimiento",
+  "revision": "2026-10-05.89-ppp-patrimonial-evidencia-final",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -16,7 +16,7 @@
       "Los detalles privados de seguridad y reconciliación no forman parte de este atlas público",
       "Inventariar un archivo no equivale a revisar cada rama de su implementación",
       "La lista de proyectos independientes no acredita cobertura de todos los scripts vinculados a Sheets.",
-      "El editor de Portero conserva funciones adicionales no publicadas; no confundirlo con la versión 51 activa.",
+      "La diferencia editor/versión51 corresponde a la auditoría histórica; recuperación PPP del 5-oct parte de V65 sin adaptador y registra publicación API V66 con editor/candidato/versión iguales. GET Patrimonial y 166 celdas cotejados según coordinador sólo para el caso inspeccionado; no certifica geometría, Vertical ni todos los módulos/casos.",
       "Obra requiere confirmar su libro efectivo y reglas de delegación antes de integrar el prototipo de identidad.",
       "La App publicadora y los recorridos operativos de Sala/Marketing corregidos siguen pendientes de configuración y verificación."
     ]
@@ -260,6 +260,21 @@
           "claim": "Lectura pública del caso y la lista del piloto comparadas con entradas, resultados, cuerpos y flujo nativos; coinciden. Evidencia operativa privada; no se ejecutaron POST de prueba.",
           "status": "ejecucion",
           "source_revision": "Apps Script version 53"
+        },
+        {
+          "claim": "Relevo del coordinador confirmado por Dirección el 5-oct: fuente activa/editor V65 idénticos, adaptador Patrimonial ausente y GET sheet-model Patrimonial con error servidor; recuperación #47 propuesta. Detalles y snapshots privados.",
+          "status": "declarado",
+          "source_revision": "Apps Script version 65; 2026-10-05"
+        },
+        {
+          "claim": "Coordinador reporta publicación API V66 desde V65: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma URL/scopes/ACL y editor == candidato == versión inmutable V66. GET funcional posterior pendiente; sin POST de pruebas de negocio.",
+          "status": "declarado",
+          "source_revision": "Apps Script version 66; 2026-10-05"
+        },
+        {
+          "claim": "Coordinador reporta GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; dos escenarios conservan IDs y 269 campos, geometría pendiente. Acta privada fuera del repositorio. Vertical y otros casos no acreditados.",
+          "status": "declarado",
+          "source_revision": "Apps Script version 66; cotejo Patrimonial 2026-10-05"
         }
       ],
       "data_entities": [
@@ -269,11 +284,12 @@
         "flujo_proyectado"
       ],
       "risks_sanitized": [
-        "Backend de transporte v53 publicado en implementación existente. GET de caso y lista contrastados con el mismo libro y revisión; edición en pantalla y demás casos pendientes. Los casos no migrados conservan cálculo cliente."
+        "Backend de transporte v53 publicado en implementación existente. GET de caso y lista contrastados con el mismo libro y revisión; edición en pantalla y demás casos pendientes. Los casos no migrados conservan cálculo cliente.",
+        "GET Patrimonial y cotejo de 166 celdas sólo acreditan el caso inspeccionado; geometría, Vertical y otros casos pendientes. Parche visual y regresión Chromium aprobados según coordinador; WebKit en CI del consumer, publicación/aceptación frontend pendientes."
       ],
       "source_of_truth": "SHEET-PORTERO registra casos; libro canónico Sheets para el piloto con lectura pública verificada en v53. Los casos pendientes de migrar aún usan modelos del frontend.",
       "status": "codigo",
-      "runtime_status": "Frontend publicado y lectura pública del piloto conciliada con Sheets; sesión de pantalla y recorrido de edición aún pendientes"
+      "runtime_status": "GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets según coordinador, sólo caso inspeccionado; geometría/Vertical pendientes. P1/P2/P3 locales: 50 Node y Chromium native/A/B/A aprobados. Parche visual de KPIs legacy falsos local, regresión Chromium aprobada según coordinador. WebKit local pendiente por dependencias; ambos navegadores requeridos en CI del consumer. Publicación frontend/aceptación pendientes."
     },
     {
       "id": "SYS-TRACK",
@@ -1020,6 +1036,21 @@
           "claim": "Preflight privado de Corcho comunicado por el coordinador: implementación existente V57, editor igual a fuente activa, principal de Dirección y scopes Drive completos ya autorizados. No acredita adapter Corcho desplegado.",
           "status": "declarado",
           "source_revision": "Apps Script version 57"
+        },
+        {
+          "claim": "Relevo del coordinador confirmado por Dirección el 5-oct: fuente activa/editor V65 idénticos, adaptador Patrimonial ausente y GET sheet-model Patrimonial con error servidor; recuperación #47 propuesta. Detalles y snapshots privados.",
+          "status": "declarado",
+          "source_revision": "Apps Script version 65; 2026-10-05"
+        },
+        {
+          "claim": "Coordinador reporta publicación API V66 desde V65: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma URL/scopes/ACL y editor == candidato == versión inmutable V66. GET funcional posterior pendiente; sin POST de pruebas de negocio.",
+          "status": "declarado",
+          "source_revision": "Apps Script version 66; 2026-10-05"
+        },
+        {
+          "claim": "Coordinador reporta GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; dos escenarios conservan IDs y 269 campos, geometría pendiente. Acta privada fuera del repositorio. Vertical y otros casos no acreditados.",
+          "status": "declarado",
+          "source_revision": "Apps Script version 66; cotejo Patrimonial 2026-10-05"
         }
       ],
       "data_entities": [
@@ -1034,9 +1065,9 @@
         "Las cachés de consumidores ajenos a esta entrega pueden conservar permisos temporalmente; revisarlos al continuar cada tablero."
       ],
       "backend_source_status": "fuente_editor_y_lectura_publica_contrastadas",
-      "source_of_truth": "Versión53 de implementación existente observada en editor; lectura HTTP PPP contrastada con libro canónico. Evidencia API de versiones51/52 histórica; los datos operativos siguen en sus hojas.",
+      "source_of_truth": "Implementación existente y sus hojas canónicas; último recibo API del coordinador V66 desde V65 el 5-oct, con editor/candidato/versión inmutable iguales. Evidencias V51/V52/V53/V57/V65 históricas, con alcance y fecha propios.",
       "status": "codigo",
-      "runtime_status": "Versión53 publicada en la implementación existente. Código leído del editor coincide con el cambio guardado; configuración conservada. Lectura pública PPP de caso/lista conciliada con Sheets; activador directo instalado. Edición real, sesión de pantalla y aceptación por rol pendientes. Preflight Corcho V57 registrado por separado; adapter provisional CHG-DESPACHO-CORCHO-PROVISIONAL-035 propuesto, sin despliegue de producto en este PR."
+      "runtime_status": "Publicación API V66 desde V65 reportada por coordinador: adaptador PPP recuperado, siete archivos idénticos, misma URL/scopes/ACL y editor/candidato/versión iguales. GET real Patrimonial aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; geometría pendiente. Vertical y otros casos no acreditados; aceptación final pendiente."
     },
     {
       "id": "SHEET-PORTERO",
@@ -4394,9 +4425,24 @@
           "claim": "Versión53 publicada; lectura HTTP de caso y lista conciliada con el libro piloto. Escritura permitida desplegada y probada con dobles; recorrido público de edición pendiente.",
           "status": "ejecucion",
           "source_revision": "Apps Script version 53"
+        },
+        {
+          "claim": "Relevo del coordinador confirmado por Dirección el 5-oct: fuente activa/editor V65 idénticos, adaptador Patrimonial ausente y GET sheet-model Patrimonial con error servidor; recuperación #47 propuesta. Detalles y snapshots privados.",
+          "status": "declarado",
+          "source_revision": "Apps Script version 65; 2026-10-05"
+        },
+        {
+          "claim": "Coordinador reporta publicación API V66 desde V65: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma URL/scopes/ACL y editor == candidato == versión inmutable V66. GET funcional posterior pendiente; sin POST de pruebas de negocio.",
+          "status": "declarado",
+          "source_revision": "Apps Script version 66; 2026-10-05"
+        },
+        {
+          "claim": "Coordinador reporta GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; dos escenarios conservan IDs y 269 campos, geometría pendiente. Acta privada fuera del repositorio. Vertical y otros casos no acreditados.",
+          "status": "declarado",
+          "source_revision": "Apps Script version 66; cotejo Patrimonial 2026-10-05"
         }
       ],
-      "contract": "Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente."
+      "contract": "Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente. Recuperación #47: conservar compatibilidad Vertical; ausencia del adaptador Patrimonial observada en V65 según relevo, publicación API V66 reportada posteriormente, con GET Patrimonial y cotejo de 166 celdas aprobados según coordinador sólo para el caso inspeccionado; geometría y Vertical pendientes. Reconciliar job exacto y recibos antes de CAS conforme CTR-PPP-PATRIMONIAL-NATIVO."
     },
     {
       "id": "CON-PPP-REGISTRO",
@@ -8217,6 +8263,39 @@
       ],
       "deployment": "Consumidor preparado en PR100 sobre main466db10. Head a9413239: 390 pruebas y verificadores OS aprobados (runs37398477844/37398477241), Chromium aislado en1280×900/390×844 aprobado (37398478599), dos capturas sintéticas. El registro inicial sin fecha y los metadatos reales de modalidad/modelo/horizonte se conservan sin inferencias. El PR permanece borrador: no acredita backend publicado, escritura de negocio, audio físico, aceptación de Dirección ni sincronización Obsidian.",
       "rollback": "Revertir panel, imports y caché por PR; conservar voz, PPP, navegador, expediente, IDs, versiones, fuentes, decisiones y recibos. No borrar datos de negocio ni vaults."
+    },
+    {
+      "id": "CHG-PPP-PATRIMONIAL-RECOVERY-047",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS"
+      ],
+      "proposal": "Recuperar exclusivamente transporte PPP Patrimonial aprobado por CTR-PPP-PATRIMONIAL-NATIVO sobre activo/editor V65: adaptador pppPat* igual a V54, números null/cero, rangos integer, CAS, revisiones, auditoría, protecciones e idempotencia. Preservar funciones ajenas y los otros siete archivos byte a byte, incluido manifest, URLs, scopes, configuración y ACL PT/PA; sin fórmulas ni reglas de negocio nuevas. El coordinador corrige frontend: caché por caso que conserva A al abrir B y retornar; conciliación de ACK perdido tras reload con el job exacto sólo después de GET fresco; metadatos del borrador durables antes de pintar. El recibo existente en caché de seis horas se recupera antes de CAS; si fue evictado, CAS rechaza revisión obsoleta sin sobrescribir ni emitir otro job. Despliegue coordinado con lock y CAS de fuente/configuración; si editor == active en preflight, editor final == candidato desplegado. Mantener adaptador en activo y editor, sin restaurar V53. Corregir además KPIs legacy falsos sobre el modelo nativo: localizar .sticky-header sin asumir etiqueta header y aplicar ocultación CSS; no mostrar cifras cero legacy como resultado nativo. Alcance visual del mismo defecto #47, sin modificar fórmulas ni otros componentes.",
+      "status": "propuesto",
+      "approval": "Dirección autorizó resolver Sala #47 y analizar consistencias; recuperación quirúrgica previamente aprobada y correcciones frontend del mismo defecto. El coordinador conserva implementación/publicación frontend/backend. Autorización final explícita: completar evidencia Atlas, aprobar checks, pasar PR #101 a ready e integrar con match-head exacto, revalidando main y resolviendo concurrencia si avanza. Sin incorporar otro draft ni ampliar arquitectura.",
+      "observed": "Evidencia privada reportada por el coordinador y retomada por Dirección el 5-oct: V65 activo/editor idénticos; ninguna definición pppPat* en los ocho archivos; GET sheet-model Patrimonial devuelve ok:false,error:servidor. V54 publicada 2-oct 05:47 UTC contenía el adaptador, pero el editor volvió a V53 sin él y un despliegue posterior lo perdió. Mock reproduce horizonte_invalido al pasar el modelo nativo por ppEstadoHoja_ Vertical. Helpers candidatos iguales a V54; mock de CAS, null/cero, Vertical e idempotencia aprobado según el relevo. No acredita publicación ni GET posterior correcto. Actualización del coordinador: backend publicado en V66 desde V65; publicación observada por API y CAS/readback confirma ocho archivos, siete preservados byte a byte y sólo Code con transporte PPP adaptado. Misma URL, scopes y ACL; editor == candidato == fuente de versión inmutable V66. Sin POST de pruebas de negocio. GET real posterior pendiente. Frontend P1/P2/P3 local: 50 Node aprobados (14 native, 4 bridge, 32 legacy), según coordinador. Chromium aprobó native CUS cero y metadatos pendientes tras repintado/recarga; A/B/A conservó Local, renta cero, CUS null y metadatos. WebKit local pendiente por dependencias del sistema; CI del consumer en su contenedor debe verificar Chromium y WebKit. Publicación frontend y GET real/Sheets pendientes. Recibo posterior del coordinador: GET real Patrimonial V66 aprobado y 166 celdas comparadas exactamente con lectura directa de Sheets; acta privada fuera del Atlas. Los dos escenarios conservan IDs y 269 campos según reporte; geometría sigue pendiente. No extrapolar cotejo a otros casos ni a Vertical. Runtime Vertical inconcluso: primer probe agotó 45 s y el segundo de 90 s terminó en HTTPError. Hallazgo visual nuevo: selector header.sticky-header omitía un DIV y mostraba KPIs legacy cero sobre el modelo nativo; parche local usa .sticky-header y ocultación CSS, regresión Chromium aprobada según último recibo del coordinador. Recibo final de preservación del coordinador: 99 funciones fuera de las seis PPP restauradas idénticas por Function.toString; siete archivos preservados. Sin fuentes privadas publicadas. Merge Atlas #101 autorizado con head exacto después de checks; no implica publicación frontend ni aceptación de otros casos. Recibo final de límites: código original de las 99 funciones conservado y auditoría/mocks aprobados; no equivalen a Runtime Vertical verificado. GET anónimo sin credencial no ejecutado tras el fallo HTTP Vertical, validación separada del coordinador. Consumer consolidado con su main/PR13 preservando metadatos compartidos y pruebas bridge; no amplía el alcance de Atlas.",
+      "tests": [
+        "Backend coordinado con datos sintéticos: helpers iguales a V54; mock reproduce horizonte_invalido y candidato pasa CAS, null/cero, Vertical e idempotencia según relevo. Auditoría, rangos integer y fórmulas protegidas requieren evidencia del consumer exacto. Actualización: CAS/readback de publicación V66 confirma preservación de siete archivos y editor/candidato/versión iguales; GET real Patrimonial V66 y 166 celdas exactas con Sheets aprobados según coordinador; geometría, otros casos y Vertical no acreditados.",
+        "Frontend coordinado: editar A, abrir B y retornar A sin pérdida ni cruce; reload con ACK perdido conserva job/request_id/payload/revisión originales y sólo concilia después de GET fresco autorizado. P1/P2/P3 locales: 50 Node aprobados (14 native, 4 bridge, 32 legacy) según el coordinador; Chromium native y A/B/A aprobados. WebKit local pendiente por dependencias; CI del consumer verifica ambos navegadores en su contenedor.",
+        "Recibo en caché de seis horas se resuelve antes de CAS sin repetir escritura; recibo evictado y revisión obsoleta dan conflicto sin overwrite. No crear un job nuevo ni actualizar revisión esperada para forzar el reintento.",
+        "Persistir metadatos de borrador antes de paint; recarga y repintado conservan su vínculo con caso/job y estado no confirmado; resultados vigentes sólo con recibo confirmado.",
+        "Chromium según coordinador: native CUS cero y metadatos pendientes tras repintado/recarga; A/B/A conserva Local, renta cero, CUS null y metadatos. WebKit no verificado localmente por dependencias del sistema; exigir Chromium y WebKit en CI del consumer sin confundirlo con CI del Atlas.",
+        "Regresión visual del consumer: al montar nativo ocultar .sticky-header incluso si es DIV mediante selector/CSS; no mostrar KPIs legacy cero sobre datos nativos. Parche local y regresión Chromium aprobados según coordinador; publicación frontend pendiente.",
+        "Preservación final reportada por coordinador: 99 funciones ajenas a las seis PPP restauradas idénticas por Function.toString; siete archivos idénticos. Conservar manifest, URLs, scopes, configuración y ACL; fuentes privadas fuera de Git.",
+        "Preflight/postflight de versión/editor/configuración con lock y CAS; GET Patrimonial V66 y cotejo de 166 celdas con Sheets aprobados según coordinador. Dos escenarios conservan IDs y 269 campos; geometría pendiente. Runtime Vertical inconcluso: probe 45 s agotado y probe 90 s HTTPError; GET anónimo sin credencial no ejecutado, validación separada. Código conservado, auditoría y mocks aprobados según coordinador; no acreditan runtime. Sin POST de prueba ni extrapolación a otros casos.",
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs (ACCESOS_REF=58eb8e91a61f30419f3795afeeccdb5997689b57)",
+        "node verify-obra-app.cjs",
+        "node scripts/verificar-impacto.cjs --base origin/main --head HEAD --repo yodesarrollomx/yod-portal; git diff --check"
+      ],
+      "deployment": "Propuesta previa registrada antes del parche en 1f5a58bc2084f63cb9d2c8f88542883bd9285a9f. Backend V66 publicado desde V65 según recibo API del coordinador: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma implementación/URL/scopes/ACL, editor == candidato == versión inmutable V66. Recibo posterior: GET real Patrimonial V66 aprobado y 166 celdas exactas frente a Sheets según coordinador; dos escenarios con IDs y 269 campos conservados, geometría pendiente. Cotejo exclusivo del caso inspeccionado: no acredita otros casos ni Vertical. Runtime Vertical inconcluso: probe 45 s agotado y probe 90 s terminó en HTTPError; no afirmar verificación runtime. Frontend P1/P2/P3 local con 50 Node y Chromium native/A/B/A aprobados según coordinador; WebKit local pendiente por dependencias del sistema, ambos navegadores requeridos en CI del consumer. Publicación frontend pendiente; corrección local de KPIs legacy falsos (.sticky-header para DIV y ocultación CSS), regresión Chromium aprobada según coordinador. Este PR sólo Atlas. Integración de PR #101 autorizada tras checks y revalidación de main, con match-head exacto. Consumer fija el SHA de merge de PR #101 y revisión final junto a CTR-PPP-PATRIMONIAL-NATIVO; no fijar SHA de otro draft. Main c45e0f7 ya integra PR #100; se conservan íntegros su código y propuesta CHG-DESPACHO-CONOCIMIENTO-078 como base concurrente, sin ampliarlos en este PR. Revalidar concurrencia antes de integrar/publicar. Sin POST de pruebas de negocio; Sala #47 permanece sin cierre por esta evidencia. Runtime Vertical y GET anónimo sin credencial no acreditados; límite acotado registrado, sin bloquear esta integración documental ni afirmar cobertura de otros casos. Consumer consolidado sobre main/PR13 según coordinador, con metadatos compartidos y bridge conservados.",
+      "rollback": "Ante conflicto de fuente/configuración detener antes de escribir. Reversión documental: revertir este PR y regenerar vistas conservando cambios concurrentes. Reversión funcional del coordinador: snapshot revisado de la misma implementación y frontend compatible, conservando jobs, borradores, recibos, historial, datos/fórmulas/libros y CAS. No restaurar editor antiguo por rutina; registrar si una reversión de emergencia vuelve a degradar Patrimonial. No reemitir jobs ni sobrescribir para resolver un conflicto."
     }
   ],
   "data_contracts": [
@@ -8821,7 +8900,10 @@
         "Dato ausente permanece pendiente, no se convierte en cero. Demanda que excede capacidad conserva el número y muestra discrepancia, sin recorte silencioso.",
         "Mantener endpoint, ACL PT/PA, IDs, caso_id, palabra, históricos, CAS y revisión. No cambiar lectura vertical ni datos de otros casos.",
         "Lectura tipada en pppLeerLibro_/sheet-cantidades conserva compatibilidad vertical. Registro y creación de modelo canónico documentados con fuente y rollback.",
-        "Pruebas mixtas vivienda/comercio, CUS cero/ausente, pasillos 0/20, 1/N puertas, rentas distintas y exceso; cero POST de prueba de negocio."
+        "Pruebas mixtas vivienda/comercio, CUS cero/ausente, pasillos 0/20, 1/N puertas, rentas distintas y exceso; cero POST de prueba de negocio.",
+        "Recuperación #47 conserva caché y borrador vinculados al caso al navegar A/B/A; persistir metadatos de borrador antes de pintar y no presentar pendientes como confirmados.",
+        "ACK perdido tras reload: recuperar el job exacto con request_id, payload y revisión originales sólo tras GET fresco autorizado. La caché de recibos de seis horas se consulta antes de CAS; recibo evictado y revisión obsoleta producen conflicto sin overwrite. No sustituir el job ni elevar revisión esperada para forzar escritura.",
+        "Recuperación sobre activo/editor V65 preserva los otros siete archivos, manifest, URLs, scopes y ACL; adaptador presente en activo y editor final. Pruebas sintéticas y propuesta Atlas no certifican despliegue ni cierre de Sala #47."
       ]
     },
     {
