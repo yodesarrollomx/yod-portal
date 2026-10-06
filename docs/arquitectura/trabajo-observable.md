@@ -1,6 +1,6 @@
 # Trabajo observable en la computadora
 
-CHG-TRABAJO-OBSERVABLE-098. Propuesta autorizada, implementación y despliegue por verificar.
+CHG-TRABAJO-OBSERVABLE-098. Implementado en portal PR110 y servidor PR35; pruebas y despliegues se registran por separado en esos PR.
 
 La computadora comparte una proyección privada del objetivo ejecutado: caso, ejecución, revisión fuente, tarea actual, herramienta invocada, resultado y fuentes de esa llamada. El progreso sólo se presenta como confirmado tras el acuse del backend canónico. El resultado del ejecutor se llama análisis preparado; la aceptación y estado final se consultan en Pendientes. No inicia trabajo al abrir, observar o recargar.
 

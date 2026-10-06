@@ -534,3 +534,19 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - La modalidad PPP no es el tipo versión/variante ni una etapa de avance. No inferirla del nombre del escenario.
 - Una subtarea running bajo padre detenido se muestra interrumpida y pendiente de conciliación. La presentación no altera su estado canónico.
 - Conocimiento se consulta al abrir, por acción de Actualizar y tras recibo; no hace polling ni lecturas concurrentes periódicas de contexto.
+
+## CTR-DESPACHO-TRABAJO-OBSERVABLE
+
+- Componentes: SYS-YOD-OS, SYS-DESPACHO.
+- Evidencia: Dirección autoriza observar una tarea real del PPP en la computadora del autón..
+- Entrada/campos: `POST /computer/work con cuerpo vacío y credencial efímera del caso vigente.`, `Progreso validado del ejecutor tras acuse canónico; invocaciones reales de herramientas con resultados filtrados.`, `Captura del navegador ligada a case_id, run_id, goal_id y task_id opcional.`.
+- Salida: Proyección privada acotada de la última ejecución: tarea, herramientas, fuentes, pasos y evidencia., Pantalla 3D y sección Computadora comparten procedencia; última captura fechada, no video., Estado preparado separado de aprobación y confirmación final del objetivo..
+
+- Observar no inicia inferencia, no navega ni crea/reanuda objetivos.
+- Fuentes leídas proceden del resultado de herramientas, no del argumento solicitado ni de resultados de búsqueda no leídos.
+- No se muestran avances como confirmados antes de onProgress aceptado por el backend.
+- Restaurar una ejecución antes activa la marca interrumpida. Un fallo de observación no reintenta una acción de negocio.
+- No se guardan argumentos, claves ni razonamiento interno en el registro. Datos privados fuera de Git y del storage del navegador.
+- Respuesta tardía, otro caso o revocación no puede pintar el puesto; una imagen de otra ejecución no se atribuye al trabajo actual.
+- Capturas sólo se descargan al cambiar. Observación periódica únicamente en pestaña visible; sin lecturas nuevas de Drive/JEV por observar.
+- El piloto instalado conserva sus permisos; múltiples personajes no equivalen a workers habilitados.
