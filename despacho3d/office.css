@@ -29,3 +29,8 @@ body>header>.chinche-ui-tools{padding:0}#pin-selection{z-index:2147483647}
 #office-agent-marker::after{content:"";position:absolute;left:calc(50% - 4px);bottom:-5px;width:8px;height:8px;background:#fffaf0;transform:rotate(45deg);border-right:1px solid #a88b56;border-bottom:1px solid #a88b56}
 
 #office-agent-marker{overflow-wrap:anywhere}
+
+#office-agent-marker{width:max-content;max-width:min(180px,48vw)}
+#office-agent-marker strong,#office-agent-marker span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#office-agent-marker strong{font-weight:600}
+#office-agent-marker span{font-size:11px;color:#566665}

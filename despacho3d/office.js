@@ -37,7 +37,7 @@ window.addEventListener('pagehide',()=>pilot.disconnect());
 window.addEventListener('pageshow',bindPilot);
 bindPilot();
 
-const agentMarker=document.createElement('button');agentMarker.id='office-agent-marker';agentMarker.type='button';agentMarker.hidden=true;mount.append(agentMarker);
+const agentMarker=document.createElement('button'),markerName=document.createElement('strong'),markerStatus=document.createElement('span');agentMarker.append(markerName,markerStatus);agentMarker.id='office-agent-marker';agentMarker.type='button';agentMarker.hidden=true;mount.append(agentMarker);
 let markerCase=null;
 agentMarker.onclick=()=>{
  const api=window.YodResidentAgents||window.CubefarmYOD,p=api?.getProfile?.();
@@ -50,11 +50,13 @@ function paintAgentMarker(){
  agentMarker.hidden=!show;markerCase=show?p.case_id:null;if(!show)return;
  const point=new T.Vector3(a.position[0],1.9,a.position[1]).project(camera);
  if(Math.abs(point.x)>1||Math.abs(point.y)>1||Math.abs(point.z)>1){agentMarker.hidden=true;return;}
- agentMarker.style.left=((point.x+1)*.5*mount.clientWidth)+'px';
- agentMarker.style.top=((-point.y+1)*.5*mount.clientHeight)+'px';
+
  const state=a.motion==='walk'?'En camino':a.place==='inicio'?'En su puesto':'En '+(places[a.place]?.label||'la oficina');
  const text=(p.name||'Autón')+' · '+state;
- if(agentMarker.textContent!==text){agentMarker.textContent=text;agentMarker.setAttribute('aria-label','Abrir puesto de '+(p.name||'autón')+'. '+state);}
+ if(agentMarker.dataset.label!==text){agentMarker.dataset.label=text;markerName.textContent=p.name||'Autón';markerStatus.textContent=state;agentMarker.setAttribute('aria-label','Abrir puesto de '+(p.name||'autón')+'. '+state);}
+ const half=agentMarker.offsetWidth/2+8;
+ agentMarker.style.left=T.MathUtils.clamp((point.x+1)*.5*mount.clientWidth,half,mount.clientWidth-half)+'px';
+ agentMarker.style.top=((-point.y+1)*.5*mount.clientHeight)+'px';
 }
 
 function isMobile(){return innerWidth<=700||coarse;}

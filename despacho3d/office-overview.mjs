@@ -3,7 +3,7 @@ import * as T from 'three';
 // Fixed oblique view: world sizes stay legible across the office.
 export const OFFICE_EXTENTS={min:[-24.5,-.35,-9.8],max:[12.5,4,9.8]};
 export function fitOfficeOverview(camera,controls,aspect){
- const target=new T.Vector3(-6,.8,0),direction=new T.Vector3(.65,1.3,1).normalize();
+ const target=new T.Vector3(-6,.8,0),direction=new T.Vector3(...(aspect<1?[1,1.3,.18]:[.65,1.3,1])).normalize();
  const right=new T.Vector3().crossVectors(new T.Vector3(0,1,0),direction).normalize();
  const up=new T.Vector3().crossVectors(direction,right);
  let width=0,height=0;
