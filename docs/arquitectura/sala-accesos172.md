@@ -24,3 +24,7 @@ flowchart LR
 ## Evidencia y reversión
 
 Regresiones con datos sintéticos: caché de rol, prefijos de token, canje/listado tardíos, entrada/cambio/cierre de sesión y respaldo persistido; conservación de DP y upserts. Verificación real de administración antes de cerrar Sala172. Revertir frontend/pin mediante PR sin borrar registros ni alterar el escritor o los permisos del backend.
+
+## Implementación local
+
+45 regresiones de accesos aprobadas (33 nuevas y12 existentes), más37 pruebas adicionales del consumidor. Canje y listado tienen límite de20segundos y reintento manual de lectura; ninguna escritura se reenvía. Cambios en frontend; backend y usuarios conservados. Publicación y comprobación con sesión administradora real siguen pendientes, por lo que Sala172 continúa abierto. La caché vigente del canje en GAS no se acredita por estas pruebas del frontend.

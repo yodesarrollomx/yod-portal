@@ -8372,15 +8372,15 @@
         "SHEET-PORTERO"
       ],
       "proposal": "Validar administración de accesos sobre la sesión actual y el Portero original: consultar rol en servidor, esperar canje de parámetros de entrada, descartar respuestas de sesiones anteriores y limpiar/inhabilitar la vista al cambiar o cerrar sesión. Eliminar selección persistente de respaldo; conservar autoridad del servidor, usuarios, roles, códigos de tableros y DP existente. Sin cambios de GAS ni datos.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "approval": "Dirección autorizó resolver Sala172 y continuar autónomamente los pendientes, preservando la autorización real del servidor.",
       "tests": [
-        "Regresiones Node con red sintética: rol cacheado obsoleto, prefijos coincidentes, canje/listado tardío, cambio/cierre de sesión, parámetros de entrada, respaldo persistido y rechazo original sin fallback.",
+        "45 regresiones Node PASS:33 nuevas+12 gates;37 adicionales preservadas. Canje/listado/read timeout20s, reintento manual sólo de lecturas y respuestas de sesiones antiguas.",
         "Conservar DP, códigos no dibujados y parámetros de upsert de rol/nombre/boards; no reintentar automáticamente escrituras.",
         "git diff --check; sintaxis de scripts HTML y regresiones de acceso existentes; CI sobre head exacto.",
         "Comprobar publicación por Pages y recursos públicos; verificar sesión real administradora por separado antes de cerrar Sala172."
       ],
-      "deployment": "Propuesta registrada antes de implementar. Diagnóstico en código y reproducción aislada; sesión real administradora todavía pendiente de comprobar.",
+      "deployment": "Frontend implementado en rama y validado con JavaScript real/VM/DOM/red sintéticos. No se alteró backend ni usuarios. Publicación y sesión real administradora pendientes; pantalla compartida muestra Google y Sin sesión. Sala172 sigue abierto.",
       "rollback": "Revertir frontend y pin de Atlas por PR, preservando usuarios, roles, tableros, sesiones, bitácoras, fórmulas, endpoint y despliegue GAS. No borrar ni restaurar datos."
     }
   ],
