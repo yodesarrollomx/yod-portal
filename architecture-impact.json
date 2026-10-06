@@ -4,9 +4,10 @@
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-SALA"
+    "SYS-SALA",
+    "GAS-PORTERO"
   ],
-  "summary": "Completar captura de chinches sobre escena virtual, tarjetas del agente y superficies del Despacho. Mantener geometría v1 y añadir contexto UI v2 estrictamente técnico (superficie allowlisted, ruta DOM acotada e índice visible); acciones explícitas por tarjeta y señalamiento global. No copiar contenido privado ni credenciales, no enviar sin Clavar y no ampliar autorización; mantener origen/iframe/época vigentes y contratos de producción existentes.",
+  "summary": "Completar captura de chinches sobre escena virtual, tarjetas del agente y superficies del Despacho. Mantener geometría v1 y añadir contexto UI v2 estrictamente técnico (superficie allowlisted, ruta DOM acotada e índice visible); acciones explícitas por tarjeta y señalamiento global. No copiar contenido privado ni credenciales, no enviar sin Clavar y no ampliar autorización; mantener origen/iframe/época vigentes y contratos de producción existentes. El cambio al loader de shell conserva completamente el contrato y permisos Portero; su dependencia se declara sin modificar backend.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
