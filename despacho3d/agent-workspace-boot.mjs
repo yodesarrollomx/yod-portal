@@ -1,4 +1,4 @@
-import {createWorkspace} from './agent-workspace.mjs?v=2';
+import {createWorkspace} from './agent-workspace.mjs?v=3';
 const button=document.getElementById('computer-open');
 if(button){
  const dialog=document.createElement('dialog');dialog.className='workspace-dialog';dialog.setAttribute('aria-label','Puesto de Gastón');
@@ -7,9 +7,10 @@ if(button){
  const workspace=createWorkspace({container:dialog,getSelection:()=>window.YodResidentAgents?.getSelection?.()});
  function dismiss(){workspace.setActive(false);dialog.close();button.focus();}
  close.onclick=dismiss;dialog.addEventListener('cancel',e=>{e.preventDefault();dismiss();});
- talk.onclick=()=>{dismiss();document.getElementById('voice-open')?.click();};
+ talk.onclick=()=>{const id=window.YodResidentAgents?.getSelection?.()?.case_id,tab=workspace.getTab();dismiss();if(window.YodVoiceWorkspace?.openForCase)void window.YodVoiceWorkspace.openForCase(id,tab,{startVoice:true});else document.getElementById('voice-open')?.click();};
  function openForCase(id,tab='browser'){
   const selection=window.YodResidentAgents?.getSelection?.();if(!selection||selection.case_id!==id)return false;
+  if(window.YodVoiceWorkspace?.openForCase){void window.YodVoiceWorkspace.openForCase(id,tab);return true;}
   if(window.YodVoiceWorkspace?.isOpen()){window.YodVoiceWorkspace.show(tab);return true;}
   if(!dialog.open)dialog.showModal();workspace.open(selection,tab);return true;
  }

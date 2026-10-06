@@ -1,7 +1,7 @@
 import {createFrameTransport,validateConversation} from './conversation.mjs';
 import {DurableGoals} from './goals.mjs';
 import {trayecto,centro} from './circulo.mjs';
-export const MENU_SECTORS=[['pendientes','Pendientes'],['ppp','Tablero PPP'],['historial','Historial'],['moac','Trabajo interno'],['documentos','Documentos'],['conversaciones','Conversaciones']];
+export const MENU_SECTORS=[['pendientes','Pendientes'],['ppp','Plan de potencial'],['historial','Historial'],['moac','Trabajo interno'],['documentos','Documentos'],['conversaciones','Conversaciones']];
 export const STATUS={queued:'En cola',running:'Trabajando',ready_for_review:'Para tu revisión',awaiting_data:'Faltan datos',stopped:'Detenido',completed:'Revisado'};
 export function projectMenu(conversation,goals){
  return {
@@ -19,6 +19,11 @@ export function mountAgentMenu({win=window,doc=document,transport=createFrameTra
  function close(){generation++;selection=null;conversation=null;draft={title:'',instruction:'',criterion:''};clearInterval(interval);interval=null;goals.hide();dialog.close();previousFocus?.focus?.();}
  function outside(tab){close();win.CubefarmYOD?.open(tab);}
  function talk(){close();doc.getElementById('voice-open')?.click();}
+ function sharedPPP(caseId){
+  const openShared=win.YodVoiceWorkspace?.openForCase||win.YodAgentWorkspace?.openForCase;
+  if(!openShared)return false;
+  close();void openShared(caseId,'ppp');return true;
+ }
  async function refresh(){
   if(loading||!selection||!dialog.open)return;
   loading=true;const own=generation,id=selection.case_id;
@@ -51,7 +56,7 @@ export function mountAgentMenu({win=window,doc=document,transport=createFrameTra
   const counts={pendientes:goals.model?String(model.goals.filter(g=>g.status!=='completed').length):'…',ppp:model.ppp.length?'↗':'—',historial:conversation?String(model.history.length):'…',moac:goals.model?String(model.goals.reduce((n,g)=>n+g.tasks.length,0)):'…',documentos:conversation?String(model.documents.length):'…',conversaciones:conversation?String(model.messages.length):'…'};
   MENU_SECTORS.forEach(([id,label],i)=>{
    const group=doc.createElementNS(svg.namespaceURI,'g'),path=doc.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',trayecto(i));path.setAttribute('class','circulo-gajo'+(id===section?' selected':''));path.setAttribute('role','button');path.setAttribute('tabindex','0');path.setAttribute('aria-label',label);path.setAttribute('aria-pressed',String(id===section));path.dataset.menuFocus=id;
-   const choose=()=>{section=id;render();};path.addEventListener('click',choose);path.addEventListener('keydown',e=>{if(['Enter',' '].includes(e.key)){e.preventDefault();choose();}});
+   const choose=()=>{if(id==='ppp'&&sharedPPP(selection.case_id))return;section=id;render();};path.addEventListener('click',choose);path.addEventListener('keydown',e=>{if(['Enter',' '].includes(e.key)){e.preventDefault();choose();}});
    const point=centro(i);
    for(const [value,y,cls]of [[label,point[1]-2,'circulo-et'],[counts[id],point[1]+16,'circulo-n']]){const t=doc.createElementNS(svg.namespaceURI,'text');t.setAttribute('x',point[0]);t.setAttribute('y',y);t.setAttribute('class',cls);t.textContent=value;group.append(t);}
    group.prepend(path);svg.append(group);
@@ -107,6 +112,7 @@ export function mountAgentMenu({win=window,doc=document,transport=createFrameTra
  async function openMenu(caseId,target=null){
   const resident=win.YodResidentAgents,fresh=resident?.getSelection?.();
   if(!fresh||fresh.case_id!==caseId)return false;
+  if(target==='ppp'&&sharedPPP(caseId))return true;
   if(target&&MENU_SECTORS.some(([id])=>id===target))section=target;
   if(dialog.open){render();return true;}
   selection=fresh;conversation=null;loading=false;generation++;previousFocus=doc.activeElement;dialog.showModal();render();void refresh();
