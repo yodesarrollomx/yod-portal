@@ -8,7 +8,7 @@ import {createOfficePilot,chooseOfficeHit} from './avatars/office-pilot.mjs?v=5'
 import {ENTORNO_AGENTE_CAMINA} from './entorno-config.mjs';
 import {crearAgenteIr} from './entorno-ruta.mjs?v=4';
 import {fitOfficeOverview,visibleOfficeHit} from './office-overview.mjs?v=1';
-import {places,allowed} from './office-layout.mjs?v=1';
+import {places,allowed} from './office-layout.mjs?v=2';
 const $=s=>document.querySelector(s),mount=$('#scene'),coarse=matchMedia('(pointer:coarse)').matches;
 let renderer;try{renderer=new T.WebGLRenderer({antialias:true,powerPreference:'high-performance'});}catch(e){$('#loading').hidden=true;$('#fallback').hidden=false;throw e;}
 renderer.localClippingEnabled=true;

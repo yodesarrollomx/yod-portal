@@ -51,6 +51,7 @@ const server=http.createServer((req,res)=>{
    const T=await import('/despacho3d/vendor/three.module.js'),p=new T.Vector3(7,1.23,-7.221).project(window.despacho.camera),r=document.querySelector('#scene canvas').getBoundingClientRect();
    return{x:r.x+(p.x+1)*r.width/2,y:r.y+(1-p.y)*r.height/2};
   });
+  assert.ok(point.x>=0&&point.y>=0&&point.x<=(mobile?390:1366)&&point.y<=(mobile?844:900),'computer is framed on arrival');
   await page.mouse.click(point.x,point.y);
   await page.waitForFunction(()=>window.__opened?.tab==='browser');
   assert.equal((await page.evaluate(()=>window.__opened)).id,'case-synthetic');

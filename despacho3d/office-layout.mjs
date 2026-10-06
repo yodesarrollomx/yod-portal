@@ -7,7 +7,7 @@ export const places={
  reception:{label:'Recepción',eye:[-8.3,1.65,-4.5],target:[-8.2,1.8,-8.5]},
  patio:{label:'Patio central',eye:[-4.45,1.65,.7],target:[0,1.6,-1]},
  potential:{label:'Potenciales',eye:[8.65,1.65,-4.55],target:[8.3,1.1,-7.2]},
- case:{label:'Mi terreno · Caso',eye:[8.0,1.65,-4.45],target:[6.65,1.3,-4.42]},
+ case:{label:'Puesto del proyecto',eye:[8.0,1.65,-5.6],target:[7,1.23,-7.22]},
  projects:{label:'Proyectos y permisos',eye:[8.5,1.65,1.65],target:[8.5,1.1,-1.6]},
  delivery:{label:'Obra y ventas',eye:[8.5,1.65,7.7],target:[8.5,1.1,4.8]},
  decisions:{label:'Decisiones',eye:[3.4,1.65,6.5],target:[-.2,1.1,6.3]},

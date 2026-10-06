@@ -7,7 +7,7 @@ export function createOfficeScreen(mesh,onChange=()=>{}){
  mesh.userData.agentComputer=true;let generation=0,latest=null,disposed=false;
  const line=(s,y,size=27)=>{ctx.font='500 '+size+'px Arial';ctx.fillText(String(s||''),24,y,720);};
  function draw(state,picture=null){
-  ctx.fillStyle='#162a30';ctx.fillRect(0,0,768,400);ctx.fillStyle='#ded6ba';line('COMPUTADORA',42,22);
+  ctx.fillStyle='#162a30';ctx.fillRect(0,0,768,400);ctx.fillStyle='#ded6ba';line('COMPUTADORA · '+workHeadline(state),42,22);
   if(picture){ctx.drawImage(picture,0,68,768,270);ctx.fillStyle='#162a30';ctx.fillRect(0,338,768,62);ctx.fillStyle='#ded6ba';line('Última captura · '+new Date(state.screen.captured_at).toLocaleTimeString(),376,22);}
   else{ctx.fillStyle='#eef1e8';line(workHeadline(state),130,34);line(state.work?.title||'Selecciona el puesto para consultar',194,27);line(state.work?.progress?.progress?.tasks?.find(t=>t.status==='running')?.title||'',250,25);ctx.fillStyle='#c1cbb9';line(state.work?'Registro · '+new Date(state.work.updated_at).toLocaleTimeString():'',350,23);}
   texture.needsUpdate=true;onChange();
