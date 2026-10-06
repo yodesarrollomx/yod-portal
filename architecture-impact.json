@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-05.85-ppp-patrimonial-recovery-propuesta",
+  "model_revision": "2026-10-05.86-ppp-patrimonial-recovery-alcance",
   "proposal_id": "CHG-PPP-PATRIMONIAL-RECOVERY-047",
   "components": [
     "SYS-YOD-OS",
@@ -8,17 +8,21 @@
     "SHEET-PORTERO",
     "SHEET-PPP-MODELOS"
   ],
-  "summary": "Recuperar exclusivamente transporte PPP Patrimonial aprobado por CTR-PPP-PATRIMONIAL-NATIVO: adaptador pppPat*, números null, rangos integer, CAS, revisiones, auditoría y protecciones. Partir de fuente activa/editor V65 y preservar todos los demás módulos, funciones y archivos; mismo endpoint y ACL PT/PA, sin fórmulas ni reglas de negocio nuevas. Despliegue coordinado con lock y CAS de fuente/configuración. Si editor == active en preflight, editor final == candidato desplegado; no restaurar el editor V53 sin adaptador. Mantener adaptador en versión activa y editor para evitar su pérdida en el siguiente deploy.",
+  "summary": "Recuperar exclusivamente transporte PPP Patrimonial aprobado por CTR-PPP-PATRIMONIAL-NATIVO sobre activo/editor V65: adaptador pppPat* igual a V54, números null/cero, rangos integer, CAS, revisiones, auditoría, protecciones e idempotencia. Preservar funciones ajenas y los otros siete archivos byte a byte, incluido manifest, URLs, scopes, configuración y ACL PT/PA; sin fórmulas ni reglas de negocio nuevas. El coordinador corrige frontend: caché por caso que conserva A al abrir B y retornar; conciliación de ACK perdido tras reload con el job exacto sólo después de GET fresco; metadatos del borrador durables antes de pintar. El recibo existente en caché de seis horas se recupera antes de CAS; si fue evictado, CAS rechaza revisión obsoleta sin sobrescribir ni emitir otro job. Despliegue coordinado con lock y CAS de fuente/configuración; si editor == active en preflight, editor final == candidato desplegado. Mantener adaptador en activo y editor, sin restaurar V53.",
   "tests": [
-    "Regresión Vertical y Patrimonial con datos sintéticos; Node/native/backend mock, null y rangos integer, CAS/revisión, auditoría y protección de fórmulas.",
-    "Preservación de funciones ajenas al transporte recuperado y comparación byte a byte de los otros archivos/manifest de Apps Script.",
-    "Preflight y postflight de versión/editor/configuración con lock y CAS; GET sheet-model posterior comparado con lectura directa de Sheets, sin POST de prueba.",
+    "Backend coordinado con datos sintéticos: helpers iguales a V54; mock reproduce horizonte_invalido y candidato pasa CAS, null/cero, Vertical e idempotencia según relevo. Auditoría, rangos integer y fórmulas protegidas requieren evidencia del consumer exacto.",
+    "Frontend coordinado: editar A, abrir B y retornar A sin pérdida ni cruce; reload con ACK perdido conserva job/request_id/payload/revisión originales y sólo concilia después de GET fresco autorizado.",
+    "Recibo en caché de seis horas se resuelve antes de CAS sin repetir escritura; recibo evictado y revisión obsoleta dan conflicto sin overwrite. No crear un job nuevo ni actualizar revisión esperada para forzar el reintento.",
+    "Persistir metadatos de borrador antes de paint; recarga y repintado conservan su vínculo con caso/job y estado no confirmado; resultados vigentes sólo con recibo confirmado.",
+    "Preservación de funciones ajenas y comparación byte a byte de los otros siete archivos/manifest, URLs, scopes, configuración y ACL.",
+    "Preflight y postflight de versión/editor/configuración con lock y CAS; GET sheet-model posterior comparado con lectura directa de Sheets por el coordinador, sin POST de prueba.",
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs"
+    "node verify-accesos.cjs (ACCESOS_REF=5b84278f4dfb6384f357538e2219ca63e4aa5c0d)",
+    "node verify-obra-app.cjs",
+    "node scripts/verificar-impacto.cjs --base origin/main --head HEAD --repo yodesarrollomx/yod-portal; git diff --check"
   ],
-  "rollback": "Ante conflicto de fuente/configuración detener antes de escribir. Reversión coordinada de código a snapshot revisado de la misma implementación, sin restaurar editor antiguo por rutina ni datos/fórmulas/libros; registrar si una reversión de emergencia vuelve a degradar Patrimonial."
+  "rollback": "Ante conflicto de fuente/configuración detener antes de escribir. Reversión documental: revertir este PR y regenerar vistas conservando cambios concurrentes. Reversión funcional del coordinador: snapshot revisado de la misma implementación y frontend compatible, conservando jobs, borradores, recibos, historial, datos/fórmulas/libros y CAS. No restaurar editor antiguo por rutina; registrar si una reversión de emergencia vuelve a degradar Patrimonial. No reemitir jobs ni sobrescribir para resolver un conflicto."
 }
