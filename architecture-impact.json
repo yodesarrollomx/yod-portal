@@ -1,21 +1,17 @@
 {
-  "model_revision": "2026-10-05.93-despacho-ppp-colaborativo",
-  "proposal_id": "CHG-DESPACHO-PPP-COLABORATIVO-093",
+  "model_revision": "2026-10-06.94-integraciones-oauth",
+  "proposal_id": "CHG-YOD-INTEGRACIONES-OAUTH-094",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "GAS-PORTERO",
-    "EXT-DRIVE"
+    "SYS-YOD-OS"
   ],
-  "summary": "Abrir Plan de potencial desde el círculo en una sola vista compartida: Gastón a la izquierda, PPP a la derecha; abrirlo no activa micrófono. Comenzar o terminar voz y cambiar pestañas conserva la misma instancia del tablero. Mostrar revisión/escenario confirmado y ajustes antes/después con estado de aplicación; conservar autorización, revisión y recibos, sin modificar fórmulas ni aprobar escenarios por conversación.",
+  "summary": "Publicar presentación y privacidad de YOD Integraciones para configurar la pantalla OAuth de administración de Apps Script. Páginas estáticas sin sesión, formularios ni acceso a datos operativos; no cambia autorizaciones o despliegues de Google.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
-    "node verify-obra-app.cjs",
-    "Navegador aislado escritorio/móvil: círculo→PPP sin micrófono, misma instancia al conversar, propuestas/revisión/recibo, cambios tardíos y sin escrituras de negocio."
+    "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir navegación, vista compartida y cache bumps conservando los datos PPP, variantes, recibos, voz y contratos existentes."
+  "rollback": "Revertir la incorporación de integraciones/ y el registro del modelo. No modifica los datos, las credenciales ni las implementaciones Apps Script."
 }

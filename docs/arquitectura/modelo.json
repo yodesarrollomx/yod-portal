@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-05.93-despacho-ppp-colaborativo",
+  "revision": "2026-10-06.94-integraciones-oauth",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8362,6 +8362,25 @@
       ],
       "deployment": "Código preparado con puente y herramientas existentes. Pruebas aisladas y publicación se registran en PR; no acredita disponibilidad continua de Sheets ni resultados financieros.",
       "rollback": "Revertir navegación, vista compartida y cache bumps conservando los datos PPP, variantes, recibos, voz y contratos existentes."
+    },
+    {
+      "id": "CHG-YOD-INTEGRACIONES-OAUTH-094",
+      "components": [
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Publicar presentación y privacidad de YOD Integraciones para configurar la pantalla OAuth de administración de Apps Script. Páginas estáticas sin sesión, formularios ni acceso a datos operativos; no cambia autorizaciones o despliegues de Google.",
+      "status": "implementado_local",
+      "approval": "Dirección autorizó configurar la integración directa de Apps Script y continuar su habilitación.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs"
+      ],
+      "deployment": "Propuesto para GitHub Pages mediante PR; publicación de la marca en Google y acceso efectivo a la API pendientes de comprobación independiente.",
+      "rollback": "Revertir la incorporación de integraciones/ y el registro del modelo. No modifica los datos, las credenciales ni las implementaciones Apps Script."
     }
   ],
   "data_contracts": [
@@ -10188,6 +10207,13 @@
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "integraciones/",
+      "components": [
+        "SYS-YOD-OS"
       ]
     }
   ]
