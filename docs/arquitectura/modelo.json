@@ -16,7 +16,7 @@
       "Los detalles privados de seguridad y reconciliación no forman parte de este atlas público",
       "Inventariar un archivo no equivale a revisar cada rama de su implementación",
       "La lista de proyectos independientes no acredita cobertura de todos los scripts vinculados a Sheets.",
-      "La diferencia editor/versión51 corresponde a la auditoría histórica; el relevo PPP del 5-oct reporta V65 activo/editor idénticos sin adaptador Patrimonial. No certifica todos los módulos.",
+      "La diferencia editor/versión51 corresponde a la auditoría histórica; recuperación PPP del 5-oct parte de V65 sin adaptador y registra publicación API V66 con editor/candidato/versión iguales. GET posterior pendiente; no certifica todos los módulos.",
       "Obra requiere confirmar su libro efectivo y reglas de delegación antes de integrar el prototipo de identidad.",
       "La App publicadora y los recorridos operativos de Sala/Marketing corregidos siguen pendientes de configuración y verificación."
     ]
@@ -265,6 +265,11 @@
           "claim": "Relevo del coordinador confirmado por Dirección el 5-oct: fuente activa/editor V65 idénticos, adaptador Patrimonial ausente y GET sheet-model Patrimonial con error servidor; recuperación #47 propuesta. Detalles y snapshots privados.",
           "status": "declarado",
           "source_revision": "Apps Script version 65; 2026-10-05"
+        },
+        {
+          "claim": "Coordinador reporta publicación API V66 desde V65: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma URL/scopes/ACL y editor == candidato == versión inmutable V66. GET funcional posterior pendiente; sin POST de pruebas de negocio.",
+          "status": "declarado",
+          "source_revision": "Apps Script version 66; 2026-10-05"
         }
       ],
       "data_entities": [
@@ -275,11 +280,11 @@
       ],
       "risks_sanitized": [
         "Backend de transporte v53 publicado en implementación existente. GET de caso y lista contrastados con el mismo libro y revisión; edición en pantalla y demás casos pendientes. Los casos no migrados conservan cálculo cliente.",
-        "El cotejo V53 histórico no acredita disponibilidad Patrimonial en V65 ni integridad de borradores/caché durante cambios de caso o ACK perdido; recuperación #47 pendiente."
+        "El cotejo V53 histórico y la publicación API V66 no acreditan lectura Patrimonial actual ni aceptación frontend; GET real posterior y navegador P1/P2/P3 pendientes."
       ],
       "source_of_truth": "SHEET-PORTERO registra casos; libro canónico Sheets para el piloto con lectura pública verificada en v53. Los casos pendientes de migrar aún usan modelos del frontend.",
       "status": "codigo",
-      "runtime_status": "Publicación y lectura del piloto registradas históricamente; el 5-oct GET Patrimonial falla según relevo del coordinador. Recuperación backend y tres correcciones frontend #47 propuestas; edición y aceptación actuales pendientes."
+      "runtime_status": "GET Patrimonial falló el 5-oct en V65 según relevo; backend V66 publicado por API según coordinador, GET posterior pendiente. Tres correcciones frontend #47 locales con 14 Node y 4 bridge aprobados según reporte; navegador en curso y publicación/aceptación pendientes."
     },
     {
       "id": "SYS-TRACK",
@@ -1031,6 +1036,11 @@
           "claim": "Relevo del coordinador confirmado por Dirección el 5-oct: fuente activa/editor V65 idénticos, adaptador Patrimonial ausente y GET sheet-model Patrimonial con error servidor; recuperación #47 propuesta. Detalles y snapshots privados.",
           "status": "declarado",
           "source_revision": "Apps Script version 65; 2026-10-05"
+        },
+        {
+          "claim": "Coordinador reporta publicación API V66 desde V65: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma URL/scopes/ACL y editor == candidato == versión inmutable V66. GET funcional posterior pendiente; sin POST de pruebas de negocio.",
+          "status": "declarado",
+          "source_revision": "Apps Script version 66; 2026-10-05"
         }
       ],
       "data_entities": [
@@ -1045,9 +1055,9 @@
         "Las cachés de consumidores ajenos a esta entrega pueden conservar permisos temporalmente; revisarlos al continuar cada tablero."
       ],
       "backend_source_status": "fuente_editor_y_lectura_publica_contrastadas",
-      "source_of_truth": "Implementación existente y sus hojas canónicas; última fuente activa/editor reportada V65 el 5-oct. Evidencia de V51/V52/V53/V57 histórica, con alcance y fecha propios.",
+      "source_of_truth": "Implementación existente y sus hojas canónicas; último recibo API del coordinador V66 desde V65 el 5-oct, con editor/candidato/versión inmutable iguales. Evidencias V51/V52/V53/V57/V65 históricas, con alcance y fecha propios.",
       "status": "codigo",
-      "runtime_status": "Último relevo V65 activo/editor idénticos, con transporte Patrimonial ausente y GET sheet-model en error servidor; CHG-PPP-PATRIMONIAL-RECOVERY-047 propuesto, sin restauración acreditada. Lecturas y despliegues V51/V52/V53 y preflight V57 son evidencia histórica acotada; no certifican otros módulos ni recorridos actuales."
+      "runtime_status": "Publicación API V66 desde V65 reportada por el coordinador: adaptador PPP recuperado, siete archivos idénticos, misma URL/scopes/ACL y editor/candidato/versión iguales. GET real posterior y conciliación con Sheets pendientes; no se acredita funcionamiento actual ni aceptación. Evidencias de versiones previas son históricas y acotadas."
     },
     {
       "id": "SHEET-PORTERO",
@@ -4410,9 +4420,14 @@
           "claim": "Relevo del coordinador confirmado por Dirección el 5-oct: fuente activa/editor V65 idénticos, adaptador Patrimonial ausente y GET sheet-model Patrimonial con error servidor; recuperación #47 propuesta. Detalles y snapshots privados.",
           "status": "declarado",
           "source_revision": "Apps Script version 65; 2026-10-05"
+        },
+        {
+          "claim": "Coordinador reporta publicación API V66 desde V65: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma URL/scopes/ACL y editor == candidato == versión inmutable V66. GET funcional posterior pendiente; sin POST de pruebas de negocio.",
+          "status": "declarado",
+          "source_revision": "Apps Script version 66; 2026-10-05"
         }
       ],
-      "contract": "Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente. Recuperación #47: conservar compatibilidad Vertical; ausencia del adaptador Patrimonial observada en V65 según relevo, sin restauración acreditada. Reconciliar job exacto y recibos antes de CAS conforme CTR-PPP-PATRIMONIAL-NATIVO."
+      "contract": "Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente. Recuperación #47: conservar compatibilidad Vertical; ausencia del adaptador Patrimonial observada en V65 según relevo, publicación API V66 reportada posteriormente, con GET real pendiente. Reconciliar job exacto y recibos antes de CAS conforme CTR-PPP-PATRIMONIAL-NATIVO."
     },
     {
       "id": "CON-PPP-REGISTRO",
@@ -8217,10 +8232,10 @@
       "proposal": "Recuperar exclusivamente transporte PPP Patrimonial aprobado por CTR-PPP-PATRIMONIAL-NATIVO sobre activo/editor V65: adaptador pppPat* igual a V54, números null/cero, rangos integer, CAS, revisiones, auditoría, protecciones e idempotencia. Preservar funciones ajenas y los otros siete archivos byte a byte, incluido manifest, URLs, scopes, configuración y ACL PT/PA; sin fórmulas ni reglas de negocio nuevas. El coordinador corrige frontend: caché por caso que conserva A al abrir B y retornar; conciliación de ACK perdido tras reload con el job exacto sólo después de GET fresco; metadatos del borrador durables antes de pintar. El recibo existente en caché de seis horas se recupera antes de CAS; si fue evictado, CAS rechaza revisión obsoleta sin sobrescribir ni emitir otro job. Despliegue coordinado con lock y CAS de fuente/configuración; si editor == active en preflight, editor final == candidato desplegado. Mantener adaptador en activo y editor, sin restaurar V53.",
       "status": "propuesto",
       "approval": "Dirección autorizó resolver Sala #47 y analizar consistencias; recuperación quirúrgica del transporte previamente aprobado y las tres correcciones frontend dentro de ese alcance. El coordinador implementa frontend/backend y gestiona publicación por separado; este worktree entrega sólo Atlas y checks. PR sin merge ni auto-merge hasta nuevo aviso del propietario.",
-      "observed": "Evidencia privada reportada por el coordinador y retomada por Dirección el 5-oct: V65 activo/editor idénticos; ninguna definición pppPat* en los ocho archivos; GET sheet-model Patrimonial devuelve ok:false,error:servidor. V54 publicada 2-oct 05:47 UTC contenía el adaptador, pero el editor volvió a V53 sin él y un despliegue posterior lo perdió. Mock reproduce horizonte_invalido al pasar el modelo nativo por ppEstadoHoja_ Vertical. Helpers candidatos iguales a V54; mock de CAS, null/cero, Vertical e idempotencia aprobado según el relevo. No acredita publicación ni GET posterior correcto.",
+      "observed": "Evidencia privada reportada por el coordinador y retomada por Dirección el 5-oct: V65 activo/editor idénticos; ninguna definición pppPat* en los ocho archivos; GET sheet-model Patrimonial devuelve ok:false,error:servidor. V54 publicada 2-oct 05:47 UTC contenía el adaptador, pero el editor volvió a V53 sin él y un despliegue posterior lo perdió. Mock reproduce horizonte_invalido al pasar el modelo nativo por ppEstadoHoja_ Vertical. Helpers candidatos iguales a V54; mock de CAS, null/cero, Vertical e idempotencia aprobado según el relevo. No acredita publicación ni GET posterior correcto. Actualización del coordinador: backend publicado en V66 desde V65; publicación observada por API y CAS/readback confirma ocho archivos, siete preservados byte a byte y sólo Code con transporte PPP adaptado. Misma URL, scopes y ACL; editor == candidato == fuente de versión inmutable V66. Sin POST de pruebas de negocio. GET real posterior pendiente. Frontend P1/P2/P3 parcheado localmente: 14 pruebas Node y 4 bridge aprobadas según reporte; navegador en curso, sin publicación acreditada.",
       "tests": [
-        "Backend coordinado con datos sintéticos: helpers iguales a V54; mock reproduce horizonte_invalido y candidato pasa CAS, null/cero, Vertical e idempotencia según relevo. Auditoría, rangos integer y fórmulas protegidas requieren evidencia del consumer exacto.",
-        "Frontend coordinado: editar A, abrir B y retornar A sin pérdida ni cruce; reload con ACK perdido conserva job/request_id/payload/revisión originales y sólo concilia después de GET fresco autorizado.",
+        "Backend coordinado con datos sintéticos: helpers iguales a V54; mock reproduce horizonte_invalido y candidato pasa CAS, null/cero, Vertical e idempotencia según relevo. Auditoría, rangos integer y fórmulas protegidas requieren evidencia del consumer exacto. Actualización: CAS/readback de publicación V66 confirma preservación de siete archivos y editor/candidato/versión iguales; GET real posterior pendiente.",
+        "Frontend coordinado: editar A, abrir B y retornar A sin pérdida ni cruce; reload con ACK perdido conserva job/request_id/payload/revisión originales y sólo concilia después de GET fresco autorizado. P1/P2/P3 locales: 14 Node y 4 bridge aprobados según el coordinador; navegador en curso, no acreditado por Atlas.",
         "Recibo en caché de seis horas se resuelve antes de CAS sin repetir escritura; recibo evictado y revisión obsoleta dan conflicto sin overwrite. No crear un job nuevo ni actualizar revisión esperada para forzar el reintento.",
         "Persistir metadatos de borrador antes de paint; recarga y repintado conservan su vínculo con caso/job y estado no confirmado; resultados vigentes sólo con recibo confirmado.",
         "Preservación de funciones ajenas y comparación byte a byte de los otros siete archivos/manifest, URLs, scopes, configuración y ACL.",
@@ -8233,7 +8248,7 @@
         "node verify-obra-app.cjs",
         "node scripts/verificar-impacto.cjs --base origin/main --head HEAD --repo yodesarrollomx/yod-portal; git diff --check"
       ],
-      "deployment": "Propuesta previa registrada en 1f5a58bc2084f63cb9d2c8f88542883bd9285a9f; este PR amplía alcance documental antes de publicación coordinada. Atlas solamente: frontend/backend del coordinador pendientes de sus checks, publicación y GET/Sheets posterior. Consumer fija SHA completo de este Atlas y CTR-PPP-PATRIMONIAL-NATIVO; no depende del draft #100 ni de un merge de este PR. Revalidar origin/main y fuente/configuración antes de integrar/publicar. Conservar implementación/URL/ACL y módulos V65; no cerrar Sala #47 sólo por entregar Atlas.",
+      "deployment": "Propuesta previa registrada antes del parche en 1f5a58bc2084f63cb9d2c8f88542883bd9285a9f. Backend V66 publicado desde V65 según recibo API del coordinador: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma implementación/URL/scopes/ACL, editor == candidato == versión inmutable V66. Esto acredita publicación API, no GET funcional posterior ni conciliación actual con Sheets, ambos pendientes. Frontend P1/P2/P3 local con 14 Node y 4 bridge aprobados según reporte; navegador en curso y publicación pendiente. Este PR sólo Atlas; consumer fija SHA completo y CTR-PPP-PATRIMONIAL-NATIVO, sin depender del draft #100 ni del merge de este PR. Revalidar concurrencia antes de integrar/publicar. Sin POST de pruebas de negocio; Sala #47 permanece sin cierre por esta evidencia.",
       "rollback": "Ante conflicto de fuente/configuración detener antes de escribir. Reversión documental: revertir este PR y regenerar vistas conservando cambios concurrentes. Reversión funcional del coordinador: snapshot revisado de la misma implementación y frontend compatible, conservando jobs, borradores, recibos, historial, datos/fórmulas/libros y CAS. No restaurar editor antiguo por rutina; registrar si una reversión de emergencia vuelve a degradar Patrimonial. No reemitir jobs ni sobrescribir para resolver un conflicto."
     }
   ],
