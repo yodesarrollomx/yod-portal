@@ -48,10 +48,16 @@ const server=http.createServer((req,res)=>{
   // Select the physical computer's mesh, through the production canvas raycaster.
   await page.evaluate(()=>window.despacho.visit('case'));
   const point=await page.evaluate(async()=>{
-   const T=await import('/despacho3d/vendor/three.module.js'),p=new T.Vector3(7,1.23,-7.221).project(window.despacho.camera),r=document.querySelector('#scene canvas').getBoundingClientRect();
+   const T=await import('/despacho3d/vendor/three.module.js');window.despacho.camera.updateMatrixWorld(true);const p=new T.Vector3(7,1.23,-7.221).project(window.despacho.camera),r=document.querySelector('#scene canvas').getBoundingClientRect();
    return{x:r.x+(p.x+1)*r.width/2,y:r.y+(1-p.y)*r.height/2};
   });
   assert.ok(point.x>=0&&point.y>=0&&point.x<=(mobile?390:1366)&&point.y<=(mobile?844:900),'computer is framed on arrival');
+  console.log('COMPUTER_PICK',await page.evaluate(async point=>{
+   const T=await import('/despacho3d/vendor/three.module.js'),r=document.querySelector('#scene canvas').getBoundingClientRect(),ray=new T.Raycaster();
+   ray.setFromCamera(new T.Vector2((point.x-r.x)/r.width*2-1,1-(point.y-r.y)/r.height*2),window.despacho.camera);
+   return {point,camera:window.despacho.camera.position.toArray(),hits:ray.intersectObject(window.despacho.model,true).slice(0,4).map(h=>({d:h.distance,p:h.point.toArray(),screen:!!h.object.userData.agentComputer,transparent:h.object.material.transparent})),boxes:window.despacho.layout.pickBoxes.map(b=>{const p=ray.ray.intersectBox(new T.Box3(new T.Vector3(...b.min),new T.Vector3(...b.max)),new T.Vector3());return p?{id:b.id,d:p.distanceTo(window.despacho.camera.position)}:null;}).filter(Boolean)};
+  },point));
+  console.log('WORK_SCREENSHOT_PICK_'+(mobile?'MOBILE':'DESKTOP')+':'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'));
   await page.mouse.click(point.x,point.y);
   await page.waitForFunction(()=>window.__opened?.tab==='browser');
   assert.equal((await page.evaluate(()=>window.__opened)).id,'case-synthetic');

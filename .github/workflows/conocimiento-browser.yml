@@ -36,8 +36,8 @@ jobs:
           NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
           BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
         run: |
-          node scripts/probar-oficina-panoramica-browser.cjs
           node scripts/probar-trabajo-browser.cjs
+          node scripts/probar-oficina-panoramica-browser.cjs
           node scripts/probar-conocimiento-browser.cjs
           node scripts/probar-voz-ux-browser.cjs
           node scripts/probar-ppp-colaborativo-browser.cjs
