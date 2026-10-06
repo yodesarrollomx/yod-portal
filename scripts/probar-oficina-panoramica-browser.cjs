@@ -43,6 +43,7 @@ const server=http.createServer((req,res)=>{
    const marker=await page.locator('#office-agent-marker').boundingBox();assert.ok(marker.width>=44&&marker.height>=44);
    assert.ok(marker.x>=0&&marker.x+marker.width<=(mobile?390:1366));
    await page.screenshot({path:path.join(out,'oficina-panorama-'+(mobile?'movil':'escritorio')+'.png')});
+   console.log('OFFICE_SCREENSHOT_'+(mobile?'MOBILE':'DESKTOP')+':'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'));
    await page.locator('#office-agent-marker').click();assert.deepEqual(await page.evaluate(()=>window.__opened),['synthetic-office']);
    // Select the actual mesh through the same canvas raycaster, without the label.
    const hit=await page.evaluate(async()=>{

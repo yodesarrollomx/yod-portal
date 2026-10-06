@@ -8432,7 +8432,7 @@
         "SYS-DESPACHO"
       ],
       "proposal": "Abrir el despacho con vista elevada ortográfica y paredes recortadas, en escritorio y móvil. Conservar recorrido, rutas, permisos y selección del personaje. Registrar evolución hacia actividad verificable en computadoras, misión PPP y varios autónomos aislados; no simular ejecución ni habilitar una flota desde el frontend.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "approval": "Dirección autorizó el 6-oct-2026 la vista completa de oficina y continuar el plan: espacios como herramientas, personajes ligados a PPP y ejecución visible.",
       "tests": [
         "node scripts/arquitectura.cjs --check",
@@ -8443,7 +8443,7 @@
         "node verify-obra-app.cjs",
         "Chromium escritorio/móvil: encuadre, recorte, selección real con raycaster, cambio de cámara, zoom, rutas y ausencia de errores."
       ],
-      "deployment": "Propuesta registrada antes de implementación. Vista general y documentación en esta entrega; ejecución visible y flota requieren entregas posteriores con evidencia.",
+      "deployment": "Implementado en PR109: vista ortográfica inicial, paredes recortadas con selección coherente, etiqueta del personaje autorizado y recorrido conservado. Pruebas y publicación por CI; consultar evidencia del PR. La ejecución visible de herramientas y flota siguen pendientes.",
       "rollback": "Revertir frontend por PR. No cambia datos, fórmulas, permisos ni despliegues de Apps Script o servidor de agentes."
     }
   ],
