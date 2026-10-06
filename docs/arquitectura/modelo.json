@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-05.86-ppp-patrimonial-recovery-alcance",
+  "revision": "2026-10-05.87-ppp-patrimonial-recovery-conciliado",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -280,11 +280,11 @@
       ],
       "risks_sanitized": [
         "Backend de transporte v53 publicado en implementación existente. GET de caso y lista contrastados con el mismo libro y revisión; edición en pantalla y demás casos pendientes. Los casos no migrados conservan cálculo cliente.",
-        "El cotejo V53 histórico y la publicación API V66 no acreditan lectura Patrimonial actual ni aceptación frontend; GET real posterior y navegador P1/P2/P3 pendientes."
+        "El cotejo V53 histórico, la publicación API V66 y pruebas locales no acreditan lectura Patrimonial actual ni publicación/aceptación frontend; GET real/Sheets, WebKit y CI del consumer pendientes."
       ],
       "source_of_truth": "SHEET-PORTERO registra casos; libro canónico Sheets para el piloto con lectura pública verificada en v53. Los casos pendientes de migrar aún usan modelos del frontend.",
       "status": "codigo",
-      "runtime_status": "GET Patrimonial falló el 5-oct en V65 según relevo; backend V66 publicado por API según coordinador, GET posterior pendiente. Tres correcciones frontend #47 locales con 14 Node y 4 bridge aprobados según reporte; navegador en curso y publicación/aceptación pendientes."
+      "runtime_status": "GET Patrimonial falló el 5-oct en V65 según relevo; backend V66 publicado por API según coordinador, GET posterior pendiente. Tres correcciones frontend #47 locales con 50 Node y Chromium native/A/B/A aprobados según coordinador; WebKit local pendiente por dependencias, ambos navegadores requeridos en CI del consumer. Publicación/aceptación y GET real/Sheets pendientes."
     },
     {
       "id": "SYS-TRACK",
@@ -8221,6 +8221,35 @@
       "rollback": "Revertir módulo de puesto y ampliaciones de herramientas; conservar audio, JSON Live, permisos, fuentes, expedientes, outbox, objetivos y evidencias. No restaurar datos de negocio."
     },
     {
+      "id": "CHG-DESPACHO-CONOCIMIENTO-078",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE",
+        "SYS-POTENCIALES",
+        "SHEET-PPP-MODELOS",
+        "SHEET-PORTERO"
+      ],
+      "proposal": "Añadir panel de conocimiento del expediente al puesto existente: hechos con procedencia, versiones y variantes capturadas desde la lectura PPP confirmada, decisiones y próximos pasos; capacidades Jev, exportación Markdown y conexión Obsidian diferenciadas. Capturar sólo metadatos con revisión esperada e ID estable, sin enviar cifras financieras desde el panel. Exportar Markdown portable mediante descarga explícita sin afirmar sincronización con un vault. Conservar voz, navegador, PPP, autorización y fuentes canónicas. Comparar dos capturas muestra diferencias y faltantes, sin inferir ganador. La bóveda ZIP portable conserva archivos Markdown y enlaces; no instala ni sincroniza Obsidian. Proyectar una subtarea antigua running con objetivo detenido como interrumpida, sin mutar su registro. Incorporar modalidad, escenario, revisión y horizonte únicamente cuando el puente PPP entregue metadatos reales.",
+      "status": "implementado_local",
+      "approval": "Dirección autorizó implementar capacidades, tablero y memoria/versiones PPP con Jev y Obsidian. Esta entrega de portal prepara consumidor y pruebas; backend, publicación y aceptación se registran por separado.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Pruebas aisladas de contrato, recibo perdido, reintento idéntico, conflicto, cambio de expediente, revocación y exportación Markdown.",
+        "Chromium con transporte sintético: panel, captura y descarga, errores sin perder la conversación, escritorio/móvil y cero escrituras de negocio.",
+        "Probar ZIP STORE/CRC-32, rutas relativas y límites UTF-8 de la bóveda; rechazar enlaces de fuente inseguros y contenido sin procedencia.",
+        "Comprobar proyección de subtareas interrumpidas y preservación de sus estados canónicos."
+      ],
+      "deployment": "Consumidor preparado en PR100 sobre main466db10. Head a9413239: 390 pruebas y verificadores OS aprobados (runs37398477844/37398477241), Chromium aislado en1280×900/390×844 aprobado (37398478599), dos capturas sintéticas. El registro inicial sin fecha y los metadatos reales de modalidad/modelo/horizonte se conservan sin inferencias. El PR permanece borrador: no acredita backend publicado, escritura de negocio, audio físico, aceptación de Dirección ni sincronización Obsidian.",
+      "rollback": "Revertir panel, imports y caché por PR; conservar voz, PPP, navegador, expediente, IDs, versiones, fuentes, decisiones y recibos. No borrar datos de negocio ni vaults."
+    },
+    {
       "id": "CHG-PPP-PATRIMONIAL-RECOVERY-047",
       "components": [
         "SYS-YOD-OS",
@@ -8232,12 +8261,13 @@
       "proposal": "Recuperar exclusivamente transporte PPP Patrimonial aprobado por CTR-PPP-PATRIMONIAL-NATIVO sobre activo/editor V65: adaptador pppPat* igual a V54, números null/cero, rangos integer, CAS, revisiones, auditoría, protecciones e idempotencia. Preservar funciones ajenas y los otros siete archivos byte a byte, incluido manifest, URLs, scopes, configuración y ACL PT/PA; sin fórmulas ni reglas de negocio nuevas. El coordinador corrige frontend: caché por caso que conserva A al abrir B y retornar; conciliación de ACK perdido tras reload con el job exacto sólo después de GET fresco; metadatos del borrador durables antes de pintar. El recibo existente en caché de seis horas se recupera antes de CAS; si fue evictado, CAS rechaza revisión obsoleta sin sobrescribir ni emitir otro job. Despliegue coordinado con lock y CAS de fuente/configuración; si editor == active en preflight, editor final == candidato desplegado. Mantener adaptador en activo y editor, sin restaurar V53.",
       "status": "propuesto",
       "approval": "Dirección autorizó resolver Sala #47 y analizar consistencias; recuperación quirúrgica del transporte previamente aprobado y las tres correcciones frontend dentro de ese alcance. El coordinador implementa frontend/backend y gestiona publicación por separado; este worktree entrega sólo Atlas y checks. PR sin merge ni auto-merge hasta nuevo aviso del propietario.",
-      "observed": "Evidencia privada reportada por el coordinador y retomada por Dirección el 5-oct: V65 activo/editor idénticos; ninguna definición pppPat* en los ocho archivos; GET sheet-model Patrimonial devuelve ok:false,error:servidor. V54 publicada 2-oct 05:47 UTC contenía el adaptador, pero el editor volvió a V53 sin él y un despliegue posterior lo perdió. Mock reproduce horizonte_invalido al pasar el modelo nativo por ppEstadoHoja_ Vertical. Helpers candidatos iguales a V54; mock de CAS, null/cero, Vertical e idempotencia aprobado según el relevo. No acredita publicación ni GET posterior correcto. Actualización del coordinador: backend publicado en V66 desde V65; publicación observada por API y CAS/readback confirma ocho archivos, siete preservados byte a byte y sólo Code con transporte PPP adaptado. Misma URL, scopes y ACL; editor == candidato == fuente de versión inmutable V66. Sin POST de pruebas de negocio. GET real posterior pendiente. Frontend P1/P2/P3 parcheado localmente: 14 pruebas Node y 4 bridge aprobadas según reporte; navegador en curso, sin publicación acreditada.",
+      "observed": "Evidencia privada reportada por el coordinador y retomada por Dirección el 5-oct: V65 activo/editor idénticos; ninguna definición pppPat* en los ocho archivos; GET sheet-model Patrimonial devuelve ok:false,error:servidor. V54 publicada 2-oct 05:47 UTC contenía el adaptador, pero el editor volvió a V53 sin él y un despliegue posterior lo perdió. Mock reproduce horizonte_invalido al pasar el modelo nativo por ppEstadoHoja_ Vertical. Helpers candidatos iguales a V54; mock de CAS, null/cero, Vertical e idempotencia aprobado según el relevo. No acredita publicación ni GET posterior correcto. Actualización del coordinador: backend publicado en V66 desde V65; publicación observada por API y CAS/readback confirma ocho archivos, siete preservados byte a byte y sólo Code con transporte PPP adaptado. Misma URL, scopes y ACL; editor == candidato == fuente de versión inmutable V66. Sin POST de pruebas de negocio. GET real posterior pendiente. Frontend P1/P2/P3 local: 50 Node aprobados (14 native, 4 bridge, 32 legacy), según coordinador. Chromium aprobó native CUS cero y metadatos pendientes tras repintado/recarga; A/B/A conservó Local, renta cero, CUS null y metadatos. WebKit local pendiente por dependencias del sistema; CI del consumer en su contenedor debe verificar Chromium y WebKit. Publicación frontend y GET real/Sheets pendientes.",
       "tests": [
         "Backend coordinado con datos sintéticos: helpers iguales a V54; mock reproduce horizonte_invalido y candidato pasa CAS, null/cero, Vertical e idempotencia según relevo. Auditoría, rangos integer y fórmulas protegidas requieren evidencia del consumer exacto. Actualización: CAS/readback de publicación V66 confirma preservación de siete archivos y editor/candidato/versión iguales; GET real posterior pendiente.",
-        "Frontend coordinado: editar A, abrir B y retornar A sin pérdida ni cruce; reload con ACK perdido conserva job/request_id/payload/revisión originales y sólo concilia después de GET fresco autorizado. P1/P2/P3 locales: 14 Node y 4 bridge aprobados según el coordinador; navegador en curso, no acreditado por Atlas.",
+        "Frontend coordinado: editar A, abrir B y retornar A sin pérdida ni cruce; reload con ACK perdido conserva job/request_id/payload/revisión originales y sólo concilia después de GET fresco autorizado. P1/P2/P3 locales: 50 Node aprobados (14 native, 4 bridge, 32 legacy) según el coordinador; Chromium native y A/B/A aprobados. WebKit local pendiente por dependencias; CI del consumer verifica ambos navegadores en su contenedor.",
         "Recibo en caché de seis horas se resuelve antes de CAS sin repetir escritura; recibo evictado y revisión obsoleta dan conflicto sin overwrite. No crear un job nuevo ni actualizar revisión esperada para forzar el reintento.",
         "Persistir metadatos de borrador antes de paint; recarga y repintado conservan su vínculo con caso/job y estado no confirmado; resultados vigentes sólo con recibo confirmado.",
+        "Chromium según coordinador: native CUS cero y metadatos pendientes tras repintado/recarga; A/B/A conserva Local, renta cero, CUS null y metadatos. WebKit no verificado localmente por dependencias del sistema; exigir Chromium y WebKit en CI del consumer sin confundirlo con CI del Atlas.",
         "Preservación de funciones ajenas y comparación byte a byte de los otros siete archivos/manifest, URLs, scopes, configuración y ACL.",
         "Preflight y postflight de versión/editor/configuración con lock y CAS; GET sheet-model posterior comparado con lectura directa de Sheets por el coordinador, sin POST de prueba.",
         "node scripts/arquitectura.cjs --check",
@@ -8248,7 +8278,7 @@
         "node verify-obra-app.cjs",
         "node scripts/verificar-impacto.cjs --base origin/main --head HEAD --repo yodesarrollomx/yod-portal; git diff --check"
       ],
-      "deployment": "Propuesta previa registrada antes del parche en 1f5a58bc2084f63cb9d2c8f88542883bd9285a9f. Backend V66 publicado desde V65 según recibo API del coordinador: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma implementación/URL/scopes/ACL, editor == candidato == versión inmutable V66. Esto acredita publicación API, no GET funcional posterior ni conciliación actual con Sheets, ambos pendientes. Frontend P1/P2/P3 local con 14 Node y 4 bridge aprobados según reporte; navegador en curso y publicación pendiente. Este PR sólo Atlas; consumer fija SHA completo y CTR-PPP-PATRIMONIAL-NATIVO, sin depender del draft #100 ni del merge de este PR. Revalidar concurrencia antes de integrar/publicar. Sin POST de pruebas de negocio; Sala #47 permanece sin cierre por esta evidencia.",
+      "deployment": "Propuesta previa registrada antes del parche en 1f5a58bc2084f63cb9d2c8f88542883bd9285a9f. Backend V66 publicado desde V65 según recibo API del coordinador: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma implementación/URL/scopes/ACL, editor == candidato == versión inmutable V66. Esto acredita publicación API, no GET funcional posterior ni conciliación actual con Sheets, ambos pendientes. Frontend P1/P2/P3 local con 50 Node y Chromium native/A/B/A aprobados según coordinador; WebKit local pendiente por dependencias del sistema, ambos navegadores requeridos en CI del consumer. Publicación frontend pendiente. Este PR sólo Atlas; consumer fija SHA completo y CTR-PPP-PATRIMONIAL-NATIVO, sin depender del merge de este PR. Main c45e0f7 ya integra PR #100; se conservan íntegros su código y propuesta CHG-DESPACHO-CONOCIMIENTO-078 como base concurrente, sin ampliarlos en este PR. Revalidar concurrencia antes de integrar/publicar. Sin POST de pruebas de negocio; Sala #47 permanece sin cierre por esta evidencia.",
       "rollback": "Ante conflicto de fuente/configuración detener antes de escribir. Reversión documental: revertir este PR y regenerar vistas conservando cambios concurrentes. Reversión funcional del coordinador: snapshot revisado de la misma implementación y frontend compatible, conservando jobs, borradores, recibos, historial, datos/fórmulas/libros y CAS. No restaurar editor antiguo por rutina; registrar si una reversión de emergencia vuelve a degradar Patrimonial. No reemitir jobs ni sobrescribir para resolver un conflicto."
     }
   ],
@@ -9249,6 +9279,45 @@
         "Conservar deltas y tiempos exactos, cierre hasta session.closed, historial y resultados/acciones como registros distintos. Cancelar una tarea no cuelga la voz.",
         "Distinguir pruebas sintéticas, API real, publicación y aceptación en dispositivo; no prometer perfección o conexiones no comprobadas."
       ]
+    },
+    {
+      "id": "CTR-DESPACHO-CONOCIMIENTO",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE",
+        "SYS-POTENCIALES",
+        "SHEET-PPP-MODELOS",
+        "SHEET-PORTERO"
+      ],
+      "source": "Continuación autorizada del puesto de Gastón. Contrato de lectura, captura de versiones y exportación portable, con transporte de prueba aislado.",
+      "input": [
+        "Credencial efímera del expediente vigente; servidor resuelve identidad y ámbito.",
+        "POST /fast/knowledge/board y /fast/knowledge/export: cuerpo vacío.",
+        "POST /fast/knowledge/capture: title, kind version|variant, parent_id, request_id y expected_revision. Nunca cantidades ni fórmulas del cliente.",
+        "POST /fast/knowledge/compare: left_id, right_id y criteria vacío para comparación descriptiva."
+      ],
+      "output": [
+        "Panel con revisión, fecha, capacidades, hechos, versiones/variantes, decisiones, próximos pasos y fuentes.",
+        "Captura con recibo exacto de solicitud; conflicto o resultado incierto explícitos.",
+        "Markdown portable con nombre seguro y revisión; conexión Obsidian sólo si existe sincronización comprobada.",
+        "Archivos Markdown portables reunidos en ZIP local tras validar rutas relativas únicas y límite total de dos MB.",
+        "Comparación de snapshots registrados: diferencias de entradas/resultados, unidades, valores ausentes y límites; ninguna recomendación automática."
+      ],
+      "invariants": [
+        "El panel consume datos autorizados reales; vacío, cargando, indisponible y desactualizado se presentan distintos.",
+        "El servidor captura únicamente un PPP confirmado sin cambios pendientes. Sheets conserva fórmulas y autoridad financiera.",
+        "Un reintento de guardado incierto conserva request_id y payload originales; no anunciar éxito sin recibo válido.",
+        "La exportación Markdown no acredita conexión ni sincronización con Obsidian. El navegador descarga sólo por acción explícita.",
+        "Cambiar expediente, revocar o cerrar borra la vista privada y descarta respuestas tardías. No persistir contenido en storage del navegador.",
+        "Los enlaces de fuente admiten sólo HTTP(S) sanitizados. Datos y Markdown se tratan como contenido, nunca instrucciones.",
+        "Cambiar panel o fallar una herramienta de conocimiento no abre ni detiene audio, inferencia o navegación.",
+        "Pruebas sintéticas y CI no acreditan escritura real ni aceptación del propietario.",
+        "La modalidad PPP no es el tipo versión/variante ni una etapa de avance. No inferirla del nombre del escenario.",
+        "Una subtarea running bajo padre detenido se muestra interrumpida y pendiente de conciliación. La presentación no altera su estado canónico.",
+        "Conocimiento se consulta al abrir, por acción de Actualizar y tras recibo; no hace polling ni lecturas concurrentes periódicas de contexto."
+      ]
     }
   ],
   "path_ownership": [
@@ -9943,6 +10012,46 @@
         "SYS-POTENCIALES",
         "GAS-PORTERO",
         "SHEET-PORTERO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/knowledge-board.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/knowledge-board.css",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-knowledge-board.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/probar-conocimiento-browser.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": ".github/workflows/conocimiento-browser.yml",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
       ]
     }
   ]

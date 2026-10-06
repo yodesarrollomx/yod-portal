@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.86-ppp-patrimonial-recovery-alcance · 2026-10-05.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.87-ppp-patrimonial-recovery-conciliado · 2026-10-05.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -19,13 +19,13 @@ Priorizar y aprobar trabajo de Dirección
 Evaluar alternativas y escenarios de desarrollo
 
 - Tipo: tablero. Dominio: Ventas. Responsable: Desarrollo y Comercial.
-- Evidencia: codigo. Producción: GET Patrimonial falló el 5-oct en V65 según relevo; backend V66 publicado por API según coordinador, GET posterior pendiente. Tres correcciones frontend #47 locales con 14 Node y 4 bridge aprobados según reporte; navegador en curso y publicación/aceptación pendientes..
+- Evidencia: codigo. Producción: GET Patrimonial falló el 5-oct en V65 según relevo; backend V66 publicado por API según coordinador, GET posterior pendiente. Tres correcciones frontend #47 locales con 50 Node y Chromium native/A/B/A aprobados según coordinador; WebKit local pendiente por dependencias, ambos navegadores requeridos en CI del consumer. Publicación/aceptación y GET real/Sheets pendientes..
 - Entidades: caso, escenario, variable_calculo, flujo_proyectado.
 - Fuente de verdad: SHEET-PORTERO registra casos; libro canónico Sheets para el piloto con lectura pública verificada en v53. Los casos pendientes de migrar aún usan modelos del frontend..
 - Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L17) — Sistema presente en el catálogo canónico; [potenciales-yod/mixto.html](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/mixto.html) — Frontend integrado por PR3 y publicado por Pages; código público incluye lectura del modelo nativo, cuerpos y flujo por etapas. Sesión y backend pendientes de verificación conjunta.; Lectura pública del caso y la lista del piloto comparadas con entradas, resultados, cuerpos y flujo nativos; coinciden. Evidencia operativa privada; no se ejecutaron POST de prueba.; Relevo del coordinador confirmado por Dirección el 5-oct: fuente activa/editor V65 idénticos, adaptador Patrimonial ausente y GET sheet-model Patrimonial con error servidor; recuperación #47 propuesta. Detalles y snapshots privados.; Coordinador reporta publicación API V66 desde V65: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma URL/scopes/ACL y editor == candidato == versión inmutable V66. GET funcional posterior pendiente; sin POST de pruebas de negocio..
 - Conexiones: CON-019 (SYS-POTENCIALES → GAS-PORTERO); CON-034 (SYS-YOD-OS → SYS-POTENCIALES).
 - Mejoras: C · Cotización, plan y siguiente paso comercial; PPP · Unificar tablero y fórmulas de potencial en Sheets.
-- Pendientes: Backend de transporte v53 publicado en implementación existente. GET de caso y lista contrastados con el mismo libro y revisión; edición en pantalla y demás casos pendientes. Los casos no migrados conservan cálculo cliente.; El cotejo V53 histórico y la publicación API V66 no acreditan lectura Patrimonial actual ni aceptación frontend; GET real posterior y navegador P1/P2/P3 pendientes..
+- Pendientes: Backend de transporte v53 publicado en implementación existente. GET de caso y lista contrastados con el mismo libro y revisión; edición en pantalla y demás casos pendientes. Los casos no migrados conservan cálculo cliente.; El cotejo V53 histórico, la publicación API V66 y pruebas locales no acreditan lectura Patrimonial actual ni publicación/aceptación frontend; GET real/Sheets, WebKit y CI del consumer pendientes..
 
 ## SYS-TRACK · Tracks de codesarrollo
 

@@ -1,0 +1,36 @@
+name: Conocimiento del Despacho
+on:
+  pull_request:
+    paths:
+      - 'despacho3d/**'
+      - 'scripts/probar-conocimiento-browser.cjs'
+      - '.github/workflows/conocimiento-browser.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  navegador:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Preparar Chromium aislado
+        run: |
+          npm install --prefix "$RUNNER_TEMP/yod-knowledge-browser" --no-package-lock --ignore-scripts playwright@1.51.1
+          node "$RUNNER_TEMP/yod-knowledge-browser/node_modules/playwright/cli.js" install --with-deps chromium
+      - name: Probar panel, recibos, descarga y audio sintético
+        env:
+          NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
+          BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
+        run: node scripts/probar-conocimiento-browser.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: conocimiento-escritorio-movil
+          path: ${{ runner.temp }}/knowledge-evidence
+          if-no-files-found: ignore
