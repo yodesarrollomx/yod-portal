@@ -7,7 +7,7 @@ const phases=new Set(['working','tool','prepared','awaiting_data','interrupted',
 export function safeWorkURL(raw){try{const u=new URL(raw);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null;}catch{return null;}}
 export function validateObservation(raw,caseId){
  const bad=()=>{throw Error('invalid_observation');};
- if(!plain(raw)||raw.ok!==true||raw.case_id!==caseId||typeof raw.available!=='boolean'||JSON.stringify(raw).length>120000)bad();
+ if(!plain(raw)||raw.ok!==true||raw.case_id!==caseId||typeof raw.available!=='boolean'||JSON.stringify(raw).length>524288)bad();
  if(!raw.available)return{available:false,case_id:caseId,work:null,screen:null};
  const w=raw.work;
  if(w!==null){

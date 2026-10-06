@@ -20,7 +20,7 @@ export function mountWorkView({container,getCase,win=window,doc=document,onTasks
   const list=el('ol');for(const t of w.progress.progress.tasks){const item=el('li'),name=el('strong',t.title),phase=t.status==='running'&&!live?'Sin ejecución confirmada':{pending:'Pendiente',running:'Trabajando',ready_for_review:'Para revisión',blocked:'Faltan datos'}[t.status];item.append(name,el('p',phase+(t.summary?' · '+t.summary:'')));list.append(item);}body.append(list);
   for(const source of w.sources){const row=el('p'),url=safeWorkURL(source.url);if(url){const a=el('a',source.title||'Abrir fuente');a.href=url;a.target='_blank';a.rel='noopener noreferrer';row.append(a);}else row.append(el('span',source.title||'Documento'));row.append(el('small',' · '+(source.task_id||'Expediente')+' · '+new Date(source.consulted_at).toLocaleString()));body.append(row);}
   for(const evidence of w.progress.progress.evidence){const card=el('details');card.append(el('summary',evidence.title),el('pre',evidence.text));body.append(card);}
-  const events=el('ol');for(const e of w.events.slice(-8)){events.append(el('li',e.label+' · '+({working:live?'en curso':'iniciada',completed:'terminado',failed:'sin completar'}[e.status])+' · '+new Date(e.at).toLocaleTimeString()));}body.append(events);
+  const events=el('ol');for(const e of w.events.slice(-8)){events.append(el('li',e.label+' · '+({working:'inicio',completed:'terminado',failed:'sin completar'}[e.status])+' · '+new Date(e.at).toLocaleTimeString()));}body.append(events);
  }
  function bind(){stop?.();stop=win.YodWorkObserver?.subscribe(paint)||null;}
  win.addEventListener('yod-work-observer-ready',bind);bind();

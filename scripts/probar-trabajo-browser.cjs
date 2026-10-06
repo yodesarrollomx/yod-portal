@@ -41,7 +41,7 @@ const server=http.createServer((req,res)=>{
    const host=document.createElement('div');host.id='test-workspace';host.hidden=true;host.style.cssText='position:fixed;inset:8px;z-index:3000;background:#f6f4ee;padding:16px;overflow:auto';document.body.append(host);
    const transport={mintFastSession:async({case_id})=>({ok:true,case_id,endpoint:'https://synthetic-cloud.onrender.com',token:'A'.repeat(40)+'.'+'a'.repeat(64),expires_at:Date.now()+600000}),read:async({case_id})=>({ok:true,case_id,source_revision:'r1',context:{identity:{case_id,name:'Proyecto sintético'},documents:[]},state:{updated_at:'2026-10-06T10:00:00Z'},conversation:[],jobs:[],events:[]}),dispose(){}};
    const workspace=createWorkspace({container:host,getSelection:()=>window.YodResidentAgents.getSelection(),transport});
-   window.YodVoiceWorkspace={openForCase(id,tab){window.__opened={id,tab};host.hidden=false;workspace.open(window.YodResidentAgents.getSelection(),tab);}};
+   window.YodVoiceWorkspace={openForCase(id,tab){window.__opened={id,tab};host.hidden=false;window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:true}));workspace.open(window.YodResidentAgents.getSelection(),tab);}};
    window.__workspace=workspace;
   },fixture);
   await page.waitForFunction(()=>window.despacho.getState().computer?.run_id==='run-synthetic'&&window.despacho.getState().computer.capture);

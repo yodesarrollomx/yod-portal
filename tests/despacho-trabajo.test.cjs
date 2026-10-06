@@ -33,3 +33,9 @@ test('slow or failed screenshot does not delay or erase confirmed activity; retr
  o.select();await new Promise(r=>setImmediate(r));assert.equal(o.snapshot().phase,'ready');assert.equal(o.snapshot().work.goal_id,f.work.goal_id);release();await new Promise(r=>setImmediate(r));
  assert.equal(o.snapshot().phase,'ready');assert.equal(o.snapshot().image,null);o.dispose();
 });
+
+test('bounded long source links fit the observation payload without dropping a valid long investigation',async()=>{
+ const {validateObservation}=await mod(),f=fixture(),s=f.work.sources[0];
+ f.work.sources=Array.from({length:40},(_,i)=>({...s,id:'https://example.com/'+i+'x'.repeat(1900),url:'https://example.com/'+i+'x'.repeat(1900)}));
+ assert.ok(JSON.stringify(f).length>120000);assert.equal(validateObservation(f,f.case_id).work.sources.length,40);
+});
