@@ -1,16 +1,12 @@
 {
-  "model_revision": "2026-10-05.90-despacho-conocimiento-publicado",
-  "proposal_id": "CHG-DESPACHO-CONOCIMIENTO-078",
+  "model_revision": "2026-10-05.91-despacho-voz-ux",
+  "proposal_id": "CHG-DESPACHO-VOZ-UX-079",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "GAS-PORTERO",
-    "EXT-DRIVE",
-    "SYS-POTENCIALES",
-    "SHEET-PPP-MODELOS",
-    "SHEET-PORTERO"
+    "GAS-PORTERO"
   ],
-  "summary": "Registrar publicación comprobada del panel de conocimiento, versiones PPP y exportación portable, con PR100, Pages y verificadores del merge. Conservar límites entre proveedor real, pruebas sintéticas, escritura de negocio, aceptación física y conexión Obsidian; cotejo HTTP final aprobado con recibo acotado al corte verificado, sin garantía de continuidad. Cambio documental sin producto ni datos. Integra main e108d9e y conserva íntegra la evidencia concurrente PPP #47 de PR101.",
+  "summary": "Mejora1 autorizada: conversación clara y recuperable. Separar voz, expediente y guardado; recuperar reproducción bloqueada sin otra sesión; conservar transcripción visible ante inicio fallido; impedir doble inicio y confirmaciones prematuras. PPP conserva revisión y resultados canónicos; no ejecutar ni aprobar por indicador visual.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -18,10 +14,7 @@
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "Pruebas aisladas de contrato, recibo perdido, reintento idéntico, conflicto, cambio de expediente, revocación y exportación Markdown.",
-    "Chromium con transporte sintético: panel, captura y descarga, errores sin perder la conversación, escritorio/móvil y cero escrituras de negocio.",
-    "Probar ZIP STORE/CRC-32, rutas relativas y límites UTF-8 de la bóveda; rechazar enlaces de fuente inseguros y contenido sin procedencia.",
-    "Comprobar proyección de subtareas interrumpidas y preservación de sus estados canónicos."
+    "Regresiones de micrófono, audio bloqueado, duplicados, reconexión, contexto y finalización; navegador sintético escritorio/móvil."
   ],
-  "rollback": "Revertir panel, imports y caché por PR; conservar voz, PPP, navegador, expediente, IDs, versiones, fuentes, decisiones y recibos. No borrar datos de negocio ni vaults."
+  "rollback": "Revertir consumidor, estilos y cache bumps; conservar JSON Live, autorizaciones, historial, recibos, PPP y bóvedas."
 }

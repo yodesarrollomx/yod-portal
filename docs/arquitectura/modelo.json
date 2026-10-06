@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-05.90-despacho-conocimiento-publicado",
+  "revision": "2026-10-05.91-despacho-voz-ux",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8299,6 +8299,28 @@
       ],
       "deployment": "Propuesta previa registrada antes del parche en 1f5a58bc2084f63cb9d2c8f88542883bd9285a9f. Backend V66 publicado desde V65 según recibo API del coordinador: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma implementación/URL/scopes/ACL, editor == candidato == versión inmutable V66. Recibo posterior: GET real Patrimonial V66 aprobado y 166 celdas exactas frente a Sheets según coordinador; dos escenarios con IDs y 269 campos conservados, geometría pendiente. Cotejo exclusivo del caso inspeccionado: no acredita otros casos ni Vertical. Runtime Vertical inconcluso: probe 45 s agotado y probe 90 s terminó en HTTPError; no afirmar verificación runtime. Frontend P1/P2/P3 local con 50 Node y Chromium native/A/B/A aprobados según coordinador; WebKit local pendiente por dependencias del sistema, ambos navegadores requeridos en CI del consumer. Publicación frontend pendiente; corrección local de KPIs legacy falsos (.sticky-header para DIV y ocultación CSS), regresión Chromium aprobada según coordinador. Este PR sólo Atlas. Integración de PR #101 autorizada tras checks y revalidación de main, con match-head exacto. Consumer fija el SHA de merge de PR #101 y revisión final junto a CTR-PPP-PATRIMONIAL-NATIVO; no fijar SHA de otro draft. Main c45e0f7 ya integra PR #100; se conservan íntegros su código y propuesta CHG-DESPACHO-CONOCIMIENTO-078 como base concurrente, sin ampliarlos en este PR. Revalidar concurrencia antes de integrar/publicar. Sin POST de pruebas de negocio; Sala #47 permanece sin cierre por esta evidencia. Runtime Vertical y GET anónimo sin credencial no acreditados; límite acotado registrado, sin bloquear esta integración documental ni afirmar cobertura de otros casos. Consumer consolidado sobre main/PR13 según coordinador, con metadatos compartidos y bridge conservados.",
       "rollback": "Ante conflicto de fuente/configuración detener antes de escribir. Reversión documental: revertir este PR y regenerar vistas conservando cambios concurrentes. Reversión funcional del coordinador: snapshot revisado de la misma implementación y frontend compatible, conservando jobs, borradores, recibos, historial, datos/fórmulas/libros y CAS. No restaurar editor antiguo por rutina; registrar si una reversión de emergencia vuelve a degradar Patrimonial. No reemitir jobs ni sobrescribir para resolver un conflicto."
+    },
+    {
+      "id": "CHG-DESPACHO-VOZ-UX-079",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO"
+      ],
+      "proposal": "Mejora1 autorizada: conversación clara y recuperable. Separar voz, expediente y guardado; recuperar reproducción bloqueada sin otra sesión; conservar transcripción visible ante inicio fallido; impedir doble inicio y confirmaciones prematuras. PPP conserva revisión y resultados canónicos; no ejecutar ni aprobar por indicador visual.",
+      "status": "propuesto",
+      "approval": "Dirección eligió la mejora1 y solicitó revisar UX para reducir errores y ordenar el trabajo del PPP.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Regresiones de micrófono, audio bloqueado, duplicados, reconexión, contexto y finalización; navegador sintético escritorio/móvil."
+      ],
+      "deployment": "En preparación. La contención del servicio de Sheets y la aceptación con micrófono físico siguen abiertas; no se acreditan con una mejora visual.",
+      "rollback": "Revertir consumidor, estilos y cache bumps; conservar JSON Live, autorizaciones, historial, recibos, PPP y bóvedas."
     }
   ],
   "data_contracts": [
