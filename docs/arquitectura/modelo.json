@@ -10150,6 +10150,14 @@
         "SYS-DESPACHO",
         "SYS-SALA"
       ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/probar-voz-ux-browser.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
     }
   ]
 }

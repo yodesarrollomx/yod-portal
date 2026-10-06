@@ -24,6 +24,4 @@ jobs:
       - name: Portal
         run: node verify-portal.cjs
       - name: Matriz de accesos (potenciales-yod) = SYSTEM_CODES
-        env:
-          ACCESOS_REF: d446cdce382b0272e885bcc2713b5d5224eb4f4b
         run: node verify-accesos.cjs
