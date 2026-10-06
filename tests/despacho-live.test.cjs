@@ -239,3 +239,21 @@ test('UX keeps voice, authorized tools and durable history independent',async()=
  v=voiceView({phase:'listening',context_phase:'ready',tools_ready:false});
  assert.doesNotMatch(v.context,/Expediente conectado/);
 });
+
+test('Escúchame silences output immediately, keeps input and work alive, correlates acknowledgement and resumes',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice);
+ await f.voice.start('synthetic-case');assert.equal(f.voice.interrupt(),false);
+ f.event({type:'session.started'});await tick();f.voice.mute();assert.equal(f.track.enabled,false);
+ assert.equal(f.voice.interrupt(),true);assert.equal(f.audio.muted,true);assert.equal(f.track.enabled,true);
+ assert.equal(f.voice.snapshot().output_paused,true);assert.equal(f.peer.closed,false);
+ const command=f.peer.channel.sent.at(-1);
+ assert.equal(command.type,'session.instructions.append');assert.equal(command.delegation_id,null);
+ assert.equal(f.calls.some(c=>c.url.endsWith('/close')),false);
+ assert.equal(f.voice.interrupt(),false,'double click cannot duplicate the instruction');
+ f.event({type:'session.instructions.appended',client_event_id:'another'});assert.equal(f.voice.snapshot().interruption_pending,true);
+ f.event({type:'session.instructions.appended',client_event_id:command.event_id});assert.equal(f.voice.snapshot().interruption_pending,false);
+ assert.equal(f.audio.muted,true,'instruction acceptance never claims playback completion');
+ assert.equal(f.voice.resumeAudio(),true);assert.equal(f.audio.muted,false);
+ const stopping=f.voice.stop();await tick();f.event({type:'session.closed'});await stopping;
+ assert.equal(f.voice.snapshot().output_paused,false);
+});

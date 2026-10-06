@@ -15,3 +15,78 @@
 .workspace-proposals button{margin:6px 8px 6px 0}
 .workspace-proposals small{display:block;line-height:1.5}
 @media(min-width:851px){.realtime-dialog.has-workspace .voice-sidebar{max-height:calc(100dvh - 80px);overflow:auto;padding-right:6px;overscroll-behavior:contain}.workspace-board iframe{height:70dvh}}
+
+/* Project station: the PPP is the working surface; supporting tools unfold on demand. */
+#resident-agent,.station-legacy{display:none!important}
+.realtime-dialog.has-workspace{padding:0;background:#f8f7f2;border-radius:18px;overflow:hidden}
+.voice-layout{height:100%;gap:0;grid-template-columns:minmax(260px,300px) minmax(0,1fr)}
+.realtime-dialog.has-workspace .voice-sidebar{padding:22px;max-height:none;overflow:auto;background:#e9ede7;box-sizing:border-box}
+.voice-workspace{padding:20px 24px;border-left:1px solid #cdd6cd;overflow:auto;min-height:0}
+.station-heading{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.station-heading button{background:transparent;border:1px solid #9dafa4;border-radius:24px;color:#20343c;padding:8px 14px;font:inherit;font-size:13px;cursor:pointer}
+.station-heading .voice-close{float:none}
+#station-menu{width:44px;height:44px;padding:0;font-size:26px}
+.voice-sidebar h1{font-family:Georgia,serif;font-weight:500;font-size:32px;margin:4px 0 6px;overflow-wrap:anywhere}
+.voice-eyebrow{margin:24px 0 6px;font-size:10px;letter-spacing:.17em}
+#voice-case{font-size:13px;line-height:1.45;font-weight:400;color:#526257;margin-bottom:24px}
+.station-activity{border-top:1px solid #c0cec3;border-bottom:1px solid #c0cec3;padding:16px 0}
+.station-activity>small{font-size:10px;letter-spacing:.13em;color:#536957}
+#voice-work{font-size:14px;line-height:1.5;padding:6px 0}
+#voice-work p{margin:0}
+#voice-task:empty{display:none}
+#voice-view-tasks{background:transparent;border:0;padding:4px 0;min-height:32px;text-decoration:underline;font-size:12px}
+.voice-sidebar .voice-state-card{background:transparent;border:0;padding:18px 0 0;margin:0}
+.voice-state-card h2{font-size:10px;letter-spacing:.13em}
+#voice-phase{font-size:17px;font-weight:500}
+#voice-status{font-size:13px;line-height:1.45;color:#53675b}
+#voice-audio{display:none}
+.voice-actions{gap:6px}
+.voice-actions button{font-size:13px;padding:10px}
+#voice-start{width:100%;background:#233d34;color:white;border-color:#233d34}
+#voice-interrupt{background:#233d34;color:white;border-color:#233d34}
+#voice-interrupt[aria-pressed=true]{background:#e5d6b6;color:#26392f}
+.voice-options,.station-chat,.voice-transcript-details{border-top:1px solid #c0cec3;margin:16px 0 0;padding-top:8px;font-size:13px}
+.voice-options summary,.station-chat summary,.voice-transcript-details summary{cursor:pointer;padding:10px 0;min-height:24px;font-weight:500}
+#voice-save{font-size:12px;font-weight:400;color:#506157}
+#station-messages{max-height:250px;overflow:auto;overflow-wrap:anywhere}
+#station-messages p{padding:10px;background:#f9faf7;border-radius:8px;white-space:pre-wrap}
+#station-messages b,#station-messages span{display:block}
+#station-messages b{font-size:11px;margin-bottom:4px}
+#station-message-form{display:grid;gap:6px;margin-top:12px}
+#station-message-form textarea{min-height:74px;resize:vertical;width:100%;box-sizing:border-box;font:inherit;border:1px solid #a7baad;background:white;border-radius:8px;padding:10px}
+#station-message-form button,#station-refresh{font:inherit;padding:8px 12px;background:#fff;border:1px solid #a7baad;border-radius:8px;color:#20343c}
+.agent-workspace>nav{flex-wrap:nowrap;align-items:center;border-bottom:1px solid #d4dbd1;padding-bottom:14px;gap:8px}
+.agent-workspace>nav>button{border:0;background:transparent;border-radius:0;border-bottom:2px solid transparent;padding:10px 12px;font-size:14px}
+.agent-workspace>nav>button[aria-pressed=true]{background:transparent;border-color:#244839;color:#244839;font-weight:650}
+.workspace-tools{margin-left:auto;position:relative;font-size:12px}
+.workspace-tools summary{cursor:pointer;padding:12px 8px}
+.workspace-tools>div{position:absolute;right:0;top:100%;z-index:3;background:#fff;padding:8px;min-width:200px;border:1px solid #c4cfc9;box-shadow:0 8px 24px #20343c20;border-radius:10px;display:grid;gap:8px}
+.workspace-status{margin:8px 0;font-size:12px;min-height:0}
+.workspace-ppp-status{font-size:12px;margin:8px 0;color:#56685b}
+.workspace-board iframe{height:calc(100dvh - 215px);min-height:440px;border-radius:10px}
+.workspace-board>a{font-size:12px;color:#3e6251}
+.workspace-ppp-summary{padding:6px 10px;font-size:12px;background:transparent}
+.workspace-board-options{font-size:12px;color:#52695e;padding:4px 0}
+.workspace-board-options summary{cursor:pointer;padding:10px 0}
+.workspace-board-options button{font-size:12px;margin:6px 8px 6px 0}
+.workspace-new-goal{padding:14px;border:1px solid #c4cfc9;border-radius:12px;background:#fff}
+.workspace-new-goal summary{cursor:pointer;font-size:14px}
+.workspace-new-goal form,.workspace-new-goal label{display:grid;gap:8px}
+.workspace-new-goal form{margin-top:16px;gap:16px}
+.workspace-new-goal input,.workspace-new-goal textarea{box-sizing:border-box;width:100%;font:inherit;padding:10px;border:1px solid #a7baad;border-radius:8px}
+.workspace-new-goal textarea{min-height:80px}
+@media(max-width:850px){
+ .realtime-dialog.has-workspace{width:calc(100vw - 12px);height:calc(100dvh - 12px);overflow:auto;padding:0}
+ .voice-layout{display:block;height:auto}
+ .realtime-dialog.has-workspace .voice-sidebar{padding:16px;overflow:visible;display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+ .station-heading,.voice-eyebrow,.voice-sidebar h1,#voice-case,.station-chat,#voice-save,#voice-previous,.voice-transcript-details{grid-column:1/-1}
+ .voice-eyebrow{margin-top:12px}.voice-sidebar h1{font-size:26px}
+ #voice-case{margin:0 0 12px}.station-activity{border-bottom:0}
+ .voice-sidebar .voice-state-card{padding-top:16px}
+ .voice-workspace{padding:14px;border-left:0}
+ .agent-workspace>nav{display:flex;flex-wrap:wrap;gap:2px}
+ .agent-workspace>nav>button{padding:8px;font-size:12px}
+ .workspace-tools{font-size:11px}
+ .workspace-board iframe{height:65dvh;min-height:400px}
+}
+@media(prefers-reduced-motion:reduce){.station-wheel *{transition:none!important}}

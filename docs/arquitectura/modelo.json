@@ -8411,7 +8411,7 @@
         "EXT-DRIVE"
       ],
       "proposal": "Reunir actividad, conversación y PPP en el puesto del personaje autorizado. Reducir accesos duplicados, selector radial de cuatro acciones, identidad por proyecto, enlace del PPP registrado y pausa local de voz sin colgar ni detener trabajo. Conservar permisos, recibos y revisiones; no presentar el piloto como una flota desplegada.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "approval": "Dirección solicitó rediseñar el puesto por proyecto y autorizó continuar con la implementación.",
       "tests": [
         "node scripts/arquitectura.cjs --check",
@@ -8422,7 +8422,7 @@
         "node verify-obra-app.cjs",
         "Navegador escritorio/móvil: abrir desde personaje, enlace registrado, dos identidades sintéticas aisladas, audio pausado sin cierre, recibos y transcripción conservados."
       ],
-      "deployment": "Propuesta previa a implementación. La autorización multiagente y el micrófono físico requieren evidencia separada.",
+      "deployment": "Implementado en rama: puesto compartido, cuatro acciones, PPP por fuente registrada y pausa local de audio. Pendiente CI, publicación y aceptación con voz real. El servidor conserva su piloto autorizado; este cambio no acredita una flota multiagente.",
       "rollback": "Revertir frontend por PR. Conservar PPP, variantes, registros, credenciales y despliegues Apps Script; no restaurar datos."
     }
   ],

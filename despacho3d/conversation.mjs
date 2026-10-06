@@ -1,3 +1,4 @@
+import {registeredBoard} from './project-station.mjs';
 // Local transport contract. The authenticated server chooses the private case.
 // No endpoint, credential, business record or browser persistence lives here.
 import {validateDriveSelection} from './drive-selection.mjs';
@@ -17,7 +18,8 @@ export function validateSelection(v){
  if(!v||v.ok!==true||!text(v.case_id)||!text(v.name,120)||typeof v.can_enqueue!=='boolean'||typeof v.agent_ready!=='boolean')throw Error('invalid_selection');
  const selection={...validateDriveSelection(v),case_id:v.case_id,can_enqueue:v.can_enqueue,agent_ready:v.agent_ready};
  const goals=v.goals?.schema===1&&typeof v.goals.ready==='boolean'&&typeof v.goals.worker_ready==='boolean'?{schema:1,ready:v.goals.ready,worker_ready:v.goals.worker_ready}:null;
- return {...selection,avatar:validateAvatarProfile(v.avatar,selection),goals};
+ const ppp=v.ppp?.case_id===v.case_id&&registeredBoard(v.ppp.url,v.case_id)?{case_id:v.case_id,url:v.ppp.url}:null;
+ return {...selection,avatar:validateAvatarProfile(v.avatar,selection),goals,ppp};
 }
 export function safeDocumentUrl(value){
  try{return validateDriveSelection({name:'Documento',url:value}).url;}catch{return null;}
