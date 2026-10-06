@@ -3,7 +3,7 @@ export function mountWorkView({container,getCase,win=window,doc=document,onTasks
  const el=(tag,text)=>{const n=doc.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
  const root=el('section');root.className='workspace-live-work';root.setAttribute('aria-label','Trabajo observable');
  const label=el('small','COMPUTADORA DEL AUTÓN'),status=el('h3','Consultando actividad…'),title=el('p'),step=el('p'),stamp=el('small'),result=el('p'),details=el('details'),summary=el('summary','Pasos, fuentes y resultado'),body=el('div'),tasks=el('button','Ver pendientes');
- tasks.type='button';tasks.onclick=onTasks;status.setAttribute('role','status');details.append(summary,body);root.append(label,status,title,step,stamp,result,details,tasks);container.append(root);
+ tasks.type='button';tasks.onclick=onTasks;status.setAttribute('aria-live','polite');details.append(summary,body);root.append(label,status,title,step,stamp,result,details,tasks);container.append(root);
  let stop=null,latest=null,lastPaint=null;
  function paint(state){
   latest=state;const valid=getCase()&&state.case_id===getCase(),w=valid?state.work:null;
