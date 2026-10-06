@@ -3,7 +3,7 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const load=()=>import('../despacho3d/live-voice.mjs');
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
-function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12000,maxStatusFailures=3,mode='expediente',failStatus=false,Stream}={}){
+function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12000,maxStatusFailures=3,mode='expediente',failStatus=false,Stream,startTimeout=60000}={}){
  const calls=[],captions=[],track={enabled:true,stops:0,stop(){this.stops++;}},
    stream={getTracks:()=>[track],getAudioTracks:()=>[track]},
    audio={srcObject:null,pause(){},play:async()=>{}};
@@ -19,7 +19,7 @@ function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12
  }
  const base={ok:true,active:true,started:true,context_ready:true,finalized:false,expires_at:Date.now()+600000,
   fragments:0,blocks:0,saved:0,pending:0,incomplete:false};
- const voice=createLiveVoice({audio,Peer,Stream,closeTimeout,disconnectGrace,maxStatusFailures,media:{getUserMedia:async()=>stream},
+ const voice=createLiveVoice({audio,Peer,Stream,closeTimeout,disconnectGrace,maxStatusFailures,startTimeout,media:{getUserMedia:async()=>stream},
   schedule:()=>1,cancel:()=>{},onTranscript:f=>captions.push(f),
   mint:async({case_id})=>({ok:true,case_id,token:'A'.repeat(30)+'.'+'a'.repeat(64),
    endpoint:'https://synthetic-engine.onrender.com',expires_at:Date.now()+600000}),
@@ -178,4 +178,64 @@ test('recovering the case uses the original authenticated voice session and leav
  assert.equal(f.track.enabled,true);assert.equal(f.track.stops,0);assert.equal(f.peer.channel.sent.length,0);
  assert.equal(f.calls.filter(c=>c.url.endsWith('/session')).length,1);
  const stopping=f.voice.stop();await tick();f.event({type:'session.closed'});await stopping;
+});
+
+test('blocked playback can be resumed by a gesture without another Live session',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice);
+ await f.voice.start('synthetic-case');f.event({type:'session.started'});await tick();
+ f.audio.play=async()=>{throw Object.assign(Error('blocked'),{name:'NotAllowedError'});};
+ f.peer.ontrack({streams:[{}]});await tick();
+ assert.equal(f.voice.snapshot().playback_blocked,true);assert.equal(f.track.enabled,true);
+ f.audio.play=async()=>{};assert.equal(await f.voice.playAudio(),true);
+ assert.equal(f.voice.snapshot().playback_blocked,false);
+ assert.equal(f.calls.filter(c=>c.url.endsWith('/session')).length,1);
+ const stopping=f.voice.stop();await tick();f.event({type:'session.closed'});await stopping;
+});
+test('late playback rejection cannot change a subsequent session',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice);let reject;
+ await f.voice.start('synthetic-case');f.event({type:'session.started'});await tick();
+ f.audio.play=()=>new Promise((_,r)=>{reject=r;});f.peer.ontrack({streams:[{}]});
+ const stopping=f.voice.stop();await tick();f.event({type:'session.closed'});await stopping;
+ await f.voice.start('synthetic-case');reject(Error('old rejection'));await tick();
+ assert.equal(f.voice.snapshot().playback_blocked,false);
+ const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
+});
+test('startup is bounded even when all status requests fail before session.started',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice,{failStatus:true,startTimeout:5,closeTimeout:5});
+ await f.voice.start('synthetic-case');
+ await new Promise(resolve=>setTimeout(resolve,30));
+ assert.equal(f.voice.snapshot().phase,'idle');assert.equal(f.voice.snapshot().finalized,false);
+ assert.equal(f.voice.snapshot().incomplete,true);assert.equal(f.track.stops,1);
+});
+test('double start and context retry do not create duplicate sessions or concurrent requests',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice);
+ const first=f.voice.start('synthetic-case');assert.equal(await f.voice.start('synthetic-case'),false);await first;
+ f.event({type:'session.started'});await tick();
+ const retry=f.voice.retryContext();assert.equal(await f.voice.retryContext(),false);await retry;
+ assert.equal(f.calls.filter(c=>c.url.endsWith('/session')).length,1);
+ assert.equal(f.calls.filter(c=>c.url.endsWith('/context-retry')).length,1);
+ assert.equal(f.voice.snapshot().context_retry_pending,false);
+ const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
+});
+test('interruption guidance respects a muted microphone',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice);
+ await f.voice.start('synthetic-case');f.event({type:'session.started'});await tick();
+ f.voice.mute();f.voice.interrupt();
+ assert.equal(f.track.enabled,false);assert.match(f.voice.snapshot().notice,/Activa el micrófono/);
+ const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
+});
+test('UX keeps voice, authorized tools and durable history independent',async()=>{
+ const {voiceView}=await import('../despacho3d/voice-view.mjs');
+ let v=voiceView({phase:'starting',context_phase:'preparing'});
+ assert.equal(v.title,'Conectando con Gastón');assert.doesNotMatch(v.context,/Puedes hablar/);
+ v=voiceView({phase:'listening',context_phase:'unavailable',pending:2,blocks:2,saved:0});
+ assert.equal(v.title,'Listo para hablar');assert.match(v.context,/aún no/);assert.match(v.history,/pendiente/);
+ v=voiceView({phase:'idle',finalized:true,blocks:2,saved:1,pending:1});
+ assert.doesNotMatch(v.history,/Conversación respaldada/);
+ v=voiceView({phase:'idle',finalized:true,blocks:2,saved:2,pending:0,incomplete:true});
+ assert.doesNotMatch(v.history,/Conversación respaldada/);
+ v=voiceView({phase:'idle',finalized:true,blocks:2,saved:2,pending:0});
+ assert.match(v.history,/Conversación respaldada/);
+ v=voiceView({phase:'listening',context_phase:'ready',tools_ready:false});
+ assert.doesNotMatch(v.context,/Expediente conectado/);
 });

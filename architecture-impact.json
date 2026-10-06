@@ -1,13 +1,12 @@
 {
-  "model_revision": "2026-10-05.91-chinche-contexto-despacho",
-  "proposal_id": "CHG-CHINCHE-CONTEXTO-DESPACHO-091",
+  "model_revision": "2026-10-05.92-despacho-voz-ux",
+  "proposal_id": "CHG-DESPACHO-VOZ-UX-079",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-SALA",
     "GAS-PORTERO"
   ],
-  "summary": "Completar captura de chinches sobre escena virtual, tarjetas del agente y superficies del Despacho. Mantener geometría v1 y añadir contexto UI v2 estrictamente técnico (superficie allowlisted, ruta DOM acotada e índice visible); acciones explícitas por tarjeta y señalamiento global. No copiar contenido privado ni credenciales, no enviar sin Clavar y no ampliar autorización; mantener origen/iframe/época vigentes y contratos de producción existentes. El cambio al loader de shell conserva completamente el contrato y permisos Portero; su dependencia se declara sin modificar backend.",
+  "summary": "Mejora1 autorizada: conversación clara y recuperable. Separar voz, expediente y guardado; recuperar reproducción bloqueada sin otra sesión; conservar transcripción visible ante inicio fallido; impedir doble inicio y confirmaciones prematuras. PPP conserva revisión y resultados canónicos; no ejecutar ni aprobar por indicador visual.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -15,9 +14,7 @@
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "Contratos v1/v2 y rechazo de payload privado, origen/iframe/sesión inválidos y geometría malformada.",
-    "Recorridos sintéticos móvil/escritorio: punto 3D, tarjetas de revisión dinámicas, control exacto, diálogo abierto, fallback sin WebGL y cancelación sin efectos.",
-    "Verificadores completos de portal y Despacho, CI exacto y cotejo HTTP de recursos tras Pages."
+    "Regresiones de micrófono, audio bloqueado, duplicados, reconexión, contexto y finalización; navegador sintético escritorio/móvil."
   ],
-  "rollback": "Frontend compartido primero; consumidores después con referencia de caché nueva. Misma BD/IDs/routing/servicios y cero cambios backend o datos de negocio. Reversión por PR, conserva borradores y registros."
+  "rollback": "Revertir consumidor, estilos y cache bumps; conservar JSON Live, autorizaciones, historial, recibos, PPP y bóvedas."
 }

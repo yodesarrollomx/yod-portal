@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.91-chinche-contexto-despacho · 2026-10-05.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-05.92-despacho-voz-ux · 2026-10-05.
 
 ## SYS-DESPACHO · El Despacho
 

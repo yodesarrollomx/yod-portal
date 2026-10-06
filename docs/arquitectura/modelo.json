@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-05.91-chinche-contexto-despacho",
+  "revision": "2026-10-05.92-despacho-voz-ux",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8317,6 +8317,28 @@
       ],
       "deployment": "Frontend compartido primero; consumidores después con referencia de caché nueva. Misma BD/IDs/routing/servicios y cero cambios backend o datos de negocio. Reversión por PR, conserva borradores y registros.",
       "observed": "Implementación local congelada. Puente v1 geométrico conservado y UI v2 técnica, origen/iframe/época vigentes, control exacto y tarjetas dinámicas. Captura de control dentro de PPP same-origin conserva guard del Despacho; frame cross-origin sólo se señala como marco. Compositor clickable dentro de modal, sin contenido privado automático, cámara null en mapa y toolbar móvil corregida. Recibo de agentes: portal400/400 y subset11/11, Chromium escritorio/touch y fallback real aprobados; Despacho21/21 shared real y regresión7/7. WebKit local no ejecutable por dependencias; CI exacto Chromium/WebKit y publicación/cotejo público pendientes en PR. No acredita entregas de tareas, aprobación editorial, autorización real de otra persona ni cambios de backend."
+    },
+    {
+      "id": "CHG-DESPACHO-VOZ-UX-079",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO"
+      ],
+      "proposal": "Mejora1 autorizada: conversación clara y recuperable. Separar voz, expediente y guardado; recuperar reproducción bloqueada sin otra sesión; conservar transcripción visible ante inicio fallido; impedir doble inicio y confirmaciones prematuras. PPP conserva revisión y resultados canónicos; no ejecutar ni aprobar por indicador visual.",
+      "status": "implementado_local",
+      "approval": "Dirección eligió la mejora1 y solicitó revisar UX para reducir errores y ordenar el trabajo del PPP.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Regresiones de micrófono, audio bloqueado, duplicados, reconexión, contexto y finalización; navegador sintético escritorio/móvil."
+      ],
+      "deployment": "Implementado en rama para CI y navegador sintético. No acredita micrófono físico ni resuelve la contención interna del servicio de Sheets.",
+      "rollback": "Revertir consumidor, estilos y cache bumps; conservar JSON Live, autorizaciones, historial, recibos, PPP y bóvedas."
     }
   ],
   "data_contracts": [
@@ -10127,6 +10149,14 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO",
         "SYS-SALA"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/probar-voz-ux-browser.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
       ]
     }
   ]

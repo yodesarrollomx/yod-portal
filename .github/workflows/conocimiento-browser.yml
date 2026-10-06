@@ -4,6 +4,7 @@ on:
     paths:
       - 'despacho3d/**'
       - 'scripts/probar-conocimiento-browser.cjs'
+      - 'scripts/probar-voz-ux-browser.cjs'
       - '.github/workflows/conocimiento-browser.yml'
   workflow_dispatch:
 permissions:
@@ -19,6 +20,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Accesos del PPP previsto
+        env:
+          ACCESOS_REF: d446cdce382b0272e885bcc2713b5d5224eb4f4b
+        run: node verify-accesos.cjs
       - name: Preparar Chromium aislado
         run: |
           npm install --prefix "$RUNNER_TEMP/yod-knowledge-browser" --no-package-lock --ignore-scripts playwright@1.51.1
@@ -27,7 +32,9 @@ jobs:
         env:
           NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
           BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
-        run: node scripts/probar-conocimiento-browser.cjs
+        run: |
+          node scripts/probar-conocimiento-browser.cjs
+          node scripts/probar-voz-ux-browser.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
