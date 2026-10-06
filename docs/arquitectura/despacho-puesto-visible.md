@@ -1,6 +1,6 @@
 # Puesto visible y PPP compartido
 
-CHG-DESPACHO-PUESTO-VISIBLE-077. Estado: implementación en revisión; no acredita publicación ni aceptación del propietario.
+CHG-DESPACHO-PUESTO-VISIBLE-077. Estado: publicado el5-oct-2026. La aceptación física y visual del propietario sigue pendiente.
 
 La conversación de voz queda en una columna y el puesto en otra. Navegador, PPP, pendientes y fuentes se cambian sin iniciar otra sesión ni retirar el micrófono. En móvil se ordenan verticalmente. Ver puesto también funciona sin activar voz.
 
@@ -22,4 +22,9 @@ Inventario de issues publicados revisado el5-oct: no hay chinches abiertas en yo
 
 ## Verificación y reversión
 
-Pendiente: pruebas de red/navegador real, interfaz conjunta, CAS y recibos de PPP con transporte sintético, regresión de voz y despliegue cotejado. No usar escrituras de negocio como pruebas. Revertir los módulos y sus integraciones conservando expedientes, voz, claves servidor, fuentes, libros, revisiones, tareas y evidencias.
+381 pruebas públicas, 116 privadas y ocho del conjunto de navegador aprobadas. Recorrido de voz/PPP con transporte sintético en1280×800 y390×844: consulta y cambio manual, propuesta sin escritura hasta Aplicar, recibo único, tarea canónica sintética, siete fallos de registro sin cortar audio y cierre exacto. Las capturas de interfaz fueron inspeccionadas.
+
+En el servidor real, OpenAI aprobó audio/transcripción/esquemas/función/continuación/cierre a19:17:59UTC y Chromium confirmó captura de una página pública a19:18:06UTC. Memoria máxima muestreada204693500bytes sobre536870900; no es prueba de carga general. Renderlive enf5ae7fd y diagnósticos apagados. Portal9fd6140 y PPP5b84278 publicados. No se escribieron cantidades ni objetivos de negocio para probar. Revertir los módulos y sus integraciones conservando expedientes, voz, claves servidor, fuentes, libros, revisiones, tareas y evidencias.
+
+
+Cotejo final [37363146714](https://github.com/alexpueblag/yod-agent-cloud/actions/runs/37363146714) a19:30:12UTC (12:30 Hermosillo): once recursos públicos idénticos a los commits desplegados; voz operativa, navegador y objetivos disponibles, readytrue. Contexto estaba cargando. Durante la publicación hubo un502 de reinicio y otra lectura readyfalse; esta observación puntual no acredita disponibilidad continua ni aceptación del negocio.
