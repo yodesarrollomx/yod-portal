@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-06.96-puesto-auton · 2026-10-05.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-06.97-oficina-panoramica · 2026-10-05.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 

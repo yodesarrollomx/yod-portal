@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-06.96-puesto-auton",
+  "revision": "2026-10-06.97-oficina-panoramica",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8424,6 +8424,27 @@
       ],
       "deployment": "Implementado en rama: puesto compartido, cuatro acciones, PPP por fuente registrada y pausa local de audio. Pendiente CI, publicación y aceptación con voz real. El servidor conserva su piloto autorizado; este cambio no acredita una flota multiagente.",
       "rollback": "Revertir frontend por PR. Conservar PPP, variantes, registros, credenciales y despliegues Apps Script; no restaurar datos."
+    },
+    {
+      "id": "CHG-OFICINA-PANORAMICA-097",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ],
+      "proposal": "Abrir el despacho con vista elevada ortográfica y paredes recortadas, en escritorio y móvil. Conservar recorrido, rutas, permisos y selección del personaje. Registrar evolución hacia actividad verificable en computadoras, misión PPP y varios autónomos aislados; no simular ejecución ni habilitar una flota desde el frontend.",
+      "status": "propuesto",
+      "approval": "Dirección autorizó el 6-oct-2026 la vista completa de oficina y continuar el plan: espacios como herramientas, personajes ligados a PPP y ejecución visible.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Chromium escritorio/móvil: encuadre, recorte, selección real con raycaster, cambio de cámara, zoom, rutas y ausencia de errores."
+      ],
+      "deployment": "Propuesta registrada antes de implementación. Vista general y documentación en esta entrega; ejecución visible y flota requieren entregas posteriores con evidencia.",
+      "rollback": "Revertir frontend por PR. No cambia datos, fórmulas, permisos ni despliegues de Apps Script o servidor de agentes."
     }
   ],
   "data_contracts": [
@@ -10257,6 +10278,22 @@
       "prefix": "integraciones/",
       "components": [
         "SYS-YOD-OS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/probar-oficina-panoramica-browser.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-panorama.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
       ]
     }
   ]
