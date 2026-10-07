@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-07.108-encuentro-voz",
+  "model_revision": "2026-10-07.109-encuentro-voz",
   "proposal_id": "CHG-DESPACHO-ENCUENTRO-108",
   "summary": "Encuentro por cercanía: círculo no modal a 0,60 m; conversación a 0,40 m, mirando al autón, inmóvil durante 1 s, después de aproximación manual. Separar acercamiento de navegación programada y movimiento del autón. Primer permiso de micrófono y bloqueo de reproducción se resuelven con un botón visible; nunca reintentar en bucle. Cerrar/finalizar inhibe reapertura hasta salir a 0,90 m. Sólo caso autorizado, una sesión y un puesto PPP. Al alejarse se pausa escucha conservando puesto/trabajo. Saludo breve; pendientes sólo tras consulta autorizada, sin inventar tareas durante carga. Pruebas de estados y navegador con datos sintéticos; no acreditar latencia acústica sin medición.",
   "components": [
