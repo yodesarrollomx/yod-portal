@@ -1,11 +1,11 @@
 import * as T from 'three';
-import {createEncounterGate,createPreparationGate} from './agent-proximity.mjs?v=3';
+import {createEncounterGate,createPreparationGate,ENCOUNTER_RANGE} from './agent-proximity.mjs?v=4';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {RoomEnvironment} from './vendor/RoomEnvironment.js';
-import {createOffice} from './scene.js?v=8';
+import {createOffice} from './scene.js?v=9';
 import {panels} from './office-panels.mjs?v=2';
 import {createChinches3D} from './chinches3d.mjs?v=3';
-import {createOfficePilot,chooseOfficeHit} from './avatars/office-pilot.mjs?v=6';
+import {createOfficePilot,chooseOfficeHit} from './avatars/office-pilot.mjs?v=7';
 import {ENTORNO_AGENTE_CAMINA} from './entorno-config.mjs';
 import {crearAgenteIr} from './entorno-ruta.mjs?v=4';
 import {fitOfficeOverview,visibleOfficeHit} from './office-overview.mjs?v=1';
@@ -28,7 +28,7 @@ let office;try{office=await createOffice({pilotFigure:false});scene.add(office.m
 let chinches=null;
 let agentOverlay=false;
 const proximity=createEncounterGate(),preparationGate=createPreparationGate(),sight=new T.Raycaster();
-let lastApproachPosition=null;
+let lastApproachPosition=null,recentApproach=null;
 window.addEventListener('yod-agent-menu-open',e=>{if(!e.detail?.proximity)proximity.dismiss(e.detail?.case_id);});
 window.addEventListener('yod-agent-encounter-dismiss',e=>proximity.dismiss(e.detail?.case_id));
 let mode='overview',selected='entry',yaw=0,pitch=0,near=null,sheet=null,look=null,stickId=null,stick={x:0,y:0},keys=new Set(),last=performance.now(),frames=0,transitionToken=0,dirty=true,lastFocus=null;
@@ -44,7 +44,7 @@ bindPilot();
 let unwatchWork=null;
 function bindWork(){unwatchWork?.();unwatchWork=window.YodWorkObserver?.subscribe(s=>{
  const id=window.YodResidentAgents?.getSelection?.()?.case_id;
- office.computerScreen?.update(id&&s.case_id===id?s:{phase:'unauthorized',case_id:null,work:null,image:null});
+ office.computerScreen?.update(id&&s.case_id===id?{...s,projectName:window.YodResidentAgents.getSelection().name}:{phase:'unauthorized',case_id:null,work:null,image:null});
  dirty=true;
 });}
 window.addEventListener('yod-work-observer-ready',bindWork);bindWork();
@@ -97,14 +97,20 @@ function updateAgentProximity(now){
  lastApproachPosition={x:camera.position.x,z:camera.position.z};
  const enabled=mode==='walk'&&!sheet&&!agentOverlay&&!document.hidden&&!chinches?.isSelecting()&&
   document.getElementById('office-accessible')?.hidden!==false&&!!window.YodAgentMenu;
+ // Remember only a local approach, never an authorization. A slow lease refresh
+ // must not require the person already standing here to walk away and back.
+ const shownId=window.YodResidentAgents?.getProfile?.()?.case_id;
+ if(recentApproach&&recentApproach.id!==shownId)recentApproach=null;
+ if(enabled&&manual&&moved&&shownId)recentApproach={id:shownId,at:now};
+ if(enabled&&id&&recentApproach?.id===id&&now-recentApproach.at<15000&&distance<ENCOUNTER_RANGE.leave)proximity.approach(id);
  const preparation=preparationGate.sample({caseId:id,distance,enabled:enabled&&!!fresh?.can_enqueue,now});
  if(preparation==='prepare')window.YodVoiceWorkspace?.prepareNearby?.(id);
  if(preparation==='release')window.YodVoiceWorkspace?.releaseNearby?.();
  let visible=false,facing=false;
- if(enabled&&id&&distance<=.9){
+ if(enabled&&id&&distance<=ENCOUNTER_RANGE.menu){
   const target=new T.Vector3(position[0],1.4,position[1]),direction=target.clone().sub(camera.position),length=direction.length();
   const horizontal=new T.Vector3(direction.x,0,direction.z).normalize(),forward=camera.getWorldDirection(new T.Vector3());forward.y=0;forward.normalize();
-  facing=forward.dot(horizontal)>=Math.cos(Math.PI/4);
+  facing=forward.dot(horizontal)>=Math.cos(Math.PI/3);
   sight.set(camera.position,direction.normalize());sight.far=Math.max(0,length-.2);
   visible=!sight.intersectObject(office.model,true).some(hit=>{
    const materials=Array.isArray(hit.object.material)?hit.object.material:[hit.object.material];

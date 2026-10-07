@@ -1,5 +1,5 @@
 import {deskSeat} from './office-station.mjs?v=1';
-import {createOfficeScreen} from './office-screen.mjs?v=1';
+import {createOfficeScreen} from './office-screen.mjs?v=2';
 import * as T from 'three';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
 export async function createOffice({pilotFigure=true}={}){

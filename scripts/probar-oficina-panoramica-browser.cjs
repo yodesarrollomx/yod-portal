@@ -71,12 +71,12 @@ const server=http.createServer((req,res)=>{
    assert.equal(await page.locator('#office-agent-marker').isVisible(),false);
    if(mobile)assert.equal(await page.locator('#joystick').isVisible(),true);
    // Actual renderer and nonmodal radial: enter by walking, then keep walking closer.
-   await page.evaluate(()=>window.despacho.camera.position.set(7,1.65,-2));
+   await page.evaluate(()=>window.despacho.camera.position.set(7,1.65,3.5));
    await page.waitForFunction(()=>window.__prepares.length>0);
    assert.equal(await page.evaluate(()=>window.__voiceStarts.length),0,'preparation does not open voice');
    const viewYaw=await page.evaluate(()=>window.despacho.camera.rotation.y);
    await page.mouse.move(180,220);await page.mouse.down();await page.mouse.move(180+viewYaw/.0036,220,{steps:3});await page.mouse.up();
-   await page.evaluate(()=>window.despacho.camera.position.set(7,1.65,-5.35));
+   await page.evaluate(()=>window.despacho.camera.position.set(7,1.65,-3.55));
    await page.keyboard.down('w');
    await page.waitForFunction(()=>document.querySelector('.station-radial')?.open);
    await page.keyboard.up('w');
@@ -86,12 +86,26 @@ const server=http.createServer((req,res)=>{
    await page.screenshot({path:path.join(out,'encuentro-circulo-'+(mobile?'movil':'escritorio')+'.png')});
    console.log('ENCOUNTER_'+(mobile?'MOBILE':'DESKTOP')+':'+(await page.screenshot({type:'jpeg',quality:70})).toString('base64'));
    // Hold for a bounded movement interval and then face the actual figure.
-   await page.evaluate(()=>window.despacho.camera.position.set(7,1.65,-5.88));
+   await page.evaluate(()=>window.despacho.camera.position.set(7,1.65,-4.30));
    await page.waitForFunction(()=>window.__voiceStarts.length===1);
+   const encounterDistance=await page.evaluate(()=>{const p=window.despacho.getAgentState().position,c=window.despacho.camera.position;return Math.hypot(c.x-p[0],c.z-p[1]);});
+   assert.ok(encounterDistance>=1.9&&encounterDistance<=2,'encounter must happen at two metres, not centimetres');
    assert.equal(await page.evaluate(()=>window.__voiceStarts[0].options.encounter),true);
    assert.equal(await page.evaluate(()=>window.__voiceStarts[0].options.compactOnly),true);
    await page.waitForTimeout(1200);
    assert.equal(await page.evaluate(()=>window.__voiceStarts.length),1,'no repeated automatic start');
+   // Inspect the actual seated model and the physical computer texture, not an HTML substitute.
+   await page.evaluate(()=>window.despacho.setAgentActivity('talk'));
+   await page.waitForTimeout(150);
+   const seat=await page.evaluate(()=>{const a=window.despacho.scene.children.find(o=>o.userData.caseId==='synthetic-office');return {bodyY:a.userData.body.position.y,scale:a.userData.body.scale.y,leg:a.userData.legs[0].rotation.x};});
+   assert.ok(Math.abs(seat.bodyY+.50*seat.scale-.62)<.001);assert.equal(seat.leg,-Math.PI/2);
+   await page.evaluate(async()=>{const T=await import('/despacho3d/vendor/three.module.js');const w=window.despacho;
+    w.layout.computerScreen.update({phase:'ready',case_id:'synthetic-office',projectName:'Proyecto de prueba',work:{run_id:'synthetic-run',title:'Comparar variantes',phase:'working',updated_at:'2026-10-07T12:00:00Z',progress:{sequence:2,progress:{tasks:[{title:'Verificar superficie',status:'running'},{title:'Fuente preparada',status:'ready_for_review'}],summary:''}}}});
+    w.camera.position.set(8.8,2.1,-4.8);w.camera.lookAt(new T.Vector3(7,1.2,-6.8));
+   });
+   await page.waitForTimeout(300);
+   assert.equal(await page.evaluate(()=>window.despacho.getState().computer.progress.counts),'1/2 para revisar');
+   console.log('SEATED_SCREEN_'+(mobile?'MOBILE':'DESKTOP')+':'+(await page.screenshot({type:'jpeg',quality:80})).toString('base64'));
    await page.locator('#overview').click();
    const start=await page.evaluate(()=>window.despacho.getAgentState().position);
    assert.equal(await page.evaluate(()=>window.despacho.agenteIr('decisions')),true);

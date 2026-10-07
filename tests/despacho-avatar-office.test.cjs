@@ -86,3 +86,18 @@ test('seated figure faces the visible monitor and returns to its shared chair po
  assert.deepEqual(figure.position.toArray(),[7,0,-6.25]);assert.equal(figure.rotation.y,Math.PI);
  p.dispose();
 });
+
+test('scaled figures contact the chair and remain seated while talking',async()=>{
+ const [T,{createOfficePilot}]=await modules;
+ for(const form of ['child','young','adult','robot']){
+  const scene=new T.Scene(),p=createOfficePilot({scene});p.bind(panel({...profile,form}));
+  const root=scene.children[0],body=root.userData.body,leg=root.userData.legs[0];
+  assert.ok(Math.abs(body.position.y+.50*body.scale.y-.62)<.001,'seat contact '+form);
+  assert.equal(leg.rotation.x,-Math.PI/2);
+  const seatedY=body.position.y,rotation=root.rotation.y;
+  p.setActivity('talk');p.update(0);p.update(100);
+  assert.equal(body.position.y,seatedY);assert.equal(leg.rotation.x,-Math.PI/2);
+  assert.equal(root.rotation.y,rotation);assert.equal(root.userData.base.visible,false);
+  p.dispose();
+ }
+});

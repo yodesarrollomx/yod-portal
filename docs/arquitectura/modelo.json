@@ -9451,7 +9451,7 @@
         "SYS-POTENCIALES"
       ],
       "proposal": "Encuentro a dos metros y preparación a diez: unificar radios de menú, visibilidad y voz, conservar acercamiento deliberado durante la recuperación de acceso y evitar activación por teletransporte. Corregir postura sentada según escala del avatar, mantenerla al conversar y mostrar avance registrado en el monitor físico con tareas, pendientes y fecha, sin simular ejecución.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "approval": "Dirección solicita ampliar rango, conversar a dos metros, corregir asiento y mostrar avance en computadora, 7-oct-2026.",
       "tests": [
         "Encuentro real en Three a dos metros, preparación a diez, paredes, salida, cambio de identidad, rechazo y ausencia de saludos repetidos.",
@@ -9459,7 +9459,7 @@
         "Monitor se actualiza por secuencia y contenido, distingue pendiente de revisión de terminado y elimina datos al revocar acceso.",
         "Regresión Node, arquitectura, OS, portal, accesos, obra y navegador escritorio/móvil; micrófono físico sigue siendo aceptación separada."
       ],
-      "deployment": "Propuesta antes de código; pendiente de implementación y comprobación.",
+      "deployment": "Implementación 114 preparada para CI: preparación a diez metros, conversación a dos, postura según escala y monitor con progreso registrado. Pendientes pruebas de navegador, publicación y aceptación física.",
       "rollback": "Revertir este PR. Sin cambios a hojas, permisos, credenciales ni configuración inicial GPT-Live."
     }
   ],

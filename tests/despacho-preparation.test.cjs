@@ -2,9 +2,9 @@ const test=require('node:test'),assert=require('node:assert/strict');
 test('preparation radius has hysteresis, bounded retries and no close-range voice action',async()=>{
  const {createPreparationGate}=await import('../despacho3d/agent-proximity.mjs');
  const gate=createPreparationGate(),sample=(distance,now=0,enabled=true)=>gate.sample({caseId:'a',distance,now,enabled});
- assert.equal(sample(8),null);assert.equal(sample(5),'prepare');assert.equal(sample(4,1000),null);
- assert.equal(sample(.4,2000),null);assert.equal(sample(6,31000),null);assert.equal(sample(4,31000),'prepare');
- assert.equal(sample(7,32000),'release');assert.equal(sample(8,33000),null);
+ assert.equal(sample(13),null);assert.equal(sample(10),'prepare');assert.equal(sample(4,1000),null);
+ assert.equal(sample(.4,2000),null);assert.equal(sample(11,31000),null);assert.equal(sample(4,31000),'prepare');
+ assert.equal(sample(12,32000),'release');assert.equal(sample(13,33000),null);
  assert.equal(sample(5,34000),'prepare');assert.equal(sample(4,35000,false),'release');
 });
 test('prepared peers expire and late offers cannot revive discarded preparation',async()=>{
