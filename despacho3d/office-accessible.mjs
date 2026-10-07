@@ -3,7 +3,7 @@ import {ENTORNO_AGENTE_CAMINA} from './entorno-config.mjs';
 import {crearAgenteIr} from './entorno-ruta.mjs?v=4';
 import {createOfficePilot} from './avatars/office-pilot.mjs?v=5';
 import * as T from 'three';
-import {panels} from './office-panels.mjs?v=1';
+import {panels} from './office-panels.mjs?v=2';
 import {ESPACIOS} from './entorno.mjs?v=11';
 
 const el=(tag,text='',attrs={})=>{
@@ -39,6 +39,10 @@ export function startAccessibleOffice({onPanelOpened=()=>{}}={}){
  const visit=async id=>{if(!Object.hasOwn(places,id))return false;closeSheets();selected=id;return true;};
  const openPanel=id=>{
   if(!Object.hasOwn(places,id))return false;
+  if(id==='case'||id==='computer'){
+   const selection=window.YodResidentAgents?.getSelection?.();
+   if(selection){closeSheets();return window.YodVoiceWorkspace?.openForCase(selection.case_id,'ppp')||false;}
+  }
   const p=panels[id]||{tag:places[id].label,title:places[id].label,body:'<p>Espacio del Despacho. Sus herramientas se conectan por etapas desde Entorno.</p>'};
   document.getElementById('panel-tag').textContent=p.tag;document.getElementById('panel-title').textContent=p.title;
   // Contenido de fichas del código local, nunca de un perfil o un expediente.

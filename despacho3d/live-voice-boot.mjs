@@ -2,7 +2,7 @@ import {createFrameTransport, validateSelection, Conversation} from './conversat
 import {stationIdentity} from './project-station.mjs';
 import {createLiveVoice} from './live-voice.mjs?v=8';
 import {voiceView} from './voice-view.mjs?v=2';
-import {createWorkspace} from './agent-workspace.mjs?v=6';
+import {createWorkspace} from './agent-workspace.mjs?v=7';
 import {DurableGoals,watchGoals} from './goals.mjs';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=1';
 import {groupTranscriptFragments} from './live-transcript.mjs';
@@ -117,7 +117,7 @@ if (open) {
       node('voice-transcript').replaceChildren(...articles);
       if(following)node('voice-transcript').scrollTop = node('voice-transcript').scrollHeight;
   }
-  async function openForCase(caseId,tab='activity',{startVoice=false}={}) {
+  async function openForCase(caseId,tab='ppp',{startVoice=false}={}) {
     const currentSelection=window.YodResidentAgents?.getSelection?.();
     if(active(voice.snapshot())&&voiceCaseId!==currentSelection?.case_id)return false;
     if(caseId&&(!currentSelection||currentSelection.case_id!==caseId))return false;

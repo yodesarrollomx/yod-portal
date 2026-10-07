@@ -61,8 +61,9 @@ const server=http.createServer((req,res)=>{
   console.log('WORK_SCREENSHOT_PICK_'+(mobile?'MOBILE':'DESKTOP')+':'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'));
   assert.equal(await page.evaluate(p=>document.elementFromPoint(p.x,p.y)?.tagName,point),'CANVAS','the computer is not occluded by floating controls');
   if(mobile)await page.touchscreen.tap(point.x,point.y);else await page.mouse.click(point.x,point.y);
-  await page.waitForFunction(()=>window.__opened?.tab==='activity');
+  await page.waitForFunction(()=>window.__opened?.tab==='ppp');
   assert.equal((await page.evaluate(()=>window.__opened)).id,'case-synthetic');
+  await page.locator('#test-workspace [data-tab="activity"]').click();
   const panel=page.locator('.workspace-live-work');
   assert.equal(await page.locator('.workspace-manual').evaluate(e=>e.open),false);
   await panel.getByRole('heading',{name:'Leyendo documento'}).waitFor();
