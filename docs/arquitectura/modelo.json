@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.107-radial-proximidad",
+  "revision": "2026-10-07.108-sesion-persistente",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -9320,6 +9320,25 @@
       ],
       "deployment": "Implementado en rama. Pendientes CI de proximidad/radial, capturas reales del render en escritorio/móvil y publicación. La lista de nuevos proyectos no se ha recibido; no se crearon registros.",
       "rollback": "Revertir PR y versiones de recursos; no cambia datos, perfiles, permisos ni configuración Live."
+    },
+    {
+      "id": "CHG-YOD-OS-SESION-PERSISTENTE-108",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "SYS-POTENCIALES"
+      ],
+      "proposal": "Mantener una sesión ya validada durante fallas transitorias del Portero sin ampliar permisos: el OS y el Portero conservan la identidad únicamente dentro de la carga ya validada, reintentan en segundo plano y bloquean ante revocación/caducidad explícita. Extender la política de sesión del Portero a 365 días con renovación deslizante en la fuente de backend, manteniendo revocación inmediata y validación en cada carga nueva.",
+      "status": "implementado_local",
+      "approval": "Dirección solicita que una persona previamente registrada y avalada permanezca conectada y no sea expulsada por timeouts; 7-oct-2026.",
+      "tests": [
+        "Sesión validada + timeout conserva identidad y reintenta sin gate.",
+        "Carga nueva sin validación no expone datos privados.",
+        "Revocado/expirado bloquea; cachés frontend se invalidan; regresiones OS/arquitectura."
+      ],
+      "deployment": "Frontend propuesto en PR121 y Portero compartido en potenciales-yod PR19. Fuente backend Portero V66 actualizada a política 365 días; publicación de Apps Script pendiente.",
+      "rollback": "Revertir PRs y restaurar SESION_DIAS previo; no modificar roles, boards ni registros de negocio."
     }
   ],
   "data_contracts": [
