@@ -378,6 +378,6 @@ test('Shell: respaldo que no reconoce token no revoca credencial del primario in
       ok:true,status:200,json:async()=>({ok:false,error:'liga'})
     }
   });
-  vm.runInContext(fn(shellSource,'rechazoAcceso')+'\\n'+fn(shellSource,'canjeConRelevo'),c);
+  vm.runInContext(fn(shellSource,'rechazoAcceso')+'\n'+fn(shellSource,'canjeConRelevo'),c);
   assert.equal(await c.canjeConRelevo('A'),null);
 });
