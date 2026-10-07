@@ -72,7 +72,8 @@ if (open) {
   const workspace=createWorkspace({container:workspaceHost,transport,getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision,selection?.case_id);}});
   window.YodVoiceWorkspace={isOpen:()=>dialog.open&&!compactVoice,openForCase,prepareNearby:caseId=>{const s=window.YodResidentAgents?.getSelection?.();if(s?.case_id===caseId&&s.can_enqueue&&!active(voice.snapshot()))void voice.prepare(caseId,{connection:true});},releaseNearby:()=>{/* Entry preparation remains warm outside the approach radius. */},pauseEncounter:caseId=>{if(encounterCase===caseId&&voice.snapshot().phase==='listening'&&!voice.snapshot().muted){encounterPaused=true;voice.mute();}},show:tab=>{openBoard(tab);workspaceHost.scrollIntoView({block:'nearest'});}};
   window.dispatchEvent(new CustomEvent('yod-voice-workspace-ready'));
-  let stopWatching=null,encounterCase=null,encounterPaused=false,micGrantedInPage=false;
+  let stopWatching=null,encounterCase=null,encounterPaused=false,micGrantedInPage=false,encounterNeedsMic=false;
+  const micConsentNotice='Pulsa el micrófono para permitir la voz. Después podrás conversar al acercarte.';
   const goalReader=new DurableGoals({transport,getContext:()=>{
     const current=window.YodResidentAgents?.getSelection?.();
     return current&&selection?.case_id===current.case_id&&dialog.open?{selection:current,busy:false}:null;
@@ -143,15 +144,15 @@ if (open) {
       setText('voice-mute',state.muted?'Activar micrófono':'Silenciar micrófono');
       node('voice-mute').setAttribute('aria-pressed',String(state.muted));
       setText('voice-save',view.history);
-      setText('compact-name',agentName());setText('compact-phase',state.output_paused?'Sonido pausado':state.local_speaking?'Te escucho':view.title);
+      setText('compact-name',agentName());setText('compact-phase',encounterNeedsMic?'Pulsa para hablar':state.output_paused?'Sonido pausado':state.local_speaking?'Te escucho':view.title);
       node('compact-mic').disabled=accessPaused||state.phase==='closing'||state.phase==='starting'||state.phase==='reconnecting'||!selection?.can_enqueue;
       node('compact-mic').setAttribute('aria-label',view.listening?(state.muted?'Activar micrófono':'Silenciar micrófono'):'Hablar');
       node('compact-mic').setAttribute('aria-pressed',String(view.listening&&!state.muted));
       node('compact-stop').disabled=state.phase==='closing';
       node('compact-stop').setAttribute('aria-label',state.phase==='starting'?'Cancelar conexión':'Finalizar conversación');
-      const warning=state.phase==='error'||state.playback_blocked||state.incomplete||state.pending||accessPaused;
+      const warning=encounterNeedsMic||state.phase==='error'||state.playback_blocked||state.incomplete||state.pending||accessPaused;
       node('compact-notice').hidden=!warning;
-      setText('compact-notice',accessPaused?node('station-access').textContent:state.playback_blocked?'Pulsa el micrófono para activar el sonido.':state.incomplete||state.pending?view.history:state.notice);
+      setText('compact-notice',accessPaused?node('station-access').textContent:encounterNeedsMic?micConsentNotice:state.playback_blocked?'Pulsa el micrófono para activar el sonido.':state.incomplete||state.pending?view.history:state.notice);
   }
   function renderTranscript(fragment) {
       if(!selection)return;
@@ -212,15 +213,16 @@ if (open) {
     let granted=micGrantedInPage;
     try{granted=(await navigator.permissions.query({name:'microphone'})).state==='granted';}catch{}
     if(dismissing||own!==generation||!dialog.open||id!==selection?.case_id||id!==window.YodResidentAgents?.getSelection?.()?.case_id)return;
-    if(!granted){const text='Pulsa el micrófono para permitir la voz. Después podrás conversar al acercarte.';setText('voice-status',text);setText('compact-phase','Pulsa para hablar');setText('compact-notice',text);node('compact-notice').hidden=false;return;}
+    if(!granted){encounterNeedsMic=true;renderVoiceState(voice.snapshot());setText('voice-status',micConsentNotice);return;}
     begin();
   }
   function suppressEncounter(){
     if(selection?.case_id)window.dispatchEvent(new CustomEvent('yod-agent-encounter-dismiss',{detail:{case_id:selection.case_id}}));
-    encounterCase=null;encounterPaused=false;
+    encounterCase=null;encounterPaused=false;encounterNeedsMic=false;
   }
   function begin() {
     if(dismissing||accessPaused||!selection?.can_enqueue||active(voice.snapshot()))return;
+    encounterNeedsMic=false;
     const previous=voice.snapshot();
     if(previous.pending||previous.incomplete||previous.status_pending){
       setText('voice-previous','Al cerrar la conversación anterior quedó un guardado sin confirmar. Revisa el historial antes de repetir sus encargos.');
@@ -303,7 +305,7 @@ if (open) {
         workspace.setActive(dialog.open&&!compactVoice);renderVoiceState(voice.snapshot());
       }
       if(access==='lost'){
-        entrance.clear();generation++;selection=null;stopWatching?.();stopWatching=null;goalReader.hide();chat.close();workspace.reset();workspace.setActive(false);
+        entrance.clear();generation++;selection=null;encounterNeedsMic=false;stopWatching?.();stopWatching=null;goalReader.hide();chat.close();workspace.reset();workspace.setActive(false);
         fragments.length=0;freshTranscript=false;node('voice-transcript').replaceChildren();node('voice-work').replaceChildren();node('voice-task').textContent='';
         node('voice-download').disabled=true;node('voice-start').disabled=true;node('voice-previous').hidden=true;node('voice-audio').muted=true;
         setText('voice-case','El acceso al expediente cambió.');setText('voice-title','Tu autón');node('station-message').value='';node('station-messages').replaceChildren();

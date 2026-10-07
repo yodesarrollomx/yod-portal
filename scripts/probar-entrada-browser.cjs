@@ -165,7 +165,12 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
    await frame.evaluate(async()=>{navigator.permissions.query=async()=>({state:'prompt'});window.__select('C',true);await window.despacho.visit('case');window.despacho.camera.position.set(7,1.65,-4.35);});
    await frame.locator('#scene').focus();await page.keyboard.down('a');
    await frame.locator('.station-radial').waitFor();await page.keyboard.up('a');
-   await frame.locator('#compact-notice').waitFor();
+   try{await frame.locator('#compact-notice').waitFor({timeout:10000});}catch(error){
+    console.log('ENCOUNTER_DIAGNOSTIC',await frame.evaluate(()=>({state:window.despacho.getState(),selection:window.YodResidentAgents.getSelection()?.case_id,voiceOpen:document.querySelector('.realtime-dialog').open,compactPhase:document.getElementById('compact-phase').textContent,notice:document.getElementById('compact-notice').textContent,radial:document.querySelector('.station-radial')?.open,inert:document.getElementById('workspace').inert,focus:document.activeElement?.id})));
+    console.log('ENCOUNTER_FAILURE:'+ (await page.screenshot({type:'jpeg',quality:70})).toString('base64'));throw error;
+   }
+   await page.waitForTimeout(1500);
+   assert.equal(await frame.locator('#compact-notice').isVisible(),true,'background preparation must not erase microphone instructions');
    assert.match(await frame.locator('#compact-notice').innerText(),/Pulsa el micrófono/);
    assert.equal(await frame.locator('.realtime-dialog').evaluate(e=>e.matches(':modal')),false);
    assert.equal(await frame.evaluate(()=>window.YodVoiceWorkspace.isOpen()),false,'approach stays in the office, not the PPP');
