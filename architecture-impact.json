@@ -1,22 +1,17 @@
 {
-  "model_revision": "2026-10-07.111-voz-discreta",
-  "proposal_id": "CHG-ATLAS-001",
-  "summary": "Endurecer la autenticación YOD OS ante caídas transitorias de Google Apps Script: reintento automático acotado por backoff sin borrar token, gracia máxima de cinco minutos para identidad validada en la carga actual, bloqueo de datos en arranque frío y cuando vence la gracia, rechazo y cambio de rol/permisos bloquean de inmediato. No modifica el contrato ni despliegue del Portero ni los datos del negocio. Gobernanza: los tests/portal-identity.cjs heredan el propietario transversal por defecto del Atlas; se declaran todos esos componentes para pasar el filtro de impacto sin cambiar el modelo ni los diagramas globales.",
+  "model_revision": "2026-10-07.112-escucha-local",
+  "proposal_id": "CHG-DESPACHO-ESCUCHA-LOCAL-112",
+  "summary": "Reducir solapamiento audible al intervenir: analizar en el navegador el micrófono ya autorizado y atenuar temporalmente la salida mientras hay intervención sostenida. Conservar la interrupción semántica de GPT-Live, la pausa manual, el expediente y la finalización. Medir por separado micrófono, acceso, oferta WebRTC, señalización, inicio y contexto; no añadir botones ni abrir el tablero al acercarse. La detección acústica no acredita cancelación del discurso remoto ni latencia del equipo real.",
   "components": [
     "SYS-YOD-OS",
-    "GAS-PORTERO",
     "SYS-DESPACHO",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-CONTROL",
-    "SYS-OBRA-CLIENTE"
+    "SYS-DESPACHO-3D"
   ],
   "tests": [
-    "Reintento automático ante timeout o respuesta servidor, preservando token de dispositivo.",
-    "Cold start sin identidad confirmada no expone información; recupera con canje fresco.",
-    "Revocación, respuesta malformada y cambio de permisos cierran la vista o recargan con datos ocultos.",
-    "Gracia máxima cinco minutos desde última validación; no confundir este tiempo con la duración del token del backend.",
-    "Regresión CI de portal-identity y validadores de arquitectura."
+    "Ruido breve no activa atenuación; señal sostenida sí; silencio recupera salida y pausa manual prevalece.",
+    "Detector sólo usa stream ya autorizado; no graba, no transmite análisis ni abre sesiones.",
+    "Reconexión, cambio de caso, micrófono en pausa y cierre liberan detector sin perder audio final.",
+    "Navegador con audio sintético real, permisos y expediente sintéticos; regresión completa."
   ],
-  "rollback": "Revertir los commits del PR125 que modifican os/app.js, os/shell.js y pruebas. No cambia el Portero de Apps Script ni las tablas."
+  "rollback": "Revertir únicamente este PR del portal. Sin cambios a Apps Script, configuración de OpenAI ni datos."
 }
