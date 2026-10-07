@@ -1,3 +1,4 @@
+import {createVoicePreparation} from './voice-preparation.mjs?v=1';
 import {validateFastSession} from './fast-lane.mjs';
 import {transcriptFragment} from './live-transcript.mjs';
 
@@ -21,6 +22,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     disconnectTimer = null, statusFailures = 0, connectedAt = 0, prepared = null, preparing = null, mode = null, startTimer = null, retryingContext = false, interruptionId = null;
   let state = {phase: 'idle', notice: '', muted: false, fragments: 0, blocks: 0, saved: 0, pending: 0,
     incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, input_detected:false, input_received:false, mode: null, output_paused:false, interruption_pending:false};
+  const preparation=createVoicePreparation({Peer,gather,now});
   const seen = new Set();
   const publish = patch => {state = {...state, ...patch}; onChange({...state});};
   async function post(path, data, current = credential, signal) {
@@ -53,8 +55,9 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     try {const value = await promise; prepared = value; return value;}
     finally {if (preparing?.promise === promise) preparing = null;}
   }
-  async function prepare(caseId) {
+  async function prepare(caseId,{connection=false}={}) {
     try {
+      if(connection&&!closing&&['idle','error'].includes(state.phase))void preparation.warm(caseId);
       const value = await ensureCredential(caseId);
       const response = await fetchImpl(value.endpoint + '/fast/hello', {headers: {Authorization: 'Bearer ' + value.token},
         cache: 'no-store', credentials: 'omit', signal: AbortSignal.timeout(15000)});
@@ -185,7 +188,9 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
       const minted = await auth;
       if (token !== epoch || closing) return false;
       if (minted.error) throw minted.error;
-      credential = minted.value; peer = new Peer();
+      const warmed=await preparation.take(caseId);
+      if(token!==epoch||closing){warmed?.channel.close?.();warmed?.peer.close();return false;}
+      credential = minted.value; peer = warmed?.peer || new Peer();
       audio.autoplay = true; audio.playsInline = true; audio.setAttribute?.('playsinline','');
       publish({notice: 'Conectando voz…'});
       peer.ontrack = event => {
@@ -198,9 +203,9 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
       for (const track of stream.getAudioTracks()) {
         track.enabled = false;
         track.onended=()=>{if(token===epoch&&!closing)void stop('El micrófono dejó de estar disponible. Revisa el dispositivo y vuelve a intentar.');};
-        peer.addTrack(track, stream);
+        if(warmed)await warmed.sender.replaceTrack(track);else peer.addTrack(track, stream);
       }
-      channel = peer.createDataChannel('oai-events');
+      channel = warmed?.channel || peer.createDataChannel('oai-events');
       channel.onmessage = event => {
         if (token !== epoch) return;
         let value; try {value = JSON.parse(event.data);} catch {return;}
@@ -243,7 +248,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
           }
         } else if (['failed','closed'].includes(connection)) lost();
       };
-      await peer.setLocalDescription(await peer.createOffer()); await gather(peer);
+      if(!warmed){await peer.setLocalDescription(await peer.createOffer()); await gather(peer);}
       if (token !== epoch || closing) return false;
       const current = credential;
       // Bound signalling, not the user's microphone permission prompt.
@@ -334,9 +339,9 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   }
   function abandon() {
     // Navigation cannot guarantee a final event. Never report it as a confirmed close.
-    prepared = null; preparing = null;
+    preparation.discard();prepared = null; preparing = null;
     disconnected = true; closedResolve?.(false); publish({incomplete: true});
     void stop('Finalización incompleta al salir de esta pantalla.');
   }
-  return {prepare, start, stop, mute, playAudio, retryContext, notifyBoard, interrupt, resumeAudio, abandon, refresh: () => status(epoch), retryActions:()=>{actions?.retry();void status(epoch);}, snapshot: () => ({...state})};
+  return {prepare, discardPreparation:preparation.discard, start, stop, mute, playAudio, retryContext, notifyBoard, interrupt, resumeAudio, abandon, refresh: () => status(epoch), retryActions:()=>{actions?.retry();void status(epoch);}, snapshot: () => ({...state})};
 }

@@ -7,19 +7,19 @@ function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12
  const calls=[],captions=[],track={enabled:true,stops:0,stop(){this.stops++;}},
    stream={getTracks:()=>[track],getAudioTracks:()=>[track]},
    audio={srcObject:null,pause(){},play:async()=>{}};
- let peer;
+ let peer,captures=0;
  class Peer{
   constructor(){peer=this;this.connectionState='connected';this.iceGatheringState='complete';this.closed=false;
    this.channel={readyState:'open',sent:[],send(raw){this.sent.push(JSON.parse(raw));},close(){this.closed=true;}};}
   createDataChannel(name){this.channelName=name;return this.channel;}
-  addTrack(){} createOffer(){return Promise.resolve({type:'offer',sdp:'v=0\r\noffer'});}
+  addTrack(){} addTransceiver(){this.sender={track:null,replaceTrack:async track=>{this.sender.track=track;}};return {sender:this.sender};} createOffer(){this.offers=(this.offers||0)+1;return Promise.resolve({type:'offer',sdp:'v=0\r\noffer'});}
   setLocalDescription(value){this.localDescription=value;return Promise.resolve();}
   setRemoteDescription(value){this.remoteDescription=value;return Promise.resolve();}
   close(){this.closed=true;}
  }
  const base={ok:true,active:true,started:false,context_ready:true,finalized:false,expires_at:Date.now()+600000,
   fragments:0,blocks:0,saved:0,pending:0,incomplete:false};
- const voice=createLiveVoice({audio,Peer,Stream,closeTimeout,disconnectGrace,maxStatusFailures,startTimeout,signallingTimeout,media:{getUserMedia:async()=>stream},
+ const voice=createLiveVoice({audio,Peer,Stream,closeTimeout,disconnectGrace,maxStatusFailures,startTimeout,signallingTimeout,media:{getUserMedia:async()=>{captures++;return stream;}},
   schedule:()=>1,cancel:()=>{},onTranscript:f=>captions.push(f),
   mint:mintOverride||(async({case_id})=>({ok:true,case_id,token:'A'.repeat(30)+'.'+'a'.repeat(64),
    endpoint:'https://synthetic-engine.onrender.com',expires_at:Date.now()+600000})),
@@ -33,7 +33,7 @@ function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12
    return {ok:true,json:async()=>value};
   }});
  const event=value=>peer.channel.onmessage({data:JSON.stringify(value)});
- return {voice,calls,captions,track,audio,event,get peer(){return peer;}};
+ return {voice,calls,captions,track,audio,event,get captures(){return captures;},get peer(){return peer;}};
 }
 test('WebRTC uses remote audio and oai-events, and never enables microphone before session.started',async()=>{
  const {createLiveVoice}=await load(),f=fixture(createLiveVoice);
@@ -406,4 +406,22 @@ test('a late observer confirmation while closing cannot re-enable the microphone
  const f=fixture(createLiveVoice,{statusOverride:()=>({started:confirmed})});await f.voice.start('synthetic-case');await tick();
  const end=f.voice.stop();confirmed=true;await f.voice.refresh();assert.equal(f.track.enabled,false);assert.equal(f.voice.snapshot().phase,'closing');
  f.event({type:'session.closed'});await end;
+});
+
+test('nearby preparation reuses ICE and offer without capture or a provider session',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice);
+ await f.voice.prepare('case-a',{connection:true});await tick();
+ const prepared=f.peer;
+ assert.equal(f.captures,0);assert.equal(f.calls.filter(c=>c.url.endsWith('/voice/session')).length,0);
+ assert.equal(prepared.offers,1);assert.equal(prepared.sender.track,null);
+ await f.voice.start('case-a');assert.equal(f.peer,prepared);assert.equal(f.peer.offers,1);
+ assert.equal(f.peer.sender.track,f.track);assert.equal(f.track.enabled,false);
+ f.event({type:'session.started'});assert.equal(f.track.enabled,true);
+ const stopping=f.voice.stop();await tick();f.event({type:'session.closed'});await stopping;
+});
+test('nearby preparation is discarded before using a different project',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice);
+ await f.voice.prepare('case-a',{connection:true});await tick();const first=f.peer;
+ await f.voice.prepare('case-b',{connection:true});await tick();assert.equal(first.closed,true);
+ const second=f.peer;f.voice.discardPreparation();assert.equal(second.closed,true);assert.equal(f.captures,0);
 });

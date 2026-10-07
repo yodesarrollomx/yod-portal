@@ -1,16 +1,19 @@
 {
-  "model_revision": "2026-10-07.109-encuentro-voz",
-  "proposal_id": "CHG-DESPACHO-ENCUENTRO-108",
-  "summary": "Encuentro por cercanía: círculo no modal a 0,60 m; conversación a 0,40 m, mirando al autón, inmóvil durante 1 s, después de aproximación manual. Separar acercamiento de navegación programada y movimiento del autón. Primer permiso de micrófono y bloqueo de reproducción se resuelven con un botón visible; nunca reintentar en bucle. Cerrar/finalizar inhibe reapertura hasta salir a 0,90 m. Sólo caso autorizado, una sesión y un puesto PPP. Al alejarse se pausa escucha conservando puesto/trabajo. Saludo breve; pendientes sólo tras consulta autorizada, sin inventar tareas durante carga. Pruebas de estados y navegador con datos sintéticos; no acreditar latencia acústica sin medición.",
+  "model_revision": "2026-10-07.111-voz-discreta",
+  "proposal_id": "CHG-DESPACHO-VOZ-DISCRETA-111",
+  "summary": "Separar encuentro de voz y puesto completo: el acercamiento muestra un control pequeño no modal, sin cargar el PPP. Abrir el puesto es una elección explícita y conserva la conversación; allí el PPP aparece de entrada a la derecha. Preparar acceso, servidor y oferta WebRTC sin capturar audio a 5 m; reutilizarla al conversar a 0,40 m. Preparación por proyecto, en memoria, con vencimiento y liberación al alejarse. No crear una sesión OpenAI hasta iniciar conversación; no prometer conexión instantánea ni confundir precarga con micrófono activo.",
   "components": [
     "SYS-YOD-OS",
+    "SYS-DESPACHO-3D",
     "SYS-DESPACHO",
-    "SYS-DESPACHO-3D"
+    "GAS-PORTERO",
+    "EXT-DRIVE"
   ],
   "tests": [
-    "Círculo permite seguir caminando; orientación, permanencia, paso de largo, salida, cierre y revocación.",
-    "Voz automática con permiso existente; primer permiso requiere gesto; bloqueo de sonido visible; ninguna llamada duplicada.",
-    "Navegador escritorio/móvil, contratos, arquitectura y verificadores."
+    "Precarga no pide micrófono, no crea sesión de voz ni abre tablero; deduplicación, caducidad y descarte por cambio de caso.",
+    "WebRTC usa la oferta preparada y mantiene pistas apagadas hasta inicio confirmado.",
+    "Encuentro no modal: indicador pequeño, permiso inicial explícito, expandir/minimizar conserva sesión y PPP.",
+    "Regresión de identidad, cierre con recibos y privacidad; navegador escritorio/móvil."
   ],
-  "rollback": "Revertir PR y recursos a radial107; sin cambio de datos ni permisos."
+  "rollback": "Revertir PR123 del portal; no cambia backend, Apps Script, fórmulas ni datos de negocio."
 }

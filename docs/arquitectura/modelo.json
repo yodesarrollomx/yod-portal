@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.109-encuentro-voz",
+  "revision": "2026-10-07.111-voz-discreta",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -2717,7 +2717,7 @@
       "dominio": "Operación",
       "proposito": "Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.",
       "source_of_truth": "Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos.",
-      "runtime_status": "Radial107 publicado; Dirección confirmó conversación e interrupción con retardo estimado de 1–3 s. Encuentro108 implementado en rama: círculo no modal a 60 cm y voz por permanencia a 40 cm. Verificación técnica y publicación en curso; no acredita latencia física.",
+      "runtime_status": "Encuentro108 publicado. Voz discreta111 propuesta: precarga a 5 m, conversación compacta por cercanía y PPP sólo al abrir el puesto explícitamente. Latencia de proveedor y contexto se miden por separado.",
       "evidence": [
         {
           "repo": "yodesarrollomx/yod-portal",
@@ -9336,7 +9336,7 @@
         "Voz automática con permiso existente; primer permiso requiere gesto; bloqueo de sonido visible; ninguna llamada duplicada.",
         "Navegador escritorio/móvil, contratos, arquitectura y verificadores."
       ],
-      "deployment": "Implementación en PR122; servidor coordinado privado PR38. Pruebas de lógica del portal aprobadas (467); pruebas de navegador y publicación pendientes. La demora del contexto y el retardo acústico siguen separados.",
+      "deployment": "Publicado en dcdd360a5ca74d7ff83c11daa6e2371470cc0d54. Navegador previo 37669302502 y comprobación de Pages 37669992108 aprobados. No acredita mejora de latencia acústica.",
       "rollback": "Revertir PR y recursos a radial107; sin cambio de datos ni permisos."
     },
     {
@@ -9357,6 +9357,48 @@
       ],
       "deployment": "Frontend propuesto en PR121 y Portero compartido en potenciales-yod PR19. Fuente backend Portero V66 actualizada a política 365 días; publicación de Apps Script pendiente.",
       "rollback": "Revertir PRs y restaurar SESION_DIAS previo; no modificar roles, boards ni registros de negocio."
+    },
+    {
+      "id": "CHG-DESPACHO-PPP-INMEDIATO-110",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Abrir PPP como superficie inicial cuando se elige el puesto completo; durante el encuentro automático se mantiene la voz compacta conforme a la revisión111. Recuperación limitada de fuentes sin clic y conservación del mismo iframe al hablar.",
+      "status": "implementado_local",
+      "approval": "Dirección solicita PPP visible de entrada a la derecha mientras conversa por voz; 7-oct-2026.",
+      "tests": [
+        "Entrada directa de voz abre PPP sin elegir pestaña ni Abrir tablero.",
+        "Fuente inicialmente ausente recupera el iframe sin pulsar Actualizar conexión; reintentos limitados y sin lecturas ocultas.",
+        "Mismo iframe y borrador durante conversación y pestañas; autorización y cambio de caso conservados.",
+        "Verificadores y navegador de escritorio/móvil."
+      ],
+      "deployment": "PPP inicial, recuperación limitada de fuentes y conservación de iframe implementados en rama. Verificadores y navegador pendientes.",
+      "rollback": "Revertir PR del portal; conserva datos, fórmulas y backend."
+    },
+    {
+      "id": "CHG-DESPACHO-VOZ-DISCRETA-111",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Separar encuentro de voz y puesto completo: el acercamiento muestra un control pequeño no modal, sin cargar el PPP. Abrir el puesto es una elección explícita y conserva la conversación; allí el PPP aparece de entrada a la derecha. Preparar acceso, servidor y oferta WebRTC sin capturar audio a 5 m; reutilizarla al conversar a 0,40 m. Preparación por proyecto, en memoria, con vencimiento y liberación al alejarse. No crear una sesión OpenAI hasta iniciar conversación; no prometer conexión instantánea ni confundir precarga con micrófono activo.",
+      "status": "implementado_local",
+      "approval": "Dirección corrige el alcance durante la revisión: voz discreta al acercarse, tablero sólo por elección y precarga a 5–10 metros; 7-oct-2026.",
+      "tests": [
+        "Precarga no pide micrófono, no crea sesión de voz ni abre tablero; deduplicación, caducidad y descarte por cambio de caso.",
+        "WebRTC usa la oferta preparada y mantiene pistas apagadas hasta inicio confirmado.",
+        "Encuentro no modal: indicador pequeño, permiso inicial explícito, expandir/minimizar conserva sesión y PPP.",
+        "Regresión de identidad, cierre con recibos y privacidad; navegador escritorio/móvil."
+      ],
+      "deployment": "Control de voz no modal y preparación local WebRTC implementados en PR123. Pruebas de ciclo de vida y navegador pendientes. No crea sesión OpenAI anticipada; señalización del proveedor y captura comienzan al entrar a conversación.",
+      "rollback": "Revertir PR123 del portal; no cambia backend, Apps Script, fórmulas ni datos de negocio."
     }
   ],
   "data_contracts": [
@@ -11514,6 +11556,15 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/despacho-encuentro.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-preparation.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",

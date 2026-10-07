@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-07.109-encuentro-voz
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-07.111-voz-discreta
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -993,7 +993,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dirección técnica
 
-**Estado registrado:** codigo. Radial107 publicado; Dirección confirmó conversación e interrupción con retardo estimado de 1–3 s. Encuentro108 implementado en rama: círculo no modal a 60 cm y voz por permanencia a 40 cm. Verificación técnica y publicación en curso; no acredita latencia física.
+**Estado registrado:** codigo. Encuentro108 publicado. Voz discreta111 propuesta: precarga a 5 m, conversación compacta por cercanía y PPP sólo al abrir el puesto explícitamente. Latencia de proveedor y contexto se miden por separado.
 
 **Entradas registradas:**
 

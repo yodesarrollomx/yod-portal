@@ -36,3 +36,16 @@ export function createEncounterGate({menuDistance=.6,voiceDistance=.4,leaveDista
   }
  };
 }
+
+// Warm once inside 5 m; 7 m releases resources without reopening a conversation.
+export function createPreparationGate({enter=5,leave=7,retry=30000}={}){
+ let id=null,inside=false,last=-Infinity;
+ return {sample({caseId,distance,enabled=false,now=0}={}){
+  if(id!==caseId){id=caseId;inside=false;last=-Infinity;}
+  if(!enabled||!caseId||!Number.isFinite(distance)||distance>=leave){
+   const release=inside;inside=false;last=-Infinity;return release?'release':null;
+  }
+  if(distance<=enter&&(!inside||now-last>=retry)){inside=true;last=now;return 'prepare';}
+  return null;
+ }};
+}
