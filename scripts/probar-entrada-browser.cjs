@@ -59,6 +59,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   assert.equal(await frame.locator('[data-tab="ppp"]').getAttribute('aria-pressed'),'true');
   assert.match(await frame.locator('#voice-title').textContent(),/Autón A/);
   const board=await frame.locator('.workspace-board iframe').elementHandle(),boardFrame=await board.contentFrame();
+  if(variant==='mobile'){const box=await board.boundingBox();assert.ok(box.y<644,'the PPP must show at least 200px in the first mobile screen');}
   await boardFrame.locator('#area').fill('135');
   await frame.locator('.voice-close').click();
   assert.equal(await frame.evaluate(()=>document.activeElement.id),'case-open');

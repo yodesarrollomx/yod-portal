@@ -27,6 +27,19 @@ if (open) {
   layout.className='voice-layout';sidebar.className='voice-sidebar';workspaceHost.className='voice-workspace';
   while(dialog.firstChild)sidebar.append(dialog.firstChild);layout.append(sidebar,workspaceHost);dialog.append(layout);
   document.body.append(dialog);
+  // Keep the board within the first mobile screen; preserve DOM/focus order.
+  const compact=window.matchMedia('(max-width:850px)'),followup=document.createElement('div');
+  followup.className='station-followup';
+  const activityCard=sidebar.querySelector('.station-activity'),voiceCard=sidebar.querySelector('.voice-state-card');
+  const supporting=[sidebar.querySelector('#voice-save'),sidebar.querySelector('#voice-previous'),sidebar.querySelector('.voice-transcript-details')];
+  function arrangeStation(){
+    const focus=document.activeElement;
+    if(compact.matches){followup.append(activityCard,...supporting);layout.append(followup);}
+    else{sidebar.insertBefore(activityCard,voiceCard);sidebar.append(...supporting);followup.remove();}
+    if(focus?.isConnected&&dialog.contains(focus))focus.focus({preventScroll:true});
+  }
+  compact.addEventListener('change',arrangeStation);arrangeStation();
+  window.addEventListener('pagehide',()=>compact.removeEventListener('change',arrangeStation));
   const node = id => dialog.querySelector('#' + id);
   const fragments = []; let selection = null, generation = 0, dismissing = false, transcriptCase = null, freshTranscript = false, previousFocus = null, voiceCaseId = null;
   const agentName=()=>selection?stationIdentity(selection).name:'Autón';
