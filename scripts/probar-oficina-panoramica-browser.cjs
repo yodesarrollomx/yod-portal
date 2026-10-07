@@ -23,6 +23,8 @@ const server=http.createServer((req,res)=>{
    await page.addInitScript(()=>{
     let profile={id:'synthetic-office',case_id:'synthetic-office',entity_kind:'case',name:'Proyecto de prueba',form:'child',color:'#547e75',visual:{hairStyle:'crop'}};
     const listeners=new Set();window.__opened=[];window.__arrivals=[];
+    // This geometry fixture strips the UI boots; observe the radial route used by the marker.
+    window.YodAgentMenu={showRadial(id){if(id===profile?.case_id)window.__opened.push(id);}};
     window.YodResidentAgents={getProfile:()=>profile,subscribeProfile(fn){listeners.add(fn);fn(profile);return()=>listeners.delete(fn);},openForCase(id){if(id===profile?.case_id)window.__opened.push(id);}};
     window.__revoke=()=>{profile=null;for(const fn of listeners)fn(null);};
     window.addEventListener('yod-agent-arrived',e=>window.__arrivals.push(e.detail.lugar));
