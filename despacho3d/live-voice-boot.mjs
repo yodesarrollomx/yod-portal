@@ -1,7 +1,7 @@
 import {residentAccessDecision} from './resident-agents.mjs?v=2';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=2';
 import {stationIdentity} from './project-station.mjs?v=2';
-import {createLiveVoice} from './live-voice.mjs?v=11';
+import {createLiveVoice} from './live-voice.mjs?v=12';
 import {voiceView} from './voice-view.mjs?v=2';
 import {createWorkspace} from './agent-workspace.mjs?v=12';
 import {DurableGoals,watchGoals} from './goals.mjs?v=2';
@@ -54,9 +54,9 @@ if (open) {
     if(event.phase==='confirmed')window.dispatchEvent(new CustomEvent('yod-goals-changed',{detail:null}));
   }});
   const workspace=createWorkspace({container:workspaceHost,transport,getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision);}});
-  window.YodVoiceWorkspace={isOpen:()=>dialog.open,openForCase,show:tab=>{workspace.setTab(tab);workspaceHost.scrollIntoView({block:'nearest'});}};
+  window.YodVoiceWorkspace={isOpen:()=>dialog.open,openForCase,pauseEncounter:caseId=>{if(encounterCase===caseId&&voice.snapshot().phase==='listening'&&!voice.snapshot().muted)voice.mute();},show:tab=>{workspace.setTab(tab);workspaceHost.scrollIntoView({block:'nearest'});}};
   window.dispatchEvent(new CustomEvent('yod-voice-workspace-ready'));
-  let stopWatching=null;
+  let stopWatching=null,encounterCase=null,micGrantedInPage=false;
   const goalReader=new DurableGoals({transport,getContext:()=>{
     const current=window.YodResidentAgents?.getSelection?.();
     return current&&selection?.case_id===current.case_id&&dialog.open?{selection:current,busy:false}:null;
@@ -92,6 +92,7 @@ if (open) {
       window.dispatchEvent(new CustomEvent('yod-voice-state',{detail:{phase:state.phase}}));
       const view = voiceView(state), live = view.live;
       dialog.dataset.voicePhase=state.phase;
+      if(state.phase==='listening')micGrantedInPage=true;
       if(state.phase==='listening'&&freshTranscript){fragments.length=0;node('voice-transcript').replaceChildren();freshTranscript=false;node('voice-download').disabled=true;}
       setText('voice-transcript-label',freshTranscript&&fragments.length?'Transcripción anterior · se conserva mientras conectas':'Transcripción de esta conversación');
       setText('voice-phase',view.title);
@@ -134,14 +135,14 @@ if (open) {
       node('voice-transcript').replaceChildren(...articles);
       if(following)node('voice-transcript').scrollTop = node('voice-transcript').scrollHeight;
   }
-  async function openForCase(caseId,tab='ppp',{startVoice=false}={}) {
+  async function openForCase(caseId,tab='ppp',{startVoice=false,encounter=false}={}) {
     const currentSelection=window.YodResidentAgents?.getSelection?.();
     if(active(voice.snapshot())&&voiceCaseId!==currentSelection?.case_id)return false;
     if(caseId&&(!currentSelection||currentSelection.case_id!==caseId))return false;
     if(dialog.open&&selection){
       if(caseId&&selection?.case_id!==caseId)return false;
       workspace.setTab(tab);
-      if(startVoice)begin();
+      if(startVoice)void requestBegin(encounter);
       return true;
     }
     if(!dialog.open){previousFocus=document.activeElement;dialog.showModal();visibility(true);}accessPaused=false;node('station-access').hidden=true;node('station-reconnect').hidden=true;dialog.querySelector('.voice-transcript-details').hidden=true;node('voice-previous').hidden=true;
@@ -162,7 +163,7 @@ if (open) {
       node('voice-start').disabled = !fresh.can_enqueue;
       node('voice-status').textContent = fresh.can_enqueue ?
         startVoice?'Preparando conversación de voz…':'Listo para hablar contigo.' : 'Tu acceso permite consultar; hablar requiere permiso de conversación.';
-      if (fresh.can_enqueue&&startVoice) begin();
+      if (fresh.can_enqueue&&startVoice) void requestBegin(encounter);
       return true;
     } catch {
       if (current === generation) node('voice-status').textContent = 'No pudimos validar tu acceso. Vuelve a abrir el despacho.';
@@ -170,15 +171,29 @@ if (open) {
     }
   }
   open.addEventListener('click',()=>void openForCase(window.YodResidentAgents?.getSelection?.()?.case_id,workspace.getTab(),{startVoice:true}));
+  async function requestBegin(encounter){
+    const own=generation,id=selection?.case_id;
+    if(!encounter){encounterCase=null;begin();return;}
+    encounterCase=id;
+    let granted=micGrantedInPage;
+    try{granted=(await navigator.permissions.query({name:'microphone'})).state==='granted';}catch{}
+    if(dismissing||own!==generation||!dialog.open||id!==selection?.case_id||id!==window.YodResidentAgents?.getSelection?.()?.case_id)return;
+    if(!granted){setText('voice-status','Pulsa Hablar para permitir el micrófono. Después podrás conversar al acercarte.');return;}
+    begin();
+  }
+  function suppressEncounter(){
+    if(selection?.case_id)window.dispatchEvent(new CustomEvent('yod-agent-encounter-dismiss',{detail:{case_id:selection.case_id}}));
+    encounterCase=null;
+  }
   function begin() {
-    if(accessPaused||!selection?.can_enqueue||active(voice.snapshot()))return;
+    if(dismissing||accessPaused||!selection?.can_enqueue||active(voice.snapshot()))return;
     const previous=voice.snapshot();
     if(previous.pending||previous.incomplete||previous.status_pending){
       setText('voice-previous','Al cerrar la conversación anterior quedó un guardado sin confirmar. Revisa el historial antes de repetir sus encargos.');
       node('voice-previous').hidden=false;
     }
     freshTranscript=true;voiceCaseId=selection.case_id;
-    void voice.start(selection.case_id);
+    void voice.start(selection.case_id,{encounter:encounterCase===selection.case_id});
   }
   node('voice-start').addEventListener('click',begin);
   node('voice-interrupt').addEventListener('click',()=>voice.snapshot().output_paused?voice.resumeAudio():voice.interrupt());
@@ -197,9 +212,9 @@ if (open) {
   node('voice-retry-context').addEventListener('click',()=>{void voice.retryContext();});
   node('voice-retry-actions').addEventListener('click',()=>voice.retryActions());
   node('voice-mute').addEventListener('click', voice.mute);
-  node('voice-stop').addEventListener('click', () => {void voice.stop();});
+  node('voice-stop').addEventListener('click', () => {suppressEncounter();void voice.stop();});
   async function dismiss() {
-    if (dismissing) return; dismissing = true;
+    if (dismissing) return; dismissing = true;suppressEncounter();
     const wasLive = active(voice.snapshot()), result = await voice.stop();
     if (wasLive && (result?.incomplete || result?.pending)) {dismissing = false; return;}
     generation++; selection = null; stopWatching?.();stopWatching=null;goalReader.hide();workspace.setActive(false);dialog.close();visibility(false);previousFocus?.focus?.(); dismissing = false;

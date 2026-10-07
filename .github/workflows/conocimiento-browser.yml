@@ -37,19 +37,46 @@ jobs:
         run: node verify-accesos.cjs
       - name: Preparar Chromium aislado
         run: |
+          printf '%s\n' 'https://archive.ubuntu.com/ubuntu' | sudo tee /etc/apt/apt-mirrors.txt >/dev/null
+          printf '%s\n' 'Acquire::http::Timeout "20";' 'Acquire::https::Timeout "20";' 'Acquire::Retries "2";' | sudo tee /etc/apt/apt.conf.d/80-yod-timeout >/dev/null
           npm install --prefix "$RUNNER_TEMP/yod-knowledge-browser" --no-package-lock --ignore-scripts playwright@1.51.1
           node "$RUNNER_TEMP/yod-knowledge-browser/node_modules/playwright/cli.js" install --with-deps chromium
-      - name: Probar panel, recibos, descarga y audio sintético
+      - name: Entrada, identidad y puesto
+        timeout-minutes: 3
         env:
           NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
           BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
-        run: |
-          node scripts/probar-entrada-browser.cjs
-          node scripts/probar-trabajo-browser.cjs
-          node scripts/probar-oficina-panoramica-browser.cjs
-          node scripts/probar-conocimiento-browser.cjs
-          node scripts/probar-voz-ux-browser.cjs
-          node scripts/probar-ppp-colaborativo-browser.cjs
+        run: node scripts/probar-entrada-browser.cjs
+      - name: Trabajo observable
+        timeout-minutes: 3
+        env:
+          NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
+          BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
+        run: node scripts/probar-trabajo-browser.cjs
+      - name: Recorrido real y encuentro por cercanía
+        timeout-minutes: 3
+        env:
+          NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
+          BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
+        run: node scripts/probar-oficina-panoramica-browser.cjs
+      - name: Conocimiento y recibos
+        timeout-minutes: 3
+        env:
+          NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
+          BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
+        run: node scripts/probar-conocimiento-browser.cjs
+      - name: Voz, permisos y cierre
+        timeout-minutes: 3
+        env:
+          NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
+          BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
+        run: node scripts/probar-voz-ux-browser.cjs
+      - name: PPP colaborativo
+        timeout-minutes: 3
+        env:
+          NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
+          BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
+        run: node scripts/probar-ppp-colaborativo-browser.cjs
       - name: Comprobar entrada publicada sin sesión privada
         if: github.event_name == 'push'
         env:

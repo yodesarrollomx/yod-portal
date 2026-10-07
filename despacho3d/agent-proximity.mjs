@@ -14,3 +14,25 @@ export function createProximityGate({enter=1.8,leave=2.5,dwell=450}={}){
   }
  };
 }
+
+// One encounter per deliberate approach. Scene units are metres (walking speed 2.1 m/s).
+export function createEncounterGate({menuDistance=.6,voiceDistance=.4,leaveDistance=.9,dwell=1000}={}){
+ let identity=null,armed=false,menu=false,voice=false,suppressed=false,since=null;
+ const reset=()=>{armed=false;menu=false;voice=false;suppressed=false;since=null;};
+ return {
+  dismiss(caseId){if(identity===caseId){suppressed=true;since=null;}},
+  sample({caseId,distance,enabled=false,visible=false,facing=false,moving=false,agentMoving=false,canTalk=false,now=0}={}){
+   if(identity!==caseId){identity=caseId;reset();}
+   if(!caseId||!Number.isFinite(distance)){reset();return null;}
+   if(distance>=leaveDistance){const close=menu;reset();if(enabled&&moving&&!agentMoving&&distance<1.5)armed=true;return close?'leave':null;}
+   if(!enabled){since=null;return null;}
+   if(moving&&!agentMoving)armed=true;
+   if(suppressed||!armed||!visible||agentMoving){since=null;return null;}
+   if(distance<=menuDistance&&!menu){menu=true;return 'menu';}
+   if(!canTalk||voice||distance>voiceDistance||!facing||moving){since=null;return null;}
+   if(since===null){since=now;return null;}
+   if(now-since<dwell)return null;
+   voice=true;since=null;return 'voice';
+  }
+ };
+}

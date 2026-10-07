@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-07.108-sesion-persistente
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-07.109-encuentro-voz
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -993,7 +993,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dirección técnica
 
-**Estado registrado:** codigo. PR119 puesto106 publicado y comprobado técnicamente. Interacción radial/proximidad107 propuesta por Dirección; voz física y aceptación privada pendientes.
+**Estado registrado:** codigo. Radial107 publicado; Dirección confirmó conversación e interrupción con retardo estimado de 1–3 s. Encuentro108 implementado en rama: círculo no modal a 60 cm y voz por permanencia a 40 cm. Verificación técnica y publicación en curso; no acredita latencia física.
 
 **Entradas registradas:**
 

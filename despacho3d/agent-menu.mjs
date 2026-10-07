@@ -17,11 +17,12 @@ export function sectorPath(index){
 export function mountAgentMenu({win=window,doc=document}={}){
  const open=doc.getElementById('circulo-open');if(!open)return false;
  const dialog=doc.createElement('dialog');dialog.className='agent-menu station-radial';dialog.setAttribute('aria-labelledby','agent-menu-title');doc.body.append(dialog);
+ let proximityMode=false;
  let selection=null,previousFocus=null,unsubscribe=null,bound=null,sector='ppp',selectSector=()=>{};
  const el=(tag,text,cls)=>{const n=doc.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
  const button=(text,click)=>{const n=el('button',text);n.type='button';n.addEventListener('click',click);return n;};
- const visible=()=>win.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:dialog.open||!!win.YodVoiceWorkspace?.isOpen()}));
- function close(){selection=null;if(dialog.open)dialog.close();dialog.replaceChildren();visible();if(previousFocus?.isConnected)previousFocus.focus?.({preventScroll:true});}
+ const visible=()=>win.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:(dialog.open&&!proximityMode)||!!win.YodVoiceWorkspace?.isOpen()}));
+ function close(reason='dismiss'){const id=selection?.case_id;if(id&&reason==='dismiss')win.dispatchEvent(new CustomEvent('yod-agent-encounter-dismiss',{detail:{case_id:id}}));selection=null;proximityMode=false;if(dialog.open)dialog.close();dialog.replaceChildren();visible();if(previousFocus?.isConnected)previousFocus.focus?.({preventScroll:true});}
  async function openForCase(caseId,target='ppp'){
   const fresh=win.YodResidentAgents?.getSelection?.();
   if(!fresh||fresh.case_id!==caseId)return false;
@@ -31,18 +32,19 @@ export function mountAgentMenu({win=window,doc=document}={}){
    return false;
   }
   const tabs={ppp:'ppp',pendientes:'tasks',documentos:'sources',conversaciones:'ppp',chat:'activity',notas:'knowledge',moac:'tasks',historial:'knowledge'};
-  if(dialog.open)close();
+  if(dialog.open)close('transition');
   const ok=await win.YodVoiceWorkspace?.openForCase(caseId,tabs[target]||target,{startVoice:target==='conversaciones'});
   if(ok&&target==='chat'&&win.YodResidentAgents?.getSelection?.()?.case_id===caseId){
    const chat=doc.querySelector('.realtime-dialog .station-chat');if(chat){chat.open=true;chat.querySelector('textarea')?.focus();}
   }
   return ok||false;
  }
- function showRadial(caseId){
+ function showRadial(caseId,{proximity=false}={}){
   const fresh=win.YodResidentAgents?.getSelection?.();if(!fresh||fresh.case_id!==caseId||!fresh.avatar)return false;
   if(dialog.open&&selection?.case_id===caseId)return true;
+  proximityMode=proximity;dialog.classList.toggle('proximity-radial',proximityMode);
   selection=fresh;sector='ppp';const identity=stationIdentity(fresh);previousFocus=doc.activeElement;
-  dialog.replaceChildren();const closeButton=button('×',close);closeButton.className='radial-close';closeButton.setAttribute('aria-label','Cerrar opciones');dialog.append(closeButton);
+  dialog.replaceChildren();const closeButton=button('×',()=>close());closeButton.className='radial-close';closeButton.setAttribute('aria-label','Cerrar opciones');dialog.append(closeButton);
   const title=el('h1',identity.name);title.id='agent-menu-title';
   dialog.append(el('p','PUESTO DEL PROYECTO','radial-eyebrow'),title,el('p',identity.project,'radial-project'));
   const wheel=el('div',undefined,'station-wheel'),svg=doc.createElementNS('http://www.w3.org/2000/svg','svg');
@@ -73,9 +75,10 @@ export function mountAgentMenu({win=window,doc=document}={}){
   });
   choices.id='radial-options';
   dialog.append(wheel,submenu,el('p','Apunta o usa las flechas · Elige una opción para abrir · Esc para salir','radial-footnote'));
-  select(sector);if(!dialog.open)dialog.showModal();visible();
-  win.dispatchEvent(new CustomEvent('yod-agent-menu-open',{detail:{case_id:caseId}}));
-  buttons[0].focus({preventScroll:true});return true;
+  select(sector);if(!dialog.open){if(proximityMode)dialog.show();else dialog.showModal();}visible();
+  if(proximityMode)dialog.querySelector('.radial-footnote').textContent='Acércate un poco más y detente para hablar · WASD para caminar';
+  win.dispatchEvent(new CustomEvent('yod-agent-menu-open',{detail:{case_id:caseId,proximity:proximityMode}}));
+  if(proximityMode){previousFocus?.focus?.({preventScroll:true});}else buttons[0].focus({preventScroll:true});return true;
  }
  open.textContent='Opciones del autón';open.hidden=true;open.addEventListener('click',()=>showRadial(win.YodResidentAgents?.getSelection?.()?.case_id));
  function bind(){const resident=win.YodResidentAgents;if(!resident||bound===resident)return;unsubscribe?.();bound=resident;unsubscribe=resident.subscribe(()=>{
@@ -85,9 +88,11 @@ export function mountAgentMenu({win=window,doc=document}={}){
  dialog.addEventListener('cancel',e=>{e.preventDefault();close();});
  dialog.addEventListener('keydown',e=>{
   const directions={ArrowUp:'ppp',ArrowRight:'conversaciones',ArrowDown:'pendientes',ArrowLeft:'notas'};
+  if(e.key==='Escape'){e.preventDefault();e.stopPropagation();close();return;}
+  if(proximityMode&&['w','a','s','d','W','A','S','D'].includes(e.key))return;
   if(directions[e.key]){e.preventDefault();selectSector(directions[e.key]);dialog.querySelector('[data-sector="'+directions[e.key]+'"]').focus();}
  });
  win.addEventListener('yod-residents-ready',bind);bind();
  win.addEventListener('pagehide',()=>{unsubscribe?.();dialog.remove();delete win.YodAgentMenu;});
- win.YodAgentMenu={openForCase,showRadial,isOpen:()=>dialog.open,close};win.dispatchEvent(new CustomEvent('yod-agent-menu-ready'));return true;
+ win.YodAgentMenu={openForCase,showRadial,isOpen:()=>dialog.open,isProximity:()=>dialog.open&&proximityMode,close};win.dispatchEvent(new CustomEvent('yod-agent-menu-ready'));return true;
 }

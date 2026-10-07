@@ -1,17 +1,16 @@
 {
-  "model_revision": "2026-10-07.108-sesion-persistente",
-  "proposal_id": "CHG-YOD-OS-SESION-PERSISTENTE-108",
-  "summary": "Mantener la sesión de YOD OS estable ante fallas transitorias del Portero: si una identidad ya fue validada en la carga actual, una caída temporal conserva la interfaz y reintenta en segundo plano; una revocación o caducidad explícita sigue bloqueando. Invalidar cachés del frontend para cargar el Portero actualizado. La sesión persistente sigue dependiendo de una credencial válida y del backend; no se amplían permisos ni se omite la autorización.",
+  "model_revision": "2026-10-07.109-encuentro-voz",
+  "proposal_id": "CHG-DESPACHO-ENCUENTRO-108",
+  "summary": "Encuentro por cercanía: círculo no modal a 0,60 m; conversación a 0,40 m, mirando al autón, inmóvil durante 1 s, después de aproximación manual. Separar acercamiento de navegación programada y movimiento del autón. Primer permiso de micrófono y bloqueo de reproducción se resuelven con un botón visible; nunca reintentar en bucle. Cerrar/finalizar inhibe reapertura hasta salir a 0,90 m. Sólo caso autorizado, una sesión y un puesto PPP. Al alejarse se pausa escucha conservando puesto/trabajo. Saludo breve; pendientes sólo tras consulta autorizada, sin inventar tareas durante carga. Pruebas de estados y navegador con datos sintéticos; no acreditar latencia acústica sin medición.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "GAS-PORTERO",
-    "SYS-POTENCIALES"
+    "SYS-DESPACHO-3D"
   ],
   "tests": [
-    "Identidad: sesión validada + timeout conserva identidad/permisos de la carga actual y programa reintento.",
-    "Seguridad: carga nueva sin validación no muestra datos privados; revocado/expirado sigue bloqueando y termina retirando token.",
-    "Regresión: verificar YOD OS, contratos, arquitectura e impacto; caché de app.js/portero.js invalidada por query string."
+    "Círculo permite seguir caminando; orientación, permanencia, paso de largo, salida, cierre y revocación.",
+    "Voz automática con permiso existente; primer permiso requiere gesto; bloqueo de sonido visible; ninguna llamada duplicada.",
+    "Navegador escritorio/móvil, contratos, arquitectura y verificadores."
   ],
-  "rollback": "Revertir PR 121 y volver los query strings de app.js/portero.js a la versión anterior. No cambia datos, roles ni permisos."
+  "rollback": "Revertir PR y recursos a radial107; sin cambio de datos ni permisos."
 }

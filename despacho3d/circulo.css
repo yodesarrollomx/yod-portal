@@ -110,3 +110,13 @@ header #circulo-open:focus-visible{outline:2px solid #bc9f6d;outline-offset:2px}
 @media(max-width:480px){.station-radial{padding:18px}.station-wheel{max-width:310px}.station-radial h1{font-size:22px}.station-wheel button{font-size:12px}}
 @media(max-height:650px) and (min-width:650px){.station-radial{width:min(750px,calc(100vw - 24px));display:grid;grid-template-columns:1fr 1fr;column-gap:20px}.station-radial:not([open]){display:none}.station-radial>.radial-eyebrow,.station-radial>h1,.station-radial>.radial-project{grid-column:1/-1}.station-wheel{grid-row:4/6;max-width:310px}.radial-submenu{grid-column:2;grid-row:4;align-self:center}.radial-options{grid-template-columns:1fr}.radial-footnote{grid-column:2;grid-row:5}}
 @media(prefers-reduced-motion:reduce){.radial-sector{transition:none}}
+
+/* Proximity must not trap the walker or cover the movement control. Explicit menus remain modal. */
+.station-radial.proximity-radial{position:fixed;inset:90px 18px auto auto;margin:0;width:300px;max-height:calc(100dvh - 190px);padding:15px;z-index:80;display:block}
+.proximity-radial .station-wheel{max-width:235px}
+.proximity-radial .radial-options{grid-template-columns:1fr}
+.proximity-radial .radial-options button{min-height:44px;padding:8px}
+.proximity-radial .station-wheel button{font-size:11px}
+@media(max-width:700px){.station-radial.proximity-radial{top:80px;right:8px;width:235px;max-height:calc(100dvh - 255px)}.proximity-radial .station-wheel{max-width:205px}.proximity-radial .radial-options small,.proximity-radial .radial-project{display:none}.proximity-radial h1{font-size:19px}.proximity-radial .radial-options button{min-height:44px}}
+
+.station-radial.proximity-radial:not([open]){display:none}

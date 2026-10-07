@@ -6,7 +6,7 @@ const server=http.createServer((req,res)=>{
  const filename=path.resolve(ROOT,'.'+(pathname.endsWith('/')?pathname+'index.html':pathname));
  if(!filename.startsWith(ROOT+path.sep)||!fs.existsSync(filename)||!fs.statSync(filename).isFile()){res.writeHead(404);res.end();return;}
  let data=fs.readFileSync(filename);
- if(pathname==='/despacho3d/')data=Buffer.from(data.toString().replace(/<script type="module" src="(?!office-boot)[^"]+"><\/script>/g,''));
+ if(pathname==='/despacho3d/')data=Buffer.from(data.toString().replace(/<script type="module" src="(?!(?:office-boot|circulo-boot))[^"]+"><\/script>/g,''));
  const ext=path.extname(filename);
  res.setHeader('Content-Type',({'.mjs':'text/javascript','.js':'text/javascript','.css':'text/css','.html':'text/html','.png':'image/png','.jpg':'image/jpeg'})[ext]||'application/octet-stream');res.end(data);
 });
@@ -24,8 +24,9 @@ const server=http.createServer((req,res)=>{
     let profile={id:'synthetic-office',case_id:'synthetic-office',entity_kind:'case',name:'Proyecto de prueba',form:'child',color:'#547e75',visual:{hairStyle:'crop'}};
     const listeners=new Set();window.__opened=[];window.__arrivals=[];
     // This geometry fixture strips the UI boots; observe the radial route used by the marker.
-    window.YodAgentMenu={showRadial(id){if(id===profile?.case_id)window.__opened.push(id);}};
-    window.YodResidentAgents={getProfile:()=>profile,subscribeProfile(fn){listeners.add(fn);fn(profile);return()=>listeners.delete(fn);},openForCase(id){if(id===profile?.case_id)window.__opened.push(id);}};
+    window.__voiceStarts=[];window.YodVoiceWorkspace={isOpen:()=>false,openForCase:async(id,tab,options)=>{window.__voiceStarts.push({id,tab,options});return true;}};
+    window.addEventListener('yod-agent-menu-open',e=>window.__opened.push(e.detail.case_id));
+    window.YodResidentAgents={getSelection:()=>profile?{case_id:profile.case_id,name:profile.name,avatar:profile,can_enqueue:true}:null,subscribe(fn){fn();return()=>{};},getProfile:()=>profile,subscribeProfile(fn){listeners.add(fn);fn(profile);return()=>listeners.delete(fn);},openForCase(id){if(id===profile?.case_id)window.YodAgentMenu.showRadial(id);}};
     window.__revoke=()=>{profile=null;for(const fn of listeners)fn(null);};
     window.addEventListener('yod-agent-arrived',e=>window.__arrivals.push(e.detail.lugar));
    });
@@ -47,6 +48,7 @@ const server=http.createServer((req,res)=>{
    await page.screenshot({path:path.join(out,'oficina-panorama-'+(mobile?'movil':'escritorio')+'.png')});
    console.log('OFFICE_SCREENSHOT_'+(mobile?'MOBILE':'DESKTOP')+':'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'));
    await page.locator('#office-agent-marker').click();assert.deepEqual(await page.evaluate(()=>window.__opened),['synthetic-office']);
+   await page.locator('.radial-close').click();
    // Select the actual mesh through the same canvas raycaster, without the label.
    const hit=await page.evaluate(async()=>{
     const T=await import('/despacho3d/vendor/three.module.js');
@@ -57,6 +59,7 @@ const server=http.createServer((req,res)=>{
    });
    await page.mouse.click(hit.x,hit.y);
    assert.equal(await page.evaluate(()=>window.__opened.length),2,'canvas selects visible avatar');
+   await page.locator('.radial-close').click();
    // Zoom and pan remain available without changing the oblique viewing angle.
    const r=await page.locator('#scene canvas').boundingBox();
    await page.mouse.move(r.x+r.width*.35,r.y+r.height*.55);await page.mouse.wheel(0,-200);
@@ -67,6 +70,24 @@ const server=http.createServer((req,res)=>{
    state=await page.evaluate(()=>window.despacho.getState());assert.equal(state.projection,'perspective');assert.equal(state.cutaway,false);assert.equal((await materialState()).clipped,0);
    assert.equal(await page.locator('#office-agent-marker').isVisible(),false);
    if(mobile)assert.equal(await page.locator('#joystick').isVisible(),true);
+   // Actual renderer and nonmodal radial: enter by walking, then keep walking closer.
+   const viewYaw=await page.evaluate(()=>window.despacho.camera.rotation.y);
+   await page.mouse.move(180,220);await page.mouse.down();await page.mouse.move(180+viewYaw/.0036,220,{steps:3});await page.mouse.up();
+   await page.evaluate(()=>window.despacho.camera.position.set(7,1.65,-5.35));
+   await page.keyboard.down('w');
+   await page.waitForFunction(()=>document.querySelector('.station-radial')?.open);
+   await page.keyboard.up('w');
+   assert.equal(await page.locator('.station-radial').evaluate(e=>e.matches(':modal')),false);
+   assert.equal(await page.evaluate(()=>document.getElementById('workspace').inert),false);
+   assert.equal(await page.evaluate(()=>window.__voiceStarts.length),0);
+   await page.screenshot({path:path.join(out,'encuentro-circulo-'+(mobile?'movil':'escritorio')+'.png')});
+   console.log('ENCOUNTER_'+(mobile?'MOBILE':'DESKTOP')+':'+(await page.screenshot({type:'jpeg',quality:70})).toString('base64'));
+   // Hold for a bounded movement interval and then face the actual figure.
+   await page.evaluate(()=>window.despacho.camera.position.set(7,1.65,-5.88));
+   await page.waitForFunction(()=>window.__voiceStarts.length===1);
+   assert.equal(await page.evaluate(()=>window.__voiceStarts[0].options.encounter),true);
+   await page.waitForTimeout(1200);
+   assert.equal(await page.evaluate(()=>window.__voiceStarts.length),1,'no repeated automatic start');
    await page.locator('#overview').click();
    const start=await page.evaluate(()=>window.despacho.getAgentState().position);
    assert.equal(await page.evaluate(()=>window.despacho.agenteIr('decisions')),true);

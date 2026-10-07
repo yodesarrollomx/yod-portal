@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.108-sesion-persistente",
+  "revision": "2026-10-07.109-encuentro-voz",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -2717,7 +2717,7 @@
       "dominio": "Operación",
       "proposito": "Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.",
       "source_of_truth": "Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos.",
-      "runtime_status": "PR119 puesto106 publicado y comprobado técnicamente. Interacción radial/proximidad107 propuesta por Dirección; voz física y aceptación privada pendientes.",
+      "runtime_status": "Radial107 publicado; Dirección confirmó conversación e interrupción con retardo estimado de 1–3 s. Encuentro108 implementado en rama: círculo no modal a 60 cm y voz por permanencia a 40 cm. Verificación técnica y publicación en curso; no acredita latencia física.",
       "evidence": [
         {
           "repo": "yodesarrollomx/yod-portal",
@@ -9322,6 +9322,24 @@
       "rollback": "Revertir PR y versiones de recursos; no cambia datos, perfiles, permisos ni configuración Live."
     },
     {
+      "id": "CHG-DESPACHO-ENCUENTRO-108",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "proposal": "Encuentro por cercanía: círculo no modal a 0,60 m; conversación a 0,40 m, mirando al autón, inmóvil durante 1 s, después de aproximación manual. Separar acercamiento de navegación programada y movimiento del autón. Primer permiso de micrófono y bloqueo de reproducción se resuelven con un botón visible; nunca reintentar en bucle. Cerrar/finalizar inhibe reapertura hasta salir a 0,90 m. Sólo caso autorizado, una sesión y un puesto PPP. Al alejarse se pausa escucha conservando puesto/trabajo. Saludo breve; pendientes sólo tras consulta autorizada, sin inventar tareas durante carga. Pruebas de estados y navegador con datos sintéticos; no acreditar latencia acústica sin medición.",
+      "status": "implementado_local",
+      "approval": "Dirección autorizó inicio de micrófono por proximidad y completar implementación el 7-oct-2026.",
+      "tests": [
+        "Círculo permite seguir caminando; orientación, permanencia, paso de largo, salida, cierre y revocación.",
+        "Voz automática con permiso existente; primer permiso requiere gesto; bloqueo de sonido visible; ninguna llamada duplicada.",
+        "Navegador escritorio/móvil, contratos, arquitectura y verificadores."
+      ],
+      "deployment": "Implementación en PR122; servidor coordinado privado PR38. Pruebas de lógica del portal aprobadas (467); pruebas de navegador y publicación pendientes. La demora del contexto y el retardo acústico siguen separados.",
+      "rollback": "Revertir PR y recursos a radial107; sin cambio de datos ni permisos."
+    },
+    {
       "id": "CHG-YOD-OS-SESION-PERSISTENTE-108",
       "components": [
         "SYS-YOD-OS",
@@ -11487,6 +11505,15 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/despacho-proximidad.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-encuentro.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",
