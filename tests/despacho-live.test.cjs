@@ -574,3 +574,18 @@ test('a provider-initiated confirmed close retains captions and explains why voi
  await f.voice.start('synthetic-case');assert.equal(f.voice.snapshot().ended_remotely,false);
  const close=f.voice.stop();await tick();f.event({type:'session.closed'});await close;
 });
+
+test('late acoustic acknowledgement cannot hide a rejected newer manual listening instruction',async()=>{
+ const {createLiveVoice}=await load();let monitor;
+ const f=fixture(createLiveVoice,{monitorFactory:o=>{monitor=o;return{resume(){},close(){}};}});
+ await f.voice.start('synthetic-case');f.event({type:'session.started'});await tick();
+ f.event({type:'session.output_transcript.delta',delta:'respuesta',start_ms:0,end_ms:20,event_id:'old-output'});
+ monitor.onActivity(true);const acoustic=f.peer.channel.sent[0].event_id;
+ f.voice.interrupt();const manual=f.peer.channel.sent.at(-1).event_id;
+ f.event({type:'error',error:{client_event_id:manual}});
+ assert.equal(f.voice.snapshot().interruption_error,true);
+ f.event({type:'session.instructions.appended',client_event_id:acoustic});
+ assert.equal(f.voice.snapshot().interruption_error,true,'older receipt cannot certify a newer rejected instruction');
+ assert.equal(f.audio.muted,true);assert.equal(f.voice.snapshot().phase,'listening');
+ const close=f.voice.stop();await tick();f.event({type:'session.closed'});await close;
+});

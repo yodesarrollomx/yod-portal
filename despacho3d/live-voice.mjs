@@ -386,6 +386,8 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   function sendListeningIntent(){
     if(!state.output_paused||!state.interruption_pending||interruptionId||!started||
        closing||channel?.readyState!=='open')return;
+    // A manual instruction supersedes an earlier acoustic request; late acknowledgements cannot clear its error.
+    automaticInterruptionId=null;remoteSpeechObserved=false;
     interruptionId='listen-'+epoch+'-'+(++sequence);
     try{channel.send(JSON.stringify({type:'session.instructions.append',event_id:interruptionId,delegation_id:null,
       content:'El usuario pulsó Escúchame. Deja de hablar y escucha su intervención. No continúes el discurso anterior. Responde brevemente cuando termine. No canceles tareas ni cierres la sesión.'}));}
