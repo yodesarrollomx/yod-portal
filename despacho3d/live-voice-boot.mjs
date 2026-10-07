@@ -40,6 +40,7 @@ if (open) {
   }});
   const workspace=createWorkspace({container:workspaceHost,transport,getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision);}});
   window.YodVoiceWorkspace={isOpen:()=>dialog.open,openForCase,show:tab=>{workspace.setTab(tab);workspaceHost.scrollIntoView({block:'nearest'});}};
+  window.dispatchEvent(new CustomEvent('yod-voice-workspace-ready'));
   let stopWatching=null;
   const goalReader=new DurableGoals({transport,getContext:()=>{
     const current=window.YodResidentAgents?.getSelection?.();

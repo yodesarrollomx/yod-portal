@@ -38,7 +38,7 @@ export function startAccessibleOffice({onPanelOpened=()=>{}}={}){
  };
  const visit=async id=>{if(!Object.hasOwn(places,id))return false;closeSheets();selected=id;return true;};
  const openPanel=id=>{
-  if(!Object.hasOwn(places,id))return false;
+  if(id!=='computer'&&!Object.hasOwn(places,id))return false;
   if(id==='case'||id==='computer'){
    const selection=window.YodResidentAgents?.getSelection?.();
    if(selection){closeSheets();return window.YodVoiceWorkspace?.openForCase(selection.case_id,'ppp')||false;}
@@ -87,6 +87,10 @@ export function mountAccessibleView(api){
  const title=el('div');title.append(el('span','El Despacho · Vista accesible',{class:'eyebrow'}),el('h1','Plano de la oficina'));
  const close=el('button','Volver al 3D',{type:'button'});close.hidden=api.view==='map';close.onclick=()=>{root.hidden=true;button.setAttribute('aria-expanded','false');button.focus();};
  heading.append(title,close);root.append(heading);
+ if(api.view==='map'){
+  const entry=document.getElementById('office-entry'),trigger=document.getElementById('case-open');
+  if(entry&&trigger){const station=el('div','',{class:'office-map-entry'});station.append(entry,trigger);root.append(station);}
+ }
  const reason=el('p',api.view==='map'?'El recorrido 3D no está disponible aquí. Puedes recorrer esta misma oficina en el plano.':'Este plano muestra los mismos lugares y obstáculos del recorrido 3D.',{class:'office-map-note'});root.append(reason);
  const status=el('div','',{class:'office-map-status','aria-live':'polite',role:'status'});
  const visitorText=el('p'),agentText=el('p'),result=el('p','Solo movimiento en la oficina. Las herramientas conservan sus permisos.',{class:'office-map-note'});

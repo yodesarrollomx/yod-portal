@@ -22,3 +22,9 @@ body>header>.title>span{display:none}
 
 /* The station has one primary entry; its radial options stay inside the station. */
 body:has(#office-entry)>header>#circulo-open{display:none}
+
+.office-map-entry{display:flex;align-items:center;gap:16px;margin:12px 0 20px;padding:16px;border:1px solid #d3d9d0;border-radius:16px;background:#fafbf7}
+.office-map-entry #office-entry{position:static;width:auto;max-width:none;flex:1;padding:0;border:0;box-shadow:none;background:transparent;display:block}
+.office-map-entry #case-open{min-height:48px;padding:10px 18px;border:0;border-radius:12px;background:#20343c;color:#fff}
+.office-map-entry #case-open span{display:block}
+@media(max-width:700px){.office-map-entry{align-items:stretch;flex-direction:column}.office-map-entry #office-entry [data-entry-status]{text-align:left;max-width:none}}

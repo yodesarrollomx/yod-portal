@@ -64,6 +64,11 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   assert.equal(await frame.evaluate(()=>document.activeElement.id),'case-open');
   await page.screenshot({path:path.join(out,'entrada-'+variant+'-oficina-prueba.png')});
   console.log('ENTRY_OFFICE_'+variant+':'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'));
+  if(variant!=='fallback'){
+   await frame.locator('#office-agent-marker').click();await frame.locator('.realtime-dialog').waitFor();
+   assert.equal(await frame.locator('[data-tab="ppp"]').getAttribute('aria-pressed'),'true');
+   await frame.locator('.voice-close').click();
+  }
   // The physical computer and case route must open the same PPP and preserve drafts.
   await frame.evaluate(()=>window.despacho.openPanel('computer'));
   await frame.locator('.realtime-dialog').waitFor();
