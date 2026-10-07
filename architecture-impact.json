@@ -1,19 +1,22 @@
 {
   "model_revision": "2026-10-07.111-voz-discreta",
-  "proposal_id": "CHG-DESPACHO-VOZ-DISCRETA-111",
-  "summary": "Separar encuentro de voz y puesto completo: el acercamiento muestra un control pequeño no modal, sin cargar el PPP. Abrir el puesto es una elección explícita y conserva la conversación; allí el PPP aparece de entrada a la derecha. Preparar acceso, servidor y oferta WebRTC sin capturar audio a 5 m; reutilizarla al conversar a 0,40 m. Preparación por proyecto, en memoria, con vencimiento y liberación al alejarse. No crear una sesión OpenAI hasta iniciar conversación; no prometer conexión instantánea ni confundir precarga con micrófono activo.",
+  "proposal_id": "CHG-ATLAS-001",
+  "summary": "Endurecer la autenticación YOD OS ante caídas transitorias de Google Apps Script: reintento automático acotado por backoff sin borrar token, gracia máxima de cinco minutos para identidad validada en la carga actual, bloqueo de datos en arranque frío y cuando vence la gracia, rechazo y cambio de rol/permisos bloquean de inmediato. No modifica el contrato ni despliegue del Portero ni los datos del negocio. Gobernanza: los tests/portal-identity.cjs heredan el propietario transversal por defecto del Atlas; se declaran todos esos componentes para pasar el filtro de impacto sin cambiar el modelo ni los diagramas globales.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-DESPACHO-3D",
-    "SYS-DESPACHO",
     "GAS-PORTERO",
-    "EXT-DRIVE"
+    "SYS-DESPACHO",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-CONTROL",
+    "SYS-OBRA-CLIENTE"
   ],
   "tests": [
-    "Precarga no pide micrófono, no crea sesión de voz ni abre tablero; deduplicación, caducidad y descarte por cambio de caso.",
-    "WebRTC usa la oferta preparada y mantiene pistas apagadas hasta inicio confirmado.",
-    "Encuentro no modal: indicador pequeño, permiso inicial explícito, expandir/minimizar conserva sesión y PPP.",
-    "Regresión de identidad, cierre con recibos y privacidad; navegador escritorio/móvil."
+    "Reintento automático ante timeout o respuesta servidor, preservando token de dispositivo.",
+    "Cold start sin identidad confirmada no expone información; recupera con canje fresco.",
+    "Revocación, respuesta malformada y cambio de permisos cierran la vista o recargan con datos ocultos.",
+    "Gracia máxima cinco minutos desde última validación; no confundir este tiempo con la duración del token del backend.",
+    "Regresión CI de portal-identity y validadores de arquitectura."
   ],
-  "rollback": "Revertir PR123 del portal; no cambia backend, Apps Script, fórmulas ni datos de negocio."
+  "rollback": "Revertir los commits del PR125 que modifican os/app.js, os/shell.js y pruebas. No cambia el Portero de Apps Script ni las tablas."
 }

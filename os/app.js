@@ -68,7 +68,7 @@
   // Versión corta del tablero embebido: se sube a mano cuando cambia tablero.html
   // (sin esto, el caché de 10 min de Pages servía el tablero viejo tras un deploy).
   var TABLERO_V='os4';
-  var state={modules:[],rawRows:[],role:'vista',boards:'',profileReady:false,loading:false,opsScope:'mias',allTasks:[],sesionEpoch:0,sessionToken:'',identityRequest:0,pulseCache:{},opsCache:null};
+  var state={modules:[],rawRows:[],role:'vista',boards:'',profileReady:false,loading:false,opsScope:'mias',allTasks:[],sesionEpoch:0,sessionToken:'',identityRequest:0,pulseCache:{},opsCache:null,verifiedAt:0};
   var $=function(id){return document.getElementById(id);};
   // ¿hay clave guardada? distingue «sin sesión» de «sesión validándose»
   function hayToken(){try{return !!localStorage.getItem(TOKEN_KEY);}catch(_e){return false;}}
@@ -632,34 +632,39 @@
       if(!vigente())return;
       if(!data||data.ok!==true||data.token!==token||typeof data.rol!=='string'||!data.rol.trim()||typeof data.boards!=='string'){var diag='canje:'+((data&&data.error)||'sin-respuesta');var err=new Error(diag);err._diag=diag;throw err;}
       try{localStorage.removeItem('yod_canje_fail');}catch(_e){}
-      state.canjeRetry=0;state.sessionToken=token;applyIdentity(data);
+      state.canjeRetry=0;state.sessionToken=token;state.verifiedAt=Date.now();applyIdentity(data);
       await Promise.allSettled([loadCatalog(),startData(token)]);
     }catch(err){
       if(!vigente())return;
       var d=(err&&err._diag)||'error';
-      var LENTO={'canje:sin-respuesta':1,'canje:timeout':1,'error':1};
+      var LENTO={'canje:sin-respuesta':1,'canje:timeout':1,'canje:servidor':1,
+                 'canje:token_red':1,'error':1};
       var MUERTO={'canje:clave':1,'canje:liga':1,'canje:revocado':1,'canje:expirado':1};
-
-      // Fallo transitorio + sesión ya validada: conservar la pantalla y sus
-      // permisos actuales, marcar reconexión y reintentar sin mandar a Google.
-      if(LENTO[d]&&yaValidada){
+      function reintentar(){
         state.canjeRetry=(state.canjeRetry||0)+1;
+        // Mantener reintentos en segundo plano sin golpear al Portero sin límite
+        // de frecuencia: 15, 30, 60, 120, 240 y máximo 300 segundos.
+        var espera=Math.min(300000,REINTENTO_MS*Math.pow(2,Math.min(5,state.canjeRetry-1)));
+        setTimeout(function(){if(request===state.identityRequest&&tokenActual()===token)loadIdentity();},espera);
+      }
+
+      // Una falla de red no revoca un token. Permitimos una gracia acotada para
+      // datos YA validados en esta carga; después, ocultamos información privada
+      // sin eliminar la credencial persistente ni pedir login nuevo.
+      if(LENTO[d]&&yaValidada&&state.verifiedAt&&Date.now()-state.verifiedAt<5*60000){
         setConnection('error','Sesión activa · reconectando');
         $('access-status').textContent='Sesión activa · reintentando';
-        if(state.canjeRetry<=REINTENTOS_MAX){
-          setTimeout(function(){if(request===state.identityRequest&&tokenActual()===token)loadIdentity();},REINTENTO_MS);
-        }
+        reintentar();
         console.warn('[YOD OS] Portero temporalmente no disponible; se conserva la sesión validada:',d);
         return;
       }
 
-      // Si nunca se validó esta carga, no se muestran datos privados mientras
-      // el Portero está caído. Tampoco se borra el token por un timeout.
+      // Primera carga o gracia agotada: nada privado se muestra antes del canje.
+      // La credencial sigue guardada para poder reconectar automáticamente.
       bloquearSesion();
       if(LENTO[d]){
-        state.canjeRetry=(state.canjeRetry||0)+1;
-        if(state.canjeRetry<=REINTENTOS_MAX){setConnection('error','Portero lento · reintentando');
-          setTimeout(function(){if(request===state.identityRequest&&tokenActual()===token)loadIdentity();},REINTENTO_MS);}
+        setConnection('error','Portero lento · reintentando');
+        reintentar();
       }
       // Revocación/caducidad sí invalida el acceso. Se conserva el umbral de
       // tres respuestas definitivas para evitar borrar por una respuesta aislada.

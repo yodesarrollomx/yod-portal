@@ -50,7 +50,7 @@ function appHarness(token = 'prefix-shared--A') {
   });
   const names = ['tokenActual','rechazoAcceso','mismaSesion','purgarDatosSensibles','bloquearSesion','pulseCacheRead','pulseCacheWrite','loadIdentity','loadFinance','loadMarketing','loadOperations','catalogoSinAcceso'];
   vm.runInContext(names.map(n => fn(appSource, n)).join('\n'), c);
-  function authorize() { state.profileReady = true;state.sessionToken = localStorage.getItem('pyod_clave_v1');state.role = 'admin';state.boards = '*'; }
+  function authorize() { state.profileReady = true;state.sessionToken = localStorage.getItem('pyod_clave_v1');state.role = 'admin';state.boards = '*';state.verifiedAt=Date.now(); }
   return { c, state, applied, loads, renders, timers, nodes, node, localStorage, sessionStorage, authorize };
 }
 
@@ -69,6 +69,25 @@ test('Dos credenciales con los primeros 14 caracteres iguales no comparten ident
   await h.c.loadIdentity();
   assert.deepEqual(h.applied, ['Current']);assert.equal(h.state.role, 'vista');
   assert.equal(h.sessionStorage.getItem('yod_id_v1'), null);
+});
+
+test('App: error servidor transitorio reintenta sin borrar la credencial',async()=>{
+  const h=appHarness();h.c.canjearConRelevo_=async()=>({ok:false,error:'servidor'});
+  await h.c.loadIdentity();assert.equal(h.state.profileReady,false);
+  assert.equal(h.localStorage.getItem('pyod_clave_v1'),'prefix-shared--A');
+  assert.equal(h.timers.length,1);
+  h.c.canjearConRelevo_=async t=>({ok:true,token:t,rol:'vista',boards:'TA',nombre:'Current'});
+  h.timers[0]();await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(h.state.profileReady,true);
+});
+
+test('App: red caída conserva vista validada cinco minutos, luego la oculta y reintenta',async()=>{
+  const h=appHarness();h.authorize();h.c.canjearConRelevo_=async()=>null;
+  await h.c.loadIdentity();assert.equal(h.state.profileReady,true);assert.equal(h.timers.length,1);
+  h.state.verifiedAt=Date.now()-6*60000;
+  await h.c.loadIdentity();assert.equal(h.state.profileReady,false);
+  assert.equal(h.localStorage.getItem('pyod_clave_v1'),'prefix-shared--A');
+  assert.equal(h.timers.length,2);
 });
 
 test('App ignora canje tardío de A después de validar B', async () => {
@@ -162,10 +181,10 @@ for (const [name, source, functionName] of [['app',appSource,'canjearConRelevo_'
 }
 
 function shellHarness(token = 'A') {
-  const nodes = new Map(), canvas = element(), main = element(), applied = [], reloads = [];
+  const nodes = new Map(), canvas = element(), main = element(), applied = [], reloads = [], timers = [];
   const node = id => { if(!nodes.has(id))nodes.set(id,element());return nodes.get(id); };
   const localStorage=store({pyod_clave_v1:token}),sessionStorage=store({yod_id_v1:'{"rol":"admin","boards":"*"}'});
-  const state={role:'',boards:'',modules:[],identity:'pending',catalogRows:null,catalogIds:null,identityRequest:0,sessionToken:'',sessionIdentity:''};
+  const state={role:'',boards:'',modules:[],identity:'pending',catalogRows:null,catalogIds:null,identityRequest:0,sessionToken:'',sessionIdentity:'',verifiedAt:0,reconnectAttempts:0,retryTimer:null};
   const c=vm.createContext({
     state,localStorage,sessionStorage,LSC:'pyod_clave_v1',CATCACHE:'yod_portal_cat_v1',CATIDS:'yod_portal_cat_ids_v1',DATA_CACHES:{'SYS-TAREAS':['aurum-cache-v5']},
     NAME:{'SYS-TAREAS':'MOAC'},OS:'https://example.invalid/os',currentSys:()=> 'SYS-TAREAS',
@@ -174,10 +193,11 @@ function shellHarness(token = 'A') {
     canOpen:()=>state.identity==='ok'&&(state.boards==='TA'||state.role==='admin'),
     location:{reload(){reloads.push(true);}},
     aplicaIdentidad(j){state.role=j.rol;state.boards=j.boards;state.identity='ok';applied.push(j.nombre);c.maybeLock();},
+    setTimeout(f,ms){timers.push({f,ms});return timers.length;},clearTimeout(){},
     loadCatalog:async()=>{},canjeConRelevo:async t=>({ok:true,token:t,rol:'vista',boards:'TA',nombre:'Current'})
   });
   vm.runInContext(['tok','purgeCaches','purgeAll','maybeLock','loadIdentity'].map(n=>fn(shellSource,n)).join('\n'),c);
-  return {c,state,localStorage,sessionStorage,applied,canvas,reloads};
+  return {c,state,localStorage,sessionStorage,applied,canvas,reloads,timers};
 }
 
 test('Shell oculta lienzo mientras valida y no toma rol de yod_id_v1',async()=>{
@@ -192,6 +212,43 @@ test('Shell conserva lienzo oculto después de revocación y sin token',async()=
   const h=shellHarness();h.c.canjeConRelevo=async()=>({ok:false,error:'revocado'});
   await h.c.loadIdentity();assert.equal(h.canvas.style.display,'none');assert.equal(h.state.identity,'fail');
   h.localStorage.removeItem('pyod_clave_v1');await h.c.loadIdentity();assert.equal(h.canvas.style.display,'none');
+});
+
+test('Shell: error temporal en sesión ya confirmada mantiene vista y reintenta',async()=>{
+  const h=shellHarness();await h.c.loadIdentity();
+  assert.equal(h.state.identity,'ok');assert.equal(h.canvas.style.display,'');
+  h.c.canjeConRelevo=async()=>null;
+  await h.c.loadIdentity();
+  assert.equal(h.state.identity,'ok');assert.equal(h.canvas.style.display,'');
+  assert.equal(h.localStorage.getItem('pyod_clave_v1'),'A');
+  assert.equal(h.timers.length,1);assert.equal(h.timers[0].ms,15000);
+  h.c.canjeConRelevo=async t=>({ok:true,token:t,rol:'vista',boards:'TA',nombre:'Current'});
+  h.timers[0].f();await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(h.state.identity,'ok');assert.equal(h.state.reconnectAttempts,0);
+});
+
+test('Shell: sesión nueva sin conexión permanece cerrada pero reintenta sin borrar token',async()=>{
+  const h=shellHarness();h.c.canjeConRelevo=async()=>null;await h.c.loadIdentity();
+  assert.equal(h.state.identity,'pending');assert.equal(h.canvas.style.display,'none');
+  assert.equal(h.timers.length,1);assert.equal(h.localStorage.getItem('pyod_clave_v1'),'A');
+  h.c.canjeConRelevo=async t=>({ok:true,token:t,rol:'vista',boards:'TA',nombre:'Current'});
+  h.timers[0].f();await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(h.state.identity,'ok');assert.equal(h.canvas.style.display,'');
+});
+
+test('Shell: tras cinco minutos sin validación esconde datos, conserva token y sigue reintentando',async()=>{
+  const h=shellHarness();await h.c.loadIdentity();
+  h.state.verifiedAt=Date.now()-6*60000;
+  h.c.canjeConRelevo=async()=>null;await h.c.loadIdentity();
+  assert.equal(h.state.identity,'pending');assert.equal(h.canvas.style.display,'none');
+  assert.equal(h.localStorage.getItem('pyod_clave_v1'),'A');assert.equal(h.timers.length,1);
+});
+
+test('Shell: revocación explícita nunca obtiene gracia ni reintento',async()=>{
+  const h=shellHarness();await h.c.loadIdentity();
+  h.c.canjeConRelevo=async()=>({ok:false,error:'revocado'});
+  await h.c.loadIdentity();assert.equal(h.state.identity,'fail');
+  assert.equal(h.canvas.style.display,'none');assert.equal(h.timers.length,0);
 });
 
 test('Shell ignora canje de A recibido después de validar B',async()=>{
