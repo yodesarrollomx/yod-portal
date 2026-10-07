@@ -1,20 +1,21 @@
 {
-  "model_revision": "2026-10-07.103.1-impacto-config",
-  "proposal_id": "CHG-DESPACHO-COBERTURA-103",
-  "summary": "Seguimiento del paso 1: cerrar omisión YAML/YML en el control de impacto de configuración y despliegue. Registrar propuesta antes del código y exigir responsables de Render para render.yaml y cloud/render.yaml. Implementación: YAML/YML entra al control de impacto, con regresiones del manifiesto y responsables de las dos rutas Render.",
+  "model_revision": "2026-10-07.104-puesto-recuperable",
+  "proposal_id": "CHG-DESPACHO-PUESTO-104",
+  "summary": "Paso2: corregir rutas y capacidades reales del PPP, recuperación de confirmaciones y fuentes, y fallos locales de interrupción de voz. Vertical apunta a Mixto; sólo Patrimonial tiene edición conversada nativa acreditada. Conservar recibo tras escritura y reintentar únicamente /board/resolve; actualizar fuentes con conversación abierta sin recrear el iframe correcto. Manejar ausencia de audio y rechazos correlacionados de interrupción sin falsear éxito ni alterar configuración Live. No implementar modelos nativos no existentes ni iniciar paso3.",
   "components": [
     "SYS-YOD-OS",
-    "SVC-AUTON-CLOUD",
-    "EXT-RENDER"
+    "SYS-DESPACHO",
+    "SYS-DESPACHO-3D",
+    "SYS-POTENCIALES",
+    "GAS-PORTERO",
+    "EXT-DRIVE",
+    "SVC-AUTON-CLOUD"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node scripts/verificar-impacto.cjs",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs"
+    "Regresiones de rutas reales, capacidades por modelo y selección ambigua.",
+    "Secuencias de recibo confirmado, confirmación fallida y recuperación sin segunda escritura; recarga de fuentes con conversación activa.",
+    "Interrupción rechazada con error.client_event_id y ausencia de reproductor; configuración Live conservada.",
+    "Node, verificadores, pruebas de navegador pertinentes y despliegue. Micrófono físico y expediente privado deben acreditarse por separado."
   ],
-  "rollback": "Revertir PR de filtro, pruebas, modelo y vistas; no modifica configuración efectiva, infraestructura, datos, permisos ni sesiones."
+  "rollback": "Revertir PR y referencias de caché. No revertir registros de negocio ni reenviar escrituras; mantener recibos."
 }

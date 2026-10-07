@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-07.103.1-impacto-config
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-07.104-puesto-recuperable
 
 **Encargado de verificación:** Coordinación técnica YOD
 
