@@ -1,16 +1,16 @@
 {
-  "model_revision": "2026-10-07.109-encuentro-voz",
-  "proposal_id": "CHG-DESPACHO-ENCUENTRO-108",
-  "summary": "Encuentro por cercanía: círculo no modal a 0,60 m; conversación a 0,40 m, mirando al autón, inmóvil durante 1 s, después de aproximación manual. Separar acercamiento de navegación programada y movimiento del autón. Primer permiso de micrófono y bloqueo de reproducción se resuelven con un botón visible; nunca reintentar en bucle. Cerrar/finalizar inhibe reapertura hasta salir a 0,90 m. Sólo caso autorizado, una sesión y un puesto PPP. Al alejarse se pausa escucha conservando puesto/trabajo. Saludo breve; pendientes sólo tras consulta autorizada, sin inventar tareas durante carga. Pruebas de estados y navegador con datos sintéticos; no acreditar latencia acústica sin medición.",
+  "model_revision": "2026-10-07.110-ppp-inmediato",
+  "proposal_id": "CHG-DESPACHO-PPP-INMEDIATO-110",
+  "summary": "Abrir el PPP canónico como superficie inicial del puesto y de las entradas de conversación, visible a la derecha de la voz sin elegir otra pestaña. Recuperar automáticamente el vínculo si la primera lectura aún no lo devuelve, con reintentos limitados y sólo mientras el puesto está activo. Conservar iframe, tarjeta abierta, borrador, identidad y recibos durante la voz; no modificar fórmulas ni inventar proyectos.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-DESPACHO",
     "SYS-DESPACHO-3D"
   ],
   "tests": [
-    "Círculo permite seguir caminando; orientación, permanencia, paso de largo, salida, cierre y revocación.",
-    "Voz automática con permiso existente; primer permiso requiere gesto; bloqueo de sonido visible; ninguna llamada duplicada.",
-    "Navegador escritorio/móvil, contratos, arquitectura y verificadores."
+    "Entrada directa de voz abre PPP sin elegir pestaña ni Abrir tablero.",
+    "Fuente inicialmente ausente recupera el iframe sin pulsar Actualizar conexión; reintentos limitados y sin lecturas ocultas.",
+    "Mismo iframe y borrador durante conversación y pestañas; autorización y cambio de caso conservados.",
+    "Verificadores y navegador de escritorio/móvil."
   ],
-  "rollback": "Revertir PR y recursos a radial107; sin cambio de datos ni permisos."
+  "rollback": "Revertir PR del portal; conserva datos, fórmulas y backend."
 }
