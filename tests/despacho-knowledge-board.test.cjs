@@ -74,7 +74,7 @@ test('comparison describes recorded values, gaps and units without inferring a w
 test('stopped parent never presents an old running task as ongoing execution',async()=>{
  const {taskDisplay}=await import('../despacho3d/agent-workspace.mjs');const task={status:'running'};
  for(const parent of ['stopped','awaiting_data','ready_for_review','completed'])assert.equal(taskDisplay(task,parent),'Interrumpida · pendiente de conciliación');
- assert.equal(taskDisplay(task,'running'),'Trabajando');assert.equal(task.status,'running');
+ assert.equal(taskDisplay(task,'running'),'Ejecución registrada');assert.equal(task.status,'running');
 });
 
 test('empty case has no invented update time; real model metadata remains distinct from variant kind',async()=>{

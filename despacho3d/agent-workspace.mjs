@@ -3,13 +3,9 @@ import {registeredBoard,resolveBoard,stationIdentity} from './project-station.mj
 import {mountKnowledgeBoard} from './knowledge-board.mjs?v=1';
 import {createFrameTransport,validateConversation} from './conversation.mjs';
 import {validateFastSession} from './fast-lane.mjs';
-import {DurableGoals} from './goals.mjs';
+import {DurableGoals,goalDisplay,taskDisplay,goalReviewActions} from './goals.mjs';
+export {taskDisplay} from './goals.mjs';
 export const WORKSPACE_TABS=[['activity','Trabajo'],['ppp','Plan de potencial'],['tasks','Pendientes'],['sources','Fuentes'],['browser','Computadora'],['knowledge','Versiones y conocimiento']];
-export function taskDisplay(task,parentStatus){
- if(task.status==='running'&&parentStatus==='queued')return 'Pendiente de reanudación';
- if(task.status==='running'&&['stopped','awaiting_data','ready_for_review','completed'].includes(parentStatus))return 'Interrumpida · pendiente de conciliación';
- return {pending:'Pendiente',running:'Trabajando',ready_for_review:'Para revisión',blocked:'Bloqueada'}[task.status]||task.status;
-}
 export function proposalState(board,proposal,application=null){
  if(application?.request_id===proposal.request_id)return application.status;
  if(!board?.confirmed||board.pending)return 'board_pending';
@@ -50,12 +46,12 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
  const retryGoal=button('Comprobar la misma solicitud',()=>void tasks.retry());retryGoal.hidden=true;
  sections.tasks.append(newGoal,retryGoal,taskList);
  goalForm.addEventListener('submit',async event=>{event.preventDefault();const own=generation;if(await tasks.read()&&own===generation&&await tasks.create({...goalDraft})){goalDraft={title:'',instruction:'',criterion:''};for(const input of Object.values(goalInputs))input.value='';newGoal.open=false;win.dispatchEvent(new CustomEvent('yod-goals-changed'));}});
- const states={queued:'En cola',running:'Trabajando',ready_for_review:'Para tu revisión',awaiting_data:'Faltan datos',stopped:'Detenido',completed:'Revisado'};
+ const actionLabels={approve:'Marcar revisado',resume:'Retomar',stop:'Detener'};
  tasks.subscribe(s=>{if(disposed)return;taskList.replaceChildren();goalNotice.textContent=s.notice||'';retryGoal.hidden=!s.pending;retryGoal.disabled=s.busy;submit.disabled=!selected?.can_enqueue||!selected?.goals?.ready||s.busy||!!s.pending||!s.model||s.model.goals.some(g=>!['stopped','completed'].includes(g.status));if(!s.model){taskList.append(el('p',s.notice||'Consultando pendientes…'));return;}
-  for(const g of s.model.goals){const card=el('article',undefined,'workspace-card');card.append(el('h3',g.title),el('p',states[g.status]),el('p',g.summary||g.criterion));
-   for(const t of g.tasks){card.append(el('p',t.title+' · '+taskDisplay(t,g.status)));if(t.summary)card.append(el('p',t.summary));}
+  for(const g of s.model.goals){const display=goalDisplay(g),card=el('article',undefined,'workspace-card');card.append(el('h3',g.title),el('p',display.label),el('p',g.summary||g.criterion),el('small','Último registro · '+new Date(g.updated_at).toLocaleString()));if(display.notice)card.append(el('p',display.notice));
+   for(const t of g.tasks){card.append(el('p',t.title+' · '+taskDisplay(t,g)));if(t.summary)card.append(el('p',t.summary));}
    for(const e of g.evidence){const d=el('details');d.append(el('summary',e.title),el('pre',e.text));card.append(d);}
-   for(const [action,label]of g.status==='ready_for_review'?[['approve','Marcar revisado'],['stop','Detener']]:['stopped','awaiting_data'].includes(g.status)?[['resume','Retomar']]:['queued','running'].includes(g.status)?[['stop','Detener']]:[]){
+   for(const action of goalReviewActions(g)){const label=actionLabels[action];
     const b=button(label,async()=>{if(await tasks.read())await tasks.review(g.goal_id,action);win.dispatchEvent(new CustomEvent('yod-goals-changed'));});b.disabled=!selected?.can_enqueue||s.busy||!!s.pending;card.append(b);}
    taskList.append(card);}
   if(!s.model.goals.length)taskList.append(el('p','No hay objetivos registrados.'));

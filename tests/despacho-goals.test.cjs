@@ -62,3 +62,47 @@ test('OS preserves safe transient diagnostics and does not forward provider deta
  const request=()=>listeners.message({origin:root.location.origin,source,data:{type:'yod:case:request',version:1,id:'request-synthetic',method:'resolveCurrent',payload:{}}});
  await request();assert.equal(posts.at(-1).error,'timeout');failure=Error('session_pending');await request();assert.equal(posts.at(-1).error,'session_pending');failure=Error('provider detail private');await request();assert.equal(posts.at(-1).error,'unavailable');
 });
+
+test('goal status describes a durable record and server permission, never a live worker',async()=>{
+ const {goalDisplay,taskDisplay,goalReviewActions}=await load();
+ const task={status:'running'},base=goal({status:'running'});
+ const before=JSON.stringify(base);
+ for(const can_resume of [undefined,false]){
+  const value={...base,...(can_resume===undefined?{}:{can_resume})};
+  assert.equal(goalDisplay(value).label,'Ejecución registrada');
+  assert.deepEqual(goalReviewActions(value),['stop']);
+  assert.equal(taskDisplay(task,value),'Ejecución registrada');
+ }
+ const resumable={...base,can_resume:true};
+ assert.equal(goalDisplay(resumable).label,'Necesita retomar');
+ assert.deepEqual(goalReviewActions(resumable),['resume','stop']);
+ assert.equal(taskDisplay(task,resumable),'Por retomar');
+ assert.equal(taskDisplay(task,goal({status:'queued'})),'Pendiente de reanudación');
+ for(const status of ['stopped','awaiting_data','ready_for_review','completed'])
+  assert.equal(taskDisplay(task,goal({status})),'Interrumpida · pendiente de conciliación');
+ assert.deepEqual(goalReviewActions(goal({status:'completed',can_resume:true})),[]);
+ assert.equal(JSON.stringify(base),before);assert.equal(task.status,'running');
+});
+test('observing a resumable running goal never starts it; explicit resume preserves canonical revision',async()=>{
+ const {goalDisplay,goalReviewActions}=await load(),h=await harness();
+ h.server.state.goals=[goal({status:'running',can_resume:true,revision:'resume-revision'})];
+ await h.controller.read();const stored=structuredClone(h.server.state.goals[0]);
+ goalDisplay(h.controller.model.goals[0]);goalReviewActions(h.controller.model.goals[0]);
+ assert.deepEqual(h.server.calls.map(c=>c.op),['readGoals']);
+ assert.deepEqual(h.server.state.goals[0],stored);
+ assert.equal(await h.controller.review('goal-synthetic','resume'),true);
+ const write=h.server.calls.at(-1);
+ assert.equal(write.op,'reviewGoal');assert.equal(write.payload.action,'resume');
+ assert.equal(write.payload.expected_revision,'resume-revision');
+ assert.equal(h.controller.model.goals[0].status,'queued');
+});
+test('running resume requires the explicit server flag and malformed permission is rejected',async()=>{
+ const {validateGoal}=await load();
+ for(const can_resume of [undefined,false]){
+  const h=await harness();h.server.state.goals=[goal({status:'running',...(can_resume===undefined?{}:{can_resume})})];
+  await h.controller.read();assert.equal(await h.controller.review('goal-synthetic','resume'),false);
+  assert.deepEqual(h.server.calls.map(c=>c.op),['readGoals']);
+ }
+ for(const can_resume of ['true',1,null])assert.throws(()=>validateGoal(goal({can_resume}),caseId),/invalid_goals/);
+ assert.throws(()=>validateGoal(goal({lease_expires_at:'2026-10-03T00:01:00Z'}),caseId),/invalid_goals/);
+});
