@@ -19,11 +19,11 @@ Priorizar y aprobar trabajo de Dirección
 Evaluar alternativas y escenarios de desarrollo
 
 - Tipo: tablero. Dominio: Ventas. Responsable: Desarrollo y Comercial.
-- Evidencia: codigo. Producción: GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets según coordinador, sólo caso inspeccionado; geometría/Vertical pendientes. P1/P2/P3 locales: 50 Node y Chromium native/A/B/A aprobados. Parche visual de KPIs legacy falsos local, regresión Chromium aprobada según coordinador. WebKit local pendiente por dependencias; ambos navegadores requeridos en CI del consumer. Publicación frontend/aceptación pendientes..
+- Evidencia: codigo. Producción: PPP patrimonial compacto publicado en PR17, commit d150ee0; Pages y regresiones Chromium/WebKit aprobados. Herramienta conversada publicada en motor b88ce380. No acredita micrófono físico, escritura privada ni equivalencia de todos los modelos/casos..
 - Entidades: caso, escenario, variable_calculo, flujo_proyectado.
 - Fuente de verdad: SHEET-PORTERO registra casos; libro canónico Sheets para el piloto con lectura pública verificada en v53. Los casos pendientes de migrar aún usan modelos del frontend..
-- Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L17) — Sistema presente en el catálogo canónico; [potenciales-yod/mixto.html](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/mixto.html) — Frontend integrado por PR3 y publicado por Pages; código público incluye lectura del modelo nativo, cuerpos y flujo por etapas. Sesión y backend pendientes de verificación conjunta.; Lectura pública del caso y la lista del piloto comparadas con entradas, resultados, cuerpos y flujo nativos; coinciden. Evidencia operativa privada; no se ejecutaron POST de prueba.; Relevo del coordinador confirmado por Dirección el 5-oct: fuente activa/editor V65 idénticos, adaptador Patrimonial ausente y GET sheet-model Patrimonial con error servidor; recuperación #47 propuesta. Detalles y snapshots privados.; Coordinador reporta publicación API V66 desde V65: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma URL/scopes/ACL y editor == candidato == versión inmutable V66. GET funcional posterior pendiente; sin POST de pruebas de negocio.; Coordinador reporta GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; dos escenarios conservan IDs y 269 campos, geometría pendiente. Acta privada fuera del repositorio. Vertical y otros casos no acreditados..
-- Conexiones: CON-019 (SYS-POTENCIALES → GAS-PORTERO); CON-034 (SYS-YOD-OS → SYS-POTENCIALES).
+- Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L17) — Sistema presente en el catálogo canónico; [potenciales-yod/mixto.html](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/mixto.html) — Frontend integrado por PR3 y publicado por Pages; código público incluye lectura del modelo nativo, cuerpos y flujo por etapas. Sesión y backend pendientes de verificación conjunta.; Lectura pública del caso y la lista del piloto comparadas con entradas, resultados, cuerpos y flujo nativos; coinciden. Evidencia operativa privada; no se ejecutaron POST de prueba.; Relevo del coordinador confirmado por Dirección el 5-oct: fuente activa/editor V65 idénticos, adaptador Patrimonial ausente y GET sheet-model Patrimonial con error servidor; recuperación #47 propuesta. Detalles y snapshots privados.; Coordinador reporta publicación API V66 desde V65: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma URL/scopes/ACL y editor == candidato == versión inmutable V66. GET funcional posterior pendiente; sin POST de pruebas de negocio.; Coordinador reporta GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; dos escenarios conservan IDs y 269 campos, geometría pendiente. Acta privada fuera del repositorio. Vertical y otros casos no acreditados.; [potenciales-yod/ppp-agent-cards.js](https://github.com/yodesarrollomx/potenciales-yod/blob/d150ee0c323803869cc52b084a1911f09e2cdc91/ppp-agent-cards.js) — Tarjetas nativas del PPP patrimonial con datos del Store; pruebas y despliegue de PR17..
+- Conexiones: CON-019 (SYS-POTENCIALES → GAS-PORTERO); CON-034 (SYS-YOD-OS → SYS-POTENCIALES); CON-DESPACHO-3D-PPP (SYS-DESPACHO-3D → SYS-POTENCIALES).
 - Mejoras: C · Cotización, plan y siguiente paso comercial; PPP · Unificar tablero y fórmulas de potencial en Sheets.
 - Pendientes: Backend de transporte v53 publicado en implementación existente. GET de caso y lista contrastados con el mismo libro y revisión; edición en pantalla y demás casos pendientes. Los casos no migrados conservan cálculo cliente.; GET Patrimonial y cotejo de 166 celdas sólo acreditan el caso inspeccionado; geometría, Vertical y otros casos pendientes. Parche visual y regresión Chromium aprobados según coordinador; WebKit en CI del consumer, publicación/aceptación frontend pendientes..
 
@@ -141,11 +141,11 @@ Administrar catálogo y registro de proyectos
 Integrar navegación, identidad y síntesis de tableros
 
 - Tipo: portal. Dominio: Gobierno. Responsable: Dirección.
-- Evidencia: declarado. Producción: No verificado en despliegue.
+- Evidencia: declarado. Producción: Portal PR114 publicado en Pages, commit 5eca769. Cobertura operativa completa y aceptación privada de recorridos pendientes..
 - Entidades: sistema, sesion, resumen, proyecto.
 - Fuente de verdad: Catálogo de código y Control Maestro; cada indicador hereda el almacén de su dominio.
 - Evidencia: [yod-portal/CLAUDE.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/CLAUDE.md#L7) — El portal integra tableros; [yod-portal/docs/arquitectura/control-maestro.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/control-maestro.md) — PR #14 integrado; doce archivos servidos comparados exactamente con commit 7e9094b y perfiles sintéticos sobre la publicación. No acredita sesiones ni escrituras reales..
-- Conexiones: CON-033 (SYS-YOD-OS → SYS-DESPACHO); CON-034 (SYS-YOD-OS → SYS-POTENCIALES); CON-035 (SYS-YOD-OS → SYS-TRACK); CON-036 (SYS-YOD-OS → SYS-MIRAMAR); CON-037 (SYS-YOD-OS → SYS-TAREAS); CON-038 (SYS-YOD-OS → SYS-FLUJO); CON-039 (SYS-YOD-OS → SYS-INTERIORES); CON-040 (SYS-YOD-OS → SYS-INVERSION); CON-041 (SYS-YOD-OS → SYS-MARKETING); CON-042 (SYS-YOD-OS → SYS-OBRA); CON-043 (SYS-YOD-OS → SYS-CONTROL); CON-044 (SYS-YOD-OS → GAS-PORTERO); CON-052 (GAS-PLAN-POTENCIAL → SYS-YOD-OS); CON-053 (GAS-MIRAMAR → SYS-YOD-OS); CON-054 (GAS-PORTERO → SYS-YOD-OS); CON-055 (GAS-OPERACION → SYS-YOD-OS); CON-056 (GAS-CODES → SYS-YOD-OS); CON-057 (GAS-OBRA → SYS-YOD-OS); CON-065 (SYS-YOD-OS → GAS-CRM); CON-073 (SYS-YOD-OS → GAS-PORTERO-RESPALDO); CON-EMD-GITHUB-EMBED (SYS-YOD-OS → SYS-EMD).
+- Conexiones: CON-033 (SYS-YOD-OS → SYS-DESPACHO); CON-034 (SYS-YOD-OS → SYS-POTENCIALES); CON-035 (SYS-YOD-OS → SYS-TRACK); CON-036 (SYS-YOD-OS → SYS-MIRAMAR); CON-037 (SYS-YOD-OS → SYS-TAREAS); CON-038 (SYS-YOD-OS → SYS-FLUJO); CON-039 (SYS-YOD-OS → SYS-INTERIORES); CON-040 (SYS-YOD-OS → SYS-INVERSION); CON-041 (SYS-YOD-OS → SYS-MARKETING); CON-042 (SYS-YOD-OS → SYS-OBRA); CON-043 (SYS-YOD-OS → SYS-CONTROL); CON-044 (SYS-YOD-OS → GAS-PORTERO); CON-052 (GAS-PLAN-POTENCIAL → SYS-YOD-OS); CON-053 (GAS-MIRAMAR → SYS-YOD-OS); CON-054 (GAS-PORTERO → SYS-YOD-OS); CON-055 (GAS-OPERACION → SYS-YOD-OS); CON-056 (GAS-CODES → SYS-YOD-OS); CON-057 (GAS-OBRA → SYS-YOD-OS); CON-065 (SYS-YOD-OS → GAS-CRM); CON-073 (SYS-YOD-OS → GAS-PORTERO-RESPALDO); CON-EMD-GITHUB-EMBED (SYS-YOD-OS → SYS-EMD); CON-OS-DESPACHO-3D (SYS-YOD-OS → SYS-DESPACHO-3D).
 - Mejoras: K · Indicadores confiables y rendimiento medido; L · Mapa vivo, contratos y cambios verificables.
 
 ## SYS-PLAN-POTENCIAL · Plan de Potencial
@@ -313,7 +313,7 @@ Servir el contrato de Portero y Potenciales
 - Entidades: acceso, sesion, caso, escenario, track.
 - Fuente de verdad: Implementación existente y sus hojas canónicas; último recibo API del coordinador V66 desde V65 el 5-oct, con editor/candidato/versión inmutable iguales. Evidencias V51/V52/V53/V57/V65 históricas, con alcance y fecha propios..
 - Evidencia: [potenciales-yod/CLAUDE.md](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/CLAUDE.md#L35) — Tipo de fuente disponible: ausente; Registro backends-verificados.json: versión activa 51 comprobada por API el 2026-10-01, con misma implementación, URL y permisos; pruebas aisladas de la corrección.; CHG-CONTROL-MAESTRO-001: versión 52; publicación contrastada por API y pruebas HTTP de lectura y rechazo el 2026-10-01. Detalle en control-maestro.md y registro de backends.; CHG-PPP-BACKEND-001: versión53 observada tras actualizar la implementación existente; fuente de editor releída idéntica, configuración conservada y lectura HTTP autorizada de caso/lista conciliada. Activador directo instalado; sin POST de prueba.; Preflight privado de Corcho comunicado por el coordinador: implementación existente V57, editor igual a fuente activa, principal de Dirección y scopes Drive completos ya autorizados. No acredita adapter Corcho desplegado.; Relevo del coordinador confirmado por Dirección el 5-oct: fuente activa/editor V65 idénticos, adaptador Patrimonial ausente y GET sheet-model Patrimonial con error servidor; recuperación #47 propuesta. Detalles y snapshots privados.; Coordinador reporta publicación API V66 desde V65: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma URL/scopes/ACL y editor == candidato == versión inmutable V66. GET funcional posterior pendiente; sin POST de pruebas de negocio.; Coordinador reporta GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; dos escenarios conservan IDs y 269 campos, geometría pendiente. Acta privada fuera del repositorio. Vertical y otros casos no acreditados..
-- Conexiones: CON-001 (GAS-PORTERO → SHEET-PORTERO); CON-019 (SYS-POTENCIALES → GAS-PORTERO); CON-020 (SYS-TRACK → GAS-PORTERO); CON-044 (SYS-YOD-OS → GAS-PORTERO); CON-045 (SYS-TAREAS → GAS-PORTERO); CON-046 (SYS-FLUJO → GAS-PORTERO); CON-047 (SYS-DESPACHO → GAS-PORTERO); CON-048 (SYS-INTERIORES → GAS-PORTERO); CON-049 (SYS-MARKETING → GAS-PORTERO); CON-050 (SYS-MIRAMAR → GAS-PORTERO); CON-051 (SYS-OBRA → GAS-PORTERO); CON-054 (GAS-PORTERO → SYS-YOD-OS); CON-071 (SYS-INVERSION → GAS-PORTERO); CON-085 (GAS-SALA → GAS-PORTERO); CON-PPP-MODELO (GAS-PORTERO → SHEET-PPP-MODELOS); CON-PPP-AUDITORIA (GAS-PORTERO → SYS-CONTROL); CON-AUTH-FLUJO (GAS-FLUJO → GAS-PORTERO); CON-AUTH-CRM (GAS-CRM → GAS-PORTERO); CON-AUTH-OBRA (GAS-OBRA → GAS-PORTERO); CON-DESPACHO-CORCHO-PORTERO (SYS-DESPACHO → GAS-PORTERO); CON-PORTERO-CORCHO-STORE (GAS-PORTERO → STORE-DESPACHO-CORCHO); CON-PORTERO-CORCHO-DRIVE (GAS-PORTERO → EXT-DRIVE).
+- Conexiones: CON-001 (GAS-PORTERO → SHEET-PORTERO); CON-019 (SYS-POTENCIALES → GAS-PORTERO); CON-020 (SYS-TRACK → GAS-PORTERO); CON-044 (SYS-YOD-OS → GAS-PORTERO); CON-045 (SYS-TAREAS → GAS-PORTERO); CON-046 (SYS-FLUJO → GAS-PORTERO); CON-047 (SYS-DESPACHO → GAS-PORTERO); CON-048 (SYS-INTERIORES → GAS-PORTERO); CON-049 (SYS-MARKETING → GAS-PORTERO); CON-050 (SYS-MIRAMAR → GAS-PORTERO); CON-051 (SYS-OBRA → GAS-PORTERO); CON-054 (GAS-PORTERO → SYS-YOD-OS); CON-071 (SYS-INVERSION → GAS-PORTERO); CON-085 (GAS-SALA → GAS-PORTERO); CON-PPP-MODELO (GAS-PORTERO → SHEET-PPP-MODELOS); CON-PPP-AUDITORIA (GAS-PORTERO → SYS-CONTROL); CON-AUTH-FLUJO (GAS-FLUJO → GAS-PORTERO); CON-AUTH-CRM (GAS-CRM → GAS-PORTERO); CON-AUTH-OBRA (GAS-OBRA → GAS-PORTERO); CON-DESPACHO-CORCHO-PORTERO (SYS-DESPACHO → GAS-PORTERO); CON-PORTERO-CORCHO-STORE (GAS-PORTERO → STORE-DESPACHO-CORCHO); CON-PORTERO-CORCHO-DRIVE (GAS-PORTERO → EXT-DRIVE); CON-MOTOR-PORTERO (SVC-AUTON-CLOUD → GAS-PORTERO).
 - Mejoras: PPP · Unificar tablero y fórmulas de potencial en Sheets.
 - Pendientes: La revisión acotada no certifica todas las operaciones de negocio ni sustituye la aceptación con usuarios reales.; Las cachés de consumidores ajenos a esta entrega pueden conservar permisos temporalmente; revisarlos al continuar cada tablero..
 
@@ -703,7 +703,7 @@ Dependencia externa de procesos YOD OS
 - Entidades: .
 - Fuente de verdad: Datos del servicio externo; no inspeccionados.
 - Evidencia: Integración pendiente de verificar.
-- Conexiones: CON-062 (GAS-CODES → EXT-DRIVE); CON-084 (SVC-SALA-EJECUTOR → EXT-DRIVE); CON-EMD-PROFILES-DRIVE (GAS-EMD → EXT-DRIVE); CON-PORTERO-CORCHO-DRIVE (GAS-PORTERO → EXT-DRIVE).
+- Conexiones: CON-062 (GAS-CODES → EXT-DRIVE); CON-084 (SVC-SALA-EJECUTOR → EXT-DRIVE); CON-EMD-PROFILES-DRIVE (GAS-EMD → EXT-DRIVE); CON-PORTERO-CORCHO-DRIVE (GAS-PORTERO → EXT-DRIVE); CON-MOTOR-DRIVE (SVC-AUTON-CLOUD → EXT-DRIVE).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Estado y permisos no comprobados.
 
@@ -1000,3 +1000,99 @@ Persistir notas y ejes del Corcho en un archivo privado independiente, autorizad
 - Conexiones: CON-DESPACHO-CORCHO-STORE (GAS-OPERACION → STORE-DESPACHO-CORCHO); CON-PORTERO-CORCHO-STORE (GAS-PORTERO → STORE-DESPACHO-CORCHO).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Dependencia de identidad de ejecución y consentimiento vigentes para verificar privacidad antes de acceder a datos.
+
+## SYS-DESPACHO-3D · Oficina 3D y puesto del autón
+
+Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.
+
+- Tipo: interfaz. Dominio: Operación. Responsable: Dirección técnica.
+- Evidencia: codigo. Producción: Portal PR114 y Pages del commit 5eca769 publicados. Tarjetas y edición conversada probadas con transporte sintético; aceptación física y privada pendiente..
+- Entidades: caso, sesion, tablero, tarea, recibo.
+- Fuente de verdad: Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos..
+- Evidencia: [yod-portal/despacho3d/agent-workspace.mjs](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/agent-workspace.mjs) — Puesto compartido con PPP y ejecución de intención explícita; observar no otorga permisos..
+- Conexiones: CON-OS-DESPACHO-3D (SYS-YOD-OS → SYS-DESPACHO-3D); CON-DESPACHO-3D-MOTOR (SYS-DESPACHO-3D → SVC-AUTON-CLOUD); CON-DESPACHO-3D-PPP (SYS-DESPACHO-3D → SYS-POTENCIALES); CON-ESTADO-EXPORTACION (STORE-AUTON-ESTADO → SYS-DESPACHO-3D); CON-DESPACHO-EXPORTAR-OBSIDIAN (SYS-DESPACHO-3D → EXT-OBSIDIAN); CON-BIBLIOTECA-NOTEBOOKLM (SYS-DESPACHO-3D → EXT-NOTEBOOKLM).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+
+## SVC-AUTON-CLOUD · Motor de nube del autón
+
+Ejecutar conversación, consulta y tareas del expediente autorizado, con estado durable.
+
+- Tipo: worker. Dominio: Operación. Responsable: Dirección técnica.
+- Evidencia: codigo. Producción: Commit b88ce380 activo en Render. Dos muestras consecutivas confirmaron disponibilidad. Piloto único; coordinación de varios autónomos pendiente..
+- Entidades: caso, ejecucion, objetivo, tarea, recibo.
+- Fuente de verdad: Expediente autorizado y registros de cada dominio; volumen privado para estado, recibos y recuperación..
+- Evidencia: Compone motor, voz, investigación, objetivos y conocimiento por caso..
+- Conexiones: CON-DESPACHO-3D-MOTOR (SYS-DESPACHO-3D → SVC-AUTON-CLOUD); CON-MOTOR-PORTERO (SVC-AUTON-CLOUD → GAS-PORTERO); CON-MOTOR-ESTADO (SVC-AUTON-CLOUD → STORE-AUTON-ESTADO); CON-MOTOR-JEV (SVC-AUTON-CLOUD → EXT-JEV); CON-MOTOR-DRIVE (SVC-AUTON-CLOUD → EXT-DRIVE); CON-MOTOR-OPENAI (SVC-AUTON-CLOUD → EXT-OPENAI); CON-RENDER-MOTOR (EXT-RENDER → SVC-AUTON-CLOUD).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+
+## STORE-AUTON-ESTADO · Estado y conocimiento del autón
+
+Conservar fuentes, hechos, versiones, decisiones y recibos del expediente.
+
+- Tipo: almacen_servidor. Dominio: Operación. Responsable: Dirección técnica.
+- Evidencia: codigo. Producción: Persistencia con revisión y recibos implementada y probada. La aceptación del ciclo privado de Dirección se registra por separado..
+- Entidades: hecho, fuente, version, variante, decision, recibo.
+- Fuente de verdad: Volumen privado; las cantidades y fórmulas vigentes permanecen en Sheets..
+- Evidencia: Conocimiento por caso, revisiones, versiones y recuperación..
+- Conexiones: CON-MOTOR-ESTADO (SVC-AUTON-CLOUD → STORE-AUTON-ESTADO); CON-ESTADO-EXPORTACION (STORE-AUTON-ESTADO → SYS-DESPACHO-3D).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+
+## EXT-JEV · JEV · búsqueda y selección
+
+Orientar la búsqueda y ordenar pasajes relevantes antes de investigar.
+
+- Tipo: servicio_externo. Dominio: Conocimiento. Responsable: Dirección técnica.
+- Evidencia: codigo. Producción: Adaptador implementado; disponibilidad y cobertura dependen de configuración y fuentes autorizadas..
+- Entidades: consulta, referencia, pasaje.
+- Fuente de verdad: Fuentes autorizadas de cada expediente; la clasificación no confirma por sí sola los hechos..
+- Evidencia: Cliente para orientar y filtrar información; conserva límites y errores..
+- Conexiones: CON-MOTOR-JEV (SVC-AUTON-CLOUD → EXT-JEV).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+
+## EXT-OPENAI · OpenAI · conversación y ejecución
+
+Proveer voz y respuestas con herramientas del servidor.
+
+- Tipo: servicio_externo. Dominio: Infraestructura. Responsable: Dirección técnica.
+- Evidencia: codigo. Producción: Voz configurada y disponible en el piloto. Micrófono físico e interacción de Dirección requieren aceptación independiente..
+- Entidades: sesion, audio, transcripcion, llamada_herramienta.
+- Fuente de verdad: Configuración de sesión y herramientas autorizadas en servidor; resultados deben comprobarse contra registros de negocio..
+- Evidencia: Sesión de voz y herramientas conectadas desde el servidor..
+- Conexiones: CON-MOTOR-OPENAI (SVC-AUTON-CLOUD → EXT-OPENAI).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+
+## EXT-RENDER · Render · alojamiento del motor
+
+Alojar el servicio existente y su volumen persistente.
+
+- Tipo: infraestructura. Dominio: Infraestructura. Responsable: Dirección técnica.
+- Evidencia: ejecucion. Producción: Commit b88ce380 confirmado live el 7-oct-2026 05:08:53 UTC. Disponibilidad comprobada a 05:10:46 y 05:10:56 UTC; no promesa de continuidad ininterrumpida..
+- Entidades: version, despliegue, estado_servicio.
+- Fuente de verdad: Configuración efectiva y versión activa del proveedor, separadas de los blueprints del repositorio..
+- Evidencia: Alojamiento del servicio con volumen durable.; Conector Render confirmó la versión activa y el monitor de disponibilidad obtuvo dos muestras listas; recibos en la bitácora privada..
+- Conexiones: CON-RENDER-MOTOR (EXT-RENDER → SVC-AUTON-CLOUD).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+
+## EXT-OBSIDIAN · Obsidian · bóveda de conocimiento
+
+Relacionar notas, fuentes y decisiones del expediente mediante una bóveda portable.
+
+- Tipo: aplicacion_local. Dominio: Conocimiento. Responsable: Dirección técnica.
+- Evidencia: propuesto. Producción: Exportación Markdown/ZIP implementada. Instalación de bóveda y sincronización continua no acreditadas..
+- Entidades: nota, enlace, exportacion.
+- Fuente de verdad: Notas derivadas y referencias; originales en Drive y cálculos oficiales en Sheets..
+- Evidencia: [yod-portal/docs/arquitectura/despacho-conocimiento.md](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/docs/arquitectura/despacho-conocimiento.md) — Exportar una bóveda no instala Obsidian ni acredita sincronización..
+- Conexiones: CON-DESPACHO-EXPORTAR-OBSIDIAN (SYS-DESPACHO-3D → EXT-OBSIDIAN).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+
+## EXT-NOTEBOOKLM · NotebookLM · consulta documental prevista
+
+Registrar la herramienta documental mencionada para Biblioteca y comprobar su forma de acceso.
+
+- Tipo: servicio_externo. Dominio: Conocimiento. Responsable: Dirección técnica.
+- Evidencia: propuesto. Producción: Mencionado en la biblioteca del entorno; no se acredita conexión ejecutable ni acceso a notebooks..
+- Entidades: fuente, referencia.
+- Fuente de verdad: Documentos originales autorizados; API y sincronización por verificar..
+- Evidencia: [yod-portal/despacho3d/entorno.mjs](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/entorno.mjs) — Biblioteca menciona NotebookLM como capacidad por verificar..
+- Conexiones: CON-BIBLIOTECA-NOTEBOOKLM (SYS-DESPACHO-3D → EXT-NOTEBOOKLM).
+- Mejoras: Conservar y verificar alcance antes de ampliar.

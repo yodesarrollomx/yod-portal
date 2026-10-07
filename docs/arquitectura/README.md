@@ -4,6 +4,8 @@ Esta es la entrada para entender y modificar YOD OS. Prioridad de mejora acordad
 
 ## Explorar
 
+- [Cobertura completa de la oficina](oficina-cobertura.html): cada componente, área funcional, fuente, responsable, conexiones, evidencia y pendientes. Asignación de inventario no equivale a permiso ni integración operativa.
+
 - [Abrir el atlas visual](index.html): búsqueda, dominios, conexiones, fichas, procesos y propuestas. Es autónomo: también funciona descargado, sin acceso a producción.
 - [Diagramas de conexiones y contratos](mapas.md).
 - [Fichas por tablero, motor y almacén](fichas.md).

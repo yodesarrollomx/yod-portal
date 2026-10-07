@@ -8,7 +8,7 @@
     "cobrar_antes"
   ],
   "coverage": {
-    "summary": "Inventario de 20 repositorios; nueve fuentes activas contrastadas y revisión aislada de autorización de cinco motores. Obra Cliente y cuatro correcciones acotadas de backend publicadas con versiones verificadas; auditoría funcional de producción abierta.",
+    "summary": "Inventario conciliado de 22 repositorios, 86 componentes y 116 conexiones. Asignación funcional completa en office_coverage; estados de implementación y operación separados. Se conserva el inventario histórico de fuentes y se incorporan motor privado y Amalaya con alcance explícito.",
     "production_verified": false,
     "limitations": [
       "No se ha comprobado la versión activa de todos los Apps Script",
@@ -18,7 +18,8 @@
       "La lista de proyectos independientes no acredita cobertura de todos los scripts vinculados a Sheets.",
       "La diferencia editor/versión51 corresponde a la auditoría histórica; recuperación PPP del 5-oct parte de V65 sin adaptador y registra publicación API V66 con editor/candidato/versión iguales. GET Patrimonial y 166 celdas cotejados según coordinador sólo para el caso inspeccionado; no certifica geometría, Vertical ni todos los módulos/casos.",
       "Obra requiere confirmar su libro efectivo y reglas de delegación antes de integrar el prototipo de identidad.",
-      "La App publicadora y los recorridos operativos de Sala/Marketing corregidos siguen pendientes de configuración y verificación."
+      "La App publicadora y los recorridos operativos de Sala/Marketing corregidos siguen pendientes de configuración y verificación.",
+      "La cobertura de oficina asigna todo el inventario inspeccionado; responsables operativos por confirmar e integraciones pendientes siguen explícitos. No equivale a operación completa ni a descubrir todos los recursos de todas las cuentas."
     ]
   },
   "repositories": [
@@ -188,6 +189,14 @@
       "visibility": "public",
       "scope": "Registro acotado de tablero, fuente Apps Script y conciliación de chinches. No añade navegación ni permisos en el OS.",
       "runtime_status": "Publicación actual y extensión de conciliación pendientes de verificar en esta entrega."
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "commit": "b88ce380d7e437cf535facdbd5592a0b8bc14dc1",
+      "visibility": "private",
+      "scope": "Motor de un autón autorizado: voz, documentos, conocimiento, PPP y objetivos. Fuente privada inspeccionada; este atlas publica sólo metadatos de arquitectura.",
+      "runtime_status": "Render confirmó el commit indicado activo y dos muestras de disponibilidad de motor, voz, contexto y objetivos. No acredita aceptación con micrófono físico ni escrituras privadas.",
+      "file_count": 124
     }
   ],
   "components": [
@@ -275,6 +284,13 @@
           "claim": "Coordinador reporta GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; dos escenarios conservan IDs y 269 campos, geometría pendiente. Acta privada fuera del repositorio. Vertical y otros casos no acreditados.",
           "status": "declarado",
           "source_revision": "Apps Script version 66; cotejo Patrimonial 2026-10-05"
+        },
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "ppp-agent-cards.js",
+          "commit": "d150ee0c323803869cc52b084a1911f09e2cdc91",
+          "claim": "Tarjetas nativas del PPP patrimonial con datos del Store; pruebas y despliegue de PR17.",
+          "status": "codigo"
         }
       ],
       "data_entities": [
@@ -289,7 +305,7 @@
       ],
       "source_of_truth": "SHEET-PORTERO registra casos; libro canónico Sheets para el piloto con lectura pública verificada en v53. Los casos pendientes de migrar aún usan modelos del frontend.",
       "status": "codigo",
-      "runtime_status": "GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets según coordinador, sólo caso inspeccionado; geometría/Vertical pendientes. P1/P2/P3 locales: 50 Node y Chromium native/A/B/A aprobados. Parche visual de KPIs legacy falsos local, regresión Chromium aprobada según coordinador. WebKit local pendiente por dependencias; ambos navegadores requeridos en CI del consumer. Publicación frontend/aceptación pendientes."
+      "runtime_status": "PPP patrimonial compacto publicado en PR17, commit d150ee0; Pages y regresiones Chromium/WebKit aprobados. Herramienta conversada publicada en motor b88ce380. No acredita micrófono físico, escritura privada ni equivalencia de todos los modelos/casos."
     },
     {
       "id": "SYS-TRACK",
@@ -605,7 +621,7 @@
         "SYS-PORTAL"
       ],
       "status": "declarado",
-      "runtime_status": "No verificado en despliegue"
+      "runtime_status": "Portal PR114 publicado en Pages, commit 5eca769. Cobertura operativa completa y aceptación privada de recorridos pendientes."
     },
     {
       "id": "SYS-PLAN-POTENCIAL",
@@ -2689,6 +2705,233 @@
       ],
       "source_of_truth": "Mi Corcho privado independiente ya preparado; propiedades privadas o fallback de módulo privado, sin publicar identificadores ni notas. Mismo archivo durante provisional y futura migración Ops.",
       "physical_mapping_status": "preparado_en_registro_privado"
+    },
+    {
+      "owner_role": "Dirección técnica",
+      "status": "codigo",
+      "risks_sanitized": [],
+      "id": "SYS-DESPACHO-3D",
+      "nombre": "Oficina 3D y puesto del autón",
+      "tipo": "interfaz",
+      "repo": "yodesarrollomx/yod-portal",
+      "dominio": "Operación",
+      "proposito": "Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.",
+      "source_of_truth": "Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos.",
+      "runtime_status": "Portal PR114 y Pages del commit 5eca769 publicados. Tarjetas y edición conversada probadas con transporte sintético; aceptación física y privada pendiente.",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "despacho3d/agent-workspace.mjs",
+          "commit": "5eca769947e60bc5b51389244393e0f63817cf86",
+          "claim": "Puesto compartido con PPP y ejecución de intención explícita; observar no otorga permisos.",
+          "status": "codigo"
+        }
+      ],
+      "data_entities": [
+        "caso",
+        "sesion",
+        "tablero",
+        "tarea",
+        "recibo"
+      ]
+    },
+    {
+      "owner_role": "Dirección técnica",
+      "status": "codigo",
+      "risks_sanitized": [],
+      "id": "SVC-AUTON-CLOUD",
+      "nombre": "Motor de nube del autón",
+      "tipo": "worker",
+      "repo": "alexpueblag/yod-agent-cloud",
+      "dominio": "Operación",
+      "proposito": "Ejecutar conversación, consulta y tareas del expediente autorizado, con estado durable.",
+      "source_of_truth": "Expediente autorizado y registros de cada dominio; volumen privado para estado, recibos y recuperación.",
+      "runtime_status": "Commit b88ce380 activo en Render. Dos muestras consecutivas confirmaron disponibilidad. Piloto único; coordinación de varios autónomos pendiente.",
+      "evidence": [
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "cloud/server.mjs",
+          "commit": "b88ce380d7e437cf535facdbd5592a0b8bc14dc1",
+          "claim": "Compone motor, voz, investigación, objetivos y conocimiento por caso.",
+          "status": "codigo"
+        }
+      ],
+      "data_entities": [
+        "caso",
+        "ejecucion",
+        "objetivo",
+        "tarea",
+        "recibo"
+      ]
+    },
+    {
+      "owner_role": "Dirección técnica",
+      "status": "codigo",
+      "risks_sanitized": [],
+      "id": "STORE-AUTON-ESTADO",
+      "nombre": "Estado y conocimiento del autón",
+      "tipo": "almacen_servidor",
+      "repo": "alexpueblag/yod-agent-cloud",
+      "dominio": "Operación",
+      "proposito": "Conservar fuentes, hechos, versiones, decisiones y recibos del expediente.",
+      "source_of_truth": "Volumen privado; las cantidades y fórmulas vigentes permanecen en Sheets.",
+      "runtime_status": "Persistencia con revisión y recibos implementada y probada. La aceptación del ciclo privado de Dirección se registra por separado.",
+      "evidence": [
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "cloud/case-knowledge.mjs",
+          "commit": "b88ce380d7e437cf535facdbd5592a0b8bc14dc1",
+          "claim": "Conocimiento por caso, revisiones, versiones y recuperación.",
+          "status": "codigo"
+        }
+      ],
+      "data_entities": [
+        "hecho",
+        "fuente",
+        "version",
+        "variante",
+        "decision",
+        "recibo"
+      ]
+    },
+    {
+      "owner_role": "Dirección técnica",
+      "status": "codigo",
+      "risks_sanitized": [],
+      "id": "EXT-JEV",
+      "nombre": "JEV · búsqueda y selección",
+      "tipo": "servicio_externo",
+      "repo": "alexpueblag/yod-agent-cloud",
+      "dominio": "Conocimiento",
+      "proposito": "Orientar la búsqueda y ordenar pasajes relevantes antes de investigar.",
+      "source_of_truth": "Fuentes autorizadas de cada expediente; la clasificación no confirma por sí sola los hechos.",
+      "runtime_status": "Adaptador implementado; disponibilidad y cobertura dependen de configuración y fuentes autorizadas.",
+      "evidence": [
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "runtime/typesafe-jev.mjs",
+          "commit": "b88ce380d7e437cf535facdbd5592a0b8bc14dc1",
+          "claim": "Cliente para orientar y filtrar información; conserva límites y errores.",
+          "status": "codigo"
+        }
+      ],
+      "data_entities": [
+        "consulta",
+        "referencia",
+        "pasaje"
+      ]
+    },
+    {
+      "owner_role": "Dirección técnica",
+      "status": "codigo",
+      "risks_sanitized": [],
+      "id": "EXT-OPENAI",
+      "nombre": "OpenAI · conversación y ejecución",
+      "tipo": "servicio_externo",
+      "repo": "alexpueblag/yod-agent-cloud",
+      "dominio": "Infraestructura",
+      "proposito": "Proveer voz y respuestas con herramientas del servidor.",
+      "source_of_truth": "Configuración de sesión y herramientas autorizadas en servidor; resultados deben comprobarse contra registros de negocio.",
+      "runtime_status": "Voz configurada y disponible en el piloto. Micrófono físico e interacción de Dirección requieren aceptación independiente.",
+      "evidence": [
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "cloud/voice-lane.mjs",
+          "commit": "b88ce380d7e437cf535facdbd5592a0b8bc14dc1",
+          "claim": "Sesión de voz y herramientas conectadas desde el servidor.",
+          "status": "codigo"
+        }
+      ],
+      "data_entities": [
+        "sesion",
+        "audio",
+        "transcripcion",
+        "llamada_herramienta"
+      ]
+    },
+    {
+      "owner_role": "Dirección técnica",
+      "status": "ejecucion",
+      "risks_sanitized": [],
+      "id": "EXT-RENDER",
+      "nombre": "Render · alojamiento del motor",
+      "tipo": "infraestructura",
+      "repo": "alexpueblag/yod-agent-cloud",
+      "dominio": "Infraestructura",
+      "proposito": "Alojar el servicio existente y su volumen persistente.",
+      "source_of_truth": "Configuración efectiva y versión activa del proveedor, separadas de los blueprints del repositorio.",
+      "runtime_status": "Commit b88ce380 confirmado live el 7-oct-2026 05:08:53 UTC. Disponibilidad comprobada a 05:10:46 y 05:10:56 UTC; no promesa de continuidad ininterrumpida.",
+      "evidence": [
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "cloud/README.txt",
+          "commit": "b88ce380d7e437cf535facdbd5592a0b8bc14dc1",
+          "claim": "Alojamiento del servicio con volumen durable.",
+          "status": "codigo"
+        },
+        {
+          "claim": "Conector Render confirmó la versión activa y el monitor de disponibilidad obtuvo dos muestras listas; recibos en la bitácora privada.",
+          "status": "ejecucion"
+        }
+      ],
+      "data_entities": [
+        "version",
+        "despliegue",
+        "estado_servicio"
+      ]
+    },
+    {
+      "owner_role": "Dirección técnica",
+      "status": "propuesto",
+      "risks_sanitized": [],
+      "id": "EXT-OBSIDIAN",
+      "nombre": "Obsidian · bóveda de conocimiento",
+      "tipo": "aplicacion_local",
+      "repo": "",
+      "dominio": "Conocimiento",
+      "proposito": "Relacionar notas, fuentes y decisiones del expediente mediante una bóveda portable.",
+      "source_of_truth": "Notas derivadas y referencias; originales en Drive y cálculos oficiales en Sheets.",
+      "runtime_status": "Exportación Markdown/ZIP implementada. Instalación de bóveda y sincronización continua no acreditadas.",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/despacho-conocimiento.md",
+          "commit": "5eca769947e60bc5b51389244393e0f63817cf86",
+          "claim": "Exportar una bóveda no instala Obsidian ni acredita sincronización.",
+          "status": "codigo"
+        }
+      ],
+      "data_entities": [
+        "nota",
+        "enlace",
+        "exportacion"
+      ]
+    },
+    {
+      "owner_role": "Dirección técnica",
+      "status": "propuesto",
+      "risks_sanitized": [],
+      "id": "EXT-NOTEBOOKLM",
+      "nombre": "NotebookLM · consulta documental prevista",
+      "tipo": "servicio_externo",
+      "repo": "",
+      "dominio": "Conocimiento",
+      "proposito": "Registrar la herramienta documental mencionada para Biblioteca y comprobar su forma de acceso.",
+      "source_of_truth": "Documentos originales autorizados; API y sincronización por verificar.",
+      "runtime_status": "Mencionado en la biblioteca del entorno; no se acredita conexión ejecutable ni acceso a notebooks.",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "despacho3d/entorno.mjs",
+          "commit": "5eca769947e60bc5b51389244393e0f63817cf86",
+          "claim": "Biblioteca menciona NotebookLM como capacidad por verificar.",
+          "status": "declarado"
+        }
+      ],
+      "data_entities": [
+        "fuente",
+        "referencia"
+      ]
     }
   ],
   "connections": [
@@ -2710,7 +2953,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-002",
@@ -2730,7 +2974,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-003",
@@ -2750,7 +2995,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-004",
@@ -2770,7 +3016,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-005",
@@ -2790,7 +3037,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-006",
@@ -2810,7 +3058,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-007",
@@ -2830,7 +3079,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-008",
@@ -2850,7 +3100,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-009",
@@ -2870,7 +3121,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-010",
@@ -2890,7 +3142,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-011",
@@ -2910,7 +3163,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-012",
@@ -2930,7 +3184,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-013",
@@ -2950,7 +3205,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-014",
@@ -2970,7 +3226,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-015",
@@ -2987,7 +3244,8 @@
       "status": "pendiente",
       "runtime_verified": false,
       "restricted_evidence_omitted": true,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-016",
@@ -3015,7 +3273,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "getAll/update siguen en GAS-OPERACION, con contrato y autorización existentes. CHG-DESPACHO-CORCHO-PROVISIONAL-035 propone separar exclusivamente corchoGet/corchoSave hacia GAS-PORTERO; ninguna otra acción cambia de endpoint."
+      "contract": "getAll/update siguen en GAS-OPERACION, con contrato y autorización existentes. CHG-DESPACHO-CORCHO-PROVISIONAL-035 propone separar exclusivamente corchoGet/corchoSave hacia GAS-PORTERO; ninguna otra acción cambia de endpoint.",
+      "contract_ids": []
     },
     {
       "id": "CON-017",
@@ -3035,7 +3294,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-018",
@@ -3055,7 +3315,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-019",
@@ -3075,7 +3336,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-020",
@@ -3095,7 +3357,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-021",
@@ -3115,7 +3378,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-022",
@@ -3135,7 +3399,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-023",
@@ -3155,7 +3420,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-024",
@@ -3175,7 +3441,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-025",
@@ -3195,7 +3462,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-026",
@@ -3215,7 +3483,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-027",
@@ -3235,7 +3504,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-028",
@@ -3255,7 +3525,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-029",
@@ -3275,7 +3546,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-030",
@@ -3295,7 +3567,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-031",
@@ -3315,7 +3588,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-032",
@@ -3332,7 +3606,8 @@
       "status": "pendiente",
       "runtime_verified": false,
       "restricted_evidence_omitted": true,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-033",
@@ -3352,7 +3627,10 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Navegación existente al Despacho autorizado. CTR-DESPACHO-3D-SECTION: sección inmersiva bajo sesión confirmada y DP; frontend neutro alojado en GitHub, sin autenticación ChatGPT. Chinches geométricas por origen/ventana exactos. Datos operativos y motor autónomo requieren transportes autorizados comprobados."
+      "contract": "Navegación existente al Despacho autorizado. CTR-DESPACHO-3D-SECTION: sección inmersiva bajo sesión confirmada y DP; frontend neutro alojado en GitHub, sin autenticación ChatGPT. Chinches geométricas por origen/ventana exactos. Datos operativos y motor autónomo requieren transportes autorizados comprobados.",
+      "contract_ids": [
+        "CTR-DESPACHO-3D-SECTION"
+      ]
     },
     {
       "id": "CON-034",
@@ -3372,7 +3650,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-035",
@@ -3392,7 +3671,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-036",
@@ -3412,7 +3692,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-037",
@@ -3432,7 +3713,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-038",
@@ -3452,7 +3734,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-039",
@@ -3472,7 +3755,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-040",
@@ -3492,7 +3776,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-041",
@@ -3512,7 +3797,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-042",
@@ -3532,7 +3818,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-043",
@@ -3552,7 +3839,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-044",
@@ -3572,7 +3860,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-045",
@@ -3592,7 +3881,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-046",
@@ -3612,7 +3902,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-047",
@@ -3632,7 +3923,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-048",
@@ -3652,7 +3944,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-049",
@@ -3672,7 +3965,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-050",
@@ -3692,7 +3986,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-051",
@@ -3712,7 +4007,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-052",
@@ -3732,7 +4028,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-053",
@@ -3752,7 +4049,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-054",
@@ -3772,7 +4070,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-055",
@@ -3792,7 +4091,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-056",
@@ -3812,7 +4112,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-057",
@@ -3832,7 +4133,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-058",
@@ -3852,7 +4154,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-059",
@@ -3872,7 +4175,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-060",
@@ -3892,7 +4196,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-061",
@@ -3912,7 +4217,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-062",
@@ -3932,7 +4238,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-063",
@@ -3952,7 +4259,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-064",
@@ -3972,7 +4280,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-065",
@@ -3992,7 +4301,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-066",
@@ -4008,7 +4318,8 @@
       ],
       "status": "pendiente",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-067",
@@ -4028,7 +4339,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-068",
@@ -4048,7 +4360,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-069",
@@ -4076,7 +4389,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-070",
@@ -4096,7 +4410,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-071",
@@ -4116,7 +4431,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-072",
@@ -4136,7 +4452,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-073",
@@ -4156,7 +4473,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-074",
@@ -4176,7 +4494,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-075",
@@ -4196,7 +4515,8 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-076",
@@ -4216,7 +4536,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-077",
@@ -4233,7 +4554,8 @@
       "status": "pendiente",
       "runtime_verified": false,
       "restricted_evidence_omitted": true,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-078",
@@ -4250,7 +4572,8 @@
       "status": "pendiente",
       "runtime_verified": false,
       "restricted_evidence_omitted": true,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-079",
@@ -4270,7 +4593,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-080",
@@ -4290,7 +4614,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-081",
@@ -4310,7 +4635,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-082",
@@ -4330,7 +4656,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-083",
@@ -4350,7 +4677,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-084",
@@ -4370,7 +4698,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-085",
@@ -4390,7 +4719,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-086",
@@ -4410,7 +4740,8 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar."
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract_ids": []
     },
     {
       "id": "CON-PPP-MODELO",
@@ -4442,7 +4773,10 @@
           "source_revision": "Apps Script version 66; cotejo Patrimonial 2026-10-05"
         }
       ],
-      "contract": "Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente. Recuperación #47: conservar compatibilidad Vertical; ausencia del adaptador Patrimonial observada en V65 según relevo, publicación API V66 reportada posteriormente, con GET Patrimonial y cotejo de 166 celdas aprobados según coordinador sólo para el caso inspeccionado; geometría y Vertical pendientes. Reconciliar job exacto y recibos antes de CAS conforme CTR-PPP-PATRIMONIAL-NATIVO."
+      "contract": "Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente. Recuperación #47: conservar compatibilidad Vertical; ausencia del adaptador Patrimonial observada en V65 según relevo, publicación API V66 reportada posteriormente, con GET Patrimonial y cotejo de 166 celdas aprobados según coordinador sólo para el caso inspeccionado; geometría y Vertical pendientes. Reconciliar job exacto y recibos antes de CAS conforme CTR-PPP-PATRIMONIAL-NATIVO.",
+      "contract_ids": [
+        "CTR-PPP-PATRIMONIAL-NATIVO"
+      ]
     },
     {
       "id": "CON-PPP-REGISTRO",
@@ -4458,7 +4792,8 @@
           "status": "declarado"
         }
       ],
-      "contract": "IDs estables; un libro por caso y hoja por versión; no sustituir historial ni compartir archivos por efecto de registrar un enlace."
+      "contract": "IDs estables; un libro por caso y hoja por versión; no sustituir historial ni compartir archivos por efecto de registrar un enlace.",
+      "contract_ids": []
     },
     {
       "id": "CON-PPP-AUDITORIA",
@@ -4475,7 +4810,8 @@
           "source_revision": "Apps Script version 53"
         }
       ],
-      "contract": "Auditoría en libro y Control Maestro con actor autenticado, entidad, versión, revisión, campo/rango, fuente y validación. No inventar valores previos ausentes ni declarar publicada una operación no confirmada."
+      "contract": "Auditoría en libro y Control Maestro con actor autenticado, entidad, versión, revisión, campo/rango, fuente y validación. No inventar valores previos ausentes ni declarar publicada una operación no confirmada.",
+      "contract_ids": []
     },
     {
       "id": "CON-PUBLICADOR-IDENTIDAD",
@@ -4491,7 +4827,10 @@
           "status": "declarado"
         }
       ],
-      "contract": "CTR-PUBLICADOR-GITHUB. App con contents:read y pull_requests:write, exclusivamente para crear el PR. Las revisiones requeridas deben pasar antes del merge normal."
+      "contract": "CTR-PUBLICADOR-GITHUB. App con contents:read y pull_requests:write, exclusivamente para crear el PR. Las revisiones requeridas deben pasar antes del merge normal.",
+      "contract_ids": [
+        "CTR-PUBLICADOR-GITHUB"
+      ]
     },
     {
       "id": "CON-PUBLICADOR-SALA",
@@ -4507,7 +4846,10 @@
           "status": "declarado"
         }
       ],
-      "contract": "CTR-PUBLICADOR-GITHUB. App con contents:read y pull_requests:write, exclusivamente para crear el PR. Las revisiones requeridas deben pasar antes del merge normal."
+      "contract": "CTR-PUBLICADOR-GITHUB. App con contents:read y pull_requests:write, exclusivamente para crear el PR. Las revisiones requeridas deben pasar antes del merge normal.",
+      "contract_ids": [
+        "CTR-PUBLICADOR-GITHUB"
+      ]
     },
     {
       "id": "CON-PUBLICADOR-MARKETING",
@@ -4523,7 +4865,10 @@
           "status": "declarado"
         }
       ],
-      "contract": "CTR-PUBLICADOR-GITHUB. App con contents:read y pull_requests:write, exclusivamente para crear el PR. Las revisiones requeridas deben pasar antes del merge normal."
+      "contract": "CTR-PUBLICADOR-GITHUB. App con contents:read y pull_requests:write, exclusivamente para crear el PR. Las revisiones requeridas deben pasar antes del merge normal.",
+      "contract_ids": [
+        "CTR-PUBLICADOR-GITHUB"
+      ]
     },
     {
       "id": "CON-AUTH-FLUJO",
@@ -4540,7 +4885,10 @@
           "source_revision": "Apps Script version 15"
         }
       ],
-      "contract": "CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada."
+      "contract": "CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada.",
+      "contract_ids": [
+        "CTR-AUTORIZACION-OPERACIONES"
+      ]
     },
     {
       "id": "CON-AUTH-CRM",
@@ -4557,7 +4905,10 @@
           "source_revision": "Apps Script version 20"
         }
       ],
-      "contract": "CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada."
+      "contract": "CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada.",
+      "contract_ids": [
+        "CTR-AUTORIZACION-OPERACIONES"
+      ]
     },
     {
       "id": "CON-AUTH-OBRA",
@@ -4574,7 +4925,10 @@
           "source_revision": "Apps Script version 16"
         }
       ],
-      "contract": "CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada."
+      "contract": "CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada.",
+      "contract_ids": [
+        "CTR-AUTORIZACION-OPERACIONES"
+      ]
     },
     {
       "id": "CON-EMD-PROFILES-DRIVE",
@@ -4591,7 +4945,10 @@
       "status": "propuesto",
       "runtime_verified": false,
       "restricted_evidence_omitted": true,
-      "contract": "CTR-EMD-PROFILES: carpeta dedicada privada, carga y retirada propias, lectura autorizada y confirmación por revisión/mutación; sin nuevas autorizaciones OAuth."
+      "contract": "CTR-EMD-PROFILES: carpeta dedicada privada, carga y retirada propias, lectura autorizada y confirmación por revisión/mutación; sin nuevas autorizaciones OAuth.",
+      "contract_ids": [
+        "CTR-EMD-PROFILES"
+      ]
     },
     {
       "id": "CON-EMD-DRAFTS-LOCAL",
@@ -4608,7 +4965,10 @@
       "status": "propuesto",
       "runtime_verified": false,
       "restricted_evidence_omitted": true,
-      "contract": "CTR-EMD-DRAFTS: cifrado por enlace vigente, aislamiento de pestañas, confirmación transaccional local y recuperación explícita; el servidor mantiene revisión y cierre."
+      "contract": "CTR-EMD-DRAFTS: cifrado por enlace vigente, aislamiento de pestañas, confirmación transaccional local y recuperación explícita; el servidor mantiene revisión y cierre.",
+      "contract_ids": [
+        "CTR-EMD-DRAFTS"
+      ]
     },
     {
       "id": "CON-AMALAYA-CLIENT",
@@ -4627,7 +4987,10 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "CTR-AMALAYA-CHINCHES-ESTADO registra la extensión propuesta. Identidad, token, roles, implementación y URL actuales se conservan."
+      "contract": "CTR-AMALAYA-CHINCHES-ESTADO registra la extensión propuesta. Identidad, token, roles, implementación y URL actuales se conservan.",
+      "contract_ids": [
+        "CTR-AMALAYA-CHINCHES-ESTADO"
+      ]
     },
     {
       "id": "CON-AMALAYA-STORE",
@@ -4646,7 +5009,10 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "CTR-AMALAYA-CHINCHES-ESTADO registra la extensión propuesta. Identidad, token, roles, implementación y URL actuales se conservan."
+      "contract": "CTR-AMALAYA-CHINCHES-ESTADO registra la extensión propuesta. Identidad, token, roles, implementación y URL actuales se conservan.",
+      "contract_ids": [
+        "CTR-AMALAYA-CHINCHES-ESTADO"
+      ]
     },
     {
       "id": "CON-DESPACHO-CORCHO-STORE",
@@ -4662,7 +5028,10 @@
           "status": "propuesto"
         }
       ],
-      "contract": "CTR-DESPACHO-CORCHO; futuro adapter en GAS-OPERACION. Sólo cambiar endpoint/adapter, sin mover ni recrear Sheet, notas, ejes o versiones; nunca dos escritores con locks independientes."
+      "contract": "CTR-DESPACHO-CORCHO; futuro adapter en GAS-OPERACION. Sólo cambiar endpoint/adapter, sin mover ni recrear Sheet, notas, ejes o versiones; nunca dos escritores con locks independientes.",
+      "contract_ids": [
+        "CTR-DESPACHO-CORCHO"
+      ]
     },
     {
       "id": "CON-EMD-GITHUB-EMBED",
@@ -4678,7 +5047,10 @@
           "status": "declarado"
         }
       ],
-      "contract": "CTR-EMD-GITHUB-EMBED: wrapper top GitHub y handshake nonce/ready con origen exacto antes de arranque; RPC y datos permanecen en Google."
+      "contract": "CTR-EMD-GITHUB-EMBED: wrapper top GitHub y handshake nonce/ready con origen exacto antes de arranque; RPC y datos permanecen en Google.",
+      "contract_ids": [
+        "CTR-EMD-GITHUB-EMBED"
+      ]
     },
     {
       "id": "CON-DESPACHO-CORCHO-PORTERO",
@@ -4694,7 +5066,10 @@
           "status": "propuesto"
         }
       ],
-      "contract": "POST text/plain; {action,k} para corchoGet y {action,k,version,data} para corchoSave. CTR-DESPACHO-CORCHO; URL Portero conocida actual, sin fallback de servidor ni desvío de getAll/update."
+      "contract": "POST text/plain; {action,k} para corchoGet y {action,k,version,data} para corchoSave. CTR-DESPACHO-CORCHO; URL Portero conocida actual, sin fallback de servidor ni desvío de getAll/update.",
+      "contract_ids": [
+        "CTR-DESPACHO-CORCHO"
+      ]
     },
     {
       "id": "CON-PORTERO-CORCHO-STORE",
@@ -4710,7 +5085,10 @@
           "status": "propuesto"
         }
       ],
-      "contract": "CTR-DESPACHO-CORCHO; canjearLigaLento_(key,'DP') local fresco, owner exacto, principal efectivo y ACL Drive exhaustiva, LockService, CAS global y ACK con snapshot; no renovar/cache ni publicar notas."
+      "contract": "CTR-DESPACHO-CORCHO; canjearLigaLento_(key,'DP') local fresco, owner exacto, principal efectivo y ACL Drive exhaustiva, LockService, CAS global y ACK con snapshot; no renovar/cache ni publicar notas.",
+      "contract_ids": [
+        "CTR-DESPACHO-CORCHO"
+      ]
     },
     {
       "id": "CON-PORTERO-CORCHO-DRIVE",
@@ -4726,7 +5104,269 @@
           "status": "propuesto"
         }
       ],
-      "contract": "Drive full guard en cada operación: about.user del token de ejecución, propietario único exacto, archivo y todos los ancestros hasta raíz, permissions.list paginado incluidos permisos publicados; scopes Drive existentes completos, fail-closed sin fallback."
+      "contract": "Drive full guard en cada operación: about.user del token de ejecución, propietario único exacto, archivo y todos los ancestros hasta raíz, permissions.list paginado incluidos permisos publicados; scopes Drive existentes completos, fail-closed sin fallback.",
+      "contract_ids": []
+    },
+    {
+      "id": "CON-OS-DESPACHO-3D",
+      "from": "SYS-YOD-OS",
+      "to": "SYS-DESPACHO-3D",
+      "kind": "navegacion",
+      "label": "Ruta interna del despacho con sesión y permiso vigentes",
+      "contract": "CTR-DESPACHO-3D-SECTION",
+      "status": "codigo",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "os/despacho-section.js",
+          "commit": "5eca769947e60bc5b51389244393e0f63817cf86",
+          "claim": "Ruta interna del despacho con sesión y permiso vigentes",
+          "status": "codigo"
+        }
+      ],
+      "contract_ids": [
+        "CTR-DESPACHO-3D-SECTION"
+      ]
+    },
+    {
+      "id": "CON-DESPACHO-3D-MOTOR",
+      "from": "SYS-DESPACHO-3D",
+      "to": "SVC-AUTON-CLOUD",
+      "kind": "api",
+      "label": "Conversación y operaciones del puesto ligadas al caso y actor",
+      "contract": "CTR-DESPACHO-AGENTE-OPERATIVO; CTR-PPP-AJUSTE-CONVERSADO",
+      "status": "codigo",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "despacho3d/agent-workspace.mjs",
+          "commit": "5eca769947e60bc5b51389244393e0f63817cf86",
+          "claim": "Conversación y operaciones del puesto ligadas al caso y actor",
+          "status": "codigo"
+        }
+      ],
+      "contract_ids": [
+        "CTR-DESPACHO-AGENTE-OPERATIVO",
+        "CTR-PPP-AJUSTE-CONVERSADO"
+      ]
+    },
+    {
+      "id": "CON-DESPACHO-3D-PPP",
+      "from": "SYS-DESPACHO-3D",
+      "to": "SYS-POTENCIALES",
+      "kind": "embed",
+      "label": "Tablero original con contexto compartido, escenario y revisión",
+      "contract": "CTR-PPP-AJUSTE-CONVERSADO",
+      "status": "codigo",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "despacho3d/project-station.mjs",
+          "commit": "5eca769947e60bc5b51389244393e0f63817cf86",
+          "claim": "Tablero original con contexto compartido, escenario y revisión",
+          "status": "codigo"
+        }
+      ],
+      "contract_ids": [
+        "CTR-PPP-AJUSTE-CONVERSADO"
+      ]
+    },
+    {
+      "id": "CON-MOTOR-PORTERO",
+      "from": "SVC-AUTON-CLOUD",
+      "to": "GAS-PORTERO",
+      "kind": "api",
+      "label": "Identidad, contexto, objetivos y cola autorizados",
+      "contract": "CTR-DESPACHO-AGENTE-OPERATIVO",
+      "status": "codigo",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "cloud/server.mjs",
+          "commit": "b88ce380d7e437cf535facdbd5592a0b8bc14dc1",
+          "claim": "Identidad, contexto, objetivos y cola autorizados",
+          "status": "codigo"
+        }
+      ],
+      "contract_ids": [
+        "CTR-DESPACHO-AGENTE-OPERATIVO"
+      ]
+    },
+    {
+      "id": "CON-MOTOR-ESTADO",
+      "from": "SVC-AUTON-CLOUD",
+      "to": "STORE-AUTON-ESTADO",
+      "kind": "persistencia",
+      "label": "Conocimiento y recibos por expediente con revisión",
+      "contract": "CTR-DESPACHO-CONOCIMIENTO",
+      "status": "codigo",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "cloud/case-knowledge.mjs",
+          "commit": "b88ce380d7e437cf535facdbd5592a0b8bc14dc1",
+          "claim": "Conocimiento y recibos por expediente con revisión",
+          "status": "codigo"
+        }
+      ],
+      "contract_ids": [
+        "CTR-DESPACHO-CONOCIMIENTO"
+      ]
+    },
+    {
+      "id": "CON-MOTOR-JEV",
+      "from": "SVC-AUTON-CLOUD",
+      "to": "EXT-JEV",
+      "kind": "integracion",
+      "label": "Orientar y ordenar fuentes autorizadas",
+      "contract": "CTR-DESPACHO-BIBLIOTECA",
+      "status": "codigo",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "cloud/RESEARCH.md",
+          "commit": "b88ce380d7e437cf535facdbd5592a0b8bc14dc1",
+          "claim": "Orientar y ordenar fuentes autorizadas",
+          "status": "codigo"
+        }
+      ],
+      "contract_ids": [
+        "CTR-DESPACHO-BIBLIOTECA"
+      ]
+    },
+    {
+      "id": "CON-MOTOR-DRIVE",
+      "from": "SVC-AUTON-CLOUD",
+      "to": "EXT-DRIVE",
+      "kind": "lectura",
+      "label": "Leer originales, documentos y pasajes del expediente",
+      "contract": "CTR-DESPACHO-BIBLIOTECA",
+      "status": "codigo",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "cloud/RESEARCH.md",
+          "commit": "b88ce380d7e437cf535facdbd5592a0b8bc14dc1",
+          "claim": "Leer originales, documentos y pasajes del expediente",
+          "status": "codigo"
+        }
+      ],
+      "contract_ids": [
+        "CTR-DESPACHO-BIBLIOTECA"
+      ]
+    },
+    {
+      "id": "CON-MOTOR-OPENAI",
+      "from": "SVC-AUTON-CLOUD",
+      "to": "EXT-OPENAI",
+      "kind": "integracion",
+      "label": "Voz y herramientas con claves de servidor",
+      "contract": "CTR-DESPACHO-VOZ-BASICA",
+      "status": "codigo",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "cloud/voice-lane.mjs",
+          "commit": "b88ce380d7e437cf535facdbd5592a0b8bc14dc1",
+          "claim": "Voz y herramientas con claves de servidor",
+          "status": "codigo"
+        }
+      ],
+      "contract_ids": [
+        "CTR-DESPACHO-VOZ-BASICA"
+      ]
+    },
+    {
+      "id": "CON-RENDER-MOTOR",
+      "from": "EXT-RENDER",
+      "to": "SVC-AUTON-CLOUD",
+      "kind": "alojamiento",
+      "label": "Servicio y volumen persistentes en la versión efectiva",
+      "contract": "Alojamiento de un piloto; desplegar sólo en servicio existente.",
+      "status": "declarado",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "cloud/README.txt",
+          "commit": "b88ce380d7e437cf535facdbd5592a0b8bc14dc1",
+          "claim": "Servicio y volumen persistentes en la versión efectiva",
+          "status": "declarado"
+        }
+      ],
+      "contract_ids": []
+    },
+    {
+      "id": "CON-ESTADO-EXPORTACION",
+      "from": "STORE-AUTON-ESTADO",
+      "to": "SYS-DESPACHO-3D",
+      "kind": "lectura",
+      "label": "Leer versiones, decisiones y exportación autorizadas",
+      "contract": "CTR-DESPACHO-CONOCIMIENTO",
+      "status": "codigo",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "cloud/case-knowledge.mjs",
+          "commit": "b88ce380d7e437cf535facdbd5592a0b8bc14dc1",
+          "claim": "Leer versiones, decisiones y exportación autorizadas",
+          "status": "codigo"
+        }
+      ],
+      "contract_ids": [
+        "CTR-DESPACHO-CONOCIMIENTO"
+      ]
+    },
+    {
+      "id": "CON-DESPACHO-EXPORTAR-OBSIDIAN",
+      "from": "SYS-DESPACHO-3D",
+      "to": "EXT-OBSIDIAN",
+      "kind": "exportacion",
+      "label": "Descarga manual de bóveda portable; no sincronización",
+      "contract": "CTR-DESPACHO-CONOCIMIENTO",
+      "status": "codigo",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/despacho-conocimiento.md",
+          "commit": "5eca769947e60bc5b51389244393e0f63817cf86",
+          "claim": "Descarga manual de bóveda portable; no sincronización",
+          "status": "codigo"
+        }
+      ],
+      "contract_ids": [
+        "CTR-DESPACHO-CONOCIMIENTO"
+      ]
+    },
+    {
+      "id": "CON-BIBLIOTECA-NOTEBOOKLM",
+      "from": "SYS-DESPACHO-3D",
+      "to": "EXT-NOTEBOOKLM",
+      "kind": "propuesta",
+      "label": "Consulta documental prevista, conexión sin verificar",
+      "contract": "Acceso/API/sincronización pendientes de comprobar.",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "despacho3d/entorno.mjs",
+          "commit": "5eca769947e60bc5b51389244393e0f63817cf86",
+          "claim": "Consulta documental prevista, conexión sin verificar",
+          "status": "propuesto"
+        }
+      ],
+      "contract_ids": []
     }
   ],
   "processes": [
@@ -8567,7 +9207,15 @@
         "SYS-DESPACHO",
         "SYS-CONTROL",
         "SYS-POTENCIALES",
-        "EXT-DRIVE"
+        "EXT-DRIVE",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD",
+        "STORE-AUTON-ESTADO",
+        "EXT-JEV",
+        "EXT-OPENAI",
+        "EXT-RENDER",
+        "EXT-OBSIDIAN",
+        "EXT-NOTEBOOKLM"
       ],
       "proposal": "Paso 1: conciliar registro operativo, catálogo técnico y atlas sin migrar IDs, permisos ni datos. Registrar motor privado e integraciones omitidas, ubicación funcional de cada componente, superficies, responsables y estados de evidencia. Cobertura exacta comprobada por validador y vista generada; fuentes históricas y componentes pendientes explícitos. Preparar base de los pasos 2 y 3, que no se inician hasta cerrar este paso.",
       "status": "propuesto",
@@ -10593,6 +11241,256 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO"
       ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/oficina-cobertura.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/oficina-cobertura.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/templates/arquitectura.html",
+      "components": [
+        "SYS-YOD-OS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/arquitectura.test.cjs",
+      "components": [
+        "SYS-YOD-OS"
+      ]
     }
-  ]
+  ],
+  "office_coverage": {
+    "observed_at": "2026-10-07T05:34:28Z",
+    "scope": "Inventario conciliado y asignación funcional propuesta. No concede permisos, no cambia geometría, no acredita integración operativa completa.",
+    "verification_owner": "Coordinación técnica YOD",
+    "catalog_snapshot": {
+      "observed_at": "2026-10-07T05:34:28Z",
+      "canonical_ids": [
+        "SYS-PORTAL",
+        "SYS-MIRAMAR",
+        "SYS-TAREAS",
+        "SYS-FLUJO",
+        "SYS-INTERIORES",
+        "SYS-MARKETING",
+        "SYS-POTENCIALES",
+        "SYS-INVERSION",
+        "SYS-CONTROL",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-DESPACHO"
+      ],
+      "technical_ids": [
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES",
+        "SYS-TRACK",
+        "SYS-MIRAMAR",
+        "SYS-TAREAS",
+        "SYS-FLUJO",
+        "SYS-INTERIORES",
+        "SYS-INVERSION",
+        "SYS-MARKETING",
+        "SYS-OBRA",
+        "SYS-CONTROL"
+      ]
+    },
+    "surfaces": [
+      {
+        "component": "SYS-YOD-OS",
+        "entry": "os/",
+        "description": "Cabina YOD OS; SYS-PORTAL se conserva como alias del registro."
+      },
+      {
+        "component": "SYS-DESPACHO",
+        "entry": "https://yodesarrollomx.github.io/yod-despacho/",
+        "description": "Bandeja/Corcho de Dirección; destino del catálogo técnico."
+      },
+      {
+        "component": "SYS-DESPACHO-3D",
+        "entry": "os/#/despacho",
+        "description": "Oficina y puesto del autón dentro de YOD OS; sesión y DP requeridos."
+      }
+    ],
+    "areas": [
+      {
+        "id": "direccion",
+        "nombre": "Dirección",
+        "place": "decisions",
+        "placement": "propuesto",
+        "components": [
+          "SYS-DESPACHO",
+          "SYS-YOD-OS",
+          "SYS-CONTROL",
+          "SYS-PINTARRON",
+          "GAS-PORTERO",
+          "SHEET-PORTERO",
+          "GAS-CATALOGO",
+          "SHEET-CATALOGO",
+          "GAS-PORTERO-RESPALDO",
+          "STORE-DESPACHO-CORCHO"
+        ]
+      },
+      {
+        "id": "comercial",
+        "nombre": "Comercial",
+        "place": "funnel",
+        "placement": "propuesto",
+        "components": [
+          "SYS-PLAN-POTENCIAL",
+          "SYS-CROKISS",
+          "SYS-MARKETING",
+          "SYS-AURUM-EXPERIENCIA",
+          "GAS-MARKETING",
+          "SHEET-MARKETING",
+          "GAS-PLAN-POTENCIAL",
+          "SHEET-PLAN-POTENCIAL",
+          "GAS-CROKISS",
+          "SHEET-CROKISS",
+          "GAS-CRM",
+          "SHEET-CRM",
+          "EXT-AURUM-WEB",
+          "EXT-META",
+          "EXT-GMAIL",
+          "EXT-CALENDAR"
+        ]
+      },
+      {
+        "id": "desarrollo",
+        "nombre": "Plan de Potencial y puesto",
+        "place": "potential",
+        "placement": "propuesto",
+        "components": [
+          "SYS-POTENCIALES",
+          "SHEET-PPP-MODELOS",
+          "SYS-DESPACHO-3D"
+        ]
+      },
+      {
+        "id": "proyectos",
+        "nombre": "Proyectos y diseño",
+        "place": "projects",
+        "placement": "propuesto",
+        "components": [
+          "SYS-AMALAYA",
+          "GAS-AMALAYA",
+          "SHEET-AMALAYA",
+          "SYS-INTERIORES",
+          "GAS-INTERIORES",
+          "SHEET-INTERIORES",
+          "SYS-ALQUIMIA",
+          "GAS-ALQUIMIA",
+          "SHEET-ALQUIMIA",
+          "SYS-MIRAMAR",
+          "GAS-MIRAMAR",
+          "SHEET-MIRAMAR",
+          "SYS-TRACK"
+        ]
+      },
+      {
+        "id": "operacion",
+        "nombre": "Operación y obra",
+        "place": "delivery",
+        "placement": "propuesto",
+        "components": [
+          "SYS-TAREAS",
+          "SYS-OBRA",
+          "SYS-OBRA-CLIENTE",
+          "GAS-OPERACION",
+          "SHEET-OPERACION",
+          "GAS-MOAC-METAS",
+          "SHEET-MOAC-METAS",
+          "GAS-OBRA",
+          "SHEET-OBRA",
+          "GAS-OBRA-CLIENTE",
+          "SHEET-OBRA-CLIENTE"
+        ]
+      },
+      {
+        "id": "capital",
+        "nombre": "Capital y tesorería",
+        "place": "decisions",
+        "placement": "propuesto",
+        "components": [
+          "SYS-INVERSION",
+          "GAS-INVERSION",
+          "SHEET-INVERSION",
+          "SYS-CODES-PORTAL",
+          "GAS-CODES",
+          "SHEET-CODES",
+          "SYS-FLUJO",
+          "GAS-FLUJO",
+          "SHEET-FLUJO"
+        ]
+      },
+      {
+        "id": "contenido",
+        "nombre": "Contenido y producción",
+        "place": "editing",
+        "placement": "propuesto",
+        "components": [
+          "SYS-SALA",
+          "SYS-SALA-OPERACION",
+          "GAS-SALA",
+          "SHEET-SALA",
+          "GAS-AUX-METRICAS",
+          "SVC-SALA-PRODUCTOR",
+          "SVC-SALA-EJECUTOR",
+          "EXT-MOTORES-MEDIA"
+        ]
+      },
+      {
+        "id": "personas",
+        "nombre": "Personas",
+        "place": "lounge",
+        "placement": "propuesto",
+        "components": [
+          "SYS-EMD",
+          "GAS-EMD",
+          "SHEET-EMD",
+          "STORE-EMD-DRAFTS"
+        ]
+      },
+      {
+        "id": "biblioteca",
+        "nombre": "Biblioteca y conocimiento",
+        "place": "lounge",
+        "placement": "propuesto",
+        "components": [
+          "EXT-DRIVE",
+          "EXT-JEV",
+          "EXT-OBSIDIAN",
+          "EXT-NOTEBOOKLM",
+          "STORE-AUTON-ESTADO"
+        ]
+      },
+      {
+        "id": "soporte",
+        "nombre": "Soporte técnico",
+        "place": "reception",
+        "placement": "propuesto",
+        "components": [
+          "SYS-SITIO-ORG",
+          "SYS-PRUEBA-DOMINIO",
+          "EXT-ACTIONS",
+          "EXT-GITHUB-PUBLISHER-APP",
+          "SVC-AUTON-CLOUD",
+          "EXT-OPENAI",
+          "EXT-RENDER"
+        ]
+      }
+    ]
+  }
 }

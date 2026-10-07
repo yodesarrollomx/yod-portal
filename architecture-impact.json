@@ -1,14 +1,22 @@
 {
   "model_revision": "2026-10-07.103-oficina-cobertura",
   "proposal_id": "CHG-DESPACHO-COBERTURA-103",
+  "summary": "Paso 1: conciliar registro operativo, catálogo técnico y atlas sin migrar IDs, permisos ni datos. Registrar motor privado e integraciones omitidas, ubicación funcional de cada componente, superficies, responsables y estados de evidencia. Cobertura exacta comprobada por validador y vista generada; fuentes históricas y componentes pendientes explícitos. Preparar base de los pasos 2 y 3, que no se inician hasta cerrar este paso.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "SYS-CONTROL",
     "SYS-POTENCIALES",
-    "EXT-DRIVE"
+    "EXT-DRIVE",
+    "SYS-DESPACHO-3D",
+    "SVC-AUTON-CLOUD",
+    "STORE-AUTON-ESTADO",
+    "EXT-JEV",
+    "EXT-OPENAI",
+    "EXT-RENDER",
+    "EXT-OBSIDIAN",
+    "EXT-NOTEBOOKLM"
   ],
-  "summary": "Paso 1: conciliar registro operativo, catálogo técnico y atlas sin migrar IDs, permisos ni datos. Registrar motor privado e integraciones omitidas, ubicación funcional de cada componente, superficies, responsables y estados de evidencia. Cobertura exacta comprobada por validador y vista generada; fuentes históricas y componentes pendientes explícitos. Preparar base de los pasos 2 y 3, que no se inician hasta cerrar este paso.",
   "tests": [
     "Esquema y vistas de arquitectura sincronizados; cobertura única de componentes y resolución de alias/catálogos/superficies.",
     "Regresión de IDs desconocidos, omisión, duplicados, alias ambiguo, evidencia y escape seguro.",
