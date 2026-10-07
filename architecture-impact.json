@@ -4,7 +4,8 @@
   "summary": "Abrir el PPP canónico como superficie inicial del puesto y de las entradas de conversación, visible a la derecha de la voz sin elegir otra pestaña. Recuperar automáticamente el vínculo si la primera lectura aún no lo devuelve, con reintentos limitados y sólo mientras el puesto está activo. Conservar iframe, tarjeta abierta, borrador, identidad y recibos durante la voz; no modificar fórmulas ni inventar proyectos.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-DESPACHO-3D"
+    "SYS-DESPACHO-3D",
+    "SYS-DESPACHO"
   ],
   "tests": [
     "Entrada directa de voz abre PPP sin elegir pestaña ni Abrir tablero.",
