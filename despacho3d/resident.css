@@ -14,15 +14,9 @@
 .resident-actions [data-resident-talk]{background:#20343c;color:#fff;border-color:#20343c}
 .resident-actions [data-resident-visit]{grid-column:span 2;background:transparent;border:0;min-height:34px;padding:5px}
 .resident-actions button:disabled{opacity:.45;cursor:default}
-
 body:has(#workspace > .sheet:not([hidden])) #resident-agent{display:none}
 body:has(#resident-agent:not([hidden])) #nearby{right:325px}
-
 @media(max-width:700px){
- 
- 
- 
- 
  #resident-agent{right:12px;bottom:calc(107px + env(safe-area-inset-bottom));width:min(210px,calc(100% - 150px));padding:12px;border-radius:13px}
  .resident-symbol{width:33px;height:33px;border-radius:10px;font-size:21px}
  .resident-heading{gap:9px}.resident-heading h2{font-size:21px}.resident-heading small{font-size:9px}
@@ -33,4 +27,3 @@ body:has(#resident-agent:not([hidden])) #nearby{right:325px}
  #walk-guide{display:none}
 }
 @media(max-height:550px) and (orientation:landscape){#resident-agent{bottom:72px;width:230px;padding:10px}.resident-case{display:none}.resident-actions [data-resident-visit]{display:none}.resident-status{margin:6px 0}}
-
