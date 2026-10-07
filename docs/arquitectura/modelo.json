@@ -9241,14 +9241,15 @@
         "EXT-DRIVE",
         "SVC-AUTON-CLOUD"
       ],
-      "proposal": "Paso2: corregir rutas y capacidades reales del PPP, recuperación de confirmaciones y fuentes, y fallos locales de interrupción de voz. Vertical apunta a Mixto; sólo Patrimonial tiene edición conversada nativa acreditada. Conservar recibo tras escritura y reintentar únicamente /board/resolve; actualizar fuentes con conversación abierta sin recrear el iframe correcto. Manejar ausencia de audio y rechazos correlacionados de interrupción sin falsear éxito ni alterar configuración Live. No implementar modelos nativos no existentes ni iniciar paso3.",
+      "proposal": "Paso2: corregir rutas y capacidades reales del PPP, recuperación de confirmaciones y fuentes, y fallos locales de interrupción de voz. Vertical apunta a Mixto; sólo Patrimonial tiene edición conversada nativa acreditada. Conservar recibo tras escritura y reintentar únicamente /board/resolve; actualizar fuentes con conversación abierta sin recrear el iframe correcto. Manejar ausencia de audio y rechazos correlacionados de interrupción sin falsear éxito ni alterar configuración Live. No implementar modelos nativos no existentes ni iniciar paso3. Limitar espera del handshake con recuperación por Actualizar conexión. En Pendientes distinguir ejecución registrada de trabajo actualmente acreditado y ofrecer Retomar sólo por can_resume del contrato vigente; sin reactivar objetivos ni cambiar sus registros.",
       "status": "propuesto",
       "approval": "Dirección autoriza completar pasos1–3 secuencialmente con bitácora; paso1 cerrado y publicado antes de este cambio. 7-oct-2026 UTC /6-oct Hermosillo.",
       "tests": [
         "Regresiones de rutas reales, capacidades por modelo y selección ambigua.",
         "Secuencias de recibo confirmado, confirmación fallida y recuperación sin segunda escritura; recarga de fuentes con conversación activa.",
         "Interrupción rechazada con error.client_event_id y ausencia de reproductor; configuración Live conservada.",
-        "Node, verificadores, pruebas de navegador pertinentes y despliegue. Micrófono físico y expediente privado deben acreditarse por separado."
+        "Node, verificadores, pruebas de navegador pertinentes y despliegue. Micrófono físico y expediente privado deben acreditarse por separado.",
+        "Handshake sin respuesta, respuesta tardía y cambio de proyecto; presentación conservadora de running/can_resume sin mutaciones en lectura."
       ],
       "deployment": "Propuesta registrada antes de código. Publicar correcciones de puesto y voz tras CI; paso2 no cierra integralmente mientras falte aceptación real requerida.",
       "rollback": "Revertir PR y referencias de caché. No revertir registros de negocio ni reenviar escrituras; mantener recibos."
