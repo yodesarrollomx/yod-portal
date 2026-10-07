@@ -5,7 +5,8 @@
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-DESPACHO-3D"
+    "SYS-DESPACHO-3D",
+    "GAS-PORTERO"
   ],
   "tests": [
     "Inicio confirmado por observador, canal abierto y WebRTC conectado habilita micrófono sin evento primario duplicado; estado no confirmado/cerrado/expirado nunca habilita.",

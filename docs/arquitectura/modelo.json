@@ -9288,7 +9288,8 @@
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",
-        "SYS-DESPACHO-3D"
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO"
       ],
       "proposal": "Corregir inicio confirmado por el observador que no llega al canal primario: reconciliar únicamente started=true del estado autenticado de la misma sesión activa, con WebRTC conectado y canal abierto, sin reenviar configuración ni habilitar antes del evento confirmado. Mantener visible el puesto durante fallos de revalidación: pausa de nuevas operaciones mientras se recupera una autorización reciente, revocación/expiración limpia contenido privado y detiene voz mostrando explicación, nunca cierra automáticamente el diálogo. Unificar geometría de escritorio, silla y autón del lado visible del monitor; sillas orientadas hacia mesas. Añadir evidencia de captura de micrófono local y aviso si la pista termina. Probar ambos órdenes de inicio, revocación, recuperación y orientación real en navegador. Mantener JSON Live, contratos e IDs y no encubrir errores de trabajo.",
       "status": "implementado_local",
@@ -9299,7 +9300,7 @@
         "Silla y figura delante del monitor, mirando hacia él; posición compartida, regreso al asiento y captura en navegador.",
         "Pruebas completas y entrada publicada; el dispositivo real se acredita por separado."
       ],
-      "deployment": "Implementación en rama; contraprueba local de inicio pasa de starting/micrófono false a listening/micrófono true sin evento primario duplicado. CI y capturas pendientes. Aceptación real pendiente.",
+      "deployment": "PR #119 implementado y probado fuera de producción. Contraprueba: inicio confirmado solo por observador pasa de starting/micrófono false a listening/micrófono true. Navegador de escritorio/móvil verifica recuperación, revocación visible, mismo PPP, pista habilitada y geometría; capturas inspeccionadas en CI 37645791084. 460/460 pruebas Node en 4f02e21; faltaba declarar GAS-PORTERO en impacto de su prueba de presencia y se corrigió. Consolidación CI y publicación pendientes. Micrófono físico, interrupción hablada y aceptación real pendientes.",
       "rollback": "Revertir PR y versiones de recursos; preservar configuración de voz, datos, historial y permisos."
     }
   ],
