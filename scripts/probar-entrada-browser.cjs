@@ -74,6 +74,9 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   }
   if(variant!=='fallback'){
    await frame.evaluate(()=>window.despacho.visit('case'));
+   await page.waitForTimeout(700);
+   assert.equal(await frame.locator('.station-radial').isVisible(),false,'programmatic travel is not deliberate proximity');
+   await frame.evaluate(()=>window.YodAgentMenu.showRadial('synthetic-A',{proximity:true}));
    await frame.locator('.station-radial').waitFor();
    assert.equal(await frame.evaluate(()=>window.__captures),0,'proximity does not request audio');
    assert.match(await frame.locator('#agent-menu-title').innerText(),/Autón A/);
@@ -81,6 +84,9 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
    assert.equal(await frame.locator('.station-radial').isVisible(),false,'closing near the character must not immediately reopen');
    await frame.evaluate(async()=>{window.despacho.camera.position.set(9.8,1.65,-4.4);await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));});
    await frame.evaluate(()=>window.despacho.camera.position.set(8,1.65,-5.6));
+   await page.waitForTimeout(500);
+   assert.equal(await frame.locator('.station-radial').isVisible(),false,'teleport does not reopen the encounter');
+   await frame.evaluate(()=>window.YodAgentMenu.showRadial('synthetic-A'));
    await frame.locator('.station-radial').waitFor();
    await page.keyboard.press('ArrowLeft');
    assert.equal(await frame.locator('.radial-submenu h2').innerText(),'Notas');
