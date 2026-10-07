@@ -42,7 +42,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
    else if(u.pathname==='/voice/close'){await page.frames().find(f=>f.url().endsWith('/__collab')).evaluate(()=>window.voicePeer.channel.onmessage({data:JSON.stringify({type:'session.closed'})}));body={ok:true,active:false,finalized:true,fragments:0,blocks:0,saved:0,pending:0};}
    else if(u.pathname==='/board/snapshot'){board=payload;body={ok:true,tablero:board};}
    else if(u.pathname==='/board/state')body={ok:true,tablero:board,proposals};
-   else if(u.pathname==='/board/resolve'){resolved.push(payload);assert.equal(board.confirmed,true);assert.equal(board.pending,false);assert.equal(board.revision,payload.revision);assert.equal(board.inputs.inTerrenoM2,150);proposals=[];body={ok:true};}
+   else if(u.pathname==='/board/resolve'){resolved.push(payload);assert.equal(board.confirmed,true);assert.equal(board.pending,false);assert.equal(board.revision,payload.revision);assert.equal(board.inputs.inTerrenoM2,payload.request_id==='board-voice-2'?644:150);proposals=[];body={ok:true};}
    else if(u.pathname==='/computer/state')body={ok:true,phase:'idle',image:null,activity:[],links:[]};
    else if(u.pathname==='/fast/knowledge/board')body={ok:true,schema:1,case_id:CASE,revision:'1',capabilities:{},facts:[],versions:[],decisions:[],next_steps:[],sources:[]};
    return route.fulfill({status:200,contentType:'application/json',headers,body:JSON.stringify(body)});
