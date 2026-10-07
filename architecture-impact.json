@@ -1,16 +1,16 @@
 {
-  "model_revision": "2026-10-07.107-radial-proximidad",
-  "proposal_id": "CHG-DESPACHO-RADIAL-PROXIMIDAD-107",
-  "summary": "Unificar acceso al autón en selector radial al acercarse o seleccionar su figura: detección por distancia al personaje autorizado, tiempo breve de permanencia, línea de visión y rearme al alejarse para evitar reaperturas. Cuatro sectores direccionales con submenú en el mismo diálogo: Plan de potencial, Hablar, Notas y Pendientes. Cursor/flechas exploran; clic/Enter ejecuta; acercarse nunca inicia micrófono. Mantener el PPP canónico, perfil/ID del proyecto, permisos y aislamiento al cambiar de autón. Preparar la misma interacción para futuros proyectos sin inventar registros ni crear agentes sin la lista pendiente.",
+  "model_revision": "2026-10-07.108-encuentro-voz",
+  "proposal_id": "CHG-DESPACHO-ENCUENTRO-108",
+  "summary": "Encuentro por cercanía: círculo no modal a 0,60 m; conversación a 0,40 m, mirando al autón, inmóvil durante 1 s, después de aproximación manual. Separar acercamiento de navegación programada y movimiento del autón. Primer permiso de micrófono y bloqueo de reproducción se resuelven con un botón visible; nunca reintentar en bucle. Cerrar/finalizar inhibe reapertura hasta salir a 0,90 m. Sólo caso autorizado, una sesión y un puesto PPP. Al alejarse se pausa escucha conservando puesto/trabajo. Saludo breve; pendientes sólo tras consulta autorizada, sin inventar tareas durante carga. Pruebas de estados y navegador con datos sintéticos; no acreditar latencia acústica sin medición.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "SYS-DESPACHO-3D"
   ],
   "tests": [
-    "Proximidad: distancia, permanencia, línea de visión, salida/reentrada, bloqueo por panel y revocación.",
-    "Navegador: acercarse abre círculo sin micrófono; hover/flechas submenú; PPP/Notas/Hablar por elección explícita; cierre no reaparece hasta alejarse; identidad A/B y revocación.",
-    "Node, arquitectura, impacto, OS, portal, accesos, Obra; capturas de escritorio/móvil y publicación."
+    "Círculo permite seguir caminando; orientación, permanencia, paso de largo, salida, cierre y revocación.",
+    "Voz automática con permiso existente; primer permiso requiere gesto; bloqueo de sonido visible; ninguna llamada duplicada.",
+    "Navegador escritorio/móvil, contratos, arquitectura y verificadores."
   ],
-  "rollback": "Revertir PR y versiones de recursos; no cambia datos, perfiles, permisos ni configuración Live."
+  "rollback": "Revertir PR y recursos a radial107; sin cambio de datos ni permisos."
 }

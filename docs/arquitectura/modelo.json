@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.107-radial-proximidad",
+  "revision": "2026-10-07.108-encuentro-voz",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -9320,6 +9320,24 @@
       ],
       "deployment": "Implementado en rama. Pendientes CI de proximidad/radial, capturas reales del render en escritorio/móvil y publicación. La lista de nuevos proyectos no se ha recibido; no se crearon registros.",
       "rollback": "Revertir PR y versiones de recursos; no cambia datos, perfiles, permisos ni configuración Live."
+    },
+    {
+      "id": "CHG-DESPACHO-ENCUENTRO-108",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "proposal": "Encuentro por cercanía: círculo no modal a 0,60 m; conversación a 0,40 m, mirando al autón, inmóvil durante 1 s, después de aproximación manual. Separar acercamiento de navegación programada y movimiento del autón. Primer permiso de micrófono y bloqueo de reproducción se resuelven con un botón visible; nunca reintentar en bucle. Cerrar/finalizar inhibe reapertura hasta salir a 0,90 m. Sólo caso autorizado, una sesión y un puesto PPP. Al alejarse se pausa escucha conservando puesto/trabajo. Saludo breve; pendientes sólo tras consulta autorizada, sin inventar tareas durante carga. Pruebas de estados y navegador con datos sintéticos; no acreditar latencia acústica sin medición.",
+      "status": "propuesto",
+      "approval": "Dirección autorizó inicio de micrófono por proximidad y completar implementación el 7-oct-2026.",
+      "tests": [
+        "Círculo permite seguir caminando; orientación, permanencia, paso de largo, salida, cierre y revocación.",
+        "Voz automática con permiso existente; primer permiso requiere gesto; bloqueo de sonido visible; ninguna llamada duplicada.",
+        "Navegador escritorio/móvil, contratos, arquitectura y verificadores."
+      ],
+      "deployment": "Propuesta registrada 2026-10-07 18:21:22 UTC; no implementada aún.",
+      "rollback": "Revertir PR y recursos a radial107; sin cambio de datos ni permisos."
     }
   ],
   "data_contracts": [
