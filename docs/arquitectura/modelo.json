@@ -9365,7 +9365,7 @@
         "SYS-DESPACHO-3D"
       ],
       "proposal": "Abrir el PPP canónico como superficie inicial del puesto y de las entradas de conversación, visible a la derecha de la voz sin elegir otra pestaña. Recuperar automáticamente el vínculo si la primera lectura aún no lo devuelve, con reintentos limitados y sólo mientras el puesto está activo. Conservar iframe, tarjeta abierta, borrador, identidad y recibos durante la voz; no modificar fórmulas ni inventar proyectos.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "approval": "Dirección solicita PPP visible de entrada a la derecha mientras conversa por voz; 7-oct-2026.",
       "tests": [
         "Entrada directa de voz abre PPP sin elegir pestaña ni Abrir tablero.",
@@ -9373,7 +9373,7 @@
         "Mismo iframe y borrador durante conversación y pestañas; autorización y cambio de caso conservados.",
         "Verificadores y navegador de escritorio/móvil."
       ],
-      "deployment": "Propuesta previa a implementación. Sin cambio de servidor o Apps Script.",
+      "deployment": "PPP inicial, recuperación limitada de fuentes y conservación de iframe implementados en rama. Verificadores y navegador pendientes.",
       "rollback": "Revertir PR del portal; conserva datos, fórmulas y backend."
     }
   ],

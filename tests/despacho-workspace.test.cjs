@@ -3,7 +3,7 @@ const read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
 test('workspace keeps same case in board URL and rejects arbitrary identifiers',async()=>{
  const m=await import(url.pathToFileURL(path.join(__dirname,'../despacho3d/agent-workspace.mjs')));
  assert.match(m.boardURL('case-synthetic','https://yodesarrollomx.github.io/potenciales-yod/patrimonial.html?open=case-synthetic'),/open=case-synthetic&embed=1&agent=1$/);
- assert.throws(()=>m.boardURL('../other'));assert.equal(m.WORKSPACE_TABS[0][0],'activity');
+ assert.throws(()=>m.boardURL('../other'));assert.equal(m.WORKSPACE_TABS[0][0],'ppp');
 });
 test('workspace and voice are mounted together without a second media request',()=>{
  const s=read('despacho3d/live-voice-boot.mjs');

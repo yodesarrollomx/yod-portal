@@ -31,7 +31,7 @@ export function mountAgentMenu({win=window,doc=document}={}){
    if(dialog.open){let notice=dialog.querySelector('.radial-status');if(!notice){notice=el('p','','radial-status');notice.setAttribute('role','status');dialog.append(notice);}notice.textContent='El puesto se está cargando. Vuelve a elegir la opción en un momento.';}
    return false;
   }
-  const tabs={ppp:'ppp',pendientes:'tasks',documentos:'sources',conversaciones:'ppp',chat:'activity',notas:'knowledge',moac:'tasks',historial:'knowledge'};
+  const tabs={ppp:'ppp',pendientes:'tasks',documentos:'sources',conversaciones:'ppp',chat:'ppp',notas:'knowledge',moac:'tasks',historial:'knowledge'};
   if(dialog.open)close('transition');
   const ok=await win.YodVoiceWorkspace?.openForCase(caseId,tabs[target]||target,{startVoice:target==='conversaciones'});
   if(ok&&target==='chat'&&win.YodResidentAgents?.getSelection?.()?.case_id===caseId){

@@ -133,3 +133,6 @@
  .station-followup .station-activity{padding:12px 0}
  .workspace-live-work{padding-top:14px}.workspace-live-work .work-title{font-size:26px}
 }
+
+/* The board owns the right-hand surface; avoid a second generic instruction above it. */
+.agent-workspace>.workspace-status:empty{display:none}

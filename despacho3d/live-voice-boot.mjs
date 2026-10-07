@@ -3,7 +3,7 @@ import {createFrameTransport, validateSelection, Conversation} from './conversat
 import {stationIdentity} from './project-station.mjs?v=2';
 import {createLiveVoice} from './live-voice.mjs?v=12';
 import {voiceView} from './voice-view.mjs?v=2';
-import {createWorkspace} from './agent-workspace.mjs?v=12';
+import {createWorkspace} from './agent-workspace.mjs?v=13';
 import {DurableGoals,watchGoals} from './goals.mjs?v=2';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=1';
 import {groupTranscriptFragments} from './live-transcript.mjs';
@@ -170,7 +170,7 @@ if (open) {
       return false;
     }
   }
-  open.addEventListener('click',()=>void openForCase(window.YodResidentAgents?.getSelection?.()?.case_id,workspace.getTab(),{startVoice:true}));
+  open.addEventListener('click',()=>void openForCase(window.YodResidentAgents?.getSelection?.()?.case_id,'ppp',{startVoice:true}));
   async function requestBegin(encounter){
     const own=generation,id=selection?.case_id;
     if(!encounter){encounterCase=null;begin();return;}
@@ -192,6 +192,7 @@ if (open) {
       setText('voice-previous','Al cerrar la conversación anterior quedó un guardado sin confirmar. Revisa el historial antes de repetir sus encargos.');
       node('voice-previous').hidden=false;
     }
+    workspace.setTab('ppp');
     freshTranscript=true;voiceCaseId=selection.case_id;
     void voice.start(selection.case_id,{encounter:encounterCase===selection.case_id});
   }
