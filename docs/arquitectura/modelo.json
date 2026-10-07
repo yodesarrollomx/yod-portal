@@ -2717,7 +2717,7 @@
       "dominio": "Operación",
       "proposito": "Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.",
       "source_of_truth": "Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos.",
-      "runtime_status": "Voz112 publicada por PR127 y Pages con checks automáticos. Primera conexión e interrupción aún fallan según Dirección; entrada113 propuesta. PPP original embebido; aceptación real conjunta pendiente.",
+      "runtime_status": "Entrada113 publicada en PR128; usuario reporta que el encuentro no saluda y el asiento/monitor no reflejan lo esperado. Encuentro114 en PR129 corrige radios, postura y proyección de avance; pendiente navegador y publicación. Piloto de un proyecto autorizado, no múltiples autónomos simultáneos verificados.",
       "evidence": [
         {
           "repo": "yodesarrollomx/yod-portal",
@@ -2746,7 +2746,7 @@
       "dominio": "Operación",
       "proposito": "Ejecutar conversación, consulta y tareas del expediente autorizado, con estado durable.",
       "source_of_truth": "Expediente autorizado y registros de cada dominio; volumen privado para estado, recibos y recuperación.",
-      "runtime_status": "Commit b88ce380 activo en Render. Dos muestras consecutivas confirmaron disponibilidad. Piloto único; coordinación de varios autónomos pendiente.",
+      "runtime_status": "Render 9e1fac335ea6dd36add9bee895d39d4677a48d73 activo desde 2026-10-07T21:31:43Z. Lecturas de contexto posteriores entre 5.4 y 13.4 segundos; no se acredita primera conversación por proximidad con micrófono físico.",
       "evidence": [
         {
           "repo": "alexpueblag/yod-agent-cloud",
@@ -9448,9 +9448,10 @@
         "SYS-DESPACHO",
         "SYS-DESPACHO-3D",
         "SVC-AUTON-CLOUD",
-        "SYS-POTENCIALES"
+        "SYS-POTENCIALES",
+        "SYS-TRACK"
       ],
-      "proposal": "Encuentro a dos metros y preparación a diez: unificar radios de menú, visibilidad y voz, conservar acercamiento deliberado durante la recuperación de acceso y evitar activación por teletransporte. Corregir postura sentada según escala del avatar, mantenerla al conversar y mostrar avance registrado en el monitor físico con tareas, pendientes y fecha, sin simular ejecución.",
+      "proposal": "Encuentro a dos metros y preparación a diez: unificar radios de menú, visibilidad y voz, conservar acercamiento deliberado durante la recuperación de acceso y evitar activación por teletransporte. Corregir postura sentada según escala del avatar, mantenerla al conversar y mostrar avance registrado en el monitor físico con tareas, pendientes y fecha, sin simular ejecución. La suite compartida de avatares de Track adapta su cargador a módulos versionados; sin cambios de contratos ni datos de Track.",
       "status": "implementado_local",
       "approval": "Dirección solicita ampliar rango, conversar a dos metros, corregir asiento y mostrar avance en computadora, 7-oct-2026.",
       "tests": [

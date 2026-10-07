@@ -1006,7 +1006,7 @@ Persistir notas y ejes del Corcho en un archivo privado independiente, autorizad
 Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.
 
 - Tipo: interfaz. Dominio: Operación. Responsable: Dirección técnica.
-- Evidencia: codigo. Producción: Voz112 publicada por PR127 y Pages con checks automáticos. Primera conexión e interrupción aún fallan según Dirección; entrada113 propuesta. PPP original embebido; aceptación real conjunta pendiente..
+- Evidencia: codigo. Producción: Entrada113 publicada en PR128; usuario reporta que el encuentro no saluda y el asiento/monitor no reflejan lo esperado. Encuentro114 en PR129 corrige radios, postura y proyección de avance; pendiente navegador y publicación. Piloto de un proyecto autorizado, no múltiples autónomos simultáneos verificados..
 - Entidades: caso, sesion, tablero, tarea, recibo.
 - Fuente de verdad: Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos..
 - Evidencia: [yod-portal/despacho3d/agent-workspace.mjs](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/agent-workspace.mjs) — Puesto compartido con PPP y ejecución de intención explícita; observar no otorga permisos..
@@ -1018,7 +1018,7 @@ Observar y conversar con el autón del proyecto, consultar su PPP y seguir el tr
 Ejecutar conversación, consulta y tareas del expediente autorizado, con estado durable.
 
 - Tipo: worker. Dominio: Operación. Responsable: Dirección técnica.
-- Evidencia: codigo. Producción: Commit b88ce380 activo en Render. Dos muestras consecutivas confirmaron disponibilidad. Piloto único; coordinación de varios autónomos pendiente..
+- Evidencia: codigo. Producción: Render 9e1fac335ea6dd36add9bee895d39d4677a48d73 activo desde 2026-10-07T21:31:43Z. Lecturas de contexto posteriores entre 5.4 y 13.4 segundos; no se acredita primera conversación por proximidad con micrófono físico..
 - Entidades: caso, ejecucion, objetivo, tarea, recibo.
 - Fuente de verdad: Expediente autorizado y registros de cada dominio; volumen privado para estado, recibos y recuperación..
 - Evidencia: Compone motor, voz, investigación, objetivos y conocimiento por caso..

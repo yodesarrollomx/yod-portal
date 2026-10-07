@@ -7,7 +7,8 @@
     "SYS-DESPACHO",
     "SYS-DESPACHO-3D",
     "SVC-AUTON-CLOUD",
-    "SYS-POTENCIALES"
+    "SYS-POTENCIALES",
+    "SYS-TRACK"
   ],
   "tests": [
     "Encuentro real en Three a dos metros, preparación a diez, paredes, salida, cambio de identidad, rechazo y ausencia de saludos repetidos.",
