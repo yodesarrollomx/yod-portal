@@ -1,20 +1,18 @@
 {
-  "model_revision": "2026-10-07.102-ppp-tarjetas",
-  "proposal_id": "CHG-DESPACHO-PPP-TARJETAS-102",
+  "model_revision": "2026-10-07.103-oficina-cobertura",
+  "proposal_id": "CHG-DESPACHO-COBERTURA-103",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
+    "SYS-CONTROL",
     "SYS-POTENCIALES",
-    "GAS-PORTERO",
-    "SHEET-PORTERO",
-    "SHEET-PPP-MODELOS",
     "EXT-DRIVE"
   ],
-  "summary": "PPP compartido con tarjetas de datos plegadas y detalle accesible, sin infográficos ni captura manual en el puesto del autón. Conservar el modelo/Store nativo y las fórmulas de Sheets. Añadir ejecución explícita de ajustes solicitados en conversación, separada de propuestas: intención durable por actor/caso/revisión, envío idempotente por el puente existente y recibo confirmado antes de afirmar guardado. Tarjeta abierta aporta contexto observado, nunca autoridad. No modificar datos reales durante pruebas.",
+  "summary": "Paso 1: conciliar registro operativo, catálogo técnico y atlas sin migrar IDs, permisos ni datos. Registrar motor privado e integraciones omitidas, ubicación funcional de cada componente, superficies, responsables y estados de evidencia. Cobertura exacta comprobada por validador y vista generada; fuentes históricas y componentes pendientes explícitos. Preparar base de los pasos 2 y 3, que no se inician hasta cerrar este paso.",
   "tests": [
-    "Controles Node de autorización, revisión, límites, expiración, idempotencia y recibo confirmado.",
-    "Chromium/WebKit con página PPP real y transporte sintético: tarjetas cerradas, expansión, 500→644, persistencia/recarga, conflicto y móvil.",
-    "Verificaciones requeridas de Portal y contratos de voz; capturas de interfaz real con datos sintéticos."
+    "Esquema y vistas de arquitectura sincronizados; cobertura única de componentes y resolución de alias/catálogos/superficies.",
+    "Regresión de IDs desconocidos, omisión, duplicados, alias ambiguo, evidencia y escape seguro.",
+    "Verificadores requeridos del portal y prueba de publicación de las vistas generadas."
   ],
-  "rollback": "Revertir código y versiones de caché mediante PR; conservar propuestas, recibos, datos, versiones, fórmulas y permisos."
+  "rollback": "Revertir modelo, validador y vistas por PR; no cambiar datos, IDs, permisos, aplicaciones ni historial."
 }

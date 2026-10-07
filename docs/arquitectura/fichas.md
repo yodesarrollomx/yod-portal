@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-07.102-ppp-tarjetas · 2026-10-05.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-07.103-oficina-cobertura · 2026-10-07.
 
 ## SYS-DESPACHO · El Despacho
 
