@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.103-oficina-cobertura",
+  "revision": "2026-10-07.103.1-impacto-config",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -9217,16 +9217,18 @@
         "EXT-OBSIDIAN",
         "EXT-NOTEBOOKLM"
       ],
-      "proposal": "Paso 1: conciliar registro operativo, catálogo técnico y atlas sin migrar IDs, permisos ni datos. Registrar motor privado e integraciones omitidas, ubicación funcional de cada componente, superficies, responsables y estados de evidencia. Cobertura exacta comprobada por validador y vista generada; fuentes históricas y componentes pendientes explícitos. Preparar base de los pasos 2 y 3, que no se inician hasta cerrar este paso.",
+      "proposal": "Paso 1: conciliar registro operativo, catálogo técnico y atlas sin migrar IDs, permisos ni datos. Registrar motor privado e integraciones omitidas, ubicación funcional de cada componente, superficies, responsables y estados de evidencia. Cobertura exacta comprobada por validador y vista generada; fuentes históricas y componentes pendientes explícitos. Preparar base de los pasos 2 y 3, que no se inician hasta cerrar este paso. Seguimiento del paso 1: el filtro de impacto debe considerar archivos YAML/YML de configuración y despliegue, incluidos render.yaml y cloud/render.yaml. Sus reglas de propiedad ya existen; omitirlos del filtro permite cambios de configuración sin declarar componentes. Ampliar el filtro conservando las exclusiones documentales; añadir pruebas con y sin impacto y con responsables incompletos.",
       "status": "propuesto",
       "approval": "Dirección solicita ejecutar y cerrar los pasos 1, 2 y 3 secuencialmente con bitácora de intención/resultados y marcas de tiempo; 6-oct-2026 Hermosillo.",
       "tests": [
         "Esquema y vistas de arquitectura sincronizados; cobertura única de componentes y resolución de alias/catálogos/superficies.",
         "Regresión de IDs desconocidos, omisión, duplicados, alias ambiguo, evidencia y escape seguro.",
-        "Verificadores requeridos del portal y prueba de publicación de las vistas generadas."
+        "Verificadores requeridos del portal y prueba de publicación de las vistas generadas.",
+        "Regresión de configuración YAML/YML: render.yaml y cloud/render.yaml exigen architecture-impact.json, SVC-AUTON-CLOUD y EXT-RENDER; documentación y archivos ajenos conservan clasificación."
       ],
       "deployment": "Propuesta registrada antes del cambio de código. Registro y vista de cobertura; no instala integraciones ni acredita los pasos 2 y 3.",
-      "rollback": "Revertir modelo, validador y vistas por PR; no cambiar datos, IDs, permisos, aplicaciones ni historial."
+      "rollback": "Revertir modelo, validador y vistas por PR; no cambiar datos, IDs, permisos, aplicaciones ni historial.",
+      "followup_proposed_at": "2026-10-07T05:46:11Z"
     }
   ],
   "data_contracts": [
@@ -11340,6 +11342,13 @@
       "components": [
         "SVC-AUTON-CLOUD",
         "EXT-RENDER"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/verificar-impacto.cjs",
+      "components": [
+        "SYS-YOD-OS"
       ]
     }
   ],
