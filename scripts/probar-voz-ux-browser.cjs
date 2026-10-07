@@ -16,7 +16,7 @@ const server=http.createServer((req,res)=>{
  const browser=await chromium.launch({headless:true});
  const out=process.env.BROWSER_EVIDENCE_DIR||path.join(process.env.RUNNER_TEMP||'/tmp','voice-ux-evidence');fs.mkdirSync(out,{recursive:true});
  try{for(const viewport of [{width:1280,height:900},{width:390,height:844}]){
-  const context=await browser.newContext({viewport,acceptDownloads:true}),page=await context.newPage(),errors=[];let sessions=0,retries=0;
+  const context=await browser.newContext({viewport,acceptDownloads:true}),page=await context.newPage(),errors=[];let sessions=0,retries=0,hello=0,releaseSession=null;
   page.on('pageerror',e=>errors.push(e.message));
   await context.addInitScript(()=>{
    if(!location.pathname.includes('__voice-child'))return;
@@ -24,7 +24,7 @@ const server=http.createServer((req,res)=>{
    let access='standby';const listeners=new Set();const state=()=>({phase:access,prepared:true,checked_at:Date.now(),selection:access==='unauthorized'?null:selection});
    window.YodResidentAgents={getSelection:()=>access==='standby'?selection:null,subscribe(fn){listeners.add(fn);fn(state());return()=>listeners.delete(fn);},refresh:async()=>window.setAccess('standby')};
    window.setAccess=value=>{access=value;for(const fn of listeners)fn(state());};
-   window.blockAudio=true;window.failMic=false;window.streams=[];window.micPermission='prompt';
+   window.blockAudio=true;window.peerPreparations=0;window.failMic=false;window.streams=[];window.micPermission='prompt';
    navigator.permissions.query=async()=>({state:window.micPermission});
    navigator.mediaDevices.getUserMedia=async()=>{
     if(window.failMic)throw new DOMException('denied','NotAllowedError');
@@ -35,8 +35,8 @@ const server=http.createServer((req,res)=>{
    };
    HTMLMediaElement.prototype.play=function(){return window.blockAudio?Promise.reject(new DOMException('blocked','NotAllowedError')):Promise.resolve();};
    window.RTCPeerConnection=class{
-    constructor(){this.connectionState='connected';this.iceGatheringState='complete';window.voicePeer=this;this.channel={readyState:'open',close(){},send(){throw Error('No extra startup commands');}};}
-    addTrack(){}createDataChannel(){return this.channel;}
+    constructor(){window.peerPreparations++;this.connectionState='connected';this.iceGatheringState='complete';window.voicePeer=this;this.channel={readyState:'open',close(){},send(){throw Error('No extra startup commands');}};}
+    addTransceiver(){return {sender:{replaceTrack:async()=>{}}};}addTrack(){}createDataChannel(){return this.channel;}
     async createOffer(){return{type:'offer',sdp:'v=0\r\nsynthetic'};}
     async setLocalDescription(v){this.localDescription=v;}
     async setRemoteDescription(){setTimeout(()=>{this.ontrack({streams:[window.streams.at(-1)]});/* Intentionally omit the primary start event; the server observer is authoritative. */},10);}
@@ -51,7 +51,8 @@ const server=http.createServer((req,res)=>{
    const headers={'Access-Control-Allow-Origin':base,'Access-Control-Allow-Headers':'Authorization,Content-Type','Access-Control-Allow-Methods':'POST,GET'};
    if(route.request().method()==='OPTIONS')return route.fulfill({status:204,headers});
    let body={ok:true};
-   if(u.pathname==='/voice/session'){sessions++;body={ok:true,mode:'operativo',session:{id:'opaque/test'},transport:{type:'webrtc',sdp:'v=0\r\nanswer'}};}
+   if(u.pathname==='/fast/hello')hello++;
+   if(u.pathname==='/voice/session'){sessions++;if(sessions===1)await new Promise(resolve=>{releaseSession=resolve;});body={ok:true,mode:'operativo',session:{id:'opaque/test'},transport:{type:'webrtc',sdp:'v=0\r\nanswer'}};}
    else if(u.pathname==='/voice/status')body={ok:true,active:true,started:true,expires_at:Date.now()+600000,context_phase:'unavailable',tools_ready:false,tasks_ready:false,fragments:1,blocks:1,saved:0,pending:1};
    else if(u.pathname==='/voice/context-retry'){retries++;body={ok:true,retrying:true,context_phase:'retrying'};}
    else if(u.pathname==='/voice/close'){await page.frames().find(f=>f.url().includes('__voice-child')).evaluate(()=>window.voiceEvent({type:'session.closed'}));body={ok:true,active:false,finalized:true,fragments:1,blocks:1,saved:0,pending:1};}
@@ -60,11 +61,22 @@ const server=http.createServer((req,res)=>{
    return route.fulfill({status:200,contentType:'application/json',headers,body:JSON.stringify(body)});
   });
   await page.goto(base+'/__voice-shell');const frame=page.frames().find(f=>f.url().includes('__voice-child'));
+  await frame.waitForFunction(()=>window.peerPreparations===1);
+  await expectHello();
+  async function expectHello(){for(let i=0;i<100&&!hello;i++)await page.waitForTimeout(20);assert.equal(hello,1,'entry prepares backend before approach');}
   await frame.evaluate(()=>window.YodVoiceWorkspace.prepareNearby('synthetic-voice-case'));
   assert.equal(await frame.evaluate(()=>window.streams.length),0);
   assert.equal(sessions,0);
   await frame.locator('#voice-open').click();
+  await frame.locator('[data-voice-phase="starting"]').waitFor();
+  await frame.locator('#compact-interrupt').click();
+  assert.equal(await frame.locator('#voice-audio').evaluate(a=>a.muted),true);
+  for(let i=0;i<100&&!releaseSession;i++)await page.waitForTimeout(20);
+  assert.equal(typeof releaseSession,'function');releaseSession();
   await frame.locator('[data-voice-phase="listening"]').waitFor();
+  assert.equal(await frame.locator('#voice-audio').evaluate(a=>a.muted),true,'late audio respects pause requested during connection');
+  await frame.locator('#compact-interrupt').click();
+  assert.equal(await frame.locator('#voice-audio').evaluate(a=>a.muted),false);
   assert.equal(await frame.locator('#voice-start').isVisible(),false);
   assert.equal(await frame.locator('.realtime-dialog').evaluate(e=>e.matches(':modal')),false);
   assert.equal(await frame.locator('.voice-workspace').isVisible(),false);

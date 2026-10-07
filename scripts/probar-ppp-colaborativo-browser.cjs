@@ -8,7 +8,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
 (async()=>{
  const browser=await chromium.launch({headless:true}),out=process.env.BROWSER_EVIDENCE_DIR||'/tmp/ppp-collab-evidence';fs.mkdirSync(out,{recursive:true});
  try{for(const viewport of [{width:1280,height:900},{width:390,height:844}]){
-  const context=await browser.newContext({viewport}),page=await context.newPage(),errors=[];let sessions=0,board=null,proposals=[],resolved=[],resolveAttempts=[],failNextResolve=false,wrongResolveIdentity=false;
+  const context=await browser.newContext({viewport}),page=await context.newPage(),errors=[];let sessions=0,board=null,proposals=[],resolved=[],resolveAttempts=[],failNextResolve=false,wrongResolveIdentity=false,boardNotices=[];
   page.on('pageerror',e=>errors.push(e.message));
   await context.addInitScript(()=>{
    if(!location.pathname.endsWith('/__collab'))return;
@@ -44,6 +44,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
    if(u.pathname==='/voice/session'){sessions++;body={ok:true,mode:'operativo',session:{id:'opaque/collab'},transport:{type:'webrtc',sdp:'v=0\r\nanswer'}};}
    else if(u.pathname==='/voice/status')body={ok:true,active:true,expires_at:Date.now()+600000,context_phase:'ready',context_ready:true,tools_ready:true,tasks_ready:false,fragments:0,blocks:0,saved:0,pending:0};
    else if(u.pathname==='/voice/close'){await page.frames().find(f=>f.url().endsWith('/__collab')).evaluate(()=>window.voicePeer.channel.onmessage({data:JSON.stringify({type:'session.closed'})}));body={ok:true,active:false,finalized:true,fragments:0,blocks:0,saved:0,pending:0};}
+   else if(u.pathname==='/voice/board-change'){boardNotices.push(payload);assert.equal(payload.revision,board.revision);}
    else if(u.pathname==='/board/snapshot'){board=payload;body={ok:true,tablero:board};}
    else if(u.pathname==='/board/state')body={ok:true,tablero:board,proposals};
    else if(u.pathname==='/board/resolve'){resolveAttempts.push(payload);if(failNextResolve){failNextResolve=false;return route.fulfill({status:503,contentType:'application/json',headers,body:JSON.stringify({ok:false,error:'temporary'})});}if(wrongResolveIdentity){wrongResolveIdentity=false;return route.fulfill({status:200,contentType:'application/json',headers,body:JSON.stringify({ok:true,request_id:'other-request',status:'applied'})});}resolved.push(payload);assert.equal(board.confirmed,true);assert.equal(board.pending,false);assert.equal(board.revision,payload.revision);assert.equal(board.inputs.inTerrenoM2,payload.request_id==='board-voice-2'?644:150);proposals=[];body={ok:true,request_id:payload.request_id,status:'applied'};}
@@ -76,6 +77,8 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await frame.locator('#voice-start').click();await frame.locator('[data-voice-phase="listening"]').waitFor();
   assert.equal(await frame.locator('[data-tab="ppp"]').getAttribute('aria-pressed'),'true','starting voice returns to the shared board automatically');
   assert.equal(sessions,1);assert.equal(await frame.evaluate(()=>window.captures),1);
+  for(let i=0;i<100&&!boardNotices.length;i++)await page.waitForTimeout(20);
+  assert.equal(boardNotices[0]?.revision,'r1','PPP already visible is shared when voice context becomes ready');
   assert.equal(await iframe.evaluate(el=>el.isConnected),true);assert.equal(await ppp.locator('#area').inputValue(),'135');
   await ppp.evaluate(()=>window.confirmDraft());await frame.locator('.workspace-ppp-summary').filter({hasText:'Lectura confirmada'}).waitFor();
   proposals=[{request_id:'board-synthetic-1',case_id:CASE,scenario_id:'scenario-1',revision:'r1',motivo:'Comparar superficie alternativa',cambios:[{campo:'inTerrenoM2',label:'Superficie',antes:120,valor:150}]}];

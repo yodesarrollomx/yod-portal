@@ -126,7 +126,7 @@ test('background preparation never captures a microphone or creates a Live sessi
   mint:async({case_id})=>{mints++;return {ok:true,case_id,token:'A'.repeat(30)+'.'+'a'.repeat(64),endpoint:'https://synthetic-engine.onrender.com',expires_at:Date.now()+600000};},
   fetchImpl:async(url)=>{calls.push(url);return {ok:true,status:200};}});
  assert.equal(await voice.prepare('synthetic-case'),true);assert.equal(await voice.prepare('synthetic-case'),true);
- assert.equal(mints,1);assert.equal(captures,0);assert.deepEqual(calls,['https://synthetic-engine.onrender.com/fast/hello','https://synthetic-engine.onrender.com/fast/hello']);
+ assert.equal(mints,1);assert.equal(captures,0);assert.deepEqual(calls,['https://synthetic-engine.onrender.com/fast/hello']);
  assert.equal(voice.snapshot().phase,'idle');
 });
 test('a single status read failure preserves live audio and a later check recovers',async()=>{
@@ -244,7 +244,7 @@ test('UX keeps voice, authorized tools and durable history independent',async()=
 
 test('Escúchame silences output immediately, keeps input and work alive, correlates acknowledgement and resumes',async()=>{
  const {createLiveVoice}=await load(),f=fixture(createLiveVoice);
- await f.voice.start('synthetic-case');assert.equal(f.voice.interrupt(),false);
+ await f.voice.start('synthetic-case');
  f.event({type:'session.started'});await tick();f.voice.mute();assert.equal(f.track.enabled,false);
  assert.equal(f.voice.interrupt(),true);assert.equal(f.audio.muted,true);assert.equal(f.track.enabled,true);
  assert.equal(f.voice.snapshot().output_paused,true);assert.equal(f.peer.closed,false);
@@ -437,7 +437,7 @@ test('local overlap preserves the same session, manual pause and final audio tra
  options.onActivity(true);f.voice.resumeAudio();assert.equal(f.audio.muted,true,'resuming manual pause keeps current overlap protection');
  options.onActivity(false);assert.equal(f.audio.muted,false);
  f.voice.mute();assert.equal(options.enabled(),false);f.voice.mute();
- const stopping=f.voice.stop();await tick();assert.equal(disposed,1);assert.equal(f.audio.muted,false);
+ const stopping=f.voice.stop();await tick();assert.equal(disposed,1);assert.equal(f.audio.muted,true);
  assert.equal(f.track.stops,0);assert.equal(f.peer.closed,false);
  f.event({type:'session.closed'});await stopping;assert.equal(f.track.stops,1);
  assert.equal(f.calls.filter(c=>c.url.endsWith('/session')).length,1);
@@ -452,5 +452,53 @@ test('connection milestones are cumulative, reset per call and do not contain ca
  assert.ok(Object.values(times).every(v=>typeof v==='number'));
  const stopping=f.voice.stop();await tick();f.event({type:'session.closed'});await stopping;
  clock=2000;await f.voice.start('synthetic-case');assert.equal(f.voice.snapshot().timings.listening_ms,undefined);
+ const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
+});
+
+test('Escuchame works before signalling resolves and the late remote track stays silent',async()=>{
+ const {createLiveVoice}=await load();let resolveSession;
+ const f=fixture(createLiveVoice,{sessionOverride:()=>new Promise(resolve=>{resolveSession=resolve;})});
+ const starting=f.voice.start('synthetic-case');await tick();
+ assert.equal(f.voice.interrupt(),true);assert.equal(f.audio.muted,true);
+ assert.equal(f.track.enabled,false,'do not transmit input before session.started');
+ assert.equal(f.peer.channel.sent.length,0,'defer runtime instruction until session.started');
+ resolveSession({ok:true,json:async()=>({ok:true,session:{id:'opaque'},transport:{sdp:'v=0\r\nanswer'}})});
+ await starting;f.peer.ontrack({streams:[{}]});
+ assert.equal(f.audio.muted,true);f.event({type:'session.started'});await tick();
+ assert.equal(f.track.enabled,true);assert.equal(f.audio.muted,true);assert.equal(f.peer.channel.sent.length,1);
+ f.peer.connectionState='disconnected';f.peer.onconnectionstatechange();
+ f.voice.resumeAudio();assert.equal(f.voice.interrupt(),true);assert.equal(f.audio.muted,true);
+ f.peer.connectionState='connected';f.peer.onconnectionstatechange();assert.equal(f.audio.muted,true);
+ const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
+});
+test('stop silences immediately but keeps final transcripts and remote transport until closed',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice);
+ await f.voice.start('synthetic-case');f.event({type:'session.started'});await tick();
+ const end=f.voice.stop();assert.equal(f.audio.muted,true);assert.equal(f.peer.closed,false);
+ f.peer.ontrack({streams:[{}]});assert.equal(f.audio.muted,true);
+ f.event({type:'session.output_transcript.delta',delta:'final',start_ms:1,end_ms:2});
+ assert.equal(f.captions.at(-1).delta,'final');await tick();f.event({type:'session.closed'});await end;
+});
+test('concurrent preparation shares hello and expired authorization cannot return from a discarded flight',async()=>{
+ const {createLiveVoice}=await load();let resolveMint;const f=fixture(createLiveVoice,{
+  mintOverride:({case_id})=>new Promise(resolve=>{resolveMint=()=>resolve({ok:true,case_id,token:'A'.repeat(30)+'.'+'a'.repeat(64),endpoint:'https://synthetic-engine.onrender.com',expires_at:Date.now()+600000});})
+ });
+ const a=f.voice.prepare('case-a',{connection:true}),b=f.voice.prepare('case-a',{connection:true});await tick();
+ f.voice.discardPreparation();resolveMint();assert.equal(await a,false);assert.equal(await b,false);
+ assert.equal(f.calls.length,0,'discarded access never warms the backend');assert.equal(f.captures,0);
+ const g=fixture(createLiveVoice);await Promise.all([g.voice.prepare('case-a'),g.voice.prepare('case-a')]);
+ assert.equal(g.calls.filter(c=>c.url.endsWith('/fast/hello')).length,1);g.voice.discardPreparation();
+});
+test('a PPP loaded before voice is sent once when context becomes ready, with case isolation',async()=>{
+ const {createLiveVoice}=await load();let contextReady=false;
+ const f=fixture(createLiveVoice,{statusOverride:()=>({context_ready:contextReady})});
+ assert.equal(await f.voice.notifyBoard('r1','case-a'),false);
+ await f.voice.start('case-a');f.event({type:'session.started'});await tick();
+ assert.equal(f.calls.filter(c=>c.url.endsWith('/board-change')).length,0);
+ contextReady=true;await f.voice.refresh();await tick();
+ assert.equal(f.calls.filter(c=>c.url.endsWith('/board-change')).length,1);
+ await f.voice.refresh();await tick();assert.equal(f.calls.filter(c=>c.url.endsWith('/board-change')).length,1);
+ await f.voice.notifyBoard('other-revision','case-b');await f.voice.refresh();
+ assert.equal(f.calls.filter(c=>c.url.endsWith('/board-change')).length,1);
  const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
 });
