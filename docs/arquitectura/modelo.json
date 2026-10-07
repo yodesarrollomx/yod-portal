@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.113-entrada-y-control-voz",
+  "revision": "2026-10-07.114-encuentro-dos-metros",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -2717,7 +2717,7 @@
       "dominio": "Operación",
       "proposito": "Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.",
       "source_of_truth": "Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos.",
-      "runtime_status": "Voz112 publicada por PR127 y Pages con checks automáticos. Primera conexión e interrupción aún fallan según Dirección; entrada113 propuesta. PPP original embebido; aceptación real conjunta pendiente.",
+      "runtime_status": "Entrada113 publicada en PR128; usuario reporta que el encuentro no saluda y el asiento/monitor no reflejan lo esperado. Encuentro114 en PR129 corrige radios, postura y proyección de avance; pendiente navegador y publicación. Piloto de un proyecto autorizado, no múltiples autónomos simultáneos verificados.",
       "evidence": [
         {
           "repo": "yodesarrollomx/yod-portal",
@@ -2746,7 +2746,7 @@
       "dominio": "Operación",
       "proposito": "Ejecutar conversación, consulta y tareas del expediente autorizado, con estado durable.",
       "source_of_truth": "Expediente autorizado y registros de cada dominio; volumen privado para estado, recibos y recuperación.",
-      "runtime_status": "Commit b88ce380 activo en Render. Dos muestras consecutivas confirmaron disponibilidad. Piloto único; coordinación de varios autónomos pendiente.",
+      "runtime_status": "Render 9e1fac335ea6dd36add9bee895d39d4677a48d73 activo desde 2026-10-07T21:31:43Z. Lecturas de contexto posteriores entre 5.4 y 13.4 segundos; no se acredita primera conversación por proximidad con micrófono físico.",
       "evidence": [
         {
           "repo": "alexpueblag/yod-agent-cloud",
@@ -9429,7 +9429,7 @@
         "SYS-POTENCIALES"
       ],
       "proposal": "Preparar credencial y WebRTC al entrar y mantener una preparación acotada por proyecto; impedir solicitudes de preparación duplicadas o recuperación sin pausa. Hacer Escúchame accesible en la cápsula y durante conexión/reconexión, conservar el silencio solicitado al llegar audio tardío y distinguir desconexión de pausa. Revisar el disparo por cercanía y las afirmaciones de presencia contra hechos observados. Continuar con el PPP original y su confirmación compartida, conservando la misma voz y las revisiones canónicas. El aviso de revisión PPP se retiene hasta confirmar contexto; los cambios de confirmación en la misma revisión también se transmiten. La pausa se conserva si la pista de audio llega tarde y al finalizar se silencia sin cortar la recepción de fragmentos finales.",
-      "status": "implementado_local",
+      "status": "publicado",
       "approval": "Dirección solicita corregir primera conexión/interrupción, preparar desde la entrada y continuar punto 2, 7-oct-2026.",
       "tests": [
         "Entrada visible prepara WebRTC sin capturar micrófono ni abrir sesiones de proveedor; llamadas concurrentes comparten preparación y fallos no generan bucle.",
@@ -9438,8 +9438,29 @@
         "PPP compartido: abrir y minimizar no crea otra voz; guardado sin confirmación no se anuncia como confirmado; revisión compartida se comunica cuando está disponible.",
         "Regresión completa Node y navegador; separar evidencia sintética de aceptación física."
       ],
-      "deployment": "Implementado en PR128, pendiente de integración y publicación. La primera ejecución aprobó arquitectura, Node, accesos y chinches; el recorrido de navegador sigue en curso. La preparación desde la entrada es local y por proyecto autorizado: no abre micrófonos ni sesiones de OpenAI sin encuentro. La causa del servidor y la aceptación con micrófono físico siguen pendientes.",
+      "deployment": "PR128 integrado y Pages publicado; Render 9e1fac activo desde 2026-10-07 21:31:43 UTC. Prueba física posterior reporta que acercarse no activa voz; la aceptación de interacción continúa abierta.",
       "rollback": "Revertir este PR del portal y, si se modifica el motor, desplegar su commit anterior. Sin cambios de datos de negocio ni a la configuración inicial de GPT-Live."
+    },
+    {
+      "id": "CHG-DESPACHO-ENCUENTRO-114",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD",
+        "SYS-POTENCIALES"
+      ],
+      "proposal": "Encuentro a dos metros y preparación a diez: unificar radios de menú, visibilidad y voz, conservar acercamiento deliberado durante la recuperación de acceso y evitar activación por teletransporte. Corregir postura sentada según escala del avatar, mantenerla al conversar y mostrar avance registrado en el monitor físico con tareas, pendientes y fecha, sin simular ejecución. Se asignan explícitamente las pruebas de avatares y monitor al Despacho 3D en el mapa de propietarios; antes caían por omisión en los tableros generales.",
+      "status": "implementado_local",
+      "approval": "Dirección solicita ampliar rango, conversar a dos metros, corregir asiento y mostrar avance en computadora, 7-oct-2026.",
+      "tests": [
+        "Encuentro real en Three a dos metros, preparación a diez, paredes, salida, cambio de identidad, rechazo y ausencia de saludos repetidos.",
+        "Geometría sentada de niño, joven y adulto; conversación conserva asiento y orientación hacia monitor.",
+        "Monitor se actualiza por secuencia y contenido, distingue pendiente de revisión de terminado y elimina datos al revocar acceso.",
+        "Regresión Node, arquitectura, OS, portal, accesos, obra y navegador escritorio/móvil; micrófono físico sigue siendo aceptación separada."
+      ],
+      "deployment": "Implementación 114 preparada para CI: preparación a diez metros, conversación a dos, postura según escala y monitor con progreso registrado. Pendientes pruebas de navegador, publicación y aceptación física.",
+      "rollback": "Revertir este PR. Sin cambios a hojas, permisos, credenciales ni configuración inicial GPT-Live."
     }
   ],
   "data_contracts": [
@@ -11615,6 +11636,24 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/despacho-barge-in.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-avatars.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-screen-status.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",

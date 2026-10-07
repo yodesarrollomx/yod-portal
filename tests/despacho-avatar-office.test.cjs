@@ -86,3 +86,34 @@ test('seated figure faces the visible monitor and returns to its shared chair po
  assert.deepEqual(figure.position.toArray(),[7,0,-6.25]);assert.equal(figure.rotation.y,Math.PI);
  p.dispose();
 });
+
+test('scaled figures contact the chair and remain seated while talking',async()=>{
+ const [T,{createOfficePilot}]=await modules;
+ for(const form of ['child','young','adult','robot']){
+  const scene=new T.Scene(),p=createOfficePilot({scene});p.bind(panel({...profile,form}));
+  const root=scene.children[0],body=root.userData.body,leg=root.userData.legs[0];
+  assert.ok(Math.abs(body.position.y+.50*body.scale.y-.62)<.001,'seat contact '+form);
+  assert.equal(leg.rotation.x,-Math.PI/2);
+  const seatedY=body.position.y,rotation=root.rotation.y;
+  p.setActivity('talk');p.update(0);p.update(100);
+  assert.equal(body.position.y,seatedY);assert.equal(leg.rotation.x,-Math.PI/2);
+  assert.equal(root.rotation.y,rotation);assert.equal(root.userData.base.visible,false);
+  p.dispose();
+ }
+});
+
+test('physical monitor repaints progress with unchanged timestamp and clears private content on revoke',async()=>{
+ const [T]=await modules,{createOfficeScreen}=await import(moduleURL(path.join(base,'office-screen.mjs')));
+ const old=global.document,written=[];let draws=0;
+ global.document={createElement:()=>({getContext:()=>({fillRect(){draws++;},fillText(text){written.push(text);}})})};
+ try{
+  const screen=createOfficeScreen(new T.Mesh(new T.PlaneGeometry(1,1),new T.MeshBasicMaterial()));
+  const state={phase:'ready',case_id:'synthetic',work:{run_id:'run',phase:'working',title:'Trabajo de prueba',updated_at:'2026-10-07T12:00:00Z',progress:{sequence:1,progress:{tasks:[{title:'Primera tarea',status:'running'}],summary:''}}}};
+  screen.update(state);const before=draws;
+  state.work.progress.sequence=2;state.work.progress.progress.tasks[0].title='Siguiente tarea';
+  screen.update(state);assert.ok(draws>before);assert.ok(written.includes('Siguiente tarea'));
+  written.length=0;screen.update({phase:'unauthorized',case_id:null,work:null});
+  assert.equal(screen.snapshot().run_id,null);assert.equal(screen.snapshot().progress.total,0);
+  assert.ok(!written.includes('Siguiente tarea'));screen.dispose();
+ }finally{global.document=old;}
+});

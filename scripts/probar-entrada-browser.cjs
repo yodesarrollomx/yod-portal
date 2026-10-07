@@ -18,8 +18,8 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
    window.YodResidentAgents={getSelection:()=>selection,getProfile:()=>selection?.avatar||null,snapshot:state,subscribe(fn){states.add(fn);fn(state());return()=>states.delete(fn);},subscribeProfile(fn){profiles.add(fn);fn(selection?.avatar||null);return()=>profiles.delete(fn);},openForCase(id){return window.YodAgentMenu.showRadial(id);}};
    window.YodWorkObserver={snapshot:()=>observation,subscribe(fn){works.add(fn);fn(observation);return()=>works.delete(fn);},refresh:async()=>{}};
    window.__observe=value=>{observation=value;for(const fn of works)fn(value);};
-   window.__select=key=>{
-    selection=key?{ok:true,case_id:'synthetic-'+key,name:'Proyecto '+key+' · prueba',can_enqueue:false,agent_ready:true,goals:{ready:false},avatar:{id:'synthetic-'+key,case_id:'synthetic-'+key,entity_kind:'case',name:'Autón '+key+' · prueba',form:'child',color:'#547e75',visual:{hairStyle:'crop'}},ppp:{case_id:'synthetic-'+key,url:'https://yodesarrollomx.github.io/potenciales-yod/patrimonial.html?open=synthetic-'+key}}:null;
+   window.__select=(key,canTalk=false)=>{
+    selection=key?{ok:true,case_id:'synthetic-'+key,name:'Proyecto '+key+' · prueba',can_enqueue:canTalk,agent_ready:true,goals:{ready:false},avatar:{id:'synthetic-'+key,case_id:'synthetic-'+key,entity_kind:'case',name:'Autón '+key+' · prueba',form:'child',color:'#547e75',visual:{hairStyle:'crop'}},ppp:{case_id:'synthetic-'+key,url:'https://yodesarrollomx.github.io/potenciales-yod/patrimonial.html?open=synthetic-'+key}}:null;
     for(const fn of states)fn(state());for(const fn of profiles)fn(selection?.avatar||null);
    };
    window.__captures=0;
@@ -159,6 +159,25 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   assert.equal(await frame.locator('#agent-menu-title').count(),0,'old project identity removed');
   await frame.evaluate(()=>{window.YodAgentMenu.showRadial('synthetic-A');window.__select(null);});
   assert.equal(await frame.locator('.station-radial').isVisible(),false);
+  if(variant!=='fallback'){
+   // Real scene + actual voice boot: approach opens the capsule and a permission
+   // explanation, without starting capture or a provider session behind a prompt.
+   await frame.evaluate(async()=>{navigator.permissions.query=async()=>({state:'prompt'});window.__select('C',true);await window.despacho.visit('case');window.despacho.camera.position.set(7,1.65,-4.35);});
+   await frame.locator('#scene').focus();await page.keyboard.down('w');
+   await frame.locator('.station-radial').waitFor();await page.keyboard.up('w');
+   try{await frame.locator('#compact-notice').waitFor({timeout:10000});}catch(error){
+    console.log('ENCOUNTER_DIAGNOSTIC',await frame.evaluate(()=>({state:window.despacho.getState(),selection:window.YodResidentAgents.getSelection()?.case_id,voiceOpen:document.querySelector('.realtime-dialog').open,compactPhase:document.getElementById('compact-phase').textContent,notice:document.getElementById('compact-notice').textContent,radial:document.querySelector('.station-radial')?.open,inert:document.getElementById('workspace').inert,focus:document.activeElement?.id})));
+    console.log('ENCOUNTER_FAILURE:'+ (await page.screenshot({type:'jpeg',quality:70})).toString('base64'));throw error;
+   }
+   await page.waitForTimeout(1500);
+   assert.equal(await frame.locator('#compact-notice').isVisible(),true,'background preparation must not erase microphone instructions');
+   assert.match(await frame.locator('#compact-notice').innerText(),/Pulsa el micrófono/);
+   assert.equal(await frame.locator('.realtime-dialog').evaluate(e=>e.matches(':modal')),false);
+   assert.equal(await frame.evaluate(()=>window.YodVoiceWorkspace.isOpen()),false,'approach stays in the office, not the PPP');
+   assert.equal(await frame.evaluate(()=>window.__captures),0);
+   console.log('ACTUAL_ENCOUNTER_CAPSULE_'+variant+':'+(await page.screenshot({type:'jpeg',quality:75})).toString('base64'));
+   await frame.locator('#compact-stop').click();
+  }
   assert.deepEqual(errors,[]);
   console.log('Entry '+variant+': access, keyboard, one PPP, draft retained, identity switch, late activity discarded and revocation passed; synthetic authorization.');
   await context.close();

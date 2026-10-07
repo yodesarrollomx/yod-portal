@@ -11,13 +11,15 @@ const {chromium}=require('playwright'),fs=require('node:fs'),path=require('node:
   assert.equal(expectedAssets.length,4,'the publication gate must identify all current interaction entry assets');
   let ready=false;
   for(let attempt=0;attempt<36;attempt++){
-   const response=await context.request.get(url+'?verify=radial107-'+Date.now());
+   const response=await context.request.get(url+'?verify=published-'+Date.now());
    if(response.ok()){const html=await response.text();if(expectedAssets.every(asset=>html.includes(asset))){ready=true;break;}}
    await new Promise(resolve=>setTimeout(resolve,5000));
   }
   assert.equal(ready,true,'Pages must serve the changed entry before reporting publication');
   for(const viewport of [{width:1366,height:900},{width:390,height:844}]){
-   const page=await context.newPage();await page.setViewportSize(viewport);await page.goto(url+'?v=radial107',{waitUntil:'networkidle'});
+   const page=await context.newPage();await page.setViewportSize(viewport);await page.goto(url+'?verify=published-'+Date.now(),{waitUntil:'networkidle'});
+   const loadedAssets=await page.locator('script[type="module"][src]').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('src')));
+   assert.ok(expectedAssets.every(asset=>loadedAssets.includes(asset)),'the rendered page must use the current interaction assets');
    await page.waitForFunction(()=>window.despacho&&window.YodVoiceWorkspace,{},{timeout:60000});
    await page.locator('[data-entry-status]').filter({hasText:'Entra a YOD OS'}).waitFor({timeout:20000});
    assert.equal(await page.locator('#case-open').isDisabled(),true);

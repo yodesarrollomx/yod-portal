@@ -1,4 +1,4 @@
-import {createAvatar,animateAvatar,disposeAvatar} from './avatar.mjs';
+import {createAvatar,animateAvatar,disposeAvatar} from './avatar.mjs?v=2';
 import {createIdentityIndex} from './identity.mjs';
 
 /** Visual layer only. Receive profiles AFTER server authorization; never use a selected ID as access control. */
@@ -25,8 +25,8 @@ export function createAvatarLayer({scene,onSelect=()=>{}}={}){
  function select(id){requireLive();const canonical=index.resolve(id);if(!canonical||!entities.get(canonical)?.visible)return false;const p=index.get(canonical);onSelect({id:canonical,case_id:p.case_id||null,entity_kind:p.entity_kind||null});return true;}
  function selectIntersection(hit){return hit?.object?select(hit.object.userData.canonicalId):false;}
  function setAppearance(id,look){requireLive();const canonical=index.resolve(id),prior=entities.get(canonical);if(!prior)return null;const p=profiles.find(p=>p.id===canonical);const placement={position:prior.position.toArray(),rotationY:prior.rotation.y,scale:prior.scale.x,visible:prior.visible};const motion=prior.userData.motion;disposeAvatar(prior);const updated={...p,form:look.form||p.form,color:look.color||p.color,visual:{...p.visual,...look},placement};profiles=profiles.map(p=>p.id===canonical?updated:p);const root=mount(updated);root.userData.motion=motion;return root;}
- function setMotion(id,motion='idle'){requireLive();const model=entities.get(index.resolve(id));if(!model)return false;if(!['idle','walk','sit','talk','wave','deliver'].includes(motion))throw new Error('Unknown animation');model.userData.motion=motion;return true;}
- function update(seconds,{reducedMotion=false}={}){requireLive();for(const root of entities.values()){if(!root.visible)continue;const motion=root.userData.motion;animateAvatar(root,reducedMotion?0:seconds,motion==='walk',motion==='sit',motion);}}
+ function setMotion(id,motion='idle'){requireLive();const model=entities.get(index.resolve(id));if(!model)return false;if(!['idle','walk','sit','sit-talk','talk','wave','deliver'].includes(motion))throw new Error('Unknown animation');model.userData.motion=motion;return true;}
+ function update(seconds,{reducedMotion=false}={}){requireLive();for(const root of entities.values()){if(!root.visible)continue;const motion=root.userData.motion;animateAvatar(root,reducedMotion?0:seconds,motion==='walk',motion==='sit'||motion==='sit-talk',motion==='sit-talk'?'talk':motion);}}
  function dispose(){if(!disposed){clear();disposed=true;}}
  return {replaceAuthorizedProfiles,select,selectIntersection,setAppearance,setMotion,update,clear,dispose,get:id=>entities.get(index.resolve(id))||null,pickables:()=>[...entities.values()].filter(x=>x.visible),size:()=>entities.size};
 }

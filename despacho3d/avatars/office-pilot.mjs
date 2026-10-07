@@ -1,5 +1,5 @@
 import {PROJECT_SEAT} from '../office-station.mjs?v=1';
-import {createAvatarLayer} from './adapter.mjs';
+import {createAvatarLayer} from './adapter.mjs?v=2';
 
 // This controller consumes the panel's authorized profile, never a public roster.
 // Placement is local to this room and cannot be supplied by a case record.
@@ -22,7 +22,7 @@ export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{}}){
   const key=next?JSON.stringify(next):'';
   if(key===fingerprint)return;
   profile=null;fingerprint='';lastFrame=null;time=0;poseTicks=0;route=null;lastPlace='inicio';
-  try{layer.replaceAuthorizedProfiles(next?[next]:[]);if(next){layer.setMotion(next.id,activity);layer.update(0);profile=next;fingerprint=key;}}
+  try{layer.replaceAuthorizedProfiles(next?[next]:[]);if(next){layer.setMotion(next.id,activity==='talk'?'sit-talk':activity);layer.update(0);profile=next;fingerprint=key;}}
   catch{layer.clear();}
   onChange();
  }
@@ -57,7 +57,7 @@ export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{}}){
   const m=model();
   if(m&&route){m.position.set(route.end[0],0,route.end[1]);m.rotation.y=route.rot;}
   const done=route;route=null;
-  if(profile){if(done?.destino==='inicio'){m?.position.set(...SEAT);if(m)m.rotation.y=HOME_ROT;layer.setMotion(profile.id,activity);}else layer.setMotion(profile.id,'idle');}
+  if(profile){if(done?.destino==='inicio'){m?.position.set(...SEAT);if(m)m.rotation.y=HOME_ROT;layer.setMotion(profile.id,activity==='talk'?'sit-talk':activity);}else layer.setMotion(profile.id,'idle');}
   if(done){lastPlace=done.destino||null;try{done.onArrival?.();}catch{}}
  }
  function advance(dt){
@@ -79,7 +79,7 @@ export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{}}){
   layer.setMotion(profile.id,'walk');onChange();return true;
  }
  return {bind,disconnect,update,pickables:()=>layer.pickables(),selectIntersection:hit=>!disposed&&layer.selectIntersection(hit),
-  setActivity(value){if(!['sit','talk'].includes(value))return false;activity=value;if(profile&&!route&&lastPlace==='inicio'){layer.setMotion(profile.id,value);onChange();}return true;},
+  setActivity(value){if(!['sit','talk'].includes(value))return false;activity=value;if(profile&&!route&&lastPlace==='inicio'){layer.setMotion(profile.id,value==='talk'?'sit-talk':value);layer.update(time);onChange();}return true;},
   recorrer:walk,
   posicion:()=>{const m=model();return m?[m.position.x,m.position.z]:null;},
   inicio:{xz:[SEAT[0],SEAT[2]],rot:HOME_ROT},

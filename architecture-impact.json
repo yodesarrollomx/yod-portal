@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-07.113-entrada-y-control-voz",
-  "proposal_id": "CHG-DESPACHO-ENTRADA-VOZ-113",
-  "summary": "Preparar credencial y WebRTC al entrar y mantener una preparación acotada por proyecto; impedir solicitudes de preparación duplicadas o recuperación sin pausa. Hacer Escúchame accesible en la cápsula y durante conexión/reconexión, conservar el silencio solicitado al llegar audio tardío y distinguir desconexión de pausa. Revisar el disparo por cercanía y las afirmaciones de presencia contra hechos observados. Continuar con el PPP original y su confirmación compartida, conservando la misma voz y las revisiones canónicas.",
+  "model_revision": "2026-10-07.114-encuentro-dos-metros",
+  "proposal_id": "CHG-DESPACHO-ENCUENTRO-114",
+  "summary": "Encuentro a dos metros y preparación a diez: unificar radios de menú, visibilidad y voz, conservar acercamiento deliberado durante la recuperación de acceso y evitar activación por teletransporte. Corregir postura sentada según escala del avatar, mantenerla al conversar y mostrar avance registrado en el monitor físico con tareas, pendientes y fecha, sin simular ejecución.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
@@ -10,11 +10,10 @@
     "SYS-POTENCIALES"
   ],
   "tests": [
-    "Entrada visible prepara WebRTC sin capturar micrófono ni abrir sesiones de proveedor; llamadas concurrentes comparten preparación y fallos no generan bucle.",
-    "Escúchame durante conexión y reconexión silencia inmediatamente, no termina tareas ni sesión, y conserva la intención tras session.started.",
-    "Errores de voz permanecen visibles, se puede reintentar, y el inicio conserva el expediente elegido.",
-    "PPP compartido: abrir y minimizar no crea otra voz; guardado sin confirmación no se anuncia como confirmado; revisión compartida se comunica cuando está disponible.",
-    "Regresión completa Node y navegador; separar evidencia sintética de aceptación física."
+    "Encuentro real en Three a dos metros, preparación a diez, paredes, salida, cambio de identidad, rechazo y ausencia de saludos repetidos.",
+    "Geometría sentada de niño, joven y adulto; conversación conserva asiento y orientación hacia monitor.",
+    "Monitor se actualiza por secuencia y contenido, distingue pendiente de revisión de terminado y elimina datos al revocar acceso.",
+    "Regresión Node, arquitectura, OS, portal, accesos, obra y navegador escritorio/móvil; micrófono físico sigue siendo aceptación separada."
   ],
-  "rollback": "Revertir este PR del portal y, si se modifica el motor, desplegar su commit anterior. Sin cambios de datos de negocio ni a la configuración inicial de GPT-Live."
+  "rollback": "Revertir este PR. Sin cambios a hojas, permisos, credenciales ni configuración inicial GPT-Live."
 }
