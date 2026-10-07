@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-07.105-voz-reconexion
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-07.106-voz-puesto
 
 **Encargado de verificación:** Coordinación técnica YOD
 

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.105-voz-reconexion",
+  "revision": "2026-10-07.106-voz-puesto",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -9279,9 +9279,28 @@
         "Desconexión/reconexión mientras se espera session.closed conserva phase closing, micrófono apagado y transporte abierto.",
         "Respuesta de señalización que no llega y respeta AbortSignal: error recuperable al vencer el límite, pistas liberadas y una sola llamada; cancelar antes del límite no cambia aviso ni caso."
       ],
-      "deployment": "Implementación en PR118 con siete regresiones sintéticas aprobadas en evaluador local. El primer conjunto pasó en Node real; CI final y publicación pendientes. Aceptación del micrófono físico y escritura privada del paso 2 siguen pendientes; no iniciar paso 3.",
+      "deployment": "PR118 integrado en 821b1e7117a6f624595410b4fc97b3d7445e7422; Pages37592233792 y navegador37592235950 aprobados; 455 pruebas. Dirección reporta nuevo fallo real; aceptación del paso2 no alcanzada.",
       "rollback": "Revertir PR y referencias de caché; no modificar credenciales de YOD OS, registros ni sesiones de negocio.",
       "followup_proposed_at": "2026-10-07T07:59:27Z"
+    },
+    {
+      "id": "CHG-DESPACHO-VOZ-PUESTO-106",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "proposal": "Corregir inicio confirmado por el observador que no llega al canal primario: reconciliar únicamente started=true del estado autenticado de la misma sesión activa, con WebRTC conectado y canal abierto, sin reenviar configuración ni habilitar antes del evento confirmado. Mantener visible el puesto durante fallos de revalidación: pausa de nuevas operaciones mientras se recupera una autorización reciente, revocación/expiración limpia contenido privado y detiene voz mostrando explicación, nunca cierra automáticamente el diálogo. Unificar geometría de escritorio, silla y autón del lado visible del monitor; sillas orientadas hacia mesas. Añadir evidencia de captura de micrófono local y aviso si la pista termina. Probar ambos órdenes de inicio, revocación, recuperación y orientación real en navegador. Mantener JSON Live, contratos e IDs y no encubrir errores de trabajo.",
+      "status": "propuesto",
+      "approval": "Dirección reporta fallo de voz, cierre silencioso del puesto y geometría incorrecta el 7-oct-2026. Reproducción de inicio confirmado sin escucha a las 08:31:52 Hermosillo.",
+      "tests": [
+        "Inicio confirmado por observador, canal abierto y WebRTC conectado habilita micrófono sin evento primario duplicado; estado no confirmado/cerrado/expirado nunca habilita.",
+        "Revalidación temporal mantiene diálogo, impide operaciones nuevas y recupera el mismo PPP; revocación limpia contenido y ofrece reconectar sin cierre silencioso.",
+        "Silla y figura delante del monitor, mirando hacia él; posición compartida, regreso al asiento y captura en navegador.",
+        "Pruebas completas y entrada publicada; el dispositivo real se acredita por separado."
+      ],
+      "deployment": "Propuesta anterior a implementación. Paso 2 abierto por fallo real reportado; paso 3 no iniciado.",
+      "rollback": "Revertir PR y versiones de recursos; preservar configuración de voz, datos, historial y permisos."
     }
   ],
   "data_contracts": [
