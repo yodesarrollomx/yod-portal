@@ -88,7 +88,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
    await page.screenshot({path:path.join(out,'radial-proximidad-'+variant+'.png')});
    console.log('RADIAL_'+variant+':'+(await page.screenshot({type:'jpeg',quality:80})).toString('base64'));
    await frame.locator('.radial-options [data-action="notas"]').click();
-   await frame.locator('[data-tab="knowledge"][aria-pressed="true"]').waitFor();
+   await frame.locator('[data-panel="knowledge"]').waitFor();assert.equal(await frame.locator('[data-tab="knowledge"]').getAttribute('aria-pressed'),'true');
    assert.equal(await frame.evaluate(()=>window.__captures),0);
    await frame.locator('.voice-close').click();await frame.evaluate(()=>window.despacho.setMode('overview'));
   }
