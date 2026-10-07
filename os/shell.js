@@ -47,7 +47,9 @@
     var P = window.YOD_PORTERO; if (!P) return null;
     var j = null; try { j = await intenta(P.original); } catch (e) { }
     if (j && (j.ok || rechazoAcceso(j.error))) return j;
-    try { return await intenta(P.respaldo); } catch (e) { return null; }
+    // El respaldo puede usar otra base de sesiones. Un rechazo suyo no puede
+    // invalidar una credencial cuando el primario simplemente no respondió.
+    try { var backup = await intenta(P.respaldo); return backup && backup.ok ? backup : null; } catch (e) { return null; }
   }
   var OS = 'https://yodesarrollomx.github.io/yod-portal/os/';
   var CORPORATE = 'https://yodesarrollo.mx/'; // sitio público; la marca del shell ya NO cuelga de aquí (lleva al OS)
@@ -478,9 +480,9 @@
       // Problemas de transporte NO son pruebas de revocación. Solo el rechazo
       // explícito del Portero invalida los permisos. Durante una caída el canje
       // se reintenta automáticamente, sin borrar la credencial de este dispositivo.
-      var temporal = reason === 'sin-respuesta' || reason === 'timeout' || reason === 'servidor' || /^http 5\d\d$/.test(reason);
+      var temporal = !rechazoAcceso(reason); // cualquier error no concluyente permite reconectar, sin conceder nuevos permisos
       if (temporal) {
-        var fresh = confirmedHere && state.verifiedAt && Date.now() - state.verifiedAt < 5 * 60000;
+        var fresh = reason !== 'respuesta-invalida' && confirmedHere && state.verifiedAt && Date.now() - state.verifiedAt < 5 * 60000;
         if (fresh) {
           // Gracia limitada para una identidad ya validada. El backend sigue
           // autorizando cada operación protegida; NO hay permisos offline nuevos.
@@ -494,7 +496,7 @@
           applyNav();maybeLock();
         }
         state.reconnectAttempts = (state.reconnectAttempts || 0) + 1;
-        var wait = Math.min(300000, 15000 * Math.pow(2, Math.min(5, state.reconnectAttempts - 1)));
+        var wait = Math.min(30000, 15000 * Math.pow(2, Math.min(5, state.reconnectAttempts - 1)));
         state.retryTimer = setTimeout(function() {
           state.retryTimer = null;
           if (request === state.identityRequest && tok() === k) loadIdentity();
@@ -505,7 +507,7 @@
       // el token (el OS dueño de la sesión decide si debe pedir nuevo acceso).
       purgeAll();state.identity = 'fail';state.sessionToken = '';state.verifiedAt = 0;
       state.reconnectAttempts = 0;pastilla('fail');
-      set('yodRole', 'Sesión por validar');applyNav();maybeLock();
+      set('yodRole', rechazoAcceso(reason) ? 'Acceso vencido o retirado' : 'Validando acceso…');applyNav();maybeLock();
     });
   }
   window.addEventListener('storage',function(e){if(e.key===LSC||e.key===null)loadIdentity();});

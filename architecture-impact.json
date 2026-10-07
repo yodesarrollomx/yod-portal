@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-10-07.111-voz-discreta",
   "proposal_id": "CHG-ATLAS-001",
-  "summary": "Endurecer la autenticación YOD OS ante caídas transitorias de Google Apps Script: reintento automático acotado por backoff sin borrar token, gracia máxima de cinco minutos para identidad validada en la carga actual, bloqueo de datos en arranque frío y cuando vence la gracia, rechazo y cambio de rol/permisos bloquean de inmediato. No modifica el contrato ni despliegue del Portero ni los datos del negocio. Gobernanza: los tests/portal-identity.cjs heredan el propietario transversal por defecto del Atlas; se declaran todos esos componentes para pasar el filtro de impacto sin cambiar el modelo ni los diagramas globales.",
+  "summary": "PR126 / issue #124: elimina cierres de sesión falsos por rechazo de respaldo no autoritativo y amplía reintento ante errores no concluyentes en os/shell.js, preservando revocación confirmada, cambios de identidad, canje fresco en nueva carga y gracia de 5 min para identidad ya validada. os/app.js reintenta más rápido sin borrar credenciales. No cambia el TTL real de 90 días indicado en documentación ni el Apps Script desplegado.",
   "components": [
     "SYS-YOD-OS",
     "GAS-PORTERO",
@@ -12,11 +12,10 @@
     "SYS-OBRA-CLIENTE"
   ],
   "tests": [
-    "Reintento automático ante timeout o respuesta servidor, preservando token de dispositivo.",
-    "Cold start sin identidad confirmada no expone información; recupera con canje fresco.",
-    "Revocación, respuesta malformada y cambio de permisos cierran la vista o recargan con datos ocultos.",
-    "Gracia máxima cinco minutos desde última validación; no confundir este tiempo con la duración del token del backend.",
-    "Regresión CI de portal-identity y validadores de arquitectura."
+    "479 regresiones Node con datos sintéticos: sesión nueva, acceso revocado, cambios de identidad y permisos.",
+    "Caída del portero primario y rechazo del respaldo no revocan automáticamente el token guardado.",
+    "Error no concluyente conserva token y mantiene privado el tablero hasta validar.",
+    "CI verificar/arquitectura, verify-os, verify-portal, verify-accesos y verify-obra-app; comprobación de Pages tras fusionar."
   ],
-  "rollback": "Revertir los commits del PR125 que modifican os/app.js, os/shell.js y pruebas. No cambia el Portero de Apps Script ni las tablas."
+  "rollback": "Revertir los commits del PR126 y los cambios de os/app.js, os/shell.js, tests/portal-identity.cjs. Sin modificaciones al Apps Script del Portero ni al Sheet."
 }
