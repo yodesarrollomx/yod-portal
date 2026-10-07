@@ -1,4 +1,5 @@
 import * as T from 'three';
+import {createProximityGate} from './agent-proximity.mjs?v=1';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {RoomEnvironment} from './vendor/RoomEnvironment.js';
 import {createOffice} from './scene.js?v=8';
@@ -26,6 +27,8 @@ let office;try{office=await createOffice({pilotFigure:false});scene.add(office.m
 
 let chinches=null;
 let agentOverlay=false;
+const proximity=createProximityGate(),sight=new T.Raycaster();
+window.addEventListener('yod-agent-menu-open',e=>proximity.suppress(e.detail?.case_id));
 let mode='overview',selected='entry',yaw=0,pitch=0,near=null,sheet=null,look=null,stickId=null,stick={x:0,y:0},keys=new Set(),last=performance.now(),frames=0,transitionToken=0,dirty=true,lastFocus=null;
 const reducedMotion=matchMedia('(prefers-reduced-motion:reduce)');
 let avatarShadowAt=0;
@@ -51,7 +54,7 @@ let markerCase=null;
 agentMarker.onclick=()=>{
  const api=window.YodResidentAgents||window.CubefarmYOD,p=api?.getProfile?.();
  if(!p||p.id!==markerCase||p.case_id!==markerCase||p.entity_kind!=='case')return;
- closeSheets(false);api.openForCase(markerCase);
+ closeSheets(false);window.YodAgentMenu?.showRadial(markerCase);
 };
 function paintAgentMarker(){
  const api=window.YodResidentAgents||window.CubefarmYOD,p=api?.getProfile?.(),a=pilot.getMovementState();
@@ -78,10 +81,29 @@ function setMode(next){chinches?.stop();transitionToken++;$('#fade').classList.r
 async function visit(id){if(!Object.hasOwn(places,id))return false;chinches?.stop();closeSheets(false);clearMovement();const token=++transitionToken;$('#fade').classList.add('visible');await new Promise(r=>setTimeout(r,matchMedia('(prefers-reduced-motion:reduce)').matches?0:130));if(token!==transitionToken)return false;selected=id;mode='walk';camera=walkCamera;office.setCutaway(false);renderer.shadowMap.needsUpdate=true;orbit.enabled=false;camera.fov=isMobile()?70:72;camera.updateProjectionMatrix();camera.position.fromArray(places[id].eye);updateAngles(new T.Vector3(...places[id].target));updateChrome();dirty=true;$('#fade').classList.remove('visible');if(!isMobile())mount.focus({preventScroll:true});return true;}
 function showSheet(id){chinches?.stop();closeSheets(false);lastFocus=document.activeElement;clearMovement();sheet=id;document.querySelector('header').inert=true;for(const e of mount.parentElement.children)if(!e.classList.contains('sheet')&&e.id!=='scrim')e.inert=true;$('#'+id).hidden=false;$('#scrim').hidden=false;$('#'+id).scrollTop=0;orbit.enabled=false;$('#nearby').hidden=true;updateChrome();$('#'+id+' .close').focus({preventScroll:true});}
 function closeSheets(focus=true){document.querySelectorAll('.sheet').forEach(e=>e.hidden=true);$('#scrim').hidden=true;document.querySelector('header').inert=false;for(const e of mount.parentElement.children)e.inert=false;const restore=lastFocus;sheet=null;clearMovement();orbit.enabled=mode==='overview';updateChrome();if(focus&&restore?.isConnected)restore.focus({preventScroll:true});dirty=true;}
-function openPanel(id){if(id==='computer'){const selected=window.YodResidentAgents?.getSelection?.();if(selected){closeSheets(false);void window.YodVoiceWorkspace?.openForCase(selected.case_id,'ppp');}return;}if(id==='case'&&window.YodResidentAgents?.getSelection?.()){closeSheets(false);void window.YodAgentMenu?.openForCase(window.YodResidentAgents.getSelection().case_id);return;}const d=panels[id];if(!d)return;$('#panel-tag').textContent=d.tag;$('#panel-title').innerHTML=d.title;$('#panel-body').innerHTML=d.body;showSheet('panel');chinches.bindPanel(id);if(id==='case'&&window.CubefarmYOD){const button=document.createElement('button');button.className='open-agent-panel';button.textContent='Abrir panel de agentes';button.onclick=()=>window.CubefarmYOD.open('chat');$('#panel-body').prepend(button);}}
+function openPanel(id){if(id==='computer'){const selected=window.YodResidentAgents?.getSelection?.();if(selected){closeSheets(false);void window.YodVoiceWorkspace?.openForCase(selected.case_id,'ppp');}return;}if(id==='case'&&window.YodResidentAgents?.getSelection?.()){closeSheets(false);void window.YodAgentMenu?.showRadial(window.YodResidentAgents.getSelection().case_id);return;}const d=panels[id];if(!d)return;$('#panel-tag').textContent=d.tag;$('#panel-title').innerHTML=d.title;$('#panel-body').innerHTML=d.body;showSheet('panel');chinches.bindPanel(id);if(id==='case'&&window.CubefarmYOD){const button=document.createElement('button');button.className='open-agent-panel';button.textContent='Abrir panel de agentes';button.onclick=()=>window.CubefarmYOD.open('chat');$('#panel-body').prepend(button);}}
 $('#overview').onclick=()=>setMode('overview');$('#walk').onclick=()=>setMode('walk');$('#areas-open').onclick=()=>showSheet('areas');$('#help-open').onclick=()=>showSheet('help');$('#case-open').onclick=async()=>{await visit('case');openPanel('case');};document.querySelectorAll('[data-place]').forEach(b=>b.onclick=()=>visit(b.dataset.place));document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>closeSheets());$('#scrim').onclick=()=>closeSheets();$('#nearby').onclick=()=>near&&openPanel(near);
 
 function movement(dt){let forward=(keys.has('w')||keys.has('ArrowUp')?1:0)-(keys.has('s')||keys.has('ArrowDown')?1:0)-stick.y,sideways=(keys.has('d')||keys.has('ArrowRight')?1:0)-(keys.has('a')||keys.has('ArrowLeft')?1:0)+stick.x;const length=Math.hypot(forward,sideways);if(length<.05)return false;const speed=2.1*dt/Math.max(1,length),dx=(-Math.sin(yaw)*forward+Math.cos(yaw)*sideways)*speed,dz=(-Math.cos(yaw)*forward-Math.sin(yaw)*sideways)*speed;const steps=Math.ceil(Math.max(Math.abs(dx),Math.abs(dz))/.1)||1;for(let i=0;i<steps;i++){if(allowed(camera.position.x+dx/steps,camera.position.z))camera.position.x+=dx/steps;if(allowed(camera.position.x,camera.position.z+dz/steps))camera.position.z+=dz/steps;}return true;}
+function updateAgentProximity(now){
+ const fresh=window.YodResidentAgents?.getSelection?.(),position=pilot.posicion();
+ const id=fresh?.avatar?.case_id===fresh?.case_id?fresh?.case_id:null;
+ const distance=position?Math.hypot(camera.position.x-position[0],camera.position.z-position[1]):Infinity;
+ const enabled=mode==='walk'&&!sheet&&!agentOverlay&&!document.hidden&&!chinches?.isSelecting()&&
+  document.getElementById('office-accessible')?.hidden!==false&&!!window.YodAgentMenu;
+ let visible=false;
+ if(enabled&&id&&distance<=1.8){
+  const target=new T.Vector3(position[0],1.4,position[1]),direction=target.clone().sub(camera.position),length=direction.length();
+  sight.set(camera.position,direction.normalize());sight.far=Math.max(0,length-.2);
+  visible=!sight.intersectObject(office.model,true).some(hit=>{
+   const materials=Array.isArray(hit.object.material)?hit.object.material:[hit.object.material];
+   return hit.object.visible&&materials.some(m=>m?.visible&&(!m.transparent||m.opacity>=.95));
+  });
+ }
+ const hit=proximity.sample({caseId:id,distance,enabled,visible,now});
+ if(hit)window.YodAgentMenu.showRadial(hit);
+}
+
 function updateNear(){near=null;let distance=2.3;for(const [id,p] of Object.entries(places)){if(id==='entry')continue;const d=camera.position.distanceTo(new T.Vector3(...p.eye));if(d<distance){distance=d;near=id;}}if(selected==='case'&&camera.position.distanceTo(new T.Vector3(...places.case.eye))<2)near='case';const show=!!near&&mode==='walk'&&!sheet;$('#nearby').hidden=!show;if(show)$('#nearby').textContent=near==='case'?'Abrir puesto del proyecto':'Ver '+places[near].label;}
 window.addEventListener('keydown',e=>{if(agentOverlay)return;if(!sheet&&document.getElementById('office-accessible')?.hidden===false)return;if(e.key==='Escape'){closeSheets();return;}if(sheet){if(e.key==='Tab'){const nodes=[...$('#'+sheet).querySelectorAll('button,a[href]')],first=nodes[0],last=nodes[nodes.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}return;}const k=e.key.length===1?e.key.toLowerCase():e.key;if(mode==='walk'&&['w','a','s','d','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(k)){e.preventDefault();keys.add(k);}if(k==='e'&&near)openPanel(near);});window.addEventListener('keyup',e=>keys.delete(e.key.length===1?e.key.toLowerCase():e.key));window.addEventListener('blur',clearMovement);document.addEventListener('visibilitychange',()=>{clearMovement();last=performance.now();});
 const base=$('#stick-base');function updateStick(e){const rect=base.getBoundingClientRect(),dx=e.clientX-(rect.x+rect.width/2),dy=e.clientY-(rect.y+rect.height/2),length=Math.hypot(dx,dy),limit=35*rect.width/112,factor=Math.min(1,limit/(length||1));const x=dx*factor,y=dy*factor;stick={x:Math.abs(x)<3?0:x/limit,y:Math.abs(y)<3?0:y/limit};$('#stick-knob').style.transform=`translate(${x*112/rect.width}px,${y*112/rect.width}px)`;}
@@ -94,7 +116,7 @@ chinches.selectPoint(p.toArray(),hitZone==='computer'?'case':hitZone||selected);
 renderer.domElement.addEventListener('pointerup',e=>release(e));renderer.domElement.addEventListener('pointercancel',e=>release(e,true));renderer.domElement.addEventListener('lostpointercapture',e=>{if(look?.id===e.pointerId)look=null;});
 orbit.addEventListener('change',()=>{dirty=true;});
 function resize(){const width=mount.clientWidth,height=mount.clientHeight;renderer.setSize(width,height);walkCamera.aspect=width/Math.max(1,height);walkCamera.updateProjectionMatrix();if(mode==='overview')fitOverview();else updateChrome();dirty=true;}new ResizeObserver(resize).observe(mount);resize();setMode('overview');
-let rendererLost=false;let shadowBaked=false;function animate(now){requestAnimationFrame(animate);const dt=Math.min((now-last)/1000,.1);last=now;const avatarChanged=pilot.update(now,{hidden:document.hidden,overlay:agentOverlay,reducedMotion:reducedMotion.matches});if(avatarChanged){dirty=true;if(now-avatarShadowAt>=400){renderer.shadowMap.needsUpdate=true;avatarShadowAt=now;}}if(document.hidden)return;if(mode==='walk'&&!sheet&&!agentOverlay){dirty=movement(dt)||dirty;updateNear();}else if(mode==='overview'&&!sheet&&!agentOverlay)orbit.update();if(office.model.userData.needsRender){dirty=true;office.model.userData.needsRender=false;}if(dirty&&!rendererLost){renderer.render(scene,camera);paintAgentMarker();frames++;dirty=false;if(!shadowBaked){renderer.shadowMap.autoUpdate=false;shadowBaked=true;}}}
+let rendererLost=false;let shadowBaked=false;function animate(now){requestAnimationFrame(animate);const dt=Math.min((now-last)/1000,.1);last=now;const avatarChanged=pilot.update(now,{hidden:document.hidden,overlay:agentOverlay,reducedMotion:reducedMotion.matches});if(avatarChanged){dirty=true;if(now-avatarShadowAt>=400){renderer.shadowMap.needsUpdate=true;avatarShadowAt=now;}}if(document.hidden)return;updateAgentProximity(now);if(mode==='walk'&&!sheet&&!agentOverlay){dirty=movement(dt)||dirty;updateNear();}else if(mode==='overview'&&!sheet&&!agentOverlay)orbit.update();if(office.model.userData.needsRender){dirty=true;office.model.userData.needsRender=false;}if(dirty&&!rendererLost){renderer.render(scene,camera);paintAgentMarker();frames++;dirty=false;if(!shadowBaked){renderer.shadowMap.autoUpdate=false;shadowBaked=true;}}}
 requestAnimationFrame(animate);$('#loading').hidden=true;window.officeReady=true;renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();rendererLost=true;clearMovement();$('#fallback').hidden=false;if(window.despacho)window.despacho.view='map';window.dispatchEvent(new CustomEvent('yod-office-view-unavailable'));});
 window.despacho={setAgentActivity:pilot.setActivity,view:'3d',layout:office,get camera(){return camera;},getAgentState:()=>pilot.getMovementState(),model:office.model,scene,visit,setMode,openPanel,closeSheets,getState:()=>({computer:office.computerScreen?.snapshot(),projection:camera.isOrthographicCamera?'orthographic':'perspective',cutaway:office.getCutaway(),zoom:camera.zoom,mode,selected,near,sheet,position:camera.position.toArray(),rotation:camera.rotation.toArray(),frames,stick:{...stick},triangles:renderer.info.render.triangles,drawCalls:renderer.info.render.calls,allowed:allowed(camera.position.x,camera.position.z),mobile:isMobile(),colliders:office.collisions.length,avatar:pilot.getState()}),allowed};
 if(ENTORNO_AGENTE_CAMINA||/(?:^|[?&])camina=1(?:&|$)/.test(location.search))window.despacho.agenteIr=crearAgenteIr({lugares:places,piloto:pilot,permitido:allowed,limites:[office.bounds,office.annex],reducido:()=>reducedMotion.matches,alLlegar:lugar=>window.dispatchEvent(new CustomEvent('yod-agent-arrived',{detail:{lugar}}))});

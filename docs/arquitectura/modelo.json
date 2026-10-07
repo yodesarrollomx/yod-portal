@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.106-voz-puesto",
+  "revision": "2026-10-07.107-radial-proximidad",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -2717,7 +2717,7 @@
       "dominio": "Operación",
       "proposito": "Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.",
       "source_of_truth": "Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos.",
-      "runtime_status": "Portal PR118 / main821b1e7 publicado y verificado automáticamente. Dirección reporta fallo real de voz y orientación; corrección106 en rama, pendiente de publicación y aceptación.",
+      "runtime_status": "PR119 puesto106 publicado y comprobado técnicamente. Interacción radial/proximidad107 propuesta por Dirección; voz física y aceptación privada pendientes.",
       "evidence": [
         {
           "repo": "yodesarrollomx/yod-portal",
@@ -9300,8 +9300,26 @@
         "Silla y figura delante del monitor, mirando hacia él; posición compartida, regreso al asiento y captura en navegador.",
         "Pruebas completas y entrada publicada; el dispositivo real se acredita por separado."
       ],
-      "deployment": "PR #119 implementado y probado fuera de producción. Contraprueba: inicio confirmado solo por observador pasa de starting/micrófono false a listening/micrófono true. Navegador de escritorio/móvil verifica recuperación, revocación visible, mismo PPP, pista habilitada y geometría; capturas inspeccionadas en CI 37645791084. 460/460 pruebas Node en 4f02e21; faltaba declarar GAS-PORTERO en impacto de su prueba de presencia y se corrigió. Consolidación CI y publicación pendientes. Micrófono físico, interrupción hablada y aceptación real pendientes.",
+      "deployment": "PR119 publicado en c8bea79; Pages 37647711893 y navegador 37647715882 aprobados, incluidas capturas públicas escritorio/móvil. Escucha e interrupción física siguen pendientes; paso 2 abierto.",
       "rollback": "Revertir PR y versiones de recursos; preservar configuración de voz, datos, historial y permisos."
+    },
+    {
+      "id": "CHG-DESPACHO-RADIAL-PROXIMIDAD-107",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "proposal": "Unificar acceso al autón en selector radial al acercarse o seleccionar su figura: detección por distancia al personaje autorizado, tiempo breve de permanencia, línea de visión y rearme al alejarse para evitar reaperturas. Cuatro sectores direccionales con submenú en el mismo diálogo: Plan de potencial, Hablar, Notas y Pendientes. Cursor/flechas exploran; clic/Enter ejecuta; acercarse nunca inicia micrófono. Mantener el PPP canónico, perfil/ID del proyecto, permisos y aislamiento al cambiar de autón. Preparar la misma interacción para futuros proyectos sin inventar registros ni crear agentes sin la lista pendiente.",
+      "status": "implementado_local",
+      "approval": "Dirección solicita explícitamente apertura automática por proximidad y selector radial con submenús el 7-oct-2026. Autoriza corregir interfaz; la lista de proyectos nuevos se entregará después.",
+      "tests": [
+        "Proximidad: distancia, permanencia, línea de visión, salida/reentrada, bloqueo por panel y revocación.",
+        "Navegador: acercarse abre círculo sin micrófono; hover/flechas submenú; PPP/Notas/Hablar por elección explícita; cierre no reaparece hasta alejarse; identidad A/B y revocación.",
+        "Node, arquitectura, impacto, OS, portal, accesos, Obra; capturas de escritorio/móvil y publicación."
+      ],
+      "deployment": "Implementado en rama. Pendientes CI de proximidad/radial, capturas reales del render en escritorio/móvil y publicación. La lista de nuevos proyectos no se ha recibido; no se crearon registros.",
+      "rollback": "Revertir PR y versiones de recursos; no cambia datos, perfiles, permisos ni configuración Live."
     }
   ],
   "data_contracts": [
@@ -11432,6 +11450,24 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": ".github/workflows/despacho-bundle-paso2.yml",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/agent-proximity.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-proximidad.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",

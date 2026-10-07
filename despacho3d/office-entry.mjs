@@ -17,7 +17,7 @@ export function mountOfficeEntry({win=window,doc=document}={}){
  function paint(){
   if(disposed)return;
   const selection=resident?.getSelection?.(),view=entryView(selection,resident?.snapshot?.(),observer?.snapshot?.());
-  const operable=view.ready&&typeof win.YodVoiceWorkspace?.openForCase==='function';
+  const operable=view.ready&&typeof win.YodAgentMenu?.showRadial==='function';
   name.textContent=view.name;project.textContent=view.project===view.name?'':view.project;project.hidden=!project.textContent;
   status.textContent=view.ready&&!operable?'Abriendo puesto…':view.status;detail.textContent=view.detail;detail.hidden=!view.detail;
   host.dataset.caseId=view.caseId||'';host.dataset.ready=String(view.ready);
@@ -28,7 +28,7 @@ export function mountOfficeEntry({win=window,doc=document}={}){
  function open(){
   const selection=resident?.getSelection?.();if(!selection)return false;
   win.despacho?.closeSheets?.(false);
-  return win.YodVoiceWorkspace?.openForCase(selection.case_id,'ppp')||false;
+  return win.YodAgentMenu?.showRadial(selection.case_id)||false;
  }
  function bind(){
   if(resident!==win.YodResidentAgents){stopResident?.();resident=win.YodResidentAgents;stopResident=resident?.subscribe?.(paint);}
@@ -38,7 +38,7 @@ export function mountOfficeEntry({win=window,doc=document}={}){
  // Capture keeps the same route in both renderers; the old walking shortcut must not fire.
  function click(e){e.preventDefault();e.stopImmediatePropagation();void open();}
  trigger.addEventListener('click',click,true);
- win.addEventListener('yod-voice-workspace-ready',bind);win.addEventListener('yod-residents-ready',bind);win.addEventListener('yod-work-observer-ready',bind);bind();
- const api={open,paint,dispose(){disposed=true;stopResident?.();stopObserver?.();trigger.removeEventListener('click',click,true);win.removeEventListener('yod-voice-workspace-ready',bind);win.removeEventListener('yod-residents-ready',bind);win.removeEventListener('yod-work-observer-ready',bind);}};
+ win.addEventListener('yod-agent-menu-ready',bind);win.addEventListener('yod-voice-workspace-ready',bind);win.addEventListener('yod-residents-ready',bind);win.addEventListener('yod-work-observer-ready',bind);bind();
+ const api={open,paint,dispose(){disposed=true;stopResident?.();stopObserver?.();trigger.removeEventListener('click',click,true);win.removeEventListener('yod-agent-menu-ready',bind);win.removeEventListener('yod-voice-workspace-ready',bind);win.removeEventListener('yod-residents-ready',bind);win.removeEventListener('yod-work-observer-ready',bind);}};
  return api;
 }

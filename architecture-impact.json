@@ -1,18 +1,16 @@
 {
-  "model_revision": "2026-10-07.106-voz-puesto",
-  "proposal_id": "CHG-DESPACHO-VOZ-PUESTO-106",
-  "summary": "Corregir inicio confirmado por el observador que no llega al canal primario: reconciliar únicamente started=true del estado autenticado de la misma sesión activa, con WebRTC conectado y canal abierto, sin reenviar configuración ni habilitar antes del evento confirmado. Mantener visible el puesto durante fallos de revalidación: pausa de nuevas operaciones mientras se recupera una autorización reciente, revocación/expiración limpia contenido privado y detiene voz mostrando explicación, nunca cierra automáticamente el diálogo. Unificar geometría de escritorio, silla y autón del lado visible del monitor; sillas orientadas hacia mesas. Añadir evidencia de captura de micrófono local y aviso si la pista termina. Probar ambos órdenes de inicio, revocación, recuperación y orientación real en navegador. Mantener JSON Live, contratos e IDs y no encubrir errores de trabajo.",
+  "model_revision": "2026-10-07.107-radial-proximidad",
+  "proposal_id": "CHG-DESPACHO-RADIAL-PROXIMIDAD-107",
+  "summary": "Unificar acceso al autón en selector radial al acercarse o seleccionar su figura: detección por distancia al personaje autorizado, tiempo breve de permanencia, línea de visión y rearme al alejarse para evitar reaperturas. Cuatro sectores direccionales con submenú en el mismo diálogo: Plan de potencial, Hablar, Notas y Pendientes. Cursor/flechas exploran; clic/Enter ejecuta; acercarse nunca inicia micrófono. Mantener el PPP canónico, perfil/ID del proyecto, permisos y aislamiento al cambiar de autón. Preparar la misma interacción para futuros proyectos sin inventar registros ni crear agentes sin la lista pendiente.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "GAS-PORTERO"
+    "SYS-DESPACHO-3D"
   ],
   "tests": [
-    "Inicio confirmado por observador, canal abierto y WebRTC conectado habilita micrófono sin evento primario duplicado; estado no confirmado/cerrado/expirado nunca habilita.",
-    "Revalidación temporal mantiene diálogo, impide operaciones nuevas y recupera el mismo PPP; revocación limpia contenido y ofrece reconectar sin cierre silencioso.",
-    "Silla y figura delante del monitor, mirando hacia él; posición compartida, regreso al asiento y captura en navegador.",
-    "Pruebas completas y entrada publicada; el dispositivo real se acredita por separado."
+    "Proximidad: distancia, permanencia, línea de visión, salida/reentrada, bloqueo por panel y revocación.",
+    "Navegador: acercarse abre círculo sin micrófono; hover/flechas submenú; PPP/Notas/Hablar por elección explícita; cierre no reaparece hasta alejarse; identidad A/B y revocación.",
+    "Node, arquitectura, impacto, OS, portal, accesos, Obra; capturas de escritorio/móvil y publicación."
   ],
-  "rollback": "Revertir PR y versiones de recursos; preservar configuración de voz, datos, historial y permisos."
+  "rollback": "Revertir PR y versiones de recursos; no cambia datos, perfiles, permisos ni configuración Live."
 }

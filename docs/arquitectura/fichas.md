@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-07.106-voz-puesto · 2026-10-07.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-07.107-radial-proximidad · 2026-10-07.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -1006,7 +1006,7 @@ Persistir notas y ejes del Corcho en un archivo privado independiente, autorizad
 Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.
 
 - Tipo: interfaz. Dominio: Operación. Responsable: Dirección técnica.
-- Evidencia: codigo. Producción: Portal PR118 / main821b1e7 publicado y verificado automáticamente. Dirección reporta fallo real de voz y orientación; corrección106 en rama, pendiente de publicación y aceptación..
+- Evidencia: codigo. Producción: PR119 puesto106 publicado y comprobado técnicamente. Interacción radial/proximidad107 propuesta por Dirección; voz física y aceptación privada pendientes..
 - Entidades: caso, sesion, tablero, tarea, recibo.
 - Fuente de verdad: Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos..
 - Evidencia: [yod-portal/despacho3d/agent-workspace.mjs](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/agent-workspace.mjs) — Puesto compartido con PPP y ejecución de intención explícita; observar no otorga permisos..

@@ -41,7 +41,7 @@ export function startAccessibleOffice({onPanelOpened=()=>{}}={}){
   if(id!=='computer'&&!Object.hasOwn(places,id))return false;
   if(id==='case'||id==='computer'){
    const selection=window.YodResidentAgents?.getSelection?.();
-   if(selection){closeSheets();return window.YodVoiceWorkspace?.openForCase(selection.case_id,'ppp')||false;}
+   if(selection){closeSheets();return id==='case'?(window.YodAgentMenu?.showRadial(selection.case_id)||false):(window.YodVoiceWorkspace?.openForCase(selection.case_id,'ppp')||false);}
   }
   const p=panels[id]||{tag:places[id].label,title:places[id].label,body:'<p>Espacio del Despacho. Sus herramientas se conectan por etapas desde Entorno.</p>'};
   document.getElementById('panel-tag').textContent=p.tag;document.getElementById('panel-title').textContent=p.title;
