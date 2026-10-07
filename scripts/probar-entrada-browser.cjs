@@ -163,8 +163,8 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
    // Real scene + actual voice boot: approach opens the capsule and a permission
    // explanation, without starting capture or a provider session behind a prompt.
    await frame.evaluate(async()=>{navigator.permissions.query=async()=>({state:'prompt'});window.__select('C',true);await window.despacho.visit('case');window.despacho.camera.position.set(7,1.65,-4.35);});
-   await frame.locator('#scene').focus();await page.keyboard.down('a');
-   await frame.locator('.station-radial').waitFor();await page.keyboard.up('a');
+   await frame.locator('#scene').focus();await page.keyboard.down('w');
+   await frame.locator('.station-radial').waitFor();await page.keyboard.up('w');
    try{await frame.locator('#compact-notice').waitFor({timeout:10000});}catch(error){
     console.log('ENCOUNTER_DIAGNOSTIC',await frame.evaluate(()=>({state:window.despacho.getState(),selection:window.YodResidentAgents.getSelection()?.case_id,voiceOpen:document.querySelector('.realtime-dialog').open,compactPhase:document.getElementById('compact-phase').textContent,notice:document.getElementById('compact-notice').textContent,radial:document.querySelector('.station-radial')?.open,inert:document.getElementById('workspace').inert,focus:document.activeElement?.id})));
     console.log('ENCOUNTER_FAILURE:'+ (await page.screenshot({type:'jpeg',quality:70})).toString('base64'));throw error;
