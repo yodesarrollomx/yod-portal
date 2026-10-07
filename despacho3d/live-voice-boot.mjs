@@ -75,7 +75,7 @@ if (open) {
     host.replaceChildren(...messages.slice(-30).map(m=>{const p=document.createElement('p'),b=document.createElement('b'),text=document.createElement('span');b.textContent=m.role==='user'?'Tú':agentName();text.textContent=m.body;p.append(b,text);return p;}));
     for(const turn of state.fastTurns||[]){for(const [label,text]of [['Tú',turn.message],[agentName(),turn.reply]])if(text){const p=document.createElement('p'),b=document.createElement('b'),body=document.createElement('span');b.textContent=label;body.textContent=text;p.append(b,body);host.append(p);}}
     const live=dialog.dataset.voicePhase&&!['idle','error'].includes(dialog.dataset.voicePhase);
-    node('station-send').disabled=live||state.busy||!!state.pending||!!state.accepted||!state.selection?.can_enqueue||state.stale;
+    node('station-send').disabled=accessPaused||live||state.busy||!!state.pending||!!state.accepted||!state.selection?.can_enqueue||state.stale;
     node('station-message-status').textContent=live?'Finaliza la voz para continuar por escrito.':state.fastNotice||(state.pending?'Guardado pendiente. Actualizar comprobará la misma solicitud.':state.busy?'Consultando…':state.status==='unavailable'?'No se pudo cargar el historial. Puedes actualizar.':'');
   }
   dialog.querySelector('.station-chat').addEventListener('toggle',()=>{if(dialog.querySelector('.station-chat').open&&selection&&!chat.selection&&!chat.busy)void chat.open();});
@@ -227,7 +227,7 @@ if (open) {
       const s=resident.getSelection();
       const access=residentAccessDecision(state,selection);
       if(access==='recovering'){
-        accessPaused=true;workspace.setActive(false);
+        accessPaused=true;workspace.setActive(false);renderChat(chat);
         setText('station-access','Recuperando acceso al proyecto. El puesto permanece abierto; las operaciones nuevas están en pausa.');
         node('station-access').hidden=false;node('voice-start').disabled=true;
         return;

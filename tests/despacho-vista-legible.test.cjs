@@ -3,7 +3,7 @@ const base=path.resolve(__dirname,'../despacho3d'),vendor=pathToFileURL(path.joi
 const cache=new Map();
 function moduleURL(file){
  if(cache.has(file))return cache.get(file);
- const src=fs.readFileSync(file,'utf8').replace(/from 'three'/g,`from '${vendor}'`).replace(/from '(\.\/[^']+)'/g,(_,relative)=>`from '${moduleURL(path.resolve(path.dirname(file),relative.split('?')[0]))}'`);
+ const src=fs.readFileSync(file,'utf8').replace(/from 'three'/g,`from '${vendor}'`).replace(/from '(\.\.?\/[^']+)'/g,(_,relative)=>`from '${moduleURL(path.resolve(path.dirname(file),relative.split('?')[0]))}'`);
  const url='data:text/javascript;base64,'+Buffer.from(src).toString('base64');cache.set(file,url);return url;
 }
 const modules=Promise.all([import(vendor),import(moduleURL(path.join(base,'avatars/office-pilot.mjs'))),import(moduleURL(path.join(base,'entorno-ruta.mjs'))),import('../despacho3d/office-layout.mjs')]);
