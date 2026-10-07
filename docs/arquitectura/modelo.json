@@ -9268,7 +9268,7 @@
         "SYS-DESPACHO",
         "SYS-DESPACHO-3D"
       ],
-      "proposal": "Corregir dos fallos de recuperación de voz reproducidos con dobles locales: session.started recibido durante reconexión dejaba el micrófono desactivado al publicar escucha; /voice/session rechazado con 401 conservaba el token temporal y el siguiente intento explícito lo reutilizaba. Centralizar habilitación del micrófono al recuperar la conexión, respetar silencio voluntario y renovar sólo la credencial temporal rechazada en un intento posterior. No reiniciar sesiones automáticamente ni modificar JSON Live, contexto, datos de negocio o credencial de YOD OS. Actualizar URLs de módulos e importadores para que la entrega se pueda verificar en la publicación. No atribuir estos fallos al reporte anterior del usuario sin correlación; aceptación natural con micrófono físico pendiente. Durante finalización, ignorar cambios de conexión para conservar el micrófono cerrado y retener audio/transporte hasta session.closed.",
+      "proposal": "Corregir dos fallos de recuperación de voz reproducidos con dobles locales: session.started recibido durante reconexión dejaba el micrófono desactivado al publicar escucha; /voice/session rechazado con 401 conservaba el token temporal y el siguiente intento explícito lo reutilizaba. Centralizar habilitación del micrófono al recuperar la conexión, respetar silencio voluntario y renovar sólo la credencial temporal rechazada en un intento posterior. No reiniciar sesiones automáticamente ni modificar JSON Live, contexto, datos de negocio o credencial de YOD OS. Actualizar URLs de módulos e importadores para que la entrega se pueda verificar en la publicación. No atribuir estos fallos al reporte anterior del usuario sin correlación; aceptación natural con micrófono físico pendiente. Durante finalización, ignorar cambios de conexión para conservar el micrófono cerrado y retener audio/transporte hasta session.closed. Seguimiento propuesto antes del código: acotar exclusivamente la espera de señalización /voice/session a 60 segundos (startTimeout configurable), dejando el permiso del micrófono bajo control del usuario. El límite supera los plazos existentes de creación y conexión del observador, aborta el intento y muestra un error recuperable, sin crear otra sesión automáticamente. El servidor existente cierra una sesión creada si la respuesta del cliente fue abandonada.",
       "status": "implementado_local",
       "approval": "Dirección solicita resolver voz y cerrar pasos secuencialmente; revisión de fallo anterior recibida el 7-oct-2026. Se registró reproducción antes del cambio el 7-oct-2026 00:51–00:52, America/Hermosillo (UTC-7).",
       "tests": [
@@ -9276,10 +9276,12 @@
         "Reconexión conserva micrófono silenciado por el usuario y no reinicia trabajo.",
         "Rechazo de credencial temporal y siguiente intento explícito: mint nuevo, sin renovación automática; rechazo tardío de otro caso no elimina credencial nueva.",
         "Node y verificadores requeridos, Chromium/WebKit pertinentes y versiones de publicación; audio físico se acredita por separado.",
-        "Desconexión/reconexión mientras se espera session.closed conserva phase closing, micrófono apagado y transporte abierto."
+        "Desconexión/reconexión mientras se espera session.closed conserva phase closing, micrófono apagado y transporte abierto.",
+        "Respuesta de señalización que no llega y respeta AbortSignal: error recuperable al vencer el límite, pistas liberadas y una sola llamada; cancelar antes del límite no cambia aviso ni caso."
       ],
       "deployment": "Implementación en rama y cinco regresiones sintéticas aprobadas en evaluador local. CI Node/navegadores y publicación pendientes. Aceptación del micrófono físico y escritura privada del paso 2 siguen pendientes; no iniciar paso 3.",
-      "rollback": "Revertir PR y referencias de caché; no modificar credenciales de YOD OS, registros ni sesiones de negocio."
+      "rollback": "Revertir PR y referencias de caché; no modificar credenciales de YOD OS, registros ni sesiones de negocio.",
+      "followup_proposed_at": "2026-10-07T07:59:27Z"
     }
   ],
   "data_contracts": [
