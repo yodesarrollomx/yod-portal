@@ -1,13 +1,13 @@
 {
-  "model_revision": "2026-10-07.100-entrada-despacho",
-  "proposal_id": "CHG-DESPACHO-ENTRADA-100",
+  "model_revision": "2026-10-07.101-composicion-despacho",
+  "proposal_id": "CHG-DESPACHO-COMPOSICION-101",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "GAS-PORTERO",
     "EXT-DRIVE"
   ],
-  "summary": "Paso 1 D01–D05/D20: entrada única oficina → autón autorizado → puesto con PPP. Mostrar identidad y actividad confirmada sin otro panel; deshabilitar selección sin sesión; abrir el mismo puesto desde personaje, computadora y plano, preservar foco al volver. Suprimir fichas de demostración como entrada del proyecto. No ampliar padrón, cambiar permisos ni ejecutar objetivos al navegar.",
+  "summary": "Revisión visual de la primera pantalla rechazada por Dirección: cabecera compacta, oficina como diorama sobre fondo grafito, identidad y acceso al puesto en una tarjeta, navegación secundaria discreta y puesto del PPP con tipografía y superficies coherentes. Consolidar estilos existentes y comprobar capturas reales desktop/móvil/fallback sin datos ni actividad inventados.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -17,5 +17,5 @@
     "node verify-obra-app.cjs",
     "Chromium: entrada real sin sesión, selección/PPP con transporte sintético, respuesta tardía, revocación, teclado, escritorio/móvil y modo sin WebGL."
   ],
-  "rollback": "Revertir PR del frontend; conservar expedientes, permisos, transcripciones, tareas y fórmulas."
+  "rollback": "Revertir PR visual y sus versiones de caché; no cambia datos, permisos, sesiones de voz ni contratos del PPP."
 }

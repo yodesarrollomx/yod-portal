@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.100-entrada-despacho",
+  "revision": "2026-10-07.101-composicion-despacho",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8514,6 +8514,29 @@
       ],
       "deployment": "Implementación en rama de PR; comprobación en CI y publicación pendientes. Aceptación con sesión y PPP privados del propietario pendiente.",
       "rollback": "Revertir PR del frontend; conservar expedientes, permisos, transcripciones, tareas y fórmulas."
+    },
+    {
+      "id": "CHG-DESPACHO-COMPOSICION-101",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Revisión visual de la primera pantalla rechazada por Dirección: cabecera compacta, oficina como diorama sobre fondo grafito, identidad y acceso al puesto en una tarjeta, navegación secundaria discreta y puesto del PPP con tipografía y superficies coherentes. Consolidar estilos existentes y comprobar capturas reales desktop/móvil/fallback sin datos ni actividad inventados.",
+      "status": "implementado_local",
+      "approval": "Dirección solicita una revisión estética coherente con la oficina ya acordada, 7-oct-2026.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Chromium: entrada real sin sesión, selección/PPP con transporte sintético, respuesta tardía, revocación, teclado, escritorio/móvil y modo sin WebGL."
+      ],
+      "deployment": "Propuesta registrada antes de editar la interfaz. Pendientes comprobación visual en CI y publicación; aceptación estética del propietario pendiente.",
+      "rollback": "Revertir PR visual y sus versiones de caché; no cambia datos, permisos, sesiones de voz ni contratos del PPP."
     }
   ],
   "data_contracts": [
