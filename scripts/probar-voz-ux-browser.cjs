@@ -21,7 +21,9 @@ const server=http.createServer((req,res)=>{
   await context.addInitScript(()=>{
    if(!location.pathname.includes('__voice-child'))return;
    const selection={ok:true,case_id:'synthetic-voice-case',name:'Proyecto sintético',can_enqueue:true,agent_ready:true,goals:{ready:false}};
-   window.YodResidentAgents={getSelection:()=>selection,subscribe:()=>()=>{}};
+   let access='standby';const listeners=new Set();const state=()=>({phase:access,prepared:true,checked_at:Date.now(),selection:access==='unauthorized'?null:selection});
+   window.YodResidentAgents={getSelection:()=>access==='standby'?selection:null,subscribe(fn){listeners.add(fn);fn(state());return()=>listeners.delete(fn);},refresh:async()=>window.setAccess('standby')};
+   window.setAccess=value=>{access=value;for(const fn of listeners)fn(state());};
    window.blockAudio=true;window.failMic=false;window.streams=[];
    navigator.mediaDevices.getUserMedia=async()=>{
     if(window.failMic)throw new DOMException('denied','NotAllowedError');
@@ -33,7 +35,7 @@ const server=http.createServer((req,res)=>{
     addTrack(){}createDataChannel(){return this.channel;}
     async createOffer(){return{type:'offer',sdp:'v=0\r\nsynthetic'};}
     async setLocalDescription(v){this.localDescription=v;}
-    async setRemoteDescription(){setTimeout(()=>{this.ontrack({streams:[window.streams.at(-1)]});this.channel.onmessage({data:JSON.stringify({type:'session.started'})});},10);}
+    async setRemoteDescription(){setTimeout(()=>{this.ontrack({streams:[window.streams.at(-1)]});/* Intentionally omit the primary start event; the server observer is authoritative. */},10);}
     close(){this.connectionState='closed';}
    };
    window.voiceEvent=e=>window.voicePeer.channel.onmessage({data:JSON.stringify(e)});
@@ -46,7 +48,7 @@ const server=http.createServer((req,res)=>{
    if(route.request().method()==='OPTIONS')return route.fulfill({status:204,headers});
    let body={ok:true};
    if(u.pathname==='/voice/session'){sessions++;body={ok:true,mode:'operativo',session:{id:'opaque/test'},transport:{type:'webrtc',sdp:'v=0\r\nanswer'}};}
-   else if(u.pathname==='/voice/status')body={ok:true,active:true,expires_at:Date.now()+600000,context_phase:'unavailable',tools_ready:false,tasks_ready:false,fragments:1,blocks:1,saved:0,pending:1};
+   else if(u.pathname==='/voice/status')body={ok:true,active:true,started:true,expires_at:Date.now()+600000,context_phase:'unavailable',tools_ready:false,tasks_ready:false,fragments:1,blocks:1,saved:0,pending:1};
    else if(u.pathname==='/voice/context-retry'){retries++;body={ok:true,retrying:true,context_phase:'retrying'};}
    else if(u.pathname==='/voice/close'){await page.frames().find(f=>f.url().includes('__voice-child')).evaluate(()=>window.voiceEvent({type:'session.closed'}));body={ok:true,active:false,finalized:true,fragments:1,blocks:1,saved:0,pending:1};}
    else if(u.pathname==='/computer/state')body={ok:true,phase:'idle',image:null,activity:[],links:[]};
@@ -57,6 +59,14 @@ const server=http.createServer((req,res)=>{
   await frame.locator('#voice-open').click();
   await frame.locator('[data-voice-phase="listening"]').waitFor();
   assert.equal(await frame.locator('#voice-start').isVisible(),false);
+  assert.equal(await frame.evaluate(()=>window.streams.at(-1).getAudioTracks()[0].enabled),true);
+  await frame.evaluate(()=>window.setAccess('reconnecting'));
+  assert.equal(await frame.locator('.realtime-dialog').isVisible(),true);
+  assert.match(await frame.locator('#station-access').innerText(),/Recuperando acceso/);
+  assert.equal(await frame.locator('[data-voice-phase="listening"]').count(),1);
+  await frame.evaluate(()=>window.setAccess('standby'));
+  assert.equal(await frame.locator('#station-access').isVisible(),false);
+  assert.equal(sessions,1,'access recovery keeps the same voice session');
   await frame.locator('.voice-options summary').click();
   await frame.locator('#voice-context').filter({hasText:'Expediente pendiente'}).waitFor();
   await frame.locator('#voice-play').waitFor();
@@ -81,6 +91,14 @@ const server=http.createServer((req,res)=>{
   assert.equal(await frame.locator('#voice-start').innerText(),'Volver a intentar');
   assert.equal(await frame.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
   await page.screenshot({path:path.join(out,'voice-ux-'+viewport.width+'.png'),fullPage:true});
+  await frame.evaluate(()=>window.setAccess('unauthorized'));
+  assert.equal(await frame.locator('.realtime-dialog').isVisible(),true);
+  assert.match(await frame.locator('#station-access').innerText(),/dejó de ser válido/);
+  assert.equal(await frame.locator('#voice-transcript p').count(),0);
+  await frame.locator('#station-reconnect').click();
+  await frame.locator('#station-access').waitFor({state:'hidden'});
+  assert.equal(await frame.locator('.realtime-dialog').isVisible(),true);
+  assert.equal(sessions,1,'explicit access recovery does not start another call');
   assert.deepEqual(errors,[]);await context.close();
  }
  console.log('Voice UX: desktop/mobile, blocked audio retry, single session, mute, context retry, exact local copy, pending receipt and transcript retained after microphone denial passed.');

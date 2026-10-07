@@ -13,7 +13,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await context.addInitScript(()=>{
    if(!location.pathname.endsWith('/__collab'))return;
    let selection={ok:true,case_id:'synthetic-collaboration',name:'Proyecto sintético',can_enqueue:true,agent_ready:true,avatar:true,goals:{ready:false}};
-   window.captures=0;const listeners=new Set();window.switchProject=()=>{selection={...selection,case_id:'synthetic-second',name:'Torre sintética',avatar:{name:'Ruiseñor de prueba'},ppp:{case_id:'synthetic-second',url:'https://yodesarrollomx.github.io/potenciales-yod/vertical.html?open=synthetic-second'}};for(const cb of listeners)cb({prepared:true});};window.YodResidentAgents={getSelection:()=>selection,subscribe:cb=>{listeners.add(cb);cb({prepared:true});return()=>listeners.delete(cb);}};
+   window.captures=0;const listeners=new Set();window.switchProject=()=>{selection={...selection,case_id:'synthetic-second',name:'Torre sintética',avatar:{name:'Ruiseñor de prueba'},ppp:{case_id:'synthetic-second',url:'https://yodesarrollomx.github.io/potenciales-yod/vertical.html?open=synthetic-second'}};for(const cb of listeners)cb({prepared:true,phase:'standby',checked_at:Date.now(),selection});};window.YodResidentAgents={getSelection:()=>selection,subscribe:cb=>{listeners.add(cb);cb({prepared:true,phase:'standby',checked_at:Date.now(),selection});return()=>listeners.delete(cb);}};
    const track={enabled:true,stop(){}},stream={getTracks:()=>[track],getAudioTracks:()=>[track]};
    navigator.mediaDevices.getUserMedia=async()=>{window.captures++;return stream;};
    HTMLMediaElement.prototype.play=()=>Promise.resolve();
@@ -142,8 +142,9 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await frame.locator('#voice-start').click();await frame.locator('[data-voice-phase="listening"]').waitFor();
   const reopened=await frame.evaluate(async()=>{window.switchProject();const attempt=window.YodVoiceWorkspace.openForCase('synthetic-second');window.voicePeer.channel.onmessage?.({data:JSON.stringify({type:'session.output_transcript.delta',event_id:'old-case-late',delta:'late fragment from previous project',start_ms:1,end_ms:2})});return attempt;});
   assert.equal(reopened,false,'another project cannot enter an unfinished voice session');
-  await frame.locator('.realtime-dialog').waitFor({state:'hidden'});
-  await frame.locator('#circulo-open').click();
+  await frame.locator('[data-voice-phase="idle"]').waitFor();
+  assert.equal(await frame.locator('.realtime-dialog').isVisible(),true);
+  await frame.locator('#station-reconnect').click();
   await frame.locator('#voice-title').filter({hasText:'Ruiseñor de prueba'}).waitFor();
   await frame.locator('.workspace-board iframe[src*="mixto.html?open=synthetic-second"]').waitFor();
   assert.equal(await iframe.evaluate(el=>el.isConnected),false,'previous project frame is removed');

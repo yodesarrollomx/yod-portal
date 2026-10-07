@@ -1,7 +1,7 @@
 (function(root){
   'use strict';
   // Escena estática del mismo portal: no recibe sesión, rutas ni datos del OS.
-  var FRAME_PATH='../despacho3d/index.html?v=voz105';
+  var FRAME_PATH='../despacho3d/index.html?v=puesto106';
   function create(options){
     var win=options.window,doc=options.document,host=doc.getElementById('seccionDespacho'),
         canvas=doc.getElementById('despachoCanvas'),status=doc.getElementById('despachoEstado'),

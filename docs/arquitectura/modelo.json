@@ -2717,7 +2717,7 @@
       "dominio": "Operación",
       "proposito": "Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.",
       "source_of_truth": "Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos.",
-      "runtime_status": "Última entrega técnica comprobada: Portal PR 117 / main 264d2cdee87fb7a2c0a40b81d065f32bc0643bb0, Pages 37582743970. Puesto y recibos validados con pruebas sintéticas; entrada pública real sin sesión comprobada. Micrófono físico y edición de expediente privado pendientes. Corrección de reconexión 105 sólo en rama, sin publicar.",
+      "runtime_status": "Portal PR118 / main821b1e7 publicado y verificado automáticamente. Dirección reporta fallo real de voz y orientación; corrección106 en rama, pendiente de publicación y aceptación.",
       "evidence": [
         {
           "repo": "yodesarrollomx/yod-portal",
@@ -9291,7 +9291,7 @@
         "SYS-DESPACHO-3D"
       ],
       "proposal": "Corregir inicio confirmado por el observador que no llega al canal primario: reconciliar únicamente started=true del estado autenticado de la misma sesión activa, con WebRTC conectado y canal abierto, sin reenviar configuración ni habilitar antes del evento confirmado. Mantener visible el puesto durante fallos de revalidación: pausa de nuevas operaciones mientras se recupera una autorización reciente, revocación/expiración limpia contenido privado y detiene voz mostrando explicación, nunca cierra automáticamente el diálogo. Unificar geometría de escritorio, silla y autón del lado visible del monitor; sillas orientadas hacia mesas. Añadir evidencia de captura de micrófono local y aviso si la pista termina. Probar ambos órdenes de inicio, revocación, recuperación y orientación real en navegador. Mantener JSON Live, contratos e IDs y no encubrir errores de trabajo.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "approval": "Dirección reporta fallo de voz, cierre silencioso del puesto y geometría incorrecta el 7-oct-2026. Reproducción de inicio confirmado sin escucha a las 08:31:52 Hermosillo.",
       "tests": [
         "Inicio confirmado por observador, canal abierto y WebRTC conectado habilita micrófono sin evento primario duplicado; estado no confirmado/cerrado/expirado nunca habilita.",
@@ -9299,7 +9299,7 @@
         "Silla y figura delante del monitor, mirando hacia él; posición compartida, regreso al asiento y captura en navegador.",
         "Pruebas completas y entrada publicada; el dispositivo real se acredita por separado."
       ],
-      "deployment": "Propuesta anterior a implementación. Paso 2 abierto por fallo real reportado; paso 3 no iniciado.",
+      "deployment": "Implementación en rama; contraprueba local de inicio pasa de starting/micrófono false a listening/micrófono true sin evento primario duplicado. CI y capturas pendientes. Aceptación real pendiente.",
       "rollback": "Revertir PR y versiones de recursos; preservar configuración de voz, datos, historial y permisos."
     }
   ],

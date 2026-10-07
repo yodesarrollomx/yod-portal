@@ -3,7 +3,7 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const load=()=>import('../despacho3d/live-voice.mjs');
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
-function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12000,maxStatusFailures=3,mode='expediente',failStatus=false,Stream,startTimeout=60000,signallingTimeout=90000,mintOverride,sessionOverride}={}){
+function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12000,maxStatusFailures=3,mode='expediente',failStatus=false,Stream,startTimeout=60000,signallingTimeout=90000,mintOverride,sessionOverride,statusOverride}={}){
  const calls=[],captions=[],track={enabled:true,stops:0,stop(){this.stops++;}},
    stream={getTracks:()=>[track],getAudioTracks:()=>[track]},
    audio={srcObject:null,pause(){},play:async()=>{}};
@@ -17,7 +17,7 @@ function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12
   setRemoteDescription(value){this.remoteDescription=value;return Promise.resolve();}
   close(){this.closed=true;}
  }
- const base={ok:true,active:true,started:true,context_ready:true,finalized:false,expires_at:Date.now()+600000,
+ const base={ok:true,active:true,started:false,context_ready:true,finalized:false,expires_at:Date.now()+600000,
   fragments:0,blocks:0,saved:0,pending:0,incomplete:false};
  const voice=createLiveVoice({audio,Peer,Stream,closeTimeout,disconnectGrace,maxStatusFailures,startTimeout,signallingTimeout,media:{getUserMedia:async()=>stream},
   schedule:()=>1,cancel:()=>{},onTranscript:f=>captions.push(f),
@@ -26,6 +26,7 @@ function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12
   fetchImpl:async(url,options)=>{
    calls.push({url,options});
    if(failStatus && url.endsWith('/status'))throw Error('record unavailable');
+   if(url.endsWith('/status')&&statusOverride)return {ok:true,json:async()=>({...base,...statusOverride()})};
    if(url.endsWith('/session')&&sessionOverride){const override=await sessionOverride(url,options);if(override)return override;}
    const value=url.endsWith('/session')?{ok:true,mode,session:{id:'live:opaque/session'},transport:{type:'webrtc',sdp:'v=0\r\nanswer'}}:
     url.endsWith('/close')?{...base,active:false,finalized:closed,fragments:1,blocks:1,saved:closed?1:0,pending:closed?0:1,incomplete:!closed}:base;
@@ -380,4 +381,29 @@ test('explicit cancellation of signalling retains its outcome after the connecti
  await new Promise(resolve=>setTimeout(resolve,70));
  assert.equal(f.voice.snapshot().phase,'idle');assert.equal(f.voice.snapshot().notice,notice);
  assert.equal(signals,1);assert.equal(f.track.stops,1);assert.equal(f.calls.filter(c=>c.url.endsWith('/session')).length,1);
+});
+
+test('observer-confirmed session.started reconciles primary event loss without resending startup',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice,{statusOverride:()=>({started:true})});
+ await f.voice.start('synthetic-case');await tick();
+ assert.equal(f.voice.snapshot().phase,'listening');assert.equal(f.track.enabled,true);
+ assert.equal(f.peer.channel.sent.length,0);assert.equal(f.calls.filter(c=>c.url.endsWith('/session')).length,1);
+ f.voice.mute();await f.voice.refresh();assert.equal(f.track.enabled,false,'observer confirmation cannot undo manual mute');
+ const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
+});
+test('observer confirmation waits for an open connected transport and rejects expired state',async()=>{
+ const {createLiveVoice}=await load();let status={started:false};const f=fixture(createLiveVoice,{statusOverride:()=>status});
+ await f.voice.start('synthetic-case');await tick();
+ f.peer.connectionState='connecting';status={started:true};await f.voice.refresh();
+ assert.equal(f.track.enabled,false);f.peer.connectionState='connected';f.peer.channel.readyState='connecting';await f.voice.refresh();
+ assert.equal(f.track.enabled,false);f.peer.channel.readyState='open';await f.voice.refresh();
+ assert.equal(f.track.enabled,true);const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
+ const g=fixture(createLiveVoice,{closeTimeout:5,statusOverride:()=>({started:true,expires_at:1})});
+ await g.voice.start('synthetic-case');await tick();assert.equal(g.track.enabled,false);await g.voice.stop();
+});
+test('a late observer confirmation while closing cannot re-enable the microphone',async()=>{
+ const {createLiveVoice}=await load();let confirmed=false;
+ const f=fixture(createLiveVoice,{statusOverride:()=>({started:confirmed})});await f.voice.start('synthetic-case');await tick();
+ const end=f.voice.stop();confirmed=true;await f.voice.refresh();assert.equal(f.track.enabled,false);assert.equal(f.voice.snapshot().phase,'closing');
+ f.event({type:'session.closed'});await end;
 });

@@ -1,3 +1,4 @@
+import {deskSeat} from './office-station.mjs?v=1';
 import {createOfficeScreen} from './office-screen.mjs?v=1';
 import * as T from 'three';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
@@ -59,16 +60,16 @@ export async function createOffice({pilotFigure=true}={}){
  for(let i=0;i<12;i++){const x=(random()-.5)*5.3,z=-1+(random()-.5)*5.2;foliage(x,.30,z,.28,.17,.28,35);}
  for(let i=0;i<100;i++){const x=(random()-.5)*5.7,z=-1+(random()-.5)*5.7;const p=mesh(new T.IcosahedronGeometry(.025+random()*.025),m.stone,x,.2,z);p.scale.y=.6;}
  // Comfortable chairs with curved upholstered backs and proper bases.
- function chair(x,z,angle=0,office=false,parent=root){const g=new T.Group();g.position.set(x,0,z);g.rotation.y=angle;parent.add(g);rounded(.68,.65,.16,.18,0,.54,0,m.fabric,g);const back=new T.Shape();back.absarc(0,0,.37,Math.PI,Math.PI*2,false);back.absarc(0,0,.29,Math.PI*2,Math.PI,true);const geo=new T.ExtrudeGeometry(back,{depth:.48,bevelEnabled:true,bevelThickness:.018,bevelSize:.012,bevelSegments:2,curveSegments:14});geo.rotateX(-Math.PI/2);mesh(geo,m.fabric,0,.56,.1,g);
+ function chair(x,z,angle=0,office=false,parent=root){const g=new T.Group();g.position.set(x,0,z);g.rotation.y=angle;parent.add(g);rounded(.68,.65,.16,.18,0,.54,0,m.fabric,g);const back=new T.Shape();back.absarc(0,0,.37,Math.PI,Math.PI*2,false);back.absarc(0,0,.29,Math.PI*2,Math.PI,true);const geo=new T.ExtrudeGeometry(back,{depth:.48,bevelEnabled:true,bevelThickness:.018,bevelSize:.012,bevelSegments:2,curveSegments:14});geo.rotateX(-Math.PI/2);geo.rotateY(Math.PI);mesh(geo,m.fabric,0,.56,-.1,g);
  if(office){cylinder(.035,.035,.36,0,.25,0,m.steel,g);for(let i=0;i<5;i++){const a=i*2*Math.PI/5;branch(new T.Vector3(0,.13,0),new T.Vector3(Math.cos(a)*.33,.08,Math.sin(a)*.33),.022,m.steel,g);mesh(new T.SphereGeometry(.048,8,6),m.black,Math.cos(a)*.33,.05,Math.sin(a)*.33,g);}}else{for(const sx of [-1,1])for(const sz of [-1,1])branch(new T.Vector3(sx*.26,.48,sz*.23),new T.Vector3(sx*.29,.04,sz*.27),.028,m.oakPlain,g);}return g;}
- function desk(x,z,{pilot=false}={}){rounded(1.9,.88,.08,.055,x,.82,z,m.oak);box(1.82,.018,.8,x,.769,z,m.brass);for(const sx of [-.77,.77])box(.045,.75,.62,x+sx,.38,z,m.steel);block(x,z,2.03,1.0);box(.026,.27,.04,x,.985,z-.14,m.steel);box(.27,.025,.2,x,.884,z-.10,m.steel);rounded(.74,.048,.43,.027,x,1.22,z-.15,m.steel);const display=label(pilot?'Caso':'YO DESARROLLO',.68,.355,x,1.23,z-.10,{size:pilot?130:61,color:'#d4c8a7',bg:'#20343c'});if(pilot)computerScreen=createOfficeScreen(display,()=>{root.userData.needsRender=true;});rounded(.40,.14,.02,.025,x,.881,z+.17,m.steel);for(let i=0;i<3;i++)for(let j=0;j<10;j++)box(.024,.004,.017,x-.16+j*.035,.895,z+.13+i*.035,m.plaster);box(.19,.018,.26,x-.63,.88,z+.05,m.plaster);box(.018,.012,.20,x-.49,.899,z+.03,m.brass);chair(x,z-.85,0,true);}
+ function desk(x,z,{pilot=false}={}){rounded(1.9,.88,.08,.055,x,.82,z,m.oak);box(1.82,.018,.8,x,.769,z,m.brass);for(const sx of [-.77,.77])box(.045,.75,.62,x+sx,.38,z,m.steel);block(x,z,2.03,1.0);box(.026,.27,.04,x,.985,z-.14,m.steel);box(.27,.025,.2,x,.884,z-.10,m.steel);rounded(.74,.048,.43,.027,x,1.22,z-.15,m.steel);const display=label(pilot?'Caso':'YO DESARROLLO',.68,.355,x,1.23,z-.10,{size:pilot?130:61,color:'#d4c8a7',bg:'#20343c'});if(pilot)computerScreen=createOfficeScreen(display,()=>{root.userData.needsRender=true;});rounded(.40,.14,.02,.025,x,.881,z+.17,m.steel);for(let i=0;i<3;i++)for(let j=0;j<10;j++)box(.024,.004,.017,x-.16+j*.035,.895,z+.13+i*.035,m.plaster);box(.19,.018,.26,x-.63,.88,z+.05,m.plaster);box(.018,.012,.20,x-.49,.899,z+.03,m.brass);const seat=deskSeat(x,z);chair(seat.position[0],seat.position[2],seat.rotationY,true);}
  // Three studios share a wide gallery; only the selected tasks will occupy their seats.
  for(const [z,title,num] of [[-6.45,'POTENCIALES','01'],[-.2,'PROYECTOS Y PERMISOS','02'],[5.85,'OBRA Y VENTAS','03']]){
    box(6.1,.023,4.8,8.65,.045,z,m.rug);wall(.10,1.25,3.8,5.45,.64,z-.35,m.oak);wall(.14,.07,3.85,5.45,1.30,z-.35,m.stone);for(let k=0;k<35;k++)wall(.018,1.14,.025,5.385,.63,z-2.03+k*.098,m.oakPlain);
    // Large readable signs over the open entry, facing the gallery.
    const sign=label(title,3.8,.36,5.35,2.53,z+.05,{size:72,color:'#263c40'});sign.rotation.y=-Math.PI/2;
    const id=label(num,.55,.42,5.35,2.94,z+.05,{size:180,color:'#9a7b4d'});id.rotation.y=-Math.PI/2;
-   desk(7.0,z-.65,{pilot:num==='01'});desk(10.05,z-.65);chair(7,z+.35,Math.PI);chair(10.05,z+.35,Math.PI);
+   desk(7.0,z-.65,{pilot:num==='01'});desk(10.05,z-.65);chair(7,z-1.5,0);chair(10.05,z-1.5,0);
    box(5.9,.68,.42,8.8,.37,z-2.35,m.oak);box(6,.05,.47,8.8,.735,z-2.35,m.stone);vase(10.4,.76,z-2.35,.5);
    if(num!=='03'){wall(6.55,1.25,.10,8.72,.65,z+2.62,m.plaster);wall(6.55,1.3,.015,8.72,1.96,z+2.62,m.glass);wall(6.55,.045,.045,8.72,2.62,z+2.62,m.steel);block(8.72,z+2.62,6.55,.15);}
    block(5.45,z-.35,.16,3.85);

@@ -1006,7 +1006,7 @@ Persistir notas y ejes del Corcho en un archivo privado independiente, autorizad
 Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.
 
 - Tipo: interfaz. Dominio: Operación. Responsable: Dirección técnica.
-- Evidencia: codigo. Producción: Última entrega técnica comprobada: Portal PR 117 / main 264d2cdee87fb7a2c0a40b81d065f32bc0643bb0, Pages 37582743970. Puesto y recibos validados con pruebas sintéticas; entrada pública real sin sesión comprobada. Micrófono físico y edición de expediente privado pendientes. Corrección de reconexión 105 sólo en rama, sin publicar..
+- Evidencia: codigo. Producción: Portal PR118 / main821b1e7 publicado y verificado automáticamente. Dirección reporta fallo real de voz y orientación; corrección106 en rama, pendiente de publicación y aceptación..
 - Entidades: caso, sesion, tablero, tarea, recibo.
 - Fuente de verdad: Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos..
 - Evidencia: [yod-portal/despacho3d/agent-workspace.mjs](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/agent-workspace.mjs) — Puesto compartido con PPP y ejecución de intención explícita; observar no otorga permisos..

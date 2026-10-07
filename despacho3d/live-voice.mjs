@@ -13,14 +13,14 @@ const NOTICES = {
 };
 export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   media = globalThis.navigator?.mediaDevices, Peer = globalThis.RTCPeerConnection, Stream = globalThis.MediaStream,
-  audio, onChange = () => {}, actions = null, onTranscript = () => {}, now = Date.now,
+  audio, onChange = () => {}, canOperate = () => true, actions = null, onTranscript = () => {}, now = Date.now,
   schedule = setInterval, cancel = clearInterval, closeTimeout = 20000, disconnectGrace = 12000, maxStatusFailures = 3, startTimeout = 60000, signallingTimeout = 90000} = {}) {
   let epoch = 0, stream = null, peer = null, channel = null, credential = null, sessionId = null,
     poll = null, controller = null, polling = false, closing = null, began = 0, started = false,
     contextReady = false, finalSeen = false, disconnected = false, closedResolve = null, sequence = 0,
     disconnectTimer = null, statusFailures = 0, connectedAt = 0, prepared = null, preparing = null, mode = null, startTimer = null, retryingContext = false, interruptionId = null;
   let state = {phase: 'idle', notice: '', muted: false, fragments: 0, blocks: 0, saved: 0, pending: 0,
-    incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, mode: null, output_paused:false, interruption_pending:false};
+    incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, input_detected:false, input_received:false, mode: null, output_paused:false, interruption_pending:false};
   const seen = new Set();
   const publish = patch => {state = {...state, ...patch}; onChange({...state});};
   async function post(path, data, current = credential, signal) {
@@ -40,7 +40,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     clearTimeout(disconnectTimer); disconnectTimer = null;
     if (channel) {channel.onmessage = channel.onopen = channel.onclose = null; channel.close?.();} channel = null;
     if (peer) {peer.ontrack = peer.onconnectionstatechange = null; peer.close();} peer = null;
-    stream?.getTracks().forEach(track => track.stop()); stream = null;
+    stream?.getTracks().forEach(track => {track.onended=null;track.stop();}); stream = null;
     if (audio) {audio.pause?.(); audio.srcObject = null;audio.muted=false;}
     interruptionId=null;
   }
@@ -64,7 +64,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   }
   const report = result => publish({fragments: result.fragments, blocks: result.blocks, saved: result.saved,
     pending: result.pending, incomplete: state.incomplete || result.incomplete === true});
-  const ready = (notice = 'Habla con el autón. Puedes interrumpirlo al hablar.') => {
+  const ready = (notice = 'Conexión lista. Puedes hablar.') => {
     if (closing || !started || state.phase !== 'starting') return;
     clearTimeout(startTimer); startTimer = null;
     stream?.getAudioTracks().forEach(track => {track.enabled = !state.muted;});
@@ -111,10 +111,15 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
       const result = await post('/voice/status', {session_id: sessionId}, credential, AbortSignal.timeout(12000));
       if (token !== epoch || closing) return;
       statusFailures = 0; publish({status_pending: false});
+      // The observer can receive session.started before the browser attaches its primary channel.
+      // Only this authenticated response for the current opaque session may reconcile that event.
+      if (result.active === true && result.started === true && Number.isFinite(result.expires_at) &&
+          now() < result.expires_at && peer?.connectionState === 'connected' && channel?.readyState === 'open')
+        started = true;
       report(result); contextReady = result.context_ready === true; ready();
       publish({context_phase:result.context_phase||'preparing',context_attempts:result.context_attempts||0,context_error:result.context_error||null,tools_ready:result.tools_ready===true,documents_ready:result.documents_ready===true,tasks_ready:result.tasks_ready===true,actions_pending:result.actions?.length||0});
-      if(result.tools_ready&&actions&&credential){const auth=credential,id=sessionId,own=epoch;
-        actions.consume(result.actions,{caseId:auth.case_id,active:()=>epoch===own&&!closing&&started&&['listening','reconnecting','starting'].includes(state.phase),post:(path,data)=>post(path,{session_id:id,...data},auth,AbortSignal.timeout(15000))});
+      if(result.tools_ready&&actions&&credential&&canOperate()){const auth=credential,id=sessionId,own=epoch;
+        actions.consume(result.actions,{caseId:auth.case_id,active:()=>epoch===own&&!closing&&started&&canOperate()&&['listening','reconnecting','starting'].includes(state.phase),post:(path,data)=>post(path,{session_id:id,...data},auth,AbortSignal.timeout(15000))});
       }
       if (!result.active || now() >= result.expires_at) void stop('La sesión terminó. Puedes iniciar otra.');
       else if (state.phase === 'starting' && connectedAt && now() - connectedAt > 60000) void stop('No se confirmó el inicio. Vuelve a intentar.');
@@ -127,6 +132,16 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
       }
     }
     finally {if (token === epoch) polling = false;}
+  }
+  async function sampleInput(token) {
+    if(token!==epoch||closing||state.phase!=='listening'||state.muted||!peer?.getStats)return;
+    try{
+      const reports=await peer.getStats();
+      if(token!==epoch||closing)return;
+      let detected=false;
+      reports.forEach(report=>{if(report.type==='media-source'&&report.kind==='audio'&&report.audioLevel>.01)detected=true;});
+      if(detected&&!state.input_detected)publish({input_detected:true});
+    }catch{/* Missing browser statistics do not interrupt the call. */}
   }
   async function playAudio() {
     const token = epoch, remote = audio?.srcObject;
@@ -157,7 +172,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     interruptionId=null;
     mode = null; started = contextReady = finalSeen = disconnected = false; seen.clear(); sequence = 0; polling = false; statusFailures = 0; connectedAt = 0;
     publish({phase: 'starting', notice: 'Abriendo el micrófono…', fragments: 0, blocks: 0, saved: 0,
-      pending: 0, incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, output_paused:false,interruption_pending:false, mode: null,context_phase:'preparing',context_attempts:0,context_error:null,tools_ready:false,documents_ready:false,tasks_ready:false,actions_pending:0});
+      pending: 0, incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, output_paused:false,interruption_pending:false, mode: null,input_detected:false,input_received:false,context_phase:'preparing',context_attempts:0,context_error:null,tools_ready:false,documents_ready:false,tasks_ready:false,actions_pending:0});
     try {
       if (typeof media?.getUserMedia !== 'function' || typeof Peer !== 'function' || !audio)
         throw Error('Este navegador no admite voz en tiempo real.');
@@ -166,7 +181,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
       const auth = ensureCredential(caseId).then(value => ({value}), error => ({error}));
       const captured = await media.getUserMedia({audio: {echoCancellation: true, noiseSuppression: true}, video: false});
       if (token !== epoch || closing) {captured.getTracks().forEach(track => track.stop()); return false;}
-      stream = captured;
+      stream = captured;publish({notice:'Micrófono disponible. Preparando acceso al proyecto…'});
       const minted = await auth;
       if (token !== epoch || closing) return false;
       if (minted.error) throw minted.error;
@@ -180,7 +195,11 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
         audio.srcObject = remote;
         void playAudio();
       };
-      for (const track of stream.getAudioTracks()) {track.enabled = false; peer.addTrack(track, stream);}
+      for (const track of stream.getAudioTracks()) {
+        track.enabled = false;
+        track.onended=()=>{if(token===epoch&&!closing)void stop('El micrófono dejó de estar disponible. Revisa el dispositivo y vuelve a intentar.');};
+        peer.addTrack(track, stream);
+      }
       channel = peer.createDataChannel('oai-events');
       channel.onmessage = event => {
         if (token !== epoch) return;
@@ -189,6 +208,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
         const fragment = transcriptFragment(value, sequence++);
         if (fragment && (!fragment.event_id || !seen.has(fragment.event_id))) {
           if (fragment.event_id) seen.add(fragment.event_id);
+          if(fragment.role==='user'&&!state.input_received)publish({input_received:true});
           onTranscript(fragment);
         }
         if(value.type==='session.instructions.appended'&&value.client_event_id===interruptionId){interruptionId=null;publish({interruption_pending:false});}
@@ -255,7 +275,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
         startTimer = null;
         if (token === epoch && !started && !closing) void stop('No se confirmó el inicio de voz. Puedes volver a intentar.');
       }, startTimeout);
-      poll = schedule(() => {void status(token);}, 2000); void status(token);
+      poll = schedule(() => {void status(token);void sampleInput(token);}, 2000); void status(token);
       return true;
     } catch (error) {
       if (token === epoch && !closing) {

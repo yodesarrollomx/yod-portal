@@ -14,7 +14,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
    if(!location.pathname.endsWith('/despacho3d/index.html'))return;
    let selection=null,observation={phase:'unauthorized',case_id:null,work:null};
    const states=new Set(),profiles=new Set(),works=new Set();
-   const state=()=>({phase:selection?'observe':'unauthorized',prepared:true,selection});
+   const state=()=>({phase:selection?'observe':'unauthorized',prepared:true,checked_at:Date.now(),selection});
    window.YodResidentAgents={getSelection:()=>selection,getProfile:()=>selection?.avatar||null,snapshot:state,subscribe(fn){states.add(fn);fn(state());return()=>states.delete(fn);},subscribeProfile(fn){profiles.add(fn);fn(selection?.avatar||null);return()=>profiles.delete(fn);},openForCase(id){return window.YodAgentMenu.openForCase(id);}};
    window.YodWorkObserver={snapshot:()=>observation,subscribe(fn){works.add(fn);fn(observation);return()=>works.delete(fn);},refresh:async()=>{}};
    window.__observe=value=>{observation=value;for(const fn of works)fn(value);};
@@ -60,6 +60,18 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   assert.ok(chrome.header<=61,'the office header must stay on one compact row');
   if(variant!=='fallback')assert.equal(chrome.inside,true,'project identity and primary action must share one card');
   assert.equal(await frame.locator('[data-entry-detail]').textContent(),'Revisando fuentes · prueba');
+  if(variant!=='fallback'){
+   const alignment=await frame.evaluate(()=>{
+    const avatar=window.despacho.scene.children.find(o=>o.name==='avatar');
+    return {position:avatar.position.toArray(),rotation:avatar.rotation.y};
+   });
+   assert.deepEqual(alignment.position,[7,0,-6.25]);assert.equal(alignment.rotation,Math.PI);
+   await frame.evaluate(async()=>{await window.despacho.visit('case');window.despacho.camera.position.set(9,2.8,-4.4);window.despacho.camera.lookAt(7,1,-7.1);});
+   await page.waitForTimeout(300);
+   await page.screenshot({path:path.join(out,'puesto-alineado-'+variant+'.png')});
+   console.log('STATION_ALIGNMENT_'+variant+':'+(await page.screenshot({type:'jpeg',quality:80})).toString('base64'));
+   await frame.evaluate(()=>window.despacho.setMode('overview'));
+  }
   await frame.locator('#case-open').focus();await page.keyboard.press('Enter');
   await frame.locator('.workspace-board iframe[src*="open=synthetic-A"]').waitFor();
   assert.equal(await frame.locator('[data-tab="ppp"]').getAttribute('aria-pressed'),'true');
@@ -89,12 +101,13 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await page.screenshot({path:path.join(out,'entrada-'+variant+'-puesto-prueba.png')});
   console.log('ENTRY_STATION_'+variant+':'+(await page.screenshot({type:'jpeg',quality:75})).toString('base64'));
   await frame.evaluate(()=>window.__select('B'));
-  await frame.locator('.realtime-dialog').waitFor({state:'hidden'});
+  await frame.locator('#station-reconnect').waitFor();
+  assert.equal(await frame.locator('.realtime-dialog').isVisible(),true);
   assert.equal(await board.evaluate(el=>el.isConnected),false);
   assert.equal(await frame.locator('[data-entry-detail]').textContent(),'','late work from A cannot appear for B');
-  await frame.locator('#case-open').click();await frame.locator('.workspace-board iframe[src*="open=synthetic-B"]').waitFor();
+  await frame.locator('#station-reconnect').click();await frame.locator('.workspace-board iframe[src*="open=synthetic-B"]').waitFor();
   assert.match(await frame.locator('#voice-title').textContent(),/Autón B/);
-  await frame.evaluate(()=>window.__select(null));await frame.locator('.realtime-dialog').waitFor({state:'hidden'});
+  await frame.evaluate(()=>window.__select(null));await frame.locator('#station-reconnect').waitFor();assert.equal(await frame.locator('.realtime-dialog').isVisible(),true);
   assert.equal(await frame.locator('#case-open').isDisabled(),true);
   assert.equal(await frame.locator('.workspace-board iframe').count(),0);
   assert.equal(await frame.locator('[data-entry-detail]').textContent(),'');

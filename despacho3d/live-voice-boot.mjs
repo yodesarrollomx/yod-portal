@@ -1,6 +1,7 @@
+import {residentAccessDecision} from './resident-agents.mjs?v=2';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=2';
 import {stationIdentity} from './project-station.mjs?v=2';
-import {createLiveVoice} from './live-voice.mjs?v=10';
+import {createLiveVoice} from './live-voice.mjs?v=11';
 import {voiceView} from './voice-view.mjs?v=2';
 import {createWorkspace} from './agent-workspace.mjs?v=12';
 import {DurableGoals,watchGoals} from './goals.mjs?v=2';
@@ -13,10 +14,11 @@ if (open) {
   dialog.className = 'realtime-dialog has-workspace'; dialog.setAttribute('aria-labelledby','voice-title');
   // Private dynamic text always uses textContent.
   dialog.innerHTML = '<div class="station-heading"><button class="voice-close" aria-label="Volver al despacho">← Despacho</button><button id="station-menu" aria-label="Opciones del personaje">◉</button></div>' +
+    '<p id="station-access" role="status" hidden></p><button id="station-reconnect" hidden>Reconectar puesto</button>' +
     '<p class="voice-eyebrow">Puesto del proyecto</p><h1 id="voice-title">Tu autón</h1><p id="voice-case">Comprobando proyecto…</p>' +
     '<section class="station-activity" aria-label="Trabajo actual"><small>AHORA</small><div id="voice-work">Consultando actividad…</div><p id="voice-task" role="status"></p><button id="voice-view-tasks">Ver pendientes</button><button id="voice-retry-actions" hidden>Comprobar acción pendiente</button></section>' +
     '<section class="voice-state-card" aria-labelledby="voice-connection-label"><h2 id="voice-connection-label">Conversación</h2><strong id="voice-phase">Disponible</strong><p id="voice-status" role="status">Habla cuando quieras.</p>' +
-    '<audio id="voice-audio" autoplay aria-label="Voz del autón"></audio><button id="voice-play" hidden>Activar sonido</button>' +
+    '<p id="voice-input" role="status"></p><audio id="voice-audio" autoplay aria-label="Voz del autón"></audio><button id="voice-play" hidden>Activar sonido</button>' +
     '<div class="voice-actions"><button id="voice-start" disabled>Hablar</button><button id="voice-interrupt" hidden>Escúchame</button><button id="voice-stop" hidden disabled>Finalizar</button></div>' +
     '<details class="voice-options"><summary>Audio y conexión</summary><button id="voice-mute" disabled>Silenciar micrófono</button><p class="voice-note">Voz generada por IA.</p>' +
     '<p id="voice-context" role="status">El expediente se comprueba al conectar.</p><button id="voice-retry-context" hidden>Recuperar expediente</button></details></section>' +
@@ -41,7 +43,7 @@ if (open) {
   compact.addEventListener('change',arrangeStation);arrangeStation();
   window.addEventListener('pagehide',()=>compact.removeEventListener('change',arrangeStation));
   const node = id => dialog.querySelector('#' + id);
-  const fragments = []; let selection = null, generation = 0, dismissing = false, transcriptCase = null, freshTranscript = false, previousFocus = null, voiceCaseId = null;
+  const fragments = []; let selection = null, generation = 0, dismissing = false, transcriptCase = null, freshTranscript = false, previousFocus = null, voiceCaseId = null, accessPaused = false;
   const agentName=()=>selection?stationIdentity(selection).name:'Autón';
   const visibility=value=>window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:value}));
   const setText = (id,text) => {if(node(id).textContent!==text)node(id).textContent=text;};
@@ -81,7 +83,7 @@ if (open) {
   node('station-refresh').addEventListener('click',()=>void(chat.selection?chat.refresh():chat.open()));
   chatTimer=setInterval(()=>{if(dialog.open&&!document.hidden&&dialog.querySelector('.station-chat').open&&chat.selection&&!chat.busy&&!active(voice.snapshot()))void chat.refresh();},12000);
   window.addEventListener('pagehide',()=>{clearInterval(chatTimer);chat.close();stopWatching?.();});
-  const voice = createLiveVoice({actions:actionExecutor,audio: node('voice-audio'), mint: value => transport.mintFastSession(value),
+  const voice = createLiveVoice({canOperate:()=>!accessPaused&&!!selection,actions:actionExecutor,audio: node('voice-audio'), mint: value => transport.mintFastSession(value),
     onChange: renderVoiceState,
     onTranscript: fragment => {
       if(selection?.case_id===voiceCaseId)renderTranscript(fragment);
@@ -95,13 +97,14 @@ if (open) {
       setText('voice-phase',view.title);
       if(dialog.open&&selection?.goals?.ready&&!stopWatching)stopWatching=watchGoals(goalReader,{visible:()=>dialog.open&&!document.hidden&&!voice.snapshot().actions_pending});
       setText('voice-status',state.notice);
+      setText('voice-input',state.phase!=='listening'?'':state.muted?'Micrófono en pausa.':state.input_received?'Tu voz está llegando a la conversación.':state.input_detected?'Tu micrófono detecta sonido. Aún no recibimos palabras.':'Micrófono abierto. Aún no recibimos palabras.');
       setText('voice-context',view.context);
-      if(state.context_phase==='ready'&&dialog.open)workspace.setActive(true);
+      if(state.context_phase==='ready'&&dialog.open&&!accessPaused)workspace.setActive(true);
       node('voice-retry-context').hidden=!view.retryContext;
       node('voice-retry-context').disabled=state.context_retry_pending===true;
       node('voice-play').hidden=!view.audioBlocked;
       node('voice-start').hidden=live;
-      node('voice-start').disabled=live||!selection?.can_enqueue;
+      node('voice-start').disabled=live||accessPaused||!selection?.can_enqueue;
       setText('voice-start',state.phase==='error'?'Volver a intentar':'Hablar');
       node('voice-interrupt').hidden=!view.listening;
       setText('voice-interrupt',state.output_paused?'Volver a escuchar':'Escúchame');
@@ -135,13 +138,13 @@ if (open) {
     const currentSelection=window.YodResidentAgents?.getSelection?.();
     if(active(voice.snapshot())&&voiceCaseId!==currentSelection?.case_id)return false;
     if(caseId&&(!currentSelection||currentSelection.case_id!==caseId))return false;
-    if(dialog.open){
+    if(dialog.open&&selection){
       if(caseId&&selection?.case_id!==caseId)return false;
       workspace.setTab(tab);
       if(startVoice)begin();
       return true;
     }
-    previousFocus=document.activeElement;dialog.showModal();visibility(true);dialog.querySelector('.voice-transcript-details').hidden=true;node('voice-previous').hidden=true;
+    if(!dialog.open){previousFocus=document.activeElement;dialog.showModal();visibility(true);}accessPaused=false;node('station-access').hidden=true;node('station-reconnect').hidden=true;dialog.querySelector('.voice-transcript-details').hidden=true;node('voice-previous').hidden=true;
     const current = ++generation; selection = null; node('voice-start').disabled = true;
     node('voice-status').textContent = 'Validando tu acceso a la voz…';
     try {
@@ -168,7 +171,7 @@ if (open) {
   }
   open.addEventListener('click',()=>void openForCase(window.YodResidentAgents?.getSelection?.()?.case_id,workspace.getTab(),{startVoice:true}));
   function begin() {
-    if(!selection?.can_enqueue||active(voice.snapshot()))return;
+    if(accessPaused||!selection?.can_enqueue||active(voice.snapshot()))return;
     const previous=voice.snapshot();
     if(previous.pending||previous.incomplete||previous.status_pending){
       setText('voice-previous','Al cerrar la conversación anterior quedó un guardado sin confirmar. Revisa el historial antes de repetir sus encargos.');
@@ -206,6 +209,15 @@ if (open) {
   window.addEventListener('pagehide', () => {generation++; voice.abandon();workspace.dispose();delete window.YodVoiceWorkspace;});
   // Visibility alone is not a hangup; mobile permission prompts and app switching can hide the page.
   document.addEventListener('visibilitychange', () => {if (!document.hidden) void voice.refresh();});
+  node('station-reconnect').addEventListener('click',async()=>{
+    node('station-reconnect').disabled=true;
+    try{
+      const resident=window.YodResidentAgents;await resident?.refresh?.();
+      const fresh=resident?.getSelection?.();
+      if(fresh)await openForCase(fresh.case_id,workspace.getTab());
+      else setText('station-access','Todavía no se pudo validar el acceso. Puedes volver a intentar desde este puesto.');
+    }finally{node('station-reconnect').disabled=false;}
+  });
   let boundResident=null,unbind=null,warming=null;
   function bindResident() {
     const resident=window.YodResidentAgents;
@@ -213,12 +225,26 @@ if (open) {
     unbind?.();boundResident=resident;
     unbind=resident.subscribe(state=>{
       const s=resident.getSelection();
-      if(selection&&(!s||s.case_id!==selection.case_id)){
+      const access=residentAccessDecision(state,selection);
+      if(access==='recovering'){
+        accessPaused=true;workspace.setActive(false);
+        setText('station-access','Recuperando acceso al proyecto. El puesto permanece abierto; las operaciones nuevas están en pausa.');
+        node('station-access').hidden=false;node('voice-start').disabled=true;
+        return;
+      }
+      if(access==='current'&&accessPaused){
+        accessPaused=false;selection=s;node('station-access').hidden=true;node('station-reconnect').hidden=true;
+        workspace.setActive(dialog.open);renderVoiceState(voice.snapshot());
+      }
+      if(access==='lost'){
         generation++;selection=null;stopWatching?.();stopWatching=null;goalReader.hide();chat.close();workspace.reset();workspace.setActive(false);
         fragments.length=0;freshTranscript=false;node('voice-transcript').replaceChildren();node('voice-work').replaceChildren();node('voice-task').textContent='';
         node('voice-download').disabled=true;node('voice-start').disabled=true;node('voice-previous').hidden=true;node('voice-audio').muted=true;
-        setText('voice-case','El acceso al expediente cambió.');
-        void voice.stop().finally(()=>{if(!selection&&dialog.open){dialog.close();visibility(false);}});
+        setText('voice-case','El acceso al expediente cambió.');setText('voice-title','Tu autón');node('station-message').value='';node('station-messages').replaceChildren();
+        accessPaused=true;
+        setText('station-access',state.phase==='unauthorized'?'Tu acceso al proyecto dejó de ser válido. El contenido privado se retiró. Reconecta el puesto para continuar.':'No pudimos renovar el acceso al proyecto. La voz se detuvo y el contenido privado se retiró; puedes reconectar aquí.');
+        node('station-access').hidden=false;node('station-reconnect').hidden=false;
+        void voice.stop();
       }
       if(!s?.can_enqueue||state.prepared||warming===s.case_id)return;
       warming=s.case_id;
