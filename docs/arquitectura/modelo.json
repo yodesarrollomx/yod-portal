@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.112-escucha-local",
+  "revision": "2026-10-07.113-entrada-y-control-voz",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -2717,7 +2717,7 @@
       "dominio": "Operación",
       "proposito": "Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.",
       "source_of_truth": "Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos.",
-      "runtime_status": "Encuentro108 publicado. Voz discreta111 propuesta: precarga a 5 m, conversación compacta por cercanía y PPP sólo al abrir el puesto explícitamente. Latencia de proveedor y contexto se miden por separado.",
+      "runtime_status": "Voz112 publicada por PR127 y Pages con checks automáticos. Primera conexión e interrupción aún fallan según Dirección; entrada113 propuesta. PPP original embebido; aceptación real conjunta pendiente.",
       "evidence": [
         {
           "repo": "yodesarrollomx/yod-portal",
@@ -9418,6 +9418,28 @@
       ],
       "deployment": "Implementado en rama: atenuación acústica local con ataque 120 ms, salida tras 480 ms de silencio y tope de 8 s ante ruido sostenido; diagnóstico acumulado de conexión dentro de Audio y conexión. Pruebas y publicación pendientes. No afirma cancelación semántica del proveedor ni latencia física medida.",
       "rollback": "Revertir únicamente este PR del portal. Sin cambios a Apps Script, configuración de OpenAI ni datos."
+    },
+    {
+      "id": "CHG-DESPACHO-ENTRADA-VOZ-113",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD",
+        "SYS-POTENCIALES"
+      ],
+      "proposal": "Preparar credencial y WebRTC al entrar y mantener una preparación acotada por proyecto; impedir solicitudes de preparación duplicadas o recuperación sin pausa. Hacer Escúchame accesible en la cápsula y durante conexión/reconexión, conservar el silencio solicitado al llegar audio tardío y distinguir desconexión de pausa. Revisar el disparo por cercanía y las afirmaciones de presencia contra hechos observados. Continuar con el PPP original y su confirmación compartida, conservando la misma voz y las revisiones canónicas.",
+      "status": "propuesto",
+      "approval": "Dirección solicita corregir primera conexión/interrupción, preparar desde la entrada y continuar punto 2, 7-oct-2026.",
+      "tests": [
+        "Entrada visible prepara WebRTC sin capturar micrófono ni abrir sesiones de proveedor; llamadas concurrentes comparten preparación y fallos no generan bucle.",
+        "Escúchame durante conexión y reconexión silencia inmediatamente, no termina tareas ni sesión, y conserva la intención tras session.started.",
+        "Errores de voz permanecen visibles, se puede reintentar, y el inicio conserva el expediente elegido.",
+        "PPP compartido: abrir y minimizar no crea otra voz; guardado sin confirmación no se anuncia como confirmado; revisión compartida se comunica cuando está disponible.",
+        "Regresión completa Node y navegador; separar evidencia sintética de aceptación física."
+      ],
+      "deployment": "Propuesta previa a implementación. Voz112 publicada, fallo de primera conversación reportado por Dirección. La transcripción confirma inicio manual y una afirmación de presencia no sustentada; causa del servidor aún por comprobar.",
+      "rollback": "Revertir este PR del portal y, si se modifica el motor, desplegar su commit anterior. Sin cambios de datos de negocio ni a la configuración inicial de GPT-Live."
     }
   ],
   "data_contracts": [

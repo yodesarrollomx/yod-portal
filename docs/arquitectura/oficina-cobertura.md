@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-07.112-escucha-local
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-07.113-entrada-y-control-voz
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -993,7 +993,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dirección técnica
 
-**Estado registrado:** codigo. Encuentro108 publicado. Voz discreta111 propuesta: precarga a 5 m, conversación compacta por cercanía y PPP sólo al abrir el puesto explícitamente. Latencia de proveedor y contexto se miden por separado.
+**Estado registrado:** codigo. Voz112 publicada por PR127 y Pages con checks automáticos. Primera conexión e interrupción aún fallan según Dirección; entrada113 propuesta. PPP original embebido; aceptación real conjunta pendiente.
 
 **Entradas registradas:**
 
