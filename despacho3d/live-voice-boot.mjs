@@ -1,6 +1,6 @@
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=2';
 import {stationIdentity} from './project-station.mjs?v=2';
-import {createLiveVoice} from './live-voice.mjs?v=9';
+import {createLiveVoice} from './live-voice.mjs?v=10';
 import {voiceView} from './voice-view.mjs?v=2';
 import {createWorkspace} from './agent-workspace.mjs?v=12';
 import {DurableGoals,watchGoals} from './goals.mjs?v=2';

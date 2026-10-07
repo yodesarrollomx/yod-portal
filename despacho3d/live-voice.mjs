@@ -64,11 +64,11 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   }
   const report = result => publish({fragments: result.fragments, blocks: result.blocks, saved: result.saved,
     pending: result.pending, incomplete: state.incomplete || result.incomplete === true});
-  const ready = () => {
-    if (!started || state.phase !== 'starting') return;
+  const ready = (notice = 'Habla con el autón. Puedes interrumpirlo al hablar.') => {
+    if (closing || !started || state.phase !== 'starting') return;
     clearTimeout(startTimer); startTimer = null;
     stream?.getAudioTracks().forEach(track => {track.enabled = !state.muted;});
-    publish({phase: 'listening', notice: 'Habla con el autón. Puedes interrumpirlo al hablar.'});
+    publish({phase: 'listening', notice});
   };
   function stop(notice = 'Conversación finalizada.') {
     if (closing) return closing;
@@ -207,6 +207,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
         void stop('Finalización incompleta: la conexión se interrumpió.');};
       channel.onclose = lost; channel.onopen = () => {if (token === epoch) void status(token);};
       peer.onconnectionstatechange = () => {
+        if (token !== epoch || closing || finalSeen) return;
         const connection = peer?.connectionState;
         if (connection === 'disconnected') {
           if (disconnectTimer === null) {
@@ -216,9 +217,9 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
         } else if (connection === 'connected') {
           clearTimeout(disconnectTimer); disconnectTimer = null;
           if (state.phase === 'reconnecting') {
-            publish({phase: started ? 'listening' : 'starting', notice: started ?
-              'Conexión recuperada. Sigue hablando con el autón.' : 'Preparando conversación…'});
-            ready();
+            // Run the same microphone transition even when session.started arrived while disconnected.
+            publish({phase: 'starting', notice: 'Preparando conversación…'});
+            ready('Conexión recuperada. Sigue hablando con el autón.');
           }
         } else if (['failed','closed'].includes(connection)) lost();
       };
@@ -246,6 +247,8 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
       return true;
     } catch (error) {
       if (token === epoch && !closing) {
+        // Forget only the temporary credential rejected by this attempt. A newer preparation must survive.
+        if (error?.code === 'unauthorized' && prepared === credential) prepared = null;
         if (sessionId) await stop();
         else {epoch++; release(); credential = null; publish({phase: 'error', notice: error?.name === 'NotAllowedError'
           ? 'Permite el micrófono en el navegador y pulsa Volver a intentar.' : error?.name === 'NotFoundError'

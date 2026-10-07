@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-10-07.105-voz-reconexion",
   "proposal_id": "CHG-DESPACHO-VOZ-105",
-  "summary": "Corregir dos fallos de recuperación de voz reproducidos con dobles locales: session.started recibido durante reconexión dejaba el micrófono desactivado al publicar escucha; /voice/session rechazado con 401 conservaba el token temporal y el siguiente intento explícito lo reutilizaba. Centralizar habilitación del micrófono al recuperar la conexión, respetar silencio voluntario y renovar sólo la credencial temporal rechazada en un intento posterior. No reiniciar sesiones automáticamente ni modificar JSON Live, contexto, datos de negocio o credencial de YOD OS. Actualizar URLs de módulos e importadores para que la entrega se pueda verificar en la publicación. No atribuir estos fallos al reporte anterior del usuario sin correlación; aceptación natural con micrófono físico pendiente.",
+  "summary": "Corregir dos fallos de recuperación de voz reproducidos con dobles locales: session.started recibido durante reconexión dejaba el micrófono desactivado al publicar escucha; /voice/session rechazado con 401 conservaba el token temporal y el siguiente intento explícito lo reutilizaba. Centralizar habilitación del micrófono al recuperar la conexión, respetar silencio voluntario y renovar sólo la credencial temporal rechazada en un intento posterior. No reiniciar sesiones automáticamente ni modificar JSON Live, contexto, datos de negocio o credencial de YOD OS. Actualizar URLs de módulos e importadores para que la entrega se pueda verificar en la publicación. No atribuir estos fallos al reporte anterior del usuario sin correlación; aceptación natural con micrófono físico pendiente. Durante finalización, ignorar cambios de conexión para conservar el micrófono cerrado y retener audio/transporte hasta session.closed.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
@@ -11,7 +11,8 @@
     "Regresión del orden starting → disconnected → session.started → connected: micrófono activo únicamente después del inicio confirmado y reconexión, sin nueva sesión.",
     "Reconexión conserva micrófono silenciado por el usuario y no reinicia trabajo.",
     "Rechazo de credencial temporal y siguiente intento explícito: mint nuevo, sin renovación automática; rechazo tardío de otro caso no elimina credencial nueva.",
-    "Node y verificadores requeridos, Chromium/WebKit pertinentes y versiones de publicación; audio físico se acredita por separado."
+    "Node y verificadores requeridos, Chromium/WebKit pertinentes y versiones de publicación; audio físico se acredita por separado.",
+    "Desconexión/reconexión mientras se espera session.closed conserva phase closing, micrófono apagado y transporte abierto."
   ],
   "rollback": "Revertir PR y referencias de caché; no modificar credenciales de YOD OS, registros ni sesiones de negocio."
 }
