@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.110-ppp-inmediato",
+  "revision": "2026-10-07.111-voz-discreta",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -2717,7 +2717,7 @@
       "dominio": "Operación",
       "proposito": "Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.",
       "source_of_truth": "Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos.",
-      "runtime_status": "Encuentro108 publicado y comprobado técnicamente en Pages, escritorio y móvil. PPP inmediato propuesto; retardo físico de interrupción y carga variable de contexto siguen separados.",
+      "runtime_status": "Encuentro108 publicado. Voz discreta111 propuesta: precarga a 5 m, conversación compacta por cercanía y PPP sólo al abrir el puesto explícitamente. Latencia de proveedor y contexto se miden por separado.",
       "evidence": [
         {
           "repo": "yodesarrollomx/yod-portal",
@@ -9378,6 +9378,27 @@
       ],
       "deployment": "PPP inicial, recuperación limitada de fuentes y conservación de iframe implementados en rama. Verificadores y navegador pendientes.",
       "rollback": "Revertir PR del portal; conserva datos, fórmulas y backend."
+    },
+    {
+      "id": "CHG-DESPACHO-VOZ-DISCRETA-111",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Separar encuentro de voz y puesto completo: el acercamiento muestra un control pequeño no modal, sin cargar el PPP. Abrir el puesto es una elección explícita y conserva la conversación; allí el PPP aparece de entrada a la derecha. Preparar acceso, servidor y oferta WebRTC sin capturar audio a 5 m; reutilizarla al conversar a 0,40 m. Preparación por proyecto, en memoria, con vencimiento y liberación al alejarse. No crear una sesión OpenAI hasta iniciar conversación; no prometer conexión instantánea ni confundir precarga con micrófono activo.",
+      "status": "propuesto",
+      "approval": "Dirección corrige el alcance durante la revisión: voz discreta al acercarse, tablero sólo por elección y precarga a 5–10 metros; 7-oct-2026.",
+      "tests": [
+        "Precarga no pide micrófono, no crea sesión de voz ni abre tablero; deduplicación, caducidad y descarte por cambio de caso.",
+        "WebRTC usa la oferta preparada y mantiene pistas apagadas hasta inicio confirmado.",
+        "Encuentro no modal: indicador pequeño, permiso inicial explícito, expandir/minimizar conserva sesión y PPP.",
+        "Regresión de identidad, cierre con recibos y privacidad; navegador escritorio/móvil."
+      ],
+      "deployment": "Propuesta antes de código; PR123 se amplía por la corrección del usuario. PPP inmediato aún sin publicar.",
+      "rollback": "Revertir PR123 del portal; no cambia backend, Apps Script, fórmulas ni datos de negocio."
     }
   ],
   "data_contracts": [

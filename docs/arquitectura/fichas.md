@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-07.110-ppp-inmediato · 2026-10-07.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-07.111-voz-discreta · 2026-10-07.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -1006,7 +1006,7 @@ Persistir notas y ejes del Corcho en un archivo privado independiente, autorizad
 Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.
 
 - Tipo: interfaz. Dominio: Operación. Responsable: Dirección técnica.
-- Evidencia: codigo. Producción: Encuentro108 publicado y comprobado técnicamente en Pages, escritorio y móvil. PPP inmediato propuesto; retardo físico de interrupción y carga variable de contexto siguen separados..
+- Evidencia: codigo. Producción: Encuentro108 publicado. Voz discreta111 propuesta: precarga a 5 m, conversación compacta por cercanía y PPP sólo al abrir el puesto explícitamente. Latencia de proveedor y contexto se miden por separado..
 - Entidades: caso, sesion, tablero, tarea, recibo.
 - Fuente de verdad: Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos..
 - Evidencia: [yod-portal/despacho3d/agent-workspace.mjs](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/agent-workspace.mjs) — Puesto compartido con PPP y ejecución de intención explícita; observar no otorga permisos..

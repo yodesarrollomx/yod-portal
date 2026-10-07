@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-07.110-ppp-inmediato
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-07.111-voz-discreta
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -993,7 +993,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dirección técnica
 
-**Estado registrado:** codigo. Encuentro108 publicado y comprobado técnicamente en Pages, escritorio y móvil. PPP inmediato propuesto; retardo físico de interrupción y carga variable de contexto siguen separados.
+**Estado registrado:** codigo. Encuentro108 publicado. Voz discreta111 propuesta: precarga a 5 m, conversación compacta por cercanía y PPP sólo al abrir el puesto explícitamente. Latencia de proveedor y contexto se miden por separado.
 
 **Entradas registradas:**
 

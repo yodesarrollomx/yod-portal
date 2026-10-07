@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-07.110-ppp-inmediato",
-  "proposal_id": "CHG-DESPACHO-PPP-INMEDIATO-110",
-  "summary": "Abrir el PPP canónico como superficie inicial del puesto y de las entradas de conversación, visible a la derecha de la voz sin elegir otra pestaña. Recuperar automáticamente el vínculo si la primera lectura aún no lo devuelve, con reintentos limitados y sólo mientras el puesto está activo. Conservar iframe, tarjeta abierta, borrador, identidad y recibos durante la voz; no modificar fórmulas ni inventar proyectos.",
+  "model_revision": "2026-10-07.111-voz-discreta",
+  "proposal_id": "CHG-DESPACHO-VOZ-DISCRETA-111",
+  "summary": "Separar encuentro de voz y puesto completo: el acercamiento muestra un control pequeño no modal, sin cargar el PPP. Abrir el puesto es una elección explícita y conserva la conversación; allí el PPP aparece de entrada a la derecha. Preparar acceso, servidor y oferta WebRTC sin capturar audio a 5 m; reutilizarla al conversar a 0,40 m. Preparación por proyecto, en memoria, con vencimiento y liberación al alejarse. No crear una sesión OpenAI hasta iniciar conversación; no prometer conexión instantánea ni confundir precarga con micrófono activo.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO-3D",
@@ -10,10 +10,10 @@
     "EXT-DRIVE"
   ],
   "tests": [
-    "Entrada directa de voz abre PPP sin elegir pestaña ni Abrir tablero.",
-    "Fuente inicialmente ausente recupera el iframe sin pulsar Actualizar conexión; reintentos limitados y sin lecturas ocultas.",
-    "Mismo iframe y borrador durante conversación y pestañas; autorización y cambio de caso conservados.",
-    "Verificadores y navegador de escritorio/móvil."
+    "Precarga no pide micrófono, no crea sesión de voz ni abre tablero; deduplicación, caducidad y descarte por cambio de caso.",
+    "WebRTC usa la oferta preparada y mantiene pistas apagadas hasta inicio confirmado.",
+    "Encuentro no modal: indicador pequeño, permiso inicial explícito, expandir/minimizar conserva sesión y PPP.",
+    "Regresión de identidad, cierre con recibos y privacidad; navegador escritorio/móvil."
   ],
-  "rollback": "Revertir PR del portal; conserva datos, fórmulas y backend."
+  "rollback": "Revertir PR123 del portal; no cambia backend, Apps Script, fórmulas ni datos de negocio."
 }
