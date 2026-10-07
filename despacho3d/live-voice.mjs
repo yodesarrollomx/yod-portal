@@ -1,5 +1,5 @@
 import {createLocalInputMonitor} from './voice-input-monitor.mjs?v=1';
-import {createVoicePreparation} from './voice-preparation.mjs?v=1';
+import {createVoicePreparation} from './voice-preparation.mjs?v=2';
 import {validateFastSession} from './fast-lane.mjs';
 import {transcriptFragment} from './live-transcript.mjs';
 
@@ -21,7 +21,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   let epoch = 0, stream = null, peer = null, channel = null, credential = null, sessionId = null,
     poll = null, controller = null, polling = false, closing = null, began = 0, started = false,
     contextReady = false, finalSeen = false, disconnected = false, closedResolve = null, sequence = 0,
-    disconnectTimer = null, statusFailures = 0, connectedAt = 0, prepared = null, preparing = null, mode = null, startTimer = null, retryingContext = false, interruptionId = null;
+    disconnectTimer = null, statusFailures = 0, connectedAt = 0, prepared = null, preparing = null, mode = null, startTimer = null, retryingContext = false, interruptionId = null, helloFlight = null, helloReady = null, preparationEpoch = 0, activeCaseId = null, pendingBoard = null, boardFlight = null, boardSent = null, boardRetryAt = 0;
   let state = {phase: 'idle', notice: '', muted: false, fragments: 0, blocks: 0, saved: 0, pending: 0,
     incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, input_detected:false, input_received:false, mode: null, output_paused:false, interruption_pending:false, local_speaking:false, timings:{}};
   const timing = key => {if(!Object.hasOwn(state.timings,key))publish({timings:{...state.timings,[key]:Math.max(0,now()-began)}});};
@@ -44,6 +44,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     if (poll !== null) cancel(poll); poll = null;
     clearTimeout(startTimer); startTimer = null;
     clearTimeout(disconnectTimer); disconnectTimer = null;
+    boardFlight=null;
     if (channel) {channel.onmessage = channel.onopen = channel.onclose = null; channel.close?.();} channel = null;
     if (peer) {peer.ontrack = peer.onconnectionstatechange = null; peer.close();} peer = null;
     stream?.getTracks().forEach(track => {track.onended=null;track.stop();}); stream = null;
@@ -53,21 +54,35 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   async function ensureCredential(caseId) {
     if (prepared?.case_id === caseId && prepared.expires_at - now() > 60000) return prepared;
     if (preparing?.caseId === caseId) return preparing.promise;
+    const own = preparationEpoch;
     const promise = Promise.resolve().then(() => mint({case_id: caseId}))
       .then(raw => validateFastSession(raw, caseId, now()));
     preparing = {caseId, promise};
-    try {const value = await promise; prepared = value; return value;}
+    try {const value = await promise; if (own === preparationEpoch) prepared = value; return value;}
     finally {if (preparing?.promise === promise) preparing = null;}
   }
   async function prepare(caseId,{connection=false}={}) {
-    try {
-      if(connection&&!closing&&['idle','error'].includes(state.phase))void preparation.warm(caseId);
-      const value = await ensureCredential(caseId);
-      const response = await fetchImpl(value.endpoint + '/fast/hello', {headers: {Authorization: 'Bearer ' + value.token},
-        cache: 'no-store', credentials: 'omit', signal: AbortSignal.timeout(15000)});
-      if (response.status === 401) {prepared = null; return false;}
-      return response.ok;
-    } catch {return false;}
+    if(connection&&!closing&&['idle','error'].includes(state.phase))void preparation.warm(caseId);
+    if(helloFlight?.caseId===caseId)return helloFlight.promise;
+    if(helloReady?.caseId===caseId&&now()-helloReady.at<30000)return true;
+    const own=preparationEpoch;
+    const promise=(async()=>{
+      try{
+        const value=await ensureCredential(caseId);
+        if(own!==preparationEpoch)return false;
+        const response=await fetchImpl(value.endpoint+'/fast/hello',{headers:{Authorization:'Bearer '+value.token},
+          cache:'no-store',credentials:'omit',signal:AbortSignal.timeout(15000)});
+        if(own!==preparationEpoch)return false;
+        if(response.status===401||response.status===403){if(prepared===value)prepared=null;return false;}
+        if(response.ok)helloReady={caseId,at:now()};
+        return response.ok;
+      }catch{return false;}
+    })();
+    helloFlight={caseId,promise};
+    try{return await promise;}finally{if(helloFlight?.promise===promise)helloFlight=null;}
+  }
+  function discardPreparation(){
+    preparationEpoch++;preparation.discard();prepared=null;preparing=null;helloReady=null;helloFlight=null;
   }
   const report = result => publish({fragments: result.fragments, blocks: result.blocks, saved: result.saved,
     pending: result.pending, incomplete: state.incomplete || result.incomplete === true});
@@ -76,7 +91,8 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     clearTimeout(startTimer); startTimer = null;
     stream?.getAudioTracks().forEach(track => {track.enabled = !state.muted;});
     timing('listening_ms');
-    publish({phase: 'listening', notice});
+    publish({phase: 'listening', notice:state.output_paused?'Sonido pausado. Te escucho.':notice});
+    sendListeningIntent();
     if(!inputMonitor)inputMonitor=monitorFactory({stream,enabled:()=>state.phase==='listening'&&!state.muted&&canOperate(),onActivity:value=>{
       if(state.phase!=='listening'||closing)value=false;
       audio.muted=state.output_paused||value;
@@ -87,7 +103,9 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     if (closing) return closing;
     if (!stream && !sessionId && state.phase !== 'starting') return Promise.resolve(state);
     inputMonitor?.close();inputMonitor=null;
-    publish({phase: 'closing', notice: 'Finalizando conversación y comprobando el historial…'});
+    publish({phase: 'closing', local_speaking:false, notice: 'Finalizando conversación y comprobando el historial…'});
+    // Silence immediately; keep transport and transcripts alive until finalization.
+    if(audio)audio.muted=true;
     stream?.getAudioTracks().forEach(track => {track.enabled = false;}); // Silence; retain tracks and playback until final event.
     clearTimeout(disconnectTimer); disconnectTimer = null;
     controller?.abort(); controller = null;
@@ -131,7 +149,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
           now() < result.expires_at && peer?.connectionState === 'connected' && channel?.readyState === 'open')
         started = true;
       report(result); contextReady = result.context_ready === true; ready();
-      if(contextReady)timing('context_ms');
+      if(contextReady){timing('context_ms');void flushBoard();}
       publish({context_phase:result.context_phase||'preparing',context_attempts:result.context_attempts||0,context_error:result.context_error||null,tools_ready:result.tools_ready===true,documents_ready:result.documents_ready===true,tasks_ready:result.tasks_ready===true,actions_pending:result.actions?.length||0});
       if(result.tools_ready&&actions&&credential&&canOperate()){const auth=credential,id=sessionId,own=epoch;
         actions.consume(result.actions,{caseId:auth.case_id,active:()=>epoch===own&&!closing&&started&&canOperate()&&['listening','reconnecting','starting'].includes(state.phase),post:(path,data)=>post(path,{session_id:id,...data},auth,AbortSignal.timeout(15000))});
@@ -185,7 +203,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   }
   async function start(caseId,{encounter=false}={}) {
     if (closing || !['idle','error'].includes(state.phase)) return false;
-    const token = ++epoch; controller = new AbortController(); began = now();
+    const token = ++epoch; controller = new AbortController(); began = now();activeCaseId=caseId;boardSent=null;boardRetryAt=0;
     interruptionId=null;
     mode = null; started = contextReady = finalSeen = disconnected = false; seen.clear(); sequence = 0; polling = false; statusFailures = 0; connectedAt = 0;
     publish({phase: 'starting', notice: 'Abriendo el micrófono…', fragments: 0, blocks: 0, saved: 0,
@@ -212,7 +230,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
         if (token !== epoch) return;
         const remote = event.streams?.[0] || (typeof Stream === 'function' && event.track ? new Stream([event.track]) : null);
         if (!remote) {publish({notice: 'Esperando el audio del proyecto…'});return;}
-        audio.srcObject = remote;
+        audio.srcObject = remote;audio.muted=state.output_paused||state.phase==='closing'||state.local_speaking;
         void playAudio();
       };
       for (const track of stream.getAudioTracks()) {
@@ -245,7 +263,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
       const lost = () => {if (token !== epoch || finalSeen) return;
         disconnected = true; closedResolve?.(false); publish({incomplete: true});
         void stop('Finalización incompleta: la conexión se interrumpió.');};
-      channel.onclose = lost; channel.onopen = () => {if (token === epoch) void status(token);};
+      channel.onclose = lost; channel.onopen = () => {if (token === epoch){sendListeningIntent();void status(token);}};
       peer.onconnectionstatechange = () => {
         if (token !== epoch || closing || finalSeen) return;
         const connection = peer?.connectionState;
@@ -327,38 +345,56 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
       if (token === epoch) {retryingContext=false;publish({context_retry_pending:false});}
     }
   }
-  async function notifyBoard(revision){
-    if(!credential||!sessionId||closing||!state.context_ready&&state.context_phase!=='ready')return false;
-    try{await post('/voice/board-change',{session_id:sessionId,revision},credential,AbortSignal.timeout(8000));return true;}catch{return false;}
+  async function notifyBoard(revision,caseId=activeCaseId){
+    if(typeof revision!=='string'||!revision||revision.length>256||!caseId)return false;
+    pendingBoard={caseId,revision};return flushBoard();
+  }
+  async function flushBoard(){
+    const pending=pendingBoard;
+    if(!pending||pending.caseId!==activeCaseId||!credential||!sessionId||closing||!contextReady||
+       boardSent===pending||boardFlight||now()<boardRetryAt||!canOperate())return false;
+    const own=epoch,flight={};boardFlight=flight;boardRetryAt=now()+5000;
+    try{
+      await post('/voice/board-change',{session_id:sessionId,revision:pending.revision},credential,AbortSignal.timeout(8000));
+      if(own!==epoch)return false;
+      boardSent=pending;return true;
+    }catch{return false;}
+    finally{if(boardFlight===flight)boardFlight=null;}
   }
   function mute() {
     if (!stream || state.phase !== 'listening') return;
     const muted = !state.muted; stream.getAudioTracks().forEach(track => {track.enabled = !muted;});
     publish({muted, notice: muted ? 'Micrófono silenciado.' : 'Micrófono activo.'});
   }
-  function interrupt() {
-    if (channel?.readyState !== 'open' || state.phase !== 'listening' || state.output_paused) return false;
-    // Muting the live remote track stops playback immediately without stopping input or work.
-    audio.muted=true;
-    stream?.getAudioTracks().forEach(track=>{track.enabled=true;});
+  function sendListeningIntent(){
+    if(!state.output_paused||!state.interruption_pending||interruptionId||!started||
+       closing||channel?.readyState!=='open')return;
     interruptionId='listen-'+epoch+'-'+(++sequence);
-    publish({muted:false,output_paused:true,interruption_pending:true,notice:'Te escucho. El sonido está pausado; pulsa Volver a escuchar cuando termines.'});
     try{channel.send(JSON.stringify({type:'session.instructions.append',event_id:interruptionId,delegation_id:null,
       content:'El usuario pulsó Escúchame. Deja de hablar y escucha su intervención. No continúes el discurso anterior. Responde brevemente cuando termine. No canceles tareas ni cierres la sesión.'}));}
     catch{interruptionId=null;publish({interruption_pending:false,notice:'Sonido pausado. No se pudo enviar la instrucción de escuchar.'});}
-    return true;
+  }
+  function interrupt() {
+    if(!['starting','listening','reconnecting'].includes(state.phase)||state.output_paused)return false;
+    // Local control must work even before signalling or session.started completes.
+    audio.muted=true;
+    if(started)stream?.getAudioTracks().forEach(track=>{track.enabled=true;});
+    publish({muted:false,output_paused:true,interruption_pending:true,notice:started?
+      'Te escucho. El sonido está pausado; pulsa Volver a escuchar cuando termines.':
+      'Sonido pausado. El micrófono se activará cuando termine la conexión.'});
+    sendListeningIntent();return true;
   }
   function resumeAudio(){
-    if(state.phase!=='listening'||!state.output_paused)return false;
+    if(!['starting','listening','reconnecting'].includes(state.phase)||!state.output_paused)return false;
     // Media continues advancing while muted; no recorded monologue is replayed.
-    audio.muted=state.local_speaking;publish({output_paused:false,notice:'Sonido activo. Puedes seguir conversando.'});
+    audio.muted=state.local_speaking;publish({output_paused:false,interruption_pending:!!interruptionId,notice:started?'Sonido activo. Puedes seguir conversando.':'Sonido habilitado. Conectando voz…'});
     void playAudio();return true;
   }
   function abandon() {
     // Navigation cannot guarantee a final event. Never report it as a confirmed close.
-    preparation.discard();prepared = null; preparing = null;
+    discardPreparation();
     disconnected = true; closedResolve?.(false); publish({incomplete: true});
     void stop('Finalización incompleta al salir de esta pantalla.');
   }
-  return {prepare, discardPreparation:preparation.discard, start, stop, mute, playAudio, retryContext, notifyBoard, interrupt, resumeAudio, abandon, refresh: () => status(epoch), retryActions:()=>{actions?.retry();void status(epoch);}, snapshot: () => ({...state})};
+  return {prepare, discardPreparation, start, stop, mute, playAudio, retryContext, notifyBoard, interrupt, resumeAudio, abandon, refresh: () => status(epoch), retryActions:()=>{actions?.retry();void status(epoch);}, snapshot: () => ({...state})};
 }

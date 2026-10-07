@@ -1,7 +1,8 @@
+import {createEntryPreparation} from './voice-preparation.mjs?v=2';
 import {residentAccessDecision} from './resident-agents.mjs?v=2';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=2';
 import {stationIdentity} from './project-station.mjs?v=2';
-import {createLiveVoice} from './live-voice.mjs?v=14';
+import {createLiveVoice} from './live-voice.mjs?v=15';
 import {voiceView} from './voice-view.mjs?v=2';
 import {createWorkspace} from './agent-workspace.mjs?v=13';
 import {DurableGoals,watchGoals} from './goals.mjs?v=2';
@@ -29,7 +30,7 @@ if (open) {
   layout.className='voice-layout';sidebar.className='voice-sidebar';workspaceHost.className='voice-workspace';
   while(dialog.firstChild)sidebar.append(dialog.firstChild);layout.append(sidebar,workspaceHost);dialog.append(layout);
   const capsule=document.createElement('div');capsule.className='voice-capsule';
-  capsule.innerHTML='<button id="compact-mic" aria-label="Hablar"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></svg></button><button id="compact-expand" aria-label="Abrir plan de potencial"><b id="compact-name">Tu autón</b><small id="compact-phase">Preparando voz…</small><span aria-hidden="true">↗</span></button><button id="compact-stop" aria-label="Finalizar conversación">×</button><p id="compact-notice" role="status" hidden></p>';
+  capsule.innerHTML='<button id="compact-mic" aria-label="Hablar"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></svg></button><button id="compact-expand" aria-label="Abrir plan de potencial"><b id="compact-name">Tu autón</b><small id="compact-phase">Preparando voz…</small><span aria-hidden="true">↗</span></button><button id="compact-interrupt" hidden aria-label="Escúchame">Escúchame</button><button id="compact-stop" aria-label="Finalizar conversación">×</button><p id="compact-notice" role="status" hidden></p>';
   dialog.append(capsule);document.body.append(dialog);
   let compactVoice=false;
   function present(compactOnly){
@@ -68,8 +69,8 @@ if (open) {
     node('voice-retry-actions').hidden=event.phase!=='unconfirmed';
     if(event.phase==='confirmed')window.dispatchEvent(new CustomEvent('yod-goals-changed',{detail:null}));
   }});
-  const workspace=createWorkspace({container:workspaceHost,transport,getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision);}});
-  window.YodVoiceWorkspace={isOpen:()=>dialog.open&&!compactVoice,openForCase,prepareNearby:caseId=>{const s=window.YodResidentAgents?.getSelection?.();if(s?.case_id===caseId&&s.can_enqueue&&!active(voice.snapshot()))void voice.prepare(caseId,{connection:true});},releaseNearby:()=>voice.discardPreparation(),pauseEncounter:caseId=>{if(encounterCase===caseId&&voice.snapshot().phase==='listening'&&!voice.snapshot().muted){encounterPaused=true;voice.mute();}},show:tab=>{openBoard(tab);workspaceHost.scrollIntoView({block:'nearest'});}};
+  const workspace=createWorkspace({container:workspaceHost,transport,getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision,selection?.case_id);}});
+  window.YodVoiceWorkspace={isOpen:()=>dialog.open&&!compactVoice,openForCase,prepareNearby:caseId=>{const s=window.YodResidentAgents?.getSelection?.();if(s?.case_id===caseId&&s.can_enqueue&&!active(voice.snapshot()))void voice.prepare(caseId,{connection:true});},releaseNearby:()=>{/* Entry preparation remains warm outside the approach radius. */},pauseEncounter:caseId=>{if(encounterCase===caseId&&voice.snapshot().phase==='listening'&&!voice.snapshot().muted){encounterPaused=true;voice.mute();}},show:tab=>{openBoard(tab);workspaceHost.scrollIntoView({block:'nearest'});}};
   window.dispatchEvent(new CustomEvent('yod-voice-workspace-ready'));
   let stopWatching=null,encounterCase=null,encounterPaused=false,micGrantedInPage=false;
   const goalReader=new DurableGoals({transport,getContext:()=>{
@@ -125,23 +126,29 @@ if (open) {
       node('voice-start').hidden=live;
       node('voice-start').disabled=live||accessPaused||!selection?.can_enqueue;
       setText('voice-start',state.phase==='error'?'Volver a intentar':'Hablar');
-      node('voice-interrupt').hidden=!view.listening;
+      const canInterrupt=['starting','listening','reconnecting'].includes(state.phase);
+      node('voice-interrupt').hidden=!canInterrupt;
+      node('compact-interrupt').hidden=!canInterrupt;
+      setText('compact-interrupt',state.output_paused?'Escuchar':'Escúchame');
+      node('compact-interrupt').setAttribute('aria-label',state.output_paused?'Volver a escuchar':'Escúchame');
+      node('compact-interrupt').setAttribute('aria-pressed',String(!!state.output_paused));
       setText('voice-interrupt',state.output_paused?'Volver a escuchar':'Escúchame');
       node('voice-interrupt').setAttribute('aria-pressed',String(!!state.output_paused));
       renderChat(chat);
       node('voice-stop').hidden=!live;
       node('voice-stop').disabled=!live||state.phase==='closing';
-      setText('voice-stop',state.phase==='closing'?'Guardando…':'Finalizar');
+      setText('voice-stop',state.phase==='closing'?'Guardando…':state.phase==='starting'?'Cancelar conexión':'Finalizar');
       node('voice-mute').hidden=!live;
       node('voice-mute').disabled=!view.listening;
       setText('voice-mute',state.muted?'Activar micrófono':'Silenciar micrófono');
       node('voice-mute').setAttribute('aria-pressed',String(state.muted));
       setText('voice-save',view.history);
-      setText('compact-name',agentName());setText('compact-phase',state.local_speaking?'Te escucho':view.title);
+      setText('compact-name',agentName());setText('compact-phase',state.output_paused?'Sonido pausado':state.local_speaking?'Te escucho':view.title);
       node('compact-mic').disabled=accessPaused||state.phase==='closing'||state.phase==='starting'||state.phase==='reconnecting'||!selection?.can_enqueue;
       node('compact-mic').setAttribute('aria-label',view.listening?(state.muted?'Activar micrófono':'Silenciar micrófono'):'Hablar');
       node('compact-mic').setAttribute('aria-pressed',String(view.listening&&!state.muted));
       node('compact-stop').disabled=state.phase==='closing';
+      node('compact-stop').setAttribute('aria-label',state.phase==='starting'?'Cancelar conexión':'Finalizar conversación');
       const warning=state.phase==='error'||state.playback_blocked||state.incomplete||state.pending||accessPaused;
       node('compact-notice').hidden=!warning;
       setText('compact-notice',accessPaused?node('station-access').textContent:state.playback_blocked?'Pulsa el micrófono para activar el sonido.':state.incomplete||state.pending?view.history:state.notice);
@@ -230,7 +237,9 @@ if (open) {
   node('compact-expand').addEventListener('click',()=>openBoard('ppp'));
   node('compact-stop').addEventListener('click',()=>{void dismiss();});
   node('voice-start').addEventListener('click',begin);
-  node('voice-interrupt').addEventListener('click',()=>voice.snapshot().output_paused?voice.resumeAudio():voice.interrupt());
+  const listen=()=>voice.snapshot().output_paused?voice.resumeAudio():voice.interrupt();
+  node('voice-interrupt').addEventListener('click',listen);
+  node('compact-interrupt').addEventListener('click',listen);
   node('station-menu').addEventListener('click',()=>window.YodAgentMenu?.showRadial(selection?.case_id));
   node('voice-play').addEventListener('click',()=>{void voice.playAudio();});
   node('voice-download').addEventListener('click',()=>{
@@ -267,7 +276,15 @@ if (open) {
       else setText('station-access','Todavía no se pudo validar el acceso. Puedes volver a intentar desde este puesto.');
     }finally{node('station-reconnect').disabled=false;}
   });
-  let boundResident=null,unbind=null,warming=null;
+  let boundResident=null,unbind=null;
+  const entrance=createEntryPreparation({prepare:(...args)=>voice.prepare(...args),discard:()=>voice.discardPreparation(),
+    onResult:(id,ok)=>{const resident=window.YodResidentAgents;if(resident?.getSelection?.()?.case_id===id)resident.markPrepared?.(id,ok);}});
+  function prepareEntry(){
+    const s=window.YodResidentAgents?.getSelection?.();
+    return entrance.update(s?.can_enqueue?s.case_id:null,{visible:!document.hidden,idle:!active(voice.snapshot())});
+  }
+  const preparationTimer=setInterval(()=>void prepareEntry(),15000);
+  document.addEventListener('visibilitychange',()=>void prepareEntry());
   function bindResident() {
     const resident=window.YodResidentAgents;
     if(!resident||resident===boundResident)return;
@@ -286,7 +303,7 @@ if (open) {
         workspace.setActive(dialog.open&&!compactVoice);renderVoiceState(voice.snapshot());
       }
       if(access==='lost'){
-        voice.discardPreparation();generation++;selection=null;stopWatching?.();stopWatching=null;goalReader.hide();chat.close();workspace.reset();workspace.setActive(false);
+        entrance.clear();generation++;selection=null;stopWatching?.();stopWatching=null;goalReader.hide();chat.close();workspace.reset();workspace.setActive(false);
         fragments.length=0;freshTranscript=false;node('voice-transcript').replaceChildren();node('voice-work').replaceChildren();node('voice-task').textContent='';
         node('voice-download').disabled=true;node('voice-start').disabled=true;node('voice-previous').hidden=true;node('voice-audio').muted=true;
         setText('voice-case','El acceso al expediente cambió.');setText('voice-title','Tu autón');node('station-message').value='';node('station-messages').replaceChildren();
@@ -295,11 +312,9 @@ if (open) {
         node('station-access').hidden=false;node('station-reconnect').hidden=false;
         void voice.stop();
       }
-      if(!s?.can_enqueue||state.prepared||warming===s.case_id)return;
-      warming=s.case_id;
-      void voice.prepare(s.case_id).then(ok=>resident.markPrepared(s.case_id,ok)).finally(()=>{warming=null;});
+      void prepareEntry();
     });
   }
   window.addEventListener('yod-residents-ready',bindResident);bindResident();
-  window.addEventListener('pagehide',()=>{unbind?.();transport.dispose();});
+  window.addEventListener('pagehide',()=>{clearInterval(preparationTimer);entrance.clear();unbind?.();transport.dispose();});
 }

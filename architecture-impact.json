@@ -1,17 +1,20 @@
 {
-  "model_revision": "2026-10-07.112-escucha-local",
-  "proposal_id": "CHG-DESPACHO-ESCUCHA-LOCAL-112",
-  "summary": "Reducir solapamiento audible al intervenir: analizar en el navegador el micrófono ya autorizado y atenuar temporalmente la salida mientras hay intervención sostenida. Conservar la interrupción semántica de GPT-Live, la pausa manual, el expediente y la finalización. Medir por separado micrófono, acceso, oferta WebRTC, señalización, inicio y contexto; no añadir botones ni abrir el tablero al acercarse. La detección acústica no acredita cancelación del discurso remoto ni latencia del equipo real.",
+  "model_revision": "2026-10-07.113-entrada-y-control-voz",
+  "proposal_id": "CHG-DESPACHO-ENTRADA-VOZ-113",
+  "summary": "Preparar credencial y WebRTC al entrar y mantener una preparación acotada por proyecto; impedir solicitudes de preparación duplicadas o recuperación sin pausa. Hacer Escúchame accesible en la cápsula y durante conexión/reconexión, conservar el silencio solicitado al llegar audio tardío y distinguir desconexión de pausa. Revisar el disparo por cercanía y las afirmaciones de presencia contra hechos observados. Continuar con el PPP original y su confirmación compartida, conservando la misma voz y las revisiones canónicas.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-DESPACHO-3D"
+    "SYS-DESPACHO-3D",
+    "SVC-AUTON-CLOUD",
+    "SYS-POTENCIALES"
   ],
   "tests": [
-    "Ruido breve no activa atenuación; señal sostenida sí; silencio recupera salida y pausa manual prevalece.",
-    "Detector sólo usa stream ya autorizado; no graba, no transmite análisis ni abre sesiones.",
-    "Reconexión, cambio de caso, micrófono en pausa y cierre liberan detector sin perder audio final.",
-    "Navegador con audio sintético real, permisos y expediente sintéticos; regresión completa."
+    "Entrada visible prepara WebRTC sin capturar micrófono ni abrir sesiones de proveedor; llamadas concurrentes comparten preparación y fallos no generan bucle.",
+    "Escúchame durante conexión y reconexión silencia inmediatamente, no termina tareas ni sesión, y conserva la intención tras session.started.",
+    "Errores de voz permanecen visibles, se puede reintentar, y el inicio conserva el expediente elegido.",
+    "PPP compartido: abrir y minimizar no crea otra voz; guardado sin confirmación no se anuncia como confirmado; revisión compartida se comunica cuando está disponible.",
+    "Regresión completa Node y navegador; separar evidencia sintética de aceptación física."
   ],
-  "rollback": "Revertir únicamente este PR del portal. Sin cambios a Apps Script, configuración de OpenAI ni datos."
+  "rollback": "Revertir este PR del portal y, si se modifica el motor, desplegar su commit anterior. Sin cambios de datos de negocio ni a la configuración inicial de GPT-Live."
 }

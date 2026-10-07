@@ -17,3 +17,26 @@ test('prepared peers expire and late offers cannot revive discarded preparation'
  const pending=delayed.warm('a');await new Promise(r=>setImmediate(r));delayed.discard();release();
  assert.equal(await pending,null);assert.equal(await delayed.take('a'),null);assert.equal(peers[1].closed,true);
 });
+
+test('office entry warms once, retries failures after a delay, and never retries recursively',async()=>{
+ const {createEntryPreparation}=await import('../despacho3d/voice-preparation.mjs');
+ let now=0,calls=0,controller;const results=[];
+ controller=createEntryPreparation({now:()=>now,prepare:async(id,options)=>{calls++;assert.equal(options.connection,true);return false;},
+  onResult:(id,ok)=>{results.push(ok);void controller.update(id);}});
+ await controller.update('case-a');assert.equal(calls,1);
+ await controller.update('case-a');assert.equal(calls,1);
+ now=30000;await controller.update('case-a');assert.equal(calls,2);
+ await controller.update('case-b');assert.equal(calls,3);
+ now=60000;await controller.update('case-b',{idle:false});assert.equal(calls,3);
+ await controller.update(null);assert.deepEqual(results,[false,false,false]);
+});
+test('late preparations cannot mark a different or hidden resident ready',async()=>{
+ const {createEntryPreparation}=await import('../despacho3d/voice-preparation.mjs');
+ const waiting=[],results=[];let discarded=0;
+ const c=createEntryPreparation({prepare:id=>new Promise(resolve=>waiting.push({id,resolve})),discard:()=>discarded++,onResult:(...r)=>results.push(r)});
+ const a=c.update('a');await new Promise(r=>setImmediate(r));
+ const b=c.update('b');await new Promise(r=>setImmediate(r));
+ waiting[0].resolve(true);await a;assert.deepEqual(results,[]);
+ await c.update('b',{visible:false});waiting[1].resolve(true);await b;assert.deepEqual(results,[]);
+ assert.ok(discarded>=3);
+});

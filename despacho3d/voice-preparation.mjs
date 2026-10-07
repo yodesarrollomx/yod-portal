@@ -28,3 +28,22 @@ export function createVoicePreparation({Peer,gather,now=Date.now,ttl=60000}={}){
  }
  return {warm,take,discard};
 }
+
+// Keep one preparation current from office entry, independently of avatar distance.
+// The caller supplies a fresh authorized case and suppresses work in hidden tabs/live calls.
+export function createEntryPreparation({prepare,discard=()=>{},onResult=()=>{},now=Date.now,cooldown=30000}={}){
+ let caseId=null,epoch=0,flight=null,last=-Infinity;
+ function clear(){caseId=null;epoch++;flight=null;last=-Infinity;discard();}
+ function update(id,{visible=true,idle=true}={}){
+  if(!id||!visible){if(caseId)clear();return Promise.resolve(false);}
+  if(id!==caseId){clear();caseId=id;}
+  if(!idle)return Promise.resolve(false);
+  if(flight)return flight;
+  if(now()-last<cooldown)return Promise.resolve(false);
+  const own=epoch;last=now();
+  const work=Promise.resolve().then(()=>prepare(id,{connection:true})).catch(()=>false)
+   .then(ok=>{if(own===epoch&&caseId===id)onResult(id,ok===true);return ok===true;});
+  const result=work.finally(()=>{if(flight===result)flight=null;});flight=result;return result;
+ }
+ return {update,clear};
+}
