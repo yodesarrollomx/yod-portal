@@ -516,3 +516,61 @@ test('PPP confirmation changes at the same revision reach voice without replayin
  assert.equal(f.calls.filter(c=>c.url.endsWith('/board-change')).length,2);
  const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
 });
+
+test('local intervention after agent output sends one listening instruction without another session or startup configuration',async()=>{
+ const {createLiveVoice}=await load();let monitor;
+ const f=fixture(createLiveVoice,{monitorFactory:o=>{monitor=o;return{resume(){},close(){o.onActivity(false);}};}});
+ await f.voice.start('synthetic-case');f.event({type:'session.started'});await tick();
+ monitor.onActivity(true);assert.equal(f.peer.channel.sent.length,0,'ordinary input does not invent agent speech');
+ monitor.onActivity(false);
+ f.event({type:'session.output_transcript.delta',delta:' respuesta ',start_ms:10,end_ms:30,event_id:'out-overlap'});
+ monitor.onActivity(true);
+ assert.equal(f.audio.muted,true,'local silence precedes the provider acknowledgement');
+ assert.equal(f.track.enabled,true);
+ const sent=f.peer.channel.sent;assert.equal(sent.length,1);assert.equal(sent[0].type,'session.instructions.append');
+ assert.match(sent[0].event_id,/^overlap-/);assert.match(sent[0].content,/no es una transcripción/);
+ monitor.onActivity(true);monitor.onActivity(false);monitor.onActivity(true);
+ assert.equal(sent.length,1,'one acoustic onset does not repeatedly interrupt the same output');
+ f.event({type:'session.instructions.appended',client_event_id:sent[0].event_id});
+ assert.equal(f.voice.snapshot().interruption_error,false);
+ f.event({type:'session.input_transcript.delta',delta:'espera',start_ms:40,end_ms:50,event_id:'user-overlap'});
+ monitor.onActivity(false);assert.equal(f.audio.muted,false);
+ assert.equal(f.calls.filter(c=>c.url.endsWith('/session')).length,1);
+ const close=f.voice.stop();await tick();f.event({type:'session.closed'});await close;
+});
+test('a rejected automatic listening instruction stays explainable and never ends the call',async()=>{
+ const {createLiveVoice}=await load();let monitor;
+ const f=fixture(createLiveVoice,{monitorFactory:o=>{monitor=o;return{resume(){},close(){}};}});
+ await f.voice.start('synthetic-case');f.event({type:'session.started'});await tick();
+ f.event({type:'session.output_transcript.delta',delta:'respuesta',start_ms:0,end_ms:20,event_id:'output'});
+ monitor.onActivity(true);const id=f.peer.channel.sent[0].event_id;
+ f.event({type:'error',error:{client_event_id:id}});
+ assert.equal(f.voice.snapshot().phase,'listening');assert.equal(f.voice.snapshot().interruption_error,true);
+ assert.match(f.voice.snapshot().notice,/Escúchame/);assert.equal(f.audio.muted,true);assert.equal(f.peer.closed,false);
+ f.voice.interrupt();const manual=f.peer.channel.sent.at(-1).event_id;
+ f.event({type:'session.instructions.appended',client_event_id:manual});
+ assert.equal(f.voice.snapshot().interruption_error,false);
+ const close=f.voice.stop();await tick();f.event({type:'session.closed'});await close;
+});
+test('a newly connected peer immediately reconciles a missing primary start event',async()=>{
+ const {createLiveVoice}=await load();let reads=0;
+ const f=fixture(createLiveVoice,{statusOverride:()=>({started:++reads>1})});
+ await f.voice.start('synthetic-case');await tick();
+ assert.equal(reads,1);assert.equal(f.track.enabled,false);
+ f.peer.onconnectionstatechange();await tick();
+ assert.equal(reads,2,'does not wait for the next periodic status check');
+ assert.equal(f.voice.snapshot().phase,'listening');assert.equal(f.track.enabled,true);
+ assert.equal(f.peer.channel.sent.length,0,'no startup configuration is repeated');
+ const close=f.voice.stop();await tick();f.event({type:'session.closed'});await close;
+});
+test('a provider-initiated confirmed close retains captions and explains why voice ended',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice);
+ await f.voice.start('synthetic-case');f.event({type:'session.started'});await tick();
+ f.event({type:'session.input_transcript.delta',delta:'texto exacto  ',start_ms:1,end_ms:9,event_id:'kept'});
+ f.event({type:'session.closed'});await tick();await tick();
+ assert.equal(f.voice.snapshot().phase,'idle');assert.equal(f.voice.snapshot().ended_remotely,true);
+ assert.match(f.voice.snapshot().notice,/terminó desde el servicio/);assert.equal(f.captions[0].delta,'texto exacto  ');
+ assert.equal(f.voice.snapshot().finalized,true);
+ await f.voice.start('synthetic-case');assert.equal(f.voice.snapshot().ended_remotely,false);
+ const close=f.voice.stop();await tick();f.event({type:'session.closed'});await close;
+});
