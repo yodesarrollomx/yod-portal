@@ -24,3 +24,11 @@ Pruebas de reapertura con el mismo ID, ausencia de escrituras, pérdida de conex
 ## Reversión
 
 Revertir frontend por PR. Conservar IDs, datos privados, permisos, historial, fuentes y revisiones. No requiere instalar Apps Script ni desplegar el servidor privado.
+
+## Paso 2 · revisión independiente antes de corregir
+
+**2026-10-07 06:17 UTC — propuesta, todavía no implementada.** La revisión de `9c730ba02f748c34ae6c51fdf97c68fca3f94ce4` encuentra dos fallos reproducibles: el puesto solicita exports nuevos a una URL de `goals.mjs` que un navegador puede conservar de la versión anterior; además, ocultar el puesto descarta el recibo de un ajuste ya enviado al iframe.
+
+La corrección propuesta actualiza las referencias de caché de los consumidores afectados y mantiene una recepción acotada al ajuste pendiente cuando se cierra el panel. El cierre no autoriza propuestas nuevas. Se preservan selección vigente, origen, emisor, nonce y generación; un cambio de proyecto invalida el trabajo anterior. Ningún intento de confirmar un recibo vuelve a escribir el PPP.
+
+Criterios de aceptación: abrir con la superficie de exports anterior simulada en la URL antigua; cerrar mientras un ajuste se guarda, recibir su confirmación oculto y reabrir el mismo iframe sin duplicar el ajuste. El navegador de prueba usa datos sintéticos y transporte local. La ejecución de estas pruebas y las verificaciones obligatorias queda pendiente del commit de implementación y CI; esta nota no acredita funcionamiento en producción.
