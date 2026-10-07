@@ -129,6 +129,12 @@ const server=http.createServer((req,res)=>{
   assert.equal(sessions,2);
   await frame.evaluate(()=>window.YodVoiceWorkspace.pauseEncounter('synthetic-voice-case'));
   assert.equal(await frame.evaluate(()=>window.streams.at(-1).getAudioTracks()[0].enabled),false);
+  await frame.evaluate(()=>window.YodVoiceWorkspace.openForCase('synthetic-voice-case','ppp',{startVoice:true,encounter:true}));
+  assert.equal(await frame.evaluate(()=>window.streams.at(-1).getAudioTracks()[0].enabled),true,'returning resumes only the proximity pause');
+  assert.equal(sessions,2,'returning keeps the same call');
+  await frame.locator('#compact-mic').click();
+  await frame.evaluate(()=>window.YodVoiceWorkspace.openForCase('synthetic-voice-case','ppp',{startVoice:true,encounter:true}));
+  assert.equal(await frame.evaluate(()=>window.streams.at(-1).getAudioTracks()[0].enabled),false,'manual microphone mute remains respected');
   await frame.locator('#compact-expand').click();
   await frame.locator('#voice-stop').click();await frame.locator('[data-voice-phase="idle"]').waitFor();
   assert.deepEqual(errors,[]);await context.close();

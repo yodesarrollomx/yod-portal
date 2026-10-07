@@ -11561,6 +11561,15 @@
         "SYS-DESPACHO",
         "SYS-DESPACHO-3D"
       ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-preparation.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
     }
   ],
   "office_coverage": {

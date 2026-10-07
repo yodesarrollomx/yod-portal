@@ -69,9 +69,9 @@ if (open) {
     if(event.phase==='confirmed')window.dispatchEvent(new CustomEvent('yod-goals-changed',{detail:null}));
   }});
   const workspace=createWorkspace({container:workspaceHost,transport,getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision);}});
-  window.YodVoiceWorkspace={isOpen:()=>dialog.open&&!compactVoice,openForCase,prepareNearby:caseId=>{const s=window.YodResidentAgents?.getSelection?.();if(s?.case_id===caseId&&s.can_enqueue&&!active(voice.snapshot()))void voice.prepare(caseId,{connection:true});},releaseNearby:()=>voice.discardPreparation(),pauseEncounter:caseId=>{if(encounterCase===caseId&&voice.snapshot().phase==='listening'&&!voice.snapshot().muted)voice.mute();},show:tab=>{openBoard(tab);workspaceHost.scrollIntoView({block:'nearest'});}};
+  window.YodVoiceWorkspace={isOpen:()=>dialog.open&&!compactVoice,openForCase,prepareNearby:caseId=>{const s=window.YodResidentAgents?.getSelection?.();if(s?.case_id===caseId&&s.can_enqueue&&!active(voice.snapshot()))void voice.prepare(caseId,{connection:true});},releaseNearby:()=>voice.discardPreparation(),pauseEncounter:caseId=>{if(encounterCase===caseId&&voice.snapshot().phase==='listening'&&!voice.snapshot().muted){encounterPaused=true;voice.mute();}},show:tab=>{openBoard(tab);workspaceHost.scrollIntoView({block:'nearest'});}};
   window.dispatchEvent(new CustomEvent('yod-voice-workspace-ready'));
-  let stopWatching=null,encounterCase=null,micGrantedInPage=false;
+  let stopWatching=null,encounterCase=null,encounterPaused=false,micGrantedInPage=false;
   const goalReader=new DurableGoals({transport,getContext:()=>{
     const current=window.YodResidentAgents?.getSelection?.();
     return current&&selection?.case_id===current.case_id&&dialog.open?{selection:current,busy:false}:null;
@@ -198,6 +198,7 @@ if (open) {
     const own=generation,id=selection?.case_id;
     if(!encounter){encounterCase=null;begin();return;}
     encounterCase=id;
+    if(voiceCaseId===id&&voice.snapshot().phase==='listening'){if(encounterPaused&&voice.snapshot().muted)voice.mute();encounterPaused=false;return;}
     let granted=micGrantedInPage;
     try{granted=(await navigator.permissions.query({name:'microphone'})).state==='granted';}catch{}
     if(dismissing||own!==generation||!dialog.open||id!==selection?.case_id||id!==window.YodResidentAgents?.getSelection?.()?.case_id)return;
@@ -206,7 +207,7 @@ if (open) {
   }
   function suppressEncounter(){
     if(selection?.case_id)window.dispatchEvent(new CustomEvent('yod-agent-encounter-dismiss',{detail:{case_id:selection.case_id}}));
-    encounterCase=null;
+    encounterCase=null;encounterPaused=false;
   }
   function begin() {
     if(dismissing||accessPaused||!selection?.can_enqueue||active(voice.snapshot()))return;
@@ -216,7 +217,7 @@ if (open) {
       node('voice-previous').hidden=false;
     }
     if(!compactVoice)workspace.setTab('ppp');
-    freshTranscript=true;voiceCaseId=selection.case_id;
+    encounterPaused=false;freshTranscript=true;voiceCaseId=selection.case_id;
     void voice.start(selection.case_id,{encounter:encounterCase===selection.case_id});
   }
   node('compact-mic').addEventListener('click',()=>{
