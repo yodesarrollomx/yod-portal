@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.112-sesion-reconexion",
+  "revision": "2026-10-07.111-voz-discreta",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -11569,15 +11569,6 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO",
         "SYS-DESPACHO-3D"
-      ]
-    },
-    {
-      "repo": "yodesarrollomx/yod-portal",
-      "prefix": "tests/portal-identity.cjs",
-      "components": [
-        "SYS-YOD-OS",
-        "GAS-PORTERO",
-        "SYS-DESPACHO"
       ]
     }
   ],
