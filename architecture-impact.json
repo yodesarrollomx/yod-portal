@@ -5,6 +5,7 @@
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
+    "GAS-PORTERO",
     "SYS-POTENCIALES"
   ],
   "tests": [
