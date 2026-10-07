@@ -464,7 +464,11 @@
         throw new Error(j.ok === false && j.error ? j.error : 'respuesta-invalida');
       }
       var identity = JSON.stringify([j.correo || '',j.nombre || '',j.rol || 'vista',j.boards || '']);
-      if (state.sessionIdentity && state.sessionIdentity !== identity) { location.reload();return; }
+      if (state.sessionIdentity && state.sessionIdentity !== identity) {
+        // Un cambio de rol/permisos/persona debe ocultar datos ANTES de recargar.
+        state.identity = 'pending';state.role = '';state.boards = '';state.modules = [];
+        state.sessionToken = '';purgeAll();applyNav();maybeLock();location.reload();return;
+      }
       state.sessionIdentity = identity;state.sessionToken = k;
       state.verifiedAt = Date.now();state.reconnectAttempts = 0;
       aplicaIdentidad(j);return loadCatalog(currentSys());
