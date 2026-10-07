@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-06.98-trabajo-observable · 2026-10-05.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-07.99-puesto-trabajo-claro · 2026-10-05.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 

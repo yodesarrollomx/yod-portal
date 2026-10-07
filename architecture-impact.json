@@ -1,11 +1,13 @@
 {
-  "model_revision": "2026-10-06.98-trabajo-observable",
-  "proposal_id": "CHG-TRABAJO-OBSERVABLE-098",
+  "model_revision": "2026-10-07.99-puesto-trabajo-claro",
+  "proposal_id": "CHG-PUESTO-TRABAJO-CLARO-099",
   "components": [
     "SYS-YOD-OS",
-    "SYS-DESPACHO"
+    "SYS-DESPACHO",
+    "GAS-PORTERO",
+    "EXT-DRIVE"
   ],
-  "summary": "Vincular la ejecución autorizada del objetivo con su computadora: identificador de ejecución y tarea, herramienta realmente invocada, fuentes devueltas, avance confirmado y evidencia. Mostrar captura fechada sólo con su procedencia; distinguir análisis preparado de confirmación canónica. Recuperar observación tras recarga, marcar interrupciones y no reiniciar tareas al observar.",
+  "summary": "Dar al puesto una entrada Trabajo con actividad recuperada, resultado, siguiente decisión y fuentes; conservar PPP, pendientes y herramientas en el mismo lugar. Reapertura de sólo lectura, sin crear ni reanudar objetivos. Evaluar jerarquía, navegación y alcance de aceptación.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -13,8 +15,7 @@
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "Servidor: asociación ejecución/tarea/fuente, progreso después de acuse, cancelación, restauración interrumpida, aislamiento y fallos de observación.",
-    "Navegador escritorio/móvil: computadora y puesto comparten estado, captura fechada, errores sin falso éxito, recarga sin ejecutar y revocación inmediata."
+    "Recuperación sintética del mismo trabajo, respuestas tardías, cambio de selección, pérdida de conexión y ausencia de escrituras."
   ],
-  "rollback": "Revertir módulos de observación y frontend conservando estado privado, tareas, evidencias, permisos y registros canónicos."
+  "rollback": "Revertir frontend por PR conservando IDs, historial, fuentes, permisos y registros del servidor."
 }
