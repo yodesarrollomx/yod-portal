@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-07.106-voz-puesto
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-07.107-radial-proximidad
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -993,7 +993,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dirección técnica
 
-**Estado registrado:** codigo. Portal PR118 / main821b1e7 publicado y verificado automáticamente. Dirección reporta fallo real de voz y orientación; corrección106 en rama, pendiente de publicación y aceptación.
+**Estado registrado:** codigo. PR119 puesto106 publicado y comprobado técnicamente. Interacción radial/proximidad107 propuesta por Dirección; voz física y aceptación privada pendientes.
 
 **Entradas registradas:**
 
