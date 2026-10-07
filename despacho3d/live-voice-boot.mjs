@@ -1,7 +1,7 @@
 import {residentAccessDecision} from './resident-agents.mjs?v=2';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=2';
 import {stationIdentity} from './project-station.mjs?v=2';
-import {createLiveVoice} from './live-voice.mjs?v=13';
+import {createLiveVoice} from './live-voice.mjs?v=14';
 import {voiceView} from './voice-view.mjs?v=2';
 import {createWorkspace} from './agent-workspace.mjs?v=13';
 import {DurableGoals,watchGoals} from './goals.mjs?v=2';
@@ -21,7 +21,7 @@ if (open) {
     '<p id="voice-input" role="status"></p><audio id="voice-audio" autoplay aria-label="Voz del autón"></audio><button id="voice-play" hidden>Activar sonido</button>' +
     '<div class="voice-actions"><button id="voice-start" disabled>Hablar</button><button id="voice-interrupt" hidden>Escúchame</button><button id="voice-stop" hidden disabled>Finalizar</button></div>' +
     '<details class="voice-options"><summary>Audio y conexión</summary><button id="voice-mute" disabled>Silenciar micrófono</button><p class="voice-note">Voz generada por IA.</p>' +
-    '<p id="voice-context" role="status">El expediente se comprueba al conectar.</p><button id="voice-retry-context" hidden>Recuperar expediente</button></details></section>' +
+    '<p id="voice-timing" class="voice-note"></p><p id="voice-context" role="status">El expediente se comprueba al conectar.</p><button id="voice-retry-context" hidden>Recuperar expediente</button></details></section>' +
     '<details class="station-chat"><summary>Escribir y consultar historial</summary><div id="station-messages" role="log" aria-live="off"></div><form id="station-message-form"><label for="station-message">Mensaje</label><textarea id="station-message" maxlength="12000" required placeholder="Qué resolvemos ahora…"></textarea><button id="station-send" disabled>Enviar</button></form><p id="station-message-status" role="status"></p><button id="station-refresh">Actualizar historial</button></details>' +
     '<p id="voice-save" role="status">Sin conversación nueva.</p><p id="voice-previous" class="voice-note" hidden></p>' +
     '<details class="voice-transcript-details"><summary id="voice-transcript-label">Transcripción de voz</summary><div id="voice-transcript" role="log" aria-label="Transcripción de voz" aria-live="off"></div><button id="voice-download" disabled>Descargar transcripción</button><p class="voice-note">Copia local; el estado de guardado aparece arriba.</p></details>';
@@ -113,8 +113,11 @@ if (open) {
       setText('voice-phase',view.title);
       if(dialog.open&&!compactVoice&&selection?.goals?.ready&&!stopWatching)stopWatching=watchGoals(goalReader,{visible:()=>dialog.open&&!document.hidden&&!voice.snapshot().actions_pending});
       setText('voice-status',state.notice);
-      setText('voice-input',state.phase!=='listening'?'':state.muted?'Micrófono en pausa.':state.input_received?'Tu voz está llegando a la conversación.':state.input_detected?'Tu micrófono detecta sonido. Aún no recibimos palabras.':'Micrófono abierto. Aún no recibimos palabras.');
+      setText('voice-input',state.phase!=='listening'?'':state.muted?'Micrófono en pausa.':state.local_speaking?'Te escucho.':state.input_received?'Tu voz está llegando a la conversación.':state.input_detected?'Tu micrófono detecta sonido. Aún no recibimos palabras.':'Micrófono abierto. Aún no recibimos palabras.');
       setText('voice-context',view.context);
+      const stages=[['microphone_ms','micrófono'],['access_ms','acceso'],['offer_ms','WebRTC'],['signalling_ms','servidor'],['listening_ms','escucha'],['playback_ms','reproducción habilitada'],['context_ms','expediente']];
+      const timings=stages.filter(([key])=>Number.isFinite(state.timings?.[key])).map(([key,label])=>label+' '+(state.timings[key]/1000).toFixed(1)+' s');
+      setText('voice-timing',timings.length?'Desde que iniciaste: '+timings.join(' · ')+'. Tiempos acumulados; no se suman.':'');
       if(state.context_phase==='ready'&&dialog.open&&!compactVoice&&!accessPaused)workspace.setActive(true);
       node('voice-retry-context').hidden=!view.retryContext;
       node('voice-retry-context').disabled=state.context_retry_pending===true;
@@ -134,7 +137,7 @@ if (open) {
       setText('voice-mute',state.muted?'Activar micrófono':'Silenciar micrófono');
       node('voice-mute').setAttribute('aria-pressed',String(state.muted));
       setText('voice-save',view.history);
-      setText('compact-name',agentName());setText('compact-phase',view.title);
+      setText('compact-name',agentName());setText('compact-phase',state.local_speaking?'Te escucho':view.title);
       node('compact-mic').disabled=accessPaused||state.phase==='closing'||state.phase==='starting'||state.phase==='reconnecting'||!selection?.can_enqueue;
       node('compact-mic').setAttribute('aria-label',view.listening?(state.muted?'Activar micrófono':'Silenciar micrófono'):'Hablar');
       node('compact-mic').setAttribute('aria-pressed',String(view.listening&&!state.muted));

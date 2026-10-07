@@ -28,7 +28,10 @@ const server=http.createServer((req,res)=>{
    navigator.permissions.query=async()=>({state:window.micPermission});
    navigator.mediaDevices.getUserMedia=async()=>{
     if(window.failMic)throw new DOMException('denied','NotAllowedError');
-    const ctx=new AudioContext(),dest=ctx.createMediaStreamDestination();window.streams.push(dest.stream);return dest.stream;
+    const ctx=new AudioContext(),dest=ctx.createMediaStreamDestination(),tone=ctx.createOscillator(),gain=ctx.createGain();
+    tone.frequency.value=420;gain.gain.value=0;tone.connect(gain);gain.connect(dest);tone.start();void ctx.resume();
+    window.setInputLevel=value=>{void ctx.resume();gain.gain.value=value;};
+    window.streams.push(dest.stream);return dest.stream;
    };
    HTMLMediaElement.prototype.play=function(){return window.blockAudio?Promise.reject(new DOMException('blocked','NotAllowedError')):Promise.resolve();};
    window.RTCPeerConnection=class{
@@ -88,6 +91,16 @@ const server=http.createServer((req,res)=>{
   await frame.locator('#voice-play').waitFor();
   await frame.evaluate(()=>window.blockAudio=false);await frame.locator('#voice-play').click();
   await frame.locator('#voice-play').waitFor({state:'hidden'});assert.equal(sessions,1);
+  await frame.evaluate(()=>window.setInputLevel(.18));
+  await frame.waitForFunction(()=>document.querySelector('#voice-input').textContent==='Te escucho.');
+  assert.equal(await frame.locator('#voice-audio').evaluate(a=>a.muted),true);
+  assert.equal(await frame.evaluate(()=>window.streams.at(-1).getAudioTracks()[0].enabled),true);
+  assert.equal(sessions,1,'local acoustic overlap neither restarts nor closes the call');
+  await frame.evaluate(()=>window.setInputLevel(0));
+  await frame.waitForFunction(()=>document.querySelector('#voice-audio').muted===false);
+  assert.match(await frame.locator('#voice-timing').innerText(),/Tiempos acumulados/);
+  console.log('Local acoustic attenuation and automatic recovery: real Web Audio with synthetic tone, not owner microphone latency.');
+
   await frame.locator('#voice-interrupt').click();assert.equal(await frame.locator('#voice-audio').evaluate(a=>a.muted),true);assert.equal(sessions,1);
   await frame.locator('#voice-interrupt').click();assert.equal(await frame.locator('#voice-audio').evaluate(a=>a.muted),false);
   await frame.locator('#voice-mute').click();assert.equal(await frame.locator('#voice-phase').innerText(),'Micrófono en pausa');

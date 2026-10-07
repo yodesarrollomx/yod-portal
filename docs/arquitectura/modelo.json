@@ -9408,7 +9408,7 @@
         "SYS-DESPACHO-3D"
       ],
       "proposal": "Reducir solapamiento audible al intervenir: analizar en el navegador el micrófono ya autorizado y atenuar temporalmente la salida mientras hay intervención sostenida. Conservar la interrupción semántica de GPT-Live, la pausa manual, el expediente y la finalización. Medir por separado micrófono, acceso, oferta WebRTC, señalización, inicio y contexto; no añadir botones ni abrir el tablero al acercarse. La detección acústica no acredita cancelación del discurso remoto ni latencia del equipo real.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "approval": "Dirección autoriza continuar los pendientes de voz y despacho el 7-oct-2026.",
       "tests": [
         "Ruido breve no activa atenuación; señal sostenida sí; silencio recupera salida y pausa manual prevalece.",
@@ -9416,7 +9416,7 @@
         "Reconexión, cambio de caso, micrófono en pausa y cierre liberan detector sin perder audio final.",
         "Navegador con audio sintético real, permisos y expediente sintéticos; regresión completa."
       ],
-      "deployment": "Propuesta previa a implementación. Se conserva voz111 y autenticación PR124. Aceptación acústica del propietario pendiente.",
+      "deployment": "Implementado en rama: atenuación acústica local con ataque 120 ms, salida tras 480 ms de silencio y tope de 8 s ante ruido sostenido; diagnóstico acumulado de conexión dentro de Audio y conexión. Pruebas y publicación pendientes. No afirma cancelación semántica del proveedor ni latencia física medida.",
       "rollback": "Revertir únicamente este PR del portal. Sin cambios a Apps Script, configuración de OpenAI ni datos."
     }
   ],

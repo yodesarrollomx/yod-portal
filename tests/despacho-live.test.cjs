@@ -3,7 +3,7 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const load=()=>import('../despacho3d/live-voice.mjs');
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
-function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12000,maxStatusFailures=3,mode='expediente',failStatus=false,Stream,startTimeout=60000,signallingTimeout=90000,mintOverride,sessionOverride,statusOverride}={}){
+function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12000,maxStatusFailures=3,mode='expediente',failStatus=false,Stream,startTimeout=60000,signallingTimeout=90000,mintOverride,sessionOverride,statusOverride,monitorFactory,now}={}){
  const calls=[],captions=[],track={enabled:true,stops:0,stop(){this.stops++;}},
    stream={getTracks:()=>[track],getAudioTracks:()=>[track]},
    audio={srcObject:null,pause(){},play:async()=>{}};
@@ -19,7 +19,7 @@ function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12
  }
  const base={ok:true,active:true,started:false,context_ready:true,finalized:false,expires_at:Date.now()+600000,
   fragments:0,blocks:0,saved:0,pending:0,incomplete:false};
- const voice=createLiveVoice({audio,Peer,Stream,closeTimeout,disconnectGrace,maxStatusFailures,startTimeout,signallingTimeout,media:{getUserMedia:async()=>{captures++;return stream;}},
+ const voice=createLiveVoice({audio,Peer,Stream,monitorFactory,now,closeTimeout,disconnectGrace,maxStatusFailures,startTimeout,signallingTimeout,media:{getUserMedia:async()=>{captures++;return stream;}},
   schedule:()=>1,cancel:()=>{},onTranscript:f=>captions.push(f),
   mint:mintOverride||(async({case_id})=>({ok:true,case_id,token:'A'.repeat(30)+'.'+'a'.repeat(64),
    endpoint:'https://synthetic-engine.onrender.com',expires_at:Date.now()+600000})),
@@ -424,4 +424,33 @@ test('nearby preparation is discarded before using a different project',async()=
  await f.voice.prepare('case-a',{connection:true});await tick();const first=f.peer;
  await f.voice.prepare('case-b',{connection:true});await tick();assert.equal(first.closed,true);
  const second=f.peer;f.voice.discardPreparation();assert.equal(second.closed,true);assert.equal(f.captures,0);
+});
+
+test('local overlap preserves the same session, manual pause and final audio transport',async()=>{
+ const {createLiveVoice}=await load();let options,disposed=0;
+ const f=fixture(createLiveVoice,{monitorFactory:o=>{options=o;return{resume(){},close(){disposed++;o.onActivity(false);}};}});
+ await f.voice.start('synthetic-case');assert.equal(options,undefined);
+ f.event({type:'session.started'});await tick();assert.equal(options.enabled(),true);
+ options.onActivity(true);assert.equal(f.audio.muted,true);assert.equal(f.track.enabled,true);
+ assert.equal(f.peer.channel.sent.length,0);assert.equal(f.voice.snapshot().local_speaking,true);
+ f.voice.interrupt();options.onActivity(false);assert.equal(f.audio.muted,true,'manual pause wins');
+ options.onActivity(true);f.voice.resumeAudio();assert.equal(f.audio.muted,true,'resuming manual pause keeps current overlap protection');
+ options.onActivity(false);assert.equal(f.audio.muted,false);
+ f.voice.mute();assert.equal(options.enabled(),false);f.voice.mute();
+ const stopping=f.voice.stop();await tick();assert.equal(disposed,1);assert.equal(f.audio.muted,false);
+ assert.equal(f.track.stops,0);assert.equal(f.peer.closed,false);
+ f.event({type:'session.closed'});await stopping;assert.equal(f.track.stops,1);
+ assert.equal(f.calls.filter(c=>c.url.endsWith('/session')).length,1);
+});
+test('connection milestones are cumulative, reset per call and do not contain case or credential data',async()=>{
+ const {createLiveVoice}=await load();let clock=1000;
+ const f=fixture(createLiveVoice,{now:()=>clock});
+ await f.voice.start('synthetic-case');clock=1500;f.event({type:'session.started'});await tick();
+ const times=f.voice.snapshot().timings;
+ assert.equal(times.microphone_ms,0);assert.equal(times.access_ms,0);
+ assert.equal(times.offer_ms,0);assert.equal(times.signalling_ms,0);assert.equal(times.listening_ms,500);
+ assert.ok(Object.values(times).every(v=>typeof v==='number'));
+ const stopping=f.voice.stop();await tick();f.event({type:'session.closed'});await stopping;
+ clock=2000;await f.voice.start('synthetic-case');assert.equal(f.voice.snapshot().timings.listening_ms,undefined);
+ const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
 });
