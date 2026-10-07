@@ -26,6 +26,10 @@ export function mountAgentMenu({win=window,doc=document}={}){
   const fresh=win.YodResidentAgents?.getSelection?.();
   if(!fresh||fresh.case_id!==caseId)return false;
   if(target==='conversaciones'&&!fresh.can_enqueue)return false;
+  if(typeof win.YodVoiceWorkspace?.openForCase!=='function'){
+   if(dialog.open){let notice=dialog.querySelector('.radial-status');if(!notice){notice=el('p','','radial-status');notice.setAttribute('role','status');dialog.append(notice);}notice.textContent='El puesto se está cargando. Vuelve a elegir la opción en un momento.';}
+   return false;
+  }
   const tabs={ppp:'ppp',pendientes:'tasks',documentos:'sources',conversaciones:'ppp',chat:'activity',notas:'knowledge',moac:'tasks',historial:'knowledge'};
   if(dialog.open)close();
   const ok=await win.YodVoiceWorkspace?.openForCase(caseId,tabs[target]||target,{startVoice:target==='conversaciones'});

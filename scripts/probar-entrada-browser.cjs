@@ -94,6 +94,11 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   }
   await frame.locator('#case-open').focus();await page.keyboard.press('Enter');
   await frame.locator('.station-radial').waitFor();
+  await frame.evaluate(()=>{window.__workspaceReady=window.YodVoiceWorkspace;delete window.YodVoiceWorkspace;});
+  await frame.locator('.radial-options [data-action="ppp"]').click();
+  assert.equal(await frame.locator('.station-radial').isVisible(),true,'a delayed workspace must not silently dismiss the menu');
+  assert.match(await frame.locator('.radial-status').textContent(),/cargando/);
+  await frame.evaluate(()=>{window.YodVoiceWorkspace=window.__workspaceReady;delete window.__workspaceReady;});
   await frame.locator('[data-sector="conversaciones"]').hover();
   assert.equal(await frame.locator('.radial-submenu h2').innerText(),'Hablar');
   assert.equal(await frame.locator('[data-action="conversaciones"]').isDisabled(),true,'read-only profiles cannot start audio');
