@@ -9311,14 +9311,14 @@
         "SYS-DESPACHO-3D"
       ],
       "proposal": "Unificar acceso al autón en selector radial al acercarse o seleccionar su figura: detección por distancia al personaje autorizado, tiempo breve de permanencia, línea de visión y rearme al alejarse para evitar reaperturas. Cuatro sectores direccionales con submenú en el mismo diálogo: Plan de potencial, Hablar, Notas y Pendientes. Cursor/flechas exploran; clic/Enter ejecuta; acercarse nunca inicia micrófono. Mantener el PPP canónico, perfil/ID del proyecto, permisos y aislamiento al cambiar de autón. Preparar la misma interacción para futuros proyectos sin inventar registros ni crear agentes sin la lista pendiente.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "approval": "Dirección solicita explícitamente apertura automática por proximidad y selector radial con submenús el 7-oct-2026. Autoriza corregir interfaz; la lista de proyectos nuevos se entregará después.",
       "tests": [
         "Proximidad: distancia, permanencia, línea de visión, salida/reentrada, bloqueo por panel y revocación.",
         "Navegador: acercarse abre círculo sin micrófono; hover/flechas submenú; PPP/Notas/Hablar por elección explícita; cierre no reaparece hasta alejarse; identidad A/B y revocación.",
         "Node, arquitectura, impacto, OS, portal, accesos, Obra; capturas de escritorio/móvil y publicación."
       ],
-      "deployment": "Propuesta previa a implementación. Puesto106 sigue publicado; voz física permanece pendiente.",
+      "deployment": "Implementado en rama. Pendientes CI de proximidad/radial, capturas reales del render en escritorio/móvil y publicación. La lista de nuevos proyectos no se ha recibido; no se crearon registros.",
       "rollback": "Revertir PR y versiones de recursos; no cambia datos, perfiles, permisos ni configuración Live."
     }
   ],

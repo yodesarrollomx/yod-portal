@@ -22,7 +22,7 @@ if(host){
  const api={...resident,openForCase(id){
   const selection=resident.getSelection();
   if(!selection||selection.case_id!==id)return false;
-  if(window.YodAgentMenu)return window.YodAgentMenu.openForCase(id);
+  if(window.YodAgentMenu)return window.YodAgentMenu.showRadial(id);
   const panel=window.CubefarmYOD;if(!panel)return false;
   const current=panel.getProfile?.();
   if(current&&current.case_id!==id){void resident.refresh();return false;}

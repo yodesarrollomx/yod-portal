@@ -55,7 +55,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   const cachedModule=await frame.evaluate(async()=>{try{await import('./__old-goals-consumer.mjs');return {failed:false};}catch(error){return {failed:true,message:error.message};}});
   assert.equal(cachedModule.failed,true,'the unversioned cache fixture must reject the new exports');
   assert.match(cachedModule.message,/does not provide an export|not exported/);
-  await frame.locator('#circulo-open').click();await frame.getByRole('button',{name:'Plan de potencial',exact:true}).click();
+  await frame.locator('#circulo-open').click();await frame.locator('.radial-options [data-action="ppp"]').click();
   await frame.locator('.workspace-ppp-status').filter({hasText:'No se encontró un vínculo único'}).waitFor();
   assert.equal(await frame.locator('.workspace-board iframe').count(),0);
   await page.evaluate(()=>{window.sourcesReady=true;});
@@ -74,7 +74,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   assert.equal(sessions,0);assert.equal(await frame.evaluate(()=>window.captures),0);
   const iframe=await frame.locator('.workspace-board iframe').elementHandle(),ppp=await iframe.contentFrame();
   await ppp.locator('#area').fill('135');
-  await frame.locator('#voice-start').click();await frame.locator('[data-voice-phase="listening"]').waitFor();
+  await frame.locator('#station-menu').click();await frame.locator('[data-sector="conversaciones"]').click();assert.equal(sessions,0);await frame.locator('[data-action="conversaciones"]').click();await frame.locator('[data-voice-phase="listening"]').waitFor();
   assert.equal(sessions,1);assert.equal(await frame.evaluate(()=>window.captures),1);
   assert.equal(await iframe.evaluate(el=>el.isConnected),true);assert.equal(await ppp.locator('#area').inputValue(),'135');
   await ppp.evaluate(()=>window.confirmDraft());await frame.locator('.workspace-ppp-summary').filter({hasText:'Lectura confirmada'}).waitFor();
@@ -122,7 +122,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   assert.deepEqual(await ppp.evaluate(()=>window.receiptAcks.at(-1)),{request_id:'board-voice-2',revision:'r3'});
   assert.equal(await frame.locator('.realtime-dialog').isVisible(),false);
   assert.equal(await ppp.evaluate(()=>window.applies),2,'finalization while hidden never dispatches another write');
-  await frame.locator('#circulo-open').click();await frame.getByRole('button',{name:'Plan de potencial',exact:true}).click();
+  await frame.locator('#circulo-open').click();await frame.locator('.radial-options [data-action="ppp"]').click();
   assert.equal(await iframe.evaluate(el=>el.isConnected),true);
   assert.equal(await ppp.evaluate(()=>window.applies),2,'reopening does not replay the completed write');
   await frame.getByRole('button',{name:'Conservar y comparar variantes'}).click();
@@ -131,9 +131,9 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await frame.locator('#station-menu').click();await frame.locator('.station-radial').waitFor();
   assert.equal(await frame.locator('.station-wheel [data-sector]').count(),4);
   await page.screenshot({path:path.join(out,'selector-auton-'+viewport.width+'.png'),fullPage:true});
-  await frame.locator('.station-radial [data-sector="ppp"]').click();assert.equal(await iframe.evaluate(el=>el.isConnected),true);
+  await frame.locator('.station-radial [data-sector="ppp"]').click();await frame.locator('.radial-options [data-action="ppp"]').click();assert.equal(await iframe.evaluate(el=>el.isConnected),true);
   assert.equal(await iframe.evaluate(el=>el.isConnected),true);
-  await frame.locator('.voice-close').click();await frame.locator('#circulo-open').click();await frame.getByRole('button',{name:'Plan de potencial',exact:true}).click();
+  await frame.locator('.voice-close').click();await frame.locator('#circulo-open').click();await frame.locator('.radial-options [data-action="ppp"]').click();
   assert.equal(await iframe.evaluate(el=>el.isConnected),true);assert.equal(sessions,1);
   if(viewport.width>850){const left=await frame.locator('.voice-sidebar').boundingBox(),right=await frame.locator('.voice-workspace').boundingBox();assert.ok(right.x>=left.x+left.width);}
   assert.equal(await frame.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);

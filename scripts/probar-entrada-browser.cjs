@@ -15,7 +15,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
    let selection=null,observation={phase:'unauthorized',case_id:null,work:null};
    const states=new Set(),profiles=new Set(),works=new Set();
    const state=()=>({phase:selection?'observe':'unauthorized',prepared:true,checked_at:Date.now(),selection});
-   window.YodResidentAgents={getSelection:()=>selection,getProfile:()=>selection?.avatar||null,snapshot:state,subscribe(fn){states.add(fn);fn(state());return()=>states.delete(fn);},subscribeProfile(fn){profiles.add(fn);fn(selection?.avatar||null);return()=>profiles.delete(fn);},openForCase(id){return window.YodAgentMenu.openForCase(id);}};
+   window.YodResidentAgents={getSelection:()=>selection,getProfile:()=>selection?.avatar||null,snapshot:state,subscribe(fn){states.add(fn);fn(state());return()=>states.delete(fn);},subscribeProfile(fn){profiles.add(fn);fn(selection?.avatar||null);return()=>profiles.delete(fn);},openForCase(id){return window.YodAgentMenu.showRadial(id);}};
    window.YodWorkObserver={snapshot:()=>observation,subscribe(fn){works.add(fn);fn(observation);return()=>works.delete(fn);},refresh:async()=>{}};
    window.__observe=value=>{observation=value;for(const fn of works)fn(value);};
    window.__select=key=>{
@@ -72,7 +72,33 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
    console.log('STATION_ALIGNMENT_'+variant+':'+(await page.screenshot({type:'jpeg',quality:80})).toString('base64'));
    await frame.evaluate(()=>window.despacho.setMode('overview'));
   }
+  if(variant!=='fallback'){
+   await frame.evaluate(()=>window.despacho.visit('case'));
+   await frame.locator('.station-radial').waitFor();
+   assert.equal(await frame.evaluate(()=>window.__captures),0,'proximity does not request audio');
+   assert.match(await frame.locator('#agent-menu-title').innerText(),/Autón A/);
+   await page.keyboard.press('Escape');await page.waitForTimeout(700);
+   assert.equal(await frame.locator('.station-radial').isVisible(),false,'closing near the character must not immediately reopen');
+   await frame.evaluate(()=>window.despacho.camera.position.set(9.8,1.65,-4.4));await page.waitForTimeout(150);
+   await frame.evaluate(()=>window.despacho.camera.position.set(8,1.65,-5.6));
+   await frame.locator('.station-radial').waitFor();
+   await page.keyboard.press('ArrowLeft');
+   assert.equal(await frame.locator('.radial-submenu h2').innerText(),'Notas');
+   assert.equal(await frame.locator('[data-sector="notas"]').getAttribute('aria-pressed'),'true');
+   await page.screenshot({path:path.join(out,'radial-proximidad-'+variant+'.png')});
+   console.log('RADIAL_'+variant+':'+(await page.screenshot({type:'jpeg',quality:80})).toString('base64'));
+   await frame.locator('.radial-options [data-action="notas"]').click();
+   await frame.locator('[data-tab="knowledge"][aria-pressed="true"]').waitFor();
+   assert.equal(await frame.evaluate(()=>window.__captures),0);
+   await frame.locator('.voice-close').click();await frame.evaluate(()=>window.despacho.setMode('overview'));
+  }
   await frame.locator('#case-open').focus();await page.keyboard.press('Enter');
+  await frame.locator('.station-radial').waitFor();
+  await frame.locator('[data-sector="conversaciones"]').hover();
+  assert.equal(await frame.locator('.radial-submenu h2').innerText(),'Hablar');
+  assert.equal(await frame.locator('[data-action="conversaciones"]').isDisabled(),true,'read-only profiles cannot start audio');
+  await page.keyboard.press('ArrowUp');
+  await frame.locator('.radial-options [data-action="ppp"]').click();
   await frame.locator('.workspace-board iframe[src*="open=synthetic-A"]').waitFor();
   assert.equal(await frame.locator('[data-tab="ppp"]').getAttribute('aria-pressed'),'true');
   assert.match(await frame.locator('#voice-title').textContent(),/Autón A/);
@@ -84,7 +110,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await page.screenshot({path:path.join(out,'entrada-'+variant+'-oficina-prueba.png')});
   console.log('ENTRY_OFFICE_'+variant+':'+(await page.screenshot({type:'jpeg',quality:75})).toString('base64'));
   if(variant!=='fallback'){
-   await frame.locator('#office-agent-marker').click();await frame.locator('.realtime-dialog').waitFor();
+   await frame.locator('#office-agent-marker').click();await frame.locator('.station-radial').waitFor();await frame.locator('.radial-options [data-action="ppp"]').click();await frame.locator('.realtime-dialog').waitFor();
    assert.equal(await frame.locator('[data-tab="ppp"]').getAttribute('aria-pressed'),'true');
    await frame.locator('.voice-close').click();
   }
@@ -96,6 +122,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   assert.equal(await boardFrame.locator('#area').inputValue(),'135');
   await frame.locator('.voice-close').click();
   await frame.evaluate(()=>window.despacho.openPanel('case'));
+  await frame.locator('.station-radial').waitFor();await frame.locator('.radial-options [data-action="ppp"]').click();
   await frame.locator('.realtime-dialog').waitFor();
   assert.equal(await board.evaluate(el=>el.isConnected),true);
   await page.screenshot({path:path.join(out,'entrada-'+variant+'-puesto-prueba.png')});
@@ -113,6 +140,13 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   assert.equal(await frame.locator('[data-entry-detail]').textContent(),'');
   assert.equal(await frame.evaluate(()=>window.__captures),0);
   assert.equal(await frame.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
+  await frame.locator('.voice-close').click();
+  await frame.evaluate(()=>{window.__select('B');window.YodAgentMenu.showRadial('synthetic-B');});
+  assert.match(await frame.locator('#agent-menu-title').innerText(),/Autón B/);
+  await frame.evaluate(()=>window.__select('A'));assert.equal(await frame.locator('.station-radial').isVisible(),false);
+  assert.equal(await frame.locator('#agent-menu-title').count(),0,'old project identity removed');
+  await frame.evaluate(()=>{window.YodAgentMenu.showRadial('synthetic-A');window.__select(null);});
+  assert.equal(await frame.locator('.station-radial').isVisible(),false);
   assert.deepEqual(errors,[]);
   console.log('Entry '+variant+': access, keyboard, one PPP, draft retained, identity switch, late activity discarded and revocation passed; synthetic authorization.');
   await context.close();
