@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-07.104-puesto-recuperable · 2026-10-07.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-07.105-voz-reconexion · 2026-10-07.
 
 ## SYS-DESPACHO · El Despacho
 

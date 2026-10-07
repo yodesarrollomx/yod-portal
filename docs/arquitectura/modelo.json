@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.104-puesto-recuperable",
+  "revision": "2026-10-07.105-voz-reconexion",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -9260,6 +9260,25 @@
       ],
       "deployment": "Implementado en PR117, buildagents.js/css9c730ba con workflow37579768200; workflowtemporal retirado. Recuperación conjunta con potenciales-yodPR18 y CI final pendientes. No cerrar integralmente paso2 ni iniciar paso3 mientras falte aceptación real requerida.",
       "rollback": "Revertir PR y referencias de caché. No revertir registros de negocio ni reenviar escrituras; mantener recibos."
+    },
+    {
+      "id": "CHG-DESPACHO-VOZ-105",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "proposal": "Corregir dos fallos de recuperación de voz reproducidos con dobles locales: session.started recibido durante reconexión dejaba el micrófono desactivado al publicar escucha; /voice/session rechazado con 401 conservaba el token temporal y el siguiente intento explícito lo reutilizaba. Centralizar habilitación del micrófono al recuperar la conexión, respetar silencio voluntario y renovar sólo la credencial temporal rechazada en un intento posterior. No reiniciar sesiones automáticamente ni modificar JSON Live, contexto, datos de negocio o credencial de YOD OS. Actualizar URLs de módulos e importadores para que la entrega se pueda verificar en la publicación. No atribuir estos fallos al reporte anterior del usuario sin correlación; aceptación natural con micrófono físico pendiente.",
+      "status": "propuesto",
+      "approval": "Dirección solicita resolver voz y cerrar pasos secuencialmente; revisión de fallo anterior recibida el 7-oct-2026. Se registró reproducción antes del cambio el 7-oct-2026 00:51–00:52, America/Hermosillo (UTC-7).",
+      "tests": [
+        "Regresión del orden starting → disconnected → session.started → connected: micrófono activo únicamente después del inicio confirmado y reconexión, sin nueva sesión.",
+        "Reconexión conserva micrófono silenciado por el usuario y no reinicia trabajo.",
+        "Rechazo de credencial temporal y siguiente intento explícito: mint nuevo, sin renovación automática; rechazo tardío de otro caso no elimina credencial nueva.",
+        "Node y verificadores requeridos, Chromium/WebKit pertinentes y versiones de publicación; audio físico se acredita por separado."
+      ],
+      "deployment": "Propuesta previa a implementación. Paso 2 permanece abierto y paso 3 no se inicia. No llamadas pagadas ni escritura de expediente durante pruebas.",
+      "rollback": "Revertir PR y referencias de caché; no modificar credenciales de YOD OS, registros ni sesiones de negocio."
     }
   ],
   "data_contracts": [
