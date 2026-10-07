@@ -101,6 +101,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await frame.evaluate(()=>{window.YodVoiceWorkspace=window.__workspaceReady;delete window.__workspaceReady;});
   await frame.locator('[data-sector="conversaciones"]').hover();
   assert.equal(await frame.locator('.radial-submenu h2').innerText(),'Hablar');
+  assert.equal(await frame.evaluate(()=>document.querySelector('.station-radial').contains(document.activeElement)),true,'changing sector keeps keyboard focus inside the modal');
   assert.equal(await frame.locator('[data-action="conversaciones"]').isDisabled(),true,'read-only profiles cannot start audio');
   await page.keyboard.press('ArrowUp');
   await frame.locator('.radial-options [data-action="ppp"]').click();

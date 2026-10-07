@@ -52,6 +52,8 @@ export function mountAgentMenu({win=window,doc=document}={}){
   const subtitle=el('h2'),choices=el('div',undefined,'radial-options');submenu.append(subtitle,choices);
   const buttons=[],paths=[],icons=['▤','◉','✓','▧'];
   function select(id){
+   if(id===sector&&choices.childElementCount)return;
+   const restoreFocus=choices.contains(doc.activeElement);
    sector=id;const label=MENU_SECTORS.find(([k])=>k===id)[1];subtitle.textContent=label;
    buttons.forEach((b,i)=>{const on=MENU_SECTORS[i][0]===id;b.setAttribute('aria-pressed',String(on));paths[i].classList.toggle('selected',on);});
    choices.replaceChildren(...RADIAL_OPTIONS[id].map(([target,label,detail])=>{
@@ -60,6 +62,7 @@ export function mountAgentMenu({win=window,doc=document}={}){
     if(target==='conversaciones'&&!selection.can_enqueue){b.disabled=true;b.querySelector('small').textContent='Acceso de consulta';}
     return b;
    }));
+   if(restoreFocus)buttons[MENU_SECTORS.findIndex(([key])=>key===id)].focus({preventScroll:true});
   }
   selectSector=select;
   MENU_SECTORS.forEach(([id,label],i)=>{
