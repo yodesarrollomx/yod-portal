@@ -6,15 +6,18 @@ const {chromium}=require('playwright'),fs=require('node:fs'),path=require('node:
  const out=process.env.BROWSER_EVIDENCE_DIR||'/tmp/yod-entry';fs.mkdirSync(out,{recursive:true});
  try{
   const context=await browser.newContext(),url='https://yodesarrollomx.github.io/yod-portal/despacho3d/index.html';
+  const entry=fs.readFileSync(path.resolve(__dirname,'../despacho3d/index.html'),'utf8');
+  const expectedAssets=entry.match(/(?:live-voice-boot\.mjs|agents\.js)\?v=[\w-]+/g)||[];
+  assert.equal(expectedAssets.length,2,'the publication gate must identify both current entry assets');
   let ready=false;
   for(let attempt=0;attempt<36;attempt++){
-   const response=await context.request.get(url+'?verify=composicion101-'+Date.now());
-   if(response.ok()&&(await response.text()).includes('office.css?v=8')){ready=true;break;}
+   const response=await context.request.get(url+'?verify=puesto104-'+Date.now());
+   if(response.ok()){const html=await response.text();if(expectedAssets.every(asset=>html.includes(asset))){ready=true;break;}}
    await new Promise(resolve=>setTimeout(resolve,5000));
   }
   assert.equal(ready,true,'Pages must serve the changed entry before reporting publication');
   for(const viewport of [{width:1366,height:900},{width:390,height:844}]){
-   const page=await context.newPage();await page.setViewportSize(viewport);await page.goto(url+'?v=composicion101',{waitUntil:'networkidle'});
+   const page=await context.newPage();await page.setViewportSize(viewport);await page.goto(url+'?v=puesto104',{waitUntil:'networkidle'});
    await page.waitForFunction(()=>window.despacho&&window.YodVoiceWorkspace,{},{timeout:60000});
    await page.locator('[data-entry-status]').filter({hasText:'Entra a YOD OS'}).waitFor({timeout:20000});
    assert.equal(await page.locator('#case-open').isDisabled(),true);
