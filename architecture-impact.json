@@ -1,16 +1,17 @@
 {
-  "model_revision": "2026-10-07.107-radial-proximidad",
-  "proposal_id": "CHG-DESPACHO-RADIAL-PROXIMIDAD-107",
-  "summary": "Unificar acceso al autón en selector radial al acercarse o seleccionar su figura: detección por distancia al personaje autorizado, tiempo breve de permanencia, línea de visión y rearme al alejarse para evitar reaperturas. Cuatro sectores direccionales con submenú en el mismo diálogo: Plan de potencial, Hablar, Notas y Pendientes. Cursor/flechas exploran; clic/Enter ejecuta; acercarse nunca inicia micrófono. Mantener el PPP canónico, perfil/ID del proyecto, permisos y aislamiento al cambiar de autón. Preparar la misma interacción para futuros proyectos sin inventar registros ni crear agentes sin la lista pendiente.",
+  "model_revision": "2026-10-07.108-sesion-persistente",
+  "proposal_id": "CHG-YOD-OS-SESION-PERSISTENTE-108",
+  "summary": "Mantener la sesión de YOD OS estable ante fallas transitorias del Portero: si una identidad ya fue validada en la carga actual, una caída temporal conserva la interfaz y reintenta en segundo plano; una revocación o caducidad explícita sigue bloqueando. Invalidar cachés del frontend para cargar el Portero actualizado. La sesión persistente sigue dependiendo de una credencial válida y del backend; no se amplían permisos ni se omite la autorización.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-DESPACHO-3D"
+    "GAS-PORTERO",
+    "SYS-POTENCIALES"
   ],
   "tests": [
-    "Proximidad: distancia, permanencia, línea de visión, salida/reentrada, bloqueo por panel y revocación.",
-    "Navegador: acercarse abre círculo sin micrófono; hover/flechas submenú; PPP/Notas/Hablar por elección explícita; cierre no reaparece hasta alejarse; identidad A/B y revocación.",
-    "Node, arquitectura, impacto, OS, portal, accesos, Obra; capturas de escritorio/móvil y publicación."
+    "Identidad: sesión validada + timeout conserva identidad/permisos de la carga actual y programa reintento.",
+    "Seguridad: carga nueva sin validación no muestra datos privados; revocado/expirado sigue bloqueando y termina retirando token.",
+    "Regresión: verificar YOD OS, contratos, arquitectura e impacto; caché de app.js/portero.js invalidada por query string."
   ],
-  "rollback": "Revertir PR y versiones de recursos; no cambia datos, perfiles, permisos ni configuración Live."
+  "rollback": "Revertir PR 121 y volver los query strings de app.js/portero.js a la versión anterior. No cambia datos, roles ni permisos."
 }
