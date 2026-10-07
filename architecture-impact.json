@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-07.111-voz-discreta",
+  "model_revision": "2026-10-07.112-sesion-reconexion",
   "proposal_id": "CHG-YOD-OS-SESION-PERSISTENTE-108",
   "summary": "Endurecer la autenticación YOD OS ante caídas transitorias de Google Apps Script: reintento automático acotado por backoff sin borrar token, gracia máxima de cinco minutos para identidad validada en la carga actual, bloqueo de datos en arranque frío y cuando vence la gracia, rechazo y cambio de rol/permisos bloquean de inmediato. No modifica el contrato ni despliegue del Portero ni los datos del negocio.",
   "components": [
