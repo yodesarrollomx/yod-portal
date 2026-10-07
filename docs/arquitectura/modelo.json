@@ -9931,7 +9931,8 @@
         "GAS-PORTERO",
         "SYS-SALA",
         "GAS-SALA",
-        "SHEET-SALA"
+        "SHEET-SALA",
+        "SYS-DESPACHO-3D"
       ],
       "source": "Petición del propietario del 3 de octubre de 2026: alojamiento directo GitHub e ingreso inmersivo desde Despacho, eliminando el segundo login del Site privado.",
       "input": [
@@ -10152,7 +10153,9 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO",
         "GAS-PORTERO",
-        "EXT-DRIVE"
+        "EXT-DRIVE",
+        "SVC-AUTON-CLOUD",
+        "EXT-JEV"
       ],
       "source": "Continuación autorizada 5-oct-2026 de la biblioteca indexada de Jev; Documentos del expediente y lector Drive actuales.",
       "input": [
@@ -10181,7 +10184,9 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO",
         "GAS-PORTERO",
-        "EXT-DRIVE"
+        "EXT-DRIVE",
+        "SVC-AUTON-CLOUD",
+        "EXT-OPENAI"
       ],
       "source": "Prioridad explícita de Dirección el 5-oct-2026: voz básica primero y contexto después.",
       "input": [
@@ -10207,7 +10212,9 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO",
         "GAS-PORTERO",
-        "EXT-DRIVE"
+        "EXT-DRIVE",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD"
       ],
       "source": "Continuidad autorizada por Dirección después de la voz básica.",
       "input": [
@@ -10239,7 +10246,11 @@
         "EXT-DRIVE",
         "SYS-POTENCIALES",
         "SHEET-PPP-MODELOS",
-        "SHEET-PORTERO"
+        "SHEET-PORTERO",
+        "SVC-AUTON-CLOUD",
+        "STORE-AUTON-ESTADO",
+        "SYS-DESPACHO-3D",
+        "EXT-OBSIDIAN"
       ],
       "source": "Continuación autorizada del puesto de Gastón. Contrato de lectura, captura de versiones y exportación portable, con transporte de prueba aislado.",
       "input": [
@@ -10306,7 +10317,9 @@
         "GAS-PORTERO",
         "SHEET-PORTERO",
         "SHEET-PPP-MODELOS",
-        "EXT-DRIVE"
+        "EXT-DRIVE",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD"
       ],
       "source": "Petición explícita de Dirección; extensión del puente existente y del modelo nativo.",
       "input": [
@@ -10665,7 +10678,8 @@
       "prefix": "despacho3d/",
       "components": [
         "SYS-YOD-OS",
-        "SYS-DESPACHO"
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
       ]
     },
     {
@@ -10929,7 +10943,8 @@
       "prefix": "despacho3d/permisos-demo.html",
       "components": [
         "SYS-YOD-OS",
-        "SYS-DESPACHO"
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
       ]
     },
     {
@@ -10937,7 +10952,8 @@
       "prefix": "despacho3d/permisos-demo.mjs",
       "components": [
         "SYS-YOD-OS",
-        "SYS-DESPACHO"
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
       ]
     },
     {
@@ -11028,7 +11044,8 @@
       "prefix": "despacho3d/knowledge-board.mjs",
       "components": [
         "SYS-YOD-OS",
-        "SYS-DESPACHO"
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
       ]
     },
     {
@@ -11036,7 +11053,8 @@
       "prefix": "despacho3d/knowledge-board.css",
       "components": [
         "SYS-YOD-OS",
-        "SYS-DESPACHO"
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
       ]
     },
     {
@@ -11142,7 +11160,8 @@
       "prefix": "despacho3d/work-observer.mjs",
       "components": [
         "SYS-YOD-OS",
-        "SYS-DESPACHO"
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
       ],
       "repo": "yodesarrollomx/yod-portal"
     },
@@ -11150,7 +11169,8 @@
       "prefix": "despacho3d/work-observer-boot.mjs",
       "components": [
         "SYS-YOD-OS",
-        "SYS-DESPACHO"
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
       ],
       "repo": "yodesarrollomx/yod-portal"
     },
@@ -11158,7 +11178,8 @@
       "prefix": "despacho3d/work-view.mjs",
       "components": [
         "SYS-YOD-OS",
-        "SYS-DESPACHO"
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
       ],
       "repo": "yodesarrollomx/yod-portal"
     },
@@ -11166,7 +11187,8 @@
       "prefix": "despacho3d/office-screen.mjs",
       "components": [
         "SYS-YOD-OS",
-        "SYS-DESPACHO"
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
       ],
       "repo": "yodesarrollomx/yod-portal"
     },
@@ -11207,7 +11229,8 @@
       "prefix": "despacho3d/puesto-demo.html",
       "components": [
         "SYS-YOD-OS",
-        "SYS-DESPACHO"
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
       ]
     },
     {
@@ -11270,6 +11293,53 @@
       "prefix": "tests/arquitectura.test.cjs",
       "components": [
         "SYS-YOD-OS"
+      ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": "",
+      "components": [
+        "SVC-AUTON-CLOUD"
+      ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": "cloud/case-knowledge.mjs",
+      "components": [
+        "SVC-AUTON-CLOUD",
+        "STORE-AUTON-ESTADO"
+      ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": "cloud/voice-lane.mjs",
+      "components": [
+        "SVC-AUTON-CLOUD",
+        "EXT-OPENAI"
+      ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": "runtime/typesafe-jev.mjs",
+      "components": [
+        "SVC-AUTON-CLOUD",
+        "EXT-JEV"
+      ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": "render.yaml",
+      "components": [
+        "SVC-AUTON-CLOUD",
+        "EXT-RENDER"
+      ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": "cloud/render.yaml",
+      "components": [
+        "SVC-AUTON-CLOUD",
+        "EXT-RENDER"
       ]
     }
   ],

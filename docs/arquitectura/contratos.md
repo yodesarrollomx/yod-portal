@@ -352,7 +352,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 ## CTR-DESPACHO-3D-SECTION
 
-- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, SYS-SALA, GAS-SALA, SHEET-SALA.
+- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, SYS-SALA, GAS-SALA, SHEET-SALA, SYS-DESPACHO-3D.
 - Evidencia: Petición del propietario del 3 de octubre de 2026: alojamiento directo GitHub e ingreso inmersivo desde Despacho, eliminando el segundo login del Site privado..
 - Entrada/campos: `Ruta exacta #/despacho y perfil confirmado por Portero con permiso DP vigente`, `Destino fijo ../despacho3d/index.html de mismo origen; frontend neutro sin identidad o registros de negocio incluidos en el código público.`, `Evento yod:despacho:pin version 1 de la ventana/origen exactos del iframe activo: requestId UUID, target id/zone/kind/point, view position/quaternion/fov/mode, modelVersion y viewport`, `Evento compatible yod:despacho:pin version 2: mismo envelope/target interface más ui {surface,path,item}. Surface lista fija, path tag:nth-of-type sin atributos/IDs/texto máx600 y item ordinal nullable0..9999. Fallback UI mode map exige position/quaternion/fov null.`, `Extensión de view para panorama ortográfico: mode overview, fov null y orthographic {left,right,top,bottom,zoom} con límites finitos ordenados. Perspectiva v1/v2 y fallback map se conservan; ningún dato privado adicional.`.
 - Salida: Sección Despacho inmersiva con recorrido, paneles de agentes, regreso a Inicio y enlace a Bandeja canónica., Iframe desmontado al salir, cerrar, cambiar usuario o invalidar autorización, Chinche revisable con ancla/cámara/versiones geométricas y encargo humano; contexto técnico en campo codigo existente.
@@ -472,7 +472,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 ## CTR-DESPACHO-BIBLIOTECA
 
-- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, EXT-DRIVE.
+- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, EXT-DRIVE, SVC-AUTON-CLOUD, EXT-JEV.
 - Evidencia: Continuación autorizada 5-oct-2026 de la biblioteca indexada de Jev; Documentos del expediente y lector Drive actuales..
 - Entrada/campos: `Contexto autenticado del expediente y referencias de Documentos; cliente no elige otro actor/expediente o amplía alcance.`, `Credencial temporal del carril rápido, consulta acotada y sólo lectura.`.
 - Salida: Estado de preparación y fuentes reales antes de cargar contenidos., Pasajes con fuente/página/pestaña/rango/versión/fecha, cobertura y límites; historial conserva referencias aparte de deltas exactos..
@@ -489,7 +489,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 ## CTR-DESPACHO-VOZ-BASICA
 
-- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, EXT-DRIVE.
+- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, EXT-DRIVE, SVC-AUTON-CLOUD, EXT-OPENAI.
 - Evidencia: Prioridad explícita de Dirección el 5-oct-2026: voz básica primero y contexto después..
 - Entrada/campos: `Credencial efímera válida para el expediente autorizado y gesto explícito de Hablar.`, `SDP WebRTC y JSON GPT-Live exacto ya proporcionado; claves sólo servidor.`.
 - Salida: Audio remoto y escucha al recibir session.started; no depende de ACK de contexto/herramientas., Transcripciones exactas por start_ms/end_ms, journal durable y estado de respaldo separado..
@@ -503,7 +503,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 ## CTR-DESPACHO-AGENTE-OPERATIVO
 
-- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, EXT-DRIVE.
+- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, EXT-DRIVE, SYS-DESPACHO-3D, SVC-AUTON-CLOUD.
 - Evidencia: Continuidad autorizada por Dirección después de la voz básica..
 - Entrada/campos: `Gesto de Hablar y credencial efímera ligada a caso/actor.`, `Expediente/fuentes canónicos y herramientas de lectura existentes.`, `Petición hablada de consultar o trabajar un objetivo con criterio de salida, dentro de capacidades instaladas.`.
 - Salida: Audio independiente de la carga; contexto y herramientas con estado verificable., Objetivos/acciones en el registro existente con ID, avance, evidencia, bloqueo y siguiente paso., Interacción de Gastón con pendientes/documentos/historial reales y acceso al tablero vigente..
@@ -518,7 +518,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 ## CTR-DESPACHO-CONOCIMIENTO
 
-- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, EXT-DRIVE, SYS-POTENCIALES, SHEET-PPP-MODELOS, SHEET-PORTERO.
+- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, EXT-DRIVE, SYS-POTENCIALES, SHEET-PPP-MODELOS, SHEET-PORTERO, SVC-AUTON-CLOUD, STORE-AUTON-ESTADO, SYS-DESPACHO-3D, EXT-OBSIDIAN.
 - Evidencia: Continuación autorizada del puesto de Gastón. Contrato de lectura, captura de versiones y exportación portable, con transporte de prueba aislado..
 - Entrada/campos: `Credencial efímera del expediente vigente; servidor resuelve identidad y ámbito.`, `POST /fast/knowledge/board y /fast/knowledge/export: cuerpo vacío.`, `POST /fast/knowledge/capture: title, kind version|variant, parent_id, request_id y expected_revision. Nunca cantidades ni fórmulas del cliente.`, `POST /fast/knowledge/compare: left_id, right_id y criteria vacío para comparación descriptiva.`.
 - Salida: Panel con revisión, fecha, capacidades, hechos, versiones/variantes, decisiones, próximos pasos y fuentes., Captura con recibo exacto de solicitud; conflicto o resultado incierto explícitos., Markdown portable con nombre seguro y revisión; conexión Obsidian sólo si existe sincronización comprobada., Archivos Markdown portables reunidos en ZIP local tras validar rutas relativas únicas y límite total de dos MB., Comparación de snapshots registrados: diferencias de entradas/resultados, unidades, valores ausentes y límites; ninguna recomendación automática..
@@ -553,7 +553,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 ## CTR-PPP-AJUSTE-CONVERSADO
 
-- Componentes: SYS-YOD-OS, SYS-DESPACHO, SYS-POTENCIALES, GAS-PORTERO, SHEET-PORTERO, SHEET-PPP-MODELOS, EXT-DRIVE.
+- Componentes: SYS-YOD-OS, SYS-DESPACHO, SYS-POTENCIALES, GAS-PORTERO, SHEET-PORTERO, SHEET-PPP-MODELOS, EXT-DRIVE, SYS-DESPACHO-3D, SVC-AUTON-CLOUD.
 - Evidencia: Petición explícita de Dirección; extensión del puente existente y del modelo nativo..
 - Entrada/campos: `PPP registrado del caso seleccionado, sesión autorizada y snapshot confirmado.`, `Propuesta con campos allowlisted, antes/después, escenario, revisión y motivo.`, `Solicitud explícita del usuario al autón; herramienta separada para solicitar ejecución de esa propuesta.`.
 - Salida: Tarjetas cerradas al abrir el puesto y detalle de datos al seleccionarlas., Intención de aplicación durable con vigencia acotada; estado pendiente no acredita escritura., Confirmación solo después de releer cantidades, escenario y revisión devueltos por el tablero..

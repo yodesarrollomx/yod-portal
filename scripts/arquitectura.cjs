@@ -70,10 +70,16 @@ function validate(model, schema) {
     checkEvidence(e);
     if (!Array.isArray(e.contract_ids)) throw new Error(e.id + ': falta contract_ids');
     if (new Set(e.contract_ids).size !== e.contract_ids.length) throw new Error(e.id + ': contrato duplicado en conexión');
-    for (const id of e.contract_ids) if (!sets.data_contracts.has(id)) throw new Error(e.id + ': contrato desconocido ' + id);
+    for (const id of e.contract_ids) {
+      if (!sets.data_contracts.has(id)) throw new Error(e.id + ': contrato desconocido ' + id);
+      const contract = model.data_contracts.find(c => c.id === id);
+      if (![e.from, e.to].every(component => contract.components.includes(component))) throw new Error(e.id + ': contrato no cubre ambos participantes ' + id);
+    }
     if (e.runtime_verified === true) {
       const proof = e.runtime_evidence;
-      if (!proof || !/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$/.test(proof.checked_at || '') || !proof.scope || !proof.receipt || !e.evidence.some(x => x.status === 'ejecucion')) throw new Error(e.id + ': ejecución sin recibo fechado y alcance');
+      const date = proof && proof.checked_at;
+      const validDate = typeof date === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(date) && Number.isFinite(Date.parse(date)) && new Date(date).toISOString().slice(0, 19) === date.slice(0, 19);
+      if (!proof || !validDate || typeof proof.scope !== 'string' || !proof.scope.trim() || typeof proof.receipt !== 'string' || !proof.receipt.trim() || !e.evidence.some(x => x.status === 'ejecucion')) throw new Error(e.id + ': ejecución sin recibo fechado y alcance');
     }
   }
   for (const p of model.processes) { checkEvidence(p); for (const s of p.steps) for (const id of s.components || []) if (!sets.components.has(id)) throw new Error(p.id + ': paso con componente desconocido ' + id); }
