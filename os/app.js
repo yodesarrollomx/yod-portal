@@ -617,7 +617,12 @@
   function frasePendiente(d){return FRASE_CANJE[d]||'Sin validar · toca ⟳';}
   async function loadIdentity(){
     var token=tokenActual(),request=++state.identityRequest;
-    bloquearSesion(Boolean(token));
+    // Si esta misma sesión ya fue validada en esta carga, revalidar en segundo
+    // plano sin desmontar la identidad ni vaciar la pantalla. Un Portero lento
+    // no equivale a cerrar sesión; una revocación real sí bloquea de inmediato.
+    var yaValidada=Boolean(token)&&state.profileReady&&state.sessionToken===token;
+    if(!yaValidada)bloquearSesion(Boolean(token));
+    else setConnection('loading','Sesión activa · comprobando acceso');
     var ep=state.sesionEpoch;
     function vigente(){return request===state.identityRequest&&ep===state.sesionEpoch&&token===tokenActual();}
     if(!token){$('access-status').textContent='Requiere acceso';return;}
@@ -632,16 +637,32 @@
     }catch(err){
       if(!vigente())return;
       var d=(err&&err._diag)||'error';
-      bloquearSesion();
       var LENTO={'canje:sin-respuesta':1,'canje:timeout':1,'error':1};
+      var MUERTO={'canje:clave':1,'canje:liga':1,'canje:revocado':1,'canje:expirado':1};
+
+      // Fallo transitorio + sesión ya validada: conservar la pantalla y sus
+      // permisos actuales, marcar reconexión y reintentar sin mandar a Google.
+      if(LENTO[d]&&yaValidada){
+        state.canjeRetry=(state.canjeRetry||0)+1;
+        setConnection('error','Sesión activa · reconectando');
+        $('access-status').textContent='Sesión activa · reintentando';
+        if(state.canjeRetry<=REINTENTOS_MAX){
+          setTimeout(function(){if(request===state.identityRequest&&tokenActual()===token)loadIdentity();},REINTENTO_MS);
+        }
+        console.warn('[YOD OS] Portero temporalmente no disponible; se conserva la sesión validada:',d);
+        return;
+      }
+
+      // Si nunca se validó esta carga, no se muestran datos privados mientras
+      // el Portero está caído. Tampoco se borra el token por un timeout.
+      bloquearSesion();
       if(LENTO[d]){
         state.canjeRetry=(state.canjeRetry||0)+1;
         if(state.canjeRetry<=REINTENTOS_MAX){setConnection('error','Portero lento · reintentando');
           setTimeout(function(){if(request===state.identityRequest&&tokenActual()===token)loadIdentity();},REINTENTO_MS);}
       }
-      // Conserva la política existente de retirar el token tras tres rechazos;
-      // los permisos y datos visibles se invalidan desde el primer rechazo.
-      var MUERTO={'canje:clave':1,'canje:liga':1,'canje:revocado':1,'canje:expirado':1};
+      // Revocación/caducidad sí invalida el acceso. Se conserva el umbral de
+      // tres respuestas definitivas para evitar borrar por una respuesta aislada.
       if(MUERTO[d]){
         var n=0;try{n=(parseInt(localStorage.getItem('yod_canje_fail')||'0',10)||0)+1;localStorage.setItem('yod_canje_fail',String(n));}catch(_e){}
         if(n>=3){try{localStorage.removeItem(TOKEN_KEY);localStorage.removeItem('yod_canje_fail');}catch(_e){}location.reload();return;}
