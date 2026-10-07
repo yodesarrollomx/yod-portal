@@ -88,13 +88,8 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   activity.replaceChildren(...(s.activity||[]).slice(0,8).map(a=>el('li',a.action+' · '+({working:'en curso',completed:'completado',failed:'sin completar'}[a.status]||a.status)+' · '+new Date(a.at).toLocaleTimeString())));
  }
  function postBoard(type,extra={}){if(frame&&selected&&boardLink?.bridge)frame.contentWindow?.postMessage({type,version:1,nonce,case_id:selected.case_id,...extra},boardLink.origin);}
- function paintProposals(){
-  proposalHost.replaceChildren();
-  for(const p of proposals){
-   const article=el('article',undefined,'workspace-card');article.append(el('h3','Ajuste propuesto por el autón'),el('p',p.motivo));
-   for(const c of p.cambios)article.append(el('p',c.label+': '+(c.antes??'pendiente')+' → '+(c.valor??'pendiente')));
-   const eligibility=proposalState(board,p,application);
-   const apply=button(eligibility==='sending'?'Aplicando…':eligibility==='unconfirmed'?'Confirmación pendiente':'Aplicar en el tablero',()=>{
+ function applyProposal(p){
+
     if(!getSelection()?.can_enqueue||getSelection()?.case_id!==selected?.case_id||proposalState(board,p,application)!=='ready')return;
     application={request_id:p.request_id,status:'sending'};
     applyNotice.textContent='Ajuste enviado. Esperando guardado y recálculo; no repitas la solicitud.';
@@ -102,7 +97,20 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
     clearTimeout(applyTimer);const own=generation;
     applyTimer=setTimeout(()=>{if(own!==generation||application?.request_id!==p.request_id)return;
      application.status='unconfirmed';applyNotice.textContent='El guardado no se confirmó. Revisa los pendientes del tablero; conserva la misma solicitud.';paintProposals();},35000);
-   });
+   
+ }
+ function dispatchRequested(){
+  if(!active||tab!=='ppp'||application)return;
+  const p=proposals.find(p=>p.apply_requested_at&&Number.isFinite(Date.parse(p.apply_expires_at))&&Date.parse(p.apply_expires_at)>Date.now()&&proposalState(board,p)==='ready');
+  if(p)applyProposal(p);
+ }
+ function paintProposals(){
+  proposalHost.replaceChildren();
+  for(const p of proposals){
+   const article=el('article',undefined,'workspace-card');article.append(el('h3','Ajuste propuesto por el autón'),el('p',p.motivo));
+   for(const c of p.cambios)article.append(el('p',c.label+': '+(c.antes??'pendiente')+' → '+(c.valor??'pendiente')));
+   const eligibility=proposalState(board,p,application);
+   const apply=button(eligibility==='sending'?'Aplicando…':eligibility==='unconfirmed'?'Confirmación pendiente':'Aplicar en el tablero',()=>applyProposal(p));
    apply.disabled=eligibility!=='ready'||!getSelection()?.can_enqueue;
    const discard=button('Retirar propuesta',async()=>{try{await request('/board/resolve',{request_id:p.request_id,status:'discarded'});if(application?.request_id===p.request_id){clearTimeout(applyTimer);applyTimer=null;application=null;}applyNotice.textContent='Propuesta retirada. Los cambios ya guardados, si los hay, se conservan.';await refresh();}catch{pppNote.textContent='No se confirmó el descarte. La propuesta sigue pendiente.';}});
    discard.disabled=eligibility==='sending'||!getSelection()?.can_enqueue;
@@ -136,7 +144,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
      pppNote.textContent=board.confirmed&&!board.pending?'PPP compartido con el autón · lectura confirmada del tablero.':'El tablero tiene una lectura o cambios por confirmar.';
      const signature=JSON.stringify([board.revision,board.scenario_id,board.confirmed,board.pending]);
      if(signature!==boardRevision){boardRevision=signature;onBoard(board.revision);win.dispatchEvent(new CustomEvent('yod-shared-board',{detail:{revision:board.revision}}));}
-     paintProposals();
+     paintProposals();dispatchRequested();
     }
     if(data.receipt){
      const r=data.receipt;
@@ -162,7 +170,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   try{
    if(getSelection()?.case_id!==selected.case_id){clear();return;}
    if(tab==='browser')paintBrowser(await request('/computer/state'));
-   if(tab==='ppp'&&boardLink?.bridge){postBoard(board?'yod:ppp:read':'yod:ppp:hello');const r=await request('/board/state');proposals=r.proposals||[];paintProposals();}
+   if(tab==='ppp'&&boardLink?.bridge){postBoard(board?'yod:ppp:read':'yod:ppp:hello');const r=await request('/board/state');proposals=r.proposals||[];paintProposals();dispatchRequested();}
    if(tab==='tasks'&&Date.now()-lastTaskRead>=12000){lastTaskRead=Date.now();await tasks.read();}
   }catch{notice.textContent='El puesto no respondió. Reintentando; la conversación puede continuar.';}
   finally{fetching=false;}

@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-07.101-composicion-despacho · 2026-10-05.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-07.102-ppp-tarjetas · 2026-10-05.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -550,3 +550,17 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Respuesta tardía, otro caso o revocación no puede pintar el puesto; una imagen de otra ejecución no se atribuye al trabajo actual.
 - Capturas sólo se descargan al cambiar. Observación periódica únicamente en pestaña visible; sin lecturas nuevas de Drive/JEV por observar.
 - El piloto instalado conserva sus permisos; múltiples personajes no equivalen a workers habilitados.
+
+## CTR-PPP-AJUSTE-CONVERSADO
+
+- Componentes: SYS-YOD-OS, SYS-DESPACHO, SYS-POTENCIALES, GAS-PORTERO, SHEET-PORTERO, SHEET-PPP-MODELOS, EXT-DRIVE.
+- Evidencia: Petición explícita de Dirección; extensión del puente existente y del modelo nativo..
+- Entrada/campos: `PPP registrado del caso seleccionado, sesión autorizada y snapshot confirmado.`, `Propuesta con campos allowlisted, antes/después, escenario, revisión y motivo.`, `Solicitud explícita del usuario al autón; herramienta separada para solicitar ejecución de esa propuesta.`.
+- Salida: Tarjetas cerradas al abrir el puesto y detalle de datos al seleccionarlas., Intención de aplicación durable con vigencia acotada; estado pendiente no acredita escritura., Confirmación solo después de releer cantidades, escenario y revisión devueltos por el tablero..
+
+- Las tarjetas presentan el mismo Store del PPP, no copias de datos ni fórmulas financieras nuevas.
+- Proponer no escribe. La herramienta de aplicar requiere instrucción explícita del usuario; documentos y eventos del tablero no autorizan cambios.
+- Actor, caso, escenario y revisión coinciden. Fórmulas y campos no editables se rechazan; ambigüedades se aclaran antes de proponer.
+- Request_id se conserva ante reintentos. Una revisión concurrente bloquea la escritura y requiere nueva lectura.
+- La UI no anuncia guardado hasta recibo validado; desconexión o timeout permanece sin confirmar.
+- Tarjeta seleccionada aporta campos de contexto observados, no autoridad ni permisos. No ampliar fuentes registradas ni autenticación.

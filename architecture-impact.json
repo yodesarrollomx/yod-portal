@@ -1,21 +1,20 @@
 {
-  "model_revision": "2026-10-07.101-composicion-despacho",
-  "proposal_id": "CHG-DESPACHO-COMPOSICION-101",
+  "model_revision": "2026-10-07.102-ppp-tarjetas",
+  "proposal_id": "CHG-DESPACHO-PPP-TARJETAS-102",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
+    "SYS-POTENCIALES",
     "GAS-PORTERO",
+    "SHEET-PORTERO",
+    "SHEET-PPP-MODELOS",
     "EXT-DRIVE"
   ],
-  "summary": "Revisión visual de la primera pantalla rechazada por Dirección: cabecera compacta, oficina como diorama sobre fondo grafito, identidad y acceso al puesto en una tarjeta, navegación secundaria discreta y puesto del PPP con tipografía y superficies coherentes. Consolidar estilos existentes y comprobar capturas reales desktop/móvil/fallback sin datos ni actividad inventados.",
+  "summary": "PPP compartido con tarjetas de datos plegadas y detalle accesible, sin infográficos ni captura manual en el puesto del autón. Conservar el modelo/Store nativo y las fórmulas de Sheets. Añadir ejecución explícita de ajustes solicitados en conversación, separada de propuestas: intención durable por actor/caso/revisión, envío idempotente por el puente existente y recibo confirmado antes de afirmar guardado. Tarjeta abierta aporta contexto observado, nunca autoridad. No modificar datos reales durante pruebas.",
   "tests": [
-    "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs",
-    "Chromium: entrada real sin sesión, selección/PPP con transporte sintético, respuesta tardía, revocación, teclado, escritorio/móvil y modo sin WebGL."
+    "Controles Node de autorización, revisión, límites, expiración, idempotencia y recibo confirmado.",
+    "Chromium/WebKit con página PPP real y transporte sintético: tarjetas cerradas, expansión, 500→644, persistencia/recarga, conflicto y móvil.",
+    "Verificaciones requeridas de Portal y contratos de voz; capturas de interfaz real con datos sintéticos."
   ],
-  "rollback": "Revertir PR visual y sus versiones de caché; no cambia datos, permisos, sesiones de voz ni contratos del PPP."
+  "rollback": "Revertir código y versiones de caché mediante PR; conservar propuestas, recibos, datos, versiones, fórmulas y permisos."
 }
