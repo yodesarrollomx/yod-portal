@@ -31,7 +31,7 @@ test('station resolves the registered PPP type, rejects another case and disting
  const {resolveBoard,registeredBoard,stationIdentity}=await import('../despacho3d/project-station.mjs');
  const selection={case_id:'synthetic-a',name:'Proyecto A',avatar:{name:'Autón A'}};
  const source='https://yodesarrollomx.github.io/potenciales-yod/vertical.html?open=synthetic-a';
- assert.match(resolveBoard(selection,[{title:'PPP',source}]).url,/vertical.html/);
+ assert.match(resolveBoard(selection,[{title:'PPP',source}]).url,/mixto.html/);
  assert.equal(registeredBoard(source,'synthetic-b'),null);
  assert.equal(registeredBoard(source+'&open=synthetic-b','synthetic-a'),null);
  for(const url of ['javascript:alert(1)','https://evil.test/potenciales-yod/vertical.html?open=synthetic-a','https://yodesarrollomx.github.io/potenciales-yod/../other.html?open=synthetic-a'])
@@ -42,4 +42,22 @@ test('station resolves the registered PPP type, rejects another case and disting
  assert.equal(stationIdentity(selection).name,'Autón A');
  assert.equal(stationIdentity({case_id:'b',name:'Proyecto B'}).name,'Proyecto B');
  assert.equal(resolveBoard({...selection,ppp:{case_id:'wrong',url:source}},[]),null);
+});
+
+test('PPP capability follows installed adapter and vertical resolves to the real mixto page',async()=>{
+ const {registeredBoard,resolveBoard}=await import('../despacho3d/project-station.mjs');
+ const id='synthetic-a',base='https://yodesarrollomx.github.io/potenciales-yod/';
+ for(const page of ['vertical.html','mixto.html','macrolotes.html','unifamiliar.html','residencial.html']){
+  const board=registeredBoard(base+page+'?open='+id,id);
+  assert.equal(board.bridge,false);assert.equal(board.surface,'ppp');
+  const url=new URL(board.url);assert.equal(url.pathname,'/potenciales-yod/'+(page==='vertical.html'?'mixto.html':page));
+  assert.equal(url.searchParams.get('open'),id);assert.equal(url.searchParams.get('embed'),'1');assert.equal(url.searchParams.has('agent'),false);
+ }
+ const patrimonial=registeredBoard(base+'patrimonial.html?open='+id,id);
+ assert.equal(patrimonial.bridge,true);assert.equal(patrimonial.surface,'ppp');assert.equal(new URL(patrimonial.url).searchParams.get('agent'),'1');
+ const sheet='https://docs.google.com/spreadsheets/d/SYNTHETIC_ONLY/edit';
+ assert.equal(registeredBoard(sheet,id).surface,'sheet');
+ assert.equal(resolveBoard({case_id:id},[{title:'PPP',source:base+'mixto.html?open='+id},{title:'PPP',source:sheet}]).surface,'ppp');
+ assert.equal(resolveBoard({case_id:id},[{title:'PPP',source:base+'mixto.html?open='+id},{title:'PPP',source:base+'patrimonial.html?open='+id}]),null);
+ assert.equal(resolveBoard({case_id:id},[{title:'PPP',source:base+'vertical.html?open='+id},{title:'PPP',source:base+'mixto.html?open='+id}]).bridge,false);
 });
