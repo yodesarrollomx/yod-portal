@@ -391,7 +391,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     interruptionId='listen-'+epoch+'-'+(++sequence);
     try{channel.send(JSON.stringify({type:'session.instructions.append',event_id:interruptionId,delegation_id:null,
       content:'El usuario pulsó Escúchame. Deja de hablar y escucha su intervención. No continúes el discurso anterior. Responde brevemente cuando termine. No canceles tareas ni cierres la sesión.'}));}
-    catch{interruptionId=null;publish({interruption_pending:false,notice:'Sonido pausado. No se pudo enviar la instrucción de escuchar.'});}
+    catch{interruptionId=null;publish({interruption_pending:false,interruption_error:true,notice:'Sonido pausado. No se pudo enviar la instrucción de escuchar.'});}
   }
   function interrupt() {
     if(!['starting','listening','reconnecting'].includes(state.phase)||state.output_paused)return false;

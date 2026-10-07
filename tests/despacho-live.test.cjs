@@ -589,3 +589,14 @@ test('late acoustic acknowledgement cannot hide a rejected newer manual listenin
  assert.equal(f.audio.muted,true);assert.equal(f.voice.snapshot().phase,'listening');
  const close=f.voice.stop();await tick();f.event({type:'session.closed'});await close;
 });
+
+test('a local send failure leaves a visible listening error while audio stays paused and the call remains open',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice);
+ await f.voice.start('synthetic-case');f.event({type:'session.started'});await tick();
+ f.peer.channel.send=()=>{throw Error('synthetic send failure');};
+ assert.equal(f.voice.interrupt(),true);
+ assert.equal(f.voice.snapshot().interruption_error,true);
+ assert.match(f.voice.snapshot().notice,/No se pudo enviar/);
+ assert.equal(f.audio.muted,true);assert.equal(f.track.enabled,true);assert.equal(f.voice.snapshot().phase,'listening');
+ const close=f.voice.stop();await tick();f.event({type:'session.closed'});await close;
+});
