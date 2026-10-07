@@ -38,3 +38,10 @@ test('remembered approach can resume after slow authority but never bypasses per
  assert.equal(sample(300),null);assert.equal(sample(750),'voice');
  gate.dismiss('synthetic-a');gate.approach('synthetic-a');assert.equal(sample(1200),null);
 });
+
+test('walking toward the visible character can greet without requiring a full stop',async()=>{
+ const {sample}=await fixture();
+ assert.equal(sample(0,{moving:true,approaching:true}),'menu');
+ assert.equal(sample(100,{moving:true,approaching:true}),null);
+ assert.equal(sample(550,{moving:true,approaching:true}),'voice');
+});

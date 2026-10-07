@@ -23,7 +23,7 @@ export function createEncounterGate({menuDistance=ENCOUNTER_RANGE.menu,voiceDist
  return {
   approach(caseId){if(identity!==caseId){identity=caseId;reset();}if(caseId)armed=true;},
   dismiss(caseId){if(identity===caseId){suppressed=true;since=null;}},
-  sample({caseId,distance,enabled=false,visible=false,facing=false,moving=false,agentMoving=false,canTalk=false,now=0}={}){
+  sample({caseId,distance,enabled=false,visible=false,facing=false,moving=false,approaching=false,agentMoving=false,canTalk=false,now=0}={}){
    if(identity!==caseId){identity=caseId;reset();}
    if(!caseId||!Number.isFinite(distance)){reset();return null;}
    if(distance>=leaveDistance){const close=menu;reset();if(enabled&&moving&&!agentMoving&&distance<ENCOUNTER_RANGE.prepare)armed=true;return close?'leave':null;}
@@ -31,7 +31,7 @@ export function createEncounterGate({menuDistance=ENCOUNTER_RANGE.menu,voiceDist
    if(moving&&!agentMoving)armed=true;
    if(suppressed||!armed||!visible||agentMoving){since=null;return null;}
    if(distance<=menuDistance&&!menu){menu=true;return 'menu';}
-   if(!canTalk||voice||distance>voiceDistance||!facing||moving){since=null;return null;}
+   if(!canTalk||voice||distance>voiceDistance||!facing||(moving&&!approaching)){since=null;return null;}
    if(since===null){since=now;return null;}
    if(now-since<dwell)return null;
    voice=true;since=null;return 'voice';

@@ -9448,10 +9448,9 @@
         "SYS-DESPACHO",
         "SYS-DESPACHO-3D",
         "SVC-AUTON-CLOUD",
-        "SYS-POTENCIALES",
-        "SYS-TRACK"
+        "SYS-POTENCIALES"
       ],
-      "proposal": "Encuentro a dos metros y preparación a diez: unificar radios de menú, visibilidad y voz, conservar acercamiento deliberado durante la recuperación de acceso y evitar activación por teletransporte. Corregir postura sentada según escala del avatar, mantenerla al conversar y mostrar avance registrado en el monitor físico con tareas, pendientes y fecha, sin simular ejecución. La suite compartida de avatares de Track adapta su cargador a módulos versionados; sin cambios de contratos ni datos de Track.",
+      "proposal": "Encuentro a dos metros y preparación a diez: unificar radios de menú, visibilidad y voz, conservar acercamiento deliberado durante la recuperación de acceso y evitar activación por teletransporte. Corregir postura sentada según escala del avatar, mantenerla al conversar y mostrar avance registrado en el monitor físico con tareas, pendientes y fecha, sin simular ejecución. Se asignan explícitamente las pruebas de avatares y monitor al Despacho 3D en el mapa de propietarios; antes caían por omisión en los tableros generales.",
       "status": "implementado_local",
       "approval": "Dirección solicita ampliar rango, conversar a dos metros, corregir asiento y mostrar avance en computadora, 7-oct-2026.",
       "tests": [
@@ -11637,6 +11636,24 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/despacho-barge-in.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-avatars.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-screen-status.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",

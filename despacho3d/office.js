@@ -117,7 +117,8 @@ function updateAgentProximity(now){
    return hit.object.visible&&materials.some(m=>m?.visible&&(!m.transparent||m.opacity>=.95));
   });
  }
- const hit=proximity.sample({caseId:id,distance,enabled,visible,facing,moving:!!(manual&&moved),agentMoving:pilot.getMovementState().motion==='walk',canTalk:!!fresh?.can_enqueue&&typeof window.YodVoiceWorkspace?.openForCase==='function',now});
+ const approaching=!!(previous&&position&&distance<Math.hypot(previous.x-position[0],previous.z-position[1])-.0005);
+ const hit=proximity.sample({caseId:id,distance,enabled,visible,facing,moving:!!(manual&&moved),approaching,agentMoving:pilot.getMovementState().motion==='walk',canTalk:!!fresh?.can_enqueue&&typeof window.YodVoiceWorkspace?.openForCase==='function',now});
  if(hit==='menu')window.YodAgentMenu.showRadial(id,{proximity:true});
  if(hit==='voice'){
   window.YodAgentMenu.close('transition');
