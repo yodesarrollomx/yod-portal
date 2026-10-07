@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-07.111-voz-discreta · 2026-10-07.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-07.112-escucha-local · 2026-10-07.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 

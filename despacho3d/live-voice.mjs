@@ -1,3 +1,4 @@
+import {createLocalInputMonitor} from './voice-input-monitor.mjs?v=1';
 import {createVoicePreparation} from './voice-preparation.mjs?v=1';
 import {validateFastSession} from './fast-lane.mjs';
 import {transcriptFragment} from './live-transcript.mjs';
@@ -14,14 +15,16 @@ const NOTICES = {
 };
 export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   media = globalThis.navigator?.mediaDevices, Peer = globalThis.RTCPeerConnection, Stream = globalThis.MediaStream,
-  audio, onChange = () => {}, canOperate = () => true, actions = null, onTranscript = () => {}, now = Date.now,
+  audio, monitorFactory = createLocalInputMonitor, onChange = () => {}, canOperate = () => true, actions = null, onTranscript = () => {}, now = Date.now,
   schedule = setInterval, cancel = clearInterval, closeTimeout = 20000, disconnectGrace = 12000, maxStatusFailures = 3, startTimeout = 60000, signallingTimeout = 90000} = {}) {
+  let inputMonitor = null;
   let epoch = 0, stream = null, peer = null, channel = null, credential = null, sessionId = null,
     poll = null, controller = null, polling = false, closing = null, began = 0, started = false,
     contextReady = false, finalSeen = false, disconnected = false, closedResolve = null, sequence = 0,
     disconnectTimer = null, statusFailures = 0, connectedAt = 0, prepared = null, preparing = null, mode = null, startTimer = null, retryingContext = false, interruptionId = null;
   let state = {phase: 'idle', notice: '', muted: false, fragments: 0, blocks: 0, saved: 0, pending: 0,
-    incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, input_detected:false, input_received:false, mode: null, output_paused:false, interruption_pending:false};
+    incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, input_detected:false, input_received:false, mode: null, output_paused:false, interruption_pending:false, local_speaking:false, timings:{}};
+  const timing = key => {if(!Object.hasOwn(state.timings,key))publish({timings:{...state.timings,[key]:Math.max(0,now()-began)}});};
   const preparation=createVoicePreparation({Peer,gather,now});
   const seen = new Set();
   const publish = patch => {state = {...state, ...patch}; onChange({...state});};
@@ -37,6 +40,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     return value;
   }
   function release() {
+    inputMonitor?.close();inputMonitor=null;
     if (poll !== null) cancel(poll); poll = null;
     clearTimeout(startTimer); startTimer = null;
     clearTimeout(disconnectTimer); disconnectTimer = null;
@@ -71,11 +75,18 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     if (closing || !started || state.phase !== 'starting') return;
     clearTimeout(startTimer); startTimer = null;
     stream?.getAudioTracks().forEach(track => {track.enabled = !state.muted;});
+    timing('listening_ms');
     publish({phase: 'listening', notice});
+    if(!inputMonitor)inputMonitor=monitorFactory({stream,enabled:()=>state.phase==='listening'&&!state.muted&&canOperate(),onActivity:value=>{
+      if(state.phase!=='listening'||closing)value=false;
+      audio.muted=state.output_paused||value;
+      publish({local_speaking:value,...(value?{input_detected:true}:{})});
+    }});
   };
   function stop(notice = 'Conversación finalizada.') {
     if (closing) return closing;
     if (!stream && !sessionId && state.phase !== 'starting') return Promise.resolve(state);
+    inputMonitor?.close();inputMonitor=null;
     publish({phase: 'closing', notice: 'Finalizando conversación y comprobando el historial…'});
     stream?.getAudioTracks().forEach(track => {track.enabled = false;}); // Silence; retain tracks and playback until final event.
     clearTimeout(disconnectTimer); disconnectTimer = null;
@@ -120,6 +131,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
           now() < result.expires_at && peer?.connectionState === 'connected' && channel?.readyState === 'open')
         started = true;
       report(result); contextReady = result.context_ready === true; ready();
+      if(contextReady)timing('context_ms');
       publish({context_phase:result.context_phase||'preparing',context_attempts:result.context_attempts||0,context_error:result.context_error||null,tools_ready:result.tools_ready===true,documents_ready:result.documents_ready===true,tasks_ready:result.tasks_ready===true,actions_pending:result.actions?.length||0});
       if(result.tools_ready&&actions&&credential&&canOperate()){const auth=credential,id=sessionId,own=epoch;
         actions.consume(result.actions,{caseId:auth.case_id,active:()=>epoch===own&&!closing&&started&&canOperate()&&['listening','reconnecting','starting'].includes(state.phase),post:(path,data)=>post(path,{session_id:id,...data},auth,AbortSignal.timeout(15000))});
@@ -147,11 +159,13 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     }catch{/* Missing browser statistics do not interrupt the call. */}
   }
   async function playAudio() {
+    inputMonitor?.resume();
     const token = epoch, remote = audio?.srcObject;
     if (!remote || !audio?.play || !peer) return false;
     try {
       await audio.play();
       if (token !== epoch || audio.srcObject !== remote) return false;
+      timing('playback_ms');
       publish({playback_blocked: false});
       return true;
     } catch {
@@ -175,7 +189,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     interruptionId=null;
     mode = null; started = contextReady = finalSeen = disconnected = false; seen.clear(); sequence = 0; polling = false; statusFailures = 0; connectedAt = 0;
     publish({phase: 'starting', notice: 'Abriendo el micrófono…', fragments: 0, blocks: 0, saved: 0,
-      pending: 0, incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, output_paused:false,interruption_pending:false, mode: null,input_detected:false,input_received:false,context_phase:'preparing',context_attempts:0,context_error:null,tools_ready:false,documents_ready:false,tasks_ready:false,actions_pending:0});
+      pending: 0, incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, output_paused:false,interruption_pending:false, mode: null,local_speaking:false,timings:{},input_detected:false,input_received:false,context_phase:'preparing',context_attempts:0,context_error:null,tools_ready:false,documents_ready:false,tasks_ready:false,actions_pending:0});
     try {
       if (typeof media?.getUserMedia !== 'function' || typeof Peer !== 'function' || !audio)
         throw Error('Este navegador no admite voz en tiempo real.');
@@ -184,10 +198,11 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
       const auth = ensureCredential(caseId).then(value => ({value}), error => ({error}));
       const captured = await media.getUserMedia({audio: {echoCancellation: true, noiseSuppression: true}, video: false});
       if (token !== epoch || closing) {captured.getTracks().forEach(track => track.stop()); return false;}
-      stream = captured;publish({notice:'Micrófono disponible. Preparando acceso al proyecto…'});
+      stream = captured;timing('microphone_ms');publish({notice:'Micrófono disponible. Preparando acceso al proyecto…'});
       const minted = await auth;
       if (token !== epoch || closing) return false;
       if (minted.error) throw minted.error;
+      timing('access_ms');
       const warmed=await preparation.take(caseId);
       if(token!==epoch||closing){warmed?.channel.close?.();warmed?.peer.close();return false;}
       credential = minted.value; peer = warmed?.peer || new Peer();
@@ -250,6 +265,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
       };
       if(!warmed){await peer.setLocalDescription(await peer.createOffer()); await gather(peer);}
       if (token !== epoch || closing) return false;
+      timing('offer_ms');
       const current = credential;
       // Bound signalling, not the user's microphone permission prompt.
       const signallingController = controller;
@@ -264,6 +280,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
         if (signallingTimedOut) throw Error('La conexión de voz no respondió a tiempo. Puedes volver a intentar.');
         throw error;
       } finally {clearTimeout(signallingTimer);}
+      timing('signalling_ms');
       const id = result.session?.id, sdp = result.transport?.sdp;
       if (typeof id !== 'string' || !id || typeof sdp !== 'string' || !sdp.startsWith('v=0'))
         throw Error('La conexión de voz no es válida.');
@@ -334,7 +351,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   function resumeAudio(){
     if(state.phase!=='listening'||!state.output_paused)return false;
     // Media continues advancing while muted; no recorded monologue is replayed.
-    audio.muted=false;publish({output_paused:false,notice:'Sonido activo. Puedes seguir conversando.'});
+    audio.muted=state.local_speaking;publish({output_paused:false,notice:'Sonido activo. Puedes seguir conversando.'});
     void playAudio();return true;
   }
   function abandon() {

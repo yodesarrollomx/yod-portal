@@ -1,21 +1,17 @@
 {
-  "model_revision": "2026-10-07.111-voz-discreta",
-  "proposal_id": "CHG-ATLAS-001",
-  "summary": "PR126 / issue #124: elimina cierres de sesión falsos por rechazo de respaldo no autoritativo y amplía reintento ante errores no concluyentes en os/shell.js, preservando revocación confirmada, cambios de identidad, canje fresco en nueva carga y gracia de 5 min para identidad ya validada. os/app.js reintenta más rápido sin borrar credenciales. No cambia el TTL real de 90 días indicado en documentación ni el Apps Script desplegado.",
+  "model_revision": "2026-10-07.112-escucha-local",
+  "proposal_id": "CHG-DESPACHO-ESCUCHA-LOCAL-112",
+  "summary": "Reducir solapamiento audible al intervenir: analizar en el navegador el micrófono ya autorizado y atenuar temporalmente la salida mientras hay intervención sostenida. Conservar la interrupción semántica de GPT-Live, la pausa manual, el expediente y la finalización. Medir por separado micrófono, acceso, oferta WebRTC, señalización, inicio y contexto; no añadir botones ni abrir el tablero al acercarse. La detección acústica no acredita cancelación del discurso remoto ni latencia del equipo real.",
   "components": [
     "SYS-YOD-OS",
-    "GAS-PORTERO",
     "SYS-DESPACHO",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-CONTROL",
-    "SYS-OBRA-CLIENTE"
+    "SYS-DESPACHO-3D"
   ],
   "tests": [
-    "479 regresiones Node con datos sintéticos: sesión nueva, acceso revocado, cambios de identidad y permisos.",
-    "Caída del portero primario y rechazo del respaldo no revocan automáticamente el token guardado.",
-    "Error no concluyente conserva token y mantiene privado el tablero hasta validar.",
-    "CI verificar/arquitectura, verify-os, verify-portal, verify-accesos y verify-obra-app; comprobación de Pages tras fusionar."
+    "Ruido breve no activa atenuación; señal sostenida sí; silencio recupera salida y pausa manual prevalece.",
+    "Detector sólo usa stream ya autorizado; no graba, no transmite análisis ni abre sesiones.",
+    "Reconexión, cambio de caso, micrófono en pausa y cierre liberan detector sin perder audio final.",
+    "Navegador con audio sintético real, permisos y expediente sintéticos; regresión completa."
   ],
-  "rollback": "Revertir los commits del PR126 y los cambios de os/app.js, os/shell.js, tests/portal-identity.cjs. Sin modificaciones al Apps Script del Portero ni al Sheet."
+  "rollback": "Revertir únicamente este PR del portal. Sin cambios a Apps Script, configuración de OpenAI ni datos."
 }

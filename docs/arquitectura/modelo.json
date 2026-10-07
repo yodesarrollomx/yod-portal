@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.111-voz-discreta",
+  "revision": "2026-10-07.112-escucha-local",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -9399,6 +9399,25 @@
       ],
       "deployment": "Control de voz no modal y preparación local WebRTC implementados en PR123. Pruebas de ciclo de vida y navegador pendientes. No crea sesión OpenAI anticipada; señalización del proveedor y captura comienzan al entrar a conversación.",
       "rollback": "Revertir PR123 del portal; no cambia backend, Apps Script, fórmulas ni datos de negocio."
+    },
+    {
+      "id": "CHG-DESPACHO-ESCUCHA-LOCAL-112",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "proposal": "Reducir solapamiento audible al intervenir: analizar en el navegador el micrófono ya autorizado y atenuar temporalmente la salida mientras hay intervención sostenida. Conservar la interrupción semántica de GPT-Live, la pausa manual, el expediente y la finalización. Medir por separado micrófono, acceso, oferta WebRTC, señalización, inicio y contexto; no añadir botones ni abrir el tablero al acercarse. La detección acústica no acredita cancelación del discurso remoto ni latencia del equipo real.",
+      "status": "implementado_local",
+      "approval": "Dirección autoriza continuar los pendientes de voz y despacho el 7-oct-2026.",
+      "tests": [
+        "Ruido breve no activa atenuación; señal sostenida sí; silencio recupera salida y pausa manual prevalece.",
+        "Detector sólo usa stream ya autorizado; no graba, no transmite análisis ni abre sesiones.",
+        "Reconexión, cambio de caso, micrófono en pausa y cierre liberan detector sin perder audio final.",
+        "Navegador con audio sintético real, permisos y expediente sintéticos; regresión completa."
+      ],
+      "deployment": "Implementado en rama: atenuación acústica local con ataque 120 ms, salida tras 480 ms de silencio y tope de 8 s ante ruido sostenido; diagnóstico acumulado de conexión dentro de Audio y conexión. Pruebas y publicación pendientes. No afirma cancelación semántica del proveedor ni latencia física medida.",
+      "rollback": "Revertir únicamente este PR del portal. Sin cambios a Apps Script, configuración de OpenAI ni datos."
     }
   ],
   "data_contracts": [
@@ -11565,6 +11584,15 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/despacho-preparation.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-barge-in.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",
