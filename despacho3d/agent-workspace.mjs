@@ -3,8 +3,8 @@ import {registeredBoard,resolveBoard,stationIdentity} from './project-station.mj
 import {mountKnowledgeBoard} from './knowledge-board.mjs?v=1';
 import {createFrameTransport,validateConversation} from './conversation.mjs';
 import {validateFastSession} from './fast-lane.mjs';
-import {DurableGoals,goalDisplay,taskDisplay,goalReviewActions} from './goals.mjs';
-export {taskDisplay} from './goals.mjs';
+import {DurableGoals,goalDisplay,taskDisplay,goalReviewActions} from './goals.mjs?v=2';
+export {taskDisplay} from './goals.mjs?v=2';
 export const WORKSPACE_TABS=[['activity','Trabajo'],['ppp','Plan de potencial'],['tasks','Pendientes'],['sources','Fuentes'],['browser','Computadora'],['knowledge','Versiones y conocimiento']];
 export function proposalState(board,proposal,application=null){
  if(application?.request_id===proposal.request_id)return application.status;
@@ -162,12 +162,20 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   boardSummary.hidden=!boardLink.bridge;
  }
 
+ // Closing a panel must not discard the receipt of a write already sent.
+ // Selection and transport validation still apply; this never dispatches a new write.
+ function acceptsBoardState(data){
+  if(!selected||getSelection()?.case_id!==selected.case_id)return false;
+  if(active)return true;
+  const requestId=pendingReceipt?.request_id||application?.request_id;
+  return !!requestId&&(!data.receipt||data.receipt.request_id===requestId);
+ }
  let boardQueue=Promise.resolve();
  function receive(e){
-  if(disposed||!active||!boardLink?.bridge||e.origin!==boardLink.origin||e.source!==frame?.contentWindow||e.data?.type!=='yod:ppp:state'||e.data?.version!==1||e.data.nonce!==nonce)return;
+  if(disposed||!acceptsBoardState(e.data||{})||!boardLink?.bridge||e.origin!==boardLink.origin||e.source!==frame?.contentWindow||e.data?.type!=='yod:ppp:state'||e.data?.version!==1||e.data.nonce!==nonce)return;
   const data=e.data,own=generation;
   boardQueue=boardQueue.catch(()=>{}).then(async()=>{
-   if(own!==generation||!selected)return;
+   if(own!==generation||disposed||!acceptsBoardState(data))return;
    try{
     if(data.board?.case_id===selected.case_id){
      const r=await request('/board/snapshot',data.board);if(own!==generation||!selected)return;board=r.tablero;clearBoardHandshake();boardHandshakeTimedOut=false;
