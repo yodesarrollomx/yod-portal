@@ -1,6 +1,7 @@
 'use strict';
 const fs = require('node:fs');
 const path = require('node:path');
+const {validateOfficeCoverage, renderOfficeCoverage} = require('./oficina-cobertura.cjs');
 const ROOT = path.resolve(__dirname, '..');
 const DIR = path.join(ROOT, 'docs/arquitectura');
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -31,7 +32,7 @@ function checkSchema(value, schema, at = '$') {
 function validate(model, schema) {
   checkSchema(model, schema);
   const sets = {};
-  for (const list of ['components', 'connections', 'processes', 'proposals', 'changes']) {
+  for (const list of ['components', 'connections', 'processes', 'proposals', 'changes', 'data_contracts']) {
     const ids = (model[list] || []).map(x => x.id);
     if (new Set(ids).size !== ids.length) throw new Error(list + ': identificadores duplicados');
     sets[list] = new Set(ids);
@@ -67,6 +68,19 @@ function validate(model, schema) {
   for (const e of model.connections) {
     if (!sets.components.has(e.from) || !sets.components.has(e.to)) throw new Error(e.id + ': conexión huérfana');
     checkEvidence(e);
+    if (!Array.isArray(e.contract_ids)) throw new Error(e.id + ': falta contract_ids');
+    if (new Set(e.contract_ids).size !== e.contract_ids.length) throw new Error(e.id + ': contrato duplicado en conexión');
+    for (const id of e.contract_ids) {
+      if (!sets.data_contracts.has(id)) throw new Error(e.id + ': contrato desconocido ' + id);
+      const contract = model.data_contracts.find(c => c.id === id);
+      if (![e.from, e.to].every(component => contract.components.includes(component))) throw new Error(e.id + ': contrato no cubre ambos participantes ' + id);
+    }
+    if (e.runtime_verified === true) {
+      const proof = e.runtime_evidence;
+      const date = proof && proof.checked_at;
+      const validDate = typeof date === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(date) && Number.isFinite(Date.parse(date)) && new Date(date).toISOString().slice(0, 19) === date.slice(0, 19);
+      if (!proof || !validDate || typeof proof.scope !== 'string' || !proof.scope.trim() || typeof proof.receipt !== 'string' || !proof.receipt.trim() || !e.evidence.some(x => x.status === 'ejecucion')) throw new Error(e.id + ': ejecución sin recibo fechado y alcance');
+    }
   }
   for (const p of model.processes) { checkEvidence(p); for (const s of p.steps) for (const id of s.components || []) if (!sets.components.has(id)) throw new Error(p.id + ': paso con componente desconocido ' + id); }
   for (const c of model.data_contracts || []) for (const id of c.components) if (!sets.components.has(id)) throw new Error(c.id + ': contrato con componente desconocido');
@@ -78,6 +92,8 @@ function validate(model, schema) {
   const serialized = JSON.stringify(model);
   const forbidden = [/AKfy[A-Za-z0-9_-]{15,}/, /AIza[A-Za-z0-9_-]{20,}/, /gh[pousr]_[A-Za-z0-9_]{15,}/, /github_pat_[A-Za-z0-9_]+/, /-----BEGIN [^-]*PRIVATE KEY-----/, /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i, /docs\.google\.com\/spreadsheets\/d\//, /(?:token|clave|password|secret)=[^\s&"<>]{5,}/i];
   if (forbidden.some(re => re.test(serialized))) throw new Error('El modelo público contiene identificadores de acceso, datos privados o secretos; usar referencias lógicas');
+  const coverageErrors = validateOfficeCoverage(model);
+  if (coverageErrors.length) throw new Error('Cobertura oficina: ' + coverageErrors.join('; '));
   return true;
 }
 
@@ -141,7 +157,7 @@ function render(model) {
   const html = fs.readFileSync(path.join(__dirname, 'templates/arquitectura.html'), 'utf8').replace('/*__MODEL__*/null', JSON.stringify(model).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029'));
   let contracts = '# Contratos de datos e identidad\n\n' + intro + 'Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.\n\n';
   for (const c of model.data_contracts || []) contracts += '## ' + c.id + '\n\n- Componentes: ' + c.components.join(', ') + '.\n- Evidencia: ' + c.source + '.\n- Entrada/campos: ' + c.input.map(x=>'`'+x+'`').join(', ') + '.\n- Salida: ' + c.output.join(', ') + '.\n\n' + c.invariants.map(x=>'- '+x).join('\n') + '\n\n';
-  return Object.fromEntries(Object.entries({'mapas.md':maps, 'fichas.md':cards, 'procesos.md':processes, 'propuestas.md':proposals, 'contratos.md':contracts, 'index.html':html}).map(([name, content]) => [name, content.replace(/\n+$/, '') + '\n']));
+  return Object.fromEntries(Object.entries({'mapas.md':maps, 'fichas.md':cards, 'procesos.md':processes, 'propuestas.md':proposals, 'contratos.md':contracts, 'index.html':html, ...renderOfficeCoverage(model)}).map(([name, content]) => [name, content.replace(/\n+$/, '') + '\n']));
 }
 
 function main() {

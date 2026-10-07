@@ -1,6 +1,6 @@
 {
   "checked_at": "2026-09-30",
-  "policy": "Inventario completo; deep_review distingue fuente citada de archivo únicamente inventariado. Commits fijan la fotografía anterior a las correcciones de esta revisión.",
+  "policy": "Inventario completo; deep_review distingue fuente citada de archivo únicamente inventariado. Commits fijan la fotografía anterior a las correcciones de esta revisión. Conciliación posterior incorpora repositorios omitidos sin actualizar por inferencia la fotografía de los anteriores. Los archivos históricos conservan su commit y alcance.",
   "repositories": [
     {
       "repo": "yodesarrollomx/Co-desarrolladores-Yod",
@@ -1934,6 +1934,65 @@
       "status": "inventariado",
       "visibility": "public",
       "source_basis": "git_HEAD"
+    },
+    {
+      "repo": "yodesarrollo/amalaya-board",
+      "commit": "a3cf36f508015d288a04288fef040130f30ec3b7",
+      "tracked_files": 422,
+      "all_file_types": {
+        ".production": 1,
+        ".gitattributes": 1,
+        ".yml": 3,
+        ".gitignore": 2,
+        ".md": 5,
+        ".gs": 1,
+        ".html": 11,
+        ".mjs": 16,
+        ".js": 31,
+        ".json": 24,
+        ".zip": 2,
+        ".png": 85,
+        ".svg": 73,
+        ".glb": 8,
+        ".mtl": 8,
+        ".obj": 8,
+        ".gif": 3,
+        ".jpg": 88,
+        ".txt": 9,
+        ".woff2": 7,
+        ".css": 6,
+        ".wasm": 1,
+        ".webmanifest": 1,
+        ".py": 1,
+        ".jsx": 27
+      },
+      "status": "inventariado_parcial",
+      "visibility": "public",
+      "source_basis": "GitHub tree at pinned commit; selected source review",
+      "coverage": "Árbol enumerado y referencias de arquitectura inspeccionadas; no revisión profunda de todos los archivos.",
+      "restricted_details_omitted": false
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "commit": "b88ce380d7e437cf535facdbd5592a0b8bc14dc1",
+      "tracked_files": 124,
+      "all_file_types": {
+        ".gitignore": 3,
+        ".json": 9,
+        ".yml": 5,
+        ".txt": 2,
+        ".md": 8,
+        ".mjs": 80,
+        ".yaml": 2,
+        "(sin_extension)": 1,
+        ".js": 14
+      },
+      "status": "inventariado_parcial",
+      "visibility": "private",
+      "source_basis": "GitHub tree at pinned commit; selected source review",
+      "coverage": "Árbol enumerado y referencias de arquitectura inspeccionadas; no revisión profunda de todos los archivos.",
+      "restricted_details_omitted": true
     }
-  ]
+  ],
+  "reconciled_at": "2026-10-07T05:34:28Z"
 }

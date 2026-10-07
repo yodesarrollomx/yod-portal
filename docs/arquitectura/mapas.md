@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-07.102-ppp-tarjetas · 2026-10-05.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-07.103-oficina-cobertura · 2026-10-07.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -9,15 +9,25 @@ Línea continua: conexión observada en código o ejecución. Discontinua: manua
 ```mermaid
 flowchart LR
   n_SYS_DESPACHO["El Despacho"]
+  n_SYS_POTENCIALES["PPP · Potenciales"]
   n_SYS_TAREAS["MOAC"]
   n_SYS_YOD_OS["YOD OS"]
   n_GAS_PORTERO["Portero y Potenciales"]
   n_GAS_OPERACION["Operación y tareas"]
   n_SHEET_OPERACION["Datos de Operación y tareas"]
+  n_EXT_DRIVE["Google Drive"]
   n_EXT_GMAIL["Gmail"]
   n_GAS_MOAC_METAS["Metas y objetivos de MOAC"]
   n_SHEET_MOAC_METAS["Metas, objetivos y acciones"]
   n_STORE_DESPACHO_CORCHO["Mi Corcho · almacén privado de Dirección"]
+  n_SYS_DESPACHO_3D["Oficina 3D y puesto del autón"]
+  n_SVC_AUTON_CLOUD["Motor de nube del autón"]
+  n_STORE_AUTON_ESTADO["Estado y conocimiento del autón"]
+  n_EXT_JEV["JEV · búsqueda y selección"]
+  n_EXT_OPENAI["OpenAI · conversación y ejecución"]
+  n_EXT_RENDER["Render · alojamiento del motor"]
+  n_EXT_OBSIDIAN["Obsidian · bóveda de conocimiento"]
+  n_EXT_NOTEBOOKLM["NotebookLM · consulta documental prevista"]
   n_GAS_OPERACION -->|Lee/escribe registros del dominio| n_SHEET_OPERACION
   n_SYS_DESPACHO -.->|Tareas ordinarias getAll/update en Operación| n_GAS_OPERACION
   n_SYS_TAREAS -.->|Consume contrato del backend| n_GAS_OPERACION
@@ -31,9 +41,22 @@ flowchart LR
   n_GAS_MOAC_METAS -->|Lee y vincula estrategia| n_SHEET_MOAC_METAS
   n_GAS_OPERACION -.->|Futuro Ops: mismo almacén Corcho tras identificar proyecto| n_STORE_DESPACHO_CORCHO
   n_SYS_DESPACHO -.->|Provisional: sólo corchoGet/corchoSave| n_GAS_PORTERO
+  n_SYS_YOD_OS -->|Ruta interna del despacho con sesión y permiso vigentes| n_SYS_DESPACHO_3D
+  n_SYS_DESPACHO_3D -->|Conversación y operaciones del puesto ligadas al caso y actor| n_SVC_AUTON_CLOUD
+  n_SYS_DESPACHO_3D -->|Tablero original con contexto compartido, escenario y revisión| n_SYS_POTENCIALES
+  n_SVC_AUTON_CLOUD -->|Identidad, contexto, objetivos y cola autorizados| n_GAS_PORTERO
+  n_SVC_AUTON_CLOUD -->|Conocimiento y recibos por expediente con revisión| n_STORE_AUTON_ESTADO
+  n_SVC_AUTON_CLOUD -->|Orientar y ordenar fuentes autorizadas| n_EXT_JEV
+  n_SVC_AUTON_CLOUD -->|Leer originales, documentos y pasajes del expediente| n_EXT_DRIVE
+  n_SVC_AUTON_CLOUD -->|Voz y herramientas con claves de servidor| n_EXT_OPENAI
+  n_EXT_RENDER -.->|Servicio y volumen persistentes en la versión efectiva| n_SVC_AUTON_CLOUD
+  n_STORE_AUTON_ESTADO -->|Leer versiones, decisiones y exportación autorizadas| n_SYS_DESPACHO_3D
+  n_SYS_DESPACHO_3D -->|Descarga manual de bóveda portable; no sincronización| n_EXT_OBSIDIAN
+  n_SYS_DESPACHO_3D -.->|Consulta documental prevista, conexión sin verificar| n_EXT_NOTEBOOKLM
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SHEET_OPERACION pendiente;
+  class n_EXT_DRIVE pendiente;
   class n_EXT_GMAIL pendiente;
   class n_SHEET_MOAC_METAS pendiente;
   class n_STORE_DESPACHO_CORCHO pendiente;
@@ -81,6 +104,7 @@ flowchart LR
   n_EXT_MOTORES_MEDIA["Motores de generación de contenido"]
   n_SHEET_PPP_MODELOS["PPP · Libros de cálculo por caso"]
   n_EXT_GITHUB_PUBLISHER_APP["Identidad de publicación GitHub"]
+  n_SYS_DESPACHO_3D["Oficina 3D y puesto del autón"]
   n_GAS_MARKETING -->|Lee/escribe registros del dominio| n_SHEET_MARKETING
   n_GAS_PLAN_POTENCIAL -.->|Lee/escribe registros del dominio| n_SHEET_PLAN_POTENCIAL
   n_GAS_CROKISS -->|Lee/escribe registros del dominio| n_SHEET_CROKISS
@@ -127,6 +151,7 @@ flowchart LR
   n_EXT_GITHUB_PUBLISHER_APP -.->|Crea PR del commit preparado de Sala| n_SYS_SALA
   n_EXT_GITHUB_PUBLISHER_APP -.->|Crea PR del commit preparado de Marketing| n_SYS_MARKETING
   n_GAS_CRM -->|Consulta identidad y alcance de lectura| n_GAS_PORTERO
+  n_SYS_DESPACHO_3D -->|Tablero original con contexto compartido, escenario y revisión| n_SYS_POTENCIALES
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PLAN_POTENCIAL pendiente;
@@ -261,6 +286,7 @@ flowchart LR
   n_GAS_OBRA["Motor de obra"]
   n_GAS_CRM["CRM comercial"]
   n_GAS_PORTERO_RESPALDO["Portero de respaldo"]
+  n_SYS_DESPACHO_3D["Oficina 3D y puesto del autón"]
   n_GAS_CATALOGO -.->|Lee/escribe registros del dominio| n_SHEET_CATALOGO
   n_SYS_YOD_OS -->|Navega al sistema autorizado| n_SYS_DESPACHO
   n_SYS_YOD_OS -->|Navega al sistema autorizado| n_SYS_POTENCIALES
@@ -285,6 +311,7 @@ flowchart LR
   n_SYS_YOD_OS -->|Respaldo de identidad| n_GAS_PORTERO_RESPALDO
   n_GAS_PORTERO -->|Registra antes, después, actor y siguiente paso| n_SYS_CONTROL
   n_SYS_YOD_OS -.->|Wrapper EMD en dominio GitHub propio; legado compatible| n_SYS_EMD
+  n_SYS_YOD_OS -->|Ruta interna del despacho con sesión y permiso vigentes| n_SYS_DESPACHO_3D
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_EMD pendiente;
@@ -335,6 +362,9 @@ flowchart LR
   n_SVC_SALA_PRODUCTOR["Productor de Sala"]
   n_SVC_SALA_EJECUTOR["Ejecutor de Sala"]
   n_EXT_GITHUB_PUBLISHER_APP["Identidad de publicación GitHub"]
+  n_SVC_AUTON_CLOUD["Motor de nube del autón"]
+  n_EXT_OPENAI["OpenAI · conversación y ejecución"]
+  n_EXT_RENDER["Render · alojamiento del motor"]
   n_GAS_PLAN_POTENCIAL -.->|Confirma cita agendada| n_EXT_CALENDAR
   n_EXT_META -.->|Obtiene métricas mediante Actions| n_SYS_MARKETING
   n_SYS_DESPACHO -.->|Aprobación de borradores por protocolo BANDEJA| n_EXT_GMAIL
@@ -348,6 +378,9 @@ flowchart LR
   n_EXT_GITHUB_PUBLISHER_APP -.->|Crea PR del commit preparado de Marketing| n_SYS_MARKETING
   n_GAS_EMD -.->|Propuesta: fotos privadas de perfil| n_EXT_DRIVE
   n_GAS_PORTERO -.->|Corcho: principal y ACL completos por GET| n_EXT_DRIVE
+  n_SVC_AUTON_CLOUD -->|Leer originales, documentos y pasajes del expediente| n_EXT_DRIVE
+  n_SVC_AUTON_CLOUD -->|Voz y herramientas con claves de servidor| n_EXT_OPENAI
+  n_EXT_RENDER -.->|Servicio y volumen persistentes en la versión efectiva| n_SVC_AUTON_CLOUD
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_SITIO_ORG pendiente;
   class n_GAS_EMD pendiente;
@@ -384,6 +417,7 @@ flowchart LR
   n_GAS_PORTERO_RESPALDO["Portero de respaldo"]
   n_SHEET_PPP_MODELOS["PPP · Libros de cálculo por caso"]
   n_STORE_DESPACHO_CORCHO["Mi Corcho · almacén privado de Dirección"]
+  n_SVC_AUTON_CLOUD["Motor de nube del autón"]
   n_GAS_PORTERO -.->|Lee/escribe registros del dominio| n_SHEET_PORTERO
   n_SYS_POTENCIALES -.->|Consume contrato del backend| n_GAS_PORTERO
   n_SYS_TRACK -->|Consume contrato del backend| n_GAS_PORTERO
@@ -409,6 +443,7 @@ flowchart LR
   n_SYS_DESPACHO -.->|Provisional: sólo corchoGet/corchoSave| n_GAS_PORTERO
   n_GAS_PORTERO -.->|Provisional: CAS en Mi Corcho privado| n_STORE_DESPACHO_CORCHO
   n_GAS_PORTERO -.->|Corcho: principal y ACL completos por GET| n_EXT_DRIVE
+  n_SVC_AUTON_CLOUD -->|Identidad, contexto, objetivos y cola autorizados| n_GAS_PORTERO
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SHEET_PORTERO pendiente;
@@ -440,6 +475,21 @@ flowchart LR
   n_GAS_PORTERO -.->|Provisional: CAS en Mi Corcho privado| n_STORE_DESPACHO_CORCHO
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_STORE_DESPACHO_CORCHO pendiente;
+```
+
+## Conocimiento
+
+```mermaid
+flowchart LR
+  n_SYS_DESPACHO_3D["Oficina 3D y puesto del autón"]
+  n_SVC_AUTON_CLOUD["Motor de nube del autón"]
+  n_EXT_JEV["JEV · búsqueda y selección"]
+  n_EXT_OBSIDIAN["Obsidian · bóveda de conocimiento"]
+  n_EXT_NOTEBOOKLM["NotebookLM · consulta documental prevista"]
+  n_SVC_AUTON_CLOUD -->|Orientar y ordenar fuentes autorizadas| n_EXT_JEV
+  n_SYS_DESPACHO_3D -->|Descarga manual de bóveda portable; no sincronización| n_EXT_OBSIDIAN
+  n_SYS_DESPACHO_3D -.->|Consulta documental prevista, conexión sin verificar| n_EXT_NOTEBOOKLM
+  classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
 ```
 
 ## Contratos y evidencia de cada conexión
@@ -550,3 +600,15 @@ flowchart LR
 | CON-DESPACHO-CORCHO-PORTERO | SYS-DESPACHO → GAS-PORTERO | api: Provisional: sólo corchoGet/corchoSave. POST text/plain; {action,k} para corchoGet y {action,k,version,data} para corchoSave. CTR-DESPACHO-CORCHO; URL Portero conocida actual, sin fallback de servidor ni desvío de getAll/update. | propuesto | CHG-DESPACHO-CORCHO-PROVISIONAL-035: Integración provisional autorizada, pendiente en PR consumidores; preflight V57 no acredita despliegue del adapter. |
 | CON-PORTERO-CORCHO-STORE | GAS-PORTERO → STORE-DESPACHO-CORCHO | persistencia: Provisional: CAS en Mi Corcho privado. CTR-DESPACHO-CORCHO; canjearLigaLento_(key,'DP') local fresco, owner exacto, principal efectivo y ACL Drive exhaustiva, LockService, CAS global y ACK con snapshot; no renovar/cache ni publicar notas. | propuesto | CHG-DESPACHO-CORCHO-PROVISIONAL-035: Integración provisional autorizada, pendiente en PR consumidores; preflight V57 no acredita despliegue del adapter. |
 | CON-PORTERO-CORCHO-DRIVE | GAS-PORTERO → EXT-DRIVE | autorizacion: Corcho: principal y ACL completos por GET. Drive full guard en cada operación: about.user del token de ejecución, propietario único exacto, archivo y todos los ancestros hasta raíz, permissions.list paginado incluidos permisos publicados; scopes Drive existentes completos, fail-closed sin fallback. | propuesto | CHG-DESPACHO-CORCHO-PROVISIONAL-035: Integración provisional autorizada, pendiente en PR consumidores; preflight V57 no acredita despliegue del adapter. |
+| CON-OS-DESPACHO-3D | SYS-YOD-OS → SYS-DESPACHO-3D | navegacion: Ruta interna del despacho con sesión y permiso vigentes. CTR-DESPACHO-3D-SECTION | codigo | [yod-portal/os/despacho-section.js](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/os/despacho-section.js) — Ruta interna del despacho con sesión y permiso vigentes |
+| CON-DESPACHO-3D-MOTOR | SYS-DESPACHO-3D → SVC-AUTON-CLOUD | api: Conversación y operaciones del puesto ligadas al caso y actor. CTR-DESPACHO-AGENTE-OPERATIVO; CTR-PPP-AJUSTE-CONVERSADO | codigo | [yod-portal/despacho3d/agent-workspace.mjs](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/agent-workspace.mjs) — Conversación y operaciones del puesto ligadas al caso y actor |
+| CON-DESPACHO-3D-PPP | SYS-DESPACHO-3D → SYS-POTENCIALES | embed: Tablero original con contexto compartido, escenario y revisión. CTR-PPP-AJUSTE-CONVERSADO | codigo | [yod-portal/despacho3d/project-station.mjs](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/project-station.mjs) — Tablero original con contexto compartido, escenario y revisión |
+| CON-MOTOR-PORTERO | SVC-AUTON-CLOUD → GAS-PORTERO | api: Identidad, contexto, objetivos y cola autorizados. CTR-DESPACHO-AGENTE-OPERATIVO | codigo | Identidad, contexto, objetivos y cola autorizados |
+| CON-MOTOR-ESTADO | SVC-AUTON-CLOUD → STORE-AUTON-ESTADO | persistencia: Conocimiento y recibos por expediente con revisión. CTR-DESPACHO-CONOCIMIENTO | codigo | Conocimiento y recibos por expediente con revisión |
+| CON-MOTOR-JEV | SVC-AUTON-CLOUD → EXT-JEV | integracion: Orientar y ordenar fuentes autorizadas. CTR-DESPACHO-BIBLIOTECA | codigo | Orientar y ordenar fuentes autorizadas |
+| CON-MOTOR-DRIVE | SVC-AUTON-CLOUD → EXT-DRIVE | lectura: Leer originales, documentos y pasajes del expediente. CTR-DESPACHO-BIBLIOTECA | codigo | Leer originales, documentos y pasajes del expediente |
+| CON-MOTOR-OPENAI | SVC-AUTON-CLOUD → EXT-OPENAI | integracion: Voz y herramientas con claves de servidor. CTR-DESPACHO-VOZ-BASICA | codigo | Voz y herramientas con claves de servidor |
+| CON-RENDER-MOTOR | EXT-RENDER → SVC-AUTON-CLOUD | alojamiento: Servicio y volumen persistentes en la versión efectiva. Alojamiento de un piloto; desplegar sólo en servicio existente. | declarado | Servicio y volumen persistentes en la versión efectiva |
+| CON-ESTADO-EXPORTACION | STORE-AUTON-ESTADO → SYS-DESPACHO-3D | lectura: Leer versiones, decisiones y exportación autorizadas. CTR-DESPACHO-CONOCIMIENTO | codigo | Leer versiones, decisiones y exportación autorizadas |
+| CON-DESPACHO-EXPORTAR-OBSIDIAN | SYS-DESPACHO-3D → EXT-OBSIDIAN | exportacion: Descarga manual de bóveda portable; no sincronización. CTR-DESPACHO-CONOCIMIENTO | codigo | [yod-portal/docs/arquitectura/despacho-conocimiento.md](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/docs/arquitectura/despacho-conocimiento.md) — Descarga manual de bóveda portable; no sincronización |
+| CON-BIBLIOTECA-NOTEBOOKLM | SYS-DESPACHO-3D → EXT-NOTEBOOKLM | propuesta: Consulta documental prevista, conexión sin verificar. Acceso/API/sincronización pendientes de comprobar. | propuesto | [yod-portal/despacho3d/entorno.mjs](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/entorno.mjs) — Consulta documental prevista, conexión sin verificar |

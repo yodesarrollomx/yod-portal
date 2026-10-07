@@ -54,3 +54,10 @@ test('dependencias de propuestas deben existir',()=>{const m=load();m.proposals[
 test('IDs legales que colisionan en Mermaid son rechazados',()=>{const m=load(),copy=structuredClone(m.components[0]);copy.id=copy.id.replace(/-/g,'_');m.components.push(copy);assert.throws(()=>validate(m,schema),/colisionan/);});
 
 test('actualizar el lockfile también exige declarar impacto',()=>{const f=fixture();f.changed=['package-lock.json'];assert.throws(()=>verify(f),/sin actualizar/);f.changed.push('architecture-impact.json');assert.equal(verify(f).behavioral.length,1);});
+
+test('contratos duplicados se rechazan',()=>{const m=load();m.data_contracts.push(structuredClone(m.data_contracts[0]));assert.throws(()=>validate(m,schema),/duplicados/);});
+test('conexión no puede referir un contrato inexistente',()=>{const m=load();m.connections[0].contract_ids=['CTR-NO-EXISTE'];assert.throws(()=>validate(m,schema),/contrato desconocido/);});
+test('marcar runtime verificado exige recibo con fecha y alcance',()=>{const m=load();m.connections[0].runtime_verified=true;assert.throws(()=>validate(m,schema),/recibo fechado/);});
+
+test('recibo sintético válido permite registrar ejecución; fecha imposible no',()=>{const m=load(),e=m.connections[0];e.runtime_verified=true;e.runtime_evidence={checked_at:'2026-10-07T05:34:28Z',scope:'Fixture sintética de prueba',receipt:'synthetic-receipt-1'};e.evidence.push({...e.evidence[0],status:'ejecucion',claim:'Fixture, no producción'});assert.equal(validate(m,schema),true);e.runtime_evidence.checked_at='2026-02-30T05:34:28Z';assert.throws(()=>validate(m,schema),/recibo fechado/);});
+test('contrato vinculado cubre ambos participantes de la conexión',()=>{const m=load(),e=m.connections.find(x=>x.contract_ids.length);const c=m.data_contracts.find(x=>x.id===e.contract_ids[0]);c.components=c.components.filter(x=>x!==e.to);assert.throws(()=>validate(m,schema),/ambos participantes/);});
