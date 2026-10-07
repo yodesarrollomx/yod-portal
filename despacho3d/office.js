@@ -1,5 +1,5 @@
 import * as T from 'three';
-import {createEncounterGate} from './agent-proximity.mjs?v=2';
+import {createEncounterGate,createPreparationGate} from './agent-proximity.mjs?v=3';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {RoomEnvironment} from './vendor/RoomEnvironment.js';
 import {createOffice} from './scene.js?v=8';
@@ -27,7 +27,7 @@ let office;try{office=await createOffice({pilotFigure:false});scene.add(office.m
 
 let chinches=null;
 let agentOverlay=false;
-const proximity=createEncounterGate(),sight=new T.Raycaster();
+const proximity=createEncounterGate(),preparationGate=createPreparationGate(),sight=new T.Raycaster();
 let lastApproachPosition=null;
 window.addEventListener('yod-agent-menu-open',e=>{if(!e.detail?.proximity)proximity.dismiss(e.detail?.case_id);});
 window.addEventListener('yod-agent-encounter-dismiss',e=>proximity.dismiss(e.detail?.case_id));
@@ -97,6 +97,9 @@ function updateAgentProximity(now){
  lastApproachPosition={x:camera.position.x,z:camera.position.z};
  const enabled=mode==='walk'&&!sheet&&!agentOverlay&&!document.hidden&&!chinches?.isSelecting()&&
   document.getElementById('office-accessible')?.hidden!==false&&!!window.YodAgentMenu;
+ const preparation=preparationGate.sample({caseId:id,distance,enabled:enabled&&!!fresh?.can_enqueue,now});
+ if(preparation==='prepare')window.YodVoiceWorkspace?.prepareNearby?.(id);
+ if(preparation==='release')window.YodVoiceWorkspace?.releaseNearby?.();
  let visible=false,facing=false;
  if(enabled&&id&&distance<=.9){
   const target=new T.Vector3(position[0],1.4,position[1]),direction=target.clone().sub(camera.position),length=direction.length();
@@ -112,7 +115,7 @@ function updateAgentProximity(now){
  if(hit==='menu')window.YodAgentMenu.showRadial(id,{proximity:true});
  if(hit==='voice'){
   window.YodAgentMenu.close('transition');
-  void window.YodVoiceWorkspace?.openForCase(id,'ppp',{startVoice:true,encounter:true});
+  void window.YodVoiceWorkspace?.openForCase(id,'ppp',{startVoice:true,encounter:true,compactOnly:true});
  }
  if(hit==='leave'){
   if(window.YodAgentMenu?.isProximity?.())window.YodAgentMenu.close('leave');

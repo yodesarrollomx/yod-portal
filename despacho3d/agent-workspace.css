@@ -136,3 +136,21 @@
 
 /* The board owns the right-hand surface; avoid a second generic instruction above it. */
 .agent-workspace>.workspace-status:empty{display:none}
+
+/* Voice proximity keeps the office visible; opening the board is explicit. */
+.voice-capsule{display:none}
+.realtime-dialog.has-workspace.voice-compact{position:fixed;inset:auto 18px 24px auto;margin:0;width:min(360px,calc(100vw - 32px));height:auto;max-height:45dvh;padding:10px;border-radius:20px;background:#f7f8f5;box-shadow:0 12px 40px #132b3433;overflow:auto}
+.realtime-dialog.voice-compact .voice-layout{display:none}
+.realtime-dialog.voice-compact .voice-capsule{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:8px}
+.voice-capsule button{border:0;border-radius:12px;background:transparent;color:#20343c;cursor:pointer;font:inherit;min-height:44px}
+#compact-mic{width:44px;height:44px;display:grid;place-items:center;background:#e4ebe7}
+#compact-mic[aria-pressed="true"]{background:#203f36;color:#fff}
+#compact-mic svg{width:21px;height:25px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+#compact-expand{text-align:left;position:relative;padding:4px 24px 4px 2px;display:flex;flex-direction:column;gap:3px}
+#compact-expand b{font-size:14px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#compact-expand small{font-size:12px;color:#526960}
+#compact-expand span{position:absolute;right:4px;top:12px}
+#compact-stop{font-size:24px}
+#compact-notice{grid-column:1/-1;font-size:12px;line-height:1.4;margin:3px 4px}
+.voice-capsule button:disabled{opacity:.5;cursor:default}
+@media(max-width:600px){.realtime-dialog.has-workspace.voice-compact{inset:auto 16px 100px auto}}

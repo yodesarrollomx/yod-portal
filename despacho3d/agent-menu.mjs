@@ -33,7 +33,7 @@ export function mountAgentMenu({win=window,doc=document}={}){
   }
   const tabs={ppp:'ppp',pendientes:'tasks',documentos:'sources',conversaciones:'ppp',chat:'ppp',notas:'knowledge',moac:'tasks',historial:'knowledge'};
   if(dialog.open)close('transition');
-  const ok=await win.YodVoiceWorkspace?.openForCase(caseId,tabs[target]||target,{startVoice:target==='conversaciones'});
+  const ok=await win.YodVoiceWorkspace?.openForCase(caseId,tabs[target]||target,{startVoice:target==='conversaciones',compactOnly:target==='conversaciones'});
   if(ok&&target==='chat'&&win.YodResidentAgents?.getSelection?.()?.case_id===caseId){
    const chat=doc.querySelector('.realtime-dialog .station-chat');if(chat){chat.open=true;chat.querySelector('textarea')?.focus();}
   }

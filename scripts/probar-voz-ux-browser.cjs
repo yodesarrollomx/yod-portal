@@ -57,9 +57,24 @@ const server=http.createServer((req,res)=>{
    return route.fulfill({status:200,contentType:'application/json',headers,body:JSON.stringify(body)});
   });
   await page.goto(base+'/__voice-shell');const frame=page.frames().find(f=>f.url().includes('__voice-child'));
+  await frame.evaluate(()=>window.YodVoiceWorkspace.prepareNearby('synthetic-voice-case'));
+  assert.equal(await frame.evaluate(()=>window.streams.length),0);
+  assert.equal(sessions,0);
   await frame.locator('#voice-open').click();
   await frame.locator('[data-voice-phase="listening"]').waitFor();
   assert.equal(await frame.locator('#voice-start').isVisible(),false);
+  assert.equal(await frame.locator('.realtime-dialog').evaluate(e=>e.matches(':modal')),false);
+  assert.equal(await frame.locator('.voice-workspace').isVisible(),false);
+  await page.screenshot({path:path.join(out,'voz-compacta-'+viewport.width+'.png'),fullPage:true});
+  console.log('COMPACT_VOICE_'+viewport.width+':'+(await page.screenshot({type:'jpeg',quality:80})).toString('base64'));
+  await frame.locator('#compact-expand').click();
+  assert.equal(await frame.locator('.realtime-dialog').evaluate(e=>e.matches(':modal')),true);
+  assert.equal(await frame.locator('[data-tab="ppp"]').getAttribute('aria-pressed'),'true');
+  assert.equal(sessions,1,'expanding the board preserves the call');
+  await frame.locator('.voice-close').click();
+  assert.equal(await frame.locator('.realtime-dialog').evaluate(e=>e.matches(':modal')),false);
+  assert.equal(sessions,1,'minimizing does not end the call');
+  await frame.locator('#compact-expand').click();
   assert.equal(await frame.evaluate(()=>window.streams.at(-1).getAudioTracks()[0].enabled),true);
   await frame.evaluate(()=>window.setAccess('reconnecting'));
   assert.equal(await frame.locator('.realtime-dialog').isVisible(),true);
@@ -103,9 +118,9 @@ const server=http.createServer((req,res)=>{
   await frame.locator('.voice-close').click();
   await frame.evaluate(()=>{window.failMic=false;window.blockAudio=false;window.micPermission='prompt';});
   await frame.evaluate(()=>window.YodVoiceWorkspace.openForCase('synthetic-voice-case','ppp',{startVoice:true,encounter:true}));
-  await frame.locator('#voice-status').filter({hasText:'Pulsa Hablar para permitir'}).waitFor();
+  await frame.locator('#compact-notice').filter({hasText:'Pulsa el micrófono para permitir'}).waitFor();
   assert.equal(sessions,1,'proximity does not request permission without a user gesture');
-  await frame.locator('.voice-close').click();
+  await frame.locator('#compact-stop').click();
   await frame.evaluate(()=>window.micPermission='granted');
   await frame.evaluate(()=>window.YodVoiceWorkspace.openForCase('synthetic-voice-case','ppp',{startVoice:true,encounter:true}));
   await frame.locator('[data-voice-phase="listening"]').waitFor();
@@ -114,6 +129,7 @@ const server=http.createServer((req,res)=>{
   assert.equal(sessions,2);
   await frame.evaluate(()=>window.YodVoiceWorkspace.pauseEncounter('synthetic-voice-case'));
   assert.equal(await frame.evaluate(()=>window.streams.at(-1).getAudioTracks()[0].enabled),false);
+  await frame.locator('#compact-expand').click();
   await frame.locator('#voice-stop').click();await frame.locator('[data-voice-phase="idle"]').waitFor();
   assert.deepEqual(errors,[]);await context.close();
  }

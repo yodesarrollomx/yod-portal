@@ -9367,7 +9367,7 @@
         "GAS-PORTERO",
         "EXT-DRIVE"
       ],
-      "proposal": "Abrir el PPP canónico como superficie inicial del puesto y de las entradas de conversación, visible a la derecha de la voz sin elegir otra pestaña. Recuperar automáticamente el vínculo si la primera lectura aún no lo devuelve, con reintentos limitados y sólo mientras el puesto está activo. Conservar iframe, tarjeta abierta, borrador, identidad y recibos durante la voz; no modificar fórmulas ni inventar proyectos.",
+      "proposal": "Abrir PPP como superficie inicial cuando se elige el puesto completo; durante el encuentro automático se mantiene la voz compacta conforme a la revisión111. Recuperación limitada de fuentes sin clic y conservación del mismo iframe al hablar.",
       "status": "implementado_local",
       "approval": "Dirección solicita PPP visible de entrada a la derecha mientras conversa por voz; 7-oct-2026.",
       "tests": [
@@ -9389,7 +9389,7 @@
         "EXT-DRIVE"
       ],
       "proposal": "Separar encuentro de voz y puesto completo: el acercamiento muestra un control pequeño no modal, sin cargar el PPP. Abrir el puesto es una elección explícita y conserva la conversación; allí el PPP aparece de entrada a la derecha. Preparar acceso, servidor y oferta WebRTC sin capturar audio a 5 m; reutilizarla al conversar a 0,40 m. Preparación por proyecto, en memoria, con vencimiento y liberación al alejarse. No crear una sesión OpenAI hasta iniciar conversación; no prometer conexión instantánea ni confundir precarga con micrófono activo.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "approval": "Dirección corrige el alcance durante la revisión: voz discreta al acercarse, tablero sólo por elección y precarga a 5–10 metros; 7-oct-2026.",
       "tests": [
         "Precarga no pide micrófono, no crea sesión de voz ni abre tablero; deduplicación, caducidad y descarte por cambio de caso.",
@@ -9397,7 +9397,7 @@
         "Encuentro no modal: indicador pequeño, permiso inicial explícito, expandir/minimizar conserva sesión y PPP.",
         "Regresión de identidad, cierre con recibos y privacidad; navegador escritorio/móvil."
       ],
-      "deployment": "Propuesta antes de código; PR123 se amplía por la corrección del usuario. PPP inmediato aún sin publicar.",
+      "deployment": "Control de voz no modal y preparación local WebRTC implementados en PR123. Pruebas de ciclo de vida y navegador pendientes. No crea sesión OpenAI anticipada; señalización del proveedor y captura comienzan al entrar a conversación.",
       "rollback": "Revertir PR123 del portal; no cambia backend, Apps Script, fórmulas ni datos de negocio."
     }
   ],

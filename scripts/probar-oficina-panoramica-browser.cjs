@@ -24,7 +24,7 @@ const server=http.createServer((req,res)=>{
     let profile={id:'synthetic-office',case_id:'synthetic-office',entity_kind:'case',name:'Proyecto de prueba',form:'child',color:'#547e75',visual:{hairStyle:'crop'}};
     const listeners=new Set();window.__opened=[];window.__arrivals=[];
     // This geometry fixture strips the UI boots; observe the radial route used by the marker.
-    window.__voiceStarts=[];window.YodVoiceWorkspace={isOpen:()=>false,openForCase:async(id,tab,options)=>{window.__voiceStarts.push({id,tab,options});return true;}};
+    window.__prepares=[];window.__voiceStarts=[];window.YodVoiceWorkspace={isOpen:()=>false,prepareNearby:id=>window.__prepares.push(id),releaseNearby:()=>{},openForCase:async(id,tab,options)=>{window.__voiceStarts.push({id,tab,options});return true;}};
     window.addEventListener('yod-agent-menu-open',e=>window.__opened.push(e.detail.case_id));
     window.YodResidentAgents={getSelection:()=>profile?{case_id:profile.case_id,name:profile.name,avatar:profile,can_enqueue:true}:null,subscribe(fn){fn();return()=>{};},getProfile:()=>profile,subscribeProfile(fn){listeners.add(fn);fn(profile);return()=>listeners.delete(fn);},openForCase(id){if(id===profile?.case_id)window.YodAgentMenu.showRadial(id);}};
     window.__revoke=()=>{profile=null;for(const fn of listeners)fn(null);};
@@ -71,6 +71,9 @@ const server=http.createServer((req,res)=>{
    assert.equal(await page.locator('#office-agent-marker').isVisible(),false);
    if(mobile)assert.equal(await page.locator('#joystick').isVisible(),true);
    // Actual renderer and nonmodal radial: enter by walking, then keep walking closer.
+   await page.evaluate(()=>window.despacho.camera.position.set(7,1.65,-2));
+   await page.waitForFunction(()=>window.__prepares.length>0);
+   assert.equal(await page.evaluate(()=>window.__voiceStarts.length),0,'preparation does not open voice');
    const viewYaw=await page.evaluate(()=>window.despacho.camera.rotation.y);
    await page.mouse.move(180,220);await page.mouse.down();await page.mouse.move(180+viewYaw/.0036,220,{steps:3});await page.mouse.up();
    await page.evaluate(()=>window.despacho.camera.position.set(7,1.65,-5.35));
@@ -86,6 +89,7 @@ const server=http.createServer((req,res)=>{
    await page.evaluate(()=>window.despacho.camera.position.set(7,1.65,-5.88));
    await page.waitForFunction(()=>window.__voiceStarts.length===1);
    assert.equal(await page.evaluate(()=>window.__voiceStarts[0].options.encounter),true);
+   assert.equal(await page.evaluate(()=>window.__voiceStarts[0].options.compactOnly),true);
    await page.waitForTimeout(1200);
    assert.equal(await page.evaluate(()=>window.__voiceStarts.length),1,'no repeated automatic start');
    await page.locator('#overview').click();
