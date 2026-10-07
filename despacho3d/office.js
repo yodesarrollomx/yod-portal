@@ -28,7 +28,7 @@ let office;try{office=await createOffice({pilotFigure:false});scene.add(office.m
 let chinches=null;
 let agentOverlay=false;
 const proximity=createEncounterGate(),preparationGate=createPreparationGate(),sight=new T.Raycaster();
-let lastApproachPosition=null,recentApproach=null;
+let lastApproachPosition=null,recentApproach=null,lastProximitySample=-Infinity;
 window.addEventListener('yod-agent-menu-open',e=>{if(!e.detail?.proximity)proximity.dismiss(e.detail?.case_id);});
 window.addEventListener('yod-agent-encounter-dismiss',e=>proximity.dismiss(e.detail?.case_id));
 let mode='overview',selected='entry',yaw=0,pitch=0,near=null,sheet=null,look=null,stickId=null,stick={x:0,y:0},keys=new Set(),last=performance.now(),frames=0,transitionToken=0,dirty=true,lastFocus=null;
@@ -103,6 +103,10 @@ function updateAgentProximity(now){
  if(recentApproach&&recentApproach.id!==shownId)recentApproach=null;
  if(enabled&&manual&&moved&&shownId)recentApproach={id:shownId,at:now};
  if(enabled&&id&&recentApproach?.id===id&&now-recentApproach.at<60000&&distance<ENCOUNTER_RANGE.leave)proximity.approach(id);
+ // Keep movement intent above this bound; raycasting the entire furnished room
+ // on every animation frame competes with input and voice on modest devices.
+ if(now-lastProximitySample<100)return;
+ lastProximitySample=now;
  const preparation=preparationGate.sample({caseId:id,distance,enabled:enabled&&!!fresh?.can_enqueue,now});
  if(preparation==='prepare')window.YodVoiceWorkspace?.prepareNearby?.(id);
  if(preparation==='release')window.YodVoiceWorkspace?.releaseNearby?.();
