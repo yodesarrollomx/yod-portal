@@ -502,3 +502,17 @@ test('a PPP loaded before voice is sent once when context becomes ready, with ca
  assert.equal(f.calls.filter(c=>c.url.endsWith('/board-change')).length,1);
  const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
 });
+
+test('PPP confirmation changes at the same revision reach voice without replaying an acknowledged notification',async()=>{
+ const {createLiveVoice}=await load();let clock=1000;
+ const f=fixture(createLiveVoice,{now:()=>clock,statusOverride:()=>({context_ready:true})});
+ await f.voice.start('case-a');f.event({type:'session.started'});await tick();
+ await f.voice.notifyBoard('r1','case-a');await tick();
+ assert.equal(f.calls.filter(c=>c.url.endsWith('/board-change')).length,1);
+ // Workspace emits again when confirmed/pending changes even without a new revision.
+ await f.voice.notifyBoard('r1','case-a');clock+=5001;await f.voice.refresh();await tick();
+ assert.equal(f.calls.filter(c=>c.url.endsWith('/board-change')).length,2);
+ clock+=5001;await f.voice.refresh();await tick();
+ assert.equal(f.calls.filter(c=>c.url.endsWith('/board-change')).length,2);
+ const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
+});

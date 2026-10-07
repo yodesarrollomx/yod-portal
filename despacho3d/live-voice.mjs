@@ -352,12 +352,12 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   async function flushBoard(){
     const pending=pendingBoard;
     if(!pending||pending.caseId!==activeCaseId||!credential||!sessionId||closing||!contextReady||
-       boardSent===pending.revision||boardFlight||now()<boardRetryAt||!canOperate())return false;
+       boardSent===pending||boardFlight||now()<boardRetryAt||!canOperate())return false;
     const own=epoch,flight={};boardFlight=flight;boardRetryAt=now()+5000;
     try{
       await post('/voice/board-change',{session_id:sessionId,revision:pending.revision},credential,AbortSignal.timeout(8000));
       if(own!==epoch)return false;
-      boardSent=pending.revision;return true;
+      boardSent=pending;return true;
     }catch{return false;}
     finally{if(boardFlight===flight)boardFlight=null;}
   }

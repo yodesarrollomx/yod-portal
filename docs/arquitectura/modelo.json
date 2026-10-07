@@ -9428,8 +9428,8 @@
         "SVC-AUTON-CLOUD",
         "SYS-POTENCIALES"
       ],
-      "proposal": "Preparar credencial y WebRTC al entrar y mantener una preparación acotada por proyecto; impedir solicitudes de preparación duplicadas o recuperación sin pausa. Hacer Escúchame accesible en la cápsula y durante conexión/reconexión, conservar el silencio solicitado al llegar audio tardío y distinguir desconexión de pausa. Revisar el disparo por cercanía y las afirmaciones de presencia contra hechos observados. Continuar con el PPP original y su confirmación compartida, conservando la misma voz y las revisiones canónicas.",
-      "status": "propuesto",
+      "proposal": "Preparar credencial y WebRTC al entrar y mantener una preparación acotada por proyecto; impedir solicitudes de preparación duplicadas o recuperación sin pausa. Hacer Escúchame accesible en la cápsula y durante conexión/reconexión, conservar el silencio solicitado al llegar audio tardío y distinguir desconexión de pausa. Revisar el disparo por cercanía y las afirmaciones de presencia contra hechos observados. Continuar con el PPP original y su confirmación compartida, conservando la misma voz y las revisiones canónicas. El aviso de revisión PPP se retiene hasta confirmar contexto; los cambios de confirmación en la misma revisión también se transmiten. La pausa se conserva si la pista de audio llega tarde y al finalizar se silencia sin cortar la recepción de fragmentos finales.",
+      "status": "implementado_local",
       "approval": "Dirección solicita corregir primera conexión/interrupción, preparar desde la entrada y continuar punto 2, 7-oct-2026.",
       "tests": [
         "Entrada visible prepara WebRTC sin capturar micrófono ni abrir sesiones de proveedor; llamadas concurrentes comparten preparación y fallos no generan bucle.",
@@ -9438,7 +9438,7 @@
         "PPP compartido: abrir y minimizar no crea otra voz; guardado sin confirmación no se anuncia como confirmado; revisión compartida se comunica cuando está disponible.",
         "Regresión completa Node y navegador; separar evidencia sintética de aceptación física."
       ],
-      "deployment": "Propuesta previa a implementación. Voz112 publicada, fallo de primera conversación reportado por Dirección. La transcripción confirma inicio manual y una afirmación de presencia no sustentada; causa del servidor aún por comprobar.",
+      "deployment": "Implementado en PR128, pendiente de integración y publicación. La primera ejecución aprobó arquitectura, Node, accesos y chinches; el recorrido de navegador sigue en curso. La preparación desde la entrada es local y por proyecto autorizado: no abre micrófonos ni sesiones de OpenAI sin encuentro. La causa del servidor y la aceptación con micrófono físico siguen pendientes.",
       "rollback": "Revertir este PR del portal y, si se modifica el motor, desplegar su commit anterior. Sin cambios de datos de negocio ni a la configuración inicial de GPT-Live."
     }
   ],
