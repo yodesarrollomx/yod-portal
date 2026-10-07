@@ -79,7 +79,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
    assert.match(await frame.locator('#agent-menu-title').innerText(),/Autón A/);
    await page.keyboard.press('Escape');await page.waitForTimeout(700);
    assert.equal(await frame.locator('.station-radial').isVisible(),false,'closing near the character must not immediately reopen');
-   await frame.evaluate(()=>window.despacho.camera.position.set(9.8,1.65,-4.4));await page.waitForTimeout(150);
+   await frame.evaluate(async()=>{window.despacho.camera.position.set(9.8,1.65,-4.4);await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));});
    await frame.evaluate(()=>window.despacho.camera.position.set(8,1.65,-5.6));
    await frame.locator('.station-radial').waitFor();
    await page.keyboard.press('ArrowLeft');
