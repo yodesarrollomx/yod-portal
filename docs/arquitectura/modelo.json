@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.101-composicion-despacho",
+  "revision": "2026-10-07.102-ppp-tarjetas",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8537,6 +8537,28 @@
       ],
       "deployment": "Propuesta registrada antes de editar la interfaz. Pendientes comprobación visual en CI y publicación; aceptación estética del propietario pendiente.",
       "rollback": "Revertir PR visual y sus versiones de caché; no cambia datos, permisos, sesiones de voz ni contratos del PPP."
+    },
+    {
+      "id": "CHG-DESPACHO-PPP-TARJETAS-102",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "EXT-DRIVE"
+      ],
+      "proposal": "PPP compartido con tarjetas de datos plegadas y detalle accesible, sin infográficos ni captura manual en el puesto del autón. Conservar el modelo/Store nativo y las fórmulas de Sheets. Añadir ejecución explícita de ajustes solicitados en conversación, separada de propuestas: intención durable por actor/caso/revisión, envío idempotente por el puente existente y recibo confirmado antes de afirmar guardado. Tarjeta abierta aporta contexto observado, nunca autoridad. No modificar datos reales durante pruebas.",
+      "status": "propuesto",
+      "approval": "Dirección solicita tarjetas compactas junto al autón y corrección conversada que actualice el libro y tablero, 7-oct-2026.",
+      "tests": [
+        "Controles Node de autorización, revisión, límites, expiración, idempotencia y recibo confirmado.",
+        "Chromium/WebKit con página PPP real y transporte sintético: tarjetas cerradas, expansión, 500→644, persistencia/recarga, conflicto y móvil.",
+        "Verificaciones requeridas de Portal y contratos de voz; capturas de interfaz real con datos sintéticos."
+      ],
+      "deployment": "Propuesta registrada antes del código. Integración coordinada de Portal, Potenciales y servidor; aceptación privada y micrófono real pendientes.",
+      "rollback": "Revertir código y versiones de caché mediante PR; conservar propuestas, recibos, datos, versiones, fórmulas y permisos."
     }
   ],
   "data_contracts": [
@@ -9605,6 +9627,37 @@
         "Respuesta tardía, otro caso o revocación no puede pintar el puesto; una imagen de otra ejecución no se atribuye al trabajo actual.",
         "Capturas sólo se descargan al cambiar. Observación periódica únicamente en pestaña visible; sin lecturas nuevas de Drive/JEV por observar.",
         "El piloto instalado conserva sus permisos; múltiples personajes no equivalen a workers habilitados."
+      ]
+    },
+    {
+      "id": "CTR-PPP-AJUSTE-CONVERSADO",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "EXT-DRIVE"
+      ],
+      "source": "Petición explícita de Dirección; extensión del puente existente y del modelo nativo.",
+      "input": [
+        "PPP registrado del caso seleccionado, sesión autorizada y snapshot confirmado.",
+        "Propuesta con campos allowlisted, antes/después, escenario, revisión y motivo.",
+        "Solicitud explícita del usuario al autón; herramienta separada para solicitar ejecución de esa propuesta."
+      ],
+      "output": [
+        "Tarjetas cerradas al abrir el puesto y detalle de datos al seleccionarlas.",
+        "Intención de aplicación durable con vigencia acotada; estado pendiente no acredita escritura.",
+        "Confirmación solo después de releer cantidades, escenario y revisión devueltos por el tablero."
+      ],
+      "invariants": [
+        "Las tarjetas presentan el mismo Store del PPP, no copias de datos ni fórmulas financieras nuevas.",
+        "Proponer no escribe. La herramienta de aplicar requiere instrucción explícita del usuario; documentos y eventos del tablero no autorizan cambios.",
+        "Actor, caso, escenario y revisión coinciden. Fórmulas y campos no editables se rechazan; ambigüedades se aclaran antes de proponer.",
+        "Request_id se conserva ante reintentos. Una revisión concurrente bloquea la escritura y requiere nueva lectura.",
+        "La UI no anuncia guardado hasta recibo validado; desconexión o timeout permanece sin confirmar.",
+        "Tarjeta seleccionada aporta campos de contexto observados, no autoridad ni permisos. No ampliar fuentes registradas ni autenticación."
       ]
     }
   ],
