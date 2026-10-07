@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.104-puesto-recuperable",
+  "revision": "2026-10-07.105-voz-reconexion",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -2717,7 +2717,7 @@
       "dominio": "Operación",
       "proposito": "Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.",
       "source_of_truth": "Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos.",
-      "runtime_status": "Portal PR114 y Pages del commit 5eca769 publicados. Tarjetas y edición conversada probadas con transporte sintético; aceptación física y privada pendiente.",
+      "runtime_status": "Última entrega técnica comprobada: Portal PR 117 / main 264d2cdee87fb7a2c0a40b81d065f32bc0643bb0, Pages 37582743970. Puesto y recibos validados con pruebas sintéticas; entrada pública real sin sesión comprobada. Micrófono físico y edición de expediente privado pendientes. Corrección de reconexión 105 sólo en rama, sin publicar.",
       "evidence": [
         {
           "repo": "yodesarrollomx/yod-portal",
@@ -9244,7 +9244,7 @@
         "SHEET-PPP-MODELOS"
       ],
       "proposal": "Paso2: corregir rutas y capacidades reales del PPP, recuperación de confirmaciones y fuentes, y fallos locales de interrupción de voz. Vertical apunta a Mixto; sólo Patrimonial tiene edición conversada nativa acreditada. Conservar recibo tras escritura y reintentar únicamente /board/resolve; actualizar fuentes con conversación abierta sin recrear el iframe correcto. Manejar ausencia de audio y rechazos correlacionados de interrupción sin falsear éxito ni alterar configuración Live. No implementar modelos nativos no existentes ni iniciar paso3. Limitar espera del handshake con recuperación por Actualizar conexión. En Pendientes distinguir ejecución registrada de trabajo actualmente acreditado y ofrecer Retomar sólo por can_resume del contrato vigente; sin reactivar objetivos ni cambiar sus registros. Reconstruir agents.js/css con el build existente y dependencia Cubefarm fijada, mediante workflow temporal exclusivo de esta rama; publicar sólo artefactos compilados sin forzar la rama y eliminar ese workflow antes del merge final. Revisión independiente del 2026-10-07 06:17 UTC: fijar una nueva URL de goals.mjs para imports/reexport del puesto y consumidores del arranque, evitando mezclar exports nuevos con el módulo almacenado antes de esta entrega. Admitir estado y recibo del iframe autorizado cuando el puesto está oculto sólo para una aplicación ya en vuelo; conservar validación de origen, emisor, nonce, caso y generación, y mantener bloqueado el despacho de ajustes nuevos mientras esté oculto. Recuperación tras recarga completa: PPP conserva un outbox acotado de metadatos de ACK validado; después de releer el libro, reenvía sólo recibos del mismo caso, escenario y revisión. El puesto confirma mediante /board/resolve idempotente y devuelve receipt-ack ligado al canal. No reconstruir recibos por igualdad de cantidades ni repetir escrituras. Revisión de outbox: conciliar también recibos históricos tras lectura confirmada del caso, usando exclusivamente /board/resolve. El servidor sólo reconoce un histórico ya aplicado con el mismo actor/request_id/revisión; uno todavía pendiente no se marca aplicado contra otra revisión. El padre mantiene una cola de recibos y valida request_id/status de la respuesta antes del acuse, sin descartar otros recibos al resolver uno. Actualizar el cargador de la oficina a puesto104 y hacer que la prueba pública espere las versiones exactas de voz y paquete del puesto, evitando acreditar como nueva una página anterior.",
-      "status": "implementado_local",
+      "status": "publicado",
       "approval": "Dirección autoriza completar pasos1–3 secuencialmente con bitácora; paso1 cerrado y publicado antes de este cambio. 7-oct-2026 UTC /6-oct Hermosillo.",
       "tests": [
         "Regresiones de rutas reales, capacidades por modelo y selección ambigua.",
@@ -9258,8 +9258,30 @@
         "Recarga completa después de ACK y fallo de resolve: una escritura total, relectura confirmada, mismo recibo y eliminación sólo tras ack exacto; rechazar otros casos/escenarios/revisiones y lecturas no confirmadas.",
         "Ocho recibos ya registrados con acuses perdidos se concilian aunque el libro avance; históricos no confirmados permanecen pendientes y no se infieren por valores. Cola concurrente y respuesta de otro request_id no borran recibos."
       ],
-      "deployment": "Implementado en PR117, buildagents.js/css9c730ba con workflow37579768200; workflowtemporal retirado. Recuperación conjunta con potenciales-yodPR18 y CI final pendientes. No cerrar integralmente paso2 ni iniciar paso3 mientras falte aceptación real requerida.",
+      "deployment": "Entrega técnica publicada: Portal PR 117, commit 264d2cdee87fb7a2c0a40b81d065f32bc0643bb0 y Pages 37582743970; Potenciales PR 18, commit 39acdf28c1249fae0a0bc40183ea6a22283e827c y Pages 37583345506. CI: 448 pruebas Node Portal y 63 PPP, además de Chromium/WebKit. Paso 2 conserva aceptación de micrófono físico y escritura privada pendiente; no iniciar paso 3.",
       "rollback": "Revertir PR y referencias de caché. No revertir registros de negocio ni reenviar escrituras; mantener recibos."
+    },
+    {
+      "id": "CHG-DESPACHO-VOZ-105",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "proposal": "Corregir dos fallos de recuperación de voz reproducidos con dobles locales: session.started recibido durante reconexión dejaba el micrófono desactivado al publicar escucha; /voice/session rechazado con 401 conservaba el token temporal y el siguiente intento explícito lo reutilizaba. Centralizar habilitación del micrófono al recuperar la conexión, respetar silencio voluntario y renovar sólo la credencial temporal rechazada en un intento posterior. No reiniciar sesiones automáticamente ni modificar JSON Live, contexto, datos de negocio o credencial de YOD OS. Actualizar URLs de módulos e importadores para que la entrega se pueda verificar en la publicación. No atribuir estos fallos al reporte anterior del usuario sin correlación; aceptación natural con micrófono físico pendiente. Durante finalización, ignorar cambios de conexión para conservar el micrófono cerrado y retener audio/transporte hasta session.closed. Seguimiento propuesto antes del código: acotar exclusivamente la espera de señalización /voice/session a 90 segundos (signallingTimeout configurable), separado del límite de 60 segundos posterior al SDP, dejando el permiso del micrófono bajo control del usuario. El límite contempla contexto Portero de 25 segundos en modo expediente, creación de sesión de 25 segundos y conexión del observador de 15 segundos, más margen para red y registro, aborta el intento y muestra un error recuperable, sin crear otra sesión automáticamente. El servidor existente cierra una sesión creada si la respuesta del cliente fue abandonada.",
+      "status": "implementado_local",
+      "approval": "Dirección solicita resolver voz y cerrar pasos secuencialmente; revisión de fallo anterior recibida el 7-oct-2026. Se registró reproducción antes del cambio el 7-oct-2026 00:51–00:52, America/Hermosillo (UTC-7).",
+      "tests": [
+        "Regresión del orden starting → disconnected → session.started → connected: micrófono activo únicamente después del inicio confirmado y reconexión, sin nueva sesión.",
+        "Reconexión conserva micrófono silenciado por el usuario y no reinicia trabajo.",
+        "Rechazo de credencial temporal y siguiente intento explícito: mint nuevo, sin renovación automática; rechazo tardío de otro caso no elimina credencial nueva.",
+        "Node y verificadores requeridos, Chromium/WebKit pertinentes y versiones de publicación; audio físico se acredita por separado.",
+        "Desconexión/reconexión mientras se espera session.closed conserva phase closing, micrófono apagado y transporte abierto.",
+        "Respuesta de señalización que no llega y respeta AbortSignal: error recuperable al vencer el límite, pistas liberadas y una sola llamada; cancelar antes del límite no cambia aviso ni caso."
+      ],
+      "deployment": "Implementación en PR118 con siete regresiones sintéticas aprobadas en evaluador local. El primer conjunto pasó en Node real; CI final y publicación pendientes. Aceptación del micrófono físico y escritura privada del paso 2 siguen pendientes; no iniciar paso 3.",
+      "rollback": "Revertir PR y referencias de caché; no modificar credenciales de YOD OS, registros ni sesiones de negocio.",
+      "followup_proposed_at": "2026-10-07T07:59:27Z"
     }
   ],
   "data_contracts": [

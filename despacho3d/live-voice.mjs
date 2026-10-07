@@ -14,7 +14,7 @@ const NOTICES = {
 export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   media = globalThis.navigator?.mediaDevices, Peer = globalThis.RTCPeerConnection, Stream = globalThis.MediaStream,
   audio, onChange = () => {}, actions = null, onTranscript = () => {}, now = Date.now,
-  schedule = setInterval, cancel = clearInterval, closeTimeout = 20000, disconnectGrace = 12000, maxStatusFailures = 3, startTimeout = 60000} = {}) {
+  schedule = setInterval, cancel = clearInterval, closeTimeout = 20000, disconnectGrace = 12000, maxStatusFailures = 3, startTimeout = 60000, signallingTimeout = 90000} = {}) {
   let epoch = 0, stream = null, peer = null, channel = null, credential = null, sessionId = null,
     poll = null, controller = null, polling = false, closing = null, began = 0, started = false,
     contextReady = false, finalSeen = false, disconnected = false, closedResolve = null, sequence = 0,
@@ -64,11 +64,11 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   }
   const report = result => publish({fragments: result.fragments, blocks: result.blocks, saved: result.saved,
     pending: result.pending, incomplete: state.incomplete || result.incomplete === true});
-  const ready = () => {
-    if (!started || state.phase !== 'starting') return;
+  const ready = (notice = 'Habla con el autón. Puedes interrumpirlo al hablar.') => {
+    if (closing || !started || state.phase !== 'starting') return;
     clearTimeout(startTimer); startTimer = null;
     stream?.getAudioTracks().forEach(track => {track.enabled = !state.muted;});
-    publish({phase: 'listening', notice: 'Habla con el autón. Puedes interrumpirlo al hablar.'});
+    publish({phase: 'listening', notice});
   };
   function stop(notice = 'Conversación finalizada.') {
     if (closing) return closing;
@@ -207,6 +207,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
         void stop('Finalización incompleta: la conexión se interrumpió.');};
       channel.onclose = lost; channel.onopen = () => {if (token === epoch) void status(token);};
       peer.onconnectionstatechange = () => {
+        if (token !== epoch || closing || finalSeen) return;
         const connection = peer?.connectionState;
         if (connection === 'disconnected') {
           if (disconnectTimer === null) {
@@ -216,16 +217,28 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
         } else if (connection === 'connected') {
           clearTimeout(disconnectTimer); disconnectTimer = null;
           if (state.phase === 'reconnecting') {
-            publish({phase: started ? 'listening' : 'starting', notice: started ?
-              'Conexión recuperada. Sigue hablando con el autón.' : 'Preparando conversación…'});
-            ready();
+            // Run the same microphone transition even when session.started arrived while disconnected.
+            publish({phase: 'starting', notice: 'Preparando conversación…'});
+            ready('Conexión recuperada. Sigue hablando con el autón.');
           }
         } else if (['failed','closed'].includes(connection)) lost();
       };
       await peer.setLocalDescription(await peer.createOffer()); await gather(peer);
       if (token !== epoch || closing) return false;
       const current = credential;
-      const result = await post('/voice/session', {sdp: peer.localDescription.sdp}, current, controller.signal);
+      // Bound signalling, not the user's microphone permission prompt.
+      const signallingController = controller;
+      let signallingTimedOut = false, result;
+      const signallingTimer = setTimeout(() => {
+        if (token !== epoch || closing) return;
+        signallingTimedOut = true; signallingController.abort();
+      }, signallingTimeout);
+      try {
+        result = await post('/voice/session', {sdp: peer.localDescription.sdp}, current, signallingController.signal);
+      } catch (error) {
+        if (signallingTimedOut) throw Error('La conexión de voz no respondió a tiempo. Puedes volver a intentar.');
+        throw error;
+      } finally {clearTimeout(signallingTimer);}
       const id = result.session?.id, sdp = result.transport?.sdp;
       if (typeof id !== 'string' || !id || typeof sdp !== 'string' || !sdp.startsWith('v=0'))
         throw Error('La conexión de voz no es válida.');
@@ -246,6 +259,8 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
       return true;
     } catch (error) {
       if (token === epoch && !closing) {
+        // Forget only the temporary credential rejected by this attempt. A newer preparation must survive.
+        if (error?.code === 'unauthorized' && prepared === credential) prepared = null;
         if (sessionId) await stop();
         else {epoch++; release(); credential = null; publish({phase: 'error', notice: error?.name === 'NotAllowedError'
           ? 'Permite el micrófono en el navegador y pulsa Volver a intentar.' : error?.name === 'NotFoundError'

@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-07.104-puesto-recuperable
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-07.105-voz-reconexion
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -993,7 +993,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dirección técnica
 
-**Estado registrado:** codigo. Portal PR114 y Pages del commit 5eca769 publicados. Tarjetas y edición conversada probadas con transporte sintético; aceptación física y privada pendiente.
+**Estado registrado:** codigo. Última entrega técnica comprobada: Portal PR 117 / main 264d2cdee87fb7a2c0a40b81d065f32bc0643bb0, Pages 37582743970. Puesto y recibos validados con pruebas sintéticas; entrada pública real sin sesión comprobada. Micrófono físico y edición de expediente privado pendientes. Corrección de reconexión 105 sólo en rama, sin publicar.
 
 **Entradas registradas:**
 

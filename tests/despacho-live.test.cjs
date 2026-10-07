@@ -3,7 +3,7 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const load=()=>import('../despacho3d/live-voice.mjs');
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
-function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12000,maxStatusFailures=3,mode='expediente',failStatus=false,Stream,startTimeout=60000}={}){
+function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12000,maxStatusFailures=3,mode='expediente',failStatus=false,Stream,startTimeout=60000,signallingTimeout=90000,mintOverride,sessionOverride}={}){
  const calls=[],captions=[],track={enabled:true,stops:0,stop(){this.stops++;}},
    stream={getTracks:()=>[track],getAudioTracks:()=>[track]},
    audio={srcObject:null,pause(){},play:async()=>{}};
@@ -19,13 +19,14 @@ function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12
  }
  const base={ok:true,active:true,started:true,context_ready:true,finalized:false,expires_at:Date.now()+600000,
   fragments:0,blocks:0,saved:0,pending:0,incomplete:false};
- const voice=createLiveVoice({audio,Peer,Stream,closeTimeout,disconnectGrace,maxStatusFailures,startTimeout,media:{getUserMedia:async()=>stream},
+ const voice=createLiveVoice({audio,Peer,Stream,closeTimeout,disconnectGrace,maxStatusFailures,startTimeout,signallingTimeout,media:{getUserMedia:async()=>stream},
   schedule:()=>1,cancel:()=>{},onTranscript:f=>captions.push(f),
-  mint:async({case_id})=>({ok:true,case_id,token:'A'.repeat(30)+'.'+'a'.repeat(64),
-   endpoint:'https://synthetic-engine.onrender.com',expires_at:Date.now()+600000}),
+  mint:mintOverride||(async({case_id})=>({ok:true,case_id,token:'A'.repeat(30)+'.'+'a'.repeat(64),
+   endpoint:'https://synthetic-engine.onrender.com',expires_at:Date.now()+600000})),
   fetchImpl:async(url,options)=>{
    calls.push({url,options});
    if(failStatus && url.endsWith('/status'))throw Error('record unavailable');
+   if(url.endsWith('/session')&&sessionOverride){const override=await sessionOverride(url,options);if(override)return override;}
    const value=url.endsWith('/session')?{ok:true,mode,session:{id:'live:opaque/session'},transport:{type:'webrtc',sdp:'v=0\r\nanswer'}}:
     url.endsWith('/close')?{...base,active:false,finalized:closed,fragments:1,blocks:1,saved:closed?1:0,pending:closed?0:1,incomplete:!closed}:base;
    return {ok:true,json:async()=>value};
@@ -285,4 +286,98 @@ test('correlated interruption rejection stays visible without unmuting output or
   assert.equal(f.voice.resumeAudio(),true);assert.equal(f.audio.muted,false);
   const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
  }
+});
+
+test('session.started received during reconnection enables input when the same peer reconnects',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice);
+ await f.voice.start('synthetic-case');
+ assert.equal(f.track.enabled,false);
+ f.peer.connectionState='disconnected';f.peer.onconnectionstatechange();
+ f.event({type:'session.started'});
+ assert.equal(f.voice.snapshot().phase,'reconnecting');assert.equal(f.track.enabled,false);
+ f.peer.connectionState='connected';f.peer.onconnectionstatechange();
+ assert.equal(f.voice.snapshot().phase,'listening');assert.equal(f.track.enabled,true);
+ assert.equal(f.calls.filter(c=>c.url.endsWith('/session')).length,1,'recovery never creates a second session');
+ const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
+});
+
+test('peer reconnection preserves the microphone mute chosen by the user',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice);
+ await f.voice.start('synthetic-case');f.event({type:'session.started'});await tick();f.voice.mute();
+ f.peer.connectionState='disconnected';f.peer.onconnectionstatechange();
+ f.peer.connectionState='connected';f.peer.onconnectionstatechange();
+ assert.equal(f.voice.snapshot().phase,'listening');assert.equal(f.voice.snapshot().muted,true);
+ assert.equal(f.track.enabled,false);assert.equal(f.calls.filter(c=>c.url.endsWith('/session')).length,1);
+ const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
+});
+
+test('peer reconnect events during finalization cannot reactivate input or leave closing',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice);
+ await f.voice.start('synthetic-case');f.event({type:'session.started'});await tick();
+ const end=f.voice.stop();await tick();
+ f.peer.connectionState='disconnected';f.peer.onconnectionstatechange();
+ f.peer.connectionState='connected';f.peer.onconnectionstatechange();
+ assert.equal(f.voice.snapshot().phase,'closing');assert.equal(f.track.enabled,false);
+ assert.equal(f.peer.closed,false);assert.equal(f.track.stops,0);
+ f.event({type:'session.closed'});await end;
+ assert.equal(f.voice.snapshot().finalized,true);assert.equal(f.track.stops,1);
+});
+
+test('rejected temporary voice credential is minted again only on an explicit retry',async()=>{
+ const {createLiveVoice}=await load();let mints=0,attempts=0;
+ const f=fixture(createLiveVoice,{
+  mintOverride:async({case_id})=>({ok:true,case_id,token:'A'.repeat(29)+(++mints)+'.'+'a'.repeat(64),
+   endpoint:'https://synthetic-engine.onrender.com',expires_at:Date.now()+600000}),
+  sessionOverride:async()=>++attempts===1?{ok:false,status:401,json:async()=>({ok:false,error:'unauthorized'})}:null
+ });
+ assert.equal(await f.voice.start('synthetic-case'),false);await tick();
+ assert.equal(f.voice.snapshot().phase,'error');assert.equal(mints,1);assert.equal(attempts,1);
+ assert.equal(await f.voice.start('synthetic-case'),true);assert.equal(mints,2);assert.equal(attempts,2);
+ const requests=f.calls.filter(c=>c.url.endsWith('/session'));
+ assert.notEqual(requests[0].options.headers.Authorization,requests[1].options.headers.Authorization);
+ f.event({type:'session.started'});const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
+});
+
+test('late rejection from a cancelled case cannot discard the new case temporary credential',async()=>{
+ const {createLiveVoice}=await load();let rejectOld;const minted=[];
+ const f=fixture(createLiveVoice,{
+  mintOverride:async({case_id})=>{minted.push(case_id);return {ok:true,case_id,token:'A'.repeat(29)+minted.length+'.'+'a'.repeat(64),
+   endpoint:'https://synthetic-engine.onrender.com',expires_at:Date.now()+600000};},
+  sessionOverride:async()=>minted.length===1?new Promise(resolve=>{rejectOld=resolve;}):null
+ });
+ const old=f.voice.start('case-a');await tick();await f.voice.stop();
+ assert.equal(await f.voice.prepare('case-b'),true);
+ rejectOld({ok:false,status:401,json:async()=>({ok:false,error:'unauthorized'})});assert.equal(await old,false);
+ assert.equal(f.voice.snapshot().phase,'idle');
+ assert.equal(await f.voice.start('case-b'),true);assert.deepEqual(minted,['case-a','case-b']);
+ f.event({type:'session.started'});const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
+});
+
+test('a stalled signalling request expires visibly without creating another Live session',async()=>{
+ const {createLiveVoice}=await load();let signals=0;
+ const f=fixture(createLiveVoice,{signallingTimeout:5,sessionOverride:async(_url,options)=>
+  new Promise((_resolve,reject)=>options.signal.addEventListener('abort',()=>{
+   signals++;reject(Object.assign(Error('aborted'),{name:'AbortError'}));
+  },{once:true}))
+ });
+ assert.equal(await f.voice.start('synthetic-case'),false);
+ assert.equal(f.voice.snapshot().phase,'error');assert.match(f.voice.snapshot().notice,/no respondió a tiempo/);
+ assert.equal(signals,1);assert.equal(f.track.stops,1);assert.equal(f.peer.closed,true);
+ await new Promise(resolve=>setTimeout(resolve,15));
+ assert.equal(f.calls.filter(c=>c.url.endsWith('/session')).length,1);
+ assert.equal(f.calls.some(c=>c.url.endsWith('/close')),false,'no opaque session ID was received');
+});
+
+test('explicit cancellation of signalling retains its outcome after the connection deadline',async()=>{
+ const {createLiveVoice}=await load();let signals=0;
+ const f=fixture(createLiveVoice,{signallingTimeout:50,sessionOverride:async(_url,options)=>
+  new Promise((_resolve,reject)=>options.signal.addEventListener('abort',()=>{
+   signals++;reject(Object.assign(Error('aborted'),{name:'AbortError'}));
+  },{once:true}))
+ });
+ const starting=f.voice.start('synthetic-case');await tick();await f.voice.stop();
+ assert.equal(await starting,false);const notice=f.voice.snapshot().notice;
+ await new Promise(resolve=>setTimeout(resolve,70));
+ assert.equal(f.voice.snapshot().phase,'idle');assert.equal(f.voice.snapshot().notice,notice);
+ assert.equal(signals,1);assert.equal(f.track.stops,1);assert.equal(f.calls.filter(c=>c.url.endsWith('/session')).length,1);
 });

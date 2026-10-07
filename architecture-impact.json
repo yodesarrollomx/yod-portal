@@ -1,29 +1,19 @@
 {
-  "model_revision": "2026-10-07.104-puesto-recuperable",
-  "proposal_id": "CHG-DESPACHO-PUESTO-104",
-  "summary": "Paso2: corregir rutas y capacidades reales del PPP, recuperación de confirmaciones y fuentes, y fallos locales de interrupción de voz. Vertical apunta a Mixto; sólo Patrimonial tiene edición conversada nativa acreditada. Conservar recibo tras escritura y reintentar únicamente /board/resolve; actualizar fuentes con conversación abierta sin recrear el iframe correcto. Manejar ausencia de audio y rechazos correlacionados de interrupción sin falsear éxito ni alterar configuración Live. No implementar modelos nativos no existentes ni iniciar paso3. Limitar espera del handshake con recuperación por Actualizar conexión. En Pendientes distinguir ejecución registrada de trabajo actualmente acreditado y ofrecer Retomar sólo por can_resume del contrato vigente; sin reactivar objetivos ni cambiar sus registros. Reconstruir agents.js/css con el build existente y dependencia Cubefarm fijada, mediante workflow temporal exclusivo de esta rama; publicar sólo artefactos compilados sin forzar la rama y eliminar ese workflow antes del merge final. Revisión independiente del 2026-10-07 06:17 UTC: fijar una nueva URL de goals.mjs para imports/reexport del puesto y consumidores del arranque, evitando mezclar exports nuevos con el módulo almacenado antes de esta entrega. Admitir estado y recibo del iframe autorizado cuando el puesto está oculto sólo para una aplicación ya en vuelo; conservar validación de origen, emisor, nonce, caso y generación, y mantener bloqueado el despacho de ajustes nuevos mientras esté oculto. Recuperación tras recarga completa: PPP conserva un outbox acotado de metadatos de ACK validado; después de releer el libro, reenvía sólo recibos del mismo caso, escenario y revisión. El puesto confirma mediante /board/resolve idempotente y devuelve receipt-ack ligado al canal. No reconstruir recibos por igualdad de cantidades ni repetir escrituras. Revisión de outbox: conciliar también recibos históricos tras lectura confirmada del caso, usando exclusivamente /board/resolve. El servidor sólo reconoce un histórico ya aplicado con el mismo actor/request_id/revisión; uno todavía pendiente no se marca aplicado contra otra revisión. El padre mantiene una cola de recibos y valida request_id/status de la respuesta antes del acuse, sin descartar otros recibos al resolver uno. Actualizar el cargador de la oficina a puesto104 y hacer que la prueba pública espere las versiones exactas de voz y paquete del puesto, evitando acreditar como nueva una página anterior.",
+  "model_revision": "2026-10-07.105-voz-reconexion",
+  "proposal_id": "CHG-DESPACHO-VOZ-105",
+  "summary": "Corregir dos fallos de recuperación de voz reproducidos con dobles locales: session.started recibido durante reconexión dejaba el micrófono desactivado al publicar escucha; /voice/session rechazado con 401 conservaba el token temporal y el siguiente intento explícito lo reutilizaba. Centralizar habilitación del micrófono al recuperar la conexión, respetar silencio voluntario y renovar sólo la credencial temporal rechazada en un intento posterior. No reiniciar sesiones automáticamente ni modificar JSON Live, contexto, datos de negocio o credencial de YOD OS. Actualizar URLs de módulos e importadores para que la entrega se pueda verificar en la publicación. No atribuir estos fallos al reporte anterior del usuario sin correlación; aceptación natural con micrófono físico pendiente. Durante finalización, ignorar cambios de conexión para conservar el micrófono cerrado y retener audio/transporte hasta session.closed. Seguimiento propuesto antes del código: acotar exclusivamente la espera de señalización /voice/session a 90 segundos (signallingTimeout configurable), separado del límite de 60 segundos posterior al SDP, dejando el permiso del micrófono bajo control del usuario. El límite contempla contexto Portero de 25 segundos en modo expediente, creación de sesión de 25 segundos y conexión del observador de 15 segundos, más margen para red y registro, aborta el intento y muestra un error recuperable, sin crear otra sesión automáticamente. El servidor existente cierra una sesión creada si la respuesta del cliente fue abandonada.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "SYS-POTENCIALES",
-    "GAS-PORTERO",
-    "EXT-DRIVE",
-    "SVC-AUTON-CLOUD",
-    "SHEET-PORTERO",
-    "SHEET-PPP-MODELOS"
+    "SYS-DESPACHO-3D"
   ],
   "tests": [
-    "Regresiones de rutas reales, capacidades por modelo y selección ambigua.",
-    "Secuencias de recibo confirmado, confirmación fallida y recuperación sin segunda escritura; recarga de fuentes con conversación activa.",
-    "Interrupción rechazada con error.client_event_id y ausencia de reproductor; configuración Live conservada.",
-    "Node, verificadores, pruebas de navegador pertinentes y despliegue. Micrófono físico y expediente privado deben acreditarse por separado.",
-    "Handshake sin respuesta, respuesta tardía y cambio de proyecto; presentación conservadora de running/can_resume sin mutaciones en lectura.",
-    "Build real Node22 con lockfile original fijado; artefactos compilados y CI de la revisión final tras retirar el workflow temporal.",
-    "Navegador sintético con goals.mjs anterior almacenado; cierre del puesto durante un ajuste y llegada posterior del recibo: confirmar una sola vez sin recrear iframe ni aplicar otra propuesta oculta.",
-    "Regresión de dependencia ESM antigua cacheada y cierre de panel durante guardado: confirmar sólo la aplicación autorizada sin nuevas acciones.",
-    "Recarga completa después de ACK y fallo de resolve: una escritura total, relectura confirmada, mismo recibo y eliminación sólo tras ack exacto; rechazar otros casos/escenarios/revisiones y lecturas no confirmadas.",
-    "Ocho recibos ya registrados con acuses perdidos se concilian aunque el libro avance; históricos no confirmados permanecen pendientes y no se infieren por valores. Cola concurrente y respuesta de otro request_id no borran recibos."
+    "Regresión del orden starting → disconnected → session.started → connected: micrófono activo únicamente después del inicio confirmado y reconexión, sin nueva sesión.",
+    "Reconexión conserva micrófono silenciado por el usuario y no reinicia trabajo.",
+    "Rechazo de credencial temporal y siguiente intento explícito: mint nuevo, sin renovación automática; rechazo tardío de otro caso no elimina credencial nueva.",
+    "Node y verificadores requeridos, Chromium/WebKit pertinentes y versiones de publicación; audio físico se acredita por separado.",
+    "Desconexión/reconexión mientras se espera session.closed conserva phase closing, micrófono apagado y transporte abierto.",
+    "Respuesta de señalización que no llega y respeta AbortSignal: error recuperable al vencer el límite, pistas liberadas y una sola llamada; cancelar antes del límite no cambia aviso ni caso."
   ],
-  "rollback": "Revertir PR y referencias de caché. No revertir registros de negocio ni reenviar escrituras; mantener recibos."
+  "rollback": "Revertir PR y referencias de caché; no modificar credenciales de YOD OS, registros ni sesiones de negocio."
 }

@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-07.104-puesto-recuperable · 2026-10-07.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-07.105-voz-reconexion · 2026-10-07.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -1006,7 +1006,7 @@ Persistir notas y ejes del Corcho en un archivo privado independiente, autorizad
 Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.
 
 - Tipo: interfaz. Dominio: Operación. Responsable: Dirección técnica.
-- Evidencia: codigo. Producción: Portal PR114 y Pages del commit 5eca769 publicados. Tarjetas y edición conversada probadas con transporte sintético; aceptación física y privada pendiente..
+- Evidencia: codigo. Producción: Última entrega técnica comprobada: Portal PR 117 / main 264d2cdee87fb7a2c0a40b81d065f32bc0643bb0, Pages 37582743970. Puesto y recibos validados con pruebas sintéticas; entrada pública real sin sesión comprobada. Micrófono físico y edición de expediente privado pendientes. Corrección de reconexión 105 sólo en rama, sin publicar..
 - Entidades: caso, sesion, tablero, tarea, recibo.
 - Fuente de verdad: Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos..
 - Evidencia: [yod-portal/despacho3d/agent-workspace.mjs](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/agent-workspace.mjs) — Puesto compartido con PPP y ejecución de intención explícita; observar no otorga permisos..
