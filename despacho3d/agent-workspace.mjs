@@ -103,6 +103,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   try{
    await request('/board/resolve',{request_id:receipt.request_id,status:'applied',revision:receipt.revision});
    if(own!==generation||disposed)return false;
+   postBoard('yod:ppp:receipt-ack',{request_id:receipt.request_id,revision:receipt.revision});
    pendingReceipt=null;application=null;
    applyNotice.textContent='Ajuste guardado y confirmado. Puedes comparar esta revisión o conservarla como variante.';
    pppNote.textContent='Ajuste confirmado por el tablero y recalculado en Sheets.';
