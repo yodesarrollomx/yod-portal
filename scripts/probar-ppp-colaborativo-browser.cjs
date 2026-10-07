@@ -8,7 +8,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
 (async()=>{
  const browser=await chromium.launch({headless:true}),out=process.env.BROWSER_EVIDENCE_DIR||'/tmp/ppp-collab-evidence';fs.mkdirSync(out,{recursive:true});
  try{for(const viewport of [{width:1280,height:900},{width:390,height:844}]){
-  const context=await browser.newContext({viewport}),page=await context.newPage(),errors=[];let sessions=0,board=null,proposals=[],resolved=[],resolveAttempts=[],failNextResolve=false;
+  const context=await browser.newContext({viewport}),page=await context.newPage(),errors=[];let sessions=0,board=null,proposals=[],resolved=[],resolveAttempts=[],failNextResolve=false,wrongResolveIdentity=false;
   page.on('pageerror',e=>errors.push(e.message));
   await context.addInitScript(()=>{
    if(!location.pathname.endsWith('/__collab'))return;
@@ -46,7 +46,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
    else if(u.pathname==='/voice/close'){await page.frames().find(f=>f.url().endsWith('/__collab')).evaluate(()=>window.voicePeer.channel.onmessage({data:JSON.stringify({type:'session.closed'})}));body={ok:true,active:false,finalized:true,fragments:0,blocks:0,saved:0,pending:0};}
    else if(u.pathname==='/board/snapshot'){board=payload;body={ok:true,tablero:board};}
    else if(u.pathname==='/board/state')body={ok:true,tablero:board,proposals};
-   else if(u.pathname==='/board/resolve'){resolveAttempts.push(payload);if(failNextResolve){failNextResolve=false;return route.fulfill({status:503,contentType:'application/json',headers,body:JSON.stringify({ok:false,error:'temporary'})});}resolved.push(payload);assert.equal(board.confirmed,true);assert.equal(board.pending,false);assert.equal(board.revision,payload.revision);assert.equal(board.inputs.inTerrenoM2,payload.request_id==='board-voice-2'?644:150);proposals=[];body={ok:true};}
+   else if(u.pathname==='/board/resolve'){resolveAttempts.push(payload);if(failNextResolve){failNextResolve=false;return route.fulfill({status:503,contentType:'application/json',headers,body:JSON.stringify({ok:false,error:'temporary'})});}if(wrongResolveIdentity){wrongResolveIdentity=false;return route.fulfill({status:200,contentType:'application/json',headers,body:JSON.stringify({ok:true,request_id:'other-request',status:'applied'})});}resolved.push(payload);assert.equal(board.confirmed,true);assert.equal(board.pending,false);assert.equal(board.revision,payload.revision);assert.equal(board.inputs.inTerrenoM2,payload.request_id==='board-voice-2'?644:150);proposals=[];body={ok:true,request_id:payload.request_id,status:'applied'};}
    else if(u.pathname==='/computer/state')body={ok:true,phase:'idle',image:null,activity:[],links:[]};
    else if(u.pathname==='/fast/knowledge/board')body={ok:true,schema:1,case_id:CASE,revision:'1',capabilities:{},facts:[],versions:[],decisions:[],next_steps:[],sources:[]};
    return route.fulfill({status:200,contentType:'application/json',headers,body:JSON.stringify(body)});
@@ -92,9 +92,15 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await frame.getByRole('button',{name:'Comprobar confirmación',exact:true}).waitFor();
   assert.equal(await frame.getByRole('button',{name:'Aplicando…',exact:true}).count(),0);
   assert.equal(await ppp.evaluate(()=>window.applies),1);assert.equal(resolved.length,0);assert.deepEqual(await ppp.evaluate(()=>window.receiptAcks),[],'a failed resolve cannot acknowledge a receipt');
+  wrongResolveIdentity=true;
+  await frame.getByRole('button',{name:'Comprobar confirmación',exact:true}).click();
+  await frame.getByRole('button',{name:'Comprobar confirmación',exact:true}).waitFor();
+  await frame.waitForFunction(()=>{const b=[...document.querySelectorAll('button')].find(b=>b.textContent==='Comprobar confirmación');return b&&!b.disabled;});
+  assert.deepEqual(await ppp.evaluate(()=>window.receiptAcks),[],'ok:true for another request must not acknowledge this receipt');
+  assert.equal(resolved.length,0);assert.equal(await ppp.evaluate(()=>window.applies),1);
   await frame.getByRole('button',{name:'Comprobar confirmación',exact:true}).click();
   await frame.locator('.workspace-apply-status').filter({hasText:'guardado y confirmado'}).waitFor();
-  assert.deepEqual(resolveAttempts[0],resolveAttempts[1]);assert.equal(await ppp.evaluate(()=>window.applies),1,'receipt retry never writes PPP twice');
+  assert.deepEqual(resolveAttempts[0],resolveAttempts[1]);assert.deepEqual(resolveAttempts[1],resolveAttempts[2]);assert.equal(await ppp.evaluate(()=>window.applies),1,'receipt retry never writes PPP twice');
   assert.equal(resolved.length,1);assert.equal(await ppp.locator('#result').innerText(),'130');
   await ppp.waitForFunction(()=>window.receiptAcks.length===1);
   assert.deepEqual(await ppp.evaluate(()=>window.receiptAcks),[{request_id:'board-synthetic-1',revision:'r2'}]);
