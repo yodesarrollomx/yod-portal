@@ -47,7 +47,9 @@
     var P = window.YOD_PORTERO; if (!P) return null;
     var j = null; try { j = await intenta(P.original); } catch (e) { }
     if (j && (j.ok || rechazoAcceso(j.error))) return j;
-    try { return await intenta(P.respaldo); } catch (e) { return null; }
+    // El respaldo puede usar otra base de sesiones. Un rechazo suyo no puede
+    // invalidar una credencial cuando el primario simplemente no respondió.
+    try { var backup = await intenta(P.respaldo); return backup && backup.ok ? backup : null; } catch (e) { return null; }
   }
   var OS = 'https://yodesarrollomx.github.io/yod-portal/os/';
   var CORPORATE = 'https://yodesarrollo.mx/'; // sitio público; la marca del shell ya NO cuelga de aquí (lleva al OS)
@@ -438,48 +440,74 @@
     var chip = document.getElementById('yodChip'); if (chip) { chip.className = 'yod-role ' + persona; chip.textContent = persona === 'direccion' ? 'Dirección' : 'Colaborador'; chip.style.display = ''; }
     applyNav(); maybeLock();
   }
-  // Una caída temporal del Portero no revoca una identidad ya verificada en esta página.
-  // No se persiste autorización offline: una nueva carga requiere canje fresco.
-  var recheckTimer = null, lastIdentityVerifiedAt = 0;
-  var TRANSIENT_GRACE_MS = 5 * 60 * 1000, RECHECK_MS = 12000;
-  function scheduleIdentityRetry() {
-    if (recheckTimer) clearTimeout(recheckTimer);
-    recheckTimer = setTimeout(function () { recheckTimer = null; loadIdentity(); }, RECHECK_MS);
-  }
   function loadIdentity() {
     var k = tok(), previous = state.sessionToken, request = ++state.identityRequest;
-    if (recheckTimer) { clearTimeout(recheckTimer); recheckTimer = null; }
-    // Conservar pantalla y permisos previamente verificados mientras se revalida.
-    var trusted = Boolean(k && previous === k && state.identity === 'ok');
-    if (!trusted) {
+    var confirmedHere = !!k && previous === k && state.identity === 'ok';
+    if (state.retryTimer) { clearTimeout(state.retryTimer); state.retryTimer = null; }
+    // Solo conservar una identidad YA confirmada en esta carga. Una visita nueva
+    // nunca recibe permisos desde localStorage o una caché de roles.
+    if (!confirmedHere) {
       state.identity = k ? 'pending' : 'fail';state.role = '';state.boards = '';state.modules = [];
-      state.catalogRows = null;state.catalogIds = null;state.catalogUnavailable=false;purgeAll();
+      state.catalogRows = null;state.catalogIds = null;state.catalogUnavailable = false;purgeAll();
       set('yodName', 'Equipo YOD');set('yodRole', k ? 'Validando acceso…' : 'Sin sesión');set('yodAv', 'YO');
       var chip = document.getElementById('yodChip');if(chip)chip.style.display='none';
       var results = document.getElementById('yodRes');if(results)results.replaceChildren();
       pastilla(k ? 'wait' : 'fail');applyNav();maybeLock();
+    } else {
+      pastilla('wait');set('yodRole', 'Sesión activa · verificando');
     }
-    if(previous && previous !== k){state.sessionToken='';location.reload();return Promise.resolve();}
-    if(!k)return Promise.resolve();
-    return canjeConRelevo(k).then(function(j){
-      if(request !== state.identityRequest || k !== tok())return;
-      if (!j || j.ok !== true) throw new Error(j && j.error || 'sin-respuesta');
-      if(j.token!==k || typeof j.rol!=='string' || !j.rol.trim() || typeof j.boards!=='string')throw new Error('invalid_identity');
-      var identity = JSON.stringify([j.correo||'',j.nombre||'',j.rol||'vista',j.boards||'']);
-      if(state.sessionIdentity && state.sessionIdentity !== identity){location.reload();return;}
-      state.sessionIdentity=identity;lastIdentityVerifiedAt=Date.now();
-      state.sessionToken=k;aplicaIdentidad(j);return loadCatalog(currentSys());
-    }).catch(function(error){
-      if(request !== state.identityRequest || k !== tok())return;
-      var authoritative = rechazoAcceso(error) || String(error && error.message || '') === 'invalid_identity';
-      if(!authoritative && trusted && Date.now()-lastIdentityVerifiedAt < TRANSIENT_GRACE_MS){
-        // Solo dentro de la pestaña previamente autenticada, por tiempo limitado.
-        pastilla('wait');set('yodRole','Reconectando…');
-        scheduleIdentityRetry();return;
+    // Evita filtrar el estado de un board a otra persona.
+    if (previous && previous !== k) { state.sessionToken = '';location.reload();return Promise.resolve(); }
+    if (!k) { state.reconnectAttempts = 0;state.verifiedAt = 0;return Promise.resolve(); }
+    return canjeConRelevo(k).then(function(j) {
+      if (request !== state.identityRequest || k !== tok()) return;
+      if (!j) throw new Error('sin-respuesta');
+      if (j.ok !== true || j.token !== k || typeof j.rol !== 'string' || !j.rol.trim() || typeof j.boards !== 'string') {
+        throw new Error(j.ok === false && j.error ? j.error : 'respuesta-invalida');
       }
-      purgeAll();state.identity='fail';state.sessionToken='';pastilla('fail');
-      set('yodRole',authoritative?'Acceso vencido o retirado':'Sesión por validar');applyNav();maybeLock();
-      if(!authoritative && k) scheduleIdentityRetry();
+      var identity = JSON.stringify([j.correo || '',j.nombre || '',j.rol || 'vista',j.boards || '']);
+      if (state.sessionIdentity && state.sessionIdentity !== identity) {
+        // Un cambio de rol/permisos/persona debe ocultar datos ANTES de recargar.
+        state.identity = 'pending';state.role = '';state.boards = '';state.modules = [];
+        state.sessionToken = '';purgeAll();applyNav();maybeLock();location.reload();return;
+      }
+      state.sessionIdentity = identity;state.sessionToken = k;
+      state.verifiedAt = Date.now();state.reconnectAttempts = 0;
+      aplicaIdentidad(j);return loadCatalog(currentSys());
+    }).catch(function(err) {
+      if (request !== state.identityRequest || k !== tok()) return;
+      var reason = String(err && err.message || err || 'sin-respuesta').trim().toLowerCase();
+      // Problemas de transporte NO son pruebas de revocación. Solo el rechazo
+      // explícito del Portero invalida los permisos. Durante una caída el canje
+      // se reintenta automáticamente, sin borrar la credencial de este dispositivo.
+      var temporal = !rechazoAcceso(reason); // cualquier error no concluyente permite reconectar, sin conceder nuevos permisos
+      if (temporal) {
+        var fresh = reason !== 'respuesta-invalida' && confirmedHere && state.verifiedAt && Date.now() - state.verifiedAt < 5 * 60000;
+        if (fresh) {
+          // Gracia limitada para una identidad ya validada. El backend sigue
+          // autorizando cada operación protegida; NO hay permisos offline nuevos.
+          state.identity = 'ok';
+          pastilla('wait');set('yodRole', 'Sesión activa · reconectando');
+        } else {
+          // Sin canje confirmado recientemente se ocultan datos privados,
+          // pero no se obliga a entrar de nuevo: se espera al Portero.
+          state.identity = 'pending';state.role = '';state.boards = '';state.modules = [];
+          state.sessionToken = '';pastilla('wait');set('yodRole', 'Sin conexión · reintentando');
+          applyNav();maybeLock();
+        }
+        state.reconnectAttempts = (state.reconnectAttempts || 0) + 1;
+        var wait = Math.min(30000, 15000 * Math.pow(2, Math.min(5, state.reconnectAttempts - 1)));
+        state.retryTimer = setTimeout(function() {
+          state.retryTimer = null;
+          if (request === state.identityRequest && tok() === k) loadIdentity();
+        }, wait);
+        return;
+      }
+      // Rechazo definitivo o respuesta inválida: cerrar el lienzo sin borrar
+      // el token (el OS dueño de la sesión decide si debe pedir nuevo acceso).
+      purgeAll();state.identity = 'fail';state.sessionToken = '';state.verifiedAt = 0;
+      state.reconnectAttempts = 0;pastilla('fail');
+      set('yodRole', rechazoAcceso(reason) ? 'Acceso vencido o retirado' : 'Validando acceso…');applyNav();maybeLock();
     });
   }
   window.addEventListener('storage',function(e){if(e.key===LSC||e.key===null)loadIdentity();});
