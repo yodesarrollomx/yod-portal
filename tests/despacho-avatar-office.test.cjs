@@ -3,7 +3,7 @@ const base=path.resolve(__dirname,'../despacho3d'),vendor=pathToFileURL(path.joi
 const cache=new Map();
 function moduleURL(file){
  if(cache.has(file))return cache.get(file);
- let src=fs.readFileSync(file,'utf8').replace(/from 'three'/g,`from '${vendor}'`).replace(/from '(\.\/[^']+)'/g,(_,relative)=>`from '${moduleURL(path.resolve(path.dirname(file),relative.split('?')[0]))}'`);
+ let src=fs.readFileSync(file,'utf8').replace(/from 'three'/g,`from '${vendor}'`).replace(/from '(\.\.?\/[^']+)'/g,(_,relative)=>`from '${moduleURL(path.resolve(path.dirname(file),relative.split('?')[0]))}'`);
  const url='data:text/javascript;base64,'+Buffer.from(src).toString('base64');cache.set(file,url);return url;
 }
 const modules=Promise.all([import(vendor),import(moduleURL(path.join(base,'avatars/office-pilot.mjs')))]);
@@ -16,7 +16,7 @@ test('the pilot stays empty until authorized and ignores placement supplied by a
  const[T,{createOfficePilot}]=await modules,scene=new T.Scene(),p=createOfficePilot({scene});
  p.bind(panel(null));assert.equal(p.getState().count,0);
  const api=panel({...profile,placement:{position:[100,100,100],scale:999,rotationY:0}});p.bind(api);
- assert.deepEqual(p.getState(),{count:1,motion:'sit',poseTicks:0});assert.deepEqual(scene.children[0].position.toArray(),[7,0,-7.95]);assert.equal(scene.children[0].rotation.y,0);
+ assert.deepEqual(p.getState(),{count:1,motion:'sit',poseTicks:0});assert.deepEqual(scene.children[0].position.toArray(),[7,0,-6.25]);assert.equal(scene.children[0].rotation.y,Math.PI);
  const first=scene.children[0];api.publish({...profile});assert.equal(scene.children[0],first,'unchanged profile must not allocate another model');
  api.publish({...profile,id:'DIFFERENT'});assert.equal(scene.children.length,0,'mismatched identity fails closed');p.dispose();
 });
@@ -72,4 +72,17 @@ test('omitting the provisional figure before static merging retains the office l
   assert.ok(current.distance>prior.distance+.2,`the original head must no longer intercept its location (${prior.distance} vs ${current.distance})`);
   assert.deepEqual(current.collisions,prior.collisions);assert.deepEqual(current.pickBoxes,prior.pickBoxes);assert.deepEqual(current.bounds,prior.bounds);
  }finally{global.document=previous;}
+});
+
+test('seated figure faces the visible monitor and returns to its shared chair position',async()=>{
+ const[T,{createOfficePilot}]=await modules,scene=new T.Scene(),p=createOfficePilot({scene});p.bind(panel());
+ const figure=scene.children[0],screen=new T.Vector3(7,1.23,-7.2);
+ assert.ok(figure.position.z>screen.z,'chair must be on the visible side of the monitor');
+ const facing=new T.Vector3(0,0,1).applyQuaternion(figure.quaternion);
+ const toward=screen.clone().sub(figure.position);toward.y=0;toward.normalize();
+ assert.ok(facing.dot(toward)>.99,'face, knees and gaze point toward the monitor');
+ p.recorrer([[7,-6.25],[8,-5]],0,{inmediato:true,destino:'other'});
+ p.recorrer([[8,-5],p.inicio.xz],p.inicio.rot,{inmediato:true,destino:'inicio'});
+ assert.deepEqual(figure.position.toArray(),[7,0,-6.25]);assert.equal(figure.rotation.y,Math.PI);
+ p.dispose();
 });

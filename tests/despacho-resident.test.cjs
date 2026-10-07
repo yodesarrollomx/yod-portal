@@ -46,3 +46,14 @@ test('OS shares identical in-flight reads without sharing results across session
  const c=receive(event('three')),d=receive(event('four'));epoch++;allowed=false;bridge.clear();resolve(selection);await Promise.all([c,d]);
  assert.equal(results.length,2);bridge.dispose();
 });
+
+test('station distinguishes a short access outage from revocation, expiry and case change',async()=>{
+ const {residentAccessDecision}=await load(),current={case_id:'SYNTHETIC-CASE'},state={phase:'reconnecting',checked_at:1000,selection};
+ assert.equal(residentAccessDecision(state,current,50000),'recovering');
+ assert.equal(residentAccessDecision(state,current,121000),'lost');
+ assert.equal(residentAccessDecision({...state,phase:'unauthorized'},current,50000),'lost');
+ assert.equal(residentAccessDecision({...state,selection:null},current,50000),'lost');
+ assert.equal(residentAccessDecision({...state,selection:{case_id:'OTHER'}},current,50000),'lost');
+ assert.equal(residentAccessDecision({...state,phase:'standby'},current,50000),'current');
+ assert.equal(residentAccessDecision(state,null,50000),'none');
+});

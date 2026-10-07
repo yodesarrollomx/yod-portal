@@ -51,3 +51,14 @@ export function createResidentAgents({transport,onChange=()=>{},now=Date.now,sch
   dispose(){if(disposed)return;disposed=true;epoch++;if(timer!==null)cancel(timer);timer=null;selection=null;prepared=false;phase='unauthorized';publishProfile();emit();profiles.clear();listeners.clear();}
  };
 }
+
+// A failed refresh is not a revocation. Existing sessions may finish within the current lease;
+// getSelection() still blocks new operations until authority is validated again.
+export function residentAccessDecision(state,current,now=Date.now()){
+ if(!current)return 'none';
+ if(state?.phase==='reconnecting'&&state.selection?.case_id===current.case_id&&
+    Number.isFinite(state.checked_at)&&now>=state.checked_at&&now-state.checked_at<120000)return 'recovering';
+ if(!state?.selection||state.selection.case_id!==current.case_id||
+    ['loading','unauthorized','reconnecting'].includes(state.phase)||!Number.isFinite(state.checked_at)||now-state.checked_at>=120000)return 'lost';
+ return 'current';
+}

@@ -1,19 +1,18 @@
 {
-  "model_revision": "2026-10-07.105-voz-reconexion",
-  "proposal_id": "CHG-DESPACHO-VOZ-105",
-  "summary": "Corregir dos fallos de recuperación de voz reproducidos con dobles locales: session.started recibido durante reconexión dejaba el micrófono desactivado al publicar escucha; /voice/session rechazado con 401 conservaba el token temporal y el siguiente intento explícito lo reutilizaba. Centralizar habilitación del micrófono al recuperar la conexión, respetar silencio voluntario y renovar sólo la credencial temporal rechazada en un intento posterior. No reiniciar sesiones automáticamente ni modificar JSON Live, contexto, datos de negocio o credencial de YOD OS. Actualizar URLs de módulos e importadores para que la entrega se pueda verificar en la publicación. No atribuir estos fallos al reporte anterior del usuario sin correlación; aceptación natural con micrófono físico pendiente. Durante finalización, ignorar cambios de conexión para conservar el micrófono cerrado y retener audio/transporte hasta session.closed. Seguimiento propuesto antes del código: acotar exclusivamente la espera de señalización /voice/session a 90 segundos (signallingTimeout configurable), separado del límite de 60 segundos posterior al SDP, dejando el permiso del micrófono bajo control del usuario. El límite contempla contexto Portero de 25 segundos en modo expediente, creación de sesión de 25 segundos y conexión del observador de 15 segundos, más margen para red y registro, aborta el intento y muestra un error recuperable, sin crear otra sesión automáticamente. El servidor existente cierra una sesión creada si la respuesta del cliente fue abandonada.",
+  "model_revision": "2026-10-07.106-voz-puesto",
+  "proposal_id": "CHG-DESPACHO-VOZ-PUESTO-106",
+  "summary": "Corregir inicio confirmado por el observador que no llega al canal primario: reconciliar únicamente started=true del estado autenticado de la misma sesión activa, con WebRTC conectado y canal abierto, sin reenviar configuración ni habilitar antes del evento confirmado. Mantener visible el puesto durante fallos de revalidación: pausa de nuevas operaciones mientras se recupera una autorización reciente, revocación/expiración limpia contenido privado y detiene voz mostrando explicación, nunca cierra automáticamente el diálogo. Unificar geometría de escritorio, silla y autón del lado visible del monitor; sillas orientadas hacia mesas. Añadir evidencia de captura de micrófono local y aviso si la pista termina. Probar ambos órdenes de inicio, revocación, recuperación y orientación real en navegador. Mantener JSON Live, contratos e IDs y no encubrir errores de trabajo.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-DESPACHO-3D"
+    "SYS-DESPACHO-3D",
+    "GAS-PORTERO"
   ],
   "tests": [
-    "Regresión del orden starting → disconnected → session.started → connected: micrófono activo únicamente después del inicio confirmado y reconexión, sin nueva sesión.",
-    "Reconexión conserva micrófono silenciado por el usuario y no reinicia trabajo.",
-    "Rechazo de credencial temporal y siguiente intento explícito: mint nuevo, sin renovación automática; rechazo tardío de otro caso no elimina credencial nueva.",
-    "Node y verificadores requeridos, Chromium/WebKit pertinentes y versiones de publicación; audio físico se acredita por separado.",
-    "Desconexión/reconexión mientras se espera session.closed conserva phase closing, micrófono apagado y transporte abierto.",
-    "Respuesta de señalización que no llega y respeta AbortSignal: error recuperable al vencer el límite, pistas liberadas y una sola llamada; cancelar antes del límite no cambia aviso ni caso."
+    "Inicio confirmado por observador, canal abierto y WebRTC conectado habilita micrófono sin evento primario duplicado; estado no confirmado/cerrado/expirado nunca habilita.",
+    "Revalidación temporal mantiene diálogo, impide operaciones nuevas y recupera el mismo PPP; revocación limpia contenido y ofrece reconectar sin cierre silencioso.",
+    "Silla y figura delante del monitor, mirando hacia él; posición compartida, regreso al asiento y captura en navegador.",
+    "Pruebas completas y entrada publicada; el dispositivo real se acredita por separado."
   ],
-  "rollback": "Revertir PR y referencias de caché; no modificar credenciales de YOD OS, registros ni sesiones de negocio."
+  "rollback": "Revertir PR y versiones de recursos; preservar configuración de voz, datos, historial y permisos."
 }

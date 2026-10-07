@@ -1,10 +1,10 @@
 import * as T from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {RoomEnvironment} from './vendor/RoomEnvironment.js';
-import {createOffice} from './scene.js?v=7';
+import {createOffice} from './scene.js?v=8';
 import {panels} from './office-panels.mjs?v=2';
 import {createChinches3D} from './chinches3d.mjs?v=3';
-import {createOfficePilot,chooseOfficeHit} from './avatars/office-pilot.mjs?v=5';
+import {createOfficePilot,chooseOfficeHit} from './avatars/office-pilot.mjs?v=6';
 import {ENTORNO_AGENTE_CAMINA} from './entorno-config.mjs';
 import {crearAgenteIr} from './entorno-ruta.mjs?v=4';
 import {fitOfficeOverview,visibleOfficeHit} from './office-overview.mjs?v=1';
