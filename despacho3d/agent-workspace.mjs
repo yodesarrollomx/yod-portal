@@ -1,10 +1,10 @@
-import {mountWorkView} from './work-view.mjs?v=1';
+import {mountWorkView} from './work-view.mjs?v=2';
 import {registeredBoard,resolveBoard,stationIdentity} from './project-station.mjs';
 import {mountKnowledgeBoard} from './knowledge-board.mjs?v=1';
 import {createFrameTransport,validateConversation} from './conversation.mjs';
 import {validateFastSession} from './fast-lane.mjs';
 import {DurableGoals} from './goals.mjs';
-export const WORKSPACE_TABS=[['ppp','Plan de potencial'],['tasks','Pendientes'],['sources','Fuentes'],['browser','Computadora'],['knowledge','Versiones y conocimiento']];
+export const WORKSPACE_TABS=[['activity','Trabajo'],['ppp','Plan de potencial'],['tasks','Pendientes'],['sources','Fuentes'],['browser','Computadora'],['knowledge','Versiones y conocimiento']];
 export function taskDisplay(task,parentStatus){
  if(task.status==='running'&&parentStatus==='queued')return 'Pendiente de reanudación';
  if(task.status==='running'&&['stopped','awaiting_data','ready_for_review','completed'].includes(parentStatus))return 'Interrumpida · pendiente de conciliación';
@@ -20,7 +20,7 @@ export function boardURL(caseId,source){const board=registeredBoard(source,caseI
 export function createWorkspace({container,getSelection,transport=createFrameTransport(window),win=window,doc=document,onBoard=()=>{}}){
  const el=(tag,text,cls)=>{const n=doc.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
  const button=(label,click)=>{const b=el('button',label);b.type='button';b.addEventListener('click',click);return b;};
- let selected=null,credential=null,minting=null,disposed=false,timer=null,busy=false,tab='ppp',frame=null,nonce=null,board=null,boardRevision=null,conversation=null,proposals=[],generation=0,fetching=false,active=true,lastTaskRead=0,application=null,applyTimer=null,boardLink=null,readingSources=null,goalDraft={title:'',instruction:'',criterion:''};
+ let selected=null,credential=null,minting=null,disposed=false,timer=null,busy=false,tab='activity',frame=null,nonce=null,board=null,boardRevision=null,conversation=null,proposals=[],generation=0,fetching=false,active=true,lastTaskRead=0,application=null,applyTimer=null,boardLink=null,readingSources=null,goalDraft={title:'',instruction:'',criterion:''};
  const root=el('section',undefined,'agent-workspace');root.setAttribute('aria-label','Puesto del proyecto');
  const nav=el('nav'),notice=el('p','Preparando el puesto…','workspace-status'),body=el('div',undefined,'workspace-body');
  notice.setAttribute('role','status');const tools=el('details',undefined,'workspace-tools'),toolsNav=el('div');tools.append(el('summary','Herramientas'),toolsNav);nav.setAttribute('aria-label','Tablero del proyecto');root.append(nav,notice,body);container.append(root);
@@ -29,7 +29,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
  const knowledge=mountKnowledgeBoard({container:sections.knowledge,request,getCase:()=>selected&&getSelection()?.case_id===selected.case_id?selected.case_id:null,onUnauthorized:()=>clear(),doc,win});
  const browser=sections.browser,form=el('form',undefined,'workspace-address'),address=el('input');address.type='url';address.placeholder='https://…';address.setAttribute('aria-label','Dirección del navegador');address.required=true;
  const go=el('button','Abrir');go.type='submit';form.append(address,go);
- const workView=mountWorkView({container:browser,getCase:()=>selected&&getSelection()?.case_id===selected.case_id?selected.case_id:null,win,doc,onTasks:()=>setTab('tasks')});
+ const workView=mountWorkView({container:sections.activity,getCase:()=>selected&&getSelection()?.case_id===selected.case_id?selected.case_id:null,win,doc,onTasks:()=>setTab('tasks')});
  const location=el('p','Ninguna página abierta.','workspace-location'),image=el('img');image.alt='Última captura del navegador del autón';image.hidden=true;
  const caption=el('p','Pide al autón que abra una página o escribe su dirección.','workspace-caption'),controls=el('div',undefined,'workspace-controls');
  controls.append(button('Subir',()=>void command('navegador_desplazar',{direccion:'arriba'})),button('Bajar',()=>void command('navegador_desplazar',{direccion:'abajo'})),button('Actualizar vista',()=>void refresh()));
@@ -152,6 +152,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   const own=generation,id=selected.case_id;
   const promise=(async()=>{try{const raw=await transport.read({case_id:id});if(own!==generation||disposed||getSelection()?.case_id!==id)return;conversation=validateConversation(raw,id);
    sections.sources.replaceChildren(...conversation.documents.map(d=>{const c=el('article',undefined,'workspace-card');c.append(el('h3',d.title),el('p',d.role||''));if(d.url){const a=el('a','Abrir fuente ↗');a.href=d.url;a.target='_blank';a.rel='noopener noreferrer';c.append(a);}return c;}));
+   if(!conversation.documents.length)sections.sources.append(el('p','No hay fuentes registradas para este proyecto.'));
    if(tab==='ppp')mountBoard();
   }catch{if(own!==generation||disposed)return;sections.sources.replaceChildren(el('p','No se pudieron recuperar las fuentes. Puedes actualizar la conexión.'));if(tab==='ppp'&&!frame)pppNote.textContent='No se pudo recuperar el vínculo del PPP. Abre Conexión y variantes para reintentar.';}})();
   readingSources={generation:own,promise};try{await promise;}finally{if(readingSources?.promise===promise)readingSources=null;}
@@ -167,9 +168,9 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   finally{fetching=false;}
  }
  function setTab(id){if(!WORKSPACE_TABS.some(([k])=>k===id))return;if(tab==='knowledge'&&id!=='knowledge')knowledge.hide();tab=id;tools.open=false;for(const [key,section]of Object.entries(sections)){section.hidden=key!==id;nav.querySelector('[data-tab="'+key+'"]').setAttribute('aria-pressed',String(key===id));}
-  if(id==='browser')workView.refresh();if(id==='ppp'){notice.textContent='Trabaja con el autón sobre el mismo tablero y escenario.';mountBoard();}if(id==='knowledge'&&selected){notice.textContent='Conocimiento y versiones del expediente.';void knowledge.open(selected.case_id);}void refresh();}
+  if(id==='activity'){notice.textContent='Tu trabajo y el siguiente paso, al volver al puesto.';workView.refresh();}if(id==='browser')workView.refresh();if(id==='ppp'){notice.textContent='Trabaja con el autón sobre el mismo tablero y escenario.';mountBoard();}if(id==='knowledge'&&selected){notice.textContent='Conocimiento y versiones del expediente.';void knowledge.open(selected.case_id);}void refresh();}
  function clear(){workView.clear();generation++;clearTimeout(applyTimer);applyTimer=null;application=null;applyNotice.textContent='';boardSummary.textContent='Todavía no hay una lectura compartida.';knowledge.reset();lastTaskRead=0;credential=null;selected=null;board=null;boardRevision=null;conversation=null;readingSources=null;boardLink=null;proposals=[];goalDraft={title:'',instruction:'',criterion:''};for(const input of Object.values(goalInputs))input.value='';newGoal.open=false;frame?.remove();frame=null;image.removeAttribute('src');image.hidden=true;activity.replaceChildren();links.replaceChildren();taskList.replaceChildren();sections.sources.replaceChildren();proposalHost.replaceChildren();pppHost.replaceChildren();tasks.hide();notice.textContent='El acceso cambió. Vuelve a abrir tu despacho.';}
- function open(selection,target='ppp'){if(selected?.case_id===selection.case_id){active=true;setTab(target);void readSources();return;}clear();selected=selection;root.setAttribute('aria-label','Puesto de '+stationIdentity(selection).name);active=true;generation++;notice.textContent='Preparando el puesto de '+selection.name+'…';setTab(target);void readSources();if(!timer)timer=setInterval(()=>void refresh(),tab==='tasks'?12000:4000);}
+ function open(selection,target='activity'){if(selected?.case_id===selection.case_id){active=true;setTab(target);void readSources();return;}clear();selected=selection;if(!selection.goals?.ready)taskList.append(el('p','El seguimiento de objetivos aún no está conectado para este proyecto.'));root.setAttribute('aria-label','Puesto de '+stationIdentity(selection).name);active=true;generation++;notice.textContent='Preparando el puesto de '+selection.name+'…';setTab(target);void readSources();if(!timer)timer=setInterval(()=>void refresh(),tab==='tasks'?12000:4000);}
  win.addEventListener('message',receive);
  return{open,setTab,getTab:()=>tab,reset:clear,setActive(value){if(active===value)return;active=value;if(!value)knowledge.hide();if(value)void refresh();},dispose(){disposed=true;clear();workView.dispose();knowledge.dispose();clearInterval(timer);win.removeEventListener('message',receive);root.remove();transport.dispose?.();},root};
 }

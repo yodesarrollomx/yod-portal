@@ -124,7 +124,7 @@ export function mountAccessibleView(api){
   root.setAttribute('data-agent-motion',has?a.motion:'unavailable');root.setAttribute('data-agent-place',has?(a.place||''):'');root.setAttribute('data-agent-destination',has?(a.destination||''):'');
   const v='Tu vista: '+(s.mode==='overview'?'Vista general':label(s.selected))+(camera?' · x, z: '+coords(camera):'');
   const name=typeof p?.name==='string'?p.name:'Agente del caso';
-  const t=!has?'Agente: sin perfil autorizado cargado. Abre Agentes para cargar el expediente.':name+': '+(a.motion==='walk'?'En camino a '+label(a.destination):'Llegada confirmada · '+label(a.place))+' · x, z: '+coords(a.position);
+  const t=!has?'Agente sin perfil autorizado. Entra desde El Despacho en YOD OS para validar tu acceso.':name+': '+(a.motion==='walk'?'En camino a '+label(a.destination):'Llegada confirmada · '+label(a.place))+' · x, z: '+coords(a.position);
   const key=v+'\n'+t;if(key!==fingerprint){visitorText.textContent=v;agentText.textContent=t;fingerprint=key;}
   root.querySelectorAll('[data-agent-destination]').forEach(n=>{n.disabled=!has||typeof api.agenteIr!=='function';});
  }

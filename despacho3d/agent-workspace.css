@@ -101,3 +101,26 @@
 .workspace-live-work ol{padding-left:22px}
 
 .workspace-manual{margin-top:16px;border-top:1px solid #c4cfc9;padding-top:8px}.workspace-manual>summary{cursor:pointer;padding:12px 0;font-size:13px}
+
+/* The recovered work is the first reading surface in the existing station. */
+.workspace-live-work{background:transparent;border:0;border-radius:0;padding:20px 0;margin:0;max-width:900px}
+.workspace-live-work>small:first-child{display:block;font-size:11px;letter-spacing:.13em;color:#637166}
+.workspace-live-work .work-title{font:32px/1.2 Georgia,serif;margin:14px 0;overflow-wrap:anywhere}
+.workspace-live-work .work-state{display:inline-block;font-size:13px;margin:0 0 12px;padding:6px 10px;background:#e5ebdf;color:#36533b;border-radius:6px}
+.workspace-live-work .work-stamp{display:block;font-size:12px;color:#637166;margin:12px 0 22px}
+.workspace-live-work .work-result{border-top:1px solid #d0d7cb;padding:20px 0}
+.workspace-live-work h4{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#526454;margin:0 0 10px}
+.workspace-live-work .work-result p{font-size:16px;line-height:1.65;max-width:72ch;margin:0}
+.workspace-live-work .work-next{background:#e9ede3;padding:18px 20px;border-radius:12px;margin-bottom:20px}
+.workspace-live-work .work-next p{font-size:14px;line-height:1.6;margin:0 0 14px}
+.workspace-live-work .work-next button{background:#244839;color:white;border-color:#244839;padding:11px 18px}
+.workspace-live-work>details{border-top:1px solid #d0d7cb;padding-top:6px;font-size:14px}
+.workspace-live-work>details>summary{font-weight:550;min-height:44px}
+.workspace-live-work>details h4{margin-top:24px}
+.workspace-live-work a{color:#244839;text-underline-offset:3px;overflow-wrap:anywhere}
+.workspace-live-work li{margin:12px 0}
+@media(max-width:850px){
+ .workspace-live-work{padding-top:14px}.workspace-live-work .work-title{font-size:26px}
+ .agent-workspace>nav>button{font-size:13px;min-height:44px;padding:10px}
+ .workspace-tools summary{min-height:44px;padding:12px 8px}
+}

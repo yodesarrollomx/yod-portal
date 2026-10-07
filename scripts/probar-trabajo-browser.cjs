@@ -61,12 +61,12 @@ const server=http.createServer((req,res)=>{
   console.log('WORK_SCREENSHOT_PICK_'+(mobile?'MOBILE':'DESKTOP')+':'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'));
   assert.equal(await page.evaluate(p=>document.elementFromPoint(p.x,p.y)?.tagName,point),'CANVAS','the computer is not occluded by floating controls');
   if(mobile)await page.touchscreen.tap(point.x,point.y);else await page.mouse.click(point.x,point.y);
-  await page.waitForFunction(()=>window.__opened?.tab==='browser');
+  await page.waitForFunction(()=>window.__opened?.tab==='activity');
   assert.equal((await page.evaluate(()=>window.__opened)).id,'case-synthetic');
   const panel=page.locator('.workspace-live-work');
   assert.equal(await page.locator('.workspace-manual').evaluate(e=>e.open),false);
   await panel.getByRole('heading',{name:'Leyendo documento'}).waitFor();
-  await panel.getByText('Pasos, fuentes y resultado',{exact:true}).click();await panel.getByRole('link',{name:'Fuente de prueba'}).waitFor();
+  await panel.getByText('Avance, fuentes y evidencia',{exact:true}).click();await panel.getByRole('link',{name:'Fuente de prueba'}).waitFor();
   assert.ok(await panel.getByText('Ahora: Leer la fuente',{exact:true}).isVisible());
   await page.evaluate(async()=>{window.__data.work.phase='prepared';window.__data.work.current_tool=null;window.__data.work.progress.progress.tasks[0].status='ready_for_review';window.__data.work.progress.progress.tasks[0].summary='Fuente revisada';window.__data.work.progress.progress.tasks[0].evidence_ids=['evidence-synthetic'];window.__data.work.progress.progress.evidence=[{id:'evidence-synthetic',task_id:'task-1',title:'Lectura documentada',text:'Hallazgo sintético con referencia a la fuente consultada.'}];window.__data.work.result={state:'ready_for_review',summary:'La lectura dejó un resultado verificable.'};await window.YodWorkObserver.refresh();});
   await panel.getByRole('heading',{name:'Análisis preparado'}).waitFor();assert.ok(await panel.getByText(/todavía no es una aprobación/).isVisible());
@@ -75,7 +75,7 @@ const server=http.createServer((req,res)=>{
   await page.evaluate(async()=>{window.__networkFailure=true;await window.YodWorkObserver.refresh();});await panel.getByRole('heading',{name:'Sin conexión con la actividad'}).waitFor();
   assert.equal(await page.evaluate(()=>window.despacho.getState().computer.capture),false);
   await page.evaluate(()=>window.__revoke());await page.waitForFunction(()=>window.despacho.getState().computer.case_id===null);
-  assert.equal(await panel.getByText('La lectura dejó un resultado verificable.',{exact:true}).count(),0);
+  assert.equal(await panel.getByText(/La lectura dejó un resultado verificable./).count(),0);
   assert.ok((await page.evaluate(()=>window.__requests)).every(p=>['/computer/work','/computer/state'].includes(p)));
   assert.deepEqual(errors,[]);console.log('Observable work '+(mobile?'mobile':'desktop')+': physical screen, same workspace, source, prepared result, disconnect and revoke passed.');
   await context.close();

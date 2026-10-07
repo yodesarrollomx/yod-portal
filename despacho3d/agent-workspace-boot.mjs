@@ -1,6 +1,6 @@
 // Compatibility entry: all routes open the same station and preserve its draft.
 const button=document.getElementById('computer-open');
-function openForCase(id,tab='ppp'){
+function openForCase(id,tab='activity'){
  const selection=window.YodResidentAgents?.getSelection?.();
  if(!selection||selection.case_id!==id)return false;
  return window.YodVoiceWorkspace?.openForCase(id,tab)||false;
