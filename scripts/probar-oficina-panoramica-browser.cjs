@@ -76,7 +76,7 @@ const server=http.createServer((req,res)=>{
    assert.equal(await page.evaluate(()=>window.__voiceStarts.length),0,'preparation does not open voice');
    const viewYaw=await page.evaluate(()=>window.despacho.camera.rotation.y);
    await page.mouse.move(180,220);await page.mouse.down();await page.mouse.move(180+viewYaw/.0036,220,{steps:3});await page.mouse.up();
-   await page.evaluate(()=>window.despacho.camera.position.set(7,1.65,-3.55));
+   await page.evaluate(()=>window.despacho.camera.position.set(7,1.65,-4.15));
    await page.keyboard.down('w');
    await page.waitForFunction(()=>document.querySelector('.station-radial')?.open);
    await page.keyboard.up('w');

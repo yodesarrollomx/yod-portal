@@ -102,7 +102,7 @@ function updateAgentProximity(now){
  const shownId=window.YodResidentAgents?.getProfile?.()?.case_id;
  if(recentApproach&&recentApproach.id!==shownId)recentApproach=null;
  if(enabled&&manual&&moved&&shownId)recentApproach={id:shownId,at:now};
- if(enabled&&id&&recentApproach?.id===id&&now-recentApproach.at<15000&&distance<ENCOUNTER_RANGE.leave)proximity.approach(id);
+ if(enabled&&id&&recentApproach?.id===id&&now-recentApproach.at<60000&&distance<ENCOUNTER_RANGE.leave)proximity.approach(id);
  const preparation=preparationGate.sample({caseId:id,distance,enabled:enabled&&!!fresh?.can_enqueue,now});
  if(preparation==='prepare')window.YodVoiceWorkspace?.prepareNearby?.(id);
  if(preparation==='release')window.YodVoiceWorkspace?.releaseNearby?.();
