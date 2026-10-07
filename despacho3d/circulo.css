@@ -118,3 +118,5 @@ header #circulo-open:focus-visible{outline:2px solid #bc9f6d;outline-offset:2px}
 .proximity-radial .radial-options button{min-height:44px;padding:8px}
 .proximity-radial .station-wheel button{font-size:11px}
 @media(max-width:700px){.station-radial.proximity-radial{top:80px;right:8px;width:235px;max-height:calc(100dvh - 255px)}.proximity-radial .station-wheel{max-width:205px}.proximity-radial .radial-options small,.proximity-radial .radial-project{display:none}.proximity-radial h1{font-size:19px}.proximity-radial .radial-options button{min-height:44px}}
+
+.station-radial.proximity-radial:not([open]){display:none}
