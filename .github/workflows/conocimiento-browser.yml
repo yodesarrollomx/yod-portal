@@ -41,8 +41,14 @@ jobs:
           printf '%s\n' 'Acquire::http::Timeout "20";' 'Acquire::https::Timeout "20";' 'Acquire::Retries "2";' | sudo tee /etc/apt/apt.conf.d/80-yod-timeout >/dev/null
           npm install --prefix "$RUNNER_TEMP/yod-knowledge-browser" --no-package-lock --ignore-scripts playwright@1.51.1
           node "$RUNNER_TEMP/yod-knowledge-browser/node_modules/playwright/cli.js" install --with-deps chromium
+      - name: Comprobar entrada publicada sin sesión privada
+        if: github.event_name == 'push'
+        env:
+          NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
+          BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
+        run: node scripts/probar-entrada-publicada.cjs
       - name: Entrada, identidad y puesto
-        timeout-minutes: 3
+        timeout-minutes: 4
         env:
           NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
           BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
@@ -77,12 +83,6 @@ jobs:
           NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
           BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
         run: node scripts/probar-ppp-colaborativo-browser.cjs
-      - name: Comprobar entrada publicada sin sesión privada
-        if: github.event_name == 'push'
-        env:
-          NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
-          BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
-        run: node scripts/probar-entrada-publicada.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
