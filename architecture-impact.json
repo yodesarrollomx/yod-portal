@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-10-07.103.1-impacto-config",
   "proposal_id": "CHG-DESPACHO-COBERTURA-103",
-  "summary": "Seguimiento del paso 1: cerrar omisión YAML/YML en el control de impacto de configuración y despliegue. Registrar propuesta antes del código y exigir responsables de Render para render.yaml y cloud/render.yaml.",
+  "summary": "Seguimiento del paso 1: cerrar omisión YAML/YML en el control de impacto de configuración y despliegue. Registrar propuesta antes del código y exigir responsables de Render para render.yaml y cloud/render.yaml. Implementación: YAML/YML entra al control de impacto, con regresiones del manifiesto y responsables de las dos rutas Render.",
   "components": [
     "SYS-YOD-OS",
     "SVC-AUTON-CLOUD",

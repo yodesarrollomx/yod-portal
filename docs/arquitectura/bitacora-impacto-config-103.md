@@ -24,3 +24,11 @@ La propuesta se registra en `CHG-DESPACHO-COBERTURA-103`, revisión `2026-10-07.
 ### Alcance de comprobación
 
 Pruebas sintéticas del verificador, regeneración exacta del atlas y verificadores requeridos del portal en CI. No se realizan llamadas de negocio ni modificaciones de infraestructura.
+
+## 2026-10-07T05:48:29Z · Ejecución y resultados técnicos
+
+La propuesta quedó registrada antes del código en commit `22f939010d40672862d9276048e7492358c0b398`. Se amplió únicamente el filtro de extensiones a `json|ya?ml`, utilizando las reglas de propiedad ya registradas.
+
+Las regresiones comprueban las dos rutas Render, YAML/YML fuera de workflows, manifiesto ausente, alojamiento omitido y configuración correctamente declarada. Se conservan fuera del filtro los documentos de arquitectura y archivos sin extensión de comportamiento.
+
+La ejecución de las funciones puras exactas en un entorno aislado confirmó los casos positivos y negativos. Las pruebas Node y los verificadores completos quedan a cargo del CI del PR; este resultado aislado no los sustituye. No hubo llamadas de negocio ni cambios de infraestructura.

@@ -61,3 +61,34 @@ test('marcar runtime verificado exige recibo con fecha y alcance',()=>{const m=l
 
 test('recibo sintético válido permite registrar ejecución; fecha imposible no',()=>{const m=load(),e=m.connections[0];e.runtime_verified=true;e.runtime_evidence={checked_at:'2026-10-07T05:34:28Z',scope:'Fixture sintética de prueba',receipt:'synthetic-receipt-1'};e.evidence.push({...e.evidence[0],status:'ejecucion',claim:'Fixture, no producción'});assert.equal(validate(m,schema),true);e.runtime_evidence.checked_at='2026-02-30T05:34:28Z';assert.throws(()=>validate(m,schema),/recibo fechado/);});
 test('contrato vinculado cubre ambos participantes de la conexión',()=>{const m=load(),e=m.connections.find(x=>x.contract_ids.length);const c=m.data_contracts.find(x=>x.id===e.contract_ids[0]);c.components=c.components.filter(x=>x!==e.to);assert.throws(()=>validate(m,schema),/ambos participantes/);});
+
+function configFixture(file) {
+  const model=load();
+  return {model,repository:'alexpueblag/yod-agent-cloud',changed:[file],
+    impact:{model_revision:model.revision,proposal_id:'CHG-DESPACHO-COBERTURA-103',
+      summary:'Configuración sintética de despliegue',rollback:'Restaurar revisión anterior',
+      components:['SVC-AUTON-CLOUD','EXT-RENDER'],tests:['Regresión de configuración']}};
+}
+test('YAML e YML fuera de workflows exigen actualizar el manifiesto de impacto',()=>{
+  for(const file of ['render.yaml','cloud/render.yaml','config/runtime.yml','config/RUNTIME.YAML']){
+    const f=configFixture(file);
+    assert.throws(()=>verify(f),/sin actualizar architecture-impact/);
+  }
+});
+test('ambas configuraciones Render exigen motor y alojamiento; manifiesto completo pasa',()=>{
+  for(const file of ['render.yaml','cloud/render.yaml']){
+    const f=configFixture(file);f.changed.push('architecture-impact.json');
+    f.impact.components=['SVC-AUTON-CLOUD'];
+    assert.throws(()=>verify(f),/falta declarar impacto en EXT-RENDER/);
+    f.impact.components=['SVC-AUTON-CLOUD','EXT-RENDER'];
+    assert.deepEqual(verify(f).behavioral,[file]);
+  }
+});
+test('YML genérico conserva su propietario y los documentos siguen fuera del filtro',()=>{
+  const f=configFixture('config/runtime.yml');f.changed.push('architecture-impact.json');
+  f.impact.components=['SVC-AUTON-CLOUD'];
+  assert.deepEqual(verify(f).behavioral,['config/runtime.yml']);
+  for(const file of ['docs/arquitectura/ejemplo.yaml','README.md','render.yaml.bak']){
+    const doc=configFixture(file);assert.deepEqual(verify(doc).behavioral,[]);
+  }
+});
