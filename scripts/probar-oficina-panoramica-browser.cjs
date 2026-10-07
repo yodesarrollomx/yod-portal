@@ -81,6 +81,7 @@ const server=http.createServer((req,res)=>{
    assert.equal(await page.evaluate(()=>document.getElementById('workspace').inert),false);
    assert.equal(await page.evaluate(()=>window.__voiceStarts.length),0);
    await page.screenshot({path:path.join(out,'encuentro-circulo-'+(mobile?'movil':'escritorio')+'.png')});
+   console.log('ENCOUNTER_'+(mobile?'MOBILE':'DESKTOP')+':'+(await page.screenshot({type:'jpeg',quality:70})).toString('base64'));
    // Hold for a bounded movement interval and then face the actual figure.
    await page.evaluate(()=>window.despacho.camera.position.set(7,1.65,-5.88));
    await page.waitForFunction(()=>window.__voiceStarts.length===1);

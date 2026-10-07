@@ -56,7 +56,7 @@ if (open) {
   const workspace=createWorkspace({container:workspaceHost,transport,getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision);}});
   window.YodVoiceWorkspace={isOpen:()=>dialog.open,openForCase,pauseEncounter:caseId=>{if(encounterCase===caseId&&voice.snapshot().phase==='listening'&&!voice.snapshot().muted)voice.mute();},show:tab=>{workspace.setTab(tab);workspaceHost.scrollIntoView({block:'nearest'});}};
   window.dispatchEvent(new CustomEvent('yod-voice-workspace-ready'));
-  let stopWatching=null,encounterCase=null;
+  let stopWatching=null,encounterCase=null,micGrantedInPage=false;
   const goalReader=new DurableGoals({transport,getContext:()=>{
     const current=window.YodResidentAgents?.getSelection?.();
     return current&&selection?.case_id===current.case_id&&dialog.open?{selection:current,busy:false}:null;
@@ -92,6 +92,7 @@ if (open) {
       window.dispatchEvent(new CustomEvent('yod-voice-state',{detail:{phase:state.phase}}));
       const view = voiceView(state), live = view.live;
       dialog.dataset.voicePhase=state.phase;
+      if(state.phase==='listening')micGrantedInPage=true;
       if(state.phase==='listening'&&freshTranscript){fragments.length=0;node('voice-transcript').replaceChildren();freshTranscript=false;node('voice-download').disabled=true;}
       setText('voice-transcript-label',freshTranscript&&fragments.length?'Transcripción anterior · se conserva mientras conectas':'Transcripción de esta conversación');
       setText('voice-phase',view.title);
@@ -174,9 +175,9 @@ if (open) {
     const own=generation,id=selection?.case_id;
     if(!encounter){encounterCase=null;begin();return;}
     encounterCase=id;
-    let granted=false;
+    let granted=micGrantedInPage;
     try{granted=(await navigator.permissions.query({name:'microphone'})).state==='granted';}catch{}
-    if(own!==generation||!dialog.open||id!==selection?.case_id||id!==window.YodResidentAgents?.getSelection?.()?.case_id)return;
+    if(dismissing||own!==generation||!dialog.open||id!==selection?.case_id||id!==window.YodResidentAgents?.getSelection?.()?.case_id)return;
     if(!granted){setText('voice-status','Pulsa Hablar para permitir el micrófono. Después podrás conversar al acercarte.');return;}
     begin();
   }
@@ -185,7 +186,7 @@ if (open) {
     encounterCase=null;
   }
   function begin() {
-    if(accessPaused||!selection?.can_enqueue||active(voice.snapshot()))return;
+    if(dismissing||accessPaused||!selection?.can_enqueue||active(voice.snapshot()))return;
     const previous=voice.snapshot();
     if(previous.pending||previous.incomplete||previous.status_pending){
       setText('voice-previous','Al cerrar la conversación anterior quedó un guardado sin confirmar. Revisa el historial antes de repetir sus encargos.');
