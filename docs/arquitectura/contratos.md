@@ -564,6 +564,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Request_id se conserva ante reintentos. Una revisión concurrente bloquea la escritura y requiere nueva lectura.
 - La UI no anuncia guardado hasta recibo validado; desconexión o timeout permanece sin confirmar.
 - Tarjeta seleccionada aporta campos de contexto observados, no autoridad ni permisos. No ampliar fuentes registradas ni autenticación.
-- Recuperar un recibo después de recargar requiere lectura del libro confirmada y coincidencia de caso, escenario y revisión; nunca inferir éxito por igualdad de valores. El outbox no sobrescribe pendientes al alcanzar su límite.
+- Recuperar recibos después de recargar exige lectura del libro confirmada del mismo caso. Un recibo pendiente exige coincidencia de escenario/revisión al resolver; un histórico sólo se elimina si el servidor reconoce su registro previo con el mismo actor, request_id y result_revision. Nunca inferir éxito por igualdad de valores. El outbox no sobrescribe pendientes al alcanzar su límite.
 - Cerrar el panel no invalida la conciliación de una escritura ya iniciada en el iframe autorizado; no habilita nuevos envíos. Cambio de caso o revocación invalidan canal y vista.
 - Un receipt-ack exige origen, ventana, nonce y caso vigentes, y el request_id/revisión exactos. Perder el acuse permite repetir sólo la conciliación idempotente, nunca una escritura.
+- El padre mantiene una cola de recibos y sólo acusa respuestas /board/resolve con ok:true, request_id exacto y status:applied. Un fallo no elimina ese recibo ni impide intentar los demás. Los metadatos locales de recuperación no acreditan autoría criptográfica del servidor.
