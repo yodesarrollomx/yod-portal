@@ -5,7 +5,9 @@
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO-3D",
-    "SYS-DESPACHO"
+    "SYS-DESPACHO",
+    "GAS-PORTERO",
+    "EXT-DRIVE"
   ],
   "tests": [
     "Entrada directa de voz abre PPP sin elegir pestaña ni Abrir tablero.",
