@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.99-puesto-trabajo-claro",
+  "revision": "2026-10-07.100-entrada-despacho",
   "checked_at": "2026-10-05",
   "priorities": [
     "vender_mas",
@@ -8491,6 +8491,29 @@
       ],
       "deployment": "Implementado y probado en aislamiento. Pendiente PR/CI/Pages y aceptación visual autenticada; la demostración usa un lector sintético sin servidor.",
       "rollback": "Revertir frontend por PR conservando IDs, historial, fuentes, permisos y registros del servidor."
+    },
+    {
+      "id": "CHG-DESPACHO-ENTRADA-100",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Paso 1 D01–D05/D20: entrada única oficina → autón autorizado → puesto con PPP. Mostrar identidad y actividad confirmada sin otro panel; deshabilitar selección sin sesión; abrir el mismo puesto desde personaje, computadora y plano, preservar foco al volver. Suprimir fichas de demostración como entrada del proyecto. No ampliar padrón, cambiar permisos ni ejecutar objetivos al navegar.",
+      "status": "implementado_local",
+      "approval": "Dirección autorizó el paso 1 hasta terminar el 7-oct-2026.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Chromium: entrada real sin sesión, selección/PPP con transporte sintético, respuesta tardía, revocación, teclado, escritorio/móvil y modo sin WebGL."
+      ],
+      "deployment": "Implementación en rama de PR; comprobación en CI y publicación pendientes. Aceptación con sesión y PPP privados del propietario pendiente.",
+      "rollback": "Revertir PR del frontend; conservar expedientes, permisos, transcripciones, tareas y fórmulas."
     }
   ],
   "data_contracts": [
@@ -10446,6 +10469,30 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "docs/arquitectura/puesto-trabajo-claro.md",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-entrada.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/probar-entrada-browser.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/probar-entrada-publicada.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO"

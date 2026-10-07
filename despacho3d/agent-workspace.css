@@ -124,3 +124,21 @@
  .agent-workspace>nav>button{font-size:13px;min-height:44px;padding:10px}
  .workspace-tools summary{min-height:44px;padding:12px 8px}
 }
+
+/* Mobile: identity and conversation, then PPP, then supporting follow-up. */
+@media(max-width:850px){
+ .realtime-dialog.has-workspace{max-width:calc(100vw - 12px)}
+ .realtime-dialog.has-workspace .voice-sidebar{display:block;padding:12px 16px}
+ .voice-sidebar .voice-eyebrow{display:none}
+ .voice-sidebar h1{font-size:24px;margin-top:10px}
+ .voice-sidebar #voice-case{margin-bottom:8px}
+ .voice-sidebar .voice-state-card{padding:8px 0 0}
+ .voice-sidebar .voice-state-card h2{display:none}
+ .voice-sidebar #voice-phase{font-size:14px}
+ .voice-sidebar #voice-status{margin:4px 0;font-size:12px}
+ .voice-sidebar .voice-options,.voice-sidebar .station-chat{margin-top:6px;padding-top:0}
+ .voice-sidebar .voice-options summary,.voice-sidebar .station-chat summary{padding:8px 0}
+ .voice-workspace{overflow:visible;padding-top:8px}
+ .station-followup{padding:0 16px 20px;background:#e9ede7}
+ .station-followup .station-activity{padding:12px 0}
+}

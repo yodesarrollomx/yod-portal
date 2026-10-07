@@ -10,7 +10,7 @@ export function mountAgentMenu({win=window,doc=document}={}){
  const button=(text,click)=>{const n=el('button',text);n.type='button';n.addEventListener('click',click);return n;};
  const visible=()=>win.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:dialog.open||!!win.YodVoiceWorkspace?.isOpen()}));
  function close(){selection=null;dialog.close();visible();previousFocus?.focus?.();}
- function openForCase(caseId,target='activity'){
+ function openForCase(caseId,target='ppp'){
   const fresh=win.YodResidentAgents?.getSelection?.();
   if(!fresh||fresh.case_id!==caseId)return false;
   const tabs={ppp:'ppp',pendientes:'tasks',documentos:'sources',conversaciones:'activity',moac:'tasks',historial:'sources'};

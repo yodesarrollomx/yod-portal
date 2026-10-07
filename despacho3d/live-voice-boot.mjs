@@ -2,7 +2,7 @@ import {createFrameTransport, validateSelection, Conversation} from './conversat
 import {stationIdentity} from './project-station.mjs';
 import {createLiveVoice} from './live-voice.mjs?v=8';
 import {voiceView} from './voice-view.mjs?v=2';
-import {createWorkspace} from './agent-workspace.mjs?v=6';
+import {createWorkspace} from './agent-workspace.mjs?v=7';
 import {DurableGoals,watchGoals} from './goals.mjs';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=1';
 import {groupTranscriptFragments} from './live-transcript.mjs';
@@ -27,6 +27,19 @@ if (open) {
   layout.className='voice-layout';sidebar.className='voice-sidebar';workspaceHost.className='voice-workspace';
   while(dialog.firstChild)sidebar.append(dialog.firstChild);layout.append(sidebar,workspaceHost);dialog.append(layout);
   document.body.append(dialog);
+  // Keep the board within the first mobile screen; preserve DOM/focus order.
+  const compact=window.matchMedia('(max-width:850px)'),followup=document.createElement('div');
+  followup.className='station-followup';
+  const activityCard=sidebar.querySelector('.station-activity'),voiceCard=sidebar.querySelector('.voice-state-card');
+  const supporting=[sidebar.querySelector('#voice-save'),sidebar.querySelector('#voice-previous'),sidebar.querySelector('.voice-transcript-details')];
+  function arrangeStation(){
+    const focus=document.activeElement;
+    if(compact.matches){followup.append(activityCard,...supporting);layout.append(followup);}
+    else{sidebar.insertBefore(activityCard,voiceCard);sidebar.append(...supporting);followup.remove();}
+    if(focus?.isConnected&&dialog.contains(focus))focus.focus({preventScroll:true});
+  }
+  compact.addEventListener('change',arrangeStation);arrangeStation();
+  window.addEventListener('pagehide',()=>compact.removeEventListener('change',arrangeStation));
   const node = id => dialog.querySelector('#' + id);
   const fragments = []; let selection = null, generation = 0, dismissing = false, transcriptCase = null, freshTranscript = false, previousFocus = null, voiceCaseId = null;
   const agentName=()=>selection?stationIdentity(selection).name:'Autón';
@@ -40,6 +53,7 @@ if (open) {
   }});
   const workspace=createWorkspace({container:workspaceHost,transport,getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision);}});
   window.YodVoiceWorkspace={isOpen:()=>dialog.open,openForCase,show:tab=>{workspace.setTab(tab);workspaceHost.scrollIntoView({block:'nearest'});}};
+  window.dispatchEvent(new CustomEvent('yod-voice-workspace-ready'));
   let stopWatching=null;
   const goalReader=new DurableGoals({transport,getContext:()=>{
     const current=window.YodResidentAgents?.getSelection?.();
@@ -117,7 +131,7 @@ if (open) {
       node('voice-transcript').replaceChildren(...articles);
       if(following)node('voice-transcript').scrollTop = node('voice-transcript').scrollHeight;
   }
-  async function openForCase(caseId,tab='activity',{startVoice=false}={}) {
+  async function openForCase(caseId,tab='ppp',{startVoice=false}={}) {
     const currentSelection=window.YodResidentAgents?.getSelection?.();
     if(active(voice.snapshot())&&voiceCaseId!==currentSelection?.case_id)return false;
     if(caseId&&(!currentSelection||currentSelection.case_id!==caseId))return false;

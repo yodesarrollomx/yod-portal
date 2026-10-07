@@ -1,13 +1,13 @@
 {
-  "model_revision": "2026-10-07.99-puesto-trabajo-claro",
-  "proposal_id": "CHG-PUESTO-TRABAJO-CLARO-099",
+  "model_revision": "2026-10-07.100-entrada-despacho",
+  "proposal_id": "CHG-DESPACHO-ENTRADA-100",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "GAS-PORTERO",
     "EXT-DRIVE"
   ],
-  "summary": "Dar al puesto una entrada Trabajo con actividad recuperada, resultado, siguiente decisión y fuentes; conservar PPP, pendientes y herramientas en el mismo lugar. Reapertura de sólo lectura, sin crear ni reanudar objetivos. Evaluar jerarquía, navegación y alcance de aceptación.",
+  "summary": "Paso 1 D01–D05/D20: entrada única oficina → autón autorizado → puesto con PPP. Mostrar identidad y actividad confirmada sin otro panel; deshabilitar selección sin sesión; abrir el mismo puesto desde personaje, computadora y plano, preservar foco al volver. Suprimir fichas de demostración como entrada del proyecto. No ampliar padrón, cambiar permisos ni ejecutar objetivos al navegar.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -15,7 +15,7 @@
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "Recuperación sintética del mismo trabajo, respuestas tardías, cambio de selección, pérdida de conexión y ausencia de escrituras."
+    "Chromium: entrada real sin sesión, selección/PPP con transporte sintético, respuesta tardía, revocación, teclado, escritorio/móvil y modo sin WebGL."
   ],
-  "rollback": "Revertir frontend por PR conservando IDs, historial, fuentes, permisos y registros del servidor."
+  "rollback": "Revertir PR del frontend; conservar expedientes, permisos, transcripciones, tareas y fórmulas."
 }

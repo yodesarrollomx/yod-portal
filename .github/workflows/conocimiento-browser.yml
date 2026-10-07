@@ -1,10 +1,18 @@
 name: Conocimiento del Despacho
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'despacho3d/**'
+      - 'os/despacho-section.js'
+      - 'scripts/probar-entrada-publicada.cjs'
+      - '.github/workflows/conocimiento-browser.yml'
   pull_request:
     paths:
       - 'despacho3d/**'
       - 'scripts/probar-oficina-panoramica-browser.cjs'
       - 'scripts/probar-trabajo-browser.cjs'
+      - 'scripts/probar-entrada-browser.cjs'
       - 'scripts/probar-conocimiento-browser.cjs'
       - 'scripts/probar-voz-ux-browser.cjs'
       - 'scripts/probar-ppp-colaborativo-browser.cjs'
@@ -36,11 +44,18 @@ jobs:
           NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
           BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
         run: |
+          node scripts/probar-entrada-browser.cjs
           node scripts/probar-trabajo-browser.cjs
           node scripts/probar-oficina-panoramica-browser.cjs
           node scripts/probar-conocimiento-browser.cjs
           node scripts/probar-voz-ux-browser.cjs
           node scripts/probar-ppp-colaborativo-browser.cjs
+      - name: Comprobar entrada publicada sin sesión privada
+        if: github.event_name == 'push'
+        env:
+          NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
+          BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
+        run: node scripts/probar-entrada-publicada.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

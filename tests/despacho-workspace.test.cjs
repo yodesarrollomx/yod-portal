@@ -11,7 +11,7 @@ test('workspace and voice are mounted together without a second media request',(
  assert.match(s,/voice-view-tasks.*workspace.setTab/);
  assert.doesNotMatch(read('despacho3d/agent-workspace.mjs'),/getUserMedia|sessionStorage|localStorage|innerHTML/);
  assert.match(read('despacho3d/agent-workspace.mjs'),/e\.source!==frame\?\.contentWindow/);
- assert.match(read('despacho3d/index.html'),/agent-workspace-boot\.mjs\?v=5/);
+ assert.match(read('despacho3d/index.html'),/agent-workspace-boot\.mjs\?v=6/);
 });
 
 test('PPP proposals require the exact case, scenario and confirmed revision and cannot repeat while pending',async()=>{
