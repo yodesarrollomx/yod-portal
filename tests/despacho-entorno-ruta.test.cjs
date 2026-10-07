@@ -81,19 +81,19 @@ test('el piloto camina por la ruta, pasa a caminar y termina quieto mirando al f
  const [T,{createOfficePilot}]=await modules,scene=new T.Scene(),p=createOfficePilot({scene});
  assert.equal(p.recorrer([[0,0],[1,1]],0),false,'sin perfil no se mueve');
  p.bind(panel(profile));
- assert.deepEqual(p.posicion(),[7,-7.95]);
- assert.deepEqual(p.inicio,{xz:[7,-7.95],rot:0});
- assert.equal(p.recorrer([[7,-7.95]],0),false);
- assert.equal(p.recorrer([[7,-7.95],[NaN,1]],0),false);
- assert.equal(p.recorrer([[7,-7.95],[5,-7.95]],'x'),false);
- assert.equal(p.recorrer([[7,-7.95],[5,-7.95]],1.5),true);
+ assert.deepEqual(p.posicion(),[7,-6.25]);
+ assert.deepEqual(p.inicio,{xz:[7,-6.25],rot:Math.PI});
+ assert.equal(p.recorrer([[7,-6.25]],0),false);
+ assert.equal(p.recorrer([[7,-6.25],[NaN,1]],0),false);
+ assert.equal(p.recorrer([[7,-6.25],[5,-6.25]],'x'),false);
+ assert.equal(p.recorrer([[7,-6.25],[5,-6.25]],1.5),true);
  assert.equal(p.getState().motion,'walk');
  let t=0;p.update(t);
  for(;t<=800;t+=70)p.update(t);
  const [x]=p.posicion();assert.ok(x<7&&x>5,'va a medio camino: '+x);
  assert.ok(Math.abs(scene.children[0].rotation.y-(-Math.PI/2))<.01,'mira hacia donde camina');
  for(;t<=3000;t+=70)p.update(t);
- assert.deepEqual(p.posicion().map(v=>+v.toFixed(2)),[5,-7.95]);
+ assert.deepEqual(p.posicion().map(v=>+v.toFixed(2)),[5,-6.25]);
  assert.equal(p.getState().motion,'idle');
  assert.equal(scene.children[0].rotation.y,1.5);
  p.dispose();
@@ -103,7 +103,7 @@ test('movimiento inmediato (movimiento reducido), pausa por overlay y fallo cerr
  const [T,{createOfficePilot}]=await modules,scene=new T.Scene(),p=createOfficePilot({scene});
  let valor=profile,oyente=null;
  p.bind({getProfile:()=>valor,openForCase(){},subscribeProfile(fn){oyente=fn;fn(valor);return()=>{};}});
- assert.equal(p.recorrer([[7,-7.95],[2,2]],0.5,{inmediato:true}),true);
+ assert.equal(p.recorrer([[7,-6.25],[2,2]],0.5,{inmediato:true}),true);
  assert.deepEqual(p.posicion(),[2,2]);assert.equal(p.getState().motion,'idle');
  p.recorrer([[2,2],[0,0]],0);p.update(0);
  for(let t=70;t<=700;t+=70)p.update(t,{overlay:true});
@@ -111,7 +111,7 @@ test('movimiento inmediato (movimiento reducido), pausa por overlay y fallo cerr
  oyente(null);
  assert.equal(p.posicion(),null);assert.equal(p.recorrer([[0,0],[1,1]],0),false);
  oyente(profile);
- assert.deepEqual(p.posicion(),[7,-7.95],'un perfil nuevo vuelve a su lugar');
+ assert.deepEqual(p.posicion(),[7,-6.25],'un perfil nuevo vuelve a su lugar');
  p.dispose();
 });
 

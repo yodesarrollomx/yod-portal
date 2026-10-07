@@ -26,7 +26,7 @@ test('llegada: inicia, se pausa, alcanza coordenadas reales y notifica una sola 
  const[T,{createOfficePilot},{crearAgenteIr},layout]=await modules,pilot=createOfficePilot({scene:new T.Scene()}),api=session();pilot.bind(api);
  const events=[],ir=crearAgenteIr({lugares:layout.places,piloto:pilot,permitido:layout.allowed,limites:[layout.bounds,layout.annex],alLlegar:id=>events.push(id)});
  assert.equal(ir('decisions'),true);assert.equal(events.length,0);assert.equal(pilot.getMovementState().destination,'decisions');
- pilot.update(0);for(let t=70;t<1000;t+=70)pilot.update(t,{overlay:true});assert.deepEqual(pilot.posicion(),[7,-7.95]);
+ pilot.update(0);for(let t=70;t<1000;t+=70)pilot.update(t,{overlay:true});assert.deepEqual(pilot.posicion(),[7,-6.25]);
  for(let t=1000;t<30000;t+=70)pilot.update(t);
  assert.deepEqual(events,['decisions']);assert.equal(pilot.getMovementState().place,'decisions');assert.equal(pilot.getMovementState().destination,null);assert.equal(pilot.getMovementState().motion,'idle');
  assert.ok(layout.allowed(...pilot.posicion()));
