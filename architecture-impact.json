@@ -1,20 +1,29 @@
 {
-  "model_revision": "2026-10-07.103.1-impacto-config",
-  "proposal_id": "CHG-DESPACHO-COBERTURA-103",
-  "summary": "Seguimiento del paso 1: cerrar omisión YAML/YML en el control de impacto de configuración y despliegue. Registrar propuesta antes del código y exigir responsables de Render para render.yaml y cloud/render.yaml. Implementación: YAML/YML entra al control de impacto, con regresiones del manifiesto y responsables de las dos rutas Render.",
+  "model_revision": "2026-10-07.104-puesto-recuperable",
+  "proposal_id": "CHG-DESPACHO-PUESTO-104",
+  "summary": "Paso2: corregir rutas y capacidades reales del PPP, recuperación de confirmaciones y fuentes, y fallos locales de interrupción de voz. Vertical apunta a Mixto; sólo Patrimonial tiene edición conversada nativa acreditada. Conservar recibo tras escritura y reintentar únicamente /board/resolve; actualizar fuentes con conversación abierta sin recrear el iframe correcto. Manejar ausencia de audio y rechazos correlacionados de interrupción sin falsear éxito ni alterar configuración Live. No implementar modelos nativos no existentes ni iniciar paso3. Limitar espera del handshake con recuperación por Actualizar conexión. En Pendientes distinguir ejecución registrada de trabajo actualmente acreditado y ofrecer Retomar sólo por can_resume del contrato vigente; sin reactivar objetivos ni cambiar sus registros. Reconstruir agents.js/css con el build existente y dependencia Cubefarm fijada, mediante workflow temporal exclusivo de esta rama; publicar sólo artefactos compilados sin forzar la rama y eliminar ese workflow antes del merge final. Revisión independiente del 2026-10-07 06:17 UTC: fijar una nueva URL de goals.mjs para imports/reexport del puesto y consumidores del arranque, evitando mezclar exports nuevos con el módulo almacenado antes de esta entrega. Admitir estado y recibo del iframe autorizado cuando el puesto está oculto sólo para una aplicación ya en vuelo; conservar validación de origen, emisor, nonce, caso y generación, y mantener bloqueado el despacho de ajustes nuevos mientras esté oculto. Recuperación tras recarga completa: PPP conserva un outbox acotado de metadatos de ACK validado; después de releer el libro, reenvía sólo recibos del mismo caso, escenario y revisión. El puesto confirma mediante /board/resolve idempotente y devuelve receipt-ack ligado al canal. No reconstruir recibos por igualdad de cantidades ni repetir escrituras. Revisión de outbox: conciliar también recibos históricos tras lectura confirmada del caso, usando exclusivamente /board/resolve. El servidor sólo reconoce un histórico ya aplicado con el mismo actor/request_id/revisión; uno todavía pendiente no se marca aplicado contra otra revisión. El padre mantiene una cola de recibos y valida request_id/status de la respuesta antes del acuse, sin descartar otros recibos al resolver uno. Actualizar el cargador de la oficina a puesto104 y hacer que la prueba pública espere las versiones exactas de voz y paquete del puesto, evitando acreditar como nueva una página anterior.",
   "components": [
     "SYS-YOD-OS",
+    "SYS-DESPACHO",
+    "SYS-DESPACHO-3D",
+    "SYS-POTENCIALES",
+    "GAS-PORTERO",
+    "EXT-DRIVE",
     "SVC-AUTON-CLOUD",
-    "EXT-RENDER"
+    "SHEET-PORTERO",
+    "SHEET-PPP-MODELOS"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node scripts/verificar-impacto.cjs",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs"
+    "Regresiones de rutas reales, capacidades por modelo y selección ambigua.",
+    "Secuencias de recibo confirmado, confirmación fallida y recuperación sin segunda escritura; recarga de fuentes con conversación activa.",
+    "Interrupción rechazada con error.client_event_id y ausencia de reproductor; configuración Live conservada.",
+    "Node, verificadores, pruebas de navegador pertinentes y despliegue. Micrófono físico y expediente privado deben acreditarse por separado.",
+    "Handshake sin respuesta, respuesta tardía y cambio de proyecto; presentación conservadora de running/can_resume sin mutaciones en lectura.",
+    "Build real Node22 con lockfile original fijado; artefactos compilados y CI de la revisión final tras retirar el workflow temporal.",
+    "Navegador sintético con goals.mjs anterior almacenado; cierre del puesto durante un ajuste y llegada posterior del recibo: confirmar una sola vez sin recrear iframe ni aplicar otra propuesta oculta.",
+    "Regresión de dependencia ESM antigua cacheada y cierre de panel durante guardado: confirmar sólo la aplicación autorizada sin nuevas acciones.",
+    "Recarga completa después de ACK y fallo de resolve: una escritura total, relectura confirmada, mismo recibo y eliminación sólo tras ack exacto; rechazar otros casos/escenarios/revisiones y lecturas no confirmadas.",
+    "Ocho recibos ya registrados con acuses perdidos se concilian aunque el libro avance; históricos no confirmados permanecen pendientes y no se infieren por valores. Cola concurrente y respuesta de otro request_id no borran recibos."
   ],
-  "rollback": "Revertir PR de filtro, pruebas, modelo y vistas; no modifica configuración efectiva, infraestructura, datos, permisos ni sesiones."
+  "rollback": "Revertir PR y referencias de caché. No revertir registros de negocio ni reenviar escrituras; mantener recibos."
 }

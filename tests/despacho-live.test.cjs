@@ -257,3 +257,32 @@ test('Escúchame silences output immediately, keeps input and work alive, correl
  const stopping=f.voice.stop();await tick();f.event({type:'session.closed'});await stopping;
  assert.equal(f.voice.snapshot().output_paused,false);
 });
+
+test('missing audio reports a recoverable error before asking for microphone or credentials',async()=>{
+ const {createLiveVoice}=await load();let captures=0,mints=0;
+ const voice=createLiveVoice({Peer:class{},media:{getUserMedia:async()=>{captures++;}},mint:async()=>{mints++;}});
+ assert.equal(await voice.start('synthetic-case'),false);
+ assert.equal(voice.snapshot().phase,'error');
+ assert.match(voice.snapshot().notice,/no admite voz/);
+ assert.equal(captures,0);assert.equal(mints,0);
+ assert.equal(await voice.start('synthetic-case'),false,'retry also reports a handled error');
+});
+test('correlated interruption rejection stays visible without unmuting output or hanging up',async()=>{
+ const {createLiveVoice}=await load();
+ for(const format of ['nested-client','top-client','nested-event']){
+  const f=fixture(createLiveVoice);await f.voice.start('synthetic-case');
+  f.event({type:'session.started'});await tick();f.voice.interrupt();
+  const id=f.peer.channel.sent.at(-1).event_id;
+  f.event({type:'error',error:{client_event_id:'another-command'}});
+  assert.equal(f.voice.snapshot().interruption_pending,true,'an unrelated rejection cannot settle Escúchame');
+  f.event(format==='nested-client'?{type:'error',error:{client_event_id:id}}:
+   format==='top-client'?{type:'error',client_event_id:id}:{type:'error',error:{event_id:id}});
+  assert.equal(f.voice.snapshot().interruption_pending,false,format);
+  assert.match(f.voice.snapshot().notice,/No se confirmó la instrucción de escuchar/,format);
+  assert.equal(f.voice.snapshot().output_paused,true);assert.equal(f.audio.muted,true);
+  assert.equal(f.voice.snapshot().phase,'listening');assert.equal(f.track.enabled,true);
+  assert.equal(f.calls.some(c=>c.url.endsWith('/close')),false);
+  assert.equal(f.voice.resumeAudio(),true);assert.equal(f.audio.muted,false);
+  const end=f.voice.stop();await tick();f.event({type:'session.closed'});await end;
+ }
+});

@@ -1,9 +1,9 @@
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=2';
-import {stationIdentity} from './project-station.mjs';
-import {createLiveVoice} from './live-voice.mjs?v=8';
+import {stationIdentity} from './project-station.mjs?v=2';
+import {createLiveVoice} from './live-voice.mjs?v=9';
 import {voiceView} from './voice-view.mjs?v=2';
-import {createWorkspace} from './agent-workspace.mjs?v=8';
-import {DurableGoals,watchGoals} from './goals.mjs';
+import {createWorkspace} from './agent-workspace.mjs?v=12';
+import {DurableGoals,watchGoals} from './goals.mjs?v=2';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=1';
 import {groupTranscriptFragments} from './live-transcript.mjs';
 

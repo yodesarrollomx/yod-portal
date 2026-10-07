@@ -154,13 +154,14 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   async function start(caseId) {
     if (closing || !['idle','error'].includes(state.phase)) return false;
     const token = ++epoch; controller = new AbortController(); began = now();
-    audio.muted=false;interruptionId=null;
+    interruptionId=null;
     mode = null; started = contextReady = finalSeen = disconnected = false; seen.clear(); sequence = 0; polling = false; statusFailures = 0; connectedAt = 0;
     publish({phase: 'starting', notice: 'Abriendo el micrófono…', fragments: 0, blocks: 0, saved: 0,
       pending: 0, incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, output_paused:false,interruption_pending:false, mode: null,context_phase:'preparing',context_attempts:0,context_error:null,tools_ready:false,documents_ready:false,tasks_ready:false,actions_pending:0});
     try {
       if (typeof media?.getUserMedia !== 'function' || typeof Peer !== 'function' || !audio)
         throw Error('Este navegador no admite voz en tiempo real.');
+      audio.muted=false;
       // Prepare authentication in parallel with the browser's microphone permission.
       const auth = ensureCredential(caseId).then(value => ({value}), error => ({error}));
       const captured = await media.getUserMedia({audio: {echoCancellation: true, noiseSuppression: true}, video: false});
@@ -191,13 +192,15 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
           onTranscript(fragment);
         }
         if(value.type==='session.instructions.appended'&&value.client_event_id===interruptionId){interruptionId=null;publish({interruption_pending:false});}
-        if(value.type==='error'&&(value.client_event_id===interruptionId||value.error?.event_id===interruptionId)){interruptionId=null;publish({interruption_pending:false,notice:'El sonido sigue pausado. No se confirmó la instrucción de escuchar.'});}
+        const interruptRejected = value.type === 'error' && interruptionId !== null &&
+          [value.client_event_id, value.error?.client_event_id, value.error?.event_id].includes(interruptionId);
+        if (interruptRejected) {interruptionId=null;publish({interruption_pending:false,notice:'El sonido sigue pausado. No se confirmó la instrucción de escuchar.'});}
         if (value.type === 'session.closed') {
           finalSeen = true; closedResolve?.(true);
           if (!closing) void stop('Conversación finalizada.');
         }
         // A rejected command is not a closed session. Keep consuming audio and final events.
-        if (value.type === 'error' && !closing) publish({notice: 'No se pudo completar una instrucción. La conversación sigue abierta.'});
+        if (value.type === 'error' && !closing && !interruptRejected) publish({notice: 'No se pudo completar una instrucción. La conversación sigue abierta.'});
       };
       const lost = () => {if (token !== epoch || finalSeen) return;
         disconnected = true; closedResolve?.(false); publish({incomplete: true});

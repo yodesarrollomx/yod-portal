@@ -34,6 +34,32 @@ export function validateGoals(value,caseId){
 const notices={unavailable:'No pude consultar las metas. Puedes volver a actualizar.',timeout:'La conexión tardó demasiado. Puedes volver a actualizar.',invalid_goals:'La respuesta de metas no tiene el formato esperado. Actualiza para consultar su estado.',stale_revision:'El expediente o la meta cambió. Actualiza y revisa el estado antes de continuar.',goal_busy:'Ya hay una meta en curso. Actualiza para verla.',case_busy:'Ya hay trabajo en curso. Actualiza para consultar su estado.',request_id_reused:'El servidor rechazó ese identificador. Actualiza antes de intentar una nueva acción.',invalid_state:'La meta cambió de estado. Actualiza antes de continuar.',invalid_transition:'La meta cambió de estado. Actualiza antes de continuar.',goals_not_ready:'Todavía falta preparar el guardado de metas.',schema_not_initialized:'Todavía falta preparar el guardado de metas.',invalid_request:'El servidor rechazó la solicitud. Actualiza antes de continuar.',unauthorized:'Tu sesión ya no autoriza estas metas. Vuelve a entrar desde YOD OS.',session_changed:'La sesión cambió. Vuelve a entrar desde YOD OS.'};
 const denied=code=>['unauthorized','session_changed'].includes(code);
 const definitive=code=>['stale_revision','goal_busy','case_busy','request_id_reused','invalid_state','invalid_transition','goals_not_ready','schema_not_initialized','invalid_payload','invalid_request','goal_not_found'].includes(code);
+// Canonical goal status is a durable record, not proof that a worker is active.
+// can_resume only describes the server's permitted transition; it reveals no lease.
+export function goalDisplay(goal){
+ if(goal.status==='running')return goal.can_resume===true
+  ? {label:'Necesita retomar',notice:'El servidor permite retomar esta meta. Los avances guardados se conservan.'}
+  : {label:'Ejecución registrada',notice:'Este es el estado guardado de la meta. Consulta Trabajo para ver la actividad observada.'};
+ return {label:{queued:'En cola',ready_for_review:'Para tu revisión',awaiting_data:'Faltan datos',stopped:'Detenido',completed:'Revisado'}[goal.status]||'Estado no disponible',notice:''};
+}
+export function taskDisplay(task,parent){
+ const status=typeof parent==='string'?parent:parent?.status;
+ if(task.status==='running'){
+  if(status==='queued')return 'Pendiente de reanudación';
+  if(status==='running')return parent?.can_resume===true?'Por retomar':'Ejecución registrada';
+  if(['stopped','awaiting_data','ready_for_review','completed'].includes(status))return 'Interrumpida · pendiente de conciliación';
+  return 'Sin ejecución confirmada';
+ }
+ return {pending:'Pendiente',ready_for_review:'Para revisión',blocked:'Bloqueada'}[task.status]||task.status;
+}
+export function goalReviewActions(goal){
+ if(goal.status==='ready_for_review')return ['approve','stop'];
+ if(goal.status==='stopped')return ['resume'];
+ if(goal.status==='awaiting_data')return ['resume','stop'];
+ if(goal.status==='running')return goal.can_resume===true?['resume','stop']:['stop'];
+ return goal.status==='queued'?['stop']:[];
+}
+
 export class DurableGoals {
  constructor({transport,getContext,notify=()=>{},onUnauthorized=()=>{},uuid=()=>crypto.randomUUID(),timeout=55000}){Object.assign(this,{transport,getContext,notify,onUnauthorized,uuid,timeout,epoch:0,caseId:null,model:null,pending:null,busy:false,status:'disconnected',notice:'',listeners:new Set()});}
  state(){return {model:this.model,pending:this.pending?{method:this.pending.method,action:this.pending.payload.action}:null,busy:this.busy,status:this.status,notice:this.notice};}
