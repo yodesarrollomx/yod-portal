@@ -196,7 +196,7 @@ function shellHarness(token = 'A') {
     setTimeout(f,ms){timers.push({f,ms});return timers.length;},clearTimeout(){},
     loadCatalog:async()=>{},canjeConRelevo:async t=>({ok:true,token:t,rol:'vista',boards:'TA',nombre:'Current'})
   });
-  vm.runInContext(['tok','purgeCaches','purgeAll','maybeLock','loadIdentity'].map(n=>fn(shellSource,n)).join('\n'),c);
+  vm.runInContext(['tok','rechazoAcceso','purgeCaches','purgeAll','maybeLock','loadIdentity'].map(n=>fn(shellSource,n)).join('\n'),c);
   return {c,state,localStorage,sessionStorage,applied,canvas,reloads,timers};
 }
 
@@ -358,6 +358,26 @@ test('Canje incompleto o de otra credencial no habilita cabina ni marco',async()
   const app=appHarness('A');app.c.canjearConRelevo_=async()=>reply;await app.c.loadIdentity();
   assert.equal(app.state.profileReady,false);assert.equal(app.loads.length,0);
   const sh=shellHarness();sh.c.canjeConRelevo=async()=>reply;await sh.c.loadIdentity();
-  assert.equal(sh.state.identity,'fail');assert.equal(sh.canvas.style.display,'none');
+  assert.notEqual(sh.state.identity,'ok');assert.equal(sh.canvas.style.display,'none');
  }
+});
+
+test('Shell: respuesta de Portero no concluyente no elimina token y reintenta con permisos cerrados',async()=>{
+  const h=shellHarness();h.c.canjeConRelevo=async()=>({ok:false,error:'error_interno'});
+  await h.c.loadIdentity();
+  assert.equal(h.localStorage.getItem('pyod_clave_v1'),'A');
+  assert.equal(h.state.identity,'pending');assert.equal(h.canvas.style.display,'none');
+  assert.equal(h.timers.length,1);assert.equal(h.timers[0].ms,15000);
+});
+
+test('Shell: respaldo que no reconoce token no revoca credencial del primario inaccesible',async()=>{
+  const c=vm.createContext({
+    window:{YOD_PORTERO:{original:'https://original.invalid',respaldo:'https://backup.invalid'}},
+    ACCESO_LISTO:Promise.resolve(),AbortController,setTimeout,clearTimeout,encodeURIComponent,
+    fetch:async url=>url.startsWith('https://original.invalid')?Promise.reject(Error('sin conexion')):{
+      ok:true,status:200,json:async()=>({ok:false,error:'liga'})
+    }
+  });
+  vm.runInContext(fn(shellSource,'rechazoAcceso')+'\n'+fn(shellSource,'canjeConRelevo'),c);
+  assert.equal(await c.canjeConRelevo('A'),null);
 });

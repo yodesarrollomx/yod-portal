@@ -24,7 +24,10 @@
       var raw=await r.text(); try{return JSON.parse(raw);}catch(e){return null;}
     }
     var d=null; try{ d=await intenta(PORTERO_ORIGINAL); }catch(e){ d=null; }
-    if(!d||(!d.ok&&!rechazoAcceso(d.error))){ try{ d=await intenta(PORTERO_RESPALDO); }catch(e){ d=null; } }
+    if(!d||(!d.ok&&!rechazoAcceso(d.error))){
+      // El respaldo no es autoridad para revocar sesiones del primario caído.
+      try{var backup=await intenta(PORTERO_RESPALDO);d=backup&&backup.ok?backup:null;}catch(e){d=null;}
+    }
     return d;
   }
   // Respaldo curado del catálogo (4-sep-2026). Los títulos y textos dicen LO MISMO que
@@ -644,7 +647,7 @@
         state.canjeRetry=(state.canjeRetry||0)+1;
         // Mantener reintentos en segundo plano sin golpear al Portero sin límite
         // de frecuencia: 15, 30, 60, 120, 240 y máximo 300 segundos.
-        var espera=Math.min(300000,REINTENTO_MS*Math.pow(2,Math.min(5,state.canjeRetry-1)));
+        var espera=Math.min(30000,REINTENTO_MS*Math.pow(2,Math.min(5,state.canjeRetry-1)));
         setTimeout(function(){if(request===state.identityRequest&&tokenActual()===token)loadIdentity();},espera);
       }
 
@@ -672,7 +675,7 @@
         var n=0;try{n=(parseInt(localStorage.getItem('yod_canje_fail')||'0',10)||0)+1;localStorage.setItem('yod_canje_fail',String(n));}catch(_e){}
         if(n>=3){try{localStorage.removeItem(TOKEN_KEY);localStorage.removeItem('yod_canje_fail');}catch(_e){}location.reload();return;}
       }
-      $('user-role').textContent='Sesión por validar';$('access-status').textContent=frasePendiente(d);
+      $('user-role').textContent=LENTO[d]?'Reconectando…':'Sesión por validar';$('access-status').textContent=frasePendiente(d);
       console.warn('[YOD OS] identidad no validada:',d);
     }
   }
