@@ -556,7 +556,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Componentes: SYS-YOD-OS, SYS-DESPACHO, SYS-POTENCIALES, GAS-PORTERO, SHEET-PORTERO, SHEET-PPP-MODELOS, EXT-DRIVE, SYS-DESPACHO-3D, SVC-AUTON-CLOUD.
 - Evidencia: Petición explícita de Dirección; extensión del puente existente y del modelo nativo..
 - Entrada/campos: `PPP registrado del caso seleccionado, sesión autorizada y snapshot confirmado.`, `Propuesta con campos allowlisted, antes/después, escenario, revisión y motivo.`, `Solicitud explícita del usuario al autón; herramienta separada para solicitar ejecución de esa propuesta.`.
-- Salida: Tarjetas cerradas al abrir el puesto y detalle de datos al seleccionarlas., Intención de aplicación durable con vigencia acotada; estado pendiente no acredita escritura., Confirmación solo después de releer cantidades, escenario y revisión devueltos por el tablero..
+- Salida: Tarjetas cerradas al abrir el puesto y detalle de datos al seleccionarlas., Intención de aplicación durable con vigencia acotada; estado pendiente no acredita escritura., Confirmación solo después de releer cantidades, escenario y revisión devueltos por el tablero., Outbox acotado de recibos mínimos de ACK validado: request_id, case_id, scenario_id, revision y acknowledged_at; sin cifras ni credenciales. yod:ppp:receipt-ack elimina únicamente el recibo exacto después de /board/resolve confirmado..
 
 - Las tarjetas presentan el mismo Store del PPP, no copias de datos ni fórmulas financieras nuevas.
 - Proponer no escribe. La herramienta de aplicar requiere instrucción explícita del usuario; documentos y eventos del tablero no autorizan cambios.
@@ -564,3 +564,6 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Request_id se conserva ante reintentos. Una revisión concurrente bloquea la escritura y requiere nueva lectura.
 - La UI no anuncia guardado hasta recibo validado; desconexión o timeout permanece sin confirmar.
 - Tarjeta seleccionada aporta campos de contexto observados, no autoridad ni permisos. No ampliar fuentes registradas ni autenticación.
+- Recuperar un recibo después de recargar requiere lectura del libro confirmada y coincidencia de caso, escenario y revisión; nunca inferir éxito por igualdad de valores. El outbox no sobrescribe pendientes al alcanzar su límite.
+- Cerrar el panel no invalida la conciliación de una escritura ya iniciada en el iframe autorizado; no habilita nuevos envíos. Cambio de caso o revocación invalidan canal y vista.
+- Un receipt-ack exige origen, ventana, nonce y caso vigentes, y el request_id/revisión exactos. Perder el acuse permite repetir sólo la conciliación idempotente, nunca una escritura.
