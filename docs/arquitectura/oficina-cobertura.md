@@ -993,7 +993,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dirección técnica
 
-**Estado registrado:** codigo. Última entrega técnica comprobada: Portal PR117/main264d2cdee87fb7a2c0a40b81d065f32bc0643bb0, Pages37582743970. Puesto y recibos validados con pruebas sintéticas; entrada pública real sin sesión comprobada. Micrófono físico y edición de expediente privado pendientes. Corrección de reconexión105 sólo en rama, sin publicar.
+**Estado registrado:** codigo. Última entrega técnica comprobada: Portal PR 117 / main 264d2cdee87fb7a2c0a40b81d065f32bc0643bb0, Pages 37582743970. Puesto y recibos validados con pruebas sintéticas; entrada pública real sin sesión comprobada. Micrófono físico y edición de expediente privado pendientes. Corrección de reconexión 105 sólo en rama, sin publicar.
 
 **Entradas registradas:**
 

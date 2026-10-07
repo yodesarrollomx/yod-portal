@@ -14,7 +14,7 @@ const NOTICES = {
 export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   media = globalThis.navigator?.mediaDevices, Peer = globalThis.RTCPeerConnection, Stream = globalThis.MediaStream,
   audio, onChange = () => {}, actions = null, onTranscript = () => {}, now = Date.now,
-  schedule = setInterval, cancel = clearInterval, closeTimeout = 20000, disconnectGrace = 12000, maxStatusFailures = 3, startTimeout = 60000} = {}) {
+  schedule = setInterval, cancel = clearInterval, closeTimeout = 20000, disconnectGrace = 12000, maxStatusFailures = 3, startTimeout = 60000, signallingTimeout = 90000} = {}) {
   let epoch = 0, stream = null, peer = null, channel = null, credential = null, sessionId = null,
     poll = null, controller = null, polling = false, closing = null, began = 0, started = false,
     contextReady = false, finalSeen = false, disconnected = false, closedResolve = null, sequence = 0,
@@ -226,7 +226,19 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
       await peer.setLocalDescription(await peer.createOffer()); await gather(peer);
       if (token !== epoch || closing) return false;
       const current = credential;
-      const result = await post('/voice/session', {sdp: peer.localDescription.sdp}, current, controller.signal);
+      // Bound signalling, not the user's microphone permission prompt.
+      const signallingController = controller;
+      let signallingTimedOut = false, result;
+      const signallingTimer = setTimeout(() => {
+        if (token !== epoch || closing) return;
+        signallingTimedOut = true; signallingController.abort();
+      }, signallingTimeout);
+      try {
+        result = await post('/voice/session', {sdp: peer.localDescription.sdp}, current, signallingController.signal);
+      } catch (error) {
+        if (signallingTimedOut) throw Error('La conexión de voz no respondió a tiempo. Puedes volver a intentar.');
+        throw error;
+      } finally {clearTimeout(signallingTimer);}
       const id = result.session?.id, sdp = result.transport?.sdp;
       if (typeof id !== 'string' || !id || typeof sdp !== 'string' || !sdp.startsWith('v=0'))
         throw Error('La conexión de voz no es válida.');

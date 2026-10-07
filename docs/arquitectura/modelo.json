@@ -2717,7 +2717,7 @@
       "dominio": "Operación",
       "proposito": "Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.",
       "source_of_truth": "Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos.",
-      "runtime_status": "Última entrega técnica comprobada: Portal PR117/main264d2cdee87fb7a2c0a40b81d065f32bc0643bb0, Pages37582743970. Puesto y recibos validados con pruebas sintéticas; entrada pública real sin sesión comprobada. Micrófono físico y edición de expediente privado pendientes. Corrección de reconexión105 sólo en rama, sin publicar.",
+      "runtime_status": "Última entrega técnica comprobada: Portal PR 117 / main 264d2cdee87fb7a2c0a40b81d065f32bc0643bb0, Pages 37582743970. Puesto y recibos validados con pruebas sintéticas; entrada pública real sin sesión comprobada. Micrófono físico y edición de expediente privado pendientes. Corrección de reconexión 105 sólo en rama, sin publicar.",
       "evidence": [
         {
           "repo": "yodesarrollomx/yod-portal",
@@ -9258,7 +9258,7 @@
         "Recarga completa después de ACK y fallo de resolve: una escritura total, relectura confirmada, mismo recibo y eliminación sólo tras ack exacto; rechazar otros casos/escenarios/revisiones y lecturas no confirmadas.",
         "Ocho recibos ya registrados con acuses perdidos se concilian aunque el libro avance; históricos no confirmados permanecen pendientes y no se infieren por valores. Cola concurrente y respuesta de otro request_id no borran recibos."
       ],
-      "deployment": "Entrega técnica publicada: Portal PR117, commit264d2cdee87fb7a2c0a40b81d065f32bc0643bb0 y Pages37582743970; Potenciales PR18, commit39acdf28c1249fae0a0bc40183ea6a22283e827c y Pages37583345506. CI:448pruebas Node Portal y63PPP, además de Chromium/WebKit. Paso2 conserva aceptación de micrófono físico y escritura privada pendiente; no iniciar paso3.",
+      "deployment": "Entrega técnica publicada: Portal PR 117, commit 264d2cdee87fb7a2c0a40b81d065f32bc0643bb0 y Pages 37582743970; Potenciales PR 18, commit 39acdf28c1249fae0a0bc40183ea6a22283e827c y Pages 37583345506. CI: 448 pruebas Node Portal y 63 PPP, además de Chromium/WebKit. Paso 2 conserva aceptación de micrófono físico y escritura privada pendiente; no iniciar paso 3.",
       "rollback": "Revertir PR y referencias de caché. No revertir registros de negocio ni reenviar escrituras; mantener recibos."
     },
     {
@@ -9279,7 +9279,7 @@
         "Desconexión/reconexión mientras se espera session.closed conserva phase closing, micrófono apagado y transporte abierto.",
         "Respuesta de señalización que no llega y respeta AbortSignal: error recuperable al vencer el límite, pistas liberadas y una sola llamada; cancelar antes del límite no cambia aviso ni caso."
       ],
-      "deployment": "Implementación en rama y cinco regresiones sintéticas aprobadas en evaluador local. CI Node/navegadores y publicación pendientes. Aceptación del micrófono físico y escritura privada del paso 2 siguen pendientes; no iniciar paso 3.",
+      "deployment": "Implementación en PR118 con siete regresiones sintéticas aprobadas en evaluador local. El primer conjunto pasó en Node real; CI final y publicación pendientes. Aceptación del micrófono físico y escritura privada del paso 2 siguen pendientes; no iniciar paso 3.",
       "rollback": "Revertir PR y referencias de caché; no modificar credenciales de YOD OS, registros ni sesiones de negocio.",
       "followup_proposed_at": "2026-10-07T07:59:27Z"
     }
