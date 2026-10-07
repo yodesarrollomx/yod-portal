@@ -50,7 +50,7 @@ function appHarness(token = 'prefix-shared--A') {
   });
   const names = ['tokenActual','rechazoAcceso','mismaSesion','purgarDatosSensibles','bloquearSesion','pulseCacheRead','pulseCacheWrite','loadIdentity','loadFinance','loadMarketing','loadOperations','catalogoSinAcceso'];
   vm.runInContext(names.map(n => fn(appSource, n)).join('\n'), c);
-  function authorize() { state.profileReady = true;state.sessionToken = localStorage.getItem('pyod_clave_v1');state.role = 'admin';state.boards = '*'; }
+  function authorize() { state.profileReady = true;state.sessionToken = localStorage.getItem('pyod_clave_v1');state.role = 'admin';state.boards = '*';state.verifiedAt=Date.now(); }
   return { c, state, applied, loads, renders, timers, nodes, node, localStorage, sessionStorage, authorize };
 }
 
@@ -69,6 +69,25 @@ test('Dos credenciales con los primeros 14 caracteres iguales no comparten ident
   await h.c.loadIdentity();
   assert.deepEqual(h.applied, ['Current']);assert.equal(h.state.role, 'vista');
   assert.equal(h.sessionStorage.getItem('yod_id_v1'), null);
+});
+
+test('App: error servidor transitorio reintenta sin borrar la credencial',async()=>{
+  const h=appHarness();h.c.canjearConRelevo_=async()=>({ok:false,error:'servidor'});
+  await h.c.loadIdentity();assert.equal(h.state.profileReady,false);
+  assert.equal(h.localStorage.getItem('pyod_clave_v1'),'prefix-shared--A');
+  assert.equal(h.timers.length,1);
+  h.c.canjearConRelevo_=async t=>({ok:true,token:t,rol:'vista',boards:'TA',nombre:'Current'});
+  h.timers[0]();await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(h.state.profileReady,true);
+});
+
+test('App: red caída conserva vista validada cinco minutos, luego la oculta y reintenta',async()=>{
+  const h=appHarness();h.authorize();h.c.canjearConRelevo_=async()=>null;
+  await h.c.loadIdentity();assert.equal(h.state.profileReady,true);assert.equal(h.timers.length,1);
+  h.state.verifiedAt=Date.now()-6*60000;
+  await h.c.loadIdentity();assert.equal(h.state.profileReady,false);
+  assert.equal(h.localStorage.getItem('pyod_clave_v1'),'prefix-shared--A');
+  assert.equal(h.timers.length,2);
 });
 
 test('App ignora canje tardío de A después de validar B', async () => {
