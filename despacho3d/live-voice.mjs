@@ -166,7 +166,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
       current.addEventListener('icegatheringstatechange', changed);
     });
   }
-  async function start(caseId) {
+  async function start(caseId,{encounter=false}={}) {
     if (closing || !['idle','error'].includes(state.phase)) return false;
     const token = ++epoch; controller = new AbortController(); began = now();
     interruptionId=null;
@@ -254,7 +254,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
         signallingTimedOut = true; signallingController.abort();
       }, signallingTimeout);
       try {
-        result = await post('/voice/session', {sdp: peer.localDescription.sdp}, current, signallingController.signal);
+        result = await post('/voice/session', {sdp: peer.localDescription.sdp,...(encounter?{encounter:true}:{})}, current, signallingController.signal);
       } catch (error) {
         if (signallingTimedOut) throw Error('La conexión de voz no respondió a tiempo. Puedes volver a intentar.');
         throw error;

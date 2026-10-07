@@ -1,7 +1,7 @@
 import {residentAccessDecision} from './resident-agents.mjs?v=2';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=2';
 import {stationIdentity} from './project-station.mjs?v=2';
-import {createLiveVoice} from './live-voice.mjs?v=11';
+import {createLiveVoice} from './live-voice.mjs?v=12';
 import {voiceView} from './voice-view.mjs?v=2';
 import {createWorkspace} from './agent-workspace.mjs?v=12';
 import {DurableGoals,watchGoals} from './goals.mjs?v=2';
@@ -192,7 +192,7 @@ if (open) {
       node('voice-previous').hidden=false;
     }
     freshTranscript=true;voiceCaseId=selection.case_id;
-    void voice.start(selection.case_id);
+    void voice.start(selection.case_id,{encounter:encounterCase===selection.case_id});
   }
   node('voice-start').addEventListener('click',begin);
   node('voice-interrupt').addEventListener('click',()=>voice.snapshot().output_paused?voice.resumeAudio():voice.interrupt());
