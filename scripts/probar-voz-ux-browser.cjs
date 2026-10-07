@@ -24,7 +24,8 @@ const server=http.createServer((req,res)=>{
    let access='standby';const listeners=new Set();const state=()=>({phase:access,prepared:true,checked_at:Date.now(),selection:access==='unauthorized'?null:selection});
    window.YodResidentAgents={getSelection:()=>access==='standby'?selection:null,subscribe(fn){listeners.add(fn);fn(state());return()=>listeners.delete(fn);},refresh:async()=>window.setAccess('standby')};
    window.setAccess=value=>{access=value;for(const fn of listeners)fn(state());};
-   window.blockAudio=true;window.failMic=false;window.streams=[];
+   window.blockAudio=true;window.failMic=false;window.streams=[];window.micPermission='prompt';
+   navigator.permissions.query=async()=>({state:window.micPermission});
    navigator.mediaDevices.getUserMedia=async()=>{
     if(window.failMic)throw new DOMException('denied','NotAllowedError');
     const ctx=new AudioContext(),dest=ctx.createMediaStreamDestination();window.streams.push(dest.stream);return dest.stream;
@@ -99,6 +100,21 @@ const server=http.createServer((req,res)=>{
   await frame.locator('#station-access').waitFor({state:'hidden'});
   assert.equal(await frame.locator('.realtime-dialog').isVisible(),true);
   assert.equal(sessions,1,'explicit access recovery does not start another call');
+  await frame.locator('.voice-close').click();
+  await frame.evaluate(()=>{window.failMic=false;window.blockAudio=false;window.micPermission='prompt';});
+  await frame.evaluate(()=>window.YodVoiceWorkspace.openForCase('synthetic-voice-case','ppp',{startVoice:true,encounter:true}));
+  await frame.locator('#voice-status').filter({hasText:'Pulsa Hablar para permitir'}).waitFor();
+  assert.equal(sessions,1,'proximity does not request permission without a user gesture');
+  await frame.locator('.voice-close').click();
+  await frame.evaluate(()=>window.micPermission='granted');
+  await frame.evaluate(()=>window.YodVoiceWorkspace.openForCase('synthetic-voice-case','ppp',{startVoice:true,encounter:true}));
+  await frame.locator('[data-voice-phase="listening"]').waitFor();
+  assert.equal(sessions,2);
+  await frame.evaluate(()=>window.YodVoiceWorkspace.openForCase('synthetic-voice-case','ppp',{startVoice:true,encounter:true}));
+  assert.equal(sessions,2);
+  await frame.evaluate(()=>window.YodVoiceWorkspace.pauseEncounter('synthetic-voice-case'));
+  assert.equal(await frame.evaluate(()=>window.streams.at(-1).getAudioTracks()[0].enabled),false);
+  await frame.locator('#voice-stop').click();await frame.locator('[data-voice-phase="idle"]').waitFor();
   assert.deepEqual(errors,[]);await context.close();
  }
  console.log('Voice UX: desktop/mobile, blocked audio retry, single session, mute, context retry, exact local copy, pending receipt and transcript retained after microphone denial passed.');

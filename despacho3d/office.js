@@ -1,5 +1,5 @@
 import * as T from 'three';
-import {createProximityGate} from './agent-proximity.mjs?v=1';
+import {createEncounterGate} from './agent-proximity.mjs?v=2';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {RoomEnvironment} from './vendor/RoomEnvironment.js';
 import {createOffice} from './scene.js?v=8';
@@ -27,8 +27,10 @@ let office;try{office=await createOffice({pilotFigure:false});scene.add(office.m
 
 let chinches=null;
 let agentOverlay=false;
-const proximity=createProximityGate(),sight=new T.Raycaster();
-window.addEventListener('yod-agent-menu-open',e=>proximity.suppress(e.detail?.case_id));
+const proximity=createEncounterGate(),sight=new T.Raycaster();
+let lastApproachPosition=null;
+window.addEventListener('yod-agent-menu-open',e=>{if(!e.detail?.proximity)proximity.dismiss(e.detail?.case_id);});
+window.addEventListener('yod-agent-encounter-dismiss',e=>proximity.dismiss(e.detail?.case_id));
 let mode='overview',selected='entry',yaw=0,pitch=0,near=null,sheet=null,look=null,stickId=null,stick={x:0,y:0},keys=new Set(),last=performance.now(),frames=0,transitionToken=0,dirty=true,lastFocus=null;
 const reducedMotion=matchMedia('(prefers-reduced-motion:reduce)');
 let avatarShadowAt=0;
@@ -89,23 +91,37 @@ function updateAgentProximity(now){
  const fresh=window.YodResidentAgents?.getSelection?.(),position=pilot.posicion();
  const id=fresh?.avatar?.case_id===fresh?.case_id?fresh?.case_id:null;
  const distance=position?Math.hypot(camera.position.x-position[0],camera.position.z-position[1]):Infinity;
+ const manual=keys.size>0||Math.hypot(stick.x,stick.y)>.05;
+ const previous=lastApproachPosition;
+ const moved=previous&&Math.hypot(camera.position.x-previous.x,camera.position.z-previous.z)>.0005;
+ lastApproachPosition={x:camera.position.x,z:camera.position.z};
  const enabled=mode==='walk'&&!sheet&&!agentOverlay&&!document.hidden&&!chinches?.isSelecting()&&
   document.getElementById('office-accessible')?.hidden!==false&&!!window.YodAgentMenu;
- let visible=false;
- if(enabled&&id&&distance<=1.8){
+ let visible=false,facing=false;
+ if(enabled&&id&&distance<=.9){
   const target=new T.Vector3(position[0],1.4,position[1]),direction=target.clone().sub(camera.position),length=direction.length();
+  const horizontal=new T.Vector3(direction.x,0,direction.z).normalize(),forward=camera.getWorldDirection(new T.Vector3());forward.y=0;forward.normalize();
+  facing=forward.dot(horizontal)>=Math.cos(Math.PI/4);
   sight.set(camera.position,direction.normalize());sight.far=Math.max(0,length-.2);
   visible=!sight.intersectObject(office.model,true).some(hit=>{
    const materials=Array.isArray(hit.object.material)?hit.object.material:[hit.object.material];
    return hit.object.visible&&materials.some(m=>m?.visible&&(!m.transparent||m.opacity>=.95));
   });
  }
- const hit=proximity.sample({caseId:id,distance,enabled,visible,now});
- if(hit)window.YodAgentMenu.showRadial(hit);
+ const hit=proximity.sample({caseId:id,distance,enabled,visible,facing,moving:!!(manual&&moved),agentMoving:pilot.getMovementState().motion==='walk',canTalk:!!fresh?.can_enqueue,now});
+ if(hit==='menu')window.YodAgentMenu.showRadial(id,{proximity:true});
+ if(hit==='voice'){
+  window.YodAgentMenu.close('transition');
+  void window.YodVoiceWorkspace?.openForCase(id,'ppp',{startVoice:true,encounter:true});
+ }
+ if(hit==='leave'){
+  if(window.YodAgentMenu?.isProximity?.())window.YodAgentMenu.close('leave');
+  window.YodVoiceWorkspace?.pauseEncounter?.(id);
+ }
 }
 
 function updateNear(){near=null;let distance=2.3;for(const [id,p] of Object.entries(places)){if(id==='entry')continue;const d=camera.position.distanceTo(new T.Vector3(...p.eye));if(d<distance){distance=d;near=id;}}if(selected==='case'&&camera.position.distanceTo(new T.Vector3(...places.case.eye))<2)near='case';const show=!!near&&mode==='walk'&&!sheet;$('#nearby').hidden=!show;if(show)$('#nearby').textContent=near==='case'?'Abrir puesto del proyecto':'Ver '+places[near].label;}
-window.addEventListener('keydown',e=>{if(agentOverlay)return;if(!sheet&&document.getElementById('office-accessible')?.hidden===false)return;if(e.key==='Escape'){closeSheets();return;}if(sheet){if(e.key==='Tab'){const nodes=[...$('#'+sheet).querySelectorAll('button,a[href]')],first=nodes[0],last=nodes[nodes.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}return;}const k=e.key.length===1?e.key.toLowerCase():e.key;if(mode==='walk'&&['w','a','s','d','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(k)){e.preventDefault();keys.add(k);}if(k==='e'&&near)openPanel(near);});window.addEventListener('keyup',e=>keys.delete(e.key.length===1?e.key.toLowerCase():e.key));window.addEventListener('blur',clearMovement);document.addEventListener('visibilitychange',()=>{clearMovement();last=performance.now();});
+window.addEventListener('keydown',e=>{if(agentOverlay)return;if(!sheet&&document.getElementById('office-accessible')?.hidden===false)return;if(e.key==='Escape'){if(window.YodAgentMenu?.isProximity?.())window.YodAgentMenu.close();closeSheets();return;}if(sheet){if(e.key==='Tab'){const nodes=[...$('#'+sheet).querySelectorAll('button,a[href]')],first=nodes[0],last=nodes[nodes.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}return;}const k=e.key.length===1?e.key.toLowerCase():e.key;if(mode==='walk'&&['w','a','s','d','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(k)){e.preventDefault();keys.add(k);}if(k==='e'&&near)openPanel(near);});window.addEventListener('keyup',e=>keys.delete(e.key.length===1?e.key.toLowerCase():e.key));window.addEventListener('blur',clearMovement);document.addEventListener('visibilitychange',()=>{clearMovement();last=performance.now();});
 const base=$('#stick-base');function updateStick(e){const rect=base.getBoundingClientRect(),dx=e.clientX-(rect.x+rect.width/2),dy=e.clientY-(rect.y+rect.height/2),length=Math.hypot(dx,dy),limit=35*rect.width/112,factor=Math.min(1,limit/(length||1));const x=dx*factor,y=dy*factor;stick={x:Math.abs(x)<3?0:x/limit,y:Math.abs(y)<3?0:y/limit};$('#stick-knob').style.transform=`translate(${x*112/rect.width}px,${y*112/rect.width}px)`;}
 base.addEventListener('pointerdown',e=>{if(stickId!==null)return;e.preventDefault();e.stopPropagation();stickId=e.pointerId;base.setPointerCapture(e.pointerId);updateStick(e);});base.addEventListener('pointermove',e=>{if(e.pointerId===stickId){e.preventDefault();updateStick(e);}});for(const name of ['pointerup','pointercancel','lostpointercapture'])base.addEventListener(name,e=>{if(e.pointerId===stickId)resetStick();});
 const raycaster=new T.Raycaster();let press=null;const pointers=new Set();renderer.domElement.addEventListener('pointerdown',e=>{if(sheet)return;pointers.add(e.pointerId);press={x:e.clientX,y:e.clientY,id:e.pointerId,multiple:pointers.size>1};if(mode==='walk'&&look===null){look={id:e.pointerId,x:e.clientX,y:e.clientY};renderer.domElement.setPointerCapture(e.pointerId);}if(!isMobile())mount.focus({preventScroll:true});});
@@ -129,6 +145,6 @@ window.addEventListener('hashchange',routeOffice);
 await routeOffice();
 window.dispatchEvent(new CustomEvent('yod-office-ready',{detail:null}));
 
-function agentsVisibility(open){agentOverlay=open;chinches?.stop();closeSheets(false);clearMovement();document.querySelector('header').inert=agentOverlay;document.getElementById('workspace').inert=agentOverlay;orbit.enabled=!agentOverlay&&mode==='overview';dirty=true;}
+function agentsVisibility(open){if(agentOverlay===open)return;agentOverlay=open;chinches?.stop();closeSheets(false);clearMovement();document.querySelector('header').inert=agentOverlay;document.getElementById('workspace').inert=agentOverlay;orbit.enabled=!agentOverlay&&mode==='overview';dirty=true;}
 window.addEventListener('yod-agents-visibility',e=>agentsVisibility(e.detail===true));
 if(window.CubefarmYOD?.isOpen())agentsVisibility(true);
