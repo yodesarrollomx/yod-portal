@@ -37,7 +37,7 @@ export async function createOffice({pilotFigure=true}={}){
  function potted(x,z,scale=1){const g=new T.Group();g.position.set(x,0,z);g.scale.setScalar(scale);root.add(g);cylinder(.28,.22,.62,0,.31,0,m.stone,g);cylinder(.25,.25,.022,0,.628,0,m.bark,g);for(let i=0;i<5;i++){const a=i*2.4;branch(new T.Vector3(0,.6,0),new T.Vector3(Math.cos(a)*.22,1.55+random()*.25,Math.sin(a)*.22),.013,m.bark,g);}foliage(0,1.55,0,.48,.65,.48,170,g);}
  // A larger connected floorplate: 24 x 19 metres, clear central circulation.
  box(24.4,.35,19.4,0,-.22,0,m.stone);box(24,.06,19,0,-.015,0,m.floor);
- const ground=box(140,.15,140,0,-.51,0,material('#dedbd4'));ground.name='Presentation ground';
+ const ground=box(140,.15,140,0,-.51,0,material('#20353a'));ground.name='Presentation ground';
  wall(24.1,3.7,.18,0,1.85,-9.5,m.plaster);wall(7.3,3.7,.09,-8.22,1.85,-9.35,m.navy);
  for(const side of [-1,1]){wall(.075,.065,19,side*12,3.45,0,m.steel);if(side===1){wall(.16,.45,19,12,.225,0,m.stone);wall(.012,2.96,18.95,12,1.96,0,m.glass);for(let z=-9.5;z<=9.6;z+=3.8)wall(.06,3.45,.06,12,1.725,z,m.steel);}else{for(const [z,d]of [[-5.75,7.5],[5.35,8.3]]){wall(.16,.45,d,-12,.225,z,m.stone);wall(.012,2.96,d,-12,1.96,z,m.glass);block(-12,z,.16,d);}for(const z of [-9.5,-5.7,-2,1.2,5.7,9.5])wall(.06,3.45,.06,-12,1.725,z,m.steel);}}
  for(const side of [-1,1]){wall(8.4,.36,.14,side*7.8,.18,9.5,m.stone);wall(8.4,2.8,.01,side*7.8,1.78,9.5,m.glass);wall(8.4,.06,.06,side*7.8,3.2,9.5,m.steel);for(const x of [3.6,7.8,12])wall(.055,3.2,.055,side*x,1.6,9.5,m.steel);}

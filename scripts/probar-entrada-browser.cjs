@@ -53,6 +53,12 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await frame.evaluate(()=>{window.__select('A');window.__observe({case_id:'synthetic-A',phase:'ready',work:{title:'Revisando fuentes · prueba',phase:'tool',current_tool:'Leyendo documento'}});});
   await frame.locator('#case-open').waitFor({state:'visible'});
   assert.equal(await frame.locator('#case-open').isEnabled(),true);
+  const chrome=await frame.evaluate(()=>{
+   const header=document.querySelector('body>header').getBoundingClientRect(),entry=document.getElementById('office-entry').getBoundingClientRect(),button=document.getElementById('case-open').getBoundingClientRect();
+   return {header:header.height,inside:button.x>=entry.x&&button.right<=entry.right+1&&button.y>=entry.y&&button.bottom<=entry.bottom+1};
+  });
+  assert.ok(chrome.header<=61,'the office header must stay on one compact row');
+  if(variant!=='fallback')assert.equal(chrome.inside,true,'project identity and primary action must share one card');
   assert.equal(await frame.locator('[data-entry-detail]').textContent(),'Revisando fuentes · prueba');
   await frame.locator('#case-open').focus();await page.keyboard.press('Enter');
   await frame.locator('.workspace-board iframe[src*="open=synthetic-A"]').waitFor();
@@ -64,7 +70,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await frame.locator('.voice-close').click();
   assert.equal(await frame.evaluate(()=>document.activeElement.id),'case-open');
   await page.screenshot({path:path.join(out,'entrada-'+variant+'-oficina-prueba.png')});
-  console.log('ENTRY_OFFICE_'+variant+':'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'));
+  console.log('ENTRY_OFFICE_'+variant+':'+(await page.screenshot({type:'jpeg',quality:75})).toString('base64'));
   if(variant!=='fallback'){
    await frame.locator('#office-agent-marker').click();await frame.locator('.realtime-dialog').waitFor();
    assert.equal(await frame.locator('[data-tab="ppp"]').getAttribute('aria-pressed'),'true');
@@ -81,7 +87,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await frame.locator('.realtime-dialog').waitFor();
   assert.equal(await board.evaluate(el=>el.isConnected),true);
   await page.screenshot({path:path.join(out,'entrada-'+variant+'-puesto-prueba.png')});
-  console.log('ENTRY_STATION_'+variant+':'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'));
+  console.log('ENTRY_STATION_'+variant+':'+(await page.screenshot({type:'jpeg',quality:75})).toString('base64'));
   await frame.evaluate(()=>window.__select('B'));
   await frame.locator('.realtime-dialog').waitFor({state:'hidden'});
   assert.equal(await board.evaluate(el=>el.isConnected),false);

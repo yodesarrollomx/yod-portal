@@ -1,7 +1,7 @@
 import * as T from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {RoomEnvironment} from './vendor/RoomEnvironment.js';
-import {createOffice} from './scene.js?v=6';
+import {createOffice} from './scene.js?v=7';
 import {panels} from './office-panels.mjs?v=2';
 import {createChinches3D} from './chinches3d.mjs?v=3';
 import {createOfficePilot,chooseOfficeHit} from './avatars/office-pilot.mjs?v=5';
@@ -13,7 +13,7 @@ const $=s=>document.querySelector(s),mount=$('#scene'),coarse=matchMedia('(point
 let renderer;try{renderer=new T.WebGLRenderer({antialias:true,powerPreference:'high-performance'});}catch(e){$('#loading').hidden=true;$('#fallback').hidden=false;throw e;}
 renderer.localClippingEnabled=true;
 renderer.setPixelRatio(Math.min(devicePixelRatio,coarse?1.25:1.65));renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.10;mount.appendChild(renderer.domElement);
-const scene=new T.Scene();scene.background=new T.Color('#e3dfd7');scene.fog=new T.Fog('#e3dfd7',60,180);
+const scene=new T.Scene();scene.background=new T.Color('#223b3f');scene.fog=new T.Fog('#223b3f',60,180);
 const pmrem=new T.PMREMGenerator(renderer),room=new RoomEnvironment();scene.environment=pmrem.fromScene(room,.04).texture;scene.environmentIntensity=.23;room.dispose();pmrem.dispose();
 const walkCamera=new T.PerspectiveCamera(43,1,.08,240),overviewCamera=new T.OrthographicCamera(-30,30,20,-20,.08,240);
 let camera=overviewCamera;
