@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.114-encuentro-dos-metros",
+  "revision": "2026-10-07.115-escucha-continua",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -9461,6 +9461,26 @@
       ],
       "deployment": "Implementación 114 preparada para CI: preparación a diez metros, conversación a dos, postura según escala y monitor con progreso registrado. Pendientes pruebas de navegador, publicación y aceptación física.",
       "rollback": "Revertir este PR. Sin cambios a hojas, permisos, credenciales ni configuración inicial GPT-Live."
+    },
+    {
+      "id": "CHG-DESPACHO-ESCUCHA-115",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD"
+      ],
+      "proposal": "Escucha durante la respuesta: orden automática y acotada al detectar intervención local después de salida del agente; comprobar inicio inmediatamente al conectar WebRTC y explicar cierres remotos en la cápsula sin perder el puesto. La demora canónica del expediente permanece medida y abierta; no introducir caché de autoridad ni más lecturas repetidas.",
+      "status": "propuesto",
+      "approval": "Dirección autoriza continuar con el siguiente paso de la interacción, 7-oct-2026.",
+      "tests": [
+        "Intervención local silencia antes de enviar; una orden por transición y respuesta, sin configurar ni cerrar Live.",
+        "Conexión WebRTC consulta estado de inicio inmediatamente sin esperar el siguiente sondeo.",
+        "Cierre remoto confirmado conserva transcripción y muestra explicación recuperable.",
+        "Regresiones completas y navegador; aceptación física e impacto sobre latencia canónica separados."
+      ],
+      "deployment": "Propuesta previa a implementación. Sin nuevos endpoints ni cambios al JSON inicial Live.",
+      "rollback": "Revertir PR de interfaz; conserva historial, permisos y expedientes."
     }
   ],
   "data_contracts": [

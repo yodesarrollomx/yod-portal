@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-07.114-encuentro-dos-metros · 2026-10-07.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-07.115-escucha-continua · 2026-10-07.
 
 ## SYS-DESPACHO · El Despacho
 

@@ -1,19 +1,18 @@
 {
-  "model_revision": "2026-10-07.114-encuentro-dos-metros",
-  "proposal_id": "CHG-DESPACHO-ENCUENTRO-114",
-  "summary": "Encuentro a dos metros y preparación a diez: unificar radios de menú, visibilidad y voz, conservar acercamiento deliberado durante la recuperación de acceso y evitar activación por teletransporte. Corregir postura sentada según escala del avatar, mantenerla al conversar y mostrar avance registrado en el monitor físico con tareas, pendientes y fecha, sin simular ejecución.",
+  "model_revision": "2026-10-07.115-escucha-continua",
+  "proposal_id": "CHG-DESPACHO-ESCUCHA-115",
+  "summary": "Escucha durante la respuesta: orden automática y acotada al detectar intervención local después de salida del agente; comprobar inicio inmediatamente al conectar WebRTC y explicar cierres remotos en la cápsula sin perder el puesto. La demora canónica del expediente permanece medida y abierta; no introducir caché de autoridad ni más lecturas repetidas.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "SYS-DESPACHO-3D",
-    "SVC-AUTON-CLOUD",
-    "SYS-POTENCIALES"
+    "SVC-AUTON-CLOUD"
   ],
   "tests": [
-    "Encuentro real en Three a dos metros, preparación a diez, paredes, salida, cambio de identidad, rechazo y ausencia de saludos repetidos.",
-    "Geometría sentada de niño, joven y adulto; conversación conserva asiento y orientación hacia monitor.",
-    "Monitor se actualiza por secuencia y contenido, distingue pendiente de revisión de terminado y elimina datos al revocar acceso.",
-    "Regresión Node, arquitectura, OS, portal, accesos, obra y navegador escritorio/móvil; micrófono físico sigue siendo aceptación separada."
+    "Intervención local silencia antes de enviar; una orden por transición y respuesta, sin configurar ni cerrar Live.",
+    "Conexión WebRTC consulta estado de inicio inmediatamente sin esperar el siguiente sondeo.",
+    "Cierre remoto confirmado conserva transcripción y muestra explicación recuperable.",
+    "Regresiones completas y navegador; aceptación física e impacto sobre latencia canónica separados."
   ],
-  "rollback": "Revertir este PR. Sin cambios a hojas, permisos, credenciales ni configuración inicial GPT-Live."
+  "rollback": "Revertir PR de interfaz; conserva historial, permisos y expedientes."
 }
