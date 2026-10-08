@@ -57,3 +57,28 @@ test('station distinguishes a short access outage from revocation, expiry and ca
  assert.equal(residentAccessDecision({...state,phase:'standby'},current,50000),'current');
  assert.equal(residentAccessDecision(state,null,50000),'none');
 });
+
+test('lock_busy preserves a current voice lease and recovers without treating contention as revocation',async()=>{
+ const {createResidentAgents,residentAccessDecision}=await load();let time=1000,busy=false,delay;
+ const room=createResidentAgents({transport:{resolveCurrent:async()=>busy?{ok:false,error:'lock_busy'}:selection},
+  now:()=>time,schedule:(_fn,ms)=>{delay=ms;return 1;},cancel(){}});
+ await room.refresh();const current=room.getSelection();room.markPrepared(current.case_id,true);
+ busy=true;time=61000;assert.equal(await room.refresh(),false);
+ assert.equal(room.snapshot().phase,'reconnecting');
+ assert.equal(residentAccessDecision(room.snapshot(),current,time),'recovering');
+ assert.equal(room.getSelection(),null);assert.deepEqual(room.getProfile(),selection.avatar);
+ assert.equal(room.snapshot().checked_at,1000);assert.equal(delay,2000);
+ busy=false;time=63000;assert.equal(await room.refresh(),true);
+ assert.equal(residentAccessDecision(room.snapshot(),current,time),'current');
+ assert.equal(room.getSelection().case_id,current.case_id);room.dispose();
+});
+test('lock_busy grants no first access and cannot extend an expired authorization',async()=>{
+ const {createResidentAgents,residentAccessDecision}=await load();let time=1000,busy=true;
+ const room=createResidentAgents({transport:{resolveCurrent:async()=>busy?{ok:false,error:'lock_busy'}:selection},
+  now:()=>time,schedule:()=>1,cancel(){}});
+ await room.refresh();assert.equal(room.getProfile(),null);assert.equal(room.getSelection(),null);
+ busy=false;await room.refresh();const current=room.getSelection();
+ busy=true;time=121000;await room.refresh();
+ assert.equal(room.getProfile(),null);assert.equal(residentAccessDecision(room.snapshot(),current,time),'lost');
+ assert.equal(room.snapshot().checked_at,1000);room.dispose();
+});

@@ -1,5 +1,5 @@
 import {createFrameTransport} from './conversation.mjs';
-import {createResidentAgents} from './resident-agents.mjs?v=2';
+import {createResidentAgents} from './resident-agents.mjs?v=3';
 const host=document.getElementById('resident-agent');
 if(host){
  const transport=createFrameTransport(window);

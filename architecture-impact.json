@@ -1,16 +1,16 @@
 {
-  "model_revision": "2026-10-08.117-carga-medida",
-  "proposal_id": "CHG-DESPACHO-CARGA-117",
-  "summary": "Diferir la imagen de respaldo oculta hasta que sea visible: la entrada 3D no debe transferir el recurso de fallback cuando el recorrido funciona. Comparar navegación fría y recarga sin caché sobre publicación real. Mantener alternativa visual si WebGL falla; sin cambios de permisos ni datos.",
+  "model_revision": "2026-10-08.118-recuperacion-acceso",
+  "proposal_id": "CHG-DESPACHO-ACCESO-118",
+  "summary": "Tratar lock_busy del Portero como indisponibilidad temporal al renovar la presencia. Conservar solo la autorización vigente dentro del plazo existente, pausar nuevas operaciones, reintentar y recuperar automáticamente. Revocación real y vencimiento siguen retirando datos y voz.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "SYS-DESPACHO-3D"
   ],
   "tests": [
-    "Regresiones del portal y arquitectura.",
-    "Navegador: imagen no se solicita al cargar escena; al revelar fallback descarga y decodifica correctamente.",
-    "Comparación de tiempos y bytes en navegación fría y hard refresh; no equiparar ahorro de bytes con mejora temporal."
+    "Regresión de lock_busy con conversación activa: recuperando, sin pérdida inmediata de acceso; recuperación posterior.",
+    "Sin autorización previa no aparece figura. Tras 120 segundos se retira. Una revocación real sigue retirando inmediatamente.",
+    "Arquitectura, suite completa y verificadores del portal."
   ],
-  "rollback": "Revertir atributo de carga de la imagen; conserva archivo, alternativa de acceso y recorrido."
+  "rollback": "Revertir clasificación de lock_busy y versiones de módulos, sin alterar datos ni permisos del servidor."
 }
