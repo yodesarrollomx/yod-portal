@@ -1,27 +1,27 @@
 /* One station: conversation on the left, the selected project's working surface on the right. */
 #resident-agent,.station-legacy{display:none!important}
-.workspace-dialog,.realtime-dialog.has-workspace{width:min(1480px,calc(100vw - 40px));height:min(940px,calc(100dvh - 40px));max-height:calc(100dvh - 40px);box-sizing:border-box;border:1px solid #ffffff9c;border-radius:24px;background:#f7faf6;color:#243e36;padding:0;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:hidden;box-shadow:0 30px 100px #071c2b66}
+.workspace-dialog,.realtime-dialog.has-workspace{width:calc(100vw - 24px);max-width:1680px;height:calc(100dvh - 24px);max-height:calc(100dvh - 24px);box-sizing:border-box;border:1px solid #ffffff9c;border-radius:24px;background:#f7faf6;color:#243e36;padding:0;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:hidden;box-shadow:0 30px 100px #071c2b66}
 .workspace-dialog::backdrop,.realtime-dialog.has-workspace::backdrop{background:#10272b99;backdrop-filter:blur(8px)}
 .workspace-dialog{padding:24px;overflow:auto}
 .workspace-dialog>header{position:static;display:flex;align-items:center;gap:12px;height:auto;background:transparent;padding:0 0 16px;border:0;box-shadow:none}
 .workspace-dialog h1{font-size:24px;margin:0 auto 0 0}
-.voice-layout{display:grid;grid-template-columns:minmax(260px,300px) minmax(0,1fr);height:100%;min-height:0;gap:0}
-.realtime-dialog.has-workspace .voice-sidebar{min-width:0;padding:24px;overflow:auto;overscroll-behavior:contain;background:#eef3ed;box-sizing:border-box}
-.voice-workspace{min-width:0;min-height:0;padding:24px 28px;border-left:1px solid #dce5dc;overflow:auto;background:#fcfdfb}
-.station-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:26px}
+.voice-layout{display:grid;grid-template-columns:248px minmax(0,1fr);height:100%;min-height:0;gap:0}
+.realtime-dialog.has-workspace .voice-sidebar{min-width:0;padding:20px;overflow:auto;overscroll-behavior:contain;background:#eef3ed;box-sizing:border-box}
+.voice-workspace{min-width:0;min-height:0;padding:16px 20px;border-left:1px solid #dce5dc;overflow:auto;background:#fcfdfb}
+.station-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}
 .station-heading button{background:transparent;border:1px solid #c5d7ca;border-radius:12px;color:#345746;padding:8px 12px;font:500 12px system-ui,sans-serif;cursor:pointer;min-height:44px}
 .station-heading .voice-close{float:none}
 #station-menu{width:44px;height:44px;padding:0;font-size:24px;background:#fff}
 .voice-sidebar .voice-eyebrow{margin:0 0 8px;font-size:10px;letter-spacing:.15em;color:#647d6c}
 .voice-sidebar h1{font-family:inherit;font-weight:600;font-size:30px;letter-spacing:-.045em;margin:0 0 8px;overflow-wrap:anywhere}
-#voice-case{font-size:12px;line-height:1.5;font-weight:400;color:#657a6e;margin:0 0 28px}
+#voice-case{font-size:12px;line-height:1.5;font-weight:400;color:#657a6e;margin:0 0 16px}
 .station-activity{border-top:1px solid #d2dfd3;border-bottom:1px solid #d2dfd3;padding:18px 0}
 .station-activity>small{font-size:10px;letter-spacing:.13em;color:#647d6c}
 .voice-sidebar #voice-work{font-size:13px;line-height:1.6;padding:8px 0;max-height:110px;overflow:auto}
 #voice-work p{margin:0}
 #voice-task:empty{display:none}
 #voice-view-tasks{background:transparent;border:0;padding:4px 0;min-height:32px;text-decoration:underline;text-underline-offset:4px;font-size:12px;color:#39634e}
-.voice-sidebar .voice-state-card{background:transparent;border:0;padding:22px 0 0;margin:0}
+.voice-sidebar .voice-state-card{background:transparent;border:0;padding:12px 0 0;margin:0}
 .voice-state-card h2{font-size:10px;letter-spacing:.13em}
 #voice-phase{font-size:17px;font-weight:600;letter-spacing:-.02em}
 #voice-status{font-size:13px;line-height:1.5;color:#657a6e}
@@ -31,8 +31,8 @@
 .voice-actions #voice-start,#voice-interrupt{background:#235a4e;color:#fff;border-color:#235a4e}
 #voice-start{width:100%}
 #voice-interrupt[aria-pressed=true]{background:#dbe9df;color:#244536}
-.voice-options,.station-chat,.voice-transcript-details{border-top:1px solid #d2dfd3;margin:18px 0 0;padding-top:6px;font-size:12px}
-.voice-options summary,.station-chat summary,.voice-transcript-details summary{cursor:pointer;padding:10px 0;min-height:44px;font-weight:500;color:#4b6856}
+.voice-options,.station-chat,.station-details,.voice-transcript-details{border-top:1px solid #d2dfd3;margin:18px 0 0;padding-top:6px;font-size:12px}
+.voice-options summary,.station-chat summary,.station-details>summary,.voice-transcript-details summary{cursor:pointer;padding:10px 0;min-height:44px;font-weight:500;color:#4b6856}
 .voice-sidebar #voice-context{font-size:12px;line-height:1.5}
 #voice-save{font-size:11px;font-weight:400;color:#647d6c}
 .voice-sidebar #voice-transcript{max-height:32dvh}
@@ -64,7 +64,7 @@
 .workspace-controls,.workspace-links{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
 .workspace-links button{text-align:left;max-width:100%;overflow-wrap:anywhere}
 .workspace-activity{font-size:12px;line-height:1.8;color:#688070;padding-left:18px;max-height:120px;overflow:auto}
-.workspace-board iframe{width:100%;height:calc(100dvh - 230px);min-height:440px;border:1px solid #d6e1d6;border-radius:16px;background:#fff;display:block;box-shadow:0 4px 20px #254f3c06}
+.workspace-board iframe{width:100%;height:calc(100dvh - 190px);min-height:440px;border:1px solid #d6e1d6;border-radius:16px;background:#fff;display:block;box-shadow:0 4px 20px #254f3c06}
 .workspace-board>a{display:inline-block;margin-top:10px;font-size:12px;color:#39634e}
 .workspace-card{padding:20px;background:#fff;border:1px solid #dce6dc;border-radius:16px;margin:12px 0}
 .workspace-card h3{font-size:16px;margin:0 0 8px;letter-spacing:-.02em}
@@ -106,7 +106,7 @@
 .workspace-live-work pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;font-size:13px}
 .workspace-live-work a{color:#39634e;text-underline-offset:3px;overflow-wrap:anywhere}
 .workspace-live-work ol{padding-left:22px}.workspace-live-work li{margin:12px 0}
-@media(max-width:1050px) and (min-width:851px){.voice-layout{grid-template-columns:260px minmax(0,1fr)}.voice-workspace{padding:20px 16px}.agent-workspace>nav{flex-wrap:wrap}.agent-workspace>nav>button{padding:8px 10px}}
+@media(max-width:1050px) and (min-width:851px){.voice-layout{grid-template-columns:232px minmax(0,1fr)}.voice-workspace{padding:20px 16px}.agent-workspace>nav{flex-wrap:wrap}.agent-workspace>nav>button{padding:8px 10px}}
 @media(max-width:850px){
  .realtime-dialog.has-workspace,.workspace-dialog{width:calc(100vw - 16px);max-width:calc(100vw - 16px);height:calc(100dvh - 16px);max-height:calc(100dvh - 16px);border-radius:20px;overflow:auto;padding:0}
  .workspace-dialog{padding:16px}.workspace-dialog>header{flex-wrap:wrap}.workspace-dialog h1{flex:1 1 100%}
@@ -157,3 +157,10 @@
 
 #compact-interrupt{font-size:12px;padding:8px;background:#e4ebe7;max-width:90px}
 #compact-interrupt[aria-pressed="true"]{background:#203f36;color:#fff}
+
+/* Secondary details share one disclosure; proximity remains a small voice capsule. */
+.station-details .station-activity{border:0;padding:8px 0}
+.station-details #voice-work{font-size:13px;line-height:1.6}
+.realtime-dialog.voice-compact>.chinche-ui-tools{display:none}
+.voice-workspace .workspace-ppp-summary:empty{display:none}
+@media(max-width:850px){.voice-sidebar .station-details{margin-top:6px;padding-top:0}.voice-sidebar .station-details>summary{padding:8px 0;min-height:36px}}

@@ -18,7 +18,7 @@ export function registeredBoard(source,caseId,boardCaseId=caseId) {
    const page=u.pathname.slice('/potenciales-yod/'.length)==='vertical.html'?'mixto.html':u.pathname.slice('/potenciales-yod/'.length);
    const clean=new URL(u.origin+'/potenciales-yod/'+page);clean.searchParams.set('open',boardCaseId);
    const external=clean.href,bridge=nativePages.has(page)||observationPages.has(page);clean.searchParams.set('embed','1');
-   if(bridge)clean.searchParams.set('agent','1');
+   if(bridge){clean.searchParams.set('agent','1');clean.searchParams.set('view','board');}
    return {url:clean.href,external,origin:clean.origin,bridge,readOnly:observationPages.has(page),board_case_id:boardCaseId,surface:'ppp'};
   }
   if(u.hostname==='docs.google.com'&&/^\/spreadsheets\/d\/[A-Za-z0-9_-]+\/(edit|preview)$/.test(u.pathname)){

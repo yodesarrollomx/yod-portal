@@ -6,7 +6,7 @@ import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {RoomEnvironment} from './vendor/RoomEnvironment.js';
 import {createOffice} from './scene.js?v=9';
 import {panels} from './office-panels.mjs?v=2';
-import {createChinches3D} from './chinches3d.mjs?v=3';
+import {createChinches3D} from './chinches3d.mjs?v=4';
 import {createOfficePilot,chooseOfficeHit} from './avatars/office-pilot.mjs?v=8';
 import {ENTORNO_AGENTE_CAMINA} from './entorno-config.mjs';
 import {crearAgenteIr} from './entorno-ruta.mjs?v=4';

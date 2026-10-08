@@ -112,6 +112,13 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await page.keyboard.press('ArrowUp');
   await frame.locator('.radial-options [data-action="ppp"]').click();
   await frame.locator('.workspace-board iframe[src*="open=synthetic-A"]').waitFor();
+  const report=frame.locator('.realtime-dialog [data-chinche-ui="select"]');
+  assert.equal(await report.count(),1,'one report entry per station');
+  await frame.locator('.workspace-tools>summary').click();
+  assert.equal(await report.isVisible(),true,'report remains reachable in Tools');
+  assert.equal(await report.evaluate(e=>!!e.closest('.workspace-tools')),true);
+  await frame.locator('.workspace-tools>summary').click();
+
   assert.equal(await frame.locator('[data-tab="ppp"]').getAttribute('aria-pressed'),'true');
   assert.match(await frame.locator('#voice-title').textContent(),/Autón A/);
   const board=await frame.locator('.workspace-board iframe').elementHandle(),boardFrame=await board.contentFrame();

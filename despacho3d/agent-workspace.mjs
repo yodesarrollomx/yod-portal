@@ -1,5 +1,5 @@
 import {mountWorkView} from './work-view.mjs?v=2';
-import {registeredBoard,resolveBoard,stationIdentity} from './project-station.mjs?v=116';
+import {registeredBoard,resolveBoard,stationIdentity} from './project-station.mjs?v=121';
 import {mountKnowledgeBoard} from './knowledge-board.mjs?v=1';
 import {createFrameTransport,validateConversation} from './conversation.mjs?v=116';
 import {validateFastSession} from './fast-lane.mjs';
@@ -54,7 +54,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
  const root=el('section',undefined,'agent-workspace');root.setAttribute('aria-label','Puesto del proyecto');
  const nav=el('nav'),notice=el('p','Preparando el puesto…','workspace-status'),body=el('div',undefined,'workspace-body');
  notice.setAttribute('role','status');const tools=el('details',undefined,'workspace-tools'),toolsNav=el('div');tools.append(el('summary','Herramientas'),toolsNav);nav.setAttribute('aria-label','Tablero del proyecto');root.append(nav,notice,body);container.append(root);
- const sections=Object.fromEntries(WORKSPACE_TABS.map(([id,label])=>{const b=button(label,()=>setTab(id));b.dataset.tab=id;(id==='browser'||id==='knowledge'?toolsNav:nav).append(b);const section=el('section');section.dataset.panel=id;body.append(section);return[id,section];}));
+ const sections=Object.fromEntries(WORKSPACE_TABS.map(([id,label])=>{const b=button(label,()=>setTab(id));b.dataset.tab=id;(id==='browser'||id==='knowledge'||id==='sources'?toolsNav:nav).append(b);const section=el('section');section.dataset.panel=id;body.append(section);return[id,section];}));
  nav.append(tools);
  const knowledge=mountKnowledgeBoard({container:sections.knowledge,request,getCase:()=>selected&&getSelection()?.case_id===selected.case_id?selected.case_id:null,onUnauthorized:()=>clear(),doc,win});
  const browser=sections.browser,form=el('form',undefined,'workspace-address'),address=el('input');address.type='url';address.placeholder='https://…';address.setAttribute('aria-label','Dirección del navegador');address.required=true;

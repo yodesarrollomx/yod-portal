@@ -36,6 +36,7 @@ function serverFor(){return http.createServer((req,res)=>{
  if(!file.startsWith(root+path.sep)||!fs.existsSync(file)||!fs.statSync(file).isFile()){res.writeHead(404);res.end();return;}
  res.setHeader('Content-Type',/\.m?js$/.test(file)?'text/javascript':file.endsWith('.css')?'text/css':file.endsWith('.html')?'text/html':file.endsWith('.png')?'image/png':'application/octet-stream');res.end(fs.readFileSync(file));
 });}
+async function pointTo(child,selector){await child.evaluate(()=>YODChinche.senalar());await child.locator('.chinche-ui-hint').waitFor();await child.locator(selector).dispatchEvent('click');}
 async function cancelComposer(page){await page.locator('.chn-hoja [data-x]').click();await page.locator('.chn-velo').waitFor({state:'detached'});}
 async function run(){
  const server=serverFor();await new Promise(r=>server.listen(0,'127.0.0.1',r));const base='http://127.0.0.1:'+server.address().port;
@@ -62,9 +63,10 @@ async function run(){
    await child.waitForFunction(()=>!document.querySelector('[data-chinche-ui="select"]').disabled);
    assert.equal(await child.evaluate(()=>YODChinche.sentinel),42);
    await child.locator('body>header [data-chinche-ui="select"]').click();
-   await page.keyboard.press('Escape');assert.equal(await page.evaluate(()=>calls.length),0);assert.equal(network.length,0);
-   await child.evaluate(()=>document.querySelector('#review').showModal());
-   await child.locator('#private-card [data-chinche-ui="card"]').click();await page.locator('.chn-txt').waitFor();
+   await page.keyboard.press('Escape');assert.equal(await child.locator('.chinche-ui-hint').isVisible(),false,'Escape cancels even when the selector button has focus');assert.equal(await page.evaluate(()=>calls.length),0);assert.equal(network.length,0);
+   await child.evaluate(()=>{const nested=document.createElement('div');nested.className='voice-workspace';document.querySelector('#review').append(nested);document.querySelector('#review').showModal()});
+   assert.equal(await child.locator('#review [data-chinche-ui="select"]').count(),1,'Nested workspace shares the surface selector');
+   await pointTo(child,'#private-card');await page.locator('.chn-txt').waitFor();
    assert.equal(await child.evaluate(()=>effects),0);assert.equal(await child.evaluate(()=>cardEffects),0,'Card actions suppress application document capture');assert.equal(network.length,0);
    let pin=await page.evaluate(()=>pins.at(-1));assert.equal(pin.version,2);assert.equal(pin.target.ui.surface,'tasks');assert.equal(pin.target.ui.item,0);
    assert.equal(await child.evaluate(path=>document.querySelector(path)===document.querySelector('#private-card'),pin.target.ui.path),true);
@@ -87,12 +89,12 @@ async function run(){
    if(process.env.BROWSER_EVIDENCE_DIR){fs.mkdirSync(process.env.BROWSER_EVIDENCE_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.BROWSER_EVIDENCE_DIR,`chinches-selection-${browserName}-${mobile?'touch':'desktop'}.png`),fullPage:true});}
    await page.keyboard.press('Escape');
    await child.evaluate(()=>{const card=document.createElement('article');card.id='dynamic';card.innerHTML='<h2>PRIVATE-DYNAMIC</h2><button>Resolver</button>';document.querySelector('[data-panel="tasks"]').append(card)});
-   await child.locator('#dynamic [data-chinche-ui="card"]').waitFor();await child.locator('#dynamic [data-chinche-ui="card"]').click();await page.locator('.chn-txt').waitFor();assert.equal(await page.evaluate(()=>pins.at(-1).target.ui.item),1);await cancelComposer(page);
+   assert.equal(await child.locator('[data-chinche-ui="card"]').count(),0);await pointTo(child,'#dynamic');await page.locator('.chn-txt').waitFor();assert.equal(await page.evaluate(()=>pins.at(-1).target.ui.item),1);await cancelComposer(page);
    // Independent local surfaces; no application identifiers are copied into references.
    const surfaces=[['knowledge','workspace-dialog','<section class="knowledge-board"><article class="knowledge-card">PRIVATE-KNOWLEDGE</article></section>'],['goals','dossier-overlay','<section class="durable-goals"><article class="durable-goal">PRIVATE-GOAL</article></section>'],['permissions','entorno-hoja','<section class="entorno-permisos" data-permissions-status="ready"><article>PRIVATE-POLICY</article></section>'],['visits','entorno-hoja','<section class="entorno-respaldo"><article>PRIVATE-VISIT</article></section>'],['library','library-dialog','<article class="library-source">PRIVATE-SOURCE</article>'],['chat','dossier-overlay','<article class="case-message">PRIVATE-CHAT</article>'],['activity','dossier-overlay','<div class="term"><div class="term-line">PRIVATE-EVENT</div></div>'],['evidence','workspace-dialog','<details open><summary>PRIVATE-EVIDENCE</summary><pre>PRIVATE-TEXT</pre></details>'],['circle','circulo-hoja','<div class="circulo-tarjeta">PRIVATE-CIRCLE</div>'],['voice','realtime-dialog has-workspace','<article>PRIVATE-VOICE</article>']];
    for(const [surface,cls,html]of surfaces){
     await child.evaluate(({cls,html})=>{document.querySelector('#review').close();document.querySelector('#extra')?.remove();const dialog=document.createElement('dialog');dialog.id='extra';dialog.className=cls;dialog.innerHTML=html;document.body.append(dialog);dialog.showModal()},{cls,html});
-    await child.locator('#extra [data-chinche-ui="card"]').first().click();await page.locator('.chn-txt').waitFor();assert.equal(await page.evaluate(()=>pins.at(-1).target.ui.surface),surface);await cancelComposer(page);
+    await child.locator('#extra [data-chinche-ui="select"]').waitFor();assert.equal(await child.locator('#extra [data-chinche-ui="select"]').count(),1);await pointTo(child,'#extra article,#extra .term-line,#extra details,#extra .circulo-tarjeta');await page.locator('.chn-txt').waitFor();assert.equal(await page.evaluate(()=>pins.at(-1).target.ui.surface),surface);await cancelComposer(page);
    }
    await child.evaluate(()=>{document.querySelector('#extra').close();document.querySelector('#review').showModal();const panel=document.createElement('section');panel.dataset.panel='ppp';panel.innerHTML='<div class="workspace-board"><iframe title="PPP sintético" src="/nested?token=PRIVATE-IFRAME-TOKEN" style="width:100%;height:190px"></iframe></div>';document.querySelector('.agent-workspace').append(panel)});
    await child.locator('.workspace-board iframe').waitFor();await child.waitForFunction(()=>typeof document.querySelector('.workspace-board iframe').contentWindow.effects==='number');const nested=page.frames().find(f=>f.url().includes('/nested'));assert.ok(nested);await nested.waitForFunction(()=>typeof window.effects==='number');
@@ -117,12 +119,12 @@ async function run(){
    assert.equal(network.length,0);assert.deepEqual(errors,[]);
    if(process.env.BROWSER_EVIDENCE_DIR){fs.mkdirSync(process.env.BROWSER_EVIDENCE_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.BROWSER_EVIDENCE_DIR,`chinches-ui-${browserName}-${mobile?'touch':'desktop'}.png`),fullPage:true});}
    await child.evaluate(()=>{document.querySelector('#extra').close();document.querySelector('#review').showModal()});
-   await child.locator('#dynamic [data-chinche-ui="card"]').click();await page.locator('.chn-txt').fill('Solicitud humana sintética');await page.locator('.chn-hoja [data-ok]').click();
+   await pointTo(child,'#dynamic');await page.locator('.chn-txt').fill('Solicitud humana sintética');await page.locator('.chn-hoja [data-ok]').click();
    await page.waitForFunction(()=>!document.querySelector('.chn-velo'));await page.waitForTimeout(100);
    assert.equal(network.length,1);assert.equal(network[0].method,'POST');assert.doesNotMatch(network[0].body,/PRIVATE-/);
-   await page.evaluate(()=>{authorized=false;epoch++;binding.clear()});await child.waitForFunction(()=>document.querySelector('[data-chinche-ui="card"]').disabled);
+   await page.evaluate(()=>{authorized=false;epoch++;binding.clear()});await child.waitForFunction(()=>document.querySelector('[data-chinche-ui="select"]').disabled);
    assert.equal(await child.evaluate(()=>YODChinche.senalar()),false);
-   await child.evaluate(()=>{const a=document.createElement('article');a.id='late';document.querySelector('[data-panel="tasks"]').append(a)});await child.locator('#late [data-chinche-ui="card"]').waitFor();assert.equal(await child.locator('#late [data-chinche-ui="card"]').isDisabled(),true);
+   await child.evaluate(()=>{const a=document.createElement('article');a.id='late';document.querySelector('[data-panel="tasks"]').append(a)});assert.equal(await child.locator('#late [data-chinche-ui="card"]').count(),0);assert.equal(await child.locator('#review [data-chinche-ui="select"]').isDisabled(),true);
    await context.close();
    console.log('UI '+(mobile?'touch':'desktop')+': auth, exact controls, keyboard, disabled control, dynamic cards, voice + 9 surfaces, nested PPP, privacy, session and Clavar PASS');
   }
@@ -143,7 +145,7 @@ async function run(){
   const go=office.locator('[data-place-card="decisions"] button').first();if(mobile)await go.tap();else await go.click();
   await page.locator('.chn-txt').waitFor();assert.equal(await office.evaluate(()=>despacho.getState().selected),initial,'Selection must not navigate the office');
   await cancelComposer(page);await page.waitForTimeout(710);
-  await office.locator('[data-place-card="decisions"] [data-chinche-ui="card"]').click();
+  await pointTo(office,'[data-place-card="decisions"]');
   await page.waitForFunction(()=>pins.length>0);const mapPin=await page.evaluate(()=>pins.at(-1));
   assert.deepEqual(mapPin.view,{position:null,quaternion:null,fov:null,mode:'map'});assert.equal(mapPin.target.zone,'decisions');assert.equal(mapPin.target.point,null);
   assert.equal(await page.evaluate(()=>YodDespachoChinches.validPin(pins.at(-1))),true,'Parent accepts a truthful camera-free UI reference');await page.locator('.chn-txt').waitFor();await cancelComposer(page);

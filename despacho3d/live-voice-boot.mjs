@@ -2,10 +2,10 @@ import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
 import {createEntryPreparation} from './voice-preparation.mjs?v=2';
 import {residentAccessDecision} from './resident-agents.mjs?v=3';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=116';
-import {stationIdentity} from './project-station.mjs?v=116';
+import {stationIdentity} from './project-station.mjs?v=121';
 import {createLiveVoice} from './live-voice.mjs?v=16';
 import {voiceView} from './voice-view.mjs?v=2';
-import {createWorkspace} from './agent-workspace.mjs?v=116';
+import {createWorkspace} from './agent-workspace.mjs?v=121';
 import {DurableGoals,watchGoals} from './goals.mjs?v=2';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=1';
 import {groupTranscriptFragments} from './live-transcript.mjs';
@@ -46,19 +46,14 @@ if (open) {
     present(false);workspace.open(selection,tab);
     renderVoiceState(voice.snapshot());
   }
-  // Keep the board within the first mobile screen; preserve DOM/focus order.
-  const compact=window.matchMedia('(max-width:850px)'),followup=document.createElement('div');
-  followup.className='station-followup';
+  // Conversation stays beside the original board. Secondary information is disclosed once.
   const activityCard=sidebar.querySelector('.station-activity'),voiceCard=sidebar.querySelector('.voice-state-card');
-  const supporting=[sidebar.querySelector('#voice-save'),sidebar.querySelector('#voice-previous'),sidebar.querySelector('.voice-transcript-details')];
-  function arrangeStation(){
-    const focus=document.activeElement;
-    if(compact.matches){followup.append(activityCard,...supporting);layout.append(followup);}
-    else{sidebar.insertBefore(activityCard,voiceCard);sidebar.append(...supporting);followup.remove();}
-    if(focus?.isConnected&&dialog.contains(focus))focus.focus({preventScroll:true});
-  }
-  compact.addEventListener('change',arrangeStation);arrangeStation();
-  window.addEventListener('pagehide',()=>compact.removeEventListener('change',arrangeStation));
+  sidebar.insertBefore(voiceCard,activityCard);
+  const activityDetails=document.createElement('details');activityDetails.className='station-details';
+  const activitySummary=document.createElement('summary');activitySummary.textContent='Actividad y registro';
+  activityDetails.append(activitySummary,activityCard,sidebar.querySelector('.voice-transcript-details'));
+  sidebar.append(activityDetails);
+  voiceCard.append(sidebar.querySelector('#voice-save'),sidebar.querySelector('#voice-previous'));
   const node = id => dialog.querySelector('#' + id);
   const fragments = []; let selection = null, generation = 0, dismissing = false, transcriptCase = null, freshTranscript = false, previousFocus = null, voiceCaseId = null, accessPaused = false;
   const agentName=()=>selection?stationIdentity(selection).name:'Autón';
