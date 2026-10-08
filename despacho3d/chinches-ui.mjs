@@ -118,6 +118,9 @@ export function mountChincheUI({send,onSelecting,onSceneStart,bar}){
         const b=makeButton('Señalar control con chinche','select',button=>start(root.matches('body > header')?document.body:root,button));b.setAttribute('aria-pressed','false');
         toolbar.append(b);root.append(toolbar);toolbars.set(root,toolbar);
       }
+      // The full station clips its outer shell; place its single report entry in Tools.
+      const menu=root.matches('.realtime-dialog')&&root.querySelector('.workspace-tools>div');
+      if(menu&&toolbar.parentElement!==menu)menu.append(toolbar);
 
     });
     syncFrames();
