@@ -118,6 +118,7 @@ const server=http.createServer((req,res)=>{
   await frame.locator('#voice-mute').click();assert.equal(await frame.locator('#voice-phase').innerText(),'Micrófono en pausa');
   await frame.locator('#voice-mute').click();
   await frame.locator('#voice-retry-context').click();assert.equal(retries,1);
+  await frame.locator('.station-details>summary').click();
   await frame.locator('.voice-transcript-details summary').click();
   await frame.evaluate(()=>window.voiceEvent({type:'session.output_transcript.delta',event_id:'exact',delta:' Texto  exacto\n',start_ms:100,end_ms:900}));
   assert.equal(await frame.locator('#voice-transcript p').textContent(),' Texto  exacto\n');

@@ -51,7 +51,7 @@ export function surfaceOf(node){
 
 export function mountChincheUI({send,onSelecting,onSceneStart,bar}){
   let ready=false,selecting=false,selectionRoot=null,highlight=null,highlightFrame=null,swallowUntil=0,swallowKey=null;
-  const toolbars=new WeakMap(),cardButtons=new WeakMap(),panelZones=new WeakMap(),buttonActions=new WeakMap();
+  const toolbars=new WeakMap(),panelZones=new WeakMap(),buttonActions=new WeakMap();
   const frameBindings=new Map(),frameShields=new Map(),loadedFrames=new WeakSet();
   const outline=document.createElement('div');outline.className='chinche-ui-outline';outline.hidden=true;outline.setAttribute('aria-hidden','true');
   const hint=document.createElement('div');hint.className='chinche-ui-hint';hint.hidden=true;
@@ -96,7 +96,7 @@ export function mountChincheUI({send,onSelecting,onSceneStart,bar}){
     onSelecting(true);selecting=true;selectionRoot=root;
     hintText.textContent='Selecciona el control exacto. Tab para recorrer; Enter para señalar; Escape para cancelar.';
     hostFor(root).append(hint,outline);hint.hidden=false;button.setAttribute('aria-pressed','true');
-    syncFrames();
+    syncFrames();cancel.focus({preventScroll:true});
   }
   function makeButton(label,kind,action){
     const b=document.createElement('button');b.type='button';b.textContent=label;b.dataset.chincheUi=kind;
@@ -110,18 +110,18 @@ export function mountChincheUI({send,onSelecting,onSceneStart,bar}){
   function scan(){
     if(selecting&&(!visible(selectionRoot)||!selectionRoot.contains(hint)&&hostFor(selectionRoot)!==hint.parentElement))stop();
     document.querySelectorAll(ROOTS).forEach(root=>{
+      // A nested workspace shares its enclosing surface's selector.
+      if(root.parentElement?.closest(ROOTS))return;
       let toolbar=toolbars.get(root);
       if(!toolbar||!root.contains(toolbar)){
         toolbar=document.createElement('div');toolbar.className='chinche-ui-tools';toolbar.dataset.chincheUi='tools';
         const b=makeButton('Señalar control con chinche','select',button=>start(root.matches('body > header')?document.body:root,button));b.setAttribute('aria-pressed','false');
         toolbar.append(b);root.append(toolbar);toolbars.set(root,toolbar);
       }
-      root.querySelectorAll(CARDS).forEach(card=>{
-        let b=cardButtons.get(card);
-        if(b&&card.contains(b))return;
-        b=makeButton('Pedir cambio en esta tarjeta','card',()=>request(card,root));
-        const host=card.localName==='tr'?card.lastElementChild:card;if(!host)return;host.append(b);cardButtons.set(card,b);
-      });
+      // The full station clips its outer shell; place its single report entry in Tools.
+      const menu=root.matches('.realtime-dialog')&&root.querySelector('.workspace-tools>div');
+      if(menu&&toolbar.parentElement!==menu)menu.append(toolbar);
+
     });
     syncFrames();
   }
@@ -212,6 +212,7 @@ export function mountChincheUI({send,onSelecting,onSceneStart,bar}){
     },{capture:true,passive:false});
   }
   window.addEventListener('keydown',e=>{
+    if(e.key==='Escape'&&selecting){block(e);stop();return;}
     const control=e.target instanceof Element?e.target.closest('[data-chinche-ui="card"],[data-chinche-ui="select"],[data-chinche-ui="cancel"]'):null;
     if(control&&buttonActions.has(control)&&e.key!=='Tab'){block(e);swallowKey=e.key;if(['Enter',' '].includes(e.key)&&!control.disabled)buttonActions.get(control)(control);return;}
     if(!selecting)return;
