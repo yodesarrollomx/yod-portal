@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-08.116-autones-versiones",
+  "revision": "2026-10-08.118-autones-conciliados",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -9509,6 +9509,24 @@
       ],
       "deployment": "Código preparado con AUTONES_MULTIPLES=false. Pendientes integración del Portero vivo, configuración privada, CI y aceptación. Puentes Macro Lotes/Vertical son de observación.",
       "rollback": "Revertir PR y apagar YOD_MULTI_CASES; conservar expedientes, versiones, credenciales e historiales."
+    },
+    {
+      "id": "CHG-DESPACHO-CARGA-117",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "proposal": "Diferir la imagen de respaldo oculta hasta que sea visible: la entrada 3D no debe transferir el recurso de fallback cuando el recorrido funciona. Comparar navegación fría y recarga sin caché sobre publicación real. Mantener alternativa visual si WebGL falla; sin cambios de permisos ni datos.",
+      "status": "implementado_local",
+      "approval": "Dirección pide prueba visual con hard refresh, ejecutar mejora de carga y continuar con preparación de voz si no alcanza 50% de reducción temporal, 8-oct-2026.",
+      "tests": [
+        "Regresiones del portal y arquitectura.",
+        "Navegador: imagen no se solicita al cargar escena; al revelar fallback descarga y decodifica correctamente.",
+        "Comparación de tiempos y bytes en navegación fría y hard refresh; no equiparar ahorro de bytes con mejora temporal."
+      ],
+      "deployment": "En rama: carga diferida de imagen de respaldo, pendiente CI y prueba publicada. No acredita mejora temporal de 50% ni conversación autenticada.",
+      "rollback": "Revertir atributo de carga de la imagen; conserva archivo, alternativa de acceso y recorrido."
     }
   ],
   "data_contracts": [
