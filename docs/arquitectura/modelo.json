@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-08.118-autones-conciliados",
+  "revision": "2026-10-08.119-autones-conciliados",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -9527,6 +9527,25 @@
       ],
       "deployment": "En rama: carga diferida de imagen de respaldo, pendiente CI y prueba publicada. No acredita mejora temporal de 50% ni conversación autenticada.",
       "rollback": "Revertir atributo de carga de la imagen; conserva archivo, alternativa de acceso y recorrido."
+    },
+    {
+      "id": "CHG-DESPACHO-ACCESO-118",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO"
+      ],
+      "proposal": "Tratar lock_busy del Portero como indisponibilidad temporal al renovar la presencia. Conservar solo la autorización vigente dentro del plazo existente, pausar nuevas operaciones, reintentar y recuperar automáticamente. Revocación real y vencimiento siguen retirando datos y voz.",
+      "status": "propuesto",
+      "approval": "Dirección solicita revisar el cierre inesperado de la conversación y continuar las correcciones, 8-oct-2026.",
+      "tests": [
+        "Regresión de lock_busy con conversación activa: recuperando, sin pérdida inmediata de acceso; recuperación posterior.",
+        "Sin autorización previa no aparece figura. Tras 120 segundos se retira. Una revocación real sigue retirando inmediatamente.",
+        "Arquitectura, suite completa y verificadores del portal."
+      ],
+      "deployment": "Propuesto; falta CI, publicación y aceptación del micrófono real.",
+      "rollback": "Revertir clasificación de lock_busy y versiones de módulos, sin alterar datos ni permisos del servidor."
     }
   ],
   "data_contracts": [

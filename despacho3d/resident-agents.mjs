@@ -31,7 +31,7 @@ export function createResidentAgents({transport,onChange=()=>{},now=Date.now,sch
     if(changed)publishProfile();emit();later(60000);return true;
    }catch(error){
     if(disposed||own!==epoch)return false;
-    const transient=['unavailable','timeout','transport_busy','session_pending'].includes(error?.message);
+    const transient=['unavailable','timeout','transport_busy','session_pending','lock_busy'].includes(error?.message);
     prepared=false;
     // Preserve a recently authorized figure during a short outage, with operation disabled.
     if(!transient||now()-checkedAt>=120000){selection=null;publishProfile();}
