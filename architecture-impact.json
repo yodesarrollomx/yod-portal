@@ -14,7 +14,8 @@
     "SYS-CONTROL",
     "SYS-OBRA",
     "SYS-OBRA-CLIENTE",
-    "SYS-TRACK"
+    "SYS-TRACK",
+    "SYS-SALA"
   ],
   "tests": [
     "Dos casos sintéticos sin mezcla ni selección no autorizada.",
