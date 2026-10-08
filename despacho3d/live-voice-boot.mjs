@@ -1,5 +1,5 @@
 import {createEntryPreparation} from './voice-preparation.mjs?v=2';
-import {residentAccessDecision} from './resident-agents.mjs?v=2';
+import {residentAccessDecision} from './resident-agents.mjs?v=3';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=2';
 import {stationIdentity} from './project-station.mjs?v=2';
 import {createLiveVoice} from './live-voice.mjs?v=16';
