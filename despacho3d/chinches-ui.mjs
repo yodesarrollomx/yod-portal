@@ -96,7 +96,7 @@ export function mountChincheUI({send,onSelecting,onSceneStart,bar}){
     onSelecting(true);selecting=true;selectionRoot=root;
     hintText.textContent='Selecciona el control exacto. Tab para recorrer; Enter para señalar; Escape para cancelar.';
     hostFor(root).append(hint,outline);hint.hidden=false;button.setAttribute('aria-pressed','true');
-    syncFrames();
+    syncFrames();cancel.focus({preventScroll:true});
   }
   function makeButton(label,kind,action){
     const b=document.createElement('button');b.type='button';b.textContent=label;b.dataset.chincheUi=kind;
