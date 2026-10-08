@@ -6,7 +6,8 @@
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "SYS-DESPACHO-3D",
-    "SYS-POTENCIALES"
+    "SYS-POTENCIALES",
+    "SYS-SALA"
   ],
   "tests": [
     "Tablero original con puente habilitado y caso exacto; modo compacto compatible.",

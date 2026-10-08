@@ -36,7 +36,7 @@ function serverFor(){return http.createServer((req,res)=>{
  if(!file.startsWith(root+path.sep)||!fs.existsSync(file)||!fs.statSync(file).isFile()){res.writeHead(404);res.end();return;}
  res.setHeader('Content-Type',/\.m?js$/.test(file)?'text/javascript':file.endsWith('.css')?'text/css':file.endsWith('.html')?'text/html':file.endsWith('.png')?'image/png':'application/octet-stream');res.end(fs.readFileSync(file));
 });}
-async function pointTo(child,selector){await child.evaluate(()=>YODChinche.senalar());await child.locator(selector).dispatchEvent('click');}
+async function pointTo(child,selector){await child.evaluate(()=>YODChinche.senalar());await child.locator('.chinche-ui-hint').waitFor();await child.locator(selector).dispatchEvent('click');console.log('POINT',selector,await child.evaluate(()=>({hint:document.querySelector('.chinche-ui-hint')?.hidden,notice:document.querySelector('#pin-selection')?.textContent})));}
 async function cancelComposer(page){await page.locator('.chn-hoja [data-x]').click();await page.locator('.chn-velo').waitFor({state:'detached'});}
 async function run(){
  const server=serverFor();await new Promise(r=>server.listen(0,'127.0.0.1',r));const base='http://127.0.0.1:'+server.address().port;

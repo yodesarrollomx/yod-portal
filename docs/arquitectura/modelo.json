@@ -9555,7 +9555,8 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO",
         "SYS-DESPACHO-3D",
-        "SYS-POTENCIALES"
+        "SYS-POTENCIALES",
+        "SYS-SALA"
       ],
       "proposal": "Mostrar el PPP original dentro del puesto conservando el puente colaborativo; priorizar voz y tablero, agrupar información secundaria y ofrecer una sola entrada de señalamiento por superficie. La identidad y el expediente siguen ligados al caso autorizado.",
       "status": "implementado_local",
