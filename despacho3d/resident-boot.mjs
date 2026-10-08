@@ -1,5 +1,5 @@
-import {AUTONES_MULTIPLES} from './office-config.mjs?v=2';
-import {createAuthorizedCases} from './authorized-cases.mjs?v=1';
+import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
+import {createAuthorizedCases} from './authorized-cases.mjs?v=2';
 import {createFrameTransport} from './conversation.mjs?v=116';
 import {createResidentAgents} from './resident-agents.mjs?v=3';
 const host=document.getElementById('resident-agent');
@@ -33,19 +33,14 @@ if(host){
  const authorizedListeners=new Set();
  let authorized=null,catalogTimer=null;
  if(AUTONES_MULTIPLES){
-  const picker=document.createElement('select');picker.setAttribute('aria-label','Proyecto del autón');picker.style.cssText='position:fixed;top:12px;right:12px;z-index:50;max-width:60vw;padding:10px;border-radius:12px';picker.hidden=true;document.body.append(picker);
   authorized=createAuthorizedCases({transport,beforeSelect:()=>['idle','error'].includes(voicePhase)&&!window.YodVoiceWorkspace?.isOpen?.(),onChange:state=>{
-   picker.replaceChildren();const prompt=document.createElement('option');prompt.value='';prompt.textContent='Seleccionar proyecto';picker.append(prompt);
-   for(const item of state.cases){const option=document.createElement('option');option.value=item.case_id;option.textContent=item.name;picker.append(option);}
-   picker.value=state.selected?.case_id||resident.getSelection()?.case_id||'';picker.hidden=!state.cases.length;
    for(const fn of authorizedListeners)fn(state.cases.map(c=>c.avatar).filter(Boolean));
   }});
-  picker.onchange=async()=>{const selected=await authorized.select(picker.value);if(selected)await resident.selectCase(selected.case_id);};
   api.subscribeAuthorizedProfiles=fn=>{authorizedListeners.add(fn);fn(api.getAuthorizedProfiles());return()=>authorizedListeners.delete(fn);};
   api.getAuthorizedProfiles=()=>authorized.snapshot().cases.map(c=>c.avatar).filter(Boolean);
   api.selectCase=async id=>{const chosen=await authorized.select(id);return chosen?resident.selectCase(id):false;};
   catalogTimer=setInterval(()=>{if(!document.hidden)void authorized.refresh();},55000);void authorized.refresh();
-  window.addEventListener('pagehide',()=>{clearInterval(catalogTimer);authorized.dispose();picker.remove();});
+  window.addEventListener('pagehide',()=>{clearInterval(catalogTimer);authorized.dispose();});
  }
  window.YodResidentAgents=api;
  window.dispatchEvent(new CustomEvent('yod-residents-ready',{detail:null}));

@@ -37,6 +37,11 @@ jobs:
         run: |
           node scripts/probar-chinche-compartida.cjs
           node scripts/probar-chinches-browser.cjs
+      - name: Residentes autorizados y movimiento en la misma oficina
+        if: matrix.browser == 'chromium'
+        env:
+          NODE_PATH: ${{ runner.temp }}/chinche-browser/node_modules
+        run: node scripts/probar-autones-browser.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

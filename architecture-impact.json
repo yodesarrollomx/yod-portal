@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-08.120-autones-continuidad",
+  "model_revision": "2026-10-08.121-autones-activacion",
   "proposal_id": "CHG-DESPACHO-AUTONES-116",
-  "summary": "Selección autorizada por caso, motores separados y personajes en la misma oficina. Puentes de observación Macro Lotes, Vertical y Patrimonial legacy; mantener identidad y memoria al evolucionar de PPP a proyecto sin ampliar permisos automáticamente.",
+  "summary": "Activar personajes autorizados en la misma oficina, sin selector adicional; recorridos visuales por rutas existentes y motores privados separados. La animación no certifica ejecución de trabajo.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
@@ -22,7 +22,8 @@
     "Puente de observación Macro Lotes/Vertical sin escritura ni resultados locales presentados como Sheets.",
     "Regresiones del piloto, comprobaciones del portal y pruebas de motor.",
     "Refresco de catálogo mantiene figuras durante una autorización aún vigente y retira revocadas.",
-    "Patrimonial legacy conserva versiones y puente nativo; observación no concede escritura."
+    "Patrimonial legacy conserva versiones y puente nativo; observación no concede escritura.",
+    "Recorridos independientes se pausan durante interacción, ocultación y movimiento reducido; catálogo autorizado y aislamiento preservados."
   ],
   "rollback": "Revertir PR y apagar YOD_MULTI_CASES; conservar expedientes, versiones, credenciales e historiales."
 }
