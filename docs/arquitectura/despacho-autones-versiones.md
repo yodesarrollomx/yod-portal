@@ -34,3 +34,9 @@ Dirección autoriza libros operativos, conexión y activación de los casos sele
 Patrimonial legacy agrega observación de versiones guardadas. Su puente se desmonta al abrir un modelo nativo, cuyo contrato de edición permanece intacto. Las cantidades observadas no se presentan como resultados calculados en Sheets. El catálogo conserva figuras durante el refresco de una autorización vigente; error, caducidad o revocación las retira.
 
 La conexión productiva, credenciales independientes, publicación del Portero y validación de cada motor siguen pendientes. No se certifica trabajo autónomo por animar una figura.
+
+## Activación de presencia · 8 de octubre
+
+Los workers privados fueron emparejados y las lecturas firmadas confirmaron el expediente de cada credencial. El motor con varios casos está desplegado. Este cambio enciende AUTONES_MULTIPLES y conserva la oficina existente: las figuras sólo provienen del catálogo autorizado, se interactúa directamente con ellas y no se añade un selector flotante.
+
+Cada figura puede recorrer rutas existentes y volver a su puesto. Es movimiento visual, no evidencia de haber terminado tareas. Los recorridos se pausan al interactuar, ocultar la página o pedir movimiento reducido. Los objetivos y resultados siguen en los libros operativos privados. La aceptación productiva de voz y experiencia completa continúa separada de las pruebas sintéticas.
