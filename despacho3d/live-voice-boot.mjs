@@ -51,9 +51,9 @@ if (open) {
   sidebar.insertBefore(voiceCard,activityCard);
   const activityDetails=document.createElement('details');activityDetails.className='station-details';
   const activitySummary=document.createElement('summary');activitySummary.textContent='Actividad y registro';
-  activityDetails.append(activitySummary,activityCard,sidebar.querySelector('#voice-previous'),sidebar.querySelector('.voice-transcript-details'));
+  activityDetails.append(activitySummary,activityCard,sidebar.querySelector('.voice-transcript-details'));
   sidebar.append(activityDetails);
-  voiceCard.append(sidebar.querySelector('#voice-save'));
+  voiceCard.append(sidebar.querySelector('#voice-save'),sidebar.querySelector('#voice-previous'));
   const node = id => dialog.querySelector('#' + id);
   const fragments = []; let selection = null, generation = 0, dismissing = false, transcriptCase = null, freshTranscript = false, previousFocus = null, voiceCaseId = null, accessPaused = false;
   const agentName=()=>selection?stationIdentity(selection).name:'Autón';
