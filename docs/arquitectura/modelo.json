@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-08.121-puesto-ppp-original",
+  "revision": "2026-10-08.122-puesto-publicado",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -9561,15 +9561,16 @@
         "EXT-DRIVE"
       ],
       "proposal": "Mostrar el PPP original dentro del puesto conservando el puente colaborativo; priorizar voz y tablero, agrupar información secundaria y ofrecer una sola entrada de señalamiento por superficie. La identidad y el expediente siguen ligados al caso autorizado.",
-      "status": "implementado_local",
+      "status": "publicado",
       "approval": "Dirección solicita el tablero PPP original durante la conversación y reducir controles repetidos; autorizado 8-oct-2026.",
       "tests": [
         "Tablero original con puente habilitado y caso exacto; modo compacto compatible.",
         "Un solo control de señalamiento por superficie, selección de tarjetas e iframe sin ejecutar acciones.",
         "Voz e iframe se conservan al cambiar de vista; escritorio y móvil; aislamiento de proyecto.",
-        "Arquitectura, suites y verificadores de ambos repositorios."
+        "Arquitectura, suites y verificadores de ambos repositorios.",
+        "512 pruebas de lógica; reporte exacto Chromium/WebKit; entrada, foco, voz, sesión conservada, recibos y PPP colaborativo. Transporte sintético, sin escrituras de negocio."
       ],
-      "deployment": "Preparado para CI. Integra selección autorizada y puentes de observación de main; interruptor de varios autónomos permanece apagado.",
+      "deployment": "Portal PR134 / 08e9b48615e35665fd355ff3e7bcd9d24a8fde0f y Potenciales PR23 / a163c245d03128a93ab03d9a3f3e54a878c78171 publicados en Pages. CI de portal 37834226481 y PPP 37832787187 aprobada. Recursos públicos verificados el 8-oct-2026. AUTONES_MULTIPLES sigue apagado; sin acreditación de micrófono personal ni escritura equivalente de todos los modelos.",
       "rollback": "Revertir presentación y parámetros del puesto; conservar datos, versiones financieras y permisos."
     }
   ],
