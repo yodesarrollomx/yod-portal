@@ -1,18 +1,16 @@
 {
-  "model_revision": "2026-10-07.115-escucha-continua",
-  "proposal_id": "CHG-DESPACHO-ESCUCHA-115",
-  "summary": "Escucha durante la respuesta: orden automática y acotada al detectar intervención local después de salida del agente; comprobar inicio inmediatamente al conectar WebRTC y explicar cierres remotos en la cápsula sin perder el puesto. La demora canónica del expediente permanece medida y abierta; no introducir caché de autoridad ni más lecturas repetidas.",
+  "model_revision": "2026-10-08.117-carga-medida",
+  "proposal_id": "CHG-DESPACHO-CARGA-117",
+  "summary": "Diferir la imagen de respaldo oculta hasta que sea visible: la entrada 3D no debe transferir el recurso de fallback cuando el recorrido funciona. Comparar navegación fría y recarga sin caché sobre publicación real. Mantener alternativa visual si WebGL falla; sin cambios de permisos ni datos.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "SVC-AUTON-CLOUD"
+    "SYS-DESPACHO-3D"
   ],
   "tests": [
-    "Intervención local silencia antes de enviar; una orden por transición y respuesta, sin configurar ni cerrar Live.",
-    "Conexión WebRTC consulta estado de inicio inmediatamente sin esperar el siguiente sondeo.",
-    "Cierre remoto confirmado conserva transcripción y muestra explicación recuperable.",
-    "Regresiones completas y navegador; aceptación física e impacto sobre latencia canónica separados."
+    "Regresiones del portal y arquitectura.",
+    "Navegador: imagen no se solicita al cargar escena; al revelar fallback descarga y decodifica correctamente.",
+    "Comparación de tiempos y bytes en navegación fría y hard refresh; no equiparar ahorro de bytes con mejora temporal."
   ],
-  "rollback": "Revertir PR de interfaz; conserva historial, permisos y expedientes."
+  "rollback": "Revertir atributo de carga de la imagen; conserva archivo, alternativa de acceso y recorrido."
 }
