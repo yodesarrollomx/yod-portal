@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.115-escucha-continua",
+  "revision": "2026-10-08.116-autones-versiones",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -9481,6 +9481,34 @@
       ],
       "deployment": "Implementación en rama; escucha automática acotada, confirmación inmediata al conectar y cierre remoto explicado. Pendientes CI y publicación; audio físico sin certificar.",
       "rollback": "Revertir PR de interfaz; conserva historial, permisos y expedientes."
+    },
+    {
+      "id": "CHG-DESPACHO-AUTONES-116",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SVC-AUTON-CLOUD",
+        "EXT-DRIVE",
+        "SYS-CONTROL",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-TRACK"
+      ],
+      "proposal": "Preparación de selección autorizada por caso, motor aislado y lectura del tablero original Macro Lotes/Vertical. La versión defendida queda fijada al alta; consultar variantes no cambia esa decisión. Registro privado; activación pendiente de backend y aceptación.",
+      "status": "implementado_local",
+      "approval": "Dirección solicita terminar la preparación y mantener el funcionamiento de versiones existente. Selección de proyectos en registro privado.",
+      "tests": [
+        "Dos casos sintéticos sin mezcla ni selección no autorizada.",
+        "Última versión inscrita separada de versión consultada, sin fechas inventadas ni sobrescrituras.",
+        "Puente de observación Macro Lotes/Vertical sin escritura ni resultados locales presentados como Sheets.",
+        "Regresiones del piloto, comprobaciones del portal y pruebas de motor."
+      ],
+      "deployment": "Código preparado con AUTONES_MULTIPLES=false. Pendientes integración del Portero vivo, configuración privada, CI y aceptación. Puentes Macro Lotes/Vertical son de observación.",
+      "rollback": "Revertir PR y apagar YOD_MULTI_CASES; conservar expedientes, versiones, credenciales e historiales."
     }
   ],
   "data_contracts": [
@@ -11678,6 +11706,14 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO",
         "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-authorized-cases.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
       ]
     }
   ],

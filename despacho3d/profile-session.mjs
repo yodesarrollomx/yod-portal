@@ -1,11 +1,12 @@
 // One shared authenticated read for initial hydration and opening the panel.
 // Conversation memory is discarded on close; only its authorized visual profile remains.
-export function createProfileSession(conversation,{show=()=>{},hide=()=>{}}={}){
+export function createProfileSession(conversation,{show=()=>{},hide=()=>{},getCaseId=()=>null}={}){
  let opening=null,opened=false,disposed=false,hydrated=false;
  function read(){
   if(disposed)return Promise.resolve(false);
   if(opening)return opening;
-  const request=conversation.selection?conversation.refresh():conversation.open();
+  const id=getCaseId();
+  const request=conversation.selection&&(!id||conversation.selection.case_id===id)?conversation.refresh():conversation.open(id);
   const pending=Promise.resolve(request).finally(()=>{if(opening===pending)opening=null;});
   opening=pending;return pending;
  }

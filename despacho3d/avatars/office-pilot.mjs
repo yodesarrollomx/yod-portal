@@ -3,8 +3,9 @@ import {createAvatarLayer} from './adapter.mjs?v=2';
 
 // This controller consumes the panel's authorized profile, never a public roster.
 // Placement is local to this room and cannot be supplied by a case record.
-const SEAT=PROJECT_SEAT.position, HOME_ROT=PROJECT_SEAT.rotationY, FRAME_MS=1000/15, WALK_SPEED=1.4;
-export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{}}){
+const FRAME_MS=1000/15, WALK_SPEED=1.4;
+export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{},seat=PROJECT_SEAT}){
+ const SEAT=seat.position,HOME_ROT=seat.rotationY;
  let activity='sit',api=null,unsubscribe=null,profile=null,fingerprint='',lastFrame=null,time=0,poseTicks=0,disposed=false,route=null,lastPlace='inicio';
  const layer=createAvatarLayer({scene,onSelect(selection){
   if(!api||!profile||selection.id!==profile.id)return;

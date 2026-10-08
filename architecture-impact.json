@@ -1,18 +1,27 @@
 {
-  "model_revision": "2026-10-07.115-escucha-continua",
-  "proposal_id": "CHG-DESPACHO-ESCUCHA-115",
-  "summary": "Escucha durante la respuesta: orden automática y acotada al detectar intervención local después de salida del agente; comprobar inicio inmediatamente al conectar WebRTC y explicar cierres remotos en la cápsula sin perder el puesto. La demora canónica del expediente permanece medida y abierta; no introducir caché de autoridad ni más lecturas repetidas.",
+  "model_revision": "2026-10-08.116-autones-versiones",
+  "proposal_id": "CHG-DESPACHO-AUTONES-116",
+  "summary": "Preparación de selección autorizada por caso, motor aislado y lectura del tablero original Macro Lotes/Vertical. La versión defendida queda fijada al alta; consultar variantes no cambia esa decisión. Registro privado; activación pendiente de backend y aceptación.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "SYS-DESPACHO-3D",
-    "SVC-AUTON-CLOUD"
+    "SYS-POTENCIALES",
+    "GAS-PORTERO",
+    "SHEET-PORTERO",
+    "SVC-AUTON-CLOUD",
+    "EXT-DRIVE",
+    "SYS-CONTROL",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "SYS-TRACK"
   ],
   "tests": [
-    "Intervención local silencia antes de enviar; una orden por transición y respuesta, sin configurar ni cerrar Live.",
-    "Conexión WebRTC consulta estado de inicio inmediatamente sin esperar el siguiente sondeo.",
-    "Cierre remoto confirmado conserva transcripción y muestra explicación recuperable.",
-    "Regresiones completas y navegador; aceptación física e impacto sobre latencia canónica separados."
+    "Dos casos sintéticos sin mezcla ni selección no autorizada.",
+    "Última versión inscrita separada de versión consultada, sin fechas inventadas ni sobrescrituras.",
+    "Puente de observación Macro Lotes/Vertical sin escritura ni resultados locales presentados como Sheets.",
+    "Regresiones del piloto, comprobaciones del portal y pruebas de motor.",
+    "Consumidores del shell OS y transporte compartido: regresiones de Control, Obra, Track y Drive; no cambia su lógica ni datos."
   ],
-  "rollback": "Revertir PR de interfaz; conserva historial, permisos y expedientes."
+  "rollback": "Revertir PR y apagar YOD_MULTI_CASES; conservar expedientes, versiones, credenciales e historiales."
 }

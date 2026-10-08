@@ -18,7 +18,7 @@ export function validateSelection(v){
  if(!v||v.ok!==true||!text(v.case_id)||!text(v.name,120)||typeof v.can_enqueue!=='boolean'||typeof v.agent_ready!=='boolean')throw Error('invalid_selection');
  const selection={...validateDriveSelection(v),case_id:v.case_id,can_enqueue:v.can_enqueue,agent_ready:v.agent_ready};
  const goals=v.goals?.schema===1&&typeof v.goals.ready==='boolean'&&typeof v.goals.worker_ready==='boolean'?{schema:1,ready:v.goals.ready,worker_ready:v.goals.worker_ready}:null;
- const ppp=v.ppp?.case_id===v.case_id&&registeredBoard(v.ppp.url,v.case_id)?{case_id:v.case_id,url:v.ppp.url}:null;
+ const ppp=v.ppp?.case_id===v.case_id&&registeredBoard(v.ppp.url,v.case_id,v.ppp.board_case_id||v.case_id)?{case_id:v.case_id,url:v.ppp.url,board_case_id:v.ppp.board_case_id||v.case_id,...(text(v.ppp.scenario_id)?{scenario_id:v.ppp.scenario_id}:{})}:null;
  return {...selection,avatar:validateAvatarProfile(v.avatar,selection),goals,ppp};
 }
 export function safeDocumentUrl(value){
@@ -87,13 +87,15 @@ export class Conversation {
   if(!transport||typeof transport[method]!=='function')throw Error('unavailable');
   let timer;try{return await Promise.race([transport[method](structuredClone(payload)),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('timeout')),this.timeout);})]);}finally{clearTimeout(timer);}
  }
- close(){this.epoch++;this.fastAbort?.abort();this.fastAbort=null;this.fastTurns=[];this.fastNotice='';this.fastClientRef=null;this.selection=null;this.model=null;this.pending=null;this.accepted=null;this.diagnostic=null;this.stale=false;this.status='disconnected';this.busy=false;this.emit();}
- async open(){
-  this.close();const epoch=this.epoch;this.busy=true;this.status='loading';this.emit();
+ close(){this.epoch++;this.fastAbort?.abort();this.fastAbort=null;this.fastTurns=[];this.fastNotice='';this.fastClientRef=null;this.requestedCaseId=null;this.selection=null;this.model=null;this.pending=null;this.accepted=null;this.diagnostic=null;this.stale=false;this.status='disconnected';this.busy=false;this.emit();}
+ async open(caseId=null){
+  if(caseId!==null&&!text(caseId))return false;
+  this.close();this.requestedCaseId=caseId;this.forgetProfile();const epoch=this.epoch;this.busy=true;this.status='loading';this.emit();
   let step='expediente';
   try{
-   const selection=validateSelection(checked(await this.call('resolveCurrent',{})));
+   const selection=validateSelection(checked(await this.call('resolveCurrent',this.requestedCaseId?{case_id:this.requestedCaseId}:{})));
    if(epoch!==this.epoch)return false;
+   if(this.requestedCaseId&&selection.case_id!==this.requestedCaseId)throw Error('case_changed');
    step='historial';
    const model=validateConversation(checked(await this.call('read',{case_id:selection.case_id})),selection.case_id);
    if(epoch!==this.epoch)return false;
@@ -106,7 +108,7 @@ export class Conversation {
   if(this.busy||!this.selection)return false;
   const epoch=this.epoch;this.busy=true;this.emit();
   try{
-   const selection=validateSelection(checked(await this.call('resolveCurrent',{})));
+   const selection=validateSelection(checked(await this.call('resolveCurrent',this.requestedCaseId?{case_id:this.requestedCaseId}:{})));
    if(epoch!==this.epoch)return false;
    if(selection.case_id!==this.selection.case_id)throw Error('case_changed');
    const model=validateConversation(checked(await this.call('read',{case_id:this.selection.case_id})),this.selection.case_id);
@@ -197,5 +199,5 @@ export function createFrameTransport(win,timeout=55000){
   const id=win.crypto.randomUUID();const timer=setTimeout(()=>{waiting.delete(id);reject(Error('timeout'));},timeout);
   waiting.set(id,{resolve,reject,timer});win.parent.postMessage({type:'yod:case:request',version:1,id,method,payload},win.location.origin);
  });
- return {readOfficePermissions:p=>request('readOfficePermissions',p),readOfficePending:p=>request('readOfficePending',p),readVisits:p=>request('readVisits',p),recordVisit:p=>request('recordVisit',p),mintFastSession:p=>request('mintFastSession',p),resolveCurrent:p=>request('resolveCurrent',p),read:p=>request('read',p),enqueue:p=>request('enqueue',p),readGoals:p=>request('readGoals',p),createGoal:p=>request('createGoal',p),reviewGoal:p=>request('reviewGoal',p),dispose(){alive=false;win.removeEventListener('message',receive);for(const item of waiting.values()){clearTimeout(item.timer);item.reject(Error('closed'));}waiting.clear();}};
+ return {listAuthorized:p=>request('listAuthorized',p),readOfficePermissions:p=>request('readOfficePermissions',p),readOfficePending:p=>request('readOfficePending',p),readVisits:p=>request('readVisits',p),recordVisit:p=>request('recordVisit',p),mintFastSession:p=>request('mintFastSession',p),resolveCurrent:p=>request('resolveCurrent',p),read:p=>request('read',p),enqueue:p=>request('enqueue',p),readGoals:p=>request('readGoals',p),createGoal:p=>request('createGoal',p),reviewGoal:p=>request('reviewGoal',p),dispose(){alive=false;win.removeEventListener('message',receive);for(const item of waiting.values()){clearTimeout(item.timer);item.reject(Error('closed'));}waiting.clear();}};
 }

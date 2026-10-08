@@ -1,7 +1,7 @@
 import {mountWorkView} from './work-view.mjs?v=2';
-import {registeredBoard,resolveBoard,stationIdentity} from './project-station.mjs?v=2';
+import {registeredBoard,resolveBoard,stationIdentity} from './project-station.mjs?v=116';
 import {mountKnowledgeBoard} from './knowledge-board.mjs?v=1';
-import {createFrameTransport,validateConversation} from './conversation.mjs';
+import {createFrameTransport,validateConversation} from './conversation.mjs?v=116';
 import {validateFastSession} from './fast-lane.mjs';
 import {DurableGoals,goalDisplay,taskDisplay,goalReviewActions} from './goals.mjs?v=2';
 export {taskDisplay} from './goals.mjs?v=2';
@@ -65,7 +65,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
  controls.append(button('Subir',()=>void command('navegador_desplazar',{direccion:'arriba'})),button('Bajar',()=>void command('navegador_desplazar',{direccion:'abajo'})),button('Actualizar vista',()=>void refresh()));
  const activity=el('ol',undefined,'workspace-activity'),links=el('div',undefined,'workspace-links');const manual=el('details',undefined,'workspace-manual');manual.append(el('summary','Navegación manual'),form,controls,links,activity);browser.append(location,image,caption,manual);
  form.addEventListener('submit',e=>{e.preventDefault();void command('navegador_abrir',{url:address.value});});
- const ppp=sections.ppp,pppNote=el('p','Conectando el PPP registrado. Sus resultados se calculan en Sheets.','workspace-ppp-status'),pppHost=el('div',undefined,'workspace-board'),proposalHost=el('div',undefined,'workspace-proposals');
+ const ppp=sections.ppp,pppNote=el('p','Conectando el mismo tablero de Plan de Potencial.','workspace-ppp-status'),pppHost=el('div',undefined,'workspace-board'),proposalHost=el('div',undefined,'workspace-proposals');
  const boardSummary=el('p','Todavía no hay una lectura compartida.','workspace-ppp-summary'),applyNotice=el('p','','workspace-apply-status');
  pppNote.setAttribute('role','status');applyNotice.setAttribute('role','status');
  const pppActions=el('details',undefined,'workspace-board-options');pppActions.append(el('summary','Conexión y variantes'));
@@ -125,7 +125,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   links.replaceChildren(...(s.links||[]).slice(0,10).map(l=>button(l.title,()=>void command('navegador_abrir',{url:l.url}))));
   activity.replaceChildren(...(s.activity||[]).slice(0,8).map(a=>el('li',a.action+' · '+({working:'en curso',completed:'completado',failed:'sin completar'}[a.status]||a.status)+' · '+new Date(a.at).toLocaleTimeString())));
  }
- function postBoard(type,extra={}){if(frame&&selected&&boardLink?.bridge)frame.contentWindow?.postMessage({type,version:1,nonce,case_id:selected.case_id,...extra},boardLink.origin);}
+ function postBoard(type,extra={}){if(frame&&selected&&boardLink?.bridge)frame.contentWindow?.postMessage({type,version:1,nonce,case_id:selected.case_id,...(boardLink.readOnly?{board_case_id:boardLink.board_case_id,...(selected.ppp?.scenario_id?{scenario_id:selected.ppp.scenario_id}:{})}:{}),...extra},boardLink.origin);}
  function applyProposal(p){
 
     if(receipts.size>=8||receipts.has(p.request_id)||!getSelection()?.can_enqueue||getSelection()?.case_id!==selected?.case_id||proposalState(board,p,application)!=='ready')return;
@@ -216,7 +216,8 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
     if(data.board?.case_id===selected.case_id){
      const r=await request('/board/snapshot',data.board);if(own!==generation||!selected)return;board=r.tablero;clearBoardHandshake();boardHandshakeTimedOut=false;
      boardSummary.textContent='Escenario: '+(board.scenario_name||board.scenario_id)+' · Revisión: '+board.revision+(board.confirmed&&!board.pending?' · Lectura confirmada':' · Cambios o lectura pendientes');
-     pppNote.textContent=board.confirmed&&!board.pending?'PPP compartido con el autón · lectura confirmada del tablero.':'El tablero tiene una lectura o cambios por confirmar.';
+     pppNote.textContent=board.version_context?.read_only?'Versiones compartidas en consulta. Los ajustes se hacen en el tablero original.':board.confirmed&&!board.pending?'PPP compartido con el autón · lectura confirmada del tablero.':'El tablero tiene una lectura o cambios por confirmar.';
+     if(board.version_context)boardSummary.textContent='Defiende: '+(board.scenario_name||board.scenario_id)+' · Estás viendo: '+(board.version_context.viewed_scenario_name||board.version_context.viewed_scenario_id)+' · Revisión: '+board.revision+(board.pending?' · Cambios pendientes':'');
      const signature=JSON.stringify([board.revision,board.scenario_id,board.confirmed,board.pending]);
      if(signature!==boardRevision){boardRevision=signature;onBoard(board.revision);win.dispatchEvent(new CustomEvent('yod-shared-board',{detail:{revision:board.revision}}));}
      paintProposals();dispatchRequested();
