@@ -5,7 +5,8 @@
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-DESPACHO-3D"
+    "SYS-DESPACHO-3D",
+    "GAS-PORTERO"
   ],
   "tests": [
     "Regresión de lock_busy con conversación activa: recuperando, sin pérdida inmediata de acceso; recuperación posterior.",
