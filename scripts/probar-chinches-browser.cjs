@@ -36,7 +36,7 @@ function serverFor(){return http.createServer((req,res)=>{
  if(!file.startsWith(root+path.sep)||!fs.existsSync(file)||!fs.statSync(file).isFile()){res.writeHead(404);res.end();return;}
  res.setHeader('Content-Type',/\.m?js$/.test(file)?'text/javascript':file.endsWith('.css')?'text/css':file.endsWith('.html')?'text/html':file.endsWith('.png')?'image/png':'application/octet-stream');res.end(fs.readFileSync(file));
 });}
-async function pointTo(child,selector){await child.evaluate(()=>YODChinche.senalar());await child.locator('.chinche-ui-hint').waitFor();await child.locator(selector).dispatchEvent('click');console.log('POINT',selector,await child.evaluate(()=>({hint:document.querySelector('.chinche-ui-hint')?.hidden,notice:document.querySelector('#pin-selection')?.textContent})));}
+async function pointTo(child,selector){await child.evaluate(()=>YODChinche.senalar());await child.locator('.chinche-ui-hint').waitFor();await child.locator(selector).dispatchEvent('click');}
 async function cancelComposer(page){await page.locator('.chn-hoja [data-x]').click();await page.locator('.chn-velo').waitFor({state:'detached'});}
 async function run(){
  const server=serverFor();await new Promise(r=>server.listen(0,'127.0.0.1',r));const base='http://127.0.0.1:'+server.address().port;
@@ -63,7 +63,7 @@ async function run(){
    await child.waitForFunction(()=>!document.querySelector('[data-chinche-ui="select"]').disabled);
    assert.equal(await child.evaluate(()=>YODChinche.sentinel),42);
    await child.locator('body>header [data-chinche-ui="select"]').click();
-   await page.keyboard.press('Escape');assert.equal(await page.evaluate(()=>calls.length),0);assert.equal(network.length,0);
+   await page.keyboard.press('Escape');assert.equal(await child.locator('.chinche-ui-hint').isVisible(),false,'Escape cancels even when the selector button has focus');assert.equal(await page.evaluate(()=>calls.length),0);assert.equal(network.length,0);
    await child.evaluate(()=>{const nested=document.createElement('div');nested.className='voice-workspace';document.querySelector('#review').append(nested);document.querySelector('#review').showModal()});
    assert.equal(await child.locator('#review [data-chinche-ui="select"]').count(),1,'Nested workspace shares the surface selector');
    await pointTo(child,'#private-card');await page.locator('.chn-txt').waitFor();

@@ -209,6 +209,7 @@ export function mountChincheUI({send,onSelecting,onSceneStart,bar}){
     },{capture:true,passive:false});
   }
   window.addEventListener('keydown',e=>{
+    if(e.key==='Escape'&&selecting){block(e);stop();return;}
     const control=e.target instanceof Element?e.target.closest('[data-chinche-ui="card"],[data-chinche-ui="select"],[data-chinche-ui="cancel"]'):null;
     if(control&&buttonActions.has(control)&&e.key!=='Tab'){block(e);swallowKey=e.key;if(['Enter',' '].includes(e.key)&&!control.disabled)buttonActions.get(control)(control);return;}
     if(!selecting)return;
