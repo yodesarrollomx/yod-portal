@@ -2,7 +2,7 @@ import {createEntryPreparation} from './voice-preparation.mjs?v=2';
 import {residentAccessDecision} from './resident-agents.mjs?v=2';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=2';
 import {stationIdentity} from './project-station.mjs?v=2';
-import {createLiveVoice} from './live-voice.mjs?v=15';
+import {createLiveVoice} from './live-voice.mjs?v=16';
 import {voiceView} from './voice-view.mjs?v=2';
 import {createWorkspace} from './agent-workspace.mjs?v=13';
 import {DurableGoals,watchGoals} from './goals.mjs?v=2';
@@ -150,7 +150,7 @@ if (open) {
       node('compact-mic').setAttribute('aria-pressed',String(view.listening&&!state.muted));
       node('compact-stop').disabled=state.phase==='closing';
       node('compact-stop').setAttribute('aria-label',state.phase==='starting'?'Cancelar conexión':'Finalizar conversación');
-      const warning=encounterNeedsMic||state.phase==='error'||state.playback_blocked||state.incomplete||state.pending||accessPaused;
+      const warning=encounterNeedsMic||state.phase==='error'||state.ended_remotely||state.interruption_error||state.playback_blocked||state.incomplete||state.pending||accessPaused;
       node('compact-notice').hidden=!warning;
       setText('compact-notice',accessPaused?node('station-access').textContent:encounterNeedsMic?micConsentNotice:state.playback_blocked?'Pulsa el micrófono para activar el sonido.':state.incomplete||state.pending?view.history:state.notice);
   }

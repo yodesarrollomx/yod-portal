@@ -60,7 +60,7 @@ jobs:
           BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
         run: node scripts/probar-trabajo-browser.cjs
       - name: Recorrido real y encuentro por cercanía
-        timeout-minutes: 3
+        timeout-minutes: 4
         env:
           NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
           BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-07.114-encuentro-dos-metros",
+  "revision": "2026-10-07.115-escucha-continua",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -9451,7 +9451,7 @@
         "SYS-POTENCIALES"
       ],
       "proposal": "Encuentro a dos metros y preparación a diez: unificar radios de menú, visibilidad y voz, conservar acercamiento deliberado durante la recuperación de acceso y evitar activación por teletransporte. Corregir postura sentada según escala del avatar, mantenerla al conversar y mostrar avance registrado en el monitor físico con tareas, pendientes y fecha, sin simular ejecución. Se asignan explícitamente las pruebas de avatares y monitor al Despacho 3D en el mapa de propietarios; antes caían por omisión en los tableros generales.",
-      "status": "implementado_local",
+      "status": "publicado",
       "approval": "Dirección solicita ampliar rango, conversar a dos metros, corregir asiento y mostrar avance en computadora, 7-oct-2026.",
       "tests": [
         "Encuentro real en Three a dos metros, preparación a diez, paredes, salida, cambio de identidad, rechazo y ausencia de saludos repetidos.",
@@ -9459,8 +9459,28 @@
         "Monitor se actualiza por secuencia y contenido, distingue pendiente de revisión de terminado y elimina datos al revocar acceso.",
         "Regresión Node, arquitectura, OS, portal, accesos, obra y navegador escritorio/móvil; micrófono físico sigue siendo aceptación separada."
       ],
-      "deployment": "Implementación 114 preparada para CI: preparación a diez metros, conversación a dos, postura según escala y monitor con progreso registrado. Pendientes pruebas de navegador, publicación y aceptación física.",
+      "deployment": "PR129 integrado en 9149db29468d79cd0b6b39a0f99049547281cea2; Pages y entrada pública comprobadas, CI completo previo. Micrófono físico pendiente.",
       "rollback": "Revertir este PR. Sin cambios a hojas, permisos, credenciales ni configuración inicial GPT-Live."
+    },
+    {
+      "id": "CHG-DESPACHO-ESCUCHA-115",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD"
+      ],
+      "proposal": "Escucha durante la respuesta: orden automática y acotada al detectar intervención local después de salida del agente; comprobar inicio inmediatamente al conectar WebRTC y explicar cierres remotos en la cápsula sin perder el puesto. La demora canónica del expediente permanece medida y abierta; no introducir caché de autoridad ni más lecturas repetidas.",
+      "status": "implementado_local",
+      "approval": "Dirección autoriza continuar con el siguiente paso de la interacción, 7-oct-2026.",
+      "tests": [
+        "Intervención local silencia antes de enviar; una orden por transición y respuesta, sin configurar ni cerrar Live.",
+        "Conexión WebRTC consulta estado de inicio inmediatamente sin esperar el siguiente sondeo.",
+        "Cierre remoto confirmado conserva transcripción y muestra explicación recuperable.",
+        "Regresiones completas y navegador; aceptación física e impacto sobre latencia canónica separados."
+      ],
+      "deployment": "Implementación en rama; escucha automática acotada, confirmación inmediata al conectar y cierre remoto explicado. Pendientes CI y publicación; audio físico sin certificar.",
+      "rollback": "Revertir PR de interfaz; conserva historial, permisos y expedientes."
     }
   ],
   "data_contracts": [

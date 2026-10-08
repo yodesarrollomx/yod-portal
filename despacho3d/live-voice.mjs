@@ -17,13 +17,13 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   media = globalThis.navigator?.mediaDevices, Peer = globalThis.RTCPeerConnection, Stream = globalThis.MediaStream,
   audio, monitorFactory = createLocalInputMonitor, onChange = () => {}, canOperate = () => true, actions = null, onTranscript = () => {}, now = Date.now,
   schedule = setInterval, cancel = clearInterval, closeTimeout = 20000, disconnectGrace = 12000, maxStatusFailures = 3, startTimeout = 60000, signallingTimeout = 90000} = {}) {
-  let inputMonitor = null;
+  let inputMonitor = null, remoteSpeechObserved = false, automaticInterruptionId = null;
   let epoch = 0, stream = null, peer = null, channel = null, credential = null, sessionId = null,
     poll = null, controller = null, polling = false, closing = null, began = 0, started = false,
     contextReady = false, finalSeen = false, disconnected = false, closedResolve = null, sequence = 0,
     disconnectTimer = null, statusFailures = 0, connectedAt = 0, prepared = null, preparing = null, mode = null, startTimer = null, retryingContext = false, interruptionId = null, helloFlight = null, helloReady = null, preparationEpoch = 0, activeCaseId = null, pendingBoard = null, boardFlight = null, boardSent = null, boardRetryAt = 0;
   let state = {phase: 'idle', notice: '', muted: false, fragments: 0, blocks: 0, saved: 0, pending: 0,
-    incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, input_detected:false, input_received:false, mode: null, output_paused:false, interruption_pending:false, local_speaking:false, timings:{}};
+    incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, input_detected:false, input_received:false, mode: null, output_paused:false, interruption_pending:false, local_speaking:false, ended_remotely:false, interruption_error:false, timings:{}};
   const timing = key => {if(!Object.hasOwn(state.timings,key))publish({timings:{...state.timings,[key]:Math.max(0,now()-began)}});};
   const preparation=createVoicePreparation({Peer,gather,now});
   const seen = new Set();
@@ -49,7 +49,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     if (peer) {peer.ontrack = peer.onconnectionstatechange = null; peer.close();} peer = null;
     stream?.getTracks().forEach(track => {track.onended=null;track.stop();}); stream = null;
     if (audio) {audio.pause?.(); audio.srcObject = null;audio.muted=false;}
-    interruptionId=null;
+    interruptionId=null;automaticInterruptionId=null;remoteSpeechObserved=false;
   }
   async function ensureCredential(caseId) {
     if (prepared?.case_id === caseId && prepared.expires_at - now() > 60000) return prepared;
@@ -94,9 +94,12 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     publish({phase: 'listening', notice:state.output_paused?'Sonido pausado. Te escucho.':notice});
     sendListeningIntent();
     if(!inputMonitor)inputMonitor=monitorFactory({stream,enabled:()=>state.phase==='listening'&&!state.muted&&canOperate(),onActivity:value=>{
-      if(state.phase!=='listening'||closing)value=false;
+      if(state.phase!=='listening'||closing||state.muted||!canOperate())value=false;
+      const begins=value&&!state.local_speaking;
       audio.muted=state.output_paused||value;
       publish({local_speaking:value,...(value?{input_detected:true}:{})});
+      // Silence locally first; ask the same Live session to listen only after observed agent output.
+      if(begins&&remoteSpeechObserved)sendAutomaticListeningIntent();
     }});
   };
   function stop(notice = 'Conversación finalizada.') {
@@ -204,10 +207,10 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   async function start(caseId,{encounter=false}={}) {
     if (closing || !['idle','error'].includes(state.phase)) return false;
     const token = ++epoch; controller = new AbortController(); began = now();activeCaseId=caseId;boardSent=null;boardRetryAt=0;
-    interruptionId=null;
+    interruptionId=null;automaticInterruptionId=null;remoteSpeechObserved=false;
     mode = null; started = contextReady = finalSeen = disconnected = false; seen.clear(); sequence = 0; polling = false; statusFailures = 0; connectedAt = 0;
     publish({phase: 'starting', notice: 'Abriendo el micrófono…', fragments: 0, blocks: 0, saved: 0,
-      pending: 0, incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, output_paused:false,interruption_pending:false, mode: null,local_speaking:false,timings:{},input_detected:false,input_received:false,context_phase:'preparing',context_attempts:0,context_error:null,tools_ready:false,documents_ready:false,tasks_ready:false,actions_pending:0});
+      pending: 0, incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, output_paused:false,interruption_pending:false, mode: null,local_speaking:false,timings:{},input_detected:false,input_received:false,context_phase:'preparing',context_attempts:0,context_error:null,tools_ready:false,documents_ready:false,tasks_ready:false,actions_pending:0,ended_remotely:false,interruption_error:false});
     try {
       if (typeof media?.getUserMedia !== 'function' || typeof Peer !== 'function' || !audio)
         throw Error('Este navegador no admite voz en tiempo real.');
@@ -246,19 +249,24 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
         const fragment = transcriptFragment(value, sequence++);
         if (fragment && (!fragment.event_id || !seen.has(fragment.event_id))) {
           if (fragment.event_id) seen.add(fragment.event_id);
-          if(fragment.role==='user'&&!state.input_received)publish({input_received:true});
+          if(fragment.role==='assistant')remoteSpeechObserved=true;
+          if(fragment.role==='user'){remoteSpeechObserved=false;if(!state.input_received)publish({input_received:true});}
           onTranscript(fragment);
         }
-        if(value.type==='session.instructions.appended'&&value.client_event_id===interruptionId){interruptionId=null;publish({interruption_pending:false});}
+        if(value.type==='session.instructions.appended'&&value.client_event_id===interruptionId){interruptionId=null;publish({interruption_pending:false,interruption_error:false});}
+        if(value.type==='session.instructions.appended'&&value.client_event_id===automaticInterruptionId){automaticInterruptionId=null;publish({interruption_error:false});}
+        const automaticRejected=value.type==='error'&&automaticInterruptionId!==null&&
+          [value.client_event_id,value.error?.client_event_id,value.error?.event_id].includes(automaticInterruptionId);
+        if(automaticRejected){automaticInterruptionId=null;publish({interruption_error:true,notice:'Tu micrófono detecta sonido. No se confirmó la orden de escuchar; puedes usar Escúchame.'});}
         const interruptRejected = value.type === 'error' && interruptionId !== null &&
           [value.client_event_id, value.error?.client_event_id, value.error?.event_id].includes(interruptionId);
-        if (interruptRejected) {interruptionId=null;publish({interruption_pending:false,notice:'El sonido sigue pausado. No se confirmó la instrucción de escuchar.'});}
+        if (interruptRejected) {interruptionId=null;publish({interruption_pending:false,interruption_error:true,notice:'El sonido sigue pausado. No se confirmó la instrucción de escuchar.'});}
         if (value.type === 'session.closed') {
           finalSeen = true; closedResolve?.(true);
-          if (!closing) void stop('Conversación finalizada.');
+          if (!closing) {publish({ended_remotely:true});void stop('La sesión de voz terminó desde el servicio. Tu conversación sigue en este puesto; puedes volver a hablar.');}
         }
         // A rejected command is not a closed session. Keep consuming audio and final events.
-        if (value.type === 'error' && !closing && !interruptRejected) publish({notice: 'No se pudo completar una instrucción. La conversación sigue abierta.'});
+        if (value.type === 'error' && !closing && !interruptRejected && !automaticRejected) publish({notice: 'No se pudo completar una instrucción. La conversación sigue abierta.'});
       };
       const lost = () => {if (token !== epoch || finalSeen) return;
         disconnected = true; closedResolve?.(false); publish({incomplete: true});
@@ -279,6 +287,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
             publish({phase: 'starting', notice: 'Preparando conversación…'});
             ready('Conexión recuperada. Sigue hablando con el autón.');
           }
+        if(!started)void status(token);
         } else if (['failed','closed'].includes(connection)) lost();
       };
       if(!warmed){await peer.setLocalDescription(await peer.createOffer()); await gather(peer);}
@@ -366,13 +375,23 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     const muted = !state.muted; stream.getAudioTracks().forEach(track => {track.enabled = !muted;});
     publish({muted, notice: muted ? 'Micrófono silenciado.' : 'Micrófono activo.'});
   }
+  function sendAutomaticListeningIntent(){
+    if(!started||closing||state.phase!=='listening'||state.muted||!canOperate()||channel?.readyState!=='open')return;
+    remoteSpeechObserved=false;
+    const id='overlap-'+epoch+'-'+(++sequence);automaticInterruptionId=id;
+    try{channel.send(JSON.stringify({type:'session.instructions.append',event_id:id,delegation_id:null,
+      content:'El micrófono local detectó que el usuario interviene mientras respondes. Deja de hablar y escucha su intervención completa. No retomes el discurso interrumpido. La detección acústica no es una transcripción: espera sus palabras antes de responder. No canceles tareas ni cierres la sesión.'}));}
+    catch{if(automaticInterruptionId===id)automaticInterruptionId=null;publish({interruption_error:true,notice:'El sonido se pausa mientras hablas. No se pudo enviar la orden de escuchar; puedes usar Escúchame.'});}
+  }
   function sendListeningIntent(){
     if(!state.output_paused||!state.interruption_pending||interruptionId||!started||
        closing||channel?.readyState!=='open')return;
+    // A manual instruction supersedes an earlier acoustic request; late acknowledgements cannot clear its error.
+    automaticInterruptionId=null;remoteSpeechObserved=false;
     interruptionId='listen-'+epoch+'-'+(++sequence);
     try{channel.send(JSON.stringify({type:'session.instructions.append',event_id:interruptionId,delegation_id:null,
       content:'El usuario pulsó Escúchame. Deja de hablar y escucha su intervención. No continúes el discurso anterior. Responde brevemente cuando termine. No canceles tareas ni cierres la sesión.'}));}
-    catch{interruptionId=null;publish({interruption_pending:false,notice:'Sonido pausado. No se pudo enviar la instrucción de escuchar.'});}
+    catch{interruptionId=null;publish({interruption_pending:false,interruption_error:true,notice:'Sonido pausado. No se pudo enviar la instrucción de escuchar.'});}
   }
   function interrupt() {
     if(!['starting','listening','reconnecting'].includes(state.phase)||state.output_paused)return false;
