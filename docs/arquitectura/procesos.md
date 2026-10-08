@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-08.118-recuperacion-acceso · 2026-10-07.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-08.119-puesto-ppp-original · 2026-10-08.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
