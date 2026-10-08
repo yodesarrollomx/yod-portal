@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-08.121-puesto-ppp-original
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-08.122-puesto-publicado
 
 **Encargado de verificación:** Coordinación técnica YOD
 
