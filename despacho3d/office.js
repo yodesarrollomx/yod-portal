@@ -1,11 +1,13 @@
+import {AUTONES_MULTIPLES} from './office-config.mjs?v=2';
+import {createOfficeResidents} from './avatars/office-residents.mjs?v=1';
 import * as T from 'three';
 import {createEncounterGate,createPreparationGate,ENCOUNTER_RANGE} from './agent-proximity.mjs?v=4';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {RoomEnvironment} from './vendor/RoomEnvironment.js';
 import {createOffice} from './scene.js?v=9';
 import {panels} from './office-panels.mjs?v=2';
-import {createChinches3D} from './chinches3d.mjs?v=3';
-import {createOfficePilot,chooseOfficeHit} from './avatars/office-pilot.mjs?v=7';
+import {createChinches3D} from './chinches3d.mjs?v=4';
+import {createOfficePilot,chooseOfficeHit} from './avatars/office-pilot.mjs?v=8';
 import {ENTORNO_AGENTE_CAMINA} from './entorno-config.mjs';
 import {crearAgenteIr} from './entorno-ruta.mjs?v=4';
 import {fitOfficeOverview,visibleOfficeHit} from './office-overview.mjs?v=1';
@@ -34,7 +36,7 @@ window.addEventListener('yod-agent-encounter-dismiss',e=>proximity.dismiss(e.det
 let mode='overview',selected='entry',yaw=0,pitch=0,near=null,sheet=null,look=null,stickId=null,stick={x:0,y:0},keys=new Set(),last=performance.now(),frames=0,transitionToken=0,dirty=true,lastFocus=null;
 const reducedMotion=matchMedia('(prefers-reduced-motion:reduce)');
 let avatarShadowAt=0;
-const pilot=createOfficePilot({scene,beforeOpen:()=>closeSheets(false),onChange:()=>{dirty=true;renderer.shadowMap.needsUpdate=true;avatarShadowAt=performance.now();}});
+const pilot=(AUTONES_MULTIPLES?createOfficeResidents:createOfficePilot)({scene,beforeOpen:()=>closeSheets(false),onChange:()=>{dirty=true;renderer.shadowMap.needsUpdate=true;avatarShadowAt=performance.now();}});
 const bindPilot=()=>pilot.bind(window.YodResidentAgents||window.CubefarmYOD);
 window.addEventListener('yod-agents-ready',bindPilot);
 window.addEventListener('yod-residents-ready',bindPilot);

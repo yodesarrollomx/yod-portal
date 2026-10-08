@@ -117,3 +117,16 @@ test('physical monitor repaints progress with unchanged timestamp and clears pri
   assert.ok(!written.includes('Siguiente tarea'));screen.dispose();
  }finally{global.document=old;}
 });
+
+
+test('authorized residents use separate existing seats and a stale current profile cannot restore a revoked case',async()=>{
+ const [T]=await modules,{createOfficeResidents}=await import(moduleURL(path.join(base,'avatars/office-residents.mjs')));
+ const scene=new T.Scene(),fleet=createOfficeResidents({scene});let currentListener,listListener;
+ const a={...profile},b={...profile,id:'CASE-SECOND',case_id:'CASE-SECOND'};
+ fleet.bind({subscribeProfile(fn){currentListener=fn;fn(a);return()=>{};},subscribeAuthorizedProfiles(fn){listListener=fn;fn([a,b]);return()=>{};},selectCase:async()=>true,openForCase:()=>true});
+ assert.equal(fleet.getState().count,2);assert.equal(scene.children.length,2);
+ assert.notDeepEqual(scene.children[0].position.toArray(),scene.children[1].position.toArray());
+ assert.deepEqual(scene.children[0].position.toArray(),[7,0,-6.25]);assert.deepEqual(scene.children[1].position.toArray(),[10.05,0,-6.25]);
+ listListener([b]);currentListener(a);assert.equal(fleet.getState().count,1);assert.equal(scene.children[0].userData.caseId,'CASE-SECOND');
+ listListener([]);assert.equal(scene.children.length,0);fleet.dispose();
+});

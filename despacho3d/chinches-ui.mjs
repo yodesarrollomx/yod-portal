@@ -51,7 +51,7 @@ export function surfaceOf(node){
 
 export function mountChincheUI({send,onSelecting,onSceneStart,bar}){
   let ready=false,selecting=false,selectionRoot=null,highlight=null,highlightFrame=null,swallowUntil=0,swallowKey=null;
-  const toolbars=new WeakMap(),cardButtons=new WeakMap(),panelZones=new WeakMap(),buttonActions=new WeakMap();
+  const toolbars=new WeakMap(),panelZones=new WeakMap(),buttonActions=new WeakMap();
   const frameBindings=new Map(),frameShields=new Map(),loadedFrames=new WeakSet();
   const outline=document.createElement('div');outline.className='chinche-ui-outline';outline.hidden=true;outline.setAttribute('aria-hidden','true');
   const hint=document.createElement('div');hint.className='chinche-ui-hint';hint.hidden=true;
@@ -110,18 +110,15 @@ export function mountChincheUI({send,onSelecting,onSceneStart,bar}){
   function scan(){
     if(selecting&&(!visible(selectionRoot)||!selectionRoot.contains(hint)&&hostFor(selectionRoot)!==hint.parentElement))stop();
     document.querySelectorAll(ROOTS).forEach(root=>{
+      // A nested workspace shares its enclosing surface's selector.
+      if(root.parentElement?.closest(ROOTS))return;
       let toolbar=toolbars.get(root);
       if(!toolbar||!root.contains(toolbar)){
         toolbar=document.createElement('div');toolbar.className='chinche-ui-tools';toolbar.dataset.chincheUi='tools';
         const b=makeButton('Señalar control con chinche','select',button=>start(root.matches('body > header')?document.body:root,button));b.setAttribute('aria-pressed','false');
         toolbar.append(b);root.append(toolbar);toolbars.set(root,toolbar);
       }
-      root.querySelectorAll(CARDS).forEach(card=>{
-        let b=cardButtons.get(card);
-        if(b&&card.contains(b))return;
-        b=makeButton('Pedir cambio en esta tarjeta','card',()=>request(card,root));
-        const host=card.localName==='tr'?card.lastElementChild:card;if(!host)return;host.append(b);cardButtons.set(card,b);
-      });
+
     });
     syncFrames();
   }

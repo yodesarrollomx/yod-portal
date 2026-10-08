@@ -2,7 +2,7 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 const read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
 test('workspace keeps same case in board URL and rejects arbitrary identifiers',async()=>{
  const m=await import(url.pathToFileURL(path.join(__dirname,'../despacho3d/agent-workspace.mjs')));
- assert.match(m.boardURL('case-synthetic','https://yodesarrollomx.github.io/potenciales-yod/patrimonial.html?open=case-synthetic'),/open=case-synthetic&embed=1&agent=1$/);
+ assert.match(m.boardURL('case-synthetic','https://yodesarrollomx.github.io/potenciales-yod/patrimonial.html?open=case-synthetic'),/open=case-synthetic&embed=1&agent=1&view=board$/);
  assert.throws(()=>m.boardURL('../other'));assert.equal(m.WORKSPACE_TABS[0][0],'ppp');
 });
 test('workspace and voice are mounted together without a second media request',()=>{
@@ -49,9 +49,9 @@ test('PPP capability follows installed adapter and vertical resolves to the real
  const id='synthetic-a',base='https://yodesarrollomx.github.io/potenciales-yod/';
  for(const page of ['vertical.html','mixto.html','macrolotes.html','unifamiliar.html','residencial.html']){
   const board=registeredBoard(base+page+'?open='+id,id);
-  assert.equal(board.bridge,false);assert.equal(board.surface,'ppp');
+  assert.equal(board.bridge,!['unifamiliar.html','residencial.html'].includes(page));assert.equal(board.surface,'ppp');
   const url=new URL(board.url);assert.equal(url.pathname,'/potenciales-yod/'+(page==='vertical.html'?'mixto.html':page));
-  assert.equal(url.searchParams.get('open'),id);assert.equal(url.searchParams.get('embed'),'1');assert.equal(url.searchParams.has('agent'),false);
+  assert.equal(url.searchParams.get('open'),id);assert.equal(url.searchParams.get('embed'),'1');assert.equal(url.searchParams.has('agent'),board.bridge);
  }
  const patrimonial=registeredBoard(base+'patrimonial.html?open='+id,id);
  assert.equal(patrimonial.bridge,true);assert.equal(patrimonial.surface,'ppp');assert.equal(new URL(patrimonial.url).searchParams.get('agent'),'1');
@@ -59,7 +59,7 @@ test('PPP capability follows installed adapter and vertical resolves to the real
  assert.equal(registeredBoard(sheet,id).surface,'sheet');
  assert.equal(resolveBoard({case_id:id},[{title:'PPP',source:base+'mixto.html?open='+id},{title:'PPP',source:sheet}]).surface,'ppp');
  assert.equal(resolveBoard({case_id:id},[{title:'PPP',source:base+'mixto.html?open='+id},{title:'PPP',source:base+'patrimonial.html?open='+id}]),null);
- assert.equal(resolveBoard({case_id:id},[{title:'PPP',source:base+'vertical.html?open='+id},{title:'PPP',source:base+'mixto.html?open='+id}]).bridge,false);
+ assert.equal(resolveBoard({case_id:id},[{title:'PPP',source:base+'vertical.html?open='+id},{title:'PPP',source:base+'mixto.html?open='+id}]).bridge,true);
 });
 
 test('receipt queue retains failures, validates identity and drains siblings during concurrent retry',async()=>{

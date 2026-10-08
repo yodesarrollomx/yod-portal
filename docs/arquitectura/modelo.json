@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-08.119-puesto-ppp-original",
-  "checked_at": "2026-10-08",
+  "revision": "2026-10-08.121-puesto-ppp-original",
+  "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
     "margen_y_control",
@@ -9483,6 +9483,36 @@
       "rollback": "Revertir PR de interfaz; conserva historial, permisos y expedientes."
     },
     {
+      "id": "CHG-DESPACHO-AUTONES-116",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SVC-AUTON-CLOUD",
+        "EXT-DRIVE",
+        "SYS-CONTROL",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-TRACK"
+      ],
+      "proposal": "Selección autorizada por caso, motores separados y personajes en la misma oficina. Puentes de observación Macro Lotes, Vertical y Patrimonial legacy; mantener identidad y memoria al evolucionar de PPP a proyecto sin ampliar permisos automáticamente.",
+      "status": "implementado_local",
+      "approval": "Dirección solicita el 8 de octubre integrar un caso adicional y realizar libros, conexión y activación en la misma oficina. Identidades exclusivamente en registro privado.",
+      "tests": [
+        "Dos casos sintéticos sin mezcla ni selección no autorizada.",
+        "Última versión inscrita separada de versión consultada, sin fechas inventadas ni sobrescrituras.",
+        "Puente de observación Macro Lotes/Vertical sin escritura ni resultados locales presentados como Sheets.",
+        "Regresiones del piloto, comprobaciones del portal y pruebas de motor.",
+        "Refresco de catálogo mantiene figuras durante una autorización aún vigente y retira revocadas.",
+        "Patrimonial legacy conserva versiones y puente nativo; observación no concede escritura."
+      ],
+      "deployment": "Preparación local; libros operativos privados creados. Portero, credenciales y activación productiva pendientes. AUTONES_MULTIPLES=false.",
+      "rollback": "Revertir PR y apagar YOD_MULTI_CASES; conservar expedientes, versiones, credenciales e historiales."
+    },
+    {
       "id": "CHG-DESPACHO-CARGA-117",
       "components": [
         "SYS-YOD-OS",
@@ -9528,7 +9558,7 @@
         "SYS-POTENCIALES"
       ],
       "proposal": "Mostrar el PPP original dentro del puesto conservando el puente colaborativo; priorizar voz y tablero, agrupar información secundaria y ofrecer una sola entrada de señalamiento por superficie. La identidad y el expediente siguen ligados al caso autorizado.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "approval": "Dirección solicita el tablero PPP original durante la conversación y reducir controles repetidos; autorizado 8-oct-2026.",
       "tests": [
         "Tablero original con puente habilitado y caso exacto; modo compacto compatible.",
@@ -9536,7 +9566,7 @@
         "Voz e iframe se conservan al cambiar de vista; escritorio y móvil; aislamiento de proyecto.",
         "Arquitectura, suites y verificadores de ambos repositorios."
       ],
-      "deployment": "Pendiente de implementación y pruebas; no acredita integración de nuevos casos.",
+      "deployment": "Preparado para CI. Integra selección autorizada y puentes de observación de main; interruptor de varios autónomos permanece apagado.",
       "rollback": "Revertir presentación y parámetros del puesto; conservar datos, versiones financieras y permisos."
     }
   ],
@@ -11735,6 +11765,14 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO",
         "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-authorized-cases.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
       ]
     }
   ],

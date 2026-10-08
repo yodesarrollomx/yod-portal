@@ -1,8 +1,9 @@
-import {validateSelection} from './conversation.mjs';
+import {validateSelection} from './conversation.mjs?v=116';
 
 // Presence belongs to the authorized room, independently of its conversation panel.
 // This in-memory lease is refreshed in the foreground and never restores access from storage.
 export function createResidentAgents({transport,onChange=()=>{},now=Date.now,schedule=setTimeout,cancel=clearTimeout,isVisible=()=>true}={}){
+ let requestedCaseId=null;
  let selection=null,prepared=false,phase='loading',checkedAt=0,flight=null,epoch=0,disposed=false,timer=null,attempt=0;
  const profiles=new Set(),listeners=new Set();
  const clone=v=>v?structuredClone(v):null;
@@ -17,9 +18,10 @@ export function createResidentAgents({transport,onChange=()=>{},now=Date.now,sch
   const own=epoch;
   flight=(async()=>{
    try{
-    const raw=await transport.resolveCurrent({});
+    const raw=await transport.resolveCurrent(requestedCaseId?{case_id:requestedCaseId}:{});
     if(raw?.ok===false)throw Error(raw.error||'unavailable');
     const fresh=validateSelection(raw);
+    if(requestedCaseId&&fresh.case_id!==requestedCaseId)throw Error('case_changed');
     if(disposed||own!==epoch)return false;
     const changed=JSON.stringify(selection?.avatar)!==JSON.stringify(fresh.avatar);
     const changedCase=selection?.case_id!==fresh.case_id;
@@ -45,6 +47,7 @@ export function createResidentAgents({transport,onChange=()=>{},now=Date.now,sch
   prepared=ok===true;phase=!selection.can_enqueue?'observe':!selection.agent_ready?'offline':prepared?'standby':'preparing';emit();
  }
  return {refresh,snapshot,getProfile:profile,
+  async selectCase(caseId){if(disposed||typeof caseId!=='string'||!/^[A-Za-z0-9_.:-]{1,200}$/.test(caseId))return false;epoch++;flight=null;requestedCaseId=caseId;selection=null;prepared=false;phase='loading';publishProfile();emit();return refresh();},
   getSelection(){return !['loading','unauthorized','reconnecting'].includes(phase)&&now()-checkedAt<120000?clone(selection):null;},
   subscribeProfile(fn){profiles.add(fn);fn(profile());return()=>profiles.delete(fn);},
   subscribe(fn){listeners.add(fn);fn(snapshot());return()=>listeners.delete(fn);},markPrepared,

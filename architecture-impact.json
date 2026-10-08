@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-08.119-puesto-ppp-original",
+  "model_revision": "2026-10-08.121-puesto-ppp-original",
   "proposal_id": "CHG-DESPACHO-PPP-119",
   "summary": "Mostrar el PPP original dentro del puesto conservando el puente colaborativo; priorizar voz y tablero, agrupar información secundaria y ofrecer una sola entrada de señalamiento por superficie. La identidad y el expediente siguen ligados al caso autorizado.",
   "components": [

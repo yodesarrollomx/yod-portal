@@ -1,10 +1,11 @@
+import {AUTONES_MULTIPLES} from './office-config.mjs?v=2';
 import {createEntryPreparation} from './voice-preparation.mjs?v=2';
 import {residentAccessDecision} from './resident-agents.mjs?v=3';
-import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=2';
-import {stationIdentity} from './project-station.mjs?v=2';
+import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=116';
+import {stationIdentity} from './project-station.mjs?v=121';
 import {createLiveVoice} from './live-voice.mjs?v=16';
 import {voiceView} from './voice-view.mjs?v=2';
-import {createWorkspace} from './agent-workspace.mjs?v=13';
+import {createWorkspace} from './agent-workspace.mjs?v=121';
 import {DurableGoals,watchGoals} from './goals.mjs?v=2';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=1';
 import {groupTranscriptFragments} from './live-transcript.mjs';
@@ -45,19 +46,14 @@ if (open) {
     present(false);workspace.open(selection,tab);
     renderVoiceState(voice.snapshot());
   }
-  // Keep the board within the first mobile screen; preserve DOM/focus order.
-  const compact=window.matchMedia('(max-width:850px)'),followup=document.createElement('div');
-  followup.className='station-followup';
+  // Conversation stays beside the original board. Secondary information is disclosed once.
   const activityCard=sidebar.querySelector('.station-activity'),voiceCard=sidebar.querySelector('.voice-state-card');
-  const supporting=[sidebar.querySelector('#voice-save'),sidebar.querySelector('#voice-previous'),sidebar.querySelector('.voice-transcript-details')];
-  function arrangeStation(){
-    const focus=document.activeElement;
-    if(compact.matches){followup.append(activityCard,...supporting);layout.append(followup);}
-    else{sidebar.insertBefore(activityCard,voiceCard);sidebar.append(...supporting);followup.remove();}
-    if(focus?.isConnected&&dialog.contains(focus))focus.focus({preventScroll:true});
-  }
-  compact.addEventListener('change',arrangeStation);arrangeStation();
-  window.addEventListener('pagehide',()=>compact.removeEventListener('change',arrangeStation));
+  sidebar.insertBefore(voiceCard,activityCard);
+  const activityDetails=document.createElement('details');activityDetails.className='station-details';
+  const activitySummary=document.createElement('summary');activitySummary.textContent='Actividad y registro';
+  activityDetails.append(activitySummary,activityCard,sidebar.querySelector('#voice-previous'),sidebar.querySelector('.voice-transcript-details'));
+  sidebar.append(activityDetails);
+  voiceCard.append(sidebar.querySelector('#voice-save'));
   const node = id => dialog.querySelector('#' + id);
   const fragments = []; let selection = null, generation = 0, dismissing = false, transcriptCase = null, freshTranscript = false, previousFocus = null, voiceCaseId = null, accessPaused = false;
   const agentName=()=>selection?stationIdentity(selection).name:'Autón';
@@ -95,7 +91,7 @@ if (open) {
     node('station-send').disabled=accessPaused||live||state.busy||!!state.pending||!!state.accepted||!state.selection?.can_enqueue||state.stale;
     node('station-message-status').textContent=live?'Finaliza la voz para continuar por escrito.':state.fastNotice||(state.pending?'Guardado pendiente. Actualizar comprobará la misma solicitud.':state.busy?'Consultando…':state.status==='unavailable'?'No se pudo cargar el historial. Puedes actualizar.':'');
   }
-  dialog.querySelector('.station-chat').addEventListener('toggle',()=>{if(dialog.querySelector('.station-chat').open&&selection&&!chat.selection&&!chat.busy)void chat.open();});
+  dialog.querySelector('.station-chat').addEventListener('toggle',()=>{if(dialog.querySelector('.station-chat').open&&selection&&!chat.selection&&!chat.busy)void chat.open(AUTONES_MULTIPLES?selection.case_id:null);});
   node('station-message-form').addEventListener('submit',async event=>{event.preventDefault();if(node('station-send').disabled)return;const text=node('station-message').value;if(await chat.send(text))node('station-message').value='';});
   node('station-refresh').addEventListener('click',()=>void(chat.selection?chat.refresh():chat.open()));
   chatTimer=setInterval(()=>{if(dialog.open&&!document.hidden&&dialog.querySelector('.station-chat').open&&chat.selection&&!chat.busy&&!active(voice.snapshot()))void chat.refresh();},12000);
@@ -191,7 +187,7 @@ if (open) {
       dialog.querySelector('.voice-transcript-details').hidden=false;
       if(!compactVoice){workspace.open(fresh,tab);}else workspace.setActive(false);
       if(!fresh.goals?.ready)node('voice-work').textContent='El seguimiento de objetivos aún no está conectado para este proyecto.';
-      if(dialog.querySelector('.station-chat').open&&!chat.selection)void chat.open();
+      if(dialog.querySelector('.station-chat').open&&!chat.selection)void chat.open(AUTONES_MULTIPLES?selection.case_id:null);
       setText('voice-title',agentName());
       renderVoiceState(voice.snapshot());
       node('voice-start').disabled = !fresh.can_enqueue;

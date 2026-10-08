@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-08.119-puesto-ppp-original · 2026-10-08.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-08.121-puesto-ppp-original · 2026-10-07.
 
 ## SYS-DESPACHO · El Despacho
 
