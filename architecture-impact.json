@@ -1,17 +1,28 @@
 {
-  "model_revision": "2026-10-08.118-recuperacion-acceso",
-  "proposal_id": "CHG-DESPACHO-ACCESO-118",
-  "summary": "Tratar lock_busy del Portero como indisponibilidad temporal al renovar la presencia. Conservar solo la autorización vigente dentro del plazo existente, pausar nuevas operaciones, reintentar y recuperar automáticamente. Revocación real y vencimiento siguen retirando datos y voz.",
+  "model_revision": "2026-10-08.120-autones-continuidad",
+  "proposal_id": "CHG-DESPACHO-AUTONES-116",
+  "summary": "Selección autorizada por caso, motores separados y personajes en la misma oficina. Puentes de observación Macro Lotes, Vertical y Patrimonial legacy; mantener identidad y memoria al evolucionar de PPP a proyecto sin ampliar permisos automáticamente.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "SYS-DESPACHO-3D",
-    "GAS-PORTERO"
+    "SYS-POTENCIALES",
+    "GAS-PORTERO",
+    "SHEET-PORTERO",
+    "SVC-AUTON-CLOUD",
+    "EXT-DRIVE",
+    "SYS-CONTROL",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "SYS-TRACK"
   ],
   "tests": [
-    "Regresión de lock_busy con conversación activa: recuperando, sin pérdida inmediata de acceso; recuperación posterior.",
-    "Sin autorización previa no aparece figura. Tras 120 segundos se retira. Una revocación real sigue retirando inmediatamente.",
-    "Arquitectura, suite completa y verificadores del portal."
+    "Dos casos sintéticos sin mezcla ni selección no autorizada.",
+    "Última versión inscrita separada de versión consultada, sin fechas inventadas ni sobrescrituras.",
+    "Puente de observación Macro Lotes/Vertical sin escritura ni resultados locales presentados como Sheets.",
+    "Regresiones del piloto, comprobaciones del portal y pruebas de motor.",
+    "Refresco de catálogo mantiene figuras durante una autorización aún vigente y retira revocadas.",
+    "Patrimonial legacy conserva versiones y puente nativo; observación no concede escritura."
   ],
-  "rollback": "Revertir clasificación de lock_busy y versiones de módulos, sin alterar datos ni permisos del servidor."
+  "rollback": "Revertir PR y apagar YOD_MULTI_CASES; conservar expedientes, versiones, credenciales e historiales."
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-08.118-recuperacion-acceso",
+  "revision": "2026-10-08.120-autones-continuidad",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -9483,6 +9483,36 @@
       "rollback": "Revertir PR de interfaz; conserva historial, permisos y expedientes."
     },
     {
+      "id": "CHG-DESPACHO-AUTONES-116",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SVC-AUTON-CLOUD",
+        "EXT-DRIVE",
+        "SYS-CONTROL",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-TRACK"
+      ],
+      "proposal": "Selección autorizada por caso, motores separados y personajes en la misma oficina. Puentes de observación Macro Lotes, Vertical y Patrimonial legacy; mantener identidad y memoria al evolucionar de PPP a proyecto sin ampliar permisos automáticamente.",
+      "status": "implementado_local",
+      "approval": "Dirección solicita el 8 de octubre integrar un caso adicional y realizar libros, conexión y activación en la misma oficina. Identidades exclusivamente en registro privado.",
+      "tests": [
+        "Dos casos sintéticos sin mezcla ni selección no autorizada.",
+        "Última versión inscrita separada de versión consultada, sin fechas inventadas ni sobrescrituras.",
+        "Puente de observación Macro Lotes/Vertical sin escritura ni resultados locales presentados como Sheets.",
+        "Regresiones del piloto, comprobaciones del portal y pruebas de motor.",
+        "Refresco de catálogo mantiene figuras durante una autorización aún vigente y retira revocadas.",
+        "Patrimonial legacy conserva versiones y puente nativo; observación no concede escritura."
+      ],
+      "deployment": "Preparación local; libros operativos privados creados. Portero, credenciales y activación productiva pendientes. AUTONES_MULTIPLES=false.",
+      "rollback": "Revertir PR y apagar YOD_MULTI_CASES; conservar expedientes, versiones, credenciales e historiales."
+    },
+    {
       "id": "CHG-DESPACHO-CARGA-117",
       "components": [
         "SYS-YOD-OS",
@@ -11715,6 +11745,14 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO",
         "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-authorized-cases.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
       ]
     }
   ],

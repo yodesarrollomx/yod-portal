@@ -1,6 +1,6 @@
 (function(root){
  'use strict';
- var methods=['resolveCurrent','read','enqueue','createGoal','readGoals','reviewGoal','mintFastSession','readVisits','recordVisit','readOfficePermissions','readOfficePending'];
+ var methods=['listAuthorized','resolveCurrent','read','enqueue','createGoal','readGoals','reviewGoal','mintFastSession','readVisits','recordVisit','readOfficePermissions','readOfficePending'];
  function keys(v,names){return !!v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).length===names.length&&names.every(function(k){return Object.prototype.hasOwnProperty.call(v,k);});}
  function str(v,max){return typeof v==='string'&&v.length>0&&v.length<=max;}
  function bind(options){
@@ -12,7 +12,8 @@
    var m=event.data,epoch=options.getEpoch(),source=event.source;
    if(event.origin!==root.location.origin||!authorized(source,epoch)||!keys(m,['type','version','id','method','payload'])||m.type!=='yod:case:request'||m.version!==1||!str(m.id,100)||!methods.includes(m.method))return;
    var p=m.payload;
-   if(m.method==='resolveCurrent'&&!keys(p,[]))return;
+   if(m.method==='listAuthorized'&&!keys(p,[]))return;
+   if(m.method==='resolveCurrent'&&!(keys(p,[])||(keys(p,['case_id'])&&str(p.case_id,200))))return;
    if(m.method==='read'&&(!keys(p,['case_id'])||!str(p.case_id,256)))return;
    if(m.method==='enqueue'&&(!keys(p,['case_id','expected_revision','request_id','message'])||!str(p.case_id,256)||!str(p.expected_revision,256)||!str(p.request_id,256)||!str(p.message,8000)))return;
    if(m.method==='readGoals'&&(!keys(p,['case_id'])||!str(p.case_id,256)))return;
@@ -27,7 +28,7 @@
    function reply(result,error){if(own===generation&&authorized(source,epoch))source.postMessage({type:'yod:case:result',version:1,id:m.id,result:result,error:error},root.location.origin);}
    var transport=options.getTransport(),lane=['readOfficePermissions','readOfficePending'].includes(m.method)?'office':['readVisits','recordVisit'].includes(m.method)?'visits':m.method==='readGoals'?'goals':m.method==='mintFastSession'?'fast':'conversation';
    if(!transport||typeof transport[m.method]!=='function'){reply(null,'unavailable');return;}
-   var readKey=['resolveCurrent','read','mintFastSession'].includes(m.method)?m.method+'|'+JSON.stringify(p):null;
+   var readKey=['listAuthorized','resolveCurrent','read','mintFastSession'].includes(m.method)?m.method+'|'+JSON.stringify(p):null;
    if(readKey&&readFlights.has(readKey)){
     var shared=await readFlights.get(readKey);reply(shared.result,shared.error);return;
    }

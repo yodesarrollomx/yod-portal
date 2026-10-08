@@ -54,7 +54,7 @@ Aviso: el botón «Entorno» aparece cuando el panel de Agentes ya cargó el per
 2. **WhatsApp y Gmail**: las pruebas salen **solo al número/correo de Dirección y con su confirmación en el chat**. Borrador primero; nada sale sin visto bueno. Contactos solo autorizados.
 3. El acceso al Despacho lo controla la matriz de Accesos (código DP); solo Dirección concede acceso. «Seleccionar una figura» nunca concede acceso.
 4. Cada cambio de motor o portal termina con un clic de Dirección. En esta sesión Dirección delegó el merge para PR **con interruptor apagado y checks verdes**, y pidió expresamente encender el entorno, el movimiento y la sala de juntas. Para cualquier otra cosa, preguntar antes de mezclar.
-5. Fuera de la lista por ahora: agente animal temporal, Ruiseñor, Casa Alysa.
+5. La selección privada de Dirección del 7 de octubre sustituye la exclusión anterior del proyecto incorporado. Preparar los tres primeros autónomos conforme al registro privado y a `docs/arquitectura/despacho-autones-versiones.md`; el registro público no es fuente de altas. Siguen fuera el agente animal temporal y Casa Alysa.
 6. No volver a hablar de «metas duraderas» (reanudar la meta detenida, tarjetas de Jev en metas) salvo que Dirección lo pida.
 7. El auto-despliegue de Render está apagado. La rotación de la llave de TypeSafe está pospuesta (hay un recordatorio programado).
 

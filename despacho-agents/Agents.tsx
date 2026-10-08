@@ -1,3 +1,4 @@
+import {AUTONES_MULTIPLES} from '../despacho3d/office-config.mjs';
 // Adapted from Cubefarm 0.3.2 Phone/TerminalView/KanbanView. MIT © 2026 Leon van Zyl.
 // Business records only come from the existing authorized Sheets transport.
 import {useEffect, useState, useRef} from 'react';
@@ -61,7 +62,7 @@ function App(){
  const close=()=>session.current?.close();
  useEffect(()=>{
   transportRef.current=createFrameTransport(window);
-  const current=createProfileSession(conversation.current,{
+  const current=createProfileSession(conversation.current,{getCaseId:()=>AUTONES_MULTIPLES?(window as any).YodResidentAgents?.getSelection?.()?.case_id||null:null,
    show:(next:Tab)=>{if(!overlayOpen)focusRef.current=document.activeElement as HTMLElement;overlayOpen=true;inertWorld(true);setTab(tabs.some(([key])=>key===next)?next:'chat');setOpened(true);window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:true}));},
    hide:()=>{const wasOpen=overlayOpen;overlayOpen=false;inertWorld(false);setOpened(false);setSelection(null);setMessage('');goals.current.hide();window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:false}));if(wasOpen)(focusRef.current?.isConnected&&focusRef.current.getClientRects().length?focusRef.current:document.getElementById('agents-open'))?.focus();}
   });
