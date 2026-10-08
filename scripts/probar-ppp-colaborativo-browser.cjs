@@ -88,6 +88,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await frame.getByRole('button',{name:'Aplicar en el tablero',exact:true}).click();
   await frame.getByRole('button',{name:'Aplicando…',exact:true}).waitFor();
   assert.equal(await frame.getByRole('button',{name:'Aplicando…',exact:true}).isDisabled(),true);
+  await ppp.waitForFunction(()=>window.applies===1);
   assert.equal(await ppp.evaluate(()=>window.applies),1);
   assert.equal(resolved.length,0);
   failNextResolve=true;
@@ -111,6 +112,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   proposals=[{request_id:'board-voice-2',case_id:CASE,scenario_id:'scenario-1',revision:'r2',motivo:'Corrige superficie',apply_requested_at:new Date().toISOString(),apply_expires_at:new Date(Date.now()+120000).toISOString(),cambios:[{campo:'inTerrenoM2',label:'Superficie',antes:150,valor:644}]}];
   await frame.getByRole('button',{name:'Actualizar conexión',exact:true}).click();
   await frame.getByRole('button',{name:'Aplicando…',exact:true}).waitFor();
+  await ppp.waitForFunction(()=>window.applies===2);
   assert.equal(await ppp.evaluate(()=>window.applies),2);
   assert.equal(resolved.length,1,'dispatch is not a receipt');
   // Hiding the station must keep the pending write and accept only its trusted receipt.
@@ -151,9 +153,9 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await frame.locator('#voice-title').filter({hasText:'Ruiseñor de prueba'}).waitFor();
   await frame.locator('.workspace-board iframe[src*="mixto.html?open=synthetic-second"]').waitFor();
   assert.equal(await iframe.evaluate(el=>el.isConnected),false,'previous project frame is removed');
-  await frame.locator('.workspace-ppp-status').filter({hasText:'todavía no comparte su lectura ni admite ajustes'}).waitFor();
-  assert.equal(await frame.locator('.workspace-board iframe').getAttribute('src').then(s=>s.includes('agent=1')),false);
-  assert.equal(await frame.locator('.workspace-ppp-summary').isVisible(),false);
+  await frame.locator('.workspace-ppp-status').filter({hasText:'todavía no recibió una lectura compartida'}).waitFor();
+  assert.equal(await frame.locator('.workspace-board iframe').getAttribute('src').then(s=>s.includes('agent=1')),true);
+  assert.equal(await frame.locator('.workspace-ppp-summary').isVisible(),true);
   assert.equal(await frame.locator('#voice-transcript article').count(),0);
   assert.equal(await frame.locator('#station-message').inputValue(),'');
   assert.equal(sessions,2,'switching projects does not activate another microphone session');

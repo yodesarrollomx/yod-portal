@@ -1,7 +1,7 @@
 // A station belongs to the currently authorized case. A title is never a board identifier.
 const id = value => typeof value === 'string' && /^[A-Za-z0-9_.:-]{1,200}$/.test(value);
 const pages = new Set(['patrimonial.html','vertical.html','mixto.html','macrolotes.html','unifamiliar.html','residencial.html']);
-// VERTICAL is served by mixto.html. Only the native patrimonial Store speaks the shared-board protocol.
+// VERTICAL is served by mixto.html. Only the native patrimonial Store supports shared-board writes.
 const nativePages = new Set(['patrimonial.html']);
 const observationPages = new Set(['mixto.html','macrolotes.html']);
 export function stationIdentity(selection) {
