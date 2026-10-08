@@ -1,4 +1,4 @@
-import {AUTONES_MULTIPLES} from './office-config.mjs?v=2';
+import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
 import {createEntryPreparation} from './voice-preparation.mjs?v=2';
 import {residentAccessDecision} from './resident-agents.mjs?v=3';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=116';

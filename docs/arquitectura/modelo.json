@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-08.121-puesto-ppp-original",
+  "revision": "2026-10-08.122-autones-activacion",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -9498,7 +9498,7 @@
         "SYS-OBRA-CLIENTE",
         "SYS-TRACK"
       ],
-      "proposal": "Selección autorizada por caso, motores separados y personajes en la misma oficina. Puentes de observación Macro Lotes, Vertical y Patrimonial legacy; mantener identidad y memoria al evolucionar de PPP a proyecto sin ampliar permisos automáticamente.",
+      "proposal": "Activar personajes autorizados en la misma oficina, sin selector adicional; recorridos visuales por rutas existentes y motores privados separados. La animación no certifica ejecución de trabajo.",
       "status": "implementado_local",
       "approval": "Dirección solicita el 8 de octubre integrar un caso adicional y realizar libros, conexión y activación en la misma oficina. Identidades exclusivamente en registro privado.",
       "tests": [
@@ -9507,9 +9507,10 @@
         "Puente de observación Macro Lotes/Vertical sin escritura ni resultados locales presentados como Sheets.",
         "Regresiones del piloto, comprobaciones del portal y pruebas de motor.",
         "Refresco de catálogo mantiene figuras durante una autorización aún vigente y retira revocadas.",
-        "Patrimonial legacy conserva versiones y puente nativo; observación no concede escritura."
+        "Patrimonial legacy conserva versiones y puente nativo; observación no concede escritura.",
+        "Recorridos independientes se pausan durante interacción, ocultación y movimiento reducido; catálogo autorizado y aislamiento preservados."
       ],
-      "deployment": "Preparación local; libros operativos privados creados. Portero, credenciales y activación productiva pendientes. AUTONES_MULTIPLES=false.",
+      "deployment": "Motor multi-caso desplegado y cuatro credenciales emparejadas, verificadas por expediente. Activación visual en este PR; comprobación de interacción productiva pendiente.",
       "rollback": "Revertir PR y apagar YOD_MULTI_CASES; conservar expedientes, versiones, credenciales e historiales."
     },
     {

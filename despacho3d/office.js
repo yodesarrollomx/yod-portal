@@ -1,5 +1,5 @@
-import {AUTONES_MULTIPLES} from './office-config.mjs?v=2';
-import {createOfficeResidents} from './avatars/office-residents.mjs?v=1';
+import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
+import {createOfficeResidents} from './avatars/office-residents.mjs?v=2';
 import * as T from 'three';
 import {createEncounterGate,createPreparationGate,ENCOUNTER_RANGE} from './agent-proximity.mjs?v=4';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
