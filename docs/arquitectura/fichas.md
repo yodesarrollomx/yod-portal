@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-08.122-autones-activacion · 2026-10-07.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-08.123-autones-activacion · 2026-10-07.
 
 ## SYS-DESPACHO · El Despacho
 

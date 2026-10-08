@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-08.122-autones-activacion",
+  "model_revision": "2026-10-08.123-autones-activacion",
   "proposal_id": "CHG-DESPACHO-AUTONES-116",
   "summary": "Activar personajes autorizados en la misma oficina, sin selector adicional; recorridos visuales por rutas existentes y motores privados separados. La animación no certifica ejecución de trabajo.",
   "components": [
