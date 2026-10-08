@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-08.119-autones-conciliados",
+  "revision": "2026-10-08.120-autones-continuidad",
   "checked_at": "2026-10-07",
   "priorities": [
     "vender_mas",
@@ -9498,16 +9498,18 @@
         "SYS-OBRA-CLIENTE",
         "SYS-TRACK"
       ],
-      "proposal": "Preparación de selección autorizada por caso, motor aislado y lectura del tablero original Macro Lotes/Vertical. La versión defendida queda fijada al alta; consultar variantes no cambia esa decisión. Registro privado; activación pendiente de backend y aceptación.",
+      "proposal": "Selección autorizada por caso, motores separados y personajes en la misma oficina. Puentes de observación Macro Lotes, Vertical y Patrimonial legacy; mantener identidad y memoria al evolucionar de PPP a proyecto sin ampliar permisos automáticamente.",
       "status": "implementado_local",
-      "approval": "Dirección solicita terminar la preparación y mantener el funcionamiento de versiones existente. Selección de proyectos en registro privado.",
+      "approval": "Dirección solicita el 8 de octubre integrar un caso adicional y realizar libros, conexión y activación en la misma oficina. Identidades exclusivamente en registro privado.",
       "tests": [
         "Dos casos sintéticos sin mezcla ni selección no autorizada.",
         "Última versión inscrita separada de versión consultada, sin fechas inventadas ni sobrescrituras.",
         "Puente de observación Macro Lotes/Vertical sin escritura ni resultados locales presentados como Sheets.",
-        "Regresiones del piloto, comprobaciones del portal y pruebas de motor."
+        "Regresiones del piloto, comprobaciones del portal y pruebas de motor.",
+        "Refresco de catálogo mantiene figuras durante una autorización aún vigente y retira revocadas.",
+        "Patrimonial legacy conserva versiones y puente nativo; observación no concede escritura."
       ],
-      "deployment": "Código preparado con AUTONES_MULTIPLES=false. Pendientes integración del Portero vivo, configuración privada, CI y aceptación. Puentes Macro Lotes/Vertical son de observación.",
+      "deployment": "Preparación local; libros operativos privados creados. Portero, credenciales y activación productiva pendientes. AUTONES_MULTIPLES=false.",
       "rollback": "Revertir PR y apagar YOD_MULTI_CASES; conservar expedientes, versiones, credenciales e historiales."
     },
     {

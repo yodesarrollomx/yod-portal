@@ -26,3 +26,11 @@ La preparación del paso de varios autónomos no cierra conversación fiable, PP
 Edición automática futura: usar el contrato nativo por modelo con control de revisión, recibos durables y bloqueo de versiones congeladas. No envolver el guardado completo legacy para aparentar una edición segura.
 
 Reversión: apagar `AUTONES_MULTIPLES`, revertir los PR y conservar estado, IDs, conversaciones y versiones. Motor y Portero se entregan por separado en el repositorio privado.
+
+## Continuidad y alta adicional · 8 de octubre
+
+Dirección autoriza libros operativos, conexión y activación de los casos seleccionados en la misma oficina. El expediente conserva case_id, memoria y personaje al pasar de PPP a proyecto; la etapa cambia de forma explícita, sin asumir contratación ni conceder facultades nuevas. Las fichas y cuatro libros operativos viven en almacenamiento privado.
+
+Patrimonial legacy agrega observación de versiones guardadas. Su puente se desmonta al abrir un modelo nativo, cuyo contrato de edición permanece intacto. Las cantidades observadas no se presentan como resultados calculados en Sheets. El catálogo conserva figuras durante el refresco de una autorización vigente; error, caducidad o revocación las retira.
+
+La conexión productiva, credenciales independientes, publicación del Portero y validación de cada motor siguen pendientes. No se certifica trabajo autónomo por animar una figura.

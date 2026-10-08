@@ -6,11 +6,14 @@ export function createAuthorizedCases({transport,onChange=()=>{},beforeSelect=()
  const emit=()=>onChange(snapshot());
  function clear(){epoch++;items=[];selected=null;checkedAt=0;emit();}
  async function refresh(){
-  const own=++epoch;items=[];selected=null;checkedAt=0;emit();
+  const own=++epoch;
+  // Keep figures stable while refreshing a still-valid authorization lease.
+  // Failure or expiry clears authority; a refresh never extends the old lease.
+  if(now()-checkedAt>=60000){items=[];selected=null;checkedAt=0;emit();}
   try{const r=await transport.listAuthorized({});if(disposed||own!==epoch)return false;
    if(r?.ok!==true||r.schema!==1||!Array.isArray(r.cases)||r.cases.length>6)throw Error('invalid_catalog');
    const next=r.cases.map(validateSelection);if(new Set(next.map(x=>x.case_id)).size!==next.length)throw Error('invalid_catalog');
-   items=next;checkedAt=now();emit();return true;
+   items=next;if(selected&&!next.some(x=>x.case_id===selected.case_id))selected=null;checkedAt=now();emit();return true;
   }catch{if(own===epoch)clear();return false;}
  }
  async function select(caseId){
