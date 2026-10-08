@@ -9496,7 +9496,8 @@
         "SYS-CONTROL",
         "SYS-OBRA",
         "SYS-OBRA-CLIENTE",
-        "SYS-TRACK"
+        "SYS-TRACK",
+        "SYS-SALA"
       ],
       "proposal": "Activar personajes autorizados en la misma oficina, sin selector adicional; recorridos visuales por rutas existentes y motores privados separados. La animación no certifica ejecución de trabajo.",
       "status": "implementado_local",
