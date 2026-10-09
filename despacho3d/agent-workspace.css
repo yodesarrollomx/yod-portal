@@ -184,6 +184,9 @@
 .avatar-portrait canvas{width:280px;max-width:100%;height:auto}
 @media(max-width:760px){.meeting-diagram{grid-template-columns:1fr}.meeting-slide{padding:20px 0}.meeting-slide h2{font-size:28px}.meeting-controls{justify-content:center}}
 
-.station-avatar .avatar-portrait{min-height:0;height:140px;background:radial-gradient(ellipse,#dce6d8,transparent);overflow:hidden}.station-avatar canvas{width:123px;height:140px}.station-avatar:empty{display:none}
+.station-profile-portrait .avatar-portrait{min-height:0;height:140px;background:radial-gradient(ellipse,#dce6d8,transparent);overflow:hidden}.station-profile-portrait canvas{width:123px;height:140px}.station-profile-portrait:empty{display:none}
 
-@media(max-width:850px){.station-avatar{float:right;width:64px;height:72px;margin:0 0 0 10px}.station-avatar .avatar-portrait{height:72px;border-radius:14px}.station-avatar canvas{width:63px;height:72px}}
+@media(max-width:850px){.station-profile-portrait{float:right;width:64px;height:72px;margin:0 0 0 10px}.station-profile-portrait .avatar-portrait{height:72px;border-radius:14px}.station-profile-portrait canvas{width:63px;height:72px}}
+
+.station-profile-portrait canvas{margin:0 auto}
+@media(max-width:850px){.station-profile-portrait~#voice-title{margin-right:74px}}

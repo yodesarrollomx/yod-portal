@@ -56,7 +56,7 @@ if (open) {
   sidebar.append(activityDetails);
   voiceCard.append(sidebar.querySelector('#voice-save'),sidebar.querySelector('#voice-previous'));
   const node = id => dialog.querySelector('#' + id);
-  const portraitHost=document.createElement('div');portraitHost.className='station-avatar';sidebar.insertBefore(portraitHost,node('voice-title'));const portrait=mountAvatarCard({container:portraitHost,compact:true});
+  const portraitHost=document.createElement('div');portraitHost.className='station-profile-portrait';sidebar.insertBefore(portraitHost,node('voice-title'));const portrait=mountAvatarCard({container:portraitHost,compact:true});
   const fragments = []; let selection = null, generation = 0, dismissing = false, transcriptCase = null, freshTranscript = false, previousFocus = null, voiceCaseId = null, accessPaused = false;
   const agentName=()=>selection?stationIdentity(selection).name:'Autón';
   const visibility=value=>window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:value}));
