@@ -68,6 +68,20 @@ A/B manteniendo URL/cliente/HTML y cambiando sólo la política a strict-origin:
 Se cambia únicamente la meta del contenedor OS, manteniendo rel=noreferrer en enlaces que lo requieren. El ajuste transmite el origen necesario para GSI y evita compartir rutas/consultas, incluso hacia recursos del mismo origen. La documentación de Google recomienda enviar el origen a GSI: https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid .
 Esto verifica el botón de acceso y su comunicación; no equivale a acreditar un inicio de sesión personal completo ni el micrófono.
 
+## 23:45:58–23:47 · Cierre de pruebas y publicación
+El recorrido completo37894399997 termina correctamente: Entrada, Reunión, Trabajo observable, Panorama, Conocimiento, Voz y PPP colaborativo. Duración total9m35s dentro del presupuesto; seis PNG mantienen evidencia visual. Panorama dura2m34s tras retirar capturas duplicadas; no se extrapola a la carga del usuario.
+Los580 tests Node y validadores aprobaron el commit1396948, que sólo agrega el ajusteOS y bitácora sobre la interfaz ya comprobada. PR141 se integra el09-oct2026 a06:46:13Z (23:46:13 local) como0351157a71ec9fc3c5b3beae70702c92646ece58. Pages37895280755 confirma build/deploy/report correctos. Se cierra PR140 porque su contenido está incluido en141.
+La auditoría anónima final37895405594 compara archivos publicados contra el merge, comprueba GSI y backend, y separa carga fría/cálida sin desactivar caché. No solicita micrófono, cuenta ni encargos.
 
-## Aceptación pendiente
-Publicación del portal, comprobación anónima de los recursos servidos y entrega HTML. El micrófono físico y los datos del PPP nativo requieren una sesión real; no se declaran acreditados por fixtures.
+
+## 23:48:48–23:54:42 · Auditoría de publicación y recarga real
+La auditoría pública37895405594/job113705512880 coteja cuatro archivos publicados contra0351157: todos los SHA256 coinciden. GSI devuelve200 tanto en escritorio1366×900 como en móvil390×844, enviando únicamente el origen. No se reproducen errores de página ni fallos HTTP en ese recorrido.
+El servidor contesta /healthz200 en151ms y /readyz200 en221ms; listo para voz y objetivos. /computer/work y /voice/status contestan401 sin sesión: no se exponen datos privados.
+La primera medición cálida del contenedorOS no provocó navegación real al reutilizar el mismo fragmento; se descarta. El seguimiento37895920139/job113707118202 usa page.reload, timeOrigin nuevo y navigation.type=reload. Entrada anónima de Google: DCL503/100ms escritorio y335/101ms móvil, frío/cálido. No había iframe de oficina autenticada en esa entrada.
+La oficina pública sí mide primer render:21.429/14.716s escritorio y13.606/13.117s móvil, frío/caché, en ChromiumCI/SwiftShader. No son mediciones del Chromebook ni de latencia de voz y no cumplen una demostración de mejora50%. La carga visual sigue siendo un objetivo de rendimiento pendiente de aceptación en dispositivo.
+Ayuda de escritorio había excedido una espera de5s tras cerrar Áreas. El seguimiento realiza el cierre observable y comprueba abrir/cerrar Ayuda tras Caminar→Ver todo→Áreas; pasa. No se introduce un cambio de producto por ese timeout del arnés.
+
+## 23:56 · Estado de entrega y límites
+La versión normal está publicada; el motor, Apps Script y portal conservan los recibos indicados. El documento privado de entrega incorpora capturas, decisiones y resultados; la propuesta original se conserva para comparar.
+Se consideran cerrados implementación, publicación y alcance automatizado descrito. Permanecen sin acreditar la aceptación del micrófono físico, una sesión con PPP nativo privado y el rendimiento del Chromebook. No se afirma que toda la oficina esté al100% ni una reducción de carga50%.
+La siguiente comprobación de aceptación debe observar una conversación autorizada, interrupción real, mismo PPP nativo y lectura del recibo de cualquier cambio solicitado; no exige repetir configuraciónOAuth. La versión pixel y aprendizaje automático acumulado no están incluidos en esta entrega.
