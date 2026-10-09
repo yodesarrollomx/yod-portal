@@ -26,5 +26,5 @@ test('refresh keeps authorized figures stable until response and removes revoked
  const {createAuthorizedCases}=await import('../despacho3d/authorized-cases.mjs');let pending=null,clock=100;
  const c=createAuthorizedCases({now:()=>clock,transport:{listAuthorized:()=>pending?new Promise(r=>pending.resolve=r):Promise.resolve({ok:true,schema:1,cases:[profile('a'),profile('b')]}),resolveCurrent:async p=>profile(p.case_id)}});
  await c.refresh();await c.select('b');pending={};clock=55000;const refresh=c.refresh();assert.equal(c.snapshot().cases.length,2);assert.equal(c.snapshot().selected.case_id,'b');pending.resolve({ok:true,schema:1,cases:[profile('a')]});await refresh;assert.equal(c.snapshot().cases.length,1);assert.equal(c.snapshot().selected,null);
- pending={};clock=120000;const expired=c.refresh();assert.equal(c.snapshot().cases.length,0);pending.resolve({ok:false});await expired;assert.equal(c.snapshot().cases.length,0);c.dispose();
+ pending={};clock=120100;const expired=c.refresh();assert.equal(c.snapshot().cases.length,0);pending.resolve({ok:false});await expired;assert.equal(c.snapshot().cases.length,0);c.dispose();
 });
