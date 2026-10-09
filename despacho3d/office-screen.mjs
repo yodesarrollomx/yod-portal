@@ -11,7 +11,7 @@ export function createOfficeScreen(mesh,onChange=()=>{}){
   if(state.surface==='library'&&state.phase==='ready'&&state.work?.document){
    const d=state.work.document;ctx.fillStyle='#f3f0e9';ctx.fillRect(0,0,768,400);ctx.fillStyle='#193c3d';
    line('BIBLIOTECA · '+(state.projectName||''),35,20);line(d.title,78,30);
-   const words=d.content.replace(/\\s+/g,' ').split(' ');let row='',y=126;ctx.font='500 21px Arial';
+   const words=d.content.replace(/\s+/g,' ').split(' ');let row='',y=126;ctx.font='500 21px Arial';
    for(const word of words){if(ctx.measureText(row+' '+word).width>708){line(row,y,21);y+=28;row='';if(y>304)break;}row+=(row?' ':'')+word;}if(y<=304)line(row,y,21);
    ctx.fillStyle='#806e4e';line('Extracto de lectura · '+new Date(d.read_at).toLocaleTimeString(),369,20);
    texture.needsUpdate=true;onChange();return;
@@ -21,7 +21,7 @@ export function createOfficeScreen(mesh,onChange=()=>{}){
    line(state.slide.project,38,20);line(state.slide.title,95,32);
    const words=String(state.slide.result||'').split(/\s+/);let row='',y=146;ctx.font='500 23px Arial';
    for(const word of words){if(ctx.measureText(row+' '+word).width>708){line(row,y,23);y+=31;row='';if(y>270)break;}row+=(row?' ':'')+word;}if(y<=270)line(row,y,23);
-   ctx.fillStyle='#806e4e';line('OBJETIVO  →  AVANCE  →  REVISIÓN',322,24);line(state.slide.checkpoint,368,20);
+   ctx.fillStyle='#806e4e';line('OBJETIVO  →  EVIDENCIA  →  REVISIÓN',322,24);line(state.slide.checkpoint,368,20);
    texture.needsUpdate=true;onChange();return;
   }
   ctx.fillStyle='#162a30';ctx.fillRect(0,0,768,400);ctx.fillStyle='#ded6ba';line('COMPUTADORA · '+workHeadline(state),42,22);

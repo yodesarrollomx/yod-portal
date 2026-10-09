@@ -1,9 +1,10 @@
 // Render the exact authorized appearance used in the room, never a generated stand-in.
 export function mountAvatarCard({container,doc=document,win=window,compact=false}){
- let epoch=0;const el=(t,text)=>{const n=doc.createElement(t);if(text)n.textContent=text;return n;};
- function clear(){epoch++;container.replaceChildren();}
+ let epoch=0,fingerprint='';const el=(t,text)=>{const n=doc.createElement(t);if(text)n.textContent=text;return n;};
+ function clear(){fingerprint='';epoch++;container.replaceChildren();}
  async function open(selection){
-  clear();const own=epoch,p=selection?.avatar;if(!p||p.case_id!==selection.case_id)return;
+  const p=selection?.avatar,key=p?JSON.stringify(p):'';if(key&&key===fingerprint)return;
+  clear();const own=epoch;if(!p||p.case_id!==selection.case_id)return;fingerprint=key;
   const heading=el('h2',p.name||selection.name),portrait=el('div'),description=el('p','Represento este plan de potencial. Mi expediente, objetivos y evidencias pertenecen a este proyecto; comparto herramientas con los otros autónomos.');
   portrait.className='avatar-portrait';if(compact)container.append(portrait);else container.append(heading,portrait,el('p',selection.name),description,
    el('p','Mi color y apariencia permiten reconocerme en la oficina. Mi avance se comprueba en Trabajo y mis entregas se presentan desde Pendientes.'));

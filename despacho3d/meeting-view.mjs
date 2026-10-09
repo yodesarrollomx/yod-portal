@@ -9,7 +9,7 @@ export function mountMeeting({container,getCase,onPresent=async()=>false,onSlide
   if(!valid()){clear();return;}
   const s=deck.slides[index],own=++generation;container.replaceChildren();
   const top=el('div',undefined,'meeting-top');top.append(el('small',deck.project+' · '+deck.status),el('span',(index+1)+' / '+deck.slides.length));
-  const slide=el('article',undefined,'meeting-slide');slide.append(el('small','REUNIÓN DE AVANCES'),el('h2',s.title),el('p',s.result,'meeting-result'));
+  const slide=el('article',undefined,'meeting-slide');slide.append(el('small','REUNIÓN DE AVANCES'),el('h2',s.title),el('p',s.excerpt||s.result,'meeting-result'));
   const diagram=el('div',undefined,'meeting-diagram');diagram.setAttribute('aria-label','Objetivo, avance y revisión');
   for(const n of s.diagram){const card=el('div');card.append(el('strong',n.label),el('p',n.text));diagram.append(card);}slide.append(diagram);
   const controls=el('div',undefined,'meeting-controls'),notice=el('p','','meeting-notice');notice.setAttribute('role','status');
@@ -24,7 +24,7 @@ export function mountMeeting({container,getCase,onPresent=async()=>false,onSlide
    finally{if(own===generation)speak.disabled=false;}
   });
   controls.append(back,speak,next);
-  const notes=el('details');notes.append(el('summary','Guion y evidencia'),el('p',s.script));
+  const notes=el('details');notes.append(el('summary','Resultado completo, guion y evidencia'),el('p',s.result),el('p',s.script));
   for(const e of s.evidence)notes.append(el('h3',e.title),el('pre',e.text));
   if(!s.evidence.length)notes.append(el('p','No hay evidencia vinculada a este tema.'));
   const footer=el('div',undefined,'meeting-footer');

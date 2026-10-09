@@ -6,6 +6,7 @@ export function workDestination(state,now=Date.now()){
  if(!['working','tool'].includes(w.phase))return 'inicio';
  const last=w.events?.at(-1);const activity=w.current_tool||(['drive_leer','drive_inspeccionar_pdf','drive_buscar','drive_listar'].includes(last?.tool)?'documento':'');
  if(/drive|document|biblioteca|hoja/i.test(activity))return 'library';
+ if(w.sources?.at(-1)?.kind==='document'&&!/web|página|pantalla/i.test(w.current_tool||''))return 'library';
  return 'inicio';
 }
 export function createResidentMotion({pilot,navigate,now=Date.now}){
