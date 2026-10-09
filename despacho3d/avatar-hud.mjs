@@ -1,5 +1,6 @@
 import * as T from 'three';
 import {avatarPresence} from './avatar-presence.mjs?v=126';
+import {avatarConnector} from './avatar-label-layout.mjs?v=126';
 const paths={
  analysis:'M4 14V9m4 5V5m4 9V2m4 12V7M2 17h16',
  library:'M3 3h5c2 0 2 1 2 2v12c0-1-1-2-3-2H3ZM17 3h-5c-2 0-2 1-2 2v12c0-1 1-2 3-2h4Z',
@@ -14,16 +15,18 @@ const paths={
 export function createAvatarHUD({container,onSelect=()=>{},doc=document,now=Date.now}={}){
  if(!container)throw new TypeError('HUD container required');
  const layer=doc.createElement('div');layer.className='avatar-hud';container.append(layer);
+ const links=doc.createElementNS('http://www.w3.org/2000/svg','svg');links.setAttribute('class','avatar-hud__connectors');links.setAttribute('aria-hidden','true');layer.append(links);
  const entries=new Map(),point=new T.Vector3(),ray=new T.Raycaster(),origin=new T.Vector3(),projectedPoint=new T.Vector3();
  let disposed=false,lastSample=-Infinity;
- function remove(id){entries.get(id)?.button.remove();entries.delete(id);}
+ function remove(id){const e=entries.get(id);e?.button.remove();e?.connector.remove();entries.delete(id);}
  function mount(id){
+  const connector=doc.createElementNS(links.namespaceURI,'path');connector.setAttribute('visibility','hidden');connector.setAttribute('vector-effect','non-scaling-stroke');links.append(connector);
   const button=doc.createElement('button');button.type='button';button.className='avatar-presence';button.dataset.caseId=id;
   const icon=doc.createElement('span');icon.className='avatar-presence__icon';icon.setAttribute('aria-hidden','true');
   const svg=doc.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 20 20');const path=doc.createElementNS(svg.namespaceURI,'path');svg.append(path);icon.append(svg);
   const name=doc.createElement('strong'),label=doc.createElement('span'),milestones=doc.createElement('span');label.className='avatar-presence__label';milestones.className='avatar-presence__milestones';milestones.setAttribute('aria-hidden','true');
   button.append(icon,name,label,milestones);button.onclick=()=>{if(!disposed&&!button.hidden&&entries.has(id))onSelect(id);};
-  const e={button,name,label,path,milestones,key:''};entries.set(id,e);layer.append(button);return e;
+  const e={button,connector,name,label,path,milestones,key:''};entries.set(id,e);layer.append(button);return e;
  }
  function update({residents=[],observations=[],camera,occluder=null,visibleHit=()=>true,hidden=false,selectedCaseId=null,time=now()}={}){
   if(disposed)return;layer.hidden=!!hidden;
@@ -38,14 +41,14 @@ export function createAvatarHUD({container,onSelect=()=>{},doc=document,now=Date
   for(const r of residents){
    const id=r.profile?.case_id,p=avatarPresence({profile:r.profile,observation:states.get(id),movement:r.movement,now:time});
    if(!p){remove(id);continue;}
-   const e=entries.get(id)||mount(id);e.button.hidden=true;
+   const e=entries.get(id)||mount(id);e.button.hidden=true;e.connector.setAttribute('visibility','hidden');
    if(!Array.isArray(r.anchor)||r.anchor.length!==3||!r.anchor.every(Number.isFinite))continue;
    point.set(...r.anchor);const length=point.distanceTo(origin);
    projectedPoint.copy(point).project(camera);if(Math.abs(projectedPoint.x)>1||Math.abs(projectedPoint.y)>1||Math.abs(projectedPoint.z)>1)continue;
    if(occluder&&length>.1){setAvatarOcclusionRay(ray,camera,point,projectedPoint);
     if(ray.intersectObject(occluder,true).some(h=>visibleHit(h)&&h.object?.visible!==false&&(Array.isArray(h.object.material)?h.object.material:[h.object.material]).some(m=>m?.visible!==false&&m&&(!m.transparent||m.opacity>=.95))))continue;
    }
-   const key=JSON.stringify(p);if(key!==e.key){e.key=key;e.name.textContent=p.name;e.label.textContent=p.label;e.path.setAttribute('d',paths[p.activity]||paths.wait);e.button.dataset.activity=p.activity;e.button.style.setProperty('--avatar-accent',p.color);e.milestones.replaceChildren();
+   const key=JSON.stringify(p);if(key!==e.key){e.key=key;e.name.textContent=p.name;e.label.textContent=p.label;e.path.setAttribute('d',paths[p.activity]||paths.wait);e.button.dataset.activity=p.activity;e.button.style.setProperty('--avatar-accent',p.color);e.connector.style.setProperty('--avatar-accent',p.color);e.milestones.replaceChildren();
     if(p.progress){for(const state of p.progress.states){const tick=doc.createElement('i');tick.dataset.state=state;e.milestones.append(tick);}const count=doc.createElement('span');count.className='avatar-presence__count';count.textContent=p.progress.ready+'/'+p.progress.total+' listas';e.milestones.append(count);}
     e.milestones.hidden=!p.progress;e.button.setAttribute('aria-label',p.name+' · '+p.label+(p.progress?' · '+p.progress.label:'')+' · Abrir opciones');e.button.title=e.button.getAttribute('aria-label');
    }
@@ -58,7 +61,14 @@ export function createAvatarHUD({container,onSelect=()=>{},doc=document,now=Date
    for(let attempt=0;attempt<4;attempt++){
     const rect={x,y,w,h};if(y+h<=height-6&&!occupied.some(o=>rect.x<o.x+o.w+4&&rect.x+rect.w+4>o.x&&rect.y<o.y+o.h+4&&rect.y+rect.h+4>o.y)){occupied.push(rect);placed=true;break;}y-=h+7;if(y<6)break;
    }
-   p.e.button.hidden=!placed;if(placed)p.e.button.style.transform='translate('+Math.round(x)+'px,'+Math.round(y)+'px)';
+   p.e.button.hidden=!placed;
+   if(placed){
+    const pixelX=Math.round(x),pixelY=Math.round(y);
+    p.e.button.style.transform='translate('+pixelX+'px,'+pixelY+'px)';
+    const connector=avatarConnector({anchor:{x:p.x,y:p.y},rect:{x:pixelX,y:pixelY,w,h},viewport:{width,height}});
+    p.e.button.dataset.linked=String(!!connector);
+    if(connector){const {from,to}=connector;p.e.connector.setAttribute('d','M'+from.x+' '+from.y+'L'+to.x+' '+to.y);p.e.connector.setAttribute('visibility','visible');}
+   }
   }
  }
  return{update,clear(){for(const id of entries.keys())remove(id);lastSample=-Infinity;},dispose(){if(disposed)return;disposed=true;entries.clear();layer.remove();}};

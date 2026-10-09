@@ -35,6 +35,12 @@ Apps Script V72 publicada sobre la implementación existente. Verificación inde
 Despliegue Render dep-db47qobncjis73c3vrp0, commit dfe9c7a45ddeb997c32b8bd39483be3874e68658. Render confirma estado live a las22:37:10.191. Se conservan el plan, las variables y el volumen persistente existentes. Logs de arranque muestran lecturas de contexto preparadas en1749 y1996ms, sin error en esa ventana.
 Los encargos autorizados usan la cola y el estado del servidor aunque no haya una pestaña abierta. La escena representa esos eventos cuando alguien la visita; no se necesita renderizar 3D en el servidor vacío. Un encargo incierto tras reinicio requiere reanudación explícita para no repetir acciones sin certeza.
 
+## 22:49–22:57 · Revisión visual y móvil
+El recorrido de escritorio dfc690c comprobó los tres personajes, cambio por proximidad, conservación del contenedor PPP durante voz, bloqueo de cambio durante conversación, recuperación, reunión y radial. El runner agotó su límite al cerrar el contexto; los pasos pendientes de móvil y plano se ejecutaron por separado en37890648925 y aprobaron. El PPP de esa matriz es un doble HTML simplificado: acredita el contenedor y su continuidad, no el tablero nativo ni sus datos privados. Chromium eligió navegación normal al volver; BFCache real no fue observado, aunque sus estados tienen regresiones de lógica.
+La prueba adicional de entrada detectó un desbordamiento real del retrato móvil: translateX(-5px) movía el canvas fuera de su host40×56. Se elimina ese desplazamiento y se conserva proporción/centrado, manteniendo el assert.
+La captura también mostró una etiqueta alejada de su personaje. La proyección mundial era correcta; el sistema para evitar solapamientos la elevaba151px sin asociación visual. Se incorpora un conector fino al mismo anclaje y se retira junto a la etiqueta cuando pierde visibilidad o acceso.
+La tarjeta compacta reutiliza las etiquetas humanas de actividad; ya no muestra identificadores como navegador_abrir. Estos cambios requieren el cierre del recorrido de entrada sobre la nueva cabeza antes de publicar.
+
 ## Pendiente de evidencia
 - Resultados de integración y capturas reales del render con datos sintéticos.
 - Prueba de entrada pública: la configuración OAuth externa puede rechazar un origen no registrado; no se altera identidad para ocultarlo.
