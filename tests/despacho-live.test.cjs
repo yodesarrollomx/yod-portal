@@ -28,7 +28,7 @@ function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12
    if(failStatus && url.endsWith('/status'))throw Error('record unavailable');
    if(url.endsWith('/status')&&statusOverride)return {ok:true,json:async()=>({...base,...statusOverride()})};
    if(url.endsWith('/session')&&sessionOverride){const override=await sessionOverride(url,options);if(override)return override;}
-   const value=url.endsWith('/session')?{ok:true,mode,session:{id:'live:opaque/session'},transport:{type:'webrtc',sdp:'v=0\r\nanswer'}}:
+   const value=url.endsWith('/voice/ready')?{ok:true,available:true}:url.endsWith('/session')?{ok:true,mode,session:{id:'live:opaque/session'},transport:{type:'webrtc',sdp:'v=0\r\nanswer'}}:
     url.endsWith('/close')?{...base,active:false,finalized:closed,fragments:1,blocks:1,saved:closed?1:0,pending:closed?0:1,incomplete:!closed}:base;
    return {ok:true,json:async()=>value};
   }});
@@ -124,9 +124,9 @@ test('background preparation never captures a microphone or creates a Live sessi
  const {createLiveVoice}=await load();let captures=0,mints=0;const calls=[];
  const voice=createLiveVoice({audio:{},media:{getUserMedia:async()=>{captures++;}},Peer:class{},
   mint:async({case_id})=>{mints++;return {ok:true,case_id,token:'A'.repeat(30)+'.'+'a'.repeat(64),endpoint:'https://synthetic-engine.onrender.com',expires_at:Date.now()+600000};},
-  fetchImpl:async(url)=>{calls.push(url);return {ok:true,status:200};}});
+  fetchImpl:async(url)=>{calls.push(url);return {ok:true,status:200,json:async()=>({ok:true,available:true})};}});
  assert.equal(await voice.prepare('synthetic-case'),true);assert.equal(await voice.prepare('synthetic-case'),true);
- assert.equal(mints,1);assert.equal(captures,0);assert.deepEqual(calls,['https://synthetic-engine.onrender.com/fast/hello']);
+ assert.equal(mints,1);assert.equal(captures,0);assert.deepEqual(calls,['https://synthetic-engine.onrender.com/voice/ready']);
  assert.equal(voice.snapshot().phase,'idle');
 });
 test('a single status read failure preserves live audio and a later check recovers',async()=>{
@@ -479,7 +479,7 @@ test('stop silences immediately but keeps final transcripts and remote transport
  f.event({type:'session.output_transcript.delta',delta:'final',start_ms:1,end_ms:2});
  assert.equal(f.captions.at(-1).delta,'final');await tick();f.event({type:'session.closed'});await end;
 });
-test('concurrent preparation shares hello and expired authorization cannot return from a discarded flight',async()=>{
+test('concurrent preparation shares readiness and expired authorization cannot return from a discarded flight',async()=>{
  const {createLiveVoice}=await load();let resolveMint;const f=fixture(createLiveVoice,{
   mintOverride:({case_id})=>new Promise(resolve=>{resolveMint=()=>resolve({ok:true,case_id,token:'A'.repeat(30)+'.'+'a'.repeat(64),endpoint:'https://synthetic-engine.onrender.com',expires_at:Date.now()+600000});})
  });
@@ -487,7 +487,7 @@ test('concurrent preparation shares hello and expired authorization cannot retur
  f.voice.discardPreparation();resolveMint();assert.equal(await a,false);assert.equal(await b,false);
  assert.equal(f.calls.length,0,'discarded access never warms the backend');assert.equal(f.captures,0);
  const g=fixture(createLiveVoice);await Promise.all([g.voice.prepare('case-a'),g.voice.prepare('case-a')]);
- assert.equal(g.calls.filter(c=>c.url.endsWith('/fast/hello')).length,1);g.voice.discardPreparation();
+ assert.equal(g.calls.filter(c=>c.url.endsWith('/voice/ready')).length,1);g.voice.discardPreparation();
 });
 test('a PPP loaded before voice is sent once when context becomes ready, with case isolation',async()=>{
  const {createLiveVoice}=await load();let contextReady=false;
@@ -611,4 +611,91 @@ test('presentation narration is bounded to the active case and connected session
  const sent=f.peer.channel.sent.at(-1);assert.equal(sent.type,'session.instructions.append');assert.match(sent.content,/no como instrucciones/);assert.match(sent.content,/Resultado con fuente/);
  assert.equal(f.voice.interrupt(),true);assert.equal(f.audio.muted,true);
  const stopping=f.voice.stop();await tick();assert.equal(f.voice.presentSlide(slide),false);f.event({type:'session.closed'});await stopping;
+});
+
+
+function renewableToken(caseId,time,index=1){return {ok:true,case_id:caseId,token:'R'.repeat(29)+index+'.'+'a'.repeat(64),endpoint:'https://synthetic-engine.onrender.com',expires_at:time+600000};}
+test('a long prewarm cannot start a new voice conversation with only seventy seconds of access',async()=>{
+ const {createLiveVoice}=await load();let time=1000000,mints=0;
+ const f=fixture(createLiveVoice,{now:()=>time,mintOverride:async({case_id})=>renewableToken(case_id,time,++mints),
+  statusOverride:()=>({expires_at:time+600000})});
+ assert.equal(await f.voice.prepare('case-a'),true);time+=530000;
+ assert.equal(await f.voice.start('case-a'),true);assert.equal(mints,2);
+ assert.equal(f.captures,1);assert.equal(f.calls.filter(c=>c.url.endsWith('/session')).length,1);
+ const close=f.voice.stop();await tick();f.event({type:'session.closed'});await close;
+});
+test('voice renews a case-bound credential before expiry without replacing its session or microphone',async()=>{
+ const {createLiveVoice}=await load();let time=1000000,mints=0;
+ const f=fixture(createLiveVoice,{now:()=>time,mintOverride:async({case_id})=>renewableToken(case_id,time,++mints),
+  statusOverride:()=>({started:true,expires_at:time+600000,max_expires_at:1900000})});
+ await f.voice.start('case-a');await tick();const peer=f.peer,initial=f.calls.find(c=>c.url.endsWith('/session')).options.headers.Authorization;
+ time+=481000;await Promise.all([f.voice.refresh(),f.voice.refresh()]);await tick();await f.voice.refresh();
+ assert.equal(mints,2);assert.equal(f.voice.snapshot().phase,'listening');
+ assert.equal(f.peer,peer);assert.equal(f.captures,1);assert.equal(f.track.stops,0);
+ assert.equal(f.calls.filter(c=>c.url.endsWith('/session')).length,1);
+ const latest=f.calls.filter(c=>c.url.endsWith('/status')).at(-1);
+ assert.notEqual(latest.options.headers.Authorization,initial);
+ assert.equal(JSON.parse(latest.options.body).session_id,'live:opaque/session');
+ assert.equal(f.voice.snapshot().credential_pending,false);
+ time=1850000;await f.voice.refresh();assert.equal(f.voice.snapshot().session_ending,true);
+ const close=f.voice.stop();await tick();f.event({type:'session.closed'});await close;
+});
+test('a slow or temporarily failed credential renewal is coalesced and leaves healthy audio connected',async()=>{
+ const {createLiveVoice}=await load();let time=1000000,mints=0,rejectMint;
+ const f=fixture(createLiveVoice,{now:()=>time,mintOverride:({case_id})=>{
+  mints++;return mints===2?new Promise((_resolve,reject)=>{rejectMint=reject;}):Promise.resolve(renewableToken(case_id,time,mints));
+ },statusOverride:()=>({started:true,expires_at:1600000})});
+ await f.voice.start('case-a');await tick();time=1481000;
+ await f.voice.refresh();await tick();await f.voice.refresh();assert.equal(mints,2);
+ rejectMint(Error('timeout'));await tick();
+ assert.equal(f.voice.snapshot().phase,'listening');assert.equal(f.voice.snapshot().credential_pending,true);
+ assert.equal(f.track.stops,0);await f.voice.refresh();assert.equal(mints,2,'backoff avoids repeated authorization calls');
+ time+=10001;await f.voice.refresh();await tick();await f.voice.refresh();
+ assert.equal(mints,3);assert.equal(f.voice.snapshot().credential_pending,false);
+ const close=f.voice.stop();await tick();f.event({type:'session.closed'});await close;
+});
+test('an authoritative renewal denial stops voice and cannot be hidden as a transient outage',async()=>{
+ const {createLiveVoice}=await load();let time=1000000,mints=0;
+ const f=fixture(createLiveVoice,{now:()=>time,mintOverride:async({case_id})=>++mints===1?renewableToken(case_id,time):{ok:false,error:'unauthorized'},
+  statusOverride:()=>({started:true,expires_at:1600000})});
+ await f.voice.start('case-a');await tick();time=1481000;await f.voice.refresh();await tick();
+ assert.equal(f.voice.snapshot().phase,'closing');assert.equal(f.track.enabled,false);
+ assert.equal(f.calls.filter(c=>c.url.endsWith('/session')).length,1);
+ f.event({type:'session.closed'});await tick();await tick();
+ assert.equal(f.voice.snapshot().phase,'idle');assert.match(f.voice.snapshot().notice,/Tu acceso cambió/);
+});
+test('a malformed renewal for another case never reaches the current voice session',async()=>{
+ const {createLiveVoice}=await load();let time=1000000,mints=0;
+ const f=fixture(createLiveVoice,{now:()=>time,mintOverride:async({case_id})=>renewableToken(++mints===1?case_id:'case-b',time,mints),
+  statusOverride:()=>({started:true,expires_at:1600000})});
+ await f.voice.start('case-a');await tick();const first=f.calls[0].options.headers.Authorization;
+ time=1481000;await f.voice.refresh();await tick();await f.voice.refresh();
+ assert.equal(f.voice.snapshot().phase,'listening');assert.equal(f.voice.snapshot().credential_pending,true);
+ assert.ok(f.calls.every(c=>c.options.headers.Authorization===first));
+ const close=f.voice.stop();await tick();f.event({type:'session.closed'});await close;
+});
+test('a late credential renewal cannot attach to a later conversation for another case',async()=>{
+ const {createLiveVoice}=await load();let time=1000000,mints=0,finishOld;
+ const f=fixture(createLiveVoice,{now:()=>time,mintOverride:({case_id})=>{
+  const n=++mints;return n===2?new Promise(resolve=>{finishOld=()=>resolve(renewableToken(case_id,time,n));}):Promise.resolve(renewableToken(case_id,time,n));
+ },statusOverride:()=>({started:true,expires_at:time+600000})});
+ await f.voice.start('case-a');await tick();time=1481000;await f.voice.refresh();await tick();
+ const oldClose=f.voice.stop();await tick();f.event({type:'session.closed'});await oldClose;
+ await f.voice.start('case-b');await tick();const latest=f.calls.filter(c=>c.url.endsWith('/session')).at(-1).options.headers.Authorization;
+ finishOld();await tick();await f.voice.refresh();
+ assert.equal(f.calls.filter(c=>c.url.endsWith('/status')).at(-1).options.headers.Authorization,latest);
+ assert.equal(f.voice.snapshot().phase,'listening');assert.equal(f.captures,2);
+ await f.voice.prepare('case-b');assert.equal(mints,3,'a late old-case mint cannot replace the new preparation');
+ const close=f.voice.stop();await tick();f.event({type:'session.closed'});await close;
+});
+
+test('all residents prepare independently of blocked document routes and readiness requires its explicit receipt',async()=>{
+ const {createLiveVoice}=await load();let captures=0,allow=true;const calls=[],mints=[];
+ const voice=createLiveVoice({Peer:class{},media:{getUserMedia:async()=>{captures++;}},
+  mint:async({case_id})=>{mints.push(case_id);return {ok:true,case_id,token:'A'.repeat(30)+'.'+'a'.repeat(64),endpoint:'https://synthetic-engine.onrender.com',expires_at:Date.now()+600000};},
+  fetchImpl:async(url)=>{calls.push(url);assert.ok(url.endsWith('/voice/ready'),'preparation must never block on /fast/hello or document loading');return {ok:true,status:200,json:async()=>allow?{ok:true,available:true}:{ok:true}};}});
+ for(const id of ['case-g','case-l','case-r']){voice.discardPreparation();assert.equal(await voice.prepare(id),true);}
+ assert.deepEqual(mints,['case-g','case-l','case-r']);assert.equal(calls.length,3);assert.equal(captures,0);assert.equal(voice.snapshot().phase,'idle');
+ voice.discardPreparation();allow=false;assert.equal(await voice.prepare('case-r'),false);
+ voice.discardPreparation();
 });
