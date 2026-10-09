@@ -30,7 +30,7 @@ export function mountAgentMenu({win=window,doc=document}={}){
  function showPending(caseId,{message=null,retry=false}={}){
   const profile=pendingProfile(caseId);if(!profile)return false;
   const ticket=++pendingEpoch;pendingCase=caseId;selection=null;selectSector=()=>{};proximityMode=false;dialog.classList.remove('proximity-radial');
-  previousFocus=doc.activeElement;dialog.replaceChildren();
+  if(!dialog.open)previousFocus=doc.activeElement;dialog.replaceChildren();
   const exit=button('×',()=>close());exit.className='radial-close';exit.setAttribute('aria-label','Cerrar opciones');
   const title=el('h1',profile.name);title.id='agent-menu-title';
   const status=el('p',message||'Preparando su puesto…','radial-status');status.setAttribute('role','status');status.setAttribute('aria-live','polite');
@@ -70,7 +70,7 @@ export function mountAgentMenu({win=window,doc=document}={}){
   const fresh=win.YodResidentAgents?.getSelection?.();if(!fresh||fresh.case_id!==caseId||!fresh.avatar)return false;
   if(dialog.open&&selection?.case_id===caseId)return true;
   proximityMode=proximity;dialog.classList.toggle('proximity-radial',proximityMode);
-  pendingCase=null;pendingEpoch++;selection=fresh;sector='ppp';const identity=stationIdentity(fresh);previousFocus=doc.activeElement;
+  if(!dialog.open)previousFocus=doc.activeElement;pendingCase=null;pendingEpoch++;selection=fresh;sector='ppp';const identity=stationIdentity(fresh);
   dialog.replaceChildren();const closeButton=button('×',()=>close());closeButton.className='radial-close';closeButton.setAttribute('aria-label','Cerrar opciones');dialog.append(closeButton);
   const title=el('h1',identity.name);title.id='agent-menu-title';
   dialog.append(el('p','PUESTO DEL PROYECTO','radial-eyebrow'),title,el('p',identity.project,'radial-project'));
