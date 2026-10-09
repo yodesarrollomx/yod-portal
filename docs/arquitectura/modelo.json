@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-09.126-despacho-integral",
+  "revision": "2026-10-09.126-despacho-publicado",
   "checked_at": "2026-10-09",
   "priorities": [
     "vender_mas",
@@ -100,7 +100,7 @@
       "commit": "82f597bee316c942e4f631a507c7f8277178fcd3",
       "visibility": "public",
       "scope": "Inventario de archivos y revisión de entradas, contratos y automatizaciones; detalle de cobertura en inventario-fuentes.json.",
-      "runtime_status": "Despliegue y funcionamiento integrado no verificados",
+      "runtime_status": "Inventario referido al commit indicado. Despacho126 publicado mediante0351157 y Pages37895280755; pruebas acotadas a esa interfaz y sus contratos, sin acreditar todos los sistemas del repositorio ni micrófono físico.",
       "file_count": 64
     },
     {
@@ -607,6 +607,13 @@
           "claim": "PR #14 integrado; doce archivos servidos comparados exactamente con commit 7e9094b y perfiles sintéticos sobre la publicación. No acredita sesiones ni escrituras reales.",
           "status": "ejecucion",
           "source_revision": "7e9094bf2a70ea1ee4e790299370fe28cfc4d89b"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "os/index.html",
+          "commit": "0351157a71ec9fc3c5b3beae70702c92646ece58",
+          "claim": "GSI recupera origen mediante strict-origin; A/B real pasa400→200 y confirma Referer sin rutas/query. No modifica clientesOAuth ni acredita login personal completo.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -621,7 +628,7 @@
         "SYS-PORTAL"
       ],
       "status": "declarado",
-      "runtime_status": "Portal PR114 publicado en Pages, commit 5eca769. Cobertura operativa completa y aceptación privada de recorridos pendientes."
+      "runtime_status": "Portal PR141 publicado en Pages (0351157). El clienteWeb y origen ya estaban registrados correctamente: OS recupera Referer de sólo origen y GSI devuelve200 en publicación escritorio/móvil. No acredita inicio de sesión personal, micrófono físico ni cobertura operativa completa de YOD."
     },
     {
       "id": "SYS-PLAN-POTENCIAL",
@@ -2722,7 +2729,7 @@
       "dominio": "Operación",
       "proposito": "Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.",
       "source_of_truth": "Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos.",
-      "runtime_status": "Integración126 en preparación: tres personajes autorizados, presencia por tarea y puesto PPP/Trabajo/Expediente compartido. Publicación y aceptación se registrarán tras pruebas del mismo commit; no se acredita micrófono físico.",
+      "runtime_status": "Versión normal126 publicada por PR141 (0351157): presencia de tres proyectos autorizados, puestos PPP/Trabajo/Expediente y pantallas ligadas al caso. Siete recorridos de navegador aprobados con datos sintéticos; accesoGSI400 corregido en OS enviando sólo el origen. No acredita micrófono físico ni apariencia/datos del PPP nativo privado.",
       "evidence": [
         {
           "repo": "yodesarrollomx/yod-portal",
@@ -2730,6 +2737,13 @@
           "commit": "5eca769947e60bc5b51389244393e0f63817cf86",
           "claim": "Puesto compartido con PPP y ejecución de intención explícita; observar no otorga permisos.",
           "status": "codigo"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/despacho126-resultados.md",
+          "commit": "0351157a71ec9fc3c5b3beae70702c92646ece58",
+          "claim": "Publicación126 con bitácora, geometría de avatar, presencia y estaciones aisladas por caso; evidencia de navegador distingue fixtures de solicitudesGSI reales.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -9628,7 +9642,7 @@
         "SYS-POTENCIALES"
       ],
       "proposal": "Unificar continuidad de proyecto, conversación y PPP; mejorar avatares y presencia legible con herramienta e hitos reales; reflejar trabajo persistente e historial por ejecución. Preparar representación ligera compartiendo contratos, sin publicar aún una vista pixel.",
-      "status": "implementado_local",
+      "status": "publicado",
       "approval": "Dirección acepta la propuesta integral y autoriza implementar, comprobar y publicar la versión normal el 8-oct-2026. Nombres cortos vienen del registro privado autorizado; conservar IDs, datos financieros y permisos.",
       "tests": [
         "Aislamiento de tres proyectos y acciones con case_id explícito; voz no cambia la vista.",
@@ -9637,7 +9651,7 @@
         "Recuperación transitoria versus revocación, móvil, bajo consumo y fallback con acciones consistentes.",
         "Regresiones, verificadores, navegador con datos sintéticos y cotejo público; audio físico y sesión real se informan por separado."
       ],
-      "deployment": "2026-10-09T05:37:10Z: backend dfe9c7a45ddeb997c32b8bd39483be3874e68658 live en Render, pruebas de cabeza 282 aprobadas y una omitida; navegadores voz/PPP y puesto aprobados. Portero V72 comprobado en lectura independiente conservando implementación. Portal integrado en PR141: cierre de pruebas y revisión visual pendientes antes de publicar; micrófono físico no acreditado.",
+      "deployment": "2026-10-09T06:46:13Z: portal PR141 integrado en0351157a71ec9fc3c5b3beae70702c92646ece58 y Pages37895280755 publicado. Recorrido integrado37894399997: siete suites aprobadas; Node580 y validadores aprobados. Corrección finalOS strict-origin acreditada por A/BGoogle400→200 sin compartir ruta/query. Backend dfe9c7a45ddeb997c32b8bd39483be3874e68658 live en Render desde05:37:10Z; 282 pruebas aprobadas y una omitida. PorteroV72 verificado conservando implementación. La aceptación de micrófono físico y PPP nativo privado no se acredita con fixtures. Auditoría pública37895405594: cuatro SHA256 publicados coinciden; GSI200 escritorio/móvil, salud y disponibilidad200, APIs privadas401 sin sesión. Seguimiento37895920139 confirma recarga real y Ayuda. No se acredita mejora50% ni velocidadChromebook; primer render en ChromiumCI/SwiftShader21.43s/13.61s frío escritorio/móvil.",
       "rollback": "Revertir interfaz y cambios compatibles del motor mediante PR; conservar expedientes, journal/outbox, recibos y volumen persistente. No borrar objetivos ni reanudar acciones inciertas."
     }
   ],

@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-09.126-despacho-integral
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-09.126-despacho-publicado
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -76,7 +76,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dirección
 
-**Estado registrado:** declarado. Portal PR114 publicado en Pages, commit 5eca769. Cobertura operativa completa y aceptación privada de recorridos pendientes.
+**Estado registrado:** declarado. Portal PR141 publicado en Pages (0351157). El clienteWeb y origen ya estaban registrados correctamente: OS recupera Referer de sólo origen y GSI devuelve200 en publicación escritorio/móvil. No acredita inicio de sesión personal, micrófono físico ni cobertura operativa completa de YOD.
 
 **Entradas registradas:**
 
@@ -111,6 +111,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - El portal integra tableros · Estado: declarado · yodesarrollomx/yod-portal · CLAUDE.md · Revisión: HEAD\_baseline
 - [PR \#14 integrado; doce archivos servidos comparados exactamente con commit 7e9094b y perfiles sintéticos sobre la publicación. No acredita sesiones ni escrituras reales. · Estado: ejecucion · yodesarrollomx/yod-portal · docs/arquitectura/control-maestro.md · Revisión: 7e9094bf2a70ea1ee4e790299370fe28cfc4d89b](https://github.com/yodesarrollomx/yod-portal/blob/7e9094bf2a70ea1ee4e790299370fe28cfc4d89b/docs/arquitectura/control-maestro.md)
+- [GSI recupera origen mediante strict-origin; A/B real pasa400→200 y confirma Referer sin rutas/query. No modifica clientesOAuth ni acredita login personal completo. · Estado: ejecucion · yodesarrollomx/yod-portal · os/index.html · Revisión: 0351157a71ec9fc3c5b3beae70702c92646ece58](https://github.com/yodesarrollomx/yod-portal/blob/0351157a71ec9fc3c5b3beae70702c92646ece58/os/index.html)
 
 **Evidencia de conexiones:**
 
@@ -994,7 +995,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dirección técnica
 
-**Estado registrado:** codigo. Integración126 en preparación: tres personajes autorizados, presencia por tarea y puesto PPP/Trabajo/Expediente compartido. Publicación y aceptación se registrarán tras pruebas del mismo commit; no se acredita micrófono físico.
+**Estado registrado:** codigo. Versión normal126 publicada por PR141 (0351157): presencia de tres proyectos autorizados, puestos PPP/Trabajo/Expediente y pantallas ligadas al caso. Siete recorridos de navegador aprobados con datos sintéticos; accesoGSI400 corregido en OS enviando sólo el origen. No acredita micrófono físico ni apariencia/datos del PPP nativo privado.
 
 **Entradas registradas:**
 
@@ -1012,6 +1013,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Evidencia de la ficha:**
 
 - [Puesto compartido con PPP y ejecución de intención explícita; observar no otorga permisos. · Estado: codigo · yodesarrollomx/yod-portal · despacho3d/agent-workspace.mjs · Revisión: 5eca769947e60bc5b51389244393e0f63817cf86](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/agent-workspace.mjs)
+- [Publicación126 con bitácora, geometría de avatar, presencia y estaciones aisladas por caso; evidencia de navegador distingue fixtures de solicitudesGSI reales. · Estado: ejecucion · yodesarrollomx/yod-portal · docs/arquitectura/despacho126-resultados.md · Revisión: 0351157a71ec9fc3c5b3beae70702c92646ece58](https://github.com/yodesarrollomx/yod-portal/blob/0351157a71ec9fc3c5b3beae70702c92646ece58/docs/arquitectura/despacho126-resultados.md)
 
 **Evidencia de conexiones:**
 

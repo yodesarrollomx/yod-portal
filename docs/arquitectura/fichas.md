@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-09.126-despacho-integral · 2026-10-09.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-09.126-despacho-publicado · 2026-10-09.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -141,10 +141,10 @@ Administrar catálogo y registro de proyectos
 Integrar navegación, identidad y síntesis de tableros
 
 - Tipo: portal. Dominio: Gobierno. Responsable: Dirección.
-- Evidencia: declarado. Producción: Portal PR114 publicado en Pages, commit 5eca769. Cobertura operativa completa y aceptación privada de recorridos pendientes..
+- Evidencia: declarado. Producción: Portal PR141 publicado en Pages (0351157). El clienteWeb y origen ya estaban registrados correctamente: OS recupera Referer de sólo origen y GSI devuelve200 en publicación escritorio/móvil. No acredita inicio de sesión personal, micrófono físico ni cobertura operativa completa de YOD..
 - Entidades: sistema, sesion, resumen, proyecto.
 - Fuente de verdad: Catálogo de código y Control Maestro; cada indicador hereda el almacén de su dominio.
-- Evidencia: [yod-portal/CLAUDE.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/CLAUDE.md#L7) — El portal integra tableros; [yod-portal/docs/arquitectura/control-maestro.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/control-maestro.md) — PR #14 integrado; doce archivos servidos comparados exactamente con commit 7e9094b y perfiles sintéticos sobre la publicación. No acredita sesiones ni escrituras reales..
+- Evidencia: [yod-portal/CLAUDE.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/CLAUDE.md#L7) — El portal integra tableros; [yod-portal/docs/arquitectura/control-maestro.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/control-maestro.md) — PR #14 integrado; doce archivos servidos comparados exactamente con commit 7e9094b y perfiles sintéticos sobre la publicación. No acredita sesiones ni escrituras reales.; [yod-portal/os/index.html](https://github.com/yodesarrollomx/yod-portal/blob/0351157a71ec9fc3c5b3beae70702c92646ece58/os/index.html) — GSI recupera origen mediante strict-origin; A/B real pasa400→200 y confirma Referer sin rutas/query. No modifica clientesOAuth ni acredita login personal completo..
 - Conexiones: CON-033 (SYS-YOD-OS → SYS-DESPACHO); CON-034 (SYS-YOD-OS → SYS-POTENCIALES); CON-035 (SYS-YOD-OS → SYS-TRACK); CON-036 (SYS-YOD-OS → SYS-MIRAMAR); CON-037 (SYS-YOD-OS → SYS-TAREAS); CON-038 (SYS-YOD-OS → SYS-FLUJO); CON-039 (SYS-YOD-OS → SYS-INTERIORES); CON-040 (SYS-YOD-OS → SYS-INVERSION); CON-041 (SYS-YOD-OS → SYS-MARKETING); CON-042 (SYS-YOD-OS → SYS-OBRA); CON-043 (SYS-YOD-OS → SYS-CONTROL); CON-044 (SYS-YOD-OS → GAS-PORTERO); CON-052 (GAS-PLAN-POTENCIAL → SYS-YOD-OS); CON-053 (GAS-MIRAMAR → SYS-YOD-OS); CON-054 (GAS-PORTERO → SYS-YOD-OS); CON-055 (GAS-OPERACION → SYS-YOD-OS); CON-056 (GAS-CODES → SYS-YOD-OS); CON-057 (GAS-OBRA → SYS-YOD-OS); CON-065 (SYS-YOD-OS → GAS-CRM); CON-073 (SYS-YOD-OS → GAS-PORTERO-RESPALDO); CON-EMD-GITHUB-EMBED (SYS-YOD-OS → SYS-EMD); CON-OS-DESPACHO-3D (SYS-YOD-OS → SYS-DESPACHO-3D).
 - Mejoras: K · Indicadores confiables y rendimiento medido; L · Mapa vivo, contratos y cambios verificables.
 
@@ -1006,10 +1006,10 @@ Persistir notas y ejes del Corcho en un archivo privado independiente, autorizad
 Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.
 
 - Tipo: interfaz. Dominio: Operación. Responsable: Dirección técnica.
-- Evidencia: codigo. Producción: Integración126 en preparación: tres personajes autorizados, presencia por tarea y puesto PPP/Trabajo/Expediente compartido. Publicación y aceptación se registrarán tras pruebas del mismo commit; no se acredita micrófono físico..
+- Evidencia: codigo. Producción: Versión normal126 publicada por PR141 (0351157): presencia de tres proyectos autorizados, puestos PPP/Trabajo/Expediente y pantallas ligadas al caso. Siete recorridos de navegador aprobados con datos sintéticos; accesoGSI400 corregido en OS enviando sólo el origen. No acredita micrófono físico ni apariencia/datos del PPP nativo privado..
 - Entidades: caso, sesion, tablero, tarea, recibo.
 - Fuente de verdad: Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos..
-- Evidencia: [yod-portal/despacho3d/agent-workspace.mjs](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/agent-workspace.mjs) — Puesto compartido con PPP y ejecución de intención explícita; observar no otorga permisos..
+- Evidencia: [yod-portal/despacho3d/agent-workspace.mjs](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/agent-workspace.mjs) — Puesto compartido con PPP y ejecución de intención explícita; observar no otorga permisos.; [yod-portal/docs/arquitectura/despacho126-resultados.md](https://github.com/yodesarrollomx/yod-portal/blob/0351157a71ec9fc3c5b3beae70702c92646ece58/docs/arquitectura/despacho126-resultados.md) — Publicación126 con bitácora, geometría de avatar, presencia y estaciones aisladas por caso; evidencia de navegador distingue fixtures de solicitudesGSI reales..
 - Conexiones: CON-OS-DESPACHO-3D (SYS-YOD-OS → SYS-DESPACHO-3D); CON-DESPACHO-3D-MOTOR (SYS-DESPACHO-3D → SVC-AUTON-CLOUD); CON-DESPACHO-3D-PPP (SYS-DESPACHO-3D → SYS-POTENCIALES); CON-ESTADO-EXPORTACION (STORE-AUTON-ESTADO → SYS-DESPACHO-3D); CON-DESPACHO-EXPORTAR-OBSIDIAN (SYS-DESPACHO-3D → EXT-OBSIDIAN); CON-BIBLIOTECA-NOTEBOOKLM (SYS-DESPACHO-3D → EXT-NOTEBOOKLM).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 
