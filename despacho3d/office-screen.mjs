@@ -8,7 +8,7 @@ export function createOfficeScreen(mesh,onChange=()=>{}){
  mesh.userData.agentComputer=true;let generation=0,latest=null,disposed=false,lastPaint=null,decoded=null,decodedKey=null,pending=null;
  const labels={library:'Biblioteca',research:'Investigación',meeting:'Sala de juntas'},stamp=v=>v?new Date(v).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):'';
  const line=(s,y,size=24,color='#183d3b')=>{ctx.fillStyle=color;ctx.font='500 '+size+'px Arial';ctx.fillText(String(s||''),28,y,710);};
- const wrap=(s,y,maxY,size=24)=>{ctx.font='500 '+size+'px Arial';let row='';for(const word of String(s||'').replace(/\\s+/g,' ').split(' ')){if(ctx.measureText(row+' '+word).width>710){line(row,y,size);y+=size+7;row='';if(y>maxY)return;}row+=(row?' ':'')+word;}if(y<=maxY)line(row,y,size);};
+ const wrap=(s,y,maxY,size=24)=>{ctx.font='500 '+size+'px Arial';let row='';for(const word of String(s||'').replace(/\s+/g,' ').split(' ')){if(ctx.measureText(row+' '+word).width>710){line(row,y,size);y+=size+7;row='';if(y>maxY)return;}row+=(row?' ':'')+word;}if(y<=maxY)line(row,y,size);};
  function base(state){
   ctx.fillStyle='#f2f1eb';ctx.fillRect(0,0,768,400);ctx.fillStyle='#173f3c';ctx.fillRect(0,0,768,60);
   line((labels[state.surface]||'Puesto de trabajo')+' · '+(state.projectName||'Autón'),38,22,'#f2f1eb');

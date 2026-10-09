@@ -78,6 +78,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
    assert.equal(await frame.locator('.station-radial').isVisible(),false,'programmatic travel is not deliberate proximity');
    await frame.evaluate(()=>window.YodAgentMenu.showRadial('synthetic-A',{proximity:true}));
    await frame.locator('.station-radial').waitFor();
+   assert.equal(await frame.locator('.station-radial [data-chinche-ui="select"]').count(),0,'the radial contains actions only, without a duplicate report toolbar');
    assert.equal(await frame.evaluate(()=>window.__captures),0,'proximity does not request audio');
    assert.match(await frame.locator('#agent-menu-title').innerText(),/Autón A/);
    await page.keyboard.press('Escape');await page.waitForTimeout(700);
@@ -114,10 +115,23 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await frame.locator('.workspace-board iframe[src*="open=synthetic-A"]').waitFor();
   const report=frame.locator('.realtime-dialog [data-chinche-ui="select"]');
   assert.equal(await report.count(),1,'one report entry per station');
-  await frame.locator('.workspace-tools>summary').click();
-  assert.equal(await report.isVisible(),true,'report remains reachable in Tools');
-  assert.equal(await report.evaluate(e=>!!e.closest('.workspace-tools')),true);
-  await frame.locator('.workspace-tools>summary').click();
+  const chatPanel=frame.locator('.station-chat'),activityPanel=frame.locator('.station-details');
+  const chatWasOpen=await chatPanel.evaluate(e=>e.open);
+  if(!chatWasOpen)await chatPanel.locator(':scope > summary').click();
+  await activityPanel.locator(':scope > summary').click();
+  assert.equal(await report.isVisible(),true,'one report entry remains reachable in the secondary activity panel');
+  assert.equal(await report.evaluate(e=>!!e.closest('.station-details')),true);
+  await report.scrollIntoViewIfNeeded();
+  const reportBounds=await report.evaluate(e=>{const r=e.getBoundingClientRect(),dialog=e.closest('dialog').getBoundingClientRect();return r.top>=dialog.top&&r.bottom<=dialog.bottom&&r.left>=dialog.left&&r.right<=dialog.right;});
+  assert.equal(reportBounds,true,'report cannot be clipped below the full-height station layout');
+  await page.evaluate(()=>document.querySelector('iframe').contentWindow.postMessage({type:'yod:despacho:ready',version:1},location.origin));
+  await report.click();
+  assert.equal(await frame.locator('.chinche-ui-hint').isVisible(),true,'authorized report selection opens from the reachable entry');
+  await page.keyboard.press('Escape');
+  assert.equal(await frame.locator('.chinche-ui-hint').isVisible(),false,'Escape cancels even while Cancel is focused');
+  assert.equal(await frame.locator('.realtime-dialog').isVisible(),true,'cancelling a report keeps the PPP station open');
+  await activityPanel.locator(':scope > summary').click();
+  if(!chatWasOpen)await chatPanel.locator(':scope > summary').click();
 
   assert.equal(await frame.locator('[data-tab="ppp"]').getAttribute('aria-pressed'),'true');
   assert.match(await frame.locator('#voice-title').textContent(),/Autón A/);

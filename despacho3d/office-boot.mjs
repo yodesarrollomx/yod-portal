@@ -1,5 +1,5 @@
 import {OFICINA_LEGIBLE} from './office-config.mjs?v=3';
-import {createChinches3D} from './chinches3d.mjs?v=4';
+import {createChinches3D} from './chinches3d.mjs?v=126';
 // Install the authorized UI bridge before WebGL: an unavailable camera stays explicitly null.
 const chinches=createChinches3D({readView:()=>({position:null,quaternion:null,fov:null,mode:'map'})});
 let fallback=false;

@@ -89,14 +89,18 @@ test('seated figure faces the visible monitor and returns to its shared chair po
 
 test('scaled figures contact the chair and remain seated while talking',async()=>{
  const [T,{createOfficePilot}]=await modules;
- for(const form of ['child','young','adult','robot']){
+ for(const form of ['child','young_male','man','robot']){
   const scene=new T.Scene(),p=createOfficePilot({scene});p.bind(panel({...profile,form}));
   const root=scene.children[0],body=root.userData.body,leg=root.userData.legs[0];
-  assert.ok(Math.abs(body.position.y+.50*body.scale.y-.62)<.001,'seat contact '+form);
+  // Measure the rendered upper thigh in world coordinates, independently of each rig's hip formula.
+  root.updateMatrixWorld(true);const thigh=leg.children.find(part=>part.isMesh);assert.ok(thigh,'upper thigh '+form);
+  const contact=new T.Box3().setFromObject(thigh).min.y;
+  assert.ok(Math.abs(contact-.62)<.02,'rendered seat contact '+form+': '+contact);
   assert.equal(leg.rotation.x,-Math.PI/2);
   const seatedY=body.position.y,rotation=root.rotation.y;
   p.setActivity('talk');p.update(0);p.update(100);
   assert.equal(body.position.y,seatedY);assert.equal(leg.rotation.x,-Math.PI/2);
+  root.updateMatrixWorld(true);assert.ok(Math.abs(new T.Box3().setFromObject(thigh).min.y-contact)<1e-8,'talk preserves rendered chair contact');
   assert.equal(root.rotation.y,rotation);assert.equal(root.userData.base.visible,false);
   p.dispose();
  }
@@ -105,7 +109,7 @@ test('scaled figures contact the chair and remain seated while talking',async()=
 test('physical monitor repaints progress with unchanged timestamp and clears private content on revoke',async()=>{
  const [T]=await modules,{createOfficeScreen}=await import(moduleURL(path.join(base,'office-screen.mjs')));
  const old=global.document,written=[];let draws=0;
- global.document={createElement:()=>({getContext:()=>({fillRect(){draws++;},fillText(text){written.push(text);}})})};
+ global.document={createElement:()=>({getContext:()=>({fillRect(){draws++;},fillText(text){written.push(text);},measureText(text){return {width:String(text).length*12};}})})};
  try{
   const screen=createOfficeScreen(new T.Mesh(new T.PlaneGeometry(1,1),new T.MeshBasicMaterial()));
   const state={phase:'ready',case_id:'synthetic',work:{run_id:'run',phase:'working',title:'Trabajo de prueba',updated_at:'2026-10-07T12:00:00Z',progress:{sequence:1,progress:{tasks:[{title:'Primera tarea',status:'running'}],summary:''}}}};
