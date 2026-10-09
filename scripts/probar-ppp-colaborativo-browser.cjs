@@ -73,9 +73,13 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   assert.equal(sessions,0);assert.equal(await frame.evaluate(()=>window.captures),0);
   const iframe=await frame.locator('.workspace-board iframe').elementHandle(),ppp=await iframe.contentFrame();
   await ppp.locator('#area').fill('135');
+  await frame.locator('[data-tab="activity"]').click();
   await frame.locator('[data-tab="tasks"]').click();assert.equal(sessions,0);
   await frame.locator('#voice-start').click();await frame.locator('[data-voice-phase="listening"]').waitFor();
-  assert.equal(await frame.locator('[data-tab="ppp"]').getAttribute('aria-pressed'),'true','starting voice returns to the shared board automatically');
+  assert.equal(await frame.locator('[data-tab="tasks"]').getAttribute('aria-pressed'),'true','starting voice preserves the current workspace section');
+  assert.equal(await iframe.evaluate(el=>el.isConnected),true);assert.equal(await ppp.locator('#area').inputValue(),'135');
+  await frame.locator('[data-tab="ppp"]').click();
+  assert.equal(await frame.locator('[data-tab="ppp"]').getAttribute('aria-pressed'),'true');
   assert.equal(sessions,1);assert.equal(await frame.evaluate(()=>window.captures),1);
   for(let i=0;i<100&&!boardNotices.length;i++)await page.waitForTimeout(20);
   assert.equal(boardNotices[0]?.revision,'r1','PPP already visible is shared when voice context becomes ready');
@@ -133,7 +137,9 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await frame.getByRole('button',{name:'Conservar y comparar variantes'}).click();
   await frame.locator('.realtime-dialog [data-tab="ppp"]').click();
   assert.equal(await iframe.evaluate(el=>el.isConnected),true);assert.equal(await ppp.locator('#area').inputValue(),'644');
-  await frame.locator('#station-menu').click();await frame.locator('.station-radial').waitFor();
+  if(viewport.width<=850){await frame.locator('.voice-close').click();await frame.locator('#circulo-open').click();}
+  else await frame.locator('#station-menu').click();
+  await frame.locator('.station-radial').waitFor();
   assert.equal(await frame.locator('.station-wheel [data-sector]').count(),4);
   await page.screenshot({path:path.join(out,'selector-auton-'+viewport.width+'.png'),fullPage:true});
   await frame.locator('.station-radial [data-sector="ppp"]').click();await frame.locator('.radial-options [data-action="ppp"]').click();assert.equal(await iframe.evaluate(el=>el.isConnected),true);
