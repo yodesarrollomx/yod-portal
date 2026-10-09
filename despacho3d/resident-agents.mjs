@@ -61,7 +61,7 @@ export function createResidentAgents({transport,onChange=()=>{},now=Date.now,sch
   return active;
  }
  function markPrepared(caseId,ok){
-  if(disposed||!selection||selection.case_id!==caseId||['unauthorized','reconnecting'].includes(phase))return;
+  if(disposed||!selection||!current()||selection.case_id!==caseId||['unauthorized','reconnecting'].includes(phase))return;
   prepared=ok===true;phase=!selection.can_enqueue?'observe':!selection.agent_ready?'offline':prepared?'standby':'preparing';emit();
  }
  return {refresh,snapshot,getProfile:profile,reconcileCatalog,
