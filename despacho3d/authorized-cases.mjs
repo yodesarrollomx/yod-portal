@@ -31,8 +31,11 @@ export function createAuthorizedCases({transport,onChange=()=>{},beforeSelect=()
   })();const active=flight;void active.then(()=>{if(flight===active)flight=null;},()=>{if(flight===active)flight=null;});return active;
  }
  async function select(caseId,{onResolved=()=>{}}={}){
-  if(disposed||phase!=='current'||!valid()||!items.some(x=>x.case_id===caseId)||!await beforeSelect(caseId))return null;
-  if(disposed||phase!=='current'||!valid()||!items.some(x=>x.case_id===caseId))return null;
+  // A failed network read is not a revoked catalog. Revalidate the requested case
+  // immediately while the existing catalog lease is still current.
+  const selectable=()=>!disposed&&['current','reconnecting'].includes(phase)&&valid()&&items.some(x=>x.case_id===caseId);
+  if(!selectable()||!await beforeSelect(caseId))return null;
+  if(!selectable())return null;
   const own=epoch,selectionOwn=++selectionEpoch;selected=null;emit();
   try{
    const r=await transport.resolveCurrent({case_id:caseId});
@@ -40,9 +43,9 @@ export function createAuthorizedCases({transport,onChange=()=>{},beforeSelect=()
    if(r?.ok===false)throw Error(r.error||'unavailable');
    const fresh=validateSelection(r);
    if(fresh.case_id!==caseId)throw Error('case_changed');
-   if(!valid()||phase!=='current'||!items.some(x=>x.case_id===caseId))return null;
+   if(!selectable())return null;
    selected=fresh;emit();
-   if(disposed||own!==epoch||selectionOwn!==selectionEpoch||!valid()||phase!=='current')return null;
+   if(own!==epoch||selectionOwn!==selectionEpoch||!selectable())return null;
    onResolved(structuredClone(r));return structuredClone(fresh);
   }catch(e){
    if(own===epoch&&selectionOwn===selectionEpoch){

@@ -1,5 +1,7 @@
+import {mountAgentMenu} from './agent-menu.mjs?v=127';
+import {createResidentOpening} from './resident-opening.mjs?v=127';
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
-import {createAuthorizedCases} from './authorized-cases.mjs?v=126';
+import {createAuthorizedCases} from './authorized-cases.mjs?v=127';
 import {createFrameTransport} from './conversation.mjs?v=126';
 import {createResidentAgents} from './resident-agents.mjs?v=126';
 import {AUTHORITY_REFRESH_MS} from './authority-lease.mjs?v=126';
@@ -11,8 +13,9 @@ if(host){
   talk=host.querySelector('[data-resident-talk]'),write=host.querySelector('[data-resident-write]'),visit=host.querySelector('[data-resident-visit]');
  const notices={loading:'Preparando tu despacho…',preparing:'Preparando conversación…',standby:'En espera · disponible',observe:'Disponible para consultar',offline:'Presente · sin conexión',reconnecting:'Recuperando conexión…',unauthorized:'Valida tu acceso a YOD OS'};
  let voicePhase='idle',panel=false;
+ const shouldRefreshAuthority=()=>!document.hidden||!['idle','error'].includes(voicePhase);
  const selectionHandoff=createCaseSelectionHandoff();
- const resident=createResidentAgents({transport,onChange:paint,isVisible:()=>!document.hidden,takeSelection:id=>selectionHandoff.consume(id)});
+ const resident=createResidentAgents({transport,onChange:paint,isVisible:shouldRefreshAuthority,takeSelection:id=>selectionHandoff.consume(id)});
  function paint(state){
   const active=!['idle','error'].includes(voicePhase),sel=state.selection;
   host.hidden=true;if(host.querySelector('h2'))host.querySelector('h2').textContent=sel?.avatar?.name||sel?.name||'Autón';
@@ -24,35 +27,28 @@ if(host){
   write.disabled=!operable;visit.disabled=!sel?.avatar||!window.despacho;
  }
  // Use the same canonical profile contract as the scene's pilot.
- const api={...resident,openForCase(id){
-  const selection=resident.getSelection();
-  if(!selection||selection.case_id!==id)return false;
-  if(window.YodAgentMenu)return window.YodAgentMenu.showRadial(id);
-  const panel=window.CubefarmYOD;if(!panel)return false;
-  const current=panel.getProfile?.();
-  if(current&&current.case_id!==id){void resident.refresh();return false;}
-  return panel.open('chat');
- }};
+ const api={...resident};
  const authorizedListeners=new Set();
  let authorized=null,catalogTimer=null;
  if(AUTONES_MULTIPLES){
-  authorized=createAuthorizedCases({transport,beforeSelect:()=>['idle','error'].includes(voicePhase)&&!window.YodVoiceWorkspace?.isOpen?.(),onChange:state=>{
+  authorized=createAuthorizedCases({transport,beforeSelect:()=>['idle','error'].includes(voicePhase),onChange:state=>{
    selectionHandoff.reconcile(state);resident.reconcileCatalog(state);
    for(const fn of authorizedListeners)fn(state.cases.map(c=>c.avatar).filter(Boolean));
   }});
   api.subscribeAuthorizedProfiles=fn=>{authorizedListeners.add(fn);fn(api.getAuthorizedProfiles());return()=>authorizedListeners.delete(fn);};
   api.getAuthorizedProfiles=()=>authorized.snapshot().cases.map(c=>c.avatar).filter(Boolean);
-  api.selectCase=async id=>{
+  api.selectCase=async (id,{isCurrent=()=>true}={})=>{
    const attempt=selectionHandoff.begin(id);
    try{
     const chosen=await authorized.select(id,{onResolved:raw=>selectionHandoff.capture(attempt,raw)});
-    return chosen&&selectionHandoff.current(attempt)?await resident.selectCase(id):false;
+    return chosen&&selectionHandoff.current(attempt)&&isCurrent()&&['idle','error'].includes(voicePhase)?await resident.selectCase(id):false;
    }finally{selectionHandoff.finish(attempt);}
   };
-  catalogTimer=setInterval(()=>{if(!document.hidden)void authorized.refresh();},AUTHORITY_REFRESH_MS);void authorized.refresh();
+  catalogTimer=setInterval(()=>{if(shouldRefreshAuthority())void authorized.refresh();},AUTHORITY_REFRESH_MS);void authorized.refresh();
   window.addEventListener('pagehide',()=>{clearInterval(catalogTimer);authorized.dispose();});
  }
- window.YodResidentAgents=api;
+ api.openForCase=createResidentOpening({getResidents:()=>api,getMenu:()=>window.YodAgentMenu,beforeOpen:()=>window.despacho?.closeSheets?.(false),canSelect:()=>['idle','error'].includes(voicePhase)});
+ window.YodResidentAgents=api;mountAgentMenu();
  window.dispatchEvent(new CustomEvent('yod-residents-ready',{detail:null}));
  talk.onclick=()=>document.getElementById('voice-open')?.click();
  write.onclick=()=>window.CubefarmYOD?.open('chat');

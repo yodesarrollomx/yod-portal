@@ -1,2 +1,2 @@
-import {mountAgentMenu} from './agent-menu.mjs?v=126';
+import {mountAgentMenu} from './agent-menu.mjs?v=127';
 mountAgentMenu();

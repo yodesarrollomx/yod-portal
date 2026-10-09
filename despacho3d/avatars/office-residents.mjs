@@ -22,7 +22,6 @@ export function createOfficeResidents({scene,beforeOpen=()=>{},onChange=()=>{}})
    entry.pilot=createOfficePilot({scene,seat:SEATS[slot],beforeOpen,onChange});
    entry.pilot.bind({getProfile:()=>entry.profile,subscribeProfile(fn){entry.notify=fn;fn(entry.profile);return()=>{entry.notify=null;};},async openForCase(id){
     if(!api)return false;
-    if(api.selectCase){if(!await api.selectCase(id))return false;}else if(api.getProfile?.()?.case_id!==id)return false;
     return api.openForCase(id);
    }});
    const route=crearAgenteIr({lugares:places,piloto:entry.pilot,permitido:walkable,limites:[bounds,annex]});

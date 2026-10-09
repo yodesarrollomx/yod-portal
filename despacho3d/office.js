@@ -3,7 +3,7 @@ import {nearbyResident} from './nearby-resident.mjs?v=126';
 import {createAvatarHUD} from './avatar-hud.mjs?v=126';
 import {assignStationOwners} from './station-ownership.mjs?v=126';
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
-import {createOfficeResidents} from './avatars/office-residents.mjs?v=126';
+import {createOfficeResidents} from './avatars/office-residents.mjs?v=127';
 import * as T from 'three';
 import {createEncounterGate,createPreparationGate,ENCOUNTER_RANGE} from './agent-proximity.mjs?v=4';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
@@ -76,12 +76,7 @@ window.addEventListener('pagehide',()=>{unwatchRoom?.();office.deskScreens?.forE
 window.addEventListener('pagehide',()=>{unwatchWork?.();office.computerScreen?.dispose();});
 
 
-const avatarHUD=createAvatarHUD({container:mount,onSelect:async caseId=>{
- const api=window.YodResidentAgents||window.CubefarmYOD;
- if(!api)return;
- if(api.getSelection?.()?.case_id!==caseId&&!await api.selectCase?.(caseId))return;
- if(api.getSelection?.()?.case_id!==caseId)return;
- closeSheets(false);window.YodAgentMenu?.showRadial(caseId);
+const avatarHUD=createAvatarHUD({container:mount,onSelect:caseId=>{void (window.YodResidentAgents||window.CubefarmYOD)?.openForCase?.(caseId);
 }});
 function paintAgentMarker(){
  avatarHUD.update({residents:pilot.presentations?.()||[],observations:observedWork,
