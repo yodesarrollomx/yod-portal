@@ -110,6 +110,9 @@ export function mountChincheUI({send,onSelecting,onSceneStart,bar}){
   function scan(){
     if(selecting&&(!visible(selectionRoot)||!selectionRoot.contains(hint)&&hostFor(selectionRoot)!==hint.parentElement))stop();
     document.querySelectorAll(ROOTS).forEach(root=>{
+      // The radial only chooses an action. Report controls belong to the station,
+      // not to this transient navigation overlay or its duplicated office header.
+      if(root.matches('.station-radial')){toolbars.get(root)?.remove();toolbars.delete(root);return;}
       // A nested workspace shares its enclosing surface's selector.
       if(root.parentElement?.closest(ROOTS))return;
       let toolbar=toolbars.get(root);
@@ -118,8 +121,9 @@ export function mountChincheUI({send,onSelecting,onSceneStart,bar}){
         const b=makeButton('Señalar control con chinche','select',button=>start(root.matches('body > header')?document.body:root,button));b.setAttribute('aria-pressed','false');
         toolbar.append(b);root.append(toolbar);toolbars.set(root,toolbar);
       }
-      // The full station clips its outer shell; place its single report entry in Tools.
-      const menu=root.matches('.realtime-dialog')&&root.querySelector('.workspace-tools>div');
+      // The full station clips its shell. Keep one report entry in its scrollable
+      // secondary activity panel; older stations may still expose the Tools slot.
+      const menu=root.matches('.realtime-dialog')&&(root.querySelector('.station-details')||root.querySelector('.workspace-tools>div'));
       if(menu&&toolbar.parentElement!==menu)menu.append(toolbar);
 
     });

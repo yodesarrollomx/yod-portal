@@ -1,4 +1,4 @@
-import {mountChincheUI} from './chinches-ui.mjs?v=4';
+import {mountChincheUI} from './chinches-ui.mjs?v=126';
 let instance=null;
 const BOARD_ORIGIN=location.origin;
 const ZONES=new Set(['editing','editorial','funnel','entry','reception','patio','potential','case','projects','delivery','decisions','lounge']);
