@@ -21,7 +21,7 @@ test('read-only polling never navigates, caches matching capture, stops on revok
 test('capture is retrieved once and never reused for another execution',async()=>{
  const {createWorkObserver}=await mod();let f=fixture(),calls=[];
  f.screen={captured_at:'2026-10-06T10:02:00Z',revision:2,owner:{case_id:f.case_id,run_id:f.work.run_id,goal_id:f.work.goal_id,task_id:'task-1'}};
- const o=createWorkObserver({getSelection:()=>({case_id:f.case_id}),schedule:()=>1,cancel:()=>{},request:async path=>{calls.push(path);return path==='/computer/work'?structuredClone(f):{ok:true,capture_work:f.screen.owner,captured_at:f.screen.captured_at,image:'data:image/jpeg;base64,YQ=='};}});
+ const o=createWorkObserver({getSelection:()=>({case_id:f.case_id}),schedule:()=>1,cancel:()=>{},request:async path=>{calls.push(path);return path==='/computer/work'?structuredClone(f):{ok:true,capture_work:f.screen.owner,captured_at:f.screen.captured_at,revision:f.screen.revision,image:'data:image/jpeg;base64,YQ=='};}});
  o.select();await new Promise(r=>setImmediate(r));await o.refresh();assert.equal(calls.filter(p=>p==='/computer/state').length,1);assert.ok(o.snapshot().image);
  f.work.run_id='new-run';f.work.sources=[];await o.refresh();assert.equal(o.snapshot().image,null);assert.equal(calls.filter(p=>p==='/computer/state').length,1);o.dispose();
 });

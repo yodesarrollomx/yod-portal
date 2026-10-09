@@ -1,7 +1,7 @@
 import {crearAgenteIr,rutaEntre} from '../entorno-ruta.mjs?v=4';
 import {places,allowed as walkable,bounds,annex} from '../office-layout.mjs?v=124';
-import {createResidentMotion} from '../resident-motion.mjs?v=124';
-import {createOfficePilot} from './office-pilot.mjs?v=124';
+import {createResidentMotion} from '../resident-motion.mjs?v=126';
+import {createOfficePilot} from './office-pilot.mjs?v=126';
 import {deskSeat,PROJECT_SEAT} from '../office-station.mjs?v=1';
 const MEETING=[[-1.8,5.08],[-.3,5.08],[1.2,5.08],[-1.8,7.57],[-.3,7.57],[1.2,7.57]];
 const SEATS=[PROJECT_SEAT,deskSeat(10.05,-7.1),deskSeat(7,-.85),deskSeat(10.05,-.85),deskSeat(7,5.2),deskSeat(10.05,5.2)];
@@ -45,6 +45,7 @@ export function createOfficeResidents({scene,beforeOpen=()=>{},onChange=()=>{}})
   if(hasCatalog)stopList=next.subscribeAuthorizedProfiles(p=>{profiles=p;reconcile();});
  },disconnect,update(now,options){let changed=false;for(const [id,e]of residents){e.motion?.update(now,{...options,selected:current?.case_id===id});changed=e.pilot.update(now,options)||changed;}return changed;},
  observeWork(states){const values=new Map((states||[]).map(s=>[s.case_id,s]));for(const[id,e]of residents)e.motion.observe(values.get(id)||null);},
+ presentations:()=>[...residents.values()].flatMap(e=>e.pilot.presentations()),
  seatProfiles:()=>[...residents.values()].map(e=>({slot:e.slot,case_id:e.profile.case_id,name:e.profile.name})),
  pickables:()=>[...residents.values()].flatMap(e=>e.pilot.pickables()),selectIntersection(hit){for(const e of residents.values())if(e.pilot.selectIntersection(hit))return true;return false;},
  setActivity:v=>selected()?.setActivity(v)||false,recorrer:(...args)=>selected()?.recorrer(...args)||false,posicion:()=>selected()?.posicion()||null,

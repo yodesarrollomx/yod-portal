@@ -10,7 +10,7 @@ export function mountAvatarCard({container,doc=document,win=window,compact=false
    el('p','Mi color y apariencia permiten reconocerme en la oficina. Mi avance se comprueba en Trabajo y mis entregas se presentan desde Pendientes.'));
   let renderer,model;
   try{
-   const [T,avatar]=await Promise.all([import('three'),import('./avatars/avatar.mjs?v=2')]);if(own!==epoch)return;
+   const [T,avatar]=await Promise.all([import('three'),import('./avatars/avatar.mjs?v=126')]);if(own!==epoch)return;
    renderer=new T.WebGLRenderer({antialias:true,preserveDrawingBuffer:true,alpha:true});renderer.setSize(280,320);renderer.setPixelRatio(Math.min(win.devicePixelRatio||1,2));
    const scene=new T.Scene(),camera=new T.PerspectiveCamera(32,280/320,.1,20);camera.position.set(0,1.35,5.1);camera.lookAt(0,1.18,0);
    scene.add(new T.HemisphereLight('#fff7e9','#8d9b8a',2.5));const light=new T.DirectionalLight('#fff3d8',3);light.position.set(2,5,4);scene.add(light);

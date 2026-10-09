@@ -1,7 +1,8 @@
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
-import {createAuthorizedCases} from './authorized-cases.mjs?v=2';
-import {createFrameTransport} from './conversation.mjs?v=116';
-import {createResidentAgents} from './resident-agents.mjs?v=3';
+import {createAuthorizedCases} from './authorized-cases.mjs?v=126';
+import {createFrameTransport} from './conversation.mjs?v=126';
+import {createResidentAgents} from './resident-agents.mjs?v=126';
+import {AUTHORITY_REFRESH_MS} from './authority-lease.mjs?v=126';
 const host=document.getElementById('resident-agent');
 if(host){
  const transport=createFrameTransport(window);
@@ -34,12 +35,13 @@ if(host){
  let authorized=null,catalogTimer=null;
  if(AUTONES_MULTIPLES){
   authorized=createAuthorizedCases({transport,beforeSelect:()=>['idle','error'].includes(voicePhase)&&!window.YodVoiceWorkspace?.isOpen?.(),onChange:state=>{
+   resident.reconcileCatalog(state);
    for(const fn of authorizedListeners)fn(state.cases.map(c=>c.avatar).filter(Boolean));
   }});
   api.subscribeAuthorizedProfiles=fn=>{authorizedListeners.add(fn);fn(api.getAuthorizedProfiles());return()=>authorizedListeners.delete(fn);};
   api.getAuthorizedProfiles=()=>authorized.snapshot().cases.map(c=>c.avatar).filter(Boolean);
   api.selectCase=async id=>{const chosen=await authorized.select(id);return chosen?resident.selectCase(id):false;};
-  catalogTimer=setInterval(()=>{if(!document.hidden)void authorized.refresh();},55000);void authorized.refresh();
+  catalogTimer=setInterval(()=>{if(!document.hidden)void authorized.refresh();},AUTHORITY_REFRESH_MS);void authorized.refresh();
   window.addEventListener('pagehide',()=>{clearInterval(catalogTimer);authorized.dispose();});
  }
  window.YodResidentAgents=api;
@@ -54,8 +56,8 @@ if(host){
  window.addEventListener('yod-agents-visibility',e=>{panel=e.detail===true;host.hidden=true;});
  window.addEventListener('yod-agents-ready',()=>paint(resident.snapshot()));
  window.addEventListener('yod-office-ready',()=>paint(resident.snapshot()));
- window.addEventListener('online',()=>{void resident.refresh();});
- document.addEventListener('visibilitychange',()=>{if(!document.hidden)void resident.refresh();});
+ window.addEventListener('online',()=>{void authorized?.refresh();void resident.refresh();});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden){void authorized?.refresh();void resident.refresh();}});
  window.addEventListener('pagehide',()=>{resident.dispose();transport.dispose();delete window.YodResidentAgents;});
  void resident.refresh();
 }

@@ -1,5 +1,5 @@
 import {PROJECT_SEAT} from '../office-station.mjs?v=1';
-import {createAvatarLayer} from './adapter.mjs?v=2';
+import {createAvatarLayer} from './adapter.mjs?v=126';
 
 // This controller consumes the panel's authorized profile, never a public roster.
 // Placement is local to this room and cannot be supplied by a case record.
@@ -79,7 +79,13 @@ export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{},seat=
   if(inmediato){finish();onChange();return true;}
   layer.setMotion(profile.id,'walk');onChange();return true;
  }
- return {bind,disconnect,update,pickables:()=>layer.pickables(),selectIntersection:hit=>!disposed&&layer.selectIntersection(hit),
+ function presentations(){
+  const m=model(),head=m?.userData?.joints?.head;if(!profile||!m||!head)return[];
+  m.updateMatrixWorld(true);const anchor=head.position.clone();head.getWorldPosition(anchor);
+  anchor.y+=(m.userData.headClearance||.42)*(m.userData.body?.scale.y||1)*m.scale.y;
+  return[{profile:{id:profile.id,case_id:profile.case_id,entity_kind:'case',name:profile.name,color:profile.color},anchor:anchor.toArray(),movement:{place:lastPlace,destination:route?.destino||null,motion:route?'walk':'idle',position:[m.position.x,m.position.z]}}];
+ }
+ return {presentations,bind,disconnect,update,pickables:()=>layer.pickables(),selectIntersection:hit=>!disposed&&layer.selectIntersection(hit),
   setActivity(value){if(!['sit','talk'].includes(value))return false;activity=value;if(profile&&!route&&(lastPlace==='inicio'||seatedAtMeeting)){layer.setMotion(profile.id,value==='talk'?'sit-talk':value);layer.update(time);onChange();}return true;},
   recorrer:walk,
   posicion:()=>{const m=model();return m?[m.position.x,m.position.z]:null;},

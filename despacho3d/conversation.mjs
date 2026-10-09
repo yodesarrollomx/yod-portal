@@ -2,14 +2,14 @@ import {registeredBoard} from './project-station.mjs';
 // Local transport contract. The authenticated server chooses the private case.
 // No endpoint, credential, business record or browser persistence lives here.
 import {validateDriveSelection} from './drive-selection.mjs';
-import {validateAvatarProfile} from './avatar-profile.mjs';
+import {validateAvatarProfile} from './avatar-profile.mjs?v=126';
 import {createFastLaneClient} from './fast-lane.mjs';
 
 const text=(v,max=256)=>typeof v==='string'&&v.length>0&&v.length<=max;
 const date=v=>typeof v==='string'&&Number.isFinite(Date.parse(v));
 const active=new Set(['queued','running','claimed']);
 const FAST_FALLBACK=new Set(['unavailable','unauthorized','fast_lane_unavailable','model_unavailable','context_unavailable']);
-const FAST_NOTICES={busy:'Gastón sigue respondiendo el mensaje anterior. Espera un momento y vuelve a enviar.',rate_limited:'Demasiados mensajes seguidos. Espera unos minutos.',model_failed:'La respuesta no se completó. Tu mensaje no se guardó; puedes volver a enviarlo.',auth_unavailable:'El servicio del modelo rechazó la conexión. Tu mensaje no se guardó.',provider_busy:'El modelo está saturado. Tu mensaje no se guardó; vuelve a intentarlo.',cancelled:'',invalid_request:'No se pudo enviar ese mensaje.'};
+const FAST_NOTICES={busy:'El autón sigue respondiendo el mensaje anterior. Espera un momento y vuelve a enviar.',rate_limited:'Demasiados mensajes seguidos. Espera unos minutos.',model_failed:'La respuesta no se completó. Tu mensaje no se guardó; puedes volver a enviarlo.',auth_unavailable:'El servicio del modelo rechazó la conexión. Tu mensaje no se guardó.',provider_busy:'El modelo está saturado. Tu mensaje no se guardó; vuelve a intentarlo.',cancelled:'',invalid_request:'No se pudo enviar ese mensaje.'};
 const diagnosticCodes=new Set(['unauthorized','session_changed','timeout','unavailable','despacho_not_ready','invalid_selection','invalid_snapshot','invalid_message','invalid_job','invalid_event','seleccion_invalida','enlace_invalido','outside_os','case_changed','session_pending','transport_busy']);
 const transientCodes=new Set(['timeout','unavailable','transport_busy','session_pending']);
 const diagnosticCode=e=>diagnosticCodes.has(e?.message)?e.message:'unavailable';

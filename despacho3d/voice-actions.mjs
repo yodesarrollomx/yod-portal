@@ -17,7 +17,7 @@ export function createVoiceActionExecutor({transport,onChange=()=>{},now=Date.no
  }
  async function execute(a,ctx){
   validAction(a,ctx.caseId);
-  const fresh=validateSelection(checked(await transport.resolveCurrent({})));
+  const fresh=validateSelection(checked(await transport.resolveCurrent({case_id:ctx.caseId})));
   if(fresh.case_id!==ctx.caseId)throw Error('action_cancelled');
   if(!ctx.active())return;
   if(a.name!=='pendientes_consultar'&&(!fresh.can_enqueue||!fresh.goals?.ready))throw Error(fresh.can_enqueue?'goals_not_ready':'unauthorized');
