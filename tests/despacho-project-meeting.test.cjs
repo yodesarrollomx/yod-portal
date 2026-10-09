@@ -8,7 +8,7 @@ test('meeting is derived from validated case evidence; exactly one slide per top
  assert.throws(()=>buildMeeting(g,'case-other','Otro'));
  assert.throws(()=>buildMeeting({...g,status:'running'},g.case_id,'Personaje'));
  const html=meetingDocument(d);assert.ok(!html.includes('<script>'));assert.ok(html.includes('&lt;script&gt;'));
- assert.ok(html.includes('Guion'));assert.equal((html.match(/<article>/g)||[]).length,1);
+ assert.ok(html.includes(d.slides[0].script));assert.equal((html.match(/<article>/g)||[]).length,1);
  const partial=buildMeeting({...g,status:'awaiting_data',tasks:[{...g.tasks[0],status:'blocked',evidence_ids:[]}],evidence:[]},g.case_id,'Personaje');
  assert.match(partial.status,/parcial/);assert.match(partial.slides[0].checkpoint,/Bloqueado/);assert.equal(partial.slides[0].evidence.length,0);
 });
