@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-09.124-reunion-autones
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-09.126-despacho-integral
 
 **Encargado de verificación:** Coordinación técnica YOD
 

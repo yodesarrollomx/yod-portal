@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-09.124-reunion-autones",
+  "revision": "2026-10-09.126-despacho-integral",
   "checked_at": "2026-10-09",
   "priorities": [
     "vender_mas",
@@ -9602,6 +9602,31 @@
       ],
       "deployment": "2026-10-09 04:18 UTC: portal PR138 integrado en 611c762; cuatro checks correctos (517 pruebas más navegador escritorio/móvil). Recursos de Pages comprobados por HTTP con caché invalidada: ejecución 37883194304. Backend PR45 live desde 03:52:54 UTC (267 pruebas correctas, una omitida). Presentación HTML; Google Slides y micrófono físico no acreditados.",
       "rollback": "Revertir PR de interfaz; conservar objetivos, evidencia y credenciales del servidor."
+    },
+    {
+      "id": "CHG-DESPACHO-INTEGRAL-126",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD",
+        "GAS-PORTERO",
+        "EXT-DRIVE",
+        "STORE-AUTON-ESTADO",
+        "SYS-POTENCIALES"
+      ],
+      "proposal": "Unificar continuidad de proyecto, conversación y PPP; mejorar avatares y presencia legible con herramienta e hitos reales; reflejar trabajo persistente e historial por ejecución. Preparar representación ligera compartiendo contratos, sin publicar aún una vista pixel.",
+      "status": "propuesto",
+      "approval": "Dirección acepta la propuesta integral y autoriza implementar, comprobar y publicar la versión normal el 8-oct-2026. Nombres cortos vienen del registro privado autorizado; conservar IDs, datos financieros y permisos.",
+      "tests": [
+        "Aislamiento de tres proyectos y acciones con case_id explícito; voz no cambia la vista.",
+        "Progreso calculado desde tareas/evidencia confirmadas, estación vinculada a ocupante, cola e historial trazables.",
+        "Servidor continúa tareas sin navegador; reinicio preserva estado y no repite acciones inciertas.",
+        "Recuperación transitoria versus revocación, móvil, bajo consumo y fallback con acciones consistentes.",
+        "Regresiones, verificadores, navegador con datos sintéticos y cotejo público; audio físico y sesión real se informan por separado."
+      ],
+      "deployment": "Pendiente: propuesta registrada antes de modificar implementación.",
+      "rollback": "Revertir interfaz y cambios compatibles del motor mediante PR; conservar expedientes, journal/outbox, recibos y volumen persistente. No borrar objetivos ni reanudar acciones inciertas."
     }
   ],
   "data_contracts": [

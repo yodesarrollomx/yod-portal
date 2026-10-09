@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-09.124-reunion-autones",
-  "proposal_id": "CHG-DESPACHO-REUNION-124",
-  "summary": "Vincular recorridos al trabajo observado; fichas de avatares autorizados y presentación por tema desde objetivos y evidencias guardados, con guion, voz y consulta simultánea del PPP.",
+  "model_revision": "2026-10-09.126-despacho-integral",
+  "proposal_id": "CHG-DESPACHO-INTEGRAL-126",
+  "summary": "Unificar continuidad de proyecto, conversación y PPP; mejorar avatares y presencia legible con herramienta e hitos reales; reflejar trabajo persistente e historial por ejecución. Preparar representación ligera compartiendo contratos, sin publicar aún una vista pixel.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
@@ -9,18 +9,15 @@
     "SVC-AUTON-CLOUD",
     "GAS-PORTERO",
     "EXT-DRIVE",
-    "SYS-SALA",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
-    "SYS-CONTROL",
-    "STORE-AUTON-ESTADO"
+    "STORE-AUTON-ESTADO",
+    "SYS-POTENCIALES"
   ],
   "tests": [
-    "Sin recorrido de trabajo sin evidencia ni mezcla de casos.",
-    "Láminas reproducibles desde objetivos, máximo dos por tema, sin confundir preparado con aprobado.",
-    "Guion y narración vinculados al caso vigente; revocación retira contenido.",
-    "Pruebas del portal y navegador con datos sintéticos; micrófono real no acreditable automáticamente."
+    "Aislamiento de tres proyectos y acciones con case_id explícito; voz no cambia la vista.",
+    "Progreso calculado desde tareas/evidencia confirmadas, estación vinculada a ocupante, cola e historial trazables.",
+    "Servidor continúa tareas sin navegador; reinicio preserva estado y no repite acciones inciertas.",
+    "Recuperación transitoria versus revocación, móvil, bajo consumo y fallback con acciones consistentes.",
+    "Regresiones, verificadores, navegador con datos sintéticos y cotejo público; audio físico y sesión real se informan por separado."
   ],
-  "rollback": "Revertir PR de interfaz; conservar objetivos, evidencia y credenciales del servidor."
+  "rollback": "Revertir interfaz y cambios compatibles del motor mediante PR; conservar expedientes, journal/outbox, recibos y volumen persistente. No borrar objetivos ni reanudar acciones inciertas."
 }

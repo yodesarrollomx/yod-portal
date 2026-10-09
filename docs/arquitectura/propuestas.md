@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-09.124-reunion-autones · 2026-10-09.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-09.126-despacho-integral · 2026-10-09.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 
