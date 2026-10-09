@@ -1,6 +1,6 @@
-import {createFrameTransport} from './conversation.mjs?v=116';
+import {createFrameTransport} from './conversation.mjs?v=126';
 import {validateFastSession} from './fast-lane.mjs';
-import {createRoomWork} from './room-work.mjs?v=124';
+import {createRoomWork} from './room-work.mjs?v=126';
 const transport=createFrameTransport(window),credentials=new Map();let stop=null,bound=null;
 async function request(path,data,caseId){
  if(!room.has(caseId))throw Error('unauthorized');

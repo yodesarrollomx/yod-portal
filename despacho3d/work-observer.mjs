@@ -3,12 +3,19 @@ const id=v=>typeof v==='string'&&/^[A-Za-z0-9_.:-]{1,200}$/.test(v);
 const plain=v=>v&&typeof v==='object'&&!Array.isArray(v);
 const txt=(v,n)=>typeof v==='string'&&v.length<=n;
 const stamp=v=>typeof v==='string'&&Number.isFinite(Date.parse(v));
+const runtimePhases=new Set(['starting','ready','working','waiting_capacity','reconnecting','review_required','unavailable','disabled','stopped']);
+const count=v=>Number.isSafeInteger(v)&&v>=0;
 const phases=new Set(['working','tool','prepared','awaiting_data','interrupted','error']);
 export function safeWorkURL(raw){try{const u=new URL(raw);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null;}catch{return null;}}
 export function validateObservation(raw,caseId){
  const bad=()=>{throw Error('invalid_observation');};
  if(!plain(raw)||raw.ok!==true||raw.case_id!==caseId||typeof raw.available!=='boolean'||JSON.stringify(raw).length>524288)bad();
  if(!raw.available)return{available:false,case_id:caseId,work:null,screen:null};
+ const extended=['observed_at','runtime','history_available'].some(k=>Object.hasOwn(raw,k));
+ if(extended){const r=raw.runtime;
+  if(!stamp(raw.observed_at)||typeof raw.history_available!=='boolean'||!plain(r)||!runtimePhases.has(r.phase)||!stamp(r.updated_at)||typeof r.continues_without_viewer!=='boolean'||r.concurrency!==1||!Number.isSafeInteger(r.goal_poll_ms)||r.goal_poll_ms<1000||r.goal_poll_ms>3600000)bad();
+  if(r.diagnostic!==undefined&&r.diagnostic!==null&&(!plain(r.diagnostic)||!/^[_a-z]{3,60}$/.test(r.diagnostic.code)))bad();
+ }
  const w=raw.work;
  if(w!==null){
   if(!plain(w)||w.schema!==1||w.case_id!==caseId||!id(w.run_id)||!id(w.goal_id)||!id(w.source_revision)||!txt(w.title,160)||!txt(w.criterion,1000)||!phases.has(w.phase)||!stamp(w.started_at)||!stamp(w.updated_at)||!(w.current_tool===null||txt(w.current_tool,240)))bad();
@@ -19,7 +26,12 @@ export function validateObservation(raw,caseId){
   const ids=new Set();
   for(const t of tasks){if(!/^task-[1-8]$/.test(t.id)||ids.has(t.id)||!txt(t.title,240)||!txt(t.summary,1200)||!['pending','running','ready_for_review','blocked'].includes(t.status))bad();ids.add(t.id);}
   for(const e of evidence)if(!id(e.id)||!ids.has(e.task_id)||!txt(e.title,200)||!txt(e.text,4000))bad();
-  if(!Array.isArray(w.sources)||w.sources.length>40||!Array.isArray(w.events)||w.events.length>40)bad();
+  if(w.metrics!==undefined){const m=w.metrics;
+   if(!plain(m)||m.review_required!==true||m.total!==tasks.length||m.evidence_count!==evidence.length)bad();
+   for(const status of ['ready_for_review','blocked','running','pending'])if(!count(m[status])||m[status]!==tasks.filter(t=>t.status===status).length)bad();
+  }
+  if(!Array.isArray(w.sources)||w.sources.length>40||!Array.isArray(w.events)||w.events.length>200)bad();
+  if(w.event_count!==undefined&&(!count(w.event_count)||w.event_count<w.events.length))bad();
   for(const s of w.sources)if(s.case_id!==caseId||s.run_id!==w.run_id||s.goal_id!==w.goal_id||!(s.task_id===null||ids.has(s.task_id))||!txt(s.title,240)||!(s.url===null||txt(s.url,2048)&&safeWorkURL(s.url))||!stamp(s.consulted_at))bad();
   for(const e of w.events)if(e.case_id!==caseId||e.run_id!==w.run_id||e.goal_id!==w.goal_id||!txt(e.label,240)||!stamp(e.at)||!['working','completed','failed'].includes(e.status))bad();
   if(w.result!==null&&(!plain(w.result)||!txt(w.result.summary,4000)||!['ready_for_review','awaiting_data'].includes(w.result.state)))bad();
@@ -29,14 +41,51 @@ export function validateObservation(raw,caseId){
  const s=raw.screen;
  if(s&&(!plain(s)||!(s.captured_at===null||stamp(s.captured_at))||!Number.isSafeInteger(s.revision)||s.revision<0))bad();
  if(s?.owner&&(!id(s.owner.run_id)||s.owner.case_id!==caseId||!id(s.owner.goal_id)||!(s.owner.task_id===null||/^task-[1-8]$/.test(s.owner.task_id))))bad();
- return structuredClone({available:true,case_id:caseId,work:w,screen:s||null});
+ return structuredClone({available:true,case_id:caseId,work:w,screen:s||null,...(extended?{observed_at:raw.observed_at,runtime:raw.runtime,history_available:raw.history_available}:{})});
+}
+const historyEntry=v=>typeof v==='string'&&/^\d{17}-[a-f0-9-]{36}$/.test(v);
+export function validateWorkHistory(raw,caseId,options={}){
+ const bad=()=>{throw Error('invalid_history');};
+ if(!plain(raw)||raw.ok!==true||raw.case_id!==caseId||typeof raw.available!=='boolean'||JSON.stringify(raw).length>524288)bad();
+ if(!raw.available)return{available:false,case_id:caseId,entries:[],next:null};
+ if(options.entry_id){
+  const {work}=validateObservation({...raw,screen:null},caseId);
+  if(work&&new Date(work.started_at).toISOString().replace(/[-:.TZ]/g,'')+'-'+work.run_id!==options.entry_id)bad();
+  return{available:true,case_id:caseId,work};
+ }
+ if(!Array.isArray(raw.entries)||raw.entries.length>20||!(raw.next===null||historyEntry(raw.next)))bad();
+ const seen=new Set();for(const e of raw.entries){
+  if(!plain(e)||!historyEntry(e.entry_id)||seen.has(e.entry_id)||e.case_id!==caseId||!id(e.run_id)||!id(e.goal_id)||!id(e.source_revision)||!txt(e.title,160)||!phases.has(e.phase)||!stamp(e.started_at)||!stamp(e.updated_at)||!count(e.event_count))bad();
+  if(new Date(e.started_at).toISOString().replace(/[-:.TZ]/g,'')+'-'+e.run_id!==e.entry_id)bad();seen.add(e.entry_id);
+  const m=e.metrics;if(!plain(m)||m.review_required!==true||!count(m.total)||m.total>8||!count(m.evidence_count)||m.evidence_count>8)bad();
+  let total=0;for(const key of ['ready_for_review','blocked','running','pending']){if(!count(m[key]))bad();total+=m[key];}if(total!==m.total)bad();
+ }
+ return structuredClone({available:true,case_id:caseId,entries:raw.entries,next:raw.next});
 }
 export function workHeadline(state){
  if(state.phase==='unauthorized'||!state.case_id)return 'Puesto sin seleccionar';
  if(state.phase==='loading')return 'Consultando actividad…';
  if(state.phase!=='ready')return 'Sin conexión con la actividad';
+ const runtime=state.runtime?.phase;
+ if(runtime==='waiting_capacity')return 'Encargo en cola';
+ if(runtime==='reconnecting')return 'Recuperando conexión del servidor';
+ if(runtime==='unavailable')return 'Servidor sin disponibilidad';
+ if(runtime==='disabled'||runtime==='stopped')return 'Motor detenido';
+ if(runtime==='starting')return 'Preparando motor';
+ if(runtime==='working'&&(!state.work||!['working','tool'].includes(state.work.phase)))return 'Preparando encargo';
  const w=state.work;if(!w)return 'En espera · sin ejecución registrada';
  return ({working:'Analizando',tool:w.current_tool||'Consultando',prepared:'Análisis preparado',awaiting_data:'Faltan datos',interrupted:'Ejecución interrumpida',error:'Ejecución sin completar'})[w.phase];
+}
+// A capture belongs to one exact execution and task, not merely to a timestamp.
+export function observationCaptureKey(value){
+ const s=value?.screen,w=value?.work,o=s?.owner;
+ if(!value?.available||!w||!s?.captured_at||o?.case_id!==value.case_id||o.run_id!==w.run_id||o.goal_id!==w.goal_id)return null;
+ return JSON.stringify([value.case_id,w.run_id,w.goal_id,o.task_id,s.captured_at,s.revision]);
+}
+export function validatedCapture(capture,value){
+ const key=observationCaptureKey(value),owner=value?.screen?.owner,b=capture?.capture_work;
+ if(!key||!b||b.case_id!==owner.case_id||b.run_id!==owner.run_id||b.goal_id!==owner.goal_id||b.task_id!==owner.task_id||capture.captured_at!==value.screen.captured_at||capture.revision!==value.screen.revision)return null;
+ return typeof capture.image==='string'&&capture.image.length<=900100&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(capture.image)?capture.image:null;
 }
 export function createWorkObserver({request,getSelection,onChange=()=>{},now=Date.now,schedule=setTimeout,cancel=clearTimeout,isVisible=()=>true}){
  let state={phase:'unauthorized',case_id:null,work:null,screen:null,image:null},generation=0,disposed=false,flight=null,timer=null;
@@ -52,20 +101,29 @@ export function createWorkObserver({request,getSelection,onChange=()=>{},now=Dat
   const valid=()=>!disposed&&own===generation&&getSelection()?.case_id===caseId;
   try{
    const value=validateObservation(await request('/computer/work',{},caseId),caseId);if(!valid())return;
-   const old=state.screen;state={...state,...value,phase:value.available?'ready':'unavailable',checked_at:now(),image:old?.captured_at===value.screen?.captured_at&&old?.owner?.run_id===value.work?.run_id?cachedImage:null};
+   const oldKey=observationCaptureKey(state),key=observationCaptureKey(value);
+   state={...value,phase:value.available?'ready':'unavailable',checked_at:now(),image:key&&oldKey===key?cachedImage:null};
    emit();
-   // Fetch the JPEG only when its dated capture changes, never on every poll.
-   if(value.screen?.captured_at&&value.screen.owner?.run_id===value.work?.run_id){
-    if(cachedImage&&old?.captured_at===value.screen.captured_at&&old?.owner?.run_id===value.screen.owner.run_id)state.image=cachedImage;
-    else{try{const snap=await request('/computer/state',{},caseId);if(!valid())return;
-     if(snap.capture_work?.case_id===caseId&&snap.capture_work?.run_id===value.work.run_id&&snap.captured_at===value.screen.captured_at&&typeof snap.image==='string'&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(snap.image)&&snap.image.length<=900100)state.image=snap.image;
-    }catch(error){if(['unauthorized','forbidden'].includes(error?.message))throw error;if(!valid())return;state.image=null;}}
-   
-   }
+   if(key&&!state.image){try{
+    const snap=await request('/computer/state',{},caseId);if(!valid())return;
+    state.image=validatedCapture(snap,value);
+   }catch(error){if(['unauthorized','forbidden'].includes(error?.message))throw error;if(!valid())return;state.image=null;}}
    cachedImage=state.image;emit();
   }catch(error){if(valid()){const denied=['unauthorized','forbidden'].includes(error?.message);state={phase:denied?'unauthorized':'unavailable',case_id:caseId,work:denied?null:state.work,screen:null,image:null};cachedImage=null;emit();}}
   finally{if(flight?.generation===own){flight=null;later();}}
  }
  let cachedImage=null;
- return{select,refresh,snapshot:copy,subscribe(fn){listeners.add(fn);fn(copy());return()=>listeners.delete(fn);},dispose(){disposed=true;clear();cachedImage=null;listeners.clear();}};
+ async function history(options={}){
+  const caseId=getSelection()?.case_id,own=generation;
+  if(disposed||!caseId||caseId!==state.case_id||state.phase==='unauthorized')throw Error('unauthorized');
+  if(!plain(options)||Object.keys(options).some(k=>!['entry_id','limit','before'].includes(k)))throw Error('invalid_arguments');
+  const detail=Object.hasOwn(options,'entry_id');
+  if(detail?(!historyEntry(options.entry_id)||Object.keys(options).length!==1):((options.limit!==undefined&&(!Number.isSafeInteger(options.limit)||options.limit<1||options.limit>20))||(options.before!==undefined&&options.before!==null&&!historyEntry(options.before))))throw Error('invalid_arguments');
+  const valid=()=>!disposed&&own===generation&&getSelection()?.case_id===caseId;
+  try{
+   const raw=await request('/computer/work-history',options,caseId);if(!valid())throw Error('unauthorized');
+   return validateWorkHistory(raw,caseId,options);
+  }catch(error){if(valid()&&['unauthorized','forbidden'].includes(error?.message))clear();throw error;}
+ }
+ return{select,refresh,history,snapshot:copy,subscribe(fn){listeners.add(fn);fn(copy());return()=>listeners.delete(fn);},dispose(){disposed=true;clear();cachedImage=null;listeners.clear();}};
 }

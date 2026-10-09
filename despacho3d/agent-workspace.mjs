@@ -1,13 +1,31 @@
-import {mountMeeting} from './meeting-view.mjs?v=124';
-import {mountAvatarCard} from './avatar-card.mjs?v=124';
-import {mountWorkView} from './work-view.mjs?v=124';
+import {mountMeeting} from './meeting-view.mjs?v=126';
+import {mountAvatarCard} from './avatar-card.mjs?v=126';
+import {mountWorkView} from './work-view.mjs?v=126';
 import {registeredBoard,resolveBoard,stationIdentity} from './project-station.mjs?v=121';
 import {mountKnowledgeBoard} from './knowledge-board.mjs?v=1';
-import {createFrameTransport,validateConversation} from './conversation.mjs?v=116';
+import {createFrameTransport,validateConversation} from './conversation.mjs?v=126';
 import {validateFastSession} from './fast-lane.mjs';
 import {DurableGoals,goalDisplay,taskDisplay,goalReviewActions} from './goals.mjs?v=2';
 export {taskDisplay} from './goals.mjs?v=2';
-export const WORKSPACE_TABS=[['ppp','Plan de potencial'],['activity','Trabajo'],['tasks','Pendientes'],['sources','Fuentes'],['browser','Computadora'],['knowledge','Versiones y conocimiento'],['meeting','Reunión'],['avatar','Conocer al autón']];
+export const WORKSPACE_TABS=[['ppp','Plan de potencial'],['activity','Trabajo'],['tasks','Pendientes'],['sources','Expediente'],['browser','Navegador'],['knowledge','Notas y versiones'],['meeting','Reunión'],['avatar','Conocer al autón']];
+export const WORKSPACE_GROUPS={ppp:['ppp'],activity:['activity','tasks','browser','meeting'],sources:['sources','knowledge','avatar']};
+export const workspaceGroup=id=>Object.keys(WORKSPACE_GROUPS).find(key=>WORKSPACE_GROUPS[key].includes(id))||'ppp';
+// A review belongs to the exact delivery shown. An uncertain receipt retries its original request.
+export async function reviewPresentedGoal(controller,value,isCurrent=()=>true){
+ if(!isCurrent())return null;
+ if(controller.pending){
+  const p=controller.pending;
+  if(p.method!=='reviewGoal'||p.payload.case_id!==value.case_id||p.payload.goal_id!==value.goal_id||p.payload.action!=='approve')return null;
+  if(!await controller.retry()||!isCurrent())return null;
+ }else{
+  if(!await controller.read()||!isCurrent())return null;
+  const goal=controller.model?.goals.find(g=>g.goal_id===value.goal_id);
+  if(goal?.case_id!==value.case_id||goal.revision!==value.revision||goal.status!=='ready_for_review')throw Error('stale_revision');
+  if(!await controller.review(value.goal_id,'approve')||!isCurrent())return null;
+ }
+ const goal=controller.model?.goals.find(g=>g.goal_id===value.goal_id);
+ return goal?.case_id===value.case_id&&goal.status==='completed'?goal:null;
+}
 export function proposalState(board,proposal,application=null){
  if(application?.request_id===proposal.request_id)return application.status;
  if(!board?.confirmed||board.pending)return 'board_pending';
@@ -55,12 +73,15 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
  let selected=null,credential=null,minting=null,disposed=false,timer=null,busy=false,tab='ppp',frame=null,nonce=null,board=null,boardRevision=null,conversation=null,proposals=[],generation=0,fetching=false,active=true,lastTaskRead=0,application=null,applyTimer=null,boardHandshakeTimer=null,boardHandshakeTimedOut=false,boardLink=null,readingSources=null,sourceAttempts=0,sourceRetryAt=0,goalDraft={title:'',instruction:'',criterion:''};
  const root=el('section',undefined,'agent-workspace');root.setAttribute('aria-label','Puesto del proyecto');
  const nav=el('nav'),notice=el('p','Preparando el puesto…','workspace-status'),body=el('div',undefined,'workspace-body');
- notice.setAttribute('role','status');const tools=el('details',undefined,'workspace-tools'),toolsNav=el('div');tools.append(el('summary','Herramientas'),toolsNav);nav.setAttribute('aria-label','Tablero del proyecto');root.append(nav,notice,body);container.append(root);
- const sections=Object.fromEntries(WORKSPACE_TABS.map(([id,label])=>{const b=button(label,()=>setTab(id));b.dataset.tab=id;(id==='browser'||id==='knowledge'||id==='sources'||id==='meeting'||id==='avatar'?toolsNav:nav).append(b);const section=el('section');section.dataset.panel=id;body.append(section);return[id,section];}));
- nav.append(tools);
+ notice.setAttribute('role','status');const subnav=el('nav',undefined,'workspace-subnav');subnav.setAttribute('aria-label','Opciones de la sección');nav.className='workspace-primary';nav.setAttribute('aria-label','Tablero del proyecto');root.append(nav,subnav,notice,body);container.append(root);
+ const sections=Object.fromEntries(WORKSPACE_TABS.map(([id,label])=>{const b=button(label,()=>setTab(id));b.dataset.tab=id;(Object.hasOwn(WORKSPACE_GROUPS,id)?nav:subnav).append(b);const section=el('section');section.dataset.panel=id;body.append(section);return[id,section];}));
+
  const avatarCard=mountAvatarCard({container:sections.avatar,doc,win});
  const meeting=mountMeeting({container:sections.meeting,getCase:()=>selected&&getSelection()?.case_id===selected.case_id?selected.case_id:null,doc,win,onPresent,
-  onSlide:slide=>win.dispatchEvent(new CustomEvent('yod-meeting-slide',{detail:slide})),onNext:()=>{setTab('tasks');newGoal.open=true;goalInputs.title.focus();}});
+  onSlide:slide=>win.dispatchEvent(new CustomEvent('yod-meeting-slide',{detail:slide})),
+  canReview:()=>!!selected?.can_enqueue&&getSelection()?.case_id===selected.case_id,
+  onReview:async value=>{const own=generation;const goal=await reviewPresentedGoal(tasks,value,()=>own===generation&&selected?.case_id===value.case_id&&getSelection()?.case_id===value.case_id);if(goal)win.dispatchEvent(new CustomEvent('yod-goals-changed'));return goal;},
+  onNext:value=>{if(selected?.case_id!==value.case_id)return;setTab('tasks');newGoal.open=true;goalInputs.title.focus();}});
  const knowledge=mountKnowledgeBoard({container:sections.knowledge,request,getCase:()=>selected&&getSelection()?.case_id===selected.case_id?selected.case_id:null,onUnauthorized:()=>clear(),doc,win});
  const browser=sections.browser,form=el('form',undefined,'workspace-address'),address=el('input');address.type='url';address.placeholder='https://…';address.setAttribute('aria-label','Dirección del navegador');address.required=true;
  const go=el('button','Abrir');go.type='submit';form.append(address,go);
@@ -261,9 +282,11 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   }catch{notice.textContent='El puesto no respondió. Reintentando; la conversación puede continuar.';}
   finally{fetching=false;}
  }
- function setTab(id){if(!WORKSPACE_TABS.some(([k])=>k===id))return;if(tab==='meeting'&&id!=='meeting')meeting.hide();if(tab==='knowledge'&&id!=='knowledge')knowledge.hide();tab=id;tools.open=false;for(const [key,section]of Object.entries(sections)){section.hidden=key!==id;nav.querySelector('[data-tab="'+key+'"]').setAttribute('aria-pressed',String(key===id));}
+ function setTab(id){if(!WORKSPACE_TABS.some(([k])=>k===id))return;if(tab==='meeting'&&id!=='meeting')meeting.hide();if(tab==='knowledge'&&id!=='knowledge')knowledge.hide();tab=id;root.dataset.workspaceGroup=workspaceGroup(id);subnav.hidden=id==='ppp';
+  for(const [key,section]of Object.entries(sections)){section.hidden=key!==id;const b=root.querySelector('[data-tab="'+key+'"]');b.setAttribute('aria-pressed',String(Object.hasOwn(WORKSPACE_GROUPS,key)?workspaceGroup(id)===key:key===id));if(b.parentElement===subnav)b.hidden=workspaceGroup(key)!==workspaceGroup(id);}
+
   if(id==='avatar'&&selected)void avatarCard.open(selected);if(id==='meeting'&&!meeting.snapshot()){sections.meeting.replaceChildren(el('p','Buscando la última entrega preparada…'));void openLatestMeeting();}
-  if(id==='activity'){notice.textContent='Tu trabajo y el siguiente paso, al volver al puesto.';workView.refresh();}if(id==='browser')workView.refresh();if(id==='ppp'){notice.textContent='';mountBoard();}if(id==='knowledge'&&selected){notice.textContent='Conocimiento y versiones del expediente.';void knowledge.open(selected.case_id);}void refresh();}
+  if(id==='activity'){notice.textContent='';workView.refresh();}if(id==='browser')workView.refresh();if(id==='ppp'){notice.textContent='';mountBoard();}if(id==='knowledge'&&selected){notice.textContent='';void knowledge.open(selected.case_id);}void refresh();}
  async function openLatestMeeting(){
   const own=generation,id=selected?.case_id;if(!id)return;
   await tasks.read();if(own!==generation||getSelection()?.case_id!==id||tab!=='meeting')return;

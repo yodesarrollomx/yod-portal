@@ -3,9 +3,9 @@
 // No envía mensajes ni crea documentos. Todo espacio está en "solo observar".
 // El repositorio es público: aquí no hay nombres de casos, clientes ni contactos.
 import {ENTORNO_ACTIVO,ENTORNO_JUNTAS,ENTORNO_VISITAS_PERSISTENTES,ENTORNO_PERMISOS_SERVIDOR} from './entorno-config.mjs?v=5';
-import {leerMetas,pendientesDeMetas} from './circulo-pendientes.mjs';
+import {leerMetas,pendientesDeMetas} from './circulo-pendientes.mjs?v=126';
 import {Visitas} from './visitas.mjs?v=2';
-import {createFrameTransport} from './conversation.mjs?v=3';
+import {createFrameTransport} from './conversation.mjs?v=126';
 import {Permisos} from './permisos.mjs?v=1';
 
 export const PERMISOS={

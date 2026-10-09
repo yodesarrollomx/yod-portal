@@ -42,12 +42,14 @@ const server=http.createServer((req,res)=>{
     return {walls:walls.size,clipped:[...walls].filter(m=>m.clippingPlanes?.length===1).length,furnitureClipped:[...furniture].filter(m=>m.clippingPlanes?.length).length};
    });
    const cut=await materialState();assert.ok(cut.walls>0);assert.equal(cut.clipped,cut.walls);assert.equal(cut.furnitureClipped,0);
-   await page.locator('#office-agent-marker').waitFor({state:'visible'});
-   const marker=await page.locator('#office-agent-marker').boundingBox();assert.ok(marker.width>=44&&marker.height>=44);
+   const residentLabel=page.locator('.avatar-presence[data-case-id="synthetic-office"]');
+   await residentLabel.waitFor({state:'visible'});
+   assert.equal(await residentLabel.getAttribute('data-selected'),'true');
+   assert.match(await residentLabel.getAttribute('aria-label'),/Proyecto de prueba.*Abrir opciones/);
+   const marker=await page.locator('.avatar-presence[data-case-id="synthetic-office"]').boundingBox();assert.ok(marker.width>=44&&marker.height>=44);
    assert.ok(marker.x>=0&&marker.x+marker.width<=(mobile?390:1366));
    await page.screenshot({path:path.join(out,'oficina-panorama-'+(mobile?'movil':'escritorio')+'.png')});
-   console.log('OFFICE_SCREENSHOT_'+(mobile?'MOBILE':'DESKTOP')+':'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'));
-   await page.locator('#office-agent-marker').click();assert.deepEqual(await page.evaluate(()=>window.__opened),['synthetic-office']);
+   await page.locator('.avatar-presence[data-case-id="synthetic-office"]').click();assert.deepEqual(await page.evaluate(()=>window.__opened),['synthetic-office']);
    await page.locator('.radial-close').click();
    // Select the actual mesh through the same canvas raycaster, without the label.
    const hit=await page.evaluate(async()=>{
@@ -68,7 +70,13 @@ const server=http.createServer((req,res)=>{
    await page.locator('#overview').click();assert.equal((await page.evaluate(()=>window.despacho.getState())).zoom,1);
    await page.locator('#walk').click();
    state=await page.evaluate(()=>window.despacho.getState());assert.equal(state.projection,'perspective');assert.equal(state.cutaway,false);assert.equal((await materialState()).clipped,0);
-   assert.equal(await page.locator('#office-agent-marker').isVisible(),false);
+   // Labels now work in both camera modes; a resident behind the camera must remain hidden.
+   await page.evaluate(async()=>{const T=await import('/despacho3d/vendor/three.module.js'),camera=window.despacho.camera;
+    const avatar=window.despacho.scene.children.find(o=>o.userData.caseId==='synthetic-office'),target=new T.Box3().setFromObject(avatar).getCenter(new T.Vector3());
+    window.__savedCameraQuaternion=camera.quaternion.clone();camera.lookAt(camera.position.clone().multiplyScalar(2).sub(target));
+   });
+   await residentLabel.waitFor({state:'hidden'});
+   await page.evaluate(()=>{window.despacho.camera.quaternion.copy(window.__savedCameraQuaternion);delete window.__savedCameraQuaternion;});
    if(mobile)assert.equal(await page.locator('#joystick').isVisible(),true);
    // Actual renderer and nonmodal radial: enter by walking, then keep walking closer.
    await page.evaluate(()=>window.despacho.camera.position.set(7,1.65,3.5));
@@ -84,7 +92,6 @@ const server=http.createServer((req,res)=>{
    assert.equal(await page.evaluate(()=>document.getElementById('workspace').inert),false);
    assert.equal(await page.evaluate(()=>window.__voiceStarts.length),0);
    await page.screenshot({path:path.join(out,'encuentro-circulo-'+(mobile?'movil':'escritorio')+'.png')});
-   console.log('ENCOUNTER_'+(mobile?'MOBILE':'DESKTOP')+':'+(await page.screenshot({type:'jpeg',quality:70})).toString('base64'));
    // Hold for a bounded movement interval and then face the actual figure.
    await page.evaluate(()=>window.despacho.camera.position.set(7,1.65,-4.30));
    await page.waitForFunction(()=>window.__voiceStarts.length===1);
@@ -97,27 +104,31 @@ const server=http.createServer((req,res)=>{
    // Inspect the actual seated model and the physical computer texture, not an HTML substitute.
    await page.evaluate(()=>window.despacho.setAgentActivity('talk'));
    await page.waitForTimeout(150);
-   const seat=await page.evaluate(()=>{const a=window.despacho.scene.children.find(o=>o.userData.caseId==='synthetic-office');return {bodyY:a.userData.body.position.y,scale:a.userData.body.scale.y,leg:a.userData.legs[0].rotation.x};});
-   assert.ok(Math.abs(seat.bodyY+.50*seat.scale-.62)<.001);assert.equal(seat.leg,-Math.PI/2);
+   const seat=await page.evaluate(async()=>{const T=await import('/despacho3d/vendor/three.module.js');
+    const avatar=window.despacho.scene.children.find(o=>o.userData.caseId==='synthetic-office');avatar.updateMatrixWorld(true);
+    return avatar.userData.legs.map(leg=>{const thigh=leg.children.find(o=>o.isMesh);if(!thigh)throw Error('missing upper thigh mesh');return {contactY:new T.Box3().setFromObject(thigh).min.y,leg:leg.rotation.x};});
+   });
+   // Measure the rendered thighs against the actual 0.62 m chair top, independent of either rig's hip offset.
+   assert.equal(seat.length,2);for(const side of seat){assert.ok(Math.abs(side.contactY-.62)<.001,JSON.stringify(side));assert.equal(side.leg,-Math.PI/2);}
    await page.evaluate(async()=>{const T=await import('/despacho3d/vendor/three.module.js');const w=window.despacho;
-    w.layout.computerScreen.update({phase:'ready',case_id:'synthetic-office',projectName:'Proyecto de prueba',work:{run_id:'synthetic-run',title:'Comparar variantes',phase:'working',updated_at:'2026-10-07T12:00:00Z',progress:{sequence:2,progress:{tasks:[{title:'Verificar superficie',status:'running'},{title:'Fuente preparada',status:'ready_for_review'}],summary:''}}}});
+    w.layout.computerScreen.update({phase:'ready',case_id:'synthetic-office',checked_at:Date.now(),projectName:'Proyecto de prueba',work:{case_id:'synthetic-office',goal_id:'synthetic-goal',run_id:'synthetic-run',title:'Comparar variantes',phase:'working',updated_at:new Date().toISOString(),progress:{sequence:2,progress:{tasks:[{title:'Verificar superficie',status:'running'},{title:'Fuente preparada',status:'ready_for_review'}],summary:''}}}});
     w.camera.position.set(8.8,2.1,-4.8);w.camera.lookAt(new T.Vector3(7,1.2,-6.8));
    });
    await page.waitForTimeout(300);
    assert.equal(await page.evaluate(()=>window.despacho.getState().computer.progress.counts),'1/2 para revisar');
-   console.log('SEATED_SCREEN_'+(mobile?'MOBILE':'DESKTOP')+':'+(await page.screenshot({type:'jpeg',quality:80})).toString('base64'));
+   await page.screenshot({path:path.join(out,'puesto-sentado-'+(mobile?'movil':'escritorio')+'.png')});
    await page.locator('#overview').click();
    const start=await page.evaluate(()=>window.despacho.getAgentState().position);
    assert.equal(await page.evaluate(()=>window.despacho.agenteIr('decisions')),true);
    await page.waitForFunction(()=>window.despacho.getAgentState().motion==='walk');
    await page.waitForFunction(p=>Math.hypot(...window.despacho.getAgentState().position.map((v,i)=>v-p[i]))>.2,start);
-   assert.equal(await page.locator('#office-agent-marker').isVisible(),true);
+   await residentLabel.waitFor({state:'visible'});
    // Reduced motion completes the accepted route without a long animated wait.
    await page.emulateMedia({reducedMotion:'reduce'});
    await page.waitForFunction(()=>window.despacho.getAgentState().place==='decisions');
    assert.deepEqual(await page.evaluate(()=>window.__arrivals),['decisions']);
    await page.evaluate(()=>window.__revoke());
-   await page.waitForFunction(()=>window.despacho.getState().avatar.count===0&&document.querySelector('#office-agent-marker').hidden);
+   await page.waitForFunction(()=>window.despacho.getState().avatar.count===0&&!document.querySelector('.avatar-presence[data-case-id="synthetic-office"]'));
    await page.setViewportSize(mobile?{width:844,height:390}:{width:1000,height:700});
    assert.equal((await page.evaluate(()=>window.despacho.getState())).projection,'orthographic');
    assert.deepEqual(errors,[]);

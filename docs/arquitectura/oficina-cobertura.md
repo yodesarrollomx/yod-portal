@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-09.124-reunion-autones
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-09.126-despacho-integral
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -199,11 +199,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Función:** Servir el contrato de Portero y Potenciales
 
-**Fuente oficial:** Implementación existente y sus hojas canónicas; último recibo API del coordinador V66 desde V65 el 5-oct, con editor/candidato/versión inmutable iguales. Evidencias V51/V52/V53/V57/V65 históricas, con alcance y fecha propios.
+**Fuente oficial:** Implementación existente y hojas canónicas. V72 verificada el 2026-10-09 para metadatos autorizados de autones; pruebas de negocio históricas conservan su alcance específico.
 
 **Responsable operativo:** Responsable técnico del backend
 
-**Estado registrado:** codigo. Publicación API V66 desde V65 reportada por coordinador: adaptador PPP recuperado, siete archivos idénticos, misma URL/scopes/ACL y editor/candidato/versión iguales. GET real Patrimonial aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; geometría pendiente. Vertical y otros casos no acreditados; aceptación final pendiente.
+**Estado registrado:** codigo. Publicación API V66 desde V65 reportada por coordinador: adaptador PPP recuperado, siete archivos idénticos, misma URL/scopes/ACL y editor/candidato/versión iguales. GET real Patrimonial aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; geometría pendiente. Vertical y otros casos no acreditados; aceptación final pendiente. Despacho126: V72 comprobada por lectura independiente el 2026-10-09; display\_name autorizado y perfiles adultos sin cambiar IDs ni URL. La lectura de metadatos no amplía la aceptación financiera.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -241,6 +241,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Relevo del coordinador confirmado por Dirección el 5-oct: fuente activa/editor V65 idénticos, adaptador Patrimonial ausente y GET sheet-model Patrimonial con error servidor; recuperación \#47 propuesta. Detalles y snapshots privados. · Estado: declarado · Revisión: Apps Script version 65; 2026-10-05
 - Coordinador reporta publicación API V66 desde V65: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma URL/scopes/ACL y editor == candidato == versión inmutable V66. GET funcional posterior pendiente; sin POST de pruebas de negocio. · Estado: declarado · Revisión: Apps Script version 66; 2026-10-05
 - Coordinador reporta GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; dos escenarios conservan IDs y 269 campos, geometría pendiente. Acta privada fuera del repositorio. Vertical y otros casos no acreditados. · Estado: declarado · Revisión: Apps Script version 66; cotejo Patrimonial 2026-10-05
+- V72 verificada en ejecución privada37888901829: HEAD y versión coinciden en hash189630ca1ab4d19c17f54f9e13caacbfb6aa99c44ad34240ad6275d806224d3d; mismos IDs/implementación/URL. display\_name separado de avatar.name canónico; no certifica escrituras de negocio. · Estado: ejecucion · Revisión: Apps Script version72; 2026-10-09
 
 **Evidencia de conexiones:**
 
@@ -993,7 +994,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dirección técnica
 
-**Estado registrado:** codigo. Entrada113 publicada en PR128; usuario reporta que el encuentro no saluda y el asiento/monitor no reflejan lo esperado. Encuentro114 en PR129 corrige radios, postura y proyección de avance; pendiente navegador y publicación. Piloto de un proyecto autorizado, no múltiples autónomos simultáneos verificados.
+**Estado registrado:** codigo. Integración126 en preparación: tres personajes autorizados, presencia por tarea y puesto PPP/Trabajo/Expediente compartido. Publicación y aceptación se registrarán tras pruebas del mismo commit; no se acredita micrófono físico.
 
 **Entradas registradas:**
 
@@ -2672,7 +2673,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dirección técnica
 
-**Estado registrado:** codigo. Render 9e1fac335ea6dd36add9bee895d39d4677a48d73 activo desde 2026-10-07T21:31:43Z. Lecturas de contexto posteriores entre 5.4 y 13.4 segundos; no se acredita primera conversación por proximidad con micrófono físico.
+**Estado registrado:** codigo. Render dfe9c7a45ddeb997c32b8bd39483be3874e68658 live desde 2026-10-09T05:37:10Z. Cola FIFO persistente con un ejecutor y cuarentena si no termina; historial privado por caso desde esta entrega. Pruebas automáticas de voz/PPP aprobadas; micrófono físico y primera conversación privada por proximidad no acreditados.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -2687,6 +2688,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Evidencia de la ficha:**
 
 - [Compone motor, voz, investigación, objetivos y conocimiento por caso. · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/server.mjs · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/server.mjs)
+- [Historia por ejecución, FIFO, progreso confirmado y recuperación; 282 pruebas aprobadas y una omitida, navegadores aprobados; recibo Render dep-db47qobncjis73c3vrp0 live. · Estado: ejecucion · alexpueblag/yod-agent-cloud · cloud/AUTONOMY-126.md · Revisión: dfe9c7a45ddeb997c32b8bd39483be3874e68658](https://github.com/alexpueblag/yod-agent-cloud/blob/dfe9c7a45ddeb997c32b8bd39483be3874e68658/cloud/AUTONOMY-126.md)
 
 **Evidencia de conexiones:**
 

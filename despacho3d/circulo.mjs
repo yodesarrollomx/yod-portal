@@ -3,7 +3,7 @@
 // si el interruptor está encendido (o ?circulo=1) y el servidor autorizó el perfil del caso.
 import {CIRCULO_ACTIVO,CIRCULO_PENDIENTES_REALES} from './circulo-config.mjs';
 import {CATEGORIAS,datosDeEjemplo,validarDatos} from './circulo-datos.mjs';
-import {datosReales,leerMetas} from './circulo-pendientes.mjs';
+import {datosReales,leerMetas} from './circulo-pendientes.mjs?v=126';
 
 export const SECTORES=[
  {id:'pendientes',etiqueta:'Pendientes',voz:'Esto es lo que me falta resolver y con quién está.'},

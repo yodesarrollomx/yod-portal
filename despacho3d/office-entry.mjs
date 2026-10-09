@@ -1,13 +1,18 @@
 import {stationIdentity} from './project-station.mjs';
-import {workHeadline} from './work-observer.mjs?v=1';
+import {workHeadline} from './work-observer.mjs?v=126';
+import {avatarPresence} from './avatar-presence.mjs?v=126';
 
 // A view of the authorized selection, never a second registry or a source of permission.
 export function entryView(selection,presence={},observation={}){
  if(!selection)return {ready:false,name:'Tu despacho',project:'',status:presence.phase==='reconnecting'?'Recuperando conexión…':presence.phase==='unauthorized'?'Entra a YOD OS para ver tus proyectos.':'Preparando tus proyectos…',detail:'',caseId:null};
  const identity=stationIdentity(selection),same=observation.case_id===selection.case_id;
+ const projected=same?avatarPresence({profile:selection.avatar,observation}):null;
+ const headline=projected?.label||workHeadline(observation);
+ // Older profiles can lack the presentation contract. Never expose a raw tool identifier.
+ const status=/^[a-z][a-z0-9]*(_[a-z0-9]+)+$/i.test(headline||'')?'Consultando herramienta':headline;
  return {ready:true,name:identity.name,project:identity.project,caseId:identity.case_id,
-  status:same?workHeadline(observation):'Consultando actividad…',
-  detail:same&&observation.phase==='ready'?observation.work?.title||'':''};
+  status:same?status:'Consultando actividad…',
+  detail:same&&observation.phase==='ready'&&(!projected||projected.goal_id)?observation.work?.title||'':''};
 }
 export function mountOfficeEntry({win=window,doc=document}={}){
  const host=doc.getElementById('office-entry'),trigger=doc.getElementById('case-open');

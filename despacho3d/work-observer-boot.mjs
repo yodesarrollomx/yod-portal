@@ -1,6 +1,6 @@
-import {createFrameTransport} from './conversation.mjs';
+import {createFrameTransport} from './conversation.mjs?v=126';
 import {validateFastSession} from './fast-lane.mjs';
-import {createWorkObserver} from './work-observer.mjs?v=124';
+import {createWorkObserver} from './work-observer.mjs?v=126';
 const transport=createFrameTransport(window);
 let credential=null,minting=null,stop=null,bound=null;
 const current=()=>window.YodResidentAgents?.getSelection?.();

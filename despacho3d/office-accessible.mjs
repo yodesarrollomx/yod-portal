@@ -1,10 +1,11 @@
+import {openOfficeDestination,createOfficeCasePicker} from './office-destination.mjs?v=126';
 import {places,bounds,annex,collisions,allowed} from './office-layout.mjs?v=1';
 import {ENTORNO_AGENTE_CAMINA} from './entorno-config.mjs';
 import {crearAgenteIr} from './entorno-ruta.mjs?v=4';
-import {createOfficePilot} from './avatars/office-pilot.mjs?v=5';
+import {createOfficePilot} from './avatars/office-pilot.mjs?v=126';
 import * as T from 'three';
 import {panels} from './office-panels.mjs?v=2';
-import {ESPACIOS} from './entorno.mjs?v=11';
+import {ESPACIOS} from './entorno.mjs?v=126';
 
 const el=(tag,text='',attrs={})=>{
  const node=document.createElement(tag);node.textContent=text;
@@ -39,18 +40,12 @@ export function startAccessibleOffice({onPanelOpened=()=>{}}={}){
  const visit=async id=>{if(!Object.hasOwn(places,id))return false;closeSheets();selected=id;return true;};
  const openPanel=id=>{
   if(id!=='computer'&&!Object.hasOwn(places,id))return false;
-  if(id==='case'||id==='computer'){
-   const selection=window.YodResidentAgents?.getSelection?.();
-   if(selection){closeSheets();return id==='case'?(window.YodAgentMenu?.showRadial(selection.case_id)||false):(window.YodVoiceWorkspace?.openForCase(selection.case_id,'ppp')||false);}
-  }
+  const route=openOfficeDestination(id,{residents:window.YodResidentAgents,workspace:window.YodVoiceWorkspace,menu:window.YodAgentMenu,beforeOpen:closeSheets});
+  if(route.handled)return route.opened;
   const p=panels[id]||{tag:places[id].label,title:places[id].label,body:'<p>Espacio del Despacho. Sus herramientas se conectan por etapas desde Entorno.</p>'};
   document.getElementById('panel-tag').textContent=p.tag;document.getElementById('panel-title').textContent=p.title;
   // Contenido de fichas del código local, nunca de un perfil o un expediente.
   document.getElementById('panel-body').innerHTML=p.body;
-  if(id==='case'){
-   const b=el('button','Abrir panel de agentes');b.onclick=()=>{closeSheets();window.CubefarmYOD?.open('chat');};
-   document.getElementById('panel-body').prepend(b);
-  }
   showSheet('panel');onPanelOpened(id);return true;
  };
  const api={setAgentActivity:pilot.setActivity,view:'map',layout:{bounds,annex,collisions},visit,setMode:()=>closeSheets(),openPanel,closeSheets,allowed,
@@ -104,11 +99,29 @@ export function mountAccessibleView(api){
  }
  const visitor=svgEl('circle',{r:'.24',class:'office-visitor'}),agent=svgEl('circle',{r:'.3',class:'office-agent'});svg.append(visitor,agent);root.append(svg);
  root.append(el('p','Azul: tu vista · Dorado: agente · Gris: muebles y paredes',{class:'office-map-legend'}));
+ const roster=el('section','',{class:'office-map-residents','aria-label':'Autónomos autorizados'}),rosterNames=el('div','',{class:'office-map-resident-list'}),rosterNotice=el('p','',{role:'status','aria-live':'polite'});
+ roster.append(el('h2','Autónomos'),rosterNames,rosterNotice);root.append(roster);
+ let rosterKey='';
+ const casePicker=createOfficeCasePicker({getResidents:()=>window.YodResidentAgents,openCase:id=>{
+  if(window.YodResidentAgents?.getSelection?.()?.case_id!==id)return false;
+  return api.openPanel('case');
+ },onChange:state=>{
+  const key=JSON.stringify(state);if(key===rosterKey)return;rosterKey=key;
+  const focused=document.activeElement?.dataset?.residentCase;
+  rosterNames.replaceChildren();
+  for(const item of state.cases){
+   const b=el('button',item.name,{type:'button','data-resident-case':item.id,'aria-pressed':String(item.id===state.selected)});
+   b.disabled=!!state.busy;b.onclick=()=>void casePicker.pick(item.id);rosterNames.append(b);
+  }
+  rosterNotice.textContent=state.notice||(state.cases.length?'Elige con quién trabajar.':'Valida tu acceso en YOD OS para ver a tus autónomos.');
+  if(focused)rosterNames.querySelectorAll('[data-resident-case]').forEach(b=>{if(b.dataset.residentCase===focused)b.focus({preventScroll:true});});
+ }});
+ const bindPicker=()=>casePicker.bind();window.addEventListener('yod-residents-ready',bindPicker);bindPicker();
  const controls=el('div','',{class:'office-map-controls'});
  for(const [id,p]of Object.entries(places)){
   const card=el('article','',{'data-place-card':id});card.append(el('h2',p.label));
   const go=el('button','Ir a '+p.label,{type:'button'});go.onclick=async()=>{const ok=await api.visit(id);result.textContent=ok===true?'Vista situada en '+p.label+'.':'No se confirmó el cambio de vista.';paint();};card.append(go);
-  const info=el('button','Abrir ficha de '+p.label,{type:'button'});info.onclick=()=>api.openPanel(id);card.append(info);
+  const info=el('button','Abrir ficha de '+p.label,{type:'button'});info.onclick=async()=>{const ok=await api.openPanel(id);if(ok===false)result.textContent='El puesto todavía se está preparando o necesita validar tu acceso en YOD OS.';};card.append(info);
   const space=ESPACIOS.find(e=>e.lugar===id);
   if(space){const send=el('button','Enviar agente a '+space.nombre,{type:'button','data-agent-destination':id});send.onclick=()=>{
    if(!authorized((window.YodResidentAgents||window.CubefarmYOD)?.getProfile?.()))return;
@@ -143,7 +156,7 @@ export function mountAccessibleView(api){
  const bind=()=>{if(!unsubscribe&&(window.YodResidentAgents||window.CubefarmYOD)?.subscribeProfile)unsubscribe=(window.YodResidentAgents||window.CubefarmYOD).subscribeProfile(()=>paint());};
  window.addEventListener('yod-agents-ready',bind);bind();paint();
  let timer=setInterval(()=>{if(!document.hidden)paint();},250);
- window.addEventListener('pagehide',()=>{clearInterval(timer);unsubscribe?.();unsubscribe=null;});
+ window.addEventListener('pagehide',()=>{clearInterval(timer);unsubscribe?.();unsubscribe=null;casePicker.dispose();window.removeEventListener('yod-residents-ready',bindPicker);});
  window.addEventListener('pageshow',()=>{clearInterval(timer);timer=setInterval(()=>{if(!document.hidden)paint();},250);bind();paint();});
  return {root,paint};
 }

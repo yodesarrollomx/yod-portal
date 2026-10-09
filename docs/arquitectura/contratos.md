@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-09.124-reunion-autones · 2026-10-09.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-09.126-despacho-integral · 2026-10-09.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 

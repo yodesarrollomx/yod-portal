@@ -18,7 +18,7 @@ const server=http.createServer((req,res)=>{
    if(u.origin==='https://synthetic-cloud.onrender.com'){
     const headers={'Access-Control-Allow-Origin':base,'Access-Control-Allow-Headers':'Authorization,Content-Type','Access-Control-Allow-Methods':'POST,OPTIONS'};
     if(r.request().method()==='OPTIONS')return r.fulfill({status:204,headers});
-    const body=await page.evaluate(()=>({ok:true,phase:'idle',url:'https://example.com/source',title:'Fuente sintética',image:window.__image,captured_at:window.__data.screen.captured_at,capture_work:window.__data.screen.owner,links:[],activity:[]}));
+    const body=await page.evaluate(()=>({ok:true,phase:'idle',url:'https://example.com/source',title:'Fuente sintética',image:window.__image,captured_at:window.__data.screen.captured_at,revision:window.__data.screen.revision,capture_work:window.__data.screen.owner,links:[],activity:[]}));
     return r.fulfill({status:200,headers,contentType:'application/json',body:JSON.stringify(body)});
    }
    return r.abort();
@@ -36,7 +36,7 @@ const server=http.createServer((req,res)=>{
    const imageCanvas=document.createElement('canvas');imageCanvas.width=1120;imageCanvas.height=700;const c=imageCanvas.getContext('2d');c.fillStyle='#e8e5d9';c.fillRect(0,0,1120,700);c.fillStyle='#20343c';c.font='40px Arial';c.fillText('Fuente sintética consultada',60,120);c.font='26px Arial';c.fillText('Resultado vinculado a task-1',60,190);window.__image=imageCanvas.toDataURL('image/jpeg');
    const owner={case_id:fixture.case_id,run_id:fixture.work.run_id,goal_id:fixture.work.goal_id,task_id:'task-1'};
    window.__data.screen={captured_at:'2026-10-06T10:02:00Z',revision:2,owner};
-   const observer=createWorkObserver({getSelection:()=>window.YodResidentAgents.getSelection(),schedule:()=>1,cancel:()=>{},request:async path=>{window.__requests.push(path);if(window.__networkFailure)throw Error('unavailable');return path==='/computer/work'?structuredClone(window.__data):{ok:true,capture_work:owner,captured_at:window.__data.screen.captured_at,image:window.__image};}});
+   const observer=createWorkObserver({getSelection:()=>window.YodResidentAgents.getSelection(),schedule:()=>1,cancel:()=>{},request:async path=>{window.__requests.push(path);if(window.__networkFailure)throw Error('unavailable');return path==='/computer/work'?structuredClone(window.__data):{ok:true,capture_work:owner,captured_at:window.__data.screen.captured_at,revision:window.__data.screen.revision,image:window.__image};}});
    window.YodWorkObserver=observer;window.dispatchEvent(new CustomEvent('yod-work-observer-ready'));observer.select();
    const host=document.createElement('div');host.id='test-workspace';host.hidden=true;host.style.cssText='position:fixed;inset:8px;z-index:3000;background:#f6f4ee;padding:16px;overflow:auto';document.body.append(host);
    const transport={mintFastSession:async({case_id})=>({ok:true,case_id,endpoint:'https://synthetic-cloud.onrender.com',token:'A'.repeat(40)+'.'+'a'.repeat(64),expires_at:Date.now()+600000}),read:async({case_id})=>({ok:true,case_id,source_revision:'r1',context:{identity:{case_id,name:'Proyecto sintético'},documents:[]},state:{updated_at:'2026-10-06T10:00:00Z'},conversation:[],jobs:[],events:[]}),dispose(){}};

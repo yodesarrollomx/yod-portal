@@ -70,7 +70,10 @@ const server=http.createServer((req,res)=>{
    exportFail=true;await page.getByRole('button',{name:'Descargar Markdown',exact:true}).click();await page.locator('.knowledge-notice').filter({hasText:'registro no está disponible'}).waitFor();
    await page.evaluate(()=>{window.workspace.setActive(false);window.workspace.open(window.selection,'ppp');});
    await page.locator('.workspace-board iframe').waitFor();assert.equal(await page.evaluate(()=>window.sourceReads),2);
-   for(const tab of ['browser','ppp','tasks','knowledge']){if(['browser','knowledge'].includes(tab))await page.locator('.workspace-tools summary').click();await page.locator('[data-tab="'+tab+'"]').click();}
+   for(const [group,tab] of [['activity','browser'],['ppp','ppp'],['activity','tasks'],['sources','knowledge']]){
+    if(group!==tab)await page.locator('[data-tab="'+group+'"]').click();
+    await page.locator('[data-tab="'+tab+'"]').click();
+   }
    await page.locator('.knowledge-board[data-state="ready"]').waitFor();
    assert.deepEqual(await page.evaluate(()=>({track:window.voiceTrack.readyState,same:window.voiceTrack.id===window.voiceTrackId,paused:document.getElementById('voice-audio').paused,requests:window.mediaRequests})),{track:'live',same:true,paused:false,requests:0});
    assert.equal(await page.locator('#voice-status').innerText(),'La conversación sigue activa');

@@ -103,3 +103,24 @@ test('closing retains unacknowledged history and changing project invalidates an
  const fresh=queue.drain(),releaseNew=release;releaseOld();assert.equal(await retry,false);assert.equal(queue.size,1);assert.deepEqual(acks,[]);
  releaseNew();assert.equal(await fresh,true);assert.deepEqual(acks,['new-case']);assert.equal(queue.size,0);
 });
+
+test('meeting review only closes the exact displayed delivery and preserves an uncertain request',async()=>{
+ const {reviewPresentedGoal}=await import('../despacho3d/agent-workspace.mjs');
+ const value={case_id:'case-synthetic',goal_id:'delivery-1',revision:'r1'};
+ const model={goals:[{...value,status:'ready_for_review'}]};let writes=0,reads=0,retries=0;
+ const controller={model,pending:null,read:async()=>{reads++;return true;},review:async(id,action)=>{writes++;assert.equal(id,value.goal_id);assert.equal(action,'approve');model.goals[0]={...model.goals[0],status:'completed',revision:'r2'};return true;},retry:async()=>{retries++;model.goals[0]={...model.goals[0],status:'completed'};controller.pending=null;return true;}};
+ const changed={...value,revision:'old'};
+ await assert.rejects(()=>reviewPresentedGoal(controller,changed),/stale_revision/);assert.equal(writes,0);
+ assert.equal((await reviewPresentedGoal(controller,value)).status,'completed');assert.equal(writes,1);
+ controller.pending={method:'reviewGoal',payload:{case_id:value.case_id,goal_id:value.goal_id,action:'approve',request_id:'same-request'}};
+ assert.equal((await reviewPresentedGoal(controller,value)).status,'completed');assert.equal(retries,1);assert.equal(writes,1);assert.equal(reads,2);
+ controller.pending={method:'reviewGoal',payload:{case_id:'other',goal_id:value.goal_id,action:'approve'}};
+ assert.equal(await reviewPresentedGoal(controller,value),null);assert.equal(retries,1);
+ assert.equal(await reviewPresentedGoal(controller,value,()=>false),null);
+});
+test('a revoked project after reading cannot approve a meeting delivery',async()=>{
+ const {reviewPresentedGoal}=await import('../despacho3d/agent-workspace.mjs');let current=true,writes=0;
+ const value={case_id:'case-synthetic',goal_id:'delivery-1',revision:'r1'};
+ const controller={pending:null,model:{goals:[{...value,status:'ready_for_review'}]},read:async()=>{current=false;return true;},review:async()=>{writes++;return true;}};
+ assert.equal(await reviewPresentedGoal(controller,value,()=>current),null);assert.equal(writes,0);
+});

@@ -2,7 +2,7 @@
 // convierte en tarjetas. No crea, aprueba ni detiene metas, y no escribe en Sheets.
 // La categoría la pone Jev cuando el motor la dejó en el resumen de la meta (JEV_GASTON_CARDS=on);
 // si no está, se usa el estado de la acción. Nunca se guarda ni se muestra nada fuera de esta hoja.
-import {createFrameTransport} from './conversation.mjs';
+import {createFrameTransport} from './conversation.mjs?v=126';
 import {validateGoals} from './goals.mjs';
 
 // Textos exactos con los que el motor resume las tarjetas (cloud/cards-jev.mjs).

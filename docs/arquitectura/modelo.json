@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-09.124-reunion-autones",
+  "revision": "2026-10-09.126-despacho-integral",
   "checked_at": "2026-10-09",
   "priorities": [
     "vender_mas",
@@ -1067,6 +1067,11 @@
           "claim": "Coordinador reporta GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; dos escenarios conservan IDs y 269 campos, geometría pendiente. Acta privada fuera del repositorio. Vertical y otros casos no acreditados.",
           "status": "declarado",
           "source_revision": "Apps Script version 66; cotejo Patrimonial 2026-10-05"
+        },
+        {
+          "claim": "V72 verificada en ejecución privada37888901829: HEAD y versión coinciden en hash189630ca1ab4d19c17f54f9e13caacbfb6aa99c44ad34240ad6275d806224d3d; mismos IDs/implementación/URL. display_name separado de avatar.name canónico; no certifica escrituras de negocio.",
+          "status": "ejecucion",
+          "source_revision": "Apps Script version72; 2026-10-09"
         }
       ],
       "data_entities": [
@@ -1081,9 +1086,9 @@
         "Las cachés de consumidores ajenos a esta entrega pueden conservar permisos temporalmente; revisarlos al continuar cada tablero."
       ],
       "backend_source_status": "fuente_editor_y_lectura_publica_contrastadas",
-      "source_of_truth": "Implementación existente y sus hojas canónicas; último recibo API del coordinador V66 desde V65 el 5-oct, con editor/candidato/versión inmutable iguales. Evidencias V51/V52/V53/V57/V65 históricas, con alcance y fecha propios.",
+      "source_of_truth": "Implementación existente y hojas canónicas. V72 verificada el 2026-10-09 para metadatos autorizados de autones; pruebas de negocio históricas conservan su alcance específico.",
       "status": "codigo",
-      "runtime_status": "Publicación API V66 desde V65 reportada por coordinador: adaptador PPP recuperado, siete archivos idénticos, misma URL/scopes/ACL y editor/candidato/versión iguales. GET real Patrimonial aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; geometría pendiente. Vertical y otros casos no acreditados; aceptación final pendiente."
+      "runtime_status": "Publicación API V66 desde V65 reportada por coordinador: adaptador PPP recuperado, siete archivos idénticos, misma URL/scopes/ACL y editor/candidato/versión iguales. GET real Patrimonial aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; geometría pendiente. Vertical y otros casos no acreditados; aceptación final pendiente. Despacho126: V72 comprobada por lectura independiente el 2026-10-09; display_name autorizado y perfiles adultos sin cambiar IDs ni URL. La lectura de metadatos no amplía la aceptación financiera."
     },
     {
       "id": "SHEET-PORTERO",
@@ -2717,7 +2722,7 @@
       "dominio": "Operación",
       "proposito": "Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.",
       "source_of_truth": "Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos.",
-      "runtime_status": "Entrada113 publicada en PR128; usuario reporta que el encuentro no saluda y el asiento/monitor no reflejan lo esperado. Encuentro114 en PR129 corrige radios, postura y proyección de avance; pendiente navegador y publicación. Piloto de un proyecto autorizado, no múltiples autónomos simultáneos verificados.",
+      "runtime_status": "Integración126 en preparación: tres personajes autorizados, presencia por tarea y puesto PPP/Trabajo/Expediente compartido. Publicación y aceptación se registrarán tras pruebas del mismo commit; no se acredita micrófono físico.",
       "evidence": [
         {
           "repo": "yodesarrollomx/yod-portal",
@@ -2746,7 +2751,7 @@
       "dominio": "Operación",
       "proposito": "Ejecutar conversación, consulta y tareas del expediente autorizado, con estado durable.",
       "source_of_truth": "Expediente autorizado y registros de cada dominio; volumen privado para estado, recibos y recuperación.",
-      "runtime_status": "Render 9e1fac335ea6dd36add9bee895d39d4677a48d73 activo desde 2026-10-07T21:31:43Z. Lecturas de contexto posteriores entre 5.4 y 13.4 segundos; no se acredita primera conversación por proximidad con micrófono físico.",
+      "runtime_status": "Render dfe9c7a45ddeb997c32b8bd39483be3874e68658 live desde 2026-10-09T05:37:10Z. Cola FIFO persistente con un ejecutor y cuarentena si no termina; historial privado por caso desde esta entrega. Pruebas automáticas de voz/PPP aprobadas; micrófono físico y primera conversación privada por proximidad no acreditados.",
       "evidence": [
         {
           "repo": "alexpueblag/yod-agent-cloud",
@@ -2754,6 +2759,13 @@
           "commit": "b88ce380d7e437cf535facdbd5592a0b8bc14dc1",
           "claim": "Compone motor, voz, investigación, objetivos y conocimiento por caso.",
           "status": "codigo"
+        },
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "cloud/AUTONOMY-126.md",
+          "commit": "dfe9c7a45ddeb997c32b8bd39483be3874e68658",
+          "claim": "Historia por ejecución, FIFO, progreso confirmado y recuperación; 282 pruebas aprobadas y una omitida, navegadores aprobados; recibo Render dep-db47qobncjis73c3vrp0 live.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -9602,6 +9614,31 @@
       ],
       "deployment": "2026-10-09 04:18 UTC: portal PR138 integrado en 611c762; cuatro checks correctos (517 pruebas más navegador escritorio/móvil). Recursos de Pages comprobados por HTTP con caché invalidada: ejecución 37883194304. Backend PR45 live desde 03:52:54 UTC (267 pruebas correctas, una omitida). Presentación HTML; Google Slides y micrófono físico no acreditados.",
       "rollback": "Revertir PR de interfaz; conservar objetivos, evidencia y credenciales del servidor."
+    },
+    {
+      "id": "CHG-DESPACHO-INTEGRAL-126",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD",
+        "GAS-PORTERO",
+        "EXT-DRIVE",
+        "STORE-AUTON-ESTADO",
+        "SYS-POTENCIALES"
+      ],
+      "proposal": "Unificar continuidad de proyecto, conversación y PPP; mejorar avatares y presencia legible con herramienta e hitos reales; reflejar trabajo persistente e historial por ejecución. Preparar representación ligera compartiendo contratos, sin publicar aún una vista pixel.",
+      "status": "implementado_local",
+      "approval": "Dirección acepta la propuesta integral y autoriza implementar, comprobar y publicar la versión normal el 8-oct-2026. Nombres cortos vienen del registro privado autorizado; conservar IDs, datos financieros y permisos.",
+      "tests": [
+        "Aislamiento de tres proyectos y acciones con case_id explícito; voz no cambia la vista.",
+        "Progreso calculado desde tareas/evidencia confirmadas, estación vinculada a ocupante, cola e historial trazables.",
+        "Servidor continúa tareas sin navegador; reinicio preserva estado y no repite acciones inciertas.",
+        "Recuperación transitoria versus revocación, móvil, bajo consumo y fallback con acciones consistentes.",
+        "Regresiones, verificadores, navegador con datos sintéticos y cotejo público; audio físico y sesión real se informan por separado."
+      ],
+      "deployment": "2026-10-09T05:37:10Z: backend dfe9c7a45ddeb997c32b8bd39483be3874e68658 live en Render, pruebas de cabeza 282 aprobadas y una omitida; navegadores voz/PPP y puesto aprobados. Portero V72 comprobado en lectura independiente conservando implementación. Portal integrado en PR141: cierre de pruebas y revisión visual pendientes antes de publicar; micrófono físico no acreditado.",
+      "rollback": "Revertir interfaz y cambios compatibles del motor mediante PR; conservar expedientes, journal/outbox, recibos y volumen persistente. No borrar objetivos ni reanudar acciones inciertas."
     }
   ],
   "data_contracts": [
@@ -11807,6 +11844,130 @@
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-avatar-presence126.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-avatar-profile126.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-office-human126.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-authority-lease.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-office-destination.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-resident-motion.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-stations.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-nearby-resident.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-avatar-occlusion126.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-work-history.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-lifecycle.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-case-selection-handoff.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/probar-autones-browser.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-avatar-label-layout126.test.cjs",
+      "components": [
+        "SYS-DESPACHO-3D"
       ]
     }
   ],

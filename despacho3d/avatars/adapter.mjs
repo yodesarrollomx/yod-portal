@@ -1,4 +1,4 @@
-import {createAvatar,animateAvatar,disposeAvatar} from './avatar.mjs?v=2';
+import {createAvatar,animateAvatar,disposeAvatar} from './avatar.mjs?v=126';
 import {createIdentityIndex} from './identity.mjs';
 
 /** Visual layer only. Receive profiles AFTER server authorization; never use a selected ID as access control. */

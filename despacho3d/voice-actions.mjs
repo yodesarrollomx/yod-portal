@@ -1,4 +1,4 @@
-import {validateSelection} from './conversation.mjs';
+import {validateSelection} from './conversation.mjs?v=126';
 import {validateGoal,validateGoals,GOAL_SCOPE} from './goals.mjs';
 const definitive=new Set(['stale_revision','goal_busy','case_busy','request_id_reused','invalid_state','invalid_transition','goals_not_ready','schema_not_initialized','invalid_request','goal_not_found','unauthorized','session_changed','action_cancelled']);
 const names=new Set(['pendientes_consultar','objetivo_crear','objetivo_reanudar','objetivo_detener']);
@@ -17,7 +17,7 @@ export function createVoiceActionExecutor({transport,onChange=()=>{},now=Date.no
  }
  async function execute(a,ctx){
   validAction(a,ctx.caseId);
-  const fresh=validateSelection(checked(await transport.resolveCurrent({})));
+  const fresh=validateSelection(checked(await transport.resolveCurrent({case_id:ctx.caseId})));
   if(fresh.case_id!==ctx.caseId)throw Error('action_cancelled');
   if(!ctx.active())return;
   if(a.name!=='pendientes_consultar'&&(!fresh.can_enqueue||!fresh.goals?.ready))throw Error(fresh.can_enqueue?'goals_not_ready':'unauthorized');

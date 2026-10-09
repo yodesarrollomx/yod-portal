@@ -50,7 +50,8 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await frame.waitForFunction(()=>window.despacho&&window.YodVoiceWorkspace&&document.querySelector('#case-open').disabled);
   assert.equal(await frame.locator('[data-entry-status]').innerText(),'Entra a YOD OS para ver tus proyectos.');
   await page.screenshot({path:path.join(out,'entrada-'+variant+'-sin-acceso.png')});
-  await frame.evaluate(()=>{window.__select('A');window.__observe({case_id:'synthetic-A',phase:'ready',work:{title:'Revisando fuentes · prueba',phase:'tool',current_tool:'Leyendo documento'}});});
+  // This fixture works at its own computer; library travel is covered by the multi-resident browser run.
+  await frame.evaluate(()=>{window.__select('A');window.__observe({case_id:'synthetic-A',phase:'ready',checked_at:Date.now(),work:{case_id:'synthetic-A',goal_id:'synthetic-goal-A',updated_at:new Date().toISOString(),title:'Revisando fuentes · prueba',phase:'tool',current_tool:'navegador_abrir'}});});
   await frame.locator('#case-open').waitFor({state:'visible'});
   assert.equal(await frame.locator('#case-open').isEnabled(),true);
   const chrome=await frame.evaluate(()=>{
@@ -60,6 +61,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   assert.ok(chrome.header<=61,'the office header must stay on one compact row');
   if(variant!=='fallback')assert.equal(chrome.inside,true,'project identity and primary action must share one card');
   assert.equal(await frame.locator('[data-entry-detail]').textContent(),'Revisando fuentes · prueba');
+  assert.equal(await frame.locator('[data-entry-status]').textContent(),'Investigando en internet','the entry uses a human activity from a fresh case-bound observation');
   if(variant!=='fallback'){
    const alignment=await frame.evaluate(()=>{
     const avatar=window.despacho.scene.children.find(o=>o.name==='avatar');
@@ -78,6 +80,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
    assert.equal(await frame.locator('.station-radial').isVisible(),false,'programmatic travel is not deliberate proximity');
    await frame.evaluate(()=>window.YodAgentMenu.showRadial('synthetic-A',{proximity:true}));
    await frame.locator('.station-radial').waitFor();
+   assert.equal(await frame.locator('.station-radial [data-chinche-ui="select"]').count(),0,'the radial contains actions only, without a duplicate report toolbar');
    assert.equal(await frame.evaluate(()=>window.__captures),0,'proximity does not request audio');
    assert.match(await frame.locator('#agent-menu-title').innerText(),/Autón A/);
    await page.keyboard.press('Escape');await page.waitForTimeout(700);
@@ -89,7 +92,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
    await frame.evaluate(()=>window.YodAgentMenu.showRadial('synthetic-A'));
    await frame.locator('.station-radial').waitFor();
    await page.keyboard.press('ArrowLeft');
-   assert.equal(await frame.locator('.radial-submenu h2').innerText(),'Notas');
+   assert.equal(await frame.locator('.radial-submenu h2').innerText(),'Expediente');
    assert.equal(await frame.locator('[data-sector="notas"]').getAttribute('aria-pressed'),'true');
    await page.screenshot({path:path.join(out,'radial-proximidad-'+variant+'.png')});
    console.log('RADIAL_'+variant+':'+(await page.screenshot({type:'jpeg',quality:80})).toString('base64'));
@@ -114,10 +117,23 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await frame.locator('.workspace-board iframe[src*="open=synthetic-A"]').waitFor();
   const report=frame.locator('.realtime-dialog [data-chinche-ui="select"]');
   assert.equal(await report.count(),1,'one report entry per station');
-  await frame.locator('.workspace-tools>summary').click();
-  assert.equal(await report.isVisible(),true,'report remains reachable in Tools');
-  assert.equal(await report.evaluate(e=>!!e.closest('.workspace-tools')),true);
-  await frame.locator('.workspace-tools>summary').click();
+  const chatPanel=frame.locator('.station-chat'),activityPanel=frame.locator('.station-details');
+  const chatWasOpen=await chatPanel.evaluate(e=>e.open);
+  if(!chatWasOpen)await chatPanel.locator(':scope > summary').click();
+  await activityPanel.locator(':scope > summary').click();
+  assert.equal(await report.isVisible(),true,'one report entry remains reachable in the secondary activity panel');
+  assert.equal(await report.evaluate(e=>!!e.closest('.station-details')),true);
+  await report.scrollIntoViewIfNeeded();
+  const reportBounds=await report.evaluate(e=>{const r=e.getBoundingClientRect(),dialog=e.closest('dialog').getBoundingClientRect();return r.top>=dialog.top&&r.bottom<=dialog.bottom&&r.left>=dialog.left&&r.right<=dialog.right;});
+  assert.equal(reportBounds,true,'report cannot be clipped below the full-height station layout');
+  await page.evaluate(()=>document.querySelector('iframe').contentWindow.postMessage({type:'yod:despacho:ready',version:1},location.origin));
+  await report.click();
+  assert.equal(await frame.locator('.chinche-ui-hint').isVisible(),true,'authorized report selection opens from the reachable entry');
+  await page.keyboard.press('Escape');
+  assert.equal(await frame.locator('.chinche-ui-hint').isVisible(),false,'Escape cancels even while Cancel is focused');
+  assert.equal(await frame.locator('.realtime-dialog').isVisible(),true,'cancelling a report keeps the PPP station open');
+  await activityPanel.locator(':scope > summary').click();
+  if(!chatWasOpen)await chatPanel.locator(':scope > summary').click();
 
   assert.equal(await frame.locator('[data-tab="ppp"]').getAttribute('aria-pressed'),'true');
   assert.match(await frame.locator('#voice-title').textContent(),/Autón A/);
@@ -136,8 +152,30 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await page.screenshot({path:path.join(out,'entrada-'+variant+'-oficina-prueba.png')});
   console.log('ENTRY_OFFICE_'+variant+':'+(await page.screenshot({type:'jpeg',quality:75})).toString('base64'));
   if(variant!=='fallback'){
-   await frame.locator('#office-agent-marker').click();await frame.locator('.station-radial').waitFor();await frame.locator('.radial-options [data-action="ppp"]').click();await frame.locator('.realtime-dialog').waitFor();
+   // The authorized multi-resident HUD replaced the fixed single-project marker.
+   // Use the actual perspective camera and occlusion projection, never force a click
+   // through a wall or overlay merely to satisfy a selector.
+   await frame.evaluate(async()=>{
+    await window.despacho.visit('case');
+    const avatar=window.despacho.scene.children.find(o=>o.name==='avatar'),head=avatar.userData.joints.head;
+    avatar.updateMatrixWorld(true);
+    const target=head.position.clone();head.getWorldPosition(target);
+    target.y+=(avatar.userData.headClearance||.42)*(avatar.userData.body?.scale.y||1)*avatar.scale.y;
+    window.despacho.camera.position.set(avatar.position.x+2.4,target.y+1,avatar.position.z+2.6);
+    window.despacho.camera.lookAt(target);window.despacho.camera.updateMatrixWorld();
+   });
+   assert.equal(await frame.evaluate(()=>window.despacho.camera.isPerspectiveCamera),true,'HUD interaction uses the real perspective view');
+   const marker=frame.locator('.avatar-presence[data-case-id="synthetic-A"]');
+   await marker.waitFor({state:'visible'});
+   assert.match(await marker.getAttribute('aria-label'),/Autón A.*Abrir opciones/);
+   assert.equal(await marker.getAttribute('data-selected'),'true');
+   await marker.click();
+   await frame.locator('.station-radial').waitFor();
+   assert.match(await frame.locator('#agent-menu-title').innerText(),/Autón A/);
+   await frame.locator('.radial-options [data-action="ppp"]').click();await frame.locator('.realtime-dialog').waitFor();
    assert.equal(await frame.locator('[data-tab="ppp"]').getAttribute('aria-pressed'),'true');
+   assert.equal(await board.evaluate(el=>el.isConnected),true,'HUD reopens the same PPP document');
+   assert.equal(await boardFrame.locator('#area').inputValue(),'135','HUD navigation retains the unfinished PPP draft');
    await frame.locator('.voice-close').click();
   }
   // The physical computer and case route must open the same PPP and preserve drafts.
