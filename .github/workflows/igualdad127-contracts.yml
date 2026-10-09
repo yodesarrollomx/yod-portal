@@ -1,0 +1,17 @@
+name: QA igualdad127 contracts
+on:
+  push:
+    branches: [codex/qa-igualdad127]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Resident selection and 3D identity contracts
+        run: node --test tests/despacho-resident-opening.test.cjs tests/despacho-authorized-cases.test.cjs tests/despacho-case-selection-handoff.test.cjs tests/despacho-avatar-office.test.cjs
