@@ -9592,7 +9592,7 @@
         "STORE-AUTON-ESTADO"
       ],
       "proposal": "Vincular recorridos al trabajo observado; fichas de avatares autorizados y presentación por tema desde objetivos y evidencias guardados, con guion, voz y consulta simultánea del PPP.",
-      "status": "implementado_local",
+      "status": "publicado",
       "approval": "Dirección autoriza integrar los tres autónomos y continuar objetivos tras conversar, mostrar trabajo real por estación y presentar avances en reunión.",
       "tests": [
         "Sin recorrido de trabajo sin evidencia ni mezcla de casos.",
@@ -9600,7 +9600,7 @@
         "Guion y narración vinculados al caso vigente; revocación retira contenido.",
         "Pruebas del portal y navegador con datos sintéticos; micrófono real no acreditable automáticamente."
       ],
-      "deployment": "PR de portal y backend en prueba. Guion persistente al terminar el objetivo; extracto documental acotado. Publicación pendiente.",
+      "deployment": "2026-10-09 04:18 UTC: portal PR138 integrado en 611c762; cuatro checks correctos (517 pruebas más navegador escritorio/móvil). Recursos de Pages comprobados por HTTP con caché invalidada: ejecución 37883194304. Backend PR45 live desde 03:52:54 UTC (267 pruebas correctas, una omitida). Presentación HTML; Google Slides y micrófono físico no acreditados.",
       "rollback": "Revertir PR de interfaz; conservar objetivos, evidencia y credenciales del servidor."
     }
   ],
