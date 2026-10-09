@@ -22,7 +22,7 @@ La interfaz ya guarda tareas y evidencias, pero obliga a leerlas como lista. Se 
 
 Pruebas pendientes al registrar esta implementación. Los escenarios de navegador son sintéticos y no acreditan voz física del usuario.
 
-La ubicación de un personaje representa la última actividad recibida, no vídeo continuo. La observación se consulta por turnos para no multiplicar llamadas. El monitor de navegación conserva fecha de captura. La biblioteca muestra actividad y evidencias registradas; no transmite una sesión privada de Google Drive.
+La ubicación de un personaje representa la última actividad recibida, no vídeo continuo. La observación se consulta por turnos para no multiplicar llamadas. El monitor de navegación conserva fecha de captura. La biblioteca muestra el extracto de una lectura completada, limitado a 8.000 caracteres, con fuente y fecha; no transmite una sesión privada de Google Drive. El servidor conserva automáticamente un guion por tarea al preparar una entrega (backend PR45).
 
 Persistencia de objetivos pertenece al servidor existente. Esta entrega no amplía el alcance de escritura financiera de modelos Vertical o Patrimonial legacy, ni atribuye acceso a archivos por el nombre del avatar.
 

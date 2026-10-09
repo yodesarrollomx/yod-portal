@@ -4,7 +4,8 @@ export function workDestination(state,now=Date.now()){
  const w=state.work;if(!w)return 'inicio';
  if(['prepared','awaiting_data'].includes(w.phase))return 'decisions';
  if(!['working','tool'].includes(w.phase))return 'inicio';
- if(/drive|document|biblioteca|hoja/i.test(w.current_tool||''))return 'library';
+ const last=w.events?.at(-1);const activity=w.current_tool||(['drive_leer','drive_inspeccionar_pdf','drive_buscar','drive_listar'].includes(last?.tool)?'documento':'');
+ if(/drive|document|biblioteca|hoja/i.test(activity))return 'library';
  return 'inicio';
 }
 export function createResidentMotion({pilot,navigate,now=Date.now}){

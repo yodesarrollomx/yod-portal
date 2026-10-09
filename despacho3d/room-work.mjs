@@ -1,4 +1,4 @@
-import {validateObservation} from './work-observer.mjs?v=1';
+import {validateObservation} from './work-observer.mjs?v=124';
 // One request at a time for the authorized roster. No execution or selection side effects.
 export function createRoomWork({request,now=Date.now,schedule=setTimeout,cancel=clearTimeout,isVisible=()=>true}){
  const profiles=new Map(),states=new Map(),listeners=new Set();let cursor=0,timer=null,flight=false,disposed=false,epoch=0;

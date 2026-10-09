@@ -1,6 +1,6 @@
 import {mountMeeting} from './meeting-view.mjs?v=124';
 import {mountAvatarCard} from './avatar-card.mjs?v=124';
-import {mountWorkView} from './work-view.mjs?v=2';
+import {mountWorkView} from './work-view.mjs?v=124';
 import {registeredBoard,resolveBoard,stationIdentity} from './project-station.mjs?v=121';
 import {mountKnowledgeBoard} from './knowledge-board.mjs?v=1';
 import {createFrameTransport,validateConversation} from './conversation.mjs?v=116';
@@ -262,8 +262,15 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   finally{fetching=false;}
  }
  function setTab(id){if(!WORKSPACE_TABS.some(([k])=>k===id))return;if(tab==='meeting'&&id!=='meeting')meeting.hide();if(tab==='knowledge'&&id!=='knowledge')knowledge.hide();tab=id;tools.open=false;for(const [key,section]of Object.entries(sections)){section.hidden=key!==id;nav.querySelector('[data-tab="'+key+'"]').setAttribute('aria-pressed',String(key===id));}
-  if(id==='avatar'&&selected)void avatarCard.open(selected);if(id==='meeting'&&!meeting.snapshot()){sections.meeting.replaceChildren(el('p','Presenta una entrega preparada desde Pendientes.'),button('Ver pendientes',()=>setTab('tasks')));}
+  if(id==='avatar'&&selected)void avatarCard.open(selected);if(id==='meeting'&&!meeting.snapshot()){sections.meeting.replaceChildren(el('p','Buscando la última entrega preparada…'));void openLatestMeeting();}
   if(id==='activity'){notice.textContent='Tu trabajo y el siguiente paso, al volver al puesto.';workView.refresh();}if(id==='browser')workView.refresh();if(id==='ppp'){notice.textContent='';mountBoard();}if(id==='knowledge'&&selected){notice.textContent='Conocimiento y versiones del expediente.';void knowledge.open(selected.case_id);}void refresh();}
+ async function openLatestMeeting(){
+  const own=generation,id=selected?.case_id;if(!id)return;
+  await tasks.read();if(own!==generation||getSelection()?.case_id!==id||tab!=='meeting')return;
+  const goal=(tasks.model?.goals||[]).filter(g=>['ready_for_review','completed','awaiting_data'].includes(g.status)).sort((a,b)=>Date.parse(b.updated_at)-Date.parse(a.updated_at))[0];
+  if(goal)meeting.open(goal,id,selected.avatar?.name||selected.name);
+  else sections.meeting.replaceChildren(el('p','Todavía no hay una entrega preparada para presentar.'),button('Ver pendientes',()=>setTab('tasks')));
+ }
  function clear(){meeting.clear();avatarCard.clear();workView.clear();generation++;clearBoardHandshake();boardHandshakeTimedOut=false;clearTimeout(applyTimer);applyTimer=null;application=null;receipts.clear();receiptRetry.hidden=true;receiptRetry.disabled=false;applyNotice.textContent='';boardSummary.textContent='Todavía no hay una lectura compartida.';knowledge.reset();lastTaskRead=0;credential=null;selected=null;board=null;boardRevision=null;conversation=null;readingSources=null;sourceAttempts=0;sourceRetryAt=0;boardLink=null;proposals=[];goalDraft={title:'',instruction:'',criterion:''};for(const input of Object.values(goalInputs))input.value='';newGoal.open=false;frame?.remove();frame=null;image.removeAttribute('src');image.hidden=true;activity.replaceChildren();links.replaceChildren();taskList.replaceChildren();sections.sources.replaceChildren();proposalHost.replaceChildren();pppHost.replaceChildren();tasks.hide();notice.textContent='El acceso cambió. Vuelve a abrir tu despacho.';}
  function open(selection,target='ppp'){if(selected?.case_id===selection.case_id){active=true;setTab(target);void readSources();return;}clear();selected=selection;if(!selection.goals?.ready)taskList.append(el('p','El seguimiento de objetivos aún no está conectado para este proyecto.'));root.setAttribute('aria-label','Puesto de '+stationIdentity(selection).name);active=true;generation++;notice.textContent='Preparando el puesto de '+selection.name+'…';setTab(target);void readSources();if(!timer)timer=setInterval(()=>void refresh(),tab==='tasks'?12000:4000);}
  win.addEventListener('message',receive);

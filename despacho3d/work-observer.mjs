@@ -24,6 +24,8 @@ export function validateObservation(raw,caseId){
   for(const e of w.events)if(e.case_id!==caseId||e.run_id!==w.run_id||e.goal_id!==w.goal_id||!txt(e.label,240)||!stamp(e.at)||!['working','completed','failed'].includes(e.status))bad();
   if(w.result!==null&&(!plain(w.result)||!txt(w.result.summary,4000)||!['ready_for_review','awaiting_data'].includes(w.result.state)))bad();
  }
+ const d=w?.document;
+ if(d!==undefined&&d!==null&&(!plain(d)||d.case_id!==caseId||d.run_id!==w.run_id||d.goal_id!==w.goal_id||!(d.task_id===null||w.progress.progress.tasks.some(t=>t.id===d.task_id))||!id(d.id)||!txt(d.title,240)||!txt(d.content,8000)||!txt(d.tab,240)||!txt(d.range,80)||typeof d.truncated!=='boolean'||!stamp(d.read_at)||!(d.url===null||txt(d.url,2048)&&safeWorkURL(d.url))))bad();
  const s=raw.screen;
  if(s&&(!plain(s)||!(s.captured_at===null||stamp(s.captured_at))||!Number.isSafeInteger(s.revision)||s.revision<0))bad();
  if(s?.owner&&(!id(s.owner.run_id)||s.owner.case_id!==caseId||!id(s.owner.goal_id)||!(s.owner.task_id===null||/^task-[1-8]$/.test(s.owner.task_id))))bad();

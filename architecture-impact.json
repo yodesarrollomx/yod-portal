@@ -10,7 +10,11 @@
     "GAS-PORTERO",
     "EXT-DRIVE",
     "SYS-SALA",
-    "SYS-TRACK"
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "SYS-CONTROL",
+    "STORE-AUTON-ESTADO"
   ],
   "tests": [
     "Sin recorrido de trabajo sin evidencia ni mezcla de casos.",

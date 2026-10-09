@@ -9585,7 +9585,11 @@
         "GAS-PORTERO",
         "EXT-DRIVE",
         "SYS-SALA",
-        "SYS-TRACK"
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-CONTROL",
+        "STORE-AUTON-ESTADO"
       ],
       "proposal": "Vincular recorridos al trabajo observado; fichas de avatares autorizados y presentación por tema desde objetivos y evidencias guardados, con guion, voz y consulta simultánea del PPP.",
       "status": "implementado_local",
@@ -9596,7 +9600,7 @@
         "Guion y narración vinculados al caso vigente; revocación retira contenido.",
         "Pruebas del portal y navegador con datos sintéticos; micrófono real no acreditable automáticamente."
       ],
-      "deployment": "Pendiente de implementación, pruebas y PR; no acredita edición financiera Vertical/legacy ni creación de Google Slides.",
+      "deployment": "PR de portal y backend en prueba. Guion persistente al terminar el objetivo; extracto documental acotado. Publicación pendiente.",
       "rollback": "Revertir PR de interfaz; conservar objetivos, evidencia y credenciales del servidor."
     }
   ],

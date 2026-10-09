@@ -3,7 +3,7 @@ import {createOfficeScreen} from './office-screen.mjs?v=124';
 import * as T from 'three';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
 export async function createOffice({pilotFigure=true}={}){
- const root=new T.Group();root.name='YoDesarrollo Despacho V2';const collisions=[];let seed=751,computerScreen=null;const deskScreens=[];let libraryScreen=null,meetingScreen=null;
+ const root=new T.Group();root.name='YoDesarrollo Despacho V2';const collisions=[];let seed=751,computerScreen=null;const deskScreens=[];let libraryScreen=null,meetingScreen=null,researchScreen=null;
  const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
  const material=(color,roughness=.7,extra={})=>new T.MeshStandardMaterial({color,roughness,...extra});
  function texture(kind){const c=document.createElement('canvas');c.width=c.height=512;const ctx=c.getContext('2d');
@@ -80,6 +80,7 @@ export async function createOffice({pilotFigure=true}={}){
  function sofa(x,z){rounded(3.25,1.2,.4,.20,x,.4,z,m.oakPlain);for(const dx of [-1,0,1]){rounded(.97,1.04,.25,.17,x+dx,.7,z+.04,m.fabric);rounded(.97,.28,.55,.12,x+dx,.98,z-.42,m.fabric);}for(const dx of [-1.55,1.55])rounded(.20,1.23,.54,.09,x+dx,.8,z,m.fabric);block(x,z,3.45,1.3);}
  box(5.7,.022,4.4,-8.4,.04,3.2,m.rug);sofa(-8.55,2.0);chair(-9.9,4.3,Math.PI);chair(-7.0,4.3,Math.PI);rounded(2.0,1.0,.07,.48,-8.45,.51,3.4,m.stone);for(const x of [-9,-7.9])cylinder(.07,.07,.43,x,.26,3.4,m.brass);vase(-8.35,.55,3.4,.45);block(-8.45,3.4,2.15,1.15);
  box(4.8,.8,.50,-8.35,.43,-2.5,m.oak);box(4.9,.065,.57,-8.35,.86,-2.5,m.stone);for(const y of [1.55,2.3]){box(4.8,.055,.30,-8.35,y,-2.65,m.oak);for(let j=0;j<15;j++){const h=.19+random()*.20;box(.07,h,.16,-10.3+j*.12,y+.04+h/2,-2.67,j%3?m.plaster:m.navy);}vase(-7.2,y+.035,-2.66,.62);}
+ const researchDisplay=label('Investigación',3.45,1.8,9.1,2.45,-8.85,{bg:'#162a30'});researchScreen=createOfficeScreen(researchDisplay,()=>{root.userData.needsRender=true;});
  // Shared projections display only the selected authorized work, dated like desk screens.
  const libraryDisplay=label('Biblioteca',3.6,1.88,-8.35,2.1,-2.38,{bg:'#162a30'});libraryScreen=createOfficeScreen(libraryDisplay,()=>{root.userData.needsRender=true;});
  const meetingDisplay=label('Avances',5.6,2.92,-.3,2.35,8.85,{bg:'#162a30'});meetingDisplay.rotation.y=Math.PI;meetingScreen=createOfficeScreen(meetingDisplay,()=>{root.userData.needsRender=true;});
@@ -121,5 +122,5 @@ export async function createOffice({pilotFigure=true}={}){
  
  // Static meshes batched by material to keep touch navigation responsive.
  root.updateMatrixWorld(true);const groups=new Map(),remove=[];root.traverse(o=>{if(!o.isMesh||o.isInstancedMesh||o.material.transparent||Array.isArray(o.material))return;const key=o.material.uuid+o.castShadow+o.receiveShadow;if(!groups.has(key))groups.set(key,{material:o.material,cast:o.castShadow,receive:o.receiveShadow,list:[]});let g=o.geometry.clone();if(g.index)g=g.toNonIndexed();g.applyMatrix4(o.matrixWorld);groups.get(key).list.push(g);remove.push(o);});for(const group of groups.values()){const g=mergeGeometries(group.list);if(!g)throw Error('No se pudo preparar la geometría');const o=mesh(g,group.material);o.castShadow=group.cast;o.receiveShadow=group.receive;group.list.forEach(g=>g.dispose());}remove.forEach(o=>o.removeFromParent());
- return {computerScreen,deskScreens,libraryScreen,meetingScreen,setCutaway,getCutaway:()=>cutaway,model:root,collisions,bounds:{minX:-11.65,maxX:11.65,minZ:-9.14,maxZ:9.12},annex:{minX:-23.65,maxX:-11.5,minZ:-7.75,maxZ:6.85},pickBoxes:[{id:'computer',min:[6.58,.92,-7.38],max:[7.42,1.52,-6.9]},{id:'editing',min:[-20.6,0,-4],max:[-15.4,1.4,-2.2]},{id:'editorial',min:[-23.1,1,-8],max:[-18.3,2.8,-7.7]},{id:'funnel',min:[-17.7,1,-8],max:[-12.8,2.8,-7.7]},{id:'case',min:[6.1,0,-4.95],max:[7.2,2.1,-3.8]},{id:'reception',min:[-10.75,0,-8.3],max:[-5.75,1.25,-6.6]},{id:'patio',min:[-3,.1,-4],max:[3,3.5,2]},{id:'decisions',min:[-2.7,0,5.45],max:[2.2,1.2,7.15]}]};
+ return {computerScreen,deskScreens,libraryScreen,meetingScreen,researchScreen,setCutaway,getCutaway:()=>cutaway,model:root,collisions,bounds:{minX:-11.65,maxX:11.65,minZ:-9.14,maxZ:9.12},annex:{minX:-23.65,maxX:-11.5,minZ:-7.75,maxZ:6.85},pickBoxes:[{id:'library',min:[-10.7,1.15,-2.45],max:[-6,3.1,-2.30]},{id:'computer',min:[6.58,.92,-7.38],max:[7.42,1.52,-6.9]},{id:'editing',min:[-20.6,0,-4],max:[-15.4,1.4,-2.2]},{id:'editorial',min:[-23.1,1,-8],max:[-18.3,2.8,-7.7]},{id:'funnel',min:[-17.7,1,-8],max:[-12.8,2.8,-7.7]},{id:'case',min:[6.1,0,-4.95],max:[7.2,2.1,-3.8]},{id:'reception',min:[-10.75,0,-8.3],max:[-5.75,1.25,-6.6]},{id:'patio',min:[-3,.1,-4],max:[3,3.5,2]},{id:'decisions',min:[-2.7,0,5.45],max:[2.2,1.2,7.15]}]};
 }

@@ -21,3 +21,10 @@ test('room observation remains read-only, serial and clears revoked cases during
  assert.deepEqual(values,[]);assert.equal(room.has('one'),false);assert.equal(calls[0][0],'/computer/work');room.dispose();
 });
 module.exports={fixture};
+
+test('source excerpts are bounded, tied to the active run and rejected across cases',async()=>{
+ const {validateObservation}=await import('../despacho3d/work-observer.mjs');
+ const raw={ok:true,available:true,case_id:'case-synthetic',screen:null,work:{schema:1,case_id:'case-synthetic',run_id:'run1',goal_id:'goal1',source_revision:'s1',title:'Leer',criterion:'Fuente',phase:'working',started_at:'2026-10-09T00:00:00Z',updated_at:'2026-10-09T00:01:00Z',current_tool:null,progress:{sequence:0,progress:{tasks:[],evidence:[],summary:''}},sources:[],events:[],result:null,document:{case_id:'case-synthetic',run_id:'run1',goal_id:'goal1',task_id:null,id:'doc1',title:'Documento',content:'Texto',tab:'',range:'',truncated:false,read_at:'2026-10-09T00:01:00Z',url:null}}};
+ assert.equal(validateObservation(raw,'case-synthetic').work.document.content,'Texto');
+ for(const mutation of [{case_id:'other'},{run_id:'old'},{content:'x'.repeat(8001)}])assert.throws(()=>validateObservation({...raw,work:{...raw.work,document:{...raw.work.document,...mutation}}},'case-synthetic'));
+});

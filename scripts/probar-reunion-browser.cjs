@@ -27,7 +27,7 @@ const server=http.createServer((req,res)=>{
   await page.waitForFunction(()=>window.narrations.length===1);
   assert.equal(await page.evaluate(()=>window.narrations[0].case_id),'case-synthetic');
   const download=page.waitForEvent('download');await page.getByRole('button',{name:'Descargar presentación'}).click();const d=await download;await d.saveAs(path.join(out,'presentacion-sintetica-'+(mobile?'movil':'escritorio')+'.html'));
-  await page.screenshot({path:path.join(out,'reunion-'+(mobile?'movil':'escritorio')+'.png'),fullPage:true});
+  await page.screenshot({path:path.join(out,'reunion-'+(mobile?'movil':'escritorio')+'.png'),fullPage:true});console.log('REUNION_SCREEN_'+(mobile?'MOBILE':'DESKTOP')+':'+(await page.screenshot({type:'jpeg',quality:70,fullPage:true})).toString('base64'));
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2),'no horizontal overflow');
   await page.getByRole('button',{name:'Siguiente',exact:true}).click();
   assert.match(await page.locator('.meeting-slide').textContent(),/Bloqueado/);
