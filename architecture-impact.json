@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-09.126-despacho-integral",
+  "model_revision": "2026-10-09.126-despacho-publicado",
   "proposal_id": "CHG-DESPACHO-INTEGRAL-126",
-  "summary": "Unificar continuidad de proyecto, conversación y PPP; mejorar avatares y presencia legible con herramienta e hitos reales; reflejar trabajo persistente e historial por ejecución. Preparar representación ligera compartiendo contratos, sin publicar aún una vista pixel.",
+  "summary": "Cierre documental de la publicación126: registrar recibos de Pages, Render y Apps Script, auditoría pública y límites de aceptación; sin cambios al código de ejecución.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
@@ -13,11 +13,8 @@
     "SYS-POTENCIALES"
   ],
   "tests": [
-    "Aislamiento de tres proyectos y acciones con case_id explícito; voz no cambia la vista.",
-    "Progreso calculado desde tareas/evidencia confirmadas, estación vinculada a ocupante, cola e historial trazables.",
-    "Servidor continúa tareas sin navegador; reinicio preserva estado y no repite acciones inciertas.",
-    "Recuperación transitoria versus revocación, móvil, bajo consumo y fallback con acciones consistentes.",
-    "Regresiones, verificadores, navegador con datos sintéticos y cotejo público; audio físico y sesión real se informan por separado."
+    "Validación del modelo, ocho vistas regeneradas y comprobación de impacto.",
+    "Recibos existentes: siete suites integradas y corrida main aprobadas; auditoría pública y recarga real aprobadas."
   ],
   "rollback": "Revertir interfaz y cambios compatibles del motor mediante PR; conservar expedientes, journal/outbox, recibos y volumen persistente. No borrar objetivos ni reanudar acciones inciertas."
 }
