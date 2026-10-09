@@ -106,8 +106,12 @@ const server=http.createServer((req,res)=>{
    // Inspect the actual seated model and the physical computer texture, not an HTML substitute.
    await page.evaluate(()=>window.despacho.setAgentActivity('talk'));
    await page.waitForTimeout(150);
-   const seat=await page.evaluate(()=>{const a=window.despacho.scene.children.find(o=>o.userData.caseId==='synthetic-office');return {bodyY:a.userData.body.position.y,scale:a.userData.body.scale.y,leg:a.userData.legs[0].rotation.x};});
-   assert.ok(Math.abs(seat.bodyY+.50*seat.scale-.62)<.001);assert.equal(seat.leg,-Math.PI/2);
+   const seat=await page.evaluate(async()=>{const T=await import('/despacho3d/vendor/three.module.js');
+    const avatar=window.despacho.scene.children.find(o=>o.userData.caseId==='synthetic-office');avatar.updateMatrixWorld(true);
+    return avatar.userData.legs.map(leg=>{const thigh=leg.children.find(o=>o.isMesh);if(!thigh)throw Error('missing upper thigh mesh');return {contactY:new T.Box3().setFromObject(thigh).min.y,leg:leg.rotation.x};});
+   });
+   // Measure the rendered thighs against the actual 0.62 m chair top, independent of either rig's hip offset.
+   assert.equal(seat.length,2);for(const side of seat){assert.ok(Math.abs(side.contactY-.62)<.001,JSON.stringify(side));assert.equal(side.leg,-Math.PI/2);}
    await page.evaluate(async()=>{const T=await import('/despacho3d/vendor/three.module.js');const w=window.despacho;
     w.layout.computerScreen.update({phase:'ready',case_id:'synthetic-office',checked_at:Date.now(),projectName:'Proyecto de prueba',work:{case_id:'synthetic-office',goal_id:'synthetic-goal',run_id:'synthetic-run',title:'Comparar variantes',phase:'working',updated_at:new Date().toISOString(),progress:{sequence:2,progress:{tasks:[{title:'Verificar superficie',status:'running'},{title:'Fuente preparada',status:'ready_for_review'}],summary:''}}}});
     w.camera.position.set(8.8,2.1,-4.8);w.camera.lookAt(new T.Vector3(7,1.2,-6.8));
