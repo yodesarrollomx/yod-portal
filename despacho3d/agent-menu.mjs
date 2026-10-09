@@ -1,12 +1,12 @@
 import {stationIdentity} from './project-station.mjs';
-export const MENU_SECTORS=[['ppp','Plan de potencial'],['conversaciones','Hablar'],['pendientes','Pendientes'],['notas','Notas']];
+export const MENU_SECTORS=[['ppp','PPP'],['conversaciones','Hablar'],['pendientes','Trabajo'],['notas','Expediente']];
 export const STATUS={queued:'En cola',running:'Trabajando',ready_for_review:'Para tu revisión',awaiting_data:'Faltan datos',stopped:'Detenido',completed:'Revisado'};
 export function projectMenu(conversation,goals){return {documents:conversation?.documents||[],history:conversation?.events||[],messages:conversation?.messages||[],goals:goals?.goals||[],ppp:(conversation?.documents||[]).filter(d=>/\bppp\b|plan de potencial/i.test(d.title+' '+d.role))};}
 export const RADIAL_OPTIONS={
  ppp:[['ppp','Abrir tablero','El mismo plan de potencial'],['knowledge','Versiones y variantes','Comparar lo registrado']],
  conversaciones:[['conversaciones','Hablar por voz','Activa el micrófono'],['chat','Escribir','Conversación e historial']],
- pendientes:[['pendientes','Ver pendientes','Objetivos y próximos pasos'],['activity','Ver trabajo actual','Actividad del autón']],
- notas:[['notas','Notas y decisiones','Conocimiento del expediente'],['documentos','Ver fuentes','Documentos del proyecto']]
+ pendientes:[['pendientes','Ver pendientes','Objetivos y próximos pasos'],['activity','Trabajo actual','Avance y siguiente paso']],
+ notas:[['documentos','Fuentes del expediente','Documentos del proyecto'],['notas','Notas y versiones','Decisiones y conocimiento']]
 };
 export function sectorPath(index){
  const point=(r,a)=>[200+r*Math.sin(a),200-r*Math.cos(a)];

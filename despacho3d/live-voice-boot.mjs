@@ -6,9 +6,9 @@ import {createFrameTransport, validateSelection, Conversation} from './conversat
 import {stationIdentity} from './project-station.mjs?v=121';
 import {createLiveVoice} from './live-voice.mjs?v=124';
 import {voiceView} from './voice-view.mjs?v=2';
-import {createWorkspace} from './agent-workspace.mjs?v=124';
+import {createWorkspace} from './agent-workspace.mjs?v=126';
 import {DurableGoals,watchGoals} from './goals.mjs?v=2';
-import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=1';
+import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=126';
 import {groupTranscriptFragments} from './live-transcript.mjs';
 
 const open = document.getElementById('voice-open');
@@ -25,9 +25,9 @@ if (open) {
     '<div class="voice-actions"><button id="voice-start" disabled>Hablar</button><button id="voice-interrupt" hidden>Escúchame</button><button id="voice-stop" hidden disabled>Finalizar</button></div>' +
     '<details class="voice-options"><summary>Audio y conexión</summary><button id="voice-mute" disabled>Silenciar micrófono</button><p class="voice-note">Voz generada por IA.</p>' +
     '<p id="voice-timing" class="voice-note"></p><p id="voice-context" role="status">El expediente se comprueba al conectar.</p><button id="voice-retry-context" hidden>Recuperar expediente</button></details></section>' +
-    '<details class="station-chat"><summary>Escribir y consultar historial</summary><div id="station-messages" role="log" aria-live="off"></div><form id="station-message-form"><label for="station-message">Mensaje</label><textarea id="station-message" maxlength="12000" required placeholder="Qué resolvemos ahora…"></textarea><button id="station-send" disabled>Enviar</button></form><p id="station-message-status" role="status"></p><button id="station-refresh">Actualizar historial</button></details>' +
+    '<details class="station-chat"><summary>Conversación</summary><div id="station-messages" role="log" aria-live="off"></div><form id="station-message-form"><label for="station-message">Mensaje</label><textarea id="station-message" maxlength="12000" required placeholder="Qué resolvemos ahora…"></textarea><button id="station-send" disabled>Enviar</button></form><p id="station-message-status" role="status"></p><button id="station-write" hidden>Terminar voz y escribir</button><button id="station-refresh">Actualizar historial</button></details>' +
     '<p id="voice-save" role="status">Sin conversación nueva.</p><p id="voice-previous" class="voice-note" hidden></p>' +
-    '<details class="voice-transcript-details"><summary id="voice-transcript-label">Transcripción de voz</summary><div id="voice-transcript" role="log" aria-label="Transcripción de voz" aria-live="off"></div><button id="voice-download" disabled>Descargar transcripción</button><p class="voice-note">Copia local; el estado de guardado aparece arriba.</p></details>';
+    '<section class="voice-transcript-details"><h3 id="voice-transcript-label">Conversación de voz</h3><div id="voice-transcript" role="log" aria-label="Transcripción de voz" aria-live="off"></div><button id="voice-download" disabled>Descargar transcripción</button><p class="voice-note">Copia local; el estado de guardado aparece arriba.</p></section>';
   const layout=document.createElement('div'),sidebar=document.createElement('div'),workspaceHost=document.createElement('div');
   layout.className='voice-layout';sidebar.className='voice-sidebar';workspaceHost.className='voice-workspace';
   while(dialog.firstChild)sidebar.append(dialog.firstChild);layout.append(sidebar,workspaceHost);dialog.append(layout);
@@ -52,8 +52,11 @@ if (open) {
   sidebar.insertBefore(voiceCard,activityCard);
   const activityDetails=document.createElement('details');activityDetails.className='station-details';
   const activitySummary=document.createElement('summary');activitySummary.textContent='Actividad y registro';
-  activityDetails.append(activitySummary,activityCard,sidebar.querySelector('.voice-transcript-details'));
-  sidebar.append(activityDetails);
+  activityDetails.append(activitySummary,activityCard);
+  const chatPanel=sidebar.querySelector('.station-chat'),chatForm=sidebar.querySelector('#station-message-form');
+  chatPanel.insertBefore(sidebar.querySelector('.voice-transcript-details'),chatForm);
+  chatPanel.open=window.matchMedia?.('(min-width:851px)').matches===true;
+  chatPanel.append(activityDetails);
   voiceCard.append(sidebar.querySelector('#voice-save'),sidebar.querySelector('#voice-previous'));
   const node = id => dialog.querySelector('#' + id);
   const portraitHost=document.createElement('div');portraitHost.className='station-profile-portrait';sidebar.insertBefore(portraitHost,node('voice-title'));const portrait=mountAvatarCard({container:portraitHost,compact:true});
@@ -103,11 +106,19 @@ if (open) {
     for(const turn of state.fastTurns||[]){for(const [label,text]of [['Tú',turn.message],[agentName(),turn.reply]])if(text){const p=document.createElement('p'),b=document.createElement('b'),body=document.createElement('span');b.textContent=label;body.textContent=text;p.append(b,body);host.append(p);}}
     const live=dialog.dataset.voicePhase&&!['idle','error'].includes(dialog.dataset.voicePhase);
     node('station-send').disabled=accessPaused||live||state.busy||!!state.pending||!!state.accepted||!state.selection?.can_enqueue||state.stale;
-    node('station-message-status').textContent=live?'Finaliza la voz para continuar por escrito.':state.fastNotice||(state.pending?'Guardado pendiente. Actualizar comprobará la misma solicitud.':state.busy?'Consultando…':state.status==='unavailable'?'No se pudo cargar el historial. Puedes actualizar.':'');
+    node('station-write').hidden=!live;node('station-write').disabled=dialog.dataset.voicePhase==='closing';
+    node('station-message-status').textContent=live?'Tu borrador se conserva. Puedes terminar la voz y continuar por escrito aquí.':state.fastNotice||(state.pending?'Guardado pendiente. Actualizar comprobará la misma solicitud.':state.busy?'Consultando…':state.status==='unavailable'?'No se pudo cargar el historial. Puedes actualizar.':'');
   }
   dialog.querySelector('.station-chat').addEventListener('toggle',()=>{if(dialog.querySelector('.station-chat').open&&selection&&!chat.selection&&!chat.busy)void chat.open(AUTONES_MULTIPLES?selection.case_id:null);});
   node('station-message-form').addEventListener('submit',async event=>{event.preventDefault();if(node('station-send').disabled)return;const text=node('station-message').value;if(await chat.send(text))node('station-message').value='';});
-  node('station-refresh').addEventListener('click',()=>void(chat.selection?chat.refresh():chat.open()));
+  node('station-refresh').addEventListener('click',()=>void(chat.selection?chat.refresh():chat.open(AUTONES_MULTIPLES?selection?.case_id:null)));
+  node('station-write').addEventListener('click',async()=>{
+    if(!selection||accessPaused)return;const own=generation;suppressEncounter();node('station-write').disabled=true;
+    const result=await voice.stop();if(own!==generation||!selection)return;
+    if(result?.incomplete||result?.pending){node('station-message-status').textContent='El cierre de voz quedó sin confirmar. El borrador se conserva; revisa el estado de guardado.';return;}
+    if(!chat.selection)await chat.open(AUTONES_MULTIPLES?selection.case_id:null);
+    if(own===generation)node('station-message').focus();
+  });
   chatTimer=setInterval(()=>{if(dialog.open&&!document.hidden&&dialog.querySelector('.station-chat').open&&chat.selection&&!chat.busy&&!active(voice.snapshot()))void chat.refresh();},12000);
   window.addEventListener('pagehide',()=>{clearInterval(chatTimer);chat.close();stopWatching?.();});
   const voice = createLiveVoice({canOperate:()=>!accessPaused&&!!selection,actions:actionExecutor,audio: node('voice-audio'), mint: value => transport.mintFastSession(value),
@@ -194,7 +205,7 @@ if (open) {
     node('voice-status').textContent = 'Validando tu acceso a la voz…';
     try {
       const resident = window.YodResidentAgents;
-      const fresh = resident?.getSelection?.() || validateSelection(await transport.resolveCurrent({}));
+      const fresh = resident?.getSelection?.() || validateSelection(await transport.resolveCurrent(caseId?{case_id:caseId}:{}));
       if (current !== generation || !dialog.open || caseId&&fresh.case_id!==caseId) return false;
       selection = fresh; node('voice-audio').muted=false; node('voice-case').textContent = fresh.name;
       if(transcriptCase!==fresh.case_id){fragments.length=0;node('voice-transcript').replaceChildren();node('voice-download').disabled=true;node('voice-previous').hidden=true;node('station-message').value='';node('station-messages').replaceChildren();chat.close();transcriptCase=fresh.case_id;}
@@ -238,7 +249,7 @@ if (open) {
       setText('voice-previous','Al cerrar la conversación anterior quedó un guardado sin confirmar. Revisa el historial antes de repetir sus encargos.');
       node('voice-previous').hidden=false;
     }
-    if(!compactVoice)workspace.setTab('ppp');
+    // Voice is a modality of this station, never a navigation action.
     encounterPaused=false;freshTranscript=true;voiceCaseId=selection.case_id;
     void voice.start(selection.case_id,{encounter:encounterCase===selection.case_id});
   }

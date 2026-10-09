@@ -48,3 +48,30 @@ test('simultaneous read requests share one flight and a later request reads agai
  const next=transport.readGoals({case_id:caseId});await new Promise(r=>setImmediate(r));assert.equal(reads,2);resolve({ok:true});await next;
  await transport.createGoal({});await transport.createGoal({});assert.equal(writes,2);
 });
+
+test('voice pending lookup revalidates the selected second and third project instead of the default pilot',async()=>{
+ const {createVoiceActionExecutor}=await import('../despacho3d/voice-actions.mjs');
+ const lookups=[],reads=[],results=[];
+ const allowed=['CASE-SECOND-SYNTHETIC','CASE-THIRD-SYNTHETIC'];
+ const transport={
+  resolveCurrent:async p=>{lookups.push(p);return {...selection,case_id:p.case_id||'DEFAULT-PILOT-SYNTHETIC'};},
+  readGoals:async p=>{reads.push(p.case_id);return {ok:true,schema:1,source_revision:'r-'+p.case_id,goals:[]};}
+ };
+ const executor=createVoiceActionExecutor({transport});
+ for(const [i,selectedCase]of allowed.entries()){
+  const request_id='voice-action-'+String(i+1).repeat(48);
+  executor.consume([{case_id:selectedCase,request_id,name:'pendientes_consultar',args:{},state:'pending'}],
+   {caseId:selectedCase,active:()=>true,post:async(path,p)=>{results.push(p.result);return {ok:true};}});
+  await executor.settled();
+ }
+ assert.deepEqual(lookups,allowed.map(case_id=>({case_id})));
+ assert.deepEqual(reads,allowed);assert.equal(results.length,2);
+ assert.ok(results.every(r=>r.ok===true&&r.total===0));
+});
+test('a mismatching revalidation still rejects another case without reading its goals',async()=>{
+ const {createVoiceActionExecutor}=await import('../despacho3d/voice-actions.mjs');let reads=0,result;
+ const executor=createVoiceActionExecutor({transport:{resolveCurrent:async()=>selection,readGoals:async()=>{reads++;}}});
+ const other='OTHER-SYNTHETIC';
+ executor.consume([{...intent,case_id:other,name:'pendientes_consultar',args:{}}],{caseId:other,active:()=>true,post:async(path,p)=>{result=p.result;return {ok:true};}});
+ await executor.settled();assert.equal(reads,0);assert.equal(result.error,'action_cancelled');
+});
