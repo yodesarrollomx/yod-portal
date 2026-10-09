@@ -213,3 +213,11 @@
 
 .station-profile-portrait canvas{margin:0 auto}
 @media(max-width:850px){.station-profile-portrait~#voice-title{margin-right:0}}
+
+.work-history{margin-top:24px;border-top:1px solid #d7dfd9;padding-top:18px}
+.work-history > article,.work-history article{border:1px solid #d7dfd9;border-radius:14px;padding:14px 16px;margin:10px 0;background:#fff}
+.work-history h3,.work-history h4{margin:0 0 8px;font-weight:600}
+.work-history button{min-height:44px;border:1px solid #becfc4;border-radius:10px;padding:8px 12px;background:#f3f7f3;color:#254b3e;font:inherit;cursor:pointer}
+.work-history button:disabled{opacity:.5;cursor:default}
+.work-history button:focus-visible{outline:3px solid #439b7c;outline-offset:3px}
+.work-history p,.work-history li{overflow-wrap:anywhere;line-height:1.5}

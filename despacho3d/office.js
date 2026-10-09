@@ -104,12 +104,13 @@ function openPanel(id){const route=openOfficeDestination(id,{residents:window.Yo
 $('#overview').onclick=()=>setMode('overview');$('#walk').onclick=()=>setMode('walk');$('#areas-open').onclick=()=>showSheet('areas');$('#help-open').onclick=()=>showSheet('help');$('#case-open').onclick=async()=>{await visit('case');openPanel('case');};document.querySelectorAll('[data-place]').forEach(b=>b.onclick=()=>visit(b.dataset.place));document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>closeSheets());$('#scrim').onclick=()=>closeSheets();$('#nearby').onclick=()=>near&&openPanel(near);
 
 function movement(dt){let forward=(keys.has('w')||keys.has('ArrowUp')?1:0)-(keys.has('s')||keys.has('ArrowDown')?1:0)-stick.y,sideways=(keys.has('d')||keys.has('ArrowRight')?1:0)-(keys.has('a')||keys.has('ArrowLeft')?1:0)+stick.x;const length=Math.hypot(forward,sideways);if(length<.05)return false;const speed=2.1*dt/Math.max(1,length),dx=(-Math.sin(yaw)*forward+Math.cos(yaw)*sideways)*speed,dz=(-Math.cos(yaw)*forward-Math.sin(yaw)*sideways)*speed;const steps=Math.ceil(Math.max(Math.abs(dx),Math.abs(dz))/.1)||1;for(let i=0;i<steps;i++){if(allowed(camera.position.x+dx/steps,camera.position.z))camera.position.x+=dx/steps;if(allowed(camera.position.x,camera.position.z+dz/steps))camera.position.z+=dz/steps;}return true;}
-let nearbyFlight=false,nearbyCandidate=null,nearbySince=0,lastWalkIntent=-Infinity,lastSelectionAttempt=-Infinity;
+let nearbyFlight=false,nearbyCandidate=null,nearbySince=0,lastWalkIntent=-Infinity,lastSelectionAttempt=-Infinity,lastNearbySample=-Infinity;
 function followNearbyResident(now){
  const api=window.YodResidentAgents;
  if(mode!=='walk'||sheet||agentOverlay||document.hidden||!['idle','error'].includes(voicePhase)||!api?.selectCase)return;
  if(keys.size||Math.hypot(stick.x,stick.y)>.05)lastWalkIntent=now;
- if(now-lastWalkIntent>2500)return;
+ if(now-lastWalkIntent>2500||now-lastNearbySample<100)return;
+ lastNearbySample=now;
  const chosen=nearbyResident({residents:pilot.presentations?.()||[],point:[camera.position.x,camera.position.z],currentCaseId:api.getProfile?.()?.case_id});
  if(!chosen||chosen.case_id===api.getProfile?.()?.case_id){nearbyCandidate=null;return;}
  if(nearbyCandidate!==chosen.case_id){nearbyCandidate=chosen.case_id;nearbySince=now;return;}

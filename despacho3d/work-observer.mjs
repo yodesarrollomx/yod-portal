@@ -43,6 +43,25 @@ export function validateObservation(raw,caseId){
  if(s?.owner&&(!id(s.owner.run_id)||s.owner.case_id!==caseId||!id(s.owner.goal_id)||!(s.owner.task_id===null||/^task-[1-8]$/.test(s.owner.task_id))))bad();
  return structuredClone({available:true,case_id:caseId,work:w,screen:s||null,...(extended?{observed_at:raw.observed_at,runtime:raw.runtime,history_available:raw.history_available}:{})});
 }
+const historyEntry=v=>typeof v==='string'&&/^\d{17}-[a-f0-9-]{36}$/.test(v);
+export function validateWorkHistory(raw,caseId,options={}){
+ const bad=()=>{throw Error('invalid_history');};
+ if(!plain(raw)||raw.ok!==true||raw.case_id!==caseId||typeof raw.available!=='boolean'||JSON.stringify(raw).length>524288)bad();
+ if(!raw.available)return{available:false,case_id:caseId,entries:[],next:null};
+ if(options.entry_id){
+  const {work}=validateObservation({...raw,screen:null},caseId);
+  if(work&&new Date(work.started_at).toISOString().replace(/[-:.TZ]/g,'')+'-'+work.run_id!==options.entry_id)bad();
+  return{available:true,case_id:caseId,work};
+ }
+ if(!Array.isArray(raw.entries)||raw.entries.length>20||!(raw.next===null||historyEntry(raw.next)))bad();
+ const seen=new Set();for(const e of raw.entries){
+  if(!plain(e)||!historyEntry(e.entry_id)||seen.has(e.entry_id)||e.case_id!==caseId||!id(e.run_id)||!id(e.goal_id)||!id(e.source_revision)||!txt(e.title,160)||!phases.has(e.phase)||!stamp(e.started_at)||!stamp(e.updated_at)||!count(e.event_count))bad();
+  if(new Date(e.started_at).toISOString().replace(/[-:.TZ]/g,'')+'-'+e.run_id!==e.entry_id)bad();seen.add(e.entry_id);
+  const m=e.metrics;if(!plain(m)||m.review_required!==true||!count(m.total)||m.total>8||!count(m.evidence_count)||m.evidence_count>8)bad();
+  let total=0;for(const key of ['ready_for_review','blocked','running','pending']){if(!count(m[key]))bad();total+=m[key];}if(total!==m.total)bad();
+ }
+ return structuredClone({available:true,case_id:caseId,entries:raw.entries,next:raw.next});
+}
 export function workHeadline(state){
  if(state.phase==='unauthorized'||!state.case_id)return 'Puesto sin seleccionar';
  if(state.phase==='loading')return 'Consultando actividad…';
@@ -53,6 +72,7 @@ export function workHeadline(state){
  if(runtime==='unavailable')return 'Servidor sin disponibilidad';
  if(runtime==='disabled'||runtime==='stopped')return 'Motor detenido';
  if(runtime==='starting')return 'Preparando motor';
+ if(runtime==='working'&&(!state.work||!['working','tool'].includes(state.work.phase)))return 'Preparando encargo';
  const w=state.work;if(!w)return 'En espera · sin ejecución registrada';
  return ({working:'Analizando',tool:w.current_tool||'Consultando',prepared:'Análisis preparado',awaiting_data:'Faltan datos',interrupted:'Ejecución interrumpida',error:'Ejecución sin completar'})[w.phase];
 }
@@ -93,5 +113,17 @@ export function createWorkObserver({request,getSelection,onChange=()=>{},now=Dat
   finally{if(flight?.generation===own){flight=null;later();}}
  }
  let cachedImage=null;
- return{select,refresh,snapshot:copy,subscribe(fn){listeners.add(fn);fn(copy());return()=>listeners.delete(fn);},dispose(){disposed=true;clear();cachedImage=null;listeners.clear();}};
+ async function history(options={}){
+  const caseId=getSelection()?.case_id,own=generation;
+  if(disposed||!caseId||caseId!==state.case_id||state.phase==='unauthorized')throw Error('unauthorized');
+  if(!plain(options)||Object.keys(options).some(k=>!['entry_id','limit','before'].includes(k)))throw Error('invalid_arguments');
+  const detail=Object.hasOwn(options,'entry_id');
+  if(detail?(!historyEntry(options.entry_id)||Object.keys(options).length!==1):((options.limit!==undefined&&(!Number.isSafeInteger(options.limit)||options.limit<1||options.limit>20))||(options.before!==undefined&&options.before!==null&&!historyEntry(options.before))))throw Error('invalid_arguments');
+  const valid=()=>!disposed&&own===generation&&getSelection()?.case_id===caseId;
+  try{
+   const raw=await request('/computer/work-history',options,caseId);if(!valid())throw Error('unauthorized');
+   return validateWorkHistory(raw,caseId,options);
+  }catch(error){if(valid()&&['unauthorized','forbidden'].includes(error?.message))clear();throw error;}
+ }
+ return{select,refresh,history,snapshot:copy,subscribe(fn){listeners.add(fn);fn(copy());return()=>listeners.delete(fn);},dispose(){disposed=true;clear();cachedImage=null;listeners.clear();}};
 }

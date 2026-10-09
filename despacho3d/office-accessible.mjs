@@ -2,10 +2,10 @@ import {openOfficeDestination,createOfficeCasePicker} from './office-destination
 import {places,bounds,annex,collisions,allowed} from './office-layout.mjs?v=1';
 import {ENTORNO_AGENTE_CAMINA} from './entorno-config.mjs';
 import {crearAgenteIr} from './entorno-ruta.mjs?v=4';
-import {createOfficePilot} from './avatars/office-pilot.mjs?v=5';
+import {createOfficePilot} from './avatars/office-pilot.mjs?v=126';
 import * as T from 'three';
 import {panels} from './office-panels.mjs?v=2';
-import {ESPACIOS} from './entorno.mjs?v=11';
+import {ESPACIOS} from './entorno.mjs?v=126';
 
 const el=(tag,text='',attrs={})=>{
  const node=document.createElement(tag);node.textContent=text;

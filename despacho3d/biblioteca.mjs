@@ -1,5 +1,5 @@
 import {validateFastSession} from './fast-lane.mjs';
-import {safeDocumentUrl} from './conversation.mjs';
+import {safeDocumentUrl} from './conversation.mjs?v=126';
 const PHASES=new Set(['empty','preparing','ready','partial','unavailable']);
 const ERRORS=new Set(['unauthorized','unavailable','rate_limited','knowledge_unavailable','invalid_request','cancelled']);
 const short=(v,n)=>typeof v==='string'&&v.length<=n;

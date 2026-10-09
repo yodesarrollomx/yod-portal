@@ -6,7 +6,7 @@
     var win=options.window,doc=options.document,host=doc.getElementById('seccionDespacho'),
         canvas=doc.getElementById('despachoCanvas'),status=doc.getElementById('despachoEstado'),
         open=doc.getElementById('despachoAbrir'),tray=doc.getElementById('despachoBandeja'),
-        frame=null,mountedEpoch=null,suspended=false;
+        frame=null,mountedEpoch=null,suspended=false,recoveringFromHistory=false;
     if(!host||!canvas||!status||!open||!tray)throw new Error('Sección Despacho incompleta');
     function active(){return win.location.hash==='#/despacho';}
     function access(){return options.readAccess();}
@@ -40,14 +40,14 @@
         frame.setAttribute('referrerpolicy','no-referrer');frame.setAttribute('allow','fullscreen; microphone; autoplay');
         var current=frame;
         frame.addEventListener('load',function(){if(frame===current&&authorized())status.hidden=true;});
-        frame.setAttribute('src',FRAME_PATH);canvas.appendChild(frame);mountedEpoch=a.epoch;
+        frame.setAttribute('src',FRAME_PATH+(recoveringFromHistory?'&office_recovery=history':''));canvas.appendChild(frame);mountedEpoch=a.epoch;recoveringFromHistory=false;
       }
     }
     [open,tray].forEach(function(link){link.addEventListener('click',function(event){if(!authorized()){event.preventDefault();paint();}});});
     win.addEventListener('hashchange',paint);win.addEventListener('popstate',paint);
     // Una página congelada no conserva un marco autorizado entre personas.
     win.addEventListener('pagehide',function(){suspended=true;teardown();});
-    win.addEventListener('pageshow',function(e){if(e.persisted){suspended=false;if(options.revalidate)options.revalidate();else teardown();}});
+    win.addEventListener('pageshow',function(e){if(e.persisted){suspended=false;recoveringFromHistory=true;if(options.revalidate)options.revalidate();else teardown();}});
     paint();
     return Object.freeze({refresh:paint,teardown:teardown,isAuthorized:authorized,getIframeWindow:function(){return frame&&authorized()&&mountedEpoch===access().epoch?frame.contentWindow:null;}});
   }

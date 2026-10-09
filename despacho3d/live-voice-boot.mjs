@@ -231,6 +231,7 @@ if (open) {
     if(!encounter){encounterCase=null;begin();return;}
     encounterCase=id;
     if(voiceCaseId===id&&voice.snapshot().phase==='listening'){if(encounterPaused&&voice.snapshot().muted)voice.mute();encounterPaused=false;return;}
+    if(window.YodOfficeLifecycle?.automaticVoiceAllowed()===false){encounterNeedsMic=true;renderVoiceState(voice.snapshot());setText('voice-status','Volviste al despacho. Pulsa Hablar para iniciar otra conversación.');return;}
     let granted=micGrantedInPage;
     try{granted=(await navigator.permissions.query({name:'microphone'})).state==='granted';}catch{}
     if(dismissing||own!==generation||!dialog.open||id!==selection?.case_id||id!==window.YodResidentAgents?.getSelection?.()?.case_id)return;
@@ -243,6 +244,7 @@ if (open) {
   }
   function begin() {
     if(dismissing||accessPaused||!selection?.can_enqueue||active(voice.snapshot()))return;
+    if(window.YodOfficeLifecycle?.allowVoiceFromGesture()===false)return;
     encounterNeedsMic=false;
     const previous=voice.snapshot();
     if(previous.pending||previous.incomplete||previous.status_pending){

@@ -89,7 +89,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
    await frame.evaluate(()=>window.YodAgentMenu.showRadial('synthetic-A'));
    await frame.locator('.station-radial').waitFor();
    await page.keyboard.press('ArrowLeft');
-   assert.equal(await frame.locator('.radial-submenu h2').innerText(),'Notas');
+   assert.equal(await frame.locator('.radial-submenu h2').innerText(),'Expediente');
    assert.equal(await frame.locator('[data-sector="notas"]').getAttribute('aria-pressed'),'true');
    await page.screenshot({path:path.join(out,'radial-proximidad-'+variant+'.png')});
    console.log('RADIAL_'+variant+':'+(await page.screenshot({type:'jpeg',quality:80})).toString('base64'));

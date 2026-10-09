@@ -33,3 +33,15 @@ body:has(#office-entry)>header>#circulo-open{display:none}
 .office-map-entry #office-entry{position:static;width:auto;max-width:none;flex:1;padding:0;border:0;box-shadow:none;background:transparent;display:block;backdrop-filter:none}
 .office-map-entry #case-open{width:auto;min-width:160px;margin:0}
 @media(max-width:700px){.office-map-entry{align-items:stretch;flex-direction:column}.office-map-entry #office-entry [data-entry-status]{text-align:left;max-width:none}}
+
+/* In the room, names and progress already live over each character.
+   Keep a compact selected-person control; retain the full access state when disconnected. */
+#workspace > #office-entry[data-ready="true"]{width:292px;padding:12px 14px;border-radius:18px;display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:3px 12px}
+#workspace > #office-entry[data-ready="true"] .entry-eyebrow{grid-column:1;font-size:9px}
+#workspace > #office-entry[data-ready="true"] h2{grid-column:1;margin:0;font-size:18px}
+#workspace > #office-entry[data-ready="true"] [data-entry-status]{grid-column:1;margin:0;font-size:11px;text-align:left;max-width:none}
+#workspace > #office-entry[data-ready="true"] [data-entry-project],
+#workspace > #office-entry[data-ready="true"] [data-entry-detail]{display:none}
+#workspace > #office-entry[data-ready="true"] #case-open{grid-column:2;grid-row:1/4;align-self:center;margin:0;width:44px;min-height:44px;padding:0;justify-content:center;border-radius:50%}
+#workspace > #office-entry[data-ready="true"] [data-entry-action]{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+@media(max-width:700px){#workspace > #office-entry[data-ready="true"]{width:calc(100% - 28px)}}

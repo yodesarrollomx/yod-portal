@@ -1,5 +1,5 @@
 import {stationIdentity} from './project-station.mjs';
-import {workHeadline} from './work-observer.mjs?v=1';
+import {workHeadline} from './work-observer.mjs?v=126';
 
 // A view of the authorized selection, never a second registry or a source of permission.
 export function entryView(selection,presence={},observation={}){
