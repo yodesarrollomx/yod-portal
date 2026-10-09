@@ -58,7 +58,7 @@ export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{},seat=
   const m=model();
   if(m&&route){m.position.set(route.end[0],0,route.end[1]);m.rotation.y=route.rot;}
   const done=route;route=null;
-  if(profile){if(done?.destino==='inicio'){m?.position.set(...SEAT);if(m)m.rotation.y=HOME_ROT;layer.setMotion(profile.id,activity==='talk'?'sit-talk':activity);}else {seatedAtMeeting=done?.seated===true;layer.setMotion(profile.id,seatedAtMeeting?(activity==='talk'?'sit-talk':'sit'):'idle');}}
+  if(profile){if(done?.destino==='inicio'){seatedAtMeeting=false;m?.position.set(...SEAT);if(m)m.rotation.y=HOME_ROT;layer.setMotion(profile.id,activity==='talk'?'sit-talk':activity);}else {seatedAtMeeting=done?.seated===true;layer.setMotion(profile.id,seatedAtMeeting?(activity==='talk'?'sit-talk':'sit'):'idle');}}
   if(done){lastPlace=done.destino||null;try{done.onArrival?.();}catch{}}
  }
  function advance(dt){

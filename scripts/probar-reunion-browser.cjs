@@ -12,7 +12,7 @@ const server=http.createServer((req,res)=>{
  try{
  for(const mobile of [false,true]){
   const page=await browser.newPage({viewport:mobile?{width:390,height:844}:{width:1366,height:900}});
-  await page.goto(base+'/despacho3d/avatars/demo.html'); // same origin, replaced below before modules run
+  await page.goto(base+'/docs/arquitectura/mapa.md'); // establish origin without starting application services
   await page.setContent('<!doctype html><html lang="es"><meta name="viewport" content="width=device-width"><link rel="stylesheet" href="'+base+'/despacho3d/agent-workspace.css"><body style="margin:0;background:#f3f0e9"><p>PRUEBA AUTOMÁTICA · datos sintéticos</p><main class="agent-workspace"><section data-panel="meeting"></section></main></body></html>');
   await page.evaluate(async base=>{
    const {mountMeeting}=await import(base+'/despacho3d/meeting-view.mjs?v=124');

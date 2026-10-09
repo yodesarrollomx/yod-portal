@@ -9584,7 +9584,8 @@
         "SVC-AUTON-CLOUD",
         "GAS-PORTERO",
         "EXT-DRIVE",
-        "SYS-SALA"
+        "SYS-SALA",
+        "SYS-TRACK"
       ],
       "proposal": "Vincular recorridos al trabajo observado; fichas de avatares autorizados y presentación por tema desde objetivos y evidencias guardados, con guion, voz y consulta simultánea del PPP.",
       "status": "implementado_local",

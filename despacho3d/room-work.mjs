@@ -19,7 +19,24 @@ export function createRoomWork({request,now=Date.now,schedule=setTimeout,cancel=
    const raw=await request('/computer/work',{},id);
    if(disposed||own!==epoch||profiles.get(id)!==profile)return;
    const value=validateObservation(raw,id);
-   states.set(id,{...value,phase:value.available?'ready':'unavailable',checked_at:now()});emit();
+   let image=null;const prior=states.get(id);
+   if(value.available&&value.work&&value.screen?.owner?.run_id===value.work.run_id&&value.screen.captured_at){
+    if(prior?.screen?.captured_at===value.screen.captured_at)image=prior.image||null;
+    else{const capture=await request('/computer/state',{},id);if(disposed||own!==epoch||profiles.get(id)!==profile)return;
+     if(capture.capture_work?.case_id===id&&capture.capture_work?.run_id===value.work.run_id&&capture.captured_at===value.screen.captured_at&&typeof capture.image==='string'&&new RegExp('^data:image/jpeg;base64,[A-Za-z0-9+/=]+&&capture.image.length<=900100)image=capture.image;
+    }
+   }
+   states.set(id,{...value,image,phase:value.available?'ready':'unavailable',checked_at:now()});emit();
+  }catch(e){if(!disposed&&own===epoch&&profiles.has(id)){states.set(id,{phase:e.message==='unauthorized'?'unauthorized':'unavailable',case_id:id,work:null,screen:null,checked_at:now()});emit();}}
+  finally{flight=false;later();}
+ }
+ return {reconcile,refresh,snapshot,has:id=>profiles.has(id),subscribe(fn){listeners.add(fn);fn(snapshot());return()=>listeners.delete(fn);},
+ dispose(){disposed=true;epoch++;cancel(timer);profiles.clear();states.clear();emit();listeners.clear();}};
+}
+).test(capture.image)&&capture.image.length<=900100)image=capture.image;
+    }
+   }
+   states.set(id,{...value,image,phase:value.available?'ready':'unavailable',checked_at:now()});emit();
   }catch(e){if(!disposed&&own===epoch&&profiles.has(id)){states.set(id,{phase:e.message==='unauthorized'?'unauthorized':'unavailable',case_id:id,work:null,screen:null,checked_at:now()});emit();}}
   finally{flight=false;later();}
  }

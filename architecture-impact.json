@@ -9,7 +9,8 @@
     "SVC-AUTON-CLOUD",
     "GAS-PORTERO",
     "EXT-DRIVE",
-    "SYS-SALA"
+    "SYS-SALA",
+    "SYS-TRACK"
   ],
   "tests": [
     "Sin recorrido de trabajo sin evidencia ni mezcla de casos.",
