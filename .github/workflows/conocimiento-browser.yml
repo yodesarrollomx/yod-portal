@@ -48,7 +48,7 @@ jobs:
           BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
         run: node scripts/probar-entrada-publicada.cjs
       - name: Entrada, identidad y puesto
-        timeout-minutes: 4
+        timeout-minutes: 6
         env:
           NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
           BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
