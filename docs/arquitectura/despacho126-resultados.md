@@ -37,12 +37,37 @@ Los encargos autorizados usan la cola y el estado del servidor aunque no haya un
 
 ## 22:49–22:57 · Revisión visual y móvil
 El recorrido de escritorio dfc690c comprobó los tres personajes, cambio por proximidad, conservación del contenedor PPP durante voz, bloqueo de cambio durante conversación, recuperación, reunión y radial. El runner agotó su límite al cerrar el contexto; los pasos pendientes de móvil y plano se ejecutaron por separado en37890648925 y aprobaron. El PPP de esa matriz es un doble HTML simplificado: acredita el contenedor y su continuidad, no el tablero nativo ni sus datos privados. Chromium eligió navegación normal al volver; BFCache real no fue observado, aunque sus estados tienen regresiones de lógica.
-La prueba adicional de entrada detectó un desbordamiento real del retrato móvil: translateX(-5px) movía el canvas fuera de su host40×56. Se elimina ese desplazamiento y se conserva proporción/centrado, manteniendo el assert.
+La prueba adicional de entrada detectó un desbordamiento real del retrato móvil: translateX(-5px) movía el canvas fuera de su host 40×56. Se elimina ese desplazamiento y se conserva proporción/centrado, manteniendo el assert.
 La captura también mostró una etiqueta alejada de su personaje. La proyección mundial era correcta; el sistema para evitar solapamientos la elevaba151px sin asociación visual. Se incorpora un conector fino al mismo anclaje y se retira junto a la etiqueta cuando pierde visibilidad o acceso.
 La tarjeta compacta reutiliza las etiquetas humanas de actividad; ya no muestra identificadores como navegador_abrir. Estos cambios requieren el cierre del recorrido de entrada sobre la nueva cabeza antes de publicar.
 
-## Pendiente de evidencia
-- Resultados de integración y capturas reales del render con datos sintéticos.
-- Prueba de entrada pública: la configuración OAuth externa puede rechazar un origen no registrado; no se altera identidad para ocultarlo.
-- La aceptación del micrófono del equipo requiere observación real del usuario.
-- Vista pixel ligera, concurrencia ilimitada, aprendizaje automático acumulado y edición financiera universal no se declaran implementados.
+## 22:57–23:10 · Cerrar defectos y distinguirlos del arnés de prueba
+La revisión focal de 921919 aprueba seis comprobaciones geométricas/visuales. La captura del retrato móvil mide host 40×56 y canvas 40×45.70 centrado, sin desbordamiento. El conector de etiqueta identifica a su personaje y la tarjeta muestra la actividad en lenguaje humano.
+La arquitectura exige declarar el propietario exacto de la prueba nueva de etiquetas; se corrige el registro y las 580 pruebas Node quedan aprobadas. Chromium y WebKit también aprueban.
+El recorrido de entrada conservaba dos fixtures anteriores al contrato actual: faltaban la identidad y fecha de la actividad y se ordenaba ir a biblioteca mientras se comprobaba la posición sentada en su escritorio. Se actualizan los datos sintéticos a un trabajo vigente en su propia computadora, sin eliminar las aserciones.
+El run37891712312 completa los asserts de escritorio, móvil y plano; agota 4 minutos cuando cierra el navegador. El límite por paso aumenta a 6 minutos en f5f0d57, manteniendo las mismas comprobaciones y el límite global. No se presenta esta demora del runner como tiempo de carga del usuario.
+
+## 23:20–23:22 · Recorrido integrado y selector heredado
+Con el margen de cierre corregido, Entrada, Reunión y Trabajo observable aprueban en 37892778658. El paso panorámico falla porque busca el antiguo marcador único; se detiene la publicación y se actualiza el arnés para seleccionar al residente correcto del HUD múltiple. Las verificaciones de posición, movimiento, asiento y revocación se mantienen. Las tres suites posteriores se comprueban aparte para detectar problemas independientes sin esperar otra cadena completa.
+
+La contraprueba privada37893263723 confirmó tres selectores/navegaciones heredados: herramientas plegadas retiradas, transcripción convertida en sección y pendientes que ahora pertenecen a Trabajo. Se actualiza el recorrido para utilizar los controles visibles. No se elimina ninguna aserción de permisos, aislamiento ni recibos financieros.
+
+## 23:30–23:33 · Tres suites cerradas y geometría de asiento
+En e0e51c, las suites de Conocimiento, Voz y PPP colaborativo terminan correctamente en escritorio y móvil (run 37893693009), con actividad y proveedor sintéticos. El recorrido panorámico conserva una fórmula fija del esqueleto anterior para medir el asiento. Se contrasta con el anclaje físico del nuevo rig; no se amplía la tolerancia ni se elimina la comprobación de contacto.
+La auditoría pública anterior recuperada también confirma un rechazo real de Google GSI para el origen del portal. Se prepara comprobación final sin sesión; la configuración del cliente Web en Google Cloud no es editable mediante las herramientas de esta sesión.
+
+## 23:34–23:37 · Contacto físico y coste de la evidencia
+Se confirma asiento correcto del rig nuevo y se reemplaza la constante antigua por Box3 de ambos muslos contra la altura real de la silla, con la misma tolerancia de 1 mm. La corrección sólo afecta al arnés.
+El recorrido panorámico producía diez capturas para seis situaciones: cuatro eran duplicados JPEG impresos como base64 además de sus PNG. Se conservan las seis PNG de artefacto y todas las aserciones; se retiran cuatro capturas redundantes. Esta reducción corresponde al runner, no acredita una mejora porcentual de la aplicación.
+Se proporciona a Dirección el enlace y los pasos del cliente Web para registrar el origen del portal, sin confundirlo con el cliente de escritorio de Apps Script.
+
+## 23:39–23:43 · Resolver el acceso Google con una contraprueba
+La captura de Dirección demuestra que el cliente Web y el origen ya estaban configurados. Se corrige la indicación inicial de volver a agregar el origen; se descarta el duplicado sin alterar Cloud.
+El portal suprimía Referer mediante meta no-referrer. Auditoría real: mismo client_id, origin de documento correcto, petición a Google sin Origin/Referer y respuesta400.
+A/B manteniendo URL/cliente/HTML y cambiando sólo la política a strict-origin: Google pasa de400 a200. La réplica con canario en query confirma Referer exacto https://yodesarrollomx.github.io/, sin ruta ni consulta. Cero errores GSI_LOGGER en la variante corregida. Evidencia privada:37894902824/job113703938601 (23:42:57/59), réplica37894864013/job113703815225. No hubo login ni uso de credenciales privadas.
+Se cambia únicamente la meta del contenedor OS, manteniendo rel=noreferrer en enlaces que lo requieren. El ajuste transmite el origen necesario para GSI y evita compartir rutas/consultas, incluso hacia recursos del mismo origen. La documentación de Google recomienda enviar el origen a GSI: https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid .
+Esto verifica el botón de acceso y su comunicación; no equivale a acreditar un inicio de sesión personal completo ni el micrófono.
+
+
+## Aceptación pendiente
+Publicación del portal, comprobación anónima de los recursos servidos y entrega HTML. El micrófono físico y los datos del PPP nativo requieren una sesión real; no se declaran acreditados por fixtures.
