@@ -3,7 +3,7 @@ import {AUTHORITY_LEASE_MS,AUTHORITY_REFRESH_MS,authorityIsCurrent,isTransientAu
 
 // Presence belongs to the authorized room, independently of its conversation panel.
 // This in-memory lease is refreshed in the foreground and never restores access from storage.
-export function createResidentAgents({transport,onChange=()=>{},now=Date.now,schedule=setTimeout,cancel=clearTimeout,isVisible=()=>true}={}){
+export function createResidentAgents({transport,onChange=()=>{},now=Date.now,schedule=setTimeout,cancel=clearTimeout,isVisible=()=>true,takeSelection=()=>null}={}){
  let requestedCaseId=null,catalogAllowed=null,catalogDenied=false;
  let selection=null,prepared=false,phase='loading',checkedAt=null,flight=null,epoch=0,disposed=false,timer=null,leaseTimer=null,attempt=0;
  const profiles=new Set(),listeners=new Set();
@@ -27,14 +27,15 @@ export function createResidentAgents({transport,onChange=()=>{},now=Date.now,sch
   if(wasBlocked&&catalogAllowed.size)void refresh();
  }
  function later(delay){if(timer!==null)cancel(timer);timer=schedule(()=>{timer=null;if(isVisible())void refresh();else later(60000);},delay);}
- async function refresh(){
+ async function refresh(useSelection=false){
   if(disposed)return false;
   if(selection&&!current())expire();
   if(flight)return flight;
   const own=epoch;
   flight=(async()=>{
    try{
-    const raw=await transport.resolveCurrent(requestedCaseId?{case_id:requestedCaseId}:{});
+    const resolved=useSelection?takeSelection(requestedCaseId):null;
+    const raw=await (resolved??transport.resolveCurrent(requestedCaseId?{case_id:requestedCaseId}:{}));
     if(raw?.ok===false)throw Error(raw.error||'unavailable');
     const fresh=validateSelection(raw);
     if(requestedCaseId&&fresh.case_id!==requestedCaseId)throw Error('case_changed');
@@ -64,8 +65,8 @@ export function createResidentAgents({transport,onChange=()=>{},now=Date.now,sch
   if(disposed||!selection||!current()||selection.case_id!==caseId||['unauthorized','reconnecting'].includes(phase))return;
   prepared=ok===true;phase=!selection.can_enqueue?'observe':!selection.agent_ready?'offline':prepared?'standby':'preparing';emit();
  }
- return {refresh,snapshot,getProfile:profile,reconcileCatalog,
-  async selectCase(caseId){if(disposed||typeof caseId!=='string'||!/^[A-Za-z0-9_.:-]{1,200}$/.test(caseId))return false;epoch++;flight=null;requestedCaseId=caseId;selection=null;prepared=false;checkedAt=null;stopLease();phase='loading';publishProfile();emit();return refresh();},
+ return {refresh:()=>refresh(false),snapshot,getProfile:profile,reconcileCatalog,
+  async selectCase(caseId){if(disposed||typeof caseId!=='string'||!/^[A-Za-z0-9_.:-]{1,200}$/.test(caseId))return false;epoch++;flight=null;requestedCaseId=caseId;selection=null;prepared=false;checkedAt=null;stopLease();phase='loading';publishProfile();emit();return refresh(true);},
   getSelection(){return !['loading','unauthorized','reconnecting'].includes(phase)&&current()?clone(selection):null;},
   subscribeProfile(fn){profiles.add(fn);fn(profile());return()=>profiles.delete(fn);},
   subscribe(fn){listeners.add(fn);fn(snapshot());return()=>listeners.delete(fn);},markPrepared,

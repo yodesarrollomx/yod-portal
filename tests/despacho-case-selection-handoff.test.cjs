@@ -1,0 +1,40 @@
+'use strict';
+const test=require('node:test'),assert=require('node:assert/strict');
+const profile=id=>({ok:true,case_id:id,name:'Proyecto sintético '+id,url:'https://docs.google.com/spreadsheets/d/SYNTHETIC_ONLY/edit',can_enqueue:true,agent_ready:true,avatar:{id,case_id:id,entity_kind:'case',name:'Proyecto sintético '+id,display_name:'Autón '+id,form:'man',color:'#547e75',visual:{}}});
+test('selecting a resident shares one raw server response, without caching subsequent refreshes',async t=>{
+ const {createCaseSelectionHandoff}=await import('../despacho3d/case-selection-handoff.mjs');
+ const {createAuthorizedCases}=await import('../despacho3d/authorized-cases.mjs');
+ const {createResidentAgents}=await import('../despacho3d/resident-agents.mjs');
+ let calls=0,taken=null;const handoff=createCaseSelectionHandoff(),transport={listAuthorized:async()=>({ok:true,schema:1,cases:[profile('a'),profile('b')]}),resolveCurrent:async p=>{calls++;return profile(p.case_id||'a');}};
+ const resident=createResidentAgents({transport,takeSelection:id=>{taken=handoff.consume(id);return taken;},schedule:()=>1,cancel(){}});
+ const catalog=createAuthorizedCases({transport,schedule:()=>1,cancel(){},onChange:s=>{handoff.reconcile(s);resident.reconcileCatalog(s);}});
+ t.after(()=>{catalog.dispose();resident.dispose();handoff.invalidate();});
+ assert.equal(await catalog.refresh(),true);
+ const select=async id=>{const ticket=handoff.begin(id);try{const selected=await catalog.select(id,{onResolved:raw=>handoff.capture(ticket,raw)});return selected&&handoff.current(ticket)?await resident.selectCase(id):false;}finally{handoff.finish(ticket);}};
+ assert.equal(await select('b'),true);assert.equal(calls,1);assert.equal(resident.getSelection().case_id,'b');
+ assert.equal(taken.avatar.name,'Proyecto sintético b');assert.equal(taken.avatar.display_name,'Autón b');
+ assert.equal(await resident.refresh(),true);assert.equal(calls,2);
+ assert.equal(await select('a'),true);assert.equal(calls,3);assert.equal(resident.getSelection().case_id,'a');
+});
+test('handoff is single-use, case-bound, deadline-bound and cannot be restored after revocation',async()=>{
+ const {createCaseSelectionHandoff}=await import('../despacho3d/case-selection-handoff.mjs');let time=0;const h=createCaseSelectionHandoff({now:()=>time,maxAge:1000});
+ const a=h.begin('a');assert.equal(h.capture(a,profile('b')),false);assert.equal(h.capture(a,profile('a')),true);
+ assert.equal(h.consume('b'),null);assert.equal(h.consume('a').case_id,'a');assert.equal(h.consume('a'),null);assert.equal(h.capture(a,profile('a')),false);
+ const b=h.begin('b');assert.equal(h.capture(a,profile('a')),false);h.capture(b,profile('b'));time=1001;assert.equal(h.consume('b'),null);
+ const c=h.begin('a');h.capture(c,profile('a'));h.reconcile({phase:'unauthorized',cases:[]});assert.equal(h.current(c),false);assert.equal(h.consume('a'),null);
+ const d=h.begin('a');h.capture(d,profile('a'));h.reconcile({phase:'current',cases:[profile('b')]});assert.equal(h.consume('a'),null);
+ const e=h.begin('b');h.capture(e,profile('b'));time=0;assert.equal(h.consume('b'),null);
+});
+test('revocation invalidates a raw selection handoff before the resident can use it',async t=>{
+ const {createCaseSelectionHandoff}=await import('../despacho3d/case-selection-handoff.mjs');
+ const {createAuthorizedCases}=await import('../despacho3d/authorized-cases.mjs');
+ const {createResidentAgents}=await import('../despacho3d/resident-agents.mjs');
+ const h=createCaseSelectionHandoff();let calls=0;
+ const transport={listAuthorized:async()=>({ok:true,schema:1,cases:[profile('a')]}),resolveCurrent:async()=>{calls++;return profile('a');}};
+ const resident=createResidentAgents({transport,takeSelection:id=>h.consume(id),schedule:()=>1,cancel(){}});
+ const catalog=createAuthorizedCases({transport,schedule:()=>1,cancel(){},onChange:s=>{h.reconcile(s);resident.reconcileCatalog(s);}});
+ t.after(()=>{catalog.dispose();resident.dispose();h.invalidate();});
+ await catalog.refresh();const ticket=h.begin('a');await catalog.select('a',{onResolved:raw=>h.capture(ticket,raw)});
+ catalog.clear('session_changed');assert.equal(h.current(ticket),false);assert.equal(h.consume('a'),null);assert.equal(resident.getSelection(),null);
+ assert.equal(calls,1);
+});

@@ -30,7 +30,7 @@ export function createAuthorizedCases({transport,onChange=()=>{},beforeSelect=()
    }
   })();const active=flight;void active.then(()=>{if(flight===active)flight=null;},()=>{if(flight===active)flight=null;});return active;
  }
- async function select(caseId){
+ async function select(caseId,{onResolved=()=>{}}={}){
   if(disposed||phase!=='current'||!valid()||!items.some(x=>x.case_id===caseId)||!await beforeSelect(caseId))return null;
   if(disposed||phase!=='current'||!valid()||!items.some(x=>x.case_id===caseId))return null;
   const own=epoch,selectionOwn=++selectionEpoch;selected=null;emit();
@@ -41,7 +41,9 @@ export function createAuthorizedCases({transport,onChange=()=>{},beforeSelect=()
    const fresh=validateSelection(r);
    if(fresh.case_id!==caseId)throw Error('case_changed');
    if(!valid()||phase!=='current'||!items.some(x=>x.case_id===caseId))return null;
-   selected=fresh;emit();return structuredClone(fresh);
+   selected=fresh;emit();
+   if(disposed||own!==epoch||selectionOwn!==selectionEpoch||!valid()||phase!=='current')return null;
+   onResolved(structuredClone(r));return structuredClone(fresh);
   }catch(e){
    if(own===epoch&&selectionOwn===selectionEpoch){
     if(isTransientAuthorityError(e)){phase='reconnecting';error=e.message;emit();}
