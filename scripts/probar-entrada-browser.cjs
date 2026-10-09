@@ -50,7 +50,8 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await frame.waitForFunction(()=>window.despacho&&window.YodVoiceWorkspace&&document.querySelector('#case-open').disabled);
   assert.equal(await frame.locator('[data-entry-status]').innerText(),'Entra a YOD OS para ver tus proyectos.');
   await page.screenshot({path:path.join(out,'entrada-'+variant+'-sin-acceso.png')});
-  await frame.evaluate(()=>{window.__select('A');window.__observe({case_id:'synthetic-A',phase:'ready',checked_at:Date.now(),work:{case_id:'synthetic-A',goal_id:'synthetic-goal-A',updated_at:new Date().toISOString(),title:'Revisando fuentes · prueba',phase:'tool',current_tool:'drive_leer'}});});
+  // This fixture works at its own computer; library travel is covered by the multi-resident browser run.
+  await frame.evaluate(()=>{window.__select('A');window.__observe({case_id:'synthetic-A',phase:'ready',checked_at:Date.now(),work:{case_id:'synthetic-A',goal_id:'synthetic-goal-A',updated_at:new Date().toISOString(),title:'Revisando fuentes · prueba',phase:'tool',current_tool:'navegador_abrir'}});});
   await frame.locator('#case-open').waitFor({state:'visible'});
   assert.equal(await frame.locator('#case-open').isEnabled(),true);
   const chrome=await frame.evaluate(()=>{
@@ -60,7 +61,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   assert.ok(chrome.header<=61,'the office header must stay on one compact row');
   if(variant!=='fallback')assert.equal(chrome.inside,true,'project identity and primary action must share one card');
   assert.equal(await frame.locator('[data-entry-detail]').textContent(),'Revisando fuentes · prueba');
-  assert.equal(await frame.locator('[data-entry-status]').textContent(),'Consultando documentos','the entry uses a human activity from a fresh case-bound observation');
+  assert.equal(await frame.locator('[data-entry-status]').textContent(),'Investigando en internet','the entry uses a human activity from a fresh case-bound observation');
   if(variant!=='fallback'){
    const alignment=await frame.evaluate(()=>{
     const avatar=window.despacho.scene.children.find(o=>o.name==='avatar');
