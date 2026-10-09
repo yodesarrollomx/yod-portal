@@ -209,7 +209,7 @@
 
 .station-profile-portrait .avatar-portrait{min-height:0;height:140px;background:radial-gradient(ellipse,#dce6d8,transparent);overflow:hidden}.station-profile-portrait canvas{width:123px;height:140px}.station-profile-portrait:empty{display:none}
 
-@media(max-width:850px){.station-profile-portrait{position:absolute;top:10px;left:98px;width:40px;height:56px;margin:0}.station-profile-portrait .avatar-portrait{height:56px;border-radius:12px}.station-profile-portrait canvas{width:49px;height:56px;transform:translateX(-5px)}}
+@media(max-width:850px){.station-profile-portrait{position:absolute;top:10px;left:98px;width:40px;height:56px;margin:0}.station-profile-portrait .avatar-portrait{height:56px;border-radius:12px;display:grid;place-items:center}.station-profile-portrait canvas{display:block;width:100%;height:auto;transform:none}}
 
 .station-profile-portrait canvas{margin:0 auto}
 @media(max-width:850px){.station-profile-portrait~#voice-title{margin-right:0}}
