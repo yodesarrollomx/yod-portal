@@ -1,17 +1,17 @@
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
-import {createOfficeResidents} from './avatars/office-residents.mjs?v=2';
+import {createOfficeResidents} from './avatars/office-residents.mjs?v=124';
 import * as T from 'three';
 import {createEncounterGate,createPreparationGate,ENCOUNTER_RANGE} from './agent-proximity.mjs?v=4';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {RoomEnvironment} from './vendor/RoomEnvironment.js';
-import {createOffice} from './scene.js?v=9';
+import {createOffice} from './scene.js?v=124';
 import {panels} from './office-panels.mjs?v=2';
 import {createChinches3D} from './chinches3d.mjs?v=4';
-import {createOfficePilot,chooseOfficeHit} from './avatars/office-pilot.mjs?v=8';
+import {createOfficePilot,chooseOfficeHit} from './avatars/office-pilot.mjs?v=124';
 import {ENTORNO_AGENTE_CAMINA} from './entorno-config.mjs';
 import {crearAgenteIr} from './entorno-ruta.mjs?v=4';
 import {fitOfficeOverview,visibleOfficeHit} from './office-overview.mjs?v=1';
-import {places,allowed} from './office-layout.mjs?v=2';
+import {places,allowed} from './office-layout.mjs?v=124';
 const $=s=>document.querySelector(s),mount=$('#scene'),coarse=matchMedia('(pointer:coarse)').matches;
 let renderer;try{renderer=new T.WebGLRenderer({antialias:true,powerPreference:'high-performance'});}catch(e){$('#loading').hidden=true;$('#fallback').hidden=false;throw e;}
 renderer.localClippingEnabled=true;
@@ -44,12 +44,27 @@ window.addEventListener('pagehide',()=>pilot.disconnect());
 window.addEventListener('pageshow',bindPilot);
 bindPilot();
 let unwatchWork=null;
-function bindWork(){unwatchWork?.();unwatchWork=window.YodWorkObserver?.subscribe(s=>{
- const id=window.YodResidentAgents?.getSelection?.()?.case_id;
- office.computerScreen?.update(id&&s.case_id===id?{...s,projectName:window.YodResidentAgents.getSelection().name}:{phase:'unauthorized',case_id:null,work:null,image:null});
- dirty=true;
-});}
+const emptyScreen={phase:'unauthorized',case_id:null,work:null,image:null};
+let roomStates=[],selectedWork=null,unwatchRoom=null;
+function paintWork(){
+ const selection=window.YodResidentAgents?.getSelection?.(),id=selection?.case_id;
+ const all=new Map(roomStates.map(s=>[s.case_id,s]));if(selectedWork?.case_id===id)all.set(id,selectedWork);
+ pilot.observeWork?.([...all.values()]);
+ const seats=pilot.seatProfiles?.()||[];
+ for(let slot=0;slot<(office.deskScreens?.length||0);slot++){const p=seats.find(p=>p.slot===slot);office.deskScreens[slot].update(p&&all.has(p.case_id)?{...all.get(p.case_id),projectName:p.name}:emptyScreen);}
+ const shown=id&&all.get(id)?{...all.get(id),projectName:selection.name}:emptyScreen;
+ if(!seats.length)office.computerScreen?.update(shown);
+ office.libraryScreen?.update({...shown,surface:'library'});office.researchScreen?.update(shown);dirty=true;
+}
+function bindWork(){unwatchWork?.();unwatchWork=window.YodWorkObserver?.subscribe(s=>{selectedWork=s;paintWork();});}
+function bindRoomWork(){unwatchRoom?.();unwatchRoom=window.YodRoomWork?.subscribe(s=>{roomStates=s;paintWork();});}
 window.addEventListener('yod-work-observer-ready',bindWork);bindWork();
+window.addEventListener('yod-room-work-ready',bindRoomWork);bindRoomWork();
+window.addEventListener('yod-meeting-slide',event=>{
+ const slide=event.detail,id=window.YodResidentAgents?.getSelection?.()?.case_id;
+ office.meetingScreen?.update(slide&&slide.case_id===id?{...emptyScreen,phase:'ready',case_id:id,slide}:emptyScreen);dirty=true;
+});
+window.addEventListener('pagehide',()=>{unwatchRoom?.();office.deskScreens?.forEach(s=>s.dispose());office.libraryScreen?.dispose();office.researchScreen?.dispose();office.meetingScreen?.dispose();});
 window.addEventListener('pagehide',()=>{unwatchWork?.();office.computerScreen?.dispose();});
 
 
@@ -85,7 +100,7 @@ function setMode(next){chinches?.stop();transitionToken++;$('#fade').classList.r
 async function visit(id){if(!Object.hasOwn(places,id))return false;chinches?.stop();closeSheets(false);clearMovement();const token=++transitionToken;$('#fade').classList.add('visible');await new Promise(r=>setTimeout(r,matchMedia('(prefers-reduced-motion:reduce)').matches?0:130));if(token!==transitionToken)return false;selected=id;mode='walk';camera=walkCamera;office.setCutaway(false);renderer.shadowMap.needsUpdate=true;orbit.enabled=false;camera.fov=isMobile()?70:72;camera.updateProjectionMatrix();camera.position.fromArray(places[id].eye);updateAngles(new T.Vector3(...places[id].target));updateChrome();dirty=true;$('#fade').classList.remove('visible');if(!isMobile())mount.focus({preventScroll:true});return true;}
 function showSheet(id){chinches?.stop();closeSheets(false);lastFocus=document.activeElement;clearMovement();sheet=id;document.querySelector('header').inert=true;for(const e of mount.parentElement.children)if(!e.classList.contains('sheet')&&e.id!=='scrim')e.inert=true;$('#'+id).hidden=false;$('#scrim').hidden=false;$('#'+id).scrollTop=0;orbit.enabled=false;$('#nearby').hidden=true;updateChrome();$('#'+id+' .close').focus({preventScroll:true});}
 function closeSheets(focus=true){document.querySelectorAll('.sheet').forEach(e=>e.hidden=true);$('#scrim').hidden=true;document.querySelector('header').inert=false;for(const e of mount.parentElement.children)e.inert=false;const restore=lastFocus;sheet=null;clearMovement();orbit.enabled=mode==='overview';updateChrome();if(focus&&restore?.isConnected)restore.focus({preventScroll:true});dirty=true;}
-function openPanel(id){if(id==='computer'){const selected=window.YodResidentAgents?.getSelection?.();if(selected){closeSheets(false);void window.YodVoiceWorkspace?.openForCase(selected.case_id,'ppp');}return;}if(id==='case'&&window.YodResidentAgents?.getSelection?.()){closeSheets(false);void window.YodAgentMenu?.showRadial(window.YodResidentAgents.getSelection().case_id);return;}const d=panels[id];if(!d)return;$('#panel-tag').textContent=d.tag;$('#panel-title').innerHTML=d.title;$('#panel-body').innerHTML=d.body;showSheet('panel');chinches.bindPanel(id);if(id==='case'&&window.CubefarmYOD){const button=document.createElement('button');button.className='open-agent-panel';button.textContent='Abrir panel de agentes';button.onclick=()=>window.CubefarmYOD.open('chat');$('#panel-body').prepend(button);}}
+function openPanel(id){if(['decisions','library'].includes(id)){const current=window.YodResidentAgents?.getSelection?.();if(current){closeSheets(false);void window.YodVoiceWorkspace?.openForCase(current.case_id,id==='decisions'?'meeting':'activity');return;}}if(id==='computer'){const selected=window.YodResidentAgents?.getSelection?.();if(selected){closeSheets(false);void window.YodVoiceWorkspace?.openForCase(selected.case_id,'ppp');}return;}if(id==='case'&&window.YodResidentAgents?.getSelection?.()){closeSheets(false);void window.YodAgentMenu?.showRadial(window.YodResidentAgents.getSelection().case_id);return;}const d=panels[id];if(!d)return;$('#panel-tag').textContent=d.tag;$('#panel-title').innerHTML=d.title;$('#panel-body').innerHTML=d.body;showSheet('panel');chinches.bindPanel(id);if(id==='case'&&window.CubefarmYOD){const button=document.createElement('button');button.className='open-agent-panel';button.textContent='Abrir panel de agentes';button.onclick=()=>window.CubefarmYOD.open('chat');$('#panel-body').prepend(button);}}
 $('#overview').onclick=()=>setMode('overview');$('#walk').onclick=()=>setMode('walk');$('#areas-open').onclick=()=>showSheet('areas');$('#help-open').onclick=()=>showSheet('help');$('#case-open').onclick=async()=>{await visit('case');openPanel('case');};document.querySelectorAll('[data-place]').forEach(b=>b.onclick=()=>visit(b.dataset.place));document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>closeSheets());$('#scrim').onclick=()=>closeSheets();$('#nearby').onclick=()=>near&&openPanel(near);
 
 function movement(dt){let forward=(keys.has('w')||keys.has('ArrowUp')?1:0)-(keys.has('s')||keys.has('ArrowDown')?1:0)-stick.y,sideways=(keys.has('d')||keys.has('ArrowRight')?1:0)-(keys.has('a')||keys.has('ArrowLeft')?1:0)+stick.x;const length=Math.hypot(forward,sideways);if(length<.05)return false;const speed=2.1*dt/Math.max(1,length),dx=(-Math.sin(yaw)*forward+Math.cos(yaw)*sideways)*speed,dz=(-Math.cos(yaw)*forward-Math.sin(yaw)*sideways)*speed;const steps=Math.ceil(Math.max(Math.abs(dx),Math.abs(dz))/.1)||1;for(let i=0;i<steps;i++){if(allowed(camera.position.x+dx/steps,camera.position.z))camera.position.x+=dx/steps;if(allowed(camera.position.x,camera.position.z+dz/steps))camera.position.z+=dz/steps;}return true;}

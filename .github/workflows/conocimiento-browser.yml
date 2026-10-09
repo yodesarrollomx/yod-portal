@@ -53,6 +53,12 @@ jobs:
           NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
           BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
         run: node scripts/probar-entrada-browser.cjs
+      - name: Reunión, guion y entrega
+        timeout-minutes: 2
+        env:
+          NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
+          BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
+        run: node scripts/probar-reunion-browser.cjs
       - name: Trabajo observable
         timeout-minutes: 3
         env:

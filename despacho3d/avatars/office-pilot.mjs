@@ -6,7 +6,7 @@ import {createAvatarLayer} from './adapter.mjs?v=2';
 const FRAME_MS=1000/15, WALK_SPEED=1.4;
 export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{},seat=PROJECT_SEAT}){
  const SEAT=seat.position,HOME_ROT=seat.rotationY;
- let activity='sit',api=null,unsubscribe=null,profile=null,fingerprint='',lastFrame=null,time=0,poseTicks=0,disposed=false,route=null,lastPlace='inicio';
+ let activity='sit',api=null,unsubscribe=null,profile=null,fingerprint='',lastFrame=null,time=0,poseTicks=0,disposed=false,route=null,lastPlace='inicio',seatedAtMeeting=false;
  const layer=createAvatarLayer({scene,onSelect(selection){
   if(!api||!profile||selection.id!==profile.id)return;
   // Recheck the current authority immediately before opening the panel.
@@ -22,7 +22,7 @@ export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{},seat=
   }
   const key=next?JSON.stringify(next):'';
   if(key===fingerprint)return;
-  profile=null;fingerprint='';lastFrame=null;time=0;poseTicks=0;route=null;lastPlace='inicio';
+  profile=null;fingerprint='';lastFrame=null;time=0;poseTicks=0;route=null;lastPlace='inicio';seatedAtMeeting=false;
   try{layer.replaceAuthorizedProfiles(next?[next]:[]);if(next){layer.setMotion(next.id,activity==='talk'?'sit-talk':activity);layer.update(0);profile=next;fingerprint=key;}}
   catch{layer.clear();}
   onChange();
@@ -58,7 +58,7 @@ export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{},seat=
   const m=model();
   if(m&&route){m.position.set(route.end[0],0,route.end[1]);m.rotation.y=route.rot;}
   const done=route;route=null;
-  if(profile){if(done?.destino==='inicio'){m?.position.set(...SEAT);if(m)m.rotation.y=HOME_ROT;layer.setMotion(profile.id,activity==='talk'?'sit-talk':activity);}else layer.setMotion(profile.id,'idle');}
+  if(profile){if(done?.destino==='inicio'){seatedAtMeeting=false;m?.position.set(...SEAT);if(m)m.rotation.y=HOME_ROT;layer.setMotion(profile.id,activity==='talk'?'sit-talk':activity);}else {seatedAtMeeting=done?.seated===true;layer.setMotion(profile.id,seatedAtMeeting?(activity==='talk'?'sit-talk':'sit'):'idle');}}
   if(done){lastPlace=done.destino||null;try{done.onArrival?.();}catch{}}
  }
  function advance(dt){
@@ -71,16 +71,16 @@ export function createOfficePilot({scene,beforeOpen=()=>{},onChange=()=>{},seat=
    else{m.position.x+=dx/d*left;m.position.z+=dz/d*left;left=0;}
   }
  }
- function walk(points,rot,{inmediato=false,onArrival=null,destino=null}={}){
+ function walk(points,rot,{inmediato=false,onArrival=null,destino=null,seated=false}={}){
   if(disposed||!profile||!Array.isArray(points)||points.length<2||!Number.isFinite(rot))return false;
   if(!points.every(p=>Array.isArray(p)&&p.length===2&&p.every(Number.isFinite)))return false;
   const m=model();if(!m)return false;
-  route={points:points.slice(1).map(p=>[...p]),next:0,end:[...points[points.length-1]],rot,onArrival:typeof onArrival==='function'?onArrival:null,destino};
+  route={seated:seated===true,points:points.slice(1).map(p=>[...p]),next:0,end:[...points[points.length-1]],rot,onArrival:typeof onArrival==='function'?onArrival:null,destino};
   if(inmediato){finish();onChange();return true;}
   layer.setMotion(profile.id,'walk');onChange();return true;
  }
  return {bind,disconnect,update,pickables:()=>layer.pickables(),selectIntersection:hit=>!disposed&&layer.selectIntersection(hit),
-  setActivity(value){if(!['sit','talk'].includes(value))return false;activity=value;if(profile&&!route&&lastPlace==='inicio'){layer.setMotion(profile.id,value==='talk'?'sit-talk':value);layer.update(time);onChange();}return true;},
+  setActivity(value){if(!['sit','talk'].includes(value))return false;activity=value;if(profile&&!route&&(lastPlace==='inicio'||seatedAtMeeting)){layer.setMotion(profile.id,value==='talk'?'sit-talk':value);layer.update(time);onChange();}return true;},
   recorrer:walk,
   posicion:()=>{const m=model();return m?[m.position.x,m.position.z]:null;},
   inicio:{xz:[SEAT[0],SEAT[2]],rot:HOME_ROT},

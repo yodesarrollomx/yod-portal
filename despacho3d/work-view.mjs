@@ -1,4 +1,4 @@
-import {workHeadline,safeWorkURL} from './work-observer.mjs?v=1';
+import {workHeadline,safeWorkURL} from './work-observer.mjs?v=124';
 // The next step describes a human decision, never an automatic execution.
 export function recoveryNextStep(state){
  if(state.phase!=='ready')return 'Actualiza la conexión antes de decidir. El último registro puede haber cambiado.';
@@ -29,6 +29,7 @@ export function mountWorkView({container,getCase,win=window,doc=document,onTasks
   if(w.phase==='prepared')result.textContent+=' El análisis preparado todavía no es una aprobación del PPP.';
   if(state.phase!=='ready')body.append(el('p','Conexión pendiente. Estos son los últimos registros recibidos.'));
   if(w.phase==='interrupted')body.append(el('p','La ejecución se interrumpió. Observar esta pantalla no la reanuda.'));
+  if(w.document){const document=el('details');document.className='work-document';document.open=true;document.append(el('summary','Última lectura · '+w.document.title),el('small',new Date(w.document.read_at).toLocaleString()+(w.document.tab?' · '+w.document.tab:'')+(w.document.range?' · '+w.document.range:'')),el('pre',w.document.content),el('p',w.document.truncated?'Extracto limitado a 8.000 caracteres; consulta la fuente completa.':'Texto recibido en esta lectura.'));body.append(document);}
   const list=el('ol');body.append(el('h4','Avance'));for(const t of w.progress.progress.tasks){const item=el('li'),name=el('strong',t.title),phase=t.status==='running'&&!live?'Sin ejecución confirmada':{pending:'Pendiente',running:'Trabajando',ready_for_review:'Para revisión',blocked:'Faltan datos'}[t.status];item.append(name,el('p',phase+(t.summary?' · '+t.summary:'')));list.append(item);}body.append(list,el('h4','Fuentes consultadas'));
   if(!w.sources.length)body.append(el('p','No hay fuentes consultadas registradas para esta ejecución.'));
   for(const source of w.sources){const row=el('p'),url=safeWorkURL(source.url);if(url){const a=el('a',source.title||'Abrir fuente');a.href=url;a.target='_blank';a.rel='noopener noreferrer';row.append(a);}else row.append(el('span',source.title||'Documento'));row.append(el('small',' · '+(source.task_id||'Expediente')+' · '+new Date(source.consulted_at).toLocaleString()));body.append(row);}

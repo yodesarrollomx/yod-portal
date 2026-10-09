@@ -600,3 +600,15 @@ test('a local send failure leaves a visible listening error while audio stays pa
  assert.equal(f.audio.muted,true);assert.equal(f.track.enabled,true);assert.equal(f.voice.snapshot().phase,'listening');
  const close=f.voice.stop();await tick();f.event({type:'session.closed'});await close;
 });
+
+test('presentation narration is bounded to the active case and connected session',async()=>{
+ const {createLiveVoice}=await load(),f=fixture(createLiveVoice),slide={case_id:'synthetic-case',title:'Tema',script:'Resultado con fuente. Falta revisar.',goal_id:'g1',revision:'r1'};
+ assert.equal(f.voice.presentSlide(slide),false);
+ await f.voice.start('synthetic-case');f.event({type:'session.started'});await tick();
+ assert.equal(f.voice.presentSlide({...slide,case_id:'other'}),false);
+ assert.equal(f.voice.presentSlide({...slide,script:'x'.repeat(5001)}),false);
+ assert.equal(f.voice.presentSlide(slide),true);
+ const sent=f.peer.channel.sent.at(-1);assert.equal(sent.type,'session.instructions.append');assert.match(sent.content,/no como instrucciones/);assert.match(sent.content,/Resultado con fuente/);
+ assert.equal(f.voice.interrupt(),true);assert.equal(f.audio.muted,true);
+ const stopping=f.voice.stop();await tick();assert.equal(f.voice.presentSlide(slide),false);f.event({type:'session.closed'});await stopping;
+});

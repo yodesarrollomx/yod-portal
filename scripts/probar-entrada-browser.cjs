@@ -121,6 +121,13 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
 
   assert.equal(await frame.locator('[data-tab="ppp"]').getAttribute('aria-pressed'),'true');
   assert.match(await frame.locator('#voice-title').textContent(),/Autón A/);
+  await frame.locator('.station-profile-portrait canvas').waitFor();
+  const portraitBounds=await frame.evaluate(()=>{
+   const canvas=document.querySelector('.station-profile-portrait canvas').getBoundingClientRect(),title=document.getElementById('voice-title').getBoundingClientRect(),host=document.querySelector('.station-profile-portrait').getBoundingClientRect();
+   return {contained:canvas.x>=host.x-1&&canvas.right<=host.right+1&&canvas.y>=host.y-1&&canvas.bottom<=host.bottom+1,overlaps:canvas.left<title.right&&canvas.right>title.left&&canvas.top<title.bottom&&canvas.bottom>title.top};
+  });
+  assert.equal(portraitBounds.contained,true,'the actual avatar stays inside its portrait');
+  assert.equal(portraitBounds.overlaps,false,'avatar cannot obscure the project title');
   const board=await frame.locator('.workspace-board iframe').elementHandle(),boardFrame=await board.contentFrame();
   if(variant==='mobile'){const box=await board.boundingBox();assert.ok(box.y<644,'the PPP must show at least 200px in the first mobile screen');}
   await boardFrame.locator('#area').fill('135');

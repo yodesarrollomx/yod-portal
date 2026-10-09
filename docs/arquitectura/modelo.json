@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-08.123-autones-activacion",
-  "checked_at": "2026-10-07",
+  "revision": "2026-10-09.124-reunion-autones",
+  "checked_at": "2026-10-09",
   "priorities": [
     "vender_mas",
     "margen_y_control",
@@ -9574,6 +9574,34 @@
       ],
       "deployment": "Portal PR134 / 08e9b48615e35665fd355ff3e7bcd9d24a8fde0f y Potenciales PR23 / a163c245d03128a93ab03d9a3f3e54a878c78171 publicados en Pages. CI de portal 37834226481 y PPP 37832787187 aprobada. Recursos públicos verificados el 8-oct-2026. AUTONES_MULTIPLES sigue apagado; sin acreditación de micrófono personal ni escritura equivalente de todos los modelos.",
       "rollback": "Revertir presentación y parámetros del puesto; conservar datos, versiones financieras y permisos."
+    },
+    {
+      "id": "CHG-DESPACHO-REUNION-124",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD",
+        "GAS-PORTERO",
+        "EXT-DRIVE",
+        "SYS-SALA",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-CONTROL",
+        "STORE-AUTON-ESTADO"
+      ],
+      "proposal": "Vincular recorridos al trabajo observado; fichas de avatares autorizados y presentación por tema desde objetivos y evidencias guardados, con guion, voz y consulta simultánea del PPP.",
+      "status": "implementado_local",
+      "approval": "Dirección autoriza integrar los tres autónomos y continuar objetivos tras conversar, mostrar trabajo real por estación y presentar avances en reunión.",
+      "tests": [
+        "Sin recorrido de trabajo sin evidencia ni mezcla de casos.",
+        "Láminas reproducibles desde objetivos, máximo dos por tema, sin confundir preparado con aprobado.",
+        "Guion y narración vinculados al caso vigente; revocación retira contenido.",
+        "Pruebas del portal y navegador con datos sintéticos; micrófono real no acreditable automáticamente."
+      ],
+      "deployment": "PR de portal y backend en prueba. Guion persistente al terminar el objetivo; extracto documental acotado. Publicación pendiente.",
+      "rollback": "Revertir PR de interfaz; conservar objetivos, evidencia y credenciales del servidor."
     }
   ],
   "data_contracts": [

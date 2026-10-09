@@ -4,6 +4,7 @@ export const places={
  editorial:{label:'Mesa editorial',eye:[-21,1.65,-5.8],target:[-20.7,1.9,-7.9]},
  funnel:{label:'Embudo comercial',eye:[-15.1,1.65,-5.8],target:[-15.25,1.9,-7.9]},
  entry:{label:'Entrada al Despacho',eye:[-4.8,1.65,7.7],target:[-1,1.5,-3.5]},
+ library:{label:'Biblioteca del proyecto',eye:[-8.35,1.65,-.7],target:[-8.35,1.4,-2.6]},
  reception:{label:'Recepción',eye:[-8.3,1.65,-4.5],target:[-8.2,1.8,-8.5]},
  patio:{label:'Patio central',eye:[-4.45,1.65,.7],target:[0,1.6,-1]},
  potential:{label:'Potenciales',eye:[8.65,1.65,-4.55],target:[8.3,1.1,-7.2]},
