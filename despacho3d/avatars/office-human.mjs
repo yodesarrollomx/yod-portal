@@ -33,7 +33,8 @@ export function createOfficeHuman(form,color,name,options={}){
   const brow=block(hair,[.036,.007,.007],[side*.052,.042,.133],head);brow.rotation.z=side*-.08;
  }
  oval(skin,[.019,.031,.025],[0,-.023,.138],head);
- joints.mouth=block(ink,[.044,.006,.007],[0,-.076,.124],head);
+ // Animate a unit-scale joint; changing the mesh scale would turn the 6 mm mouth into a metre-long bar.
+ const mouth=joint('mouth',[0,-.076,.124],head);block(ink,[.044,.006,.007],[0,0,0],mouth);
  // Working clothes have clean sleeves and straight trousers. No decorative tool implies real activity.
  for(const side of [-1,1]){
   const arm=joint('arm_'+(side<0?'left':'right'),[side*.229,1.369,0]);arms.push(arm);arm.rotation.z=-side*.06;
