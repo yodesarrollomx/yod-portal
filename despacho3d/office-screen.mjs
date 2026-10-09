@@ -8,12 +8,20 @@ export function createOfficeScreen(mesh,onChange=()=>{}){
  mesh.userData.agentComputer=true;let generation=0,latest=null,disposed=false,lastPaint=null;
  const line=(s,y,size=27)=>{ctx.font='500 '+size+'px Arial';ctx.fillText(String(s||''),24,y,720);};
  function draw(state,picture=null){
+  if(state.slide){
+   ctx.fillStyle='#f3f0e9';ctx.fillRect(0,0,768,400);ctx.fillStyle='#193c3d';
+   line(state.slide.project,38,20);line(state.slide.title,95,32);
+   const words=String(state.slide.result||'').split(/\s+/);let row='',y=146;ctx.font='500 23px Arial';
+   for(const word of words){if(ctx.measureText(row+' '+word).width>708){line(row,y,23);y+=31;row='';if(y>270)break;}row+=(row?' ':'')+word;}if(y<=270)line(row,y,23);
+   ctx.fillStyle='#806e4e';line('OBJETIVO  →  AVANCE  →  REVISIÓN',322,24);line(state.slide.checkpoint,368,20);
+   texture.needsUpdate=true;onChange();return;
+  }
   ctx.fillStyle='#162a30';ctx.fillRect(0,0,768,400);ctx.fillStyle='#ded6ba';line('COMPUTADORA · '+workHeadline(state),42,22);
   if(picture){ctx.drawImage(picture,0,68,768,270);ctx.fillStyle='#162a30';ctx.fillRect(0,338,768,62);ctx.fillStyle='#ded6ba';line('Última captura · '+new Date(state.screen.captured_at).toLocaleTimeString(),376,22);}
   else{const status=screenStatus(state);ctx.fillStyle='#eef1e8';line(status.title,103,34);line(status.objective,151,25);ctx.fillStyle='#ded6ba';line(status.counts,204,27);ctx.fillStyle='#eef1e8';line(status.detail,259,25);ctx.fillStyle='#c1cbb9';line(status.note,350,23);}
   texture.needsUpdate=true;onChange();
  }
- function update(state){if(disposed)return;latest=state;const key=JSON.stringify([state.case_id,state.phase,state.work?.run_id,state.work?.updated_at,state.work?.phase,state.work?.current_tool,state.work?.progress,state.work?.result,state.projectName,state.screen,!!state.image]);if(lastPaint===key)return;lastPaint=key;const own=++generation;draw(state);
+ function update(state){if(disposed)return;latest=state;const key=JSON.stringify([state.slide,state.case_id,state.phase,state.work?.run_id,state.work?.updated_at,state.work?.phase,state.work?.current_tool,state.work?.progress,state.work?.result,state.projectName,state.screen,!!state.image]);if(lastPaint===key)return;lastPaint=key;const own=++generation;draw(state);
   if(state.phase==='ready'&&state.image&&state.screen?.owner?.run_id===state.work?.run_id){const image=new Image();image.onload=()=>{if(!disposed&&own===generation)draw(state,image);};image.src=state.image;}
  }
  update({phase:'unauthorized',case_id:null,work:null});

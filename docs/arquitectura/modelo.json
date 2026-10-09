@@ -9587,7 +9587,7 @@
         "SYS-SALA"
       ],
       "proposal": "Vincular recorridos al trabajo observado; fichas de avatares autorizados y presentación por tema desde objetivos y evidencias guardados, con guion, voz y consulta simultánea del PPP.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "approval": "Dirección autoriza integrar los tres autónomos y continuar objetivos tras conversar, mostrar trabajo real por estación y presentar avances en reunión.",
       "tests": [
         "Sin recorrido de trabajo sin evidencia ni mezcla de casos.",

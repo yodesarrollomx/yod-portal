@@ -164,3 +164,22 @@
 .realtime-dialog.voice-compact>.chinche-ui-tools{display:none}
 .voice-workspace .workspace-ppp-summary:empty{display:none}
 @media(max-width:850px){.voice-sidebar .station-details{margin-top:6px;padding-top:0}.voice-sidebar .station-details>summary{padding:8px 0;min-height:36px}}
+
+/* One focused presentation surface; evidence stays available without crowding the slide. */
+.agent-workspace [data-panel="meeting"]{background:#f3f0e9;color:#193c3d;padding:clamp(16px,3vw,36px);border-radius:18px}
+.meeting-top,.meeting-controls,.meeting-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.meeting-top{font-size:13px;color:#526764}.meeting-slide{padding:30px 0}
+.meeting-slide>small{font-size:11px;letter-spacing:.16em;color:#806e4e}
+.meeting-slide h2{font-size:clamp(26px,3vw,42px);line-height:1.15;max-width:26ch;margin:14px 0 24px}
+.meeting-result{font-size:18px;line-height:1.55;white-space:pre-wrap}
+.meeting-diagram{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:28px}
+.meeting-diagram>div{background:#fffdf8;border-top:3px solid #a68a5b;padding:20px;border-radius:0 0 12px 12px}
+.meeting-diagram strong{font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.meeting-diagram p{font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+.meeting-controls button{min-height:44px}.meeting-controls button:nth-child(2){background:#193c3d;color:#fff}
+.meeting-notice{min-height:24px;font-size:14px}.meeting-footer{margin-top:24px;border-top:1px solid #dcd8cb;padding-top:20px}
+[data-panel="meeting"] pre{white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.6 system-ui}
+[data-panel="avatar"]{max-width:640px;margin:auto;padding:24px;line-height:1.6}
+.avatar-portrait{background:radial-gradient(ellipse,#e6eadf,#f4f1e9);border-radius:24px;min-height:280px;text-align:center}
+.avatar-portrait canvas{width:280px;max-width:100%;height:auto}
+@media(max-width:760px){.meeting-diagram{grid-template-columns:1fr}.meeting-slide{padding:20px 0}.meeting-slide h2{font-size:28px}.meeting-controls{justify-content:center}}

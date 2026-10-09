@@ -1,17 +1,17 @@
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
-import {createOfficeResidents} from './avatars/office-residents.mjs?v=2';
+import {createOfficeResidents} from './avatars/office-residents.mjs?v=124';
 import * as T from 'three';
 import {createEncounterGate,createPreparationGate,ENCOUNTER_RANGE} from './agent-proximity.mjs?v=4';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {RoomEnvironment} from './vendor/RoomEnvironment.js';
-import {createOffice} from './scene.js?v=9';
+import {createOffice} from './scene.js?v=124';
 import {panels} from './office-panels.mjs?v=2';
 import {createChinches3D} from './chinches3d.mjs?v=4';
-import {createOfficePilot,chooseOfficeHit} from './avatars/office-pilot.mjs?v=8';
+import {createOfficePilot,chooseOfficeHit} from './avatars/office-pilot.mjs?v=124';
 import {ENTORNO_AGENTE_CAMINA} from './entorno-config.mjs';
 import {crearAgenteIr} from './entorno-ruta.mjs?v=4';
 import {fitOfficeOverview,visibleOfficeHit} from './office-overview.mjs?v=1';
-import {places,allowed} from './office-layout.mjs?v=2';
+import {places,allowed} from './office-layout.mjs?v=124';
 const $=s=>document.querySelector(s),mount=$('#scene'),coarse=matchMedia('(pointer:coarse)').matches;
 let renderer;try{renderer=new T.WebGLRenderer({antialias:true,powerPreference:'high-performance'});}catch(e){$('#loading').hidden=true;$('#fallback').hidden=false;throw e;}
 renderer.localClippingEnabled=true;
@@ -44,12 +44,27 @@ window.addEventListener('pagehide',()=>pilot.disconnect());
 window.addEventListener('pageshow',bindPilot);
 bindPilot();
 let unwatchWork=null;
-function bindWork(){unwatchWork?.();unwatchWork=window.YodWorkObserver?.subscribe(s=>{
- const id=window.YodResidentAgents?.getSelection?.()?.case_id;
- office.computerScreen?.update(id&&s.case_id===id?{...s,projectName:window.YodResidentAgents.getSelection().name}:{phase:'unauthorized',case_id:null,work:null,image:null});
- dirty=true;
-});}
+const emptyScreen={phase:'unauthorized',case_id:null,work:null,image:null};
+let roomStates=[],selectedWork=null,unwatchRoom=null;
+function paintWork(){
+ const selection=window.YodResidentAgents?.getSelection?.(),id=selection?.case_id;
+ const all=new Map(roomStates.map(s=>[s.case_id,s]));if(selectedWork?.case_id===id)all.set(id,selectedWork);
+ pilot.observeWork?.([...all.values()]);
+ const seats=pilot.seatProfiles?.()||[];
+ for(let slot=0;slot<(office.deskScreens?.length||0);slot++){const p=seats.find(p=>p.slot===slot);office.deskScreens[slot].update(p&&all.has(p.case_id)?{...all.get(p.case_id),projectName:p.name}:emptyScreen);}
+ const shown=id&&all.get(id)?{...all.get(id),projectName:selection.name}:emptyScreen;
+ if(!seats.length)office.computerScreen?.update(shown);
+ office.libraryScreen?.update(shown);dirty=true;
+}
+function bindWork(){unwatchWork?.();unwatchWork=window.YodWorkObserver?.subscribe(s=>{selectedWork=s;paintWork();});}
+function bindRoomWork(){unwatchRoom?.();unwatchRoom=window.YodRoomWork?.subscribe(s=>{roomStates=s;paintWork();});}
 window.addEventListener('yod-work-observer-ready',bindWork);bindWork();
+window.addEventListener('yod-room-work-ready',bindRoomWork);bindRoomWork();
+window.addEventListener('yod-meeting-slide',event=>{
+ const slide=event.detail,id=window.YodResidentAgents?.getSelection?.()?.case_id;
+ office.meetingScreen?.update(slide&&slide.case_id===id?{...emptyScreen,phase:'ready',case_id:id,slide}:emptyScreen);dirty=true;
+});
+window.addEventListener('pagehide',()=>{unwatchRoom?.();office.deskScreens?.forEach(s=>s.dispose());office.libraryScreen?.dispose();office.meetingScreen?.dispose();});
 window.addEventListener('pagehide',()=>{unwatchWork?.();office.computerScreen?.dispose();});
 
 

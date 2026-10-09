@@ -3,9 +3,9 @@ import {createEntryPreparation} from './voice-preparation.mjs?v=2';
 import {residentAccessDecision} from './resident-agents.mjs?v=3';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=116';
 import {stationIdentity} from './project-station.mjs?v=121';
-import {createLiveVoice} from './live-voice.mjs?v=16';
+import {createLiveVoice} from './live-voice.mjs?v=124';
 import {voiceView} from './voice-view.mjs?v=2';
-import {createWorkspace} from './agent-workspace.mjs?v=121';
+import {createWorkspace} from './agent-workspace.mjs?v=124';
 import {DurableGoals,watchGoals} from './goals.mjs?v=2';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=1';
 import {groupTranscriptFragments} from './live-transcript.mjs';
@@ -65,7 +65,19 @@ if (open) {
     node('voice-retry-actions').hidden=event.phase!=='unconfirmed';
     if(event.phase==='confirmed')window.dispatchEvent(new CustomEvent('yod-goals-changed',{detail:null}));
   }});
-  const workspace=createWorkspace({container:workspaceHost,transport,getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision,selection?.case_id);}});
+  async function presentMeetingSlide(value){
+    if(accessPaused||selection?.case_id!==value.case_id||window.YodResidentAgents?.getSelection?.()?.case_id!==value.case_id)return false;
+    if(!active(voice.snapshot()))begin();
+    const deadline=Date.now()+25000;
+    while(Date.now()<deadline){
+      if(accessPaused||selection?.case_id!==value.case_id||!dialog.open||workspace.getTab()!=='meeting')return false;
+      if(voice.presentSlide(value))return true;
+      if(['idle','error','closing'].includes(voice.snapshot().phase))return false;
+      await new Promise(resolve=>setTimeout(resolve,250));
+    }
+    return false;
+  }
+  const workspace=createWorkspace({container:workspaceHost,transport,getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision,selection?.case_id);},onPresent:presentMeetingSlide});
   window.YodVoiceWorkspace={isOpen:()=>dialog.open&&!compactVoice,openForCase,prepareNearby:caseId=>{const s=window.YodResidentAgents?.getSelection?.();if(s?.case_id===caseId&&s.can_enqueue&&!active(voice.snapshot()))void voice.prepare(caseId,{connection:true});},releaseNearby:()=>{/* Entry preparation remains warm outside the approach radius. */},pauseEncounter:caseId=>{if(encounterCase===caseId&&voice.snapshot().phase==='listening'&&!voice.snapshot().muted){encounterPaused=true;voice.mute();}},show:tab=>{openBoard(tab);workspaceHost.scrollIntoView({block:'nearest'});}};
   window.dispatchEvent(new CustomEvent('yod-voice-workspace-ready'));
   let stopWatching=null,encounterCase=null,encounterPaused=false,micGrantedInPage=false,encounterNeedsMic=false;
