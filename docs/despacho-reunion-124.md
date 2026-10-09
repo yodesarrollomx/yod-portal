@@ -27,3 +27,5 @@ La ubicación de un personaje representa la última actividad recibida, no víde
 Persistencia de objetivos pertenece al servidor existente. Esta entrega no amplía el alcance de escritura financiera de modelos Vertical o Patrimonial legacy, ni atribuye acceso a archivos por el nombre del avatar.
 
 Reversión: revertir este PR conserva las tareas y sus evidencias.
+
+2026-10-09 03:52 UTC: backend PR45 integrado, 267 pruebas correctas, una omitida, cero fallos. Despliegue Render dep-db469pdg1s2s738d7sjg en estado live a las 03:52:54 UTC. Portal todavía en comprobación visual antes de publicar.

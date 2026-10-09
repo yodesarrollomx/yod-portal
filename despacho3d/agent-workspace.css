@@ -183,3 +183,5 @@
 .avatar-portrait{background:radial-gradient(ellipse,#e6eadf,#f4f1e9);border-radius:24px;min-height:280px;text-align:center}
 .avatar-portrait canvas{width:280px;max-width:100%;height:auto}
 @media(max-width:760px){.meeting-diagram{grid-template-columns:1fr}.meeting-slide{padding:20px 0}.meeting-slide h2{font-size:28px}.meeting-controls{justify-content:center}}
+
+.station-avatar .avatar-portrait{min-height:0;height:140px;background:radial-gradient(ellipse,#dce6d8,transparent);overflow:hidden}.station-avatar canvas{width:123px;height:140px}.station-avatar:empty{display:none}
