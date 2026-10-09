@@ -1,14 +1,14 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const fixture=()=>({goal_id:'goal-synthetic',case_id:'case-synthetic',title:'Entrega de prueba',instruction:'Analizar',criterion:'Evidencia',scope:'local_analysis_v1',status:'ready_for_review',source_revision:'s1',revision:'r1',sequence:1,created_at:'2026-10-09T00:00:00Z',updated_at:'2026-10-09T00:01:00Z',tasks:[{id:'task-1',title:'Tema <script>',criterion:'Fuente',status:'ready_for_review',summary:'Resultado de prueba',evidence_ids:['e1']}],evidence:[{id:'e1',task_id:'task-1',title:'Documento',text:'Evidencia',sha256:'a'.repeat(64),bytes:9}],summary:'Preparado'});
 test('meeting is derived from validated case evidence; exactly one slide per topic',async()=>{
- const {buildMeeting,meetingDocument}=await import('../despacho3d/project-meeting.mjs');
+ const {buildMeeting,meetingDocument,escapeHTML}=await import('../despacho3d/project-meeting.mjs');
  const g=fixture(),d=buildMeeting(g,g.case_id,'Personaje sintético');
  assert.equal(d.slides.length,1);assert.equal(d.slides[0].evidence[0].text,'Evidencia');assert.match(d.status,/revisar/);
  assert.deepEqual(d,buildMeeting(g,g.case_id,'Personaje sintético'));
  assert.throws(()=>buildMeeting(g,'case-other','Otro'));
  assert.throws(()=>buildMeeting({...g,status:'running'},g.case_id,'Personaje'));
  const html=meetingDocument(d);assert.ok(!html.includes('<script>'));assert.ok(html.includes('&lt;script&gt;'));
- assert.ok(html.includes(d.slides[0].script));assert.equal((html.match(/<article>/g)||[]).length,1);
+ assert.ok(html.includes(escapeHTML(d.slides[0].script)));assert.equal((html.match(/<article>/g)||[]).length,1);
  const partial=buildMeeting({...g,status:'awaiting_data',tasks:[{...g.tasks[0],status:'blocked',evidence_ids:[]}],evidence:[]},g.case_id,'Personaje');
  assert.match(partial.status,/parcial/);assert.match(partial.slides[0].checkpoint,/Bloqueado/);assert.equal(partial.slides[0].evidence.length,0);
 });
