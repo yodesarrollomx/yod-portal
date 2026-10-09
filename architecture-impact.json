@@ -1,30 +1,21 @@
 {
-  "model_revision": "2026-10-08.123-autones-activacion",
-  "proposal_id": "CHG-DESPACHO-AUTONES-116",
-  "summary": "Activar personajes autorizados en la misma oficina, sin selector adicional; recorridos visuales por rutas existentes y motores privados separados. La animación no certifica ejecución de trabajo.",
+  "model_revision": "2026-10-09.124-reunion-autones",
+  "proposal_id": "CHG-DESPACHO-REUNION-124",
+  "summary": "Vincular recorridos al trabajo observado; fichas de avatares autorizados y presentación por tema desde objetivos y evidencias guardados, con guion, voz y consulta simultánea del PPP.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "SYS-DESPACHO-3D",
-    "SYS-POTENCIALES",
-    "GAS-PORTERO",
-    "SHEET-PORTERO",
     "SVC-AUTON-CLOUD",
+    "GAS-PORTERO",
     "EXT-DRIVE",
-    "SYS-CONTROL",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
-    "SYS-TRACK",
     "SYS-SALA"
   ],
   "tests": [
-    "Dos casos sintéticos sin mezcla ni selección no autorizada.",
-    "Última versión inscrita separada de versión consultada, sin fechas inventadas ni sobrescrituras.",
-    "Puente de observación Macro Lotes/Vertical sin escritura ni resultados locales presentados como Sheets.",
-    "Regresiones del piloto, comprobaciones del portal y pruebas de motor.",
-    "Refresco de catálogo mantiene figuras durante una autorización aún vigente y retira revocadas.",
-    "Patrimonial legacy conserva versiones y puente nativo; observación no concede escritura.",
-    "Recorridos independientes se pausan durante interacción, ocultación y movimiento reducido; catálogo autorizado y aislamiento preservados."
+    "Sin recorrido de trabajo sin evidencia ni mezcla de casos.",
+    "Láminas reproducibles desde objetivos, máximo dos por tema, sin confundir preparado con aprobado.",
+    "Guion y narración vinculados al caso vigente; revocación retira contenido.",
+    "Pruebas del portal y navegador con datos sintéticos; micrófono real no acreditable automáticamente."
   ],
-  "rollback": "Revertir PR y apagar YOD_MULTI_CASES; conservar expedientes, versiones, credenciales e historiales."
+  "rollback": "Revertir PR de interfaz; conservar objetivos, evidencia y credenciales del servidor."
 }
