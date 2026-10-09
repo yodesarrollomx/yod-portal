@@ -72,11 +72,11 @@ test('motion shares the station projection, including queued work and desk resea
 test('screen reuses one decoded image until capture changes and cancels it on release',async()=>{
  const fs=require('node:fs'),{screenStatus}=await import('../despacho3d/office-screen-status.mjs'),{workHeadline,observationCaptureKey}=await import('../despacho3d/work-observer.mjs');
  const source=fs.readFileSync(require.resolve('../despacho3d/office-screen.mjs'),'utf8').replace(/^import.*\n/gm,'').replace(/^export /gm,'');
- let images=0,disposed=0;const ctx={fillRect(){},fillText(){},drawImage(){},measureText:t=>({width:t.length*10})};
+ let images=0,disposed=0;const painted=[];const ctx={fillRect(){},fillText(value){painted.push(String(value));},drawImage(){},measureText:t=>({width:t.length*10})};
  const document={createElement:()=>({getContext:()=>ctx})};class Image{set src(value){if(value){images++;this.onload?.();}}}
  const T={SRGBColorSpace:'s',CanvasTexture:class{dispose(){disposed++;}}};
  const createOfficeScreen=new Function('T','screenStatus','workHeadline','observationCaptureKey','document','Image',source+';return createOfficeScreen;')(T,screenStatus,workHeadline,observationCaptureKey,document,Image);
  const screen=createOfficeScreen({material:{},userData:{}}),f={...screened(),phase:'ready',image:capture(screened()).image};
- screen.update(f);assert.equal(images,1);screen.update({...f,work:{...f.work,updated_at:'2026-10-09T05:00:01.000Z'}});assert.equal(images,1);
+ f.work.progress.progress.tasks[0].title='Texto\ncon\tespacios';screen.update(f);assert.ok(painted.includes('Texto con espacios'));assert.equal(images,1);screen.update({...f,work:{...f.work,updated_at:'2026-10-09T05:00:01.000Z'}});assert.equal(images,1);
  screen.update({...f,screen:{...f.screen,revision:2}});assert.equal(images,2);screen.update({phase:'unauthorized',case_id:null,work:null});screen.dispose();assert.equal(disposed,1);
 });
