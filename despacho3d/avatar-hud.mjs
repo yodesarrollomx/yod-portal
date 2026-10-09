@@ -27,7 +27,7 @@ export function createAvatarHUD({container,onSelect=()=>{},doc=document,now=Date
  }
  function update({residents=[],observations=[],camera,occluder=null,visibleHit=()=>true,hidden=false,selectedCaseId=null,time=now()}={}){
   if(disposed)return;layer.hidden=!!hidden;
-  const allowed=new Set(residents.map(r=>r.profile?.case_id));for(const id of entries.keys())if(!allowed.has(id))remove(id);
+  const allowed=new Set(residents.map(r=>r.profile?.case_id)),denied=new Set(observations.filter(s=>s.phase==='unauthorized').map(s=>s.case_id));for(const id of entries.keys())if(!allowed.has(id)||denied.has(id))remove(id);
   if(hidden||!camera)return;
   // Bound projection/occlusion work to 10 Hz; update authorization removal immediately.
   if(time-lastSample<100)return;lastSample=time;
