@@ -18,12 +18,14 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   audio, monitorFactory = createLocalInputMonitor, onChange = () => {}, canOperate = () => true, actions = null, onTranscript = () => {}, now = Date.now,
   schedule = setInterval, cancel = clearInterval, closeTimeout = 20000, disconnectGrace = 12000, maxStatusFailures = 3, startTimeout = 60000, signallingTimeout = 90000} = {}) {
   let inputMonitor = null, remoteSpeechObserved = false, automaticInterruptionId = null;
+  let credentialRenewal = null, credentialRetryAt = 0;
+  const credentialMargin = 120000;
   let epoch = 0, stream = null, peer = null, channel = null, credential = null, sessionId = null,
     poll = null, controller = null, polling = false, closing = null, began = 0, started = false,
     contextReady = false, finalSeen = false, disconnected = false, closedResolve = null, sequence = 0,
     disconnectTimer = null, statusFailures = 0, connectedAt = 0, prepared = null, preparing = null, mode = null, startTimer = null, retryingContext = false, interruptionId = null, helloFlight = null, helloReady = null, preparationEpoch = 0, activeCaseId = null, pendingBoard = null, boardFlight = null, boardSent = null, boardRetryAt = 0;
   let state = {phase: 'idle', notice: '', muted: false, fragments: 0, blocks: 0, saved: 0, pending: 0,
-    incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, input_detected:false, input_received:false, mode: null, output_paused:false, interruption_pending:false, local_speaking:false, ended_remotely:false, interruption_error:false, timings:{}};
+    incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, input_detected:false, input_received:false, mode: null, output_paused:false, interruption_pending:false, local_speaking:false, ended_remotely:false, interruption_error:false, credential_pending:false, session_ending:false, timings:{}};
   const timing = key => {if(!Object.hasOwn(state.timings,key))publish({timings:{...state.timings,[key]:Math.max(0,now()-began)}});};
   const preparation=createVoicePreparation({Peer,gather,now});
   const seen = new Set();
@@ -44,7 +46,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     if (poll !== null) cancel(poll); poll = null;
     clearTimeout(startTimer); startTimer = null;
     clearTimeout(disconnectTimer); disconnectTimer = null;
-    boardFlight=null;
+    boardFlight=null;credentialRenewal=null;credentialRetryAt=0;
     if (channel) {channel.onmessage = channel.onopen = channel.onclose = null; channel.close?.();} channel = null;
     if (peer) {peer.ontrack = peer.onconnectionstatechange = null; peer.close();} peer = null;
     stream?.getTracks().forEach(track => {track.onended=null;track.stop();}); stream = null;
@@ -52,14 +54,35 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     interruptionId=null;automaticInterruptionId=null;remoteSpeechObserved=false;
   }
   async function ensureCredential(caseId) {
-    if (prepared?.case_id === caseId && prepared.expires_at - now() > 60000) return prepared;
+    if (prepared?.case_id === caseId && prepared.expires_at - now() > credentialMargin) return prepared;
     if (preparing?.caseId === caseId) return preparing.promise;
     const own = preparationEpoch;
     const promise = Promise.resolve().then(() => mint({case_id: caseId}))
-      .then(raw => validateFastSession(raw, caseId, now()));
+      .then(raw => {
+        if(raw?.ok===false){const error=Error(raw.error||'unavailable');error.code=raw.error;throw error;}
+        return validateFastSession(raw, caseId, now());
+      });
     preparing = {caseId, promise};
-    try {const value = await promise; if (own === preparationEpoch) prepared = value; return value;}
+    try {const value = await promise; if (own === preparationEpoch && preparing?.promise === promise) prepared = value; return value;}
     finally {if (preparing?.promise === promise) preparing = null;}
+  }
+  function renewCredential(token) {
+    if(token!==epoch||!credential||!sessionId||closing||!canOperate()||
+       credential.expires_at-now()>credentialMargin||now()<credentialRetryAt)return;
+    if(credentialRenewal)return;
+    const previous=credential,id=activeCaseId,own={};
+    credentialRenewal=own;credentialRetryAt=now()+10000;
+    // Refresh authorization before its real expiry; never replace the Live session or microphone.
+    void ensureCredential(id).then(fresh=>{
+      if(token!==epoch||closing||activeCaseId!==id||credential!==previous)return;
+      credential=fresh;credentialRetryAt=0;publish({credential_pending:false});
+    }).catch(error=>{
+      if(token!==epoch||closing||activeCaseId!==id)return;
+      if(['unauthorized','session_changed'].includes(error?.code||error?.message)){
+        prepared=null;publish({credential_pending:false});
+        void stop('Tu acceso cambió. La voz se detuvo; el puesto permanece abierto.');
+      }else {credentialRetryAt=now()+10000;publish({credential_pending:true});}
+    }).finally(()=>{if(credentialRenewal===own)credentialRenewal=null;});
   }
   async function prepare(caseId,{connection=false}={}) {
     if(connection&&!closing&&['idle','error'].includes(state.phase))void preparation.warm(caseId);
@@ -133,7 +156,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
         }
       } finally {
         clearTimeout(timer); closedResolve = null; epoch++; release(); credential = null; sessionId = null;
-        closing = null; retryingContext = false; publish({phase: 'idle', muted: false, playback_blocked: false, output_paused:false,interruption_pending:false, context_retry_pending: false, notice});
+        closing = null; retryingContext = false; publish({phase: 'idle', muted: false, playback_blocked: false, output_paused:false,interruption_pending:false, context_retry_pending: false, credential_pending:false, session_ending:false, notice});
       }
       return {...state};
     });
@@ -142,10 +165,11 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   async function status(token) {
     if (token !== epoch || !sessionId || polling || closing) return;
     polling = true;
+    renewCredential(token);
     try {
       const result = await post('/voice/status', {session_id: sessionId}, credential, AbortSignal.timeout(12000));
       if (token !== epoch || closing) return;
-      statusFailures = 0; publish({status_pending: false});
+      statusFailures = 0; publish({status_pending: false, session_ending: result.active===true&&Number.isFinite(result.max_expires_at)&&result.max_expires_at-now()<=60000});
       // The observer can receive session.started before the browser attaches its primary channel.
       // Only this authenticated response for the current opaque session may reconcile that event.
       if (result.active === true && result.started === true && Number.isFinite(result.expires_at) &&
@@ -210,7 +234,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     interruptionId=null;automaticInterruptionId=null;remoteSpeechObserved=false;
     mode = null; started = contextReady = finalSeen = disconnected = false; seen.clear(); sequence = 0; polling = false; statusFailures = 0; connectedAt = 0;
     publish({phase: 'starting', notice: 'Abriendo el micrófono…', fragments: 0, blocks: 0, saved: 0,
-      pending: 0, incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, output_paused:false,interruption_pending:false, mode: null,local_speaking:false,timings:{},input_detected:false,input_received:false,context_phase:'preparing',context_attempts:0,context_error:null,tools_ready:false,documents_ready:false,tasks_ready:false,actions_pending:0,ended_remotely:false,interruption_error:false});
+      pending: 0, incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, output_paused:false,interruption_pending:false, mode: null,local_speaking:false,timings:{},input_detected:false,input_received:false,context_phase:'preparing',context_attempts:0,context_error:null,tools_ready:false,documents_ready:false,tasks_ready:false,actions_pending:0,ended_remotely:false,interruption_error:false,credential_pending:false,session_ending:false});
     try {
       if (typeof media?.getUserMedia !== 'function' || typeof Peer !== 'function' || !audio)
         throw Error('Este navegador no admite voz en tiempo real.');
