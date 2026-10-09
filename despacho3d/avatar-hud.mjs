@@ -14,7 +14,7 @@ const paths={
 export function createAvatarHUD({container,onSelect=()=>{},doc=document,now=Date.now}={}){
  if(!container)throw new TypeError('HUD container required');
  const layer=doc.createElement('div');layer.className='avatar-hud';container.append(layer);
- const entries=new Map(),point=new T.Vector3(),ray=new T.Raycaster(),origin=new T.Vector3(),direction=new T.Vector3();
+ const entries=new Map(),point=new T.Vector3(),ray=new T.Raycaster(),origin=new T.Vector3(),projectedPoint=new T.Vector3();
  let disposed=false,lastSample=-Infinity;
  function remove(id){entries.get(id)?.button.remove();entries.delete(id);}
  function mount(id){
@@ -40,17 +40,17 @@ export function createAvatarHUD({container,onSelect=()=>{},doc=document,now=Date
    if(!p){remove(id);continue;}
    const e=entries.get(id)||mount(id);e.button.hidden=true;
    if(!Array.isArray(r.anchor)||r.anchor.length!==3||!r.anchor.every(Number.isFinite))continue;
-   point.set(...r.anchor);direction.copy(point).sub(origin);const length=direction.length();
-   if(occluder&&length>.1){ray.set(origin,direction.normalize());ray.far=length-.15;
+   point.set(...r.anchor);const length=point.distanceTo(origin);
+   projectedPoint.copy(point).project(camera);if(Math.abs(projectedPoint.x)>1||Math.abs(projectedPoint.y)>1||Math.abs(projectedPoint.z)>1)continue;
+   if(occluder&&length>.1){setAvatarOcclusionRay(ray,camera,point,projectedPoint);
     if(ray.intersectObject(occluder,true).some(h=>visibleHit(h)&&h.object?.visible!==false&&(Array.isArray(h.object.material)?h.object.material:[h.object.material]).some(m=>m?.visible!==false&&m&&(!m.transparent||m.opacity>=.95))))continue;
    }
-   point.project(camera);if(Math.abs(point.x)>1||Math.abs(point.y)>1||Math.abs(point.z)>1)continue;
    const key=JSON.stringify(p);if(key!==e.key){e.key=key;e.name.textContent=p.name;e.label.textContent=p.label;e.path.setAttribute('d',paths[p.activity]||paths.wait);e.button.dataset.activity=p.activity;e.button.style.setProperty('--avatar-accent',p.color);e.milestones.replaceChildren();
     if(p.progress){for(const state of p.progress.states){const tick=doc.createElement('i');tick.dataset.state=state;e.milestones.append(tick);}const count=doc.createElement('span');count.className='avatar-presence__count';count.textContent=p.progress.ready+'/'+p.progress.total+' listas';e.milestones.append(count);}
     e.milestones.hidden=!p.progress;e.button.setAttribute('aria-label',p.name+' · '+p.label+(p.progress?' · '+p.progress.label:'')+' · Abrir opciones');e.button.title=e.button.getAttribute('aria-label');
    }
    e.button.dataset.selected=String(id===selectedCaseId);
-   projected.push({e,id,x:(point.x+1)*width/2,y:(1-point.y)*height/2,distance:length});
+   projected.push({e,id,x:(projectedPoint.x+1)*width/2,y:(1-projectedPoint.y)*height/2,distance:length});
   }
   // Prioritize the nearest marker; offset colliding labels without extending offscreen.
   const occupied=[];projected.sort((a,b)=>(a.id===selectedCaseId?-1:b.id===selectedCaseId?1:a.distance-b.distance));
@@ -62,4 +62,9 @@ export function createAvatarHUD({container,onSelect=()=>{},doc=document,now=Date
   }
  }
  return{update,clear(){for(const id of entries.keys())remove(id);lastSample=-Infinity;},dispose(){if(disposed)return;disposed=true;entries.clear();layer.remove();}};
+}
+
+// Orthographic rays must stay parallel. A camera-to-head ray would hide visible labels near the room edges.
+export function setAvatarOcclusionRay(ray,camera,anchor,ndc){
+ ray.setFromCamera(ndc,camera);ray.far=Math.max(0,ray.ray.origin.distanceTo(anchor)-.15);return ray;
 }
