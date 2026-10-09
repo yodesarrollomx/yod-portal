@@ -49,7 +49,6 @@ const server=http.createServer((req,res)=>{
    const marker=await page.locator('.avatar-presence[data-case-id="synthetic-office"]').boundingBox();assert.ok(marker.width>=44&&marker.height>=44);
    assert.ok(marker.x>=0&&marker.x+marker.width<=(mobile?390:1366));
    await page.screenshot({path:path.join(out,'oficina-panorama-'+(mobile?'movil':'escritorio')+'.png')});
-   console.log('OFFICE_SCREENSHOT_'+(mobile?'MOBILE':'DESKTOP')+':'+(await page.screenshot({type:'jpeg',quality:55})).toString('base64'));
    await page.locator('.avatar-presence[data-case-id="synthetic-office"]').click();assert.deepEqual(await page.evaluate(()=>window.__opened),['synthetic-office']);
    await page.locator('.radial-close').click();
    // Select the actual mesh through the same canvas raycaster, without the label.
@@ -93,7 +92,6 @@ const server=http.createServer((req,res)=>{
    assert.equal(await page.evaluate(()=>document.getElementById('workspace').inert),false);
    assert.equal(await page.evaluate(()=>window.__voiceStarts.length),0);
    await page.screenshot({path:path.join(out,'encuentro-circulo-'+(mobile?'movil':'escritorio')+'.png')});
-   console.log('ENCOUNTER_'+(mobile?'MOBILE':'DESKTOP')+':'+(await page.screenshot({type:'jpeg',quality:70})).toString('base64'));
    // Hold for a bounded movement interval and then face the actual figure.
    await page.evaluate(()=>window.despacho.camera.position.set(7,1.65,-4.30));
    await page.waitForFunction(()=>window.__voiceStarts.length===1);
@@ -118,7 +116,7 @@ const server=http.createServer((req,res)=>{
    });
    await page.waitForTimeout(300);
    assert.equal(await page.evaluate(()=>window.despacho.getState().computer.progress.counts),'1/2 para revisar');
-   console.log('SEATED_SCREEN_'+(mobile?'MOBILE':'DESKTOP')+':'+(await page.screenshot({type:'jpeg',quality:80})).toString('base64'));
+   await page.screenshot({path:path.join(out,'puesto-sentado-'+(mobile?'movil':'escritorio')+'.png')});
    await page.locator('#overview').click();
    const start=await page.evaluate(()=>window.despacho.getAgentState().position);
    assert.equal(await page.evaluate(()=>window.despacho.agenteIr('decisions')),true);
