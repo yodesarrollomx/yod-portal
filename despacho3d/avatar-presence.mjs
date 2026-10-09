@@ -12,18 +12,21 @@ function activity(w){
 }
 export function avatarPresence({profile,observation,movement,now=Date.now()}={}){
  if(!profile||profile.entity_kind!=='case'||!profile.case_id||profile.case_id!==profile.id)return null;
- const out={case_id:profile.case_id,name:shortAvatarName(profile),color:/^#[a-f\d]{6}$/i.test(profile.color||'')?profile.color:'#57827d',activity:'wait',label:'Sin actividad confirmada',fresh:false,progress:null,updated_at:null,goal_id:null};
+ const out={case_id:profile.case_id,name:shortAvatarName(profile),color:/^#[a-f\d]{6}$/i.test(profile.color||'')?profile.color:'#57827d',activity:'wait',label:'Sin actividad confirmada',fresh:false,progress:null,observed_at:null,updated_at:null,goal_id:null};
  const o=observation;
  if(o?.phase==='unauthorized')return null;
  if(!o||o.case_id!==profile.case_id)return {...out,activity:'loading',label:'Consultando actividad'};
  if(o.phase!=='ready')return {...out,activity:o.phase==='loading'?'loading':'offline',label:o.phase==='loading'?'Consultando actividad':'Sin conexión con la actividad'};
  const checked=Number(o.checked_at),age=now-checked;
  if(!Number.isFinite(checked)||age<0||age>90000)return {...out,activity:'offline',label:'Actualización pendiente'};
- out.fresh=true;out.updated_at=checked;
- const w=o.work;
- if(!w){const runtime=o.runtime?.phase;return {...out,activity:['disabled','unavailable','reconnecting','stopped'].includes(runtime)?'offline':runtime==='starting'?'loading':'wait',label:({waiting_capacity:'Encargo en cola',starting:'Preparando motor',reconnecting:'Reconectando con el motor',unavailable:'Motor no disponible',disabled:'Motor desactivado',stopped:'Motor detenido'})[runtime]||'Disponible · sin encargo activo'};}
+ out.fresh=true;out.observed_at=checked;
+ const w=o.work,runtime=o.runtime?.phase;
+ if(runtime==='waiting_capacity')return {...out,label:'Encargo en cola'};
+ if(['starting','reconnecting','unavailable','disabled','stopped'].includes(runtime))return {...out,activity:runtime==='starting'?'loading':'offline',label:({starting:'Preparando motor',reconnecting:'Reconectando con el motor',unavailable:'Motor no disponible',disabled:'Motor desactivado',stopped:'Motor detenido'})[runtime]};
+ if(runtime==='working'&&(!w||['prepared','awaiting_data','interrupted','error'].includes(w.phase)))return {...out,activity:'loading',label:'Preparando encargo'};
+ if(!w)return {...out,label:'Disponible · sin encargo activo'};
  if(w.case_id!==profile.case_id)return {...out,activity:'offline',label:'Actividad no disponible',fresh:false};
- out.goal_id=clean(w.goal_id,200);[out.activity,out.label]=activity(w);
+ out.goal_id=clean(w.goal_id,200);out.updated_at=Number.isFinite(Date.parse(w.updated_at))?Date.parse(w.updated_at):null;[out.activity,out.label]=activity(w);
  const tasks=w.progress?.progress?.tasks;
  if(Array.isArray(tasks)&&tasks.length&&tasks.length<=8&&tasks.every(t=>['pending','running','ready_for_review','blocked'].includes(t?.status))){
   const ready=tasks.filter(t=>t.status==='ready_for_review').length,blocked=tasks.filter(t=>t.status==='blocked').length;
