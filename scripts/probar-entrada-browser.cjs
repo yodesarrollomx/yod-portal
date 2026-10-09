@@ -150,8 +150,30 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await page.screenshot({path:path.join(out,'entrada-'+variant+'-oficina-prueba.png')});
   console.log('ENTRY_OFFICE_'+variant+':'+(await page.screenshot({type:'jpeg',quality:75})).toString('base64'));
   if(variant!=='fallback'){
-   await frame.locator('#office-agent-marker').click();await frame.locator('.station-radial').waitFor();await frame.locator('.radial-options [data-action="ppp"]').click();await frame.locator('.realtime-dialog').waitFor();
+   // The authorized multi-resident HUD replaced the fixed single-project marker.
+   // Use the actual perspective camera and occlusion projection, never force a click
+   // through a wall or overlay merely to satisfy a selector.
+   await frame.evaluate(async()=>{
+    await window.despacho.visit('case');
+    const avatar=window.despacho.scene.children.find(o=>o.name==='avatar'),head=avatar.userData.joints.head;
+    avatar.updateMatrixWorld(true);
+    const target=head.position.clone();head.getWorldPosition(target);
+    target.y+=(avatar.userData.headClearance||.42)*(avatar.userData.body?.scale.y||1)*avatar.scale.y;
+    window.despacho.camera.position.set(avatar.position.x+2.4,target.y+1,avatar.position.z+2.6);
+    window.despacho.camera.lookAt(target);window.despacho.camera.updateMatrixWorld();
+   });
+   assert.equal(await frame.evaluate(()=>window.despacho.camera.isPerspectiveCamera),true,'HUD interaction uses the real perspective view');
+   const marker=frame.locator('.avatar-presence[data-case-id="synthetic-A"]');
+   await marker.waitFor({state:'visible'});
+   assert.match(await marker.getAttribute('aria-label'),/Autón A.*Abrir opciones/);
+   assert.equal(await marker.getAttribute('data-selected'),'true');
+   await marker.click();
+   await frame.locator('.station-radial').waitFor();
+   assert.match(await frame.locator('#agent-menu-title').innerText(),/Autón A/);
+   await frame.locator('.radial-options [data-action="ppp"]').click();await frame.locator('.realtime-dialog').waitFor();
    assert.equal(await frame.locator('[data-tab="ppp"]').getAttribute('aria-pressed'),'true');
+   assert.equal(await board.evaluate(el=>el.isConnected),true,'HUD reopens the same PPP document');
+   assert.equal(await boardFrame.locator('#area').inputValue(),'135','HUD navigation retains the unfinished PPP draft');
    await frame.locator('.voice-close').click();
   }
   // The physical computer and case route must open the same PPP and preserve drafts.
