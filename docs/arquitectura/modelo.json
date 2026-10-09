@@ -11962,6 +11962,13 @@
         "SYS-DESPACHO",
         "SYS-DESPACHO-3D"
       ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-avatar-label-layout126.test.cjs",
+      "components": [
+        "SYS-DESPACHO-3D"
+      ]
     }
   ],
   "office_coverage": {
