@@ -1,3 +1,4 @@
+import {createVoiceActivityMonitor} from './voice-activity.mjs?v=130';
 import {createLocalInputMonitor} from './voice-input-monitor.mjs?v=1';
 import {createVoicePreparation} from './voice-preparation.mjs?v=2';
 import {validateFastSession} from './fast-lane.mjs';
@@ -15,8 +16,9 @@ const NOTICES = {
 };
 export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   media = globalThis.navigator?.mediaDevices, Peer = globalThis.RTCPeerConnection, Stream = globalThis.MediaStream,
-  audio, monitorFactory = createLocalInputMonitor, onChange = () => {}, canOperate = () => true, actions = null, onTranscript = () => {}, now = Date.now,
+  audio, activityFactory=createVoiceActivityMonitor, monitorFactory = createLocalInputMonitor, onChange = () => {}, canOperate = () => true, actions = null, onTranscript = () => {}, now = Date.now,
   schedule = setInterval, cancel = clearInterval, closeTimeout = 20000, disconnectGrace = 12000, maxStatusFailures = 3, startTimeout = 60000, signallingTimeout = 90000} = {}) {
+  let activityMonitor=null,activityTimer=null,activityFlight=false,activitySeq=0,pauseReason=null;
   let typedMessage = null, typing = false;
   let inputMonitor = null, remoteSpeechObserved = false, automaticInterruptionId = null;
   let credentialRenewal = null, credentialRetryAt = 0;
@@ -43,6 +45,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     return value;
   }
   function release() {
+    activityMonitor?.close();activityMonitor=null;if(activityTimer!==null)cancel(activityTimer);activityTimer=null;activityFlight=false;
     inputMonitor?.close();inputMonitor=null;
     if (poll !== null) cancel(poll); poll = null;
     clearTimeout(startTimer); startTimer = null;
@@ -118,6 +121,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     if (closing || !started || state.phase !== 'starting') return;
     clearTimeout(startTimer); startTimer = null;
     stream?.getAudioTracks().forEach(track => {track.enabled = !state.muted;});
+    if(!activityMonitor){activityMonitor=activityFactory({audio,stream,now});activityTimer=schedule(()=>void reportActivity(epoch),1000);}
     timing('listening_ms');
     publish({phase: 'listening', notice:state.output_paused?'Sonido pausado. Te escucho.':notice});
     sendListeningIntent();
@@ -130,6 +134,13 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
       if(begins&&remoteSpeechObserved)sendAutomaticListeningIntent();
     }});
   };
+  async function reportActivity(token){
+    if(token!==epoch||closing||!started||!sessionId||!credential||activityFlight)return;
+    activityFlight=true;
+    try{await post('/voice/activity',{session_id:sessionId,seq:++activitySeq,...activityMonitor.snapshot({muted:state.muted,blocked:state.playback_blocked})},credential,AbortSignal.timeout(4000));}
+    catch{/* Missing reports prevent automatic close; ordinary status handles auth. */}
+    finally{if(token===epoch)activityFlight=false;}
+  }
   function stop(notice = 'Conversación finalizada.') {
     if (closing) return closing;
     if (!stream && !sessionId && state.phase !== 'starting') return Promise.resolve(state);
@@ -151,7 +162,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
           const saved = post('/voice/close', {session_id: id}, current, AbortSignal.timeout(closeTimeout))
             .catch(() => null);
           [confirmed, result] = await Promise.all([finalized, saved]);
-          if (result) report(result);
+          if (result) {report(result);if(['inactivity','goal_background'].includes(result.reason))pauseReason=result.reason;}
           // A primary session.closed confirms finalization even if history status could not be read.
           publish({finalized: confirmed, incomplete: state.incomplete || !confirmed || !result});
           notice = !confirmed ? 'Finalización incompleta: no se confirmó el cierre. Revisa el historial en Agentes.' :
@@ -161,7 +172,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
         }
       } finally {
         clearTimeout(timer); closedResolve = null; epoch++; release(); credential = null; sessionId = null;
-        closing = null; retryingContext = false; publish({phase: 'idle', muted: false, playback_blocked: false, output_paused:false,interruption_pending:false, context_retry_pending: false, credential_pending:false, session_ending:false, notice});
+        closing = null; retryingContext = false; publish({phase: 'idle', paused:!!pauseReason, close_reason:pauseReason, voice_state:pauseReason==='goal_background'?'working_without_voice':pauseReason?'paused':'idle', muted: false, playback_blocked: false, output_paused:false,interruption_pending:false, context_retry_pending: false, credential_pending:false, session_ending:false, notice});
       }
       return {...state};
     });
@@ -186,6 +197,8 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
       if(result.tools_ready&&actions&&credential&&canOperate()){const auth=credential,id=sessionId,own=epoch;
         actions.consume(result.actions,{caseId:auth.case_id,active:()=>epoch===own&&!closing&&started&&canOperate()&&['listening','reconnecting','starting'].includes(state.phase),post:(path,data)=>post(path,{session_id:id,...data},auth,AbortSignal.timeout(15000))});
       }
+      if(['inactivity','goal_background'].includes(result.reason))pauseReason=result.reason;
+      if(result.finalized===true){finalSeen=true;closedResolve?.(true);}
       if (!result.active || now() >= result.expires_at) void stop('La sesión terminó. Puedes iniciar otra.');
       else if (state.phase === 'starting' && connectedAt && now() - connectedAt > 60000) void stop('No se confirmó el inicio. Vuelve a intentar.');
     } catch (error) {
@@ -209,6 +222,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     }catch{/* Missing browser statistics do not interrupt the call. */}
   }
   async function playAudio() {
+    activityMonitor?.resume();
     inputMonitor?.resume();
     const token = epoch, remote = audio?.srcObject;
     if (!remote || !audio?.play || !peer) return false;
@@ -235,10 +249,10 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   }
   async function start(caseId,{encounter=false}={}) {
     if (closing || !['idle','error'].includes(state.phase)) return false;
-    const token = ++epoch; controller = new AbortController(); began = now();activeCaseId=caseId;boardSent=null;boardRetryAt=0;
+    const token = ++epoch;pauseReason=null;activitySeq=0; controller = new AbortController(); began = now();activeCaseId=caseId;boardSent=null;boardRetryAt=0;
     interruptionId=null;automaticInterruptionId=null;remoteSpeechObserved=false;
     mode = null; started = contextReady = finalSeen = disconnected = false; seen.clear(); sequence = 0; polling = false; statusFailures = 0; connectedAt = 0;
-    publish({phase: 'starting', notice: 'Abriendo el micrófono…', fragments: 0, blocks: 0, saved: 0,
+    publish({paused:false,voice_state:'in_call',phase: 'starting', notice: 'Abriendo el micrófono…', fragments: 0, blocks: 0, saved: 0,
       pending: 0, incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, output_paused:false,interruption_pending:false, mode: null,local_speaking:false,timings:{},input_detected:false,input_received:false,context_phase:'preparing',context_attempts:0,context_error:null,tools_ready:false,documents_ready:false,tasks_ready:false,actions_pending:0,ended_remotely:false,interruption_error:false,credential_pending:false,session_ending:false});
     try {
       if (typeof media?.getUserMedia !== 'function' || typeof Peer !== 'function' || !audio)
@@ -313,7 +327,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
           clearTimeout(disconnectTimer); disconnectTimer = null;
           if (state.phase === 'reconnecting') {
             // Run the same microphone transition even when session.started arrived while disconnected.
-            publish({phase: 'starting', notice: 'Preparando conversación…'});
+            publish({paused:false,voice_state:'in_call',phase: 'starting', notice: 'Preparando conversación…'});
             ready('Conexión recuperada. Sigue hablando con el autón.');
           }
         if(!started)void status(token);

@@ -4,8 +4,8 @@ import {createEntryPreparation} from './voice-preparation.mjs?v=2';
 import {residentAccessDecision} from './resident-agents.mjs?v=127';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=126';
 import {stationIdentity} from './project-station.mjs?v=121';
-import {createLiveVoice} from './live-voice.mjs?v=128';
-import {voiceView} from './voice-view.mjs?v=2';
+import {createLiveVoice} from './live-voice.mjs?v=130';
+import {voiceView,createVoiceGoalView} from './voice-view.mjs?v=130';
 import {createWorkspace} from './agent-workspace.mjs?v=129';
 import {DurableGoals,watchGoals} from './goals.mjs?v=2';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=126';
@@ -83,16 +83,20 @@ if (open) {
     return false;
   }
   const workspace=createWorkspace({container:workspaceHost,transport,getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision,selection?.case_id);},onPresent:presentMeetingSlide});
-  window.YodVoiceWorkspace={isOpen:()=>dialog.open&&!compactVoice,openForCase,prepareNearby:caseId=>{const s=window.YodResidentAgents?.getSelection?.();if(s?.case_id===caseId&&s.can_enqueue&&!active(voice.snapshot()))void voice.prepare(caseId,{connection:true});},releaseNearby:()=>{/* Entry preparation remains warm outside the approach radius. */},pauseEncounter:caseId=>{if(encounterCase===caseId&&voice.snapshot().phase==='listening'&&!voice.snapshot().muted){encounterPaused=true;voice.mute();}},show:tab=>{openBoard(tab);workspaceHost.scrollIntoView({block:'nearest'});}};
+  window.YodVoiceWorkspace={isOpen:()=>dialog.open&&!compactVoice,openForCase,prepareNearby:caseId=>{const s=window.YodResidentAgents?.getSelection?.();if(s?.case_id===caseId&&s.can_enqueue&&!active(voice.snapshot()))void voice.prepare(caseId,{connection:false});},releaseNearby:()=>{/* Entry preparation remains warm outside the approach radius. */},pauseEncounter:caseId=>{if(encounterCase===caseId&&voice.snapshot().phase==='listening'&&!voice.snapshot().muted){encounterPaused=true;voice.mute();}},show:tab=>{openBoard(tab);workspaceHost.scrollIntoView({block:'nearest'});}};
   window.dispatchEvent(new CustomEvent('yod-voice-workspace-ready'));
   let stopWatching=null,encounterCase=null,encounterPaused=false,micGrantedInPage=false,encounterNeedsMic=false;
-  const micConsentNotice='Pulsa el micrófono para permitir la voz. Después podrás conversar al acercarte.';
+  const micConsentNotice='Pulsa Hablar cuando quieras conversar. Entrar al puesto no abre una llamada.';
+  let workingWithoutVoice=false;const goalView=createVoiceGoalView();
   const goalReader=new DurableGoals({transport,getContext:()=>{
     const current=window.YodResidentAgents?.getSelection?.();
     return current&&selection?.case_id===current.case_id&&dialog.open?{selection:current,busy:false}:null;
   }});
   goalReader.subscribe(state=>{
     if(!state.model){node('voice-work').textContent=state.notice||'Consultando actividad…';return;}
+    const activity=goalView.update(state.model.goals);workingWithoutVoice=activity.working;
+    if(activity.notice)node('voice-task').textContent=activity.notice;
+    queueMicrotask(()=>renderVoiceState(voice.snapshot()));
     const labels={queued:'En cola',running:'Trabajando',ready_for_review:'Para tu revisión',awaiting_data:'Faltan datos',stopped:'Detenido',completed:'Revisado'};
     node('voice-work').replaceChildren(...state.model.goals.filter(g=>g.status!=='completed').slice(0,1).map(g=>{const p=document.createElement('p');p.textContent=g.title+' · '+labels[g.status];return p;}));
     if(!state.model.goals.some(g=>g.status!=='completed'))node('voice-work').textContent='En espera · listo para el siguiente objetivo.';
@@ -131,7 +135,7 @@ if (open) {
     }});
   function renderVoiceState(state) {
       window.dispatchEvent(new CustomEvent('yod-voice-state',{detail:{phase:state.phase}}));
-      const view = voiceView(state), live = view.live;
+      const view = voiceView({...state,working_without_voice:workingWithoutVoice}), live = view.live;
       const wasLive=!['idle','error'].includes(lastChatVoicePhase);lastChatVoicePhase=state.phase;
       dialog.dataset.voicePhase=state.phase;
       if(wasLive&&['idle','error'].includes(state.phase)&&selection&&!accessPaused&&!chat.busy)void(chat.selection?chat.refresh():chat.open(AUTONES_MULTIPLES?selection.case_id:null));
@@ -139,7 +143,7 @@ if (open) {
       if(state.phase==='listening'&&freshTranscript){fragments.length=0;node('voice-transcript').replaceChildren();freshTranscript=false;node('voice-download').disabled=true;}
       setText('voice-transcript-label',freshTranscript&&fragments.length?'Transcripción anterior · se conserva mientras conectas':'Transcripción de esta conversación');
       setText('voice-phase',view.title);
-      if(dialog.open&&!compactVoice&&selection?.goals?.ready&&!stopWatching)stopWatching=watchGoals(goalReader,{visible:()=>dialog.open&&!document.hidden&&!voice.snapshot().actions_pending});
+      if(dialog.open&&selection?.goals?.ready&&!stopWatching)stopWatching=watchGoals(goalReader,{visible:()=>dialog.open&&!document.hidden&&!voice.snapshot().actions_pending});
       const connectionNotice=state.credential_pending?'La voz continúa. Recuperando la autorización antes de que venza.':state.session_ending?'Esta conversación se acerca al límite de duración. El puesto seguirá abierto para continuar.':state.notice;
       setText('voice-status',connectionNotice);
       setText('voice-input',state.phase!=='listening'?'':state.muted?'Micrófono en pausa.':state.local_speaking?'Te escucho.':state.input_received?'Tu voz está llegando a la conversación.':state.input_detected?'Tu micrófono detecta sonido. Aún no recibimos palabras.':'Micrófono abierto. Aún no recibimos palabras.');
@@ -153,7 +157,7 @@ if (open) {
       node('voice-play').hidden=!view.audioBlocked;
       node('voice-start').hidden=live;
       node('voice-start').disabled=live||accessPaused||!selection?.can_enqueue;
-      setText('voice-start',state.phase==='error'?'Volver a intentar':'Hablar');
+      setText('voice-start',state.paused?'Toca para seguir':state.phase==='error'?'Volver a intentar':'Hablar');
       const canInterrupt=['starting','listening','reconnecting'].includes(state.phase);
       node('voice-interrupt').hidden=!canInterrupt;
       node('compact-interrupt').hidden=!canInterrupt;
@@ -213,6 +217,7 @@ if (open) {
       const resident = window.YodResidentAgents;
       const fresh = resident?.getSelection?.() || validateSelection(await transport.resolveCurrent(caseId?{case_id:caseId}:{}));
       if (current !== generation || !dialog.open || caseId&&fresh.case_id!==caseId) return false;
+      if(selection?.case_id!==fresh.case_id){goalView.reset();workingWithoutVoice=false;}
       selection = fresh; node('voice-audio').muted=false; node('voice-case').textContent = fresh.name;
       if(transcriptCase!==fresh.case_id){fragments.length=0;node('voice-transcript').replaceChildren();node('voice-download').disabled=true;node('voice-previous').hidden=true;node('station-message').value='';node('station-messages').replaceChildren();chat.close();transcriptCase=fresh.case_id;}
       dialog.querySelector('.voice-transcript-details').hidden=false;
@@ -237,12 +242,9 @@ if (open) {
     if(!encounter){encounterCase=null;begin();return;}
     encounterCase=id;
     if(voiceCaseId===id&&voice.snapshot().phase==='listening'){if(encounterPaused&&voice.snapshot().muted)voice.mute();encounterPaused=false;return;}
-    if(window.YodOfficeLifecycle?.automaticVoiceAllowed()===false){encounterNeedsMic=true;renderVoiceState(voice.snapshot());setText('voice-status','Volviste al despacho. Pulsa Hablar para iniciar otra conversación.');return;}
-    let granted=micGrantedInPage;
-    try{granted=(await navigator.permissions.query({name:'microphone'})).state==='granted';}catch{}
-    if(dismissing||own!==generation||!dialog.open||id!==selection?.case_id||id!==window.YodResidentAgents?.getSelection?.()?.case_id)return;
-    if(!granted){encounterNeedsMic=true;renderVoiceState(voice.snapshot());setText('voice-status',micConsentNotice);return;}
-    begin();
+    // Proximity is navigation, never consent to a new billable session.
+    encounterNeedsMic=true;renderVoiceState(voice.snapshot());setText('voice-status',micConsentNotice);
+
   }
   function suppressEncounter(){
     if(selection?.case_id)window.dispatchEvent(new CustomEvent('yod-agent-encounter-dismiss',{detail:{case_id:selection.case_id}}));

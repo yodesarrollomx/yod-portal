@@ -1,19 +1,18 @@
 {
-  "model_revision": "2026-10-10.129-modelos-agente",
-  "proposal_id": "CHG-DESPACHO-MODELOS-129",
-  "summary": "Selector de modelo/esfuerzo por agente y ejecución, autorización vigente, recibo durable y procedencia por capa.",
+  "model_revision": "2026-10-10.130-voz-pausa",
+  "proposal_id": "CHG-DESPACHO-VOZ-130",
+  "summary": "Voz bajo demanda: expediente único, pausa por inactividad comprobada, continuidad textual privada y objetivos independientes.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "SYS-DESPACHO-3D",
     "SVC-AUTON-CLOUD",
-    "GAS-PORTERO",
     "STORE-AUTON-ESTADO",
-    "EXT-OPENAI",
-    "EXT-DRIVE"
+    "EXT-OPENAI"
   ],
   "tests": [
-    "Dobles de Portero/Responses/Live, permisos, CAS, recibos, aislamiento y ciclo de tarea; validadores del portal."
+    "Dobles de Live, reloj, reproducción, historial, permisos por actor/caso, objetivos y bitácora; suite y atlas del portal."
   ],
-  "rollback": "Revertir PRs, conservar historial privado y preferencias canónicas."
+  "rollback": "Revertir ambos PR; conservar diarios privados. No hay migración ni despliegue en este paso.",
+  "base_commit": "d2323534ebd194cac66cb5655c7ad6b80d76747b"
 }

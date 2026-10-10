@@ -13,7 +13,7 @@ const server=http.createServer((req,res)=>{
 });
 (async()=>{
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const base='http://127.0.0.1:'+server.address().port;
- const browser=await chromium.launch({headless:true});
+ const browser=await chromium.launch({...(process.env.BROWSER_EXECUTABLE?{executablePath:process.env.BROWSER_EXECUTABLE}:{}),headless:true});
  const out=process.env.BROWSER_EVIDENCE_DIR||path.join(process.env.RUNNER_TEMP||'/tmp','voice-ux-evidence');fs.mkdirSync(out,{recursive:true});
  try{for(const viewport of [{width:1280,height:900},{width:390,height:844}]){
   const context=await browser.newContext({viewport,acceptDownloads:true}),page=await context.newPage(),errors=[];let sessions=0,retries=0,readiness=0,contextReads=0,releaseSession=null;
@@ -116,7 +116,7 @@ const server=http.createServer((req,res)=>{
 
   await frame.locator('#voice-interrupt').click();assert.equal(await frame.locator('#voice-audio').evaluate(a=>a.muted),true);assert.equal(sessions,1);
   await frame.locator('#voice-interrupt').click();assert.equal(await frame.locator('#voice-audio').evaluate(a=>a.muted),false);
-  await frame.locator('#voice-mute').click();assert.equal(await frame.locator('#voice-phase').innerText(),'Micrófono en pausa');
+  await frame.locator('#voice-mute').click();assert.equal(await frame.locator('#voice-phase').innerText(),'En llamada · micrófono silenciado');
   await frame.locator('#voice-mute').click();
   await frame.locator('#voice-retry-context').click();assert.equal(retries,1);
   await frame.locator('.voice-options>summary').click();
@@ -146,11 +146,14 @@ const server=http.createServer((req,res)=>{
   await frame.locator('.voice-close').click();
   await frame.evaluate(()=>{window.failMic=false;window.blockAudio=false;window.micPermission='prompt';});
   await frame.evaluate(()=>window.YodVoiceWorkspace.openForCase('synthetic-voice-case','ppp',{startVoice:true,encounter:true}));
-  await frame.locator('#compact-notice').filter({hasText:'Pulsa el micrófono para permitir'}).waitFor();
+  await frame.locator('#compact-notice').filter({hasText:'Pulsa Hablar'}).waitFor();
   assert.equal(sessions,1,'proximity does not request permission without a user gesture');
   await frame.locator('#compact-stop').click();
   await frame.evaluate(()=>window.micPermission='granted');
   await frame.evaluate(()=>window.YodVoiceWorkspace.openForCase('synthetic-voice-case','ppp',{startVoice:true,encounter:true}));
+  await frame.locator('#compact-notice').filter({hasText:'Pulsa Hablar'}).waitFor();
+  assert.equal(sessions,1,'even existing microphone permission does not open a billable session on approach');
+  await frame.locator('#compact-mic').click();
   await frame.locator('[data-voice-phase="listening"]').waitFor();
   assert.equal(sessions,2);
   await frame.evaluate(()=>window.YodVoiceWorkspace.openForCase('synthetic-voice-case','ppp',{startVoice:true,encounter:true}));

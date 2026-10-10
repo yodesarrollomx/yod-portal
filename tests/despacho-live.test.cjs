@@ -3,7 +3,7 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const load=()=>import('../despacho3d/live-voice.mjs');
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
-function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12000,maxStatusFailures=3,mode='expediente',failStatus=false,Stream,startTimeout=60000,signallingTimeout=90000,mintOverride,sessionOverride,statusOverride,monitorFactory,now,messageOverride}={}){
+function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12000,maxStatusFailures=3,mode='expediente',failStatus=false,Stream,startTimeout=60000,signallingTimeout=90000,mintOverride,sessionOverride,statusOverride,monitorFactory,now,messageOverride,activityFactory,scheduleOverride,closeOverride}={}){
  const calls=[],captions=[],track={enabled:true,stops:0,stop(){this.stops++;}},
    stream={getTracks:()=>[track],getAudioTracks:()=>[track]},
    audio={srcObject:null,pause(){},play:async()=>{}};
@@ -19,12 +19,13 @@ function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12
  }
  const base={ok:true,active:true,started:false,context_ready:true,finalized:false,expires_at:Date.now()+600000,
   fragments:0,blocks:0,saved:0,pending:0,incomplete:false};
- const voice=createLiveVoice({audio,Peer,Stream,monitorFactory,now,closeTimeout,disconnectGrace,maxStatusFailures,startTimeout,signallingTimeout,media:{getUserMedia:async()=>{captures++;return stream;}},
-  schedule:()=>1,cancel:()=>{},onTranscript:f=>captions.push(f),
+ const voice=createLiveVoice({audio,Peer,Stream,monitorFactory,activityFactory,now,closeTimeout,disconnectGrace,maxStatusFailures,startTimeout,signallingTimeout,media:{getUserMedia:async()=>{captures++;return stream;}},
+  schedule:scheduleOverride||(()=>1),cancel:()=>{},onTranscript:f=>captions.push(f),
   mint:mintOverride||(async({case_id})=>({ok:true,case_id,token:'A'.repeat(30)+'.'+'a'.repeat(64),
    endpoint:'https://synthetic-engine.onrender.com',expires_at:Date.now()+600000})),
   fetchImpl:async(url,options)=>{
    calls.push({url,options});
+   if(url.endsWith('/close')&&closeOverride)return {ok:true,json:async()=>({...base,...closeOverride()})};
    if(url.endsWith('/voice/message')&&messageOverride)return {ok:true,json:async()=>messageOverride(JSON.parse(options.body))};
    if(failStatus && url.endsWith('/status'))throw Error('record unavailable');
    if(url.endsWith('/status')&&statusOverride)return {ok:true,json:async()=>({...base,...statusOverride()})};
@@ -232,7 +233,7 @@ test('UX keeps voice, authorized tools and durable history independent',async()=
  let v=voiceView({phase:'starting',context_phase:'preparing'});
  assert.equal(v.title,'Conectando voz');assert.doesNotMatch(v.context,/Puedes hablar/);
  v=voiceView({phase:'listening',context_phase:'unavailable',pending:2,blocks:2,saved:0});
- assert.equal(v.title,'Listo para hablar');assert.match(v.context,/aún no/);assert.match(v.history,/pendiente/);
+ assert.equal(v.title,'En llamada');assert.match(v.context,/aún no/);assert.match(v.history,/pendiente/);
  v=voiceView({phase:'idle',finalized:true,blocks:2,saved:1,pending:1});
  assert.doesNotMatch(v.history,/Conversación respaldada/);
  v=voiceView({phase:'idle',finalized:true,blocks:2,saved:2,pending:0,incomplete:true});
@@ -712,4 +713,19 @@ test('typed text uses the current Live session and checks uncertain delivery wit
  assert.equal(messages.length,2);assert.equal(messages[0].session_id,'live:opaque/session');assert.deepEqual(messages[0],messages[1]);
  assert.equal(f.voice.snapshot().phase,'listening');assert.equal(f.track.stops,0);assert.equal(f.voice.snapshot().text_pending,false);
  const p=f.voice.stop();await tick();f.event({type:'session.closed'});await p;
+});
+
+test('idle server close releases devices and resumes only on a new click, with started gate and fresh telemetry sequence',async()=>{
+ const {createLiveVoice}=await load();const timers=[];let phase='live';
+ const f=fixture(createLiveVoice,{scheduleOverride:(fn,ms)=>(timers.push({fn,ms}),timers.length),activityFactory:()=>({snapshot:()=>({input_active:false,output_active:false,playback_pending:false}),close(){}}),
+ statusOverride:()=>phase==='paused'?{active:false,finalized:true,reason:'inactivity'}:{},
+ closeOverride:()=>({active:false,finalized:true,reason:'inactivity'})});
+ await f.voice.prepare('synthetic-case');assert.equal(f.calls.some(c=>c.url.endsWith('/session')),false);assert.equal(f.captures,0);
+ await f.voice.start('synthetic-case');assert.equal(f.track.enabled,false);f.event({type:'session.started'});await tick();
+ await timers.find(t=>t.ms===1000).fn();await tick();const activity=f.calls.find(c=>c.url.endsWith('/activity'));assert.equal(JSON.parse(activity.options.body).seq,1);
+ f.voice.mute();assert.equal(f.track.enabled,false);phase='paused';await f.voice.refresh();await tick();await tick();
+ assert.equal(f.voice.snapshot().phase,'idle');assert.equal(f.voice.snapshot().paused,true);assert.equal(f.voice.snapshot().finalized,true);assert.equal(f.track.stops,1);
+ assert.equal(f.calls.filter(c=>c.url.endsWith('/session')).length,1);phase='live';
+ await f.voice.start('synthetic-case');assert.equal(f.track.enabled,false);assert.equal(f.voice.snapshot().paused,false);
+ f.event({type:'session.started'});await tick();assert.equal(f.track.enabled,true);const stop=f.voice.stop();await tick();f.event({type:'session.closed'});await stop;
 });
