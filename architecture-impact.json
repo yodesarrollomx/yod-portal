@@ -1,18 +1,17 @@
 {
-  "model_revision": "2026-10-10.131-decisions-jev",
-  "proposal_id": "CHG-DESPACHO-DECISIONS-131",
-  "summary": "Comparar Decisions con Jev en cuatro operaciones tipadas; Jev predeterminado y sombra sin esperar ni consumir su resultado.",
+  "model_revision": "2026-10-10.132-auton-evals",
+  "proposal_id": "CHG-DESPACHO-EVALS-132",
+  "summary": "Evaluación reproducible de delegaciones sintéticas; dobles en CI, matriz real manual con límite de llamadas y presupuesto.",
   "components": [
     "SYS-YOD-OS",
     "SVC-AUTON-CLOUD",
-    "STORE-AUTON-ESTADO",
-    "EXT-JEV",
-    "EXT-OPENAI"
+    "EXT-OPENAI",
+    "STORE-AUTON-ESTADO"
   ],
   "tests": [
-    "Motor: 344 pruebas aprobadas, una omitida optativa de Chromium; 19 pruebas nuevas con dobles, sin llamadas reales.",
-    "Sombra sin espera, refusal/fallback, timeouts de cabecera/cuerpo, privacidad, comparación de umbrales y ruta autenticada."
+    "Motor: 364 pruebas aprobadas, una omitida optativa Chromium; 20 pruebas nuevas de calificadores, aislamiento, límites y CLI.",
+    "Matriz offline: 27 evaluaciones, 216 resultados de calificadores, 66 llamadas a dobles con bitácora aislada. Ningún modelo real."
   ],
-  "rollback": "Seleccionar jev o revertir PR; conservar diarios privados, sin migración.",
-  "base_commit": "5fd5c72c5411a1f64e14336c49f535a6d4c413f4"
+  "rollback": "Revertir PR de evaluación; sin cambios en ejecución productiva ni migración.",
+  "base_commit": "441030c982ee9e4f9ef56589b3ef25b91de9facf"
 }

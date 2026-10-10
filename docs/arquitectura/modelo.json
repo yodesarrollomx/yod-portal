@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-10.131-decisions-jev",
+  "revision": "2026-10-10.132-auton-evals",
   "checked_at": "2026-10-09",
   "priorities": [
     "vender_mas",
@@ -9798,6 +9798,24 @@
       ],
       "deployment": "No desplegado. Motor depende de PR60; atlas depende de PR150.",
       "rollback": "Seleccionar jev o revertir PR; conservar diarios privados, sin migración."
+    },
+    {
+      "id": "CHG-DESPACHO-EVALS-132",
+      "components": [
+        "SYS-YOD-OS",
+        "SVC-AUTON-CLOUD",
+        "EXT-OPENAI",
+        "STORE-AUTON-ESTADO"
+      ],
+      "proposal": "Evaluación reproducible de delegaciones sintéticas; dobles en CI, matriz real manual con límite de llamadas y presupuesto.",
+      "status": "implementado_local",
+      "approval": "Paso 7 solicitado por Dirección. Sólo ramas apiladas y PR, sin ejecución real, integración ni despliegue.",
+      "tests": [
+        "Motor: 364 pruebas aprobadas, una omitida optativa Chromium; 20 pruebas nuevas de calificadores, aislamiento, límites y CLI.",
+        "Matriz offline: 27 evaluaciones, 216 resultados de calificadores, 66 llamadas a dobles con bitácora aislada. Ningún modelo real."
+      ],
+      "deployment": "No desplegado. Motor sobre PR65; atlas sobre PR151.",
+      "rollback": "Revertir PR de evaluación; sin cambios en ejecución productiva ni migración."
     }
   ],
   "data_contracts": [
@@ -12214,6 +12232,33 @@
       "components": [
         "SVC-AUTON-CLOUD",
         "EXT-JEV",
+        "EXT-OPENAI",
+        "STORE-AUTON-ESTADO"
+      ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": "evals/",
+      "components": [
+        "SVC-AUTON-CLOUD",
+        "EXT-OPENAI",
+        "STORE-AUTON-ESTADO"
+      ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": ".github/workflows/auton-evals.yml",
+      "components": [
+        "SVC-AUTON-CLOUD",
+        "EXT-OPENAI",
+        "STORE-AUTON-ESTADO"
+      ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": "tests/auton-evals.test.mjs",
+      "components": [
+        "SVC-AUTON-CLOUD",
         "EXT-OPENAI",
         "STORE-AUTON-ESTADO"
       ]
