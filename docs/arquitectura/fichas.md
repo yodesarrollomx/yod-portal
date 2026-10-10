@@ -87,14 +87,14 @@ Seleccionar y documentar programa de interiores
 - Conexiones: CON-027 (SYS-INTERIORES → GAS-INTERIORES); CON-039 (SYS-YOD-OS → SYS-INTERIORES); CON-048 (SYS-INTERIORES → GAS-PORTERO).
 - Mejoras: E · Folio común de proyecto y datos conciliados; F · Margen por proyecto y compromisos.
 
-## SYS-INVERSION · Presentación a inversionistas
+## SYS-INVERSION · Brokers
 
-Presentar oportunidades de codesarrollo
+Cartera, contactos, seguimiento, PPP y participaciones por broker; presentación comercial conservada
 
 - Tipo: tablero. Dominio: Ventas. Responsable: Comercial.
-- Evidencia: codigo. Producción: No verificado en despliegue.
+- Evidencia: codigo. Producción: Brokers publicado y lectura autenticada de Dirección comprobada; CRM v21. Acceso individual pendiente de correo verificado; guardado en producción no probado..
 - Entidades: diagnostico, proyecto, lote, supuesto, acuerdo_pago.
-- Fuente de verdad: SHEET-INVERSION; respaldo cifrado y cambios locales son copias.
+- Fuente de verdad: SHEET-CRM y cartera canónica; SHEET-INVERSION conserva presentación comercial.
 - Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L23) — Sistema presente en el catálogo canónico.
 - Conexiones: CON-040 (SYS-YOD-OS → SYS-INVERSION); CON-069 (SYS-INVERSION → GAS-INVERSION); CON-071 (SYS-INVERSION → GAS-PORTERO); CON-075 (SYS-INVERSION → SYS-PLAN-POTENCIAL).
 - Mejoras: C · Cotización, plan y siguiente paso comercial.

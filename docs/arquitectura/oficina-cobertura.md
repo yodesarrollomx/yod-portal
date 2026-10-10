@@ -1749,15 +1749,15 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Ubicación propuesta:** decisions · 9 componentes.
 
-### Presentación a inversionistas · SYS-INVERSION
+### Brokers · SYS-INVERSION
 
-**Función:** Presentar oportunidades de codesarrollo
+**Función:** Cartera, contactos, seguimiento, PPP y participaciones por broker; presentación comercial conservada
 
-**Fuente oficial:** SHEET-INVERSION; respaldo cifrado y cambios locales son copias
+**Fuente oficial:** SHEET-CRM y cartera canónica; SHEET-INVERSION conserva presentación comercial
 
 **Responsable operativo:** Comercial
 
-**Estado registrado:** codigo. No verificado en despliegue
+**Estado registrado:** codigo. Brokers publicado y lectura autenticada de Dirección comprobada; CRM v21. Acceso individual pendiente de correo verificado; guardado en producción no probado.
 
 **Conexiones registradas; no habilitan operaciones:**
 
