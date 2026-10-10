@@ -9698,13 +9698,13 @@
         "Contrato de snapshot autorizado, sin caché privada ni fallback general",
         "Alta y actualización con revisión y clave idempotente, ACK explícito",
         "CRM, búsqueda, etapas, seguimiento, participación y navegación PPP con datos sintéticos",
-        "Autorización real por registro y despliegue backend pendientes de fuente viva",
         "Fuente viva de GAS-INVERSION v14 y GAS-CRM inspeccionada en editor; esquemas de CRM verificados mediante Sheets.",
         "Snapshot broker A/B/Dirección, referencias, duplicados, conflicto e idempotencia con datos sintéticos.",
-        "Atomicidad de contactos, historial y recibos mediante una operación Sheets batchUpdate."
+        "Atomicidad de contactos, historial y recibos mediante una operación Sheets batchUpdate.",
+        "21 pruebas sintéticas de dominio y cliente aprobadas; no acreditan guardado en producción."
       ],
       "rollback": "Revertir por PR sin borrar registros, identidades ni historial.",
-      "deployment": "No desplegado; acceso a fuente viva GAS-INVERSION/CRM requerido antes de activar usuarios."
+      "deployment": "Implementado en rama y añadido al editor vivo de GAS-CRM. Lectura de esquema y cartera comprobada sin escribir registros. Activación de Sheets API y nueva versión de la implementación pendientes; no se ha habilitado el menú vivo ni usuarios."
     }
   ],
   "data_contracts": [
