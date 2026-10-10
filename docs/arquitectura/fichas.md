@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-10.129-brokers · 2026-10-09.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-10.130-masterbrokers · 2026-10-09.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -87,9 +87,9 @@ Seleccionar y documentar programa de interiores
 - Conexiones: CON-027 (SYS-INTERIORES → GAS-INTERIORES); CON-039 (SYS-YOD-OS → SYS-INTERIORES); CON-048 (SYS-INTERIORES → GAS-PORTERO).
 - Mejoras: E · Folio común de proyecto y datos conciliados; F · Margen por proyecto y compromisos.
 
-## SYS-INVERSION · Brokers
+## SYS-INVERSION · Masterbrokers
 
-Cartera, contactos, seguimiento, PPP y participaciones por broker; presentación comercial conservada
+Espacio de trabajo del Masterbroker: oferta comercial, oportunidades propias, solicitudes a YOD, red de contactos y acuerdos por expediente; presentación comercial conservada.
 
 - Tipo: tablero. Dominio: Ventas. Responsable: Comercial.
 - Evidencia: codigo. Producción: Brokers publicado y lectura autenticada de Dirección comprobada; CRM v21. Acceso individual pendiente de correo verificado; guardado en producción no probado..

@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-10.129-brokers",
-  "proposal_id": "CHG-BROKERS-128",
-  "summary": "Cierre Brokers: corregir nombre y descripción en CAT_RESPALDO de la cabina y registrar publicación y lectura autenticada de Dirección; conservar permisos, IDs y contratos.",
+  "model_revision": "2026-10-10.130-masterbrokers",
+  "proposal_id": "CHG-MASTERBROKERS-130",
+  "summary": "Experiencia Masterbrokers centrada en trabajo propio, oferta, entregas de YOD y acuerdos; mismo CRM y contratos.",
   "components": [
     "SYS-INVERSION",
     "GAS-INVERSION",
@@ -18,11 +18,10 @@
     "SYS-DESPACHO"
   ],
   "tests": [
-    "Contrato de snapshot autorizado, sin caché privada ni fallback general",
-    "Alta y actualización con revisión y clave idempotente, ACK explícito",
-    "CRM, búsqueda, etapas, seguimiento, participación y navegación PPP con datos sintéticos",
-    "Regresión de catálogo compartido, navegación del Despacho, obra, control y track: verify-os, verify-portal, verify-obra-app y 599 pruebas Node aprobadas",
-    "API de Sheets y esquema vivo leídos correctamente después de activar la API; versión21 publicada en el mismo endpoint"
+    "Pruebas sintéticas de contrato y autorización existentes",
+    "Responsable explícito, solicitudes, fechas, estados finales y ausencia de cifras inferidas",
+    "Navegación de inicio, oferta, expediente, red y acuerdos; envíos con ACK",
+    "Regresiones de catálogo y atlas del portal"
   ],
   "rollback": "Revertir por PR sin borrar registros, identidades ni historial."
 }

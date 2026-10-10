@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-10.129-brokers
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-10.130-masterbrokers
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -1749,9 +1749,9 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Ubicación propuesta:** decisions · 9 componentes.
 
-### Brokers · SYS-INVERSION
+### Masterbrokers · SYS-INVERSION
 
-**Función:** Cartera, contactos, seguimiento, PPP y participaciones por broker; presentación comercial conservada
+**Función:** Espacio de trabajo del Masterbroker: oferta comercial, oportunidades propias, solicitudes a YOD, red de contactos y acuerdos por expediente; presentación comercial conservada.
 
 **Fuente oficial:** SHEET-CRM y cartera canónica; SHEET-INVERSION conserva presentación comercial
 
