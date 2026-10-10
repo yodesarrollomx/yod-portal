@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-10.130-masterbrokers",
+  "revision": "2026-10-10.131-masterbroker-personal",
   "checked_at": "2026-10-09",
   "priorities": [
     "vender_mas",
@@ -9754,17 +9754,19 @@
         "SYS-OBRA-CLIENTE",
         "SYS-DESPACHO"
       ],
-      "proposal": "Replantear el frontend para uso del Masterbroker: inicio con acciones pendientes explícitas, guía de oferta, registro de oportunidades, solicitud de análisis mediante revisión guardada, material vinculado y acuerdos. Responsabilidad del siguiente paso mediante prefijos reversibles en next_action; registros antiguos permanecen sin responsable definido. Reutiliza brokers.v1, CRM, permisos, IDs y enlaces existentes. No calcula comisiones, asigna identidades ni transforma el acceso al catálogo en autorización comercial.",
+      "proposal": "Replantear el frontend para uso del Masterbroker: inicio con acciones pendientes explícitas, guía de oferta, registro de oportunidades, solicitud de análisis mediante revisión guardada, material vinculado y acuerdos. Responsabilidad del siguiente paso mediante prefijos reversibles en next_action; registros antiguos permanecen sin responsable definido. Reutiliza brokers.v1, CRM, permisos, IDs y enlaces existentes. No calcula comisiones, asigna identidades ni transforma el acceso al catálogo en autorización comercial. Extensión autorizada 9-oct: recorrido personal con cartera real, preparación de conversación y registro de respuesta. Dirección puede previsualizar un perfil de Masterbroker con snapshot reducido por ID y formularios explorables sin guardado. El parámetro de URL no concede acceso: broker real conserva alcance de servidor; perfil inexistente falla cerrado. Vista embebida conserva Portero y validación del backend.",
       "status": "propuesto",
       "approval": "Alejandro pide repensar y ejecutar el tablero para los propios Masterbrokers el 9-oct-2026. Autorización previa de publicación vigente; no incluye condiciones comerciales nuevas.",
       "tests": [
         "Pruebas sintéticas de contrato y autorización existentes",
         "Responsable explícito, solicitudes, fechas, estados finales y ausencia de cifras inferidas",
         "Navegación de inicio, oferta, expediente, red y acuerdos; envíos con ACK",
-        "Regresiones de catálogo y atlas del portal"
+        "Regresiones de catálogo y atlas del portal",
+        "Vista previa reduce contactos, oportunidades, actividades y participaciones; no modifica snapshot original ni guarda por Dirección",
+        "Recorrido personal con datos sintéticos y lectura de cartera real; no inventa avance ni prioridad comercial"
       ],
       "rollback": "Revertir PRs de interfaz y catálogo sin alterar registros; prefijos en next_action siguen legibles en la interfaz anterior.",
-      "deployment": "Implementación en rama; publicación y comprobación real pendientes."
+      "deployment": "Base Masterbrokers publicada en PR7 y portal152. Extensión personal en rama, pendiente de publicación."
     }
   ],
   "data_contracts": [
