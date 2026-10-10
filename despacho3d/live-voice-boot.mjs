@@ -4,9 +4,9 @@ import {createEntryPreparation} from './voice-preparation.mjs?v=2';
 import {residentAccessDecision} from './resident-agents.mjs?v=127';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=126';
 import {stationIdentity} from './project-station.mjs?v=121';
-import {createLiveVoice} from './live-voice.mjs?v=127';
+import {createLiveVoice} from './live-voice.mjs?v=128';
 import {voiceView} from './voice-view.mjs?v=2';
-import {createWorkspace} from './agent-workspace.mjs?v=126';
+import {createWorkspace} from './agent-workspace.mjs?v=128';
 import {DurableGoals,watchGoals} from './goals.mjs?v=2';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=126';
 import {groupTranscriptFragments} from './live-transcript.mjs';
@@ -25,7 +25,7 @@ if (open) {
     '<div class="voice-actions"><button id="voice-start" disabled>Hablar</button><button id="voice-interrupt" hidden>Escúchame</button><button id="voice-stop" hidden disabled>Finalizar</button></div>' +
     '<details class="voice-options"><summary>Audio y conexión</summary><button id="voice-mute" disabled>Silenciar micrófono</button><p class="voice-note">Voz generada por IA.</p>' +
     '<p id="voice-timing" class="voice-note"></p><p id="voice-context" role="status">El expediente se comprueba al conectar.</p><button id="voice-retry-context" hidden>Recuperar expediente</button></details></section>' +
-    '<details class="station-chat"><summary>Conversación</summary><div id="station-messages" role="log" aria-live="off"></div><form id="station-message-form"><label for="station-message">Mensaje</label><textarea id="station-message" maxlength="12000" required placeholder="Qué resolvemos ahora…"></textarea><button id="station-send" disabled>Enviar</button></form><p id="station-message-status" role="status"></p><button id="station-write" hidden>Terminar voz y escribir</button><button id="station-refresh">Actualizar historial</button></details>' +
+    '<details class="station-chat"><summary>Conversación</summary><div id="station-messages" role="log" aria-live="off"></div><form id="station-message-form"><label for="station-message">Mensaje</label><textarea id="station-message" maxlength="6000" required placeholder="Qué resolvemos ahora…"></textarea><button id="station-send" disabled>Enviar</button></form><p id="station-message-status" role="status"></p><button id="station-write" hidden>Terminar voz y escribir</button><button id="station-refresh">Actualizar historial</button></details>' +
     '<p id="voice-save" role="status">Sin conversación nueva.</p><p id="voice-previous" class="voice-note" hidden></p>' +
     '<section class="voice-transcript-details"><h3 id="voice-transcript-label">Conversación de voz</h3><div id="voice-transcript" role="log" aria-label="Transcripción de voz" aria-live="off"></div><button id="voice-download" disabled>Descargar transcripción</button><p class="voice-note">Copia local; el estado de guardado aparece arriba.</p></section>';
   const layout=document.createElement('div'),sidebar=document.createElement('div'),workspaceHost=document.createElement('div');
@@ -66,7 +66,7 @@ if (open) {
   const setText = (id,text) => {if(node(id).textContent!==text)node(id).textContent=text;};
   const active = state => !['idle','error'].includes(state.phase);
   const actionExecutor=createVoiceActionExecutor({transport,onChange:event=>{
-    node('voice-task').textContent=event.phase==='running'?'Consultando o guardando el pendiente…':event.phase==='confirmed'?'Solicitud confirmada. Puedes consultar su avance en Pendientes.':event.phase==='rejected'?'La solicitud no se ejecutó. Consulta los pendientes antes de continuar.':'El guardado está pendiente de confirmación. Comprobar conserva la misma solicitud.';
+    node('voice-task').textContent=event.phase==='running'?'Consultando o guardando el pendiente…':event.phase==='confirmed'?'Solicitud confirmada. Puedes consultar su avance en Pendientes.':event.phase==='rejected'?(event.code==='goal_busy'?'No se creó el encargo: hay una entrega pendiente. Abre Pendientes para revisarla o detenerla.':'La solicitud no se ejecutó. Consulta los pendientes antes de continuar.'):'El guardado está pendiente de confirmación. Comprobar conserva la misma solicitud.';
     node('voice-retry-actions').hidden=event.phase!=='unconfirmed';
     if(event.phase==='confirmed')window.dispatchEvent(new CustomEvent('yod-goals-changed',{detail:null}));
   }});
@@ -98,19 +98,22 @@ if (open) {
     if(!state.model.goals.some(g=>g.status!=='completed'))node('voice-work').textContent='En espera · listo para el siguiente objetivo.';
   });
   const chat=new Conversation({transport,notify:renderChat});
-  let chatTimer=null;
+  let chatTimer=null,lastChatVoicePhase='idle';const typedTurns=[];
   function renderChat(state){
     if(!selection||state.selection&&state.selection.case_id!==selection.case_id)return;
     const host=node('station-messages'),messages=state.model?.messages||[];
     host.replaceChildren(...messages.slice(-30).map(m=>{const p=document.createElement('p'),b=document.createElement('b'),text=document.createElement('span');b.textContent=m.role==='user'?'Tú':agentName();text.textContent=m.body;p.append(b,text);return p;}));
     for(const turn of state.fastTurns||[]){for(const [label,text]of [['Tú',turn.message],[agentName(),turn.reply]])if(text){const p=document.createElement('p'),b=document.createElement('b'),body=document.createElement('span');b.textContent=label;body.textContent=text;p.append(b,body);host.append(p);}}
+    for(const turn of typedTurns.filter(t=>t.caseId===selection.case_id)){const p=document.createElement('p'),b=document.createElement('b'),body=document.createElement('span');b.textContent='Tú · texto durante voz';body.textContent=turn.text;p.append(b,body);host.append(p);}
+    const voiceState=voice.snapshot();
     const live=dialog.dataset.voicePhase&&!['idle','error'].includes(dialog.dataset.voicePhase);
-    node('station-send').disabled=accessPaused||live||state.busy||!!state.pending||!!state.accepted||!state.selection?.can_enqueue||state.stale;
+    node('station-send').disabled=accessPaused||!selection?.can_enqueue||(voiceState.text_pending?voiceState.text_sending:live?voiceState.phase!=='listening'||voiceState.text_sending:state.busy||!!state.pending||!!state.accepted||!state.selection?.can_enqueue||state.stale);
+    node('station-send').textContent=voiceState.text_pending?'Comprobar envío':'Enviar';
     node('station-write').hidden=!live;node('station-write').disabled=dialog.dataset.voicePhase==='closing';
-    node('station-message-status').textContent=live?'Tu borrador se conserva. Puedes terminar la voz y continuar por escrito aquí.':state.fastNotice||(state.pending?'Guardado pendiente. Actualizar comprobará la misma solicitud.':state.busy?'Consultando…':state.status==='unavailable'?'No se pudo cargar el historial. Puedes actualizar.':'');
+    node('station-message-status').textContent=voiceState.text_notice||(live?'Puedes escribir mientras conversas. El mensaje llegará a esta misma voz.':state.fastNotice||(state.pending?'Guardado pendiente. Actualizar comprobará la misma solicitud.':state.busy?'Consultando…':state.status==='unavailable'?'No se pudo cargar el historial. Puedes actualizar.':''));
   }
   dialog.querySelector('.station-chat').addEventListener('toggle',()=>{if(dialog.querySelector('.station-chat').open&&selection&&!chat.selection&&!chat.busy)void chat.open(AUTONES_MULTIPLES?selection.case_id:null);});
-  node('station-message-form').addEventListener('submit',async event=>{event.preventDefault();if(node('station-send').disabled)return;const text=node('station-message').value;if(await chat.send(text))node('station-message').value='';});
+  node('station-message-form').addEventListener('submit',async event=>{event.preventDefault();if(node('station-send').disabled)return;const text=node('station-message').value,own=generation,id=selection?.case_id;const inVoice=active(voice.snapshot())||voice.snapshot().text_pending;const sent=await(inVoice?voice.sendText(text):chat.send(text));if(sent&&own===generation&&selection?.case_id===id){if(inVoice)typedTurns.push({caseId:id,text});if(node('station-message').value===text)node('station-message').value='';renderChat(chat);}});
   node('station-refresh').addEventListener('click',()=>void(chat.selection?chat.refresh():chat.open(AUTONES_MULTIPLES?selection?.case_id:null)));
   node('station-write').addEventListener('click',async()=>{
     if(!selection||accessPaused)return;const own=generation;suppressEncounter();node('station-write').disabled=true;
@@ -129,7 +132,9 @@ if (open) {
   function renderVoiceState(state) {
       window.dispatchEvent(new CustomEvent('yod-voice-state',{detail:{phase:state.phase}}));
       const view = voiceView(state), live = view.live;
+      const wasLive=!['idle','error'].includes(lastChatVoicePhase);lastChatVoicePhase=state.phase;
       dialog.dataset.voicePhase=state.phase;
+      if(wasLive&&['idle','error'].includes(state.phase)&&selection&&!accessPaused&&!chat.busy)void(chat.selection?chat.refresh():chat.open(AUTONES_MULTIPLES?selection.case_id:null));
       if(state.phase==='listening')micGrantedInPage=true;
       if(state.phase==='listening'&&freshTranscript){fragments.length=0;node('voice-transcript').replaceChildren();freshTranscript=false;node('voice-download').disabled=true;}
       setText('voice-transcript-label',freshTranscript&&fragments.length?'Transcripción anterior · se conserva mientras conectas':'Transcripción de esta conversación');

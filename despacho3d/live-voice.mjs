@@ -17,6 +17,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
   media = globalThis.navigator?.mediaDevices, Peer = globalThis.RTCPeerConnection, Stream = globalThis.MediaStream,
   audio, monitorFactory = createLocalInputMonitor, onChange = () => {}, canOperate = () => true, actions = null, onTranscript = () => {}, now = Date.now,
   schedule = setInterval, cancel = clearInterval, closeTimeout = 20000, disconnectGrace = 12000, maxStatusFailures = 3, startTimeout = 60000, signallingTimeout = 90000} = {}) {
+  let typedMessage = null, typing = false;
   let inputMonitor = null, remoteSpeechObserved = false, automaticInterruptionId = null;
   let credentialRenewal = null, credentialRetryAt = 0;
   const credentialMargin = 120000;
@@ -398,6 +399,26 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     }catch{return false;}
     finally{if(boardFlight===flight)boardFlight=null;}
   }
+  async function sendText(message){
+    if(!canOperate()||typing||typeof message!=='string'||!message.trim()||message.length>6000)return false;
+    if(typedMessage&&(typedMessage.caseId!==activeCaseId||typedMessage.message!==message)){
+      publish({text_notice:'Comprueba primero el envío anterior con el mismo texto.'});return false;
+    }
+    if(!typedMessage){
+      if(!started||closing||state.phase!=='listening'||!credential||!sessionId)return false;
+      typedMessage={caseId:activeCaseId,session_id:sessionId,request_id:'voice-text-'+crypto.randomUUID(),message,credential};
+    }
+    const pending=typedMessage;typing=true;publish({text_pending:true,text_sending:true,text_notice:'Enviando a esta conversación…'});
+    try{
+      const result=await post('/voice/message',{session_id:pending.session_id,request_id:pending.request_id,message:pending.message},pending.credential,AbortSignal.timeout(12000));
+      if(typedMessage!==pending)return false;
+      if(result.request_id!==pending.request_id||!['accepted','pending','rejected'].includes(result.status))throw Error('invalid_receipt');
+      if(result.status==='accepted'){typedMessage=null;publish({text_pending:false,text_notice:'Mensaje recibido en la conversación de voz.'});return true;}
+      if(result.status==='rejected'){typedMessage=null;publish({text_pending:false,text_notice:'El servicio rechazó el mensaje. El borrador se conserva.'});return false;}
+      publish({text_notice:'Recepción pendiente. Pulsa Comprobar envío; no se repetirá el mensaje.'});return false;
+    }catch{if(typedMessage===pending)publish({text_notice:'Envío sin confirmar. Conservamos el texto y su identificador para comprobarlo.'});return false;}
+    finally{typing=false;publish({text_sending:false});}
+  }
   function presentSlide(value){
     if(!value||value.case_id!==activeCaseId||typeof value.script!=='string'||value.script.length>5000||
        !started||closing||!contextReady||!canOperate()||state.phase!=='listening'||channel?.readyState!=='open')return false;
@@ -453,5 +474,5 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     disconnected = true; closedResolve?.(false); publish({incomplete: true});
     void stop('Finalización incompleta al salir de esta pantalla.');
   }
-  return {prepare, discardPreparation, start, stop, mute, playAudio, retryContext, notifyBoard, presentSlide, interrupt, resumeAudio, abandon, refresh: () => status(epoch), retryActions:()=>{actions?.retry();void status(epoch);}, snapshot: () => ({...state})};
+  return {prepare, discardPreparation, start, stop, sendText, mute, playAudio, retryContext, notifyBoard, presentSlide, interrupt, resumeAudio, abandon, refresh: () => status(epoch), retryActions:()=>{actions?.retry();void status(epoch);}, snapshot: () => ({...state})};
 }

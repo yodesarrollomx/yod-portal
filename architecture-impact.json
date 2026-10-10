@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-09.128-brokers",
+  "model_revision": "2026-10-10.129-brokers",
   "proposal_id": "CHG-BROKERS-128",
-  "summary": "Brokers: catálogo preparado y CRM canónico contrastado en editor. Conexión por registro, seguimiento y participaciones; publicación y activación pendientes de API de Sheets.",
+  "summary": "Brokers integra el CRM canónico con autorización por registro. API Sheets y GAS-CRM versión21 activos; publicación frontend y navegación se cotejan por separado.",
   "components": [
     "SYS-INVERSION",
     "GAS-INVERSION",
@@ -21,8 +21,8 @@
     "Contrato de snapshot autorizado, sin caché privada ni fallback general",
     "Alta y actualización con revisión y clave idempotente, ACK explícito",
     "CRM, búsqueda, etapas, seguimiento, participación y navegación PPP con datos sintéticos",
-    "Lectura sin escrituras del esquema vivo de GAS-CRM completada; API atómica pendiente de activación",
-    "Regresión de catálogo compartido, navegación del Despacho, obra, control y track: verify-os, verify-portal, verify-obra-app y 597 pruebas Node aprobadas"
+    "Regresión de catálogo compartido, navegación del Despacho, obra, control y track: verify-os, verify-portal, verify-obra-app y 597 pruebas Node aprobadas",
+    "API de Sheets y esquema vivo leídos correctamente después de activar la API; versión21 publicada en el mismo endpoint"
   ],
   "rollback": "Revertir por PR sin borrar registros, identidades ni historial."
 }
