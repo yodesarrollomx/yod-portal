@@ -9667,7 +9667,7 @@
         "SYS-POTENCIALES"
       ],
       "proposal": "Corregir selección y conexión para que todos los autones abran el mismo puesto, radial y capacidades autorizadas, eliminando bloqueos silenciosos y consultas duplicadas; preservar identidad, permisos y estado del proyecto.",
-      "status": "implementado_local",
+      "status": "publicado",
       "approval": "Dirección autoriza corregir, verificar y publicar tras reportar fallos de selección y desconexión el9-oct2026.",
       "tests": [
         "Clic real en cada figura/etiqueta desde panorama/caminar hasta radial y PPP, sin apertura programática.",
@@ -9676,7 +9676,7 @@
         "Deduplicación y límites de consultas sin mezclar actor/caso ni extender autorización.",
         "Pruebas Node, validadores y navegador con latencia; publicar y cotejar versión; micrófono físico se acredita aparte."
       ],
-      "deployment": "Pendiente. Base portal79cabc6 y backenddfe9c7a. QA126 no comprobaba clic completo de cada avatar; este hueco se corrige.",
+      "deployment": "2026-10-10T01:09:42Z: portal PR143 integrado en dc5233b7dde5fed77fa473620fce36f2bb6e6880 y Pages38012047418 publicado. 597 pruebas Node, validadores, Chromium/WebKit y recorrido integrado38011488972 aprobados. Clic real en las tres figuras, etiquetas, radial, PPP y voz por caso comprobado con datos sintéticos (QA38010902615 job114090411929 y38011244981). Fallo transitorio, resolución demorada y protección de llamada activa comprobados. Backend48 integrado en e55943540c3501784ec0a0d48d5432c504df9a46, Render dep-db4opn7lot8c73cfi7p0 live desde00:55:30Z; 288 pruebas aprobadas y una omitida. Ventana00:55:30–01:01:23Z sin repetir ráfagas de contexto ni lock_busy. No acredita micrófono físico, latencia Sheets, mejora50% ni disponibilidad perpetua.",
       "rollback": "Revertir cambios por PR conservando expedientes, journal, recibos, historial, cola y volumen persistente."
     }
   ],
