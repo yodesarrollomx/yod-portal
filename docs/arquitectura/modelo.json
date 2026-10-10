@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-10.132-masterbroker-control",
+  "revision": "2026-10-10.133-masterbroker-rows",
   "checked_at": "2026-10-09",
   "priorities": [
     "vender_mas",
@@ -9770,6 +9770,30 @@
       ],
       "rollback": "Revertir PRs de interfaz y catálogo sin alterar registros; prefijos en next_action siguen legibles en la interfaz anterior.",
       "deployment": "PR8/9 y portal154 publicados y revisados visualmente. Extensión control diario en implementación; activación de identidades individuales sigue pendiente de correo verificado."
+    },
+    {
+      "id": "CHG-MASTERBROKERS-133",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-INVERSION",
+        "SHEET-INVERSION",
+        "GAS-CRM",
+        "SHEET-CRM",
+        "SYS-YOD-OS",
+        "GAS-PORTERO",
+        "SYS-POTENCIALES"
+      ],
+      "proposal": "Integrar el control Masterbrokers en el marco existente de YOD OS: sustituir inicio promocional, tarjetas y bandejas repetidas por una tabla compacta. Un renglón por expediente; oportunidades con el mismo terrain_id o, sin terreno, el mismo ppp_id se agrupan visualmente. Contactos, trabajos y prospectos vinculados se consultan desde ese renglón, conservando cada ID y operación individual. Sin agrupación por similitud de nombres ni avisos repetidos de campos vacíos. Última actividad real, etapa y seguimiento en la misma fila; expediente con historial cronológico y material existente. Reutiliza brokers.v1, sesión, permisos y fuentes; no cambia backend, identidad ni términos comerciales.",
+      "status": "propuesto",
+      "approval": "Alejandro solicita integrar en YOD OS y ejecutar el control con un solo renglón y registros relacionados, sin saturación. Autorización de publicación vigente.",
+      "tests": [
+        "Agrupación determinista por ID, sin fusionar personas o terrenos por nombre; búsqueda conserva contexto del grupo",
+        "Un renglón por expediente, contacto debajo, actividad real y apertura del historial; escritorio y móvil",
+        "Vista previa sin guardado, gestión con actor real y alcance después del ACK; contratos y autorización existentes",
+        "Verificaciones del atlas y portal; comprobación de publicación separada de lectura autenticada"
+      ],
+      "rollback": "Revertir PR de interfaz; no migrar, borrar ni modificar datos del CRM.",
+      "deployment": "Implementación propuesta. Publicación y lectura autenticada pendientes de comprobación."
     }
   ],
   "data_contracts": [
