@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-10.129-brokers · 2026-10-09.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-10.130-masterbrokers · 2026-10-09.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -67,7 +67,7 @@ flowchart LR
 ```mermaid
 flowchart LR
   n_SYS_POTENCIALES["PPP · Potenciales"]
-  n_SYS_INVERSION["Brokers"]
+  n_SYS_INVERSION["Masterbrokers"]
   n_SYS_MARKETING["Embudo comercial"]
   n_SYS_YOD_OS["YOD OS"]
   n_SYS_PLAN_POTENCIAL["Plan de Potencial"]
@@ -269,7 +269,7 @@ flowchart LR
   n_SYS_TAREAS["MOAC"]
   n_SYS_FLUJO["Tesorería"]
   n_SYS_INTERIORES["Aurum · Interiores"]
-  n_SYS_INVERSION["Brokers"]
+  n_SYS_INVERSION["Masterbrokers"]
   n_SYS_MARKETING["Embudo comercial"]
   n_SYS_OBRA["Obra en vivo"]
   n_SYS_CONTROL["Control Maestro"]
@@ -402,7 +402,7 @@ flowchart LR
   n_SYS_TAREAS["MOAC"]
   n_SYS_FLUJO["Tesorería"]
   n_SYS_INTERIORES["Aurum · Interiores"]
-  n_SYS_INVERSION["Brokers"]
+  n_SYS_INVERSION["Masterbrokers"]
   n_SYS_MARKETING["Embudo comercial"]
   n_SYS_OBRA["Obra en vivo"]
   n_SYS_CONTROL["Control Maestro"]

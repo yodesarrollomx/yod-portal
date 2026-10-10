@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-10.129-brokers",
+  "revision": "2026-10-10.130-masterbrokers",
   "checked_at": "2026-10-09",
   "priorities": [
     "vender_mas",
@@ -459,10 +459,10 @@
     },
     {
       "id": "SYS-INVERSION",
-      "nombre": "Brokers",
+      "nombre": "Masterbrokers",
       "tipo": "tablero",
       "repo": "yodesarrollomx/yodesarrollo-board",
-      "proposito": "Cartera, contactos, seguimiento, PPP y participaciones por broker; presentación comercial conservada",
+      "proposito": "Espacio de trabajo del Masterbroker: oferta comercial, oportunidades propias, solicitudes a YOD, red de contactos y acuerdos por expediente; presentación comercial conservada.",
       "dominio": "Ventas",
       "owner_role": "Comercial",
       "evidence": [
@@ -9736,6 +9736,35 @@
       ],
       "rollback": "Revertir por PR sin borrar registros, identidades ni historial.",
       "deployment": "GAS-CRM v21 y API Sheets activos en implementación existente. Board PR5 y portal PR146 integrados; Pages aprobado. Vista real autenticada de Dirección carga cartera, contactos y perfiles. Acceso individual pendiente de correo verificado; no se realizaron escrituras de prueba en producción."
+    },
+    {
+      "id": "CHG-MASTERBROKERS-130",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-INVERSION",
+        "SHEET-INVERSION",
+        "GAS-CRM",
+        "SHEET-CRM",
+        "SYS-YOD-OS",
+        "GAS-PORTERO",
+        "SYS-POTENCIALES",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE",
+        "SYS-DESPACHO"
+      ],
+      "proposal": "Replantear el frontend para uso del Masterbroker: inicio con acciones pendientes explícitas, guía de oferta, registro de oportunidades, solicitud de análisis mediante revisión guardada, material vinculado y acuerdos. Responsabilidad del siguiente paso mediante prefijos reversibles en next_action; registros antiguos permanecen sin responsable definido. Reutiliza brokers.v1, CRM, permisos, IDs y enlaces existentes. No calcula comisiones, asigna identidades ni transforma el acceso al catálogo en autorización comercial.",
+      "status": "propuesto",
+      "approval": "Alejandro pide repensar y ejecutar el tablero para los propios Masterbrokers el 9-oct-2026. Autorización previa de publicación vigente; no incluye condiciones comerciales nuevas.",
+      "tests": [
+        "Pruebas sintéticas de contrato y autorización existentes",
+        "Responsable explícito, solicitudes, fechas, estados finales y ausencia de cifras inferidas",
+        "Navegación de inicio, oferta, expediente, red y acuerdos; envíos con ACK",
+        "Regresiones de catálogo y atlas del portal"
+      ],
+      "rollback": "Revertir PRs de interfaz y catálogo sin alterar registros; prefijos en next_action siguen legibles en la interfaz anterior.",
+      "deployment": "Implementación en rama; publicación y comprobación real pendientes."
     }
   ],
   "data_contracts": [

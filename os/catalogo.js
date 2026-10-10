@@ -20,7 +20,7 @@
     { id: "SYS-TAREAS", nombre: "MOAC", icono: "checklist", codigos: ["TA"], destino: "https://yodesarrollomx.github.io/board-aurum/" },
     { id: "SYS-FLUJO", nombre: "Flujo", icono: "wallet", codigos: ["FL"], destino: "https://yodesarrollomx.github.io/board-flujo-yod/" },
     { id: "SYS-INTERIORES", nombre: "AURUM", icono: "armchair-2", codigos: ["IN"], destino: "https://yodesarrollomx.github.io/interiores-aurum/" },
-    { id: "SYS-INVERSION", nombre: "Brokers", icono: "presentation-analytics", codigos: ["IV"], destino: "https://yodesarrollomx.github.io/yodesarrollo-board/brokers.html" },
+    { id: "SYS-INVERSION", nombre: "Masterbrokers", icono: "presentation-analytics", codigos: ["IV"], destino: "https://yodesarrollomx.github.io/yodesarrollo-board/brokers.html" },
     { id: "SYS-MARKETING", nombre: "Embudo comercial", icono: "speakerphone", codigos: ["MK"], destino: "https://yodesarrollomx.github.io/aurum-board/" },
     { id: "SYS-OBRA", nombre: "Obra en vivo", icono: "building-skyscraper", codigos: ["OB"], destino: "https://yodesarrollomx.github.io/yod-portal/obra.html" },
     { id: "SYS-CONTROL", nombre: "", icono: "", codigos: ["AC"], destino: "https://docs.google.com/spreadsheets/d/1E_89GQBnOmwv5Nej2B-QEkAdVnFYQbBVQUffHWwI7Vk/", sinMarco: true }

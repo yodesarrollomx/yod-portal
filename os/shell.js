@@ -70,7 +70,7 @@
   /* Los títulos oficiales viven en la pestaña Portal del Control Maestro
      (titulo_portal); estos son solo el respaldo si aquella no contesta.
      Deben decir LO MISMO que el Sheet — si renombras allá, renombra acá. */
-  var NAME = { 'SYS-DESPACHO': 'El Despacho', 'SYS-POTENCIALES': 'PPP', 'SYS-TRACK': 'Codesarrollos', 'SYS-MIRAMAR': 'Real de Miramar', 'SYS-TAREAS': 'MOAC', 'SYS-FLUJO': 'Flujo', 'SYS-INTERIORES': 'AURUM', 'SYS-INVERSION': 'Brokers', 'SYS-MARKETING': 'Embudo comercial', 'SYS-OBRA': 'Obra en vivo' };
+  var NAME = { 'SYS-DESPACHO': 'El Despacho', 'SYS-POTENCIALES': 'PPP', 'SYS-TRACK': 'Codesarrollos', 'SYS-MIRAMAR': 'Real de Miramar', 'SYS-TAREAS': 'MOAC', 'SYS-FLUJO': 'Flujo', 'SYS-INTERIORES': 'AURUM', 'SYS-INVERSION': 'Masterbrokers', 'SYS-MARKETING': 'Embudo comercial', 'SYS-OBRA': 'Obra en vivo' };
   // Códigos por tablero — MISMA matriz que YOD OS (access-policy.js). El menú
   // solo enseña lo que tu sesión permite; el muro real sigue siendo cada backend.
   var CODES = {
