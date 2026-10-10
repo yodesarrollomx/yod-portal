@@ -459,10 +459,10 @@
     },
     {
       "id": "SYS-INVERSION",
-      "nombre": "Presentación a inversionistas",
+      "nombre": "Brokers",
       "tipo": "tablero",
       "repo": "yodesarrollomx/yodesarrollo-board",
-      "proposito": "Presentar oportunidades de codesarrollo",
+      "proposito": "Cartera, contactos, seguimiento, PPP y participaciones por broker; presentación comercial conservada",
       "dominio": "Ventas",
       "owner_role": "Comercial",
       "evidence": [
@@ -483,9 +483,9 @@
         "acuerdo_pago"
       ],
       "risks_sanitized": [],
-      "source_of_truth": "SHEET-INVERSION; respaldo cifrado y cambios locales son copias",
+      "source_of_truth": "SHEET-CRM y cartera canónica; SHEET-INVERSION conserva presentación comercial",
       "status": "codigo",
-      "runtime_status": "No verificado en despliegue"
+      "runtime_status": "Brokers publicado y lectura autenticada de Dirección comprobada; CRM v21. Acceso individual pendiente de correo verificado; guardado en producción no probado."
     },
     {
       "id": "SYS-MARKETING",
@@ -9721,7 +9721,7 @@
         "SYS-OBRA-CLIENTE",
         "SYS-DESPACHO"
       ],
-      "proposal": "Brokers usa el CRM existente: contactos con folio de LEADS-POTENCIAL y tablas de relación, expedientes, revisiones, participaciones y recibos en el mismo libro. GAS-CRM ofrece brokers.v1 con autorización por registro y escritura atómica. SYS-INVERSION conserva su ID y la presentación comercial; PPP enlaza la versión aprobada desde la hoja.",
+      "proposal": "Brokers usa el CRM existente: contactos con folio de LEADS-POTENCIAL y tablas de relación, expedientes, revisiones, participaciones y recibos en el mismo libro. GAS-CRM ofrece brokers.v1 con autorización por registro y escritura atómica. SYS-INVERSION conserva su ID y la presentación comercial; PPP enlaza la versión aprobada desde la hoja. Cierre de revisión: sincronizar CAT_RESPALDO de la cabina con Brokers; no cambia permisos ni contratos.",
       "status": "propuesto",
       "approval": "Dirección autoriza implementar y publicar en yodesarrollo-board y yod-portal el 9-oct-2026; no fija participaciones económicas ni permite deducir identidades por nombre.",
       "tests": [
@@ -9735,7 +9735,7 @@
         "Catálogo y rutas compartidas: regresiones de Despacho, obra, control y track aprobadas"
       ],
       "rollback": "Revertir por PR sin borrar registros, identidades ni historial.",
-      "deployment": "GAS-CRM versión21 publicado el9-oct2026 en la implementación existente, sin cambiar URL ni permisos. Google Sheets API activada con autorización específica de Dirección; comprobación de lectura de API y esquema aprobada. Board PR5 integrado en b9985a680998bdbdca7f8962ba908704a385bc6c; Pages y navegación integrada pendientes de cotejo. Perfiles pendientes de vinculación verificable."
+      "deployment": "GAS-CRM v21 y API Sheets activos en implementación existente. Board PR5 y portal PR146 integrados; Pages aprobado. Vista real autenticada de Dirección carga cartera, contactos y perfiles. Acceso individual pendiente de correo verificado; no se realizaron escrituras de prueba en producción."
     }
   ],
   "data_contracts": [

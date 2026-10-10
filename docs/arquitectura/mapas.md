@@ -67,7 +67,7 @@ flowchart LR
 ```mermaid
 flowchart LR
   n_SYS_POTENCIALES["PPP · Potenciales"]
-  n_SYS_INVERSION["Presentación a inversionistas"]
+  n_SYS_INVERSION["Brokers"]
   n_SYS_MARKETING["Embudo comercial"]
   n_SYS_YOD_OS["YOD OS"]
   n_SYS_PLAN_POTENCIAL["Plan de Potencial"]
@@ -269,7 +269,7 @@ flowchart LR
   n_SYS_TAREAS["MOAC"]
   n_SYS_FLUJO["Tesorería"]
   n_SYS_INTERIORES["Aurum · Interiores"]
-  n_SYS_INVERSION["Presentación a inversionistas"]
+  n_SYS_INVERSION["Brokers"]
   n_SYS_MARKETING["Embudo comercial"]
   n_SYS_OBRA["Obra en vivo"]
   n_SYS_CONTROL["Control Maestro"]
@@ -402,7 +402,7 @@ flowchart LR
   n_SYS_TAREAS["MOAC"]
   n_SYS_FLUJO["Tesorería"]
   n_SYS_INTERIORES["Aurum · Interiores"]
-  n_SYS_INVERSION["Presentación a inversionistas"]
+  n_SYS_INVERSION["Brokers"]
   n_SYS_MARKETING["Embudo comercial"]
   n_SYS_OBRA["Obra en vivo"]
   n_SYS_CONTROL["Control Maestro"]
