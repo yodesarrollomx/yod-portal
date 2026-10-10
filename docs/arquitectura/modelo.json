@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-10.130-voz-pausa",
+  "revision": "2026-10-10.131-decisions-jev",
   "checked_at": "2026-10-09",
   "priorities": [
     "vender_mas",
@@ -9779,6 +9779,25 @@
       ],
       "deployment": "No desplegado; depende de PR55 motor y PR149 portal.",
       "rollback": "Revertir ambos PR; conservar diarios privados. No hay migración ni despliegue en este paso."
+    },
+    {
+      "id": "CHG-DESPACHO-DECISIONS-131",
+      "components": [
+        "SYS-YOD-OS",
+        "SVC-AUTON-CLOUD",
+        "STORE-AUTON-ESTADO",
+        "EXT-JEV",
+        "EXT-OPENAI"
+      ],
+      "proposal": "Comparar Decisions con Jev en cuatro operaciones tipadas; Jev predeterminado y sombra sin esperar ni consumir su resultado.",
+      "status": "implementado_local",
+      "approval": "Dirección solicita paso 6: ramas apiladas y PR; sin integrar, desplegar ni cambiar variables.",
+      "tests": [
+        "Motor: 344 pruebas aprobadas, una omitida optativa de Chromium; 19 pruebas nuevas con dobles, sin llamadas reales.",
+        "Sombra sin espera, refusal/fallback, timeouts de cabecera/cuerpo, privacidad, comparación de umbrales y ruta autenticada."
+      ],
+      "deployment": "No desplegado. Motor depende de PR60; atlas depende de PR150.",
+      "rollback": "Seleccionar jev o revertir PR; conservar diarios privados, sin migración."
     }
   ],
   "data_contracts": [
@@ -12147,6 +12166,56 @@
       "prefix": "scripts/probar-voice-saving-browser.cjs",
       "components": [
         "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": "cloud/decisions-provider.mjs",
+      "components": [
+        "SVC-AUTON-CLOUD",
+        "EXT-JEV",
+        "EXT-OPENAI",
+        "STORE-AUTON-ESTADO"
+      ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": "cloud/jev-provider.mjs",
+      "components": [
+        "SVC-AUTON-CLOUD",
+        "EXT-JEV",
+        "EXT-OPENAI",
+        "STORE-AUTON-ESTADO"
+      ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": "runtime/decision-comparison.mjs",
+      "components": [
+        "SVC-AUTON-CLOUD",
+        "EXT-JEV",
+        "EXT-OPENAI",
+        "STORE-AUTON-ESTADO"
+      ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": "cloud/jev-mcp.mjs",
+      "components": [
+        "SVC-AUTON-CLOUD",
+        "EXT-JEV",
+        "EXT-OPENAI",
+        "STORE-AUTON-ESTADO"
+      ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": "cloud/usage-route.mjs",
+      "components": [
+        "SVC-AUTON-CLOUD",
+        "EXT-JEV",
+        "EXT-OPENAI",
+        "STORE-AUTON-ESTADO"
       ]
     }
   ],

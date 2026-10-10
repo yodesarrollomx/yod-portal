@@ -1,18 +1,18 @@
 {
-  "model_revision": "2026-10-10.130-voz-pausa",
-  "proposal_id": "CHG-DESPACHO-VOZ-130",
-  "summary": "Voz bajo demanda: expediente único, pausa por inactividad comprobada, continuidad textual privada y objetivos independientes.",
+  "model_revision": "2026-10-10.131-decisions-jev",
+  "proposal_id": "CHG-DESPACHO-DECISIONS-131",
+  "summary": "Comparar Decisions con Jev en cuatro operaciones tipadas; Jev predeterminado y sombra sin esperar ni consumir su resultado.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
     "SVC-AUTON-CLOUD",
     "STORE-AUTON-ESTADO",
+    "EXT-JEV",
     "EXT-OPENAI"
   ],
   "tests": [
-    "Dobles de Live, reloj, reproducción, historial, permisos por actor/caso, objetivos y bitácora; suite y atlas del portal."
+    "Motor: 344 pruebas aprobadas, una omitida optativa de Chromium; 19 pruebas nuevas con dobles, sin llamadas reales.",
+    "Sombra sin espera, refusal/fallback, timeouts de cabecera/cuerpo, privacidad, comparación de umbrales y ruta autenticada."
   ],
-  "rollback": "Revertir ambos PR; conservar diarios privados. No hay migración ni despliegue en este paso.",
-  "base_commit": "d2323534ebd194cac66cb5655c7ad6b80d76747b"
+  "rollback": "Seleccionar jev o revertir PR; conservar diarios privados, sin migración.",
+  "base_commit": "5fd5c72c5411a1f64e14336c49f535a6d4c413f4"
 }
