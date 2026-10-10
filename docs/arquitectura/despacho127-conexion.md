@@ -16,5 +16,25 @@ Backend PR48 integrado en e55943540c3501784ec0a0d48d5432c504df9a46; Render dep-d
 597 pruebas Node aprobadas, validadores y navegadores Chromium/WebKit aprobados. Recorrido adicional de clic en las tres figuras, radial y PPP aprobado. Recuperación de fallo temporal y aviso durante voz activa aprobados con datos sintéticos.
 La regresión de voz esperaba todavía /fast/hello; se actualiza al contrato /voice/ready y se añade la comprobación de cero lecturas completas de contexto al preparar. Se conserva la exigencia de preparar antes de acercarse, sin micrófono ni sesión Live.
 
-## Estado
-Servidor publicado; interfaz en PR143. Cierre de las pruebas integradas y publicación del portal pendientes. No se garantiza disponibilidad perpetua ni se acredita micrófono físico con dobles de prueba.
+## 2026-10-10T01:09:42Z · Interfaz publicada
+PR143 integrado en dc5233b7dde5fed77fa473620fce36f2bb6e6880. Pages38012047418 finalizó correctamente. La cabeza probada5699769f tiene el mismo runtime que la matriz visual286ae; los commits intermedios sólo ajustan expectativas de pruebas y bitácora.
+
+Todos los controles de la cabeza5699769f aprobados: 597 pruebas Node, verificar, arquitectura, Chromium/WebKit y recorrido integrado38011488972, incluida voz y PPP colaborativo.
+La matriz privada38011244981 comprobó clic real de las etiquetas de tres proyectos, mismos cuatro sectores, PPP propio, inicio y cierre de voz con case_id correspondiente, recuperación de backend_unavailable y resolución demorada5s. El clic real sobre las tres figuras se acredita en38010902615 job114090411929. Se inspeccionaron capturas; no hay contenido cruzado.
+
+## Cambio concreto de la guarda
+Antes, abrir el tablero bloqueaba otro caso aunque no hubiera conversación:
+```js
+beforeSelect: () => ['idle','error'].includes(voicePhase) && !window.YodVoiceWorkspace?.isOpen?.()
+```
+Ahora sólo la voz activa protege el caso:
+```js
+beforeSelect: () => ['idle','error'].includes(voicePhase)
+```
+Las dos superficies de clic delegan en resident-opening.mjs, que muestra preparación, valida autorización exacta y descarta respuestas canceladas o de otro caso. El menú abierto no concede permisos.
+
+## 2026-10-10T01:01:23Z · Observación del servidor después de publicar
+Logs completos durante5min53s: cero context-read/context-timing, lock_busy, motores detenidos o errores de voz. Antes se observaron cinco lecturas juntas a00:47Z (dos lock_busy) y otras cinco a00:52Z. La ráfaga no reapareció en la ventana observada; no se usa esa ausencia para afirmar latencia foreground.
+
+## Resultado y límites
+Corrección127 publicada. La validación de voz utiliza audio, identidad y PPP sintéticos: no acredita el micrófono físico del propietario ni latencia real de Sheets. Los tiempos del recorrido de navegador incluyen autoesperas de Playwright y renderizado SwiftShader; no se presentan como latencia del producto ni mejora50%. No se garantiza disponibilidad perpetua ni se acredita micrófono físico con dobles de prueba.
