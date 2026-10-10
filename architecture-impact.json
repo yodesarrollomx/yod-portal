@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-09.127-autones-conectados",
-  "proposal_id": "CHG-DESPACHO-IGUALDAD-CONEXION-127",
-  "summary": "Corregir selección y conexión para que todos los autones abran el mismo puesto, radial y capacidades autorizadas, eliminando bloqueos silenciosos y consultas duplicadas; preservar identidad, permisos y estado del proyecto.",
+  "model_revision": "2026-10-10.128-conversacion-contexto",
+  "proposal_id": "CHG-DESPACHO-CONVERSACION-CONTEXTO-128",
+  "summary": "Compartir texto y voz del mismo caso, recuperar fuentes y memoria, enlazar el identificador del PPP registrado y hacer visibles los recibos o bloqueos de objetivos.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
@@ -13,11 +13,11 @@
     "SYS-POTENCIALES"
   ],
   "tests": [
-    "Clic real en cada figura/etiqueta desde panorama/caminar hasta radial y PPP, sin apertura programática.",
-    "Cambio de puesto permitido sin voz; llamada activa protege su caso con explicación visible.",
-    "Demoras y fallos transitorios recuperables; revocación explícita no conserva acceso.",
-    "Deduplicación y límites de consultas sin mezclar actor/caso ni extender autorización.",
-    "Pruebas Node, validadores y navegador con latencia; publicar y cotejar versión; micrófono físico se acredita aparte."
+    "Texto durante voz con acuse e idempotencia; cierre y continuación escrita.",
+    "Lectura de memoria con unidades opcionales nulas y reintento local de fuentes.",
+    "Identificadores distintos de autón y tablero sin aceptar casos ajenos.",
+    "Objetivos confirmados sólo con recibo; bloqueo de revisión visible sin aprobar por cuenta propia.",
+    "Pruebas Node, validadores y recorrido de navegador con datos sintéticos; despliegues cotejados por separado."
   ],
   "rollback": "Revertir cambios por PR conservando expedientes, journal, recibos, historial, cola y volumen persistente."
 }

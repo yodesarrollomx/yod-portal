@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-09.127-autones-conectados · 2026-10-09.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-10.128-conversacion-contexto · 2026-10-09.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
