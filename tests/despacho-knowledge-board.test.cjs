@@ -104,3 +104,9 @@ test('queued parent labels its old running child as pending resumption without m
  const {taskDisplay}=await import('../despacho3d/agent-workspace.mjs'),task={status:'running'};
  assert.equal(taskDisplay(task,'queued'),'Pendiente de reanudación');assert.equal(task.status,'running');
 });
+
+test('facts without a physical unit accept the canonical null without accepting malformed units',async()=>{
+ const {validateKnowledgeBoard}=await knowledge(),raw=board();
+ raw.facts[0].unit=null;assert.equal(validateKnowledgeBoard(raw,CASE).facts[0].unit,undefined);
+ raw.facts[0].unit={};assert.throws(()=>validateKnowledgeBoard(raw,CASE),/invalid_knowledge/);
+});

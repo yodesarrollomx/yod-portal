@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-09.127-autones-conectados",
+  "revision": "2026-10-10.128-conversacion-contexto",
   "checked_at": "2026-10-09",
   "priorities": [
     "vender_mas",
@@ -9677,6 +9677,31 @@
         "Pruebas Node, validadores y navegador con latencia; publicar y cotejar versión; micrófono físico se acredita aparte."
       ],
       "deployment": "2026-10-10T01:09:42Z: portal PR143 integrado en dc5233b7dde5fed77fa473620fce36f2bb6e6880 y Pages38012047418 publicado. 597 pruebas Node, validadores, Chromium/WebKit y recorrido integrado38011488972 aprobados. Clic real en las tres figuras, etiquetas, radial, PPP y voz por caso comprobado con datos sintéticos (QA38010902615 job114090411929 y38011244981). Fallo transitorio, resolución demorada y protección de llamada activa comprobados. Backend48 integrado en e55943540c3501784ec0a0d48d5432c504df9a46, Render dep-db4opn7lot8c73cfi7p0 live desde00:55:30Z; 288 pruebas aprobadas y una omitida. Ventana00:55:30–01:01:23Z sin repetir ráfagas de contexto ni lock_busy. No acredita micrófono físico, latencia Sheets, mejora50% ni disponibilidad perpetua.",
+      "rollback": "Revertir cambios por PR conservando expedientes, journal, recibos, historial, cola y volumen persistente."
+    },
+    {
+      "id": "CHG-DESPACHO-CONVERSACION-CONTEXTO-128",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD",
+        "GAS-PORTERO",
+        "EXT-DRIVE",
+        "STORE-AUTON-ESTADO",
+        "SYS-POTENCIALES"
+      ],
+      "proposal": "Compartir texto y voz del mismo caso, recuperar fuentes y memoria, enlazar el identificador del PPP registrado y hacer visibles los recibos o bloqueos de objetivos.",
+      "status": "propuesto",
+      "approval": "Dirección solicita implementar las correcciones de la revisión del 9 de octubre.",
+      "tests": [
+        "Texto durante voz con acuse e idempotencia; cierre y continuación escrita.",
+        "Lectura de memoria con unidades opcionales nulas y reintento local de fuentes.",
+        "Identificadores distintos de autón y tablero sin aceptar casos ajenos.",
+        "Objetivos confirmados sólo con recibo; bloqueo de revisión visible sin aprobar por cuenta propia.",
+        "Pruebas Node, validadores y recorrido de navegador con datos sintéticos; despliegues cotejados por separado."
+      ],
+      "deployment": "Pendiente de implementación y comprobación.",
       "rollback": "Revertir cambios por PR conservando expedientes, journal, recibos, historial, cola y volumen persistente."
     }
   ],
