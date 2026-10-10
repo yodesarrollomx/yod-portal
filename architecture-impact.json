@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-10.130-masterbrokers",
+  "model_revision": "2026-10-10.131-masterbroker-personal",
   "proposal_id": "CHG-MASTERBROKERS-130",
-  "summary": "Experiencia Masterbrokers centrada en trabajo propio, oferta, entregas de YOD y acuerdos; mismo CRM y contratos.",
+  "summary": "Recorrido personal Masterbroker y vista previa restringida a su cartera para Dirección, sin suplantar identidad ni guardar desde la previsualización.",
   "components": [
     "SYS-INVERSION",
     "GAS-INVERSION",
@@ -18,10 +18,8 @@
     "SYS-DESPACHO"
   ],
   "tests": [
-    "Pruebas sintéticas de contrato y autorización existentes",
-    "Responsable explícito, solicitudes, fechas, estados finales y ausencia de cifras inferidas",
-    "Navegación de inicio, oferta, expediente, red y acuerdos; envíos con ACK",
-    "Regresiones de catálogo y atlas del portal"
+    "Vista previa reduce contactos, oportunidades, actividades y participaciones; no modifica snapshot original ni guarda por Dirección",
+    "Recorrido personal con datos sintéticos y lectura de cartera real; no inventa avance ni prioridad comercial"
   ],
   "rollback": "Revertir por PR sin borrar registros, identidades ni historial."
 }
