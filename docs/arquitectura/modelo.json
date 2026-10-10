@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-10.129-modelos-agente",
+  "revision": "2026-10-10.130-voz-pausa",
   "checked_at": "2026-10-09",
   "priorities": [
     "vender_mas",
@@ -9758,6 +9758,27 @@
       ],
       "deployment": "Sin desplegar. Motor apilado sobre paso 3; fuente para implementación existente de Portero.",
       "rollback": "Revertir PRs, conservar historial privado y preferencias canónicas."
+    },
+    {
+      "id": "CHG-DESPACHO-VOZ-130",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD",
+        "STORE-AUTON-ESTADO",
+        "EXT-OPENAI"
+      ],
+      "proposal": "Voz bajo demanda: expediente único, pausa por inactividad comprobada, continuidad textual privada y objetivos independientes.",
+      "status": "implementado_local",
+      "approval": "Dirección solicita paso 5; sólo ramas apiladas y PR, sin integrar ni desplegar.",
+      "tests": [
+        "608 pruebas Node del portal aprobadas; Chromium local 1280/390 px con audio sintético, sin red externa.",
+        "Motor: 325 pruebas aprobadas y una optativa de Chromium omitida; dobles de Live, relojes, recibos, recuperación y bitácora.",
+        "Contexto sintético: 13666 → 8884 bytes UTF-8 por delegación, reducción 34.99%; no es medición de facturación."
+      ],
+      "deployment": "No desplegado; depende de PR55 motor y PR149 portal.",
+      "rollback": "Revertir ambos PR; conservar diarios privados. No hay migración ni despliegue en este paso."
     }
   ],
   "data_contracts": [
@@ -12112,6 +12133,20 @@
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-voice-saving.test.cjs",
+      "components": [
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/probar-voice-saving-browser.cjs",
+      "components": [
+        "SYS-DESPACHO-3D"
       ]
     }
   ],

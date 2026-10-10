@@ -2,8 +2,8 @@
 export function voiceView(state = {}) {
   const live = !['idle','error'].includes(state.phase);
   const listening = state.phase === 'listening';
-  const titles = {idle:state.finalized?'Conversación finalizada':'Disponible para conversar',
-    error:'No se pudo conectar',starting:'Conectando voz',listening:state.muted?'Micrófono en pausa':'Listo para hablar',
+  const titles = {idle:state.working_without_voice?'Trabajando sin voz':state.paused?'En pausa (toca para seguir)':state.finalized?'Conversación finalizada':'Disponible para conversar',
+    error:'No se pudo conectar',starting:'Conectando voz',listening:state.muted?'En llamada · micrófono silenciado':'En llamada',
     reconnecting:'Recuperando conexión',closing:'Finalizando conversación'};
   let context = !live ? 'El expediente se comprueba al conectar. Las tareas conservan su estado.' :
     state.mode === 'basic' ? 'Conversación básica: sin acceso a datos ni herramientas del expediente.' :
@@ -22,8 +22,18 @@ export function voiceView(state = {}) {
     state.fragments ? 'Transcripción recibida. El guardado todavía no está confirmado.' :
     'Aquí aparecerá la confirmación de guardado; recibir texto no significa que ya esté guardado.';
   return {live,listening,title:titles[state.phase]||'Comprobando conversación',context,history,
-    startLabel:state.phase==='error'?'Volver a intentar':state.finalized||state.incomplete?'Nueva conversación':'Iniciar conversación',
+    startLabel:state.paused?'Toca para seguir':state.phase==='error'?'Volver a intentar':state.finalized||state.incomplete?'Nueva conversación':'Iniciar conversación',
     stopLabel:state.phase==='starting'?'Cancelar conexión':state.phase==='closing'?'Finalizando…':'Finalizar conversación',
     audioBlocked:live && state.playback_blocked === true,
     retryContext:listening && state.context_phase === 'unavailable'};
+}
+
+// Canonical goal snapshots drive workspace notices, never voice lifetime or permissions.
+export function createVoiceGoalView(){
+ let previous=new Map();
+ return {reset(){previous.clear();},update(goals=[]){
+  const ready=goals.find(g=>['ready_for_review','awaiting_data','completed'].includes(g.status)&&['queued','running'].includes(previous.get(g.goal_id)));
+  previous=new Map(goals.map(g=>[g.goal_id,g.status]));
+  return {working:goals.some(g=>['queued','running'].includes(g.status)),notice:ready?'Hay un resultado disponible. Abre Pendientes para revisarlo.':''};
+ }};
 }
