@@ -221,3 +221,7 @@
 .work-history button:disabled{opacity:.5;cursor:default}
 .work-history button:focus-visible{outline:3px solid #439b7c;outline-offset:3px}
 .work-history p,.work-history li{overflow-wrap:anywhere;line-height:1.5}
+
+.model-settings{max-width:40rem;margin:1.5rem auto;padding:1rem;border:1px solid #d3d7d2;border-radius:1rem;background:#fff;color:#24312c}.model-settings label{display:block;margin:.75rem 0;font-weight:600}.model-settings select{display:block;width:100%;min-height:44px;margin-top:.3rem;padding:.55rem;border:1px solid #a9b5ac;border-radius:.5rem;background:#fff;color:inherit;font:inherit}.model-settings button{min-height:44px;padding:.65rem;margin:.3rem;border:1px solid #9aaa9d;border-radius:.5rem;font:inherit}.model-settings p{font-size:.9rem;line-height:1.45}.model-settings [role=status]{font-weight:600}.model-settings :disabled{opacity:.55}.model-settings :focus-visible{outline:3px solid #267861;outline-offset:2px}
+
+.model-settings [hidden]{display:none!important}

@@ -3,10 +3,12 @@
  function create(options){
   var endpoint=options.endpoint;
   if(typeof endpoint!=='string'||!/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(endpoint))throw Error('invalid_endpoint');
-  var methods=['listAuthorized','resolveCurrent','read','enqueue','createGoal','readGoals','reviewGoal','mintFastSession','readVisits','recordVisit','readOfficePermissions','readOfficePending'];
+  var methods=['readModelPreferences','setModelPreferences','listAuthorized','resolveCurrent','read','enqueue','createGoal','readGoals','reviewGoal','mintFastSession','readVisits','recordVisit','readOfficePermissions','readOfficePending'];
   function keys(value,names){return !!value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).length===names.length&&names.every(function(key){return Object.prototype.hasOwnProperty.call(value,key);});}
   function str(value,max){return typeof value==='string'&&value.trim().length>0&&value.length<=max;}
   function validGoalPayload(operation,p){
+   if(operation==='readModelPreferences')return keys(p,['case_id'])&&str(p.case_id,200);
+   if(operation==='setModelPreferences')return keys(p,['case_id','request_id','expected_revision','scope','task_id','preference'])&&str(p.case_id,200)&&str(p.request_id,200)&&Number.isSafeInteger(p.expected_revision)&&['agent','task'].includes(p.scope);
    if(operation==='listAuthorized')return keys(p,[]);
    if(operation==='resolveCurrent')return keys(p,[])||(keys(p,['case_id'])&&str(p.case_id,200));
    if(operation==='readOfficePending')return keys(p,['case_id','space_id'])&&str(p.case_id,256)&&p.space_id==='juntas';

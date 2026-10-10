@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-10.129-brokers",
+  "revision": "2026-10-10.129-modelos-agente",
   "checked_at": "2026-10-09",
   "priorities": [
     "vender_mas",
@@ -9736,6 +9736,28 @@
       ],
       "rollback": "Revertir por PR sin borrar registros, identidades ni historial.",
       "deployment": "GAS-CRM v21 y API Sheets activos en implementación existente. Board PR5 y portal PR146 integrados; Pages aprobado. Vista real autenticada de Dirección carga cartera, contactos y perfiles. Acceso individual pendiente de correo verificado; no se realizaron escrituras de prueba en producción."
+    },
+    {
+      "id": "CHG-DESPACHO-MODELOS-129",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD",
+        "GAS-PORTERO",
+        "STORE-AUTON-ESTADO",
+        "EXT-OPENAI",
+        "EXT-DRIVE"
+      ],
+      "proposal": "Selector de modelo/esfuerzo por agente y ejecución, autorización vigente, recibo durable y procedencia por capa.",
+      "status": "implementado_local",
+      "approval": "Dirección solicita paso 4; integración y despliegue no autorizados.",
+      "tests": [
+        "603 pruebas Node del portal aprobadas; navegador sintético 1280 y 390 px: esfuerzos, recibos, tarea temporal y aislamiento.",
+        "Motor: suite con red externa bloqueada; dobles de Portero, Responses y Live; permisos, CAS, expiración y procedencia."
+      ],
+      "deployment": "Sin desplegar. Motor apilado sobre paso 3; fuente para implementación existente de Portero.",
+      "rollback": "Revertir PRs, conservar historial privado y preferencias canónicas."
     }
   ],
   "data_contracts": [
@@ -12074,6 +12096,22 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO",
         "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-model-settings.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/probar-model-settings-browser.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
       ]
     }
   ],
