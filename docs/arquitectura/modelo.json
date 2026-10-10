@@ -9692,7 +9692,7 @@
         "SYS-POTENCIALES"
       ],
       "proposal": "Compartir texto y voz del mismo caso, recuperar fuentes y memoria, enlazar el identificador del PPP registrado y hacer visibles los recibos o bloqueos de objetivos.",
-      "status": "propuesto",
+      "status": "publicado",
       "approval": "Dirección solicita implementar las correcciones de la revisión del 9 de octubre.",
       "tests": [
         "Texto durante voz con acuse e idempotencia; cierre y continuación escrita.",
@@ -9701,7 +9701,7 @@
         "Objetivos confirmados sólo con recibo; bloqueo de revisión visible sin aprobar por cuenta propia.",
         "Pruebas Node, validadores y recorrido de navegador con datos sintéticos; despliegues cotejados por separado."
       ],
-      "deployment": "Pendiente de implementación y comprobación.",
+      "deployment": "Publicado: portal PR145, commit dcbdd0ca843193599a2d457a60ce646c375ab661; servidor PR49, commit 2be0c5870ed122140f0ad7bec498655947c9742b. Cinco recursos públicos cotejados byte a byte y /healthz disponible en run 38019096060. Recorrido de tres avatares aprobado en run 38018726510 con datos y audio sintéticos. Micrófono físico y aceptación de datos privados no acreditados por esas pruebas.",
       "rollback": "Revertir cambios por PR conservando expedientes, journal, recibos, historial, cola y volumen persistente."
     }
   ],
