@@ -83,6 +83,11 @@ jobs:
           NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
           BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/knowledge-evidence
         run: node scripts/probar-voz-ux-browser.cjs
+      - name: Pausa y reanudación de voz sin llamadas externas
+        timeout-minutes: 2
+        env:
+          NODE_PATH: ${{ runner.temp }}/yod-knowledge-browser/node_modules
+        run: node scripts/probar-voice-saving-browser.cjs
       - name: PPP colaborativo
         timeout-minutes: 3
         env:
