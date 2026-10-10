@@ -1,0 +1,20 @@
+'use strict';
+const {chromium}=require('playwright'),http=require('node:http'),fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'..');
+const html=`<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/despacho3d/agent-workspace.css"><body style="margin:16px;background:#eef1ec;font-family:system-ui"><h2>Ficha · Autón sintético</h2><main id="profile"></main><script type="module">
+import {mountModelSettings} from '/despacho3d/model-settings.mjs';
+let revision=0,preference=null,tasks=[{id:'session-synthetic',kind:'voice',preference:null,expires_at:Date.now()+120000}];window.saved=[];
+const state=()=>({ok:true,case_id:'synthetic',can_edit:true,revision,preference,tasks});
+const transport={readModelPreferences:async()=>state(),setModelPreferences:async p=>{window.saved.push(p);revision++;if(p.scope==='agent')preference=p.preference;else tasks[0].preference=p.preference;return {...state(),receipt:{id:'receipt-'+revision,case_id:'synthetic',request_id:p.request_id,at:new Date().toISOString()}};}};
+window.panel=mountModelSettings({container:document.querySelector('#profile'),transport,applyLive:async()=>true});await panel.open('synthetic');
+window.finishTask=async()=>{tasks=[];await panel.open('synthetic');};
+</script></body></html>`;
+const server=http.createServer((req,res)=>{if(req.url==='/'){res.setHeader('Content-Type','text/html');res.end(html);return;}const file=path.resolve(root,'.'+new URL(req.url,'http://local').pathname);if(!file.startsWith(root+path.sep)||!fs.existsSync(file)){res.writeHead(404).end();return;}res.setHeader('Content-Type',file.endsWith('.css')?'text/css':'text/javascript');res.end(fs.readFileSync(file));});
+(async()=>{await new Promise(r=>server.listen(0,'127.0.0.1',r));let browser;try{browser=await chromium.launch({headless:true,...(process.env.BROWSER_EXECUTABLE?{executablePath:process.env.BROWSER_EXECUTABLE}:{}),args:['--no-sandbox']});const base='http://127.0.0.1:'+server.address().port;
+for(const width of [1280,390]){const page=await browser.newPage({viewport:{width,height:900}}),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.route('**/*',r=>new URL(r.request().url()).origin===base?r.continue():r.abort());await page.goto(base);await page.getByRole('button',{name:'Guardar elección'}).waitFor();
+await page.getByLabel('Modelo',{exact:true}).selectOption('gpt-6-astra');assert.equal(await page.getByLabel('Esfuerzo',{exact:true}).locator('option[value="none"]').count(),0);await page.getByLabel('Esfuerzo',{exact:true}).selectOption('xhigh');await page.getByRole('button',{name:'Guardar elección'}).click();await page.getByRole('status').filter({hasText:'recibo'}).waitFor();
+assert.equal(await page.evaluate(()=>saved[0].scope),'agent');await page.getByLabel('Aplicar a').selectOption('task');await page.getByLabel('Modelo',{exact:true}).selectOption('gpt-6-luna');await page.getByLabel('Esfuerzo',{exact:true}).selectOption('none');await page.getByRole('button',{name:'Guardar elección'}).click();await page.waitForFunction(()=>saved.length===2);assert.equal(await page.evaluate(()=>saved[1].task_id),'session-synthetic');
+await page.evaluate(()=>finishTask());assert.equal(await page.getByRole('button',{name:'Guardar elección'}).isDisabled(),true);await page.getByLabel('Aplicar a').selectOption('agent');assert.equal(await page.getByLabel('Modelo',{exact:true}).inputValue(),'gpt-6-astra');assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);assert.deepEqual(errors,[]);
+if(process.env.PROFILE_SCREENSHOT_DIR)await page.screenshot({path:path.join(process.env.PROFILE_SCREENSHOT_DIR,'profile-'+width+'.png'),fullPage:true});await page.close();}
+console.log('Profile browser: desktop/mobile, allowed efforts, durable/task scopes, receipt, task finish, no overflow or page errors.');
+}finally{await browser?.close();await new Promise(r=>server.close(r));}})().catch(e=>{console.error(e);process.exitCode=1;});

@@ -1,28 +1,19 @@
 {
-  "model_revision": "2026-10-10.129-brokers",
-  "proposal_id": "CHG-BROKERS-128",
-  "summary": "Cierre Brokers: corregir nombre y descripción en CAT_RESPALDO de la cabina y registrar publicación y lectura autenticada de Dirección; conservar permisos, IDs y contratos.",
+  "model_revision": "2026-10-10.129-modelos-agente",
+  "proposal_id": "CHG-DESPACHO-MODELOS-129",
+  "summary": "Selector de modelo/esfuerzo por agente y ejecución, autorización vigente, recibo durable y procedencia por capa.",
   "components": [
-    "SYS-INVERSION",
-    "GAS-INVERSION",
-    "SHEET-INVERSION",
-    "GAS-CRM",
-    "SHEET-CRM",
-    "SYS-POTENCIALES",
-    "GAS-PORTERO",
     "SYS-YOD-OS",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-CONTROL",
-    "SYS-OBRA-CLIENTE",
-    "SYS-DESPACHO"
+    "SYS-DESPACHO",
+    "SYS-DESPACHO-3D",
+    "SVC-AUTON-CLOUD",
+    "GAS-PORTERO",
+    "STORE-AUTON-ESTADO",
+    "EXT-OPENAI",
+    "EXT-DRIVE"
   ],
   "tests": [
-    "Contrato de snapshot autorizado, sin caché privada ni fallback general",
-    "Alta y actualización con revisión y clave idempotente, ACK explícito",
-    "CRM, búsqueda, etapas, seguimiento, participación y navegación PPP con datos sintéticos",
-    "Regresión de catálogo compartido, navegación del Despacho, obra, control y track: verify-os, verify-portal, verify-obra-app y 599 pruebas Node aprobadas",
-    "API de Sheets y esquema vivo leídos correctamente después de activar la API; versión21 publicada en el mismo endpoint"
+    "Dobles de Portero/Responses/Live, permisos, CAS, recibos, aislamiento y ciclo de tarea; validadores del portal."
   ],
-  "rollback": "Revertir por PR sin borrar registros, identidades ni historial."
+  "rollback": "Revertir PRs, conservar historial privado y preferencias canónicas."
 }

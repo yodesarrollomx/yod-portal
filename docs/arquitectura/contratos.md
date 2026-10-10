@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-10.129-brokers · 2026-10-09.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-10.129-modelos-agente · 2026-10-09.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
