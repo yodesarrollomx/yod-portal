@@ -10,13 +10,19 @@
     "SHEET-CRM",
     "SYS-POTENCIALES",
     "GAS-PORTERO",
-    "SYS-YOD-OS"
+    "SYS-YOD-OS",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-CONTROL",
+    "SYS-OBRA-CLIENTE",
+    "SYS-DESPACHO"
   ],
   "tests": [
     "Contrato de snapshot autorizado, sin caché privada ni fallback general",
     "Alta y actualización con revisión y clave idempotente, ACK explícito",
     "CRM, búsqueda, etapas, seguimiento, participación y navegación PPP con datos sintéticos",
-    "Lectura sin escrituras del esquema vivo de GAS-CRM completada; API atómica pendiente de activación"
+    "Lectura sin escrituras del esquema vivo de GAS-CRM completada; API atómica pendiente de activación",
+    "Regresión de catálogo compartido, navegación del Despacho, obra, control y track: verify-os, verify-portal, verify-obra-app y 597 pruebas Node aprobadas"
   ],
   "rollback": "Revertir por PR sin borrar registros, identidades ni historial."
 }

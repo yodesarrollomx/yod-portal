@@ -9689,7 +9689,12 @@
         "SHEET-CRM",
         "SYS-POTENCIALES",
         "GAS-PORTERO",
-        "SYS-YOD-OS"
+        "SYS-YOD-OS",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE",
+        "SYS-DESPACHO"
       ],
       "proposal": "Brokers usa el CRM existente: contactos con folio de LEADS-POTENCIAL y tablas de relación, expedientes, revisiones, participaciones y recibos en el mismo libro. GAS-CRM ofrece brokers.v1 con autorización por registro y escritura atómica. SYS-INVERSION conserva su ID y la presentación comercial; PPP enlaza la versión aprobada desde la hoja.",
       "status": "propuesto",
@@ -9701,7 +9706,8 @@
         "Fuente viva de GAS-INVERSION v14 y GAS-CRM inspeccionada en editor; esquemas de CRM verificados mediante Sheets.",
         "Snapshot broker A/B/Dirección, referencias, duplicados, conflicto e idempotencia con datos sintéticos.",
         "Atomicidad de contactos, historial y recibos mediante una operación Sheets batchUpdate.",
-        "21 pruebas sintéticas de dominio y cliente aprobadas; no acreditan guardado en producción."
+        "21 pruebas sintéticas de dominio y cliente aprobadas; no acreditan guardado en producción.",
+        "Catálogo y rutas compartidas: regresiones de Despacho, obra, control y track aprobadas"
       ],
       "rollback": "Revertir por PR sin borrar registros, identidades ni historial.",
       "deployment": "Implementado en rama y añadido al editor vivo de GAS-CRM. Lectura de esquema y cartera comprobada sin escribir registros. Activación de Sheets API y nueva versión de la implementación pendientes; no se ha habilitado el menú vivo ni usuarios."
