@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-09.126-despacho-publicado",
-  "proposal_id": "CHG-DESPACHO-INTEGRAL-126",
-  "summary": "Cierre documental de la publicación126: registrar recibos de Pages, Render y Apps Script, auditoría pública y límites de aceptación; sin cambios al código de ejecución.",
+  "model_revision": "2026-10-09.127-autones-conectados",
+  "proposal_id": "CHG-DESPACHO-IGUALDAD-CONEXION-127",
+  "summary": "Corregir selección y conexión para que todos los autones abran el mismo puesto, radial y capacidades autorizadas, eliminando bloqueos silenciosos y consultas duplicadas; preservar identidad, permisos y estado del proyecto.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
@@ -13,8 +13,11 @@
     "SYS-POTENCIALES"
   ],
   "tests": [
-    "Validación del modelo, ocho vistas regeneradas y comprobación de impacto.",
-    "Recibos existentes: siete suites integradas y corrida main aprobadas; auditoría pública y recarga real aprobadas."
+    "Clic real en cada figura/etiqueta desde panorama/caminar hasta radial y PPP, sin apertura programática.",
+    "Cambio de puesto permitido sin voz; llamada activa protege su caso con explicación visible.",
+    "Demoras y fallos transitorios recuperables; revocación explícita no conserva acceso.",
+    "Deduplicación y límites de consultas sin mezclar actor/caso ni extender autorización.",
+    "Pruebas Node, validadores y navegador con latencia; publicar y cotejar versión; micrófono físico se acredita aparte."
   ],
-  "rollback": "Revertir interfaz y cambios compatibles del motor mediante PR; conservar expedientes, journal/outbox, recibos y volumen persistente. No borrar objetivos ni reanudar acciones inciertas."
+  "rollback": "Revertir cambios por PR conservando expedientes, journal, recibos, historial, cola y volumen persistente."
 }
