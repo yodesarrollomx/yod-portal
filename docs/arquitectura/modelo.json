@@ -9667,7 +9667,7 @@
         "SYS-POTENCIALES"
       ],
       "proposal": "Corregir selección y conexión para que todos los autones abran el mismo puesto, radial y capacidades autorizadas, eliminando bloqueos silenciosos y consultas duplicadas; preservar identidad, permisos y estado del proyecto.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "approval": "Dirección autoriza corregir, verificar y publicar tras reportar fallos de selección y desconexión el9-oct2026.",
       "tests": [
         "Clic real en cada figura/etiqueta desde panorama/caminar hasta radial y PPP, sin apertura programática.",
@@ -12006,6 +12006,15 @@
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/despacho-avatar-label-layout126.test.cjs",
       "components": [
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-resident-opening.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
         "SYS-DESPACHO-3D"
       ]
     }
