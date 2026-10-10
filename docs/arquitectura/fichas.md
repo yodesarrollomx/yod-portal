@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-10.128-conversacion-contexto · 2026-10-09.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-10.129-brokers · 2026-10-09.
 
 ## SYS-DESPACHO · El Despacho
 

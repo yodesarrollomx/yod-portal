@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-10.128-conversacion-contexto",
+  "revision": "2026-10-10.129-brokers",
   "checked_at": "2026-10-09",
   "priorities": [
     "vender_mas",
@@ -9703,6 +9703,39 @@
       ],
       "deployment": "Publicado: portal PR145, commit dcbdd0ca843193599a2d457a60ce646c375ab661; servidor PR49, commit 2be0c5870ed122140f0ad7bec498655947c9742b. Cinco recursos públicos cotejados byte a byte y /healthz disponible en run 38019096060. Recorrido de tres avatares aprobado en run 38018726510 con datos y audio sintéticos. Micrófono físico y aceptación de datos privados no acreditados por esas pruebas.",
       "rollback": "Revertir cambios por PR conservando expedientes, journal, recibos, historial, cola y volumen persistente."
+    },
+    {
+      "id": "CHG-BROKERS-128",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-INVERSION",
+        "SHEET-INVERSION",
+        "GAS-CRM",
+        "SHEET-CRM",
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SYS-YOD-OS",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE",
+        "SYS-DESPACHO"
+      ],
+      "proposal": "Brokers usa el CRM existente: contactos con folio de LEADS-POTENCIAL y tablas de relación, expedientes, revisiones, participaciones y recibos en el mismo libro. GAS-CRM ofrece brokers.v1 con autorización por registro y escritura atómica. SYS-INVERSION conserva su ID y la presentación comercial; PPP enlaza la versión aprobada desde la hoja.",
+      "status": "propuesto",
+      "approval": "Dirección autoriza implementar y publicar en yodesarrollo-board y yod-portal el 9-oct-2026; no fija participaciones económicas ni permite deducir identidades por nombre.",
+      "tests": [
+        "Contrato de snapshot autorizado, sin caché privada ni fallback general",
+        "Alta y actualización con revisión y clave idempotente, ACK explícito",
+        "CRM, búsqueda, etapas, seguimiento, participación y navegación PPP con datos sintéticos",
+        "Fuente viva de GAS-INVERSION v14 y GAS-CRM inspeccionada en editor; esquemas de CRM verificados mediante Sheets.",
+        "Snapshot broker A/B/Dirección, referencias, duplicados, conflicto e idempotencia con datos sintéticos.",
+        "Atomicidad de contactos, historial y recibos mediante una operación Sheets batchUpdate.",
+        "21 pruebas sintéticas de dominio y cliente aprobadas; no acreditan guardado en producción.",
+        "Catálogo y rutas compartidas: regresiones de Despacho, obra, control y track aprobadas"
+      ],
+      "rollback": "Revertir por PR sin borrar registros, identidades ni historial.",
+      "deployment": "GAS-CRM versión21 publicado el9-oct2026 en la implementación existente, sin cambiar URL ni permisos. Google Sheets API activada con autorización específica de Dirección; comprobación de lectura de API y esquema aprobada. Board PR5 integrado en b9985a680998bdbdca7f8962ba908704a385bc6c; Pages y navegación integrada pendientes de cotejo. Perfiles pendientes de vinculación verificable."
     }
   ],
   "data_contracts": [

@@ -62,7 +62,7 @@
     'SYS-TAREAS': 'https://yodesarrollomx.github.io/board-aurum/',
     'SYS-FLUJO': 'https://yodesarrollomx.github.io/board-flujo-yod/',
     'SYS-INTERIORES': 'https://yodesarrollomx.github.io/interiores-aurum/',
-    'SYS-INVERSION': 'https://yodesarrollomx.github.io/yodesarrollo-board/',
+    'SYS-INVERSION': 'https://yodesarrollomx.github.io/yodesarrollo-board/brokers.html',
     'SYS-MARKETING': 'https://yodesarrollomx.github.io/aurum-board/',
     'SYS-OBRA': 'https://yodesarrollomx.github.io/yod-portal/obra.html'
   };
@@ -70,7 +70,7 @@
   /* Los títulos oficiales viven en la pestaña Portal del Control Maestro
      (titulo_portal); estos son solo el respaldo si aquella no contesta.
      Deben decir LO MISMO que el Sheet — si renombras allá, renombra acá. */
-  var NAME = { 'SYS-DESPACHO': 'El Despacho', 'SYS-POTENCIALES': 'PPP', 'SYS-TRACK': 'Codesarrollos', 'SYS-MIRAMAR': 'Real de Miramar', 'SYS-TAREAS': 'MOAC', 'SYS-FLUJO': 'Flujo', 'SYS-INTERIORES': 'AURUM', 'SYS-INVERSION': 'Codesarrolladores', 'SYS-MARKETING': 'Embudo comercial', 'SYS-OBRA': 'Obra en vivo' };
+  var NAME = { 'SYS-DESPACHO': 'El Despacho', 'SYS-POTENCIALES': 'PPP', 'SYS-TRACK': 'Codesarrollos', 'SYS-MIRAMAR': 'Real de Miramar', 'SYS-TAREAS': 'MOAC', 'SYS-FLUJO': 'Flujo', 'SYS-INTERIORES': 'AURUM', 'SYS-INVERSION': 'Brokers', 'SYS-MARKETING': 'Embudo comercial', 'SYS-OBRA': 'Obra en vivo' };
   // Códigos por tablero — MISMA matriz que YOD OS (access-policy.js). El menú
   // solo enseña lo que tu sesión permite; el muro real sigue siendo cada backend.
   var CODES = {

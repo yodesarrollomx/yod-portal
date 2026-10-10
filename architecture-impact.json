@@ -1,23 +1,28 @@
 {
-  "model_revision": "2026-10-10.128-conversacion-contexto",
-  "proposal_id": "CHG-DESPACHO-CONVERSACION-CONTEXTO-128",
-  "summary": "Compartir texto y voz del mismo caso, recuperar fuentes y memoria, enlazar el identificador del PPP registrado y hacer visibles los recibos o bloqueos de objetivos.",
+  "model_revision": "2026-10-10.129-brokers",
+  "proposal_id": "CHG-BROKERS-128",
+  "summary": "Brokers integra el CRM canónico con autorización por registro. API Sheets y GAS-CRM versión21 activos; publicación frontend y navegación se cotejan por separado.",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "SVC-AUTON-CLOUD",
+    "SYS-INVERSION",
+    "GAS-INVERSION",
+    "SHEET-INVERSION",
+    "GAS-CRM",
+    "SHEET-CRM",
+    "SYS-POTENCIALES",
     "GAS-PORTERO",
-    "EXT-DRIVE",
-    "STORE-AUTON-ESTADO",
-    "SYS-POTENCIALES"
+    "SYS-YOD-OS",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-CONTROL",
+    "SYS-OBRA-CLIENTE",
+    "SYS-DESPACHO"
   ],
   "tests": [
-    "Texto durante voz con acuse e idempotencia; cierre y continuación escrita.",
-    "Lectura de memoria con unidades opcionales nulas y reintento local de fuentes.",
-    "Identificadores distintos de autón y tablero sin aceptar casos ajenos.",
-    "Objetivos confirmados sólo con recibo; bloqueo de revisión visible sin aprobar por cuenta propia.",
-    "Pruebas Node, validadores y recorrido de navegador con datos sintéticos; despliegues cotejados por separado."
+    "Contrato de snapshot autorizado, sin caché privada ni fallback general",
+    "Alta y actualización con revisión y clave idempotente, ACK explícito",
+    "CRM, búsqueda, etapas, seguimiento, participación y navegación PPP con datos sintéticos",
+    "Regresión de catálogo compartido, navegación del Despacho, obra, control y track: verify-os, verify-portal, verify-obra-app y 597 pruebas Node aprobadas",
+    "API de Sheets y esquema vivo leídos correctamente después de activar la API; versión21 publicada en el mismo endpoint"
   ],
-  "rollback": "Revertir cambios por PR conservando expedientes, journal, recibos, historial, cola y volumen persistente."
+  "rollback": "Revertir por PR sin borrar registros, identidades ni historial."
 }

@@ -49,6 +49,7 @@
       'https://alexpueblag.github.io/interiores-aurum/'
     ],
     'SYS-INVERSION':[
+      'https://yodesarrollomx.github.io/yodesarrollo-board/brokers.html',
       'https://yodesarrollomx.github.io/yodesarrollo-board/',
       'https://tableros.yodesarrollo.mx/yodesarrollo-board/',
       'https://alexpueblag.github.io/yodesarrollo-board/'
