@@ -31,7 +31,7 @@ export function validateKnowledgeBoard(raw,caseId){
   seen.add(s.id);const item={id:s.id,title:s.title,status:s.status,source_ids:[...s.source_ids]};
   if(key==='facts'){
    if(!(s.value===null||typeof s.value==='boolean'||typeof s.value==='number'&&Number.isFinite(s.value)||text(s.value,8000,true)))invalid();
-   item.value=s.value;if(s.unit!==undefined){if(!text(s.unit,100,true))invalid();item.unit=s.unit;}
+   item.value=s.value;if(s.unit!==undefined&&s.unit!==null){if(!text(s.unit,100,true))invalid();item.unit=s.unit;}
   }else{if(!text(s.summary,8000,true))invalid();item.summary=s.summary;}
   if(key!=='next_steps'||s.updated_at!==undefined){if(!date(s.updated_at))invalid();item.updated_at=s.updated_at;}
   if(key==='versions'){

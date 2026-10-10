@@ -3,7 +3,7 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const load=()=>import('../despacho3d/live-voice.mjs');
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
-function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12000,maxStatusFailures=3,mode='expediente',failStatus=false,Stream,startTimeout=60000,signallingTimeout=90000,mintOverride,sessionOverride,statusOverride,monitorFactory,now}={}){
+function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12000,maxStatusFailures=3,mode='expediente',failStatus=false,Stream,startTimeout=60000,signallingTimeout=90000,mintOverride,sessionOverride,statusOverride,monitorFactory,now,messageOverride}={}){
  const calls=[],captions=[],track={enabled:true,stops:0,stop(){this.stops++;}},
    stream={getTracks:()=>[track],getAudioTracks:()=>[track]},
    audio={srcObject:null,pause(){},play:async()=>{}};
@@ -25,6 +25,7 @@ function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12
    endpoint:'https://synthetic-engine.onrender.com',expires_at:Date.now()+600000})),
   fetchImpl:async(url,options)=>{
    calls.push({url,options});
+   if(url.endsWith('/voice/message')&&messageOverride)return {ok:true,json:async()=>messageOverride(JSON.parse(options.body))};
    if(failStatus && url.endsWith('/status'))throw Error('record unavailable');
    if(url.endsWith('/status')&&statusOverride)return {ok:true,json:async()=>({...base,...statusOverride()})};
    if(url.endsWith('/session')&&sessionOverride){const override=await sessionOverride(url,options);if(override)return override;}
@@ -698,4 +699,17 @@ test('all residents prepare independently of blocked document routes and readine
  assert.deepEqual(mints,['case-g','case-l','case-r']);assert.equal(calls.length,3);assert.equal(captures,0);assert.equal(voice.snapshot().phase,'idle');
  voice.discardPreparation();allow=false;assert.equal(await voice.prepare('case-r'),false);
  voice.discardPreparation();
+});
+
+test('typed text uses the current Live session and checks uncertain delivery with the same request',async()=>{
+ const {createLiveVoice}=await load();let accepted=false;
+ const f=fixture(createLiveVoice,{messageOverride:data=>({ok:true,request_id:data.request_id,status:accepted?'accepted':'pending'})});
+ await f.voice.start('synthetic-case');f.event({type:'session.started'});await tick();
+ assert.equal(await f.voice.sendText('un dato escrito'),false);assert.equal(f.voice.snapshot().text_pending,true);
+ assert.equal(await f.voice.sendText('otro texto'),false);
+ accepted=true;assert.equal(await f.voice.sendText('un dato escrito'),true);
+ const messages=f.calls.filter(c=>c.url.endsWith('/voice/message')).map(c=>JSON.parse(c.options.body));
+ assert.equal(messages.length,2);assert.equal(messages[0].session_id,'live:opaque/session');assert.deepEqual(messages[0],messages[1]);
+ assert.equal(f.voice.snapshot().phase,'listening');assert.equal(f.track.stops,0);assert.equal(f.voice.snapshot().text_pending,false);
+ const p=f.voice.stop();await tick();f.event({type:'session.closed'});await p;
 });

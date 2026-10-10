@@ -2,7 +2,7 @@ import {mountMeeting} from './meeting-view.mjs?v=126';
 import {mountAvatarCard} from './avatar-card.mjs?v=126';
 import {mountWorkView} from './work-view.mjs?v=126';
 import {registeredBoard,resolveBoard,stationIdentity} from './project-station.mjs?v=121';
-import {mountKnowledgeBoard} from './knowledge-board.mjs?v=1';
+import {mountKnowledgeBoard} from './knowledge-board.mjs?v=128';
 import {createFrameTransport,validateConversation} from './conversation.mjs?v=126';
 import {validateFastSession} from './fast-lane.mjs';
 import {DurableGoals,goalDisplay,taskDisplay,goalReviewActions} from './goals.mjs?v=2';
@@ -132,7 +132,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
  }
  async function request(path,data={}){
   const own=generation,c=await session();
-  const r=await fetch(c.endpoint+path,{method:'POST',headers:{Authorization:'Bearer '+c.token,'Content-Type':'application/json'},credentials:'omit',cache:'no-store',redirect:'error',signal:AbortSignal.timeout(30000),body:JSON.stringify(data)});
+  const r=await fetch(c.endpoint+path,{method:'POST',headers:{Authorization:'Bearer '+c.token,'Content-Type':'application/json'},credentials:'omit',cache:'no-store',redirect:'error',signal:AbortSignal.timeout(55000),body:JSON.stringify(data)});
   if(own!==generation||disposed)throw Error('session_changed');
   if(r.status===401||r.status===403){credential=null;clear();throw Error('unauthorized');}
   const out=await r.json();if(own!==generation||disposed)throw Error('session_changed');if(!r.ok||out.ok!==true)throw Error(out.error||'unavailable');return out;
@@ -152,7 +152,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   links.replaceChildren(...(s.links||[]).slice(0,10).map(l=>button(l.title,()=>void command('navegador_abrir',{url:l.url}))));
   activity.replaceChildren(...(s.activity||[]).slice(0,8).map(a=>el('li',a.action+' · '+({working:'en curso',completed:'completado',failed:'sin completar'}[a.status]||a.status)+' · '+new Date(a.at).toLocaleTimeString())));
  }
- function postBoard(type,extra={}){if(frame&&selected&&boardLink?.bridge)frame.contentWindow?.postMessage({type,version:1,nonce,case_id:selected.case_id,...(boardLink.readOnly?{board_case_id:boardLink.board_case_id,...(selected.ppp?.scenario_id?{scenario_id:selected.ppp.scenario_id}:{})}:{}),...extra},boardLink.origin);}
+ function postBoard(type,extra={}){if(frame&&selected&&boardLink?.bridge)frame.contentWindow?.postMessage({type,version:1,nonce,case_id:selected.case_id,...{board_case_id:boardLink.board_case_id,...(selected.ppp?.scenario_id?{scenario_id:selected.ppp.scenario_id}:{})},...extra},boardLink.origin);}
  function applyProposal(p){
 
     if(receipts.size>=8||receipts.has(p.request_id)||!getSelection()?.can_enqueue||getSelection()?.case_id!==selected?.case_id||proposalState(board,p,application)!=='ready')return;
@@ -268,7 +268,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
    sections.sources.replaceChildren(...conversation.documents.map(d=>{const c=el('article',undefined,'workspace-card');c.append(el('h3',d.title),el('p',d.role||''));if(d.url){const a=el('a','Abrir fuente ↗');a.href=d.url;a.target='_blank';a.rel='noopener noreferrer';c.append(a);}return c;}));
    if(!conversation.documents.length)sections.sources.append(el('p','No hay fuentes registradas para este proyecto.'));
    if(tab==='ppp')mountBoard();
-  }catch{if(own!==generation||disposed)return;sections.sources.replaceChildren(el('p','No se pudieron recuperar las fuentes. Puedes actualizar la conexión.'));if(tab==='ppp'&&!frame)pppNote.textContent='No se pudo recuperar el vínculo del PPP. Abre Conexión y variantes para reintentar.';}})();
+  }catch{if(own!==generation||disposed)return;sections.sources.replaceChildren(el('p','No se pudieron recuperar las fuentes. La conversación puede continuar.'),button('Volver a cargar fuentes',()=>void readSources()));if(tab==='ppp'&&!frame)pppNote.textContent='No se pudo recuperar el vínculo del PPP. Pulsa Actualizar conexión para reintentar.';}})();
   readingSources={generation:own,promise};try{await promise;}finally{if(readingSources?.promise===promise)readingSources=null;}
  }
  async function refresh(){
