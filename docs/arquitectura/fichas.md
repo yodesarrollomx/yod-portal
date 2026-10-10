@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-09.127-autones-conectados · 2026-10-09.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-09.128-brokers · 2026-10-09.
 
 ## SYS-DESPACHO · El Despacho
 

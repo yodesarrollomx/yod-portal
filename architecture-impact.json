@@ -1,23 +1,22 @@
 {
-  "model_revision": "2026-10-09.127-autones-conectados",
-  "proposal_id": "CHG-DESPACHO-IGUALDAD-CONEXION-127",
-  "summary": "Corregir selección y conexión para que todos los autones abran el mismo puesto, radial y capacidades autorizadas, eliminando bloqueos silenciosos y consultas duplicadas; preservar identidad, permisos y estado del proyecto.",
+  "model_revision": "2026-10-09.128-brokers",
+  "proposal_id": "CHG-BROKERS-128",
+  "summary": "Organizar oportunidades, contactos, seguimiento y participación por broker dentro de SYS-INVERSION, reutilizando identidad y registros canónicos. Interfaz preparada; contrato servidor pendiente de contrastar con fuente viva.",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "SVC-AUTON-CLOUD",
+    "SYS-INVERSION",
+    "GAS-INVERSION",
+    "SHEET-INVERSION",
+    "GAS-CRM",
+    "SHEET-CRM",
+    "SYS-POTENCIALES",
     "GAS-PORTERO",
-    "EXT-DRIVE",
-    "STORE-AUTON-ESTADO",
-    "SYS-POTENCIALES"
+    "SYS-YOD-OS"
   ],
   "tests": [
-    "Clic real en cada figura/etiqueta desde panorama/caminar hasta radial y PPP, sin apertura programática.",
-    "Cambio de puesto permitido sin voz; llamada activa protege su caso con explicación visible.",
-    "Demoras y fallos transitorios recuperables; revocación explícita no conserva acceso.",
-    "Deduplicación y límites de consultas sin mezclar actor/caso ni extender autorización.",
-    "Pruebas Node, validadores y navegador con latencia; publicar y cotejar versión; micrófono físico se acredita aparte."
+    "Contrato de snapshot autorizado, sin caché privada ni fallback general",
+    "Alta y actualización con revisión y clave idempotente, ACK explícito",
+    "CRM, búsqueda, etapas, seguimiento, participación y navegación PPP con datos sintéticos",
+    "Autorización real por registro y despliegue backend pendientes de fuente viva"
   ],
-  "rollback": "Revertir cambios por PR conservando expedientes, journal, recibos, historial, cola y volumen persistente."
+  "rollback": "Revertir por PR sin borrar registros, identidades ni historial."
 }

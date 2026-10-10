@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-09.127-autones-conectados",
+  "revision": "2026-10-09.128-brokers",
   "checked_at": "2026-10-09",
   "priorities": [
     "vender_mas",
@@ -9678,6 +9678,33 @@
       ],
       "deployment": "2026-10-10T01:09:42Z: portal PR143 integrado en dc5233b7dde5fed77fa473620fce36f2bb6e6880 y Pages38012047418 publicado. 597 pruebas Node, validadores, Chromium/WebKit y recorrido integrado38011488972 aprobados. Clic real en las tres figuras, etiquetas, radial, PPP y voz por caso comprobado con datos sintéticos (QA38010902615 job114090411929 y38011244981). Fallo transitorio, resolución demorada y protección de llamada activa comprobados. Backend48 integrado en e55943540c3501784ec0a0d48d5432c504df9a46, Render dep-db4opn7lot8c73cfi7p0 live desde00:55:30Z; 288 pruebas aprobadas y una omitida. Ventana00:55:30–01:01:23Z sin repetir ráfagas de contexto ni lock_busy. No acredita micrófono físico, latencia Sheets, mejora50% ni disponibilidad perpetua.",
       "rollback": "Revertir cambios por PR conservando expedientes, journal, recibos, historial, cola y volumen persistente."
+    },
+    {
+      "id": "CHG-BROKERS-128",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-INVERSION",
+        "SHEET-INVERSION",
+        "GAS-CRM",
+        "SHEET-CRM",
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Brokers usa el CRM existente: contactos con folio de LEADS-POTENCIAL y tablas de relación, expedientes, revisiones, participaciones y recibos en el mismo libro. GAS-CRM ofrece brokers.v1 con autorización por registro y escritura atómica. SYS-INVERSION conserva su ID y la presentación comercial; PPP enlaza la versión aprobada desde la hoja.",
+      "status": "propuesto",
+      "approval": "Dirección autoriza implementar y publicar en yodesarrollo-board y yod-portal el 9-oct-2026; no fija participaciones económicas ni permite deducir identidades por nombre.",
+      "tests": [
+        "Contrato de snapshot autorizado, sin caché privada ni fallback general",
+        "Alta y actualización con revisión y clave idempotente, ACK explícito",
+        "CRM, búsqueda, etapas, seguimiento, participación y navegación PPP con datos sintéticos",
+        "Autorización real por registro y despliegue backend pendientes de fuente viva",
+        "Fuente viva de GAS-INVERSION v14 y GAS-CRM inspeccionada en editor; esquemas de CRM verificados mediante Sheets.",
+        "Snapshot broker A/B/Dirección, referencias, duplicados, conflicto e idempotencia con datos sintéticos.",
+        "Atomicidad de contactos, historial y recibos mediante una operación Sheets batchUpdate."
+      ],
+      "rollback": "Revertir por PR sin borrar registros, identidades ni historial.",
+      "deployment": "No desplegado; acceso a fuente viva GAS-INVERSION/CRM requerido antes de activar usuarios."
     }
   ],
   "data_contracts": [

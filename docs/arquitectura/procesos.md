@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-09.127-autones-conectados · 2026-10-09.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-09.128-brokers · 2026-10-09.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
