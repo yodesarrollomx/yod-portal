@@ -1,10 +1,10 @@
 import {mountAvatarCard} from './avatar-card.mjs?v=126';
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
 import {createEntryPreparation} from './voice-preparation.mjs?v=2';
-import {residentAccessDecision} from './resident-agents.mjs?v=126';
+import {residentAccessDecision} from './resident-agents.mjs?v=127';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=126';
 import {stationIdentity} from './project-station.mjs?v=121';
-import {createLiveVoice} from './live-voice.mjs?v=124';
+import {createLiveVoice} from './live-voice.mjs?v=127';
 import {voiceView} from './voice-view.mjs?v=2';
 import {createWorkspace} from './agent-workspace.mjs?v=126';
 import {DurableGoals,watchGoals} from './goals.mjs?v=2';
@@ -135,7 +135,8 @@ if (open) {
       setText('voice-transcript-label',freshTranscript&&fragments.length?'Transcripción anterior · se conserva mientras conectas':'Transcripción de esta conversación');
       setText('voice-phase',view.title);
       if(dialog.open&&!compactVoice&&selection?.goals?.ready&&!stopWatching)stopWatching=watchGoals(goalReader,{visible:()=>dialog.open&&!document.hidden&&!voice.snapshot().actions_pending});
-      setText('voice-status',state.notice);
+      const connectionNotice=state.credential_pending?'La voz continúa. Recuperando la autorización antes de que venza.':state.session_ending?'Esta conversación se acerca al límite de duración. El puesto seguirá abierto para continuar.':state.notice;
+      setText('voice-status',connectionNotice);
       setText('voice-input',state.phase!=='listening'?'':state.muted?'Micrófono en pausa.':state.local_speaking?'Te escucho.':state.input_received?'Tu voz está llegando a la conversación.':state.input_detected?'Tu micrófono detecta sonido. Aún no recibimos palabras.':'Micrófono abierto. Aún no recibimos palabras.');
       setText('voice-context',view.context);
       const stages=[['microphone_ms','micrófono'],['access_ms','acceso'],['offer_ms','WebRTC'],['signalling_ms','servidor'],['listening_ms','escucha'],['playback_ms','reproducción habilitada'],['context_ms','expediente']];
@@ -171,9 +172,9 @@ if (open) {
       node('compact-mic').setAttribute('aria-pressed',String(view.listening&&!state.muted));
       node('compact-stop').disabled=state.phase==='closing';
       node('compact-stop').setAttribute('aria-label',state.phase==='starting'?'Cancelar conexión':'Finalizar conversación');
-      const warning=encounterNeedsMic||state.phase==='error'||state.ended_remotely||state.interruption_error||state.playback_blocked||state.incomplete||state.pending||accessPaused;
+      const warning=encounterNeedsMic||state.credential_pending||state.session_ending||state.phase==='error'||state.ended_remotely||state.interruption_error||state.playback_blocked||state.incomplete||state.pending||accessPaused;
       node('compact-notice').hidden=!warning;
-      setText('compact-notice',accessPaused?node('station-access').textContent:encounterNeedsMic?micConsentNotice:state.playback_blocked?'Pulsa el micrófono para activar el sonido.':state.incomplete||state.pending?view.history:state.notice);
+      setText('compact-notice',accessPaused?node('station-access').textContent:encounterNeedsMic?micConsentNotice:state.playback_blocked?'Pulsa el micrófono para activar el sonido.':state.incomplete||state.pending?view.history:connectionNotice);
   }
   function renderTranscript(fragment) {
       if(!selection)return;

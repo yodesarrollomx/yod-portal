@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-09.126-despacho-publicado",
+  "revision": "2026-10-09.127-autones-conectados",
   "checked_at": "2026-10-09",
   "priorities": [
     "vender_mas",
@@ -9653,6 +9653,31 @@
       ],
       "deployment": "2026-10-09T06:46:13Z: portal PR141 integrado en0351157a71ec9fc3c5b3beae70702c92646ece58 y Pages37895280755 publicado. Recorrido integrado37894399997: siete suites aprobadas; Node580 y validadores aprobados. Corrección finalOS strict-origin acreditada por A/BGoogle400→200 sin compartir ruta/query. Backend dfe9c7a45ddeb997c32b8bd39483be3874e68658 live en Render desde05:37:10Z; 282 pruebas aprobadas y una omitida. PorteroV72 verificado conservando implementación. La aceptación de micrófono físico y PPP nativo privado no se acredita con fixtures. Auditoría pública37895405594: cuatro SHA256 publicados coinciden; GSI200 escritorio/móvil, salud y disponibilidad200, APIs privadas401 sin sesión. Seguimiento37895920139 confirma recarga real y Ayuda. No se acredita mejora50% ni velocidadChromebook; primer render en ChromiumCI/SwiftShader21.43s/13.61s frío escritorio/móvil.",
       "rollback": "Revertir interfaz y cambios compatibles del motor mediante PR; conservar expedientes, journal/outbox, recibos y volumen persistente. No borrar objetivos ni reanudar acciones inciertas."
+    },
+    {
+      "id": "CHG-DESPACHO-IGUALDAD-CONEXION-127",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD",
+        "GAS-PORTERO",
+        "EXT-DRIVE",
+        "STORE-AUTON-ESTADO",
+        "SYS-POTENCIALES"
+      ],
+      "proposal": "Corregir selección y conexión para que todos los autones abran el mismo puesto, radial y capacidades autorizadas, eliminando bloqueos silenciosos y consultas duplicadas; preservar identidad, permisos y estado del proyecto.",
+      "status": "implementado_local",
+      "approval": "Dirección autoriza corregir, verificar y publicar tras reportar fallos de selección y desconexión el9-oct2026.",
+      "tests": [
+        "Clic real en cada figura/etiqueta desde panorama/caminar hasta radial y PPP, sin apertura programática.",
+        "Cambio de puesto permitido sin voz; llamada activa protege su caso con explicación visible.",
+        "Demoras y fallos transitorios recuperables; revocación explícita no conserva acceso.",
+        "Deduplicación y límites de consultas sin mezclar actor/caso ni extender autorización.",
+        "Pruebas Node, validadores y navegador con latencia; publicar y cotejar versión; micrófono físico se acredita aparte."
+      ],
+      "deployment": "Pendiente. Base portal79cabc6 y backenddfe9c7a. QA126 no comprobaba clic completo de cada avatar; este hueco se corrige.",
+      "rollback": "Revertir cambios por PR conservando expedientes, journal, recibos, historial, cola y volumen persistente."
     }
   ],
   "data_contracts": [
@@ -11981,6 +12006,15 @@
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/despacho-avatar-label-layout126.test.cjs",
       "components": [
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-resident-opening.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
         "SYS-DESPACHO-3D"
       ]
     }

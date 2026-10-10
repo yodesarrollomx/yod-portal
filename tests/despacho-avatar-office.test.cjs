@@ -134,3 +134,13 @@ test('authorized residents use separate existing seats and a stale current profi
  listListener([b]);currentListener(a);assert.equal(fleet.getState().count,1);assert.equal(scene.children[0].userData.caseId,'CASE-SECOND');
  listListener([]);assert.equal(scene.children.length,0);fleet.dispose();
 });
+
+test('every resident body delegates to the same opening flow without a second case-selection request',async()=>{
+ const [T]=await modules,{createOfficeResidents}=await import(moduleURL(path.join(base,'avatars/office-residents.mjs')));
+ const scene=new T.Scene(),fleet=createOfficeResidents({scene}),opened=[];
+ const profiles=['SYNTHETIC-A','SYNTHETIC-B','SYNTHETIC-C'].map(id=>({...profile,id,case_id:id,form:'man'}));
+ fleet.bind({subscribeProfile(fn){fn(profiles[0]);return()=>{};},subscribeAuthorizedProfiles(fn){fn(profiles);return()=>{};},
+  selectCase(){throw Error('Selection must belong to the shared opening controller');},openForCase:id=>{opened.push(id);return true;}});
+ for(const body of scene.children){let mesh;body.traverse(o=>{if(!mesh&&o.isMesh)mesh=o;});assert.equal(fleet.selectIntersection({object:mesh}),true);}
+ assert.deepEqual(opened,profiles.map(p=>p.case_id));fleet.dispose();
+});

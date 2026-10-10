@@ -18,7 +18,7 @@ test('catalog and resident keep figures during timeout but do not authorize new 
  await c.advance(65000);await catalog.refresh();await resident.refresh();
  assert.equal(catalog.snapshot().phase,'reconnecting');assert.equal(catalog.snapshot().cases.length,1);
  assert.equal(resident.snapshot().phase,'reconnecting');assert.ok(resident.getProfile());assert.equal(resident.getSelection(),null);
- const before=selected;assert.equal(await catalog.select('a'),null);assert.equal(selected,before);
+ const before=selected;assert.equal(await catalog.select('a'),null);assert.equal(selected,before+1,'retry must revalidate on the server; a failed read grants no access');
  fail=false;await catalog.refresh();await resident.refresh();assert.equal(resident.getSelection().case_id,'a');
  catalog.dispose();resident.dispose();assert.equal(c.size,0);
 });
@@ -64,4 +64,25 @@ test('synchronous transport failures remain retryable and clock rollback denies 
  const c=createAuthorizedCases({now:()=>time,schedule:()=>1,cancel(){},transport:{listAuthorized:()=>{calls++;if(fail)throw Error('timeout');return {ok:true,schema:1,cases:[profile('a')]};},resolveCurrent:async()=>profile('a')}});
  assert.equal(await c.refresh(),false);fail=false;assert.equal(await c.refresh(),true);assert.equal(calls,2);
  time=0;assert.equal(c.snapshot().cases.length,0);assert.equal(await c.select('a'),null);c.dispose();
+});
+
+test('backend unavailability keeps the current display lease and retries without treating it as revocation',async()=>{
+ const {createAuthorizedCases}=await import('../despacho3d/authorized-cases.mjs'),{createResidentAgents,residentAccessDecision}=await import('../despacho3d/resident-agents.mjs');
+ const c=clock();let fail=false,reads=0;
+ const transport={listAuthorized:async()=>{reads++;if(fail)throw Error('backend_unavailable');return {ok:true,schema:1,cases:[profile('a')]};},resolveCurrent:async()=>{if(fail)throw Error('backend_unavailable');return profile('a');}};
+ const resident=createResidentAgents({...c,transport,isVisible:()=>true}),catalog=createAuthorizedCases({...c,transport,onChange:s=>resident.reconcileCatalog(s)});
+ await catalog.refresh();await resident.refresh();const selected=resident.getSelection();fail=true;
+ await catalog.refresh();await resident.refresh();
+ assert.equal(catalog.snapshot().phase,'reconnecting');assert.equal(catalog.snapshot().cases.length,1);
+ assert.equal(residentAccessDecision(resident.snapshot(),selected,c.now()),'recovering');assert.equal(resident.getSelection(),null);
+ fail=false;await c.advance(2000);assert.equal(reads,3);assert.equal(catalog.snapshot().phase,'current');assert.equal(resident.getSelection().case_id,'a');
+ catalog.dispose();resident.dispose();assert.equal(c.size,0);
+});
+test('catalog retries stop after explicit revocation and cannot restore an expired display lease',async()=>{
+ const {createAuthorizedCases}=await import('../despacho3d/authorized-cases.mjs');const c=clock();let response='ok',reads=0;
+ const catalog=createAuthorizedCases({...c,transport:{listAuthorized:async()=>{reads++;if(response!=='ok')throw Error(response);return {ok:true,schema:1,cases:[profile('a')]};}}});
+ await catalog.refresh();response='backend_unavailable';await catalog.refresh();await c.advance(120000);
+ assert.equal(catalog.snapshot().cases.length,0);assert.equal(catalog.snapshot().phase,'reconnecting');
+ response='unauthorized';await c.advance(15000);assert.equal(catalog.snapshot().phase,'unauthorized');const stopped=reads;
+ response='ok';await c.advance(60000);assert.equal(reads,stopped);assert.equal(catalog.snapshot().cases.length,0);catalog.dispose();assert.equal(c.size,0);
 });

@@ -16,7 +16,7 @@ const server=http.createServer((req,res)=>{
  const browser=await chromium.launch({headless:true});
  const out=process.env.BROWSER_EVIDENCE_DIR||path.join(process.env.RUNNER_TEMP||'/tmp','voice-ux-evidence');fs.mkdirSync(out,{recursive:true});
  try{for(const viewport of [{width:1280,height:900},{width:390,height:844}]){
-  const context=await browser.newContext({viewport,acceptDownloads:true}),page=await context.newPage(),errors=[];let sessions=0,retries=0,hello=0,releaseSession=null;
+  const context=await browser.newContext({viewport,acceptDownloads:true}),page=await context.newPage(),errors=[];let sessions=0,retries=0,readiness=0,contextReads=0,releaseSession=null;
   page.on('pageerror',e=>errors.push(e.message));
   await context.addInitScript(()=>{
    if(!location.pathname.includes('__voice-child'))return;
@@ -51,7 +51,8 @@ const server=http.createServer((req,res)=>{
    const headers={'Access-Control-Allow-Origin':base,'Access-Control-Allow-Headers':'Authorization,Content-Type','Access-Control-Allow-Methods':'POST,GET'};
    if(route.request().method()==='OPTIONS')return route.fulfill({status:204,headers});
    let body={ok:true};
-   if(u.pathname==='/fast/hello')hello++;
+   if(u.pathname==='/voice/ready'){readiness++;body={ok:true,available:true};}
+   if(u.pathname==='/fast/hello')contextReads++;
    if(u.pathname==='/voice/session'){sessions++;if(sessions===1)await new Promise(resolve=>{releaseSession=resolve;});body={ok:true,mode:'operativo',session:{id:'opaque/test'},transport:{type:'webrtc',sdp:'v=0\r\nanswer'}};}
    else if(u.pathname==='/voice/status')body={ok:true,active:true,started:true,expires_at:Date.now()+600000,context_phase:'unavailable',tools_ready:false,tasks_ready:false,fragments:1,blocks:1,saved:0,pending:1};
    else if(u.pathname==='/voice/context-retry'){retries++;body={ok:true,retrying:true,context_phase:'retrying'};}
@@ -62,8 +63,8 @@ const server=http.createServer((req,res)=>{
   });
   await page.goto(base+'/__voice-shell');const frame=page.frames().find(f=>f.url().includes('__voice-child'));
   await frame.waitForFunction(()=>window.peerPreparations===1);
-  await expectHello();
-  async function expectHello(){for(let i=0;i<100&&!hello;i++)await page.waitForTimeout(20);assert.equal(hello,1,'entry prepares backend before approach');}
+  await expectReadiness();
+  async function expectReadiness(){for(let i=0;i<100&&!readiness;i++)await page.waitForTimeout(20);assert.equal(readiness,1,'entry checks voice availability before approach');assert.equal(contextReads,0,'voice preparation must not load the full project context');}
   await frame.evaluate(()=>window.YodVoiceWorkspace.prepareNearby('synthetic-voice-case'));
   assert.equal(await frame.evaluate(()=>window.streams.length),0);
   assert.equal(sessions,0);
