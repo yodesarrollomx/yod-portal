@@ -1,26 +1,22 @@
 {
-  "model_revision": "2026-10-10.132-masterbroker-control",
-  "proposal_id": "CHG-MASTERBROKERS-130",
-  "summary": "Control diario Masterbroker, agenda y acuerdos por definir; gestión explícita por Dirección con identidad real y acotación de cada respuesta.",
+  "model_revision": "2026-10-10.133-masterbroker-rows",
+  "proposal_id": "CHG-MASTERBROKERS-133",
+  "summary": "Control Masterbrokers dentro de YOD OS con tabla de expedientes y registros relacionados en un solo renglón.",
   "components": [
     "SYS-INVERSION",
     "GAS-INVERSION",
     "SHEET-INVERSION",
     "GAS-CRM",
     "SHEET-CRM",
-    "SYS-POTENCIALES",
-    "GAS-PORTERO",
     "SYS-YOD-OS",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-CONTROL",
-    "SYS-OBRA-CLIENTE",
-    "SYS-DESPACHO"
+    "GAS-PORTERO",
+    "SYS-POTENCIALES"
   ],
   "tests": [
-    "Bandejas: vencidos, hoy, próximos y sin fecha; pausas/cierres excluidos; faltantes sin falsa asignación",
-    "Gestión por Dirección mantiene actor real y alcance tras ACK; preview sigue sin POST; broker no escala por URL",
-    "Formularios con seguimiento existente y reintento idempotente; nueva oportunidad visible tras guardado"
+    "Agrupación determinista por ID, sin fusionar personas o terrenos por nombre; búsqueda conserva contexto del grupo",
+    "Un renglón por expediente, contacto debajo, actividad real y apertura del historial; escritorio y móvil",
+    "Vista previa sin guardado, gestión con actor real y alcance después del ACK; contratos y autorización existentes",
+    "Verificaciones del atlas y portal; comprobación de publicación separada de lectura autenticada"
   ],
-  "rollback": "Revertir por PR sin borrar registros, identidades ni historial."
+  "rollback": "Revertir PR de interfaz; no migrar, borrar ni modificar datos del CRM."
 }
