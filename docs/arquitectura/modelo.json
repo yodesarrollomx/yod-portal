@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-10.131-masterbroker-personal",
+  "revision": "2026-10-10.132-masterbroker-control",
   "checked_at": "2026-10-09",
   "priorities": [
     "vender_mas",
@@ -9754,7 +9754,7 @@
         "SYS-OBRA-CLIENTE",
         "SYS-DESPACHO"
       ],
-      "proposal": "Replantear el frontend para uso del Masterbroker: inicio con acciones pendientes explícitas, guía de oferta, registro de oportunidades, solicitud de análisis mediante revisión guardada, material vinculado y acuerdos. Responsabilidad del siguiente paso mediante prefijos reversibles en next_action; registros antiguos permanecen sin responsable definido. Reutiliza brokers.v1, CRM, permisos, IDs y enlaces existentes. No calcula comisiones, asigna identidades ni transforma el acceso al catálogo en autorización comercial. Extensión autorizada 9-oct: recorrido personal con cartera real, preparación de conversación y registro de respuesta. Dirección puede previsualizar un perfil de Masterbroker con snapshot reducido por ID y formularios explorables sin guardado. El parámetro de URL no concede acceso: broker real conserva alcance de servidor; perfil inexistente falla cerrado. Vista embebida conserva Portero y validación del backend.",
+      "proposal": "Replantear el frontend para uso del Masterbroker: inicio con acciones pendientes explícitas, guía de oferta, registro de oportunidades, solicitud de análisis mediante revisión guardada, material vinculado y acuerdos. Responsabilidad del siguiente paso mediante prefijos reversibles en next_action; registros antiguos permanecen sin responsable definido. Reutiliza brokers.v1, CRM, permisos, IDs y enlaces existentes. No calcula comisiones, asigna identidades ni transforma el acceso al catálogo en autorización comercial. Extensión autorizada 9-oct: recorrido personal con cartera real, preparación de conversación y registro de respuesta. Dirección puede previsualizar un perfil de Masterbroker con snapshot reducido por ID y formularios explorables sin guardado. El parámetro de URL no concede acceso: broker real conserva alcance de servidor; perfil inexistente falla cerrado. Vista embebida conserva Portero y validación del backend. Extensión control diario: bandejas por fecha y responsable, próximos compromisos, actividad reciente y acuerdos por definir, derivados exclusivamente del snapshot. Dirección puede gestionar una cartera seleccionada conservando su actor real; las respuestas se vuelven a acotar tras guardar. La vista previa continúa sin escrituras. Los brokers no pueden seleccionar carteras ajenas ni adquirir capacidades de Dirección por URL.",
       "status": "propuesto",
       "approval": "Alejandro pide repensar y ejecutar el tablero para los propios Masterbrokers el 9-oct-2026. Autorización previa de publicación vigente; no incluye condiciones comerciales nuevas.",
       "tests": [
@@ -9763,10 +9763,13 @@
         "Navegación de inicio, oferta, expediente, red y acuerdos; envíos con ACK",
         "Regresiones de catálogo y atlas del portal",
         "Vista previa reduce contactos, oportunidades, actividades y participaciones; no modifica snapshot original ni guarda por Dirección",
-        "Recorrido personal con datos sintéticos y lectura de cartera real; no inventa avance ni prioridad comercial"
+        "Recorrido personal con datos sintéticos y lectura de cartera real; no inventa avance ni prioridad comercial",
+        "Bandejas: vencidos, hoy, próximos y sin fecha; pausas/cierres excluidos; faltantes sin falsa asignación",
+        "Gestión por Dirección mantiene actor real y alcance tras ACK; preview sigue sin POST; broker no escala por URL",
+        "Formularios con seguimiento existente y reintento idempotente; nueva oportunidad visible tras guardado"
       ],
       "rollback": "Revertir PRs de interfaz y catálogo sin alterar registros; prefijos en next_action siguen legibles en la interfaz anterior.",
-      "deployment": "Base Masterbrokers publicada en PR7 y portal152. Extensión personal en rama, pendiente de publicación."
+      "deployment": "PR8/9 y portal154 publicados y revisados visualmente. Extensión control diario en implementación; activación de identidades individuales sigue pendiente de correo verificado."
     }
   ],
   "data_contracts": [
