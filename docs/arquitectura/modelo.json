@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-11.sala-cierre-verificado",
+  "revision": "2026-10-11.salud-accesos",
   "checked_at": "2026-10-11",
   "priorities": [
     "vender_mas",
@@ -5720,6 +5720,63 @@
         "scope": "Un cierre completo y una comparación técnica aislada de seis escenas usando guion original. No certifica equivalencia visual, todas las rutinas históricas o continuidad temporal de cada cron. Compuertas humanas y datos existentes conservados.",
         "receipt": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38166137118 ; code_sha=4582fc3c42a2ac8459dea7d553c42f9719f07962 ; stages=4 ; archived_seconds=31.88 ; cloud_seconds=48 ; verified_private_files=16 ; original_versioned_images=5 ; sixth_image=archived_video_reference ; business_writes_comparison=0 ; human_approval=false"
       }
+    },
+    {
+      "id": "CON-SALUD-ACCESOS",
+      "from": "SYS-CONTROL",
+      "to": "SYS-POTENCIALES",
+      "label": "Informe técnico por proceso visible en Accesos",
+      "kind": "observacion",
+      "evidence": [
+        {
+          "claim": "Solicitud explícita de Dirección el11-oct-2026; implementación pendiente.",
+          "status": "propuesto"
+        }
+      ],
+      "status": "propuesto",
+      "runtime_verified": false,
+      "contract": "CTR-SALUD-ACCESOS; resultados con alcance, vigencia y evidencia; ninguna operación de negocio por la sonda.",
+      "contract_ids": [
+        "CTR-SALUD-ACCESOS"
+      ]
+    },
+    {
+      "id": "CON-SALUD-SALA",
+      "from": "SYS-SALA",
+      "to": "SYS-CONTROL",
+      "label": "Lecturas agregadas y canario aislado de Sala",
+      "kind": "observacion",
+      "evidence": [
+        {
+          "claim": "Solicitud explícita de Dirección el11-oct-2026; implementación pendiente.",
+          "status": "propuesto"
+        }
+      ],
+      "status": "propuesto",
+      "runtime_verified": false,
+      "contract": "CTR-SALUD-ACCESOS; resultados con alcance, vigencia y evidencia; ninguna operación de negocio por la sonda.",
+      "contract_ids": [
+        "CTR-SALUD-ACCESOS"
+      ]
+    },
+    {
+      "id": "CON-SALUD-ACTIONS",
+      "from": "SYS-CONTROL",
+      "to": "EXT-ACTIONS",
+      "label": "Pruebas programadas y evidencia de ejecución",
+      "kind": "observacion",
+      "evidence": [
+        {
+          "claim": "Solicitud explícita de Dirección el11-oct-2026; implementación pendiente.",
+          "status": "propuesto"
+        }
+      ],
+      "status": "propuesto",
+      "runtime_verified": false,
+      "contract": "CTR-SALUD-ACCESOS; resultados con alcance, vigencia y evidencia; ninguna operación de negocio por la sonda.",
+      "contract_ids": [
+        "CTR-SALUD-ACCESOS"
+      ]
     }
   ],
   "processes": [
@@ -10411,6 +10468,39 @@
       ],
       "deployment": "PR168 integrado en 1959af900210d0c697c9f88abcfafcf5eff6f4fa el 11-oct-2026 19:13:08 UTC. Pages 38167078699 publicado con éxito, finalización 19:13:35 UTC. Entrada publicada comprobada por navegador real en 38167079475 (paso observado aprobado 19:14:45 UTC; el resto del workflow de push continúa). Cliente fluido132, sin cambios de Render/Sheets/API/permisos ni automatizaciones canceladas.",
       "rollback": "Revertir el PR de interfaz; conservar Sheets, expedientes, objetivos, recibos y disco persistente."
+    },
+    {
+      "id": "CHG-SALUD-ACCESOS-20261011",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "EXT-GMAIL",
+        "SYS-MARKETING",
+        "SYS-PLAN-POTENCIAL",
+        "EXT-MOTORES-MEDIA"
+      ],
+      "status": "propuesto",
+      "proposal": "Dirección solicita horarios y control de funcionamiento por sistema/proceso en Accesos mediante pruebas pequeñas continuas. Ampliar la observación autorizada de Sala cada15min y ejecutar un canario aislado diario de Kokoro/parallax/ffmpeg/Drive. Publicar sólo resultados técnicos en una rama de datos del Portal y mostrarlos en Accesos vinculados a la sesión administradora vigente. Inventario completo derivado del Atlas; cada prueba muestra alcance, fecha, vigencia y evidencia. Página accesible, workflow activo, corrida correcta y proceso de negocio completo se distinguen; pendientes nunca verdes. Sin reactivar Vigía/gestores/PPP cancelados.",
+      "tests": [
+        "Estados de fallo, respuesta inválida, lectura caducada/futura, workflow detenido, canario parcial y falta de evidencia; resultados anteriores nunca vuelven verde una comprobación fallida.",
+        "Comprobaciones de páginas/contratos sólo contra allowlist; API pública de Actions y snapshots publicados; observación Sala exclusivamente de recursos de lectura ya autorizados.",
+        "Canario sintético local: motores reales, codecs/duración/audio medidos; Drive sólo prueba temporal fuera de registros comerciales; limpieza y errores independientes, sin mensajes o decisiones.",
+        "Accesos con sesión vigente: montaje y refresco, descarte de respuestas tardías tras cambio/cierre de sesión; matriz y escritor intactos; móvil y escritorio.",
+        "CI completos de Portal/Sala/Potenciales; publicación y ejecución real registradas por separado de pruebas aisladas."
+      ],
+      "deployment": "Propuesta autorizada por petición explícita de Dirección; implementación y prueba de publicación pendientes.",
+      "rollback": "Revertir cambios de monitor/clientes y horarios mediante PR. Conservar la rama de resultados y registros existentes; detener únicamente el monitor/canario nuevos, sin borrar medios, decisiones, usuarios o disparadores del negocio."
     }
   ],
   "data_contracts": [
@@ -11661,6 +11751,48 @@
         "No presentar una prueba CPU/parallax como video generativo LTX ni equivalencia visual aceptada. Todo material regenerado conserva procedencia propia y no sustituye el original.",
         "Si no se acredita una facultad, se registra el pendiente exacto. No cancelar las rutinas anteriores de Claude por un diagnóstico parcial.",
         "Sólo rutinas Sala declaradas en allowlist pueden habilitarse, sin PPP ni supervisores cancelados. Revisión diaria debe distinguir schedule declarado, workflow activo y última ejecución real."
+      ]
+    },
+    {
+      "id": "CTR-SALUD-ACCESOS",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "EXT-GMAIL",
+        "SYS-MARKETING",
+        "SYS-PLAN-POTENCIAL",
+        "EXT-MOTORES-MEDIA"
+      ],
+      "source": "Modelo técnico del Atlas, superficies publicadas, API de Actions y revisión agregada de Sala; motores reales sólo con insumos sintéticos.",
+      "input": [
+        "Catálogo técnico y pasos de cada proceso con IDs existentes; configuración explícita de pruebas y caducidad.",
+        "Lecturas públicas allowlisted de páginas/contratos; observación de Sala con identidad agente y datos agregados, sin publicar filas o identidades.",
+        "Canario aislado diario de voz/escena/corte y transferencia temporal privada de Drive, sin encolar ni proponer."
+      ],
+      "output": [
+        "Informe técnico sanitizado por prueba: estado, alcance, hora, vencimiento y enlace de evidencia. Rama de datos independiente de main.",
+        "Panel Estado de los sistemas en Accesos con actualización de pantalla cada minuto y comprobación programada cada15min. Procesos manuales/pendientes visibles; no certificar operaciones comerciales por un ping.",
+        "Horarios declarados en Hermosillo y última ejecución real de las rutinas de Sala."
+      ],
+      "invariants": [
+        "Verde exige prueba correcta vigente; sin datos, error de lectura, reloj futuro, workflow cancelado/detenido o prueba vencida se muestran sin confirmar, con fallo o atrasados.",
+        "Un HTTP200/ok de API no certifica autenticación, transacción, correo recibido, pago, confirmación Calendar o todo el proceso.",
+        "No reactivar procesos cancelados ni cambiar usuarios, roles, claves o reglas editoriales. No usar endpoints de negocio para pruebas de escritura.",
+        "La sesión/epoch vigente controla montaje y respuestas del panel en Accesos; cerrar/cambiar sesión limpia y detiene el monitor.",
+        "Resultados de datos se publican sólo en la rama técnica y se conservan fallos actuales e historial acotado. Sin credenciales, guiones privados, IDs de Sheets, clientes, destinatarios o contenido real.",
+        "Cadencias de GitHub son declaradas y pueden retrasarse; mostrar edad real y estado caducado. No prometer funcionamiento instantáneo por programar un cron.",
+        "Generar componentes/pasos del inventario vigente y dejar explícita la falta de prueba funcional para cada facultad aún no instrumentada."
       ]
     }
   ],
@@ -12925,6 +13057,85 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO",
         "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/yod-salud.js",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/salud-online.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "EXT-ACTIONS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/salud-catalogo.json",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/salud-online.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": ".github/workflows/salud-online.yml",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "EXT-ACTIONS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "accesos.html",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-CONTROL"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "tests/salud-accesos-browser.cjs",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-CONTROL"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": "nube/salud_canario.py",
+      "components": [
+        "SYS-SALA",
+        "SVC-SALA-EJECUTOR",
+        "EXT-DRIVE",
+        "EXT-MOTORES-MEDIA"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": ".github/workflows/sala-salud-canario.yml",
+      "components": [
+        "SYS-SALA",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "EXT-MOTORES-MEDIA"
       ]
     }
   ],

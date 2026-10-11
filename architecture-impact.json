@@ -1,21 +1,32 @@
 {
-  "model_revision": "2026-10-11.sala-cierre-verificado",
-  "proposal_id": "CHG-SALA-CIERRE-ONLINE-20261011",
-  "summary": "Registrar cierre real y comparación parcial de Sala online:181/183 pruebas,4jobs success,16 archivos privados byte-verificados; distinguir registro de correo de recepción y límites de equivalencia.",
+  "model_revision": "2026-10-11.salud-accesos",
+  "proposal_id": "CHG-SALUD-ACCESOS-20261011",
+  "summary": "Registrar control autorizado de salud por prueba y proceso en Accesos; conservar datos, compuertas e identidad.",
   "components": [
     "SYS-YOD-OS",
+    "SYS-CONTROL",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "SYS-POTENCIALES",
+    "GAS-PORTERO",
     "SYS-SALA",
     "GAS-SALA",
-    "SHEET-SALA",
     "SVC-SALA-PRODUCTOR",
     "SVC-SALA-EJECUTOR",
     "EXT-ACTIONS",
     "EXT-DRIVE",
-    "EXT-GMAIL"
+    "EXT-GMAIL",
+    "SYS-MARKETING",
+    "SYS-PLAN-POTENCIAL",
+    "EXT-MOTORES-MEDIA"
   ],
   "tests": [
-    "Modelo/vistas sincronizados; verificaciones obligatorias del portal en CI.",
-    "Recibos reales de Sala y comparación por alcance; correo/source/triggers/equivalencia pendientes explícitos."
+    "Estados de fallo, respuesta inválida, lectura caducada/futura, workflow detenido, canario parcial y falta de evidencia; resultados anteriores nunca vuelven verde una comprobación fallida.",
+    "Comprobaciones de páginas/contratos sólo contra allowlist; API pública de Actions y snapshots publicados; observación Sala exclusivamente de recursos de lectura ya autorizados.",
+    "Canario sintético local: motores reales, codecs/duración/audio medidos; Drive sólo prueba temporal fuera de registros comerciales; limpieza y errores independientes, sin mensajes o decisiones.",
+    "Accesos con sesión vigente: montaje y refresco, descarte de respuestas tardías tras cambio/cierre de sesión; matriz y escritor intactos; móvil y escritorio.",
+    "CI completos de Portal/Sala/Potenciales; publicación y ejecución real registradas por separado de pruebas aisladas."
   ],
-  "rollback": "Revertir el worker y configuración técnica exacta respaldada tras lectura reciente; mantener medios, decisiones, colas y registros existentes. Reprogramar sólo correoDiario si hace falta; nunca ejecutar instalar() ni borrar otras rutinas."
+  "rollback": "Revertir cambios de monitor/clientes y horarios mediante PR. Conservar la rama de resultados y registros existentes; detener únicamente el monitor/canario nuevos, sin borrar medios, decisiones, usuarios o disparadores del negocio."
 }
