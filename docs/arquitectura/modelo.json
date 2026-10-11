@@ -510,6 +510,13 @@
           "commit": "6ad059cd1ed97edee894df5a9b2032d919143e0f",
           "claim": "PR76/77 integrados. Run 38141736288 success; rama de datos agregados y lector verifican 76 publicaciones y snapshot 409673351. Main conserva PR/CI.",
           "status": "ejecucion"
+        },
+        {
+          "repo": "yodesarrollomx/aurum-board",
+          "path": "scripts/pull_metrics.py",
+          "commit": "e3dd428a01b01d1c8b5775c7fcca408735c98357",
+          "claim": "PR78 integrado; run 38157069665 success. Plan lectura confirmada con hash y frescura; leads_medicion_caida=false, 76 publicaciones Meta. El lector HTTP comprueba bytes/recibo de snapshot409795880.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -523,7 +530,7 @@
       "risks_sanitized": [],
       "source_of_truth": "GAS-MARKETING y GAS-PLAN-POTENCIAL para embudos; API Meta y archivos generados para publicaciones",
       "status": "ejecucion",
-      "runtime_status": "Código Pages y refresh en nube comprobados el 11-oct-2026:76 publicaciones reales con recibo/hash y lector HTTP correcto. Plan de Potencial incompleto: lectura automática rechazada; no se sustituyen errores por ceros."
+      "runtime_status": "Run38157069665: 76 publicaciones Meta y Plan histórico confirmado con recibo/hash/frescura; leads_medicion_caida=false. Seis registros históricos válidos, cuatro sesiones registradas, una prueba excluida y sólo una atribución campaña/pieza. Captación/pagos/Calendar y backends originales no acreditados por esta lectura."
     },
     {
       "id": "SYS-OBRA",
@@ -653,6 +660,13 @@
           "claim": "Cadena comercial documentada",
           "status": "declarado",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/plan_agregados.py",
+          "commit": "a3b6c7053b3cd26333dd06878e74bb666288ce51",
+          "claim": "Lectura de atribución del Sheet canónico comprobada mediante worker Sala; no acredita el despliegue completo del formulario, backend, pagos o Calendar.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -666,7 +680,7 @@
       ],
       "source_of_truth": "Fuente de GitHub; despliegue y datos reales por verificar",
       "status": "declarado",
-      "runtime_status": "No verificado en despliegue"
+      "runtime_status": "Lectura automática agregada confirmada; backend de captación, inventario Apps Script/Calendar/pagos por verificar."
     },
     {
       "id": "SYS-CROKISS",
@@ -810,6 +824,20 @@
           "commit": "73902861db96d213a07f788996f50fdcf3c65566",
           "claim": "PR265 integrado. Revisión 38141812652 y Pages 38141874311 success; publicación exacta del snapshot 409673426 y diagnóstico agregado sin filas privadas.",
           "status": "ejecucion"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "docs/PLAN-ONLINE.md",
+          "commit": "a3b6c7053b3cd26333dd06878e74bb666288ce51",
+          "claim": "PR266/267/268 integrados. Run 38156397507 success: cuenta de servicio existente con permiso lector, consulta autenticada GViz sólo cuando Sheets API está deshabilitada, columnas permitidas, exclusión de prueba y publicación verificada. Fuente no modificada.",
+          "status": "ejecucion"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/medios_reconexion.py",
+          "commit": "159d932cd81c2d2c3fda31a862ea60fc0b3ae667",
+          "claim": "PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -828,7 +856,7 @@
       ],
       "source_of_truth": "SHEET-SALA: propuestas, decisiones, producción, reglas, motores y cola; archivos de repositorio son superficie o respaldo",
       "status": "ejecucion",
-      "runtime_status": "Código y revisión diaria publicados y comprobados el 11-oct-2026: cola/rutinas confirmadas, recibo exacto del sitio. Ruta técnica de medios CPU comprobada; aprobaciones humanas. Apps Script original/correo y conciliación histórica pendientes."
+      "runtime_status": "Código y revisión diaria publicados; ruta de medios CPU comprobada y lectura automática agregada de Plan confirmada el11-oct-2026. Compuertas editoriales humanas. Fuentes/disparadores Apps Script originales, correo y medios históricos restantes pendientes. Reconexión de dos voces originales exactas comprobada por run38159239581 y acuse privado."
     },
     {
       "id": "SYS-SALA-OPERACION",
@@ -1463,6 +1491,17 @@
         {
           "claim": "Integración pendiente de verificar",
           "status": "pendiente"
+        },
+        {
+          "claim": "Metadatos y encabezados de LEADS - POTENCIAL contrastados con documentación y lecturas autorizadas acotadas el11-oct-2026. Datos y ID físico omitidos del atlas; autoridad del runtime de servicio pendiente.",
+          "status": "ejecucion"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/plan_agregados.py",
+          "commit": "a3b6c7053b3cd26333dd06878e74bb666288ce51",
+          "claim": "PR266/267/268 integrados. Run 38156397507 success: cuenta de servicio existente con permiso lector, consulta autenticada GViz sólo cuando Sheets API está deshabilitada, columnas permitidas, exclusión de prueba y publicación verificada. Fuente no modificada.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -1471,12 +1510,12 @@
         "cita"
       ],
       "risks_sanitized": [
-        "Esquema y calidad de datos vivos no inspeccionados"
+        "Verificación limitada a columnas contractuales; no acredita calidad de campos privados no leídos ni confirmación independiente de Calendar."
       ],
-      "source_of_truth": "Almacén lógico Google Sheets; correspondencia con archivo vivo por verificar",
-      "physical_mapping_status": "pendiente_no_contar_como_archivos_distintos_confirmados",
-      "status": "declarado",
-      "runtime_status": "No verificado en despliegue"
+      "source_of_truth": "Hoja canónica contrastada mediante metadatos, encabezados y valores acotados; identidad técnica sólo en configuración privada.",
+      "physical_mapping_status": "correspondencia_confirmada_lectura_acotada",
+      "status": "ejecucion",
+      "runtime_status": "Permiso lector de la cuenta de servicio y ejecución cloud verificados: sólo columnas contractuales; no crear/modificar leads. Calidad del resto de columnas y código del backend original pendientes."
     },
     {
       "id": "GAS-CROKISS",
@@ -1944,6 +1983,13 @@
           "claim": "Esquemas de tablas de Sala",
           "status": "codigo",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/medios_reconexion.py",
+          "commit": "159d932cd81c2d2c3fda31a862ea60fc0b3ae667",
+          "claim": "PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -1957,7 +2003,7 @@
       "backend_source_status": "fuente_completa_versionada_despliegue_no_verificado",
       "source_of_truth": "gas/Code.gs es fuente versionada; no se comprobó igualdad con versión desplegada",
       "status": "codigo",
-      "runtime_status": "No verificado en despliegue"
+      "runtime_status": "GET cola y POST cola/op:estado sólo para evidencia técnica de dos voces originales comprobados el11-oct-2026; conservación de campos y acuse real. Fuente/editor, versión completa, otras funciones, disparadores y correo no acreditados por esta comprobación."
     },
     {
       "id": "SHEET-SALA",
@@ -1971,6 +2017,13 @@
         {
           "claim": "Integración pendiente de verificar",
           "status": "pendiente"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/medios_reconexion.py",
+          "commit": "159d932cd81c2d2c3fda31a862ea60fc0b3ae667",
+          "claim": "PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -1990,7 +2043,7 @@
       "source_of_truth": "Google Sheets de Sala; identidad física y valores vivos no inspeccionados",
       "physical_mapping_status": "pendiente_no_contar_como_archivos_distintos_confirmados",
       "status": "declarado",
-      "runtime_status": "No verificado en despliegue"
+      "runtime_status": "Lectura/conciliación de evidencia en dos trabajos existentes de COLA comprobadas vía backend autorizado. Sin fila nueva, estado o decisión cambiada. Identidad física/otras hojas y backend original por verificar."
     },
     {
       "id": "GAS-EMD",
@@ -2477,6 +2530,13 @@
           "commit": "73902861db96d213a07f788996f50fdcf3c65566",
           "claim": "PR265 conserva compuertas, aprobaciones y procedencia; Modal default 0 y CPU de respaldo. CI completo acreditado.",
           "status": "codigo"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/medios_reconexion.py",
+          "commit": "159d932cd81c2d2c3fda31a862ea60fc0b3ae667",
+          "claim": "PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -2489,7 +2549,7 @@
       ],
       "source_of_truth": "Configuración de reglas/motores y código de ejecución; ejecución viva pendiente",
       "status": "codigo",
-      "runtime_status": "Código actualizado/CI de 120 pruebas integrado; ruta técnica compartida de imagen/escena/voz/montaje confirmada por 38139680521. La prueba técnica no encoló negocio ni acredita todas las etapas/piezas existentes."
+      "runtime_status": "Mantenimiento de nube de dos originales comprobado con acuse; producción CPU técnica acreditada por pruebas previas. Cada ejecución editorial sigue su configuración y compuertas humanas; no certifica todos los trabajos históricos."
     },
     {
       "id": "EXT-MOTORES-MEDIA",
@@ -5472,15 +5532,103 @@
           "commit": "6ad059cd1ed97edee894df5a9b2032d919143e0f",
           "claim": "LECTOR_ONLINE ok:true, posts:76, run_id:38141736288. El navegador recibe sólo agregados/covers y verifica SHA256. Plan rechazado mantiene último dato acreditado y señal de medición incompleta.",
           "status": "ejecucion"
+        },
+        {
+          "repo": "yodesarrollomx/aurum-board",
+          "path": "metrics-online.js",
+          "commit": "e3dd428a01b01d1c8b5775c7fcca408735c98357",
+          "claim": "PR78 integrado; run 38157069665 success. Plan lectura confirmada con hash y frescura; leads_medicion_caida=false, 76 publicaciones Meta. El lector HTTP comprueba bytes/recibo de snapshot409795880.",
+          "status": "ejecucion"
         }
       ],
       "contract_ids": [
         "CTR-SALA-SNAPSHOT-ONLINE"
       ],
       "runtime_evidence": {
-        "checked_at": "2026-10-11T13:06:39Z",
-        "scope": "Agregados de Meta y rama datos-online, lectura del cliente con hash exacto; Pages/main conserva código aprobado. No acredita lectura automática completa de Plan de Potencial.",
-        "receipt": "https://github.com/yodesarrollomx/aurum-board/actions/runs/38141736288 ; https://raw.githubusercontent.com/yodesarrollomx/aurum-board/datos-online/version-online.json ; snapshot_id=409673351 ; code_sha=6ad059cd1ed97edee894df5a9b2032d919143e0f ; data_sha=35cd384cddecdc970c44b0ac8121757c4efd8f586fd339f039a0c4a319e483cd"
+        "checked_at": "2026-10-11T16:52:06Z",
+        "scope": "Rama pública de agregados y lector HTTP exacto: 76 publicaciones Meta y atribución Plan confirmada. Código Pages/main y datos separados; contratos de captación/pago originales quedan fuera de este alcance.",
+        "receipt": "https://github.com/yodesarrollomx/aurum-board/actions/runs/38157069665 ; snapshot_id=409795880 ; code_sha=e3dd428a01b01d1c8b5775c7fcca408735c98357 ; data_sha=bdd45db26647f4034d8ffe81a5ccac6b7a7dc80d9e7375d1d6075c062f095c77 ; metrics_sha256=25e785764d1c5d1bd5f845a48cfb57be2e00299a6fec725f5021d67f64ec808f"
+      }
+    },
+    {
+      "id": "CON-PLAN-SHEETS-ONLINE",
+      "from": "SHEET-PLAN-POTENCIAL",
+      "to": "SYS-SALA",
+      "kind": "lectura",
+      "label": "Lectura de Plan por cuenta de servicio y salida agregada",
+      "status": "ejecucion",
+      "runtime_verified": true,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/plan_agregados.py",
+          "commit": "a3b6c7053b3cd26333dd06878e74bb666288ce51",
+          "claim": "PR266/267/268 integrados. Run 38156397507 success: cuenta de servicio existente con permiso lector, consulta autenticada GViz sólo cuando Sheets API está deshabilitada, columnas permitidas, exclusión de prueba y publicación verificada. Fuente no modificada.",
+          "status": "ejecucion"
+        }
+      ],
+      "contract": "CTR-PLAN-AGREGADOS-ONLINE; identidad sólo lectora, columnas permitidas y ningún registro de cliente en salida.",
+      "contract_ids": [
+        "CTR-PLAN-AGREGADOS-ONLINE"
+      ],
+      "runtime_evidence": {
+        "checked_at": "2026-10-11T16:43:03Z",
+        "scope": "Lectura acotada de fuente canónica con identidad de servicio lectora; publicación exacta de agregados históricos. No acredita formulario, backend Apps Script o citas verificadas contra Calendar.",
+        "receipt": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38156397507 ; https://github.com/yodesarrollomx/sala-edicion/actions/runs/38156497145 ; code_sha=a3b6c7053b3cd26333dd06878e74bb666288ce51 ; snapshot_id=409790395 ; data_sha=d55787c358225c0f04f33f54d5cbc12ee0736bfba259205b9668ec6f58687461"
+      }
+    },
+    {
+      "id": "CON-PLAN-METRICAS-ONLINE",
+      "from": "SYS-SALA",
+      "to": "SYS-MARKETING",
+      "kind": "lectura",
+      "label": "Marketing consume agregados de Plan publicados con hash",
+      "status": "ejecucion",
+      "runtime_verified": true,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/aurum-board",
+          "path": "scripts/pull_metrics.py",
+          "commit": "e3dd428a01b01d1c8b5775c7fcca408735c98357",
+          "claim": "PR78 integrado; run 38157069665 success. Plan lectura confirmada con hash y frescura; leads_medicion_caida=false, 76 publicaciones Meta. El lector HTTP comprueba bytes/recibo de snapshot409795880.",
+          "status": "ejecucion"
+        }
+      ],
+      "contract": "CTR-PLAN-AGREGADOS-ONLINE; recibo exacto, frescura y no sustituir errores por cero.",
+      "contract_ids": [
+        "CTR-PLAN-AGREGADOS-ONLINE"
+      ],
+      "runtime_evidence": {
+        "checked_at": "2026-10-11T16:52:06Z",
+        "scope": "Consumidor real valida recibos antes/después, hash del DTO, frescura y contrato. Históricos y pruebas se distinguen de leads nuevos; última lectura acreditada se conserva ante error.",
+        "receipt": "https://github.com/yodesarrollomx/aurum-board/actions/runs/38157069665 ; source_snapshot_id=409791946 ; source_run_id=38156711455 ; plan_sha256=245828a89c278f2f376938d5cc675a20248a2ee1220ee6b0787733507c207822 ; board_snapshot_id=409795880 ; code_sha=e3dd428a01b01d1c8b5775c7fcca408735c98357 ; data_sha=bdd45db26647f4034d8ffe81a5ccac6b7a7dc80d9e7375d1d6075c062f095c77"
+      }
+    },
+    {
+      "id": "CON-SALA-RECONEXION-MEDIOS",
+      "from": "SVC-SALA-EJECUTOR",
+      "to": "GAS-SALA",
+      "kind": "conciliacion",
+      "label": "Mantenimiento limitado de evidencia de voces originales recuperadas",
+      "status": "ejecucion",
+      "runtime_verified": true,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/medios_reconexion.py",
+          "commit": "159d932cd81c2d2c3fda31a862ea60fc0b3ae667",
+          "claim": "PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto.",
+          "status": "ejecucion"
+        }
+      ],
+      "contract": "CTR-SALA-RECONECTAR-MEDIOS; sólo evidencia técnica con archivo original exacto, sin estados ni decisiones.",
+      "contract_ids": [
+        "CTR-SALA-RECONECTAR-MEDIOS"
+      ],
+      "runtime_evidence": {
+        "checked_at": "2026-10-11T17:26:16Z",
+        "scope": "Dos referencias de voces originales exactas en COLA; hash/tamaño completos, estado terminado, lectura inmediata y posterior. Sin cambios operativos/editoriales; API heredada sin CAS atómico. No acredita los medios no localizados ni la fuente completa de Apps Script.",
+        "receipt": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38159239581 ; code_sha=159d932cd81c2d2c3fda31a862ea60fc0b3ae667 ; targets=2 ; attempted=2 ; readback_verified=2 ; confirmed_writes=2 ; private_receipt=byte_verified ; decisions_changed=false ; social_publications=0"
       }
     }
   ],
@@ -9990,6 +10138,55 @@
       "rollback": "Revertir PR de infraestructura y volver a publicación Git tras resolver la identidad del bot. Restaurar último snapshot confirmado, sin borrar COLA, decisiones, medios ni registros de Sheets."
     },
     {
+      "id": "CHG-PLAN-AGREGADOS-ONLINE-20261011",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "SYS-MARKETING",
+        "SYS-PLAN-POTENCIAL",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL",
+        "SHEET-CRM",
+        "EXT-ACTIONS",
+        "EXT-DRIVE"
+      ],
+      "status": "publicado",
+      "proposal": "Por autorización de Dirección: resolver la lectura automática de atribución de Plan mediante lectura acotada de su hoja canónica con la cuenta de servicio ya usada por Sala y permiso sólo lector. Configuración sin credenciales en documento privado de Drive. Sala publica únicamente agregados de campaña/pieza con SHA256 en su recibo; Marketing consulta esa versión confirmada y conserva el último dato si hay rechazo, retraso o contrato incompleto. No cambia el formulario, el backend de captación, permisos del Portero, gastos, estados del CRM ni decisiones editoriales.",
+      "tests": [
+        "Sala suite completa144 y Marketing consumidor17 pruebas pasan mediante CI normal; regresiones6 de leads,26 de snapshots y20 de publicador permanecen.",
+        "PR266/267/268 Sala y PR78 Marketing pasan verificadores obligatorios y se integran con arquitectura aprobada16390c54873393d590793a4407cf05dbcd2f2bb1.",
+        "Permiso de servicio reader leído de vuelta; fuente de producción únicamente GET. REST detecta SERVICE_DISABLED; GViz autenticado devuelve sólo columnas permitidas. Sin credenciales en URL.",
+        "Run38156397507 y Pages38156497145 success; byte/hash/recibo exactos. Run38157069665 success y LECTOR_ONLINE confirma snapshot409795880/76 publicaciones.",
+        "Plan histórico:6 registros válidos,4 sesiones con estado/fecha,1 prueba excluida; 1grupo UTM con1lead/1sesión y5 registros sin campaña. No nuevos leads del día ni verificación independiente Calendar."
+      ],
+      "deployment": "Publicado y comprobado el11-oct-2026. Sala main=a3b6c7053b3cd26333dd06878e74bb666288ce51, Marketing main=e3dd428a01b01d1c8b5775c7fcca408735c98357. Lectura Plan hourly minuto25 y consumidor hourly minuto00 declarados en Actions; revisión diaria incorpora octava rutina. Primeras ejecuciones y publicación reales success. Apps Script original, disparadores/correo y medios históricos restantes siguen separados.",
+      "rollback": "Revertir PR de lectura y consumidor; mantener los últimos snapshots confirmados y las hojas intactas. Retirar sólo el permiso lector específico si se añadió para esta ruta; no borrar CRM, medios o historial."
+    },
+    {
+      "id": "CHG-SALA-RECONECTAR-MEDIOS-20261011",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE"
+      ],
+      "status": "publicado",
+      "proposal": "Por autorización de Dirección de completar la migración: reconciliar exclusivamente las dos voces originales recuperadas y verificadas en Drive privado con sus trabajos existentes de COLA. Worker de mantenimiento lee instrucciones privadas, hash/tamaño/MD5 del archivo y evidencia original, exige coincidencia exacta y relee la fila antes del cambio. Actualiza sólo evidencia.drive_id y procedencia técnica mediante cola/op:estado; conserva todos los demás campos de evidencia y nunca manda estado, motor, bloqueado_por o decisiones. Relee fila y registra acuse privado. No regenerar ni crear trabajos, ni sustituir medios no localizados.",
+      "tests": [
+        "PR269 head82b7db1c10ad14d77945fb430f0be8a29dc485a9: Arquitectura YOD, verificar y regresiones success. Suite completa164 pruebas, incluidas20 de reconexión, sin API/credenciales de producción.",
+        "Runtime38159239581 success con code_sha159d932cd81c2d2c3fda31a862ea60fc0b3ae667; ambos MD5 originales completos, SHA256/tamaño y WAV verificados. Preflight de ambos objetivos antes de escribir.",
+        "Dos POST reales exclusivamente evidencia: dos actualizaciones confirmadas por lectura posterior, errores nulos, mismo estado/motor/bloqueo/prioridad/identidad y decisiones. Acuse privado de antes/después byte-verificado, instrucciones originales retenidas.",
+        "Cambio detectado aborta, filas ambiguas/activas o referencia/hash diferentes se rechazan; idempotencia probada con dobles. El API heredado carece de CAS atómico, limitación registrada."
+      ],
+      "deployment": "Publicado y comprobado el11-oct-2026 mediante PR269 y run38159239581. Dos originales recuperados reconectados a sus trabajos, con antes/después privado y acuse exacto. Workflow de mantenimiento por incorporación del código/manual, sin cron; serializa con sala-ejecutor. Fuentes/editor IDs de Apps Script, disparadores/correo y26 medios no localizados en fuentes auditadas siguen pendientes.",
+      "rollback": "Conservar copia privada del antes/después. Revertir worker y reconectar sólo la referencia técnica previa tras lectura reciente y revisión; no cambiar decisiones, estados, borrar recuperados ni restaurar hojas completas."
+    },
+    {
       "id": "CHG-DESPACHO-FLUIDEZ-20261011",
       "components": [
         "SYS-YOD-OS",
@@ -9998,13 +10195,13 @@
         "GAS-PORTERO"
       ],
       "proposal": "Dirección autoriza reorganizar la interacción como oficina de estrategia: selección, cuatro direcciones y puesto con PPP visible mientras conversa. Conservar todas las capacidades, identidades y contratos. Corregir estados de lectura, reducir cabeceras y separar ruta guardada, actividad y evidencia. Revisar sólo la entrega exacta mostrada, sin aprobar por actualización silenciosa ni crear encargos al abrir. No reactivar automatizaciones canceladas ni ampliar APIs, permisos o backend.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "tests": [
         "Suite completa y verificadores de arquitectura, OS, Portal, Accesos y Obra mediante Actions.",
         "Navegador sobre módulos reales: carga lenta/fallo/recuperación, PPP y espacio visible, tres expedientes, rueda teclado/táctil, voz/cápsula y móvil. Transporte sintético no acredita micrófono físico ni datos privados.",
         "Revisor separado sobre el commit exacto; evidencia visual de escritorio, Chromebook y móvil."
       ],
-      "deployment": "Propuesta registrada antes de implementación. Publicación por PR y Pages tras CI y revisión; no reiniciar Render por cambios de cliente.",
+      "deployment": "Código implementado en rama; pendiente CI, revisión separada y Pages. No es aceptación de voz física ni autonomía 24/7.",
       "rollback": "Revertir el PR de interfaz; conservar Sheets, expedientes, objetivos, recibos y disco persistente."
     }
   ],
@@ -11157,6 +11354,70 @@
         "Nunca autoaprobar editoriales ni enviar/publicar contenido a terceros. Prueba técnica no registra un proyecto o producción ficticia en Sheets.",
         "Si una API devuelve ok:false o error, conservar el backup anterior y mostrar fallo. HTTP200 no equivale a lectura válida.",
         "La rama pública de datos no contiene código, credenciales, leads o registros nuevos de clientes. Una escritura del bot en esa rama publica únicamente datos validados; main conserva protecciones, PR y CI."
+      ]
+    },
+    {
+      "id": "CTR-PLAN-AGREGADOS-ONLINE",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "SYS-MARKETING",
+        "SYS-PLAN-POTENCIAL",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL",
+        "SHEET-CRM",
+        "EXT-ACTIONS",
+        "EXT-DRIVE"
+      ],
+      "source": "Hoja canónica de Plan de Potencial; metadatos/encabezados inspeccionados por conector autorizado el 11-oct-2026. Configuración técnica e inventario de fuentes en documento privado; sin credenciales ni exportación de filas a repositorios.",
+      "input": [
+        "Lectura acotada de columnas de identidad interna, tipo, estado, confirmación de sesión y UTM; encabezados verificados; sin nombre, correo, teléfono, dirección, notas o JSON del lead.",
+        "Cuenta de servicio existente; permiso lector a la fuente. Identidad y acuse técnicos sólo en Drive privado.",
+        "Último snapshot confirmado y código aprobado; reloj America/Hermosillo."
+      ],
+      "output": [
+        "DTO schema1 con lectura fechada, conteos históricos/contexto de cobertura y agregados por campaña/pieza: leads y citas confirmadas; ningún folio, fila, PII o ID de Sheet.",
+        "Recibo publicado enlaza SHA256 de datos/plan-agregados.json; Marketing comprueba recibo, bytes, frescura y contrato antes de usar conteos.",
+        "Ante error conservar último dato, marcar lectura fallida y no certificar cero; fuentes Apps Script y correo pendientes por separado."
+      ],
+      "invariants": [
+        "No crear/modificar leads, estados, gastos, citas, triggers o decisiones para probar la integración.",
+        "Excluir registros de prueba explícitos, deduplicar por folio y fallar ante duplicados contradictorios; no sumar CRM históricos como leads nuevos del día.",
+        "Cita confirmada exige valor de sesión válido y estado compatible; clic en agendar no es confirmación. Las claves no se publican.",
+        "Sólo agregados de UTM permitidos sin PII; el recibo vincula hash del archivo exacto. Una respuesta HTTP200 sin contrato no acredita lectura.",
+        "Configuración en Drive privado no incluye llaves de cuenta de servicio o OAuth. Las credenciales sólo se usan en su runtime autorizado.",
+        "Cambios de código pasan por PR y CI; pin de arquitectura aprobado antes de integrar consumidores. No sustituir fuentes activas desconocidas por espejos."
+      ]
+    },
+    {
+      "id": "CTR-SALA-RECONECTAR-MEDIOS",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE"
+      ],
+      "source": "Informe de recuperación privado, archivos originales recuperados y COLA viva; ningún ID físico o referencia de pieza en el atlas.",
+      "input": [
+        "Instrucción privada exacta de dos recuperaciones originales con identidad de trabajo, referencia anterior/nueva, MD5, SHA256 y tamaño.",
+        "Lectura de COLA con identidad agente existente y archivos Drive con cuenta de servicio actual; configuración privada sin credenciales."
+      ],
+      "output": [
+        "Misma fila y mismos campos operativos; sólo referencia de archivo y procedencia técnica en evidencia.",
+        "Acuse privado con antes/después y hash de archivos, lectura posterior acreditada. Resumen público sólo conteos/error tipificado."
+      ],
+      "invariants": [
+        "Nunca escribir estado, motor, prioridad, bloqueado_por, piezas, decisiones, propuestas o registros nuevos.",
+        "Archivo recuperado debe coincidir exactamente con MD5 de evidencia original y hashes/tamaño del informe; sin sustitución por regeneración.",
+        "Fila única y evidencia JSON dict; si falta o no coincide, detener sin escribir esa fila.",
+        "Releer antes de actualizar y abortar ante cambios; API heredada no ofrece CAS atómico, por lo que no afirmar una transacción global ni sobrescribir un cambio detectado.",
+        "Actualización idempotente: si el archivo ya está reconectado con mismo hash, sólo verificar y no reescribir.",
+        "Archivo/informe/acuse quedan privados; errores no publican cuerpos, nombres privados, IDs, tokens o contenidos del audio."
       ]
     }
   ],
@@ -12408,6 +12669,15 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "scripts/probar-puesto-browser.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-read-state.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",

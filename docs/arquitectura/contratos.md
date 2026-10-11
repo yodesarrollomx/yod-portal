@@ -584,3 +584,31 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Nunca autoaprobar editoriales ni enviar/publicar contenido a terceros. Prueba técnica no registra un proyecto o producción ficticia en Sheets.
 - Si una API devuelve ok:false o error, conservar el backup anterior y mostrar fallo. HTTP200 no equivale a lectura válida.
 - La rama pública de datos no contiene código, credenciales, leads o registros nuevos de clientes. Una escritura del bot en esa rama publica únicamente datos validados; main conserva protecciones, PR y CI.
+
+## CTR-PLAN-AGREGADOS-ONLINE
+
+- Componentes: SYS-YOD-OS, SYS-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, SYS-MARKETING, SYS-PLAN-POTENCIAL, GAS-PLAN-POTENCIAL, SHEET-PLAN-POTENCIAL, SHEET-CRM, EXT-ACTIONS, EXT-DRIVE.
+- Evidencia: Hoja canónica de Plan de Potencial; metadatos/encabezados inspeccionados por conector autorizado el 11-oct-2026. Configuración técnica e inventario de fuentes en documento privado; sin credenciales ni exportación de filas a repositorios..
+- Entrada/campos: `Lectura acotada de columnas de identidad interna, tipo, estado, confirmación de sesión y UTM; encabezados verificados; sin nombre, correo, teléfono, dirección, notas o JSON del lead.`, `Cuenta de servicio existente; permiso lector a la fuente. Identidad y acuse técnicos sólo en Drive privado.`, `Último snapshot confirmado y código aprobado; reloj America/Hermosillo.`.
+- Salida: DTO schema1 con lectura fechada, conteos históricos/contexto de cobertura y agregados por campaña/pieza: leads y citas confirmadas; ningún folio, fila, PII o ID de Sheet., Recibo publicado enlaza SHA256 de datos/plan-agregados.json; Marketing comprueba recibo, bytes, frescura y contrato antes de usar conteos., Ante error conservar último dato, marcar lectura fallida y no certificar cero; fuentes Apps Script y correo pendientes por separado..
+
+- No crear/modificar leads, estados, gastos, citas, triggers o decisiones para probar la integración.
+- Excluir registros de prueba explícitos, deduplicar por folio y fallar ante duplicados contradictorios; no sumar CRM históricos como leads nuevos del día.
+- Cita confirmada exige valor de sesión válido y estado compatible; clic en agendar no es confirmación. Las claves no se publican.
+- Sólo agregados de UTM permitidos sin PII; el recibo vincula hash del archivo exacto. Una respuesta HTTP200 sin contrato no acredita lectura.
+- Configuración en Drive privado no incluye llaves de cuenta de servicio o OAuth. Las credenciales sólo se usan en su runtime autorizado.
+- Cambios de código pasan por PR y CI; pin de arquitectura aprobado antes de integrar consumidores. No sustituir fuentes activas desconocidas por espejos.
+
+## CTR-SALA-RECONECTAR-MEDIOS
+
+- Componentes: SYS-YOD-OS, SYS-SALA, GAS-SALA, SHEET-SALA, SVC-SALA-EJECUTOR, EXT-ACTIONS, EXT-DRIVE.
+- Evidencia: Informe de recuperación privado, archivos originales recuperados y COLA viva; ningún ID físico o referencia de pieza en el atlas..
+- Entrada/campos: `Instrucción privada exacta de dos recuperaciones originales con identidad de trabajo, referencia anterior/nueva, MD5, SHA256 y tamaño.`, `Lectura de COLA con identidad agente existente y archivos Drive con cuenta de servicio actual; configuración privada sin credenciales.`.
+- Salida: Misma fila y mismos campos operativos; sólo referencia de archivo y procedencia técnica en evidencia., Acuse privado con antes/después y hash de archivos, lectura posterior acreditada. Resumen público sólo conteos/error tipificado..
+
+- Nunca escribir estado, motor, prioridad, bloqueado_por, piezas, decisiones, propuestas o registros nuevos.
+- Archivo recuperado debe coincidir exactamente con MD5 de evidencia original y hashes/tamaño del informe; sin sustitución por regeneración.
+- Fila única y evidencia JSON dict; si falta o no coincide, detener sin escribir esa fila.
+- Releer antes de actualizar y abortar ante cambios; API heredada no ofrece CAS atómico, por lo que no afirmar una transacción global ni sobrescribir un cambio detectado.
+- Actualización idempotente: si el archivo ya está reconectado con mismo hash, sólo verificar y no reescribir.
+- Archivo/informe/acuse quedan privados; errores no publican cuerpos, nombres privados, IDs, tokens o contenidos del audio.

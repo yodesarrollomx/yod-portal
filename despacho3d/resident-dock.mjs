@@ -1,7 +1,7 @@
 
 // Compact selection uses the same authorized catalog and opening path as avatar clicks.
 export function mountResidentDock({win=window,doc=document}={}){
- const api=win.YodResidentAgents;if(!api||doc.getElementById('resident-dock'))return null;
+ const api=win.YodResidentAgents;if(!api||typeof api.getAuthorizedProfiles!=='function'||typeof api.subscribeAuthorizedProfiles!=='function'||doc.getElementById('resident-dock'))return null;
  const root=doc.createElement('nav');root.id='resident-dock';root.setAttribute('aria-label','Elegir autón del despacho');
  const cards=doc.createElement('div');cards.className='resident-dock-cards';
  const notice=doc.createElement('p');notice.className='resident-dock-notice';notice.setAttribute('role','status');
