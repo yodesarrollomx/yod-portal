@@ -8,8 +8,8 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
-- 26 sistemas y 86 componentes distribuidos exactamente una vez.
-- 10 áreas; 127 conexiones registradas, 8 marcadas como verificadas en el atlas.
+- 26 sistemas y 88 componentes distribuidos exactamente una vez.
+- 10 áreas; 131 conexiones registradas, 8 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -159,6 +159,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-SALUD-ACCESOS · SYS-CONTROL → SYS-POTENCIALES · observacion · Informe técnico por proceso visible en Accesos · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-SALUD-SALA · SYS-SALA → SYS-CONTROL · observacion · Lecturas agregadas y canario aislado de Sala · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-SALUD-ACTIONS · SYS-CONTROL → EXT-ACTIONS · observacion · Pruebas programadas y evidencia de ejecución · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
+- CON-HORARIOS-ACCESOS · SVC-HORARIOS-CLOUD → SYS-CONTROL · integracion · Resultados sanitizados observados desde Accesos · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -175,10 +176,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [CON-SALUD-SALA · Monitor38170852821 y canario38170259463 success; resultados técnicos y fuentes leídas realmente, con alcance/caducidad.40 correctos,59 pendientes; sin operaciones comerciales como prueba. · Estado: ejecucion · yodesarrollomx/yod-portal · docs/SALUD-SISTEMAS.md · Revisión: de33d90af87e9b5b225b0405841145348d42b8b0](https://github.com/yodesarrollomx/yod-portal/blob/de33d90af87e9b5b225b0405841145348d42b8b0/docs/SALUD-SISTEMAS.md)
 - CON-SALUD-ACTIONS · Solicitud explícita de Dirección el11-oct-2026; implementación pendiente. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - [CON-SALUD-ACTIONS · Monitor38170852821 y canario38170259463 success; resultados técnicos y fuentes leídas realmente, con alcance/caducidad.40 correctos,59 pendientes; sin operaciones comerciales como prueba. · Estado: ejecucion · yodesarrollomx/yod-portal · docs/SALUD-SISTEMAS.md · Revisión: de33d90af87e9b5b225b0405841145348d42b8b0](https://github.com/yodesarrollomx/yod-portal/blob/de33d90af87e9b5b225b0405841145348d42b8b0/docs/SALUD-SISTEMAS.md)
+- CON-HORARIOS-ACCESOS · Prioridad1 autorizada; implementação y aceptación real por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 3 conexiones sin verificación de ejecución registrada.
+- 4 conexiones sin verificación de ejecución registrada.
 - Catálogo local y Control Maestro deben reconciliarse sin editar silenciosamente datos operativos
 
 ### Pintarrón · SYS-PINTARRON
@@ -2610,7 +2612,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 ## Soporte técnico
 
-**Ubicación propuesta:** reception · 7 componentes.
+**Ubicación propuesta:** reception · 9 componentes.
 
 ### Sitio de organización · SYS-SITIO-ORG
 
@@ -2680,6 +2682,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-MARKETING-DATOS-ONLINE · SYS-MARKETING → EXT-ACTIONS · publicacion · Agregados públicos en rama de datos; UI de Pages conserva código aprobado · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-SALA-CIERRE-ONLINE · SVC-SALA-EJECUTOR → EXT-ACTIONS · automatizacion · Cierre, activación acotada y comparación aislada · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-SALUD-ACTIONS · SYS-CONTROL → EXT-ACTIONS · observacion · Pruebas programadas y evidencia de ejecución · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
+- CON-HORARIOS-ACTIONS · SVC-HORARIOS-CLOUD → EXT-ACTIONS · integracion · Observar ejecuciones y recuperar horarios omitidos con GitHub App · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2698,11 +2701,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [CON-SALA-CIERRE-ONLINE · PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-CIERRE-ONLINE.md · Revisión: 4582fc3c42a2ac8459dea7d553c42f9719f07962](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md)
 - CON-SALUD-ACTIONS · Solicitud explícita de Dirección el11-oct-2026; implementación pendiente. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - [CON-SALUD-ACTIONS · Monitor38170852821 y canario38170259463 success; resultados técnicos y fuentes leídas realmente, con alcance/caducidad.40 correctos,59 pendientes; sin operaciones comerciales como prueba. · Estado: ejecucion · yodesarrollomx/yod-portal · docs/SALUD-SISTEMAS.md · Revisión: de33d90af87e9b5b225b0405841145348d42b8b0](https://github.com/yodesarrollomx/yod-portal/blob/de33d90af87e9b5b225b0405841145348d42b8b0/docs/SALUD-SISTEMAS.md)
+- CON-HORARIOS-ACTIONS · Prioridad1 autorizada; implementação y aceptación real por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
 - Responsable operativo pendiente de confirmación; el encargado de verificación no sustituye esa asignación.
-- 4 conexiones sin verificación de ejecución registrada.
+- 5 conexiones sin verificación de ejecución registrada.
 - Estado y permisos no comprobados
 
 ### Identidad de publicación GitHub · EXT-GITHUB-PUBLISHER-APP
@@ -2815,6 +2819,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Conexiones registradas; no habilitan operaciones:**
 
 - CON-RENDER-MOTOR · EXT-RENDER → SVC-AUTON-CLOUD · alojamiento · Servicio y volumen persistentes en la versión efectiva · Estado: declarado · Ejecución no verificada en el atlas.
+- CON-HORARIOS-RENDER · EXT-RENDER → SVC-HORARIOS-CLOUD · integracion · Alojar un vigilante ligero dentro del servicio existente · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2824,7 +2829,68 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Evidencia de conexiones:**
 
 - [CON-RENDER-MOTOR · Servicio y volumen persistentes en la versión efectiva · Estado: declarado · alexpueblag/yod-agent-cloud · cloud/README.txt · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/README.txt)
+- CON-HORARIOS-RENDER · Prioridad1 autorizada; implementação y aceptación real por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
+
+**Pendientes y límites:**
+
+- 2 conexiones sin verificación de ejecución registrada.
+
+### Vigilante y programador en nube · SVC-HORARIOS-CLOUD
+
+**Función:** Observar horarios declarados y recuperar sólo ejecuciones actuales omitidas, sin depender de las sesiones de chat.
+
+**Fuente oficial:** Estado privado del servicio existente y ejecuciones reales de Actions; reglas editoriales y datos de negocio conservan sus fuentes.
+
+**Responsable operativo:** Dirección técnica
+
+**Estado registrado:** propuesto. Implementación y pruebas pendientes. La recuperación requiere una App propia con autorización personal de GitHub; observar no acredita ejecutar.
+
+**Conexiones registradas; no habilitan operaciones:**
+
+- CON-HORARIOS-RENDER · EXT-RENDER → SVC-HORARIOS-CLOUD · integracion · Alojar un vigilante ligero dentro del servicio existente · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-HORARIOS-ESTADO · SVC-HORARIOS-CLOUD → STORE-HORARIOS-CLOUD · integracion · Reservas durables y configuración privada cifrada · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-HORARIOS-ACTIONS · SVC-HORARIOS-CLOUD → EXT-ACTIONS · integracion · Observar ejecuciones y recuperar horarios omitidos con GitHub App · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-HORARIOS-ACCESOS · SVC-HORARIOS-CLOUD → SYS-CONTROL · integracion · Resultados sanitizados observados desde Accesos · Estado: propuesto · Ejecución no verificada en el atlas.
+
+**Evidencia de la ficha:**
+
+- Dirección autoriza prioridad1: horarios, vigilancia, recuperación segura y evidencia en Accesos. · Estado: propuesto · Sin revisión inmutable en esta referencia
+
+**Evidencia de conexiones:**
+
+- CON-HORARIOS-RENDER · Prioridad1 autorizada; implementação y aceptación real por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-HORARIOS-ESTADO · Prioridad1 autorizada; implementação y aceptación real por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-HORARIOS-ACTIONS · Prioridad1 autorizada; implementação y aceptación real por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-HORARIOS-ACCESOS · Prioridad1 autorizada; implementação y aceptación real por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
+
+**Pendientes y límites:**
+
+- 4 conexiones sin verificación de ejecución registrada.
+- No acreditar verde sin prueba vigente; reconcilación de efectos inciertos antes de otro intento.
+
+### Estado privado de horarios · STORE-HORARIOS-CLOUD
+
+**Función:** Conservar recibos, reservas de ejecución y configuración de la App cifrada para reconciliar reinicios sin duplicar efectos.
+
+**Fuente oficial:** Estado privado del servicio existente y ejecuciones reales de Actions; reglas editoriales y datos de negocio conservan sus fuentes.
+
+**Responsable operativo:** Dirección técnica
+
+**Estado registrado:** propuesto. Implementación y pruebas pendientes. La recuperación requiere una App propia con autorización personal de GitHub; observar no acredita ejecutar.
+
+**Conexiones registradas; no habilitan operaciones:**
+
+- CON-HORARIOS-ESTADO · SVC-HORARIOS-CLOUD → STORE-HORARIOS-CLOUD · integracion · Reservas durables y configuración privada cifrada · Estado: propuesto · Ejecución no verificada en el atlas.
+
+**Evidencia de la ficha:**
+
+- Dirección autoriza prioridad1: horarios, vigilancia, recuperación segura y evidencia en Accesos. · Estado: propuesto · Sin revisión inmutable en esta referencia
+
+**Evidencia de conexiones:**
+
+- CON-HORARIOS-ESTADO · Prioridad1 autorizada; implementação y aceptación real por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
 - 1 conexiones sin verificación de ejecución registrada.
+- No acreditar verde sin prueba vigente; reconcilación de efectos inciertos antes de otro intento.

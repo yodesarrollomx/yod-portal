@@ -6,6 +6,8 @@
 })(typeof window!=='undefined'?window:globalThis,function(){
   'use strict';
   var REPORT='https://raw.githubusercontent.com/yodesarrollomx/yod-portal/estado-online/estado-online.json';
+  var CLOUD='https://yod-cloud-room.onrender.com/horarios/estado.json';
+  var CONNECT='https://yod-cloud-room.onrender.com/horarios/conectar';
   var CATALOG='https://yodesarrollomx.github.io/yod-portal/os/salud-catalogo.json?v=salud1';
   var TZ='America/Hermosillo',MAX_AGE=45*60000;
   var active=false,epoch=0,busy=false,timer=null,controller=null,box=null,last=null,cat=null,live=[],probeSession=null,filter='todas';
@@ -26,6 +28,7 @@
     try{
       var u=new URL(s);
       if(u.protocol!=='https:'||u.search||u.hash)return '';
+      if(u.hostname==='yod-cloud-room.onrender.com'&&u.pathname==='/horarios/estado.json')return u.href;
       if(u.hostname==='github.com'&&/^\/yodesarrollomx\/[A-Za-z0-9._-]+\/actions\/runs\/\d+$/.test(u.pathname))return u.href;
       if(u.hostname==='yodesarrollomx.github.io'&&/^\/[A-Za-z0-9._/-]+$/.test(u.pathname))return u.href;
     }catch(e){}
@@ -33,11 +36,18 @@
   }
   function validReport(r){
     return !!r&&r.schema===1&&Array.isArray(r.checks)&&r.checks.length<=200&&
-      /^[0-9a-f]{40}$/.test(r.code_sha||'')&&/^\d+$/.test(r.run_id||'')&&
+      /^[0-9a-f]{40}$/.test(r.code_sha||'')&&
+      (r.source==='render'?/^h-[0-9a-f-]{36}$/.test(r.cycle_id||''):(r.source==null||r.source==='github')&&/^\d+$/.test(r.run_id||''))&&
       r.checks.every(function(c){return c&&typeof c.id==='string'&&/^[a-zA-Z0-9:_-]{1,120}$/.test(c.id)&&
         typeof c.nombre==='string'&&typeof c.detalle==='string'&&Array.isArray(c.components)&&
         ['ok','fallo','sin_confirmar','ejecutando'].indexOf(c.estado)>=0;})&&
       new Set(r.checks.map(function(c){return c.id;})).size===r.checks.length;
+  }
+  function chooseReport(reports,now){
+    var valid=reports.filter(validReport);
+    var current=valid.filter(function(r){return fresh(r.generado_en,now,MAX_AGE);});
+    return (current.length?current:valid.filter(function(r){return Date.parse(r.generado_en)<=now;}))
+      .sort(function(a,b){return Date.parse(b.generado_en)-Date.parse(a.generado_en);})[0]||null;
   }
   function hora(s){
     var t=Date.parse(s);if(!Number.isFinite(t))return 'Sin fecha confirmada';
@@ -49,6 +59,7 @@
     return '<article class="salud-row"><div><b>'+esc(c.nombre)+'</b>'+pill(status)+'</div><p>'+esc(c.detalle)+'</p><small>'
       +esc(c.alcance)+' · '+esc(hora(c.revisado_en))+' · vence '+esc(hora(c.vence_en))+'</small>'
       +(c.ultima_ejecucion?'<small>Última ejecución: '+esc(hora(c.ultima_ejecucion))+' · Hermosillo</small>':'')
+      +(c.programado_en?'<small>Horario esperado: '+esc(hora(c.programado_en))+' · Hermosillo</small>':'')
       +(c.frecuencia?'<small>Programación: '+esc(c.frecuencia)+'</small>':'')
       +(url?'<a href="'+esc(url)+'" target="_blank" rel="noopener">Ver evidencia</a>':'')+'</article>';
   }
@@ -73,13 +84,14 @@
       (!last||!fresh(last.generado_en,now,MAX_AGE))?'El monitor está atrasado o aún no ha publicado.':'Actualizado '+hora(last.generado_en)+' · Hermosillo';
     var html='<div class="salud-top"><h2>Estado de los sistemas</h2><button type="button" class="btn mini" data-salud-refrescar>Actualizar estado</button></div>'
       +'<p class="salud-summary" role="status">'+esc(summary)+'</p><p>'+esc(msg)+'</p>'
-      +'<p class="salud-note">Verde: la prueba indicada pasó y sigue vigente. Las lecturas se programan cada 15 minutos; esta pantalla se actualiza cada minuto. El horario puede retrasarse.</p>'
+      +'<p class="salud-note">Verde: la prueba indicada pasó y sigue vigente. El vigilante de nube revisa su reloj cada minuto y las páginas cada cinco minutos; esta pantalla se actualiza cada minuto. Cada prueba conserva su fecha y vigencia.</p>'
+      +(last&&last.checks.some(function(x){return x.id==='conexion-horarios'&&color(x,last,now,online)!=='verde';})?'<p><a class="btn mini" href="'+CONNECT+'" target="_blank" rel="noopener">Conectar recuperación de horarios</a></p>':'')
       +'<div class="salud-top">'+['todas','sala','fallos','pendientes'].map(function(f){return '<button type="button" class="btn ghost mini" data-salud-filtro="'+f+'" aria-pressed="'+(f===filter)+'">'+({todas:'Pruebas conectadas',sala:'Sala',fallos:'Fallos',pendientes:'Por verificar'})[f]+'</button>';}).join('')+'</div>'
       +'<details open><summary>Pruebas por proceso y sistema</summary><div class="salud-grid">'+live.map(function(x){return row(x,directReport,now,true);}).join('')+checks.filter(function(x){
         var status=color(x,last,now,online);
         if(filter==='fallos')return status==='rojo';
         if(filter==='pendientes')return status!=='verde'&&status!=='rojo';
-        if(filter==='sala')return /^(sala-|rutina:|correo-|motor-|drive-|canario-)/.test(x.id)||x.id==='pagina:SYS-SALA';
+        if(filter==='sala')return /^(sala-|rutina:|horario:|vigilante-|conexion-horarios|persistencia-horarios|correo-|motor-|drive-|canario-)/.test(x.id)||x.id==='pagina:SYS-SALA';
         return x.id.indexOf('pendiente:')!==0;
       }).map(function(x){return row(x,last,now,online);}).join('')+'</div></details>';
     html+='<details><summary>Todos los componentes ('+c.components.length+')</summary><div class="salud-grid">'+c.components.map(function(comp){
@@ -104,20 +116,26 @@
     if(!r.ok)throw Error('lectura_sin_confirmar');
     return r.json();
   }
+  async function cloudJson(signal){
+    var ctrl=new AbortController(),to=setTimeout(function(){ctrl.abort();},5000);
+    function stop(){ctrl.abort();}signal.addEventListener('abort',stop,{once:true});
+    try{return await json(CLOUD+'?t='+Date.now(),ctrl.signal);}
+    finally{clearTimeout(to);signal.removeEventListener('abort',stop);}
+  }
   async function cargar(){
     if(!active||busy)return;
     var e=epoch;busy=true;
     controller=new AbortController();var ctrl=controller,to=setTimeout(function(){ctrl.abort();},18000);
     try{
-      var results=await Promise.allSettled([json(REPORT+'?t='+Date.now(),ctrl.signal),cat?Promise.resolve(cat):json(CATALOG,ctrl.signal),
+      var results=await Promise.allSettled([json(REPORT+'?t='+Date.now(),ctrl.signal),cloudJson(ctrl.signal),cat?Promise.resolve(cat):json(CATALOG,ctrl.signal),
         probeSession?probeSession():Promise.resolve(null)]);
       if(!active||e!==epoch)return;
-      var report=results[0],catalog=results[1],session=results[2],time=new Date().toISOString();
+      var report=chooseReport(results.slice(0,2).filter(function(r){return r.status==='fulfilled';}).map(function(r){return r.value;}),Date.now()),catalog=results[2],session=results[3],time=new Date().toISOString();
       live=probeSession?[{id:'sesion-local',nombre:'Accesos · sesión en este dispositivo',components:['GAS-PORTERO'],estado:session.status==='fulfilled'&&session.value===true?'ok':'sin_confirmar',
         revisado_en:time,vence_en:new Date(Date.now()+90000).toISOString(),detalle:session.status==='fulfilled'&&session.value===true?'El Portero confirmó la sesión administradora actual':'La sesión actual no se pudo confirmar',alcance:'Canje de sesión leído ahora; refresco cada minuto'}]:[];
       if(catalog.status==='fulfilled'&&catalog.value&&catalog.value.schema===1&&Array.isArray(catalog.value.components)&&Array.isArray(catalog.value.processes))cat=catalog.value;
-      if(report.status!=='fulfilled'||!validReport(report.value))throw Error('informe_sin_contrato');
-      last=report.value;render(true);
+      if(!report)throw Error('informe_sin_contrato');
+      last=report;render(true);
     }catch(err){if(active&&e===epoch)render(false);}
     finally{clearTimeout(to);if(e===epoch){busy=false;controller=null;}}
   }
@@ -141,5 +159,5 @@
     document.head.appendChild(s);
   }
   if(typeof window!=='undefined')window.addEventListener('focus',function(){if(active)cargar();});
-  return {activar:activar,detener:detener,color:color,validReport:validReport,safeEvidence:safeEvidence,processState:processState,reportUrl:REPORT};
+  return {activar:activar,detener:detener,color:color,validReport:validReport,safeEvidence:safeEvidence,processState:processState,chooseReport:chooseReport,reportUrl:REPORT,cloudUrl:CLOUD};
 });
