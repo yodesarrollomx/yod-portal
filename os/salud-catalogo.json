@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "model_revision": "2026-10-11.salud-accesos-verificada",
+  "model_revision": "2026-10-11.horarios-render",
   "components": [
     {
       "id": "SYS-DESPACHO",
@@ -517,6 +517,20 @@
       "nombre": "NotebookLM · consulta documental prevista",
       "tipo": "servicio_externo",
       "repo": ""
+    },
+    {
+      "id": "SVC-HORARIOS-CLOUD",
+      "nombre": "Vigilante y programador en nube",
+      "dominio": "Infraestructura",
+      "tipo": "worker",
+      "estado_catalogo": "propuesto"
+    },
+    {
+      "id": "STORE-HORARIOS-CLOUD",
+      "nombre": "Estado privado de horarios",
+      "dominio": "Infraestructura",
+      "tipo": "almacen_servidor",
+      "estado_catalogo": "propuesto"
     }
   ],
   "processes": [
