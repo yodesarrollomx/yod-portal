@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.sala-online · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.sala-online-verificada · 2026-10-11.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -572,7 +572,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 ## CTR-SALA-SNAPSHOT-ONLINE
 
 - Componentes: SYS-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, SYS-MARKETING, EXT-ACTIONS, EXT-DRIVE.
-- Evidencia: Instrucción de Dirección del 2026-10-11; implementación cloud propuesta en nube/snapshots_online.py y scripts/snapshots_online.py..
+- Evidencia: Propuesta central aprobada en 93afbea366c19872bfb855463afece2ac73eeb08, instrucción de Dirección del 2026-10-11; implementada en Sala PR265 y Marketing PR76/77; ejecución real de ambos publicadores registrada el 11-oct-2026..
 - Entrada/campos: `Código aprobado de main; outputs públicos declarados por proceso; último snapshot publicado e inmutable`, `Identidad automática del workflow del mismo repositorio; nunca credenciales del conector`, `Motor elegido, warnings y comprobación real del archivo para medios; producción CPU no es animación generativa LTX`.
 - Salida: Release en borrador privado con ZIP de datos públicos acumulados, SHA256 y manifiesto de archivos, Pages con recibo version-online.json: code_sha, data_sha, snapshot_id y run_id exactos, Estado publicado sólo tras comprobar el recibo del sitio; montaje sólo con archivo/hash en versión publicada, Revisión diaria agregada de colas y rutinas; lecturas rechazadas representadas como errores, no ceros, Marketing: rama datos-online contiene únicamente agregados públicos, portadas y recibo; el frontend aprobado en Pages los consulta por raw.githubusercontent.com..
 

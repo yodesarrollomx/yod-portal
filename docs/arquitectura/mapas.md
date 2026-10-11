@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.sala-online · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.sala-online-verificada · 2026-10-11.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -152,8 +152,8 @@ flowchart LR
   n_EXT_GITHUB_PUBLISHER_APP -.->|Crea PR del commit preparado de Marketing| n_SYS_MARKETING
   n_GAS_CRM -->|Consulta identidad y alcance de lectura| n_GAS_PORTERO
   n_SYS_DESPACHO_3D -->|Tablero original con contexto compartido, escenario y revisión| n_SYS_POTENCIALES
-  n_SYS_SALA -.->|Snapshots privados de datos públicos y Pages con recibo verificable| n_EXT_ACTIONS
-  n_SYS_MARKETING -.->|Agregados públicos en rama de datos; UI de Pages conserva código aprobado| n_EXT_ACTIONS
+  n_SYS_SALA -->|Snapshots privados de datos públicos y Pages con recibo verificable| n_EXT_ACTIONS
+  n_SYS_MARKETING -->|Agregados públicos en rama de datos; UI de Pages conserva código aprobado| n_EXT_ACTIONS
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PLAN_POTENCIAL pendiente;
@@ -383,8 +383,8 @@ flowchart LR
   n_SVC_AUTON_CLOUD -->|Leer originales, documentos y pasajes del expediente| n_EXT_DRIVE
   n_SVC_AUTON_CLOUD -->|Voz y herramientas con claves de servidor| n_EXT_OPENAI
   n_EXT_RENDER -.->|Servicio y volumen persistentes en la versión efectiva| n_SVC_AUTON_CLOUD
-  n_SYS_SALA -.->|Snapshots privados de datos públicos y Pages con recibo verificable| n_EXT_ACTIONS
-  n_SYS_MARKETING -.->|Agregados públicos en rama de datos; UI de Pages conserva código aprobado| n_EXT_ACTIONS
+  n_SYS_SALA -->|Snapshots privados de datos públicos y Pages con recibo verificable| n_EXT_ACTIONS
+  n_SYS_MARKETING -->|Agregados públicos en rama de datos; UI de Pages conserva código aprobado| n_EXT_ACTIONS
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_SITIO_ORG pendiente;
   class n_GAS_EMD pendiente;
@@ -616,5 +616,5 @@ flowchart LR
 | CON-ESTADO-EXPORTACION | STORE-AUTON-ESTADO → SYS-DESPACHO-3D | lectura: Leer versiones, decisiones y exportación autorizadas. CTR-DESPACHO-CONOCIMIENTO | codigo | Leer versiones, decisiones y exportación autorizadas |
 | CON-DESPACHO-EXPORTAR-OBSIDIAN | SYS-DESPACHO-3D → EXT-OBSIDIAN | exportacion: Descarga manual de bóveda portable; no sincronización. CTR-DESPACHO-CONOCIMIENTO | codigo | [yod-portal/docs/arquitectura/despacho-conocimiento.md](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/docs/arquitectura/despacho-conocimiento.md) — Descarga manual de bóveda portable; no sincronización |
 | CON-BIBLIOTECA-NOTEBOOKLM | SYS-DESPACHO-3D → EXT-NOTEBOOKLM | propuesta: Consulta documental prevista, conexión sin verificar. Acceso/API/sincronización pendientes de comprobar. | propuesto | [yod-portal/despacho3d/entorno.mjs](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/entorno.mjs) — Consulta documental prevista, conexión sin verificar |
-| CON-SALA-SNAPSHOT-ONLINE | SYS-SALA → EXT-ACTIONS | propuesta: Snapshots privados de datos públicos y Pages con recibo verificable. CTR-SALA-SNAPSHOT-ONLINE: datos aprobados y validados, draft privado, hash y recibo exactos antes del montaje; CI de código separado y obligatorio. | propuesto | [sala-edicion/nube/snapshots_online.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/snapshots_online.py) — Implementación y ejecución pendientes; identidad nativa del workflow, sin nuevo GitHub App. |
-| CON-MARKETING-DATOS-ONLINE | SYS-MARKETING → EXT-ACTIONS | propuesta: Agregados públicos en rama de datos; UI de Pages conserva código aprobado. CTR-SALA-SNAPSHOT-ONLINE. Permiso nativo contents:write; compare-and-swap, hash y recibo antes de confirmar. Sin Administration:write. | propuesto | [aurum-board/.github/workflows/snapshots-online.yml](https://github.com/yodesarrollomx/aurum-board/blob/ed41c34892aa8554b9599f0f50f325bb7b1d4deb/.github/workflows/snapshots-online.yml) — Run 38138596609 confirmó draft privado y rechazo 403 al cambio de Source de Pages; rama de datos aún pendiente. |
+| CON-SALA-SNAPSHOT-ONLINE | SYS-SALA → EXT-ACTIONS | publicacion: Snapshots privados de datos públicos y Pages con recibo verificable. CTR-SALA-SNAPSHOT-ONLINE: datos aprobados y validados, draft privado, hash y recibo exactos antes del montaje; CI de código separado y obligatorio. | ejecucion | [sala-edicion/nube/snapshots_online.py](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/nube/snapshots_online.py) — Run 38141812652 publicó la revisión acumulativa y esperó el recibo exacto de Pages run 38141874311; ambos success. ZIP permitido, bloqueo CAS y release permanece draft:true. |
+| CON-MARKETING-DATOS-ONLINE | SYS-MARKETING → EXT-ACTIONS | publicacion: Agregados públicos en rama de datos; UI de Pages conserva código aprobado. CTR-SALA-SNAPSHOT-ONLINE. Permiso nativo contents:write; compare-and-swap, hash y recibo antes de confirmar. Sin Administration:write. | ejecucion | [aurum-board/scripts/snapshots_online.py](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/scripts/snapshots_online.py) — Run 38141736288 success: actualizó y publicó 76 publicaciones de Meta, confirmó hash/recibo del HTTP real y conservó el snapshot como draft privado.; [aurum-board/metrics-online.js](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/metrics-online.js) — LECTOR_ONLINE ok:true, posts:76, run_id:38141736288. El navegador recibe sólo agregados/covers y verifica SHA256. Plan rechazado mantiene último dato acreditado y señal de medición incompleta. |

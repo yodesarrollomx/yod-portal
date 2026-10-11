@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-11.sala-online
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-11.sala-online-verificada
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 26 sistemas y 86 componentes distribuidos exactamente una vez.
-- 10 áreas; 118 conexiones registradas, 0 marcadas como verificadas en el atlas.
+- 10 áreas; 118 conexiones registradas, 2 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -501,7 +501,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Comercial y marketing
 
-**Estado registrado:** codigo. No verificado en despliegue
+**Estado registrado:** ejecucion. Código Pages y refresh en nube comprobados el 11-oct-2026:76 publicaciones reales con recibo/hash y lector HTTP correcto. Plan de Potencial incompleto: lectura automática rechazada; no se sustituyen errores por ceros.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -513,11 +513,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-076 · GAS-PLAN-POTENCIAL → SYS-MARKETING · atribucion · Cruza campañas/piezas con leads y citas · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-077 · SYS-SALA-OPERACION → SYS-MARKETING · automatizacion · Genera métricas de campañas en utilidades históricas · Estado: pendiente · Ejecución no verificada en el atlas.
 - CON-PUBLICADOR-MARKETING · EXT-GITHUB-PUBLISHER-APP → SYS-MARKETING · automatizacion · Crea PR del commit preparado de Marketing · Estado: propuesto · Ejecución no verificada en el atlas.
-- CON-MARKETING-DATOS-ONLINE · SYS-MARKETING → EXT-ACTIONS · propuesta · Agregados públicos en rama de datos; UI de Pages conserva código aprobado · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-MARKETING-DATOS-ONLINE · SYS-MARKETING → EXT-ACTIONS · publicacion · Agregados públicos en rama de datos; UI de Pages conserva código aprobado · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
 - Sistema presente en el catálogo canónico · Estado: codigo · yodesarrollomx/yod-portal · os/catalogo.js · Revisión: HEAD\_baseline
+- [PR76/77 integrados. Run 38141736288 success; rama de datos agregados y lector verifican 76 publicaciones y snapshot 409673351. Main conserva PR/CI. · Estado: ejecucion · yodesarrollomx/aurum-board · docs/ONLINE.md · Revisión: 6ad059cd1ed97edee894df5a9b2032d919143e0f](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/docs/ONLINE.md)
 
 **Evidencia de conexiones:**
 
@@ -529,11 +530,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-076 · Atribución implementada a nivel campaña y pieza · Estado: codigo · yodesarrollomx/aurum-board · scripts/pull\_metrics.py · Revisión: HEAD\_baseline
 - CON-077 · Integración pendiente de verificar · Estado: pendiente · Sin revisión inmutable en esta referencia
 - CON-PUBLICADOR-MARKETING · Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB\_TOKEN; requiere registro e instalación personal de una App privada de la organización. · Estado: declarado · Sin revisión inmutable en esta referencia
-- CON-MARKETING-DATOS-ONLINE · Run 38138596609 confirmó draft privado y rechazo 403 al cambio de Source de Pages; rama de datos aún pendiente. · Estado: propuesto · yodesarrollomx/aurum-board · .github/workflows/snapshots-online.yml · Sin revisión inmutable en esta referencia
+- [CON-MARKETING-DATOS-ONLINE · Run 38141736288 success: actualizó y publicó 76 publicaciones de Meta, confirmó hash/recibo del HTTP real y conservó el snapshot como draft privado. · Estado: ejecucion · yodesarrollomx/aurum-board · scripts/snapshots\_online.py · Revisión: 6ad059cd1ed97edee894df5a9b2032d919143e0f](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/scripts/snapshots_online.py)
+- [CON-MARKETING-DATOS-ONLINE · LECTOR\_ONLINE ok:true, posts:76, run\_id:38141736288. El navegador recibe sólo agregados/covers y verifica SHA256. Plan rechazado mantiene último dato acreditado y señal de medición incompleta. · Estado: ejecucion · yodesarrollomx/aurum-board · metrics-online.js · Revisión: 6ad059cd1ed97edee894df5a9b2032d919143e0f](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/metrics-online.js)
 
 **Pendientes y límites:**
 
-- 9 conexiones sin verificación de ejecución registrada.
+- 8 conexiones sin verificación de ejecución registrada.
 
 ### Experiencia Aurum · SYS-AURUM-EXPERIENCIA
 
@@ -2039,7 +2041,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Editores y producción
 
-**Estado registrado:** codigo. No verificado en despliegue
+**Estado registrado:** ejecucion. Código y revisión diaria publicados y comprobados el 11-oct-2026: cola/rutinas confirmadas, recibo exacto del sitio. Ruta técnica de medios CPU comprobada; aprobaciones humanas. Apps Script original/correo y conciliación histórica pendientes.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -2047,7 +2049,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-063 · SYS-SALA → EXT-ACTIONS · automatizacion · Orquesta producción en la nube · Estado: declarado · Ejecución no verificada en el atlas.
 - CON-064 · SYS-SALA-OPERACION → SYS-SALA · automatizacion · Herramientas históricas de producción · Estado: declarado · Ejecución no verificada en el atlas.
 - CON-PUBLICADOR-SALA · EXT-GITHUB-PUBLISHER-APP → SYS-SALA · automatizacion · Crea PR del commit preparado de Sala · Estado: propuesto · Ejecución no verificada en el atlas.
-- CON-SALA-SNAPSHOT-ONLINE · SYS-SALA → EXT-ACTIONS · propuesta · Snapshots privados de datos públicos y Pages con recibo verificable · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-SALA-SNAPSHOT-ONLINE · SYS-SALA → EXT-ACTIONS · publicacion · Snapshots privados de datos públicos y Pages con recibo verificable · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
@@ -2055,6 +2057,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - El cliente automático impide decisiones editoriales antes de la red · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_cliente.py · Revisión: HEAD\_baseline
 - El productor planifica compuertas de producción · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_productor.py · Revisión: HEAD\_baseline
 - El ejecutor solo admite etapas habilitadas por configuración · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_ejecutor.py · Revisión: HEAD\_baseline
+- [PR265 integrado. Revisión 38141812652 y Pages 38141874311 success; publicación exacta del snapshot 409673426 y diagnóstico agregado sin filas privadas. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-ONLINE.md · Revisión: 73902861db96d213a07f788996f50fdcf3c65566](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/docs/SALA-ONLINE.md)
 
 **Evidencia de conexiones:**
 
@@ -2062,11 +2065,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-063 · Ciclo de producción en nube · Estado: declarado · yodesarrollomx/sala-edicion · CLAUDE.md · Revisión: HEAD\_baseline
 - CON-064 · Migración de herramientas a nube · Estado: declarado · yodesarrollomx/sala-edicion · CLAUDE.md · Revisión: HEAD\_baseline
 - CON-PUBLICADOR-SALA · Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB\_TOKEN; requiere registro e instalación personal de una App privada de la organización. · Estado: declarado · Sin revisión inmutable en esta referencia
-- CON-SALA-SNAPSHOT-ONLINE · Implementación y ejecución pendientes; identidad nativa del workflow, sin nuevo GitHub App. · Estado: propuesto · yodesarrollomx/sala-edicion · nube/snapshots\_online.py · Sin revisión inmutable en esta referencia
+- [CON-SALA-SNAPSHOT-ONLINE · Run 38141812652 publicó la revisión acumulativa y esperó el recibo exacto de Pages run 38141874311; ambos success. ZIP permitido, bloqueo CAS y release permanece draft:true. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/snapshots\_online.py · Revisión: 73902861db96d213a07f788996f50fdcf3c65566](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/nube/snapshots_online.py)
 
 **Pendientes y límites:**
 
-- 5 conexiones sin verificación de ejecución registrada.
+- 4 conexiones sin verificación de ejecución registrada.
 - Cambios de infraestructura y documentos históricos requieren reconciliación
 
 ### Herramientas de producción · SYS-SALA-OPERACION
@@ -2231,7 +2234,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Producción
 
-**Estado registrado:** codigo. No verificado en despliegue
+**Estado registrado:** codigo. Código actualizado/CI de 120 pruebas integrado; ruta técnica compartida de imagen/escena/voz/montaje confirmada por 38139680521. La prueba técnica no encoló negocio ni acredita todas las etapas/piezas existentes.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -2243,6 +2246,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Evidencia de la ficha:**
 
 - Procesar trabajos habilitados y subir resultados · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_ejecutor.py · Revisión: HEAD\_baseline
+- [PR265 conserva compuertas, aprobaciones y procedencia; Modal default 0 y CPU de respaldo. CI completo acreditado. · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_ejecutor.py · Revisión: 73902861db96d213a07f788996f50fdcf3c65566](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/nube/sala_ejecutor.py)
 
 **Evidencia de conexiones:**
 
@@ -2264,7 +2268,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Producción
 
-**Estado registrado:** codigo. No verificado en despliegue
+**Estado registrado:** ejecucion. Prueba técnica real CPU 38139680521 exitosa: Tiny-SD, profundidad ONNX/parallax, Kokoro y ffmpeg con seis subidas/readbacks Drive. Modal opcional y apagado por defecto; parallax no equivale a animación LTX. No prueba todas las piezas comerciales.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -2273,6 +2277,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Evidencia de la ficha:**
 
 - Generar texto, imagen, escena o voz según motor configurado · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_motores.py · Revisión: HEAD\_baseline
+- [Run 38139680521 success: seis artefactos privados verificados por SHA256, corte 1080x1920 H264/AAC 10.166667s. Entradas sintéticas, sin filas o decisiones de negocio. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/prueba\_online.py · Revisión: 6e67927f01829baba72267aad15d59ea60139444](https://github.com/yodesarrollomx/sala-edicion/blob/6e67927f01829baba72267aad15d59ea60139444/nube/prueba_online.py)
 
 **Evidencia de conexiones:**
 
@@ -2621,8 +2626,8 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-079 · EXT-ACTIONS → SVC-SALA-PRODUCTOR · automatizacion · Programa productor cada veinte minutos · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-081 · EXT-ACTIONS → SVC-SALA-EJECUTOR · automatizacion · Programa ejecución de etapas habilitadas · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-PUBLICADOR-IDENTIDAD · EXT-ACTIONS → EXT-GITHUB-PUBLISHER-APP · autenticacion · Solicita identidad temporal limitada al repositorio · Estado: propuesto · Ejecución no verificada en el atlas.
-- CON-SALA-SNAPSHOT-ONLINE · SYS-SALA → EXT-ACTIONS · propuesta · Snapshots privados de datos públicos y Pages con recibo verificable · Estado: propuesto · Ejecución no verificada en el atlas.
-- CON-MARKETING-DATOS-ONLINE · SYS-MARKETING → EXT-ACTIONS · propuesta · Agregados públicos en rama de datos; UI de Pages conserva código aprobado · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-SALA-SNAPSHOT-ONLINE · SYS-SALA → EXT-ACTIONS · publicacion · Snapshots privados de datos públicos y Pages con recibo verificable · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
+- CON-MARKETING-DATOS-ONLINE · SYS-MARKETING → EXT-ACTIONS · publicacion · Agregados públicos en rama de datos; UI de Pages conserva código aprobado · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
@@ -2634,13 +2639,14 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-079 · Frecuencia configurada en workflow, no evidencia de corridas · Estado: codigo · yodesarrollomx/sala-edicion · .github/workflows/sala-cada-hora.yml · Revisión: HEAD\_baseline
 - CON-081 · Disparador declarado cada dos horas · Estado: codigo · yodesarrollomx/sala-edicion · .github/workflows/sala-cada-hora.yml · Revisión: HEAD\_baseline
 - CON-PUBLICADOR-IDENTIDAD · Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB\_TOKEN; requiere registro e instalación personal de una App privada de la organización. · Estado: declarado · Sin revisión inmutable en esta referencia
-- CON-SALA-SNAPSHOT-ONLINE · Implementación y ejecución pendientes; identidad nativa del workflow, sin nuevo GitHub App. · Estado: propuesto · yodesarrollomx/sala-edicion · nube/snapshots\_online.py · Sin revisión inmutable en esta referencia
-- CON-MARKETING-DATOS-ONLINE · Run 38138596609 confirmó draft privado y rechazo 403 al cambio de Source de Pages; rama de datos aún pendiente. · Estado: propuesto · yodesarrollomx/aurum-board · .github/workflows/snapshots-online.yml · Sin revisión inmutable en esta referencia
+- [CON-SALA-SNAPSHOT-ONLINE · Run 38141812652 publicó la revisión acumulativa y esperó el recibo exacto de Pages run 38141874311; ambos success. ZIP permitido, bloqueo CAS y release permanece draft:true. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/snapshots\_online.py · Revisión: 73902861db96d213a07f788996f50fdcf3c65566](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/nube/snapshots_online.py)
+- [CON-MARKETING-DATOS-ONLINE · Run 38141736288 success: actualizó y publicó 76 publicaciones de Meta, confirmó hash/recibo del HTTP real y conservó el snapshot como draft privado. · Estado: ejecucion · yodesarrollomx/aurum-board · scripts/snapshots\_online.py · Revisión: 6ad059cd1ed97edee894df5a9b2032d919143e0f](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/scripts/snapshots_online.py)
+- [CON-MARKETING-DATOS-ONLINE · LECTOR\_ONLINE ok:true, posts:76, run\_id:38141736288. El navegador recibe sólo agregados/covers y verifica SHA256. Plan rechazado mantiene último dato acreditado y señal de medición incompleta. · Estado: ejecucion · yodesarrollomx/aurum-board · metrics-online.js · Revisión: 6ad059cd1ed97edee894df5a9b2032d919143e0f](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/metrics-online.js)
 
 **Pendientes y límites:**
 
 - Responsable operativo pendiente de confirmación; el encargado de verificación no sustituye esa asignación.
-- 6 conexiones sin verificación de ejecución registrada.
+- 4 conexiones sin verificación de ejecución registrada.
 - Estado y permisos no comprobados
 
 ### Identidad de publicación GitHub · EXT-GITHUB-PUBLISHER-APP
