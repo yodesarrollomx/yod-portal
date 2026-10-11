@@ -1,21 +1,18 @@
 {
-  "model_revision": "2026-10-11.plan-medios-verificados",
-  "proposal_id": "CHG-SALA-RECONECTAR-MEDIOS-20261011",
-  "summary": "Registrar integración y reconexión reales de dos voces originales a COLA, con hashes completos y acuse privado; conservar alcance pendiente de fuentes, disparadores/correo y otros medios. Plan online ya publicado permanece acreditado.",
+  "model_revision": "2026-10-11.masterbroker-preevaluation",
+  "proposal_id": "CHG-MASTERBROKER-PREEVALUATION",
+  "summary": "Propuesta autorizada para integrar preevaluación y retorno al alta de terrenos de Masterbrokers.",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-SALA",
-    "GAS-SALA",
-    "SHEET-SALA",
-    "SVC-SALA-EJECUTOR",
-    "EXT-ACTIONS",
+    "SYS-INVERSION",
+    "SYS-POTENCIALES",
+    "GAS-PORTERO",
+    "GAS-CRM",
+    "SHEET-CRM",
     "EXT-DRIVE"
   ],
   "tests": [
-    "PR269 head82b7db1c10ad14d77945fb430f0be8a29dc485a9: Arquitectura YOD, verificar y regresiones success. Suite completa164 pruebas, incluidas20 de reconexión, sin API/credenciales de producción.",
-    "Runtime38159239581 success con code_sha159d932cd81c2d2c3fda31a862ea60fc0b3ae667; ambos MD5 originales completos, SHA256/tamaño y WAV verificados. Preflight de ambos objetivos antes de escribir.",
-    "Dos POST reales exclusivamente evidencia: dos actualizaciones confirmadas por lectura posterior, errores nulos, mismo estado/motor/bloqueo/prioridad/identidad y decisiones. Acuse privado de antes/después byte-verificado, instrucciones originales retenidas.",
-    "Cambio detectado aborta, filas ambiguas/activas o referencia/hash diferentes se rechazan; idempotencia probada con dobles. El API heredado carece de CAS atómico, limitación registrada."
+    "Modelo y vistas regenerados; suite del portal en CI",
+    "Pruebas de implementación y despliegue documentadas por separado"
   ],
-  "rollback": "Conservar copia privada del antes/después. Revertir worker y reconectar sólo la referencia técnica previa tras lectura reciente y revisión; no cambiar decisiones, estados, borrar recuperados ni restaurar hojas completas."
+  "rollback": "Revertir propuesta e interfaz sin borrar datos operativos."
 }
