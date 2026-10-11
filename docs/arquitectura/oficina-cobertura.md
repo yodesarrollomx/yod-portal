@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-11.plan-verificado-medios-propuestos
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-11.plan-medios-verificados
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 26 sistemas y 86 componentes distribuidos exactamente una vez.
-- 10 áreas; 121 conexiones registradas, 4 marcadas como verificadas en el atlas.
+- 10 áreas; 121 conexiones registradas, 5 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -2050,7 +2050,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Editores y producción
 
-**Estado registrado:** ejecucion. Código y revisión diaria publicados; ruta de medios CPU comprobada y lectura automática agregada de Plan confirmada el11-oct-2026. Compuertas editoriales humanas. Fuentes/disparadores Apps Script originales, correo y medios históricos restantes pendientes.
+**Estado registrado:** ejecucion. Código y revisión diaria publicados; ruta de medios CPU comprobada y lectura automática agregada de Plan confirmada el11-oct-2026. Compuertas editoriales humanas. Fuentes/disparadores Apps Script originales, correo y medios históricos restantes pendientes. Reconexión de dos voces originales exactas comprobada por run38159239581 y acuse privado.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -2070,6 +2070,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - El ejecutor solo admite etapas habilitadas por configuración · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_ejecutor.py · Revisión: HEAD\_baseline
 - [PR265 integrado. Revisión 38141812652 y Pages 38141874311 success; publicación exacta del snapshot 409673426 y diagnóstico agregado sin filas privadas. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-ONLINE.md · Revisión: 73902861db96d213a07f788996f50fdcf3c65566](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/docs/SALA-ONLINE.md)
 - [PR266/267/268 integrados. Run 38156397507 success: cuenta de servicio existente con permiso lector, consulta autenticada GViz sólo cuando Sheets API está deshabilitada, columnas permitidas, exclusión de prueba y publicación verificada. Fuente no modificada. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/PLAN-ONLINE.md · Revisión: a3b6c7053b3cd26333dd06878e74bb666288ce51](https://github.com/yodesarrollomx/sala-edicion/blob/a3b6c7053b3cd26333dd06878e74bb666288ce51/docs/PLAN-ONLINE.md)
+- [PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/medios\_reconexion.py · Revisión: 159d932cd81c2d2c3fda31a862ea60fc0b3ae667](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py)
 
 **Evidencia de conexiones:**
 
@@ -2126,7 +2127,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Responsable técnico del backend
 
-**Estado registrado:** codigo. No verificado en despliegue
+**Estado registrado:** codigo. GET cola y POST cola/op:estado sólo para evidencia técnica de dos voces originales comprobados el11-oct-2026; conservación de campos y acuse real. Fuente/editor, versión completa, otras funciones, disparadores y correo no acreditados por esta comprobación.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -2136,13 +2137,14 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-082 · SVC-SALA-EJECUTOR → GAS-SALA · api · Lee cola y registra resultado · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-085 · GAS-SALA → GAS-PORTERO · autenticacion · Valida credencial del OS desde servidor · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-086 · GAS-SALA → GAS-PORTERO-RESPALDO · autenticacion · Consulta respaldo de identidad · Estado: codigo · Ejecución no verificada en el atlas.
-- CON-SALA-RECONEXION-MEDIOS · SVC-SALA-EJECUTOR → GAS-SALA · conciliacion · Mantenimiento limitado de evidencia de voces originales recuperadas · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-SALA-RECONEXION-MEDIOS · SVC-SALA-EJECUTOR → GAS-SALA · conciliacion · Mantenimiento limitado de evidencia de voces originales recuperadas · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
 - Tipo de fuente disponible: fuente\_repositorio\_despliegue\_no\_verificado · Estado: codigo · yodesarrollomx/sala-edicion · gas/Code.gs · Revisión: HEAD\_baseline
 - Ruta de decisión editorial en el backend versionado · Estado: codigo · yodesarrollomx/sala-edicion · gas/Code.gs · Revisión: HEAD\_baseline
 - Esquemas de tablas de Sala · Estado: codigo · yodesarrollomx/sala-edicion · gas/Code.gs · Revisión: HEAD\_baseline
+- [PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/medios\_reconexion.py · Revisión: 159d932cd81c2d2c3fda31a862ea60fc0b3ae667](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py)
 
 **Evidencia de conexiones:**
 
@@ -2152,11 +2154,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-082 · Procesamiento de trabajo · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_ejecutor.py · Revisión: HEAD\_baseline
 - CON-085 · Valida credencial del OS desde servidor · Estado: codigo · yodesarrollomx/sala-edicion · gas/Code.gs · Revisión: HEAD\_baseline
 - CON-086 · Consulta respaldo de identidad · Estado: codigo · yodesarrollomx/sala-edicion · gas/Code.gs · Revisión: HEAD\_baseline
-- CON-SALA-RECONEXION-MEDIOS · Informe privado acredita dos copias originales, pero no acuse de COLA. Reconciliación de referencia técnica propuesta con verificaciones previas y posteriores. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- [CON-SALA-RECONEXION-MEDIOS · PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/medios\_reconexion.py · Revisión: 159d932cd81c2d2c3fda31a862ea60fc0b3ae667](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py)
 
 **Pendientes y límites:**
 
-- 7 conexiones sin verificación de ejecución registrada.
+- 6 conexiones sin verificación de ejecución registrada.
 - Código desplegado y permisos reales no contrastados
 
 ### Datos de Sala de Edición · SHEET-SALA
@@ -2167,7 +2169,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Editores y producción
 
-**Estado registrado:** declarado. No verificado en despliegue
+**Estado registrado:** declarado. Lectura/conciliación de evidencia en dos trabajos existentes de COLA comprobadas vía backend autorizado. Sin fila nueva, estado o decisión cambiada. Identidad física/otras hojas y backend original por verificar.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -2176,6 +2178,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Evidencia de la ficha:**
 
 - Integración pendiente de verificar · Estado: pendiente · Sin revisión inmutable en esta referencia
+- [PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/medios\_reconexion.py · Revisión: 159d932cd81c2d2c3fda31a862ea60fc0b3ae667](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py)
 
 **Evidencia de conexiones:**
 
@@ -2250,7 +2253,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Producción
 
-**Estado registrado:** codigo. Código actualizado/CI de 120 pruebas integrado; ruta técnica compartida de imagen/escena/voz/montaje confirmada por 38139680521. La prueba técnica no encoló negocio ni acredita todas las etapas/piezas existentes.
+**Estado registrado:** codigo. Mantenimiento de nube de dos originales comprobado con acuse; producción CPU técnica acreditada por pruebas previas. Cada ejecución editorial sigue su configuración y compuertas humanas; no certifica todos los trabajos históricos.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -2258,12 +2261,13 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-082 · SVC-SALA-EJECUTOR → GAS-SALA · api · Lee cola y registra resultado · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-083 · SVC-SALA-EJECUTOR → EXT-MOTORES-MEDIA · integracion · Selecciona motor según configuración · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-084 · SVC-SALA-EJECUTOR → EXT-DRIVE · documentos · Sube activos producidos · Estado: codigo · Ejecución no verificada en el atlas.
-- CON-SALA-RECONEXION-MEDIOS · SVC-SALA-EJECUTOR → GAS-SALA · conciliacion · Mantenimiento limitado de evidencia de voces originales recuperadas · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-SALA-RECONEXION-MEDIOS · SVC-SALA-EJECUTOR → GAS-SALA · conciliacion · Mantenimiento limitado de evidencia de voces originales recuperadas · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
 - Procesar trabajos habilitados y subir resultados · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_ejecutor.py · Revisión: HEAD\_baseline
 - [PR265 conserva compuertas, aprobaciones y procedencia; Modal default 0 y CPU de respaldo. CI completo acreditado. · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_ejecutor.py · Revisión: 73902861db96d213a07f788996f50fdcf3c65566](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/nube/sala_ejecutor.py)
+- [PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/medios\_reconexion.py · Revisión: 159d932cd81c2d2c3fda31a862ea60fc0b3ae667](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py)
 
 **Evidencia de conexiones:**
 
@@ -2271,11 +2275,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-082 · Procesamiento de trabajo · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_ejecutor.py · Revisión: HEAD\_baseline
 - CON-083 · Registro de motores de producción · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_motores.py · Revisión: HEAD\_baseline
 - CON-084 · Publicación de resultado en Drive · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_ejecutor.py · Revisión: HEAD\_baseline
-- CON-SALA-RECONEXION-MEDIOS · Informe privado acredita dos copias originales, pero no acuse de COLA. Reconciliación de referencia técnica propuesta con verificaciones previas y posteriores. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- [CON-SALA-RECONEXION-MEDIOS · PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/medios\_reconexion.py · Revisión: 159d932cd81c2d2c3fda31a862ea60fc0b3ae667](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py)
 
 **Pendientes y límites:**
 
-- 5 conexiones sin verificación de ejecución registrada.
+- 4 conexiones sin verificación de ejecución registrada.
 - Uso efectivo, configuración y costo en producción no comprobados
 
 ### Motores de generación de contenido · EXT-MOTORES-MEDIA

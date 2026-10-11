@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-11.plan-verificado-medios-propuestos",
+  "revision": "2026-10-11.plan-medios-verificados",
   "checked_at": "2026-10-11",
   "priorities": [
     "vender_mas",
@@ -831,6 +831,13 @@
           "commit": "a3b6c7053b3cd26333dd06878e74bb666288ce51",
           "claim": "PR266/267/268 integrados. Run 38156397507 success: cuenta de servicio existente con permiso lector, consulta autenticada GViz sólo cuando Sheets API está deshabilitada, columnas permitidas, exclusión de prueba y publicación verificada. Fuente no modificada.",
           "status": "ejecucion"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/medios_reconexion.py",
+          "commit": "159d932cd81c2d2c3fda31a862ea60fc0b3ae667",
+          "claim": "PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -849,7 +856,7 @@
       ],
       "source_of_truth": "SHEET-SALA: propuestas, decisiones, producción, reglas, motores y cola; archivos de repositorio son superficie o respaldo",
       "status": "ejecucion",
-      "runtime_status": "Código y revisión diaria publicados; ruta de medios CPU comprobada y lectura automática agregada de Plan confirmada el11-oct-2026. Compuertas editoriales humanas. Fuentes/disparadores Apps Script originales, correo y medios históricos restantes pendientes."
+      "runtime_status": "Código y revisión diaria publicados; ruta de medios CPU comprobada y lectura automática agregada de Plan confirmada el11-oct-2026. Compuertas editoriales humanas. Fuentes/disparadores Apps Script originales, correo y medios históricos restantes pendientes. Reconexión de dos voces originales exactas comprobada por run38159239581 y acuse privado."
     },
     {
       "id": "SYS-SALA-OPERACION",
@@ -1976,6 +1983,13 @@
           "claim": "Esquemas de tablas de Sala",
           "status": "codigo",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/medios_reconexion.py",
+          "commit": "159d932cd81c2d2c3fda31a862ea60fc0b3ae667",
+          "claim": "PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -1989,7 +2003,7 @@
       "backend_source_status": "fuente_completa_versionada_despliegue_no_verificado",
       "source_of_truth": "gas/Code.gs es fuente versionada; no se comprobó igualdad con versión desplegada",
       "status": "codigo",
-      "runtime_status": "No verificado en despliegue"
+      "runtime_status": "GET cola y POST cola/op:estado sólo para evidencia técnica de dos voces originales comprobados el11-oct-2026; conservación de campos y acuse real. Fuente/editor, versión completa, otras funciones, disparadores y correo no acreditados por esta comprobación."
     },
     {
       "id": "SHEET-SALA",
@@ -2003,6 +2017,13 @@
         {
           "claim": "Integración pendiente de verificar",
           "status": "pendiente"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/medios_reconexion.py",
+          "commit": "159d932cd81c2d2c3fda31a862ea60fc0b3ae667",
+          "claim": "PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -2022,7 +2043,7 @@
       "source_of_truth": "Google Sheets de Sala; identidad física y valores vivos no inspeccionados",
       "physical_mapping_status": "pendiente_no_contar_como_archivos_distintos_confirmados",
       "status": "declarado",
-      "runtime_status": "No verificado en despliegue"
+      "runtime_status": "Lectura/conciliación de evidencia en dos trabajos existentes de COLA comprobadas vía backend autorizado. Sin fila nueva, estado o decisión cambiada. Identidad física/otras hojas y backend original por verificar."
     },
     {
       "id": "GAS-EMD",
@@ -2509,6 +2530,13 @@
           "commit": "73902861db96d213a07f788996f50fdcf3c65566",
           "claim": "PR265 conserva compuertas, aprobaciones y procedencia; Modal default 0 y CPU de respaldo. CI completo acreditado.",
           "status": "codigo"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/medios_reconexion.py",
+          "commit": "159d932cd81c2d2c3fda31a862ea60fc0b3ae667",
+          "claim": "PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -2521,7 +2549,7 @@
       ],
       "source_of_truth": "Configuración de reglas/motores y código de ejecución; ejecución viva pendiente",
       "status": "codigo",
-      "runtime_status": "Código actualizado/CI de 120 pruebas integrado; ruta técnica compartida de imagen/escena/voz/montaje confirmada por 38139680521. La prueba técnica no encoló negocio ni acredita todas las etapas/piezas existentes."
+      "runtime_status": "Mantenimiento de nube de dos originales comprobado con acuse; producción CPU técnica acreditada por pruebas previas. Cada ejecución editorial sigue su configuración y compuertas humanas; no certifica todos los trabajos históricos."
     },
     {
       "id": "EXT-MOTORES-MEDIA",
@@ -5582,18 +5610,26 @@
       "to": "GAS-SALA",
       "kind": "conciliacion",
       "label": "Mantenimiento limitado de evidencia de voces originales recuperadas",
-      "status": "propuesto",
-      "runtime_verified": false,
+      "status": "ejecucion",
+      "runtime_verified": true,
       "evidence": [
         {
-          "claim": "Informe privado acredita dos copias originales, pero no acuse de COLA. Reconciliación de referencia técnica propuesta con verificaciones previas y posteriores.",
-          "status": "propuesto"
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/medios_reconexion.py",
+          "commit": "159d932cd81c2d2c3fda31a862ea60fc0b3ae667",
+          "claim": "PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto.",
+          "status": "ejecucion"
         }
       ],
       "contract": "CTR-SALA-RECONECTAR-MEDIOS; sólo evidencia técnica con archivo original exacto, sin estados ni decisiones.",
       "contract_ids": [
         "CTR-SALA-RECONECTAR-MEDIOS"
-      ]
+      ],
+      "runtime_evidence": {
+        "checked_at": "2026-10-11T17:26:16Z",
+        "scope": "Dos referencias de voces originales exactas en COLA; hash/tamaño completos, estado terminado, lectura inmediata y posterior. Sin cambios operativos/editoriales; API heredada sin CAS atómico. No acredita los medios no localizados ni la fuente completa de Apps Script.",
+        "receipt": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38159239581 ; code_sha=159d932cd81c2d2c3fda31a862ea60fc0b3ae667 ; targets=2 ; attempted=2 ; readback_verified=2 ; confirmed_writes=2 ; private_receipt=byte_verified ; decisions_changed=false ; social_publications=0"
+      }
     }
   ],
   "processes": [
@@ -10139,14 +10175,15 @@
         "EXT-ACTIONS",
         "EXT-DRIVE"
       ],
-      "status": "propuesto",
+      "status": "publicado",
       "proposal": "Por autorización de Dirección de completar la migración: reconciliar exclusivamente las dos voces originales recuperadas y verificadas en Drive privado con sus trabajos existentes de COLA. Worker de mantenimiento lee instrucciones privadas, hash/tamaño/MD5 del archivo y evidencia original, exige coincidencia exacta y relee la fila antes del cambio. Actualiza sólo evidencia.drive_id y procedencia técnica mediante cola/op:estado; conserva todos los demás campos de evidencia y nunca manda estado, motor, bloqueado_por o decisiones. Relee fila y registra acuse privado. No regenerar ni crear trabajos, ni sustituir medios no localizados.",
       "tests": [
-        "Dobles: hashes/tamaño/formato, filas únicas, coincidencia de MD5 y referencia original, evidencia no dict rechazada, idempotencia, conservación de campos, cambio concurrente y relectura posterior.",
-        "Ejecución real sólo sobre instrucciones privadas de recuperación ya aprobada; conteo/hash y acuse públicos sin referencias privadas, y evidencia completa en Drive privado.",
-        "PR y CI normales; cuenta de servicio/clave de agente sólo en main. Nunca secretos en PR. Si el endpoint no conserva evidencia o cambia la fila, fallar y no acreditar reconexión."
+        "PR269 head82b7db1c10ad14d77945fb430f0be8a29dc485a9: Arquitectura YOD, verificar y regresiones success. Suite completa164 pruebas, incluidas20 de reconexión, sin API/credenciales de producción.",
+        "Runtime38159239581 success con code_sha159d932cd81c2d2c3fda31a862ea60fc0b3ae667; ambos MD5 originales completos, SHA256/tamaño y WAV verificados. Preflight de ambos objetivos antes de escribir.",
+        "Dos POST reales exclusivamente evidencia: dos actualizaciones confirmadas por lectura posterior, errores nulos, mismo estado/motor/bloqueo/prioridad/identidad y decisiones. Acuse privado de antes/después byte-verificado, instrucciones originales retenidas.",
+        "Cambio detectado aborta, filas ambiguas/activas o referencia/hash diferentes se rechazan; idempotencia probada con dobles. El API heredado carece de CAS atómico, limitación registrada."
       ],
-      "deployment": "Propuesto. Dos copias originales verificadas y retenidas, aún sin acuse de reconexión de cola. Inventario de Apps Script original y otros medios permanece pendiente.",
+      "deployment": "Publicado y comprobado el11-oct-2026 mediante PR269 y run38159239581. Dos originales recuperados reconectados a sus trabajos, con antes/después privado y acuse exacto. Workflow de mantenimiento por incorporación del código/manual, sin cron; serializa con sala-ejecutor. Fuentes/editor IDs de Apps Script, disparadores/correo y26 medios no localizados en fuentes auditadas siguen pendientes.",
       "rollback": "Conservar copia privada del antes/después. Revertir worker y reconectar sólo la referencia técnica previa tras lectura reciente y revisión; no cambiar decisiones, estados, borrar recuperados ni restaurar hojas completas."
     }
   ],
