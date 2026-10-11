@@ -1,31 +1,13 @@
 {
-  "model_revision": "2026-10-11.salud-accesos-verificada",
-  "proposal_id": "CHG-SALUD-ACCESOS-20261011",
-  "summary": "Registrar publicación/alcance real del monitor y comprobar bytes de los archivos servidos de Accesos.",
+  "model_revision": "2026-10-11.hairline-expediente",
+  "proposal_id": "CHG-DESPACHO-HAIRLINE-20261011",
+  "summary": "Bandeja Hairline para seleccionar las fuentes autorizadas del expediente. Usa documentos validados del caso vigente, sin nuevas consultas ni escrituras. Lista accesible y paginada; sin inferir lectura ni versión. Vista de demostración sólo sintética.",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-CONTROL",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
-    "SYS-POTENCIALES",
-    "GAS-PORTERO",
-    "SYS-SALA",
-    "GAS-SALA",
-    "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
-    "EXT-ACTIONS",
-    "EXT-DRIVE",
-    "EXT-GMAIL",
-    "SYS-MARKETING",
-    "SYS-PLAN-POTENCIAL",
-    "EXT-MOTORES-MEDIA",
-    "SYS-DESPACHO",
     "SYS-DESPACHO-3D"
   ],
   "tests": [
-    "Regresiones de datos caducados/futuros, fallos, canarios posteriores, falta de contrato y respuesta tardía después de cerrar sesión.",
-    "Catálogo derivado del Atlas completo y CI Portal completo; monitor real y publicación se acreditan aparte."
+    "Selección por puntero, teclado y toque; enlace autorizado, vacío, más de ocho fuentes, limpieza al cambiar de caso y movimiento reducido.",
+    "Verificaciones completas del portal y capturas escritorio/móvil con datos sintéticos."
   ],
-  "rollback": "Revertir monitor, cliente y enlace mediante PR. Conservar rama de datos e historial; detener sólo salud-online."
+  "rollback": "Revertir el PR; vuelve el listado de fuentes y se conservan registros y contratos."
 }

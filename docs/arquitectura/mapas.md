@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.salud-accesos-verificada · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.hairline-expediente · 2026-10-11.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 

@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.salud-accesos-verificada · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.hairline-expediente · 2026-10-11.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 

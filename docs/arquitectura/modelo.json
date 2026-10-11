@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-11.salud-accesos-verificada",
+  "revision": "2026-10-11.hairline-expediente",
   "checked_at": "2026-10-11",
   "priorities": [
     "vender_mas",
@@ -10535,6 +10535,20 @@
       ],
       "deployment": "Portalbd177ce9/de33d90, Salab611382/b9a7376 y Accesosae618274 integrados por PR/CI. Informe de datos en ramaestado-online byte-verificado; canario público sanitizado en salud-canario. Frontends publicados.40 pruebas correctas,59facultades/componentes sin prueba conectada; sin recepción de correo o equivalencia editorial completa acreditadas. Sesión se verifica en cada dispositivo con el Portero original.",
       "rollback": "Revertir cambios de monitor/clientes y horarios mediante PR. Conservar la rama de resultados y registros existentes; detener únicamente el monitor/canario nuevos, sin borrar medios, decisiones, usuarios o disparadores del negocio."
+    },
+    {
+      "id": "CHG-DESPACHO-HAIRLINE-20261011",
+      "components": [
+        "SYS-DESPACHO-3D"
+      ],
+      "proposal": "Bandeja Hairline para seleccionar las fuentes autorizadas del expediente. Usa documentos validados del caso vigente, sin nuevas consultas ni escrituras. Lista accesible y paginada; sin inferir lectura ni versión. Vista de demostración sólo sintética.",
+      "status": "implementado_local",
+      "tests": [
+        "630 pruebas Node aprobadas; Arquitectura, OS, Portal, Obra y Accesos aprobados.",
+        "Chromium sintético 1280/390: selección, teclado, apertura, paginación, vacío y movimiento reducido; ver docs/arquitectura/despacho-hairline.md."
+      ],
+      "deployment": "Pendiente de PR y revisión; no publicado.",
+      "rollback": "Revertir el PR; vuelve el listado de fuentes y se conservan registros y contratos."
     }
   ],
   "data_contracts": [
