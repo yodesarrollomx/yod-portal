@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-11.plan-agregados-online
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-11.plan-verificado-medios-propuestos
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 26 sistemas y 86 componentes distribuidos exactamente una vez.
-- 10 áreas; 120 conexiones registradas, 2 marcadas como verificadas en el atlas.
+- 10 áreas; 121 conexiones registradas, 4 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -443,7 +443,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Responsable del proceso por confirmar
 
-**Estado registrado:** declarado. No verificado en despliegue
+**Estado registrado:** declarado. Lectura automática agregada confirmada; backend de captación, inventario Apps Script/Calendar/pagos por verificar.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -453,6 +453,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Evidencia de la ficha:**
 
 - Cadena comercial documentada · Estado: declarado · yodesarrollomx/plan-potencial · CLAUDE.md · Revisión: HEAD\_baseline
+- [Lectura de atribución del Sheet canónico comprobada mediante worker Sala; no acredita el despliegue completo del formulario, backend, pagos o Calendar. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/plan\_agregados.py · Revisión: a3b6c7053b3cd26333dd06878e74bb666288ce51](https://github.com/yodesarrollomx/sala-edicion/blob/a3b6c7053b3cd26333dd06878e74bb666288ce51/nube/plan_agregados.py)
 
 **Evidencia de conexiones:**
 
@@ -501,7 +502,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Comercial y marketing
 
-**Estado registrado:** ejecucion. Código Pages y refresh en nube comprobados el 11-oct-2026:76 publicaciones reales con recibo/hash y lector HTTP correcto. Plan de Potencial incompleto: lectura automática rechazada; no se sustituyen errores por ceros.
+**Estado registrado:** ejecucion. Run38157069665: 76 publicaciones Meta y Plan histórico confirmado con recibo/hash/frescura; leads\_medicion\_caida=false. Seis registros históricos válidos, cuatro sesiones registradas, una prueba excluida y sólo una atribución campaña/pieza. Captación/pagos/Calendar y backends originales no acreditados por esta lectura.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -514,12 +515,13 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-077 · SYS-SALA-OPERACION → SYS-MARKETING · automatizacion · Genera métricas de campañas en utilidades históricas · Estado: pendiente · Ejecución no verificada en el atlas.
 - CON-PUBLICADOR-MARKETING · EXT-GITHUB-PUBLISHER-APP → SYS-MARKETING · automatizacion · Crea PR del commit preparado de Marketing · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-MARKETING-DATOS-ONLINE · SYS-MARKETING → EXT-ACTIONS · publicacion · Agregados públicos en rama de datos; UI de Pages conserva código aprobado · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
-- CON-PLAN-METRICAS-ONLINE · SYS-SALA → SYS-MARKETING · lectura · Marketing consume agregados de Plan publicados con hash · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-PLAN-METRICAS-ONLINE · SYS-SALA → SYS-MARKETING · lectura · Marketing consume agregados de Plan publicados con hash · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
 - Sistema presente en el catálogo canónico · Estado: codigo · yodesarrollomx/yod-portal · os/catalogo.js · Revisión: HEAD\_baseline
 - [PR76/77 integrados. Run 38141736288 success; rama de datos agregados y lector verifican 76 publicaciones y snapshot 409673351. Main conserva PR/CI. · Estado: ejecucion · yodesarrollomx/aurum-board · docs/ONLINE.md · Revisión: 6ad059cd1ed97edee894df5a9b2032d919143e0f](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/docs/ONLINE.md)
+- [PR78 integrado; run 38157069665 success. Plan lectura confirmada con hash y frescura; leads\_medicion\_caida=false, 76 publicaciones Meta. El lector HTTP comprueba bytes/recibo de snapshot409795880. · Estado: ejecucion · yodesarrollomx/aurum-board · scripts/pull\_metrics.py · Revisión: e3dd428a01b01d1c8b5775c7fcca408735c98357](https://github.com/yodesarrollomx/aurum-board/blob/e3dd428a01b01d1c8b5775c7fcca408735c98357/scripts/pull_metrics.py)
 
 **Evidencia de conexiones:**
 
@@ -533,11 +535,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PUBLICADOR-MARKETING · Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB\_TOKEN; requiere registro e instalación personal de una App privada de la organización. · Estado: declarado · Sin revisión inmutable en esta referencia
 - [CON-MARKETING-DATOS-ONLINE · Run 38141736288 success: actualizó y publicó 76 publicaciones de Meta, confirmó hash/recibo del HTTP real y conservó el snapshot como draft privado. · Estado: ejecucion · yodesarrollomx/aurum-board · scripts/snapshots\_online.py · Revisión: 6ad059cd1ed97edee894df5a9b2032d919143e0f](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/scripts/snapshots_online.py)
 - [CON-MARKETING-DATOS-ONLINE · LECTOR\_ONLINE ok:true, posts:76, run\_id:38141736288. El navegador recibe sólo agregados/covers y verifica SHA256. Plan rechazado mantiene último dato acreditado y señal de medición incompleta. · Estado: ejecucion · yodesarrollomx/aurum-board · metrics-online.js · Revisión: 6ad059cd1ed97edee894df5a9b2032d919143e0f](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/metrics-online.js)
-- CON-PLAN-METRICAS-ONLINE · Nueva ruta propuesta para atribución, con hash y última lectura válida; no cambia los backends de captación. · Estado: propuesto · yodesarrollomx/aurum-board · scripts/pull\_metrics.py · Sin revisión inmutable en esta referencia
+- [CON-MARKETING-DATOS-ONLINE · PR78 integrado; run 38157069665 success. Plan lectura confirmada con hash y frescura; leads\_medicion\_caida=false, 76 publicaciones Meta. El lector HTTP comprueba bytes/recibo de snapshot409795880. · Estado: ejecucion · yodesarrollomx/aurum-board · metrics-online.js · Revisión: e3dd428a01b01d1c8b5775c7fcca408735c98357](https://github.com/yodesarrollomx/aurum-board/blob/e3dd428a01b01d1c8b5775c7fcca408735c98357/metrics-online.js)
+- [CON-PLAN-METRICAS-ONLINE · PR78 integrado; run 38157069665 success. Plan lectura confirmada con hash y frescura; leads\_medicion\_caida=false, 76 publicaciones Meta. El lector HTTP comprueba bytes/recibo de snapshot409795880. · Estado: ejecucion · yodesarrollomx/aurum-board · scripts/pull\_metrics.py · Revisión: e3dd428a01b01d1c8b5775c7fcca408735c98357](https://github.com/yodesarrollomx/aurum-board/blob/e3dd428a01b01d1c8b5775c7fcca408735c98357/scripts/pull_metrics.py)
 
 **Pendientes y límites:**
 
-- 9 conexiones sin verificación de ejecución registrada.
+- 8 conexiones sin verificación de ejecución registrada.
 
 ### Experiencia Aurum · SYS-AURUM-EXPERIENCIA
 
@@ -667,32 +670,33 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Función:** Almacenar registros del dominio ventas
 
-**Fuente oficial:** Almacén lógico Google Sheets; correspondencia con archivo vivo por verificar
+**Fuente oficial:** Hoja canónica contrastada mediante metadatos, encabezados y valores acotados; identidad técnica sólo en configuración privada.
 
 **Responsable operativo:** Dueño del dato por confirmar
 
-**Estado registrado:** ejecucion. Correspondencia de fuente y lectura por conector verificadas; operación de la cuenta de servicio y backend activo pendientes.
+**Estado registrado:** ejecucion. Permiso lector de la cuenta de servicio y ejecución cloud verificados: sólo columnas contractuales; no crear/modificar leads. Calidad del resto de columnas y código del backend original pendientes.
 
 **Conexiones registradas; no habilitan operaciones:**
 
 - CON-006 · GAS-PLAN-POTENCIAL → SHEET-PLAN-POTENCIAL · persistencia · Lee/escribe registros del dominio · Estado: declarado · Ejecución no verificada en el atlas.
-- CON-PLAN-SHEETS-ONLINE · SHEET-PLAN-POTENCIAL → SYS-SALA · lectura · Lectura de Plan por cuenta de servicio y salida agregada · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-PLAN-SHEETS-ONLINE · SHEET-PLAN-POTENCIAL → SYS-SALA · lectura · Lectura de Plan por cuenta de servicio y salida agregada · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
 - Integración pendiente de verificar · Estado: pendiente · Sin revisión inmutable en esta referencia
 - Metadatos y encabezados de LEADS - POTENCIAL contrastados con documentación y lecturas autorizadas acotadas el11-oct-2026. Datos y ID físico omitidos del atlas; autoridad del runtime de servicio pendiente. · Estado: ejecucion · Sin revisión inmutable en esta referencia
+- [PR266/267/268 integrados. Run 38156397507 success: cuenta de servicio existente con permiso lector, consulta autenticada GViz sólo cuando Sheets API está deshabilitada, columnas permitidas, exclusión de prueba y publicación verificada. Fuente no modificada. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/plan\_agregados.py · Revisión: a3b6c7053b3cd26333dd06878e74bb666288ce51](https://github.com/yodesarrollomx/sala-edicion/blob/a3b6c7053b3cd26333dd06878e74bb666288ce51/nube/plan_agregados.py)
 
 **Evidencia de conexiones:**
 
 - CON-006 · Backend asociado al almacén de su dominio · Estado: declarado · yodesarrollomx/plan-potencial · CLAUDE.md · Revisión: HEAD\_baseline
-- CON-PLAN-SHEETS-ONLINE · Encabezados canónicos y columnas seleccionadas leídos por conector autorizado. Cuenta de servicio y ejecución programada pendientes; ninguna fila creada. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- [CON-PLAN-SHEETS-ONLINE · PR266/267/268 integrados. Run 38156397507 success: cuenta de servicio existente con permiso lector, consulta autenticada GViz sólo cuando Sheets API está deshabilitada, columnas permitidas, exclusión de prueba y publicación verificada. Fuente no modificada. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/plan\_agregados.py · Revisión: a3b6c7053b3cd26333dd06878e74bb666288ce51](https://github.com/yodesarrollomx/sala-edicion/blob/a3b6c7053b3cd26333dd06878e74bb666288ce51/nube/plan_agregados.py)
 
 **Pendientes y límites:**
 
 - Responsable operativo pendiente de confirmación; el encargado de verificación no sustituye esa asignación.
-- 2 conexiones sin verificación de ejecución registrada.
-- Esquema y calidad de datos vivos no inspeccionados
+- 1 conexiones sin verificación de ejecución registrada.
+- Verificación limitada a columnas contractuales; no acredita calidad de campos privados no leídos ni confirmación independiente de Calendar.
 
 ### Guardado de planos · GAS-CROKISS
 
@@ -2046,7 +2050,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Editores y producción
 
-**Estado registrado:** ejecucion. Código y revisión diaria publicados y comprobados el 11-oct-2026: cola/rutinas confirmadas, recibo exacto del sitio. Ruta técnica de medios CPU comprobada; aprobaciones humanas. Apps Script original/correo y conciliación histórica pendientes.
+**Estado registrado:** ejecucion. Código y revisión diaria publicados; ruta de medios CPU comprobada y lectura automática agregada de Plan confirmada el11-oct-2026. Compuertas editoriales humanas. Fuentes/disparadores Apps Script originales, correo y medios históricos restantes pendientes.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -2055,8 +2059,8 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-064 · SYS-SALA-OPERACION → SYS-SALA · automatizacion · Herramientas históricas de producción · Estado: declarado · Ejecución no verificada en el atlas.
 - CON-PUBLICADOR-SALA · EXT-GITHUB-PUBLISHER-APP → SYS-SALA · automatizacion · Crea PR del commit preparado de Sala · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-SALA-SNAPSHOT-ONLINE · SYS-SALA → EXT-ACTIONS · publicacion · Snapshots privados de datos públicos y Pages con recibo verificable · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
-- CON-PLAN-SHEETS-ONLINE · SHEET-PLAN-POTENCIAL → SYS-SALA · lectura · Lectura de Plan por cuenta de servicio y salida agregada · Estado: propuesto · Ejecución no verificada en el atlas.
-- CON-PLAN-METRICAS-ONLINE · SYS-SALA → SYS-MARKETING · lectura · Marketing consume agregados de Plan publicados con hash · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-PLAN-SHEETS-ONLINE · SHEET-PLAN-POTENCIAL → SYS-SALA · lectura · Lectura de Plan por cuenta de servicio y salida agregada · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
+- CON-PLAN-METRICAS-ONLINE · SYS-SALA → SYS-MARKETING · lectura · Marketing consume agregados de Plan publicados con hash · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
@@ -2065,6 +2069,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - El productor planifica compuertas de producción · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_productor.py · Revisión: HEAD\_baseline
 - El ejecutor solo admite etapas habilitadas por configuración · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_ejecutor.py · Revisión: HEAD\_baseline
 - [PR265 integrado. Revisión 38141812652 y Pages 38141874311 success; publicación exacta del snapshot 409673426 y diagnóstico agregado sin filas privadas. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-ONLINE.md · Revisión: 73902861db96d213a07f788996f50fdcf3c65566](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/docs/SALA-ONLINE.md)
+- [PR266/267/268 integrados. Run 38156397507 success: cuenta de servicio existente con permiso lector, consulta autenticada GViz sólo cuando Sheets API está deshabilitada, columnas permitidas, exclusión de prueba y publicación verificada. Fuente no modificada. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/PLAN-ONLINE.md · Revisión: a3b6c7053b3cd26333dd06878e74bb666288ce51](https://github.com/yodesarrollomx/sala-edicion/blob/a3b6c7053b3cd26333dd06878e74bb666288ce51/docs/PLAN-ONLINE.md)
 
 **Evidencia de conexiones:**
 
@@ -2073,12 +2078,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-064 · Migración de herramientas a nube · Estado: declarado · yodesarrollomx/sala-edicion · CLAUDE.md · Revisión: HEAD\_baseline
 - CON-PUBLICADOR-SALA · Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB\_TOKEN; requiere registro e instalación personal de una App privada de la organización. · Estado: declarado · Sin revisión inmutable en esta referencia
 - [CON-SALA-SNAPSHOT-ONLINE · Run 38141812652 publicó la revisión acumulativa y esperó el recibo exacto de Pages run 38141874311; ambos success. ZIP permitido, bloqueo CAS y release permanece draft:true. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/snapshots\_online.py · Revisión: 73902861db96d213a07f788996f50fdcf3c65566](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/nube/snapshots_online.py)
-- CON-PLAN-SHEETS-ONLINE · Encabezados canónicos y columnas seleccionadas leídos por conector autorizado. Cuenta de servicio y ejecución programada pendientes; ninguna fila creada. · Estado: propuesto · Sin revisión inmutable en esta referencia
-- CON-PLAN-METRICAS-ONLINE · Nueva ruta propuesta para atribución, con hash y última lectura válida; no cambia los backends de captación. · Estado: propuesto · yodesarrollomx/aurum-board · scripts/pull\_metrics.py · Sin revisión inmutable en esta referencia
+- [CON-PLAN-SHEETS-ONLINE · PR266/267/268 integrados. Run 38156397507 success: cuenta de servicio existente con permiso lector, consulta autenticada GViz sólo cuando Sheets API está deshabilitada, columnas permitidas, exclusión de prueba y publicación verificada. Fuente no modificada. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/plan\_agregados.py · Revisión: a3b6c7053b3cd26333dd06878e74bb666288ce51](https://github.com/yodesarrollomx/sala-edicion/blob/a3b6c7053b3cd26333dd06878e74bb666288ce51/nube/plan_agregados.py)
+- [CON-PLAN-METRICAS-ONLINE · PR78 integrado; run 38157069665 success. Plan lectura confirmada con hash y frescura; leads\_medicion\_caida=false, 76 publicaciones Meta. El lector HTTP comprueba bytes/recibo de snapshot409795880. · Estado: ejecucion · yodesarrollomx/aurum-board · scripts/pull\_metrics.py · Revisión: e3dd428a01b01d1c8b5775c7fcca408735c98357](https://github.com/yodesarrollomx/aurum-board/blob/e3dd428a01b01d1c8b5775c7fcca408735c98357/scripts/pull_metrics.py)
 
 **Pendientes y límites:**
 
-- 6 conexiones sin verificación de ejecución registrada.
+- 4 conexiones sin verificación de ejecución registrada.
 - Cambios de infraestructura y documentos históricos requieren reconciliación
 
 ### Herramientas de producción · SYS-SALA-OPERACION
@@ -2131,6 +2136,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-082 · SVC-SALA-EJECUTOR → GAS-SALA · api · Lee cola y registra resultado · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-085 · GAS-SALA → GAS-PORTERO · autenticacion · Valida credencial del OS desde servidor · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-086 · GAS-SALA → GAS-PORTERO-RESPALDO · autenticacion · Consulta respaldo de identidad · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-SALA-RECONEXION-MEDIOS · SVC-SALA-EJECUTOR → GAS-SALA · conciliacion · Mantenimiento limitado de evidencia de voces originales recuperadas · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2146,10 +2152,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-082 · Procesamiento de trabajo · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_ejecutor.py · Revisión: HEAD\_baseline
 - CON-085 · Valida credencial del OS desde servidor · Estado: codigo · yodesarrollomx/sala-edicion · gas/Code.gs · Revisión: HEAD\_baseline
 - CON-086 · Consulta respaldo de identidad · Estado: codigo · yodesarrollomx/sala-edicion · gas/Code.gs · Revisión: HEAD\_baseline
+- CON-SALA-RECONEXION-MEDIOS · Informe privado acredita dos copias originales, pero no acuse de COLA. Reconciliación de referencia técnica propuesta con verificaciones previas y posteriores. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 6 conexiones sin verificación de ejecución registrada.
+- 7 conexiones sin verificación de ejecución registrada.
 - Código desplegado y permisos reales no contrastados
 
 ### Datos de Sala de Edición · SHEET-SALA
@@ -2251,6 +2258,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-082 · SVC-SALA-EJECUTOR → GAS-SALA · api · Lee cola y registra resultado · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-083 · SVC-SALA-EJECUTOR → EXT-MOTORES-MEDIA · integracion · Selecciona motor según configuración · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-084 · SVC-SALA-EJECUTOR → EXT-DRIVE · documentos · Sube activos producidos · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-SALA-RECONEXION-MEDIOS · SVC-SALA-EJECUTOR → GAS-SALA · conciliacion · Mantenimiento limitado de evidencia de voces originales recuperadas · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2263,10 +2271,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-082 · Procesamiento de trabajo · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_ejecutor.py · Revisión: HEAD\_baseline
 - CON-083 · Registro de motores de producción · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_motores.py · Revisión: HEAD\_baseline
 - CON-084 · Publicación de resultado en Drive · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_ejecutor.py · Revisión: HEAD\_baseline
+- CON-SALA-RECONEXION-MEDIOS · Informe privado acredita dos copias originales, pero no acuse de COLA. Reconciliación de referencia técnica propuesta con verificaciones previas y posteriores. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 4 conexiones sin verificación de ejecución registrada.
+- 5 conexiones sin verificación de ejecución registrada.
 - Uso efectivo, configuración y costo en producción no comprobados
 
 ### Motores de generación de contenido · EXT-MOTORES-MEDIA
@@ -2651,6 +2660,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [CON-SALA-SNAPSHOT-ONLINE · Run 38141812652 publicó la revisión acumulativa y esperó el recibo exacto de Pages run 38141874311; ambos success. ZIP permitido, bloqueo CAS y release permanece draft:true. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/snapshots\_online.py · Revisión: 73902861db96d213a07f788996f50fdcf3c65566](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/nube/snapshots_online.py)
 - [CON-MARKETING-DATOS-ONLINE · Run 38141736288 success: actualizó y publicó 76 publicaciones de Meta, confirmó hash/recibo del HTTP real y conservó el snapshot como draft privado. · Estado: ejecucion · yodesarrollomx/aurum-board · scripts/snapshots\_online.py · Revisión: 6ad059cd1ed97edee894df5a9b2032d919143e0f](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/scripts/snapshots_online.py)
 - [CON-MARKETING-DATOS-ONLINE · LECTOR\_ONLINE ok:true, posts:76, run\_id:38141736288. El navegador recibe sólo agregados/covers y verifica SHA256. Plan rechazado mantiene último dato acreditado y señal de medición incompleta. · Estado: ejecucion · yodesarrollomx/aurum-board · metrics-online.js · Revisión: 6ad059cd1ed97edee894df5a9b2032d919143e0f](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/metrics-online.js)
+- [CON-MARKETING-DATOS-ONLINE · PR78 integrado; run 38157069665 success. Plan lectura confirmada con hash y frescura; leads\_medicion\_caida=false, 76 publicaciones Meta. El lector HTTP comprueba bytes/recibo de snapshot409795880. · Estado: ejecucion · yodesarrollomx/aurum-board · metrics-online.js · Revisión: e3dd428a01b01d1c8b5775c7fcca408735c98357](https://github.com/yodesarrollomx/aurum-board/blob/e3dd428a01b01d1c8b5775c7fcca408735c98357/metrics-online.js)
 
 **Pendientes y límites:**
 

@@ -1,11 +1,11 @@
 # Lectura automática de agregados de Plan
 
-Propuesta CHG-PLAN-AGREGADOS-ONLINE-20261011, contrato CTR-PLAN-AGREGADOS-ONLINE, autorizada por Dirección para continuar la instalación en nube.
+Cambio CHG-PLAN-AGREGADOS-ONLINE-20261011 y contrato CTR-PLAN-AGREGADOS-ONLINE publicados el11-oct-2026. Fuente canónica leída por la cuenta de servicio existente con permiso lector. El proyecto no tiene Sheets API activa; la ruta confirmada usa Google Charts autenticado, con Bearer en cabecera y sólo columnas permitidas. Las personas y folios permanecen privados.
 
-La hoja canónica y sus columnas se comprobaron mediante lectura privada autorizada. La ruta automática se propone con la cuenta de servicio existente, permiso lector y configuración privada en Drive. Sólo agregados por campaña/pieza y conteos históricos llegan al publicador. El recibo de Sala vincula el hash exacto del archivo; Marketing verifica hash, frescura y contrato. Un rechazo conserva el dato anterior y se muestra como lectura incompleta.
+Sala produce agregados históricos, excluye PRUEBA y rechaza duplicados contradictorios. Sesión registrada requiere estado y fecha; no acredita Calendar. Marketing comprueba recibos antes/después, hash, frescura y contrato y conserva el último dato si hay error. Actualización declarada de fuente cada hora al minuto25 y consumidor al00; revisión diaria incluye la octava rutina.
 
-Las filas marcadas PRUEBA se excluyen; los folios permanecen privados, duplicados contradictorios son error y una cita requiere confirmación de sesión registrada. No cambiar captación, formularios, estados, gastos, decisiones editoriales, Portero ni fuentes GAS desconocidas. No escribir datos ficticios en producción.
+Pruebas: suite Sala144 y consumidor Marketing17, además de las regresiones existentes, pasan. Producción: [lector/publicador Plan](https://github.com/yodesarrollomx/sala-edicion/actions/runs/38156397507), [Pages](https://github.com/yodesarrollomx/sala-edicion/actions/runs/38156497145) y [consumidor real](https://github.com/yodesarrollomx/aurum-board/actions/runs/38157069665) success. El lector HTTP de Marketing confirma76 publicaciones y snapshot409795880; medición caída=false.
 
-Estado: propuesto; identidad y permiso automático, lectura/publicación real y consumidor pendientes. El inventario de fuentes/disparadores y correo heredado sigue separado.
+Fuentes/editor IDs y disparadores de Apps Script original, correo, confirmación Calendar y medios históricos restantes siguen pendientes. No se desplegaron espejos ni se modificaron registros de captación.
 
-Reversión: revertir infraestructura/consumidor y mantener snapshots confirmados. No borrar Sheets, CRM, decisiones o medios; retirar sólo el nuevo permiso lector específico si se añadió.
+Reversión: revertir la infraestructura/consumidor y conservar snapshots y hojas. Retirar sólo el nuevo permiso lector específico si corresponde.
