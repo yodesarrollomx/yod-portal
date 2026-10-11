@@ -111,3 +111,15 @@ test('office bridge rejects forged scope, keeps visits independent and suppresse
  await b.request({data:data('office-busy','readOfficePending',{case_id:'synthetic',space_id:'juntas'})});assert.equal(b.posts[1].error,'transport_busy');
  b.setAllowed(false);release();await pending;assert.equal(b.posts.length,2);assert.equal(calls.length,1);
 });
+test('chinche 249: a slow read never bounces a message, and mutations still go one at a time',async()=>{
+ const b=bridge(),sent=[];let releaseRead,releaseSend;
+ b.setTransport({read:async()=>{await new Promise(r=>releaseRead=r);return {ok:true};},enqueue:async p=>{sent.push(p.request_id);await new Promise(r=>releaseSend=r);return {ok:true,state:'queued'};}});
+ const data=(id,method,payload)=>({type:'yod:case:request',version:1,id,method,payload});
+ const msg=id=>({case_id:'synthetic',expected_revision:'r1',request_id:id,message:'Hola'});
+ const reading=b.request({data:data('read','read',{case_id:'synthetic'})});
+ const first=b.request({data:data('send-1','enqueue',msg('m1'))});
+ await new Promise(r=>setImmediate(r));assert.deepEqual(sent,['m1']);
+ await b.request({data:data('send-2','enqueue',msg('m2'))});assert.equal(b.posts[0].id,'send-2');assert.equal(b.posts[0].error,'transport_busy');assert.deepEqual(sent,['m1']);
+ releaseSend();await first;assert.equal(b.posts[1].id,'send-1');assert.equal(b.posts[1].error,null);
+ releaseRead();await reading;assert.equal(b.posts[2].id,'read');
+});
