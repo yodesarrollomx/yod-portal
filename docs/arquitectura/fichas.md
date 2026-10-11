@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.horarios-render.1 · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.despacho-lectura-reportes133 · 2026-10-11.
 
 ## SYS-DESPACHO · El Despacho
 

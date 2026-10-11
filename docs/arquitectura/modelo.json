@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-11.horarios-render.1",
+  "revision": "2026-10-11.despacho-lectura-reportes133",
   "checked_at": "2026-10-11",
   "priorities": [
     "vender_mas",
@@ -10705,6 +10705,28 @@
       ],
       "deployment": "Propuesta registrada antes de implementación. El servicio Render y las rutinas existentes se conservan; instalación de App y comprobación operativa pendientes.",
       "rollback": "Apagar YOD_SCHEDULER_ENABLED y revertir PR. Conservar estado/recibos y datos de negocio; no borrar App o medios para facilitar reversión."
+    },
+    {
+      "id": "CHG-DESPACHO-LECTURA-REPORTES-20261011",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SVC-AUTON-CLOUD",
+        "STORE-AUTON-ESTADO"
+      ],
+      "proposal": "Dirección autoriza revisar las conversaciones guardadas y atender sus solicitudes. Registrar mejoras técnicas con recibo en la memoria privada autorizada del caso, de forma independiente de objetivos PPP en revisión. Compartir foco y versión efectivamente observados del tablero y distinguir lectura, espera, error y cambios pendientes sin inventar porcentajes ni tiempos restantes. Reutilizar el PR20 de reintento de sesión, conservando sus rechazos definitivos. Conservar objetivos, permisos, formulas y datos; no revivir automatizaciones canceladas ni capturar otras pantallas sin un gesto del usuario. Solicitudes de MOAC y herramientas adicionales se registran con su estado real y dependencias canónicas; un reporte no acredita implementación.",
+      "status": "propuesto",
+      "tests": [
+        "Regresiones de observación PPP: versión defendida y consultada, foco real, campos heterogéneos, nonce/origen y cero escrituras.",
+        "Herramienta de reporte sobre memoria durable: caso/actor/revisión, reintento idempotente y no dependencia de crear/aceptar objetivos.",
+        "Suites completas y verificadores de los repos afectados; navegador con motores reales y transporte aislado.",
+        "Cotejar commits publicados y revisión activa de Render sin reiniciar ni modificar disco."
+      ],
+      "deployment": "Propuesta registrada; correcciones, pruebas y publicación pendientes.",
+      "rollback": "Revertir PRs de cliente/herramientas por revisión. Conservar expedientes, filas, objetivos, memoria, recibos, URLs y volumen persistente."
     }
   ],
   "data_contracts": [
