@@ -1,7 +1,8 @@
 
 'use strict';
 const {chromium}=require('playwright'),http=require('node:http'),fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
-const root=path.resolve(__dirname,'..'),snapshots=new Map();
+const root=path.resolve(__dirname,'..'),snapshots=new Map(),evidence=process.env.BROWSER_EVIDENCE_DIR;
+if(evidence)fs.mkdirSync(evidence,{recursive:true});
 const harness='<!doctype html><iframe title="Oficina" style="width:100%;height:900px;border:0" src="/despacho3d/index.html?puesto-test=1" allow="microphone"></iframe>';
 const server=http.createServer((req,res)=>{
  const u=new URL(req.url,'http://local');if(u.pathname==='/harness'){res.setHeader('Content-Type','text/html');res.end(harness);return;}
@@ -54,11 +55,14 @@ const server=http.createServer((req,res)=>{
    assert.equal(snapshots.has(id),true);
    if(id==='case-a')assert.match(await office.locator('.workspace-brief').innerText(),/Consultar normativa/);
    else assert.match(await office.locator('.workspace-brief').innerText(),/Revisar la entrega contigo/);
-   if(i<3)await office.locator('.voice-close').click();
+   if(evidence&&i<3)await page.screenshot({path:path.join(evidence,'puesto-sintetico-'+id+'.png')});
+   if(i<3){await office.locator('.voice-close').click();if(i===1){await frame.evaluate(id=>window.YodVoiceWorkspace.openForCase(id,'ppp',{compactOnly:true}),id);await office.locator('.voice-capsule').waitFor({state:'visible'});}}
+
   }
   await page.setViewportSize({width:390,height:844});
   assert.equal(await office.locator('.workspace-brief h2').isVisible(),true);
   assert.equal(await frame.evaluate(()=>document.querySelector('.voice-workspace').scrollWidth<=document.querySelector('.voice-workspace').clientWidth+1),true);
+  if(evidence)await page.screenshot({path:path.join(evidence,'puesto-sintetico-movil.png')});
   assert.deepEqual(errors,[]);
   console.log('Actual resident and voice boot: four openings across three authorized cases; native PPP identity translated, one iframe, meta and next decision, same voice controls, mobile overflow checked. Synthetic transport; no physical microphone acceptance.');
  }finally{await browser.close();await new Promise(r=>server.close(r));}

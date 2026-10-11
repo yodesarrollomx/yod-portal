@@ -41,6 +41,7 @@ jobs:
         if: matrix.browser == 'chromium'
         env:
           NODE_PATH: ${{ runner.temp }}/chinche-browser/node_modules
+          BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/chinche-evidence
         run: |
           node scripts/probar-autones-browser.cjs
           node scripts/probar-puesto-browser.cjs
