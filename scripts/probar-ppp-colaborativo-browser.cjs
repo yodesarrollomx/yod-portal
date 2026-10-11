@@ -71,6 +71,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await frame.getByRole('button',{name:'Actualizar conexión',exact:true}).click();
   await showBoardOptions();
   await frame.locator('.workspace-ppp-summary').filter({hasText:'Lectura confirmada'}).waitFor();
+  await frame.locator('.workspace-board-options summary').click();
   assert.equal(sessions,0);assert.equal(await frame.evaluate(()=>window.captures),0);
   const iframe=await frame.locator('.workspace-board iframe').elementHandle(),ppp=await iframe.contentFrame();
   await ppp.locator('#area').fill('135');
