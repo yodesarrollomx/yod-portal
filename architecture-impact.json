@@ -1,21 +1,29 @@
 {
-  "model_revision": "2026-10-11.despacho-puesto131",
-  "proposal_id": "CHG-DESPACHO-PUESTO-20261011",
-  "summary": "Abrir el puesto del autón desde su nombre con la misma selección autorizada; mostrar PPP junto a conversación y una ruta de trabajo derivada de las metas reales. Separar conexiones por caso y enlazar explícitamente identidad del autón con identidad del PPP registrado. Consultas de voz conservan instrucción, criterio y resumen de cada tarea. Sin reiniciar automatizaciones canceladas ni modificar resultados del negocio. El workflow compartido de chinches conserva sus pruebas de Sala y añade el recorrido del puesto.",
+  "model_revision": "2026-10-11.sala-online",
+  "proposal_id": "CHG-SALA-ONLINE-20261011",
+  "summary": "Por instrucción explícita de Dirección: continuar la Sala existente enteramente en nube con alternativas a Modal y al publicador GitHub App ausente. Generación CPU de imágenes, parallax/cámara y voz mantiene procedencia y revisión editorial. Datos del tablero: snapshots privados acumulativos con checksum, validación y despliegue Pages; cambios de código conservan PR y CI. Revisión diaria resumida sin datos personales. Sheets y contratos actuales siguen siendo fuente operativa; no publicar el espejo GAS como si fuera el código vivo.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "SYS-DESPACHO-3D",
     "SVC-AUTON-CLOUD",
     "GAS-PORTERO",
-    "SYS-SALA"
+    "SYS-SALA",
+    "GAS-SALA",
+    "SHEET-SALA",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-MOTORES-MEDIA",
+    "SYS-MARKETING",
+    "EXT-ACTIONS",
+    "EXT-DRIVE"
   ],
   "tests": [
-    "Cambiar entre tres puestos y descartar conexiones y respuestas del caso anterior",
-    "PPP con identidad distinta: handshake, lectura y propuesta preservan revisión, nonce y fuente autorizada",
-    "Ruta de meta distingue revisión, bloqueo, historial y trabajo registrado; no inventa avance",
-    "Navegador con red interceptada: abrir por nombre, voz y PPP simultáneos, móvil y revocación",
-    "Arquitectura --check, tests/*.cjs, verify-os/portal/accesos/obra-app"
+    "Prueba técnica real CPU: imagen, voz, parallax y corte con archivos sintéticos y evidencia privada; ningún registro de negocio creado",
+    "Archive allowlist, hashes, tamaños, extracción segura, CAS y estados preparado/publicado; rechazo de versión equivocada y fallo no se convierte en cero",
+    "Publicación Pages acredita código y snapshot exactos antes de montar la mesa; CI de código y aprobación editorial siguen vigentes",
+    "Lecturas rechazadas de APIs conservan último backup y reportan rechazo; revisión diária muestra frecuencia, últimas ejecuciones y fallos",
+    "Arquitectura central --check y verificaciones de Portal; nube/verificar.py, regresiones Sala y contratos Marketing"
   ],
-  "rollback": "Revertir frontend y los cambios de contexto/lectura de voz del backend; conservar expedientes, recibos y automatizaciones canceladas."
+  "rollback": "Revertir PR de infraestructura y volver a publicación Git tras resolver la identidad del bot. Restaurar último snapshot confirmado, sin borrar COLA, decisiones, medios ni registros de Sheets."
 }
