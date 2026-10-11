@@ -1,7 +1,8 @@
+import {createOfficePreparation} from './office-preparation.mjs?v=1';
 import {mountAgentMenu} from './agent-menu.mjs?v=127';
 import {createResidentOpening} from './resident-opening.mjs?v=127';
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
-import {createAuthorizedCases} from './authorized-cases.mjs?v=127';
+import {createAuthorizedCases} from './authorized-cases.mjs?v=130';
 import {createFrameTransport} from './conversation.mjs?v=126';
 import {createResidentAgents} from './resident-agents.mjs?v=127';
 import {AUTHORITY_REFRESH_MS} from './authority-lease.mjs?v=127';
@@ -28,11 +29,16 @@ if(host){
  }
  // Use the same canonical profile contract as the scene's pilot.
  const api={...resident};
+ const officePreparation=createOfficePreparation({mint:p=>transport.mintFastSession(p),visible:()=>!document.hidden,
+  onResult:(id,ok)=>{if(resident.getSelection()?.case_id===id)resident.markPrepared(id,ok);}});
+ const prepareCatalog=()=>void officePreparation.update(authorized?.snapshot().cases||[]);
  const authorizedListeners=new Set();
  let authorized=null,catalogTimer=null;
  if(AUTONES_MULTIPLES){
-  authorized=createAuthorizedCases({transport,beforeSelect:()=>['idle','error'].includes(voicePhase),onChange:state=>{
+  authorized=createAuthorizedCases({transport,reuseCatalog:true,beforeSelect:()=>['idle','error'].includes(voicePhase),onChange:state=>{
    selectionHandoff.reconcile(state);resident.reconcileCatalog(state);
+   if(state.phase==='unauthorized')officePreparation.clear();
+   else if(state.phase==='current')void officePreparation.update(state.cases);
    for(const fn of authorizedListeners)fn(state.cases.map(c=>c.avatar).filter(Boolean));
   }});
   api.subscribeAuthorizedProfiles=fn=>{authorizedListeners.add(fn);fn(api.getAuthorizedProfiles());return()=>authorizedListeners.delete(fn);};
@@ -44,7 +50,7 @@ if(host){
     return chosen&&selectionHandoff.current(attempt)&&isCurrent()&&['idle','error'].includes(voicePhase)?await resident.selectCase(id):false;
    }finally{selectionHandoff.finish(attempt);}
   };
-  catalogTimer=setInterval(()=>{if(shouldRefreshAuthority())void authorized.refresh();},AUTHORITY_REFRESH_MS);void authorized.refresh();
+  catalogTimer=setInterval(()=>{if(shouldRefreshAuthority())void authorized.refresh();},AUTHORITY_REFRESH_MS);void authorized.refresh().then(()=>resident.refresh());
   window.addEventListener('pagehide',()=>{clearInterval(catalogTimer);authorized.dispose();});
  }
  api.openForCase=createResidentOpening({getResidents:()=>api,getMenu:()=>window.YodAgentMenu,beforeOpen:()=>window.despacho?.closeSheets?.(false),canSelect:()=>['idle','error'].includes(voicePhase)});
@@ -61,7 +67,7 @@ if(host){
  window.addEventListener('yod-agents-ready',()=>paint(resident.snapshot()));
  window.addEventListener('yod-office-ready',()=>paint(resident.snapshot()));
  window.addEventListener('online',()=>{void authorized?.refresh();void resident.refresh();});
- document.addEventListener('visibilitychange',()=>{if(!document.hidden){void authorized?.refresh();void resident.refresh();}});
- window.addEventListener('pagehide',()=>{selectionHandoff.invalidate();resident.dispose();transport.dispose();delete window.YodResidentAgents;});
- void resident.refresh();
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden){prepareCatalog();void authorized?.refresh();void resident.refresh();}});
+ window.addEventListener('pagehide',()=>{officePreparation.close();selectionHandoff.invalidate();resident.dispose();transport.dispose();delete window.YodResidentAgents;});
+ if(!AUTONES_MULTIPLES)void resident.refresh();
 }

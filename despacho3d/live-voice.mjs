@@ -13,7 +13,7 @@ const NOTICES = {
   voice_unavailable: 'La voz no está disponible en el servidor. Puedes continuar por escrito en este puesto.',
   context_unavailable: 'No pudimos recuperar el expediente del proyecto.',
 };
-export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
+export function createLiveVoice({mint, forgetCredential=()=>{}, fetchImpl = (...args) => fetch(...args),
   media = globalThis.navigator?.mediaDevices, Peer = globalThis.RTCPeerConnection, Stream = globalThis.MediaStream,
   audio, monitorFactory = createLocalInputMonitor, onChange = () => {}, canOperate = () => true, actions = null, onTranscript = () => {}, now = Date.now,
   schedule = setInterval, cancel = clearInterval, closeTimeout = 20000, disconnectGrace = 12000, maxStatusFailures = 3, startTimeout = 60000, signallingTimeout = 90000} = {}) {
@@ -80,7 +80,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     }).catch(error=>{
       if(token!==epoch||closing||activeCaseId!==id)return;
       if(['unauthorized','session_changed'].includes(error?.code||error?.message)){
-        prepared=null;publish({credential_pending:false});
+        prepared=null;forgetCredential(id);publish({credential_pending:false});
         void stop('Tu acceso cambió. La voz se detuvo; el puesto permanece abierto.');
       }else {credentialRetryAt=now()+10000;publish({credential_pending:true});}
     }).finally(()=>{if(credentialRenewal===own)credentialRenewal=null;});
@@ -98,7 +98,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
         const response=await fetchImpl(value.endpoint+'/voice/ready',{headers:{Authorization:'Bearer '+value.token},
           cache:'no-store',credentials:'omit',signal:AbortSignal.timeout(15000)});
         if(own!==preparationEpoch)return false;
-        if(response.status===401||response.status===403){if(prepared===value)prepared=null;return false;}
+        if(response.status===401||response.status===403){if(prepared===value)prepared=null;forgetCredential(caseId);return false;}
         const health=response.ok?await response.json():null;
         const available=response.ok&&health?.ok===true&&health.available===true;
         if(own!==preparationEpoch)return false;
@@ -190,7 +190,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
       else if (state.phase === 'starting' && connectedAt && now() - connectedAt > 60000) void stop('No se confirmó el inicio. Vuelve a intentar.');
     } catch (error) {
       if (token === epoch && !closing) {
-        if (error?.code === 'unauthorized') {prepared = null; void stop('La sesión venció. Vuelve a abrir el despacho.');}
+        if (error?.code === 'unauthorized') {prepared = null;forgetCredential(activeCaseId); void stop('La sesión venció. Vuelve a abrir el despacho.');}
         else if (error?.code === 'session_unavailable') void stop('La sesión de voz terminó. Puedes volver a intentar.');
         else {statusFailures++;publish({status_pending: true, notice: statusFailures >= maxStatusFailures ?
           'La voz sigue conectada. El estado del respaldo está pendiente.' : 'La voz continúa. Recuperando conexión con el registro…'});}
@@ -358,7 +358,7 @@ export function createLiveVoice({mint, fetchImpl = (...args) => fetch(...args),
     } catch (error) {
       if (token === epoch && !closing) {
         // Forget only the temporary credential rejected by this attempt. A newer preparation must survive.
-        if (error?.code === 'unauthorized' && prepared === credential) prepared = null;
+        if (error?.code === 'unauthorized') {if(prepared===credential)prepared=null;forgetCredential(caseId);}
         if (sessionId) await stop();
         else {epoch++; release(); credential = null; publish({phase: 'error', notice: error?.name === 'NotAllowedError'
           ? 'Permite el micrófono en el navegador y pulsa Volver a intentar.' : error?.name === 'NotFoundError'

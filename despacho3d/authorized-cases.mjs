@@ -1,7 +1,9 @@
 import {validateSelection} from './conversation.mjs?v=126';
 import {AUTHORITY_LEASE_MS,authorityIsCurrent,isTransientAuthorityError} from './authority-lease.mjs?v=127';
-// Private server catalog, kept only in memory. Selecting always revalidates the exact case.
-export function createAuthorizedCases({transport,onChange=()=>{},beforeSelect=()=>true,now=Date.now,schedule=setTimeout,cancel=clearTimeout}){
+// Private catalog in memory. Selection may reuse a recently validated entry;
+// every business operation still validates its own exact case and authority.
+export function createAuthorizedCases({transport,onChange=()=>{},beforeSelect=()=>true,now=Date.now,schedule=setTimeout,cancel=clearTimeout,reuseCatalog=false}){
+ let rawItems=new Map();
  let items=[],selected=null,epoch=0,selectionEpoch=0,disposed=false,checkedAt=null,phase='loading',error=null,flight=null,leaseTimer=null,retryTimer=null,retryAttempt=0;
  const valid=()=>checkedAt!==null&&authorityIsCurrent(checkedAt,now());
  const snapshot=()=>({cases:structuredClone(valid()?items:[]),selected:structuredClone(valid()?selected:null),checked_at:checkedAt,phase:checkedAt===null?phase:valid()?phase:phase==='unauthorized'?'unauthorized':'reconnecting',error});
@@ -9,9 +11,9 @@ export function createAuthorizedCases({transport,onChange=()=>{},beforeSelect=()
  function stopRetry(){if(retryTimer!==null)cancel(retryTimer);retryTimer=null;}
  function retry(){stopRetry();if(disposed)return;retryTimer=schedule(()=>{retryTimer=null;void refresh();},Math.min(15000,2000*2**Math.min(retryAttempt++,3)));}
  function stopLease(){if(leaseTimer!==null)cancel(leaseTimer);leaseTimer=null;}
- function expire(){if(disposed||checkedAt===null)return;if(valid()){armLease();return;}items=[];selected=null;selectionEpoch++;phase='reconnecting';error='lease_expired';stopLease();emit();}
+ function expire(){if(disposed||checkedAt===null)return;if(valid()){armLease();return;}items=[];rawItems.clear();selected=null;selectionEpoch++;phase='reconnecting';error='lease_expired';stopLease();emit();}
  function armLease(){stopLease();if(checkedAt!==null)leaseTimer=schedule(expire,Math.max(0,AUTHORITY_LEASE_MS-(now()-checkedAt)));}
- function clear(reason='unauthorized'){epoch++;selectionEpoch++;flight=null;stopLease();stopRetry();retryAttempt=0;items=[];selected=null;checkedAt=null;phase='unauthorized';error=reason;emit();}
+ function clear(reason='unauthorized'){epoch++;selectionEpoch++;flight=null;stopLease();stopRetry();retryAttempt=0;items=[];rawItems.clear();selected=null;checkedAt=null;phase='unauthorized';error=reason;emit();}
  async function refresh(){
   if(disposed)return false;if(flight)return flight;stopRetry();
   if(checkedAt!==null&&!valid())expire();
@@ -22,11 +24,11 @@ export function createAuthorizedCases({transport,onChange=()=>{},beforeSelect=()
     if(r?.ok===false)throw Error(r.error||'unavailable');
     if(r?.ok!==true||r.schema!==1||!Array.isArray(r.cases)||r.cases.length>6)throw Error('invalid_catalog');
     const next=r.cases.map(validateSelection);if(new Set(next.map(x=>x.case_id)).size!==next.length)throw Error('invalid_catalog');
-    items=next;if(selected&&!next.some(x=>x.case_id===selected.case_id)){selected=null;selectionEpoch++;}
+    rawItems=new Map(r.cases.map(c=>[c.case_id,structuredClone(c)]));items=next;if(selected&&!next.some(x=>x.case_id===selected.case_id)){selected=null;selectionEpoch++;}
     checkedAt=now();phase='current';error=null;retryAttempt=0;armLease();emit();return true;
    }catch(e){
     if(disposed||own!==epoch)return false;
-    if(isTransientAuthorityError(e)){phase='reconnecting';error=e.message;if(!valid()){items=[];selected=null;selectionEpoch++;}emit();retry();}
+    if(isTransientAuthorityError(e)){phase='reconnecting';error=e.message;if(!valid()){items=[];rawItems.clear();selected=null;selectionEpoch++;}emit();retry();}
     else clear(e.message||'invalid_catalog');
     return false;
    }
@@ -40,7 +42,8 @@ export function createAuthorizedCases({transport,onChange=()=>{},beforeSelect=()
   if(!selectable())return null;
   const own=epoch,selectionOwn=++selectionEpoch;selected=null;emit();
   try{
-   const r=await transport.resolveCurrent({case_id:caseId});
+   const r=reuseCatalog&&phase==='current'&&now()>=checkedAt&&now()-checkedAt<55000&&rawItems.has(caseId)
+    ? structuredClone(rawItems.get(caseId)) : await transport.resolveCurrent({case_id:caseId});
    if(disposed||own!==epoch||selectionOwn!==selectionEpoch)return null;
    if(r?.ok===false)throw Error(r.error||'unavailable');
    const fresh=validateSelection(r);
