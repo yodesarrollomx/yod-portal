@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.hairline-expediente · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.hairline-elecciones · 2026-10-11.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -643,3 +643,18 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Resultados de datos se publican sólo en la rama técnica y se conservan fallos actuales e historial acotado. Sin credenciales, guiones privados, IDs de Sheets, clientes, destinatarios o contenido real.
 - Cadencias de GitHub son declaradas y pueden retrasarse; mostrar edad real y estado caducado. No prometer funcionamiento instantáneo por programar un cron.
 - Generar componentes/pasos del inventario vigente y dejar explícita la falta de prueba funcional para cada facultad aún no instrumentada.
+
+## CTR-HORARIOS-NUBE
+
+- Componentes: SYS-YOD-OS, SYS-CONTROL, SYS-POTENCIALES, SYS-SALA, GAS-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-ACTIONS, EXT-RENDER, SVC-AUTON-CLOUD, SVC-HORARIOS-CLOUD, STORE-HORARIOS-CLOUD.
+- Evidencia: Propuesta autorizada de prioridad1. Servicio Render existente; workflows existentes de Sala y monitor Portal; consentimiento de GitHub App separado de publicación de código..
+- Entrada/campos: `Horarios fijos UTC−7, workflows y repositorios allowlisted; estado activo, jobs de producción y recibos.`, `Configuración de GitHub App en el volumen privado, cifrada con clave del servidor; nunca credenciales de sesión de suscripción.`.
+- Salida: Informe técnico público sanitizado con pruebas nuevas y vigencia original de comprobaciones antiguas., Despacho correlacionado sólo de una ejecución actual omitida; reserva durable antes de POST, reconciliación después; sin repetir un POST incierto., Instalador web de GitHub App que exige consentimiento personal de la organización y exactamente los repositorios de Sala y Portal..
+
+- Un solo vigilante para todo el servicio, también con varios casos; sin nuevos servidores ni bucles de modelos.
+- Las rutas permitidas son sólo los horarios autorizados de Sala y su vigilancia. Nunca reactivar workflows deshabilitados, gestores retirados, metas históricas, decisiones, pagos o envíos.
+- Job correcto acredita su ejecución y sus verificaciones; dispatch204 sólo registra solicitud, no ejecución o éxito. Un simulacro no da prueba de producción.
+- Una reserva aceptada/incierta se reconcilia antes de cualquier nuevo despacho. Reinicio no autoriza repetir efectos externos. Recuperar como máximo la última oportunidad vigente, sin acumular todas las omitidas.
+- Caducidad por prueba; generar un informe nuevo no renueva datos anteriores. Render caído, disco fallido, rate-limit o permisos ausentes dejan estado pendiente/fallido visible.
+- App privada de propietario esperado, permisos mínimos Actionswrite/Contentsread y sólo dos repositorios. Llave cifrada, nunca en Git/logs/cliente; creación e instalación personales en GitHub.
+- APIs sólo se llaman a destinos exactos previstos; cuerpos, errores y secretos no se reflejan en el informe o logs públicos.

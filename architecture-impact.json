@@ -1,13 +1,12 @@
 {
-  "model_revision": "2026-10-11.hairline-expediente",
+  "model_revision": "2026-10-11.hairline-elecciones",
   "proposal_id": "CHG-DESPACHO-HAIRLINE-20261011",
-  "summary": "Bandeja Hairline para seleccionar las fuentes autorizadas del expediente. Usa documentos validados del caso vigente, sin nuevas consultas ni escrituras. Lista accesible y paginada; sin inferir lectura ni versión. Vista de demostración sólo sintética.",
+  "summary": "Instalar las once metáforas Hairline elegidas en los accesos existentes del puesto: círculo, herramientas y documentos. Conservar contratos, etiquetas, permisos y acciones; las tres alternativas descartadas permanecen sin cambiar.",
   "components": [
     "SYS-DESPACHO-3D"
   ],
   "tests": [
-    "Selección por puntero, teclado y toque; enlace autorizado, vacío, más de ocho fuentes, limpieza al cambiar de caso y movimiento reducido.",
-    "Verificaciones completas del portal y capturas escritorio/móvil con datos sintéticos."
+    "Verificaciones completas del portal; navegador sintético de círculo, navegación, documentos, movimiento reducido y desmontaje."
   ],
   "rollback": "Revertir el PR; vuelve el listado de fuentes y se conservan registros y contratos."
 }

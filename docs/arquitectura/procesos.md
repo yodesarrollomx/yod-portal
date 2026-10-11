@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.hairline-expediente · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.hairline-elecciones · 2026-10-11.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
