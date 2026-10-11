@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-11.sala-cierre-online
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-11.masterbroker-preevaluation-published
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -231,7 +231,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PORTERO-CORCHO-STORE · GAS-PORTERO → STORE-DESPACHO-CORCHO · persistencia · Provisional: CAS en Mi Corcho privado · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-PORTERO-CORCHO-DRIVE · GAS-PORTERO → EXT-DRIVE · autorizacion · Corcho: principal y ACL completos por GET · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-MOTOR-PORTERO · SVC-AUTON-CLOUD → GAS-PORTERO · api · Identidad, contexto, objetivos y cola autorizados · Estado: codigo · Ejecución no verificada en el atlas.
-- CON-BROKER-PREEVALUATION · SYS-INVERSION → GAS-PORTERO · api · Preevaluación y retorno de terreno a cartera · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-BROKER-PREEVALUATION · SYS-INVERSION → GAS-PORTERO · api · Preevaluación y retorno de terreno a cartera · Estado: codigo · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -273,7 +273,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PORTERO-CORCHO-STORE · CHG-DESPACHO-CORCHO-PROVISIONAL-035: Integración provisional autorizada, pendiente en PR consumidores; preflight V57 no acredita despliegue del adapter. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - CON-PORTERO-CORCHO-DRIVE · CHG-DESPACHO-CORCHO-PROVISIONAL-035: Integración provisional autorizada, pendiente en PR consumidores; preflight V57 no acredita despliegue del adapter. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - [CON-MOTOR-PORTERO · Identidad, contexto, objetivos y cola autorizados · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/server.mjs · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/server.mjs)
-- CON-BROKER-PREEVALUATION · CHG-MASTERBROKER-PREEVALUATION: integración autorizada; implementación y despliegue pendientes · Estado: propuesto · Sin revisión inmutable en esta referencia
+- [CON-BROKER-PREEVALUATION · PR12 integrado: lanzamiento de un solo uso y retorno autorizado; backend v92 publicado, flujo individual comprobado con servicios sintéticos. · Estado: codigo · yodesarrollomx/yodesarrollo-board · brokers-evaluator.js · Revisión: 19fbe950af458778607f2ae0baa70b8bc7894105](https://github.com/yodesarrollomx/yodesarrollo-board/blob/19fbe950af458778607f2ae0baa70b8bc7894105/brokers-evaluator.js)
 
 **Pendientes y límites:**
 
@@ -1782,7 +1782,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-069 · SYS-INVERSION → GAS-INVERSION · api · Lee presentación y guarda diagnóstico · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-071 · SYS-INVERSION → GAS-PORTERO · autenticacion · Acceso compartido del equipo · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-075 · SYS-INVERSION → SYS-PLAN-POTENCIAL · captacion · CTA con atribución de presentación · Estado: declarado · Ejecución no verificada en el atlas.
-- CON-BROKER-PREEVALUATION · SYS-INVERSION → GAS-PORTERO · api · Preevaluación y retorno de terreno a cartera · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-BROKER-PREEVALUATION · SYS-INVERSION → GAS-PORTERO · api · Preevaluación y retorno de terreno a cartera · Estado: codigo · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -1795,7 +1795,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-069 · Acción de diagnóstico · Estado: declarado · yodesarrollomx/yodesarrollo-board · CLAUDE.md · Revisión: HEAD\_baseline
 - CON-071 · Carga del Portero · Estado: codigo · yodesarrollomx/yodesarrollo-board · index.html · Revisión: HEAD\_baseline
 - CON-075 · CTA comercial con campaña · Estado: declarado · yodesarrollomx/yodesarrollo-board · CLAUDE.md · Revisión: HEAD\_baseline
-- CON-BROKER-PREEVALUATION · CHG-MASTERBROKER-PREEVALUATION: integración autorizada; implementación y despliegue pendientes · Estado: propuesto · Sin revisión inmutable en esta referencia
+- [CON-BROKER-PREEVALUATION · PR12 integrado: lanzamiento de un solo uso y retorno autorizado; backend v92 publicado, flujo individual comprobado con servicios sintéticos. · Estado: codigo · yodesarrollomx/yodesarrollo-board · brokers-evaluator.js · Revisión: 19fbe950af458778607f2ae0baa70b8bc7894105](https://github.com/yodesarrollomx/yodesarrollo-board/blob/19fbe950af458778607f2ae0baa70b8bc7894105/brokers-evaluator.js)
 
 **Pendientes y límites:**
 
