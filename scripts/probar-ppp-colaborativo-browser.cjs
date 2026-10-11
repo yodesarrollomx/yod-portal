@@ -54,6 +54,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   });
   await page.goto(ORIGIN+'/__collab-shell');const frame=page.frames().find(f=>f.url().endsWith('/__collab'));
    async function showBoardOptions(){const options=frame.locator('.workspace-board-options');if(await options.getAttribute('open')===null)await options.locator('summary').click();}
+   async function hideBoardOptions(){const options=frame.locator('.workspace-board-options');if(await options.getAttribute('open')!==null)await options.locator('summary').click();}
   const cachedModule=await frame.evaluate(async()=>{try{await import('./__old-goals-consumer.mjs');return {failed:false};}catch(error){return {failed:true,message:error.message};}});
   assert.equal(cachedModule.failed,true,'the unversioned cache fixture must reject the new exports');
   assert.match(cachedModule.message,/does not provide an export|not exported/);
@@ -68,7 +69,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   const waitingFrame=await (await frame.locator('.workspace-board iframe').elementHandle()).contentFrame();
   await waitingFrame.evaluate(()=>{window.boardSilent=false;});
   await showBoardOptions();
-  await frame.getByRole('button',{name:'Actualizar conexión',exact:true}).click();
+  await frame.getByRole('button',{name:'Actualizar conexión',exact:true}).click();await hideBoardOptions();
   await showBoardOptions();
   await frame.locator('.workspace-ppp-summary').filter({hasText:'Lectura confirmada'}).waitFor();
   await frame.locator('.workspace-board-options summary').click();
@@ -89,7 +90,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await ppp.evaluate(()=>window.confirmDraft());await showBoardOptions();await frame.locator('.workspace-ppp-summary').filter({hasText:'Lectura confirmada'}).waitFor();await frame.locator('.workspace-board-options summary').click();
   proposals=[{request_id:'board-synthetic-1',case_id:CASE,scenario_id:'scenario-1',revision:'r1',motivo:'Comparar superficie alternativa',cambios:[{campo:'inTerrenoM2',label:'Superficie',antes:120,valor:150}]}];
   await showBoardOptions();
-  await frame.getByRole('button',{name:'Actualizar conexión',exact:true}).click();
+  await frame.getByRole('button',{name:'Actualizar conexión',exact:true}).click();await hideBoardOptions();
   await frame.getByRole('button',{name:'Aplicar en el tablero',exact:true}).waitFor();
   await frame.getByRole('button',{name:'Aplicar en el tablero',exact:true}).click();
   await frame.getByRole('button',{name:'Aplicando…',exact:true}).waitFor();
@@ -116,7 +117,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   assert.deepEqual(await ppp.evaluate(()=>window.receiptAcks),[{request_id:'board-synthetic-1',revision:'r2'}]);
   // Explicit conversation intent dispatches without the user clicking Apply.
   proposals=[{request_id:'board-voice-2',case_id:CASE,scenario_id:'scenario-1',revision:'r2',motivo:'Corrige superficie',apply_requested_at:new Date().toISOString(),apply_expires_at:new Date(Date.now()+120000).toISOString(),cambios:[{campo:'inTerrenoM2',label:'Superficie',antes:150,valor:644}]}];
-  await frame.getByRole('button',{name:'Actualizar conexión',exact:true}).click();
+  await showBoardOptions();await frame.getByRole('button',{name:'Actualizar conexión',exact:true}).click();await hideBoardOptions();
   await frame.getByRole('button',{name:'Aplicando…',exact:true}).waitFor();
   await ppp.waitForFunction(()=>window.applies===2);
   assert.equal(await ppp.evaluate(()=>window.applies),2);
