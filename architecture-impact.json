@@ -1,12 +1,13 @@
 {
   "model_revision": "2026-10-11.despacho-fluido132",
   "proposal_id": "CHG-DESPACHO-FLUIDEZ-20261011",
-  "summary": "Dirección autoriza reorganizar la interacción como oficina de estrategia: selección, cuatro direcciones y puesto con PPP visible mientras conversa. Conservar todas las capacidades, identidades y contratos. Corregir estados de lectura, reducir cabeceras y separar ruta guardada, actividad y evidencia. Revisar sólo la entrega exacta mostrada, sin aprobar por actualización silenciosa ni crear encargos al abrir. No reactivar automatizaciones canceladas ni ampliar APIs, permisos o backend.",
+  "summary": "Dirección autoriza reorganizar la interacción como oficina de estrategia: selección, cuatro direcciones y puesto con PPP visible mientras conversa. Conservar todas las capacidades, identidades y contratos. Corregir estados de lectura, reducir cabeceras y separar ruta guardada, actividad y evidencia. Revisar sólo la entrega exacta mostrada, sin aprobar por actualización silenciosa ni crear encargos al abrir. No reactivar automatizaciones canceladas ni ampliar APIs, permisos o backend. La prueba compartida de chinches conserva la revisión de Sala y abre explícitamente el desplegable de movimiento.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "SYS-DESPACHO-3D",
-    "GAS-PORTERO"
+    "GAS-PORTERO",
+    "SYS-SALA"
   ],
   "tests": [
     "Suite completa y verificadores de arquitectura, OS, Portal, Accesos y Obra mediante Actions.",

@@ -156,13 +156,13 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   const routeCard=el('article',undefined,'workspace-card workspace-route-card');
   routeCard.append(el('small',view.label),el('h2',view.next),el('p',view.why));
   if(route?.goal){const prepared=route.goal.tasks.filter(t=>t.status==='ready_for_review').length,total=route.goal.tasks.length;
-   routeCard.append(el('small',(total?prepared+' de '+total+' tareas preparadas para revisión · ':'')+'Último registro: '+new Date(route.goal.updated_at).toLocaleString()));
+   routeCard.append(el('small',(total?prepared+' de '+total+' tareas preparadas para revisión · ':'')+'Último registro: '+new Date(route.goal.updated_at).toLocaleString()));if(total){const progress=el('progress');progress.max=total;progress.value=prepared;progress.setAttribute('aria-label',prepared+' de '+total+' tareas preparadas para revisión');progress.className='workspace-route-progress';routeCard.append(progress);}
    if(view.historical)routeCard.append(el('p','Este registro puede haber cambiado; recupera la lectura antes de decidir.'));
    if(route.goal.status==='running')routeCard.append(el('p','El estado guardado no acredita actividad en vivo. Consúltala en Trabajo actual.'));
   }
   routeDetail.append(routeCard);
   const sources=el('details',undefined,'workspace-research');sources.append(el('summary','Fuentes registradas y método'),el('p','Fuentes registradas; su presencia no acredita lectura. Método y dependencias: por definir si el encargo o las evidencias no los documentan.'));
-  if(conversation){for(const d of conversation.documents){const row=el('p');row.append(el('b',d.title+' · '),el('span',d.role||'Fuente registrada'));if(d.url){const a=el('a','Consultar fuente ↗');a.href=d.url;a.target='_blank';a.rel='noopener noreferrer';row.append(a);}sources.append(row);}if(!conversation.documents.length)sources.append(el('p','Sin fuentes registradas. Define la fuente antes de afirmar resultados.'));}
+  if(conversation){for(const d of conversation.documents){const row=el('p');row.append(el('b',d.title+' · '),el('span',d.role||'Fuente registrada'));if(d.url){const a=el('a','Consultar fuente ↗');a.dataset.focusKey='source:'+String(d.id||d.url||d.title);a.href=d.url;a.target='_blank';a.rel='noopener noreferrer';row.append(a);}sources.append(row);}if(!conversation.documents.length)sources.append(el('p','Sin fuentes registradas. Define la fuente antes de afirmar resultados.'));}
   else sources.append(el('p','Consultando las fuentes autorizadas de este proyecto…'));
   disclosure(sources,'sources-method');routeDetail.append(sources);restoreBrief();restoreRoute();
  }

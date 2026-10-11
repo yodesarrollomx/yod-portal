@@ -268,3 +268,5 @@
  .workspace-board-options>summary{font-size:10px}
  .workspace-board-options[open]{max-height:50dvh;overflow:auto}
 }
+
+.workspace-route-progress{width:100%;height:8px;display:block;margin:16px 0 8px;accent-color:#527a65}
