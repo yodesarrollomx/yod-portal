@@ -91,3 +91,23 @@ test('stop clears view and discards a delayed response from the old session',asy
  assert.equal(node.hidden,true);assert.equal(node.innerHTML,'');assert.equal(intervals.size,0);
  assert.ok(requests.every(u=>!u.includes('k=')&&!u.includes('token')));
 });
+
+test('Render receipt is accepted without a fabricated Actions run',()=>{
+ const r=report({source:'render',run_id:undefined,cycle_id:'h-00000000-0000-4000-8000-000000000001'});
+ assert.equal(Health.validReport(r),true);
+ assert.equal(Health.validReport({...r,cycle_id:'bad'}),false);
+ assert.equal(Health.validReport(report({source:'unknown'})),false);
+});
+test('independent report selection rejects a future clock and falls back when cloud is expired',()=>{
+ const github=report(),cloud=report({source:'render',run_id:undefined,cycle_id:'h-00000000-0000-4000-8000-000000000001',generado_en:new Date(now+1).toISOString()});
+ assert.equal(Health.chooseReport([github,cloud],now),github);
+ assert.equal(Health.chooseReport([github,{...cloud,generado_en:new Date(now-46*60000).toISOString()}],now),github);
+ const current={...cloud,generado_en:iso};assert.ok(Health.chooseReport([current],now)===current);
+});
+test('a fresh Render heartbeat does not renew an old business observation',()=>{
+ const r=report({source:'render',run_id:undefined,cycle_id:'h-00000000-0000-4000-8000-000000000001'});
+ const old=check({revisado_en:new Date(now-60*60000).toISOString(),vence_en:new Date(now-15*60000).toISOString()});
+ assert.notEqual(Health.color(old,r,now,true),'verde');
+ assert.equal(Health.safeEvidence('https://yod-cloud-room.onrender.com/horarios/estado.json'),'https://yod-cloud-room.onrender.com/horarios/estado.json');
+ assert.equal(Health.safeEvidence('https://yod-cloud-room.onrender.com/horarios/callback?code=secret'),'');
+});

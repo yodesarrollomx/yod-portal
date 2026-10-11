@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-10-11.horarios-render",
   "proposal_id": "CHG-HORARIOS-NUBE-20261011",
-  "summary": "Registrar vigilancia independiente en Render, reservas durables, recuperación de horarios actuales y conexión mínima de GitHub App.",
+  "summary": "Mostrar vigilancia independiente de Render en Accesos, conservar vigencias y correlacionar solicitudes de monitor.",
   "components": [
     "SYS-YOD-OS",
     "SYS-CONTROL",
@@ -28,7 +28,7 @@
     "STORE-HORARIOS-CLOUD"
   ],
   "tests": [
-    "Validación del Atlas y vistas generadas; CI completo Portal."
+    "Selección de fuente, reloj futuro, caducidad y fallo de Render con respaldo GitHub; pruebas del panel/sesión existentes y CI completo."
   ],
   "rollback": "Revertir la propuesta por PR; sin modificar registros de negocio."
 }
