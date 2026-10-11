@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.sala-cierre-verificado · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.salud-accesos · 2026-10-11.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -628,3 +628,18 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - No presentar una prueba CPU/parallax como video generativo LTX ni equivalencia visual aceptada. Todo material regenerado conserva procedencia propia y no sustituye el original.
 - Si no se acredita una facultad, se registra el pendiente exacto. No cancelar las rutinas anteriores de Claude por un diagnóstico parcial.
 - Sólo rutinas Sala declaradas en allowlist pueden habilitarse, sin PPP ni supervisores cancelados. Revisión diaria debe distinguir schedule declarado, workflow activo y última ejecución real.
+
+## CTR-SALUD-ACCESOS
+
+- Componentes: SYS-YOD-OS, SYS-CONTROL, SYS-TRACK, SYS-OBRA, SYS-OBRA-CLIENTE, SYS-POTENCIALES, GAS-PORTERO, SYS-SALA, GAS-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-ACTIONS, EXT-DRIVE, EXT-GMAIL, SYS-MARKETING, SYS-PLAN-POTENCIAL, EXT-MOTORES-MEDIA.
+- Evidencia: Modelo técnico del Atlas, superficies publicadas, API de Actions y revisión agregada de Sala; motores reales sólo con insumos sintéticos..
+- Entrada/campos: `Catálogo técnico y pasos de cada proceso con IDs existentes; configuración explícita de pruebas y caducidad.`, `Lecturas públicas allowlisted de páginas/contratos; observación de Sala con identidad agente y datos agregados, sin publicar filas o identidades.`, `Canario aislado diario de voz/escena/corte y transferencia temporal privada de Drive, sin encolar ni proponer.`.
+- Salida: Informe técnico sanitizado por prueba: estado, alcance, hora, vencimiento y enlace de evidencia. Rama de datos independiente de main., Panel Estado de los sistemas en Accesos con actualización de pantalla cada minuto y comprobación programada cada15min. Procesos manuales/pendientes visibles; no certificar operaciones comerciales por un ping., Horarios declarados en Hermosillo y última ejecución real de las rutinas de Sala..
+
+- Verde exige prueba correcta vigente; sin datos, error de lectura, reloj futuro, workflow cancelado/detenido o prueba vencida se muestran sin confirmar, con fallo o atrasados.
+- Un HTTP200/ok de API no certifica autenticación, transacción, correo recibido, pago, confirmación Calendar o todo el proceso.
+- No reactivar procesos cancelados ni cambiar usuarios, roles, claves o reglas editoriales. No usar endpoints de negocio para pruebas de escritura.
+- La sesión/epoch vigente controla montaje y respuestas del panel en Accesos; cerrar/cambiar sesión limpia y detiene el monitor.
+- Resultados de datos se publican sólo en la rama técnica y se conservan fallos actuales e historial acotado. Sin credenciales, guiones privados, IDs de Sheets, clientes, destinatarios o contenido real.
+- Cadencias de GitHub son declaradas y pueden retrasarse; mostrar edad real y estado caducado. No prometer funcionamiento instantáneo por programar un cron.
+- Generar componentes/pasos del inventario vigente y dejar explícita la falta de prueba funcional para cada facultad aún no instrumentada.
