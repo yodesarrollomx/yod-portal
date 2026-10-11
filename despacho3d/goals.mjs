@@ -105,3 +105,21 @@ export function watchGoals(controller,{visible=()=>true,interval=8000,setTimer=s
  async function tick(){if(stopped)return;if(visible()&&!controller.busy)await controller.read();if(!stopped)timer=setTimer(tick,interval);}
  void tick();return()=>{stopped=true;clearTimer(timer);};
 }
+
+export function orderedGoals(goals=[]){
+ return [...goals].sort((a,b)=>Number(['stopped','completed'].includes(a.status))-Number(['stopped','completed'].includes(b.status))||Date.parse(b.updated_at)-Date.parse(a.updated_at));
+}
+// This is a projection of saved records. It neither assigns work nor proves a worker is live.
+export function goalRoadmap(goals=[]){
+ const goal=orderedGoals(goals)[0];
+ if(!goal)return {goal:null,task:null,next:'Definir el siguiente encargo',why:'Todavía no hay una meta registrada.',mode:'empty'};
+ const task=[...(goal.tasks||[])].sort((a,b)=>Number(a.id?.slice(5))-Number(b.id?.slice(5))).find(t=>t.status!=='ready_for_review')||null;
+ let next,why,mode;
+ if(goal.status==='ready_for_review'){mode='review';next='Revisar la entrega contigo';why=goal.criterion;}
+ else if(goal.status==='completed'){mode='history';next='Definir un nuevo encargo';why='Esta entrega ya fue revisada. Se conserva como antecedente.';}
+ else if(goal.status==='stopped'){mode='stopped';next='Trabajo detenido';why=goal.summary||'Retomar requiere una instrucción explícita; abrir el puesto no reinicia esta meta.';}
+ else if(goal.status==='awaiting_data'||task?.status==='blocked'){mode='blocked';next=task?.title||'Resolver los datos o capacidades faltantes';why=task?.summary||goal.summary||task?.criterion||goal.criterion;}
+ else if(task){mode='task';next=task.title;why=task.criterion;}
+ else{mode='plan';next=goal.tasks?.length?'Conciliar y entregar el análisis':'Preparar la ruta de tareas';why=goal.criterion;}
+ return {goal,task,next,why,mode};
+}

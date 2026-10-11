@@ -4,12 +4,12 @@ import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
 import {createEntryPreparation} from './voice-preparation.mjs?v=2';
 import {residentAccessDecision} from './resident-agents.mjs?v=127';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=126';
-import {stationIdentity} from './project-station.mjs?v=121';
+import {stationIdentity} from './project-station.mjs?v=131';
 import {createLiveVoice} from './live-voice.mjs?v=130';
 import {voiceView} from './voice-view.mjs?v=2';
-import {createWorkspace} from './agent-workspace.mjs?v=129';
-import {DurableGoals,watchGoals} from './goals.mjs?v=2';
-import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=126';
+import {createWorkspace} from './agent-workspace.mjs?v=131';
+import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=131';
+import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=131';
 import {groupTranscriptFragments} from './live-transcript.mjs';
 
 const open = document.getElementById('voice-open');
@@ -94,9 +94,8 @@ if (open) {
   }});
   goalReader.subscribe(state=>{
     if(!state.model){node('voice-work').textContent=state.notice||'Consultando actividad…';return;}
-    const labels={queued:'En cola',running:'Trabajando',ready_for_review:'Para tu revisión',awaiting_data:'Faltan datos',stopped:'Detenido',completed:'Revisado'};
-    node('voice-work').replaceChildren(...state.model.goals.filter(g=>g.status!=='completed').slice(0,1).map(g=>{const p=document.createElement('p');p.textContent=g.title+' · '+labels[g.status];return p;}));
-    if(!state.model.goals.some(g=>g.status!=='completed'))node('voice-work').textContent='En espera · listo para el siguiente objetivo.';
+    const route=goalRoadmap(state.model.goals);
+    node('voice-work').textContent=route.goal?route.goal.title+' · '+goalDisplay(route.goal).label+' · '+route.next:'En espera · listo para el siguiente objetivo.';
   });
   const chat=new Conversation({transport,notify:renderChat});
   let chatTimer=null,lastChatVoicePhase='idle';const typedTurns=[];
@@ -207,7 +206,7 @@ if (open) {
       if(startVoice)void requestBegin(encounter);
       return true;
     }
-    if(!dialog.open){previousFocus=document.activeElement;present(compactOnly);}accessPaused=false;node('station-access').hidden=true;node('station-reconnect').hidden=true;dialog.querySelector('.voice-transcript-details').hidden=true;node('voice-previous').hidden=true;
+    if(!dialog.open)previousFocus=document.activeElement;present(compactOnly);accessPaused=false;node('station-access').hidden=true;node('station-reconnect').hidden=true;dialog.querySelector('.voice-transcript-details').hidden=true;node('voice-previous').hidden=true;
     const current = ++generation; selection = null; node('voice-start').disabled = true;
     node('voice-status').textContent = 'Validando tu acceso a la voz…';
     try {

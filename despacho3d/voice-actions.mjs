@@ -1,10 +1,16 @@
 import {validateSelection} from './conversation.mjs?v=126';
-import {validateGoal,validateGoals,GOAL_SCOPE} from './goals.mjs';
+import {validateGoal,validateGoals,GOAL_SCOPE,orderedGoals} from './goals.mjs?v=131';
 const definitive=new Set(['stale_revision','goal_busy','case_busy','request_id_reused','invalid_state','invalid_transition','goals_not_ready','schema_not_initialized','invalid_request','goal_not_found','unauthorized','session_changed','action_cancelled']);
 const names=new Set(['pendientes_consultar','objetivo_crear','objetivo_reanudar','objetivo_detener']);
 export function summarizeGoals(model){
- const sorted=[...model.goals].sort((a,b)=>Number(a.status==='completed')-Number(b.status==='completed')||b.sequence-a.sequence);
- return {ok:true,source_revision:model.source_revision,total:model.goals.length,goals:sorted.slice(0,12).map(g=>({goal_id:g.goal_id,title:g.title,status:g.status,summary:g.summary.slice(0,1200),tasks:g.tasks.map(t=>({id:t.id,title:t.title,status:t.status})),updated_at:g.updated_at}))};
+ const sorted=orderedGoals(model.goals),goals=[];
+ for(const g of sorted.slice(0,12)){
+  const item={goal_id:g.goal_id,title:g.title,status:g.status,summary:g.summary.slice(0,1200),
+   instruction:g.instruction.slice(0,1200),criterion:g.criterion,
+   tasks:g.tasks.map(t=>({id:t.id,title:t.title,status:t.status,criterion:t.criterion,summary:t.summary.slice(0,600)})),updated_at:g.updated_at};
+  if(JSON.stringify(goals.concat(item)).length>45000)break;goals.push(item);
+ }
+ return {ok:true,source_revision:model.source_revision,total:model.goals.length,goals};
 }
 // The cloud owns durable intents; the authenticated OS owns every canonical write.
 // Retries use the already prepared payload and never mint a new request ID.

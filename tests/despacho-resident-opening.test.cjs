@@ -37,3 +37,10 @@ test('voice that starts during revalidation or a superseding request cannot redi
  const open=createResidentOpening({getResidents:()=>r.api,getMenu:()=>r.menu,canSelect:r.canSelect}),p=open('b');
  r.setAllowed(false);finish();assert.equal(await p,false);assert.equal(r.current(),'a');assert.equal(r.opened.length,0);
 });
+
+test('clicking any authorized name opens its working station directly with the PPP, while the radial remains a separate entry',async()=>{
+ const {createResidentOpening}=await import('../despacho3d/resident-opening.mjs'),r=rig(),stations=[];
+ const open=createResidentOpening({getResidents:()=>r.api,getMenu:()=>r.menu,canSelect:r.canSelect,openStation:async id=>{assert.equal(r.current(),id);stations.push(id);return true;}});
+ for(const id of ['a','b','c','a'])assert.equal(await open(id),true);
+ assert.deepEqual(stations,['a','b','c','a']);assert.deepEqual(r.opened,[]);
+});

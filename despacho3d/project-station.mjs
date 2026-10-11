@@ -40,3 +40,12 @@ export function resolveBoard(selection,documents=[]) {
  const ppp=unique.filter(d=>d.surface==='ppp');
  return ppp.length===1?ppp[0]:ppp.length===0&&unique.length===1?unique[0]:null;
 }
+
+export function nativeBoardState(value,selection,link){
+ if(!selection||!link?.bridge||!value)return null;
+ // Map only identities from the exact registered descriptor, after the frame/nonce checks.
+ if(value.case_id!==selection.case_id&&value.case_id!==link.board_case_id)return null;
+ if(value.version_context&&value.version_context.board_case_id!==link.board_case_id)return null;
+ if(selection.ppp?.scenario_id&&value.scenario_id!==selection.ppp.scenario_id)return null;
+ return {...value,case_id:selection.case_id};
+}

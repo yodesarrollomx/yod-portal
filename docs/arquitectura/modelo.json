@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-11.despacho-precarga",
+  "revision": "2026-10-11.despacho-puesto131",
   "checked_at": "2026-10-11",
   "priorities": [
     "vender_mas",
@@ -9848,6 +9848,28 @@
       ],
       "deployment": "Código preparado en rama aislada. CI, integración, publicación Pages y despliegue del servidor pendientes; no acredita micrófono ni latencia física.",
       "rollback": "Revertir cliente y servidor; apagar preparación con YOD_RESIDENT_PREPARATION=off. Conservar datos, disco y tareas canceladas."
+    },
+    {
+      "id": "CHG-DESPACHO-PUESTO-20261011",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD",
+        "GAS-PORTERO",
+        "SYS-SALA"
+      ],
+      "proposal": "Abrir el puesto del autón desde su nombre con la misma selección autorizada; mostrar PPP junto a conversación y una ruta de trabajo derivada de las metas reales. Separar conexiones por caso y enlazar explícitamente identidad del autón con identidad del PPP registrado. Consultas de voz conservan instrucción, criterio y resumen de cada tarea. Sin reiniciar automatizaciones canceladas ni modificar resultados del negocio. El workflow compartido de chinches conserva sus pruebas de Sala y añade el recorrido del puesto.",
+      "status": "propuesto",
+      "tests": [
+        "Cambiar entre tres puestos y descartar conexiones y respuestas del caso anterior",
+        "PPP con identidad distinta: handshake, lectura y propuesta preservan revisión, nonce y fuente autorizada",
+        "Ruta de meta distingue revisión, bloqueo, historial y trabajo registrado; no inventa avance",
+        "Navegador con red interceptada: abrir por nombre, voz y PPP simultáneos, móvil y revocación",
+        "Arquitectura --check, tests/*.cjs, verify-os/portal/accesos/obra-app"
+      ],
+      "deployment": "Propuesta registrada antes de implementar. La aceptación operativa con sesión y micrófono físicos sigue separada de CI.",
+      "rollback": "Revertir frontend y los cambios de contexto/lectura de voz del backend; conservar expedientes, recibos y automatizaciones canceladas."
     }
   ],
   "data_contracts": [
@@ -12198,6 +12220,24 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/despacho-office-preparation.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-work-roadmap.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/probar-puesto-browser.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",
