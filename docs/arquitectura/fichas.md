@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.plan-agregados-online · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.plan-verificado-medios-propuestos · 2026-10-11.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -104,10 +104,10 @@ Espacio de trabajo del Masterbroker: oferta comercial, oportunidades propias, so
 Medir adquisición, citas, clientes y pauta
 
 - Tipo: tablero. Dominio: Ventas. Responsable: Comercial y marketing.
-- Evidencia: ejecucion. Producción: Código Pages y refresh en nube comprobados el 11-oct-2026:76 publicaciones reales con recibo/hash y lector HTTP correcto. Plan de Potencial incompleto: lectura automática rechazada; no se sustituyen errores por ceros..
+- Evidencia: ejecucion. Producción: Run38157069665: 76 publicaciones Meta y Plan histórico confirmado con recibo/hash/frescura; leads_medicion_caida=false. Seis registros históricos válidos, cuatro sesiones registradas, una prueba excluida y sólo una atribución campaña/pieza. Captación/pagos/Calendar y backends originales no acreditados por esta lectura..
 - Entidades: lead_agregado, cita_agregada, campaña, pieza, gasto, conversion.
 - Fuente de verdad: GAS-MARKETING y GAS-PLAN-POTENCIAL para embudos; API Meta y archivos generados para publicaciones.
-- Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L24) — Sistema presente en el catálogo canónico; [aurum-board/docs/ONLINE.md](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/docs/ONLINE.md) — PR76/77 integrados. Run 38141736288 success; rama de datos agregados y lector verifican 76 publicaciones y snapshot 409673351. Main conserva PR/CI..
+- Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L24) — Sistema presente en el catálogo canónico; [aurum-board/docs/ONLINE.md](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/docs/ONLINE.md) — PR76/77 integrados. Run 38141736288 success; rama de datos agregados y lector verifican 76 publicaciones y snapshot 409673351. Main conserva PR/CI.; [aurum-board/scripts/pull_metrics.py](https://github.com/yodesarrollomx/aurum-board/blob/e3dd428a01b01d1c8b5775c7fcca408735c98357/scripts/pull_metrics.py) — PR78 integrado; run 38157069665 success. Plan lectura confirmada con hash y frescura; leads_medicion_caida=false, 76 publicaciones Meta. El lector HTTP comprueba bytes/recibo de snapshot409795880..
 - Conexiones: CON-021 (SYS-MARKETING → GAS-MARKETING); CON-022 (SYS-MARKETING → GAS-PLAN-POTENCIAL); CON-041 (SYS-YOD-OS → SYS-MARKETING); CON-049 (SYS-MARKETING → GAS-PORTERO); CON-060 (EXT-META → SYS-MARKETING); CON-076 (GAS-PLAN-POTENCIAL → SYS-MARKETING); CON-077 (SYS-SALA-OPERACION → SYS-MARKETING); CON-PUBLICADOR-MARKETING (EXT-GITHUB-PUBLISHER-APP → SYS-MARKETING); CON-MARKETING-DATOS-ONLINE (SYS-MARKETING → EXT-ACTIONS); CON-PLAN-METRICAS-ONLINE (SYS-SALA → SYS-MARKETING).
 - Mejoras: A · Atención comercial sin leads olvidados; B · Atribución desde campaña hasta venta; K · Indicadores confiables y rendimiento medido.
 
@@ -153,10 +153,10 @@ Integrar navegación, identidad y síntesis de tableros
 Captar dueños de terreno y convertirlos a videollamada y servicio de pago
 
 - Tipo: captacion. Dominio: Ventas. Responsable: Responsable del proceso por confirmar.
-- Evidencia: declarado. Producción: No verificado en despliegue.
+- Evidencia: declarado. Producción: Lectura automática agregada confirmada; backend de captación, inventario Apps Script/Calendar/pagos por verificar..
 - Entidades: lead, folio, actividad, cita.
 - Fuente de verdad: Fuente de GitHub; despliegue y datos reales por verificar.
-- Evidencia: [plan-potencial/CLAUDE.md](https://github.com/yodesarrollomx/plan-potencial/blob/78e616f858ad593f16891d2f5158cd46d5617bc2/CLAUDE.md#L79) — Cadena comercial documentada.
+- Evidencia: [plan-potencial/CLAUDE.md](https://github.com/yodesarrollomx/plan-potencial/blob/78e616f858ad593f16891d2f5158cd46d5617bc2/CLAUDE.md#L79) — Cadena comercial documentada; [sala-edicion/nube/plan_agregados.py](https://github.com/yodesarrollomx/sala-edicion/blob/a3b6c7053b3cd26333dd06878e74bb666288ce51/nube/plan_agregados.py) — Lectura de atribución del Sheet canónico comprobada mediante worker Sala; no acredita el despliegue completo del formulario, backend, pagos o Calendar..
 - Conexiones: CON-023 (SYS-PLAN-POTENCIAL → GAS-PLAN-POTENCIAL); CON-075 (SYS-INVERSION → SYS-PLAN-POTENCIAL).
 - Mejoras: A · Atención comercial sin leads olvidados; B · Atribución desde campaña hasta venta; C · Cotización, plan y siguiente paso comercial.
 - Pendientes: Confirmación de cita depende de cruce Calendar no verificable solo con frontend.
@@ -205,10 +205,10 @@ Coordinar trámites y dependencias entre equipos de proyectos
 Proponer, decidir y producir contenido con compuertas humanas
 
 - Tipo: produccion. Dominio: Ventas. Responsable: Editores y producción.
-- Evidencia: ejecucion. Producción: Código y revisión diaria publicados y comprobados el 11-oct-2026: cola/rutinas confirmadas, recibo exacto del sitio. Ruta técnica de medios CPU comprobada; aprobaciones humanas. Apps Script original/correo y conciliación histórica pendientes..
+- Evidencia: ejecucion. Producción: Código y revisión diaria publicados; ruta de medios CPU comprobada y lectura automática agregada de Plan confirmada el11-oct-2026. Compuertas editoriales humanas. Fuentes/disparadores Apps Script originales, correo y medios históricos restantes pendientes..
 - Entidades: pieza, version, propuesta, decision, peticion, produccion, regla, motor, trabajo_cola.
 - Fuente de verdad: SHEET-SALA: propuestas, decisiones, producción, reglas, motores y cola; archivos de repositorio son superficie o respaldo.
-- Evidencia: [sala-edicion/CLAUDE.md](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/CLAUDE.md#L29) — Decisiones reservadas a editores; [sala-edicion/nube/sala_cliente.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_cliente.py#L42) — El cliente automático impide decisiones editoriales antes de la red; [sala-edicion/nube/sala_productor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_productor.py#L130) — El productor planifica compuertas de producción; [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_ejecutor.py#L48) — El ejecutor solo admite etapas habilitadas por configuración; [sala-edicion/docs/SALA-ONLINE.md](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/docs/SALA-ONLINE.md) — PR265 integrado. Revisión 38141812652 y Pages 38141874311 success; publicación exacta del snapshot 409673426 y diagnóstico agregado sin filas privadas..
+- Evidencia: [sala-edicion/CLAUDE.md](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/CLAUDE.md#L29) — Decisiones reservadas a editores; [sala-edicion/nube/sala_cliente.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_cliente.py#L42) — El cliente automático impide decisiones editoriales antes de la red; [sala-edicion/nube/sala_productor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_productor.py#L130) — El productor planifica compuertas de producción; [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_ejecutor.py#L48) — El ejecutor solo admite etapas habilitadas por configuración; [sala-edicion/docs/SALA-ONLINE.md](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/docs/SALA-ONLINE.md) — PR265 integrado. Revisión 38141812652 y Pages 38141874311 success; publicación exacta del snapshot 409673426 y diagnóstico agregado sin filas privadas.; [sala-edicion/docs/PLAN-ONLINE.md](https://github.com/yodesarrollomx/sala-edicion/blob/a3b6c7053b3cd26333dd06878e74bb666288ce51/docs/PLAN-ONLINE.md) — PR266/267/268 integrados. Run 38156397507 success: cuenta de servicio existente con permiso lector, consulta autenticada GViz sólo cuando Sheets API está deshabilitada, columnas permitidas, exclusión de prueba y publicación verificada. Fuente no modificada..
 - Conexiones: CON-031 (SYS-SALA → GAS-SALA); CON-063 (SYS-SALA → EXT-ACTIONS); CON-064 (SYS-SALA-OPERACION → SYS-SALA); CON-PUBLICADOR-SALA (EXT-GITHUB-PUBLISHER-APP → SYS-SALA); CON-SALA-SNAPSHOT-ONLINE (SYS-SALA → EXT-ACTIONS); CON-PLAN-SHEETS-ONLINE (SHEET-PLAN-POTENCIAL → SYS-SALA); CON-PLAN-METRICAS-ONLINE (SYS-SALA → SYS-MARKETING).
 - Mejoras: B · Atribución desde campaña hasta venta.
 - Pendientes: Cambios de infraestructura y documentos históricos requieren reconciliación.
@@ -452,13 +452,13 @@ Servir el contrato de Captación de Plan Potencial
 Almacenar registros del dominio ventas
 
 - Tipo: google_sheets. Dominio: Ventas. Responsable: Dueño del dato por confirmar.
-- Evidencia: ejecucion. Producción: Correspondencia de fuente y lectura por conector verificadas; operación de la cuenta de servicio y backend activo pendientes..
+- Evidencia: ejecucion. Producción: Permiso lector de la cuenta de servicio y ejecución cloud verificados: sólo columnas contractuales; no crear/modificar leads. Calidad del resto de columnas y código del backend original pendientes..
 - Entidades: lead, actividad, cita.
-- Fuente de verdad: Almacén lógico Google Sheets; correspondencia con archivo vivo por verificar.
-- Evidencia: Integración pendiente de verificar; Metadatos y encabezados de LEADS - POTENCIAL contrastados con documentación y lecturas autorizadas acotadas el11-oct-2026. Datos y ID físico omitidos del atlas; autoridad del runtime de servicio pendiente..
+- Fuente de verdad: Hoja canónica contrastada mediante metadatos, encabezados y valores acotados; identidad técnica sólo en configuración privada..
+- Evidencia: Integración pendiente de verificar; Metadatos y encabezados de LEADS - POTENCIAL contrastados con documentación y lecturas autorizadas acotadas el11-oct-2026. Datos y ID físico omitidos del atlas; autoridad del runtime de servicio pendiente.; [sala-edicion/nube/plan_agregados.py](https://github.com/yodesarrollomx/sala-edicion/blob/a3b6c7053b3cd26333dd06878e74bb666288ce51/nube/plan_agregados.py) — PR266/267/268 integrados. Run 38156397507 success: cuenta de servicio existente con permiso lector, consulta autenticada GViz sólo cuando Sheets API está deshabilitada, columnas permitidas, exclusión de prueba y publicación verificada. Fuente no modificada..
 - Conexiones: CON-006 (GAS-PLAN-POTENCIAL → SHEET-PLAN-POTENCIAL); CON-PLAN-SHEETS-ONLINE (SHEET-PLAN-POTENCIAL → SYS-SALA).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
-- Pendientes: Esquema y calidad de datos vivos no inspeccionados.
+- Pendientes: Verificación limitada a columnas contractuales; no acredita calidad de campos privados no leídos ni confirmación independiente de Calendar..
 
 ## GAS-CROKISS · Guardado de planos
 
@@ -651,7 +651,7 @@ Servir el contrato de Sala de Edición
 - Entidades: propuesta, decision, produccion.
 - Fuente de verdad: gas/Code.gs es fuente versionada; no se comprobó igualdad con versión desplegada.
 - Evidencia: [sala-edicion/gas/Code.gs](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/gas/Code.gs#L713) — Tipo de fuente disponible: fuente_repositorio_despliegue_no_verificado; [sala-edicion/gas/Code.gs](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/gas/Code.gs#L962) — Ruta de decisión editorial en el backend versionado; [sala-edicion/gas/Code.gs](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/gas/Code.gs#L27) — Esquemas de tablas de Sala.
-- Conexiones: CON-014 (GAS-SALA → SHEET-SALA); CON-031 (SYS-SALA → GAS-SALA); CON-080 (SVC-SALA-PRODUCTOR → GAS-SALA); CON-082 (SVC-SALA-EJECUTOR → GAS-SALA); CON-085 (GAS-SALA → GAS-PORTERO); CON-086 (GAS-SALA → GAS-PORTERO-RESPALDO).
+- Conexiones: CON-014 (GAS-SALA → SHEET-SALA); CON-031 (SYS-SALA → GAS-SALA); CON-080 (SVC-SALA-PRODUCTOR → GAS-SALA); CON-082 (SVC-SALA-EJECUTOR → GAS-SALA); CON-085 (GAS-SALA → GAS-PORTERO); CON-086 (GAS-SALA → GAS-PORTERO-RESPALDO); CON-SALA-RECONEXION-MEDIOS (SVC-SALA-EJECUTOR → GAS-SALA).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Código desplegado y permisos reales no contrastados.
 
@@ -893,7 +893,7 @@ Procesar trabajos habilitados y subir resultados
 - Entidades: trabajo, pieza, version.
 - Fuente de verdad: Configuración de reglas/motores y código de ejecución; ejecución viva pendiente.
 - Evidencia: [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_ejecutor.py#L88) — Procesar trabajos habilitados y subir resultados; [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/nube/sala_ejecutor.py) — PR265 conserva compuertas, aprobaciones y procedencia; Modal default 0 y CPU de respaldo. CI completo acreditado..
-- Conexiones: CON-081 (EXT-ACTIONS → SVC-SALA-EJECUTOR); CON-082 (SVC-SALA-EJECUTOR → GAS-SALA); CON-083 (SVC-SALA-EJECUTOR → EXT-MOTORES-MEDIA); CON-084 (SVC-SALA-EJECUTOR → EXT-DRIVE).
+- Conexiones: CON-081 (EXT-ACTIONS → SVC-SALA-EJECUTOR); CON-082 (SVC-SALA-EJECUTOR → GAS-SALA); CON-083 (SVC-SALA-EJECUTOR → EXT-MOTORES-MEDIA); CON-084 (SVC-SALA-EJECUTOR → EXT-DRIVE); CON-SALA-RECONEXION-MEDIOS (SVC-SALA-EJECUTOR → GAS-SALA).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Uso efectivo, configuración y costo en producción no comprobados.
 

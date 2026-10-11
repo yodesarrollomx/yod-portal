@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.plan-agregados-online · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.plan-verificado-medios-propuestos · 2026-10-11.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -598,3 +598,17 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Sólo agregados de UTM permitidos sin PII; el recibo vincula hash del archivo exacto. Una respuesta HTTP200 sin contrato no acredita lectura.
 - Configuración en Drive privado no incluye llaves de cuenta de servicio o OAuth. Las credenciales sólo se usan en su runtime autorizado.
 - Cambios de código pasan por PR y CI; pin de arquitectura aprobado antes de integrar consumidores. No sustituir fuentes activas desconocidas por espejos.
+
+## CTR-SALA-RECONECTAR-MEDIOS
+
+- Componentes: SYS-YOD-OS, SYS-SALA, GAS-SALA, SHEET-SALA, SVC-SALA-EJECUTOR, EXT-ACTIONS, EXT-DRIVE.
+- Evidencia: Informe de recuperación privado, archivos originales recuperados y COLA viva; ningún ID físico o referencia de pieza en el atlas..
+- Entrada/campos: `Instrucción privada exacta de dos recuperaciones originales con identidad de trabajo, referencia anterior/nueva, MD5, SHA256 y tamaño.`, `Lectura de COLA con identidad agente existente y archivos Drive con cuenta de servicio actual; configuración privada sin credenciales.`.
+- Salida: Misma fila y mismos campos operativos; sólo referencia de archivo y procedencia técnica en evidencia., Acuse privado con antes/después y hash de archivos, lectura posterior acreditada. Resumen público sólo conteos/error tipificado..
+
+- Nunca escribir estado, motor, prioridad, bloqueado_por, piezas, decisiones, propuestas o registros nuevos.
+- Archivo recuperado debe coincidir exactamente con MD5 de evidencia original y hashes/tamaño del informe; sin sustitución por regeneración.
+- Fila única y evidencia JSON dict; si falta o no coincide, detener sin escribir esa fila.
+- Releer antes de actualizar y abortar ante cambios; API heredada no ofrece CAS atómico, por lo que no afirmar una transacción global ni sobrescribir un cambio detectado.
+- Actualización idempotente: si el archivo ya está reconectado con mismo hash, sólo verificar y no reescribir.
+- Archivo/informe/acuse quedan privados; errores no publican cuerpos, nombres privados, IDs, tokens o contenidos del audio.

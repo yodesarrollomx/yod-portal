@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-11.plan-agregados-online",
+  "model_revision": "2026-10-11.plan-verificado-medios-propuestos",
   "proposal_id": "CHG-PLAN-AGREGADOS-ONLINE-20261011",
-  "summary": "Por autorización de Dirección: resolver la lectura automática de atribución de Plan mediante lectura acotada de su hoja canónica con la cuenta de servicio ya usada por Sala y permiso sólo lector. Configuración sin credenciales en documento privado de Drive. Sala publica únicamente agregados de campaña/pieza con SHA256 en su recibo; Marketing consulta esa versión confirmada y conserva el último dato si hay rechazo, retraso o contrato incompleto. No cambia el formulario, el backend de captación, permisos del Portero, gastos, estados del CRM ni decisiones editoriales.",
+  "summary": "Registrar publicación real de Plan y consumidor Marketing; proponer por separado reconexión limitada de dos voces originales recuperadas. Mantener explícitos los vacíos de Apps Script/correo/medios no localizados.",
   "components": [
     "SYS-YOD-OS",
     "SYS-SALA",
@@ -16,10 +16,11 @@
     "EXT-DRIVE"
   ],
   "tests": [
-    "Lectura real y privada de metadatos/encabezados confirma correspondencia con la hoja canónica; comprobar por separado la autoridad del servicio.",
-    "Dobles: lectura por columnas permitidas, cabeceras exactas, folios duplicados/rechazados, pruebas excluidas y cita sólo con confirmación registrada; sin PII o IDs privados en el DTO.",
-    "Snapshot/recibo: hash exacto del archivo de agregados; consumidor rechaza recibos incompletos, corruptos o desactualizados y conserva último dato acreditado.",
-    "Regresiones completas de Sala y leads/publicación Marketing; arquitectura central y CI obligatorios; ninguna escritura de prueba en hojas/CRM."
+    "Sala suite completa144 y Marketing consumidor17 pruebas pasan mediante CI normal; regresiones6 de leads,26 de snapshots y20 de publicador permanecen.",
+    "PR266/267/268 Sala y PR78 Marketing pasan verificadores obligatorios y se integran con arquitectura aprobada16390c54873393d590793a4407cf05dbcd2f2bb1.",
+    "Permiso de servicio reader leído de vuelta; fuente de producción únicamente GET. REST detecta SERVICE_DISABLED; GViz autenticado devuelve sólo columnas permitidas. Sin credenciales en URL.",
+    "Run38156397507 y Pages38156497145 success; byte/hash/recibo exactos. Run38157069665 success y LECTOR_ONLINE confirma snapshot409795880/76 publicaciones.",
+    "Plan histórico:6 registros válidos,4 sesiones con estado/fecha,1 prueba excluida; 1grupo UTM con1lead/1sesión y5 registros sin campaña. No nuevos leads del día ni verificación independiente Calendar."
   ],
   "rollback": "Revertir PR de lectura y consumidor; mantener los últimos snapshots confirmados y las hojas intactas. Retirar sólo el permiso lector específico si se añadió para esta ruta; no borrar CRM, medios o historial."
 }
