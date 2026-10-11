@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-10.133-masterbroker-rows",
+  "revision": "2026-10-10.c5-recovery-wait",
   "checked_at": "2026-10-09",
   "priorities": [
     "vender_mas",
@@ -9794,6 +9794,26 @@
       ],
       "rollback": "Revertir PR de interfaz; no migrar, borrar ni modificar datos del CRM.",
       "deployment": "Implementación propuesta. Publicación y lectura autenticada pendientes de comprobación."
+    },
+    {
+      "id": "CHG-DESPACHO-RECOVERY-WAIT-C5",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD",
+        "STORE-AUTON-ESTADO"
+      ],
+      "proposal": "Compatibilidad del observador con la espera de recuperación del servidor: reconocer waiting_recovery y explicar recovery_lease_wait; conservar registro anterior e historial, sin presentarlos como avance nuevo, uso de herramientas o captura actual. Cambia sólo representación y validación; no reanuda objetivos, cambia permisos ni aprueba entregas.",
+      "status": "propuesto",
+      "tests": [
+        "Servicio en working pasa a waiting_recovery y vuelve sin descartar datos ni estado de autorización",
+        "La vista conserva el registro anterior y su fecha sin atribuir ejecución presente",
+        "El avatar y la pantalla muestran espera sin progreso o captura antiguos como actividad actual",
+        "Arquitectura --check, tests/*.cjs y verify-os/portal/accesos/obra-app; publicación se verifica aparte"
+      ],
+      "deployment": "Preparación documental previa al código. Backend y consumidor requieren publicación coordinada; aceptación operativa no acreditada.",
+      "rollback": "Revertir consumidor sólo después de retirar la nueva fase del backend; conservar expedientes, registros y disco."
     }
   ],
   "data_contracts": [

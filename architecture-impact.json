@@ -1,22 +1,19 @@
 {
-  "model_revision": "2026-10-10.133-masterbroker-rows",
-  "proposal_id": "CHG-MASTERBROKERS-133",
-  "summary": "Control Masterbrokers dentro de YOD OS con tabla de expedientes y registros relacionados en un solo renglón.",
+  "model_revision": "2026-10-10.c5-recovery-wait",
+  "proposal_id": "CHG-DESPACHO-RECOVERY-WAIT-C5",
+  "summary": "Mostrar la espera real de recuperación sin perder el último registro ni inventar actividad.",
   "components": [
-    "SYS-INVERSION",
-    "GAS-INVERSION",
-    "SHEET-INVERSION",
-    "GAS-CRM",
-    "SHEET-CRM",
     "SYS-YOD-OS",
-    "GAS-PORTERO",
-    "SYS-POTENCIALES"
+    "SYS-DESPACHO",
+    "SYS-DESPACHO-3D",
+    "SVC-AUTON-CLOUD",
+    "STORE-AUTON-ESTADO"
   ],
   "tests": [
-    "Agrupación determinista por ID, sin fusionar personas o terrenos por nombre; búsqueda conserva contexto del grupo",
-    "Un renglón por expediente, contacto debajo, actividad real y apertura del historial; escritorio y móvil",
-    "Vista previa sin guardado, gestión con actor real y alcance después del ACK; contratos y autorización existentes",
-    "Verificaciones del atlas y portal; comprobación de publicación separada de lectura autenticada"
+    "Servicio en working pasa a waiting_recovery y vuelve sin descartar datos ni estado de autorización",
+    "La vista conserva el registro anterior y su fecha sin atribuir ejecución presente",
+    "El avatar y la pantalla muestran espera sin progreso o captura antiguos como actividad actual",
+    "Arquitectura --check, tests/*.cjs y verify-os/portal/accesos/obra-app; publicación se verifica aparte"
   ],
-  "rollback": "Revertir PR de interfaz; no migrar, borrar ni modificar datos del CRM."
+  "rollback": "Volver primero al backend anterior; después revertir consumidor. No tocar datos, permisos ni estado operativo."
 }
