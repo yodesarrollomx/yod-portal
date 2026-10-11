@@ -6,7 +6,7 @@ let fallback=false;
 try{await import('./office.js?v=129');}catch{fallback=true;}
 if(OFICINA_LEGIBLE||fallback){
  document.body.classList.add('office-readable');
- const {startAccessibleOffice,mountAccessibleView}=await import('./office-accessible.mjs?v=126');
+ const {startAccessibleOffice,mountAccessibleView}=await import('./office-accessible.mjs?v=132');
  if(fallback){
   const api=startAccessibleOffice({onPanelOpened:zone=>chinches.bindPanel(zone)});
   chinches.configure({readView:()=>({position:null,quaternion:null,fov:null,mode:'map'}),readZone:()=>api.getState().selected,closeSheets:api.closeSheets});

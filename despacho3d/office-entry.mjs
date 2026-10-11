@@ -27,8 +27,8 @@ export function mountOfficeEntry({win=window,doc=document}={}){
   status.textContent=view.ready&&!operable?'Abriendo puesto…':view.status;detail.textContent=view.detail;detail.hidden=!view.detail;
   host.dataset.caseId=view.caseId||'';host.dataset.ready=String(view.ready);
   trigger.disabled=!operable;trigger.querySelector('.case-number').textContent=view.ready?view.name:'Proyecto';
-  trigger.querySelector('[data-entry-action]').textContent=view.ready?'Abrir puesto':resident?.snapshot?.()?.phase==='unauthorized'?'Acceso pendiente':'Validando acceso';
-  trigger.setAttribute('aria-label',view.ready?'Abrir puesto de '+view.name:'Proyecto no disponible mientras se valida el acceso');
+  trigger.querySelector('[data-entry-action]').textContent=view.ready?'Opciones del autón':resident?.snapshot?.()?.phase==='unauthorized'?'Acceso pendiente':'Validando acceso';
+  trigger.setAttribute('aria-label',view.ready?'Opciones de '+view.name:'Proyecto no disponible mientras se valida el acceso');
  }
  function open(){
   const selection=resident?.getSelection?.();if(!selection)return false;

@@ -1,6 +1,7 @@
+import {mountResidentDock} from './resident-dock.mjs?v=132';
 import {createOfficePreparation} from './office-preparation.mjs?v=1';
-import {mountAgentMenu} from './agent-menu.mjs?v=131';
-import {createResidentOpening} from './resident-opening.mjs?v=131';
+import {mountAgentMenu} from './agent-menu.mjs?v=132';
+import {createResidentOpening} from './resident-opening.mjs?v=132';
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
 import {createAuthorizedCases} from './authorized-cases.mjs?v=130';
 import {createFrameTransport} from './conversation.mjs?v=126';
@@ -54,7 +55,7 @@ if(host){
   window.addEventListener('pagehide',()=>{clearInterval(catalogTimer);authorized.dispose();});
  }
  api.openForCase=createResidentOpening({getResidents:()=>api,getMenu:()=>window.YodAgentMenu,beforeOpen:()=>window.despacho?.closeSheets?.(false),canSelect:()=>['idle','error'].includes(voicePhase),openStation:async id=>window.YodVoiceWorkspace?.openForCase(id,'ppp')||false});
- window.YodResidentAgents=api;mountAgentMenu();
+ window.YodResidentAgents=api;mountAgentMenu();mountResidentDock();
  window.dispatchEvent(new CustomEvent('yod-residents-ready',{detail:null}));
  talk.onclick=()=>document.getElementById('voice-open')?.click();
  write.onclick=()=>window.CubefarmYOD?.open('chat');

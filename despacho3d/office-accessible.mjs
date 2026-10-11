@@ -100,7 +100,7 @@ export function mountAccessibleView(api){
  const visitor=svgEl('circle',{r:'.24',class:'office-visitor'}),agent=svgEl('circle',{r:'.3',class:'office-agent'});svg.append(visitor,agent);root.append(svg);
  root.append(el('p','Azul: tu vista · Dorado: agente · Gris: muebles y paredes',{class:'office-map-legend'}));
  const roster=el('section','',{class:'office-map-residents','aria-label':'Autónomos autorizados'}),rosterNames=el('div','',{class:'office-map-resident-list'}),rosterNotice=el('p','',{role:'status','aria-live':'polite'});
- roster.append(el('h2','Autónomos'),rosterNames,rosterNotice);root.append(roster);
+ roster.append(el('h2','Elige con quién trabajar'),rosterNames,rosterNotice);root.insertBefore(roster,reason);
  let rosterKey='';
  const casePicker=createOfficeCasePicker({getResidents:()=>window.YodResidentAgents,openCase:id=>{
   if(window.YodResidentAgents?.getSelection?.()?.case_id!==id)return false;
@@ -132,7 +132,7 @@ export function mountAccessibleView(api){
  const home=el('button','Que el agente vuelva a su puesto',{type:'button','data-agent-destination':'inicio'});home.onclick=()=>{
   if(!authorized((window.YodResidentAgents||window.CubefarmYOD)?.getProfile?.()))return;
   result.textContent=api.agenteIr?.('inicio')?'Regreso iniciado. Esperando llegada.':'No se pudo iniciar el regreso.';paint();
- };root.append(home,controls);document.getElementById('workspace').append(root);
+ };const movement=el('details','',{class:'office-map-movement'});movement.append(el('summary','Recorrer espacios y mover al autón'),home,controls);root.append(movement);document.getElementById('workspace').append(root);
  button.setAttribute('aria-controls',root.id);button.setAttribute('aria-expanded',String(!root.hidden));
  button.onclick=()=>{api.closeSheets(false);root.hidden=false;button.setAttribute('aria-expanded','true');paint();};
  const mark=(node,p)=>{node.style.display=p?'':'none';if(p){node.setAttribute('cx',p[0]);node.setAttribute('cy',p[1]);}};
@@ -143,9 +143,9 @@ export function mountAccessibleView(api){
   mark(visitor,camera);mark(agent,has?a.position:null);
   root.setAttribute('data-renderer',api.view);root.setAttribute('data-selected',s.selected);
   root.setAttribute('data-agent-motion',has?a.motion:'unavailable');root.setAttribute('data-agent-place',has?(a.place||''):'');root.setAttribute('data-agent-destination',has?(a.destination||''):'');
-  const v='Tu vista: '+(s.mode==='overview'?'Vista general':label(s.selected))+(camera?' · x, z: '+coords(camera):'');
+  const v='Tu vista: '+(s.mode==='overview'?'Vista general':label(s.selected));
   const name=typeof p?.name==='string'?p.name:'Agente del caso';
-  const t=!has?'Agente sin perfil autorizado. Entra desde El Despacho en YOD OS para validar tu acceso.':name+': '+(a.motion==='walk'?'En camino a '+label(a.destination):'Llegada confirmada · '+label(a.place))+' · x, z: '+coords(a.position);
+  const t=!has?'Agente sin perfil autorizado. Entra desde El Despacho en YOD OS para validar tu acceso.':name+': '+(a.motion==='walk'?'En camino a '+label(a.destination):'Llegada confirmada · '+label(a.place));
   const key=v+'\n'+t;if(key!==fingerprint){visitorText.textContent=v;agentText.textContent=t;fingerprint=key;}
   root.querySelectorAll('[data-agent-destination]').forEach(n=>{n.disabled=!has||typeof api.agenteIr!=='function';});
  }

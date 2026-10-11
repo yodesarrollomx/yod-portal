@@ -4,12 +4,12 @@ import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
 import {createEntryPreparation} from './voice-preparation.mjs?v=2';
 import {residentAccessDecision} from './resident-agents.mjs?v=127';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=126';
-import {stationIdentity} from './project-station.mjs?v=131';
+import {stationIdentity} from './project-station.mjs?v=132';
 import {createLiveVoice} from './live-voice.mjs?v=130';
 import {voiceView} from './voice-view.mjs?v=2';
-import {createWorkspace} from './agent-workspace.mjs?v=131';
-import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=131';
-import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=131';
+import {createWorkspace} from './agent-workspace.mjs?v=132';
+import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=132';
+import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=132';
 import {groupTranscriptFragments} from './live-transcript.mjs';
 
 const open = document.getElementById('voice-open');
@@ -56,7 +56,7 @@ if (open) {
   activityDetails.append(activitySummary,activityCard);
   const chatPanel=sidebar.querySelector('.station-chat'),chatForm=sidebar.querySelector('#station-message-form');
   chatPanel.insertBefore(sidebar.querySelector('.voice-transcript-details'),chatForm);
-  chatPanel.open=window.matchMedia?.('(min-width:851px)').matches===true;
+  chatPanel.open=false;
   chatPanel.append(activityDetails);
   voiceCard.append(sidebar.querySelector('#voice-save'),sidebar.querySelector('#voice-previous'));
   const node = id => dialog.querySelector('#' + id);
@@ -83,7 +83,7 @@ if (open) {
     }
     return false;
   }
-  const workspace=createWorkspace({container:workspaceHost,transport,getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision,selection?.case_id);},onPresent:presentMeetingSlide});
+  const workspace=createWorkspace({container:workspaceHost,transport,onDiscuss:value=>{if(accessPaused||selection?.case_id!==value.case_id)return;chatPanel.open=true;const field=node('station-message');const draft='Sobre la entrega «'+value.title+'» (revisión '+value.revision+'): ';field.value=field.value?field.value+'\n'+draft:draft;field.focus();field.setSelectionRange(field.value.length,field.value.length);node('station-message-status').textContent='Borrador para discutir la entrega. Todavía no se envió ni se creó un encargo.';},getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision,selection?.case_id);},onPresent:presentMeetingSlide});
   window.YodVoiceWorkspace={isOpen:()=>dialog.open&&!compactVoice,openForCase,prepareNearby:caseId=>{const s=window.YodResidentAgents?.getSelection?.();if(s?.case_id===caseId&&s.can_enqueue&&!active(voice.snapshot()))void voice.prepare(caseId,{connection:true});},releaseNearby:()=>{/* Entry preparation remains warm outside the approach radius. */},pauseEncounter:caseId=>{if(encounterCase===caseId&&voice.snapshot().phase==='listening'&&!voice.snapshot().muted){encounterPaused=true;voice.mute();}},show:tab=>{openBoard(tab);workspaceHost.scrollIntoView({block:'nearest'});}};
   window.dispatchEvent(new CustomEvent('yod-voice-workspace-ready'));
   let stopWatching=null,encounterCase=null,encounterPaused=false,micGrantedInPage=false,encounterNeedsMic=false;
