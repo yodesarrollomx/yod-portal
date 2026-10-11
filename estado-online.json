@@ -1,0 +1,1258 @@
+{
+  "schema": 1,
+  "generado_en": "2026-10-11T19:57:07.703Z",
+  "zona_horaria": "America/Hermosillo",
+  "code_sha": "bd177ce9b1c42bfc235de13226b6ee47f2248be8",
+  "run_id": "38170147540",
+  "model_revision": "2026-10-11.salud-accesos",
+  "checks": [
+    {
+      "id": "pagina:SYS-YOD-OS",
+      "nombre": "YOD OS · página",
+      "components": [
+        "SYS-YOD-OS"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/yod-portal/os/"
+    },
+    {
+      "id": "pagina:SYS-POTENCIALES",
+      "nombre": "PPP · página",
+      "components": [
+        "SYS-POTENCIALES"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/potenciales-yod/"
+    },
+    {
+      "id": "pagina:SYS-DESPACHO",
+      "nombre": "Despacho · página",
+      "components": [
+        "SYS-DESPACHO"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/yod-despacho/"
+    },
+    {
+      "id": "pagina:SYS-TRACK",
+      "nombre": "Codesarrollos · página",
+      "components": [
+        "SYS-TRACK"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/yod-portal/track-codesarrollos.html"
+    },
+    {
+      "id": "pagina:SYS-MIRAMAR",
+      "nombre": "Real de Miramar · página",
+      "components": [
+        "SYS-MIRAMAR"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/real-miramar-board/"
+    },
+    {
+      "id": "pagina:SYS-TAREAS",
+      "nombre": "MOAC · página",
+      "components": [
+        "SYS-TAREAS"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/board-aurum/"
+    },
+    {
+      "id": "pagina:SYS-FLUJO",
+      "nombre": "Flujo · página",
+      "components": [
+        "SYS-FLUJO"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/board-flujo-yod/"
+    },
+    {
+      "id": "pagina:SYS-INTERIORES",
+      "nombre": "AURUM · página",
+      "components": [
+        "SYS-INTERIORES"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/interiores-aurum/"
+    },
+    {
+      "id": "pagina:SYS-INVERSION",
+      "nombre": "Masterbrokers · página",
+      "components": [
+        "SYS-INVERSION"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/yodesarrollo-board/brokers.html"
+    },
+    {
+      "id": "pagina:SYS-MARKETING",
+      "nombre": "Embudo comercial · página",
+      "components": [
+        "SYS-MARKETING"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/aurum-board/"
+    },
+    {
+      "id": "pagina:SYS-OBRA",
+      "nombre": "Obra en vivo · página",
+      "components": [
+        "SYS-OBRA"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/yod-portal/obra.html"
+    },
+    {
+      "id": "pagina:SYS-SALA",
+      "nombre": "Sala de Edición · página",
+      "components": [
+        "SYS-SALA"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/sala-edicion/"
+    },
+    {
+      "id": "pagina:SYS-PLAN-POTENCIAL",
+      "nombre": "Plan de Potencial · página",
+      "components": [
+        "SYS-PLAN-POTENCIAL"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/plan-potencial/"
+    },
+    {
+      "id": "pagina:SYS-CROKISS",
+      "nombre": "CroKiss · página",
+      "components": [
+        "SYS-CROKISS"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/crokiss/"
+    },
+    {
+      "id": "pagina:SYS-CODES-PORTAL",
+      "nombre": "Portal de codesarrolladores · página",
+      "components": [
+        "SYS-CODES-PORTAL"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/Co-desarrolladores-Yod/"
+    },
+    {
+      "id": "pagina:SYS-ALQUIMIA",
+      "nombre": "Alquimia Urbana · página",
+      "components": [
+        "SYS-ALQUIMIA"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/alquimia-urbana/"
+    },
+    {
+      "id": "pagina:SYS-OBRA-CLIENTE",
+      "nombre": "Obra · cliente · página",
+      "components": [
+        "SYS-OBRA-CLIENTE"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/yod-portal/obra-app/"
+    },
+    {
+      "id": "pagina:SYS-AURUM-EXPERIENCIA",
+      "nombre": "Experiencia Aurum · página",
+      "components": [
+        "SYS-AURUM-EXPERIENCIA"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/aurum-experiencia/"
+    },
+    {
+      "id": "pagina:SYS-EMD",
+      "nombre": "Evaluación de personas · página",
+      "components": [
+        "SYS-EMD"
+      ],
+      "estado": "fallo",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "La página o su contrato HTML no se pudo comprobar",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/EMDevaluacion360/"
+    },
+    {
+      "id": "pagina:SYS-PINTARRON",
+      "nombre": "Pintarrón · página",
+      "components": [
+        "SYS-PINTARRON"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/pintarron/"
+    },
+    {
+      "id": "pagina:SYS-SITIO-ORG",
+      "nombre": "Sitio de organización · página",
+      "components": [
+        "SYS-SITIO-ORG"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/"
+    },
+    {
+      "id": "pagina:SYS-PRUEBA-DOMINIO",
+      "nombre": "Prueba de dominio · página",
+      "components": [
+        "SYS-PRUEBA-DOMINIO"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
+      "alcance": "Disponibilidad de la página",
+      "evidencia_url": "https://yodesarrollomx.github.io/prueba-dominio/"
+    },
+    {
+      "id": "portero-meta",
+      "nombre": "Portero · conexión",
+      "components": [
+        "GAS-PORTERO"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "Contrato público meta/pong; el canje de sesión y los permisos se validan en Accesos",
+      "alcance": "Respuesta del backend"
+    },
+    {
+      "id": "sala-publicacion",
+      "nombre": "Sala · versión publicada",
+      "components": [
+        "SYS-SALA"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "Recibo publicado corresponde al código vigente de main",
+      "alcance": "Versión publicada",
+      "evidencia_url": "https://yodesarrollomx.github.io/sala-edicion/version-online.json"
+    },
+    {
+      "id": "sala-lectura",
+      "nombre": "Sala · cola y reglas",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:51:32.477434+00:00",
+      "vence_en": "2026-10-11T20:36:32.477Z",
+      "detalle": "Lectura agregada del backend; no certifica escrituras editoriales",
+      "alcance": "Lectura autorizada",
+      "evidencia_url": "https://yodesarrollomx.github.io/sala-edicion/"
+    },
+    {
+      "id": "sala-etapas",
+      "nombre": "Sala · etapas en nube",
+      "components": [
+        "SVC-SALA-EJECUTOR"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:51:32.477434+00:00",
+      "vence_en": "2026-10-11T20:36:32.477Z",
+      "detalle": "Comprueba las cuatro etapas habilitadas; cada motor conserva su prueba independiente",
+      "alcance": "Configuración leída"
+    },
+    {
+      "id": "rutina:plan",
+      "nombre": "Plan · lectura agregada",
+      "components": [
+        "SYS-PLAN-POTENCIAL"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "Última ejecución de producción completada correctamente",
+      "alcance": "Ejecución de la rutina",
+      "frecuencia": "Cada hora, minuto25",
+      "ultima_ejecucion": "2026-10-11T16:43:08Z",
+      "evidencia_url": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38156397507"
+    },
+    {
+      "id": "rutina:productor",
+      "nombre": "Sala · Productor",
+      "components": [
+        "SVC-SALA-PRODUCTOR"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "Última ejecución de producción completada correctamente",
+      "alcance": "Ejecución de la rutina",
+      "frecuencia": "Cada hora, minutos10,30,50",
+      "ultima_ejecucion": "2026-10-11T19:01:54Z",
+      "evidencia_url": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38166137118"
+    },
+    {
+      "id": "rutina:ejecutor",
+      "nombre": "Sala · Ejecutor",
+      "components": [
+        "SVC-SALA-EJECUTOR"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "Última ejecución de producción completada correctamente",
+      "alcance": "Ejecución de la rutina",
+      "frecuencia": "Horas impares de Hermosillo, minuto20; también al recibir trabajo",
+      "ultima_ejecucion": "2026-10-11T19:03:33Z",
+      "evidencia_url": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38166137118"
+    },
+    {
+      "id": "rutina:mesa",
+      "nombre": "Sala · Mesa",
+      "components": [
+        "SYS-SALA"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "Última ejecución de producción completada correctamente",
+      "alcance": "Ejecución de la rutina",
+      "frecuencia": "Cada hora, minuto35; diario05:40Hermosillo",
+      "ultima_ejecucion": "2026-10-11T17:51:12Z",
+      "evidencia_url": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38161005616"
+    },
+    {
+      "id": "rutina:arranque",
+      "nombre": "Sala · Arranque",
+      "components": [
+        "SYS-SALA"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "Última ejecución de producción completada correctamente",
+      "alcance": "Ejecución de la rutina",
+      "frecuencia": "Cada hora, minuto05; semillero diario05:50Hermosillo",
+      "ultima_ejecucion": "2026-10-11T17:54:06Z",
+      "evidencia_url": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38161192476"
+    },
+    {
+      "id": "rutina:chinches",
+      "nombre": "Sala · Encargos",
+      "components": [
+        "SYS-SALA"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "Última ejecución correcta, fuera del plazo esperado",
+      "alcance": "Ejecución de la rutina",
+      "frecuencia": "Cada hora, minuto45",
+      "ultima_ejecucion": "2026-10-11T16:01:29Z",
+      "evidencia_url": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38153491943"
+    },
+    {
+      "id": "rutina:maquinas",
+      "nombre": "Sala · Semáforo",
+      "components": [
+        "SYS-SALA"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "Última ejecución de producción completada correctamente",
+      "alcance": "Ejecución de la rutina",
+      "frecuencia": "Horas impares de Hermosillo, minuto15",
+      "ultima_ejecucion": "2026-10-11T18:58:39Z",
+      "evidencia_url": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38165913734"
+    },
+    {
+      "id": "rutina:relevo",
+      "nombre": "Sala · Respaldo",
+      "components": [
+        "SYS-SALA"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "Última ejecución de producción completada correctamente",
+      "alcance": "Ejecución de la rutina",
+      "frecuencia": "06:00,09:00,12:00,15:00,18:00Hermosillo",
+      "ultima_ejecucion": "2026-10-11T18:02:49Z",
+      "evidencia_url": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38161524020"
+    },
+    {
+      "id": "sala-horarios",
+      "nombre": "Sala · puertas programadas",
+      "components": [
+        "EXT-ACTIONS"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:51:32.477434+00:00",
+      "vence_en": "2026-10-11T20:36:32.477Z",
+      "detalle": "Comprueba el estado activo de las puertas; el horario declarado puede retrasarse",
+      "alcance": "Estado de workflows"
+    },
+    {
+      "id": "correo-registro",
+      "nombre": "Sala · registro de correo",
+      "components": [
+        "EXT-GMAIL"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:51:32.477434+00:00",
+      "vence_en": "2026-10-11T20:36:32.477Z",
+      "detalle": "Último envío registrado por el backend: 2026-10-11T14:13:00+00:00. Entrega y recepción se comprueban aparte",
+      "alcance": "Registro del backend",
+      "frecuencia": "Diario07:00Hermosillo; registro observado separado"
+    },
+    {
+      "id": "correo-recepcion",
+      "nombre": "Sala · recepción del correo",
+      "components": [
+        "EXT-GMAIL"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "Aún no hay una prueba independiente de entrega y recepción",
+      "alcance": "Recepción independiente"
+    },
+    {
+      "id": "canario-reglas",
+      "nombre": "Canario · configuración",
+      "components": [
+        "GAS-SALA"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:49:03.831397+00:00",
+      "vence_en": "2026-10-13T07:49:03.831397+00:00",
+      "detalle": "Configuración leída; ninguna regla modificada",
+      "alcance": "Prueba sintética aislada; no modifica el negocio",
+      "frecuencia": "Diario05:20Hermosillo",
+      "evidencia_url": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38169539654"
+    },
+    {
+      "id": "motor-voz",
+      "nombre": "Sala · voz Kokoro",
+      "components": [
+        "EXT-MOTORES-MEDIA"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:49:03.831397+00:00",
+      "vence_en": "2026-10-13T07:49:03.831397+00:00",
+      "detalle": "Kokoro real: WAV con señal y duración 2.877s",
+      "alcance": "Prueba sintética aislada; no modifica el negocio",
+      "frecuencia": "Diario05:20Hermosillo",
+      "evidencia_url": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38169539654"
+    },
+    {
+      "id": "motor-escena",
+      "nombre": "Sala · escena parallax",
+      "components": [
+        "EXT-MOTORES-MEDIA"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:49:03.831397+00:00",
+      "vence_en": "2026-10-13T07:49:03.831397+00:00",
+      "detalle": "Parallax real 1080×1920 H264 2.000s; profundidad depth-anything-v2",
+      "alcance": "Prueba sintética aislada; no modifica el negocio",
+      "frecuencia": "Diario05:20Hermosillo",
+      "evidencia_url": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38169539654"
+    },
+    {
+      "id": "motor-corte",
+      "nombre": "Sala · montaje de corte",
+      "components": [
+        "SVC-SALA-EJECUTOR"
+      ],
+      "estado": "ok",
+      "revisado_en": "2026-10-11T19:49:03.831397+00:00",
+      "vence_en": "2026-10-13T07:49:03.831397+00:00",
+      "detalle": "Montador real: H264/AAC con audio, duración 3.633s",
+      "alcance": "Prueba sintética aislada; no modifica el negocio",
+      "frecuencia": "Diario05:20Hermosillo",
+      "evidencia_url": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38169539654"
+    },
+    {
+      "id": "drive-transferencia",
+      "nombre": "Sala · transferencia Drive",
+      "components": [
+        "EXT-DRIVE"
+      ],
+      "estado": "fallo",
+      "revisado_en": "2026-10-11T19:49:03.831397+00:00",
+      "vence_en": "2026-10-13T07:49:03.831397+00:00",
+      "detalle": "Transferencia o limpieza de la prueba sin confirmar",
+      "alcance": "Prueba sintética aislada; no modifica el negocio",
+      "frecuencia": "Diario05:20Hermosillo",
+      "evidencia_url": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38169539654"
+    },
+    {
+      "id": "motor-otros",
+      "nombre": "Sala · motores alternativos",
+      "components": [
+        "EXT-MOTORES-MEDIA"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "Este canario comprueba Kokoro, parallax y corte; imagen generativa y otros motores requieren una prueba propia",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SYS-CONTROL",
+      "nombre": "Control Maestro · prueba funcional",
+      "components": [
+        "SYS-CONTROL"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SYS-SALA-OPERACION",
+      "nombre": "Herramientas de producción · prueba funcional",
+      "components": [
+        "SYS-SALA-OPERACION"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SHEET-PORTERO",
+      "nombre": "Datos de Portero y Potenciales · prueba funcional",
+      "components": [
+        "SHEET-PORTERO"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:GAS-CATALOGO",
+      "nombre": "Catálogo del OS · prueba funcional",
+      "components": [
+        "GAS-CATALOGO"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SHEET-CATALOGO",
+      "nombre": "Datos de Catálogo del OS · prueba funcional",
+      "components": [
+        "SHEET-CATALOGO"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:GAS-OPERACION",
+      "nombre": "Operación y tareas · prueba funcional",
+      "components": [
+        "GAS-OPERACION"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SHEET-OPERACION",
+      "nombre": "Datos de Operación y tareas · prueba funcional",
+      "components": [
+        "SHEET-OPERACION"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:GAS-FLUJO",
+      "nombre": "Tesorería · prueba funcional",
+      "components": [
+        "GAS-FLUJO"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SHEET-FLUJO",
+      "nombre": "Datos de Tesorería · prueba funcional",
+      "components": [
+        "SHEET-FLUJO"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:GAS-MARKETING",
+      "nombre": "Métricas y CRM de captación · prueba funcional",
+      "components": [
+        "GAS-MARKETING"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SHEET-MARKETING",
+      "nombre": "Datos de Métricas y CRM de captación · prueba funcional",
+      "components": [
+        "SHEET-MARKETING"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:GAS-PLAN-POTENCIAL",
+      "nombre": "Captación de Plan Potencial · prueba funcional",
+      "components": [
+        "GAS-PLAN-POTENCIAL"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SHEET-PLAN-POTENCIAL",
+      "nombre": "Datos de Captación de Plan Potencial · prueba funcional",
+      "components": [
+        "SHEET-PLAN-POTENCIAL"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:GAS-CROKISS",
+      "nombre": "Guardado de planos · prueba funcional",
+      "components": [
+        "GAS-CROKISS"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SHEET-CROKISS",
+      "nombre": "Datos de Guardado de planos · prueba funcional",
+      "components": [
+        "SHEET-CROKISS"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:GAS-CODES",
+      "nombre": "Portal de codesarrolladores · prueba funcional",
+      "components": [
+        "GAS-CODES"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SHEET-CODES",
+      "nombre": "Datos de Portal de codesarrolladores · prueba funcional",
+      "components": [
+        "SHEET-CODES"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:GAS-MIRAMAR",
+      "nombre": "Miramar · prueba funcional",
+      "components": [
+        "GAS-MIRAMAR"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SHEET-MIRAMAR",
+      "nombre": "Datos de Miramar · prueba funcional",
+      "components": [
+        "SHEET-MIRAMAR"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:GAS-INTERIORES",
+      "nombre": "Interiores · prueba funcional",
+      "components": [
+        "GAS-INTERIORES"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SHEET-INTERIORES",
+      "nombre": "Datos de Interiores · prueba funcional",
+      "components": [
+        "SHEET-INTERIORES"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:GAS-ALQUIMIA",
+      "nombre": "Registro del grupo · prueba funcional",
+      "components": [
+        "GAS-ALQUIMIA"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SHEET-ALQUIMIA",
+      "nombre": "Datos de Registro del grupo · prueba funcional",
+      "components": [
+        "SHEET-ALQUIMIA"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:GAS-OBRA",
+      "nombre": "Motor de obra · prueba funcional",
+      "components": [
+        "GAS-OBRA"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SHEET-OBRA",
+      "nombre": "Datos de Motor de obra · prueba funcional",
+      "components": [
+        "SHEET-OBRA"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:GAS-OBRA-CLIENTE",
+      "nombre": "Módulo cliente de obra · prueba funcional",
+      "components": [
+        "GAS-OBRA-CLIENTE"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SHEET-OBRA-CLIENTE",
+      "nombre": "Datos de Módulo cliente de obra · prueba funcional",
+      "components": [
+        "SHEET-OBRA-CLIENTE"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SHEET-SALA",
+      "nombre": "Datos de Sala de Edición · prueba funcional",
+      "components": [
+        "SHEET-SALA"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:GAS-EMD",
+      "nombre": "Evaluación privada · prueba funcional",
+      "components": [
+        "GAS-EMD"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SHEET-EMD",
+      "nombre": "Datos de Evaluación privada · prueba funcional",
+      "components": [
+        "SHEET-EMD"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:EXT-CALENDAR",
+      "nombre": "Google Calendar · prueba funcional",
+      "components": [
+        "EXT-CALENDAR"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:EXT-META",
+      "nombre": "Meta · prueba funcional",
+      "components": [
+        "EXT-META"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:GAS-CRM",
+      "nombre": "CRM comercial · prueba funcional",
+      "components": [
+        "GAS-CRM"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SHEET-CRM",
+      "nombre": "Datos de CRM comercial · prueba funcional",
+      "components": [
+        "SHEET-CRM"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:GAS-MOAC-METAS",
+      "nombre": "Metas y objetivos de MOAC · prueba funcional",
+      "components": [
+        "GAS-MOAC-METAS"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SHEET-MOAC-METAS",
+      "nombre": "Metas, objetivos y acciones · prueba funcional",
+      "components": [
+        "SHEET-MOAC-METAS"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:GAS-INVERSION",
+      "nombre": "Carpeta de inversión · prueba funcional",
+      "components": [
+        "GAS-INVERSION"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SHEET-INVERSION",
+      "nombre": "Contenido de carpeta comercial · prueba funcional",
+      "components": [
+        "SHEET-INVERSION"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:GAS-PORTERO-RESPALDO",
+      "nombre": "Portero de respaldo · prueba funcional",
+      "components": [
+        "GAS-PORTERO-RESPALDO"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:EXT-AURUM-WEB",
+      "nombre": "Sitio de Arquitectura de Autor · prueba funcional",
+      "components": [
+        "EXT-AURUM-WEB"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:GAS-AUX-METRICAS",
+      "nombre": "Fuente de métricas en utilidades auxiliares · prueba funcional",
+      "components": [
+        "GAS-AUX-METRICAS"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SHEET-PPP-MODELOS",
+      "nombre": "PPP · Libros de cálculo por caso · prueba funcional",
+      "components": [
+        "SHEET-PPP-MODELOS"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:EXT-GITHUB-PUBLISHER-APP",
+      "nombre": "Identidad de publicación GitHub · prueba funcional",
+      "components": [
+        "EXT-GITHUB-PUBLISHER-APP"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:STORE-EMD-DRAFTS",
+      "nombre": "Borradores locales cifrados de evaluación · prueba funcional",
+      "components": [
+        "STORE-EMD-DRAFTS"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SYS-AMALAYA",
+      "nombre": "Amalaya · prueba funcional",
+      "components": [
+        "SYS-AMALAYA"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:GAS-AMALAYA",
+      "nombre": "Motor Amalaya · prueba funcional",
+      "components": [
+        "GAS-AMALAYA"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SHEET-AMALAYA",
+      "nombre": "Datos de Amalaya · prueba funcional",
+      "components": [
+        "SHEET-AMALAYA"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:STORE-DESPACHO-CORCHO",
+      "nombre": "Mi Corcho · almacén privado de Dirección · prueba funcional",
+      "components": [
+        "STORE-DESPACHO-CORCHO"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SYS-DESPACHO-3D",
+      "nombre": "Oficina 3D y puesto del autón · prueba funcional",
+      "components": [
+        "SYS-DESPACHO-3D"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:SVC-AUTON-CLOUD",
+      "nombre": "Motor de nube del autón · prueba funcional",
+      "components": [
+        "SVC-AUTON-CLOUD"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:STORE-AUTON-ESTADO",
+      "nombre": "Estado y conocimiento del autón · prueba funcional",
+      "components": [
+        "STORE-AUTON-ESTADO"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:EXT-JEV",
+      "nombre": "JEV · búsqueda y selección · prueba funcional",
+      "components": [
+        "EXT-JEV"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:EXT-OPENAI",
+      "nombre": "OpenAI · conversación y ejecución · prueba funcional",
+      "components": [
+        "EXT-OPENAI"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:EXT-RENDER",
+      "nombre": "Render · alojamiento del motor · prueba funcional",
+      "components": [
+        "EXT-RENDER"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:EXT-OBSIDIAN",
+      "nombre": "Obsidian · bóveda de conocimiento · prueba funcional",
+      "components": [
+        "EXT-OBSIDIAN"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    },
+    {
+      "id": "pendiente:EXT-NOTEBOOKLM",
+      "nombre": "NotebookLM · consulta documental prevista · prueba funcional",
+      "components": [
+        "EXT-NOTEBOOKLM"
+      ],
+      "estado": "sin_confirmar",
+      "revisado_en": "2026-10-11T19:57:07.703Z",
+      "vence_en": "2026-10-11T20:42:07.703Z",
+      "detalle": "No hay una comprobación segura conectada para esta facultad",
+      "alcance": "Cobertura pendiente"
+    }
+  ]
+}
