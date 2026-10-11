@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-11.despacho-fluido132",
+  "revision": "2026-10-11.despacho-fluido132-publicado",
   "checked_at": "2026-10-11",
   "priorities": [
     "vender_mas",
@@ -10366,13 +10366,17 @@
         "SYS-SALA"
       ],
       "proposal": "Dirección autoriza reorganizar la interacción como oficina de estrategia: selección, cuatro direcciones y puesto con PPP visible mientras conversa. Conservar todas las capacidades, identidades y contratos. Corregir estados de lectura, reducir cabeceras y separar ruta guardada, actividad y evidencia. Revisar sólo la entrega exacta mostrada, sin aprobar por actualización silenciosa ni crear encargos al abrir. No reactivar automatizaciones canceladas ni ampliar APIs, permisos o backend.",
-      "status": "implementado_local",
+      "status": "publicado",
       "tests": [
-        "Suite completa y verificadores de arquitectura, OS, Portal, Accesos y Obra mediante Actions.",
-        "Navegador sobre módulos reales: carga lenta/fallo/recuperación, PPP y espacio visible, tres expedientes, rueda teclado/táctil, voz/cápsula y móvil. Transporte sintético no acredita micrófono físico ni datos privados.",
-        "Revisor separado sobre el commit exacto; evidencia visual de escritorio, Chromebook y móvil."
+        "SHA b8df8c2823726b184a01405e63c8d67acf6b0d76: 618/618 regresiones, esquema/vistas/impacto y Obra; Actions 38166340212.",
+        "OS, Portal y matriz de accesos comprobados: Actions 38166340153.",
+        "Chinches Chromium/WebKit, modo sin GPU, puesto con tres casos aislados, rueda teclado/táctil y capturas 1366/1024/390: Actions 38166340131.",
+        "Entrada, reuniones, trabajo observable, cercanía, conocimiento, voz y PPP colaborativo con mismo iframe/borrador y recibos exactos: Actions 38166340113.",
+        "Revisor separado aprobó el commit exacto tras inspeccionar código, pruebas y capturas.",
+        "11-oct-2026 19:14:45 UTC: observado PASS de Comprobar entrada publicada sin sesión privada en Actions 38167079475; Chromium lee Pages sin interceptar red, comprueba módulos actuales y oficina pública 1366/390.",
+        "Los transportes de pruebas privadas usan expedientes sintéticos: no acreditan micrófono físico, tarjetas privadas ni autonomía 24/7."
       ],
-      "deployment": "Código implementado en rama; pendiente CI, revisión separada y Pages. No es aceptación de voz física ni autonomía 24/7.",
+      "deployment": "PR168 integrado en 1959af900210d0c697c9f88abcfafcf5eff6f4fa el 11-oct-2026 19:13:08 UTC. Pages 38167078699 publicado con éxito, finalización 19:13:35 UTC. Entrada publicada comprobada por navegador real en 38167079475 (paso observado aprobado 19:14:45 UTC; el resto del workflow de push continúa). Cliente fluido132, sin cambios de Render/Sheets/API/permisos ni automatizaciones canceladas.",
       "rollback": "Revertir el PR de interfaz; conservar Sheets, expedientes, objetivos, recibos y disco persistente."
     }
   ],
