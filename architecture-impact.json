@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-10-11.horarios-render.1",
   "proposal_id": "CHG-HORARIOS-NUBE-20261011",
-  "summary": "Completar alcance de la lectura programada de Plan y la revisión de Sala sin cambiar sus registros o contratos.",
+  "summary": "Mostrar vigilancia independiente de Render en Accesos, conservar vigencias y correlacionar solicitudes de monitor.",
   "components": [
     "SYS-YOD-OS",
     "SYS-CONTROL",
@@ -31,7 +31,7 @@
     "SHEET-SALA"
   ],
   "tests": [
-    "Atlas/vistas sincronizados, inventario de salud y CI Portal completo."
+    "Selección de fuente, reloj futuro, caducidad y fallo de Render con respaldo GitHub; pruebas del panel/sesión existentes y CI completo."
   ],
-  "rollback": "Revertir el alcance mediante PR; conservar datos de negocio."
+  "rollback": "Revertir la propuesta por PR; sin modificar registros de negocio."
 }
