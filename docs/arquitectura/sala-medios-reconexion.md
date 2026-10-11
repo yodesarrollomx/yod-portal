@@ -1,11 +1,13 @@
 # Reconexión limitada de medios originales
 
-Propuesta CHG-SALA-RECONECTAR-MEDIOS-20261011 y contrato CTR-SALA-RECONECTAR-MEDIOS. Hay dos voces originales recuperadas y verificadas en Drive privado que aún necesitan un acuse de reconexión a COLA.
+Cambio CHG-SALA-RECONECTAR-MEDIOS-20261011 y contrato CTR-SALA-RECONECTAR-MEDIOS publicados y comprobados el11-oct-2026. Dos voces originales recuperadas y verificadas en Drive privado quedaron reconectadas a sus trabajos existentes de COLA.
 
-Se propone un worker de mantenimiento de nube. Lee el informe privado, verifica bytes/MD5/SHA256 de las copias y la evidencia de los trabajos existentes. Ante identidad ambigua, hash diferente o fila cambiada, se detiene. Sólo actualiza la referencia y procedencia de evidencia; nunca manda estados, motores, decisiones o filas nuevas. Relee después y conserva antes/después en un acuse privado. No regenera originales faltantes.
+Worker de mantenimiento aprobado primero en Atlas PR165 e integrado por Sala PR269. Comprueba bytes/MD5/SHA256/tamaño de las copias contra el informe y MD5 completos de la evidencia original. Exige trabajo terminado, identidad/referencia exactas y fila única. Relee inmediatamente antes y después, actualiza sólo referencia/procedencia de evidencia y conserva estados, motores, bloqueos, prioridades y decisiones. No regenera ni crea trabajos.
 
-El endpoint heredado carece de comparación atómica: se relee inmediatamente antes, se aborta ante cambios detectados y se conserva acuse para conciliación. No se afirma transacción global. Pruebas sintéticas cubren mismatch, idempotencia y conservación; producción sólo sobre las instrucciones de recuperación aprobadas.
+Pruebas: suite completa164, incluidas20 de reconexión; Arquitectura YOD y verificar success. [Run real38159239581](https://github.com/yodesarrollomx/sala-edicion/actions/runs/38159239581) success con code_sha159d932cd81c2d2c3fda31a862ea60fc0b3ae667. Dos intentos y dos actualizaciones confirmadas, error nulo y acuse privado completo de antes/después subido y leído byte exacto. El log público sólo muestra conteos; archivos/revisiones/referencias permanecen privados.
 
-Estado: propuesto; lectura de cola, autoridad del runtime y reconexión real pendientes. Las referencias/identidades físicas están únicamente en Drive privado.
+Workflow sin cron: activación por incorporación del código o manual, serializado con sala-ejecutor. Referencia ya reconectada se verifica sin reescribir; idempotencia probada con dobles. El API heredado no ofrece CAS atómico: se rechazan cambios detectados y se conserva antes/después para conciliación, sin afirmar una transacción global.
 
-Reversión: detener/revertir el worker, conservar medios e historial y conciliar sólo referencias técnicas previa revisión reciente. No restaurar hojas completas ni cambiar aprobaciones.
+Pendientes: fuentes/editor IDs, disparadores y correo originales;26 medios históricos no localizados en las fuentes auditadas. Estos dos originales sí están recuperados/reconectados. No se modificaron los espejos Apps Script ni se reactivaron gestores cancelados.
+
+Reversión: detener/revertir el worker y conservar acuses/medios. Conciliar sólo referencia técnica previa contra lectura reciente y revisión; no restaurar hojas completas ni cambiar aprobaciones.

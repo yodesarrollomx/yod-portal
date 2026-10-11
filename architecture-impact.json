@@ -1,26 +1,21 @@
 {
-  "model_revision": "2026-10-11.plan-verificado-medios-propuestos",
-  "proposal_id": "CHG-PLAN-AGREGADOS-ONLINE-20261011",
-  "summary": "Registrar publicación real de Plan y consumidor Marketing; proponer por separado reconexión limitada de dos voces originales recuperadas. Mantener explícitos los vacíos de Apps Script/correo/medios no localizados.",
+  "model_revision": "2026-10-11.plan-medios-verificados",
+  "proposal_id": "CHG-SALA-RECONECTAR-MEDIOS-20261011",
+  "summary": "Registrar integración y reconexión reales de dos voces originales a COLA, con hashes completos y acuse privado; conservar alcance pendiente de fuentes, disparadores/correo y otros medios. Plan online ya publicado permanece acreditado.",
   "components": [
     "SYS-YOD-OS",
     "SYS-SALA",
-    "SVC-SALA-PRODUCTOR",
+    "GAS-SALA",
+    "SHEET-SALA",
     "SVC-SALA-EJECUTOR",
-    "SYS-MARKETING",
-    "SYS-PLAN-POTENCIAL",
-    "GAS-PLAN-POTENCIAL",
-    "SHEET-PLAN-POTENCIAL",
-    "SHEET-CRM",
     "EXT-ACTIONS",
     "EXT-DRIVE"
   ],
   "tests": [
-    "Sala suite completa144 y Marketing consumidor17 pruebas pasan mediante CI normal; regresiones6 de leads,26 de snapshots y20 de publicador permanecen.",
-    "PR266/267/268 Sala y PR78 Marketing pasan verificadores obligatorios y se integran con arquitectura aprobada16390c54873393d590793a4407cf05dbcd2f2bb1.",
-    "Permiso de servicio reader leído de vuelta; fuente de producción únicamente GET. REST detecta SERVICE_DISABLED; GViz autenticado devuelve sólo columnas permitidas. Sin credenciales en URL.",
-    "Run38156397507 y Pages38156497145 success; byte/hash/recibo exactos. Run38157069665 success y LECTOR_ONLINE confirma snapshot409795880/76 publicaciones.",
-    "Plan histórico:6 registros válidos,4 sesiones con estado/fecha,1 prueba excluida; 1grupo UTM con1lead/1sesión y5 registros sin campaña. No nuevos leads del día ni verificación independiente Calendar."
+    "PR269 head82b7db1c10ad14d77945fb430f0be8a29dc485a9: Arquitectura YOD, verificar y regresiones success. Suite completa164 pruebas, incluidas20 de reconexión, sin API/credenciales de producción.",
+    "Runtime38159239581 success con code_sha159d932cd81c2d2c3fda31a862ea60fc0b3ae667; ambos MD5 originales completos, SHA256/tamaño y WAV verificados. Preflight de ambos objetivos antes de escribir.",
+    "Dos POST reales exclusivamente evidencia: dos actualizaciones confirmadas por lectura posterior, errores nulos, mismo estado/motor/bloqueo/prioridad/identidad y decisiones. Acuse privado de antes/después byte-verificado, instrucciones originales retenidas.",
+    "Cambio detectado aborta, filas ambiguas/activas o referencia/hash diferentes se rechazan; idempotencia probada con dobles. El API heredado carece de CAS atómico, limitación registrada."
   ],
-  "rollback": "Revertir PR de lectura y consumidor; mantener los últimos snapshots confirmados y las hojas intactas. Retirar sólo el permiso lector específico si se añadió para esta ruta; no borrar CRM, medios o historial."
+  "rollback": "Conservar copia privada del antes/después. Revertir worker y reconectar sólo la referencia técnica previa tras lectura reciente y revisión; no cambiar decisiones, estados, borrar recuperados ni restaurar hojas completas."
 }
