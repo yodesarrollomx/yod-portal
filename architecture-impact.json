@@ -1,21 +1,20 @@
 {
-  "model_revision": "2026-10-11.sala-cierre-online",
-  "proposal_id": "CHG-SALA-CIERRE-ONLINE-20261011",
-  "summary": "Propuesta autorizada para cerrar correo, rutinas y comparación técnica de Sala online; estado real separado.",
+  "model_revision": "2026-10-11.masterbroker-preevaluation-published",
+  "proposal_id": "CHG-MASTERBROKER-PREEVALUATION",
+  "summary": "Registrar publicación de preevaluación en Masterbrokers y alcance de las pruebas, con activación individual aún pendiente.",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-SALA",
-    "GAS-SALA",
-    "SHEET-SALA",
-    "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
-    "EXT-ACTIONS",
-    "EXT-DRIVE",
-    "EXT-GMAIL"
+    "SYS-INVERSION",
+    "SYS-POTENCIALES",
+    "GAS-PORTERO",
+    "GAS-CRM",
+    "SHEET-CRM",
+    "EXT-DRIVE"
   ],
   "tests": [
-    "Modelo y vistas sincronizados; verificaciones obligatorias del portal mediante CI.",
-    "Pruebas de runtime y recepción de correo pendientes; no se dan por verificadas con esta propuesta."
+    "34 pruebas Node del tablero aprobadas; retorno prellenado, guardado explícito, reapertura de evaluación vinculada, denegación en preview y móvil en navegador con datos sintéticos",
+    "59 pruebas de backend aprobadas, incluida identidad canónica, acceso cruzado, revocación y liga de un solo uso; 34 comprobaciones de UI del evaluador",
+    "Publicación Apps Script v92 verificada; mapa público disponible y broker_launch/broker_summary rechazados a acceso público; cero escrituras de negocio en verificación",
+    "Pages publicado; vinculación de correos individuales pendiente de datos confirmados por Dirección"
   ],
-  "rollback": "Revertir el worker y configuración técnica exacta respaldada tras lectura reciente; mantener medios, decisiones, colas y registros existentes. Reprogramar sólo correoDiario si hace falta; nunca ejecutar instalar() ni borrar otras rutinas."
+  "rollback": "Revertir interfaz y adaptador; conservar expedientes y referencias ya guardados. Desactivar configuración de integración en Drive sin borrar registros."
 }

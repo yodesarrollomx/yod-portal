@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-11.sala-cierre-online",
+  "revision": "2026-10-11.masterbroker-preevaluation-published",
   "checked_at": "2026-10-11",
   "priorities": [
     "vender_mas",
@@ -5637,12 +5637,15 @@
       "to": "GAS-PORTERO",
       "label": "Preevaluación y retorno de terreno a cartera",
       "kind": "api",
-      "status": "propuesto",
+      "status": "codigo",
       "runtime_verified": false,
       "evidence": [
         {
-          "claim": "CHG-MASTERBROKER-PREEVALUATION: integración autorizada; implementación y despliegue pendientes",
-          "status": "propuesto"
+          "repo": "yodesarrollomx/yodesarrollo-board",
+          "path": "brokers-evaluator.js",
+          "claim": "PR12 integrado: lanzamiento de un solo uso y retorno autorizado; backend v92 publicado, flujo individual comprobado con servicios sintéticos.",
+          "status": "codigo",
+          "source_revision": "19fbe950af458778607f2ae0baa70b8bc7894105"
         }
       ],
       "contract": "POST autenticado valida alcance con brokers_snapshot de CRM; liga corta de un solo uso abre evaluador. Regreso contiene sólo ID; lectura exige sesión vigente y cartera autorizada. Alta CRM usa brokers_save existente y confirmación explícita.",
@@ -6972,7 +6975,7 @@
     {
       "id": "PROC-BROKER-PREEVALUATION",
       "nombre": "Preevaluar un terreno desde Masterbrokers",
-      "status": "propuesto",
+      "status": "codigo",
       "steps": [
         {
           "label": "Abrir preevaluación desde cartera",
@@ -7027,8 +7030,11 @@
       ],
       "evidence": [
         {
-          "claim": "Recorrido autorizado por Dirección; pendiente de implementación",
-          "status": "propuesto"
+          "repo": "yodesarrollomx/yodesarrollo-board",
+          "path": "brokers-evaluator.js",
+          "claim": "PR12 integrado: lanzamiento de un solo uso y retorno autorizado; backend v92 publicado, flujo individual comprobado con servicios sintéticos.",
+          "status": "codigo",
+          "source_revision": "19fbe950af458778607f2ae0baa70b8bc7894105"
         }
       ]
     }
@@ -10314,17 +10320,17 @@
         "SHEET-CRM",
         "EXT-DRIVE"
       ],
-      "status": "propuesto",
+      "status": "publicado",
       "approval": "Alejandro autoriza integrar y publicar la preevaluación en el tablero de Masterbrokers antes de ingresar terrenos al plan, 11-oct-2026.",
       "proposal": "Preevaluar desde la cartera con identidad canónica validada por CRM. Acceso de un solo uso al evaluador existente, guardado en Drive por broker, regreso con datos medidos y referencia al expediente para revisar y guardar el alta mediante brokers.v1. No deducir identidad por nombre, elevar permisos, aprobar el plan ni cambiar condiciones comerciales. La consulta pública permanece aislada.",
       "tests": [
-        "Autorización broker A/B, Dirección, identidad revocada y acceso público aislado",
-        "Liga de un solo uso, caducidad, sin credenciales en URL y lectura autorizada del retorno",
-        "Formulario de alta prellenado, guardado y reintento por contrato existente, sin duplicados automáticos",
-        "Navegación escritorio/móvil con datos sintéticos; publicación y lectura pública se acreditan por separado"
+        "34 pruebas Node del tablero aprobadas; retorno prellenado, guardado explícito, reapertura de evaluación vinculada, denegación en preview y móvil en navegador con datos sintéticos",
+        "59 pruebas de backend aprobadas, incluida identidad canónica, acceso cruzado, revocación y liga de un solo uso; 34 comprobaciones de UI del evaluador",
+        "Publicación Apps Script v92 verificada; mapa público disponible y broker_launch/broker_summary rechazados a acceso público; cero escrituras de negocio en verificación",
+        "Pages publicado; vinculación de correos individuales pendiente de datos confirmados por Dirección"
       ],
       "rollback": "Revertir interfaz y adaptador; conservar expedientes y referencias ya guardados. Desactivar configuración de integración en Drive sin borrar registros.",
-      "deployment": "Propuesta registrada; código e integración pública todavía no verificados."
+      "deployment": "Frontend integrado por yodesarrollo-board#12 y publicado en Pages. Evaluador existente actualizado a versión92 con verificación de API y mapa público, rechazo de rutas broker a sesión pública y cero escrituras de prueba. Recorrido de broker verificado con dobles de CRM/evaluador y navegador móvil; no se acredita todavía recorrido autenticado de los perfiles individuales. CRM mantiene tres perfiles sin correo y desactivados; activación requiere correo verificado."
     },
     {
       "id": "CHG-SALA-CIERRE-ONLINE-20261011",
