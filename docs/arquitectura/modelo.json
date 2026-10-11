@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-11.bandeja-nube.1",
+  "revision": "2026-10-11.bandeja-nube.2",
   "checked_at": "2026-10-11",
   "priorities": [
     "vender_mas",
@@ -10985,6 +10985,23 @@
       "rollback": "Apagar YOD_SCHEDULER_ENABLED y revertir PR. Conservar estado/recibos y datos de negocio; no borrar App o medios para facilitar reversión."
     },
     {
+      "id": "CHG-DESPACHO-HAIRLINE-20261011",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "proposal": "Instalar las once metáforas Hairline elegidas en los accesos existentes del puesto: círculo, herramientas y documentos. Conservar contratos, etiquetas, permisos y acciones; las tres alternativas descartadas permanecen sin cambiar.",
+      "status": "implementado_local",
+      "tests": [
+        "633 pruebas Node aprobadas; Arquitectura, OS, Portal, Obra y matriz de Accesos aprobados (94c2c446ea93176896844a470b3397cffad3968b).",
+        "Chromium: círculo real con datos sintéticos, conserva caso y acción de escribir, decoraciones sin foco, desmontaje y reapertura; bandeja documental escritorio/móvil."
+      ],
+      "deployment": "Publicación del frontend pendiente de checks del PR178. No acredita aceptación autenticada ni integración operativa nueva.",
+      "rollback": "Revertir el PR; vuelve el listado de fuentes y se conservan registros y contratos.",
+      "approval": "Propietario solicita instalar sus once elecciones y ver nuevas alternativas para tres pendientes; 11-oct-2026."
+    },
+    {
       "id": "CHG-BANDEJA-NUBE-20261011",
       "components": [
         "SYS-DESPACHO",
@@ -12398,6 +12415,20 @@
     }
   ],
   "path_ownership": [
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/hairline-browser.py",
+      "components": [
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "prefix": "demos/hairline/",
+      "components": [
+        "SYS-DESPACHO-3D"
+      ],
+      "repo": "yodesarrollomx/yod-portal"
+    },
     {
       "repo": "yodesarrollomx/board-aurum",
       "prefix": "apps-script/corcho.gs",
