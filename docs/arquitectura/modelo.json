@@ -9839,14 +9839,14 @@
         "GAS-PORTERO"
       ],
       "proposal": "Preparar todos los residentes autorizados desde la entrada: reutilizar el catálogo vigente para selección, conservar tokens temporales por caso en memoria y compartirlos entre precarga y voz. El servidor actualiza el contexto inicial por turnos sin navegador; herramientas y escrituras conservan revalidación actual. Sin reactivar manager, supervisor, Vigía ni planes cancelados.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "tests": [
         "Catálogo vigente abre sin otra consulta; caducidad, revocación y cambio de sesión impiden reutilización",
         "Tokens y vuelos aislados por caso; cola de preparación sin duplicados ni resurrección tras cancelar",
         "Precarga del servidor secuencial sin navegador; herramientas mantienen lecturas frescas",
         "Arquitectura --check, tests/*.cjs, verify-os/portal/accesos/obra-app"
       ],
-      "deployment": "Propuesta registrada antes de implementación. Publicación y latencia real se documentan separadamente.",
+      "deployment": "Código preparado en rama aislada. CI, integración, publicación Pages y despliegue del servidor pendientes; no acredita micrófono ni latencia física.",
       "rollback": "Revertir cliente y servidor; apagar preparación con YOD_RESIDENT_PREPARATION=off. Conservar datos, disco y tareas canceladas."
     }
   ],
@@ -12193,6 +12193,15 @@
       "prefix": ".github/workflows/vigia-diario.yml",
       "components": [
         "SYS-YOD-OS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-office-preparation.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
       ]
     }
   ],

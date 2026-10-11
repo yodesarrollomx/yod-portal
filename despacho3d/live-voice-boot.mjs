@@ -1,3 +1,4 @@
+import {officeFastSessions} from './office-preparation.mjs?v=1';
 import {mountAvatarCard} from './avatar-card.mjs?v=126';
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
 import {createEntryPreparation} from './voice-preparation.mjs?v=2';
@@ -124,7 +125,7 @@ if (open) {
   });
   chatTimer=setInterval(()=>{if(dialog.open&&!document.hidden&&dialog.querySelector('.station-chat').open&&chat.selection&&!chat.busy&&!active(voice.snapshot()))void chat.refresh();},12000);
   window.addEventListener('pagehide',()=>{clearInterval(chatTimer);chat.close();stopWatching?.();});
-  const voice = createLiveVoice({canOperate:()=>!accessPaused&&!!selection,actions:actionExecutor,audio: node('voice-audio'), mint: value => transport.mintFastSession(value),
+  const voice = createLiveVoice({canOperate:()=>!accessPaused&&!!selection,actions:actionExecutor,audio: node('voice-audio'), mint: value => officeFastSessions.ensure(value.case_id,p=>transport.mintFastSession(p)),
     onChange: renderVoiceState,
     onTranscript: fragment => {
       if(selection?.case_id===voiceCaseId)renderTranscript(fragment);
