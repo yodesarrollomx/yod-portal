@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.salud-accesos · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.salud-accesos-verificada · 2026-10-11.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -162,8 +162,8 @@ flowchart LR
   n_SYS_INVERSION -->|Preevaluación y retorno de terreno a cartera| n_GAS_PORTERO
   n_GAS_SALA -->|Correo diario y entrada al destinatario existente| n_EXT_GMAIL
   n_SVC_SALA_EJECUTOR -->|Cierre, activación acotada y comparación aislada| n_EXT_ACTIONS
-  n_SYS_CONTROL -.->|Informe técnico por proceso visible en Accesos| n_SYS_POTENCIALES
-  n_SYS_SALA -.->|Lecturas agregadas y canario aislado de Sala| n_SYS_CONTROL
+  n_SYS_CONTROL -->|Informe técnico por proceso visible en Accesos| n_SYS_POTENCIALES
+  n_SYS_SALA -->|Lecturas agregadas y canario aislado de Sala| n_SYS_CONTROL
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PLAN_POTENCIAL pendiente;
@@ -326,9 +326,9 @@ flowchart LR
   n_GAS_PORTERO -->|Registra antes, después, actor y siguiente paso| n_SYS_CONTROL
   n_SYS_YOD_OS -.->|Wrapper EMD en dominio GitHub propio; legado compatible| n_SYS_EMD
   n_SYS_YOD_OS -->|Ruta interna del despacho con sesión y permiso vigentes| n_SYS_DESPACHO_3D
-  n_SYS_CONTROL -.->|Informe técnico por proceso visible en Accesos| n_SYS_POTENCIALES
-  n_SYS_SALA -.->|Lecturas agregadas y canario aislado de Sala| n_SYS_CONTROL
-  n_SYS_CONTROL -.->|Pruebas programadas y evidencia de ejecución| n_EXT_ACTIONS
+  n_SYS_CONTROL -->|Informe técnico por proceso visible en Accesos| n_SYS_POTENCIALES
+  n_SYS_SALA -->|Lecturas agregadas y canario aislado de Sala| n_SYS_CONTROL
+  n_SYS_CONTROL -->|Pruebas programadas y evidencia de ejecución| n_EXT_ACTIONS
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_EMD pendiente;
@@ -405,7 +405,7 @@ flowchart LR
   n_SYS_MARKETING -->|Agregados públicos en rama de datos; UI de Pages conserva código aprobado| n_EXT_ACTIONS
   n_GAS_SALA -->|Correo diario y entrada al destinatario existente| n_EXT_GMAIL
   n_SVC_SALA_EJECUTOR -->|Cierre, activación acotada y comparación aislada| n_EXT_ACTIONS
-  n_SYS_CONTROL -.->|Pruebas programadas y evidencia de ejecución| n_EXT_ACTIONS
+  n_SYS_CONTROL -->|Pruebas programadas y evidencia de ejecución| n_EXT_ACTIONS
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_SITIO_ORG pendiente;
   class n_GAS_EMD pendiente;
@@ -646,6 +646,6 @@ flowchart LR
 | CON-BROKER-PREEVALUATION | SYS-INVERSION → GAS-PORTERO | api: Preevaluación y retorno de terreno a cartera. POST autenticado valida alcance con brokers_snapshot de CRM; liga corta de un solo uso abre evaluador. Regreso contiene sólo ID; lectura exige sesión vigente y cartera autorizada. Alta CRM usa brokers_save existente y confirmación explícita. | codigo | [yodesarrollo-board/brokers-evaluator.js](https://github.com/yodesarrollomx/yodesarrollo-board/blob/4774888ede9caf53684ed7509d36ef7ffe1e126e/brokers-evaluator.js) — PR12 integrado: lanzamiento de un solo uso y retorno autorizado; backend v92 publicado, flujo individual comprobado con servicios sintéticos. |
 | CON-SALA-CORREO-ONLINE | GAS-SALA → EXT-GMAIL | correo: Correo diario y entrada al destinatario existente. CTR-SALA-CIERRE-ONLINE; destinatario/compuertas existentes y comprobación por alcance. | ejecucion | [sala-edicion/nube/correo_estado.py](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/nube/correo_estado.py) — Bitácora del backend registra correo diario tres días a07:13Hermosillo; solicitud de entrada38166137118 aceptada y acuse privado byte-verificado. Recepción en Gmail y fuente/inventario completo de disparadores siguen sin verificar. |
 | CON-SALA-CIERRE-ONLINE | SVC-SALA-EJECUTOR → EXT-ACTIONS | automatizacion: Cierre, activación acotada y comparación aislada. CTR-SALA-CIERRE-ONLINE; destinatario/compuertas existentes y comprobación por alcance. | ejecucion | [sala-edicion/docs/SALA-CIERRE-ONLINE.md](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md) — PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes. |
-| CON-SALUD-ACCESOS | SYS-CONTROL → SYS-POTENCIALES | observacion: Informe técnico por proceso visible en Accesos. CTR-SALUD-ACCESOS; resultados con alcance, vigencia y evidencia; ninguna operación de negocio por la sonda. | propuesto | Solicitud explícita de Dirección el11-oct-2026; implementación pendiente. |
-| CON-SALUD-SALA | SYS-SALA → SYS-CONTROL | observacion: Lecturas agregadas y canario aislado de Sala. CTR-SALUD-ACCESOS; resultados con alcance, vigencia y evidencia; ninguna operación de negocio por la sonda. | propuesto | Solicitud explícita de Dirección el11-oct-2026; implementación pendiente. |
-| CON-SALUD-ACTIONS | SYS-CONTROL → EXT-ACTIONS | observacion: Pruebas programadas y evidencia de ejecución. CTR-SALUD-ACCESOS; resultados con alcance, vigencia y evidencia; ninguna operación de negocio por la sonda. | propuesto | Solicitud explícita de Dirección el11-oct-2026; implementación pendiente. |
+| CON-SALUD-ACCESOS | SYS-CONTROL → SYS-POTENCIALES | observacion: Informe técnico por proceso visible en Accesos. CTR-SALUD-ACCESOS; resultados con alcance, vigencia y evidencia; ninguna operación de negocio por la sonda. | codigo | Solicitud explícita de Dirección el11-oct-2026; implementación pendiente.; [yod-portal/docs/SALUD-SISTEMAS.md](https://github.com/yodesarrollomx/yod-portal/blob/de33d90af87e9b5b225b0405841145348d42b8b0/docs/SALUD-SISTEMAS.md) — Frontend Accesos publicado byte exacto y8 recorridos aislados. Validación real del usuario al abrir conserva su autoridad; no certificar el rol personal por pruebas sintéticas. |
+| CON-SALUD-SALA | SYS-SALA → SYS-CONTROL | observacion: Lecturas agregadas y canario aislado de Sala. CTR-SALUD-ACCESOS; resultados con alcance, vigencia y evidencia; ninguna operación de negocio por la sonda. | ejecucion | Solicitud explícita de Dirección el11-oct-2026; implementación pendiente.; [yod-portal/docs/SALUD-SISTEMAS.md](https://github.com/yodesarrollomx/yod-portal/blob/de33d90af87e9b5b225b0405841145348d42b8b0/docs/SALUD-SISTEMAS.md) — Monitor38170852821 y canario38170259463 success; resultados técnicos y fuentes leídas realmente, con alcance/caducidad.40 correctos,59 pendientes; sin operaciones comerciales como prueba. |
+| CON-SALUD-ACTIONS | SYS-CONTROL → EXT-ACTIONS | observacion: Pruebas programadas y evidencia de ejecución. CTR-SALUD-ACCESOS; resultados con alcance, vigencia y evidencia; ninguna operación de negocio por la sonda. | ejecucion | Solicitud explícita de Dirección el11-oct-2026; implementación pendiente.; [yod-portal/docs/SALUD-SISTEMAS.md](https://github.com/yodesarrollomx/yod-portal/blob/de33d90af87e9b5b225b0405841145348d42b8b0/docs/SALUD-SISTEMAS.md) — Monitor38170852821 y canario38170259463 success; resultados técnicos y fuentes leídas realmente, con alcance/caducidad.40 correctos,59 pendientes; sin operaciones comerciales como prueba. |

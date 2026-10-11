@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-11.salud-accesos",
+  "revision": "2026-10-11.salud-accesos-verificada",
   "checked_at": "2026-10-11",
   "priorities": [
     "vender_mas",
@@ -5731,9 +5731,16 @@
         {
           "claim": "Solicitud explícita de Dirección el11-oct-2026; implementación pendiente.",
           "status": "propuesto"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/SALUD-SISTEMAS.md",
+          "commit": "de33d90af87e9b5b225b0405841145348d42b8b0",
+          "claim": "Frontend Accesos publicado byte exacto y8 recorridos aislados. Validación real del usuario al abrir conserva su autoridad; no certificar el rol personal por pruebas sintéticas.",
+          "status": "codigo"
         }
       ],
-      "status": "propuesto",
+      "status": "codigo",
       "runtime_verified": false,
       "contract": "CTR-SALUD-ACCESOS; resultados con alcance, vigencia y evidencia; ninguna operación de negocio por la sonda.",
       "contract_ids": [
@@ -5750,14 +5757,26 @@
         {
           "claim": "Solicitud explícita de Dirección el11-oct-2026; implementación pendiente.",
           "status": "propuesto"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/SALUD-SISTEMAS.md",
+          "commit": "de33d90af87e9b5b225b0405841145348d42b8b0",
+          "claim": "Monitor38170852821 y canario38170259463 success; resultados técnicos y fuentes leídas realmente, con alcance/caducidad.40 correctos,59 pendientes; sin operaciones comerciales como prueba.",
+          "status": "ejecucion"
         }
       ],
-      "status": "propuesto",
-      "runtime_verified": false,
+      "status": "ejecucion",
+      "runtime_verified": true,
       "contract": "CTR-SALUD-ACCESOS; resultados con alcance, vigencia y evidencia; ninguna operación de negocio por la sonda.",
       "contract_ids": [
         "CTR-SALUD-ACCESOS"
-      ]
+      ],
+      "runtime_evidence": {
+        "checked_at": "2026-10-11T20:07:14Z",
+        "scope": "Lecturas agregadas publicadas de cola/reglas/rutinas/bitácora y canario aislado de Kokoro, parallax, corte y transferencia temporal Drive. No acredita operaciones editoriales, todos los motores, recepción de correo ni otros sistemas.",
+        "receipt": "https://github.com/yodesarrollomx/yod-portal/actions/runs/38170852821 ; code_sha=de33d90af87e9b5b225b0405841145348d42b8b0 ; checks=99 ; correct=40 ; unknown=59 ; failed=0 ; https://github.com/yodesarrollomx/sala-edicion/actions/runs/38170259463 ; canary_checks=5 ; business_writes=0 ; mail_sent=0"
+      }
     },
     {
       "id": "CON-SALUD-ACTIONS",
@@ -5769,14 +5788,26 @@
         {
           "claim": "Solicitud explícita de Dirección el11-oct-2026; implementación pendiente.",
           "status": "propuesto"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/SALUD-SISTEMAS.md",
+          "commit": "de33d90af87e9b5b225b0405841145348d42b8b0",
+          "claim": "Monitor38170852821 y canario38170259463 success; resultados técnicos y fuentes leídas realmente, con alcance/caducidad.40 correctos,59 pendientes; sin operaciones comerciales como prueba.",
+          "status": "ejecucion"
         }
       ],
-      "status": "propuesto",
-      "runtime_verified": false,
+      "status": "ejecucion",
+      "runtime_verified": true,
       "contract": "CTR-SALUD-ACCESOS; resultados con alcance, vigencia y evidencia; ninguna operación de negocio por la sonda.",
       "contract_ids": [
         "CTR-SALUD-ACCESOS"
-      ]
+      ],
+      "runtime_evidence": {
+        "checked_at": "2026-10-11T20:07:14Z",
+        "scope": "Un ciclo real del monitor y datos publicados con relectura byte exacta. Horarios declarados con edad y vigencia; no acredita puntualidad constante o todas las operaciones del negocio.",
+        "receipt": "https://github.com/yodesarrollomx/yod-portal/actions/runs/38170852821 ; code_sha=de33d90af87e9b5b225b0405841145348d42b8b0 ; checks=99 ; correct=40 ; unknown=59 ; failed=0 ; https://github.com/yodesarrollomx/sala-edicion/actions/runs/38170259463 ; canary_checks=5 ; business_writes=0 ; mail_sent=0"
+      }
     }
   ],
   "processes": [
@@ -10492,16 +10523,17 @@
         "SYS-DESPACHO",
         "SYS-DESPACHO-3D"
       ],
-      "status": "propuesto",
+      "status": "publicado",
       "proposal": "Dirección solicita horarios y control de funcionamiento por sistema/proceso en Accesos mediante pruebas pequeñas continuas. Ampliar la observación autorizada de Sala cada15min y ejecutar un canario aislado diario de Kokoro/parallax/ffmpeg/Drive. Publicar sólo resultados técnicos en una rama de datos del Portal y mostrarlos en Accesos vinculados a la sesión administradora vigente. Inventario completo derivado del Atlas; cada prueba muestra alcance, fecha, vigencia y evidencia. Página accesible, workflow activo, corrida correcta y proceso de negocio completo se distinguen; pendientes nunca verdes. Sin reactivar Vigía/gestores/PPP cancelados.",
       "tests": [
-        "Estados de fallo, respuesta inválida, lectura caducada/futura, workflow detenido, canario parcial y falta de evidencia; resultados anteriores nunca vuelven verde una comprobación fallida.",
-        "Comprobaciones de páginas/contratos sólo contra allowlist; API pública de Actions y snapshots publicados; observación Sala exclusivamente de recursos de lectura ya autorizados.",
-        "Canario sintético local: motores reales, codecs/duración/audio medidos; Drive sólo prueba temporal fuera de registros comerciales; limpieza y errores independientes, sin mensajes o decisiones.",
-        "Accesos con sesión vigente: montaje y refresco, descarte de respuestas tardías tras cambio/cierre de sesión; matriz y escritor intactos; móvil y escritorio.",
-        "CI completos de Portal/Sala/Potenciales; publicación y ejecución real registradas por separado de pruebas aisladas."
+        "Portal PR174/175:630 pruebas sin omisiones y verificadores de arquitectura/OS/portal/accesos/obra correctos.",
+        "Sala PR272/273:CI completo; canario real38170259463 success. Kokoro2.877s, parallax1080x1920 H2642.000s con Depth Anything V2, corteH264/AAC3.633s con señal real y transferencia temporal Drive byte-verificada/retiro a papelera confirmado. Sin escrituras de negocio o correo.",
+        "Accesos PR25:8 recorridos Chromium/WebKit móvil con admin, rechazo, respuesta tardía y revocación de rol;45 regresiones de administración/sesión y suites existentes correctas. Usuarios/endpoints exclusivamente sintéticos.",
+        "Monitor38170852821 success:informe técnico99 comprobaciones/pendientes,40 correctas,0fallos y59sin confirmar. Todos86componentes/17procesos representados; pasos comerciales sin prueba explícita permanecen pendientes.",
+        "Accesos integrado ae6182744c692ddb9c2e3cc901241295aa241ed4; Pages38171106873 y verificador38171107109 success. El workflow confirma accesos.html byte exacto; validación personal real depende del canje al abrir.",
+        "Lecturas programadas cada15min, vista/canje cada60s y canario05:20Hermosillo. Fecha/vigencia visibles; no garantía de puntualidad del cron ni de operaciones fuera del alcance de las sondas."
       ],
-      "deployment": "Propuesta autorizada por petición explícita de Dirección; implementación y prueba de publicación pendientes.",
+      "deployment": "Portalbd177ce9/de33d90, Salab611382/b9a7376 y Accesosae618274 integrados por PR/CI. Informe de datos en ramaestado-online byte-verificado; canario público sanitizado en salud-canario. Frontends publicados.40 pruebas correctas,59facultades/componentes sin prueba conectada; sin recepción de correo o equivalencia editorial completa acreditadas. Sesión se verifica en cada dispositivo con el Portero original.",
       "rollback": "Revertir cambios de monitor/clientes y horarios mediante PR. Conservar la rama de resultados y registros existentes; detener únicamente el monitor/canario nuevos, sin borrar medios, decisiones, usuarios o disparadores del negocio."
     }
   ],
@@ -11778,7 +11810,7 @@
         "SYS-DESPACHO",
         "SYS-DESPACHO-3D"
       ],
-      "source": "Modelo técnico del Atlas, superficies publicadas, API de Actions y revisión agregada de Sala; motores reales sólo con insumos sintéticos.",
+      "source": "Modelo técnico del Atlas, superficies publicadas, API de Actions y revisión agregada de Sala; motores reales sólo con insumos sintéticos. Implementado y publicado por PR174/175,272/273 y25. Recibo/informe/canario reales y8 recorridos de navegador aislados; sesión personal y facultades sin sonda no se acreditan por el inventario.",
       "input": [
         "Catálogo técnico y pasos de cada proceso con IDs existentes; configuración explícita de pruebas y caducidad.",
         "Lecturas públicas allowlisted de páginas/contratos; observación de Sala con identidad agente y datos agregados, sin publicar filas o identidades.",
