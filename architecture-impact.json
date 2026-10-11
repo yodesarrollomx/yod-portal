@@ -1,22 +1,21 @@
 {
-  "model_revision": "2026-10-11.despacho-fluido132-publicado",
-  "proposal_id": "CHG-DESPACHO-FLUIDEZ-20261011",
-  "summary": "Registrar el cierre comprobado de CHG-DESPACHO-FLUIDEZ-20261011: evidencia de revisión, pruebas, integración y publicación del cliente. Sólo documentación y vistas generadas; no cambia runtime, API, permisos ni backend.",
+  "model_revision": "2026-10-11.sala-cierre-verificado",
+  "proposal_id": "CHG-SALA-CIERRE-ONLINE-20261011",
+  "summary": "Registrar cierre real y comparación parcial de Sala online:181/183 pruebas,4jobs success,16 archivos privados byte-verificados; distinguir registro de correo de recepción y límites de equivalencia.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "GAS-PORTERO",
-    "SYS-SALA"
+    "SYS-SALA",
+    "GAS-SALA",
+    "SHEET-SALA",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-ACTIONS",
+    "EXT-DRIVE",
+    "EXT-GMAIL"
   ],
   "tests": [
-    "SHA b8df8c2823726b184a01405e63c8d67acf6b0d76: 618/618 regresiones, esquema/vistas/impacto y Obra; Actions 38166340212.",
-    "OS, Portal y matriz de accesos comprobados: Actions 38166340153.",
-    "Chinches Chromium/WebKit, modo sin GPU, puesto con tres casos aislados, rueda teclado/táctil y capturas 1366/1024/390: Actions 38166340131.",
-    "Entrada, reuniones, trabajo observable, cercanía, conocimiento, voz y PPP colaborativo con mismo iframe/borrador y recibos exactos: Actions 38166340113.",
-    "Revisor separado aprobó el commit exacto tras inspeccionar código, pruebas y capturas.",
-    "11-oct-2026 19:14:45 UTC: observado PASS de Comprobar entrada publicada sin sesión privada en Actions 38167079475; Chromium lee Pages sin interceptar red, comprueba módulos actuales y oficina pública 1366/390.",
-    "Los transportes de pruebas privadas usan expedientes sintéticos: no acreditan micrófono físico, tarjetas privadas ni autonomía 24/7."
+    "Modelo/vistas sincronizados; verificaciones obligatorias del portal en CI.",
+    "Recibos reales de Sala y comparación por alcance; correo/source/triggers/equivalencia pendientes explícitos."
   ],
-  "rollback": "Revertir el PR de interfaz; conservar Sheets, expedientes, objetivos, recibos y disco persistente."
+  "rollback": "Revertir el worker y configuración técnica exacta respaldada tras lectura reciente; mantener medios, decisiones, colas y registros existentes. Reprogramar sólo correoDiario si hace falta; nunca ejecutar instalar() ni borrar otras rutinas."
 }

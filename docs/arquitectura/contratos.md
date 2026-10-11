@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.despacho-fluido132-publicado · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.sala-cierre-verificado · 2026-10-11.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -616,7 +616,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 ## CTR-SALA-CIERRE-ONLINE
 
 - Componentes: SYS-YOD-OS, SYS-SALA, GAS-SALA, SHEET-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-ACTIONS, EXT-DRIVE, EXT-GMAIL.
-- Evidencia: Backend original de Sala, reglas/colas vivas, rutinas Actions autorizadas y archivos originales privados; las fuentes del editor original no se presumen a partir de su espejo..
+- Evidencia: Backend original de Sala, reglas/colas vivas, rutinas Actions autorizadas y archivos originales privados; las fuentes del editor original no se presumen a partir de su espejo. Implementación PR270/271 y run38166137118 con acuses privados y183 pruebas. Se distingue correo registrado/entrada aceptada de recepción; comparación parcial explícita..
 - Entrada/campos: `Identidad agente existente, cuenta de servicio Drive actual y token propio de Actions; nunca credenciales del conector ni llaves editoriales.`, `Autorización de Dirección para poner Sala en nube y volver a probar su correo; destinatario fijo de la configuración existente, sin parámetro de destinatario en el worker.`, `Último material original recuperable y su receta/guion; comparación técnica aislada sin escribir decisiones o proyectos ficticios.`.
 - Salida: Acuse privado de antes/después de configuración técnica y horario de correo, con conteos/hash y resumen público sin IDs o credenciales., Correo solicitado sólo mediante el backend existente. ok:true/bitácora acreditan únicamente el alcance observado; recepción requiere prueba separada., Archivos de comparación en Drive privado, byte/hash verificados; publicación del tablero sólo con snapshots y código aprobados..
 

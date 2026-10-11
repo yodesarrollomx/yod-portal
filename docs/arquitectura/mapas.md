@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.despacho-fluido132-publicado · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.sala-cierre-verificado · 2026-10-11.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -159,8 +159,8 @@ flowchart LR
   n_SYS_SALA -->|Marketing consume agregados de Plan publicados con hash| n_SYS_MARKETING
   n_SVC_SALA_EJECUTOR -->|Mantenimiento limitado de evidencia de voces originales recuperadas| n_GAS_SALA
   n_SYS_INVERSION -->|Preevaluación y retorno de terreno a cartera| n_GAS_PORTERO
-  n_GAS_SALA -.->|Correo diario y entrada al destinatario existente| n_EXT_GMAIL
-  n_SVC_SALA_EJECUTOR -.->|Cierre, activación acotada y comparación aislada| n_EXT_ACTIONS
+  n_GAS_SALA -->|Correo diario y entrada al destinatario existente| n_EXT_GMAIL
+  n_SVC_SALA_EJECUTOR -->|Cierre, activación acotada y comparación aislada| n_EXT_ACTIONS
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PLAN_POTENCIAL pendiente;
@@ -393,8 +393,8 @@ flowchart LR
   n_EXT_RENDER -.->|Servicio y volumen persistentes en la versión efectiva| n_SVC_AUTON_CLOUD
   n_SYS_SALA -->|Snapshots privados de datos públicos y Pages con recibo verificable| n_EXT_ACTIONS
   n_SYS_MARKETING -->|Agregados públicos en rama de datos; UI de Pages conserva código aprobado| n_EXT_ACTIONS
-  n_GAS_SALA -.->|Correo diario y entrada al destinatario existente| n_EXT_GMAIL
-  n_SVC_SALA_EJECUTOR -.->|Cierre, activación acotada y comparación aislada| n_EXT_ACTIONS
+  n_GAS_SALA -->|Correo diario y entrada al destinatario existente| n_EXT_GMAIL
+  n_SVC_SALA_EJECUTOR -->|Cierre, activación acotada y comparación aislada| n_EXT_ACTIONS
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_SITIO_ORG pendiente;
   class n_GAS_EMD pendiente;
@@ -633,5 +633,5 @@ flowchart LR
 | CON-PLAN-METRICAS-ONLINE | SYS-SALA → SYS-MARKETING | lectura: Marketing consume agregados de Plan publicados con hash. CTR-PLAN-AGREGADOS-ONLINE; recibo exacto, frescura y no sustituir errores por cero. | ejecucion | [aurum-board/scripts/pull_metrics.py](https://github.com/yodesarrollomx/aurum-board/blob/e3dd428a01b01d1c8b5775c7fcca408735c98357/scripts/pull_metrics.py) — PR78 integrado; run 38157069665 success. Plan lectura confirmada con hash y frescura; leads_medicion_caida=false, 76 publicaciones Meta. El lector HTTP comprueba bytes/recibo de snapshot409795880. |
 | CON-SALA-RECONEXION-MEDIOS | SVC-SALA-EJECUTOR → GAS-SALA | conciliacion: Mantenimiento limitado de evidencia de voces originales recuperadas. CTR-SALA-RECONECTAR-MEDIOS; sólo evidencia técnica con archivo original exacto, sin estados ni decisiones. | ejecucion | [sala-edicion/nube/medios_reconexion.py](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py) — PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto. |
 | CON-BROKER-PREEVALUATION | SYS-INVERSION → GAS-PORTERO | api: Preevaluación y retorno de terreno a cartera. POST autenticado valida alcance con brokers_snapshot de CRM; liga corta de un solo uso abre evaluador. Regreso contiene sólo ID; lectura exige sesión vigente y cartera autorizada. Alta CRM usa brokers_save existente y confirmación explícita. | codigo | [yodesarrollo-board/brokers-evaluator.js](https://github.com/yodesarrollomx/yodesarrollo-board/blob/4774888ede9caf53684ed7509d36ef7ffe1e126e/brokers-evaluator.js) — PR12 integrado: lanzamiento de un solo uso y retorno autorizado; backend v92 publicado, flujo individual comprobado con servicios sintéticos. |
-| CON-SALA-CORREO-ONLINE | GAS-SALA → EXT-GMAIL | correo: Correo diario y entrada al destinatario existente. CTR-SALA-CIERRE-ONLINE; destinatario/compuertas existentes y comprobación por alcance. | propuesto | Diseño de cierre autorizado por Dirección; ejecución y recepción todavía no verificadas. |
-| CON-SALA-CIERRE-ONLINE | SVC-SALA-EJECUTOR → EXT-ACTIONS | automatizacion: Cierre, activación acotada y comparación aislada. CTR-SALA-CIERRE-ONLINE; destinatario/compuertas existentes y comprobación por alcance. | propuesto | Diseño de cierre autorizado por Dirección; ejecución y recepción todavía no verificadas. |
+| CON-SALA-CORREO-ONLINE | GAS-SALA → EXT-GMAIL | correo: Correo diario y entrada al destinatario existente. CTR-SALA-CIERRE-ONLINE; destinatario/compuertas existentes y comprobación por alcance. | ejecucion | [sala-edicion/nube/correo_estado.py](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/nube/correo_estado.py) — Bitácora del backend registra correo diario tres días a07:13Hermosillo; solicitud de entrada38166137118 aceptada y acuse privado byte-verificado. Recepción en Gmail y fuente/inventario completo de disparadores siguen sin verificar. |
+| CON-SALA-CIERRE-ONLINE | SVC-SALA-EJECUTOR → EXT-ACTIONS | automatizacion: Cierre, activación acotada y comparación aislada. CTR-SALA-CIERRE-ONLINE; destinatario/compuertas existentes y comprobación por alcance. | ejecucion | [sala-edicion/docs/SALA-CIERRE-ONLINE.md](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md) — PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes. |
