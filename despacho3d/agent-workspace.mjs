@@ -1,12 +1,13 @@
+import {officeFastSessions} from './office-preparation.mjs?v=1';
 import {mountMeeting} from './meeting-view.mjs?v=126';
 import {mountAvatarCard} from './avatar-card.mjs?v=126';
 import {mountWorkView} from './work-view.mjs?v=129';
-import {registeredBoard,resolveBoard,stationIdentity} from './project-station.mjs?v=121';
+import {registeredBoard,resolveBoard,stationIdentity,nativeBoardState} from './project-station.mjs?v=131';
 import {mountKnowledgeBoard} from './knowledge-board.mjs?v=128';
 import {createFrameTransport,validateConversation} from './conversation.mjs?v=126';
 import {validateFastSession} from './fast-lane.mjs';
-import {DurableGoals,goalDisplay,taskDisplay,goalReviewActions} from './goals.mjs?v=2';
-export {taskDisplay} from './goals.mjs?v=2';
+import {DurableGoals,goalDisplay,taskDisplay,goalReviewActions,goalRoadmap,orderedGoals} from './goals.mjs?v=131';
+export {taskDisplay} from './goals.mjs?v=131';
 export const WORKSPACE_TABS=[['ppp','Plan de potencial'],['activity','Trabajo'],['tasks','Pendientes'],['sources','Expediente'],['browser','Navegador'],['knowledge','Notas y versiones'],['meeting','Reunión'],['avatar','Conocer al autón']];
 export const WORKSPACE_GROUPS={ppp:['ppp'],activity:['activity','tasks','browser','meeting'],sources:['sources','knowledge','avatar']};
 export const workspaceGroup=id=>Object.keys(WORKSPACE_GROUPS).find(key=>WORKSPACE_GROUPS[key].includes(id))||'ppp';
@@ -70,10 +71,10 @@ export function createReceiptQueue({resolve,ack,eligible=()=>true,onAttempt=()=>
 export function createWorkspace({container,getSelection,transport=createFrameTransport(window),win=window,doc=document,onBoard=()=>{},onPresent=async()=>false}){
  const el=(tag,text,cls)=>{const n=doc.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
  const button=(label,click)=>{const b=el('button',label);b.type='button';b.addEventListener('click',click);return b;};
- let selected=null,credential=null,minting=null,disposed=false,timer=null,busy=false,tab='ppp',frame=null,nonce=null,board=null,boardRevision=null,conversation=null,proposals=[],generation=0,fetching=false,active=true,lastTaskRead=0,application=null,applyTimer=null,boardHandshakeTimer=null,boardHandshakeTimedOut=false,boardLink=null,readingSources=null,sourceAttempts=0,sourceRetryAt=0,goalDraft={title:'',instruction:'',criterion:''};
+ let selected=null,credential=null,disposed=false,timer=null,busy=false,tab='ppp',frame=null,nonce=null,board=null,boardRevision=null,conversation=null,proposals=[],generation=0,fetching=false,active=true,lastTaskRead=0,application=null,applyTimer=null,boardHandshakeTimer=null,boardHandshakeTimedOut=false,boardLink=null,readingSources=null,sourceAttempts=0,sourceRetryAt=0,goalDraft={title:'',instruction:'',criterion:''},goalSnapshot=null;
  const root=el('section',undefined,'agent-workspace');root.setAttribute('aria-label','Puesto del proyecto');
  const nav=el('nav'),notice=el('p','Preparando el puesto…','workspace-status'),body=el('div',undefined,'workspace-body');
- notice.setAttribute('role','status');const subnav=el('nav',undefined,'workspace-subnav');subnav.setAttribute('aria-label','Opciones de la sección');nav.className='workspace-primary';nav.setAttribute('aria-label','Tablero del proyecto');root.append(nav,subnav,notice,body);container.append(root);
+ notice.setAttribute('role','status');const subnav=el('nav',undefined,'workspace-subnav');subnav.setAttribute('aria-label','Opciones de la sección');nav.className='workspace-primary';nav.setAttribute('aria-label','Tablero del proyecto');const brief=el('section',undefined,'workspace-brief');brief.setAttribute('aria-label','Meta y siguiente paso');root.append(nav,subnav,notice,brief,body);container.append(root);
  const sections=Object.fromEntries(WORKSPACE_TABS.map(([id,label])=>{const b=button(label,()=>setTab(id));b.dataset.tab=id;(Object.hasOwn(WORKSPACE_GROUPS,id)?nav:subnav).append(b);const section=el('section');section.dataset.panel=id;body.append(section);return[id,section];}));
 
  const avatarCard=mountAvatarCard({container:sections.avatar,doc,win});
@@ -114,27 +115,48 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
  sections.tasks.append(newGoal,retryGoal,taskList);
  goalForm.addEventListener('submit',async event=>{event.preventDefault();const own=generation;if(await tasks.read()&&own===generation&&await tasks.create({...goalDraft})){goalDraft={title:'',instruction:'',criterion:''};for(const input of Object.values(goalInputs))input.value='';newGoal.open=false;win.dispatchEvent(new CustomEvent('yod-goals-changed'));}});
  const actionLabels={approve:'Marcar revisado',resume:'Retomar',stop:'Detener'};
- tasks.subscribe(s=>{if(disposed)return;taskList.replaceChildren();goalNotice.textContent=s.notice||'';retryGoal.hidden=!s.pending;retryGoal.disabled=s.busy;submit.disabled=!selected?.can_enqueue||!selected?.goals?.ready||s.busy||!!s.pending||!s.model||s.model.goals.some(g=>!['stopped','completed'].includes(g.status));if(!s.model){taskList.append(el('p',s.notice||'Consultando pendientes…'));return;}
-  for(const g of s.model.goals){const display=goalDisplay(g),card=el('article',undefined,'workspace-card');card.append(el('h3',g.title),el('p',display.label),el('p',g.summary||g.criterion),el('small','Último registro · '+new Date(g.updated_at).toLocaleString()));if(display.notice)card.append(el('p',display.notice));
-   for(const t of g.tasks){card.append(el('p',t.title+' · '+taskDisplay(t,g)));if(t.summary)card.append(el('p',t.summary));}
+ tasks.subscribe(s=>{if(disposed)return;goalSnapshot=s.model;paintBrief();taskList.replaceChildren();goalNotice.textContent=s.notice||'';retryGoal.hidden=!s.pending;retryGoal.disabled=s.busy;submit.disabled=!selected?.can_enqueue||!selected?.goals?.ready||s.busy||!!s.pending||!s.model||s.model.goals.some(g=>!['stopped','completed'].includes(g.status));if(!s.model){taskList.append(el('p',s.notice||'Consultando pendientes…'));return;}
+  const history=el('details',undefined,'workspace-goal-history');history.append(el('summary','Historial de metas detenidas y revisadas'));
+  for(const g of orderedGoals(s.model.goals)){const display=goalDisplay(g),card=el('article',undefined,'workspace-card');card.append(el('h3',g.title),el('p',display.label),el('p',g.summary||g.criterion),el('small','Último registro · '+new Date(g.updated_at).toLocaleString()));if(display.notice)card.append(el('p',display.notice));
+   const steps=el('ol',undefined,'workspace-task-route');
+   for(const t of g.tasks){const step=el('li');step.append(el('b',t.title),el('small',taskDisplay(t,g)));const detail=el('details');detail.append(el('summary','Criterio y avance'),el('p','Debe entregar: '+t.criterion),el('p',t.summary||'Sin resultado registrado todavía.'));step.append(detail);steps.append(step);}card.append(steps);
    for(const e of g.evidence){const d=el('details');d.append(el('summary',e.title),el('pre',e.text));card.append(d);}
    if(['ready_for_review','completed','awaiting_data'].includes(g.status))card.append(button('Presentar avances',()=>{setTab('meeting');meeting.open(g,selected.case_id,selected.avatar?.name||selected.name);}));
    for(const action of goalReviewActions(g)){const label=actionLabels[action];
     const b=button(label,async()=>{if(await tasks.read())await tasks.review(g.goal_id,action);win.dispatchEvent(new CustomEvent('yod-goals-changed'));});b.disabled=!selected?.can_enqueue||s.busy||!!s.pending;card.append(b);}
-   taskList.append(card);}
+   if(['stopped','completed'].includes(g.status))history.append(card);else taskList.append(card);}
+  if(history.childElementCount>1)taskList.append(history);
   if(!s.model.goals.length)taskList.append(el('p','No hay objetivos registrados.'));
  });
+
+ function paintBrief(){
+  brief.replaceChildren();if(!selected)return;
+  const route=goalRoadmap(goalSnapshot?.goals||[]),identity=stationIdentity(selected);
+  const heading=el('div',undefined,'workspace-brief-heading');heading.append(el('small','RUTA DEL PROYECTO'),el('b',identity.name));
+  const meta=el('div'),next=el('div');meta.append(el('small','META'),el('h2',route.goal?.title||(goalSnapshot?'Sin encargo registrado':'Consultando su meta…')));
+  if(route.goal)meta.append(el('p','Entregable: '+route.goal.criterion));
+  next.append(el('small','SIGUIENTE PASO'),el('h3',route.next),el('p',route.why));
+  if(route.goal)next.append(el('small',goalDisplay(route.goal).label+' · Último registro: '+new Date(route.goal.updated_at).toLocaleString()));
+  if(route.goal?.status==='running')next.append(el('p','Estado guardado; la actividad en vivo se consulta en Trabajo.','workspace-record-note'));
+  brief.append(heading,meta,next);
+  const sources=el('details',undefined,'workspace-research');sources.append(el('summary','Fuentes y método de investigación'),el('p','Primero el PPP visible y su revisión; después las fuentes registradas del expediente. Contrastar cada dato con su documento, separar supuestos y guardar evidencia por tarea. Una fuente registrada todavía necesita una lectura comprobada.'));
+  if(conversation){for(const d of conversation.documents){const row=el('p');row.append(el('b',d.title+' · '),el('span',d.role||'Fuente registrada'));if(d.url){const a=el('a','Consultar fuente ↗');a.href=d.url;a.target='_blank';a.rel='noopener noreferrer';row.append(a);}sources.append(row);}if(!conversation.documents.length)sources.append(el('p','Sin fuentes registradas: falta definir la fuente antes de afirmar resultados.'));}
+  else sources.append(el('p','Consultando las fuentes autorizadas de este proyecto…'));
+  brief.append(sources);
+ }
  async function session(){
-  const current=getSelection();if(!current||!selected||current.case_id!==selected.case_id)throw Error('unauthorized');
-  if(credential&&credential.expires_at-Date.now()>45000)return credential;
-  if(!minting){const id=current.case_id;minting=transport.mintFastSession({case_id:id}).then(raw=>{if(getSelection()?.case_id!==id)throw Error('unauthorized');return credential=validateFastSession(raw,id);}).finally(()=>{minting=null;});}
-  return minting;
+  const current=getSelection(),own=generation;if(!current||!selected||current.case_id!==selected.case_id)throw Error('unauthorized');
+  if(credential?.case_id===current.case_id&&credential.expires_at-Date.now()>45000)return credential;
+  const id=current.case_id,raw=await officeFastSessions.ensure(id,p=>transport.mintFastSession(p));
+  if(disposed||own!==generation||getSelection()?.case_id!==id)throw Error('session_changed');
+  return credential=validateFastSession(raw,id);
  }
  async function request(path,data={}){
   const own=generation,c=await session();
+  if(disposed||own!==generation||getSelection()?.case_id!==selected?.case_id)throw Error('session_changed');
   const r=await fetch(c.endpoint+path,{method:'POST',headers:{Authorization:'Bearer '+c.token,'Content-Type':'application/json'},credentials:'omit',cache:'no-store',redirect:'error',signal:AbortSignal.timeout(55000),body:JSON.stringify(data)});
   if(own!==generation||disposed)throw Error('session_changed');
-  if(r.status===401||r.status===403){credential=null;clear();throw Error('unauthorized');}
+  if(r.status===401||r.status===403){officeFastSessions.forget(selected?.case_id);credential=null;clear();throw Error('unauthorized');}
   const out=await r.json();if(own!==generation||disposed)throw Error('session_changed');if(!r.ok||out.ok!==true)throw Error(out.error||'unavailable');return out;
  }
  async function command(name,args){
@@ -152,13 +174,13 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   links.replaceChildren(...(s.links||[]).slice(0,10).map(l=>button(l.title,()=>void command('navegador_abrir',{url:l.url}))));
   activity.replaceChildren(...(s.activity||[]).slice(0,8).map(a=>el('li',a.action+' · '+({working:'en curso',completed:'completado',failed:'sin completar'}[a.status]||a.status)+' · '+new Date(a.at).toLocaleTimeString())));
  }
- function postBoard(type,extra={}){if(frame&&selected&&boardLink?.bridge)frame.contentWindow?.postMessage({type,version:1,nonce,case_id:selected.case_id,...{board_case_id:boardLink.board_case_id,...(selected.ppp?.scenario_id?{scenario_id:selected.ppp.scenario_id}:{})},...extra},boardLink.origin);}
+ function postBoard(type,extra={}){if(frame&&selected&&boardLink?.bridge)frame.contentWindow?.postMessage({type,version:1,nonce,case_id:boardLink.board_case_id,...{board_case_id:boardLink.board_case_id,...(selected.ppp?.scenario_id?{scenario_id:selected.ppp.scenario_id}:{})},...extra},boardLink.origin);}
  function applyProposal(p){
 
     if(receipts.size>=8||receipts.has(p.request_id)||!getSelection()?.can_enqueue||getSelection()?.case_id!==selected?.case_id||proposalState(board,p,application)!=='ready')return;
     application={request_id:p.request_id,status:'sending'};
     applyNotice.textContent='Ajuste enviado. Esperando guardado y recálculo; no repitas la solicitud.';
-    paintProposals();postBoard('yod:ppp:apply',{proposal:p});
+    paintProposals();postBoard('yod:ppp:apply',{proposal:{...p,case_id:boardLink.board_case_id}});
     clearTimeout(applyTimer);const own=generation;
     applyTimer=setTimeout(()=>{if(own!==generation||application?.request_id!==p.request_id)return;
      application.status='unconfirmed';applyNotice.textContent='El guardado no se confirmó. Revisa los pendientes del tablero; conserva la misma solicitud.';paintProposals();},35000);
@@ -240,8 +262,9 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   boardQueue=boardQueue.catch(()=>{}).then(async()=>{
    if(own!==generation||disposed||!acceptsBoardState(data))return;
    try{
-    if(data.board?.case_id===selected.case_id){
-     const r=await request('/board/snapshot',data.board);if(own!==generation||!selected)return;board=r.tablero;clearBoardHandshake();boardHandshakeTimedOut=false;
+    const shared=nativeBoardState(data.board,selected,boardLink);
+    if(shared){
+     const r=await request('/board/snapshot',shared);if(own!==generation||!selected)return;board=r.tablero;clearBoardHandshake();boardHandshakeTimedOut=false;
      boardSummary.textContent='Escenario: '+(board.scenario_name||board.scenario_id)+' · Revisión: '+board.revision+(board.confirmed&&!board.pending?' · Lectura confirmada':' · Cambios o lectura pendientes');
      pppNote.textContent=board.version_context?.read_only?'Versiones compartidas en consulta. Los ajustes se hacen en el tablero original.':board.confirmed&&!board.pending?'PPP compartido con el autón · lectura confirmada del tablero.':'El tablero tiene una lectura o cambios por confirmar.';
      if(board.version_context)boardSummary.textContent='Defiende: '+(board.scenario_name||board.scenario_id)+' · Estás viendo: '+(board.version_context.viewed_scenario_name||board.version_context.viewed_scenario_id)+' · Revisión: '+board.revision+(board.pending?' · Cambios pendientes':'');
@@ -267,20 +290,20 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   const promise=(async()=>{try{const raw=await transport.read({case_id:id});if(own!==generation||disposed||getSelection()?.case_id!==id)return;conversation=validateConversation(raw,id);
    sections.sources.replaceChildren(...conversation.documents.map(d=>{const c=el('article',undefined,'workspace-card');c.append(el('h3',d.title),el('p',d.role||''));if(d.url){const a=el('a','Abrir fuente ↗');a.href=d.url;a.target='_blank';a.rel='noopener noreferrer';c.append(a);}return c;}));
    if(!conversation.documents.length)sections.sources.append(el('p','No hay fuentes registradas para este proyecto.'));
-   if(tab==='ppp')mountBoard();
+   paintBrief();if(tab==='ppp')mountBoard();
   }catch{if(own!==generation||disposed)return;sections.sources.replaceChildren(el('p','No se pudieron recuperar las fuentes. La conversación puede continuar.'),button('Volver a cargar fuentes',()=>void readSources()));if(tab==='ppp'&&!frame)pppNote.textContent='No se pudo recuperar el vínculo del PPP. Pulsa Actualizar conexión para reintentar.';}})();
   readingSources={generation:own,promise};try{await promise;}finally{if(readingSources?.promise===promise)readingSources=null;}
  }
  async function refresh(){
-  if(disposed||!active||fetching||doc.hidden||!selected)return;fetching=true;
+  if(disposed||!active||fetching||doc.hidden||!selected)return;const own=generation,token={generation:own};fetching=token;
   try{
    if(getSelection()?.case_id!==selected.case_id){clear();return;}
    if(tab==='ppp'&&!frame&&!readingSources&&sourceAttempts<3&&Date.now()>=sourceRetryAt)void readSources();
    if(tab==='browser')paintBrowser(await request('/computer/state'));
    if(tab==='ppp'&&boardLink?.bridge){startBoardHandshake();postBoard(board?'yod:ppp:read':'yod:ppp:hello');const r=await request('/board/state');proposals=r.proposals||[];paintProposals();dispatchRequested();}
-   if(tab==='tasks'&&Date.now()-lastTaskRead>=12000){lastTaskRead=Date.now();await tasks.read();}
-  }catch{notice.textContent='El puesto no respondió. Reintentando; la conversación puede continuar.';}
-  finally{fetching=false;}
+   if(selected.goals?.ready&&Date.now()-lastTaskRead>=12000){lastTaskRead=Date.now();await tasks.read();}
+  }catch{if(own===generation)notice.textContent='El puesto no respondió. Reintentando; la conversación puede continuar.';}
+  finally{if(fetching===token)fetching=null;}
  }
  function setTab(id){if(!WORKSPACE_TABS.some(([k])=>k===id))return;if(tab==='meeting'&&id!=='meeting')meeting.hide();if(tab==='knowledge'&&id!=='knowledge')knowledge.hide();tab=id;root.dataset.workspaceGroup=workspaceGroup(id);subnav.hidden=id==='ppp';
   for(const [key,section]of Object.entries(sections)){section.hidden=key!==id;const b=root.querySelector('[data-tab="'+key+'"]');b.setAttribute('aria-pressed',String(Object.hasOwn(WORKSPACE_GROUPS,key)?workspaceGroup(id)===key:key===id));if(b.parentElement===subnav)b.hidden=workspaceGroup(key)!==workspaceGroup(id);}
@@ -294,8 +317,8 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   if(goal)meeting.open(goal,id,selected.avatar?.name||selected.name);
   else sections.meeting.replaceChildren(el('p','Todavía no hay una entrega preparada para presentar.'),button('Ver pendientes',()=>setTab('tasks')));
  }
- function clear(){meeting.clear();avatarCard.clear();workView.clear();generation++;clearBoardHandshake();boardHandshakeTimedOut=false;clearTimeout(applyTimer);applyTimer=null;application=null;receipts.clear();receiptRetry.hidden=true;receiptRetry.disabled=false;applyNotice.textContent='';boardSummary.textContent='Todavía no hay una lectura compartida.';knowledge.reset();lastTaskRead=0;credential=null;selected=null;board=null;boardRevision=null;conversation=null;readingSources=null;sourceAttempts=0;sourceRetryAt=0;boardLink=null;proposals=[];goalDraft={title:'',instruction:'',criterion:''};for(const input of Object.values(goalInputs))input.value='';newGoal.open=false;frame?.remove();frame=null;image.removeAttribute('src');image.hidden=true;activity.replaceChildren();links.replaceChildren();taskList.replaceChildren();sections.sources.replaceChildren();proposalHost.replaceChildren();pppHost.replaceChildren();tasks.hide();notice.textContent='El acceso cambió. Vuelve a abrir tu despacho.';}
- function open(selection,target='ppp'){if(selected?.case_id===selection.case_id){active=true;setTab(target);void readSources();return;}clear();selected=selection;if(!selection.goals?.ready)taskList.append(el('p','El seguimiento de objetivos aún no está conectado para este proyecto.'));root.setAttribute('aria-label','Puesto de '+stationIdentity(selection).name);active=true;generation++;notice.textContent='Preparando el puesto de '+selection.name+'…';setTab(target);void readSources();if(!timer)timer=setInterval(()=>void refresh(),tab==='tasks'?12000:4000);}
+ function clear(){meeting.clear();avatarCard.clear();workView.clear();generation++;fetching=null;clearBoardHandshake();boardHandshakeTimedOut=false;clearTimeout(applyTimer);applyTimer=null;application=null;receipts.clear();receiptRetry.hidden=true;receiptRetry.disabled=false;applyNotice.textContent='';boardSummary.textContent='Todavía no hay una lectura compartida.';knowledge.reset();lastTaskRead=0;goalSnapshot=null;brief.replaceChildren();credential=null;selected=null;board=null;boardRevision=null;conversation=null;readingSources=null;sourceAttempts=0;sourceRetryAt=0;boardLink=null;proposals=[];goalDraft={title:'',instruction:'',criterion:''};for(const input of Object.values(goalInputs))input.value='';newGoal.open=false;frame?.remove();frame=null;image.removeAttribute('src');image.hidden=true;activity.replaceChildren();links.replaceChildren();taskList.replaceChildren();sections.sources.replaceChildren();proposalHost.replaceChildren();pppHost.replaceChildren();tasks.hide();notice.textContent='El acceso cambió. Vuelve a abrir tu despacho.';}
+ function open(selection,target='ppp'){if(selected?.case_id===selection.case_id){active=true;setTab(target);void readSources();return;}clear();selected=selection;if(!selection.goals?.ready)taskList.append(el('p','El seguimiento de objetivos aún no está conectado para este proyecto.'));root.setAttribute('aria-label','Puesto de '+stationIdentity(selection).name);active=true;generation++;notice.textContent='Preparando el puesto de '+selection.name+'…';paintBrief();setTab(target);void readSources();if(!timer)timer=setInterval(()=>void refresh(),tab==='tasks'?12000:4000);}
  win.addEventListener('message',receive);
  return{open,setTab,getTab:()=>tab,reset:clear,setActive(value){if(active===value)return;active=value;if(!value){meeting.hide();knowledge.hide();clearBoardHandshake();}if(value)void refresh();},dispose(){disposed=true;clear();workView.dispose();knowledge.dispose();clearInterval(timer);win.removeEventListener('message',receive);root.remove();transport.dispose?.();},root};
 }

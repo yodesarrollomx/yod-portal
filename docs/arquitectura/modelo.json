@@ -9859,7 +9859,7 @@
         "GAS-PORTERO"
       ],
       "proposal": "Abrir el puesto del autón desde su nombre con la misma selección autorizada; mostrar PPP junto a conversación y una ruta de trabajo derivada de las metas reales. Separar conexiones por caso y enlazar explícitamente identidad del autón con identidad del PPP registrado. Consultas de voz conservan instrucción, criterio y resumen de cada tarea. Sin reiniciar automatizaciones canceladas ni modificar resultados del negocio.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "tests": [
         "Cambiar entre tres puestos y descartar conexiones y respuestas del caso anterior",
         "PPP con identidad distinta: handshake, lectura y propuesta preservan revisión, nonce y fuente autorizada",
@@ -9867,7 +9867,7 @@
         "Navegador con red interceptada: abrir por nombre, voz y PPP simultáneos, móvil y revocación",
         "Arquitectura --check, tests/*.cjs, verify-os/portal/accesos/obra-app"
       ],
-      "deployment": "Propuesta registrada antes de implementar. La aceptación operativa con sesión y micrófono físicos sigue separada de CI.",
+      "deployment": "Implementación en rama aislada: selección autorizada, un puesto PPP/voz por caso, resumen derivado de metas y consultas de voz con criterios. CI y publicación pendientes; no acredita micrófono ni fuentes privadas en un navegador real.",
       "rollback": "Revertir frontend y los cambios de contexto/lectura de voz del backend; conservar expedientes, recibos y automatizaciones canceladas."
     }
   ],

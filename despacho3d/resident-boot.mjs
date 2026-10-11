@@ -1,6 +1,6 @@
 import {createOfficePreparation} from './office-preparation.mjs?v=1';
-import {mountAgentMenu} from './agent-menu.mjs?v=127';
-import {createResidentOpening} from './resident-opening.mjs?v=127';
+import {mountAgentMenu} from './agent-menu.mjs?v=131';
+import {createResidentOpening} from './resident-opening.mjs?v=131';
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
 import {createAuthorizedCases} from './authorized-cases.mjs?v=130';
 import {createFrameTransport} from './conversation.mjs?v=126';
@@ -53,7 +53,7 @@ if(host){
   catalogTimer=setInterval(()=>{if(shouldRefreshAuthority())void authorized.refresh();},AUTHORITY_REFRESH_MS);void authorized.refresh().then(()=>resident.refresh());
   window.addEventListener('pagehide',()=>{clearInterval(catalogTimer);authorized.dispose();});
  }
- api.openForCase=createResidentOpening({getResidents:()=>api,getMenu:()=>window.YodAgentMenu,beforeOpen:()=>window.despacho?.closeSheets?.(false),canSelect:()=>['idle','error'].includes(voicePhase)});
+ api.openForCase=createResidentOpening({getResidents:()=>api,getMenu:()=>window.YodAgentMenu,beforeOpen:()=>window.despacho?.closeSheets?.(false),canSelect:()=>['idle','error'].includes(voicePhase),openStation:async id=>window.YodVoiceWorkspace?.openForCase(id,'ppp')||false});
  window.YodResidentAgents=api;mountAgentMenu();
  window.dispatchEvent(new CustomEvent('yod-residents-ready',{detail:null}));
  talk.onclick=()=>document.getElementById('voice-open')?.click();

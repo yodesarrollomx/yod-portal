@@ -221,3 +221,21 @@
 .work-history button:disabled{opacity:.5;cursor:default}
 .work-history button:focus-visible{outline:3px solid #439b7c;outline-offset:3px}
 .work-history p,.work-history li{overflow-wrap:anywhere;line-height:1.5}
+
+.workspace-brief{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:18px 20px;border:1px solid #dbe4dc;border-radius:18px;background:#f0f4ee;margin:0 0 18px}
+.workspace-brief-heading{grid-column:1/-1;display:flex;justify-content:space-between;gap:12px}
+.workspace-brief small{display:block;font-size:10px;letter-spacing:.08em;color:#637769}
+.workspace-brief h2,.workspace-brief h3{font-size:16px;line-height:1.35;margin:6px 0;font-weight:650;letter-spacing:-.02em}
+.workspace-brief p{font-size:12px;line-height:1.55;margin:6px 0;overflow-wrap:anywhere}
+.workspace-research{grid-column:1/-1;border-top:1px solid #d5dfd4;padding-top:8px;font-size:12px}
+.workspace-research summary{cursor:pointer;min-height:32px;display:flex;align-items:center}
+.workspace-research a{display:block;color:#315d4d;padding:6px 0}
+.workspace-record-note{color:#6d756e}
+.workspace-task-route{padding-left:26px;display:grid;gap:12px}
+.workspace-task-route li{padding:8px 12px;border-left:2px solid #c2d4c5}
+.workspace-task-route b,.workspace-task-route small{display:block}
+.workspace-task-route small{font-size:11px;color:#637769;margin-top:4px}
+.workspace-task-route details{font-size:12px;margin-top:6px}
+.workspace-task-route summary{cursor:pointer;min-height:30px}
+.workspace-goal-history>summary{padding:14px 0;cursor:pointer;font-weight:600}
+@media(max-width:650px){.workspace-brief{grid-template-columns:1fr;padding:14px;gap:12px}.workspace-brief-heading{gap:8px}.workspace-brief-heading b{max-width:65%;text-align:right}}
