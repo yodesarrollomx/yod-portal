@@ -50,3 +50,19 @@ test('fresh validated catalog opens another resident without a second server rea
  at+=55001;assert.equal((await cases.select('a')).case_id,'a');assert.equal(reads,1);
  at+=120000;assert.equal(await cases.select('b'),null);assert.equal(reads,1);cases.dispose();
 });
+
+test('shared prepared credentials remain usable by the live voice connector',async()=>{
+ const {createFastSessionPool}=await import('../despacho3d/office-preparation.mjs');
+ const {createLiveVoice}=await import('../despacho3d/live-voice.mjs');
+ const pool=createFastSessionPool({now:()=>1000}),requests=[];let mints=0;
+ const mint=async p=>{mints++;return raw(p.case_id);};
+ await pool.ensure('a',mint);await pool.ensure('b',mint);
+ const voice=createLiveVoice({now:()=>1000,mint:p=>pool.ensure(p.case_id,mint),
+  fetchImpl:async(url,opts)=>{requests.push(url);assert.equal(opts.headers.Authorization,'Bearer '+token);
+   return{ok:true,status:200,json:async()=>({ok:true,available:true})};}});
+ assert.equal(await voice.prepare('a'),true);
+ assert.equal(await voice.prepare('b'),true);
+ assert.equal(mints,2,'voice must consume the already prepared credential of each resident');
+ assert.deepEqual(requests,[endpoint+'/voice/ready',endpoint+'/voice/ready']);
+ voice.discardPreparation();
+});

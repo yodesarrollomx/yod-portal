@@ -13,7 +13,7 @@ export function createFastSessionPool({now=Date.now,margin=120000,maxCases=6}={}
    if(entries.get(id)!==entry)throw Error('session_changed');
    const raw=await mint({case_id:id});
    if(raw?.ok===false)throw Error(raw.error||'unavailable');
-   const value=validateFastSession(raw,id,now());
+   const value={ok:true,...validateFastSession(raw,id,now())};
    if(entries.get(id)!==entry)throw Error('session_changed');
    entry.value=value;return value;
   });
