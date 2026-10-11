@@ -144,10 +144,10 @@
  .realtime-dialog.has-workspace .voice-sidebar{height:82px;flex:0 0 82px;padding:12px 16px;overflow:visible;box-sizing:border-box}
  .station-heading{position:absolute;top:18px;left:12px;margin:0;gap:4px}
  .station-heading .voice-close{font-size:12px;padding:8px}
- .station-heading #station-menu{display:none}
+ .station-heading #station-menu{display:block;width:44px;height:44px}
  .voice-sidebar .voice-eyebrow{display:none}
- .voice-sidebar h1{font-size:22px;margin:0 0 3px 138px;line-height:1.2}
- .voice-sidebar #voice-case{margin:0 0 0 138px;max-width:calc(100% - 138px);font-size:11px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+ .voice-sidebar h1{font-size:22px;margin:0 0 3px 154px;line-height:1.2}
+ .voice-sidebar #voice-case{margin:0 0 0 154px;max-width:calc(100% - 154px);font-size:11px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
  .voice-sidebar .voice-state-card{position:absolute;inset:auto 0 0;height:90px;padding:10px 14px;box-sizing:border-box;background:#efeee7;border-top:1px solid #d8ded3;z-index:8;overflow:visible}
  .voice-sidebar .voice-state-card h2{display:none}
  .voice-sidebar #voice-phase{font-size:13px;max-width:45%;display:block}
@@ -228,7 +228,7 @@
 
 .station-profile-portrait .avatar-portrait{min-height:0;height:140px;background:radial-gradient(ellipse,#dce6d8,transparent);overflow:hidden}.station-profile-portrait canvas{width:123px;height:140px}.station-profile-portrait:empty{display:none}
 
-@media(max-width:850px){.station-profile-portrait{position:absolute;top:10px;left:98px;width:40px;height:56px;margin:0}.station-profile-portrait .avatar-portrait{height:56px;border-radius:12px;display:grid;place-items:center}.station-profile-portrait canvas{display:block;width:100%;height:auto;transform:none}}
+@media(max-width:850px){.station-profile-portrait{display:none;position:absolute;top:10px;left:98px;width:40px;height:56px;margin:0}.station-profile-portrait .avatar-portrait{height:56px;border-radius:12px;display:grid;place-items:center}.station-profile-portrait canvas{display:block;width:100%;height:auto;transform:none}}
 
 .station-profile-portrait canvas{margin:0 auto}
 @media(max-width:850px){.station-profile-portrait~#voice-title{margin-right:0}}

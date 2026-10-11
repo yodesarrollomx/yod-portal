@@ -45,7 +45,7 @@ const server=http.createServer((req,res)=>{
   const frame=page.frames().find(f=>f.url().includes('puesto-test'));
   await frame.waitForFunction(()=>window.YodResidentAgents?.getAuthorizedProfiles().length===3&&window.YodVoiceWorkspace);
   for(const [i,id]of ['case-a','case-b','case-c','case-a'].entries()){
-   assert.equal(await frame.evaluate(id=>window.YodResidentAgents.openForCase(id),id),true);
+   await office.locator('[data-dock-case="'+id+'"]').click();
    await office.locator('.realtime-dialog').waitFor({state:'visible'});
    
    if(i===0){await office.locator('.workspace-brief[data-read-phase=loading]').waitFor();assert.doesNotMatch(await office.locator('.workspace-brief').innerText(),/Definir el siguiente encargo|Sin encargo registrado/);await page.evaluate(()=>window.__releaseGoals());}
@@ -67,10 +67,13 @@ const server=http.createServer((req,res)=>{
 
   // A failed refresh keeps the old record and the iframe; recovery does not reopen it.
   const nativeFrame=await office.locator('.workspace-board iframe').elementHandle();
-  await page.evaluate(()=>window.__goalMode='fail');
   await office.locator('.workspace-brief button').click();await office.locator('.workspace-subnav [data-tab=tasks]').click();
+  const taskDisclosure=office.locator('.workspace-task-route details').first();await taskDisclosure.locator('summary').click();
+  const sourceDisclosure=office.locator('.workspace-research');await sourceDisclosure.locator('summary').click();await taskDisclosure.locator('summary').focus();
+  await page.evaluate(()=>window.__goalMode='fail');
   await office.locator('.workspace-brief[data-read-phase=unavailable]').waitFor({timeout:16000});
   assert.match(await office.locator('.workspace-brief').innerText(),/Último registro/);
+  assert.equal(await taskDisclosure.getAttribute('open')!==null,true);assert.equal(await sourceDisclosure.getAttribute('open')!==null,true);assert.equal(await taskDisclosure.locator('summary').evaluate(n=>n===document.activeElement),true);
   await page.evaluate(()=>window.__goalMode='ready');await office.locator('.workspace-brief button').click();
   await office.locator('.workspace-brief[data-read-phase=ready]').waitFor();await office.locator('.workspace-primary [data-tab=ppp]').click();
   assert.equal(await nativeFrame.evaluate(n=>n.isConnected),true);
@@ -106,7 +109,7 @@ const server=http.createServer((req,res)=>{
   const mobileBox=await office.locator('.workspace-board iframe').boundingBox();assert.ok(mobileBox.height>=330,'PPP mobile first surface: '+mobileBox.height);
   if(evidence)await page.screenshot({path:path.join(evidence,'puesto-sintetico-movil.png')});
   console.log('UX132_IMAGE_MOBILE '+(await page.screenshot({type:'jpeg',quality:65})).toString('base64'));
-  await office.locator('#station-menu').evaluate(n=>n.click());
+  assert.equal(await office.locator('#station-menu').isVisible(),true);await office.locator('#station-menu').click();
   await office.locator('.station-wheel [data-sector=pendientes]').click();
   for(const box of await office.locator('.radial-options button').evaluateAll(nodes=>nodes.map(n=>({width:n.getBoundingClientRect().width,height:n.getBoundingClientRect().height}))))assert.ok(box.height>=44&&box.width>=44);
   assert.equal(await office.locator('.station-wheel .radial-submenu').count(),1);
