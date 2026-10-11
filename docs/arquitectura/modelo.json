@@ -5414,6 +5414,27 @@
       "contract_ids": [
         "CTR-SALA-SNAPSHOT-ONLINE"
       ]
+    },
+    {
+      "id": "CON-MARKETING-DATOS-ONLINE",
+      "from": "SYS-MARKETING",
+      "to": "EXT-ACTIONS",
+      "kind": "propuesta",
+      "label": "Agregados públicos en rama de datos; UI de Pages conserva código aprobado",
+      "contract": "CTR-SALA-SNAPSHOT-ONLINE. Permiso nativo contents:write; compare-and-swap, hash y recibo antes de confirmar. Sin Administration:write.",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/aurum-board",
+          "path": ".github/workflows/snapshots-online.yml",
+          "claim": "Run 38138596609 confirmó draft privado y rechazo 403 al cambio de Source de Pages; rama de datos aún pendiente.",
+          "status": "propuesto"
+        }
+      ],
+      "contract_ids": [
+        "CTR-SALA-SNAPSHOT-ONLINE"
+      ]
     }
   ],
   "processes": [
@@ -9904,16 +9925,19 @@
         "EXT-MOTORES-MEDIA",
         "SYS-MARKETING",
         "EXT-ACTIONS",
-        "EXT-DRIVE"
+        "EXT-DRIVE",
+        "SYS-DESPACHO",
+        "GAS-PORTERO"
       ],
-      "proposal": "Por instrucción explícita de Dirección: continuar la Sala existente enteramente en nube con alternativas a Modal y al publicador GitHub App ausente. Generación CPU de imágenes, parallax/cámara y voz mantiene procedencia y revisión editorial. Datos del tablero: snapshots privados acumulativos con checksum, validación y despliegue Pages; cambios de código conservan PR y CI. Revisión diaria resumida sin datos personales. Sheets y contratos actuales siguen siendo fuente operativa; no publicar el espejo GAS como si fuera el código vivo.",
+      "proposal": "Por instrucción explícita de Dirección: continuar la Sala existente enteramente en nube con alternativas a Modal y al publicador GitHub App ausente. Generación CPU de imágenes, parallax/cámara y voz mantiene procedencia y revisión editorial. Datos del tablero: snapshots privados acumulativos con checksum, validación y despliegue Pages; cambios de código conservan PR y CI. Revisión diaria resumida sin datos personales. Sheets y contratos actuales siguen siendo fuente operativa; no publicar el espejo GAS como si fuera el código vivo. El board comercial mantiene Pages para su código y lee sus agregados desde una rama pública exclusiva de datos con recibo/hash: el token nativo no puede cambiar su Source de Pages (403 comprobado). El código ya aprobado de conversación de main se conserva al conciliar el atlas.",
       "status": "propuesto",
       "tests": [
         "Prueba técnica real CPU: imagen, voz, parallax y corte con archivos sintéticos y evidencia privada; ningún registro de negocio creado",
         "Archive allowlist, hashes, tamaños, extracción segura, CAS y estados preparado/publicado; rechazo de versión equivocada y fallo no se convierte en cero",
         "Publicación Pages acredita código y snapshot exactos antes de montar la mesa; CI de código y aprobación editorial siguen vigentes",
         "Lecturas rechazadas de APIs conservan último backup y reportan rechazo; revisión diária muestra frecuencia, últimas ejecuciones y fallos",
-        "Arquitectura central --check y verificaciones de Portal; nube/verificar.py, regresiones Sala y contratos Marketing"
+        "Arquitectura central --check y verificaciones de Portal; nube/verificar.py, regresiones Sala y contratos Marketing",
+        "Board: rama de datos sólo admite metrics.json, covers y recibo; consumo CORS, comparación de hash y estado confirmado, sin cambiar Settings de Pages."
       ],
       "deployment": "Propuesta previa a implementación. Requiere comprobar generación CPU, almacenamiento draft privado y Pages real; no acredita sustitución equivalente de animación LTX ni publicación social autónoma.",
       "rollback": "Revertir PR de infraestructura y volver a publicación Git tras resolver la identidad del bot. Restaurar último snapshot confirmado, sin borrar COLA, decisiones, medios ni registros de Sheets."
@@ -11056,7 +11080,8 @@
         "Release en borrador privado con ZIP de datos públicos acumulados, SHA256 y manifiesto de archivos",
         "Pages con recibo version-online.json: code_sha, data_sha, snapshot_id y run_id exactos",
         "Estado publicado sólo tras comprobar el recibo del sitio; montaje sólo con archivo/hash en versión publicada",
-        "Revisión diaria agregada de colas y rutinas; lecturas rechazadas representadas como errores, no ceros"
+        "Revisión diaria agregada de colas y rutinas; lecturas rechazadas representadas como errores, no ceros",
+        "Marketing: rama datos-online contiene únicamente agregados públicos, portadas y recibo; el frontend aprobado en Pages los consulta por raw.githubusercontent.com."
       ],
       "invariants": [
         "Cambios de código pasan por PR y las comprobaciones existentes. Publicar datos validados es un contrato nuevo; nunca integrar los PR anteriores del bot omitiendo CI.",
@@ -11065,7 +11090,8 @@
         "Serializar productores y aplicar comparación de snapshot padre y main antes de publicar; un fallo o concurrencia no acredita publicación ni monta láminas.",
         "Una escena CPU identifica cámara/parallax/profundidad aproximada según el motor real. Las decisiones, retirar, rehechas e identidad de piezas se conservan.",
         "Nunca autoaprobar editoriales ni enviar/publicar contenido a terceros. Prueba técnica no registra un proyecto o producción ficticia en Sheets.",
-        "Si una API devuelve ok:false o error, conservar el backup anterior y mostrar fallo. HTTP200 no equivale a lectura válida."
+        "Si una API devuelve ok:false o error, conservar el backup anterior y mostrar fallo. HTTP200 no equivale a lectura válida.",
+        "La rama pública de datos no contiene código, credenciales, leads o registros nuevos de clientes. Una escritura del bot en esa rama publica únicamente datos validados; main conserva protecciones, PR y CI."
       ]
     }
   ],

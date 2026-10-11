@@ -574,7 +574,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Componentes: SYS-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, SYS-MARKETING, EXT-ACTIONS, EXT-DRIVE.
 - Evidencia: Instrucción de Dirección del 2026-10-11; implementación cloud propuesta en nube/snapshots_online.py y scripts/snapshots_online.py..
 - Entrada/campos: `Código aprobado de main; outputs públicos declarados por proceso; último snapshot publicado e inmutable`, `Identidad automática del workflow del mismo repositorio; nunca credenciales del conector`, `Motor elegido, warnings y comprobación real del archivo para medios; producción CPU no es animación generativa LTX`.
-- Salida: Release en borrador privado con ZIP de datos públicos acumulados, SHA256 y manifiesto de archivos, Pages con recibo version-online.json: code_sha, data_sha, snapshot_id y run_id exactos, Estado publicado sólo tras comprobar el recibo del sitio; montaje sólo con archivo/hash en versión publicada, Revisión diaria agregada de colas y rutinas; lecturas rechazadas representadas como errores, no ceros.
+- Salida: Release en borrador privado con ZIP de datos públicos acumulados, SHA256 y manifiesto de archivos, Pages con recibo version-online.json: code_sha, data_sha, snapshot_id y run_id exactos, Estado publicado sólo tras comprobar el recibo del sitio; montaje sólo con archivo/hash en versión publicada, Revisión diaria agregada de colas y rutinas; lecturas rechazadas representadas como errores, no ceros, Marketing: rama datos-online contiene únicamente agregados públicos, portadas y recibo; el frontend aprobado en Pages los consulta por raw.githubusercontent.com..
 
 - Cambios de código pasan por PR y las comprobaciones existentes. Publicar datos validados es un contrato nuevo; nunca integrar los PR anteriores del bot omitiendo CI.
 - ZIP sólo admite los prefijos públicos de cada repositorio, sin secretos, leads, URLs privadas, symlinks, traversal, datos de Sheets ni archivos arbitrarios.
@@ -583,3 +583,4 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Una escena CPU identifica cámara/parallax/profundidad aproximada según el motor real. Las decisiones, retirar, rehechas e identidad de piezas se conservan.
 - Nunca autoaprobar editoriales ni enviar/publicar contenido a terceros. Prueba técnica no registra un proyecto o producción ficticia en Sheets.
 - Si una API devuelve ok:false o error, conservar el backup anterior y mostrar fallo. HTTP200 no equivale a lectura válida.
+- La rama pública de datos no contiene código, credenciales, leads o registros nuevos de clientes. Una escritura del bot en esa rama publica únicamente datos validados; main conserva protecciones, PR y CI.
