@@ -1,37 +1,15 @@
 {
-  "model_revision": "2026-10-11.horarios-render-verificada",
-  "proposal_id": "CHG-HORARIOS-NUBE-20261011",
-  "summary": "Registrar observación viva y persistencia, con recuperación por App todavía pendiente de autorización personal.",
+  "model_revision": "2026-10-11.hairline-elecciones",
+  "proposal_id": "CHG-DESPACHO-HAIRLINE-20261011",
+  "summary": "Instalar las once metáforas Hairline elegidas en los accesos existentes del puesto: círculo, herramientas y documentos. Conservar contratos, etiquetas, permisos y acciones; las tres alternativas descartadas permanecen sin cambiar.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-CONTROL",
-    "SYS-POTENCIALES",
-    "SYS-SALA",
-    "GAS-SALA",
-    "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
-    "EXT-ACTIONS",
-    "EXT-RENDER",
-    "SVC-AUTON-CLOUD",
-    "SVC-HORARIOS-CLOUD",
-    "STORE-HORARIOS-CLOUD",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
-    "GAS-PORTERO",
-    "EXT-DRIVE",
-    "EXT-GMAIL",
-    "SYS-MARKETING",
-    "SYS-PLAN-POTENCIAL",
-    "EXT-MOTORES-MEDIA",
     "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "GAS-PLAN-POTENCIAL",
-    "SHEET-PLAN-POTENCIAL",
-    "SHEET-SALA"
+    "SYS-DESPACHO-3D"
   ],
   "tests": [
-    "Verificación de evidencias por alcance, Atlas/vistas sincronizados e inventario de salud; CI Portal completo."
+    "633 pruebas Node aprobadas; Arquitectura, OS, Portal, Obra y matriz de Accesos aprobados (94c2c446ea93176896844a470b3397cffad3968b).",
+    "Chromium: círculo real con datos sintéticos, conserva caso y acción de escribir, decoraciones sin foco, desmontaje y reapertura; bandeja documental escritorio/móvil."
   ],
-  "rollback": "Revertir registro por PR; conservar despliegues, estado y datos de negocio."
+  "rollback": "Revertir el PR; vuelve el listado de fuentes y se conservan registros y contratos."
 }
