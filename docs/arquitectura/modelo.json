@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-11.sala-online-verificada",
+  "revision": "2026-10-11.despacho-fluido132",
   "checked_at": "2026-10-11",
   "priorities": [
     "vender_mas",
@@ -9988,6 +9988,24 @@
       ],
       "deployment": "Sala PR265 integrado en 73902861db96d213a07f788996f50fdcf3c65566, código publicado por run 38141732590. Revisión diaria publicada y releída: snapshot 409673426, data_sha beb4361a64e0b77206e313964514587b816de6184dc26a1d8b052e5c34e76c11, productor 38141812652 y Pages 38141874311, ambos success. Marketing PR76/77 integrado en 6ad059cd1ed97edee894df5a9b2032d919143e0f; refresh 38141736288 success publica snapshot 409673351, data_sha 35cd384cddecdc970c44b0ac8121757c4efd8f586fd339f039a0c4a319e483cd y el lector real confirma 76 publicaciones. Código de Marketing continúa en Pages/main; sólo agregados públicos en datos-online. Releases permanecen draft:true. Generación CPU real confirmada por 38139680521, sin Modal obligatorio ni sesión de chat. Alcance pendiente: fuente y disparadores originales de Apps Script, correo heredado, lectura automática de Plan de Potencial rechazada y conciliación de medios históricos. La escena parallax no acredita animación LTX y las aprobaciones editoriales permanecen humanas.",
       "rollback": "Revertir PR de infraestructura y volver a publicación Git tras resolver la identidad del bot. Restaurar último snapshot confirmado, sin borrar COLA, decisiones, medios ni registros de Sheets."
+    },
+    {
+      "id": "CHG-DESPACHO-FLUIDEZ-20261011",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO"
+      ],
+      "proposal": "Dirección autoriza reorganizar la interacción como oficina de estrategia: selección, cuatro direcciones y puesto con PPP visible mientras conversa. Conservar todas las capacidades, identidades y contratos. Corregir estados de lectura, reducir cabeceras y separar ruta guardada, actividad y evidencia. Revisar sólo la entrega exacta mostrada, sin aprobar por actualización silenciosa ni crear encargos al abrir. No reactivar automatizaciones canceladas ni ampliar APIs, permisos o backend.",
+      "status": "propuesto",
+      "tests": [
+        "Suite completa y verificadores de arquitectura, OS, Portal, Accesos y Obra mediante Actions.",
+        "Navegador sobre módulos reales: carga lenta/fallo/recuperación, PPP y espacio visible, tres expedientes, rueda teclado/táctil, voz/cápsula y móvil. Transporte sintético no acredita micrófono físico ni datos privados.",
+        "Revisor separado sobre el commit exacto; evidencia visual de escritorio, Chromebook y móvil."
+      ],
+      "deployment": "Propuesta registrada antes de implementación. Publicación por PR y Pages tras CI y revisión; no reiniciar Render por cambios de cliente.",
+      "rollback": "Revertir el PR de interfaz; conservar Sheets, expedientes, objetivos, recibos y disco persistente."
     }
   ],
   "data_contracts": [

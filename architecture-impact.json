@@ -1,28 +1,17 @@
 {
-  "model_revision": "2026-10-11.sala-online-verificada",
-  "proposal_id": "CHG-SALA-ONLINE-20261011",
-  "summary": "Registrar código integrado y recibos de ejecución reales de Sala y tablero comercial: CPU/Drive, revisión diaria/Pages y métricas/hash. Alcance confirmado específico; mantener pendientes de Plan, Apps Script original, correo y medios históricos. Sin cambios de reglas comerciales ni credenciales.",
+  "model_revision": "2026-10-11.despacho-fluido132",
+  "proposal_id": "CHG-DESPACHO-FLUIDEZ-20261011",
+  "summary": "Dirección autoriza reorganizar la interacción como oficina de estrategia: selección, cuatro direcciones y puesto con PPP visible mientras conversa. Conservar todas las capacidades, identidades y contratos. Corregir estados de lectura, reducir cabeceras y separar ruta guardada, actividad y evidencia. Revisar sólo la entrega exacta mostrada, sin aprobar por actualización silenciosa ni crear encargos al abrir. No reactivar automatizaciones canceladas ni ampliar APIs, permisos o backend.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-SALA",
-    "GAS-SALA",
-    "SHEET-SALA",
-    "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
-    "EXT-MOTORES-MEDIA",
-    "SYS-MARKETING",
-    "EXT-ACTIONS",
-    "EXT-DRIVE",
     "SYS-DESPACHO",
+    "SYS-DESPACHO-3D",
     "GAS-PORTERO"
   ],
   "tests": [
-    "Sala PR265: CI obligatorio, verificador de contratos y suite Python completa de 120 pruebas; regresiones de publicador, lectura/revisión y montage con recibo.",
-    "Snapshots: 26 pruebas de ZIP/allowlist/hash, selección de drafts, CAS, lease, revisión y confirmación; prueba real PATCH→GET conserva draft privado y permite recuperar el activo.",
-    "CPU real run 38139680521, commit 6e67927f01829baba72267aad15d59ea60139444: Tiny-SD, profundidad ONNX/parallax, Kokoro y montaje ffmpeg; seis archivos privados subidos y releídos con SHA256. Video H264/AAC 1080x1920 de 10.166667s. Cero filas de negocio y decisiones editoriales.",
-    "Revisión run 38141812652: cola y rutinas confirmadas, errores vacíos; seis pruebas de revisión pasan. Pages run 38141874311 pasa 31 regresiones del publicador y26 de snapshots y confirma el recibo HTTP exacto.",
-    "Marketing PR76/77: CI obligatorio, sintaxis del cliente y seis pruebas del lector; seis regresiones de leads y20 del publicador previas permanecen. Run 38141736288 confirma 26 pruebas de snapshots y lectura real de 76 publicaciones con hash exacto.",
-    "Arquitectura central: vistas reproducibles, esquema, contratos/regresiones, impacto, verificadores de Portal/OS/accesos/Obra mediante CI del PR de evidencia."
+    "Suite completa y verificadores de arquitectura, OS, Portal, Accesos y Obra mediante Actions.",
+    "Navegador sobre módulos reales: carga lenta/fallo/recuperación, PPP y espacio visible, tres expedientes, rueda teclado/táctil, voz/cápsula y móvil. Transporte sintético no acredita micrófono físico ni datos privados.",
+    "Revisor separado sobre el commit exacto; evidencia visual de escritorio, Chromebook y móvil."
   ],
-  "rollback": "Revertir PR de infraestructura y volver a publicación Git tras resolver la identidad del bot. Restaurar último snapshot confirmado, sin borrar COLA, decisiones, medios ni registros de Sheets."
+  "rollback": "Revertir el PR de interfaz; conservar Sheets, expedientes, objetivos, recibos y disco persistente."
 }
