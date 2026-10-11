@@ -1,21 +1,17 @@
 {
   "model_revision": "2026-10-11.despacho-puesto131",
-  "proposal_id": "CHG-DESPACHO-PUESTO-20261011",
-  "summary": "Abrir el puesto del autón desde su nombre con la misma selección autorizada; mostrar PPP junto a conversación y una ruta de trabajo derivada de las metas reales. Separar conexiones por caso y enlazar explícitamente identidad del autón con identidad del PPP registrado. Consultas de voz conservan instrucción, criterio y resumen de cada tarea. Sin reiniciar automatizaciones canceladas ni modificar resultados del negocio. El workflow compartido de chinches conserva sus pruebas de Sala y añade el recorrido del puesto.",
+  "proposal_id": "CHG-DESPACHO-CONVERSACION-CONTEXTO-128",
+  "summary": "Chinche #249: enviar un mensaje al autón ya no rebota como «ocupado» cuando hay una lectura en vuelo. En el puente del Despacho las mutaciones (enqueue, createGoal, reviewGoal) van en su propio carril; siguen una a la vez y sin reintentos.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "SVC-AUTON-CLOUD",
     "GAS-PORTERO",
-    "SYS-SALA"
+    "EXT-DRIVE"
   ],
   "tests": [
-    "Cambiar entre tres puestos y descartar conexiones y respuestas del caso anterior",
-    "PPP con identidad distinta: handshake, lectura y propuesta preservan revisión, nonce y fuente autorizada",
-    "Ruta de meta distingue revisión, bloqueo, historial y trabajo registrado; no inventa avance",
-    "Navegador con red interceptada: abrir por nombre, voz y PPP simultáneos, móvil y revocación",
-    "Arquitectura --check, tests/*.cjs, verify-os/portal/accesos/obra-app"
+    "node --test tests/despacho-conversation.test.cjs (17/17; la prueba nueva falla sin el cambio)",
+    "Lectura lenta en vuelo + enqueue: el mensaje pasa; un segundo enqueue simultáneo recibe transport_busy y no se duplica",
+    "node scripts/arquitectura.cjs --check y scripts/verificar-impacto.cjs contra main"
   ],
-  "rollback": "Revertir frontend y los cambios de contexto/lectura de voz del backend; conservar expedientes, recibos y automatizaciones canceladas."
+  "rollback": "Revertir este PR: vuelve el carril único; no toca backend, Portero, expedientes ni datos."
 }
