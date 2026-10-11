@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-11.salud-accesos",
+  "model_revision": "2026-10-11.salud-accesos-verificada",
   "proposal_id": "CHG-SALUD-ACCESOS-20261011",
-  "summary": "Mostrar última ejecución en Hermosillo, filtrar pruebas y comprobar la sesión actual cada minuto sin exponer tokens.",
+  "summary": "Registrar publicación/alcance real del monitor y comprobar bytes de los archivos servidos de Accesos.",
   "components": [
     "SYS-YOD-OS",
     "SYS-CONTROL",
@@ -24,8 +24,8 @@
     "SYS-DESPACHO-3D"
   ],
   "tests": [
-    "Regresiones de caducidad/fallo y descarte al detener; CI Portal completo.",
-    "Navegador Accesos con admin/rechazo/cambio de sesión y relectura del informe real."
+    "Regresiones de datos caducados/futuros, fallos, canarios posteriores, falta de contrato y respuesta tardía después de cerrar sesión.",
+    "Catálogo derivado del Atlas completo y CI Portal completo; monitor real y publicación se acreditan aparte."
   ],
   "rollback": "Revertir monitor, cliente y enlace mediante PR. Conservar rama de datos e historial; detener sólo salud-online."
 }

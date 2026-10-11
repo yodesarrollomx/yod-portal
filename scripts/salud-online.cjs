@@ -155,6 +155,17 @@ function canaryChecks(r,now,lastAttempt){
 }
 async function collect(now=new Date().toISOString()){
  const checks=await Promise.all(FRONTS.map(d=>page(d,now)));
+ for(const[file,id,name]of [['os/yod-salud.js','cliente-publicado','Accesos · cliente publicado'],['os/salud-catalogo.json','catalogo-publicado','Accesos · inventario publicado']]){
+  try{
+   const local=fs.readFileSync(path.join(__dirname,'../'+file),'utf8');
+   const url='https://yodesarrollomx.github.io/yod-portal/'+file;
+   const served=await read(url+'?salud='+Date.parse(now));
+   checks.push(record(id,name,['SYS-YOD-OS','SYS-CONTROL'],served===local?'ok':'sin_confirmar',now,
+    served===local?'Bytes servidos coinciden con el código aprobado de esta corrida':'La publicación aún no coincide con esta versión',
+    'Publicación byte exacta',{evidencia_url:url}));
+  }catch(e){checks.push(record(id,name,['SYS-YOD-OS','SYS-CONTROL'],'sin_confirmar',now,
+   'No se pudo confirmar la publicación exacta','Publicación byte exacta'));}
+ }
  try{
    const source=fs.readFileSync(path.join(__dirname,'../os/yod-acceso.js'),'utf8');
    const match=source.match(/(?:ORIGINAL|original)\s*[:=]\s*['"]([^'"]+)['"]/);

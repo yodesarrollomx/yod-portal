@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "model_revision": "2026-10-11.salud-accesos",
+  "model_revision": "2026-10-11.salud-accesos-verificada",
   "components": [
     {
       "id": "SYS-DESPACHO",
