@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-11.sala-online-verificada",
+  "revision": "2026-10-11.plan-agregados-online",
   "checked_at": "2026-10-11",
   "priorities": [
     "vender_mas",
@@ -1463,6 +1463,10 @@
         {
           "claim": "Integración pendiente de verificar",
           "status": "pendiente"
+        },
+        {
+          "claim": "Metadatos y encabezados de LEADS - POTENCIAL contrastados con documentación y lecturas autorizadas acotadas el11-oct-2026. Datos y ID físico omitidos del atlas; autoridad del runtime de servicio pendiente.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -1475,8 +1479,8 @@
       ],
       "source_of_truth": "Almacén lógico Google Sheets; correspondencia con archivo vivo por verificar",
       "physical_mapping_status": "pendiente_no_contar_como_archivos_distintos_confirmados",
-      "status": "declarado",
-      "runtime_status": "No verificado en despliegue"
+      "status": "ejecucion",
+      "runtime_status": "Correspondencia de fuente y lectura por conector verificadas; operación de la cuenta de servicio y backend activo pendientes."
     },
     {
       "id": "GAS-CROKISS",
@@ -5482,6 +5486,46 @@
         "scope": "Agregados de Meta y rama datos-online, lectura del cliente con hash exacto; Pages/main conserva código aprobado. No acredita lectura automática completa de Plan de Potencial.",
         "receipt": "https://github.com/yodesarrollomx/aurum-board/actions/runs/38141736288 ; https://raw.githubusercontent.com/yodesarrollomx/aurum-board/datos-online/version-online.json ; snapshot_id=409673351 ; code_sha=6ad059cd1ed97edee894df5a9b2032d919143e0f ; data_sha=35cd384cddecdc970c44b0ac8121757c4efd8f586fd339f039a0c4a319e483cd"
       }
+    },
+    {
+      "id": "CON-PLAN-SHEETS-ONLINE",
+      "from": "SHEET-PLAN-POTENCIAL",
+      "to": "SYS-SALA",
+      "kind": "lectura",
+      "label": "Lectura de Plan por cuenta de servicio y salida agregada",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "Encabezados canónicos y columnas seleccionadas leídos por conector autorizado. Cuenta de servicio y ejecución programada pendientes; ninguna fila creada.",
+          "status": "propuesto"
+        }
+      ],
+      "contract": "CTR-PLAN-AGREGADOS-ONLINE; identidad sólo lectora, columnas permitidas y ningún registro de cliente en salida.",
+      "contract_ids": [
+        "CTR-PLAN-AGREGADOS-ONLINE"
+      ]
+    },
+    {
+      "id": "CON-PLAN-METRICAS-ONLINE",
+      "from": "SYS-SALA",
+      "to": "SYS-MARKETING",
+      "kind": "lectura",
+      "label": "Marketing consume agregados de Plan publicados con hash",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/aurum-board",
+          "path": "scripts/pull_metrics.py",
+          "claim": "Nueva ruta propuesta para atribución, con hash y última lectura válida; no cambia los backends de captación.",
+          "status": "propuesto"
+        }
+      ],
+      "contract": "CTR-PLAN-AGREGADOS-ONLINE; recibo exacto, frescura y no sustituir errores por cero.",
+      "contract_ids": [
+        "CTR-PLAN-AGREGADOS-ONLINE"
+      ]
     }
   ],
   "processes": [
@@ -9988,6 +10032,32 @@
       ],
       "deployment": "Sala PR265 integrado en 73902861db96d213a07f788996f50fdcf3c65566, código publicado por run 38141732590. Revisión diaria publicada y releída: snapshot 409673426, data_sha beb4361a64e0b77206e313964514587b816de6184dc26a1d8b052e5c34e76c11, productor 38141812652 y Pages 38141874311, ambos success. Marketing PR76/77 integrado en 6ad059cd1ed97edee894df5a9b2032d919143e0f; refresh 38141736288 success publica snapshot 409673351, data_sha 35cd384cddecdc970c44b0ac8121757c4efd8f586fd339f039a0c4a319e483cd y el lector real confirma 76 publicaciones. Código de Marketing continúa en Pages/main; sólo agregados públicos en datos-online. Releases permanecen draft:true. Generación CPU real confirmada por 38139680521, sin Modal obligatorio ni sesión de chat. Alcance pendiente: fuente y disparadores originales de Apps Script, correo heredado, lectura automática de Plan de Potencial rechazada y conciliación de medios históricos. La escena parallax no acredita animación LTX y las aprobaciones editoriales permanecen humanas.",
       "rollback": "Revertir PR de infraestructura y volver a publicación Git tras resolver la identidad del bot. Restaurar último snapshot confirmado, sin borrar COLA, decisiones, medios ni registros de Sheets."
+    },
+    {
+      "id": "CHG-PLAN-AGREGADOS-ONLINE-20261011",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "SYS-MARKETING",
+        "SYS-PLAN-POTENCIAL",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL",
+        "SHEET-CRM",
+        "EXT-ACTIONS",
+        "EXT-DRIVE"
+      ],
+      "status": "propuesto",
+      "proposal": "Por autorización de Dirección: resolver la lectura automática de atribución de Plan mediante lectura acotada de su hoja canónica con la cuenta de servicio ya usada por Sala y permiso sólo lector. Configuración sin credenciales en documento privado de Drive. Sala publica únicamente agregados de campaña/pieza con SHA256 en su recibo; Marketing consulta esa versión confirmada y conserva el último dato si hay rechazo, retraso o contrato incompleto. No cambia el formulario, el backend de captación, permisos del Portero, gastos, estados del CRM ni decisiones editoriales.",
+      "tests": [
+        "Lectura real y privada de metadatos/encabezados confirma correspondencia con la hoja canónica; comprobar por separado la autoridad del servicio.",
+        "Dobles: lectura por columnas permitidas, cabeceras exactas, folios duplicados/rechazados, pruebas excluidas y cita sólo con confirmación registrada; sin PII o IDs privados en el DTO.",
+        "Snapshot/recibo: hash exacto del archivo de agregados; consumidor rechaza recibos incompletos, corruptos o desactualizados y conserva último dato acreditado.",
+        "Regresiones completas de Sala y leads/publicación Marketing; arquitectura central y CI obligatorios; ninguna escritura de prueba en hojas/CRM."
+      ],
+      "deployment": "Propuesto; conector de Dirección acreditó encabezados y lecturas acotadas del Sheet. Permiso de la identidad de servicio y publicación automática por comprobar. Fuentes/IDs/disparadores de los tres Apps Script y correo heredado siguen pendientes; no desplegar espejos.",
+      "rollback": "Revertir PR de lectura y consumidor; mantener los últimos snapshots confirmados y las hojas intactas. Retirar sólo el permiso lector específico si se añadió para esta ruta; no borrar CRM, medios o historial."
     }
   ],
   "data_contracts": [
@@ -11139,6 +11209,41 @@
         "Nunca autoaprobar editoriales ni enviar/publicar contenido a terceros. Prueba técnica no registra un proyecto o producción ficticia en Sheets.",
         "Si una API devuelve ok:false o error, conservar el backup anterior y mostrar fallo. HTTP200 no equivale a lectura válida.",
         "La rama pública de datos no contiene código, credenciales, leads o registros nuevos de clientes. Una escritura del bot en esa rama publica únicamente datos validados; main conserva protecciones, PR y CI."
+      ]
+    },
+    {
+      "id": "CTR-PLAN-AGREGADOS-ONLINE",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "SYS-MARKETING",
+        "SYS-PLAN-POTENCIAL",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL",
+        "SHEET-CRM",
+        "EXT-ACTIONS",
+        "EXT-DRIVE"
+      ],
+      "source": "Hoja canónica de Plan de Potencial; metadatos/encabezados inspeccionados por conector autorizado el 11-oct-2026. Configuración técnica e inventario de fuentes en documento privado; sin credenciales ni exportación de filas a repositorios.",
+      "input": [
+        "Lectura acotada de columnas de identidad interna, tipo, estado, confirmación de sesión y UTM; encabezados verificados; sin nombre, correo, teléfono, dirección, notas o JSON del lead.",
+        "Cuenta de servicio existente; permiso lector a la fuente. Identidad y acuse técnicos sólo en Drive privado.",
+        "Último snapshot confirmado y código aprobado; reloj America/Hermosillo."
+      ],
+      "output": [
+        "DTO schema1 con lectura fechada, conteos históricos/contexto de cobertura y agregados por campaña/pieza: leads y citas confirmadas; ningún folio, fila, PII o ID de Sheet.",
+        "Recibo publicado enlaza SHA256 de datos/plan-agregados.json; Marketing comprueba recibo, bytes, frescura y contrato antes de usar conteos.",
+        "Ante error conservar último dato, marcar lectura fallida y no certificar cero; fuentes Apps Script y correo pendientes por separado."
+      ],
+      "invariants": [
+        "No crear/modificar leads, estados, gastos, citas, triggers o decisiones para probar la integración.",
+        "Excluir registros de prueba explícitos, deduplicar por folio y fallar ante duplicados contradictorios; no sumar CRM históricos como leads nuevos del día.",
+        "Cita confirmada exige valor de sesión válido y estado compatible; clic en agendar no es confirmación. Las claves no se publican.",
+        "Sólo agregados de UTM permitidos sin PII; el recibo vincula hash del archivo exacto. Una respuesta HTTP200 sin contrato no acredita lectura.",
+        "Configuración en Drive privado no incluye llaves de cuenta de servicio o OAuth. Las credenciales sólo se usan en su runtime autorizado.",
+        "Cambios de código pasan por PR y CI; pin de arquitectura aprobado antes de integrar consumidores. No sustituir fuentes activas desconocidas por espejos."
       ]
     }
   ],

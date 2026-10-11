@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-11.sala-online-verificada
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-11.plan-agregados-online
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 26 sistemas y 86 componentes distribuidos exactamente una vez.
-- 10 áreas; 118 conexiones registradas, 2 marcadas como verificadas en el atlas.
+- 10 áreas; 120 conexiones registradas, 2 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -514,6 +514,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-077 · SYS-SALA-OPERACION → SYS-MARKETING · automatizacion · Genera métricas de campañas en utilidades históricas · Estado: pendiente · Ejecución no verificada en el atlas.
 - CON-PUBLICADOR-MARKETING · EXT-GITHUB-PUBLISHER-APP → SYS-MARKETING · automatizacion · Crea PR del commit preparado de Marketing · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-MARKETING-DATOS-ONLINE · SYS-MARKETING → EXT-ACTIONS · publicacion · Agregados públicos en rama de datos; UI de Pages conserva código aprobado · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
+- CON-PLAN-METRICAS-ONLINE · SYS-SALA → SYS-MARKETING · lectura · Marketing consume agregados de Plan publicados con hash · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -532,10 +533,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PUBLICADOR-MARKETING · Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB\_TOKEN; requiere registro e instalación personal de una App privada de la organización. · Estado: declarado · Sin revisión inmutable en esta referencia
 - [CON-MARKETING-DATOS-ONLINE · Run 38141736288 success: actualizó y publicó 76 publicaciones de Meta, confirmó hash/recibo del HTTP real y conservó el snapshot como draft privado. · Estado: ejecucion · yodesarrollomx/aurum-board · scripts/snapshots\_online.py · Revisión: 6ad059cd1ed97edee894df5a9b2032d919143e0f](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/scripts/snapshots_online.py)
 - [CON-MARKETING-DATOS-ONLINE · LECTOR\_ONLINE ok:true, posts:76, run\_id:38141736288. El navegador recibe sólo agregados/covers y verifica SHA256. Plan rechazado mantiene último dato acreditado y señal de medición incompleta. · Estado: ejecucion · yodesarrollomx/aurum-board · metrics-online.js · Revisión: 6ad059cd1ed97edee894df5a9b2032d919143e0f](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/metrics-online.js)
+- CON-PLAN-METRICAS-ONLINE · Nueva ruta propuesta para atribución, con hash y última lectura válida; no cambia los backends de captación. · Estado: propuesto · yodesarrollomx/aurum-board · scripts/pull\_metrics.py · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 8 conexiones sin verificación de ejecución registrada.
+- 9 conexiones sin verificación de ejecución registrada.
 
 ### Experiencia Aurum · SYS-AURUM-EXPERIENCIA
 
@@ -669,24 +671,27 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dueño del dato por confirmar
 
-**Estado registrado:** declarado. No verificado en despliegue
+**Estado registrado:** ejecucion. Correspondencia de fuente y lectura por conector verificadas; operación de la cuenta de servicio y backend activo pendientes.
 
 **Conexiones registradas; no habilitan operaciones:**
 
 - CON-006 · GAS-PLAN-POTENCIAL → SHEET-PLAN-POTENCIAL · persistencia · Lee/escribe registros del dominio · Estado: declarado · Ejecución no verificada en el atlas.
+- CON-PLAN-SHEETS-ONLINE · SHEET-PLAN-POTENCIAL → SYS-SALA · lectura · Lectura de Plan por cuenta de servicio y salida agregada · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
 - Integración pendiente de verificar · Estado: pendiente · Sin revisión inmutable en esta referencia
+- Metadatos y encabezados de LEADS - POTENCIAL contrastados con documentación y lecturas autorizadas acotadas el11-oct-2026. Datos y ID físico omitidos del atlas; autoridad del runtime de servicio pendiente. · Estado: ejecucion · Sin revisión inmutable en esta referencia
 
 **Evidencia de conexiones:**
 
 - CON-006 · Backend asociado al almacén de su dominio · Estado: declarado · yodesarrollomx/plan-potencial · CLAUDE.md · Revisión: HEAD\_baseline
+- CON-PLAN-SHEETS-ONLINE · Encabezados canónicos y columnas seleccionadas leídos por conector autorizado. Cuenta de servicio y ejecución programada pendientes; ninguna fila creada. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
 - Responsable operativo pendiente de confirmación; el encargado de verificación no sustituye esa asignación.
-- 1 conexiones sin verificación de ejecución registrada.
+- 2 conexiones sin verificación de ejecución registrada.
 - Esquema y calidad de datos vivos no inspeccionados
 
 ### Guardado de planos · GAS-CROKISS
@@ -2050,6 +2055,8 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-064 · SYS-SALA-OPERACION → SYS-SALA · automatizacion · Herramientas históricas de producción · Estado: declarado · Ejecución no verificada en el atlas.
 - CON-PUBLICADOR-SALA · EXT-GITHUB-PUBLISHER-APP → SYS-SALA · automatizacion · Crea PR del commit preparado de Sala · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-SALA-SNAPSHOT-ONLINE · SYS-SALA → EXT-ACTIONS · publicacion · Snapshots privados de datos públicos y Pages con recibo verificable · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
+- CON-PLAN-SHEETS-ONLINE · SHEET-PLAN-POTENCIAL → SYS-SALA · lectura · Lectura de Plan por cuenta de servicio y salida agregada · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-PLAN-METRICAS-ONLINE · SYS-SALA → SYS-MARKETING · lectura · Marketing consume agregados de Plan publicados con hash · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2066,10 +2073,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-064 · Migración de herramientas a nube · Estado: declarado · yodesarrollomx/sala-edicion · CLAUDE.md · Revisión: HEAD\_baseline
 - CON-PUBLICADOR-SALA · Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB\_TOKEN; requiere registro e instalación personal de una App privada de la organización. · Estado: declarado · Sin revisión inmutable en esta referencia
 - [CON-SALA-SNAPSHOT-ONLINE · Run 38141812652 publicó la revisión acumulativa y esperó el recibo exacto de Pages run 38141874311; ambos success. ZIP permitido, bloqueo CAS y release permanece draft:true. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/snapshots\_online.py · Revisión: 73902861db96d213a07f788996f50fdcf3c65566](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/nube/snapshots_online.py)
+- CON-PLAN-SHEETS-ONLINE · Encabezados canónicos y columnas seleccionadas leídos por conector autorizado. Cuenta de servicio y ejecución programada pendientes; ninguna fila creada. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-PLAN-METRICAS-ONLINE · Nueva ruta propuesta para atribución, con hash y última lectura válida; no cambia los backends de captación. · Estado: propuesto · yodesarrollomx/aurum-board · scripts/pull\_metrics.py · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 4 conexiones sin verificación de ejecución registrada.
+- 6 conexiones sin verificación de ejecución registrada.
 - Cambios de infraestructura y documentos históricos requieren reconciliación
 
 ### Herramientas de producción · SYS-SALA-OPERACION

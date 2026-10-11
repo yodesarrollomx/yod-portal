@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.sala-online-verificada · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.plan-agregados-online · 2026-10-11.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -154,6 +154,8 @@ flowchart LR
   n_SYS_DESPACHO_3D -->|Tablero original con contexto compartido, escenario y revisión| n_SYS_POTENCIALES
   n_SYS_SALA -->|Snapshots privados de datos públicos y Pages con recibo verificable| n_EXT_ACTIONS
   n_SYS_MARKETING -->|Agregados públicos en rama de datos; UI de Pages conserva código aprobado| n_EXT_ACTIONS
+  n_SHEET_PLAN_POTENCIAL -.->|Lectura de Plan por cuenta de servicio y salida agregada| n_SYS_SALA
+  n_SYS_SALA -.->|Marketing consume agregados de Plan publicados con hash| n_SYS_MARKETING
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PLAN_POTENCIAL pendiente;
@@ -161,7 +163,6 @@ flowchart LR
   class n_SYS_SALA_OPERACION pendiente;
   class n_SHEET_PORTERO pendiente;
   class n_SHEET_MARKETING pendiente;
-  class n_SHEET_PLAN_POTENCIAL pendiente;
   class n_SHEET_CROKISS pendiente;
   class n_SHEET_CODES pendiente;
   class n_SHEET_SALA pendiente;
@@ -618,3 +619,5 @@ flowchart LR
 | CON-BIBLIOTECA-NOTEBOOKLM | SYS-DESPACHO-3D → EXT-NOTEBOOKLM | propuesta: Consulta documental prevista, conexión sin verificar. Acceso/API/sincronización pendientes de comprobar. | propuesto | [yod-portal/despacho3d/entorno.mjs](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/entorno.mjs) — Consulta documental prevista, conexión sin verificar |
 | CON-SALA-SNAPSHOT-ONLINE | SYS-SALA → EXT-ACTIONS | publicacion: Snapshots privados de datos públicos y Pages con recibo verificable. CTR-SALA-SNAPSHOT-ONLINE: datos aprobados y validados, draft privado, hash y recibo exactos antes del montaje; CI de código separado y obligatorio. | ejecucion | [sala-edicion/nube/snapshots_online.py](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/nube/snapshots_online.py) — Run 38141812652 publicó la revisión acumulativa y esperó el recibo exacto de Pages run 38141874311; ambos success. ZIP permitido, bloqueo CAS y release permanece draft:true. |
 | CON-MARKETING-DATOS-ONLINE | SYS-MARKETING → EXT-ACTIONS | publicacion: Agregados públicos en rama de datos; UI de Pages conserva código aprobado. CTR-SALA-SNAPSHOT-ONLINE. Permiso nativo contents:write; compare-and-swap, hash y recibo antes de confirmar. Sin Administration:write. | ejecucion | [aurum-board/scripts/snapshots_online.py](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/scripts/snapshots_online.py) — Run 38141736288 success: actualizó y publicó 76 publicaciones de Meta, confirmó hash/recibo del HTTP real y conservó el snapshot como draft privado.; [aurum-board/metrics-online.js](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/metrics-online.js) — LECTOR_ONLINE ok:true, posts:76, run_id:38141736288. El navegador recibe sólo agregados/covers y verifica SHA256. Plan rechazado mantiene último dato acreditado y señal de medición incompleta. |
+| CON-PLAN-SHEETS-ONLINE | SHEET-PLAN-POTENCIAL → SYS-SALA | lectura: Lectura de Plan por cuenta de servicio y salida agregada. CTR-PLAN-AGREGADOS-ONLINE; identidad sólo lectora, columnas permitidas y ningún registro de cliente en salida. | propuesto | Encabezados canónicos y columnas seleccionadas leídos por conector autorizado. Cuenta de servicio y ejecución programada pendientes; ninguna fila creada. |
+| CON-PLAN-METRICAS-ONLINE | SYS-SALA → SYS-MARKETING | lectura: Marketing consume agregados de Plan publicados con hash. CTR-PLAN-AGREGADOS-ONLINE; recibo exacto, frescura y no sustituir errores por cero. | propuesto | [aurum-board/scripts/pull_metrics.py](https://github.com/yodesarrollomx/aurum-board/blob/ed41c34892aa8554b9599f0f50f325bb7b1d4deb/scripts/pull_metrics.py) — Nueva ruta propuesta para atribución, con hash y última lectura válida; no cambia los backends de captación. |
