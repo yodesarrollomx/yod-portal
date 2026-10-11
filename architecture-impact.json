@@ -1,20 +1,24 @@
 {
-  "model_revision": "2026-10-11.horarios-render",
+  "model_revision": "2026-10-11.horarios-render.1",
   "proposal_id": "CHG-HORARIOS-NUBE-20261011",
   "summary": "Mostrar vigilancia independiente de Render en Accesos, conservar vigencias y correlacionar solicitudes de monitor.",
   "components": [
     "SYS-YOD-OS",
     "SYS-CONTROL",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
     "SYS-POTENCIALES",
-    "GAS-PORTERO",
     "SYS-SALA",
     "GAS-SALA",
     "SVC-SALA-PRODUCTOR",
     "SVC-SALA-EJECUTOR",
     "EXT-ACTIONS",
+    "EXT-RENDER",
+    "SVC-AUTON-CLOUD",
+    "SVC-HORARIOS-CLOUD",
+    "STORE-HORARIOS-CLOUD",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "GAS-PORTERO",
     "EXT-DRIVE",
     "EXT-GMAIL",
     "SYS-MARKETING",
@@ -22,10 +26,9 @@
     "EXT-MOTORES-MEDIA",
     "SYS-DESPACHO",
     "SYS-DESPACHO-3D",
-    "EXT-RENDER",
-    "SVC-AUTON-CLOUD",
-    "SVC-HORARIOS-CLOUD",
-    "STORE-HORARIOS-CLOUD"
+    "GAS-PLAN-POTENCIAL",
+    "SHEET-PLAN-POTENCIAL",
+    "SHEET-SALA"
   ],
   "tests": [
     "Selección de fuente, reloj futuro, caducidad y fallo de Render con respaldo GitHub; pruebas del panel/sesión existentes y CI completo."
