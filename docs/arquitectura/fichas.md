@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.salud-accesos-verificada · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.horarios-render · 2026-10-11.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -132,7 +132,7 @@ Administrar catálogo y registro de proyectos
 - Entidades: sistema, portal, proyecto, folio.
 - Fuente de verdad: Control Maestro en Google Sheets; catálogo técnico local puede divergir.
 - Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L26) — Sistema presente en el catálogo canónico; Lecturas acotadas de Portal, registro Sistemas, esquema de Bitácora y configuración de roles/permisos, sin correos ni exportación de Accesos. Pruebas descritas en control-maestro.md..
-- Conexiones: CON-043 (SYS-YOD-OS → SYS-CONTROL); CON-PPP-AUDITORIA (GAS-PORTERO → SYS-CONTROL); CON-SALUD-ACCESOS (SYS-CONTROL → SYS-POTENCIALES); CON-SALUD-SALA (SYS-SALA → SYS-CONTROL); CON-SALUD-ACTIONS (SYS-CONTROL → EXT-ACTIONS).
+- Conexiones: CON-043 (SYS-YOD-OS → SYS-CONTROL); CON-PPP-AUDITORIA (GAS-PORTERO → SYS-CONTROL); CON-SALUD-ACCESOS (SYS-CONTROL → SYS-POTENCIALES); CON-SALUD-SALA (SYS-SALA → SYS-CONTROL); CON-SALUD-ACTIONS (SYS-CONTROL → EXT-ACTIONS); CON-HORARIOS-ACCESOS (SVC-HORARIOS-CLOUD → SYS-CONTROL).
 - Mejoras: E · Folio común de proyecto y datos conciliados; L · Mapa vivo, contratos y cambios verificables; PPP · Unificar tablero y fórmulas de potencial en Sheets.
 - Pendientes: Catálogo local y Control Maestro deben reconciliarse sin editar silenciosamente datos operativos.
 
@@ -755,7 +755,7 @@ Dependencia externa de procesos YOD OS
 - Entidades: .
 - Fuente de verdad: Datos del servicio externo; no inspeccionados.
 - Evidencia: Integración pendiente de verificar.
-- Conexiones: CON-063 (SYS-SALA → EXT-ACTIONS); CON-079 (EXT-ACTIONS → SVC-SALA-PRODUCTOR); CON-081 (EXT-ACTIONS → SVC-SALA-EJECUTOR); CON-PUBLICADOR-IDENTIDAD (EXT-ACTIONS → EXT-GITHUB-PUBLISHER-APP); CON-SALA-SNAPSHOT-ONLINE (SYS-SALA → EXT-ACTIONS); CON-MARKETING-DATOS-ONLINE (SYS-MARKETING → EXT-ACTIONS); CON-SALA-CIERRE-ONLINE (SVC-SALA-EJECUTOR → EXT-ACTIONS); CON-SALUD-ACTIONS (SYS-CONTROL → EXT-ACTIONS).
+- Conexiones: CON-063 (SYS-SALA → EXT-ACTIONS); CON-079 (EXT-ACTIONS → SVC-SALA-PRODUCTOR); CON-081 (EXT-ACTIONS → SVC-SALA-EJECUTOR); CON-PUBLICADOR-IDENTIDAD (EXT-ACTIONS → EXT-GITHUB-PUBLISHER-APP); CON-SALA-SNAPSHOT-ONLINE (SYS-SALA → EXT-ACTIONS); CON-MARKETING-DATOS-ONLINE (SYS-MARKETING → EXT-ACTIONS); CON-SALA-CIERRE-ONLINE (SVC-SALA-EJECUTOR → EXT-ACTIONS); CON-SALUD-ACTIONS (SYS-CONTROL → EXT-ACTIONS); CON-HORARIOS-ACTIONS (SVC-HORARIOS-CLOUD → EXT-ACTIONS).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Estado y permisos no comprobados.
 
@@ -1070,7 +1070,7 @@ Alojar el servicio existente y su volumen persistente.
 - Entidades: version, despliegue, estado_servicio.
 - Fuente de verdad: Configuración efectiva y versión activa del proveedor, separadas de los blueprints del repositorio..
 - Evidencia: Alojamiento del servicio con volumen durable.; Conector Render confirmó la versión activa y el monitor de disponibilidad obtuvo dos muestras listas; recibos en la bitácora privada..
-- Conexiones: CON-RENDER-MOTOR (EXT-RENDER → SVC-AUTON-CLOUD).
+- Conexiones: CON-RENDER-MOTOR (EXT-RENDER → SVC-AUTON-CLOUD); CON-HORARIOS-RENDER (EXT-RENDER → SVC-HORARIOS-CLOUD).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 
 ## EXT-OBSIDIAN · Obsidian · bóveda de conocimiento
@@ -1096,3 +1096,29 @@ Registrar la herramienta documental mencionada para Biblioteca y comprobar su fo
 - Evidencia: [yod-portal/despacho3d/entorno.mjs](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/entorno.mjs) — Biblioteca menciona NotebookLM como capacidad por verificar..
 - Conexiones: CON-BIBLIOTECA-NOTEBOOKLM (SYS-DESPACHO-3D → EXT-NOTEBOOKLM).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
+
+## SVC-HORARIOS-CLOUD · Vigilante y programador en nube
+
+Observar horarios declarados y recuperar sólo ejecuciones actuales omitidas, sin depender de las sesiones de chat.
+
+- Tipo: worker. Dominio: Infraestructura. Responsable: Dirección técnica.
+- Evidencia: propuesto. Producción: Implementación y pruebas pendientes. La recuperación requiere una App propia con autorización personal de GitHub; observar no acredita ejecutar..
+- Entidades: horario, reserva, ejecucion, recibo.
+- Fuente de verdad: Estado privado del servicio existente y ejecuciones reales de Actions; reglas editoriales y datos de negocio conservan sus fuentes..
+- Evidencia: Dirección autoriza prioridad1: horarios, vigilancia, recuperación segura y evidencia en Accesos..
+- Conexiones: CON-HORARIOS-RENDER (EXT-RENDER → SVC-HORARIOS-CLOUD); CON-HORARIOS-ESTADO (SVC-HORARIOS-CLOUD → STORE-HORARIOS-CLOUD); CON-HORARIOS-ACTIONS (SVC-HORARIOS-CLOUD → EXT-ACTIONS); CON-HORARIOS-ACCESOS (SVC-HORARIOS-CLOUD → SYS-CONTROL).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Pendientes: No acreditar verde sin prueba vigente; reconcilación de efectos inciertos antes de otro intento..
+
+## STORE-HORARIOS-CLOUD · Estado privado de horarios
+
+Conservar recibos, reservas de ejecución y configuración de la App cifrada para reconciliar reinicios sin duplicar efectos.
+
+- Tipo: almacen_servidor. Dominio: Infraestructura. Responsable: Dirección técnica.
+- Evidencia: propuesto. Producción: Implementación y pruebas pendientes. La recuperación requiere una App propia con autorización personal de GitHub; observar no acredita ejecutar..
+- Entidades: horario, reserva, ejecucion, recibo.
+- Fuente de verdad: Estado privado del servicio existente y ejecuciones reales de Actions; reglas editoriales y datos de negocio conservan sus fuentes..
+- Evidencia: Dirección autoriza prioridad1: horarios, vigilancia, recuperación segura y evidencia en Accesos..
+- Conexiones: CON-HORARIOS-ESTADO (SVC-HORARIOS-CLOUD → STORE-HORARIOS-CLOUD).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Pendientes: No acreditar verde sin prueba vigente; reconcilación de efectos inciertos antes de otro intento..

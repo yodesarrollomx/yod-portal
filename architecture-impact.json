@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-11.salud-accesos-verificada",
-  "proposal_id": "CHG-SALUD-ACCESOS-20261011",
-  "summary": "Registrar publicación/alcance real del monitor y comprobar bytes de los archivos servidos de Accesos.",
+  "model_revision": "2026-10-11.horarios-render",
+  "proposal_id": "CHG-HORARIOS-NUBE-20261011",
+  "summary": "Registrar vigilancia independiente en Render, reservas durables, recuperación de horarios actuales y conexión mínima de GitHub App.",
   "components": [
     "SYS-YOD-OS",
     "SYS-CONTROL",
@@ -21,11 +21,14 @@
     "SYS-PLAN-POTENCIAL",
     "EXT-MOTORES-MEDIA",
     "SYS-DESPACHO",
-    "SYS-DESPACHO-3D"
+    "SYS-DESPACHO-3D",
+    "EXT-RENDER",
+    "SVC-AUTON-CLOUD",
+    "SVC-HORARIOS-CLOUD",
+    "STORE-HORARIOS-CLOUD"
   ],
   "tests": [
-    "Regresiones de datos caducados/futuros, fallos, canarios posteriores, falta de contrato y respuesta tardía después de cerrar sesión.",
-    "Catálogo derivado del Atlas completo y CI Portal completo; monitor real y publicación se acreditan aparte."
+    "Validación del Atlas y vistas generadas; CI completo Portal."
   ],
-  "rollback": "Revertir monitor, cliente y enlace mediante PR. Conservar rama de datos e historial; detener sólo salud-online."
+  "rollback": "Revertir la propuesta por PR; sin modificar registros de negocio."
 }

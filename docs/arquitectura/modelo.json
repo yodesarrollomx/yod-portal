@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-11.salud-accesos-verificada",
+  "revision": "2026-10-11.horarios-render",
   "checked_at": "2026-10-11",
   "priorities": [
     "vender_mas",
@@ -8,7 +8,7 @@
     "cobrar_antes"
   ],
   "coverage": {
-    "summary": "Inventario conciliado de 22 repositorios, 86 componentes y 116 conexiones. Asignación funcional completa en office_coverage; estados de implementación y operación separados. Se conserva el inventario histórico de fuentes y se incorporan motor privado y Amalaya con alcance explícito.",
+    "summary": "Inventario conciliado de 22 repositorios, 88 componentes y 116 conexiones. Asignación funcional completa en office_coverage; estados de implementación y operación separados. Se conserva el inventario histórico de fuentes y se incorporan motor privado y Amalaya con alcance explícito.",
     "production_verified": false,
     "limitations": [
       "No se ha comprobado la versión activa de todos los Apps Script",
@@ -3067,6 +3067,60 @@
         "fuente",
         "referencia"
       ]
+    },
+    {
+      "id": "SVC-HORARIOS-CLOUD",
+      "nombre": "Vigilante y programador en nube",
+      "tipo": "worker",
+      "repo": "alexpueblag/yod-agent-cloud",
+      "proposito": "Observar horarios declarados y recuperar sólo ejecuciones actuales omitidas, sin depender de las sesiones de chat.",
+      "dominio": "Infraestructura",
+      "owner_role": "Dirección técnica",
+      "status": "propuesto",
+      "runtime_status": "Implementación y pruebas pendientes. La recuperación requiere una App propia con autorización personal de GitHub; observar no acredita ejecutar.",
+      "evidence": [
+        {
+          "claim": "Dirección autoriza prioridad1: horarios, vigilancia, recuperación segura y evidencia en Accesos.",
+          "status": "propuesto"
+        }
+      ],
+      "data_entities": [
+        "horario",
+        "reserva",
+        "ejecucion",
+        "recibo"
+      ],
+      "source_of_truth": "Estado privado del servicio existente y ejecuciones reales de Actions; reglas editoriales y datos de negocio conservan sus fuentes.",
+      "risks_sanitized": [
+        "No acreditar verde sin prueba vigente; reconcilación de efectos inciertos antes de otro intento."
+      ]
+    },
+    {
+      "id": "STORE-HORARIOS-CLOUD",
+      "nombre": "Estado privado de horarios",
+      "tipo": "almacen_servidor",
+      "repo": "alexpueblag/yod-agent-cloud",
+      "proposito": "Conservar recibos, reservas de ejecución y configuración de la App cifrada para reconciliar reinicios sin duplicar efectos.",
+      "dominio": "Infraestructura",
+      "owner_role": "Dirección técnica",
+      "status": "propuesto",
+      "runtime_status": "Implementación y pruebas pendientes. La recuperación requiere una App propia con autorización personal de GitHub; observar no acredita ejecutar.",
+      "evidence": [
+        {
+          "claim": "Dirección autoriza prioridad1: horarios, vigilancia, recuperación segura y evidencia en Accesos.",
+          "status": "propuesto"
+        }
+      ],
+      "data_entities": [
+        "horario",
+        "reserva",
+        "ejecucion",
+        "recibo"
+      ],
+      "source_of_truth": "Estado privado del servicio existente y ejecuciones reales de Actions; reglas editoriales y datos de negocio conservan sus fuentes.",
+      "risks_sanitized": [
+        "No acreditar verde sin prueba vigente; reconcilación de efectos inciertos antes de otro intento."
+      ]
     }
   ],
   "connections": [
@@ -5808,6 +5862,82 @@
         "scope": "Un ciclo real del monitor y datos publicados con relectura byte exacta. Horarios declarados con edad y vigencia; no acredita puntualidad constante o todas las operaciones del negocio.",
         "receipt": "https://github.com/yodesarrollomx/yod-portal/actions/runs/38170852821 ; code_sha=de33d90af87e9b5b225b0405841145348d42b8b0 ; checks=99 ; correct=40 ; unknown=59 ; failed=0 ; https://github.com/yodesarrollomx/sala-edicion/actions/runs/38170259463 ; canary_checks=5 ; business_writes=0 ; mail_sent=0"
       }
+    },
+    {
+      "id": "CON-HORARIOS-RENDER",
+      "from": "EXT-RENDER",
+      "to": "SVC-HORARIOS-CLOUD",
+      "label": "Alojar un vigilante ligero dentro del servicio existente",
+      "kind": "integracion",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "contract": "CTR-HORARIOS-NUBE",
+      "contract_ids": [
+        "CTR-HORARIOS-NUBE"
+      ],
+      "evidence": [
+        {
+          "claim": "Prioridad1 autorizada; implementação y aceptación real por separado.",
+          "status": "propuesto"
+        }
+      ]
+    },
+    {
+      "id": "CON-HORARIOS-ESTADO",
+      "from": "SVC-HORARIOS-CLOUD",
+      "to": "STORE-HORARIOS-CLOUD",
+      "label": "Reservas durables y configuración privada cifrada",
+      "kind": "integracion",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "contract": "CTR-HORARIOS-NUBE",
+      "contract_ids": [
+        "CTR-HORARIOS-NUBE"
+      ],
+      "evidence": [
+        {
+          "claim": "Prioridad1 autorizada; implementação y aceptación real por separado.",
+          "status": "propuesto"
+        }
+      ]
+    },
+    {
+      "id": "CON-HORARIOS-ACTIONS",
+      "from": "SVC-HORARIOS-CLOUD",
+      "to": "EXT-ACTIONS",
+      "label": "Observar ejecuciones y recuperar horarios omitidos con GitHub App",
+      "kind": "integracion",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "contract": "CTR-HORARIOS-NUBE",
+      "contract_ids": [
+        "CTR-HORARIOS-NUBE"
+      ],
+      "evidence": [
+        {
+          "claim": "Prioridad1 autorizada; implementação y aceptación real por separado.",
+          "status": "propuesto"
+        }
+      ]
+    },
+    {
+      "id": "CON-HORARIOS-ACCESOS",
+      "from": "SVC-HORARIOS-CLOUD",
+      "to": "SYS-CONTROL",
+      "label": "Resultados sanitizados observados desde Accesos",
+      "kind": "integracion",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "contract": "CTR-HORARIOS-NUBE",
+      "contract_ids": [
+        "CTR-HORARIOS-NUBE"
+      ],
+      "evidence": [
+        {
+          "claim": "Prioridad1 autorizada; implementação y aceptación real por separado.",
+          "status": "propuesto"
+        }
+      ]
     }
   ],
   "processes": [
@@ -10535,6 +10665,43 @@
       ],
       "deployment": "Portalbd177ce9/de33d90, Salab611382/b9a7376 y Accesosae618274 integrados por PR/CI. Informe de datos en ramaestado-online byte-verificado; canario público sanitizado en salud-canario. Frontends publicados.40 pruebas correctas,59facultades/componentes sin prueba conectada; sin recepción de correo o equivalencia editorial completa acreditadas. Sesión se verifica en cada dispositivo con el Portero original.",
       "rollback": "Revertir cambios de monitor/clientes y horarios mediante PR. Conservar la rama de resultados y registros existentes; detener únicamente el monitor/canario nuevos, sin borrar medios, decisiones, usuarios o disparadores del negocio."
+    },
+    {
+      "id": "CHG-HORARIOS-NUBE-20261011",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-POTENCIALES",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-RENDER",
+        "SVC-AUTON-CLOUD",
+        "SVC-HORARIOS-CLOUD",
+        "STORE-HORARIOS-CLOUD",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "GAS-PORTERO",
+        "EXT-DRIVE",
+        "EXT-GMAIL",
+        "SYS-MARKETING",
+        "SYS-PLAN-POTENCIAL",
+        "EXT-MOTORES-MEDIA",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "status": "propuesto",
+      "proposal": "Dirección autoriza implementar prioridad1 con la solución más eficiente. Añadir un vigilante residente en el Render existente, leer estado público cada5min y conservar reservas privadas. Recuperar sólo la oportunidad actual omitida mediante workflows existentes, con una GitHub App propia y consentimiento personal. Accesos muestra vigencia, programación, solicitudes y ejecución confirmada por separado. La publicación no equivale a tener instalada la App.",
+      "tests": [
+        "Reloj UTC−7, oportunidades actuales, reinicio tras reserva, timeout de dispatch sin duplicados, jobs simulados/deshabilitados y cancelaciones.",
+        "Appowner/permisos/repos exactos, estado callback de un solo uso, cifrado privado y ausencia de secretos en informe.",
+        "Un solo vigilante en modo multicase, fallo de disco/cierre, CORS, publicación y navegador; suite completa existente."
+      ],
+      "deployment": "Propuesta registrada antes de implementación. El servicio Render y las rutinas existentes se conservan; instalación de App y comprobación operativa pendientes.",
+      "rollback": "Apagar YOD_SCHEDULER_ENABLED y revertir PR. Conservar estado/recibos y datos de negocio; no borrar App o medios para facilitar reversión."
     }
   ],
   "data_contracts": [
@@ -11829,6 +11996,42 @@
         "Resultados de datos se publican sólo en la rama técnica y se conservan fallos actuales e historial acotado. Sin credenciales, guiones privados, IDs de Sheets, clientes, destinatarios o contenido real.",
         "Cadencias de GitHub son declaradas y pueden retrasarse; mostrar edad real y estado caducado. No prometer funcionamiento instantáneo por programar un cron.",
         "Generar componentes/pasos del inventario vigente y dejar explícita la falta de prueba funcional para cada facultad aún no instrumentada."
+      ]
+    },
+    {
+      "id": "CTR-HORARIOS-NUBE",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-POTENCIALES",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-RENDER",
+        "SVC-AUTON-CLOUD",
+        "SVC-HORARIOS-CLOUD",
+        "STORE-HORARIOS-CLOUD"
+      ],
+      "source": "Propuesta autorizada de prioridad1. Servicio Render existente; workflows existentes de Sala y monitor Portal; consentimiento de GitHub App separado de publicación de código.",
+      "input": [
+        "Horarios fijos UTC−7, workflows y repositorios allowlisted; estado activo, jobs de producción y recibos.",
+        "Configuración de GitHub App en el volumen privado, cifrada con clave del servidor; nunca credenciales de sesión de suscripción."
+      ],
+      "output": [
+        "Informe técnico público sanitizado con pruebas nuevas y vigencia original de comprobaciones antiguas.",
+        "Despacho correlacionado sólo de una ejecución actual omitida; reserva durable antes de POST, reconciliación después; sin repetir un POST incierto.",
+        "Instalador web de GitHub App que exige consentimiento personal de la organización y exactamente los repositorios de Sala y Portal."
+      ],
+      "invariants": [
+        "Un solo vigilante para todo el servicio, también con varios casos; sin nuevos servidores ni bucles de modelos.",
+        "Las rutas permitidas son sólo los horarios autorizados de Sala y su vigilancia. Nunca reactivar workflows deshabilitados, gestores retirados, metas históricas, decisiones, pagos o envíos.",
+        "Job correcto acredita su ejecución y sus verificaciones; dispatch204 sólo registra solicitud, no ejecución o éxito. Un simulacro no da prueba de producción.",
+        "Una reserva aceptada/incierta se reconcilia antes de cualquier nuevo despacho. Reinicio no autoriza repetir efectos externos. Recuperar como máximo la última oportunidad vigente, sin acumular todas las omitidas.",
+        "Caducidad por prueba; generar un informe nuevo no renueva datos anteriores. Render caído, disco fallido, rate-limit o permisos ausentes dejan estado pendiente/fallido visible.",
+        "App privada de propietario esperado, permisos mínimos Actionswrite/Contentsread y sólo dos repositorios. Llave cifrada, nunca en Git/logs/cliente; creación e instalación personales en GitHub.",
+        "APIs sólo se llaman a destinos exactos previstos; cuerpos, errores y secretos no se reflejan en el informe o logs públicos."
       ]
     }
   ],
@@ -13173,6 +13376,51 @@
         "EXT-DRIVE",
         "EXT-MOTORES-MEDIA"
       ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": "cloud/scheduler/",
+      "components": [
+        "SVC-HORARIOS-CLOUD",
+        "STORE-HORARIOS-CLOUD",
+        "EXT-ACTIONS",
+        "EXT-RENDER"
+      ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": "tests/scheduler-",
+      "components": [
+        "SVC-HORARIOS-CLOUD",
+        "STORE-HORARIOS-CLOUD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": ".github/workflows/sala-vigilante.yml",
+      "components": [
+        "SYS-SALA",
+        "EXT-ACTIONS",
+        "SVC-HORARIOS-CLOUD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "docs/arquitectura/horarios-nube.md",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-POTENCIALES",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-RENDER",
+        "SVC-AUTON-CLOUD",
+        "SVC-HORARIOS-CLOUD",
+        "STORE-HORARIOS-CLOUD"
+      ]
     }
   ],
   "office_coverage": {
@@ -13390,7 +13638,9 @@
           "EXT-GITHUB-PUBLISHER-APP",
           "SVC-AUTON-CLOUD",
           "EXT-OPENAI",
-          "EXT-RENDER"
+          "EXT-RENDER",
+          "SVC-HORARIOS-CLOUD",
+          "STORE-HORARIOS-CLOUD"
         ]
       }
     ]
