@@ -24,6 +24,7 @@ const FRONTS=[
  ['SYS-ALQUIMIA','Alquimia Urbana','alquimia-urbana/'],
  ['SYS-OBRA-CLIENTE','Obra · cliente','yod-portal/obra-app/'],
  ['SYS-AURUM-EXPERIENCIA','Experiencia Aurum','aurum-experiencia/'],
+ ['SYS-EMD','Evaluación de personas · entrada','emd-evaluacion-360/'],
  ['SYS-PINTARRON','Pintarrón','pintarron/'],
  ['SYS-SITIO-ORG','Sitio de organización',''],
  ['SYS-PRUEBA-DOMINIO','Prueba de dominio','prueba-dominio/']
