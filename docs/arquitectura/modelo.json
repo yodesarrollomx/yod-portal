@@ -5630,6 +5630,23 @@
         "scope": "Dos referencias de voces originales exactas en COLA; hash/tamaño completos, estado terminado, lectura inmediata y posterior. Sin cambios operativos/editoriales; API heredada sin CAS atómico. No acredita los medios no localizados ni la fuente completa de Apps Script.",
         "receipt": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38159239581 ; code_sha=159d932cd81c2d2c3fda31a862ea60fc0b3ae667 ; targets=2 ; attempted=2 ; readback_verified=2 ; confirmed_writes=2 ; private_receipt=byte_verified ; decisions_changed=false ; social_publications=0"
       }
+    },
+    {
+      "id": "CON-BROKER-PREEVALUATION",
+      "from": "SYS-INVERSION",
+      "to": "GAS-PORTERO",
+      "label": "Preevaluación y retorno de terreno a cartera",
+      "kind": "api",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "CHG-MASTERBROKER-PREEVALUATION: integración autorizada; implementación y despliegue pendientes",
+          "status": "propuesto"
+        }
+      ],
+      "contract": "POST autenticado valida alcance con brokers_snapshot de CRM; liga corta de un solo uso abre evaluador. Regreso contiene sólo ID; lectura exige sesión vigente y cartera autorizada. Alta CRM usa brokers_save existente y confirmación explícita.",
+      "contract_ids": []
     }
   ],
   "processes": [
@@ -6910,6 +6927,69 @@
       "evidence": [
         {
           "claim": "Diseño autorizado; publicación y prueba real pendientes",
+          "status": "propuesto"
+        }
+      ]
+    },
+    {
+      "id": "PROC-BROKER-PREEVALUATION",
+      "nombre": "Preevaluar un terreno desde Masterbrokers",
+      "status": "propuesto",
+      "steps": [
+        {
+          "label": "Abrir preevaluación desde cartera",
+          "role": "Masterbroker",
+          "components": [
+            "SYS-INVERSION",
+            "GAS-CRM",
+            "GAS-PORTERO"
+          ],
+          "input": "Sesión vigente",
+          "output": "Cartera autorizada",
+          "mode": "automatico"
+        },
+        {
+          "label": "Localizar y trazar inmueble",
+          "role": "Masterbroker",
+          "components": [
+            "SYS-POTENCIALES",
+            "GAS-PORTERO"
+          ],
+          "input": "Ubicación y trazos",
+          "output": "Mediciones y contexto de zona",
+          "mode": "manual"
+        },
+        {
+          "label": "Guardar expediente",
+          "role": "Masterbroker",
+          "components": [
+            "GAS-PORTERO",
+            "EXT-DRIVE"
+          ],
+          "input": "Mediciones y supuestos",
+          "output": "Preevaluación por broker",
+          "mode": "manual"
+        },
+        {
+          "label": "Registrar oportunidad con preevaluación",
+          "role": "Masterbroker",
+          "components": [
+            "SYS-INVERSION",
+            "GAS-CRM",
+            "SHEET-CRM"
+          ],
+          "input": "Referencia autorizada y datos prellenados",
+          "output": "Alta confirmada en cartera",
+          "mode": "manual"
+        }
+      ],
+      "manual_gaps": [
+        "Los correos individuales deben estar vinculados canónicamente en CRM",
+        "Cobertura de fuentes de entorno variable; preevaluación no equivale a aprobación del plan"
+      ],
+      "evidence": [
+        {
+          "claim": "Recorrido autorizado por Dirección; pendiente de implementación",
           "status": "propuesto"
         }
       ]
@@ -10185,6 +10265,28 @@
       ],
       "deployment": "Publicado y comprobado el11-oct-2026 mediante PR269 y run38159239581. Dos originales recuperados reconectados a sus trabajos, con antes/después privado y acuse exacto. Workflow de mantenimiento por incorporación del código/manual, sin cron; serializa con sala-ejecutor. Fuentes/editor IDs de Apps Script, disparadores/correo y26 medios no localizados en fuentes auditadas siguen pendientes.",
       "rollback": "Conservar copia privada del antes/después. Revertir worker y reconectar sólo la referencia técnica previa tras lectura reciente y revisión; no cambiar decisiones, estados, borrar recuperados ni restaurar hojas completas."
+    },
+    {
+      "id": "CHG-MASTERBROKER-PREEVALUATION",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "GAS-CRM",
+        "SHEET-CRM",
+        "EXT-DRIVE"
+      ],
+      "status": "propuesto",
+      "approval": "Alejandro autoriza integrar y publicar la preevaluación en el tablero de Masterbrokers antes de ingresar terrenos al plan, 11-oct-2026.",
+      "proposal": "Preevaluar desde la cartera con identidad canónica validada por CRM. Acceso de un solo uso al evaluador existente, guardado en Drive por broker, regreso con datos medidos y referencia al expediente para revisar y guardar el alta mediante brokers.v1. No deducir identidad por nombre, elevar permisos, aprobar el plan ni cambiar condiciones comerciales. La consulta pública permanece aislada.",
+      "tests": [
+        "Autorización broker A/B, Dirección, identidad revocada y acceso público aislado",
+        "Liga de un solo uso, caducidad, sin credenciales en URL y lectura autorizada del retorno",
+        "Formulario de alta prellenado, guardado y reintento por contrato existente, sin duplicados automáticos",
+        "Navegación escritorio/móvil con datos sintéticos; publicación y lectura pública se acreditan por separado"
+      ],
+      "rollback": "Revertir interfaz y adaptador; conservar expedientes y referencias ya guardados. Desactivar configuración de integración en Drive sin borrar registros.",
+      "deployment": "Propuesta registrada; código e integración pública todavía no verificados."
     },
     {
       "id": "CHG-DESPACHO-FLUIDEZ-20261011",
