@@ -8,7 +8,7 @@
   var REPORT='https://raw.githubusercontent.com/yodesarrollomx/yod-portal/estado-online/estado-online.json';
   var CATALOG='https://yodesarrollomx.github.io/yod-portal/os/salud-catalogo.json?v=salud1';
   var TZ='America/Hermosillo',MAX_AGE=45*60000;
-  var active=false,epoch=0,busy=false,timer=null,controller=null,box=null,last=null,cat=null;
+  var active=false,epoch=0,busy=false,timer=null,controller=null,box=null,last=null,cat=null,live=[],probeSession=null,filter='todas';
   var labels={verde:'Comprobado',rojo:'Falló',ambar:'Por verificar',atrasado:'Prueba vencida',corriendo:'En curso'};
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
   function fresh(when,now,max){var t=Date.parse(when);return Number.isFinite(t)&&t<=now&&now-t<=max;}
@@ -48,6 +48,7 @@
     var status=color(c,r,now,online),url=safeEvidence(c.evidencia_url);
     return '<article class="salud-row"><div><b>'+esc(c.nombre)+'</b>'+pill(status)+'</div><p>'+esc(c.detalle)+'</p><small>'
       +esc(c.alcance)+' · '+esc(hora(c.revisado_en))+' · vence '+esc(hora(c.vence_en))+'</small>'
+      +(c.ultima_ejecucion?'<small>Última ejecución: '+esc(hora(c.ultima_ejecucion))+' · Hermosillo</small>':'')
       +(c.frecuencia?'<small>Programación: '+esc(c.frecuencia)+'</small>':'')
       +(url?'<a href="'+esc(url)+'" target="_blank" rel="noopener">Ver evidencia</a>':'')+'</article>';
   }
@@ -64,6 +65,7 @@
   function render(online){
     if(!box||!active)return;
     var now=Date.now(),checks=last&&validReport(last)?last.checks:[],c=cat||{components:[],processes:[]};
+    var directReport={schema:1,generado_en:new Date(now).toISOString()};
     var counts={verde:0,rojo:0,pendiente:0};
     checks.forEach(function(x){var s=color(x,last,now,online);if(s==='verde'||s==='rojo')counts[s]++;else counts.pendiente++;});
     var summary=checks.length?(counts.verde+' comprobadas · '+counts.rojo+' con fallo · '+counts.pendiente+' por verificar'):'Sin resultados comprobados';
@@ -72,7 +74,14 @@
     var html='<div class="salud-top"><h2>Estado de los sistemas</h2><button type="button" class="btn mini" data-salud-refrescar>Actualizar estado</button></div>'
       +'<p class="salud-summary" role="status">'+esc(summary)+'</p><p>'+esc(msg)+'</p>'
       +'<p class="salud-note">Verde: la prueba indicada pasó y sigue vigente. Las lecturas se programan cada 15 minutos; esta pantalla se actualiza cada minuto. El horario puede retrasarse.</p>'
-      +'<details open><summary>Pruebas por proceso y sistema</summary><div class="salud-grid">'+checks.map(function(x){return row(x,last,now,online);}).join('')+'</div></details>';
+      +'<div class="salud-top">'+['todas','sala','fallos','pendientes'].map(function(f){return '<button type="button" class="btn ghost mini" data-salud-filtro="'+f+'" aria-pressed="'+(f===filter)+'">'+({todas:'Pruebas conectadas',sala:'Sala',fallos:'Fallos',pendientes:'Por verificar'})[f]+'</button>';}).join('')+'</div>'
+      +'<details open><summary>Pruebas por proceso y sistema</summary><div class="salud-grid">'+live.map(function(x){return row(x,directReport,now,true);}).join('')+checks.filter(function(x){
+        var status=color(x,last,now,online);
+        if(filter==='fallos')return status==='rojo';
+        if(filter==='pendientes')return status!=='verde'&&status!=='rojo';
+        if(filter==='sala')return /^(sala-|rutina:|correo-|motor-|drive-|canario-)/.test(x.id)||x.id==='pagina:SYS-SALA';
+        return x.id.indexOf('pendiente:')!==0;
+      }).map(function(x){return row(x,last,now,online);}).join('')+'</div></details>';
     html+='<details><summary>Todos los componentes ('+c.components.length+')</summary><div class="salud-grid">'+c.components.map(function(comp){
       var tests=checks.filter(function(x){return x.components.indexOf(comp.id)>=0;});
       var states=tests.map(function(x){return color(x,last,now,online);});
@@ -88,6 +97,7 @@
     }).join('')+'</details>';
     box.innerHTML=html;
     var b=box.querySelector('[data-salud-refrescar]');if(b)b.onclick=function(){cargar();};
+    if(box.querySelectorAll)box.querySelectorAll('[data-salud-filtro]').forEach(function(button){button.onclick=function(){filter=button.getAttribute('data-salud-filtro');render(online);};});
   }
   async function json(url,signal){
     var r=await fetch(url,{cache:'no-store',credentials:'omit',signal:signal});
@@ -99,9 +109,12 @@
     var e=epoch;busy=true;
     controller=new AbortController();var ctrl=controller,to=setTimeout(function(){ctrl.abort();},18000);
     try{
-      var results=await Promise.allSettled([json(REPORT+'?t='+Date.now(),ctrl.signal),cat?Promise.resolve(cat):json(CATALOG,ctrl.signal)]);
+      var results=await Promise.allSettled([json(REPORT+'?t='+Date.now(),ctrl.signal),cat?Promise.resolve(cat):json(CATALOG,ctrl.signal),
+        probeSession?probeSession():Promise.resolve(null)]);
       if(!active||e!==epoch)return;
-      var report=results[0],catalog=results[1];
+      var report=results[0],catalog=results[1],session=results[2],time=new Date().toISOString();
+      live=probeSession?[{id:'sesion-local',nombre:'Accesos · sesión en este dispositivo',components:['GAS-PORTERO'],estado:session.status==='fulfilled'&&session.value===true?'ok':'sin_confirmar',
+        revisado_en:time,vence_en:new Date(Date.now()+90000).toISOString(),detalle:session.status==='fulfilled'&&session.value===true?'El Portero confirmó la sesión administradora actual':'La sesión actual no se pudo confirmar',alcance:'Canje de sesión leído ahora; refresco cada minuto'}]:[];
       if(catalog.status==='fulfilled'&&catalog.value&&catalog.value.schema===1&&Array.isArray(catalog.value.components)&&Array.isArray(catalog.value.processes))cat=catalog.value;
       if(report.status!=='fulfilled'||!validReport(report.value))throw Error('informe_sin_contrato');
       last=report.value;render(true);
@@ -112,11 +125,11 @@
     detener();
     if(typeof document==='undefined')return;
     box=document.getElementById(options&&options.elementId||'salud-sistemas');if(!box)return;
-    active=true;epoch++;box.hidden=false;box.innerHTML='<p role="status">Comprobando estado de los sistemas…</p>';
+    active=true;epoch++;probeSession=options&&typeof options.probarSesion==='function'?options.probarSesion:null;filter='todas';box.hidden=false;box.innerHTML='<p role="status">Comprobando estado de los sistemas…</p>';
     style();cargar();timer=setInterval(cargar,60000);
   }
   function detener(){
-    active=false;epoch++;busy=false;last=null;cat=null;
+    active=false;epoch++;busy=false;last=null;cat=null;live=[];probeSession=null;
     if(timer)clearInterval(timer);timer=null;
     if(controller)controller.abort();controller=null;
     if(box){box.hidden=true;box.innerHTML='';}box=null;

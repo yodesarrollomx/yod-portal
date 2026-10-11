@@ -24,7 +24,6 @@ const FRONTS=[
  ['SYS-ALQUIMIA','Alquimia Urbana','alquimia-urbana/'],
  ['SYS-OBRA-CLIENTE','Obra · cliente','yod-portal/obra-app/'],
  ['SYS-AURUM-EXPERIENCIA','Experiencia Aurum','aurum-experiencia/'],
- ['SYS-EMD','Evaluación de personas','EMDevaluacion360/'],
  ['SYS-PINTARRON','Pintarrón','pintarron/'],
  ['SYS-SITIO-ORG','Sitio de organización',''],
  ['SYS-PRUEBA-DOMINIO','Prueba de dominio','prueba-dominio/']
@@ -119,9 +118,11 @@ function revisionChecks(r,now){
    Array.isArray(active)&&active.length===4&&active.every(x=>x.activo===true)&&!r.errores.some(x=>x.startsWith('disparadores_'))?'ok':'sin_confirmar',
    r.revisado_en,'Comprueba el estado activo de las puertas; el horario declarado puede retrasarse','Estado de workflows'));
  const mail=r.correo;
+ const mailDate=mail&&Date.parse(mail.ultimo_envio_registrado);
+ const mailWhen=Number.isFinite(mailDate)?new Intl.DateTimeFormat('es-MX',{timeZone:'America/Hermosillo',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',hour12:false}).format(mailDate)+' Hermosillo':'sin confirmar';
  out.push(record('correo-registro','Sala · registro de correo',['EXT-GMAIL'],
    mail&&mail.estado==='envio_registrado'&&fresh(mail.ultimo_envio_registrado,now,36*3600000)?'ok':'sin_confirmar',
-   r.revisado_en,'Último envío registrado por el backend: '+(mail&&mail.ultimo_envio_registrado||'sin confirmar')+
+   r.revisado_en,'Último envío registrado por el backend: '+mailWhen+
    '. Entrega y recepción se comprueban aparte','Registro del backend',
    {frecuencia:'Diario07:00Hermosillo; registro observado separado'}));
  out.push(record('correo-recepcion','Sala · recepción del correo',['EXT-GMAIL'],'sin_confirmar',now,
