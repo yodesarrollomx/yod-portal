@@ -296,12 +296,12 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
  }
  async function refresh(){
   if(disposed||!active||fetching||doc.hidden||!selected)return;const own=generation,token={generation:own};fetching=token;
+  if(selected.goals?.ready&&Date.now()-lastTaskRead>=12000){lastTaskRead=Date.now();void tasks.read();}
   try{
    if(getSelection()?.case_id!==selected.case_id){clear();return;}
    if(tab==='ppp'&&!frame&&!readingSources&&sourceAttempts<3&&Date.now()>=sourceRetryAt)void readSources();
    if(tab==='browser')paintBrowser(await request('/computer/state'));
    if(tab==='ppp'&&boardLink?.bridge){startBoardHandshake();postBoard(board?'yod:ppp:read':'yod:ppp:hello');const r=await request('/board/state');proposals=r.proposals||[];paintProposals();dispatchRequested();}
-   if(selected.goals?.ready&&Date.now()-lastTaskRead>=12000){lastTaskRead=Date.now();await tasks.read();}
   }catch{if(own===generation)notice.textContent='El puesto no respondió. Reintentando; la conversación puede continuar.';}
   finally{if(fetching===token)fetching=null;}
  }
