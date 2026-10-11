@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-11.horarios-render-verificada
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-11.bandeja-nube.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -8,8 +8,8 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
-- 26 sistemas y 88 componentes distribuidos exactamente una vez.
-- 10 áreas; 131 conexiones registradas, 10 marcadas como verificadas en el atlas.
+- 26 sistemas y 90 componentes distribuidos exactamente una vez.
+- 10 áreas; 136 conexiones registradas, 10 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -25,7 +25,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 ## Dirección
 
-**Ubicación propuesta:** decisions · 10 componentes.
+**Ubicación propuesta:** decisions · 12 componentes.
 
 ### El Despacho · SYS-DESPACHO
 
@@ -444,6 +444,69 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - 2 conexiones sin verificación de ejecución registrada.
 - Dependencia de identidad de ejecución y consentimiento vigentes para verificar privacidad antes de acceder a datos
+
+### Ejecutor de Bandeja en nube · GAS-BANDEJA-NUBE
+
+**Función:** Revisar los encargos BANDEJA existentes, rehacer borradores por API y ejecutar sólo envíos aprobados
+
+**Fuente oficial:** BANDEJA en SHEET-OPERACION; Gmail conserva borradores y mensajes. Registro técnico aparte sólo para idempotencia y salud.
+
+**Responsable operativo:** Dirección
+
+**Estado registrado:** propuesto. Código y proyecto de nube por preparar; consentimiento Gmail, correspondencia exacta del Sheet y corte de la rutina Claude pendientes.
+
+**Conexiones registradas; no habilitan operaciones:**
+
+- CON-BANDEJA-TAREAS · GAS-BANDEJA-NUBE → SHEET-OPERACION · persistencia · Leer BANDEJA y añadir resultados al mismo libro · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-BANDEJA-GMAIL · GAS-BANDEJA-NUBE → EXT-GMAIL · api · Borradores y envíos aprobados por API · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-BANDEJA-IA · GAS-BANDEJA-NUBE → EXT-OPENAI · api · Redactar cambios con API de pago por uso · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-BANDEJA-RECIBOS · GAS-BANDEJA-NUBE → STORE-BANDEJA-RECIBOS · persistencia · Intención durable antes del efecto · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-BANDEJA-SALUD · GAS-BANDEJA-NUBE → SVC-HORARIOS-CLOUD · observacion · Recibo técnico leído por el vigilante y mostrado en Accesos · Estado: propuesto · Ejecución no verificada en el atlas.
+
+**Evidencia de la ficha:**
+
+- Dirección autorizó continuar la migración de automatizaciones a APIs de nube y preparar el cierre para Claude Chrome. · Estado: declarado · Sin revisión inmutable en esta referencia
+
+**Evidencia de conexiones:**
+
+- CON-BANDEJA-TAREAS · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-BANDEJA-GMAIL · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-BANDEJA-IA · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-BANDEJA-RECIBOS · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-BANDEJA-SALUD · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
+
+**Pendientes y límites:**
+
+- 5 conexiones sin verificación de ejecución registrada.
+- Gmail y Sheets no comparten transacción; no prometer entrega ni cancelación sin recibo real.
+- Rutina Claude y nuevo ejecutor no pueden enviar en paralelo.
+
+### Recibos privados de Bandeja · STORE-BANDEJA-RECIBOS
+
+**Función:** Reservar efectos antes de Gmail y conciliar resultados inciertos sin repetir envíos
+
+**Fuente oficial:** Sólo intención/resultado técnico de los efectos producidos por GAS-BANDEJA-NUBE.
+
+**Responsable operativo:** Dirección
+
+**Estado registrado:** propuesto. ScriptProperties privadas del ejecutor; instalación y primera conciliación reales pendientes.
+
+**Conexiones registradas; no habilitan operaciones:**
+
+- CON-BANDEJA-RECIBOS · GAS-BANDEJA-NUBE → STORE-BANDEJA-RECIBOS · persistencia · Intención durable antes del efecto · Estado: propuesto · Ejecución no verificada en el atlas.
+
+**Evidencia de la ficha:**
+
+- Almacén técnico privado propuesto; no copia ni sustituye tareas, comentarios o borradores de los sistemas canónicos. · Estado: propuesto · Sin revisión inmutable en esta referencia
+
+**Evidencia de conexiones:**
+
+- CON-BANDEJA-RECIBOS · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
+
+**Pendientes y límites:**
+
+- 1 conexiones sin verificación de ejecución registrada.
+- Cupo de ScriptProperties: los resultados inciertos no se podan ni se reintentan por falta de espacio.
 
 ## Comercial
 
@@ -896,6 +959,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - CON-061 · SYS-DESPACHO → EXT-GMAIL · accion\_humana\_y\_rutina · Aprobación de borradores por protocolo BANDEJA · Estado: declarado · Ejecución no verificada en el atlas.
 - CON-SALA-CORREO-ONLINE · GAS-SALA → EXT-GMAIL · correo · Correo diario y entrada al destinatario existente · Estado: ejecucion · Ejecución no verificada en el atlas.
+- CON-BANDEJA-GMAIL · GAS-BANDEJA-NUBE → EXT-GMAIL · api · Borradores y envíos aprobados por API · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -905,11 +969,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - CON-061 · Rutina externa declarada con aprobación humana · Estado: declarado · yodesarrollomx/yod-despacho · EJECUTOR.md · Revisión: HEAD\_baseline
 - [CON-SALA-CORREO-ONLINE · Bitácora del backend registra correo diario tres días a07:13Hermosillo; solicitud de entrada38166137118 aceptada y acuse privado byte-verificado. Recepción en Gmail y fuente/inventario completo de disparadores siguen sin verificar. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/correo\_estado.py · Revisión: 4582fc3c42a2ac8459dea7d553c42f9719f07962](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/nube/correo_estado.py)
+- CON-BANDEJA-GMAIL · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
 - Responsable operativo pendiente de confirmación; el encargado de verificación no sustituye esa asignación.
-- 2 conexiones sin verificación de ejecución registrada.
+- 3 conexiones sin verificación de ejecución registrada.
 - Estado y permisos no comprobados
 
 ### Google Calendar · EXT-CALENDAR
@@ -1583,6 +1648,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Conexiones registradas; no habilitan operaciones:**
 
 - CON-003 · GAS-OPERACION → SHEET-OPERACION · persistencia · Lee/escribe registros del dominio · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-BANDEJA-TAREAS · GAS-BANDEJA-NUBE → SHEET-OPERACION · persistencia · Leer BANDEJA y añadir resultados al mismo libro · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -1591,11 +1657,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Evidencia de conexiones:**
 
 - CON-003 · Backend asociado al almacén de su dominio · Estado: codigo · yodesarrollomx/board-aurum · apps-script/portero-auth.gs · Revisión: HEAD\_baseline
+- CON-BANDEJA-TAREAS · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
 - Responsable operativo pendiente de confirmación; el encargado de verificación no sustituye esa asignación.
-- 1 conexiones sin verificación de ejecución registrada.
+- 2 conexiones sin verificación de ejecución registrada.
 - Esquema y calidad de datos vivos no inspeccionados
 
 ### Metas y objetivos de MOAC · GAS-MOAC-METAS
@@ -2795,6 +2862,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Conexiones registradas; no habilitan operaciones:**
 
 - CON-MOTOR-OPENAI · SVC-AUTON-CLOUD → EXT-OPENAI · integracion · Voz y herramientas con claves de servidor · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-BANDEJA-IA · GAS-BANDEJA-NUBE → EXT-OPENAI · api · Redactar cambios con API de pago por uso · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2803,10 +2871,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Evidencia de conexiones:**
 
 - [CON-MOTOR-OPENAI · Voz y herramientas con claves de servidor · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/voice-lane.mjs · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/voice-lane.mjs)
+- CON-BANDEJA-IA · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 1 conexiones sin verificación de ejecución registrada.
+- 2 conexiones sin verificación de ejecución registrada.
 
 ### Render · alojamiento del motor · EXT-RENDER
 
@@ -2854,6 +2923,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-HORARIOS-ESTADO · SVC-HORARIOS-CLOUD → STORE-HORARIOS-CLOUD · integracion · Reservas durables y configuración privada cifrada · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-HORARIOS-ACTIONS · SVC-HORARIOS-CLOUD → EXT-ACTIONS · integracion · Observar ejecuciones y recuperar horarios omitidos con GitHub App · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-HORARIOS-ACCESOS · SVC-HORARIOS-CLOUD → SYS-CONTROL · integracion · Resultados sanitizados observados desde Accesos · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-BANDEJA-SALUD · GAS-BANDEJA-NUBE → SVC-HORARIOS-CLOUD · observacion · Recibo técnico leído por el vigilante y mostrado en Accesos · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2870,10 +2940,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [CON-HORARIOS-ACTIONS · Código entregado y probado con dobles; instalación personal y recuperación real pendientes. · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/scheduler/github-app.mjs · Revisión: b41a98751ae3ae89f43372557d61e77461aa086c](https://github.com/alexpueblag/yod-agent-cloud/blob/b41a98751ae3ae89f43372557d61e77461aa086c/cloud/scheduler/github-app.mjs)
 - CON-HORARIOS-ACCESOS · Prioridad1 autorizada; implementação y aceptación real por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - [CON-HORARIOS-ACCESOS · Cliente publicado y doce recorridos aislados; sesión administradora personal no operada por el agente. · Estado: codigo · yodesarrollomx/yod-portal · os/yod-salud.js · Revisión: 9b2e5f4497878223aba26531076c64894e17823e](https://github.com/yodesarrollomx/yod-portal/blob/9b2e5f4497878223aba26531076c64894e17823e/os/yod-salud.js)
+- CON-BANDEJA-SALUD · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 2 conexiones sin verificación de ejecución registrada.
+- 3 conexiones sin verificación de ejecución registrada.
 - No acreditar verde sin prueba vigente; reconcilación de efectos inciertos antes de otro intento.
 
 ### Estado privado de horarios · STORE-HORARIOS-CLOUD

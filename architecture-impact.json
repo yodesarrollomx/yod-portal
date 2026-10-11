@@ -1,10 +1,18 @@
 {
-  "model_revision": "2026-10-11.horarios-render-verificada",
-  "proposal_id": "CHG-HORARIOS-NUBE-20261011",
-  "summary": "Registrar observación viva y persistencia, con recuperación por App todavía pendiente de autorización personal.",
+  "model_revision": "2026-10-11.bandeja-nube.1",
+  "proposal_id": "CHG-BANDEJA-NUBE-20261011",
   "components": [
-    "SYS-YOD-OS",
+    "SYS-DESPACHO",
+    "SYS-TAREAS",
+    "GAS-OPERACION",
+    "SHEET-OPERACION",
+    "GAS-BANDEJA-NUBE",
+    "STORE-BANDEJA-RECIBOS",
+    "EXT-GMAIL",
+    "EXT-OPENAI",
+    "SVC-HORARIOS-CLOUD",
     "SYS-CONTROL",
+    "SYS-YOD-OS",
     "SYS-POTENCIALES",
     "SYS-SALA",
     "GAS-SALA",
@@ -13,25 +21,23 @@
     "EXT-ACTIONS",
     "EXT-RENDER",
     "SVC-AUTON-CLOUD",
-    "SVC-HORARIOS-CLOUD",
     "STORE-HORARIOS-CLOUD",
     "SYS-TRACK",
     "SYS-OBRA",
     "SYS-OBRA-CLIENTE",
     "GAS-PORTERO",
     "EXT-DRIVE",
-    "EXT-GMAIL",
     "SYS-MARKETING",
     "SYS-PLAN-POTENCIAL",
     "EXT-MOTORES-MEDIA",
-    "SYS-DESPACHO",
     "SYS-DESPACHO-3D",
     "GAS-PLAN-POTENCIAL",
     "SHEET-PLAN-POTENCIAL",
     "SHEET-SALA"
   ],
+  "summary": "Registrar antes de implementación la Bandeja con ejecutor Google y APIs; consentimiento y pruebas reales separados.",
   "tests": [
-    "Verificación de evidencias por alcance, Atlas/vistas sincronizados e inventario de salud; CI Portal completo."
+    "Atlas estructural, vistas y catálogo coherentes; propuesta, alcance y rollback explícitos."
   ],
-  "rollback": "Revertir registro por PR; conservar despliegues, estado y datos de negocio."
+  "rollback": "Revertir registro por PR sin borrar recursos o datos."
 }

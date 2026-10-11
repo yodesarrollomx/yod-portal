@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "model_revision": "2026-10-11.horarios-render-verificada",
+  "model_revision": "2026-10-11.bandeja-nube.1",
   "components": [
     {
       "id": "SYS-DESPACHO",
@@ -528,6 +528,18 @@
       "id": "STORE-HORARIOS-CLOUD",
       "nombre": "Estado privado de horarios",
       "tipo": "almacen_servidor",
+      "repo": "alexpueblag/yod-agent-cloud"
+    },
+    {
+      "id": "GAS-BANDEJA-NUBE",
+      "nombre": "Ejecutor de Bandeja en nube",
+      "tipo": "apps_script",
+      "repo": "alexpueblag/yod-agent-cloud"
+    },
+    {
+      "id": "STORE-BANDEJA-RECIBOS",
+      "nombre": "Recibos privados de Bandeja",
+      "tipo": "almacen_tecnico",
       "repo": "alexpueblag/yod-agent-cloud"
     }
   ],
@@ -1423,6 +1435,60 @@
             "SYS-INVERSION",
             "GAS-CRM",
             "SHEET-CRM"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROC-BANDEJA-NUBE",
+      "nombre": "Bandeja del Despacho con APIs de nube",
+      "steps": [
+        {
+          "id": "PROC-BANDEJA-NUBE:0",
+          "nombre": "Revisar encargos existentes cada cinco minutos",
+          "modo": "automatico",
+          "components": [
+            "GAS-BANDEJA-NUBE",
+            "SHEET-OPERACION"
+          ]
+        },
+        {
+          "id": "PROC-BANDEJA-NUBE:1",
+          "nombre": "Preparar o rehacer borrador",
+          "modo": "automatico",
+          "components": [
+            "GAS-BANDEJA-NUBE",
+            "EXT-GMAIL",
+            "EXT-OPENAI"
+          ]
+        },
+        {
+          "id": "PROC-BANDEJA-NUBE:2",
+          "nombre": "Aprobar contenido y destinatarios",
+          "modo": "manual",
+          "components": [
+            "SYS-DESPACHO",
+            "SHEET-OPERACION"
+          ]
+        },
+        {
+          "id": "PROC-BANDEJA-NUBE:3",
+          "nombre": "Reservar y enviar versión aprobada",
+          "modo": "automatico",
+          "components": [
+            "GAS-BANDEJA-NUBE",
+            "STORE-BANDEJA-RECIBOS",
+            "EXT-GMAIL"
+          ]
+        },
+        {
+          "id": "PROC-BANDEJA-NUBE:4",
+          "nombre": "Conciliar y observar funcionamiento",
+          "modo": "automatico",
+          "components": [
+            "GAS-BANDEJA-NUBE",
+            "SVC-HORARIOS-CLOUD",
+            "SYS-CONTROL"
           ]
         }
       ]

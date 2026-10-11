@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.horarios-render-verificada · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.bandeja-nube.1 · 2026-10-11.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
@@ -491,3 +491,32 @@ flowchart TD
 Vacíos: Los correos individuales deben estar vinculados canónicamente en CRM; Cobertura de fuentes de entorno variable; preevaluación no equivale a aprobación del plan.
 
 Evidencia: [yodesarrollo-board/brokers-evaluator.js](https://github.com/yodesarrollomx/yodesarrollo-board/blob/4774888ede9caf53684ed7509d36ef7ffe1e126e/brokers-evaluator.js) — PR12 integrado: lanzamiento de un solo uso y retorno autorizado; backend v92 publicado, flujo individual comprobado con servicios sintéticos..
+
+## PROC-BANDEJA-NUBE · Bandeja del Despacho con APIs de nube
+
+Estado: propuesto.
+
+```mermaid
+flowchart TD
+  p0["Revisar encargos existentes cada cinco minutos · Ejecutor nube"]
+  p1["Preparar o rehacer borrador · Ejecutor nube"]
+  p0 --> p1
+  p2["Aprobar contenido y destinatarios · Dirección"]
+  p1 -.-> p2
+  p3["Reservar y enviar versión aprobada · Ejecutor nube"]
+  p2 --> p3
+  p4["Conciliar y observar funcionamiento · Ejecutor nube"]
+  p3 --> p4
+```
+
+| Paso | Responsable | Componentes | Entrada → salida | Ejecución |
+|---|---|---|---|---|
+| 1. Revisar encargos existentes cada cinco minutos | Ejecutor nube | GAS-BANDEJA-NUBE, SHEET-OPERACION | Libro efectivo y rutina instalada → Estado actual sin decisiones automáticas | automatico |
+| 2. Preparar o rehacer borrador | Ejecutor nube | GAS-BANDEJA-NUBE, EXT-GMAIL, EXT-OPENAI | Encargo o CAMBIO/RESPUESTA de Dirección → LISTO/REHECHO con huella | automatico |
+| 3. Aprobar contenido y destinatarios | Dirección | SYS-DESPACHO, SHEET-OPERACION | Versión exacta para revisar → APROBADO o veto | manual |
+| 4. Reservar y enviar versión aprobada | Ejecutor nube | GAS-BANDEJA-NUBE, STORE-BANDEJA-RECIBOS, EXT-GMAIL | Última aprobación vigente → Recibo o efecto incierto sin repetición | automatico |
+| 5. Conciliar y observar funcionamiento | Ejecutor nube | GAS-BANDEJA-NUBE, SVC-HORARIOS-CLOUD, SYS-CONTROL | Recibos reales y latido → Estado por alcance en Accesos | automatico |
+
+Vacíos: Consentimiento inicial de Google y confirmación del libro efectivo mediante sesión de Dirección.; Corte de la rutina Claude sólo después de dos ciclos de observación y pruebas; primer envío aprobado real se acredita por separado..
+
+Evidencia: CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes..
