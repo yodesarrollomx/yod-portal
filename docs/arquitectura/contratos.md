@@ -631,7 +631,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 ## CTR-SALUD-ACCESOS
 
-- Componentes: SYS-YOD-OS, SYS-CONTROL, SYS-TRACK, SYS-OBRA, SYS-OBRA-CLIENTE, SYS-POTENCIALES, GAS-PORTERO, SYS-SALA, GAS-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-ACTIONS, EXT-DRIVE, EXT-GMAIL, SYS-MARKETING, SYS-PLAN-POTENCIAL, EXT-MOTORES-MEDIA.
+- Componentes: SYS-YOD-OS, SYS-CONTROL, SYS-TRACK, SYS-OBRA, SYS-OBRA-CLIENTE, SYS-POTENCIALES, GAS-PORTERO, SYS-SALA, GAS-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-ACTIONS, EXT-DRIVE, EXT-GMAIL, SYS-MARKETING, SYS-PLAN-POTENCIAL, EXT-MOTORES-MEDIA, SYS-DESPACHO, SYS-DESPACHO-3D.
 - Evidencia: Modelo técnico del Atlas, superficies publicadas, API de Actions y revisión agregada de Sala; motores reales sólo con insumos sintéticos..
 - Entrada/campos: `Catálogo técnico y pasos de cada proceso con IDs existentes; configuración explícita de pruebas y caducidad.`, `Lecturas públicas allowlisted de páginas/contratos; observación de Sala con identidad agente y datos agregados, sin publicar filas o identidades.`, `Canario aislado diario de voz/escena/corte y transferencia temporal privada de Drive, sin encolar ni proponer.`.
 - Salida: Informe técnico sanitizado por prueba: estado, alcance, hora, vencimiento y enlace de evidencia. Rama de datos independiente de main., Panel Estado de los sistemas en Accesos con actualización de pantalla cada minuto y comprobación programada cada15min. Procesos manuales/pendientes visibles; no certificar operaciones comerciales por un ping., Horarios declarados en Hermosillo y última ejecución real de las rutinas de Sala..

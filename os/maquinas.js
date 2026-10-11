@@ -9,7 +9,7 @@
 (function () {
   'use strict';
   var MAQUINAS = [
-    { n: 'Vigía (el único vigilante)', r: 'yodesarrollomx/yod-portal', w: 'vigia-diario.yml', cada: 'cada hora', maxHoras: 3 },
+    { n: 'Monitor de funcionamiento', r: 'yodesarrollomx/yod-portal', w: 'salud-online.yml', cada: 'cada 15 minutos · detalle en Accesos', maxHoras: 0.75 },
     { n: 'Pruebas de YOD OS', r: 'yodesarrollomx/yod-portal', w: 'verificar.yml', cada: 'en cada cambio' },
     { n: 'Sala · Diario', r: 'yodesarrollomx/sala-edicion', w: 'sala-diario.yml', cada: '5:40 a 18 h', maxHoras: 26 },
     { n: 'Sala · Cada hora', r: 'yodesarrollomx/sala-edicion', w: 'sala-cada-hora.yml', cada: 'cada hora', maxHoras: 3 },

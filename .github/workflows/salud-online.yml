@@ -1,0 +1,41 @@
+name: Estado de los sistemas · pruebas continuas
+on:
+  schedule:
+    - cron: '3,18,33,48 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - scripts/salud-online.cjs
+      - os/yod-salud.js
+      - os/salud-catalogo.json
+      - .github/workflows/salud-online.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: yod-salud-online
+  cancel-in-progress: false
+jobs:
+  monitor:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar monitor sin endpoints de negocio
+        run: node --test tests/salud-online.test.cjs
+      - name: Lecturas públicas y recibo técnico verificado
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/salud-online.cjs
+      - name: Conservar informe técnico de esta corrida
+        uses: actions/upload-artifact@v4
+        with:
+          name: yod-salud
+          path: ${{ runner.temp }}/yod-salud.json
+          retention-days: 7

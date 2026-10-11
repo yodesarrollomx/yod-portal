@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-10-11.salud-accesos",
   "proposal_id": "CHG-SALUD-ACCESOS-20261011",
-  "summary": "Registrar control autorizado de salud por prueba y proceso en Accesos; conservar datos, compuertas e identidad.",
+  "summary": "Monitor continuo y cliente de Accesos con pruebas por alcance, edad, vencimiento y evidencia; datos técnicos en rama separada.",
   "components": [
     "SYS-YOD-OS",
     "SYS-CONTROL",
@@ -19,14 +19,13 @@
     "EXT-GMAIL",
     "SYS-MARKETING",
     "SYS-PLAN-POTENCIAL",
-    "EXT-MOTORES-MEDIA"
+    "EXT-MOTORES-MEDIA",
+    "SYS-DESPACHO",
+    "SYS-DESPACHO-3D"
   ],
   "tests": [
-    "Estados de fallo, respuesta inválida, lectura caducada/futura, workflow detenido, canario parcial y falta de evidencia; resultados anteriores nunca vuelven verde una comprobación fallida.",
-    "Comprobaciones de páginas/contratos sólo contra allowlist; API pública de Actions y snapshots publicados; observación Sala exclusivamente de recursos de lectura ya autorizados.",
-    "Canario sintético local: motores reales, codecs/duración/audio medidos; Drive sólo prueba temporal fuera de registros comerciales; limpieza y errores independientes, sin mensajes o decisiones.",
-    "Accesos con sesión vigente: montaje y refresco, descarte de respuestas tardías tras cambio/cierre de sesión; matriz y escritor intactos; móvil y escritorio.",
-    "CI completos de Portal/Sala/Potenciales; publicación y ejecución real registradas por separado de pruebas aisladas."
+    "Regresiones de datos caducados/futuros, fallos, canarios posteriores, falta de contrato y respuesta tardía después de cerrar sesión.",
+    "Catálogo derivado del Atlas completo y CI Portal completo; monitor real y publicación se acreditan aparte."
   ],
-  "rollback": "Revertir cambios de monitor/clientes y horarios mediante PR. Conservar la rama de resultados y registros existentes; detener únicamente el monitor/canario nuevos, sin borrar medios, decisiones, usuarios o disparadores del negocio."
+  "rollback": "Revertir monitor, cliente y enlace mediante PR. Conservar rama de datos e historial; detener sólo salud-online."
 }

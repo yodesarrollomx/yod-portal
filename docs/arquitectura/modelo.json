@@ -10488,7 +10488,9 @@
         "EXT-GMAIL",
         "SYS-MARKETING",
         "SYS-PLAN-POTENCIAL",
-        "EXT-MOTORES-MEDIA"
+        "EXT-MOTORES-MEDIA",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
       ],
       "status": "propuesto",
       "proposal": "Dirección solicita horarios y control de funcionamiento por sistema/proceso en Accesos mediante pruebas pequeñas continuas. Ampliar la observación autorizada de Sala cada15min y ejecutar un canario aislado diario de Kokoro/parallax/ffmpeg/Drive. Publicar sólo resultados técnicos en una rama de datos del Portal y mostrarlos en Accesos vinculados a la sesión administradora vigente. Inventario completo derivado del Atlas; cada prueba muestra alcance, fecha, vigencia y evidencia. Página accesible, workflow activo, corrida correcta y proceso de negocio completo se distinguen; pendientes nunca verdes. Sin reactivar Vigía/gestores/PPP cancelados.",
@@ -11772,7 +11774,9 @@
         "EXT-GMAIL",
         "SYS-MARKETING",
         "SYS-PLAN-POTENCIAL",
-        "EXT-MOTORES-MEDIA"
+        "EXT-MOTORES-MEDIA",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
       ],
       "source": "Modelo técnico del Atlas, superficies publicadas, API de Actions y revisión agregada de Sala; motores reales sólo con insumos sintéticos.",
       "input": [
