@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "model_revision": "2026-10-11.horarios-render",
+  "model_revision": "2026-10-11.horarios-render.1",
   "components": [
     {
       "id": "SYS-DESPACHO",
@@ -521,16 +521,14 @@
     {
       "id": "SVC-HORARIOS-CLOUD",
       "nombre": "Vigilante y programador en nube",
-      "dominio": "Infraestructura",
       "tipo": "worker",
-      "estado_catalogo": "propuesto"
+      "repo": "alexpueblag/yod-agent-cloud"
     },
     {
       "id": "STORE-HORARIOS-CLOUD",
       "nombre": "Estado privado de horarios",
-      "dominio": "Infraestructura",
       "tipo": "almacen_servidor",
-      "estado_catalogo": "propuesto"
+      "repo": "alexpueblag/yod-agent-cloud"
     }
   ],
   "processes": [

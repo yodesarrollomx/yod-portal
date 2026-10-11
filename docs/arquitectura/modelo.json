@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-11.horarios-render",
+  "revision": "2026-10-11.horarios-render.1",
   "checked_at": "2026-10-11",
   "priorities": [
     "vender_mas",
@@ -10691,7 +10691,10 @@
         "SYS-PLAN-POTENCIAL",
         "EXT-MOTORES-MEDIA",
         "SYS-DESPACHO",
-        "SYS-DESPACHO-3D"
+        "SYS-DESPACHO-3D",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL",
+        "SHEET-SALA"
       ],
       "status": "propuesto",
       "proposal": "Dirección autoriza implementar prioridad1 con la solución más eficiente. Añadir un vigilante residente en el Render existente, leer estado público cada5min y conservar reservas privadas. Recuperar sólo la oportunidad actual omitida mediante workflows existentes, con una GitHub App propia y consentimiento personal. Accesos muestra vigencia, programación, solicitudes y ejecución confirmada por separado. La publicación no equivale a tener instalada la App.",

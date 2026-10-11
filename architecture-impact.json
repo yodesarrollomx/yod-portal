@@ -1,20 +1,24 @@
 {
-  "model_revision": "2026-10-11.horarios-render",
+  "model_revision": "2026-10-11.horarios-render.1",
   "proposal_id": "CHG-HORARIOS-NUBE-20261011",
-  "summary": "Registrar vigilancia independiente en Render, reservas durables, recuperación de horarios actuales y conexión mínima de GitHub App.",
+  "summary": "Completar alcance de la lectura programada de Plan y la revisión de Sala sin cambiar sus registros o contratos.",
   "components": [
     "SYS-YOD-OS",
     "SYS-CONTROL",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
     "SYS-POTENCIALES",
-    "GAS-PORTERO",
     "SYS-SALA",
     "GAS-SALA",
     "SVC-SALA-PRODUCTOR",
     "SVC-SALA-EJECUTOR",
     "EXT-ACTIONS",
+    "EXT-RENDER",
+    "SVC-AUTON-CLOUD",
+    "SVC-HORARIOS-CLOUD",
+    "STORE-HORARIOS-CLOUD",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "GAS-PORTERO",
     "EXT-DRIVE",
     "EXT-GMAIL",
     "SYS-MARKETING",
@@ -22,13 +26,12 @@
     "EXT-MOTORES-MEDIA",
     "SYS-DESPACHO",
     "SYS-DESPACHO-3D",
-    "EXT-RENDER",
-    "SVC-AUTON-CLOUD",
-    "SVC-HORARIOS-CLOUD",
-    "STORE-HORARIOS-CLOUD"
+    "GAS-PLAN-POTENCIAL",
+    "SHEET-PLAN-POTENCIAL",
+    "SHEET-SALA"
   ],
   "tests": [
-    "Validación del Atlas y vistas generadas; CI completo Portal."
+    "Atlas/vistas sincronizados, inventario de salud y CI Portal completo."
   ],
-  "rollback": "Revertir la propuesta por PR; sin modificar registros de negocio."
+  "rollback": "Revertir el alcance mediante PR; conservar datos de negocio."
 }
