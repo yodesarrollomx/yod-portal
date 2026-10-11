@@ -10,3 +10,13 @@ test('interrupted, blocked, queued and missing connection are explicit states',a
 test('movement changes the label only while the observed execution is active',async()=>{const {avatarPresence}=await mod;const o=observation();assert.equal(avatarPresence({profile,observation:o,movement:{motion:'walk'},now:1500}).label,'En camino · documentos');o.work.phase='prepared';assert.equal(avatarPresence({profile,observation:o,movement:{motion:'walk'},now:1500}).label,'Entrega preparada');});
 
 test('queue and new run preparation never display an earlier delivery as current progress',async()=>{const {avatarPresence}=await mod;const o=observation();o.work.phase='prepared';o.runtime={phase:'waiting_capacity'};let p=avatarPresence({profile,observation:o,now:1500});assert.equal(p.label,'Encargo en cola');assert.equal(p.progress,null);assert.equal(p.goal_id,null);o.runtime.phase='working';p=avatarPresence({profile,observation:o,now:1500});assert.equal(p.label,'Preparando encargo');assert.equal(p.progress,null);o.runtime.phase='unavailable';assert.equal(avatarPresence({profile,observation:o,now:1500}).activity,'offline');});
+
+test('safe recovery wait has no current tool, goal or progress even with a previous active record',async()=>{
+ const {avatarPresence}=await mod;
+ for(const name of ['Gastón','Luis','Ruiseñor']){
+  const o=observation(),p={...profile,name};o.runtime={phase:'waiting_recovery',diagnostic:{code:'recovery_lease_wait'}};
+  const before=structuredClone(o.work),waiting=avatarPresence({profile:p,observation:o,movement:{motion:'walk'},now:1500});
+  assert.equal(waiting.name,name);assert.equal(waiting.activity,'wait');assert.equal(waiting.label,'Esperando recuperación segura');assert.equal(waiting.fresh,true);assert.equal(waiting.goal_id,null);assert.equal(waiting.progress,null);assert.equal(waiting.updated_at,null);assert.deepEqual(o.work,before);
+  o.runtime={phase:'working'};const resumed=avatarPresence({profile:p,observation:o,now:1500});assert.equal(resumed.activity,'library');assert.equal(resumed.goal_id,'GOAL-ONE');assert.ok(resumed.progress);
+ }
+});

@@ -3,7 +3,7 @@ const id=v=>typeof v==='string'&&/^[A-Za-z0-9_.:-]{1,200}$/.test(v);
 const plain=v=>v&&typeof v==='object'&&!Array.isArray(v);
 const txt=(v,n)=>typeof v==='string'&&v.length<=n;
 const stamp=v=>typeof v==='string'&&Number.isFinite(Date.parse(v));
-const runtimePhases=new Set(['starting','ready','working','waiting_capacity','reconnecting','review_required','unavailable','disabled','stopped']);
+const runtimePhases=new Set(['starting','ready','working','waiting_capacity','waiting_recovery','reconnecting','review_required','unavailable','disabled','stopped']);
 const count=v=>Number.isSafeInteger(v)&&v>=0;
 const phases=new Set(['working','tool','prepared','awaiting_data','interrupted','error']);
 export function safeWorkURL(raw){try{const u=new URL(raw);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null;}catch{return null;}}
@@ -68,6 +68,7 @@ export function workHeadline(state){
  if(state.phase!=='ready')return 'Sin conexión con la actividad';
  const runtime=state.runtime?.phase;
  if(runtime==='waiting_capacity')return 'Encargo en cola';
+ if(runtime==='waiting_recovery')return 'Esperando recuperación segura';
  if(runtime==='reconnecting')return 'Recuperando conexión del servidor';
  if(runtime==='unavailable')return 'Servidor sin disponibilidad';
  if(runtime==='disabled'||runtime==='stopped')return 'Motor detenido';

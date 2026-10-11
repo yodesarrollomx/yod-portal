@@ -1,6 +1,6 @@
 import * as T from 'three';
 import {screenStatus} from './office-screen-status.mjs?v=1';
-import {workHeadline,observationCaptureKey} from './work-observer.mjs?v=126';
+import {workHeadline,observationCaptureKey} from './work-observer.mjs?v=129';
 // A dated, owned projection. A texture is never a claim of continuous video.
 export function createOfficeScreen(mesh,onChange=()=>{}){
  const canvas=document.createElement('canvas');canvas.width=768;canvas.height=400;const ctx=canvas.getContext('2d');
@@ -26,10 +26,10 @@ export function createOfficeScreen(mesh,onChange=()=>{}){
    line(state.slide.title,108,32);wrap(state.slide.result,155,275,25);
    footer(state.slide.checkpoint||'Resultado para revisar');return;
   }
-  const queued=['starting','waiting_capacity','reconnecting','unavailable','disabled','stopped'].includes(state.runtime?.phase)||state.runtime?.phase==='working'&&!['working','tool'].includes(state.work?.phase);
+  const queued=['starting','waiting_capacity','waiting_recovery','reconnecting','unavailable','disabled','stopped'].includes(state.runtime?.phase)||state.runtime?.phase==='working'&&!['working','tool'].includes(state.work?.phase);
   if(queued){
    line(state.runtime?.phase==='working'?'Preparando encargo':workHeadline(state),115,32);
-   wrap(state.runtime?.phase==='waiting_capacity'?'El encargo espera su turno en el servidor.':state.runtime?.continues_without_viewer?'El motor del servidor está conectado a este expediente.':'La ejecución requiere recuperar el motor.',172,272);
+   wrap(state.runtime?.phase==='waiting_capacity'?'El encargo espera su turno en el servidor.':state.runtime?.phase==='waiting_recovery'?'El servidor espera a que venza la reserva de la ejecución anterior. El último avance se conserva en el historial.':state.runtime?.continues_without_viewer?'El motor del servidor está conectado a este expediente.':'La ejecución requiere recuperar el motor.',172,272);
    footer('Estado del servidor · '+stamp(state.runtime?.updated_at));return;
   }
   if(state.surface==='library'&&state.work?.document){

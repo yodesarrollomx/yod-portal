@@ -22,6 +22,7 @@ export function avatarPresence({profile,observation,movement,now=Date.now()}={})
  out.fresh=true;out.observed_at=checked;
  const w=o.work,runtime=o.runtime?.phase;
  if(runtime==='waiting_capacity')return {...out,label:'Encargo en cola'};
+ if(runtime==='waiting_recovery')return {...out,label:'Esperando recuperación segura'};
  if(['starting','reconnecting','unavailable','disabled','stopped'].includes(runtime))return {...out,activity:runtime==='starting'?'loading':'offline',label:({starting:'Preparando motor',reconnecting:'Reconectando con el motor',unavailable:'Motor no disponible',disabled:'Motor desactivado',stopped:'Motor detenido'})[runtime]};
  if(runtime==='working'&&(!w||['prepared','awaiting_data','interrupted','error'].includes(w.phase)))return {...out,activity:'loading',label:'Preparando encargo'};
  if(!w)return {...out,label:'Disponible · sin encargo activo'};

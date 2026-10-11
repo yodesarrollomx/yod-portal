@@ -1,6 +1,6 @@
 import {mountMeeting} from './meeting-view.mjs?v=126';
 import {mountAvatarCard} from './avatar-card.mjs?v=126';
-import {mountWorkView} from './work-view.mjs?v=126';
+import {mountWorkView} from './work-view.mjs?v=129';
 import {registeredBoard,resolveBoard,stationIdentity} from './project-station.mjs?v=121';
 import {mountKnowledgeBoard} from './knowledge-board.mjs?v=128';
 import {createFrameTransport,validateConversation} from './conversation.mjs?v=126';
