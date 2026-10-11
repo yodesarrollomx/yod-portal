@@ -651,7 +651,7 @@ Servir el contrato de Sala de Edición
 - Entidades: propuesta, decision, produccion.
 - Fuente de verdad: gas/Code.gs es fuente versionada; no se comprobó igualdad con versión desplegada.
 - Evidencia: [sala-edicion/gas/Code.gs](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/gas/Code.gs#L713) — Tipo de fuente disponible: fuente_repositorio_despliegue_no_verificado; [sala-edicion/gas/Code.gs](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/gas/Code.gs#L962) — Ruta de decisión editorial en el backend versionado; [sala-edicion/gas/Code.gs](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/gas/Code.gs#L27) — Esquemas de tablas de Sala; [sala-edicion/nube/medios_reconexion.py](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py) — PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto..
-- Conexiones: CON-014 (GAS-SALA → SHEET-SALA); CON-031 (SYS-SALA → GAS-SALA); CON-080 (SVC-SALA-PRODUCTOR → GAS-SALA); CON-082 (SVC-SALA-EJECUTOR → GAS-SALA); CON-085 (GAS-SALA → GAS-PORTERO); CON-086 (GAS-SALA → GAS-PORTERO-RESPALDO); CON-SALA-RECONEXION-MEDIOS (SVC-SALA-EJECUTOR → GAS-SALA).
+- Conexiones: CON-014 (GAS-SALA → SHEET-SALA); CON-031 (SYS-SALA → GAS-SALA); CON-080 (SVC-SALA-PRODUCTOR → GAS-SALA); CON-082 (SVC-SALA-EJECUTOR → GAS-SALA); CON-085 (GAS-SALA → GAS-PORTERO); CON-086 (GAS-SALA → GAS-PORTERO-RESPALDO); CON-SALA-RECONEXION-MEDIOS (SVC-SALA-EJECUTOR → GAS-SALA); CON-SALA-CORREO-ONLINE (GAS-SALA → EXT-GMAIL).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Código desplegado y permisos reales no contrastados.
 
@@ -742,7 +742,7 @@ Dependencia externa de procesos YOD OS
 - Entidades: .
 - Fuente de verdad: Datos del servicio externo; no inspeccionados.
 - Evidencia: Integración pendiente de verificar.
-- Conexiones: CON-061 (SYS-DESPACHO → EXT-GMAIL).
+- Conexiones: CON-061 (SYS-DESPACHO → EXT-GMAIL); CON-SALA-CORREO-ONLINE (GAS-SALA → EXT-GMAIL).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Estado y permisos no comprobados.
 
@@ -755,7 +755,7 @@ Dependencia externa de procesos YOD OS
 - Entidades: .
 - Fuente de verdad: Datos del servicio externo; no inspeccionados.
 - Evidencia: Integración pendiente de verificar.
-- Conexiones: CON-063 (SYS-SALA → EXT-ACTIONS); CON-079 (EXT-ACTIONS → SVC-SALA-PRODUCTOR); CON-081 (EXT-ACTIONS → SVC-SALA-EJECUTOR); CON-PUBLICADOR-IDENTIDAD (EXT-ACTIONS → EXT-GITHUB-PUBLISHER-APP); CON-SALA-SNAPSHOT-ONLINE (SYS-SALA → EXT-ACTIONS); CON-MARKETING-DATOS-ONLINE (SYS-MARKETING → EXT-ACTIONS).
+- Conexiones: CON-063 (SYS-SALA → EXT-ACTIONS); CON-079 (EXT-ACTIONS → SVC-SALA-PRODUCTOR); CON-081 (EXT-ACTIONS → SVC-SALA-EJECUTOR); CON-PUBLICADOR-IDENTIDAD (EXT-ACTIONS → EXT-GITHUB-PUBLISHER-APP); CON-SALA-SNAPSHOT-ONLINE (SYS-SALA → EXT-ACTIONS); CON-MARKETING-DATOS-ONLINE (SYS-MARKETING → EXT-ACTIONS); CON-SALA-CIERRE-ONLINE (SVC-SALA-EJECUTOR → EXT-ACTIONS).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Estado y permisos no comprobados.
 
@@ -893,7 +893,7 @@ Procesar trabajos habilitados y subir resultados
 - Entidades: trabajo, pieza, version.
 - Fuente de verdad: Configuración de reglas/motores y código de ejecución; ejecución viva pendiente.
 - Evidencia: [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_ejecutor.py#L88) — Procesar trabajos habilitados y subir resultados; [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/nube/sala_ejecutor.py) — PR265 conserva compuertas, aprobaciones y procedencia; Modal default 0 y CPU de respaldo. CI completo acreditado.; [sala-edicion/nube/medios_reconexion.py](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py) — PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto..
-- Conexiones: CON-081 (EXT-ACTIONS → SVC-SALA-EJECUTOR); CON-082 (SVC-SALA-EJECUTOR → GAS-SALA); CON-083 (SVC-SALA-EJECUTOR → EXT-MOTORES-MEDIA); CON-084 (SVC-SALA-EJECUTOR → EXT-DRIVE); CON-SALA-RECONEXION-MEDIOS (SVC-SALA-EJECUTOR → GAS-SALA).
+- Conexiones: CON-081 (EXT-ACTIONS → SVC-SALA-EJECUTOR); CON-082 (SVC-SALA-EJECUTOR → GAS-SALA); CON-083 (SVC-SALA-EJECUTOR → EXT-MOTORES-MEDIA); CON-084 (SVC-SALA-EJECUTOR → EXT-DRIVE); CON-SALA-RECONEXION-MEDIOS (SVC-SALA-EJECUTOR → GAS-SALA); CON-SALA-CIERRE-ONLINE (SVC-SALA-EJECUTOR → EXT-ACTIONS).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Uso efectivo, configuración y costo en producción no comprobados.
 

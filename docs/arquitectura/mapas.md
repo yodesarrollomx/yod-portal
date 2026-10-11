@@ -91,6 +91,7 @@ flowchart LR
   n_EXT_DRIVE["Google Drive"]
   n_EXT_CALENDAR["Google Calendar"]
   n_EXT_META["Meta"]
+  n_EXT_GMAIL["Gmail"]
   n_EXT_ACTIONS["GitHub Actions"]
   n_GAS_CRM["CRM comercial"]
   n_SHEET_CRM["Datos de CRM comercial"]
@@ -157,7 +158,9 @@ flowchart LR
   n_SHEET_PLAN_POTENCIAL -->|Lectura de Plan por cuenta de servicio y salida agregada| n_SYS_SALA
   n_SYS_SALA -->|Marketing consume agregados de Plan publicados con hash| n_SYS_MARKETING
   n_SVC_SALA_EJECUTOR -->|Mantenimiento limitado de evidencia de voces originales recuperadas| n_GAS_SALA
-  n_SYS_INVERSION -.->|Preevaluación y retorno de terreno a cartera| n_GAS_PORTERO
+  n_SYS_INVERSION -->|Preevaluación y retorno de terreno a cartera| n_GAS_PORTERO
+  n_GAS_SALA -.->|Correo diario y entrada al destinatario existente| n_EXT_GMAIL
+  n_SVC_SALA_EJECUTOR -.->|Cierre, activación acotada y comparación aislada| n_EXT_ACTIONS
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PLAN_POTENCIAL pendiente;
@@ -171,6 +174,7 @@ flowchart LR
   class n_EXT_DRIVE pendiente;
   class n_EXT_CALENDAR pendiente;
   class n_EXT_META pendiente;
+  class n_EXT_GMAIL pendiente;
   class n_EXT_ACTIONS pendiente;
   class n_SHEET_CRM pendiente;
   class n_GAS_INVERSION pendiente;
@@ -358,6 +362,7 @@ flowchart LR
   n_GAS_PORTERO["Portero y Potenciales"]
   n_GAS_PLAN_POTENCIAL["Captación de Plan Potencial"]
   n_GAS_CODES["Portal de codesarrolladores"]
+  n_GAS_SALA["Sala de Edición"]
   n_GAS_EMD["Evaluación privada"]
   n_EXT_DRIVE["Google Drive"]
   n_EXT_CALENDAR["Google Calendar"]
@@ -388,6 +393,8 @@ flowchart LR
   n_EXT_RENDER -.->|Servicio y volumen persistentes en la versión efectiva| n_SVC_AUTON_CLOUD
   n_SYS_SALA -->|Snapshots privados de datos públicos y Pages con recibo verificable| n_EXT_ACTIONS
   n_SYS_MARKETING -->|Agregados públicos en rama de datos; UI de Pages conserva código aprobado| n_EXT_ACTIONS
+  n_GAS_SALA -.->|Correo diario y entrada al destinatario existente| n_EXT_GMAIL
+  n_SVC_SALA_EJECUTOR -.->|Cierre, activación acotada y comparación aislada| n_EXT_ACTIONS
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_SITIO_ORG pendiente;
   class n_GAS_EMD pendiente;
@@ -451,7 +458,7 @@ flowchart LR
   n_GAS_PORTERO -.->|Provisional: CAS en Mi Corcho privado| n_STORE_DESPACHO_CORCHO
   n_GAS_PORTERO -.->|Corcho: principal y ACL completos por GET| n_EXT_DRIVE
   n_SVC_AUTON_CLOUD -->|Identidad, contexto, objetivos y cola autorizados| n_GAS_PORTERO
-  n_SYS_INVERSION -.->|Preevaluación y retorno de terreno a cartera| n_GAS_PORTERO
+  n_SYS_INVERSION -->|Preevaluación y retorno de terreno a cartera| n_GAS_PORTERO
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SHEET_PORTERO pendiente;
@@ -625,4 +632,6 @@ flowchart LR
 | CON-PLAN-SHEETS-ONLINE | SHEET-PLAN-POTENCIAL → SYS-SALA | lectura: Lectura de Plan por cuenta de servicio y salida agregada. CTR-PLAN-AGREGADOS-ONLINE; identidad sólo lectora, columnas permitidas y ningún registro de cliente en salida. | ejecucion | [sala-edicion/nube/plan_agregados.py](https://github.com/yodesarrollomx/sala-edicion/blob/a3b6c7053b3cd26333dd06878e74bb666288ce51/nube/plan_agregados.py) — PR266/267/268 integrados. Run 38156397507 success: cuenta de servicio existente con permiso lector, consulta autenticada GViz sólo cuando Sheets API está deshabilitada, columnas permitidas, exclusión de prueba y publicación verificada. Fuente no modificada. |
 | CON-PLAN-METRICAS-ONLINE | SYS-SALA → SYS-MARKETING | lectura: Marketing consume agregados de Plan publicados con hash. CTR-PLAN-AGREGADOS-ONLINE; recibo exacto, frescura y no sustituir errores por cero. | ejecucion | [aurum-board/scripts/pull_metrics.py](https://github.com/yodesarrollomx/aurum-board/blob/e3dd428a01b01d1c8b5775c7fcca408735c98357/scripts/pull_metrics.py) — PR78 integrado; run 38157069665 success. Plan lectura confirmada con hash y frescura; leads_medicion_caida=false, 76 publicaciones Meta. El lector HTTP comprueba bytes/recibo de snapshot409795880. |
 | CON-SALA-RECONEXION-MEDIOS | SVC-SALA-EJECUTOR → GAS-SALA | conciliacion: Mantenimiento limitado de evidencia de voces originales recuperadas. CTR-SALA-RECONECTAR-MEDIOS; sólo evidencia técnica con archivo original exacto, sin estados ni decisiones. | ejecucion | [sala-edicion/nube/medios_reconexion.py](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py) — PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto. |
-| CON-BROKER-PREEVALUATION | SYS-INVERSION → GAS-PORTERO | api: Preevaluación y retorno de terreno a cartera. POST autenticado valida alcance con brokers_snapshot de CRM; liga corta de un solo uso abre evaluador. Regreso contiene sólo ID; lectura exige sesión vigente y cartera autorizada. Alta CRM usa brokers_save existente y confirmación explícita. | propuesto | CHG-MASTERBROKER-PREEVALUATION: integración autorizada; implementación y despliegue pendientes |
+| CON-BROKER-PREEVALUATION | SYS-INVERSION → GAS-PORTERO | api: Preevaluación y retorno de terreno a cartera. POST autenticado valida alcance con brokers_snapshot de CRM; liga corta de un solo uso abre evaluador. Regreso contiene sólo ID; lectura exige sesión vigente y cartera autorizada. Alta CRM usa brokers_save existente y confirmación explícita. | codigo | [yodesarrollo-board/brokers-evaluator.js](https://github.com/yodesarrollomx/yodesarrollo-board/blob/4774888ede9caf53684ed7509d36ef7ffe1e126e/brokers-evaluator.js) — PR12 integrado: lanzamiento de un solo uso y retorno autorizado; backend v92 publicado, flujo individual comprobado con servicios sintéticos. |
+| CON-SALA-CORREO-ONLINE | GAS-SALA → EXT-GMAIL | correo: Correo diario y entrada al destinatario existente. CTR-SALA-CIERRE-ONLINE; destinatario/compuertas existentes y comprobación por alcance. | propuesto | Diseño de cierre autorizado por Dirección; ejecución y recepción todavía no verificadas. |
+| CON-SALA-CIERRE-ONLINE | SVC-SALA-EJECUTOR → EXT-ACTIONS | automatizacion: Cierre, activación acotada y comparación aislada. CTR-SALA-CIERRE-ONLINE; destinatario/compuertas existentes y comprobación por alcance. | propuesto | Diseño de cierre autorizado por Dirección; ejecución y recepción todavía no verificadas. |

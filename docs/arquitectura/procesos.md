@@ -468,7 +468,7 @@ Evidencia: Diseño autorizado; publicación y prueba real pendientes.
 
 ## PROC-BROKER-PREEVALUATION · Preevaluar un terreno desde Masterbrokers
 
-Estado: propuesto.
+Estado: codigo.
 
 ```mermaid
 flowchart TD
@@ -490,4 +490,4 @@ flowchart TD
 
 Vacíos: Los correos individuales deben estar vinculados canónicamente en CRM; Cobertura de fuentes de entorno variable; preevaluación no equivale a aprobación del plan.
 
-Evidencia: Recorrido autorizado por Dirección; pendiente de implementación.
+Evidencia: [yodesarrollo-board/brokers-evaluator.js](https://github.com/yodesarrollomx/yodesarrollo-board/blob/4774888ede9caf53684ed7509d36ef7ffe1e126e/brokers-evaluator.js) — PR12 integrado: lanzamiento de un solo uso y retorno autorizado; backend v92 publicado, flujo individual comprobado con servicios sintéticos..
