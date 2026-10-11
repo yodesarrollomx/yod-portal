@@ -1,0 +1,1419 @@
+{
+  "schema": 1,
+  "model_revision": "2026-10-11.salud-accesos",
+  "components": [
+    {
+      "id": "SYS-DESPACHO",
+      "nombre": "El Despacho",
+      "tipo": "tablero",
+      "repo": "yodesarrollomx/yod-despacho"
+    },
+    {
+      "id": "SYS-POTENCIALES",
+      "nombre": "PPP · Potenciales",
+      "tipo": "tablero",
+      "repo": "yodesarrollomx/potenciales-yod"
+    },
+    {
+      "id": "SYS-TRACK",
+      "nombre": "Tracks de codesarrollo",
+      "tipo": "tablero",
+      "repo": "yodesarrollomx/yod-portal"
+    },
+    {
+      "id": "SYS-MIRAMAR",
+      "nombre": "Real de Miramar",
+      "tipo": "tablero",
+      "repo": "yodesarrollomx/real-miramar-board"
+    },
+    {
+      "id": "SYS-TAREAS",
+      "nombre": "MOAC",
+      "tipo": "tablero",
+      "repo": "yodesarrollomx/board-aurum"
+    },
+    {
+      "id": "SYS-FLUJO",
+      "nombre": "Tesorería",
+      "tipo": "tablero",
+      "repo": "yodesarrollomx/board-flujo-yod"
+    },
+    {
+      "id": "SYS-INTERIORES",
+      "nombre": "Aurum · Interiores",
+      "tipo": "tablero",
+      "repo": "yodesarrollomx/interiores-aurum"
+    },
+    {
+      "id": "SYS-INVERSION",
+      "nombre": "Masterbrokers",
+      "tipo": "tablero",
+      "repo": "yodesarrollomx/yodesarrollo-board"
+    },
+    {
+      "id": "SYS-MARKETING",
+      "nombre": "Embudo comercial",
+      "tipo": "tablero",
+      "repo": "yodesarrollomx/aurum-board"
+    },
+    {
+      "id": "SYS-OBRA",
+      "nombre": "Obra en vivo",
+      "tipo": "tablero",
+      "repo": "yodesarrollomx/yod-portal"
+    },
+    {
+      "id": "SYS-CONTROL",
+      "nombre": "Control Maestro",
+      "tipo": "tablero",
+      "repo": "yodesarrollomx/yod-portal"
+    },
+    {
+      "id": "SYS-YOD-OS",
+      "nombre": "YOD OS",
+      "tipo": "portal",
+      "repo": "yodesarrollomx/yod-portal"
+    },
+    {
+      "id": "SYS-PLAN-POTENCIAL",
+      "nombre": "Plan de Potencial",
+      "tipo": "captacion",
+      "repo": "yodesarrollomx/plan-potencial"
+    },
+    {
+      "id": "SYS-CROKISS",
+      "nombre": "CroKiss",
+      "tipo": "captacion",
+      "repo": "yodesarrollomx/crokiss"
+    },
+    {
+      "id": "SYS-CODES-PORTAL",
+      "nombre": "Portal de codesarrolladores",
+      "tipo": "portal_cliente",
+      "repo": "yodesarrollomx/Co-desarrolladores-Yod"
+    },
+    {
+      "id": "SYS-ALQUIMIA",
+      "nombre": "Alquimia Urbana",
+      "tipo": "tablero",
+      "repo": "yodesarrollomx/alquimia-urbana"
+    },
+    {
+      "id": "SYS-SALA",
+      "nombre": "Sala de Edición",
+      "tipo": "produccion",
+      "repo": "yodesarrollomx/sala-edicion"
+    },
+    {
+      "id": "SYS-SALA-OPERACION",
+      "nombre": "Herramientas de producción",
+      "tipo": "automatizacion",
+      "repo": "yodesarrollomx/sala-operacion"
+    },
+    {
+      "id": "SYS-OBRA-CLIENTE",
+      "nombre": "Obra · módulo cliente",
+      "tipo": "portal_cliente",
+      "repo": "yodesarrollomx/yod-portal"
+    },
+    {
+      "id": "SYS-AURUM-EXPERIENCIA",
+      "nombre": "Experiencia Aurum",
+      "tipo": "redirect",
+      "repo": "yodesarrollomx/aurum-experiencia"
+    },
+    {
+      "id": "SYS-EMD",
+      "nombre": "Evaluación de personas",
+      "tipo": "aplicacion_auxiliar",
+      "repo": "yodesarrollomx/EMDevaluacion360"
+    },
+    {
+      "id": "SYS-PINTARRON",
+      "nombre": "Pintarrón",
+      "tipo": "aplicacion_auxiliar",
+      "repo": "yodesarrollomx/pintarron"
+    },
+    {
+      "id": "SYS-SITIO-ORG",
+      "nombre": "Sitio de organización",
+      "tipo": "infraestructura",
+      "repo": "yodesarrollomx/yodesarrollomx.github.io"
+    },
+    {
+      "id": "SYS-PRUEBA-DOMINIO",
+      "nombre": "Prueba de dominio",
+      "tipo": "auxiliar",
+      "repo": "yodesarrollomx/prueba-dominio"
+    },
+    {
+      "id": "GAS-PORTERO",
+      "nombre": "Portero y Potenciales",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/potenciales-yod"
+    },
+    {
+      "id": "SHEET-PORTERO",
+      "nombre": "Datos de Portero y Potenciales",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/potenciales-yod"
+    },
+    {
+      "id": "GAS-CATALOGO",
+      "nombre": "Catálogo del OS",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/yod-portal"
+    },
+    {
+      "id": "SHEET-CATALOGO",
+      "nombre": "Datos de Catálogo del OS",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/yod-portal"
+    },
+    {
+      "id": "GAS-OPERACION",
+      "nombre": "Operación y tareas",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/board-aurum"
+    },
+    {
+      "id": "SHEET-OPERACION",
+      "nombre": "Datos de Operación y tareas",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/board-aurum"
+    },
+    {
+      "id": "GAS-FLUJO",
+      "nombre": "Tesorería",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/board-flujo-yod"
+    },
+    {
+      "id": "SHEET-FLUJO",
+      "nombre": "Datos de Tesorería",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/board-flujo-yod"
+    },
+    {
+      "id": "GAS-MARKETING",
+      "nombre": "Métricas y CRM de captación",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/aurum-board"
+    },
+    {
+      "id": "SHEET-MARKETING",
+      "nombre": "Datos de Métricas y CRM de captación",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/aurum-board"
+    },
+    {
+      "id": "GAS-PLAN-POTENCIAL",
+      "nombre": "Captación de Plan Potencial",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/plan-potencial"
+    },
+    {
+      "id": "SHEET-PLAN-POTENCIAL",
+      "nombre": "Datos de Captación de Plan Potencial",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/plan-potencial"
+    },
+    {
+      "id": "GAS-CROKISS",
+      "nombre": "Guardado de planos",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/crokiss"
+    },
+    {
+      "id": "SHEET-CROKISS",
+      "nombre": "Datos de Guardado de planos",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/crokiss"
+    },
+    {
+      "id": "GAS-CODES",
+      "nombre": "Portal de codesarrolladores",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/Co-desarrolladores-Yod"
+    },
+    {
+      "id": "SHEET-CODES",
+      "nombre": "Datos de Portal de codesarrolladores",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/Co-desarrolladores-Yod"
+    },
+    {
+      "id": "GAS-MIRAMAR",
+      "nombre": "Miramar",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/real-miramar-board"
+    },
+    {
+      "id": "SHEET-MIRAMAR",
+      "nombre": "Datos de Miramar",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/real-miramar-board"
+    },
+    {
+      "id": "GAS-INTERIORES",
+      "nombre": "Interiores",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/interiores-aurum"
+    },
+    {
+      "id": "SHEET-INTERIORES",
+      "nombre": "Datos de Interiores",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/interiores-aurum"
+    },
+    {
+      "id": "GAS-ALQUIMIA",
+      "nombre": "Registro del grupo",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/alquimia-urbana"
+    },
+    {
+      "id": "SHEET-ALQUIMIA",
+      "nombre": "Datos de Registro del grupo",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/alquimia-urbana"
+    },
+    {
+      "id": "GAS-OBRA",
+      "nombre": "Motor de obra",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/yod-portal"
+    },
+    {
+      "id": "SHEET-OBRA",
+      "nombre": "Datos de Motor de obra",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/yod-portal"
+    },
+    {
+      "id": "GAS-OBRA-CLIENTE",
+      "nombre": "Módulo cliente de obra",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/yod-portal"
+    },
+    {
+      "id": "SHEET-OBRA-CLIENTE",
+      "nombre": "Datos de Módulo cliente de obra",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/yod-portal"
+    },
+    {
+      "id": "GAS-SALA",
+      "nombre": "Sala de Edición",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/sala-edicion"
+    },
+    {
+      "id": "SHEET-SALA",
+      "nombre": "Datos de Sala de Edición",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/sala-edicion"
+    },
+    {
+      "id": "GAS-EMD",
+      "nombre": "Evaluación privada",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/EMDevaluacion360"
+    },
+    {
+      "id": "SHEET-EMD",
+      "nombre": "Datos de Evaluación privada",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/EMDevaluacion360"
+    },
+    {
+      "id": "EXT-DRIVE",
+      "nombre": "Google Drive",
+      "tipo": "servicio_externo",
+      "repo": ""
+    },
+    {
+      "id": "EXT-CALENDAR",
+      "nombre": "Google Calendar",
+      "tipo": "servicio_externo",
+      "repo": ""
+    },
+    {
+      "id": "EXT-META",
+      "nombre": "Meta",
+      "tipo": "servicio_externo",
+      "repo": ""
+    },
+    {
+      "id": "EXT-GMAIL",
+      "nombre": "Gmail",
+      "tipo": "servicio_externo",
+      "repo": ""
+    },
+    {
+      "id": "EXT-ACTIONS",
+      "nombre": "GitHub Actions",
+      "tipo": "servicio_externo",
+      "repo": ""
+    },
+    {
+      "id": "GAS-CRM",
+      "nombre": "CRM comercial",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/yod-portal"
+    },
+    {
+      "id": "SHEET-CRM",
+      "nombre": "Datos de CRM comercial",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/yod-portal"
+    },
+    {
+      "id": "GAS-MOAC-METAS",
+      "nombre": "Metas y objetivos de MOAC",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/board-aurum"
+    },
+    {
+      "id": "SHEET-MOAC-METAS",
+      "nombre": "Metas, objetivos y acciones",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/board-aurum"
+    },
+    {
+      "id": "GAS-INVERSION",
+      "nombre": "Carpeta de inversión",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/yodesarrollo-board"
+    },
+    {
+      "id": "SHEET-INVERSION",
+      "nombre": "Contenido de carpeta comercial",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/yodesarrollo-board"
+    },
+    {
+      "id": "GAS-PORTERO-RESPALDO",
+      "nombre": "Portero de respaldo",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/yod-portal"
+    },
+    {
+      "id": "EXT-AURUM-WEB",
+      "nombre": "Sitio de Arquitectura de Autor",
+      "tipo": "sitio_externo",
+      "repo": "yodesarrollomx/aurum-experiencia"
+    },
+    {
+      "id": "GAS-AUX-METRICAS",
+      "nombre": "Fuente de métricas en utilidades auxiliares",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/sala-operacion"
+    },
+    {
+      "id": "SVC-SALA-PRODUCTOR",
+      "nombre": "Productor de Sala",
+      "tipo": "worker",
+      "repo": "yodesarrollomx/sala-edicion"
+    },
+    {
+      "id": "SVC-SALA-EJECUTOR",
+      "nombre": "Ejecutor de Sala",
+      "tipo": "worker",
+      "repo": "yodesarrollomx/sala-edicion"
+    },
+    {
+      "id": "EXT-MOTORES-MEDIA",
+      "nombre": "Motores de generación de contenido",
+      "tipo": "servicio_externo",
+      "repo": "yodesarrollomx/sala-edicion"
+    },
+    {
+      "id": "SHEET-PPP-MODELOS",
+      "nombre": "PPP · Libros de cálculo por caso",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/potenciales-yod"
+    },
+    {
+      "id": "EXT-GITHUB-PUBLISHER-APP",
+      "nombre": "Identidad de publicación GitHub",
+      "tipo": "servicio_externo",
+      "repo": ""
+    },
+    {
+      "id": "STORE-EMD-DRAFTS",
+      "nombre": "Borradores locales cifrados de evaluación",
+      "tipo": "almacen_navegador",
+      "repo": "yodesarrollomx/EMDevaluacion360"
+    },
+    {
+      "id": "SYS-AMALAYA",
+      "nombre": "Amalaya",
+      "tipo": "tablero",
+      "repo": "yodesarrollo/amalaya-board"
+    },
+    {
+      "id": "GAS-AMALAYA",
+      "nombre": "Motor Amalaya",
+      "tipo": "apps_script",
+      "repo": "yodesarrollo/amalaya-board"
+    },
+    {
+      "id": "SHEET-AMALAYA",
+      "nombre": "Datos de Amalaya",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollo/amalaya-board"
+    },
+    {
+      "id": "STORE-DESPACHO-CORCHO",
+      "nombre": "Mi Corcho · almacén privado de Dirección",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/board-aurum"
+    },
+    {
+      "id": "SYS-DESPACHO-3D",
+      "nombre": "Oficina 3D y puesto del autón",
+      "tipo": "interfaz",
+      "repo": "yodesarrollomx/yod-portal"
+    },
+    {
+      "id": "SVC-AUTON-CLOUD",
+      "nombre": "Motor de nube del autón",
+      "tipo": "worker",
+      "repo": "alexpueblag/yod-agent-cloud"
+    },
+    {
+      "id": "STORE-AUTON-ESTADO",
+      "nombre": "Estado y conocimiento del autón",
+      "tipo": "almacen_servidor",
+      "repo": "alexpueblag/yod-agent-cloud"
+    },
+    {
+      "id": "EXT-JEV",
+      "nombre": "JEV · búsqueda y selección",
+      "tipo": "servicio_externo",
+      "repo": "alexpueblag/yod-agent-cloud"
+    },
+    {
+      "id": "EXT-OPENAI",
+      "nombre": "OpenAI · conversación y ejecución",
+      "tipo": "servicio_externo",
+      "repo": "alexpueblag/yod-agent-cloud"
+    },
+    {
+      "id": "EXT-RENDER",
+      "nombre": "Render · alojamiento del motor",
+      "tipo": "infraestructura",
+      "repo": "alexpueblag/yod-agent-cloud"
+    },
+    {
+      "id": "EXT-OBSIDIAN",
+      "nombre": "Obsidian · bóveda de conocimiento",
+      "tipo": "aplicacion_local",
+      "repo": ""
+    },
+    {
+      "id": "EXT-NOTEBOOKLM",
+      "nombre": "NotebookLM · consulta documental prevista",
+      "tipo": "servicio_externo",
+      "repo": ""
+    }
+  ],
+  "processes": [
+    {
+      "id": "PROC-VENTA-PPP",
+      "nombre": "Captación y venta de Plan de Potencial",
+      "steps": [
+        {
+          "id": "PROC-VENTA-PPP:0",
+          "nombre": "Visita con campaña",
+          "modo": "automatico",
+          "components": [
+            "SYS-PLAN-POTENCIAL",
+            "SYS-MARKETING",
+            "SYS-POTENCIALES"
+          ]
+        },
+        {
+          "id": "PROC-VENTA-PPP:1",
+          "nombre": "Formulario y folio",
+          "modo": "manual",
+          "components": [
+            "SYS-PLAN-POTENCIAL",
+            "SYS-MARKETING",
+            "SYS-POTENCIALES"
+          ]
+        },
+        {
+          "id": "PROC-VENTA-PPP:2",
+          "nombre": "Seguimiento comercial",
+          "modo": "manual",
+          "components": [
+            "SYS-PLAN-POTENCIAL",
+            "SYS-MARKETING",
+            "SYS-POTENCIALES"
+          ]
+        },
+        {
+          "id": "PROC-VENTA-PPP:3",
+          "nombre": "Videollamada gratuita",
+          "modo": "manual",
+          "components": [
+            "SYS-PLAN-POTENCIAL",
+            "SYS-MARKETING",
+            "SYS-POTENCIALES"
+          ]
+        },
+        {
+          "id": "PROC-VENTA-PPP:4",
+          "nombre": "Venta de Plan de Potencial",
+          "modo": "manual",
+          "components": [
+            "SYS-PLAN-POTENCIAL",
+            "SYS-MARKETING",
+            "SYS-POTENCIALES"
+          ]
+        },
+        {
+          "id": "PROC-VENTA-PPP:5",
+          "nombre": "Evaluación de viabilidad",
+          "modo": "manual",
+          "components": [
+            "SYS-PLAN-POTENCIAL",
+            "SYS-MARKETING",
+            "SYS-POTENCIALES"
+          ]
+        },
+        {
+          "id": "PROC-VENTA-PPP:6",
+          "nombre": "Codesarrollo si califica",
+          "modo": "manual",
+          "components": [
+            "SYS-PLAN-POTENCIAL",
+            "SYS-MARKETING",
+            "SYS-POTENCIALES"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROC-VENTA-CROKISS",
+      "nombre": "Captación por herramienta gratuita",
+      "steps": [
+        {
+          "id": "PROC-VENTA-CROKISS:0",
+          "nombre": "Dibujo",
+          "modo": "manual",
+          "components": [
+            "SYS-CROKISS"
+          ]
+        },
+        {
+          "id": "PROC-VENTA-CROKISS:1",
+          "nombre": "Guardado con contacto",
+          "modo": "manual",
+          "components": [
+            "SYS-CROKISS"
+          ]
+        },
+        {
+          "id": "PROC-VENTA-CROKISS:2",
+          "nombre": "Entrega y recuperación del plano",
+          "modo": "automatico",
+          "components": [
+            "SYS-CROKISS"
+          ]
+        },
+        {
+          "id": "PROC-VENTA-CROKISS:3",
+          "nombre": "Seguimiento comercial por verificar",
+          "modo": "pendiente",
+          "components": [
+            "SYS-CROKISS"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROC-INVERSION",
+      "nombre": "Venta y aportaciones de codesarrolladores",
+      "steps": [
+        {
+          "id": "PROC-INVERSION:0",
+          "nombre": "Alta de cliente y proyecto",
+          "modo": "manual",
+          "components": [
+            "SYS-CODES-PORTAL",
+            "GAS-CODES"
+          ]
+        },
+        {
+          "id": "PROC-INVERSION:1",
+          "nombre": "Inversión con folio",
+          "modo": "manual",
+          "components": [
+            "SYS-CODES-PORTAL",
+            "GAS-CODES"
+          ]
+        },
+        {
+          "id": "PROC-INVERSION:2",
+          "nombre": "Calendario de aportaciones",
+          "modo": "automatico",
+          "components": [
+            "SYS-CODES-PORTAL",
+            "GAS-CODES"
+          ]
+        },
+        {
+          "id": "PROC-INVERSION:3",
+          "nombre": "Cliente reporta pago",
+          "modo": "manual",
+          "components": [
+            "SYS-CODES-PORTAL",
+            "GAS-CODES"
+          ]
+        },
+        {
+          "id": "PROC-INVERSION:4",
+          "nombre": "Equipo verifica recepción",
+          "modo": "manual",
+          "components": [
+            "SYS-CODES-PORTAL",
+            "GAS-CODES"
+          ]
+        },
+        {
+          "id": "PROC-INVERSION:5",
+          "nombre": "Comprobante y notificación",
+          "modo": "automatico",
+          "components": [
+            "SYS-CODES-PORTAL",
+            "GAS-CODES"
+          ]
+        },
+        {
+          "id": "PROC-INVERSION:6",
+          "nombre": "Referidos y seguimiento",
+          "modo": "manual",
+          "components": [
+            "SYS-CODES-PORTAL",
+            "GAS-CODES"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROC-PROYECTO",
+      "nombre": "Proyecto desde potencial hasta venta",
+      "steps": [
+        {
+          "id": "PROC-PROYECTO:0",
+          "nombre": "Potencial",
+          "modo": "manual",
+          "components": [
+            "SYS-CONTROL",
+            "SYS-POTENCIALES",
+            "SYS-MIRAMAR",
+            "SYS-OBRA"
+          ]
+        },
+        {
+          "id": "PROC-PROYECTO:1",
+          "nombre": "Trámite",
+          "modo": "manual",
+          "components": [
+            "SYS-CONTROL",
+            "SYS-POTENCIALES",
+            "SYS-MIRAMAR",
+            "SYS-OBRA"
+          ]
+        },
+        {
+          "id": "PROC-PROYECTO:2",
+          "nombre": "Obra",
+          "modo": "manual",
+          "components": [
+            "SYS-CONTROL",
+            "SYS-POTENCIALES",
+            "SYS-MIRAMAR",
+            "SYS-OBRA"
+          ]
+        },
+        {
+          "id": "PROC-PROYECTO:3",
+          "nombre": "Venta",
+          "modo": "manual",
+          "components": [
+            "SYS-CONTROL",
+            "SYS-POTENCIALES",
+            "SYS-MIRAMAR",
+            "SYS-OBRA"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROC-OBRA",
+      "nombre": "Avance y autorización de obra",
+      "steps": [
+        {
+          "id": "PROC-OBRA:0",
+          "nombre": "Captura de avance",
+          "modo": "manual",
+          "components": [
+            "SYS-OBRA",
+            "GAS-OBRA"
+          ]
+        },
+        {
+          "id": "PROC-OBRA:1",
+          "nombre": "Verificación",
+          "modo": "manual",
+          "components": [
+            "SYS-OBRA",
+            "GAS-OBRA"
+          ]
+        },
+        {
+          "id": "PROC-OBRA:2",
+          "nombre": "Autorización",
+          "modo": "manual",
+          "components": [
+            "SYS-OBRA",
+            "GAS-OBRA"
+          ]
+        },
+        {
+          "id": "PROC-OBRA:3",
+          "nombre": "Pago efectivo por verificar",
+          "modo": "pendiente",
+          "components": [
+            "SYS-OBRA",
+            "GAS-OBRA"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROC-MARGEN",
+      "nombre": "Control de margen por proyecto",
+      "steps": [
+        {
+          "id": "PROC-MARGEN:0",
+          "nombre": "Presupuesto objetivo",
+          "modo": "pendiente",
+          "components": [
+            "SYS-FLUJO",
+            "SYS-OBRA",
+            "SYS-INTERIORES",
+            "SYS-MIRAMAR"
+          ]
+        },
+        {
+          "id": "PROC-MARGEN:1",
+          "nombre": "Compromiso de compra o destajo",
+          "modo": "pendiente",
+          "components": [
+            "SYS-FLUJO",
+            "SYS-OBRA",
+            "SYS-INTERIORES",
+            "SYS-MIRAMAR"
+          ]
+        },
+        {
+          "id": "PROC-MARGEN:2",
+          "nombre": "Avance comprobado",
+          "modo": "pendiente",
+          "components": [
+            "SYS-FLUJO",
+            "SYS-OBRA",
+            "SYS-INTERIORES",
+            "SYS-MIRAMAR"
+          ]
+        },
+        {
+          "id": "PROC-MARGEN:3",
+          "nombre": "Costo devengado",
+          "modo": "pendiente",
+          "components": [
+            "SYS-FLUJO",
+            "SYS-OBRA",
+            "SYS-INTERIORES",
+            "SYS-MIRAMAR"
+          ]
+        },
+        {
+          "id": "PROC-MARGEN:4",
+          "nombre": "Pago",
+          "modo": "pendiente",
+          "components": [
+            "SYS-FLUJO",
+            "SYS-OBRA",
+            "SYS-INTERIORES",
+            "SYS-MIRAMAR"
+          ]
+        },
+        {
+          "id": "PROC-MARGEN:5",
+          "nombre": "Ingreso por contrato",
+          "modo": "pendiente",
+          "components": [
+            "SYS-FLUJO",
+            "SYS-OBRA",
+            "SYS-INTERIORES",
+            "SYS-MIRAMAR"
+          ]
+        },
+        {
+          "id": "PROC-MARGEN:6",
+          "nombre": "Margen por proyecto",
+          "modo": "pendiente",
+          "components": [
+            "SYS-FLUJO",
+            "SYS-OBRA",
+            "SYS-INTERIORES",
+            "SYS-MIRAMAR"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROC-DIRECCION",
+      "nombre": "Aprobación y ejecución desde Despacho",
+      "steps": [
+        {
+          "id": "PROC-DIRECCION:0",
+          "nombre": "Preparación del trabajo",
+          "modo": "pendiente",
+          "components": [
+            "SYS-DESPACHO",
+            "SYS-TAREAS",
+            "EXT-GMAIL"
+          ]
+        },
+        {
+          "id": "PROC-DIRECCION:1",
+          "nombre": "Borrador listo",
+          "modo": "pendiente",
+          "components": [
+            "SYS-DESPACHO",
+            "SYS-TAREAS",
+            "EXT-GMAIL"
+          ]
+        },
+        {
+          "id": "PROC-DIRECCION:2",
+          "nombre": "Aprobación o cambio humano",
+          "modo": "manual",
+          "components": [
+            "SYS-DESPACHO",
+            "SYS-TAREAS",
+            "EXT-GMAIL"
+          ]
+        },
+        {
+          "id": "PROC-DIRECCION:3",
+          "nombre": "Rutina ejecuta",
+          "modo": "pendiente",
+          "components": [
+            "SYS-DESPACHO",
+            "SYS-TAREAS",
+            "EXT-GMAIL"
+          ]
+        },
+        {
+          "id": "PROC-DIRECCION:4",
+          "nombre": "Confirmación y cierre",
+          "modo": "manual",
+          "components": [
+            "SYS-DESPACHO",
+            "SYS-TAREAS",
+            "EXT-GMAIL"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROC-CONTENIDO",
+      "nombre": "Producción de contenido con compuertas",
+      "steps": [
+        {
+          "id": "PROC-CONTENIDO:0",
+          "nombre": "Propuesta",
+          "modo": "manual",
+          "components": [
+            "SYS-SALA",
+            "GAS-SALA",
+            "EXT-ACTIONS"
+          ]
+        },
+        {
+          "id": "PROC-CONTENIDO:1",
+          "nombre": "Decisión editorial",
+          "modo": "manual",
+          "components": [
+            "SYS-SALA",
+            "GAS-SALA",
+            "EXT-ACTIONS"
+          ]
+        },
+        {
+          "id": "PROC-CONTENIDO:2",
+          "nombre": "Producción por etapas",
+          "modo": "automatico",
+          "components": [
+            "SVC-SALA-PRODUCTOR",
+            "SVC-SALA-EJECUTOR",
+            "GAS-SALA",
+            "EXT-MOTORES-MEDIA",
+            "EXT-DRIVE"
+          ]
+        },
+        {
+          "id": "PROC-CONTENIDO:3",
+          "nombre": "Correcciones",
+          "modo": "manual",
+          "components": [
+            "SYS-SALA",
+            "GAS-SALA",
+            "EXT-ACTIONS"
+          ]
+        },
+        {
+          "id": "PROC-CONTENIDO:4",
+          "nombre": "Aprobación final",
+          "modo": "manual",
+          "components": [
+            "SYS-SALA",
+            "GAS-SALA",
+            "EXT-ACTIONS"
+          ]
+        },
+        {
+          "id": "PROC-CONTENIDO:5",
+          "nombre": "Publicación y medición por verificar",
+          "modo": "pendiente",
+          "components": [
+            "SYS-SALA",
+            "GAS-SALA",
+            "EXT-ACTIONS"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROC-COBRO",
+      "nombre": "Cobranza y caja",
+      "steps": [
+        {
+          "id": "PROC-COBRO:0",
+          "nombre": "Por gestionar",
+          "modo": "manual",
+          "components": [
+            "SYS-FLUJO"
+          ]
+        },
+        {
+          "id": "PROC-COBRO:1",
+          "nombre": "Por facturar",
+          "modo": "manual",
+          "components": [
+            "SYS-FLUJO"
+          ]
+        },
+        {
+          "id": "PROC-COBRO:2",
+          "nombre": "Facturado",
+          "modo": "manual",
+          "components": [
+            "SYS-FLUJO"
+          ]
+        },
+        {
+          "id": "PROC-COBRO:3",
+          "nombre": "Cobrado",
+          "modo": "manual",
+          "components": [
+            "SYS-FLUJO"
+          ]
+        },
+        {
+          "id": "PROC-COBRO:4",
+          "nombre": "Conciliación bancaria por verificar",
+          "modo": "pendiente",
+          "components": [
+            "SYS-FLUJO"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROC-INTERIORES",
+      "nombre": "Selección y presupuesto de interiores",
+      "steps": [
+        {
+          "id": "PROC-INTERIORES:0",
+          "nombre": "Consultar proyecto y espacios",
+          "modo": "manual",
+          "components": [
+            "SYS-INTERIORES"
+          ]
+        },
+        {
+          "id": "PROC-INTERIORES:1",
+          "nombre": "Seleccionar productos",
+          "modo": "manual",
+          "components": [
+            "SYS-INTERIORES"
+          ]
+        },
+        {
+          "id": "PROC-INTERIORES:2",
+          "nombre": "Calcular importe de selección",
+          "modo": "automatico",
+          "components": [
+            "SYS-INTERIORES"
+          ]
+        },
+        {
+          "id": "PROC-INTERIORES:3",
+          "nombre": "Revisar y corregir fichas",
+          "modo": "manual",
+          "components": [
+            "SYS-INTERIORES"
+          ]
+        },
+        {
+          "id": "PROC-INTERIORES:4",
+          "nombre": "Vincular pedido, recepción y pago",
+          "modo": "pendiente",
+          "components": [
+            "SYS-INTERIORES"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROC-TRAMITES",
+      "nombre": "Trámites e hitos de desarrollo",
+      "steps": [
+        {
+          "id": "PROC-TRAMITES:0",
+          "nombre": "Revisar etapas y dependencias",
+          "modo": "manual",
+          "components": [
+            "SYS-MIRAMAR",
+            "SYS-ALQUIMIA"
+          ]
+        },
+        {
+          "id": "PROC-TRAMITES:1",
+          "nombre": "Actualizar evidencia y estado",
+          "modo": "manual",
+          "components": [
+            "SYS-MIRAMAR",
+            "SYS-ALQUIMIA"
+          ]
+        },
+        {
+          "id": "PROC-TRAMITES:2",
+          "nombre": "Recalcular panorama del proyecto",
+          "modo": "automatico",
+          "components": [
+            "SYS-MIRAMAR",
+            "SYS-ALQUIMIA"
+          ]
+        },
+        {
+          "id": "PROC-TRAMITES:3",
+          "nombre": "Relacionar demora y costos con margen",
+          "modo": "pendiente",
+          "components": [
+            "SYS-MIRAMAR",
+            "SYS-ALQUIMIA"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROC-METAS",
+      "nombre": "Metas, objetivos y ejecución semanal",
+      "steps": [
+        {
+          "id": "PROC-METAS:0",
+          "nombre": "Consultar metas y objetivos",
+          "modo": "manual",
+          "components": [
+            "SYS-TAREAS",
+            "GAS-MOAC-METAS",
+            "GAS-OPERACION"
+          ]
+        },
+        {
+          "id": "PROC-METAS:1",
+          "nombre": "Vincular tarea a objetivo",
+          "modo": "manual",
+          "components": [
+            "SYS-TAREAS",
+            "GAS-MOAC-METAS",
+            "GAS-OPERACION"
+          ]
+        },
+        {
+          "id": "PROC-METAS:2",
+          "nombre": "Actualizar avance de tarea",
+          "modo": "manual",
+          "components": [
+            "SYS-TAREAS",
+            "GAS-MOAC-METAS",
+            "GAS-OPERACION"
+          ]
+        },
+        {
+          "id": "PROC-METAS:3",
+          "nombre": "Revisar objetivos y decisiones",
+          "modo": "manual",
+          "components": [
+            "SYS-TAREAS",
+            "GAS-MOAC-METAS",
+            "GAS-OPERACION"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROC-EMD-PROFILES",
+      "nombre": "Perfil fotográfico privado de evaluación",
+      "steps": [
+        {
+          "id": "PROC-EMD-PROFILES:0",
+          "nombre": "Elegir y recortar foto propia",
+          "modo": "manual",
+          "components": [
+            "SYS-EMD"
+          ]
+        },
+        {
+          "id": "PROC-EMD-PROFILES:1",
+          "nombre": "Validar y guardar perfil",
+          "modo": "pendiente",
+          "components": [
+            "GAS-EMD",
+            "SHEET-EMD",
+            "EXT-DRIVE"
+          ]
+        },
+        {
+          "id": "PROC-EMD-PROFILES:2",
+          "nombre": "Editar y homologar en recorrido",
+          "modo": "pendiente",
+          "components": [
+            "GAS-EMD",
+            "SHEET-EMD",
+            "EXT-DRIVE"
+          ]
+        },
+        {
+          "id": "PROC-EMD-PROFILES:3",
+          "nombre": "Publicar derivado verificado",
+          "modo": "pendiente",
+          "components": [
+            "GAS-EMD",
+            "SHEET-EMD",
+            "EXT-DRIVE"
+          ]
+        },
+        {
+          "id": "PROC-EMD-PROFILES:4",
+          "nombre": "Consultar foto autorizada",
+          "modo": "pendiente",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "EXT-DRIVE"
+          ]
+        },
+        {
+          "id": "PROC-EMD-PROFILES:5",
+          "nombre": "Representar avance confirmado",
+          "modo": "automatico",
+          "components": [
+            "SYS-EMD"
+          ]
+        },
+        {
+          "id": "PROC-EMD-PROFILES:6",
+          "nombre": "Quitar foto propia",
+          "modo": "manual",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD",
+            "EXT-DRIVE"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROC-EMD-DRAFTS",
+      "nombre": "Recuperación revisada de borrador local",
+      "steps": [
+        {
+          "id": "PROC-EMD-DRAFTS:0",
+          "nombre": "Conservar copia local",
+          "modo": "pendiente",
+          "components": [
+            "SYS-EMD",
+            "STORE-EMD-DRAFTS"
+          ]
+        },
+        {
+          "id": "PROC-EMD-DRAFTS:1",
+          "nombre": "Consultar estado vigente",
+          "modo": "pendiente",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD"
+          ]
+        },
+        {
+          "id": "PROC-EMD-DRAFTS:2",
+          "nombre": "Revisar diferencias",
+          "modo": "manual",
+          "components": [
+            "SYS-EMD",
+            "STORE-EMD-DRAFTS"
+          ]
+        },
+        {
+          "id": "PROC-EMD-DRAFTS:3",
+          "nombre": "Confirmar envío o cierre",
+          "modo": "manual",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROC-EMD-CONTACTS",
+      "nombre": "Preparación privada de contactos y recordatorios",
+      "steps": [
+        {
+          "id": "PROC-EMD-CONTACTS:0",
+          "nombre": "Elegir archivo y revisar vista previa",
+          "modo": "manual",
+          "components": [
+            "SYS-EMD"
+          ]
+        },
+        {
+          "id": "PROC-EMD-CONTACTS:1",
+          "nombre": "Validar personas y correos",
+          "modo": "pendiente",
+          "components": [
+            "GAS-EMD",
+            "SHEET-EMD"
+          ]
+        },
+        {
+          "id": "PROC-EMD-CONTACTS:2",
+          "nombre": "Confirmar y guardar contactos",
+          "modo": "manual",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD"
+          ]
+        },
+        {
+          "id": "PROC-EMD-CONTACTS:3",
+          "nombre": "Preparar recordatorio individual",
+          "modo": "manual",
+          "components": [
+            "SYS-EMD"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROC-EMD-LOAD",
+      "nombre": "Carga ligera y espera orientativa de evaluación",
+      "steps": [
+        {
+          "id": "PROC-EMD-LOAD:0",
+          "nombre": "Abrir enlace personal",
+          "modo": "automatico",
+          "components": [
+            "SYS-EMD"
+          ]
+        },
+        {
+          "id": "PROC-EMD-LOAD:1",
+          "nombre": "Validar conexión y consultar acceso",
+          "modo": "automatico",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD"
+          ]
+        },
+        {
+          "id": "PROC-EMD-LOAD:2",
+          "nombre": "Recuperar carga lenta",
+          "modo": "manual",
+          "components": [
+            "SYS-EMD"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROC-BROKER-PREEVALUATION",
+      "nombre": "Preevaluar un terreno desde Masterbrokers",
+      "steps": [
+        {
+          "id": "PROC-BROKER-PREEVALUATION:0",
+          "nombre": "Abrir preevaluación desde cartera",
+          "modo": "automatico",
+          "components": [
+            "SYS-INVERSION",
+            "GAS-CRM",
+            "GAS-PORTERO"
+          ]
+        },
+        {
+          "id": "PROC-BROKER-PREEVALUATION:1",
+          "nombre": "Localizar y trazar inmueble",
+          "modo": "manual",
+          "components": [
+            "SYS-POTENCIALES",
+            "GAS-PORTERO"
+          ]
+        },
+        {
+          "id": "PROC-BROKER-PREEVALUATION:2",
+          "nombre": "Guardar expediente",
+          "modo": "manual",
+          "components": [
+            "GAS-PORTERO",
+            "EXT-DRIVE"
+          ]
+        },
+        {
+          "id": "PROC-BROKER-PREEVALUATION:3",
+          "nombre": "Registrar oportunidad con preevaluación",
+          "modo": "manual",
+          "components": [
+            "SYS-INVERSION",
+            "GAS-CRM",
+            "SHEET-CRM"
+          ]
+        }
+      ]
+    }
+  ]
+}
