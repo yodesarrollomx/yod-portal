@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-11.hairline-elecciones",
+  "revision": "2026-10-11.bandeja-nube.2",
   "checked_at": "2026-10-11",
   "priorities": [
     "vender_mas",
@@ -8,7 +8,7 @@
     "cobrar_antes"
   ],
   "coverage": {
-    "summary": "Inventario conciliado de 22 repositorios, 88 componentes y 116 conexiones. Asignación funcional completa en office_coverage; estados de implementación y operación separados. Se conserva el inventario histórico de fuentes y se incorporan motor privado y Amalaya con alcance explícito.",
+    "summary": "Inventario conciliado de 22 repositorios, 90 componentes y 136 conexiones. Asignación funcional en office_coverage; instalación y operación se verifican por alcance.",
     "production_verified": false,
     "limitations": [
       "No se ha comprobado la versión activa de todos los Apps Script",
@@ -3135,6 +3135,60 @@
       "risks_sanitized": [
         "No acreditar verde sin prueba vigente; reconcilación de efectos inciertos antes de otro intento."
       ]
+    },
+    {
+      "id": "GAS-BANDEJA-NUBE",
+      "nombre": "Ejecutor de Bandeja en nube",
+      "tipo": "apps_script",
+      "repo": "alexpueblag/yod-agent-cloud",
+      "proposito": "Revisar los encargos BANDEJA existentes, rehacer borradores por API y ejecutar sólo envíos aprobados",
+      "dominio": "Dirección",
+      "owner_role": "Dirección",
+      "status": "propuesto",
+      "runtime_status": "Código y proyecto de nube por preparar; consentimiento Gmail, correspondencia exacta del Sheet y corte de la rutina Claude pendientes.",
+      "evidence": [
+        {
+          "claim": "Dirección autorizó continuar la migración de automatizaciones a APIs de nube y preparar el cierre para Claude Chrome.",
+          "status": "declarado"
+        }
+      ],
+      "data_entities": [
+        "tarea",
+        "borrador",
+        "aprobacion",
+        "recibo"
+      ],
+      "risks_sanitized": [
+        "Gmail y Sheets no comparten transacción; no prometer entrega ni cancelación sin recibo real.",
+        "Rutina Claude y nuevo ejecutor no pueden enviar en paralelo."
+      ],
+      "source_of_truth": "BANDEJA en SHEET-OPERACION; Gmail conserva borradores y mensajes. Registro técnico aparte sólo para idempotencia y salud."
+    },
+    {
+      "id": "STORE-BANDEJA-RECIBOS",
+      "nombre": "Recibos privados de Bandeja",
+      "tipo": "almacen_tecnico",
+      "repo": "alexpueblag/yod-agent-cloud",
+      "proposito": "Reservar efectos antes de Gmail y conciliar resultados inciertos sin repetir envíos",
+      "dominio": "Dirección",
+      "owner_role": "Dirección",
+      "status": "propuesto",
+      "runtime_status": "ScriptProperties privadas del ejecutor; instalación y primera conciliación reales pendientes.",
+      "evidence": [
+        {
+          "claim": "Almacén técnico privado propuesto; no copia ni sustituye tareas, comentarios o borradores de los sistemas canónicos.",
+          "status": "propuesto"
+        }
+      ],
+      "data_entities": [
+        "solicitud",
+        "huella",
+        "recibo"
+      ],
+      "risks_sanitized": [
+        "Cupo de ScriptProperties: los resultados inciertos no se podan ni se reintentan por falta de espacio."
+      ],
+      "source_of_truth": "Sólo intención/resultado técnico de los efectos producidos por GAS-BANDEJA-NUBE."
     }
   ],
   "connections": [
@@ -5990,6 +6044,101 @@
           "status": "codigo"
         }
       ]
+    },
+    {
+      "id": "CON-BANDEJA-TAREAS",
+      "from": "GAS-BANDEJA-NUBE",
+      "to": "SHEET-OPERACION",
+      "kind": "persistencia",
+      "label": "Leer BANDEJA y añadir resultados al mismo libro",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "contract": "CTR-BANDEJA-NUBE",
+      "contract_ids": [
+        "CTR-BANDEJA-NUBE"
+      ],
+      "evidence": [
+        {
+          "claim": "CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.",
+          "status": "propuesto"
+        }
+      ]
+    },
+    {
+      "id": "CON-BANDEJA-GMAIL",
+      "from": "GAS-BANDEJA-NUBE",
+      "to": "EXT-GMAIL",
+      "kind": "api",
+      "label": "Borradores y envíos aprobados por API",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "contract": "CTR-BANDEJA-NUBE",
+      "contract_ids": [
+        "CTR-BANDEJA-NUBE"
+      ],
+      "evidence": [
+        {
+          "claim": "CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.",
+          "status": "propuesto"
+        }
+      ]
+    },
+    {
+      "id": "CON-BANDEJA-IA",
+      "from": "GAS-BANDEJA-NUBE",
+      "to": "EXT-OPENAI",
+      "kind": "api",
+      "label": "Redactar cambios con API de pago por uso",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "contract": "CTR-BANDEJA-NUBE",
+      "contract_ids": [
+        "CTR-BANDEJA-NUBE"
+      ],
+      "evidence": [
+        {
+          "claim": "CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.",
+          "status": "propuesto"
+        }
+      ]
+    },
+    {
+      "id": "CON-BANDEJA-RECIBOS",
+      "from": "GAS-BANDEJA-NUBE",
+      "to": "STORE-BANDEJA-RECIBOS",
+      "kind": "persistencia",
+      "label": "Intención durable antes del efecto",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "contract": "CTR-BANDEJA-NUBE",
+      "contract_ids": [
+        "CTR-BANDEJA-NUBE"
+      ],
+      "evidence": [
+        {
+          "claim": "CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.",
+          "status": "propuesto"
+        }
+      ]
+    },
+    {
+      "id": "CON-BANDEJA-SALUD",
+      "from": "GAS-BANDEJA-NUBE",
+      "to": "SVC-HORARIOS-CLOUD",
+      "kind": "observacion",
+      "label": "Recibo técnico leído por el vigilante y mostrado en Accesos",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "contract": "CTR-BANDEJA-NUBE",
+      "contract_ids": [
+        "CTR-BANDEJA-NUBE"
+      ],
+      "evidence": [
+        {
+          "claim": "CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.",
+          "status": "propuesto"
+        }
+      ]
     }
   ],
   "processes": [
@@ -7337,6 +7486,81 @@
           "claim": "PR12 integrado: lanzamiento de un solo uso y retorno autorizado; backend v92 publicado, flujo individual comprobado con servicios sintéticos.",
           "status": "codigo",
           "source_revision": "19fbe950af458778607f2ae0baa70b8bc7894105"
+        }
+      ]
+    },
+    {
+      "id": "PROC-BANDEJA-NUBE",
+      "nombre": "Bandeja del Despacho con APIs de nube",
+      "status": "propuesto",
+      "steps": [
+        {
+          "label": "Revisar encargos existentes cada cinco minutos",
+          "role": "Ejecutor nube",
+          "components": [
+            "GAS-BANDEJA-NUBE",
+            "SHEET-OPERACION"
+          ],
+          "input": "Libro efectivo y rutina instalada",
+          "output": "Estado actual sin decisiones automáticas",
+          "mode": "automatico"
+        },
+        {
+          "label": "Preparar o rehacer borrador",
+          "role": "Ejecutor nube",
+          "components": [
+            "GAS-BANDEJA-NUBE",
+            "EXT-GMAIL",
+            "EXT-OPENAI"
+          ],
+          "input": "Encargo o CAMBIO/RESPUESTA de Dirección",
+          "output": "LISTO/REHECHO con huella",
+          "mode": "automatico"
+        },
+        {
+          "label": "Aprobar contenido y destinatarios",
+          "role": "Dirección",
+          "components": [
+            "SYS-DESPACHO",
+            "SHEET-OPERACION"
+          ],
+          "input": "Versión exacta para revisar",
+          "output": "APROBADO o veto",
+          "mode": "manual"
+        },
+        {
+          "label": "Reservar y enviar versión aprobada",
+          "role": "Ejecutor nube",
+          "components": [
+            "GAS-BANDEJA-NUBE",
+            "STORE-BANDEJA-RECIBOS",
+            "EXT-GMAIL"
+          ],
+          "input": "Última aprobación vigente",
+          "output": "Recibo o efecto incierto sin repetición",
+          "mode": "automatico"
+        },
+        {
+          "label": "Conciliar y observar funcionamiento",
+          "role": "Ejecutor nube",
+          "components": [
+            "GAS-BANDEJA-NUBE",
+            "SVC-HORARIOS-CLOUD",
+            "SYS-CONTROL"
+          ],
+          "input": "Recibos reales y latido",
+          "output": "Estado por alcance en Accesos",
+          "mode": "automatico"
+        }
+      ],
+      "manual_gaps": [
+        "Consentimiento inicial de Google y confirmación del libro efectivo mediante sesión de Dirección.",
+        "Corte de la rutina Claude sólo después de dos ciclos de observación y pruebas; primer envío aprobado real se acredita por separado."
+      ],
+      "evidence": [
+        {
+          "claim": "CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.",
+          "status": "propuesto"
         }
       ]
     }
@@ -10776,6 +11000,52 @@
       "deployment": "Publicación del frontend pendiente de checks del PR178. No acredita aceptación autenticada ni integración operativa nueva.",
       "rollback": "Revertir el PR; vuelve el listado de fuentes y se conservan registros y contratos.",
       "approval": "Propietario solicita instalar sus once elecciones y ver nuevas alternativas para tres pendientes; 11-oct-2026."
+    },
+    {
+      "id": "CHG-BANDEJA-NUBE-20261011",
+      "components": [
+        "SYS-DESPACHO",
+        "SYS-TAREAS",
+        "GAS-OPERACION",
+        "SHEET-OPERACION",
+        "GAS-BANDEJA-NUBE",
+        "STORE-BANDEJA-RECIBOS",
+        "EXT-GMAIL",
+        "EXT-OPENAI",
+        "SVC-HORARIOS-CLOUD",
+        "SYS-CONTROL",
+        "SYS-YOD-OS",
+        "SYS-POTENCIALES",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-RENDER",
+        "SVC-AUTON-CLOUD",
+        "STORE-HORARIOS-CLOUD",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "GAS-PORTERO",
+        "EXT-DRIVE",
+        "SYS-MARKETING",
+        "SYS-PLAN-POTENCIAL",
+        "EXT-MOTORES-MEDIA",
+        "SYS-DESPACHO-3D",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL",
+        "SHEET-SALA"
+      ],
+      "status": "propuesto",
+      "proposal": "Continuar la siguiente migración sin sesiones de suscripción: ejecutor Google Apps Script cada5min, Gmail por API y redacción por uso. Provisionar proyecto original nuevo dedicado, sin modificar Apps Script de Operación no identificado. Probar en dobles y observación; cierre personal mediante Claude Chrome.",
+      "tests": [
+        "Pruebas de veto, huella, destinatarios, respuesta perdida, reserva durable y conciliación de Gmail con datos sintéticos.",
+        "Regresiones del Despacho de aprobación individual y en lote con huella, y conservación de compuertas.",
+        "Lectura real de fuente/despliegue Google y dos ciclos de observación; Gmail y envío requieren pruebas propias."
+      ],
+      "deployment": "Pendiente de implementación, consentimiento y corte; no se declara 100% funcional.",
+      "rollback": "Detener sólo trigger BANDEJA_tick y volver a observar. Conservar recibos inciertos, Sheet y borradores; no reactivar Claude hasta conciliar envíos."
     }
   ],
   "data_contracts": [
@@ -12106,6 +12376,41 @@
         "Caducidad por prueba; generar un informe nuevo no renueva datos anteriores. Render caído, disco fallido, rate-limit o permisos ausentes dejan estado pendiente/fallido visible.",
         "App privada de propietario esperado, permisos mínimos Actionswrite/Contentsread y sólo dos repositorios. Llave cifrada, nunca en Git/logs/cliente; creación e instalación personales en GitHub.",
         "APIs sólo se llaman a destinos exactos previstos; cuerpos, errores y secretos no se reflejan en el informe o logs públicos."
+      ]
+    },
+    {
+      "id": "CTR-BANDEJA-NUBE",
+      "components": [
+        "SYS-DESPACHO",
+        "SYS-TAREAS",
+        "GAS-OPERACION",
+        "SHEET-OPERACION",
+        "GAS-BANDEJA-NUBE",
+        "STORE-BANDEJA-RECIBOS",
+        "EXT-GMAIL",
+        "EXT-OPENAI",
+        "SVC-HORARIOS-CLOUD",
+        "SYS-CONTROL"
+      ],
+      "source": "EJECUTOR.md del Despacho y autorización de Dirección de pasar rutinas a ejecución autónoma con APIs. Fuente y compuertas existentes conservadas.",
+      "input": [
+        "Fila BANDEJA del Sheet efectivo confirmado, última aprobación de Dirección y borrador exacto.",
+        "Configuración privada del ejecutor; Google como propietario y API de IA únicamente para redacción."
+      ],
+      "output": [
+        "LISTO/REHECHO con huella de contenido y destinatarios; nueva aprobación para cada nueva versión.",
+        "ENVIADO sólo con recibo o conciliación exacta; incertidumbre visible, sin duplicar solicitudes.",
+        "Latido y pruebas sanitizados con fecha original por alcance; consulta pública sólo devuelve estado guardado."
+      ],
+      "invariants": [
+        "Instalación inicia en observación sin escribir negocio ni enviar; el corte a ejecución exige confirmar el libro efectivo y detener sólo la rutina Claude de Bandeja.",
+        "Nada se envía sin última línea APROBADO, draft y huella vigentes, destinatarios exactos y relectura inmediatamente anterior a Gmail. Legacy sin huella se presenta para nueva revisión; nunca se aprovecha una aprobación de otro borrador.",
+        "La IA recibe contenido como datos; no dispone de herramientas, destinatarios, credenciales ni autoridad de envío. Los cambios retornan a revisión humana.",
+        "Efecto reservado en ScriptProperties antes de llamar Gmail. Resultado incierto permanece reservado; sólo lectura/conciliación, no POST repetido.",
+        "Una lectura de página no ejecuta procesos ni renueva salud. Programador, Gmail, libro, redacción y envío se acreditan por separado.",
+        "Mandar un correo no cierra una tarea de Operación pendiente de respuesta; preservar estado, historial y datos ajenos.",
+        "Gmail y Sheets no ofrecen transacción conjunta; reportar carreras, cambios y respuestas perdidas en lugar de prometer atomicidad.",
+        "Nunca reactivar gestores/metas históricos cancelados ni cancelar toda la Sala por terminar una autorización."
       ]
     }
   ],
@@ -13509,6 +13814,54 @@
         "SVC-HORARIOS-CLOUD",
         "STORE-HORARIOS-CLOUD"
       ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": "server/bandeja/",
+      "components": [
+        "GAS-BANDEJA-NUBE",
+        "STORE-BANDEJA-RECIBOS"
+      ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": "scripts/bandeja/",
+      "components": [
+        "GAS-BANDEJA-NUBE",
+        "STORE-BANDEJA-RECIBOS"
+      ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": "tests/bandeja",
+      "components": [
+        "GAS-BANDEJA-NUBE",
+        "STORE-BANDEJA-RECIBOS"
+      ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": "cloud/bandeja-status.mjs",
+      "components": [
+        "GAS-BANDEJA-NUBE",
+        "SVC-HORARIOS-CLOUD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "docs/arquitectura/bandeja-nube.md",
+      "components": [
+        "SYS-DESPACHO",
+        "SYS-TAREAS",
+        "GAS-OPERACION",
+        "SHEET-OPERACION",
+        "GAS-BANDEJA-NUBE",
+        "STORE-BANDEJA-RECIBOS",
+        "EXT-GMAIL",
+        "EXT-OPENAI",
+        "SVC-HORARIOS-CLOUD",
+        "SYS-CONTROL"
+      ]
     }
   ],
   "office_coverage": {
@@ -13578,7 +13931,9 @@
           "GAS-CATALOGO",
           "SHEET-CATALOGO",
           "GAS-PORTERO-RESPALDO",
-          "STORE-DESPACHO-CORCHO"
+          "STORE-DESPACHO-CORCHO",
+          "GAS-BANDEJA-NUBE",
+          "STORE-BANDEJA-RECIBOS"
         ]
       },
       {

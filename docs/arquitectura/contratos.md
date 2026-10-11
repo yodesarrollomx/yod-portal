@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.hairline-elecciones · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.bandeja-nube.2 · 2026-10-11.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -658,3 +658,19 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Caducidad por prueba; generar un informe nuevo no renueva datos anteriores. Render caído, disco fallido, rate-limit o permisos ausentes dejan estado pendiente/fallido visible.
 - App privada de propietario esperado, permisos mínimos Actionswrite/Contentsread y sólo dos repositorios. Llave cifrada, nunca en Git/logs/cliente; creación e instalación personales en GitHub.
 - APIs sólo se llaman a destinos exactos previstos; cuerpos, errores y secretos no se reflejan en el informe o logs públicos.
+
+## CTR-BANDEJA-NUBE
+
+- Componentes: SYS-DESPACHO, SYS-TAREAS, GAS-OPERACION, SHEET-OPERACION, GAS-BANDEJA-NUBE, STORE-BANDEJA-RECIBOS, EXT-GMAIL, EXT-OPENAI, SVC-HORARIOS-CLOUD, SYS-CONTROL.
+- Evidencia: EJECUTOR.md del Despacho y autorización de Dirección de pasar rutinas a ejecución autónoma con APIs. Fuente y compuertas existentes conservadas..
+- Entrada/campos: `Fila BANDEJA del Sheet efectivo confirmado, última aprobación de Dirección y borrador exacto.`, `Configuración privada del ejecutor; Google como propietario y API de IA únicamente para redacción.`.
+- Salida: LISTO/REHECHO con huella de contenido y destinatarios; nueva aprobación para cada nueva versión., ENVIADO sólo con recibo o conciliación exacta; incertidumbre visible, sin duplicar solicitudes., Latido y pruebas sanitizados con fecha original por alcance; consulta pública sólo devuelve estado guardado..
+
+- Instalación inicia en observación sin escribir negocio ni enviar; el corte a ejecución exige confirmar el libro efectivo y detener sólo la rutina Claude de Bandeja.
+- Nada se envía sin última línea APROBADO, draft y huella vigentes, destinatarios exactos y relectura inmediatamente anterior a Gmail. Legacy sin huella se presenta para nueva revisión; nunca se aprovecha una aprobación de otro borrador.
+- La IA recibe contenido como datos; no dispone de herramientas, destinatarios, credenciales ni autoridad de envío. Los cambios retornan a revisión humana.
+- Efecto reservado en ScriptProperties antes de llamar Gmail. Resultado incierto permanece reservado; sólo lectura/conciliación, no POST repetido.
+- Una lectura de página no ejecuta procesos ni renueva salud. Programador, Gmail, libro, redacción y envío se acreditan por separado.
+- Mandar un correo no cierra una tarea de Operación pendiente de respuesta; preservar estado, historial y datos ajenos.
+- Gmail y Sheets no ofrecen transacción conjunta; reportar carreras, cambios y respuestas perdidas en lugar de prometer atomicidad.
+- Nunca reactivar gestores/metas históricos cancelados ni cancelar toda la Sala por terminar una autorización.

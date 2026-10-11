@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.hairline-elecciones · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.bandeja-nube.2 · 2026-10-11.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -378,7 +378,7 @@ Almacenar registros del dominio operacion
 - Entidades: tarea, comentario.
 - Fuente de verdad: Almacén lógico Google Sheets; correspondencia con archivo vivo por verificar.
 - Evidencia: Integración pendiente de verificar.
-- Conexiones: CON-003 (GAS-OPERACION → SHEET-OPERACION).
+- Conexiones: CON-003 (GAS-OPERACION → SHEET-OPERACION); CON-BANDEJA-TAREAS (GAS-BANDEJA-NUBE → SHEET-OPERACION).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Esquema y calidad de datos vivos no inspeccionados.
 
@@ -742,7 +742,7 @@ Dependencia externa de procesos YOD OS
 - Entidades: .
 - Fuente de verdad: Datos del servicio externo; no inspeccionados.
 - Evidencia: Integración pendiente de verificar.
-- Conexiones: CON-061 (SYS-DESPACHO → EXT-GMAIL); CON-SALA-CORREO-ONLINE (GAS-SALA → EXT-GMAIL).
+- Conexiones: CON-061 (SYS-DESPACHO → EXT-GMAIL); CON-SALA-CORREO-ONLINE (GAS-SALA → EXT-GMAIL); CON-BANDEJA-GMAIL (GAS-BANDEJA-NUBE → EXT-GMAIL).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Estado y permisos no comprobados.
 
@@ -1058,7 +1058,7 @@ Proveer voz y respuestas con herramientas del servidor.
 - Entidades: sesion, audio, transcripcion, llamada_herramienta.
 - Fuente de verdad: Configuración de sesión y herramientas autorizadas en servidor; resultados deben comprobarse contra registros de negocio..
 - Evidencia: Sesión de voz y herramientas conectadas desde el servidor..
-- Conexiones: CON-MOTOR-OPENAI (SVC-AUTON-CLOUD → EXT-OPENAI).
+- Conexiones: CON-MOTOR-OPENAI (SVC-AUTON-CLOUD → EXT-OPENAI); CON-BANDEJA-IA (GAS-BANDEJA-NUBE → EXT-OPENAI).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 
 ## EXT-RENDER · Render · alojamiento del motor
@@ -1106,7 +1106,7 @@ Observar horarios declarados y recuperar sólo ejecuciones actuales omitidas, si
 - Entidades: horario, reserva, ejecucion, recibo.
 - Fuente de verdad: Estado privado del servicio existente y ejecuciones reales de Actions; reglas editoriales y datos de negocio conservan sus fuentes..
 - Evidencia: Dirección autoriza prioridad1: horarios, vigilancia, recuperación segura y evidencia en Accesos.; Verificador38182585661 confirma versión viva y dos ciclos independientes; estado técnico cifrado/readback. Recuperación por App sigue pendiente..
-- Conexiones: CON-HORARIOS-RENDER (EXT-RENDER → SVC-HORARIOS-CLOUD); CON-HORARIOS-ESTADO (SVC-HORARIOS-CLOUD → STORE-HORARIOS-CLOUD); CON-HORARIOS-ACTIONS (SVC-HORARIOS-CLOUD → EXT-ACTIONS); CON-HORARIOS-ACCESOS (SVC-HORARIOS-CLOUD → SYS-CONTROL).
+- Conexiones: CON-HORARIOS-RENDER (EXT-RENDER → SVC-HORARIOS-CLOUD); CON-HORARIOS-ESTADO (SVC-HORARIOS-CLOUD → STORE-HORARIOS-CLOUD); CON-HORARIOS-ACTIONS (SVC-HORARIOS-CLOUD → EXT-ACTIONS); CON-HORARIOS-ACCESOS (SVC-HORARIOS-CLOUD → SYS-CONTROL); CON-BANDEJA-SALUD (GAS-BANDEJA-NUBE → SVC-HORARIOS-CLOUD).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: No acreditar verde sin prueba vigente; reconcilación de efectos inciertos antes de otro intento..
 
@@ -1122,3 +1122,29 @@ Conservar recibos, reservas de ejecución y configuración de la App cifrada par
 - Conexiones: CON-HORARIOS-ESTADO (SVC-HORARIOS-CLOUD → STORE-HORARIOS-CLOUD).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: No acreditar verde sin prueba vigente; reconcilación de efectos inciertos antes de otro intento..
+
+## GAS-BANDEJA-NUBE · Ejecutor de Bandeja en nube
+
+Revisar los encargos BANDEJA existentes, rehacer borradores por API y ejecutar sólo envíos aprobados
+
+- Tipo: apps_script. Dominio: Dirección. Responsable: Dirección.
+- Evidencia: propuesto. Producción: Código y proyecto de nube por preparar; consentimiento Gmail, correspondencia exacta del Sheet y corte de la rutina Claude pendientes..
+- Entidades: tarea, borrador, aprobacion, recibo.
+- Fuente de verdad: BANDEJA en SHEET-OPERACION; Gmail conserva borradores y mensajes. Registro técnico aparte sólo para idempotencia y salud..
+- Evidencia: Dirección autorizó continuar la migración de automatizaciones a APIs de nube y preparar el cierre para Claude Chrome..
+- Conexiones: CON-BANDEJA-TAREAS (GAS-BANDEJA-NUBE → SHEET-OPERACION); CON-BANDEJA-GMAIL (GAS-BANDEJA-NUBE → EXT-GMAIL); CON-BANDEJA-IA (GAS-BANDEJA-NUBE → EXT-OPENAI); CON-BANDEJA-RECIBOS (GAS-BANDEJA-NUBE → STORE-BANDEJA-RECIBOS); CON-BANDEJA-SALUD (GAS-BANDEJA-NUBE → SVC-HORARIOS-CLOUD).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Pendientes: Gmail y Sheets no comparten transacción; no prometer entrega ni cancelación sin recibo real.; Rutina Claude y nuevo ejecutor no pueden enviar en paralelo..
+
+## STORE-BANDEJA-RECIBOS · Recibos privados de Bandeja
+
+Reservar efectos antes de Gmail y conciliar resultados inciertos sin repetir envíos
+
+- Tipo: almacen_tecnico. Dominio: Dirección. Responsable: Dirección.
+- Evidencia: propuesto. Producción: ScriptProperties privadas del ejecutor; instalación y primera conciliación reales pendientes..
+- Entidades: solicitud, huella, recibo.
+- Fuente de verdad: Sólo intención/resultado técnico de los efectos producidos por GAS-BANDEJA-NUBE..
+- Evidencia: Almacén técnico privado propuesto; no copia ni sustituye tareas, comentarios o borradores de los sistemas canónicos..
+- Conexiones: CON-BANDEJA-RECIBOS (GAS-BANDEJA-NUBE → STORE-BANDEJA-RECIBOS).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Pendientes: Cupo de ScriptProperties: los resultados inciertos no se podan ni se reintentan por falta de espacio..
