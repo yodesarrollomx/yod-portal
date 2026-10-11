@@ -1,19 +1,13 @@
 {
-  "model_revision": "2026-10-11.c5-recovery-wait",
-  "proposal_id": "CHG-DESPACHO-RECOVERY-WAIT-C5",
-  "summary": "Mostrar la espera real de recuperación sin perder el último registro ni inventar actividad.",
+  "model_revision": "2026-10-11.cancelacion-vigia",
+  "proposal_id": "CHG-CANCELAR-VIGIA-20261011",
+  "summary": "Cancelación solicitada del auditor automático Vigía; conservar su fuente y retirar su ejecución automática.",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "SVC-AUTON-CLOUD",
-    "STORE-AUTON-ESTADO"
+    "SYS-YOD-OS"
   ],
   "tests": [
-    "Servicio en working pasa a waiting_recovery y vuelve sin descartar datos ni estado de autorización",
-    "La vista conserva el registro anterior y su fecha sin atribuir ejecución presente",
-    "El avatar y la pantalla muestran espera sin progreso o captura antiguos como actividad actual",
-    "Arquitectura --check, tests/*.cjs y verify-os/portal/accesos/obra-app; publicación se verifica aparte"
+    "Igualdad SHA del archivo archivado y ausencia en .github/workflows",
+    "Arquitectura --check, tests/*.cjs, verify-os/portal/accesos/obra-app"
   ],
-  "rollback": "Volver primero al backend anterior; después revertir consumidor. No tocar datos, permisos ni estado operativo."
+  "rollback": "Restaurar el workflow original únicamente tras nueva instrucción del propietario."
 }
