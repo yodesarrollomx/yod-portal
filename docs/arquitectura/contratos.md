@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.despacho-puesto131 · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.sala-online · 2026-10-11.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -568,3 +568,18 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Cerrar el panel no invalida la conciliación de una escritura ya iniciada en el iframe autorizado; no habilita nuevos envíos. Cambio de caso o revocación invalidan canal y vista.
 - Un receipt-ack exige origen, ventana, nonce y caso vigentes, y el request_id/revisión exactos. Perder el acuse permite repetir sólo la conciliación idempotente, nunca una escritura.
 - El padre mantiene una cola de recibos y sólo acusa respuestas /board/resolve con ok:true, request_id exacto y status:applied. Un fallo no elimina ese recibo ni impide intentar los demás. Los metadatos locales de recuperación no acreditan autoría criptográfica del servidor.
+
+## CTR-SALA-SNAPSHOT-ONLINE
+
+- Componentes: SYS-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, SYS-MARKETING, EXT-ACTIONS, EXT-DRIVE.
+- Evidencia: Instrucción de Dirección del 2026-10-11; implementación cloud propuesta en nube/snapshots_online.py y scripts/snapshots_online.py..
+- Entrada/campos: `Código aprobado de main; outputs públicos declarados por proceso; último snapshot publicado e inmutable`, `Identidad automática del workflow del mismo repositorio; nunca credenciales del conector`, `Motor elegido, warnings y comprobación real del archivo para medios; producción CPU no es animación generativa LTX`.
+- Salida: Release en borrador privado con ZIP de datos públicos acumulados, SHA256 y manifiesto de archivos, Pages con recibo version-online.json: code_sha, data_sha, snapshot_id y run_id exactos, Estado publicado sólo tras comprobar el recibo del sitio; montaje sólo con archivo/hash en versión publicada, Revisión diaria agregada de colas y rutinas; lecturas rechazadas representadas como errores, no ceros.
+
+- Cambios de código pasan por PR y las comprobaciones existentes. Publicar datos validados es un contrato nuevo; nunca integrar los PR anteriores del bot omitiendo CI.
+- ZIP sólo admite los prefijos públicos de cada repositorio, sin secretos, leads, URLs privadas, symlinks, traversal, datos de Sheets ni archivos arbitrarios.
+- Snapshots en releases draft no se publican como releases, no envían avisos públicos y no incluyen credenciales. Conservan manifiesto y hash del activo descargado.
+- Serializar productores y aplicar comparación de snapshot padre y main antes de publicar; un fallo o concurrencia no acredita publicación ni monta láminas.
+- Una escena CPU identifica cámara/parallax/profundidad aproximada según el motor real. Las decisiones, retirar, rehechas e identidad de piezas se conservan.
+- Nunca autoaprobar editoriales ni enviar/publicar contenido a terceros. Prueba técnica no registra un proyecto o producción ficticia en Sheets.
+- Si una API devuelve ok:false o error, conservar el backup anterior y mostrar fallo. HTTP200 no equivale a lectura válida.
