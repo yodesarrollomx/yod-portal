@@ -3,6 +3,8 @@
   "proposal_id": "CHG-DESPACHO-HAIRLINE-20261011",
   "summary": "Instalar las once metáforas Hairline elegidas en los accesos existentes del puesto: círculo, herramientas y documentos. Conservar contratos, etiquetas, permisos y acciones; las tres alternativas descartadas permanecen sin cambiar.",
   "components": [
+    "SYS-YOD-OS",
+    "SYS-DESPACHO",
     "SYS-DESPACHO-3D"
   ],
   "tests": [

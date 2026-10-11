@@ -10763,6 +10763,8 @@
     {
       "id": "CHG-DESPACHO-HAIRLINE-20261011",
       "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
         "SYS-DESPACHO-3D"
       ],
       "proposal": "Instalar las once metáforas Hairline elegidas en los accesos existentes del puesto: círculo, herramientas y documentos. Conservar contratos, etiquetas, permisos y acciones; las tres alternativas descartadas permanecen sin cambiar.",
@@ -12109,10 +12111,18 @@
   ],
   "path_ownership": [
     {
-      "prefix": "demos/hairline/",
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/hairline-browser.py",
       "components": [
         "SYS-DESPACHO-3D"
       ]
+    },
+    {
+      "prefix": "demos/hairline/",
+      "components": [
+        "SYS-DESPACHO-3D"
+      ],
+      "repo": "yodesarrollomx/yod-portal"
     },
     {
       "repo": "yodesarrollomx/board-aurum",
