@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-11.masterbroker-preevaluation",
+  "revision": "2026-10-11.sala-cierre-online",
   "checked_at": "2026-10-11",
   "priorities": [
     "vender_mas",
@@ -5647,6 +5647,44 @@
       ],
       "contract": "POST autenticado valida alcance con brokers_snapshot de CRM; liga corta de un solo uso abre evaluador. Regreso contiene sólo ID; lectura exige sesión vigente y cartera autorizada. Alta CRM usa brokers_save existente y confirmación explícita.",
       "contract_ids": []
+    },
+    {
+      "id": "CON-SALA-CORREO-ONLINE",
+      "from": "GAS-SALA",
+      "to": "EXT-GMAIL",
+      "label": "Correo diario y entrada al destinatario existente",
+      "kind": "correo",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "Diseño de cierre autorizado por Dirección; ejecución y recepción todavía no verificadas.",
+          "status": "declarado"
+        }
+      ],
+      "contract": "CTR-SALA-CIERRE-ONLINE; destinatario/compuertas existentes y comprobación por alcance.",
+      "contract_ids": [
+        "CTR-SALA-CIERRE-ONLINE"
+      ]
+    },
+    {
+      "id": "CON-SALA-CIERRE-ONLINE",
+      "from": "SVC-SALA-EJECUTOR",
+      "to": "EXT-ACTIONS",
+      "label": "Cierre, activación acotada y comparación aislada",
+      "kind": "automatizacion",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "Diseño de cierre autorizado por Dirección; ejecución y recepción todavía no verificadas.",
+          "status": "declarado"
+        }
+      ],
+      "contract": "CTR-SALA-CIERRE-ONLINE; destinatario/compuertas existentes y comprobación por alcance.",
+      "contract_ids": [
+        "CTR-SALA-CIERRE-ONLINE"
+      ]
     }
   ],
   "processes": [
@@ -10287,6 +10325,30 @@
       ],
       "rollback": "Revertir interfaz y adaptador; conservar expedientes y referencias ya guardados. Desactivar configuración de integración en Drive sin borrar registros.",
       "deployment": "Propuesta registrada; código e integración pública todavía no verificados."
+    },
+    {
+      "id": "CHG-SALA-CIERRE-ONLINE-20261011",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "EXT-GMAIL"
+      ],
+      "status": "propuesto",
+      "proposal": "Completar la operación autorizada por Dirección: diagnosticar reglas/colas/rutinas activas, restaurar sólo el disparador del correo diario mediante la función existente del backend, pedir una entrada de prueba sólo al destinatario ya configurado y registrar acuse sin confundirlo con recepción. Habilitar únicamente rutas de producción ya autorizadas y comprobadas, conservando compuertas humanas, silencio, límites y datos históricos. Ejecutar una comparación aislada de nube contra un material/versionado original accesible; conservar entradas, salida y hashes en Drive privado y distinguir equivalencia técnica de aceptación editorial. No sustituir el Apps Script desconocido por el espejo ni reactivar gestores cancelados.",
+      "tests": [
+        "Dobles para rechazo de ok:false, límites/espera de correo, zona horaria inesperada, fallo de transporte sin reenvío automático y readback de configuración.",
+        "Comparación con el mismo insumo original: texto/guion, duración, codecs, resolución, contenido exacto de entrada y almacenamiento recuperable; si el original no existe, reportar comparación parcial.",
+        "Activación de rutinas exclusivamente por allowlist del repositorio Sala, main y lectura de vuelta. Cambios de reglas preflight/backups privados, sin cambiar decisiones, marcas, precios o historial.",
+        "CI obligatorio y pin del atlas previo al consumo; recibos reales de correo/configuración y ejecución de medios por separado."
+      ],
+      "deployment": "Propuesta autorizada por Dirección el11-oct-2026. Diagnóstico previo en lectura en curso; implementación y resultados reales pendientes.",
+      "rollback": "Revertir el worker y configuración técnica exacta respaldada tras lectura reciente; mantener medios, decisiones, colas y registros existentes. Reprogramar sólo correoDiario si hace falta; nunca ejecutar instalar() ni borrar otras rutinas."
     }
   ],
   "data_contracts": [
@@ -11502,6 +11564,41 @@
         "Releer antes de actualizar y abortar ante cambios; API heredada no ofrece CAS atómico, por lo que no afirmar una transacción global ni sobrescribir un cambio detectado.",
         "Actualización idempotente: si el archivo ya está reconectado con mismo hash, sólo verificar y no reescribir.",
         "Archivo/informe/acuse quedan privados; errores no publican cuerpos, nombres privados, IDs, tokens o contenidos del audio."
+      ]
+    },
+    {
+      "id": "CTR-SALA-CIERRE-ONLINE",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "EXT-GMAIL"
+      ],
+      "source": "Backend original de Sala, reglas/colas vivas, rutinas Actions autorizadas y archivos originales privados; las fuentes del editor original no se presumen a partir de su espejo.",
+      "input": [
+        "Identidad agente existente, cuenta de servicio Drive actual y token propio de Actions; nunca credenciales del conector ni llaves editoriales.",
+        "Autorización de Dirección para poner Sala en nube y volver a probar su correo; destinatario fijo de la configuración existente, sin parámetro de destinatario en el worker.",
+        "Último material original recuperable y su receta/guion; comparación técnica aislada sin escribir decisiones o proyectos ficticios."
+      ],
+      "output": [
+        "Acuse privado de antes/después de configuración técnica y horario de correo, con conteos/hash y resumen público sin IDs o credenciales.",
+        "Correo solicitado sólo mediante el backend existente. ok:true/bitácora acreditan únicamente el alcance observado; recepción requiere prueba separada.",
+        "Archivos de comparación en Drive privado, byte/hash verificados; publicación del tablero sólo con snapshots y código aprobados."
+      ],
+      "invariants": [
+        "El agente no decide ni autoaprueba. Alejandro y Sayri conservan veto igual y ninguna pieza avanza con petición abierta.",
+        "Reprogramar sólo el handler correoDiario con su zona original. No llamar instalar(), rotar claves o alterar triggers ajenos.",
+        "Las operaciones con efecto de correo o disparador no se reintentan a ciegas tras timeout/acuse ambiguo. No pasar por un cliente GET/POST de reintentos generales.",
+        "No introducir otro destinatario/remitente ni enviar correo desde una identidad personal diferente para simular el backend.",
+        "No publicar guiones privados, contenido de correos, fuentes con claves, filas de negocio ni archivos originales en repositorios/artifacts públicos.",
+        "No presentar una prueba CPU/parallax como video generativo LTX ni equivalencia visual aceptada. Todo material regenerado conserva procedencia propia y no sustituye el original.",
+        "Si no se acredita una facultad, se registra el pendiente exacto. No cancelar las rutinas anteriores de Claude por un diagnóstico parcial.",
+        "Sólo rutinas Sala declaradas en allowlist pueden habilitarse, sin PPP ni supervisores cancelados. Revisión diaria debe distinguir schedule declarado, workflow activo y última ejecución real."
       ]
     }
   ],
