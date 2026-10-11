@@ -1,28 +1,25 @@
 {
-  "model_revision": "2026-10-11.sala-online-verificada",
-  "proposal_id": "CHG-SALA-ONLINE-20261011",
-  "summary": "Registrar código integrado y recibos de ejecución reales de Sala y tablero comercial: CPU/Drive, revisión diaria/Pages y métricas/hash. Alcance confirmado específico; mantener pendientes de Plan, Apps Script original, correo y medios históricos. Sin cambios de reglas comerciales ni credenciales.",
+  "model_revision": "2026-10-11.plan-agregados-online",
+  "proposal_id": "CHG-PLAN-AGREGADOS-ONLINE-20261011",
+  "summary": "Por autorización de Dirección: resolver la lectura automática de atribución de Plan mediante lectura acotada de su hoja canónica con la cuenta de servicio ya usada por Sala y permiso sólo lector. Configuración sin credenciales en documento privado de Drive. Sala publica únicamente agregados de campaña/pieza con SHA256 en su recibo; Marketing consulta esa versión confirmada y conserva el último dato si hay rechazo, retraso o contrato incompleto. No cambia el formulario, el backend de captación, permisos del Portero, gastos, estados del CRM ni decisiones editoriales.",
   "components": [
     "SYS-YOD-OS",
     "SYS-SALA",
-    "GAS-SALA",
-    "SHEET-SALA",
     "SVC-SALA-PRODUCTOR",
     "SVC-SALA-EJECUTOR",
-    "EXT-MOTORES-MEDIA",
     "SYS-MARKETING",
+    "SYS-PLAN-POTENCIAL",
+    "GAS-PLAN-POTENCIAL",
+    "SHEET-PLAN-POTENCIAL",
+    "SHEET-CRM",
     "EXT-ACTIONS",
-    "EXT-DRIVE",
-    "SYS-DESPACHO",
-    "GAS-PORTERO"
+    "EXT-DRIVE"
   ],
   "tests": [
-    "Sala PR265: CI obligatorio, verificador de contratos y suite Python completa de 120 pruebas; regresiones de publicador, lectura/revisión y montage con recibo.",
-    "Snapshots: 26 pruebas de ZIP/allowlist/hash, selección de drafts, CAS, lease, revisión y confirmación; prueba real PATCH→GET conserva draft privado y permite recuperar el activo.",
-    "CPU real run 38139680521, commit 6e67927f01829baba72267aad15d59ea60139444: Tiny-SD, profundidad ONNX/parallax, Kokoro y montaje ffmpeg; seis archivos privados subidos y releídos con SHA256. Video H264/AAC 1080x1920 de 10.166667s. Cero filas de negocio y decisiones editoriales.",
-    "Revisión run 38141812652: cola y rutinas confirmadas, errores vacíos; seis pruebas de revisión pasan. Pages run 38141874311 pasa 31 regresiones del publicador y26 de snapshots y confirma el recibo HTTP exacto.",
-    "Marketing PR76/77: CI obligatorio, sintaxis del cliente y seis pruebas del lector; seis regresiones de leads y20 del publicador previas permanecen. Run 38141736288 confirma 26 pruebas de snapshots y lectura real de 76 publicaciones con hash exacto.",
-    "Arquitectura central: vistas reproducibles, esquema, contratos/regresiones, impacto, verificadores de Portal/OS/accesos/Obra mediante CI del PR de evidencia."
+    "Lectura real y privada de metadatos/encabezados confirma correspondencia con la hoja canónica; comprobar por separado la autoridad del servicio.",
+    "Dobles: lectura por columnas permitidas, cabeceras exactas, folios duplicados/rechazados, pruebas excluidas y cita sólo con confirmación registrada; sin PII o IDs privados en el DTO.",
+    "Snapshot/recibo: hash exacto del archivo de agregados; consumidor rechaza recibos incompletos, corruptos o desactualizados y conserva último dato acreditado.",
+    "Regresiones completas de Sala y leads/publicación Marketing; arquitectura central y CI obligatorios; ninguna escritura de prueba en hojas/CRM."
   ],
-  "rollback": "Revertir PR de infraestructura y volver a publicación Git tras resolver la identidad del bot. Restaurar último snapshot confirmado, sin borrar COLA, decisiones, medios ni registros de Sheets."
+  "rollback": "Revertir PR de lectura y consumidor; mantener los últimos snapshots confirmados y las hojas intactas. Retirar sólo el permiso lector específico si se añadió para esta ruta; no borrar CRM, medios o historial."
 }

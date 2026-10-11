@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.sala-online-verificada · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.plan-agregados-online · 2026-10-11.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -584,3 +584,17 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Nunca autoaprobar editoriales ni enviar/publicar contenido a terceros. Prueba técnica no registra un proyecto o producción ficticia en Sheets.
 - Si una API devuelve ok:false o error, conservar el backup anterior y mostrar fallo. HTTP200 no equivale a lectura válida.
 - La rama pública de datos no contiene código, credenciales, leads o registros nuevos de clientes. Una escritura del bot en esa rama publica únicamente datos validados; main conserva protecciones, PR y CI.
+
+## CTR-PLAN-AGREGADOS-ONLINE
+
+- Componentes: SYS-YOD-OS, SYS-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, SYS-MARKETING, SYS-PLAN-POTENCIAL, GAS-PLAN-POTENCIAL, SHEET-PLAN-POTENCIAL, SHEET-CRM, EXT-ACTIONS, EXT-DRIVE.
+- Evidencia: Hoja canónica de Plan de Potencial; metadatos/encabezados inspeccionados por conector autorizado el 11-oct-2026. Configuración técnica e inventario de fuentes en documento privado; sin credenciales ni exportación de filas a repositorios..
+- Entrada/campos: `Lectura acotada de columnas de identidad interna, tipo, estado, confirmación de sesión y UTM; encabezados verificados; sin nombre, correo, teléfono, dirección, notas o JSON del lead.`, `Cuenta de servicio existente; permiso lector a la fuente. Identidad y acuse técnicos sólo en Drive privado.`, `Último snapshot confirmado y código aprobado; reloj America/Hermosillo.`.
+- Salida: DTO schema1 con lectura fechada, conteos históricos/contexto de cobertura y agregados por campaña/pieza: leads y citas confirmadas; ningún folio, fila, PII o ID de Sheet., Recibo publicado enlaza SHA256 de datos/plan-agregados.json; Marketing comprueba recibo, bytes, frescura y contrato antes de usar conteos., Ante error conservar último dato, marcar lectura fallida y no certificar cero; fuentes Apps Script y correo pendientes por separado..
+
+- No crear/modificar leads, estados, gastos, citas, triggers o decisiones para probar la integración.
+- Excluir registros de prueba explícitos, deduplicar por folio y fallar ante duplicados contradictorios; no sumar CRM históricos como leads nuevos del día.
+- Cita confirmada exige valor de sesión válido y estado compatible; clic en agendar no es confirmación. Las claves no se publican.
+- Sólo agregados de UTM permitidos sin PII; el recibo vincula hash del archivo exacto. Una respuesta HTTP200 sin contrato no acredita lectura.
+- Configuración en Drive privado no incluye llaves de cuenta de servicio o OAuth. Las credenciales sólo se usan en su runtime autorizado.
+- Cambios de código pasan por PR y CI; pin de arquitectura aprobado antes de integrar consumidores. No sustituir fuentes activas desconocidas por espejos.

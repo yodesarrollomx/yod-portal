@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.sala-online-verificada · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.plan-agregados-online · 2026-10-11.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -108,7 +108,7 @@ Medir adquisición, citas, clientes y pauta
 - Entidades: lead_agregado, cita_agregada, campaña, pieza, gasto, conversion.
 - Fuente de verdad: GAS-MARKETING y GAS-PLAN-POTENCIAL para embudos; API Meta y archivos generados para publicaciones.
 - Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L24) — Sistema presente en el catálogo canónico; [aurum-board/docs/ONLINE.md](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/docs/ONLINE.md) — PR76/77 integrados. Run 38141736288 success; rama de datos agregados y lector verifican 76 publicaciones y snapshot 409673351. Main conserva PR/CI..
-- Conexiones: CON-021 (SYS-MARKETING → GAS-MARKETING); CON-022 (SYS-MARKETING → GAS-PLAN-POTENCIAL); CON-041 (SYS-YOD-OS → SYS-MARKETING); CON-049 (SYS-MARKETING → GAS-PORTERO); CON-060 (EXT-META → SYS-MARKETING); CON-076 (GAS-PLAN-POTENCIAL → SYS-MARKETING); CON-077 (SYS-SALA-OPERACION → SYS-MARKETING); CON-PUBLICADOR-MARKETING (EXT-GITHUB-PUBLISHER-APP → SYS-MARKETING); CON-MARKETING-DATOS-ONLINE (SYS-MARKETING → EXT-ACTIONS).
+- Conexiones: CON-021 (SYS-MARKETING → GAS-MARKETING); CON-022 (SYS-MARKETING → GAS-PLAN-POTENCIAL); CON-041 (SYS-YOD-OS → SYS-MARKETING); CON-049 (SYS-MARKETING → GAS-PORTERO); CON-060 (EXT-META → SYS-MARKETING); CON-076 (GAS-PLAN-POTENCIAL → SYS-MARKETING); CON-077 (SYS-SALA-OPERACION → SYS-MARKETING); CON-PUBLICADOR-MARKETING (EXT-GITHUB-PUBLISHER-APP → SYS-MARKETING); CON-MARKETING-DATOS-ONLINE (SYS-MARKETING → EXT-ACTIONS); CON-PLAN-METRICAS-ONLINE (SYS-SALA → SYS-MARKETING).
 - Mejoras: A · Atención comercial sin leads olvidados; B · Atribución desde campaña hasta venta; K · Indicadores confiables y rendimiento medido.
 
 ## SYS-OBRA · Obra en vivo
@@ -209,7 +209,7 @@ Proponer, decidir y producir contenido con compuertas humanas
 - Entidades: pieza, version, propuesta, decision, peticion, produccion, regla, motor, trabajo_cola.
 - Fuente de verdad: SHEET-SALA: propuestas, decisiones, producción, reglas, motores y cola; archivos de repositorio son superficie o respaldo.
 - Evidencia: [sala-edicion/CLAUDE.md](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/CLAUDE.md#L29) — Decisiones reservadas a editores; [sala-edicion/nube/sala_cliente.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_cliente.py#L42) — El cliente automático impide decisiones editoriales antes de la red; [sala-edicion/nube/sala_productor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_productor.py#L130) — El productor planifica compuertas de producción; [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_ejecutor.py#L48) — El ejecutor solo admite etapas habilitadas por configuración; [sala-edicion/docs/SALA-ONLINE.md](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/docs/SALA-ONLINE.md) — PR265 integrado. Revisión 38141812652 y Pages 38141874311 success; publicación exacta del snapshot 409673426 y diagnóstico agregado sin filas privadas..
-- Conexiones: CON-031 (SYS-SALA → GAS-SALA); CON-063 (SYS-SALA → EXT-ACTIONS); CON-064 (SYS-SALA-OPERACION → SYS-SALA); CON-PUBLICADOR-SALA (EXT-GITHUB-PUBLISHER-APP → SYS-SALA); CON-SALA-SNAPSHOT-ONLINE (SYS-SALA → EXT-ACTIONS).
+- Conexiones: CON-031 (SYS-SALA → GAS-SALA); CON-063 (SYS-SALA → EXT-ACTIONS); CON-064 (SYS-SALA-OPERACION → SYS-SALA); CON-PUBLICADOR-SALA (EXT-GITHUB-PUBLISHER-APP → SYS-SALA); CON-SALA-SNAPSHOT-ONLINE (SYS-SALA → EXT-ACTIONS); CON-PLAN-SHEETS-ONLINE (SHEET-PLAN-POTENCIAL → SYS-SALA); CON-PLAN-METRICAS-ONLINE (SYS-SALA → SYS-MARKETING).
 - Mejoras: B · Atribución desde campaña hasta venta.
 - Pendientes: Cambios de infraestructura y documentos históricos requieren reconciliación.
 
@@ -452,11 +452,11 @@ Servir el contrato de Captación de Plan Potencial
 Almacenar registros del dominio ventas
 
 - Tipo: google_sheets. Dominio: Ventas. Responsable: Dueño del dato por confirmar.
-- Evidencia: declarado. Producción: No verificado en despliegue.
+- Evidencia: ejecucion. Producción: Correspondencia de fuente y lectura por conector verificadas; operación de la cuenta de servicio y backend activo pendientes..
 - Entidades: lead, actividad, cita.
 - Fuente de verdad: Almacén lógico Google Sheets; correspondencia con archivo vivo por verificar.
-- Evidencia: Integración pendiente de verificar.
-- Conexiones: CON-006 (GAS-PLAN-POTENCIAL → SHEET-PLAN-POTENCIAL).
+- Evidencia: Integración pendiente de verificar; Metadatos y encabezados de LEADS - POTENCIAL contrastados con documentación y lecturas autorizadas acotadas el11-oct-2026. Datos y ID físico omitidos del atlas; autoridad del runtime de servicio pendiente..
+- Conexiones: CON-006 (GAS-PLAN-POTENCIAL → SHEET-PLAN-POTENCIAL); CON-PLAN-SHEETS-ONLINE (SHEET-PLAN-POTENCIAL → SYS-SALA).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Esquema y calidad de datos vivos no inspeccionados.
 
