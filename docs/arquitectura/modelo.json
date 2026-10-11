@@ -9821,12 +9821,12 @@
         "SYS-YOD-OS"
       ],
       "proposal": "Desactivar Vigía por orden del propietario: retirar su workflow del directorio activo y conservar el original íntegro como archivo histórico. No reactivar sin nueva instrucción.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "tests": [
         "Igualdad SHA del archivo archivado y ausencia en .github/workflows",
         "Arquitectura --check, tests/*.cjs, verify-os/portal/accesos/obra-app"
       ],
-      "deployment": "Propuesta de cancelación antes de retirar el disparador; sin cambios de aplicación ni datos.",
+      "deployment": "Workflow retirado del directorio activo en rama aislada, con fuente archivada íntegra. Integración y comprobaciones de GitHub pendientes; no requiere despliegue de aplicación.",
       "rollback": "Restaurar el workflow original únicamente tras nueva instrucción del propietario."
     }
   ],
