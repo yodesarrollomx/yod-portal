@@ -80,3 +80,26 @@ test('screen reuses one decoded image until capture changes and cancels it on re
  f.work.progress.progress.tasks[0].title='Texto\ncon\tespacios';screen.update(f);assert.ok(painted.includes('Texto con espacios'));assert.equal(images,1);screen.update({...f,work:{...f.work,updated_at:'2026-10-09T05:00:01.000Z'}});assert.equal(images,1);
  screen.update({...f,screen:{...f.screen,revision:2}});assert.equal(images,2);screen.update({phase:'unauthorized',case_id:null,work:null});screen.dispose();assert.equal(disposed,1);
 });
+
+test('recovery wait releases station ownership and motion without losing the dated work record',async()=>{
+ const {observedStation,assignStationOwners}=await import('../despacho3d/station-ownership.mjs'),{workDestination}=await import('../despacho3d/resident-motion.mjs');
+ for(const id of ['case-a','case-b','case-c']){
+  const s=view(id),prior=structuredClone(s.work);s.runtime.phase='waiting_recovery';
+  assert.equal(observedStation(s,now),null);assert.deepEqual(assignStationOwners([s],{now}),{library:null,research:null,meeting:null});assert.equal(workDestination(s,now),'inicio');assert.deepEqual(s.work,prior);
+  s.runtime.phase='working';assert.equal(observedStation(s,now),'library');
+ }
+});
+test('recovery wait paints the lease explanation instead of a previous document or image',async()=>{
+ const fs=require('node:fs'),{screenStatus}=await import('../despacho3d/office-screen-status.mjs'),{workHeadline,observationCaptureKey}=await import('../despacho3d/work-observer.mjs');
+ const source=fs.readFileSync(require.resolve('../despacho3d/office-screen.mjs'),'utf8').replace(/^import.*\n/gm,'').replace(/^export /gm,'');
+ const painted=[];let imageDraws=0;const ctx={fillRect(){},fillText:value=>painted.push(String(value)),drawImage(){imageDraws++;},measureText:t=>({width:t.length*10})};
+ const document={createElement:()=>({getContext:()=>ctx})};class Image{set src(value){if(value)this.onload?.();}}
+ const T={SRGBColorSpace:'s',CanvasTexture:class{dispose(){}}};
+ const make=new Function('T','screenStatus','workHeadline','observationCaptureKey','document','Image',source+';return createOfficeScreen;')(T,screenStatus,workHeadline,observationCaptureKey,document,Image);
+ const screen=make({material:{},userData:{}}),f={...screened(),phase:'ready',image:capture(screened()).image,surface:'library'};
+ f.work.document={title:'Lectura anterior',content:'Extracto histórico',read_at:stamp};
+ screen.update(f);assert.ok(painted.includes('Lectura anterior'));painted.length=0;
+ screen.update({...f,runtime:{...f.runtime,phase:'waiting_recovery',diagnostic:{code:'recovery_lease_wait'}}});
+ assert.ok(painted.includes('Esperando recuperación segura'));assert.match(painted.join(' '),/reserva de la ejecución anterior/);assert.match(painted.join(' '),/historial/);assert.doesNotMatch(painted.join(' '),/Lectura anterior|Extracto histórico|Última captura/);assert.equal(imageDraws,0);
+ painted.length=0;screen.update({...f,surface:'research'});assert.equal(imageDraws,1);screen.dispose();
+});

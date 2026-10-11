@@ -28,3 +28,28 @@ test('runtime-only transition repaints work state without claiming the previous 
  const host=new Node('main'),ui=mountWorkView({container:host,getCase:()=>s.case_id,doc:{createElement:t=>new Node(t)},win:{YodWorkObserver:{subscribe:fn=>{emit=fn;fn(s);return()=>{};}},addEventListener(){},removeEventListener(){}}});assert.match(text(host),/Ahora: Tarea anterior/);
  emit({...s,runtime:{...s.runtime,phase:'waiting_capacity'}});assert.match(text(host),/Encargo en cola/);assert.doesNotMatch(text(host),/Ahora: Tarea anterior/);assert.match(text(host),/REGISTRO ANTERIOR/);ui.dispose();
 });
+
+test('recovery wait remains readable for three isolated projects and preserves history until work resumes',async()=>{
+ const {createWorkObserver,validateObservation,workHeadline}=await import('../despacho3d/work-observer.mjs'),{mountWorkView}=await import('../despacho3d/work-view.mjs');
+ for(const caseId of ['case-synthetic-a','case-synthetic-b','case-synthetic-c']){
+  let current=fixture(),selection={case_id:caseId};current.case_id=caseId;current.work.case_id=caseId;
+  current.work.progress.progress.tasks=[{id:'task-1',title:'Consulta anterior',status:'running',summary:'Registro previo'}];current.work.metrics.total=1;current.work.metrics.running=1;
+  current.work.sources=[{case_id:caseId,run_id:run,goal_id:current.work.goal_id,task_id:'task-1',title:'Fuente guardada',url:'https://example.com/document',consulted_at:stamp}];
+  const original=structuredClone(current.work),calls=[],page=list();page.case_id=caseId;page.entries[0]={...page.entries[0],case_id:caseId,metrics:current.work.metrics};
+  const observer=createWorkObserver({getSelection:()=>selection,schedule:()=>1,cancel:()=>{},request:async(path,args,id)=>{calls.push([path,id]);assert.equal(id,caseId);return structuredClone(path==='/computer/work'?current:page);}});
+  observer.select();await tick();
+  const host=new Node('main'),ui=mountWorkView({container:host,getCase:()=>selection?.case_id,doc:{createElement:t=>new Node(t)},win:{YodWorkObserver:observer,addEventListener(){},removeEventListener(){}}});
+  assert.match(text(host),/Ahora: Consulta anterior/);
+  current.runtime={...current.runtime,phase:'waiting_recovery',diagnostic:{code:'recovery_lease_wait'}};
+  await observer.refresh();const waiting=observer.snapshot();
+  assert.equal(waiting.phase,'ready');assert.equal(waiting.runtime.diagnostic.code,'recovery_lease_wait');assert.deepEqual(waiting.work,original);
+  assert.equal(workHeadline(waiting),'Esperando recuperación segura');assert.match(text(host),/REGISTRO ANTERIOR/);assert.match(text(host),/Última tarea: Consulta anterior/);assert.match(text(host),/Fuente guardada/);assert.match(text(host),/Último registro/);assert.match(text(host),/vence|venza/);assert.doesNotMatch(text(host),/Ahora:|Sin conexión con la actividad|Retomar requiere una acción tuya/);
+  const history=await observer.history({limit:12});assert.equal(history.entries[0].case_id,caseId);assert.deepEqual(observer.snapshot(),waiting);
+  assert.throws(()=>validateObservation({...current,case_id:'another-case'},caseId),/invalid_observation/);
+  assert.throws(()=>validateObservation({...current,runtime:{...current.runtime,phase:'unknown_recovery'}},caseId),/invalid_observation/);
+  current.runtime={...current.runtime,phase:'working'};delete current.runtime.diagnostic;
+  await observer.refresh();assert.equal(observer.snapshot().runtime.diagnostic,undefined);assert.match(text(host),/Ahora: Consulta anterior/);assert.doesNotMatch(text(host),/Esperando recuperación segura|REGISTRO ANTERIOR/);
+  assert.ok(calls.every(([path])=>['/computer/work','/computer/work-history'].includes(path)),'observation never submits or resumes a goal');
+  selection=null;observer.select();assert.equal(observer.snapshot().work,null);assert.doesNotMatch(text(host),/Fuente guardada|Consulta anterior/);ui.dispose();observer.dispose();
+ }
+});

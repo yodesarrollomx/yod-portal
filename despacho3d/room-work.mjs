@@ -1,4 +1,4 @@
-import {validateObservation,observationCaptureKey,validatedCapture} from './work-observer.mjs?v=126';
+import {validateObservation,observationCaptureKey,validatedCapture} from './work-observer.mjs?v=129';
 // One serial round refreshes the whole authorized roster; the pause is between rounds.
 // This observes persisted work. It never starts execution or changes selected project.
 export function createRoomWork({request,now=Date.now,schedule=setTimeout,cancel=clearTimeout,isVisible=()=>true,intervalMs=5000,maxImageBytes=1800200}){

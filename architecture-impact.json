@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-10.c5-recovery-wait",
+  "model_revision": "2026-10-11.c5-recovery-wait",
   "proposal_id": "CHG-DESPACHO-RECOVERY-WAIT-C5",
   "summary": "Mostrar la espera real de recuperación sin perder el último registro ni inventar actividad.",
   "components": [

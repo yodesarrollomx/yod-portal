@@ -1,9 +1,10 @@
-import {workHeadline,safeWorkURL} from './work-observer.mjs?v=126';
+import {workHeadline,safeWorkURL} from './work-observer.mjs?v=129';
 // The next step describes a human decision, never an automatic execution.
 export function recoveryNextStep(state){
  if(state.phase!=='ready')return 'Actualiza la conexión antes de decidir. El último registro puede haber cambiado.';
  const runtime=state.runtime?.phase;
  if(runtime==='waiting_capacity')return 'El encargo espera su turno en el servidor. No hace falta mantener esta vista abierta.';
+ if(runtime==='waiting_recovery')return 'El servidor espera a que venza la reserva de la ejecución anterior antes de recuperarla. El registro anterior se conserva debajo; observarlo no reanuda tareas.';
  if(['starting','reconnecting','unavailable','disabled','stopped'].includes(runtime))return 'Revisa el estado del motor antes de dar por iniciada una ejecución.';
  const w=state.work;
  if(runtime==='working'&&w&&!['working','tool'].includes(w.phase))return 'El servidor está preparando el siguiente encargo; el registro anterior se conserva debajo.';
@@ -70,7 +71,7 @@ export function mountWorkView({container,getCase,win=window,doc=document,onTasks
   next.textContent=valid?recoveryNextStep(state):'';
   if(!w)return;
   const live=['working','tool'].includes(w.phase)&&state.phase==='ready'&&(!state.runtime||state.runtime.phase==='working'),current=w.progress.progress.tasks.find(t=>t.status==='running');
-  const prior=state.runtime&&(['waiting_capacity','starting','reconnecting','unavailable','disabled','stopped'].includes(state.runtime.phase)||state.runtime.phase==='working'&&!['working','tool'].includes(w.phase));
+  const prior=state.runtime&&(['waiting_capacity','waiting_recovery','starting','reconnecting','unavailable','disabled','stopped'].includes(state.runtime.phase)||state.runtime.phase==='working'&&!['working','tool'].includes(w.phase));
   label.textContent=prior?'REGISTRO ANTERIOR DEL PROYECTO':'TRABAJO DEL PROYECTO';
   step.textContent=current?(live?'Ahora: ':'Última tarea: ')+current.title:'';
   stamp.textContent='Último registro · '+new Date(w.updated_at).toLocaleString();
