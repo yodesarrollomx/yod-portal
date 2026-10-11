@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.plan-medios-verificados · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.masterbroker-preevaluation · 2026-10-11.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
@@ -465,3 +465,29 @@ flowchart TD
 Vacíos: La duración depende también del arranque de Google y la conexión. La medición de peso no garantiza una latencia universal.; El almacén permite vincular identidad y respuestas: confidencialidad y acceso restringido no equivalen a anonimato..
 
 Evidencia: Diseño autorizado; publicación y prueba real pendientes.
+
+## PROC-BROKER-PREEVALUATION · Preevaluar un terreno desde Masterbrokers
+
+Estado: propuesto.
+
+```mermaid
+flowchart TD
+  p0["Abrir preevaluación desde cartera · Masterbroker"]
+  p1["Localizar y trazar inmueble · Masterbroker"]
+  p0 -.-> p1
+  p2["Guardar expediente · Masterbroker"]
+  p1 -.-> p2
+  p3["Registrar oportunidad con preevaluación · Masterbroker"]
+  p2 -.-> p3
+```
+
+| Paso | Responsable | Componentes | Entrada → salida | Ejecución |
+|---|---|---|---|---|
+| 1. Abrir preevaluación desde cartera | Masterbroker | SYS-INVERSION, GAS-CRM, GAS-PORTERO | Sesión vigente → Cartera autorizada | automatico |
+| 2. Localizar y trazar inmueble | Masterbroker | SYS-POTENCIALES, GAS-PORTERO | Ubicación y trazos → Mediciones y contexto de zona | manual |
+| 3. Guardar expediente | Masterbroker | GAS-PORTERO, EXT-DRIVE | Mediciones y supuestos → Preevaluación por broker | manual |
+| 4. Registrar oportunidad con preevaluación | Masterbroker | SYS-INVERSION, GAS-CRM, SHEET-CRM | Referencia autorizada y datos prellenados → Alta confirmada en cartera | manual |
+
+Vacíos: Los correos individuales deben estar vinculados canónicamente en CRM; Cobertura de fuentes de entorno variable; preevaluación no equivale a aprobación del plan.
+
+Evidencia: Recorrido autorizado por Dirección; pendiente de implementación.

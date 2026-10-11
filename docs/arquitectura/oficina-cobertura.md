@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-11.plan-medios-verificados
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-11.masterbroker-preevaluation
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 26 sistemas y 86 componentes distribuidos exactamente una vez.
-- 10 áreas; 121 conexiones registradas, 5 marcadas como verificadas en el atlas.
+- 10 áreas; 122 conexiones registradas, 5 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -231,6 +231,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PORTERO-CORCHO-STORE · GAS-PORTERO → STORE-DESPACHO-CORCHO · persistencia · Provisional: CAS en Mi Corcho privado · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-PORTERO-CORCHO-DRIVE · GAS-PORTERO → EXT-DRIVE · autorizacion · Corcho: principal y ACL completos por GET · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-MOTOR-PORTERO · SVC-AUTON-CLOUD → GAS-PORTERO · api · Identidad, contexto, objetivos y cola autorizados · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-BROKER-PREEVALUATION · SYS-INVERSION → GAS-PORTERO · api · Preevaluación y retorno de terreno a cartera · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -272,10 +273,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PORTERO-CORCHO-STORE · CHG-DESPACHO-CORCHO-PROVISIONAL-035: Integración provisional autorizada, pendiente en PR consumidores; preflight V57 no acredita despliegue del adapter. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - CON-PORTERO-CORCHO-DRIVE · CHG-DESPACHO-CORCHO-PROVISIONAL-035: Integración provisional autorizada, pendiente en PR consumidores; preflight V57 no acredita despliegue del adapter. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - [CON-MOTOR-PORTERO · Identidad, contexto, objetivos y cola autorizados · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/server.mjs · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/server.mjs)
+- CON-BROKER-PREEVALUATION · CHG-MASTERBROKER-PREEVALUATION: integración autorizada; implementación y despliegue pendientes · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 23 conexiones sin verificación de ejecución registrada.
+- 24 conexiones sin verificación de ejecución registrada.
 - La revisión acotada no certifica todas las operaciones de negocio ni sustituye la aceptación con usuarios reales.
 - Las cachés de consumidores ajenos a esta entrega pueden conservar permisos temporalmente; revisarlos al continuar cada tablero.
 
@@ -1778,6 +1780,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-069 · SYS-INVERSION → GAS-INVERSION · api · Lee presentación y guarda diagnóstico · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-071 · SYS-INVERSION → GAS-PORTERO · autenticacion · Acceso compartido del equipo · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-075 · SYS-INVERSION → SYS-PLAN-POTENCIAL · captacion · CTA con atribución de presentación · Estado: declarado · Ejecución no verificada en el atlas.
+- CON-BROKER-PREEVALUATION · SYS-INVERSION → GAS-PORTERO · api · Preevaluación y retorno de terreno a cartera · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -1790,10 +1793,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-069 · Acción de diagnóstico · Estado: declarado · yodesarrollomx/yodesarrollo-board · CLAUDE.md · Revisión: HEAD\_baseline
 - CON-071 · Carga del Portero · Estado: codigo · yodesarrollomx/yodesarrollo-board · index.html · Revisión: HEAD\_baseline
 - CON-075 · CTA comercial con campaña · Estado: declarado · yodesarrollomx/yodesarrollo-board · CLAUDE.md · Revisión: HEAD\_baseline
+- CON-BROKER-PREEVALUATION · CHG-MASTERBROKER-PREEVALUATION: integración autorizada; implementación y despliegue pendientes · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 4 conexiones sin verificación de ejecución registrada.
+- 5 conexiones sin verificación de ejecución registrada.
 
 ### Carpeta de inversión · GAS-INVERSION
 
