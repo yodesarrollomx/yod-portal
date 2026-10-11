@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.despacho-lectura-reportes133 · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.horarios-render-verificada · 2026-10-11.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -1102,10 +1102,10 @@ Registrar la herramienta documental mencionada para Biblioteca y comprobar su fo
 Observar horarios declarados y recuperar sólo ejecuciones actuales omitidas, sin depender de las sesiones de chat.
 
 - Tipo: worker. Dominio: Infraestructura. Responsable: Dirección técnica.
-- Evidencia: propuesto. Producción: Implementación y pruebas pendientes. La recuperación requiere una App propia con autorización personal de GitHub; observar no acredita ejecutar..
+- Evidencia: ejecucion. Producción: Proceso residente observado en Render por dos ciclos verificables y logs consecutivos; sin sesiones de chat. Despacho real de recuperación pendiente de App autorizada..
 - Entidades: horario, reserva, ejecucion, recibo.
 - Fuente de verdad: Estado privado del servicio existente y ejecuciones reales de Actions; reglas editoriales y datos de negocio conservan sus fuentes..
-- Evidencia: Dirección autoriza prioridad1: horarios, vigilancia, recuperación segura y evidencia en Accesos..
+- Evidencia: Dirección autoriza prioridad1: horarios, vigilancia, recuperación segura y evidencia en Accesos.; Verificador38182585661 confirma versión viva y dos ciclos independientes; estado técnico cifrado/readback. Recuperación por App sigue pendiente..
 - Conexiones: CON-HORARIOS-RENDER (EXT-RENDER → SVC-HORARIOS-CLOUD); CON-HORARIOS-ESTADO (SVC-HORARIOS-CLOUD → STORE-HORARIOS-CLOUD); CON-HORARIOS-ACTIONS (SVC-HORARIOS-CLOUD → EXT-ACTIONS); CON-HORARIOS-ACCESOS (SVC-HORARIOS-CLOUD → SYS-CONTROL).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: No acreditar verde sin prueba vigente; reconcilación de efectos inciertos antes de otro intento..
@@ -1115,10 +1115,10 @@ Observar horarios declarados y recuperar sólo ejecuciones actuales omitidas, si
 Conservar recibos, reservas de ejecución y configuración de la App cifrada para reconciliar reinicios sin duplicar efectos.
 
 - Tipo: almacen_servidor. Dominio: Infraestructura. Responsable: Dirección técnica.
-- Evidencia: propuesto. Producción: Implementación y pruebas pendientes. La recuperación requiere una App propia con autorización personal de GitHub; observar no acredita ejecutar..
+- Evidencia: ejecucion. Producción: Estado cifrado escrito y releído en el volumen privado del servicio; reservas de efectos externos sólo probadas con dobles, pues App aún no instalada..
 - Entidades: horario, reserva, ejecucion, recibo.
 - Fuente de verdad: Estado privado del servicio existente y ejecuciones reales de Actions; reglas editoriales y datos de negocio conservan sus fuentes..
-- Evidencia: Dirección autoriza prioridad1: horarios, vigilancia, recuperación segura y evidencia en Accesos..
+- Evidencia: Dirección autoriza prioridad1: horarios, vigilancia, recuperación segura y evidencia en Accesos.; Verificador38182585661 confirma versión viva y dos ciclos independientes; estado técnico cifrado/readback. Recuperación por App sigue pendiente..
 - Conexiones: CON-HORARIOS-ESTADO (SVC-HORARIOS-CLOUD → STORE-HORARIOS-CLOUD).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: No acreditar verde sin prueba vigente; reconcilación de efectos inciertos antes de otro intento..
