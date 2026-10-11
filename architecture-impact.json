@@ -1,18 +1,21 @@
 {
-  "model_revision": "2026-10-11.masterbroker-preevaluation",
-  "proposal_id": "CHG-MASTERBROKER-PREEVALUATION",
-  "summary": "Propuesta autorizada para integrar preevaluación y retorno al alta de terrenos de Masterbrokers.",
+  "model_revision": "2026-10-11.sala-cierre-online",
+  "proposal_id": "CHG-SALA-CIERRE-ONLINE-20261011",
+  "summary": "Propuesta autorizada para cerrar correo, rutinas y comparación técnica de Sala online; estado real separado.",
   "components": [
-    "SYS-INVERSION",
-    "SYS-POTENCIALES",
-    "GAS-PORTERO",
-    "GAS-CRM",
-    "SHEET-CRM",
-    "EXT-DRIVE"
+    "SYS-YOD-OS",
+    "SYS-SALA",
+    "GAS-SALA",
+    "SHEET-SALA",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-ACTIONS",
+    "EXT-DRIVE",
+    "EXT-GMAIL"
   ],
   "tests": [
-    "Modelo y vistas regenerados; suite del portal en CI",
-    "Pruebas de implementación y despliegue documentadas por separado"
+    "Modelo y vistas sincronizados; verificaciones obligatorias del portal mediante CI.",
+    "Pruebas de runtime y recepción de correo pendientes; no se dan por verificadas con esta propuesta."
   ],
-  "rollback": "Revertir propuesta e interfaz sin borrar datos operativos."
+  "rollback": "Revertir el worker y configuración técnica exacta respaldada tras lectura reciente; mantener medios, decisiones, colas y registros existentes. Reprogramar sólo correoDiario si hace falta; nunca ejecutar instalar() ni borrar otras rutinas."
 }

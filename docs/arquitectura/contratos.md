@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.masterbroker-preevaluation · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.sala-cierre-online · 2026-10-11.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -612,3 +612,19 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Releer antes de actualizar y abortar ante cambios; API heredada no ofrece CAS atómico, por lo que no afirmar una transacción global ni sobrescribir un cambio detectado.
 - Actualización idempotente: si el archivo ya está reconectado con mismo hash, sólo verificar y no reescribir.
 - Archivo/informe/acuse quedan privados; errores no publican cuerpos, nombres privados, IDs, tokens o contenidos del audio.
+
+## CTR-SALA-CIERRE-ONLINE
+
+- Componentes: SYS-YOD-OS, SYS-SALA, GAS-SALA, SHEET-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-ACTIONS, EXT-DRIVE, EXT-GMAIL.
+- Evidencia: Backend original de Sala, reglas/colas vivas, rutinas Actions autorizadas y archivos originales privados; las fuentes del editor original no se presumen a partir de su espejo..
+- Entrada/campos: `Identidad agente existente, cuenta de servicio Drive actual y token propio de Actions; nunca credenciales del conector ni llaves editoriales.`, `Autorización de Dirección para poner Sala en nube y volver a probar su correo; destinatario fijo de la configuración existente, sin parámetro de destinatario en el worker.`, `Último material original recuperable y su receta/guion; comparación técnica aislada sin escribir decisiones o proyectos ficticios.`.
+- Salida: Acuse privado de antes/después de configuración técnica y horario de correo, con conteos/hash y resumen público sin IDs o credenciales., Correo solicitado sólo mediante el backend existente. ok:true/bitácora acreditan únicamente el alcance observado; recepción requiere prueba separada., Archivos de comparación en Drive privado, byte/hash verificados; publicación del tablero sólo con snapshots y código aprobados..
+
+- El agente no decide ni autoaprueba. Alejandro y Sayri conservan veto igual y ninguna pieza avanza con petición abierta.
+- Reprogramar sólo el handler correoDiario con su zona original. No llamar instalar(), rotar claves o alterar triggers ajenos.
+- Las operaciones con efecto de correo o disparador no se reintentan a ciegas tras timeout/acuse ambiguo. No pasar por un cliente GET/POST de reintentos generales.
+- No introducir otro destinatario/remitente ni enviar correo desde una identidad personal diferente para simular el backend.
+- No publicar guiones privados, contenido de correos, fuentes con claves, filas de negocio ni archivos originales en repositorios/artifacts públicos.
+- No presentar una prueba CPU/parallax como video generativo LTX ni equivalencia visual aceptada. Todo material regenerado conserva procedencia propia y no sustituye el original.
+- Si no se acredita una facultad, se registra el pendiente exacto. No cancelar las rutinas anteriores de Claude por un diagnóstico parcial.
+- Sólo rutinas Sala declaradas en allowlist pueden habilitarse, sin PPP ni supervisores cancelados. Revisión diaria debe distinguir schedule declarado, workflow activo y última ejecución real.
