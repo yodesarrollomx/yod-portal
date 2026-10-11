@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-11.c5-recovery-wait",
-  "checked_at": "2026-10-09",
+  "revision": "2026-10-11.cancelacion-vigia",
+  "checked_at": "2026-10-11",
   "priorities": [
     "vender_mas",
     "margen_y_control",
@@ -9814,6 +9814,20 @@
       ],
       "deployment": "Corrección del consumidor preparada en rama aislada; pruebas de Node/Actions y revisión separada pendientes. Sin publicación ni aceptación operativa.",
       "rollback": "Revertir consumidor sólo después de retirar la nueva fase del backend; conservar expedientes, registros y disco."
+    },
+    {
+      "id": "CHG-CANCELAR-VIGIA-20261011",
+      "components": [
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Desactivar Vigía por orden del propietario: retirar su workflow del directorio activo y conservar el original íntegro como archivo histórico. No reactivar sin nueva instrucción.",
+      "status": "implementado_local",
+      "tests": [
+        "Igualdad SHA del archivo archivado y ausencia en .github/workflows",
+        "Arquitectura --check, tests/*.cjs, verify-os/portal/accesos/obra-app"
+      ],
+      "deployment": "Workflow retirado del directorio activo en rama aislada, con fuente archivada íntegra. Integración y comprobaciones de GitHub pendientes; no requiere despliegue de aplicación.",
+      "rollback": "Restaurar el workflow original únicamente tras nueva instrucción del propietario."
     }
   ],
   "data_contracts": [
@@ -12152,6 +12166,13 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO",
         "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": ".github/workflows/vigia-diario.yml",
+      "components": [
+        "SYS-YOD-OS"
       ]
     }
   ],
