@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-11.sala-online",
+  "model_revision": "2026-10-11.sala-online-verificada",
   "proposal_id": "CHG-SALA-ONLINE-20261011",
-  "summary": "Por instrucción explícita de Dirección: continuar la Sala existente enteramente en nube con alternativas a Modal y al publicador GitHub App ausente. Generación CPU de imágenes, parallax/cámara y voz mantiene procedencia y revisión editorial. Datos del tablero: snapshots privados acumulativos con checksum, validación y despliegue Pages; cambios de código conservan PR y CI. Revisión diaria resumida sin datos personales. Sheets y contratos actuales siguen siendo fuente operativa; no publicar el espejo GAS como si fuera el código vivo. El board comercial mantiene Pages para su código y lee sus agregados desde una rama pública exclusiva de datos con recibo/hash: el token nativo no puede cambiar su Source de Pages (403 comprobado). El código ya aprobado de conversación de main se conserva al conciliar el atlas.",
+  "summary": "Registrar código integrado y recibos de ejecución reales de Sala y tablero comercial: CPU/Drive, revisión diaria/Pages y métricas/hash. Alcance confirmado específico; mantener pendientes de Plan, Apps Script original, correo y medios históricos. Sin cambios de reglas comerciales ni credenciales.",
   "components": [
     "SYS-YOD-OS",
     "SYS-SALA",
@@ -17,12 +17,12 @@
     "GAS-PORTERO"
   ],
   "tests": [
-    "Prueba técnica real CPU: imagen, voz, parallax y corte con archivos sintéticos y evidencia privada; ningún registro de negocio creado",
-    "Archive allowlist, hashes, tamaños, extracción segura, CAS y estados preparado/publicado; rechazo de versión equivocada y fallo no se convierte en cero",
-    "Publicación Pages acredita código y snapshot exactos antes de montar la mesa; CI de código y aprobación editorial siguen vigentes",
-    "Lecturas rechazadas de APIs conservan último backup y reportan rechazo; revisión diária muestra frecuencia, últimas ejecuciones y fallos",
-    "Arquitectura central --check y verificaciones de Portal; nube/verificar.py, regresiones Sala y contratos Marketing",
-    "Board: rama de datos sólo admite metrics.json, covers y recibo; consumo CORS, comparación de hash y estado confirmado, sin cambiar Settings de Pages."
+    "Sala PR265: CI obligatorio, verificador de contratos y suite Python completa de 120 pruebas; regresiones de publicador, lectura/revisión y montage con recibo.",
+    "Snapshots: 26 pruebas de ZIP/allowlist/hash, selección de drafts, CAS, lease, revisión y confirmación; prueba real PATCH→GET conserva draft privado y permite recuperar el activo.",
+    "CPU real run 38139680521, commit 6e67927f01829baba72267aad15d59ea60139444: Tiny-SD, profundidad ONNX/parallax, Kokoro y montaje ffmpeg; seis archivos privados subidos y releídos con SHA256. Video H264/AAC 1080x1920 de 10.166667s. Cero filas de negocio y decisiones editoriales.",
+    "Revisión run 38141812652: cola y rutinas confirmadas, errores vacíos; seis pruebas de revisión pasan. Pages run 38141874311 pasa 31 regresiones del publicador y26 de snapshots y confirma el recibo HTTP exacto.",
+    "Marketing PR76/77: CI obligatorio, sintaxis del cliente y seis pruebas del lector; seis regresiones de leads y20 del publicador previas permanecen. Run 38141736288 confirma 26 pruebas de snapshots y lectura real de 76 publicaciones con hash exacto.",
+    "Arquitectura central: vistas reproducibles, esquema, contratos/regresiones, impacto, verificadores de Portal/OS/accesos/Obra mediante CI del PR de evidencia."
   ],
   "rollback": "Revertir PR de infraestructura y volver a publicación Git tras resolver la identidad del bot. Restaurar último snapshot confirmado, sin borrar COLA, decisiones, medios ni registros de Sheets."
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-11.sala-online",
+  "revision": "2026-10-11.sala-online-verificada",
   "checked_at": "2026-10-11",
   "priorities": [
     "vender_mas",
@@ -503,6 +503,13 @@
           "claim": "Sistema presente en el catálogo canónico",
           "status": "codigo",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/aurum-board",
+          "path": "docs/ONLINE.md",
+          "commit": "6ad059cd1ed97edee894df5a9b2032d919143e0f",
+          "claim": "PR76/77 integrados. Run 38141736288 success; rama de datos agregados y lector verifican 76 publicaciones y snapshot 409673351. Main conserva PR/CI.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -515,8 +522,8 @@
       ],
       "risks_sanitized": [],
       "source_of_truth": "GAS-MARKETING y GAS-PLAN-POTENCIAL para embudos; API Meta y archivos generados para publicaciones",
-      "status": "codigo",
-      "runtime_status": "No verificado en despliegue"
+      "status": "ejecucion",
+      "runtime_status": "Código Pages y refresh en nube comprobados el 11-oct-2026:76 publicaciones reales con recibo/hash y lector HTTP correcto. Plan de Potencial incompleto: lectura automática rechazada; no se sustituyen errores por ceros."
     },
     {
       "id": "SYS-OBRA",
@@ -796,6 +803,13 @@
           "claim": "El ejecutor solo admite etapas habilitadas por configuración",
           "status": "codigo",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "docs/SALA-ONLINE.md",
+          "commit": "73902861db96d213a07f788996f50fdcf3c65566",
+          "claim": "PR265 integrado. Revisión 38141812652 y Pages 38141874311 success; publicación exacta del snapshot 409673426 y diagnóstico agregado sin filas privadas.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -813,8 +827,8 @@
         "Cambios de infraestructura y documentos históricos requieren reconciliación"
       ],
       "source_of_truth": "SHEET-SALA: propuestas, decisiones, producción, reglas, motores y cola; archivos de repositorio son superficie o respaldo",
-      "status": "codigo",
-      "runtime_status": "No verificado en despliegue"
+      "status": "ejecucion",
+      "runtime_status": "Código y revisión diaria publicados y comprobados el 11-oct-2026: cola/rutinas confirmadas, recibo exacto del sitio. Ruta técnica de medios CPU comprobada; aprobaciones humanas. Apps Script original/correo y conciliación histórica pendientes."
     },
     {
       "id": "SYS-SALA-OPERACION",
@@ -2456,6 +2470,13 @@
           "claim": "Procesar trabajos habilitados y subir resultados",
           "status": "codigo",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/sala_ejecutor.py",
+          "commit": "73902861db96d213a07f788996f50fdcf3c65566",
+          "claim": "PR265 conserva compuertas, aprobaciones y procedencia; Modal default 0 y CPU de respaldo. CI completo acreditado.",
+          "status": "codigo"
         }
       ],
       "data_entities": [
@@ -2468,7 +2489,7 @@
       ],
       "source_of_truth": "Configuración de reglas/motores y código de ejecución; ejecución viva pendiente",
       "status": "codigo",
-      "runtime_status": "No verificado en despliegue"
+      "runtime_status": "Código actualizado/CI de 120 pruebas integrado; ruta técnica compartida de imagen/escena/voz/montaje confirmada por 38139680521. La prueba técnica no encoló negocio ni acredita todas las etapas/piezas existentes."
     },
     {
       "id": "EXT-MOTORES-MEDIA",
@@ -2486,6 +2507,13 @@
           "claim": "Generar texto, imagen, escena o voz según motor configurado",
           "status": "codigo",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/prueba_online.py",
+          "commit": "6e67927f01829baba72267aad15d59ea60139444",
+          "claim": "Run 38139680521 success: seis artefactos privados verificados por SHA256, corte 1080x1920 H264/AAC 10.166667s. Entradas sintéticas, sin filas o decisiones de negocio.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -2497,8 +2525,8 @@
         "Uso efectivo, configuración y costo en producción no comprobados"
       ],
       "source_of_truth": "Configuración de reglas/motores y código de ejecución; ejecución viva pendiente",
-      "status": "codigo",
-      "runtime_status": "No verificado en despliegue"
+      "status": "ejecucion",
+      "runtime_status": "Prueba técnica real CPU 38139680521 exitosa: Tiny-SD, profundidad ONNX/parallax, Kokoro y ffmpeg con seis subidas/readbacks Drive. Modal opcional y apagado por defecto; parallax no equivale a animación LTX. No prueba todas las piezas comerciales."
     },
     {
       "id": "SHEET-PPP-MODELOS",
@@ -5398,43 +5426,62 @@
       "id": "CON-SALA-SNAPSHOT-ONLINE",
       "from": "SYS-SALA",
       "to": "EXT-ACTIONS",
-      "kind": "propuesta",
+      "kind": "publicacion",
       "label": "Snapshots privados de datos públicos y Pages con recibo verificable",
       "contract": "CTR-SALA-SNAPSHOT-ONLINE: datos aprobados y validados, draft privado, hash y recibo exactos antes del montaje; CI de código separado y obligatorio.",
-      "status": "propuesto",
-      "runtime_verified": false,
+      "status": "ejecucion",
+      "runtime_verified": true,
       "evidence": [
         {
           "repo": "yodesarrollomx/sala-edicion",
           "path": "nube/snapshots_online.py",
-          "claim": "Implementación y ejecución pendientes; identidad nativa del workflow, sin nuevo GitHub App.",
-          "status": "propuesto"
+          "commit": "73902861db96d213a07f788996f50fdcf3c65566",
+          "claim": "Run 38141812652 publicó la revisión acumulativa y esperó el recibo exacto de Pages run 38141874311; ambos success. ZIP permitido, bloqueo CAS y release permanece draft:true.",
+          "status": "ejecucion"
         }
       ],
       "contract_ids": [
         "CTR-SALA-SNAPSHOT-ONLINE"
-      ]
+      ],
+      "runtime_evidence": {
+        "checked_at": "2026-10-11T13:08:02Z",
+        "scope": "Revisión agregada de cola y rutinas en producción; publicación de snapshot privado y Pages con código/data SHA exactos. No acredita todos los registros históricos ni disparadores del Apps Script original.",
+        "receipt": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38141812652 ; https://github.com/yodesarrollomx/sala-edicion/actions/runs/38141874311 ; https://yodesarrollomx.github.io/sala-edicion/version-online.json ; snapshot_id=409673426 ; code_sha=73902861db96d213a07f788996f50fdcf3c65566 ; data_sha=beb4361a64e0b77206e313964514587b816de6184dc26a1d8b052e5c34e76c11"
+      }
     },
     {
       "id": "CON-MARKETING-DATOS-ONLINE",
       "from": "SYS-MARKETING",
       "to": "EXT-ACTIONS",
-      "kind": "propuesta",
+      "kind": "publicacion",
       "label": "Agregados públicos en rama de datos; UI de Pages conserva código aprobado",
       "contract": "CTR-SALA-SNAPSHOT-ONLINE. Permiso nativo contents:write; compare-and-swap, hash y recibo antes de confirmar. Sin Administration:write.",
-      "status": "propuesto",
-      "runtime_verified": false,
+      "status": "ejecucion",
+      "runtime_verified": true,
       "evidence": [
         {
           "repo": "yodesarrollomx/aurum-board",
-          "path": ".github/workflows/snapshots-online.yml",
-          "claim": "Run 38138596609 confirmó draft privado y rechazo 403 al cambio de Source de Pages; rama de datos aún pendiente.",
-          "status": "propuesto"
+          "path": "scripts/snapshots_online.py",
+          "commit": "6ad059cd1ed97edee894df5a9b2032d919143e0f",
+          "claim": "Run 38141736288 success: actualizó y publicó 76 publicaciones de Meta, confirmó hash/recibo del HTTP real y conservó el snapshot como draft privado.",
+          "status": "ejecucion"
+        },
+        {
+          "repo": "yodesarrollomx/aurum-board",
+          "path": "metrics-online.js",
+          "commit": "6ad059cd1ed97edee894df5a9b2032d919143e0f",
+          "claim": "LECTOR_ONLINE ok:true, posts:76, run_id:38141736288. El navegador recibe sólo agregados/covers y verifica SHA256. Plan rechazado mantiene último dato acreditado y señal de medición incompleta.",
+          "status": "ejecucion"
         }
       ],
       "contract_ids": [
         "CTR-SALA-SNAPSHOT-ONLINE"
-      ]
+      ],
+      "runtime_evidence": {
+        "checked_at": "2026-10-11T13:06:39Z",
+        "scope": "Agregados de Meta y rama datos-online, lectura del cliente con hash exacto; Pages/main conserva código aprobado. No acredita lectura automática completa de Plan de Potencial.",
+        "receipt": "https://github.com/yodesarrollomx/aurum-board/actions/runs/38141736288 ; https://raw.githubusercontent.com/yodesarrollomx/aurum-board/datos-online/version-online.json ; snapshot_id=409673351 ; code_sha=6ad059cd1ed97edee894df5a9b2032d919143e0f ; data_sha=35cd384cddecdc970c44b0ac8121757c4efd8f586fd339f039a0c4a319e483cd"
+      }
     }
   ],
   "processes": [
@@ -9930,16 +9977,16 @@
         "GAS-PORTERO"
       ],
       "proposal": "Por instrucción explícita de Dirección: continuar la Sala existente enteramente en nube con alternativas a Modal y al publicador GitHub App ausente. Generación CPU de imágenes, parallax/cámara y voz mantiene procedencia y revisión editorial. Datos del tablero: snapshots privados acumulativos con checksum, validación y despliegue Pages; cambios de código conservan PR y CI. Revisión diaria resumida sin datos personales. Sheets y contratos actuales siguen siendo fuente operativa; no publicar el espejo GAS como si fuera el código vivo. El board comercial mantiene Pages para su código y lee sus agregados desde una rama pública exclusiva de datos con recibo/hash: el token nativo no puede cambiar su Source de Pages (403 comprobado). El código ya aprobado de conversación de main se conserva al conciliar el atlas.",
-      "status": "propuesto",
+      "status": "publicado",
       "tests": [
-        "Prueba técnica real CPU: imagen, voz, parallax y corte con archivos sintéticos y evidencia privada; ningún registro de negocio creado",
-        "Archive allowlist, hashes, tamaños, extracción segura, CAS y estados preparado/publicado; rechazo de versión equivocada y fallo no se convierte en cero",
-        "Publicación Pages acredita código y snapshot exactos antes de montar la mesa; CI de código y aprobación editorial siguen vigentes",
-        "Lecturas rechazadas de APIs conservan último backup y reportan rechazo; revisión diária muestra frecuencia, últimas ejecuciones y fallos",
-        "Arquitectura central --check y verificaciones de Portal; nube/verificar.py, regresiones Sala y contratos Marketing",
-        "Board: rama de datos sólo admite metrics.json, covers y recibo; consumo CORS, comparación de hash y estado confirmado, sin cambiar Settings de Pages."
+        "Sala PR265: CI obligatorio, verificador de contratos y suite Python completa de 120 pruebas; regresiones de publicador, lectura/revisión y montage con recibo.",
+        "Snapshots: 26 pruebas de ZIP/allowlist/hash, selección de drafts, CAS, lease, revisión y confirmación; prueba real PATCH→GET conserva draft privado y permite recuperar el activo.",
+        "CPU real run 38139680521, commit 6e67927f01829baba72267aad15d59ea60139444: Tiny-SD, profundidad ONNX/parallax, Kokoro y montaje ffmpeg; seis archivos privados subidos y releídos con SHA256. Video H264/AAC 1080x1920 de 10.166667s. Cero filas de negocio y decisiones editoriales.",
+        "Revisión run 38141812652: cola y rutinas confirmadas, errores vacíos; seis pruebas de revisión pasan. Pages run 38141874311 pasa 31 regresiones del publicador y26 de snapshots y confirma el recibo HTTP exacto.",
+        "Marketing PR76/77: CI obligatorio, sintaxis del cliente y seis pruebas del lector; seis regresiones de leads y20 del publicador previas permanecen. Run 38141736288 confirma 26 pruebas de snapshots y lectura real de 76 publicaciones con hash exacto.",
+        "Arquitectura central: vistas reproducibles, esquema, contratos/regresiones, impacto, verificadores de Portal/OS/accesos/Obra mediante CI del PR de evidencia."
       ],
-      "deployment": "Propuesta previa a implementación. Requiere comprobar generación CPU, almacenamiento draft privado y Pages real; no acredita sustitución equivalente de animación LTX ni publicación social autónoma.",
+      "deployment": "Sala PR265 integrado en 73902861db96d213a07f788996f50fdcf3c65566, código publicado por run 38141732590. Revisión diaria publicada y releída: snapshot 409673426, data_sha beb4361a64e0b77206e313964514587b816de6184dc26a1d8b052e5c34e76c11, productor 38141812652 y Pages 38141874311, ambos success. Marketing PR76/77 integrado en 6ad059cd1ed97edee894df5a9b2032d919143e0f; refresh 38141736288 success publica snapshot 409673351, data_sha 35cd384cddecdc970c44b0ac8121757c4efd8f586fd339f039a0c4a319e483cd y el lector real confirma 76 publicaciones. Código de Marketing continúa en Pages/main; sólo agregados públicos en datos-online. Releases permanecen draft:true. Generación CPU real confirmada por 38139680521, sin Modal obligatorio ni sesión de chat. Alcance pendiente: fuente y disparadores originales de Apps Script, correo heredado, lectura automática de Plan de Potencial rechazada y conciliación de medios históricos. La escena parallax no acredita animación LTX y las aprobaciones editoriales permanecen humanas.",
       "rollback": "Revertir PR de infraestructura y volver a publicación Git tras resolver la identidad del bot. Restaurar último snapshot confirmado, sin borrar COLA, decisiones, medios ni registros de Sheets."
     }
   ],
@@ -11070,7 +11117,7 @@
         "EXT-ACTIONS",
         "EXT-DRIVE"
       ],
-      "source": "Instrucción de Dirección del 2026-10-11; implementación cloud propuesta en nube/snapshots_online.py y scripts/snapshots_online.py.",
+      "source": "Propuesta central aprobada en 93afbea366c19872bfb855463afece2ac73eeb08, instrucción de Dirección del 2026-10-11; implementada en Sala PR265 y Marketing PR76/77; ejecución real de ambos publicadores registrada el 11-oct-2026.",
       "input": [
         "Código aprobado de main; outputs públicos declarados por proceso; último snapshot publicado e inmutable",
         "Identidad automática del workflow del mismo repositorio; nunca credenciales del conector",
