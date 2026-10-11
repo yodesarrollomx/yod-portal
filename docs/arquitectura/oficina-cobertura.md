@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-11.despacho-puesto131
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-11.sala-online
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 26 sistemas y 86 componentes distribuidos exactamente una vez.
-- 10 áreas; 116 conexiones registradas, 0 marcadas como verificadas en el atlas.
+- 10 áreas; 117 conexiones registradas, 0 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -2045,6 +2045,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-063 · SYS-SALA → EXT-ACTIONS · automatizacion · Orquesta producción en la nube · Estado: declarado · Ejecución no verificada en el atlas.
 - CON-064 · SYS-SALA-OPERACION → SYS-SALA · automatizacion · Herramientas históricas de producción · Estado: declarado · Ejecución no verificada en el atlas.
 - CON-PUBLICADOR-SALA · EXT-GITHUB-PUBLISHER-APP → SYS-SALA · automatizacion · Crea PR del commit preparado de Sala · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-SALA-SNAPSHOT-ONLINE · SYS-SALA → EXT-ACTIONS · propuesta · Snapshots privados de datos públicos y Pages con recibo verificable · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2059,10 +2060,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-063 · Ciclo de producción en nube · Estado: declarado · yodesarrollomx/sala-edicion · CLAUDE.md · Revisión: HEAD\_baseline
 - CON-064 · Migración de herramientas a nube · Estado: declarado · yodesarrollomx/sala-edicion · CLAUDE.md · Revisión: HEAD\_baseline
 - CON-PUBLICADOR-SALA · Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB\_TOKEN; requiere registro e instalación personal de una App privada de la organización. · Estado: declarado · Sin revisión inmutable en esta referencia
+- CON-SALA-SNAPSHOT-ONLINE · Implementación y ejecución pendientes; identidad nativa del workflow, sin nuevo GitHub App. · Estado: propuesto · yodesarrollomx/sala-edicion · nube/snapshots\_online.py · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 4 conexiones sin verificación de ejecución registrada.
+- 5 conexiones sin verificación de ejecución registrada.
 - Cambios de infraestructura y documentos históricos requieren reconciliación
 
 ### Herramientas de producción · SYS-SALA-OPERACION
@@ -2617,6 +2619,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-079 · EXT-ACTIONS → SVC-SALA-PRODUCTOR · automatizacion · Programa productor cada veinte minutos · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-081 · EXT-ACTIONS → SVC-SALA-EJECUTOR · automatizacion · Programa ejecución de etapas habilitadas · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-PUBLICADOR-IDENTIDAD · EXT-ACTIONS → EXT-GITHUB-PUBLISHER-APP · autenticacion · Solicita identidad temporal limitada al repositorio · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-SALA-SNAPSHOT-ONLINE · SYS-SALA → EXT-ACTIONS · propuesta · Snapshots privados de datos públicos y Pages con recibo verificable · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2628,11 +2631,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-079 · Frecuencia configurada en workflow, no evidencia de corridas · Estado: codigo · yodesarrollomx/sala-edicion · .github/workflows/sala-cada-hora.yml · Revisión: HEAD\_baseline
 - CON-081 · Disparador declarado cada dos horas · Estado: codigo · yodesarrollomx/sala-edicion · .github/workflows/sala-cada-hora.yml · Revisión: HEAD\_baseline
 - CON-PUBLICADOR-IDENTIDAD · Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB\_TOKEN; requiere registro e instalación personal de una App privada de la organización. · Estado: declarado · Sin revisión inmutable en esta referencia
+- CON-SALA-SNAPSHOT-ONLINE · Implementación y ejecución pendientes; identidad nativa del workflow, sin nuevo GitHub App. · Estado: propuesto · yodesarrollomx/sala-edicion · nube/snapshots\_online.py · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
 - Responsable operativo pendiente de confirmación; el encargado de verificación no sustituye esa asignación.
-- 4 conexiones sin verificación de ejecución registrada.
+- 5 conexiones sin verificación de ejecución registrada.
 - Estado y permisos no comprobados
 
 ### Identidad de publicación GitHub · EXT-GITHUB-PUBLISHER-APP
