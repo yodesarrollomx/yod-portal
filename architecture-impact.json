@@ -1,13 +1,14 @@
 {
   "model_revision": "2026-10-11.despacho-puesto131",
   "proposal_id": "CHG-DESPACHO-PUESTO-20261011",
-  "summary": "Abrir el puesto del autón desde su nombre con la misma selección autorizada; mostrar PPP junto a conversación y una ruta de trabajo derivada de las metas reales. Separar conexiones por caso y enlazar explícitamente identidad del autón con identidad del PPP registrado. Consultas de voz conservan instrucción, criterio y resumen de cada tarea. Sin reiniciar automatizaciones canceladas ni modificar resultados del negocio.",
+  "summary": "Abrir el puesto del autón desde su nombre con la misma selección autorizada; mostrar PPP junto a conversación y una ruta de trabajo derivada de las metas reales. Separar conexiones por caso y enlazar explícitamente identidad del autón con identidad del PPP registrado. Consultas de voz conservan instrucción, criterio y resumen de cada tarea. Sin reiniciar automatizaciones canceladas ni modificar resultados del negocio. El workflow compartido de chinches conserva sus pruebas de Sala y añade el recorrido del puesto.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "SYS-DESPACHO-3D",
     "SVC-AUTON-CLOUD",
-    "GAS-PORTERO"
+    "GAS-PORTERO",
+    "SYS-SALA"
   ],
   "tests": [
     "Cambiar entre tres puestos y descartar conexiones y respuestas del caso anterior",
