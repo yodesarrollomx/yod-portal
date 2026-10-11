@@ -5,7 +5,7 @@ import {createEntryPreparation} from './voice-preparation.mjs?v=2';
 import {residentAccessDecision} from './resident-agents.mjs?v=127';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=126';
 import {stationIdentity} from './project-station.mjs?v=121';
-import {createLiveVoice} from './live-voice.mjs?v=128';
+import {createLiveVoice} from './live-voice.mjs?v=130';
 import {voiceView} from './voice-view.mjs?v=2';
 import {createWorkspace} from './agent-workspace.mjs?v=129';
 import {DurableGoals,watchGoals} from './goals.mjs?v=2';
@@ -125,7 +125,7 @@ if (open) {
   });
   chatTimer=setInterval(()=>{if(dialog.open&&!document.hidden&&dialog.querySelector('.station-chat').open&&chat.selection&&!chat.busy&&!active(voice.snapshot()))void chat.refresh();},12000);
   window.addEventListener('pagehide',()=>{clearInterval(chatTimer);chat.close();stopWatching?.();});
-  const voice = createLiveVoice({canOperate:()=>!accessPaused&&!!selection,actions:actionExecutor,audio: node('voice-audio'), mint: value => officeFastSessions.ensure(value.case_id,p=>transport.mintFastSession(p)),
+  const voice = createLiveVoice({canOperate:()=>!accessPaused&&!!selection,actions:actionExecutor,audio: node('voice-audio'), forgetCredential:id=>officeFastSessions.forget(id), mint: value => officeFastSessions.ensure(value.case_id,p=>transport.mintFastSession(p)),
     onChange: renderVoiceState,
     onTranscript: fragment => {
       if(selection?.case_id===voiceCaseId)renderTranscript(fragment);

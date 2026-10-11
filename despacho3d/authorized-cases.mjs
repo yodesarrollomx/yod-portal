@@ -1,6 +1,7 @@
 import {validateSelection} from './conversation.mjs?v=126';
 import {AUTHORITY_LEASE_MS,authorityIsCurrent,isTransientAuthorityError} from './authority-lease.mjs?v=127';
-// Private server catalog, kept only in memory. Selecting always revalidates the exact case.
+// Private catalog in memory. Selection may reuse a recently validated entry;
+// every business operation still validates its own exact case and authority.
 export function createAuthorizedCases({transport,onChange=()=>{},beforeSelect=()=>true,now=Date.now,schedule=setTimeout,cancel=clearTimeout,reuseCatalog=false}){
  let rawItems=new Map();
  let items=[],selected=null,epoch=0,selectionEpoch=0,disposed=false,checkedAt=null,phase='loading',error=null,flight=null,leaseTimer=null,retryTimer=null,retryAttempt=0;
@@ -12,7 +13,7 @@ export function createAuthorizedCases({transport,onChange=()=>{},beforeSelect=()
  function stopLease(){if(leaseTimer!==null)cancel(leaseTimer);leaseTimer=null;}
  function expire(){if(disposed||checkedAt===null)return;if(valid()){armLease();return;}items=[];rawItems.clear();selected=null;selectionEpoch++;phase='reconnecting';error='lease_expired';stopLease();emit();}
  function armLease(){stopLease();if(checkedAt!==null)leaseTimer=schedule(expire,Math.max(0,AUTHORITY_LEASE_MS-(now()-checkedAt)));}
- function clear(reason='unauthorized'){epoch++;selectionEpoch++;flight=null;stopLease();stopRetry();retryAttempt=0;items=[];selected=null;checkedAt=null;phase='unauthorized';error=reason;emit();}
+ function clear(reason='unauthorized'){epoch++;selectionEpoch++;flight=null;stopLease();stopRetry();retryAttempt=0;items=[];rawItems.clear();selected=null;checkedAt=null;phase='unauthorized';error=reason;emit();}
  async function refresh(){
   if(disposed)return false;if(flight)return flight;stopRetry();
   if(checkedAt!==null&&!valid())expire();
@@ -27,7 +28,7 @@ export function createAuthorizedCases({transport,onChange=()=>{},beforeSelect=()
     checkedAt=now();phase='current';error=null;retryAttempt=0;armLease();emit();return true;
    }catch(e){
     if(disposed||own!==epoch)return false;
-    if(isTransientAuthorityError(e)){phase='reconnecting';error=e.message;if(!valid()){items=[];selected=null;selectionEpoch++;}emit();retry();}
+    if(isTransientAuthorityError(e)){phase='reconnecting';error=e.message;if(!valid()){items=[];rawItems.clear();selected=null;selectionEpoch++;}emit();retry();}
     else clear(e.message||'invalid_catalog');
     return false;
    }
