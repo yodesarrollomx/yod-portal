@@ -53,6 +53,8 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
    return route.fulfill({status:200,contentType:'application/json',headers,body:JSON.stringify(body)});
   });
   await page.goto(ORIGIN+'/__collab-shell');const frame=page.frames().find(f=>f.url().endsWith('/__collab'));
+   async function showBoardOptions(){const options=frame.locator('.workspace-board-options');if(await options.getAttribute('open')===null)await options.locator('summary').click();}
+   async function hideBoardOptions(){const options=frame.locator('.workspace-board-options');if(await options.getAttribute('open')!==null)await options.locator('summary').click();}
   const cachedModule=await frame.evaluate(async()=>{try{await import('./__old-goals-consumer.mjs');return {failed:false};}catch(error){return {failed:true,message:error.message};}});
   assert.equal(cachedModule.failed,true,'the unversioned cache fixture must reject the new exports');
   assert.match(cachedModule.message,/does not provide an export|not exported/);
@@ -66,10 +68,11 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await frame.locator('.workspace-ppp-status').filter({hasText:'todavía no recibió una lectura compartida'}).waitFor();
   const waitingFrame=await (await frame.locator('.workspace-board iframe').elementHandle()).contentFrame();
   await waitingFrame.evaluate(()=>{window.boardSilent=false;});
-  await frame.locator('.workspace-board-options summary').click();
-  await frame.getByRole('button',{name:'Actualizar conexión',exact:true}).click();
-  await frame.locator('.workspace-board-options summary').click();
+  await showBoardOptions();
+  await frame.getByRole('button',{name:'Actualizar conexión',exact:true}).click();await hideBoardOptions();
+  await showBoardOptions();
   await frame.locator('.workspace-ppp-summary').filter({hasText:'Lectura confirmada'}).waitFor();
+  await frame.locator('.workspace-board-options summary').click();
   assert.equal(sessions,0);assert.equal(await frame.evaluate(()=>window.captures),0);
   const iframe=await frame.locator('.workspace-board iframe').elementHandle(),ppp=await iframe.contentFrame();
   await ppp.locator('#area').fill('135');
@@ -84,10 +87,10 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   for(let i=0;i<100&&!boardNotices.length;i++)await page.waitForTimeout(20);
   assert.equal(boardNotices[0]?.revision,'r1','PPP already visible is shared when voice context becomes ready');
   assert.equal(await iframe.evaluate(el=>el.isConnected),true);assert.equal(await ppp.locator('#area').inputValue(),'135');
-  await ppp.evaluate(()=>window.confirmDraft());await frame.locator('.workspace-ppp-summary').filter({hasText:'Lectura confirmada'}).waitFor();
+  await ppp.evaluate(()=>window.confirmDraft());await showBoardOptions();await frame.locator('.workspace-ppp-summary').filter({hasText:'Lectura confirmada'}).waitFor();await frame.locator('.workspace-board-options summary').click();
   proposals=[{request_id:'board-synthetic-1',case_id:CASE,scenario_id:'scenario-1',revision:'r1',motivo:'Comparar superficie alternativa',cambios:[{campo:'inTerrenoM2',label:'Superficie',antes:120,valor:150}]}];
-  await frame.locator('.workspace-board-options summary').click();
-  await frame.getByRole('button',{name:'Actualizar conexión',exact:true}).click();
+  await showBoardOptions();
+  await frame.getByRole('button',{name:'Actualizar conexión',exact:true}).click();await hideBoardOptions();
   await frame.getByRole('button',{name:'Aplicar en el tablero',exact:true}).waitFor();
   await frame.getByRole('button',{name:'Aplicar en el tablero',exact:true}).click();
   await frame.getByRole('button',{name:'Aplicando…',exact:true}).waitFor();
@@ -114,7 +117,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   assert.deepEqual(await ppp.evaluate(()=>window.receiptAcks),[{request_id:'board-synthetic-1',revision:'r2'}]);
   // Explicit conversation intent dispatches without the user clicking Apply.
   proposals=[{request_id:'board-voice-2',case_id:CASE,scenario_id:'scenario-1',revision:'r2',motivo:'Corrige superficie',apply_requested_at:new Date().toISOString(),apply_expires_at:new Date(Date.now()+120000).toISOString(),cambios:[{campo:'inTerrenoM2',label:'Superficie',antes:150,valor:644}]}];
-  await frame.getByRole('button',{name:'Actualizar conexión',exact:true}).click();
+  await showBoardOptions();await frame.getByRole('button',{name:'Actualizar conexión',exact:true}).click();await hideBoardOptions();
   await frame.getByRole('button',{name:'Aplicando…',exact:true}).waitFor();
   await ppp.waitForFunction(()=>window.applies===2);
   assert.equal(await ppp.evaluate(()=>window.applies),2);
@@ -134,7 +137,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await frame.locator('#circulo-open').click();await frame.locator('.radial-options [data-action="ppp"]').click();
   assert.equal(await iframe.evaluate(el=>el.isConnected),true);
   assert.equal(await ppp.evaluate(()=>window.applies),2,'reopening does not replay the completed write');
-  await frame.getByRole('button',{name:'Conservar y comparar variantes'}).click();
+  await showBoardOptions();await frame.getByRole('button',{name:'Conservar y comparar variantes'}).click();
   await frame.locator('.realtime-dialog [data-tab="ppp"]').click();
   assert.equal(await iframe.evaluate(el=>el.isConnected),true);assert.equal(await ppp.locator('#area').inputValue(),'644');
   if(viewport.width<=850){await frame.locator('.voice-close').click();await frame.locator('#circulo-open').click();}
@@ -161,7 +164,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   assert.equal(await iframe.evaluate(el=>el.isConnected),false,'previous project frame is removed');
   await frame.locator('.workspace-ppp-status').filter({hasText:'todavía no recibió una lectura compartida'}).waitFor();
   assert.equal(await frame.locator('.workspace-board iframe').getAttribute('src').then(s=>s.includes('agent=1')),true);
-  assert.equal(await frame.locator('.workspace-ppp-summary').isVisible(),true);
+  await showBoardOptions();assert.equal(await frame.locator('.workspace-ppp-summary').isVisible(),true);
   assert.equal(await frame.locator('#voice-transcript article').count(),0);
   assert.equal(await frame.locator('#station-message').inputValue(),'');
   assert.equal(sessions,2,'switching projects does not activate another microphone session');

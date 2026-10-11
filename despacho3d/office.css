@@ -196,3 +196,18 @@ body>header>.chinche-ui-tools{width:auto}
 
 #office-agent-marker span{font-size:11px;color:#5e7970}
 
+
+/* RTS-like selection, backed exclusively by the current authorized catalog. */
+#resident-dock{position:absolute;left:50%;bottom:78px;transform:translateX(-50%);z-index:9;max-width:calc(100% - 32px);padding:8px;background:#f8f9f3f2;border:1px solid #d0d9cb;border-radius:18px;box-shadow:0 8px 28px #11262326;box-sizing:border-box}
+#resident-dock[hidden]{display:none}
+.resident-dock-cards{display:flex;gap:6px;overflow-x:auto;max-width:100%}
+.resident-dock-cards button{display:flex;align-items:center;gap:8px;flex:none;min-width:116px;min-height:56px;padding:8px 12px;border:1px solid transparent;border-radius:12px;background:transparent;color:#25463c;text-align:left;font:13px system-ui;cursor:pointer}
+.resident-dock-cards button[aria-pressed=true]{background:#203f36;color:#fff;border-color:#203f36}
+.resident-dock-cards button:focus-visible{outline:3px solid #b59b65;outline-offset:-3px}
+.resident-dock-cards button:disabled{opacity:.6}
+.resident-dock-symbol{display:grid;place-items:center;width:30px;height:30px;flex:none;border-radius:50%;background:#dfe7da;color:#345746;font-size:15px}
+.resident-dock-cards b,.resident-dock-cards small{display:block;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.resident-dock-cards small{font-size:10px;margin-top:4px;opacity:.75}
+.resident-dock-notice{font:12px/1.4 system-ui;color:#345746;margin:6px 8px;max-width:50ch}
+.resident-dock-notice:empty{display:none}
+@media(max-width:700px){#resident-dock{bottom:82px;max-width:calc(100% - 28px);padding:5px}.resident-dock-cards button{min-width:96px;padding:6px 8px;gap:6px}.resident-dock-symbol{width:24px;height:24px}.resident-dock-cards b{max-width:80px;font-size:11px}}

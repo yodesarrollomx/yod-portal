@@ -10388,6 +10388,29 @@
       ],
       "deployment": "Integrado por PR270 (4582fc3c42a2ac8459dea7d553c42f9719f07962) y PR271 (f491c93229aa2d08c5e81eed597375568843b111). Cierre y comparación reales38166137118 success;183 pruebas sin omisiones. Runtime autónomo para las rutas actuales, compuertas humanas conservadas. Comparación parcial: diferencia de duración, sexta lámina fuente ausente, igualdad visual/aceptación editorial y recepción del reenvío no acreditadas. Editor/fuentes/triggers completos, conteo original de correo y26 medios históricos siguen pendientes; no retirar aún rutinas anteriores de Claude.",
       "rollback": "Revertir el worker y configuración técnica exacta respaldada tras lectura reciente; mantener medios, decisiones, colas y registros existentes. Reprogramar sólo correoDiario si hace falta; nunca ejecutar instalar() ni borrar otras rutinas."
+    },
+    {
+      "id": "CHG-DESPACHO-FLUIDEZ-20261011",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO",
+        "SYS-SALA"
+      ],
+      "proposal": "Dirección autoriza reorganizar la interacción como oficina de estrategia: selección, cuatro direcciones y puesto con PPP visible mientras conversa. Conservar todas las capacidades, identidades y contratos. Corregir estados de lectura, reducir cabeceras y separar ruta guardada, actividad y evidencia. Revisar sólo la entrega exacta mostrada, sin aprobar por actualización silenciosa ni crear encargos al abrir. No reactivar automatizaciones canceladas ni ampliar APIs, permisos o backend.",
+      "status": "publicado",
+      "tests": [
+        "SHA b8df8c2823726b184a01405e63c8d67acf6b0d76: 618/618 regresiones, esquema/vistas/impacto y Obra; Actions 38166340212.",
+        "OS, Portal y matriz de accesos comprobados: Actions 38166340153.",
+        "Chinches Chromium/WebKit, modo sin GPU, puesto con tres casos aislados, rueda teclado/táctil y capturas 1366/1024/390: Actions 38166340131.",
+        "Entrada, reuniones, trabajo observable, cercanía, conocimiento, voz y PPP colaborativo con mismo iframe/borrador y recibos exactos: Actions 38166340113.",
+        "Revisor separado aprobó el commit exacto tras inspeccionar código, pruebas y capturas.",
+        "11-oct-2026 19:14:45 UTC: observado PASS de Comprobar entrada publicada sin sesión privada en Actions 38167079475; Chromium lee Pages sin interceptar red, comprueba módulos actuales y oficina pública 1366/390.",
+        "Los transportes de pruebas privadas usan expedientes sintéticos: no acreditan micrófono físico, tarjetas privadas ni autonomía 24/7."
+      ],
+      "deployment": "PR168 integrado en 1959af900210d0c697c9f88abcfafcf5eff6f4fa el 11-oct-2026 19:13:08 UTC. Pages 38167078699 publicado con éxito, finalización 19:13:35 UTC. Entrada publicada comprobada por navegador real en 38167079475 (paso observado aprobado 19:14:45 UTC; el resto del workflow de push continúa). Cliente fluido132, sin cambios de Render/Sheets/API/permisos ni automatizaciones canceladas.",
+      "rollback": "Revertir el PR de interfaz; conservar Sheets, expedientes, objetivos, recibos y disco persistente."
     }
   ],
   "data_contracts": [
@@ -12889,6 +12912,15 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "scripts/probar-puesto-browser.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-read-state.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",

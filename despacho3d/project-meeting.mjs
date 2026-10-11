@@ -8,7 +8,7 @@ export function buildMeeting(raw,caseId,name){
  const slides=topics.map((task,index)=>{
   const evidence=goal.evidence.filter(e=>e.task_id===task.id&&task.evidence_ids.includes(e.id));
   const result=task.summary||'Sin resultado registrado para este tema.';
-  const checkpoint=task.status==='ready_for_review'?'Preparado; pendiente de tu revisión.':task.status==='blocked'?'Bloqueado; necesita datos o una decisión.':'Este tema todavía no está terminado.';
+  const checkpoint=goal.status==='completed'?'Entrega revisada; se conserva como antecedente.':task.status==='ready_for_review'?'Preparado; pendiente de tu revisión.':task.status==='blocked'?'Bloqueado; necesita datos o una decisión.':'Este tema todavía no está terminado.';
   const script=[String(name||'Autón')+'. '+task.title+'.',excerpt(result,340),checkpoint,
    evidence.length?'La evidencia de este tema está disponible en la lámina.':'Este tema no tiene evidencia vinculada.',
    '¿Qué quieres aclarar o dejar como siguiente encargo?'].join(' ');
