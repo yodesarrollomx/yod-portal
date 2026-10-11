@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-11.masterbroker-preevaluation-published
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-11.sala-cierre-verificado
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 26 sistemas y 86 componentes distribuidos exactamente una vez.
-- 10 áreas; 124 conexiones registradas, 5 marcadas como verificadas en el atlas.
+- 10 áreas; 124 conexiones registradas, 6 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -883,7 +883,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Conexiones registradas; no habilitan operaciones:**
 
 - CON-061 · SYS-DESPACHO → EXT-GMAIL · accion\_humana\_y\_rutina · Aprobación de borradores por protocolo BANDEJA · Estado: declarado · Ejecución no verificada en el atlas.
-- CON-SALA-CORREO-ONLINE · GAS-SALA → EXT-GMAIL · correo · Correo diario y entrada al destinatario existente · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-SALA-CORREO-ONLINE · GAS-SALA → EXT-GMAIL · correo · Correo diario y entrada al destinatario existente · Estado: ejecucion · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -892,7 +892,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Evidencia de conexiones:**
 
 - CON-061 · Rutina externa declarada con aprobación humana · Estado: declarado · yodesarrollomx/yod-despacho · EJECUTOR.md · Revisión: HEAD\_baseline
-- CON-SALA-CORREO-ONLINE · Diseño de cierre autorizado por Dirección; ejecución y recepción todavía no verificadas. · Estado: declarado · Sin revisión inmutable en esta referencia
+- [CON-SALA-CORREO-ONLINE · Bitácora del backend registra correo diario tres días a07:13Hermosillo; solicitud de entrada38166137118 aceptada y acuse privado byte-verificado. Recepción en Gmail y fuente/inventario completo de disparadores siguen sin verificar. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/correo\_estado.py · Revisión: 4582fc3c42a2ac8459dea7d553c42f9719f07962](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/nube/correo_estado.py)
 
 **Pendientes y límites:**
 
@@ -2056,7 +2056,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Editores y producción
 
-**Estado registrado:** ejecucion. Código y revisión diaria publicados; ruta de medios CPU comprobada y lectura automática agregada de Plan confirmada el11-oct-2026. Compuertas editoriales humanas. Fuentes/disparadores Apps Script originales, correo y medios históricos restantes pendientes. Reconexión de dos voces originales exactas comprobada por run38159239581 y acuse privado.
+**Estado registrado:** ejecucion. Cierre y rutas actuales de nube comprobados por run38166137118; producción habilitada y compuertas humanas. Revisión/correo supervisados. Comparación parcial original31.88s/nube48s, cinco láminas de fuente y sexta referencia del corte. Fuente/triggers originales y medios históricos siguen separados, sin equivalencia integral acreditada.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -2077,6 +2077,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [PR265 integrado. Revisión 38141812652 y Pages 38141874311 success; publicación exacta del snapshot 409673426 y diagnóstico agregado sin filas privadas. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-ONLINE.md · Revisión: 73902861db96d213a07f788996f50fdcf3c65566](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/docs/SALA-ONLINE.md)
 - [PR266/267/268 integrados. Run 38156397507 success: cuenta de servicio existente con permiso lector, consulta autenticada GViz sólo cuando Sheets API está deshabilitada, columnas permitidas, exclusión de prueba y publicación verificada. Fuente no modificada. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/PLAN-ONLINE.md · Revisión: a3b6c7053b3cd26333dd06878e74bb666288ce51](https://github.com/yodesarrollomx/sala-edicion/blob/a3b6c7053b3cd26333dd06878e74bb666288ce51/docs/PLAN-ONLINE.md)
 - [PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/medios\_reconexion.py · Revisión: 159d932cd81c2d2c3fda31a862ea60fc0b3ae667](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py)
+- [PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-CIERRE-ONLINE.md · Revisión: 4582fc3c42a2ac8459dea7d553c42f9719f07962](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md)
 
 **Evidencia de conexiones:**
 
@@ -2144,7 +2145,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-085 · GAS-SALA → GAS-PORTERO · autenticacion · Valida credencial del OS desde servidor · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-086 · GAS-SALA → GAS-PORTERO-RESPALDO · autenticacion · Consulta respaldo de identidad · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-SALA-RECONEXION-MEDIOS · SVC-SALA-EJECUTOR → GAS-SALA · conciliacion · Mantenimiento limitado de evidencia de voces originales recuperadas · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
-- CON-SALA-CORREO-ONLINE · GAS-SALA → EXT-GMAIL · correo · Correo diario y entrada al destinatario existente · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-SALA-CORREO-ONLINE · GAS-SALA → EXT-GMAIL · correo · Correo diario y entrada al destinatario existente · Estado: ejecucion · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2162,7 +2163,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-085 · Valida credencial del OS desde servidor · Estado: codigo · yodesarrollomx/sala-edicion · gas/Code.gs · Revisión: HEAD\_baseline
 - CON-086 · Consulta respaldo de identidad · Estado: codigo · yodesarrollomx/sala-edicion · gas/Code.gs · Revisión: HEAD\_baseline
 - [CON-SALA-RECONEXION-MEDIOS · PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/medios\_reconexion.py · Revisión: 159d932cd81c2d2c3fda31a862ea60fc0b3ae667](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py)
-- CON-SALA-CORREO-ONLINE · Diseño de cierre autorizado por Dirección; ejecución y recepción todavía no verificadas. · Estado: declarado · Sin revisión inmutable en esta referencia
+- [CON-SALA-CORREO-ONLINE · Bitácora del backend registra correo diario tres días a07:13Hermosillo; solicitud de entrada38166137118 aceptada y acuse privado byte-verificado. Recepción en Gmail y fuente/inventario completo de disparadores siguen sin verificar. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/correo\_estado.py · Revisión: 4582fc3c42a2ac8459dea7d553c42f9719f07962](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/nube/correo_estado.py)
 
 **Pendientes y límites:**
 
@@ -2242,6 +2243,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Evidencia de la ficha:**
 
 - Abrir compuertas aprobadas y encolar trabajo sin decidir ni ejecutar · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_productor.py · Revisión: HEAD\_baseline
+- [PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-CIERRE-ONLINE.md · Revisión: 4582fc3c42a2ac8459dea7d553c42f9719f07962](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md)
 
 **Evidencia de conexiones:**
 
@@ -2270,13 +2272,14 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-083 · SVC-SALA-EJECUTOR → EXT-MOTORES-MEDIA · integracion · Selecciona motor según configuración · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-084 · SVC-SALA-EJECUTOR → EXT-DRIVE · documentos · Sube activos producidos · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-SALA-RECONEXION-MEDIOS · SVC-SALA-EJECUTOR → GAS-SALA · conciliacion · Mantenimiento limitado de evidencia de voces originales recuperadas · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
-- CON-SALA-CIERRE-ONLINE · SVC-SALA-EJECUTOR → EXT-ACTIONS · automatizacion · Cierre, activación acotada y comparación aislada · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-SALA-CIERRE-ONLINE · SVC-SALA-EJECUTOR → EXT-ACTIONS · automatizacion · Cierre, activación acotada y comparación aislada · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
 - Procesar trabajos habilitados y subir resultados · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_ejecutor.py · Revisión: HEAD\_baseline
 - [PR265 conserva compuertas, aprobaciones y procedencia; Modal default 0 y CPU de respaldo. CI completo acreditado. · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_ejecutor.py · Revisión: 73902861db96d213a07f788996f50fdcf3c65566](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/nube/sala_ejecutor.py)
 - [PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/medios\_reconexion.py · Revisión: 159d932cd81c2d2c3fda31a862ea60fc0b3ae667](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py)
+- [PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-CIERRE-ONLINE.md · Revisión: 4582fc3c42a2ac8459dea7d553c42f9719f07962](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md)
 
 **Evidencia de conexiones:**
 
@@ -2285,11 +2288,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-083 · Registro de motores de producción · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_motores.py · Revisión: HEAD\_baseline
 - CON-084 · Publicación de resultado en Drive · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_ejecutor.py · Revisión: HEAD\_baseline
 - [CON-SALA-RECONEXION-MEDIOS · PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/medios\_reconexion.py · Revisión: 159d932cd81c2d2c3fda31a862ea60fc0b3ae667](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py)
-- CON-SALA-CIERRE-ONLINE · Diseño de cierre autorizado por Dirección; ejecución y recepción todavía no verificadas. · Estado: declarado · Sin revisión inmutable en esta referencia
+- [CON-SALA-CIERRE-ONLINE · PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-CIERRE-ONLINE.md · Revisión: 4582fc3c42a2ac8459dea7d553c42f9719f07962](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md)
 
 **Pendientes y límites:**
 
-- 5 conexiones sin verificación de ejecución registrada.
+- 4 conexiones sin verificación de ejecución registrada.
 - Uso efectivo, configuración y costo en producción no comprobados
 
 ### Motores de generación de contenido · EXT-MOTORES-MEDIA
@@ -2660,7 +2663,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PUBLICADOR-IDENTIDAD · EXT-ACTIONS → EXT-GITHUB-PUBLISHER-APP · autenticacion · Solicita identidad temporal limitada al repositorio · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-SALA-SNAPSHOT-ONLINE · SYS-SALA → EXT-ACTIONS · publicacion · Snapshots privados de datos públicos y Pages con recibo verificable · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-MARKETING-DATOS-ONLINE · SYS-MARKETING → EXT-ACTIONS · publicacion · Agregados públicos en rama de datos; UI de Pages conserva código aprobado · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
-- CON-SALA-CIERRE-ONLINE · SVC-SALA-EJECUTOR → EXT-ACTIONS · automatizacion · Cierre, activación acotada y comparación aislada · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-SALA-CIERRE-ONLINE · SVC-SALA-EJECUTOR → EXT-ACTIONS · automatizacion · Cierre, activación acotada y comparación aislada · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
@@ -2676,12 +2679,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [CON-MARKETING-DATOS-ONLINE · Run 38141736288 success: actualizó y publicó 76 publicaciones de Meta, confirmó hash/recibo del HTTP real y conservó el snapshot como draft privado. · Estado: ejecucion · yodesarrollomx/aurum-board · scripts/snapshots\_online.py · Revisión: 6ad059cd1ed97edee894df5a9b2032d919143e0f](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/scripts/snapshots_online.py)
 - [CON-MARKETING-DATOS-ONLINE · LECTOR\_ONLINE ok:true, posts:76, run\_id:38141736288. El navegador recibe sólo agregados/covers y verifica SHA256. Plan rechazado mantiene último dato acreditado y señal de medición incompleta. · Estado: ejecucion · yodesarrollomx/aurum-board · metrics-online.js · Revisión: 6ad059cd1ed97edee894df5a9b2032d919143e0f](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/metrics-online.js)
 - [CON-MARKETING-DATOS-ONLINE · PR78 integrado; run 38157069665 success. Plan lectura confirmada con hash y frescura; leads\_medicion\_caida=false, 76 publicaciones Meta. El lector HTTP comprueba bytes/recibo de snapshot409795880. · Estado: ejecucion · yodesarrollomx/aurum-board · metrics-online.js · Revisión: e3dd428a01b01d1c8b5775c7fcca408735c98357](https://github.com/yodesarrollomx/aurum-board/blob/e3dd428a01b01d1c8b5775c7fcca408735c98357/metrics-online.js)
-- CON-SALA-CIERRE-ONLINE · Diseño de cierre autorizado por Dirección; ejecución y recepción todavía no verificadas. · Estado: declarado · Sin revisión inmutable en esta referencia
+- [CON-SALA-CIERRE-ONLINE · PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-CIERRE-ONLINE.md · Revisión: 4582fc3c42a2ac8459dea7d553c42f9719f07962](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md)
 
 **Pendientes y límites:**
 
 - Responsable operativo pendiente de confirmación; el encargado de verificación no sustituye esa asignación.
-- 5 conexiones sin verificación de ejecución registrada.
+- 4 conexiones sin verificación de ejecución registrada.
 - Estado y permisos no comprobados
 
 ### Identidad de publicación GitHub · EXT-GITHUB-PUBLISHER-APP

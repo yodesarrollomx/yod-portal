@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-11.masterbroker-preevaluation-published",
+  "revision": "2026-10-11.sala-cierre-verificado",
   "checked_at": "2026-10-11",
   "priorities": [
     "vender_mas",
@@ -838,6 +838,13 @@
           "commit": "159d932cd81c2d2c3fda31a862ea60fc0b3ae667",
           "claim": "PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto.",
           "status": "ejecucion"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "docs/SALA-CIERRE-ONLINE.md",
+          "commit": "4582fc3c42a2ac8459dea7d553c42f9719f07962",
+          "claim": "PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -856,7 +863,7 @@
       ],
       "source_of_truth": "SHEET-SALA: propuestas, decisiones, producción, reglas, motores y cola; archivos de repositorio son superficie o respaldo",
       "status": "ejecucion",
-      "runtime_status": "Código y revisión diaria publicados; ruta de medios CPU comprobada y lectura automática agregada de Plan confirmada el11-oct-2026. Compuertas editoriales humanas. Fuentes/disparadores Apps Script originales, correo y medios históricos restantes pendientes. Reconexión de dos voces originales exactas comprobada por run38159239581 y acuse privado."
+      "runtime_status": "Cierre y rutas actuales de nube comprobados por run38166137118; producción habilitada y compuertas humanas. Revisión/correo supervisados. Comparación parcial original31.88s/nube48s, cinco láminas de fuente y sexta referencia del corte. Fuente/triggers originales y medios históricos siguen separados, sin equivalencia integral acreditada."
     },
     {
       "id": "SYS-SALA-OPERACION",
@@ -2493,6 +2500,13 @@
           "claim": "Abrir compuertas aprobadas y encolar trabajo sin decidir ni ejecutar",
           "status": "codigo",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "docs/SALA-CIERRE-ONLINE.md",
+          "commit": "4582fc3c42a2ac8459dea7d553c42f9719f07962",
+          "claim": "PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -2536,6 +2550,13 @@
           "path": "nube/medios_reconexion.py",
           "commit": "159d932cd81c2d2c3fda31a862ea60fc0b3ae667",
           "claim": "PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto.",
+          "status": "ejecucion"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "docs/SALA-CIERRE-ONLINE.md",
+          "commit": "4582fc3c42a2ac8459dea7d553c42f9719f07962",
+          "claim": "PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes.",
           "status": "ejecucion"
         }
       ],
@@ -5657,12 +5678,15 @@
       "to": "EXT-GMAIL",
       "label": "Correo diario y entrada al destinatario existente",
       "kind": "correo",
-      "status": "propuesto",
+      "status": "ejecucion",
       "runtime_verified": false,
       "evidence": [
         {
-          "claim": "Diseño de cierre autorizado por Dirección; ejecución y recepción todavía no verificadas.",
-          "status": "declarado"
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/correo_estado.py",
+          "commit": "4582fc3c42a2ac8459dea7d553c42f9719f07962",
+          "claim": "Bitácora del backend registra correo diario tres días a07:13Hermosillo; solicitud de entrada38166137118 aceptada y acuse privado byte-verificado. Recepción en Gmail y fuente/inventario completo de disparadores siguen sin verificar.",
+          "status": "ejecucion"
         }
       ],
       "contract": "CTR-SALA-CIERRE-ONLINE; destinatario/compuertas existentes y comprobación por alcance.",
@@ -5676,18 +5700,26 @@
       "to": "EXT-ACTIONS",
       "label": "Cierre, activación acotada y comparación aislada",
       "kind": "automatizacion",
-      "status": "propuesto",
-      "runtime_verified": false,
+      "status": "ejecucion",
+      "runtime_verified": true,
       "evidence": [
         {
-          "claim": "Diseño de cierre autorizado por Dirección; ejecución y recepción todavía no verificadas.",
-          "status": "declarado"
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "docs/SALA-CIERRE-ONLINE.md",
+          "commit": "4582fc3c42a2ac8459dea7d553c42f9719f07962",
+          "claim": "PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes.",
+          "status": "ejecucion"
         }
       ],
       "contract": "CTR-SALA-CIERRE-ONLINE; destinatario/compuertas existentes y comprobación por alcance.",
       "contract_ids": [
         "CTR-SALA-CIERRE-ONLINE"
-      ]
+      ],
+      "runtime_evidence": {
+        "checked_at": "2026-10-11T19:04:12Z",
+        "scope": "Un cierre completo y una comparación técnica aislada de seis escenas usando guion original. No certifica equivalencia visual, todas las rutinas históricas o continuidad temporal de cada cron. Compuertas humanas y datos existentes conservados.",
+        "receipt": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38166137118 ; code_sha=4582fc3c42a2ac8459dea7d553c42f9719f07962 ; stages=4 ; archived_seconds=31.88 ; cloud_seconds=48 ; verified_private_files=16 ; original_versioned_images=5 ; sixth_image=archived_video_reference ; business_writes_comparison=0 ; human_approval=false"
+      }
     }
   ],
   "processes": [
@@ -10345,15 +10377,16 @@
         "EXT-DRIVE",
         "EXT-GMAIL"
       ],
-      "status": "propuesto",
+      "status": "publicado",
       "proposal": "Completar la operación autorizada por Dirección: diagnosticar reglas/colas/rutinas activas, restaurar sólo el disparador del correo diario mediante la función existente del backend, pedir una entrada de prueba sólo al destinatario ya configurado y registrar acuse sin confundirlo con recepción. Habilitar únicamente rutas de producción ya autorizadas y comprobadas, conservando compuertas humanas, silencio, límites y datos históricos. Ejecutar una comparación aislada de nube contra un material/versionado original accesible; conservar entradas, salida y hashes en Drive privado y distinguir equivalencia técnica de aceptación editorial. No sustituir el Apps Script desconocido por el espejo ni reactivar gestores cancelados.",
       "tests": [
-        "Dobles para rechazo de ok:false, límites/espera de correo, zona horaria inesperada, fallo de transporte sin reenvío automático y readback de configuración.",
-        "Comparación con el mismo insumo original: texto/guion, duración, codecs, resolución, contenido exacto de entrada y almacenamiento recuperable; si el original no existe, reportar comparación parcial.",
-        "Activación de rutinas exclusivamente por allowlist del repositorio Sala, main y lectura de vuelta. Cambios de reglas preflight/backups privados, sin cambiar decisiones, marcas, precios o historial.",
-        "CI obligatorio y pin del atlas previo al consumo; recibos reales de correo/configuración y ejecución de medios por separado."
+        "PR270 head08f3cfe432d03d52c36c84ca9e69a1ca24ffcd50: Arquitectura YOD, verificar y regresiones success;181 pruebas con ffmpeg real. PR271 headd05437bcc7deaf6950f7f78ddbd8054199f738da: mismas comprobaciones success,183 pruebas, cero omitidas.",
+        "Run38166137118 con code_sha4582fc3c42a2ac8459dea7d553c42f9719f07962 success: cierre, productor, ejecutor y comparación. Cuatro etapas habilitadas, cuatro puertas activas,95 trabajos acumulados; ninguna regla/decisión cambiada. Entrada aceptada, acuse privado byte-verificado.",
+        "Comparación real con seis voces, seis escenas parallax y corte:16 archivos privados descargados y byte-verificados. Original31.88s; nube48.0s; ambos1080x1920 H264/AAC. Guion archivado exacto, cinco láminas del mismo commit y sexta referencia extraída del original con procedencia declarada.",
+        "Registro del backend: correo diario observado9,10y11 de octubre07:13Hermosillo. Supervisión activa en revisión. Sin acreditación de recepción, inventario completo de triggers o equivalencia visual; voces L1 recuperadas no son byte-identicas a la nueva.",
+        "Revisión diaria incluye los pushes aprobados de Plan y jobs reales anidados del cierre, sin contar la comparación técnica o ramas ajenas. Frontend publicado y revisión con recibos exactos; pendientes originales conservados."
       ],
-      "deployment": "Propuesta autorizada por Dirección el11-oct-2026. Diagnóstico previo en lectura en curso; implementación y resultados reales pendientes.",
+      "deployment": "Integrado por PR270 (4582fc3c42a2ac8459dea7d553c42f9719f07962) y PR271 (f491c93229aa2d08c5e81eed597375568843b111). Cierre y comparación reales38166137118 success;183 pruebas sin omisiones. Runtime autónomo para las rutas actuales, compuertas humanas conservadas. Comparación parcial: diferencia de duración, sexta lámina fuente ausente, igualdad visual/aceptación editorial y recepción del reenvío no acreditadas. Editor/fuentes/triggers completos, conteo original de correo y26 medios históricos siguen pendientes; no retirar aún rutinas anteriores de Claude.",
       "rollback": "Revertir el worker y configuración técnica exacta respaldada tras lectura reciente; mantener medios, decisiones, colas y registros existentes. Reprogramar sólo correoDiario si hace falta; nunca ejecutar instalar() ni borrar otras rutinas."
     }
   ],
@@ -11585,7 +11618,7 @@
         "EXT-DRIVE",
         "EXT-GMAIL"
       ],
-      "source": "Backend original de Sala, reglas/colas vivas, rutinas Actions autorizadas y archivos originales privados; las fuentes del editor original no se presumen a partir de su espejo.",
+      "source": "Backend original de Sala, reglas/colas vivas, rutinas Actions autorizadas y archivos originales privados; las fuentes del editor original no se presumen a partir de su espejo. Implementación PR270/271 y run38166137118 con acuses privados y183 pruebas. Se distingue correo registrado/entrada aceptada de recepción; comparación parcial explícita.",
       "input": [
         "Identidad agente existente, cuenta de servicio Drive actual y token propio de Actions; nunca credenciales del conector ni llaves editoriales.",
         "Autorización de Dirección para poner Sala en nube y volver a probar su correo; destinatario fijo de la configuración existente, sin parámetro de destinatario en el worker.",
