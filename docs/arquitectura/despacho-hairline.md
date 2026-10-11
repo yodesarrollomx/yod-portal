@@ -16,3 +16,14 @@ Hairline MIT, commit a2217852fed6d1a4f20bc7d43d4fad1a3de117b8. Kernel local con 
 - `demos/hairline/` es sólo demostración sintética. No acredita fuentes privadas ni aceptación real del usuario. Las aperturas de la demo se interceptan para mostrar contenido ficticio local; la vista operativa usa el enlace autorizado.
 
 Reversión: revertir el PR para restaurar la lista; no cambia datos, ACL, motor ni permisos.
+
+
+## Elecciones autorizadas · 11-oct-2026
+
+Se incorporan once metáforas elegidas: PPP/terrain, Hablar/keyboard, Trabajo/riffle, Expediente/drawer, Versiones/stack, Historial/branches, Pendientes/lockers, Documentos/riffle, Notas/format, Biblioteca/cabinet y Navegador/laptop. Reunión, conectores y maquetas conservan su interfaz hasta una nueva elección.
+
+`hairline-access.mjs` añade exclusivamente figuras decorativas a accesos existentes. Los textos, handlers, IDs, estados disabled y autorización permanecen en sus módulos. No interpreta movimiento como progreso, no llama al motor, no habilita herramientas ni concede permisos. Se destruyen figuras retiradas y se pausa su animación cuando dejan de estar visibles. El bundle local incluye la licencia MIT; sin CDN ni secretos.
+
+Interruptor: `HAIRLINE_ENABLED` en `hairline-access.mjs` (true por solicitud expresa de instalar), recompilar el bundle tras cambiarlo. Reversión completa: revertir PR178. Las fuentes documentales siguen llegando por la conversación autorizada y sus enlaces se conservan.
+
+Validación: 633 pruebas Node; arquitectura, OS, Portal, Obra y Accesos. Chromium con datos sintéticos: las cuatro figuras del círculo, acción Escribir sin iniciar voz, mismo case_id, cero foco extra, cuatro reaperturas sin duplicación; bandeja con paginación, vacío y móvil. No se utilizaron endpoints de negocio para pruebas ni se acredita sesión privada real.

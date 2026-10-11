@@ -1,0 +1,7 @@
+.hairline-access{display:inline-block;width:44px;height:38px;flex:0 0 44px;vertical-align:middle;pointer-events:none;--hairline-hi:#315c45;--hairline-edge:#647e78;--hairline-mid:#899e90;--hairline-lo:#c3cec5;--hairline-plate:#f5f5ed}
+.hairline-access svg{display:block;width:100%;height:100%}.has-hairline{gap:7px}.has-hairline>.radial-icon{display:none}
+.station-wheel .hairline-access{width:64px;height:48px;flex:0 0 48px;--hairline-hi:#f4e7c6;--hairline-edge:#d0c5a9;--hairline-mid:#a6b7a0;--hairline-lo:#698c77;--hairline-plate:#254238}
+.station-wheel [aria-pressed=true] .hairline-access{--hairline-hi:#203c2c;--hairline-edge:#4b6346;--hairline-mid:#647951;--hairline-lo:#96a274;--hairline-plate:#bba473}
+.workspace-primary .has-hairline,.workspace-subnav .has-hairline{display:flex;align-items:center;justify-content:center}
+.radial-options .hairline-access{display:none}
+@media(max-width:480px){.hairline-access{width:32px;height:30px;flex-basis:32px}.station-wheel .hairline-access{width:50px;height:36px;flex-basis:36px}.workspace-primary .has-hairline{flex-direction:column}}

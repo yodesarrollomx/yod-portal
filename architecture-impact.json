@@ -6,7 +6,8 @@
     "SYS-DESPACHO-3D"
   ],
   "tests": [
-    "Verificaciones completas del portal; navegador sintético de círculo, navegación, documentos, movimiento reducido y desmontaje."
+    "633 pruebas Node aprobadas; Arquitectura, OS, Portal, Obra y matriz de Accesos aprobados (94c2c446ea93176896844a470b3397cffad3968b).",
+    "Chromium: círculo real con datos sintéticos, conserva caso y acción de escribir, decoraciones sin foco, desmontaje y reapertura; bandeja documental escritorio/móvil."
   ],
   "rollback": "Revertir el PR; vuelve el listado de fuentes y se conservan registros y contratos."
 }
