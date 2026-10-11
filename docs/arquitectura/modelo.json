@@ -12109,6 +12109,12 @@
   ],
   "path_ownership": [
     {
+      "prefix": "demos/hairline/",
+      "components": [
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
       "repo": "yodesarrollomx/board-aurum",
       "prefix": "apps-script/corcho.gs",
       "components": [
