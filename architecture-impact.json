@@ -1,21 +1,37 @@
 {
-  "model_revision": "2026-10-11.despacho-lectura-reportes133",
-  "proposal_id": "CHG-DESPACHO-LECTURA-REPORTES-20261011",
-  "summary": "Dirección autoriza revisar las conversaciones guardadas y atender sus solicitudes. Registrar mejoras técnicas con recibo en la memoria privada autorizada del caso, de forma independiente de objetivos PPP en revisión. Compartir foco y versión efectivamente observados del tablero y distinguir lectura, espera, error y cambios pendientes sin inventar porcentajes ni tiempos restantes. Reutilizar el PR20 de reintento de sesión, conservando sus rechazos definitivos. Conservar objetivos, permisos, formulas y datos; no revivir automatizaciones canceladas ni capturar otras pantallas sin un gesto del usuario. Solicitudes de MOAC y herramientas adicionales se registran con su estado real y dependencias canónicas; un reporte no acredita implementación.",
+  "model_revision": "2026-10-11.horarios-render-verificada",
+  "proposal_id": "CHG-HORARIOS-NUBE-20261011",
+  "summary": "Registrar observación viva y persistencia, con recuperación por App todavía pendiente de autorización personal.",
   "components": [
     "SYS-YOD-OS",
+    "SYS-CONTROL",
+    "SYS-POTENCIALES",
+    "SYS-SALA",
+    "GAS-SALA",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-ACTIONS",
+    "EXT-RENDER",
+    "SVC-AUTON-CLOUD",
+    "SVC-HORARIOS-CLOUD",
+    "STORE-HORARIOS-CLOUD",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "GAS-PORTERO",
+    "EXT-DRIVE",
+    "EXT-GMAIL",
+    "SYS-MARKETING",
+    "SYS-PLAN-POTENCIAL",
+    "EXT-MOTORES-MEDIA",
     "SYS-DESPACHO",
     "SYS-DESPACHO-3D",
-    "SYS-POTENCIALES",
-    "GAS-PORTERO",
-    "SVC-AUTON-CLOUD",
-    "STORE-AUTON-ESTADO"
+    "GAS-PLAN-POTENCIAL",
+    "SHEET-PLAN-POTENCIAL",
+    "SHEET-SALA"
   ],
   "tests": [
-    "Regresiones de observación PPP: versión defendida y consultada, foco real, campos heterogéneos, nonce/origen y cero escrituras.",
-    "Herramienta de reporte sobre memoria durable: caso/actor/revisión, reintento idempotente y no dependencia de crear/aceptar objetivos.",
-    "Suites completas y verificadores de los repos afectados; navegador con motores reales y transporte aislado.",
-    "Cotejar commits publicados y revisión activa de Render sin reiniciar ni modificar disco."
+    "Verificación de evidencias por alcance, Atlas/vistas sincronizados e inventario de salud; CI Portal completo."
   ],
-  "rollback": "Revertir PRs de cliente/herramientas por revisión. Conservar expedientes, filas, objetivos, memoria, recibos, URLs y volumen persistente."
+  "rollback": "Revertir registro por PR; conservar despliegues, estado y datos de negocio."
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-11.despacho-lectura-reportes133",
+  "revision": "2026-10-11.horarios-render-verificada",
   "checked_at": "2026-10-11",
   "priorities": [
     "vender_mas",
@@ -3076,12 +3076,19 @@
       "proposito": "Observar horarios declarados y recuperar sólo ejecuciones actuales omitidas, sin depender de las sesiones de chat.",
       "dominio": "Infraestructura",
       "owner_role": "Dirección técnica",
-      "status": "propuesto",
-      "runtime_status": "Implementación y pruebas pendientes. La recuperación requiere una App propia con autorización personal de GitHub; observar no acredita ejecutar.",
+      "status": "ejecucion",
+      "runtime_status": "Proceso residente observado en Render por dos ciclos verificables y logs consecutivos; sin sesiones de chat. Despacho real de recuperación pendiente de App autorizada.",
       "evidence": [
         {
           "claim": "Dirección autoriza prioridad1: horarios, vigilancia, recuperación segura y evidencia en Accesos.",
           "status": "propuesto"
+        },
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "cloud/scheduler/hub.mjs",
+          "commit": "b41a98751ae3ae89f43372557d61e77461aa086c",
+          "claim": "Verificador38182585661 confirma versión viva y dos ciclos independientes; estado técnico cifrado/readback. Recuperación por App sigue pendiente.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -3103,12 +3110,19 @@
       "proposito": "Conservar recibos, reservas de ejecución y configuración de la App cifrada para reconciliar reinicios sin duplicar efectos.",
       "dominio": "Infraestructura",
       "owner_role": "Dirección técnica",
-      "status": "propuesto",
-      "runtime_status": "Implementación y pruebas pendientes. La recuperación requiere una App propia con autorización personal de GitHub; observar no acredita ejecutar.",
+      "status": "ejecucion",
+      "runtime_status": "Estado cifrado escrito y releído en el volumen privado del servicio; reservas de efectos externos sólo probadas con dobles, pues App aún no instalada.",
       "evidence": [
         {
           "claim": "Dirección autoriza prioridad1: horarios, vigilancia, recuperación segura y evidencia en Accesos.",
           "status": "propuesto"
+        },
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "cloud/scheduler/hub.mjs",
+          "commit": "b41a98751ae3ae89f43372557d61e77461aa086c",
+          "claim": "Verificador38182585661 confirma versión viva y dos ciclos independientes; estado técnico cifrado/readback. Recuperación por App sigue pendiente.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -5869,8 +5883,8 @@
       "to": "SVC-HORARIOS-CLOUD",
       "label": "Alojar un vigilante ligero dentro del servicio existente",
       "kind": "integracion",
-      "status": "propuesto",
-      "runtime_verified": false,
+      "status": "ejecucion",
+      "runtime_verified": true,
       "contract": "CTR-HORARIOS-NUBE",
       "contract_ids": [
         "CTR-HORARIOS-NUBE"
@@ -5879,8 +5893,20 @@
         {
           "claim": "Prioridad1 autorizada; implementação y aceptación real por separado.",
           "status": "propuesto"
+        },
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "scripts/scheduler-live.mjs",
+          "commit": "b41a98751ae3ae89f43372557d61e77461aa086c",
+          "claim": "Vigilancia residente en servicio existente; dos ciclos reales y versión exacta. No acredita despacho por App.",
+          "status": "ejecucion"
         }
-      ]
+      ],
+      "runtime_evidence": {
+        "checked_at": "2026-10-11T23:03:08Z",
+        "scope": "Vigilancia residente en servicio existente; dos ciclos reales y versión exacta. No acredita despacho por App.",
+        "receipt": "Render dep-db61aaqjnfac73c2d7ag liveb41a987; verificador38182585661 true/timerObserved, first23:01:44Z second23:02:44Z."
+      }
     },
     {
       "id": "CON-HORARIOS-ESTADO",
@@ -5888,8 +5914,8 @@
       "to": "STORE-HORARIOS-CLOUD",
       "label": "Reservas durables y configuración privada cifrada",
       "kind": "integracion",
-      "status": "propuesto",
-      "runtime_verified": false,
+      "status": "ejecucion",
+      "runtime_verified": true,
       "contract": "CTR-HORARIOS-NUBE",
       "contract_ids": [
         "CTR-HORARIOS-NUBE"
@@ -5898,8 +5924,20 @@
         {
           "claim": "Prioridad1 autorizada; implementação y aceptación real por separado.",
           "status": "propuesto"
+        },
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "scripts/scheduler-live.mjs",
+          "commit": "b41a98751ae3ae89f43372557d61e77461aa086c",
+          "claim": "Persistencia del informe técnico cifrado/readback; no acredita efectos de negocio o reservas reales de despacho.",
+          "status": "ejecucion"
         }
-      ]
+      ],
+      "runtime_evidence": {
+        "checked_at": "2026-10-11T23:03:08Z",
+        "scope": "Persistencia del informe técnico cifrado/readback; no acredita efectos de negocio o reservas reales de despacho.",
+        "receipt": "Render dep-db61aaqjnfac73c2d7ag liveb41a987; verificador38182585661 true/timerObserved, first23:01:44Z second23:02:44Z."
+      }
     },
     {
       "id": "CON-HORARIOS-ACTIONS",
@@ -5907,7 +5945,7 @@
       "to": "EXT-ACTIONS",
       "label": "Observar ejecuciones y recuperar horarios omitidos con GitHub App",
       "kind": "integracion",
-      "status": "propuesto",
+      "status": "codigo",
       "runtime_verified": false,
       "contract": "CTR-HORARIOS-NUBE",
       "contract_ids": [
@@ -5917,6 +5955,13 @@
         {
           "claim": "Prioridad1 autorizada; implementação y aceptación real por separado.",
           "status": "propuesto"
+        },
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "cloud/scheduler/github-app.mjs",
+          "commit": "b41a98751ae3ae89f43372557d61e77461aa086c",
+          "claim": "Código entregado y probado con dobles; instalación personal y recuperación real pendientes.",
+          "status": "codigo"
         }
       ]
     },
@@ -5926,7 +5971,7 @@
       "to": "SYS-CONTROL",
       "label": "Resultados sanitizados observados desde Accesos",
       "kind": "integracion",
-      "status": "propuesto",
+      "status": "codigo",
       "runtime_verified": false,
       "contract": "CTR-HORARIOS-NUBE",
       "contract_ids": [
@@ -5936,6 +5981,13 @@
         {
           "claim": "Prioridad1 autorizada; implementação y aceptación real por separado.",
           "status": "propuesto"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "os/yod-salud.js",
+          "commit": "9b2e5f4497878223aba26531076c64894e17823e",
+          "claim": "Cliente publicado y doce recorridos aislados; sesión administradora personal no operada por el agente.",
+          "status": "codigo"
         }
       ]
     }
@@ -10696,37 +10748,17 @@
         "SHEET-PLAN-POTENCIAL",
         "SHEET-SALA"
       ],
-      "status": "propuesto",
+      "status": "publicado",
       "proposal": "Dirección autoriza implementar prioridad1 con la solución más eficiente. Añadir un vigilante residente en el Render existente, leer estado público cada5min y conservar reservas privadas. Recuperar sólo la oportunidad actual omitida mediante workflows existentes, con una GitHub App propia y consentimiento personal. Accesos muestra vigencia, programación, solicitudes y ejecución confirmada por separado. La publicación no equivale a tener instalada la App.",
       "tests": [
-        "Reloj UTC−7, oportunidades actuales, reinicio tras reserva, timeout de dispatch sin duplicados, jobs simulados/deshabilitados y cancelaciones.",
-        "Appowner/permisos/repos exactos, estado callback de un solo uso, cifrado privado y ausencia de secretos en informe.",
-        "Un solo vigilante en modo multicase, fallo de disco/cierre, CORS, publicación y navegador; suite completa existente."
+        "Cloud PR97:17 regresiones nuevas de reloj, disco, reinicio/timeout, simulacros, cifrado, Appscope/callback y un solo vigilante multicase; suites completas y navegador/voz existentes aprobados.",
+        "Render liveb41a98751ae3ae89f43372557d61e77461aa086c y verificador38182585661:dos vueltas reales16:01:44/16:02:44Hermosillo, commit exacto y cero escrituras de negocio del verificador. Logs del proceso muestran ciclos consecutivos cada minuto.",
+        "Portal PR179:CI completo y Pages38182924826; fuente Render con respaldo GitHub, reloj futuro rechazado y pruebas viejas sin renovación ficticia.",
+        "Sala PR274:CI completo, revisión/Plan/Canario reutilizables, puerta con correlación y pin al Atlas. Canario real38182928940 correcto; configuración y compuertas originales conservadas.",
+        "Accesos PR26:12 recorridos Chromium/WebKit móvil con nube/respaldo, admin/rechazo, respuestas tardías y rol revocado. Publicación byte exacta se registra por su verificador de main."
       ],
-      "deployment": "Propuesta registrada antes de implementación. El servicio Render y las rutinas existentes se conservan; instalación de App y comprobación operativa pendientes.",
+      "deployment": "Observación independiente y estado durable comprobados en el Render existente; ciclos cada minuto, sondas públicas cada5min. Portal/Sala/Accesos publicados por PR/CI. Recuperación automática pendiente de consentimiento e instalación de App GitHub:conexion-horarios sin_confirmar y0 solicitudes. No se declara funcionalidad completa, aceptación de sesión personal ni alta disponibilidad.",
       "rollback": "Apagar YOD_SCHEDULER_ENABLED y revertir PR. Conservar estado/recibos y datos de negocio; no borrar App o medios para facilitar reversión."
-    },
-    {
-      "id": "CHG-DESPACHO-LECTURA-REPORTES-20261011",
-      "components": [
-        "SYS-YOD-OS",
-        "SYS-DESPACHO",
-        "SYS-DESPACHO-3D",
-        "SYS-POTENCIALES",
-        "GAS-PORTERO",
-        "SVC-AUTON-CLOUD",
-        "STORE-AUTON-ESTADO"
-      ],
-      "proposal": "Dirección autoriza revisar las conversaciones guardadas y atender sus solicitudes. Registrar mejoras técnicas con recibo en la memoria privada autorizada del caso, de forma independiente de objetivos PPP en revisión. Compartir foco y versión efectivamente observados del tablero y distinguir lectura, espera, error y cambios pendientes sin inventar porcentajes ni tiempos restantes. Reutilizar el PR20 de reintento de sesión, conservando sus rechazos definitivos. Conservar objetivos, permisos, formulas y datos; no revivir automatizaciones canceladas ni capturar otras pantallas sin un gesto del usuario. Solicitudes de MOAC y herramientas adicionales se registran con su estado real y dependencias canónicas; un reporte no acredita implementación.",
-      "status": "propuesto",
-      "tests": [
-        "Regresiones de observación PPP: versión defendida y consultada, foco real, campos heterogéneos, nonce/origen y cero escrituras.",
-        "Herramienta de reporte sobre memoria durable: caso/actor/revisión, reintento idempotente y no dependencia de crear/aceptar objetivos.",
-        "Suites completas y verificadores de los repos afectados; navegador con motores reales y transporte aislado.",
-        "Cotejar commits publicados y revisión activa de Render sin reiniciar ni modificar disco."
-      ],
-      "deployment": "Propuesta registrada; correcciones, pruebas y publicación pendientes.",
-      "rollback": "Revertir PRs de cliente/herramientas por revisión. Conservar expedientes, filas, objetivos, memoria, recibos, URLs y volumen persistente."
     }
   ],
   "data_contracts": [

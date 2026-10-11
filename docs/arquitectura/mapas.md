@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.despacho-lectura-reportes133 · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.horarios-render-verificada · 2026-10-11.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -330,7 +330,7 @@ flowchart LR
   n_SYS_CONTROL -->|Informe técnico por proceso visible en Accesos| n_SYS_POTENCIALES
   n_SYS_SALA -->|Lecturas agregadas y canario aislado de Sala| n_SYS_CONTROL
   n_SYS_CONTROL -->|Pruebas programadas y evidencia de ejecución| n_EXT_ACTIONS
-  n_SVC_HORARIOS_CLOUD -.->|Resultados sanitizados observados desde Accesos| n_SYS_CONTROL
+  n_SVC_HORARIOS_CLOUD -->|Resultados sanitizados observados desde Accesos| n_SYS_CONTROL
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_EMD pendiente;
@@ -410,10 +410,10 @@ flowchart LR
   n_GAS_SALA -->|Correo diario y entrada al destinatario existente| n_EXT_GMAIL
   n_SVC_SALA_EJECUTOR -->|Cierre, activación acotada y comparación aislada| n_EXT_ACTIONS
   n_SYS_CONTROL -->|Pruebas programadas y evidencia de ejecución| n_EXT_ACTIONS
-  n_EXT_RENDER -.->|Alojar un vigilante ligero dentro del servicio existente| n_SVC_HORARIOS_CLOUD
-  n_SVC_HORARIOS_CLOUD -.->|Reservas durables y configuración privada cifrada| n_STORE_HORARIOS_CLOUD
-  n_SVC_HORARIOS_CLOUD -.->|Observar ejecuciones y recuperar horarios omitidos con GitHub App| n_EXT_ACTIONS
-  n_SVC_HORARIOS_CLOUD -.->|Resultados sanitizados observados desde Accesos| n_SYS_CONTROL
+  n_EXT_RENDER -->|Alojar un vigilante ligero dentro del servicio existente| n_SVC_HORARIOS_CLOUD
+  n_SVC_HORARIOS_CLOUD -->|Reservas durables y configuración privada cifrada| n_STORE_HORARIOS_CLOUD
+  n_SVC_HORARIOS_CLOUD -->|Observar ejecuciones y recuperar horarios omitidos con GitHub App| n_EXT_ACTIONS
+  n_SVC_HORARIOS_CLOUD -->|Resultados sanitizados observados desde Accesos| n_SYS_CONTROL
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_SITIO_ORG pendiente;
   class n_GAS_EMD pendiente;
@@ -657,7 +657,7 @@ flowchart LR
 | CON-SALUD-ACCESOS | SYS-CONTROL → SYS-POTENCIALES | observacion: Informe técnico por proceso visible en Accesos. CTR-SALUD-ACCESOS; resultados con alcance, vigencia y evidencia; ninguna operación de negocio por la sonda. | codigo | Solicitud explícita de Dirección el11-oct-2026; implementación pendiente.; [yod-portal/docs/SALUD-SISTEMAS.md](https://github.com/yodesarrollomx/yod-portal/blob/de33d90af87e9b5b225b0405841145348d42b8b0/docs/SALUD-SISTEMAS.md) — Frontend Accesos publicado byte exacto y8 recorridos aislados. Validación real del usuario al abrir conserva su autoridad; no certificar el rol personal por pruebas sintéticas. |
 | CON-SALUD-SALA | SYS-SALA → SYS-CONTROL | observacion: Lecturas agregadas y canario aislado de Sala. CTR-SALUD-ACCESOS; resultados con alcance, vigencia y evidencia; ninguna operación de negocio por la sonda. | ejecucion | Solicitud explícita de Dirección el11-oct-2026; implementación pendiente.; [yod-portal/docs/SALUD-SISTEMAS.md](https://github.com/yodesarrollomx/yod-portal/blob/de33d90af87e9b5b225b0405841145348d42b8b0/docs/SALUD-SISTEMAS.md) — Monitor38170852821 y canario38170259463 success; resultados técnicos y fuentes leídas realmente, con alcance/caducidad.40 correctos,59 pendientes; sin operaciones comerciales como prueba. |
 | CON-SALUD-ACTIONS | SYS-CONTROL → EXT-ACTIONS | observacion: Pruebas programadas y evidencia de ejecución. CTR-SALUD-ACCESOS; resultados con alcance, vigencia y evidencia; ninguna operación de negocio por la sonda. | ejecucion | Solicitud explícita de Dirección el11-oct-2026; implementación pendiente.; [yod-portal/docs/SALUD-SISTEMAS.md](https://github.com/yodesarrollomx/yod-portal/blob/de33d90af87e9b5b225b0405841145348d42b8b0/docs/SALUD-SISTEMAS.md) — Monitor38170852821 y canario38170259463 success; resultados técnicos y fuentes leídas realmente, con alcance/caducidad.40 correctos,59 pendientes; sin operaciones comerciales como prueba. |
-| CON-HORARIOS-RENDER | EXT-RENDER → SVC-HORARIOS-CLOUD | integracion: Alojar un vigilante ligero dentro del servicio existente. CTR-HORARIOS-NUBE | propuesto | Prioridad1 autorizada; implementação y aceptación real por separado. |
-| CON-HORARIOS-ESTADO | SVC-HORARIOS-CLOUD → STORE-HORARIOS-CLOUD | integracion: Reservas durables y configuración privada cifrada. CTR-HORARIOS-NUBE | propuesto | Prioridad1 autorizada; implementação y aceptación real por separado. |
-| CON-HORARIOS-ACTIONS | SVC-HORARIOS-CLOUD → EXT-ACTIONS | integracion: Observar ejecuciones y recuperar horarios omitidos con GitHub App. CTR-HORARIOS-NUBE | propuesto | Prioridad1 autorizada; implementação y aceptación real por separado. |
-| CON-HORARIOS-ACCESOS | SVC-HORARIOS-CLOUD → SYS-CONTROL | integracion: Resultados sanitizados observados desde Accesos. CTR-HORARIOS-NUBE | propuesto | Prioridad1 autorizada; implementação y aceptación real por separado. |
+| CON-HORARIOS-RENDER | EXT-RENDER → SVC-HORARIOS-CLOUD | integracion: Alojar un vigilante ligero dentro del servicio existente. CTR-HORARIOS-NUBE | ejecucion | Prioridad1 autorizada; implementação y aceptación real por separado.; Vigilancia residente en servicio existente; dos ciclos reales y versión exacta. No acredita despacho por App. |
+| CON-HORARIOS-ESTADO | SVC-HORARIOS-CLOUD → STORE-HORARIOS-CLOUD | integracion: Reservas durables y configuración privada cifrada. CTR-HORARIOS-NUBE | ejecucion | Prioridad1 autorizada; implementação y aceptación real por separado.; Persistencia del informe técnico cifrado/readback; no acredita efectos de negocio o reservas reales de despacho. |
+| CON-HORARIOS-ACTIONS | SVC-HORARIOS-CLOUD → EXT-ACTIONS | integracion: Observar ejecuciones y recuperar horarios omitidos con GitHub App. CTR-HORARIOS-NUBE | codigo | Prioridad1 autorizada; implementação y aceptación real por separado.; Código entregado y probado con dobles; instalación personal y recuperación real pendientes. |
+| CON-HORARIOS-ACCESOS | SVC-HORARIOS-CLOUD → SYS-CONTROL | integracion: Resultados sanitizados observados desde Accesos. CTR-HORARIOS-NUBE | codigo | Prioridad1 autorizada; implementação y aceptación real por separado.; [yod-portal/os/yod-salud.js](https://github.com/yodesarrollomx/yod-portal/blob/9b2e5f4497878223aba26531076c64894e17823e/os/yod-salud.js) — Cliente publicado y doce recorridos aislados; sesión administradora personal no operada por el agente. |
