@@ -140,6 +140,7 @@ async function run(){
     return {width:document.documentElement.scrollWidth,viewport:innerWidth,inView:r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight,hit:hit===button||button.contains(hit)};
   });
   assert.ok(layout.width<=layout.viewport+1,'Fallback must not overflow horizontally');assert.equal(layout.inView,true,'Global toolbar stays in the mobile viewport');assert.equal(layout.hit,true,'Global toolbar is reachable');
+  await office.locator('.office-map-movement > summary').click();
   const initial=await office.evaluate(()=>despacho.getState().selected);
   await office.locator('body>header [data-chinche-ui="select"]').click();
   const go=office.locator('[data-place-card="decisions"] button').first();if(mobile)await go.tap();else await go.click();

@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.masterbroker-preevaluation-published · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.despacho-fluido132 · 2026-10-11.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 

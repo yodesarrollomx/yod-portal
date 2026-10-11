@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.masterbroker-preevaluation-published · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.despacho-fluido132 · 2026-10-11.
 
 ## SYS-DESPACHO · El Despacho
 

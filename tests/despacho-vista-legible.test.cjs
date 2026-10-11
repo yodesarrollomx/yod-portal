@@ -55,6 +55,7 @@ class Node {
  set textContent(v){this._text=String(v);this.children=[];} get textContent(){return this._text+this.children.map(n=>n.textContent).join(' ');}
  append(...ns){ns.forEach(n=>this.appendChild(n));} appendChild(n){n.parentNode=this;this.children.push(n);return n;}
  replaceChildren(...ns){for(const n of this.children)n.parentNode=null;this.children=[];this._text='';this.append(...ns);}
+ insertBefore(n,reference){if(reference==null)return this.appendChild(n);if(!this.children.includes(reference))throw Error('Reference is not a child');n.parentNode?.removeChild(n);n.parentNode=this;this.children.splice(this.children.indexOf(reference),0,n);return n;}
  prepend(n){n.parentNode=this;this.children.unshift(n);} focus(){}
  addEventListener(k,fn){(this.listeners[k]??=[]).push(fn);} removeEventListener(){}
  removeChild(n){this.children=this.children.filter(c=>c!==n);n.parentNode=null;} get firstChild(){return this.children[0];}

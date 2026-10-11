@@ -11,8 +11,8 @@ export const RADIAL_OPTIONS={
 export function sectorPath(index){
  const point=(r,a)=>[200+r*Math.sin(a),200-r*Math.cos(a)];
  const a=index*Math.PI/2-Math.PI/4+.025,b=a+Math.PI/2-.05;
- const p=point(184,a),q=point(184,b),s=point(80,b),t=point(80,a);
- return 'M'+p+' A184 184 0 0 1 '+q+' L'+s+' A80 80 0 0 0 '+t+' Z';
+ const p=point(196,a),q=point(196,b),s=point(114,b),t=point(114,a);
+ return 'M'+p+' A196 196 0 0 1 '+q+' L'+s+' A114 114 0 0 0 '+t+' Z';
 }
 export function mountAgentMenu({win=window,doc=document}={}){
  if(win.YodAgentMenu)return true;
@@ -76,7 +76,7 @@ export function mountAgentMenu({win=window,doc=document}={}){
   dialog.append(el('p','PUESTO DEL PROYECTO','radial-eyebrow'),title,el('p',identity.project,'radial-project'));
   const wheel=el('div',undefined,'station-wheel'),svg=doc.createElementNS('http://www.w3.org/2000/svg','svg');
   svg.setAttribute('viewBox','0 0 400 400');svg.setAttribute('aria-hidden','true');wheel.append(svg);
-  const center=el('div',undefined,'station-wheel-center');center.append(el('span',identity.name.slice(0,1).toUpperCase(),'station-avatar'),el('span','Elige una dirección'));wheel.append(center);
+  const center=el('div',undefined,'station-wheel-center');center.setAttribute('aria-hidden','true');wheel.append(center);
   const submenu=el('section',undefined,'radial-submenu');submenu.setAttribute('aria-label','Opciones del sector');
   const subtitle=el('h2'),choices=el('div',undefined,'radial-options');submenu.append(subtitle,choices);
   const buttons=[],paths=[],icons=['▤','◉','✓','▧'];
@@ -101,7 +101,7 @@ export function mountAgentMenu({win=window,doc=document}={}){
    b.append(el('span',icons[i],'radial-icon'),el('span',label));b.addEventListener('pointerenter',()=>select(id));b.addEventListener('focus',()=>select(id));buttons.push(b);wheel.append(b);
   });
   choices.id='radial-options';
-  dialog.append(wheel,submenu,el('p','Apunta o usa las flechas · Elige una opción para abrir · Esc para salir','radial-footnote'));
+  wheel.append(submenu);dialog.append(wheel,el('p','Apunta o usa las flechas · Elige en el centro · Esc para salir','radial-footnote'));
   select(sector);if(!dialog.open){if(proximityMode)dialog.show();else dialog.showModal();}visible();
   if(proximityMode)dialog.querySelector('.radial-footnote').textContent='Acércate un poco más y detente para hablar · WASD para caminar';
   win.dispatchEvent(new CustomEvent('yod-agent-menu-open',{detail:{case_id:caseId,proximity:proximityMode}}));
@@ -117,7 +117,7 @@ export function mountAgentMenu({win=window,doc=document}={}){
   const directions={ArrowUp:'ppp',ArrowRight:'conversaciones',ArrowDown:'pendientes',ArrowLeft:'notas'};
   if(e.key==='Escape'){e.preventDefault();e.stopPropagation();close();return;}
   if(proximityMode&&['w','a','s','d','W','A','S','D'].includes(e.key))return;
-  if(directions[e.key]){e.preventDefault();selectSector(directions[e.key]);dialog.querySelector('[data-sector="'+directions[e.key]+'"]').focus();}
+  if(directions[e.key]&&e.target.closest?.('[data-sector]')){e.preventDefault();selectSector(directions[e.key]);dialog.querySelector('[data-sector="'+directions[e.key]+'"]').focus();}
  });
  win.addEventListener('yod-residents-ready',bind);bind();
  win.addEventListener('pagehide',()=>{unsubscribe?.();unsubscribeCatalog?.();dialog.remove();delete win.YodAgentMenu;});

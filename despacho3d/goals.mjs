@@ -123,3 +123,15 @@ export function goalRoadmap(goals=[]){
  else{mode='plan';next=goal.tasks?.length?'Conciliar y entregar el análisis':'Preparar la ruta de tareas';why=goal.criterion;}
  return {goal,task,next,why,mode};
 }
+
+// Readiness describes a saved observation, not the lifetime of a worker.
+export function goalReadView(state={},enabled=true){
+ const model=state.model||null,route=model?goalRoadmap(model.goals):null;
+ const phase=!enabled?'unavailable':state.status==='writing'||state.pending?'unconfirmed':state.status==='loading'?'loading':state.status==='unavailable'||state.status==='conflict'?'unavailable':model?'ready':'loading';
+ const historical=!!model&&['loading','unavailable'].includes(phase);
+ const label=phase==='loading'?(historical?'Actualizando registro':'Consultando meta'):phase==='unavailable'?(historical?'Último registro · sin conexión':'Lectura no disponible'):phase==='unconfirmed'?'Guardado por confirmar':route?.goal?'Registro consultado':'Sin encargo registrado';
+ return {phase,historical,label,route,
+  title:route?.goal?.title||(!model?(phase==='unavailable'?'No se pudo consultar la meta':'Consultando su meta…'):'Sin encargo registrado'),
+  next:route?.next|| (phase==='unavailable'?'Recuperar la lectura':'Esperando lectura del proyecto'),
+  why:!enabled?'El seguimiento de objetivos todavía no está conectado.':state.notice||route?.why||'La carga no demuestra que el proyecto esté vacío.'};
+}

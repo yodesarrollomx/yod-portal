@@ -4,12 +4,12 @@ import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
 import {createEntryPreparation} from './voice-preparation.mjs?v=2';
 import {residentAccessDecision} from './resident-agents.mjs?v=127';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=126';
-import {stationIdentity} from './project-station.mjs?v=131';
+import {stationIdentity} from './project-station.mjs?v=132';
 import {createLiveVoice} from './live-voice.mjs?v=130';
 import {voiceView} from './voice-view.mjs?v=2';
-import {createWorkspace} from './agent-workspace.mjs?v=131';
-import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=131';
-import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=131';
+import {createWorkspace} from './agent-workspace.mjs?v=132';
+import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=132';
+import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=132';
 import {groupTranscriptFragments} from './live-transcript.mjs';
 
 const open = document.getElementById('voice-open');
@@ -56,12 +56,12 @@ if (open) {
   activityDetails.append(activitySummary,activityCard);
   const chatPanel=sidebar.querySelector('.station-chat'),chatForm=sidebar.querySelector('#station-message-form');
   chatPanel.insertBefore(sidebar.querySelector('.voice-transcript-details'),chatForm);
-  chatPanel.open=window.matchMedia?.('(min-width:851px)').matches===true;
+  chatPanel.open=false;
   chatPanel.append(activityDetails);
   voiceCard.append(sidebar.querySelector('#voice-save'),sidebar.querySelector('#voice-previous'));
   const node = id => dialog.querySelector('#' + id);
   const portraitHost=document.createElement('div');portraitHost.className='station-profile-portrait';sidebar.insertBefore(portraitHost,node('voice-title'));const portrait=mountAvatarCard({container:portraitHost,compact:true});
-  const fragments = []; let selection = null, generation = 0, dismissing = false, transcriptCase = null, freshTranscript = false, previousFocus = null, voiceCaseId = null, accessPaused = false;
+  const fragments = []; let selection = null, discussionDraftCase = null, generation = 0, dismissing = false, transcriptCase = null, freshTranscript = false, previousFocus = null, voiceCaseId = null, accessPaused = false;
   const agentName=()=>selection?stationIdentity(selection).name:'Autón';
   const visibility=value=>window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:value}));
   const setText = (id,text) => {if(node(id).textContent!==text)node(id).textContent=text;};
@@ -83,7 +83,7 @@ if (open) {
     }
     return false;
   }
-  const workspace=createWorkspace({container:workspaceHost,transport,getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision,selection?.case_id);},onPresent:presentMeetingSlide});
+  const workspace=createWorkspace({container:workspaceHost,transport,onDiscuss:value=>{if(accessPaused||selection?.case_id!==value.case_id)return;discussionDraftCase=value.case_id;chatPanel.open=true;const field=node('station-message');const draft='Sobre la entrega «'+value.title+'» (revisión '+value.revision+'): ';field.value=field.value?field.value+'\n'+draft:draft;field.focus();field.setSelectionRange(field.value.length,field.value.length);node('station-message-status').textContent='Borrador para discutir la entrega. Todavía no se envió ni se creó un encargo.';},getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision,selection?.case_id);},onPresent:presentMeetingSlide});
   window.YodVoiceWorkspace={isOpen:()=>dialog.open&&!compactVoice,openForCase,prepareNearby:caseId=>{const s=window.YodResidentAgents?.getSelection?.();if(s?.case_id===caseId&&s.can_enqueue&&!active(voice.snapshot()))void voice.prepare(caseId,{connection:true});},releaseNearby:()=>{/* Entry preparation remains warm outside the approach radius. */},pauseEncounter:caseId=>{if(encounterCase===caseId&&voice.snapshot().phase==='listening'&&!voice.snapshot().muted){encounterPaused=true;voice.mute();}},show:tab=>{openBoard(tab);workspaceHost.scrollIntoView({block:'nearest'});}};
   window.dispatchEvent(new CustomEvent('yod-voice-workspace-ready'));
   let stopWatching=null,encounterCase=null,encounterPaused=false,micGrantedInPage=false,encounterNeedsMic=false;
@@ -110,10 +110,13 @@ if (open) {
     node('station-send').disabled=accessPaused||!selection?.can_enqueue||(voiceState.text_pending?voiceState.text_sending:live?voiceState.phase!=='listening'||voiceState.text_sending:state.busy||!!state.pending||!!state.accepted||!state.selection?.can_enqueue||state.stale);
     node('station-send').textContent=voiceState.text_pending?'Comprobar envío':'Enviar';
     node('station-write').hidden=!live;node('station-write').disabled=dialog.dataset.voicePhase==='closing';
-    node('station-message-status').textContent=voiceState.text_notice||(live?'Puedes escribir mientras conversas. El mensaje llegará a esta misma voz.':state.fastNotice||(state.pending?'Guardado pendiente. Actualizar comprobará la misma solicitud.':state.busy?'Consultando…':state.status==='unavailable'?'No se pudo cargar el historial. Puedes actualizar.':''));
+    const messageStatus=voiceState.text_notice||(live?'Puedes escribir mientras conversas. El mensaje llegará a esta misma voz.':state.fastNotice||(state.pending?'Guardado pendiente. Actualizar comprobará la misma solicitud.':state.busy?'Consultando…':state.status==='unavailable'?'No se pudo cargar el historial. Puedes actualizar.':''));
+    const draftNotice=discussionDraftCase===selection.case_id&&node('station-message').value.trim()?'Borrador para discutir la entrega. Todavía no se envió ni se creó un encargo.':'';
+    node('station-message-status').textContent=[messageStatus,draftNotice].filter(Boolean).join(' ');
   }
   dialog.querySelector('.station-chat').addEventListener('toggle',()=>{if(dialog.querySelector('.station-chat').open&&selection&&!chat.selection&&!chat.busy)void chat.open(AUTONES_MULTIPLES?selection.case_id:null);});
-  node('station-message-form').addEventListener('submit',async event=>{event.preventDefault();if(node('station-send').disabled)return;const text=node('station-message').value,own=generation,id=selection?.case_id;const inVoice=active(voice.snapshot())||voice.snapshot().text_pending;const sent=await(inVoice?voice.sendText(text):chat.send(text));if(sent&&own===generation&&selection?.case_id===id){if(inVoice)typedTurns.push({caseId:id,text});if(node('station-message').value===text)node('station-message').value='';renderChat(chat);}});
+  node('station-message').addEventListener('input',()=>{if(discussionDraftCase)renderChat(chat);});
+  node('station-message-form').addEventListener('submit',async event=>{event.preventDefault();if(node('station-send').disabled)return;discussionDraftCase=null;const text=node('station-message').value,own=generation,id=selection?.case_id;const inVoice=active(voice.snapshot())||voice.snapshot().text_pending;const sent=await(inVoice?voice.sendText(text):chat.send(text));if(sent&&own===generation&&selection?.case_id===id){if(inVoice)typedTurns.push({caseId:id,text});if(node('station-message').value===text)node('station-message').value='';renderChat(chat);}});
   node('station-refresh').addEventListener('click',()=>void(chat.selection?chat.refresh():chat.open(AUTONES_MULTIPLES?selection?.case_id:null)));
   node('station-write').addEventListener('click',async()=>{
     if(!selection||accessPaused)return;const own=generation;suppressEncounter();node('station-write').disabled=true;
@@ -214,7 +217,7 @@ if (open) {
       const fresh = resident?.getSelection?.() || validateSelection(await transport.resolveCurrent(caseId?{case_id:caseId}:{}));
       if (current !== generation || !dialog.open || caseId&&fresh.case_id!==caseId) return false;
       selection = fresh; node('voice-audio').muted=false; node('voice-case').textContent = fresh.name;
-      if(transcriptCase!==fresh.case_id){fragments.length=0;node('voice-transcript').replaceChildren();node('voice-download').disabled=true;node('voice-previous').hidden=true;node('station-message').value='';node('station-messages').replaceChildren();chat.close();transcriptCase=fresh.case_id;}
+      if(transcriptCase!==fresh.case_id){discussionDraftCase=null;fragments.length=0;node('voice-transcript').replaceChildren();node('voice-download').disabled=true;node('voice-previous').hidden=true;node('station-message').value='';node('station-messages').replaceChildren();chat.close();transcriptCase=fresh.case_id;}
       dialog.querySelector('.voice-transcript-details').hidden=false;
       if(!compactVoice){workspace.open(fresh,tab);void portrait.open(fresh);}else workspace.setActive(false);
       if(!fresh.goals?.ready)node('voice-work').textContent='El seguimiento de objetivos aún no está conectado para este proyecto.';
@@ -337,7 +340,7 @@ if (open) {
         entrance.clear();generation++;selection=null;encounterNeedsMic=false;stopWatching?.();stopWatching=null;goalReader.hide();chat.close();workspace.reset();portrait.clear();workspace.setActive(false);
         fragments.length=0;freshTranscript=false;node('voice-transcript').replaceChildren();node('voice-work').replaceChildren();node('voice-task').textContent='';
         node('voice-download').disabled=true;node('voice-start').disabled=true;node('voice-previous').hidden=true;node('voice-audio').muted=true;
-        setText('voice-case','El acceso al expediente cambió.');setText('voice-title','Tu autón');node('station-message').value='';node('station-messages').replaceChildren();
+        setText('voice-case','El acceso al expediente cambió.');setText('voice-title','Tu autón');discussionDraftCase=null;node('station-message').value='';node('station-messages').replaceChildren();
         accessPaused=true;
         setText('station-access',state.phase==='unauthorized'?'Tu acceso al proyecto dejó de ser válido. El contenido privado se retiró. Reconecta el puesto para continuar.':'No pudimos renovar el acceso al proyecto. La voz se detuvo y el contenido privado se retiró; puedes reconectar aquí.');
         node('station-access').hidden=false;node('station-reconnect').hidden=false;

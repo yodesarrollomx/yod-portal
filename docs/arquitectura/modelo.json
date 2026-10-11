@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-11.masterbroker-preevaluation-published",
+  "revision": "2026-10-11.despacho-fluido132",
   "checked_at": "2026-10-11",
   "priorities": [
     "vender_mas",
@@ -10355,6 +10355,25 @@
       ],
       "deployment": "Propuesta autorizada por Dirección el11-oct-2026. Diagnóstico previo en lectura en curso; implementación y resultados reales pendientes.",
       "rollback": "Revertir el worker y configuración técnica exacta respaldada tras lectura reciente; mantener medios, decisiones, colas y registros existentes. Reprogramar sólo correoDiario si hace falta; nunca ejecutar instalar() ni borrar otras rutinas."
+    },
+    {
+      "id": "CHG-DESPACHO-FLUIDEZ-20261011",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO",
+        "SYS-SALA"
+      ],
+      "proposal": "Dirección autoriza reorganizar la interacción como oficina de estrategia: selección, cuatro direcciones y puesto con PPP visible mientras conversa. Conservar todas las capacidades, identidades y contratos. Corregir estados de lectura, reducir cabeceras y separar ruta guardada, actividad y evidencia. Revisar sólo la entrega exacta mostrada, sin aprobar por actualización silenciosa ni crear encargos al abrir. No reactivar automatizaciones canceladas ni ampliar APIs, permisos o backend.",
+      "status": "implementado_local",
+      "tests": [
+        "Suite completa y verificadores de arquitectura, OS, Portal, Accesos y Obra mediante Actions.",
+        "Navegador sobre módulos reales: carga lenta/fallo/recuperación, PPP y espacio visible, tres expedientes, rueda teclado/táctil, voz/cápsula y móvil. Transporte sintético no acredita micrófono físico ni datos privados.",
+        "Revisor separado sobre el commit exacto; evidencia visual de escritorio, Chromebook y móvil."
+      ],
+      "deployment": "Código implementado en rama; pendiente CI, revisión separada y Pages. No es aceptación de voz física ni autonomía 24/7.",
+      "rollback": "Revertir el PR de interfaz; conservar Sheets, expedientes, objetivos, recibos y disco persistente."
     }
   ],
   "data_contracts": [
@@ -12856,6 +12875,15 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "scripts/probar-puesto-browser.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-read-state.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",

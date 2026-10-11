@@ -1,4 +1,4 @@
-import {buildMeeting,meetingDocument} from './project-meeting.mjs?v=124';
+import {buildMeeting,meetingDocument} from './project-meeting.mjs?v=132';
 export function mountMeeting({container,getCase,onPresent=async()=>false,onSlide=()=>{},onNext=()=>{},onReview=async()=>null,canReview=()=>false,doc=document,win=window}){
  let deck=null,index=0,generation=0,goalStatus=null;
  const el=(tag,text,cls)=>{const n=doc.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
