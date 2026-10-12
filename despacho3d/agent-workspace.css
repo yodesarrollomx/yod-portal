@@ -304,7 +304,7 @@
 .workspace-inspector .meeting-slide h2{font-size:24px}
 .workspace-inspector .meeting-diagram{grid-template-columns:1fr;gap:8px}
 .workspace-board-retry{flex:none}
-@media(max-width:850px){
+@media(max-width:1000px){
  .workspace-body[data-inspector-open=true]{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(150px,1fr) minmax(170px,45%);gap:8px}
  .workspace-inspector{grid-column:1;grid-row:2;border-radius:12px}
  .workspace-inspector-heading{padding:8px 10px}
@@ -313,7 +313,7 @@
  .workspace-inspector .workspace-subnav{padding:4px 7px;gap:2px;flex-wrap:nowrap;overflow:auto}
  .workspace-inspector .workspace-subnav button{flex:none;white-space:nowrap;min-height:40px}
 }
-@media(max-width:850px) and (max-height:650px){
+@media(max-width:1000px) and (max-height:650px){
  .workspace-body[data-inspector-open=true]{grid-template-rows:minmax(100px,1fr) minmax(140px,50%)}
  .agent-workspace .workspace-brief-next{display:none}
  .workspace-brief>button{grid-row:1}

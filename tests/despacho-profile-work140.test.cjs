@@ -40,3 +40,19 @@ test('review and blocked decisions precede current work in the summary without c
  const disabled=profileWorkView({status:'ready',model:{goals}},'synthetic-a',false);
  assert.equal(disabled.selected,null);assert.equal(disabled.active,0);assert.equal(disabled.confirmedEmpty,false);
 });
+
+test('contextual inspector stacks before the desktop minima exceed Chromebook room width',()=>{
+ const fs=require('node:fs'),path=require('node:path'),css=fs.readFileSync(path.join(__dirname,'../despacho3d/agent-workspace.css'),'utf8');
+ const profile=css.slice(css.indexOf('/* Profile140:'));
+ const columns=profile.match(/grid-template-columns:minmax\((\d+)px,1fr\) minmax\((\d+)px,36%\)/);
+ const gap=profile.match(/\.workspace-body\{[^}]*gap:(\d+)px/);
+ const stack=profile.match(/@media\(max-width:(\d+)px\)\{\s*\.workspace-body\[data-inspector-open=true\]\{grid-template-columns:minmax\(0,1fr\);grid-template-rows/);
+ assert.ok(columns&&gap&&stack,'The persistent PPP and inspector declare desktop minima and their stack boundary');
+ const minimum=Number(columns[1])+Number(columns[2])+Number(gap[1]),stackAt=Number(stack[1]);
+ // Read geometry of the existing desktop shell, whose sidebar remains 232px through 1050px.
+ for(let viewport=851;viewport<=879;viewport++){
+  const room=viewport-24-232-32;
+  assert.ok(room>=minimum||viewport<=stackAt,'Inspector would crop at '+viewport+'px');
+ }
+ assert.match(profile,/\.workspace-inspector\{grid-column:1;grid-row:2/);
+});
