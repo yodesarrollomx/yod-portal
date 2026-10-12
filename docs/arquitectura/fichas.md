@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.investor-story17.1 · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.sala-imagen-evidencia.1 · 2026-10-12.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -875,10 +875,10 @@ Fuente literal de métricas consumida por scripts auxiliares; uso activo no comp
 Abrir compuertas aprobadas y encolar trabajo sin decidir ni ejecutar
 
 - Tipo: worker. Dominio: Ventas. Responsable: Producción.
-- Evidencia: codigo. Producción: No verificado en despliegue.
+- Evidencia: ejecucion. Producción: Productor real38310054319 success; lee la fuente vigente y preserva aprobaciones. No abrió trabajos nuevos en esta vuelta. Reemplazos pendientes de crédito y revisión editorial no se convierten en aprobaciones..
 - Entidades: trabajo, pieza, version.
 - Fuente de verdad: Configuración de reglas/motores y código de ejecución; ejecución viva pendiente.
-- Evidencia: [sala-edicion/nube/sala_productor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_productor.py#L130) — Abrir compuertas aprobadas y encolar trabajo sin decidir ni ejecutar; [sala-edicion/docs/SALA-CIERRE-ONLINE.md](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md) — PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes..
+- Evidencia: [sala-edicion/nube/sala_productor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_productor.py#L130) — Abrir compuertas aprobadas y encolar trabajo sin decidir ni ejecutar; [sala-edicion/docs/SALA-CIERRE-ONLINE.md](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md) — PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes.; [sala-edicion/nube/sala_productor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dde4ab0151c5cc36071882380afe7ecf495ecef6/nube/sala_productor.py) — Lote38310054319: productor success. Ningún nuevo trabajo habilitado; las imágenes rehechas esperan revisión editorial..
 - Conexiones: CON-079 (EXT-ACTIONS → SVC-SALA-PRODUCTOR); CON-080 (SVC-SALA-PRODUCTOR → GAS-SALA); CON-SALA-IMAGEN-OPENAI (SVC-SALA-PRODUCTOR → SVC-AUTON-CLOUD).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Uso efectivo, configuración y costo en producción no comprobados.
@@ -888,10 +888,10 @@ Abrir compuertas aprobadas y encolar trabajo sin decidir ni ejecutar
 Procesar trabajos habilitados y subir resultados
 
 - Tipo: worker. Dominio: Ventas. Responsable: Producción.
-- Evidencia: codigo. Producción: Mantenimiento de nube de dos originales comprobado con acuse; producción CPU técnica acreditada por pruebas previas. Cada ejecución editorial sigue su configuración y compuertas humanas; no certifica todos los trabajos históricos..
+- Evidencia: ejecucion. Producción: Ejecutor real38310054319 success;124 registros de COLA revisados y0 trabajos habilitados pendientes. Las entregas anteriores y sus evidencias se conservan. No acredita aprobación editorial de las láminas nuevas..
 - Entidades: trabajo, pieza, version.
 - Fuente de verdad: Configuración de reglas/motores y código de ejecución; ejecución viva pendiente.
-- Evidencia: [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_ejecutor.py#L88) — Procesar trabajos habilitados y subir resultados; [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/nube/sala_ejecutor.py) — PR265 conserva compuertas, aprobaciones y procedencia; Modal default 0 y CPU de respaldo. CI completo acreditado.; [sala-edicion/nube/medios_reconexion.py](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py) — PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto.; [sala-edicion/docs/SALA-CIERRE-ONLINE.md](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md) — PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes..
+- Evidencia: [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_ejecutor.py#L88) — Procesar trabajos habilitados y subir resultados; [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/nube/sala_ejecutor.py) — PR265 conserva compuertas, aprobaciones y procedencia; Modal default 0 y CPU de respaldo. CI completo acreditado.; [sala-edicion/nube/medios_reconexion.py](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py) — PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto.; [sala-edicion/docs/SALA-CIERRE-ONLINE.md](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md) — PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes.; [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dde4ab0151c5cc36071882380afe7ecf495ecef6/nube/sala_ejecutor.py) — Lote38310054319: ejecutor success; COLA124 registros,0 trabajos habilitados pendientes,0 entregables nuevos en esta vuelta..
 - Conexiones: CON-081 (EXT-ACTIONS → SVC-SALA-EJECUTOR); CON-082 (SVC-SALA-EJECUTOR → GAS-SALA); CON-083 (SVC-SALA-EJECUTOR → EXT-MOTORES-MEDIA); CON-084 (SVC-SALA-EJECUTOR → EXT-DRIVE); CON-SALA-RECONEXION-MEDIOS (SVC-SALA-EJECUTOR → GAS-SALA); CON-SALA-CIERRE-ONLINE (SVC-SALA-EJECUTOR → EXT-ACTIONS).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Uso efectivo, configuración y costo en producción no comprobados.
@@ -901,10 +901,10 @@ Procesar trabajos habilitados y subir resultados
 Generar texto, imagen, escena o voz según motor configurado
 
 - Tipo: servicio_externo. Dominio: Ventas. Responsable: Producción.
-- Evidencia: ejecucion. Producción: Prueba técnica real CPU 38139680521 exitosa: Tiny-SD, profundidad ONNX/parallax, Kokoro y ffmpeg con seis subidas/readbacks Drive. Modal opcional y apagado por defecto; parallax no equivale a animación LTX. No prueba todas las piezas comerciales..
+- Evidencia: ejecucion. Producción: Imágenes por API GPT Image1.5 en servidor propio: prueba real y10 fotografías montadas;6 de27 reemplazos completados,21 pendientes por saldo agotado. Pollinations FLUX y segmind/tiny-sd retirados de producción y revisión. Pruebas CPU anteriores quedan como historia; voz y cámara conservan sus compuertas, Modal sigue opcional..
 - Entidades: trabajo, pieza, version.
 - Fuente de verdad: Configuración de reglas/motores y código de ejecución; ejecución viva pendiente.
-- Evidencia: [sala-edicion/nube/sala_motores.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_motores.py#L37) — Generar texto, imagen, escena o voz según motor configurado; [sala-edicion/nube/prueba_online.py](https://github.com/yodesarrollomx/sala-edicion/blob/6e67927f01829baba72267aad15d59ea60139444/nube/prueba_online.py) — Run 38139680521 success: seis artefactos privados verificados por SHA256, corte 1080x1920 H264/AAC 10.166667s. Entradas sintéticas, sin filas o decisiones de negocio..
+- Evidencia: [sala-edicion/nube/sala_motores.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_motores.py#L37) — Generar texto, imagen, escena o voz según motor configurado; [sala-edicion/nube/prueba_online.py](https://github.com/yodesarrollomx/sala-edicion/blob/6e67927f01829baba72267aad15d59ea60139444/nube/prueba_online.py) — Run 38139680521 success: seis artefactos privados verificados por SHA256, corte 1080x1920 H264/AAC 10.166667s. Entradas sintéticas, sin filas o decisiones de negocio.; [sala-edicion/nube/motores/imagen.py](https://github.com/yodesarrollomx/sala-edicion/blob/dde4ab0151c5cc36071882380afe7ecf495ecef6/nube/motores/imagen.py) — API GPT Image1.5 probada38302218587; montaje real38310054319:10 nuevas fotografías recuperadas,6 sustituciones y4 continuaciones. Quedan21 sustituciones por credit_balance_exhausted; CF y Gemini también429..
 - Conexiones: CON-083 (SVC-SALA-EJECUTOR → EXT-MOTORES-MEDIA).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Uso efectivo, configuración y costo en producción no comprobados.
@@ -1017,10 +1017,10 @@ Observar y conversar con el autón del proyecto, consultar su PPP y seguir el tr
 Ejecutar conversación, consulta y tareas del expediente autorizado, con estado durable.
 
 - Tipo: worker. Dominio: Operación. Responsable: Dirección técnica.
-- Evidencia: codigo. Producción: Render dfe9c7a45ddeb997c32b8bd39483be3874e68658 live desde 2026-10-09T05:37:10Z. Cola FIFO persistente con un ejecutor y cuarentena si no termina; historial privado por caso desde esta entrega. Pruebas automáticas de voz/PPP aprobadas; micrófono físico y primera conversación privada por proximidad no acreditados..
+- Evidencia: codigo. Producción: Render dfe9c7a45ddeb997c32b8bd39483be3874e68658 live desde 2026-10-09T05:37:10Z. Cola FIFO persistente con un ejecutor y cuarentena si no termina; historial privado por caso desde esta entrega. Pruebas automáticas de voz/PPP aprobadas; micrófono físico y primera conversación privada por proximidad no acreditados. Imagen Sala: puente GPT Image1.5 en servicio existente; montaje real de10 fotografías. Proveedor de imagen bloqueado por credit_balance_exhausted; no certifica producción completa..
 - Entidades: caso, ejecucion, objetivo, tarea, recibo.
 - Fuente de verdad: Expediente autorizado y registros de cada dominio; volumen privado para estado, recibos y recuperación..
-- Evidencia: Compone motor, voz, investigación, objetivos y conocimiento por caso.; Historia por ejecución, FIFO, progreso confirmado y recuperación; 282 pruebas aprobadas y una omitida, navegadores aprobados; recibo Render dep-db47qobncjis73c3vrp0 live..
+- Evidencia: Compone motor, voz, investigación, objetivos y conocimiento por caso.; Historia por ejecución, FIFO, progreso confirmado y recuperación; 282 pruebas aprobadas y una omitida, navegadores aprobados; recibo Render dep-db47qobncjis73c3vrp0 live.; Puente de propósito exclusivo e idempotencia desplegado en servicio existente: diagnóstico de crédito/ritmo, una solicitud nueva por minuto y recibos persistentes;559 pruebas pasadas y0 fallos antes del arranque vigente..
 - Conexiones: CON-DESPACHO-3D-MOTOR (SYS-DESPACHO-3D → SVC-AUTON-CLOUD); CON-MOTOR-PORTERO (SVC-AUTON-CLOUD → GAS-PORTERO); CON-MOTOR-ESTADO (SVC-AUTON-CLOUD → STORE-AUTON-ESTADO); CON-MOTOR-JEV (SVC-AUTON-CLOUD → EXT-JEV); CON-MOTOR-DRIVE (SVC-AUTON-CLOUD → EXT-DRIVE); CON-MOTOR-OPENAI (SVC-AUTON-CLOUD → EXT-OPENAI); CON-RENDER-MOTOR (EXT-RENDER → SVC-AUTON-CLOUD); CON-SALA-IMAGEN-OPENAI (SVC-SALA-PRODUCTOR → SVC-AUTON-CLOUD).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 
@@ -1053,10 +1053,10 @@ Orientar la búsqueda y ordenar pasajes relevantes antes de investigar.
 Proveer voz y respuestas con herramientas del servidor.
 
 - Tipo: servicio_externo. Dominio: Infraestructura. Responsable: Dirección técnica.
-- Evidencia: codigo. Producción: Voz configurada y disponible en el piloto. Micrófono físico e interacción de Dirección requieren aceptación independiente..
+- Evidencia: codigo. Producción: Voz configurada y disponible en el piloto. Micrófono físico e interacción de Dirección requieren aceptación independiente. Imagen: generación real comprobada; saldo agotado confirmado para GPT Image1.5. Quedan21 reemplazos sin producir..
 - Entidades: sesion, audio, transcripcion, llamada_herramienta.
 - Fuente de verdad: Configuración de sesión y herramientas autorizadas en servidor; resultados deben comprobarse contra registros de negocio..
-- Evidencia: Sesión de voz y herramientas conectadas desde el servidor..
+- Evidencia: Sesión de voz y herramientas conectadas desde el servidor.; [sala-edicion/nube/motores/imagen.py](https://github.com/yodesarrollomx/sala-edicion/blob/dde4ab0151c5cc36071882380afe7ecf495ecef6/nube/motores/imagen.py) — GPT Image1.5 real por servidor existente; código429 credit_balance_exhausted e insufficient_quota confirmado38310564537. Configuración accesible no equivale a saldo disponible..
 - Conexiones: CON-MOTOR-OPENAI (SVC-AUTON-CLOUD → EXT-OPENAI); CON-BANDEJA-IA (GAS-BANDEJA-NUBE → EXT-OPENAI).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 

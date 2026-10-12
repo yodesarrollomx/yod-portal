@@ -156,7 +156,7 @@ test('small authorized PPP sources survive accumulated history without weakening
  const projection=validateWorkspaceSources(s,current.case_id);
  assert.ok(JSON.stringify(projection).length<2048);assert.equal(projection.documents.length,1);
  assert.equal(resolveBoard(current,projection.documents).board_case_id,current.case_id);
- assert.throws(()=>validateConversation(s,current.case_id),/invalid_snapshot/);
+ assert.throws(()=>validateConversation(s,current.case_id),/invalid_message/);
  assert.match(workspaceSourceNotice(Error('response_limit')),/límite/);
  assert.match(workspaceSourceNotice(Error('invalid_response')),/ilegible/);
  assert.match(workspaceSourceNotice(Error('invalid_snapshot')),/metadatos válidos/);

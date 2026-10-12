@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-12.investor-story17.1",
+  "model_revision": "2026-10-12.sala-imagen-evidencia.1",
   "proposal_id": "CHG-DESPACHO-PERFIL-ORDEN-20261012",
-  "summary": "Recuperación PPP e historial antes del iframe: read autenticado acotado2MiB y presupuestos512KiB de cada proyección validada, conservando todas las reglas de chat, ACL, épocas e IDs. Sin APIs, permisos, GAS, escrituras ni recorte de historia nuevos.",
+  "summary": "Recuperación PPP e historial antes del iframe: read autenticado acotado2,097,152 unidades UTF-16 y presupuestos524,288 unidades UTF-16 de cada proyección validada, conservando todas las reglas de chat, ACL, épocas e IDs. Sin APIs, permisos, GAS, escrituras ni recorte de historia nuevos.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",

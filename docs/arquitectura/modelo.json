@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.investor-story17.1",
+  "revision": "2026-10-12.sala-imagen-evidencia.1",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -2518,6 +2518,13 @@
           "commit": "4582fc3c42a2ac8459dea7d553c42f9719f07962",
           "claim": "PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes.",
           "status": "ejecucion"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/sala_productor.py",
+          "commit": "dde4ab0151c5cc36071882380afe7ecf495ecef6",
+          "claim": "Lote38310054319: productor success. Ningún nuevo trabajo habilitado; las imágenes rehechas esperan revisión editorial.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -2529,8 +2536,8 @@
         "Uso efectivo, configuración y costo en producción no comprobados"
       ],
       "source_of_truth": "Configuración de reglas/motores y código de ejecución; ejecución viva pendiente",
-      "status": "codigo",
-      "runtime_status": "No verificado en despliegue"
+      "status": "ejecucion",
+      "runtime_status": "Productor real38310054319 success; lee la fuente vigente y preserva aprobaciones. No abrió trabajos nuevos en esta vuelta. Reemplazos pendientes de crédito y revisión editorial no se convierten en aprobaciones."
     },
     {
       "id": "SVC-SALA-EJECUTOR",
@@ -2569,6 +2576,13 @@
           "commit": "4582fc3c42a2ac8459dea7d553c42f9719f07962",
           "claim": "PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes.",
           "status": "ejecucion"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/sala_ejecutor.py",
+          "commit": "dde4ab0151c5cc36071882380afe7ecf495ecef6",
+          "claim": "Lote38310054319: ejecutor success; COLA124 registros,0 trabajos habilitados pendientes,0 entregables nuevos en esta vuelta.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -2580,8 +2594,8 @@
         "Uso efectivo, configuración y costo en producción no comprobados"
       ],
       "source_of_truth": "Configuración de reglas/motores y código de ejecución; ejecución viva pendiente",
-      "status": "codigo",
-      "runtime_status": "Mantenimiento de nube de dos originales comprobado con acuse; producción CPU técnica acreditada por pruebas previas. Cada ejecución editorial sigue su configuración y compuertas humanas; no certifica todos los trabajos históricos."
+      "status": "ejecucion",
+      "runtime_status": "Ejecutor real38310054319 success;124 registros de COLA revisados y0 trabajos habilitados pendientes. Las entregas anteriores y sus evidencias se conservan. No acredita aprobación editorial de las láminas nuevas."
     },
     {
       "id": "EXT-MOTORES-MEDIA",
@@ -2606,6 +2620,13 @@
           "commit": "6e67927f01829baba72267aad15d59ea60139444",
           "claim": "Run 38139680521 success: seis artefactos privados verificados por SHA256, corte 1080x1920 H264/AAC 10.166667s. Entradas sintéticas, sin filas o decisiones de negocio.",
           "status": "ejecucion"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/motores/imagen.py",
+          "commit": "dde4ab0151c5cc36071882380afe7ecf495ecef6",
+          "claim": "API GPT Image1.5 probada38302218587; montaje real38310054319:10 nuevas fotografías recuperadas,6 sustituciones y4 continuaciones. Quedan21 sustituciones por credit_balance_exhausted; CF y Gemini también429.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -2618,7 +2639,7 @@
       ],
       "source_of_truth": "Configuración de reglas/motores y código de ejecución; ejecución viva pendiente",
       "status": "ejecucion",
-      "runtime_status": "Prueba técnica real CPU 38139680521 exitosa: Tiny-SD, profundidad ONNX/parallax, Kokoro y ffmpeg con seis subidas/readbacks Drive. Modal opcional y apagado por defecto; parallax no equivale a animación LTX. No prueba todas las piezas comerciales."
+      "runtime_status": "Imágenes por API GPT Image1.5 en servidor propio: prueba real y10 fotografías montadas;6 de27 reemplazos completados,21 pendientes por saldo agotado. Pollinations FLUX y segmind/tiny-sd retirados de producción y revisión. Pruebas CPU anteriores quedan como historia; voz y cámara conservan sus compuertas, Modal sigue opcional."
     },
     {
       "id": "SHEET-PPP-MODELOS",
@@ -2885,7 +2906,7 @@
       "dominio": "Operación",
       "proposito": "Ejecutar conversación, consulta y tareas del expediente autorizado, con estado durable.",
       "source_of_truth": "Expediente autorizado y registros de cada dominio; volumen privado para estado, recibos y recuperación.",
-      "runtime_status": "Render dfe9c7a45ddeb997c32b8bd39483be3874e68658 live desde 2026-10-09T05:37:10Z. Cola FIFO persistente con un ejecutor y cuarentena si no termina; historial privado por caso desde esta entrega. Pruebas automáticas de voz/PPP aprobadas; micrófono físico y primera conversación privada por proximidad no acreditados.",
+      "runtime_status": "Render dfe9c7a45ddeb997c32b8bd39483be3874e68658 live desde 2026-10-09T05:37:10Z. Cola FIFO persistente con un ejecutor y cuarentena si no termina; historial privado por caso desde esta entrega. Pruebas automáticas de voz/PPP aprobadas; micrófono físico y primera conversación privada por proximidad no acreditados. Imagen Sala: puente GPT Image1.5 en servicio existente; montaje real de10 fotografías. Proveedor de imagen bloqueado por credit_balance_exhausted; no certifica producción completa.",
       "evidence": [
         {
           "repo": "alexpueblag/yod-agent-cloud",
@@ -2899,6 +2920,13 @@
           "path": "cloud/AUTONOMY-126.md",
           "commit": "dfe9c7a45ddeb997c32b8bd39483be3874e68658",
           "claim": "Historia por ejecución, FIFO, progreso confirmado y recuperación; 282 pruebas aprobadas y una omitida, navegadores aprobados; recibo Render dep-db47qobncjis73c3vrp0 live.",
+          "status": "ejecucion"
+        },
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "cloud/sala-image-broker.mjs",
+          "commit": "7f1297cbf1ba9fe12f663faf2f843f35f79d411e",
+          "claim": "Puente de propósito exclusivo e idempotencia desplegado en servicio existente: diagnóstico de crédito/ritmo, una solicitud nueva por minuto y recibos persistentes;559 pruebas pasadas y0 fallos antes del arranque vigente.",
           "status": "ejecucion"
         }
       ],
@@ -2978,7 +3006,7 @@
       "dominio": "Infraestructura",
       "proposito": "Proveer voz y respuestas con herramientas del servidor.",
       "source_of_truth": "Configuración de sesión y herramientas autorizadas en servidor; resultados deben comprobarse contra registros de negocio.",
-      "runtime_status": "Voz configurada y disponible en el piloto. Micrófono físico e interacción de Dirección requieren aceptación independiente.",
+      "runtime_status": "Voz configurada y disponible en el piloto. Micrófono físico e interacción de Dirección requieren aceptación independiente. Imagen: generación real comprobada; saldo agotado confirmado para GPT Image1.5. Quedan21 reemplazos sin producir.",
       "evidence": [
         {
           "repo": "alexpueblag/yod-agent-cloud",
@@ -2986,6 +3014,13 @@
           "commit": "b88ce380d7e437cf535facdbd5592a0b8bc14dc1",
           "claim": "Sesión de voz y herramientas conectadas desde el servidor.",
           "status": "codigo"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/motores/imagen.py",
+          "commit": "dde4ab0151c5cc36071882380afe7ecf495ecef6",
+          "claim": "GPT Image1.5 real por servidor existente; código429 credit_balance_exhausted e insufficient_quota confirmado38310564537. Configuración accesible no equivale a saldo disponible.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -11518,7 +11553,7 @@
         "EXT-OPENAI",
         "EXT-RENDER"
       ],
-      "status": "propuesto",
+      "status": "publicado",
       "approval": "Dirección autoriza retirar el generador deficiente y rehacer sus imágenes actuales mediante otro modelo y las APIs ya disponibles en nube.",
       "proposal": "Puente interno /sala/image en el servicio existente de Render yod-cloud-room: modelo fijo gpt-image-1.5 y clave OpenAI que permanece en servidor. El agente de Sala usa una credencial derivada de propósito exclusivo; cada solicitud tiene identidad y receta, recibo durable y límite diario. Una respuesta incierta no se repite. Las imágenes siguen por compositor, publicación y montaje existentes, sin votos escritos. El módulo genérico y sus fixtures pueden verificarse públicamente; la suite del servidor privado se verifica sin claves ni datos productivos antes de escuchar. Activar producción sólo después de una imagen real y su inspección.",
       "tests": [
@@ -11528,7 +11563,7 @@
         "Suite privada con entorno sin credenciales antes del arranque; comprobar deploy existente.",
         "API real con escena sintética antes de activación; completar reemplazos sin votos editoriales."
       ],
-      "deployment": "Retiro de Pollinations publicado94ecdf77 y confirmado38295651381:0 vetadas visibles,27 pendientes. Cloudflare y Gemini responden429. Render está conectado al servicio propio existente y su configuración declara OpenAI; acceso real a imagen aún por comprobar.",
+      "deployment": "Sala PR285/286 integrados y puente desplegado en el servicio existente; prueba38302218587 generó GPT Image1.5,1024×1536PNG de2,667,406 bytes y se inspeccionó. PR125 privado integrado7f1297cb; despliegue vigente6f016b68 conserva el mismo puente y pasó559 pruebas,0 fallos,1 omitida antes de escuchar. Lote38310054319 publicó y montó10 láminas:6 de27 reemplazos y4 continuaciones; no escribió votos. API429 credit_balance_exhausted/insufficient_quota impide las21 sustituciones restantes. Sin otro recurso, plan o clave de imagen alternativa en Actions.",
       "rollback": "Desactivar únicamente SALA_IMAGE_ENABLED y revertir por PR; preservar recibos, volumen, decisiones y retiro. Sin cambios de planes, recursos, identidades ni metas de los autóns."
     },
     {
@@ -11658,7 +11693,7 @@
         "EXT-OPENAI",
         "EXT-RENDER"
       ],
-      "status": "propuesto",
+      "status": "publicado",
       "approval": "Dirección autoriza completar las imágenes con un modelo nuevo y dejar su generación, publicación y revisión funcionando en nube.",
       "proposal": "Corregir bloqueos observados del lote GPT Image: neutralizar únicamente ubicaciones vetadas heredadas en referencias visuales, conservando exactamente caption y votos; elevar el límite del ZIP público de100 a200MiB sin cambiar500MiB descomprimidos,25MiB por archivo, rutas, tipos ni hashes. Cuando el proveedor se queda sin cupo, recuperar igualmente las tomas que ya tienen recibo, sin otra generación. Exponer sólo código/tipo de error y encabezados de cuota seguros para distinguir crédito de ritmo; espaciar nuevas solicitudes del proveedor a una por minuto. El recibo incierto nunca se repite y el confirmado se reutiliza.",
       "tests": [
@@ -11668,7 +11703,7 @@
         "Código de error de proveedor sin mensaje privado/credenciales; ritmo acotado e idempotencia.",
         "Checks de Sala, módulo genérico y suite privada antes del despliegue; montaje de archivos ya publicados."
       ],
-      "deployment": "Lote38305020768 generó10 imágenes/3 cartas,16 correcciones quedaron bloqueadas por Hermosillo en una referencia heredada y5 esperaron cupo. Verificación local pasó; publicación falló por ZIP>100MiB. No se declara ninguna de las10 imágenes montada; se conservan recibos para recuperarlas sin pagar otra generación.",
+      "deployment": "Sala PR287 integrado dde4ab0151c5cc36071882380afe7ecf495ecef6; verificación, regresiones, contratos y Atlas aprobados. Run38310054319 recuperó10 recibos sin pagar otra generación, publicó snapshot datos-38310054319-1-mesa con recibo Pages38310390321 y montó3 cartas confirmadas. Se conservaron decisiones, captions e historia. Estado parcial:1 toma fallida y20 pendientes de cupo;21 reemplazos siguen bloqueados por saldo API agotado. Productor y ejecutor reales success; COLA124 registros y0 trabajos habilitados pendientes. Revisión final y chinches se comprueban por separado.",
       "rollback": "Revertir por PR manteniendo fotos, recibos, decisiones y política de retiro. No borrar historia para reducir un paquete; límites de archivo, rutas y datos siguen vigentes."
     },
     {
