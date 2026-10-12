@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.moac-canonico134.resultados · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.os-figuras-volumen · 2026-10-12.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 

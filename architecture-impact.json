@@ -1,26 +1,15 @@
 {
-  "model_revision": "2026-10-12.moac-canonico134.resultados",
-  "proposal_id": "CHG-DESPACHO-MOAC-CANONICO-20261012",
+  "model_revision": "2026-10-12.os-figuras-volumen",
+  "proposal_id": "CHG-OS-FIGURAS-VOLUMEN-20261012",
+  "summary": "Sustituir pictogramas planos y salto uniforme por figuras isométricas Hairline originales, manipuladas por puntero o foco; aumentar escala en tarjetas y ofrecer muestra pública. Mantener distribución, marca, permisos y elecciones del Despacho.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "SVC-AUTON-CLOUD",
-    "STORE-AUTON-ESTADO",
-    "SYS-TAREAS",
-    "GAS-OPERACION",
-    "SHEET-OPERACION",
-    "GAS-MOAC-METAS",
-    "SHEET-MOAC-METAS",
     "GAS-PORTERO"
   ],
-  "summary": "Registrar resultados comprobados del método compartido y el bloqueo del adaptador MOAC, conservando la propuesta pendiente y los criterios de integración nativa.",
   "tests": [
-    "Contratos con fuentes, IDs y autorizaciones por proyecto; cambios externos y acceso revocado.",
-    "Recorrido meta/objetivo/acción → encargo → herramienta/evidencia → recibo → MOAC y reapertura; duplicación, conflicto, reinicio y salida del navegador.",
-    "Revisión de despliegues y lecturas operativas sin escrituras de negocio de prueba; separar pruebas aisladas de aceptación.",
-    "Diagnóstico Apps Script ejecutado en Actions con el cliente existente, respaldos privados y coincidencia exacta; ningún efecto de negocio.",
-    "Regresiones del método en peticiones de chat, voz y trabajador; herramientas presentes frente a recuperación local; no confundir guía del modelo con aceptación operativa."
+    "633 pruebas Node y verificadores Arquitectura, OS, Portal, Accesos y Obra aprobados.",
+    "Chromium sintético: geometría reactiva en cuatro motores, reposo sin bucle, movimiento reducido, iconos compactos visibles, expansión y contenido conservado."
   ],
-  "rollback": "Revertir código mediante PR y versiones existentes; mantener IDs, filas, metas, objetivos, acciones, evidencia, recibos y disco."
+  "rollback": "Revertir PR; conserva barra plegable y elecciones del Despacho."
 }

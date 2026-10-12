@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.moac-canonico134.resultados",
+  "revision": "2026-10-12.os-figuras-volumen",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -11187,6 +11187,23 @@
       ],
       "deployment": "12-oct-2026 UTC: auditoría y consulta API realizadas; las implementaciones de Operación y Metas no pertenecen al proyecto registrado y su resolución por deployment respondió 400/404. Método común de chat/voz/trabajador integrado en cloud PR109, commit b5896d210b0091f2b3598bfb5b2a559e2b23db56, publicado explícitamente en Render a las 01:11:46 UTC. 481 pruebas pasan, una omitida, navegador correcto. Eso acredita código/método publicado; la proyección por caso, lectura nativa y sincronización bidireccional MOAC permanecen pendientes de acceso a los proyectos editables y verificación de contratos.",
       "rollback": "Revertir código mediante PR y versiones existentes; mantener IDs, filas, metas, objetivos, acciones, evidencia, recibos y disco."
+    },
+    {
+      "id": "CHG-OS-FIGURAS-VOLUMEN-20261012",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO"
+      ],
+      "proposal": "Sustituir pictogramas planos y salto uniforme por figuras isométricas Hairline originales, manipuladas por puntero o foco; aumentar escala en tarjetas y ofrecer muestra pública. Mantener distribución, marca, permisos y elecciones del Despacho.",
+      "status": "implementado_local",
+      "approval": "El propietario pide corregir específicamente dibujos y movimientos de la versión anterior.",
+      "tests": [
+        "633 pruebas Node y verificadores Arquitectura, OS, Portal, Accesos y Obra aprobados.",
+        "Chromium sintético: geometría reactiva en cuatro motores, reposo sin bucle, movimiento reducido, iconos compactos visibles, expansión y contenido conservado."
+      ],
+      "deployment": "Pendiente de PR y Pages.",
+      "rollback": "Revertir PR; conserva barra plegable y elecciones del Despacho."
     }
   ],
   "data_contracts": [
@@ -14033,6 +14050,20 @@
         "EXT-OPENAI",
         "SVC-HORARIOS-CLOUD",
         "SYS-CONTROL"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/ui-figures.mjs",
+      "components": [
+        "SYS-YOD-OS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/ui-figures.bundle.mjs",
+      "components": [
+        "SYS-YOD-OS"
       ]
     }
   ],

@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-12.moac-canonico134.resultados
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-12.os-figuras-volumen
 
 **Encargado de verificación:** Coordinación técnica YOD
 
