@@ -133,3 +133,25 @@ Python indicados por variables). Los ejemplos son sintéticos; nunca subir audio
 
 Reversión: retirar los botones y detener ingestión, conservar servicio/datos para
 exportación; no borrar disco, IndexedDB, aplicación, credenciales de descifrado ni Drive.
+
+## Archivo del proyecto y reuniones sin PPP
+
+La oficina ofrece «Grabar reunión nueva» sin PPP. La ficha de captura mantiene un
+meeting_id y case_id nulo hasta vinculación explícita, sin crear un plan. El audio
+se comparte junto con esa ficha para que el asistente mantenga la relación exacta.
+
+Tras procesar, el asistente entrega `yod-meeting-delivery/v1`: referencias privadas
+Drive, resumen, hash del original y propuestas con evidencia. En Reunión del puesto,
+«Incorporar ficha» comprueba el caso; «Archivar» recibe confirmación de la memoria
+privada del agente. El historial se recupera del servicio existente, no de localStorage.
+Una entrega inicial se vincula explícitamente al proyecto abierto; una entrega de otro
+proyecto se rechaza. No se crea PPP por grabar, importar ni vincular una reunión.
+
+El archivo en Drive y la confirmación del agente son pasos distintos. El conector del
+chat no hereda la sesión del portal: la confirmación se realiza en el puesto autenticado.
+No presentar una ficha descargada como ya archivada en el agente. La memoria conserva
+resumen y enlaces; no acredita lectura del audio ni aprobación de sus afirmaciones.
+
+Los pendientes se seleccionan en la grabadora o en el puesto y se exportan como lista
+para autorizar en MOAC. No se escriben tareas ni se cambian estados comerciales. La
+lista identifica reunión/proyecto, cita y minuto, y conserva sin asignar/sin fecha.

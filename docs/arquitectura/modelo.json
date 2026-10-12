@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.despacho-perfil140.2",
+  "revision": "2026-10-12.despacho-perfil140.3",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -6243,6 +6243,25 @@
       "contract_ids": [
         "CTR-INVESTOR-STORY1"
       ]
+    },
+    {
+      "id": "CON-SALA-IMAGEN-OPENAI",
+      "from": "SVC-SALA-PRODUCTOR",
+      "to": "SVC-AUTON-CLOUD",
+      "kind": "api",
+      "label": "Imagen para Sala con modelo fijo y recibo",
+      "contract": "CTR-SALA-IMAGEN-OPENAI-NUBE",
+      "contract_ids": [
+        "CTR-SALA-IMAGEN-OPENAI-NUBE"
+      ],
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "Propuesta autorizada para usar el servicio existente, aún sin prueba de generación.",
+          "status": "propuesto"
+        }
+      ]
     }
   ],
   "processes": [
@@ -11483,6 +11502,63 @@
       "rollback": "Revertir el PR frontend y enlace Material. Conservar copy de Sheets y originales; no modificar cartera, acuerdos ni identidad."
     },
     {
+      "id": "CHG-SALA-OPENAI-BROKER-20261012",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-MOTORES-MEDIA",
+        "SVC-AUTON-CLOUD",
+        "STORE-AUTON-ESTADO",
+        "EXT-OPENAI",
+        "EXT-RENDER"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección autoriza retirar el generador deficiente y rehacer sus imágenes actuales mediante otro modelo y las APIs ya disponibles en nube.",
+      "proposal": "Puente interno /sala/image en el servicio existente de Render yod-cloud-room: modelo fijo gpt-image-1.5 y clave OpenAI que permanece en servidor. El agente de Sala usa una credencial derivada de propósito exclusivo; cada solicitud tiene identidad y receta, recibo durable y límite diario. Una respuesta incierta no se repite. Las imágenes siguen por compositor, publicación y montaje existentes, sin votos escritos. El módulo genérico y sus fixtures pueden verificarse públicamente; la suite del servidor privado se verifica sin claves ni datos productivos antes de escuchar. Activar producción sólo después de una imagen real y su inspección.",
+      "tests": [
+        "Autenticación anterior a red; solicitud acotada; modelo fijo y cuota explícita.",
+        "Idempotencia y bloqueo de resultado incierto; recetas distintas no comparten identidad.",
+        "Módulo público y copia privada idénticos, fixtures sin claves ni datos y checks de Sala/atlas.",
+        "Suite privada con entorno sin credenciales antes del arranque; comprobar deploy existente.",
+        "API real con escena sintética antes de activación; completar reemplazos sin votos editoriales."
+      ],
+      "deployment": "Retiro de Pollinations publicado94ecdf77 y confirmado38295651381:0 vetadas visibles,27 pendientes. Cloudflare y Gemini responden429. Render está conectado al servicio propio existente y su configuración declara OpenAI; acceso real a imagen aún por comprobar.",
+      "rollback": "Desactivar únicamente SALA_IMAGE_ENABLED y revertir por PR; preservar recibos, volumen, decisiones y retiro. Sin cambios de planes, recursos, identidades ni metas de los autóns."
+    },
+    {
+      "id": "CHG-REUNIONES-EXPEDIENTE-20261012",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE",
+        "SVC-AUTON-CLOUD"
+      ],
+      "status": "implementado_local",
+      "approval": "Dirección solicita archivo por proyecto con historial del agente, captura sin PPP y pendientes para autorizar en MOAC.",
+      "proposal": "Registrar fichas de reunión en memoria privada existente por caso, con referencias Drive, hash e ID estable; historial autenticado. Pláticas iniciales con ID independiente sin crear PPP. Propuestas de pendientes importadas y selección para lista de revisión MOAC, sin alta automática ni aprobación inferida.",
+      "tests": [
+        "Caso ajeno y URL inválida rechazados",
+        "Acuse perdido e ID reutilizado",
+        "Reinicio conserva archivo",
+        "Reunión inicial no crea PPP",
+        "Pendientes no se convierten en tareas por importar",
+        "639 pruebas Node del portal; navegador aislado: captura inicial, selección CSV, rechazo de caso ajeno, importación y conservación del panel; ocho regresiones de grabación."
+      ],
+      "deployment": "Código y pruebas aisladas completados; publicación por PR y despliegue del servidor existente pendientes. Archivo con el agente requiere importar ficha y pulsar Archivar; MOAC recibe una lista manual, no tareas automáticas. Sin escrituras de reuniones reales en las pruebas.",
+      "rollback": "Retirar accesos y rutas nuevas conservando fichas privadas, Drive y audio original."
+    },
+    {
       "id": "CHG-DESPACHO-PERFIL-ORDEN-20261012",
       "components": [
         "SYS-YOD-OS",
@@ -12983,6 +13059,38 @@
         "Textos renderizados como texto; colores validados y URLs HTTPS verificadas.",
         "La lectura pública no concede permisos en CRM, Portero ni evaluador.",
         "La lámina no muestra un caso aprobado, un rendimiento garantizado ni una probabilidad de éxito."
+      ]
+    },
+    {
+      "id": "CTR-SALA-IMAGEN-OPENAI-NUBE",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-MOTORES-MEDIA",
+        "SVC-AUTON-CLOUD",
+        "STORE-AUTON-ESTADO",
+        "EXT-OPENAI",
+        "EXT-RENDER"
+      ],
+      "source": "Credenciales existentes del servicio propio y autoridad técnica del agente de Sala.",
+      "input": [
+        "Bearer derivado de propósito exclusivo; request_id hex64 y receta acotada."
+      ],
+      "output": [
+        "PNG y recibo privado de modelo/receta/solicitud; modelo explícito por candidata.",
+        "Cupo o resultado incierto: pendiente sin una imagen ficticia."
+      ],
+      "invariants": [
+        "Clave OpenAI sólo en servidor; módulo público sin expedientes ni claves.",
+        "No repetir una generación confirmada o incierta; identidad ligada a receta.",
+        "No cambiar votos, permisos, planes, servicios, metas archivadas ni expedientes.",
+        "Activación sólo tras imagen comprobada; generación no equivale a aceptación editorial."
       ]
     }
   ],
@@ -14555,6 +14663,44 @@
         "SYS-SALA",
         "SVC-SALA-PRODUCTOR",
         "EXT-MOTORES-MEDIA"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": "nube/imagen_api_broker.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-MOTORES-MEDIA",
+        "SVC-AUTON-CLOUD",
+        "STORE-AUTON-ESTADO",
+        "EXT-OPENAI",
+        "EXT-RENDER"
+      ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": "cloud/sala-image-broker.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-MOTORES-MEDIA",
+        "SVC-AUTON-CLOUD",
+        "STORE-AUTON-ESTADO",
+        "EXT-OPENAI",
+        "EXT-RENDER"
       ]
     }
   ],

@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.despacho-perfil140.2 · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.despacho-perfil140.3 · 2026-10-12.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -19,6 +19,7 @@ flowchart LR
   n_EXT_GMAIL["Gmail"]
   n_GAS_MOAC_METAS["Metas y objetivos de MOAC"]
   n_SHEET_MOAC_METAS["Metas, objetivos y acciones"]
+  n_SVC_SALA_PRODUCTOR["Productor de Sala"]
   n_STORE_DESPACHO_CORCHO["Mi Corcho · almacén privado de Dirección"]
   n_SYS_DESPACHO_3D["Oficina 3D y puesto del autón"]
   n_SVC_AUTON_CLOUD["Motor de nube del autón"]
@@ -55,6 +56,7 @@ flowchart LR
   n_SYS_DESPACHO_3D -->|Descarga manual de bóveda portable; no sincronización| n_EXT_OBSIDIAN
   n_SYS_DESPACHO_3D -.->|Consulta documental prevista, conexión sin verificar| n_EXT_NOTEBOOKLM
   n_GAS_BANDEJA_NUBE -->|Leer BANDEJA y añadir resultados al mismo libro| n_SHEET_OPERACION
+  n_SVC_SALA_PRODUCTOR -.->|Imagen para Sala con modelo fijo y recibo| n_SVC_AUTON_CLOUD
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SHEET_OPERACION pendiente;
@@ -109,6 +111,7 @@ flowchart LR
   n_SHEET_PPP_MODELOS["PPP · Libros de cálculo por caso"]
   n_EXT_GITHUB_PUBLISHER_APP["Identidad de publicación GitHub"]
   n_SYS_DESPACHO_3D["Oficina 3D y puesto del autón"]
+  n_SVC_AUTON_CLOUD["Motor de nube del autón"]
   n_GAS_MARKETING -->|Lee/escribe registros del dominio| n_SHEET_MARKETING
   n_GAS_PLAN_POTENCIAL -.->|Lee/escribe registros del dominio| n_SHEET_PLAN_POTENCIAL
   n_GAS_CROKISS -->|Lee/escribe registros del dominio| n_SHEET_CROKISS
@@ -167,6 +170,7 @@ flowchart LR
   n_SYS_CONTROL -->|Informe técnico por proceso visible en Accesos| n_SYS_POTENCIALES
   n_SYS_SALA -->|Lecturas agregadas y canario aislado de Sala| n_SYS_CONTROL
   n_SYS_INVERSION -.->|Lee copy público de presentación por recurso=textos| n_GAS_PLAN_POTENCIAL
+  n_SVC_SALA_PRODUCTOR -.->|Imagen para Sala con modelo fijo y recibo| n_SVC_AUTON_CLOUD
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PLAN_POTENCIAL pendiente;
@@ -691,3 +695,4 @@ flowchart LR
 | CON-BANDEJA-SALUD | GAS-BANDEJA-NUBE → SVC-HORARIOS-CLOUD | observacion: Recibo técnico leído por el vigilante y mostrado en Accesos. CTR-BANDEJA-NUBE | codigo | CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.; Render publicó seis comprobaciones de Bandeja pendientes, en el mismo servidor. Pruebas públicas de lectura y bytes separadas del consentimiento y la ejecución Google. |
 | CON-BANDEJA-PORTERO | GAS-BANDEJA-NUBE → GAS-PORTERO | autorizacion: Revalidar identidad de Dirección para aprobar y antes de enviar. CTR-BANDEJA-NUBE | codigo | Permiso privado ligado a sesión real, tarjeta, huella y última aprobación; veto aparte de comentarios. Regresiones sintéticas aprobadas; consentimiento y sesión real pendientes.; Código publicado; su compuerta o consentimiento reales todavía no se acreditan. |
 | CON-INVESTOR-STORY-TEXTS | SYS-INVERSION → GAS-PLAN-POTENCIAL | lectura: Lee copy público de presentación por recurso=textos. CTR-INVESTOR-STORY1; contenido comercial exclusivamente; fallo visible sin respaldo de datos privados. | propuesto | [plan-potencial/index.html](https://github.com/yodesarrollomx/plan-potencial/blob/78e616f858ad593f16891d2f5158cd46d5617bc2/index.html#L1244) — GET de textos comerciales ya utilizado por la landing pública; propuesta de consumo por la primera escena de inversión. |
+| CON-SALA-IMAGEN-OPENAI | SVC-SALA-PRODUCTOR → SVC-AUTON-CLOUD | api: Imagen para Sala con modelo fijo y recibo. CTR-SALA-IMAGEN-OPENAI-NUBE | propuesto | Propuesta autorizada para usar el servicio existente, aún sin prueba de generación. |

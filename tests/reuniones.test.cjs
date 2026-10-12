@@ -41,3 +41,14 @@ test('private handoff validates Drive destinations and does not certify share-sh
   assert(called);assert.match(receipt,/todavía no hay un recibo/);
   await assert.rejects(()=>shareFile(file,{canShare:()=>false}),/Descargar audio/);
 });
+
+test('meeting delivery binds initial meetings explicitly, rejects other cases and exports proposals without approval',async()=>{
+ const {validateDelivery,proposalsCSV}=await import('../reuniones/delivery.mjs');
+ const value={schema:'yod-meeting-delivery/v1',meeting:{meeting_id:'meeting-synthetic-001',case_id:null,title:'Initial',occurred_at:null,summary:'For review',source_sha256:'a'.repeat(64),archive_url:'https://drive.google.com/drive/folders/synthetic',minutes_url:'https://drive.google.com/file/d/minutes/view',transcript_url:'https://drive.google.com/file/d/transcript/view',origin:'initial'},proposals:[{id:'one',action:'=SUM(1)',owner:null,due_date:null,quote:'I will review it',start:31,status:'proposed'}]};
+ assert.equal(validateDelivery(value).meeting.case_id,null);
+ const bound=validateDelivery(value,'CASE-A');assert.equal(bound.meeting.case_id,'CASE-A');assert.equal(bound.initial,true);
+ assert.throws(()=>validateDelivery({...value,meeting:{...value.meeting,case_id:'CASE-B',origin:'project'}},'CASE-A'),/otro proyecto/);
+ assert.throws(()=>validateDelivery({...value,proposals:[{...value.proposals[0],status:'approved'}]}),/aprobación/);
+ assert.throws(()=>proposalsCSV(bound,[]),/Selecciona/);
+ const csv=proposalsCSV(bound,['one']);assert.match(csv,/'=SUM/);assert.match(csv,/no creado/);assert.match(csv,/Sin asignar/);
+});

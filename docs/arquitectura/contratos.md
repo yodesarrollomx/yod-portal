@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.despacho-perfil140.2 · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.despacho-perfil140.3 · 2026-10-12.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -724,3 +724,15 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Textos renderizados como texto; colores validados y URLs HTTPS verificadas.
 - La lectura pública no concede permisos en CRM, Portero ni evaluador.
 - La lámina no muestra un caso aprobado, un rendimiento garantizado ni una probabilidad de éxito.
+
+## CTR-SALA-IMAGEN-OPENAI-NUBE
+
+- Componentes: SYS-YOD-OS, SYS-CONTROL, SYS-SALA, GAS-SALA, SHEET-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-ACTIONS, EXT-MOTORES-MEDIA, SVC-AUTON-CLOUD, STORE-AUTON-ESTADO, EXT-OPENAI, EXT-RENDER.
+- Evidencia: Credenciales existentes del servicio propio y autoridad técnica del agente de Sala..
+- Entrada/campos: `Bearer derivado de propósito exclusivo; request_id hex64 y receta acotada.`.
+- Salida: PNG y recibo privado de modelo/receta/solicitud; modelo explícito por candidata., Cupo o resultado incierto: pendiente sin una imagen ficticia..
+
+- Clave OpenAI sólo en servidor; módulo público sin expedientes ni claves.
+- No repetir una generación confirmada o incierta; identidad ligada a receta.
+- No cambiar votos, permisos, planes, servicios, metas archivadas ni expedientes.
+- Activación sólo tras imagen comprobada; generación no equivale a aceptación editorial.

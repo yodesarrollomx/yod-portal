@@ -7,7 +7,7 @@ const childHTML='<!doctype html><html lang="es"><meta name="viewport" content="w
 const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><label>Superficie <input id=\"area\" value=\"120\" type=\"number\"></label><output id=\"result\">100</output><script>\nconst CASE=new URL(location.href).searchParams.get('open');let nonce=null,proposal=null;window.applies=0;window.receiptAcks=[];window.boardSilent=true;\nwindow.board={case_id:CASE,scenario_id:'scenario-1',scenario_name:'Base',revision:'r1',confirmed:true,pending:false,observed_at:new Date().toISOString(),fields:[{id:'inTerrenoM2',label:'Superficie',min:1,max:9999,editable:true,nullable:false,kind:'number'}],inputs:{inTerrenoM2:120},results:{noi:100}};\nwindow.publish=()=>{if(nonce)parent.postMessage({type:'yod:ppp:state',version:1,nonce,board:window.board},location.origin);};\narea.oninput=()=>{board.pending=true;board.confirmed=false;publish();};\nwindow.confirmDraft=()=>{board.pending=false;board.confirmed=true;area.value=120;publish();};\nwindow.confirmApply=()=>{board.revision='r'+(window.applies+1);board.inputs.inTerrenoM2=proposal.cambios[0].valor;board.results.noi=130;board.pending=false;board.confirmed=true;area.value=board.inputs.inTerrenoM2;result.textContent=130;publish();parent.postMessage({type:'yod:ppp:state',version:1,nonce,receipt:{request_id:proposal.request_id,ok:true,revision:board.revision}},location.origin);};\naddEventListener('message',e=>{if(e.origin!==location.origin||e.source!==parent||e.data.case_id!==CASE||e.data.version!==1)return;const m=e.data;\nif(m.type==='yod:ppp:hello'){if(window.boardSilent)return;nonce=m.nonce;publish();return;}if(m.nonce!==nonce)return;\nif(m.type==='yod:ppp:read')publish();\nif(m.type==='yod:ppp:receipt-ack')window.receiptAcks.push({request_id:m.request_id,revision:m.revision});\nif(m.type==='yod:ppp:apply'){window.applies++;proposal=m.proposal;board.pending=true;board.confirmed=false;publish();}\n});</script></body></html>";
 (async()=>{
  const browser=await chromium.launch({headless:true}),out=process.env.BROWSER_EVIDENCE_DIR||'/tmp/ppp-collab-evidence';fs.mkdirSync(out,{recursive:true});
- try{for(const viewport of [{width:1280,height:900},{width:390,height:844}]){
+ try{for(const viewport of [{width:1280,height:900},{width:860,height:900},{width:390,height:844}]){
   const context=await browser.newContext({viewport}),page=await context.newPage(),errors=[];let sessions=0,board=null,proposals=[],resolved=[],resolveAttempts=[],failNextResolve=false,wrongResolveIdentity=false,boardNotices=[];
   page.on('pageerror',e=>errors.push(e.message));
   await context.addInitScript(()=>{
@@ -78,6 +78,12 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await ppp.locator('#area').fill('135');
   await frame.locator('[data-tab="activity"]').click();
   await frame.locator('[data-tab="tasks"]').click();assert.equal(sessions,0);
+  const workBounds=await frame.locator('.workspace-body').boundingBox(),inspectorBounds=await frame.locator('.workspace-inspector').boundingBox();
+  assert.ok(workBounds&&inspectorBounds&&inspectorBounds.width>0&&inspectorBounds.height>0,'work inspector has usable geometry');
+  assert.ok(inspectorBounds.x>=workBounds.x-1&&inspectorBounds.y>=workBounds.y-1&&inspectorBounds.x+inspectorBounds.width<=workBounds.x+workBounds.width+1&&inspectorBounds.y+inspectorBounds.height<=workBounds.y+workBounds.height+1,'work inspector fits its workspace at '+viewport.width+'px');
+  assert.equal(await iframe.evaluate(el=>el.isConnected),true,'opening work keeps the same PPP mounted');
+  assert.equal(await frame.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true,'work view has no page overflow');
+
   await frame.locator('#voice-start').click();await frame.locator('[data-voice-phase="listening"]').waitFor();
   assert.equal(await frame.locator('[data-tab="tasks"]').getAttribute('aria-pressed'),'true','starting voice preserves the current workspace section');
   assert.equal(await iframe.evaluate(el=>el.isConnected),true);assert.equal(await ppp.locator('#area').inputValue(),'135');

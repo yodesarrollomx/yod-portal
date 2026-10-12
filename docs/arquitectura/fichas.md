@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.despacho-perfil140.2 · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.despacho-perfil140.3 · 2026-10-12.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -879,7 +879,7 @@ Abrir compuertas aprobadas y encolar trabajo sin decidir ni ejecutar
 - Entidades: trabajo, pieza, version.
 - Fuente de verdad: Configuración de reglas/motores y código de ejecución; ejecución viva pendiente.
 - Evidencia: [sala-edicion/nube/sala_productor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_productor.py#L130) — Abrir compuertas aprobadas y encolar trabajo sin decidir ni ejecutar; [sala-edicion/docs/SALA-CIERRE-ONLINE.md](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md) — PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes..
-- Conexiones: CON-079 (EXT-ACTIONS → SVC-SALA-PRODUCTOR); CON-080 (SVC-SALA-PRODUCTOR → GAS-SALA).
+- Conexiones: CON-079 (EXT-ACTIONS → SVC-SALA-PRODUCTOR); CON-080 (SVC-SALA-PRODUCTOR → GAS-SALA); CON-SALA-IMAGEN-OPENAI (SVC-SALA-PRODUCTOR → SVC-AUTON-CLOUD).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Uso efectivo, configuración y costo en producción no comprobados.
 
@@ -1021,7 +1021,7 @@ Ejecutar conversación, consulta y tareas del expediente autorizado, con estado 
 - Entidades: caso, ejecucion, objetivo, tarea, recibo.
 - Fuente de verdad: Expediente autorizado y registros de cada dominio; volumen privado para estado, recibos y recuperación..
 - Evidencia: Compone motor, voz, investigación, objetivos y conocimiento por caso.; Historia por ejecución, FIFO, progreso confirmado y recuperación; 282 pruebas aprobadas y una omitida, navegadores aprobados; recibo Render dep-db47qobncjis73c3vrp0 live..
-- Conexiones: CON-DESPACHO-3D-MOTOR (SYS-DESPACHO-3D → SVC-AUTON-CLOUD); CON-MOTOR-PORTERO (SVC-AUTON-CLOUD → GAS-PORTERO); CON-MOTOR-ESTADO (SVC-AUTON-CLOUD → STORE-AUTON-ESTADO); CON-MOTOR-JEV (SVC-AUTON-CLOUD → EXT-JEV); CON-MOTOR-DRIVE (SVC-AUTON-CLOUD → EXT-DRIVE); CON-MOTOR-OPENAI (SVC-AUTON-CLOUD → EXT-OPENAI); CON-RENDER-MOTOR (EXT-RENDER → SVC-AUTON-CLOUD).
+- Conexiones: CON-DESPACHO-3D-MOTOR (SYS-DESPACHO-3D → SVC-AUTON-CLOUD); CON-MOTOR-PORTERO (SVC-AUTON-CLOUD → GAS-PORTERO); CON-MOTOR-ESTADO (SVC-AUTON-CLOUD → STORE-AUTON-ESTADO); CON-MOTOR-JEV (SVC-AUTON-CLOUD → EXT-JEV); CON-MOTOR-DRIVE (SVC-AUTON-CLOUD → EXT-DRIVE); CON-MOTOR-OPENAI (SVC-AUTON-CLOUD → EXT-OPENAI); CON-RENDER-MOTOR (EXT-RENDER → SVC-AUTON-CLOUD); CON-SALA-IMAGEN-OPENAI (SVC-SALA-PRODUCTOR → SVC-AUTON-CLOUD).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 
 ## STORE-AUTON-ESTADO · Estado y conocimiento del autón

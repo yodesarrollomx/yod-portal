@@ -2,7 +2,7 @@ import {sha256} from './journal.mjs';
 
 export class MeetingRecorder {
   constructor(journal,onChange=()=>{}) {this.journal=journal;this.change=onChange;this.queue=Promise.resolve();this.active=false;this.error=null;}
-  async start(project) {
+  async start(project,context=null) {
     if(this.active)throw Error('Ya hay una reunión grabándose.');
     if(!globalThis.isSecureContext||!navigator.mediaDevices?.getUserMedia||!globalThis.MediaRecorder)throw Error('Este navegador no permite grabar. Usa HTTPS y un navegador compatible.');
     if(!/^[A-Za-z0-9_-]{1,100}$/.test(project))throw Error('Selecciona el identificador del proyecto.');
@@ -21,7 +21,7 @@ export class MeetingRecorder {
       const mime=['audio/webm;codecs=opus','audio/mp4','audio/ogg;codecs=opus'].find(m=>MediaRecorder.isTypeSupported(m));
       if(!mime)throw Error('No hay un formato de grabación compatible.');
       this.recorder=new MediaRecorder(this.stream,{mimeType:mime,audioBitsPerSecond:64000});
-      this.session={id:crypto.randomUUID(),project,mime,created:Date.now(),state:'recording',count:0,duration:0,interrupted:false};
+      this.session={id:crypto.randomUUID(),project,context,mime,created:Date.now(),state:'recording',count:0,duration:0,interrupted:false};
       this.error=null;this.queue=Promise.resolve();this.unsaved=[];
       await this.journal.save(this.session);
       this.last=performance.now();this.active=true;
