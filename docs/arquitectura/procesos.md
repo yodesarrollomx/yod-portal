@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.os-figuras-volumen · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.sala-decisiones.1 · 2026-10-12.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
@@ -242,7 +242,7 @@ flowchart TD
 | 5. Aprobación final | Editor | SYS-SALA, GAS-SALA, EXT-ACTIONS | Correcciones → Aprobación final | manual |
 | 6. Publicación y medición por verificar | Marketing | SYS-SALA, GAS-SALA, EXT-ACTIONS | Aprobación final → Publicación y medición por verificar | pendiente |
 
-Vacíos: Atribución pieza a lead y venta no comprobada; Migración histórica a nube necesita reconciliación de dependencias; Atribución campaña/pieza a leads/citas sí existe en Marketing; cierre a venta/margen no comprobado; No se comprobaron reglas habilitadas, secrets, cuotas, cola ni ejecución viva; fuente presente no prueba producción.
+Vacíos: Atribución pieza a lead y venta no comprobada; Migración histórica a nube necesita reconciliación de dependencias; Atribución campaña/pieza a leads/citas sí existe en Marketing; cierre a venta/margen no comprobado; No se comprobaron reglas habilitadas, secrets, cuotas, cola ni ejecución viva; fuente presente no prueba producción; Defecto observado: la vista editorial oculta tarjetas contestadas mientras el productor consume sólo tarjetas visibles; transferencia corregida y láminas restantes pendientes de implementación y comprobación..
 
 Evidencia: [sala-edicion/CLAUDE.md](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/CLAUDE.md#L29) — Compuerta de aprobación humana; [sala-edicion/nube/sala_cliente.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_cliente.py#L42) — Decisiones humanas protegidas en cliente de nube; [sala-edicion/nube/sala_productor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_productor.py#L130) — Planificación en fuente versionada; [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_ejecutor.py#L48) — Etapas configurables.
 
