@@ -96,8 +96,8 @@ Espacio de trabajo del Masterbroker: oferta comercial, oportunidades propias, so
 - Entidades: diagnostico, proyecto, lote, supuesto, acuerdo_pago.
 - Fuente de verdad: SHEET-CRM y cartera canónica; SHEET-INVERSION conserva presentación comercial.
 - Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L23) — Sistema presente en el catálogo canónico.
-- Conexiones: CON-040 (SYS-YOD-OS → SYS-INVERSION); CON-069 (SYS-INVERSION → GAS-INVERSION); CON-071 (SYS-INVERSION → GAS-PORTERO); CON-075 (SYS-INVERSION → SYS-PLAN-POTENCIAL); CON-BROKER-PREEVALUATION (SYS-INVERSION → GAS-PORTERO).
-- Mejoras: C · Cotización, plan y siguiente paso comercial.
+- Conexiones: CON-040 (SYS-YOD-OS → SYS-INVERSION); CON-069 (SYS-INVERSION → GAS-INVERSION); CON-071 (SYS-INVERSION → GAS-PORTERO); CON-075 (SYS-INVERSION → SYS-PLAN-POTENCIAL); CON-BROKER-PREEVALUATION (SYS-INVERSION → GAS-PORTERO); CON-INVESTOR-STORY-TEXTS (SYS-INVERSION → GAS-PLAN-POTENCIAL).
+- Mejoras: C · Cotización, plan y siguiente paso comercial; INV · Presentación animada para inversionistas desde Masterbrokers.
 
 ## SYS-MARKETING · Embudo comercial
 
@@ -442,8 +442,8 @@ Servir el contrato de Captación de Plan Potencial
 - Entidades: lead, actividad, cita.
 - Fuente de verdad: Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos..
 - Evidencia: [plan-potencial/CLAUDE.md](https://github.com/yodesarrollomx/plan-potencial/blob/78e616f858ad593f16891d2f5158cd46d5617bc2/CLAUDE.md#L95) — Tipo de fuente disponible: ausente; Registro backends-verificados.json: Fuente de versión activa 16 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente..
-- Conexiones: CON-006 (GAS-PLAN-POTENCIAL → SHEET-PLAN-POTENCIAL); CON-022 (SYS-MARKETING → GAS-PLAN-POTENCIAL); CON-023 (SYS-PLAN-POTENCIAL → GAS-PLAN-POTENCIAL); CON-052 (GAS-PLAN-POTENCIAL → SYS-YOD-OS); CON-059 (GAS-PLAN-POTENCIAL → EXT-CALENDAR); CON-076 (GAS-PLAN-POTENCIAL → SYS-MARKETING).
-- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Conexiones: CON-006 (GAS-PLAN-POTENCIAL → SHEET-PLAN-POTENCIAL); CON-022 (SYS-MARKETING → GAS-PLAN-POTENCIAL); CON-023 (SYS-PLAN-POTENCIAL → GAS-PLAN-POTENCIAL); CON-052 (GAS-PLAN-POTENCIAL → SYS-YOD-OS); CON-059 (GAS-PLAN-POTENCIAL → EXT-CALENDAR); CON-076 (GAS-PLAN-POTENCIAL → SYS-MARKETING); CON-INVESTOR-STORY-TEXTS (SYS-INVERSION → GAS-PLAN-POTENCIAL).
+- Mejoras: INV · Presentación animada para inversionistas desde Masterbrokers.
 - Pendientes: Permisos por operación y recorridos por rol pendientes de prueba.
 
 ## SHEET-PLAN-POTENCIAL · Datos de Captación de Plan Potencial
@@ -456,7 +456,7 @@ Almacenar registros del dominio ventas
 - Fuente de verdad: Hoja canónica contrastada mediante metadatos, encabezados y valores acotados; identidad técnica sólo en configuración privada..
 - Evidencia: Integración pendiente de verificar; Metadatos y encabezados de LEADS - POTENCIAL contrastados con documentación y lecturas autorizadas acotadas el11-oct-2026. Datos y ID físico omitidos del atlas; autoridad del runtime de servicio pendiente.; [sala-edicion/nube/plan_agregados.py](https://github.com/yodesarrollomx/sala-edicion/blob/a3b6c7053b3cd26333dd06878e74bb666288ce51/nube/plan_agregados.py) — PR266/267/268 integrados. Run 38156397507 success: cuenta de servicio existente con permiso lector, consulta autenticada GViz sólo cuando Sheets API está deshabilitada, columnas permitidas, exclusión de prueba y publicación verificada. Fuente no modificada..
 - Conexiones: CON-006 (GAS-PLAN-POTENCIAL → SHEET-PLAN-POTENCIAL); CON-PLAN-SHEETS-ONLINE (SHEET-PLAN-POTENCIAL → SYS-SALA).
-- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Mejoras: INV · Presentación animada para inversionistas desde Masterbrokers.
 - Pendientes: Verificación limitada a columnas contractuales; no acredita calidad de campos privados no leídos ni confirmación independiente de Calendar..
 
 ## GAS-CROKISS · Guardado de planos
@@ -879,7 +879,7 @@ Abrir compuertas aprobadas y encolar trabajo sin decidir ni ejecutar
 - Entidades: trabajo, pieza, version.
 - Fuente de verdad: Configuración de reglas/motores y código de ejecución; ejecución viva pendiente.
 - Evidencia: [sala-edicion/nube/sala_productor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_productor.py#L130) — Abrir compuertas aprobadas y encolar trabajo sin decidir ni ejecutar; [sala-edicion/docs/SALA-CIERRE-ONLINE.md](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md) — PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes..
-- Conexiones: CON-079 (EXT-ACTIONS → SVC-SALA-PRODUCTOR); CON-080 (SVC-SALA-PRODUCTOR → GAS-SALA).
+- Conexiones: CON-079 (EXT-ACTIONS → SVC-SALA-PRODUCTOR); CON-080 (SVC-SALA-PRODUCTOR → GAS-SALA); CON-SALA-IMAGEN-OPENAI (SVC-SALA-PRODUCTOR → SVC-AUTON-CLOUD).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Uso efectivo, configuración y costo en producción no comprobados.
 
@@ -1021,7 +1021,7 @@ Ejecutar conversación, consulta y tareas del expediente autorizado, con estado 
 - Entidades: caso, ejecucion, objetivo, tarea, recibo.
 - Fuente de verdad: Expediente autorizado y registros de cada dominio; volumen privado para estado, recibos y recuperación..
 - Evidencia: Compone motor, voz, investigación, objetivos y conocimiento por caso.; Historia por ejecución, FIFO, progreso confirmado y recuperación; 282 pruebas aprobadas y una omitida, navegadores aprobados; recibo Render dep-db47qobncjis73c3vrp0 live..
-- Conexiones: CON-DESPACHO-3D-MOTOR (SYS-DESPACHO-3D → SVC-AUTON-CLOUD); CON-MOTOR-PORTERO (SVC-AUTON-CLOUD → GAS-PORTERO); CON-MOTOR-ESTADO (SVC-AUTON-CLOUD → STORE-AUTON-ESTADO); CON-MOTOR-JEV (SVC-AUTON-CLOUD → EXT-JEV); CON-MOTOR-DRIVE (SVC-AUTON-CLOUD → EXT-DRIVE); CON-MOTOR-OPENAI (SVC-AUTON-CLOUD → EXT-OPENAI); CON-RENDER-MOTOR (EXT-RENDER → SVC-AUTON-CLOUD).
+- Conexiones: CON-DESPACHO-3D-MOTOR (SYS-DESPACHO-3D → SVC-AUTON-CLOUD); CON-MOTOR-PORTERO (SVC-AUTON-CLOUD → GAS-PORTERO); CON-MOTOR-ESTADO (SVC-AUTON-CLOUD → STORE-AUTON-ESTADO); CON-MOTOR-JEV (SVC-AUTON-CLOUD → EXT-JEV); CON-MOTOR-DRIVE (SVC-AUTON-CLOUD → EXT-DRIVE); CON-MOTOR-OPENAI (SVC-AUTON-CLOUD → EXT-OPENAI); CON-RENDER-MOTOR (EXT-RENDER → SVC-AUTON-CLOUD); CON-SALA-IMAGEN-OPENAI (SVC-SALA-PRODUCTOR → SVC-AUTON-CLOUD).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 
 ## STORE-AUTON-ESTADO · Estado y conocimiento del autón

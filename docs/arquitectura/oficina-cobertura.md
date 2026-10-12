@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 26 sistemas y 90 componentes distribuidos exactamente una vez.
-- 10 áreas; 137 conexiones registradas, 10 marcadas como verificadas en el atlas.
+- 10 áreas; 139 conexiones registradas, 10 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -737,6 +737,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-052 · GAS-PLAN-POTENCIAL → SYS-YOD-OS · lectura\_agregada · Agrega indicadores en tablero cenital · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-059 · GAS-PLAN-POTENCIAL → EXT-CALENDAR · integracion · Confirma cita agendada · Estado: declarado · Ejecución no verificada en el atlas.
 - CON-076 · GAS-PLAN-POTENCIAL → SYS-MARKETING · atribucion · Cruza campañas/piezas con leads y citas · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-INVESTOR-STORY-TEXTS · SYS-INVERSION → GAS-PLAN-POTENCIAL · lectura · Lee copy público de presentación por recurso=textos · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -751,10 +752,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-052 · Conector de resumen · Estado: codigo · yodesarrollomx/yod-portal · tablero.html · Revisión: HEAD\_baseline
 - CON-059 · Cruce declarado con Calendar · Estado: declarado · yodesarrollomx/plan-potencial · CLAUDE.md · Revisión: HEAD\_baseline
 - CON-076 · Atribución implementada a nivel campaña y pieza · Estado: codigo · yodesarrollomx/aurum-board · scripts/pull\_metrics.py · Revisión: HEAD\_baseline
+- CON-INVESTOR-STORY-TEXTS · GET de textos comerciales ya utilizado por la landing pública; propuesta de consumo por la primera escena de inversión. · Estado: codigo · yodesarrollomx/plan-potencial · index.html · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 6 conexiones sin verificación de ejecución registrada.
+- 7 conexiones sin verificación de ejecución registrada.
 - Permisos por operación y recorridos por rol pendientes de prueba
 
 ### Datos de Captación de Plan Potencial · SHEET-PLAN-POTENCIAL
@@ -1881,6 +1883,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-071 · SYS-INVERSION → GAS-PORTERO · autenticacion · Acceso compartido del equipo · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-075 · SYS-INVERSION → SYS-PLAN-POTENCIAL · captacion · CTA con atribución de presentación · Estado: declarado · Ejecución no verificada en el atlas.
 - CON-BROKER-PREEVALUATION · SYS-INVERSION → GAS-PORTERO · api · Preevaluación y retorno de terreno a cartera · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-INVESTOR-STORY-TEXTS · SYS-INVERSION → GAS-PLAN-POTENCIAL · lectura · Lee copy público de presentación por recurso=textos · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -1894,10 +1897,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-071 · Carga del Portero · Estado: codigo · yodesarrollomx/yodesarrollo-board · index.html · Revisión: HEAD\_baseline
 - CON-075 · CTA comercial con campaña · Estado: declarado · yodesarrollomx/yodesarrollo-board · CLAUDE.md · Revisión: HEAD\_baseline
 - [CON-BROKER-PREEVALUATION · PR12 integrado: lanzamiento de un solo uso y retorno autorizado; backend v92 publicado, flujo individual comprobado con servicios sintéticos. · Estado: codigo · yodesarrollomx/yodesarrollo-board · brokers-evaluator.js · Revisión: 19fbe950af458778607f2ae0baa70b8bc7894105](https://github.com/yodesarrollomx/yodesarrollo-board/blob/19fbe950af458778607f2ae0baa70b8bc7894105/brokers-evaluator.js)
+- CON-INVESTOR-STORY-TEXTS · GET de textos comerciales ya utilizado por la landing pública; propuesta de consumo por la primera escena de inversión. · Estado: codigo · yodesarrollomx/plan-potencial · index.html · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 5 conexiones sin verificación de ejecución registrada.
+- 6 conexiones sin verificación de ejecución registrada.
 
 ### Carpeta de inversión · GAS-INVERSION
 
@@ -2340,6 +2344,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - CON-079 · EXT-ACTIONS → SVC-SALA-PRODUCTOR · automatizacion · Programa productor cada veinte minutos · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-080 · SVC-SALA-PRODUCTOR → GAS-SALA · api · Lee decisiones/reglas y escribe cola · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-SALA-IMAGEN-OPENAI · SVC-SALA-PRODUCTOR → SVC-AUTON-CLOUD · api · Imagen para Sala con modelo fijo y recibo · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2350,10 +2355,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - CON-079 · Frecuencia configurada en workflow, no evidencia de corridas · Estado: codigo · yodesarrollomx/sala-edicion · .github/workflows/sala-cada-hora.yml · Revisión: HEAD\_baseline
 - CON-080 · Planificador de compuertas · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_productor.py · Revisión: HEAD\_baseline
+- CON-SALA-IMAGEN-OPENAI · Propuesta autorizada para usar el servicio existente, aún sin prueba de generación. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 2 conexiones sin verificación de ejecución registrada.
+- 3 conexiones sin verificación de ejecución registrada.
 - Uso efectivo, configuración y costo en producción no comprobados
 
 ### Ejecutor de Sala · SVC-SALA-EJECUTOR
@@ -2845,6 +2851,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-MOTOR-DRIVE · SVC-AUTON-CLOUD → EXT-DRIVE · lectura · Leer originales, documentos y pasajes del expediente · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-MOTOR-OPENAI · SVC-AUTON-CLOUD → EXT-OPENAI · integracion · Voz y herramientas con claves de servidor · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-RENDER-MOTOR · EXT-RENDER → SVC-AUTON-CLOUD · alojamiento · Servicio y volumen persistentes en la versión efectiva · Estado: declarado · Ejecución no verificada en el atlas.
+- CON-SALA-IMAGEN-OPENAI · SVC-SALA-PRODUCTOR → SVC-AUTON-CLOUD · api · Imagen para Sala con modelo fijo y recibo · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2860,10 +2867,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [CON-MOTOR-DRIVE · Leer originales, documentos y pasajes del expediente · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/RESEARCH.md · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/RESEARCH.md)
 - [CON-MOTOR-OPENAI · Voz y herramientas con claves de servidor · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/voice-lane.mjs · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/voice-lane.mjs)
 - [CON-RENDER-MOTOR · Servicio y volumen persistentes en la versión efectiva · Estado: declarado · alexpueblag/yod-agent-cloud · cloud/README.txt · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/README.txt)
+- CON-SALA-IMAGEN-OPENAI · Propuesta autorizada para usar el servicio existente, aún sin prueba de generación. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 7 conexiones sin verificación de ejecución registrada.
+- 8 conexiones sin verificación de ejecución registrada.
 
 ### OpenAI · conversación y ejecución · EXT-OPENAI
 

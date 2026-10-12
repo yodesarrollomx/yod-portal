@@ -711,3 +711,28 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - No reutilizar una generación cuya parte revisable contenga candidatas retiradas.
 - La vista no puede mostrar un modelo vetado como sustituto silencioso al faltar una toma válida.
 - Recuperación de fuente sólo para IDs canónicos activos del backend e índice de la publicación propia; imágenes en rutas locales autorizadas, huellas verificadas y fallo de red explícito.
+
+## CTR-INVESTOR-STORY1
+
+- Componentes: SYS-INVERSION, GAS-PLAN-POTENCIAL, SHEET-PLAN-POTENCIAL.
+- Evidencia: Código público del formulario Plan de Potencial: GET recurso=textos; nuevas claves comerciales autorizadas por Dirección y escritas mediante conector de Sheets..
+- Entrada/campos: `Respuesta textos o diccionario directo.`, `Claves inv1_* para copy, marca, colores, duración y puente.`, `Cliente anónimo; no recibe ni transmite credenciales del Masterbroker.`.
+- Salida: Narrativa comercial para inversionista; animación conceptual por scroll., Tarjeta Material con apertura pública y copia de enlace., Error recuperable si falta contenido; ninguna cifra o aprobación inventada..
+
+- Sólo GET al contrato de textos; ninguna escritura o prueba de negocio desde la presentación.
+- Sin nombres, ID de broker, correo, cartera o estado de cuenta en el enlace compartido.
+- Textos renderizados como texto; colores validados y URLs HTTPS verificadas.
+- La lectura pública no concede permisos en CRM, Portero ni evaluador.
+- La lámina no muestra un caso aprobado, un rendimiento garantizado ni una probabilidad de éxito.
+
+## CTR-SALA-IMAGEN-OPENAI-NUBE
+
+- Componentes: SYS-YOD-OS, SYS-CONTROL, SYS-SALA, GAS-SALA, SHEET-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-ACTIONS, EXT-MOTORES-MEDIA, SVC-AUTON-CLOUD, STORE-AUTON-ESTADO, EXT-OPENAI, EXT-RENDER.
+- Evidencia: Credenciales existentes del servicio propio y autoridad técnica del agente de Sala..
+- Entrada/campos: `Bearer derivado de propósito exclusivo; request_id hex64 y receta acotada.`.
+- Salida: PNG y recibo privado de modelo/receta/solicitud; modelo explícito por candidata., Cupo o resultado incierto: pendiente sin una imagen ficticia..
+
+- Clave OpenAI sólo en servidor; módulo público sin expedientes ni claves.
+- No repetir una generación confirmada o incierta; identidad ligada a receta.
+- No cambiar votos, permisos, planes, servicios, metas archivadas ni expedientes.
+- Activación sólo tras imagen comprobada; generación no equivale a aceptación editorial.

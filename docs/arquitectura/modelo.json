@@ -6221,6 +6221,47 @@
           "status": "codigo"
         }
       ]
+    },
+    {
+      "id": "CON-INVESTOR-STORY-TEXTS",
+      "from": "SYS-INVERSION",
+      "to": "GAS-PLAN-POTENCIAL",
+      "label": "Lee copy público de presentación por recurso=textos",
+      "kind": "lectura",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/plan-potencial",
+          "path": "index.html",
+          "lines": "1244",
+          "claim": "GET de textos comerciales ya utilizado por la landing pública; propuesta de consumo por la primera escena de inversión.",
+          "status": "codigo"
+        }
+      ],
+      "contract": "CTR-INVESTOR-STORY1; contenido comercial exclusivamente; fallo visible sin respaldo de datos privados.",
+      "contract_ids": [
+        "CTR-INVESTOR-STORY1"
+      ]
+    },
+    {
+      "id": "CON-SALA-IMAGEN-OPENAI",
+      "from": "SVC-SALA-PRODUCTOR",
+      "to": "SVC-AUTON-CLOUD",
+      "kind": "api",
+      "label": "Imagen para Sala con modelo fijo y recibo",
+      "contract": "CTR-SALA-IMAGEN-OPENAI-NUBE",
+      "contract_ids": [
+        "CTR-SALA-IMAGEN-OPENAI-NUBE"
+      ],
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "Propuesta autorizada para usar el servicio existente, aún sin prueba de generación.",
+          "status": "propuesto"
+        }
+      ]
     }
   ],
   "processes": [
@@ -8132,6 +8173,42 @@
         "Integrar propuesta central y fijar commit del atlas antes de integrar frontend",
         "Actualizar únicamente implementación existente después de frontend compatible",
         "Registrar despliegue y verificar conexión pública por separado del modelo nativo"
+      ]
+    },
+    {
+      "id": "INV",
+      "titulo": "Presentación animada para inversionistas desde Masterbrokers",
+      "boards": [
+        "SYS-INVERSION",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL"
+      ],
+      "problem": "La propuesta comercial requiere una primera escena legible en celular y continuidad visual entre capítulos, sin duplicar contenido en Git.",
+      "benefit": "Presentar la oportunidad y compartirla desde Material del Masterbroker con una narrativa orientada al capital.",
+      "metric": "Primera escena reproducible, lectura móvil, pausa, repetición, transición y enlace copiable; resultados comerciales por medir.",
+      "dependencies": [],
+      "effort": "M",
+      "decision": "aprobada",
+      "approval": {
+        "fecha": "2026-10-12",
+        "rol": "Dirección",
+        "alcance": "Montar lámina 1 animada en línea, enlazarla desde el perfil Masterbroker y conservar versiones anteriores; marca pública exclusiva YoDesarrollo."
+      },
+      "prerequisites": [
+        "Conservar la autorización del tablero privado y usar sólo textos comerciales en el endpoint público existente.",
+        "Contrastar el contrato de textos; no exponer cartera, identidad, precios ni criterios financieros privados."
+      ],
+      "tasks": [
+        "Guardar copy y configuración de escena en las filas de textos comerciales en Sheets.",
+        "Publicar gráfico vectorial responsive y animación ligada al scroll con controles.",
+        "Añadir acceso y copia del enlace en Material, sin modificar autorización ni registros CRM.",
+        "Verificar móvil, escritorio, movimiento reducido y publicación de texto en línea."
+      ],
+      "acceptance": [
+        "El enlace comercial abre sin sesión y muestra únicamente contenido editorial público.",
+        "Los textos y duración se cambian desde Sheets; Git contiene lógica y esquema conceptual sintético.",
+        "Los controles funcionan y el inmueble de la escena se conserva en el puente a la evaluación.",
+        "Un perfil sin identidad vinculada no se activa ni se suplanta para comprobar la integración."
       ]
     }
   ],
@@ -11404,6 +11481,57 @@
       "rollback": "Retirar enlaces y detener ingestión; conservar grabaciones y exportaciones, sin borrar datos."
     },
     {
+      "id": "CHG-INVESTOR-STORY-SCENE1",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL",
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
+      ],
+      "status": "propuesto",
+      "approval": "Instrucción explícita de Dirección en conversación del 12-oct-2026: publicar primera lámina por scroll y anclar en Material del Masterbroker, conservando originales y marca YoDesarrollo.",
+      "proposal": "Escena pública independiente bajo el sitio comercial existente. Inversionista → inmueble → transformación → evaluación. Textos/configuración en el contrato público existente de Sheets; sin nuevo backend ni datos privados en Git. Tarjeta Material disponible en el workspace autorizado. Identidad individual aún debe resolverse desde el registro privado, no por parámetros del cliente.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check; verificadores y pruebas existentes del portal.",
+        "Pruebas de normalización, progreso y URLs con datos sintéticos.",
+        "Navegador 390x844 y 1440x900: scroll, pausa, repetición, vista completa, copiar enlace y movimiento reducido.",
+        "Lectura real limitada a GET de textos y publicación del frontend; ninguna escritura de prueba en CRM."
+      ],
+      "deployment": "Propuesta aprobada y textos escritos en Sheets mediante conector. Frontend y lectura pública todavía por verificar.",
+      "rollback": "Revertir el PR frontend y enlace Material. Conservar copy de Sheets y originales; no modificar cartera, acuerdos ni identidad."
+    },
+    {
+      "id": "CHG-SALA-OPENAI-BROKER-20261012",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-MOTORES-MEDIA",
+        "SVC-AUTON-CLOUD",
+        "STORE-AUTON-ESTADO",
+        "EXT-OPENAI",
+        "EXT-RENDER"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección autoriza retirar el generador deficiente y rehacer sus imágenes actuales mediante otro modelo y las APIs ya disponibles en nube.",
+      "proposal": "Puente interno /sala/image en el servicio existente de Render yod-cloud-room: modelo fijo gpt-image-1.5 y clave OpenAI que permanece en servidor. El agente de Sala usa una credencial derivada de propósito exclusivo; cada solicitud tiene identidad y receta, recibo durable y límite diario. Una respuesta incierta no se repite. Las imágenes siguen por compositor, publicación y montaje existentes, sin votos escritos. El módulo genérico y sus fixtures pueden verificarse públicamente; la suite del servidor privado se verifica sin claves ni datos productivos antes de escuchar. Activar producción sólo después de una imagen real y su inspección.",
+      "tests": [
+        "Autenticación anterior a red; solicitud acotada; modelo fijo y cuota explícita.",
+        "Idempotencia y bloqueo de resultado incierto; recetas distintas no comparten identidad.",
+        "Módulo público y copia privada idénticos, fixtures sin claves ni datos y checks de Sala/atlas.",
+        "Suite privada con entorno sin credenciales antes del arranque; comprobar deploy existente.",
+        "API real con escena sintética antes de activación; completar reemplazos sin votos editoriales."
+      ],
+      "deployment": "Retiro de Pollinations publicado94ecdf77 y confirmado38295651381:0 vetadas visibles,27 pendientes. Cloudflare y Gemini responden429. Render está conectado al servicio propio existente y su configuración declara OpenAI; acceso real a imagen aún por comprobar.",
+      "rollback": "Desactivar únicamente SALA_IMAGE_ENABLED y revertir por PR; preservar recibos, volumen, decisiones y retiro. Sin cambios de planes, recursos, identidades ni metas de los autóns."
+    },
+    {
       "id": "CHG-REUNIONES-EXPEDIENTE-20261012",
       "components": [
         "SYS-YOD-OS",
@@ -12874,6 +13002,64 @@
         "No reutilizar una generación cuya parte revisable contenga candidatas retiradas.",
         "La vista no puede mostrar un modelo vetado como sustituto silencioso al faltar una toma válida.",
         "Recuperación de fuente sólo para IDs canónicos activos del backend e índice de la publicación propia; imágenes en rutas locales autorizadas, huellas verificadas y fallo de red explícito."
+      ]
+    },
+    {
+      "id": "CTR-INVESTOR-STORY1",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL"
+      ],
+      "source": "Código público del formulario Plan de Potencial: GET recurso=textos; nuevas claves comerciales autorizadas por Dirección y escritas mediante conector de Sheets.",
+      "input": [
+        "Respuesta textos o diccionario directo.",
+        "Claves inv1_* para copy, marca, colores, duración y puente.",
+        "Cliente anónimo; no recibe ni transmite credenciales del Masterbroker."
+      ],
+      "output": [
+        "Narrativa comercial para inversionista; animación conceptual por scroll.",
+        "Tarjeta Material con apertura pública y copia de enlace.",
+        "Error recuperable si falta contenido; ninguna cifra o aprobación inventada."
+      ],
+      "invariants": [
+        "Sólo GET al contrato de textos; ninguna escritura o prueba de negocio desde la presentación.",
+        "Sin nombres, ID de broker, correo, cartera o estado de cuenta en el enlace compartido.",
+        "Textos renderizados como texto; colores validados y URLs HTTPS verificadas.",
+        "La lectura pública no concede permisos en CRM, Portero ni evaluador.",
+        "La lámina no muestra un caso aprobado, un rendimiento garantizado ni una probabilidad de éxito."
+      ]
+    },
+    {
+      "id": "CTR-SALA-IMAGEN-OPENAI-NUBE",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-MOTORES-MEDIA",
+        "SVC-AUTON-CLOUD",
+        "STORE-AUTON-ESTADO",
+        "EXT-OPENAI",
+        "EXT-RENDER"
+      ],
+      "source": "Credenciales existentes del servicio propio y autoridad técnica del agente de Sala.",
+      "input": [
+        "Bearer derivado de propósito exclusivo; request_id hex64 y receta acotada."
+      ],
+      "output": [
+        "PNG y recibo privado de modelo/receta/solicitud; modelo explícito por candidata.",
+        "Cupo o resultado incierto: pendiente sin una imagen ficticia."
+      ],
+      "invariants": [
+        "Clave OpenAI sólo en servidor; módulo público sin expedientes ni claves.",
+        "No repetir una generación confirmada o incierta; identidad ligada a receta.",
+        "No cambiar votos, permisos, planes, servicios, metas archivadas ni expedientes.",
+        "Activación sólo tras imagen comprobada; generación no equivale a aceptación editorial."
       ]
     }
   ],
@@ -14446,6 +14632,44 @@
         "SYS-SALA",
         "SVC-SALA-PRODUCTOR",
         "EXT-MOTORES-MEDIA"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": "nube/imagen_api_broker.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-MOTORES-MEDIA",
+        "SVC-AUTON-CLOUD",
+        "STORE-AUTON-ESTADO",
+        "EXT-OPENAI",
+        "EXT-RENDER"
+      ]
+    },
+    {
+      "repo": "alexpueblag/yod-agent-cloud",
+      "prefix": "cloud/sala-image-broker.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-MOTORES-MEDIA",
+        "SVC-AUTON-CLOUD",
+        "STORE-AUTON-ESTADO",
+        "EXT-OPENAI",
+        "EXT-RENDER"
       ]
     }
   ],
