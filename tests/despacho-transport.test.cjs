@@ -16,7 +16,7 @@ test('office requests accept only scoped reads and never accept actor or level f
  assert.deepEqual(calls.map(c=>c.operation),['readOfficePermissions','readOfficePending']);assert.equal(calls[1].k,'synthetic-session');assert.deepEqual(calls[1].payload,{case_id:'synthetic',space_id:'juntas'});
 });
 
-test('only authenticated durable read may carry bounded accumulated history; other operations retain512KiB',async()=>{
+test('only authenticated durable read may carry bounded accumulated history; other operations retain their524288-character bound',async()=>{
  const payload=JSON.stringify({ok:true,history:'x'.repeat(620120)}),calls=[];
  const h=harness(async(url,request)=>{calls.push(JSON.parse(request.body));return {ok:true,text:async()=>payload};}),transport=h.create();
  assert.equal((await transport.read({case_id:'synthetic-case'})).history.length,620120);
