@@ -10,6 +10,11 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      reuniones:
+        description: Compilar y verificar el piloto de reuniones iPhone
+        type: boolean
+        default: false
 
 jobs:
   verificar:
@@ -25,3 +30,7 @@ jobs:
         run: node verify-portal.cjs
       - name: Matriz de accesos (potenciales-yod) = SYSTEM_CODES
         run: node verify-accesos.cjs
+
+  reuniones:
+    if: startsWith(github.head_ref, 'feat/reuniones-') || (github.event_name == 'workflow_dispatch' && inputs.reuniones)
+    uses: ./.github/workflows/reuniones.yml

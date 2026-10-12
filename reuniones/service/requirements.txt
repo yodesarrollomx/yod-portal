@@ -1,0 +1,7 @@
+fastapi==0.115.12
+uvicorn==0.34.2
+httpx==0.28.1
+google-auth==2.40.3
+requests==2.32.4
+# Worker only: install in an isolated environment with enough CPU/RAM.
+faster-whisper==1.2.1

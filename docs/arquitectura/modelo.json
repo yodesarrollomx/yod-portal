@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.despacho-perfil140.1",
+  "revision": "2026-10-12.despacho-perfil140.2",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -6221,6 +6221,28 @@
           "status": "codigo"
         }
       ]
+    },
+    {
+      "id": "CON-INVESTOR-STORY-TEXTS",
+      "from": "SYS-INVERSION",
+      "to": "GAS-PLAN-POTENCIAL",
+      "label": "Lee copy público de presentación por recurso=textos",
+      "kind": "lectura",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/plan-potencial",
+          "path": "index.html",
+          "lines": "1244",
+          "claim": "GET de textos comerciales ya utilizado por la landing pública; propuesta de consumo por la primera escena de inversión.",
+          "status": "codigo"
+        }
+      ],
+      "contract": "CTR-INVESTOR-STORY1; contenido comercial exclusivamente; fallo visible sin respaldo de datos privados.",
+      "contract_ids": [
+        "CTR-INVESTOR-STORY1"
+      ]
     }
   ],
   "processes": [
@@ -8132,6 +8154,42 @@
         "Integrar propuesta central y fijar commit del atlas antes de integrar frontend",
         "Actualizar únicamente implementación existente después de frontend compatible",
         "Registrar despliegue y verificar conexión pública por separado del modelo nativo"
+      ]
+    },
+    {
+      "id": "INV",
+      "titulo": "Presentación animada para inversionistas desde Masterbrokers",
+      "boards": [
+        "SYS-INVERSION",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL"
+      ],
+      "problem": "La propuesta comercial requiere una primera escena legible en celular y continuidad visual entre capítulos, sin duplicar contenido en Git.",
+      "benefit": "Presentar la oportunidad y compartirla desde Material del Masterbroker con una narrativa orientada al capital.",
+      "metric": "Primera escena reproducible, lectura móvil, pausa, repetición, transición y enlace copiable; resultados comerciales por medir.",
+      "dependencies": [],
+      "effort": "M",
+      "decision": "aprobada",
+      "approval": {
+        "fecha": "2026-10-12",
+        "rol": "Dirección",
+        "alcance": "Montar lámina 1 animada en línea, enlazarla desde el perfil Masterbroker y conservar versiones anteriores; marca pública exclusiva YoDesarrollo."
+      },
+      "prerequisites": [
+        "Conservar la autorización del tablero privado y usar sólo textos comerciales en el endpoint público existente.",
+        "Contrastar el contrato de textos; no exponer cartera, identidad, precios ni criterios financieros privados."
+      ],
+      "tasks": [
+        "Guardar copy y configuración de escena en las filas de textos comerciales en Sheets.",
+        "Publicar gráfico vectorial responsive y animación ligada al scroll con controles.",
+        "Añadir acceso y copia del enlace en Material, sin modificar autorización ni registros CRM.",
+        "Verificar móvil, escritorio, movimiento reducido y publicación de texto en línea."
+      ],
+      "acceptance": [
+        "El enlace comercial abre sin sesión y muestra únicamente contenido editorial público.",
+        "Los textos y duración se cambian desde Sheets; Git contiene lógica y esquema conceptual sintético.",
+        "Los controles funcionan y el inmueble de la escena se conserva en el puente a la evaluación.",
+        "Un perfil sin identidad vinculada no se activa ni se suplanta para comprobar la integración."
       ]
     }
   ],
@@ -11378,6 +11436,53 @@
       "rollback": "Revertir implementación mediante PR conservando historia y la orden de retiro. Nunca reactivar Pollinations o Tiny-SD sin revocación explícita de Dirección."
     },
     {
+      "id": "CHG-REUNIONES-RECUPERABLES-20261012",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE",
+        "SYS-DESPACHO"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección sustituye la propuesta de contratación por flujo privado sin nuevas suscripciones, con Drive conectado y Whisper existente.",
+      "proposal": "Modo principal sin servidor: grabar/importar, conservar audio local, compartir mediante la hoja nativa a Drive privado y copiar encargo para procesamiento asistido con Whisper local. Carpeta configurada sólo en el dispositivo/perfil privado, sin IDs privados en repo. El asistente procesa durante una conversación activa y entrega minuta, evidencias y pendientes; no promete vigilancia autónoma ni procesamiento cada cinco minutos. Backend y app nativa quedan opcionales, sin contratación ni activación.",
+      "tests": [
+        "Corte de red y reintentos idempotentes",
+        "Fragmento alterado, hueco y acuse perdido",
+        "Aislamiento de actor/caso",
+        "Recuperación tras cierre y errores de almacenamiento",
+        "Verificadores del portal y pruebas sintéticas de navegador",
+        "638 pruebas Node aprobadas; 10 pruebas servidor, 8 escenarios navegador y recorrido real Drive → Whisper → Drive con audio sintético."
+      ],
+      "deployment": "Flujo privado Drive → Whisper local → Drive verificado con audio sintético, hashes idénticos y permisos privados. Minuta previa revisada incorporada al archivo privado. Frontend pendiente de publicar desde PR; backend de pago y app nativa no activados.",
+      "rollback": "Retirar enlaces y detener ingestión; conservar grabaciones y exportaciones, sin borrar datos."
+    },
+    {
+      "id": "CHG-INVESTOR-STORY-SCENE1",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL",
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
+      ],
+      "status": "propuesto",
+      "approval": "Instrucción explícita de Dirección en conversación del 12-oct-2026: publicar primera lámina por scroll y anclar en Material del Masterbroker, conservando originales y marca YoDesarrollo.",
+      "proposal": "Escena pública independiente bajo el sitio comercial existente. Inversionista → inmueble → transformación → evaluación. Textos/configuración en el contrato público existente de Sheets; sin nuevo backend ni datos privados en Git. Tarjeta Material disponible en el workspace autorizado. Identidad individual aún debe resolverse desde el registro privado, no por parámetros del cliente.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check; verificadores y pruebas existentes del portal.",
+        "Pruebas de normalización, progreso y URLs con datos sintéticos.",
+        "Navegador 390x844 y 1440x900: scroll, pausa, repetición, vista completa, copiar enlace y movimiento reducido.",
+        "Lectura real limitada a GET de textos y publicación del frontend; ninguna escritura de prueba en CRM."
+      ],
+      "deployment": "Propuesta aprobada y textos escritos en Sheets mediante conector. Frontend y lectura pública todavía por verificar.",
+      "rollback": "Revertir el PR frontend y enlace Material. Conservar copy de Sheets y originales; no modificar cartera, acuerdos ni identidad."
+    },
+    {
       "id": "CHG-DESPACHO-PERFIL-ORDEN-20261012",
       "components": [
         "SYS-YOD-OS",
@@ -11387,7 +11492,7 @@
         "SHEET-PPP-MODELOS",
         "GAS-PORTERO"
       ],
-      "status": "propuesto",
+      "status": "implementado_local",
       "approval": "Dirección solicita reorganizar y probar el perfil común de los autóns, empezando por el recorrido de Gastón, con revisión UX y de métodos de trabajo; conservar capacidades y fuentes canónicas.",
       "proposal": "PPP canónico persistente junto a conversación; trabajo organizado en Ahora/Bloqueado/Para revisar, con encargos separados de metas de negocio, una siguiente acción explícita y evidencia contextual. Conservar documentos, navegador, notas/versiones, presentación e historial en accesos secundarios. Recuperar lectura PPP sin cerrar voz ni sesión compartida; lectura puntual por caso no depende de cargar todo el catálogo. Compartir sólo preparación autorizada vigente por caso/actor, sin ampliar ACL ni restaurar credenciales persistentes. Métodos inspirados en autores publicados son adaptaciones propias, no revisiones reales de esos autores.",
       "tests": [
@@ -11405,7 +11510,7 @@
         "Recorridos con datos aislados y mediciones separadas clic→perfil/clic→PPP/inicio→audio/interrupción; una prueba sintética no acredita micrófono ni expediente privado.",
         "Antes de cierre: prueba de sesión privada con fuente y despliegue exactos, sin datos privados en repos públicos."
       ],
-      "deployment": "Propuesta registrada antes de editar código. Fuentes portal5169b195 y revisión PPP de su bootstrap; publicación y aceptación operativa pendientes. Coordinación de navegador privado y ejecutor por el Buzón de trabajo mutuo.",
+      "deployment": "Código candidato en PortalPR203 y PotencialesPR29, pruebas completas y publicación pendientes. Historial de fuente anterior y propuesta0a548f conservados. No acredita micrófono ni expediente privado; no publica descriptores GAS ni sincronización MOAC.",
       "rollback": "Revertir módulos del perfil y arranque PPP por PR conservando IDs, URLs, permisos, libros, datos, recibos y volumen; no restaurar snapshots de negocio ni reactivar automatizaciones canceladas."
     }
   ],
@@ -12836,24 +12941,48 @@
       "input": [
         "Política versionada: motor cpu/modelo segmind/tiny-sd retirado.",
         "Fuente actual de decisiones fusionadas, números reales de lámina y candidata elegida.",
-        "Candidatas con procedencia, historial, notas y referencias aprobadas.",
-        "Retiro de Pollinations FLUX identificado por archivo y orden actual de rehacer fuentes afectadas de piezas activas, incluida su presentación aprobada anterior."
+        "Candidatas con procedencia, historial, notas y referencias aprobadas."
       ],
       "output": [
         "Generación limitada a motores permitidos; falta de cupo genera pendiente explícito.",
         "Revisión sin candidatas vetadas; selección conserva el índice original.",
-        "Nueva versión de las pendientes depuradas o rehechas y recibo de montaje; historia y aprobaciones conservadas.",
-        "Sustitución pendiente explícita y revalidación de fuentes retiradas; las decisiones anteriores permanecen en historia."
+        "Nueva versión de las pendientes depuradas o rehechas y recibo de montaje; historia y aprobaciones conservadas."
       ],
       "invariants": [
         "Ningún respaldo implícito ni una regla antigua puede reactivar el modelo retirado.",
         "Veto de imagen no altera cerebro de texto, voz, escena, reglas comerciales ni cuotas.",
         "Nunca escribir votos editoriales ni inferir rechazo de toda carta como voto contra cada motor.",
         "Filtrar opciones no renumera el índice que se guarda como toma elegida.",
-        "No alterar archivos, votos ni selección histórica. Una instrucción explícita posterior de Dirección puede retirar una fuente activa aprobada y exigir nueva versión/revisión; jamás equivale a un voto automático.",
+        "No alterar archivos ni selecciones ya aprobados; los documentos anteriores siguen en historia.",
         "No reutilizar una generación cuya parte revisable contenga candidatas retiradas.",
         "La vista no puede mostrar un modelo vetado como sustituto silencioso al faltar una toma válida.",
         "Recuperación de fuente sólo para IDs canónicos activos del backend e índice de la publicación propia; imágenes en rutas locales autorizadas, huellas verificadas y fallo de red explícito."
+      ]
+    },
+    {
+      "id": "CTR-INVESTOR-STORY1",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL"
+      ],
+      "source": "Código público del formulario Plan de Potencial: GET recurso=textos; nuevas claves comerciales autorizadas por Dirección y escritas mediante conector de Sheets.",
+      "input": [
+        "Respuesta textos o diccionario directo.",
+        "Claves inv1_* para copy, marca, colores, duración y puente.",
+        "Cliente anónimo; no recibe ni transmite credenciales del Masterbroker."
+      ],
+      "output": [
+        "Narrativa comercial para inversionista; animación conceptual por scroll.",
+        "Tarjeta Material con apertura pública y copia de enlace.",
+        "Error recuperable si falta contenido; ninguna cifra o aprobación inventada."
+      ],
+      "invariants": [
+        "Sólo GET al contrato de textos; ninguna escritura o prueba de negocio desde la presentación.",
+        "Sin nombres, ID de broker, correo, cartera o estado de cuenta en el enlace compartido.",
+        "Textos renderizados como texto; colores validados y URLs HTTPS verificadas.",
+        "La lectura pública no concede permisos en CRM, Portero ni evaluador.",
+        "La lámina no muestra un caso aprobado, un rendimiento garantizado ni una probabilidad de éxito."
       ]
     }
   ],
