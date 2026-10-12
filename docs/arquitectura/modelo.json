@@ -6891,7 +6891,8 @@
         "Migración histórica a nube necesita reconciliación de dependencias",
         "Atribución campaña/pieza a leads/citas sí existe en Marketing; cierre a venta/margen no comprobado",
         "Sala: reglas, cola y ejecución viva contrastadas en el recorrido inspeccionado; cuota y disponibilidad de todos los respaldos/motores y publicación a redes siguen sin certificarse.",
-        "Desacoplamiento editorial/producción corregido: las cinco decisiones inspeccionadas dieron nuevas tarjetas. Falta aceptación editorial de las nuevas láminas, terminar las etapas aprobables y conciliar siete fallos históricos sin reactivarlos automáticamente."
+        "Desacoplamiento editorial/producción corregido: las cinco decisiones inspeccionadas dieron nuevas tarjetas. Falta aceptación editorial de las nuevas láminas, terminar las etapas aprobables y conciliar siete fallos históricos sin reactivarlos automáticamente.",
+        "Disponibilidad limitada observada: Cloudflare/Gemini imagen429 y HF410/402. Pollinations720×960 comprobado; ajustar pedido antiguo1080×1440(402). Aceptación editorial y restablecimiento de cuotas siguen separados."
       ],
       "evidence": [
         {
@@ -6941,6 +6942,14 @@
           "claim": "Run38204774271: montaje real de siete tarjetas incluidas cinco decisiones recientes; escena y voz durables, aceptación editorial pendiente",
           "status": "ejecucion",
           "source_revision": "0db8a5432a76f9d91fb7562714e30d0c8ee0b196",
+          "commit": "0db8a5432a76f9d91fb7562714e30d0c8ee0b196"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/motores/imagen.py",
+          "lines": "1",
+          "claim": "Prueba38207824685: pedido720×960 entregó foto en2.76s;1080×1440 respondió402. Proveedores primarios limitados en las pruebas actuales.",
+          "status": "ejecucion",
           "commit": "0db8a5432a76f9d91fb7562714e30d0c8ee0b196"
         }
       ],
@@ -11251,8 +11260,30 @@
         "41 regresiones específicas, incluyendo fuentes activas frente a versiones sin montar, reutilización sin generación extra, referencia cambiada, identidad del montaje y roundtrip del reporte de Mesa.",
         "CI229 pruebas Python y checks existentes aprobados en PR277; publicaciones con recibo/hash comprobado. Lectura independiente de PROPUESTAS/COLA y tres fotos descargadas."
       ],
-      "deployment": "Sala PR275/276/277 integrados; versión0db8a5432a76f9d91fb7562714e30d0c8ee0b196. Run38204774271:8 imágenes nuevas,3 cartas recuperadas sin regenerar y7 POST de montaje confirmados en el backend y cotejados en el Sheet vivo. Las cinco decisiones recientes tienen nuevas tarjetas; cuatro láminas restantes del carrusel, tres del reel y tres correcciones. El reel conserva su toma aprobada y produjo escena generativa5.06s y voz4.31s, ambas verificadas en Drive antes de HECHO. Prueba de descarga38201549241/attempt2: cinco tiras accesibles y tres fotos con hash. El error anterior de montaje y el informe ausente se corrigieron; revisión/segunda pasada en cierre. Esto no equivale a aprobación editorial, corte final ni publicación a redes.",
+      "deployment": "Sala PR275/276/277 integrados; versión0db8a5432a76f9d91fb7562714e30d0c8ee0b196. Run38204774271:8 láminas nuevas,3 cartas recuperadas sin regenerar y7 POST de montaje confirmados en el backend y cotejados en el Sheet vivo. Las cinco decisiones recientes tienen nuevas tarjetas; cuatro láminas restantes del carrusel, tres del reel y tres correcciones. El reel conserva su toma aprobada y produjo escena generativa5.06s y voz4.31s, ambas verificadas en Drive antes de HECHO. Prueba de descarga38201549241/attempt2: cinco tiras accesibles y tres fotos con hash. El error anterior de montaje y el informe ausente se corrigieron; revisión completada con errores:[] y segundo run38206007233 despachado automáticamente; el nuevo lote estaba confirmando publicación. Esto no equivale a aprobación editorial, corte final ni publicación a redes.",
       "rollback": "Revertir código y workflow mediante PR; conservar decisiones, cola, versiones, medios y snapshots. No reencolar fallos históricos ni cancelar rutinas ajenas."
+    },
+    {
+      "id": "CHG-SALA-IMAGENES-RESPALDO-20261012",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "EXT-MOTORES-MEDIA",
+        "EXT-ACTIONS"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección autorizó corregir el recorrido de producción y dejar la operación autónoma en nube; respaldo operativo dentro de los proveedores existentes.",
+      "proposal": "Usar720×960 en el respaldo Pollinations, antes de componer al formato de la casa. El pedido1080×1440 devuelve402; el pedido720×960 devuelve foto verificada en2.76s. Conservar orden de motores, reglas, número de tomas, compuertas y decisiones. No añadir credenciales, suscripciones ni ampliar cuotas.",
+      "tests": [
+        "API sintética38207824685:720×960 genera foto con hash;1080×1440 responde402.",
+        "Pruebas38207217182/38207412625: Cloudflare y Gemini imagen responden429; no marcarlos disponibles.",
+        "Prueba38207521835: HF ruta antigua410, proveedor automático402; Pollinations pequeño devuelve foto.",
+        "Checks existentes de Sala,229 pruebas Python y verificación de cambios en CI; revisión de resultado publicado por separado."
+      ],
+      "deployment": "Propuesta respaldada por llamadas reales; el ajuste del proveedor aún no se ha integrado. La segunda pasada38206007233 estaba publicando su lote al registrar esta ampliación. Los códigos de proveedores son disponibilidad de esta prueba, no aceptación editorial ni un diagnóstico de todas las facultades.",
+      "rollback": "Revertir el tamaño por PR; conservar decisiones, tarjetas, versiones, medios y cuotas existentes."
     }
   ],
   "data_contracts": [
@@ -14179,6 +14210,15 @@
     {
       "repo": "yodesarrollomx/sala-edicion",
       "prefix": "nube/motores/cerebro.py",
+      "components": [
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "EXT-MOTORES-MEDIA"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": "nube/motores/imagen.py",
       "components": [
         "SYS-SALA",
         "SVC-SALA-PRODUCTOR",
