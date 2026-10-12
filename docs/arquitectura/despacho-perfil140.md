@@ -1,5 +1,5 @@
 # Perfil común del autón · rediseño con Gastón
-Registro: 12-oct-2026, America/Hermosillo (UTC−7). Estado: implementación y pruebas; PPP publicado, perfil en revisión antes de publicación.
+Registro: 12-oct-2026, America/Hermosillo (UTC−7). Estado al 12-oct-2026: correcciones implementadas y entregas registradas abajo; la bitácora mutua conserva la publicación y aceptación privada más reciente.
 La revisión partió del portal `5169b195` y del arranque nativo de Patrimonial; el candidato conserva también las integraciones posteriores de reuniones. No representa capturas de la sesión privada ni mediciones físicas del micrófono.
 
 ## Resultado que debe permitir
@@ -104,3 +104,6 @@ El recorrido privado autenticado de Gastón y la interrupción con micrófono f�
 
 ### Continuidad conversacional comprobada
 La revisión privada encontró respuestas que confundían recuperación de contexto con ausencia de historial y que mezclaban una respuesta de voz detenida con un encargo detenido. Los registros son fragmentos por intervalo; no sirven para medir latencia acústica ni acreditar ejecución. El diseño separa ambos estados y muestra el contexto registrado. La revisión técnica del arranque de voz sigue siendo necesaria: etiquetar una fase correctamente no demuestra que el modelo haya recibido el expediente antes de responder.
+
+| 2026-10-12 20:16–20:18 | Se integró Potenciales PR30 tras revisión exacta de `fe269eb`; el shell conserva recuperación visible fuera del embed. | 12 casos externos con shell real más 32 casos del modo integrado; [pruebas completas de PR30](https://github.com/yodesarrollomx/potenciales-yod/actions/runs/38302584488). |
+| 2026-10-12 20:15–20:20 | Se corrigió el estado de voz: conexión no equivale a expediente preparado. Se adaptaron recorridos a los controles vigentes, manteniendo comprobaciones de caso, foco y recibos. | Perfil común en [Portal PR203](https://github.com/yodesarrollomx/yod-portal/pull/203); el verificador registra pruebas para cada commit. No se atribuye un método ni una ejecución que los datos no registren. |

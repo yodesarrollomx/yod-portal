@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.despacho-perfil140.4 · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.despacho-perfil140.5 · 2026-10-12.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
