@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.os-marca-navegacion",
+  "revision": "2026-10-12.moac-canonico134.3",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -11160,6 +11160,31 @@
       ],
       "deployment": "Pendiente de PR y publicación.",
       "rollback": "Revertir PR o retirar la carga de ui-chrome.js/css; navegación base sigue disponible."
+    },
+    {
+      "id": "CHG-DESPACHO-MOAC-CANONICO-20261012",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD",
+        "STORE-AUTON-ESTADO",
+        "SYS-TAREAS",
+        "GAS-OPERACION",
+        "SHEET-OPERACION",
+        "GAS-MOAC-METAS",
+        "SHEET-MOAC-METAS",
+        "GAS-PORTERO"
+      ],
+      "proposal": "Dirección pide un despacho interconectado con el MOAC existente. Meta de empresa, objetivo e ID de acción proceden del MOAC canónico; el runtime conserva sólo intentos, herramientas, evidencia y recibos vinculados. Leer ambos backends activos antes de instalar escritura; confirmar fuente de acciones y contratos. Metas inmutables para el autón. Método por encargo: finalidad/obstáculo, criterio, dependencias, dato/fuente/método, ejecución instalada, evidencia y siguiente decisión. Releer cambios externos, sincronizar avance/evidencia mediante revisión esperada y recibos, reconciliar incertidumbre sin duplicar. Las entregas y la aceptación empresarial son estados distintos. Cache por caso con fecha de lectura, refresco de cinco minutos y lectura fresca para efectos. La misma proyección alimenta voz, chat, trabajador y puesto. No reactivar supervisor cancelado ni simular autoridad o integración por un documento. Mantener casos aislados, responsables y metas existentes.",
+      "status": "propuesto",
+      "tests": [
+        "Contratos con fuentes, IDs y autorizaciones por proyecto; cambios externos y acceso revocado.",
+        "Recorrido meta/objetivo/acción → encargo → herramienta/evidencia → recibo → MOAC y reapertura; duplicación, conflicto, reinicio y salida del navegador.",
+        "Revisión de despliegues y lecturas operativas sin escrituras de negocio de prueba; separar pruebas aisladas de aceptación."
+      ],
+      "deployment": "Auditoría en curso. Implementaciones de Operación y Metas localizadas; scriptId/fuentes activas por obtener antes de modificar esos servidores. No se acredita sincronización bidireccional aún.",
+      "rollback": "Revertir código mediante PR y versiones existentes; mantener IDs, filas, metas, objetivos, acciones, evidencia, recibos y disco."
     }
   ],
   "data_contracts": [

@@ -1,16 +1,24 @@
 {
-  "model_revision": "2026-10-12.os-marca-navegacion",
-  "proposal_id": "CHG-OS-MARCA-NAVEGACION-20261012",
-  "summary": "Rediseñar el marco visual compartido con marca oficial, barra expandida/compacta persistente, nombres accesibles y microanimaciones coherentes en navegación, tarjetas y accesos. Mantener catálogo, destinos, permisos, sesión y datos operativos. Aplicar también Galería de modelos de Aurum, opción A confirmada explícitamente.",
+  "model_revision": "2026-10-12.moac-canonico134.3",
+  "proposal_id": "CHG-DESPACHO-MOAC-CANONICO-20261012",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "GAS-PORTERO",
-    "SYS-DESPACHO-3D"
+    "SYS-DESPACHO-3D",
+    "SVC-AUTON-CLOUD",
+    "STORE-AUTON-ESTADO",
+    "SYS-TAREAS",
+    "GAS-OPERACION",
+    "SHEET-OPERACION",
+    "GAS-MOAC-METAS",
+    "SHEET-MOAC-METAS",
+    "GAS-PORTERO"
   ],
+  "summary": "Dirección pide un despacho interconectado con el MOAC existente. Meta de empresa, objetivo e ID de acción proceden del MOAC canónico; el runtime conserva sólo intentos, herramientas, evidencia y recibos vinculados. Leer ambos backends activos antes de instalar escritura; confirmar fuente de acciones y contratos. Metas inmutables para el autón. Método por encargo: finalidad/obstáculo, criterio, dependencias, dato/fuente/método, ejecución instalada, evidencia y siguiente decisión. Releer cambios externos, sincronizar avance/evidencia mediante revisión esperada y recibos, reconciliar incertidumbre sin duplicar. Las entregas y la aceptación empresarial son estados distintos. Cache por caso con fecha de lectura, refresco de cinco minutos y lectura fresca para efectos. La misma proyección alimenta voz, chat, trabajador y puesto. No reactivar supervisor cancelado ni simular autoridad o integración por un documento. Mantener casos aislados, responsables y metas existentes.",
   "tests": [
-    "633 pruebas Node; Arquitectura, OS, Portal, Obra y Accesos aprobados.",
-    "Chromium sintético: expansión, persistencia, nombres, teclado, móvil, movimiento reducido, acceso deshabilitado, conservación de iframe y contenido del marco compartido."
+    "Contratos con fuentes, IDs y autorizaciones por proyecto; cambios externos y acceso revocado.",
+    "Recorrido meta/objetivo/acción → encargo → herramienta/evidencia → recibo → MOAC y reapertura; duplicación, conflicto, reinicio y salida del navegador.",
+    "Revisión de despliegues y lecturas operativas sin escrituras de negocio de prueba; separar pruebas aisladas de aceptación."
   ],
-  "rollback": "Revertir PR o retirar la carga de ui-chrome.js/css; navegación base sigue disponible."
+  "rollback": "Revertir código mediante PR y versiones existentes; mantener IDs, filas, metas, objetivos, acciones, evidencia, recibos y disco."
 }
