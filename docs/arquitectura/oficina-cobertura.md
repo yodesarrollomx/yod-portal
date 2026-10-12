@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-12.investor-story17.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-12.sala-imagen-evidencia.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -2338,7 +2338,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Producción
 
-**Estado registrado:** codigo. No verificado en despliegue
+**Estado registrado:** ejecucion. Productor real38310054319 success; lee la fuente vigente y preserva aprobaciones. No abrió trabajos nuevos en esta vuelta. Reemplazos pendientes de crédito y revisión editorial no se convierten en aprobaciones.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -2350,6 +2350,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - Abrir compuertas aprobadas y encolar trabajo sin decidir ni ejecutar · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_productor.py · Revisión: HEAD\_baseline
 - [PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-CIERRE-ONLINE.md · Revisión: 4582fc3c42a2ac8459dea7d553c42f9719f07962](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md)
+- [Lote38310054319: productor success. Ningún nuevo trabajo habilitado; las imágenes rehechas esperan revisión editorial. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/sala\_productor.py · Revisión: dde4ab0151c5cc36071882380afe7ecf495ecef6](https://github.com/yodesarrollomx/sala-edicion/blob/dde4ab0151c5cc36071882380afe7ecf495ecef6/nube/sala_productor.py)
 
 **Evidencia de conexiones:**
 
@@ -2370,7 +2371,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Producción
 
-**Estado registrado:** codigo. Mantenimiento de nube de dos originales comprobado con acuse; producción CPU técnica acreditada por pruebas previas. Cada ejecución editorial sigue su configuración y compuertas humanas; no certifica todos los trabajos históricos.
+**Estado registrado:** ejecucion. Ejecutor real38310054319 success;124 registros de COLA revisados y0 trabajos habilitados pendientes. Las entregas anteriores y sus evidencias se conservan. No acredita aprobación editorial de las láminas nuevas.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -2387,6 +2388,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [PR265 conserva compuertas, aprobaciones y procedencia; Modal default 0 y CPU de respaldo. CI completo acreditado. · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_ejecutor.py · Revisión: 73902861db96d213a07f788996f50fdcf3c65566](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/nube/sala_ejecutor.py)
 - [PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/medios\_reconexion.py · Revisión: 159d932cd81c2d2c3fda31a862ea60fc0b3ae667](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py)
 - [PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-CIERRE-ONLINE.md · Revisión: 4582fc3c42a2ac8459dea7d553c42f9719f07962](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md)
+- [Lote38310054319: ejecutor success; COLA124 registros,0 trabajos habilitados pendientes,0 entregables nuevos en esta vuelta. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/sala\_ejecutor.py · Revisión: dde4ab0151c5cc36071882380afe7ecf495ecef6](https://github.com/yodesarrollomx/sala-edicion/blob/dde4ab0151c5cc36071882380afe7ecf495ecef6/nube/sala_ejecutor.py)
 
 **Evidencia de conexiones:**
 
@@ -2410,7 +2412,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Producción
 
-**Estado registrado:** ejecucion. Prueba técnica real CPU 38139680521 exitosa: Tiny-SD, profundidad ONNX/parallax, Kokoro y ffmpeg con seis subidas/readbacks Drive. Modal opcional y apagado por defecto; parallax no equivale a animación LTX. No prueba todas las piezas comerciales.
+**Estado registrado:** ejecucion. Imágenes por API GPT Image1.5 en servidor propio: prueba real y10 fotografías montadas;6 de27 reemplazos completados,21 pendientes por saldo agotado. Pollinations FLUX y segmind/tiny-sd retirados de producción y revisión. Pruebas CPU anteriores quedan como historia; voz y cámara conservan sus compuertas, Modal sigue opcional.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -2420,6 +2422,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - Generar texto, imagen, escena o voz según motor configurado · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_motores.py · Revisión: HEAD\_baseline
 - [Run 38139680521 success: seis artefactos privados verificados por SHA256, corte 1080x1920 H264/AAC 10.166667s. Entradas sintéticas, sin filas o decisiones de negocio. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/prueba\_online.py · Revisión: 6e67927f01829baba72267aad15d59ea60139444](https://github.com/yodesarrollomx/sala-edicion/blob/6e67927f01829baba72267aad15d59ea60139444/nube/prueba_online.py)
+- [API GPT Image1.5 probada38302218587; montaje real38310054319:10 nuevas fotografías recuperadas,6 sustituciones y4 continuaciones. Quedan21 sustituciones por credit\_balance\_exhausted; CF y Gemini también429. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/motores/imagen.py · Revisión: dde4ab0151c5cc36071882380afe7ecf495ecef6](https://github.com/yodesarrollomx/sala-edicion/blob/dde4ab0151c5cc36071882380afe7ecf495ecef6/nube/motores/imagen.py)
 
 **Evidencia de conexiones:**
 
@@ -2840,7 +2843,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dirección técnica
 
-**Estado registrado:** codigo. Render dfe9c7a45ddeb997c32b8bd39483be3874e68658 live desde 2026-10-09T05:37:10Z. Cola FIFO persistente con un ejecutor y cuarentena si no termina; historial privado por caso desde esta entrega. Pruebas automáticas de voz/PPP aprobadas; micrófono físico y primera conversación privada por proximidad no acreditados.
+**Estado registrado:** codigo. Render dfe9c7a45ddeb997c32b8bd39483be3874e68658 live desde 2026-10-09T05:37:10Z. Cola FIFO persistente con un ejecutor y cuarentena si no termina; historial privado por caso desde esta entrega. Pruebas automáticas de voz/PPP aprobadas; micrófono físico y primera conversación privada por proximidad no acreditados. Imagen Sala: puente GPT Image1.5 en servicio existente; montaje real de10 fotografías. Proveedor de imagen bloqueado por credit\_balance\_exhausted; no certifica producción completa.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -2857,6 +2860,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - [Compone motor, voz, investigación, objetivos y conocimiento por caso. · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/server.mjs · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/server.mjs)
 - [Historia por ejecución, FIFO, progreso confirmado y recuperación; 282 pruebas aprobadas y una omitida, navegadores aprobados; recibo Render dep-db47qobncjis73c3vrp0 live. · Estado: ejecucion · alexpueblag/yod-agent-cloud · cloud/AUTONOMY-126.md · Revisión: dfe9c7a45ddeb997c32b8bd39483be3874e68658](https://github.com/alexpueblag/yod-agent-cloud/blob/dfe9c7a45ddeb997c32b8bd39483be3874e68658/cloud/AUTONOMY-126.md)
+- [Puente de propósito exclusivo e idempotencia desplegado en servicio existente: diagnóstico de crédito/ritmo, una solicitud nueva por minuto y recibos persistentes;559 pruebas pasadas y0 fallos antes del arranque vigente. · Estado: ejecucion · alexpueblag/yod-agent-cloud · cloud/sala-image-broker.mjs · Revisión: 7f1297cbf1ba9fe12f663faf2f843f35f79d411e](https://github.com/alexpueblag/yod-agent-cloud/blob/7f1297cbf1ba9fe12f663faf2f843f35f79d411e/cloud/sala-image-broker.mjs)
 
 **Evidencia de conexiones:**
 
@@ -2881,7 +2885,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dirección técnica
 
-**Estado registrado:** codigo. Voz configurada y disponible en el piloto. Micrófono físico e interacción de Dirección requieren aceptación independiente.
+**Estado registrado:** codigo. Voz configurada y disponible en el piloto. Micrófono físico e interacción de Dirección requieren aceptación independiente. Imagen: generación real comprobada; saldo agotado confirmado para GPT Image1.5. Quedan21 reemplazos sin producir.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -2891,6 +2895,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Evidencia de la ficha:**
 
 - [Sesión de voz y herramientas conectadas desde el servidor. · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/voice-lane.mjs · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/voice-lane.mjs)
+- [GPT Image1.5 real por servidor existente; código429 credit\_balance\_exhausted e insufficient\_quota confirmado38310564537. Configuración accesible no equivale a saldo disponible. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/motores/imagen.py · Revisión: dde4ab0151c5cc36071882380afe7ecf495ecef6](https://github.com/yodesarrollomx/sala-edicion/blob/dde4ab0151c5cc36071882380afe7ecf495ecef6/nube/motores/imagen.py)
 
 **Evidencia de conexiones:**
 
