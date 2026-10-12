@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-10-12.despacho-perfil140.6",
   "proposal_id": "CHG-DESPACHO-PERFIL-ORDEN-20261012",
-  "summary": "Perfil común con PPP y conversación simultáneos, trabajo contextual y carga/recuperación por caso, sin mezclar metas de negocio ni perder capacidades.",
+  "summary": "Recuperación de voz por proyecto: distinguir apertura remota incierta y evitar repetir su POST mientras no exista cierre comprobado. Conserva PPP/chat, cancelación, epoch y disponibilidad de otros casos; el bloqueo local no acredita persistencia tras recargar ni sustituye la guardia del servidor.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
@@ -21,7 +21,8 @@
     "node verify-os.cjs",
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
-    "node verify-obra-app.cjs"
+    "node verify-obra-app.cjs",
+    "Casos aislados de voice_creation_uncertain: una apertura, cero POST extra; otra identidad de proyecto sigue disponible; cancelación/respuesta tardía y reapertura no limpian incertidumbre."
   ],
   "rollback": "Revertir módulos del perfil y arranque PPP por PR conservando IDs, URLs, permisos, libros, datos, recibos y volumen; no restaurar snapshots de negocio ni reactivar automatizaciones canceladas."
 }
