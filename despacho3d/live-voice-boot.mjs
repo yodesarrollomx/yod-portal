@@ -127,7 +127,7 @@ if (open) {
   });
   chatTimer=setInterval(()=>{if(dialog.open&&!document.hidden&&dialog.querySelector('.station-chat').open&&chat.selection&&!chat.busy&&!active(voice.snapshot()))void chat.refresh();},12000);
   window.addEventListener('pagehide',()=>{clearInterval(chatTimer);chat.close();stopWatching?.();});
-  const voice = createLiveVoice({canOperate:()=>!accessPaused&&!!selection,actions:actionExecutor,audio: node('voice-audio'), forgetCredential:id=>officeFastSessions.forget(id), mint: value => officeFastSessions.ensure(value.case_id,p=>transport.mintFastSession(p)),
+  const voice = createLiveVoice({canOperate:()=>!accessPaused&&!!selection,actions:actionExecutor,audio: node('voice-audio'), forgetCredential:id=>officeFastSessions.forget(id), mint: value => officeFastSessions.ensure(value.case_id,p=>transport.mintFastSession(p),{priority:true}),
     onChange: renderVoiceState,
     onTranscript: fragment => {
       if(selection?.case_id===voiceCaseId)renderTranscript(fragment);
