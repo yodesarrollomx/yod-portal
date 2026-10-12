@@ -75,7 +75,21 @@ const server=http.createServer((req,res)=>{
   // The contextual source control replaces the duplicated research box. Exercise its actual tray.
   await office.locator('.workspace-route-detail button').filter({hasText:'Consultar fuentes del expediente'}).click();
   await office.locator('.document-tray-detail h3').filter({hasText:'Plan de potencial'}).waitFor();
-  assert.equal(await office.locator('.document-tray-detail a').getAttribute('href'),'https://yodesarrollomx.github.io/potenciales-yod/patrimonial.html?open=native-0');
+  // DocumentTray admits Drive/Sheets only; the case-bound web PPP opens through its own registered link.
+  assert.equal(await office.locator('.document-tray-detail a').isHidden(),true);
+  assert.equal(await office.locator('.document-tray-detail a').getAttribute('href'),null);
+  const sourceURL='https://yodesarrollomx.github.io/potenciales-yod/patrimonial.html?open=native-0',sourceLink=office.locator('.workspace-external-board');
+  assert.equal(await sourceLink.getAttribute('href'),sourceURL);
+  const sourcePopupRoute=async route=>route.request().url()===sourceURL?
+   route.fulfill({contentType:'text/html',body:'<!doctype html><h1>Fuente PPP sintética registrada</h1>'}):route.abort();
+  // Context routing also catches the popup's first request; no real board or business GET is contacted.
+  await page.context().route('https://yodesarrollomx.github.io/**',sourcePopupRoute);
+  const boardOptions=office.locator('.workspace-board-options');if(await boardOptions.getAttribute('open')===null)await boardOptions.locator('summary').click();
+  const sourcePopupWait=page.waitForEvent('popup');await sourceLink.click();const sourcePopup=await sourcePopupWait;
+  await sourcePopup.waitForURL(sourceURL);assert.equal(sourcePopup.url(),sourceURL);
+  await sourcePopup.getByRole('heading',{name:'Fuente PPP sintética registrada'}).waitFor();
+  await sourcePopup.close();await page.context().unroute('https://yodesarrollomx.github.io/**',sourcePopupRoute);
+  await boardOptions.locator('summary').click();
   assert.match(await office.locator('.document-tray-note').first().innerText(),/Su presencia no confirma que el autón las haya leído/);
   const sourceTray=await office.locator('.document-tray').elementHandle();
   await office.locator('.workspace-primary [data-tab=activity]').click();await office.locator('.workspace-subnav [data-tab=tasks]').click();
@@ -84,7 +98,7 @@ const server=http.createServer((req,res)=>{
   await office.locator('.workspace-brief[data-read-phase=unavailable]').waitFor({timeout:16000});
   assert.match(await office.locator('.workspace-brief').innerText(),/Último registro/);
   assert.equal(await taskDisclosure.getAttribute('open')!==null,true);assert.equal(await sourceDisclosure.getAttribute('open')!==null,true);assert.equal(await taskDisclosure.locator('summary').evaluate(n=>n===document.activeElement),true);
-  assert.equal(await sourceTray.evaluate(n=>n.isConnected),true);assert.equal(await office.locator('.document-tray-detail a').getAttribute('href'),'https://yodesarrollomx.github.io/potenciales-yod/patrimonial.html?open=native-0');
+  assert.equal(await sourceTray.evaluate(n=>n.isConnected),true);assert.equal(await sourceLink.getAttribute('href'),sourceURL);
   await page.evaluate(()=>window.__goalMode='ready');await office.locator('.workspace-brief button').click();
   await office.locator('.workspace-brief[data-read-phase=ready]').waitFor();await office.locator('.workspace-primary [data-tab=ppp]').click();
   assert.equal(await nativeFrame.evaluate(n=>n.isConnected),true);
