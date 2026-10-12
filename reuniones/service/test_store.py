@@ -100,3 +100,32 @@ def test_native_wav_segments_assemble(store,tmp_path):
     put(store,wav(b'\x00\x00'*160));put(store,wav(b'\x01\x00'*160),seq=1)
     output=tmp_path/'joined.wav';assemble(store,store.meeting('meeting-1','owner'),store.chunks('meeting-1'),output)
     with wave.open(str(output)) as src:assert src.getnframes()==320
+
+def test_drive_lost_ack_reuses_identity_and_identical_archive(store,monkeypatch):
+    import drive
+    create(store);put(store);store.finalize('meeting-1','owner',manifest(store))
+    monkeypatch.setenv('MEETINGS_DRIVE_FOLDERS',json.dumps({'project':'synthetic-folder'}))
+    monkeypatch.setattr(drive.google.auth,'default',lambda **_:('synthetic',None))
+    state={'generated':0,'uploads':0,'file':None}
+    class Response:
+        def __init__(self,code=200,data=None,headers=None):self.status_code=code;self.data=data;self.headers=headers or {}
+        def json(self):return self.data
+        def raise_for_status(self):
+            if self.status_code>=400:raise RuntimeError('synthetic_http_failure')
+    class Client:
+        def get(self,url,**kwargs):
+            if url.endswith('generateIds'):
+                state['generated']+=1;return Response(data={'ids':['synthetic-file-id']})
+            return Response(data=state['file']) if state['file'] else Response(code=404)
+        def post(self,url,**kwargs):return Response(headers={'Location':'https://www.googleapis.com/synthetic-upload'})
+        def put(self,url,data,**kwargs):
+            content=data.read();state['uploads']+=1
+            state['file']={'id':'synthetic-file-id','size':len(content),'md5Checksum':hashlib.md5(content).hexdigest(),'parents':['synthetic-folder'],'trashed':False}
+            raise TimeoutError('response_lost_after_remote_commit')
+    monkeypatch.setattr(drive,'AuthorizedSession',lambda _:Client())
+    worker=Worker(store,transcriber=lambda _:[]);worker.once();worker.once()
+    with store.db() as db:db.execute("UPDATE jobs SET retry=0 WHERE kind='drive'")
+    worker.once()
+    job=next(j for j in store.status('meeting-1','owner')['jobs'] if j['kind']=='drive')
+    assert job['state']=='done' and job['result']['verified']
+    assert state['generated']==1 and state['uploads']==1

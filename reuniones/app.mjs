@@ -1,5 +1,6 @@
 import {Journal,synchronize,endpoint} from './journal.mjs';
 import {MeetingRecorder} from './recorder.mjs';
+import {importAudio} from './import.mjs';
 const $=id=>document.getElementById(id),journal=await new Journal().open();
 const recorder=new MeetingRecorder(journal,paint);
 let config=null,syncing=false,currentStatus=null;
@@ -35,7 +36,7 @@ async function renderSessions() {
     const chunks=await journal.chunks(s.id),remote=chunks.filter(c=>c.remote).length;
     const card=document.createElement('article');card.className='session';
     const title=document.createElement('h3');title.textContent=s.project+' · '+new Date(s.created).toLocaleString('es-MX');
-    const state=document.createElement('p');state.textContent=`${chunks.length} fragmentos guardados en este dispositivo · ${remote} con acuse del servidor. ${s.state==='interrupted'?'Grabación interrumpida: revisar el final.':s.state==='recording'?'Grabando.':'Captura finalizada.'}`;
+    const state=document.createElement('p');state.textContent=`${chunks.length} fragmentos guardados en este dispositivo · ${remote} con acuse del servidor. ${s.state.startsWith('import')?'Importación incompleta: vuelve a seleccionar el archivo original.':s.state==='interrupted'?'Grabación interrumpida: revisar el final.':s.state==='recording'?'Grabando.':'Captura finalizada.'}`;
     const actions=document.createElement('div');actions.className='actions';actions.append(button('Descargar audio',()=>exportSession(s)));
     if(config)actions.append(button('Respaldar y ver resultado',()=>sync(s.id)));
     card.append(title,state,actions);$('sessions').append(card);
@@ -65,6 +66,7 @@ async function sync(id=null) {
   try {
     for(const s of await journal.sessions()) {
       if(id&&s.id!==id)continue;
+      if(s.state.startsWith('import'))continue; // Never back up/seal a partially imported file as a complete recording.
       currentStatus=await synchronize(journal,s,config);renderFeedback(currentStatus);
     }
     text($('connection'),'Conectado. Los acuses verifican fragmentos; Drive se confirma por separado.');
@@ -75,6 +77,15 @@ $('start').onclick=async()=>{try{recorder.notice='';text($('notice'),'');await r
 $('pause').onclick=()=>recorder.recorder?.state==='paused'?recorder.resume():recorder.pause();
 $('stop').onclick=async()=>{await recorder.stop();await renderSessions();await sync();};
 $('refresh').onclick=()=>renderSessions().catch(showError);
+$('audio-file').onchange=async()=>{
+  const file=$('audio-file').files[0];if(!file)return;
+  $('audio-file').disabled=true;
+  try {
+    await importAudio(journal,file,$('project').value.trim(),percent=>text($('import-status'),`Conservando copia local: ${percent} %`));
+    text($('import-status'),'Importación completa. Conserva el original hasta comprobar el respaldo remoto.');await renderSessions();await sync();
+  }catch(error){text($('import-status'),error.message);await renderSessions();}
+  finally{$('audio-file').disabled=false;$('audio-file').value='';}
+};
 $('connect').onclick=async()=>{try{config={server:endpoint($('server').value),token:$('token').value};if(config.token.length<24)throw Error('La credencial del dispositivo está incompleta.');sessionStorage.setItem('yod-meetings-connection',JSON.stringify(config));$('token').value='';await sync();}catch(e){config=null;showError(e);}};
 $('disconnect').onclick=()=>{config=null;sessionStorage.removeItem('yod-meetings-connection');text($('connection'),'Desconectado. Las copias locales se conservan.');};
 // Mark only truly orphaned captures; never relabel an active recording in another tab.
