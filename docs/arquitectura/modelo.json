@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.sala-veto-tiny-sd.2",
+  "revision": "2026-10-12.sala-rehacer-flux.1",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -11350,6 +11350,32 @@
       ],
       "deployment": "PR281 publicado:02b06521575ea6b938a7af7350dcae9bb6ea54ab. Regla viva imagen_respaldo_cpu=0 confirmada. Prueba38287509000: política/script y sello publicados exactamente;28 láminas pendientes,21 opciones CPU retiradas,0 vetadas visibles y28 con alternativa permitida;0 decisiones escritas. Sala38287086969 completó Mesa→Productor→Ejecutor→Revisión→Continuar y montó3 cartas depuradas. La generación del primer lote fue parcial:1 lámina nueva,7 sin toma por límites de los proveedores y11 limitadas al siguiente lote; el motor vetado no se usó para completar esos faltantes. Encargo280 cerrado con evidencia; el puente confirma su cumplimiento por separado.",
       "rollback": "Revertir código por PR sólo con revocación explícita del veto de Dirección. Conservar historia, decisiones, archivos, fuentes y medios; no restaurar el modelo en la cascada mediante una regla heredada."
+    },
+    {
+      "id": "CHG-SALA-REHACER-POLLINATIONS-20261012",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-MOTORES-MEDIA"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección identifica una imagen deficiente y autoriza cancelar su producción, retirar el modelo y rehacer todas sus láminas presentadas con otro modelo. Después solicita revisión de chinches en todos los espacios y ejecución de Sala en línea.",
+      "proposal": "La imagen exacta es L2 de Tres opiniones, tres números distintos: candidata de Pollinations FLUX, receta Gemini, producida por el Montador de la mesa. Retirar Pollinations de generación, respaldos y opciones de revisión. La instrucción actual incluye reemitir las fuentes afectadas de las piezas activas aunque tuvieran aprobación anterior; conservar votos, archivos, selección e historia sin convertir esa orden administrativa en un voto. Fuente histórica retirada no se utiliza para nuevas escenas/cortes. Nueva generación vía Cloudflare FLUX 2 Klein 9B (multipart REST) y Gemini 3 Pro Image, con procedencia explícita por candidata. Conservar texto visible, rehacer la relación literal imagen/texto y requerir nuevas decisiones. Si se agota cuota: declarar pendientes con causa; no remostrar ni generar modelos retirados. Reintentar en el horario de Mesa ya existente, sin depender del chat ni comprar/activar planes.",
+      "tests": [
+        "Pruebas sintéticas de HTTP multipart y modelo configurado, rechazo de regla antigua Pollinations/CPU, procedencia explícita y conservación del texto.",
+        "Retiro de fuente afectada aprobada sólo bajo la instrucción actual; historia y decisiones intactas; una candidata sana aprobada permanece.",
+        "Vista, zoom y producción bloquean fuentes retiradas sin renumerar la selección.",
+        "Mesa mantiene la petición de reemplazo pendiente si no logra generar, aun cuando había un sí anterior; lote nuevo recibe ID distinto y no altera histórico.",
+        "Checks existentes de Sala y atlas; publicación y lectura real independientes, sin decisiones escritas por agente."
+      ],
+      "deployment": "Pausa viva imagen_motores=pausado-direccion confirmada antes de editar. Auditoría pública38293691710 identifica el archivo exacto y las opciones afectadas. Prueba38293341843: FLUX 2 Klein9B acepta contrato multipart pero retorna429 por cupo diario CF; Gemini3ProImage también429. No hay OPENAI_API_KEY ni claves BFL/FAL/Replicate/Pollinations en esta instalación. Generación nueva pendiente hasta disponibilidad real del proveedor.",
+      "rollback": "Revertir implementación mediante PR conservando historia y la orden de retiro. Nunca reactivar Pollinations o Tiny-SD sin revocación explícita de Dirección."
     }
   ],
   "data_contracts": [
@@ -12779,19 +12805,21 @@
       "input": [
         "Política versionada: motor cpu/modelo segmind/tiny-sd retirado.",
         "Fuente actual de decisiones fusionadas, números reales de lámina y candidata elegida.",
-        "Candidatas con procedencia, historial, notas y referencias aprobadas."
+        "Candidatas con procedencia, historial, notas y referencias aprobadas.",
+        "Retiro de Pollinations FLUX identificado por archivo y orden actual de rehacer fuentes afectadas de piezas activas, incluida su presentación aprobada anterior."
       ],
       "output": [
         "Generación limitada a motores permitidos; falta de cupo genera pendiente explícito.",
         "Revisión sin candidatas vetadas; selección conserva el índice original.",
-        "Nueva versión de las pendientes depuradas o rehechas y recibo de montaje; historia y aprobaciones conservadas."
+        "Nueva versión de las pendientes depuradas o rehechas y recibo de montaje; historia y aprobaciones conservadas.",
+        "Sustitución pendiente explícita y revalidación de fuentes retiradas; las decisiones anteriores permanecen en historia."
       ],
       "invariants": [
         "Ningún respaldo implícito ni una regla antigua puede reactivar el modelo retirado.",
         "Veto de imagen no altera cerebro de texto, voz, escena, reglas comerciales ni cuotas.",
         "Nunca escribir votos editoriales ni inferir rechazo de toda carta como voto contra cada motor.",
         "Filtrar opciones no renumera el índice que se guarda como toma elegida.",
-        "No alterar archivos ni selecciones ya aprobados; los documentos anteriores siguen en historia.",
+        "No alterar archivos, votos ni selección histórica. Una instrucción explícita posterior de Dirección puede retirar una fuente activa aprobada y exigir nueva versión/revisión; jamás equivale a un voto automático.",
         "No reutilizar una generación cuya parte revisable contenga candidatas retiradas.",
         "La vista no puede mostrar un modelo vetado como sustituto silencioso al faltar una toma válida.",
         "Recuperación de fuente sólo para IDs canónicos activos del backend e índice de la publicación propia; imágenes en rutas locales autorizadas, huellas verificadas y fallo de red explícito."
