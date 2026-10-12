@@ -34,6 +34,29 @@ final class Vault {
         guard let result=job?["result"] as? [String:Any],let candidates=result["candidates"] as? [[String:Any]] else { return "Procesamiento pendiente." }
         return candidates.map { "Por confirmar (\(Int($0["start"] as? Double ?? 0)) s): \($0["quote"] as? String ?? "")\n\($0["question"] as? String ?? "")" }.joined(separator:"\n\n")
     }
+    static func export(_ dir: URL) throws -> URL {
+        let files=chunks(dir)
+        guard !files.isEmpty else { throw MeetingError.audio }
+        var total=0
+        for (index,file) in files.enumerated() {
+            guard Int(file.deletingPathExtension().lastPathComponent)==index else { throw MeetingError.integrity }
+            total += (try file.resourceValues(forKeys:[.fileSizeKey]).fileSize ?? 0)-44
+        }
+        guard total>0,total<4_000_000_000 else { throw MeetingError.audio }
+        var header=try Data(contentsOf:files[0]).prefix(44)
+        var riff=UInt32(total+36).littleEndian;var length=UInt32(total).littleEndian
+        withUnsafeBytes(of:&riff) { header.replaceSubrange(4..<8,with:$0) }
+        withUnsafeBytes(of:&length) { header.replaceSubrange(40..<44,with:$0) }
+        let destination=FileManager.default.temporaryDirectory.appendingPathComponent("YOD-\(dir.lastPathComponent).wav")
+        try save(Data(header),to:destination)
+        let handle=try FileHandle(forWritingTo:destination)
+        do {
+            try handle.seekToEnd()
+            for file in files { try handle.write(contentsOf:Data(contentsOf:file).dropFirst(44)) }
+            try handle.synchronize();try handle.close()
+        } catch { try? handle.close();throw error }
+        return destination
+    }
     static func wav(_ raw: URL) throws {
         let pcm = try Data(contentsOf: raw)
         guard pcm.count > 0, pcm.count % 2 == 0 else { return }
@@ -220,6 +243,7 @@ final class Recorder: ObservableObject {
     @State private var server=""
     @State private var token=""
     @State private var connection=""
+    @State private var exportURL:URL?
     @Environment(\.scenePhase) private var phase
     var body:some Scene {
         WindowGroup {
@@ -247,9 +271,15 @@ final class Recorder: ObservableObject {
                                 Text("\(Vault.chunks(dir).count) fragmentos locales")
                                 Text(Vault.feedback(dir)).font(.caption)
                                 if FileManager.default.fileExists(atPath:dir.appendingPathComponent("sealed.json").path) { Text("Audio verificado en servidor") }
-                                ForEach(Vault.chunks(dir),id:\.self) { file in ShareLink(item:file) { Text("Exportar \(file.lastPathComponent)") } }
+                                Button("Preparar copia del audio conservado") {
+                                    Task {
+                                        do { exportURL=try await Task.detached(priority:.userInitiated) { try Vault.export(dir) }.value }
+                                        catch { connection="No se pudo preparar la copia; los originales permanecen guardados." }
+                                    }
+                                }
                             }
                         }
+                        if let exportURL { ShareLink(item:exportURL) { Text("Guardar o compartir copia preparada") } }
                     }
                 }.navigationTitle("YOD · Reuniones")
             }.onChange(of:phase) { value in if value == .active { recorder.refresh();recorder.sync() } }
