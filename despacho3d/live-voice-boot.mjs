@@ -5,8 +5,8 @@ import {createEntryPreparation} from './voice-preparation.mjs?v=2';
 import {residentAccessDecision} from './resident-agents.mjs?v=127';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=126';
 import {stationIdentity} from './project-station.mjs?v=140';
-import {createLiveVoice} from './live-voice.mjs?v=130';
-import {voiceView} from './voice-view.mjs?v=3';
+import {createLiveVoice} from './live-voice.mjs?v=141';
+import {voiceView} from './voice-view.mjs?v=141';
 import {createWorkspace} from './agent-workspace.mjs?v=140';
 import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=132';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=132';
@@ -133,6 +133,7 @@ if (open) {
       if(selection?.case_id===voiceCaseId)renderTranscript(fragment);
     }});
   function renderVoiceState(state) {
+      if(selection)state=voice.stateForCase(selection.case_id);
       window.dispatchEvent(new CustomEvent('yod-voice-state',{detail:{phase:state.phase}}));
       const view = voiceView(state), live = view.live;
       const wasLive=!['idle','error'].includes(lastChatVoicePhase);lastChatVoicePhase=state.phase;
@@ -155,8 +156,8 @@ if (open) {
       node('voice-retry-context').disabled=state.context_retry_pending===true;
       node('voice-play').hidden=!view.audioBlocked;
       node('voice-start').hidden=live;
-      node('voice-start').disabled=live||accessPaused||!selection?.can_enqueue;
-      setText('voice-start',state.phase==='error'?'Volver a intentar':'Hablar');
+      node('voice-start').disabled=live||accessPaused||!selection?.can_enqueue||view.startDisabled;
+      setText('voice-start',view.startDisabled?view.startLabel:state.phase==='error'?'Volver a intentar':'Hablar');
       const canInterrupt=['starting','listening','reconnecting'].includes(state.phase);
       node('voice-interrupt').hidden=!canInterrupt;
       node('compact-interrupt').hidden=!canInterrupt;
@@ -175,7 +176,7 @@ if (open) {
       node('voice-mute').setAttribute('aria-pressed',String(state.muted));
       setText('voice-save',view.history);
       setText('compact-name',agentName());setText('compact-phase',encounterNeedsMic?'Pulsa para hablar':state.output_paused?'Sonido pausado':state.local_speaking?'Te escucho':view.title);
-      node('compact-mic').disabled=accessPaused||state.phase==='closing'||state.phase==='starting'||state.phase==='reconnecting'||!selection?.can_enqueue;
+      node('compact-mic').disabled=accessPaused||state.phase==='closing'||state.phase==='starting'||state.phase==='reconnecting'||!selection?.can_enqueue||(!view.listening&&view.startDisabled);
       node('compact-mic').setAttribute('aria-label',view.listening?(state.muted?'Activar micrófono':'Silenciar micrófono'):'Hablar');
       node('compact-mic').setAttribute('aria-pressed',String(view.listening&&!state.muted));
       node('compact-stop').disabled=state.phase==='closing';
@@ -224,8 +225,8 @@ if (open) {
       if(dialog.querySelector('.station-chat').open&&!chat.selection)void chat.open(AUTONES_MULTIPLES?selection.case_id:null);
       setText('voice-title',agentName());
       renderVoiceState(voice.snapshot());
-      node('voice-start').disabled = !fresh.can_enqueue;
-      node('voice-status').textContent = fresh.can_enqueue ?
+      node('voice-start').disabled = !fresh.can_enqueue||voice.stateForCase(fresh.case_id).creation_uncertain;
+      if(!voice.stateForCase(fresh.case_id).creation_uncertain)node('voice-status').textContent = fresh.can_enqueue ?
         startVoice?'Preparando conversación de voz…':'Listo para hablar contigo.' : 'Tu acceso permite consultar; hablar requiere permiso de conversación.';
       if (fresh.can_enqueue&&startVoice) void requestBegin(encounter);
       return true;

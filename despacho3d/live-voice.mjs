@@ -11,6 +11,7 @@ const NOTICES = {
   provider_busy: 'OpenAI está ocupado. Vuelve a intentar en un momento.',
   observer_unavailable: 'No pudimos conectar el registro de conversación. Vuelve a intentar.',
   voice_unavailable: 'La voz no está disponible en el servidor. Puedes continuar por escrito en este puesto.',
+  voice_creation_uncertain: 'No se confirmó el resultado de creación de esta conversación. No abriré otra sesión de este proyecto para evitar duplicados. El PPP y el chat siguen disponibles.',
   context_unavailable: 'No pudimos recuperar el expediente del proyecto.',
 };
 export function createLiveVoice({mint, forgetCredential=()=>{}, fetchImpl = (...args) => fetch(...args),
@@ -21,12 +22,15 @@ export function createLiveVoice({mint, forgetCredential=()=>{}, fetchImpl = (...
   let inputMonitor = null, remoteSpeechObserved = false, automaticInterruptionId = null;
   let credentialRenewal = null, credentialRetryAt = 0;
   const credentialMargin = 120000;
+  // A confirmed uncertainty belongs to the credential's case, even after a cancelled attempt.
+  // Readiness, discardPreparation and closing a different session do not prove its remote closure.
+  const uncertainCreations = new Set();
   let epoch = 0, stream = null, peer = null, channel = null, credential = null, sessionId = null,
     poll = null, controller = null, polling = false, closing = null, began = 0, started = false,
     contextReady = false, finalSeen = false, disconnected = false, closedResolve = null, sequence = 0,
     disconnectTimer = null, statusFailures = 0, connectedAt = 0, prepared = null, preparing = null, mode = null, startTimer = null, retryingContext = false, interruptionId = null, helloFlight = null, helloReady = null, preparationEpoch = 0, activeCaseId = null, pendingBoard = null, boardFlight = null, boardSent = null, boardRetryAt = 0;
   let state = {phase: 'idle', notice: '', muted: false, fragments: 0, blocks: 0, saved: 0, pending: 0,
-    incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, input_detected:false, input_received:false, mode: null, output_paused:false, interruption_pending:false, local_speaking:false, ended_remotely:false, interruption_error:false, credential_pending:false, session_ending:false, timings:{}};
+    incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, input_detected:false, input_received:false, mode: null, output_paused:false, interruption_pending:false, local_speaking:false, ended_remotely:false, interruption_error:false, credential_pending:false, session_ending:false, creation_uncertain:false, timings:{}};
   const timing = key => {if(!Object.hasOwn(state.timings,key))publish({timings:{...state.timings,[key]:Math.max(0,now()-began)}});};
   const preparation=createVoicePreparation({Peer,gather,now});
   const seen = new Set();
@@ -37,6 +41,10 @@ export function createLiveVoice({mint, forgetCredential=()=>{}, fetchImpl = (...
     let value;
     try{value=await response.json();}catch{const error=Error(response.status===401||response.status===403?NOTICES.unauthorized:NOTICES.voice_unavailable);error.code=response.status===401||response.status===403?'unauthorized':'unavailable';throw error;}
     if (!response.ok || value?.ok !== true) {
+      if(path==='/voice/session'&&value?.ok===false&&value.error==='voice_creation_uncertain'){
+        uncertainCreations.add(current.case_id);
+        if(activeCaseId===current.case_id&&['idle','error'].includes(state.phase))publish({phase:'error',creation_uncertain:true,notice:NOTICES.voice_creation_uncertain});
+      }
       const error = Error(NOTICES[value?.error] || 'La conexión de voz se interrumpió.');
       error.code = value?.error; throw error;
     }
@@ -86,6 +94,7 @@ export function createLiveVoice({mint, forgetCredential=()=>{}, fetchImpl = (...
     }).finally(()=>{if(credentialRenewal===own)credentialRenewal=null;});
   }
   async function prepare(caseId,{connection=false}={}) {
+    if(uncertainCreations.has(caseId))return false;
     if(connection&&!closing&&['idle','error'].includes(state.phase))void preparation.warm(caseId);
     if(helloFlight?.caseId===caseId)return helloFlight.promise;
     if(helloReady?.caseId===caseId&&now()-helloReady.at<30000)return true;
@@ -235,11 +244,12 @@ export function createLiveVoice({mint, forgetCredential=()=>{}, fetchImpl = (...
   }
   async function start(caseId,{encounter=false}={}) {
     if (closing || !['idle','error'].includes(state.phase)) return false;
+    if(uncertainCreations.has(caseId)){activeCaseId=caseId;publish({phase:'error',creation_uncertain:true,notice:NOTICES.voice_creation_uncertain});return false;}
     const token = ++epoch; controller = new AbortController(); began = now();activeCaseId=caseId;boardSent=null;boardRetryAt=0;
     interruptionId=null;automaticInterruptionId=null;remoteSpeechObserved=false;
     mode = null; started = contextReady = finalSeen = disconnected = false; seen.clear(); sequence = 0; polling = false; statusFailures = 0; connectedAt = 0;
     publish({phase: 'starting', notice: 'Abriendo el micrófono…', fragments: 0, blocks: 0, saved: 0,
-      pending: 0, incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, output_paused:false,interruption_pending:false, mode: null,local_speaking:false,timings:{},input_detected:false,input_received:false,context_phase:'preparing',context_attempts:0,context_error:null,tools_ready:false,documents_ready:false,tasks_ready:false,actions_pending:0,ended_remotely:false,interruption_error:false,credential_pending:false,session_ending:false});
+      pending: 0, incomplete: false, finalized: false, status_pending: false, playback_blocked: false, context_retry_pending: false, output_paused:false,interruption_pending:false, mode: null,local_speaking:false,timings:{},input_detected:false,input_received:false,context_phase:'preparing',context_attempts:0,context_error:null,tools_ready:false,documents_ready:false,tasks_ready:false,actions_pending:0,ended_remotely:false,interruption_error:false,credential_pending:false,session_ending:false,creation_uncertain:false});
     try {
       if (typeof media?.getUserMedia !== 'function' || typeof Peer !== 'function' || !audio)
         throw Error('Este navegador no admite voz en tiempo real.');
@@ -333,7 +343,7 @@ export function createLiveVoice({mint, forgetCredential=()=>{}, fetchImpl = (...
       try {
         result = await post('/voice/session', {sdp: peer.localDescription.sdp,...(encounter?{encounter:true}:{})}, current, signallingController.signal);
       } catch (error) {
-        if (signallingTimedOut) throw Error('La conexión de voz no respondió a tiempo. Puedes volver a intentar.');
+        if (signallingTimedOut&&error?.code!=='voice_creation_uncertain') throw Error('La conexión de voz no respondió a tiempo. Puedes volver a intentar.');
         throw error;
       } finally {clearTimeout(signallingTimer);}
       timing('signalling_ms');
@@ -360,7 +370,7 @@ export function createLiveVoice({mint, forgetCredential=()=>{}, fetchImpl = (...
         // Forget only the temporary credential rejected by this attempt. A newer preparation must survive.
         if (error?.code === 'unauthorized') {if(prepared===credential)prepared=null;forgetCredential(caseId);}
         if (sessionId) await stop();
-        else {epoch++; release(); credential = null; publish({phase: 'error', notice: error?.name === 'NotAllowedError'
+        else {epoch++; release(); credential = null; publish({phase: 'error', creation_uncertain:uncertainCreations.has(caseId), notice: error?.name === 'NotAllowedError'
           ? 'Permite el micrófono en el navegador y pulsa Volver a intentar.' : error?.name === 'NotFoundError'
           ? 'No encontramos un micrófono. Conecta uno y vuelve a intentar.' : error?.name === 'NotReadableError'
           ? 'No pudimos abrir el micrófono. Revisa si otra aplicación lo está usando.' : error?.message || 'No pudimos iniciar la voz.'});}
@@ -468,11 +478,19 @@ export function createLiveVoice({mint, forgetCredential=()=>{}, fetchImpl = (...
     audio.muted=state.local_speaking;publish({output_paused:false,interruption_pending:!!interruptionId,notice:started?'Sonido activo. Puedes seguir conversando.':'Sonido habilitado. Conectando voz…'});
     void playAudio();return true;
   }
+  // Display only the selected case's uncertainty. The underlying session/outbox is unchanged.
+  function stateForCase(caseId){
+    if((!caseId||caseId===activeCaseId)&&uncertainCreations.has(caseId||activeCaseId)&&['idle','error'].includes(state.phase))return {...state,phase:'error',creation_uncertain:true,notice:NOTICES.voice_creation_uncertain};
+    if(!caseId||caseId===activeCaseId||!['idle','error'].includes(state.phase))return {...state,creation_uncertain:uncertainCreations.has(caseId||activeCaseId)};
+    const blocked=uncertainCreations.has(caseId);
+    return {...state,phase:blocked?'error':'idle',notice:blocked?NOTICES.voice_creation_uncertain:'',creation_uncertain:blocked,
+      finalized:false,incomplete:false,status_pending:false,fragments:0,blocks:0,saved:0,pending:0,mode:null,context_phase:'preparing',tools_ready:false,documents_ready:false,tasks_ready:false};
+  }
   function abandon() {
     // Navigation cannot guarantee a final event. Never report it as a confirmed close.
     discardPreparation();
     disconnected = true; closedResolve?.(false); publish({incomplete: true});
     void stop('Finalización incompleta al salir de esta pantalla.');
   }
-  return {prepare, discardPreparation, start, stop, sendText, mute, playAudio, retryContext, notifyBoard, presentSlide, interrupt, resumeAudio, abandon, refresh: () => status(epoch), retryActions:()=>{actions?.retry();void status(epoch);}, snapshot: () => ({...state})};
+  return {prepare, discardPreparation, start, stop, stateForCase, sendText, mute, playAudio, retryContext, notifyBoard, presentSlide, interrupt, resumeAudio, abandon, refresh: () => status(epoch), retryActions:()=>{actions?.retry();void status(epoch);}, snapshot: () => ({...state})};
 }
