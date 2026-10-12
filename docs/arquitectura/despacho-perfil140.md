@@ -111,3 +111,13 @@ La revisión privada encontró respuestas que confundían recuperación de conte
 ### Verificación visual completada
 2026-10-12 20:30:27 UTC: el [recorrido completo de navegador](https://github.com/yodesarrollomx/yod-portal/actions/runs/38303452844) aprobó entrada, proximidad, reuniones, trabajo observado, conocimiento y recibos, voz y PPP simultáneo. El PPP permaneció en la misma instancia con borrador y lectura al cambiar herramientas. La geometría del inspector pasó en 1280, 860 y 390 px. Son expedientes de ensayo con módulos reales, no aceptación privada ni mediciones de hardware.
 2026-10-12 20:33 UTC: se preservó la actualización concurrente del modelo de arquitectura; la interfaz anterior ya aprobada no cambia. El ajuste restante del recorrido de fuente externa comprueba navegación y URL efectivas, conservando el bloqueo de red de negocio.
+
+
+### Recuperación de fuentes antes del iframe · 2026-10-12 21:45 UTC
+El recorrido privado registrado por coordinación encuentra un fallo antes de solicitar el HTML del PPP: el puesto abre, pero la lectura de fuentes termina en un aviso genérico y recuperar repite el fallo. El vínculo canónico ya fue comprobado por lectura autorizada; un vínculo en la hoja no acredita su transporte.
+
+La inspección autorizada de las tablas de historial encontró un total parcial de 620120 caracteres serializados, sin copiar cuerpos ni credenciales al repositorio. Es mayor que el límite de 524288 aplicado a toda respuesta y repetido por la proyección de fuentes. La hipótesis es que un expediente con historial acumulado bloquea fuentes pequeñas; el tamaño de la respuesta HTTP real aún debe medirse de forma privada. No se declara esta hipótesis como causa HTTP confirmada.
+
+Corrección propuesta bajo CHG-DESPACHO-PERFIL-ORDEN-20261012: conservar la operación read, servidor, ACL y cercas de sesión/caso; permitir hasta 2097152 caracteres sólo a esa lectura autenticada. Las demás operaciones conservan 524288. La superficie PPP valida y limita a 524288 únicamente identidad, revisión, fecha y documentos; no hereda validaciones de mensajes o trabajos ajenos a su función. validateConversation conserva su contrato estricto y su límite propio. No se altera Apps Script ni se añaden APIs o permisos.
+
+La regresión reproduce un historial grande con una fuente PPP válida, comprueba el montaje y conserva rechazo por identidad ajena, fecha inválida, documentos excesivos, revocación y respuestas tardías. Los avisos distinguen tamaño, transporte, respuesta ilegible y metadatos inválidos. La aceptación requiere nueva comprobación privada posterior a publicación, no sólo este ensayo. Reversión por PR conserva hojas, datos, URLs y acuses.

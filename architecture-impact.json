@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-10-12.investor-story17.1",
   "proposal_id": "CHG-DESPACHO-PERFIL-ORDEN-20261012",
-  "summary": "Recuperación de voz por proyecto: distinguir creación remota incierta y evitar repetir su POST sin un resultado autoritativo. La vista proyecta incertidumbre del caso seleccionado, mantiene PPP/chat y permite los otros casos. Conserva cancelación y epoch; la guardia local no acredita persistencia tras recargar ni sustituye la del servidor.",
+  "summary": "Recuperación PPP antes del iframe: limitar la proyección de fuentes independiente del historial y ampliar sólo lectura autenticada a2MiB, conservando ACL, cercas de sesión y contrato chat. Metadatos HTTP privados pendientes; sin APIs, permisos, GAS ni escrituras nuevas.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
@@ -23,7 +23,8 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
     "Casos aislados de voice_creation_uncertain: una apertura, cero POST extra; otra identidad de proyecto sigue disponible; cancelación/respuesta tardía y reapertura no limpian incertidumbre.",
-    "Proyección A bloqueado / B disponible / volver a A conserva incertidumbre, sin perder recuperación de otros errores."
+    "Proyección A bloqueado / B disponible / volver a A conserva incertidumbre, sin perder recuperación de otros errores.",
+    "Historial grande con fuente canónica, proyección limitada, rechazo de identidad/metadata ajenos; sólo read hasta2MiB y revocación/respuesta tardía fail closed."
   ],
   "rollback": "Revertir módulos del perfil y arranque PPP por PR conservando IDs, URLs, permisos, libros, datos, recibos y volumen; no restaurar snapshots de negocio ni reactivar automatizaciones canceladas."
 }
