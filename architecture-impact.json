@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-10-12.sala-openai-broker.1",
   "proposal_id": "CHG-SALA-OPENAI-BROKER-20261012",
-  "summary": "Puente de imágenes con OpenAI del servidor existente, sin exportar la clave ni crear recursos.",
+  "summary": "Puente de imagen con OpenAI del servidor existente, preservando los cambios concurrentes del tablero.",
   "components": [
     "SYS-YOD-OS",
     "SYS-CONTROL",
