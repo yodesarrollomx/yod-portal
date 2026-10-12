@@ -11328,13 +11328,14 @@
       ],
       "status": "propuesto",
       "approval": "Dirección instruye retirar el modelo de imagen de baja calidad identificado por su chinche y evitar que sus tomas pendientes aparezcan en la siguiente revisión; ejecutar Sala y Chinches.",
-      "proposal": "Retirar segmind/tiny-sd (motor cpu) de generación y respaldo automático. Política pública compartida por Python y vista de revisión, con veto que prevalece aunque una regla antigua intente activarlo. Depurar candidatas pendientes; conservar archivos históricos, tomas aprobadas, selección por índice original y decisiones. Rehacer las láminas rechazadas atendiendo la relación literal texto/imagen, sin alterar el texto cuando la nota sólo rechaza la imagen. Si no hay motor válido, declarar pendiente/fallo y nunca sustituir por el modelo retirado. Ejecutar el puente y montaje existentes con verificación independiente.",
+      "proposal": "Retirar segmind/tiny-sd (motor cpu) de generación y respaldo automático. Política pública compartida por Python y vista de revisión, con veto que prevalece aunque una regla antigua intente activarlo. Depurar candidatas pendientes; conservar archivos históricos, tomas aprobadas, selección por índice original y decisiones. Rehacer las láminas rechazadas atendiendo la relación literal texto/imagen, sin alterar el texto cuando la nota sólo rechaza la imagen. Si no hay motor válido, declarar pendiente/fallo y nunca sustituir por el modelo retirado. Ejecutar el puente y montaje existentes con verificación independiente. Recuperar desde la publicación propia las tiras activas que falten en el snapshot local, únicamente si el backend vigente y el índice propio las referencian; validar rutas, metadatos y huellas de originales antes de producir. No recrear propuestas retiradas.",
       "tests": [
         "Regresión: cascada configurada o respaldo heredado no ejecutan el modelo vetado; agotamiento de motores válidos no produce imagen de baja calidad.",
         "Selección mantiene número original al filtrar opciones; una candidata retirada no se renderiza en el turno ni su ampliación.",
         "Depuración conserva exactamente lo aprobado y elimina el modelo de candidatas nuevas/presentadas; no se reusa caché incompatible con el veto.",
         "Muestra real agregada:13 rechazos compartidos,0 selecciones CPU; no atribuir rechazos de una carta mixta a un motor de forma exclusiva.",
-        "Checks existentes de Sala; ejecución autorizada de Chinches, Mesa y revisión con recibo, sin decisiones escritas por el agente."
+        "Checks existentes de Sala; ejecución autorizada de Chinches, Mesa y revisión con recibo, sin decisiones escritas por el agente.",
+        "Fuente reciente ausente localmente: recuperar sólo una tira canónica activa, validar rutas y huellas; fuente retirada o error de red bloquea explícitamente sin inventar datos."
       ],
       "deployment": "Chinches38282489941 ejecutado con éxito y encargo recogido. Auditoría de archivos públicos38283061332 identificó motor/modelo y muestra. Cambios de veto, depuración y vista aún pendientes de integrar; confirmar política, próxima revisión y cierre del encargo por separado.",
       "rollback": "Revertir código por PR sólo con revocación explícita del veto de Dirección. Conservar historia, decisiones, archivos, fuentes y medios; no restaurar el modelo en la cascada mediante una regla heredada."
@@ -12781,7 +12782,8 @@
         "Filtrar opciones no renumera el índice que se guarda como toma elegida.",
         "No alterar archivos ni selecciones ya aprobados; los documentos anteriores siguen en historia.",
         "No reutilizar una generación cuya parte revisable contenga candidatas retiradas.",
-        "La vista no puede mostrar un modelo vetado como sustituto silencioso al faltar una toma válida."
+        "La vista no puede mostrar un modelo vetado como sustituto silencioso al faltar una toma válida.",
+        "Recuperación de fuente sólo para IDs canónicos activos del backend e índice de la publicación propia; imágenes en rutas locales autorizadas, huellas verificadas y fallo de red explícito."
       ]
     }
   ],

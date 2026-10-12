@@ -710,3 +710,4 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - No alterar archivos ni selecciones ya aprobados; los documentos anteriores siguen en historia.
 - No reutilizar una generación cuya parte revisable contenga candidatas retiradas.
 - La vista no puede mostrar un modelo vetado como sustituto silencioso al faltar una toma válida.
+- Recuperación de fuente sólo para IDs canónicos activos del backend e índice de la publicación propia; imágenes en rutas locales autorizadas, huellas verificadas y fallo de red explícito.
