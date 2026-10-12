@@ -11,7 +11,7 @@ const NOTICES = {
   provider_busy: 'OpenAI está ocupado. Vuelve a intentar en un momento.',
   observer_unavailable: 'No pudimos conectar el registro de conversación. Vuelve a intentar.',
   voice_unavailable: 'La voz no está disponible en el servidor. Puedes continuar por escrito en este puesto.',
-  voice_creation_uncertain: 'Hay una apertura de voz sin cierre confirmado. No abriré otra sesión de este proyecto. Puedes seguir usando el PPP o escribir.',
+  voice_creation_uncertain: 'No se confirmó el resultado de creación de esta conversación. No abriré otra sesión de este proyecto para evitar duplicados. El PPP y el chat siguen disponibles.',
   context_unavailable: 'No pudimos recuperar el expediente del proyecto.',
 };
 export function createLiveVoice({mint, forgetCredential=()=>{}, fetchImpl = (...args) => fetch(...args),
@@ -475,11 +475,18 @@ export function createLiveVoice({mint, forgetCredential=()=>{}, fetchImpl = (...
     audio.muted=state.local_speaking;publish({output_paused:false,interruption_pending:!!interruptionId,notice:started?'Sonido activo. Puedes seguir conversando.':'Sonido habilitado. Conectando voz…'});
     void playAudio();return true;
   }
+  // Display only the selected case's uncertainty. The underlying session/outbox is unchanged.
+  function stateForCase(caseId){
+    if(!caseId||caseId===activeCaseId||!['idle','error'].includes(state.phase))return {...state,creation_uncertain:uncertainCreations.has(caseId||activeCaseId)};
+    const blocked=uncertainCreations.has(caseId);
+    return {...state,phase:blocked?'error':'idle',notice:blocked?NOTICES.voice_creation_uncertain:'',creation_uncertain:blocked,
+      finalized:false,incomplete:false,status_pending:false,fragments:0,blocks:0,saved:0,pending:0,mode:null,context_phase:'preparing',tools_ready:false,documents_ready:false,tasks_ready:false};
+  }
   function abandon() {
     // Navigation cannot guarantee a final event. Never report it as a confirmed close.
     discardPreparation();
     disconnected = true; closedResolve?.(false); publish({incomplete: true});
     void stop('Finalización incompleta al salir de esta pantalla.');
   }
-  return {prepare, discardPreparation, start, stop, sendText, mute, playAudio, retryContext, notifyBoard, presentSlide, interrupt, resumeAudio, abandon, refresh: () => status(epoch), retryActions:()=>{actions?.retry();void status(epoch);}, snapshot: () => ({...state})};
+  return {prepare, discardPreparation, start, stop, stateForCase, sendText, mute, playAudio, retryContext, notifyBoard, presentSlide, interrupt, resumeAudio, abandon, refresh: () => status(epoch), retryActions:()=>{actions?.retry();void status(epoch);}, snapshot: () => ({...state})};
 }

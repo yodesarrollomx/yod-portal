@@ -736,7 +736,7 @@ test('confirmed uncertain voice creation blocks the same case across preparation
   openings++;return openings===1?{ok:false,json:async()=>({ok:false,error:'voice_creation_uncertain'})}:null;
  }});
  assert.equal(await f.voice.start('synthetic-a'),false);assert.equal(f.voice.snapshot().creation_uncertain,true);
- assert.match(f.voice.snapshot().notice,/apertura de voz sin cierre confirmado/);assert.doesNotMatch(f.voice.snapshot().notice,/se interrumpió|Vuelve a intentar/);
+ assert.match(f.voice.snapshot().notice,/resultado de creación/);assert.doesNotMatch(f.voice.snapshot().notice,/se interrumpió|Vuelve a intentar/);
  const before=f.calls.length,captures=f.captures;
  assert.equal(await f.voice.prepare('synthetic-a',{connection:true}),false);f.voice.discardPreparation();await f.voice.stop();f.voice.abandon();
  assert.equal(await f.voice.start('synthetic-a'),false);assert.equal(await f.voice.start('synthetic-a'),false);
@@ -770,4 +770,21 @@ test('an ordinary unavailable response does not invent a confirmed remote-creati
  assert.equal(await f.voice.start('synthetic-a'),true);f.event({type:'session.started'});await tick();
  const closing=f.voice.stop();await tick();f.event({type:'session.closed'});await closing;
  assert.equal(openings,2);
+});
+
+test('selected-case view disables retry only for the uncertain project and preserves it when switching back',async()=>{
+ const {createLiveVoice}=await load(),{voiceView}=await import('../despacho3d/voice-view.mjs');
+ const f=fixture(createLiveVoice,{sessionOverride:async()=>({ok:false,json:async()=>({ok:false,error:'voice_creation_uncertain'})})});
+ assert.equal(await f.voice.start('synthetic-a'),false);
+ const a=f.voice.stateForCase('synthetic-a');assert.equal(a.creation_uncertain,true);assert.equal(voiceView(a).startDisabled,true);
+ assert.equal(voiceView(a).startLabel,'Apertura sin confirmar');
+ const b=f.voice.stateForCase('synthetic-b');assert.equal(b.phase,'idle');assert.equal(b.creation_uncertain,false);
+ assert.equal(voiceView(b).startDisabled,false);assert.doesNotMatch(b.notice,/resultado de creación/);
+ assert.equal(f.voice.stateForCase('synthetic-a').creation_uncertain,true);
+ assert.equal(f.voice.snapshot().creation_uncertain,true,'displaying B never clears A uncertainty');
+ assert.equal(voiceView({phase:'error',notice:'Micrófono denegado'}).startDisabled,false);
+ assert.equal(voiceView({phase:'error'}).startLabel,'Volver a intentar');
+ const bootstrap=require('node:fs').readFileSync(require('node:path').join(__dirname,'../despacho3d/live-voice-boot.mjs'),'utf8');
+ assert.match(bootstrap,/if\(selection\)state=voice\.stateForCase\(selection\.case_id\)/);
+ assert.match(bootstrap,/voice-start'\)\.disabled = !fresh\.can_enqueue\|\|voice\.stateForCase\(fresh\.case_id\)\.creation_uncertain/);
 });
