@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.bandeja-publicada · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.bandeja-publicada.2 · 2026-10-12.
 
 ## SYS-DESPACHO · El Despacho
 

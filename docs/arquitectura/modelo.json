@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.bandeja-publicada",
+  "revision": "2026-10-12.bandeja-publicada.2",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -8,7 +8,7 @@
     "cobrar_antes"
   ],
   "coverage": {
-    "summary": "Inventario conciliado de 22 repositorios, 90 componentes y 137 conexiones. Publicación y ejecución comprobadas por alcance; la Bandeja espera consentimiento y relevo.",
+    "summary": "Inventario conciliado de 22 repositorios, 90 componentes y 137 conexiones. Publicación y ejecución comprobadas por alcance; Bandeja espera consentimiento y relevo.",
     "production_verified": false,
     "limitations": [
       "No se ha comprobado la versión activa de todos los Apps Script",
@@ -11125,6 +11125,23 @@
       ],
       "deployment": "Código de Google y Despacho publicado; lector en Render existente y Accesos por alcance. Libro efectivo, consentimiento Gmail, dos timers de Google y relevo de la rutina Claude siguen pendientes. Esta versión no importa correos nuevos automáticamente: confirmar alcance de la rutina anterior antes de retirarla. No se declara sustitución completa, correo enviado/recibido ni funcionalidad del resto de YOD.",
       "rollback": "Detener sólo trigger BANDEJA_tick y volver a observar. Conservar recibos inciertos, Sheet y borradores; no reactivar Claude hasta conciliar envíos."
+    },
+    {
+      "id": "CHG-DESPACHO-HAIRLINE-ATRIL-MUELLE-20261012",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "proposal": "Aplicar Atril de presentación al acceso Reunión y Muelle de aplicaciones a las tarjetas Comunicación y Drive existentes. Son figuras decorativas; se mantienen estados por construir y permisos. Maquetas permanece sin elegir.",
+      "status": "implementado_local",
+      "approval": "Elección explícita del propietario en conversación del 12-oct-2026; autorización previa de instalar las mejoras.",
+      "tests": [
+        "633 pruebas Node; arquitectura, OS, Portal, Obra y Accesos aprobados.",
+        "Chromium sintético: nombres accesibles, acción Reunión conservada, canales por construir, disabled conservado, animación, movimiento reducido y desmontaje."
+      ],
+      "deployment": "Pendiente de PR y publicación del frontend.",
+      "rollback": "Revertir este PR; conserva las once elecciones instaladas por PR178."
     }
   ],
   "data_contracts": [

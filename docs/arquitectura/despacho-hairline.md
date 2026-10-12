@@ -27,3 +27,7 @@ Se incorporan once metáforas elegidas: PPP/terrain, Hablar/keyboard, Trabajo/ri
 Interruptor: `HAIRLINE_ENABLED` en `hairline-access.mjs` (true por solicitud expresa de instalar), recompilar el bundle tras cambiarlo. Reversión completa: revertir PR178. Las fuentes documentales siguen llegando por la conversación autorizada y sus enlaces se conservan.
 
 Validación: 633 pruebas Node; arquitectura, OS, Portal, Obra y Accesos. Chromium con datos sintéticos: las cuatro figuras del círculo, acción Escribir sin iniciar voz, mismo case_id, cero foco extra, cuatro reaperturas sin duplicación; bandeja con paginación, vacío y móvil. No se utilizaron endpoints de negocio para pruebas ni se acredita sesión privada real.
+
+## Segunda selección · 12-oct-2026
+
+Se eligen Atril de presentación (Reunión) y Muelle de aplicaciones (Comunicación/Drive). Se aplican a los accesos existentes con `hairline-approved.mjs`, integrado en el bundle local. Las tarjetas de Comunicación y Drive conservan sus avisos por construir: la figura no añade envío de mensajes, conexión a servicios ni permisos. Maquetas sigue pendiente de elección. Movimiento reducido desactiva las animaciones CSS. Pruebas: 633 Node, verificaciones del portal, navegador sintético con acción de Reunión, disabled y nombres conservados; desmontaje sin duplicación. Publicación pendiente de PR.
