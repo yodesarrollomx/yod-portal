@@ -1,13 +1,13 @@
-import {officeFastSessions} from './office-preparation.mjs?v=1';
+import {officeFastSessions} from './office-preparation.mjs?v=2';
 import {mountAvatarCard} from './avatar-card.mjs?v=126';
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
 import {createEntryPreparation} from './voice-preparation.mjs?v=2';
 import {residentAccessDecision} from './resident-agents.mjs?v=127';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=126';
-import {stationIdentity} from './project-station.mjs?v=132';
+import {stationIdentity} from './project-station.mjs?v=140';
 import {createLiveVoice} from './live-voice.mjs?v=130';
 import {voiceView} from './voice-view.mjs?v=2';
-import {createWorkspace} from './agent-workspace.mjs?v=133';
+import {createWorkspace} from './agent-workspace.mjs?v=140';
 import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=132';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=132';
 import {groupTranscriptFragments} from './live-transcript.mjs';
