@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-12.reuniones-seguimiento",
+  "model_revision": "2026-10-12.sala-imagen-publicacion.1",
   "proposal_id": "CHG-DESPACHO-PERFIL-ORDEN-20261012",
   "summary": "Recuperación de voz por proyecto: distinguir creación remota incierta y evitar repetir su POST sin un resultado autoritativo. La vista proyecta incertidumbre del caso seleccionado, mantiene PPP/chat y permite los otros casos. Conserva cancelación y epoch; la guardia local no acredita persistencia tras recargar ni sustituye la del servidor.",
   "components": [
