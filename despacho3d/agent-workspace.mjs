@@ -170,7 +170,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
    const lane=el('section',undefined,'workspace-work-lane');lane.dataset.workLane=key;
    const heading=el('h3',label);heading.append(el('span',String(view.groups[key].length),'workspace-lane-count'));lane.append(heading);
    for(const goal of view.groups[key]){
-    const task=nextRecordedTask(goal),open=button('',()=>focusGoal(goal.goal_id));open.className='workspace-work-item';open.dataset.goalFocus=goal.goal_id;
+    const task=nextRecordedTask(goal),open=button('',()=>focusGoal(goal.goal_id));open.className='workspace-work-item';open.dataset.goalFocus=goal.goal_id;open.dataset.focusKey='work:'+goal.goal_id;
     open.append(el('strong',goal.title),el('span',goalDisplay(goal).label));
     if(key==='blocked')open.append(el('small',task?.summary||goal.summary||task?.criterion||goal.criterion));
     else if(key==='review')open.append(el('small',goal.criterion));
