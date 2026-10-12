@@ -5,7 +5,7 @@
 import {ENTORNO_ACTIVO,ENTORNO_JUNTAS,ENTORNO_VISITAS_PERSISTENTES,ENTORNO_PERMISOS_SERVIDOR} from './entorno-config.mjs?v=5';
 import {leerMetas,pendientesDeMetas} from './circulo-pendientes.mjs?v=126';
 import {Visitas} from './visitas.mjs?v=2';
-import {createFrameTransport} from './conversation.mjs?v=126';
+import {createFrameTransport} from './conversation.mjs?v=142';
 import {Permisos} from './permisos.mjs?v=1';
 
 export const PERMISOS={

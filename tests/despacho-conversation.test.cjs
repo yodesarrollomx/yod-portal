@@ -147,3 +147,82 @@ test('workspace source projection never enables a conversation mutation from a b
  const c=new Conversation({transport:backend});assert.equal(await c.open(),false);assert.equal(await c.send('No enviar'),false);
  assert.equal(backend.calls.length,0);
 });
+
+test('small authorized PPP sources survive accumulated history without weakening conversation validation',async()=>{
+ const {validateWorkspaceSources,validateConversation,workspaceSourceNotice}=await load();
+ const {resolveBoard}=await import('../despacho3d/project-station.mjs');
+ const s=snapshot();s.context.documents=[['ppp','Plan de potencial','https://yodesarrollomx.github.io/potenciales-yod/patrimonial.html?open='+current.case_id,'PPP']];
+ s.conversation=[{body_json:'x'.repeat(620120)}];assert.ok(JSON.stringify(s).length>524288);
+ const projection=validateWorkspaceSources(s,current.case_id);
+ assert.ok(JSON.stringify(projection).length<2048);assert.equal(projection.documents.length,1);
+ assert.equal(resolveBoard(current,projection.documents).board_case_id,current.case_id);
+ assert.throws(()=>validateConversation(s,current.case_id),/invalid_message/);
+ assert.match(workspaceSourceNotice(Error('response_limit')),/límite/);
+ assert.match(workspaceSourceNotice(Error('invalid_response')),/ilegible/);
+ assert.match(workspaceSourceNotice(Error('invalid_snapshot')),/metadatos válidos/);
+ assert.match(workspaceSourceNotice(Error('timeout')),/tardó demasiado/);
+});
+test('PPP source projection still rejects foreign identity, malformed metadata, oversized documents and explicit access refusal',async()=>{
+ const {validateWorkspaceSources}=await load();const valid=snapshot();
+ valid.context.documents=[['ppp','Plan de potencial','https://yodesarrollomx.github.io/potenciales-yod/patrimonial.html?open='+current.case_id,'PPP']];
+ const rejected=[
+  {...valid,case_id:'other-case'},
+  {...valid,context:{...valid.context,identity:{case_id:'other-case',name:'Otro'}}},
+  {...valid,state:{updated_at:'invalid-date'}},
+  {...valid,source_revision:''},
+  {...valid,context:{...valid.context,documents:[['incomplete']]}}
+ ];
+ for(const s of rejected)assert.throws(()=>validateWorkspaceSources(s,current.case_id),/invalid_snapshot/);
+ const large=structuredClone(valid);large.context.documents=Array.from({length:100},()=>['ppp','x'.repeat(7000),'https://example.test/','PPP']);
+ assert.throws(()=>validateWorkspaceSources(large,current.case_id),/response_limit/);
+ assert.throws(()=>validateWorkspaceSources({ok:false,error:'unauthorized'},current.case_id),/^Error: unauthorized$/);
+ assert.throws(()=>validateWorkspaceSources({ok:false,error:'private server detail'},current.case_id),/^Error: unavailable$/);
+});
+test('real OS read transport projects a large snapshot into the canonical board without a new API',async()=>{
+ const {validateWorkspaceSources}=await load(),{resolveBoard}=await import('../despacho3d/project-station.mjs');
+ const s=snapshot();s.context.documents=[['ppp','Plan de potencial','https://yodesarrollomx.github.io/potenciales-yod/patrimonial.html?open='+current.case_id,'PPP']];s.events=[{payload_json:'x'.repeat(620120)}];
+ const calls=[],source=fs.readFileSync(require('node:path').join(__dirname,'../os/despacho-transport.js'),'utf8'),context=vm.createContext({AbortController,setTimeout,clearTimeout});vm.runInContext(source,context);
+ const t=context.YodDespachoTransport.create({endpoint:'https://script.google.com/macros/s/synthetic/exec',getSession:()=>({ready:true,allowed:true,token:'synthetic-session',epoch:1}),fetch:async(url,request)=>{calls.push(JSON.parse(request.body));return {ok:true,text:async()=>JSON.stringify(s)};}});
+ const projection=validateWorkspaceSources(await t.read({case_id:current.case_id}),current.case_id);
+ assert.equal(resolveBoard(current,projection.documents).board_case_id,current.case_id);
+ assert.deepEqual(calls.map(c=>c.operation),['read']);assert.equal(calls[0].k,'synthetic-session');
+ assert.deepEqual(calls[0].payload,{case_id:current.case_id});
+});
+
+test('large valid read preserves every message, job and event under the validated model budget',async()=>{
+ const {validateConversation,Conversation}=await load(),s=snapshot(),extra='x'.repeat(620120),id=current.case_id;
+ s.conversation=[{case_id:id,message_id:'message-1',role:'user',body_json:JSON.stringify({message:'Mensaje sintético conservado'}),created_at:s.state.updated_at}];
+ s.jobs=[{case_id:id,job_id:'job-1',enqueue_request_id:'request-1',status:'queued',input_json:extra}];
+ s.events=[{case_id:id,event_id:'event-1',kind:'queued',created_at:s.state.updated_at,payload_json:extra}];
+ assert.ok(JSON.stringify(s).length>524288);assert.ok(JSON.stringify(s).length<2097152);
+ const model=validateConversation(s,id);assert.equal(model.messages.length,1);assert.equal(model.jobs.length,1);assert.equal(model.events.length,1);
+ assert.equal(model.messages[0].body,'Mensaje sintético conservado');assert.equal(model.processing,true);
+ assert.equal(Object.hasOwn(model.jobs[0],'input_json'),false,'unrendered payload never belonged to the conversation model');
+ const backend=server();Object.assign(backend.state,s);const conversation=new Conversation({transport:backend});assert.equal(await conversation.open(),true);
+ assert.equal(conversation.model.messages[0].body,'Mensaje sintético conservado');
+ for(const change of [
+  v=>{v.conversation[0].case_id='other-case';},
+  v=>{v.conversation[0].body_json=JSON.stringify({message:1});},
+  v=>{v.jobs[0].status='';},
+  v=>{v.jobs[0].case_id='other-case';},
+  v=>{v.events[0].created_at='invalid';},
+  v=>{v.events[0].case_id='other-case';}
+ ]){const invalid=structuredClone(s);change(invalid);assert.throws(()=>validateConversation(invalid,id));}
+});
+test('history is never truncated to fit: excessive validated model is rejected in full',async()=>{
+ const {validateConversation}=await load(),s=snapshot();
+ s.conversation=Array.from({length:50},(_,i)=>({case_id:current.case_id,message_id:'message-'+i,role:'user',body_json:JSON.stringify({message:'x'.repeat(12000)}),created_at:s.state.updated_at}));
+ assert.ok(JSON.stringify(s).length<2097152);assert.throws(()=>validateConversation(s,current.case_id),/invalid_snapshot/);
+ const original=s.conversation.length;assert.equal(original,50);
+ s.conversation[0].body_json=JSON.stringify({message:'small',ignored:'x'.repeat(2097152)});
+ assert.throws(()=>validateConversation(s,current.case_id),/invalid_snapshot/);assert.equal(s.conversation.length,original);
+});
+test('source diagnostics cross the actual OS bridge without exposing private server errors',async()=>{
+ const b=bridge();
+ for(const [code,expected]of [['response_limit','response_limit'],['invalid_response','invalid_response'],['private server response','unavailable']]){
+  b.setTransport({read:async()=>{throw Error(code);}});
+  await b.request({data:{type:'yod:case:request',version:1,id:'diagnostic-'+expected,method:'read',payload:{case_id:'synthetic-case'}}});
+  assert.equal(b.posts.at(-1).error,expected);
+ }
+ b.binding.dispose();
+});

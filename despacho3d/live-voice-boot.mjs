@@ -3,11 +3,11 @@ import {mountAvatarCard} from './avatar-card.mjs?v=126';
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
 import {createEntryPreparation} from './voice-preparation.mjs?v=2';
 import {residentAccessDecision} from './resident-agents.mjs?v=127';
-import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=126';
+import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=142';
 import {stationIdentity} from './project-station.mjs?v=140';
 import {createLiveVoice} from './live-voice.mjs?v=141';
 import {voiceView} from './voice-view.mjs?v=141';
-import {createWorkspace} from './agent-workspace.mjs?v=140';
+import {createWorkspace} from './agent-workspace.mjs?v=142';
 import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=132';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=132';
 import {groupTranscriptFragments} from './live-transcript.mjs';
@@ -227,7 +227,7 @@ if (open) {
       renderVoiceState(voice.snapshot());
       node('voice-start').disabled = !fresh.can_enqueue||voice.stateForCase(fresh.case_id).creation_uncertain;
       if(!voice.stateForCase(fresh.case_id).creation_uncertain)node('voice-status').textContent = fresh.can_enqueue ?
-        startVoice?'Preparando conversación de voz…':'Listo para hablar contigo.' : 'Tu acceso permite consultar; hablar requiere permiso de conversación.';
+        startVoice?'Preparando conversación de voz…':'Listo para hablar contigo.' : 'La conversación no está habilitada en este puesto. Puedes seguir consultando el tablero.';
       if (fresh.can_enqueue&&startVoice) void requestBegin(encounter);
       return true;
     } catch {
