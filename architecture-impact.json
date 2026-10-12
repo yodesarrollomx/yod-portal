@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-12.sala-decisiones.3",
-  "proposal_id": "CHG-SALA-DECISIONES-PRODUCCION-20261012",
-  "summary": "Acreditar montaje privado, recuperar generaciones de fuentes activas y publicar su informe con permiso de archivo exacto.",
+  "model_revision": "2026-10-12.sala-decisiones.4",
+  "proposal_id": "CHG-SALA-IMAGENES-RESPALDO-20261012",
+  "summary": "Registrar recorrido real de decisiones y aprobar corrección del respaldo de imagen dentro de los proveedores existentes.",
   "components": [
     "SYS-YOD-OS",
     "SYS-CONTROL",
