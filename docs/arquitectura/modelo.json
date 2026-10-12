@@ -11260,7 +11260,7 @@
         "41 regresiones específicas, incluyendo fuentes activas frente a versiones sin montar, reutilización sin generación extra, referencia cambiada, identidad del montaje y roundtrip del reporte de Mesa.",
         "CI229 pruebas Python y checks existentes aprobados en PR277; publicaciones con recibo/hash comprobado. Lectura independiente de PROPUESTAS/COLA y tres fotos descargadas."
       ],
-      "deployment": "Sala PR275/276/277 integrados; versión0db8a5432a76f9d91fb7562714e30d0c8ee0b196. Run38204774271:8 láminas nuevas,3 cartas recuperadas sin regenerar y7 POST de montaje confirmados en el backend y cotejados en el Sheet vivo. Las cinco decisiones recientes tienen nuevas tarjetas; cuatro láminas restantes del carrusel, tres del reel y tres correcciones. El reel conserva su toma aprobada y produjo escena generativa5.06s y voz4.31s, ambas verificadas en Drive antes de HECHO. Prueba de descarga38201549241/attempt2: cinco tiras accesibles y tres fotos con hash. El error anterior de montaje y el informe ausente se corrigieron; revisión completada con errores:[] y segundo run38206007233 despachado automáticamente; el nuevo lote estaba confirmando publicación. Esto no equivale a aprobación editorial, corte final ni publicación a redes.",
+      "deployment": "Sala PR275/276/277 integrados; versión0db8a5432a76f9d91fb7562714e30d0c8ee0b196. Run38204774271:8 láminas nuevas,3 cartas recuperadas sin regenerar y7 POST de montaje confirmados en el backend y cotejados en el Sheet vivo. Las cinco decisiones recientes tienen nuevas tarjetas; cuatro láminas restantes del carrusel, tres del reel y tres correcciones. El reel conserva su toma aprobada y produjo escena generativa5.06s y voz4.31s, ambas verificadas en Drive antes de HECHO. Prueba de descarga38201549241/attempt2: cinco tiras accesibles y tres fotos con hash. El error anterior de montaje y el informe ausente se corrigieron; revisión completada con errores:[] y segundo run38206007233 despachado automáticamente; segundo lote publicado y3 nuevas tarjetas confirmadas por POST y lectura nativa. La ruta autónoma ya tiene6 láminas/6 de guion y5 candidatas revisables L2–L6, preservandoL1 yL2–L4. Esto no equivale a aprobación editorial, corte final ni publicación a redes.",
       "rollback": "Revertir código y workflow mediante PR; conservar decisiones, cola, versiones, medios y snapshots. No reencolar fallos históricos ni cancelar rutinas ajenas."
     },
     {
@@ -11269,9 +11269,13 @@
         "SYS-YOD-OS",
         "SYS-CONTROL",
         "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
         "SVC-SALA-PRODUCTOR",
-        "EXT-MOTORES-MEDIA",
-        "EXT-ACTIONS"
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "EXT-MOTORES-MEDIA"
       ],
       "status": "propuesto",
       "approval": "Dirección autorizó corregir el recorrido de producción y dejar la operación autónoma en nube; respaldo operativo dentro de los proveedores existentes.",
