@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-12.sala-decisiones.5
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-12.moac-nativo138.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -1621,7 +1621,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Responsable técnico del backend
 
-**Estado registrado:** codigo. No verificado en despliegue
+**Estado registrado:** codigo. Fuente activa inspeccionada y respaldada el12-oct-2026; puente de entregas propuesto y publicación pendiente.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -1634,6 +1634,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Evidencia de la ficha:**
 
 - Tipo de fuente disponible: fragmento\_autenticacion · Estado: codigo · yodesarrollomx/board-aurum · apps-script/portero-auth.gs · Revisión: HEAD\_baseline
+- [Lectura API de fuente y versión activa con hashes y respaldos privados; ningún cambio de datos. · Estado: ejecucion · alexpueblag/yod-agent-cloud · scripts/apps-script/inspect-moac.mjs · Revisión: 44e6dda9a36c84fda3116d863ff11361642ecb3b](https://github.com/alexpueblag/yod-agent-cloud/blob/44e6dda9a36c84fda3116d863ff11361642ecb3b/scripts/apps-script/inspect-moac.mjs)
 
 **Evidencia de conexiones:**
 
@@ -1647,8 +1648,6 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Pendientes y límites:**
 
 - 5 conexiones sin verificación de ejecución registrada.
-- Código desplegado y permisos reales no contrastados
-- Proyecto editable de Operación no identificado tras comparar 13 proyectos; no modificar getAll/update ni atribuir el Corcho provisional a este despliegue.
 
 ### Datos de Operación y tareas · SHEET-OPERACION
 
@@ -1689,7 +1688,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Responsable técnico
 
-**Estado registrado:** codigo. No verificado en despliegue
+**Estado registrado:** codigo. Fuente activa inspeccionada y respaldada el12-oct-2026; puente de entregas propuesto y publicación pendiente.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -1699,6 +1698,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Evidencia de la ficha:**
 
 - Motor distinto para acciones moac · Estado: codigo · yodesarrollomx/board-aurum · src/App.jsx · Revisión: HEAD\_baseline
+- [Lectura API de fuente y versión activa con hashes y respaldos privados; ningún cambio de datos. · Estado: ejecucion · alexpueblag/yod-agent-cloud · scripts/apps-script/inspect-moac.mjs · Revisión: 44e6dda9a36c84fda3116d863ff11361642ecb3b](https://github.com/alexpueblag/yod-agent-cloud/blob/44e6dda9a36c84fda3116d863ff11361642ecb3b/scripts/apps-script/inspect-moac.mjs)
 
 **Evidencia de conexiones:**
 

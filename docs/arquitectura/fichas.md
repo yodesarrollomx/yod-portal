@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.sala-decisiones.5 · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.moac-nativo138.1 · 2026-10-12.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -361,13 +361,12 @@ Almacenar registros del dominio gobierno
 Servir el contrato de Operación y tareas
 
 - Tipo: apps_script. Dominio: Operación. Responsable: Responsable técnico del backend.
-- Evidencia: codigo. Producción: No verificado en despliegue.
+- Evidencia: codigo. Producción: Fuente activa inspeccionada y respaldada el12-oct-2026; puente de entregas propuesto y publicación pendiente..
 - Entidades: tarea, comentario.
 - Fuente de verdad: Fuente de GitHub; despliegue y datos reales por verificar.
-- Evidencia: [board-aurum/apps-script/portero-auth.gs](https://github.com/yodesarrollomx/board-aurum/blob/096550e5647a63048450b9be848be71901a32a3a/apps-script/portero-auth.gs#L63) — Tipo de fuente disponible: fragmento_autenticacion.
+- Evidencia: [board-aurum/apps-script/portero-auth.gs](https://github.com/yodesarrollomx/board-aurum/blob/096550e5647a63048450b9be848be71901a32a3a/apps-script/portero-auth.gs#L63) — Tipo de fuente disponible: fragmento_autenticacion; Lectura API de fuente y versión activa con hashes y respaldos privados; ningún cambio de datos..
 - Conexiones: CON-003 (GAS-OPERACION → SHEET-OPERACION); CON-016 (SYS-DESPACHO → GAS-OPERACION); CON-017 (SYS-TAREAS → GAS-OPERACION); CON-055 (GAS-OPERACION → SYS-YOD-OS); CON-DESPACHO-CORCHO-STORE (GAS-OPERACION → STORE-DESPACHO-CORCHO).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
-- Pendientes: Código desplegado y permisos reales no contrastados; Proyecto editable de Operación no identificado tras comparar 13 proyectos; no modificar getAll/update ni atribuir el Corcho provisional a este despliegue..
 
 ## SHEET-OPERACION · Datos de Operación y tareas
 
@@ -789,10 +788,10 @@ Almacén lógico de prospectos y seguimiento
 Relacionar metas, objetivos y tareas
 
 - Tipo: apps_script. Dominio: Operación. Responsable: Responsable técnico.
-- Evidencia: codigo. Producción: No verificado en despliegue.
+- Evidencia: codigo. Producción: Fuente activa inspeccionada y respaldada el12-oct-2026; puente de entregas propuesto y publicación pendiente..
 - Entidades: meta, objetivo, tarea_objetivo.
 - Fuente de verdad: Fuente desplegada no disponible.
-- Evidencia: [board-aurum/src/App.jsx](https://github.com/yodesarrollomx/board-aurum/blob/096550e5647a63048450b9be848be71901a32a3a/src/App.jsx#L27) — Motor distinto para acciones moac.
+- Evidencia: [board-aurum/src/App.jsx](https://github.com/yodesarrollomx/board-aurum/blob/096550e5647a63048450b9be848be71901a32a3a/src/App.jsx#L27) — Motor distinto para acciones moac; Lectura API de fuente y versión activa con hashes y respaldos privados; ningún cambio de datos..
 - Conexiones: CON-067 (SYS-TAREAS → GAS-MOAC-METAS); CON-068 (GAS-MOAC-METAS → SHEET-MOAC-METAS).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: El libro de metas es distinto del almacén de tareas.

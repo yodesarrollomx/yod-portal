@@ -1,18 +1,19 @@
 {
-  "model_revision": "2026-10-12.sala-decisiones.5",
-  "proposal_id": "CHG-SALA-IMAGENES-RESPALDO-20261012",
-  "summary": "Cerrar evidencia de recorrido, conservación de decisiones y respaldo de imagen operativo; mantener pendientes y cuotas explícitos.",
+  "model_revision": "2026-10-12.moac-nativo138.1",
+  "proposal_id": "CHG-DESPACHO-MOAC-CANONICO-20261012",
+  "summary": "MOAC por caso y entregas durables; fuentes y respaldos reales contrastados, instalación pendiente.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-CONTROL",
-    "SYS-SALA",
-    "GAS-SALA",
-    "SHEET-SALA",
-    "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
-    "EXT-ACTIONS",
-    "EXT-DRIVE",
-    "EXT-MOTORES-MEDIA"
+    "SYS-DESPACHO",
+    "SYS-DESPACHO-3D",
+    "SVC-AUTON-CLOUD",
+    "STORE-AUTON-ESTADO",
+    "SYS-TAREAS",
+    "GAS-OPERACION",
+    "SHEET-OPERACION",
+    "GAS-MOAC-METAS",
+    "SHEET-MOAC-METAS",
+    "GAS-PORTERO"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -22,5 +23,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir código por PR conservando fuentes, decisiones, snapshots, generaciones y medios."
+  "rollback": "Revertir código mediante PR y versiones existentes; mantener IDs, filas, metas, objetivos, acciones, evidencia, recibos y disco."
 }

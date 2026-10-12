@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.sala-decisiones.5",
+  "revision": "2026-10-12.moac-nativo138.1",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -1277,20 +1277,24 @@
           "claim": "Tipo de fuente disponible: fragmento_autenticacion",
           "status": "codigo",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "scripts/apps-script/inspect-moac.mjs",
+          "commit": "44e6dda9a36c84fda3116d863ff11361642ecb3b",
+          "claim": "Lectura API de fuente y versión activa con hashes y respaldos privados; ningún cambio de datos.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
         "tarea",
         "comentario"
       ],
-      "risks_sanitized": [
-        "Código desplegado y permisos reales no contrastados",
-        "Proyecto editable de Operación no identificado tras comparar 13 proyectos; no modificar getAll/update ni atribuir el Corcho provisional a este despliegue."
-      ],
-      "backend_source_status": "fragmento_autenticacion",
+      "risks_sanitized": [],
+      "backend_source_status": "fuente_activa_contrastada_en_registro_privado",
       "source_of_truth": "Fuente de GitHub; despliegue y datos reales por verificar",
       "status": "codigo",
-      "runtime_status": "No verificado en despliegue"
+      "runtime_status": "Fuente activa inspeccionada y respaldada el12-oct-2026; puente de entregas propuesto y publicación pendiente."
     },
     {
       "id": "SHEET-OPERACION",
@@ -2297,6 +2301,13 @@
           "claim": "Motor distinto para acciones moac",
           "status": "codigo",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "scripts/apps-script/inspect-moac.mjs",
+          "commit": "44e6dda9a36c84fda3116d863ff11361642ecb3b",
+          "claim": "Lectura API de fuente y versión activa con hashes y respaldos privados; ningún cambio de datos.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -2308,9 +2319,9 @@
         "El libro de metas es distinto del almacén de tareas"
       ],
       "source_of_truth": "Fuente desplegada no disponible",
-      "backend_source_status": "ausente",
+      "backend_source_status": "fuente_activa_contrastada_en_registro_privado",
       "status": "codigo",
-      "runtime_status": "No verificado en despliegue"
+      "runtime_status": "Fuente activa inspeccionada y respaldada el12-oct-2026; puente de entregas propuesto y publicación pendiente."
     },
     {
       "id": "SHEET-MOAC-METAS",
@@ -11212,16 +11223,18 @@
         "SHEET-MOAC-METAS",
         "GAS-PORTERO"
       ],
-      "proposal": "Dirección pide un despacho interconectado con el MOAC existente. Meta de empresa, objetivo e ID de acción proceden del MOAC canónico; el runtime conserva sólo intentos, herramientas, evidencia y recibos vinculados. Leer ambos backends activos antes de instalar escritura; confirmar fuente de acciones y contratos. Metas inmutables para el autón. Método por encargo: finalidad/obstáculo, criterio, dependencias, dato/fuente/método, ejecución instalada, evidencia y siguiente decisión. Releer cambios externos, sincronizar avance/evidencia mediante revisión esperada y recibos, reconciliar incertidumbre sin duplicar. Las entregas y la aceptación empresarial son estados distintos. Cache por caso con fecha de lectura, refresco de cinco minutos y lectura fresca para efectos. La misma proyección alimenta voz, chat, trabajador y puesto. No reactivar supervisor cancelado ni simular autoridad o integración por un documento. Mantener casos aislados, responsables y metas existentes.",
+      "proposal": "Dirección pide un despacho interconectado con el MOAC existente. Meta de empresa, objetivo e ID de acción proceden del MOAC canónico; el runtime conserva sólo intentos, herramientas, evidencia y recibos vinculados. Leer ambos backends activos antes de instalar escritura; confirmar fuente de acciones y contratos. Metas inmutables para el autón. Método por encargo: finalidad/obstáculo, criterio, dependencias, dato/fuente/método, ejecución instalada, evidencia y siguiente decisión. Releer cambios externos, sincronizar avance/evidencia mediante revisión esperada y recibos, reconciliar incertidumbre sin duplicar. Las entregas y la aceptación empresarial son estados distintos. Cache por caso con fecha de lectura, refresco de cinco minutos y lectura fresca para efectos. La misma proyección alimenta voz, chat, trabajador y puesto. No reactivar supervisor cancelado ni simular autoridad o integración por un documento. Mantener casos aislados, responsables y metas existentes. Proyectos activos ya localizados: consulta por vínculo explícito a IDs nativos y entrega append-only con recibo durable en el libro operativo. Portero valida identidad por proyecto; misma proyección en chat, voz y contexto del trabajador. Operación verifica autorización fresca, revisión de tarea, replay y conflicto bajo bloqueo compartido. La ficha MOAC muestra entregas ready_for_review sin aprobar ni cambiar estado/responsable. Vínculos ausentes o ambiguos quedan pendientes, sin inferencias por nombres.",
       "status": "propuesto",
       "tests": [
         "Contratos con fuentes, IDs y autorizaciones por proyecto; cambios externos y acceso revocado.",
         "Recorrido meta/objetivo/acción → encargo → herramienta/evidencia → recibo → MOAC y reapertura; duplicación, conflicto, reinicio y salida del navegador.",
         "Revisión de despliegues y lecturas operativas sin escrituras de negocio de prueba; separar pruebas aisladas de aceptación.",
         "Diagnóstico Apps Script ejecutado en Actions con el cliente existente, respaldos privados y coincidencia exacta; ningún efecto de negocio.",
-        "Regresiones del método en peticiones de chat, voz y trabajador; herramientas presentes frente a recuperación local; no confundir guía del modelo con aceptación operativa."
+        "Regresiones del método en peticiones de chat, voz y trabajador; herramientas presentes frente a recuperación local; no confundir guía del modelo con aceptación operativa.",
+        "Proyección por IDs/caso, recibos append-only, bloqueo compartido con escritores de Operación, tarea cerrada, conflicto, ACK perdido/reinicio; transformaciones sobre fuente activa respaldada.",
+        "Ficha MOAC con entregas nativas: npm ci/build, integridad y URLs seguras. Publicación de versiones y URL existentes, sin POST de negocio de prueba."
       ],
-      "deployment": "12-oct-2026 UTC: auditoría y consulta API realizadas; las implementaciones de Operación y Metas no pertenecen al proyecto registrado y su resolución por deployment respondió 400/404. Método común de chat/voz/trabajador integrado en cloud PR109, commit b5896d210b0091f2b3598bfb5b2a559e2b23db56, publicado explícitamente en Render a las 01:11:46 UTC. 481 pruebas pasan, una omitida, navegador correcto. Eso acredita código/método publicado; la proyección por caso, lectura nativa y sincronización bidireccional MOAC permanecen pendientes de acceso a los proyectos editables y verificación de contratos.",
+      "deployment": "12-oct-2026 06:26–06:32 UTC: lectura real de Operación versión23 y Metas versión5, HEAD idéntico a versión publicada; respaldos privados en cloud run38212507729 y38212793430. Portero versión92 contrastado. Implementación y publicación del nuevo puente pendientes.",
       "rollback": "Revertir código mediante PR y versiones existentes; mantener IDs, filas, metas, objetivos, acciones, evidencia, recibos y disco."
     },
     {
