@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.os-figuras-volumen · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.sala-decisiones.1 · 2026-10-12.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -675,3 +675,17 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Gmail y Sheets no ofrecen transacción conjunta; reportar carreras, cambios y respuestas perdidas en lugar de prometer atomicidad.
 - Nunca reactivar gestores/metas históricos cancelados ni cancelar toda la Sala por terminar una autorización.
 - APROBADO requiere permiso privado emitido al validar el correo real de Dirección con DP y ligado a la versión exacta. Revalidar sesión inmediatamente antes del envío; cancelar revoca ese permiso aunque falle el acuse de Sheets. No confiar en el nombre de autor dentro de un comentario.
+
+## CTR-SALA-DECISIONES-PRODUCCION
+
+- Componentes: SYS-SALA, GAS-SALA, SHEET-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-ACTIONS, EXT-DRIVE, EXT-MOTORES-MEDIA.
+- Evidencia: Fuente del día/fusión y auditoría de decisiones del backend original; tiras y snapshots publicados. Defecto de desacoplamiento editorial/producción inspeccionado en código y datos vivos el12-oct-2026..
+- Entrada/campos: `Decisiones fusionadas actuales, propuestas canónicas activas recuperadas por fecha original y fuente fresca; no inferir una aprobación de la desaparición de la carta.`, `Tira publicada, mapa de números reales, guion completo, candidatas y nota exacta de selección. Reglas/formatos y catálogo vigentes.`, `Peticiones abiertas y cola existentes; rutinas originales de Productor, Mesa, Ejecutor y Revisión.`.
+- Salida: Trabajos con identidad de la toma aprobada y procedencia verificable; ninguna marca editorial nueva., Candidatas de las láminas restantes del guion tras aprobar su primera lámina y correcciones ligadas a la nota más reciente., Recibo de transferencia separado de ejecución durable y revisión: una mesa vacía no acredita cola alineada con decisiones..
+
+- Agente no decide; conservar fusión de editores y veto, borrados, retiradas e historia. Fuente incompleta/red fallida es fallo explícito, nunca cero trabajo.
+- La identidad del trabajo y el medio del motor deben usar la misma toma y texto elegidos. Selección ambigua/inválida se bloquea, sin volver silenciosamente a la foto rechazada.
+- Corte sólo con todas las láminas del guion presentes, aprobadas y con medios vigentes; aprobar L1 no aprueba las siguientes ni el corte.
+- Las otras láminas se producen como borradores revisables al estilo de la primera aprobada; ninguna toma aprobada se regenera sin cambio de insumo.
+- Formato carrusel no genera un corte de video por aprobar su lámina. La producción no publica a redes ni altera reglas comerciales.
+- POST de producción usa los contratos existentes; pruebas sólo sintéticas. No reanudar fallos/gestores históricos ni publicar filas, notas o credenciales en informes técnicos.

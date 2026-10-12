@@ -1,15 +1,24 @@
 {
-  "model_revision": "2026-10-12.os-figuras-volumen",
-  "proposal_id": "CHG-OS-FIGURAS-VOLUMEN-20261012",
-  "summary": "Sustituir pictogramas planos y salto uniforme por figuras isométricas Hairline originales, manipuladas por puntero o foco; aumentar escala en tarjetas y ofrecer muestra pública. Mantener distribución, marca, permisos y elecciones del Despacho.",
+  "model_revision": "2026-10-12.sala-decisiones.1",
+  "proposal_id": "CHG-SALA-DECISIONES-PRODUCCION-20261012",
+  "summary": "Rastrear decisiones guardadas fuera de la mesa visual y completar su transferencia a producción con fuente vigente, toma elegida, notas actuales y guion completo.",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "GAS-PORTERO"
+    "SYS-SALA",
+    "GAS-SALA",
+    "SHEET-SALA",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-ACTIONS",
+    "EXT-DRIVE",
+    "EXT-MOTORES-MEDIA"
   ],
   "tests": [
-    "633 pruebas Node y verificadores Arquitectura, OS, Portal, Accesos y Obra aprobados.",
-    "Chromium sintético: geometría reactiva en cuatro motores, reposo sin bucle, movimiento reducido, iconos compactos visibles, expansión y contenido conservado."
+    "node scripts/arquitectura.cjs --check",
+    "node --test tests/*.cjs",
+    "node verify-os.cjs",
+    "node verify-portal.cjs",
+    "node verify-accesos.cjs",
+    "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir PR; conserva barra plegable y elecciones del Despacho."
+  "rollback": "Revertir propuesta por PR; no modificar decisiones, cola, medios ni fuentes desplegadas."
 }
