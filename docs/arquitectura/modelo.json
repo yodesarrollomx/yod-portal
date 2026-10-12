@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.moac-canonico134.3",
+  "revision": "2026-10-12.moac-canonico134.resultados",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -11181,9 +11181,11 @@
       "tests": [
         "Contratos con fuentes, IDs y autorizaciones por proyecto; cambios externos y acceso revocado.",
         "Recorrido meta/objetivo/acción → encargo → herramienta/evidencia → recibo → MOAC y reapertura; duplicación, conflicto, reinicio y salida del navegador.",
-        "Revisión de despliegues y lecturas operativas sin escrituras de negocio de prueba; separar pruebas aisladas de aceptación."
+        "Revisión de despliegues y lecturas operativas sin escrituras de negocio de prueba; separar pruebas aisladas de aceptación.",
+        "Diagnóstico Apps Script ejecutado en Actions con el cliente existente, respaldos privados y coincidencia exacta; ningún efecto de negocio.",
+        "Regresiones del método en peticiones de chat, voz y trabajador; herramientas presentes frente a recuperación local; no confundir guía del modelo con aceptación operativa."
       ],
-      "deployment": "Auditoría en curso. Implementaciones de Operación y Metas localizadas; scriptId/fuentes activas por obtener antes de modificar esos servidores. No se acredita sincronización bidireccional aún.",
+      "deployment": "12-oct-2026 UTC: auditoría y consulta API realizadas; las implementaciones de Operación y Metas no pertenecen al proyecto registrado y su resolución por deployment respondió 400/404. Método común de chat/voz/trabajador integrado en cloud PR109, commit b5896d210b0091f2b3598bfb5b2a559e2b23db56, publicado explícitamente en Render a las 01:11:46 UTC. 481 pruebas pasan, una omitida, navegador correcto. Eso acredita código/método publicado; la proyección por caso, lectura nativa y sincronización bidireccional MOAC permanecen pendientes de acceso a los proyectos editables y verificación de contratos.",
       "rollback": "Revertir código mediante PR y versiones existentes; mantener IDs, filas, metas, objetivos, acciones, evidencia, recibos y disco."
     }
   ],

@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.moac-canonico134.3 · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.moac-canonico134.resultados · 2026-10-12.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
