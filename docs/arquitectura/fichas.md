@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.bandeja-nube-autorizacion · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.hairline-atril-muelle · 2026-10-12.
 
 ## SYS-DESPACHO · El Despacho
 

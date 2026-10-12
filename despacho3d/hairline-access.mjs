@@ -1,7 +1,10 @@
+import {newEngines} from './hairline-approved.mjs';
 import {terrain,keyboard,riffle,drawer,stack,branches,lockers,format,cabinet,laptop} from './vendor/hairline/src/index.ts';
 // Decorative layer only: labels, handlers, permissions and business state stay with their owners.
 export const HAIRLINE_ENABLED=true;
 const rules=[
+ ['.workspace-subnav [data-tab="meeting"],.entorno-espacio[data-espacio="juntas"]>h2',newEngines.easel,'reunion'],
+ ['.entorno-espacio[data-espacio="comunicacion"]>h2,.entorno-espacio[data-espacio="drive"]>h2',newEngines.dock,'conectores'],
  ['.station-wheel [data-sector="ppp"],.workspace-primary [data-tab="ppp"]',terrain,'ppp'],
  ['.station-wheel [data-sector="conversaciones"],.station-chat>summary',keyboard,'hablar'],
  ['.station-wheel [data-sector="pendientes"],.workspace-primary [data-tab="activity"]',riffle,'trabajo'],
