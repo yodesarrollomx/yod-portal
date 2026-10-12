@@ -678,7 +678,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 ## CTR-SALA-DECISIONES-PRODUCCION
 
-- Componentes: SYS-SALA, GAS-SALA, SHEET-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-ACTIONS, EXT-DRIVE, EXT-MOTORES-MEDIA.
+- Componentes: SYS-YOD-OS, SYS-CONTROL, SYS-SALA, GAS-SALA, SHEET-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-ACTIONS, EXT-DRIVE, EXT-MOTORES-MEDIA.
 - Evidencia: Fuente del día/fusión y auditoría de decisiones del backend original; tiras y snapshots publicados. Defecto de desacoplamiento editorial/producción inspeccionado en código y datos vivos el12-oct-2026..
 - Entrada/campos: `Decisiones fusionadas actuales, propuestas canónicas activas recuperadas por fecha original y fuente fresca; no inferir una aprobación de la desaparición de la carta.`, `Tira publicada, mapa de números reales, guion completo, candidatas y nota exacta de selección. Reglas/formatos y catálogo vigentes.`, `Peticiones abiertas y cola existentes; rutinas originales de Productor, Mesa, Ejecutor y Revisión.`.
 - Salida: Trabajos con identidad de la toma aprobada y procedencia verificable; ninguna marca editorial nueva., Candidatas de las láminas restantes del guion tras aprobar su primera lámina y correcciones ligadas a la nota más reciente., Recibo de transferencia separado de ejecución durable y revisión: una mesa vacía no acredita cola alineada con decisiones..

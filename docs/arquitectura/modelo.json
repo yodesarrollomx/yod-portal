@@ -11209,6 +11209,8 @@
     {
       "id": "CHG-SALA-DECISIONES-PRODUCCION-20261012",
       "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
         "SYS-SALA",
         "GAS-SALA",
         "SHEET-SALA",
@@ -12603,6 +12605,8 @@
     {
       "id": "CTR-SALA-DECISIONES-PRODUCCION",
       "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
         "SYS-SALA",
         "GAS-SALA",
         "SHEET-SALA",
