@@ -52,3 +52,14 @@ test('meeting delivery binds initial meetings explicitly, rejects other cases an
  assert.throws(()=>proposalsCSV(bound,[]),/Selecciona/);
  const csv=proposalsCSV(bound,['one']);assert.match(csv,/'=SUM/);assert.match(csv,/no creado/);assert.match(csv,/Sin asignar/);
 });
+
+test('unreliable or unreviewed audio cannot generate business follow-up; evidence stays within the recording',async()=>{
+ const {requireReviewedAudio}=await import('../reuniones/quality.mjs');const d={meeting:{source_sha256:'a'.repeat(64)},proposals:[{start:61}]};const receipt={status:'completed',summary_status:'completed_assistant_review',duration_seconds:100,sha256:'a'.repeat(64)};
+ assert.equal(requireReviewedAudio(receipt,d),true);
+ for(const r of [{...receipt,transcript_valid:false},{...receipt,summary_status:'blocked_unreliable_audio'},{...receipt,sha256:'b'.repeat(64)},{...receipt,duration_seconds:60}])assert.throws(()=>requireReviewedAudio(r,d));
+});
+test('follow-up note keeps operational destinations, unknown dates and open questions without approving work',async()=>{
+ const {meetingNote}=await import('../reuniones/followup.mjs');const {normalizeDelivery,initialReview}=await import('../reuniones/results-contract.mjs');
+ const d=normalizeDelivery({schema:'yod-meeting-delivery/v1',meeting:{meeting_id:'test-meeting-002',case_id:null,origin:'initial',title:'Consulta <script>',occurred_at:null,summary:'No contratado',source_sha256:'a'.repeat(64),archive_url:'https://drive.google.com/drive/folders/synthetic',minutes_url:'https://drive.google.com/file/d/minutes/view',transcript_url:'https://drive.google.com/file/d/transcript/view'},proposals:[{id:'one',action:'Comparar alternativas',owner:null,due_date:null,quote:'Podríamos comparar',start:65,status:'proposed',destination:'ppp'},{id:'two',action:'Descartado',owner:null,due_date:null,quote:'Posibilidad',start:90,status:'proposed',destination:'moac'}]});
+ const rows=initialReview(d);rows[1].status='dismissed';const note=meetingNote(d,rows,{agenda:true});assert.match(note,/PPP · escenarios/);assert.match(note,/Responsable: Por confirmar/);assert.match(note,/No acredita tareas creadas/);assert.doesNotMatch(note,/## Descartado/);assert.doesNotMatch(note,/<script>/);
+});

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.reuniones-expediente",
+  "revision": "2026-10-12.reuniones-seguimiento",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -11557,6 +11557,32 @@
       ],
       "deployment": "Código y pruebas aisladas completados; publicación por PR y despliegue del servidor existente pendientes. Archivo con el agente requiere importar ficha y pulsar Archivar; MOAC recibe una lista manual, no tareas automáticas. Sin escrituras de reuniones reales en las pruebas.",
       "rollback": "Retirar accesos y rutas nuevas conservando fichas privadas, Drive y audio original."
+    },
+    {
+      "id": "CHG-REUNIONES-SEGUIMIENTO-20261012",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE",
+        "SVC-AUTON-CLOUD"
+      ],
+      "status": "implementado_local",
+      "approval": "Dirección solicita pruebas de transcripción, seguimiento entre procesos, segundo cerebro y mejora integral de UX dentro de infraestructura existente.",
+      "proposal": "Conservar resultados y revisión por reunión en almacén privado de caso; consulta por agente, revisión con control de versión, exportación enlazada para segundo cerebro y preparación de siguiente reunión. Bandeja local sin PPP con recuperación. Rutas de proceso orientativas, sin crear/aprobar negocio ni reactivar workflows cancelados. No tocar archivos del perfil/voz concurrentes.",
+      "tests": [
+        "Reapertura conserva propuestas y selección",
+        "Acuse perdido/reintento, concurrencia y reinicio",
+        "Importación cruzada y contenido manipulado",
+        "Fechas imposibles, evidencia incompleta, clasificación y exportación segura",
+        "Navegador móvil, teclado, errores, copia y recuperación"
+      ],
+      "deployment": "Implementación y pruebas locales completadas; publicación y aceptación física iPhone pendientes. MOAC nativo PR116 independiente.",
+      "rollback": "Revertir consumidor/rutas nuevas conservando los archivos de resultados y las fichas originales."
     }
   ],
   "data_contracts": [
