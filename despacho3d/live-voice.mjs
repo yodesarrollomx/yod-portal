@@ -41,7 +41,10 @@ export function createLiveVoice({mint, forgetCredential=()=>{}, fetchImpl = (...
     let value;
     try{value=await response.json();}catch{const error=Error(response.status===401||response.status===403?NOTICES.unauthorized:NOTICES.voice_unavailable);error.code=response.status===401||response.status===403?'unauthorized':'unavailable';throw error;}
     if (!response.ok || value?.ok !== true) {
-      if(path==='/voice/session'&&value?.ok===false&&value.error==='voice_creation_uncertain')uncertainCreations.add(current.case_id);
+      if(path==='/voice/session'&&value?.ok===false&&value.error==='voice_creation_uncertain'){
+        uncertainCreations.add(current.case_id);
+        if(activeCaseId===current.case_id&&['idle','error'].includes(state.phase))publish({phase:'error',creation_uncertain:true,notice:NOTICES.voice_creation_uncertain});
+      }
       const error = Error(NOTICES[value?.error] || 'La conexión de voz se interrumpió.');
       error.code = value?.error; throw error;
     }
@@ -477,6 +480,7 @@ export function createLiveVoice({mint, forgetCredential=()=>{}, fetchImpl = (...
   }
   // Display only the selected case's uncertainty. The underlying session/outbox is unchanged.
   function stateForCase(caseId){
+    if((!caseId||caseId===activeCaseId)&&uncertainCreations.has(caseId||activeCaseId)&&['idle','error'].includes(state.phase))return {...state,phase:'error',creation_uncertain:true,notice:NOTICES.voice_creation_uncertain};
     if(!caseId||caseId===activeCaseId||!['idle','error'].includes(state.phase))return {...state,creation_uncertain:uncertainCreations.has(caseId||activeCaseId)};
     const blocked=uncertainCreations.has(caseId);
     return {...state,phase:blocked?'error':'idle',notice:blocked?NOTICES.voice_creation_uncertain:'',creation_uncertain:blocked,

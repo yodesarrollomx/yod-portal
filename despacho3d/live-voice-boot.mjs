@@ -176,7 +176,7 @@ if (open) {
       node('voice-mute').setAttribute('aria-pressed',String(state.muted));
       setText('voice-save',view.history);
       setText('compact-name',agentName());setText('compact-phase',encounterNeedsMic?'Pulsa para hablar':state.output_paused?'Sonido pausado':state.local_speaking?'Te escucho':view.title);
-      node('compact-mic').disabled=accessPaused||state.phase==='closing'||state.phase==='starting'||state.phase==='reconnecting'||!selection?.can_enqueue||view.startDisabled;
+      node('compact-mic').disabled=accessPaused||state.phase==='closing'||state.phase==='starting'||state.phase==='reconnecting'||!selection?.can_enqueue||(!view.listening&&view.startDisabled);
       node('compact-mic').setAttribute('aria-label',view.listening?(state.muted?'Activar micrófono':'Silenciar micrófono'):'Hablar');
       node('compact-mic').setAttribute('aria-pressed',String(view.listening&&!state.muted));
       node('compact-stop').disabled=state.phase==='closing';
@@ -226,7 +226,7 @@ if (open) {
       setText('voice-title',agentName());
       renderVoiceState(voice.snapshot());
       node('voice-start').disabled = !fresh.can_enqueue||voice.stateForCase(fresh.case_id).creation_uncertain;
-      node('voice-status').textContent = fresh.can_enqueue ?
+      if(!voice.stateForCase(fresh.case_id).creation_uncertain)node('voice-status').textContent = fresh.can_enqueue ?
         startVoice?'Preparando conversación de voz…':'Listo para hablar contigo.' : 'Tu acceso permite consultar; hablar requiere permiso de conversación.';
       if (fresh.can_enqueue&&startVoice) void requestBegin(encounter);
       return true;

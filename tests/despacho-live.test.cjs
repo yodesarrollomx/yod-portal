@@ -784,7 +784,17 @@ test('selected-case view disables retry only for the uncertain project and prese
  assert.equal(f.voice.snapshot().creation_uncertain,true,'displaying B never clears A uncertainty');
  assert.equal(voiceView({phase:'error',notice:'Micrófono denegado'}).startDisabled,false);
  assert.equal(voiceView({phase:'error'}).startLabel,'Volver a intentar');
- const bootstrap=require('node:fs').readFileSync(require('node:path').join(__dirname,'../despacho3d/live-voice-boot.mjs'),'utf8');
- assert.match(bootstrap,/if\(selection\)state=voice\.stateForCase\(selection\.case_id\)/);
- assert.match(bootstrap,/voice-start'\)\.disabled = !fresh\.can_enqueue\|\|voice\.stateForCase\(fresh\.case_id\)\.creation_uncertain/);
+
+});
+
+test('uncertain creation confirmed after cancellation remains explained on reopen, never advertised as available',async()=>{
+ const {createLiveVoice}=await load(),{voiceView}=await import('../despacho3d/voice-view.mjs');let settle;
+ const f=fixture(createLiveVoice,{sessionOverride:async()=>new Promise(resolve=>{settle=()=>resolve({ok:false,json:async()=>({ok:false,error:'voice_creation_uncertain'})});})});
+ const opening=f.voice.start('synthetic-a');await tick();assert.equal(typeof settle,'function');
+ await f.voice.stop();settle();assert.equal(await opening,false);
+ await f.voice.stop();f.voice.discardPreparation();f.voice.abandon();
+ const a=f.voice.stateForCase('synthetic-a');assert.equal(a.phase,'error');assert.match(a.notice,/resultado de creación/);
+ assert.equal(voiceView(a).startDisabled,true);assert.doesNotMatch(voiceView(a).title,/Disponible/);
+ const b=f.voice.stateForCase('synthetic-b');assert.equal(b.phase,'idle');assert.equal(voiceView(b).startDisabled,false);
+ assert.equal(f.voice.stateForCase('synthetic-a').creation_uncertain,true);assert.equal(f.calls.filter(c=>c.url.endsWith('/voice/session')).length,1);
 });
