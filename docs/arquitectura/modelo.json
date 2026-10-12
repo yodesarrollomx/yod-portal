@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.sala-decisiones.4",
+  "revision": "2026-10-12.sala-decisiones.5",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -6892,7 +6892,8 @@
         "Atribución campaña/pieza a leads/citas sí existe en Marketing; cierre a venta/margen no comprobado",
         "Sala: reglas, cola y ejecución viva contrastadas en el recorrido inspeccionado; cuota y disponibilidad de todos los respaldos/motores y publicación a redes siguen sin certificarse.",
         "Desacoplamiento editorial/producción corregido: las cinco decisiones inspeccionadas dieron nuevas tarjetas. Falta aceptación editorial de las nuevas láminas, terminar las etapas aprobables y conciliar siete fallos históricos sin reactivarlos automáticamente.",
-        "Disponibilidad limitada observada: Cloudflare/Gemini imagen429 y HF410/402. Pollinations720×960 comprobado; ajustar pedido antiguo1080×1440(402). Aceptación editorial y restablecimiento de cuotas siguen separados."
+        "Cuotas limitadas observadas en Cloudflare/Gemini imagen; HF ruta antigua410 y automático402. Pollinations720×960 corregido y probado con motor real; no certifica disponibilidad permanente de todos los proveedores.",
+        "Tras el lote inspeccionado quedan18 láminas anteriores por preparar y7 fallos históricos por conciliar. Las nuevas láminas requieren aprobación editorial antes de sus etapas y cortes."
       ],
       "evidence": [
         {
@@ -6951,6 +6952,14 @@
           "claim": "Prueba38207824685: pedido720×960 entregó foto en2.76s;1080×1440 respondió402. Proveedores primarios limitados en las pruebas actuales.",
           "status": "ejecucion",
           "commit": "0db8a5432a76f9d91fb7562714e30d0c8ee0b196"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/motores/imagen.py",
+          "lines": "1",
+          "claim": "Run38208936448: motor real, reglas frescas, respaldo operativo3.23s y recorte4:5 comprobado; sin escritura de negocio.",
+          "status": "ejecucion",
+          "commit": "1b555ccad93b66fbc21432f7294061defc681a90"
         }
       ],
       "status": "ejecucion"
@@ -11258,9 +11267,10 @@
         "API real38199226962/38199533719: modelos disponibles consultados y respuesta sintética exacta; alias ligero y modelo estable verificados, sin efectos de negocio.",
         "Regresiones de prioridad de decisiones frente a heredadas, generación bloqueada, fallos de modelo, pensamiento separado del texto y continuación en otro run.",
         "41 regresiones específicas, incluyendo fuentes activas frente a versiones sin montar, reutilización sin generación extra, referencia cambiada, identidad del montaje y roundtrip del reporte de Mesa.",
-        "CI229 pruebas Python y checks existentes aprobados en PR277; publicaciones con recibo/hash comprobado. Lectura independiente de PROPUESTAS/COLA y tres fotos descargadas."
+        "CI229 pruebas Python y checks existentes aprobados en PR277; publicaciones con recibo/hash comprobado. Lectura independiente de PROPUESTAS/COLA y tres fotos descargadas.",
+        "QA de cierre38206513255/attempt2:6/6 láminas del reel,5/5 del carrusel, conservación de referencias/candidatas y24 fotos disponibles. Native Sheet confirma montajes y estados."
       ],
-      "deployment": "Sala PR275/276/277 integrados; versión0db8a5432a76f9d91fb7562714e30d0c8ee0b196. Run38204774271:8 láminas nuevas,3 cartas recuperadas sin regenerar y7 POST de montaje confirmados en el backend y cotejados en el Sheet vivo. Las cinco decisiones recientes tienen nuevas tarjetas; cuatro láminas restantes del carrusel, tres del reel y tres correcciones. El reel conserva su toma aprobada y produjo escena generativa5.06s y voz4.31s, ambas verificadas en Drive antes de HECHO. Prueba de descarga38201549241/attempt2: cinco tiras accesibles y tres fotos con hash. El error anterior de montaje y el informe ausente se corrigieron; revisión completada con errores:[] y segundo run38206007233 despachado automáticamente; segundo lote publicado y3 nuevas tarjetas confirmadas por POST y lectura nativa. La ruta autónoma ya tiene6 láminas/6 de guion y5 candidatas revisables L2–L6, preservandoL1 yL2–L4. Esto no equivale a aprobación editorial, corte final ni publicación a redes.",
+      "deployment": "Sala PR275/276/277 integrados; versión0db8a5432a76f9d91fb7562714e30d0c8ee0b196. Run38204774271:8 láminas nuevas,3 cartas recuperadas sin regenerar y7 POST de montaje confirmados en el backend y cotejados en el Sheet vivo. Las cinco decisiones recientes tienen nuevas tarjetas; cuatro láminas restantes del carrusel, tres del reel y tres correcciones. El reel conserva su toma aprobada y produjo escena generativa5.06s y voz4.31s, ambas verificadas en Drive antes de HECHO. Prueba de descarga38201549241/attempt2: cinco tiras accesibles y tres fotos con hash. El error anterior de montaje y el informe ausente se corrigieron; revisión completada con errores:[] y segundo run38206007233 despachado automáticamente; segundo lote publicado y3 nuevas tarjetas confirmadas por POST y lectura nativa. La ruta autónoma ya tiene6 láminas/6 de guion y5 candidatas revisables L2–L6, preservandoL1 yL2–L4. Esto no equivale a aprobación editorial, corte final ni publicación a redes. Ambos recorridos38204774271/38206007233 completaron Mesa→Productor→Ejecutor→Revisión→Continuar. El segundo no despachó una tercera pasada. QA38206513255/attempt2: cinco tiras comprobadas y24 fotos descargadas por hash; L1 aprobada y las tres candidatas previas de La ruta autónoma preservadas. Informe de Mesa:18 láminas anteriores limitadas para siguientes lotes. COLA101:90hecho,4obsoleto,7fallos históricos; ninguna decisión editorial escrita.",
       "rollback": "Revertir código y workflow mediante PR; conservar decisiones, cola, versiones, medios y snapshots. No reencolar fallos históricos ni cancelar rutinas ajenas."
     },
     {
@@ -11277,16 +11287,17 @@
         "EXT-DRIVE",
         "EXT-MOTORES-MEDIA"
       ],
-      "status": "propuesto",
+      "status": "publicado",
       "approval": "Dirección autorizó corregir el recorrido de producción y dejar la operación autónoma en nube; respaldo operativo dentro de los proveedores existentes.",
       "proposal": "Usar720×960 en el respaldo Pollinations, antes de componer al formato de la casa. El pedido1080×1440 devuelve402; el pedido720×960 devuelve foto verificada en2.76s. Conservar orden de motores, reglas, número de tomas, compuertas y decisiones. No añadir credenciales, suscripciones ni ampliar cuotas.",
       "tests": [
         "API sintética38207824685:720×960 genera foto con hash;1080×1440 responde402.",
         "Pruebas38207217182/38207412625: Cloudflare y Gemini imagen responden429; no marcarlos disponibles.",
         "Prueba38207521835: HF ruta antigua410, proveedor automático402; Pollinations pequeño devuelve foto.",
-        "Checks existentes de Sala,229 pruebas Python y verificación de cambios en CI; revisión de resultado publicado por separado."
+        "Checks existentes de Sala,229 pruebas Python y verificación de cambios en CI; revisión de resultado publicado por separado.",
+        "Checks de PR278 aprobados; prueba sintética del motor real38208936448 con las reglas del backend. La primera prueba fue correctamente vetada por usar una ubicación prohibida; se corrigió su prompt, no las reglas."
       ],
-      "deployment": "Propuesta respaldada por llamadas reales; el ajuste del proveedor aún no se ha integrado. La segunda pasada38206007233 estaba publicando su lote al registrar esta ampliación. Los códigos de proveedores son disponibilidad de esta prueba, no aceptación editorial ni un diagnóstico de todas las facultades.",
+      "deployment": "Sala PR278 integrado, versión1b555ccad93b66fbc21432f7294061defc681a90. Run38208936448: motor real leyó REGLAS frescas y generó vía Pollinations corregido en3.23s, recorte4:5 validado, hash de45,255 bytes comprobado, sin POST a negocio. Los avisos de los dos proveedores primarios permanecen explícitos. Mantener orden, cuotas y compuertas; las tomas nuevas requieren aceptación editorial.",
       "rollback": "Revertir el tamaño por PR; conservar decisiones, tarjetas, versiones, medios y cuotas existentes."
     }
   ],
