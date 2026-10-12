@@ -10,7 +10,7 @@ const date=v=>typeof v==='string'&&Number.isFinite(Date.parse(v));
 const active=new Set(['queued','running','claimed']);
 const FAST_FALLBACK=new Set(['unavailable','unauthorized','fast_lane_unavailable','model_unavailable','context_unavailable']);
 const FAST_NOTICES={busy:'El autón sigue respondiendo el mensaje anterior. Espera un momento y vuelve a enviar.',rate_limited:'Demasiados mensajes seguidos. Espera unos minutos.',model_failed:'La respuesta no se completó. Tu mensaje no se guardó; puedes volver a enviarlo.',auth_unavailable:'El servicio del modelo rechazó la conexión. Tu mensaje no se guardó.',provider_busy:'El modelo está saturado. Tu mensaje no se guardó; vuelve a intentarlo.',cancelled:'',invalid_request:'No se pudo enviar ese mensaje.'};
-const diagnosticCodes=new Set(['unauthorized','session_changed','timeout','unavailable','despacho_not_ready','invalid_selection','invalid_snapshot','invalid_message','invalid_job','invalid_event','seleccion_invalida','enlace_invalido','outside_os','case_changed','session_pending','transport_busy']);
+const diagnosticCodes=new Set(['unauthorized','session_changed','timeout','unavailable','despacho_not_ready','invalid_selection','invalid_snapshot','invalid_message','invalid_job','invalid_event','seleccion_invalida','enlace_invalido','outside_os','case_changed','session_pending','transport_busy','response_limit','invalid_response']);
 const transientCodes=new Set(['timeout','unavailable','transport_busy','session_pending']);
 const diagnosticCode=e=>diagnosticCodes.has(e?.message)?e.message:'unavailable';
 function checked(v){if(v?.ok===false)throw Error(diagnosticCodes.has(v.error)?v.error:'unavailable');return v;}
@@ -35,12 +35,30 @@ function sourceRows(value){
 // The PPP/document surface depends on authorized source metadata, not on the
 // validity of unrelated conversation history or old jobs. No data is cached here.
 export function validateWorkspaceSources(v,id){
- if(!v||v.ok!==true||v.case_id!==id||!text(v.source_revision)||!v.context||v.context.identity?.case_id!==id||!text(v.context.identity.name,200)||!date(v.state?.updated_at)||JSON.stringify(v).length>524288)throw Error('invalid_snapshot');
+ if(v?.ok===false&&text(v.error))checked(v);
+ if(!v||v.ok!==true||v.case_id!==id||!text(v.source_revision)||!v.context||v.context.identity?.case_id!==id||!text(v.context.identity.name,200)||!date(v.state?.updated_at))throw Error('invalid_snapshot');
  const documents=sourceRows(v.context.documents).map(([source_id,title,source,role],index)=>({id:'document-'+index,source_id,title,source,role,url:safeDocumentUrl(source)}));
- return {case_id:id,revision:v.source_revision,updated_at:v.state.updated_at,documents};
+ const projection={case_id:id,revision:v.source_revision,updated_at:v.state.updated_at,documents};
+ // Old messages and jobs cannot invalidate a small, authorized PPP source tray.
+ // Its own metadata remains bounded; this does not change the chat validator.
+ if(JSON.stringify(projection).length>524288)throw Error('response_limit');
+ return projection;
+}
+export function workspaceSourceNotice(error){
+ const code=diagnosticCode(error);
+ return ({
+  response_limit:'La lectura del expediente supera el límite admitido. El vínculo del PPP todavía no se ha recuperado.',
+  invalid_response:'El servidor devolvió una lectura ilegible del expediente. Recupera su conexión sin cerrar el puesto.',
+  invalid_snapshot:'La lectura del expediente no contiene metadatos válidos para este proyecto. El PPP no se abrirá con datos de otro caso.',
+  unauthorized:'Tu acceso a este expediente no se validó. Vuelve a validar tu acceso para recuperar su PPP.',
+  session_changed:'La sesión cambió mientras se leía el expediente. Abre de nuevo el proyecto con tu sesión actual.',
+  session_pending:'Se está validando tu acceso al expediente. Su PPP se recuperará cuando termine.',
+  timeout:'El expediente tardó demasiado en responder. Puedes recuperar su PPP sin cerrar el puesto.',
+  despacho_not_ready:'El expediente no está disponible en el servidor. Su PPP todavía no se ha recuperado.'
+ })[code]||'No se pudo conectar con el expediente para recuperar su PPP. Puedes recuperar su conexión sin cerrar el puesto.';
 }
 export function validateConversation(v,id){
- if(!v||v.ok!==true||v.case_id!==id||!text(v.source_revision)||!v.context||v.context.identity?.case_id!==id||!text(v.context.identity.name,200)||!date(v.state?.updated_at)||!Array.isArray(v.conversation)||v.conversation.length>1000||!Array.isArray(v.jobs)||v.jobs.length>1000||!Array.isArray(v.events)||v.events.length>1000||JSON.stringify(v).length>524288)throw Error('invalid_snapshot');
+ if(!v||v.ok!==true||v.case_id!==id||!text(v.source_revision)||!v.context||v.context.identity?.case_id!==id||!text(v.context.identity.name,200)||!date(v.state?.updated_at)||!Array.isArray(v.conversation)||v.conversation.length>1000||!Array.isArray(v.jobs)||v.jobs.length>1000||!Array.isArray(v.events)||v.events.length>1000||JSON.stringify(v).length>2097152)throw Error('invalid_snapshot');
  const ids=new Set();
  const messages=v.conversation.map(row=>{
   if(row.case_id!==id||!text(row.message_id)||ids.has(row.message_id)||!['user','assistant'].includes(row.role)||!text(row.body_json,16000)||!date(row.created_at))throw Error('invalid_message');
@@ -58,7 +76,11 @@ export function validateConversation(v,id){
  });
  const memory=sourceRows(v.context.memory).map(([title,body,evidence,next],index)=>({id:'memory-'+index,title,body,evidence,next,url:safeDocumentUrl(evidence)}));
  const documents=sourceRows(v.context.documents).map(([source_id,title,source,role],index)=>({id:'document-'+index,source_id,title,source,role,url:safeDocumentUrl(source)}));
- return {case_id:id,revision:v.source_revision,updated_at:v.state.updated_at,messages,jobs,events,memory,documents,decisions:[],processing:jobs.some(j=>active.has(j.status))};
+ const model={case_id:id,revision:v.source_revision,updated_at:v.state.updated_at,messages,jobs,events,memory,documents,decisions:[],processing:jobs.some(j=>active.has(j.status))};
+ // Preserve every validated row and the existing model fields; unrendered transport
+ // payloads do not consume the history budget. No truncation or mutation permission.
+ if(JSON.stringify(model).length>524288)throw Error('invalid_snapshot');
+ return model;
 }
 export class Conversation {
  constructor({transport,notify=()=>{},uuid=()=>crypto.randomUUID(),timeout=55000,fast=null,now=()=>Date.now()}){Object.assign(this,{transport,notify,uuid,timeout,now,fastOverride:fast,fastClientRef:null,fastTurns:[],fastNotice:'',fastDownUntil:0,fastAbort:null,selection:null,model:null,pending:null,accepted:null,status:'disconnected',busy:false,epoch:0,profile:null,stale:false,profileListeners:new Set()});}

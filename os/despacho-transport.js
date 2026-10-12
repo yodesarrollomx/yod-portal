@@ -30,9 +30,13 @@
      credentials:'omit',cache:'no-store',redirect:'follow',signal:controller.signal});
     if(controller.signal.aborted)throw Error('timeout');
     if(!response.ok)throw Error('unavailable');
-    var raw=await response.text();if(raw.length>524288)throw Error('response_limit');
+    // The durable read includes growing history as well as source metadata.
+    // Other operations retain their original bound; each consumer still validates its projection.
+    var limit=operation==='read'?2097152:524288;
+    var raw=await response.text();if(raw.length>limit)throw Error('response_limit');
     if(controller.signal.aborted)throw Error('timeout');
-    var data=JSON.parse(raw),current=options.getSession();
+    var data;try{data=JSON.parse(raw);}catch(_){throw Error('invalid_response');}
+    var current=options.getSession();
     if(!current||current.epoch!==session.epoch||current.token!==session.token)throw Error('session_changed');
     if(current.allowed!==true)throw Error('unauthorized');
     if(current.ready!==true)throw Error('session_pending');

@@ -7,7 +7,7 @@ import {mountWorkView} from './work-view.mjs?v=129';
 import {PROFILE_WORK_LANES,profileWorkView,nextRecordedTask} from './profile-work.mjs?v=140';
 import {registeredBoard,resolveBoard,stationIdentity,nativeBoardState} from './project-station.mjs?v=140';
 import {mountKnowledgeBoard} from './knowledge-board.mjs?v=128';
-import {createFrameTransport,validateWorkspaceSources} from './conversation.mjs?v=140';
+import {createFrameTransport,validateWorkspaceSources,workspaceSourceNotice} from './conversation.mjs?v=142';
 import {validateFastSession} from './fast-lane.mjs';
 import {DurableGoals,goalDisplay,taskDisplay,goalReviewActions,goalRoadmap,orderedGoals,goalReadView} from './goals.mjs?v=132';
 export {taskDisplay} from './goals.mjs?v=132';
@@ -356,7 +356,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   const promise=(async()=>{try{const raw=await transport.read({case_id:id});if(own!==generation||disposed||getSelection()?.case_id!==id)return;conversation=validateWorkspaceSources(raw,id);
    documentTray?.destroy();documentTray=mountDocumentTray({container:sections.sources,documents:conversation.documents,doc});
    paintBrief();mountBoard();
-  }catch{if(own!==generation||disposed)return;documentTray?.destroy();documentTray=null;sections.sources.replaceChildren(el('p','No se pudieron recuperar las fuentes. La conversación puede continuar.'),button('Volver a cargar fuentes',()=>void readSources()));if(!frame){pppNote.textContent='No se pudo recuperar el vínculo del PPP. Puedes recuperar su conexión sin cerrar el puesto.';boardRetry.hidden=false;}}})();
+  }catch(error){if(own!==generation||disposed||getSelection()?.case_id!==id)return;documentTray?.destroy();documentTray=null;const message=workspaceSourceNotice(error);sections.sources.replaceChildren(el('p',message),button('Volver a cargar fuentes',()=>void readSources()));if(!frame){pppNote.textContent=message;boardRetry.hidden=false;}}})();
   readingSources={generation:own,promise};try{await promise;}finally{if(readingSources?.promise===promise)readingSources=null;}
  }
  async function refresh(){

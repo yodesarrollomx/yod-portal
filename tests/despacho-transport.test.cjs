@@ -15,3 +15,25 @@ test('office requests accept only scoped reads and never accept actor or level f
  await t.readOfficePermissions({case_id:'synthetic'});await t.readOfficePending({case_id:'synthetic',space_id:'juntas'});
  assert.deepEqual(calls.map(c=>c.operation),['readOfficePermissions','readOfficePending']);assert.equal(calls[1].k,'synthetic-session');assert.deepEqual(calls[1].payload,{case_id:'synthetic',space_id:'juntas'});
 });
+
+test('only authenticated durable read may carry bounded accumulated history; other operations retain512KiB',async()=>{
+ const payload=JSON.stringify({ok:true,history:'x'.repeat(620120)}),calls=[];
+ const h=harness(async(url,request)=>{calls.push(JSON.parse(request.body));return {ok:true,text:async()=>payload};}),transport=h.create();
+ assert.equal((await transport.read({case_id:'synthetic-case'})).history.length,620120);
+ await assert.rejects(transport.resolveCurrent({case_id:'synthetic-case'}),/response_limit/);
+ await assert.rejects(transport.readGoals({case_id:'synthetic-case'}),/response_limit/);
+ assert.deepEqual(calls.map(c=>c.operation),['read','resolveCurrent','readGoals']);
+ const tooLarge=harness(async()=>({ok:true,text:async()=>'x'.repeat(2097153)}));
+ await assert.rejects(tooLarge.create().read({case_id:'synthetic-case'}),/response_limit/);
+});
+test('large source read remains fenced by revocation and late session change',async()=>{
+ let release;const payload=JSON.stringify({ok:true,history:'x'.repeat(620120)});
+ const h=harness(async()=>{await new Promise(r=>release=r);return {ok:true,text:async()=>payload};});
+ const session={ready:true,allowed:true,token:'same-session',epoch:1};h.session(session);
+ let request=h.create().read({case_id:'synthetic-case'});session.allowed=false;release();await assert.rejects(request,/unauthorized/);
+ session.allowed=true;request=h.create().read({case_id:'synthetic-case'});session.epoch++;release();await assert.rejects(request,/session_changed/);
+});
+test('an unreadable JSON response reports format without logging its body',async()=>{
+ const h=harness(async()=>({ok:true,text:async()=>'<html>synthetic unreadable response</html>'}));
+ await assert.rejects(h.create().read({case_id:'synthetic-case'}),/^Error: invalid_response$/);
+});

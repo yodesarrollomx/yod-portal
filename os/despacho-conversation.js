@@ -38,7 +38,7 @@
    var timer,settle;
    if(readKey)readFlights.set(readKey,new Promise(function(resolve){settle=resolve;}));
    try{var result=await Promise.race([transport[m.method](JSON.parse(JSON.stringify(p))),new Promise(function(_,reject){timer=setTimeout(function(){reject(Error('timeout'));},options.timeout||50000);})]);if(settle)settle({result:result,error:null});reply(result,null);}
-   catch(error){var failure=['unauthorized','session_changed','session_pending','timeout','transport_busy'].includes(error&&error.message)?error.message:error&&error.name==='AbortError'?'timeout':'unavailable';if(settle)settle({result:null,error:failure});reply(null,failure);}
+   catch(error){var failure=['unauthorized','session_changed','session_pending','timeout','transport_busy','response_limit','invalid_response'].includes(error&&error.message)?error.message:error&&error.name==='AbortError'?'timeout':'unavailable';if(settle)settle({result:null,error:failure});reply(null,failure);}
    finally{clearTimeout(timer);if(own===generation){busy[lane]=false;if(readKey)readFlights.delete(readKey);}}
   }
   function clear(){generation++;readFlights.clear();busy={conversation:false,send:false,goals:false,fast:false,visits:false,office:false};}

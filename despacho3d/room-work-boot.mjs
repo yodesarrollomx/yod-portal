@@ -1,4 +1,4 @@
-import {createFrameTransport} from './conversation.mjs?v=126';
+import {createFrameTransport} from './conversation.mjs?v=142';
 import {validateFastSession} from './fast-lane.mjs';
 import {createRoomWork} from './room-work.mjs?v=129';
 const transport=createFrameTransport(window),credentials=new Map();let stop=null,bound=null;
