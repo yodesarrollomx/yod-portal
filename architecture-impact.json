@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-12.sala-decisiones.3",
+  "model_revision": "2026-10-12.sala-decisiones.4",
   "proposal_id": "CHG-SALA-DECISIONES-PRODUCCION-20261012",
-  "summary": "Acreditar montaje privado, recuperar generaciones de fuentes activas y publicar su informe con permiso de archivo exacto.",
+  "summary": "Registrar evidencia real del recorrido de decisiones guardadas: tarjetas montadas, medios durables y límites editoriales conservados.",
   "components": [
     "SYS-YOD-OS",
     "SYS-CONTROL",

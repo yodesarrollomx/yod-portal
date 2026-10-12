@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.sala-decisiones.3",
+  "revision": "2026-10-12.sala-decisiones.4",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -8,17 +8,17 @@
     "cobrar_antes"
   ],
   "coverage": {
-    "summary": "Inventario conciliado de 22 repositorios, 90 componentes y 137 conexiones. Publicación y ejecución comprobadas por alcance; Bandeja espera consentimiento y relevo.",
+    "summary": "Inventario conciliado de 22 repositorios, 90 componentes y 137 conexiones. Sala: transferencia de decisiones, nuevas tarjetas y medios durables comprobados para el alcance inspeccionado; Bandeja espera consentimiento y relevo.",
     "production_verified": false,
     "limitations": [
       "No se ha comprobado la versión activa de todos los Apps Script",
-      "No se probaron escrituras sobre datos de producción",
+      "Sala: se verificaron montajes por POST y trabajos reales en su Sheet, sin nuevas decisiones editoriales. No se acredita escritura de producción en todos los sistemas.",
       "Los detalles privados de seguridad y reconciliación no forman parte de este atlas público",
       "Inventariar un archivo no equivale a revisar cada rama de su implementación",
       "La lista de proyectos independientes no acredita cobertura de todos los scripts vinculados a Sheets.",
       "La diferencia editor/versión51 corresponde a la auditoría histórica; recuperación PPP del 5-oct parte de V65 sin adaptador y registra publicación API V66 con editor/candidato/versión iguales. GET Patrimonial y 166 celdas cotejados según coordinador sólo para el caso inspeccionado; no certifica geometría, Vertical ni todos los módulos/casos.",
       "Obra requiere confirmar su libro efectivo y reglas de delegación antes de integrar el prototipo de identidad.",
-      "La App publicadora y los recorridos operativos de Sala/Marketing corregidos siguen pendientes de configuración y verificación.",
+      "Sala: recorrido de cinco decisiones guardadas contrastado con nuevas tarjetas y dos medios durables de la toma aprobada. Aceptación editorial, publicación a redes y conciliación de siete fallos históricos siguen separadas; la App publicadora general no está acreditada.",
       "La cobertura de oficina asigna todo el inventario inspeccionado; responsables operativos por confirmar e integraciones pendientes siguen explícitos. No equivale a operación completa ni a descubrir todos los recursos de todas las cuentas."
     ]
   },
@@ -6890,8 +6890,8 @@
         "Atribución pieza a lead y venta no comprobada",
         "Migración histórica a nube necesita reconciliación de dependencias",
         "Atribución campaña/pieza a leads/citas sí existe en Marketing; cierre a venta/margen no comprobado",
-        "No se comprobaron reglas habilitadas, secrets, cuotas, cola ni ejecución viva; fuente presente no prueba producción",
-        "Defecto observado: la vista editorial oculta tarjetas contestadas mientras el productor consume sólo tarjetas visibles; transferencia corregida y láminas restantes pendientes de implementación y comprobación."
+        "Sala: reglas, cola y ejecución viva contrastadas en el recorrido inspeccionado; cuota y disponibilidad de todos los respaldos/motores y publicación a redes siguen sin certificarse.",
+        "Desacoplamiento editorial/producción corregido: las cinco decisiones inspeccionadas dieron nuevas tarjetas. Falta aceptación editorial de las nuevas láminas, terminar las etapas aprobables y conciliar siete fallos históricos sin reactivarlos automáticamente."
       ],
       "evidence": [
         {
@@ -6925,9 +6925,26 @@
           "claim": "Etapas configurables",
           "status": "codigo",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/sala_produccion.py",
+          "lines": "1",
+          "claim": "Fuente de producción canónica recupera propuestas activas con decisiones vigentes, selección explícita y referencias",
+          "status": "codigo",
+          "source_revision": "0db8a5432a76f9d91fb7562714e30d0c8ee0b196"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": ".github/workflows/sala-recorrido.yml",
+          "lines": "1",
+          "claim": "Run38204774271: montaje real de siete tarjetas incluidas cinco decisiones recientes; escena y voz durables, aceptación editorial pendiente",
+          "status": "ejecucion",
+          "source_revision": "0db8a5432a76f9d91fb7562714e30d0c8ee0b196",
+          "commit": "0db8a5432a76f9d91fb7562714e30d0c8ee0b196"
         }
       ],
-      "status": "codigo"
+      "status": "ejecucion"
     },
     {
       "id": "PROC-COBRO",
@@ -11220,7 +11237,7 @@
         "EXT-DRIVE",
         "EXT-MOTORES-MEDIA"
       ],
-      "status": "propuesto",
+      "status": "publicado",
       "approval": "Dirección solicita rastrear sus decisiones guardadas y corregir el recorrido a producción el12-oct-2026.",
       "proposal": "Corregir el consumo de la mesa visual como fuente de producción. Recuperar propuestas canónicas activas asociadas a decisiones vigentes aunque el backend las haya ocultado al editor; respetar retiradas, fusión editorial y peticiones abiertas. Resolver la toma y texto elegidos antes de identificar el trabajo. Usar notas actuales al rehacer; al aprobar la primera lámina producir las demás del guion como candidatas, con referencia aprobada, sin autoaprobarlas. Bloquear corte hasta que exista y esté aprobada la tira completa, y respetar formato carrusel/reel. Encadenar rutinas existentes y comprobar encolado, producción durable y nueva revisión por separado. Ampliación tras ejecución real: comprobar el acceso al modelo de IA, sustituir modelos retirados por alias ligero vigente y respaldo Gemini comprobado; priorizar decisiones recientes y continuación de sus versiones. Reportar generación bloqueada/parcial. Cada pasada adicional usa un run independiente para conservar únicos los recibos y snapshots. Ampliación de cierre: dar al montaje su identidad propia de Actions para acreditar snapshots privados y conservar errores de los comandos canalizados. Seleccionar tiras por fuentes activas del Sheet, reutilizar generaciones no montadas sólo con sus referencias aprobadas vigentes, y registrar mesa-estado.json como output público exacto del proceso.",
       "tests": [
@@ -11231,9 +11248,10 @@
         "CI existente, dobles sin Google, ejecución autorizada sólo después de integrar código y comprobar decisiones reales.",
         "API real38199226962/38199533719: modelos disponibles consultados y respuesta sintética exacta; alias ligero y modelo estable verificados, sin efectos de negocio.",
         "Regresiones de prioridad de decisiones frente a heredadas, generación bloqueada, fallos de modelo, pensamiento separado del texto y continuación en otro run.",
-        "41 regresiones específicas, incluyendo fuentes activas frente a versiones sin montar, reutilización sin generación extra, referencia cambiada, identidad del montaje y roundtrip del reporte de Mesa."
+        "41 regresiones específicas, incluyendo fuentes activas frente a versiones sin montar, reutilización sin generación extra, referencia cambiada, identidad del montaje y roundtrip del reporte de Mesa.",
+        "CI229 pruebas Python y checks existentes aprobados en PR277; publicaciones con recibo/hash comprobado. Lectura independiente de PROPUESTAS/COLA y tres fotos descargadas."
       ],
-      "deployment": "PR275/276 publicados; run38201050335 generó8 láminas/3 cartas con modelo actual y guardó/publicó archivos, pero el montaje carecía de token de Actions y su error estaba oculto por tee. La continuación no encontró su informe porque faltaba declararlo en el contrato de outputs. Imagen pública de corrección leída por hash; esto no acredita montaje ni aceptación editorial. Se propone recuperar sin regenerar y verificar POST/medios/recepción del tablero por separado.",
+      "deployment": "Sala PR275/276/277 integrados; versión0db8a5432a76f9d91fb7562714e30d0c8ee0b196. Run38204774271:8 imágenes nuevas,3 cartas recuperadas sin regenerar y7 POST de montaje confirmados en el backend y cotejados en el Sheet vivo. Las cinco decisiones recientes tienen nuevas tarjetas; cuatro láminas restantes del carrusel, tres del reel y tres correcciones. El reel conserva su toma aprobada y produjo escena generativa5.06s y voz4.31s, ambas verificadas en Drive antes de HECHO. Prueba de descarga38201549241/attempt2: cinco tiras accesibles y tres fotos con hash. El error anterior de montaje y el informe ausente se corrigieron; revisión/segunda pasada en cierre. Esto no equivale a aprobación editorial, corte final ni publicación a redes.",
       "rollback": "Revertir código y workflow mediante PR; conservar decisiones, cola, versiones, medios y snapshots. No reencolar fallos históricos ni cancelar rutinas ajenas."
     }
   ],
