@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "model_revision": "2026-10-12.sala-veto-tiny-sd.2",
+  "model_revision": "2026-10-12.sala-rehacer-flux.1",
   "components": [
     {
       "id": "SYS-DESPACHO",

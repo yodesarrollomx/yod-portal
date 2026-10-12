@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-12.sala-veto-tiny-sd.2",
-  "proposal_id": "CHG-SALA-VETO-TINY-SD-20261012",
-  "summary": "Registrar publicación y prueba real del retiro de Tiny SD; conservar pendientes por cuota y cumplimiento del encargo explícitos.",
+  "model_revision": "2026-10-12.sala-rehacer-flux.1",
+  "proposal_id": "CHG-SALA-REHACER-POLLINATIONS-20261012",
+  "summary": "Retirar Pollinations FLUX y reemitir fuentes actuales con modelos nuevos, cuota explícita y decisiones históricas conservadas.",
   "components": [
     "SYS-YOD-OS",
     "SYS-CONTROL",
@@ -21,5 +21,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir mediante PR conservando el veto explícito de Dirección y los registros de negocio."
+  "rollback": "Revertir implementación mediante PR conservando historia y la orden de retiro. Nunca reactivar Pollinations o Tiny-SD sin revocación explícita de Dirección."
 }
