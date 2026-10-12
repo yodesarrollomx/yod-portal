@@ -729,3 +729,72 @@ test('the connected microphone never labels the project ready before its authent
  assert.equal(waiting.live,true);assert.equal(waiting.listening,true);assert.equal(waiting.retryContext,true);
  assert.match(waiting.title,/expediente pendiente/);
 });
+
+test('confirmed uncertain voice creation blocks the same case across preparation and reopening, while another case can speak',async()=>{
+ const {createLiveVoice}=await load();let openings=0;
+ const f=fixture(createLiveVoice,{sessionOverride:async()=>{
+  openings++;return openings===1?{ok:false,json:async()=>({ok:false,error:'voice_creation_uncertain'})}:null;
+ }});
+ assert.equal(await f.voice.start('synthetic-a'),false);assert.equal(f.voice.snapshot().creation_uncertain,true);
+ assert.match(f.voice.snapshot().notice,/resultado de creación/);assert.doesNotMatch(f.voice.snapshot().notice,/se interrumpió|Vuelve a intentar/);
+ const before=f.calls.length,captures=f.captures;
+ assert.equal(await f.voice.prepare('synthetic-a',{connection:true}),false);f.voice.discardPreparation();await f.voice.stop();f.voice.abandon();
+ assert.equal(await f.voice.start('synthetic-a'),false);assert.equal(await f.voice.start('synthetic-a'),false);
+ assert.equal(f.calls.length,before);assert.equal(f.captures,captures,'blocked attempts cannot open the microphone again');
+ assert.equal(await f.voice.start('synthetic-b'),true);f.event({type:'session.started'});await tick();
+ assert.equal(f.voice.snapshot().phase,'listening');assert.equal(f.voice.snapshot().creation_uncertain,false);
+ const closing=f.voice.stop();await tick();f.event({type:'session.closed'});await closing;
+ assert.equal(await f.voice.start('synthetic-a'),false);
+ assert.equal(f.calls.filter(c=>c.url.endsWith('/voice/session')).length,2,'only A initial and B legitimate openings');
+});
+test('an uncertain response arriving after cancellation stays scoped to its old case and never interrupts the next one',async()=>{
+ const {createLiveVoice}=await load();let settle,openings=0;
+ const f=fixture(createLiveVoice,{sessionOverride:async()=>{
+  if(++openings===1)return new Promise(resolve=>{settle=()=>resolve({ok:false,json:async()=>({ok:false,error:'voice_creation_uncertain'})});});
+  return null;
+ }});
+ const previous=f.voice.start('synthetic-a');await tick();assert.equal(typeof settle,'function');await f.voice.stop();
+ assert.equal(await f.voice.start('synthetic-b'),true);f.event({type:'session.started'});await tick();
+ settle();assert.equal(await previous,false);assert.equal(f.voice.snapshot().phase,'listening');
+ assert.equal(f.track.enabled,true);assert.equal(f.voice.snapshot().creation_uncertain,false);
+ assert.equal(await f.voice.prepare('synthetic-a',{connection:true}),false);
+ const closing=f.voice.stop();await tick();f.event({type:'session.closed'});await closing;
+ assert.equal(await f.voice.start('synthetic-a'),false);assert.equal(openings,2);
+});
+test('an ordinary unavailable response does not invent a confirmed remote-creation block',async()=>{
+ const {createLiveVoice}=await load();let openings=0;
+ const f=fixture(createLiveVoice,{sessionOverride:async()=>{
+  return ++openings===1?{ok:false,json:async()=>({ok:false,error:'voice_unavailable'})}:null;
+ }});
+ assert.equal(await f.voice.start('synthetic-a'),false);assert.equal(f.voice.snapshot().creation_uncertain,false);
+ assert.equal(await f.voice.start('synthetic-a'),true);f.event({type:'session.started'});await tick();
+ const closing=f.voice.stop();await tick();f.event({type:'session.closed'});await closing;
+ assert.equal(openings,2);
+});
+
+test('selected-case view disables retry only for the uncertain project and preserves it when switching back',async()=>{
+ const {createLiveVoice}=await load(),{voiceView}=await import('../despacho3d/voice-view.mjs');
+ const f=fixture(createLiveVoice,{sessionOverride:async()=>({ok:false,json:async()=>({ok:false,error:'voice_creation_uncertain'})})});
+ assert.equal(await f.voice.start('synthetic-a'),false);
+ const a=f.voice.stateForCase('synthetic-a');assert.equal(a.creation_uncertain,true);assert.equal(voiceView(a).startDisabled,true);
+ assert.equal(voiceView(a).startLabel,'Apertura sin confirmar');
+ const b=f.voice.stateForCase('synthetic-b');assert.equal(b.phase,'idle');assert.equal(b.creation_uncertain,false);
+ assert.equal(voiceView(b).startDisabled,false);assert.doesNotMatch(b.notice,/resultado de creación/);
+ assert.equal(f.voice.stateForCase('synthetic-a').creation_uncertain,true);
+ assert.equal(f.voice.snapshot().creation_uncertain,true,'displaying B never clears A uncertainty');
+ assert.equal(voiceView({phase:'error',notice:'Micrófono denegado'}).startDisabled,false);
+ assert.equal(voiceView({phase:'error'}).startLabel,'Volver a intentar');
+
+});
+
+test('uncertain creation confirmed after cancellation remains explained on reopen, never advertised as available',async()=>{
+ const {createLiveVoice}=await load(),{voiceView}=await import('../despacho3d/voice-view.mjs');let settle;
+ const f=fixture(createLiveVoice,{sessionOverride:async()=>new Promise(resolve=>{settle=()=>resolve({ok:false,json:async()=>({ok:false,error:'voice_creation_uncertain'})});})});
+ const opening=f.voice.start('synthetic-a');await tick();assert.equal(typeof settle,'function');
+ await f.voice.stop();settle();assert.equal(await opening,false);
+ await f.voice.stop();f.voice.discardPreparation();f.voice.abandon();
+ const a=f.voice.stateForCase('synthetic-a');assert.equal(a.phase,'error');assert.match(a.notice,/resultado de creación/);
+ assert.equal(voiceView(a).startDisabled,true);assert.doesNotMatch(voiceView(a).title,/Disponible/);
+ const b=f.voice.stateForCase('synthetic-b');assert.equal(b.phase,'idle');assert.equal(voiceView(b).startDisabled,false);
+ assert.equal(f.voice.stateForCase('synthetic-a').creation_uncertain,true);assert.equal(f.calls.filter(c=>c.url.endsWith('/voice/session')).length,1);
+});

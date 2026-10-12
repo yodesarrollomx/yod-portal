@@ -24,7 +24,8 @@ export function voiceView(state = {}) {
     state.fragments ? 'Transcripción recibida. El guardado todavía no está confirmado.' :
     'Aquí aparecerá la confirmación de guardado; recibir texto no significa que ya esté guardado.';
   return {live,listening,title:titles[state.phase]||'Comprobando conversación',context,history,
-    startLabel:state.phase==='error'?'Volver a intentar':state.finalized||state.incomplete?'Nueva conversación':'Iniciar conversación',
+    startDisabled:state.creation_uncertain===true,
+    startLabel:state.creation_uncertain===true?'Apertura sin confirmar':state.phase==='error'?'Volver a intentar':state.finalized||state.incomplete?'Nueva conversación':'Iniciar conversación',
     stopLabel:state.phase==='starting'?'Cancelar conexión':state.phase==='closing'?'Finalizando…':'Finalizar conversación',
     audioBlocked:live && state.playback_blocked === true,
     retryContext:listening && state.context_phase === 'unavailable'};
