@@ -65,7 +65,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await page.evaluate(()=>{window.sourcesReady=true;});
   await frame.locator('.workspace-board iframe').waitFor();
   assert.equal(await page.evaluate(()=>window.sourceReads),2,'PPP source recovers automatically without another click');
-  await frame.locator('.workspace-ppp-status').filter({hasText:'todavía no recibió una lectura compartida'}).waitFor();
+  await frame.locator('.workspace-ppp-status').filter({hasText:'El PPP todavía no compartió su lectura'}).waitFor();
   const waitingFrame=await (await frame.locator('.workspace-board iframe').elementHandle()).contentFrame();
   await waitingFrame.evaluate(()=>{window.boardSilent=false;});
   await showBoardOptions();
@@ -168,7 +168,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await frame.locator('#voice-title').filter({hasText:'Ruiseñor de prueba'}).waitFor();
   await frame.locator('.workspace-board iframe[src*="mixto.html?open=synthetic-second"]').waitFor();
   assert.equal(await iframe.evaluate(el=>el.isConnected),false,'previous project frame is removed');
-  await frame.locator('.workspace-ppp-status').filter({hasText:'todavía no recibió una lectura compartida'}).waitFor();
+  await frame.locator('.workspace-ppp-status').filter({hasText:'El PPP todavía no compartió su lectura'}).waitFor();
   assert.equal(await frame.locator('.workspace-board iframe').getAttribute('src').then(s=>s.includes('agent=1')),true);
   await showBoardOptions();assert.equal(await frame.locator('.workspace-ppp-summary').isVisible(),true);
   assert.equal(await frame.locator('#voice-transcript article').count(),0);
