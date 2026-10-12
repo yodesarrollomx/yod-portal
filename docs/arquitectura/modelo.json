@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.reuniones-privadas-sin-servidor",
+  "revision": "2026-10-12.reuniones-expediente",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -11402,6 +11402,33 @@
       ],
       "deployment": "Flujo privado Drive → Whisper local → Drive verificado con audio sintético, hashes idénticos y permisos privados. Minuta previa revisada incorporada al archivo privado. Frontend pendiente de publicar desde PR; backend de pago y app nativa no activados.",
       "rollback": "Retirar enlaces y detener ingestión; conservar grabaciones y exportaciones, sin borrar datos."
+    },
+    {
+      "id": "CHG-REUNIONES-EXPEDIENTE-20261012",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE",
+        "SVC-AUTON-CLOUD"
+      ],
+      "status": "implementado_local",
+      "approval": "Dirección solicita archivo por proyecto con historial del agente, captura sin PPP y pendientes para autorizar en MOAC.",
+      "proposal": "Registrar fichas de reunión en memoria privada existente por caso, con referencias Drive, hash e ID estable; historial autenticado. Pláticas iniciales con ID independiente sin crear PPP. Propuestas de pendientes importadas y selección para lista de revisión MOAC, sin alta automática ni aprobación inferida.",
+      "tests": [
+        "Caso ajeno y URL inválida rechazados",
+        "Acuse perdido e ID reutilizado",
+        "Reinicio conserva archivo",
+        "Reunión inicial no crea PPP",
+        "Pendientes no se convierten en tareas por importar",
+        "639 pruebas Node del portal; navegador aislado: captura inicial, selección CSV, rechazo de caso ajeno, importación y conservación del panel; ocho regresiones de grabación."
+      ],
+      "deployment": "Código y pruebas aisladas completados; publicación por PR y despliegue del servidor existente pendientes. Archivo con el agente requiere importar ficha y pulsar Archivar; MOAC recibe una lista manual, no tareas automáticas. Sin escrituras de reuniones reales en las pruebas.",
+      "rollback": "Retirar accesos y rutas nuevas conservando fichas privadas, Drive y audio original."
     }
   ],
   "data_contracts": [

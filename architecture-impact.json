@@ -1,24 +1,24 @@
 {
-  "model_revision": "2026-10-12.reuniones-privadas-sin-servidor",
-  "proposal_id": "CHG-REUNIONES-RECUPERABLES-20261012",
-  "summary": "Modo principal sin servidor: grabar/importar, conservar audio local, compartir mediante la hoja nativa a Drive privado y copiar encargo para procesamiento asistido con Whisper local. Carpeta configurada sólo en el dispositivo/perfil privado, sin IDs privados en repo. El asistente procesa durante una conversación activa y entrega minuta, evidencias y pendientes; no promete vigilancia autónoma ni procesamiento cada cinco minutos. Backend y app nativa quedan opcionales, sin contratación ni activación.",
+  "model_revision": "2026-10-12.reuniones-expediente",
+  "proposal_id": "CHG-REUNIONES-EXPEDIENTE-20261012",
+  "summary": "Registrar fichas de reunión en memoria privada existente por caso, con referencias Drive, hash e ID estable; historial autenticado. Pláticas iniciales con ID independiente sin crear PPP. Propuestas de pendientes importadas y selección para lista de revisión MOAC, sin alta automática ni aprobación inferida.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO-3D",
+    "SYS-DESPACHO",
     "SYS-POTENCIALES",
     "SYS-TRACK",
     "SYS-OBRA",
     "SYS-CONTROL",
     "SYS-OBRA-CLIENTE",
-    "SYS-DESPACHO"
+    "SVC-AUTON-CLOUD"
   ],
   "tests": [
-    "Corte de red y reintentos idempotentes",
-    "Fragmento alterado, hueco y acuse perdido",
-    "Aislamiento de actor/caso",
-    "Recuperación tras cierre y errores de almacenamiento",
-    "Verificadores del portal y pruebas sintéticas de navegador",
-    "638 pruebas Node aprobadas; 10 pruebas servidor, 8 escenarios navegador y recorrido real Drive → Whisper → Drive con audio sintético."
+    "Caso ajeno y URL inválida rechazados",
+    "Acuse perdido e ID reutilizado",
+    "Reinicio conserva archivo",
+    "Reunión inicial no crea PPP",
+    "Pendientes no se convierten en tareas por importar"
   ],
-  "rollback": "Retirar enlaces y detener ingestión; conservar grabaciones y exportaciones, sin borrar datos."
+  "rollback": "Retirar accesos y rutas nuevas conservando fichas privadas, Drive y audio original."
 }
