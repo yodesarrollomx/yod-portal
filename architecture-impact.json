@@ -1,24 +1,21 @@
 {
-  "model_revision": "2026-10-12.reuniones-expediente",
-  "proposal_id": "CHG-REUNIONES-EXPEDIENTE-20261012",
-  "summary": "Registrar fichas de reunión en memoria privada existente por caso, con referencias Drive, hash e ID estable; historial autenticado. Pláticas iniciales con ID independiente sin crear PPP. Propuestas de pendientes importadas y selección para lista de revisión MOAC, sin alta automática ni aprobación inferida.",
+  "model_revision": "2026-10-12.investor-story123.1",
+  "proposal_id": "CHG-INVESTOR-STORY-SCENES23",
+  "summary": "Narrativa comercial pública de tres láminas con escenario persistente y contenido en Sheets.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-DESPACHO-3D",
-    "SYS-DESPACHO",
-    "SYS-POTENCIALES",
-    "SYS-TRACK",
-    "SYS-OBRA",
     "SYS-CONTROL",
-    "SYS-OBRA-CLIENTE",
-    "SVC-AUTON-CLOUD"
+    "SYS-INVERSION",
+    "GAS-PLAN-POTENCIAL",
+    "SHEET-PLAN-POTENCIAL"
   ],
   "tests": [
-    "Caso ajeno y URL inválida rechazados",
-    "Acuse perdido e ID reutilizado",
-    "Reinicio conserva archivo",
-    "Reunión inicial no crea PPP",
-    "Pendientes no se convierten en tareas por importar"
+    "node scripts/arquitectura.cjs --check",
+    "node --test tests/*.cjs",
+    "node verify-os.cjs",
+    "node verify-portal.cjs",
+    "node verify-accesos.cjs",
+    "node verify-obra-app.cjs"
   ],
-  "rollback": "Retirar accesos y rutas nuevas conservando fichas privadas, Drive y audio original."
+  "rollback": "Revertir documentación mediante PR sin borrar contenido, originales ni modificar accesos."
 }
