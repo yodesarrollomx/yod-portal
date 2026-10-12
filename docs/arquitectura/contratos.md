@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.sala-rehacer-flux.1 · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.reuniones-privadas-sin-servidor · 2026-10-12.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -700,14 +700,14 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 - Componentes: SYS-YOD-OS, SYS-CONTROL, SYS-SALA, GAS-SALA, SHEET-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-ACTIONS, EXT-MOTORES-MEDIA.
 - Evidencia: Instrucción explícita de Dirección y procedencia de candidatas inspeccionada en archivos publicados; veto técnico identificado, no ranking inferido de una carta mixta..
-- Entrada/campos: `Política versionada: motor cpu/modelo segmind/tiny-sd retirado.`, `Fuente actual de decisiones fusionadas, números reales de lámina y candidata elegida.`, `Candidatas con procedencia, historial, notas y referencias aprobadas.`, `Retiro de Pollinations FLUX identificado por archivo y orden actual de rehacer fuentes afectadas de piezas activas, incluida su presentación aprobada anterior.`.
-- Salida: Generación limitada a motores permitidos; falta de cupo genera pendiente explícito., Revisión sin candidatas vetadas; selección conserva el índice original., Nueva versión de las pendientes depuradas o rehechas y recibo de montaje; historia y aprobaciones conservadas., Sustitución pendiente explícita y revalidación de fuentes retiradas; las decisiones anteriores permanecen en historia..
+- Entrada/campos: `Política versionada: motor cpu/modelo segmind/tiny-sd retirado.`, `Fuente actual de decisiones fusionadas, números reales de lámina y candidata elegida.`, `Candidatas con procedencia, historial, notas y referencias aprobadas.`.
+- Salida: Generación limitada a motores permitidos; falta de cupo genera pendiente explícito., Revisión sin candidatas vetadas; selección conserva el índice original., Nueva versión de las pendientes depuradas o rehechas y recibo de montaje; historia y aprobaciones conservadas..
 
 - Ningún respaldo implícito ni una regla antigua puede reactivar el modelo retirado.
 - Veto de imagen no altera cerebro de texto, voz, escena, reglas comerciales ni cuotas.
 - Nunca escribir votos editoriales ni inferir rechazo de toda carta como voto contra cada motor.
 - Filtrar opciones no renumera el índice que se guarda como toma elegida.
-- No alterar archivos, votos ni selección histórica. Una instrucción explícita posterior de Dirección puede retirar una fuente activa aprobada y exigir nueva versión/revisión; jamás equivale a un voto automático.
+- No alterar archivos ni selecciones ya aprobados; los documentos anteriores siguen en historia.
 - No reutilizar una generación cuya parte revisable contenga candidatas retiradas.
 - La vista no puede mostrar un modelo vetado como sustituto silencioso al faltar una toma válida.
 - Recuperación de fuente sólo para IDs canónicos activos del backend e índice de la publicación propia; imágenes en rutas locales autorizadas, huellas verificadas y fallo de red explícito.

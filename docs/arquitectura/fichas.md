@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.sala-rehacer-flux.1 · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.reuniones-privadas-sin-servidor · 2026-10-12.
 
 ## SYS-DESPACHO · El Despacho
 

@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-12.sala-rehacer-flux.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-12.reuniones-privadas-sin-servidor
 
 **Encargado de verificación:** Coordinación técnica YOD
 

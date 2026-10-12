@@ -88,6 +88,10 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
  }
  function disclosure(node,key){node.dataset.disclosure=key;const summary=node.querySelector('summary');if(summary)summary.dataset.focusKey=key;return node;}
 
+ // Open the recorder separately so changing stations cannot destroy a capture.
+ const openRecorder=()=>{const caseId=selected?.case_id;if(!caseId||getSelection()?.case_id!==caseId)return;const url=new URL('../reuniones/',win.location.href);url.searchParams.set('case_id',caseId);win.open(url.href,'_blank','noopener,noreferrer');};
+ sections.ppp.append(button('Grabar reunión del proyecto',openRecorder));
+ sections.meeting.append(button('Grabar reunión del proyecto',openRecorder));
  const avatarCard=mountAvatarCard({container:sections.avatar,doc,win});
  const meeting=mountMeeting({container:sections.meeting,getCase:()=>selected&&getSelection()?.case_id===selected.case_id?selected.case_id:null,doc,win,onPresent,
   onSlide:slide=>win.dispatchEvent(new CustomEvent('yod-meeting-slide',{detail:slide})),

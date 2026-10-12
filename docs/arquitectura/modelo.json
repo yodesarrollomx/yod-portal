@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.sala-rehacer-flux.1",
+  "revision": "2026-10-12.reuniones-privadas-sin-servidor",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -11376,6 +11376,32 @@
       ],
       "deployment": "Pausa viva imagen_motores=pausado-direccion confirmada antes de editar. Auditoría pública38293691710 identifica el archivo exacto y las opciones afectadas. Prueba38293341843: FLUX 2 Klein9B acepta contrato multipart pero retorna429 por cupo diario CF; Gemini3ProImage también429. No hay OPENAI_API_KEY ni claves BFL/FAL/Replicate/Pollinations en esta instalación. Generación nueva pendiente hasta disponibilidad real del proveedor.",
       "rollback": "Revertir implementación mediante PR conservando historia y la orden de retiro. Nunca reactivar Pollinations o Tiny-SD sin revocación explícita de Dirección."
+    },
+    {
+      "id": "CHG-REUNIONES-RECUPERABLES-20261012",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE",
+        "SYS-DESPACHO"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección sustituye la propuesta de contratación por flujo privado sin nuevas suscripciones, con Drive conectado y Whisper existente.",
+      "proposal": "Modo principal sin servidor: grabar/importar, conservar audio local, compartir mediante la hoja nativa a Drive privado y copiar encargo para procesamiento asistido con Whisper local. Carpeta configurada sólo en el dispositivo/perfil privado, sin IDs privados en repo. El asistente procesa durante una conversación activa y entrega minuta, evidencias y pendientes; no promete vigilancia autónoma ni procesamiento cada cinco minutos. Backend y app nativa quedan opcionales, sin contratación ni activación.",
+      "tests": [
+        "Corte de red y reintentos idempotentes",
+        "Fragmento alterado, hueco y acuse perdido",
+        "Aislamiento de actor/caso",
+        "Recuperación tras cierre y errores de almacenamiento",
+        "Verificadores del portal y pruebas sintéticas de navegador",
+        "638 pruebas Node aprobadas; 10 pruebas servidor, 8 escenarios navegador y recorrido real Drive → Whisper → Drive con audio sintético."
+      ],
+      "deployment": "Flujo privado Drive → Whisper local → Drive verificado con audio sintético, hashes idénticos y permisos privados. Minuta previa revisada incorporada al archivo privado. Frontend pendiente de publicar desde PR; backend de pago y app nativa no activados.",
+      "rollback": "Retirar enlaces y detener ingestión; conservar grabaciones y exportaciones, sin borrar datos."
     }
   ],
   "data_contracts": [
@@ -12805,21 +12831,19 @@
       "input": [
         "Política versionada: motor cpu/modelo segmind/tiny-sd retirado.",
         "Fuente actual de decisiones fusionadas, números reales de lámina y candidata elegida.",
-        "Candidatas con procedencia, historial, notas y referencias aprobadas.",
-        "Retiro de Pollinations FLUX identificado por archivo y orden actual de rehacer fuentes afectadas de piezas activas, incluida su presentación aprobada anterior."
+        "Candidatas con procedencia, historial, notas y referencias aprobadas."
       ],
       "output": [
         "Generación limitada a motores permitidos; falta de cupo genera pendiente explícito.",
         "Revisión sin candidatas vetadas; selección conserva el índice original.",
-        "Nueva versión de las pendientes depuradas o rehechas y recibo de montaje; historia y aprobaciones conservadas.",
-        "Sustitución pendiente explícita y revalidación de fuentes retiradas; las decisiones anteriores permanecen en historia."
+        "Nueva versión de las pendientes depuradas o rehechas y recibo de montaje; historia y aprobaciones conservadas."
       ],
       "invariants": [
         "Ningún respaldo implícito ni una regla antigua puede reactivar el modelo retirado.",
         "Veto de imagen no altera cerebro de texto, voz, escena, reglas comerciales ni cuotas.",
         "Nunca escribir votos editoriales ni inferir rechazo de toda carta como voto contra cada motor.",
         "Filtrar opciones no renumera el índice que se guarda como toma elegida.",
-        "No alterar archivos, votos ni selección histórica. Una instrucción explícita posterior de Dirección puede retirar una fuente activa aprobada y exigir nueva versión/revisión; jamás equivale a un voto automático.",
+        "No alterar archivos ni selecciones ya aprobados; los documentos anteriores siguen en historia.",
         "No reutilizar una generación cuya parte revisable contenga candidatas retiradas.",
         "La vista no puede mostrar un modelo vetado como sustituto silencioso al faltar una toma válida.",
         "Recuperación de fuente sólo para IDs canónicos activos del backend e índice de la publicación propia; imágenes en rutas locales autorizadas, huellas verificadas y fallo de red explícito."
