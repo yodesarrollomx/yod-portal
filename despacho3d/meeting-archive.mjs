@@ -38,7 +38,7 @@ export function mountMeetingArchive({container,request,getCase,doc=document}) {
    finally{if(current(own)){busy=false;save.disabled=false;}}
   });
   review.append(el('p',d.initial?'Plática inicial: al incorporarla la vincularás a este proyecto, conservando su identificador original.':'Proyecto de la ficha comprobado.'));if(!entry)review.append(save);
-  view=mountResultsView({container:review,delivery:d,review:entry?.review,doc,onReload:async()=>{try{const r=await request('/fast/knowledge/meeting-results',{meeting_id:d.meeting.meeting_id});if(current(own))show(d,checked(r,d.meeting.meeting_id));}catch(e){if(current(own))notice.textContent=message(e);}},onSave:async rows=>{
+  view=mountResultsView({container:review,delivery:d,review:entry?.review,readOnly:!entry,doc,onReload:async()=>{try{const r=await request('/fast/knowledge/meeting-results',{meeting_id:d.meeting.meeting_id});if(current(own))show(d,checked(r,d.meeting.meeting_id));}catch(e){if(current(own))notice.textContent=message(e);}},onSave:async rows=>{
    if(!current(own))throw Error('Cambió el proyecto.');if(!entry)throw Error('Primero pulsa Archivar en el expediente para conservar los resultados.');
    const signature=JSON.stringify(rows);if(!pending||pending.signature!==signature)pending={signature,body:{meeting_id:d.meeting.meeting_id,expected_revision:entry.revision,request_id:crypto.randomUUID(),rows}};
    const result=await request('/fast/knowledge/meeting-review',pending.body);if(!current(own))throw Error('Cambió el proyecto.');const confirmed=checked(result,d.meeting.meeting_id);if(JSON.stringify(confirmed.review)!==JSON.stringify(rows))throw Error('La revisión cambió. Descarga tus notas y pulsa Descartar cambios y recargar para ver lo guardado.');entry=confirmed;pending=null;
