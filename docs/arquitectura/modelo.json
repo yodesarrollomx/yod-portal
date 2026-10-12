@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.sala-rehacer-flux.1",
+  "revision": "2026-10-12.despacho-perfil140.1",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -11376,6 +11376,37 @@
       ],
       "deployment": "Pausa viva imagen_motores=pausado-direccion confirmada antes de editar. Auditoría pública38293691710 identifica el archivo exacto y las opciones afectadas. Prueba38293341843: FLUX 2 Klein9B acepta contrato multipart pero retorna429 por cupo diario CF; Gemini3ProImage también429. No hay OPENAI_API_KEY ni claves BFL/FAL/Replicate/Pollinations en esta instalación. Generación nueva pendiente hasta disponibilidad real del proveedor.",
       "rollback": "Revertir implementación mediante PR conservando historia y la orden de retiro. Nunca reactivar Pollinations o Tiny-SD sin revocación explícita de Dirección."
+    },
+    {
+      "id": "CHG-DESPACHO-PERFIL-ORDEN-20261012",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES",
+        "SHEET-PPP-MODELOS",
+        "GAS-PORTERO"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección solicita reorganizar y probar el perfil común de los autóns, empezando por el recorrido de Gastón, con revisión UX y de métodos de trabajo; conservar capacidades y fuentes canónicas.",
+      "proposal": "PPP canónico persistente junto a conversación; trabajo organizado en Ahora/Bloqueado/Para revisar, con encargos separados de metas de negocio, una siguiente acción explícita y evidencia contextual. Conservar documentos, navegador, notas/versiones, presentación e historial en accesos secundarios. Recuperar lectura PPP sin cerrar voz ni sesión compartida; lectura puntual por caso no depende de cargar todo el catálogo. Compartir sólo preparación autorizada vigente por caso/actor, sin ampliar ACL ni restaurar credenciales persistentes. Métodos inspirados en autores publicados son adaptaciones propias, no revisiones reales de esos autores.",
+      "tests": [
+        "Pruebas de contrato: apertura por avatar/nombre/rueda, caso exacto y PPP visible junto a conversación.",
+        "PPP: error transitorio de catálogo no borra la sesión compartida; lectura puntual y timeout recuperable sin aplicar cambios de negocio.",
+        "Datos: encargos/runtime, metas MOAC y entregas diferenciadas; históricos no se anuncian como pendientes actuales y ninguna aprobación automática.",
+        "UI: selección/foco persistentes, navegación por teclado/toque, escritorio/Chromebook/móvil y una acción primaria por estado.",
+        "Regresión: cambiar de caso invalida datos/acuses viejos, los recibos inciertos conservan solicitud, abrir no reanuda trabajo.",
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Recorridos con datos aislados y mediciones separadas clic→perfil/clic→PPP/inicio→audio/interrupción; una prueba sintética no acredita micrófono ni expediente privado.",
+        "Antes de cierre: prueba de sesión privada con fuente y despliegue exactos, sin datos privados en repos públicos."
+      ],
+      "deployment": "Propuesta registrada antes de editar código. Fuentes portal5169b195 y revisión PPP de su bootstrap; publicación y aceptación operativa pendientes. Coordinación de navegador privado y ejecutor por el Buzón de trabajo mutuo.",
+      "rollback": "Revertir módulos del perfil y arranque PPP por PR conservando IDs, URLs, permisos, libros, datos, recibos y volumen; no restaurar snapshots de negocio ni reactivar automatizaciones canceladas."
     }
   ],
   "data_contracts": [

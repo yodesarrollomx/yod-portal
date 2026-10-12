@@ -1,17 +1,14 @@
 {
-  "model_revision": "2026-10-12.sala-rehacer-flux.1",
-  "proposal_id": "CHG-SALA-REHACER-POLLINATIONS-20261012",
-  "summary": "Retirar Pollinations FLUX y reemitir fuentes actuales con modelos nuevos, cuota explícita y decisiones históricas conservadas.",
+  "model_revision": "2026-10-12.despacho-perfil140.1",
+  "proposal_id": "CHG-DESPACHO-PERFIL-ORDEN-20261012",
+  "summary": "Perfil común con PPP y conversación simultáneos, trabajo contextual y carga/recuperación por caso, sin mezclar metas de negocio ni perder capacidades.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-CONTROL",
-    "SYS-SALA",
-    "GAS-SALA",
-    "SHEET-SALA",
-    "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
-    "EXT-ACTIONS",
-    "EXT-MOTORES-MEDIA"
+    "SYS-DESPACHO",
+    "SYS-DESPACHO-3D",
+    "SYS-POTENCIALES",
+    "SHEET-PPP-MODELOS",
+    "GAS-PORTERO"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -21,5 +18,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir implementación mediante PR conservando historia y la orden de retiro. Nunca reactivar Pollinations o Tiny-SD sin revocación explícita de Dirección."
+  "rollback": "Revertir módulos del perfil y arranque PPP por PR conservando IDs, URLs, permisos, libros, datos, recibos y volumen; no restaurar snapshots de negocio ni reactivar automatizaciones canceladas."
 }
