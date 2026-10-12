@@ -1,43 +1,24 @@
 {
-  "model_revision": "2026-10-11.bandeja-nube-autorizacion",
-  "proposal_id": "CHG-BANDEJA-NUBE-20261011",
+  "model_revision": "2026-10-12.moac-canonico134",
+  "proposal_id": "CHG-DESPACHO-MOAC-CANONICO-20261012",
   "components": [
+    "SYS-YOD-OS",
     "SYS-DESPACHO",
+    "SYS-DESPACHO-3D",
+    "SVC-AUTON-CLOUD",
+    "STORE-AUTON-ESTADO",
     "SYS-TAREAS",
     "GAS-OPERACION",
     "SHEET-OPERACION",
-    "GAS-BANDEJA-NUBE",
-    "STORE-BANDEJA-RECIBOS",
-    "EXT-GMAIL",
-    "EXT-OPENAI",
-    "SVC-HORARIOS-CLOUD",
-    "SYS-CONTROL",
-    "SYS-YOD-OS",
-    "SYS-POTENCIALES",
-    "SYS-SALA",
-    "GAS-SALA",
-    "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
-    "EXT-ACTIONS",
-    "EXT-RENDER",
-    "SVC-AUTON-CLOUD",
-    "STORE-HORARIOS-CLOUD",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
-    "GAS-PORTERO",
-    "EXT-DRIVE",
-    "SYS-MARKETING",
-    "SYS-PLAN-POTENCIAL",
-    "EXT-MOTORES-MEDIA",
-    "SYS-DESPACHO-3D",
-    "GAS-PLAN-POTENCIAL",
-    "SHEET-PLAN-POTENCIAL",
-    "SHEET-SALA"
+    "GAS-MOAC-METAS",
+    "SHEET-MOAC-METAS",
+    "GAS-PORTERO"
   ],
-  "summary": "Precisar autorización de correo con sesión real y permiso privado; publicación y consentimiento pendientes.",
+  "summary": "Dirección pide un despacho interconectado con el MOAC existente. Meta de empresa, objetivo e ID de acción proceden del MOAC canónico; el runtime conserva sólo intentos, herramientas, evidencia y recibos vinculados. Leer ambos backends activos antes de instalar escritura; confirmar fuente de acciones y contratos. Metas inmutables para el autón. Método por encargo: finalidad/obstáculo, criterio, dependencias, dato/fuente/método, ejecución instalada, evidencia y siguiente decisión. Releer cambios externos, sincronizar avance/evidencia mediante revisión esperada y recibos, reconciliar incertidumbre sin duplicar. Las entregas y la aceptación empresarial son estados distintos. Cache por caso con fecha de lectura, refresco de cinco minutos y lectura fresca para efectos. La misma proyección alimenta voz, chat, trabajador y puesto. No reactivar supervisor cancelado ni simular autoridad o integración por un documento. Mantener casos aislados, responsables y metas existentes.",
   "tests": [
-    "Atlas generado coherente y regresiones de autoridad sintéticas; pruebas reales separadas."
+    "Contratos con fuentes, IDs y autorizaciones por proyecto; cambios externos y acceso revocado.",
+    "Recorrido meta/objetivo/acción → encargo → herramienta/evidencia → recibo → MOAC y reapertura; duplicación, conflicto, reinicio y salida del navegador.",
+    "Revisión de despliegues y lecturas operativas sin escrituras de negocio de prueba; separar pruebas aisladas de aceptación."
   ],
-  "rollback": "Detener sólo trigger BANDEJA_tick y volver a observar. Conservar recibos inciertos, Sheet y borradores; no reactivar Claude hasta conciliar envíos."
+  "rollback": "Revertir código mediante PR y versiones existentes; mantener IDs, filas, metas, objetivos, acciones, evidencia, recibos y disco."
 }
