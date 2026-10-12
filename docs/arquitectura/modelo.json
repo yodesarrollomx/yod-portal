@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.moac-nativo138.1",
+  "revision": "2026-10-12.sala-veto-tiny-sd.1",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -11312,6 +11312,33 @@
       ],
       "deployment": "Sala PR278 integrado, versión1b555ccad93b66fbc21432f7294061defc681a90. Run38208936448: motor real leyó REGLAS frescas y generó vía Pollinations corregido en3.23s, recorte4:5 validado, hash de45,255 bytes comprobado, sin POST a negocio. Los avisos de los dos proveedores primarios permanecen explícitos. Mantener orden, cuotas y compuertas; las tomas nuevas requieren aceptación editorial.",
       "rollback": "Revertir el tamaño por PR; conservar decisiones, tarjetas, versiones, medios y cuotas existentes."
+    },
+    {
+      "id": "CHG-SALA-VETO-TINY-SD-20261012",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-MOTORES-MEDIA"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección instruye retirar el modelo de imagen de baja calidad identificado por su chinche y evitar que sus tomas pendientes aparezcan en la siguiente revisión; ejecutar Sala y Chinches.",
+      "proposal": "Retirar segmind/tiny-sd (motor cpu) de generación y respaldo automático. Política pública compartida por Python y vista de revisión, con veto que prevalece aunque una regla antigua intente activarlo. Depurar candidatas pendientes; conservar archivos históricos, tomas aprobadas, selección por índice original y decisiones. Rehacer las láminas rechazadas atendiendo la relación literal texto/imagen, sin alterar el texto cuando la nota sólo rechaza la imagen. Si no hay motor válido, declarar pendiente/fallo y nunca sustituir por el modelo retirado. Ejecutar el puente y montaje existentes con verificación independiente. Recuperar desde la publicación propia las tiras activas que falten en el snapshot local, únicamente si el backend vigente y el índice propio las referencian; validar rutas, metadatos y huellas de originales antes de producir. No recrear propuestas retiradas.",
+      "tests": [
+        "Regresión: cascada configurada o respaldo heredado no ejecutan el modelo vetado; agotamiento de motores válidos no produce imagen de baja calidad.",
+        "Selección mantiene número original al filtrar opciones; una candidata retirada no se renderiza en el turno ni su ampliación.",
+        "Depuración conserva exactamente lo aprobado y elimina el modelo de candidatas nuevas/presentadas; no se reusa caché incompatible con el veto.",
+        "Muestra real agregada:13 rechazos compartidos,0 selecciones CPU; no atribuir rechazos de una carta mixta a un motor de forma exclusiva.",
+        "Checks existentes de Sala; ejecución autorizada de Chinches, Mesa y revisión con recibo, sin decisiones escritas por el agente.",
+        "Fuente reciente ausente localmente: recuperar sólo una tira canónica activa, validar rutas y huellas; fuente retirada o error de red bloquea explícitamente sin inventar datos."
+      ],
+      "deployment": "Chinches38282489941 ejecutado con éxito y encargo recogido. Auditoría de archivos públicos38283061332 identificó motor/modelo y muestra. Cambios de veto, depuración y vista aún pendientes de integrar; confirmar política, próxima revisión y cierre del encargo por separado.",
+      "rollback": "Revertir código por PR sólo con revocación explícita del veto de Dirección. Conservar historia, decisiones, archivos, fuentes y medios; no restaurar el modelo en la cascada mediante una regla heredada."
     }
   ],
   "data_contracts": [
@@ -12722,6 +12749,41 @@
         "Montaje recibe sólo la identidad de Actions de su propio repositorio para leer el snapshot privado; un fallo de lectura/hash/post detiene el paso, también a través de tee.",
         "Una generación sin montar no sustituye la fuente activa del Sheet. Reutilizar sólo con las mismas referencias aprobadas; cambio de referencia crea otra versión, sin pisar archivos.",
         "mesa-estado.json se declara por nombre exacto entre los outputs de Mesa; nunca ampliar el permiso al directorio entero de datos."
+      ]
+    },
+    {
+      "id": "CTR-SALA-VETO-MODELO-IMAGEN",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-MOTORES-MEDIA"
+      ],
+      "source": "Instrucción explícita de Dirección y procedencia de candidatas inspeccionada en archivos publicados; veto técnico identificado, no ranking inferido de una carta mixta.",
+      "input": [
+        "Política versionada: motor cpu/modelo segmind/tiny-sd retirado.",
+        "Fuente actual de decisiones fusionadas, números reales de lámina y candidata elegida.",
+        "Candidatas con procedencia, historial, notas y referencias aprobadas."
+      ],
+      "output": [
+        "Generación limitada a motores permitidos; falta de cupo genera pendiente explícito.",
+        "Revisión sin candidatas vetadas; selección conserva el índice original.",
+        "Nueva versión de las pendientes depuradas o rehechas y recibo de montaje; historia y aprobaciones conservadas."
+      ],
+      "invariants": [
+        "Ningún respaldo implícito ni una regla antigua puede reactivar el modelo retirado.",
+        "Veto de imagen no altera cerebro de texto, voz, escena, reglas comerciales ni cuotas.",
+        "Nunca escribir votos editoriales ni inferir rechazo de toda carta como voto contra cada motor.",
+        "Filtrar opciones no renumera el índice que se guarda como toma elegida.",
+        "No alterar archivos ni selecciones ya aprobados; los documentos anteriores siguen en historia.",
+        "No reutilizar una generación cuya parte revisable contenga candidatas retiradas.",
+        "La vista no puede mostrar un modelo vetado como sustituto silencioso al faltar una toma válida.",
+        "Recuperación de fuente sólo para IDs canónicos activos del backend e índice de la publicación propia; imágenes en rutas locales autorizadas, huellas verificadas y fallo de red explícito."
       ]
     }
   ],
@@ -14247,6 +14309,49 @@
     {
       "repo": "yodesarrollomx/sala-edicion",
       "prefix": "nube/motores/imagen.py",
+      "components": [
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "EXT-MOTORES-MEDIA"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": "politica-imagen.json",
+      "components": [
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "EXT-MOTORES-MEDIA"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": "politica-imagen.js",
+      "components": [
+        "SYS-SALA"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": "nube/motores/politica_imagen.py",
+      "components": [
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "EXT-MOTORES-MEDIA"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": "nube/sala_mesa.py",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SVC-SALA-PRODUCTOR"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": "nube/sala_puntajes.py",
       "components": [
         "SYS-SALA",
         "SVC-SALA-PRODUCTOR",

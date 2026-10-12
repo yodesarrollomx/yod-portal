@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.moac-nativo138.1 · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.sala-veto-tiny-sd.1 · 2026-10-12.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
