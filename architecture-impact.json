@@ -1,43 +1,16 @@
 {
-  "model_revision": "2026-10-12.bandeja-publicada.2",
-  "proposal_id": "CHG-BANDEJA-NUBE-20261011",
+  "model_revision": "2026-10-12.os-marca-navegacion",
+  "proposal_id": "CHG-OS-MARCA-NAVEGACION-20261012",
+  "summary": "Rediseñar el marco visual compartido con marca oficial, barra expandida/compacta persistente, nombres accesibles y microanimaciones coherentes en navegación, tarjetas y accesos. Mantener catálogo, destinos, permisos, sesión y datos operativos. Aplicar también Galería de modelos de Aurum, opción A confirmada explícitamente.",
   "components": [
-    "SYS-DESPACHO",
-    "SYS-TAREAS",
-    "GAS-OPERACION",
-    "SHEET-OPERACION",
-    "GAS-BANDEJA-NUBE",
-    "STORE-BANDEJA-RECIBOS",
-    "EXT-GMAIL",
-    "EXT-OPENAI",
-    "SVC-HORARIOS-CLOUD",
-    "SYS-CONTROL",
     "SYS-YOD-OS",
-    "SYS-POTENCIALES",
-    "SYS-SALA",
-    "GAS-SALA",
-    "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
-    "EXT-ACTIONS",
-    "EXT-RENDER",
-    "SVC-AUTON-CLOUD",
-    "STORE-HORARIOS-CLOUD",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
+    "SYS-DESPACHO",
     "GAS-PORTERO",
-    "EXT-DRIVE",
-    "SYS-MARKETING",
-    "SYS-PLAN-POTENCIAL",
-    "EXT-MOTORES-MEDIA",
-    "SYS-DESPACHO-3D",
-    "GAS-PLAN-POTENCIAL",
-    "SHEET-PLAN-POTENCIAL",
-    "SHEET-SALA"
+    "SYS-DESPACHO-3D"
   ],
-  "summary": "Registrar publicación comprobada; consentimiento, libro/timer y relevo quedan pendientes.",
   "tests": [
-    "Atlas/vistas/catálogo coherentes y evidencias por alcance,44 pruebas motor y26 interfaz; comprobaciones reales de Google y publicación."
+    "633 pruebas Node; Arquitectura, OS, Portal, Obra y Accesos aprobados.",
+    "Chromium sintético: expansión, persistencia, nombres, teclado, móvil, movimiento reducido, acceso deshabilitado, conservación de iframe y contenido del marco compartido."
   ],
-  "rollback": "Detener sólo trigger BANDEJA_tick y volver a observar. Conservar recibos inciertos, Sheet y borradores; no reactivar Claude hasta conciliar envíos."
+  "rollback": "Revertir PR o retirar la carga de ui-chrome.js/css; navegación base sigue disponible."
 }
