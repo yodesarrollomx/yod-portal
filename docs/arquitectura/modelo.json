@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.reuniones-seguimiento",
+  "revision": "2026-10-12.sala-imagen-publicacion.1",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -11640,6 +11640,36 @@
       ],
       "deployment": "Implementación y pruebas locales completadas; publicación y aceptación física iPhone pendientes. MOAC nativo PR116 independiente.",
       "rollback": "Revertir consumidor/rutas nuevas conservando los archivos de resultados y las fichas originales."
+    },
+    {
+      "id": "CHG-SALA-IMAGEN-PUBLICACION-20261012",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-MOTORES-MEDIA",
+        "SVC-AUTON-CLOUD",
+        "STORE-AUTON-ESTADO",
+        "EXT-OPENAI",
+        "EXT-RENDER"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección autoriza completar las imágenes con un modelo nuevo y dejar su generación, publicación y revisión funcionando en nube.",
+      "proposal": "Corregir bloqueos observados del lote GPT Image: neutralizar únicamente ubicaciones vetadas heredadas en referencias visuales, conservando exactamente caption y votos; elevar el límite del ZIP público de100 a200MiB sin cambiar500MiB descomprimidos,25MiB por archivo, rutas, tipos ni hashes. Cuando el proveedor se queda sin cupo, recuperar igualmente las tomas que ya tienen recibo, sin otra generación. Exponer sólo código/tipo de error y encabezados de cuota seguros para distinguir crédito de ritmo; espaciar nuevas solicitudes del proveedor a una por minuto. El recibo incierto nunca se repite y el confirmado se reutiliza.",
+      "tests": [
+        "Referencia heredada con localidad vetada no contamina receta nueva ni modifica el caption.",
+        "Sin cupo: recuperar recibo confirmado y no llamar POST ni respaldos para una toma ausente.",
+        "ZIP hasta el nuevo límite; rechazar exceso, rutas, tipos, hashes o descompresión fuera de contrato.",
+        "Código de error de proveedor sin mensaje privado/credenciales; ritmo acotado e idempotencia.",
+        "Checks de Sala, módulo genérico y suite privada antes del despliegue; montaje de archivos ya publicados."
+      ],
+      "deployment": "Lote38305020768 generó10 imágenes/3 cartas,16 correcciones quedaron bloqueadas por Hermosillo en una referencia heredada y5 esperaron cupo. Verificación local pasó; publicación falló por ZIP>100MiB. No se declara ninguna de las10 imágenes montada; se conservan recibos para recuperarlas sin pagar otra generación.",
+      "rollback": "Revertir por PR manteniendo fotos, recibos, decisiones y política de retiro. No borrar historia para reducir un paquete; límites de archivo, rutas y datos siguen vigentes."
     }
   ],
   "data_contracts": [
@@ -13137,7 +13167,8 @@
       ],
       "output": [
         "PNG y recibo privado de modelo/receta/solicitud; modelo explícito por candidata.",
-        "Cupo o resultado incierto: pendiente sin una imagen ficticia."
+        "Cupo o resultado incierto: pendiente sin una imagen ficticia.",
+        "Error/cupo con código seguro y recuperación de imágenes confirmadas aunque el resto siga pendiente."
       ],
       "invariants": [
         "Clave OpenAI sólo en servidor; módulo público sin expedientes ni claves.",
