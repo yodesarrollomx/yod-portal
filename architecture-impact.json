@@ -1,43 +1,15 @@
 {
-  "model_revision": "2026-10-11.bandeja-nube-autorizacion",
-  "proposal_id": "CHG-BANDEJA-NUBE-20261011",
+  "model_revision": "2026-10-12.hairline-atril-muelle",
+  "proposal_id": "CHG-DESPACHO-HAIRLINE-ATRIL-MUELLE-20261012",
+  "summary": "Aplicar Atril de presentación al acceso Reunión y Muelle de aplicaciones a las tarjetas Comunicación y Drive existentes. Son figuras decorativas; se mantienen estados por construir y permisos. Maquetas permanece sin elegir.",
   "components": [
-    "SYS-DESPACHO",
-    "SYS-TAREAS",
-    "GAS-OPERACION",
-    "SHEET-OPERACION",
-    "GAS-BANDEJA-NUBE",
-    "STORE-BANDEJA-RECIBOS",
-    "EXT-GMAIL",
-    "EXT-OPENAI",
-    "SVC-HORARIOS-CLOUD",
-    "SYS-CONTROL",
     "SYS-YOD-OS",
-    "SYS-POTENCIALES",
-    "SYS-SALA",
-    "GAS-SALA",
-    "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
-    "EXT-ACTIONS",
-    "EXT-RENDER",
-    "SVC-AUTON-CLOUD",
-    "STORE-HORARIOS-CLOUD",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
-    "GAS-PORTERO",
-    "EXT-DRIVE",
-    "SYS-MARKETING",
-    "SYS-PLAN-POTENCIAL",
-    "EXT-MOTORES-MEDIA",
-    "SYS-DESPACHO-3D",
-    "GAS-PLAN-POTENCIAL",
-    "SHEET-PLAN-POTENCIAL",
-    "SHEET-SALA"
+    "SYS-DESPACHO",
+    "SYS-DESPACHO-3D"
   ],
-  "summary": "Precisar autorización de correo con sesión real y permiso privado; publicación y consentimiento pendientes.",
   "tests": [
-    "Atlas generado coherente y regresiones de autoridad sintéticas; pruebas reales separadas."
+    "633 pruebas Node; arquitectura, OS, Portal, Obra y Accesos aprobados.",
+    "Chromium sintético: nombres accesibles, acción Reunión conservada, canales por construir, disabled conservado, animación, movimiento reducido y desmontaje."
   ],
-  "rollback": "Detener sólo trigger BANDEJA_tick y volver a observar. Conservar recibos inciertos, Sheet y borradores; no reactivar Claude hasta conciliar envíos."
+  "rollback": "Revertir este PR; conserva las once elecciones instaladas por PR178."
 }

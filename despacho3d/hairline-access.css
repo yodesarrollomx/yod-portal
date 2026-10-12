@@ -5,3 +5,10 @@
 .workspace-primary .has-hairline,.workspace-subnav .has-hairline{display:flex;align-items:center;justify-content:center}
 .radial-options .hairline-access{display:none}
 @media(max-width:480px){.hairline-access{width:32px;height:30px;flex-basis:32px}.station-wheel .hairline-access{width:50px;height:36px;flex-basis:36px}.workspace-primary .has-hairline{flex-direction:column}}
+
+.hairline-access.custom-figure{color:var(--hairline-hi,#315c45)}
+.hairline-access .moving{transform-box:fill-box;transform-origin:center}
+.hairline-access.playing .moving{animation:hairline-approved-lift 2.4s ease-in-out infinite alternate}
+.hairline-access.playing .second{animation-delay:.4s}.hairline-access.playing .third{animation-delay:.8s}
+@keyframes hairline-approved-lift{to{transform:translateY(-18px)}}
+@media(prefers-reduced-motion:reduce){.hairline-access .moving{animation:none!important;transition:none!important;transform:none!important}}
