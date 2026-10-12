@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.reuniones-privadas-sin-servidor · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.sala-openai-broker.1 · 2026-10-12.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -711,3 +711,15 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - No reutilizar una generación cuya parte revisable contenga candidatas retiradas.
 - La vista no puede mostrar un modelo vetado como sustituto silencioso al faltar una toma válida.
 - Recuperación de fuente sólo para IDs canónicos activos del backend e índice de la publicación propia; imágenes en rutas locales autorizadas, huellas verificadas y fallo de red explícito.
+
+## CTR-SALA-IMAGEN-OPENAI-NUBE
+
+- Componentes: SYS-YOD-OS, SYS-CONTROL, SYS-SALA, GAS-SALA, SHEET-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-ACTIONS, EXT-MOTORES-MEDIA, SVC-AUTON-CLOUD, STORE-AUTON-ESTADO, EXT-OPENAI, EXT-RENDER.
+- Evidencia: Credenciales existentes del servicio propio y autoridad técnica del agente de Sala..
+- Entrada/campos: `Bearer derivado de propósito exclusivo; request_id hex64 y receta acotada.`.
+- Salida: PNG y recibo privado de modelo/receta/solicitud; modelo explícito por candidata., Cupo o resultado incierto: pendiente sin una imagen ficticia..
+
+- Clave OpenAI sólo en servidor; módulo público sin expedientes ni claves.
+- No repetir una generación confirmada o incierta; identidad ligada a receta.
+- No cambiar votos, permisos, planes, servicios, metas archivadas ni expedientes.
+- Activación sólo tras imagen comprobada; generación no equivale a aceptación editorial.

@@ -1,24 +1,29 @@
 {
-  "model_revision": "2026-10-12.reuniones-privadas-sin-servidor",
-  "proposal_id": "CHG-REUNIONES-RECUPERABLES-20261012",
-  "summary": "Modo principal sin servidor: grabar/importar, conservar audio local, compartir mediante la hoja nativa a Drive privado y copiar encargo para procesamiento asistido con Whisper local. Carpeta configurada sólo en el dispositivo/perfil privado, sin IDs privados en repo. El asistente procesa durante una conversación activa y entrega minuta, evidencias y pendientes; no promete vigilancia autónoma ni procesamiento cada cinco minutos. Backend y app nativa quedan opcionales, sin contratación ni activación.",
+  "model_revision": "2026-10-12.sala-openai-broker.1",
+  "proposal_id": "CHG-SALA-OPENAI-BROKER-20261012",
+  "summary": "Puente de imágenes con OpenAI del servidor existente, sin exportar la clave ni crear recursos.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-DESPACHO-3D",
-    "SYS-POTENCIALES",
-    "SYS-TRACK",
-    "SYS-OBRA",
     "SYS-CONTROL",
-    "SYS-OBRA-CLIENTE",
-    "SYS-DESPACHO"
+    "SYS-SALA",
+    "GAS-SALA",
+    "SHEET-SALA",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-ACTIONS",
+    "EXT-MOTORES-MEDIA",
+    "SVC-AUTON-CLOUD",
+    "STORE-AUTON-ESTADO",
+    "EXT-OPENAI",
+    "EXT-RENDER"
   ],
   "tests": [
-    "Corte de red y reintentos idempotentes",
-    "Fragmento alterado, hueco y acuse perdido",
-    "Aislamiento de actor/caso",
-    "Recuperación tras cierre y errores de almacenamiento",
-    "Verificadores del portal y pruebas sintéticas de navegador",
-    "638 pruebas Node aprobadas; 10 pruebas servidor, 8 escenarios navegador y recorrido real Drive → Whisper → Drive con audio sintético."
+    "node scripts/arquitectura.cjs --check",
+    "node --test tests/*.cjs",
+    "node verify-os.cjs",
+    "node verify-portal.cjs",
+    "node verify-accesos.cjs",
+    "node verify-obra-app.cjs"
   ],
-  "rollback": "Retirar enlaces y detener ingestión; conservar grabaciones y exportaciones, sin borrar datos."
+  "rollback": "Desactivar únicamente SALA_IMAGE_ENABLED y revertir por PR; preservar recibos, volumen, decisiones y retiro. Sin cambios de planes, recursos, identidades ni metas de los autóns."
 }

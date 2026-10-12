@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.reuniones-privadas-sin-servidor · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.sala-openai-broker.1 · 2026-10-12.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
