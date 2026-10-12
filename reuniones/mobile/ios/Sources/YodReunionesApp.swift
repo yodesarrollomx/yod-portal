@@ -98,8 +98,10 @@ final class Vault {
 
 actor Uploader {
     private var busy=false
-    func sync() async throws {
-        if busy { return };busy=true;defer { busy=false }
+    func sync() async throws -> Bool {
+        if busy { return false };busy=true;defer { busy=false }
+        var verified=false
+        var unfinished=false
         guard let credentials=try Vault.connection(),let config=try JSONSerialization.jsonObject(with: credentials) as? [String:String],let server=config["server"],let token=config["token"] else { throw MeetingError.authentication }
         guard let base=URL(string:server),base.scheme=="https",base.user==nil,base.password==nil,base.query==nil,base.fragment==nil else { throw MeetingError.server }
         func request(_ path: String, method: String="GET", body: Data?=nil, headers: [String:String]=[:]) async throws -> [String:Any] {
@@ -133,10 +135,12 @@ actor Uploader {
                 let ack=try await request(path+"/finalize",method:"POST",body:JSONSerialization.data(withJSONObject:payload),headers:["Content-Type":"application/json"])
                 guard ack["state"] as? String=="sealed" else { throw MeetingError.integrity }
                 try Vault.save(try JSONSerialization.data(withJSONObject:ack),to:dir.appendingPathComponent("sealed.json"))
-            }
+                verified=true
+            } else { unfinished=true }
             let result=try await request(path)
             try Vault.save(try JSONSerialization.data(withJSONObject:result),to:dir.appendingPathComponent("result.json"))
         }
+        return verified && !unfinished
     }
 }
 
@@ -231,7 +235,7 @@ final class Recorder: ObservableObject {
     func refresh() { sessions=Vault.list() }
     func sync() {
         Task {
-            do { try await uploader.sync();await MainActor.run { self.refresh();if !self.active { self.status="Respaldo comprobado. Drive se verifica por separado." } } }
+            do { let verified=try await uploader.sync();await MainActor.run { self.refresh();if verified && !self.active { self.status="Respaldo comprobado. Drive se verifica por separado." } } }
             catch { await MainActor.run { if !self.active { self.status="Respaldo pendiente. El audio permanece en este teléfono." } } }
         }
     }
