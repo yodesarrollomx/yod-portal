@@ -6904,7 +6904,8 @@
         "Sala: reglas, cola y ejecución viva contrastadas en el recorrido inspeccionado; cuota y disponibilidad de todos los respaldos/motores y publicación a redes siguen sin certificarse.",
         "Desacoplamiento editorial/producción corregido: las cinco decisiones inspeccionadas dieron nuevas tarjetas. Falta aceptación editorial de las nuevas láminas, terminar las etapas aprobables y conciliar siete fallos históricos sin reactivarlos automáticamente.",
         "Cuotas limitadas observadas en Cloudflare/Gemini imagen; HF ruta antigua410 y automático402. Pollinations720×960 corregido y probado con motor real; no certifica disponibilidad permanente de todos los proveedores.",
-        "Tras el lote inspeccionado quedan18 láminas anteriores por preparar y7 fallos históricos por conciliar. Las nuevas láminas requieren aprobación editorial antes de sus etapas y cortes."
+        "Tras el lote inspeccionado quedan18 láminas anteriores por preparar y7 fallos históricos por conciliar. Las nuevas láminas requieren aprobación editorial antes de sus etapas y cortes.",
+        "Tiny SD retirado de generación/respaldo/revisión por Dirección. La falta de cuota de motores permitidos conserva las regeneraciones pendientes; el primer lote observado tuvo7 sin toma, sin suplirlas con el modelo retirado."
       ],
       "evidence": [
         {
@@ -6971,6 +6972,14 @@
           "claim": "Run38208936448: motor real, reglas frescas, respaldo operativo3.23s y recorte4:5 comprobado; sin escritura de negocio.",
           "status": "ejecucion",
           "commit": "1b555ccad93b66fbc21432f7294061defc681a90"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "politica-imagen.json",
+          "lines": "1",
+          "claim": "Veto publicado de Tiny SD; prueba38287509000 filtró21 opciones de28 láminas pendientes,0 vetadas visibles. Referencias aprobadas y votos preservados.",
+          "status": "ejecucion",
+          "commit": "02b06521575ea6b938a7af7350dcae9bb6ea54ab"
         }
       ],
       "status": "ejecucion"
@@ -11326,7 +11335,7 @@
         "EXT-ACTIONS",
         "EXT-MOTORES-MEDIA"
       ],
-      "status": "propuesto",
+      "status": "publicado",
       "approval": "Dirección instruye retirar el modelo de imagen de baja calidad identificado por su chinche y evitar que sus tomas pendientes aparezcan en la siguiente revisión; ejecutar Sala y Chinches.",
       "proposal": "Retirar segmind/tiny-sd (motor cpu) de generación y respaldo automático. Política pública compartida por Python y vista de revisión, con veto que prevalece aunque una regla antigua intente activarlo. Depurar candidatas pendientes; conservar archivos históricos, tomas aprobadas, selección por índice original y decisiones. Rehacer las láminas rechazadas atendiendo la relación literal texto/imagen, sin alterar el texto cuando la nota sólo rechaza la imagen. Si no hay motor válido, declarar pendiente/fallo y nunca sustituir por el modelo retirado. Ejecutar el puente y montaje existentes con verificación independiente. Recuperar desde la publicación propia las tiras activas que falten en el snapshot local, únicamente si el backend vigente y el índice propio las referencian; validar rutas, metadatos y huellas de originales antes de producir. No recrear propuestas retiradas.",
       "tests": [
@@ -11335,9 +11344,11 @@
         "Depuración conserva exactamente lo aprobado y elimina el modelo de candidatas nuevas/presentadas; no se reusa caché incompatible con el veto.",
         "Muestra real agregada:13 rechazos compartidos,0 selecciones CPU; no atribuir rechazos de una carta mixta a un motor de forma exclusiva.",
         "Checks existentes de Sala; ejecución autorizada de Chinches, Mesa y revisión con recibo, sin decisiones escritas por el agente.",
-        "Fuente reciente ausente localmente: recuperar sólo una tira canónica activa, validar rutas y huellas; fuente retirada o error de red bloquea explícitamente sin inventar datos."
+        "Fuente reciente ausente localmente: recuperar sólo una tira canónica activa, validar rutas y huellas; fuente retirada o error de red bloquea explícitamente sin inventar datos.",
+        "CI de PR281:236 regresiones Python,5 regresiones JS nuevas y checks existentes;12 casos específicos en total. Sello d087e85f6b comprobado en publicación.",
+        "Proyección de pendientes reales con el script publicado:0 opciones del modelo retirado visibles, sin modificar votos."
       ],
-      "deployment": "Chinches38282489941 ejecutado con éxito y encargo recogido. Auditoría de archivos públicos38283061332 identificó motor/modelo y muestra. Cambios de veto, depuración y vista aún pendientes de integrar; confirmar política, próxima revisión y cierre del encargo por separado.",
+      "deployment": "PR281 publicado:02b06521575ea6b938a7af7350dcae9bb6ea54ab. Regla viva imagen_respaldo_cpu=0 confirmada. Prueba38287509000: política/script y sello publicados exactamente;28 láminas pendientes,21 opciones CPU retiradas,0 vetadas visibles y28 con alternativa permitida;0 decisiones escritas. Sala38287086969 completó Mesa→Productor→Ejecutor→Revisión→Continuar y montó3 cartas depuradas. La generación del primer lote fue parcial:1 lámina nueva,7 sin toma por límites de los proveedores y11 limitadas al siguiente lote; el motor vetado no se usó para completar esos faltantes. Encargo280 cerrado con evidencia; el puente confirma su cumplimiento por separado.",
       "rollback": "Revertir código por PR sólo con revocación explícita del veto de Dirección. Conservar historia, decisiones, archivos, fuentes y medios; no restaurar el modelo en la cascada mediante una regla heredada."
     },
     {
