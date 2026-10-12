@@ -1,13 +1,21 @@
 {
-  "model_revision": "2026-10-12.investor-story1.1",
-  "proposal_id": "CHG-INVESTOR-STORY-SCENE1",
-  "summary": "Registrar presentación por scroll para inversionistas con textos públicos en Sheets y acceso desde Material, sin duplicar datos privados.",
+  "model_revision": "2026-10-12.sala-openai-broker.1",
+  "proposal_id": "CHG-SALA-OPENAI-BROKER-20261012",
+  "summary": "Puente de imagen con OpenAI del servidor existente, preservando los cambios concurrentes del tablero.",
   "components": [
     "SYS-YOD-OS",
     "SYS-CONTROL",
-    "SYS-INVERSION",
-    "GAS-PLAN-POTENCIAL",
-    "SHEET-PLAN-POTENCIAL"
+    "SYS-SALA",
+    "GAS-SALA",
+    "SHEET-SALA",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-ACTIONS",
+    "EXT-MOTORES-MEDIA",
+    "SVC-AUTON-CLOUD",
+    "STORE-AUTON-ESTADO",
+    "EXT-OPENAI",
+    "EXT-RENDER"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -17,5 +25,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir la propuesta mediante PR conservando los originales y el contenido en Sheets."
+  "rollback": "Desactivar únicamente SALA_IMAGE_ENABLED y revertir por PR; preservar recibos, volumen, decisiones y retiro. Sin cambios de planes, recursos, identidades ni metas de los autóns."
 }

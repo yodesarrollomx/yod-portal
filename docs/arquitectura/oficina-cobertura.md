@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-12.investor-story1.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-12.sala-openai-broker.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 26 sistemas y 90 componentes distribuidos exactamente una vez.
-- 10 áreas; 138 conexiones registradas, 10 marcadas como verificadas en el atlas.
+- 10 áreas; 139 conexiones registradas, 10 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -2344,6 +2344,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - CON-079 · EXT-ACTIONS → SVC-SALA-PRODUCTOR · automatizacion · Programa productor cada veinte minutos · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-080 · SVC-SALA-PRODUCTOR → GAS-SALA · api · Lee decisiones/reglas y escribe cola · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-SALA-IMAGEN-OPENAI · SVC-SALA-PRODUCTOR → SVC-AUTON-CLOUD · api · Imagen para Sala con modelo fijo y recibo · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2354,10 +2355,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - CON-079 · Frecuencia configurada en workflow, no evidencia de corridas · Estado: codigo · yodesarrollomx/sala-edicion · .github/workflows/sala-cada-hora.yml · Revisión: HEAD\_baseline
 - CON-080 · Planificador de compuertas · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_productor.py · Revisión: HEAD\_baseline
+- CON-SALA-IMAGEN-OPENAI · Propuesta autorizada para usar el servicio existente, aún sin prueba de generación. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 2 conexiones sin verificación de ejecución registrada.
+- 3 conexiones sin verificación de ejecución registrada.
 - Uso efectivo, configuración y costo en producción no comprobados
 
 ### Ejecutor de Sala · SVC-SALA-EJECUTOR
@@ -2849,6 +2851,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-MOTOR-DRIVE · SVC-AUTON-CLOUD → EXT-DRIVE · lectura · Leer originales, documentos y pasajes del expediente · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-MOTOR-OPENAI · SVC-AUTON-CLOUD → EXT-OPENAI · integracion · Voz y herramientas con claves de servidor · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-RENDER-MOTOR · EXT-RENDER → SVC-AUTON-CLOUD · alojamiento · Servicio y volumen persistentes en la versión efectiva · Estado: declarado · Ejecución no verificada en el atlas.
+- CON-SALA-IMAGEN-OPENAI · SVC-SALA-PRODUCTOR → SVC-AUTON-CLOUD · api · Imagen para Sala con modelo fijo y recibo · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2864,10 +2867,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [CON-MOTOR-DRIVE · Leer originales, documentos y pasajes del expediente · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/RESEARCH.md · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/RESEARCH.md)
 - [CON-MOTOR-OPENAI · Voz y herramientas con claves de servidor · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/voice-lane.mjs · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/voice-lane.mjs)
 - [CON-RENDER-MOTOR · Servicio y volumen persistentes en la versión efectiva · Estado: declarado · alexpueblag/yod-agent-cloud · cloud/README.txt · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/README.txt)
+- CON-SALA-IMAGEN-OPENAI · Propuesta autorizada para usar el servicio existente, aún sin prueba de generación. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 7 conexiones sin verificación de ejecución registrada.
+- 8 conexiones sin verificación de ejecución registrada.
 
 ### OpenAI · conversación y ejecución · EXT-OPENAI
 
