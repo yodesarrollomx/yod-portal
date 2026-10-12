@@ -1,27 +1,24 @@
 {
-  "model_revision": "2026-10-12.despacho-perfil140.6",
-  "proposal_id": "CHG-DESPACHO-PERFIL-ORDEN-20261012",
-  "summary": "Perfil común con PPP y conversación simultáneos, trabajo contextual y carga/recuperación por caso, sin mezclar metas de negocio ni perder capacidades.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-DESPACHO",
     "SYS-DESPACHO-3D",
+    "SYS-DESPACHO",
     "SYS-POTENCIALES",
-    "SHEET-PPP-MODELOS",
-    "GAS-PORTERO",
-    "EXT-DRIVE",
     "SYS-TRACK",
     "SYS-OBRA",
     "SYS-CONTROL",
-    "SYS-OBRA-CLIENTE"
+    "SYS-OBRA-CLIENTE",
+    "SVC-AUTON-CLOUD"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs"
+    "Reapertura conserva propuestas y selección",
+    "Acuse perdido/reintento, concurrencia y reinicio",
+    "Importación cruzada y contenido manipulado",
+    "Fechas imposibles, evidencia incompleta, clasificación y exportación segura",
+    "Navegador móvil, teclado, errores, copia y recuperación"
   ],
-  "rollback": "Revertir módulos del perfil y arranque PPP por PR conservando IDs, URLs, permisos, libros, datos, recibos y volumen; no restaurar snapshots de negocio ni reactivar automatizaciones canceladas."
+  "rollback": "Revertir consumidor/rutas nuevas conservando los archivos de resultados y las fichas originales.",
+  "model_revision": "2026-10-12.reuniones-seguimiento",
+  "proposal_id": "CHG-REUNIONES-SEGUIMIENTO-20261012",
+  "summary": "Conservar resultados y revisión por reunión en almacén privado de caso; consulta por agente, revisión con control de versión, exportación enlazada para segundo cerebro y preparación de siguiente reunión. Bandeja local sin PPP con recuperación. Rutas de proceso orientativas, sin crear/aprobar negocio ni reactivar workflows cancelados. No tocar archivos del perfil/voz concurrentes."
 }
