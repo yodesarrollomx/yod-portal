@@ -1,29 +1,28 @@
 {
-  "model_revision": "2026-10-12.investor-story17.1",
-  "proposal_id": "CHG-DESPACHO-PERFIL-ORDEN-20261012",
-  "summary": "Recuperación de voz por proyecto: distinguir creación remota incierta y evitar repetir su POST sin un resultado autoritativo. La vista proyecta incertidumbre del caso seleccionado, mantiene PPP/chat y permite los otros casos. Conserva cancelación y epoch; la guardia local no acredita persistencia tras recargar ni sustituye la del servidor.",
+  "model_revision": "2026-10-12.sala-imagen-evidencia.1",
+  "proposal_id": "CHG-SALA-IMAGEN-PUBLICACION-20261012",
+  "summary": "Registrar implementación y evidencia real del puente de imagen, montaje parcial y bloqueo de saldo API, con componentes y vistas existentes.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "SYS-POTENCIALES",
-    "SHEET-PPP-MODELOS",
-    "GAS-PORTERO",
-    "EXT-DRIVE",
-    "SYS-TRACK",
-    "SYS-OBRA",
     "SYS-CONTROL",
-    "SYS-OBRA-CLIENTE"
+    "SYS-SALA",
+    "GAS-SALA",
+    "SHEET-SALA",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-ACTIONS",
+    "EXT-MOTORES-MEDIA",
+    "SVC-AUTON-CLOUD",
+    "STORE-AUTON-ESTADO",
+    "EXT-OPENAI",
+    "EXT-RENDER"
   ],
   "tests": [
+    "git diff --check",
     "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs",
-    "Casos aislados de voice_creation_uncertain: una apertura, cero POST extra; otra identidad de proyecto sigue disponible; cancelación/respuesta tardía y reapertura no limpian incertidumbre.",
-    "Proyección A bloqueado / B disponible / volver a A conserva incertidumbre, sin perder recuperación de otros errores."
+    "node --test scripts/*.test.cjs",
+    "Atlas, verificación y contratos de Portal en CI",
+    "Recibos reales de imagen38302218587, montaje38310054319 y proveedor38310564537"
   ],
-  "rollback": "Revertir módulos del perfil y arranque PPP por PR conservando IDs, URLs, permisos, libros, datos, recibos y volumen; no restaurar snapshots de negocio ni reactivar automatizaciones canceladas."
+  "rollback": "Revertir sólo esta documentación por PR; conservar imágenes, recibos, votos, historial y cambios concurrentes."
 }
