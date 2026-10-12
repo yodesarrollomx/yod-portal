@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-12.despacho-perfil140.6",
+  "model_revision": "2026-10-12.reuniones-seguimiento",
   "proposal_id": "CHG-DESPACHO-PERFIL-ORDEN-20261012",
   "summary": "Recuperación de voz por proyecto: distinguir apertura remota incierta y evitar repetir su POST mientras no exista cierre comprobado. Conserva PPP/chat, cancelación, epoch y disponibilidad de otros casos; el bloqueo local no acredita persistencia tras recargar ni sustituye la guardia del servidor.",
   "components": [
