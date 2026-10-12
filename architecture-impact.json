@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-12.sala-decisiones.4",
+  "model_revision": "2026-10-12.sala-decisiones.5",
   "proposal_id": "CHG-SALA-IMAGENES-RESPALDO-20261012",
-  "summary": "Registrar recorrido real de decisiones y aprobar corrección del respaldo de imagen dentro de los proveedores existentes.",
+  "summary": "Cerrar evidencia de recorrido, conservación de decisiones y respaldo de imagen operativo; mantener pendientes y cuotas explícitos.",
   "components": [
     "SYS-YOD-OS",
     "SYS-CONTROL",
