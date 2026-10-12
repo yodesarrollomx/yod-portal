@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-12.sala-decisiones.2",
+  "model_revision": "2026-10-12.sala-decisiones.3",
   "proposal_id": "CHG-SALA-DECISIONES-PRODUCCION-20261012",
-  "summary": "Corregir bloqueos de modelo retirado, prioridad y señalización de Mesa; continuar lotes en runs distintos para mantener recibos únicos.",
+  "summary": "Acreditar montaje privado, recuperar generaciones de fuentes activas y publicar su informe con permiso de archivo exacto.",
   "components": [
     "SYS-YOD-OS",
     "SYS-CONTROL",
@@ -22,5 +22,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir código/flujo por PR; mantener decisiones, medios, cola y recibos. No volver a un modelo retirado como reversión técnica."
+  "rollback": "Revertir código por PR conservando fuentes, decisiones, snapshots, generaciones y medios."
 }

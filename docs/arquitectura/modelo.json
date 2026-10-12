@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.sala-decisiones.2",
+  "revision": "2026-10-12.sala-decisiones.3",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -11222,7 +11222,7 @@
       ],
       "status": "propuesto",
       "approval": "Dirección solicita rastrear sus decisiones guardadas y corregir el recorrido a producción el12-oct-2026.",
-      "proposal": "Corregir el consumo de la mesa visual como fuente de producción. Recuperar propuestas canónicas activas asociadas a decisiones vigentes aunque el backend las haya ocultado al editor; respetar retiradas, fusión editorial y peticiones abiertas. Resolver la toma y texto elegidos antes de identificar el trabajo. Usar notas actuales al rehacer; al aprobar la primera lámina producir las demás del guion como candidatas, con referencia aprobada, sin autoaprobarlas. Bloquear corte hasta que exista y esté aprobada la tira completa, y respetar formato carrusel/reel. Encadenar rutinas existentes y comprobar encolado, producción durable y nueva revisión por separado. Ampliación tras ejecución real: comprobar el acceso al modelo de IA, sustituir modelos retirados por alias ligero vigente y respaldo Gemini comprobado; priorizar decisiones recientes y continuación de sus versiones. Reportar generación bloqueada/parcial. Cada pasada adicional usa un run independiente para conservar únicos los recibos y snapshots.",
+      "proposal": "Corregir el consumo de la mesa visual como fuente de producción. Recuperar propuestas canónicas activas asociadas a decisiones vigentes aunque el backend las haya ocultado al editor; respetar retiradas, fusión editorial y peticiones abiertas. Resolver la toma y texto elegidos antes de identificar el trabajo. Usar notas actuales al rehacer; al aprobar la primera lámina producir las demás del guion como candidatas, con referencia aprobada, sin autoaprobarlas. Bloquear corte hasta que exista y esté aprobada la tira completa, y respetar formato carrusel/reel. Encadenar rutinas existentes y comprobar encolado, producción durable y nueva revisión por separado. Ampliación tras ejecución real: comprobar el acceso al modelo de IA, sustituir modelos retirados por alias ligero vigente y respaldo Gemini comprobado; priorizar decisiones recientes y continuación de sus versiones. Reportar generación bloqueada/parcial. Cada pasada adicional usa un run independiente para conservar únicos los recibos y snapshots. Ampliación de cierre: dar al montaje su identidad propia de Actions para acreditar snapshots privados y conservar errores de los comandos canalizados. Seleccionar tiras por fuentes activas del Sheet, reutilizar generaciones no montadas sólo con sus referencias aprobadas vigentes, y registrar mesa-estado.json como output público exacto del proceso.",
       "tests": [
         "Regresión con día visual vacío y decisiones vigentes de propuestas de días anteriores, lectura fresca y fuentes retiradas/incompletas.",
         "Toma elegida vinculada a su imagen/texto/huella; veto de segundo editor y borrado explícito conservados.",
@@ -11230,9 +11230,10 @@
         "Rechazo con nota reciente: nuevas tomas y publicación confirmada antes del montaje; doble pasada idempotente.",
         "CI existente, dobles sin Google, ejecución autorizada sólo después de integrar código y comprobar decisiones reales.",
         "API real38199226962/38199533719: modelos disponibles consultados y respuesta sintética exacta; alias ligero y modelo estable verificados, sin efectos de negocio.",
-        "Regresiones de prioridad de decisiones frente a heredadas, generación bloqueada, fallos de modelo, pensamiento separado del texto y continuación en otro run."
+        "Regresiones de prioridad de decisiones frente a heredadas, generación bloqueada, fallos de modelo, pensamiento separado del texto y continuación en otro run.",
+        "41 regresiones específicas, incluyendo fuentes activas frente a versiones sin montar, reutilización sin generación extra, referencia cambiada, identidad del montaje y roundtrip del reporte de Mesa."
       ],
-      "deployment": "Sala PR275 publicado en50e2e1afff5f1851c3d3370eb89cb95da873272c;26 regresiones nuevas y214 pruebas Python completas pasan. El run real38198280594 recuperó decisiones pero reveló rechazo404 de modelos retirados y colisión de recibos al repetir Mesa en el mismo run. API sintética confirmó alias ligero vigente y respaldo estable; configuración del modelo actualizada y releída. Producción y cierre siguen pendientes de las correcciones adicionales.",
+      "deployment": "PR275/276 publicados; run38201050335 generó8 láminas/3 cartas con modelo actual y guardó/publicó archivos, pero el montaje carecía de token de Actions y su error estaba oculto por tee. La continuación no encontró su informe porque faltaba declararlo en el contrato de outputs. Imagen pública de corrección leída por hash; esto no acredita montaje ni aceptación editorial. Se propone recuperar sin regenerar y verificar POST/medios/recepción del tablero por separado.",
       "rollback": "Revertir código y workflow mediante PR; conservar decisiones, cola, versiones, medios y snapshots. No reencolar fallos históricos ni cancelar rutinas ajenas."
     }
   ],
@@ -12640,7 +12641,10 @@
         "POST de producción usa los contratos existentes; pruebas sólo sintéticas. No reanudar fallos/gestores históricos ni publicar filas, notas o credenciales en informes técnicos.",
         "Cada pasada de un proceso utiliza un run real diferente; no reutilizar su identificador de publicación ni inventar un nuevo run_id/attempt. Continuación acotada y sólo si hubo avance y trabajo limitado.",
         "Priorizar las decisiones más recientes y sus versiones descendientes; pendientes antiguos no consumen el lote antes de las decisiones actuales.",
-        "Si la preparación falla por completo, debe fallar el workflow. Un resultado parcial se declara parcial aunque se hayan publicado los archivos que sí salieron."
+        "Si la preparación falla por completo, debe fallar el workflow. Un resultado parcial se declara parcial aunque se hayan publicado los archivos que sí salieron.",
+        "Montaje recibe sólo la identidad de Actions de su propio repositorio para leer el snapshot privado; un fallo de lectura/hash/post detiene el paso, también a través de tee.",
+        "Una generación sin montar no sustituye la fuente activa del Sheet. Reutilizar sólo con las mismas referencias aprobadas; cambio de referencia crea otra versión, sin pisar archivos.",
+        "mesa-estado.json se declara por nombre exacto entre los outputs de Mesa; nunca ampliar el permiso al directorio entero de datos."
       ]
     }
   ],

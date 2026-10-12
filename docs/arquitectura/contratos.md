@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.sala-decisiones.2 · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.sala-decisiones.3 · 2026-10-12.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -692,3 +692,6 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Cada pasada de un proceso utiliza un run real diferente; no reutilizar su identificador de publicación ni inventar un nuevo run_id/attempt. Continuación acotada y sólo si hubo avance y trabajo limitado.
 - Priorizar las decisiones más recientes y sus versiones descendientes; pendientes antiguos no consumen el lote antes de las decisiones actuales.
 - Si la preparación falla por completo, debe fallar el workflow. Un resultado parcial se declara parcial aunque se hayan publicado los archivos que sí salieron.
+- Montaje recibe sólo la identidad de Actions de su propio repositorio para leer el snapshot privado; un fallo de lectura/hash/post detiene el paso, también a través de tee.
+- Una generación sin montar no sustituye la fuente activa del Sheet. Reutilizar sólo con las mismas referencias aprobadas; cambio de referencia crea otra versión, sin pisar archivos.
+- mesa-estado.json se declara por nombre exacto entre los outputs de Mesa; nunca ampliar el permiso al directorio entero de datos.
