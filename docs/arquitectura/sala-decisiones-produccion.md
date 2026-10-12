@@ -9,3 +9,5 @@ La toma elegida fija imagen, texto e identidad del trabajo. La Mesa consume nota
 El cierre exige demostrar por separado guardado, fuentes canónicas, trabajos nuevos, productos durables y montaje de candidatos bajo un recibo de publicación. La prueba aislada de motores no acredita ese recorrido. Pruebas con fuentes sintéticas y dobles; ejecución real de decisiones existentes se registra por separado.
 
 Reversión: PR de código y workflow, conservando versiones, medios, decisiones, colas y snapshots.
+
+La ejecución real reveló dos bloqueos adicionales: modelos de IA retirados y recibos duplicados al llamar Mesa dos veces dentro del mismo run. Se verificó por API un alias ligero y un modelo estable; el catálogo por sí solo no acredita acceso. Se propone priorizar decisiones recientes, publicar estado agregado de generación y realizar cada pasada en un run nuevo. Un fallo total debe fallar, y lo parcial permanece declarado como tal.

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.sala-decisiones.1",
+  "revision": "2026-10-12.sala-decisiones.2",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -11222,15 +11222,17 @@
       ],
       "status": "propuesto",
       "approval": "Dirección solicita rastrear sus decisiones guardadas y corregir el recorrido a producción el12-oct-2026.",
-      "proposal": "Corregir el consumo de la mesa visual como fuente de producción. Recuperar propuestas canónicas activas asociadas a decisiones vigentes aunque el backend las haya ocultado al editor; respetar retiradas, fusión editorial y peticiones abiertas. Resolver la toma y texto elegidos antes de identificar el trabajo. Usar notas actuales al rehacer; al aprobar la primera lámina producir las demás del guion como candidatas, con referencia aprobada, sin autoaprobarlas. Bloquear corte hasta que exista y esté aprobada la tira completa, y respetar formato carrusel/reel. Encadenar rutinas existentes y comprobar encolado, producción durable y nueva revisión por separado.",
+      "proposal": "Corregir el consumo de la mesa visual como fuente de producción. Recuperar propuestas canónicas activas asociadas a decisiones vigentes aunque el backend las haya ocultado al editor; respetar retiradas, fusión editorial y peticiones abiertas. Resolver la toma y texto elegidos antes de identificar el trabajo. Usar notas actuales al rehacer; al aprobar la primera lámina producir las demás del guion como candidatas, con referencia aprobada, sin autoaprobarlas. Bloquear corte hasta que exista y esté aprobada la tira completa, y respetar formato carrusel/reel. Encadenar rutinas existentes y comprobar encolado, producción durable y nueva revisión por separado. Ampliación tras ejecución real: comprobar el acceso al modelo de IA, sustituir modelos retirados por alias ligero vigente y respaldo Gemini comprobado; priorizar decisiones recientes y continuación de sus versiones. Reportar generación bloqueada/parcial. Cada pasada adicional usa un run independiente para conservar únicos los recibos y snapshots.",
       "tests": [
         "Regresión con día visual vacío y decisiones vigentes de propuestas de días anteriores, lectura fresca y fuentes retiradas/incompletas.",
         "Toma elegida vinculada a su imagen/texto/huella; veto de segundo editor y borrado explícito conservados.",
         "Guion de varias láminas con primera aprobada: expandir borradores sin aprobar ni cortar anticipadamente; formato carrusel.",
         "Rechazo con nota reciente: nuevas tomas y publicación confirmada antes del montaje; doble pasada idempotente.",
-        "CI existente, dobles sin Google, ejecución autorizada sólo después de integrar código y comprobar decisiones reales."
+        "CI existente, dobles sin Google, ejecución autorizada sólo después de integrar código y comprobar decisiones reales.",
+        "API real38199226962/38199533719: modelos disponibles consultados y respuesta sintética exacta; alias ligero y modelo estable verificados, sin efectos de negocio.",
+        "Regresiones de prioridad de decisiones frente a heredadas, generación bloqueada, fallos de modelo, pensamiento separado del texto y continuación en otro run."
       ],
-      "deployment": "Pendiente de implementación, CI y ejecución del recorrido corregido. La prueba de motores aislados no acredita transferencia de decisiones a producción.",
+      "deployment": "Sala PR275 publicado en50e2e1afff5f1851c3d3370eb89cb95da873272c;26 regresiones nuevas y214 pruebas Python completas pasan. El run real38198280594 recuperó decisiones pero reveló rechazo404 de modelos retirados y colisión de recibos al repetir Mesa en el mismo run. API sintética confirmó alias ligero vigente y respaldo estable; configuración del modelo actualizada y releída. Producción y cierre siguen pendientes de las correcciones adicionales.",
       "rollback": "Revertir código y workflow mediante PR; conservar decisiones, cola, versiones, medios y snapshots. No reencolar fallos históricos ni cancelar rutinas ajenas."
     }
   ],
@@ -12620,12 +12622,14 @@
       "input": [
         "Decisiones fusionadas actuales, propuestas canónicas activas recuperadas por fecha original y fuente fresca; no inferir una aprobación de la desaparición de la carta.",
         "Tira publicada, mapa de números reales, guion completo, candidatas y nota exacta de selección. Reglas/formatos y catálogo vigentes.",
-        "Peticiones abiertas y cola existentes; rutinas originales de Productor, Mesa, Ejecutor y Revisión."
+        "Peticiones abiertas y cola existentes; rutinas originales de Productor, Mesa, Ejecutor y Revisión.",
+        "Modelo primario configurado y respaldos verificados mediante llamada sintética a la API; catálogo por sí solo no acredita disponibilidad."
       ],
       "output": [
         "Trabajos con identidad de la toma aprobada y procedencia verificable; ninguna marca editorial nueva.",
         "Candidatas de las láminas restantes del guion tras aprobar su primera lámina y correcciones ligadas a la nota más reciente.",
-        "Recibo de transferencia separado de ejecución durable y revisión: una mesa vacía no acredita cola alineada con decisiones."
+        "Recibo de transferencia separado de ejecución durable y revisión: una mesa vacía no acredita cola alineada con decisiones.",
+        "Reporte técnico Mesa agregado: estado, generación, fallos, límite pendiente y run/code de origen; sin notas o registros de negocio."
       ],
       "invariants": [
         "Agente no decide; conservar fusión de editores y veto, borrados, retiradas e historia. Fuente incompleta/red fallida es fallo explícito, nunca cero trabajo.",
@@ -12633,7 +12637,10 @@
         "Corte sólo con todas las láminas del guion presentes, aprobadas y con medios vigentes; aprobar L1 no aprueba las siguientes ni el corte.",
         "Las otras láminas se producen como borradores revisables al estilo de la primera aprobada; ninguna toma aprobada se regenera sin cambio de insumo.",
         "Formato carrusel no genera un corte de video por aprobar su lámina. La producción no publica a redes ni altera reglas comerciales.",
-        "POST de producción usa los contratos existentes; pruebas sólo sintéticas. No reanudar fallos/gestores históricos ni publicar filas, notas o credenciales en informes técnicos."
+        "POST de producción usa los contratos existentes; pruebas sólo sintéticas. No reanudar fallos/gestores históricos ni publicar filas, notas o credenciales en informes técnicos.",
+        "Cada pasada de un proceso utiliza un run real diferente; no reutilizar su identificador de publicación ni inventar un nuevo run_id/attempt. Continuación acotada y sólo si hubo avance y trabajo limitado.",
+        "Priorizar las decisiones más recientes y sus versiones descendientes; pendientes antiguos no consumen el lote antes de las decisiones actuales.",
+        "Si la preparación falla por completo, debe fallar el workflow. Un resultado parcial se declara parcial aunque se hayan publicado los archivos que sí salieron."
       ]
     }
   ],
@@ -14145,6 +14152,15 @@
         "SVC-SALA-PRODUCTOR",
         "SVC-SALA-EJECUTOR",
         "EXT-ACTIONS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": "nube/motores/cerebro.py",
+      "components": [
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "EXT-MOTORES-MEDIA"
       ]
     }
   ],

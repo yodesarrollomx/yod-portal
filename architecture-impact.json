@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-12.sala-decisiones.1",
+  "model_revision": "2026-10-12.sala-decisiones.2",
   "proposal_id": "CHG-SALA-DECISIONES-PRODUCCION-20261012",
-  "summary": "Rastrear decisiones guardadas fuera de la mesa visual y completar su transferencia a producción con fuente vigente, toma elegida, notas actuales y guion completo.",
+  "summary": "Corregir bloqueos de modelo retirado, prioridad y señalización de Mesa; continuar lotes en runs distintos para mantener recibos únicos.",
   "components": [
     "SYS-YOD-OS",
     "SYS-CONTROL",
@@ -22,5 +22,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir propuesta por PR; no modificar decisiones, cola, medios ni fuentes desplegadas."
+  "rollback": "Revertir código/flujo por PR; mantener decisiones, medios, cola y recibos. No volver a un modelo retirado como reversión técnica."
 }
