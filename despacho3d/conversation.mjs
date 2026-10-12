@@ -32,6 +32,13 @@ function sourceRows(value){
   return row.map(cell=>cell.replace(/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/g,''));
  }).filter(row=>row.some(cell=>cell.trim()));
 }
+// The PPP/document surface depends on authorized source metadata, not on the
+// validity of unrelated conversation history or old jobs. No data is cached here.
+export function validateWorkspaceSources(v,id){
+ if(!v||v.ok!==true||v.case_id!==id||!text(v.source_revision)||!v.context||v.context.identity?.case_id!==id||!text(v.context.identity.name,200)||!date(v.state?.updated_at)||JSON.stringify(v).length>524288)throw Error('invalid_snapshot');
+ const documents=sourceRows(v.context.documents).map(([source_id,title,source,role],index)=>({id:'document-'+index,source_id,title,source,role,url:safeDocumentUrl(source)}));
+ return {case_id:id,revision:v.source_revision,updated_at:v.state.updated_at,documents};
+}
 export function validateConversation(v,id){
  if(!v||v.ok!==true||v.case_id!==id||!text(v.source_revision)||!v.context||v.context.identity?.case_id!==id||!text(v.context.identity.name,200)||!date(v.state?.updated_at)||!Array.isArray(v.conversation)||v.conversation.length>1000||!Array.isArray(v.jobs)||v.jobs.length>1000||!Array.isArray(v.events)||v.events.length>1000||JSON.stringify(v).length>524288)throw Error('invalid_snapshot');
  const ids=new Set();

@@ -123,3 +123,27 @@ test('chinche 249: a slow read never bounces a message, and mutations still go o
  releaseSend();await first;assert.equal(b.posts[1].id,'send-1');assert.equal(b.posts[1].error,null);
  releaseRead();await reading;assert.equal(b.posts[2].id,'read');
 });
+
+test('workspace sources remain readable when unrelated conversation history is invalid',async()=>{
+ const {validateWorkspaceSources,validateConversation}=await load(),s=snapshot();
+ s.context.documents=[['source-1','PPP sintético','https://yodesarrollomx.github.io/potenciales-yod/patrimonial.html?open=synthetic-case','Plan de potencial']];
+ s.conversation=[{case_id:s.case_id,message_id:'old-invalid',role:'assistant',body_json:'{invalid',created_at:s.state.updated_at}];
+ assert.throws(()=>validateConversation(s,s.case_id));
+ const sources=validateWorkspaceSources(s,s.case_id);
+ assert.equal(sources.documents.length,1);assert.equal(sources.documents[0].title,'PPP sintético');
+ assert.equal(sources.case_id,s.case_id);assert.equal(sources.revision,s.source_revision);
+ assert.equal(Object.hasOwn(sources,'messages'),false);
+});
+test('workspace source metadata fails closed for denied, mixed case or malformed rows',async()=>{
+ const {validateWorkspaceSources}=await load();
+ for(const mutate of [s=>s.ok=false,s=>s.case_id='other-case',s=>s.context.identity.case_id='other-case',s=>s.source_revision='',s=>s.state.updated_at='bad',s=>s.context.documents=[['bad','shape']],s=>s.context.documents=Array.from({length:101},()=>['id','title','https://example.test','role'])]){
+  const s=snapshot();mutate(s);assert.throws(()=>validateWorkspaceSources(s,current.case_id),{message:'invalid_snapshot'});
+ }
+});
+test('workspace source projection never enables a conversation mutation from a bad snapshot',async()=>{
+ const {Conversation,validateWorkspaceSources}=await load(),backend=server();
+ backend.state.events=[{case_id:'other-case',event_id:'bad',kind:'bad',created_at:backend.state.state.updated_at}];
+ assert.equal(validateWorkspaceSources(backend.state,current.case_id).case_id,current.case_id);
+ const c=new Conversation({transport:backend});assert.equal(await c.open(),false);assert.equal(await c.send('No enviar'),false);
+ assert.equal(backend.calls.length,0);
+});
