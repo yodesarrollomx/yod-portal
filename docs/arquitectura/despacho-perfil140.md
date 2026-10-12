@@ -1,6 +1,6 @@
 # Perfil común del autón · rediseño con Gastón
-Registro: 12-oct-2026, America/Hermosillo. Estado: propuesta y diagnóstico; implementación y aceptación pendientes.
-La revisión usa el código del portal5169b195 y el arranque real de Patrimonial. No representa capturas de la sesión privada ni mediciones físicas del micrófono.
+Registro: 12-oct-2026, America/Hermosillo (UTC−7). Estado: implementación y pruebas; PPP publicado, perfil en revisión antes de publicación.
+La revisión partió del portal `5169b195` y del arranque nativo de Patrimonial; el candidato conserva también las integraciones posteriores de reuniones. No representa capturas de la sesión privada ni mediciones físicas del micrófono.
 
 ## Resultado que debe permitir
 Abrir al autón, ver el mismo PPP autorizado y conversar sobre una tarjeta, entender el siguiente encargo y revisar su evidencia sin reconstruir información dispersa. Gastón inicia la prueba; Luis y Ruiseñor usan el mismo perfil y las mismas capacidades bajo sus permisos.
@@ -8,8 +8,8 @@ Abrir al autón, ver el mismo PPP autorizado y conversar sobre una tarjeta, ente
 ## Diagnóstico por superficie
 | Superficie | Hallazgo de fuente | Consecuencia y corrección |
 |---|---|---|
-| Apertura | Perfil/conversación y workspace consumen fuentes por caminos distintos. | Compartir una lectura en vuelo sólo con identidad/caso/credencial vigentes; no almacenar permisos persistentes. |
-| PPP | El piloto depende de documentos para localizar su tablero; otros perfiles reciben descriptor explícito. | Localizar vínculo canónico una sola vez, preservando sus comprobaciones; emitir descriptor autorizado requiere coordinación con backend. |
+| Apertura | La preparación podía dejar esperando al caso seleccionado detrás de lecturas pendientes. El broker ya comparte lecturas en vuelo. | Priorizar el caso elegido dentro de la cola existente; conservar identidad/caso/credencial vigentes. No instalar un segundo caché ni guardar permisos persistentes. |
+| PPP | El piloto depende de documentos para localizar su tablero; otros perfiles reciben descriptor explícito. | La lectura autorizada confirmó un vínculo único del piloto con su PPP. Se conserva ese mecanismo y sus comprobaciones; no se inventa una relación por nombre ni se escribe un ID privado en el frontend. |
 | PPP nativo | Arranque Patrimonial espera catálogo antes de caso; un error temporal puede invocar el gate y borrar sesión compartida. | Lectura exacta del caso independiente del catálogo, espera acotada, error local y protección de respuestas tardías. |
 | Navegación | Ocho superficies organizadas en grupos; los mismos datos se repiten en voz, resumen, actividad y objetivos. | PPP persistente, conversación lateral y bandeja contextual de trabajo. |
 | Pendientes | Son encargos de análisis del runtime; no equivalen automáticamente a metas/acciones MOAC. | Etiquetar procedencia y distinguir estado de negocio, encargo, intento y entrega. |
@@ -78,3 +78,29 @@ Las pruebas aisladas verifican lógica. El cierre operativo requiere commits, pu
 ## Orden y solapes
 Primero corregir vínculo/carga/recuperación PPP; luego reorganizar el perfil; después verificar datos, voz y presentación. PortalPR199 trabaja reuniones/agent-workspace y PotencialesPR24 toca motores: se coordina el reparto y se conserva su funcionalidad. PR116 privado es publicación MOAC, no se mezcla con este rediseño ni se repiten sus instalaciones.
 Conservar todas las capacidades, URLs, contratos, recibos y fuentes. Publicar sólo después de pruebas y revisión. Volver atrás mediante commits, sin restaurar hojas de negocio o borrar historia.
+
+
+## Registro de ejecución y evidencia
+
+Las horas siguientes son UTC; Hermosillo corresponde a UTC−7. Los resultados de navegador usan HTML y módulos reales con transportes y expedientes de prueba aislados. No son capturas ni mediciones de una conversación privada.
+
+| Fecha UTC | Cambio y motivo | Resultado comprobado |
+|---|---|---|
+| 2026-10-12 19:17–19:32 | Se revisaron las ocho superficies, las fuentes y los solapes; se registró la propuesta antes de programar. | Propuesta `0a548fc`; coordinación privada con Claude para la prueba del recorrido autenticado. |
+| 2026-10-12 19:32–19:44 | Se separó la lectura de fuentes de la validación de conversaciones; se priorizó la preparación del caso seleccionado y se montó el PPP con tarjetas cerradas. | Fuentes siguen limitadas al caso autorizado; una conversación inválida no habilita escrituras. La preparación no abre micrófonos anticipadamente. |
+| 2026-10-12 19:44–20:00 | Se sustituyeron ocho accesos al mismo nivel por tres grupos; el PPP permanece junto al inspector. Se preservaron selección, foco, documentos, navegador, grabador y presentaciones. | Se añadieron recorridos de 1280, 860 y 390 px y comprobaciones geométricas. Las reuniones concurrentes se conservaron; no se reemplazó su archivo con el visor de presentación. |
+| 2026-10-12 19:45–20:02 | La revisión separada detectó borradores atrapados, acceso sin recuperación, controles ocultos afectados por CSS y modelos de otro tipo aceptados por fallback. | Se corrigieron antes de integrar. La apertura no descarta borradores ni inicia escrituras; un modelo ajeno falla explícitamente. |
+| 2026-10-12 20:02:46 | Se integró Potenciales PR29 tras revisión del commit `62cc4a4`. | 9 pruebas nuevas de apertura, 57 regresiones existentes y 32 recorridos del modo integrado en Chromium/WebKit aprobados. La apertura externa recibe una corrección complementaria al detectarse conflicto con la shell. Se conservan cálculos, API de escritura, URLs y ACL. |
+| 2026-10-12 20:04 | Se verificó publicación de Potenciales `f9ce02a3`. | [GitHub Pages: publicación aprobada](https://github.com/yodesarrollomx/potenciales-yod/actions/runs/38301647256). |
+| 2026-10-12 20:04–20:07 | Portal `bbe04f6` pasó lógica y verificaciones; dos recorridos de navegador aún buscaban los controles sustituidos. Se corrigen los recorridos, manteniendo sus invariantes. | 652 pruebas de lógica y verificaciones OS/portal/accesos/obra aprobadas; publicación de Portal pendiente del recorrido completo. |
+
+### Qué cambia al trabajar
+El PPP es el espacio estable de la conversación. «Trabajo» muestra encargos del autón en Ahora, Bloqueado y Para revisar; los detenidos y terminados permanecen en historial. En cada encargo se leen la instrucción, el criterio y la evidencia registrados. La pantalla informa cuando faltan; no rellena prioridades, planes ni métodos ficticios.
+«Expediente» concentra fuentes y documentos. «Presentación» conserva entregas y archivo de reuniones, con identidad y revisión verificadas. El autón ya recibe en el runtime su método de trabajo con fuentes, resultado, criterio, evidencia y siguiente decisión; esta entrega organiza cómo verlo y utilizarlo, no afirma haber instalado otro motor.
+
+### Límites de aceptación
+La revisión fue hecha por un agente separado con capacidad de rechazar, dentro de la misma conexión de GitHub. No es independencia de cuentas. La cola de preparación da prioridad entre solicitudes pendientes; no interrumpe una petición en vuelo ni acredita una reducción medida del audio.
+El recorrido privado autenticado de Gastón y la interrupción con micrófono físico se dejaron en la bitácora mutua para Claude. No se declaran aprobados por pasar fixtures. No se reactivaron automatizaciones canceladas, se cambió financiación ni se añadieron permisos.
+
+### Continuidad conversacional comprobada
+La revisión privada encontró respuestas que confundían recuperación de contexto con ausencia de historial y que mezclaban una respuesta de voz detenida con un encargo detenido. Los registros son fragmentos por intervalo; no sirven para medir latencia acústica ni acreditar ejecución. El diseño separa ambos estados y muestra el contexto registrado. La revisión técnica del arranque de voz sigue siendo necesaria: etiquetar una fase correctamente no demuestra que el modelo haya recibido el expediente antes de responder.

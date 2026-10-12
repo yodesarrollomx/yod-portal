@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.despacho-perfil140.3",
+  "revision": "2026-10-12.despacho-perfil140.4",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -11566,7 +11566,12 @@
         "SYS-DESPACHO-3D",
         "SYS-POTENCIALES",
         "SHEET-PPP-MODELOS",
-        "GAS-PORTERO"
+        "GAS-PORTERO",
+        "EXT-DRIVE",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE"
       ],
       "status": "implementado_local",
       "approval": "Dirección solicita reorganizar y probar el perfil común de los autóns, empezando por el recorrido de Gastón, con revisión UX y de métodos de trabajo; conservar capacidades y fuentes canónicas.",
@@ -11586,7 +11591,7 @@
         "Recorridos con datos aislados y mediciones separadas clic→perfil/clic→PPP/inicio→audio/interrupción; una prueba sintética no acredita micrófono ni expediente privado.",
         "Antes de cierre: prueba de sesión privada con fuente y despliegue exactos, sin datos privados en repos públicos."
       ],
-      "deployment": "Código candidato en PortalPR203 y PotencialesPR29, pruebas completas y publicación pendientes. Historial de fuente anterior y propuesta0a548f conservados. No acredita micrófono ni expediente privado; no publica descriptores GAS ni sincronización MOAC.",
+      "deployment": "PotencialesPR29 integrado en f9ce02a3; GitHub Pages publicado (run38301647256) tras 32 recorridos aislados y revisión62cc4a4. PortalPR203 conserva reuniones recientes; 652 pruebas de lógica y verificaciones OS/obra aprobadas en bbe04f6. Se actualizan recorridos visuales a la nueva navegación antes de integrar/publicar Portal. Sesión privada y micrófono pendientes; no descriptor GAS nuevo ni sincronización MOAC en esta entrega.",
       "rollback": "Revertir módulos del perfil y arranque PPP por PR conservando IDs, URLs, permisos, libros, datos, recibos y volumen; no restaurar snapshots de negocio ni reactivar automatizaciones canceladas."
     }
   ],

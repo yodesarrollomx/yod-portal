@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-12.despacho-perfil140.3",
+  "model_revision": "2026-10-12.despacho-perfil140.4",
   "proposal_id": "CHG-DESPACHO-PERFIL-ORDEN-20261012",
   "summary": "Perfil común con PPP y conversación simultáneos, trabajo contextual y carga/recuperación por caso, sin mezclar metas de negocio ni perder capacidades.",
   "components": [
@@ -8,7 +8,12 @@
     "SYS-DESPACHO-3D",
     "SYS-POTENCIALES",
     "SHEET-PPP-MODELOS",
-    "GAS-PORTERO"
+    "GAS-PORTERO",
+    "EXT-DRIVE",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-CONTROL",
+    "SYS-OBRA-CLIENTE"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
