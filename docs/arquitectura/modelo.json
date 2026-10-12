@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.reuniones-recuperables",
+  "revision": "2026-10-12.reuniones-privadas-sin-servidor",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -11364,17 +11364,17 @@
         "SYS-DESPACHO"
       ],
       "status": "propuesto",
-      "approval": "Dirección solicita implementar grabación, respaldo, transcripción y acompañamiento hasta completar el objetivo.",
-      "proposal": "Grabador separado por reunión/caso, journal local de fragmentos, respaldo privado con hash y acuse durable, finalización por manifiesto, trabajos reintentables de transcripción y Drive; no activar captura automática ni modificar PPP/tareas por inferencia. Preparar aplicación móvil y verificar por dispositivo antes de certificar grabación con pantalla bloqueada.",
+      "approval": "Dirección sustituye la propuesta de contratación por flujo privado sin nuevas suscripciones, con Drive conectado y Whisper existente.",
+      "proposal": "Modo principal sin servidor: grabar/importar, conservar audio local, compartir mediante la hoja nativa a Drive privado y copiar encargo para procesamiento asistido con Whisper local. Carpeta configurada sólo en el dispositivo/perfil privado, sin IDs privados en repo. El asistente procesa durante una conversación activa y entrega minuta, evidencias y pendientes; no promete vigilancia autónoma ni procesamiento cada cinco minutos. Backend y app nativa quedan opcionales, sin contratación ni activación.",
       "tests": [
         "Corte de red y reintentos idempotentes",
         "Fragmento alterado, hueco y acuse perdido",
         "Aislamiento de actor/caso",
         "Recuperación tras cierre y errores de almacenamiento",
         "Verificadores del portal y pruebas sintéticas de navegador",
-        "637 pruebas Node aprobadas; 10 pruebas servidor, 7 escenarios navegador y transcripción real de audio sintético."
+        "638 pruebas Node aprobadas; 10 pruebas servidor, 8 escenarios navegador y recorrido real Drive → Whisper → Drive con audio sintético."
       ],
-      "deployment": "Código y pruebas locales implementados; app iPhone compilada en Simulator, pendiente de validar físicamente. Servicio permanente, credenciales de Drive y firma/instalación móvil pendientes. No publicado.",
+      "deployment": "Carpeta privada creada y permisos comprobados mediante conector. Flujo Drive/Whisper en verificación; frontend aún en PR. No hay nuevas suscripciones ni credenciales API.",
       "rollback": "Retirar enlaces y detener ingestión; conservar grabaciones y exportaciones, sin borrar datos."
     }
   ],

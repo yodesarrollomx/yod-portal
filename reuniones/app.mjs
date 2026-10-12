@@ -1,15 +1,13 @@
+import {driveFolder,audioExtension,handoffText,shareFile} from './handoff.mjs';
 import {Journal,synchronize,endpoint} from './journal.mjs';
 import {MeetingRecorder} from './recorder.mjs';
 import {importAudio} from './import.mjs';
 const $=id=>document.getElementById(id),journal=await new Journal().open();
 const recorder=new MeetingRecorder(journal,paint);
 let config=null,syncing=false,currentStatus=null;
+const preparedShares=new Map();
 const project=new URL(location.href).searchParams.get('case_id');
 if(project&&/^[A-Za-z0-9_-]{1,100}$/.test(project))$('project').value=project;
-if(/iPhone|iPad/.test(navigator.userAgent)&&project&&/^[A-Za-z0-9_-]{1,100}$/.test(project)) {
-  $('iphone').hidden=false;$('iphone').href='yodmeeting://record?case_id='+encodeURIComponent(project);
-  $('iphone').title='Requiere instalar primero YOD Reuniones en el iPhone.';
-}
 const text=(node,value)=>node.textContent=value;
 function paint() {
   const active=recorder.active,paused=recorder.recorder?.state==='paused';
@@ -24,7 +22,7 @@ function paint() {
 function download(blob,name) {const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),60000);}
 async function exportSession(s) {
   const chunks=await journal.chunks(s.id),extras=recorder.session?.id===s.id?recorder.unsaved||[]:[];
-  const ext=s.mime.includes('mp4')?'m4a':s.mime.includes('ogg')?'ogg':'webm';
+  const ext=audioExtension(s.mime);
   download(new Blob([...chunks.map(c=>c.blob),...extras],{type:s.mime}),s.id+'.'+ext);
 }
 function button(label,action) {const b=document.createElement('button');b.className='secondary';b.textContent=label;b.onclick=()=>Promise.resolve(action()).catch(showError);return b;}
@@ -38,6 +36,18 @@ async function renderSessions() {
     const title=document.createElement('h3');title.textContent=s.project+' · '+new Date(s.created).toLocaleString('es-MX');
     const state=document.createElement('p');state.textContent=`${chunks.length} fragmentos guardados en este dispositivo · ${remote} con acuse del servidor. ${s.state.startsWith('import')?'Importación incompleta: vuelve a seleccionar el archivo original.':s.state==='interrupted'?'Grabación interrumpida: revisar el final.':s.state==='recording'?'Grabando.':'Captura finalizada.'}`;
     const actions=document.createElement('div');actions.className='actions';actions.append(button('Descargar audio',()=>exportSession(s)));
+    if(['stopped','interrupted','sealed'].includes(s.state)) {
+      const share=button('Compartir audio…',async()=>{
+        try { text($('notice'),await shareFile(share.preparedFile)); }
+        catch(error) { if(error.name!=='AbortError')throw error; }
+      });share.preparedFile=preparedShares.get(s.id);share.hidden=!share.preparedFile;
+      actions.append(button('Preparar envío privado',async()=>{
+        share.preparedFile=new File(chunks.map(c=>c.blob),s.id+'.'+audioExtension(s.mime),{type:s.mime});
+        if(!share.preparedFile.size)throw Error('No hay audio conservado para compartir.');
+        preparedShares.set(s.id,share.preparedFile);
+        share.hidden=false;text($('notice'),'Copia preparada. Toca Compartir audio y elige Drive o ChatGPT. Conserva el original.');
+      }),share);
+    }
     if(config)actions.append(button('Respaldar y ver resultado',()=>sync(s.id)));
     card.append(title,state,actions);$('sessions').append(card);
   }
@@ -98,3 +108,9 @@ window.addEventListener('online',()=>void sync());
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&recorder.active){recorder.notice='La ventana pasó a segundo plano: comprueba que sigue entrando audio al volver. En web no se garantiza continuidad.';paint();}});
 setInterval(()=>void sync(),30000);setInterval(()=>void renderSessions().catch(showError),15000);
 await renderSessions();paint();void sync();
+
+// Drive location belongs to this browser, never to the public source code.
+try { $('drive-folder').value=localStorage.getItem('yod-meetings-drive')||''; } catch {}
+$('save-drive').onclick=()=>{try { const url=driveFolder($('drive-folder').value.trim());localStorage.setItem('yod-meetings-drive',url);$('drive-folder').value=url;text($('handoff-status'),'Carpeta guardada en este dispositivo. Google comprobará tu acceso al abrirla.'); } catch(error){text($('handoff-status'),error.message);} };
+$('open-drive').onclick=()=>{try {window.open(driveFolder($('drive-folder').value.trim()),'_blank','noopener,noreferrer');}catch(error){text($('handoff-status'),error.message);} };
+$('copy-request').onclick=async()=>{try { const value=handoffText($('project').value.trim(),$('drive-folder').value.trim());$('request-text').value=value;$('request-text').hidden=false;try {await navigator.clipboard.writeText(value);text($('handoff-status'),'Encargo copiado. Pégalo en esta conversación y adjunta el audio o indica su nombre en Drive.');}catch{text($('handoff-status'),'Selecciona y copia el encargo de abajo; pégalo en esta conversación.');} }catch(error){text($('handoff-status'),error.message);} };

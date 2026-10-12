@@ -5,6 +5,25 @@ Reunión en el puesto abren `../reuniones/?case_id=...` en una ventana independi
 cambiar de estación no destruye una captura. El identificador sólo contextualiza;
 no concede acceso al servidor. La página no contiene credenciales ni reuniones.
 
+## Modo principal: sin nuevas suscripciones
+
+La ruta activa elegida por Dirección es Notas de Voz → Drive privado → ChatGPT/Whisper
+local → resultados privados. El asistente usa el conector Drive de la conversación;
+no necesita una credencial OAuth de servicio, Render ni Apple Developer. El usuario
+comparte el audio y solicita procesarlo. Se aplican los límites de almacenamiento,
+adjuntos y uso de sus cuentas existentes; no se invoca ninguna API facturable.
+
+La interfaz permite guardar el enlace de carpeta sólo en el navegador, abrir Drive,
+preparar/compartir un archivo con la hoja nativa y copiar un encargo con el contexto
+del proyecto. Compartir no acredita subida: el asistente verifica el archivo remoto
+al recuperarlo. Los IDs privados, recibos reales y configuración del asistente
+permanecen fuera de este repositorio. No hay vigilancia de carpetas ni acompañamiento
+continuo automático. Para una revisión intermedia el usuario puede enviar un bloque
+terminado y pedir análisis provisional; no se garantiza cadencia de cinco minutos.
+
+El backend y las fuentes iOS quedan como alternativas técnicas sin activar. El
+Blueprint de pago se conserva sólo como referencia opcional, fuera del modo elegido.
+
 ## Estado y alcance
 
 - Web: captura real con MediaRecorder, journal IndexedDB, pausa, descarga, recuperación,

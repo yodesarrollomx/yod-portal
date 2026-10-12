@@ -28,3 +28,16 @@ test('iPhone file import preserves every byte and never seals a failed import',a
   await assert.rejects(importAudio(journal,file,'demo'),/incompleta/);assert.equal(session.state,'import_incomplete');assert.equal(file.size,original.length);
  }finally{if(old)Object.defineProperty(globalThis,'navigator',old);else delete globalThis.navigator;}
 });
+
+test('private handoff validates Drive destinations and does not certify share-sheet upload',async()=>{
+  const {driveFolder,audioExtension,handoffText,shareFile}=await import('../reuniones/handoff.mjs');
+  assert.equal(driveFolder('https://drive.google.com/drive/folders/demo?usp=sharing'),'https://drive.google.com/drive/folders/demo');
+  for(const url of ['javascript:alert(1)','https://drive.google.com.evil.test/drive/folders/demo','https://user@drive.google.com/drive/folders/demo','https://drive.google.com/file/d/demo/view'])assert.throws(()=>driveFolder(url));
+  assert.equal(audioExtension('audio/wav'),'wav');
+  assert.match(handoffText('demo'),/sin API de pago/);
+  assert.throws(()=>handoffText('invalid project'));
+  const file=new Blob(['synthetic']);let called=false;
+  const receipt=await shareFile(file,{canShare:()=>true,share:async({files})=>{assert.equal(files[0],file);called=true;}});
+  assert(called);assert.match(receipt,/todavía no hay un recibo/);
+  await assert.rejects(()=>shareFile(file,{canShare:()=>false}),/Descargar audio/);
+});
