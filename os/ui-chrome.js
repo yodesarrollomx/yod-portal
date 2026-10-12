@@ -4,34 +4,19 @@
  if(window.YodChrome)return;
  var source=document.currentScript&&document.currentScript.src;
  var base=new URL('.',source||location.href),pref='yod_os_sidebar_v1',installed=new WeakSet();
- var shapes={
- home:'<path d="m4 11 8-7 8 7v10H4Z"/><path class="ui-detail" d="M9 21v-8h6v8"/>',
- office:'<path d="m3 8 9-5 9 5v10l-9 5-9-5Z"/><path class="ui-detail" d="m3 8 9 5 9-5M12 13v10"/>',
- plan:'<path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3Z"/><path d="M9 3v15m6-12v15"/><path class="ui-detail" d="m5 13 5-4 5 5 4-3"/>',
- route:'<circle cx="5" cy="5" r="2"/><circle cx="19" cy="19" r="2"/><path class="ui-detail" d="M7 5h8a4 4 0 0 1 0 8H9a4 4 0 0 0 0 8h7"/>',
- buildings:'<path d="M3 21V9l6-4 6 4v12M15 12l6-3v12M2 21h20"/><path class="ui-detail" d="M6 11h3m-3 4h3m0 6v-3m9-4h1m-1 4h1"/>',
- tasks:'<rect x="4" y="4" width="16" height="17" rx="2"/><path d="M9 3h6v3H9Z"/><path class="ui-detail" d="m7 11 2 2 3-4m2 3h3m-10 5h10"/>',
- wallet:'<path d="M4 7V5l14-2v4M4 7h16v14H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z"/><path class="ui-detail" d="M20 11h-6v6h6m-3-3h.1"/>',
- chair:'<path d="M5 12V6a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v6M5 19v3m14-3v3"/><path class="ui-detail" d="M3 11h3v5h12v-5h3v9H3Z"/>',
- present:'<path d="M3 3h18v14H3Zm9 14v5m-5 0h10"/><path class="ui-detail" d="m6 12 4-4 4 3 4-5"/>',
- funnel:'<path d="M3 4h18l-7 9v7l-4 2v-9Z"/><path class="ui-detail" d="M6 7h12"/>',
- tower:'<path d="M6 21V3h12v18M3 21h18"/><path class="ui-detail" d="M9 7h6m-6 4h6m-6 4h6m-3 6v-3"/>',
- people:'<circle cx="9" cy="7" r="3"/><path class="ui-detail" d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m2 4a5 5 0 0 1 3 4v3"/>',
- edit:'<path d="M4 3h12v6M4 3v18h16v-8"/><path class="ui-detail" d="m10 16 1-4 8-8 3 3-8 8Z"/>',
- search:'<circle cx="10" cy="10" r="6"/><path class="ui-detail" d="m15 15 6 6"/>',
- grid:'<path d="M3 3h7v7H3Zm11 0h7v7h-7ZM3 14h7v7H3Z"/><path class="ui-detail" d="M14 14h7v7h-7Z"/>'
- };
+ var figures=import(new URL('ui-figures.bundle.mjs?v=2',base).href);
+ figures.catch(function(){/* Existing accessible labels remain available if a visual asset fails. */});
  var ids={'SYS-DESPACHO':'office','SYS-POTENCIALES':'plan','SYS-TRACK':'route','SYS-MIRAMAR':'buildings','SYS-TAREAS':'tasks','SYS-FLUJO':'wallet','SYS-INTERIORES':'chair','SYS-INVERSION':'present','SYS-MARKETING':'funnel','SYS-OBRA':'tower','SYS-CONTROL':'grid'};
  var icons={'home-2':'home','layout-dashboard':'home','layout-grid':'office','map-2':'plan','route':'route','building-community':'buildings','checklist':'tasks','wallet':'wallet','armchair-2':'chair','presentation-analytics':'present','speakerphone':'funnel','chart-funnel':'funnel','filter':'funnel','building-skyscraper':'tower','users':'people','photo-edit':'edit','search':'search'};
- function svg(key){var e=document.createElementNS('http://www.w3.org/2000/svg','svg');e.setAttribute('viewBox','0 0 24 24');e.setAttribute('class','ui-glyph');e.setAttribute('aria-hidden','true');e.setAttribute('focusable','false');e.innerHTML=shapes[key]||shapes.grid;return e;}
+ function svg(key,owner){var e=document.createElement('span');e.className='ui-glyph';e.dataset.figure=key;e.setAttribute('aria-hidden','true');figures.then(function(f){if(e.isConnected)f.mount(e,key,owner);}).catch(function(){owner.classList.add('ui-figure-fallback');});return e;}
  function decorate(root){
   root.querySelectorAll('.nav-item,.yod-nav-item,.module-icon,.pulse-icon,.quick-card,.emb-ico,.search-trigger,.yod-search').forEach(function(n){
    var old=n.querySelector('i.ti');if(!old||old.classList.contains('ui-icon-original'))return;
    var cls=Array.from(old.classList).find(function(c){return c.indexOf('ti-')===0;}),id=n.dataset.systemId||(n.closest('[data-system-id]')||{}).dataset?.systemId;
    var key=ids[id]||icons[(cls||'').slice(3)];if(!key)return;
-   old.classList.add('ui-icon-original');old.setAttribute('aria-hidden','true');old.before(svg(key));n.classList.add('ui-icon-target');
+   old.classList.add('ui-icon-original');old.setAttribute('aria-hidden','true');old.before(svg(key,n.closest('.module-card,.pulse-card,a,button')||n));n.classList.add('ui-icon-target');
    if(n.matches('.nav-item,.yod-nav-item')){
-    var label=n.querySelector('span');if(label)n.setAttribute('aria-label',label.textContent.trim());
+    var label=n.querySelector('span:not(.ui-glyph)');if(label)n.setAttribute('aria-label',label.textContent.trim());
    }
   });
  }
@@ -57,7 +42,7 @@
  }
  var scheduled=false;
  function scan(){scheduled=false;document.querySelectorAll('.app-shell,.yod-shell').forEach(function(s){mount(s);if(installed.has(s))decorate(s);});}
- var observer=new MutationObserver(function(records){if(!scheduled&&records.some(function(r){return Array.from(r.addedNodes).some(function(n){return n.nodeType===1&&!n.matches('.ui-glyph,.ui-nav-tip')&&!n.closest('svg');});})){scheduled=true;queueMicrotask(scan);}});
+ var observer=new MutationObserver(function(records){if(!scheduled&&records.some(function(r){return Array.from(r.addedNodes).some(function(n){return n.nodeType===1&&!n.matches('.ui-glyph,.ui-nav-tip')&&!n.closest('svg,.ui-glyph');});})){scheduled=true;queueMicrotask(scan);}});
  function start(){scan();observer.observe(document.body,{childList:true,subtree:true});}
  window.YodChrome={refresh:scan};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
