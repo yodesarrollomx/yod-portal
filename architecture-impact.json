@@ -1,21 +1,13 @@
 {
-  "model_revision": "2026-10-12.sala-imagen-publicacion.1",
-  "proposal_id": "CHG-SALA-IMAGEN-PUBLICACION-20261012",
-  "summary": "Completar publicación de imágenes GPT y recuperar recibos, referencias y cuotas sin cambiar historia.",
+  "model_revision": "2026-10-12.investor-story17.1",
+  "proposal_id": "CHG-INVESTOR-STORY-SCENES47",
+  "summary": "Completar narrativa comercial de siete láminas y cierre copiable en el sitio público existente, copy en Sheets.",
   "components": [
+    "SYS-INVERSION",
+    "GAS-PLAN-POTENCIAL",
+    "SHEET-PLAN-POTENCIAL",
     "SYS-YOD-OS",
-    "SYS-CONTROL",
-    "SYS-SALA",
-    "GAS-SALA",
-    "SHEET-SALA",
-    "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
-    "EXT-ACTIONS",
-    "EXT-MOTORES-MEDIA",
-    "SVC-AUTON-CLOUD",
-    "STORE-AUTON-ESTADO",
-    "EXT-OPENAI",
-    "EXT-RENDER"
+    "SYS-CONTROL"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -25,5 +17,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir por PR manteniendo fotos, recibos, decisiones y política de retiro. No borrar historia para reducir un paquete; límites de archivo, rutas y datos siguen vigentes."
+  "rollback": "Revertir PR de atlas; no borrar textos, versiones anteriores ni expedientes."
 }
