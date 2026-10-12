@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.bandeja-publicada.2",
+  "revision": "2026-10-12.os-marca-navegacion",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -11142,6 +11142,24 @@
       ],
       "deployment": "Pendiente de PR y publicación del frontend.",
       "rollback": "Revertir este PR; conserva las once elecciones instaladas por PR178."
+    },
+    {
+      "id": "CHG-OS-MARCA-NAVEGACION-20261012",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "SYS-DESPACHO-3D"
+      ],
+      "proposal": "Rediseñar el marco visual compartido con marca oficial, barra expandida/compacta persistente, nombres accesibles y microanimaciones coherentes en navegación, tarjetas y accesos. Mantener catálogo, destinos, permisos, sesión y datos operativos. Aplicar también Galería de modelos de Aurum, opción A confirmada explícitamente.",
+      "status": "implementado_local",
+      "approval": "Petición del propietario del 12-oct-2026: reinterpretar identidad de YOD OS y barra lateral plegable con iconos animados.",
+      "tests": [
+        "633 pruebas Node; Arquitectura, OS, Portal, Obra y Accesos aprobados.",
+        "Chromium sintético: expansión, persistencia, nombres, teclado, móvil, movimiento reducido, acceso deshabilitado, conservación de iframe y contenido del marco compartido."
+      ],
+      "deployment": "Pendiente de PR y publicación.",
+      "rollback": "Revertir PR o retirar la carga de ui-chrome.js/css; navegación base sigue disponible."
     }
   ],
   "data_contracts": [
@@ -12514,6 +12532,34 @@
     }
   ],
   "path_ownership": [
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/os-chrome-browser.py",
+      "components": [
+        "SYS-YOD-OS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/design-preview.html",
+      "components": [
+        "SYS-YOD-OS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/ui-chrome.css",
+      "components": [
+        "SYS-YOD-OS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/ui-chrome.js",
+      "components": [
+        "SYS-YOD-OS"
+      ]
+    },
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/hairline-browser.py",
