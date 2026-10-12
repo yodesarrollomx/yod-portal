@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.bandeja-nube.2 · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.bandeja-nube-autorizacion · 2026-10-12.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -457,6 +457,7 @@ flowchart LR
   n_SHEET_PPP_MODELOS["PPP · Libros de cálculo por caso"]
   n_STORE_DESPACHO_CORCHO["Mi Corcho · almacén privado de Dirección"]
   n_SVC_AUTON_CLOUD["Motor de nube del autón"]
+  n_GAS_BANDEJA_NUBE["Ejecutor de Bandeja en nube"]
   n_GAS_PORTERO -.->|Lee/escribe registros del dominio| n_SHEET_PORTERO
   n_SYS_POTENCIALES -.->|Consume contrato del backend| n_GAS_PORTERO
   n_SYS_TRACK -->|Consume contrato del backend| n_GAS_PORTERO
@@ -484,6 +485,7 @@ flowchart LR
   n_GAS_PORTERO -.->|Corcho: principal y ACL completos por GET| n_EXT_DRIVE
   n_SVC_AUTON_CLOUD -->|Identidad, contexto, objetivos y cola autorizados| n_GAS_PORTERO
   n_SYS_INVERSION -->|Preevaluación y retorno de terreno a cartera| n_GAS_PORTERO
+  n_GAS_BANDEJA_NUBE -->|Revalidar identidad de Dirección para aprobar y antes de enviar| n_GAS_PORTERO
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SHEET_PORTERO pendiente;
@@ -524,6 +526,7 @@ flowchart LR
   n_GAS_BANDEJA_NUBE -.->|Redactar cambios con API de pago por uso| n_EXT_OPENAI
   n_GAS_BANDEJA_NUBE -.->|Intención durable antes del efecto| n_STORE_BANDEJA_RECIBOS
   n_GAS_BANDEJA_NUBE -.->|Recibo técnico leído por el vigilante y mostrado en Accesos| n_SVC_HORARIOS_CLOUD
+  n_GAS_BANDEJA_NUBE -->|Revalidar identidad de Dirección para aprobar y antes de enviar| n_GAS_PORTERO
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SHEET_OPERACION pendiente;
   class n_EXT_GMAIL pendiente;
@@ -685,3 +688,4 @@ flowchart LR
 | CON-BANDEJA-IA | GAS-BANDEJA-NUBE → EXT-OPENAI | api: Redactar cambios con API de pago por uso. CTR-BANDEJA-NUBE | propuesto | CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. |
 | CON-BANDEJA-RECIBOS | GAS-BANDEJA-NUBE → STORE-BANDEJA-RECIBOS | persistencia: Intención durable antes del efecto. CTR-BANDEJA-NUBE | propuesto | CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. |
 | CON-BANDEJA-SALUD | GAS-BANDEJA-NUBE → SVC-HORARIOS-CLOUD | observacion: Recibo técnico leído por el vigilante y mostrado en Accesos. CTR-BANDEJA-NUBE | propuesto | CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. |
+| CON-BANDEJA-PORTERO | GAS-BANDEJA-NUBE → GAS-PORTERO | autorizacion: Revalidar identidad de Dirección para aprobar y antes de enviar. CTR-BANDEJA-NUBE | codigo | Permiso privado ligado a sesión real, tarjeta, huella y última aprobación; veto aparte de comentarios. Regresiones sintéticas aprobadas; consentimiento y sesión real pendientes. |

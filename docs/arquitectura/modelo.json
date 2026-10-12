@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-11.bandeja-nube.2",
-  "checked_at": "2026-10-11",
+  "revision": "2026-10-11.bandeja-nube-autorizacion",
+  "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
     "margen_y_control",
     "cobrar_antes"
   ],
   "coverage": {
-    "summary": "Inventario conciliado de 22 repositorios, 90 componentes y 136 conexiones. Asignación funcional en office_coverage; instalación y operación se verifican por alcance.",
+    "summary": "Inventario conciliado de 22 repositorios, 90 componentes y 137 conexiones. Instalación y operación se verifican por alcance.",
     "production_verified": false,
     "limitations": [
       "No se ha comprobado la versión activa de todos los Apps Script",
@@ -6139,6 +6139,27 @@
           "status": "propuesto"
         }
       ]
+    },
+    {
+      "id": "CON-BANDEJA-PORTERO",
+      "from": "GAS-BANDEJA-NUBE",
+      "to": "GAS-PORTERO",
+      "kind": "autorizacion",
+      "label": "Revalidar identidad de Dirección para aprobar y antes de enviar",
+      "status": "codigo",
+      "runtime_verified": false,
+      "contract": "CTR-BANDEJA-NUBE",
+      "contract_ids": [
+        "CTR-BANDEJA-NUBE"
+      ],
+      "evidence": [
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "server/bandeja/Approval.gs",
+          "claim": "Permiso privado ligado a sesión real, tarjeta, huella y última aprobación; veto aparte de comentarios. Regresiones sintéticas aprobadas; consentimiento y sesión real pendientes.",
+          "status": "codigo"
+        }
+      ]
     }
   ],
   "processes": [
@@ -11038,11 +11059,12 @@
         "SHEET-SALA"
       ],
       "status": "propuesto",
-      "proposal": "Continuar la siguiente migración sin sesiones de suscripción: ejecutor Google Apps Script cada5min, Gmail por API y redacción por uso. Provisionar proyecto original nuevo dedicado, sin modificar Apps Script de Operación no identificado. Probar en dobles y observación; cierre personal mediante Claude Chrome.",
+      "proposal": "Continuar la siguiente migración sin sesiones de suscripción: ejecutor Google Apps Script cada5min, Gmail por API y redacción por uso. Provisionar proyecto original nuevo dedicado, sin modificar Apps Script de Operación no identificado. Probar en dobles y observación; cierre personal mediante Claude Chrome. Las aprobaciones/cancelaciones se validan en el nuevo backend con Portero; cambio de frontend a nube explícito tras verificar relevo.",
       "tests": [
         "Pruebas de veto, huella, destinatarios, respuesta perdida, reserva durable y conciliación de Gmail con datos sintéticos.",
         "Regresiones del Despacho de aprobación individual y en lote con huella, y conservación de compuertas.",
-        "Lectura real de fuente/despliegue Google y dos ciclos de observación; Gmail y envío requieren pruebas propias."
+        "Lectura real de fuente/despliegue Google y dos ciclos de observación; Gmail y envío requieren pruebas propias.",
+        "26 regresiones nuevas de ejecutor/identidad/salud aprobadas en rama; probar aprobación individual/en lote y cancelación con respuesta perdida en navegador antes de publicar."
       ],
       "deployment": "Pendiente de implementación, consentimiento y corte; no se declara 100% funcional.",
       "rollback": "Detener sólo trigger BANDEJA_tick y volver a observar. Conservar recibos inciertos, Sheet y borradores; no reactivar Claude hasta conciliar envíos."
@@ -12390,12 +12412,14 @@
         "EXT-GMAIL",
         "EXT-OPENAI",
         "SVC-HORARIOS-CLOUD",
-        "SYS-CONTROL"
+        "SYS-CONTROL",
+        "GAS-PORTERO"
       ],
       "source": "EJECUTOR.md del Despacho y autorización de Dirección de pasar rutinas a ejecución autónoma con APIs. Fuente y compuertas existentes conservadas.",
       "input": [
         "Fila BANDEJA del Sheet efectivo confirmado, última aprobación de Dirección y borrador exacto.",
-        "Configuración privada del ejecutor; Google como propietario y API de IA únicamente para redacción."
+        "Configuración privada del ejecutor; Google como propietario y API de IA únicamente para redacción.",
+        "Sesión Portero real de Dirección con DP; el navegador no decide correo ni autoridad."
       ],
       "output": [
         "LISTO/REHECHO con huella de contenido y destinatarios; nueva aprobación para cada nueva versión.",
@@ -12410,7 +12434,8 @@
         "Una lectura de página no ejecuta procesos ni renueva salud. Programador, Gmail, libro, redacción y envío se acreditan por separado.",
         "Mandar un correo no cierra una tarea de Operación pendiente de respuesta; preservar estado, historial y datos ajenos.",
         "Gmail y Sheets no ofrecen transacción conjunta; reportar carreras, cambios y respuestas perdidas en lugar de prometer atomicidad.",
-        "Nunca reactivar gestores/metas históricos cancelados ni cancelar toda la Sala por terminar una autorización."
+        "Nunca reactivar gestores/metas históricos cancelados ni cancelar toda la Sala por terminar una autorización.",
+        "APROBADO requiere permiso privado emitido al validar el correo real de Dirección con DP y ligado a la versión exacta. Revalidar sesión inmediatamente antes del envío; cancelar revoca ese permiso aunque falle el acuse de Sheets. No confiar en el nombre de autor dentro de un comentario."
       ]
     }
   ],

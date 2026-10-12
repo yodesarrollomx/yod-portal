@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.bandeja-nube.2 · 2026-10-11.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.bandeja-nube-autorizacion · 2026-10-12.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -661,9 +661,9 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 ## CTR-BANDEJA-NUBE
 
-- Componentes: SYS-DESPACHO, SYS-TAREAS, GAS-OPERACION, SHEET-OPERACION, GAS-BANDEJA-NUBE, STORE-BANDEJA-RECIBOS, EXT-GMAIL, EXT-OPENAI, SVC-HORARIOS-CLOUD, SYS-CONTROL.
+- Componentes: SYS-DESPACHO, SYS-TAREAS, GAS-OPERACION, SHEET-OPERACION, GAS-BANDEJA-NUBE, STORE-BANDEJA-RECIBOS, EXT-GMAIL, EXT-OPENAI, SVC-HORARIOS-CLOUD, SYS-CONTROL, GAS-PORTERO.
 - Evidencia: EJECUTOR.md del Despacho y autorización de Dirección de pasar rutinas a ejecución autónoma con APIs. Fuente y compuertas existentes conservadas..
-- Entrada/campos: `Fila BANDEJA del Sheet efectivo confirmado, última aprobación de Dirección y borrador exacto.`, `Configuración privada del ejecutor; Google como propietario y API de IA únicamente para redacción.`.
+- Entrada/campos: `Fila BANDEJA del Sheet efectivo confirmado, última aprobación de Dirección y borrador exacto.`, `Configuración privada del ejecutor; Google como propietario y API de IA únicamente para redacción.`, `Sesión Portero real de Dirección con DP; el navegador no decide correo ni autoridad.`.
 - Salida: LISTO/REHECHO con huella de contenido y destinatarios; nueva aprobación para cada nueva versión., ENVIADO sólo con recibo o conciliación exacta; incertidumbre visible, sin duplicar solicitudes., Latido y pruebas sanitizados con fecha original por alcance; consulta pública sólo devuelve estado guardado..
 
 - Instalación inicia en observación sin escribir negocio ni enviar; el corte a ejecución exige confirmar el libro efectivo y detener sólo la rutina Claude de Bandeja.
@@ -674,3 +674,4 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Mandar un correo no cierra una tarea de Operación pendiente de respuesta; preservar estado, historial y datos ajenos.
 - Gmail y Sheets no ofrecen transacción conjunta; reportar carreras, cambios y respuestas perdidas en lugar de prometer atomicidad.
 - Nunca reactivar gestores/metas históricos cancelados ni cancelar toda la Sala por terminar una autorización.
+- APROBADO requiere permiso privado emitido al validar el correo real de Dirección con DP y ligado a la versión exacta. Revalidar sesión inmediatamente antes del envío; cancelar revoca ese permiso aunque falle el acuse de Sheets. No confiar en el nombre de autor dentro de un comentario.
