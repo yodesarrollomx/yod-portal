@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "model_revision": "2026-10-12.sala-decisiones.5",
+  "model_revision": "2026-10-12.sala-veto-tiny-sd.1",
   "components": [
     {
       "id": "SYS-DESPACHO",
