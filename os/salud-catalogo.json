@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "model_revision": "2026-10-11.bandeja-nube-autorizacion",
+  "model_revision": "2026-10-12.bandeja-publicada.2",
   "components": [
     {
       "id": "SYS-DESPACHO",
