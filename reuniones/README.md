@@ -70,7 +70,22 @@ El servicio registra un respaldo confirmado sólo cuando todos los hashes coinci
 
 ## Instalación móvil
 
+### Sólo iPhone: alternativa inmediata
+
+Grabar con Notas de Voz, compartir la grabación y guardarla en Archivos. En esta
+interfaz usar **Importar audio**, elegir el archivo y esperar a que se confirme la
+copia local. La importación conserva los bytes originales; no permite cerrar una
+importación incompleta como si estuviera terminada. Conservar también el original
+en Notas de Voz. Este camino procesa la reunión después de importar, no acompaña
+en directo. La entrega remota requiere el servicio y la credencial configurados.
+
 ### iPhone/iPad
+
+La compilación sin firma ya pasó en GitHub Actions con macOS/Xcode; esto no instala
+la aplicación en un iPhone. Para distribuirla sin Mac local, usar compilación firmada
+en macOS de CI y TestFlight, con equipo Apple Developer y credenciales de firma
+aportadas mediante secretos privados. El alta de Apple requiere intervención del
+titular; no puede sustituirse por instalar una página web.
 
 En un Mac con Xcode y XcodeGen: `cd mobile/ios && xcodegen generate`, abrir
 `YodReuniones.xcodeproj`, elegir el equipo de firma y conectar el iPhone.

@@ -25,3 +25,22 @@ targets:
         TARGETED_DEVICE_FAMILY: '1,2'
         MARKETING_VERSION: '0.1.0'
         CURRENT_PROJECT_VERSION: '1'
+  YodReunionesTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [Tests]
+    dependencies:
+      - target: YodReuniones
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: mx.yod.reuniones.tests
+        SWIFT_VERSION: '5.0'
+schemes:
+  YodReuniones:
+    build:
+      targets:
+        YodReuniones: all
+        YodReunionesTests: [test]
+    test:
+      targets: [YodReunionesTests]

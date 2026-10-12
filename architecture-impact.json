@@ -6,7 +6,11 @@
     "SYS-YOD-OS",
     "SYS-DESPACHO-3D",
     "SYS-POTENCIALES",
-    "SYS-TRACK"
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-CONTROL",
+    "SYS-OBRA-CLIENTE",
+    "SYS-DESPACHO"
   ],
   "tests": [
     "Corte de red y reintentos idempotentes",
@@ -14,7 +18,7 @@
     "Aislamiento de actor/caso",
     "Recuperación tras cierre y errores de almacenamiento",
     "Verificadores del portal y pruebas sintéticas de navegador",
-    "636 pruebas Node aprobadas; 9 pruebas servidor, 7 escenarios navegador y transcripción real de audio sintético."
+    "637 pruebas Node aprobadas; 10 pruebas servidor, 7 escenarios navegador y transcripción real de audio sintético."
   ],
   "rollback": "Retirar enlaces y detener ingestión; conservar grabaciones y exportaciones, sin borrar datos."
 }
