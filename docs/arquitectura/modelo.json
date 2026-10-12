@@ -11191,7 +11191,9 @@
     {
       "id": "CHG-OS-FIGURAS-VOLUMEN-20261012",
       "components": [
-        "SYS-YOD-OS"
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO"
       ],
       "proposal": "Sustituir pictogramas planos y salto uniforme por figuras isométricas Hairline originales, manipuladas por puntero o foco; aumentar escala en tarjetas y ofrecer muestra pública. Mantener distribución, marca, permisos y elecciones del Despacho.",
       "status": "implementado_local",
