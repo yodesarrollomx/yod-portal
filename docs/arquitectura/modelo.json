@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.sala-veto-tiny-sd.1",
+  "revision": "2026-10-12.reuniones-recuperables",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -11339,6 +11339,27 @@
       ],
       "deployment": "Chinches38282489941 ejecutado con éxito y encargo recogido. Auditoría de archivos públicos38283061332 identificó motor/modelo y muestra. Cambios de veto, depuración y vista aún pendientes de integrar; confirmar política, próxima revisión y cierre del encargo por separado.",
       "rollback": "Revertir código por PR sólo con revocación explícita del veto de Dirección. Conservar historia, decisiones, archivos, fuentes y medios; no restaurar el modelo en la cascada mediante una regla heredada."
+    },
+    {
+      "id": "CHG-REUNIONES-RECUPERABLES-20261012",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección solicita implementar grabación, respaldo, transcripción y acompañamiento hasta completar el objetivo.",
+      "proposal": "Grabador separado por reunión/caso, journal local de fragmentos, respaldo privado con hash y acuse durable, finalización por manifiesto, trabajos reintentables de transcripción y Drive; no activar captura automática ni modificar PPP/tareas por inferencia. Preparar aplicación móvil y verificar por dispositivo antes de certificar grabación con pantalla bloqueada.",
+      "tests": [
+        "Corte de red y reintentos idempotentes",
+        "Fragmento alterado, hueco y acuse perdido",
+        "Aislamiento de actor/caso",
+        "Recuperación tras cierre y errores de almacenamiento",
+        "Verificadores del portal y pruebas sintéticas de navegador",
+        "636 pruebas Node aprobadas; 9 pruebas servidor, 7 escenarios navegador y transcripción real de audio sintético."
+      ],
+      "deployment": "Código y pruebas locales implementados; prototipo iPhone por compilar y validar físicamente. Servicio permanente, credenciales de Drive y firma/instalación móvil pendientes. No publicado.",
+      "rollback": "Retirar enlaces y detener ingestión; conservar grabaciones y exportaciones, sin borrar datos."
     }
   ],
   "data_contracts": [

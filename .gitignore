@@ -1,0 +1,11 @@
+/private-meetings/
+**/__pycache__/
+**/.pytest_cache/
+reuniones/service/private-meetings/
+reuniones/mobile/android/.gradle/
+reuniones/mobile/android/**/build/
+reuniones/mobile/android/local.properties
+reuniones/mobile/ios/*.xcodeproj/
+reuniones/mobile/ios/DerivedData/
+reuniones/**/.env
+reuniones/**/*credentials*.json

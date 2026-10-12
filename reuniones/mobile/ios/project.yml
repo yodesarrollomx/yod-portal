@@ -1,0 +1,26 @@
+name: YodReuniones
+options:
+  deploymentTarget:
+    iOS: '16.0'
+targets:
+  YodReuniones:
+    type: application
+    platform: iOS
+    sources: [Sources]
+    info:
+      path: Info.plist
+      properties:
+        NSMicrophoneUsageDescription: Grabar reuniones del proyecto y conservar su audio para revisión.
+        UIBackgroundModes: [audio]
+        CFBundleURLTypes:
+          - CFBundleURLName: mx.yod.reuniones
+            CFBundleURLSchemes: [yodmeeting]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: mx.yod.reuniones
+        SWIFT_VERSION: '5.0'
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        TARGETED_DEVICE_FAMILY: '1,2'
+        MARKETING_VERSION: '0.1.0'
+        CURRENT_PROJECT_VERSION: '1'

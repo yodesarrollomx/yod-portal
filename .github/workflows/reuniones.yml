@@ -1,0 +1,35 @@
+name: Reuniones recuperables
+on:
+  pull_request:
+    paths: ['reuniones/**', 'tests/reuniones*', 'tests/reuniones/**', '.github/workflows/reuniones.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  service:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install fastapi==0.115.12 httpx==0.28.1 pytest requests google-auth
+      - run: pytest -q reuniones/service/test_store.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/reuniones.test.cjs
+  iphone:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install xcodegen
+      - run: xcodegen generate
+        working-directory: reuniones/mobile/ios
+      - name: Compilar iPhone Simulator sin firma
+        run: xcodebuild -project YodReuniones.xcodeproj -scheme YodReuniones -sdk iphonesimulator -configuration Debug -derivedDataPath /tmp/yod-iphone CODE_SIGNING_ALLOWED=NO build
+        working-directory: reuniones/mobile/ios
+      - uses: actions/upload-artifact@v4
+        with:
+          name: YOD-Reuniones-iPhone-Simulator
+          path: /tmp/yod-iphone/Build/Products/Debug-iphonesimulator/YodReuniones.app

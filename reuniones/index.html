@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer"><title>Reuniones · YOD</title><link rel="stylesheet" href="style.css"></head>
+<body><main><header><a href="../os/">YOD · DESPACHO</a><span class="badge">Reuniones</span></header>
+<h1>Escuchar. Conservar.<br>Dar seguimiento.</h1><p class="intro">Graba con el proyecto a mano. El audio se conserva aquí antes de enviarse al respaldo privado.</p>
+<section class="capture"><label for="project">Proyecto · identificador del expediente</label><input id="project" placeholder="Selecciona o escribe el identificador" maxlength="100" autocomplete="off"><p id="capability">Versión web: mantén esta ventana abierta y la pantalla encendida. No garantiza grabación en segundo plano.</p>
+<a id="iphone" hidden>Continuar en la app del iPhone</a>
+<div class="signal"><span id="dot"></span><strong id="phase">Lista para grabar</strong><meter id="level" min="0" max="0.15" value="0" aria-label="Nivel del micrófono"></meter></div>
+<p id="notice" role="status" aria-live="polite"></p><div class="actions"><button id="start">Grabar reunión</button><button id="pause" disabled>Pausar</button><button id="stop" disabled>Finalizar</button></div>
+<p class="fine">Avisa a los participantes antes de grabar. No cierres esta ventana hasta comprobar el guardado. Una copia en el navegador puede perderse si borras sus datos.</p></section>
+<section><div class="section-title"><h2>Grabaciones en este dispositivo</h2><button id="refresh" class="secondary">Actualizar</button></div><p id="empty">Todavía no hay reuniones guardadas.</p><div id="sessions"></div></section>
+<details><summary>Conectar respaldo privado</summary><p>La grabación funciona sin nube. Para subirla, conecta el servicio autorizado del despacho. La credencial permanece solo durante esta sesión de navegador.</p><label for="server">Servidor HTTPS</label><input id="server" type="url" placeholder="https://reuniones.example.com"><label for="token">Credencial de este dispositivo</label><input id="token" type="password" autocomplete="off"><button id="connect" class="secondary">Conectar y respaldar</button><button id="disconnect" class="secondary">Desconectar</button><p id="connection" role="status">Sin conexión configurada: guardado local únicamente.</p></details>
+<section><h2>Acompañamiento</h2><p>Actualizaciones provisionales cada cinco minutos de audio recibido. Al finalizar se vuelve a revisar el conjunto. Los acuerdos requieren tu revisión.</p><div id="feedback"></div></section>
+</main><script type="module" src="app.mjs"></script></body></html>
