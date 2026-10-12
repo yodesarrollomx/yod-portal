@@ -1,13 +1,19 @@
 {
-  "model_revision": "2026-10-12.investor-story123.1",
-  "proposal_id": "CHG-INVESTOR-STORY-SCENES23",
-  "summary": "Narrativa comercial pública de tres láminas con escenario persistente y contenido en Sheets.",
+  "model_revision": "2026-10-12.despacho-perfil140.6",
+  "proposal_id": "CHG-DESPACHO-PERFIL-ORDEN-20261012",
+  "summary": "Perfil común con PPP y conversación simultáneos, trabajo contextual y carga/recuperación por caso, sin mezclar metas de negocio ni perder capacidades.",
   "components": [
     "SYS-YOD-OS",
+    "SYS-DESPACHO",
+    "SYS-DESPACHO-3D",
+    "SYS-POTENCIALES",
+    "SHEET-PPP-MODELOS",
+    "GAS-PORTERO",
+    "EXT-DRIVE",
+    "SYS-TRACK",
+    "SYS-OBRA",
     "SYS-CONTROL",
-    "SYS-INVERSION",
-    "GAS-PLAN-POTENCIAL",
-    "SHEET-PLAN-POTENCIAL"
+    "SYS-OBRA-CLIENTE"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -17,5 +23,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir documentación mediante PR sin borrar contenido, originales ni modificar accesos."
+  "rollback": "Revertir módulos del perfil y arranque PPP por PR conservando IDs, URLs, permisos, libros, datos, recibos y volumen; no restaurar snapshots de negocio ni reactivar automatizaciones canceladas."
 }

@@ -12,7 +12,7 @@ const server=http.createServer((req,res)=>{
 });
 (async()=>{await new Promise(r=>server.listen(0,'127.0.0.1',r));const base='http://127.0.0.1:'+server.address().port,browser=await chromium.launch({headless:true,args:['--no-sandbox']});
  try{
-  const page=await browser.newPage({viewport:{width:1366,height:768}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
+  const page=await browser.newPage({viewport:{width:1366,height:768}}),errors=[],pppIntercepts=[];page.on('pageerror',e=>errors.push(e.message));
   await page.route('**/*',async route=>{
    const req=route.request(),u=new URL(req.url());if(u.origin===base)return route.continue();
    if(u.hostname==='synthetic.onrender.com'){
@@ -23,7 +23,7 @@ const server=http.createServer((req,res)=>{
     return route.fulfill({status:200,headers:{'access-control-allow-origin':'*','access-control-allow-methods':'GET,POST,OPTIONS','access-control-allow-headers':'Authorization,Content-Type'},json:data});
    }
    if(u.hostname==='yodesarrollomx.github.io'&&u.pathname.includes('/potenciales-yod/')){
-    const id=u.searchParams.get('open');return route.fulfill({contentType:'text/html',body:'<!doctype html><h1>PPP sintético '+id+'</h1><article>Tarjeta de capacidad</article><script>addEventListener("message",e=>{const m=e.data;if(m.type!=="yod:ppp:hello"&&m.type!=="yod:ppp:read")return;if(m.case_id!=='+JSON.stringify(id)+')return;parent.postMessage({type:"yod:ppp:state",version:1,nonce:m.nonce,board:{case_id:'+JSON.stringify(id)+',scenario_id:"scenario-1",scenario_name:"Base",revision:"r1",confirmed:true,pending:false,observed_at:new Date().toISOString(),fields:[{id:"inArea",label:"Área de prueba",min:0,max:10,editable:true,nullable:false,kind:"number"}],inputs:{inArea:1},results:{}}},e.origin)});</script>'});
+    const id=u.searchParams.get('open'),body='<!doctype html><h1>PPP sintético '+id+'</h1><article>Tarjeta de capacidad</article><script>addEventListener("message",e=>{const m=e.data;if(m.type!=="yod:ppp:hello"&&m.type!=="yod:ppp:read")return;if(m.case_id!=='+JSON.stringify(id)+')return;parent.postMessage({type:"yod:ppp:state",version:1,nonce:m.nonce,board:{case_id:'+JSON.stringify(id)+',scenario_id:"scenario-1",scenario_name:"Base",revision:"r1",confirmed:true,pending:false,observed_at:new Date().toISOString(),fields:[{id:"inArea",label:"Área de prueba",min:0,max:10,editable:true,nullable:false,kind:"number"}],inputs:{inArea:1},results:{}}},e.origin)});</script>';pppIntercepts.push({url:req.url(),body,via:'page'});return route.fulfill({contentType:'text/html',body});
    }
    return route.abort();
   });
@@ -69,11 +69,44 @@ const server=http.createServer((req,res)=>{
   const nativeFrame=await office.locator('.workspace-board iframe').elementHandle();
   await office.locator('.workspace-brief button').click();await office.locator('.workspace-subnav [data-tab=tasks]').click();
   const taskDisclosure=office.locator('.workspace-task-route details').first();await taskDisclosure.locator('summary').click();
-  const sourceDisclosure=office.locator('.workspace-research');await sourceDisclosure.locator('summary').click();await taskDisclosure.locator('summary').focus();
+  const sourceDisclosure=office.locator('.workspace-goal-instruction').first();await sourceDisclosure.locator('summary').click();
+  assert.match(await sourceDisclosure.innerText(),/Leer fuente registrada/);
+  assert.match(await taskDisclosure.innerText(),/Citar fuente y fecha/);
+  // The contextual source control replaces the duplicated research box. Exercise its actual tray.
+  await office.locator('.workspace-route-detail button').filter({hasText:'Consultar fuentes del expediente'}).click();
+  await office.locator('.document-tray-detail h3').filter({hasText:'Plan de potencial'}).waitFor();
+  // DocumentTray admits Drive/Sheets only; the case-bound web PPP opens through its own registered link.
+  assert.equal(await office.locator('.document-tray-detail a').isHidden(),true);
+  assert.equal(await office.locator('.document-tray-detail a').getAttribute('href'),null);
+  const sourceURL='https://yodesarrollomx.github.io/potenciales-yod/patrimonial.html?open=native-0',sourceLink=office.locator('.workspace-external-board');
+  assert.equal(await sourceLink.getAttribute('href'),sourceURL);
+  const sourcePopupRoute=async route=>{
+   if(route.request().url()!==sourceURL)return route.abort();
+   const body='<!doctype html><h1>Fuente PPP sintética registrada</h1>';
+   pppIntercepts.push({url:route.request().url(),body,via:'context'});
+   return route.fulfill({contentType:'text/html',body});
+  };
+  // Context routing also catches the popup's first request; no real board or business GET is contacted.
+  await page.context().route('https://yodesarrollomx.github.io/**',sourcePopupRoute);
+  const boardOptions=office.locator('.workspace-board-options');if(await boardOptions.getAttribute('open')===null)await boardOptions.locator('summary').click();
+  const sourceOffset=pppIntercepts.length,sourcePopupWait=page.waitForEvent('popup');await sourceLink.click();const sourcePopup=await sourcePopupWait;
+  await sourcePopup.waitForURL(sourceURL);assert.equal(sourcePopup.url(),sourceURL);
+  const sourceRequests=pppIntercepts.slice(sourceOffset).filter(r=>r.url===sourceURL);
+  assert.equal(sourceRequests.length,1,'one exact canonical source navigation was served by the isolated harness');
+  assert.equal(sourceRequests[0].url,sourceURL);assert.match(sourceRequests[0].body,/^<!doctype html>/i);
+  assert.ok(['page','context'].includes(sourceRequests[0].via),'the source response came from an installed route, never from business networking');
+  console.log('SOURCE_POPUP_INTERCEPTED '+JSON.stringify({url:sourceRequests[0].url,via:sourceRequests[0].via,bytes:Buffer.byteLength(sourceRequests[0].body)}));
+  await sourcePopup.close();await page.context().unroute('https://yodesarrollomx.github.io/**',sourcePopupRoute);
+  await boardOptions.locator('summary').click();
+  assert.match(await office.locator('.document-tray-note').first().innerText(),/Su presencia no confirma que el autón las haya leído/);
+  const sourceTray=await office.locator('.document-tray').elementHandle();
+  await office.locator('.workspace-primary [data-tab=activity]').click();await office.locator('.workspace-subnav [data-tab=tasks]').click();
+  await taskDisclosure.locator('summary').focus();
   await page.evaluate(()=>window.__goalMode='fail');
   await office.locator('.workspace-brief[data-read-phase=unavailable]').waitFor({timeout:16000});
   assert.match(await office.locator('.workspace-brief').innerText(),/Último registro/);
   assert.equal(await taskDisclosure.getAttribute('open')!==null,true);assert.equal(await sourceDisclosure.getAttribute('open')!==null,true);assert.equal(await taskDisclosure.locator('summary').evaluate(n=>n===document.activeElement),true);
+  assert.equal(await sourceTray.evaluate(n=>n.isConnected),true);assert.equal(await sourceLink.getAttribute('href'),sourceURL);
   await page.evaluate(()=>window.__goalMode='ready');await office.locator('.workspace-brief button').click();
   await office.locator('.workspace-brief[data-read-phase=ready]').waitFor();await office.locator('.workspace-primary [data-tab=ppp]').click();
   assert.equal(await nativeFrame.evaluate(n=>n.isConnected),true);

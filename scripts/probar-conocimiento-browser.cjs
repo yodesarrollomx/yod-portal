@@ -54,6 +54,9 @@ const server=http.createServer((req,res)=>{
     window.workspace.open(selection,'knowledge');
    });
    await page.locator('.knowledge-board[data-state="ready"]').waitFor();
+   // The PPP is now persistent beside knowledge: its failed source read recovers in the background.
+   await page.locator('.workspace-board iframe').waitFor();assert.equal(await page.evaluate(()=>window.sourceReads),2,'one failed read and one automatic recovery');
+   const retainedBoard=await page.locator('.workspace-board iframe').elementHandle();
    assert.match(await page.locator('.knowledge-capabilities').innerText(),/Obsidian: sin conexión/);
    assert.match(await page.locator('[data-knowledge-section=facts]').innerText(),/Declarado por el cliente/);
    assert.equal(await page.locator('.knowledge-board img').count(),0);
@@ -69,7 +72,10 @@ const server=http.createServer((req,res)=>{
    const downloadWait=page.waitForEvent('download');await page.getByRole('button',{name:'Descargar bóveda',exact:true}).click();const download=await downloadWait;assert.match(download.suggestedFilename(),/\.zip$/);const downloaded=await download.path();assert.equal(fs.readFileSync(downloaded).readUInt32LE(0),0x04034b50);
    exportFail=true;await page.getByRole('button',{name:'Descargar Markdown',exact:true}).click();await page.locator('.knowledge-notice').filter({hasText:'registro no está disponible'}).waitFor();
    await page.evaluate(()=>{window.workspace.setActive(false);window.workspace.open(window.selection,'ppp');});
-   await page.locator('.workspace-board iframe').waitFor();assert.equal(await page.evaluate(()=>window.sourceReads),2);
+   await page.locator('.workspace-board iframe').waitFor();await page.waitForFunction(()=>window.sourceReads===3);
+   assert.equal(await page.evaluate(()=>window.sourceReads),3,'explicit reopening makes one fresh source read');
+   assert.equal(await retainedBoard.evaluate(n=>n.isConnected),true,'reopening keeps the same PPP instance');
+   assert.equal(await page.locator('.workspace-board iframe').count(),1);
    for(const [group,tab] of [['activity','browser'],['ppp','ppp'],['activity','tasks'],['sources','knowledge']]){
     if(group!==tab)await page.locator('[data-tab="'+group+'"]').click();
     await page.locator('[data-tab="'+tab+'"]').click();

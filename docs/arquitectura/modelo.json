@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.investor-story123.1",
+  "revision": "2026-10-12.despacho-perfil140.6",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -11578,6 +11578,42 @@
       ],
       "deployment": "Propuesta aprobada. Extensión y publicación por verificar por separado; presentación actual de lámina1 conserva acceso público.",
       "rollback": "Revertir PR de presentación y conservar copy/variantes de Sheets, originales, acceso de Masterbrokers y todos los expedientes."
+    },
+    {
+      "id": "CHG-DESPACHO-PERFIL-ORDEN-20261012",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES",
+        "SHEET-PPP-MODELOS",
+        "GAS-PORTERO",
+        "EXT-DRIVE",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE"
+      ],
+      "status": "implementado_local",
+      "approval": "Dirección solicita reorganizar y probar el perfil común de los autóns, empezando por el recorrido de Gastón, con revisión UX y de métodos de trabajo; conservar capacidades y fuentes canónicas.",
+      "proposal": "PPP canónico persistente junto a conversación; trabajo organizado en Ahora/Bloqueado/Para revisar, con encargos separados de metas de negocio, una siguiente acción explícita y evidencia contextual. Conservar documentos, navegador, notas/versiones, presentación e historial en accesos secundarios. Recuperar lectura PPP sin cerrar voz ni sesión compartida; lectura puntual por caso no depende de cargar todo el catálogo. Compartir sólo preparación autorizada vigente por caso/actor, sin ampliar ACL ni restaurar credenciales persistentes. Métodos inspirados en autores publicados son adaptaciones propias, no revisiones reales de esos autores.",
+      "tests": [
+        "Pruebas de contrato: apertura por avatar/nombre/rueda, caso exacto y PPP visible junto a conversación.",
+        "PPP: error transitorio de catálogo no borra la sesión compartida; lectura puntual y timeout recuperable sin aplicar cambios de negocio.",
+        "Datos: encargos/runtime, metas MOAC y entregas diferenciadas; históricos no se anuncian como pendientes actuales y ninguna aprobación automática.",
+        "UI: selección/foco persistentes, navegación por teclado/toque, escritorio/Chromebook/móvil y una acción primaria por estado.",
+        "Regresión: cambiar de caso invalida datos/acuses viejos, los recibos inciertos conservan solicitud, abrir no reanuda trabajo.",
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Recorridos con datos aislados y mediciones separadas clic→perfil/clic→PPP/inicio→audio/interrupción; una prueba sintética no acredita micrófono ni expediente privado.",
+        "Antes de cierre: prueba de sesión privada con fuente y despliegue exactos, sin datos privados en repos públicos."
+      ],
+      "deployment": "PotencialesPR29/30 integrados (f9ce02a3 y bdde8df3); 44 recorridos Chromium/WebKit de apertura integrada/externa y revisión separados. PortalPR203 contiene perfil persistente, cola con prioridad y voz/expediente distinguidos; tests completos y publicación se registran en la bitácora de ejecución. La revisión privada confirmó necesidad adicional de corregir primera respuesta con contexto en el servidor; no se acredita hardware ni trabajo autónomo por fixtures. No nuevos permisos, finanzas ni automatizaciones.",
+      "rollback": "Revertir módulos del perfil y arranque PPP por PR conservando IDs, URLs, permisos, libros, datos, recibos y volumen; no restaurar snapshots de negocio ni reactivar automatizaciones canceladas."
     }
   ],
   "data_contracts": [

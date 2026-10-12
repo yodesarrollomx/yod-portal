@@ -2,8 +2,10 @@
 export function voiceView(state = {}) {
   const live = !['idle','error'].includes(state.phase);
   const listening = state.phase === 'listening';
+  const projectReady = state.mode !== 'basic' && state.context_phase === 'ready' && state.tools_ready === true;
+  const waitingTitle = state.context_phase === 'unavailable' ? 'Voz conectada · expediente pendiente' : 'Voz conectada · preparando expediente';
   const titles = {idle:state.finalized?'Conversación finalizada':'Disponible para conversar',
-    error:'No se pudo conectar',starting:'Conectando voz',listening:state.muted?'Micrófono en pausa':'Listo para hablar',
+    error:'No se pudo conectar',starting:'Conectando voz',listening:state.muted?'Micrófono en pausa':state.mode==='basic'?'Voz básica · sin expediente':projectReady?'Voz y expediente listos':waitingTitle,
     reconnecting:'Recuperando conexión',closing:'Finalizando conversación'};
   let context = !live ? 'El expediente se comprueba al conectar. Las tareas conservan su estado.' :
     state.mode === 'basic' ? 'Conversación básica: sin acceso a datos ni herramientas del expediente.' :

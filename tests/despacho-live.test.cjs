@@ -232,7 +232,7 @@ test('UX keeps voice, authorized tools and durable history independent',async()=
  let v=voiceView({phase:'starting',context_phase:'preparing'});
  assert.equal(v.title,'Conectando voz');assert.doesNotMatch(v.context,/Puedes hablar/);
  v=voiceView({phase:'listening',context_phase:'unavailable',pending:2,blocks:2,saved:0});
- assert.equal(v.title,'Listo para hablar');assert.match(v.context,/aún no/);assert.match(v.history,/pendiente/);
+ assert.equal(v.title,'Voz conectada · expediente pendiente');assert.match(v.context,/aún no/);assert.match(v.history,/pendiente/);
  v=voiceView({phase:'idle',finalized:true,blocks:2,saved:1,pending:1});
  assert.doesNotMatch(v.history,/Conversación respaldada/);
  v=voiceView({phase:'idle',finalized:true,blocks:2,saved:2,pending:0,incomplete:true});
@@ -712,4 +712,20 @@ test('typed text uses the current Live session and checks uncertain delivery wit
  assert.equal(messages.length,2);assert.equal(messages[0].session_id,'live:opaque/session');assert.deepEqual(messages[0],messages[1]);
  assert.equal(f.voice.snapshot().phase,'listening');assert.equal(f.track.stops,0);assert.equal(f.voice.snapshot().text_pending,false);
  const p=f.voice.stop();await tick();f.event({type:'session.closed'});await p;
+});
+
+test('the connected microphone never labels the project ready before its authenticated context and tools',async()=>{
+ const {voiceView}=await import('../despacho3d/voice-view.mjs');
+ for(const context_phase of ['preparing','installing','retrying','ready']){
+  const state={phase:'listening',mode:'operativo',context_phase,tools_ready:false};
+  const view=voiceView(state);assert.equal(view.live,true);assert.equal(view.listening,true);
+  assert.match(view.title,/preparando expediente/);assert.doesNotMatch(view.context,/Expediente conectado/);
+ }
+ const ready=voiceView({phase:'listening',mode:'operativo',context_phase:'ready',tools_ready:true});
+ assert.equal(ready.title,'Voz y expediente listos');assert.match(ready.context,/Expediente conectado/);
+ const basic=voiceView({phase:'listening',mode:'basic',context_phase:'ready',tools_ready:true});
+ assert.equal(basic.title,'Voz básica · sin expediente');assert.doesNotMatch(basic.context,/Expediente conectado/);
+ const waiting=voiceView({phase:'listening',mode:'operativo',context_phase:'unavailable',tools_ready:false});
+ assert.equal(waiting.live,true);assert.equal(waiting.listening,true);assert.equal(waiting.retryContext,true);
+ assert.match(waiting.title,/expediente pendiente/);
 });
