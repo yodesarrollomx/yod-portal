@@ -69,11 +69,22 @@ const server=http.createServer((req,res)=>{
   const nativeFrame=await office.locator('.workspace-board iframe').elementHandle();
   await office.locator('.workspace-brief button').click();await office.locator('.workspace-subnav [data-tab=tasks]').click();
   const taskDisclosure=office.locator('.workspace-task-route details').first();await taskDisclosure.locator('summary').click();
-  const sourceDisclosure=office.locator('.workspace-research');await sourceDisclosure.locator('summary').click();await taskDisclosure.locator('summary').focus();
+  const sourceDisclosure=office.locator('.workspace-goal-instruction').first();await sourceDisclosure.locator('summary').click();
+  assert.match(await sourceDisclosure.innerText(),/Leer fuente registrada/);
+  assert.match(await taskDisclosure.innerText(),/Citar fuente y fecha/);
+  // The contextual source control replaces the duplicated research box. Exercise its actual tray.
+  await office.locator('.workspace-route-detail button').filter({hasText:'Consultar fuentes del expediente'}).click();
+  await office.locator('.document-tray-detail h3').filter({hasText:'Plan de potencial'}).waitFor();
+  assert.equal(await office.locator('.document-tray-detail a').getAttribute('href'),'https://yodesarrollomx.github.io/potenciales-yod/patrimonial.html?open=native-0');
+  assert.match(await office.locator('.document-tray-note').first().innerText(),/Su presencia no confirma que el autón las haya leído/);
+  const sourceTray=await office.locator('.document-tray').elementHandle();
+  await office.locator('.workspace-primary [data-tab=activity]').click();await office.locator('.workspace-subnav [data-tab=tasks]').click();
+  await taskDisclosure.locator('summary').focus();
   await page.evaluate(()=>window.__goalMode='fail');
   await office.locator('.workspace-brief[data-read-phase=unavailable]').waitFor({timeout:16000});
   assert.match(await office.locator('.workspace-brief').innerText(),/Último registro/);
   assert.equal(await taskDisclosure.getAttribute('open')!==null,true);assert.equal(await sourceDisclosure.getAttribute('open')!==null,true);assert.equal(await taskDisclosure.locator('summary').evaluate(n=>n===document.activeElement),true);
+  assert.equal(await sourceTray.evaluate(n=>n.isConnected),true);assert.equal(await office.locator('.document-tray-detail a').getAttribute('href'),'https://yodesarrollomx.github.io/potenciales-yod/patrimonial.html?open=native-0');
   await page.evaluate(()=>window.__goalMode='ready');await office.locator('.workspace-brief button').click();
   await office.locator('.workspace-brief[data-read-phase=ready]').waitFor();await office.locator('.workspace-primary [data-tab=ppp]').click();
   assert.equal(await nativeFrame.evaluate(n=>n.isConnected),true);
