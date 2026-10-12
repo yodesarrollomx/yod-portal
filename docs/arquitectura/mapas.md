@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.reuniones-privadas-sin-servidor · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.investor-story1.1 · 2026-10-12.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -166,6 +166,7 @@ flowchart LR
   n_SVC_SALA_EJECUTOR -->|Cierre, activación acotada y comparación aislada| n_EXT_ACTIONS
   n_SYS_CONTROL -->|Informe técnico por proceso visible en Accesos| n_SYS_POTENCIALES
   n_SYS_SALA -->|Lecturas agregadas y canario aislado de Sala| n_SYS_CONTROL
+  n_SYS_INVERSION -.->|Lee copy público de presentación por recurso=textos| n_GAS_PLAN_POTENCIAL
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PLAN_POTENCIAL pendiente;
@@ -689,3 +690,4 @@ flowchart LR
 | CON-BANDEJA-RECIBOS | GAS-BANDEJA-NUBE → STORE-BANDEJA-RECIBOS | persistencia: Intención durable antes del efecto. CTR-BANDEJA-NUBE | codigo | CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.; Código publicado; su compuerta o consentimiento reales todavía no se acreditan. |
 | CON-BANDEJA-SALUD | GAS-BANDEJA-NUBE → SVC-HORARIOS-CLOUD | observacion: Recibo técnico leído por el vigilante y mostrado en Accesos. CTR-BANDEJA-NUBE | codigo | CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.; Render publicó seis comprobaciones de Bandeja pendientes, en el mismo servidor. Pruebas públicas de lectura y bytes separadas del consentimiento y la ejecución Google. |
 | CON-BANDEJA-PORTERO | GAS-BANDEJA-NUBE → GAS-PORTERO | autorizacion: Revalidar identidad de Dirección para aprobar y antes de enviar. CTR-BANDEJA-NUBE | codigo | Permiso privado ligado a sesión real, tarjeta, huella y última aprobación; veto aparte de comentarios. Regresiones sintéticas aprobadas; consentimiento y sesión real pendientes.; Código publicado; su compuerta o consentimiento reales todavía no se acreditan. |
+| CON-INVESTOR-STORY-TEXTS | SYS-INVERSION → GAS-PLAN-POTENCIAL | lectura: Lee copy público de presentación por recurso=textos. CTR-INVESTOR-STORY1; contenido comercial exclusivamente; fallo visible sin respaldo de datos privados. | propuesto | [plan-potencial/index.html](https://github.com/yodesarrollomx/plan-potencial/blob/78e616f858ad593f16891d2f5158cd46d5617bc2/index.html#L1244) — GET de textos comerciales ya utilizado por la landing pública; propuesta de consumo por la primera escena de inversión. |
