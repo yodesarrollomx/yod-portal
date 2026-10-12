@@ -5,7 +5,8 @@
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO-3D",
-    "SYS-POTENCIALES"
+    "SYS-POTENCIALES",
+    "SYS-TRACK"
   ],
   "tests": [
     "Corte de red y reintentos idempotentes",

@@ -1,5 +1,6 @@
 name: YodReuniones
 options:
+  xcodeVersion: '16.0'
   deploymentTarget:
     iOS: '16.0'
 targets:

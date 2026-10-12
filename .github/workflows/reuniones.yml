@@ -19,7 +19,7 @@ jobs:
           node-version: '22'
       - run: node --test tests/reuniones.test.cjs
   iphone:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
       - run: brew install xcodegen
@@ -37,10 +37,8 @@ jobs:
           from pathlib import Path
           p=Path('/tmp/yod-build.log')
           if p.exists():
-            lines=p.read_text().splitlines()
-            errors=[line for line in lines if 'error:' in line.lower() or 'failed' in line.lower()]
-            for line in lines[-35:]:
-              print('::error::'+line.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
+            snippet=p.read_text()[-8000:]
+            print('::error::'+snippet.replace('%','%25').replace('\r','%0D').replace('\n','%0A'))
           PY
       - uses: actions/upload-artifact@v4
         with:

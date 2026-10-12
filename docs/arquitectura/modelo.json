@@ -11345,7 +11345,8 @@
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO-3D",
-        "SYS-POTENCIALES"
+        "SYS-POTENCIALES",
+        "SYS-TRACK"
       ],
       "status": "propuesto",
       "approval": "Dirección solicita implementar grabación, respaldo, transcripción y acompañamiento hasta completar el objetivo.",
