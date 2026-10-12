@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-11.bandeja-nube.2",
+  "model_revision": "2026-10-11.bandeja-nube-autorizacion",
   "proposal_id": "CHG-BANDEJA-NUBE-20261011",
   "components": [
     "SYS-DESPACHO",
@@ -35,9 +35,9 @@
     "SHEET-PLAN-POTENCIAL",
     "SHEET-SALA"
   ],
-  "summary": "Registrar antes de implementación la Bandeja con ejecutor Google y APIs; consentimiento y pruebas reales separados.",
+  "summary": "Precisar autorización de correo con sesión real y permiso privado; publicación y consentimiento pendientes.",
   "tests": [
-    "Atlas estructural, vistas y catálogo coherentes; propuesta, alcance y rollback explícitos."
+    "Atlas generado coherente y regresiones de autoridad sintéticas; pruebas reales separadas."
   ],
-  "rollback": "Revertir registro por PR sin borrar recursos o datos."
+  "rollback": "Detener sólo trigger BANDEJA_tick y volver a observar. Conservar recibos inciertos, Sheet y borradores; no reactivar Claude hasta conciliar envíos."
 }
