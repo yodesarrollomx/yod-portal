@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-12.sala-veto-tiny-sd.1",
+  "model_revision": "2026-10-12.sala-veto-tiny-sd.2",
   "proposal_id": "CHG-SALA-VETO-TINY-SD-20261012",
-  "summary": "Retirar el modelo de imagen indicado por Dirección y evitar su reaparición en revisión, conservando decisiones, referencias y trazabilidad.",
+  "summary": "Registrar publicación y prueba real del retiro de Tiny SD; conservar pendientes por cuota y cumplimiento del encargo explícitos.",
   "components": [
     "SYS-YOD-OS",
     "SYS-CONTROL",
