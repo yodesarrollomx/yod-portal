@@ -11352,6 +11352,32 @@
       "rollback": "Revertir código por PR sólo con revocación explícita del veto de Dirección. Conservar historia, decisiones, archivos, fuentes y medios; no restaurar el modelo en la cascada mediante una regla heredada."
     },
     {
+      "id": "CHG-SALA-REHACER-POLLINATIONS-20261012",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-MOTORES-MEDIA"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección identifica una imagen deficiente y autoriza cancelar su producción, retirar el modelo y rehacer todas sus láminas presentadas con otro modelo. Después solicita revisión de chinches en todos los espacios y ejecución de Sala en línea.",
+      "proposal": "La imagen exacta es L2 de Tres opiniones, tres números distintos: candidata de Pollinations FLUX, receta Gemini, producida por el Montador de la mesa. Retirar Pollinations de generación, respaldos y opciones de revisión. La instrucción actual incluye reemitir las fuentes afectadas de las piezas activas aunque tuvieran aprobación anterior; conservar votos, archivos, selección e historia sin convertir esa orden administrativa en un voto. Fuente histórica retirada no se utiliza para nuevas escenas/cortes. Nueva generación vía Cloudflare FLUX 2 Klein 9B (multipart REST) y Gemini 3 Pro Image, con procedencia explícita por candidata. Conservar texto visible, rehacer la relación literal imagen/texto y requerir nuevas decisiones. Si se agota cuota: declarar pendientes con causa; no remostrar ni generar modelos retirados. Reintentar en el horario de Mesa ya existente, sin depender del chat ni comprar/activar planes.",
+      "tests": [
+        "Pruebas sintéticas de HTTP multipart y modelo configurado, rechazo de regla antigua Pollinations/CPU, procedencia explícita y conservación del texto.",
+        "Retiro de fuente afectada aprobada sólo bajo la instrucción actual; historia y decisiones intactas; una candidata sana aprobada permanece.",
+        "Vista, zoom y producción bloquean fuentes retiradas sin renumerar la selección.",
+        "Mesa mantiene la petición de reemplazo pendiente si no logra generar, aun cuando había un sí anterior; lote nuevo recibe ID distinto y no altera histórico.",
+        "Checks existentes de Sala y atlas; publicación y lectura real independientes, sin decisiones escritas por agente."
+      ],
+      "deployment": "Pausa viva imagen_motores=pausado-direccion confirmada antes de editar. Auditoría pública38293691710 identifica el archivo exacto y las opciones afectadas. Prueba38293341843: FLUX 2 Klein9B acepta contrato multipart pero retorna429 por cupo diario CF; Gemini3ProImage también429. No hay OPENAI_API_KEY ni claves BFL/FAL/Replicate/Pollinations en esta instalación. Generación nueva pendiente hasta disponibilidad real del proveedor.",
+      "rollback": "Revertir implementación mediante PR conservando historia y la orden de retiro. Nunca reactivar Pollinations o Tiny-SD sin revocación explícita de Dirección."
+    },
+    {
       "id": "CHG-REUNIONES-RECUPERABLES-20261012",
       "components": [
         "SYS-YOD-OS",
@@ -11374,7 +11400,7 @@
         "Verificadores del portal y pruebas sintéticas de navegador",
         "638 pruebas Node aprobadas; 10 pruebas servidor, 8 escenarios navegador y recorrido real Drive → Whisper → Drive con audio sintético."
       ],
-      "deployment": "Carpeta privada creada y permisos comprobados mediante conector. Flujo Drive/Whisper en verificación; frontend aún en PR. No hay nuevas suscripciones ni credenciales API.",
+      "deployment": "Flujo privado Drive → Whisper local → Drive verificado con audio sintético, hashes idénticos y permisos privados. Minuta previa revisada incorporada al archivo privado. Frontend pendiente de publicar desde PR; backend de pago y app nativa no activados.",
       "rollback": "Retirar enlaces y detener ingestión; conservar grabaciones y exportaciones, sin borrar datos."
     }
   ],
