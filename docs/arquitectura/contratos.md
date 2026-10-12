@@ -716,7 +716,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 - Componentes: SYS-INVERSION, GAS-PLAN-POTENCIAL, SHEET-PLAN-POTENCIAL.
 - Evidencia: Código público del formulario Plan de Potencial: GET recurso=textos; nuevas claves comerciales autorizadas por Dirección y escritas mediante conector de Sheets..
-- Entrada/campos: `Respuesta textos o diccionario directo.`, `Claves inv1_* para copy, marca, colores, duración y puente.`, `Cliente anónimo; no recibe ni transmite credenciales del Masterbroker.`.
+- Entrada/campos: `Respuesta textos o diccionario directo.`, `Claves inv1_*, inv2_* e inv3_* para copy, marca, duración, capítulos, ruta de siete etapas, mercado/finanzas y puentes. inv1 conserva compatibilidad.`, `Cliente anónimo; no recibe ni transmite credenciales del Masterbroker.`.
 - Salida: Narrativa comercial para inversionista; animación conceptual por scroll., Tarjeta Material con apertura pública y copia de enlace., Error recuperable si falta contenido; ninguna cifra o aprobación inventada..
 
 - Sólo GET al contrato de textos; ninguna escritura o prueba de negocio desde la presentación.
@@ -724,6 +724,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Textos renderizados como texto; colores validados y URLs HTTPS verificadas.
 - La lectura pública no concede permisos en CRM, Portero ni evaluador.
 - La lámina no muestra un caso aprobado, un rendimiento garantizado ni una probabilidad de éxito.
+- Un único diagrama conceptual continúa entre capítulos; navegación, scroll y reproducción comparten posición. Sin publicar ejemplos financieros ni datos de la cartera.
 
 ## CTR-SALA-IMAGEN-OPENAI-NUBE
 
