@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.despacho-perfil140.5",
+  "revision": "2026-10-12.despacho-perfil140.6",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -8192,7 +8192,7 @@
       "approval": {
         "fecha": "2026-10-12",
         "rol": "Dirección",
-        "alcance": "Montar lámina 1 animada en línea, enlazarla desde el perfil Masterbroker y conservar versiones anteriores; marca pública exclusiva YoDesarrollo."
+        "alcance": "Montar lámina 1 animada en línea, enlazarla desde el perfil Masterbroker y conservar versiones anteriores; marca pública exclusiva YoDesarrollo. Continuación explícita: conectar las láminas 1, 2 y 3 con historia, scroll, gráficos y acceso público; Portero se considera después."
       },
       "prerequisites": [
         "Conservar la autorización del tablero privado y usar sólo textos comerciales en el endpoint público existente.",
@@ -11559,6 +11559,27 @@
       "rollback": "Retirar accesos y rutas nuevas conservando fichas privadas, Drive y audio original."
     },
     {
+      "id": "CHG-INVESTOR-STORY-SCENES23",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL",
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección autoriza continuar las láminas y publicar una historia conectada en GitHub abierta al público; 12-oct-2026.",
+      "proposal": "Extender la escena existente a oportunidad, método y sustento en un escenario persistente por scroll. Conservar siete etapas de operación y seis variables de mercado/siete financieras. Integrar escenario adverso cualitativo y transición al caso; no inventar cifras, probabilidades ni aprobaciones. Mismo contrato público de textos; sin nuevo backend ni cambios al acceso privado del Masterbroker.",
+      "tests": [
+        "Esquema y vistas del atlas; pruebas y verificadores existentes.",
+        "Contratos sintéticos de capítulos, pesos, navegación y compatibilidad con una sola lámina.",
+        "Navegador móvil 320/390 y escritorio: continuidad, selección de capítulos, reproducción, pausa, vuelta atrás, modo reducido, lectura y filtros narrativos.",
+        "Publicación anónima y captura real; sin escrituras de prueba en servicios de negocio."
+      ],
+      "deployment": "Propuesta aprobada. Extensión y publicación por verificar por separado; presentación actual de lámina1 conserva acceso público.",
+      "rollback": "Revertir PR de presentación y conservar copy/variantes de Sheets, originales, acceso de Masterbrokers y todos los expedientes."
+    },
+    {
       "id": "CHG-DESPACHO-PERFIL-ORDEN-20261012",
       "components": [
         "SYS-YOD-OS",
@@ -13050,7 +13071,7 @@
       "source": "Código público del formulario Plan de Potencial: GET recurso=textos; nuevas claves comerciales autorizadas por Dirección y escritas mediante conector de Sheets.",
       "input": [
         "Respuesta textos o diccionario directo.",
-        "Claves inv1_* para copy, marca, colores, duración y puente.",
+        "Claves inv1_*, inv2_* e inv3_* para copy, marca, duración, capítulos, ruta de siete etapas, mercado/finanzas y puentes. inv1 conserva compatibilidad.",
         "Cliente anónimo; no recibe ni transmite credenciales del Masterbroker."
       ],
       "output": [
@@ -13063,7 +13084,8 @@
         "Sin nombres, ID de broker, correo, cartera o estado de cuenta en el enlace compartido.",
         "Textos renderizados como texto; colores validados y URLs HTTPS verificadas.",
         "La lectura pública no concede permisos en CRM, Portero ni evaluador.",
-        "La lámina no muestra un caso aprobado, un rendimiento garantizado ni una probabilidad de éxito."
+        "La lámina no muestra un caso aprobado, un rendimiento garantizado ni una probabilidad de éxito.",
+        "Un único diagrama conceptual continúa entre capítulos; navegación, scroll y reproducción comparten posición. Sin publicar ejemplos financieros ni datos de la cartera."
       ]
     },
     {

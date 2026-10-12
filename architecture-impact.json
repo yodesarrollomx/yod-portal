@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-12.despacho-perfil140.5",
+  "model_revision": "2026-10-12.despacho-perfil140.6",
   "proposal_id": "CHG-DESPACHO-PERFIL-ORDEN-20261012",
   "summary": "Perfil común con PPP y conversación simultáneos, trabajo contextual y carga/recuperación por caso, sin mezclar metas de negocio ni perder capacidades.",
   "components": [
