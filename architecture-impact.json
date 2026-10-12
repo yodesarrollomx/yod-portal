@@ -1,24 +1,29 @@
 {
+  "model_revision": "2026-10-12.sala-imagen-publicacion.1",
+  "proposal_id": "CHG-SALA-IMAGEN-PUBLICACION-20261012",
+  "summary": "Completar publicación de imágenes GPT y recuperar recibos, referencias y cuotas sin cambiar historia.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-DESPACHO-3D",
-    "SYS-DESPACHO",
-    "SYS-POTENCIALES",
-    "SYS-TRACK",
-    "SYS-OBRA",
     "SYS-CONTROL",
-    "SYS-OBRA-CLIENTE",
-    "SVC-AUTON-CLOUD"
+    "SYS-SALA",
+    "GAS-SALA",
+    "SHEET-SALA",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-ACTIONS",
+    "EXT-MOTORES-MEDIA",
+    "SVC-AUTON-CLOUD",
+    "STORE-AUTON-ESTADO",
+    "EXT-OPENAI",
+    "EXT-RENDER"
   ],
   "tests": [
-    "Reapertura conserva propuestas y selección",
-    "Acuse perdido/reintento, concurrencia y reinicio",
-    "Importación cruzada y contenido manipulado",
-    "Fechas imposibles, evidencia incompleta, clasificación y exportación segura",
-    "Navegador móvil, teclado, errores, copia y recuperación"
+    "node scripts/arquitectura.cjs --check",
+    "node --test tests/*.cjs",
+    "node verify-os.cjs",
+    "node verify-portal.cjs",
+    "node verify-accesos.cjs",
+    "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir consumidor/rutas nuevas conservando los archivos de resultados y las fichas originales.",
-  "model_revision": "2026-10-12.reuniones-seguimiento",
-  "proposal_id": "CHG-REUNIONES-SEGUIMIENTO-20261012",
-  "summary": "Conservar resultados y revisión por reunión en almacén privado de caso; consulta por agente, revisión con control de versión, exportación enlazada para segundo cerebro y preparación de siguiente reunión. Bandeja local sin PPP con recuperación. Rutas de proceso orientativas, sin crear/aprobar negocio ni reactivar workflows cancelados. No tocar archivos del perfil/voz concurrentes."
+  "rollback": "Revertir por PR manteniendo fotos, recibos, decisiones y política de retiro. No borrar historia para reducir un paquete; límites de archivo, rutas y datos siguen vigentes."
 }
