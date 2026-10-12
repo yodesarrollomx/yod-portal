@@ -1,5 +1,5 @@
 # Perfil común del autón · rediseño con Gastón
-Registro: 12-oct-2026, America/Hermosillo (UTC−7). Estado al 12-oct-2026: correcciones implementadas y entregas registradas abajo; la bitácora mutua conserva la publicación y aceptación privada más reciente.
+Registro: 12-oct-2026, America/Hermosillo (UTC−7). Estado al 12-oct-2026 21:19 UTC: perfil140 y PPP publicados; corrección de arranque de voz activada. La recuperación complementaria del cliente141 se encuentra en validación final. El recorrido autenticado y el micrófono físico permanecen pendientes; la bitácora mutua conserva sus recibos.
 La revisión partió del portal `5169b195` y del arranque nativo de Patrimonial; el candidato conserva también las integraciones posteriores de reuniones. No representa capturas de la sesión privada ni mediciones físicas del micrófono.
 
 ## Resultado que debe permitir
@@ -105,9 +105,49 @@ El recorrido privado autenticado de Gastón y la interrupción con micrófono f�
 ### Continuidad conversacional comprobada
 La revisión privada encontró respuestas que confundían recuperación de contexto con ausencia de historial y que mezclaban una respuesta de voz detenida con un encargo detenido. Los registros son fragmentos por intervalo; no sirven para medir latencia acústica ni acreditar ejecución. El diseño separa ambos estados y muestra el contexto registrado. La revisión técnica del arranque de voz sigue siendo necesaria: etiquetar una fase correctamente no demuestra que el modelo haya recibido el expediente antes de responder.
 
+
+### Apertura externa y estado de voz
+
+| Fecha UTC | Cambio y motivo | Resultado comprobado |
+|---|---|---|
 | 2026-10-12 20:16–20:18 | Se integró Potenciales PR30 tras revisión exacta de `fe269eb`; el shell conserva recuperación visible fuera del embed. | 12 casos externos con shell real más 32 casos del modo integrado; [pruebas completas de PR30](https://github.com/yodesarrollomx/potenciales-yod/actions/runs/38302584488). |
 | 2026-10-12 20:15–20:20 | Se corrigió el estado de voz: conexión no equivale a expediente preparado. Se adaptaron recorridos a los controles vigentes, manteniendo comprobaciones de caso, foco y recibos. | Perfil común en [Portal PR203](https://github.com/yodesarrollomx/yod-portal/pull/203); el verificador registra pruebas para cada commit. No se atribuye un método ni una ejecución que los datos no registren. |
 
 ### Verificación visual completada
 2026-10-12 20:30:27 UTC: el [recorrido completo de navegador](https://github.com/yodesarrollomx/yod-portal/actions/runs/38303452844) aprobó entrada, proximidad, reuniones, trabajo observado, conocimiento y recibos, voz y PPP simultáneo. El PPP permaneció en la misma instancia con borrador y lectura al cambiar herramientas. La geometría del inspector pasó en 1280, 860 y 390 px. Son expedientes de ensayo con módulos reales, no aceptación privada ni mediciones de hardware.
 2026-10-12 20:33 UTC: se preservó la actualización concurrente del modelo de arquitectura; la interfaz anterior ya aprobada no cambia. El ajuste restante del recorrido de fuente externa comprueba navegación y URL efectivas, conservando el bloqueo de red de negocio.
+
+
+## Entrega comprobada · 2026-10-12 21:19 UTC
+
+| Superficie | Antes | Después | Evidencia |
+|---|---|---|---|
+| Perfil común | Herramientas, datos y pendientes competían al mismo nivel. | Tres grupos: PPP, Trabajo y Expediente. Tablero persistente junto a conversación e inspector; herramientas y reuniones conservadas. | [PR203](https://github.com/yodesarrollomx/yod-portal/pull/203), candidato `dd6dd378`; 653 pruebas Node aprobadas, cuatro workflows completos. |
+| Apertura PPP | El caso esperaba catálogo; fallos temporales podían retirar la sesión compartida. | Lectura independiente del caso, respuesta acotada y recuperación local. Borradores, tipo de motor y respuestas tardías comprobados. | [PR29](https://github.com/yodesarrollomx/potenciales-yod/pull/29) y [PR30](https://github.com/yodesarrollomx/potenciales-yod/pull/30); 44 escenarios de apertura integrada/externa en Chromium/WebKit. |
+| Voz y memoria | Crear la sesión podía preceder al expediente; un saludo pospuesto no lo evitaba. | Contexto autorizado e historial del mismo actor/caso incorporados antes de crear la sesión Live; conexión y preparación se indican por separado. | Servidor publicado 21:18 UTC; 554 pruebas contabilizadas, 553 aprobadas y cero fallos. El caso restante no está detallado en ese resumen. Recibos y commits exactos se conservan en la bitácora privada. |
+| Recuperación de voz | Repetir una creación de resultado remoto desconocido podía duplicarla; un error podía proyectarse a otro caso. | El cliente141 muestra la causa, preserva PPP/texto y bloquea repetir sólo la creación incierta de ese caso. Otros casos mantienen sus controles. | [PR207](https://github.com/yodesarrollomx/yod-portal/pull/207): código y regresiones revisados; integración con la arquitectura actual en validación final. |
+
+Publicaciones verificadas: [Portal perfil140, merge `c727211`](https://github.com/yodesarrollomx/yod-portal/actions/runs/38305849919) y [PPP, merge `bdde8df`](https://github.com/yodesarrollomx/potenciales-yod/actions/runs/38303199847). La revisión separada pudo rechazar entregas y detectó defectos que se corrigieron antes de integrar. Los autores citados aportan principios publicados; no son revisores ni autores de esta implementación.
+
+### Mapa de interacción entregado
+
+```mermaid
+flowchart LR
+    Caso["Autón y caso autorizado"] --> Perfil["Perfil común"]
+    Perfil --> PPP["PPP: tarjetas y versiones"]
+    Perfil --> Conversacion["Conversación: texto y voz"]
+    Perfil --> Trabajo["Trabajo: Ahora · Bloqueado · Para revisar"]
+    Trabajo --> Ficha["Instrucción · criterio · evidencia · siguiente decisión"]
+    Trabajo --> Historial["Encargos detenidos y completados"]
+    Ficha --> Expediente["Documentos · fuentes · navegador · notas"]
+    Ficha --> Entrega["Entrega identificada · presentación · revisión"]
+    PPP <--> Conversacion
+```
+
+El PPP conserva su instancia cuando se cambia de herramienta. Presentar una entrega no la aprueba, detener la voz no detiene un encargo y mostrar un pendiente no acredita que esté ejecutándose. Luis y Ruiseñor usan este mismo componente; cada uno mantiene su expediente y permisos.
+
+### Qué queda por demostrar
+
+El cambio de organización, la carga, los errores recuperables, el aislamiento y la conservación de capacidades pasaron pruebas con módulos y HTML reales. También se revisaron capturas de los recorridos aislados y geometría en 1280, 860 y 390 px. Los expedientes de esos recorridos son de ensayo: no se publican como screenshots de Gastón ni como datos reales.
+
+La bitácora privada de trabajo mutuo asigna el recorrido de Gastón autenticado: hard refresh, clic→perfil, clic→PPP, inicio→primer audio, intervención→corte, pregunta sobre un acuerdo previo y presentación de una entrega. Una asignación no demuestra ejecución. No hay porcentaje de aceptación ni mejora de latencia inventados; estas mediciones permanecen pendientes.
