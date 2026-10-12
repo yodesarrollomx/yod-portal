@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.reuniones-privadas-sin-servidor · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.investor-story1.1 · 2026-10-12.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -711,3 +711,16 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - No reutilizar una generación cuya parte revisable contenga candidatas retiradas.
 - La vista no puede mostrar un modelo vetado como sustituto silencioso al faltar una toma válida.
 - Recuperación de fuente sólo para IDs canónicos activos del backend e índice de la publicación propia; imágenes en rutas locales autorizadas, huellas verificadas y fallo de red explícito.
+
+## CTR-INVESTOR-STORY1
+
+- Componentes: SYS-INVERSION, GAS-PLAN-POTENCIAL, SHEET-PLAN-POTENCIAL.
+- Evidencia: Código público del formulario Plan de Potencial: GET recurso=textos; nuevas claves comerciales autorizadas por Dirección y escritas mediante conector de Sheets..
+- Entrada/campos: `Respuesta textos o diccionario directo.`, `Claves inv1_* para copy, marca, colores, duración y puente.`, `Cliente anónimo; no recibe ni transmite credenciales del Masterbroker.`.
+- Salida: Narrativa comercial para inversionista; animación conceptual por scroll., Tarjeta Material con apertura pública y copia de enlace., Error recuperable si falta contenido; ninguna cifra o aprobación inventada..
+
+- Sólo GET al contrato de textos; ninguna escritura o prueba de negocio desde la presentación.
+- Sin nombres, ID de broker, correo, cartera o estado de cuenta en el enlace compartido.
+- Textos renderizados como texto; colores validados y URLs HTTPS verificadas.
+- La lectura pública no concede permisos en CRM, Portero ni evaluador.
+- La lámina no muestra un caso aprobado, un rendimiento garantizado ni una probabilidad de éxito.

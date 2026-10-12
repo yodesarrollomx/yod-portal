@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.reuniones-privadas-sin-servidor · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.investor-story1.1 · 2026-10-12.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 
@@ -335,3 +335,31 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 - Cambiar cantidad actualiza fórmulas nativas; ninguna fórmula financiera paralela en cliente/servidor
 - No mostrar datos locales como sincronizados ni confirmar una escritura fallida
 - Cada versión conserva identidad, fuente e historial; datos faltantes permanecen pendientes
+
+## INV · Presentación animada para inversionistas desde Masterbrokers
+
+- Tableros: SYS-INVERSION, GAS-PLAN-POTENCIAL, SHEET-PLAN-POTENCIAL.
+- Problema: La propuesta comercial requiere una primera escena legible en celular y continuidad visual entre capítulos, sin duplicar contenido en Git.
+- Beneficio esperado: Presentar la oportunidad y compartirla desde Material del Masterbroker con una narrativa orientada al capital.
+- Medición: Primera escena reproducible, lectura móvil, pausa, repetición, transición y enlace copiable; resultados comerciales por medir.
+- Dependencias: Sin dependencias previas.
+- Esfuerzo: M. Decisión: **aprobada**.
+
+### Requisitos previos
+
+- Conservar la autorización del tablero privado y usar sólo textos comerciales en el endpoint público existente.
+- Contrastar el contrato de textos; no exponer cartera, identidad, precios ni criterios financieros privados.
+
+### Tareas
+
+1. Guardar copy y configuración de escena en las filas de textos comerciales en Sheets.
+2. Publicar gráfico vectorial responsive y animación ligada al scroll con controles.
+3. Añadir acceso y copia del enlace en Material, sin modificar autorización ni registros CRM.
+4. Verificar móvil, escritorio, movimiento reducido y publicación de texto en línea.
+
+### Criterios de aceptación
+
+- El enlace comercial abre sin sesión y muestra únicamente contenido editorial público.
+- Los textos y duración se cambian desde Sheets; Git contiene lógica y esquema conceptual sintético.
+- Los controles funcionan y el inmueble de la escena se conserva en el puente a la evaluación.
+- Un perfil sin identidad vinculada no se activa ni se suplanta para comprobar la integración.
