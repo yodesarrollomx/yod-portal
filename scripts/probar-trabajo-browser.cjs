@@ -64,6 +64,7 @@ const server=http.createServer((req,res)=>{
   await page.waitForFunction(()=>window.__opened?.tab==='ppp');
   assert.equal((await page.evaluate(()=>window.__opened)).id,'case-synthetic');
   await page.locator('#test-workspace [data-tab="activity"]').click();
+  await page.locator('#test-workspace .workspace-live-detail > summary').click();
   const panel=page.locator('.workspace-live-work');
   assert.equal(await page.locator('.workspace-manual').evaluate(e=>e.open),false);
   await panel.getByRole('heading',{name:'Leyendo documento'}).waitFor();

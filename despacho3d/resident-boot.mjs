@@ -1,5 +1,5 @@
 import {mountResidentDock} from './resident-dock.mjs?v=132';
-import {createOfficePreparation} from './office-preparation.mjs?v=1';
+import {createOfficePreparation} from './office-preparation.mjs?v=2';
 import {mountAgentMenu} from './agent-menu.mjs?v=132';
 import {createResidentOpening} from './resident-opening.mjs?v=132';
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';

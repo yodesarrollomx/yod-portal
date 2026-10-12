@@ -66,3 +66,45 @@ test('shared prepared credentials remain usable by the live voice connector',asy
  assert.deepEqual(requests,[endpoint+'/voice/ready',endpoint+'/voice/ready']);
  voice.discardPreparation();
 });
+
+test('the selected resident promotes its queued credential without interrupting an active mint',async()=>{
+ const {createFastSessionPool}=await import('../despacho3d/office-preparation.mjs');
+ const pool=createFastSessionPool({now:()=>1000}),calls=[];let release,active=0,maxActive=0;
+ const mint=async p=>{calls.push(p.case_id);active++;maxActive=Math.max(maxActive,active);
+  if(p.case_id==='a')await new Promise(r=>release=r);active--;return raw(p.case_id);};
+ const a=pool.ensure('a',mint);await tick();
+ const b=pool.ensure('b',mint),c=pool.ensure('c',mint),d=pool.ensure('d',mint);
+ const selected=pool.ensure('d',mint,{priority:true});
+ await tick();assert.deepEqual(calls,['a'],'the active request is not preempted');
+ release();await Promise.all([a,b,c,d,selected]);
+ assert.deepEqual(calls,['a','d','b','c']);assert.equal(maxActive,1);
+ assert.equal(calls.filter(id=>id==='d').length,1,'promotion shares the existing exact-case request');
+});
+test('a new selected resident starts before queued background preparation',async()=>{
+ const {createFastSessionPool}=await import('../despacho3d/office-preparation.mjs');
+ const pool=createFastSessionPool({now:()=>1000}),calls=[];let release;
+ const mint=async p=>{calls.push(p.case_id);if(p.case_id==='a')await new Promise(r=>release=r);return raw(p.case_id);};
+ const a=pool.ensure('a',mint);await tick();
+ const b=pool.ensure('b',mint),c=pool.ensure('c',mint),selected=pool.ensure('d',mint,{priority:true});
+ release();await Promise.all([a,b,c,selected]);assert.deepEqual(calls,['a','d','b','c']);
+});
+test('revoking queued preparation rejects it immediately and never mints that credential',async()=>{
+ const {createFastSessionPool}=await import('../despacho3d/office-preparation.mjs');
+ const pool=createFastSessionPool({now:()=>1000}),calls=[];let release;
+ const mint=async p=>{calls.push(p.case_id);if(p.case_id==='a')await new Promise(r=>release=r);return raw(p.case_id);};
+ const a=pool.ensure('a',mint);await tick();
+ const b=pool.ensure('b',mint),outcome=b.catch(e=>e.message);
+ pool.retain(['a']);assert.equal(await outcome,'session_changed');
+ assert.deepEqual(calls,['a']);release();await a;assert.deepEqual(calls,['a']);
+});
+test('forgetting authority prevents a late old mint from replacing a fresh same-case request',async()=>{
+ const {createFastSessionPool}=await import('../despacho3d/office-preparation.mjs');
+ const pool=createFastSessionPool({now:()=>1000});let release;
+ const old=pool.ensure('a',()=>new Promise(r=>release=r)),outcome=old.catch(e=>e.message);await tick();
+ pool.forget();
+ let freshCalls=0;
+ const fresh=pool.ensure('a',async p=>{freshCalls++;return raw(p.case_id);},{priority:true});
+ release(raw('a'));assert.equal(await outcome,'session_changed');
+ assert.equal((await fresh).case_id,'a');assert.equal(freshCalls,1);
+ await pool.ensure('a',()=>{throw Error('unexpected_remint');});assert.equal(freshCalls,1);
+});

@@ -2,7 +2,7 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 const read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
 test('workspace keeps same case in board URL and rejects arbitrary identifiers',async()=>{
  const m=await import(url.pathToFileURL(path.join(__dirname,'../despacho3d/agent-workspace.mjs')));
- assert.match(m.boardURL('case-synthetic','https://yodesarrollomx.github.io/potenciales-yod/patrimonial.html?open=case-synthetic'),/open=case-synthetic&embed=1&agent=1&view=board$/);
+ assert.match(m.boardURL('case-synthetic','https://yodesarrollomx.github.io/potenciales-yod/patrimonial.html?open=case-synthetic'),/open=case-synthetic&embed=1&agent=1&view=cards$/);
  assert.throws(()=>m.boardURL('../other'));assert.equal(m.WORKSPACE_TABS[0][0],'ppp');
 });
 test('workspace and voice are mounted together without a second media request',()=>{
@@ -123,4 +123,12 @@ test('a revoked project after reading cannot approve a meeting delivery',async()
  const value={case_id:'case-synthetic',goal_id:'delivery-1',revision:'r1'};
  const controller={pending:null,model:{goals:[{...value,status:'ready_for_review'}]},read:async()=>{current=false;return true;},review:async()=>{writes++;return true;}};
  assert.equal(await reviewPresentedGoal(controller,value,()=>current),null);assert.equal(writes,0);
+});
+
+test('native PPP opens canonical folded cards while observation surfaces keep their board contract',async()=>{
+ const {registeredBoard}=await import('../despacho3d/project-station.mjs');
+ const id='synthetic-only',base='https://yodesarrollomx.github.io/potenciales-yod/';
+ const native=registeredBoard(base+'patrimonial.html?open='+id,id);
+ assert.equal(new URL(native.url).searchParams.get('view'),'cards');assert.equal(new URL(native.external).searchParams.has('view'),false);
+ for(const page of ['mixto.html','macrolotes.html'])assert.equal(new URL(registeredBoard(base+page+'?open='+id,id).url).searchParams.get('view'),'board');
 });

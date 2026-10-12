@@ -1,28 +1,49 @@
 import {validateFastSession} from './fast-lane.mjs';
 // Temporary credentials only, scoped to this document's current authorized catalog.
 export function createFastSessionPool({now=Date.now,margin=120000,maxCases=6}={}){
- const entries=new Map();let tail=Promise.resolve();
- function forget(id){if(id===undefined)entries.clear();else entries.delete(id);}
- async function ensure(id,mint){
+ const entries=new Map(),queue=[];let running=false,scheduled=false;
+ const changed=()=>Error('session_changed');
+ function promote(entry){
+  const index=queue.indexOf(entry);if(index>0){queue.splice(index,1);queue.unshift(entry);}
+ }
+ function drop(id){
+  const entry=entries.get(id);if(!entry)return;
+  entries.delete(id);
+  const index=queue.indexOf(entry);
+  if(index>=0){queue.splice(index,1);entry.reject(changed());}
+ }
+ function forget(id){if(id===undefined){for(const key of [...entries.keys()])drop(key);}else drop(id);}
+ function requestPump(){
+  if(running||scheduled||!queue.length)return;scheduled=true;
+  void Promise.resolve().then(()=>{scheduled=false;void pump();});
+ }
+ async function pump(){
+  if(running)return;
+  const entry=queue.shift();if(!entry)return;
+  running=true;
+  try{
+   if(entries.get(entry.id)!==entry)throw changed();
+   const raw=await entry.mint({case_id:entry.id});
+   if(raw?.ok===false)throw Error(raw.error||'unavailable');
+   const value={ok:true,...validateFastSession(raw,entry.id,now())};
+   if(entries.get(entry.id)!==entry)throw changed();
+   entry.value=value;entry.resolve(value);
+  }catch(error){
+   if(entries.get(entry.id)===entry)entries.delete(entry.id);
+   entry.reject(error);
+  }finally{entry.flight=null;running=false;requestPump();}
+ }
+ async function ensure(id,mint,{priority=false}={}){
   const old=entries.get(id);
   if(old?.value&&old.value.expires_at-now()>margin)return old.value;
-  if(old?.flight)return old.flight;
+  if(old?.flight){if(priority)promote(old);return old.flight;}
   if(!old&&entries.size>=maxCases)throw Error('preparation_limit');
-  const entry={};entries.set(id,entry);
-  const flight=tail.then(async()=>{
-   if(entries.get(id)!==entry)throw Error('session_changed');
-   const raw=await mint({case_id:id});
-   if(raw?.ok===false)throw Error(raw.error||'unavailable');
-   const value={ok:true,...validateFastSession(raw,id,now())};
-   if(entries.get(id)!==entry)throw Error('session_changed');
-   entry.value=value;return value;
-  });
-  tail=flight.catch(()=>{});
-  entry.flight=flight;
-  try{return await flight;}catch(error){if(entries.get(id)===entry)entries.delete(id);throw error;}
-  finally{if(entries.get(id)===entry)entry.flight=null;}
+  const entry={id,mint,value:null,flight:null};
+  entry.flight=new Promise((resolve,reject)=>{entry.resolve=resolve;entry.reject=reject;});
+  entries.set(id,entry);queue.push(entry);if(priority)promote(entry);requestPump();
+  return entry.flight;
  }
- function retain(ids){const allowed=new Set(ids);for(const id of entries.keys())if(!allowed.has(id))entries.delete(id);}
+ function retain(ids){const allowed=new Set(ids);for(const id of [...entries.keys()])if(!allowed.has(id))drop(id);}
  return {ensure,forget,retain};
 }
 export const officeFastSessions=createFastSessionPool();
