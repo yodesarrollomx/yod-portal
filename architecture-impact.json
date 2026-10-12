@@ -1,21 +1,28 @@
 {
-  "model_revision": "2026-10-12.investor-story17.1",
-  "proposal_id": "CHG-INVESTOR-STORY-SCENES47",
-  "summary": "Completar narrativa comercial de siete láminas y cierre copiable en el sitio público existente, copy en Sheets.",
+  "model_revision": "2026-10-12.sala-imagen-evidencia.1",
+  "proposal_id": "CHG-SALA-IMAGEN-PUBLICACION-20261012",
+  "summary": "Registrar implementación y evidencia real del puente de imagen, montaje parcial y bloqueo de saldo API, con componentes y vistas existentes.",
   "components": [
-    "SYS-INVERSION",
-    "GAS-PLAN-POTENCIAL",
-    "SHEET-PLAN-POTENCIAL",
     "SYS-YOD-OS",
-    "SYS-CONTROL"
+    "SYS-CONTROL",
+    "SYS-SALA",
+    "GAS-SALA",
+    "SHEET-SALA",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-ACTIONS",
+    "EXT-MOTORES-MEDIA",
+    "SVC-AUTON-CLOUD",
+    "STORE-AUTON-ESTADO",
+    "EXT-OPENAI",
+    "EXT-RENDER"
   ],
   "tests": [
+    "git diff --check",
     "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs"
+    "node --test scripts/*.test.cjs",
+    "Atlas, verificación y contratos de Portal en CI",
+    "Recibos reales de imagen38302218587, montaje38310054319 y proveedor38310564537"
   ],
-  "rollback": "Revertir PR de atlas; no borrar textos, versiones anteriores ni expedientes."
+  "rollback": "Revertir sólo esta documentación por PR; conservar imágenes, recibos, votos, historial y cambios concurrentes."
 }
