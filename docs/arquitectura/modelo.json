@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.hairline-atril-muelle",
+  "revision": "2026-10-12.bandeja-publicada.2",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -8,7 +8,7 @@
     "cobrar_antes"
   ],
   "coverage": {
-    "summary": "Inventario conciliado de 22 repositorios, 90 componentes y 137 conexiones. Instalación y operación se verifican por alcance.",
+    "summary": "Inventario conciliado de 22 repositorios, 90 componentes y 137 conexiones. Publicación y ejecución comprobadas por alcance; Bandeja espera consentimiento y relevo.",
     "production_verified": false,
     "limitations": [
       "No se ha comprobado la versión activa de todos los Apps Script",
@@ -3144,12 +3144,19 @@
       "proposito": "Revisar los encargos BANDEJA existentes, rehacer borradores por API y ejecutar sólo envíos aprobados",
       "dominio": "Dirección",
       "owner_role": "Dirección",
-      "status": "propuesto",
-      "runtime_status": "Código y proyecto de nube por preparar; consentimiento Gmail, correspondencia exacta del Sheet y corte de la rutina Claude pendientes.",
+      "status": "codigo",
+      "runtime_status": "Proyecto Google creado y publicado por API; fuente/hash/versión2 cotejados sobre la misma implementación. Consentimiento Gmail, libro efectivo, timer nativo, relevo y envío pendientes.",
       "evidence": [
         {
           "claim": "Dirección autorizó continuar la migración de automatizaciones a APIs de nube y preparar el cierre para Claude Chrome.",
           "status": "declarado"
+        },
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "server/bandeja/Ejecutor.gs",
+          "commit": "4daeedbf4017576acd4ff1a903a74df538f6d317",
+          "claim": "Instalación API38187136866 y actualización38187558929:fuente exacta y versión2 sobre proyecto dedicado original, cero escrituras de negocio; no son eventos del timer.",
+          "status": "codigo"
         }
       ],
       "data_entities": [
@@ -3172,12 +3179,19 @@
       "proposito": "Reservar efectos antes de Gmail y conciliar resultados inciertos sin repetir envíos",
       "dominio": "Dirección",
       "owner_role": "Dirección",
-      "status": "propuesto",
-      "runtime_status": "ScriptProperties privadas del ejecutor; instalación y primera conciliación reales pendientes.",
+      "status": "codigo",
+      "runtime_status": "Reserva/permiso privados implementados y probados con dobles. ScriptProperties reales de la rutina no se acreditan hasta ejecutar instalación con el propietario.",
       "evidence": [
         {
           "claim": "Almacén técnico privado propuesto; no copia ni sustituye tareas, comentarios o borradores de los sistemas canónicos.",
           "status": "propuesto"
+        },
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "server/bandeja/Approval.gs",
+          "commit": "4daeedbf4017576acd4ff1a903a74df538f6d317",
+          "claim": "44 regresiones de Bandeja/vigilante: identidad real, reserva, veto privado, respuesta perdida, reinicio, conciliación, timer/observación y salud con fechas. Pruebas sintéticas.",
+          "status": "codigo"
         }
       ],
       "data_entities": [
@@ -6051,7 +6065,7 @@
       "to": "SHEET-OPERACION",
       "kind": "persistencia",
       "label": "Leer BANDEJA y añadir resultados al mismo libro",
-      "status": "propuesto",
+      "status": "codigo",
       "runtime_verified": false,
       "contract": "CTR-BANDEJA-NUBE",
       "contract_ids": [
@@ -6061,6 +6075,12 @@
         {
           "claim": "CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.",
           "status": "propuesto"
+        },
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "server/bandeja/README.md",
+          "claim": "Código publicado; su compuerta o consentimiento reales todavía no se acreditan.",
+          "status": "codigo"
         }
       ]
     },
@@ -6070,7 +6090,7 @@
       "to": "EXT-GMAIL",
       "kind": "api",
       "label": "Borradores y envíos aprobados por API",
-      "status": "propuesto",
+      "status": "codigo",
       "runtime_verified": false,
       "contract": "CTR-BANDEJA-NUBE",
       "contract_ids": [
@@ -6080,6 +6100,12 @@
         {
           "claim": "CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.",
           "status": "propuesto"
+        },
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "server/bandeja/README.md",
+          "claim": "Código publicado; su compuerta o consentimiento reales todavía no se acreditan.",
+          "status": "codigo"
         }
       ]
     },
@@ -6089,7 +6115,7 @@
       "to": "EXT-OPENAI",
       "kind": "api",
       "label": "Redactar cambios con API de pago por uso",
-      "status": "propuesto",
+      "status": "codigo",
       "runtime_verified": false,
       "contract": "CTR-BANDEJA-NUBE",
       "contract_ids": [
@@ -6099,6 +6125,12 @@
         {
           "claim": "CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.",
           "status": "propuesto"
+        },
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "server/bandeja/README.md",
+          "claim": "Código publicado; su compuerta o consentimiento reales todavía no se acreditan.",
+          "status": "codigo"
         }
       ]
     },
@@ -6108,7 +6140,7 @@
       "to": "STORE-BANDEJA-RECIBOS",
       "kind": "persistencia",
       "label": "Intención durable antes del efecto",
-      "status": "propuesto",
+      "status": "codigo",
       "runtime_verified": false,
       "contract": "CTR-BANDEJA-NUBE",
       "contract_ids": [
@@ -6118,6 +6150,12 @@
         {
           "claim": "CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.",
           "status": "propuesto"
+        },
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "server/bandeja/README.md",
+          "claim": "Código publicado; su compuerta o consentimiento reales todavía no se acreditan.",
+          "status": "codigo"
         }
       ]
     },
@@ -6127,7 +6165,7 @@
       "to": "SVC-HORARIOS-CLOUD",
       "kind": "observacion",
       "label": "Recibo técnico leído por el vigilante y mostrado en Accesos",
-      "status": "propuesto",
+      "status": "codigo",
       "runtime_verified": false,
       "contract": "CTR-BANDEJA-NUBE",
       "contract_ids": [
@@ -6137,6 +6175,12 @@
         {
           "claim": "CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.",
           "status": "propuesto"
+        },
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "server/bandeja/README.md",
+          "claim": "Render publicó seis comprobaciones de Bandeja pendientes, en el mismo servidor. Pruebas públicas de lectura y bytes separadas del consentimiento y la ejecución Google.",
+          "status": "codigo"
         }
       ]
     },
@@ -6157,6 +6201,12 @@
           "repo": "alexpueblag/yod-agent-cloud",
           "path": "server/bandeja/Approval.gs",
           "claim": "Permiso privado ligado a sesión real, tarjeta, huella y última aprobación; veto aparte de comentarios. Regresiones sintéticas aprobadas; consentimiento y sesión real pendientes.",
+          "status": "codigo"
+        },
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "server/bandeja/README.md",
+          "claim": "Código publicado; su compuerta o consentimiento reales todavía no se acreditan.",
           "status": "codigo"
         }
       ]
@@ -7513,7 +7563,7 @@
     {
       "id": "PROC-BANDEJA-NUBE",
       "nombre": "Bandeja del Despacho con APIs de nube",
-      "status": "propuesto",
+      "status": "codigo",
       "steps": [
         {
           "label": "Revisar encargos existentes cada cinco minutos",
@@ -7576,12 +7626,19 @@
       ],
       "manual_gaps": [
         "Consentimiento inicial de Google y confirmación del libro efectivo mediante sesión de Dirección.",
-        "Corte de la rutina Claude sólo después de dos ciclos de observación y pruebas; primer envío aprobado real se acredita por separado."
+        "Corte de la rutina Claude sólo después de dos ciclos de observación y pruebas; primer envío aprobado real se acredita por separado.",
+        "Si la rutina original captaba correos/creaba tarjetas, portar esas reglas antes de dar por sustituido su alcance; este ejecutor sólo procesa BANDEJA y cambios/respuestas existentes."
       ],
       "evidence": [
         {
           "claim": "CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.",
           "status": "propuesto"
+        },
+        {
+          "repo": "alexpueblag/yod-agent-cloud",
+          "path": "server/bandeja/Ejecutor.gs",
+          "claim": "Proceso de nube implementado con observación, aprobación privada, reserva y conciliación; publicación comprobada, ejecución Google pendiente.",
+          "status": "codigo"
         }
       ]
     }
@@ -11058,15 +11115,15 @@
         "SHEET-PLAN-POTENCIAL",
         "SHEET-SALA"
       ],
-      "status": "propuesto",
+      "status": "publicado",
       "proposal": "Continuar la siguiente migración sin sesiones de suscripción: ejecutor Google Apps Script cada5min, Gmail por API y redacción por uso. Provisionar proyecto original nuevo dedicado, sin modificar Apps Script de Operación no identificado. Probar en dobles y observación; cierre personal mediante Claude Chrome. Las aprobaciones/cancelaciones se validan en el nuevo backend con Portero; cambio de frontend a nube explícito tras verificar relevo.",
       "tests": [
-        "Pruebas de veto, huella, destinatarios, respuesta perdida, reserva durable y conciliación de Gmail con datos sintéticos.",
-        "Regresiones del Despacho de aprobación individual y en lote con huella, y conservación de compuertas.",
-        "Lectura real de fuente/despliegue Google y dos ciclos de observación; Gmail y envío requieren pruebas propias.",
-        "26 regresiones nuevas de ejecutor/identidad/salud aprobadas en rama; probar aprobación individual/en lote y cancelación con respuesta perdida en navegador antes de publicar."
+        "Cloud PR101/102:44 regresiones de Bandeja y vigilante, suites completas de voz/navegador; todo sintético y sin correos de prueba.",
+        "Google API38187136866/38187558929:proyecto original creado, seis módulos, respaldo y hash bb4810b1d816dcda496fdc0e00cb53d659e760f04dfe88787b628c54485588e4, versión2 y URL conservada; consentimiento/timer pendientes.",
+        "Despacho PR6/7:26 pruebas con navegador móvil/escritorio y red interceptada; aprobación/cancelación con respuesta perdida y firma exacta. Modo legacy hasta relevo.",
+        "Render run38187136924:dos vueltas reales17:15:18/17:16:18Hermosillo del nuevo lector, cero escrituras de negocio del verificador. Primer cotejo público38187558923:cinco recursos byte exactos y seis comprobaciones pendientes."
       ],
-      "deployment": "Pendiente de implementación, consentimiento y corte; no se declara 100% funcional.",
+      "deployment": "Código de Google y Despacho publicado; lector en Render existente y Accesos por alcance. Libro efectivo, consentimiento Gmail, dos timers de Google y relevo de la rutina Claude siguen pendientes. Esta versión no importa correos nuevos automáticamente: confirmar alcance de la rutina anterior antes de retirarla. No se declara sustitución completa, correo enviado/recibido ni funcionalidad del resto de YOD.",
       "rollback": "Detener sólo trigger BANDEJA_tick y volver a observar. Conservar recibos inciertos, Sheet y borradores; no reactivar Claude hasta conciliar envíos."
     },
     {

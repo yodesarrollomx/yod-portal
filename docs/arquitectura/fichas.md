@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.hairline-atril-muelle · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.bandeja-publicada.2 · 2026-10-12.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -1128,10 +1128,10 @@ Conservar recibos, reservas de ejecución y configuración de la App cifrada par
 Revisar los encargos BANDEJA existentes, rehacer borradores por API y ejecutar sólo envíos aprobados
 
 - Tipo: apps_script. Dominio: Dirección. Responsable: Dirección.
-- Evidencia: propuesto. Producción: Código y proyecto de nube por preparar; consentimiento Gmail, correspondencia exacta del Sheet y corte de la rutina Claude pendientes..
+- Evidencia: codigo. Producción: Proyecto Google creado y publicado por API; fuente/hash/versión2 cotejados sobre la misma implementación. Consentimiento Gmail, libro efectivo, timer nativo, relevo y envío pendientes..
 - Entidades: tarea, borrador, aprobacion, recibo.
 - Fuente de verdad: BANDEJA en SHEET-OPERACION; Gmail conserva borradores y mensajes. Registro técnico aparte sólo para idempotencia y salud..
-- Evidencia: Dirección autorizó continuar la migración de automatizaciones a APIs de nube y preparar el cierre para Claude Chrome..
+- Evidencia: Dirección autorizó continuar la migración de automatizaciones a APIs de nube y preparar el cierre para Claude Chrome.; Instalación API38187136866 y actualización38187558929:fuente exacta y versión2 sobre proyecto dedicado original, cero escrituras de negocio; no son eventos del timer..
 - Conexiones: CON-BANDEJA-TAREAS (GAS-BANDEJA-NUBE → SHEET-OPERACION); CON-BANDEJA-GMAIL (GAS-BANDEJA-NUBE → EXT-GMAIL); CON-BANDEJA-IA (GAS-BANDEJA-NUBE → EXT-OPENAI); CON-BANDEJA-RECIBOS (GAS-BANDEJA-NUBE → STORE-BANDEJA-RECIBOS); CON-BANDEJA-SALUD (GAS-BANDEJA-NUBE → SVC-HORARIOS-CLOUD); CON-BANDEJA-PORTERO (GAS-BANDEJA-NUBE → GAS-PORTERO).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Gmail y Sheets no comparten transacción; no prometer entrega ni cancelación sin recibo real.; Rutina Claude y nuevo ejecutor no pueden enviar en paralelo..
@@ -1141,10 +1141,10 @@ Revisar los encargos BANDEJA existentes, rehacer borradores por API y ejecutar s
 Reservar efectos antes de Gmail y conciliar resultados inciertos sin repetir envíos
 
 - Tipo: almacen_tecnico. Dominio: Dirección. Responsable: Dirección.
-- Evidencia: propuesto. Producción: ScriptProperties privadas del ejecutor; instalación y primera conciliación reales pendientes..
+- Evidencia: codigo. Producción: Reserva/permiso privados implementados y probados con dobles. ScriptProperties reales de la rutina no se acreditan hasta ejecutar instalación con el propietario..
 - Entidades: solicitud, huella, recibo.
 - Fuente de verdad: Sólo intención/resultado técnico de los efectos producidos por GAS-BANDEJA-NUBE..
-- Evidencia: Almacén técnico privado propuesto; no copia ni sustituye tareas, comentarios o borradores de los sistemas canónicos..
+- Evidencia: Almacén técnico privado propuesto; no copia ni sustituye tareas, comentarios o borradores de los sistemas canónicos.; 44 regresiones de Bandeja/vigilante: identidad real, reserva, veto privado, respuesta perdida, reinicio, conciliación, timer/observación y salud con fechas. Pruebas sintéticas..
 - Conexiones: CON-BANDEJA-RECIBOS (GAS-BANDEJA-NUBE → STORE-BANDEJA-RECIBOS).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Cupo de ScriptProperties: los resultados inciertos no se podan ni se reintentan por falta de espacio..

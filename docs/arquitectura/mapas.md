@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.hairline-atril-muelle · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.bandeja-publicada.2 · 2026-10-12.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -54,7 +54,7 @@ flowchart LR
   n_STORE_AUTON_ESTADO -->|Leer versiones, decisiones y exportación autorizadas| n_SYS_DESPACHO_3D
   n_SYS_DESPACHO_3D -->|Descarga manual de bóveda portable; no sincronización| n_EXT_OBSIDIAN
   n_SYS_DESPACHO_3D -.->|Consulta documental prevista, conexión sin verificar| n_EXT_NOTEBOOKLM
-  n_GAS_BANDEJA_NUBE -.->|Leer BANDEJA y añadir resultados al mismo libro| n_SHEET_OPERACION
+  n_GAS_BANDEJA_NUBE -->|Leer BANDEJA y añadir resultados al mismo libro| n_SHEET_OPERACION
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SHEET_OPERACION pendiente;
@@ -417,9 +417,9 @@ flowchart LR
   n_SVC_HORARIOS_CLOUD -->|Reservas durables y configuración privada cifrada| n_STORE_HORARIOS_CLOUD
   n_SVC_HORARIOS_CLOUD -->|Observar ejecuciones y recuperar horarios omitidos con GitHub App| n_EXT_ACTIONS
   n_SVC_HORARIOS_CLOUD -->|Resultados sanitizados observados desde Accesos| n_SYS_CONTROL
-  n_GAS_BANDEJA_NUBE -.->|Borradores y envíos aprobados por API| n_EXT_GMAIL
-  n_GAS_BANDEJA_NUBE -.->|Redactar cambios con API de pago por uso| n_EXT_OPENAI
-  n_GAS_BANDEJA_NUBE -.->|Recibo técnico leído por el vigilante y mostrado en Accesos| n_SVC_HORARIOS_CLOUD
+  n_GAS_BANDEJA_NUBE -->|Borradores y envíos aprobados por API| n_EXT_GMAIL
+  n_GAS_BANDEJA_NUBE -->|Redactar cambios con API de pago por uso| n_EXT_OPENAI
+  n_GAS_BANDEJA_NUBE -->|Recibo técnico leído por el vigilante y mostrado en Accesos| n_SVC_HORARIOS_CLOUD
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_SITIO_ORG pendiente;
   class n_GAS_EMD pendiente;
@@ -521,11 +521,11 @@ flowchart LR
   n_STORE_BANDEJA_RECIBOS["Recibos privados de Bandeja"]
   n_GAS_OPERACION -.->|Futuro Ops: mismo almacén Corcho tras identificar proyecto| n_STORE_DESPACHO_CORCHO
   n_GAS_PORTERO -.->|Provisional: CAS en Mi Corcho privado| n_STORE_DESPACHO_CORCHO
-  n_GAS_BANDEJA_NUBE -.->|Leer BANDEJA y añadir resultados al mismo libro| n_SHEET_OPERACION
-  n_GAS_BANDEJA_NUBE -.->|Borradores y envíos aprobados por API| n_EXT_GMAIL
-  n_GAS_BANDEJA_NUBE -.->|Redactar cambios con API de pago por uso| n_EXT_OPENAI
-  n_GAS_BANDEJA_NUBE -.->|Intención durable antes del efecto| n_STORE_BANDEJA_RECIBOS
-  n_GAS_BANDEJA_NUBE -.->|Recibo técnico leído por el vigilante y mostrado en Accesos| n_SVC_HORARIOS_CLOUD
+  n_GAS_BANDEJA_NUBE -->|Leer BANDEJA y añadir resultados al mismo libro| n_SHEET_OPERACION
+  n_GAS_BANDEJA_NUBE -->|Borradores y envíos aprobados por API| n_EXT_GMAIL
+  n_GAS_BANDEJA_NUBE -->|Redactar cambios con API de pago por uso| n_EXT_OPENAI
+  n_GAS_BANDEJA_NUBE -->|Intención durable antes del efecto| n_STORE_BANDEJA_RECIBOS
+  n_GAS_BANDEJA_NUBE -->|Recibo técnico leído por el vigilante y mostrado en Accesos| n_SVC_HORARIOS_CLOUD
   n_GAS_BANDEJA_NUBE -->|Revalidar identidad de Dirección para aprobar y antes de enviar| n_GAS_PORTERO
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SHEET_OPERACION pendiente;
@@ -683,9 +683,9 @@ flowchart LR
 | CON-HORARIOS-ESTADO | SVC-HORARIOS-CLOUD → STORE-HORARIOS-CLOUD | integracion: Reservas durables y configuración privada cifrada. CTR-HORARIOS-NUBE | ejecucion | Prioridad1 autorizada; implementação y aceptación real por separado.; Persistencia del informe técnico cifrado/readback; no acredita efectos de negocio o reservas reales de despacho. |
 | CON-HORARIOS-ACTIONS | SVC-HORARIOS-CLOUD → EXT-ACTIONS | integracion: Observar ejecuciones y recuperar horarios omitidos con GitHub App. CTR-HORARIOS-NUBE | codigo | Prioridad1 autorizada; implementação y aceptación real por separado.; Código entregado y probado con dobles; instalación personal y recuperación real pendientes. |
 | CON-HORARIOS-ACCESOS | SVC-HORARIOS-CLOUD → SYS-CONTROL | integracion: Resultados sanitizados observados desde Accesos. CTR-HORARIOS-NUBE | codigo | Prioridad1 autorizada; implementação y aceptación real por separado.; [yod-portal/os/yod-salud.js](https://github.com/yodesarrollomx/yod-portal/blob/9b2e5f4497878223aba26531076c64894e17823e/os/yod-salud.js) — Cliente publicado y doce recorridos aislados; sesión administradora personal no operada por el agente. |
-| CON-BANDEJA-TAREAS | GAS-BANDEJA-NUBE → SHEET-OPERACION | persistencia: Leer BANDEJA y añadir resultados al mismo libro. CTR-BANDEJA-NUBE | propuesto | CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. |
-| CON-BANDEJA-GMAIL | GAS-BANDEJA-NUBE → EXT-GMAIL | api: Borradores y envíos aprobados por API. CTR-BANDEJA-NUBE | propuesto | CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. |
-| CON-BANDEJA-IA | GAS-BANDEJA-NUBE → EXT-OPENAI | api: Redactar cambios con API de pago por uso. CTR-BANDEJA-NUBE | propuesto | CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. |
-| CON-BANDEJA-RECIBOS | GAS-BANDEJA-NUBE → STORE-BANDEJA-RECIBOS | persistencia: Intención durable antes del efecto. CTR-BANDEJA-NUBE | propuesto | CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. |
-| CON-BANDEJA-SALUD | GAS-BANDEJA-NUBE → SVC-HORARIOS-CLOUD | observacion: Recibo técnico leído por el vigilante y mostrado en Accesos. CTR-BANDEJA-NUBE | propuesto | CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. |
-| CON-BANDEJA-PORTERO | GAS-BANDEJA-NUBE → GAS-PORTERO | autorizacion: Revalidar identidad de Dirección para aprobar y antes de enviar. CTR-BANDEJA-NUBE | codigo | Permiso privado ligado a sesión real, tarjeta, huella y última aprobación; veto aparte de comentarios. Regresiones sintéticas aprobadas; consentimiento y sesión real pendientes. |
+| CON-BANDEJA-TAREAS | GAS-BANDEJA-NUBE → SHEET-OPERACION | persistencia: Leer BANDEJA y añadir resultados al mismo libro. CTR-BANDEJA-NUBE | codigo | CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.; Código publicado; su compuerta o consentimiento reales todavía no se acreditan. |
+| CON-BANDEJA-GMAIL | GAS-BANDEJA-NUBE → EXT-GMAIL | api: Borradores y envíos aprobados por API. CTR-BANDEJA-NUBE | codigo | CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.; Código publicado; su compuerta o consentimiento reales todavía no se acreditan. |
+| CON-BANDEJA-IA | GAS-BANDEJA-NUBE → EXT-OPENAI | api: Redactar cambios con API de pago por uso. CTR-BANDEJA-NUBE | codigo | CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.; Código publicado; su compuerta o consentimiento reales todavía no se acreditan. |
+| CON-BANDEJA-RECIBOS | GAS-BANDEJA-NUBE → STORE-BANDEJA-RECIBOS | persistencia: Intención durable antes del efecto. CTR-BANDEJA-NUBE | codigo | CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.; Código publicado; su compuerta o consentimiento reales todavía no se acreditan. |
+| CON-BANDEJA-SALUD | GAS-BANDEJA-NUBE → SVC-HORARIOS-CLOUD | observacion: Recibo técnico leído por el vigilante y mostrado en Accesos. CTR-BANDEJA-NUBE | codigo | CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.; Render publicó seis comprobaciones de Bandeja pendientes, en el mismo servidor. Pruebas públicas de lectura y bytes separadas del consentimiento y la ejecución Google. |
+| CON-BANDEJA-PORTERO | GAS-BANDEJA-NUBE → GAS-PORTERO | autorizacion: Revalidar identidad de Dirección para aprobar y antes de enviar. CTR-BANDEJA-NUBE | codigo | Permiso privado ligado a sesión real, tarjeta, huella y última aprobación; veto aparte de comentarios. Regresiones sintéticas aprobadas; consentimiento y sesión real pendientes.; Código publicado; su compuerta o consentimiento reales todavía no se acreditan. |

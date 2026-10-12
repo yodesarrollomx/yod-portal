@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-12.hairline-atril-muelle
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-12.bandeja-publicada.2
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -288,6 +288,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [CON-MOTOR-PORTERO · Identidad, contexto, objetivos y cola autorizados · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/server.mjs · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/server.mjs)
 - [CON-BROKER-PREEVALUATION · PR12 integrado: lanzamiento de un solo uso y retorno autorizado; backend v92 publicado, flujo individual comprobado con servicios sintéticos. · Estado: codigo · yodesarrollomx/yodesarrollo-board · brokers-evaluator.js · Revisión: 19fbe950af458778607f2ae0baa70b8bc7894105](https://github.com/yodesarrollomx/yodesarrollo-board/blob/19fbe950af458778607f2ae0baa70b8bc7894105/brokers-evaluator.js)
 - CON-BANDEJA-PORTERO · Permiso privado ligado a sesión real, tarjeta, huella y última aprobación; veto aparte de comentarios. Regresiones sintéticas aprobadas; consentimiento y sesión real pendientes. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/Approval.gs · Sin revisión inmutable en esta referencia
+- CON-BANDEJA-PORTERO · Código publicado; su compuerta o consentimiento reales todavía no se acreditan. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/README.md · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
@@ -455,29 +456,36 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dirección
 
-**Estado registrado:** propuesto. Código y proyecto de nube por preparar; consentimiento Gmail, correspondencia exacta del Sheet y corte de la rutina Claude pendientes.
+**Estado registrado:** codigo. Proyecto Google creado y publicado por API; fuente/hash/versión2 cotejados sobre la misma implementación. Consentimiento Gmail, libro efectivo, timer nativo, relevo y envío pendientes.
 
 **Conexiones registradas; no habilitan operaciones:**
 
-- CON-BANDEJA-TAREAS · GAS-BANDEJA-NUBE → SHEET-OPERACION · persistencia · Leer BANDEJA y añadir resultados al mismo libro · Estado: propuesto · Ejecución no verificada en el atlas.
-- CON-BANDEJA-GMAIL · GAS-BANDEJA-NUBE → EXT-GMAIL · api · Borradores y envíos aprobados por API · Estado: propuesto · Ejecución no verificada en el atlas.
-- CON-BANDEJA-IA · GAS-BANDEJA-NUBE → EXT-OPENAI · api · Redactar cambios con API de pago por uso · Estado: propuesto · Ejecución no verificada en el atlas.
-- CON-BANDEJA-RECIBOS · GAS-BANDEJA-NUBE → STORE-BANDEJA-RECIBOS · persistencia · Intención durable antes del efecto · Estado: propuesto · Ejecución no verificada en el atlas.
-- CON-BANDEJA-SALUD · GAS-BANDEJA-NUBE → SVC-HORARIOS-CLOUD · observacion · Recibo técnico leído por el vigilante y mostrado en Accesos · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-BANDEJA-TAREAS · GAS-BANDEJA-NUBE → SHEET-OPERACION · persistencia · Leer BANDEJA y añadir resultados al mismo libro · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-BANDEJA-GMAIL · GAS-BANDEJA-NUBE → EXT-GMAIL · api · Borradores y envíos aprobados por API · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-BANDEJA-IA · GAS-BANDEJA-NUBE → EXT-OPENAI · api · Redactar cambios con API de pago por uso · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-BANDEJA-RECIBOS · GAS-BANDEJA-NUBE → STORE-BANDEJA-RECIBOS · persistencia · Intención durable antes del efecto · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-BANDEJA-SALUD · GAS-BANDEJA-NUBE → SVC-HORARIOS-CLOUD · observacion · Recibo técnico leído por el vigilante y mostrado en Accesos · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-BANDEJA-PORTERO · GAS-BANDEJA-NUBE → GAS-PORTERO · autorizacion · Revalidar identidad de Dirección para aprobar y antes de enviar · Estado: codigo · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
 - Dirección autorizó continuar la migración de automatizaciones a APIs de nube y preparar el cierre para Claude Chrome. · Estado: declarado · Sin revisión inmutable en esta referencia
+- [Instalación API38187136866 y actualización38187558929:fuente exacta y versión2 sobre proyecto dedicado original, cero escrituras de negocio; no son eventos del timer. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/Ejecutor.gs · Revisión: 4daeedbf4017576acd4ff1a903a74df538f6d317](https://github.com/alexpueblag/yod-agent-cloud/blob/4daeedbf4017576acd4ff1a903a74df538f6d317/server/bandeja/Ejecutor.gs)
 
 **Evidencia de conexiones:**
 
 - CON-BANDEJA-TAREAS · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-BANDEJA-TAREAS · Código publicado; su compuerta o consentimiento reales todavía no se acreditan. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/README.md · Sin revisión inmutable en esta referencia
 - CON-BANDEJA-GMAIL · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-BANDEJA-GMAIL · Código publicado; su compuerta o consentimiento reales todavía no se acreditan. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/README.md · Sin revisión inmutable en esta referencia
 - CON-BANDEJA-IA · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-BANDEJA-IA · Código publicado; su compuerta o consentimiento reales todavía no se acreditan. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/README.md · Sin revisión inmutable en esta referencia
 - CON-BANDEJA-RECIBOS · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-BANDEJA-RECIBOS · Código publicado; su compuerta o consentimiento reales todavía no se acreditan. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/README.md · Sin revisión inmutable en esta referencia
 - CON-BANDEJA-SALUD · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-BANDEJA-SALUD · Render publicó seis comprobaciones de Bandeja pendientes, en el mismo servidor. Pruebas públicas de lectura y bytes separadas del consentimiento y la ejecución Google. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/README.md · Sin revisión inmutable en esta referencia
 - CON-BANDEJA-PORTERO · Permiso privado ligado a sesión real, tarjeta, huella y última aprobación; veto aparte de comentarios. Regresiones sintéticas aprobadas; consentimiento y sesión real pendientes. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/Approval.gs · Sin revisión inmutable en esta referencia
+- CON-BANDEJA-PORTERO · Código publicado; su compuerta o consentimiento reales todavía no se acreditan. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/README.md · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
@@ -493,19 +501,21 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dirección
 
-**Estado registrado:** propuesto. ScriptProperties privadas del ejecutor; instalación y primera conciliación reales pendientes.
+**Estado registrado:** codigo. Reserva/permiso privados implementados y probados con dobles. ScriptProperties reales de la rutina no se acreditan hasta ejecutar instalación con el propietario.
 
 **Conexiones registradas; no habilitan operaciones:**
 
-- CON-BANDEJA-RECIBOS · GAS-BANDEJA-NUBE → STORE-BANDEJA-RECIBOS · persistencia · Intención durable antes del efecto · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-BANDEJA-RECIBOS · GAS-BANDEJA-NUBE → STORE-BANDEJA-RECIBOS · persistencia · Intención durable antes del efecto · Estado: codigo · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
 - Almacén técnico privado propuesto; no copia ni sustituye tareas, comentarios o borradores de los sistemas canónicos. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- [44 regresiones de Bandeja/vigilante: identidad real, reserva, veto privado, respuesta perdida, reinicio, conciliación, timer/observación y salud con fechas. Pruebas sintéticas. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/Approval.gs · Revisión: 4daeedbf4017576acd4ff1a903a74df538f6d317](https://github.com/alexpueblag/yod-agent-cloud/blob/4daeedbf4017576acd4ff1a903a74df538f6d317/server/bandeja/Approval.gs)
 
 **Evidencia de conexiones:**
 
 - CON-BANDEJA-RECIBOS · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-BANDEJA-RECIBOS · Código publicado; su compuerta o consentimiento reales todavía no se acreditan. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/README.md · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
@@ -963,7 +973,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - CON-061 · SYS-DESPACHO → EXT-GMAIL · accion\_humana\_y\_rutina · Aprobación de borradores por protocolo BANDEJA · Estado: declarado · Ejecución no verificada en el atlas.
 - CON-SALA-CORREO-ONLINE · GAS-SALA → EXT-GMAIL · correo · Correo diario y entrada al destinatario existente · Estado: ejecucion · Ejecución no verificada en el atlas.
-- CON-BANDEJA-GMAIL · GAS-BANDEJA-NUBE → EXT-GMAIL · api · Borradores y envíos aprobados por API · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-BANDEJA-GMAIL · GAS-BANDEJA-NUBE → EXT-GMAIL · api · Borradores y envíos aprobados por API · Estado: codigo · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -974,6 +984,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-061 · Rutina externa declarada con aprobación humana · Estado: declarado · yodesarrollomx/yod-despacho · EJECUTOR.md · Revisión: HEAD\_baseline
 - [CON-SALA-CORREO-ONLINE · Bitácora del backend registra correo diario tres días a07:13Hermosillo; solicitud de entrada38166137118 aceptada y acuse privado byte-verificado. Recepción en Gmail y fuente/inventario completo de disparadores siguen sin verificar. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/correo\_estado.py · Revisión: 4582fc3c42a2ac8459dea7d553c42f9719f07962](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/nube/correo_estado.py)
 - CON-BANDEJA-GMAIL · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-BANDEJA-GMAIL · Código publicado; su compuerta o consentimiento reales todavía no se acreditan. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/README.md · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
@@ -1652,7 +1663,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Conexiones registradas; no habilitan operaciones:**
 
 - CON-003 · GAS-OPERACION → SHEET-OPERACION · persistencia · Lee/escribe registros del dominio · Estado: codigo · Ejecución no verificada en el atlas.
-- CON-BANDEJA-TAREAS · GAS-BANDEJA-NUBE → SHEET-OPERACION · persistencia · Leer BANDEJA y añadir resultados al mismo libro · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-BANDEJA-TAREAS · GAS-BANDEJA-NUBE → SHEET-OPERACION · persistencia · Leer BANDEJA y añadir resultados al mismo libro · Estado: codigo · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -1662,6 +1673,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - CON-003 · Backend asociado al almacén de su dominio · Estado: codigo · yodesarrollomx/board-aurum · apps-script/portero-auth.gs · Revisión: HEAD\_baseline
 - CON-BANDEJA-TAREAS · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-BANDEJA-TAREAS · Código publicado; su compuerta o consentimiento reales todavía no se acreditan. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/README.md · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
@@ -2866,7 +2878,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Conexiones registradas; no habilitan operaciones:**
 
 - CON-MOTOR-OPENAI · SVC-AUTON-CLOUD → EXT-OPENAI · integracion · Voz y herramientas con claves de servidor · Estado: codigo · Ejecución no verificada en el atlas.
-- CON-BANDEJA-IA · GAS-BANDEJA-NUBE → EXT-OPENAI · api · Redactar cambios con API de pago por uso · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-BANDEJA-IA · GAS-BANDEJA-NUBE → EXT-OPENAI · api · Redactar cambios con API de pago por uso · Estado: codigo · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2876,6 +2888,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - [CON-MOTOR-OPENAI · Voz y herramientas con claves de servidor · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/voice-lane.mjs · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/voice-lane.mjs)
 - CON-BANDEJA-IA · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-BANDEJA-IA · Código publicado; su compuerta o consentimiento reales todavía no se acreditan. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/README.md · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
@@ -2927,7 +2940,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-HORARIOS-ESTADO · SVC-HORARIOS-CLOUD → STORE-HORARIOS-CLOUD · integracion · Reservas durables y configuración privada cifrada · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-HORARIOS-ACTIONS · SVC-HORARIOS-CLOUD → EXT-ACTIONS · integracion · Observar ejecuciones y recuperar horarios omitidos con GitHub App · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-HORARIOS-ACCESOS · SVC-HORARIOS-CLOUD → SYS-CONTROL · integracion · Resultados sanitizados observados desde Accesos · Estado: codigo · Ejecución no verificada en el atlas.
-- CON-BANDEJA-SALUD · GAS-BANDEJA-NUBE → SVC-HORARIOS-CLOUD · observacion · Recibo técnico leído por el vigilante y mostrado en Accesos · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-BANDEJA-SALUD · GAS-BANDEJA-NUBE → SVC-HORARIOS-CLOUD · observacion · Recibo técnico leído por el vigilante y mostrado en Accesos · Estado: codigo · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2945,6 +2958,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-HORARIOS-ACCESOS · Prioridad1 autorizada; implementação y aceptación real por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - [CON-HORARIOS-ACCESOS · Cliente publicado y doce recorridos aislados; sesión administradora personal no operada por el agente. · Estado: codigo · yodesarrollomx/yod-portal · os/yod-salud.js · Revisión: 9b2e5f4497878223aba26531076c64894e17823e](https://github.com/yodesarrollomx/yod-portal/blob/9b2e5f4497878223aba26531076c64894e17823e/os/yod-salud.js)
 - CON-BANDEJA-SALUD · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-BANDEJA-SALUD · Render publicó seis comprobaciones de Bandeja pendientes, en el mismo servidor. Pruebas públicas de lectura y bytes separadas del consentimiento y la ejecución Google. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/README.md · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
