@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-11.bandeja-nube-autorizacion",
+  "model_revision": "2026-10-12.bandeja-publicada",
   "proposal_id": "CHG-BANDEJA-NUBE-20261011",
   "components": [
     "SYS-DESPACHO",
@@ -35,9 +35,9 @@
     "SHEET-PLAN-POTENCIAL",
     "SHEET-SALA"
   ],
-  "summary": "Precisar autorización de correo con sesión real y permiso privado; publicación y consentimiento pendientes.",
+  "summary": "Registrar publicación comprobada; consentimiento, libro/timer y relevo quedan pendientes.",
   "tests": [
-    "Atlas generado coherente y regresiones de autoridad sintéticas; pruebas reales separadas."
+    "Atlas/vistas/catálogo coherentes y evidencias por alcance,44 pruebas motor y26 interfaz; comprobaciones reales de Google y publicación."
   ],
   "rollback": "Detener sólo trigger BANDEJA_tick y volver a observar. Conservar recibos inciertos, Sheet y borradores; no reactivar Claude hasta conciliar envíos."
 }

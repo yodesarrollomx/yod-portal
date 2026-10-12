@@ -13,3 +13,9 @@ Gmail, libro, redacción, programador y envío tienen pruebas separadas. La publ
 Para horarios: abrir https://yod-cloud-room.onrender.com/horarios/conectar; crear/instalar la App privada en yodesarrollomx sólo en sala-edicion y yod-portal con Actions escritura y Contents lectura. Comprobar conexión y dos vueltas en estado.json. Un204 no acredita una ejecución completada.
 
 Para Bandeja: la guía y el proyecto de instalación se guardan en el documento privado de Dirección. Las llaves se configuran en consolas privadas; nunca se pegan en chats o archivos públicos. No cancelar otras rutinas por cerrar estos pasos.
+
+## Publicación comprobada
+
+Proyecto dedicado creado y actualizado mediante la API existente de Google, seis módulos y versión2 verificados sin escrituras de negocio. El Render existente agrega seis comprobaciones a Accesos. Despacho publicó aprobación/cancelación por permiso privado de Dirección, con URL preparada y modo legacy hasta completar relevo.
+
+44 pruebas del ejecutor/vigilante y26 del Despacho aprobadas, incluidas respuestas perdidas y móvil/escritorio. Consentimiento Gmail, libro efectivo, dos timers nativos y envío real siguen pendientes. No se captan correos nuevos sin tarjeta: comprobar alcance de la rutina antigua antes de cancelarla. La guía exacta vive en el documento privado de Dirección.

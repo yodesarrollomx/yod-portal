@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-11.bandeja-nube-autorizacion · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.bandeja-publicada · 2026-10-12.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
@@ -494,7 +494,7 @@ Evidencia: [yodesarrollo-board/brokers-evaluator.js](https://github.com/yodesarr
 
 ## PROC-BANDEJA-NUBE · Bandeja del Despacho con APIs de nube
 
-Estado: propuesto.
+Estado: codigo.
 
 ```mermaid
 flowchart TD
@@ -517,6 +517,6 @@ flowchart TD
 | 4. Reservar y enviar versión aprobada | Ejecutor nube | GAS-BANDEJA-NUBE, STORE-BANDEJA-RECIBOS, EXT-GMAIL | Última aprobación vigente → Recibo o efecto incierto sin repetición | automatico |
 | 5. Conciliar y observar funcionamiento | Ejecutor nube | GAS-BANDEJA-NUBE, SVC-HORARIOS-CLOUD, SYS-CONTROL | Recibos reales y latido → Estado por alcance en Accesos | automatico |
 
-Vacíos: Consentimiento inicial de Google y confirmación del libro efectivo mediante sesión de Dirección.; Corte de la rutina Claude sólo después de dos ciclos de observación y pruebas; primer envío aprobado real se acredita por separado..
+Vacíos: Consentimiento inicial de Google y confirmación del libro efectivo mediante sesión de Dirección.; Corte de la rutina Claude sólo después de dos ciclos de observación y pruebas; primer envío aprobado real se acredita por separado.; Si la rutina original captaba correos/creaba tarjetas, portar esas reglas antes de dar por sustituido su alcance; este ejecutor sólo procesa BANDEJA y cambios/respuestas existentes..
 
-Evidencia: CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes..
+Evidencia: CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.; Proceso de nube implementado con observación, aprobación privada, reserva y conciliación; publicación comprobada, ejecución Google pendiente..
