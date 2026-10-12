@@ -3,6 +3,8 @@
   "proposal_id": "CHG-SALA-DECISIONES-PRODUCCION-20261012",
   "summary": "Rastrear decisiones guardadas fuera de la mesa visual y completar su transferencia a producción con fuente vigente, toma elegida, notas actuales y guion completo.",
   "components": [
+    "SYS-YOD-OS",
+    "SYS-CONTROL",
     "SYS-SALA",
     "GAS-SALA",
     "SHEET-SALA",
