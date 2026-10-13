@@ -46,3 +46,22 @@ Reversión: revertir PR de esta maqueta y sus pruebas; las fuentes y la operaci�
 Candidato647f465: Arquitectura38345777587yYODOS38345777862success. Navegador38345777623/job115126734239 confirma posición/altura del chat, seis detalles contenidos, transcripción única, interrupción, aislamiento y móvil del mockup. El recorrido del dummy se detuvo al buscar644en una tarjeta compactada, que sólo mostraba su encabezado. Se comprueba ahora el valor visible en el detalle y, al volver, en la tarjeta expandida; no se elimina ninguna comprobación de integridad.
 
 Capturas también detectaron menú de proyecto en tercera fila, título de detalle alineado al borde y un control global extra de escritorio. Se corrigen orden, alineación y visibilidad sin agregar controles ni capacidades.
+
+## Cierre de las tres correcciones
+
+Registro UTC **2026-10-13 04:26:53 UTC**. [PR220](https://github.com/yodesarrollomx/yod-portal/pull/220).
+Código visual probado: **d8fa33e533b546090a74ba2de6bfec5950b182e7**.
+[Recorrido Chromium](https://github.com/yodesarrollomx/yod-portal/actions/runs/38346113048/job/115127809947): **AGENT_THREAD_RESULT:PASS** a las2026-10-13T04:23:02.885Z, con26capturas de ambos prototipos.
+[Capturas originales](https://github.com/yodesarrollomx/yod-portal/actions/runs/38346113048/artifacts/11788728319).
+[Arquitectura](https://github.com/yodesarrollomx/yod-portal/actions/runs/38346113025) y [YODOS](https://github.com/yodesarrollomx/yod-portal/actions/runs/38346113249) success.
+
+- Conversación a derecha, desde el inicio del puesto hasta el compositor. Geometría de x/y/ancho/alto comprobada antes y después de las seis interacciones.
+- Un hilo y un registro por turno. La demostración parcial/final no duplica al usuario ni la respuesta; interrupción descarta finales tardíos.
+- Detalles a izquierda contenidos dentro del proyecto. Tarjetas colapsan en sus mismos encabezados y el chat queda intacto. Evidencia, interpretación y acción distinguibles.
+
+También se comprueban borrador/referencia, expediente, foco, corrección ficticia, presentación junto al chat, navegación móvil y ausencia de llamadas externas. No se asigna otra calificación numérica; la mejora de estética debe juzgarse en las capturas y la página, no deducirse de un PASS.
+
+[Dummy actualizado](https://yodesarrollomx.github.io/yod-portal/os/agent-dummy.html?v=2). [Mockup base](https://yodesarrollomx.github.io/yod-portal/os/agent-preview.html?v=right2).
+La guía de la maqueta apunta a este documento para evitar presentar el diseño y las notas anteriores como estado vigente. Integración y publicación reales se registran en PR220 tras el recibo Pages. Cambios de cierre posteriores al código revisado son documentación/atlas y esa referencia de guía; sin cambiar comportamiento del hilo.
+
+No se instaló ni reinició un servidor. Voz, normas, precios y documentos siguen siendo demostraciones; ningún recibo local significa cambio en tu libro real.

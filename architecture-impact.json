@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-13.agent-right-thread.1",
+  "model_revision": "2026-10-13.agent-right-thread.2",
   "proposal_id": "CHG-AGENT-RIGHT-THREAD",
   "summary": "Tres correcciones del prototipo: conversación derecha completa, hilo único y detalles contenidos con jerarquía útil.",
   "components": [

@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.agent-right-thread.1 · 2026-10-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.agent-right-thread.2 · 2026-10-13.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 
@@ -473,7 +473,7 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 - Beneficio esperado: Conversar continuamente mientras se interpreta una evidencia concreta a izquierda; cada interacción conserva fuente, contexto y una próxima acción sin paneles superpuestos.
 - Medición: Cumplimiento de las tres correcciones de Dirección mediante capturas reales y geometría/estado; ningún score anterior acredita esta UX.
 - Dependencias: DUMMY.
-- Esfuerzo: M. Decisión: **aprobada**.
+- Esfuerzo: M. Decisión: **implementada**.
 
 ### Requisitos previos
 
