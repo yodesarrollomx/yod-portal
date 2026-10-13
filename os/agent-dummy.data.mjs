@@ -6,7 +6,7 @@ export const SCENES=[
  {id:'norm',title:'Normativa y fuentes',guide:'Lee el pasaje resaltado. Coméntalo sin perder tu borrador ni la versión.'},
  {id:'market',title:'Mercado',guide:'Cada precio abre su registro, su unidad y el estudio que lo reúne.'},
  {id:'compare',title:'Escenarios y fórmulas',guide:'Consulta V1, V2 o V3. La viabilidad y las fórmulas siguen esa consulta; la defendida permanece V2.'},
- {id:'work',title:'Trabajo y entregables',guide:'Objetivo, siguiente acción, fuente, impedimento y criterio de cierre. Avance por resultados comprobados.'},
+ {id:'work',title:'Trabajo y entregables',guide:'Objetivo, siguiente acción, fuente, impedimento y criterio de cierre. Avance manual con recibos simulados.'},
  {id:'presentation',title:'Presentación y siguiente encargo',guide:'Dos láminas de ejemplo, conversación al lado y una decisión concreta para continuar.'}
 ];
 export const FORMULAS=[

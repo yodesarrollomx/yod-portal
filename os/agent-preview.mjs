@@ -72,7 +72,7 @@ function sourceHTML(source){
 }
 function openSource(id,trigger=null,messageId=null){
  syncDraft();if(messageId){const cited=state.messages.find(m=>m.id===messageId);if(cited&&scenarioFor(model,cited.scenario_id)){consultScenario(model,state,cited.scenario_id);paintCards();}}state.source_id=id;state.detail=null;state.message_anchor=messageId||state.messages.find(m=>m.source_id===id)?.id||null;if(trigger)lastSourceTrigger=trigger;
- const src=sourceFor(model,id);$('source-title').textContent=src?.title||'Fuente no disponible';$('viewer-kind').textContent='Fuente de ejemplo · '+(headings[src?.card]||'referencia');$('source-body').innerHTML=sourceHTML(src);$('context-viewer').hidden=false;document.querySelector('.dialogue-column').classList.add('has-source');$('comment-source').hidden=false;$('comment-source').disabled=!src;$('back-message').hidden=!state.message_anchor;
+ const src=sourceFor(model,id);$('source-title').textContent=src?.title||'Fuente no disponible';$('viewer-kind').textContent='Fuente de ejemplo · '+(headings[src?.card]||'referencia');$('source-body').innerHTML=sourceHTML(src);$('source-body').scrollTop=0;$('context-viewer').hidden=false;document.querySelector('.dialogue-column').classList.add('has-source');$('comment-source').hidden=false;$('comment-source').disabled=!src;$('back-message').hidden=!state.message_anchor;
  if(window.matchMedia('(max-width:900px)').matches){state.mobile_view='chat';paintMobile();}
  $('source-title').focus({preventScroll:true});paintDraft();
 }
@@ -93,7 +93,7 @@ function resourceHTML(key){
 function openDetail(key){
  syncDraft();state.detail=key;state.source_id=null;state.message_anchor=null;
  const resourceNames={overview:'Conjunto de la interacción',formula:'Fórmulas y supuestos',method:'Método y decisiones',connections:'Conexiones encontradas',work:'Trabajo y próximos pasos',notes:'Notas y acuerdos',history:'Historial y evidencia',presentation:'Presentación'};
- $('source-title').textContent=resourceNames[key]||headings[key]||'Detalle';$('viewer-kind').textContent='Contexto del mismo proyecto';$('source-body').innerHTML=resourceNames[key]?resourceHTML(key):detailHTML(key);$('context-viewer').hidden=false;document.querySelector('.dialogue-column').classList.add('has-source');$('comment-source').hidden=true;$('back-message').hidden=true;
+ $('source-title').textContent=resourceNames[key]||headings[key]||'Detalle';$('viewer-kind').textContent='Contexto del mismo proyecto';$('source-body').innerHTML=resourceNames[key]?resourceHTML(key):detailHTML(key);$('source-body').scrollTop=0;$('context-viewer').hidden=false;document.querySelector('.dialogue-column').classList.add('has-source');$('comment-source').hidden=true;$('back-message').hidden=true;
  if(window.matchMedia('(max-width:900px)').matches){state.mobile_view='chat';paintMobile();}$('source-title').focus({preventScroll:true});paintDraft();
 }
 function closeSource(){syncDraft();state.source_id=null;state.detail=null;$('context-viewer').hidden=true;document.querySelector('.dialogue-column').classList.remove('has-source');paintMobile();const trigger=lastSourceTrigger;lastSourceTrigger=null;if(trigger?.isConnected&&trigger.getClientRects().length&&!trigger.closest('[inert]'))trigger.focus({preventScroll:true});else $('message-input').focus({preventScroll:true});}

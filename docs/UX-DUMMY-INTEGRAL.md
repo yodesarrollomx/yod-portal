@@ -81,3 +81,15 @@ Correcciones:
 - Si un flujo terminal es cero, la TIR se declara no calculada en el helper didáctico; no se confunde con una raíz singular-100%. VPN sigue siendo el flujo inicial.
 
 Marcaciones A20-D1-01/02rojo: no borrar borrador; dato y recibo permanecen unidos al volver. A20-D1-03azul: guía de escenas, no navegación adicional. A20-D1-04/05verde: preparación no aplica; fórmulas con versión/periodo/unidad. Marcaciones A40-D1: petición negativa/condicional nunca confirma; presentación conserva bases; avance es sólo simulado.
+
+## Segunda revisión del dummy · candidato c21b05dd
+
+Los dos rechazos de continuidad D1 se corrigieron; aún no se libera la entrega. UX mantiene rechazo, flujo puntúa8.7provisional. Run38341331234/job115112753834 falla en highlight móvil; nueve capturas muestran que el visor hereda desplazamiento, ocultando el inicio de normativa, fórmulas y lámina. La compresión anterior no era la causa completa: ahora se corrige la apertura del contexto.
+
+- openSource/openDetail llevan el visor al comienzo al abrir; refresh del mismo contenido conserva lectura.
+- Controles de avanzar trabajo y cambiar lámina pasan al inicio, evitando que el foco desplace la síntesis fuera de vista.
+- Siguiente deriva del entregable local pendiente y pasa a revisar presentación después de4/4, sin cambiar reglas del negocio real.
+- La guía de Recorrido se oculta fuera del puesto; logo→Inicio y retorno al Despacho se comprueban.
+- Los ensayos miden intersección visible del pasaje, contexto de fórmula y título de lámina, no sólo presencia en DOM.
+
+Rayones A20-D2-01/40-18rojo: abrir desde inicio. A20-D2-02azul: guía contextual. A20-D2-03verde: siguiente según resultado. 40-19azul: control y síntesis juntos.
