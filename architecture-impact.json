@@ -1,12 +1,14 @@
 {
-  "model_revision": "2026-10-13.ppp-dummy-integral.2",
-  "proposal_id": "CHG-PPP-DUMMY-INTEGRAL",
+  "model_revision": "2026-10-13.investor-monoline-story.1",
+  "proposal_id": "CHG-INVESTOR-MONOLINE-STORY",
+  "summary": "Registrar dirección4r4: siete escenas/21 momentos en un path monoline acumulativo y detalle completo, mismas fuentes públicas y URL; sin cambio a backend/ACL.",
   "components": [
+    "SYS-INVERSION",
+    "GAS-PLAN-POTENCIAL",
+    "SHEET-PLAN-POTENCIAL",
     "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "SYS-POTENCIALES"
+    "SYS-CONTROL"
   ],
-  "summary": "Dummy integral local que reúne UX auditada, PPP, conversación, fuentes, corrección, fórmulas, trabajo y presentación sin alterar operaciones.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -14,7 +16,7 @@
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "Chromium exacto aislado y regresión del mockup V3"
+    "Pruebas de frontend/móvil/publicación se ejecutan en el PR consumidor; esta propuesta no acredita implementación."
   ],
-  "rollback": "Revertir PR del dummy y adaptador de ejemplos; ninguna modificación de datos, credenciales, APIs, permisos o tareas reales."
+  "rollback": "Revertir PR frontend conservando mono_*, inv1–inv7, hunt, láminas previas, Material, permisos y expedientes; ningún cambio del runtime privado."
 }

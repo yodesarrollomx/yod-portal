@@ -60,3 +60,5 @@ Este repositorio es público. El modelo no almacena clientes, correos, importes 
 La auditoría no se considera completa mientras existan componentes críticos o despliegues sin comprobar; consultar siempre el alcance vigente en `modelo.json` y `verificacion.md`.
 
 - [Sala172 · Administración de accesos por sesión vigente](sala-accesos172.md): propuesta, invariantes, regresiones y comprobación real pendiente.
+
+- [Presentación monoline4r4](investor-monoline-story.md): cobertura de fuente, orden comercial/legal, path acumulativo, pruebas y reversión; registro previo a implementación.

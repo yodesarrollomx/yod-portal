@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.ppp-dummy-integral.2 · 2026-10-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.investor-monoline-story.1 · 2026-10-13.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -97,7 +97,7 @@ Espacio de trabajo del Masterbroker: oferta comercial, oportunidades propias, so
 - Fuente de verdad: SHEET-CRM y cartera canónica; SHEET-INVERSION conserva presentación comercial.
 - Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L23) — Sistema presente en el catálogo canónico.
 - Conexiones: CON-040 (SYS-YOD-OS → SYS-INVERSION); CON-069 (SYS-INVERSION → GAS-INVERSION); CON-071 (SYS-INVERSION → GAS-PORTERO); CON-075 (SYS-INVERSION → SYS-PLAN-POTENCIAL); CON-BROKER-PREEVALUATION (SYS-INVERSION → GAS-PORTERO); CON-INVESTOR-STORY-TEXTS (SYS-INVERSION → GAS-PLAN-POTENCIAL).
-- Mejoras: C · Cotización, plan y siguiente paso comercial; INV · Presentación animada para inversionistas desde Masterbrokers.
+- Mejoras: C · Cotización, plan y siguiente paso comercial; INV · Presentación pública para inversionistas desde Masterbrokers.
 
 ## SYS-MARKETING · Embudo comercial
 
@@ -443,7 +443,7 @@ Servir el contrato de Captación de Plan Potencial
 - Fuente de verdad: Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos..
 - Evidencia: [plan-potencial/CLAUDE.md](https://github.com/yodesarrollomx/plan-potencial/blob/78e616f858ad593f16891d2f5158cd46d5617bc2/CLAUDE.md#L95) — Tipo de fuente disponible: ausente; Registro backends-verificados.json: Fuente de versión activa 16 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente..
 - Conexiones: CON-006 (GAS-PLAN-POTENCIAL → SHEET-PLAN-POTENCIAL); CON-022 (SYS-MARKETING → GAS-PLAN-POTENCIAL); CON-023 (SYS-PLAN-POTENCIAL → GAS-PLAN-POTENCIAL); CON-052 (GAS-PLAN-POTENCIAL → SYS-YOD-OS); CON-059 (GAS-PLAN-POTENCIAL → EXT-CALENDAR); CON-076 (GAS-PLAN-POTENCIAL → SYS-MARKETING); CON-INVESTOR-STORY-TEXTS (SYS-INVERSION → GAS-PLAN-POTENCIAL).
-- Mejoras: INV · Presentación animada para inversionistas desde Masterbrokers.
+- Mejoras: INV · Presentación pública para inversionistas desde Masterbrokers.
 - Pendientes: Permisos por operación y recorridos por rol pendientes de prueba.
 
 ## SHEET-PLAN-POTENCIAL · Datos de Captación de Plan Potencial
@@ -456,7 +456,7 @@ Almacenar registros del dominio ventas
 - Fuente de verdad: Hoja canónica contrastada mediante metadatos, encabezados y valores acotados; identidad técnica sólo en configuración privada..
 - Evidencia: Integración pendiente de verificar; Metadatos y encabezados de LEADS - POTENCIAL contrastados con documentación y lecturas autorizadas acotadas el11-oct-2026. Datos y ID físico omitidos del atlas; autoridad del runtime de servicio pendiente.; [sala-edicion/nube/plan_agregados.py](https://github.com/yodesarrollomx/sala-edicion/blob/a3b6c7053b3cd26333dd06878e74bb666288ce51/nube/plan_agregados.py) — PR266/267/268 integrados. Run 38156397507 success: cuenta de servicio existente con permiso lector, consulta autenticada GViz sólo cuando Sheets API está deshabilitada, columnas permitidas, exclusión de prueba y publicación verificada. Fuente no modificada..
 - Conexiones: CON-006 (GAS-PLAN-POTENCIAL → SHEET-PLAN-POTENCIAL); CON-PLAN-SHEETS-ONLINE (SHEET-PLAN-POTENCIAL → SYS-SALA).
-- Mejoras: INV · Presentación animada para inversionistas desde Masterbrokers.
+- Mejoras: INV · Presentación pública para inversionistas desde Masterbrokers.
 - Pendientes: Verificación limitada a columnas contractuales; no acredita calidad de campos privados no leídos ni confirmación independiente de Calendar..
 
 ## GAS-CROKISS · Guardado de planos

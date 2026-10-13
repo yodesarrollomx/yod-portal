@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.ppp-dummy-integral.2 · 2026-10-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.investor-monoline-story.1 · 2026-10-13.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 
@@ -336,12 +336,12 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 - No mostrar datos locales como sincronizados ni confirmar una escritura fallida
 - Cada versión conserva identidad, fuente e historial; datos faltantes permanecen pendientes
 
-## INV · Presentación animada para inversionistas desde Masterbrokers
+## INV · Presentación pública para inversionistas desde Masterbrokers
 
 - Tableros: SYS-INVERSION, GAS-PLAN-POTENCIAL, SHEET-PLAN-POTENCIAL.
-- Problema: La propuesta comercial requiere una primera escena legible en celular y continuidad visual entre capítulos, sin duplicar contenido en Git.
-- Beneficio esperado: Presentar la oportunidad y compartirla desde Material del Masterbroker con una narrativa orientada al capital.
-- Medición: Primera escena reproducible, lectura móvil, pausa, repetición, transición y enlace copiable; resultados comerciales por medir.
+- Problema: La propuesta comercial requiere relato concreto y completo, lectura móvil y continuidad visual, sin duplicar datos editoriales en Git ni presentar un esquema como caso aprobado.
+- Beneficio esperado: Explicar qué hace YoDesarrollo, cómo decide y cómo se participa, conservando toda la fuente original y compartiendo la misma URL desde Material del Masterbroker.
+- Medición: Cobertura de ocho familias originales, 21 momentos en siete escenas, un path continuo, lectura y navegación móvil comprobadas; respuesta comercial real por medir.
 - Dependencias: Sin dependencias previas.
 - Esfuerzo: M. Decisión: **aprobada**.
 
@@ -356,6 +356,9 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 2. Publicar gráfico vectorial responsive y animación ligada al scroll con controles.
 3. Añadir acceso y copia del enlace en Material, sin modificar autorización ni registros CRM.
 4. Verificar móvil, escritorio, movimiento reducido y publicación de texto en línea.
+5. Implementar 4r4 con un único path maestro, un solo inicio, puentes exteriores y retrazados exactos; no sustituir avenidas por edificios ni codificar cifras financieras como longitudes.
+6. Guardar mono_version y mono_config editorial en TEXTOS POTENCIAL; reutilizar GET recurso=textos sin nuevo backend.
+7. Preservar la apertura y los siete capítulos anteriores bajo Versión anterior en la misma página; no crear otro deck ni ampliar acceso a expedientes.
 
 ### Criterios de aceptación
 
@@ -363,6 +366,9 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 - Los textos y duración se cambian desde Sheets; Git contiene lógica y esquema conceptual sintético.
 - Los controles funcionan y el inmueble de la escena se conserva en el puente a la evaluación.
 - Un perfil sin identidad vinculada no se activa ni se suplanta para comprobar la integración.
+- Nueva versión: ocho familias preservadas, mercado antes de producto, revisión y acuerdos antes de formalizar adquisición/aportación, proyecto/permisos antes de obra y cobros antes de recuperación efectiva.
+- Nueva versión: un path SVG acumulativo con una sola orden M, A posible compra/B posible aportación persistentes, scroll reversible y mismo dibujo estático en movimiento reducido.
+- Detalle, fórmulas y condiciones permanecen visibles mediante scroll normal; CTA conversación sin compromiso de inversión, alcance/entregables/costos por acordar.
 
 ## NAV · Navegación constante y mesa compartida del autón
 
