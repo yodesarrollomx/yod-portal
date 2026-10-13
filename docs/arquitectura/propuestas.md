@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.ppp-mini-dashboard-ux.2 · 2026-10-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.ppp-mini-dashboard-ux.3 · 2026-10-13.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 
@@ -402,7 +402,7 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 - Beneficio esperado: Revisar el PPP al hablar con el autón, abrir mapa y fuentes, cotejar pasajes y escenarios sin perder conversación ni contexto; conservar una única navegación global.
 - Medición: Dos auditorías internas separadas con rúbricas publicadas, mínimo 9/10 de diseño sin gates críticos abiertos; recorridos y responsive comprobados en Chromium con ejemplos, sin aceptación operativa de voz o negocio.
 - Dependencias: NAV.
-- Esfuerzo: M. Decisión: **aprobada**.
+- Esfuerzo: M. Decisión: **implementada**.
 
 ### Requisitos previos
 

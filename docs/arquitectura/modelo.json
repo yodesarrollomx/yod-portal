@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-13.ppp-mini-dashboard-ux.2",
+  "revision": "2026-10-13.ppp-mini-dashboard-ux.3",
   "checked_at": "2026-10-13",
   "priorities": [
     "vender_mas",
@@ -8300,7 +8300,7 @@
         "NAV"
       ],
       "effort": "M",
-      "decision": "aprobada",
+      "decision": "implementada",
       "approval": {
         "fecha": "2026-10-12",
         "rol": "Dirección",
@@ -11882,15 +11882,15 @@
         "SYS-DESPACHO",
         "SYS-POTENCIALES"
       ],
-      "status": "propuesto",
+      "status": "verificado",
       "proposal": "Rehacer exclusivamente la propuesta navegable del puesto: PPP permanente a derecha con evidencia, conversación/contexto al centro y barra global única. Mini mapa ilustrativo, fuentes ficticias rotuladas, mercado trazable, escenarios de un periodo normalizado y viabilidad enlazada. Auditar por separado UX y flujo; registrar investigación de conectores de lectura existentes sin alterar permisos, credenciales ni registros.",
       "tests": [
-        "Verificadores del portal y generadores canónicos.",
-        "Contratos puros de maquetas, trazabilidad y escenarios consultado/defendido.",
-        "Chromium aislado 1440×900, 1366×768 y 390×844: fuentes, borrador, selección, agentes, móvil, foco, una barra y overflow.",
-        "Auditorías internas en dos rondas con commit exacto, capturas y puntajes por eje."
+        "Chromium aislado con checkout exacto f4e18a658b35b700486bccd4a9b68867619dd81c: run38337301756/job115100176865 PASS y seis capturas.",
+        "Recorrido y geometría del highlight móvil ≥50% antes/después de referencia, compositor, estado, foco y barra única.",
+        "YOD OS run38337302131 y Arquitectura run38337301769 success.",
+        "Cuatro rondas internas documentadas: diseño UX9.1 y flujo9.2, con rúbricas y límites; no aceptación operativa."
       ],
-      "deployment": "Propuesta registrada antes de implementar. Mockup y pruebas pendientes; fuentes privadas, investigación operativa y voz real no se acreditan con ejemplos.",
+      "deployment": "Mockup V3 verificado en PR216, documentación docs/UX-MINI-DASHBOARDS.md. Integración/Pages se confirma con recibo en PR216. Datos/voz/APIs reales y autonomía no acreditados; ningún cambio del runtime privado ni automatizaciones canceladas.",
       "rollback": "Revertir PR de mockup y QA, sin alterar contratos, modelo privado, datos, sesiones, permisos, runtime o tareas canceladas."
     }
   ],
