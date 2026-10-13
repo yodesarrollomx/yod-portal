@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.ppp-mini-dashboard-ux.3 · 2026-10-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.ppp-dummy-integral.1 · 2026-10-13.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 
@@ -428,3 +428,34 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 - Fuente faltante o desactualizada muestra causa y acción; lectura de hojas exige valores canónicos vigentes.
 - Abrir una evidencia y alternar PPP/conversación en móvil conserva el estado del mismo proyecto.
 - Auditorías tienen evidencia, puntajes por criterio y límites; ninguna puntuación del mockup acredita producción.
+
+## DUMMY · Dummy integral de interacción del autón y PPP
+
+- Tableros: SYS-YOD-OS, SYS-DESPACHO, SYS-POTENCIALES.
+- Problema: Las pantallas del mockup muestran estructura, pero no reúnen una conversación completa desde un dato hasta su entrega y siguiente decisión.
+- Beneficio esperado: Recorrer y corregir un flujo concreto sin salir del PPP, comprobar fuentes y fórmulas, ver pendientes y presentación con la misma lógica para los tres personajes.
+- Medición: Un único dummy navegable con escenas necesarias, evidencia inspectable y continuidad del mismo expediente. Pruebas con fixtures, sin aceptación operativa.
+- Dependencias: MINI.
+- Esfuerzo: M. Decisión: **aprobada**.
+
+### Requisitos previos
+
+- Reusar la navegación existente y el PPP persistente, sin duplicar motores de negocio.
+- Datos y respuestas locales ficticios; fórmulas de ejemplo separadas de Sheets canónico.
+- No crear tareas autónomas ni conexiones reales.
+
+### Tareas
+
+1. Construir recorrido completo con estados aislados por personaje.
+2. Mostrar antes/después de un dato y su fuente, sin simular una escritura real.
+3. Añadir fórmulas con tipo, periodo, unidad y límites, vinculadas a escenarios.
+4. Unificar trabajo/entregables y presentación de dos láminas con conversación.
+5. Probar desktop/móvil y consolidar hallazgos y decisiones en documento.
+
+### Criterios de aceptación
+
+- Una navegación global y mismo PPP en todas las escenas.
+- Corrección ficticia únicamente tras petición explícita, repetición local sin nuevo efecto.
+- Escenarios consultado/defendido separados y datos ausentes no convertidos en cero.
+- Trabajo simulado rotulado y resultados no presentados como ejecución en servidor.
+- Fuentes, borrador y presentación comparten proyecto e hilo.

@@ -1,12 +1,12 @@
 {
-  "model_revision": "2026-10-13.ppp-mini-dashboard-ux.3",
-  "proposal_id": "CHG-PPP-MINI-DASHBOARD-UX",
-  "summary": "Mockup PPP persistente con mini dashboards, fuentes y escenarios coherentes; conversación única y dos revisiones independientes de diseño.",
+  "model_revision": "2026-10-13.ppp-dummy-integral.1",
+  "proposal_id": "CHG-PPP-DUMMY-INTEGRAL",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "SYS-POTENCIALES"
   ],
+  "summary": "Dummy integral local que reúne UX auditada, PPP, conversación, fuentes, corrección, fórmulas, trabajo y presentación sin alterar operaciones.",
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
@@ -14,7 +14,7 @@
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "node scripts/probar-ux-mockup.cjs (Chromium aislado)"
+    "Chromium exacto aislado y regresión del mockup V3"
   ],
-  "rollback": "Revertir PR; conserva navegación compartida anterior, permisos, datos, runtime y tareas canceladas."
+  "rollback": "Revertir PR del dummy y adaptador de ejemplos; ninguna modificación de datos, credenciales, APIs, permisos o tareas reales."
 }

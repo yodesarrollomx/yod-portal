@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-13.ppp-mini-dashboard-ux.3",
+  "revision": "2026-10-13.ppp-dummy-integral.1",
   "checked_at": "2026-10-13",
   "priorities": [
     "vender_mas",
@@ -8328,6 +8328,42 @@
         "Abrir una evidencia y alternar PPP/conversación en móvil conserva el estado del mismo proyecto.",
         "Auditorías tienen evidencia, puntajes por criterio y límites; ninguna puntuación del mockup acredita producción."
       ]
+    },
+    {
+      "id": "DUMMY",
+      "titulo": "Dummy integral de interacción del autón y PPP",
+      "boards": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ],
+      "problem": "Las pantallas del mockup muestran estructura, pero no reúnen una conversación completa desde un dato hasta su entrega y siguiente decisión.",
+      "benefit": "Recorrer y corregir un flujo concreto sin salir del PPP, comprobar fuentes y fórmulas, ver pendientes y presentación con la misma lógica para los tres personajes.",
+      "metric": "Un único dummy navegable con escenas necesarias, evidencia inspectable y continuidad del mismo expediente. Pruebas con fixtures, sin aceptación operativa.",
+      "dependencies": [
+        "MINI"
+      ],
+      "effort": "M",
+      "decision": "aprobada",
+      "prerequisites": [
+        "Reusar la navegación existente y el PPP persistente, sin duplicar motores de negocio.",
+        "Datos y respuestas locales ficticios; fórmulas de ejemplo separadas de Sheets canónico.",
+        "No crear tareas autónomas ni conexiones reales."
+      ],
+      "tasks": [
+        "Construir recorrido completo con estados aislados por personaje.",
+        "Mostrar antes/después de un dato y su fuente, sin simular una escritura real.",
+        "Añadir fórmulas con tipo, periodo, unidad y límites, vinculadas a escenarios.",
+        "Unificar trabajo/entregables y presentación de dos láminas con conversación.",
+        "Probar desktop/móvil y consolidar hallazgos y decisiones en documento."
+      ],
+      "acceptance": [
+        "Una navegación global y mismo PPP en todas las escenas.",
+        "Corrección ficticia únicamente tras petición explícita, repetición local sin nuevo efecto.",
+        "Escenarios consultado/defendido separados y datos ausentes no convertidos en cero.",
+        "Trabajo simulado rotulado y resultados no presentados como ejecución en servidor.",
+        "Fuentes, borrador y presentación comparten proyecto e hilo."
+      ]
     }
   ],
   "changes": [
@@ -11892,6 +11928,27 @@
       ],
       "deployment": "Mockup V3 verificado en PR216, documentación docs/UX-MINI-DASHBOARDS.md. Integración/Pages se confirma con recibo en PR216. Datos/voz/APIs reales y autonomía no acreditados; ningún cambio del runtime privado ni automatizaciones canceladas.",
       "rollback": "Revertir PR de mockup y QA, sin alterar contratos, modelo privado, datos, sesiones, permisos, runtime o tareas canceladas."
+    },
+    {
+      "id": "CHG-PPP-DUMMY-INTEGRAL",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ],
+      "status": "propuesto",
+      "proposal": "Conglomerar hallazgos V3 en un dummy interactivo local, con recorrido de conversación, corrección trazable de dato ficticio, evidencia normativa/mercado, versiones/fórmulas, trabajo/entrega y presentación. Reusar navegación y PPP persistentes, conversación única y capacidades visuales iguales por personaje. Sin conexiones, datos, permisos o ejecución de negocio.",
+      "approval": {
+        "date": "2026-10-13",
+        "scope": "Dirección solicita dummy de interacción y pantallas necesarias, con todos los hallazgos, mejoras y fórmulas en una sola propuesta."
+      },
+      "tests": [
+        "Verificadores canónicos del portal y atlas.",
+        "Contratos de fórmula sintética, aislamiento de expedientes, corrección explícita e idempotencia local.",
+        "Recorrido Chromium exacto: pantallas, fuentes, corrección, versiones, tareas, presentación, responsive y regresión V3."
+      ],
+      "deployment": "Propuesta registrada antes de programar. No activa producción privada ni automatizaciones canceladas.",
+      "rollback": "Revertir PR de dummy; conservar maqueta V3, originales, contratos, datos reales y sesiones."
     }
   ],
   "data_contracts": [
@@ -15070,6 +15127,60 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": ".github/workflows/ux-mockup.yml",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/agent-dummy.html",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/agent-dummy.css",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/agent-dummy.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/agent-dummy.data.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/agent-dummy.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/probar-dummy-browser.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",
