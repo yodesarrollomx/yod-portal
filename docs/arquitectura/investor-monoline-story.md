@@ -55,3 +55,7 @@ Apertura y siete capítulos anteriores siguen dentro de Versión anterior de la 
 Atlas: generador/check, tests y verificadores canónicos. Consumidor: fixtures y pruebas de contratos; una orden M, retrazados, puentes, A/B, 21 momentos/siete escenas. Chromium320/390/1440 comprueba scroll nativo, reversa, umbrales, replay/pausa/nav, punta, lectura/overflow y CTA. Movimiento reducido conserva mismo dibujo y detalle. Producción se verifica tras integración con código servido exacto y copy vivo, sólo lecturas públicas. Una auditoría del guion no sustituye esos recibos.
 
 Revertir PR frontend por PR conserva textos y anteriores; no restaurar negocio. Versiones editoriales permanecen en Sheets. El atlas registra autorización separada de integración y publicación.
+
+## Relevo a borrador beta
+
+Dirección solicita reconstruir una nueva versión principal desde su boceto de nueve cuadros. Este registro4r4 conserva su contenido y significado histórico; la nueva propuesta `CHG-INVESTOR-PRINCIPAL-STORY` se describe en [investor-principal-story.md](investor-principal-story.md). A/B en4r4 son modalidades ilustrativas; A/B/C en la principal son zonas y se distinguen expresamente. La beta permanece dentro de la misma URL; esta anotación no declara publicada la nueva principal.
