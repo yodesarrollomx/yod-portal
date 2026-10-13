@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.ppp-mini-dashboard-ux.3 · 2026-10-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.investor-monoline-story.1 · 2026-10-13.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -716,8 +716,8 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 - Componentes: SYS-INVERSION, GAS-PLAN-POTENCIAL, SHEET-PLAN-POTENCIAL.
 - Evidencia: Código público del formulario Plan de Potencial: GET recurso=textos; nuevas claves comerciales autorizadas por Dirección y escritas mediante conector de Sheets..
-- Entrada/campos: `Respuesta textos o diccionario directo.`, `Claves inv1_* a inv7_* para contenido comercial, marca, capítulos, grupos de detalles, duración y cierre. Compatibilidad con las versiones de uno y tres capítulos.`, `Cliente anónimo; no recibe ni transmite credenciales del Masterbroker.`, `hunt_*: apertura por zoom, geometría pública trazada, ocho momentos de búsqueda, dos casos y unidades abstractas de valor; datos y configuración en la misma hoja editorial.`.
-- Salida: Narrativa comercial para inversionista; animación conceptual por scroll., Tarjeta Material con apertura pública y copia de enlace., Error recuperable si falta contenido; ninguna cifra o aprobación inventada..
+- Entrada/campos: `Respuesta textos o diccionario directo.`, `Claves inv1_* a inv7_* para contenido comercial, marca, capítulos, grupos de detalles, duración y cierre. Compatibilidad con las versiones de uno y tres capítulos.`, `Cliente anónimo; no recibe ni transmite credenciales del Masterbroker.`, `hunt_*: apertura por zoom, geometría pública trazada, ocho momentos de búsqueda, dos casos y unidades abstractas de valor; datos y configuración en la misma hoja editorial.`, `mono_version y mono_config: JSON de contenido público, jerarquía, siete escenas/21 momentos, etiquetas, fuentes/atribución, estilo y controles. Validación estricta del cliente; compatibilidad con inv1_*–inv7_* y hunt_* conservados como versión anterior.`, `Cartografía pública existente de TEXTOS POTENCIAL; distinguir territorio verificable de croquis local ilustrativo. Geometría conceptual sintética y controller en presentacion/monoline-core.js y monoline.js.`.
+- Salida: Narrativa comercial para inversionista; animación conceptual por scroll., Tarjeta Material con apertura pública y copia de enlace., Error recuperable si falta contenido; ninguna cifra o aprobación inventada., Nueva presentación monoline 4r4: Qué hacemos (escenas 1–2), Cómo decidimos (3), Cómo participas (4–7); detalles en flujo normal, vínculos ancla y conversación copiable..
 
 - Sólo GET al contrato de textos; ninguna escritura o prueba de negocio desde la presentación.
 - Sin nombres, ID de broker, correo, cartera o estado de cuenta en el enlace compartido.
@@ -728,6 +728,13 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - El cierre genera un resumen copiable para conversar con quien compartió el enlace; no manda mensajes, no guarda datos privados y no constituye una suscripción ni un compromiso financiero.
 - Las vialidades llevan atribución a su fuente pública; naranja indica búsqueda ilustrativa, no zonificación municipal acreditada. Las dos cuadras y predios son esquemas, sin direcciones o propietarios reales.
 - Viviendas y unidades de valor son magnitudes distintas; resultado = venta − valor del inmueble − ejecución. La aportación conserva el valor del inmueble en el costo y el resultado del proyecto no acredita un reparto al inversionista.
+- En mono_* un único SVG/path maestro acumulativo con una sola orden M y sin subpaths, morph global, borrado ni imágenes independientes; retornos exactos por segmentos existentes y puentes exteriores entre anclajes.
+- En mono_* A=Posible compra y B=Posible aportación conservan identidad, rótulo y geometría; las avenidas no se transforman en edificios. No fijar unidades, precios o resultados sin datos.
+- Mercado antes de definir producto; revisar documentos/uso/factibilidad y acordar participación antes de formalizar adquisición/aportación; proyecto, permisos y servicios preceden al inicio de obra.
+- Inversión económica incluye valor acordado del inmueble aportado una sola vez. Intereses/comisiones son costos; principal y devolución de aportaciones son flujos. Venta prevista no equivale a cobro ni utilidad del proyecto a reparto del inversionista.
+- CTA prepara conversación con quien compartió el enlace, sin envío automático, depósito, aceptación, estudio técnico gratuito ni prelación inventada; alcance, costos y condiciones se acuerdan.
+- Misma URL pública y acceso Material; apertura y siete capítulos previos accesibles dentro de Versión anterior. Ningún cambio de sesión/Portero/CRM, permisos, backend o expedientes.
+- Scroll, navegación y reproducción comparten progreso determinista y reversible; movimiento reducido conserva el mismo SVG completo estático y todos los detalles en flujo normal.
 
 ## CTR-SALA-IMAGEN-OPENAI-NUBE
 

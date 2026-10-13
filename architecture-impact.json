@@ -1,11 +1,11 @@
 {
-  "model_revision": "2026-10-13.ppp-mini-dashboard-ux.3",
-  "proposal_id": "CHG-PPP-MINI-DASHBOARD-UX",
-  "summary": "Mockup PPP persistente con mini dashboards, fuentes y escenarios coherentes; conversación única y dos revisiones independientes de diseño.",
+  "model_revision": "2026-10-13.investor-monoline-story.1",
+  "proposal_id": "CHG-INVESTOR-MONOLINE-STORY",
+  "summary": "Registrar dirección4r4: siete escenas/21 momentos en un path monoline acumulativo y detalle completo, mismas fuentes públicas y URL; sin cambio a backend/ACL.",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "SYS-POTENCIALES"
+    "SYS-INVERSION",
+    "GAS-PLAN-POTENCIAL",
+    "SHEET-PLAN-POTENCIAL"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -14,7 +14,7 @@
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "node scripts/probar-ux-mockup.cjs (Chromium aislado)"
+    "Pruebas de frontend/móvil/publicación se ejecutan en el PR consumidor; esta propuesta no acredita implementación."
   ],
-  "rollback": "Revertir PR; conserva navegación compartida anterior, permisos, datos, runtime y tareas canceladas."
+  "rollback": "Revertir PR frontend conservando mono_*, inv1–inv7, hunt, láminas previas, Material, permisos y expedientes; ningún cambio del runtime privado."
 }
