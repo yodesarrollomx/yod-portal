@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.sala-tablero-hidream.1 · 2026-10-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.agent-right-thread.2 · 2026-10-13.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 
@@ -465,3 +465,34 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 - Escenarios consultado/defendido separados y datos ausentes no convertidos en cero.
 - Trabajo simulado rotulado y resultados no presentados como ejecución en servidor.
 - Fuentes, borrador y presentación comparten proyecto e hilo.
+
+## HILO · Conversación fija y detalle útil por interacción
+
+- Tableros: SYS-YOD-OS, SYS-DESPACHO, SYS-POTENCIALES.
+- Problema: El chat se comparte con un visor que corta su altura, la transcripción no tiene un turno único explícito y el detalle de tarjetas funciona como texto expuesto sin jerarquía de tarea.
+- Beneficio esperado: Conversar continuamente mientras se interpreta una evidencia concreta a izquierda; cada interacción conserva fuente, contexto y una próxima acción sin paneles superpuestos.
+- Medición: Cumplimiento de las tres correcciones de Dirección mediante capturas reales y geometría/estado; ningún score anterior acredita esta UX.
+- Dependencias: DUMMY.
+- Esfuerzo: M. Decisión: **implementada**.
+
+### Requisitos previos
+
+- Cambiar sólo dummy/mockup, sin runtime, datos, permisos o fórmulas nuevos.
+- Navegación global a izquierda conserva control y orden existentes.
+- Transcripción y texto se dibujan como mensajes del mismo hilo.
+
+### Tareas
+
+1. Reposicionar chat a derecha con altura completa y lectura/contexto a izquierda.
+2. Unificar actualizaciones parciales/finales de voz en el mismo mensaje sin borrar texto escrito.
+3. Dar a cada detalle estructura específica de dato/evidencia/interpretación/acción.
+4. Mejorar lectura compacta de mini tarjetas con estado y referencia útiles.
+5. Verificar todos los estados y publicar evidencia con límites.
+
+### Criterios de aceptación
+
+- En escritorio abrir detalle no cambia posición, altura o cantidad de paneles de conversación.
+- Un mismo turno actualiza una sola burbuja y el final no duplica transcripción.
+- Fuentes y detalles se contienen dentro del área izquierda, sin tapar chat ni abrir otra superficie.
+- Cerrar detalle restaura tarjetas y foco, preservando borrador/referencia/caso.
+- Móvil mantiene un único hilo y lectura navegable, sin forzar columnas ilegibles.

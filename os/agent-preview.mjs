@@ -1,4 +1,5 @@
 import {CASES,createDemoCase,sourceFor,scenarioFor,irrLabel,viabilityFor,createProjectState,consultScenario,citeSource,CONNECTION_INVENTORY} from './agent-preview.data.mjs?v=3';
+import {updateTurn} from './agent-preview.conversation.mjs?v=1';
 const $=id=>document.getElementById(id),escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const previewExtensions={};
 const shell=document.querySelector('.app-shell'),projects=new Map();
@@ -30,18 +31,19 @@ function cardBody(key){
  const custom=previewExtensions.card?.(key,{model,state});if(typeof custom==='string')return custom;
  const s=k=>model.id+':'+k,selected=scenarioFor(model,state.scenario_id),v=viabilityFor(model,state.scenario_id);
  if(key==='terreno')return '<button type="button" class="map-button" data-source="'+s('plot')+'" aria-label="Abrir mapa y ficha de Terreno">'+mapSVG()+'</button><p class="card-meta">Ficha + ubicación · <strong>ilustrativa</strong></p>';
- if(key==='documentos')return sourceLink(s('deed'),'Ficha del terreno','p. 2')+sourceLink(s('norm'),'Reglas del proyecto','art. 4')+sourceLink(s('model'),'Modelo · Escenarios','B3:F5');
- if(key==='normativa')return '<p class="norm-mini">Por comprobar: <mark>altura, uso y ocupación</mark>.</p>'+sourceLink(s('norm'),'Reglas · art. 4','p. 2')+sourceLink(s('norm-list'),'Colección y fuentes','3 temas');
+ if(key==='documentos')return '<p class="card-meta">3 referencias del expediente</p>'+sourceLink(s('deed'),'Documento del terreno','p. 2')+sourceLink(s('norm'),'Reglas del proyecto','art. 4')+sourceLink(s('model'),'Modelo de escenarios','B3:F5');
+ if(key==='normativa')return '<p class="norm-mini"><mark>Altura, uso y ocupación</mark> pendientes de comprobación.</p>'+sourceLink(s('norm'),'Abrir artículo resaltado','art. 4')+sourceLink(s('norm-list'),'Revisar colección','3 materias');
  if(key==='mercado')return model.market.map(r=>'<button type="button" class="source-link market-link" data-source="'+escape(r.source_id)+'"><span>'+escape(r.label)+'</span><strong class="market-value">'+escape(r.display)+'</strong></button>').join('')+'<p class="card-meta">MXN ficticios · 12 oct · '+sourceLink(s('market-study'),'Ver estudio y referencias','↗')+'</p>';
  if(key==='escenarios')return model.scenarios.map(sc=>'<button type="button" class="scenario-row" data-scenario="'+sc.id+'" aria-pressed="'+(sc.id===state.scenario_id)+'" aria-label="Consultar '+sc.label+' '+sc.name+'"><b>'+sc.label+'</b><span>'+sc.name+'<small>'+((sc.id===model.defended_scenario_id)?'Defendida en ejemplo':'Consulta de versión')+'</small></span><strong>'+((irrLabel(model,sc)==='TIR no calculada')?'—':sc.irr_percent+'%')+'</strong></button>').join('')+'<p class="card-meta">TIR anual del proyecto · mismo periodo · '+model.revision+'</p>';
  if(key==='viabilidad')return '<div class="viability-title"><span class="viability-version">'+v.version+'</span><span class="viability-status'+(selected?.id==='v3'?' warning-state':'')+'">'+escape(v.status)+'</span></div><p><strong>'+escape(v.summary)+'</strong></p><p>'+escape(v.constraint)+'</p>'+sourceLink(v.source_id||s('model'),'Modelo, flujo y supuestos','↗');
  return'';
 }
 function paintCards(){
- $('mini-dashboards').innerHTML=Object.keys(headings).map(key=>'<article class="mini-card '+(key==='viabilidad'?'viability-card':'')+'" data-card="'+key+'"><header class="mini-card-header"><h2><span class="card-symbol" aria-hidden="true">'+symbols[key]+'</span>'+headings[key]+'</h2><button class="card-detail" type="button" data-detail="'+key+'" aria-label="Abrir detalle de '+headings[key]+'">↗</button></header>'+cardBody(key)+'</article>').join('');
+ const active=state.detail||sourceFor(model,state.source_id)?.card;
+ $('mini-dashboards').innerHTML=Object.keys(headings).map(key=>'<article class="mini-card '+(key==='viabilidad'?'viability-card':'')+'" data-card="'+key+'" data-active="'+(active===key)+'"><header class="mini-card-header"><h2 class="card-title"><button class="card-heading" type="button" data-detail="'+key+'" aria-expanded="'+(active===key)+'" aria-controls="context-viewer"><span class="card-symbol" aria-hidden="true">'+symbols[key]+'</span><span class="card-label">'+headings[key]+'</span></button></h2></header><div class="card-body">'+cardBody(key)+'</div></article>').join('');
  const selected=scenarioFor(model,state.scenario_id),defended=scenarioFor(model,model.defended_scenario_id);
  $('consulting-version').textContent=selected?.label||'—';$('defended-version').textContent=defended?.label||'—';$('different-version').hidden=state.scenario_id===model.defended_scenario_id;
- $('board-status').textContent='Sólo consulta de '+(selected?.label||'versión')+'. No modifica la defendida ni el libro.';
+ $('board-status').textContent='Consulta '+(selected?.label||'versión')+' · libro sin modificar.';
 }
 function syncDraft(){state.draft=$('message-input').value;}
 function paintDraft(){
@@ -50,30 +52,37 @@ function paintDraft(){
  if(ref){const s=sourceFor(model,ref.source_id),sc=scenarioFor(model,ref.scenario_id);$('draft-reference').innerHTML='<div class="reference-copy"><strong>'+escape(headings[s?.card]||'Fuente')+'</strong> · '+escape(sc?.label||'versión')+' · '+escape(s?.location||'fuente no disponible')+(ref.scenario_id!==state.scenario_id?'<br><strong>Tu comentario sigue referido a '+escape(sc?.label||'la versión original')+'.</strong>':'')+'</div><button type="button" id="remove-reference" aria-label="Quitar referencia del borrador">×</button>';}
 }
 function paintMessages(){
- const stream=$('chat-stream');stream.replaceChildren();
- for(const m of state.messages){const entry=document.createElement('div');entry.className='message'+(m.who==='user'?' message-user':'');entry.id=m.id;entry.dataset.caseId=model.id;const label=document.createElement('small');label.textContent=m.who==='user'?'Tú · mensaje local':'Autón · ejemplo';const p=document.createElement('p');p.textContent=m.text;entry.append(label,p);
-  if(m.source_id){const source=sourceFor(model,m.source_id),b=document.createElement('button');b.type='button';b.className='message-cite';b.textContent=(source?.title||'Fuente faltante')+' · '+(scenarioFor(model,m.scenario_id)?.label||'versión');b.dataset.source=m.source_id;b.dataset.message=m.id;entry.appendChild(b);}
-  stream.appendChild(entry);
+ const stream=$('chat-stream'),stick=stream.scrollHeight-stream.clientHeight-stream.scrollTop<40,saved=stream.scrollTop,valid=new Set(state.messages.map(m=>m.id));
+ for(const node of Array.from(stream.children))if(!valid.has(node.id))node.remove();
+ for(const m of state.messages){
+  let entry=document.getElementById(m.id);
+  if(!entry||entry.parentElement!==stream){entry=document.createElement('div');entry.id=m.id;entry.append(document.createElement('small'),document.createElement('p'));stream.appendChild(entry);}
+  entry.className='message '+(m.who==='user'?'message-user':'message-agent');entry.dataset.caseId=model.id;entry.dataset.phase=m.phase||'final';entry.dataset.inputKind=m.input_kind||'text';
+  entry.children[0].textContent=m.who==='user'?'Tú':model.name;entry.children[1].textContent=m.text;
+  let phase=entry.querySelector('.message-phase');if(m.phase==='partial'){if(!phase){phase=document.createElement('div');phase.className='message-phase';entry.appendChild(phase);}phase.textContent=m.input_kind==='voice'?'Transcribiendo…':'Escribiendo…';}else phase?.remove();if(m.phase==='cancelled'){const note=document.createElement('div');note.className='message-phase';note.textContent='Interrumpido';entry.appendChild(note);}
+  let cite=entry.querySelector('.message-cite');if(m.source_id){const source=sourceFor(model,m.source_id);if(!cite){cite=document.createElement('button');cite.type='button';cite.className='message-cite';entry.appendChild(cite);}cite.textContent=(source?.title||'Fuente faltante')+' · '+(scenarioFor(model,m.scenario_id)?.label||'versión');cite.dataset.source=m.source_id;cite.dataset.message=m.id;}else cite?.remove();
  }
+ stream.scrollTop=stick?stream.scrollHeight:saved;
 }
 function highlight(original,term){if(!term||!original.includes(term))return escape(original);return original.split(term).map(escape).join('<mark>'+escape(term)+'</mark>');}
 function sourceHTML(source){
  const custom=previewExtensions.source?.(source,{model,state});if(typeof custom==='string')return custom;
- if(!source)return '<div class="source-warning" role="alert">Fuente no disponible para este proyecto.</div><p>La referencia no está registrada o pertenece a otro expediente. Falta un documento autorizado y verificable.</p><button type="button" class="quiet" data-prepare-missing>Preparar búsqueda de fuente</button><p>Prepara una petición en el borrador; no inicia una búsqueda ni amplía el acceso.</p>';
- const metadata='<dl class="source-meta"><dt>Tipo</dt><dd>Supuesto / fuente de ejemplo</dd><dt>Fecha</dt><dd>'+escape(source.date)+'</dd><dt>Revisión</dt><dd>'+escape(source.revision)+'</dd><dt>Ubicación</dt><dd>'+escape(source.location)+'</dd><dt>Proyecto</dt><dd>'+escape(model.name)+' · ejemplo separado</dd><dt>Consultada</dt><dd>'+escape(scenarioFor(model,state.scenario_id)?.label||'—')+'</dd><dt>Defendida</dt><dd>'+escape(scenarioFor(model,model.defended_scenario_id)?.label||'—')+'</dd>'+(source.issuer?'<dt>Emisor</dt><dd>'+escape(source.issuer)+'</dd><dt>Vigencia</dt><dd>'+escape(source.validity)+'</dd>':'')+'</dl>';
- let text='<div class="source-warning">Fuente ficticia · sin validez normativa ni financiera.</div><p class="source-quick-meta"><span>'+escape(source.location)+' · '+escape(source.date)+'</span><span class="source-version">Consultando '+escape(scenarioFor(model,state.scenario_id)?.label||'—')+' · Defendida '+escape(scenarioFor(model,model.defended_scenario_id)?.label||'—')+'</span></p>';
+ if(!source)return '<div class="source-warning" role="alert">Esta fuente no está disponible en el expediente actual.</div><section class="detail-block"><h3>Qué falta</h3><p>Un documento registrado y verificable para este dato. No se muestra contenido de otro proyecto.</p></section><button type="button" class="primary" data-prepare-missing>Preparar búsqueda de fuente</button>';
+ const summary={terreno:'Ubicación y dato del terreno',documentos:'Identificación y respaldo',normativa:'Restricción que hay que comprobar',mercado:'Referencia de precio y alcance',escenarios:'Flujos y supuestos de la versión'}[source.card]||'Evidencia del proyecto';
+ let text='<div class="source-warning">Fuente de ejemplo · sin validez normativa ni financiera.</div><div class="detail-hero"><span class="eyebrow">'+summary+'</span><strong>'+escape(source.location)+'</strong><p>'+escape(source.date)+' · '+escape(source.revision)+' · '+escape(model.name)+'</p></div>';
  if(source.card==='terreno')text+=mapSVG(true);
- text+='<h3>Pasaje de la fuente · texto original de ejemplo</h3><blockquote class="source-passage">'+highlight(source.original,source.highlight)+'</blockquote><h3>Lectura del autón · interpretación separada</h3><p class="source-interpretation">'+escape(source.analysis)+'</p>';
- text+='<details class="source-provenance"><summary>Ficha de fuente, emisor, vigencia y revisión</summary>'+metadata+'</details>';
- if(source.table)text+='<div class="source-table-wrap" tabindex="0" aria-label="Tabla de fuente, desliza si hace falta"><table class="source-table"><thead><tr>'+source.table.headers.map(x=>'<th scope="col">'+escape(x)+'</th>').join('')+'</tr></thead><tbody>'+source.table.rows.map(row=>'<tr>'+row.map(x=>'<td>'+escape(x)+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
- if(source.parent_id)text+=sourceLink(source.parent_id,'Ver estudio de mercado y su hoja','↗');
- for(const id of source.related||[])text+=sourceLink(id,sourceFor(model,id)?.title||'Fuente faltante','↗');
+ text+='<section class="detail-block"><h3>Lo que dice la fuente</h3><blockquote class="source-passage">'+highlight(source.original,source.highlight)+'</blockquote></section><section class="detail-block"><h3>Qué significa para el proyecto</h3><p class="source-interpretation">'+escape(source.analysis)+'</p></section>';
+ if(source.table)text+='<section class="detail-block"><h3>Datos del registro</h3><div class="source-table-wrap" tabindex="0" aria-label="Tabla de fuente"><table class="source-table"><thead><tr>'+source.table.headers.map(x=>'<th scope="col">'+escape(x)+'</th>').join('')+'</tr></thead><tbody>'+source.table.rows.map(row=>'<tr>'+row.map(x=>'<td>'+escape(x)+'</td>').join('')+'</tr>').join('')+'</tbody></table></div></section>';
+ if(source.parent_id)text+=sourceLink(source.parent_id,'Abrir estudio que reúne esta referencia','↗');
+ if(source.related?.length)text+='<section class="detail-block"><h3>Fuentes relacionadas</h3>'+source.related.map(id=>sourceLink(id,sourceFor(model,id)?.title||'Fuente faltante',sourceFor(model,id)?.location||'↗')).join('')+'</section>';
+ text+='<details class="source-provenance"><summary>Ver procedencia y vigencia</summary><dl class="source-meta"><dt>Expediente</dt><dd>'+escape(model.name)+'</dd><dt>Revisión</dt><dd>'+escape(source.revision)+'</dd><dt>Emisor</dt><dd>'+escape(source.issuer||'Fuente de ejemplo')+'</dd><dt>Vigencia</dt><dd>'+escape(source.validity||'Por comprobar en el documento real')+'</dd><dt>Consultada</dt><dd>'+escape(scenarioFor(model,state.scenario_id)?.label)+'</dd><dt>Defendida</dt><dd>'+escape(scenarioFor(model,model.defended_scenario_id)?.label)+'</dd></dl></details>';
  return text;
 }
 function activateViewer(){
- $('context-viewer').hidden=false;document.querySelector('.dialogue-column').classList.add('has-source');
- if(mobileQuery.matches)state.mobile_view='chat';
- paintMobile();paintDraft();$('source-title').focus({preventScroll:true});
+ $('work-popover').hidden=true;$('work-menu').setAttribute('aria-expanded','false');
+ $('context-viewer').hidden=false;document.querySelector('.project-column').classList.add('has-detail');
+ if(mobileQuery.matches)state.mobile_view='ppp';
+ paintCards();paintMobile();paintDraft();$('source-title').focus({preventScroll:true});
  const body=$('source-body');void body.clientHeight;body.scrollTop=0;
 }
 function openSource(id,trigger=null,messageId=null){
@@ -84,8 +93,13 @@ function openSource(id,trigger=null,messageId=null){
 }
 function detailHTML(key){
  const selected=scenarioFor(model,state.scenario_id),v=viabilityFor(model,state.scenario_id);
- if(key==='escenarios'||key==='viabilidad')return '<div class="source-warning">Consulta de ejemplo: no cambia la versión defendida ni guarda datos.</div><dl class="source-meta"><dt>Consultada</dt><dd>'+escape(selected?.label)+'</dd><dt>Defendida</dt><dd>'+escape(scenarioFor(model,model.defended_scenario_id)?.label)+'</dd><dt>TIR</dt><dd>'+escape(irrLabel(model,selected))+'</dd><dt>Horizonte</dt><dd>1 año · flujo normalizado</dd><dt>Revisión</dt><dd>'+escape(selected?.revision)+'</dd></dl><h3>Viabilidad de '+escape(v.version)+'</h3><p>'+escape(v.summary)+'</p><p>'+escape(v.constraint)+'</p><p>'+escape(v.risk)+'</p>'+sourceLink(selected?.source_id,'Ver flujo y supuestos de la versión','↗');
- return cardBody(key);
+ if(key==='terreno')return '<div class="detail-hero"><span class="eyebrow">Terreno</span><strong>Dato y ubicación, antes de calcular</strong><p>La superficie debe coincidir con el documento del expediente.</p></div>'+mapSVG(true)+'<section class="detail-block"><h3>Qué revisar</h3><p>Superficie, identificación y colindancias. El mapa es ilustrativo; no acredita un predio real.</p>'+sourceLink(model.id+':deed','Contrastar el dato con su documento','p. 2')+sourceLink(model.id+':plot','Abrir ficha y ubicación','↗')+'</section>';
+ if(key==='documentos')return '<div class="detail-hero"><span class="eyebrow">Documentos del expediente</span><strong>'+model.documents.length+' referencias</strong><p>Cada documento abre su contenido y ubicación, conservando la conversación.</p></div><section class="detail-block"><h3>Documentos usados en el PPP</h3>'+model.documents.map(id=>sourceLink(id,sourceFor(model,id)?.title||'Fuente faltante',sourceFor(model,id)?.location)).join('')+'</section>';
+ if(key==='normativa')return '<div class="detail-hero"><span class="eyebrow">Normativa</span><strong>Restricciones por comprobar</strong><p>Organizar una colección no significa que el proyecto cumpla la regulación.</p></div><section class="detail-block"><h3>Uso, altura y seguridad</h3>'+sourceLink(model.id+':norm-urban','Uso y ocupación','art. 2')+sourceLink(model.id+':norm','Altura y construcción','art. 4')+sourceLink(model.id+':norm-civil','Seguridad y evacuación','art. 6')+'</section><div class="detail-next"><strong>Siguiente con esta evidencia</strong><p>Abrir el artículo, verificar su vigencia y marcar qué restricción condiciona cada escenario.</p></div>';
+ if(key==='mercado')return '<div class="detail-hero"><span class="eyebrow">Mercado de ejemplo</span><strong>Precio, unidad y alcance</strong><p>Un anuncio aislado no confirma el precio de cierre.</p></div><section class="detail-block"><h3>Registros de comparación</h3>'+model.market.map(r=>sourceLink(r.source_id,r.label,r.display)).join('')+'</section>'+sourceLink(model.id+':market-study','Abrir estudio y referencias','3 registros');
+ if(key==='escenarios')return '<div class="source-warning">Comparación de ejemplo · TIR anual del proyecto · mismo horizonte.</div><div class="comparison-grid">'+model.scenarios.map(sc=>'<section class="comparison-option" data-selected="'+(sc.id===state.scenario_id)+'"><span class="eyebrow">'+escape(sc.label)+' · '+(sc.id===model.defended_scenario_id?'defendida':'consulta')+'</span><h3>'+escape(sc.name)+'</h3><strong>'+escape(irrLabel(model,sc))+'</strong><p>'+escape(sc.viability.constraint)+'</p><button class="quiet" type="button" data-scenario="'+sc.id+'">Consultar '+sc.label+'</button></section>').join('')+'</div>'+sourceLink(selected.source_id,'Abrir flujo y supuestos de '+selected.label,'↗');
+ if(key==='viabilidad')return '<div class="detail-hero"><span class="eyebrow">'+escape(v.version)+' · viabilidad</span><strong>'+escape(v.status)+'</strong><p>'+escape(irrLabel(model,selected))+' · revisión '+escape(selected.revision)+'</p></div><section class="detail-block"><h3>Por qué</h3><p>'+escape(v.summary)+'</p></section><div class="detail-split"><section class="detail-block"><h3>Qué condiciona la decisión</h3><p>'+escape(v.constraint)+'</p></section><section class="detail-block"><h3>Riesgo que conservar</h3><p>'+escape(v.risk)+'</p></section></div><div class="detail-next"><strong>Siguiente antes de defender</strong><p>Resolver la restricción con fuente y contrastarla con el flujo de la misma versión.</p>'+sourceLink(v.source_id,'Abrir evidencia y supuestos','↗')+'</div>';
+ return '';
 }
 function resourceHTML(key){
  const custom=previewExtensions.resource?.(key,{model,state});if(typeof custom==='string')return custom;
@@ -96,48 +110,69 @@ function resourceHTML(key){
  if(key==='presentation')return '<h3>1 · Resultado y evidencia</h3><p>Una lámina con versión, fuentes y restricciones.</p><h3>2 · Decisión que sigue</h3><p>Otra lámina con incertidumbre y acción necesaria. La conversación sigue disponible durante la revisión.</p>';
  return'';
 }
-function openDetail(key){
- syncDraft();state.detail=key;state.source_id=null;state.message_anchor=null;
+function openDetail(key,trigger=null){
+ syncDraft();if(trigger)lastSourceTrigger=trigger;state.detail=key;state.source_id=null;state.message_anchor=null;
  const resourceNames={overview:'Conjunto de la interacción',formula:'Fórmulas y supuestos',method:'Método y decisiones',connections:'Conexiones encontradas',work:'Trabajo y próximos pasos',notes:'Notas y acuerdos',history:'Historial y evidencia',presentation:'Presentación'};
  $('source-title').textContent=resourceNames[key]||headings[key]||'Detalle';$('viewer-kind').textContent='Contexto del mismo proyecto';$('source-body').innerHTML=resourceNames[key]?resourceHTML(key):detailHTML(key);$('comment-source').hidden=true;$('back-message').hidden=true;
  activateViewer();
 }
-function closeSource(){syncDraft();state.source_id=null;state.detail=null;$('context-viewer').hidden=true;document.querySelector('.dialogue-column').classList.remove('has-source');paintMobile();const trigger=lastSourceTrigger;lastSourceTrigger=null;if(trigger?.isConnected&&trigger.getClientRects().length&&!trigger.closest('[inert]'))trigger.focus({preventScroll:true});else $('message-input').focus({preventScroll:true});}
+function closeSource(){
+ syncDraft();const key=state.detail||sourceFor(model,state.source_id)?.card||'documentos',trigger=lastSourceTrigger;state.source_id=null;state.detail=null;
+ $('context-viewer').hidden=true;document.querySelector('.project-column').classList.remove('has-detail');paintCards();paintMobile();lastSourceTrigger=null;
+ if(trigger?.isConnected&&!trigger.closest('[inert]'))trigger.focus({preventScroll:true});else{const target=document.querySelector('[data-detail="'+key+'"]')||$('work-menu');target?.focus({preventScroll:true});}
+}
 function paintMobile(){
- const view=state.mobile_view||'ppp';document.querySelector('.workspace-grid').dataset.mobileView=view;$('mobile-ppp').setAttribute('aria-pressed',String(view==='ppp'));$('mobile-chat').setAttribute('aria-pressed',String(view==='chat'));
- $('mobile-context-summary').hidden=false;$('mobile-context-summary').dataset.sourceId=state.source_id||'';main.classList.toggle('source-reading',view==='chat'&&Boolean(state.source_id||state.detail));
- const consulted=scenarioFor(model,state.scenario_id)?.label||'—',defended=scenarioFor(model,model.defended_scenario_id)?.label||'—';
- $('mobile-context-summary').textContent='PPP · Consultando '+consulted+' · Defendida '+defended;
+ const view=state.mobile_view||'ppp',grid=$('workspace-grid')||document.querySelector('.workspace-grid'),project=document.querySelector('.project-column'),chat=document.querySelector('.dialogue-column');
+ grid.dataset.mobileView=view;$('mobile-ppp').setAttribute('aria-pressed',String(view==='ppp'));$('mobile-chat').setAttribute('aria-pressed',String(view==='chat'));
+ $('mobile-context-summary').hidden=!mobileQuery.matches;$('mobile-context-summary').textContent='Consultando '+(scenarioFor(model,state.scenario_id)?.label||'—')+' · Defendida '+(scenarioFor(model,model.defended_scenario_id)?.label||'—');
+ if(mobileQuery.matches){project.inert=view==='chat';chat.inert=view!=='chat';grid.scrollLeft=view==='chat'?grid.clientWidth:0;}else{project.inert=false;chat.inert=false;grid.scrollLeft=0;}
 }
 function chooseScenario(id){
  syncDraft();consultScenario(model,state,id);paintCards();const focused=document.querySelector('[data-scenario="'+id+'"]');if(focused)focused.focus({preventScroll:true});if(state.source_id)$('source-body').innerHTML=sourceHTML(sourceFor(model,state.source_id));if(['escenarios','viabilidad'].includes(state.detail))$('source-body').innerHTML=detailHTML(state.detail);paintDraft();paintMobile();document.dispatchEvent(new CustomEvent('preview:scenario'));
 }
 function renderProject(){
- $('case-select').value=model.id;$('agent-badge').textContent=model.name.slice(0,1);$('case-kind').textContent='Plan de potencial · '+model.kind.toLowerCase();$('project-goal').textContent=model.goal;$('project-goal').title=model.goal;$('project-next').textContent='Siguiente: '+model.next;$('project-next').title='Siguiente: '+model.next;paintCards();paintMessages();paintDraft();$('context-viewer').hidden=true;document.querySelector('.dialogue-column').classList.remove('has-source');
+ $('case-select').value=model.id;$('conversation-name').textContent=model.name;$('chat-avatar').textContent=model.name.slice(0,1);$('agent-badge').textContent=model.name.slice(0,1);$('case-kind').textContent='Plan de potencial · '+model.kind.toLowerCase();$('project-goal').textContent=model.goal;$('project-goal').title=model.goal;$('project-next').textContent='Siguiente: '+model.next;$('project-next').title='Siguiente: '+model.next;paintCards();paintMessages();paintDraft();$('context-viewer').hidden=true;document.querySelector('.project-column').classList.remove('has-detail');
  if(state.source_id)openSource(state.source_id);else if(state.detail)openDetail(state.detail);paintMobile();document.dispatchEvent(new CustomEvent('preview:project'));
 }
-$('case-select').onchange=e=>{syncDraft();model=createDemoCase(e.target.value);state=projects.get(model.id)||createProjectState(model);projects.set(model.id,state);lastSourceTrigger=null;$('context-viewer').hidden=true;renderProject();$('voice-status').textContent='Voz de ejemplo · proyecto '+model.name+'. Micrófono sin activar.';};
+$('case-select').onchange=e=>{stopDemoVoice();syncDraft();model=createDemoCase(e.target.value);state=projects.get(model.id)||createProjectState(model);projects.set(model.id,state);lastSourceTrigger=null;$('context-viewer').hidden=true;renderProject();$('voice-status').textContent='Voz de ejemplo · proyecto '+model.name+'. Micrófono sin activar.';};
 $('message-input').oninput=()=>syncDraft();
 document.addEventListener('click',e=>{
  const source=e.target.closest('[data-source]');if(source){openSource(source.dataset.source,source,source.dataset.message);return;}
  const scenario=e.target.closest('[data-scenario]');if(scenario){chooseScenario(scenario.dataset.scenario);return;}
- const detail=e.target.closest('[data-detail]');if(detail){openDetail(detail.dataset.detail);return;}
- const resource=e.target.closest('[data-resource]');if(resource){$('work-popover').hidden=true;$('work-menu').setAttribute('aria-expanded','false');openDetail(resource.dataset.resource);return;}
+ const detail=e.target.closest('[data-detail]');if(detail){openDetail(detail.dataset.detail,detail);return;}
+ const resource=e.target.closest('[data-resource]');if(resource){$('work-popover').hidden=true;$('work-menu').setAttribute('aria-expanded','false');openDetail(resource.dataset.resource,$('work-menu'));return;}
  if(e.target.closest('[data-prepare-missing]')){syncDraft();state.draft+=(state.draft?'\n':'')+'Quiero localizar y comprobar la fuente de este dato en el expediente actual.';paintDraft();$('message-input').focus({preventScroll:true});return;}
  if(e.target.closest('#remove-reference')){state.draft_ref=null;paintDraft();return;}
 });
 $('close-source').onclick=closeSource;
-$('comment-source').onclick=()=>{syncDraft();if(!sourceFor(model,state.source_id))return;citeSource(model,state,state.source_id);paintDraft();$('message-input').focus({preventScroll:true});};
-$('back-message').onclick=()=>{const anchor=state.message_anchor;closeSource();const message=anchor?document.getElementById(anchor):null;if(message){message.setAttribute('tabindex','-1');message.scrollIntoView({block:'nearest'});message.focus({preventScroll:true});}};
+$('comment-source').onclick=()=>{syncDraft();if(!sourceFor(model,state.source_id))return;citeSource(model,state,state.source_id);paintDraft();state.mobile_view='chat';paintMobile();$('message-input').focus({preventScroll:true});};
+$('back-message').onclick=()=>{const anchor=state.message_anchor;state.mobile_view='chat';paintMobile();const message=anchor?document.getElementById(anchor):null;if(message){message.setAttribute('tabindex','-1');const stream=$('chat-stream');stream.scrollTop+=message.getBoundingClientRect().top-stream.getBoundingClientRect().top;message.focus({preventScroll:true});}};
 $('work-menu').onclick=()=>{const open=$('work-popover').hidden;$('work-popover').hidden=!open;$('work-menu').setAttribute('aria-expanded',String(open));};
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){menu(false);const open=!$('work-popover').hidden;$('work-popover').hidden=true;$('work-menu').setAttribute('aria-expanded','false');if(open)$('work-menu').focus({preventScroll:true});}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const hadMenu=shell.classList.contains('nav-open')||!$('work-popover').hidden;menu(false);if(!hadMenu&&!$('context-viewer').hidden&&e.target!==$('message-input'))closeSource();const open=!$('work-popover').hidden;$('work-popover').hidden=true;$('work-menu').setAttribute('aria-expanded','false');if(open)$('work-menu').focus({preventScroll:true});}});
 $('mobile-ppp').onclick=()=>{syncDraft();state.mobile_view='ppp';paintMobile();};$('mobile-chat').onclick=()=>{syncDraft();state.mobile_view='chat';paintMobile();};
-$('mic-button').onclick=()=>{$('voice-status').textContent='Demostración de escucha; no hay audio conectado. El mismo hilo conserva voz y texto.';};
-$('stop-button').onclick=()=>{$('voice-status').textContent='Demostración interrumpida. Borrador y proyecto conservados; no hay una sesión real de audio.';};
+let voiceGeneration=0,voiceActive=false;
+function stopDemoVoice(){
+ voiceGeneration++;voiceActive=false;$('stop-button').hidden=true;$('channel-state').textContent='Demo';$('voice-status').textContent='Demostración detenida. El hilo y borrador permanecen.';
+ const pending=state.messages.filter(m=>m.phase==='partial'&&m.input_kind==='voice');for(const m of pending)updateTurn(state,{...m,case_id:model.id,seq:(m.seq||0)+1,phase:'cancelled'});paintMessages();
+}
+function playDemoVoice(){
+ if(voiceActive){stopDemoVoice();return;}
+ const token=++voiceGeneration,caseId=model.id,turnId=caseId+':speech-'+Date.now();voiceActive=true;$('stop-button').hidden=false;$('channel-state').textContent='Transcribiendo';$('voice-status').textContent='Voz de ejemplo · sin micrófono ni audio conectado.';
+ const emit=(id,who,seq,phase,text)=>{if(token!==voiceGeneration||caseId!==model.id)return false;const result=updateTurn(state,{id,case_id:caseId,who,seq,phase,text,input_kind:'voice',scenario_id:state.scenario_id});if(result)paintMessages();return result;};
+ emit(turnId,'user',1,'partial','Comparemos V2');
+ setTimeout(()=>emit(turnId,'user',2,'partial','Comparemos V2 y V3 con sus'),230);
+ setTimeout(()=>{if(!emit(turnId,'user',3,'final','Comparemos V2 y V3 con sus restricciones.'))return;
+  const prior=new Set(state.messages.map(m=>m.id));previewExtensions.reply?.('Comparemos V2 y V3 con sus restricciones.',null,{model,state});
+  let response=state.messages.find(m=>!prior.has(m.id)&&m.who==='agent');if(!response){response={id:caseId+':speech-answer-'+Date.now(),who:'agent',text:'V3 tiene mayor TIR de ejemplo, pero mantiene una restricción normativa. La consulta no cambia la defendida V2.',scenario_id:state.scenario_id};state.messages.push(response);}
+  const full=response.text;emit(response.id,'agent',1,'partial',full.slice(0,Math.max(12,Math.floor(full.length*.45))));$('channel-state').textContent='Respondiendo';
+  setTimeout(()=>{if(emit(response.id,'agent',2,'final',full)){voiceActive=false;$('stop-button').hidden=true;$('channel-state').textContent='Demo';$('voice-status').textContent='Un turno, un mensaje · ejemplo local.';}},320);
+ },550);
+}
+$('mic-button').onclick=playDemoVoice;$('stop-button').onclick=stopDemoVoice;$('stop-button').hidden=true;
 $('message-form').onsubmit=e=>{
- e.preventDefault();syncDraft();const value=state.draft.trim();if(!value)return;
+ e.preventDefault();if(voiceActive)stopDemoVoice();syncDraft();const value=state.draft.trim();if(!value)return;
  const ref=state.draft_ref;
- state.messages.push({id:model.id+':message-'+state.messages.length,who:'user',text:value,...(ref?{source_id:ref.source_id,scenario_id:ref.scenario_id}:{scenario_id:state.scenario_id})});
+ updateTurn(state,{id:model.id+':message-'+state.messages.length,case_id:model.id,who:'user',seq:0,phase:'final',input_kind:'text',text:value,scenario_id:ref?.scenario_id||state.scenario_id,...(ref?{source_id:ref.source_id}:{})});
  previewExtensions.reply?.(value,ref,{model,state});
  state.draft='';state.draft_ref=null;paintCards();paintMessages();paintDraft();$('chat-stream').scrollTop=$('chat-stream').scrollHeight;$('voice-status').textContent='Mensaje local en la maqueta. No enviado a un agente ni a Sheets.';
 };
@@ -152,5 +187,7 @@ export const demoWorkspace={
  setExtensions(extensions){Object.assign(previewExtensions,extensions);},
  refresh({cards=true,messages=true}={}){if(cards)paintCards();if(messages)paintMessages();paintDraft();if(state.source_id)$('source-body').innerHTML=sourceHTML(sourceFor(model,state.source_id));else if(state.detail)$('source-body').innerHTML=resourceHTML(state.detail)||detailHTML(state.detail);paintMobile();},
  openSource,openDetail,closeSource,chooseScenario,mapSVG,sourceLink,escape,
- showConversation(){closeSource();state.mobile_view='chat';paintMobile();}
+ showConversation(){state.mobile_view='chat';paintMobile();$('message-input').focus({preventScroll:true});}
 };
+
+const paneGrid=$('workspace-grid');paneGrid.addEventListener('scroll',()=>{if(!mobileQuery.matches||!paneGrid.clientWidth)return;const view=paneGrid.scrollLeft>paneGrid.clientWidth*.5?'chat':'ppp';if(view!==state.mobile_view){state.mobile_view=view;paintMobile();}},{passive:true});

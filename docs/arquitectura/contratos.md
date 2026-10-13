@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.sala-tablero-hidream.1 · 2026-10-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.agent-right-thread.2 · 2026-10-13.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -747,15 +747,3 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - No repetir una generación confirmada o incierta; identidad ligada a receta.
 - No cambiar votos, permisos, planes, servicios, metas archivadas ni expedientes.
 - Activación sólo tras imagen comprobada; generación no equivale a aceptación editorial.
-
-## CTR-SALA-HIDREAM
-
-- Componentes: SYS-SALA, SVC-SALA-PRODUCTOR, EXT-MOTORES-MEDIA.
-- Evidencia: Propuesta autorizada; lote real38342683066 comprobó imagen/recibo, disponibilidad permanente no garantizada..
-- Entrada/campos: `descripción visual sin caption`, `request_id`, `semilla0..999999`, `ratio3:4`.
-- Salida: PNG verificado, modelo fijo, SHA256 receta/foto, recibo y causa de indisponibilidad.
-
-- No texto en fotografía; compositor añade caption vigente por separado.
-- No decide por el editor ni activa modelos vetados.
-- Si no hay servicio/cupo, queda pendiente; no respaldo de pago implícito.
-- Cache sólo con modelo/receta/foto verificados.
