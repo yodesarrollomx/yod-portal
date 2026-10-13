@@ -1,5 +1,4 @@
 {
-  "schema_version": 1,
   "model_revision": "2026-10-13.os-navigation-consistent.1",
   "proposal_id": "CHG-OS-NAVIGATION-CONSISTENT",
   "summary": "Orden global constante y deduplicado, reutilización de la barra compacta y logo como Inicio; mockup del puesto compartido con datos de ejemplo.",
@@ -12,8 +11,6 @@
     "SYS-CONTROL",
     "SYS-OBRA-CLIENTE"
   ],
-  "connections": [],
-  "contracts": [],
   "tests": [
     "node scripts/catalogo.cjs --check",
     "node scripts/arquitectura.cjs --check",

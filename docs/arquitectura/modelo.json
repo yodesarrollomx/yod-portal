@@ -11798,7 +11798,7 @@
         "SYS-CONTROL",
         "SYS-OBRA-CLIENTE"
       ],
-      "status": "propuesto",
+      "status": "implementado_local",
       "approval": "12-oct-2026, Dirección autoriza mockup completo y aplicar el control común de barra compacta, orden estable y logo como Inicio.",
       "proposal": "Unificar presentación del menú desde el catálogo técnico, sin cambiar destinos ni permisos. Retirar entradas de Inicio repetidas. Reutilizar la compactación existente. Añadir un mockup navegable de la mesa compartida; el rediseño del puesto privado sigue siendo propuesta visual.",
       "tests": [
@@ -11807,7 +11807,7 @@
         "Diagnóstico del orden y deduplicación con datos sintéticos; no aceptación operativa del despacho.",
         "Vista propuesta con funciones locales, sin endpoints de negocio."
       ],
-      "deployment": "Propuesta registrada antes de implementación. Navegación y mockup por comprobar en CI y publicar; ninguna capacidad de voz/PPP/autonomía se acredita con el mockup.",
+      "deployment": "Código preparado en rama aislada y mockup navegable con datos de ejemplo. Verificación de GitHub Actions, integración y publicación Pages pendientes; no acredita conexiones reales de voz o PPP.",
       "rollback": "Revertir el PR de navegación y propuesta visual. Conserva la sesión, IDs, datos, permisos y fuentes de negocio."
     }
   ],

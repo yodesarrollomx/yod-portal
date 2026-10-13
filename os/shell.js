@@ -7,6 +7,28 @@
    ========================================================================== */
 (function () {
   'use strict';
+
+  /* NAVIGATION-BEGIN */
+  // Generado desde os/catalogo.js: presentación común; no concede accesos.
+  var NAV_ORDER = ["SYS-DESPACHO","SYS-POTENCIALES","SYS-TRACK","SYS-MIRAMAR","SYS-TAREAS","SYS-FLUJO","SYS-INTERIORES","SYS-INVERSION","SYS-MARKETING","SYS-OBRA","SYS-CONTROL"];
+  var NAV_PARENT = {"SYS-MIRAMAR":"SYS-TRACK"};
+  function orderedModules(rows) {
+    var seen = Object.create(null);
+    return (Array.isArray(rows) ? rows : []).filter(function (row) {
+      if (!row || !row.system_id || seen[row.system_id]) return false;
+      seen[row.system_id] = true; return true;
+    }).sort(function (a, b) {
+      var ai = NAV_ORDER.indexOf(a.system_id), bi = NAV_ORDER.indexOf(b.system_id);
+      if (ai < 0) ai = NAV_ORDER.length; if (bi < 0) bi = NAV_ORDER.length;
+      return ai - bi || String(a.system_id).localeCompare(String(b.system_id));
+    });
+  }
+  function sidebarModules(rows, available) {
+    var sorted = orderedModules(rows);
+    var ids = sorted.filter(function (row) { return !available || available(row); }).map(function (row) { return row.system_id; });
+    return sorted.filter(function (row) { return !NAV_PARENT[row.system_id] || ids.indexOf(NAV_PARENT[row.system_id]) < 0; });
+  }
+  /* NAVIGATION-END */
   if (window.__YOD_SHELL__) return; window.__YOD_SHELL__ = 1;
   // Embebido dentro de la máscara del OS: el marco ya lo pone el padre.
   try { if (/[?&]embed=1/.test(location.search)) return; } catch (e) { }
@@ -162,7 +184,7 @@
   function navItem(row, cur) {
     var url = enlace(row); if (!url) return null;
     var nuevo = false; try { nuevo = row.system_id !== cur && localStorage.getItem('yod_nuevo_' + row.system_id) === '1'; } catch (e) { }
-    var a = el('a', 'yod-nav-item' + (row.system_id === cur ? ' active' : '') + (nuevo ? ' hay-nuevo' : ''));
+    var a = el('a', 'yod-nav-item' + (row.system_id === cur || row.system_id === NAV_PARENT[cur] ? ' active' : '') + (nuevo ? ' hay-nuevo' : ''));
     if (nuevo) a.title = 'Hay algo nuevo desde tu última visita';
     a.href = url; a.setAttribute('rel', 'noopener'); if(!esPropioShell(url)) a.setAttribute('target','_blank');
     a.innerHTML = '<i class="ti ti-' + (ICON[row.system_id] || 'layout-dashboard') + '"></i><span>' + esc(row.titulo_portal || NAME[row.system_id] || row.system_id) + '</span>';
@@ -170,16 +192,14 @@
   }
   function renderNav(rows, cur) {
     var box = document.getElementById('yodNav'); if (!box) return; box.innerHTML = '';
-    state.modules = rows;
-    // Chinche #35 (28-sep): Real de Miramar vive DENTRO de Codesarrollos, no suelto en el
-    // menú. Solo se asoma si estás en él o si tu sesión no tiene Codesarrollos para llegar.
-    var DENTRO = { 'SYS-MIRAMAR': 'SYS-TRACK' };
-    var ids = rows.map(function (r) { return r.system_id; });
-    rows.forEach(function (r) {
-      var padre = DENTRO[r.system_id];
-      if (padre && r.system_id !== cur && ids.indexOf(padre) >= 0) return;
+    rows = orderedModules(rows); state.modules = rows;
+    sidebarModules(rows, vivo).forEach(function (r) {
       var n = navItem(r, cur); if (n) box.appendChild(n);
     });
+    if (state.role === 'admin') {
+      var people = el('a', 'yod-nav-item'); people.href = 'https://yodesarrollomx.github.io/potenciales-yod/accesos.html';
+      people.innerHTML = '<i class="ti ti-users"></i><span>Personas y accesos</span>'; box.appendChild(people);
+    }
     rows.forEach(function (r) { if (r.system_id === cur && r.titulo_portal) set('yodCrumbHere', r.titulo_portal); });
     if (!box.children.length) box.innerHTML = '<span class="yod-nav-loading">Sin tableros</span>';
   }
@@ -316,18 +336,18 @@
     while (document.body.firstChild) { canvas.appendChild(document.body.firstChild); }
 
     var side = el('aside', 'yod-sidebar');
-    side.innerHTML = '<a class="yod-brand" href="' + OS + '" title="Ir a YOD OS" aria-label="Ir a YOD OS"><b>YOD</b><span>OS</span></a>'
-      + '<nav class="yod-nav"><a class="yod-nav-item yod-os-link" href="' + OS + '"><i class="ti ti-layout-dashboard"></i><span>Inicio YOD OS</span></a><p class="yod-nav-label">Tableros</p><div id="yodNav"><span class="yod-nav-loading"><i class="ti ti-loader-2 yod-spin"></i> Cargando…</span></div></nav>'
+    side.innerHTML = '<a class="yod-brand" href="' + OS + '#inicio" title="Ir a YOD OS" aria-label="Ir a YOD OS"><b>YOD</b><span>OS</span></a>'
+      + '<nav class="yod-nav"><p class="yod-nav-label">Tableros</p><div id="yodNav"><span class="yod-nav-loading"><i class="ti ti-loader-2 yod-spin"></i> Cargando…</span></div></nav>'
       + '<div class="yod-foot"><div class="yod-avatar" id="yodAv">YO</div><div class="yod-id"><strong id="yodName">Equipo YOD</strong><span id="yodRole">Verificando…</span></div><button class="yod-out" id="yodOut" type="button" title="Cerrar sesión" aria-label="Cerrar sesión"><i class="ti ti-logout"></i></button></div>';
 
     var main = el('main', 'yod-main');
     var top = el('header', 'yod-topbar');
     top.innerHTML = '<button class="yod-burger" id="yodBurger" type="button" aria-label="Abrir tableros"><i class="ti ti-menu-2"></i></button>'
       + '<button class="yod-back" id="yodBack" type="button" title="Volver a la pantalla anterior" aria-label="Volver a la pantalla anterior"><i class="ti ti-arrow-left"></i><span>Atrás</span></button>'
-      + '<a class="yod-topbrand" href="' + OS + '" title="Ir a YOD OS" aria-label="Ir a YOD OS"><b>YOD</b><span>OS</span></a>'
-      + '<nav class="yod-crumbs" id="yodCrumbs" aria-label="Dónde estoy"><a href="' + OS + '">YOD OS</a><i class="ti ti-chevron-right"></i><b id="yodCrumbHere">' + esc(NAME[cur] || document.title || 'Tablero') + '</b></nav>'
+      + '<a class="yod-topbrand" href="' + OS + '#inicio" title="Ir a YOD OS" aria-label="Ir a YOD OS"><b>YOD</b><span>OS</span></a>'
+      + '<nav class="yod-crumbs" id="yodCrumbs" aria-label="Dónde estoy"><span>YOD OS</span><i class="ti ti-chevron-right"></i><b id="yodCrumbHere">' + esc(NAME[cur] || document.title || 'Tablero') + '</b></nav>'
       + '<button class="yod-search" id="yodSearch" type="button"><i class="ti ti-search"></i><span>Buscar un tablero…</span><kbd>⌘ K</kbd></button>'
-      + '<div class="yod-top-actions"><span class="yod-conn yod-conn-wait" id="yodConn" title="Validando tu acceso con Google"><i></i><span>Validando…</span></span><span class="yod-role" id="yodChip" style="display:none"></span><a class="yod-home" href="' + OS + '" title="Subir a YOD OS" aria-label="Subir a YOD OS"><i class="ti ti-home-2"></i><span>YOD OS</span></a></div>';
+      + '<div class="yod-top-actions"><span class="yod-conn yod-conn-wait" id="yodConn" title="Validando tu acceso con Google"><i></i><span>Validando…</span></span><span class="yod-role" id="yodChip" style="display:none"></span></div>';
     main.appendChild(top); main.appendChild(canvas);
 
     var shell = el('div', 'yod-shell'); shell.appendChild(side); shell.appendChild(main);

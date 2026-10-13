@@ -39,6 +39,8 @@ Repo: `yodesarrollomx/yod-portal` (`git remote -v`), público, Pages desde `main
 
 ## Reglas INVIOLABLES
 
+0. **Orden global constante (12-oct-2026, Dirección):** la barra y el menú de YOD OS conservan el orden de `os/catalogo.js` en todos los tableros. `navParent` mantiene proyectos dentro de su tablero padre; sólo se muestra el hijo suelto si el padre no está disponible. La pestaña Portal conserva nombres, visibilidad y estado; su campo `orden` no reordena la navegación global. El filtrado por sesión se mantiene y el logo es el acceso al Inicio. La compactación usa el control existente de `os/ui-chrome.js`, sin otra implementación.
+
 0. **El catálogo de tableros vive en `os/catalogo.js` (SH-2, 25-sep-2026).** Nombre de respaldo, ícono, códigos y destino se editan AHÍ y luego `node scripts/catalogo.cjs` regenera las copias de `os/shell.js`, `os/access-policy.js` y `os/app.js`; `verify-os` falla si alguien edita una copia a mano. La matriz de `potenciales-yod/accesos.html` la vigila `verify-accesos.cjs`.
 1. **Las tres tablas de códigos dicen LO MISMO, siempre.** `os/access-policy.js` (`SYSTEM_CODES`),
    `os/shell.js` (`CODES`) y `potenciales-yod/accesos.html` (`CODES`). Si divergen, un colaborador

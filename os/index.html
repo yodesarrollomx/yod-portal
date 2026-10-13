@@ -25,11 +25,10 @@
 <body>
   <div class="app-shell">
     <aside class="sidebar" aria-label="Navegación principal">
-      <a class="brand" href="https://yodesarrollo.mx/" aria-label="YOD, ir a yodesarrollo.mx" title="Ir a yodesarrollo.mx">
+      <a class="brand" href="#inicio" aria-label="YOD OS, ir a Inicio" title="Ir a Inicio de YOD OS">
         <span class="brand-mark">YOD</span><span class="brand-os">OS</span>
       </a>
       <nav class="side-nav">
-        <a class="nav-item active" href="#inicio"><i class="ti ti-home-2"></i><span>Inicio</span></a>
         <!-- CHN-20260909-1417-213f · «Quitar, se me hace repetitivo» (Alejandro, 9-sep).
              Era un atajo que sólo bajaba a la sección «El tablero de la operación» de esta
              misma página, y el menú ya trae el rótulo «Tableros» tres renglones abajo con
@@ -52,7 +51,7 @@
     <main class="main" id="inicio">
       <header class="topbar">
         <button class="burger" id="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false"><i class="ti ti-menu-2"></i></button>
-        <a class="topbar-brand" href="https://yodesarrollo.mx/" title="Ir a yodesarrollo.mx" aria-label="YOD, ir a yodesarrollo.mx"><span>YOD</span><small>OS</small></a>
+        <a class="topbar-brand" href="#inicio" title="Ir a Inicio de YOD OS" aria-label="YOD OS, ir a Inicio"><span>YOD</span><small>OS</small></a>
         <nav class="os-crumbs" id="osCrumbs" aria-label="Dónde estoy"><span>YOD OS</span><i class="ti ti-chevron-right"></i><b id="osCrumbHere">Inicio</b></nav>
         <button class="search-trigger" id="search-trigger" type="button" aria-haspopup="dialog">
           <i class="ti ti-search"></i><span>Buscar un módulo…</span><kbd>⌘ K</kbd>
@@ -61,7 +60,6 @@
           <details class="despacho-tools" id="despachoTools">
             <summary aria-label="Opciones del Despacho"><i class="ti ti-dots" aria-hidden="true"></i><span class="sr-only">Opciones del Despacho</span></summary>
             <nav aria-label="Acciones del Despacho">
-              <a class="section-link" href="#inicio" aria-label="Cerrar El Despacho y volver a Inicio"><i class="ti ti-arrow-left" aria-hidden="true"></i>Volver a Inicio</a>
               <a class="section-link" id="despachoBandeja" href="https://yodesarrollomx.github.io/yod-despacho/" target="_blank" rel="noopener noreferrer" hidden><i class="ti ti-inbox" aria-hidden="true"></i>Bandeja actual</a>
               <a class="section-link" id="despachoAbrir" target="_blank" rel="noopener noreferrer" hidden><i class="ti ti-arrow-up-right" aria-hidden="true"></i>Abrir aparte</a>
             </nav>
@@ -253,7 +251,7 @@
   <script src="despacho-chinches.js?v=panorama-20261006"></script>
   <script src="despacho-conversation.js?v=fuentes142"></script>
   <script src="despacho-transport.js?v=fuentes142"></script>
-  <script src="app.js?v=masterbrokers-130"></script>
+  <script src="app.js?v=navegacion-131"></script>
   <script src="maquinas.js?v=salud-20261011"></script>
   <script src="https://yodesarrollomx.github.io/potenciales-yod/portero.js?v=relevo10"></script>
   <script src="../chinche.js?v=ch10-contexto"></script>
