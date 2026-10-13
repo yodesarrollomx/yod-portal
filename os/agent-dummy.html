@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; font-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'">
+<title>YOD OS · Dummy integral del autón y PPP</title>
+<link rel="stylesheet" href="ui-chrome.css?v=2"><link rel="stylesheet" href="agent-preview.css?v=3">
+<script src="catalogo.js" defer></script><script src="ui-chrome.js?v=2" defer></script><link rel="stylesheet" href="agent-dummy.css?v=1"><script type="module" src="agent-dummy.mjs?v=1"></script>
+</head><body data-demo-mode="integral">
+<div class="app-shell">
+<aside class="sidebar" aria-label="Navegación global"><a class="brand" href="#inicio" aria-label="YOD OS, ir al inicio del mockup"><span>YOD</span><small>OS</small></a><nav class="side-nav"><p class="nav-section-label">Tableros</p><div class="nav-modules" id="preview-nav"></div></nav><div class="sidebar-foot"><span class="avatar">YO</span><div class="identity"><strong>Maqueta navegable</strong><span>Datos ficticios</span></div></div></aside>
+<button class="nav-scrim" id="nav-scrim" type="button" aria-label="Cerrar menú"></button>
+<main class="main">
+<header class="topbar"><button class="quiet icon-only burger" id="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false">☰</button><a class="topbar-brand" href="#inicio" aria-label="YOD OS, ir al inicio">YOD OS</a><div class="dummy-toolbar dummy-in-topbar" aria-label="Recorrido de la interacción">
+<div class="dummy-controls"><span class="eyebrow">Recorrido</span><button type="button" class="quiet icon-only" id="dummy-prev" aria-label="Escena anterior">←</button><label class="sr-only" for="dummy-scene">Escena del dummy</label><select id="dummy-scene" aria-describedby="dummy-guide"></select><button type="button" class="quiet icon-only" id="dummy-next" aria-label="Escena siguiente">→</button><button type="button" class="quiet" id="dummy-overview">Ver conjunto</button></div>
+<p id="dummy-guide" class="dummy-guide"></p></div><span class="sr-only" id="route-title">El Despacho</span><a class="audit-link" href="../docs/UX-DUMMY-INTEGRAL.md">Guía completa ↗</a><span class="mock-tag">Dummy · integral</span></header>
+<div class="demo-notice" role="note"><strong>Dummy local · datos y respuestas ficticios.</strong><span>No conecta micrófono, servidor ni Sheets. Ningún trabajo corre por abrir esta página.</span></div>
+<section id="workspace">
+
+<header class="project-head"><div class="agent-badge" id="agent-badge" aria-hidden="true">G</div><div class="project-identity"><label class="sr-only" for="case-select">Cambiar de autón</label><select id="case-select"><option value="demo-gaston">Gastón</option><option value="demo-luis">Luis</option><option value="demo-ruisenor">Ruiseñor</option></select><span id="case-kind">Plan de potencial · terreno</span></div><div class="project-purpose"><span class="eyebrow">Resultado que buscamos</span><strong id="project-goal"></strong><span id="project-next"></span></div><button type="button" id="work-menu" class="quiet" aria-expanded="false" aria-controls="work-popover">Trabajo del autón <span aria-hidden="true">⌄</span></button><div id="work-popover" class="work-popover" hidden><button type="button" data-resource="work">Trabajo y próximos pasos</button><button type="button" data-resource="notes">Notas y acuerdos</button><button type="button" data-resource="history">Historial y evidencia</button><button type="button" data-resource="presentation">Presentación</button><button type="button" data-resource="formula">Fórmulas y supuestos</button><button type="button" data-resource="method">Método y decisiones</button><button type="button" data-resource="overview">Conjunto del recorrido</button><button type="button" data-resource="connections">Conexiones encontradas</button></div></header>
+<div class="mobile-switch" role="group" aria-label="Vista conservada del proyecto"><button type="button" id="mobile-ppp" aria-pressed="true">PPP</button><button type="button" id="mobile-chat" aria-pressed="false">Conversación y fuente</button></div>
+<div class="workspace-grid">
+<section class="dialogue-column" aria-label="Conversación y contexto compartidos">
+<div id="context-viewer" class="context-viewer" hidden aria-labelledby="source-title">
+<header class="viewer-head"><div><span class="eyebrow" id="viewer-kind">Fuente de ejemplo</span><h2 id="source-title" tabindex="-1"></h2></div><button type="button" class="quiet icon-only" id="close-source" aria-label="Cerrar detalle y volver a la conversación">×</button></header>
+<div id="source-body" class="source-body"></div>
+<footer class="viewer-actions"><button type="button" class="primary" id="comment-source">Comentar este dato</button><button type="button" class="quiet" id="back-message">Volver al mensaje</button></footer>
+</div>
+<div class="chat-header"><h2>Conversación</h2><span class="channel-label">Audio y texto · un mismo hilo</span></div>
+<div id="chat-stream" class="chat-stream" role="log" aria-label="Historial de conversación" aria-live="polite"></div>
+<div id="mobile-context-summary" class="mobile-context-summary" hidden></div>
+<div class="composer">
+<div class="reference-chip" id="draft-reference" hidden></div>
+<form id="message-form"><button class="mic-button icon-only" id="mic-button" type="button" aria-label="Ver demostración visual de escucha"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0014 0v-2M12 19v3M8 22h8"/></svg></button><textarea id="message-input" aria-label="Mensaje al autón, sólo ejemplo local" rows="2" maxlength="1000" placeholder="Hablemos de lo que estás viendo…"></textarea><button type="button" class="stop-button" id="stop-button" aria-label="Interrumpir demostración visual">Interrumpir</button><button type="submit" class="send-button icon-only" aria-label="Enviar mensaje local de ejemplo">↑</button></form>
+<div class="composer-status" id="voice-status" role="status">Voz de ejemplo · micrófono sin activar. Los mensajes permanecen en la maqueta.</div>
+</div>
+</section>
+<aside class="ppp-column" aria-labelledby="ppp-title">
+<header class="ppp-header"><div><span class="eyebrow">Mismo proyecto, mismas fuentes</span><h1 id="ppp-title">Plan de potencial</h1></div><span class="reading-date">Ejemplo · 12 oct</span></header>
+<div class="scenario-context"><span>Consultando <b id="consulting-version">V2</b></span><span>Defendida <b id="defended-version">V2</b></span><span id="different-version" hidden>Son versiones distintas</span></div>
+<div id="mini-dashboards" class="mini-dashboards"></div>
+<div id="board-status" class="board-status" role="status"></div>
+</aside>
+</div>
+</section>
+<section id="home-view" class="home-view" hidden><h1 id="home-title">Tu espacio de trabajo</h1><p>Un solo menú y el mismo orden. Esta vista mantiene datos de ejemplo.</p><div id="home-grid" class="home-grid"></div></section>
+</main>
+</div>
+</body></html>
