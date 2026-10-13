@@ -48,6 +48,10 @@ lectura y escritura**. La identidad del autor debe venir de la sesión del servi
 - lookupReceipt(request_id): devolver recibo previamente confirmado, o
   {status:"not_found",request_id} sólo si se comprobó ausencia en el almacén autorizado.
   Error o resultado desconocido jamás equivale a ausencia.
+  Un rechazo definitivo por revisión debe ser un recibo durable correlacionado con
+  status=rejected y reason=revision_conflict, conservando los demás campos del recibo.
+  Sólo ese rechazo libera el intento anterior: el cliente relee, conserva el texto y
+  exige otra acción humana para enviar con nueva revisión y nuevo request_id.
 - Recibo: version=1, status=saved, id, request_id, revision, recorded_at ISO, kind, text,
   task_id. Debe acreditar escritura durable; no fabricarlo desde el frontend.
 

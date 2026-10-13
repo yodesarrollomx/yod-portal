@@ -87,6 +87,9 @@ export function createTeamSession({transport, isAuthorized, identityEpoch, reque
   }
   function finish(result, intent, at) {
     sameAuthority(at);
+    if (result && result.status === 'rejected' && result.reason === 'revision_conflict' && confirmedReceipt({...result,status:'saved'},intent)) {
+      pending = null; snapshot = null; throw new Error('revision_conflict');
+    }
     if (!confirmedReceipt(result, intent)) throw new Error('receipt_unconfirmed');
     pending = null;
     return structuredClone(result);

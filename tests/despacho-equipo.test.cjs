@@ -115,3 +115,13 @@ test('unsupported dictation has a writing fallback',async()=>{
  const {bindTeamDictation}=await voice,button={setAttribute(){}},status={};
  bindTeamDictation({button,textarea:{},status,host:{}});assert.equal(button.disabled,true);assert.match(status.textContent,/escribir/);
 });
+
+test('definitive revision conflict preserves editable text but requires a fresh read and new request',async()=>{
+ const {session,transport}=await setup({write:async intent=>({...saved(intent),status:'rejected',reason:'revision_conflict'})});
+ const first=session.prepare({kind:'request',text:'Exact note'});
+ await assert.rejects(session.send(),/revision_conflict/);assert.equal(session.pending(),null);
+ assert.throws(()=>session.prepare({kind:'request',text:first.text}),/read_required/);
+ transport.read=async()=>({...snapshot(),revision:'r2'});await session.read();
+ const next=session.prepare({kind:'request',text:first.text});assert.equal(next.text,first.text);assert.equal(next.expected_revision,'r2');
+ assert.equal(next.request_id===first.request_id,false);
+});

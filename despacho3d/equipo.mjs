@@ -109,7 +109,7 @@ export function mountTeamDesk({container,transport,isAuthorized,identityEpoch,ho
       const result=await session.send(reconcile);if(!alive())return;lastReceipt=result;
       receipt.textContent='Guardado · '+result.id+' · '+stamp(result.recorded_at)+'. Pendiente de lectura por el agente.';
       textarea.value='';target.value='';status.textContent='Tu instrucción quedó registrada.';await read();
-    }catch(error){errorMessage(error);if(alive()&&session.pending()){receipt.textContent='Envío sin confirmar. Conservamos el texto y la referencia para comprobarlo sin duplicar.';}}
+    }catch(error){errorMessage(error);if(alive()&&error.message==='revision_conflict'){receipt.textContent='No se guardó: otra persona actualizó la bitácora. Conservamos tu texto.';await read();status.textContent='Revisa la actualización y vuelve a guardar cuando estés listo.';}if(alive()&&session.pending()){receipt.textContent='Envío sin confirmar. Conservamos el texto y la referencia para comprobarlo sin duplicar.';}}
     finally{sending=false;lock();}
   }
   form.onsubmit=event=>{
