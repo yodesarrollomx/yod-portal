@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.os-navigation-consistent.1 · 2026-10-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.ppp-mini-dashboard-ux.1 · 2026-10-13.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 
@@ -394,3 +394,37 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 - El menú no añade el proyecto hijo al cambiar de pantalla y lo conserva cuando es el único acceso autorizado.
 - Logo retorna a Inicio; no se añade un botón principal alternativo.
 - Mockup claramente identificado, con ejemplos y sin llamadas a sistemas de negocio; verificadores del portal pasan.
+
+## MINI · PPP persistente con mini dashboards y evidencia inspeccionable
+
+- Tableros: SYS-YOD-OS, SYS-DESPACHO, SYS-POTENCIALES.
+- Problema: La propuesta previa ofrece etiquetas genéricas, oculta el PPP al cambiar recursos y no permite seguir cada dato a una fuente; la comparación de escenarios y viabilidad permanece indeterminada.
+- Beneficio esperado: Revisar el PPP al hablar con el autón, abrir mapa y fuentes, cotejar pasajes y escenarios sin perder conversación ni contexto; conservar una única navegación global.
+- Medición: Dos auditorías internas separadas con rúbricas publicadas, mínimo 9/10 de diseño sin gates críticos abiertos; recorridos y responsive comprobados en Chromium con ejemplos, sin aceptación operativa de voz o negocio.
+- Dependencias: NAV.
+- Esfuerzo: M. Decisión: **aprobada**.
+
+### Requisitos previos
+
+- Reutilizar barra y control global existentes, sin duplicación a derecha.
+- Fuente financiera canónica sigue en Sheets; maqueta usa ejemplos identificados y no recalcula un motor financiero paralelo.
+- Distinguir código disponible, configuración requerida y operación verificada; no declarar integraciones por existencia de un marcador.
+
+### Tareas
+
+1. Auditar la propuesta anterior y conservar hallazgos numerados con marcas visuales.
+2. Construir mini dashboards: mapa, documentos, normativa, mercado, versiones y viabilidad enlazados a evidencia local de ejemplo.
+3. Mantener PPP y compositor visibles al consultar fuentes; preservar borrador/selección y aislar ejemplos por agente.
+4. Separar escenario consultado y defendido; TIR con periodo, tipo y supuestos; viabilidad dependiente de selección.
+5. Comprobar recorridos desktop, Chromebook y móvil en navegador aislado; entregar capturas y reauditar hasta resolver hallazgos.
+6. Registrar conexiones encontradas con evidencia de código y límites; entregar mockup corregido y bitácora.
+
+### Criterios de aceptación
+
+- Una única barra global; logo como Inicio y mismo control de compactación.
+- Seis mini dashboards útiles; fuente con tipo, fecha, ubicación, alcance y distinción entre cita e interpretación.
+- TIR no calculada no aparece como cero; ejemplos explícitos y escenarios comparables identificados.
+- Cambiar escenario consultado actualiza viabilidad sin modificar la versión defendida.
+- Fuente faltante o desactualizada muestra causa y acción; lectura de hojas exige valores canónicos vigentes.
+- Abrir una evidencia y alternar PPP/conversación en móvil conserva el estado del mismo proyecto.
+- Auditorías tienen evidencia, puntajes por criterio y límites; ninguna puntuación del mockup acredita producción.

@@ -1,24 +1,20 @@
 {
-  "model_revision": "2026-10-13.os-navigation-consistent.1",
-  "proposal_id": "CHG-OS-NAVIGATION-CONSISTENT",
-  "summary": "Orden global constante y deduplicado, reutilización de la barra compacta y logo como Inicio; mockup del puesto compartido con datos de ejemplo.",
+  "model_revision": "2026-10-13.ppp-mini-dashboard-ux.1",
+  "proposal_id": "CHG-PPP-MINI-DASHBOARD-UX",
+  "summary": "Mockup PPP persistente con mini dashboards, fuentes y escenarios coherentes; conversación única y dos revisiones independientes de diseño.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "GAS-PORTERO",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-CONTROL",
-    "SYS-OBRA-CLIENTE"
+    "SYS-POTENCIALES"
   ],
   "tests": [
-    "node scripts/catalogo.cjs --check",
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
-    "node verify-obra-app.cjs"
+    "node verify-obra-app.cjs",
+    "node scripts/probar-ux-mockup.cjs (Chromium aislado)"
   ],
-  "rollback": "Revertir PR sin modificar sesiones, permisos, URLs ni registros de negocio."
+  "rollback": "Revertir PR; conserva navegación compartida anterior, permisos, datos, runtime y tareas canceladas."
 }

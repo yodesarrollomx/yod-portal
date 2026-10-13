@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-13.os-navigation-consistent.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-13.ppp-mini-dashboard-ux.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
