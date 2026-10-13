@@ -5,7 +5,8 @@
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-DESPACHO-3D"
+    "SYS-DESPACHO-3D",
+    "SYS-SALA"
   ],
   "tests": [
     "CI: node scripts/arquitectura.cjs --check; node --test tests/*.cjs; node verify-os.cjs; node verify-portal.cjs; node verify-accesos.cjs; node verify-obra-app.cjs.",

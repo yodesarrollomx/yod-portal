@@ -12216,7 +12216,8 @@
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",
-        "SYS-DESPACHO-3D"
+        "SYS-DESPACHO-3D",
+        "SYS-SALA"
       ],
       "status": "propuesto",
       "approval": "Petición directa de Dirección: implementar el equipo compartido en el Despacho existente con instrucciones escritas o dictadas y seguimiento. No concede nuevos permisos ni abre información privada.",
@@ -12226,7 +12227,7 @@
         "Pruebas sintéticas: cortes históricos sin mutación, fechas futuras no acreditan ejecución, señales ausentes/futuras, envío ambiguo conserva request_id/texto, recibo incorrecto rechazado, revocación y lectura concurrente.",
         "Aceptación pendiente: navegador escritorio/móvil, transporte privado instalado, guardar/recargar/acuse real de otro agente. Sin escrituras de prueba a negocio."
       ],
-      "deployment": "Propuesta previa a código. No instalado ni publicado. La UI sólo puede montarse con transporte y sesión autorizados; esta entrega no agrega un endpoint ni escribe al Sheet de negocio.",
+      "deployment": "Módulos frontend y pruebas sintéticas preparados en rama. CI pendiente. Sin montaje productivo, API de negocio nueva ni cambios en main. El transporte privado y su activación siguen pendientes.",
       "rollback": "Retirar el montaje y revertir estos módulos. Conservar Buzón, eventos, recibos, permisos y todas las notas."
     }
   ],
@@ -15603,6 +15604,16 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO",
         "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/probar-equipo-browser.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-SALA"
       ]
     }
   ],
