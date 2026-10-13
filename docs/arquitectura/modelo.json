@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-13.masterbrokers-mini-crm.1",
+  "revision": "2026-10-13.despacho-equipo.1",
   "checked_at": "2026-10-13",
   "priorities": [
     "vender_mas",
@@ -12210,6 +12210,24 @@
       ],
       "deployment": "Registro previo a implementación. No demuestra publicación, lectura privada nueva, ingestión automática ni invitaciones de Calendar.",
       "rollback": "Revertir sólo frontend; conservar IDs, todas las actividades y sus notas legibles, fuentes, PPP, pendientes, permisos y datos operativos. No restaurar filas de negocio."
+    },
+    {
+      "id": "CHG-DESPACHO-EQUIPO-20261013",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "status": "propuesto",
+      "approval": "Petición directa de Dirección: implementar el equipo compartido en el Despacho existente con instrucciones escritas o dictadas y seguimiento. No concede nuevos permisos ni abre información privada.",
+      "proposal": "Módulo nativo de equipo para el Despacho: historia, hoy y planeación; responsables y última revisión comprobada; instrucciones editables con dictado optativo, conservación de borrador, request_id estable y recibo correlacionado. Consume transporte autorizado inyectado por la cabina; no publica datos ni introduce credenciales o endpoints. Adaptador al Buzón existente y activación se verifican aparte. No modifica el mini CRM reservado.",
+      "tests": [
+        "CI: node scripts/arquitectura.cjs --check; node --test tests/*.cjs; node verify-os.cjs; node verify-portal.cjs; node verify-accesos.cjs; node verify-obra-app.cjs.",
+        "Pruebas sintéticas: cortes históricos sin mutación, fechas futuras no acreditan ejecución, señales ausentes/futuras, envío ambiguo conserva request_id/texto, recibo incorrecto rechazado, revocación y lectura concurrente.",
+        "Aceptación pendiente: navegador escritorio/móvil, transporte privado instalado, guardar/recargar/acuse real de otro agente. Sin escrituras de prueba a negocio."
+      ],
+      "deployment": "Propuesta previa a código. No instalado ni publicado. La UI sólo puede montarse con transporte y sesión autorizados; esta entrega no agrega un endpoint ni escribe al Sheet de negocio.",
+      "rollback": "Retirar el montaje y revertir estos módulos. Conservar Buzón, eventos, recibos, permisos y todas las notas."
     }
   ],
   "data_contracts": [
@@ -15567,6 +15585,24 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO",
         "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-equipo.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "docs/arquitectura/despacho-equipo.md",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
       ]
     }
   ],
