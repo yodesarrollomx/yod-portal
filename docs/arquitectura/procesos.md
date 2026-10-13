@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.os-navigation-consistent.1 · 2026-10-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.investor-orange-thread.1 · 2026-10-13.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
