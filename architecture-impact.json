@@ -1,15 +1,21 @@
 {
-  "model_revision": "2026-10-12.investor-hermosillo-zoom.1",
-  "proposal_id": "CHG-INVESTOR-HERMOSILLO-ZOOM",
-  "summary": "Apertura por zoom con vialidades públicas y dos casos simbólicos; configuración y geometría en Sheets, sin introducir cifras reales.",
+  "schema_version": 1,
+  "model_revision": "2026-10-13.os-navigation-consistent.1",
+  "proposal_id": "CHG-OS-NAVIGATION-CONSISTENT",
+  "summary": "Orden global constante y deduplicado, reutilización de la barra compacta y logo como Inicio; mockup del puesto compartido con datos de ejemplo.",
   "components": [
-    "SYS-INVERSION",
-    "GAS-PLAN-POTENCIAL",
-    "SHEET-PLAN-POTENCIAL",
     "SYS-YOD-OS",
-    "SYS-CONTROL"
+    "SYS-DESPACHO",
+    "GAS-PORTERO",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-CONTROL",
+    "SYS-OBRA-CLIENTE"
   ],
+  "connections": [],
+  "contracts": [],
   "tests": [
+    "node scripts/catalogo.cjs --check",
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
     "node verify-os.cjs",
@@ -17,5 +23,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir frontend por PR sin borrar contenido de Sheets, láminas originales o permisos Masterbroker."
+  "rollback": "Revertir PR sin modificar sesiones, permisos, URLs ni registros de negocio."
 }

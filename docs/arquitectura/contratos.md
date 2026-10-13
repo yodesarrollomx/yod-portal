@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.investor-hermosillo-zoom.1 · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.os-navigation-consistent.1 · 2026-10-13.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 

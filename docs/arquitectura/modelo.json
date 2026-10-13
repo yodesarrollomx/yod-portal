@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.investor-hermosillo-zoom.1",
-  "checked_at": "2026-10-12",
+  "revision": "2026-10-13.os-navigation-consistent.1",
+  "checked_at": "2026-10-13",
   "priorities": [
     "vender_mas",
     "margen_y_control",
@@ -8245,6 +8245,45 @@
         "Los controles funcionan y el inmueble de la escena se conserva en el puente a la evaluación.",
         "Un perfil sin identidad vinculada no se activa ni se suplanta para comprobar la integración."
       ]
+    },
+    {
+      "id": "NAV",
+      "titulo": "Navegación constante y mesa compartida del autón",
+      "boards": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ],
+      "problem": "El menú cambia entre la cabina y los tableros; el inicio tiene accesos redundantes y el puesto del autón dispersa conversación y PPP.",
+      "benefit": "Un recorrido predecible con la barra compactable existente, acceso al inicio desde el logo y una propuesta visual del puesto con PPP y conversación simultáneos.",
+      "metric": "Mismos IDs y orden relativo para un conjunto autorizado en cabina y marco; sin duplicados ni botón Inicio añadido; propuesta navegable sin datos reales.",
+      "dependencies": [],
+      "effort": "M",
+      "decision": "aprobada",
+      "approval": {
+        "fecha": "2026-10-12",
+        "rol": "Dirección",
+        "alcance": "Solicitud explícita de mockup completo y unificación de orden, compactación y acceso al inicio mediante YOD OS."
+      },
+      "prerequisites": [
+        "Reutilizar ui-chrome.js y su preferencia persistente; no duplicar el control de compactación.",
+        "Conservar códigos, URLs permitidas y filtrado por sesión antes de construir el menú.",
+        "El mockup usa ejemplos y no acredita voz, PPP privado o trabajo autónomo."
+      ],
+      "tasks": [
+        "Registrar la propuesta antes de tocar el frontend.",
+        "Generar una política de orden y eliminación de duplicados desde os/catalogo.js para la cabina y el marco.",
+        "Mantener Real de Miramar dentro de Codesarrollos cuando el padre está disponible, incluso al visitarlo.",
+        "Usar el logo como acceso al inicio y retirar botones Inicio redundantes.",
+        "Entregar un mockup navegable con PPP protagonista, conversación lateral, voz compacta y un único lugar para avances; verificar y publicar navegación por PR."
+      ],
+      "acceptance": [
+        "Compactación existente conserva la preferencia entre pantallas.",
+        "Cabina y marco usan la misma política generada sin conceder accesos nuevos.",
+        "El menú no añade el proyecto hijo al cambiar de pantalla y lo conserva cuando es el único acceso autorizado.",
+        "Logo retorna a Inicio; no se añade un botón principal alternativo.",
+        "Mockup claramente identificado, con ejemplos y sin llamadas a sistemas de negocio; verificadores del portal pasan."
+      ]
     }
   ],
   "changes": [
@@ -11747,6 +11786,29 @@
       ],
       "deployment": "Propuesta autorizada; geometría y apertura por implementar y comprobar. Borrador de siete láminas conserva su acceso público.",
       "rollback": "Revertir frontend por PR sin borrar contenido de Sheets, láminas originales o permisos Masterbroker."
+    },
+    {
+      "id": "CHG-OS-NAVIGATION-CONSISTENT",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE"
+      ],
+      "status": "propuesto",
+      "approval": "12-oct-2026, Dirección autoriza mockup completo y aplicar el control común de barra compacta, orden estable y logo como Inicio.",
+      "proposal": "Unificar presentación del menú desde el catálogo técnico, sin cambiar destinos ni permisos. Retirar entradas de Inicio repetidas. Reutilizar la compactación existente. Añadir un mockup navegable de la mesa compartida; el rediseño del puesto privado sigue siendo propuesta visual.",
+      "tests": [
+        "Generador de catálogo y atlas sin deriva.",
+        "Pruebas del portal y matriz de accesos, Obra, contratos y regresiones.",
+        "Diagnóstico del orden y deduplicación con datos sintéticos; no aceptación operativa del despacho.",
+        "Vista propuesta con funciones locales, sin endpoints de negocio."
+      ],
+      "deployment": "Propuesta registrada antes de implementación. Navegación y mockup por comprobar en CI y publicar; ninguna capacidad de voz/PPP/autonomía se acredita con el mockup.",
+      "rollback": "Revertir el PR de navegación y propuesta visual. Conserva la sesión, IDs, datos, permisos y fuentes de negocio."
     }
   ],
   "data_contracts": [
