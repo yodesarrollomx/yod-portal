@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-13.investor-orange-thread.1",
+  "revision": "2026-10-13.ppp-mini-dashboard-ux.3",
   "checked_at": "2026-10-13",
   "priorities": [
     "vender_mas",
@@ -8284,6 +8284,50 @@
         "Logo retorna a Inicio; no se añade un botón principal alternativo.",
         "Mockup claramente identificado, con ejemplos y sin llamadas a sistemas de negocio; verificadores del portal pasan."
       ]
+    },
+    {
+      "id": "MINI",
+      "titulo": "PPP persistente con mini dashboards y evidencia inspeccionable",
+      "boards": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ],
+      "problem": "La propuesta previa ofrece etiquetas genéricas, oculta el PPP al cambiar recursos y no permite seguir cada dato a una fuente; la comparación de escenarios y viabilidad permanece indeterminada.",
+      "benefit": "Revisar el PPP al hablar con el autón, abrir mapa y fuentes, cotejar pasajes y escenarios sin perder conversación ni contexto; conservar una única navegación global.",
+      "metric": "Dos auditorías internas separadas con rúbricas publicadas, mínimo 9/10 de diseño sin gates críticos abiertos; recorridos y responsive comprobados en Chromium con ejemplos, sin aceptación operativa de voz o negocio.",
+      "dependencies": [
+        "NAV"
+      ],
+      "effort": "M",
+      "decision": "implementada",
+      "approval": {
+        "fecha": "2026-10-12",
+        "rol": "Dirección",
+        "alcance": "Petición explícita de mini dashboards, PPP derecho persistente, conversación audio/texto única, búsqueda de conexiones y revisión iterada por dos perfiles expertos."
+      },
+      "prerequisites": [
+        "Reutilizar barra y control global existentes, sin duplicación a derecha.",
+        "Fuente financiera canónica sigue en Sheets; maqueta usa ejemplos identificados y no recalcula un motor financiero paralelo.",
+        "Distinguir código disponible, configuración requerida y operación verificada; no declarar integraciones por existencia de un marcador."
+      ],
+      "tasks": [
+        "Auditar la propuesta anterior y conservar hallazgos numerados con marcas visuales.",
+        "Construir mini dashboards: mapa, documentos, normativa, mercado, versiones y viabilidad enlazados a evidencia local de ejemplo.",
+        "Mantener PPP y compositor visibles al consultar fuentes; preservar borrador/selección y aislar ejemplos por agente.",
+        "Separar escenario consultado y defendido; TIR con periodo, tipo y supuestos; viabilidad dependiente de selección.",
+        "Comprobar recorridos desktop, Chromebook y móvil en navegador aislado; entregar capturas y reauditar hasta resolver hallazgos.",
+        "Registrar conexiones encontradas con evidencia de código y límites; entregar mockup corregido y bitácora."
+      ],
+      "acceptance": [
+        "Una única barra global; logo como Inicio y mismo control de compactación.",
+        "Seis mini dashboards útiles; fuente con tipo, fecha, ubicación, alcance y distinción entre cita e interpretación.",
+        "TIR no calculada no aparece como cero; ejemplos explícitos y escenarios comparables identificados.",
+        "Cambiar escenario consultado actualiza viabilidad sin modificar la versión defendida.",
+        "Fuente faltante o desactualizada muestra causa y acción; lectura de hojas exige valores canónicos vigentes.",
+        "Abrir una evidencia y alternar PPP/conversación en móvil conserva el estado del mismo proyecto.",
+        "Auditorías tienen evidencia, puntajes por criterio y límites; ninguna puntuación del mockup acredita producción."
+      ]
     }
   ],
   "changes": [
@@ -11830,6 +11874,24 @@
       ],
       "deployment": "Autorizado; implementación, pruebas de navegador y publicación por comprobar.",
       "rollback": "Revertir únicamente PR del frontend; conservar textos de Sheets, láminas previas, acceso Masterbroker y expedientes."
+    },
+    {
+      "id": "CHG-PPP-MINI-DASHBOARD-UX",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ],
+      "status": "verificado",
+      "proposal": "Rehacer exclusivamente la propuesta navegable del puesto: PPP permanente a derecha con evidencia, conversación/contexto al centro y barra global única. Mini mapa ilustrativo, fuentes ficticias rotuladas, mercado trazable, escenarios de un periodo normalizado y viabilidad enlazada. Auditar por separado UX y flujo; registrar investigación de conectores de lectura existentes sin alterar permisos, credenciales ni registros.",
+      "tests": [
+        "Chromium aislado con checkout exacto f4e18a658b35b700486bccd4a9b68867619dd81c: run38337301756/job115100176865 PASS y seis capturas.",
+        "Recorrido y geometría del highlight móvil ≥50% antes/después de referencia, compositor, estado, foco y barra única.",
+        "YOD OS run38337302131 y Arquitectura run38337301769 success.",
+        "Cuatro rondas internas documentadas: diseño UX9.1 y flujo9.2, con rúbricas y límites; no aceptación operativa."
+      ],
+      "deployment": "Mockup V3 verificado en PR216, documentación docs/UX-MINI-DASHBOARDS.md. Integración/Pages se confirma con recibo en PR216. Datos/voz/APIs reales y autonomía no acreditados; ningún cambio del runtime privado ni automatizaciones canceladas.",
+      "rollback": "Revertir PR de mockup y QA, sin alterar contratos, modelo privado, datos, sesiones, permisos, runtime o tareas canceladas."
     }
   ],
   "data_contracts": [
@@ -14949,6 +15011,69 @@
         "STORE-AUTON-ESTADO",
         "EXT-OPENAI",
         "EXT-RENDER"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/agent-preview.html",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/agent-preview.css",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/agent-preview.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/agent-preview.data.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/probar-ux-mockup.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/agent-mini-panels.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": ".github/workflows/ux-mockup.yml",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
       ]
     }
   ],

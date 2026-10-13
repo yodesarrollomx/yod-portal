@@ -1,0 +1,37 @@
+name: UX del mockup PPP
+on:
+  pull_request:
+    paths:
+      - 'os/agent-preview*'
+      - 'scripts/probar-ux-mockup.cjs'
+      - 'tests/agent-mini-panels.test.cjs'
+      - '.github/workflows/ux-mockup.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mockup:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.55.1-noble
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Dependencia aislada de navegador
+        run: npm install --prefix "$RUNNER_TEMP/ux-browser" --no-package-lock --ignore-scripts playwright@1.55.1
+      - name: Recorridos y capturas con datos ficticios, sin red de negocio
+        env:
+          EXPECTED_UX_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+          NODE_PATH: ${{ runner.temp }}/ux-browser/node_modules
+          UX_EVIDENCE_DIR: ${{ runner.temp }}/ux-evidence
+        run: node scripts/probar-ux-mockup.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ux-ppp-mockup
+          path: ${{ runner.temp }}/ux-evidence
+          if-no-files-found: ignore

@@ -1,13 +1,11 @@
 {
-  "model_revision": "2026-10-13.investor-orange-thread.1",
-  "proposal_id": "CHG-INVESTOR-ORANGE-THREAD",
-  "summary": "Registrar apertura existente ilustrada por scroll y un hilo continuo; sin cambiar fuentes, permisos o reglas comerciales.",
+  "model_revision": "2026-10-13.ppp-mini-dashboard-ux.3",
+  "proposal_id": "CHG-PPP-MINI-DASHBOARD-UX",
+  "summary": "Mockup PPP persistente con mini dashboards, fuentes y escenarios coherentes; conversación única y dos revisiones independientes de diseño.",
   "components": [
-    "SYS-INVERSION",
-    "GAS-PLAN-POTENCIAL",
-    "SHEET-PLAN-POTENCIAL",
     "SYS-YOD-OS",
-    "SYS-CONTROL"
+    "SYS-DESPACHO",
+    "SYS-POTENCIALES"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -16,7 +14,7 @@
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "Frontend y móvil se comprobarán en el PR consumidor; esta propuesta no acredita publicación."
+    "node scripts/probar-ux-mockup.cjs (Chromium aislado)"
   ],
-  "rollback": "Revertir frontend por PR conservando hojas, permisos, láminas anteriores y expedientes."
+  "rollback": "Revertir PR; conserva navegación compartida anterior, permisos, datos, runtime y tareas canceladas."
 }
