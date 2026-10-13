@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.ppp-mini-dashboard-ux.1 · 2026-10-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.ppp-mini-dashboard-ux.2 · 2026-10-13.
 
 ## SYS-DESPACHO · El Despacho
 

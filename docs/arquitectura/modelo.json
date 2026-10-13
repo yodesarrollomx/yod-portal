@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-13.ppp-mini-dashboard-ux.1",
+  "revision": "2026-10-13.ppp-mini-dashboard-ux.2",
   "checked_at": "2026-10-13",
   "priorities": [
     "vender_mas",
@@ -11853,6 +11853,27 @@
       ],
       "deployment": "Navegación y maqueta verificadas con Node en GitHub Actions sobre 1c0b1dab0438a7b80795d39611963038324217b0. Arquitectura YOD run 38329301097 y Verificar YOD OS run 38329301380 aprobados. Verificación de presentación con ejemplos; no aceptación operativa de voz, PPP privado o autonomía. Integración/publicación Pages se registra en PR215.",
       "rollback": "Revertir el PR de navegación y propuesta visual. Conserva la sesión, IDs, datos, permisos y fuentes de negocio."
+    },
+    {
+      "id": "CHG-INVESTOR-ORANGE-THREAD",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL",
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección selecciona HTML ilustrado, hilo naranja continuo y escenas por scroll, conservando territorio/contexto/proyecto/comparación; autorización explícita del13-oct-2026.",
+      "proposal": "Sustituir exclusivamente el renderer de la apertura existente por SVG ilustrado animado. Un hilo abierto y una punta guían ocho momentos dentro de cuatro actos. Mantener territorio público desde Sheets, candidatos y proyecto ilustrativos, A/B estables, cantidades calculadas, navegación, reproducción, pausa, reversión de scroll, movimiento reducido y continuación a las siete láminas. Mismo contrato editorial, URL y fuente; sin nuevas integraciones ni cambios a datos privados/permisos/reglas financieras.",
+      "tests": [
+        "Generación determinista y validación del modelo y vistas del atlas.",
+        "Contratos sintéticos de hilo/punta, cuatro actos, reversibilidad y casas A/B contadas; ningún dato financiero de cartera.",
+        "Chromium320/390/1440: escenas por scroll, SVG persistente, punta en curva, casas visibles, cálculo separado, controles y reduced-motion.",
+        "Frontend publicado: comparar código servido con commit, comprobar apertura anónima y continuación. Ninguna escritura de prueba en servicios de negocio."
+      ],
+      "deployment": "Autorizado; implementación, pruebas de navegador y publicación por comprobar.",
+      "rollback": "Revertir únicamente PR del frontend; conservar textos de Sheets, láminas previas, acceso Masterbroker y expedientes."
     },
     {
       "id": "CHG-PPP-MINI-DASHBOARD-UX",
