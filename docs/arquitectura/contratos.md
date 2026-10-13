@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.agent-decision-board.2 · 2026-10-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.investor-principal-story.1 · 2026-10-13.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -716,8 +716,8 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 - Componentes: SYS-INVERSION, GAS-PLAN-POTENCIAL, SHEET-PLAN-POTENCIAL.
 - Evidencia: Código público del formulario Plan de Potencial: GET recurso=textos; nuevas claves comerciales autorizadas por Dirección y escritas mediante conector de Sheets..
-- Entrada/campos: `Respuesta textos o diccionario directo.`, `Claves inv1_* a inv7_* para contenido comercial, marca, capítulos, grupos de detalles, duración y cierre. Compatibilidad con las versiones de uno y tres capítulos.`, `Cliente anónimo; no recibe ni transmite credenciales del Masterbroker.`, `hunt_*: apertura por zoom, geometría pública trazada, ocho momentos de búsqueda, dos casos y unidades abstractas de valor; datos y configuración en la misma hoja editorial.`, `mono_version y mono_config: JSON de contenido público, jerarquía, siete escenas/21 momentos, etiquetas, fuentes/atribución, estilo y controles. Validación estricta del cliente; compatibilidad con inv1_*–inv7_* y hunt_* conservados como versión anterior.`, `Cartografía pública existente de TEXTOS POTENCIAL; distinguir territorio verificable de croquis local ilustrativo. Geometría conceptual sintética y controller en presentacion/monoline-core.js y monoline.js.`.
-- Salida: Narrativa comercial para inversionista; animación conceptual por scroll., Tarjeta Material con apertura pública y copia de enlace., Error recuperable si falta contenido; ninguna cifra o aprobación inventada., Nueva presentación monoline 4r4: Qué hacemos (escenas 1–2), Cómo decidimos (3), Cómo participas (4–7); detalles en flujo normal, vínculos ancla y conversación copiable..
+- Entrada/campos: `Respuesta textos o diccionario directo.`, `Claves inv1_* a inv7_* para contenido comercial, marca, capítulos, grupos de detalles, duración y cierre. Compatibilidad con las versiones de uno y tres capítulos.`, `Cliente anónimo; no recibe ni transmite credenciales del Masterbroker.`, `hunt_*: apertura por zoom, geometría pública trazada, ocho momentos de búsqueda, dos casos y unidades abstractas de valor; datos y configuración en la misma hoja editorial.`, `mono_version y mono_config: JSON de contenido público, jerarquía, siete escenas/21 momentos, etiquetas, fuentes/atribución, estilo y controles. Validación estricta del cliente; compatibilidad con inv1_*–inv7_* y hunt_* conservados como versión anterior.`, `Cartografía pública existente de TEXTOS POTENCIAL; distinguir territorio verificable de croquis local ilustrativo. Geometría conceptual sintética y controller en presentacion/monoline-core.js y monoline.js.`, `principal_version y principal_config: nueva configuración editorial pública, nueve escenas/cuatro momentos por escena (36), zonas A/B/C, escenas de búsqueda/comparación/proyecto/participación, controles y estilo. Geometría conceptual prevista en presentacion/principal-core.js, controller en principal.js y estilo en principal.css; misma fuente pública externa.`.
+- Salida: Narrativa comercial para inversionista; animación conceptual por scroll., Tarjeta Material con apertura pública y copia de enlace., Error recuperable si falta contenido; ninguna cifra o aprobación inventada., Nueva presentación monoline 4r4: Qué hacemos (escenas 1–2), Cómo decidimos (3), Cómo participas (4–7); detalles en flujo normal, vínculos ancla y conversación copiable., Versión principal desde boceto de Dirección: territorio → tres zonas → búsqueda de propiedades → comparación → proyecto evaluable → capital/terreno y coordinación YoDesarrollo. Beta monoline4r4 y versiones anteriores accesibles dentro de la misma URL..
 
 - Sólo GET al contrato de textos; ninguna escritura o prueba de negocio desde la presentación.
 - Sin nombres, ID de broker, correo, cartera o estado de cuenta en el enlace compartido.
@@ -735,6 +735,10 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - CTA prepara conversación con quien compartió el enlace, sin envío automático, depósito, aceptación, estudio técnico gratuito ni prelación inventada; alcance, costos y condiciones se acuerdan.
 - Misma URL pública y acceso Material; apertura y siete capítulos previos accesibles dentro de Versión anterior. Ningún cambio de sesión/Portero/CRM, permisos, backend o expedientes.
 - Scroll, navegación y reproducción comparten progreso determinista y reversible; movimiento reducido conserva el mismo SVG completo estático y todos los detalles en flujo normal.
+- En principal_* las letras A/B/C son zonas de búsqueda de Hermosillo, nunca modalidades compra/aportación ni tres propiedades; primero se evalúan zonas y después inmuebles dentro de ellas. Ninguna zona real, uso compatible o demanda se declara confirmada sin evidencia.
+- principal_* conserva exactamente nueve escenas y cuatro momentos narrativos por escena; un trazo SVG naranja acumulativo, texto desde Sheets y progreso común reversible. Beta monoline4r4 se conserva con su propio vocabulario A/B histórico, sin mezclar sus identidades con la versión principal.
+- Participantes de principal_*: codesarrolladores capitalistas, codesarrollador aportador del terreno y coordinación YoDesarrollo. Roles no fijan porcentajes, prelación, retorno ni obligaciones automáticas; aportaciones, responsabilidades, salida y distribución requieren acuerdo.
+- Cuenta económica incluye una sola vez el valor del inmueble, comprado o aportado; unidades/viviendas, ingresos, inversión, utilidad y cobros son conceptos distintos. Diagrama y puntuaciones editoriales no acreditan viabilidad ni éxito financiero.
 
 ## CTR-SALA-IMAGEN-OPENAI-NUBE
 

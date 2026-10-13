@@ -62,3 +62,5 @@ La auditoría no se considera completa mientras existan componentes críticos o 
 - [Sala172 · Administración de accesos por sesión vigente](sala-accesos172.md): propuesta, invariantes, regresiones y comprobación real pendiente.
 
 - [Presentación monoline4r4](investor-monoline-story.md): cobertura de fuente, orden comercial/legal, path acumulativo, pruebas y reversión; registro previo a implementación.
+
+- [Presentación principal de nueve escenas](investor-principal-story.md): A/B/C zonas, búsqueda de propiedades posterior, 36 momentos, copy en Sheets y beta4r4 conservada; registro previo a implementación.

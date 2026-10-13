@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-13.agent-decision-board.2",
+  "revision": "2026-10-13.investor-principal-story.1",
   "checked_at": "2026-10-13",
   "priorities": [
     "vender_mas",
@@ -12144,6 +12144,30 @@
       ],
       "deployment": "Dummy offline verificado e inspeccionado en PR222. Publicación Pages se registra por recibo en el PR. Sin cambios del runtime privado y sin aceptación de voz/IA/Sheets/autonomía. Notas internas de diseño, no certificación.",
       "rollback": "Revertir PR del prototipo; conservar contratos, aplicaciones, servidor, datos, credenciales y tareas canceladas."
+    },
+    {
+      "id": "CHG-INVESTOR-PRINCIPAL-STORY",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL",
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección pide reconstruir la versión principal desde su boceto de nueve cuadros, dejando la versión previa como borrador beta. Confirma que A/B/C son tres zonas de Hermosillo, después se buscan propiedades dentro de ellas; participantes: codesarrolladores capitalistas y codesarrollador aportador del terreno. Autorización explícita para continuar el trabajo en la presentación pública existente.",
+      "proposal": "Nueva entrada principal de nueve escenas y 36 momentos por scroll en la misma URL, con un único trazo SVG naranja y contenido/configuración principal_* almacenados en Sheets. Recorrido: territorio, tres zonas y sus evaluaciones diferenciadas, búsqueda de inmuebles dentro de ellas, comparación, proyecto evaluable y participación de capital/terreno con coordinación YoDesarrollo. A/B/C sólo identifican zonas; compra y aportación se nombran como modalidades y no reutilizan esas letras. Mantener beta monoline4r4 y antecedentes dentro de la misma página, originales sin sobrescribir y todo el contrato público existente. Sin nuevos motores, ACL, datos de cartera ni reglas comerciales.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check; node --test tests/*.cjs; node verify-os.cjs; node verify-portal.cjs; node verify-accesos.cjs; node verify-obra-app.cjs.",
+        "Consumidor: contrato principal_version/principal_config mediante fixtures sintéticos; exactamente nueve escenas/cuatro momentos por escena; errores recuperables, textos seguros y compatibilidad beta/antecedentes sin pérdida editorial.",
+        "Geometría: único SVG/path maestro, una orden M, sin subpaths ni sustitución por imágenes/video; cartografía pública externa atribuida, retorno exacto y conectores exteriores; A/B/C zonas estables, propiedades y modalidades con identificación distinta.",
+        "Chromium320/390/1440: scroll nativo y reversa, 36 momentos, navegación, play/pausa/replay, estado/cámara/punta coherentes, interfaz y detalle legibles sin overflow.",
+        "Movimiento reducido: diagrama estático completo y copia accesible; beta4r4 y anteriores accesibles en la misma página; transición de ida/vuelta sin duplicar fetch ni borrar sesión.",
+        "Cuenta económica distingue inmueble aportado, obra y demás costos de inversión total, utilidad del proyecto y reparto acordado; no inventar capacidad, precio, probabilidad de éxito ni ganador por falta de datos.",
+        "Producción anónima sólo tras integración del consumidor: comparar código servido con commit, lectura pública editorial viva, controles y cierre; registrar recibos separados. Ninguna escritura de prueba a servicios de negocio."
+      ],
+      "deployment": "Registro previo de propuesta aprobada. Documenta el contrato de la nueva versión principal; no acredita implementación, configuración principal_* escrita ni publicación. Beta4r4 se conserva y no requiere cambio de backend ni acceso privado.",
+      "rollback": "Revertir únicamente PR frontend principal y restaurar beta4r4 como entrada, dentro de la misma URL; conservar principal_*, mono_*, hunt_* e inv1_*–inv7_* en Sheets, originales, Material, permisos y expedientes. No restaurar registros operativos."
     }
   ],
   "data_contracts": [
@@ -13605,13 +13629,15 @@
         "Cliente anónimo; no recibe ni transmite credenciales del Masterbroker.",
         "hunt_*: apertura por zoom, geometría pública trazada, ocho momentos de búsqueda, dos casos y unidades abstractas de valor; datos y configuración en la misma hoja editorial.",
         "mono_version y mono_config: JSON de contenido público, jerarquía, siete escenas/21 momentos, etiquetas, fuentes/atribución, estilo y controles. Validación estricta del cliente; compatibilidad con inv1_*–inv7_* y hunt_* conservados como versión anterior.",
-        "Cartografía pública existente de TEXTOS POTENCIAL; distinguir territorio verificable de croquis local ilustrativo. Geometría conceptual sintética y controller en presentacion/monoline-core.js y monoline.js."
+        "Cartografía pública existente de TEXTOS POTENCIAL; distinguir territorio verificable de croquis local ilustrativo. Geometría conceptual sintética y controller en presentacion/monoline-core.js y monoline.js.",
+        "principal_version y principal_config: nueva configuración editorial pública, nueve escenas/cuatro momentos por escena (36), zonas A/B/C, escenas de búsqueda/comparación/proyecto/participación, controles y estilo. Geometría conceptual prevista en presentacion/principal-core.js, controller en principal.js y estilo en principal.css; misma fuente pública externa."
       ],
       "output": [
         "Narrativa comercial para inversionista; animación conceptual por scroll.",
         "Tarjeta Material con apertura pública y copia de enlace.",
         "Error recuperable si falta contenido; ninguna cifra o aprobación inventada.",
-        "Nueva presentación monoline 4r4: Qué hacemos (escenas 1–2), Cómo decidimos (3), Cómo participas (4–7); detalles en flujo normal, vínculos ancla y conversación copiable."
+        "Nueva presentación monoline 4r4: Qué hacemos (escenas 1–2), Cómo decidimos (3), Cómo participas (4–7); detalles en flujo normal, vínculos ancla y conversación copiable.",
+        "Versión principal desde boceto de Dirección: territorio → tres zonas → búsqueda de propiedades → comparación → proyecto evaluable → capital/terreno y coordinación YoDesarrollo. Beta monoline4r4 y versiones anteriores accesibles dentro de la misma URL."
       ],
       "invariants": [
         "Sólo GET al contrato de textos; ninguna escritura o prueba de negocio desde la presentación.",
@@ -13629,7 +13655,11 @@
         "Inversión económica incluye valor acordado del inmueble aportado una sola vez. Intereses/comisiones son costos; principal y devolución de aportaciones son flujos. Venta prevista no equivale a cobro ni utilidad del proyecto a reparto del inversionista.",
         "CTA prepara conversación con quien compartió el enlace, sin envío automático, depósito, aceptación, estudio técnico gratuito ni prelación inventada; alcance, costos y condiciones se acuerdan.",
         "Misma URL pública y acceso Material; apertura y siete capítulos previos accesibles dentro de Versión anterior. Ningún cambio de sesión/Portero/CRM, permisos, backend o expedientes.",
-        "Scroll, navegación y reproducción comparten progreso determinista y reversible; movimiento reducido conserva el mismo SVG completo estático y todos los detalles en flujo normal."
+        "Scroll, navegación y reproducción comparten progreso determinista y reversible; movimiento reducido conserva el mismo SVG completo estático y todos los detalles en flujo normal.",
+        "En principal_* las letras A/B/C son zonas de búsqueda de Hermosillo, nunca modalidades compra/aportación ni tres propiedades; primero se evalúan zonas y después inmuebles dentro de ellas. Ninguna zona real, uso compatible o demanda se declara confirmada sin evidencia.",
+        "principal_* conserva exactamente nueve escenas y cuatro momentos narrativos por escena; un trazo SVG naranja acumulativo, texto desde Sheets y progreso común reversible. Beta monoline4r4 se conserva con su propio vocabulario A/B histórico, sin mezclar sus identidades con la versión principal.",
+        "Participantes de principal_*: codesarrolladores capitalistas, codesarrollador aportador del terreno y coordinación YoDesarrollo. Roles no fijan porcentajes, prelación, retorno ni obligaciones automáticas; aportaciones, responsabilidades, salida y distribución requieren acuerdo.",
+        "Cuenta económica incluye una sola vez el valor del inmueble, comprado o aportado; unidades/viviendas, ingresos, inversión, utilidad y cobros son conceptos distintos. Diagrama y puntuaciones editoriales no acreditan viabilidad ni éxito financiero."
       ]
     },
     {
