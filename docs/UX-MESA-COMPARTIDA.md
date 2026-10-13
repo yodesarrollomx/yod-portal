@@ -30,3 +30,10 @@ El puesto del autón es una **maqueta visual navegable** con datos sintéticos, 
 El PR debe pasar los verificadores de catálogo, atlas, contratos, accesos, portal y Obra. Las pruebas con datos de ejemplo son diagnóstico de presentación y no aceptan operación autónoma ni integraciones de negocio.
 
 Revertir el PR restaura la navegación anterior sin cambiar sesiones, permisos, expedientes, hojas o implementaciones. La maqueta puede retirarse de forma independiente.
+
+## Bitácora de entrega
+
+- 2026-10-13T00:30:37Z: comprobados main y PR abiertos; identificados el control común existente, accesos Inicio redundantes y tratamiento distinto del hijo Miramar. Propuesta registrada en commit `2ae7a255e08d56b36949a1fe7f3f70023a971877` antes del código.
+- 2026-10-13T00:49:59Z: abierto [PR215](https://github.com/yodesarrollomx/yod-portal/pull/215), con navegación común y maqueta local sin llamadas de negocio. Código `83df46b7501977c5786aa9c9f0a0542211958456`.
+- 2026-10-13T00:50:16Z: la regresión existente exigía el enlace duplicado de Inicio en herramientas del Despacho. Se ajustó a la decisión autorizada: logo de escritorio y móvil con Inicio, sin otro enlace repetido. No se cambió una regla comercial ni aceptación de negocio.
+- 2026-10-13T00:55:14Z: verificadores Node aprobados sobre `1c0b1dab0438a7b80795d39611963038324217b0`: [Arquitectura, atlas, pruebas, Obra e impacto](https://github.com/yodesarrollomx/yod-portal/actions/runs/38329301097) y [OS, portal y accesos](https://github.com/yodesarrollomx/yod-portal/actions/runs/38329301380). El PR registra la integración y publicación efectiva. La voz y los datos privados no se acreditan con estas pruebas.

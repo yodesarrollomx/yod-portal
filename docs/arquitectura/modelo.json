@@ -11798,7 +11798,7 @@
         "SYS-CONTROL",
         "SYS-OBRA-CLIENTE"
       ],
-      "status": "implementado_local",
+      "status": "verificado",
       "approval": "12-oct-2026, Dirección autoriza mockup completo y aplicar el control común de barra compacta, orden estable y logo como Inicio.",
       "proposal": "Unificar presentación del menú desde el catálogo técnico, sin cambiar destinos ni permisos. Retirar entradas de Inicio repetidas. Reutilizar la compactación existente. Añadir un mockup navegable de la mesa compartida; el rediseño del puesto privado sigue siendo propuesta visual.",
       "tests": [
@@ -11807,7 +11807,7 @@
         "Diagnóstico del orden y deduplicación con datos sintéticos; no aceptación operativa del despacho.",
         "Vista propuesta con funciones locales, sin endpoints de negocio."
       ],
-      "deployment": "Código preparado en rama aislada y mockup navegable con datos de ejemplo. Verificación de GitHub Actions, integración y publicación Pages pendientes; no acredita conexiones reales de voz o PPP.",
+      "deployment": "Navegación y maqueta verificadas con Node en GitHub Actions sobre 1c0b1dab0438a7b80795d39611963038324217b0. Arquitectura YOD run 38329301097 y Verificar YOD OS run 38329301380 aprobados. Verificación de presentación con ejemplos; no aceptación operativa de voz, PPP privado o autonomía. Integración/publicación Pages se registra en PR215.",
       "rollback": "Revertir el PR de navegación y propuesta visual. Conserva la sesión, IDs, datos, permisos y fuentes de negocio."
     }
   ],
