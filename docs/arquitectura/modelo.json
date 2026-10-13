@@ -7773,94 +7773,6 @@
           "status": "codigo"
         }
       ]
-    },
-    {
-      "id": "PROC-INVESTOR-MONOLINE-STORY",
-      "nombre": "Relato público4r4: oportunidad, decisión y participación",
-      "status": "propuesto",
-      "steps": [
-        {
-          "label": "1. Oportunidad y salida prevista",
-          "role": "Inversionista referido / YoDesarrollo",
-          "input": "Hook inmediato, Hermosillo y dos alternativas ilustrativas",
-          "output": "Negocio y modalidades comprendidos; rentabilidad buscada, no garantizada",
-          "components": [
-            "SYS-INVERSION"
-          ],
-          "mode": "manual"
-        },
-        {
-          "label": "2. Mercado orienta la búsqueda y el producto",
-          "role": "YoDesarrollo",
-          "input": "Comparables, demanda, tamaños, precio/m², competencia y comprador",
-          "output": "Contexto, producto demandado y estrategia comercial por sustentar",
-          "components": [
-            "SYS-INVERSION"
-          ],
-          "mode": "manual"
-        },
-        {
-          "label": "3. Comparar inversión, flujo y escenario adverso",
-          "role": "YoDesarrollo / inversionista",
-          "input": "Modelo de ocho variables; siete financieras; compra/aportación con valor económico",
-          "output": "Comparación integral, sin resultados ni ganador fabricados",
-          "components": [
-            "SYS-INVERSION"
-          ],
-          "mode": "manual"
-        },
-        {
-          "label": "4. Revisar, acordar y formalizar si procede",
-          "role": "Partes / responsables legales",
-          "input": "Documentos, uso/factibilidad, aportaciones, capital/plazo/recuperación/rendimiento y acuerdos",
-          "output": "Condiciones antes de compromiso; adquisición/aportación formal posterior a revisión",
-          "components": [
-            "SYS-INVERSION"
-          ],
-          "mode": "manual"
-        },
-        {
-          "label": "5. Proyecto, permisos, servicios y obra con controles",
-          "role": "YoDesarrollo / responsables acordados",
-          "input": "Proyecto, permisos y condiciones de servicios antes del inicio de obra",
-          "output": "Ejecutar y seguir riesgos, alcance, costo y plazo conforme a responsabilidades",
-          "components": [
-            "SYS-INVERSION"
-          ],
-          "mode": "manual"
-        },
-        {
-          "label": "6. Documentar, vender, cobrar y distribuir según pacto",
-          "role": "Responsables comerciales/legales / partes",
-          "input": "Regularización, condiciones de escrituración, comercialización prevista y cobros",
-          "output": "Recuperación y distribución reales según acuerdo; utilidad distinta del reparto",
-          "components": [
-            "SYS-INVERSION"
-          ],
-          "mode": "manual"
-        },
-        {
-          "label": "7. Conversación inicial y siguiente paso",
-          "role": "Persona que comparte / interesado",
-          "input": "Interés en inmueble o participación con capital",
-          "output": "Mensaje preparado sin envío; alcance, entregables, costos y siguientes pasos por acordar",
-          "components": [
-            "SYS-INVERSION"
-          ],
-          "mode": "manual"
-        }
-      ],
-      "manual_gaps": [
-        "Proceso narrativo conceptual; no certifica revisión legal, autorización, venta, cobro ni acuerdos de un inmueble.",
-        "Implementación y recorrido público deben comprobarse en el repositorio consumidor; evaluar datos reales y pactar condiciones ocurre fuera de la presentación.",
-        "No ampliar permisos ni usar la publicación editorial para activar operaciones de CRM."
-      ],
-      "evidence": [
-        {
-          "claim": "Dirección4r4 autorizada: siete escenas y ocho familias de contenido. Fuente original: cinco láminas de contenido más portada; variantes no son nuevos originales. Registro previo a implementación.",
-          "status": "propuesto"
-        }
-      ]
     }
   ],
   "proposals": [
@@ -12050,7 +11962,9 @@
       "components": [
         "SYS-INVERSION",
         "GAS-PLAN-POTENCIAL",
-        "SHEET-PLAN-POTENCIAL"
+        "SHEET-PLAN-POTENCIAL",
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
       ],
       "proposal": "Ejecutar dirección creativa4r4 en la presentación pública existente con siete escenas/21 momentos, un único path naranja acumulativo, detalles completos y CTA de conversación. Headline inmediato, tres grupos narrativos, compra/aportación ilustrativas y orden comercial/legal conservado. Reutiliza fuentes editoriales y cartográficas de Sheets, mismo GET de textos, URL y Material. No modifica backend, permisos, reglas comerciales, datos financieros ni expedientes.",
       "status": "propuesto",

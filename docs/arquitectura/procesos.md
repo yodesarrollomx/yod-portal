@@ -520,38 +520,3 @@ flowchart TD
 Vacíos: Consentimiento inicial de Google y confirmación del libro efectivo mediante sesión de Dirección.; Corte de la rutina Claude sólo después de dos ciclos de observación y pruebas; primer envío aprobado real se acredita por separado.; Si la rutina original captaba correos/creaba tarjetas, portar esas reglas antes de dar por sustituido su alcance; este ejecutor sólo procesa BANDEJA y cambios/respuestas existentes..
 
 Evidencia: CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.; Proceso de nube implementado con observación, aprobación privada, reserva y conciliación; publicación comprobada, ejecución Google pendiente..
-
-## PROC-INVESTOR-MONOLINE-STORY · Relato público4r4: oportunidad, decisión y participación
-
-Estado: propuesto.
-
-```mermaid
-flowchart TD
-  p0["1. Oportunidad y salida prevista · Inversionista referido / YoDesarrollo"]
-  p1["2. Mercado orienta la búsqueda y el producto · YoDesarrollo"]
-  p0 -.-> p1
-  p2["3. Comparar inversión, flujo y escenario adverso · YoDesarrollo / inversionista"]
-  p1 -.-> p2
-  p3["4. Revisar, acordar y formalizar si procede · Partes / responsables legales"]
-  p2 -.-> p3
-  p4["5. Proyecto, permisos, servicios y obra con controles · YoDesarrollo / responsables acordados"]
-  p3 -.-> p4
-  p5["6. Documentar, vender, cobrar y distribuir según pacto · Responsables comerciales/legales / partes"]
-  p4 -.-> p5
-  p6["7. Conversación inicial y siguiente paso · Persona que comparte / interesado"]
-  p5 -.-> p6
-```
-
-| Paso | Responsable | Componentes | Entrada → salida | Ejecución |
-|---|---|---|---|---|
-| 1. 1. Oportunidad y salida prevista | Inversionista referido / YoDesarrollo | SYS-INVERSION | Hook inmediato, Hermosillo y dos alternativas ilustrativas → Negocio y modalidades comprendidos; rentabilidad buscada, no garantizada | manual |
-| 2. 2. Mercado orienta la búsqueda y el producto | YoDesarrollo | SYS-INVERSION | Comparables, demanda, tamaños, precio/m², competencia y comprador → Contexto, producto demandado y estrategia comercial por sustentar | manual |
-| 3. 3. Comparar inversión, flujo y escenario adverso | YoDesarrollo / inversionista | SYS-INVERSION | Modelo de ocho variables; siete financieras; compra/aportación con valor económico → Comparación integral, sin resultados ni ganador fabricados | manual |
-| 4. 4. Revisar, acordar y formalizar si procede | Partes / responsables legales | SYS-INVERSION | Documentos, uso/factibilidad, aportaciones, capital/plazo/recuperación/rendimiento y acuerdos → Condiciones antes de compromiso; adquisición/aportación formal posterior a revisión | manual |
-| 5. 5. Proyecto, permisos, servicios y obra con controles | YoDesarrollo / responsables acordados | SYS-INVERSION | Proyecto, permisos y condiciones de servicios antes del inicio de obra → Ejecutar y seguir riesgos, alcance, costo y plazo conforme a responsabilidades | manual |
-| 6. 6. Documentar, vender, cobrar y distribuir según pacto | Responsables comerciales/legales / partes | SYS-INVERSION | Regularización, condiciones de escrituración, comercialización prevista y cobros → Recuperación y distribución reales según acuerdo; utilidad distinta del reparto | manual |
-| 7. 7. Conversación inicial y siguiente paso | Persona que comparte / interesado | SYS-INVERSION | Interés en inmueble o participación con capital → Mensaje preparado sin envío; alcance, entregables, costos y siguientes pasos por acordar | manual |
-
-Vacíos: Proceso narrativo conceptual; no certifica revisión legal, autorización, venta, cobro ni acuerdos de un inmueble.; Implementación y recorrido público deben comprobarse en el repositorio consumidor; evaluar datos reales y pactar condiciones ocurre fuera de la presentación.; No ampliar permisos ni usar la publicación editorial para activar operaciones de CRM..
-
-Evidencia: Dirección4r4 autorizada: siete escenas y ocho familias de contenido. Fuente original: cinco láminas de contenido más portada; variantes no son nuevos originales. Registro previo a implementación..

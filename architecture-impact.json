@@ -5,7 +5,9 @@
   "components": [
     "SYS-INVERSION",
     "GAS-PLAN-POTENCIAL",
-    "SHEET-PLAN-POTENCIAL"
+    "SHEET-PLAN-POTENCIAL",
+    "SYS-YOD-OS",
+    "SYS-CONTROL"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",

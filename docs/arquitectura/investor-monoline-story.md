@@ -20,6 +20,20 @@ Titular inmediato: «Entiende el proyecto antes de decidir invertir». YoDesarro
 
 Todos los detalles quedan bajo cada momento mediante scroll normal, sin menús, acordeones ni tablas diminutas. Tres grupos enlazan anclas; navegación no obliga a animación. Reordenación explícita del original: revisión documental/factibilidad se adelanta a la adquisición. La estrategia comercial empieza con mercado, no después de terminar obra.
 
+## Diagrama del relato, sin proceso operativo nuevo
+
+```mermaid
+flowchart TD
+  s1["1. Oportunidad y salida prevista"] --> s2["2. Mercado antes de definir producto"]
+  s2 --> s3["3. Comparar inversión, flujo y escenarios"]
+  s3 --> s4["4. Revisar, acordar y formalizar si procede"]
+  s4 --> s5["5. Proyecto, permisos, servicios y obra"]
+  s5 --> s6["6. Documentar, vender, cobrar y distribuir según acuerdo"]
+  s6 --> s7["7. Conversación inicial y siguiente paso"]
+```
+
+Este diagrama es el orden de explicación pública; no agrega un proceso al inventario operativo ni activa seguimiento de salud, permisos o transacciones.
+
 ## Dibujo y continuidad
 
 `presentacion/monoline-core.js` contiene geometría conceptual sintética sin editorial; `monoline.js` controla escena y texto desde Sheets; `monoline.css` e `index.html` montan la versión. Un único SVG/path maestro acumulativo, un inicio y ninguna orden M adicional/subpath; sin morph global, borrado o sustitución de dibujos. Los contornos retornan al mismo vértice y las derivaciones retrazan exactamente segmentos existentes. Puentes exteriores conectan anclajes sin cruzar/fusionar predios; las avenidas no se transforman en edificios.
