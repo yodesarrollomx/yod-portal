@@ -1,21 +1,21 @@
 {
-  "model_revision": "2026-10-13.masterbrokers-mini-crm.1",
-  "proposal_id": "CHG-MASTERBROKERS-MINI-CRM",
-  "summary": "Mini CRM progresivo genérico de Masterbrokers sobre el Sheet/IDs vigentes: comparación readonly de PPP guardado, historial fechado y con fuente, calendario y programación con participantes. Sin motor financiero nuevo ni cambios de backend/ACL.",
+  "model_revision": "2026-10-13.investor-simple-story.1",
+  "proposal_id": "CHG-INVESTOR-SIMPLE-STORY",
+  "summary": "Registro previo de siete escenas simples con renderer nuevo, fuente editorial vigente y archivo anterior; sin backend/ACL/reglas de negocio.",
   "components": [
     "SYS-INVERSION",
-    "GAS-CRM",
-    "SHEET-CRM",
-    "SYS-POTENCIALES",
-    "GAS-PORTERO",
-    "SHEET-PORTERO",
-    "SYS-YOD-OS"
+    "GAS-PLAN-POTENCIAL",
+    "SHEET-PLAN-POTENCIAL",
+    "SYS-YOD-OS",
+    "SYS-CONTROL"
   ],
   "tests": [
-    "node --test tests/brokers*.test.cjs: codec compatible, fecha real distinta de captura, eventos programados/reemplazados, calendario y resumen PPP sin motor propio.",
-    "Chromium320/390/1440: varios expedientes desplegados, comparación alineada, calendario, editor y fuentes; cero overflow.",
-    "Permisos existentes, preview sin guardado, sesión invalidada, ACK/revisión/reintentos idempotentes; cero escrituras de prueba en producción.",
-    "Atlas regenerado, checks del portal y pin del consumidor; publicación registrada aparte de integración y de lectura privada."
+    "node scripts/arquitectura.cjs --check",
+    "node --test tests/*.cjs",
+    "node verify-os.cjs",
+    "node verify-portal.cjs",
+    "node verify-accesos.cjs",
+    "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir sólo frontend; conservar IDs, todas las actividades y sus notas legibles, fuentes, PPP, pendientes, permisos y datos operativos. No restaurar filas de negocio."
+  "rollback": "Revertir sólo registro/consumidor mediante revisión, conservar hojas y archivos de negocio."
 }

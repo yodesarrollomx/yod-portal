@@ -66,3 +66,5 @@ La auditoría no se considera completa mientras existan componentes críticos o 
 - [Presentación principal de nueve escenas](investor-principal-story.md): A/B/C zonas, búsqueda de propiedades posterior, 36 momentos, copy en Sheets y beta4r4 conservada; registro previo a implementación.
 
 - [Masterbrokers · Mini CRM](masterbrokers-mini-crm.md): comparación de PPP guardados, historial fechado, fuentes y calendario sobre el mismo Sheet.
+
+- [Presentación simplificada de siete escenas](investor-simple-story.md): trazo grueso por escena, claridad comercial, lectura opcional y archivo anterior; registro previo.
