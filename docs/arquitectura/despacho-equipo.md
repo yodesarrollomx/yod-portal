@@ -1,6 +1,6 @@
 # Equipo del Despacho
 
-Estado: implementación frontend en rama; **sin montaje productivo ni adaptador de negocio**.
+Estado: implementación frontend y montaje autorizado implementados en rama; **sin publicación ni adaptador productivo verificado**.
 No reemplaza los expedientes ni el Buzón existente. No modifica Masterbrokers.
 
 ## Comportamiento
@@ -29,8 +29,12 @@ Cargar equipo.css e importar mountTeamDesk desde despacho3d/equipo.mjs.
 Invocar una vez desde el host de sesión confirmada, con container, transport,
 isAuthorized e identityEpoch. Guardar el controlador y llamar a revoke() antes de cambiar
 identidad, revocar acceso o destruir la sección. No montar por un valor de localStorage,
-parámetro de URL, mensaje arbitrario o estado de menú. No hay montaje automático en esta
-entrega: no se muestra un botón de producción que prometa una conexión inexistente.
+parámetro de URL, mensaje arbitrario o estado de menú. El host os/app.js monta Equipo sólo para Dirección validada y ruta privada del Despacho.
+El cargador os/despacho-equipo-host.js conserva la época real y revoca al salir de ruta,
+perder autoridad o cambiar identidad, incluyendo imports tardíos. El transporte existente
+usa readTeam, writeTeam y lookupTeamReceipt sobre la misma sesión y endpoint; los errores
+{ok:false,error} se convierten en errores, nunca en recibos. No hay tokens en iframe ni almacenes nuevos.
+La activación productiva y la disponibilidad del adaptador se verifican por separado.
 
 No sustituir los mecanismos de autenticación actuales. Las callbacks del cliente impiden
 mostrar resultados tardíos, pero **el servidor verifica por sí mismo autoridad vigente,
@@ -48,10 +52,6 @@ lectura y escritura**. La identidad del autor debe venir de la sesión del servi
 - lookupReceipt(request_id): devolver recibo previamente confirmado, o
   {status:"not_found",request_id} sólo si se comprobó ausencia en el almacén autorizado.
   Error o resultado desconocido jamás equivale a ausencia.
-  Un rechazo definitivo por revisión debe ser un recibo durable correlacionado con
-  status=rejected y reason=revision_conflict, conservando los demás campos del recibo.
-  Sólo ese rechazo libera el intento anterior: el cliente relee, conserva el texto y
-  exige otra acción humana para enviar con nueva revisión y nuevo request_id.
 - Recibo: version=1, status=saved, id, request_id, revision, recorded_at ISO, kind, text,
   task_id. Debe acreditar escritura durable; no fabricarlo desde el frontend.
 

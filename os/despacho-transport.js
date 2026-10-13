@@ -3,10 +3,13 @@
  function create(options){
   var endpoint=options.endpoint;
   if(typeof endpoint!=='string'||!/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(endpoint))throw Error('invalid_endpoint');
-  var methods=['listAuthorized','resolveCurrent','read','enqueue','createGoal','readGoals','reviewGoal','mintFastSession','readVisits','recordVisit','readOfficePermissions','readOfficePending'];
+  var methods=['listAuthorized','resolveCurrent','read','enqueue','createGoal','readGoals','reviewGoal','mintFastSession','readVisits','recordVisit','readOfficePermissions','readOfficePending','readTeam','writeTeam','lookupTeamReceipt'];
   function keys(value,names){return !!value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).length===names.length&&names.every(function(key){return Object.prototype.hasOwnProperty.call(value,key);});}
   function str(value,max){return typeof value==='string'&&value.trim().length>0&&value.length<=max;}
   function validGoalPayload(operation,p){
+   if(operation==='readTeam')return keys(p,[]);
+   if(operation==='lookupTeamReceipt')return keys(p,['request_id'])&&typeof p.request_id==='string'&&/^[a-zA-Z0-9_-]{16,100}$/.test(p.request_id);
+   if(operation==='writeTeam')return keys(p,['version','kind','text','task_id','request_id','expected_revision'])&&p.version===1&&['request','note'].includes(p.kind)&&str(p.text,12000)&&typeof p.request_id==='string'&&/^[a-zA-Z0-9_-]{16,100}$/.test(p.request_id)&&str(p.expected_revision,256)&&((p.kind==='request'&&p.task_id===null)||(p.kind==='note'&&str(p.task_id,256)));
    if(operation==='listAuthorized')return keys(p,[]);
    if(operation==='resolveCurrent')return keys(p,[])||(keys(p,['case_id'])&&str(p.case_id,200));
    if(operation==='readOfficePending')return keys(p,['case_id','space_id'])&&str(p.case_id,256)&&p.space_id==='juntas';
@@ -32,7 +35,7 @@
     if(!response.ok)throw Error('unavailable');
     // The durable read includes growing history as well as source metadata.
     // Other operations retain their original bound; each consumer still validates its projection.
-    var limit=operation==='read'?2097152:524288;
+    var limit=(operation==='read'||operation==='readTeam')?2097152:524288;
     var raw=await response.text();if(raw.length>limit)throw Error('response_limit');
     if(controller.signal.aborted)throw Error('timeout');
     var data;try{data=JSON.parse(raw);}catch(_){throw Error('invalid_response');}
@@ -40,6 +43,7 @@
     if(!current||current.epoch!==session.epoch||current.token!==session.token)throw Error('session_changed');
     if(current.allowed!==true)throw Error('unauthorized');
     if(current.ready!==true)throw Error('session_pending');
+    if(['readTeam','writeTeam','lookupTeamReceipt'].includes(operation)&&data&&data.ok===false){var code=typeof data.error==='string'&&/^[a-zA-Z0-9_:-]{1,100}$/.test(data.error)?data.error:'team_unavailable';throw Error(code);}
     return data;
    }catch(error){if(controller.signal.aborted||error&&error.name==='AbortError')throw Error('timeout');throw error;}
    finally{clearTimeout(timer);}

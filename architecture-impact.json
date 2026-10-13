@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-10-13.despacho-equipo.1",
   "proposal_id": "CHG-DESPACHO-EQUIPO-20261013",
-  "summary": "Módulo nativo de equipo para el Despacho: historia, hoy y planeación; responsables y última revisión comprobada; instrucciones editables con dictado optativo, conservación de borrador, request_id estable y recibo correlacionado. Consume transporte autorizado inyectado por la cabina; no publica datos ni introduce credenciales o endpoints. Adaptador al Buzón existente y activación se verifican aparte. No modifica el mini CRM reservado.",
+  "summary": "Módulo nativo de equipo para el Despacho: historia, hoy y planeación; responsables y última revisión comprobada; instrucciones editables con dictado optativo, conservación de borrador, request_id estable y recibo correlacionado. Consume transporte autorizado inyectado por la cabina; no publica datos ni introduce credenciales o endpoints. Adaptador al Buzón existente y activación se verifican aparte. No modifica el mini CRM reservado. Montaje nativo en cabina privada autenticada y transporte readTeam/writeTeam/lookupTeamReceipt implementados; validación de payload, revocación y fencing de import tardío. Backend coordinado separado.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
@@ -11,7 +11,8 @@
   "tests": [
     "CI: node scripts/arquitectura.cjs --check; node --test tests/*.cjs; node verify-os.cjs; node verify-portal.cjs; node verify-accesos.cjs; node verify-obra-app.cjs.",
     "Pruebas sintéticas: cortes históricos sin mutación, fechas futuras no acreditan ejecución, señales ausentes/futuras, envío ambiguo conserva request_id/texto, recibo incorrecto rechazado, revocación y lectura concurrente.",
-    "Aceptación pendiente: navegador escritorio/móvil, transporte privado instalado, guardar/recargar/acuse real de otro agente. Sin escrituras de prueba a negocio."
+    "Aceptación pendiente: navegador escritorio/móvil, transporte privado instalado, guardar/recargar/acuse real de otro agente. Sin escrituras de prueba a negocio.",
+    "tests/despacho-equipo-host.test.cjs y pruebas de transporte: sin autoridad no import, cambio de época/ruta revoca, intent exacto y errores backend no acreditan guardado."
   ],
   "rollback": "Retirar el montaje y revertir estos módulos. Conservar Buzón, eventos, recibos, permisos y todas las notas."
 }
