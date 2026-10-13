@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-13.agent-decision-board.1",
+  "model_revision": "2026-10-13.agent-decision-board.2",
   "proposal_id": "CHG-AGENT-DECISION-BOARD",
   "summary": "Reestructurar sólo el dummy como puesto de decisión YOD: próximo resultado con CTA y evidencia, ruta de cuatro resultados con denominador/alcance local, seis mini dashboards numéricos, color semántico y detalle progresivo. Chat fijo a derecha, recorrido opcional. Sin nuevos motores/APIs/datos/permisos/tareas.",
   "components": [
@@ -8,10 +8,11 @@
     "SYS-POTENCIALES"
   ],
   "tests": [
-    "Regresiones obligatorias arquitectura/OS/portal/accesos/obra.",
-    "Métricas del mismo caso; visita no suma, recibo local no significa normativa aprobada.",
-    "Chromium exacto desktop/Chromebook/móvil: geometría, borrador/ref/foco, siguiente/corrección/entrega, sin red de negocio.",
-    "Tres revisiones independientes con rúbrica fija y gates; capturas del código y nota por dimensión, sin heredar notas."
+    "Exacto fde1888a6f293e87148706a1bdeab686eefa3065: UX38350021233/job115140052518 PASS2026-10-13T05:10:59.054614Z,28capturas.",
+    "692 pruebas aprobadas; arquitectura/impacto38350021238, OS/portal/accesos38350021440 y obra correctos.",
+    "Chat fijo, seis inspectores, hilo parcial/final/cancelado sin duplicación, borrador/ref/caso, corrección y presentación.",
+    "Chromebook1366×768: seis tarjetas enteras contra borde real del visor; móvil390×844 sin overflow y mismo hilo.",
+    "Revisiones independientes simuladas: 2026=9.57, escenario2028=9.605, escenario2030=9.615; rúbrica previa sin cambios, sin gates. Tres candidatos previos rechazados; C4 sin consenso por borde."
   ],
   "rollback": "Revertir PR del prototipo; conservar contratos, aplicaciones, servidor, datos, credenciales y tareas canceladas."
 }
