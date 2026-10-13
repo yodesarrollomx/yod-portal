@@ -1,8 +1,9 @@
 'use strict';
 // Isolated static UX fixtures. External requests are blocked; no production session or microphone.
 const {chromium}=require('playwright'),fs=require('node:fs'),path=require('node:path'),http=require('node:http'),assert=require('node:assert/strict');
-const actualCommit=require('node:child_process').execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();if(process.env.EXPECTED_UX_COMMIT)assert.equal(actualCommit,process.env.EXPECTED_UX_COMMIT,'exact reviewed checkout');
-const root=path.resolve(__dirname,'..'),out=process.env.UX_EVIDENCE_DIR||'/tmp/yod-ux-evidence';
+const root=path.resolve(__dirname,'..');
+const actualCommit=require('node:child_process').execFileSync('git',['-c','safe.directory='+root,'-C',root,'rev-parse','HEAD'],{encoding:'utf8'}).trim();if(process.env.EXPECTED_UX_COMMIT)assert.equal(actualCommit,process.env.EXPECTED_UX_COMMIT,'exact reviewed checkout');
+const out=process.env.UX_EVIDENCE_DIR||'/tmp/yod-ux-evidence';
 fs.mkdirSync(out,{recursive:true});
 const mime={'.html':'text/html','.css':'text/css','.js':'text/javascript','.mjs':'text/javascript','.png':'image/png','.svg':'image/svg+xml'};
 const server=http.createServer((req,res)=>{const pathname=decodeURIComponent(new URL(req.url,'http://localhost').pathname),file=path.resolve(root,'.'+pathname);if(!file.startsWith(root+path.sep)){res.writeHead(403).end();return;}fs.readFile(file,(e,b)=>{if(e){res.writeHead(404).end();return;}res.setHeader('Content-Type',mime[path.extname(file)]||'application/octet-stream');res.end(b);});});
