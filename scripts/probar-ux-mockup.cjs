@@ -26,14 +26,14 @@ async function main(){
  async function overflow(label){const geometry=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth}));assert.ok(geometry.scroll<=geometry.width+1,label+' horizontal overflow '+JSON.stringify(geometry));}
  async function composer(label){assert.equal(await page.locator('#message-input').isVisible(),true);const box=await page.locator('#message-input').boundingBox(),size=page.viewportSize();assert.ok(box.y+box.height<=size.height+1,label+' composer clipped '+JSON.stringify(box));}
  async function snapshot(name){await overflow(name);await composer(name);const file=path.join(out,name+'.png');await page.screenshot({path:file,fullPage:false});console.log('MOCKUP_SCREENSHOT:'+name+':'+fs.readFileSync(file).toString('base64'));}
- await snapshot('v2-desktop');
+ await snapshot('v3-desktop');
  await page.locator('#message-input').fill('Borrador que debe conservarse');
  await page.locator('[data-card="normativa"] [data-source$=":norm"]').click();
  await page.locator('#source-title').filter({hasText:'Reglas del proyecto'}).waitFor();
  assert.equal(await page.locator('#context-viewer .source-passage mark').count(),1);
  assert.equal(await page.locator('#ppp-title').isVisible(),true);assert.equal(await page.locator('#message-input').inputValue(),'Borrador que debe conservarse');
  await page.locator('#comment-source').click();assert.equal(await page.locator('#message-input').inputValue(),'Borrador que debe conservarse');assert.ok((await page.locator('#draft-reference').innerText()).includes('V2'));
- await snapshot('v2-fuente');
+ await snapshot('v3-fuente');
  await page.locator('#close-source').click();
  await page.locator('[data-scenario="v1"]').click();assert.equal(await page.locator('#consulting-version').innerText(),'V1');assert.equal(await page.locator('[data-card="viabilidad"] .viability-version').innerText(),'V1');assert.equal(await page.locator('#defended-version').innerText(),'V2');
  await page.locator('[data-card="mercado"] [data-source$=":rent"]').click();assert.ok((await page.locator('#source-body').innerText()).includes('MXN/mes por unidad'));await page.locator('#source-body [data-source$=":market-study"]').click();assert.equal(await page.locator('#source-body .source-table tbody tr').count(),3);
@@ -47,13 +47,13 @@ async function main(){
  await page.locator('#case-select').selectOption('demo-gaston');assert.equal(await page.locator('#message-input').inputValue(),'Borrador que debe conservarse');assert.equal(await page.locator('#consulting-version').innerText(),'V3');
  await page.locator('#message-input').fill('<script>unsafe</script>');await page.locator('.send-button').click();assert.ok((await page.locator('#chat-stream').innerText()).includes('<script>unsafe</script>'));assert.equal(await page.locator('#chat-stream script').count(),0);
  await page.locator('[data-card="documentos"] [data-source$=":deed"]').evaluate(e=>e.dataset.source='demo-luis:deed');await page.locator('[data-card="documentos"] [data-source$=":deed"]').click();assert.ok((await page.locator('#source-body').innerText()).includes('Fuente no disponible'));assert.equal(await page.locator('#comment-source').isEnabled(),false);await page.locator('[data-prepare-missing]').click();assert.ok((await page.locator('#message-input').inputValue()).includes('expediente actual'));await page.locator('#close-source').click();
- await page.setViewportSize({width:1366,height:768});await snapshot('v2-chromebook');
+ await page.setViewportSize({width:1366,height:768});await snapshot('v3-chromebook');
  await page.locator('.ui-sidebar-toggle').click();await page.setViewportSize({width:1100,height:900});await overflow('expanded');assert.equal(await page.locator('#project-goal').isVisible(),true);assert.equal(await page.locator('#project-next').isVisible(),true);await page.locator('.ui-sidebar-toggle').click();
- await page.setViewportSize({width:390,height:844});await page.locator('#mobile-ppp').click();await snapshot('v2-mobile-ppp');
+ await page.setViewportSize({width:390,height:844});await page.locator('#mobile-ppp').click();await snapshot('v3-mobile-ppp');
  await page.locator('[data-scenario="v1"]').click();await page.locator('#message-input').fill('Borrador móvil');
- await page.locator('#mobile-chat').click();assert.ok((await page.locator('#mobile-context-summary').innerText()).includes('Consultando V1'));assert.ok((await page.locator('#mobile-context-summary').innerText()).includes('Defendida V2'));assert.equal(await page.locator('#message-input').inputValue(),'Borrador móvil');await snapshot('v2-mobile-chat');
- await page.locator('#mobile-ppp').click();await page.locator('[data-card="normativa"] [data-source$=":norm"]').click();assert.equal(await page.locator('#mobile-chat').getAttribute('aria-pressed'),'true');assert.ok((await page.locator('#source-body').innerText()).includes('V1'));await composer('mobile-source');await page.locator('#comment-source').click();await snapshot('v2-mobile-source');
- await page.locator('#mobile-ppp').click();assert.equal(await page.locator('#message-input').inputValue(),'Borrador móvil');assert.equal(await page.locator('[data-card="viabilidad"] .viability-version').innerText(),'V1');
+ await page.locator('#mobile-chat').click();assert.ok((await page.locator('#mobile-context-summary').innerText()).includes('Consultando V1'));assert.ok((await page.locator('#mobile-context-summary').innerText()).includes('Defendida V2'));assert.equal(await page.locator('#message-input').inputValue(),'Borrador móvil');await snapshot('v3-mobile-chat');
+ await page.locator('#mobile-ppp').click();await page.locator('[data-card="normativa"] [data-source$=":norm"]').click();assert.equal(await page.locator('#mobile-chat').getAttribute('aria-pressed'),'true');assert.ok((await page.locator('#source-body').innerText()).includes('V1'));await composer('mobile-source');await page.locator('#comment-source').click();await snapshot('v3-mobile-source');
+ await page.locator('#close-source').click();assert.equal(await page.evaluate(()=>document.activeElement.id),'message-input');assert.ok(!(await page.locator('#mobile-context-summary').innerText()).includes('Fuente:'));await page.locator('#mobile-ppp').click();assert.equal(await page.locator('#message-input').inputValue(),'Borrador móvil');assert.equal(await page.locator('[data-card="viabilidad"] .viability-version').innerText(),'V1');
  await page.locator('#mic-button').click();assert.ok((await page.locator('#voice-status').innerText()).includes('no hay audio conectado'));await page.locator('#stop-button').click();assert.ok((await page.locator('#voice-status').innerText()).includes('interrumpida'));
  assert.ok((await page.locator('#message-input').boundingBox()).width>=180,'mobile text field stays readable');
  assert.equal(await page.locator('.sidebar').evaluate(e=>e.inert),true);
@@ -62,7 +62,7 @@ async function main(){
  for(let n=0;n<18;n++){await page.keyboard.press('Tab');assert.equal(await page.evaluate(()=>!!document.activeElement.closest('.sidebar')),true,'drawer traps focus');}
  await page.keyboard.press('Escape');assert.equal(await page.locator('.main').evaluate(e=>e.inert),false);assert.equal(await page.locator('.sidebar').evaluate(e=>e.inert),true);assert.equal(await page.evaluate(()=>document.activeElement.id),'menu-toggle');
  await page.locator('#menu-toggle').click();await page.locator('.brand').click();await page.locator('#home-view').waitFor({state:'visible'});assert.equal(await page.locator('#route-title').innerText(),'Inicio');
- await page.locator('#menu-toggle').click();await page.locator('#preview-nav a[href="#personas"]').click();await page.waitForFunction(()=>document.getElementById('route-title').textContent==='Personas y accesos');assert.equal(await page.locator('#home-title').innerText(),'Personas y accesos');
+ await page.locator('#menu-toggle').click();await page.locator('#preview-nav a[href="#personas"]').click();await page.waitForFunction(()=>document.getElementById('route-title').textContent==='Personas y accesos');assert.equal(await page.locator('#home-title').innerText(),'Personas y accesos');assert.equal(await page.locator('#preview-nav a[href="#personas"]').evaluate(e=>e.classList.contains('active')),true);
  assert.deepEqual(errors,[]);assert.deepEqual(blocked,[]);
  fs.writeFileSync(path.join(out,'result.json'),JSON.stringify({commit:actualCommit,scope:'UX mockup; fictional data; no business API or microphone',screens:['1440x900','1366x768','390x844'],errors,blocked,checks:['one sidebar','PPP persistent','source passage/interpretation','citation preserves draft','market trace','scenario/viability','defended unchanged','case isolation','unsafe text escaped','missing source action','mobile continuity','composer visible','no overflow','logo home']},null,2));
  console.log('UX_MOCKUP_RESULT:PASS');

@@ -1,4 +1,4 @@
-import {CASES,createDemoCase,sourceFor,scenarioFor,irrLabel,viabilityFor,createProjectState,consultScenario,citeSource,CONNECTION_INVENTORY} from './agent-preview.data.mjs?v=2';
+import {CASES,createDemoCase,sourceFor,scenarioFor,irrLabel,viabilityFor,createProjectState,consultScenario,citeSource,CONNECTION_INVENTORY} from './agent-preview.data.mjs?v=3';
 const $=id=>document.getElementById(id),escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const shell=document.querySelector('.app-shell'),projects=new Map();
 let model=createDemoCase(CASES[0].id),state=createProjectState(model),lastSourceTrigger=null;
@@ -92,7 +92,7 @@ function openDetail(key){
  $('source-title').textContent=resourceNames[key]||headings[key]||'Detalle';$('viewer-kind').textContent='Contexto del mismo proyecto';$('source-body').innerHTML=resourceNames[key]?resourceHTML(key):detailHTML(key);$('context-viewer').hidden=false;document.querySelector('.dialogue-column').classList.add('has-source');$('comment-source').hidden=true;$('back-message').hidden=true;
  if(window.matchMedia('(max-width:900px)').matches){state.mobile_view='chat';paintMobile();}$('source-title').focus({preventScroll:true});paintDraft();
 }
-function closeSource(){syncDraft();state.source_id=null;state.detail=null;$('context-viewer').hidden=true;document.querySelector('.dialogue-column').classList.remove('has-source');const trigger=lastSourceTrigger;lastSourceTrigger=null;if(trigger?.isConnected)trigger.focus({preventScroll:true});else $('message-input').focus({preventScroll:true});}
+function closeSource(){syncDraft();state.source_id=null;state.detail=null;$('context-viewer').hidden=true;document.querySelector('.dialogue-column').classList.remove('has-source');paintMobile();const trigger=lastSourceTrigger;lastSourceTrigger=null;if(trigger?.isConnected&&trigger.getClientRects().length&&!trigger.closest('[inert]'))trigger.focus({preventScroll:true});else $('message-input').focus({preventScroll:true});}
 function paintMobile(){
  const view=state.mobile_view||'ppp';document.querySelector('.workspace-grid').dataset.mobileView=view;$('mobile-ppp').setAttribute('aria-pressed',String(view==='ppp'));$('mobile-chat').setAttribute('aria-pressed',String(view==='chat'));
  $('mobile-context-summary').hidden=false;
@@ -132,6 +132,6 @@ $('message-form').onsubmit=e=>{
 };
 const nav=$('preview-nav'),home=$('home-grid'),catalogue=window.YodCatalogo.filter(x=>!x.sinMarco&&!x.navParent);
 for(const c of catalogue){const a=document.createElement('a');a.className='nav-item';a.dataset.systemId=c.id;a.href='#'+c.id;a.innerHTML='<i class="ti ti-'+escape(c.icono)+'">◇</i><span>'+escape(c.nombre)+'</span>';nav.appendChild(a);const button=document.createElement('button');button.type='button';button.className='home-tile';button.textContent=c.nombre;button.onclick=()=>{location.hash=c.id;};home.appendChild(button);}
-const people=document.createElement('a');people.className='nav-item';people.href='#personas';people.innerHTML='<i class="ti ti-users">◇</i><span>Personas y accesos</span>';nav.appendChild(people);
+const people=document.createElement('a');people.className='nav-item';people.dataset.systemId='personas';people.href='#personas';people.innerHTML='<i class="ti ti-users">◇</i><span>Personas y accesos</span>';nav.appendChild(people);
 function route(){const key=location.hash.slice(1)||'SYS-DESPACHO',board=catalogue.find(x=>x.id===key),workspace=key==='SYS-DESPACHO';$('workspace').hidden=!workspace;$('home-view').hidden=workspace;$('route-title').textContent=workspace?'El Despacho':board?.nombre||(key==='personas'?'Personas y accesos':'Inicio');$('home-title').textContent=board?.nombre||(key==='personas'?'Personas y accesos':'Tu espacio de trabajo');document.querySelectorAll('#preview-nav .nav-item').forEach(a=>a.classList.toggle('active',a.dataset.systemId===key));menu(false);}
 renderProject();route();window.addEventListener('hashchange',route);
