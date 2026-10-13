@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.sala-tablero-hidream.1 · 2026-10-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.agent-decision-board.1 · 2026-10-13.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 
@@ -496,3 +496,34 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 - Fuentes y detalles se contienen dentro del área izquierda, sin tapar chat ni abrir otra superficie.
 - Cerrar detalle restaura tarjetas y foco, preservando borrador/referencia/caso.
 - Móvil mantiene un único hilo y lectura navegable, sin forzar columnas ilegibles.
+
+## MANDO · Puesto de decisión del autón con avance trazable
+
+- Tableros: SYS-YOD-OS, SYS-DESPACHO, SYS-POTENCIALES.
+- Problema: El prototipo conserva continuidad pero se percibe burocrático; muestra fuentes sin jerarquizar decisión ni cantidades/ruta.
+- Beneficio esperado: Comprender qué resolver, qué bloquea y dónde actuar con identidad YOD y conversación continua.
+- Medición: Tres revisores simulados independientes, mínimo9.5 cadauno sin gates. Juicio interno de prototipo, no aceptación operativa.
+- Dependencias: HILO.
+- Esfuerzo: M. Decisión: **pendiente**.
+
+### Requisitos previos
+
+- Chat derecho fullheight, fuente izquierda, hilo único.
+- Datos ficticios explícitos; no avance legal por botones/visitas/tiempo.
+- Navegación y compactación globales, capacidades conservadas.
+
+### Tareas
+
+1. Cabecera de decisión y ruta de cuatro hitos.
+2. Seis tarjetas numéricas con unidades/fecha y fuentes.
+3. Inspector progresivo; conservar utilidades.
+4. Revisión de commit/capturas, corregir sin rebajar rúbrica.
+5. Publicar dummy y bitácora de resultados y límites.
+
+### Criterios de aceptación
+
+- Próximo resultado/bloqueo/CTA dominantes.
+- Toda cantidad define alcance; normativa real no acreditada por simulación.
+- Ruta avanza por recibos locales, no exploración.
+- Hilo/caso/borrador/ref/versión defendida/capacidades conservadas.
+- Colores y gráficos para decidir sin XP ni trabajo fingido.
