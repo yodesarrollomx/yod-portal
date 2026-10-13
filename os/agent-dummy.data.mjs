@@ -18,7 +18,7 @@ export const FORMULAS=[
 ];
 export function onePeriodResult(initial,terminal,discount){
  if(![initial,terminal,discount].every(Number.isFinite)||initial>=0||terminal<0||discount<=-1)return null;
- return {irr:terminal/(-initial)-1,npv:initial+terminal/(1+discount)};
+ return {irr:terminal===0?null:terminal/(-initial)-1,npv:initial+terminal/(1+discount)};
 }
 export function createInteraction(caseId){
  return {case_id:caseId,scene:'conversation',visited:['conversation'],surface_m2:500,source_surface_m2:644,correction:null,events:[],presentation_page:1,station:'Puesto',workflow_stage:'pending',tasks:[
@@ -28,6 +28,8 @@ export function createInteraction(caseId){
  {id:caseId+':decision',title:'Síntesis defendible',purpose:'Explicar la recomendación y la decisión que sigue.',next:'Comparar V2/V3 sin ocultar el riesgo normativo.',source_key:'model',station:'Juntas',result:'Dos láminas, versión y restricciones.',complete:false}
  ]};
 }
+export const CORRECTION_REQUEST='Corrige la superficie de 500 a 644 m² con la ficha del terreno.';
+export function isCorrectionRequest(value){return String(value).trim()===CORRECTION_REQUEST;}
 export function correctSurface(interaction,target,sourceId){
  if(target!==interaction.source_surface_m2||sourceId!==interaction.case_id+':deed')return{ok:false,reason:'Falta la fuente de superficie del mismo expediente.'};
  if(interaction.correction)return{ok:true,repeated:true,receipt:interaction.correction};

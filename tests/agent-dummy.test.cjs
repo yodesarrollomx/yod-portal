@@ -21,10 +21,15 @@ test('annual didactic IRR and NPV use one matching period; absence is not zero',
  for(const [terminal,irr,npv]of [[115,.15,4.54545454545],[118,.18,7.27272727272],[120,.20,9.09090909090]]){
  const r=onePeriodResult(-100,terminal,.10);assert(Math.abs(r.irr-irr)<1e-12);assert(Math.abs(r.npv-npv)<1e-8);}
  assert.equal(onePeriodResult(undefined,118,.10),null);assert.equal(onePeriodResult(100,118,.10),null);assert.equal(onePeriodResult(-100,118,-1),null);
- assert.equal(onePeriodResult(-100,100,0).irr,0);
+ assert.equal(onePeriodResult(-100,100,0).irr,0);assert.deepEqual(onePeriodResult(-100,0,.10),{irr:null,npv:-100});
 });
 test('tour visits do not count as deliverables and unknown scenes cannot change context',async()=>{
  const {createInteraction,visitScene}=await data,d=createInteraction('demo-luis');
  assert.equal(visitScene(d,'norm'),true);visitScene(d,'norm');assert.equal(d.visited.length,2);
  assert.equal(visitScene(d,'other-case'),false);assert.equal(d.scene,'norm');assert.equal(d.tasks.filter(t=>t.complete).length,0);
+});
+
+test('conditional, negative and other-target requests are never applied',async()=>{
+ const {isCorrectionRequest,CORRECTION_REQUEST}=await data;assert(isCorrectionRequest(CORRECTION_REQUEST));
+ for(const text of ['Corrige la superficie no a 644 sino a 744','Corrige la superficie a 644 sólo si confirmas','No corrijas la superficie a 644',CORRECTION_REQUEST+' Si procede.'])assert.equal(isCorrectionRequest(text),false);
 });

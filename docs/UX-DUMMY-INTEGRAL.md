@@ -67,3 +67,17 @@ Pruebas previstas: contrato de fuente/caso, corrección local sin duplicación, 
 Los dos revisores internos anteriores reabren la aceptación para esta entrega: el dummy no hereda el 9.1/9.2 de V3. Se conservarán sus observaciones, puntajes y recibos después de comprobar código y capturas. No certificación internacional.
 
 Integración/publicación y evidencia exacta se registran con el PR; hasta tener recibo no se declara publicado. Revertir el PR devuelve la maqueta V3 sin alterar sesiones, datos, permisos, motores privados ni planes cancelados.
+
+## Primera revisión del dummy · candidato d7e9dfef
+
+La auditoría UX rechazó provisionalmente con 8.5/10: preparar una propuesta borraba el borrador y la cita del recibo perdía su fuente al volver al personaje. Flujo rechazó aceptación por un predicado demasiado amplio, que admitía peticiones negadas/condicionales. La prueba Chromium de run38340657257/job115110660026 dejó ocho capturas desktop, pero falló el gate de highlight móvil. Verificadores de portal/arquitectura pasaron; ese PASS parcial no cierra la entrega.
+
+Correcciones:
+- El recorrido se integra en la topbar del dummy para evitar otra fila. Móvil usa selector y controles de44px, sin flechas pequeñas.
+- Preparar anexa texto y conserva referencia original; el contexto adicional queda declarado. Con un borrador abierto, la propuesta de superficie puede aplicarse mediante una confirmación local explícita sin borrarlo.
+- La fuente del recibo se reconstruye desde el estado local al activar el mismo personaje; el cambio de personaje no convierte evidencia guardada en fuente ausente.
+- La petición escrita se admite únicamente como guion exacto, sin negación/condición/otro valor. El regresor UI comprueba que una petición negativa conserva500y ningún recibo.
+- Presentación identifica TIR anual de proyecto/flujo ficticio dentro de la lámina; trabajo identifica entregables simulados y recibos locales.
+- Si un flujo terminal es cero, la TIR se declara no calculada en el helper didáctico; no se confunde con una raíz singular-100%. VPN sigue siendo el flujo inicial.
+
+Marcaciones A20-D1-01/02rojo: no borrar borrador; dato y recibo permanecen unidos al volver. A20-D1-03azul: guía de escenas, no navegación adicional. A20-D1-04/05verde: preparación no aplica; fórmulas con versión/periodo/unidad. Marcaciones A40-D1: petición negativa/condicional nunca confirma; presentación conserva bases; avance es sólo simulado.
