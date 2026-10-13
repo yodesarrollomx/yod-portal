@@ -40,3 +40,9 @@ Se comprobarán posición/altura del chat antes y después de cada detalle, lím
 Las capturas y recibos corresponden a datos ficticios y al commit exacto del prototipo. El cierre registra publicación Pages aparte de las pruebas. No se llama a negocio, reinicia Render, instala APIs, altera permisos, cambia hojas o reactiva automatizaciones canceladas.
 
 Reversión: revertir PR de esta maqueta y sus pruebas; las fuentes y la operación privada permanecen intactas.
+
+## Primer recorrido
+
+Candidato647f465: Arquitectura38345777587yYODOS38345777862success. Navegador38345777623/job115126734239 confirma posición/altura del chat, seis detalles contenidos, transcripción única, interrupción, aislamiento y móvil del mockup. El recorrido del dummy se detuvo al buscar644en una tarjeta compactada, que sólo mostraba su encabezado. Se comprueba ahora el valor visible en el detalle y, al volver, en la tarjeta expandida; no se elimina ninguna comprobación de integridad.
+
+Capturas también detectaron menú de proyecto en tercera fila, título de detalle alineado al borde y un control global extra de escritorio. Se corrigen orden, alineación y visibilidad sin agregar controles ni capacidades.

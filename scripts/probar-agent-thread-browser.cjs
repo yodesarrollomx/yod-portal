@@ -27,7 +27,7 @@ async function main(){
  async function panel(which){await page.locator(which==='chat'?'#mobile-chat':'#mobile-ppp').click();await page.waitForTimeout(40);}
  await page.goto(base+'/os/agent-'+(mode==='dummy'?'dummy':'preview')+'.html',{waitUntil:'networkidle'});await page.locator('[data-card="terreno"]').waitFor();await page.locator('.ui-sidebar-toggle').waitFor();
  assert.equal(await page.locator('aside[aria-label="Navegación global"]').count(),1);assert.equal(await page.locator('[data-card]').count(),6);
- assert.equal(await page.locator('.dialogue-column #context-viewer').count(),0);const original=await stableChat();await shot(mode+'-01-entrada');
+ assert.equal(await page.locator('#menu-toggle').isVisible(),false,'no second desktop navigation button');assert.equal(await page.locator('.dialogue-column #context-viewer').count(),0);const original=await stableChat();await shot(mode+'-01-entrada');
  await page.locator('#message-input').fill('Mi borrador se conserva.');
  for(const key of ['terreno','documentos','normativa','mercado','escenarios','viabilidad']){
  await page.locator('[data-detail="'+key+'"]').click();await page.locator('#source-title').waitFor({state:'visible'});await stableChat(original);
@@ -44,7 +44,7 @@ async function main(){
  assert.equal(await page.locator('#message-input').inputValue(),'Mi borrador se conserva.');
  await page.locator('#case-select').selectOption('demo-luis');assert.equal(await page.locator('.message-user[data-input-kind="voice"]').count(),0);await page.locator('#case-select').selectOption('demo-gaston');assert.equal(await page.locator('.message-user[data-input-kind="voice"]').count(),2);
  if(mode==='dummy'){
- await page.locator('#dummy-scene').selectOption('correction');await page.locator('[data-dummy-action="apply-correction"]').click();assert.match(await page.locator('[data-card="terreno"]').innerText(),/644/);assert.equal(await page.locator('#message-input').inputValue(),'Mi borrador se conserva.');await shot('dummy-04-correccion');
+ await page.locator('#dummy-scene').selectOption('correction');await page.locator('[data-dummy-action="apply-correction"]').click();assert.match(await page.locator('#source-body').innerText(),/644 m²/);assert.equal(await page.locator('#message-input').inputValue(),'Mi borrador se conserva.');await shot('dummy-04-correccion');await page.locator('#close-source').click();assert.match(await page.locator('[data-card="terreno"]').innerText(),/644/);
  await page.locator('#dummy-scene').selectOption('work');for(let i=0;i<3;i++)await page.locator('[data-dummy-action="advance-work"]').click();assert.match(await page.locator('#source-body').innerText(),/4 de 4/);
  await page.locator('#dummy-scene').selectOption('presentation');await page.locator('[data-dummy-action="slide-2"]').click();await page.locator('[data-dummy-action="ask-presentation"]').click();assert.match(await page.locator('#message-input').inputValue(),/^Mi borrador se conserva/);assert.equal(await page.locator('#context-viewer').isVisible(),true,'presentation remains alongside conversation');await stableChat(original);await shot('dummy-05-presentacion-chat');
  }

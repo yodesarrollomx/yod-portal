@@ -40,7 +40,7 @@ function cardBody(key){
 }
 function paintCards(){
  const active=state.detail||sourceFor(model,state.source_id)?.card;
- $('mini-dashboards').innerHTML=Object.keys(headings).map(key=>'<article class="mini-card '+(key==='viabilidad'?'viability-card':'')+'" data-card="'+key+'" data-active="'+(active===key)+'"><header class="mini-card-header"><button class="card-heading" type="button" data-detail="'+key+'" aria-expanded="'+(active===key)+'" aria-controls="context-viewer"><span class="card-symbol" aria-hidden="true">'+symbols[key]+'</span><h2>'+headings[key]+'</h2></button></header><div class="card-body">'+cardBody(key)+'</div></article>').join('');
+ $('mini-dashboards').innerHTML=Object.keys(headings).map(key=>'<article class="mini-card '+(key==='viabilidad'?'viability-card':'')+'" data-card="'+key+'" data-active="'+(active===key)+'"><header class="mini-card-header"><h2 class="card-title"><button class="card-heading" type="button" data-detail="'+key+'" aria-expanded="'+(active===key)+'" aria-controls="context-viewer"><span class="card-symbol" aria-hidden="true">'+symbols[key]+'</span><span class="card-label">'+headings[key]+'</span></button></h2></header><div class="card-body">'+cardBody(key)+'</div></article>').join('');
  const selected=scenarioFor(model,state.scenario_id),defended=scenarioFor(model,model.defended_scenario_id);
  $('consulting-version').textContent=selected?.label||'—';$('defended-version').textContent=defended?.label||'—';$('different-version').hidden=state.scenario_id===model.defended_scenario_id;
  $('board-status').textContent='Consulta '+(selected?.label||'versión')+' · libro sin modificar.';
@@ -79,6 +79,7 @@ function sourceHTML(source){
  return text;
 }
 function activateViewer(){
+ $('work-popover').hidden=true;$('work-menu').setAttribute('aria-expanded','false');
  $('context-viewer').hidden=false;document.querySelector('.project-column').classList.add('has-detail');
  if(mobileQuery.matches)state.mobile_view='ppp';
  paintCards();paintMobile();paintDraft();$('source-title').focus({preventScroll:true});
