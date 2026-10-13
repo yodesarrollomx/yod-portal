@@ -1,5 +1,6 @@
 import {CASES,createDemoCase,sourceFor,scenarioFor,irrLabel,viabilityFor,createProjectState,consultScenario,citeSource,CONNECTION_INVENTORY} from './agent-preview.data.mjs?v=3';
 const $=id=>document.getElementById(id),escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const previewExtensions={};
 const shell=document.querySelector('.app-shell'),projects=new Map();
 let model=createDemoCase(CASES[0].id),state=createProjectState(model),lastSourceTrigger=null;
 projects.set(model.id,state);
@@ -26,6 +27,7 @@ const headings={terreno:'Terreno',documentos:'Documentos',normativa:'Normativa',
 const symbols={terreno:'⌖',documentos:'▤',normativa:'§',mercado:'↗',escenarios:'▱',viabilidad:'◎'};
 function mapSVG(large=false){return '<svg class="mini-map'+(large?' map-large':'')+'" viewBox="0 0 300 100" role="img" aria-label="Mapa ilustrativo, sin ubicación real"><rect width="300" height="100" fill="#e9f0e3"/><path d="M-10 25H310M-10 79H310M57-10V110M212-10V110" stroke="#fffdf6" stroke-width="11"/><path d="M-10 25H310M-10 79H310M57-10V110M212-10V110" stroke="#cbd8c4" stroke-width="1"/><rect x="100" y="37" width="73" height="32" rx="3" fill="#b3c9a8" stroke="#547550" stroke-width="2"/><path d="M138 32c-10 0-15 7-15 13s15 20 15 20 15-14 15-20-5-13-15-13z" fill="#375c4c"/><circle cx="138" cy="44" r="4" fill="#f7f9f1"/><text x="9" y="95" fill="#426043" font-size="10">Ubicación ilustrativa</text></svg>';}
 function cardBody(key){
+ const custom=previewExtensions.card?.(key,{model,state});if(typeof custom==='string')return custom;
  const s=k=>model.id+':'+k,selected=scenarioFor(model,state.scenario_id),v=viabilityFor(model,state.scenario_id);
  if(key==='terreno')return '<button type="button" class="map-button" data-source="'+s('plot')+'" aria-label="Abrir mapa y ficha de Terreno">'+mapSVG()+'</button><p class="card-meta">Ficha + ubicación · <strong>ilustrativa</strong></p>';
  if(key==='documentos')return sourceLink(s('deed'),'Ficha del terreno','p. 2')+sourceLink(s('norm'),'Reglas del proyecto','art. 4')+sourceLink(s('model'),'Modelo · Escenarios','B3:F5');
@@ -56,6 +58,7 @@ function paintMessages(){
 }
 function highlight(original,term){if(!term||!original.includes(term))return escape(original);return original.split(term).map(escape).join('<mark>'+escape(term)+'</mark>');}
 function sourceHTML(source){
+ const custom=previewExtensions.source?.(source,{model,state});if(typeof custom==='string')return custom;
  if(!source)return '<div class="source-warning" role="alert">Fuente no disponible para este proyecto.</div><p>La referencia no está registrada o pertenece a otro expediente. Falta un documento autorizado y verificable.</p><button type="button" class="quiet" data-prepare-missing>Preparar búsqueda de fuente</button><p>Prepara una petición en el borrador; no inicia una búsqueda ni amplía el acceso.</p>';
  const metadata='<dl class="source-meta"><dt>Tipo</dt><dd>Supuesto / fuente de ejemplo</dd><dt>Fecha</dt><dd>'+escape(source.date)+'</dd><dt>Revisión</dt><dd>'+escape(source.revision)+'</dd><dt>Ubicación</dt><dd>'+escape(source.location)+'</dd><dt>Proyecto</dt><dd>'+escape(model.name)+' · ejemplo separado</dd><dt>Consultada</dt><dd>'+escape(scenarioFor(model,state.scenario_id)?.label||'—')+'</dd><dt>Defendida</dt><dd>'+escape(scenarioFor(model,model.defended_scenario_id)?.label||'—')+'</dd>'+(source.issuer?'<dt>Emisor</dt><dd>'+escape(source.issuer)+'</dd><dt>Vigencia</dt><dd>'+escape(source.validity)+'</dd>':'')+'</dl>';
  let text='<div class="source-warning">Fuente ficticia · sin validez normativa ni financiera.</div><p class="source-quick-meta"><span>'+escape(source.location)+' · '+escape(source.date)+'</span><span class="source-version">Consultando '+escape(scenarioFor(model,state.scenario_id)?.label||'—')+' · Defendida '+escape(scenarioFor(model,model.defended_scenario_id)?.label||'—')+'</span></p>';
@@ -79,6 +82,7 @@ function detailHTML(key){
  return cardBody(key);
 }
 function resourceHTML(key){
+ const custom=previewExtensions.resource?.(key,{model,state});if(typeof custom==='string')return custom;
  if(key==='connections')return '<div class="source-warning">Inventario leído en código; esta maqueta no establece ninguna conexión operativa.</div><ul class="resource-list">'+CONNECTION_INVENTORY.map(c=>'<li><strong>'+escape(c.name)+'</strong><p>'+escape(c.state)+'</p><p>'+escape(c.detail)+'</p></li>').join('')+'</ul>';
  if(key==='work')return '<ul class="resource-list"><li><strong>Ahora · verificar el terreno</strong><p>Fuente necesaria: documento registrado del expediente.</p></li><li><strong>Después · contrastar normativa y mercado</strong><p>Conservar artículos, registros, fechas y cobertura.</p></li><li><strong>Resultado · versión defendible</strong><p>Presentar fuentes, restricciones y razón de la recomendación.</p></li></ul>';
  if(key==='notes')return '<p>Nota de ejemplo: distinguir hechos, supuestos y decisión. La selección visual no autoriza modificar un dato.</p>';
@@ -88,7 +92,7 @@ function resourceHTML(key){
 }
 function openDetail(key){
  syncDraft();state.detail=key;state.source_id=null;state.message_anchor=null;
- const resourceNames={connections:'Conexiones encontradas',work:'Trabajo y próximos pasos',notes:'Notas y acuerdos',history:'Historial y evidencia',presentation:'Presentación'};
+ const resourceNames={overview:'Conjunto de la interacción',formula:'Fórmulas y supuestos',method:'Método y decisiones',connections:'Conexiones encontradas',work:'Trabajo y próximos pasos',notes:'Notas y acuerdos',history:'Historial y evidencia',presentation:'Presentación'};
  $('source-title').textContent=resourceNames[key]||headings[key]||'Detalle';$('viewer-kind').textContent='Contexto del mismo proyecto';$('source-body').innerHTML=resourceNames[key]?resourceHTML(key):detailHTML(key);$('context-viewer').hidden=false;document.querySelector('.dialogue-column').classList.add('has-source');$('comment-source').hidden=true;$('back-message').hidden=true;
  if(window.matchMedia('(max-width:900px)').matches){state.mobile_view='chat';paintMobile();}$('source-title').focus({preventScroll:true});paintDraft();
 }
@@ -100,11 +104,11 @@ function paintMobile(){
  $('mobile-context-summary').textContent='PPP · Consultando '+consulted+' · Defendida '+defended;
 }
 function chooseScenario(id){
- syncDraft();consultScenario(model,state,id);paintCards();const focused=document.querySelector('[data-scenario="'+id+'"]');if(focused)focused.focus({preventScroll:true});if(state.source_id)$('source-body').innerHTML=sourceHTML(sourceFor(model,state.source_id));if(['escenarios','viabilidad'].includes(state.detail))$('source-body').innerHTML=detailHTML(state.detail);paintDraft();paintMobile();
+ syncDraft();consultScenario(model,state,id);paintCards();const focused=document.querySelector('[data-scenario="'+id+'"]');if(focused)focused.focus({preventScroll:true});if(state.source_id)$('source-body').innerHTML=sourceHTML(sourceFor(model,state.source_id));if(['escenarios','viabilidad'].includes(state.detail))$('source-body').innerHTML=detailHTML(state.detail);paintDraft();paintMobile();document.dispatchEvent(new CustomEvent('preview:scenario'));
 }
 function renderProject(){
  $('case-select').value=model.id;$('agent-badge').textContent=model.name.slice(0,1);$('case-kind').textContent='Plan de potencial · '+model.kind.toLowerCase();$('project-goal').textContent=model.goal;$('project-goal').title=model.goal;$('project-next').textContent='Siguiente: '+model.next;$('project-next').title='Siguiente: '+model.next;paintCards();paintMessages();paintDraft();$('context-viewer').hidden=true;document.querySelector('.dialogue-column').classList.remove('has-source');
- if(state.source_id)openSource(state.source_id);else if(state.detail)openDetail(state.detail);paintMobile();
+ if(state.source_id)openSource(state.source_id);else if(state.detail)openDetail(state.detail);paintMobile();document.dispatchEvent(new CustomEvent('preview:project'));
 }
 $('case-select').onchange=e=>{syncDraft();model=createDemoCase(e.target.value);state=projects.get(model.id)||createProjectState(model);projects.set(model.id,state);lastSourceTrigger=null;$('context-viewer').hidden=true;renderProject();$('voice-status').textContent='Voz de ejemplo · proyecto '+model.name+'. Micrófono sin activar.';};
 $('message-input').oninput=()=>syncDraft();
@@ -128,10 +132,19 @@ $('message-form').onsubmit=e=>{
  e.preventDefault();syncDraft();const value=state.draft.trim();if(!value)return;
  const ref=state.draft_ref;
  state.messages.push({id:model.id+':message-'+state.messages.length,who:'user',text:value,...(ref?{source_id:ref.source_id,scenario_id:ref.scenario_id}:{scenario_id:state.scenario_id})});
- state.draft='';state.draft_ref=null;paintMessages();paintDraft();$('chat-stream').scrollTop=$('chat-stream').scrollHeight;$('voice-status').textContent='Mensaje local en la maqueta. No enviado a un agente ni a Sheets.';
+ previewExtensions.reply?.(value,ref,{model,state});
+ state.draft='';state.draft_ref=null;paintCards();paintMessages();paintDraft();$('chat-stream').scrollTop=$('chat-stream').scrollHeight;$('voice-status').textContent='Mensaje local en la maqueta. No enviado a un agente ni a Sheets.';
 };
 const nav=$('preview-nav'),home=$('home-grid'),catalogue=window.YodCatalogo.filter(x=>!x.sinMarco&&!x.navParent);
 for(const c of catalogue){const a=document.createElement('a');a.className='nav-item';a.dataset.systemId=c.id;a.href='#'+c.id;a.innerHTML='<i class="ti ti-'+escape(c.icono)+'">◇</i><span>'+escape(c.nombre)+'</span>';nav.appendChild(a);const button=document.createElement('button');button.type='button';button.className='home-tile';button.textContent=c.nombre;button.onclick=()=>{location.hash=c.id;};home.appendChild(button);}
 const people=document.createElement('a');people.className='nav-item';people.dataset.systemId='personas';people.href='#personas';people.innerHTML='<i class="ti ti-users">◇</i><span>Personas y accesos</span>';nav.appendChild(people);
 function route(){const key=location.hash.slice(1)||'SYS-DESPACHO',board=catalogue.find(x=>x.id===key),workspace=key==='SYS-DESPACHO';$('workspace').hidden=!workspace;$('home-view').hidden=workspace;$('route-title').textContent=workspace?'El Despacho':board?.nombre||(key==='personas'?'Personas y accesos':'Inicio');$('home-title').textContent=board?.nombre||(key==='personas'?'Personas y accesos':'Tu espacio de trabajo');document.querySelectorAll('#preview-nav .nav-item').forEach(a=>a.classList.toggle('active',a.dataset.systemId===key));menu(false);}
 renderProject();route();window.addEventListener('hashchange',route);
+
+export const demoWorkspace={
+ get current(){return {model,state};},
+ setExtensions(extensions){Object.assign(previewExtensions,extensions);},
+ refresh({cards=true,messages=true}={}){if(cards)paintCards();if(messages)paintMessages();paintDraft();if(state.source_id)$('source-body').innerHTML=sourceHTML(sourceFor(model,state.source_id));else if(state.detail)$('source-body').innerHTML=resourceHTML(state.detail)||detailHTML(state.detail);paintMobile();},
+ openSource,openDetail,closeSource,chooseScenario,mapSVG,sourceLink,escape,
+ showConversation(){closeSource();state.mobile_view='chat';paintMobile();}
+};
