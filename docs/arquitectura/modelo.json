@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-13.investor-monoline-story.1",
+  "revision": "2026-10-13.agent-right-thread.2",
   "checked_at": "2026-10-13",
   "priorities": [
     "vender_mas",
@@ -8370,6 +8370,42 @@
         "Trabajo simulado rotulado y resultados no presentados como ejecución en servidor.",
         "Fuentes, borrador y presentación comparten proyecto e hilo."
       ]
+    },
+    {
+      "id": "HILO",
+      "titulo": "Conversación fija y detalle útil por interacción",
+      "boards": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ],
+      "problem": "El chat se comparte con un visor que corta su altura, la transcripción no tiene un turno único explícito y el detalle de tarjetas funciona como texto expuesto sin jerarquía de tarea.",
+      "benefit": "Conversar continuamente mientras se interpreta una evidencia concreta a izquierda; cada interacción conserva fuente, contexto y una próxima acción sin paneles superpuestos.",
+      "metric": "Cumplimiento de las tres correcciones de Dirección mediante capturas reales y geometría/estado; ningún score anterior acredita esta UX.",
+      "dependencies": [
+        "DUMMY"
+      ],
+      "effort": "M",
+      "decision": "implementada",
+      "prerequisites": [
+        "Cambiar sólo dummy/mockup, sin runtime, datos, permisos o fórmulas nuevos.",
+        "Navegación global a izquierda conserva control y orden existentes.",
+        "Transcripción y texto se dibujan como mensajes del mismo hilo."
+      ],
+      "tasks": [
+        "Reposicionar chat a derecha con altura completa y lectura/contexto a izquierda.",
+        "Unificar actualizaciones parciales/finales de voz en el mismo mensaje sin borrar texto escrito.",
+        "Dar a cada detalle estructura específica de dato/evidencia/interpretación/acción.",
+        "Mejorar lectura compacta de mini tarjetas con estado y referencia útiles.",
+        "Verificar todos los estados y publicar evidencia con límites."
+      ],
+      "acceptance": [
+        "En escritorio abrir detalle no cambia posición, altura o cantidad de paneles de conversación.",
+        "Un mismo turno actualiza una sola burbuja y el final no duplica transcripción.",
+        "Fuentes y detalles se contienen dentro del área izquierda, sin tapar chat ni abrir otra superficie.",
+        "Cerrar detalle restaura tarjetas y foco, preservando borrador/referencia/caso.",
+        "Móvil mantiene un único hilo y lectura navegable, sin forzar columnas ilegibles."
+      ]
     }
   ],
   "changes": [
@@ -11979,6 +12015,29 @@
       ],
       "deployment": "Plan autorizado y registro de arquitectura previo a implementación. Frontend, contenido mono_* y publicación requieren pruebas/recibos separados; esta PR no acredita producción de la nueva versión.",
       "rollback": "Revertir únicamente PR frontend monoline por PR y restaurar entrada anterior; conservar inv1–inv7, hunt, mono_* editorial, láminas originales, enlace Material, accesos y todos los expedientes. No restaurar ni sobrescribir registros de negocio."
+    },
+    {
+      "id": "CHG-AGENT-RIGHT-THREAD",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ],
+      "status": "verificado",
+      "proposal": "Corrección acotada del prototipo según revisión de Dirección: conversación fija a derecha y alto completo; un único hilo de texto/transcripción con actualizaciones por turno, sin duplicación; mini tarjetas útiles y detalle contextual contenido a izquierda con dato/evidencia/interpretación/acción. No ampliar APIs, datos, fórmulas ni autonomía.",
+      "approval": {
+        "date": "2026-10-13",
+        "scope": "Dirección exige conversación a derecha, hilo único y rediseño concreto de cada microinteracción; las notas anteriores no acreditan satisfacción de UX."
+      },
+      "tests": [
+        "Chromium exacto d8fa33e533b546090a74ba2de6bfec5950b182e7: run38346113048/job115127809947 PASS,26capturas.",
+        "Posición/altura del chat invariantes, detalles dentro del proyecto a izquierda y una sola superficie de conversación.",
+        "Transcripción parcial/final/cancelada en un mensaje, reintentos/actor/caso, borrador/ref y regreso a tarjetas con foco.",
+        "Seis contextos específicos, corrección/entregables/presentación del dummy y móvil con paneles laterales.",
+        "Arquitectura38346113025yYODOS38346113249success; sin puntuación nueva deUX."
+      ],
+      "deployment": "Corrección de prototipo verificada en PR220. Publicación se registra con recibo Pages en PR. No acredita satisfacción de diseño por score ni conexión real de voz/IA/Sheets; sin cambios de operación privada.",
+      "rollback": "Revertir PR de presentación/hilo local; conservar fuentes, fórmulas, permisos, datos, servidores y tareas canceladas."
     }
   ],
   "data_contracts": [
@@ -15221,6 +15280,33 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "scripts/probar-dummy-browser.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/agent-preview.conversation.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/agent-thread.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/probar-agent-thread-browser.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",

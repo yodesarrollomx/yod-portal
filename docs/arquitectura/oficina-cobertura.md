@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-13.investor-monoline-story.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-13.agent-right-thread.2
 
 **Encargado de verificación:** Coordinación técnica YOD
 

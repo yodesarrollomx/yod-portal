@@ -1,13 +1,11 @@
 {
-  "model_revision": "2026-10-13.investor-monoline-story.1",
-  "proposal_id": "CHG-INVESTOR-MONOLINE-STORY",
-  "summary": "Registrar dirección4r4: siete escenas/21 momentos en un path monoline acumulativo y detalle completo, mismas fuentes públicas y URL; sin cambio a backend/ACL.",
+  "model_revision": "2026-10-13.agent-right-thread.2",
+  "proposal_id": "CHG-AGENT-RIGHT-THREAD",
+  "summary": "Tres correcciones del prototipo: conversación derecha completa, hilo único y detalles contenidos con jerarquía útil.",
   "components": [
-    "SYS-INVERSION",
-    "GAS-PLAN-POTENCIAL",
-    "SHEET-PLAN-POTENCIAL",
     "SYS-YOD-OS",
-    "SYS-CONTROL"
+    "SYS-DESPACHO",
+    "SYS-POTENCIALES"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -16,7 +14,7 @@
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "Pruebas de frontend/móvil/publicación se ejecutan en el PR consumidor; esta propuesta no acredita implementación."
+    "Chromium aislado: geometría, turnos, contexto, fuentes y foco"
   ],
-  "rollback": "Revertir PR frontend conservando mono_*, inv1–inv7, hunt, láminas previas, Material, permisos y expedientes; ningún cambio del runtime privado."
+  "rollback": "Revertir PR del prototipo; sin modificar operación privada ni reactivar planes cancelados."
 }
