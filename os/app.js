@@ -1,6 +1,28 @@
 (function(){
   'use strict';
 
+  /* NAVIGATION-BEGIN */
+  // Generado desde os/catalogo.js: presentación común; no concede accesos.
+  var NAV_ORDER = ["SYS-DESPACHO","SYS-POTENCIALES","SYS-TRACK","SYS-MIRAMAR","SYS-TAREAS","SYS-FLUJO","SYS-INTERIORES","SYS-INVERSION","SYS-MARKETING","SYS-OBRA","SYS-CONTROL"];
+  var NAV_PARENT = {"SYS-MIRAMAR":"SYS-TRACK"};
+  function orderedModules(rows) {
+    var seen = Object.create(null);
+    return (Array.isArray(rows) ? rows : []).filter(function (row) {
+      if (!row || !row.system_id || seen[row.system_id]) return false;
+      seen[row.system_id] = true; return true;
+    }).sort(function (a, b) {
+      var ai = NAV_ORDER.indexOf(a.system_id), bi = NAV_ORDER.indexOf(b.system_id);
+      if (ai < 0) ai = NAV_ORDER.length; if (bi < 0) bi = NAV_ORDER.length;
+      return ai - bi || String(a.system_id).localeCompare(String(b.system_id));
+    });
+  }
+  function sidebarModules(rows, available) {
+    var sorted = orderedModules(rows);
+    var ids = sorted.filter(function (row) { return !available || available(row); }).map(function (row) { return row.system_id; });
+    return sorted.filter(function (row) { return !NAV_PARENT[row.system_id] || ids.indexOf(NAV_PARENT[row.system_id]) < 0; });
+  }
+  /* NAVIGATION-END */
+
   var CATALOG_ENDPOINT='https://script.google.com/macros/s/AKfycby5LKYKRwl0EsNgppOIeD_ArST8vSXRgNO4ns8XZbFW4yjfglzu4io_vhabB8h-J792Tw/exec?action=read&resource=Portal';
   /* El portal validaba la sesión SIEMPRE contra el portero del dominio
      aurumarquitectos.com (hoy suspendido): aunque el gate ya te dejara pasar, el
@@ -443,7 +465,7 @@
     var box=$('nav-modules');if(!box)return;box.replaceChildren();
     if(!state.profileReady){var h=document.createElement('span');h.className='nav-loading';h.textContent=hayToken()?'Validando tu acceso…':'Inicia sesión para ver tus tableros';box.appendChild(h);if(window.pintarSeccionEmbudo)window.pintarSeccionEmbudo();return;}
     if(!state.modules.length){var e=document.createElement('span');e.className='nav-loading';e.textContent='Sin tableros disponibles';box.appendChild(e);if(window.pintarSeccionEmbudo)window.pintarSeccionEmbudo();return;}
-    state.modules.forEach(function(row){var n=sidebarNode(row);if(n)box.appendChild(n);});
+    sidebarModules(state.modules,window.PortalCore.enabled).forEach(function(row){var n=sidebarNode(row);if(n)box.appendChild(n);});
     // el menú se repinta después del arranque en frío: sin esto, con #/embudo/sala
     // el lateral seguía marcando Inicio en vez de Embudo
     if(window.pintarSeccionEmbudo)window.pintarSeccionEmbudo();
@@ -475,7 +497,7 @@
     grid.replaceChildren();
     state.rawRows=firmaRows;
     if(!state.profileReady){state.modules=[];var waiting=document.createElement('div');waiting.className='empty-state';waiting.textContent=hayToken()?'Validando tu acceso…':'Inicia sesión para consultar tus módulos autorizados.';grid.appendChild(waiting);grid.setAttribute('aria-busy','false');$('module-count').textContent='—';renderSidebarModules();return;}
-    state.modules=window.PortalCore.cleanRows(state.rawRows).filter(function(row){return Boolean(window.PortalCore.resolveUrl(row))&&window.YodAccessPolicy.canOpen(state.boards,row.system_id,state.role);});
+    state.modules=orderedModules(window.PortalCore.cleanRows(state.rawRows).filter(function(row){return Boolean(window.PortalCore.resolveUrl(row))&&window.YodAccessPolicy.canOpen(state.boards,row.system_id,state.role);}) );
     state.modules.forEach(function(row){var node=moduleNode(row);if(node)grid.appendChild(node);});
     if(!grid.children.length){var empty=document.createElement('div');empty.className='empty-state';empty.textContent='No hay módulos disponibles en Control Maestro.';grid.appendChild(empty);}
     // el contador dice DISPONIBLES: los que están en mantenimiento/revisión no cuentan

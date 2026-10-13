@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.investor-hermosillo-zoom.1 · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.os-navigation-consistent.1 · 2026-10-13.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 
@@ -363,3 +363,34 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 - Los textos y duración se cambian desde Sheets; Git contiene lógica y esquema conceptual sintético.
 - Los controles funcionan y el inmueble de la escena se conserva en el puente a la evaluación.
 - Un perfil sin identidad vinculada no se activa ni se suplanta para comprobar la integración.
+
+## NAV · Navegación constante y mesa compartida del autón
+
+- Tableros: SYS-YOD-OS, SYS-DESPACHO, SYS-POTENCIALES.
+- Problema: El menú cambia entre la cabina y los tableros; el inicio tiene accesos redundantes y el puesto del autón dispersa conversación y PPP.
+- Beneficio esperado: Un recorrido predecible con la barra compactable existente, acceso al inicio desde el logo y una propuesta visual del puesto con PPP y conversación simultáneos.
+- Medición: Mismos IDs y orden relativo para un conjunto autorizado en cabina y marco; sin duplicados ni botón Inicio añadido; propuesta navegable sin datos reales.
+- Dependencias: Sin dependencias previas.
+- Esfuerzo: M. Decisión: **aprobada**.
+
+### Requisitos previos
+
+- Reutilizar ui-chrome.js y su preferencia persistente; no duplicar el control de compactación.
+- Conservar códigos, URLs permitidas y filtrado por sesión antes de construir el menú.
+- El mockup usa ejemplos y no acredita voz, PPP privado o trabajo autónomo.
+
+### Tareas
+
+1. Registrar la propuesta antes de tocar el frontend.
+2. Generar una política de orden y eliminación de duplicados desde os/catalogo.js para la cabina y el marco.
+3. Mantener Real de Miramar dentro de Codesarrollos cuando el padre está disponible, incluso al visitarlo.
+4. Usar el logo como acceso al inicio y retirar botones Inicio redundantes.
+5. Entregar un mockup navegable con PPP protagonista, conversación lateral, voz compacta y un único lugar para avances; verificar y publicar navegación por PR.
+
+### Criterios de aceptación
+
+- Compactación existente conserva la preferencia entre pantallas.
+- Cabina y marco usan la misma política generada sin conceder accesos nuevos.
+- El menú no añade el proyecto hijo al cambiar de pantalla y lo conserva cuando es el único acceso autorizado.
+- Logo retorna a Inicio; no se añade un botón principal alternativo.
+- Mockup claramente identificado, con ejemplos y sin llamadas a sistemas de negocio; verificadores del portal pasan.
