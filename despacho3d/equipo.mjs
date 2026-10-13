@@ -97,7 +97,7 @@ export function mountTeamDesk({container,transport,isAuthorized,identityEpoch,ho
     refresh.disabled=true;
     try{const result=await session.read();if(!alive())return;snapshot=result;renderSnapshot();status.textContent='Bitácora actualizada.';}
     catch(error){errorMessage(error);}
-    finally{refresh.disabled=false;}
+    finally{refresh.disabled=false;if(alive())lock();}
   }
   function lock(){
     const pending=!!session.pending();textarea.readOnly=pending||sending;target.disabled=pending||sending;submit.disabled=!snapshot||pending||sending;mic.disabled=sending||pending||!(host.SpeechRecognition||host.webkitSpeechRecognition);check.hidden=!pending;check.disabled=sending;
