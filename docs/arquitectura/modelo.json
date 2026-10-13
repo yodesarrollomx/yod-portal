@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-13.despacho-equipo.3",
+  "revision": "2026-10-13.despacho-equipo.4",
   "checked_at": "2026-10-13",
   "priorities": [
     "vender_mas",
@@ -12239,17 +12239,21 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO",
         "SYS-DESPACHO-3D",
-        "SYS-SALA"
+        "SYS-SALA",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
       ],
       "status": "propuesto",
       "approval": "Petición directa de Dirección: implementar el equipo compartido en el Despacho existente con instrucciones escritas o dictadas y seguimiento. No concede nuevos permisos ni abre información privada.",
-      "proposal": "Módulo nativo de equipo para el Despacho: historia, hoy y planeación; responsables y última revisión comprobada; instrucciones editables con dictado optativo, conservación de borrador, request_id estable y recibo correlacionado. Consume transporte autorizado inyectado por la cabina; no publica datos ni introduce credenciales o endpoints. Adaptador al Buzón existente y activación se verifican aparte. No modifica el mini CRM reservado.",
+      "proposal": "Módulo nativo de equipo para el Despacho: historia, hoy y planeación; responsables y última revisión comprobada; instrucciones editables con dictado optativo, conservación de borrador, request_id estable y recibo correlacionado. Consume transporte autorizado inyectado por la cabina; no publica datos ni introduce credenciales o endpoints. Adaptador al Buzón existente y activación se verifican aparte. No modifica el mini CRM reservado. Montaje nativo en cabina privada autenticada y transporte readTeam/writeTeam/lookupTeamReceipt implementados; validación de payload, revocación y fencing de import tardío. Backend coordinado separado. Merge preserva el registro de propuesta investor-simple-story ya presente en main, sin modificar su implementación ni fuente editorial.",
       "tests": [
         "CI: node scripts/arquitectura.cjs --check; node --test tests/*.cjs; node verify-os.cjs; node verify-portal.cjs; node verify-accesos.cjs; node verify-obra-app.cjs.",
         "Pruebas sintéticas: cortes históricos sin mutación, fechas futuras no acreditan ejecución, señales ausentes/futuras, envío ambiguo conserva request_id/texto, recibo incorrecto rechazado, revocación y lectura concurrente.",
-        "Aceptación pendiente: navegador escritorio/móvil, transporte privado instalado, guardar/recargar/acuse real de otro agente. Sin escrituras de prueba a negocio."
+        "Aceptación pendiente: navegador escritorio/móvil, transporte privado instalado, guardar/recargar/acuse real de otro agente. Sin escrituras de prueba a negocio.",
+        "tests/despacho-equipo-host.test.cjs y pruebas de transporte: sin autoridad no import, cambio de época/ruta revoca, intent exacto y errores backend no acreditan guardado.",
+        "717/717 Node aprobadas antes del ajuste documental; verificación de impacto se completa incluyendo Portero y Drive, componentes del transporte existente."
       ],
-      "deployment": "Módulos frontend y pruebas sintéticas preparados en rama. CI pendiente. Sin montaje productivo, API de negocio nueva ni cambios en main. El transporte privado y su activación siguen pendientes.",
+      "deployment": "Panel, transporte y montaje autenticado implementados en rama. Suite Node717/717 aprobada al commit3362eb98; OS/portal/accesos y esquema/vistas aprobados. Integración backend preparada aparte, todavía sin instalación ni recibo productivo. El flujo privado de instalación falla antes de iniciar. No hay publicación de esta propuesta ni lectura/escritura productiva confirmada.",
       "rollback": "Retirar el montaje y revertir estos módulos. Conservar Buzón, eventos, recibos, permisos y todas las notas."
     }
   ],
