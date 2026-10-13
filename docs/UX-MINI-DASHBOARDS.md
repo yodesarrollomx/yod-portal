@@ -45,3 +45,9 @@ Revisión 2 pendiente sobre código exacto y capturas de Chromium. No se concede
 Navegador aislado, sin llamadas a servicios de negocio y sin micrófono: PPP, evidencia/interpretación, borrador, escenario/viabilidad, caso, fuente faltante, texto seguro, continuidad móvil, compositor visible, overflow y logo. Tamaños 1440×900, 1366×768 y 390×844. Recibo contiene checkout exacto y capturas. Verificadores canónicos del portal deben pasar antes de integrar. El workflow es de PR/manual, sin programación periódica ni tareas autónomas.
 
 Revertir el PR restaura la maqueta previa. Datos y contratos privados permanecen intactos.
+
+## Revisión 2 · cambios solicitados
+
+Sobre V2 a7725c4c09199a79362573872d3b31cc98793bdd: UX 8.5/10 provisional, flujo 8.8/10 provisional. No se concede 9. Se corrigen drawer móvil con inert/foco/trampa/Escape, objetivo oculto en barra expandida, unidad de renta, icono de detalle, aviso de referencia V2 con consulta V1, lectura principal 14px, título Personas, contexto móvil permanente y tres fuentes normativas de ejemplo.
+
+La prueba inicial se detuvo por ownership de Git. El siguiente intento acotó safe.directory al checkout exacto y produjo seis capturas reales del mockup; detectó una aserción de ruta que consultaba el estado antes de hashchange. Se conserva comprobación del SHA y se espera visibilidad real de Inicio. Estas capturas detectaron también tarjetas inferiores fuera de la vista, un control global extra en desktop, metadatos delante del pasaje y texto móvil estrecho: correcciones de layout 3×2 cuando hay ancho, botón global móvil sólo donde corresponde, pasaje prioritario/metadatos desplegables y compositor móvil de ancho completo. Revisión 3 y pruebas pendientes.
