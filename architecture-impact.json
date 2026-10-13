@@ -1,20 +1,26 @@
 {
-  "model_revision": "2026-10-13.agent-right-thread.2",
-  "proposal_id": "CHG-AGENT-RIGHT-THREAD",
-  "summary": "Tres correcciones del prototipo: conversación derecha completa, hilo único y detalles contenidos con jerarquía útil.",
+  "model_revision": "2026-10-13.sala-tablero-hidream.1",
+  "proposal_id": "CHG-SALA-TABLERO-HIDREAM-20261013",
+  "summary": "Convertir Hoy en tablero por publicaciones con fondos translúcidos, tira completa, zoom por niveles, estados editoriales y producción diferenciados, conteo de intentos e historial y elección de candidatas por carrusel/gestos. Integrar HiDream-I1-Dev gratuito en Mesa/Arranque/Ejecutor, recibos idempotentes y fotografía sin texto incrustado. Preservar sesiones, roles, decisiones, veto de modelos y snapshot privado; ninguna aprobación automática ni respaldo de pago implícito.",
   "components": [
+    "SYS-SALA",
+    "GAS-SALA",
+    "SHEET-SALA",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-MOTORES-MEDIA",
+    "EXT-ACTIONS",
     "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "SYS-POTENCIALES"
+    "SYS-CONTROL",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs",
-    "Chromium aislado: geometría, turnos, contexto, fuentes y foco"
+    "python3 nube/verificar.py; git diff --check; regresiones Python y Node existentes.",
+    "Pruebas aisladas de recibo/cache/hash/seed/rate limit/reintento y rechazo de payloads de HiDream sin credenciales ni red.",
+    "Playwright con fuentes sintéticas: desktop/móvil/iframe, columnas/tira completa/guion/intención/historial, carrusel, gesto arriba, zoom atrás, selección original y sobre editorial, lector/agente sin votos.",
+    "Publicación por PR y recibo exacto; comprobación pública de archivos/código y lectura de datos existentes; sin decisiones de prueba en producción."
   ],
-  "rollback": "Revertir PR del prototipo; sin modificar operación privada ni reactivar planes cancelados."
+  "rollback": "Revertir PR frontend/adaptador y restaurar sólo configuración previa registrada si Dirección lo requiere. No restaurar ni borrar fotos, votos, textos, Sheets, versiones, propuestas, sesiones o snapshots."
 }

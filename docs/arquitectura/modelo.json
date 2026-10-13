@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-13.agent-right-thread.2",
+  "revision": "2026-10-13.sala-tablero-hidream.1",
   "checked_at": "2026-10-13",
   "priorities": [
     "vender_mas",
@@ -6297,6 +6297,25 @@
           "status": "propuesto"
         }
       ]
+    },
+    {
+      "id": "CON-SALA-HIDREAM",
+      "from": "SVC-SALA-PRODUCTOR",
+      "to": "EXT-MOTORES-MEDIA",
+      "kind": "api",
+      "label": "Fotografía HiDream gratuita con recibo y cupo observable",
+      "contract": "CTR-SALA-HIDREAM",
+      "contract_ids": [
+        "CTR-SALA-HIDREAM"
+      ],
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "Lote real38342683066 en rama operativa; integración recurrente propuesta.",
+          "status": "propuesto"
+        }
+      ]
     }
   ],
   "processes": [
@@ -12038,6 +12057,34 @@
       ],
       "deployment": "Corrección de prototipo verificada en PR220. Publicación se registra con recibo Pages en PR. No acredita satisfacción de diseño por score ni conexión real de voz/IA/Sheets; sin cambios de operación privada.",
       "rollback": "Revertir PR de presentación/hilo local; conservar fuentes, fórmulas, permisos, datos, servidores y tareas canceladas."
+    },
+    {
+      "id": "CHG-SALA-TABLERO-HIDREAM-20261013",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-MOTORES-MEDIA",
+        "EXT-ACTIONS",
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE"
+      ],
+      "status": "propuesto",
+      "proposal": "Convertir Hoy en tablero por publicaciones con fondos translúcidos, tira completa, zoom por niveles, estados editoriales y producción diferenciados, conteo de intentos e historial y elección de candidatas por carrusel/gestos. Integrar HiDream-I1-Dev gratuito en Mesa/Arranque/Ejecutor, recibos idempotentes y fotografía sin texto incrustado. Preservar sesiones, roles, decisiones, veto de modelos y snapshot privado; ninguna aprobación automática ni respaldo de pago implícito.",
+      "approval": "Dirección solicita implementar y publicar el tablero y usar el modelo probado en futuras corridas. Gratuito sujeto a disponibilidad del Space; sin cuota diaria garantizada.",
+      "tests": [
+        "python3 nube/verificar.py; git diff --check; regresiones Python y Node existentes.",
+        "Pruebas aisladas de recibo/cache/hash/seed/rate limit/reintento y rechazo de payloads de HiDream sin credenciales ni red.",
+        "Playwright con fuentes sintéticas: desktop/móvil/iframe, columnas/tira completa/guion/intención/historial, carrusel, gesto arriba, zoom atrás, selección original y sobre editorial, lector/agente sin votos.",
+        "Publicación por PR y recibo exacto; comprobación pública de archivos/código y lectura de datos existentes; sin decisiones de prueba en producción."
+      ],
+      "deployment": "Plan autorizado previo a implementación. Lote21 montadas/25 fotos acreditado por38342683066; aún falta integración permanente del generador y nuevo frontend.",
+      "rollback": "Revertir PR frontend/adaptador y restaurar sólo configuración previa registrada si Dirección lo requiere. No restaurar ni borrar fotos, votos, textos, Sheets, versiones, propuestas, sesiones o snapshots."
     }
   ],
   "data_contracts": [
@@ -13557,6 +13604,33 @@
         "No repetir una generación confirmada o incierta; identidad ligada a receta.",
         "No cambiar votos, permisos, planes, servicios, metas archivadas ni expedientes.",
         "Activación sólo tras imagen comprobada; generación no equivale a aceptación editorial."
+      ]
+    },
+    {
+      "id": "CTR-SALA-HIDREAM",
+      "components": [
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "EXT-MOTORES-MEDIA"
+      ],
+      "source": "Propuesta autorizada; lote real38342683066 comprobó imagen/recibo, disponibilidad permanente no garantizada.",
+      "input": [
+        "descripción visual sin caption",
+        "request_id",
+        "semilla0..999999",
+        "ratio3:4"
+      ],
+      "output": [
+        "PNG verificado",
+        "modelo fijo",
+        "SHA256 receta/foto",
+        "recibo y causa de indisponibilidad"
+      ],
+      "invariants": [
+        "No texto en fotografía; compositor añade caption vigente por separado.",
+        "No decide por el editor ni activa modelos vetados.",
+        "Si no hay servicio/cupo, queda pendiente; no respaldo de pago implícito.",
+        "Cache sólo con modelo/receta/foto verificados."
       ]
     }
   ],

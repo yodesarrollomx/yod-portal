@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-13.agent-right-thread.2
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-13.sala-tablero-hidream.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 26 sistemas y 90 componentes distribuidos exactamente una vez.
-- 10 áreas; 139 conexiones registradas, 10 marcadas como verificadas en el atlas.
+- 10 áreas; 140 conexiones registradas, 10 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -2345,6 +2345,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-079 · EXT-ACTIONS → SVC-SALA-PRODUCTOR · automatizacion · Programa productor cada veinte minutos · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-080 · SVC-SALA-PRODUCTOR → GAS-SALA · api · Lee decisiones/reglas y escribe cola · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-SALA-IMAGEN-OPENAI · SVC-SALA-PRODUCTOR → SVC-AUTON-CLOUD · api · Imagen para Sala con modelo fijo y recibo · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-SALA-HIDREAM · SVC-SALA-PRODUCTOR → EXT-MOTORES-MEDIA · api · Fotografía HiDream gratuita con recibo y cupo observable · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2357,10 +2358,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-079 · Frecuencia configurada en workflow, no evidencia de corridas · Estado: codigo · yodesarrollomx/sala-edicion · .github/workflows/sala-cada-hora.yml · Revisión: HEAD\_baseline
 - CON-080 · Planificador de compuertas · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_productor.py · Revisión: HEAD\_baseline
 - CON-SALA-IMAGEN-OPENAI · Propuesta autorizada para usar el servicio existente, aún sin prueba de generación. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-SALA-HIDREAM · Lote real38342683066 en rama operativa; integración recurrente propuesta. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 3 conexiones sin verificación de ejecución registrada.
+- 4 conexiones sin verificación de ejecución registrada.
 - Uso efectivo, configuración y costo en producción no comprobados
 
 ### Ejecutor de Sala · SVC-SALA-EJECUTOR
@@ -2417,6 +2419,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Conexiones registradas; no habilitan operaciones:**
 
 - CON-083 · SVC-SALA-EJECUTOR → EXT-MOTORES-MEDIA · integracion · Selecciona motor según configuración · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-SALA-HIDREAM · SVC-SALA-PRODUCTOR → EXT-MOTORES-MEDIA · api · Fotografía HiDream gratuita con recibo y cupo observable · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2427,10 +2430,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Evidencia de conexiones:**
 
 - CON-083 · Registro de motores de producción · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_motores.py · Revisión: HEAD\_baseline
+- CON-SALA-HIDREAM · Lote real38342683066 en rama operativa; integración recurrente propuesta. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 1 conexiones sin verificación de ejecución registrada.
+- 2 conexiones sin verificación de ejecución registrada.
 - Uso efectivo, configuración y costo en producción no comprobados
 
 ## Personas
