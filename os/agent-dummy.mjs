@@ -1,5 +1,5 @@
 
-import {demoWorkspace as work} from './agent-preview.mjs?v=4';
+import {demoWorkspace as work} from './agent-preview.mjs?v=5';
 import {SCENES,FORMULAS,METHOD,createInteraction,correctSurface,advanceLocalWork,visitScene,onePeriodResult,CORRECTION_REQUEST,isCorrectionRequest} from './agent-dummy.data.mjs?v=1';
 const $=id=>document.getElementById(id),e=work.escape,interactions=new Map(),sid=key=>work.current.model.id+':'+key;
 function current(){const {model}=work.current;if(!interactions.has(model.id))interactions.set(model.id,createInteraction(model.id));return interactions.get(model.id);}
@@ -41,8 +41,11 @@ function renderResource(key){
 }
 function renderSource(source){
  if(!source)return undefined;
- if(source.id===sid('deed'))return '<div class="source-warning">Documento ficticio. No es una escritura real.</div><p class="source-quick-meta">Página 2 · '+e(source.date)+' · '+e(source.revision)+'</p><h3>Texto original del ejemplo</h3><blockquote class="source-passage">Documento FICTICIO de '+e(work.current.model.name)+': superficie declarada <mark>644 m²</mark>.</blockquote><h3>Interpretación del autón</h3><p>El borrador muestra '+current().surface_m2+' m². '+(current().correction?'La corrección tiene recibo local.':'Hay una discrepancia que requiere tu petición para corregirse.')+'</p>'+(current().correction?'<div class="dummy-receipt">Antes: 500 m² · después: 644 m²<br>Recibo: '+e(current().correction.id)+'<br>Alcance: memoria del dummy; no Sheets.</div>':(work.current.state.draft.trim()?button('apply-correction','Aplicar propuesta local sin borrar mi borrador',true):button('prepare-correction','Preparar «corrige la superficie a 644 m²»',true)));
- if(source.id===sid('local-change'))return '<div class="source-warning">Recibo ficticio en memoria; no una escritura de negocio.</div><div class="dummy-summary"><div><span>Antes · terreno</span><strong>500 m²</strong></div><div><span>Después · terreno</span><strong>644 m²</strong></div></div><p>'+e(current().correction?.id||'Sin recibo')+'</p>'+work.sourceLink(sid('deed'),'Abrir documento de respaldo','p. 2')+'<p>El libro real sólo mostraría un cambio después del acuse y la relectura autorizada.</p>';
+ if(source.id===sid('deed')){
+ const currentValue=current().surface_m2,corrected=Boolean(current().correction);
+ return '<div class="source-warning">Documento ficticio · el cambio se demuestra sólo en memoria.</div><div class="detail-hero"><span class="eyebrow">Superficie del terreno</span><strong>'+(corrected?'644 m² · conciliado en el dummy':'500 vs 644 m²')+'</strong><p>La ficha y el dato del tablero '+(corrected?'coinciden.':'no coinciden todavía.')+'</p></div><div class="detail-split"><section class="detail-block"><h3>Dato del tablero</h3><p><strong>'+currentValue+' m²</strong> · '+(corrected?'corregido local':'borrador')+'</p></section><section class="detail-block"><h3>Dato del documento</h3><p><strong>644 m²</strong> · página 2 · documento de ejemplo</p></section></div><section class="detail-block"><h3>Lo que dice la fuente</h3><blockquote class="source-passage">Documento FICTICIO de '+e(work.current.model.name)+': superficie declarada <mark>644 m²</mark>.</blockquote></section><div class="detail-next"><strong>'+(corrected?'Resultado del ajuste':'Acción con este dato')+'</strong><p>'+(corrected?'El recibo conserva 500 → 644 m² y su documento de respaldo.':'Pedir al autón el ajuste con esta ficha como respaldo. Preparar el mensaje aún no aplica el cambio.')+'</p>'+(corrected?work.sourceLink(sid('local-change'),'Abrir antes/después y recibo','↗'):work.current.state.draft.trim()?button('apply-correction','Aplicar propuesta local sin borrar mi borrador',true):button('prepare-correction','Preparar petición de corrección',true))+'</div>';
+ }
+ if(source.id===sid('local-change'))return '<div class="source-warning">Acuse local de demostración. No hay escritura en Sheets.</div><div class="detail-hero"><span class="eyebrow">Resultado del ajuste</span><strong>500 → 644 m²</strong><p>El dato de Terreno coincide con el documento del ejemplo.</p></div><div class="detail-split"><section class="detail-block"><h3>Antes</h3><p>500 m² · borrador</p></section><section class="detail-block"><h3>Después</h3><p>644 m² · corregido local</p></section></div><section class="detail-block"><h3>Respaldo del cambio</h3>'+work.sourceLink(sid('deed'),'Abrir documento de respaldo','p. 2')+'<p>Recibo '+e(current().correction?.id||'no disponible')+'</p></section><div class="detail-next"><strong>Qué sigue</strong><p>Revisar las restricciones normativas con fuentes del mismo expediente.</p>'+work.sourceLink(sid('norm-list'),'Abrir colección normativa','3 materias')+'</div>';
  return undefined;
 }
 function paintToolbar(){
@@ -56,7 +59,7 @@ function scene(id,focus=false){
  else if(id==='market'){work.openSource(sid('market-study'));}
  else if(id==='compare'){work.openDetail('formula');}
  else work.openDetail(id);
- const u=new URL(location.href);u.searchParams.set('scene',id);u.searchParams.set('case',work.current.model.id);history.replaceState(null,'',u);paintToolbar();if(focus)$('source-title').focus({preventScroll:true});
+ const u=new URL(location.href);u.searchParams.set('scene',id);u.searchParams.set('case',work.current.model.id);history.replaceState(null,'',u);paintToolbar();if(focus)$(id==='conversation'?'message-input':'source-title').focus({preventScroll:true});
 }
 function prepare(text,sourceKey=null){
  const {model,state}=work.current;state.draft=$('message-input').value;
