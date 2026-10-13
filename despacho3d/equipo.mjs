@@ -53,6 +53,11 @@ export function mountTeamDesk({container,transport,isAuthorized,identityEpoch,ho
     status.textContent=error.message==='read_superseded'?'':error.message==='instruction_invalid'?'Revisa el texto y el encargo seleccionado.':'No pudimos confirmar la actualización. Conservamos tu texto.';
   }
   function sourceLink(value,node){const href=safeLink(value);if(!href)return;const a=el('a','team-source','Ver fuente ↗');a.href=href;a.target='_blank';a.rel='noopener noreferrer';node.append(a);}
+  function bodyText(card,value,label){
+    if(value.length<=360){card.append(el('p','team-body',value));return;}
+    card.append(el('p','team-body',value.slice(0,300).trimEnd()+'…'));
+    const details=el('details','team-details');details.append(el('summary',null,label),el('p','team-body',value));card.append(details);
+  }
   function renderLane(){
     for(const [key,b] of tabs){b.setAttribute('aria-selected',String(key===lane));b.tabIndex=key===lane?0:-1;}
     stream.setAttribute('aria-labelledby',tabs.get(lane).id);filter.hidden=lane!=='history';stream.replaceChildren();
@@ -63,13 +68,13 @@ export function mountTeamDesk({container,transport,isAuthorized,identityEpoch,ho
     for(const row of rows){
       const card=el('article','team-card');
       if(lane==='history'){
-        card.append(el('p','team-meta',stamp(row.at)+' · '+(row.actor||'Autor por confirmar')),el('p','team-body',row.text));
+        card.append(el('p','team-meta',stamp(row.at)+' · '+(row.actor||'Autor por confirmar')));bodyText(card,row.text,'Ver movimiento completo');
         if(row.kind==='ack')card.append(el('span','team-badge','Lectura confirmada'));
       }else{
         const owner=snapshot.members.find(m=>m.id===row.owner);
-        card.append(el('p','team-meta',owner?owner.label:'Sin responsable asignado'),el('h2',null,row.title),el('span','team-badge',row.status));
-        if(row.next_action)card.append(el('p','team-body','Siguiente paso: '+row.next_action));
-        if(row.blocker)card.append(el('p','team-blocker',row.blocker));
+        card.append(el('p','team-meta',owner?owner.label:row.owner==='Ambos'?'ChatGPT y Claude · compartido':row.owner||'Sin responsable asignado'),el('h2',null,row.title),el('span','team-badge',row.status));
+        if(row.next_action)bodyText(card,row.next_action,'Ver encargo y seguimiento completo');
+        if(row.blocker){card.append(el('p','team-blocker','Con un bloqueo registrado'));bodyText(card,row.blocker,'Ver bloqueo completo');}
         if(row.due_at)card.append(el('p','team-meta','Fecha prevista: '+stamp(row.due_at)));
         if(row.updated_at)card.append(el('p','team-meta','Actualizado: '+stamp(row.updated_at)));
         const note=button('Añadir nota','team-button team-quiet');note.onclick=()=>{if(session.pending()){status.textContent='Primero comprueba el envío pendiente.';return;}target.value=row.id;textarea.focus();};card.append(note);

@@ -19,7 +19,7 @@ const server=http.createServer((req,res)=>{
   const context=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce'}),page=await context.newPage(),errors=[];
   page.on('pageerror',e=>errors.push(e.message));
   await context.route('**/*',route=>route.request().url().startsWith(base+'/')?route.continue():route.abort());
-  const snap={version:1,revision:'r1',read_at:'2026-01-02T12:00:00Z',members:[{id:'director',label:'Dirección',kind:'human'},{id:'chatgpt',label:'ChatGPT',kind:'agent'},{id:'claude',label:'Claude',kind:'agent'}],tasks:[{id:'task-synthetic',title:'Revisar propuesta sintética',status:'Pendiente',owner:'chatgpt',next_action:'Preparar evidencia'}],events:[]};
+  const snap={version:1,revision:'r1',read_at:'2026-01-02T12:00:00Z',members:[{id:'director',label:'Dirección',kind:'human'},{id:'chatgpt',label:'ChatGPT',kind:'agent'},{id:'claude',label:'Claude',kind:'agent'}],tasks:[{id:'task-synthetic',title:'Revisar propuesta sintética',status:'Pendiente',owner:'Ambos',next_action:'Detalle sintético extenso. '.repeat(80)}],events:[]};
   let receipt=null,writes=0;
   await page.exposeBinding('fixtureCall',async(_,operation,value)=>{
    if(operation==='read')return structuredClone(snap);
@@ -29,6 +29,11 @@ const server=http.createServer((req,res)=>{
   });
   await page.goto(base);await page.getByRole('button',{name:'Equipo',exact:true}).click();
   await page.getByText('Bitácora actualizada.',{exact:true}).waitFor();
+  await page.getByText('ChatGPT y Claude · compartido',{exact:true}).waitFor();
+  assert.equal(await page.locator('.team-details').getAttribute('open'),null);
+  await page.getByText('Ver encargo y seguimiento completo',{exact:true}).click();
+  assert.notEqual(await page.locator('.team-details').getAttribute('open'),null);
+  await page.getByText('Ver encargo y seguimiento completo',{exact:true}).click();
   await page.getByLabel('Tu instrucción',{exact:true}).fill('Instrucción sintética conservada\npara el siguiente agente.');
   await page.getByRole('button',{name:'Guardar instrucción',exact:true}).click();
   await page.getByText('Envío sin confirmar.',{exact:false}).waitFor();

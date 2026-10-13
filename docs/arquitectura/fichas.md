@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.despacho-equipo.4 · 2026-10-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.despacho-equipo.5 · 2026-10-13.
 
 ## SYS-DESPACHO · El Despacho
 
