@@ -3,6 +3,9 @@ on:
   pull_request:
     paths:
       - 'os/agent-preview*'
+      - 'os/agent-dummy*'
+      - 'scripts/probar-dummy-browser.cjs'
+      - 'tests/agent-dummy.test.cjs'
       - 'scripts/probar-ux-mockup.cjs'
       - 'tests/agent-mini-panels.test.cjs'
       - '.github/workflows/ux-mockup.yml'
@@ -28,7 +31,9 @@ jobs:
           EXPECTED_UX_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
           NODE_PATH: ${{ runner.temp }}/ux-browser/node_modules
           UX_EVIDENCE_DIR: ${{ runner.temp }}/ux-evidence
-        run: node scripts/probar-ux-mockup.cjs
+        run: |
+          node scripts/probar-ux-mockup.cjs
+          node scripts/probar-dummy-browser.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
