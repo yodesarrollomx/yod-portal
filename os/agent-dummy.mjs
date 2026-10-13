@@ -1,5 +1,5 @@
 
-import {demoWorkspace as work} from './agent-preview.mjs?v=5';
+import {demoWorkspace as work} from './agent-preview.mjs?v=6';
 import {SCENES,FORMULAS,METHOD,createInteraction,correctSurface,advanceLocalWork,visitScene,onePeriodResult,CORRECTION_REQUEST,isCorrectionRequest} from './agent-dummy.data.mjs?v=1';
 const $=id=>document.getElementById(id),e=work.escape,interactions=new Map(),sid=key=>work.current.model.id+':'+key;
 function current(){const {model}=work.current;if(!interactions.has(model.id))interactions.set(model.id,createInteraction(model.id));return interactions.get(model.id);}
@@ -49,7 +49,7 @@ function renderSource(source){
  return undefined;
 }
 function paintToolbar(){
- const d=current(),i=SCENES.findIndex(s=>s.id===d.scene);$('dummy-scene').value=d.scene;$('dummy-guide').textContent=SCENES[i].guide;$('dummy-prev').disabled=i===0;$('dummy-next').disabled=i===SCENES.length-1;
+ const d=current();$('route-title').textContent='El Despacho / '+work.current.model.name;
 }
 function scene(id,focus=false){
  if(!visitScene(current(),id))return;
@@ -84,7 +84,8 @@ function reply(value,ref){
  patchSources();
 }
 work.setExtensions({
- card(key){if(key!=='terreno')return undefined;const d=current();return '<button type="button" class="map-button" data-source="'+sid('plot')+'" aria-label="Abrir mapa y superficie de ejemplo">'+work.mapSVG()+'</button><div class="dummy-stat"><strong>'+d.surface_m2+' m²</strong><span>Terreno · '+(d.correction?'corregido local':'borrador')+'</span></div>'+work.sourceLink(sid('deed'),d.correction?'Ver fuente y recibo':'Contrastar con ficha','644 m²');},
+ interaction(){return current();},
+
  resource:renderResource,source:renderSource,reply
 });
 document.addEventListener('preview:scenario',()=>work.refresh({cards:false,messages:false}));
@@ -101,13 +102,8 @@ document.addEventListener('click',ev=>{
  else if(action==='formula'||action==='method')work.openDetail(action);
  else scene(action,true);
 });
-$('dummy-scene').innerHTML=SCENES.map((s,i)=>'<option value="'+s.id+'">'+(i+1)+'/'+SCENES.length+' · '+e(s.title)+'</option>').join('');
-$('dummy-scene').onchange=ev=>scene(ev.target.value,true);
-$('dummy-prev').onclick=()=>scene(SCENES[Math.max(0,SCENES.findIndex(s=>s.id===current().scene)-1)].id);
-$('dummy-next').onclick=()=>scene(SCENES[Math.min(SCENES.length-1,SCENES.findIndex(s=>s.id===current().scene)+1)].id);
-$('dummy-overview').onclick=()=>work.openDetail('overview');
 const params=new URLSearchParams(location.search),caseId=params.get('case');if(caseId&&Array.from($('case-select').options).some(x=>x.value===caseId)){$('case-select').value=caseId;$('case-select').dispatchEvent(new Event('change'));}
 patchSources();paintToolbar();work.refresh();scene(params.get('scene')||'conversation');
 
-function syncRoute(){document.querySelector('.dummy-toolbar').hidden=$('workspace').hidden;}
+function syncRoute(){$('route-title').textContent=$('workspace').hidden?'YOD OS':'El Despacho / '+work.current.model.name;}
 window.addEventListener('hashchange',syncRoute);syncRoute();
