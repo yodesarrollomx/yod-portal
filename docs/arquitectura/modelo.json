@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-13.ppp-dummy-integral.1",
+  "revision": "2026-10-13.ppp-dummy-integral.2",
   "checked_at": "2026-10-13",
   "priorities": [
     "vender_mas",
@@ -8344,7 +8344,7 @@
         "MINI"
       ],
       "effort": "M",
-      "decision": "aprobada",
+      "decision": "implementada",
       "prerequisites": [
         "Reusar la navegación existente y el PPP persistente, sin duplicar motores de negocio.",
         "Datos y respuestas locales ficticios; fórmulas de ejemplo separadas de Sheets canónico.",
@@ -11936,18 +11936,19 @@
         "SYS-DESPACHO",
         "SYS-POTENCIALES"
       ],
-      "status": "propuesto",
+      "status": "verificado",
       "proposal": "Conglomerar hallazgos V3 en un dummy interactivo local, con recorrido de conversación, corrección trazable de dato ficticio, evidencia normativa/mercado, versiones/fórmulas, trabajo/entrega y presentación. Reusar navegación y PPP persistentes, conversación única y capacidades visuales iguales por personaje. Sin conexiones, datos, permisos o ejecución de negocio.",
       "approval": {
         "date": "2026-10-13",
         "scope": "Dirección solicita dummy de interacción y pantallas necesarias, con todos los hallazgos, mejoras y fórmulas en una sola propuesta."
       },
       "tests": [
-        "Verificadores canónicos del portal y atlas.",
-        "Contratos de fórmula sintética, aislamiento de expedientes, corrección explícita e idempotencia local.",
-        "Recorrido Chromium exacto: pantallas, fuentes, corrección, versiones, tareas, presentación, responsive y regresión V3."
+        "Código exacto590e92a164d3b376c505a35ccd5f796318dccc8c: run38342386801/job115116059698 PASS dummy+regresiónV3 y doce capturas.",
+        "Fuente/caso, idempotencia local, petición negativa, borrador/ref/recibo, bloqueo de entrega y fórmulas didácticas.",
+        "Geometría visible de normativa, fórmula y lámina; apertura desde hidden, guía contextual y siguiente pendiente.",
+        "Arquitectura38342386807/OS38342386892 success; revisiones internas UX9.1 y flujo9.2 sólo dummy."
       ],
-      "deployment": "Propuesta registrada antes de programar. No activa producción privada ni automatizaciones canceladas.",
+      "deployment": "Dummy local verificado en PR218. Documentación UX-DUMMY-INTEGRAL; recibo Pages al integrar en PR. No acredita voz/IA/Sheets/normativa real/autonomía; ningún cambio runtime privado.",
       "rollback": "Revertir PR de dummy; conservar maqueta V3, originales, contratos, datos reales y sesiones."
     }
   ],

@@ -99,3 +99,63 @@ Rayones A20-D2-01/40-18rojo: abrir desde inicio. A20-D2-02azul: guía contextual
 Candidato59be87: las nuevas capturas confirman Fórmulas y Trabajo desde su inicio. El mismo gate de apertura falla al reabrir Presentación desde conversación: scrollTop393en lugarde0. El reset se ejecutaba con el visor oculto; la caja de scroll aún no existía. No se rebajó la prueba.
 
 Se unifica activación del visor: mostrar, aplicar vista móvil y borrador, colocar foco, resolver geometría y finalmente reiniciar desplazamiento. Ambas aperturas usan el mismo helper; refresh del mismo contexto conserva lectura. El ensayo captura también la reapertura desde hidden.
+
+## Cierre D4 · diseño y recorridos aceptados
+
+| Revisión | Código y evidencia | Resultado |
+|---|---|---|
+| D1 | d7e9dfef · run38340657257 | UX8.5provisional/rechazo; borrador y fuente de recibo. Predicado de petición demasiado amplio; móvil no abre resaltado visible. |
+| D2 | c21b05dd · run38341331234 | Continuidad corregida; flujo8.7provisional/rechazo por scroll heredado en normativa/fórmula/lámina. |
+| D3 | 59be87b0 · run38342001081 | Fórmula/Trabajo empiezan correctamente; reapertura de visor hidden falla393≠0. Se mantiene el gate. |
+| D4 | 590e92a164d3b376c505a35ccd5f796318dccc8c · run38342386801/job115116059698 | **PASS** dummy y regresión V3. Doce capturas reales; dos revisiones liberadas. |
+
+[Recibo de navegador y capturas](https://github.com/yodesarrollomx/yod-portal/actions/runs/38342386801), [artefacto](https://github.com/yodesarrollomx/yod-portal/actions/runs/38342386801/artifacts/11787397560).
+Checkout exacto y DUMMY_RESULT:PASS a las **2026-10-13T03:35:46.247Z**.
+[Arquitectura](https://github.com/yodesarrollomx/yod-portal/actions/runs/38342386807) y [YOD OS](https://github.com/yodesarrollomx/yod-portal/actions/runs/38342386892) completados con success.
+
+Los revisores inspeccionaron código, capturas y recibos; no heredaron ni fijaron por intención la nota V3:
+
+- **UX20: 9.1/10**. PPP/conversación9.2;mini9.0;trazabilidad9.3;flujo9.1;accesibilidad9.0;consistencia9.0.
+- **Flujo40: 9.2/10**, cierre independiente **2026-10-13T03:39:04Z**. PPP1.40/1.5;jerarquía1.45/1.5;trazabilidad1.80/2;escenarios1.35/1.5;estados1/1;conversación0.95/1;adaptación0.85/1;eficiencia0.40/0.5.
+
+Son agentes con perspectivas senior simuladas; no se atribuye experiencia humana ni certificación internacional. No quedan bloqueos en el alcance del dummy. La lectura larga de normativa, fórmulas y lámina requiere desplazamiento del contexto; el inicio útil y compositor permanecen visibles. No se acredita voz, IA, datos reales, precisión normativa, latencia del Chromebook físico o autonomía24/7.
+
+### Pintarrón de decisiones finales
+
+- A20-D4-01/40-20 · verde: dato500→fuente644→petición→acuse local. La preparación no aplica; confirmación no se confunde con persistencia real.
+- A20-D4-02 · verde: entregables→Siguiente. La línea cambia cuando se acredita un resultado ficticio.
+- A20-D4-03/40-23 · verde: fuente/escena inicia con el contenido seleccionado, después de activar el visor.
+- A20-D4-04 · azul: Recorrido contextual, sin otra barra global; en Inicio desaparece.
+- A20-D4-05/40-22 · verde: ConsultaV3→TIR/VPN/viabilidad, conservando unidad, periodo, base y restricciones.
+- A20-D4-06 · verde: borrador, referencia y expediente conservados; cita de recibo reconstituida al volver.
+- A20-D4-07/40-24 · azul: presentaciónV2 y consultaV3 son acciones distintas; la fuente conduce a la decisión y al siguiente encargo.
+- 40-21 · azul: terreno644≠construidos1,000; no se intercambian superficies.
+- 40-25 · azul: recibos y avance manual simulado, sin aparentar un servidor autónomo.
+
+### Fragmentos antes/después que explican el cambio
+
+Antes, preparar reemplazaba el mensaje:
+
+~~~js
+state.draft = text;
+~~~
+
+Ahora se conserva el texto y la referencia, y se anexa la propuesta; aplicar el dato desde una ficha con borrador requiere confirmación local explícita.
+
+Antes se reiniciaba el scroll mientras el visor seguía oculto. Ahora ambas aperturas usan el mismo ciclo:
+
+~~~text
+Mostrar visor → aplicar vista/borrador → colocar foco
+→ resolver geometría → scrollTop = 0.
+~~~
+
+La función de refresh conserva el desplazamiento del mismo contexto. Las pruebas geométricas no se rebajaron para obtener aprobación.
+
+## Entrega única
+
+Registro documental UTC: **2026-10-13 03:42:15 UTC**.
+[PR218](https://github.com/yodesarrollomx/yod-portal/pull/218) conserva integración y recibo de Pages cuando se confirme. Los cambios posteriores a590e92 de esta entrega son documentación/atlas, sin alterar la interfaz probada.
+
+El dummy se recorre desde [un enlace](https://yodesarrollomx.github.io/yod-portal/os/agent-dummy.html?v=1). «Ver conjunto» reúne las siete escenas; el selector permite saltar entre ellas. «Trabajo del autón» reúne fórmulas, método, historial, notas y presentación. El micrófono representa el lugar de la voz, sin capturar audio.
+
+Sólo se publica el prototipo y su documentación. No se reinicia Render ni se instala otro Apps Script. La maqueta anterior permanece disponible y sus verificaciones pasan. Revertir PR218 conserva fuentes, permisos, sesiones y trabajo reales.

@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.ppp-dummy-integral.1 · 2026-10-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.ppp-dummy-integral.2 · 2026-10-13.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 
@@ -436,7 +436,7 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 - Beneficio esperado: Recorrer y corregir un flujo concreto sin salir del PPP, comprobar fuentes y fórmulas, ver pendientes y presentación con la misma lógica para los tres personajes.
 - Medición: Un único dummy navegable con escenas necesarias, evidencia inspectable y continuidad del mismo expediente. Pruebas con fixtures, sin aceptación operativa.
 - Dependencias: MINI.
-- Esfuerzo: M. Decisión: **aprobada**.
+- Esfuerzo: M. Decisión: **implementada**.
 
 ### Requisitos previos
 
