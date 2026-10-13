@@ -51,3 +51,5 @@ test('team server errors and session revocation cannot produce a saved receipt',
  let release;const delayed=harness(async()=>{await new Promise(r=>release=r);return {ok:true,text:async()=>JSON.stringify({version:1,status:'saved'})};});
  const session={ready:true,allowed:true,token:'same',epoch:1};delayed.session(session);const p=delayed.create().lookupTeamReceipt({request_id:'request_synthetic_12345'});session.allowed=false;release();await assert.rejects(p,/unauthorized/);
 });
+
+test('explicit team authority rejection signals teardown instead of retaining private snapshot',async()=>{for(const error of ['forbidden','unauthorized','revocado']){const h=harness(async()=>({ok:true,text:async()=>JSON.stringify({ok:false,error})}));await assert.rejects(h.create().readTeam({}),/session_changed/);}});

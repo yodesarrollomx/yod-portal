@@ -43,7 +43,7 @@
     if(!current||current.epoch!==session.epoch||current.token!==session.token)throw Error('session_changed');
     if(current.allowed!==true)throw Error('unauthorized');
     if(current.ready!==true)throw Error('session_pending');
-    if(['readTeam','writeTeam','lookupTeamReceipt'].includes(operation)&&data&&data.ok===false){var code=typeof data.error==='string'&&/^[a-zA-Z0-9_:-]{1,100}$/.test(data.error)?data.error:'team_unavailable';throw Error(code);}
+    if(['readTeam','writeTeam','lookupTeamReceipt'].includes(operation)&&data&&data.ok===false){var code=typeof data.error==='string'&&/^[a-zA-Z0-9_:-]{1,100}$/.test(data.error)?data.error:'team_unavailable';throw Error(['unauthorized','forbidden','session_changed','sin_sesion','sin_acceso','revocado','expirado'].includes(code)?'session_changed':code);}
     return data;
    }catch(error){if(controller.signal.aborted||error&&error.name==='AbortError')throw Error('timeout');throw error;}
    finally{clearTimeout(timer);}
