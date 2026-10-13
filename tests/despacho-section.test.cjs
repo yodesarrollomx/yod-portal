@@ -116,7 +116,7 @@ test('Scene uses only its fixed relative path with no credential transport or Ch
   assert.equal((source.match(/https:\/\//g)||[]).length,0);assert.doesNotMatch(source,/chatgpt\.site|requestFullscreen/);
   assert.match(source,/var FRAME_PATH='\.\.\/despacho3d\/index\.html\?v=fuentes142'/);
 });
-test('Immersive surface fills available height and retains compact controls and Inicio state',()=>{
+test('Immersive surface fills available height and retains compact controls and logo access to Inicio',()=>{
   const html=fs.readFileSync(require.resolve('../os/index.html'),'utf8'),css=fs.readFileSync(require.resolve('../os/styles.css'),'utf8');
   assert.match(css,/body\[data-workspace-route="despacho"\] \.content > :not\(#seccionDespacho\)/);
   assert.match(css,/height:calc\(100dvh - var\(--despacho-topbar-height,68px\)\)/);
@@ -128,7 +128,9 @@ test('Immersive surface fills available height and retains compact controls and 
   const section=html.split('<section class="section despacho-section"')[1].split('</section>')[0];
   assert.match(section,/<h2 class="sr-only"/);
   assert.match(html,/<details class="despacho-tools" id="despachoTools">/);
-  assert.match(html,/<nav aria-label="Acciones del Despacho">[\s\S]*?href="#inicio"/);
+  assert.match(html,/<a class="brand" href="#inicio"/);
+  assert.match(html,/<a class="topbar-brand" href="#inicio"/);
+  assert.doesNotMatch(html,/<a class="(?:nav-item active|section-link)" href="#inicio"/);
   assert.doesNotMatch(section,/class="section-head"|despacho-actions|despacho-help|Pantalla completa|iniciar sesi/);
   const h=harness();h.identity.ready=true;h.section.refresh();
   assert.equal(h.body.getAttribute('data-workspace-route'),'despacho');
