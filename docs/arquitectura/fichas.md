@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.masterbrokers-mini-crm.1 · 2026-10-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.investor-simple-story.1 · 2026-10-13.
 
 ## SYS-DESPACHO · El Despacho
 

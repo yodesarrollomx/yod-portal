@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-13.masterbrokers-mini-crm.1",
+  "revision": "2026-10-13.investor-simple-story.1",
   "checked_at": "2026-10-13",
   "priorities": [
     "vender_mas",
@@ -12210,6 +12210,28 @@
       ],
       "deployment": "Registro previo a implementación. No demuestra publicación, lectura privada nueva, ingestión automática ni invitaciones de Calendar.",
       "rollback": "Revertir sólo frontend; conservar IDs, todas las actividades y sus notas legibles, fuentes, PPP, pendientes, permisos y datos operativos. No restaurar filas de negocio."
+    },
+    {
+      "id": "CHG-INVESTOR-SIMPLE-STORY",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL",
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección solicita rehacer desde cero la presentación pública: escenas independientes, trazos simples y mayores, limpieza entre cuadros y relato comercial breve. Autorización de publicación en la URL vigente; conservar información y antecedentes.",
+      "proposal": "Siete escenas independientes con tres revelados como máximo: oportunidad, territorio, selección, cuenta, acuerdo, ejecución y participación. Nuevos HTML/CSS/SVG/runtime; no reutilizar geometría, cámara, imágenes, estilos o tipografía de la principal anterior. Contenido simple_version/simple_config sólo en la hoja editorial vigente mediante el GET existente. Información completa en lector opcional; anteriores en archivo embebido bajo la misma URL. Sin nuevo sitio, backend, ACL, precios, reglas financieras, rendimiento ni datos privados.",
+      "tests": [
+        "Generador atlas y esquema, node --test tests/*.cjs, verificadores OS/portal/accesos/obra.",
+        "Consumidor: SVG independiente por escena, trazos de al menos6px, máximo8paths, sintextoSVG ni cartografía presentada como real.",
+        "Chromium320/390/1440: una pantalla con titular/diagrama/frase/controles legibles, reproducción/pausa, navegación, reversa, reset, movimiento reducido y lectura completa.",
+        "Texto/render seguro, fuente viva en Sheets, credencial Portero intacta, mensajes limpios, cero escrituras de prueba en negocio.",
+        "Verificación pública anónima del código exacto tras integración y capturas reales; archivo anterior disponible."
+      ],
+      "deployment": "Registro previo. No acredita implementación ni publicación del nuevo frontend. Mantiene transporte público editorial y acceso vigente; no cambia sistemas de negocio.",
+      "rollback": "Revertir sólo frontend a la principal previa en la misma URL; conservar simple_*, principal_*, mono_* y originales en la hoja, permisos y expedientes."
     }
   ],
   "data_contracts": [
