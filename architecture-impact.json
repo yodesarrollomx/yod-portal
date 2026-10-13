@@ -1,22 +1,26 @@
 {
-  "model_revision": "2026-10-13.investor-monoline-story.1",
-  "proposal_id": "CHG-INVESTOR-MONOLINE-STORY",
-  "summary": "Registrar dirección4r4: siete escenas/21 momentos en un path monoline acumulativo y detalle completo, mismas fuentes públicas y URL; sin cambio a backend/ACL.",
+  "model_revision": "2026-10-13.sala-tablero-hidream.1",
+  "proposal_id": "CHG-SALA-TABLERO-HIDREAM-20261013",
+  "summary": "Convertir Hoy en tablero por publicaciones con fondos translúcidos, tira completa, zoom por niveles, estados editoriales y producción diferenciados, conteo de intentos e historial y elección de candidatas por carrusel/gestos. Integrar HiDream-I1-Dev gratuito en Mesa/Arranque/Ejecutor, recibos idempotentes y fotografía sin texto incrustado. Preservar sesiones, roles, decisiones, veto de modelos y snapshot privado; ninguna aprobación automática ni respaldo de pago implícito.",
   "components": [
-    "SYS-INVERSION",
-    "GAS-PLAN-POTENCIAL",
-    "SHEET-PLAN-POTENCIAL",
+    "SYS-SALA",
+    "GAS-SALA",
+    "SHEET-SALA",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-MOTORES-MEDIA",
+    "EXT-ACTIONS",
     "SYS-YOD-OS",
-    "SYS-CONTROL"
+    "SYS-CONTROL",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs",
-    "Pruebas de frontend/móvil/publicación se ejecutan en el PR consumidor; esta propuesta no acredita implementación."
+    "python3 nube/verificar.py; git diff --check; regresiones Python y Node existentes.",
+    "Pruebas aisladas de recibo/cache/hash/seed/rate limit/reintento y rechazo de payloads de HiDream sin credenciales ni red.",
+    "Playwright con fuentes sintéticas: desktop/móvil/iframe, columnas/tira completa/guion/intención/historial, carrusel, gesto arriba, zoom atrás, selección original y sobre editorial, lector/agente sin votos.",
+    "Publicación por PR y recibo exacto; comprobación pública de archivos/código y lectura de datos existentes; sin decisiones de prueba en producción."
   ],
-  "rollback": "Revertir PR frontend conservando mono_*, inv1–inv7, hunt, láminas previas, Material, permisos y expedientes; ningún cambio del runtime privado."
+  "rollback": "Revertir PR frontend/adaptador y restaurar sólo configuración previa registrada si Dirección lo requiere. No restaurar ni borrar fotos, votos, textos, Sheets, versiones, propuestas, sesiones o snapshots."
 }
