@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.agent-right-thread.2 · 2026-10-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.sala-tablero-hidream.1 · 2026-10-13.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -879,7 +879,7 @@ Abrir compuertas aprobadas y encolar trabajo sin decidir ni ejecutar
 - Entidades: trabajo, pieza, version.
 - Fuente de verdad: Configuración de reglas/motores y código de ejecución; ejecución viva pendiente.
 - Evidencia: [sala-edicion/nube/sala_productor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_productor.py#L130) — Abrir compuertas aprobadas y encolar trabajo sin decidir ni ejecutar; [sala-edicion/docs/SALA-CIERRE-ONLINE.md](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md) — PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes.; [sala-edicion/nube/sala_productor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dde4ab0151c5cc36071882380afe7ecf495ecef6/nube/sala_productor.py) — Lote38310054319: productor success. Ningún nuevo trabajo habilitado; las imágenes rehechas esperan revisión editorial..
-- Conexiones: CON-079 (EXT-ACTIONS → SVC-SALA-PRODUCTOR); CON-080 (SVC-SALA-PRODUCTOR → GAS-SALA); CON-SALA-IMAGEN-OPENAI (SVC-SALA-PRODUCTOR → SVC-AUTON-CLOUD).
+- Conexiones: CON-079 (EXT-ACTIONS → SVC-SALA-PRODUCTOR); CON-080 (SVC-SALA-PRODUCTOR → GAS-SALA); CON-SALA-IMAGEN-OPENAI (SVC-SALA-PRODUCTOR → SVC-AUTON-CLOUD); CON-SALA-HIDREAM (SVC-SALA-PRODUCTOR → EXT-MOTORES-MEDIA).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Uso efectivo, configuración y costo en producción no comprobados.
 
@@ -905,7 +905,7 @@ Generar texto, imagen, escena o voz según motor configurado
 - Entidades: trabajo, pieza, version.
 - Fuente de verdad: Configuración de reglas/motores y código de ejecución; ejecución viva pendiente.
 - Evidencia: [sala-edicion/nube/sala_motores.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_motores.py#L37) — Generar texto, imagen, escena o voz según motor configurado; [sala-edicion/nube/prueba_online.py](https://github.com/yodesarrollomx/sala-edicion/blob/6e67927f01829baba72267aad15d59ea60139444/nube/prueba_online.py) — Run 38139680521 success: seis artefactos privados verificados por SHA256, corte 1080x1920 H264/AAC 10.166667s. Entradas sintéticas, sin filas o decisiones de negocio.; [sala-edicion/nube/motores/imagen.py](https://github.com/yodesarrollomx/sala-edicion/blob/dde4ab0151c5cc36071882380afe7ecf495ecef6/nube/motores/imagen.py) — API GPT Image1.5 probada38302218587; montaje real38310054319:10 nuevas fotografías recuperadas,6 sustituciones y4 continuaciones. Quedan21 sustituciones por credit_balance_exhausted; CF y Gemini también429..
-- Conexiones: CON-083 (SVC-SALA-EJECUTOR → EXT-MOTORES-MEDIA).
+- Conexiones: CON-083 (SVC-SALA-EJECUTOR → EXT-MOTORES-MEDIA); CON-SALA-HIDREAM (SVC-SALA-PRODUCTOR → EXT-MOTORES-MEDIA).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Uso efectivo, configuración y costo en producción no comprobados.
 
