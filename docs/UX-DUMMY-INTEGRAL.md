@@ -93,3 +93,9 @@ Los dos rechazos de continuidad D1 se corrigieron; aún no se libera la entrega.
 - Los ensayos miden intersección visible del pasaje, contexto de fórmula y título de lámina, no sólo presencia en DOM.
 
 Rayones A20-D2-01/40-18rojo: abrir desde inicio. A20-D2-02azul: guía contextual. A20-D2-03verde: siguiente según resultado. 40-19azul: control y síntesis juntos.
+
+## Cotejo de apertura tras ocultar el visor
+
+Candidato59be87: las nuevas capturas confirman Fórmulas y Trabajo desde su inicio. El mismo gate de apertura falla al reabrir Presentación desde conversación: scrollTop393en lugarde0. El reset se ejecutaba con el visor oculto; la caja de scroll aún no existía. No se rebajó la prueba.
+
+Se unifica activación del visor: mostrar, aplicar vista móvil y borrador, colocar foco, resolver geometría y finalmente reiniciar desplazamiento. Ambas aperturas usan el mismo helper; refresh del mismo contexto conserva lectura. El ensayo captura también la reapertura desde hidden.
