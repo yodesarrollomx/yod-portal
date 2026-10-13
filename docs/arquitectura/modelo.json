@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-13.sala-tablero-hidream.1",
+  "revision": "2026-10-13.agent-decision-board.1",
   "checked_at": "2026-10-13",
   "priorities": [
     "vender_mas",
@@ -8425,6 +8425,42 @@
         "Cerrar detalle restaura tarjetas y foco, preservando borrador/referencia/caso.",
         "Móvil mantiene un único hilo y lectura navegable, sin forzar columnas ilegibles."
       ]
+    },
+    {
+      "id": "MANDO",
+      "titulo": "Puesto de decisión del autón con avance trazable",
+      "boards": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ],
+      "problem": "El prototipo conserva continuidad pero se percibe burocrático; muestra fuentes sin jerarquizar decisión ni cantidades/ruta.",
+      "benefit": "Comprender qué resolver, qué bloquea y dónde actuar con identidad YOD y conversación continua.",
+      "metric": "Tres revisores simulados independientes, mínimo9.5 cadauno sin gates. Juicio interno de prototipo, no aceptación operativa.",
+      "dependencies": [
+        "HILO"
+      ],
+      "effort": "M",
+      "decision": "pendiente",
+      "prerequisites": [
+        "Chat derecho fullheight, fuente izquierda, hilo único.",
+        "Datos ficticios explícitos; no avance legal por botones/visitas/tiempo.",
+        "Navegación y compactación globales, capacidades conservadas."
+      ],
+      "tasks": [
+        "Cabecera de decisión y ruta de cuatro hitos.",
+        "Seis tarjetas numéricas con unidades/fecha y fuentes.",
+        "Inspector progresivo; conservar utilidades.",
+        "Revisión de commit/capturas, corregir sin rebajar rúbrica.",
+        "Publicar dummy y bitácora de resultados y límites."
+      ],
+      "acceptance": [
+        "Próximo resultado/bloqueo/CTA dominantes.",
+        "Toda cantidad define alcance; normativa real no acreditada por simulación.",
+        "Ruta avanza por recibos locales, no exploración.",
+        "Hilo/caso/borrador/ref/versión defendida/capacidades conservadas.",
+        "Colores y gráficos para decidir sin XP ni trabajo fingido."
+      ]
     }
   ],
   "changes": [
@@ -12085,6 +12121,28 @@
       ],
       "deployment": "Plan autorizado previo a implementación. Lote21 montadas/25 fotos acreditado por38342683066; aún falta integración permanente del generador y nuevo frontend.",
       "rollback": "Revertir PR frontend/adaptador y restaurar sólo configuración previa registrada si Dirección lo requiere. No restaurar ni borrar fotos, votos, textos, Sheets, versiones, propuestas, sesiones o snapshots."
+    },
+    {
+      "id": "CHG-AGENT-DECISION-BOARD",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ],
+      "status": "propuesto",
+      "proposal": "Reestructurar sólo el dummy como puesto de decisión YOD: próximo resultado con CTA y evidencia, ruta de cuatro resultados con denominador/alcance local, seis mini dashboards numéricos, color semántico y detalle progresivo. Chat fijo a derecha, recorrido opcional. Sin nuevos motores/APIs/datos/permisos/tareas.",
+      "approval": {
+        "date": "2026-10-13",
+        "scope": "Dirección solicita UX amena, color, cantidades/KPIs y tres revisiones con umbral interno9.5. Perspectivas2028/2030 simuladas, sin certificación."
+      },
+      "tests": [
+        "Regresiones obligatorias arquitectura/OS/portal/accesos/obra.",
+        "Métricas del mismo caso; visita no suma, recibo local no significa normativa aprobada.",
+        "Chromium exacto desktop/Chromebook/móvil: geometría, borrador/ref/foco, siguiente/corrección/entrega, sin red de negocio.",
+        "Tres revisiones independientes con rúbrica fija y gates; capturas del código y nota por dimensión, sin heredar notas."
+      ],
+      "deployment": "Propuesta previa a código; publicación del prototipo por PR tras verificaciones. No acredita operación privada.",
+      "rollback": "Revertir PR del prototipo; conservar contratos, aplicaciones, servidor, datos, credenciales y tareas canceladas."
     }
   ],
   "data_contracts": [
@@ -15381,6 +15439,24 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "scripts/probar-agent-thread-browser.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/agent-board.metrics.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/agent-board-metrics.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",
