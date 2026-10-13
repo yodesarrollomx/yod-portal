@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-13.investor-principal-story.1",
+  "revision": "2026-10-13.masterbrokers-mini-crm.1",
   "checked_at": "2026-10-13",
   "priorities": [
     "vender_mas",
@@ -6316,6 +6316,25 @@
           "status": "propuesto"
         }
       ]
+    },
+    {
+      "id": "CON-BROKERS-PPP-SAVED",
+      "from": "SYS-INVERSION",
+      "to": "GAS-PORTERO",
+      "kind": "lectura",
+      "label": "Resumen guardado de PPP por expediente",
+      "contract": "CTR-BROKERS-MINI-CRM; GET recurso=caso&id&tipo con sesión existente. No recalcular escenarios ni guardar.",
+      "contract_ids": [
+        "CTR-BROKERS-MINI-CRM"
+      ],
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "Consumo propuesto del mismo contrato empleado por el PPP; lectura autorizada y campos guardados se comprobarán por separado.",
+          "status": "propuesto"
+        }
+      ]
     }
   ],
   "processes": [
@@ -12168,6 +12187,29 @@
       ],
       "deployment": "Registro previo de propuesta aprobada. Documenta el contrato de la nueva versión principal; no acredita implementación, configuración principal_* escrita ni publicación. Beta4r4 se conserva y no requiere cambio de backend ni acceso privado.",
       "rollback": "Revertir únicamente PR frontend principal y restaurar beta4r4 como entrada, dentro de la misma URL; conservar principal_*, mono_*, hunt_* e inv1_*–inv7_* en Sheets, originales, Material, permisos y expedientes. No restaurar registros operativos."
+    },
+    {
+      "id": "CHG-MASTERBROKERS-MINI-CRM",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-CRM",
+        "SHEET-CRM",
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección solicita implementar mini CRM en Masterbrokers el 13-oct: desplegables comparables, PPP en lectura, historial con fecha/fuente, calendario y reuniones con participantes, reutilizando el Sheet. Autorización de publicación vigente de Masterbrokers; no amplía identidad, permisos, reglas comerciales ni invitaciones externas.",
+      "proposal": "Vista progresiva sobre brokers.v1: una barra por expediente y varios desplegables abiertos; referencia del propietario/contacto sin inferir titularidad; GET del caso PPP existente muestra sólo inputs y resultados guardados con versión y fecha. Historial append-only en BROKERS_Actividades.note con sobre YOD-CRM-v1 (tipo, fecha ocurrida, estado, participantes, origen, URL, reemplazo y etapa observada), sin nueva tabla ni base. Calendario deriva hechos y reuniones programadas; confirmar/cancelar agrega evento que reemplaza la programación en calendario, preservando ambos en historial. Próximo paso y fecha se guardan mediante el contrato actual; importación de documentos verificados añade hechos históricos sin cambiar pendientes. No deduce actividad desde un clic de consulta ni convierte fecha de carga en fecha de reunión. WhatsApp requiere adjunto/fuente proporcionada, no existe escucha continua demostrada.",
+      "tests": [
+        "node --test tests/brokers*.test.cjs: codec compatible, fecha real distinta de captura, eventos programados/reemplazados, calendario y resumen PPP sin motor propio.",
+        "Chromium320/390/1440: varios expedientes desplegados, comparación alineada, calendario, editor y fuentes; cero overflow.",
+        "Permisos existentes, preview sin guardado, sesión invalidada, ACK/revisión/reintentos idempotentes; cero escrituras de prueba en producción.",
+        "Atlas regenerado, checks del portal y pin del consumidor; publicación registrada aparte de integración y de lectura privada."
+      ],
+      "deployment": "Registro previo a implementación. No demuestra publicación, lectura privada nueva, ingestión automática ni invitaciones de Calendar.",
+      "rollback": "Revertir sólo frontend; conservar IDs, todas las actividades y sus notas legibles, fuentes, PPP, pendientes, permisos y datos operativos. No restaurar filas de negocio."
     }
   ],
   "data_contracts": [
@@ -13720,6 +13762,39 @@
         "No decide por el editor ni activa modelos vetados.",
         "Si no hay servicio/cupo, queda pendiente; no respaldo de pago implícito.",
         "Cache sólo con modelo/receta/foto verificados."
+      ]
+    },
+    {
+      "id": "CTR-BROKERS-MINI-CRM",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-CRM",
+        "SHEET-CRM",
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SYS-YOD-OS"
+      ],
+      "source": "brokers.v1 sobre CRM existente; GET recurso=caso del PPP existente; documentos aportados con evidencia verificable.",
+      "input": [
+        "Snapshot autorizado con registros agrupados sólo por terrain_id/ppp_id existentes.",
+        "Actividad con note hasta4000 caracteres y prefijo de metadatos YOD-CRM-v1; filas antiguas se leen sin conversión. Fecha de captura y autor permanecen auditados por el servidor.",
+        "GET PPP por id/tipo dentro de la sesión vigente. Inputs y resumen de la versión activa guardada; escenarios alternativos se enumeran sin calcular rentabilidades."
+      ],
+      "output": [
+        "Desplegables de3–4renglones: producto/espacio, economía guardada, propietario/contacto, último resultado y siguiente paso.",
+        "Historial cronológico por fecha del hecho, con quién/fuente y etapa registrada; metadatos opcionales explícitos.",
+        "Calendario de actividades realizadas y reuniones programadas con participantes; guardar requiere ACK."
+      ],
+      "invariants": [
+        "Sin motor financiero, réplica del PPP, cache privada persistente o lectura anónima de expedientes.",
+        "No inventar propietario, importes, fechas, reuniones realizadas, conexión WhatsApp ni decisión de negocio.",
+        "Reunión programada no pasa a realizada por el reloj; cancelación/reemplazo conserva evidencia histórica.",
+        "Participantes PG/YOD/broker son nombres de seguimiento, no asignaciones de ACL.",
+        "Vista previa no guarda; gestionar como Dirección conserva actor real; invalidar sesión borra datos en memoria.",
+        "Mismo Sheet, IDs y contrato de guardado. Las participaciones comerciales continúan separadas.",
+        "Fuentes verificadas se importan de forma idempotente por clave fuente/caso/hecho, sin alterar próximo paso ni fecha.",
+        "No se envían invitaciones ni mensajes externos. Los clics de consulta no crean avances ficticios."
       ]
     }
   ],
