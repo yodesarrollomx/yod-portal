@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.investor-monoline-story.1 · 2026-10-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.sala-tablero-hidream.1 · 2026-10-13.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -171,6 +171,7 @@ flowchart LR
   n_SYS_SALA -->|Lecturas agregadas y canario aislado de Sala| n_SYS_CONTROL
   n_SYS_INVERSION -.->|Lee copy público de presentación por recurso=textos| n_GAS_PLAN_POTENCIAL
   n_SVC_SALA_PRODUCTOR -.->|Imagen para Sala con modelo fijo y recibo| n_SVC_AUTON_CLOUD
+  n_SVC_SALA_PRODUCTOR -.->|Fotografía HiDream gratuita con recibo y cupo observable| n_EXT_MOTORES_MEDIA
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PLAN_POTENCIAL pendiente;
@@ -696,3 +697,4 @@ flowchart LR
 | CON-BANDEJA-PORTERO | GAS-BANDEJA-NUBE → GAS-PORTERO | autorizacion: Revalidar identidad de Dirección para aprobar y antes de enviar. CTR-BANDEJA-NUBE | codigo | Permiso privado ligado a sesión real, tarjeta, huella y última aprobación; veto aparte de comentarios. Regresiones sintéticas aprobadas; consentimiento y sesión real pendientes.; Código publicado; su compuerta o consentimiento reales todavía no se acreditan. |
 | CON-INVESTOR-STORY-TEXTS | SYS-INVERSION → GAS-PLAN-POTENCIAL | lectura: Lee copy público de presentación por recurso=textos. CTR-INVESTOR-STORY1; contenido comercial exclusivamente; fallo visible sin respaldo de datos privados. | propuesto | [plan-potencial/index.html](https://github.com/yodesarrollomx/plan-potencial/blob/78e616f858ad593f16891d2f5158cd46d5617bc2/index.html#L1244) — GET de textos comerciales ya utilizado por la landing pública; propuesta de consumo por la primera escena de inversión. |
 | CON-SALA-IMAGEN-OPENAI | SVC-SALA-PRODUCTOR → SVC-AUTON-CLOUD | api: Imagen para Sala con modelo fijo y recibo. CTR-SALA-IMAGEN-OPENAI-NUBE | propuesto | Propuesta autorizada para usar el servicio existente, aún sin prueba de generación. |
+| CON-SALA-HIDREAM | SVC-SALA-PRODUCTOR → EXT-MOTORES-MEDIA | api: Fotografía HiDream gratuita con recibo y cupo observable. CTR-SALA-HIDREAM | propuesto | Lote real38342683066 en rama operativa; integración recurrente propuesta. |
