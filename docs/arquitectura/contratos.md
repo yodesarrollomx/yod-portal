@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.investor-principal-story.1 · 2026-10-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-13.masterbrokers-mini-crm.1 · 2026-10-13.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -763,3 +763,19 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - No decide por el editor ni activa modelos vetados.
 - Si no hay servicio/cupo, queda pendiente; no respaldo de pago implícito.
 - Cache sólo con modelo/receta/foto verificados.
+
+## CTR-BROKERS-MINI-CRM
+
+- Componentes: SYS-INVERSION, GAS-CRM, SHEET-CRM, SYS-POTENCIALES, GAS-PORTERO, SHEET-PORTERO, SYS-YOD-OS.
+- Evidencia: brokers.v1 sobre CRM existente; GET recurso=caso del PPP existente; documentos aportados con evidencia verificable..
+- Entrada/campos: `Snapshot autorizado con registros agrupados sólo por terrain_id/ppp_id existentes.`, `Actividad con note hasta4000 caracteres y prefijo de metadatos YOD-CRM-v1; filas antiguas se leen sin conversión. Fecha de captura y autor permanecen auditados por el servidor.`, `GET PPP por id/tipo dentro de la sesión vigente. Inputs y resumen de la versión activa guardada; escenarios alternativos se enumeran sin calcular rentabilidades.`.
+- Salida: Desplegables de3–4renglones: producto/espacio, economía guardada, propietario/contacto, último resultado y siguiente paso., Historial cronológico por fecha del hecho, con quién/fuente y etapa registrada; metadatos opcionales explícitos., Calendario de actividades realizadas y reuniones programadas con participantes; guardar requiere ACK..
+
+- Sin motor financiero, réplica del PPP, cache privada persistente o lectura anónima de expedientes.
+- No inventar propietario, importes, fechas, reuniones realizadas, conexión WhatsApp ni decisión de negocio.
+- Reunión programada no pasa a realizada por el reloj; cancelación/reemplazo conserva evidencia histórica.
+- Participantes PG/YOD/broker son nombres de seguimiento, no asignaciones de ACL.
+- Vista previa no guarda; gestionar como Dirección conserva actor real; invalidar sesión borra datos en memoria.
+- Mismo Sheet, IDs y contrato de guardado. Las participaciones comerciales continúan separadas.
+- Fuentes verificadas se importan de forma idempotente por clave fuente/caso/hecho, sin alterar próximo paso ni fecha.
+- No se envían invitaciones ni mensajes externos. Los clics de consulta no crean avances ficticios.

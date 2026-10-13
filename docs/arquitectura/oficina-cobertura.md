@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-13.investor-principal-story.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-13.masterbrokers-mini-crm.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 26 sistemas y 90 componentes distribuidos exactamente una vez.
-- 10 áreas; 140 conexiones registradas, 10 marcadas como verificadas en el atlas.
+- 10 áreas; 141 conexiones registradas, 10 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -245,6 +245,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-MOTOR-PORTERO · SVC-AUTON-CLOUD → GAS-PORTERO · api · Identidad, contexto, objetivos y cola autorizados · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-BROKER-PREEVALUATION · SYS-INVERSION → GAS-PORTERO · api · Preevaluación y retorno de terreno a cartera · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-BANDEJA-PORTERO · GAS-BANDEJA-NUBE → GAS-PORTERO · autorizacion · Revalidar identidad de Dirección para aprobar y antes de enviar · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-BROKERS-PPP-SAVED · SYS-INVERSION → GAS-PORTERO · lectura · Resumen guardado de PPP por expediente · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -289,10 +290,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [CON-BROKER-PREEVALUATION · PR12 integrado: lanzamiento de un solo uso y retorno autorizado; backend v92 publicado, flujo individual comprobado con servicios sintéticos. · Estado: codigo · yodesarrollomx/yodesarrollo-board · brokers-evaluator.js · Revisión: 19fbe950af458778607f2ae0baa70b8bc7894105](https://github.com/yodesarrollomx/yodesarrollo-board/blob/19fbe950af458778607f2ae0baa70b8bc7894105/brokers-evaluator.js)
 - CON-BANDEJA-PORTERO · Permiso privado ligado a sesión real, tarjeta, huella y última aprobación; veto aparte de comentarios. Regresiones sintéticas aprobadas; consentimiento y sesión real pendientes. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/Approval.gs · Sin revisión inmutable en esta referencia
 - CON-BANDEJA-PORTERO · Código publicado; su compuerta o consentimiento reales todavía no se acreditan. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/README.md · Sin revisión inmutable en esta referencia
+- CON-BROKERS-PPP-SAVED · Consumo propuesto del mismo contrato empleado por el PPP; lectura autorizada y campos guardados se comprobarán por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 25 conexiones sin verificación de ejecución registrada.
+- 26 conexiones sin verificación de ejecución registrada.
 - La revisión acotada no certifica todas las operaciones de negocio ni sustituye la aceptación con usuarios reales.
 - Las cachés de consumidores ajenos a esta entrega pueden conservar permisos temporalmente; revisarlos al continuar cada tablero.
 
@@ -1884,6 +1886,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-075 · SYS-INVERSION → SYS-PLAN-POTENCIAL · captacion · CTA con atribución de presentación · Estado: declarado · Ejecución no verificada en el atlas.
 - CON-BROKER-PREEVALUATION · SYS-INVERSION → GAS-PORTERO · api · Preevaluación y retorno de terreno a cartera · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-INVESTOR-STORY-TEXTS · SYS-INVERSION → GAS-PLAN-POTENCIAL · lectura · Lee copy público de presentación por recurso=textos · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-BROKERS-PPP-SAVED · SYS-INVERSION → GAS-PORTERO · lectura · Resumen guardado de PPP por expediente · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -1898,10 +1901,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-075 · CTA comercial con campaña · Estado: declarado · yodesarrollomx/yodesarrollo-board · CLAUDE.md · Revisión: HEAD\_baseline
 - [CON-BROKER-PREEVALUATION · PR12 integrado: lanzamiento de un solo uso y retorno autorizado; backend v92 publicado, flujo individual comprobado con servicios sintéticos. · Estado: codigo · yodesarrollomx/yodesarrollo-board · brokers-evaluator.js · Revisión: 19fbe950af458778607f2ae0baa70b8bc7894105](https://github.com/yodesarrollomx/yodesarrollo-board/blob/19fbe950af458778607f2ae0baa70b8bc7894105/brokers-evaluator.js)
 - CON-INVESTOR-STORY-TEXTS · GET de textos comerciales ya utilizado por la landing pública; propuesta de consumo por la primera escena de inversión. · Estado: codigo · yodesarrollomx/plan-potencial · index.html · Sin revisión inmutable en esta referencia
+- CON-BROKERS-PPP-SAVED · Consumo propuesto del mismo contrato empleado por el PPP; lectura autorizada y campos guardados se comprobarán por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 6 conexiones sin verificación de ejecución registrada.
+- 7 conexiones sin verificación de ejecución registrada.
 
 ### Carpeta de inversión · GAS-INVERSION
 
