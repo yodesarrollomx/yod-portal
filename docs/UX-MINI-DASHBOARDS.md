@@ -57,3 +57,7 @@ La prueba inicial se detuvo por ownership de Git. El siguiente intento acotó sa
 UX revisó b27dab22543263ac3f7fa50d071fe1486027b4a2 y mantuvo 8.8 provisional por evidencia visual aún pendiente. Encontró dos detalles de cierre móvil: foco hacia botón oculto del PPP y resumen que seguía anunciando fuente abierta. Se corrigen comprobando visibilidad/inert y volviendo al compositor, y recomputando contexto al cerrar; el ensayo confirma foco y resumen. Personas conserva también estado activo.
 
 Entró una propuesta independiente en main que sólo cambia el atlas. Se integra en la rama sin modificar su contenido ni el código de esta maqueta. Las pruebas se reanudan sobre checkout exacto de la rama conciliada. Capturas viejas se mantienen como diagnóstico; no prueban la corrección nueva. La entrega visual corregida se identifica como Mockup V3 para distinguirla de las capturas de V2.
+
+## Revisión visual de móvil · lectura al abrir
+
+El recorrido bd496338e5aae7f6b5f74f3cdc303d1b07aa795a pasó, pero su captura móvil reveló el pasaje resaltado fuera del primer pliegue. No se concede el 9 por el PASS. Se compacta aviso/contexto sólo durante lectura, conservando el objetivo/siguiente como líneas de resumen y los textos completos en su contexto; se evitan versiones repetidas y referencia redundante. La prueba nueva exige intersección visible de al menos la mitad del resaltado con el área del visor, antes y después de preparar comentario, sin scroll inicial; compositor y borrador permanecen accesibles.

@@ -45,7 +45,7 @@ function syncDraft(){state.draft=$('message-input').value;}
 function paintDraft(){
  $('message-input').value=state.draft;const ref=state.draft_ref;
  $('draft-reference').hidden=!ref;
- if(ref){const s=sourceFor(model,ref.source_id),sc=scenarioFor(model,ref.scenario_id);$('draft-reference').innerHTML='<button type="button" id="remove-reference" aria-label="Quitar referencia del borrador">×</button><strong>Comentando '+escape(headings[s?.card]||'fuente')+'</strong> · '+escape(sc?.label||'versión')+' · '+escape(s?.location||'fuente no disponible')+(ref.scenario_id!==state.scenario_id?'<br><strong>Tu comentario sigue referido a '+escape(sc?.label||'la versión original')+'.</strong>':'');}
+ if(ref){const s=sourceFor(model,ref.source_id),sc=scenarioFor(model,ref.scenario_id);$('draft-reference').innerHTML='<div class="reference-copy"><strong>'+escape(headings[s?.card]||'Fuente')+'</strong> · '+escape(sc?.label||'versión')+' · '+escape(s?.location||'fuente no disponible')+(ref.scenario_id!==state.scenario_id?'<br><strong>Tu comentario sigue referido a '+escape(sc?.label||'la versión original')+'.</strong>':'')+'</div><button type="button" id="remove-reference" aria-label="Quitar referencia del borrador">×</button>';}
 }
 function paintMessages(){
  const stream=$('chat-stream');stream.replaceChildren();
@@ -58,7 +58,7 @@ function highlight(original,term){if(!term||!original.includes(term))return esca
 function sourceHTML(source){
  if(!source)return '<div class="source-warning" role="alert">Fuente no disponible para este proyecto.</div><p>La referencia no está registrada o pertenece a otro expediente. Falta un documento autorizado y verificable.</p><button type="button" class="quiet" data-prepare-missing>Preparar búsqueda de fuente</button><p>Prepara una petición en el borrador; no inicia una búsqueda ni amplía el acceso.</p>';
  const metadata='<dl class="source-meta"><dt>Tipo</dt><dd>Supuesto / fuente de ejemplo</dd><dt>Fecha</dt><dd>'+escape(source.date)+'</dd><dt>Revisión</dt><dd>'+escape(source.revision)+'</dd><dt>Ubicación</dt><dd>'+escape(source.location)+'</dd><dt>Proyecto</dt><dd>'+escape(model.name)+' · ejemplo separado</dd><dt>Consultada</dt><dd>'+escape(scenarioFor(model,state.scenario_id)?.label||'—')+'</dd><dt>Defendida</dt><dd>'+escape(scenarioFor(model,model.defended_scenario_id)?.label||'—')+'</dd>'+(source.issuer?'<dt>Emisor</dt><dd>'+escape(source.issuer)+'</dd><dt>Vigencia</dt><dd>'+escape(source.validity)+'</dd>':'')+'</dl>';
- let text='<div class="source-warning">Fuente ficticia · sin validez normativa ni financiera.</div><p class="source-quick-meta">'+escape(source.location)+' · '+escape(source.date)+'<br>Consultando '+escape(scenarioFor(model,state.scenario_id)?.label||'—')+' · Defendida '+escape(scenarioFor(model,model.defended_scenario_id)?.label||'—')+'</p>';
+ let text='<div class="source-warning">Fuente ficticia · sin validez normativa ni financiera.</div><p class="source-quick-meta"><span>'+escape(source.location)+' · '+escape(source.date)+'</span><span class="source-version">Consultando '+escape(scenarioFor(model,state.scenario_id)?.label||'—')+' · Defendida '+escape(scenarioFor(model,model.defended_scenario_id)?.label||'—')+'</span></p>';
  if(source.card==='terreno')text+=mapSVG(true);
  text+='<h3>Pasaje de la fuente · texto original de ejemplo</h3><blockquote class="source-passage">'+highlight(source.original,source.highlight)+'</blockquote><h3>Lectura del autón · interpretación separada</h3><p class="source-interpretation">'+escape(source.analysis)+'</p>';
  text+='<details class="source-provenance"><summary>Ficha de fuente, emisor, vigencia y revisión</summary>'+metadata+'</details>';
@@ -95,15 +95,15 @@ function openDetail(key){
 function closeSource(){syncDraft();state.source_id=null;state.detail=null;$('context-viewer').hidden=true;document.querySelector('.dialogue-column').classList.remove('has-source');paintMobile();const trigger=lastSourceTrigger;lastSourceTrigger=null;if(trigger?.isConnected&&trigger.getClientRects().length&&!trigger.closest('[inert]'))trigger.focus({preventScroll:true});else $('message-input').focus({preventScroll:true});}
 function paintMobile(){
  const view=state.mobile_view||'ppp';document.querySelector('.workspace-grid').dataset.mobileView=view;$('mobile-ppp').setAttribute('aria-pressed',String(view==='ppp'));$('mobile-chat').setAttribute('aria-pressed',String(view==='chat'));
- $('mobile-context-summary').hidden=false;
+ $('mobile-context-summary').hidden=false;$('mobile-context-summary').dataset.sourceId=state.source_id||'';main.classList.toggle('source-reading',view==='chat'&&Boolean(state.source_id||state.detail));
  const consulted=scenarioFor(model,state.scenario_id)?.label||'—',defended=scenarioFor(model,model.defended_scenario_id)?.label||'—';
- $('mobile-context-summary').textContent='PPP · Consultando '+consulted+' · Defendida '+defended+(state.source_id?' · Fuente: '+(sourceFor(model,state.source_id)?.title||'No disponible'):'');
+ $('mobile-context-summary').textContent='PPP · Consultando '+consulted+' · Defendida '+defended;
 }
 function chooseScenario(id){
  syncDraft();consultScenario(model,state,id);paintCards();const focused=document.querySelector('[data-scenario="'+id+'"]');if(focused)focused.focus({preventScroll:true});if(state.source_id)$('source-body').innerHTML=sourceHTML(sourceFor(model,state.source_id));if(['escenarios','viabilidad'].includes(state.detail))$('source-body').innerHTML=detailHTML(state.detail);paintDraft();paintMobile();
 }
 function renderProject(){
- $('case-select').value=model.id;$('agent-badge').textContent=model.name.slice(0,1);$('case-kind').textContent='Plan de potencial · '+model.kind.toLowerCase();$('project-goal').textContent=model.goal;$('project-next').textContent='Siguiente: '+model.next;paintCards();paintMessages();paintDraft();$('context-viewer').hidden=true;document.querySelector('.dialogue-column').classList.remove('has-source');
+ $('case-select').value=model.id;$('agent-badge').textContent=model.name.slice(0,1);$('case-kind').textContent='Plan de potencial · '+model.kind.toLowerCase();$('project-goal').textContent=model.goal;$('project-goal').title=model.goal;$('project-next').textContent='Siguiente: '+model.next;$('project-next').title='Siguiente: '+model.next;paintCards();paintMessages();paintDraft();$('context-viewer').hidden=true;document.querySelector('.dialogue-column').classList.remove('has-source');
  if(state.source_id)openSource(state.source_id);else if(state.detail)openDetail(state.detail);paintMobile();
 }
 $('case-select').onchange=e=>{syncDraft();model=createDemoCase(e.target.value);state=projects.get(model.id)||createProjectState(model);projects.set(model.id,state);lastSourceTrigger=null;$('context-viewer').hidden=true;renderProject();$('voice-status').textContent='Voz de ejemplo · proyecto '+model.name+'. Micrófono sin activar.';};
