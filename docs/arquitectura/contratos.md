@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.sala-imagen-evidencia.1 · 2026-10-12.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-12.investor-hermosillo-zoom.1 · 2026-10-12.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -716,7 +716,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 - Componentes: SYS-INVERSION, GAS-PLAN-POTENCIAL, SHEET-PLAN-POTENCIAL.
 - Evidencia: Código público del formulario Plan de Potencial: GET recurso=textos; nuevas claves comerciales autorizadas por Dirección y escritas mediante conector de Sheets..
-- Entrada/campos: `Respuesta textos o diccionario directo.`, `Claves inv1_* a inv7_* para contenido comercial, marca, capítulos, grupos de detalles, duración y cierre. Compatibilidad con las versiones de uno y tres capítulos.`, `Cliente anónimo; no recibe ni transmite credenciales del Masterbroker.`.
+- Entrada/campos: `Respuesta textos o diccionario directo.`, `Claves inv1_* a inv7_* para contenido comercial, marca, capítulos, grupos de detalles, duración y cierre. Compatibilidad con las versiones de uno y tres capítulos.`, `Cliente anónimo; no recibe ni transmite credenciales del Masterbroker.`, `hunt_*: apertura por zoom, geometría pública trazada, ocho momentos de búsqueda, dos casos y unidades abstractas de valor; datos y configuración en la misma hoja editorial.`.
 - Salida: Narrativa comercial para inversionista; animación conceptual por scroll., Tarjeta Material con apertura pública y copia de enlace., Error recuperable si falta contenido; ninguna cifra o aprobación inventada..
 
 - Sólo GET al contrato de textos; ninguna escritura o prueba de negocio desde la presentación.
@@ -724,8 +724,10 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Textos renderizados como texto; colores validados y URLs HTTPS verificadas.
 - La lectura pública no concede permisos en CRM, Portero ni evaluador.
 - La lámina no muestra un caso aprobado, un rendimiento garantizado ni una probabilidad de éxito.
-- Un único diagrama conceptual continúa entre capítulos; navegación, scroll y reproducción comparten posición. Sin publicar ejemplos financieros ni datos de la cartera.
+- Un único diagrama conceptual continúa entre capítulos; navegación, scroll y reproducción comparten posición. No publicar datos o ejemplos financieros de cartera. Los casos con símbolos son didácticos, sin moneda ni rentabilidad real.
 - El cierre genera un resumen copiable para conversar con quien compartió el enlace; no manda mensajes, no guarda datos privados y no constituye una suscripción ni un compromiso financiero.
+- Las vialidades llevan atribución a su fuente pública; naranja indica búsqueda ilustrativa, no zonificación municipal acreditada. Las dos cuadras y predios son esquemas, sin direcciones o propietarios reales.
+- Viviendas y unidades de valor son magnitudes distintas; resultado = venta − valor del inmueble − ejecución. La aportación conserva el valor del inmueble en el costo y el resultado del proyecto no acredita un reparto al inversionista.
 
 ## CTR-SALA-IMAGEN-OPENAI-NUBE
 

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-12.sala-imagen-evidencia.1",
+  "revision": "2026-10-12.investor-hermosillo-zoom.1",
   "checked_at": "2026-10-12",
   "priorities": [
     "vender_mas",
@@ -8227,7 +8227,7 @@
       "approval": {
         "fecha": "2026-10-12",
         "rol": "Dirección",
-        "alcance": "Montar lámina 1 animada en línea, enlazarla desde el perfil Masterbroker y conservar versiones anteriores; marca pública exclusiva YoDesarrollo. Continuación explícita: conectar las láminas 1, 2 y 3 con historia, scroll, gráficos y acceso público; Portero se considera después. Continuar explícitamente todas las láminas del borrador hasta el cierre, manteniendo textos simples, el mismo sitio público y versiones originales."
+        "alcance": "Montar lámina 1 animada en línea, enlazarla desde el perfil Masterbroker y conservar versiones anteriores; marca pública exclusiva YoDesarrollo. Continuación explícita: conectar las láminas 1, 2 y 3 con historia, scroll, gráficos y acceso público; Portero se considera después. Continuar explícitamente todas las láminas del borrador hasta el cierre, manteniendo textos simples, el mismo sitio público y versiones originales. Nueva apertura autorizada: zoom desde Hermosillo con vialidades reales, criterios de búsqueda y dos casos didácticos comparados por símbolos."
       },
       "prerequisites": [
         "Conservar la autorización del tablero privado y usar sólo textos comerciales en el endpoint público existente.",
@@ -11726,6 +11726,27 @@
       ],
       "deployment": "Propuesta autorizada. Las láminas 1–3 ya publicadas; extensión 4–7, cierre y publicación completa por verificar.",
       "rollback": "Revertir PR frontend; conservar textos, láminas originales, acceso Masterbroker y expedientes. No restaurar registros de negocio."
+    },
+    {
+      "id": "CHG-INVESTOR-HERMOSILLO-ZOOM",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL",
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección pide comenzar con Hermosillo, zoom por scroll, vías principales, filtros y dos casos simbólicos; instrucción explícita del 12-oct-2026 en horario de Hermosillo.",
+      "proposal": "Agregar una apertura autónoma en el mismo sitio, manteniendo las siete láminas debajo. Calcar vialidades públicas y conservar geometría, fuente, narrativa y casos en Sheets. Zoom ciudad → criterios → barrio → dos cuadras esquemáticas → aportación/compra → costo → viviendas → saldo. Simbolizar cuatro/tres viviendas y costos/venta/saldo con unidades abstractas; no atribuir zonificación, densidad, empleo, precios o rentabilidad reales a predios ficticios. Controles de reproducción, fases, modo reducido y continuación al borrador.",
+      "tests": [
+        "Esquema, vistas y verificadores del atlas.",
+        "Generación reproducible de geometría pública, atribución y lectura de parámetros desde Sheets; sin copiar datos reales en Git.",
+        "Contrato de geometría segura, símbolos, sumatorias, zoom y controles con dobles; ocho fases y comparación en 320/390/1440.",
+        "Sitio público anónimo: mismo código, trazado real, scroll nativo, reproducción, fases, continuación y capturas."
+      ],
+      "deployment": "Propuesta autorizada; geometría y apertura por implementar y comprobar. Borrador de siete láminas conserva su acceso público.",
+      "rollback": "Revertir frontend por PR sin borrar contenido de Sheets, láminas originales o permisos Masterbroker."
     }
   ],
   "data_contracts": [
@@ -13184,7 +13205,8 @@
       "input": [
         "Respuesta textos o diccionario directo.",
         "Claves inv1_* a inv7_* para contenido comercial, marca, capítulos, grupos de detalles, duración y cierre. Compatibilidad con las versiones de uno y tres capítulos.",
-        "Cliente anónimo; no recibe ni transmite credenciales del Masterbroker."
+        "Cliente anónimo; no recibe ni transmite credenciales del Masterbroker.",
+        "hunt_*: apertura por zoom, geometría pública trazada, ocho momentos de búsqueda, dos casos y unidades abstractas de valor; datos y configuración en la misma hoja editorial."
       ],
       "output": [
         "Narrativa comercial para inversionista; animación conceptual por scroll.",
@@ -13197,8 +13219,10 @@
         "Textos renderizados como texto; colores validados y URLs HTTPS verificadas.",
         "La lectura pública no concede permisos en CRM, Portero ni evaluador.",
         "La lámina no muestra un caso aprobado, un rendimiento garantizado ni una probabilidad de éxito.",
-        "Un único diagrama conceptual continúa entre capítulos; navegación, scroll y reproducción comparten posición. Sin publicar ejemplos financieros ni datos de la cartera.",
-        "El cierre genera un resumen copiable para conversar con quien compartió el enlace; no manda mensajes, no guarda datos privados y no constituye una suscripción ni un compromiso financiero."
+        "Un único diagrama conceptual continúa entre capítulos; navegación, scroll y reproducción comparten posición. No publicar datos o ejemplos financieros de cartera. Los casos con símbolos son didácticos, sin moneda ni rentabilidad real.",
+        "El cierre genera un resumen copiable para conversar con quien compartió el enlace; no manda mensajes, no guarda datos privados y no constituye una suscripción ni un compromiso financiero.",
+        "Las vialidades llevan atribución a su fuente pública; naranja indica búsqueda ilustrativa, no zonificación municipal acreditada. Las dos cuadras y predios son esquemas, sin direcciones o propietarios reales.",
+        "Viviendas y unidades de valor son magnitudes distintas; resultado = venta − valor del inmueble − ejecución. La aportación conserva el valor del inmueble en el costo y el resultado del proyecto no acredita un reparto al inversionista."
       ]
     },
     {
