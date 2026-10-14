@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-14.investor-mobile.1",
+  "revision": "2026-10-14.goals-single-flight.2",
   "checked_at": "2026-10-14",
   "priorities": [
     "vender_mas",
@@ -12310,6 +12310,28 @@
       ],
       "deployment": "Registro previo; resultados de ejecución se documentarán al finalizar.",
       "rollback": "Restaurar entrada slider-1 conservada; mantener historial, datos y permisos."
+    },
+    {
+      "id": "CHG-GOALS-SINGLE-FLIGHT-20261014",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección pidió en sesión interactiva resolver los pendientes de Buzón/chinches (fila70, chinche #284). Corrección acotada del puente OS↔Despacho 3D; sin cambiar backend, permisos ni datos.",
+      "proposal": "Compartir en un solo vuelo las lecturas readGoals idénticas que llegan a la vez desde el Despacho 3D (puesto, voz, pendientes del círculo), igual que listAuthorized/resolveCurrent/read/mintFastSession. Hoy la segunda lectura recibe transport_busy en ~3 ms y el puesto queda en «Lectura no disponible · No se pudo consultar la meta». Escrituras y otros carriles sin cambio.",
+      "tests": [
+        "Regresión sintética: sondeo de metas no bloquea lectura ni envío de conversación; lecturas readGoals concurrentes comparten una sola llamada y ambas reciben el resultado.",
+        "Suite Node completa, verificadores OS/portal/accesos/Obra y atlas/impacto."
+      ],
+      "deployment": "Registro previo a implementación. Publicación y QA privada en sesión Dirección se documentan por separado.",
+      "rollback": "Revertir sólo la línea de single-flight en os/despacho-conversation.js y su prueba; sin datos, permisos ni deployments afectados."
     },
     {
       "id": "CHG-INVESTOR-MOBILE-SCROLL",
