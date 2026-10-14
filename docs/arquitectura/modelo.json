@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-14.despacho-selection.1",
+  "revision": "2026-10-14.investor-slider.1",
   "checked_at": "2026-10-13",
   "priorities": [
     "vender_mas",
@@ -12252,6 +12252,26 @@
       ],
       "deployment": "Registro previo. No acredita implementación ni publicación del nuevo frontend. Mantiene transporte público editorial y acceso vigente; no cambia sistemas de negocio.",
       "rollback": "Revertir sólo frontend a la principal previa en la misma URL; conservar simple_*, principal_*, mono_* y originales en la hoja, permisos y expedientes."
+    },
+    {
+      "id": "CHG-INVESTOR-SLIDER",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL",
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección aprueba crear el recorrido de nueve paradas con slider manual en la presentación pública existente, conservando las versiones anteriores y la información original.",
+      "proposal": "Continuidad causal: oportunidad, mercado, inmuebles, producto, cuenta, condiciones, participación, ejecución y recuperación. Slider reversible con subpasos legibles y un mismo inmueble conceptual. Texto editorial slider_config en el Sheet vigente a través del GET público existente. Sin cambio de backend, ACL, datos privados, cifras ni reglas de negocio. Cuenta completa, riesgos, capital, plazo y recuperación en el recorrido principal.",
+      "tests": [
+        "Contrato de progreso continuo y reversible; contenido seguro; conservación de versiones.",
+        "Chromium móvil320/390 y escritorio1440: slider, teclado, navegación, reduced-motion, cierre doble y ausencia de overflow.",
+        "Fuente editorial viva, cero escrituras de prueba, credencial Portero intacta; verificación del frontend publicado y capturas."
+      ],
+      "deployment": "Registro previo a implementación. Producción y pruebas se documentan por separado.",
+      "rollback": "Revertir únicamente frontend. Conservar originales, simple_*, principal_*, mono_*, trazo_*, slider_* y registros de negocio."
     }
   ],
   "data_contracts": [
