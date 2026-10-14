@@ -12316,7 +12316,8 @@
       "components": [
         "SYS-INVERSION",
         "GAS-PLAN-POTENCIAL",
-        "SHEET-PLAN-POTENCIAL"
+        "SHEET-PLAN-POTENCIAL",
+        "SYS-CONTROL"
       ],
       "status": "propuesto",
       "approval": "Dirección solicita recorrido móvil intuitivo, lento y continuo, con barra lateral derecha para iPhone.",
