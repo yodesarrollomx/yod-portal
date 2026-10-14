@@ -1,20 +1,17 @@
 {
-  "model_revision": "2026-10-14.entry-selection.1",
-  "proposal_id": "CHG-ENTRY-SELECTION-20261014",
-  "summary": "Distinguir selección pendiente de validación de acceso en la tarjeta del despacho.",
+  "model_revision": "2026-10-14.investor-atlas.2",
+  "proposal_id": "CHG-INVESTOR-ATLAS-2",
+  "summary": "Registro previo del recorrido profesional y navegación al evaluador existente.",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "SYS-DESPACHO-3D"
+    "SYS-INVERSION",
+    "GAS-PLAN-POTENCIAL",
+    "SHEET-PLAN-POTENCIAL",
+    "GAS-PORTERO",
+    "SYS-CONTROL"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "ACCESOS_REF=bdde8df3109424d48f57c57735a87bb72ef513a7 node verify-accesos.cjs",
-    "node verify-obra-app.cjs",
-    "node scripts/verificar-impacto.cjs --base 974865c9b145e51a8d9025380b128cd06606245d --repo yodesarrollomx/yod-portal"
+    "node --test tests/*.cjs"
   ],
-  "rollback": "Revertir sólo tarjeta, referencias de caché, prueba y registro de esta propuesta; preservar todos los datos y la autoridad existente."
+  "rollback": "Revertir sólo documentación de este cambio."
 }

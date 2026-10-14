@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-14.entry-selection.1 · 2026-10-14.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-14.investor-atlas.2 · 2026-10-14.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 

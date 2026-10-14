@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-14.entry-selection.1",
+  "revision": "2026-10-14.investor-atlas.2",
   "checked_at": "2026-10-14",
   "priorities": [
     "vender_mas",
@@ -12289,6 +12289,27 @@
       ],
       "deployment": "Registro previo a implementación. La aceptación privada de sesión seleccionada y la latencia del backend se verifican por separado.",
       "rollback": "Revertir exclusivamente esta corrección de entrada y su atlas, conservando datos, casos, permisos, deployments y cambios concurrentes."
+    },
+    {
+      "id": "CHG-INVESTOR-ATLAS-2",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL",
+        "GAS-PORTERO",
+        "SYS-CONTROL"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección solicita presentación profesional con mapa real, marca oficial, propuesta Franco y cierre al evaluador.",
+      "proposal": "Misma URL y slider reversible. Cartografía OSM y contenido editorial desde Sheets; diagramas arquitectónicos y financieros. Marca oficial. CTA al evaluador público existente app=evaluador sin credencial, transferencia de sesión o alta automática; enlace HTTPS validado del proveedor conocido. Permisos y guardado del evaluador intactos. Conservar slider-1. Sin cifras privadas, garantías ni comunicaciones originales en repo.",
+      "tests": [
+        "Contrato editorial y enlace seguro; 27momentos reversibles.",
+        "Chromium320/390/1440, marca, mapa vivo, cierre, teclado y movimiento reducido.",
+        "GET anónimo del evaluador; cero escrituras de negocio y Portero intacto.",
+        "Regresiones, capturas reales y verificación exacta publicada."
+      ],
+      "deployment": "Registro previo; resultados de ejecución se documentarán al finalizar.",
+      "rollback": "Restaurar entrada slider-1 conservada; mantener historial, datos y permisos."
     }
   ],
   "data_contracts": [
