@@ -5,7 +5,7 @@ import {createResidentOpening} from './resident-opening.mjs?v=132';
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
 import {createAuthorizedCases} from './authorized-cases.mjs?v=130';
 import {createFrameTransport} from './conversation.mjs?v=142';
-import {createResidentAgents} from './resident-agents.mjs?v=142';
+import {createResidentAgents} from './resident-agents.mjs?v=selection-20261014';
 import {AUTHORITY_REFRESH_MS} from './authority-lease.mjs?v=127';
 import {createCaseSelectionHandoff} from './case-selection-handoff.mjs?v=126';
 const host=document.getElementById('resident-agent');
@@ -13,7 +13,7 @@ if(host){
  const transport=createFrameTransport(window);
  const label=host.querySelector('[data-resident-status]'),caseName=host.querySelector('[data-resident-case]'),
   talk=host.querySelector('[data-resident-talk]'),write=host.querySelector('[data-resident-write]'),visit=host.querySelector('[data-resident-visit]');
- const notices={loading:'Preparando tu despacho…',preparing:'Preparando conversación…',standby:'En espera · disponible',observe:'Disponible para consultar',offline:'Presente · sin conexión',reconnecting:'Recuperando conexión…',unauthorized:'Valida tu acceso a YOD OS'};
+ const notices={loading:'Preparando tu despacho…',preparing:'Preparando conversación…',standby:'En espera · disponible',observe:'Disponible para consultar',offline:'Presente · sin conexión',reconnecting:'Recuperando conexión…',selection_required:'Elige un proyecto autorizado para entrar.',unauthorized:'Valida tu acceso a YOD OS'};
  let voicePhase='idle',panel=false;
  const shouldRefreshAuthority=()=>!document.hidden||!['idle','error'].includes(voicePhase);
  const selectionHandoff=createCaseSelectionHandoff();

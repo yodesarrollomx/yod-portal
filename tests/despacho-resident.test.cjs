@@ -82,3 +82,27 @@ test('lock_busy grants no first access and cannot extend an expired authorizatio
  assert.equal(room.getProfile(),null);assert.equal(residentAccessDecision(room.snapshot(),current,time),'lost');
  assert.equal(room.snapshot().checked_at,1000);room.dispose();
 });
+test('missing current project requires explicit selection without granting or revoking a session',async()=>{
+ const {createResidentAgents}=await load();const requested=[];
+ const room=createResidentAgents({transport:{resolveCurrent:async p=>{requested.push(p);return p.case_id?selection:{ok:false,error:'despacho_not_ready'};}},schedule:()=>1,cancel(){}});
+ assert.equal(await room.refresh(),false);assert.equal(room.snapshot().phase,'selection_required');
+ assert.equal(room.snapshot().checked_at,null);assert.equal(room.getSelection(),null);assert.equal(room.getProfile(),null);
+ room.reconcileCatalog({phase:'current',cases:[selection]});await tick();assert.equal(requested.length,1,'no automatic project choice');
+ assert.equal(await room.selectCase(selection.case_id),true);assert.deepEqual(requested[1],{case_id:selection.case_id});
+ assert.equal(room.getSelection().case_id,selection.case_id);room.dispose();
+ const denied=createResidentAgents({transport:{resolveCurrent:async()=>({ok:false,error:'despacho_not_ready'})},schedule:()=>1,cancel(){}});
+ denied.reconcileCatalog({phase:'unauthorized'});await denied.refresh();assert.equal(denied.snapshot().phase,'unauthorized');assert.equal(denied.getSelection(),null);denied.dispose();
+});
+test('slow authorized catalog neither blocks exact project reads nor survives a session clear',async()=>{
+ const source=fs.readFileSync(require.resolve('../os/despacho-conversation.js'),'utf8');let receive,epoch=1,catalogDone,catalogCalls=0,caseCalls=0;const replies=[];
+ const frame={postMessage:x=>replies.push(x)},root={location:{origin:'https://synthetic.invalid'},addEventListener:(_n,fn)=>receive=fn,removeEventListener(){}};
+ vm.runInNewContext(source,{globalThis:root,Map,JSON,setTimeout,clearTimeout});
+ const bridge=root.YodDespachoConversation.bind({getEpoch:()=>epoch,isAuthorized:()=>true,getIframeWindow:()=>frame,getTransport:()=>({
+  listAuthorized:()=>{catalogCalls++;return new Promise(r=>catalogDone=r);},resolveCurrent:async()=>{caseCalls++;return selection;}})});
+ const event=(id,method,payload)=>({origin:root.location.origin,source:frame,data:{type:'yod:case:request',version:1,id,method,payload}});
+ const p=receive(event('catalog','listAuthorized',{})),shared=receive(event('same','listAuthorized',{}));
+ await receive(event('case','resolveCurrent',{case_id:selection.case_id}));
+ assert.equal(catalogCalls,1);assert.equal(caseCalls,1);assert.equal(replies.length,1);assert.equal(replies[0].id,'case');assert.equal(replies[0].error,null);
+ epoch++;bridge.clear();catalogDone({ok:true,schema:1,cases:[selection]});await Promise.all([p,shared]);assert.equal(replies.length,1,'late catalog discarded after session change');
+ bridge.dispose();
+});
