@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-13.despacho-equipo.5",
+  "model_revision": "2026-10-14.equipo-relevos.1",
   "proposal_id": "CHG-DESPACHO-EQUIPO-20261013",
   "summary": "Módulo nativo de equipo para el Despacho: historia, hoy y planeación; responsables y última revisión comprobada; instrucciones editables con dictado optativo, conservación de borrador, request_id estable y recibo correlacionado. Consume transporte autorizado inyectado por la cabina; no publica datos ni introduce credenciales o endpoints. Adaptador al Buzón existente y activación se verifican aparte. No modifica el mini CRM reservado. Montaje nativo en cabina privada autenticada y transporte readTeam/writeTeam/lookupTeamReceipt implementados; validación de payload, revocación y fencing de import tardío. Backend coordinado separado. Merge preserva el registro de propuesta investor-simple-story ya presente en main, sin modificar su implementación ni fuente editorial. El historial extenso se abre a petición; los encargos Para Ambos muestran a ChatGPT y Claude como responsables compartidos.",
   "components": [
@@ -11,6 +11,7 @@
     "EXT-DRIVE"
   ],
   "tests": [
+    "Vista de relevos: todos los estados canónicos, filtro por dueño sin reasignar Ambos, orden por antigüedad registrada, fechas ausentes/futuras y conservación de entrada; sólo lectura y HBv1 sin cambios. Preparación local, aceptación visual/productiva pendiente.",
     "CI: node scripts/arquitectura.cjs --check; node --test tests/*.cjs; node verify-os.cjs; node verify-portal.cjs; node verify-accesos.cjs; node verify-obra-app.cjs.",
     "Pruebas sintéticas: cortes históricos sin mutación, fechas futuras no acreditan ejecución, señales ausentes/futuras, envío ambiguo conserva request_id/texto, recibo incorrecto rechazado, revocación y lectura concurrente.",
     "Aceptación pendiente: navegador escritorio/móvil, transporte privado instalado, guardar/recargar/acuse real de otro agente. Sin escrituras de prueba a negocio.",

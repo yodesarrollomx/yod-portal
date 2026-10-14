@@ -1,5 +1,6 @@
 import {createTeamSession,reviewSignal,timeline,safeLink} from './equipo-model.mjs?v=1';
 import {bindTeamDictation} from './equipo-dictation.mjs?v=1';
+import {kanban,taskAge,ownerTone} from './equipo-kanban.mjs?v=1';
 
 export function mountTeamDesk({container,transport,isAuthorized,identityEpoch,host=window}) {
   if (!container || typeof container.append !== 'function') throw new TypeError('team_container');
@@ -22,19 +23,20 @@ export function mountTeamDesk({container,transport,isAuthorized,identityEpoch,ho
   const people=el('section','team-members');people.setAttribute('aria-label','Responsables y últimas revisiones');
   const nav=el('div','team-tabs');nav.setAttribute('role','tablist');nav.setAttribute('aria-label','Tiempo del trabajo');
   const tabs=new Map();
-  for(const [key,label] of [['history','← Historia'],['now','Hoy'],['plan','Planeación →']]){
+  for(const [key,label] of [['history','← Historia'],['now','Hoy'],['plan','Planeación →'],['kanban','Relevos']]){
     const b=button(label,'team-tab');b.id='team-tab-'+key;b.setAttribute('role','tab');b.setAttribute('aria-controls','team-timeline');b.onclick=()=>{lane=key;renderLane();};tabs.set(key,b);nav.append(b);
   }
   nav.addEventListener('keydown',event=>{
     const keys=[...tabs.keys()],current=keys.indexOf(lane);let next=null;
-    if(event.key==='ArrowRight')next=(current+1)%3;if(event.key==='ArrowLeft')next=(current+2)%3;
-    if(event.key==='Home')next=0;if(event.key==='End')next=2;
+    if(event.key==='ArrowRight')next=(current+1)%keys.length;if(event.key==='ArrowLeft')next=(current+keys.length-1)%keys.length;
+    if(event.key==='Home')next=0;if(event.key==='End')next=keys.length-1;
     if(next!==null){event.preventDefault();lane=keys[next];renderLane();tabs.get(lane).focus();}
   });
   const filter=el('label','team-filter','Historia hasta '),date=el('input');date.type='date';
   // Hermosillo has a fixed UTC−07 offset. Day boundaries match all displayed timestamps.
   date.value=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Hermosillo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
   filter.append(date);date.onchange=renderLane;
+  const ownerLabel=el('label','team-filter','Responsable '),ownerFilter=el('select');ownerFilter.setAttribute('aria-label','Filtrar relevos por responsable');ownerLabel.append(ownerFilter);ownerFilter.onchange=renderLane;ownerLabel.hidden=true;
   const stream=el('section','team-stream');stream.id='team-timeline';stream.setAttribute('role','tabpanel');stream.tabIndex=0;
   const form=el('form','team-composer'),formTitle=el('h2',null,'Pedir algo o dejar una nota');
   const targetLabel=el('label','team-label','¿Dónde va?'),target=el('select');target.setAttribute('aria-label','Encargo relacionado');targetLabel.append(target);
@@ -45,7 +47,7 @@ export function mountTeamDesk({container,transport,isAuthorized,identityEpoch,ho
   const receipt=el('p','team-receipt');receipt.setAttribute('role','status');
   form.append(formTitle,targetLabel,textLabel,voiceStatus,actions,receipt);
   const foot=el('p','team-footnote','Las fechas están en hora de Hermosillo. Una revisión reciente indica cuándo se leyó la bitácora. Guardado, leído y terminado son pasos distintos.');
-  dialog.append(header,toolbar,status,people,nav,filter,stream,form,foot);container.append(launcher,dialog);
+  dialog.append(header,toolbar,status,people,nav,filter,ownerLabel,stream,form,foot);container.append(launcher,dialog);
   const speech=bindTeamDictation({button:mic,textarea,status:voiceStatus,host,canStart:()=>!disposed&&!sending&&!session.pending()&&isAuthorized()===true&&identityEpoch()===mountedEpoch});
   function alive(){return !disposed&&isAuthorized()===true&&identityEpoch()===mountedEpoch;}
   function errorMessage(error){
@@ -60,8 +62,9 @@ export function mountTeamDesk({container,transport,isAuthorized,identityEpoch,ho
   }
   function renderLane(){
     for(const [key,b] of tabs){b.setAttribute('aria-selected',String(key===lane));b.tabIndex=key===lane?0:-1;}
-    stream.setAttribute('aria-labelledby',tabs.get(lane).id);filter.hidden=lane!=='history';stream.replaceChildren();
+    stream.setAttribute('aria-labelledby',tabs.get(lane).id);filter.hidden=lane!=='history';ownerLabel.hidden=lane!=='kanban';stream.classList.toggle('team-kanban',lane==='kanban');stream.replaceChildren();
     if(!snapshot)return;
+    if(lane==='kanban'){renderKanban();return;}
     const cutoff=date.value?Date.parse(date.value+'T23:59:59.999-07:00'):Date.now();
     const rows=timeline(snapshot,lane,Number.isFinite(cutoff)?cutoff:Date.now());
     if(!rows.length){stream.append(el('p','team-empty',lane==='history'?'Todavía no hay movimientos registrados para esta fecha.':lane==='plan'?'No hay próximos pasos registrados.':'No hay encargos abiertos en esta lectura.'));return;}
@@ -82,6 +85,27 @@ export function mountTeamDesk({container,transport,isAuthorized,identityEpoch,ho
       sourceLink(row.source_url,card);stream.append(card);
     }
   }
+  function renderKanban(){
+    const board=kanban(snapshot,ownerFilter.value||'*');
+    const hint=el('p','team-kanban-hint','Vista de sólo lectura. El responsable guardado tiene la bolita; la cantidad de tarjetas no reasigna trabajo. Las señales indican revisión comprobada, no conexión permanente.');stream.append(hint);
+    function section(title,rows,blocked=false){
+      const column=el('section',blocked?'team-kanban-blocked':'team-kanban-column');column.setAttribute('aria-label',title);
+      column.append(el('h2',null,title+' · '+rows.length));
+      if(!rows.length)column.append(el('p','team-muted','Sin tarjetas en esta lectura.'));
+      for(const task of rows){
+        const card=el('article','team-card');card.dataset.ownerTone=ownerTone(task.owner,snapshot.members);
+        const member=snapshot.members.find(m=>m.id===task.owner),who=member?.label||(task.owner==='Ambos'?'ChatGPT y Claude · compartido':task.owner||'Sin responsable');
+        card.append(el('p','team-meta',who),el('p','team-task-id',task.id),el('h3',null,task.title),el('span','team-badge',task.status),el('p','team-meta',taskAge(task.updated_at)));
+        if(task.status==='Espera OK de Alejandro')card.append(el('p','team-approval','Espera una decisión de Alejandro. Consulta el alcance y la aprobación en la fuente; esta vista no aprueba.'));
+        if(task.blocker)bodyText(card,task.blocker,'Ver bloqueo completo');
+        if(task.next_action)bodyText(card,task.next_action,'Ver seguimiento completo');
+        sourceLink(task.source_url,card);column.append(card);
+      }
+      return column;
+    }
+    if(board.blocked.length)stream.append(section('Bloqueado',board.blocked,true));
+    const columns=el('div','team-kanban-columns');for(const c of board.columns)columns.append(section(c.status,c.tasks));stream.append(columns);
+  }
   function renderSnapshot(){
     people.replaceChildren();
     for(const member of snapshot.members){
@@ -91,6 +115,12 @@ export function mountTeamDesk({container,transport,isAuthorized,identityEpoch,ho
       card.append(el('p','team-meta',at?stamp(at):'Sin registro comprobado'));
       people.append(card);
     }
+    const selectedOwner=ownerFilter.value;ownerFilter.replaceChildren();
+    for(const [id,label] of [['*','Todos'],...snapshot.members.map(m=>[m.id,m.label]),['Ambos','Ambos · compartido']]){
+      const o=el('option',null,label);o.value=id;ownerFilter.append(o);
+    }
+    for(const task of snapshot.tasks)if(task.owner&&![...ownerFilter.options].some(o=>o.value===task.owner)){const o=el('option',null,task.owner);o.value=task.owner;ownerFilter.append(o);}
+    ownerFilter.value=[...ownerFilter.options].some(o=>o.value===selectedOwner)?selectedOwner:'*';
     const selected=target.value;target.replaceChildren();
     const option=el('option',null,'Nuevo encargo');option.value='';target.append(option);
     for(const task of snapshot.tasks){const o=el('option',null,task.title);o.value=task.id;target.append(o);}

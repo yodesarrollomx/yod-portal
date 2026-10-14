@@ -3,6 +3,27 @@
 Estado: implementación frontend y montaje autorizado implementados en rama; **sin publicación ni adaptador productivo verificado**.
 No reemplaza los expedientes ni el Buzón existente. No modifica Masterbrokers.
 
+## Relevos · preparación local, no publicada
+
+La pestaña Relevos reutiliza el snapshot autorizado de esta Mesa: cuatro columnas de estado
+y una franja de bloqueos, filtro por responsable real, antigüedad registrada y enlace a la
+fuente. Es de sólo lectura, sin arrastre, reasignación, aprobación ni escritura nueva.
+«Ambos» permanece compartido: el filtro por una persona no le adjudica esas tarjetas.
+La carga no decide quién toma un encargo ni altera las reservas.
+
+Se conserva HBv1: rojo = bloqueo explícito; gris = sin fecha/cadencia o más de tres cadencias;
+verde = lectura de hasta dos cadencias; amarillo = resto. Un nonce sin cambio no permite
+inventar conexión, desconexión o acuse. El transporte v1 actual no expone los nonces de los
+miembros: el frontend no inventa reciprocidad. Esos acuses se verifican en el Buzón original.
+
+Cómo leerlo: 1) El responsable de cada tarjeta tiene la bolita. 2) El estado y el bloqueo
+dicen qué falta, y Espera OK remite a la fuente para la decisión. 3) La fecha/señal sólo
+prueba la última revisión, no conexión continua. Sin una nueva base ni Sheet público.
+
+Preparado sobre el head de PR225; no modifica esa rama remota. Antes de publicar se debe
+conciliar main, acreditar backend/recibo/recarga del Equipo y CI/QA del árbol final.
+Esta extensión no acredita una liga viva o capturas de producción.
+
 ## Comportamiento
 
 El diálogo presenta responsables, historia, pendientes de hoy y próximos pasos. La historia

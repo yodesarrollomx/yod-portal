@@ -8,7 +8,7 @@ const html='<!doctype html><html lang="es"><meta charset="utf-8"><meta name="vie
 const server=http.createServer((req,res)=>{
  const pathname=new URL(req.url,'http://localhost').pathname;
  if(pathname==='/'){res.setHeader('Content-Type','text/html');res.end(html);return;}
- if(!/^\/despacho3d\/equipo(?:-model|-dictation)?\.(?:mjs|css)$/.test(pathname)){res.statusCode=404;res.end();return;}
+ if(!/^\/despacho3d\/equipo(?:-model|-dictation|-kanban)?\.(?:mjs|css)$/.test(pathname)){res.statusCode=404;res.end();return;}
  res.setHeader('Content-Type',pathname.endsWith('.css')?'text/css':'text/javascript');res.end(fs.readFileSync(path.join(root,pathname)));
 });
 (async()=>{
@@ -30,6 +30,17 @@ const server=http.createServer((req,res)=>{
   await page.goto(base);await page.getByRole('button',{name:'Equipo',exact:true}).click();
   await page.getByText('Bitácora actualizada.',{exact:true}).waitFor();
   await page.getByText('ChatGPT y Claude · compartido',{exact:true}).waitFor();
+  await page.getByRole('tab',{name:'Relevos',exact:true}).click();
+  await page.getByRole('heading',{name:'Pendiente · 1',exact:true}).waitFor();
+  assert.equal(await page.locator('.team-kanban-columns').count(),1);
+  await page.getByLabel('Filtrar relevos por responsable',{exact:true}).selectOption('claude');
+  await page.getByRole('heading',{name:'Pendiente · 0',exact:true}).waitFor();
+  await page.getByLabel('Filtrar relevos por responsable',{exact:true}).selectOption('Ambos');
+  await page.getByRole('heading',{name:'Pendiente · 1',exact:true}).waitFor();
+  assert.equal(writes,0);
+  assert.equal(await page.evaluate(()=>document.querySelector('.team-desk').scrollWidth<=document.querySelector('.team-desk').clientWidth+1),true);
+  await page.screenshot({path:path.join(evidence,'relevos-'+name+'-'+width+'.png'),fullPage:true});
+  await page.getByRole('tab',{name:'Hoy',exact:true}).click();
   assert.equal(await page.locator('.team-details').getAttribute('open'),null);
   await page.getByText('Ver encargo y seguimiento completo',{exact:true}).click();
   assert.notEqual(await page.locator('.team-details').getAttribute('open'),null);
