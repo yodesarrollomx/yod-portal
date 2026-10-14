@@ -1,17 +1,24 @@
 {
-  "model_revision": "2026-10-14.investor-atlas.2",
-  "proposal_id": "CHG-INVESTOR-ATLAS-2",
-  "summary": "Registro previo del recorrido profesional y navegación al evaluador existente.",
+  "model_revision": "2026-10-14.goals-single-flight.1",
+  "proposal_id": "CHG-GOALS-SINGLE-FLIGHT-20261014",
+  "summary": "Chinche #284: lecturas readGoals concurrentes del Despacho 3D comparten una sola llamada en el puente del OS en vez de rebotar como transport_busy.",
   "components": [
-    "SYS-INVERSION",
-    "GAS-PLAN-POTENCIAL",
-    "SHEET-PLAN-POTENCIAL",
+    "SYS-YOD-OS",
+    "SYS-DESPACHO",
     "GAS-PORTERO",
-    "SYS-CONTROL"
+    "EXT-DRIVE",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-CONTROL",
+    "SYS-OBRA-CLIENTE"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs"
+    "node --test tests/*.cjs",
+    "node verify-os.cjs",
+    "node verify-portal.cjs",
+    "node verify-accesos.cjs",
+    "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir sólo documentación de este cambio."
+  "rollback": "Revertir sólo la línea de single-flight en os/despacho-conversation.js y su prueba; sin datos, permisos ni deployments afectados."
 }

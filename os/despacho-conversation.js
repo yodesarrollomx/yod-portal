@@ -29,7 +29,7 @@
    function reply(result,error){if(own===generation&&authorized(source,epoch))source.postMessage({type:'yod:case:result',version:1,id:m.id,result:result,error:error},root.location.origin);}
    var transport=options.getTransport(),lane=m.method==='listAuthorized'?'catalog':['readOfficePermissions','readOfficePending'].includes(m.method)?'office':['readVisits','recordVisit'].includes(m.method)?'visits':m.method==='readGoals'?'goals':m.method==='mintFastSession'?'fast':['enqueue','createGoal','reviewGoal'].includes(m.method)?'send':'conversation';
    if(!transport||typeof transport[m.method]!=='function'){reply(null,'unavailable');return;}
-   var readKey=['listAuthorized','resolveCurrent','read','mintFastSession'].includes(m.method)?m.method+'|'+JSON.stringify(p):null;
+   var readKey=['listAuthorized','resolveCurrent','read','readGoals','mintFastSession'].includes(m.method)?m.method+'|'+JSON.stringify(p):null;
    if(readKey&&readFlights.has(readKey)){
     var shared=await readFlights.get(readKey);reply(shared.result,shared.error);return;
    }
