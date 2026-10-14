@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-14.goals-single-flight.1",
+  "model_revision": "2026-10-14.goals-single-flight.2",
   "proposal_id": "CHG-GOALS-SINGLE-FLIGHT-20261014",
   "summary": "Chinche #284: lecturas readGoals concurrentes del Despacho 3D comparten una sola llamada en el puente del OS en vez de rebotar como transport_busy.",
   "components": [
