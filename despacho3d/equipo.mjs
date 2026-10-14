@@ -61,6 +61,7 @@ export function mountTeamDesk({container,transport,isAuthorized,identityEpoch,ho
     const details=el('details','team-details');details.append(el('summary',null,label),el('p','team-body',value));card.append(details);
   }
   function renderLane(){
+    dialog.dataset.view=lane;
     for(const [key,b] of tabs){b.setAttribute('aria-selected',String(key===lane));b.tabIndex=key===lane?0:-1;}
     stream.setAttribute('aria-labelledby',tabs.get(lane).id);filter.hidden=lane!=='history';ownerLabel.hidden=lane!=='kanban';stream.classList.toggle('team-kanban',lane==='kanban');stream.replaceChildren();
     if(!snapshot)return;

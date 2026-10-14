@@ -38,6 +38,8 @@ const server=http.createServer((req,res)=>{
   await page.getByLabel('Filtrar relevos por responsable',{exact:true}).selectOption('Ambos');
   await page.getByRole('heading',{name:'Pendiente · 1',exact:true}).waitFor();
   assert.equal(writes,0);
+  const firstCard=await page.locator('.team-kanban .team-card').boundingBox();
+  assert.ok(firstCard&&firstCard.y<850,'La primera tarjeta de relevos debe empezar dentro de la pantalla, también en móvil');
   assert.equal(await page.evaluate(()=>document.querySelector('.team-desk').scrollWidth<=document.querySelector('.team-desk').clientWidth+1),true);
   await page.screenshot({path:path.join(evidence,'relevos-'+name+'-'+width+'.png'),fullPage:true});
   await page.getByRole('tab',{name:'Hoy',exact:true}).click();

@@ -11,6 +11,7 @@
     "EXT-DRIVE"
   ],
   "tests": [
+    "Revisión visual de capturas detectó responsables demasiado altos en móvil: compactación sólo en vista Relevos y prueba de primera tarjeta dentro de viewport, sin modificar otras pestañas.",
     "Vista de relevos: todos los estados canónicos, filtro por dueño sin reasignar Ambos, orden por antigüedad registrada, fechas ausentes/futuras y conservación de entrada; sólo lectura y HBv1 sin cambios. Preparación local, aceptación visual/productiva pendiente.",
     "CI: node scripts/arquitectura.cjs --check; node --test tests/*.cjs; node verify-os.cjs; node verify-portal.cjs; node verify-accesos.cjs; node verify-obra-app.cjs.",
     "Pruebas sintéticas: cortes históricos sin mutación, fechas futuras no acreditan ejecución, señales ausentes/futuras, envío ambiguo conserva request_id/texto, recibo incorrecto rechazado, revocación y lectura concurrente.",
