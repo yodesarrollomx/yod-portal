@@ -1,18 +1,19 @@
 {
-  "model_revision": "2026-10-14.despacho-selection.1",
-  "proposal_id": "CHG-DESPACHO-SELECTION-20261014",
-  "summary": "El acceso sin caso seleccionado requiere selección, y el catálogo autorizado tiene su propio carril de lectura. Conserva validación de sesión/caso y mutaciones sin reintentos.",
+  "model_revision": "2026-10-14.investor-slider.1",
+  "proposal_id": "CHG-INVESTOR-SLIDER",
+  "summary": "Registra el recorrido de nueve paradas con slider y fuente editorial existente. Cambios documentales, sin modificar permisos ni reglas de negocio.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "GAS-PORTERO",
-    "EXT-DRIVE"
+    "SYS-INVERSION",
+    "GAS-PLAN-POTENCIAL",
+    "SHEET-PLAN-POTENCIAL",
+    "SYS-CONTROL"
   ],
   "tests": [
-    "node --test tests/*.cjs; regresiones de catálogo lento, selección requerida y revocación.",
-    "node scripts/arquitectura.cjs --check; verificadores OS, portal, accesos y Obra Cliente; impacto por SHA.",
-    "Código público exacto tras despliegue Pages; aceptación privada de sesión y Groq pendiente de capacidad real."
+    "node scripts/arquitectura.cjs --check",
+    "node --test tests/*.cjs",
+    "node verify-obra-app.cjs",
+    "node scripts/verificar-impacto.cjs"
   ],
-  "rollback": "Revertir sólo front/atlas. Conservar datos, historial, sesiones, ACL, deployment de Portero, casos y reservas ajenas."
+  "rollback": "Revertir únicamente documentación del recorrido, conservando cambios concurrentes y todos los datos de negocio."
 }
