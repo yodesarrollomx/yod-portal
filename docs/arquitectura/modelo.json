@@ -8484,6 +8484,26 @@
   ],
   "changes": [
     {
+      "id": "CHG-DESPACHO-SELECTION-20261014",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección solicita ejecutar las tareas actuales del Buzón el 13-oct-2026. Corrección del acceso inicial y contención del transporte del Despacho existente; no escoger casos por el usuario ni ampliar permisos.",
+      "proposal": "Distinguir despacho_not_ready sin case_id como selección requerida, conservando acceso cerrado hasta elegir un caso autorizado. Separar listAuthorized del carril de lectura del caso: el catálogo lento no bloquea resolveCurrent/read. Mantener single-flight por método/payload, época de sesión y carril de mutaciones sin reintentos.",
+      "tests": [
+        "node --test tests/*.cjs; regresiones de catálogo lento, selección requerida y revocación.",
+        "node scripts/arquitectura.cjs --check; verificadores OS, portal, accesos y Obra Cliente; impacto por SHA.",
+        "Código público exacto tras despliegue Pages; aceptación privada de sesión y Groq pendiente de capacidad real."
+      ],
+      "deployment": "Registro previo a implementación; no acredita publicación ni un caso privado/micrófono/proveedor comprobados.",
+      "rollback": "Revertir sólo front/atlas. Conservar datos, historial, sesiones, ACL, deployment de Portero, casos y reservas ajenas."
+    },
+    {
       "id": "CHG-ATLAS-001",
       "components": [
         "SYS-DESPACHO",
