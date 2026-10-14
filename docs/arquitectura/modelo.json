@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-14.investor-slider.1",
-  "checked_at": "2026-10-13",
+  "revision": "2026-10-14.entry-selection.1",
+  "checked_at": "2026-10-14",
   "priorities": [
     "vender_mas",
     "margen_y_control",
@@ -12272,6 +12272,23 @@
       ],
       "deployment": "Registro previo a implementación. Producción y pruebas se documentan por separado.",
       "rollback": "Revertir únicamente frontend. Conservar originales, simple_*, principal_*, mono_*, trazo_*, slider_* y registros de negocio."
+    },
+    {
+      "id": "CHG-ENTRY-SELECTION-20261014",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección solicita ejecutar las tareas actuales del Buzón. Corrección acotada de mensajes de la oficina existente; selección de proyecto y autoridad se conservan.",
+      "proposal": "Presentar selection_required como Elige un proyecto en tarjeta, acción y nombre accesible; mantener botón cerrado hasta una selección autorizada y retirar datos del caso anterior. Actualizar únicamente los módulos de entrada y sus referencias de caché.",
+      "tests": [
+        "Regresión de tarjeta montada: carga, selección requerida, caso elegido y revocación; sólo dobles sintéticos.",
+        "Suite Node y verificadores OS, portal, accesos, Obra y atlas/impacto; cotejo estático de publicación por SHA."
+      ],
+      "deployment": "Registro previo a implementación. La aceptación privada de sesión seleccionada y la latencia del backend se verifican por separado.",
+      "rollback": "Revertir exclusivamente esta corrección de entrada y su atlas, conservando datos, casos, permisos, deployments y cambios concurrentes."
     }
   ],
   "data_contracts": [

@@ -4,7 +4,7 @@ import {avatarPresence} from './avatar-presence.mjs?v=126';
 
 // A view of the authorized selection, never a second registry or a source of permission.
 export function entryView(selection,presence={},observation={}){
- if(!selection)return {ready:false,name:'Tu despacho',project:'',status:presence.phase==='reconnecting'?'Recuperando conexión…':presence.phase==='unauthorized'?'Entra a YOD OS para ver tus proyectos.':'Preparando tus proyectos…',detail:'',caseId:null};
+ if(!selection)return {ready:false,name:'Tu despacho',project:'',status:presence.phase==='reconnecting'?'Recuperando conexión…':presence.phase==='unauthorized'?'Entra a YOD OS para ver tus proyectos.':presence.phase==='selection_required'?'Elige un proyecto':'Preparando tus proyectos…',detail:'',caseId:null};
  const identity=stationIdentity(selection),same=observation.case_id===selection.case_id;
  const projected=same?avatarPresence({profile:selection.avatar,observation}):null;
  const headline=projected?.label||workHeadline(observation);
@@ -21,14 +21,15 @@ export function mountOfficeEntry({win=window,doc=document}={}){
  let resident=null,observer=null,stopResident=null,stopObserver=null,disposed=false;
  function paint(){
   if(disposed)return;
-  const selection=resident?.getSelection?.(),view=entryView(selection,resident?.snapshot?.(),observer?.snapshot?.());
+  const selection=resident?.getSelection?.(),presence=resident?.snapshot?.(),view=entryView(selection,presence,observer?.snapshot?.());
+  const needsSelection=presence?.phase==='selection_required';
   const operable=view.ready&&typeof win.YodAgentMenu?.showRadial==='function';
   name.textContent=view.name;project.textContent=view.project===view.name?'':view.project;project.hidden=!project.textContent;
   status.textContent=view.ready&&!operable?'Abriendo puesto…':view.status;detail.textContent=view.detail;detail.hidden=!view.detail;
   host.dataset.caseId=view.caseId||'';host.dataset.ready=String(view.ready);
   trigger.disabled=!operable;trigger.querySelector('.case-number').textContent=view.ready?view.name:'Proyecto';
-  trigger.querySelector('[data-entry-action]').textContent=view.ready?'Opciones del autón':resident?.snapshot?.()?.phase==='unauthorized'?'Acceso pendiente':'Validando acceso';
-  trigger.setAttribute('aria-label',view.ready?'Opciones de '+view.name:'Proyecto no disponible mientras se valida el acceso');
+  trigger.querySelector('[data-entry-action]').textContent=view.ready?'Opciones del autón':presence?.phase==='unauthorized'?'Acceso pendiente':needsSelection?'Elige un proyecto':'Validando acceso';
+  trigger.setAttribute('aria-label',view.ready?'Opciones de '+view.name:needsSelection?'Elige un proyecto autorizado para abrir su puesto':'Proyecto no disponible mientras se valida el acceso');
  }
  function open(){
   const selection=resident?.getSelection?.();if(!selection)return false;
