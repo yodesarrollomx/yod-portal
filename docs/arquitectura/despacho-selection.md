@@ -9,3 +9,5 @@ Cambio acotado al frontend existente, sin elegir un proyecto por defecto, modifi
 Las regresiones de `tests/despacho-resident.test.cjs` cubren selección explícita sin autoridad, revocación, catálogo lento y descarte de respuestas de otra sesión. El PR registra los checks, SHA y publicación; la aceptación de sesión privada, voz y proveedor conserva su propio pendiente.
 
 Reversión: revertir únicamente el frontend y su registro del atlas, conservando proyectos, hojas, historial, permisos y despliegues existentes.
+
+La tarjeta de entrada distingue también `selection_required`: muestra «Elige un proyecto» en el estado y la acción, y su nombre accesible explica que falta elegir un proyecto autorizado. El botón permanece deshabilitado sin selección, y los datos de un caso anterior se retiran. Esto no mide ni corrige la latencia del catálogo.
