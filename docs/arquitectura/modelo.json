@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-14.investor-atlas.2",
+  "revision": "2026-10-14.investor-mobile.1",
   "checked_at": "2026-10-14",
   "priorities": [
     "vender_mas",
@@ -12310,6 +12310,24 @@
       ],
       "deployment": "Registro previo; resultados de ejecución se documentarán al finalizar.",
       "rollback": "Restaurar entrada slider-1 conservada; mantener historial, datos y permisos."
+    },
+    {
+      "id": "CHG-INVESTOR-MOBILE-SCROLL",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL",
+        "SYS-CONTROL"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección solicita recorrido móvil intuitivo, lento y continuo, con barra lateral derecha para iPhone.",
+      "proposal": "Misma presentación y URL: desplazamiento nativo sincroniza diagramas persistentes y lectura en flujo; barra vertical reversible y navegación por capítulos. Contenido público permanece en Sheets. No modificar permisos, datos de negocio ni evaluador.",
+      "tests": [
+        "WebKit y Chromium: avance nativo, barra vertical, reversibilidad, orientación, texto y CTA accesibles, objetivos táctiles, movimiento reducido.",
+        "Regresiones de 27 momentos y escritorio; archivos públicos exactos después de publicar."
+      ],
+      "deployment": "Registro previo a implementación y verificación de navegador.",
+      "rollback": "Revertir sólo frontend móvil. Conservar Sheets, versiones anteriores, credenciales y permisos."
     }
   ],
   "data_contracts": [
