@@ -1,13 +1,11 @@
 {
-  "model_revision": "2026-10-14.investor-atlas.2",
-  "proposal_id": "CHG-INVESTOR-ATLAS-2",
-  "summary": "Registro previo del recorrido profesional y navegación al evaluador existente.",
+  "model_revision": "2026-10-14.investor-mobile.1",
+  "proposal_id": "CHG-INVESTOR-MOBILE-SCROLL",
+  "summary": "Registro previo de navegación móvil de presentación pública.",
   "components": [
     "SYS-INVERSION",
     "GAS-PLAN-POTENCIAL",
-    "SHEET-PLAN-POTENCIAL",
-    "GAS-PORTERO",
-    "SYS-CONTROL"
+    "SHEET-PLAN-POTENCIAL"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
