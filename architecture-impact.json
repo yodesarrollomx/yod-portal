@@ -1,21 +1,18 @@
 {
-  "model_revision": "2026-10-13.investor-simple-story.1",
-  "proposal_id": "CHG-INVESTOR-SIMPLE-STORY",
-  "summary": "Registro previo de siete escenas simples con renderer nuevo, fuente editorial vigente y archivo anterior; sin backend/ACL/reglas de negocio.",
+  "model_revision": "2026-10-14.despacho-selection.1",
+  "proposal_id": "CHG-DESPACHO-SELECTION-20261014",
+  "summary": "El acceso sin caso seleccionado requiere selección, y el catálogo autorizado tiene su propio carril de lectura. Conserva validación de sesión/caso y mutaciones sin reintentos.",
   "components": [
-    "SYS-INVERSION",
-    "GAS-PLAN-POTENCIAL",
-    "SHEET-PLAN-POTENCIAL",
     "SYS-YOD-OS",
-    "SYS-CONTROL"
+    "SYS-DESPACHO",
+    "SYS-DESPACHO-3D",
+    "GAS-PORTERO",
+    "EXT-DRIVE"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs"
+    "node --test tests/*.cjs; regresiones de catálogo lento, selección requerida y revocación.",
+    "node scripts/arquitectura.cjs --check; verificadores OS, portal, accesos y Obra Cliente; impacto por SHA.",
+    "Código público exacto tras despliegue Pages; aceptación privada de sesión y Groq pendiente de capacidad real."
   ],
-  "rollback": "Revertir sólo registro/consumidor mediante revisión, conservar hojas y archivos de negocio."
+  "rollback": "Revertir sólo front/atlas. Conservar datos, historial, sesiones, ACL, deployment de Portero, casos y reservas ajenas."
 }
