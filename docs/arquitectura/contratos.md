@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.sala-medios.1 · 2026-10-15.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.presentation-pins-ingest.1 · 2026-10-15.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -866,3 +866,16 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Historial y elegibilidad son distintos: cuatro cortes fallidos no vetados del diagnóstico no prueban aprobación actual. Tres corresponden a dos fuentes no retiradas en Sheet; el cuarto a una tercera fuente retirada. Nuevo audit halló 0 elegibles, sin crear decisiones ni reencolar.
 - No publicar respuestas con títulos, IDs o notas privadas en repositorio/logs. Fuente original conservada; errores no fabrican cero ni dan por completo el historial. No cambiar reglas editoriales, prioridades comerciales o marcas humanas.
 - Pruebas con dobles sintéticos; ningún GET de efecto de negocio, correo de prueba, reencolado o escritura real para demostrar funcionamiento. Despliegue, lectura completa y activación se acreditan por separado.
+
+## CTR-PRESENTATION-PINS-INGEST
+
+- Componentes: SYS-INVERSION, SYS-YOD-OS, SYS-CONTROL, SYS-SALA, GAS-SALA, SHEET-SALA, EXT-ACTIONS, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-DRIVE.
+- Evidencia: La solicitud escrita/dictada y su captura; bandeja privada PRODUCCION de Sala..
+- Entrada/campos: `CHN estable, versión/escena/cámara/punto, destino, captura JPEG acotada con SHA256 y sesión YOD existente confinada a su origen.`.
+- Salida: Sobre privado registrado; recibo verificado por ID/huella; marcador público saneado para el puente/revisor existente..
+
+- Nunca confundir local con recibido ni recibido con cumplido.
+- No copiar claves a Sites ni postMessage ni publicar capturas/notas privadas en issues.
+- Mismo ID al recuperar pendientes; una respuesta ambigua sólo se concilia en lectura.
+- No nuevos cron, reactivaciones, backend, Sheet ni cambios de ACL.
+- Notas y capturas sólo en fuente privada. Exportaciones públicas conservan un marcador mínimo; frontera verificada antes de ingesta. La ventana del día no sustituye el historial de PRODUCCION.
