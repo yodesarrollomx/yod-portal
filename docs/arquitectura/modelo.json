@@ -12606,6 +12606,26 @@
       "rollback": "Desactivar SALA_MEDIOS_PUBLICOS detiene sólo nuevas externalizaciones. Si ya existe un medio externo, conservar lector compatible, manifiesto, pin del recibo, releases inmutables y sus activos. No volver a un lector antiguo ni retirar activos hasta repatriar y verificar todos los bytes referenciados, publicar un FULL íntegro dentro de 900 MiB y comprobar recibo fresco y consumidores. No borrar históricos ni alterar ACL, decisiones, destinatarios o reglas de negocio. Desactivar SALA_PRODUCCION_HISTORICA mantiene explícito historial no confirmado; conservar propuestas/decisiones originales y los sellos reales, sin volver a considerar la ventana14 días como historial completo ni reencolar por revertir código."
     },
     {
+      "id": "CHG-INVESTOR-INTENT-STORY",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-CONTROL",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección aprueba ejecutar el guion de intención de siete escenas en la misma presentación pública, después de rechazar anotaciones obligatorias y flechas cruzadas.",
+      "proposal": "Recorrido variable de siete preguntas del inversionista, mismo inmueble ilustrativo, composición por escena sin flechas decorativas obligatorias. Conservar gesto iPhone, chinches y detalle original. Nueva configuración editorial aditiva en Sheets, con compatibilidad para versiones previas. Capital como entrada principal; inmueble al evaluador como entrada secundaria.",
+      "tests": [
+        "Pruebas sintéticas de esquema, estados variables, reversa, error y compatibilidad.",
+        "WebKit y Chromium: iPhone pequeño y horizontal, controles, detalle y chinches; capturas de estados clave e intermedios.",
+        "Publicación anónima del código exacto y contenido editorial; enlace evaluador sin credenciales.",
+        "Atlas generado y contratos existentes."
+      ],
+      "deployment": "Registro previo; no acredita nueva publicación ni aceptación de público real.",
+      "rollback": "Revertir frontend y sólo nuevo campo editorial; conservar originales, revisiones, configuración histórica, datos, permisos y credenciales."
+    },
+    {
       "id": "CHG-PRESENTATION-PINS-INGEST-20261015",
       "components": [
         "SYS-INVERSION",
@@ -14394,6 +14414,33 @@
         "Historial y elegibilidad son distintos: cuatro cortes fallidos no vetados del diagnóstico no prueban aprobación actual. Tres corresponden a dos fuentes no retiradas en Sheet; el cuarto a una tercera fuente retirada. Nuevo audit halló 0 elegibles, sin crear decisiones ni reencolar.",
         "No publicar respuestas con títulos, IDs o notas privadas en repositorio/logs. Fuente original conservada; errores no fabrican cero ni dan por completo el historial. No cambiar reglas editoriales, prioridades comerciales o marcas humanas.",
         "Pruebas con dobles sintéticos; ningún GET de efecto de negocio, correo de prueba, reencolado o escritura real para demostrar funcionamiento. Despliegue, lectura completa y activación se acreditan por separado."
+      ]
+    },
+    {
+      "id": "CTR-INVESTOR-INTENT-STORY",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-CONTROL",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL"
+      ],
+      "source": "Guion editorial aprobado por Dirección; evolución aditiva de CTR-INVESTOR-SINGLE-SURFACE.",
+      "input": [
+        "Campo journey opcional de configuración editorial: siete escenas con cantidad variable de momentos, texto, etiquetas y tipos visuales validados.",
+        "Relato original y detalles conservados; geometría pública desde fuente vigente."
+      ],
+      "output": [
+        "Misma página con recorrido de selección, producto, economía, condiciones, ejecución y conversación de participación.",
+        "Contexto de chinche incluye escena y momento nuevos, sin cambiar almacenamiento ni compartir implícitamente."
+      ],
+      "invariants": [
+        "Copy y datos reales viven en Sheets, no en repositorio.",
+        "Sin anotaciones obligatorias ni conectores que crucen el texto.",
+        "Mismo gesto reversible y límites, sin menú inferior móvil.",
+        "Capitalista no necesita inmueble. Aportación de inmueble conserva valor. Medición no acredita autorización. Utilidad no equivale a caja.",
+        "No cifras, rendimientos, cabidas ni probabilidades fabricadas; sólo ilustración conceptual.",
+        "Todos los textos originales permanecen accesibles; versiones anteriores siguen operando.",
+        "Conservar contrato de chinches, credencial Portero, permisos, datos y backend existentes."
       ]
     },
     {
