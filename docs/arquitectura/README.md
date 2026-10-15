@@ -75,3 +75,5 @@ La auditoría no se considera completa mientras existan componentes críticos o 
 - [Presentación móvil · una superficie y chinches](investor-single-surface.md): interacción iPhone, anotaciones, almacenamiento local, pruebas y límites de recepción; registro previo.
 
 - [Chinches de presentaciones → Sala](presentation-pins-ingest.md): relevo entre orígenes, sobres privados y acuses reales; sin cambiar el calendario.
+
+- [Presentación guiada entre dispositivos](presentation-guided.md): sesión conductor/invitado, revisión temporal acotada y conservación de fuentes y chinches.
