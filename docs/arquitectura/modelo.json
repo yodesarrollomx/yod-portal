@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-14.equipo-relevos.1",
-  "checked_at": "2026-10-13",
+  "revision": "2026-10-15.equipo-relevo.1",
+  "checked_at": "2026-10-15",
   "priorities": [
     "vender_mas",
     "margen_y_control",
@@ -8484,6 +8484,26 @@
   ],
   "changes": [
     {
+      "id": "CHG-DESPACHO-SELECTION-20261014",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección solicita ejecutar las tareas actuales del Buzón el 13-oct-2026. Corrección del acceso inicial y contención del transporte del Despacho existente; no escoger casos por el usuario ni ampliar permisos.",
+      "proposal": "Distinguir despacho_not_ready sin case_id como selección requerida, conservando acceso cerrado hasta elegir un caso autorizado. Separar listAuthorized del carril de lectura del caso: el catálogo lento no bloquea resolveCurrent/read. Mantener single-flight por método/payload, época de sesión y carril de mutaciones sin reintentos.",
+      "tests": [
+        "node --test tests/*.cjs; regresiones de catálogo lento, selección requerida y revocación.",
+        "node scripts/arquitectura.cjs --check; verificadores OS, portal, accesos y Obra Cliente; impacto por SHA.",
+        "Código público exacto tras despliegue Pages; aceptación privada de sesión y Groq pendiente de capacidad real."
+      ],
+      "deployment": "Registro previo a implementación; no acredita publicación ni un caso privado/micrófono/proveedor comprobados.",
+      "rollback": "Revertir sólo front/atlas. Conservar datos, historial, sesiones, ACL, deployment de Portero, casos y reservas ajenas."
+    },
+    {
       "id": "CHG-ATLAS-001",
       "components": [
         "SYS-DESPACHO",
@@ -12234,6 +12254,104 @@
       "rollback": "Revertir sólo frontend a la principal previa en la misma URL; conservar simple_*, principal_*, mono_* y originales en la hoja, permisos y expedientes."
     },
     {
+      "id": "CHG-INVESTOR-SLIDER",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL",
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección aprueba crear el recorrido de nueve paradas con slider manual en la presentación pública existente, conservando las versiones anteriores y la información original.",
+      "proposal": "Continuidad causal: oportunidad, mercado, inmuebles, producto, cuenta, condiciones, participación, ejecución y recuperación. Slider reversible con subpasos legibles y un mismo inmueble conceptual. Texto editorial slider_config en el Sheet vigente a través del GET público existente. Sin cambio de backend, ACL, datos privados, cifras ni reglas de negocio. Cuenta completa, riesgos, capital, plazo y recuperación en el recorrido principal.",
+      "tests": [
+        "Contrato de progreso continuo y reversible; contenido seguro; conservación de versiones.",
+        "Chromium móvil320/390 y escritorio1440: slider, teclado, navegación, reduced-motion, cierre doble y ausencia de overflow.",
+        "Fuente editorial viva, cero escrituras de prueba, credencial Portero intacta; verificación del frontend publicado y capturas."
+      ],
+      "deployment": "Registro previo a implementación. Producción y pruebas se documentan por separado.",
+      "rollback": "Revertir únicamente frontend. Conservar originales, simple_*, principal_*, mono_*, trazo_*, slider_* y registros de negocio."
+    },
+    {
+      "id": "CHG-ENTRY-SELECTION-20261014",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección solicita ejecutar las tareas actuales del Buzón. Corrección acotada de mensajes de la oficina existente; selección de proyecto y autoridad se conservan.",
+      "proposal": "Presentar selection_required como Elige un proyecto en tarjeta, acción y nombre accesible; mantener botón cerrado hasta una selección autorizada y retirar datos del caso anterior. Actualizar únicamente los módulos de entrada y sus referencias de caché.",
+      "tests": [
+        "Regresión de tarjeta montada: carga, selección requerida, caso elegido y revocación; sólo dobles sintéticos.",
+        "Suite Node y verificadores OS, portal, accesos, Obra y atlas/impacto; cotejo estático de publicación por SHA."
+      ],
+      "deployment": "Registro previo a implementación. La aceptación privada de sesión seleccionada y la latencia del backend se verifican por separado.",
+      "rollback": "Revertir exclusivamente esta corrección de entrada y su atlas, conservando datos, casos, permisos, deployments y cambios concurrentes."
+    },
+    {
+      "id": "CHG-INVESTOR-ATLAS-2",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL",
+        "GAS-PORTERO",
+        "SYS-CONTROL"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección solicita presentación profesional con mapa real, marca oficial, propuesta Franco y cierre al evaluador.",
+      "proposal": "Misma URL y slider reversible. Cartografía OSM y contenido editorial desde Sheets; diagramas arquitectónicos y financieros. Marca oficial. CTA al evaluador público existente app=evaluador sin credencial, transferencia de sesión o alta automática; enlace HTTPS validado del proveedor conocido. Permisos y guardado del evaluador intactos. Conservar slider-1. Sin cifras privadas, garantías ni comunicaciones originales en repo.",
+      "tests": [
+        "Contrato editorial y enlace seguro; 27momentos reversibles.",
+        "Chromium320/390/1440, marca, mapa vivo, cierre, teclado y movimiento reducido.",
+        "GET anónimo del evaluador; cero escrituras de negocio y Portero intacto.",
+        "Regresiones, capturas reales y verificación exacta publicada."
+      ],
+      "deployment": "Registro previo; resultados de ejecución se documentarán al finalizar.",
+      "rollback": "Restaurar entrada slider-1 conservada; mantener historial, datos y permisos."
+    },
+    {
+      "id": "CHG-GOALS-SINGLE-FLIGHT-20261014",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "EXT-DRIVE",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección pidió en sesión interactiva resolver los pendientes de Buzón/chinches (fila70, chinche #284). Corrección acotada del puente OS↔Despacho 3D; sin cambiar backend, permisos ni datos.",
+      "proposal": "Compartir en un solo vuelo las lecturas readGoals idénticas que llegan a la vez desde el Despacho 3D (puesto, voz, pendientes del círculo), igual que listAuthorized/resolveCurrent/read/mintFastSession. Hoy la segunda lectura recibe transport_busy en ~3 ms y el puesto queda en «Lectura no disponible · No se pudo consultar la meta». Escrituras y otros carriles sin cambio.",
+      "tests": [
+        "Regresión sintética: sondeo de metas no bloquea lectura ni envío de conversación; lecturas readGoals concurrentes comparten una sola llamada y ambas reciben el resultado.",
+        "Suite Node completa, verificadores OS/portal/accesos/Obra y atlas/impacto."
+      ],
+      "deployment": "Registro previo a implementación. Publicación y QA privada en sesión Dirección se documentan por separado.",
+      "rollback": "Revertir sólo la línea de single-flight en os/despacho-conversation.js y su prueba; sin datos, permisos ni deployments afectados."
+    },
+    {
+      "id": "CHG-INVESTOR-MOBILE-SCROLL",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL",
+        "SYS-CONTROL"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección solicita recorrido móvil intuitivo, lento y continuo, con barra lateral derecha para iPhone.",
+      "proposal": "Misma presentación y URL: desplazamiento nativo sincroniza diagramas persistentes y lectura en flujo; barra vertical reversible y navegación por capítulos. Contenido público permanece en Sheets. No modificar permisos, datos de negocio ni evaluador.",
+      "tests": [
+        "WebKit y Chromium: avance nativo, barra vertical, reversibilidad, orientación, texto y CTA accesibles, objetivos táctiles, movimiento reducido.",
+        "Regresiones de 27 momentos y escritorio; archivos públicos exactos después de publicar."
+      ],
+      "deployment": "Registro previo a implementación y verificación de navegador.",
+      "rollback": "Revertir sólo frontend móvil. Conservar Sheets, versiones anteriores, credenciales y permisos."
+    },
+    {
       "id": "CHG-DESPACHO-EQUIPO-20261013",
       "components": [
         "SYS-YOD-OS",
@@ -12255,6 +12373,27 @@
       ],
       "deployment": "Panel, transporte y montaje autenticado implementados en rama. Suite Node717/717 aprobada al commit3362eb98; OS/portal/accesos y esquema/vistas aprobados. Integración backend preparada aparte, todavía sin instalación ni recibo productivo. El flujo privado de instalación falla antes de iniciar. No hay publicación de esta propuesta ni lectura/escritura productiva confirmada.",
       "rollback": "Retirar el montaje y revertir estos módulos. Conservar Buzón, eventos, recibos, permisos y todas las notas."
+    },
+    {
+      "id": "CHG-DESPACHO-EQUIPO-RELEVO-20261015",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-SALA",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección pide asumir el relevo de implementación pendiente y conserva la autorización de integrar/publicar la oficina existente. No concede permisos, nuevas audiencias ni cambios de negocio.",
+      "proposal": "Conciliar Equipo y Relevos sobre la cabina actual conservando selección explícita, entrada corregida, lecturas de metas concurrentes y propuestas de presentación. Un solo montaje autenticado, mismos contratos y Buzón; sin duplicar mini CRM ni fuentes.",
+      "tests": [
+        "Suite Node completa y verificadores de atlas/esquema/impacto/OS/portal/accesos/obra al árbol integrado.",
+        "Regresión sintética de Equipo/Relevos y navegador Chromium/WebKit 320/390/1440; red a negocio bloqueada.",
+        "Conservar correcciones de entrada/selección/readGoals y proyectos previos; sin API de negocio de prueba."
+      ],
+      "deployment": "Preparación en rama. La instalación del servidor declarada requiere comprobante independiente; no acredita nota durable, recarga ni aceptación. Mantener sin integrar a main hasta esos recibos.",
+      "rollback": "Retirar montaje Equipo/Relevos mediante PR conservando las correcciones publicadas de selección y metas, Buzón, historial, permisos y recibos."
     }
   ],
   "data_contracts": [

@@ -49,6 +49,13 @@ export function createResidentAgents({transport,onChange=()=>{},now=Date.now,sch
     if(changed)publishProfile();emit();later(AUTHORITY_REFRESH_MS);return true;
    }catch(error){
     if(disposed||own!==epoch)return false;
+    // No current project is a selection state, not a revoked session. Never
+    // choose a project or grant a lease from this reply; exact selection still
+    // requires the authorized catalog and its server response.
+    if(error.message==='despacho_not_ready'&&!requestedCaseId&&!catalogDenied){
+     selection=null;prepared=false;checkedAt=null;phase='selection_required';stopLease();
+     if(timer!==null)cancel(timer);timer=null;publishProfile();emit();return false;
+    }
     const transient=isTransientAuthorityError(error);
     prepared=false;
     // Preserve a recently authorized figure during a short outage, with operation disabled.

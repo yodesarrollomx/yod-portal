@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-14.equipo-relevos.1 · 2026-10-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.equipo-relevo.1 · 2026-10-15.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 

@@ -95,3 +95,16 @@ su recuperación y el acuse real del siguiente agente. No usar datos de negocio 
 Registrar por separado commit, checks, backend desplegado y aceptación real.
 
 Reversión: retirar el montaje y estos módulos. Conservar notas, recibos y fuentes.
+
+## Conciliación del relevo · 15-oct-2026
+
+La rama reúne Equipo y Relevos con la cabina actual. Conserva la selección explícita
+del proyecto, la entrada corregida y el vuelo compartido de lecturas de metas;
+las propuestas de presentación y sus fuentes permanecen intactas. Las vistas del
+atlas se regeneran desde el modelo conciliado. No modifica Masterbrokers.
+
+El código integrado en rama y sus pruebas aisladas se comprueban antes de actualizar
+el PR. La instalación declarada del servidor no sustituye una comprobación con la
+sesión autorizada: lectura, instrucción vinculada, recibo durable y recuperación.
+Se mantiene retenida la integración a main hasta esa aceptación; no se presenta el
+composer como disponible por haber pasado CI sintética.

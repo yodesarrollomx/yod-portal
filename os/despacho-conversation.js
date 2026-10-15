@@ -7,7 +7,7 @@
   // A slow background goals read must not make the conversation look offline.
   // Chinche #249: mutations ride their own lane, so a slow read never bounces a message as busy.
   // Mutations keep their original IDs; this bridge never retries them.
-  var readFlights=new Map(),generation=0,disposed=false,busy={conversation:false,send:false,goals:false,fast:false,visits:false,office:false};
+  var readFlights=new Map(),generation=0,disposed=false,busy={catalog:false,conversation:false,send:false,goals:false,fast:false,visits:false,office:false};
   function authorized(source,epoch){return !disposed&&options.isAuthorized()&&source===options.getIframeWindow()&&epoch===options.getEpoch();}
   async function receive(event){
    var m=event.data,epoch=options.getEpoch(),source=event.source;
@@ -27,9 +27,9 @@
    if(m.method==='reviewGoal'&&(!keys(p,['case_id','goal_id','request_id','expected_revision','action'])||!str(p.case_id,256)||!str(p.goal_id,256)||!str(p.request_id,256)||!str(p.expected_revision,256)||!['approve','resume','stop'].includes(p.action)))return;
    var own=generation;
    function reply(result,error){if(own===generation&&authorized(source,epoch))source.postMessage({type:'yod:case:result',version:1,id:m.id,result:result,error:error},root.location.origin);}
-   var transport=options.getTransport(),lane=['readOfficePermissions','readOfficePending'].includes(m.method)?'office':['readVisits','recordVisit'].includes(m.method)?'visits':m.method==='readGoals'?'goals':m.method==='mintFastSession'?'fast':['enqueue','createGoal','reviewGoal'].includes(m.method)?'send':'conversation';
+   var transport=options.getTransport(),lane=m.method==='listAuthorized'?'catalog':['readOfficePermissions','readOfficePending'].includes(m.method)?'office':['readVisits','recordVisit'].includes(m.method)?'visits':m.method==='readGoals'?'goals':m.method==='mintFastSession'?'fast':['enqueue','createGoal','reviewGoal'].includes(m.method)?'send':'conversation';
    if(!transport||typeof transport[m.method]!=='function'){reply(null,'unavailable');return;}
-   var readKey=['listAuthorized','resolveCurrent','read','mintFastSession'].includes(m.method)?m.method+'|'+JSON.stringify(p):null;
+   var readKey=['listAuthorized','resolveCurrent','read','readGoals','mintFastSession'].includes(m.method)?m.method+'|'+JSON.stringify(p):null;
    if(readKey&&readFlights.has(readKey)){
     var shared=await readFlights.get(readKey);reply(shared.result,shared.error);return;
    }
@@ -41,7 +41,7 @@
    catch(error){var failure=['unauthorized','session_changed','session_pending','timeout','transport_busy','response_limit','invalid_response'].includes(error&&error.message)?error.message:error&&error.name==='AbortError'?'timeout':'unavailable';if(settle)settle({result:null,error:failure});reply(null,failure);}
    finally{clearTimeout(timer);if(own===generation){busy[lane]=false;if(readKey)readFlights.delete(readKey);}}
   }
-  function clear(){generation++;readFlights.clear();busy={conversation:false,send:false,goals:false,fast:false,visits:false,office:false};}
+  function clear(){generation++;readFlights.clear();busy={catalog:false,conversation:false,send:false,goals:false,fast:false,visits:false,office:false};}
   root.addEventListener('message',receive);
   return {clear:clear,dispose:function(){clear();disposed=true;root.removeEventListener('message',receive);}};
  }
