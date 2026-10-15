@@ -50,6 +50,19 @@
      if(scheduled){reply(scheduled.result,scheduled.error);return;}
     }catch(e){reply(null,['session_changed','timeout'].includes(e&&e.message)?e.message:'unavailable');return;}
    }
+   if(options.scheduleWrite&&['enqueue','createGoal','reviewGoal','recordVisit'].includes(m.method)){
+    try{
+     var written=await options.scheduleWrite(m.method,p,async function(){
+      if(own!==generation||!authorized(source,epoch))throw Error('session_changed');
+      if(busy[lane])return {result:null,error:'transport_busy'};
+      busy[lane]=true;
+      try{return {result:await transport[m.method](JSON.parse(JSON.stringify(p))),error:null};}
+      catch(e){return {result:null,error:['unauthorized','session_changed','session_pending','timeout','transport_busy'].includes(e&&e.message)?e.message:'unavailable'};}
+      finally{if(own===generation)busy[lane]=false;}
+     },function(){return own===generation&&authorized(source,epoch);});
+     if(written){reply(written.result,written.error);return;}
+    }catch(e){reply(null,['session_changed','timeout'].includes(e&&e.message)?e.message:'unavailable');return;}
+   }
    if(busy[lane]){reply(null,'transport_busy');return;}
    busy[lane]=true;
    var timer,settle;

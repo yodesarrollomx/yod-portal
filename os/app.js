@@ -318,7 +318,33 @@
         if(!plan)return null;state.loadPlan=plan;plan.setSession(ep);
         return plan.readCase(method,payload,lane,run,isCurrent);
       });
+    }:null,
+    scheduleWrite:window.YodLoadConfig&&window.YodLoadConfig.enabled?function(method,payload,run,isCurrent){
+      var ep=state.sesionEpoch;
+      return window.YodLoadPlanReady.then(function(plan){
+        if(ep!==state.sesionEpoch||!isCurrent())throw Error('session_changed');
+        if(!plan)return null;state.loadPlan=plan;plan.setSession(ep);
+        return plan.writeCase(method,payload,run,isCurrent,async function(){
+          plan.invalidate();
+          var readMethod=method==='enqueue'?'read':method==='recordVisit'?'readVisits':'readGoals';
+          await plan.readCase(readMethod,{case_id:payload.case_id},'reconcile',async function(){
+            if(!isCurrent())throw Error('session_changed');
+            return {result:await window.YODCaseTransport[readMethod]({case_id:payload.case_id}),error:null};
+          },isCurrent);
+          notifyContinuityFrame();
+        });
+      });
     }:null
+  });
+  function notifyContinuityFrame(){
+    if(despachoSection.isAuthorized())despachoSection.getIframeWindow()?.postMessage({type:'yod:data:changed',version:1},location.origin);
+  }
+  if(window.YodLoadConfig&&window.YodLoadConfig.enabled)window.YodLoadPlanReady.then(function(plan){
+    if(!plan)return;
+    window.YodContinuityWake=async function(){
+      plan.invalidate();await loadIdentity();
+      if(state.profileReady)notifyContinuityFrame();
+    };
   });
   window.revisarPuertaDespacho=function(){despachoSection.refresh();};
   window.cerrarDespachoPrivado=function(){despachoSection.teardown();};
@@ -554,7 +580,7 @@
   }
   async function loadCatalog(){
     if(!state.profileReady)return;
-    var ep=state.sesionEpoch;
+    var ep=state.sesionEpoch;var readRevision=state.loadPlan?state.loadPlan.revision():null;
     if(state.loading&&state.catalogEpoch===ep)return;state.catalogEpoch=ep;state.loading=true;$('refresh').disabled=true;var _mr=$('mobile-refresh');if(_mr)_mr.disabled=true;setConnection('','Actualizando');
     /* Arranque en frío de Apps Script: medido el 9-sep, la MISMA llamada tardó
        64.9 s la primera vez y 2 s las siguientes. Con 25 s fijos el primer
@@ -566,9 +592,9 @@
     try{
       var _tk='';try{_tk=localStorage.getItem(TOKEN_KEY)||'';}catch(_e){}
       var response=await fetch(CATALOG_ENDPOINT+(_tk?'&k='+encodeURIComponent(_tk):'')+'&cb='+Date.now(),{cache:'no-store',credentials:'omit',signal:controller.signal});
-      if(!mismaSesion(_tk,ep))return;
+      if(!mismaSesion(_tk,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;
       if(!response.ok)throw new Error('HTTP '+response.status);var data=await response.json();
-      if(!mismaSesion(_tk,ep))return;
+      if(!mismaSesion(_tk,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;
       if(!data.ok||!Array.isArray(data.rows))throw new Error(data.error||'Respuesta incompleta');
       /* 9-sep-2026 · POR QUÉ CAMBIÓ ESTA GUARDA (el «Catálogo sin autenticar» eterno).
          Antes se daba por «no autenticado» cuando el catálogo llegaba con MENOS
@@ -593,7 +619,7 @@
       state.catRetry=0;renderModules(data.rows);nombrarAccionesRapidas();$('updated-at').textContent=selloDato(data);setConnection('ok','En línea');
       // El catálogo solo se conserva en memoria de esta sesión.
     }catch(error){
-      if(!mismaSesion(_tk,ep))return;
+      if(!mismaSesion(_tk,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;
       if(rechazoAcceso(error)){catalogoSinAcceso();return;}
       state.catRetry=(state.catRetry||0)+1;
       if(state.catRetry<=REINTENTOS_MAX){setConnection('error','Portero lento · reintentando');$('updated-at').textContent='Reintentando en fondo';setTimeout(loadCatalog,REINTENTO_MS);}
@@ -681,10 +707,13 @@
   }
   function startData(token){
     if(enDespacho()&&!(window.YodLoadConfig&&window.YodLoadConfig.enabled))return Promise.resolve([]);
-    state.homeDataEpoch=state.sesionEpoch;
+    var homeEpoch=state.sesionEpoch;state.homeDataEpoch=homeEpoch;
     var requests=[loadPulse(token)];
     if(window.YodAccessPolicy.hasCode(state.boards,'TA')||state.role==='admin')requests.push(coordinatedPortalLoad('operations',function(){return loadOperations(token);},enDespacho()?3:1,'operations'));else renderOperationsLocked();
-    return Promise.allSettled(requests);
+    return Promise.allSettled(requests).then(function(results){
+      if(state.sesionEpoch===homeEpoch&&results.some(function(r){return r.status==='rejected';}))state.homeDataEpoch=null;
+      return results;
+    });
   }
   function coordinatedPortalLoad(key,run,priority,origin){
     if(!(window.YodLoadConfig&&window.YodLoadConfig.enabled))return run();
@@ -729,7 +758,9 @@
       if(!data||data.ok!==true||data.token!==token||typeof data.rol!=='string'||!data.rol.trim()||typeof data.boards!=='string'){var diag='canje:'+((data&&data.error)||'sin-respuesta');var err=new Error(diag);err._diag=diag;throw err;}
       try{localStorage.removeItem('yod_canje_fail');}catch(_e){}
       state.canjeRetry=0;state.sessionToken=token;state.verifiedAt=Date.now();applyIdentity(data);
-      await Promise.allSettled([coordinatedPortalLoad('catalog',loadCatalog,1,'catalog'),startData(token)]);
+      var dataLoads=Promise.allSettled([coordinatedPortalLoad('catalog',loadCatalog,1,'catalog'),startData(token)]);
+      // Identity must settle even when another tab owns background admission.
+      if(!(window.YodLoadConfig&&window.YodLoadConfig.enabled))await dataLoads;
     }catch(err){
       if(!vigente())return;
       var d=(err&&err._diag)||'error';
@@ -879,13 +910,13 @@
     renderOperations({tasks:tasks,summary:window.YodOperations.summarize(tasks),updatedAt:updatedAt,source:source,mine:mine,personName:who,personGeneric:nameIsGeneric(who),responsables:uniqueResponsables(all),totalEquipo:all.length,scope:scope});
   }
   async function loadOperations(token){
-    var ep=state.sesionEpoch;if(!mismaSesion(token,ep))return;
+    var ep=state.sesionEpoch;var readRevision=state.loadPlan?state.loadPlan.revision():null;if(!mismaSesion(token,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;
     var panel=$('operation-panel');panel.setAttribute('aria-busy','true');
     var cached=state.opsCache;
     if(cached&&cached.ep===ep){state.allTasks=cached.tasks;renderOpsScoped('cache',cached.updatedAt);}
     try{
       var result=await window.YodOperations.load(token);
-      if(!mismaSesion(token,ep))return;
+      if(!mismaSesion(token,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;
       // Una versión vieja del adaptador puede devolver caché sin dueño: no se usa.
       if(result.source==='cache')throw new Error(result.diag||'cache_sin_identidad');
       state.allTasks=Array.isArray(result.tasks)?result.tasks:[];
@@ -894,7 +925,7 @@
       if(state.role==='admin')renderDecisions(state.allTasks,result.source);
       renderOpsScoped(result.source,result.updatedAt);marcaNuevo('SYS-TAREAS',state.allTasks.map(function(t){return [t.id,t.estado,t.actualizado||''];}));
     }catch(error){
-      if(!mismaSesion(token,ep))return;
+      if(!mismaSesion(token,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;
       var diag=(error&&(error._diag||error.message))||'error';
       if(!rechazoAcceso(diag)&&cached&&cached.ep===ep){
         state.allTasks=cached.tasks;renderOpsScoped('cache',cached.updatedAt);
@@ -962,21 +993,21 @@
   function sinKpis(result){return !!(result&&result.data)&&!(result.data.kpis&&Object.keys(result.data.kpis).length);}
   function renderMarketing(result){var card=$('marketing-card'),panel=$('marketing-panel'),s=result.summary,vacio=sinKpis(result);card.setAttribute('aria-busy','false');panel.replaceChildren();if(vacio){panel.innerHTML='<div class="pulse-message"><i class="ti ti-help-circle"></i><span>El CRM contestó sin cifras del periodo. No hay números que mostrar todavía.</span></div>';return;}var grid=document.createElement('div');grid.className='pulse-metrics';grid.append(pulseMetric('Leads',String(s.leads),s.period||'Periodo activo'),pulseMetric('Citas',String(s.appointments),percent(s.appointmentRate)+' de leads'),pulseMetric('Clientes',String(s.clients),percent(s.clientRate)+' de leads'),pulseMetric('Sin tocar 24 h',String(s.untouched24h),'Requieren seguimiento',s.untouched24h>0?'alert':''));panel.appendChild(grid);}
   async function loadFinance(token){
-    var ep=state.sesionEpoch;if(!mismaSesion(token,ep))return;
+    var ep=state.sesionEpoch;var readRevision=state.loadPlan?state.loadPlan.revision():null;if(!mismaSesion(token,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;
     var c=pulseCacheRead('finance',token);
     if(c){renderFinance({summary:c.summary});marcarCache('finance-panel',c.ts);}
-    try{var r=await window.YodFinance.load(token);if(!mismaSesion(token,ep))return;renderFinance(r);marcaNuevo('SYS-FLUJO',r.summary);if(!sinSaldo(r))pulseCacheWrite('finance',r.summary,token);}
-    catch(error){if(!mismaSesion(token,ep))return;if(rechazoAcceso(error)){delete state.pulseCache.finance;c=null;}if(!c)renderPulseError('finance-card','finance-panel','Flujo');else marcarCacheFallo('finance-panel');}
+    try{var r=await window.YodFinance.load(token);if(!mismaSesion(token,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;renderFinance(r);marcaNuevo('SYS-FLUJO',r.summary);if(!sinSaldo(r))pulseCacheWrite('finance',r.summary,token);}
+    catch(error){if(!mismaSesion(token,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;if(rechazoAcceso(error)){delete state.pulseCache.finance;c=null;}if(!c)renderPulseError('finance-card','finance-panel','Flujo');else marcarCacheFallo('finance-panel');}
   }
   async function loadMarketing(token){
-    var ep=state.sesionEpoch;if(!mismaSesion(token,ep))return;
+    var ep=state.sesionEpoch;var readRevision=state.loadPlan?state.loadPlan.revision():null;if(!mismaSesion(token,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;
     var c=pulseCacheRead('marketing',token);
     if(c){renderMarketing({summary:c.summary});marcarCache('marketing-panel',c.ts);}
-    try{var r=await window.YodMarketing.load(token);if(!mismaSesion(token,ep))return;renderMarketing(r);marcaNuevo('SYS-MARKETING',r.summary);if(!sinKpis(r))pulseCacheWrite('marketing',r.summary,token);}
-    catch(error){if(!mismaSesion(token,ep))return;if(rechazoAcceso(error)){delete state.pulseCache.marketing;c=null;}if(!c)renderPulseError('marketing-card','marketing-panel','Embudo comercial');else marcarCacheFallo('marketing-panel');}
+    try{var r=await window.YodMarketing.load(token);if(!mismaSesion(token,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;renderMarketing(r);marcaNuevo('SYS-MARKETING',r.summary);if(!sinKpis(r))pulseCacheWrite('marketing',r.summary,token);}
+    catch(error){if(!mismaSesion(token,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;if(rechazoAcceso(error)){delete state.pulseCache.marketing;c=null;}if(!c)renderPulseError('marketing-card','marketing-panel','Embudo comercial');else marcarCacheFallo('marketing-panel');}
   }
   async function loadPulse(token){
-    if(!mismaSesion(token,state.sesionEpoch))return;
+    var ep=state.sesionEpoch;if(!mismaSesion(token,ep))return;
     var financeAllowed=state.role==='admin';var marketingAllowed=state.role==='admin'||window.YodAccessPolicy.hasCode(state.boards,'MK');
     var decisionsAllowed=state.role==='admin';
     // La matriz y El Despacho tienen codigo propio (MZ / DP): no cuelgan de admin,
@@ -984,7 +1015,7 @@
     var despachoAllowed=window.YodAccessPolicy.canOpen(state.boards,'SYS-DESPACHO',state.role);
     $('finance-card').classList.toggle('hidden',!financeAllowed);$('marketing-card').classList.toggle('hidden',!marketingAllowed);$('decision-card').classList.toggle('hidden',!decisionsAllowed);$('despacho-card').classList.toggle('hidden',!despachoAllowed);$('pulso').classList.toggle('hidden',!financeAllowed&&!marketingAllowed&&!decisionsAllowed&&!despachoAllowed);
     if(window.revisarPuertaEmbudo)window.revisarPuertaEmbudo();   // misma regla MK para la pestaña Métricas
-    var requests=[];if(financeAllowed)requests.push(coordinatedPortalLoad('finance',function(){return loadFinance(token);},enDespacho()?3:1,'finance'));if(marketingAllowed)requests.push(coordinatedPortalLoad('marketing',function(){return loadMarketing(token);},enDespacho()?3:1,'marketing'));await Promise.allSettled(requests);
+    var requests=[];if(financeAllowed)requests.push(coordinatedPortalLoad('finance',function(){return loadFinance(token);},enDespacho()?3:1,'finance'));if(marketingAllowed)requests.push(coordinatedPortalLoad('marketing',function(){return loadMarketing(token);},enDespacho()?3:1,'marketing'));var results=await Promise.allSettled(requests);if(mismaSesion(token,ep)&&results.some(function(r){return r.status==='rejected';}))state.homeDataEpoch=null;
   }
 
   (function(){

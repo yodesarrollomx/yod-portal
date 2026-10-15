@@ -302,6 +302,11 @@ if (open) {
   window.addEventListener('pagehide', () => {generation++; voice.abandon();workspace.dispose();delete window.YodVoiceWorkspace;});
   // Visibility alone is not a hangup; mobile permission prompts and app switching can hide the page.
   document.addEventListener('visibilitychange', () => {if (!document.hidden) void voice.refresh();});
+  window.addEventListener('yod-data-invalidated',()=>{
+    if(!dialog.open||document.hidden||active(voice.snapshot()))return;
+    if(chat.selection&&!chat.busy)void chat.refresh();
+    if(selection?.goals?.ready&&!goalReader.busy)void goalReader.read();
+  });
   node('station-reconnect').addEventListener('click',async()=>{
     node('station-reconnect').disabled=true;
     try{
