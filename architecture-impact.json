@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-15.oficina-283.1",
+  "model_revision": "2026-10-15.oficina-283.2",
   "proposal_id": "CHG-OFICINA-283-20261015",
   "summary": "Carga por etapas comprobadas, actividad fresca por agente y acceso directo a hablar; tarjetas compactas y encuadre panorámico por orientación. Reutilizar el pool temporal existente para evitar canjes duplicados de observadores, sin cache persistente, permisos nuevos ni porcentajes simulados.",
   "components": [

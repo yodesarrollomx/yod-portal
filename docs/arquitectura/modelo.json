@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-15.oficina-283.1",
+  "revision": "2026-10-15.oficina-283.2",
   "checked_at": "2026-10-15",
   "priorities": [
     "vender_mas",
@@ -12672,6 +12672,25 @@
       "rollback": "Revertir este cambio de selección y sus versiones de importación; conservar metas, historial, revisiones y permisos."
     },
     {
+      "id": "CHG-PRESENTATION-GUIDED-20261015",
+      "components": [
+        "SYS-PLAN-POTENCIAL",
+        "SYS-INVERSION",
+        "SYS-CONTROL"
+      ],
+      "status": "publicado",
+      "approval": "Dirección solicita conducir en tiempo real la presentación en celulares separados. Ajuste explícito: el invitado puede revisar hasta tres cuadros anteriores mientras mantiene el gesto, con resistencia creciente; nunca adelantarse y al soltar vuelve al conductor.",
+      "proposal": "Integrar sesiones efímeras en el mismo Sitio existente y conservar la presentación y su audiencia. El conductor publica progreso semántico secuenciado; el invitado lo recibe y adapta el encuadre a su pantalla. Base privada de estado técnico en runtime nativo de Sites, sin hojas nuevas ni usar Sheets como bus de movimiento. La revisión temporal del invitado queda local; sólo se comunica presencia/posición acotada al conductor. Enlace de invitado sólo lectura, cierre/expiración y recuperación del último estado. Primera integración en plan personalizado; extensión a carpeta comercial separada de la publicación inicial.",
+      "tests": [
+        "Dos navegadores independientes: avance, reversa, salto, llegada tardía, reconexión y orientación distinta.",
+        "Invitado: máximo tres cuadros hacia atrás, resistencia progresiva, nunca adelanta; mantener conserva revisión y soltar regresa al conductor vigente.",
+        "Servidor: identidad nativa para crear, capacidades separadas lectura/escritura, secuencia, expiración, cierre y versión del guion; cero escrituras de negocio durante QA.",
+        "Regresión del rotor, dibujos, A15 y chinches; pruebas y publicación separadas de aceptación en iPhone físico."
+      ],
+      "deployment": "Primer consumidor publicado en el mismo Sitio: versión16, fuente d16ec86fbc03dd0626b7480bf733dfc73c08cb0c, despliegue succeeded 15-oct-2026 17:23UTC. Runtime nativo con dos tablas técnicas D1 provisionadas y health200/ready. Documento y once activos servidos exactos; identidad anónima sin control y cabeceras de identidad no confiables rechazadas por plataforma. Ocho pruebas SQLite y dos parejas WebKit/Chromium con roles invertidos completan gesto, retorno, presencia, orientaciones, recarga, offline, chinches y cierre. Se conservan exactamente dibujo, rotor, transportes y compositor; sólo metadatos de edición del guion. No acredita primera sesión con SIWC real, latencia SSE hospedada ni aceptación táctil en iPhone físico. El invitado recupera instantánea periódica si no hay streaming. La integración de otras presentaciones queda pendiente; no se alteran sus motores, fuentes o calendarios.",
+      "rollback": "Revertir sólo la integración de presentación guiada a la versión previa del mismo Sitio. No borrar chinches, notas, versiones, datos originales ni cambiar audiencia o rutinas. Las sesiones expiran y se pueden cerrar sin tocar fuentes de negocio."
+    },
+    {
       "id": "CHG-OFICINA-283-20261015",
       "components": [
         "SYS-YOD-OS",
@@ -14507,6 +14526,31 @@
         "Mismo ID al recuperar pendientes; una respuesta ambigua sólo se concilia en lectura.",
         "No nuevos cron, reactivaciones, backend, Sheet ni cambios de ACL.",
         "Notas y capturas sólo en fuente privada. Exportaciones públicas conservan un marcador mínimo; frontera verificada antes de ingesta. La ventana del día no sustituye el historial de PRODUCCION."
+      ]
+    },
+    {
+      "id": "CTR-PRESENTATION-GUIDED",
+      "components": [
+        "SYS-PLAN-POTENCIAL",
+        "SYS-INVERSION",
+        "SYS-CONTROL"
+      ],
+      "source": "La misma presentación y versión publicada; la sesión sólo almacena estado técnico temporal. El plan y sus fuentes originales permanecen sin cambios.",
+      "input": [
+        "Conductor autenticado en la plataforma de alojamiento; versión, secuencia creciente, capítulo/cuadro y fracción del recorrido.",
+        "Invitado con capacidad de lectura y presencia efímera sin identidad personal compartida."
+      ],
+      "output": [
+        "Último estado del conductor con acuse y reloj del servidor; eventos de actualización y lectura de recuperación.",
+        "Margen local de revisión de hasta tres cuadros, retorno al soltar y estado de conexión visible."
+      ],
+      "invariants": [
+        "No transmitir scroll en píxeles, pantallas privadas, voz, notas de chinches ni credenciales YOD.",
+        "Invitado nunca puede publicar el estado del conductor; las capacidades de lectura y escritura son diferentes.",
+        "Posiciones atrasadas se descartan por secuencia y los saltos recuperan la versión exacta del guion.",
+        "Nunca extrapolar el dibujo del invitado más allá del conductor recibido.",
+        "Revisión acotada sólo durante el gesto; al soltar, cancelar, perder foco o salir vuelve al conductor vigente.",
+        "Conservar el Sitio, público, rotor, dibujos y notas; no modificar modelos financieros, cron o datos de negocio."
       ]
     }
   ],
@@ -16379,6 +16423,15 @@
       "prefix": "tests/medios-publicos.test.cjs",
       "components": [
         "SYS-SALA"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "docs/arquitectura/presentation-guided.md",
+      "components": [
+        "SYS-PLAN-POTENCIAL",
+        "SYS-INVERSION",
+        "SYS-CONTROL"
       ]
     },
     {
