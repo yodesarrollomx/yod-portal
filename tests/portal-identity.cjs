@@ -164,7 +164,7 @@ for (const [name, source, functionName] of [['app',appSource,'canjearConRelevo_'
     const calls = [], response = { ok: false, error: 'revocado' };
     const c = vm.createContext({
       ACCESO_LISTO: Promise.resolve(), window: { YOD_PORTERO: { original: 'original', respaldo: 'respaldo' } },
-      PORTERO_ORIGINAL: 'original', PORTERO_RESPALDO: 'respaldo', conLimite_: p => p,
+      PORTERO_ORIGINAL: 'original', PORTERO_RESPALDO: 'respaldo', AbortController:name==='app'?AbortController:undefined,conLimite_: p => p,
       fetch: async url => { calls.push(url);return { ok: true, status: 200, text: async () => JSON.stringify(response), json: async () => response }; }
     });vm.runInContext(fn(source,'rechazoAcceso')+'\n'+fn(source,functionName),c);
     assert.equal((await c[functionName]('synthetic')).error,'revocado');assert.equal(calls.length,1);
@@ -173,7 +173,7 @@ for (const [name, source, functionName] of [['app',appSource,'canjearConRelevo_'
     const calls = [], response = { ok: true, rol: 'vista', boards: 'TA' };
     const c = vm.createContext({
       ACCESO_LISTO: Promise.resolve(), window: { YOD_PORTERO: { original: 'original', respaldo: 'respaldo' } },
-      PORTERO_ORIGINAL: 'original', PORTERO_RESPALDO: 'respaldo', conLimite_: p => p,
+      PORTERO_ORIGINAL: 'original', PORTERO_RESPALDO: 'respaldo', AbortController:name==='app'?AbortController:undefined,conLimite_: p => p,
       fetch: async url => { calls.push(url);if(url.startsWith('original'))throw new Error('offline');return { ok: true, text: async () => JSON.stringify(response), json: async () => response }; }
     });vm.runInContext(fn(source,'rechazoAcceso')+'\n'+fn(source,functionName),c);
     assert.equal((await c[functionName]('synthetic')).ok,true);assert.equal(calls.length,2);
@@ -386,7 +386,7 @@ test('App: distingue fallos del canje con diagnóstico seguro y conserva autorid
   for(const kind of ['red','http','formato','timeout']){
     const logs=[],calls=[];
     const c=vm.createContext({Date,console:{warn:(...x)=>logs.push(x)},PORTERO_ORIGINAL:'original',PORTERO_RESPALDO:'backup',
-      conLimite_:p=>p,fetch:async(url)=>{calls.push(url);if(kind==='red')throw Error('private-token-in-exception');if(kind==='timeout')throw Error('timeout');return {ok:kind!=='http',status:kind==='http'?503:200,text:async()=>'<html>private-body</html>'};}});
+      AbortController,conLimite_:p=>p,fetch:async(url)=>{calls.push(url);if(kind==='red')throw Error('private-token-in-exception');if(kind==='timeout')throw Error('timeout');return {ok:kind!=='http',status:kind==='http'?503:200,text:async()=>'<html>private-body</html>'};}});
     vm.runInContext(fn(appSource,'rechazoAcceso')+'\n'+fn(appSource,'canjearConRelevo_'),c);
     const r=await c.canjearConRelevo_('private-token');assert.equal(r.error,kind);assert.equal(calls.length,2);
     assert.equal(logs[0][1].length,2);assert.equal(logs[0][1][0].codigo,kind);
@@ -398,9 +398,57 @@ test('App: distingue fallos del canje con diagnóstico seguro y conserva autorid
 });
 test('App: fallo primario conserva diagnóstico aunque respaldo rechace y puede recuperar sin aviso falso',async()=>{
   for(const backupOk of [false,true]){
-    let n=0;const logs=[];const c=vm.createContext({Date,console:{warn:(...a)=>logs.push(a)},PORTERO_ORIGINAL:'original',PORTERO_RESPALDO:'backup',conLimite_:p=>p,
+    let n=0;const logs=[];const c=vm.createContext({Date,console:{warn:(...a)=>logs.push(a)},PORTERO_ORIGINAL:'original',PORTERO_RESPALDO:'backup',AbortController,conLimite_:p=>p,
       fetch:async()=>{if(!n++)throw Error('network');return {ok:true,status:200,text:async()=>JSON.stringify(backupOk?{ok:true,token:'synthetic',rol:'vista',boards:'TA'}:{ok:false,error:'revocado'})};}});
     vm.runInContext(fn(appSource,'rechazoAcceso')+'\n'+fn(appSource,'canjearConRelevo_'),c);
     const r=await c.canjearConRelevo_('synthetic');assert.equal(r.ok,backupOk);assert.equal(logs.length,backupOk?0:1);if(!backupOk)assert.equal(r.error,'red');
   }
+});
+
+function abortCanjeHarness(source=appSource){
+  const timers=new Map(),calls=[],logs=[];let serial=0,active=0,peak=0;
+  const c=vm.createContext({AbortController,Date,Promise,Error,LIMITE_MS:25000,
+    PORTERO_ORIGINAL:'original',PORTERO_RESPALDO:'backup',console:{warn:(...a)=>logs.push(a)},
+    setTimeout(f,ms){const id=++serial;timers.set(id,{f,ms});return id;},clearTimeout(id){timers.delete(id);},
+    fetch(url,options){
+      const d=deferred();active++;peak=Math.max(peak,active);
+      let done=false;const finish=f=>v=>{if(!done){done=true;active--;}f(v);};
+      const call={url,signal:options.signal,resolve:finish(d.resolve),reject:finish(d.reject)};calls.push(call);
+      if(options.signal)options.signal.addEventListener('abort',()=>call.reject(Object.assign(new Error('aborted'),{name:'AbortError'})),{once:true});
+      return d.promise;
+    }
+  });
+  vm.runInContext(fn(source,'conLimite_')+'\n'+fn(source,'rechazoAcceso')+'\n'+fn(source,'canjearConRelevo_'),c);
+  return {c,timers,calls,logs,get active(){return active;},get peak(){return peak;},expire(){const [id,t]=timers.entries().next().value;timers.delete(id);assert.equal(t.ms,25000);t.f();}};
+}
+const flushCanje=()=>new Promise(resolve=>setImmediate(resolve));
+test('App: canje vencido cancela original antes del respaldo, sin acumulación en 20 rondas',async()=>{
+  const h=abortCanjeHarness();
+  for(let round=0;round<20;round++){
+    const p=h.c.canjearConRelevo_('synthetic');
+    h.expire();await flushCanje();
+    assert.equal(h.calls.at(-2).signal.aborted,true);
+    assert.equal(h.active,1);assert.equal(h.timers.size,1);
+    h.expire();const r=await p;
+    assert.equal(r.error,'timeout');assert.equal(h.active,0);assert.equal(h.timers.size,0);
+    assert.equal(h.calls.at(-1).signal.aborted,true);
+    assert.deepEqual(h.logs.at(-1)[1].map(x=>x.codigo).join(','),'timeout,timeout');
+  }
+  assert.equal(h.peak,1);assert.equal(new Set(h.calls.map(x=>x.signal)).size,40);
+});
+test('App: éxito/error de red limpia temporizador y no aborta respuesta válida después',async()=>{
+  for(const primaryFails of [false,true]){
+    const h=abortCanjeHarness(),p=h.c.canjearConRelevo_('synthetic');
+    if(primaryFails){h.calls[0].reject(new Error('network'));await flushCanje();assert.equal(h.timers.size,1);}
+    h.calls.at(-1).resolve({ok:true,status:200,text:async()=>JSON.stringify({ok:true,rol:'vista',boards:'TA'})});
+    assert.equal((await p).ok,true);assert.equal(h.timers.size,0);assert.equal(h.active,0);
+    assert.ok(h.calls.every(x=>!x.signal.aborted));assert.equal(h.logs.length,0);
+  }
+});
+test('App: timeout primario puede recuperar con respaldo fresco sin revocar identidad',async()=>{
+  const h=abortCanjeHarness(),p=h.c.canjearConRelevo_('synthetic');
+  h.expire();await flushCanje();
+  h.calls[1].resolve({ok:true,status:200,text:async()=>JSON.stringify({ok:true,rol:'vista',boards:'TA'})});
+  assert.equal((await p).ok,true);assert.equal(h.active,0);assert.equal(h.timers.size,0);assert.equal(h.logs.length,0);
+  assert.equal(h.calls[0].signal.aborted,true);assert.equal(h.calls[1].signal.aborted,false);
 });

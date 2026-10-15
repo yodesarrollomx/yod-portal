@@ -34,7 +34,13 @@
      Antes el relevo se pegaba en localStorage y, al reactivarse Google, el
      navegador seguía en el respaldo (que no conoce correos ni login de Google). */
   try{localStorage.removeItem('pyod_portero');}catch(e){}
-  function conLimite_(p,ms){return Promise.race([p,new Promise(function(_,rj){setTimeout(function(){rj(new Error('timeout'));},ms||LIMITE_MS);})]);}
+  function conLimite_(p,ms,cancelar){
+    var timer;
+    return Promise.race([p,new Promise(function(_,rj){timer=setTimeout(function(){
+      // Fijar timeout antes de abortar: AbortError no debe ocultar el diagnóstico.
+      rj(new Error('timeout'));if(cancelar)cancelar();
+    },ms||LIMITE_MS);})]).finally(function(){clearTimeout(timer);});
+  }
   // El Portero (Apps Script) hoy tarda entre 3 y 25 s: esperar 12 s lo daba por muerto
   // y el OS se ponía «Sin conexión» con el backend vivo. 25 s + reintento en fondo.
   var LIMITE_MS=25000, LIMITE_FRIO_MS=75000, REINTENTO_MS=15000, REINTENTOS_MAX=3;
@@ -44,7 +50,8 @@
     async function intenta(base,origen){
       var inicio=Date.now(),fase='cabeceras',status=0,codigo='red';
       try{
-        var r=await conLimite_(fetch(base+'?recurso=canje&t='+encodeURIComponent(token),{cache:'no-store',credentials:'omit'}));
+        var controller=new AbortController();
+        var r=await conLimite_(fetch(base+'?recurso=canje&t='+encodeURIComponent(token),{cache:'no-store',credentials:'omit',signal:controller.signal}),undefined,function(){controller.abort();});
         status=Number(r.status)||0;
         if(r.status===401||r.status===403){codigo='http';return {ok:false,error:'HTTP '+r.status};}
         if(r.ok===false){codigo='http';return {ok:false,error:'http'};}

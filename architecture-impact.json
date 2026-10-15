@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-15.canje-diagnostico.2",
-  "proposal_id": "CHG-CANJE-DIAGNOSTICO-283",
-  "summary": "Distinguir fallos del canje con códigos/fase/duración seguros. No cambiar permisos, reintentos, plazos ni backend.",
+  "model_revision": "2026-10-15.canje-abort.1",
+  "proposal_id": "CHG-CANJE-ABORT-283",
+  "summary": "Cancelar fetch de canje al vencer plazo de cabeceras y limpiar temporizadores. Conserva plazo, respaldo, autoridad y reintentos. No cancela ejecución servidor ni limita aún cuerpo.",
   "components": [
     "SYS-YOD-OS",
     "GAS-PORTERO",
@@ -19,5 +19,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir diagnóstico y cache-bump del frontend; sin cambios en datos/backend."
+  "rollback": "Revertir cancelación y cache-bump frontend; sin cambios backend/datos."
 }
