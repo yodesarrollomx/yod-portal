@@ -1,14 +1,12 @@
 {
-  "model_revision": "2026-10-15.sala-correcciones.1",
-  "proposal_id": "CHG-SALA-CORRECCIONES-20261015",
-  "summary": "Congelar pieza, propuesta, lámina, versión y toma al abrir la anotación; revisar dictado antes de clavar. Conservar ID y checkpoint previo a envío, distinguir local/recibido/incierto/rechazado sin repetir append ambiguo. Las aprobaciones conservan el circuito exclusivo de editores. Cerrar un issue no acredita cumplimiento: exigir evidencia verificable y mostrar entrega/revisión por separado.",
+  "model_revision": "2026-10-15.sala-evaluacion.1",
+  "proposal_id": "CHG-SALA-EVALUACION-20261015",
+  "summary": "Completar preselección local de hasta dos finalistas por editor, propuesta y versión, sin emitir votos ni trabajos. Separar láminas preparadas de tomas obtenidas en la telemetría Mesa, conservando alias históricos. La evaluación real de calidad/tiempo/costo/fallos no acredita aceptación editorial ni habilita autonomía nueva.",
   "components": [
     "SYS-SALA",
-    "SYS-YOD-OS",
-    "GAS-SALA",
-    "SHEET-SALA",
+    "SVC-SALA-PRODUCTOR",
     "EXT-ACTIONS",
-    "SYS-DESPACHO"
+    "SYS-YOD-OS"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -18,5 +16,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir PR conservando cola, IndexedDB, historial, recibos, issues y datos. No reenviar estados inciertos."
+  "rollback": "Revertir PR conservando preselecciones locales, decisiones, cola, recibos y medios. No cambiar backend ni cuotas."
 }
