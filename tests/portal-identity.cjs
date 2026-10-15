@@ -452,3 +452,36 @@ test('App: timeout primario puede recuperar con respaldo fresco sin revocar iden
   assert.equal((await p).ok,true);assert.equal(h.active,0);assert.equal(h.timers.size,0);assert.equal(h.logs.length,0);
   assert.equal(h.calls[0].signal.aborted,true);assert.equal(h.calls[1].signal.aborted,false);
 });
+
+test('App: un único plazo cubre cuerpo atascado y cancela ambos intentos en20 rondas',async()=>{
+  for(let round=0;round<20;round++){
+    const h=abortCanjeHarness();let bodies=0,aborted=0;
+    const p=h.c.canjearConRelevo_('synthetic');
+    for(let i=0;i<2;i++){
+      const call=h.calls[i],timerId=[...h.timers.keys()][0];
+      call.resolve({ok:true,status:200,text:()=>new Promise((_,reject)=>{
+        bodies++;call.signal.addEventListener('abort',()=>{bodies--;aborted++;reject(Object.assign(Error('aborted'),{name:'AbortError'}));},{once:true});
+      })});
+      await flushCanje();
+      assert.equal(h.timers.size,1);assert.equal([...h.timers.keys()][0],timerId,'recibir headers no reinicia ni limpia plazo');
+      h.expire();await flushCanje();assert.equal(bodies,0);
+    }
+    assert.equal((await p).error,'timeout');assert.equal(aborted,2);assert.equal(h.timers.size,0);
+    assert.equal(h.logs[0][1].map(x=>x.fase).join(','),'cuerpo,cuerpo');
+    assert.equal(h.logs[0][1].map(x=>x.codigo).join(','),'timeout,timeout');
+  }
+});
+test('App: cuerpo tardío que ignora abort no sustituye éxito del respaldo ni altera diagnóstico',async()=>{
+  const h=abortCanjeHarness(),late=deferred(),p=h.c.canjearConRelevo_('synthetic');
+  h.calls[0].resolve({ok:true,status:200,text:()=>late.promise});await flushCanje();h.expire();await flushCanje();
+  h.calls[1].resolve({ok:true,status:200,text:async()=>JSON.stringify({ok:true,token:'synthetic',nombre:'backup',rol:'vista',boards:'TA'})});
+  const result=await p;assert.equal(result.nombre,'backup');assert.equal(h.timers.size,0);
+  late.resolve(JSON.stringify({ok:true,nombre:'late-original',rol:'admin',boards:'*'}));await flushCanje();
+  assert.equal(result.nombre,'backup');assert.equal(h.logs.length,0);
+});
+test('App: fallo al leer cuerpo conserva diagnóstico red y recupera respaldo',async()=>{
+  const h=abortCanjeHarness(),p=h.c.canjearConRelevo_('synthetic');
+  h.calls[0].resolve({ok:true,status:200,text:async()=>{throw Error('network-body');}});await flushCanje();
+  h.calls[1].resolve({ok:true,status:200,text:async()=>JSON.stringify({ok:false,error:'revocado'})});
+  assert.equal((await p).error,'red');assert.equal(h.logs[0][1][0].fase,'cuerpo');assert.equal(h.timers.size,0);
+});

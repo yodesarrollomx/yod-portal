@@ -51,14 +51,20 @@
       var inicio=Date.now(),fase='cabeceras',status=0,codigo='red';
       try{
         var controller=new AbortController();
-        var r=await conLimite_(fetch(base+'?recurso=canje&t='+encodeURIComponent(token),{cache:'no-store',credentials:'omit',signal:controller.signal}),undefined,function(){controller.abort();});
-        status=Number(r.status)||0;
-        if(r.status===401||r.status===403){codigo='http';return {ok:false,error:'HTTP '+r.status};}
-        if(r.ok===false){codigo='http';return {ok:false,error:'http'};}
-        fase='cuerpo';var raw=await r.text();fase='formato';
-        var data;try{data=JSON.parse(raw);}catch(_e){codigo='formato';return {ok:false,error:'formato'};}
-        if(!data||typeof data!=='object'){codigo='formato';return {ok:false,error:'formato'};}
-        codigo=data.ok?'ok':'rechazo';return data;
+        // El mismo plazo cubre cabeceras y cuerpo; no se reinicia al recibir headers.
+        return await conLimite_((async function(){
+          var r=await fetch(base+'?recurso=canje&t='+encodeURIComponent(token),{cache:'no-store',credentials:'omit',signal:controller.signal});
+          if(controller.signal.aborted)throw new Error('timeout');
+          status=Number(r.status)||0;
+          if(r.status===401||r.status===403){codigo='http';return {ok:false,error:'HTTP '+r.status};}
+          if(r.ok===false){codigo='http';return {ok:false,error:'http'};}
+          fase='cuerpo';var raw=await r.text();
+          if(controller.signal.aborted)throw new Error('timeout');
+          fase='formato';
+          var data;try{data=JSON.parse(raw);}catch(_e){codigo='formato';return {ok:false,error:'formato'};}
+          if(!data||typeof data!=='object'){codigo='formato';return {ok:false,error:'formato'};}
+          codigo=data.ok?'ok':'rechazo';return data;
+        })(),undefined,function(){controller.abort();});
       }catch(e){codigo=e&&e.message==='timeout'?'timeout':'red';return {ok:false,error:codigo};}
       finally{diagnostico.push({origen:origen,fase:fase,codigo:codigo,http:status,duracion_ms:Math.max(0,Date.now()-inicio)});}
     }
