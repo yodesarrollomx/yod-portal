@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-10-15.presentation-pins-ingest.1",
   "proposal_id": "CHG-PRESENTATION-PINS-INGEST-20261015",
-  "summary": "Registrar antes de implementar la ingesta de chinches de presentaciones al circuito Sala existente; sólo contrato, fuente privada, relevo limitado, recibos y revisión. Incluye proyección pública mínima, guardia de exportaciones y verificación previa de consumidores.",
+  "summary": "Registrar código y publicaciones comprobados del contrato de chinches compartidas, preservando límites de recepción privada, adopción parcial y todos los contratos vigentes. Sólo metadatos/documentación; no cambia rutas, horarios, negocio o permisos.",
   "components": [
     "SYS-INVERSION",
     "SYS-YOD-OS",
