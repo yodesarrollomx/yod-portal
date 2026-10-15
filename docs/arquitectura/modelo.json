@@ -12836,7 +12836,8 @@
         "SYS-YOD-OS",
         "GAS-SALA",
         "SHEET-SALA",
-        "EXT-ACTIONS"
+        "EXT-ACTIONS",
+        "SYS-DESPACHO"
       ],
       "status": "propuesto",
       "authorization": "Dirección: adelante con el paso 4; completar correcciones por voz/chinches y aprobación explícita.",
@@ -14707,7 +14708,8 @@
         "SYS-YOD-OS",
         "GAS-SALA",
         "SHEET-SALA",
-        "EXT-ACTIONS"
+        "EXT-ACTIONS",
+        "SYS-DESPACHO"
       ],
       "source": "Decisiones autenticadas en Sheet; chinches locales y bandeja privada PRODUCCION.",
       "input": [
@@ -16618,6 +16620,15 @@
       "prefix": "scripts/probar-carga283-browser.cjs",
       "components": [
         "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/chinche-dictado.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-SALA"
       ]
     }
   ],

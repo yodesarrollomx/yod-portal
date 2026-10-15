@@ -914,7 +914,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 ## CTR-SALA-CORRECCIONES
 
-- Componentes: SYS-SALA, SYS-YOD-OS, GAS-SALA, SHEET-SALA, EXT-ACTIONS.
+- Componentes: SYS-SALA, SYS-YOD-OS, GAS-SALA, SHEET-SALA, EXT-ACTIONS, SYS-DESPACHO.
 - Evidencia: Decisiones autenticadas en Sheet; chinches locales y bandeja privada PRODUCCION..
 - Entrada/campos: `ID estable, texto revisado, identidad de pieza/propuesta/lámina/versión/toma capturada antes del dictado.`.
 - Salida: Recibo del transporte o pendiente explícito; entrega técnica verificable separada de aprobación editorial..

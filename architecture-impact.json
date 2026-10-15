@@ -7,7 +7,8 @@
     "SYS-YOD-OS",
     "GAS-SALA",
     "SHEET-SALA",
-    "EXT-ACTIONS"
+    "EXT-ACTIONS",
+    "SYS-DESPACHO"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
