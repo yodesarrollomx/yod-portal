@@ -56,8 +56,8 @@ test('P3: mutations and session minting remain outside the coordinator, without 
  for(const method of ['enqueue','createGoal','reviewGoal','recordVisit','mintFastSession'])await p.readCase(method,payload,'send',()=>{calls++;},current);
  assert.equal(calls,5);assert.equal(p.snapshot().active,0);p.revoke();
 });
-test('P3: default boot does not import or start the new runtime',async()=>{
- const c=vm.createContext({});vm.runInContext(fs.readFileSync('os/load-config.js','utf8'),c);vm.runInContext(fs.readFileSync('os/load-plan-boot.js','utf8'),c);
+test('P5: activation is static and rollback does not import or start the runtime',async()=>{
+ const c=vm.createContext({});vm.runInContext(fs.readFileSync('os/load-config.js','utf8'),c);assert.equal(c.YodLoadConfig.enabled,true);assert.equal(Object.isFrozen(c.YodLoadConfig),true);c.YodLoadConfig={enabled:false};vm.runInContext(fs.readFileSync('os/load-plan-boot.js','utf8'),c);
  assert.equal(c.YodLoadConfig.enabled,false);assert.equal(await c.YodLoadPlanReady,null);
 });
 function bridge(p,{fallback=false}={}){

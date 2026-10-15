@@ -177,3 +177,33 @@ cambio de sesión, invalidación durante lectura, conflicto, límite de memoria,
 TTL por recurso, caída de líder, offline/visibility y señales extranjeras.
 La parte 6 comprobará activación y recorrido completo con este modo habilitado;
 las regresiones existentes mantienen el interruptor apagado.
+
+## P5 · recursos y operación activa (15 octubre 2026)
+
+Dirección autorizó explícitamente «actival y continua a la 5». Sustituye la
+espera anterior hasta P6 para activar el coordinador P2–P4 ya verificado.
+P6 conserva la medición comparativa y validación general, sin porcentajes
+anticipados de mejora.
+
+- `load-config.js` activa el coordinador estáticamente. Reversión: `enabled:false`
+  y nueva versión del script; nunca por URL o almacenamiento del cliente.
+- `frame-budget.mjs` es dueño exclusivamente de los cuadros visuales: hasta
+  60 fps normal, 30 en presupuesto compacto y 15 con el puesto superpuesto.
+  Son topes, no rendimiento medido. Ocultar o perder contexto cancela el RAF;
+  volver restaura un único ciclo y conserva el estado de cámara/selección.
+- No se modifican audio, micrófono, renovación de sesión, contratos de voz
+  ni ejecución remota. El presupuesto no llama a ninguna de esas capacidades.
+- El observador deja de programar temporizadores mientras no sea visible/online;
+  volver solicita una lectura, compartiendo el vuelo existente. Un observador
+  sigue siendo lector: no inicia, reanuda ni cancela trabajos.
+- Las texturas existentes mantienen una captura decodificada por pantalla y
+  sustitución por identidad de ejecución; se conserva la liberación de imágenes
+  pendientes y textura al retirar la oficina. Entorno y renderer se liberan
+  al salir. No hay nueva caché persistente ni descarga especulativa de expedientes.
+- La oficina accesible existente sigue disponible cuando WebGL falla; no se
+  elimina diseño ni se oculta contenido para aparentar menor tiempo de carga.
+
+Pruebas sintéticas: topes durante 120 cuadros, pausa/retorno/contexto perdido,
+cancelación al retirar, cero temporizadores de observación ocultos y un vuelo
+al despertar. Suite 776 PASS antes de publicación. Producción y mediciones
+reales se acreditan con recibos separados; los tests no las sustituyen.

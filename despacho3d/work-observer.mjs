@@ -94,9 +94,9 @@ export function createWorkObserver({request,getSelection,onChange=()=>{},now=Dat
  function emit(){onChange(copy());for(const fn of listeners)fn(copy());}
  function clear(){cachedImage=null;generation++;cancel(timer);timer=null;flight=null;state={phase:'unauthorized',case_id:null,work:null,screen:null,image:null};emit();}
  function select(){const id=getSelection()?.case_id;if(id===state.case_id)return;if(!id){clear();return;}clear();state={...state,phase:'loading',case_id:id};emit();void refresh();}
- function later(){cancel(timer);if(!disposed&&state.case_id)timer=schedule(()=>{timer=null;void refresh();},['working','tool'].includes(state.work?.phase)?5000:12000);}
+ function later(){cancel(timer);if(!disposed&&state.case_id&&isVisible())timer=schedule(()=>{timer=null;void refresh();},['working','tool'].includes(state.work?.phase)?5000:12000);}
  async function refresh(){
-  if(disposed||flight)return;if(!isVisible()){later();return;}
+  if(disposed||flight)return;if(!isVisible()){cancel(timer);timer=null;return;}
   const caseId=getSelection()?.case_id;if(caseId!==state.case_id){select();return;}if(!caseId)return;
   const own=generation;flight={generation:own};
   const valid=()=>!disposed&&own===generation&&getSelection()?.case_id===caseId;
@@ -126,5 +126,5 @@ export function createWorkObserver({request,getSelection,onChange=()=>{},now=Dat
    return validateWorkHistory(raw,caseId,options);
   }catch(error){if(valid()&&['unauthorized','forbidden'].includes(error?.message))clear();throw error;}
  }
- return{select,refresh,history,snapshot:copy,subscribe(fn){listeners.add(fn);fn(copy());return()=>listeners.delete(fn);},dispose(){disposed=true;clear();cachedImage=null;listeners.clear();}};
+ return{select,refresh,history,visibilityChanged(){cancel(timer);timer=null;if(isVisible())void refresh();},snapshot:copy,subscribe(fn){listeners.add(fn);fn(copy());return()=>listeners.delete(fn);},dispose(){disposed=true;clear();cachedImage=null;listeners.clear();}};
 }

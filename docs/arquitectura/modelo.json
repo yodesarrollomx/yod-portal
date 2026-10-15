@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-15.despacho-v2-p4.1",
+  "revision": "2026-10-15.despacho-v2-p5.1",
   "checked_at": "2026-10-15",
   "priorities": [
     "vender_mas",
@@ -12959,6 +12959,28 @@
       ],
       "deployment": "Propuesta registrada antes de implementar. Sin activación ni backend nuevo.",
       "rollback": "Interruptor de P3 apagado conserva camino anterior; ningún dato o permiso migrado."
+    },
+    {
+      "id": "CHG-DESPACHO-V2-P5",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE",
+        "EXT-DRIVE"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección: actival y continua a la 5, 15 octubre 2026. Autoriza activación P2–P4 y P5.",
+      "proposal": "Activación autorizada P2–P4; P5 presupuesto de frames, pausa visual y observación sin detener voz o agentes.",
+      "tests": [
+        "Pruebas sintéticas de frames, suspensión, retorno, pérdida de contexto y observación de agentes; suite completa y navegadores."
+      ],
+      "deployment": "Propuesta antes de implementación; publicación pendiente de verificaciones.",
+      "rollback": "Interruptor de P3 apagado conserva camino anterior; ningún dato o permiso migrado."
     }
   ],
   "data_contracts": [
@@ -16862,6 +16884,20 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO-3D",
         "GAS-PORTERO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/frame-budget.mjs",
+      "components": [
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/frame-budget.test.cjs",
+      "components": [
+        "SYS-DESPACHO-3D"
       ]
     }
   ],

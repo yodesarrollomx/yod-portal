@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-15.despacho-v2-p4.1",
-  "proposal_id": "CHG-DESPACHO-V2-P4",
-  "summary": "Continuidad opt-in: vigencia en memoria por recurso, invalidación con barrera de revisión, conciliación de escrituras inciertas y señales no sensibles entre pestañas; regreso online/móvil agrupado sin desmontar voz.",
+  "model_revision": "2026-10-15.despacho-v2-p5.1",
+  "proposal_id": "CHG-DESPACHO-V2-P5",
+  "summary": "Activación autorizada P2–P4; P5 presupuesto de frames, pausa visual y observación sin detener voz o agentes.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
