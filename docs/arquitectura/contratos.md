@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-14.investor-gesture.2 · 2026-10-14.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.sala-nube.1 · 2026-10-15.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -573,8 +573,8 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 - Componentes: SYS-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, SYS-MARKETING, EXT-ACTIONS, EXT-DRIVE.
 - Evidencia: Propuesta central aprobada en 93afbea366c19872bfb855463afece2ac73eeb08, instrucción de Dirección del 2026-10-11; implementada en Sala PR265 y Marketing PR76/77; ejecución real de ambos publicadores registrada el 11-oct-2026..
-- Entrada/campos: `Código aprobado de main; outputs públicos declarados por proceso; último snapshot publicado e inmutable`, `Identidad automática del workflow del mismo repositorio; nunca credenciales del conector`, `Motor elegido, warnings y comprobación real del archivo para medios; producción CPU no es animación generativa LTX`.
-- Salida: Release en borrador privado con ZIP de datos públicos acumulados, SHA256 y manifiesto de archivos, Pages con recibo version-online.json: code_sha, data_sha, snapshot_id y run_id exactos, Estado publicado sólo tras comprobar el recibo del sitio; montaje sólo con archivo/hash en versión publicada, Revisión diaria agregada de colas y rutinas; lecturas rechazadas representadas como errores, no ceros, Marketing: rama datos-online contiene únicamente agregados públicos, portadas y recibo; el frontend aprobado en Pages los consulta por raw.githubusercontent.com..
+- Entrada/campos: `Código aprobado de main; outputs públicos declarados por proceso; último snapshot publicado e inmutable`, `Identidad automática del workflow del mismo repositorio; nunca credenciales del conector`, `Motor elegido, warnings y comprobación real del archivo para medios; producción CPU no es animación generativa LTX`, `Snapshots históricos conservados y deltas nuevos con manifiesto, padre, hashes y replay verificables; identidad real de Actions con run_id y run_attempt.`, `Presupuesto técnico configurado para archivos y bytes que llegarán a Pages; validación previa a la publicación.`, `Despliegue en dos fases: lectores compatibles v1/v2 primero; emisión v1 predeterminada y SALA_SNAPSHOT_INCREMENTAL=1 sólo tras comprobar drenaje de ejecuciones/consumidores anteriores.`.
+- Salida: Release en borrador privado con ZIP de datos públicos acumulados, SHA256 y manifiesto de archivos, Pages con recibo version-online.json: code_sha, data_sha, snapshot_id y run_id exactos, Estado publicado sólo tras comprobar el recibo del sitio; montaje sólo con archivo/hash en versión publicada, Revisión diaria agregada de colas y rutinas; lecturas rechazadas representadas como errores, no ceros, Marketing: rama datos-online contiene únicamente agregados públicos, portadas y recibo; el frontend aprobado en Pages los consulta por raw.githubusercontent.com., Restauración acumulativa compatible con el histórico y sus deltas; ninguna ausencia en un delta borra archivos anteriores., Recibo de snapshot y de publicación ligados a su ejecución e intento; escritura remota incierta conciliada antes de volver a crearla..
 
 - Cambios de código pasan por PR y las comprobaciones existentes. Publicar datos validados es un contrato nuevo; nunca integrar los PR anteriores del bot omitiendo CI.
 - ZIP sólo admite los prefijos públicos de cada repositorio, sin secretos, leads, URLs privadas, symlinks, traversal, datos de Sheets ni archivos arbitrarios.
@@ -584,6 +584,12 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Nunca autoaprobar editoriales ni enviar/publicar contenido a terceros. Prueba técnica no registra un proyecto o producción ficticia en Sheets.
 - Si una API devuelve ok:false o error, conservar el backup anterior y mostrar fallo. HTTP200 no equivale a lectura válida.
 - La rama pública de datos no contiene código, credenciales, leads o registros nuevos de clientes. Una escritura del bot en esa rama publica únicamente datos validados; main conserva protecciones, PR y CI.
+- Mantener lectura compatible de snapshots históricos; un delta valida su padre y manifiesto antes del replay. No reescribir bases ni inferir un borrado por archivo ausente.
+- El propietario del mutex incluye run_id y run_attempt reales. Otra ejecución o intento no puede apropiarse de un lease activo por compartir run_id; liberación, recuperación y reintento requieren comprobar propietario y estado remoto.
+- Un ACK perdido de lease, release o activo no autoriza duplicarlo: releer la referencia y contrastar identidad, contenido y hash; conflicto o prueba insuficiente conserva fallo explícito.
+- Comprobar el presupuesto técnico de Pages antes de construir/publicar la salida. Exceso conserva el último sitio confirmado y medios históricos; no recortar o borrar contenido aprobado para aparentar éxito.
+- La emisión incremental queda apagada por defecto. Activar SALA_SNAPSHOT_INCREMENTAL=1 sólo después de publicar el lector v1/v2 y acreditar el drenaje de ejecuciones con lectores antiguos. El código integrado no acredita por sí solo ese drenaje.
+- Para revertir después de emitir deltas, generar y comprobar un snapshot completo v1 mediante el lector v2 antes de revertir lectores o publicador; conservar las bases y los deltas originales.
 
 ## CTR-PLAN-AGREGADOS-ONLINE
 
@@ -618,7 +624,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Componentes: SYS-YOD-OS, SYS-SALA, GAS-SALA, SHEET-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-ACTIONS, EXT-DRIVE, EXT-GMAIL.
 - Evidencia: Backend original de Sala, reglas/colas vivas, rutinas Actions autorizadas y archivos originales privados; las fuentes del editor original no se presumen a partir de su espejo. Implementación PR270/271 y run38166137118 con acuses privados y183 pruebas. Se distingue correo registrado/entrada aceptada de recepción; comparación parcial explícita..
 - Entrada/campos: `Identidad agente existente, cuenta de servicio Drive actual y token propio de Actions; nunca credenciales del conector ni llaves editoriales.`, `Autorización de Dirección para poner Sala en nube y volver a probar su correo; destinatario fijo de la configuración existente, sin parámetro de destinatario en el worker.`, `Último material original recuperable y su receta/guion; comparación técnica aislada sin escribir decisiones o proyectos ficticios.`.
-- Salida: Acuse privado de antes/después de configuración técnica y horario de correo, con conteos/hash y resumen público sin IDs o credenciales., Correo solicitado sólo mediante el backend existente. ok:true/bitácora acreditan únicamente el alcance observado; recepción requiere prueba separada., Archivos de comparación en Drive privado, byte/hash verificados; publicación del tablero sólo con snapshots y código aprobados..
+- Salida: Acuse privado de antes/después de configuración técnica y horario de correo, con conteos/hash y resumen público sin IDs o credenciales., Correo solicitado sólo mediante el backend existente. ok:true/bitácora acreditan únicamente el alcance observado; recepción requiere prueba separada., Archivos de comparación en Drive privado, byte/hash verificados; publicación del tablero sólo con snapshots y código aprobados., Correo e informe distinguen decisiones históricas fusionadas, pendientes editoriales, trabajos producidos y publicación confirmada; un listado actual vacío no equivale a ausencia de decisiones..
 
 - El agente no decide ni autoaprueba. Alejandro y Sayri conservan veto igual y ninguna pieza avanza con petición abierta.
 - Reprogramar sólo el handler correoDiario con su zona original. No llamar instalar(), rotar claves o alterar triggers ajenos.
@@ -628,6 +634,9 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - No presentar una prueba CPU/parallax como video generativo LTX ni equivalencia visual aceptada. Todo material regenerado conserva procedencia propia y no sustituye el original.
 - Si no se acredita una facultad, se registra el pendiente exacto. No cancelar las rutinas anteriores de Claude por un diagnóstico parcial.
 - Sólo rutinas Sala declaradas en allowlist pueden habilitarse, sin PPP ni supervisores cancelados. Revisión diaria debe distinguir schedule declarado, workflow activo y última ejecución real.
+- Producido exige un resultado durable; publicado exige el recibo exacto de la versión accesible. Los conteos y el correo no intercambian estos estados.
+- Una lectura fallida se declara incompleta, conservando el último dato acreditado, nunca como cero ni como ausencia de publicaciones. La fuente .gs editada y su implementación activa se comprueban por separado.
+- El push del workflow de cierre no envía entradas de correo ni repite la comparación histórica. Las opciones manuales explícitas existentes siguen disponibles bajo la autorización y contratos vigentes; no se infieren de un push.
 
 ## CTR-SALUD-ACCESOS
 
@@ -695,6 +704,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Montaje recibe sólo la identidad de Actions de su propio repositorio para leer el snapshot privado; un fallo de lectura/hash/post detiene el paso, también a través de tee.
 - Una generación sin montar no sustituye la fuente activa del Sheet. Reutilizar sólo con las mismas referencias aprobadas; cambio de referencia crea otra versión, sin pisar archivos.
 - mesa-estado.json se declara por nombre exacto entre los outputs de Mesa; nunca ampliar el permiso al directorio entero de datos.
+- Los resúmenes y correos conservan el contexto de decisiones históricas fusionadas, aun si la mesa sólo presenta lo que falta responder. Distinguir encolado, producido durable y publicado con recibo comprobado.
 
 ## CTR-SALA-VETO-MODELO-IMAGEN
 
@@ -779,3 +789,27 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Mismo Sheet, IDs y contrato de guardado. Las participaciones comerciales continúan separadas.
 - Fuentes verificadas se importan de forma idempotente por clave fuente/caso/hecho, sin alterar próximo paso ni fecha.
 - No se envían invitaciones ni mensajes externos. Los clics de consulta no crean avances ficticios.
+
+## CTR-SALA-TRANSPORTE-NUBE
+
+- Componentes: SYS-SALA, GAS-SALA, SHEET-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-ACTIONS.
+- Evidencia: Ampliación técnica autorizada en CHG-SALA-NUBE-20261015, registrada antes de implementar el cliente de la Sala existente..
+- Entrada/campos: `Acciones de lectura explícitamente declaradas y operaciones de escritura del backend existente; credencial actual y destinos canónicos.`, `Timeout y límites de reintento acotados; recibo y referencia de operación cuando el contrato existente los suministre.`.
+- Salida: JSON de aplicación validado o error controlado y explícito; HTTP exitoso no suplanta ok ni la integridad del cuerpo., Estado incierto diferenciado de rechazo explícito, con evidencia suficiente para conciliación posterior..
+
+- Reintentar sólo acciones GET declaradas de lectura sin efectos, con límites y espera acotados. No presumir que cualquier GET es inocuo.
+- Una mutación POST no recibe reintento genérico después de timeout, fallo de transporte o ACK ambiguo: consultar el estado/recibo y reconciliar primero.
+- No duplicar correo, triggers, encolados, montajes o registros para recuperar una respuesta perdida. Un rechazo explícito se trata sólo mediante su contrato particular.
+- No registrar credenciales, URLs privadas, payloads de negocio o cuerpos remotos privados en informes públicos. Mantener ACL y validación de negocio existentes.
+
+## CTR-SALA-CHINCHES-RECIBO
+
+- Componentes: SYS-SALA, GAS-SALA, SHEET-SALA, EXT-ACTIONS.
+- Evidencia: Ajuste de conciliación del puente existente autorizado en CHG-SALA-NUBE-20261015; lectores y agente conservan sus competencias..
+- Entrada/campos: `Chinche e issue canónicos existentes; resultado y motivo de cierre comprobados en la fuente GitHub.`, `Identidad estable del encargo y proof del resultado; producción y etiquetas actuales releídas antes de reintentar.`.
+- Salida: Solicitud de ejecución registrada como solicitada; cumplimiento sólo con resultado acreditado y registro confirmado., Una sola anotación de cumplimiento por ID y proof, aunque falle una etiqueta o se pierda el ACK del POST..
+
+- Aceptar un dispatch de idea no demuestra trabajo cumplido. El agente no decide ni altera el texto, la aprobación o el alcance original.
+- Un cierre not_planned no se convierte en resuelto o ENCARGO CUMPLIDO; conservar su motivo y pendientes correspondientes.
+- Antes de repetir tras una etiqueta fallida o un POST incierto, releer producción y comprobar ID/proof del registro. Resultado ambiguo permanece pendiente de conciliación; no duplicar el efecto.
+- Conservar lectores existentes, decisiones humanas, evidencias, comentarios e historial; no ampliar ACL ni cerrar trabajo pendiente sólo porque exista un issue.

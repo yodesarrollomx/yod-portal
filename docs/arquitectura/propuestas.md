@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-14.investor-gesture.2 · 2026-10-14.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.sala-nube.1 · 2026-10-15.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 
@@ -527,3 +527,35 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 - Ruta avanza por recibos locales, no exploración.
 - Hilo/caso/borrador/ref/versión defendida/capacidades conservadas.
 - Colores y gráficos para decidir sin XP ni trabajo fingido.
+
+## NUBE · Sala existente con producción y publicación comprobables en nube
+
+- Tableros: SYS-SALA, SYS-CONTROL.
+- Problema: Una mesa sin pendientes, una ejecución solicitada o un producto generado pueden confundirse con falta de decisiones o con una publicación terminada; fallos de red y acumulación de medios dificultan la continuidad.
+- Beneficio esperado: Mantener producción autorizada continua y distinguir pendiente, producido y publicado mediante recibos conservando decisiones e historia.
+- Medición: Publicaciones comprobadas por recibo exacto; errores de lectura visibles; cero mutaciones inciertas reenviadas sin conciliación y cero cumplimientos sólo por dispatch.
+- Dependencias: Sin dependencias previas.
+- Esfuerzo: M. Decisión: **aprobada**.
+
+### Requisitos previos
+
+- Autorización técnica expresa de Dirección en la conversación actual, conservando revisión humana y ACL existentes.
+- Fuentes canónicas del backend vivo; un espejo de Apps Script no acredita su despliegue.
+- Propuesta y contratos registrados antes de la implementación; CI y PR de los repositorios afectados.
+- Rollout lector v1/v2 antes del emisor incremental; emisión v1 por defecto y drenaje acreditado antes de activar el flag.
+
+### Tareas
+
+1. Aplicar recuperación acotada sólo a lecturas declaradas y reconciliar mutaciones con efecto incierto.
+2. Acumular snapshots compatibles mediante manifiestos, padre y replay verificables; mutex por ejecución e intento real y presupuesto antes de Pages.
+3. Separar conteos históricos editoriales, producción durable y publicación confirmada en informes/correo existentes.
+4. Conciliar chinches por evidencia real y deduplicación; mantener el vigilante residente y comprobar su conexión por separado.
+
+### Criterios de aceptación
+
+- Restaurar snapshot histórico y sus deltas preserva medios; error, conflicto o exceso de presupuesto no publica ni monta.
+- El mismo run/attempt puede conciliar su recibo; otro attempt no hereda un candado ni una escritura incierta sin comprobarla.
+- Una mesa vacía no borra decisiones anteriores; error de lectura no se comunica como cero ni como producción terminada.
+- Dispatch de una idea sólo acredita solicitud; not_planned conserva su motivo; cumplimiento exige evidencia y registro confirmado sin duplicación.
+- Ninguna prueba decide por el editor, cambia permisos, destinatarios, reglas de negocio o publica a redes.
+- Un push de cierre no solicita entrada por correo ni repite comparación histórica; opciones manuales explícitas conservadas. Antes de rollback con deltas, snapshot completo v1 comprobado usando lector v2.
