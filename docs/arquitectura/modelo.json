@@ -12639,7 +12639,7 @@
         "SVC-SALA-EJECUTOR",
         "EXT-DRIVE"
       ],
-      "status": "propuesto",
+      "status": "publicado",
       "approval": "Dirección solicita corregir las chinches de ambas presentaciones para que entren al circuito automático vigente, preservando notas y verificando la frecuencia real; sin cambiar calendarios ni reactivar rutinas.",
       "proposal": "Reutilizar PRODUCCION de Sala y su contrato ENCARGO/CHN. Captura/comentario/contexto completos permanecen en el JSON privado; el issue público contiene sólo un aviso técnico y su ID. El frontend conserva borradores y entrega inmediata con sesión YOD existente; origen externo utiliza relevo de navegador limitado a esos orígenes, sin transferir credenciales. Confirmar POST ok y lectura por ID/huella; un envío ambiguo sólo se concilia en lectura. Conservar ID al rescatar pendientes y distinguir local, recibido, tomado y cumplido. El revisor existente consulta el sobre privado y atiende destino GitHub o Sites. No nuevo Sheet, backend ni cron. Antes de habilitar consumidores, desplegar una proyección pública mínima por ID para relevos, snapshots y bundle final; los originales permanecen en la fuente privada. El cliente exige contrato servido de esa frontera. No basta que un issue no muestre la captura. El revisor debe leer la fuente privada completa, no limitarse a la ventana del día.",
       "tests": [
@@ -12649,7 +12649,7 @@
         "Atlas/modelo/vistas/impacto y suites existentes; recibos públicos exactos separados de entrega real.",
         "Proyección sin mutar originales, JSON de celda/truncado/anidado, rechazo de sobre sin proyectar en snapshot y bundle antes de cualquier efecto; conservar decisiones e históricos ordinarios. Consumidor sin contrato servido no escribe."
       ],
-      "deployment": "Registro previo. No acredita publicación ni recepción de una chinche en la sesión privada de Dirección. Frecuencia y ejecuciones de revisor/puente se verifican separadamente.",
+      "deployment": "Publicado15-oct-2026: Atlas240 define el contrato; Sala310/d8a8171 y Pages38762162219 acreditan proyección/capability. Board33/7435b2d y Pages38765885526 acreditan ambas entradas vigentes e histórica; su árbol54e20aee coincide con el probado, CI38765037795 SUCCESS. Consumidor externo Sites versión15 desplegado succeeded; sus activos publicados coinciden byte a byte. Transportes de consumidores idénticos; captura/contexto privados, recibo porID/huella y conciliación sin duplicados. Pruebas aisladas4flujosHTTPS/2engines más captura/recarga/pause/historial sobre recorridos vigentes; cero POST de negocio para QA. Esto acredita código/publicación, no recepción desde un dispositivo privado ni cumplimiento de una chinche. Lectura/ACK y adopción del resto de pantallas siguen pendientes; originales y base del proyecto intactos.",
       "rollback": "Revertir sólo consumidores/relevo frontend; conservar IndexedDB, IDs, sobres privados y recibos de Sala. No reponer notas a nueva para reenviar un POST ambiguo; no borrar datos ni cambiar permisos, rutinas o backend."
     }
   ],
