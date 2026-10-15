@@ -79,3 +79,5 @@ La auditoría no se considera completa mientras existan componentes críticos o 
 - [Presentación guiada entre dispositivos](presentation-guided.md): sesión conductor/invitado, revisión temporal acotada y conservación de fuentes y chinches.
 
 - [Sala · correcciones y aprobación](sala-correcciones.md): dictado revisado, contexto fijado y acuses separados de entrega/aprobación.
+
+- [Despacho 2.0 · coordinador aislado](despacho-v2-coordinator.md): parte2, API, límites y pruebas; sin activación en pantallas.

@@ -1,21 +1,19 @@
 {
-  "model_revision": "2026-10-15.sala-evaluacion.3",
-  "proposal_id": "CHG-SALA-EVALUACION-20261015",
-  "summary": "Completar preselección local de hasta dos finalistas por editor, propuesta y versión, sin emitir votos ni trabajos. Separar láminas preparadas de tomas obtenidas en la telemetría Mesa, conservando alias históricos. La evaluación real de calidad/tiempo/costo/fallos no acredita aceptación editorial ni habilita autonomía nueva.",
+  "model_revision": "2026-10-15.despacho-v2-p2.1",
+  "proposal_id": "CHG-DESPACHO-V2-P2",
+  "summary": "Implementar y probar sólo núcleo aislado del coordinador de cargas; producción no lo importa.",
   "components": [
-    "SYS-SALA",
-    "SVC-SALA-PRODUCTOR",
-    "EXT-ACTIONS",
     "SYS-YOD-OS",
-    "GAS-SALA"
+    "SYS-DESPACHO",
+    "SYS-DESPACHO-3D"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
+    "node scripts/arquitectura.cjs --check",
     "node verify-os.cjs",
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir PR conservando preselecciones locales, decisiones, cola, recibos y medios. No cambiar backend ni cuotas."
+  "rollback": "Retirar módulo sin cambiar datos o backend."
 }

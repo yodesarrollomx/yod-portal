@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-15.sala-evaluacion.3",
+  "revision": "2026-10-15.despacho-v2-p2.1",
   "checked_at": "2026-10-15",
   "priorities": [
     "vender_mas",
@@ -12896,6 +12896,23 @@
       ],
       "deployment": "Propuesta registrada antes de implementar; integración y comprobación pendientes.",
       "rollback": "Revertir PR conservando preselecciones locales, decisiones, cola, recibos y medios. No cambiar backend ni cuotas."
+    },
+    {
+      "id": "CHG-DESPACHO-V2-P2",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección autoriza parte2 del plan escalonado: coordinador aislado y pruebas; sin integración ni activación.",
+      "proposal": "Coordinador opt-in sin efectos al importar: prioridades operativas, dependencias, deduplicación por ámbito y revisión, presupuestos y cancelación por consumidor. Escrituras iniciadas no abortables ni reintentadas. Adaptadores de pantallas, vigencia y pestañas en fases posteriores.",
+      "tests": [
+        "Pruebas deterministas con transporte sintético y reloj inyectado; límites, prioridad, aislamiento, cancelación compartida y resultado incierto de escrituras.",
+        "Regresiones Node, atlas, OS, portal, accesos, Obra e impacto."
+      ],
+      "deployment": "Implementado aislado en rama: 20 pruebas específicas y 738 Node PASS; verificadores locales PASS. Sin imports desde pantallas. PR sin integración/activación; partes3–6 pendientes de autorización.",
+      "rollback": "Retirar módulo aislado; ninguna migración de datos, permisos o backend."
     }
   ],
   "data_contracts": [
@@ -14800,6 +14817,24 @@
     }
   ],
   "path_ownership": [
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/load-coordinator.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/load-coordinator.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/os-chrome-browser.py",
