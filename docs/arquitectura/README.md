@@ -70,3 +70,5 @@ La auditoría no se considera completa mientras existan componentes críticos o 
 - [Masterbrokers · Mini CRM](masterbrokers-mini-crm.md): comparación de PPP guardados, historial fechado, fuentes y calendario sobre el mismo Sheet.
 
 - [Presentación simplificada de siete escenas](investor-simple-story.md): trazo grueso por escena, claridad comercial, lectura opcional y archivo anterior; registro previo.
+
+- [Presentación móvil · una superficie y chinches](investor-single-surface.md): interacción iPhone, anotaciones, almacenamiento local, pruebas y límites de recepción; registro previo.
