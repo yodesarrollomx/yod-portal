@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-15.sala-evaluacion.1",
+  "revision": "2026-10-15.sala-evaluacion.2",
   "checked_at": "2026-10-15",
   "priorities": [
     "vender_mas",
@@ -12858,7 +12858,8 @@
         "SYS-SALA",
         "SVC-SALA-PRODUCTOR",
         "EXT-ACTIONS",
-        "SYS-YOD-OS"
+        "SYS-YOD-OS",
+        "GAS-SALA"
       ],
       "status": "propuesto",
       "authorization": "Dirección: ok hazlo bien y completa todo; cierre de los bloques de lógica creativa e interacción.",
@@ -14753,7 +14754,8 @@
         "SYS-SALA",
         "SVC-SALA-PRODUCTOR",
         "EXT-ACTIONS",
-        "SYS-YOD-OS"
+        "SYS-YOD-OS",
+        "GAS-SALA"
       ],
       "source": "Contrato de interacción de los puntos 1 y 2; evaluación del punto 5.",
       "input": [
