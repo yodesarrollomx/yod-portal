@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.sala-nube.1 · 2026-10-15.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.investor-single.1 · 2026-10-15.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -813,3 +813,22 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Un cierre not_planned no se convierte en resuelto o ENCARGO CUMPLIDO; conservar su motivo y pendientes correspondientes.
 - Antes de repetir tras una etiqueta fallida o un POST incierto, releer producción y comprobar ID/proof del registro. Resultado ambiguo permanece pendiente de conciliación; no duplicar el efecto.
 - Conservar lectores existentes, decisiones humanas, evidencias, comentarios e historial; no ampliar ACL ni cerrar trabajo pendiente sólo porque exista un issue.
+
+## CTR-INVESTOR-SINGLE-SURFACE
+
+- Componentes: SYS-INVERSION, SYS-YOD-OS, SYS-CONTROL, GAS-PLAN-POTENCIAL, SHEET-PLAN-POTENCIAL.
+- Evidencia: Petición explícita de Dirección; evolución del contrato público editorial existente y reutilización propuesta del código genérico D14/YODChinche, sin datos del caso de referencia..
+- Entrada/campos: `Contenido comercial y ayudas públicas de la presentación desde la hoja editorial vigente mediante el contrato de lectura existente; ningún dato privado en scripts o repositorio.`, `Progreso continuo0–26 de los27momentos existentes; gesto de una superficie, teclado y movimiento reducido comparten estado reversible.`, `Chinche sólo tras interacción explícita: posición normalizada o recorte, escena/progreso, comentario y captura del estado visible; dictado opcional condicionado a disponibilidad y permisos del navegador.`, `API YODChinche existente o adaptador compatible; captura gráfica local y bytes ArrayBuffer persistidos en IndexedDB para evitar incompatibilidad Blob de WebKit.`.
+- Salida: Cabecera Codesarrollo inmobiliario y subtítulo Hermosillo; lienzo y notas animadas con flechas, sin menú móvil inferior desplazable ni un segundo scroll para avanzar la historia., Relato completo accesible en lector; el texto abreviado visible conserva sentido, distinción de supuestos y cierre comercial., Chinche local recuperable tras recarga con imagen y comentario; historial En revisión sin acuse remoto fabricado., Compartir nativo únicamente por decisión explícita y cuando el navegador lo admita; cancelación o error conserva borrador/captura y no declara entrega..
+
+- Los datos reales y el copy comercial siguen en Drive/Sheets. Referencia visual sólo permite reutilizar código UX genérico, nunca nombres, IDs, cifras, documentos o geometría privada de casos en logs, fixtures o repositorios.
+- Una superficie táctil mueve la historia; el gesto no activa doble navegación ni requiere arrastrar un control adicional. Chinche, lector y acciones son funciones explícitas, no superficies de avance paralelas.
+- No se retira información de la fuente: los27momentos y el lector completo conservan mercado, inmueble, producto, cuenta, condiciones, participación, ejecución y recuperación.
+- Anotaciones y flechas son explicación editorial, no nuevas verificaciones, reglas financieras, resultados garantizados ni datos de inmueble.
+- IndexedDB opera por origen del navegador; las notas de otro dominio no se sincronizan automáticamente. Guardado local no equivale a recepción, issue remoto, ACK, encargo tomado ni tarea cumplida.
+- El historial En revisión es local; no se afirma conexión con revisor remoto sin recibo verificable. Compartir nativo se abre sólo por gesto explícito y no registra envío confirmado sin evidencia.
+- ArrayBuffer/captura/comentario deben persistir juntos o conservar borrador visible ante fallo. Cancelar, cuota excedida o error no borra notas previas ni comunica éxito.
+- La captura excluye secretos de la sesión; no leer, modificar o borrar pyod_clave_v1. No transferir credenciales al enlace público, evaluador o paquete de chinche.
+- Preservar contratos y API YODChinche existentes mediante adaptador local; no cambiar el sistema común del portal ni migrar o eliminar bases ajenas.
+- Pruebas usan dobles sintéticos para almacenamiento, captura, dictado y compartir; sin POST de negocio ni envíos reales. Publicación y verificación de frontend se documentan separadas de aceptación física.
+- Misma URL pública, Material, originales y versiones conservadas; cierre al evaluador existente con URL validada y sin nuevo backend, ACL, reglas de dinero o datos de cartera.

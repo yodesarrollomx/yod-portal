@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-15.sala-nube.1",
+  "revision": "2026-10-15.investor-single.1",
   "checked_at": "2026-10-15",
   "priorities": [
     "vender_mas",
@@ -20,7 +20,8 @@
       "Obra requiere confirmar su libro efectivo y reglas de delegación antes de integrar el prototipo de identidad.",
       "Sala: recorrido de cinco decisiones guardadas contrastado con nuevas tarjetas y dos medios durables de la toma aprobada. Aceptación editorial, publicación a redes y conciliación de siete fallos históricos siguen separadas; la App publicadora general no está acreditada.",
       "La cobertura de oficina asigna todo el inventario inspeccionado; responsables operativos por confirmar e integraciones pendientes siguen explícitos. No equivale a operación completa ni a descubrir todos los recursos de todas las cuentas.",
-      "La ampliación CHG-SALA-NUBE-20261015 está autorizada y registrada; este modelo no acredita su implementación o despliegue ni la versión activa del correo Apps Script."
+      "La ampliación CHG-SALA-NUBE-20261015 está autorizada y registrada; este modelo no acredita su implementación o despliegue ni la versión activa del correo Apps Script.",
+      "CHG-INVESTOR-SINGLE-SURFACE registra UX móvil y chinches locales autorizadas. No acredita implementación, publicación, recepción remota, sincronización entre orígenes ni aceptación física de iPhone."
     ]
   },
   "repositories": [
@@ -7837,6 +7838,78 @@
           "status": "codigo"
         }
       ]
+    },
+    {
+      "id": "PROC-INVESTOR-SINGLE-SURFACE",
+      "nombre": "Recorrer presentación y señalar una corrección desde iPhone",
+      "status": "propuesto",
+      "steps": [
+        {
+          "label": "Abrir presentación pública",
+          "role": "Visitante",
+          "components": [
+            "SYS-INVERSION",
+            "GAS-PLAN-POTENCIAL",
+            "SHEET-PLAN-POTENCIAL"
+          ],
+          "input": "Misma URL compartida",
+          "output": "Contenido público de fuente y lienzo disponible",
+          "mode": "automatico"
+        },
+        {
+          "label": "Avanzar y regresar sobre el lienzo",
+          "role": "Visitante",
+          "components": [
+            "SYS-INVERSION"
+          ],
+          "input": "Gesto o teclado",
+          "output": "Mismo progreso reversible, flechas y notas contextuales",
+          "mode": "manual"
+        },
+        {
+          "label": "Señalar punto o recorte y comentar",
+          "role": "Revisor",
+          "components": [
+            "SYS-INVERSION",
+            "SYS-YOD-OS"
+          ],
+          "input": "Estado visible y comentario explícito",
+          "output": "Chinche local con captura y progreso",
+          "mode": "manual"
+        },
+        {
+          "label": "Recuperar historial o compartir",
+          "role": "Revisor",
+          "components": [
+            "SYS-INVERSION",
+            "SYS-YOD-OS"
+          ],
+          "input": "Chinche local persistida",
+          "output": "Historial local En revisión o diálogo nativo solicitado; sin ACK remoto supuesto",
+          "mode": "manual"
+        },
+        {
+          "label": "Abrir evaluador desde cierre",
+          "role": "Visitante",
+          "components": [
+            "SYS-INVERSION"
+          ],
+          "input": "Acción final visible",
+          "output": "Evaluador existente sin transmisión de credenciales",
+          "mode": "manual"
+        }
+      ],
+      "manual_gaps": [
+        "Disponibilidad de dictado/compartir y permisos dependen del navegador.",
+        "Recepción remota, sincronización entre orígenes y atención del encargo no se acreditan por una chinche local.",
+        "Comprobación física de iPhone separada de pruebas WebKit/Chromium emuladas."
+      ],
+      "evidence": [
+        {
+          "claim": "Registro previo autorizado; implementación del consumidor, pruebas y publicación se acreditarán en su PR y recibos.",
+          "status": "propuesto"
+        }
+      ]
     }
   ],
   "proposals": [
@@ -12458,6 +12531,29 @@
       ],
       "deployment": "Registro previo. Evaluación física en iPhone se distingue de emulación.",
       "rollback": "Revertir sólo frontend móvil y ayudas; conservar contenido, Sheets, historial, credenciales y permisos."
+    },
+    {
+      "id": "CHG-INVESTOR-SINGLE-SURFACE",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección pide el mismo sistema móvil del Plan de Potencial de referencia: una interacción en iPhone, cabecera Codesarrollo inmobiliario y Hermosillo secundario, chinches iguales, sin menú inferior móvil, con flechas y notas de plumón animadas; autorización expresa para ejecutar y mejorar.",
+      "proposal": "Actualizar la misma presentación pública con una sola superficie de gesto y continuidad de27momentos; retirar navegación inferior móvil y scroll independiente. Cabecera corporativa y subtítulo de ciudad. Simplificar el texto visible mediante flechas y anotaciones manuscritas que evolucionan con el progreso, conservando el relato íntegro de fuente en lector y acciones finales visibles. Reusar sólo código UX genérico del sistema de chinches D14/YODChinche: captura puntual o recorte, compositor/dictado según disponibilidad, IndexedDB y almacenamiento ArrayBuffer compatible con WebKit; historial local En revisión y compartir nativo tras gesto explícito. Mantener fuentes en Sheets, misma URL, versiones y permisos. No incorporar datos del caso de referencia al repositorio ni atribuir recepción o sincronización remota a un guardado local.",
+      "tests": [
+        "Atlas: node scripts/arquitectura.cjs --check; node --test tests/*.cjs; node verify-os.cjs; node verify-portal.cjs; node verify-accesos.cjs; node verify-obra-app.cjs.",
+        "Consumidor aislado WebKit y Chromium en tamaños iPhone y horizontal: una sola superficie táctil, gesto lento/rápido, reversa inmediata, freno, límites y orientación sin perder progreso.",
+        "27 momentos reversibles, anotaciones/flechas legibles sin colisiones, texto íntegro en lector, CTA final visible, teclado y movimiento reducido.",
+        "Chinches con fixtures sintéticos: punto/recorte de pantalla, comentario y captura guardados en IndexedDB y releídos tras recarga, cancelación y errores de captura/almacenamiento.",
+        "Compartir nativo simulado mediante doble; ninguna comunicación ni POST real. Mantener credencial Portero y cero escrituras de negocio.",
+        "Verificar código público exacto y fuente editorial viva después de integrar frontend; captura real del navegador. Emulación no acredita prueba en iPhone físico."
+      ],
+      "deployment": "Registro previo a implementación. Esta PR documenta contratos aprobados; no acredita publicación del nuevo frontend, recepción remota de chinches, funcionamiento del dictado en todos los dispositivos ni prueba física de iPhone.",
+      "rollback": "Revertir únicamente PR del frontend a la versión móvil previa dentro de la misma URL. Conservar todas las versiones, copy/configuración de Sheets, historial de chinches e IndexedDB, credenciales, permisos y expedientes; no restaurar ni sobrescribir datos de negocio."
     }
   ],
   "data_contracts": [
@@ -14109,6 +14205,42 @@
         "Un cierre not_planned no se convierte en resuelto o ENCARGO CUMPLIDO; conservar su motivo y pendientes correspondientes.",
         "Antes de repetir tras una etiqueta fallida o un POST incierto, releer producción y comprobar ID/proof del registro. Resultado ambiguo permanece pendiente de conciliación; no duplicar el efecto.",
         "Conservar lectores existentes, decisiones humanas, evidencias, comentarios e historial; no ampliar ACL ni cerrar trabajo pendiente sólo porque exista un issue."
+      ]
+    },
+    {
+      "id": "CTR-INVESTOR-SINGLE-SURFACE",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL"
+      ],
+      "source": "Petición explícita de Dirección; evolución del contrato público editorial existente y reutilización propuesta del código genérico D14/YODChinche, sin datos del caso de referencia.",
+      "input": [
+        "Contenido comercial y ayudas públicas de la presentación desde la hoja editorial vigente mediante el contrato de lectura existente; ningún dato privado en scripts o repositorio.",
+        "Progreso continuo0–26 de los27momentos existentes; gesto de una superficie, teclado y movimiento reducido comparten estado reversible.",
+        "Chinche sólo tras interacción explícita: posición normalizada o recorte, escena/progreso, comentario y captura del estado visible; dictado opcional condicionado a disponibilidad y permisos del navegador.",
+        "API YODChinche existente o adaptador compatible; captura gráfica local y bytes ArrayBuffer persistidos en IndexedDB para evitar incompatibilidad Blob de WebKit."
+      ],
+      "output": [
+        "Cabecera Codesarrollo inmobiliario y subtítulo Hermosillo; lienzo y notas animadas con flechas, sin menú móvil inferior desplazable ni un segundo scroll para avanzar la historia.",
+        "Relato completo accesible en lector; el texto abreviado visible conserva sentido, distinción de supuestos y cierre comercial.",
+        "Chinche local recuperable tras recarga con imagen y comentario; historial En revisión sin acuse remoto fabricado.",
+        "Compartir nativo únicamente por decisión explícita y cuando el navegador lo admita; cancelación o error conserva borrador/captura y no declara entrega."
+      ],
+      "invariants": [
+        "Los datos reales y el copy comercial siguen en Drive/Sheets. Referencia visual sólo permite reutilizar código UX genérico, nunca nombres, IDs, cifras, documentos o geometría privada de casos en logs, fixtures o repositorios.",
+        "Una superficie táctil mueve la historia; el gesto no activa doble navegación ni requiere arrastrar un control adicional. Chinche, lector y acciones son funciones explícitas, no superficies de avance paralelas.",
+        "No se retira información de la fuente: los27momentos y el lector completo conservan mercado, inmueble, producto, cuenta, condiciones, participación, ejecución y recuperación.",
+        "Anotaciones y flechas son explicación editorial, no nuevas verificaciones, reglas financieras, resultados garantizados ni datos de inmueble.",
+        "IndexedDB opera por origen del navegador; las notas de otro dominio no se sincronizan automáticamente. Guardado local no equivale a recepción, issue remoto, ACK, encargo tomado ni tarea cumplida.",
+        "El historial En revisión es local; no se afirma conexión con revisor remoto sin recibo verificable. Compartir nativo se abre sólo por gesto explícito y no registra envío confirmado sin evidencia.",
+        "ArrayBuffer/captura/comentario deben persistir juntos o conservar borrador visible ante fallo. Cancelar, cuota excedida o error no borra notas previas ni comunica éxito.",
+        "La captura excluye secretos de la sesión; no leer, modificar o borrar pyod_clave_v1. No transferir credenciales al enlace público, evaluador o paquete de chinche.",
+        "Preservar contratos y API YODChinche existentes mediante adaptador local; no cambiar el sistema común del portal ni migrar o eliminar bases ajenas.",
+        "Pruebas usan dobles sintéticos para almacenamiento, captura, dictado y compartir; sin POST de negocio ni envíos reales. Publicación y verificación de frontend se documentan separadas de aceptación física.",
+        "Misma URL pública, Material, originales y versiones conservadas; cierre al evaluador existente con URL validada y sin nuevo backend, ACL, reglas de dinero o datos de cartera."
       ]
     }
   ],

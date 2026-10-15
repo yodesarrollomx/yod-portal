@@ -1,26 +1,21 @@
 {
-  "model_revision": "2026-10-15.sala-nube.1",
-  "proposal_id": "CHG-SALA-NUBE-20261015",
-  "summary": "Registrar reparación autorizada de Sala en nube: transporte resiliente sin duplicar POST inciertos, snapshots compatibles con mutex por intento y presupuesto Pages, correo trazable y chinches con cumplimiento comprobado.",
+  "model_revision": "2026-10-15.investor-single.1",
+  "proposal_id": "CHG-INVESTOR-SINGLE-SURFACE",
+  "summary": "Registrar presentación pública con una superficie móvil, anotaciones animadas y chinches locales compatibles con WebKit; preservar contenido en Sheets y contratos de negocio.",
   "components": [
+    "SYS-INVERSION",
     "SYS-YOD-OS",
     "SYS-CONTROL",
-    "SYS-SALA",
-    "GAS-SALA",
-    "SHEET-SALA",
-    "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
-    "EXT-ACTIONS",
-    "EXT-DRIVE",
-    "EXT-GMAIL"
+    "GAS-PLAN-POTENCIAL",
+    "SHEET-PLAN-POTENCIAL"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs"
+    "Atlas: node scripts/arquitectura.cjs --check; node --test tests/*.cjs; node verify-os.cjs; node verify-portal.cjs; node verify-accesos.cjs; node verify-obra-app.cjs.",
+    "Consumidor aislado WebKit y Chromium en tamaños iPhone y horizontal: una sola superficie táctil, gesto lento/rápido, reversa inmediata, freno, límites y orientación sin perder progreso.",
+    "27 momentos reversibles, anotaciones/flechas legibles sin colisiones, texto íntegro en lector, CTA final visible, teclado y movimiento reducido.",
+    "Chinches con fixtures sintéticos: punto/recorte de pantalla, comentario y captura guardados en IndexedDB y releídos tras recarga, cancelación y errores de captura/almacenamiento.",
+    "Compartir nativo simulado mediante doble; ninguna comunicación ni POST real. Mantener credencial Portero y cero escrituras de negocio.",
+    "Verificar código público exacto y fuente editorial viva después de integrar frontend; captura real del navegador. Emulación no acredita prueba en iPhone físico."
   ],
-  "rollback": "Si hubo deltas, generar y comprobar primero un snapshot completo v1 con el lector v2. Después revertir PR de código y configuración técnica afectada, conservando bases, deltas, decisiones, colas, chinches, medios, recibos e historial. No desactivar rutinas ajenas ni cambiar ACL, destinatarios o reglas editoriales."
+  "rollback": "Revertir únicamente PR del frontend a la versión móvil previa dentro de la misma URL. Conservar todas las versiones, copy/configuración de Sheets, historial de chinches e IndexedDB, credenciales, permisos y expedientes; no restaurar ni sobrescribir datos de negocio."
 }

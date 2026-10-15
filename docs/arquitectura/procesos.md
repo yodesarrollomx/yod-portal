@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.sala-nube.1 · 2026-10-15.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.investor-single.1 · 2026-10-15.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
@@ -520,3 +520,32 @@ flowchart TD
 Vacíos: Consentimiento inicial de Google y confirmación del libro efectivo mediante sesión de Dirección.; Corte de la rutina Claude sólo después de dos ciclos de observación y pruebas; primer envío aprobado real se acredita por separado.; Si la rutina original captaba correos/creaba tarjetas, portar esas reglas antes de dar por sustituido su alcance; este ejecutor sólo procesa BANDEJA y cambios/respuestas existentes..
 
 Evidencia: CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.; Proceso de nube implementado con observación, aprobación privada, reserva y conciliación; publicación comprobada, ejecución Google pendiente..
+
+## PROC-INVESTOR-SINGLE-SURFACE · Recorrer presentación y señalar una corrección desde iPhone
+
+Estado: propuesto.
+
+```mermaid
+flowchart TD
+  p0["Abrir presentación pública · Visitante"]
+  p1["Avanzar y regresar sobre el lienzo · Visitante"]
+  p0 -.-> p1
+  p2["Señalar punto o recorte y comentar · Revisor"]
+  p1 -.-> p2
+  p3["Recuperar historial o compartir · Revisor"]
+  p2 -.-> p3
+  p4["Abrir evaluador desde cierre · Visitante"]
+  p3 -.-> p4
+```
+
+| Paso | Responsable | Componentes | Entrada → salida | Ejecución |
+|---|---|---|---|---|
+| 1. Abrir presentación pública | Visitante | SYS-INVERSION, GAS-PLAN-POTENCIAL, SHEET-PLAN-POTENCIAL | Misma URL compartida → Contenido público de fuente y lienzo disponible | automatico |
+| 2. Avanzar y regresar sobre el lienzo | Visitante | SYS-INVERSION | Gesto o teclado → Mismo progreso reversible, flechas y notas contextuales | manual |
+| 3. Señalar punto o recorte y comentar | Revisor | SYS-INVERSION, SYS-YOD-OS | Estado visible y comentario explícito → Chinche local con captura y progreso | manual |
+| 4. Recuperar historial o compartir | Revisor | SYS-INVERSION, SYS-YOD-OS | Chinche local persistida → Historial local En revisión o diálogo nativo solicitado; sin ACK remoto supuesto | manual |
+| 5. Abrir evaluador desde cierre | Visitante | SYS-INVERSION | Acción final visible → Evaluador existente sin transmisión de credenciales | manual |
+
+Vacíos: Disponibilidad de dictado/compartir y permisos dependen del navegador.; Recepción remota, sincronización entre orígenes y atención del encargo no se acreditan por una chinche local.; Comprobación física de iPhone separada de pruebas WebKit/Chromium emuladas..
+
+Evidencia: Registro previo autorizado; implementación del consumidor, pruebas y publicación se acreditarán en su PR y recibos..
