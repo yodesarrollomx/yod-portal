@@ -1,15 +1,14 @@
 {
-  "model_revision": "2026-10-15.canje-body.1",
-  "proposal_id": "CHG-CANJE-BODY-283",
-  "summary": "Un único plazo de25s por intento cubre cabeceras y cuerpo de canje. Abortar al vencer; conservar diagnósticos, autoridad, identidad y reintentos.",
+  "model_revision": "2026-10-15.sala-correcciones.1",
+  "proposal_id": "CHG-SALA-CORRECCIONES-20261015",
+  "summary": "Congelar pieza, propuesta, lámina, versión y toma al abrir la anotación; revisar dictado antes de clavar. Conservar ID y checkpoint previo a envío, distinguir local/recibido/incierto/rechazado sin repetir append ambiguo. Las aprobaciones conservan el circuito exclusivo de editores. Cerrar un issue no acredita cumplimiento: exigir evidencia verificable y mostrar entrega/revisión por separado.",
   "components": [
+    "SYS-SALA",
     "SYS-YOD-OS",
-    "GAS-PORTERO",
-    "SYS-DESPACHO",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-CONTROL",
-    "SYS-OBRA-CLIENTE"
+    "GAS-SALA",
+    "SHEET-SALA",
+    "EXT-ACTIONS",
+    "SYS-DESPACHO"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -19,5 +18,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir plazo completo y cache-bump; sin cambios backend/datos."
+  "rollback": "Revertir PR conservando cola, IndexedDB, historial, recibos, issues y datos. No reenviar estados inciertos."
 }

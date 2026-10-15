@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.canje-body.1 · 2026-10-15.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.sala-correcciones.1 · 2026-10-15.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -911,3 +911,17 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Llave de control sólo en fragmento consumido al abrir, almacenada por pestaña y enviada en header; servidor conserva únicamente su hash. Excluirla de fuentes, QR, vistas previas y registros compartidos.
 - Un arrendamiento de conductor y época de control impiden escrituras anteriores tras relevo. Tomar control en otro dispositivo requiere acción expresa.
 - No compartir I/O o streams entre peticiones de Worker. Cachear sólo datos resueltos; limitar consultas reales por stream, cola pendiente, presencia y ritmos de escritura.
+
+## CTR-SALA-CORRECCIONES
+
+- Componentes: SYS-SALA, SYS-YOD-OS, GAS-SALA, SHEET-SALA, EXT-ACTIONS, SYS-DESPACHO.
+- Evidencia: Decisiones autenticadas en Sheet; chinches locales y bandeja privada PRODUCCION..
+- Entrada/campos: `ID estable, texto revisado, identidad de pieza/propuesta/lámina/versión/toma capturada antes del dictado.`.
+- Salida: Recibo del transporte o pendiente explícito; entrega técnica verificable separada de aprobación editorial..
+
+- Dictar, navegar, comparar y clavar no aprueban.
+- Sólo un acuse válido o lectura coincidente marca recibido.
+- Checkpoint antes del POST; resultado incierto se concilia sólo por lectura.
+- Un cierre de issue no prueba ejecución ni aprobación.
+- No publicar texto privado de nuevas chinches en issues; marcador público mínimo.
+- GAS espejo no se despliega por modificar repositorio.
