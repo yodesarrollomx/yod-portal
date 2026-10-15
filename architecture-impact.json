@@ -1,12 +1,16 @@
 {
-  "model_revision": "2026-10-15.oficina-283.2",
-  "proposal_id": "CHG-OFICINA-283-20261015",
-  "summary": "Carga por etapas comprobadas, actividad fresca por agente y acceso directo a hablar; tarjetas compactas y encuadre panorámico por orientación. Reutilizar el pool temporal existente para evitar canjes duplicados de observadores, sin cache persistente, permisos nuevos ni porcentajes simulados.",
+  "model_revision": "2026-10-15.sala-persistencia.1",
+  "proposal_id": "CHG-SALA-PERSISTENCIA-20261015",
+  "summary": "Punto 3: preservar instrucciones, recibos y recuperación de Sala; registro previo a implementación.",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-DESPACHO-3D",
-    "GAS-PORTERO",
-    "SYS-DESPACHO"
+    "SYS-SALA",
+    "GAS-SALA",
+    "SHEET-SALA",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-MOTORES-MEDIA",
+    "EXT-ACTIONS",
+    "SYS-YOD-OS"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -16,5 +20,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir frontend283 sin tocar datos, backend ni permisos."
+  "rollback": "Revertir este registro sin borrar evidencia ni modificar permisos."
 }

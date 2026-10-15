@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-15.oficina-283.2",
+  "revision": "2026-10-15.sala-persistencia.1",
   "checked_at": "2026-10-15",
   "priorities": [
     "vender_mas",
@@ -12707,6 +12707,31 @@
       ],
       "deployment": "Propuesta registrada antes de implementar; publicación pendiente.",
       "rollback": "Revertir frontend de283; conservar perfiles, metas, decisiones y backend."
+    },
+    {
+      "id": "CHG-SALA-PERSISTENCIA-20261015",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-MOTORES-MEDIA",
+        "EXT-ACTIONS",
+        "SYS-YOD-OS",
+        "EXT-DRIVE"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección: adelante punto 3; continuación del proceso integral y trazabilidad de puntos 1 y 2. Sin cambiar aprobaciones editoriales.",
+      "proposal": "Corregir alcance negativo del texto, notas omitidas por fallback, límite de texto nuevo y hash original del recibo. Persistir plan, envío y resultado en releases draft separados del snapshot público, con identidad estable y bytes verificables; reusar resultado antes de llamar motores; envío incierto queda pendiente de conciliación. Instrucciones y configuración efectiva permanecen privadas. Integrar Mesa y Arranque al circuito existente.",
+      "tests": [
+        "Regresiones F1-F4 con proveedores sintéticos.",
+        "Recuperación en proceso nuevo: plan y resultado; ACK perdido, conflicto, recepción incompleta, negativa de cuota, envío incierto sin duplicación.",
+        "Prueba de aislamiento: recibos no llegan al snapshot ni Pages.",
+        "CI existente y prueba de recuperación en dos jobs sin credenciales de negocio."
+      ],
+      "deployment": "Propuesto antes de implementar. La ejecución de CI no acredita calidad de una pieza real ni publicación editorial.",
+      "rollback": "Revertir PR; conservar recibos privados, imágenes, snapshots, decisiones y colas. No borrar ni convertir drafts en releases públicos."
     }
   ],
   "data_contracts": [
