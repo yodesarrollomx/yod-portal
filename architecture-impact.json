@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-10-15.sala-medios.1",
   "proposal_id": "CHG-SALA-MEDIOS-PUBLICOS-20261015",
-  "summary": "Registrar contrato de capacidad para imágenes nuevas en releases públicos inmutables: lector primero, manifest schema1 con pin del recibo, bytes anónimos verificados, snapshots compatibles y emisor OFF; conservar históricos, ACL y presupuesto900MiB. Integración relacionada de historial completo GET sólo lectura, backend propuesto y SALA_PRODUCCION_HISTORICA=0; rol agente/ACL/scopes existentes.",
+  "summary": "Registrar contrato de capacidad para imágenes nuevas en releases públicos inmutables: lector primero, manifest schema1 con pin del recibo, bytes anónimos verificados, snapshots compatibles y emisor OFF; conservar históricos, ACL y presupuesto900MiB. Integración relacionada de historial completo GET sólo lectura, backend propuesto y SALA_PRODUCCION_HISTORICA=0; rol agente/ACL/scopes existentes. EXT-GMAIL se incluye por ownership de gas/Code.gs compartido; no cambia correo ni permisos ni acredita operación o recepción.",
   "components": [
     "SYS-YOD-OS",
     "SYS-CONTROL",
@@ -11,7 +11,8 @@
     "EXT-ACTIONS",
     "EXT-DRIVE",
     "GAS-SALA",
-    "SHEET-SALA"
+    "SHEET-SALA",
+    "EXT-GMAIL"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
