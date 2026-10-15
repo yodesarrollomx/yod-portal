@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.sala-medios.1 · 2026-10-15.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.investor-intent.1 · 2026-10-15.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -866,3 +866,18 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Historial y elegibilidad son distintos: cuatro cortes fallidos no vetados del diagnóstico no prueban aprobación actual. Tres corresponden a dos fuentes no retiradas en Sheet; el cuarto a una tercera fuente retirada. Nuevo audit halló 0 elegibles, sin crear decisiones ni reencolar.
 - No publicar respuestas con títulos, IDs o notas privadas en repositorio/logs. Fuente original conservada; errores no fabrican cero ni dan por completo el historial. No cambiar reglas editoriales, prioridades comerciales o marcas humanas.
 - Pruebas con dobles sintéticos; ningún GET de efecto de negocio, correo de prueba, reencolado o escritura real para demostrar funcionamiento. Despliegue, lectura completa y activación se acreditan por separado.
+
+## CTR-INVESTOR-INTENT-STORY
+
+- Componentes: SYS-INVERSION, SYS-CONTROL, GAS-PLAN-POTENCIAL, SHEET-PLAN-POTENCIAL.
+- Evidencia: Guion editorial aprobado por Dirección; evolución aditiva de CTR-INVESTOR-SINGLE-SURFACE..
+- Entrada/campos: `Campo journey opcional de configuración editorial: siete escenas con cantidad variable de momentos, texto, etiquetas y tipos visuales validados.`, `Relato original y detalles conservados; geometría pública desde fuente vigente.`.
+- Salida: Misma página con recorrido de selección, producto, economía, condiciones, ejecución y conversación de participación., Contexto de chinche incluye escena y momento nuevos, sin cambiar almacenamiento ni compartir implícitamente..
+
+- Copy y datos reales viven en Sheets, no en repositorio.
+- Sin anotaciones obligatorias ni conectores que crucen el texto.
+- Mismo gesto reversible y límites, sin menú inferior móvil.
+- Capitalista no necesita inmueble. Aportación de inmueble conserva valor. Medición no acredita autorización. Utilidad no equivale a caja.
+- No cifras, rendimientos, cabidas ni probabilidades fabricadas; sólo ilustración conceptual.
+- Todos los textos originales permanecen accesibles; versiones anteriores siguen operando.
+- Conservar contrato de chinches, credencial Portero, permisos, datos y backend existentes.

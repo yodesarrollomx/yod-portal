@@ -1,26 +1,18 @@
 {
-  "model_revision": "2026-10-15.sala-medios.1",
-  "proposal_id": "CHG-SALA-MEDIOS-PUBLICOS-20261015",
-  "summary": "Registrar contrato de capacidad para imágenes nuevas en releases públicos inmutables: lector primero, manifest schema1 con pin del recibo, bytes anónimos verificados, snapshots compatibles y emisor OFF; conservar históricos, ACL y presupuesto900MiB. Integración relacionada de historial completo GET sólo lectura, backend propuesto y SALA_PRODUCCION_HISTORICA=0; rol agente/ACL/scopes existentes. EXT-GMAIL se incluye por ownership de gas/Code.gs compartido; no cambia correo ni permisos ni acredita operación o recepción.",
+  "model_revision": "2026-10-15.investor-intent.1",
+  "proposal_id": "CHG-INVESTOR-INTENT-STORY",
+  "summary": "Recorrido variable de siete preguntas del inversionista, mismo inmueble ilustrativo, composición por escena sin flechas decorativas obligatorias. Conservar gesto iPhone, chinches y detalle original. Nueva configuración editorial aditiva en Sheets, con compatibilidad para versiones previas. Capital como entrada principal; inmueble al evaluador como entrada secundaria.",
   "components": [
-    "SYS-YOD-OS",
+    "SYS-INVERSION",
     "SYS-CONTROL",
-    "SYS-SALA",
-    "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
-    "EXT-ACTIONS",
-    "EXT-DRIVE",
-    "GAS-SALA",
-    "SHEET-SALA",
-    "EXT-GMAIL"
+    "GAS-PLAN-POTENCIAL",
+    "SHEET-PLAN-POTENCIAL"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs"
+    "Pruebas sintéticas de esquema, estados variables, reversa, error y compatibilidad.",
+    "WebKit y Chromium: iPhone pequeño y horizontal, controles, detalle y chinches; capturas de estados clave e intermedios.",
+    "Publicación anónima del código exacto y contenido editorial; enlace evaluador sin credenciales.",
+    "Atlas generado y contratos existentes."
   ],
-  "rollback": "Desactivar SALA_MEDIOS_PUBLICOS detiene sólo nuevas externalizaciones. Si ya existe un medio externo, conservar lector compatible, manifiesto, pin del recibo, releases inmutables y sus activos. No volver a un lector antiguo ni retirar activos hasta repatriar y verificar todos los bytes referenciados, publicar un FULL íntegro dentro de 900 MiB y comprobar recibo fresco y consumidores. No borrar históricos ni alterar ACL, decisiones, destinatarios o reglas de negocio. Desactivar SALA_PRODUCCION_HISTORICA mantiene explícito historial no confirmado; conservar propuestas/decisiones originales y los sellos reales, sin volver a considerar la ventana14d como historial completo ni reencolar por revertir código."
+  "rollback": "Revertir frontend y sólo nuevo campo editorial; conservar originales, revisiones, configuración histórica, datos, permisos y credenciales."
 }
