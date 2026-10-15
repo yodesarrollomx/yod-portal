@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.carga-unificada-283.1 · 2026-10-15.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.sala-evaluacion.3 · 2026-10-15.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -928,7 +928,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 ## CTR-SALA-FINALISTAS-METRICAS
 
-- Componentes: SYS-SALA, SVC-SALA-PRODUCTOR, EXT-ACTIONS, SYS-YOD-OS.
+- Componentes: SYS-SALA, SVC-SALA-PRODUCTOR, EXT-ACTIONS, SYS-YOD-OS, GAS-SALA.
 - Evidencia: Contrato de interacción de los puntos 1 y 2; evaluación del punto 5..
 - Entrada/campos: `Editor vigente, propuesta, lámina, versión y conjunto exacto de candidatas con identidad original.`, `Resultados obtenidos por Mesa, separados por lámina y cantidad de candidatas.`.
 - Salida: Preselección local recuperable de cero, una o dos tomas; mensaje explícito de alcance en este navegador., laminas_preparadas y tomas_obtenidas; campo generadas conservado como alias de láminas..

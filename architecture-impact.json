@@ -1,16 +1,13 @@
 {
-  "model_revision": "2026-10-15.carga-unificada-283.1",
-  "proposal_id": "CHG-CARGA-UNIFICADA-283",
-  "summary": "Carga integrada283: singleflight de identidad por token/época, Inicio diferido al entrar Despacho, preparación sólo del seleccionado y despertar con autoridad fresca sin renovación redundante. Preservar límites, revocación y ACL; evaluación general del conjunto.",
+  "model_revision": "2026-10-15.sala-evaluacion.3",
+  "proposal_id": "CHG-SALA-EVALUACION-20261015",
+  "summary": "Completar preselección local de hasta dos finalistas por editor, propuesta y versión, sin emitir votos ni trabajos. Separar láminas preparadas de tomas obtenidas en la telemetría Mesa, conservando alias históricos. La evaluación real de calidad/tiempo/costo/fallos no acredita aceptación editorial ni habilita autonomía nueva.",
   "components": [
+    "SYS-SALA",
+    "SVC-SALA-PRODUCTOR",
+    "EXT-ACTIONS",
     "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "GAS-PORTERO",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-CONTROL",
-    "SYS-OBRA-CLIENTE",
-    "SYS-DESPACHO-3D"
+    "GAS-SALA"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -20,5 +17,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir PR; conservar datos y ACL."
+  "rollback": "Revertir PR conservando preselecciones locales, decisiones, cola, recibos y medios. No cambiar backend ni cuotas."
 }
