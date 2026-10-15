@@ -78,6 +78,11 @@ if(host){
   prepareCatalog();
  }
  window.addEventListener('online',refreshOnWake);
+ window.addEventListener('yod-data-invalidated',()=>{
+  if(document.hidden)return;
+  if(authorized)void authorized.refresh();
+  void resident.refresh();
+ });
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshOnWake();});
  window.addEventListener('pagehide',()=>{officePreparation.close();selectionHandoff.invalidate();resident.dispose();transport.dispose();delete window.YodResidentAgents;});
  if(!AUTONES_MULTIPLES)void resident.refresh();

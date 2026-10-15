@@ -125,3 +125,55 @@ y el caso P3 de `tests/portal-identity.cjs`. Comprueba deduplicación, promoció
 selección cambiante, retención del carril físico, revocación, ruta de mutaciones,
 arranque apagado, fallback y puente real con origen/iframe comprobados. No mide
 latencia de producción ni acredita publicación.
+
+## Parte 4: continuidad de datos, sin activar
+
+`data-continuity.mjs` mantiene sólo memoria de la pestaña: lecturas de expediente
+por 1 s, metas por 2.5 s y visitas por 3 s, con máximo 32 entradas. Catálogo de
+casos, resolución de selección, permisos, pendientes de oficina y credenciales
+no tienen caché nueva. Los adaptadores de Inicio conservan sus reglas actuales.
+Una época nueva o revocación limpia datos y recibos locales. Un cambio incrementa
+la revisión de lectura: una respuesta anterior no se publica ni se vuelve a usar
+para una consulta posterior. Nunca se restaura autorización desde esta memoria.
+
+El puente conserva sus carriles y los cuerpos originales de escritura. El diario
+de recibos en memoria agrupa únicamente la misma operación/caso/request_id con
+contenido idéntico; un contenido distinto recibe request_id_reused. No agrupa
+encargos parecidos ni coordina escrituras entre pestañas. Un timeout deja el
+resultado incierto; una repetición explícita consulta primero read/readGoals/
+readVisits y no vuelve a mandar la mutación. Si llega el acuse original tarde,
+se conserva ese acuse real. La lectura de un job permite al consumidor existente
+conciliar el request_id, pero no se fabrica un ACK a partir de similitud o estado.
+
+**Límite explícito:** las proyecciones actuales de metas y visitas no ofrecen un
+lookup universal del recibo por request_id. Si el ACK se perdió definitivamente,
+el guardado sigue sin confirmar: se conserva el borrador y queda pendiente la
+conciliación por una fuente que identifique la operación. No equivale a fallo del
+guardado ni autoriza repetirlo. La protección es de esta pestaña/época, no de
+recargas o navegadores distintos; la idempotencia durable sigue siendo del backend.
+El diario admite 500 operaciones por época y rechaza nuevas si se llena, sin
+olvidar una operación incierta para abrir espacio. Rechazos previos a la admisión
+(transport_busy/session_pending) permiten un intento explícito posterior.
+
+`tab-continuity.mjs` transmite exclusivamente version/type/id aleatorio mediante
+BroadcastChannel. Pulsos cada 5 s y expiración a 15 s eligen por ID quién admite
+fondo; no comparten casos, cuerpos, cifras, URLs ni tokens. Es coordinación de
+mejor esfuerzo, **no un mutex distribuido ni una garantía de líder único**. Una
+pestaña sin soporte funciona sola. Ocultarse/desconectarse anuncia salida; volver
+agrupa señales en 200 ms, revalida identidad, invalida lecturas y actualiza los
+paneles abiertos. Los trabajos visibles y las escrituras ya admitidas no dependen
+del líder. Sólo el fondo se pausa; no se cuelga voz ni se cambia trabajo remoto.
+
+La validación de identidad termina sin esperar datos de fondo bloqueados por otra
+pestaña. Si una carga diferida vence, Inicio queda elegible para volver a cargarla.
+El mensaje de invalidación al iframe requiere padre/origen/esquema exactos;
+usa los métodos existentes de actualización sin abrir paneles ni vaciar borradores.
+Los conflictos siguen mostrando la resolución existente y nunca se sobrescriben.
+No se añaden reintentos automáticos de mutación ni sondeo de negocio nuevo.
+
+Pruebas: data-continuity, tab-continuity, integración real del puente en load-plan
+y funciones reales de app en portal-identity. Fixtures de ACK perdido/tardío,
+cambio de sesión, invalidación durante lectura, conflicto, límite de memoria,
+TTL por recurso, caída de líder, offline/visibility y señales extranjeras.
+La parte 6 comprobará activación y recorrido completo con este modo habilitado;
+las regresiones existentes mantienen el interruptor apagado.

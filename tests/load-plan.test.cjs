@@ -81,3 +81,20 @@ test('P3: real bridge falls back when module unavailable and rejects foreign sel
  await h.selection('https://synthetic.invalid',h.frame);assert.deepEqual(h.selected,['A']);
  await h.send('a','read',{case_id:'A'});assert.equal(h.replies[0].result.ok,true);p.revoke();
 });
+
+test('P4: bridge guard retains IDs and runs read reconciliation before any uncertain retry',async()=>{
+ const p=await plan();let receive,posts=0,reads=0;const replies=[],frame={postMessage:m=>replies.push(m)};
+ const c=vm.createContext({location:{origin:'https://synthetic.invalid'},setTimeout,clearTimeout,addEventListener:(n,f)=>{receive=f;},removeEventListener(){}});
+ vm.runInContext(fs.readFileSync('os/despacho-conversation.js','utf8'),c);
+ const transport={enqueue:async()=>{posts++;throw Error('timeout');}};
+ c.YodDespachoConversation.bind({isAuthorized:()=>true,getEpoch:()=>1,getIframeWindow:()=>frame,getTransport:()=>transport,
+  scheduleWrite:(m,v,run,current)=>p.writeCase(m,v,run,current,async()=>{reads++;})});
+ const send=id=>receive({origin:c.location.origin,source:frame,data:{type:'yod:case:request',version:1,id,method:'enqueue',payload:{case_id:'A',request_id:'original',expected_revision:'r1',message:'draft'}}});
+ await send('first');await send('second');assert.equal(posts,1);assert.equal(reads,1);assert.equal(replies.length,2);assert.equal(replies[1].error,'timeout');p.revoke();
+});
+test('P4: invalidation does not reuse a pending pre-write flight',async()=>{
+ const p=await plan(),d=deferred();let calls=0;p.select('A');
+ const old=p.readCase('read',{case_id:'A'},'conversation',()=>d.promise,current);await tick();const rejected=assert.rejects(old,/stale_revision/);
+ p.invalidate();const fresh=p.readCase('read',{case_id:'A'},'conversation',()=>{calls++;return {result:{ok:true,revision:'new'},error:null};},current);
+ d.resolve({result:{ok:true,revision:'old'},error:null});await rejected;assert.equal((await fresh).result.revision,'new');assert.equal(calls,1);p.revoke();
+});

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-15.despacho-v2-p3.1",
+  "revision": "2026-10-15.despacho-v2-p4.1",
   "checked_at": "2026-10-15",
   "priorities": [
     "vender_mas",
@@ -12936,6 +12936,29 @@
       ],
       "deployment": "Implementación opt-in en rama apilada sobre P2: 13 pruebas específicas de integración y 751 Node PASS; OS, portal, accesos y Obra PASS. Interruptor apagado; sin merge, activación ni medición de producción. Continuidad/escrituras, medios/voz y medición global corresponden a P4–6.",
       "rollback": "Desactivar interruptor devuelve ruta previa; ningún dato ni backend modificado."
+    },
+    {
+      "id": "CHG-DESPACHO-V2-P4",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE",
+        "EXT-DRIVE"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección: echatelo después de entrega P3. Sólo P4 en rama, activación P6.",
+      "proposal": "Continuidad opt-in: vigencia en memoria por recurso, invalidación con barrera de revisión, conciliación de escrituras inciertas y señales no sensibles entre pestañas; regreso online/móvil agrupado sin desmontar voz.",
+      "tests": [
+        "Pruebas sintéticas de vigencia, invalidación en vuelo, ACK perdido, conflicto, aislamiento y pérdida del líder.",
+        "Suite Node, atlas/impacto con repositorio explícito y verificadores."
+      ],
+      "deployment": "Propuesta registrada antes de implementar. Sin activación ni backend nuevo.",
+      "rollback": "Interruptor de P3 apagado conserva camino anterior; ningún dato o permiso migrado."
     }
   ],
   "data_contracts": [
@@ -16794,6 +16817,51 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO",
         "SYS-SALA"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/data-continuity.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/tab-continuity.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/data-continuity.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/tab-continuity.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/data-continuity-boot.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO"
       ]
     }
   ],

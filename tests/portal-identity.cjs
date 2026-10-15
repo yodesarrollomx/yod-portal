@@ -527,3 +527,26 @@ test('P3 App: enabled coordinator reuses catalog work and rejects a session chan
   const b=h.c.coordinatedPortalLoad('catalog',run,1,'catalog'),c=h.c.coordinatedPortalLoad('catalog',run,1,'catalog');
   await new Promise(r=>setImmediate(r));assert.equal(calls,1);d.resolve();await Promise.all([b,c]);p.revoke();
 });
+
+test('P4: identity completes while a follower tab defers background data',async()=>{
+ const h=appHarness(),d=deferred();h.c.window.YodLoadConfig={enabled:true};
+ const {createPortalLoadPlan}=await import('../os/load-plan.mjs');const plan=createPortalLoadPlan();
+ h.c.window.YodLoadPlanReady=Promise.resolve(plan);h.c.startData=()=>d.promise;
+ await h.c.loadIdentity();assert.equal(h.state.profileReady,true);assert.equal(h.state.identityFlight,null);
+ d.resolve();plan.revoke();
+});
+test('P4: expired deferred Home work remains eligible on return, rather than marked complete',async()=>{
+ const h=appHarness();h.authorize();h.c.window.YodLoadConfig={enabled:true};h.c.enDespacho=()=>false;h.c.loadPulse=async()=>{};
+ h.c.window.YodAccessPolicy={hasCode:()=>true};h.c.coordinatedPortalLoad=async()=>{throw Error('timeout');};
+ vm.runInContext(fn(appSource,'startData'),h.c);await h.c.startData(h.state.sessionToken);
+ assert.equal(h.state.homeDataEpoch,null);
+});
+
+ test('P4: invalidated Home responses cannot render or populate caches in the same session',async()=>{
+ for(const [method,adapter] of [['loadFinance','YodFinance'],['loadMarketing','YodMarketing'],['loadOperations','YodOperations']]){
+  const h=appHarness(),d=deferred();h.authorize();let revision=0;h.state.loadPlan={revision:()=>revision};
+  h.c.window[adapter]={load:()=>d.promise};const pending=h.c[method](h.state.sessionToken);revision++;
+  d.resolve({summary:{balance:99},tasks:[{id:'obsolete'}],source:'live'});await pending;
+  assert.equal(h.renders.length,0);assert.equal(Object.keys(h.state.pulseCache).length,0);assert.equal(h.state.opsCache,null);
+ }
+});

@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-15.despacho-v2-p3.1",
-  "proposal_id": "CHG-DESPACHO-V2-P3",
-  "summary": "Adaptador compartido de admisión para lecturas de Inicio y Despacho. Selección explícita prioriza expediente, Inicio progresa en fondo y se promueve al abrirlo; carriles/ACL y mutaciones actuales conservados. Interruptor por defecto apagado.",
+  "model_revision": "2026-10-15.despacho-v2-p4.1",
+  "proposal_id": "CHG-DESPACHO-V2-P4",
+  "summary": "Continuidad opt-in: vigencia en memoria por recurso, invalidación con barrera de revisión, conciliación de escrituras inciertas y señales no sensibles entre pestañas; regreso online/móvil agrupado sin desmontar voz.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
