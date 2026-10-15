@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-14.investor-gesture.2
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-15.sala-nube.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -2185,6 +2185,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [PR266/267/268 integrados. Run 38156397507 success: cuenta de servicio existente con permiso lector, consulta autenticada GViz sólo cuando Sheets API está deshabilitada, columnas permitidas, exclusión de prueba y publicación verificada. Fuente no modificada. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/PLAN-ONLINE.md · Revisión: a3b6c7053b3cd26333dd06878e74bb666288ce51](https://github.com/yodesarrollomx/sala-edicion/blob/a3b6c7053b3cd26333dd06878e74bb666288ce51/docs/PLAN-ONLINE.md)
 - [PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/medios\_reconexion.py · Revisión: 159d932cd81c2d2c3fda31a862ea60fc0b3ae667](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py)
 - [PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-CIERRE-ONLINE.md · Revisión: 4582fc3c42a2ac8459dea7d553c42f9719f07962](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md)
+- Ampliación técnica autorizada por Dirección en la conversación actual: recuperación de transporte, publicación acumulativa, correo trazable y conciliación de chinches. Registro previo; la fuente no acredita despliegue. Registro local: docs/arquitectura/sala-nube-20261015.md. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Evidencia de conexiones:**
 
@@ -2262,6 +2263,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Ruta de decisión editorial en el backend versionado · Estado: codigo · yodesarrollomx/sala-edicion · gas/Code.gs · Revisión: HEAD\_baseline
 - Esquemas de tablas de Sala · Estado: codigo · yodesarrollomx/sala-edicion · gas/Code.gs · Revisión: HEAD\_baseline
 - [PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/medios\_reconexion.py · Revisión: 159d932cd81c2d2c3fda31a862ea60fc0b3ae667](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py)
+- Ampliación técnica autorizada por Dirección en la conversación actual: recuperación de transporte, publicación acumulativa, correo trazable y conciliación de chinches. Registro previo; la fuente no acredita despliegue. Registro local: docs/arquitectura/sala-nube-20261015.md. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Evidencia de conexiones:**
 
@@ -2356,6 +2358,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Abrir compuertas aprobadas y encolar trabajo sin decidir ni ejecutar · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_productor.py · Revisión: HEAD\_baseline
 - [PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-CIERRE-ONLINE.md · Revisión: 4582fc3c42a2ac8459dea7d553c42f9719f07962](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md)
 - [Lote38310054319: productor success. Ningún nuevo trabajo habilitado; las imágenes rehechas esperan revisión editorial. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/sala\_productor.py · Revisión: dde4ab0151c5cc36071882380afe7ecf495ecef6](https://github.com/yodesarrollomx/sala-edicion/blob/dde4ab0151c5cc36071882380afe7ecf495ecef6/nube/sala_productor.py)
+- Ampliación técnica autorizada por Dirección en la conversación actual: recuperación de transporte, publicación acumulativa, correo trazable y conciliación de chinches. Registro previo; la fuente no acredita despliegue. Registro local: docs/arquitectura/sala-nube-20261015.md. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Evidencia de conexiones:**
 
@@ -2395,6 +2398,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/medios\_reconexion.py · Revisión: 159d932cd81c2d2c3fda31a862ea60fc0b3ae667](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py)
 - [PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-CIERRE-ONLINE.md · Revisión: 4582fc3c42a2ac8459dea7d553c42f9719f07962](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md)
 - [Lote38310054319: ejecutor success; COLA124 registros,0 trabajos habilitados pendientes,0 entregables nuevos en esta vuelta. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/sala\_ejecutor.py · Revisión: dde4ab0151c5cc36071882380afe7ecf495ecef6](https://github.com/yodesarrollomx/sala-edicion/blob/dde4ab0151c5cc36071882380afe7ecf495ecef6/nube/sala_ejecutor.py)
+- Ampliación técnica autorizada por Dirección en la conversación actual: recuperación de transporte, publicación acumulativa, correo trazable y conciliación de chinches. Registro previo; la fuente no acredita despliegue. Registro local: docs/arquitectura/sala-nube-20261015.md. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Evidencia de conexiones:**
 

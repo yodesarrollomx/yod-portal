@@ -1,12 +1,18 @@
 {
-  "model_revision": "2026-10-14.investor-gesture.2",
-  "proposal_id": "CHG-INVESTOR-MOBILE-GESTURE",
-  "summary": "Public investor presentation adopts centered corporate header, full-width canvas and transparent relative mobile rotor.",
+  "model_revision": "2026-10-15.sala-nube.1",
+  "proposal_id": "CHG-SALA-NUBE-20261015",
+  "summary": "Registrar reparación autorizada de Sala en nube: transporte resiliente sin duplicar POST inciertos, snapshots compatibles con mutex por intento y presupuesto Pages, correo trazable y chinches con cumplimiento comprobado.",
   "components": [
-    "SYS-INVERSION",
-    "GAS-PLAN-POTENCIAL",
-    "SHEET-PLAN-POTENCIAL",
-    "SYS-CONTROL"
+    "SYS-YOD-OS",
+    "SYS-CONTROL",
+    "SYS-SALA",
+    "GAS-SALA",
+    "SHEET-SALA",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-ACTIONS",
+    "EXT-DRIVE",
+    "EXT-GMAIL"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -16,5 +22,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revert frontend only; preserve data and permissions."
+  "rollback": "Si hubo deltas, generar y comprobar primero un snapshot completo v1 con el lector v2. Después revertir PR de código y configuración técnica afectada, conservando bases, deltas, decisiones, colas, chinches, medios, recibos e historial. No desactivar rutinas ajenas ni cambiar ACL, destinatarios o reglas editoriales."
 }
