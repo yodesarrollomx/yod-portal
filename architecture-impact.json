@@ -1,12 +1,11 @@
 {
-  "model_revision": "2026-10-15.despacho-goals-hydration.1",
-  "proposal_id": "CHG-DESPACHO-GOALS-HYDRATION-20261015",
-  "summary": "Resolver el perfil individual del caso si el catálogo rápido no incluye descriptor válido de metas. Reusar perfiles completos frescos, incluidos ready:false; nunca inferir capacidad de can_enqueue. Mantener lease, revocación, selección concurrente y caso exacto. Sin cambios en motor, permisos, despliegues o datos.",
+  "model_revision": "2026-10-15.presentation-guided.1",
+  "proposal_id": "CHG-PRESENTATION-GUIDED-20261015",
+  "summary": "Registrar primero el modo guiado de las presentaciones y su contrato de revisión temporal, preservando fuentes, chinches, público y versiones.",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-DESPACHO-3D",
-    "GAS-PORTERO",
-    "SYS-DESPACHO"
+    "SYS-PLAN-POTENCIAL",
+    "SYS-INVERSION",
+    "SYS-CONTROL"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -16,5 +15,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir este cambio de selección y sus versiones de importación; conservar metas, historial, revisiones y permisos."
+  "rollback": "Revertir sólo la integración de presentación guiada a la versión previa del mismo Sitio. No borrar chinches, notas, versiones, datos originales ni cambiar audiencia o rutinas. Las sesiones expiran y se pueden cerrar sin tocar fuentes de negocio."
 }

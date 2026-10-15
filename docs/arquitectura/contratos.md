@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.despacho-goals-hydration.1 · 2026-10-15.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.presentation-guided.1 · 2026-10-15.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -894,3 +894,17 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Mismo ID al recuperar pendientes; una respuesta ambigua sólo se concilia en lectura.
 - No nuevos cron, reactivaciones, backend, Sheet ni cambios de ACL.
 - Notas y capturas sólo en fuente privada. Exportaciones públicas conservan un marcador mínimo; frontera verificada antes de ingesta. La ventana del día no sustituye el historial de PRODUCCION.
+
+## CTR-PRESENTATION-GUIDED
+
+- Componentes: SYS-PLAN-POTENCIAL, SYS-INVERSION, SYS-CONTROL.
+- Evidencia: La misma presentación y versión publicada; la sesión sólo almacena estado técnico temporal. El plan y sus fuentes originales permanecen sin cambios..
+- Entrada/campos: `Conductor autenticado en la plataforma de alojamiento; versión, secuencia creciente, capítulo/cuadro y fracción del recorrido.`, `Invitado con capacidad de lectura y presencia efímera sin identidad personal compartida.`.
+- Salida: Último estado del conductor con acuse y reloj del servidor; eventos de actualización y lectura de recuperación., Margen local de revisión de hasta tres cuadros, retorno al soltar y estado de conexión visible..
+
+- No transmitir scroll en píxeles, pantallas privadas, voz, notas de chinches ni credenciales YOD.
+- Invitado nunca puede publicar el estado del conductor; las capacidades de lectura y escritura son diferentes.
+- Posiciones atrasadas se descartan por secuencia y los saltos recuperan la versión exacta del guion.
+- Nunca extrapolar el dibujo del invitado más allá del conductor recibido.
+- Revisión acotada sólo durante el gesto; al soltar, cancelar, perder foco o salir vuelve al conductor vigente.
+- Conservar el Sitio, público, rotor, dibujos y notas; no modificar modelos financieros, cron o datos de negocio.
