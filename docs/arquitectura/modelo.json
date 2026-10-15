@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-15.despacho-v2-p5.1",
+  "revision": "2026-10-15.sala-ejemplo.1",
   "checked_at": "2026-10-15",
   "priorities": [
     "vender_mas",
@@ -12981,6 +12981,30 @@
       ],
       "deployment": "Propuesta antes de implementación; publicación pendiente de verificaciones.",
       "rollback": "Interruptor de P3 apagado conserva camino anterior; ningún dato o permiso migrado."
+    },
+    {
+      "id": "CHG-SALA-EJEMPLO-20261015",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "EXT-GMAIL",
+        "SYS-YOD-OS"
+      ],
+      "status": "implementado_local",
+      "authorization": "Dirección: siguiente etapa para dejarlo funcional, correr un ejemplo, comprobar qué estuvo bien y corregir lo que estuvo mal hasta terminar.",
+      "proposal": "Corregir lecturas CONFIG por cada firma editorial mediante memoización local de nombres por rol en cada fusión; preservar marcas, vetos y lectura fresca entre invocaciones. Ejecutar un ejemplo aislado con motores reales, comprobar bytes privados, imagen/audio/video y separar éxito técnico de aprobación editorial.",
+      "tests": [
+        "Comparar fusión antes/después con datos sintéticos: mismas decisiones, notas y vetos; lecturas CONFIG limitadas a roles únicos; nombres frescos en siguiente invocación.",
+        "Ejemplo aislado de imagen, voz, escena y corte: streams, duración, descarga privada y SHA256; revisión perceptual separada.",
+        "Lectura real de recursos, diagnóstico explícito y recibo de publicación; integración no equivale a backend desplegado."
+      ],
+      "deployment": "Autorizado por Dirección en el encargo. Verificación local: 776 tests atlas y verificadores OS, portal, accesos y obra; Sala 504 Python, 111 Node y 13 verificaciones. Ejemplo real 38814111428: 6 archivos verificados, corte 1080x1920 H264/AAC de 18.167s. La sonda 38814278019 falla sólo en dia. Función diaria original cotejada y respaldo privado; despliegue y relectura se acreditarán por separado.",
+      "rollback": "Revertir PR y restaurar las funciones exactas respaldadas en el backend original si se despliegan; conservar decisiones, cola, archivos, permisos y recibos. No activar histórico ni cambiar cuotas, crons o destinatarios."
     }
   ],
   "data_contracts": [
@@ -14609,7 +14633,8 @@
         "Reintentar sólo acciones GET declaradas de lectura sin efectos, con límites y espera acotados. No presumir que cualquier GET es inocuo.",
         "Una mutación POST no recibe reintento genérico después de timeout, fallo de transporte o ACK ambiguo: consultar el estado/recibo y reconciliar primero.",
         "No duplicar correo, triggers, encolados, montajes o registros para recuperar una respuesta perdida. Un rechazo explícito se trata sólo mediante su contrato particular.",
-        "No registrar credenciales, URLs privadas, payloads de negocio o cuerpos remotos privados en informes públicos. Mantener ACL y validación de negocio existentes."
+        "No registrar credenciales, URLs privadas, payloads de negocio o cuerpos remotos privados en informes públicos. Mantener ACL y validación de negocio existentes.",
+        "Los nombres visibles se resuelven una vez por rol dentro de cada fusión editorial. No cachear autorización ni nombres entre invocaciones; no modificar marca, nota, orden, veto o sello."
       ]
     },
     {

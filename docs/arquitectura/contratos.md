@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.despacho-v2-p5.1 · 2026-10-15.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.sala-ejemplo.1 · 2026-10-15.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -803,6 +803,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Una mutación POST no recibe reintento genérico después de timeout, fallo de transporte o ACK ambiguo: consultar el estado/recibo y reconciliar primero.
 - No duplicar correo, triggers, encolados, montajes o registros para recuperar una respuesta perdida. Un rechazo explícito se trata sólo mediante su contrato particular.
 - No registrar credenciales, URLs privadas, payloads de negocio o cuerpos remotos privados en informes públicos. Mantener ACL y validación de negocio existentes.
+- Los nombres visibles se resuelven una vez por rol dentro de cada fusión editorial. No cachear autorización ni nombres entre invocaciones; no modificar marca, nota, orden, veto o sello.
 
 ## CTR-SALA-CHINCHES-RECIBO
 
