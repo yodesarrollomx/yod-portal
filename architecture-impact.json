@@ -1,18 +1,12 @@
 {
-  "model_revision": "2026-10-15.presentation-pins-ingest.1",
-  "proposal_id": "CHG-PRESENTATION-PINS-INGEST-20261015",
-  "summary": "Registrar código y publicaciones comprobados del contrato de chinches compartidas, preservando límites de recepción privada, adopción parcial y todos los contratos vigentes. Sólo metadatos/documentación; no cambia rutas, horarios, negocio o permisos.",
+  "model_revision": "2026-10-15.despacho-goals-hydration.1",
+  "proposal_id": "CHG-DESPACHO-GOALS-HYDRATION-20261015",
+  "summary": "Resolver el perfil individual del caso si el catálogo rápido no incluye descriptor válido de metas. Reusar perfiles completos frescos, incluidos ready:false; nunca inferir capacidad de can_enqueue. Mantener lease, revocación, selección concurrente y caso exacto. Sin cambios en motor, permisos, despliegues o datos.",
   "components": [
-    "SYS-INVERSION",
     "SYS-YOD-OS",
-    "SYS-CONTROL",
-    "SYS-SALA",
-    "GAS-SALA",
-    "SHEET-SALA",
-    "EXT-ACTIONS",
-    "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
-    "EXT-DRIVE"
+    "SYS-DESPACHO-3D",
+    "GAS-PORTERO",
+    "SYS-DESPACHO"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -22,5 +16,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir sólo consumidores/relevo frontend; conservar IndexedDB, IDs, sobres privados y recibos de Sala. No reponer notas a nueva para reenviar un POST ambiguo; no borrar datos ni cambiar permisos, rutinas o backend."
+  "rollback": "Revertir este cambio de selección y sus versiones de importación; conservar metas, historial, revisiones y permisos."
 }

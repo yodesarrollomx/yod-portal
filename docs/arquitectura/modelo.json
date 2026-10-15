@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-15.presentation-pins-ingest.1",
+  "revision": "2026-10-15.despacho-goals-hydration.1",
   "checked_at": "2026-10-15",
   "priorities": [
     "vender_mas",
@@ -12651,6 +12651,25 @@
       ],
       "deployment": "Publicado15-oct-2026: Atlas240 define el contrato; Sala310/d8a8171 y Pages38762162219 acreditan proyección/capability. Board33/7435b2d y Pages38765885526 acreditan ambas entradas vigentes e histórica; su árbol54e20aee coincide con el probado, CI38765037795 SUCCESS. Consumidor externo Sites versión15 desplegado succeeded; sus activos publicados coinciden byte a byte. Transportes de consumidores idénticos; captura/contexto privados, recibo porID/huella y conciliación sin duplicados. Pruebas aisladas4flujosHTTPS/2engines más captura/recarga/pause/historial sobre recorridos vigentes; cero POST de negocio para QA. Esto acredita código/publicación, no recepción desde un dispositivo privado ni cumplimiento de una chinche. Lectura/ACK y adopción del resto de pantallas siguen pendientes; originales y base del proyecto intactos.",
       "rollback": "Revertir sólo consumidores/relevo frontend; conservar IndexedDB, IDs, sobres privados y recibos de Sala. No reponer notas a nueva para reenviar un POST ambiguo; no borrar datos ni cambiar permisos, rutinas o backend."
+    },
+    {
+      "id": "CHG-DESPACHO-GOALS-HYDRATION-20261015",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO",
+        "SYS-DESPACHO"
+      ],
+      "status": "implementado_local",
+      "approval": "Dirección solicita conectar el seguimiento de metas como tarea dos; implementación y publicación autorizadas, sin reanudar metas antiguas ni crear encargos de prueba.",
+      "proposal": "Resolver el perfil individual del caso si el catálogo rápido no incluye descriptor válido de metas. Reusar perfiles completos frescos, incluidos ready:false; nunca inferir capacidad de can_enqueue. Mantener lease, revocación, selección concurrente y caso exacto. Sin cambios en motor, permisos, despliegues o datos.",
+      "tests": [
+        "Regresiones sintéticas de catálogo incompleto, ready:false, identidad, revocación y respuesta tardía.",
+        "Suite Node, verificadores OS/portal/accesos/obra, atlas e impacto.",
+        "QA autenticada de lectura y siguiente paso tras publicación; sin escrituras de negocio para probar."
+      ],
+      "deployment": "Cambio preparado con 699 pruebas Node aprobadas y verificadores OS/portal/accesos/obra/atlas correctos. Publicación y lectura autenticada pendientes.",
+      "rollback": "Revertir este cambio de selección y sus versiones de importación; conservar metas, historial, revisiones y permisos."
     }
   ],
   "data_contracts": [
