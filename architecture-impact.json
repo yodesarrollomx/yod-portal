@@ -1,11 +1,12 @@
 {
-  "model_revision": "2026-10-15.presentation-guided.1",
-  "proposal_id": "CHG-PRESENTATION-GUIDED-20261015",
-  "summary": "Registrar primero el modo guiado de las presentaciones y su contrato de revisión temporal, preservando fuentes, chinches, público y versiones.",
+  "model_revision": "2026-10-15.oficina-283.2",
+  "proposal_id": "CHG-OFICINA-283-20261015",
+  "summary": "Carga por etapas comprobadas, actividad fresca por agente y acceso directo a hablar; tarjetas compactas y encuadre panorámico por orientación. Reutilizar el pool temporal existente para evitar canjes duplicados de observadores, sin cache persistente, permisos nuevos ni porcentajes simulados.",
   "components": [
-    "SYS-PLAN-POTENCIAL",
-    "SYS-INVERSION",
-    "SYS-CONTROL"
+    "SYS-YOD-OS",
+    "SYS-DESPACHO-3D",
+    "GAS-PORTERO",
+    "SYS-DESPACHO"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -15,5 +16,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir sólo la integración de presentación guiada a la versión previa del mismo Sitio. No borrar chinches, notas, versiones, datos originales ni cambiar audiencia o rutinas. Las sesiones expiran y se pueden cerrar sin tocar fuentes de negocio."
+  "rollback": "Revertir frontend283 sin tocar datos, backend ni permisos."
 }

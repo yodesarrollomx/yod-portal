@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-15.presentation-guided.1",
+  "revision": "2026-10-15.oficina-283.2",
   "checked_at": "2026-10-15",
   "priorities": [
     "vender_mas",
@@ -12689,6 +12689,24 @@
       ],
       "deployment": "Primer consumidor publicado en el mismo Sitio: versión16, fuente d16ec86fbc03dd0626b7480bf733dfc73c08cb0c, despliegue succeeded 15-oct-2026 17:23UTC. Runtime nativo con dos tablas técnicas D1 provisionadas y health200/ready. Documento y once activos servidos exactos; identidad anónima sin control y cabeceras de identidad no confiables rechazadas por plataforma. Ocho pruebas SQLite y dos parejas WebKit/Chromium con roles invertidos completan gesto, retorno, presencia, orientaciones, recarga, offline, chinches y cierre. Se conservan exactamente dibujo, rotor, transportes y compositor; sólo metadatos de edición del guion. No acredita primera sesión con SIWC real, latencia SSE hospedada ni aceptación táctil en iPhone físico. El invitado recupera instantánea periódica si no hay streaming. La integración de otras presentaciones queda pendiente; no se alteran sus motores, fuentes o calendarios.",
       "rollback": "Revertir sólo la integración de presentación guiada a la versión previa del mismo Sitio. No borrar chinches, notas, versiones, datos originales ni cambiar audiencia o rutinas. Las sesiones expiran y se pueden cerrar sin tocar fuentes de negocio."
+    },
+    {
+      "id": "CHG-OFICINA-283-20261015",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO",
+        "SYS-DESPACHO"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección autoriza resolver íntegramente chinche283 el15oct2026 en conversación; implementación y publicación existentes, sin ampliar acceso ni ejecutar encargos de negocio.",
+      "proposal": "Carga por etapas comprobadas, actividad fresca por agente y acceso directo a hablar; tarjetas compactas y encuadre panorámico por orientación. Reutilizar el pool temporal existente para evitar canjes duplicados de observadores, sin cache persistente, permisos nuevos ni porcentajes simulados.",
+      "tests": [
+        "Regresión de progreso sin datos falsos, permisos/identidad y canje compartido.",
+        "Suite Node y verificadores; navegador desktop/móvil/fallback y PPP."
+      ],
+      "deployment": "Propuesta registrada antes de implementar; publicación pendiente.",
+      "rollback": "Revertir frontend de283; conservar perfiles, metas, decisiones y backend."
     }
   ],
   "data_contracts": [
@@ -16414,6 +16432,20 @@
         "SYS-PLAN-POTENCIAL",
         "SYS-INVERSION",
         "SYS-CONTROL"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-loading283.test.cjs",
+      "components": [
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/probar-carga283-browser.cjs",
+      "components": [
+        "SYS-DESPACHO-3D"
       ]
     }
   ],
