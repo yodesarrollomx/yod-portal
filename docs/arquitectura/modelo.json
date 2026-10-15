@@ -12924,7 +12924,8 @@
         "SYS-TRACK",
         "SYS-OBRA",
         "SYS-CONTROL",
-        "SYS-OBRA-CLIENTE"
+        "SYS-OBRA-CLIENTE",
+        "EXT-DRIVE"
       ],
       "status": "propuesto",
       "authorization": "Dirección: sigue tras entregaP2. Sólo integración de pantallas/consultas en rama; activación enP6.",

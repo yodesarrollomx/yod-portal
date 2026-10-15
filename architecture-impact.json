@@ -10,7 +10,8 @@
     "SYS-TRACK",
     "SYS-OBRA",
     "SYS-CONTROL",
-    "SYS-OBRA-CLIENTE"
+    "SYS-OBRA-CLIENTE",
+    "EXT-DRIVE"
   ],
   "tests": [
     "node --test tests/*.cjs",
