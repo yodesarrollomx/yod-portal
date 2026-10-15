@@ -12587,11 +12587,12 @@
         "EXT-ACTIONS",
         "EXT-DRIVE",
         "GAS-SALA",
-        "SHEET-SALA"
+        "SHEET-SALA",
+        "EXT-GMAIL"
       ],
       "status": "propuesto",
       "approval": "Dirección autorizó la migración técnica de Sala el 14-oct-2026; este contrato desarrolla esa autorización sin nueva decisión editorial, pago, ACL o scope. Preparación local: ninguna emisión, release, asset o flag activado por este registro.",
-      "proposal": "Fase1 sólo de imágenes nuevas: GitHub Releases públicos inmutables en yodesarrollomx/sala-edicion; schema 1 de manifiesto público con pin de bytes exactos y lector UI/snapshot instalado primero. Emisor SALA_MEDIOS_PUBLICOS desactivado por defecto. FULL evita duplicar medios externos ya verificados, hidrata bytes exactos para Mesa/corte y conserva file_is_published por identidad. Históricos, MD5, permisos privados de Drive, reglas editoriales y presupuesto de 900 MiB intactos. Integración relacionada de continuidad: CTR-SALA-PRODUCCION-HISTORICA elimina la ventana técnica de14 días como fuente de verdad para producir, mediante GET sólo lectura produccion del backend existente. SALA_PRODUCCION_HISTORICA=0 hasta despliegue por propietario y respuesta completa verificada; backend propuesto, no publicado, sin ACL o scopes nuevos.",
+      "proposal": "Fase1 sólo de imágenes nuevas: GitHub Releases públicos inmutables en yodesarrollomx/sala-edicion; schema 1 de manifiesto público con pin de bytes exactos y lector UI/snapshot instalado primero. Emisor SALA_MEDIOS_PUBLICOS desactivado por defecto. FULL evita duplicar medios externos ya verificados, hidrata bytes exactos para Mesa/corte y conserva file_is_published por identidad. Históricos, MD5, permisos privados de Drive, reglas editoriales y presupuesto de 900 MiB intactos. Integración relacionada de continuidad: CTR-SALA-PRODUCCION-HISTORICA elimina la ventana técnica de14 días como fuente de verdad para producir, mediante GET sólo lectura produccion del backend existente. SALA_PRODUCCION_HISTORICA=0 hasta despliegue por propietario y respuesta completa verificada; backend propuesto, no publicado, sin ACL o scopes nuevos. EXT-GMAIL se declara sólo por la propiedad compartida de gas/Code.gs; este GET histórico no altera envío, destinatarios, permisos ni operación del correo y no acredita recepción.",
       "tests": [
         "node scripts/arquitectura.cjs --check; node --test tests/arquitectura.test.cjs; validación de impacto del atlas.",
         "Consumidores Sala: manifest estricto, 2 MiB antes de parse/emisión, rutas/traversal, SHA256/bytes/MIME/tag/repo, 25 MiB por imagen y 1000 assets únicos por release.",
