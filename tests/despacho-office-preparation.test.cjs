@@ -41,7 +41,7 @@ test('hidden page does not mint; cleared preparation never publishes an old resu
 test('fresh validated catalog opens another resident without a second server read; stale catalog revalidates',async()=>{
  const {createAuthorizedCases}=await import('../despacho3d/authorized-cases.mjs');
  let at=1000,reads=0;
- const selection=id=>({ok:true,case_id:id,name:'Synthetic',url:'https://docs.google.com/spreadsheets/d/SYNTHETIC_ONLY/edit',can_enqueue:true,agent_ready:true});
+ const selection=id=>({ok:true,case_id:id,name:'Synthetic',url:'https://docs.google.com/spreadsheets/d/SYNTHETIC_ONLY/edit',can_enqueue:true,agent_ready:true,goals:{schema:1,ready:true,worker_ready:false}});
  const cases=createAuthorizedCases({reuseCatalog:true,now:()=>at,schedule:()=>1,cancel:()=>{},
   transport:{listAuthorized:async()=>({ok:true,schema:1,cases:[selection('a'),selection('b')]}),
    resolveCurrent:async p=>{reads++;return selection(p.case_id);}}});
