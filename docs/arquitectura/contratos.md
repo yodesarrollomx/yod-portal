@@ -925,3 +925,16 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Un cierre de issue no prueba ejecución ni aprobación.
 - No publicar texto privado de nuevas chinches en issues; marcador público mínimo.
 - GAS espejo no se despliega por modificar repositorio.
+
+## CTR-SALA-FINALISTAS-METRICAS
+
+- Componentes: SYS-SALA, SVC-SALA-PRODUCTOR, EXT-ACTIONS, SYS-YOD-OS.
+- Evidencia: Contrato de interacción de los puntos 1 y 2; evaluación del punto 5..
+- Entrada/campos: `Editor vigente, propuesta, lámina, versión y conjunto exacto de candidatas con identidad original.`, `Resultados obtenidos por Mesa, separados por lámina y cantidad de candidatas.`.
+- Salida: Preselección local recuperable de cero, una o dos tomas; mensaje explícito de alcance en este navegador., laminas_preparadas y tomas_obtenidas; campo generadas conservado como alias de láminas..
+
+- Preseleccionar nunca envía decidir, producción, ni aprobación implícita.
+- Persistencia por propuesta/lámina/versión/conjunto de imágenes y rol; un cambio no hereda finalistas.
+- Escritura local fallida no se anuncia guardada; no se almacenan credenciales. No se afirma sincronización entre dispositivos.
+- Tomas obtenidas no equivalen a llamadas pagadas ni imágenes nuevas: pueden proceder de recibos. Costo desconocido nunca se convierte en cero.
+- Estado hecho en cola y checks exitosos no acreditan calidad editorial ni entrega externa.

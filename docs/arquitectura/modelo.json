@@ -12875,6 +12875,26 @@
       ],
       "deployment": "Implementado en rama aislada; validación general y publicación por PR pendientes. No se atribuye reducción temporal individual ni cambio de GAS.",
       "rollback": "Revertir PR sin cambiar datos, sesiones persistentes ni despliegue GAS."
+    },
+    {
+      "id": "CHG-SALA-EVALUACION-20261015",
+      "components": [
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "EXT-ACTIONS",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección: ok hazlo bien y completa todo; cierre de los bloques de lógica creativa e interacción.",
+      "proposal": "Completar preselección local de hasta dos finalistas por editor, propuesta y versión, sin emitir votos ni trabajos. Separar láminas preparadas de tomas obtenidas en la telemetría Mesa, conservando alias históricos. La evaluación real de calidad/tiempo/costo/fallos no acredita aceptación editorial ni habilita autonomía nueva.",
+      "tests": [
+        "Persistencia tras recarga; aislamiento entre editores/versiones; máximo dos; falta de almacenamiento sin éxito aparente.",
+        "Recorrido real de UI con endpoints sintéticos: conservar finalistas no vota ni produce.",
+        "Una lámina con dos candidatas informa una lámina y dos tomas; cero y resultados parciales conservan unidades.",
+        "Regresiones existentes, impacto, CI y bytes publicados."
+      ],
+      "deployment": "Propuesta registrada antes de implementar; integración y comprobación pendientes.",
+      "rollback": "Revertir PR conservando preselecciones locales, decisiones, cola, recibos y medios. No cambiar backend ni cuotas."
     }
   ],
   "data_contracts": [
@@ -14749,6 +14769,31 @@
         "Un cierre de issue no prueba ejecución ni aprobación.",
         "No publicar texto privado de nuevas chinches en issues; marcador público mínimo.",
         "GAS espejo no se despliega por modificar repositorio."
+      ]
+    },
+    {
+      "id": "CTR-SALA-FINALISTAS-METRICAS",
+      "components": [
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "EXT-ACTIONS",
+        "SYS-YOD-OS"
+      ],
+      "source": "Contrato de interacción de los puntos 1 y 2; evaluación del punto 5.",
+      "input": [
+        "Editor vigente, propuesta, lámina, versión y conjunto exacto de candidatas con identidad original.",
+        "Resultados obtenidos por Mesa, separados por lámina y cantidad de candidatas."
+      ],
+      "output": [
+        "Preselección local recuperable de cero, una o dos tomas; mensaje explícito de alcance en este navegador.",
+        "laminas_preparadas y tomas_obtenidas; campo generadas conservado como alias de láminas."
+      ],
+      "invariants": [
+        "Preseleccionar nunca envía decidir, producción, ni aprobación implícita.",
+        "Persistencia por propuesta/lámina/versión/conjunto de imágenes y rol; un cambio no hereda finalistas.",
+        "Escritura local fallida no se anuncia guardada; no se almacenan credenciales. No se afirma sincronización entre dispositivos.",
+        "Tomas obtenidas no equivalen a llamadas pagadas ni imágenes nuevas: pueden proceder de recibos. Costo desconocido nunca se convierte en cero.",
+        "Estado hecho en cola y checks exitosos no acreditan calidad editorial ni entrega externa."
       ]
     }
   ],
