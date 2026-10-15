@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-14.goals-single-flight.2 · 2026-10-14.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.equipo-relevo.1 · 2026-10-15.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 

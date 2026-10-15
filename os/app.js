@@ -261,11 +261,11 @@
   }
 
   // La sección privada solo conoce autorización/época; ninguna credencial sale del OS.
-  var despachoPins=null,despachoConversation=null;
+  var despachoPins=null,despachoConversation=null,despachoTeam=null;
   var despachoSection=window.YodDespachoSection.create({
     window:window,document:document,
     readAccess:function(){return {ready:Boolean(state.sessionToken)&&mismaSesion(state.sessionToken,state.sesionEpoch),allowed:window.YodAccessPolicy.canOpen(state.boards,'SYS-DESPACHO',state.role),epoch:state.sesionEpoch};},
-    onTeardown:function(){if(despachoPins)despachoPins.clear();if(despachoConversation)despachoConversation.clear();},
+    onTeardown:function(){if(despachoTeam)despachoTeam.teardown();if(despachoPins)despachoPins.clear();if(despachoConversation)despachoConversation.clear();},
     revalidate:function(){loadIdentity();}
   });
   if(window.YodDespachoTransport)window.YODCaseTransport=window.YodDespachoTransport.create({
@@ -278,7 +278,22 @@
     getEpoch:function(){return state.sesionEpoch;},
     getTransport:function(){return window.YODCaseTransport;}
   });
-  window.revisarPuertaDespacho=function(){despachoSection.refresh();};
+  if(window.YodDespachoEquipoHost&&window.YODCaseTransport&&$('despachoEquipo')){
+    despachoTeam=window.YodDespachoEquipoHost.create({
+      container:$('despachoEquipo'),host:window,
+      getAccess:function(){return {allowed:state.role==='admin'&&despachoSection.isAuthorized()&&mismaSesion(state.sessionToken,state.sesionEpoch),epoch:state.sesionEpoch};},
+      transport:{
+        read:function(){return window.YODCaseTransport.readTeam({});},
+        write:function(intent){return window.YODCaseTransport.writeTeam(intent);},
+        lookupReceipt:function(requestId){return window.YODCaseTransport.lookupTeamReceipt({request_id:requestId});}
+      },
+      loadMount:function(){return import('../despacho3d/equipo.mjs?v=equipo-relevos-2').then(function(module){return module.mountTeamDesk;});},
+      onError:function(){var status=$('despachoEquipoEstado');if(status)status.textContent='No se pudo abrir Equipo. Puedes volver a validar tu acceso.';}
+    });
+  }
+  window.revisarPuertaDespacho=function(){despachoSection.refresh();if(despachoTeam)void despachoTeam.refresh();};
+  addEventListener('hashchange',function(){if(despachoTeam)void despachoTeam.refresh();});
+  addEventListener('pagehide',function(){if(despachoTeam)despachoTeam.teardown();});
   window.cerrarDespachoPrivado=function(){despachoSection.teardown();};
   if(window.YodDespachoChinches)despachoPins=window.YodDespachoChinches.bindDespachoChinches({
     isAuthorized:function(){return despachoSection.isAuthorized();},

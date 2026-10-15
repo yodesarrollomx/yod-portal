@@ -37,3 +37,19 @@ test('an unreadable JSON response reports format without logging its body',async
  const h=harness(async()=>({ok:true,text:async()=>'<html>synthetic unreadable response</html>'}));
  await assert.rejects(h.create().read({case_id:'synthetic-case'}),/^Error: invalid_response$/);
 });
+
+test('team operations validate exact intent and return direct correlated responses',async()=>{
+ const calls=[],h=harness(async(url,request)=>{const b=JSON.parse(request.body);calls.push(b);return {ok:true,text:async()=>JSON.stringify(b.operation==='readTeam'?{version:1,revision:'r',members:[],tasks:[],events:[]}:{version:1,status:'saved',request_id:b.payload.request_id,text:b.payload.text})};});
+ const t=h.create(),intent={version:1,kind:'request',text:'Exact text  ',task_id:null,request_id:'request_synthetic_12345',expected_revision:'r'};
+ assert.equal((await t.readTeam({})).version,1);assert.equal((await t.writeTeam(intent)).text,intent.text);await t.lookupTeamReceipt({request_id:intent.request_id});
+ assert.deepEqual(calls.map(b=>b.operation),['readTeam','writeTeam','lookupTeamReceipt']);assert.deepEqual(calls[1].payload,intent);
+ for(const bad of [{...intent,author_id:'forged'},{...intent,task_id:'task'},{...intent,text:' '},{...intent,request_id:'short'}])await assert.rejects(t.writeTeam(bad),/invalid_payload/);
+ await assert.rejects(t.readTeam({actor_id:'forged'}),/invalid_payload/);assert.equal(calls.length,3);
+});
+test('team server errors and session revocation cannot produce a saved receipt',async()=>{
+ const h=harness(async()=>({ok:true,text:async()=>JSON.stringify({ok:false,error:'revision_conflict'})}));await assert.rejects(h.create().readTeam({}),/revision_conflict/);
+ let release;const delayed=harness(async()=>{await new Promise(r=>release=r);return {ok:true,text:async()=>JSON.stringify({version:1,status:'saved'})};});
+ const session={ready:true,allowed:true,token:'same',epoch:1};delayed.session(session);const p=delayed.create().lookupTeamReceipt({request_id:'request_synthetic_12345'});session.allowed=false;release();await assert.rejects(p,/unauthorized/);
+});
+
+test('explicit team authority rejection signals teardown instead of retaining private snapshot',async()=>{for(const error of ['forbidden','unauthorized','revocado']){const h=harness(async()=>({ok:true,text:async()=>JSON.stringify({ok:false,error})}));await assert.rejects(h.create().readTeam({}),/session_changed/);}});

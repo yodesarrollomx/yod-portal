@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-14.goals-single-flight.2",
-  "checked_at": "2026-10-14",
+  "revision": "2026-10-15.equipo-relevo.1",
+  "checked_at": "2026-10-15",
   "priorities": [
     "vender_mas",
     "margen_y_control",
@@ -2868,7 +2868,7 @@
       "tipo": "interfaz",
       "repo": "yodesarrollomx/yod-portal",
       "dominio": "Operación",
-      "proposito": "Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.",
+      "proposito": "Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto. Equipo se monta desde cabina Dirección con época real, transporte autorizado y teardown; conexión productiva pendiente.",
       "source_of_truth": "Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos.",
       "runtime_status": "Versión normal126 publicada por PR141 (0351157): presencia de tres proyectos autorizados, puestos PPP/Trabajo/Expediente y pantallas ligadas al caso. Siete recorridos de navegador aprobados con datos sintéticos; accesoGSI400 corregido en OS enviando sólo el origen. No acredita micrófono físico ni apariencia/datos del PPP nativo privado.",
       "evidence": [
@@ -12350,6 +12350,50 @@
       ],
       "deployment": "Registro previo a implementación y verificación de navegador.",
       "rollback": "Revertir sólo frontend móvil. Conservar Sheets, versiones anteriores, credenciales y permisos."
+    },
+    {
+      "id": "CHG-DESPACHO-EQUIPO-20261013",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-SALA",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "status": "propuesto",
+      "approval": "Petición directa de Dirección: implementar el equipo compartido en el Despacho existente con instrucciones escritas o dictadas y seguimiento. No concede nuevos permisos ni abre información privada. Extensión preparada localmente: Kanban de sólo lectura en la misma Mesa, cuatro estados y bloqueos separados, responsable real, antigüedad y fuentes; HBv1 intacto sin inferir conexión, acuse o reasignación por carga. Publicación y aceptación productiva pendientes.",
+      "proposal": "Módulo nativo de equipo para el Despacho: historia, hoy y planeación; responsables y última revisión comprobada; instrucciones editables con dictado optativo, conservación de borrador, request_id estable y recibo correlacionado. Consume transporte autorizado inyectado por la cabina; no publica datos ni introduce credenciales o endpoints. Adaptador al Buzón existente y activación se verifican aparte. No modifica el mini CRM reservado. Montaje nativo en cabina privada autenticada y transporte readTeam/writeTeam/lookupTeamReceipt implementados; validación de payload, revocación y fencing de import tardío. Backend coordinado separado. Merge preserva el registro de propuesta investor-simple-story ya presente en main, sin modificar su implementación ni fuente editorial. El historial extenso se abre a petición; los encargos Para Ambos muestran a ChatGPT y Claude como responsables compartidos.",
+      "tests": [
+        "CI: node scripts/arquitectura.cjs --check; node --test tests/*.cjs; node verify-os.cjs; node verify-portal.cjs; node verify-accesos.cjs; node verify-obra-app.cjs.",
+        "Pruebas sintéticas: cortes históricos sin mutación, fechas futuras no acreditan ejecución, señales ausentes/futuras, envío ambiguo conserva request_id/texto, recibo incorrecto rechazado, revocación y lectura concurrente.",
+        "Aceptación pendiente: navegador escritorio/móvil, transporte privado instalado, guardar/recargar/acuse real de otro agente. Sin escrituras de prueba a negocio.",
+        "tests/despacho-equipo-host.test.cjs y pruebas de transporte: sin autoridad no import, cambio de época/ruta revoca, intent exacto y errores backend no acreditan guardado.",
+        "717/717 Node aprobadas antes del ajuste documental; verificación de impacto se completa incluyendo Portero y Drive, componentes del transporte existente."
+      ],
+      "deployment": "Panel, transporte y montaje autenticado implementados en rama. Suite Node717/717 aprobada al commit3362eb98; OS/portal/accesos y esquema/vistas aprobados. Integración backend preparada aparte, todavía sin instalación ni recibo productivo. El flujo privado de instalación falla antes de iniciar. No hay publicación de esta propuesta ni lectura/escritura productiva confirmada.",
+      "rollback": "Retirar el montaje y revertir estos módulos. Conservar Buzón, eventos, recibos, permisos y todas las notas."
+    },
+    {
+      "id": "CHG-DESPACHO-EQUIPO-RELEVO-20261015",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-SALA",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección pide asumir el relevo de implementación pendiente y conserva la autorización de integrar/publicar la oficina existente. No concede permisos, nuevas audiencias ni cambios de negocio.",
+      "proposal": "Conciliar Equipo y Relevos sobre la cabina actual conservando selección explícita, entrada corregida, lecturas de metas concurrentes y propuestas de presentación. Un solo montaje autenticado, mismos contratos y Buzón; sin duplicar mini CRM ni fuentes.",
+      "tests": [
+        "Suite Node completa y verificadores de atlas/esquema/impacto/OS/portal/accesos/obra al árbol integrado.",
+        "Regresión sintética de Equipo/Relevos y navegador Chromium/WebKit 320/390/1440; red a negocio bloqueada.",
+        "Conservar correcciones de entrada/selección/readGoals y proyectos previos; sin API de negocio de prueba."
+      ],
+      "deployment": "Preparación en rama. La instalación del servidor declarada requiere comprobante independiente; no acredita nota durable, recarga ni aceptación. Mantener sin integrar a main hasta esos recibos.",
+      "rollback": "Retirar montaje Equipo/Relevos mediante PR conservando las correcciones publicadas de selección y metas, Buzón, historial, permisos y recibos."
     }
   ],
   "data_contracts": [
@@ -15707,6 +15751,61 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO",
         "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-equipo-kanban.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-equipo.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "docs/arquitectura/despacho-equipo.md",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/probar-equipo-browser.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-SALA"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/despacho-equipo-host.js",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-equipo-host.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
       ]
     }
   ],

@@ -1,24 +1,19 @@
 {
-  "model_revision": "2026-10-14.goals-single-flight.2",
-  "proposal_id": "CHG-GOALS-SINGLE-FLIGHT-20261014",
-  "summary": "Chinche #284: lecturas readGoals concurrentes del Despacho 3D comparten una sola llamada en el puente del OS en vez de rebotar como transport_busy.",
+  "model_revision": "2026-10-15.equipo-relevo.1",
+  "proposal_id": "CHG-DESPACHO-EQUIPO-RELEVO-20261015",
+  "summary": "Conciliar Equipo y Relevos sobre la cabina actual conservando selección explícita, entrada corregida, lecturas de metas concurrentes y propuestas de presentación. Un solo montaje autenticado, mismos contratos y Buzón; sin duplicar mini CRM ni fuentes.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
+    "SYS-DESPACHO-3D",
+    "SYS-SALA",
     "GAS-PORTERO",
-    "EXT-DRIVE",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-CONTROL",
-    "SYS-OBRA-CLIENTE"
+    "EXT-DRIVE"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs"
+    "Suite Node completa y verificadores de atlas/esquema/impacto/OS/portal/accesos/obra al árbol integrado.",
+    "Regresión sintética de Equipo/Relevos y navegador Chromium/WebKit 320/390/1440; red a negocio bloqueada.",
+    "Conservar correcciones de entrada/selección/readGoals y proyectos previos; sin API de negocio de prueba."
   ],
-  "rollback": "Revertir sólo la línea de single-flight en os/despacho-conversation.js y su prueba; sin datos, permisos ni deployments afectados."
+  "rollback": "Retirar montaje Equipo/Relevos mediante PR conservando las correcciones publicadas de selección y metas, Buzón, historial, permisos y recibos."
 }
