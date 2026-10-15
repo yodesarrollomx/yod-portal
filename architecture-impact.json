@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-15.canje-diagnostico.1",
+  "model_revision": "2026-10-15.canje-diagnostico.2",
   "proposal_id": "CHG-CANJE-DIAGNOSTICO-283",
   "summary": "Distinguir fallos del canje con códigos/fase/duración seguros. No cambiar permisos, reintentos, plazos ni backend.",
   "components": [

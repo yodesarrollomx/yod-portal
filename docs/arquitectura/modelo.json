@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-15.canje-diagnostico.1",
+  "revision": "2026-10-15.canje-diagnostico.2",
   "checked_at": "2026-10-15",
   "priorities": [
     "vender_mas",
@@ -645,7 +645,7 @@
         "SYS-PORTAL"
       ],
       "status": "declarado",
-      "runtime_status": "Portal PR141 publicado en Pages (0351157). El clienteWeb y origen ya estaban registrados correctamente: OS recupera Referer de sólo origen y GSI devuelve200 en publicación escritorio/móvil. No acredita inicio de sesión personal, micrófono físico ni cobertura operativa completa de YOD. Implementado283 en rama, pruebas locales: diagnóstico de red/HTTP/formato/timeout en canje sin registrar secretos ni alterar acceso; publicación pendiente."
+      "runtime_status": "Portal PR141 publicado en Pages (0351157). El clienteWeb y origen ya estaban registrados correctamente: OS recupera Referer de sólo origen y GSI devuelve200 en publicación escritorio/móvil. No acredita inicio de sesión personal, micrófono físico ni cobertura operativa completa de YOD. Implementado283 en rama: diagnóstico seguro de canje; publicación pendiente."
     },
     {
       "id": "SYS-PLAN-POTENCIAL",
@@ -12734,6 +12734,27 @@
       "rollback": "Revertir PR; conservar recibos privados, imágenes, snapshots, decisiones y colas. No borrar ni convertir drafts en releases públicos."
     },
     {
+      "id": "CHG-PRESENTATION-LINKS-20261015",
+      "components": [
+        "SYS-PLAN-POTENCIAL",
+        "SYS-INVERSION",
+        "SYS-CONTROL"
+      ],
+      "status": "publicado",
+      "approval": "Dirección solicita exactamente dos enlaces permanentes: control privado por posesión de llave, sin registro, y visor compartible/QR para todos los celulares y escritorios conectados, con objetivo de cien asistentes y vistas previas de marca.",
+      "proposal": "Extender el mismo runtime y contrato CTR-PRESENTATION-GUIDED con un canal permanente, capacidad secreta de control validada sólo en servidor, arrendamiento de conductor y recuperación del estado vigente. Conservar sesiones existentes y financieros. Lecturas coalescidas, streaming acotado, respaldo periódico y presencia espaciada para cien seguidores. Rutas de control y visor con metadatos y logo, sin incluir la llave en fuentes, registros compartidos o vistas previas.",
+      "tests": [
+        "Contratos aislados: llave ausente/incorrecta, origen, arrendamiento, relevo, secuencia, cierre/reinicio y no filtración de secretos.",
+        "Cien lectores concurrentes aislados: convergencia, orden y número de lecturas coalescidas; no equivale a cien teléfonos físicos.",
+        "WebKit y Chromium: móviles y escritorio, gesto elástico, reconexión y conservación de chinches.",
+        "Metadatos de ambas rutas e imágenes de marca servidos públicamente sin credenciales.",
+        "Trece contratos SQLite, dos parejas WebKit/Chromium y cien lectores aislados por cinco minutos aprobados.",
+        "Cien lectores hospedados con SSE activo por cinco minutos y prueba móvil→escritorio, recarga y compositor sin envío de negocio."
+      ],
+      "deployment": "Mismo Sitio, versión17 publicada15-oct-2026 18:29UTC, fuente2fee176464f02faeecb7d7dfa0fddab3710b3082, despliegue nativo succeeded con revisión de entorno2 y migración adicional sin eliminar sesiones. Rutas privadas/públicas con títulos, descripción y tarjetas de marca; llave ausente de documento, captura y estado público. Salud y13activos exactos verificados hospedados. Control móvil sin registro, visor escritorio, recarga privada y compositor de chinches pasan en producción sin enviar revisiones de negocio. Cien lectores hospedados durante304.3s, 65678eventos, todos convergen, latencia p95393ms en esta prueba. Clientes ligeros en20contextos de navegador; no certifica cien teléfonos físicos ni múltiples regiones. Trece contratos SQLite, dos parejas WebKit/Chromium y prueba aislada de cien lectores durante300.8s aprobadas. Conservados finanzas, dibujos, rotor, compositor y transporte de chinches; sólo dos referencias de captura se normalizan a la misma raíz autorizada. Aceptación física iPhone pendiente.",
+      "rollback": "Volver a la versión16 del mismo Sitio, conservando D1 y registros originales. La nueva tabla técnica no elimina las sesiones previas. No tocar cron, PPP ni audiencia."
+    },
+    {
       "id": "CHG-CANJE-DIAGNOSTICO-283",
       "components": [
         "SYS-YOD-OS",
@@ -14587,12 +14608,13 @@
       ],
       "source": "La misma presentación y versión publicada; la sesión sólo almacena estado técnico temporal. El plan y sus fuentes originales permanecen sin cambios.",
       "input": [
-        "Conductor autenticado en la plataforma de alojamiento; versión, secuencia creciente, capítulo/cuadro y fracción del recorrido.",
-        "Invitado con capacidad de lectura y presencia efímera sin identidad personal compartida."
+        "Conductor con enlace privado de capacidad, validación de llave sólo en servidor; versión, época, secuencia y posición semántica. Las sesiones anteriores conservan su frontera de identidad.",
+        "Visor público compartible para celular/escritorio; presencia técnica sin identidad personal compartida."
       ],
       "output": [
         "Último estado del conductor con acuse y reloj del servidor; eventos de actualización y lectura de recuperación.",
-        "Margen local de revisión de hasta tres cuadros, retorno al soltar y estado de conexión visible."
+        "Margen local de revisión de hasta tres cuadros, retorno al soltar y estado de conexión visible.",
+        "Dos entradas permanentes con vistas previas de marca; raíz y visor siguen el mismo canal durante la presentación."
       ],
       "invariants": [
         "No transmitir scroll en píxeles, pantallas privadas, voz, notas de chinches ni credenciales YOD.",
@@ -14600,7 +14622,10 @@
         "Posiciones atrasadas se descartan por secuencia y los saltos recuperan la versión exacta del guion.",
         "Nunca extrapolar el dibujo del invitado más allá del conductor recibido.",
         "Revisión acotada sólo durante el gesto; al soltar, cancelar, perder foco o salir vuelve al conductor vigente.",
-        "Conservar el Sitio, público, rotor, dibujos y notas; no modificar modelos financieros, cron o datos de negocio."
+        "Conservar el Sitio, público, rotor, dibujos y notas; no modificar modelos financieros, cron o datos de negocio.",
+        "Llave de control sólo en fragmento consumido al abrir, almacenada por pestaña y enviada en header; servidor conserva únicamente su hash. Excluirla de fuentes, QR, vistas previas y registros compartidos.",
+        "Un arrendamiento de conductor y época de control impiden escrituras anteriores tras relevo. Tomar control en otro dispositivo requiere acción expresa.",
+        "No compartir I/O o streams entre peticiones de Worker. Cachear sólo datos resueltos; limitar consultas reales por stream, cola pendiente, presencia y ritmos de escritura."
       ]
     }
   ],

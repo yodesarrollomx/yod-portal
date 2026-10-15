@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.canje-diagnostico.1 · 2026-10-15.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.canje-diagnostico.2 · 2026-10-15.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -899,8 +899,8 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 - Componentes: SYS-PLAN-POTENCIAL, SYS-INVERSION, SYS-CONTROL.
 - Evidencia: La misma presentación y versión publicada; la sesión sólo almacena estado técnico temporal. El plan y sus fuentes originales permanecen sin cambios..
-- Entrada/campos: `Conductor autenticado en la plataforma de alojamiento; versión, secuencia creciente, capítulo/cuadro y fracción del recorrido.`, `Invitado con capacidad de lectura y presencia efímera sin identidad personal compartida.`.
-- Salida: Último estado del conductor con acuse y reloj del servidor; eventos de actualización y lectura de recuperación., Margen local de revisión de hasta tres cuadros, retorno al soltar y estado de conexión visible..
+- Entrada/campos: `Conductor con enlace privado de capacidad, validación de llave sólo en servidor; versión, época, secuencia y posición semántica. Las sesiones anteriores conservan su frontera de identidad.`, `Visor público compartible para celular/escritorio; presencia técnica sin identidad personal compartida.`.
+- Salida: Último estado del conductor con acuse y reloj del servidor; eventos de actualización y lectura de recuperación., Margen local de revisión de hasta tres cuadros, retorno al soltar y estado de conexión visible., Dos entradas permanentes con vistas previas de marca; raíz y visor siguen el mismo canal durante la presentación..
 
 - No transmitir scroll en píxeles, pantallas privadas, voz, notas de chinches ni credenciales YOD.
 - Invitado nunca puede publicar el estado del conductor; las capacidades de lectura y escritura son diferentes.
@@ -908,3 +908,6 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Nunca extrapolar el dibujo del invitado más allá del conductor recibido.
 - Revisión acotada sólo durante el gesto; al soltar, cancelar, perder foco o salir vuelve al conductor vigente.
 - Conservar el Sitio, público, rotor, dibujos y notas; no modificar modelos financieros, cron o datos de negocio.
+- Llave de control sólo en fragmento consumido al abrir, almacenada por pestaña y enviada en header; servidor conserva únicamente su hash. Excluirla de fuentes, QR, vistas previas y registros compartidos.
+- Un arrendamiento de conductor y época de control impiden escrituras anteriores tras relevo. Tomar control en otro dispositivo requiere acción expresa.
+- No compartir I/O o streams entre peticiones de Worker. Cachear sólo datos resueltos; limitar consultas reales por stream, cola pendiente, presencia y ritmos de escritura.
