@@ -12992,7 +12992,8 @@
         "SVC-SALA-EJECUTOR",
         "EXT-ACTIONS",
         "EXT-DRIVE",
-        "EXT-GMAIL"
+        "EXT-GMAIL",
+        "SYS-YOD-OS"
       ],
       "status": "implementado_local",
       "authorization": "Dirección: siguiente etapa para dejarlo funcional, correr un ejemplo, comprobar qué estuvo bien y corregir lo que estuvo mal hasta terminar.",
