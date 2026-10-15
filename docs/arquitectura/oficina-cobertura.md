@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-15.investor-single.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-15.sala-medios.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 26 sistemas y 90 componentes distribuidos exactamente una vez.
-- 10 áreas; 141 conexiones registradas, 10 marcadas como verificadas en el atlas.
+- 10 áreas; 142 conexiones registradas, 10 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -2162,7 +2162,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Editores y producción
 
-**Estado registrado:** ejecucion. Cierre y rutas actuales de nube comprobados por run38166137118; producción habilitada y compuertas humanas. Revisión/correo supervisados. Comparación parcial original31.88s/nube48s, cinco láminas de fuente y sexta referencia del corte. Fuente/triggers originales y medios históricos siguen separados, sin equivalencia integral acreditada.
+**Estado registrado:** ejecucion. PR308 integrado y recorridos 38688574369/38688574251/38688731578/38688574178 success en el alcance auditado: Pages y snapshots exactos, productor sin trabajos nuevos y ejecutor sin pendientes. Recepción de correo, equivalencia completa, fallos históricos y producción nueva no acreditados. Nueva externalización de medios propuesta, desactivada y sin canario.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -2174,6 +2174,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PLAN-SHEETS-ONLINE · SHEET-PLAN-POTENCIAL → SYS-SALA · lectura · Lectura de Plan por cuenta de servicio y salida agregada · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-PLAN-METRICAS-ONLINE · SYS-SALA → SYS-MARKETING · lectura · Marketing consume agregados de Plan publicados con hash · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-SALUD-SALA · SYS-SALA → SYS-CONTROL · observacion · Lecturas agregadas y canario aislado de Sala · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
+- CON-SALA-MEDIOS-PUBLICOS · SYS-SALA → EXT-ACTIONS · publicacion · Imágenes nuevas en releases públicos inmutables con manifiesto fijado por recibo · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2186,22 +2187,26 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/medios\_reconexion.py · Revisión: 159d932cd81c2d2c3fda31a862ea60fc0b3ae667](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py)
 - [PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-CIERRE-ONLINE.md · Revisión: 4582fc3c42a2ac8459dea7d553c42f9719f07962](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md)
 - Ampliación técnica autorizada por Dirección en la conversación actual: recuperación de transporte, publicación acumulativa, correo trazable y conciliación de chinches. Registro previo; la fuente no acredita despliegue. Registro local: docs/arquitectura/sala-nube-20261015.md. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- [PR308 integrado; cinco CI del head revisado en verde. Pages 38688574369, Plan 38688574251 y Revisión 38688731578 success; hijos Pages 38688736093 y 38689030877 confirmaron snapshot y data\_sha exactos. Cierre 38688574178 success con acuse privado byte-verificado y cero escrituras de negocio. No acredita correo recibido, producción nueva ni offload. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-ONLINE.md · Revisión: e4da08887e45e984be8ea945ce607db464b0fb52](https://github.com/yodesarrollomx/sala-edicion/blob/e4da08887e45e984be8ea945ce607db464b0fb52/docs/SALA-ONLINE.md)
 
 **Evidencia de conexiones:**
 
 - CON-031 · Conexión cliente/backend · Estado: declarado · yodesarrollomx/sala-edicion · CLAUDE.md · Revisión: HEAD\_baseline
+- CON-031 · Diseño local del contrato produccion-historica-v1 para corregir exclusión técnica por ventana14d. Aún sin despliegue Apps Script ni GET completo verificado; no cambia ACL/scopes ni habilita flag. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - CON-063 · Ciclo de producción en nube · Estado: declarado · yodesarrollomx/sala-edicion · CLAUDE.md · Revisión: HEAD\_baseline
 - CON-064 · Migración de herramientas a nube · Estado: declarado · yodesarrollomx/sala-edicion · CLAUDE.md · Revisión: HEAD\_baseline
 - CON-PUBLICADOR-SALA · Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB\_TOKEN; requiere registro e instalación personal de una App privada de la organización. · Estado: declarado · Sin revisión inmutable en esta referencia
 - [CON-SALA-SNAPSHOT-ONLINE · Run 38141812652 publicó la revisión acumulativa y esperó el recibo exacto de Pages run 38141874311; ambos success. ZIP permitido, bloqueo CAS y release permanece draft:true. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/snapshots\_online.py · Revisión: 73902861db96d213a07f788996f50fdcf3c65566](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/nube/snapshots_online.py)
+- [CON-SALA-SNAPSHOT-ONLINE · PR308 integrado. Pages 38688574369, Pages de Plan 38688736093 y Pages de Revisión 38689030877 success con snapshots413444031/413458897/413460646 y recibos exactos. FULL operativo en el alcance inspeccionado; incremental OFF y offload no activado. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/snapshots\_online.py · Revisión: e4da08887e45e984be8ea945ce607db464b0fb52](https://github.com/yodesarrollomx/sala-edicion/blob/e4da08887e45e984be8ea945ce607db464b0fb52/nube/snapshots_online.py)
 - [CON-PLAN-SHEETS-ONLINE · PR266/267/268 integrados. Run 38156397507 success: cuenta de servicio existente con permiso lector, consulta autenticada GViz sólo cuando Sheets API está deshabilitada, columnas permitidas, exclusión de prueba y publicación verificada. Fuente no modificada. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/plan\_agregados.py · Revisión: a3b6c7053b3cd26333dd06878e74bb666288ce51](https://github.com/yodesarrollomx/sala-edicion/blob/a3b6c7053b3cd26333dd06878e74bb666288ce51/nube/plan_agregados.py)
 - [CON-PLAN-METRICAS-ONLINE · PR78 integrado; run 38157069665 success. Plan lectura confirmada con hash y frescura; leads\_medicion\_caida=false, 76 publicaciones Meta. El lector HTTP comprueba bytes/recibo de snapshot409795880. · Estado: ejecucion · yodesarrollomx/aurum-board · scripts/pull\_metrics.py · Revisión: e3dd428a01b01d1c8b5775c7fcca408735c98357](https://github.com/yodesarrollomx/aurum-board/blob/e3dd428a01b01d1c8b5775c7fcca408735c98357/scripts/pull_metrics.py)
 - CON-SALUD-SALA · Solicitud explícita de Dirección el11-oct-2026; implementación pendiente. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - [CON-SALUD-SALA · Monitor38170852821 y canario38170259463 success; resultados técnicos y fuentes leídas realmente, con alcance/caducidad.40 correctos,59 pendientes; sin operaciones comerciales como prueba. · Estado: ejecucion · yodesarrollomx/yod-portal · docs/SALUD-SISTEMAS.md · Revisión: de33d90af87e9b5b225b0405841145348d42b8b0](https://github.com/yodesarrollomx/yod-portal/blob/de33d90af87e9b5b225b0405841145348d42b8b0/docs/SALUD-SISTEMAS.md)
+- CON-SALA-MEDIOS-PUBLICOS · Diseño local en docs/arquitectura/sala-medios-publicos-20261015.md y schema 1 acordado por UI/snapshots/almacén. Sin release/asset, canario, activación o despliegue acreditado. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 4 conexiones sin verificación de ejecución registrada.
+- 5 conexiones sin verificación de ejecución registrada.
 - Cambios de infraestructura y documentos históricos requieren reconciliación
 
 ### Herramientas de producción · SYS-SALA-OPERACION
@@ -2269,6 +2274,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - CON-014 · Backend asociado al almacén de su dominio · Estado: codigo · yodesarrollomx/sala-edicion · gas/Code.gs · Revisión: HEAD\_baseline
 - CON-031 · Conexión cliente/backend · Estado: declarado · yodesarrollomx/sala-edicion · CLAUDE.md · Revisión: HEAD\_baseline
+- CON-031 · Diseño local del contrato produccion-historica-v1 para corregir exclusión técnica por ventana14d. Aún sin despliegue Apps Script ni GET completo verificado; no cambia ACL/scopes ni habilita flag. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - CON-080 · Planificador de compuertas · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_productor.py · Revisión: HEAD\_baseline
 - CON-082 · Procesamiento de trabajo · Estado: codigo · yodesarrollomx/sala-edicion · nube/sala\_ejecutor.py · Revisión: HEAD\_baseline
 - CON-085 · Valida credencial del OS desde servidor · Estado: codigo · yodesarrollomx/sala-edicion · gas/Code.gs · Revisión: HEAD\_baseline
@@ -2359,6 +2365,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-CIERRE-ONLINE.md · Revisión: 4582fc3c42a2ac8459dea7d553c42f9719f07962](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md)
 - [Lote38310054319: productor success. Ningún nuevo trabajo habilitado; las imágenes rehechas esperan revisión editorial. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/sala\_productor.py · Revisión: dde4ab0151c5cc36071882380afe7ecf495ecef6](https://github.com/yodesarrollomx/sala-edicion/blob/dde4ab0151c5cc36071882380afe7ecf495ecef6/nube/sala_productor.py)
 - Ampliación técnica autorizada por Dirección en la conversación actual: recuperación de transporte, publicación acumulativa, correo trazable y conciliación de chinches. Registro previo; la fuente no acredita despliegue. Registro local: docs/arquitectura/sala-nube-20261015.md. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- [PR308 integrado. Productor del Cierre 38688574178 success: 14 fuentes recuperadas/visibles, 29 decisiones sí y 153 trabajos ya existentes; cero nuevos. La ejecución acredita conciliación del proceso, no nueva producción ni aprobación editorial. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-ONLINE.md · Revisión: e4da08887e45e984be8ea945ce607db464b0fb52](https://github.com/yodesarrollomx/sala-edicion/blob/e4da08887e45e984be8ea945ce607db464b0fb52/docs/SALA-ONLINE.md)
 
 **Evidencia de conexiones:**
 
@@ -2399,6 +2406,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-CIERRE-ONLINE.md · Revisión: 4582fc3c42a2ac8459dea7d553c42f9719f07962](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md)
 - [Lote38310054319: ejecutor success; COLA124 registros,0 trabajos habilitados pendientes,0 entregables nuevos en esta vuelta. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/sala\_ejecutor.py · Revisión: dde4ab0151c5cc36071882380afe7ecf495ecef6](https://github.com/yodesarrollomx/sala-edicion/blob/dde4ab0151c5cc36071882380afe7ecf495ecef6/nube/sala_ejecutor.py)
 - Ampliación técnica autorizada por Dirección en la conversación actual: recuperación de transporte, publicación acumulativa, correo trazable y conciliación de chinches. Registro previo; la fuente no acredita despliegue. Registro local: docs/arquitectura/sala-nube-20261015.md. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- [PR308 integrado. Ejecutor del Cierre 38688574178 success: cero pendientes; cola agregada 138 hecho, 11 fallo y 4 obsoleto. Sin ejecución nueva de medios ni acreditación de entrega de correo. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-ONLINE.md · Revisión: e4da08887e45e984be8ea945ce607db464b0fb52](https://github.com/yodesarrollomx/sala-edicion/blob/e4da08887e45e984be8ea945ce607db464b0fb52/docs/SALA-ONLINE.md)
 
 **Evidencia de conexiones:**
 
@@ -2788,6 +2796,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-SALA-CIERRE-ONLINE · SVC-SALA-EJECUTOR → EXT-ACTIONS · automatizacion · Cierre, activación acotada y comparación aislada · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-SALUD-ACTIONS · SYS-CONTROL → EXT-ACTIONS · observacion · Pruebas programadas y evidencia de ejecución · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-HORARIOS-ACTIONS · SVC-HORARIOS-CLOUD → EXT-ACTIONS · integracion · Observar ejecuciones y recuperar horarios omitidos con GitHub App · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-SALA-MEDIOS-PUBLICOS · SYS-SALA → EXT-ACTIONS · publicacion · Imágenes nuevas en releases públicos inmutables con manifiesto fijado por recibo · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2800,6 +2809,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-081 · Disparador declarado cada dos horas · Estado: codigo · yodesarrollomx/sala-edicion · .github/workflows/sala-cada-hora.yml · Revisión: HEAD\_baseline
 - CON-PUBLICADOR-IDENTIDAD · Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB\_TOKEN; requiere registro e instalación personal de una App privada de la organización. · Estado: declarado · Sin revisión inmutable en esta referencia
 - [CON-SALA-SNAPSHOT-ONLINE · Run 38141812652 publicó la revisión acumulativa y esperó el recibo exacto de Pages run 38141874311; ambos success. ZIP permitido, bloqueo CAS y release permanece draft:true. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/snapshots\_online.py · Revisión: 73902861db96d213a07f788996f50fdcf3c65566](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/nube/snapshots_online.py)
+- [CON-SALA-SNAPSHOT-ONLINE · PR308 integrado. Pages 38688574369, Pages de Plan 38688736093 y Pages de Revisión 38689030877 success con snapshots413444031/413458897/413460646 y recibos exactos. FULL operativo en el alcance inspeccionado; incremental OFF y offload no activado. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/snapshots\_online.py · Revisión: e4da08887e45e984be8ea945ce607db464b0fb52](https://github.com/yodesarrollomx/sala-edicion/blob/e4da08887e45e984be8ea945ce607db464b0fb52/nube/snapshots_online.py)
 - [CON-MARKETING-DATOS-ONLINE · Run 38141736288 success: actualizó y publicó 76 publicaciones de Meta, confirmó hash/recibo del HTTP real y conservó el snapshot como draft privado. · Estado: ejecucion · yodesarrollomx/aurum-board · scripts/snapshots\_online.py · Revisión: 6ad059cd1ed97edee894df5a9b2032d919143e0f](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/scripts/snapshots_online.py)
 - [CON-MARKETING-DATOS-ONLINE · LECTOR\_ONLINE ok:true, posts:76, run\_id:38141736288. El navegador recibe sólo agregados/covers y verifica SHA256. Plan rechazado mantiene último dato acreditado y señal de medición incompleta. · Estado: ejecucion · yodesarrollomx/aurum-board · metrics-online.js · Revisión: 6ad059cd1ed97edee894df5a9b2032d919143e0f](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/metrics-online.js)
 - [CON-MARKETING-DATOS-ONLINE · PR78 integrado; run 38157069665 success. Plan lectura confirmada con hash y frescura; leads\_medicion\_caida=false, 76 publicaciones Meta. El lector HTTP comprueba bytes/recibo de snapshot409795880. · Estado: ejecucion · yodesarrollomx/aurum-board · metrics-online.js · Revisión: e3dd428a01b01d1c8b5775c7fcca408735c98357](https://github.com/yodesarrollomx/aurum-board/blob/e3dd428a01b01d1c8b5775c7fcca408735c98357/metrics-online.js)
@@ -2808,11 +2818,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [CON-SALUD-ACTIONS · Monitor38170852821 y canario38170259463 success; resultados técnicos y fuentes leídas realmente, con alcance/caducidad.40 correctos,59 pendientes; sin operaciones comerciales como prueba. · Estado: ejecucion · yodesarrollomx/yod-portal · docs/SALUD-SISTEMAS.md · Revisión: de33d90af87e9b5b225b0405841145348d42b8b0](https://github.com/yodesarrollomx/yod-portal/blob/de33d90af87e9b5b225b0405841145348d42b8b0/docs/SALUD-SISTEMAS.md)
 - CON-HORARIOS-ACTIONS · Prioridad1 autorizada; implementação y aceptación real por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - [CON-HORARIOS-ACTIONS · Código entregado y probado con dobles; instalación personal y recuperación real pendientes. · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/scheduler/github-app.mjs · Revisión: b41a98751ae3ae89f43372557d61e77461aa086c](https://github.com/alexpueblag/yod-agent-cloud/blob/b41a98751ae3ae89f43372557d61e77461aa086c/cloud/scheduler/github-app.mjs)
+- CON-SALA-MEDIOS-PUBLICOS · Diseño local en docs/arquitectura/sala-medios-publicos-20261015.md y schema 1 acordado por UI/snapshots/almacén. Sin release/asset, canario, activación o despliegue acreditado. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
 - Responsable operativo pendiente de confirmación; el encargado de verificación no sustituye esa asignación.
-- 5 conexiones sin verificación de ejecución registrada.
+- 6 conexiones sin verificación de ejecución registrada.
 - Estado y permisos no comprobados
 
 ### Identidad de publicación GitHub · EXT-GITHUB-PUBLISHER-APP
