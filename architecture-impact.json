@@ -1,21 +1,25 @@
 {
-  "model_revision": "2026-10-15.investor-single.1",
-  "proposal_id": "CHG-INVESTOR-SINGLE-SURFACE",
-  "summary": "Registrar presentación pública con una superficie móvil, anotaciones animadas y chinches locales compatibles con WebKit; preservar contenido en Sheets y contratos de negocio.",
+  "model_revision": "2026-10-15.sala-medios.1",
+  "proposal_id": "CHG-SALA-MEDIOS-PUBLICOS-20261015",
+  "summary": "Registrar contrato de capacidad para imágenes nuevas en releases públicos inmutables: lector primero, manifest schema1 con pin del recibo, bytes anónimos verificados, snapshots compatibles y emisor OFF; conservar históricos, ACL y presupuesto900MiB. Integración relacionada de historial completo GET sólo lectura, backend propuesto y SALA_PRODUCCION_HISTORICA=0; rol agente/ACL/scopes existentes.",
   "components": [
-    "SYS-INVERSION",
     "SYS-YOD-OS",
     "SYS-CONTROL",
-    "GAS-PLAN-POTENCIAL",
-    "SHEET-PLAN-POTENCIAL"
+    "SYS-SALA",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-ACTIONS",
+    "EXT-DRIVE",
+    "GAS-SALA",
+    "SHEET-SALA"
   ],
   "tests": [
-    "Atlas: node scripts/arquitectura.cjs --check; node --test tests/*.cjs; node verify-os.cjs; node verify-portal.cjs; node verify-accesos.cjs; node verify-obra-app.cjs.",
-    "Consumidor aislado WebKit y Chromium en tamaños iPhone y horizontal: una sola superficie táctil, gesto lento/rápido, reversa inmediata, freno, límites y orientación sin perder progreso.",
-    "27 momentos reversibles, anotaciones/flechas legibles sin colisiones, texto íntegro en lector, CTA final visible, teclado y movimiento reducido.",
-    "Chinches con fixtures sintéticos: punto/recorte de pantalla, comentario y captura guardados en IndexedDB y releídos tras recarga, cancelación y errores de captura/almacenamiento.",
-    "Compartir nativo simulado mediante doble; ninguna comunicación ni POST real. Mantener credencial Portero y cero escrituras de negocio.",
-    "Verificar código público exacto y fuente editorial viva después de integrar frontend; captura real del navegador. Emulación no acredita prueba en iPhone físico."
+    "node scripts/arquitectura.cjs --check",
+    "node --test tests/*.cjs",
+    "node verify-os.cjs",
+    "node verify-portal.cjs",
+    "node verify-accesos.cjs",
+    "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir únicamente PR del frontend a la versión móvil previa dentro de la misma URL. Conservar todas las versiones, copy/configuración de Sheets, historial de chinches e IndexedDB, credenciales, permisos y expedientes; no restaurar ni sobrescribir datos de negocio."
+  "rollback": "Desactivar SALA_MEDIOS_PUBLICOS detiene sólo nuevas externalizaciones. Si ya existe un medio externo, conservar lector compatible, manifiesto, pin del recibo, releases inmutables y sus activos. No volver a un lector antiguo ni retirar activos hasta repatriar y verificar todos los bytes referenciados, publicar un FULL íntegro dentro de 900 MiB y comprobar recibo fresco y consumidores. No borrar históricos ni alterar ACL, decisiones, destinatarios o reglas de negocio. Desactivar SALA_PRODUCCION_HISTORICA mantiene explícito historial no confirmado; conservar propuestas/decisiones originales y los sellos reales, sin volver a considerar la ventana14d como historial completo ni reencolar por revertir código."
 }

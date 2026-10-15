@@ -17,6 +17,7 @@ Esta es la entrada para entender y modificar YOD OS. Prioridad de mejora acordad
 - [Identidad del publicador automático](publicador-github.md): causa del bloqueo, permisos mínimos y registro pendiente.
 
 - [Sala · continuidad y publicación en nube](sala-nube-20261015.md): reparación técnica autorizada, contratos de transporte, snapshots, correo y chinches; implementación y producción se acreditan por separado.
+- [Sala · capacidad para imágenes nuevas](sala-medios-publicos-20261015.md): manifiesto schema 1, lectores antes del emisor, releases públicos inmutables y verificación anónima; emisor desactivado, históricos y presupuesto conservados.
 
 - [Capacidades compartidas de los agentes](despacho-capacidades.md): referencia Cubefarm, funciones conectadas y plan de instalación por agente.
 
