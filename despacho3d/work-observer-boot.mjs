@@ -1,7 +1,7 @@
 import {officeFastSessions} from './office-preparation.mjs?v=unified283';
 import {createFrameTransport} from './conversation.mjs?v=142';
 import {validateFastSession} from './fast-lane.mjs';
-import {createWorkObserver} from './work-observer.mjs?v=129';
+import {createWorkObserver} from './work-observer.mjs?v=v2p5';
 const transport=createFrameTransport(window);
 let credential=null,minting=null,stop=null,bound=null;
 const current=()=>window.YodResidentAgents?.getSelection?.();
@@ -17,12 +17,13 @@ async function request(path,data,caseId){
  if(response.status===401||response.status===403){credential=null;officeFastSessions.forget(caseId);throw Error('unauthorized');}
  if(!response.ok)throw Error('unavailable');return response.json();
 }
-const observer=createWorkObserver({request,getSelection:current,isVisible:()=>!document.hidden});
+const observer=createWorkObserver({request,getSelection:current,isVisible:()=>!document.hidden&&navigator.onLine!==false});
 window.YodWorkObserver=observer;
 function bind(){const api=window.YodResidentAgents;if(api===bound)return;stop?.();bound=api;stop=api?.subscribe?.(()=>{if(credential?.case_id!==current()?.case_id)credential=null;observer.select();});observer.select();}
 window.addEventListener('yod-residents-ready',bind);
-window.addEventListener('online',()=>void observer.refresh());
+window.addEventListener('online',()=>observer.visibilityChanged());
+window.addEventListener('offline',()=>observer.visibilityChanged());
 window.addEventListener('yod-goals-changed',()=>void observer.refresh());
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)void observer.refresh();});
+document.addEventListener('visibilitychange',()=>observer.visibilityChanged());
 window.addEventListener('pagehide',()=>{stop?.();observer.dispose();transport.dispose();credential=null;delete window.YodWorkObserver;});
 bind();window.dispatchEvent(new CustomEvent('yod-work-observer-ready'));

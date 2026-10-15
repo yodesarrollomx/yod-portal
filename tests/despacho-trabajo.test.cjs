@@ -39,3 +39,11 @@ test('bounded long source links fit the observation payload without dropping a v
  f.work.sources=Array.from({length:40},(_,i)=>({...s,id:'https://example.com/'+i+'x'.repeat(1900),url:'https://example.com/'+i+'x'.repeat(1900)}));
  assert.ok(JSON.stringify(f).length>120000);assert.equal(validateObservation(f,f.case_id).work.sources.length,40);
 });
+
+test('P5: hidden observer drops polling timers and wakes once without executing remote work',async()=>{
+ const {createWorkObserver}=await mod();let visible=true,calls=0,serial=0;const timers=new Map();
+ const o=createWorkObserver({getSelection:()=>({case_id:'case-synthetic'}),isVisible:()=>visible,request:async path=>{assert.equal(path,'/computer/work');calls++;return fixture();},schedule:f=>{timers.set(++serial,f);return serial;},cancel:id=>timers.delete(id)});
+ o.select();await new Promise(r=>setImmediate(r));assert.equal(calls,1);assert.equal(timers.size,1);
+ visible=false;o.visibilityChanged();assert.equal(timers.size,0);await o.refresh();assert.equal(calls,1);
+ visible=true;o.visibilityChanged();o.visibilityChanged();await new Promise(r=>setImmediate(r));assert.equal(calls,2);assert.equal(timers.size,1);o.dispose();assert.equal(timers.size,0);
+});
