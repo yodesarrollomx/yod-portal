@@ -423,6 +423,12 @@ async function anotar(op){
     try { return !cancelada && typeof op.puedeGuardar === "function" && op.puedeGuardar() === true; } catch (e) { return false; }
   }
   if (esDespacho && (!vigente() || !codigoDespacho(op.objeto))) return null;
+  // Congelar el objeto señalado antes de abrir la hoja o empezar a dictar.
+  op = Object.assign({}, op);
+  op.contexto = JSON.parse(JSON.stringify(CTX.valores ? CTX.valores(op) : {}));
+  op.valores = JSON.parse(JSON.stringify(op.valores || (CTX.valores ? CTX.valores(op) : {})));
+  op.vista = op.vista || (CTX.vista ? CTX.vista() : "");
+  op.seccion = op.seccion || (CTX.seccion ? CTX.seccion() : "");
   var d = new Date();
   var esLienzo = !op.sinCaptura && !!(CTX.canvas && op.x != null && op.y != null);
   var cap = esLienzo ? capturarLienzo(op.x, op.y) : null;
@@ -449,7 +455,7 @@ async function anotar(op){
 
   var ta = v.querySelector(".chn-txt"), tipo = "";
   try { ta.focus(); } catch(e){}
-  dictado(v.querySelector("[data-mic]"), ta, v);
+  var voz = dictado(v.querySelector("[data-mic]"), ta, v);
   if (op.sinCaptura) v.querySelector(".chn-foto").remove();
   else aBlob(lienzo, 0.72).then(function (b) {
     if (!b) { v.querySelector(".chn-foto").remove(); return; }   /* toBlob puede dar null */
@@ -469,13 +475,15 @@ async function anotar(op){
   v.querySelector("[data-x]").onclick = cancelar;
   v.querySelector("[data-ok]").onclick = async function () {
     if (!vigente()) { cancelar(); aviso("La sesión del Despacho cambió; abre de nuevo la petición"); return; }
+    if (voz && !voz.revisado()) return;
     var texto = ta.value.trim();
     if (!texto) { ta.focus(); ta.placeholder = "Escribe qué quieres que cambie…"; return; }
     var btn = this;
     btn.disabled = true; btn.textContent = "Clavando…";
     var ch = {
       id: nuevoId(d), creado: d.toISOString(), sello: sello(d), quien: quien(),
-      texto: texto, tipo: tipo, estado: "nueva",
+      contexto: op.contexto,
+      texto: texto, tipo: tipo, estado: "nueva", captura: voz ? voz.datos() : {medio:"texto"},
       pantalla: PANT, repo: repoActual(), url: op.sinUrlParams ? location.origin + location.pathname : location.href.split("#")[0], aparato: aparato(), folio: op.sinFolio ? '' : folioActual(),
       vista: op.vista || (CTX.vista ? CTX.vista() : ""),
       modo: esLienzo ? "lienzo" : "contexto",
@@ -509,7 +517,9 @@ async function anotar(op){
       /* 15-sep: la página que hospeda la Chinche puede querer enterarse al instante (la Sala de
          Edición manda cada chinche al Sheet como ENCARGO, y /sala la cosecha sin esperar un zip).
          Opcional y a prueba de errores: si el gancho truena, la chinche ya quedó clavada igual. */
-      try { if (typeof CTX.alClavar === "function") CTX.alClavar(ch); } catch (e) {}
+      try { if (typeof CTX.alClavar === "function") {
+        Promise.resolve(CTX.alClavar(ch)).then(function(r){if(r && r.mensaje) aviso(r.mensaje);}).catch(function(){aviso("Clavado aquí; falta confirmar recepción");});
+      } } catch (e) {}
       if (typeof CTX.alClavar !== "function") {
         enviarDirecto(ch).then(function (ok) {
           if (!vigente()) return;
@@ -724,38 +734,33 @@ function modoSenalar(){
 function dictado(btn, ta, hojaV){
   if (!btn) return;
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) {
-    btn.onclick = function(){ ta.focus(); aviso("Este navegador no transcribe: usa el 🎤 del teclado"); };
-    return;
-  }
-  var rec = null, base = "", oyendo = false;
-  function parar(){ oyendo = false; btn.textContent = "🎙 Dictar"; btn.classList.remove("on"); try { rec && rec.stop(); } catch (e) {} }
-  btn.onclick = function(){
-    if (oyendo) { parar(); return; }
-    rec = new SR();
-    rec.lang = "es-MX"; rec.continuous = true; rec.interimResults = true;
-    base = ta.value ? ta.value.replace(/\s*$/, " ") : "";
-    rec.onresult = function(ev){
-      var fin = "", par = "";
-      for (var i = 0; i < ev.results.length; i++) {
-        var t = ev.results[i][0].transcript;
-        if (ev.results[i].isFinal) fin += t; else par += t;
-      }
-      ta.value = base + fin + par;
-    };
-    rec.onerror = function(ev){
-      parar();
-      aviso(ev.error === "not-allowed" || ev.error === "service-not-allowed"
-        ? "Permite el micrófono para esta página y vuelve a picar 🎙"
-        : "No se oyó bien (" + ev.error + "). Pica 🎙 otra vez");
-    };
-    rec.onend = function(){ if (oyendo) parar(); };
-    try { rec.start(); oyendo = true; btn.textContent = "■ Parar"; btn.classList.add("on"); }
-    catch (e) { aviso("No arrancó el micrófono"); }
+  var rec = null, base = "", final = "", parcial = "", oyendo = false, cerrando = false, usado = false, revisar = false;
+  function parar(){oyendo=false;cerrando=!!rec;btn.textContent="🎙 Dictar";btn.classList.remove("on");try{if(rec)rec.stop();}catch(e){cerrando=false;}}
+  var control = {
+    revisado:function(){
+      if(oyendo||cerrando){parar();aviso("Detén el dictado y revisa el texto antes de clavar");return false;}
+      if(revisar){revisar=false;aviso("Revisa la transcripción y vuelve a tocar Clavar para enviarla");ta.focus();return false;}
+      return true;
+    },
+    datos:function(){return {medio:usado?"dictado":"texto",texto_revisado:true};}
   };
-  /* que no se quede oyendo si se cierra la hoja */
-  var obs = new MutationObserver(function(){ if (!hojaV.isConnected) { parar(); obs.disconnect(); } });
-  obs.observe(document.body, { childList: true });
+  btn.onclick = function(){
+    if(!SR){ta.focus();aviso("Este navegador no transcribe: usa el micrófono del teclado");return;}
+    if(oyendo){parar();return;}if(cerrando)return;
+    rec=new SR();rec.lang="es-MX";rec.continuous=true;rec.interimResults=true;
+    base=ta.value?ta.value.replace(/\s*$/," "):"";final="";parcial="";
+    rec.onresult=function(ev){
+      final="";parcial="";
+      for(var i=0;i<ev.results.length;i++){var t=ev.results[i][0].transcript;if(ev.results[i].isFinal)final+=t;else parcial+=t;}
+      // El texto provisional sólo vive en el indicador, jamás en el texto enviable.
+      ta.value=base+final;btn.title=parcial?"Transcripción provisional: "+parcial:"";revisar=true;
+    };
+    rec.onerror=function(ev){parar();aviso(ev.error==="not-allowed"?"Permite el micrófono o escribe tu corrección":"No se pudo terminar el dictado; revisa el texto conservado");};
+    rec.onend=function(){ta.readOnly=false;oyendo=false;cerrando=false;rec=null;btn.textContent="🎙 Dictar";btn.classList.remove("on");btn.title="";revisar=true;};
+    try{rec.start();ta.readOnly=true;usado=true;revisar=true;oyendo=true;btn.textContent="■ Parar";btn.classList.add("on");}catch(e){rec=null;cerrando=false;aviso("No arrancó el micrófono; puedes escribir");}
+  };
+  var obs=new MutationObserver(function(){if(!hojaV.isConnected){parar();obs.disconnect();}});
+  obs.observe(document.body,{childList:true});return control;
 }
 
 /* ═══════════════════════ LA PILA ═══════════════════════ */
@@ -860,7 +865,16 @@ async function pila(){
     /* la pila se queda abierta mientras se empaca: si se cerrara ya, la
        pastilla vuelve a ser tocable y se apilan hojas */
     var btn = this; btn.disabled = true; btn.textContent = "Armando el encargo…";
-    try { await entregar(ids, amarre, v); }
+    try {
+      if (typeof CTX.alClavar === "function") {
+        if(amarre){btn.disabled=false;btn.textContent="Pedir el cambio";aviso("Envía cada texto revisado; agrega la nota general en una nueva chinche");return;}
+        var pendientes=(await todas()).filter(function(c){return ids.indexOf(c.id)>-1;});
+        var resultados=[];
+        for(var ch of pendientes)resultados.push(await CTX.alClavar(ch));
+        btn.disabled=false;btn.textContent="Comprobar recepción";
+        aviso(resultados.every(function(r){return r&&r.estado==="recibido";})?"Recepción confirmada":"Se conservan pendientes; revisa el estado en Sala");
+      } else await entregar(ids, amarre, v);
+    }
     catch (e) {
       btn.disabled = false; btn.textContent = "Pedir el cambio";
       aviso("No se pudo armar: " + ((e && e.message) || "error"));

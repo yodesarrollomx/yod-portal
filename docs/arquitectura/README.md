@@ -77,3 +77,5 @@ La auditoría no se considera completa mientras existan componentes críticos o 
 - [Chinches de presentaciones → Sala](presentation-pins-ingest.md): relevo entre orígenes, sobres privados y acuses reales; sin cambiar el calendario.
 
 - [Presentación guiada entre dispositivos](presentation-guided.md): sesión conductor/invitado, revisión temporal acotada y conservación de fuentes y chinches.
+
+- [Sala · correcciones y aprobación](sala-correcciones.md): dictado revisado, contexto fijado y acuses separados de entrega/aprobación.

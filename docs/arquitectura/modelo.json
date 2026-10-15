@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-15.presentation-links.1",
+  "revision": "2026-10-15.sala-correcciones.1",
   "checked_at": "2026-10-15",
   "priorities": [
     "vender_mas",
@@ -12753,6 +12753,28 @@
       ],
       "deployment": "Mismo Sitio, versión17 publicada15-oct-2026 18:29UTC, fuente2fee176464f02faeecb7d7dfa0fddab3710b3082, despliegue nativo succeeded con revisión de entorno2 y migración adicional sin eliminar sesiones. Rutas privadas/públicas con títulos, descripción y tarjetas de marca; llave ausente de documento, captura y estado público. Salud y13activos exactos verificados hospedados. Control móvil sin registro, visor escritorio, recarga privada y compositor de chinches pasan en producción sin enviar revisiones de negocio. Cien lectores hospedados durante304.3s, 65678eventos, todos convergen, latencia p95393ms en esta prueba. Clientes ligeros en20contextos de navegador; no certifica cien teléfonos físicos ni múltiples regiones. Trece contratos SQLite, dos parejas WebKit/Chromium y prueba aislada de cien lectores durante300.8s aprobadas. Conservados finanzas, dibujos, rotor, compositor y transporte de chinches; sólo dos referencias de captura se normalizan a la misma raíz autorizada. Aceptación física iPhone pendiente.",
       "rollback": "Volver a la versión16 del mismo Sitio, conservando D1 y registros originales. La nueva tabla técnica no elimina las sesiones previas. No tocar cron, PPP ni audiencia."
+    },
+    {
+      "id": "CHG-SALA-CORRECCIONES-20261015",
+      "components": [
+        "SYS-SALA",
+        "SYS-YOD-OS",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "EXT-ACTIONS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección: adelante con el paso 4; completar correcciones por voz/chinches y aprobación explícita.",
+      "proposal": "Congelar pieza, propuesta, lámina, versión y toma al abrir la anotación; revisar dictado antes de clavar. Conservar ID y checkpoint previo a envío, distinguir local/recibido/incierto/rechazado sin repetir append ambiguo. Las aprobaciones conservan el circuito exclusivo de editores. Cerrar un issue no acredita cumplimiento: exigir evidencia verificable y mostrar entrega/revisión por separado.",
+      "tests": [
+        "Dictado parcial/final y contexto cambiado durante captura.",
+        "ACK perdido, recarga, doble clic, permisos rechazados y ausencia de controles de Ajustes.",
+        "Contexto de tablero/zoom; navegación sin votos, aprobación explícita y cambio de versión.",
+        "Cierre de issue sin resultado y acuse no confirmado nunca cumplen.",
+        "Gates locales, CI y despliegue exacto; sólo fixtures sintéticos sin votos reales."
+      ],
+      "deployment": "Implementado en ramas aisladas; pruebas sintéticas de voz/contexto y compuertas locales. Integración/publicación por PR y comprobación HTTP pendientes.",
+      "rollback": "Revertir PR conservando cola, IndexedDB, historial, recibos, issues y datos. No reenviar estados inciertos."
     }
   ],
   "data_contracts": [
@@ -14601,6 +14623,31 @@
         "Llave de control sólo en fragmento consumido al abrir, almacenada por pestaña y enviada en header; servidor conserva únicamente su hash. Excluirla de fuentes, QR, vistas previas y registros compartidos.",
         "Un arrendamiento de conductor y época de control impiden escrituras anteriores tras relevo. Tomar control en otro dispositivo requiere acción expresa.",
         "No compartir I/O o streams entre peticiones de Worker. Cachear sólo datos resueltos; limitar consultas reales por stream, cola pendiente, presencia y ritmos de escritura."
+      ]
+    },
+    {
+      "id": "CTR-SALA-CORRECCIONES",
+      "components": [
+        "SYS-SALA",
+        "SYS-YOD-OS",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "EXT-ACTIONS"
+      ],
+      "source": "Decisiones autenticadas en Sheet; chinches locales y bandeja privada PRODUCCION.",
+      "input": [
+        "ID estable, texto revisado, identidad de pieza/propuesta/lámina/versión/toma capturada antes del dictado."
+      ],
+      "output": [
+        "Recibo del transporte o pendiente explícito; entrega técnica verificable separada de aprobación editorial."
+      ],
+      "invariants": [
+        "Dictar, navegar, comparar y clavar no aprueban.",
+        "Sólo un acuse válido o lectura coincidente marca recibido.",
+        "Checkpoint antes del POST; resultado incierto se concilia sólo por lectura.",
+        "Un cierre de issue no prueba ejecución ni aprobación.",
+        "No publicar texto privado de nuevas chinches en issues; marcador público mínimo.",
+        "GAS espejo no se despliega por modificar repositorio."
       ]
     }
   ],
