@@ -1,16 +1,12 @@
 {
-  "model_revision": "2026-10-14.goals-single-flight.2",
-  "proposal_id": "CHG-GOALS-SINGLE-FLIGHT-20261014",
-  "summary": "Chinche #284: lecturas readGoals concurrentes del Despacho 3D comparten una sola llamada en el puente del OS en vez de rebotar como transport_busy.",
+  "model_revision": "2026-10-14.investor-gesture.2",
+  "proposal_id": "CHG-INVESTOR-MOBILE-GESTURE",
+  "summary": "Public investor presentation adopts centered corporate header, full-width canvas and transparent relative mobile rotor.",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "GAS-PORTERO",
-    "EXT-DRIVE",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-CONTROL",
-    "SYS-OBRA-CLIENTE"
+    "SYS-INVERSION",
+    "GAS-PLAN-POTENCIAL",
+    "SHEET-PLAN-POTENCIAL",
+    "SYS-CONTROL"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -20,5 +16,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir sólo la línea de single-flight en os/despacho-conversation.js y su prueba; sin datos, permisos ni deployments afectados."
+  "rollback": "Revert frontend only; preserve data and permissions."
 }
