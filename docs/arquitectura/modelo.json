@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-15.canje-diagnostico.2",
+  "revision": "2026-10-15.canje-abort.1",
   "checked_at": "2026-10-15",
   "priorities": [
     "vender_mas",
@@ -12778,6 +12778,31 @@
       ],
       "deployment": "Implementado y probado en rama; publicación pendiente. No se acredita latencia resuelta.",
       "rollback": "Revertir diagnóstico y cache-bump del frontend; sin cambios en datos/backend."
+    },
+    {
+      "id": "CHG-CANJE-ABORT-283",
+      "components": [
+        "SYS-YOD-OS",
+        "GAS-PORTERO",
+        "SYS-DESPACHO",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE"
+      ],
+      "status": "propuesto",
+      "authorization": "Orden directa de Dirección: aplicar solución dos de chinche283.",
+      "proposal": "Cancelar fetch de canje al vencer plazo de cabeceras y limpiar temporizadores. Conserva plazo, respaldo, autoridad y reintentos. No cancela ejecución servidor ni limita aún cuerpo.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs"
+      ],
+      "deployment": "Implementado y probado en rama: 705 pruebas Node; 20 rondas timeout con cero solicitudes residuales. Publicación pendiente. No acredita cancelación servidor ni mejora global de latencia.",
+      "rollback": "Revertir cancelación y cache-bump frontend; sin cambios backend/datos."
     }
   ],
   "data_contracts": [
