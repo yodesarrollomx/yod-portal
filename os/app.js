@@ -638,7 +638,7 @@
     // se queda (sostiene el mensaje de candado) pero la liga viva desaparece
     var opLink=document.querySelector('#operacion .section-link');
     if(opLink)opLink.classList.toggle('hidden',!window.YodAccessPolicy.canOpen(state.boards,'SYS-TAREAS',state.role));
-    montarTablero();
+    if(!enDespacho())montarTablero();
     if(window.revisarPuertaEmbudo)window.revisarPuertaEmbudo();
     if(window.revisarPuertaDespacho)window.revisarPuertaDespacho();
     if(state.rawRows.length)renderModules(state.rawRows);
@@ -655,7 +655,15 @@
       if(t&&strong)strong.textContent=t;
     });
   }
+  function enDespacho(){return /^#\/despacho(?:[/?]|$)/.test(location.hash||'');}
+  function iniciarInicioDiferido(){
+    if(enDespacho()||!state.profileReady||state.sessionToken!==tokenActual())return;
+    montarTablero();
+    if(state.homeDataEpoch!==state.sesionEpoch)void startData(state.sessionToken);
+  }
   function startData(token){
+    if(enDespacho())return Promise.resolve([]);
+    state.homeDataEpoch=state.sesionEpoch;
     var requests=[loadPulse(token)];
     if(window.YodAccessPolicy.hasCode(state.boards,'TA')||state.role==='admin')requests.push(loadOperations(token));else renderOperationsLocked();
     return Promise.allSettled(requests);
@@ -668,7 +676,15 @@
                    'canje:http':'Google respondió con un error · reintentando',
                    'canje:formato':'Google devolvió una respuesta inesperada · reintentando'};
   function frasePendiente(d){return FRASE_CANJE[d]||'Sin validar · toca ⟳';}
-  async function loadIdentity(){
+  function loadIdentity(){
+    var token=tokenActual(),old=state.identityFlight;
+    if(old&&old.token===token&&old.epoch===state.sesionEpoch)return old.promise;
+    var promise=loadIdentityOnce(),entry={token:token,epoch:state.sesionEpoch,promise:promise};
+    state.identityFlight=entry;
+    function done(){if(state.identityFlight===entry)state.identityFlight=null;}
+    promise.then(done,done);return promise;
+  }
+  async function loadIdentityOnce(){
     var token=tokenActual(),request=++state.identityRequest;
     // Si esta misma sesión ya fue validada en esta carga, revalidar en segundo
     // plano sin desmontar la identidad ni vaciar la pantalla. Un Portero lento
@@ -1001,6 +1017,8 @@
     var nav=$('nav-modules');if(nav)nav.addEventListener('click',function(e){if(e.target.closest('.nav-item'))closeNav();});
     if(window.matchMedia){var mq=window.matchMedia('(min-width:901px)');mq.addEventListener('change',function(m){if(m.matches)closeNav();});}
   })();
+  addEventListener('hashchange',iniciarInicioDiferido);
+  addEventListener('popstate',iniciarInicioDiferido);
   // Al recargar se valida antes de consultar y mostrar datos.
   loadIdentity();
   /* ── Entrar la clave DENTRO del tablero despierta al resto del OS ──

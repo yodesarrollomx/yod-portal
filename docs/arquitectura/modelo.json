@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-15.sala-correcciones.1",
+  "revision": "2026-10-15.carga-unificada-283.1",
   "checked_at": "2026-10-15",
   "priorities": [
     "vender_mas",
@@ -12851,6 +12851,30 @@
       ],
       "deployment": "Implementado en ramas aisladas; pruebas sintéticas de voz/contexto y compuertas locales. Integración/publicación por PR y comprobación HTTP pendientes.",
       "rollback": "Revertir PR conservando cola, IndexedDB, historial, recibos, issues y datos. No reenviar estados inciertos."
+    },
+    {
+      "id": "CHG-CARGA-UNIFICADA-283",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE",
+        "SYS-DESPACHO-3D"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección autoriza agrupar parches y comprobar el resultado general.",
+      "proposal": "Carga integrada283: singleflight de identidad por token/época, Inicio diferido al entrar Despacho, preparación sólo del seleccionado y despertar con autoridad fresca sin renovación redundante. Preservar límites, revocación y ACL; evaluación general del conjunto.",
+      "tests": [
+        "Identidad concurrente, cambio de token/época, recuperación y revocación.",
+        "Entrada Despacho sin fanout de Inicio; retorno a Inicio.",
+        "Preparación seleccionada y cooldown de fallo; vigencia de autoridad.",
+        "Suite completa, CI público y QA publicada."
+      ],
+      "deployment": "Implementado en rama aislada; validación general y publicación por PR pendientes. No se atribuye reducción temporal individual ni cambio de GAS.",
+      "rollback": "Revertir PR sin cambiar datos, sesiones persistentes ni despliegue GAS."
     }
   ],
   "data_contracts": [

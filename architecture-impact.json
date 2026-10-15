@@ -1,14 +1,16 @@
 {
-  "model_revision": "2026-10-15.sala-correcciones.1",
-  "proposal_id": "CHG-SALA-CORRECCIONES-20261015",
-  "summary": "Congelar pieza, propuesta, lámina, versión y toma al abrir la anotación; revisar dictado antes de clavar. Conservar ID y checkpoint previo a envío, distinguir local/recibido/incierto/rechazado sin repetir append ambiguo. Las aprobaciones conservan el circuito exclusivo de editores. Cerrar un issue no acredita cumplimiento: exigir evidencia verificable y mostrar entrega/revisión por separado.",
+  "model_revision": "2026-10-15.carga-unificada-283.1",
+  "proposal_id": "CHG-CARGA-UNIFICADA-283",
+  "summary": "Carga integrada283: singleflight de identidad por token/época, Inicio diferido al entrar Despacho, preparación sólo del seleccionado y despertar con autoridad fresca sin renovación redundante. Preservar límites, revocación y ACL; evaluación general del conjunto.",
   "components": [
-    "SYS-SALA",
     "SYS-YOD-OS",
-    "GAS-SALA",
-    "SHEET-SALA",
-    "EXT-ACTIONS",
-    "SYS-DESPACHO"
+    "SYS-DESPACHO",
+    "GAS-PORTERO",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-CONTROL",
+    "SYS-OBRA-CLIENTE",
+    "SYS-DESPACHO-3D"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -18,5 +20,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir PR conservando cola, IndexedDB, historial, recibos, issues y datos. No reenviar estados inciertos."
+  "rollback": "Revertir PR; conservar datos y ACL."
 }
