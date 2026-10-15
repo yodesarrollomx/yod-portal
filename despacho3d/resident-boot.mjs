@@ -47,6 +47,8 @@ if(host){
   api.subscribeAuthorizedProfiles=fn=>{authorizedListeners.add(fn);fn(api.getAuthorizedProfiles());return()=>authorizedListeners.delete(fn);};
   api.getAuthorizedProfiles=()=>authorized.snapshot().cases.map(c=>c.avatar).filter(Boolean);
   api.selectCase=async (id,{isCurrent=()=>true}={})=>{
+   if(!['idle','error'].includes(voicePhase))return false;
+   if(isCurrent()&&authorized.snapshot().cases.some(c=>c.case_id===id)&&window.parent!==window)window.parent.postMessage({type:'yod:case:selection',version:1,case_id:id},window.location.origin);
    const attempt=selectionHandoff.begin(id);
    try{
     const chosen=await authorized.select(id,{onResolved:raw=>selectionHandoff.capture(attempt,raw)});

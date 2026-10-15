@@ -48,7 +48,7 @@ function appHarness(token = 'prefix-shared--A') {
     sinSaldo: () => false, sinKpis: () => false,
     renderOpsScoped: (...args) => renders.push(['operations', ...args]), renderDecisions: (...args) => renders.push(['decisions', ...args]), loadReconcile() {}
   });
-  const names = ['tokenActual','rechazoAcceso','mismaSesion','purgarDatosSensibles','bloquearSesion','pulseCacheRead','pulseCacheWrite','loadIdentity','loadIdentityOnce','loadFinance','loadMarketing','loadOperations','catalogoSinAcceso'];
+  const names = ['tokenActual','rechazoAcceso','mismaSesion','purgarDatosSensibles','bloquearSesion','pulseCacheRead','pulseCacheWrite','loadIdentity','loadIdentityOnce','coordinatedPortalLoad','loadFinance','loadMarketing','loadOperations','catalogoSinAcceso'];
   vm.runInContext(names.map(n => fn(appSource, n)).join('\n'), c);
   function authorize() { state.profileReady = true;state.sessionToken = localStorage.getItem('pyod_clave_v1');state.role = 'admin';state.boards = '*';state.verifiedAt=Date.now(); }
   return { c, state, applied, loads, renders, timers, nodes, node, localStorage, sessionStorage, authorize };
@@ -515,4 +515,15 @@ test('283 conjunto: Despacho difiere Inicio y al volver lo carga una sola vez po
  h.c.location.hash='#pulso';h.c.iniciarInicioDiferido();h.c.iniciarInicioDiferido();
  assert.deepEqual([pulse,ops],[1,1]);h.state.sesionEpoch++;h.c.iniciarInicioDiferido();assert.deepEqual([pulse,ops],[2,2]);
  h.localStorage.removeItem('pyod_clave_v1');h.c.iniciarInicioDiferido();assert.deepEqual([pulse,ops],[2,2]);
+});
+
+test('P3 App: enabled coordinator reuses catalog work and rejects a session changed during boot',async()=>{
+  const {createPortalLoadPlan}=await import('../os/load-plan.mjs');
+  const h=appHarness();h.authorize();const p=createPortalLoadPlan(),boot=deferred();
+  h.c.window.YodLoadConfig={enabled:true};h.c.window.YodLoadPlanReady=boot.promise;
+  let calls=0;const a=h.c.coordinatedPortalLoad('catalog',()=>{calls++;},1,'catalog');
+  h.state.sesionEpoch++;boot.resolve(p);await a;assert.equal(calls,0);
+  const d=deferred(),run=()=>{calls++;return d.promise;};
+  const b=h.c.coordinatedPortalLoad('catalog',run,1,'catalog'),c=h.c.coordinatedPortalLoad('catalog',run,1,'catalog');
+  await new Promise(r=>setImmediate(r));assert.equal(calls,1);d.resolve();await Promise.all([b,c]);p.revoke();
 });

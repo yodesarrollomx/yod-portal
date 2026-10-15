@@ -135,6 +135,7 @@
   function mismaSesion(token,ep){return state.profileReady&&state.sessionToken===token&&tokenActual()===token&&state.sesionEpoch===ep;}
   function purgarDatosSensibles(){
     state.sesionEpoch++;state.pulseCache={};state.opsCache=null;state.allTasks=[];
+    if(state.loadPlan)state.loadPlan.revoke();
     if(window.cerrarDespachoPrivado)window.cerrarDespachoPrivado();
     SENSITIVE_CACHES.forEach(function(k){try{localStorage.removeItem(k);}catch(_e){}});
     try{sessionStorage.removeItem('yod_id_v1');}catch(_e){}
@@ -290,7 +291,7 @@
   var despachoSection=window.YodDespachoSection.create({
     window:window,document:document,
     readAccess:function(){return {ready:Boolean(state.sessionToken)&&mismaSesion(state.sessionToken,state.sesionEpoch),allowed:window.YodAccessPolicy.canOpen(state.boards,'SYS-DESPACHO',state.role),epoch:state.sesionEpoch};},
-    onTeardown:function(){if(despachoPins)despachoPins.clear();if(despachoConversation)despachoConversation.clear();},
+    onTeardown:function(){if(despachoPins)despachoPins.clear();if(despachoConversation)despachoConversation.clear();if(state.loadPlan)state.loadPlan.clearSelection();},
     revalidate:function(){loadIdentity();}
   });
   if(window.YodDespachoTransport)window.YODCaseTransport=window.YodDespachoTransport.create({
@@ -301,7 +302,23 @@
     isAuthorized:function(){return despachoSection.isAuthorized();},
     getIframeWindow:function(){return despachoSection.getIframeWindow();},
     getEpoch:function(){return state.sesionEpoch;},
-    getTransport:function(){return window.YODCaseTransport;}
+    getTransport:function(){return window.YODCaseTransport;},
+    onSelection:function(id){
+      if(!window.YodLoadConfig||!window.YodLoadConfig.enabled)return;
+      var ep=state.sesionEpoch,frame=despachoSection.getIframeWindow();
+      window.YodLoadPlanReady.then(function(plan){
+        if(!plan||ep!==state.sesionEpoch||frame!==despachoSection.getIframeWindow()||!despachoSection.isAuthorized())return;
+        state.loadPlan=plan;plan.setSession(ep);plan.select(id);
+      });
+    },
+    scheduleRead:window.YodLoadConfig&&window.YodLoadConfig.enabled?function(method,payload,lane,run,isCurrent){
+      var ep=state.sesionEpoch;
+      return window.YodLoadPlanReady.then(function(plan){
+        if(ep!==state.sesionEpoch||!isCurrent())throw Error('session_changed');
+        if(!plan)return null;state.loadPlan=plan;plan.setSession(ep);
+        return plan.readCase(method,payload,lane,run,isCurrent);
+      });
+    }:null
   });
   window.revisarPuertaDespacho=function(){despachoSection.refresh();};
   window.cerrarDespachoPrivado=function(){despachoSection.teardown();};
@@ -658,15 +675,25 @@
   function enDespacho(){return /^#\/despacho(?:[/?]|$)/.test(location.hash||'');}
   function iniciarInicioDiferido(){
     if(enDespacho()||!state.profileReady||state.sessionToken!==tokenActual())return;
+    if(state.loadPlan)state.loadPlan.prioritizeHome();
     montarTablero();
     if(state.homeDataEpoch!==state.sesionEpoch)void startData(state.sessionToken);
   }
   function startData(token){
-    if(enDespacho())return Promise.resolve([]);
+    if(enDespacho()&&!(window.YodLoadConfig&&window.YodLoadConfig.enabled))return Promise.resolve([]);
     state.homeDataEpoch=state.sesionEpoch;
     var requests=[loadPulse(token)];
-    if(window.YodAccessPolicy.hasCode(state.boards,'TA')||state.role==='admin')requests.push(loadOperations(token));else renderOperationsLocked();
+    if(window.YodAccessPolicy.hasCode(state.boards,'TA')||state.role==='admin')requests.push(coordinatedPortalLoad('operations',function(){return loadOperations(token);},enDespacho()?3:1,'operations'));else renderOperationsLocked();
     return Promise.allSettled(requests);
+  }
+  function coordinatedPortalLoad(key,run,priority,origin){
+    if(!(window.YodLoadConfig&&window.YodLoadConfig.enabled))return run();
+    var token=state.sessionToken,ep=state.sesionEpoch;
+    return window.YodLoadPlanReady.then(function(plan){
+      if(!mismaSesion(token,ep))return;
+      if(!plan)return run();state.loadPlan=plan;plan.setSession(ep);
+      return plan.readPortal(key,run,function(){return mismaSesion(token,ep);},priority,origin);
+    });
   }
   // El diagnóstico técnico del canje se traduce a una frase corta en español.
   var FRASE_CANJE={'canje:clave':'Acceso vencido · vuelve a entrar','canje:liga':'Acceso vencido · vuelve a entrar',
@@ -702,7 +729,7 @@
       if(!data||data.ok!==true||data.token!==token||typeof data.rol!=='string'||!data.rol.trim()||typeof data.boards!=='string'){var diag='canje:'+((data&&data.error)||'sin-respuesta');var err=new Error(diag);err._diag=diag;throw err;}
       try{localStorage.removeItem('yod_canje_fail');}catch(_e){}
       state.canjeRetry=0;state.sessionToken=token;state.verifiedAt=Date.now();applyIdentity(data);
-      await Promise.allSettled([loadCatalog(),startData(token)]);
+      await Promise.allSettled([coordinatedPortalLoad('catalog',loadCatalog,1,'catalog'),startData(token)]);
     }catch(err){
       if(!vigente())return;
       var d=(err&&err._diag)||'error';
@@ -957,7 +984,7 @@
     var despachoAllowed=window.YodAccessPolicy.canOpen(state.boards,'SYS-DESPACHO',state.role);
     $('finance-card').classList.toggle('hidden',!financeAllowed);$('marketing-card').classList.toggle('hidden',!marketingAllowed);$('decision-card').classList.toggle('hidden',!decisionsAllowed);$('despacho-card').classList.toggle('hidden',!despachoAllowed);$('pulso').classList.toggle('hidden',!financeAllowed&&!marketingAllowed&&!decisionsAllowed&&!despachoAllowed);
     if(window.revisarPuertaEmbudo)window.revisarPuertaEmbudo();   // misma regla MK para la pestaña Métricas
-    var requests=[];if(financeAllowed)requests.push(loadFinance(token));if(marketingAllowed)requests.push(loadMarketing(token));await Promise.allSettled(requests);
+    var requests=[];if(financeAllowed)requests.push(coordinatedPortalLoad('finance',function(){return loadFinance(token);},enDespacho()?3:1,'finance'));if(marketingAllowed)requests.push(coordinatedPortalLoad('marketing',function(){return loadMarketing(token);},enDespacho()?3:1,'marketing'));await Promise.allSettled(requests);
   }
 
   (function(){

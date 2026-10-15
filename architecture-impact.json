@@ -1,11 +1,17 @@
 {
-  "model_revision": "2026-10-15.despacho-v2-p2.1",
-  "proposal_id": "CHG-DESPACHO-V2-P2",
-  "summary": "Implementar y probar sólo núcleo aislado del coordinador de cargas; producción no lo importa.",
+  "model_revision": "2026-10-15.despacho-v2-p3.1",
+  "proposal_id": "CHG-DESPACHO-V2-P3",
+  "summary": "Adaptador compartido de admisión para lecturas de Inicio y Despacho. Selección explícita prioriza expediente, Inicio progresa en fondo y se promueve al abrirlo; carriles/ACL y mutaciones actuales conservados. Interruptor por defecto apagado.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-DESPACHO-3D"
+    "SYS-DESPACHO-3D",
+    "GAS-PORTERO",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-CONTROL",
+    "SYS-OBRA-CLIENTE",
+    "EXT-DRIVE"
   ],
   "tests": [
     "node --test tests/*.cjs",
