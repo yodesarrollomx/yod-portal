@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-14.investor-gesture.1",
+  "model_revision": "2026-10-14.investor-gesture.2",
   "proposal_id": "CHG-INVESTOR-MOBILE-GESTURE",
-  "summary": "Controlled mobile gesture and named stages in the public investor presentation.",
+  "summary": "Public investor presentation adopts centered corporate header, full-width canvas and transparent relative mobile rotor.",
   "components": [
     "SYS-INVERSION",
     "GAS-PLAN-POTENCIAL",
@@ -16,5 +16,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revert documentation proposal only; no business writes."
+  "rollback": "Revert frontend only; preserve data and permissions."
 }

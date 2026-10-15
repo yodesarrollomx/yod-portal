@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-14.investor-gesture.1",
+  "revision": "2026-10-14.investor-gesture.2",
   "checked_at": "2026-10-14",
   "priorities": [
     "vender_mas",
@@ -12360,14 +12360,14 @@
         "SYS-CONTROL"
       ],
       "status": "propuesto",
-      "approval": "Dirección solicita trasladar las observaciones más recientes del recorrido móvil de Plan de Potencial a la presentación comercial existente.",
-      "proposal": "Sustituir barra móvil absoluta por sensor relativo de velocidad y navegación lateral por etapas con nombre. Animación con velocidad y cola limitadas, reversa inmediata y límites sin acumulación. Preservar narrativa, diagramas, Sheets, CTA y slider de escritorio.",
+      "approval": "Dirección solicita misma familia visual e interacción del último Plan de Potencial aprobado: marca, rótulos, lienzo completo y rotor transparente.",
+      "proposal": "Actualizar presentación existente con cabecera corporativa centrada, lienzo móvil de ancho completo, narración inferior y etapas por nombre al pie. Rotor transparente44px sobre borde seguro sin reservar columna ni mostrar porcentajes; gesto relativo por velocidad, animación acotada y reversa inmediata. Preservar relato comercial, datos en Sheets, CTA, permisos y slider escritorio.",
       "tests": [
-        "Chromium y WebKit: gesto lento/rápido, extremos repetidos y reversa, cancelación de cola, salto por etapa, lectura y CTA, orientación, movimiento reducido y teclado.",
-        "Regresiones de presentación y verificación de archivos publicados. Sin escrituras de negocio."
+        "WebKit y Chromium: tamaños320/375/390/430 y horizontal844; gesto lento/rápido, tap/arrastre desde5alturas, límites/reversa, freno, etapas, rotación, teclado y movimiento reducido.",
+        "27momentos, texto/CTA accesibles, fuente editorial viva; archivos públicos exactos. Ninguna escritura de negocio."
       ],
-      "deployment": "Propuesta previa a implementación. Prueba física de sensación en iPhone se distingue de emulación.",
-      "rollback": "Revertir sólo frontend móvil y textos de ayuda; preservar datos, contenido comercial, permisos y credenciales."
+      "deployment": "Registro previo. Evaluación física en iPhone se distingue de emulación.",
+      "rollback": "Revertir sólo frontend móvil y ayudas; conservar contenido, Sheets, historial, credenciales y permisos."
     }
   ],
   "data_contracts": [
