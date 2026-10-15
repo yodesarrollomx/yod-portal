@@ -39,17 +39,29 @@
   // y el OS se ponía «Sin conexión» con el backend vivo. 25 s + reintento en fondo.
   var LIMITE_MS=25000, LIMITE_FRIO_MS=75000, REINTENTO_MS=15000, REINTENTOS_MAX=3;
   async function canjearConRelevo_(token){
-    async function intenta(base){
-      var r=await conLimite_(fetch(base+'?recurso=canje&t='+encodeURIComponent(token),{cache:'no-store',credentials:'omit'}));
-      if(r.status===401||r.status===403)return {ok:false,error:'HTTP '+r.status};
-      if(r.ok===false)throw new Error('HTTP '+r.status);
-      var raw=await r.text(); try{return JSON.parse(raw);}catch(e){return null;}
+    // Sólo metadatos permitidos: nunca URL, token, cuerpo ni mensajes de terceros.
+    var diagnostico=[];
+    async function intenta(base,origen){
+      var inicio=Date.now(),fase='cabeceras',status=0,codigo='red';
+      try{
+        var r=await conLimite_(fetch(base+'?recurso=canje&t='+encodeURIComponent(token),{cache:'no-store',credentials:'omit'}));
+        status=Number(r.status)||0;
+        if(r.status===401||r.status===403){codigo='http';return {ok:false,error:'HTTP '+r.status};}
+        if(r.ok===false){codigo='http';return {ok:false,error:'http'};}
+        fase='cuerpo';var raw=await r.text();fase='formato';
+        var data;try{data=JSON.parse(raw);}catch(_e){codigo='formato';return {ok:false,error:'formato'};}
+        if(!data||typeof data!=='object'){codigo='formato';return {ok:false,error:'formato'};}
+        codigo=data.ok?'ok':'rechazo';return data;
+      }catch(e){codigo=e&&e.message==='timeout'?'timeout':'red';return {ok:false,error:codigo};}
+      finally{diagnostico.push({origen:origen,fase:fase,codigo:codigo,http:status,duracion_ms:Math.max(0,Date.now()-inicio)});}
     }
-    var d=null; try{ d=await intenta(PORTERO_ORIGINAL); }catch(e){ d=null; }
-    if(!d||(!d.ok&&!rechazoAcceso(d.error))){
-      // El respaldo no es autoridad para revocar sesiones del primario caído.
-      try{var backup=await intenta(PORTERO_RESPALDO);d=backup&&backup.ok?backup:null;}catch(e){d=null;}
+    var d=await intenta(PORTERO_ORIGINAL,'original');
+    if(!d.ok&&!rechazoAcceso(d.error)){
+      // El respaldo no puede revocar una sesión del primario inaccesible.
+      var backup=await intenta(PORTERO_RESPALDO,'respaldo');
+      if(backup&&backup.ok)d=backup;
     }
+    if(!d.ok)console.warn('[YOD OS] diagnóstico de transporte del canje',diagnostico);
     return d;
   }
   // Respaldo curado del catálogo (4-sep-2026). Los títulos y textos dicen LO MISMO que
@@ -638,7 +650,10 @@
   // El diagnóstico técnico del canje se traduce a una frase corta en español.
   var FRASE_CANJE={'canje:clave':'Acceso vencido · vuelve a entrar','canje:liga':'Acceso vencido · vuelve a entrar',
                    'canje:revocado':'Acceso retirado · pídelo de nuevo','canje:expirado':'Acceso vencido · vuelve a entrar',
-                   'canje:sin-respuesta':'Google no contestó · toca ⟳','canje:timeout':'Google no contestó · toca ⟳'};
+                   'canje:sin-respuesta':'Google no contestó · toca ⟳','canje:timeout':'Google no contestó a tiempo · toca ⟳',
+                   'canje:red':'No se pudo conectar con Google · reintentando',
+                   'canje:http':'Google respondió con un error · reintentando',
+                   'canje:formato':'Google devolvió una respuesta inesperada · reintentando'};
   function frasePendiente(d){return FRASE_CANJE[d]||'Sin validar · toca ⟳';}
   async function loadIdentity(){
     var token=tokenActual(),request=++state.identityRequest;
@@ -663,7 +678,7 @@
       if(!vigente())return;
       var d=(err&&err._diag)||'error';
       var LENTO={'canje:sin-respuesta':1,'canje:timeout':1,'canje:servidor':1,
-                 'canje:token_red':1,'error':1};
+                 'canje:token_red':1,'canje:red':1,'canje:http':1,'canje:formato':1,'error':1};
       var MUERTO={'canje:clave':1,'canje:liga':1,'canje:revocado':1,'canje:expirado':1};
       function reintentar(){
         state.canjeRetry=(state.canjeRetry||0)+1;

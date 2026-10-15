@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.presentation-links.1 · 2026-10-15.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.canje-diagnostico.2 · 2026-10-15.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -141,7 +141,7 @@ Administrar catálogo y registro de proyectos
 Integrar navegación, identidad y síntesis de tableros
 
 - Tipo: portal. Dominio: Gobierno. Responsable: Dirección.
-- Evidencia: declarado. Producción: Portal PR141 publicado en Pages (0351157). El clienteWeb y origen ya estaban registrados correctamente: OS recupera Referer de sólo origen y GSI devuelve200 en publicación escritorio/móvil. No acredita inicio de sesión personal, micrófono físico ni cobertura operativa completa de YOD..
+- Evidencia: declarado. Producción: Portal PR141 publicado en Pages (0351157). El clienteWeb y origen ya estaban registrados correctamente: OS recupera Referer de sólo origen y GSI devuelve200 en publicación escritorio/móvil. No acredita inicio de sesión personal, micrófono físico ni cobertura operativa completa de YOD. Implementado283 en rama: diagnóstico seguro de canje; publicación pendiente..
 - Entidades: sistema, sesion, resumen, proyecto.
 - Fuente de verdad: Catálogo de código y Control Maestro; cada indicador hereda el almacén de su dominio.
 - Evidencia: [yod-portal/CLAUDE.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/CLAUDE.md#L7) — El portal integra tableros; [yod-portal/docs/arquitectura/control-maestro.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/control-maestro.md) — PR #14 integrado; doce archivos servidos comparados exactamente con commit 7e9094b y perfiles sintéticos sobre la publicación. No acredita sesiones ni escrituras reales.; [yod-portal/os/index.html](https://github.com/yodesarrollomx/yod-portal/blob/0351157a71ec9fc3c5b3beae70702c92646ece58/os/index.html) — GSI recupera origen mediante strict-origin; A/B real pasa400→200 y confirma Referer sin rutas/query. No modifica clientesOAuth ni acredita login personal completo..

@@ -1,11 +1,15 @@
 {
-  "model_revision": "2026-10-15.presentation-links.1",
-  "proposal_id": "CHG-PRESENTATION-LINKS-20261015",
-  "summary": "Dos enlaces permanentes, control por llave y visor público con seguimiento común para móvil/escritorio; objetivo cien seguidores, preservando recorrido y fuentes.",
+  "model_revision": "2026-10-15.canje-diagnostico.2",
+  "proposal_id": "CHG-CANJE-DIAGNOSTICO-283",
+  "summary": "Distinguir fallos del canje con códigos/fase/duración seguros. No cambiar permisos, reintentos, plazos ni backend.",
   "components": [
-    "SYS-PLAN-POTENCIAL",
-    "SYS-INVERSION",
-    "SYS-CONTROL"
+    "SYS-YOD-OS",
+    "GAS-PORTERO",
+    "SYS-DESPACHO",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-CONTROL",
+    "SYS-OBRA-CLIENTE"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -15,5 +19,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Volver a versión16 del mismo Sitio, conservar bases, sesiones e historia."
+  "rollback": "Revertir diagnóstico y cache-bump del frontend; sin cambios en datos/backend."
 }

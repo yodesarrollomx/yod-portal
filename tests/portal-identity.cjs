@@ -381,3 +381,26 @@ test('Shell: respaldo que no reconoce token no revoca credencial del primario in
   vm.runInContext(fn(shellSource,'rechazoAcceso')+'\n'+fn(shellSource,'canjeConRelevo'),c);
   assert.equal(await c.canjeConRelevo('A'),null);
 });
+
+test('App: distingue fallos del canje con diagnóstico seguro y conserva autoridad del primario',async()=>{
+  for(const kind of ['red','http','formato','timeout']){
+    const logs=[],calls=[];
+    const c=vm.createContext({Date,console:{warn:(...x)=>logs.push(x)},PORTERO_ORIGINAL:'original',PORTERO_RESPALDO:'backup',
+      conLimite_:p=>p,fetch:async(url)=>{calls.push(url);if(kind==='red')throw Error('private-token-in-exception');if(kind==='timeout')throw Error('timeout');return {ok:kind!=='http',status:kind==='http'?503:200,text:async()=>'<html>private-body</html>'};}});
+    vm.runInContext(fn(appSource,'rechazoAcceso')+'\n'+fn(appSource,'canjearConRelevo_'),c);
+    const r=await c.canjearConRelevo_('private-token');assert.equal(r.error,kind);assert.equal(calls.length,2);
+    assert.equal(logs[0][1].length,2);assert.equal(logs[0][1][0].codigo,kind);
+    assert.doesNotMatch(JSON.stringify(logs),/private-token|private-body|https:|\?recurso/);
+    assert.deepEqual(Object.keys(logs[0][1][0]),['origen','fase','codigo','http','duracion_ms']);
+    const h=appHarness();h.c.canjearConRelevo_=async()=>({ok:false,error:kind});await h.c.loadIdentity();
+    assert.equal(h.timers.length,1);assert.equal(h.state.profileReady,false);assert.ok(h.localStorage.getItem('pyod_clave_v1'));
+  }
+});
+test('App: fallo primario conserva diagnóstico aunque respaldo rechace y puede recuperar sin aviso falso',async()=>{
+  for(const backupOk of [false,true]){
+    let n=0;const logs=[];const c=vm.createContext({Date,console:{warn:(...a)=>logs.push(a)},PORTERO_ORIGINAL:'original',PORTERO_RESPALDO:'backup',conLimite_:p=>p,
+      fetch:async()=>{if(!n++)throw Error('network');return {ok:true,status:200,text:async()=>JSON.stringify(backupOk?{ok:true,token:'synthetic',rol:'vista',boards:'TA'}:{ok:false,error:'revocado'})};}});
+    vm.runInContext(fn(appSource,'rechazoAcceso')+'\n'+fn(appSource,'canjearConRelevo_'),c);
+    const r=await c.canjearConRelevo_('synthetic');assert.equal(r.ok,backupOk);assert.equal(logs.length,backupOk?0:1);if(!backupOk)assert.equal(r.error,'red');
+  }
+});
