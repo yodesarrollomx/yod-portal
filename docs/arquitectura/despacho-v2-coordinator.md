@@ -89,3 +89,39 @@ Ejecutar `node --test tests/load-coordinator.test.cjs`, suite Node completa y
 verificadores del repo. No hay cambio visual que requiera QA de apariencia en
 esta parte. Ningún índice/boot importa el módulo. Reversión: retirar estos archivos
 y su declaración de arquitectura; sin migraciones de datos ni despliegue backend.
+
+## Parte 3: integración opt-in de pantallas y consultas
+
+`os/load-config.js` mantiene `enabled:false`. No se habilita mediante URL,
+localStorage o mensajes del iframe. La activación y medición global corresponden
+a la parte 6. `load-plan-boot.js` sólo importa el plan al habilitarlo; si no puede
+cargarlo, Inicio y el puente de Despacho conservan su ruta anterior.
+
+El plan comparte la admisión de catálogo, finanzas, marketing y operaciones de
+Inicio con las lecturas del puente de Despacho. Inicio puede avanzar a prioridad
+3 mientras está abierto Despacho; al volver a Inicio se promueven las cargas
+pendientes. La selección explícita, recibida únicamente del iframe autorizado
+y del mismo origen, eleva las lecturas de ese caso. Es una pista de planificación,
+no una autorización: todos los controles del puente, transporte y servidor siguen
+vigentes. La época utilizada es un contador local, nunca una credencial.
+
+Las lecturas de caso comparten vuelos por operación y parámetros dentro de la
+sesión. Cada consumidor seleccionado conserva su generación: cambiar A→B
+cancela ese consumidor y descarta su respuesta, sin cancelar otro consumidor
+independiente de fondo. La lectura física conserva su plaza hasta terminar.
+Elegir un caso que ya estaba leyendo en fondo promueve y reutiliza ese vuelo.
+Los carriles originales se mantienen; escrituras y emisión de sesiones rápidas
+no pasan por el plan ni reciben reintentos nuevos.
+
+Los límites se aplican a llamadas de adaptadores, no a cada petición interna de
+red que pueda efectuar un adaptador. Las funciones existentes de Inicio conservan
+sus comprobaciones de identidad antes de actualizar la interfaz; el plan no
+sustituye esas comprobaciones. Esta parte no añade caché persistente, liderazgo
+entre pestañas, reconciliación de escrituras, gestión de medios/voz ni una garantía
+de frescura adicional: corresponden a las siguientes partes del contrato.
+
+Validación sintética de la integración: `node --test tests/load-plan.test.cjs`
+y el caso P3 de `tests/portal-identity.cjs`. Comprueba deduplicación, promoción,
+selección cambiante, retención del carril físico, revocación, ruta de mutaciones,
+arranque apagado, fallback y puente real con origen/iframe comprobados. No mide
+latencia de producción ni acredita publicación.
