@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-15.canje-abort.1",
+  "revision": "2026-10-15.canje-body.1",
   "checked_at": "2026-10-15",
   "priorities": [
     "vender_mas",
@@ -12803,6 +12803,31 @@
       ],
       "deployment": "Implementado y probado en rama: 705 pruebas Node; 20 rondas timeout con cero solicitudes residuales. Publicación pendiente. No acredita cancelación servidor ni mejora global de latencia.",
       "rollback": "Revertir cancelación y cache-bump frontend; sin cambios backend/datos."
+    },
+    {
+      "id": "CHG-CANJE-BODY-283",
+      "components": [
+        "SYS-YOD-OS",
+        "GAS-PORTERO",
+        "SYS-DESPACHO",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE"
+      ],
+      "status": "propuesto",
+      "authorization": "Orden directa de Dirección: aplicar tercera solución283.",
+      "proposal": "Un único plazo de25s por intento cubre cabeceras y cuerpo de canje. Abortar al vencer; conservar diagnósticos, autoridad, identidad y reintentos.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs"
+      ],
+      "deployment": "Implementado y probado en rama:708Node;20/20cuerpos atascados terminan timeout y40/40intentos cancelados. Deadline único y rechazo de cuerpo tardío. Publicación pendiente.",
+      "rollback": "Revertir plazo completo y cache-bump; sin cambios backend/datos."
     }
   ],
   "data_contracts": [

@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-15.canje-abort.1",
-  "proposal_id": "CHG-CANJE-ABORT-283",
-  "summary": "Cancelar fetch de canje al vencer plazo de cabeceras y limpiar temporizadores. Conserva plazo, respaldo, autoridad y reintentos. No cancela ejecución servidor ni limita aún cuerpo.",
+  "model_revision": "2026-10-15.canje-body.1",
+  "proposal_id": "CHG-CANJE-BODY-283",
+  "summary": "Un único plazo de25s por intento cubre cabeceras y cuerpo de canje. Abortar al vencer; conservar diagnósticos, autoridad, identidad y reintentos.",
   "components": [
     "SYS-YOD-OS",
     "GAS-PORTERO",
@@ -19,5 +19,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir cancelación y cache-bump frontend; sin cambios backend/datos."
+  "rollback": "Revertir plazo completo y cache-bump; sin cambios backend/datos."
 }
