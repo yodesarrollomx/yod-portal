@@ -73,3 +73,5 @@ La auditoría no se considera completa mientras existan componentes críticos o 
 - [Presentación simplificada de siete escenas](investor-simple-story.md): trazo grueso por escena, claridad comercial, lectura opcional y archivo anterior; registro previo.
 
 - [Presentación móvil · una superficie y chinches](investor-single-surface.md): interacción iPhone, anotaciones, almacenamiento local, pruebas y límites de recepción; registro previo.
+
+- [Chinches de presentaciones → Sala](presentation-pins-ingest.md): relevo entre orígenes, sobres privados y acuses reales; sin cambiar el calendario.

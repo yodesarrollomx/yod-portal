@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-15.investor-intent.1",
+  "revision": "2026-10-15.presentation-pins-ingest.1",
   "checked_at": "2026-10-15",
   "priorities": [
     "vender_mas",
@@ -12624,6 +12624,33 @@
       ],
       "deployment": "Registro previo; no acredita nueva publicación ni aceptación de público real.",
       "rollback": "Revertir frontend y sólo nuevo campo editorial; conservar originales, revisiones, configuración histórica, datos, permisos y credenciales."
+    },
+    {
+      "id": "CHG-PRESENTATION-PINS-INGEST-20261015",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "EXT-ACTIONS",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-DRIVE"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección solicita corregir las chinches de ambas presentaciones para que entren al circuito automático vigente, preservando notas y verificando la frecuencia real; sin cambiar calendarios ni reactivar rutinas.",
+      "proposal": "Reutilizar PRODUCCION de Sala y su contrato ENCARGO/CHN. Captura/comentario/contexto completos permanecen en el JSON privado; el issue público contiene sólo un aviso técnico y su ID. El frontend conserva borradores y entrega inmediata con sesión YOD existente; origen externo utiliza relevo de navegador limitado a esos orígenes, sin transferir credenciales. Confirmar POST ok y lectura por ID/huella; un envío ambiguo sólo se concilia en lectura. Conservar ID al rescatar pendientes y distinguir local, recibido, tomado y cumplido. El revisor existente consulta el sobre privado y atiende destino GitHub o Sites. No nuevo Sheet, backend ni cron. Antes de habilitar consumidores, desplegar una proyección pública mínima por ID para relevos, snapshots y bundle final; los originales permanecen en la fuente privada. El cliente exige contrato servido de esa frontera. No basta que un issue no muestre la captura. El revisor debe leer la fuente privada completa, no limitarse a la ventana del día.",
+      "tests": [
+        "Contratos sintéticos: origen/emisor/nonce, payload acotado y captura privada, rol/clave existente sólo en origen YOD; no filtrar secretos en mensajes.",
+        "Entrega y acuse por ID/huella, deduplicación, offline, error auth, respuesta perdida y recarga; sin POST de prueba en producción.",
+        "WebKit/Chromium: captura, dictado, Clavar, historial, pendientes previos, conexión y cancelación; preservar gesto y27/68momentos.",
+        "Atlas/modelo/vistas/impacto y suites existentes; recibos públicos exactos separados de entrega real.",
+        "Proyección sin mutar originales, JSON de celda/truncado/anidado, rechazo de sobre sin proyectar en snapshot y bundle antes de cualquier efecto; conservar decisiones e históricos ordinarios. Consumidor sin contrato servido no escribe."
+      ],
+      "deployment": "Registro previo. No acredita publicación ni recepción de una chinche en la sesión privada de Dirección. Frecuencia y ejecuciones de revisor/puente se verifican separadamente.",
+      "rollback": "Revertir sólo consumidores/relevo frontend; conservar IndexedDB, IDs, sobres privados y recibos de Sala. No reponer notas a nueva para reenviar un POST ambiguo; no borrar datos ni cambiar permisos, rutinas o backend."
     }
   ],
   "data_contracts": [
@@ -14414,6 +14441,35 @@
         "No cifras, rendimientos, cabidas ni probabilidades fabricadas; sólo ilustración conceptual.",
         "Todos los textos originales permanecen accesibles; versiones anteriores siguen operando.",
         "Conservar contrato de chinches, credencial Portero, permisos, datos y backend existentes."
+      ]
+    },
+    {
+      "id": "CTR-PRESENTATION-PINS-INGEST",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "EXT-ACTIONS",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-DRIVE"
+      ],
+      "source": "La solicitud escrita/dictada y su captura; bandeja privada PRODUCCION de Sala.",
+      "input": [
+        "CHN estable, versión/escena/cámara/punto, destino, captura JPEG acotada con SHA256 y sesión YOD existente confinada a su origen."
+      ],
+      "output": [
+        "Sobre privado registrado; recibo verificado por ID/huella; marcador público saneado para el puente/revisor existente."
+      ],
+      "invariants": [
+        "Nunca confundir local con recibido ni recibido con cumplido.",
+        "No copiar claves a Sites ni postMessage ni publicar capturas/notas privadas en issues.",
+        "Mismo ID al recuperar pendientes; una respuesta ambigua sólo se concilia en lectura.",
+        "No nuevos cron, reactivaciones, backend, Sheet ni cambios de ACL.",
+        "Notas y capturas sólo en fuente privada. Exportaciones públicas conservan un marcador mínimo; frontera verificada antes de ingesta. La ventana del día no sustituye el historial de PRODUCCION."
       ]
     }
   ],

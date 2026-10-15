@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.investor-intent.1 · 2026-10-15.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.presentation-pins-ingest.1 · 2026-10-15.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -881,3 +881,16 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - No cifras, rendimientos, cabidas ni probabilidades fabricadas; sólo ilustración conceptual.
 - Todos los textos originales permanecen accesibles; versiones anteriores siguen operando.
 - Conservar contrato de chinches, credencial Portero, permisos, datos y backend existentes.
+
+## CTR-PRESENTATION-PINS-INGEST
+
+- Componentes: SYS-INVERSION, SYS-YOD-OS, SYS-CONTROL, SYS-SALA, GAS-SALA, SHEET-SALA, EXT-ACTIONS, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-DRIVE.
+- Evidencia: La solicitud escrita/dictada y su captura; bandeja privada PRODUCCION de Sala..
+- Entrada/campos: `CHN estable, versión/escena/cámara/punto, destino, captura JPEG acotada con SHA256 y sesión YOD existente confinada a su origen.`.
+- Salida: Sobre privado registrado; recibo verificado por ID/huella; marcador público saneado para el puente/revisor existente..
+
+- Nunca confundir local con recibido ni recibido con cumplido.
+- No copiar claves a Sites ni postMessage ni publicar capturas/notas privadas en issues.
+- Mismo ID al recuperar pendientes; una respuesta ambigua sólo se concilia en lectura.
+- No nuevos cron, reactivaciones, backend, Sheet ni cambios de ACL.
+- Notas y capturas sólo en fuente privada. Exportaciones públicas conservan un marcador mínimo; frontera verificada antes de ingesta. La ventana del día no sustituye el historial de PRODUCCION.
