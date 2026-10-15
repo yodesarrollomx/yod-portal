@@ -1,4 +1,4 @@
-import {officeFastSessions} from './office-preparation.mjs?v=2';
+import {officeFastSessions} from './office-preparation.mjs?v=unified283';
 import {createFrameTransport} from './conversation.mjs?v=142';
 import {validateFastSession} from './fast-lane.mjs';
 import {createWorkObserver} from './work-observer.mjs?v=129';

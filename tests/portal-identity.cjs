@@ -48,7 +48,7 @@ function appHarness(token = 'prefix-shared--A') {
     sinSaldo: () => false, sinKpis: () => false,
     renderOpsScoped: (...args) => renders.push(['operations', ...args]), renderDecisions: (...args) => renders.push(['decisions', ...args]), loadReconcile() {}
   });
-  const names = ['tokenActual','rechazoAcceso','mismaSesion','purgarDatosSensibles','bloquearSesion','pulseCacheRead','pulseCacheWrite','loadIdentity','loadFinance','loadMarketing','loadOperations','catalogoSinAcceso'];
+  const names = ['tokenActual','rechazoAcceso','mismaSesion','purgarDatosSensibles','bloquearSesion','pulseCacheRead','pulseCacheWrite','loadIdentity','loadIdentityOnce','loadFinance','loadMarketing','loadOperations','catalogoSinAcceso'];
   vm.runInContext(names.map(n => fn(appSource, n)).join('\n'), c);
   function authorize() { state.profileReady = true;state.sessionToken = localStorage.getItem('pyod_clave_v1');state.role = 'admin';state.boards = '*';state.verifiedAt=Date.now(); }
   return { c, state, applied, loads, renders, timers, nodes, node, localStorage, sessionStorage, authorize };
@@ -484,4 +484,35 @@ test('App: fallo al leer cuerpo conserva diagnóstico red y recupera respaldo',a
   h.calls[0].resolve({ok:true,status:200,text:async()=>{throw Error('network-body');}});await flushCanje();
   h.calls[1].resolve({ok:true,status:200,text:async()=>JSON.stringify({ok:false,error:'revocado'})});
   assert.equal((await p).error,'red');assert.equal(h.logs[0][1][0].fase,'cuerpo');assert.equal(h.timers.size,0);
+});
+
+test('283 conjunto: avisos simultáneos de la misma identidad comparten canje y carga',async()=>{
+ const h=appHarness('A'),pending=deferred();let calls=0;
+ h.c.canjearConRelevo_=()=>{calls++;return pending.promise;};
+ const one=h.c.loadIdentity(),two=h.c.loadIdentity(),three=h.c.loadIdentity();
+ assert.equal(one,two);assert.equal(two,three);assert.equal(calls,1);
+ pending.resolve({ok:true,token:'A',rol:'vista',boards:'TA',nombre:'Current'});
+ await Promise.all([one,two,three]);assert.deepEqual(h.loads,['catalog','A']);assert.equal(h.state.identityFlight,null);
+ h.c.canjearConRelevo_=async()=>{calls++;return {ok:true,token:'A',rol:'vista',boards:'TA',nombre:'Current'};};
+ await h.c.loadIdentity();assert.equal(calls,2,'una nueva revisión sigue validando al servidor');
+});
+test('283 conjunto: volver de B a A no reutiliza el canje antiguo de A',async()=>{
+ const h=appHarness('A'),pending=[deferred(),deferred(),deferred()];let calls=0;
+ h.c.canjearConRelevo_=()=>pending[calls++].promise;
+ const a=h.c.loadIdentity();h.localStorage.setItem('pyod_clave_v1','B');const b=h.c.loadIdentity();
+ h.localStorage.setItem('pyod_clave_v1','A');const fresh=h.c.loadIdentity();assert.equal(calls,3);
+ pending[2].resolve({ok:true,token:'A',rol:'vista',boards:'TA',nombre:'Fresh'});await fresh;
+ pending[0].resolve({ok:true,token:'A',rol:'admin',boards:'*',nombre:'Old'});
+ pending[1].resolve({ok:true,token:'B',rol:'admin',boards:'*',nombre:'B'});await Promise.all([a,b]);
+ assert.deepEqual(h.applied,['Fresh']);assert.equal(h.state.role,'vista');
+});
+test('283 conjunto: Despacho difiere Inicio y al volver lo carga una sola vez por época',async()=>{
+ const h=appHarness('A');h.authorize();h.c.location.hash='#/despacho';let board=0,pulse=0,ops=0;
+ h.c.montarTablero=()=>board++;h.c.loadPulse=async()=>pulse++;h.c.loadOperations=async()=>ops++;
+ h.c.window.YodAccessPolicy={hasCode:()=>true};
+ vm.runInContext(['enDespacho','iniciarInicioDiferido','startData'].map(n=>fn(appSource,n)).join('\n'),h.c);
+ await h.c.startData('A');h.c.iniciarInicioDiferido();assert.deepEqual([board,pulse,ops],[0,0,0]);
+ h.c.location.hash='#pulso';h.c.iniciarInicioDiferido();h.c.iniciarInicioDiferido();
+ assert.deepEqual([pulse,ops],[1,1]);h.state.sesionEpoch++;h.c.iniciarInicioDiferido();assert.deepEqual([pulse,ops],[2,2]);
+ h.localStorage.removeItem('pyod_clave_v1');h.c.iniciarInicioDiferido();assert.deepEqual([pulse,ops],[2,2]);
 });

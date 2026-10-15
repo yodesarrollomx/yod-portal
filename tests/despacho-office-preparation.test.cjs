@@ -108,3 +108,35 @@ test('forgetting authority prevents a late old mint from replacing a fresh same-
  assert.equal((await fresh).case_id,'a');assert.equal(freshCalls,1);
  await pool.ensure('a',()=>{throw Error('unexpected_remint');});assert.equal(freshCalls,1);
 });
+
+test('283 conjunto: sólo prepara el seleccionado y limita fallos repetidos',async()=>{
+ const {createFastSessionPool,createOfficePreparation}=await import('../despacho3d/office-preparation.mjs');
+ let selected=null,at=1000;const calls=[],pool=createFastSessionPool({now:()=>at});
+ const office=createOfficePreparation({sessions:pool,now:()=>at,selectedOnly:true,getSelectedCase:()=>selected,
+ mint:async p=>{calls.push(p.case_id);throw Error('unavailable');}});
+ const items=[{case_id:'a',can_enqueue:true},{case_id:'b',can_enqueue:true}];
+ await office.update(items);assert.deepEqual(calls,[]);
+ selected='b';await office.update(items);await office.update(items);assert.deepEqual(calls,['b']);
+ at+=10001;await office.update(items);assert.deepEqual(calls,['b','b']);
+ office.clear();await office.update(items);assert.deepEqual(calls,['b','b','b']);office.close();
+});
+test('283 conjunto: despertar reciente no renueva; vencimiento y error sí',async()=>{
+ const {authorityRefreshDue}=await import('../despacho3d/authority-lease.mjs');
+ assert.equal(authorityRefreshDue({phase:'current',checked_at:1000},2000),false);
+ assert.equal(authorityRefreshDue({phase:'standby',checked_at:1000},55999),false);
+ assert.equal(authorityRefreshDue({phase:'current',checked_at:1000},56000),true);
+ assert.equal(authorityRefreshDue({phase:'reconnecting',checked_at:1000},2000),true);
+ assert.equal(authorityRefreshDue({phase:'unauthorized',checked_at:1000},2000),true);
+ assert.equal(authorityRefreshDue({phase:'current',checked_at:1000},500),true);
+ assert.equal(authorityRefreshDue({phase:'current',checked_at:1000},121000),true);
+});
+test('283 conjunto: cambiar selección durante preparación retoma el nuevo caso',async()=>{
+ const {createFastSessionPool,createOfficePreparation}=await import('../despacho3d/office-preparation.mjs');
+ let selected='b',release;const calls=[],pool=createFastSessionPool({now:()=>1000});
+ const office=createOfficePreparation({sessions:pool,now:()=>1000,selectedOnly:true,getSelectedCase:()=>selected,
+ mint:async p=>{calls.push(p.case_id);return raw(p.case_id);},
+ fetchImpl:async()=>{if(selected==='b')await new Promise(r=>release=r);return{ok:true,status:200,json:async()=>({ok:true,available:true})};}});
+ const items=[{case_id:'a',can_enqueue:true},{case_id:'b',can_enqueue:true}];
+ const p=office.update(items);await tick();selected='a';void office.update(items);release();await p;await tick();
+ assert.deepEqual(calls,['b','a']);office.close();
+});

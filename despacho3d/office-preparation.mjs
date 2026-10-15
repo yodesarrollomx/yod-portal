@@ -49,24 +49,26 @@ export function createFastSessionPool({now=Date.now,margin=120000,maxCases=6}={}
 export const officeFastSessions=createFastSessionPool();
 
 export function createOfficePreparation({sessions=officeFastSessions,mint,fetchImpl=(...args)=>fetch(...args),now=Date.now,
- visible=()=>true,onResult=()=>{}}={}){
+ visible=()=>true,selectedOnly=false,getSelectedCase=()=>null,onResult=()=>{}}={}){
  let generation=0,items=[],flight=null,closed=false;
- const checked=new Map();
- function clear(){generation++;items=[];checked.clear();sessions.forget();}
+ const checked=new Map(),attempted=new Map();
+ function clear(){generation++;items=[];checked.clear();attempted.clear();sessions.forget();}
  function update(next){
   if(closed)return Promise.resolve(false);
   items=next.filter(c=>c.can_enqueue);sessions.retain(items.map(c=>c.case_id));
   for(const id of checked.keys())if(!items.some(c=>c.case_id===id))checked.delete(id);
   if(flight||!visible())return flight||Promise.resolve(false);
-  const own=generation;
+  const own=generation,selectedAtStart=getSelectedCase();
   const run=(async()=>{
    for(const c of [...items]){
     if(closed||own!==generation||!visible())return false;
     if(!items.some(item=>item.case_id===c.case_id))continue;
-    if(now()-(checked.get(c.case_id)??-Infinity)<60000)continue;
+    if(selectedOnly&&c.case_id!==getSelectedCase())continue;
+    if(now()-(checked.get(c.case_id)??-Infinity)<60000||now()-(attempted.get(c.case_id)??-Infinity)<10000)continue;
+    attempted.set(c.case_id,now());
     let ok=false;
     try{
-     const auth=await sessions.ensure(c.case_id,mint);
+     const auth=await sessions.ensure(c.case_id,mint,{priority:selectedOnly});
      if(closed||own!==generation||!items.some(item=>item.case_id===c.case_id))continue;
      const response=await fetchImpl(auth.endpoint+'/voice/ready',{headers:{Authorization:'Bearer '+auth.token},
       cache:'no-store',credentials:'omit',signal:AbortSignal.timeout(15000)});
@@ -79,7 +81,7 @@ export function createOfficePreparation({sessions=officeFastSessions,mint,fetchI
    }
    return true;
   })();flight=run;
-  void run.finally(()=>{if(flight===run)flight=null;});return run;
+  void run.finally(()=>{if(flight===run){flight=null;if(selectedOnly&&getSelectedCase()!==selectedAtStart)void update(items);}});return run;
  }
  return {update,clear,close(){closed=true;clear();}};
 }
