@@ -25,6 +25,6 @@ Guardar una chinche no acredita que un revisor remoto la haya recibido. Comparti
 
 ## Contratos y reversión
 
-Componentes: SYS-INVERSION, SYS-YOD-OS, SYS-CONTROL, GAS-PLAN-POTENCIAL y SHEET-PLAN-POTENCIAL. Contrato: CTR-INVESTOR-SINGLE-SURFACE. Recorrido: PROC-INVESTOR-SINGLE-SURFACE.
+Componentes: SYS-INVERSION, SYS-YOD-OS, SYS-CONTROL, GAS-PLAN-POTENCIAL y SHEET-PLAN-POTENCIAL. Contrato: CTR-INVESTOR-SINGLE-SURFACE.
 
 Revertir sólo el PR de frontend a la versión previa en la misma URL. Conservar contenido de Sheets, originales, versiones, historial local, accesos y expedientes. Este registro no acredita implementación o publicación; los recibos corresponden al PR consumidor.
