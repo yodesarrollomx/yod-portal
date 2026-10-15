@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.oficina-283.2 · 2026-10-15.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.sala-persistencia.1 · 2026-10-15.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
