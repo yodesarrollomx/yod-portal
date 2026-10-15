@@ -33,3 +33,14 @@ test('P4: absent channel works independently; close releases timers and sends no
  const {createTabContinuity}=await load(),h=harness();let wakes=0;const t=createTabContinuity({...h,channel:null,id:'A',onWake:()=>wakes++});
  assert.equal(t.snapshot().leader,true);t.changed();t.close();h.advance(20000);assert.equal(wakes,0);
 });
+
+test('P4: BFCache suspends and restores tab coordination without losing uncertain receipts',async()=>{
+ const vm=require('node:vm'),fs=require('node:fs'),events={},calls=[];
+ const plan={invalidate:()=>calls.push('invalidate'),revoke:()=>calls.push('revoke'),pauseBackground(){}},tabs={state:s=>calls.push(s.visible?'visible':'hidden'),close:()=>calls.push('close')};
+ const modules=[{createPortalLoadPlan:()=>plan},{createTabContinuity:()=>tabs}];
+ const root={YodLoadConfig:{enabled:true},crypto:{randomUUID:()=> 'synthetic'},document:{hidden:false,addEventListener(){}},navigator:{onLine:true},addEventListener:(n,f)=>events[n]=f};
+ const source=fs.readFileSync(require.resolve('../os/load-plan-boot.js'),'utf8').replace(/import\('[^']+'\)/g,()=> 'Promise.resolve(modules.shift())');
+ vm.runInNewContext(source,{globalThis:root,modules});await root.YodLoadPlanReady;
+ events.pagehide({persisted:true});events.pageshow({persisted:true});assert.deepEqual(calls,['visible','hidden','invalidate','visible']);
+ events.pagehide({persisted:false});assert.deepEqual(calls.slice(-2),['close','revoke']);
+});

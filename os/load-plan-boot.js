@@ -9,7 +9,11 @@
         onWake:function(){if(root.YodContinuityWake)void root.YodContinuityWake();}});
       function state(){tabs.state({visible:!root.document.hidden,online:root.navigator.onLine!==false});}
       root.document.addEventListener('visibilitychange',state);root.addEventListener('online',state);root.addEventListener('offline',state);
-      root.addEventListener('pagehide',function(){tabs.close();plan.revoke();},{once:true});state();return plan;
+      root.addEventListener('pagehide',function(event){
+        if(event.persisted){tabs.state({visible:false,online:false});plan.invalidate();}
+        else{tabs.close();plan.revoke();}
+      });
+      root.addEventListener('pageshow',function(event){if(event.persisted)state();});state();return plan;
     }).catch(function(){root.YodLoadConfig=Object.freeze({enabled:false});return null;})
     : Promise.resolve(null);
 })(typeof globalThis!=='undefined'?globalThis:this);
