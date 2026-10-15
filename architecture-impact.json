@@ -1,16 +1,11 @@
 {
-  "model_revision": "2026-10-15.sala-persistencia.1",
-  "proposal_id": "CHG-SALA-PERSISTENCIA-20261015",
-  "summary": "Punto 3: preservar instrucciones, recibos y recuperación de Sala; registro previo a implementación.",
+  "model_revision": "2026-10-15.presentation-links.1",
+  "proposal_id": "CHG-PRESENTATION-LINKS-20261015",
+  "summary": "Dos enlaces permanentes, control por llave y visor público con seguimiento común para móvil/escritorio; objetivo cien seguidores, preservando recorrido y fuentes.",
   "components": [
-    "SYS-SALA",
-    "GAS-SALA",
-    "SHEET-SALA",
-    "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
-    "EXT-MOTORES-MEDIA",
-    "EXT-ACTIONS",
-    "SYS-YOD-OS"
+    "SYS-PLAN-POTENCIAL",
+    "SYS-INVERSION",
+    "SYS-CONTROL"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -20,5 +15,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir este registro sin borrar evidencia ni modificar permisos."
+  "rollback": "Volver a versión16 del mismo Sitio, conservar bases, sesiones e historia."
 }
