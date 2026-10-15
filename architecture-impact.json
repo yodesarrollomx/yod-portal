@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-15.sala-evaluacion.2",
+  "model_revision": "2026-10-15.sala-evaluacion.3",
   "proposal_id": "CHG-SALA-EVALUACION-20261015",
   "summary": "Completar preselección local de hasta dos finalistas por editor, propuesta y versión, sin emitir votos ni trabajos. Separar láminas preparadas de tomas obtenidas en la telemetría Mesa, conservando alias históricos. La evaluación real de calidad/tiempo/costo/fallos no acredita aceptación editorial ni habilita autonomía nueva.",
   "components": [

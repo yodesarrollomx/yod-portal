@@ -1,5 +1,5 @@
 import {validateSelection} from './conversation.mjs?v=126';
-import {AUTHORITY_LEASE_MS,authorityIsCurrent,isTransientAuthorityError} from './authority-lease.mjs?v=127';
+import {AUTHORITY_LEASE_MS,authorityIsCurrent,isTransientAuthorityError} from './authority-lease.mjs?v=unified283';
 // Private catalog in memory. Selection may reuse a recently validated entry;
 // every business operation still validates its own exact case and authority.
 export function createAuthorizedCases({transport,onChange=()=>{},beforeSelect=()=>true,now=Date.now,schedule=setTimeout,cancel=clearTimeout,reuseCatalog=false}){
