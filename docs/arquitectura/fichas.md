@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.despacho-goals-hydration.1 · 2026-10-15.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.oficina-283.1 · 2026-10-15.
 
 ## SYS-DESPACHO · El Despacho
 

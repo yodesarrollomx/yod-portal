@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-15.despacho-goals-hydration.1",
+  "revision": "2026-10-15.oficina-283.1",
   "checked_at": "2026-10-15",
   "priorities": [
     "vender_mas",
@@ -12670,6 +12670,24 @@
       ],
       "deployment": "Cambio preparado con 699 pruebas Node aprobadas y verificadores OS/portal/accesos/obra/atlas correctos. Publicación y lectura autenticada pendientes.",
       "rollback": "Revertir este cambio de selección y sus versiones de importación; conservar metas, historial, revisiones y permisos."
+    },
+    {
+      "id": "CHG-OFICINA-283-20261015",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO",
+        "SYS-DESPACHO"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección autoriza resolver íntegramente chinche283 el15oct2026 en conversación; implementación y publicación existentes, sin ampliar acceso ni ejecutar encargos de negocio.",
+      "proposal": "Carga por etapas comprobadas, actividad fresca por agente y acceso directo a hablar; tarjetas compactas y encuadre panorámico por orientación. Reutilizar el pool temporal existente para evitar canjes duplicados de observadores, sin cache persistente, permisos nuevos ni porcentajes simulados.",
+      "tests": [
+        "Regresión de progreso sin datos falsos, permisos/identidad y canje compartido.",
+        "Suite Node y verificadores; navegador desktop/móvil/fallback y PPP."
+      ],
+      "deployment": "Propuesta registrada antes de implementar; publicación pendiente.",
+      "rollback": "Revertir frontend de283; conservar perfiles, metas, decisiones y backend."
     }
   ],
   "data_contracts": [
@@ -16361,6 +16379,20 @@
       "prefix": "tests/medios-publicos.test.cjs",
       "components": [
         "SYS-SALA"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-loading283.test.cjs",
+      "components": [
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/probar-carga283-browser.cjs",
+      "components": [
+        "SYS-DESPACHO-3D"
       ]
     }
   ],

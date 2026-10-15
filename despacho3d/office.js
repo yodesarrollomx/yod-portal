@@ -14,7 +14,7 @@ import {createChinches3D} from './chinches3d.mjs?v=126';
 import {createOfficePilot,chooseOfficeHit} from './avatars/office-pilot.mjs?v=126';
 import {ENTORNO_AGENTE_CAMINA} from './entorno-config.mjs';
 import {crearAgenteIr} from './entorno-ruta.mjs?v=4';
-import {fitOfficeOverview,visibleOfficeHit} from './office-overview.mjs?v=1';
+import {fitOfficeOverview,visibleOfficeHit} from './office-overview.mjs?v=283';
 import {places,allowed} from './office-layout.mjs?v=124';
 const $=s=>document.querySelector(s),mount=$('#scene'),coarse=matchMedia('(pointer:coarse)').matches;
 const compactBudget=coarse||(Number.isFinite(navigator.deviceMemory)&&navigator.deviceMemory<=4);

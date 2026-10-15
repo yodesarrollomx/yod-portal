@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-15.despacho-goals-hydration.1",
-  "proposal_id": "CHG-DESPACHO-GOALS-HYDRATION-20261015",
-  "summary": "Resolver el perfil individual del caso si el catálogo rápido no incluye descriptor válido de metas. Reusar perfiles completos frescos, incluidos ready:false; nunca inferir capacidad de can_enqueue. Mantener lease, revocación, selección concurrente y caso exacto. Sin cambios en motor, permisos, despliegues o datos.",
+  "model_revision": "2026-10-15.oficina-283.1",
+  "proposal_id": "CHG-OFICINA-283-20261015",
+  "summary": "Carga por etapas comprobadas, actividad fresca por agente y acceso directo a hablar; tarjetas compactas y encuadre panorámico por orientación. Reutilizar el pool temporal existente para evitar canjes duplicados de observadores, sin cache persistente, permisos nuevos ni porcentajes simulados.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO-3D",
@@ -16,5 +16,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir este cambio de selección y sus versiones de importación; conservar metas, historial, revisiones y permisos."
+  "rollback": "Revertir frontend283 sin tocar datos, backend ni permisos."
 }

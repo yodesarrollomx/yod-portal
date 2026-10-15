@@ -1,4 +1,4 @@
-import {mountResidentDock} from './resident-dock.mjs?v=132';
+import {mountResidentDock} from './resident-dock.mjs?v=283';
 import {createOfficePreparation} from './office-preparation.mjs?v=2';
 import {mountAgentMenu} from './agent-menu.mjs?v=132';
 import {createResidentOpening} from './resident-opening.mjs?v=132';
@@ -33,15 +33,17 @@ if(host){
  const officePreparation=createOfficePreparation({mint:p=>transport.mintFastSession(p),visible:()=>!document.hidden,
   onResult:(id,ok)=>{if(resident.getSelection()?.case_id===id)resident.markPrepared(id,ok);}});
  const prepareCatalog=()=>void officePreparation.update(authorized?.snapshot().cases||[]);
- const authorizedListeners=new Set();
+ const authorizedListeners=new Set(),catalogListeners=new Set();
  let authorized=null,catalogTimer=null;
  if(AUTONES_MULTIPLES){
   authorized=createAuthorizedCases({transport,reuseCatalog:true,beforeSelect:()=>['idle','error'].includes(voicePhase),onChange:state=>{
    selectionHandoff.reconcile(state);resident.reconcileCatalog(state);
+   for(const fn of catalogListeners)fn(state);
    if(state.phase==='unauthorized')officePreparation.clear();
    else if(state.phase==='current')void officePreparation.update(state.cases);
    for(const fn of authorizedListeners)fn(state.cases.map(c=>c.avatar).filter(Boolean));
   }});
+  api.subscribeCatalog=fn=>{catalogListeners.add(fn);fn(authorized.snapshot());return()=>catalogListeners.delete(fn);};
   api.subscribeAuthorizedProfiles=fn=>{authorizedListeners.add(fn);fn(api.getAuthorizedProfiles());return()=>authorizedListeners.delete(fn);};
   api.getAuthorizedProfiles=()=>authorized.snapshot().cases.map(c=>c.avatar).filter(Boolean);
   api.selectCase=async (id,{isCurrent=()=>true}={})=>{

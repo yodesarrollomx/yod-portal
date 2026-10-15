@@ -1,3 +1,4 @@
+import {officeFastSessions} from './office-preparation.mjs?v=2';
 import {createFrameTransport} from './conversation.mjs?v=142';
 import {validateFastSession} from './fast-lane.mjs';
 import {createRoomWork} from './room-work.mjs?v=129';
@@ -6,11 +7,11 @@ async function request(path,data,caseId){
  if(!room.has(caseId))throw Error('unauthorized');
  let c=credentials.get(caseId);
  if(!c||c.expires_at-Date.now()<45000){
-  c=validateFastSession(await transport.mintFastSession({case_id:caseId}),caseId);
+  c=validateFastSession(await officeFastSessions.ensure(caseId,p=>transport.mintFastSession(p),{priority:true}),caseId);
   if(!room.has(caseId))throw Error('unauthorized');credentials.set(caseId,c);
  }
  const response=await fetch(c.endpoint+path,{method:'POST',headers:{Authorization:'Bearer '+c.token,'Content-Type':'application/json'},body:JSON.stringify(data),credentials:'omit',cache:'no-store',redirect:'error',signal:AbortSignal.timeout(12000)});
- if(!room.has(caseId)||response.status===401||response.status===403){credentials.delete(caseId);throw Error('unauthorized');}
+ if(!room.has(caseId)||response.status===401||response.status===403){credentials.delete(caseId);officeFastSessions.forget(caseId);throw Error('unauthorized');}
  if(!response.ok)throw Error('unavailable');return response.json();
 }
 const room=createRoomWork({request,isVisible:()=>!document.hidden});
