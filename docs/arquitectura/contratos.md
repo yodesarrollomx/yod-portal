@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-17.sala-entrega-cortes.1 · 2026-10-17.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-17.chinches-entregas.1 · 2026-10-17.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 

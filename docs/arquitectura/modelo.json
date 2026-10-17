@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-17.sala-entrega-cortes.1",
+  "revision": "2026-10-17.chinches-entregas.1",
   "checked_at": "2026-10-17",
   "priorities": [
     "vender_mas",
@@ -13267,6 +13267,32 @@
       ],
       "deployment": "Propuesta previa; corte real generado y guardado. Montaje y visor todavía no acreditados.",
       "rollback": "Revertir código por PR. Conservar corte, respaldo privado, evidencia de entrega y votos. No retirar acceso ni borrar propuestas o archivos como rollback."
+    },
+    {
+      "id": "CHG-CHINCHES-ENTREGAS-20261017",
+      "components": [
+        "EXT-DRIVE",
+        "GAS-PORTERO",
+        "SVC-AUTON-CLOUD",
+        "SYS-CONTROL",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-TRACK",
+        "SYS-YOD-OS",
+        "SYS-TAREAS"
+      ],
+      "status": "implementado_local",
+      "authorization": "Dirección autoriza corregir las chinches técnicas en el sistema existente.",
+      "proposal": "Compartir la promesa de lectura de metas dentro del mismo caso y época: abrir Entregas durante una consulta en curso debe esperar su resultado sin duplicar peticiones ni mostrar un error falso. Una mutación, revocación o cambio de caso conserva sus guardias. No aceptar un modelo histórico como consulta nueva. Mantener el mismo servidor y permisos.",
+      "tests": [
+        "Lecturas simultáneas hacen una sola llamada y reciben el mismo resultado.",
+        "Respuesta fallida, cambio de caso y revocación no se convierten en éxito; escritura en curso no se comparte como lectura.",
+        "Suite Node completa, arquitectura, impacto, OS, portal, accesos, Obra y QA publicada."
+      ],
+      "deployment": "Implementado en rama: 789 pruebas Node PASS y verificadores locales PASS; publicación y QA autenticada pendientes.",
+      "rollback": "Revertir PR de interfaz; no modificar registros ni estados de negocio."
     }
   ],
   "data_contracts": [

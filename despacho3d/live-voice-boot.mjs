@@ -7,8 +7,8 @@ import {createFrameTransport, validateSelection, Conversation} from './conversat
 import {stationIdentity} from './project-station.mjs?v=140';
 import {createLiveVoice} from './live-voice.mjs?v=141';
 import {voiceView} from './voice-view.mjs?v=141';
-import {createWorkspace} from './agent-workspace.mjs?v=first292';
-import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=132';
+import {createWorkspace} from './agent-workspace.mjs?v=entregas291';
+import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=entregas291';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=132';
 import {groupTranscriptFragments} from './live-transcript.mjs';
 
