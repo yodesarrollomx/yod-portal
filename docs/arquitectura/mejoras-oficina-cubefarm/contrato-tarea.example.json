@@ -1,0 +1,42 @@
+{
+  "purpose": "Ejemplo sintético para acordar un contrato futuro; NO es una respuesta aceptada por la API actual de metas",
+  "status": "proposed",
+  "schema": "yod.task-board.proposal.v1",
+  "task": {
+    "case_id": "CASE-EXAMPLE",
+    "goal_id": "GOAL-EXAMPLE",
+    "task_id": "task-1",
+    "revision": "TASK-REVISION-2",
+    "source_revision": "SOURCE-EXAMPLE-1",
+    "kind": "software",
+    "title": "Cambiar el título de la página de ejemplo",
+    "criterion": "El título contiene el texto acordado y la prueba de navegador lo confirma",
+    "stage": "in_qa",
+    "assignee_id": "AGENT-EXECUTOR-EXAMPLE",
+    "run_id": "RUN-EXAMPLE-1",
+    "blocker": null,
+    "artifact_refs": ["ARTIFACT-PATCH-EXAMPLE", "ARTIFACT-SCREENSHOT-EXAMPLE"],
+    "review": {
+      "reviewer_id": "AGENT-REVIEWER-EXAMPLE",
+      "round": 1,
+      "artifact_revision": "ARTIFACT-REVISION-EXAMPLE-1",
+      "state": "running",
+      "report_ref": null,
+      "checks": []
+    },
+    "delivery": null,
+    "updated_at": "2026-10-03T17:00:00Z"
+  },
+  "transition_rules_to_implement_on_server": [
+    "Etapas propuestas: backlog, in_progress, in_qa, ready_for_delivery, delivered",
+    "Cada lectura y acción conserva el ámbito autorizado y la clave compuesta case_id/goal_id/task_id",
+    "Cada mutación requiere request_id idempotente y expected_revision vigente",
+    "ready_for_review del esquema actual de metas no equivale a QA aprobado",
+    "Solo el servidor confirma una transición; arrastrar una tarjeta no acredita la ejecución",
+    "Revisor distinto del ejecutor; el informe pertenece a la revisión exacta del artefacto",
+    "Cambiar el artefacto invalida la aprobación anterior",
+    "La entrega exige revisión, evidencia y autorizaciones del proceso correspondiente",
+    "completed de una respuesta o meta nunca cierra por sí solo un proyecto comercial",
+    "Conservar el esquema actual de metas durante una migración explícita y probada"
+  ]
+}
