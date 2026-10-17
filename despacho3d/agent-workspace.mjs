@@ -2,7 +2,7 @@ import {mountMeetingArchive} from './meeting-archive.mjs?v=1';
 import {mountDocumentTray} from './document-tray.mjs?v=1';
 import {officeFastSessions} from './office-preparation.mjs?v=unified283';
 import {mountMeeting} from './meeting-view.mjs?v=132';
-import {mountAvatarCard} from './avatar-card.mjs?v=126';
+import {mountAvatarCard} from './avatar-card.mjs?v=controls293';
 import {mountWorkView} from './work-view.mjs?v=129';
 import {PROFILE_WORK_LANES,profileWorkView,nextRecordedTask} from './profile-work.mjs?v=140';
 import {registeredBoard,resolveBoard,stationIdentity,nativeBoardState} from './project-station.mjs?v=140';
@@ -97,7 +97,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
  sections.ppp.append(button('Grabar reunión del proyecto',openRecorder));
  sections.meeting.append(button('Grabar reunión del proyecto',openRecorder));
  const archive=mountMeetingArchive({container:sections.meeting,request,getCase:()=>selected&&getSelection()?.case_id===selected.case_id?selected.case_id:null,doc});
- const avatarCard=mountAvatarCard({container:sections.avatar,doc,win});
+ const avatarCard=mountAvatarCard({container:sections.avatar,doc,win,onNavigate:setTab});
  const presentationHost=el('div');sections.meeting.append(presentationHost);
  const meeting=mountMeeting({container:presentationHost,getCase:()=>selected&&getSelection()?.case_id===selected.case_id?selected.case_id:null,doc,win,onPresent,
   onSlide:slide=>win.dispatchEvent(new CustomEvent('yod-meeting-slide',{detail:slide})),
@@ -355,6 +355,8 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   const own=generation,id=selected.case_id;sourceAttempts++;sourceRetryAt=Date.now()+8000;
   const promise=(async()=>{try{const raw=await transport.read({case_id:id});if(own!==generation||disposed||getSelection()?.case_id!==id)return;conversation=validateWorkspaceSources(raw,id);
    documentTray?.destroy();documentTray=mountDocumentTray({container:sections.sources,documents:conversation.documents,doc});
+   const receipt=el('section');receipt.className='workspace-source-receipt';receipt.setAttribute('aria-label','Estado de las fuentes');
+   receipt.append(el('h3','Expediente consultado'),el('p',conversation.documents.length+' fuente(s) registradas para '+selected.name+'.'),el('p','Consulta: '+new Date().toLocaleString('es-MX',{timeZone:'America/Hermosillo'})+' · Hermosillo. Esta consulta confirma el índice, no la lectura de cada documento.'),button('Actualizar fuentes',()=>void readSources()));sections.sources.prepend(receipt);
    paintBrief();mountBoard();
   }catch(error){if(own!==generation||disposed||getSelection()?.case_id!==id)return;documentTray?.destroy();documentTray=null;const message=workspaceSourceNotice(error);sections.sources.replaceChildren(el('p',message),button('Volver a cargar fuentes',()=>void readSources()));if(!frame){pppNote.textContent=message;boardRetry.hidden=false;}}})();
   readingSources={generation:own,promise};try{await promise;}finally{if(readingSources?.promise===promise)readingSources=null;}
@@ -378,7 +380,8 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   mountBoard();if(id==='activity'){notice.textContent='';paintWorkBoard();workView.refresh();}if(id==='browser')workView.refresh();if(id==='ppp'){notice.textContent='';mountBoard();}if(id==='knowledge'&&selected){notice.textContent='';void knowledge.open(selected.case_id);}void refresh();}
  async function openLatestMeeting(){
   const own=generation,id=selected?.case_id;if(!id)return;
-  await tasks.read();if(own!==generation||getSelection()?.case_id!==id||tab!=='meeting')return;
+  const read=await tasks.read();if(own!==generation||getSelection()?.case_id!==id||tab!=='meeting')return;
+  if(!read||!tasks.model){presentationHost.replaceChildren(el('p','No se pudo consultar la última entrega. Esto no significa que no exista. Tu trabajo guardado se conserva.'),button('Volver a consultar',()=>void openLatestMeeting()));return;}
   const goal=(tasks.model?.goals||[]).filter(g=>['ready_for_review','completed','awaiting_data'].includes(g.status)).sort((a,b)=>Date.parse(b.updated_at)-Date.parse(a.updated_at))[0];
   if(goal)meeting.open(goal,id,selected.avatar?.name||selected.name);
   else presentationHost.replaceChildren(el('p','Todavía no hay una entrega preparada para presentar.'),button('Ver pendientes',()=>setTab('tasks')));

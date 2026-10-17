@@ -16,6 +16,30 @@ function server(){
   state.conversation.push({case_id:p.case_id,message_id:'message-'+(state.conversation.length+1),job_id:ack.job_id,role:'user',created_at:state.state.updated_at,body_json:JSON.stringify({message:p.message})});return ack;
  }};
 }
+test('chat alongside a running durable job keeps that job and never enqueues a second job',async()=>{
+ const {Conversation}=await load(),backend=server();
+ backend.state.jobs.push({case_id:current.case_id,job_id:'existing',enqueue_request_id:'original',status:'running'});
+ const turns=[];const fast={warm:async()=>{},turn:async p=>{turns.push(p);return {final:{reply:'Respuesta de conversación'},saved:false};}};
+ const c=new Conversation({transport:backend,fast,uuid:()=> 'parallel-chat'});await c.open();
+ assert.equal(c.status,'processing');assert.equal(c.canSend,true);assert.equal(await c.send('¿Cómo va?'),true);
+ assert.equal(turns.length,1);assert.equal(c.status,'processing');assert.equal(c.fastTurns[0].reply,'Respuesta de conversación');assert.equal(backend.calls.length,0);assert.equal(backend.state.jobs.length,1);
+});
+test('fast channel failure during work preserves the draft contract and cannot fall back to enqueue',async()=>{
+ const {Conversation}=await load();
+ for(const code of ['unavailable','busy','model_failed']){
+  const backend=server();backend.state.jobs.push({case_id:current.case_id,job_id:'existing',enqueue_request_id:'original',status:'running'});
+  const fast={warm:async()=>{},turn:async()=>{throw Object.assign(Error(code),{code,started:false});}};
+  const c=new Conversation({transport:backend,fast,uuid:()=>code});await c.open();
+  assert.equal(await c.send('Borrador conservado'),false);assert.equal(c.status,'processing');assert.equal(backend.calls.length,0);assert.equal(c.pending,null);assert.ok(c.fastNotice);assert.equal(c.fastTurns.length,0);
+ }
+});
+test('parallel chat remains disabled without its channel, fresh authorization or current history',async()=>{
+ const {Conversation}=await load(),backend=server();backend.state.jobs.push({case_id:current.case_id,job_id:'existing',enqueue_request_id:'original',status:'running'});
+ const c=new Conversation({transport:backend});await c.open();assert.equal(c.canSend,false);assert.equal(await c.send('No enviar'),false);
+ let turns=0;c.fastOverride={warm:async()=>{},turn:async()=>{turns++;}};
+ backend.read=async()=>{throw Error('timeout');};await c.refresh();assert.equal(c.canSend,false);assert.equal(await c.send('No enviar'),false);
+ backend.resolveCurrent=async()=>({...current,can_enqueue:false});backend.read=async()=>backend.state;await c.refresh();assert.equal(c.canSend,false);assert.equal(await c.send('No enviar'),false);assert.equal(turns,0);assert.equal(backend.calls.length,0);
+});
 test('resolves a private case without a browser selector and rereads persisted conversation after closing',async()=>{
  const {Conversation}=await load(),backend=server();let resolves=0;backend.resolveCurrent=async p=>{assert.deepEqual(p,{});resolves++;return current;};
  const c=new Conversation({transport:backend,uuid:()=> 'request-1'});assert.equal(await c.open(),true);assert.equal(await c.send('Mensaje sintético'),true);

@@ -49,7 +49,19 @@ const server=http.createServer((req,res)=>{
    await office.locator('.realtime-dialog').waitFor({state:'visible'});
    
    if(i===0){await office.locator('.workspace-brief[data-read-phase=loading]').waitFor();assert.doesNotMatch(await office.locator('.workspace-brief').innerText(),/Definir el siguiente encargo|Sin encargo registrado/);await page.evaluate(()=>window.__releaseGoals());}
-   if(i===1){await office.locator('.workspace-brief[data-read-phase=unavailable]').waitFor();assert.doesNotMatch(await office.locator('.workspace-brief').innerText(),/Sin encargo registrado/);await page.evaluate(()=>window.__goalMode='ready');await office.locator('.workspace-brief button').click();}
+   if(i===1){
+    await office.locator('.workspace-brief[data-read-phase=unavailable]').waitFor();assert.doesNotMatch(await office.locator('.workspace-brief').innerText(),/Sin encargo registrado/);
+    await office.locator('.workspace-primary [data-tab=activity]').click();
+    await office.locator('.workspace-subnav [data-tab=meeting]').click();
+    await office.getByText('No se pudo consultar la última entrega.',{exact:false}).waitFor();
+    assert.equal(await office.getByText('Todavía no hay una entrega preparada para presentar.',{exact:true}).count(),0);
+    if(evidence)await page.screenshot({path:path.join(evidence,'entrega-consulta-fallida.png')});
+    await page.evaluate(()=>window.__goalMode='ready');
+    await office.getByRole('button',{name:'Volver a consultar',exact:true}).click();
+    await office.locator('.workspace-brief[data-read-phase=ready]').waitFor();
+    assert.equal(await office.getByText('No se pudo consultar la última entrega.',{exact:false}).count(),0);
+    await office.locator('.workspace-primary [data-tab=ppp]').click();
+   }
    await office.locator('.workspace-brief h2').filter({hasText:'Meta '+id}).waitFor();
    const boardBox=await office.locator('.workspace-board iframe').boundingBox();assert.ok(boardBox.height>=400,'PPP occupies the first desktop surface: '+boardBox.height);
 
@@ -61,6 +73,21 @@ const server=http.createServer((req,res)=>{
    if(id==='case-a')assert.match(await office.locator('.workspace-brief').innerText(),/Consultar normativa/);
    else assert.match(await office.locator('.workspace-brief').innerText(),/Revisar la entrega contigo/);
    if(evidence&&i<3)await page.screenshot({path:path.join(evidence,'puesto-sintetico-'+id+'.png')});
+   if(i===2){
+    await office.locator('.workspace-primary [data-tab=sources]').click();
+    await office.locator('.workspace-source-receipt').waitFor();
+    assert.match(await office.locator('.workspace-source-receipt').innerText(),/1 fuente\(s\) registradas para Proyecto sintético 2/);
+    await office.locator('.workspace-subnav [data-tab=avatar]').click();
+    const actions=office.getByRole('navigation',{name:'Acciones del autón'});await actions.waitFor();
+    assert.match(await office.locator('[data-workspace-view=avatar]').innerText(),/Conversación habilitada para tu sesión/);
+    if(evidence)await page.screenshot({path:path.join(evidence,'auton-acciones-reales.png')});
+    await actions.getByRole('button',{name:'Consultar fuentes',exact:true}).click();
+    assert.equal(await office.locator('[data-workspace-view=sources]').count(),1);
+    await office.getByRole('button',{name:'Actualizar fuentes',exact:true}).click();
+    await office.locator('.workspace-source-receipt').waitFor();
+    await office.locator('.workspace-primary [data-tab=ppp]').click();
+   }
+
    if(i<3){await office.locator('.voice-close').click();if(i===0)await page.evaluate(()=>window.__goalMode='fail');if(i===1){await frame.evaluate(id=>window.YodVoiceWorkspace.openForCase(id,'ppp',{compactOnly:true}),id);await office.locator('.voice-capsule').waitFor({state:'visible'});}}
 
   }

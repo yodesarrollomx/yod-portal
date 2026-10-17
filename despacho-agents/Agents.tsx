@@ -58,7 +58,7 @@ function App(){
  if(!terminalLink.current)terminalLink.current=new TerminalLink({getProfile:()=>conversation.current.getProfile(),notify:setTerminalState});
  if(!goals.current)goals.current=new DurableGoals({transport:()=>transportRef.current,getContext:()=>({selection:conversation.current.selection,busy:conversation.current.busy||conversation.current.stale}),onUnauthorized:()=>{conversation.current.forgetProfile();conversation.current.close();}});
  const read=()=>session.current?.read();
- const send=async(e:React.FormEvent)=>{e.preventDefault();const submitted=message,request=conversation.current.send(submitted);if(conversation.current.pending)submittedDraft.current={message:submitted,request_id:conversation.current.pending.request_id};if(await request){setMessage(current=>current===submitted?'':current);submittedDraft.current=null;}};
+ const send=async(e:React.FormEvent)=>{e.preventDefault();const submitted=conversation.current.pending?.message||message,request=conversation.current.send(submitted);if(conversation.current.pending)submittedDraft.current={message:submitted,request_id:conversation.current.pending.request_id};if(await request){setMessage(current=>current===submitted?'':current);submittedDraft.current=null;}};
  const close=()=>session.current?.close();
  useEffect(()=>{
   transportRef.current=createFrameTransport(window);
@@ -120,7 +120,7 @@ function App(){
      {fastNotice&&<p className="conversation-notice" role="alert">{fastNotice}</p>}
      {status==='unconfirmed'&&<p className="conversation-notice" role="alert">No se ha confirmado el guardado. Reintentar conserva el mismo mensaje y su identificador.</p>}
      {model&&!conversation.current.selection?.agent_ready&&<p className="conversation-notice">El motor está desconectado. El historial sigue en Sheets; el envío se habilitará cuando vuelva a estar disponible.</p>}
-     <form className="chat-input" onSubmit={send}><MessageBox value={message} onChange={setMessage} maxLength={8000} disabled={!selection||['loading','unavailable','disconnected'].includes(status)} placeholder={status==='processing'?'Puedes preparar tu siguiente mensaje…':'Escribe un mensaje'} aria-label="Mensaje directo al agente"/><button className="btn btn-small" disabled={busy||conversation.current.stale||(!conversation.current.pending&&(!message.trim()||status!=='ready'))||!conversation.current.selection?.agent_ready||!conversation.current.selection?.can_enqueue}>{status==='unconfirmed'?'Reintentar':'Enviar'}</button></form>
+     <form className="chat-input" onSubmit={send}><MessageBox value={message} onChange={setMessage} maxLength={8000} disabled={!selection||['loading','unavailable','disconnected'].includes(status)} placeholder={status==='processing'&&conversation.current.canSend?'Puedes conversar mientras continúa el trabajo…':'Escribe un mensaje'} aria-label="Mensaje directo al agente"/><button className="btn btn-small" disabled={!conversation.current.canSend||(!conversation.current.pending&&!message.trim())}>{status==='unconfirmed'?'Reintentar mismo mensaje':'Enviar'}</button></form>
      <VoiceControls active={opened&&tab==='chat'} contextKey={`${conversation.current.epoch}:${selection?.case_id||''}`} disabled={!selection||conversation.current.stale||status==='unavailable'} response={model?.messages.filter(row=>row.role==='assistant').at(-1)||null} onTranscript={text=>setMessage(value=>appendDictation(value,text))}/>
     </div>}
     {tab==='dossier'&&<>
