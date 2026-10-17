@@ -43,3 +43,23 @@ Los accesos individuales inactivos siguen inactivos. Las pruebas usan datos sint
 ## Refinamiento de experiencia · 17-oct
 
 El inicio canónico presenta al Master Developer, su cartera y los responsables desplegables con sus asuntos. Cada expediente hace visible el enlace al PPP y separa historia, situación actual y siguiente paso. Los enlaces explícitos a una cartera conservan su alcance y ofrecen regreso a Mi portal. La activación por correo sigue siendo una operación separada; un perfil de cartera no es una identidad habilitada. Conversaciones autorizadas pueden importarse manualmente con fecha, fuente y clave de deduplicación, sin inventar una sincronización continua.
+
+## Espacio de trabajo unificado · corrección17-oct
+
+La revisión anterior fue rechazada por redundancia. Se sustituye la portada y sus métricas por una única lista de trabajo dentro de la identidad Master Developer. Selector de alcance: equipo, cartera propia y brokers autorizados. No son portales distintos ni cambios de identidad. Cada cliente conserva sus asuntos independientes, próximos compromisos y responsables. Abrir un asunto conserva la lista en escritorio; móvil ofrece regreso claro. Contactos sin asunto, filtros, calendario y material son secundarios.
+
+```mermaid
+flowchart TD
+  L["Cartera y cliente"] --> A["Asunto y compromiso"]
+  A --> H["Conversación y resultado"]
+  H --> A
+  A --> P["PPP guardado"]
+  A --> C["Acuerdo documentado"]
+  C --> R["Proyecto vinculado"]
+```
+
+Las conexiones son referencias del expediente: no se presume sincronización transaccional, contrato aceptado, viabilidad, titularidad ni proyecto aprobado. PPP y operación conservan sus fuentes; el CRM registra relación, evidencia y siguiente gestión. Sin enlace, la pantalla muestra el pendiente y permite completar la referencia bajo los permisos existentes.
+
+Criterios aplicados al diseño: claridad de la oferta y menor esfuerzo para entender el siguiente paso (marco de valor de Acquisition.com); continuidad de seguimiento con CRM (Grant Cardone); información progresiva y contexto conservado (Nielsen Norman Group). No se incorporan técnicas de presión, promesas de rentabilidad ni automatizaciones de contacto. Referencias: https://www.acquisition.com/training/offers4 ; https://grantcardone.com/sales-prospecting-guide/ ; https://www.nngroup.com/articles/complex-application-design/ .
+
+Prueba: inicio MD sin broker preseleccionado, cartera propia separada, acceso individual aislado, cliente con varios terrenos, guardar/releer, fuentes/calendario, PPP sin recálculo, ausencia de overflow320/390/1440. Reversión sólo frontend: datos, perfiles, contratos y actividades intactos.
