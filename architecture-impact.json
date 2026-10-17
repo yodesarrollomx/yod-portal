@@ -1,21 +1,16 @@
 {
-  "model_revision": "2026-10-17.sala-cola-unica.1",
-  "proposal_id": "CHG-SALA-COLA-UNICA-20261017",
-  "summary": "Productor consolida trabajos equivalentes por identidad y conserva fuentes; notas o contenido distintos bloquean esa identidad. Ejecutor excluye duplicados activos antes de cualquier efecto. GAS rechaza IDs repetidos en un upsert antes de escribir. Conciliación técnica no destructiva de la cola existente: respaldo privado, lectura fresca, comparación previa, equivalentes excedentes obsoletos con procedencia conservada, conflictos bloqueados y ejecución cancelada sin acuse bloqueada. Nunca decidir por orden físico ni borrar historia.",
+  "model_revision": "2026-10-17.sala-medios-draft.1",
+  "proposal_id": "CHG-SALA-MEDIOS-DRAFT-20261017",
+  "summary": "Corregir validación de URL temporal untagged de activos draft de GitHub. Antes de publicar, exigir ID/nombre/tamaño/MIME/SHA256 exactos y URL restringida al mismo repositorio y archivo. Después de publicar, exigir URL de tag definitiva exacta, release inmutable y descarga anónima de bytes exactos. Conservar contrato MEDIOS y límite900MiB.",
   "components": [
     "SYS-SALA",
-    "GAS-SALA",
-    "SHEET-SALA",
     "SVC-SALA-PRODUCTOR",
     "SVC-SALA-EJECUTOR",
     "EXT-ACTIONS",
-    "EXT-DRIVE",
-    "EXT-MOTORES-MEDIA",
-    "SYS-YOD-OS",
-    "EXT-GMAIL"
+    "SYS-YOD-OS"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check"
   ],
-  "rollback": "Revertir código mediante PR. Conservar respaldo privado y auditoría por fila; restaurar sólo campos técnicos si su valor actual aún coincide, sin borrar filas o tocar decisiones."
+  "rollback": "Revertir validación por PR y mantener SALA_MEDIOS_PUBLICOS=0 hasta sonda verificada. Conservar todos los recibos, releases e históricos."
 }
