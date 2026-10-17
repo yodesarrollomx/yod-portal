@@ -13217,6 +13217,31 @@
       ],
       "deployment": "Pendiente: sólo se consume el campo de contexto existente; no se instala ni modifica backend.",
       "rollback": "Revertir PR de interfaz, conservando todos los registros, vínculos y permisos."
+    },
+    {
+      "id": "CHG-SALA-ENTREGA-FUENTES-20261017",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "EXT-MOTORES-MEDIA",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección ordena continuar hasta entrega final en línea conservando decisiones y archivos. Reparación técnica, sin aprobación editorial automática.",
+      "proposal": "Conservar src de láminas históricas expresadas como texto al calcular identidad y preparar evidencia; rechazar identidades sin insumo. Aplicar a Productor y Ejecutor la misma regla vigente de Mesa: una pieza ya publicada no vuelve a producirse. Coincidencia exacta por nombre o slug en el registro publicado, sin búsquedas parciales. Conciliar sólo trabajos antiguos de piezas publicadas con respaldo, evidencia, comparación previa y readback; conservar historial y decisiones. No fabricar guiones ni ejecutar versiones vetadas. Verificar motor gratuito habilitado y entregas en la Sala, con originales durables y recibos separados de aprobación.",
+      "tests": [
+        "Distintas rutas históricas conservan src y producen distintas identidades; catálogo tiene prioridad; input vacío no crea trabajo.",
+        "Publicada exacta queda excluida antes de planificar, rescatar o ejecutar; pieza distinta con prefijo parecido sigue habilitada; no cambia votos ni filas originales.",
+        "Pruebas de regresión, cola estable antes de conciliación, respaldo y readback completos.",
+        "Ejecución real, archivo durable y visualización en Sala; no-op y CI no acreditan producción nueva."
+      ],
+      "deployment": "Propuesta previa. Fuentes e historial real inspeccionados; pruebas y entrega pendientes.",
+      "rollback": "Revertir código por PR; conservar respaldo y todas las filas, decisiones y medios. Restaurar sólo campos técnicos que sigan coincidiendo con la conciliación."
     }
   ],
   "data_contracts": [
