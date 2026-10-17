@@ -13085,7 +13085,8 @@
         "SYS-SALA",
         "SVC-SALA-PRODUCTOR",
         "EXT-ACTIONS",
-        "EXT-MOTORES-MEDIA"
+        "EXT-MOTORES-MEDIA",
+        "SYS-YOD-OS"
       ],
       "status": "propuesto",
       "authorization": "Dirección solicita corregir y completar producción en nube, conservando decisiones y modelos retirados.",
