@@ -6359,8 +6359,8 @@
       "from": "SVC-SALA-PRODUCTOR",
       "to": "EXT-MOTORES-MEDIA",
       "kind": "api",
-      "label": "Fotografía HiDream con recibo, negativa confirmada y recuperación",
-      "contract": "CTR-SALA-HIDREAM Rechazo terminal explícito sin imagen permite reintento posterior con negativa privada; resultado incierto sólo conciliación.",
+      "label": "Fotografía HiDream oficial con adaptadores I1 y O1 y recibos",
+      "contract": "CTR-SALA-HIDREAM Rechazo terminal explícito sin imagen permite reintento posterior con negativa privada; resultado incierto sólo conciliación. O1 es una selección explícita después de prueba real, no respaldo pagado; cambio de política distingue nuevas tomas de envíos I1 inciertos.",
       "contract_ids": [
         "CTR-SALA-HIDREAM"
       ],
@@ -12374,13 +12374,15 @@
         "SYS-YOD-OS"
       ],
       "status": "propuesto",
-      "approval": "Dirección solicita implementar mini CRM en Masterbrokers el 13-oct: desplegables comparables, PPP en lectura, historial con fecha/fuente, calendario y reuniones con participantes, reutilizando el Sheet. Autorización de publicación vigente de Masterbrokers; no amplía identidad, permisos, reglas comerciales ni invitaciones externas.",
-      "proposal": "Vista progresiva sobre brokers.v1: una barra por expediente y varios desplegables abiertos; referencia del propietario/contacto sin inferir titularidad; GET del caso PPP existente muestra sólo inputs y resultados guardados con versión y fecha. Historial append-only en BROKERS_Actividades.note con sobre YOD-CRM-v1 (tipo, fecha ocurrida, estado, participantes, origen, URL, reemplazo y etapa observada), sin nueva tabla ni base. Calendario deriva hechos y reuniones programadas; confirmar/cancelar agrega evento que reemplaza la programación en calendario, preservando ambos en historial. Próximo paso y fecha se guardan mediante el contrato actual; importación de documentos verificados añade hechos históricos sin cambiar pendientes. No deduce actividad desde un clic de consulta ni convierte fecha de carga en fecha de reunión. WhatsApp requiere adjunto/fuente proporcionada, no existe escucha continua demostrada.",
+      "approval": "Dirección solicita implementar mini CRM en Masterbrokers el 13-oct: desplegables comparables, PPP en lectura, historial con fecha/fuente, calendario y reuniones con participantes, reutilizando el Sheet. Autorización de publicación vigente de Masterbrokers; no amplía identidad, permisos, reglas comerciales ni invitaciones externas. El 17-oct Dirección solicita ejecutar hasta terminar la jerarquía plaza → responsables → clientes → asuntos, conservando permisos.",
+      "proposal": "Vista progresiva sobre brokers.v1: una barra por expediente y varios desplegables abiertos; referencia del propietario/contacto sin inferir titularidad; GET del caso PPP existente muestra sólo inputs y resultados guardados con versión y fecha. Historial append-only en BROKERS_Actividades.note con sobre YOD-CRM-v1 (tipo, fecha ocurrida, estado, participantes, origen, URL, reemplazo y etapa observada), sin nueva tabla ni base. Calendario deriva hechos y reuniones programadas; confirmar/cancelar agrega evento que reemplaza la programación en calendario, preservando ambos en historial. Próximo paso y fecha se guardan mediante el contrato actual; importación de documentos verificados añade hechos históricos sin cambiar pendientes. No deduce actividad desde un clic de consulta ni convierte fecha de carga en fecha de reunión. WhatsApp requiere adjunto/fuente proporcionada, no existe escucha continua demostrada. La entrada de Dirección muestra responsables y su cartera; el rol de sesión nunca cambia al navegar. Agrupación visual por contact_id explícito, con casos independientes por terrain_id/ppp_id. Sin contacto, conservar caso separado y avisar por vincular. La coincidencia única del nombre del actor sólo ordena su tarjeta; no autoriza, activa ni reasigna perfiles. Sonora es etiqueta de plaza solicitada, no una nueva frontera de ACL. Responsable nominal se codifica en next_action existente; conservar categorías anteriores sin convertirlas en nombres. Estado PPP y solicitud explícita de decisión se guardan en notes con sobre YOD-CASE-v1. Reprogramar agrega evento y reemplaza programación sólo en calendario, conserva historial. No inventar clientes, fechas ni decisiones.",
       "tests": [
         "node --test tests/brokers*.test.cjs: codec compatible, fecha real distinta de captura, eventos programados/reemplazados, calendario y resumen PPP sin motor propio.",
         "Chromium320/390/1440: varios expedientes desplegados, comparación alineada, calendario, editor y fuentes; cero overflow.",
         "Permisos existentes, preview sin guardado, sesión invalidada, ACK/revisión/reintentos idempotentes; cero escrituras de prueba en producción.",
-        "Atlas regenerado, checks del portal y pin del consumidor; publicación registrada aparte de integración y de lectura privada."
+        "Atlas regenerado, checks del portal y pin del consumidor; publicación registrada aparte de integración y de lectura privada.",
+        "Clientes múltiples, contactos homónimos, casos compartidos y sin contacto; identidad Dirección conservada y broker aislado.",
+        "Responsable nominal y estado PPP sobreviven roundtrip brokers.v1; programación/reprogramación/resultado; filtros decisión/hoy/vencidos/sin siguiente paso."
       ],
       "deployment": "Registro previo a implementación. No demuestra publicación, lectura privada nueva, ingestión automática ni invitaciones de Calendar.",
       "rollback": "Revertir sólo frontend; conservar IDs, todas las actividades y sus notas legibles, fuentes, PPP, pendientes, permisos y datos operativos. No restaurar filas de negocio."
@@ -13098,6 +13100,28 @@
       ],
       "deployment": "Propuesta previa tras ejecución39069605297: HiDream devolvió Task failed with status3; cero imágenes. Recuperación de recibos históricos exige evidencia del envío exacto; no se infiere por ausencia.",
       "rollback": "Revertir adaptadores y lector de negativas; conservar planes, resultados, negativos y decisiones. Mantener conciliación cerrada ante estado desconocido."
+    },
+    {
+      "id": "CHG-SALA-HIDREAM-O1-20261017",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-MOTORES-MEDIA",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección pide recuperar producción gratuita en nube, cambiar motores deficientes y continuar hasta funcionamiento probado. Conserva revisión editorial humana.",
+      "proposal": "Adaptador explícito hidream_o1 al Space oficial HiDream-O1-Image-Dev, sin token pagado ni respaldo implícito. Congela receta, seed, modelo y versión; conserva resultado privado y recibos. Revisión de política nueva distingue planes nuevos de envíos I1 inciertos. Habilitar en REGLAS sólo tras pruebas, imagen real conservada e integración. Productor puede procesar etapas previamente aprobadas aunque Mesa falle; sus lecturas, vetos y compuertas se mantienen y el recorrido conserva estado fallido de Mesa.",
+      "tests": [
+        "Prueba real de la receta pendiente con modelo O1 y bytes conservados; no equivale a montaje ni aprobación.",
+        "Cache exacta evita regeneración; resultado incierto sólo consulta recibo; archivo inválido/no imagen/cambio de plan se bloquea; ningún respaldo pagado.",
+        "Regresiones Python/navegador, reglas y arquitectura; después activar regla existente con readback y ejecutar recorrido real con recibo de publicación."
+      ],
+      "deployment": "Propuesta previa. Primera prueba39070664400 entregó imagen en26.92s pero persistencia git falló por sparse-checkout. Segunda prueba con persistencia corregida en curso. Sin activación productiva acreditada.",
+      "rollback": "Restaurar imagen_motores anterior y política/adaptadores mediante PR, conservando bytes, planes, votos y recibos. No reenviar planes ambiguos ni reactivar modelos vetados. Revertir condición de orquestación si falla validación de compuertas."
     },
     {
       "id": "CHG-SALA-COLA-UNICA-20261017",
