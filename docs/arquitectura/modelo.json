@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-17.sala-medios-draft.1",
+  "revision": "2026-10-17.chinches-moac.1",
   "checked_at": "2026-10-17",
   "priorities": [
     "vender_mas",
@@ -13192,6 +13192,31 @@
       ],
       "deployment": "Mesa39071362170 generó8tomas/4láminas/0fallos, pero excede presupuesto Pages. Sonda39072235135 detectó URL temporal de draft; sin nueva publicación acreditada.",
       "rollback": "Revertir validación por PR y mantener SALA_MEDIOS_PUBLICOS=0 hasta sonda verificada. Conservar todos los recibos, releases e históricos."
+    },
+    {
+      "id": "CHG-CHINCHES-MOAC-20261017",
+      "components": [
+        "EXT-DRIVE",
+        "GAS-PORTERO",
+        "SVC-AUTON-CLOUD",
+        "SYS-CONTROL",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-TRACK",
+        "SYS-YOD-OS",
+        "SYS-TAREAS"
+      ],
+      "status": "propuesto",
+      "authorization": "Continuación directa de Alejandro para concluir las chinches. Sólo consulta del contrato autenticado existente, sin asignar tareas ni cambiar negocio.",
+      "proposal": "Proyectar context.moac en el puesto: jerarquía Meta > Objetivo > Acción, estado y responsable originales, recibos disponibles separados de aprobación. Validar caso, IDs, relaciones y límites; ausencia/lectura fallida no equivalen a cero pendientes. Acceso directo desde Trabajo y Entregas al mismo MOAC. No crear una fuente paralela ni ampliar las vinculaciones por nombre.",
+      "tests": [
+        "Regresiones de aislamiento por caso, FK, duplicados, ausente/unavailable/unlinked, recibos de acción existente y cambio de caso durante lectura.",
+        "QA de navegación real de módulos con fixture sintético y verificadores obligatorios."
+      ],
+      "deployment": "Pendiente: sólo se consume el campo de contexto existente; no se instala ni modifica backend.",
+      "rollback": "Revertir PR de interfaz, conservando todos los registros, vínculos y permisos."
     }
   ],
   "data_contracts": [
