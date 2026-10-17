@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-17.sala-historico-retiros.1",
-  "proposal_id": "CHG-SALA-HISTORICO-RETIROS-20261017",
-  "summary": "Resolver duplicados heredados de PROPUESTAS en la última fecha por PID: cualquier retiro explícito domina el empate; contenido activo contradictorio sigue cerrando la lectura. Si sólo cambia origen descriptivo, conservar todos los textos únicos ordenados en el campo origen. Nunca decidir por orden físico ni modificar filas.",
+  "model_revision": "2026-10-17.sala-guion-heredado.1",
+  "proposal_id": "CHG-SALA-GUION-HEREDADO-20261017",
+  "summary": "Compatibilidad con guiones históricos expresados como ruta o texto. Mesa procesa sus láminas existentes sin inventar continuación visual; deja contador y estado parcial. Productor conserva escena/voz de láminas aprobadas, pero no abre corte sin lista estructurada completa. Una lista inválida sigue fallando. No reescribir guiones ni modificar decisiones.",
   "components": [
     "SYS-SALA",
     "GAS-SALA",
@@ -17,5 +17,5 @@
   "tests": [
     "node scripts/arquitectura.cjs --check"
   ],
-  "rollback": "Restaurar módulo respaldado y versión72 en la misma implementación; mantener SALA_PRODUCCION_HISTORICA=0 hasta contrato confirmado; conservar decisiones, cola, archivos y configuración."
+  "rollback": "Revertir PR; conservar guiones, marcas, cola, medios y snapshots. Ante incompatibilidad desactivar sólo flag histórico; misma URL/backend."
 }

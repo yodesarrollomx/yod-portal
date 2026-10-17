@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-17.sala-historico-retiros.1",
+  "revision": "2026-10-17.sala-guion-heredado.1",
   "checked_at": "2026-10-17",
   "priorities": [
     "vender_mas",
@@ -13053,6 +13053,31 @@
       ],
       "deployment": "Propuesta previa. Proyecto original y versión72 identificados; respaldo privado guardado. Comprobador detectó duplicados; candidato anterior revertido sin despliegue.",
       "rollback": "Restaurar módulo respaldado y versión72 en la misma implementación; mantener SALA_PRODUCCION_HISTORICA=0 hasta contrato confirmado; conservar decisiones, cola, archivos y configuración."
+    },
+    {
+      "id": "CHG-SALA-GUION-HEREDADO-20261017",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "EXT-MOTORES-MEDIA",
+        "SYS-YOD-OS",
+        "EXT-GMAIL"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección solicita terminar activación histórica y producción; autenticación completada y flag histórico verificado en1. No autoriza nuevas decisiones editoriales.",
+      "proposal": "Compatibilidad con guiones históricos expresados como ruta o texto. Mesa procesa sus láminas existentes sin inventar continuación visual; deja contador y estado parcial. Productor conserva escena/voz de láminas aprobadas, pero no abre corte sin lista estructurada completa. Una lista inválida sigue fallando. No reescribir guiones ni modificar decisiones.",
+      "tests": [
+        "Guion heredado textual/ruta con primera aprobada no interrumpe Mesa ni fabrica láminas; fuente inmutable.",
+        "Guion heredado bloquea corte aunque las láminas existentes estén aprobadas; escena/voz conservan sus compuertas.",
+        "Lista duplicada o malformada sigue rechazándose; diagnóstico agregado y estado parcial verificables."
+      ],
+      "deployment": "Propuesta previa tras fallo real39069155006 en Mesa: guion sin lista de láminas. Backendv73 y sonda39045627647 comprobados; consumidor histórico activado por propietario y readback.",
+      "rollback": "Revertir PR; conservar guiones, marcas, cola, medios y snapshots. Ante incompatibilidad desactivar sólo flag histórico; misma URL/backend."
     }
   ],
   "data_contracts": [
