@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-17.master-developer-crm.1",
+  "revision": "2026-10-17.sala-hidream-o1.1",
   "checked_at": "2026-10-17",
   "priorities": [
     "vender_mas",
@@ -6359,8 +6359,8 @@
       "from": "SVC-SALA-PRODUCTOR",
       "to": "EXT-MOTORES-MEDIA",
       "kind": "api",
-      "label": "Fotografía HiDream con recibo, negativa confirmada y recuperación",
-      "contract": "CTR-SALA-HIDREAM Rechazo terminal explícito sin imagen permite reintento posterior con negativa privada; resultado incierto sólo conciliación.",
+      "label": "Fotografía HiDream oficial con adaptadores I1 y O1 y recibos",
+      "contract": "CTR-SALA-HIDREAM Rechazo terminal explícito sin imagen permite reintento posterior con negativa privada; resultado incierto sólo conciliación. O1 es una selección explícita después de prueba real, no respaldo pagado; cambio de política distingue nuevas tomas de envíos I1 inciertos.",
       "contract_ids": [
         "CTR-SALA-HIDREAM"
       ],
@@ -13100,6 +13100,28 @@
       ],
       "deployment": "Propuesta previa tras ejecución39069605297: HiDream devolvió Task failed with status3; cero imágenes. Recuperación de recibos históricos exige evidencia del envío exacto; no se infiere por ausencia.",
       "rollback": "Revertir adaptadores y lector de negativas; conservar planes, resultados, negativos y decisiones. Mantener conciliación cerrada ante estado desconocido."
+    },
+    {
+      "id": "CHG-SALA-HIDREAM-O1-20261017",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-MOTORES-MEDIA",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección pide recuperar producción gratuita en nube, cambiar motores deficientes y continuar hasta funcionamiento probado. Conserva revisión editorial humana.",
+      "proposal": "Adaptador explícito hidream_o1 al Space oficial HiDream-O1-Image-Dev, sin token pagado ni respaldo implícito. Congela receta, seed, modelo y versión; conserva resultado privado y recibos. Revisión de política nueva distingue planes nuevos de envíos I1 inciertos. Habilitar en REGLAS sólo tras pruebas, imagen real conservada e integración. Productor puede procesar etapas previamente aprobadas aunque Mesa falle; sus lecturas, vetos y compuertas se mantienen y el recorrido conserva estado fallido de Mesa.",
+      "tests": [
+        "Prueba real de la receta pendiente con modelo O1 y bytes conservados; no equivale a montaje ni aprobación.",
+        "Cache exacta evita regeneración; resultado incierto sólo consulta recibo; archivo inválido/no imagen/cambio de plan se bloquea; ningún respaldo pagado.",
+        "Regresiones Python/navegador, reglas y arquitectura; después activar regla existente con readback y ejecutar recorrido real con recibo de publicación."
+      ],
+      "deployment": "Propuesta previa. Primera prueba39070664400 entregó imagen en26.92s pero persistencia git falló por sparse-checkout. Segunda prueba con persistencia corregida en curso. Sin activación productiva acreditada.",
+      "rollback": "Restaurar imagen_motores anterior y política/adaptadores mediante PR, conservando bytes, planes, votos y recibos. No reenviar planes ambiguos ni reactivar modelos vetados. Revertir condición de orquestación si falla validación de compuertas."
     }
   ],
   "data_contracts": [

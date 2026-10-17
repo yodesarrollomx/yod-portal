@@ -1,23 +1,18 @@
 {
-  "model_revision": "2026-10-17.master-developer-crm.1",
-  "proposal_id": "CHG-MASTERBROKERS-MINI-CRM",
-  "summary": "Jerarquía visual plaza, responsable, cliente y asunto sobre el CRM existente; integra mini CRM pendiente, conserva actor y ACL, responsables nominales, estado PPP explícito y agenda append-only.",
+  "model_revision": "2026-10-17.sala-hidream-o1.1",
+  "proposal_id": "CHG-SALA-HIDREAM-O1-20261017",
+  "summary": "Adaptador explícito hidream_o1 al Space oficial HiDream-O1-Image-Dev, sin token pagado ni respaldo implícito. Congela receta, seed, modelo y versión; conserva resultado privado y recibos. Revisión de política nueva distingue planes nuevos de envíos I1 inciertos. Habilitar en REGLAS sólo tras pruebas, imagen real conservada e integración. Productor puede procesar etapas previamente aprobadas aunque Mesa falle; sus lecturas, vetos y compuertas se mantienen y el recorrido conserva estado fallido de Mesa.",
   "components": [
-    "SYS-INVERSION",
-    "GAS-CRM",
-    "SHEET-CRM",
-    "SYS-POTENCIALES",
-    "GAS-PORTERO",
-    "SHEET-PORTERO",
+    "SYS-SALA",
+    "GAS-SALA",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-ACTIONS",
+    "EXT-MOTORES-MEDIA",
     "SYS-YOD-OS"
   ],
   "tests": [
-    "node --test tests/brokers*.test.cjs: codec compatible, fecha real distinta de captura, eventos programados/reemplazados, calendario y resumen PPP sin motor propio.",
-    "Chromium320/390/1440: varios expedientes desplegados, comparación alineada, calendario, editor y fuentes; cero overflow.",
-    "Permisos existentes, preview sin guardado, sesión invalidada, ACK/revisión/reintentos idempotentes; cero escrituras de prueba en producción.",
-    "Atlas regenerado, checks del portal y pin del consumidor; publicación registrada aparte de integración y de lectura privada.",
-    "Clientes múltiples, contactos homónimos, casos compartidos y sin contacto; identidad Dirección conservada y broker aislado.",
-    "Responsable nominal y estado PPP sobreviven roundtrip brokers.v1; programación/reprogramación/resultado; filtros decisión/hoy/vencidos/sin siguiente paso."
+    "node scripts/arquitectura.cjs --check"
   ],
-  "rollback": "Revertir sólo frontend; conservar IDs, todas las actividades y sus notas legibles, fuentes, PPP, pendientes, permisos y datos operativos. No restaurar filas de negocio."
+  "rollback": "Restaurar imagen_motores anterior y política/adaptadores mediante PR, conservando bytes, planes, votos y recibos. No reenviar planes ambiguos ni reactivar modelos vetados. Revertir condición de orquestación si falla validación de compuertas."
 }
