@@ -1,18 +1,21 @@
 {
-  "model_revision": "2026-10-17.sala-hidream-o1.1",
-  "proposal_id": "CHG-SALA-HIDREAM-O1-20261017",
-  "summary": "Adaptador explícito hidream_o1 al Space oficial HiDream-O1-Image-Dev, sin token pagado ni respaldo implícito. Congela receta, seed, modelo y versión; conserva resultado privado y recibos. Revisión de política nueva distingue planes nuevos de envíos I1 inciertos. Habilitar en REGLAS sólo tras pruebas, imagen real conservada e integración. Productor puede procesar etapas previamente aprobadas aunque Mesa falle; sus lecturas, vetos y compuertas se mantienen y el recorrido conserva estado fallido de Mesa.",
+  "model_revision": "2026-10-17.sala-cola-unica.1",
+  "proposal_id": "CHG-SALA-COLA-UNICA-20261017",
+  "summary": "Productor consolida trabajos equivalentes por identidad y conserva fuentes; notas o contenido distintos bloquean esa identidad. Ejecutor excluye duplicados activos antes de cualquier efecto. GAS rechaza IDs repetidos en un upsert antes de escribir. Conciliación técnica no destructiva de la cola existente: respaldo privado, lectura fresca, comparación previa, equivalentes excedentes obsoletos con procedencia conservada, conflictos bloqueados y ejecución cancelada sin acuse bloqueada. Nunca decidir por orden físico ni borrar historia.",
   "components": [
     "SYS-SALA",
     "GAS-SALA",
+    "SHEET-SALA",
     "SVC-SALA-PRODUCTOR",
     "SVC-SALA-EJECUTOR",
     "EXT-ACTIONS",
+    "EXT-DRIVE",
     "EXT-MOTORES-MEDIA",
-    "SYS-YOD-OS"
+    "SYS-YOD-OS",
+    "EXT-GMAIL"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check"
   ],
-  "rollback": "Restaurar imagen_motores anterior y política/adaptadores mediante PR, conservando bytes, planes, votos y recibos. No reenviar planes ambiguos ni reactivar modelos vetados. Revertir condición de orquestación si falla validación de compuertas."
+  "rollback": "Revertir código mediante PR. Conservar respaldo privado y auditoría por fila; restaurar sólo campos técnicos si su valor actual aún coincide, sin borrar filas o tocar decisiones."
 }

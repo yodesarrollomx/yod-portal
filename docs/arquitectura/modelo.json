@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-17.sala-hidream-o1.1",
+  "revision": "2026-10-17.sala-cola-unica.1",
   "checked_at": "2026-10-17",
   "priorities": [
     "vender_mas",
@@ -13122,6 +13122,32 @@
       ],
       "deployment": "Propuesta previa. Primera prueba39070664400 entregó imagen en26.92s pero persistencia git falló por sparse-checkout. Segunda prueba con persistencia corregida en curso. Sin activación productiva acreditada.",
       "rollback": "Restaurar imagen_motores anterior y política/adaptadores mediante PR, conservando bytes, planes, votos y recibos. No reenviar planes ambiguos ni reactivar modelos vetados. Revertir condición de orquestación si falla validación de compuertas."
+    },
+    {
+      "id": "CHG-SALA-COLA-UNICA-20261017",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "EXT-MOTORES-MEDIA",
+        "SYS-YOD-OS",
+        "EXT-GMAIL"
+      ],
+      "status": "propuesto",
+      "authorization": "Continuación técnica autorizada por Dirección hasta terminar; conservar decisiones, notas, guiones, claves, URL y archivos.",
+      "proposal": "Productor consolida trabajos equivalentes por identidad y conserva fuentes; notas o contenido distintos bloquean esa identidad. Ejecutor excluye duplicados activos antes de cualquier efecto. GAS rechaza IDs repetidos en un upsert antes de escribir. Conciliación técnica no destructiva de la cola existente: respaldo privado, lectura fresca, comparación previa, equivalentes excedentes obsoletos con procedencia conservada, conflictos bloqueados y ejecución cancelada sin acuse bloqueada. Nunca decidir por orden físico ni borrar historia.",
+      "tests": [
+        "Permutaciones sintéticas: equivalentes se consolidan, conflicto de notas no se encola, datos de entrada inmutables.",
+        "Duplicados activos no alcanzan ejecución ni rescate; un obsoleto no bloquea la fila vigente.",
+        "GAS rechaza lote con IDs repetidos sin una sola escritura; lote único conserva contrato.",
+        "Conciliación privada con plan por fila, readback y auditoría agregada antes de reanudar."
+      ],
+      "deployment": "Propuesta previa. Run39069978675 creó74filas; lectura real detectó17IDs repetidos y45excedentes. Ejecutor39070036439 cancelado antes de completar el primer medio; ningún entregable nuevo acreditado.",
+      "rollback": "Revertir código mediante PR. Conservar respaldo privado y auditoría por fila; restaurar sólo campos técnicos si su valor actual aún coincide, sin borrar filas o tocar decisiones."
     }
   ],
   "data_contracts": [
