@@ -13016,7 +13016,8 @@
         "SVC-SALA-EJECUTOR",
         "EXT-ACTIONS",
         "EXT-DRIVE",
-        "EXT-MOTORES-MEDIA"
+        "EXT-MOTORES-MEDIA",
+        "SYS-YOD-OS"
       ],
       "status": "propuesto",
       "authorization": "Dirección solicita completar Sala100%en línea y demostrar más de3 recorridos consecutivos con bitácoras y capturas reales.",

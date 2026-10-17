@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-10-17.sala-mesa-visible.1",
   "proposal_id": "CHG-SALA-MESA-VISIBLE-20261017",
-  "summary": "Conservar publicaciones vigentes en la mesa aunque no haya revisión diaria. Proyección pública de identidad y estado, sin notas privadas ni votos sobre archivos. Verificar cuatro recorridos reales consecutivos; las ejecuciones sin producción no cuentan.",
+  "summary": "Separar inventario visible de publicaciones vigentes de pendientes diarios. Mesa proyecta únicamente IDs y estado técnico/editorial agregado de las tiras que verificó; el frontend conserva consulta de las aprobadas sin habilitar decisiones fuera del día vigente. Verificación real serializada de cuatro recorridos, con entregables y recibos explícitos; un no-op no acredita producción nueva.",
   "components": [
     "SYS-SALA",
     "GAS-SALA",
@@ -10,7 +10,7 @@
     "SVC-SALA-EJECUTOR",
     "EXT-ACTIONS",
     "EXT-DRIVE",
-    "EXT-GMAIL",
+    "EXT-MOTORES-MEDIA",
     "SYS-YOD-OS"
   ],
   "tests": [
@@ -21,5 +21,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir código y proyección; conservar decisiones, cola y medios."
+  "rollback": "Revertir código mediante PR conservando fuentes, decisiones, cola, snapshots y archivos; el campo adicional en estado Mesa es compatible con lectores anteriores."
 }
