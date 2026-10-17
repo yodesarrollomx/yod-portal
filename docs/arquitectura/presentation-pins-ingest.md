@@ -29,3 +29,10 @@ Revertir sólo consumidores/relevo frontend; conservar IndexedDB, IDs, sobres pr
 - Pruebas sintéticas Chromium/WebKit con dos orígenesHTTPS: captura real, sesión confinada, ausencia/recuperación de sesión, respuesta perdida y recarga. ConflictoID bloquea reenvío; eventos de seguimiento no ocultan el sobre recibido. No se hicieron POST de prueba a producción.
 
 Pendiente operativo: primer acuse de un dispositivo privado, revisión del pedido y adopción/ACK del resto de procesos. Mantener los originales y estados parciales; publicar código no cierra una chinche.
+## Relevo sin navegación · 17 octubre 2026
+
+Corrección dentro de CTR-PRESENTATION-PINS-INGEST y CHG-PRESENTATION-PINS-INGEST-20261015, sin alterar sus conexiones, fuentes, sesión ni contrato. El relevo existente admite un marco embebido además de la ventana explícita. Se mantienen origen, emisor y nonce; ninguna credencial cruza al consumidor. Si falta sesión o el navegador aísla el almacenamiento, la conexión explícita sigue siendo necesaria.
+
+El consumidor conserva el original local, muestra un aviso no bloqueante y reintenta al volver o recuperar señal. Sólo el acuse por ID/huella permite «Recibida en Sala». Una respuesta ambigua no autoriza repetir POST. El transporte no cambia la cadencia del revisor ni acredita corrección editorial. Capturas y comentarios permanecen privados.
+
+Pruebas sintéticas Chromium y WebKit: captura real; sin sesión queda pendiente sin abrir ventana; conexión explícita recupera acuse; recarga no duplica. Ningún POST de prueba a producción. La sesión privada del dispositivo sigue siendo una comprobación distinta. Rollback: revertir consumidor y relevo, conservando IndexedDB, IDs y recibos.
