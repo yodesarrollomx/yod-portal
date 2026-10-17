@@ -13041,7 +13041,8 @@
         "EXT-ACTIONS",
         "EXT-DRIVE",
         "EXT-MOTORES-MEDIA",
-        "SYS-YOD-OS"
+        "SYS-YOD-OS",
+        "EXT-GMAIL"
       ],
       "status": "propuesto",
       "authorization": "Dirección solicita completar la activación del histórico y continuar hasta terminar; se conservan decisiones y permisos existentes.",
