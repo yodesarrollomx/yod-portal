@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-17.sala-guion-heredado.1 · 2026-10-17.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-17.sala-recibos-fallo.1 · 2026-10-17.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -171,7 +171,7 @@ flowchart LR
   n_SYS_SALA -->|Lecturas agregadas y canario aislado de Sala| n_SYS_CONTROL
   n_SYS_INVERSION -.->|Lee copy público de presentación por recurso=textos| n_GAS_PLAN_POTENCIAL
   n_SVC_SALA_PRODUCTOR -.->|Imagen para Sala con modelo fijo y recibo| n_SVC_AUTON_CLOUD
-  n_SVC_SALA_PRODUCTOR -.->|Fotografía HiDream gratuita con recibo y cupo observable| n_EXT_MOTORES_MEDIA
+  n_SVC_SALA_PRODUCTOR -.->|Fotografía HiDream con recibo, negativa confirmada y recuperación| n_EXT_MOTORES_MEDIA
   n_SYS_INVERSION -.->|Resumen guardado de PPP por expediente| n_GAS_PORTERO
   n_SYS_SALA -.->|Imágenes nuevas en releases públicos inmutables con manifiesto fijado por recibo| n_EXT_ACTIONS
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
@@ -701,6 +701,6 @@ flowchart LR
 | CON-BANDEJA-PORTERO | GAS-BANDEJA-NUBE → GAS-PORTERO | autorizacion: Revalidar identidad de Dirección para aprobar y antes de enviar. CTR-BANDEJA-NUBE | codigo | Permiso privado ligado a sesión real, tarjeta, huella y última aprobación; veto aparte de comentarios. Regresiones sintéticas aprobadas; consentimiento y sesión real pendientes.; Código publicado; su compuerta o consentimiento reales todavía no se acreditan. |
 | CON-INVESTOR-STORY-TEXTS | SYS-INVERSION → GAS-PLAN-POTENCIAL | lectura: Lee copy público de presentación por recurso=textos. CTR-INVESTOR-STORY1; contenido comercial exclusivamente; fallo visible sin respaldo de datos privados. | propuesto | [plan-potencial/index.html](https://github.com/yodesarrollomx/plan-potencial/blob/78e616f858ad593f16891d2f5158cd46d5617bc2/index.html#L1244) — GET de textos comerciales ya utilizado por la landing pública; propuesta de consumo por la primera escena de inversión. |
 | CON-SALA-IMAGEN-OPENAI | SVC-SALA-PRODUCTOR → SVC-AUTON-CLOUD | api: Imagen para Sala con modelo fijo y recibo. CTR-SALA-IMAGEN-OPENAI-NUBE | propuesto | Propuesta autorizada para usar el servicio existente, aún sin prueba de generación. |
-| CON-SALA-HIDREAM | SVC-SALA-PRODUCTOR → EXT-MOTORES-MEDIA | api: Fotografía HiDream gratuita con recibo y cupo observable. CTR-SALA-HIDREAM | propuesto | Lote real38342683066 en rama operativa; integración recurrente propuesta. |
+| CON-SALA-HIDREAM | SVC-SALA-PRODUCTOR → EXT-MOTORES-MEDIA | api: Fotografía HiDream con recibo, negativa confirmada y recuperación. CTR-SALA-HIDREAM Rechazo terminal explícito sin imagen permite reintento posterior con negativa privada; resultado incierto sólo conciliación. | propuesto | Lote real38342683066 en rama operativa; integración recurrente propuesta. |
 | CON-BROKERS-PPP-SAVED | SYS-INVERSION → GAS-PORTERO | lectura: Resumen guardado de PPP por expediente. CTR-BROKERS-MINI-CRM; GET recurso=caso&id&tipo con sesión existente. No recalcular escenarios ni guardar. | propuesto | Consumo propuesto del mismo contrato empleado por el PPP; lectura autorizada y campos guardados se comprobarán por separado. |
 | CON-SALA-MEDIOS-PUBLICOS | SYS-SALA → EXT-ACTIONS | publicacion: Imágenes nuevas en releases públicos inmutables con manifiesto fijado por recibo. CTR-SALA-MEDIOS-PUBLICOS: fase1 sólo nuevas imágenes; lector primero, pin SHA256 de bytes exactos, verificación anónima, journal de mutación e inmutabilidad antes de SALA_MEDIOS_PUBLICOS=1. Emisor OFF; conexión no comprobada en ejecución. | propuesto | Diseño local en docs/arquitectura/sala-medios-publicos-20261015.md y schema 1 acordado por UI/snapshots/almacén. Sin release/asset, canario, activación o despliegue acreditado. |

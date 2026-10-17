@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-17.sala-guion-heredado.1",
+  "revision": "2026-10-17.sala-recibos-fallo.1",
   "checked_at": "2026-10-17",
   "priorities": [
     "vender_mas",
@@ -6359,8 +6359,8 @@
       "from": "SVC-SALA-PRODUCTOR",
       "to": "EXT-MOTORES-MEDIA",
       "kind": "api",
-      "label": "Fotografía HiDream gratuita con recibo y cupo observable",
-      "contract": "CTR-SALA-HIDREAM",
+      "label": "Fotografía HiDream con recibo, negativa confirmada y recuperación",
+      "contract": "CTR-SALA-HIDREAM Rechazo terminal explícito sin imagen permite reintento posterior con negativa privada; resultado incierto sólo conciliación.",
       "contract_ids": [
         "CTR-SALA-HIDREAM"
       ],
@@ -13078,6 +13078,26 @@
       ],
       "deployment": "Propuesta previa tras fallo real39069155006 en Mesa: guion sin lista de láminas. Backendv73 y sonda39045627647 comprobados; consumidor histórico activado por propietario y readback.",
       "rollback": "Revertir PR; conservar guiones, marcas, cola, medios y snapshots. Ante incompatibilidad desactivar sólo flag histórico; misma URL/backend."
+    },
+    {
+      "id": "CHG-SALA-RECIBOS-FALLO-20261017",
+      "components": [
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "EXT-ACTIONS",
+        "EXT-MOTORES-MEDIA",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección solicita corregir y completar producción en nube, conservando decisiones y modelos retirados.",
+      "proposal": "Distinguir rechazo terminal de HiDream sin imagen y pedido no enviado del resultado incierto. Guardar negativa privada ligada al plan y al intento; permitir sólo un nuevo intento posterior. Timeout, descarga incompleta y respuesta ambigua conservan conciliación sin reenvío. No habilitar proveedores pagados ni modelos retirados.",
+      "tests": [
+        "Respuesta terminal status3 sin imagen conserva negativa durable; nueva ejecución puede intentar, mismo intento no duplica.",
+        "Circuito abierto antes de envío no deja recibo eternamente pendiente. Error incierto, conflicto o negativa corrupta sigue bloqueado.",
+        "Pruebas de regresión y ejecución real con recibos; un fallo o no-op no acredita producción."
+      ],
+      "deployment": "Propuesta previa tras ejecución39069605297: HiDream devolvió Task failed with status3; cero imágenes. Recuperación de recibos históricos exige evidencia del envío exacto; no se infiere por ausencia.",
+      "rollback": "Revertir adaptadores y lector de negativas; conservar planes, resultados, negativos y decisiones. Mantener conciliación cerrada ante estado desconocido."
     }
   ],
   "data_contracts": [

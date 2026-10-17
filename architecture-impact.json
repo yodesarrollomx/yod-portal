@@ -1,21 +1,16 @@
 {
-  "model_revision": "2026-10-17.sala-guion-heredado.1",
-  "proposal_id": "CHG-SALA-GUION-HEREDADO-20261017",
-  "summary": "Compatibilidad con guiones históricos expresados como ruta o texto. Mesa procesa sus láminas existentes sin inventar continuación visual; deja contador y estado parcial. Productor conserva escena/voz de láminas aprobadas, pero no abre corte sin lista estructurada completa. Una lista inválida sigue fallando. No reescribir guiones ni modificar decisiones.",
+  "model_revision": "2026-10-17.sala-recibos-fallo.1",
+  "proposal_id": "CHG-SALA-RECIBOS-FALLO-20261017",
+  "summary": "Distinguir rechazo terminal de HiDream sin imagen y pedido no enviado del resultado incierto. Guardar negativa privada ligada al plan y al intento; permitir sólo un nuevo intento posterior. Timeout, descarga incompleta y respuesta ambigua conservan conciliación sin reenvío. No habilitar proveedores pagados ni modelos retirados.",
   "components": [
     "SYS-SALA",
-    "GAS-SALA",
-    "SHEET-SALA",
     "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
     "EXT-ACTIONS",
-    "EXT-DRIVE",
     "EXT-MOTORES-MEDIA",
-    "SYS-YOD-OS",
-    "EXT-GMAIL"
+    "SYS-YOD-OS"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check"
   ],
-  "rollback": "Revertir PR; conservar guiones, marcas, cola, medios y snapshots. Ante incompatibilidad desactivar sólo flag histórico; misma URL/backend."
+  "rollback": "Revertir adaptadores y lector de negativas; conservar planes, resultados, negativos y decisiones. Mantener conciliación cerrada ante estado desconocido."
 }

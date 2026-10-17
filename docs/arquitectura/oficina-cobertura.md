@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-17.sala-guion-heredado.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-17.sala-recibos-fallo.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -2357,7 +2357,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-079 · EXT-ACTIONS → SVC-SALA-PRODUCTOR · automatizacion · Programa productor cada veinte minutos · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-080 · SVC-SALA-PRODUCTOR → GAS-SALA · api · Lee decisiones/reglas y escribe cola · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-SALA-IMAGEN-OPENAI · SVC-SALA-PRODUCTOR → SVC-AUTON-CLOUD · api · Imagen para Sala con modelo fijo y recibo · Estado: propuesto · Ejecución no verificada en el atlas.
-- CON-SALA-HIDREAM · SVC-SALA-PRODUCTOR → EXT-MOTORES-MEDIA · api · Fotografía HiDream gratuita con recibo y cupo observable · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-SALA-HIDREAM · SVC-SALA-PRODUCTOR → EXT-MOTORES-MEDIA · api · Fotografía HiDream con recibo, negativa confirmada y recuperación · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2435,7 +2435,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Conexiones registradas; no habilitan operaciones:**
 
 - CON-083 · SVC-SALA-EJECUTOR → EXT-MOTORES-MEDIA · integracion · Selecciona motor según configuración · Estado: codigo · Ejecución no verificada en el atlas.
-- CON-SALA-HIDREAM · SVC-SALA-PRODUCTOR → EXT-MOTORES-MEDIA · api · Fotografía HiDream gratuita con recibo y cupo observable · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-SALA-HIDREAM · SVC-SALA-PRODUCTOR → EXT-MOTORES-MEDIA · api · Fotografía HiDream con recibo, negativa confirmada y recuperación · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
