@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-17.sala-recibos-fallo.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-17.sala-cola-unica.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 

@@ -1,16 +1,21 @@
 {
-  "model_revision": "2026-10-17.sala-recibos-fallo.1",
-  "proposal_id": "CHG-SALA-RECIBOS-FALLO-20261017",
-  "summary": "Distinguir rechazo terminal de HiDream sin imagen y pedido no enviado del resultado incierto. Guardar negativa privada ligada al plan y al intento; permitir sólo un nuevo intento posterior. Timeout, descarga incompleta y respuesta ambigua conservan conciliación sin reenvío. No habilitar proveedores pagados ni modelos retirados.",
+  "model_revision": "2026-10-17.sala-cola-unica.1",
+  "proposal_id": "CHG-SALA-COLA-UNICA-20261017",
+  "summary": "Productor consolida trabajos equivalentes por identidad y conserva fuentes; notas o contenido distintos bloquean esa identidad. Ejecutor excluye duplicados activos antes de cualquier efecto. GAS rechaza IDs repetidos en un upsert antes de escribir. Conciliación técnica no destructiva de la cola existente: respaldo privado, lectura fresca, comparación previa, equivalentes excedentes obsoletos con procedencia conservada, conflictos bloqueados y ejecución cancelada sin acuse bloqueada. Nunca decidir por orden físico ni borrar historia.",
   "components": [
     "SYS-SALA",
+    "GAS-SALA",
+    "SHEET-SALA",
     "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
     "EXT-ACTIONS",
+    "EXT-DRIVE",
     "EXT-MOTORES-MEDIA",
-    "SYS-YOD-OS"
+    "SYS-YOD-OS",
+    "EXT-GMAIL"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check"
   ],
-  "rollback": "Revertir adaptadores y lector de negativas; conservar planes, resultados, negativos y decisiones. Mantener conciliación cerrada ante estado desconocido."
+  "rollback": "Revertir código mediante PR. Conservar respaldo privado y auditoría por fila; restaurar sólo campos técnicos si su valor actual aún coincide, sin borrar filas o tocar decisiones."
 }
