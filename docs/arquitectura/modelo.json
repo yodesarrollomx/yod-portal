@@ -13203,7 +13203,8 @@
         "SVC-SALA-EJECUTOR",
         "EXT-ACTIONS",
         "EXT-DRIVE",
-        "EXT-MOTORES-MEDIA"
+        "EXT-MOTORES-MEDIA",
+        "SYS-YOD-OS"
       ],
       "status": "propuesto",
       "authorization": "Dirección ordena continuar hasta entrega final en línea conservando decisiones y archivos. Reparación técnica, sin aprobación editorial automática.",

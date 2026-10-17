@@ -10,7 +10,8 @@
     "SVC-SALA-EJECUTOR",
     "EXT-ACTIONS",
     "EXT-DRIVE",
-    "EXT-MOTORES-MEDIA"
+    "EXT-MOTORES-MEDIA",
+    "SYS-YOD-OS"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check"
