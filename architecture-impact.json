@@ -3,8 +3,16 @@
   "proposal_id": "CHG-CHINCHES-CHAT-ESTADOS-20261017",
   "summary": "Permitir conversación rápida durante un trabajo durable sin reenviar fallos a la cola; mantener estado del trabajo y borradores. Diferenciar lectura fallida de presentación sin entrega, con recuperación explícita. Convertir la ficha del autón en accesos a su trabajo, expediente y PPP con capacidades autorizadas; mostrar recibo de consulta de fuentes y recuperación manual sin afirmar que cada documento fue leído.",
   "components": [
+    "EXT-DRIVE",
+    "GAS-PORTERO",
+    "SVC-AUTON-CLOUD",
+    "SYS-CONTROL",
+    "SYS-DESPACHO",
     "SYS-DESPACHO-3D",
-    "SVC-AUTON-CLOUD"
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "SYS-TRACK",
+    "SYS-YOD-OS"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check"

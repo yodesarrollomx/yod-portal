@@ -13152,8 +13152,16 @@
     {
       "id": "CHG-CHINCHES-CHAT-ESTADOS-20261017",
       "components": [
+        "EXT-DRIVE",
+        "GAS-PORTERO",
+        "SVC-AUTON-CLOUD",
+        "SYS-CONTROL",
+        "SYS-DESPACHO",
         "SYS-DESPACHO-3D",
-        "SVC-AUTON-CLOUD"
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-TRACK",
+        "SYS-YOD-OS"
       ],
       "status": "propuesto",
       "authorization": "Alejandro: revisa todas las chinches y corrige lo solicitado; mantenimiento técnico y publicación autorizados. Sin cambiar decisiones, permisos ni rutinas.",
