@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-17.sala-cola-unica.1",
+  "revision": "2026-10-17.chinches-chat-estados.1",
   "checked_at": "2026-10-17",
   "priorities": [
     "vender_mas",
@@ -13148,6 +13148,30 @@
       ],
       "deployment": "Propuesta previa. Run39069978675 creó74filas; lectura real detectó17IDs repetidos y45excedentes. Ejecutor39070036439 cancelado antes de completar el primer medio; ningún entregable nuevo acreditado.",
       "rollback": "Revertir código mediante PR. Conservar respaldo privado y auditoría por fila; restaurar sólo campos técnicos si su valor actual aún coincide, sin borrar filas o tocar decisiones."
+    },
+    {
+      "id": "CHG-CHINCHES-CHAT-ESTADOS-20261017",
+      "components": [
+        "EXT-DRIVE",
+        "GAS-PORTERO",
+        "SVC-AUTON-CLOUD",
+        "SYS-CONTROL",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-TRACK",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Alejandro: revisa todas las chinches y corrige lo solicitado; mantenimiento técnico y publicación autorizados. Sin cambiar decisiones, permisos ni rutinas.",
+      "proposal": "Permitir conversación rápida durante un trabajo durable sin reenviar fallos a la cola; mantener estado del trabajo y borradores. Diferenciar lectura fallida de presentación sin entrega, con recuperación explícita. Convertir la ficha del autón en accesos a su trabajo, expediente y PPP con capacidades autorizadas; mostrar recibo de consulta de fuentes y recuperación manual sin afirmar que cada documento fue leído.",
+      "tests": [
+        "Conversación sintética con trabajo activo, rechazo del canal, permisos revocados y ACK incierto.",
+        "QA de presentación con lectura fallida y recuperación; compilación y verificadores obligatorios."
+      ],
+      "deployment": "Pendiente de implementación y QA; no acredita producción ni cierra el alcance restante de las chinches.",
+      "rollback": "Revertir cliente y bundle; conservar mensajes, trabajos y documentos del servidor."
     }
   ],
   "data_contracts": [

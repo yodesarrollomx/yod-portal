@@ -96,6 +96,13 @@ export class Conversation {
   return this.fastClientRef.client;
  }
  get fastPending(){return this.fastTurns.some(t=>t.phase==='done');}
+ get canSend(){
+  if(this.busy||this.stale||!this.selection?.can_enqueue||!this.selection?.agent_ready||!this.model)return false;
+  if(this.pending)return this.status==='unconfirmed';
+  if(!['ready','processing'].includes(this.status))return false;
+  return !(this.accepted||this.model.processing)||this.now()>=this.fastDownUntil&&!!this.fastClient();
+ }
+ get idleStatus(){return this.accepted||this.model?.processing?'processing':'ready';}
  reconcileFast(){
   const messages=this.model?.messages||[],cutoff=this.now()-10*60000;
   this.fastTurns=this.fastTurns.filter(t=>{
@@ -176,10 +183,10 @@ export class Conversation {
    if(epoch!==this.epoch)return false;
    turn.reply=result.final.reply;turn.phase='done';turn.finished=this.now();turn.saved=result.saved===true;
    turn.meta={...turn.meta,model:result.final.model,tier:result.final.tier,ttft_ms:result.final.ttft_ms,total_ms:result.final.total_ms};
-   this.status='ready';return true;
+   this.status=this.idleStatus;return true;
   }catch(error){
    if(epoch!==this.epoch)return false;
-   this.fastTurns=this.fastTurns.filter(t=>t!==turn);this.status='ready';
+   this.fastTurns=this.fastTurns.filter(t=>t!==turn);this.status=this.idleStatus;
    if(FAST_FALLBACK.has(error?.code)&&!error.started){this.fastDownUntil=this.now()+60000;return 'fallback';}
    this.fastNotice=FAST_NOTICES[error?.code]??'No se pudo completar la respuesta. Tu mensaje no se guardó.';return false;
   }finally{
@@ -188,9 +195,12 @@ export class Conversation {
   }
  }
  async send(message){
-  if(!this.pending&&this.status==='ready'&&!this.busy&&!this.stale&&this.selection?.can_enqueue&&this.selection?.agent_ready&&this.model&&!this.model.processing&&typeof message==='string'&&message.trim()&&message.length<=8000&&this.now()>=this.fastDownUntil&&this.fastClient()){
+  if(!this.pending&&this.canSend&&typeof message==='string'&&message.trim()&&message.length<=8000&&this.now()>=this.fastDownUntil&&this.fastClient()){
    const outcome=await this.sendFast(message);
    if(outcome!=='fallback')return outcome;
+   if(this.accepted||this.model?.processing){
+    this.fastNotice='La conversación no está disponible por el momento. Tu borrador se conserva y el trabajo anterior continúa; no se creó otro encargo.';this.emit();return false;
+   }
   }
   if(this.busy||this.stale||!['ready','unconfirmed'].includes(this.status)||!this.selection?.can_enqueue||!this.selection?.agent_ready)return false;
   if(!this.pending){
