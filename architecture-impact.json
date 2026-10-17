@@ -1,21 +1,19 @@
 {
-  "model_revision": "2026-10-17.chinches-chat-estados.1",
-  "proposal_id": "CHG-CHINCHES-CHAT-ESTADOS-20261017",
-  "summary": "Permitir conversación rápida durante un trabajo durable sin reenviar fallos a la cola; mantener estado del trabajo y borradores. Diferenciar lectura fallida de presentación sin entrega, con recuperación explícita. Convertir la ficha del autón en accesos a su trabajo, expediente y PPP con capacidades autorizadas; mostrar recibo de consulta de fuentes y recuperación manual sin afirmar que cada documento fue leído.",
+  "model_revision": "2026-10-17.sala-entrega-fuentes.1",
+  "proposal_id": "CHG-SALA-ENTREGA-FUENTES-20261017",
+  "summary": "Conservar src de láminas históricas expresadas como texto al calcular identidad y preparar evidencia; rechazar identidades sin insumo. Aplicar a Productor y Ejecutor la misma regla vigente de Mesa: una pieza ya publicada no vuelve a producirse. Coincidencia exacta por nombre o slug en el registro publicado, sin búsquedas parciales. Conciliar sólo trabajos antiguos de piezas publicadas con respaldo, evidencia, comparación previa y readback; conservar historial y decisiones. No fabricar guiones ni ejecutar versiones vetadas. Verificar motor gratuito habilitado y entregas en la Sala, con originales durables y recibos separados de aprobación.",
   "components": [
+    "SYS-SALA",
+    "GAS-SALA",
+    "SHEET-SALA",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-ACTIONS",
     "EXT-DRIVE",
-    "GAS-PORTERO",
-    "SVC-AUTON-CLOUD",
-    "SYS-CONTROL",
-    "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
-    "SYS-TRACK",
-    "SYS-YOD-OS"
+    "EXT-MOTORES-MEDIA"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check"
   ],
-  "rollback": "Revertir cliente y bundle; conservar mensajes, trabajos y documentos del servidor."
+  "rollback": "Revertir código por PR; conservar respaldo y todas las filas, decisiones y medios. Restaurar sólo campos técnicos que sigan coincidiendo con la conciliación."
 }
