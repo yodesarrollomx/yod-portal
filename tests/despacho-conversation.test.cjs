@@ -6,6 +6,22 @@ const vm=require('node:vm');
 const load=()=>import('../despacho3d/conversation.mjs');
 const current={ok:true,case_id:'synthetic-case',name:'Terreno sintético',url:'https://docs.google.com/spreadsheets/d/SYNTHETIC_ONLY/edit',can_enqueue:true,agent_ready:true};
 function snapshot(){return {ok:true,case_id:current.case_id,source_revision:'rev-1',context:{identity:{case_id:current.case_id,name:current.name}},state:{updated_at:'2026-10-03T00:00:00Z'},conversation:[],jobs:[],events:[]};}
+test('canonical first-turn state exposes sources and allows conversation without inventing a timestamp',async()=>{
+ const {validateWorkspaceSources,validateConversation,Conversation}=await load(),s=snapshot();
+ s.state={case_id:current.case_id,revision:'',active_job_id:'',updated_at:''};
+ s.context.documents=[['doc-1','Fuente sintética','https://docs.google.com/document/d/synthetic/edit','Fuente']];
+ const before=JSON.stringify(s);assert.equal(validateWorkspaceSources(s,current.case_id).documents.length,1);
+ assert.equal(validateConversation(s,current.case_id).updated_at,null);assert.equal(JSON.stringify(s),before);
+ const c=new Conversation({transport:{resolveCurrent:async()=>current,read:async()=>s}});
+ assert.equal(await c.open(),true);assert.equal(c.canSend,true);assert.equal(c.model.revision,'rev-1');c.close();
+});
+test('empty timestamp is rejected for partial, foreign or already active conversation state',async()=>{
+ const {validateWorkspaceSources,validateConversation}=await load();
+ for(const change of [s=>s.state.case_id='other',s=>s.state.revision='old',s=>s.state.active_job_id='job',s=>delete s.state.active_job_id,s=>s.conversation=[{}],s=>s.jobs=[{}],s=>s.events=[{}]]){
+  const s=snapshot();s.state={case_id:current.case_id,revision:'',active_job_id:'',updated_at:''};change(s);
+  assert.throws(()=>validateWorkspaceSources(s,current.case_id));assert.throws(()=>validateConversation(s,current.case_id));
+ }
+});
 function server(){
  const state=snapshot(),receipts=new Map(),calls=[];
  return {state,calls,resolveCurrent:async()=>current,read:async()=>structuredClone(state),enqueue:async p=>{

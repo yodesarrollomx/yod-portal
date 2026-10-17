@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-10-17.chinches-moac.1",
   "proposal_id": "CHG-CHINCHES-MOAC-20261017",
-  "summary": "Proyectar context.moac en el puesto: jerarquía Meta > Objetivo > Acción, estado y responsable originales, recibos disponibles separados de aprobación. Validar caso, IDs, relaciones y límites; ausencia/lectura fallida no equivalen a cero pendientes. Acceso directo desde Trabajo y Entregas al mismo MOAC. No crear una fuente paralela ni ampliar las vinculaciones por nombre.",
+  "summary": "Proyectar context.moac en el puesto: jerarquía Meta > Objetivo > Acción, estado y responsable originales, recibos disponibles separados de aprobación. Validar caso, IDs, relaciones y límites; ausencia/lectura fallida no equivalen a cero pendientes. Acceso directo desde Trabajo y Entregas al mismo MOAC. No crear una fuente paralela ni ampliar las vinculaciones por nombre. Corregir el primer acceso sin historial conforme al estado inicial del backend, conservando todos los controles de autorización y revisión.",
   "components": [
     "EXT-DRIVE",
     "GAS-PORTERO",

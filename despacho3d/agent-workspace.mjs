@@ -8,7 +8,7 @@ import {mountWorkView} from './work-view.mjs?v=129';
 import {PROFILE_WORK_LANES,profileWorkView,nextRecordedTask} from './profile-work.mjs?v=140';
 import {registeredBoard,resolveBoard,stationIdentity,nativeBoardState} from './project-station.mjs?v=140';
 import {mountKnowledgeBoard} from './knowledge-board.mjs?v=128';
-import {createFrameTransport,validateWorkspaceSources,workspaceSourceNotice} from './conversation.mjs?v=moac290';
+import {createFrameTransport,validateWorkspaceSources,workspaceSourceNotice} from './conversation.mjs?v=first292';
 import {validateFastSession} from './fast-lane.mjs';
 import {DurableGoals,goalDisplay,taskDisplay,goalReviewActions,goalRoadmap,orderedGoals,goalReadView} from './goals.mjs?v=132';
 export {taskDisplay} from './goals.mjs?v=132';
