@@ -108,3 +108,35 @@ test('running resume requires the explicit server flag and malformed permission 
  for(const can_resume of ['true',1,null])assert.throws(()=>validateGoal(goal({can_resume}),caseId),/invalid_goals/);
  assert.throws(()=>validateGoal(goal({lease_expires_at:'2026-10-03T00:01:00Z'}),caseId),/invalid_goals/);
 });
+
+// Opening Entregas during the background read must await that read, not report failure.
+test('concurrent views share one goal read and the next explicit read is fresh',async()=>{
+ const h=await harness();let release,calls=0;
+ h.server.readGoals=()=>{calls++;return new Promise(resolve=>release=resolve);};
+ const first=h.controller.read(),second=h.controller.read();
+ assert.equal(first,second);assert.equal(calls,1);
+ release({ok:true,schema:1,source_revision:'source-1',goals:[goal()]});
+ assert.deepEqual(await Promise.all([first,second]),[true,true]);
+ assert.equal(h.controller.model.goals.length,1);
+ const next=h.controller.read();assert.equal(calls,2);assert.notEqual(next,first);
+ release({ok:true,schema:1,source_revision:'source-2',goals:[]});
+ assert.equal(await next,true);assert.equal(h.controller.model.source_revision,'source-2');
+});
+test('shared goal reads report a real failure to every view and permit a later recovery',async()=>{
+ const h=await harness();let release;h.server.readGoals=()=>new Promise(resolve=>release=resolve);
+ const first=h.controller.read(),second=h.controller.read();
+ release({ok:false,error:'unavailable'});assert.deepEqual(await Promise.all([first,second]),[false,false]);
+ assert.equal(h.controller.model,null);assert.equal(h.controller.busy,false);
+ const recovery=h.controller.read();release({ok:true,schema:1,source_revision:'source-2',goals:[]});
+ assert.equal(await recovery,true);
+});
+test('a case switch cannot share the previous case read or accept its late response',async()=>{
+ const h=await harness(),pending=[];h.server.readGoals=payload=>new Promise(resolve=>pending.push({payload,resolve}));
+ const old=h.controller.read();
+ h.context({selection:{...selection,case_id:'case-other'},busy:false});
+ const current=h.controller.read();assert.notEqual(current,old);assert.equal(pending.length,2);
+ pending[0].resolve({ok:true,schema:1,source_revision:'old',goals:[goal()]});
+ assert.equal(await old,false);assert.equal(h.controller.model,null);assert.equal(h.controller.busy,true);
+ pending[1].resolve({ok:true,schema:1,source_revision:'new',goals:[goal({case_id:'case-other'})]});
+ assert.equal(await current,true);assert.equal(h.controller.model.goals[0].case_id,'case-other');
+});

@@ -10,8 +10,8 @@ import {registeredBoard,resolveBoard,stationIdentity,nativeBoardState} from './p
 import {mountKnowledgeBoard} from './knowledge-board.mjs?v=128';
 import {createFrameTransport,validateWorkspaceSources,workspaceSourceNotice} from './conversation.mjs?v=first292';
 import {validateFastSession} from './fast-lane.mjs';
-import {DurableGoals,goalDisplay,taskDisplay,goalReviewActions,goalRoadmap,orderedGoals,goalReadView} from './goals.mjs?v=132';
-export {taskDisplay} from './goals.mjs?v=132';
+import {DurableGoals,goalDisplay,taskDisplay,goalReviewActions,goalRoadmap,orderedGoals,goalReadView} from './goals.mjs?v=entregas291';
+export {taskDisplay} from './goals.mjs?v=entregas291';
 export const WORKSPACE_TABS=[['ppp','Plan de potencial'],['activity','Trabajo'],['tasks','Encargos'],['moac','MOAC'],['sources','Expediente'],['browser','Navegador'],['knowledge','Notas y versiones'],['meeting','Entregas'],['avatar','Conocer al autón']];
 export const WORKSPACE_GROUPS={ppp:['ppp'],activity:['activity','tasks','moac','browser','meeting'],sources:['sources','knowledge','avatar']};
 export const workspaceGroup=id=>Object.keys(WORKSPACE_GROUPS).find(key=>WORKSPACE_GROUPS[key].includes(id))||'ppp';

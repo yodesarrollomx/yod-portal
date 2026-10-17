@@ -1,19 +1,24 @@
 {
-  "model_revision": "2026-10-17.sala-entrega-cortes.1",
-  "proposal_id": "CHG-SALA-ENTREGA-CORTES-20261017",
-  "summary": "Entregar automáticamente a revisión los cortes nuevos durables y aprobados en su fuente vigente. Verificar identidad, guion, plan exacto, bytes MD5 y audio/video en Drive; respaldar la preparación y releer antes de montar. La propuesta nueva usa ID derivado del hash, referencia de la fuente y visor autenticado de Drive, sin publicar el archivo ni ampliar ACL. Estado preparado se registra antes de proponer; si se pierde el acuse sólo se concilia por ID exacto, nunca se reenvía a ciegas. Conservar votos de imágenes y solicitar decisión independiente del corte. El Ejecutor despierta entrega tras trabajo real; entrega confirmada actualiza respaldo por el relevo existente. Un estado HECHO no equivale a entrega ni aceptación.",
+  "model_revision": "2026-10-17.chinches-entregas.1",
+  "proposal_id": "CHG-CHINCHES-ENTREGAS-20261017",
+  "summary": "Compartir la promesa de lectura de metas dentro del mismo caso y época: abrir Entregas durante una consulta en curso debe esperar su resultado sin duplicar peticiones ni mostrar un error falso. Una mutación, revocación o cambio de caso conserva sus guardias. No aceptar un modelo histórico como consulta nueva. Mantener el mismo servidor y permisos.",
   "components": [
-    "SYS-SALA",
-    "GAS-SALA",
-    "SHEET-SALA",
-    "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
-    "EXT-ACTIONS",
     "EXT-DRIVE",
-    "SYS-YOD-OS"
+    "GAS-PORTERO",
+    "SVC-AUTON-CLOUD",
+    "SYS-CONTROL",
+    "SYS-DESPACHO",
+    "SYS-DESPACHO-3D",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "SYS-TRACK",
+    "SYS-YOD-OS",
+    "SYS-TAREAS"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check"
+    "Lecturas simultáneas hacen una sola llamada y reciben el mismo resultado.",
+    "Respuesta fallida, cambio de caso y revocación no se convierten en éxito; escritura en curso no se comparte como lectura.",
+    "Suite Node completa, arquitectura, impacto, OS, portal, accesos, Obra y QA publicada."
   ],
-  "rollback": "Revertir código por PR. Conservar corte, respaldo privado, evidencia de entrega y votos. No retirar acceso ni borrar propuestas o archivos como rollback."
+  "rollback": "Revertir PR de interfaz; no modificar registros ni estados de negocio."
 }
