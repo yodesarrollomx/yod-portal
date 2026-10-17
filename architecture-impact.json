@@ -1,21 +1,23 @@
 {
-  "model_revision": "2026-10-17.sala-guion-heredado.1",
-  "proposal_id": "CHG-SALA-GUION-HEREDADO-20261017",
-  "summary": "Compatibilidad con guiones históricos expresados como ruta o texto. Mesa procesa sus láminas existentes sin inventar continuación visual; deja contador y estado parcial. Productor conserva escena/voz de láminas aprobadas, pero no abre corte sin lista estructurada completa. Una lista inválida sigue fallando. No reescribir guiones ni modificar decisiones.",
+  "model_revision": "2026-10-17.master-developer-crm.1",
+  "proposal_id": "CHG-MASTERBROKERS-MINI-CRM",
+  "summary": "Jerarquía visual plaza, responsable, cliente y asunto sobre el CRM existente; integra mini CRM pendiente, conserva actor y ACL, responsables nominales, estado PPP explícito y agenda append-only.",
   "components": [
-    "SYS-SALA",
-    "GAS-SALA",
-    "SHEET-SALA",
-    "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
-    "EXT-ACTIONS",
-    "EXT-DRIVE",
-    "EXT-MOTORES-MEDIA",
-    "SYS-YOD-OS",
-    "EXT-GMAIL"
+    "SYS-INVERSION",
+    "GAS-CRM",
+    "SHEET-CRM",
+    "SYS-POTENCIALES",
+    "GAS-PORTERO",
+    "SHEET-PORTERO",
+    "SYS-YOD-OS"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check"
+    "node --test tests/brokers*.test.cjs: codec compatible, fecha real distinta de captura, eventos programados/reemplazados, calendario y resumen PPP sin motor propio.",
+    "Chromium320/390/1440: varios expedientes desplegados, comparación alineada, calendario, editor y fuentes; cero overflow.",
+    "Permisos existentes, preview sin guardado, sesión invalidada, ACK/revisión/reintentos idempotentes; cero escrituras de prueba en producción.",
+    "Atlas regenerado, checks del portal y pin del consumidor; publicación registrada aparte de integración y de lectura privada.",
+    "Clientes múltiples, contactos homónimos, casos compartidos y sin contacto; identidad Dirección conservada y broker aislado.",
+    "Responsable nominal y estado PPP sobreviven roundtrip brokers.v1; programación/reprogramación/resultado; filtros decisión/hoy/vencidos/sin siguiente paso."
   ],
-  "rollback": "Revertir PR; conservar guiones, marcas, cola, medios y snapshots. Ante incompatibilidad desactivar sólo flag histórico; misma URL/backend."
+  "rollback": "Revertir sólo frontend; conservar IDs, todas las actividades y sus notas legibles, fuentes, PPP, pendientes, permisos y datos operativos. No restaurar filas de negocio."
 }
