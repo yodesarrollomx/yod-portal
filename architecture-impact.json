@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-15.sala-ejemplo.1",
-  "proposal_id": "CHG-SALA-EJEMPLO-20261015",
-  "summary": "Corregir lecturas CONFIG por cada firma editorial mediante memoización local de nombres por rol en cada fusión; preservar marcas, vetos y lectura fresca entre invocaciones. Ejecutar un ejemplo aislado con motores reales, comprobar bytes privados, imagen/audio/video y separar éxito técnico de aprobación editorial.",
+  "model_revision": "2026-10-17.sala-mesa-visible.1",
+  "proposal_id": "CHG-SALA-MESA-VISIBLE-20261017",
+  "summary": "Conservar publicaciones vigentes en la mesa aunque no haya revisión diaria. Proyección pública de identidad y estado, sin notas privadas ni votos sobre archivos. Verificar cuatro recorridos reales consecutivos; las ejecuciones sin producción no cuentan.",
   "components": [
     "SYS-SALA",
     "GAS-SALA",
@@ -21,5 +21,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir PR y restaurar las funciones exactas respaldadas en el backend original si se despliegan; conservar decisiones, cola, archivos, permisos y recibos. No activar histórico ni cambiar cuotas, crons o destinatarios."
+  "rollback": "Revertir código y proyección; conservar decisiones, cola y medios."
 }
