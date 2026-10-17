@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.sala-ejemplo.1 · 2026-10-15.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-17.sala-mesa-visible.1 · 2026-10-17.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
