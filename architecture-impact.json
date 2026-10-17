@@ -1,20 +1,24 @@
 {
-  "model_revision": "2026-10-17.sala-entrega-fuentes.1",
-  "proposal_id": "CHG-SALA-ENTREGA-FUENTES-20261017",
-  "summary": "Conservar src de láminas históricas expresadas como texto al calcular identidad y preparar evidencia; rechazar identidades sin insumo. Aplicar a Productor y Ejecutor la misma regla vigente de Mesa: una pieza ya publicada no vuelve a producirse. Coincidencia exacta por nombre o slug en el registro publicado, sin búsquedas parciales. Conciliar sólo trabajos antiguos de piezas publicadas con respaldo, evidencia, comparación previa y readback; conservar historial y decisiones. No fabricar guiones ni ejecutar versiones vetadas. Verificar motor gratuito habilitado y entregas en la Sala, con originales durables y recibos separados de aprobación.",
+  "model_revision": "2026-10-17.chinches-moac.1",
+  "proposal_id": "CHG-CHINCHES-MOAC-20261017",
+  "summary": "Proyectar context.moac en el puesto: jerarquía Meta > Objetivo > Acción, estado y responsable originales, recibos disponibles separados de aprobación. Validar caso, IDs, relaciones y límites; ausencia/lectura fallida no equivalen a cero pendientes. Acceso directo desde Trabajo y Entregas al mismo MOAC. No crear una fuente paralela ni ampliar las vinculaciones por nombre. Corregir el primer acceso sin historial conforme al estado inicial del backend, conservando todos los controles de autorización y revisión.",
   "components": [
-    "SYS-SALA",
-    "GAS-SALA",
-    "SHEET-SALA",
-    "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
-    "EXT-ACTIONS",
     "EXT-DRIVE",
-    "EXT-MOTORES-MEDIA",
-    "SYS-YOD-OS"
+    "GAS-PORTERO",
+    "SVC-AUTON-CLOUD",
+    "SYS-CONTROL",
+    "SYS-DESPACHO",
+    "SYS-DESPACHO-3D",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "SYS-TRACK",
+    "SYS-YOD-OS",
+    "SYS-TAREAS"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check"
+    "node --test tests/*.cjs",
+    "node scripts/arquitectura.cjs --check",
+    "node scripts/probar-puesto-browser.cjs"
   ],
-  "rollback": "Revertir código por PR; conservar respaldo y todas las filas, decisiones y medios. Restaurar sólo campos técnicos que sigan coincidiendo con la conciliación."
+  "rollback": "Revertir PR de interfaz, conservando todos los registros, vínculos y permisos."
 }

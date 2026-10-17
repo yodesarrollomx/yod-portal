@@ -7,6 +7,9 @@ import {createFastLaneClient} from './fast-lane.mjs';
 
 const text=(v,max=256)=>typeof v==='string'&&v.length>0&&v.length<=max;
 const date=v=>typeof v==='string'&&Number.isFinite(Date.parse(v));
+// The canonical backend returns this exact empty state before the first turn.
+// A missing history timestamp is not a missing or unauthorized source index.
+const initialState=(v,id)=>v.state?.case_id===id&&v.state.revision===''&&v.state.active_job_id===''&&v.state.updated_at===''&&['conversation','jobs','events'].every(k=>Array.isArray(v[k])&&v[k].length===0);
 const active=new Set(['queued','running','claimed']);
 const FAST_FALLBACK=new Set(['unavailable','unauthorized','fast_lane_unavailable','model_unavailable','context_unavailable']);
 const FAST_NOTICES={busy:'El autón sigue respondiendo el mensaje anterior. Espera un momento y vuelve a enviar.',rate_limited:'Demasiados mensajes seguidos. Espera unos minutos.',model_failed:'La respuesta no se completó. Tu mensaje no se guardó; puedes volver a enviarlo.',auth_unavailable:'El servicio del modelo rechazó la conexión. Tu mensaje no se guardó.',provider_busy:'El modelo está saturado. Tu mensaje no se guardó; vuelve a intentarlo.',cancelled:'',invalid_request:'No se pudo enviar ese mensaje.'};
@@ -36,15 +39,22 @@ function sourceRows(value){
 // validity of unrelated conversation history or old jobs. No data is cached here.
 export function validateWorkspaceSources(v,id){
  if(v?.ok===false&&text(v.error))checked(v);
- if(!v||v.ok!==true||v.case_id!==id||!text(v.source_revision)||!v.context||v.context.identity?.case_id!==id||!text(v.context.identity.name,200)||!date(v.state?.updated_at))throw Error('invalid_snapshot');
- const documents=sourceRows(v.context.documents).map(([source_id,title,source,role],index)=>({id:'document-'+index,source_id,title,source,role,url:safeDocumentUrl(source)}));
- const projection={case_id:id,revision:v.source_revision,updated_at:v.state.updated_at,documents};
+ const invalid=field=>{const error=Error('invalid_snapshot');error.sourceMetadata=field;throw error;};
+ if(!v||v.ok!==true||v.case_id!==id||!v.context||v.context.identity?.case_id!==id)invalid('identity');
+ if(!text(v.context.identity.name,200))invalid('name');
+ if(!text(v.source_revision))invalid('revision');
+ if(!date(v.state?.updated_at)&&!initialState(v,id))invalid('date');
+ let rows;try{rows=sourceRows(v.context.documents);}catch{invalid('documents');}
+ const documents=rows.map(([source_id,title,source,role],index)=>({id:'document-'+index,source_id,title,source,role,url:safeDocumentUrl(source)}));
+ const projection={case_id:id,revision:v.source_revision,updated_at:v.state.updated_at||null,documents};
  // Old messages and jobs cannot invalidate a small, authorized PPP source tray.
  // Its own metadata remains bounded; this does not change the chat validator.
  if(JSON.stringify(projection).length>524288)throw Error('response_limit');
  return projection;
 }
 export function workspaceSourceNotice(error){
+ const fields={identity:'El servidor no confirmó la identidad de este expediente.',name:'El servidor no entregó un nombre válido para este expediente.',revision:'El servidor no entregó la revisión del expediente.',date:'El servidor no entregó una fecha válida de actualización del expediente.',documents:'El índice de documentos llegó con un formato que no se puede leer con seguridad.'};
+ if(fields[error?.sourceMetadata])return fields[error.sourceMetadata]+' Puedes volver a consultar; no se cambió ningún documento.';
  const code=diagnosticCode(error);
  return ({
   response_limit:'La lectura del expediente supera el límite admitido. El vínculo del PPP todavía no se ha recuperado.',
@@ -58,7 +68,7 @@ export function workspaceSourceNotice(error){
  })[code]||'No se pudo conectar con el expediente para recuperar su PPP. Puedes recuperar su conexión sin cerrar el puesto.';
 }
 export function validateConversation(v,id){
- if(!v||v.ok!==true||v.case_id!==id||!text(v.source_revision)||!v.context||v.context.identity?.case_id!==id||!text(v.context.identity.name,200)||!date(v.state?.updated_at)||!Array.isArray(v.conversation)||v.conversation.length>1000||!Array.isArray(v.jobs)||v.jobs.length>1000||!Array.isArray(v.events)||v.events.length>1000||JSON.stringify(v).length>2097152)throw Error('invalid_snapshot');
+ if(!v||v.ok!==true||v.case_id!==id||!text(v.source_revision)||!v.context||v.context.identity?.case_id!==id||!text(v.context.identity.name,200)||(!date(v.state?.updated_at)&&!initialState(v,id))||!Array.isArray(v.conversation)||v.conversation.length>1000||!Array.isArray(v.jobs)||v.jobs.length>1000||!Array.isArray(v.events)||v.events.length>1000||JSON.stringify(v).length>2097152)throw Error('invalid_snapshot');
  const ids=new Set();
  const messages=v.conversation.map(row=>{
   if(row.case_id!==id||!text(row.message_id)||ids.has(row.message_id)||!['user','assistant'].includes(row.role)||!text(row.body_json,16000)||!date(row.created_at))throw Error('invalid_message');
@@ -76,7 +86,7 @@ export function validateConversation(v,id){
  });
  const memory=sourceRows(v.context.memory).map(([title,body,evidence,next],index)=>({id:'memory-'+index,title,body,evidence,next,url:safeDocumentUrl(evidence)}));
  const documents=sourceRows(v.context.documents).map(([source_id,title,source,role],index)=>({id:'document-'+index,source_id,title,source,role,url:safeDocumentUrl(source)}));
- const model={case_id:id,revision:v.source_revision,updated_at:v.state.updated_at,messages,jobs,events,memory,documents,decisions:[],processing:jobs.some(j=>active.has(j.status))};
+ const model={case_id:id,revision:v.source_revision,updated_at:v.state.updated_at||null,messages,jobs,events,memory,documents,decisions:[],processing:jobs.some(j=>active.has(j.status))};
  // Preserve every validated row and the existing model fields; unrendered transport
  // payloads do not consume the history budget. No truncation or mutation permission.
  if(JSON.stringify(model).length>524288)throw Error('invalid_snapshot');
