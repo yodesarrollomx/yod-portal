@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-15.sala-ejemplo.1",
-  "checked_at": "2026-10-15",
+  "revision": "2026-10-17.sala-mesa-visible.1",
+  "checked_at": "2026-10-17",
   "priorities": [
     "vender_mas",
     "margen_y_control",
@@ -13005,6 +13005,29 @@
       ],
       "deployment": "Autorizado por Dirección en el encargo. Verificación local: 776 tests atlas y verificadores OS, portal, accesos y obra; Sala 504 Python, 111 Node y 13 verificaciones. Ejemplo real 38814111428: 6 archivos verificados, corte 1080x1920 H264/AAC de 18.167s. La sonda 38814278019 falla sólo en dia. Función diaria original cotejada y respaldo privado; despliegue y relectura se acreditarán por separado.",
       "rollback": "Revertir PR y restaurar las funciones exactas respaldadas en el backend original si se despliegan; conservar decisiones, cola, archivos, permisos y recibos. No activar histórico ni cambiar cuotas, crons o destinatarios."
+    },
+    {
+      "id": "CHG-SALA-MESA-VISIBLE-20261017",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "EXT-MOTORES-MEDIA"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección solicita completar Sala100%en línea y demostrar más de3 recorridos consecutivos con bitácoras y capturas reales.",
+      "proposal": "Separar inventario visible de publicaciones vigentes de pendientes diarios. Mesa proyecta únicamente IDs y estado técnico/editorial agregado de las tiras que verificó; el frontend conserva consulta de las aprobadas sin habilitar decisiones fuera del día vigente. Verificación real serializada de cuatro recorridos, con entregables y recibos explícitos; un no-op no acredita producción nueva.",
+      "tests": [
+        "Reproducir manifiesto vacío con catálogo poblado; comprobar columnas e imágenes reales tras publicación.",
+        "Datos sintéticos: veto, roles, fuente ausente, contrato inválido, cambio de día y lectura fallida no borran contenido ni autorizan votos.",
+        "Cuatro recorridos completos consecutivos con capturas desktop/móvil, bitácora de fases, bytes de medios y recibos; distinguir reutilización y producción nueva."
+      ],
+      "deployment": "Propuesta previa. Falta implementación, CI, publicación y cuatro recorridos reales; no se declara aceptada.",
+      "rollback": "Revertir código mediante PR conservando fuentes, decisiones, cola, snapshots y archivos; el campo adicional en estado Mesa es compatible con lectores anteriores."
     }
   ],
   "data_contracts": [
