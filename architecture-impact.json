@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-17.sala-mesa-visible.1",
-  "proposal_id": "CHG-SALA-MESA-VISIBLE-20261017",
-  "summary": "Separar inventario visible de publicaciones vigentes de pendientes diarios. Mesa proyecta únicamente IDs y estado técnico/editorial agregado de las tiras que verificó; el frontend conserva consulta de las aprobadas sin habilitar decisiones fuera del día vigente. Verificación real serializada de cuatro recorridos, con entregables y recibos explícitos; un no-op no acredita producción nueva.",
+  "model_revision": "2026-10-17.sala-historico-retiros.1",
+  "proposal_id": "CHG-SALA-HISTORICO-RETIROS-20261017",
+  "summary": "Resolver duplicados heredados de PROPUESTAS en la última fecha por PID: cualquier retiro explícito domina el empate; contenido activo contradictorio sigue cerrando la lectura. Si sólo cambia origen descriptivo, conservar todos los textos únicos ordenados en el campo origen. Nunca decidir por orden físico ni modificar filas.",
   "components": [
     "SYS-SALA",
     "GAS-SALA",
@@ -11,15 +11,11 @@
     "EXT-ACTIONS",
     "EXT-DRIVE",
     "EXT-MOTORES-MEDIA",
-    "SYS-YOD-OS"
+    "SYS-YOD-OS",
+    "EXT-GMAIL"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs"
+    "node scripts/arquitectura.cjs --check"
   ],
-  "rollback": "Revertir código mediante PR conservando fuentes, decisiones, cola, snapshots y archivos; el campo adicional en estado Mesa es compatible con lectores anteriores."
+  "rollback": "Restaurar módulo respaldado y versión72 en la misma implementación; mantener SALA_PRODUCCION_HISTORICA=0 hasta contrato confirmado; conservar decisiones, cola, archivos y configuración."
 }
