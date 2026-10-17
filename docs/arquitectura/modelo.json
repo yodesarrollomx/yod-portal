@@ -13174,6 +13174,26 @@
       "rollback": "Revertir cliente y bundle; conservar mensajes, trabajos y documentos del servidor."
     },
     {
+      "id": "CHG-SALA-MEDIOS-DRAFT-20261017",
+      "components": [
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección autoriza reparar y completar la producción en nube con evidencia; sin decisiones editoriales nuevas.",
+      "proposal": "Corregir validación de URL temporal untagged de activos draft de GitHub. Antes de publicar, exigir ID/nombre/tamaño/MIME/SHA256 exactos y URL restringida al mismo repositorio y archivo. Después de publicar, exigir URL de tag definitiva exacta, release inmutable y descarga anónima de bytes exactos. Conservar contrato MEDIOS y límite900MiB.",
+      "tests": [
+        "Regresión de draft real untagged y rechazo de URL ajena, query, digest falso y URL temporal después de publicar.",
+        "Sonda técnica con reentrada sin mutaciones; sólo tras éxito habilitar emisor existente y recuperar8tomas de recibos.",
+        "Producción, snapshot, Pages, montaje y navegador requieren evidencia independiente."
+      ],
+      "deployment": "Mesa39071362170 generó8tomas/4láminas/0fallos, pero excede presupuesto Pages. Sonda39072235135 detectó URL temporal de draft; sin nueva publicación acreditada.",
+      "rollback": "Revertir validación por PR y mantener SALA_MEDIOS_PUBLICOS=0 hasta sonda verificada. Conservar todos los recibos, releases e históricos."
+    },
+    {
       "id": "CHG-SALA-ENTREGA-FUENTES-20261017",
       "components": [
         "SYS-SALA",
