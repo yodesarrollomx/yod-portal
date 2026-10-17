@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-17.chinches-moac.1",
+  "revision": "2026-10-17.sala-entrega-cortes.1",
   "checked_at": "2026-10-17",
   "priorities": [
     "vender_mas",
@@ -13243,6 +13243,30 @@
       ],
       "deployment": "Propuesta previa. Fuentes e historial real inspeccionados; pruebas y entrega pendientes.",
       "rollback": "Revertir código por PR; conservar respaldo y todas las filas, decisiones y medios. Restaurar sólo campos técnicos que sigan coincidiendo con la conciliación."
+    },
+    {
+      "id": "CHG-SALA-ENTREGA-CORTES-20261017",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección pide completar la Sala hasta entrega final en línea; conservar revisión editorial, claves, URL y permisos.",
+      "proposal": "Entregar automáticamente a revisión los cortes nuevos durables y aprobados en su fuente vigente. Verificar identidad, guion, plan exacto, bytes MD5 y audio/video en Drive; respaldar la preparación y releer antes de montar. La propuesta nueva usa ID derivado del hash, referencia de la fuente y visor autenticado de Drive, sin publicar el archivo ni ampliar ACL. Estado preparado se registra antes de proponer; si se pierde el acuse sólo se concilia por ID exacto, nunca se reenvía a ciegas. Conservar votos de imágenes y solicitar decisión independiente del corte. El Ejecutor despierta entrega tras trabajo real; entrega confirmada actualiza respaldo por el relevo existente. Un estado HECHO no equivale a entrega ni aceptación.",
+      "tests": [
+        "Medio alterado, fuente retirada, guion vetado, plan distinto, lectura cambiante y duplicados bloquean antes de proponer.",
+        "Un acuse perdido se concilia sólo si la propuesta exacta está presente; estado preparado sin confirmación no repite POST.",
+        "Vista Drive limitada a su URL de preview y archivo; MP4 existente conserva reproducción, otros orígenes no obtienen iframe.",
+        "Ejecución real con corte durable, propuesta en backend y reproducción en Sala; no socialización ni aprobación automática."
+      ],
+      "deployment": "Propuesta previa; corte real generado y guardado. Montaje y visor todavía no acreditados.",
+      "rollback": "Revertir código por PR. Conservar corte, respaldo privado, evidencia de entrega y votos. No retirar acceso ni borrar propuestas o archivos como rollback."
     }
   ],
   "data_contracts": [
