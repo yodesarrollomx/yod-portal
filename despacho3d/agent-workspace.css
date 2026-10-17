@@ -224,6 +224,10 @@
 [data-panel="avatar"]{max-width:640px;margin:auto;padding:24px;line-height:1.6}
 .avatar-portrait{background:radial-gradient(ellipse,#e6eadf,#f4f1e9);border-radius:24px;min-height:280px;text-align:center}
 .avatar-portrait canvas{width:280px;max-width:100%;height:auto}
+.avatar-portrait-actions{min-height:0;height:112px;border-radius:16px}
+.avatar-portrait-actions canvas{width:98px;height:112px}
+[aria-label="Acciones del autón"]{display:grid;gap:8px;margin-block:16px}
+.workspace-source-receipt{padding:12px;border:1px solid #c5d5cb;border-radius:12px;margin-bottom:16px}
 @media(max-width:760px){.meeting-diagram{grid-template-columns:1fr}.meeting-slide{padding:20px 0}.meeting-slide h2{font-size:28px}.meeting-controls{justify-content:center}}
 
 .station-profile-portrait .avatar-portrait{min-height:0;height:140px;background:radial-gradient(ellipse,#dce6d8,transparent);overflow:hidden}.station-profile-portrait canvas{width:123px;height:140px}.station-profile-portrait:empty{display:none}
