@@ -39,3 +39,7 @@ flowchart TD
 Contactos homónimos no se fusionan. Un asunto sin contacto conserva su ID y muestra pendiente de vincular. Un cliente con varios terrenos mantiene una fila de cliente y expedientes separados. El responsable nominal usa el campo next_action vigente; las asignaciones genéricas antiguas no se reinterpretan. notes conserva texto previo y metadatos YOD-CASE-v1 para estado PPP y decisión solicitada. No se actualiza estado comercial al registrar una actividad.
 
 Los accesos individuales inactivos siguen inactivos. Las pruebas usan datos sintéticos y no crean seguimientos ficticios en producción. Lectura privada, integración, publicación y aceptación se registran por separado.
+
+## Refinamiento de experiencia · 17-oct
+
+El inicio canónico presenta al Master Developer, su cartera y los responsables desplegables con sus asuntos. Cada expediente hace visible el enlace al PPP y separa historia, situación actual y siguiente paso. Los enlaces explícitos a una cartera conservan su alcance y ofrecen regreso a Mi portal. La activación por correo sigue siendo una operación separada; un perfil de cartera no es una identidad habilitada. Conversaciones autorizadas pueden importarse manualmente con fecha, fuente y clave de deduplicación, sin inventar una sincronización continua.
