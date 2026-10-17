@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-17.sala-mesa-visible.1 · 2026-10-17.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-17.sala-historico-retiros.1 · 2026-10-17.
 
 ## SYS-DESPACHO · El Despacho
 
