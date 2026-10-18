@@ -1,7 +1,7 @@
 import {officeFastSessions} from './office-preparation.mjs?v=unified283';
 import {createFrameTransport} from './conversation.mjs?v=142';
 import {validateFastSession} from './fast-lane.mjs';
-import {createWorkObserver} from './work-observer.mjs?v=v2p5';
+import {createWorkObserver} from './work-observer.mjs?v=core1';
 const transport=createFrameTransport(window);
 let credential=null,minting=null,stop=null,bound=null;
 const current=()=>window.YodResidentAgents?.getSelection?.();

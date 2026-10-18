@@ -322,3 +322,7 @@
  .agent-workspace .workspace-brief-next{display:none}
  .workspace-brief>button{grid-row:1}
 }
+
+.workspace-live-work .work-core{border:1px solid #d6e1d6;border-left:4px solid #527861;border-radius:12px;padding:18px;margin:20px 0;background:#f7faf5}
+.workspace-live-work .work-core[data-phase="attention"],.workspace-live-work .work-core[data-phase="blocked"]{border-left-color:#9b6624;background:#fffaf1}
+.workspace-live-work .work-core p{font-size:14px;line-height:1.6;margin:8px 0}.workspace-live-work .work-core small{display:block;color:#596b60;margin-top:12px}

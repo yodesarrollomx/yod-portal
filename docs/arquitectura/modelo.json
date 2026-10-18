@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-18.yod-core.1",
+  "revision": "2026-10-18.core-observation-ui.1",
   "checked_at": "2026-10-18",
   "priorities": [
     "vender_mas",
@@ -13440,6 +13440,24 @@
       ],
       "deployment": "Implementación y validación en PR281. Integración a un transporte autenticado y aceptación productiva pendientes; no activar un segundo motor.",
       "rollback": "Retirar módulos/CLI y workflow Core; preservar todas las bases privadas, bitácoras, contratos de metas y datos existentes."
+    },
+    {
+      "id": "CHG-CORE-OBSERVATION-UI-20261018",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección autoriza terminar pantalla, validar y desplegar sobre servicio existente. Sin cambios de permisos ni escrituras de negocio.",
+      "proposal": "Mostrar control de continuidad e integridad del observador autenticado dentro de Trabajo del proyecto. Validar identidad, revisión y secuencia; ocultar datos al revocar o cambiar caso. Compatible con backend sin Core. No reintenta ni aprueba tareas.",
+      "tests": [
+        "Regresión de identidad/cruce de casos, datos inválidos, estado antiguo, revocación y UI sin duplicar consultas.",
+        "Suite portal y verificadores de arquitectura/OS/portal/accesos/obra."
+      ],
+      "deployment": "Propuesta previa a implementación; backend y frontend se verifican por separado.",
+      "rollback": "Revertir consumidor Core conservando trabajo, historial, permisos y datos; backend admite YOD_CORE_ENABLED=off."
     }
   ],
   "data_contracts": [
@@ -17482,6 +17500,26 @@
       "prefix": ".github/workflows/yod-core-register.yml",
       "components": [
         "SYS-YOD-OS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/core-observation.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-core-observation.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD"
       ]
     }
   ],
