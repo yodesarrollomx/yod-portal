@@ -212,3 +212,11 @@ La super app de obra: una sola estructura para cualquier tipo de obra (Proyecto 
 - Módulo cliente (pagos, documentos, dudas, fotos, gastos): `obra-app/motor/ObraCliente.gs`, Apps Script APARTE.
   Se instala con `obra-app/motor/INSTALAR.md`; mientras `CLIENTE` esté vacío en `obras.js`, esas secciones dicen «sin instalar».
 - Prueba: `node verify-obra-app.cjs` (además de las tres de siempre).
+
+## Herramientas del Reel · política local 1.0.0
+
+Leer [docs/agentes/POLITICA.md](docs/agentes/POLITICA.md) para búsqueda, triage Jev,
+pasajes, presupuesto, evidencia y entrega. Cargar sólo la skill documental pertinente
+indicada allí. Inventario, licencias y pendientes: docs/agentes/RESULTADOS.md y
+integraciones.lock.json en esa carpeta. No registrar skills globales ni cambiar
+proveedores por esta referencia; no enviar datos privados sin aprobación específica.
