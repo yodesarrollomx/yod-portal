@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-18.equipo-relevo.1",
+  "model_revision": "2026-10-18.equipo-relevo.2",
   "proposal_id": "CHG-DESPACHO-EQUIPO-RELEVO-20261015",
-  "summary": "Conciliar Equipo y Relevos con main 18-oct conservando coordinación de carga, continuidad, selección, propuestas y fuentes actuales. Backend existente sin reinstalación; aceptación privada pendiente.",
+  "summary": "Conciliar PR225 con aceptación PR277, conservar fuentes y recibos, montar sólo Equipo tras aceptación real; sin despliegue.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
