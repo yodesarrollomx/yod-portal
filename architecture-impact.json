@@ -1,20 +1,21 @@
 {
   "model_revision": "2026-10-18.equipo-relevo.4",
-  "proposal_id": "CHG-DESPACHO-EQUIPO-RELEVO-20261015",
-  "summary": "Conciliar PR225 con recuperación PR280 y Atlas Sala279, conservando único Equipo, modo sin 3D y apilamiento acotado.",
+  "proposal_id": "CHG-MASTERBROKERS-PORTAL-INTEGRATED",
+  "summary": "Misma entrada brokers.html y contrato brokers.v1: MD abre equipo y cartera propia, broker abre únicamente su cartera validada. Un renglón por contacto; al abrirlo muestra asuntos separados, historial agregado con fuente y PPP por asunto. Responsable, etapa, último hecho y siguiente compromiso provienen de los registros, sin inventar estados agregados o finanzas. Breadcrumbs y URL conservan navegación autorizada, nunca otorgan permisos. Se conserva la vista de comparación de asuntos como herramienta opcional. Reutiliza edición, guardado idempotente/readback, agenda/reprogramación, acuerdos, documentos, presentación común, evaluación y retorno recuperable de PR43. No importa fixtures de la muestra pública ni crea otra base. La conexión real utiliza sesión existente de YOD OS; no se crea otro acceso. Preservar cambios concurrentes de roles/beneficios/pregunta clave del encargado original.",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "SYS-SALA",
+    "SYS-INVERSION",
+    "GAS-CRM",
+    "SHEET-CRM",
+    "SYS-POTENCIALES",
     "GAS-PORTERO",
-    "EXT-DRIVE"
+    "SHEET-PORTERO",
+    "SYS-YOD-OS"
   ],
   "tests": [
-    "Suite Node completa y verificadores de atlas/esquema/impacto/OS/portal/accesos/obra al árbol integrado.",
-    "Regresión sintética de Equipo/Relevos y navegador Chromium/WebKit 320/390/1440; red a negocio bloqueada.",
-    "Conservar correcciones de entrada/selección/readGoals y proyectos previos; sin API de negocio de prueba.",
-    "Comprobar geometría de lanzador sobre canvas normal, escena clicable fuera del botón y diálogo modal con datos sintéticos."
+    "Proyección por contacto/expediente, responsable nominal, última actividad real y sin mezclar carteras; no duplicar personas por varios asuntos.",
+    "Navegador320/390/1440: MD→broker→cliente→asunto→PPP/historial/avance, regreso y recarga; broker aislado, sesión revocada, datos sintéticos sólo en pruebas.",
+    "Regresiones de edición, nueva oportunidad/contacto, guardado con ACK viejo, agenda y reprogramación, presentación, acuerdos y retorno evaluador en Chromium/WebKit.",
+    "Atlas, manifiesto/pin, CI, bytes publicados y recorrido autenticado se comprueban por separado."
   ],
-  "rollback": "Retirar montaje Equipo/Relevos mediante PR conservando las correcciones publicadas de selección y metas, Buzón, historial, permisos y recibos."
+  "rollback": "Revertir sólo interfaz y manifiestos; conservar todas las fuentes, IDs, historia, acuerdos, PPP, datos y permisos."
 }
