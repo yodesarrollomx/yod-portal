@@ -144,7 +144,7 @@
   // 14 caracteres, la otra ni siquiera eso) nunca conceden permisos.
   function bloquearSesion(validando){
     purgarDatosSensibles();state.profileReady=false;state.role='vista';state.boards='';
-    state.personName='';state.sessionToken='';state.rawRows=[];state.catalogIds=null;state.modules=[];
+    state.personName='';state.verifiedEmail='';state.sessionToken='';state.rawRows=[];state.catalogIds=null;state.modules=[];
     ['finance-panel','marketing-panel','decision-panel','reconcile-panel','search-results'].forEach(function(id){var p=$(id);if(p)p.replaceChildren();});
     ['pulso','reconcile','quick-section'].forEach(function(id){var p=$(id);if(p)p.classList.add('hidden');});
     var inicio=$('miInicio');if(inicio){inicio.hidden=true;inicio.replaceChildren();}
@@ -287,11 +287,11 @@
   }
 
   // La sección privada solo conoce autorización/época; ninguna credencial sale del OS.
-  var despachoPins=null,despachoConversation=null;
+  var despachoPins=null,despachoConversation=null,despachoAcceptance=null;
   var despachoSection=window.YodDespachoSection.create({
     window:window,document:document,
     readAccess:function(){return {ready:Boolean(state.sessionToken)&&mismaSesion(state.sessionToken,state.sesionEpoch),allowed:window.YodAccessPolicy.canOpen(state.boards,'SYS-DESPACHO',state.role),epoch:state.sesionEpoch};},
-    onTeardown:function(){if(despachoPins)despachoPins.clear();if(despachoConversation)despachoConversation.clear();if(state.loadPlan)state.loadPlan.clearSelection();},
+    onTeardown:function(){if(despachoAcceptance)despachoAcceptance.teardown();if(despachoPins)despachoPins.clear();if(despachoConversation)despachoConversation.clear();if(state.loadPlan)state.loadPlan.clearSelection();},
     revalidate:function(){loadIdentity();}
   });
   if(window.YodDespachoTransport)window.YODCaseTransport=window.YodDespachoTransport.create({
@@ -346,7 +346,17 @@
       if(state.profileReady)notifyContinuityFrame();
     };
   });
-  window.revisarPuertaDespacho=function(){despachoSection.refresh();};
+  if(window.YodDespachoEquipoHost&&window.YODCaseTransport&&$('despachoAceptacion')){
+    despachoAcceptance=window.YodDespachoEquipoHost.create({
+      container:$('despachoAceptacion'),host:window,
+      getAccess:function(){return {allowed:new URLSearchParams(location.search).get('equipo-aceptacion')==='1'&&state.role==='admin'&&Boolean(state.verifiedEmail)&&despachoSection.isAuthorized()&&mismaSesion(state.sessionToken,state.sesionEpoch),epoch:state.sesionEpoch};},
+      transport:{read:function(){return window.YODCaseTransport.readTeam({});},write:function(intent){return window.YODCaseTransport.writeTeam(intent);},lookupReceipt:function(id){return window.YODCaseTransport.lookupTeamReceipt({request_id:id});}},
+      loadMount:async function(){var email=state.verifiedEmail;var hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(email));var scope=Array.from(new Uint8Array(hash),function(x){return x.toString(16).padStart(2,'0');}).join('');var module=await import('../despacho3d/equipo-aceptacion.mjs?v=1');return function(options){return module.mountAcceptance(Object.assign({},options,{storageScope:scope}));};}
+    });
+  }
+  window.revisarPuertaDespacho=function(){despachoSection.refresh();if(despachoAcceptance)void despachoAcceptance.refresh();};
+  addEventListener('hashchange',function(){if(despachoAcceptance)void despachoAcceptance.refresh();});
+  addEventListener('pagehide',function(){if(despachoAcceptance)despachoAcceptance.teardown();});
   window.cerrarDespachoPrivado=function(){despachoSection.teardown();};
   if(window.YodDespachoChinches)despachoPins=window.YodDespachoChinches.bindDespachoChinches({
     isAuthorized:function(){return despachoSection.isAuthorized();},
@@ -666,7 +676,7 @@
   }
   function applyIdentity(data){
     state.role=String(data.rol||'vista').toLowerCase();state.boards=data.boards||'';state.profileReady=true;
-    state.personName=String(data.nombre||'').trim();
+    state.personName=String(data.nombre||'').trim();state.verifiedEmail=String(data.correo||'').trim().toLowerCase();
     var name=data.nombre||data.correo||'Equipo YOD';$('user-name').textContent=name;$('user-role').textContent=state.role;$('avatar').textContent=initials(name);$('first-name').textContent=name.split(/\s|@/)[0];$('access-status').textContent=state.role==='admin'?'Dirección':'Autorizado';
     var persona=state.role==='admin'?'direccion':'colaborador';
     document.documentElement.setAttribute('data-persona',persona);
