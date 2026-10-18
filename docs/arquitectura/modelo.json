@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-18.sala-metadatos-corte.1",
-  "checked_at": "2026-10-17",
+  "revision": "2026-10-18.equipo-aceptacion.1",
+  "checked_at": "2026-10-18",
   "priorities": [
     "vender_mas",
     "margen_y_control",
@@ -13337,6 +13337,27 @@
       ],
       "deployment": "Propuesta previa; implementación y ejecución no acreditadas.",
       "rollback": "Conservar originales y recibos privados. Restaurar sólo metadatos que aún coincidan con el parche; no borrar medios, propuestas ni votos. Revertir código por PR."
+    },
+    {
+      "id": "CHG-EQUIPO-ACEPTACION-20261018",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-SALA",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "status": "propuesto",
+      "approval": "Autorización vigente de Dirección para implementar y publicar Equipo; preparación separada para revisión técnica, sin nueva autorización genérica. No activar compositor general antes del recibo.",
+      "proposal": "Panel acotado dentro de la cabina y sesión existentes, habilitado sólo por entrada explícita y autoridad Dirección confirmada. Reutiliza transporte, fencing de época y modelo de recibos de PR225. Sólo nota a tarea existente, con ID/texto ingresados en runtime desde paquete privado. Sin nuevas solicitudes, permisos, credenciales ni bases. Conserva únicamente request_id en sessionStorage para consultar recibo tras recarga; texto y token no se almacenan por este panel. Después de recarga nunca reenvía una escritura automáticamente.",
+      "tests": [
+        "Transporte y modelo reutilizados: payload/autoridad/época, conflicto, respuesta incierta, recibo correlacionado.",
+        "Aceptación con datos sintéticos: nota exacta, un solo envío, recuperación por lookup tras recarga sin segundo write, storage sin texto ni token y revocación.",
+        "Atlas, suite Node, verificadores OS/portal/accesos/Obra y navegador aislado."
+      ],
+      "deployment": "Sólo preparación local. Nota real, recibo, recarga y ACK de otro agente pendientes; compositor general retenido.",
+      "rollback": "Retirar panel de aceptación y montaje; conservar notas, recibos, Buzón, backend, permisos y sesión original."
     }
   ],
   "data_contracts": [
@@ -17254,6 +17275,60 @@
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/frame-budget.test.cjs",
       "components": [
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/despacho-equipo-host.js",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/equipo-model.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/equipo-aceptacion.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-equipo-host.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-equipo.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/equipo-aceptacion.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
         "SYS-DESPACHO-3D"
       ]
     }
