@@ -14,3 +14,7 @@ El repositorio es público. Nunca publicar datos reales de clientes, secretos, e
 Prioridad del propietario: vender más, luego mejorar margen/control y después acelerar cobros. Seguridad e integridad de datos no se sacrifican por ese orden.
 
 Relevo del Despacho 3D (entorno del agente y versión de oficina): `docs/ENTORNO-AGENTE-RELEVO.md` (estado, interruptores, reglas, método de entrega y lo que sigue).
+
+## Eficiencia de contexto y agentes (propuesta 2026-10-18)
+
+Consultar `docs/agentes/politica-eficiencia-yod-os.md` antes de investigar o modificar sistemas. Esta política complementa —no reemplaza— los requisitos de arquitectura, seguridad y pruebas anteriores. Los complementos opcionales no se consideran instalados por mencionar su nombre.
