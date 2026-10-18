@@ -1,20 +1,14 @@
 {
-  "model_revision": "2026-10-18.equipo-relevo.4",
-  "proposal_id": "CHG-DESPACHO-EQUIPO-RELEVO-20261015",
-  "summary": "Conciliar PR225 con recuperación PR280 y Atlas Sala279, conservando único Equipo, modo sin 3D y apilamiento acotado.",
+  "model_revision": "2026-10-18.yod-core.1",
+  "proposal_id": "CHG-YOD-CORE-20261017",
+  "summary": "Núcleo de contratos y ledger SQLite transaccional opt-in para nuevos trabajos de integración: responsable único, evidencias ligadas a revisión, verificador distinto del ejecutor, request_id idempotente, conflictos explícitos, checkpoints y conciliación de escrituras inciertas. CLI sólo local y pruebas sin red. No sustituye metas/cola/almacenes existentes del motor privado ni añade registros de negocio al portal público.",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "SYS-SALA",
-    "GAS-PORTERO",
-    "EXT-DRIVE"
+    "SYS-YOD-OS"
   ],
   "tests": [
-    "Suite Node completa y verificadores de atlas/esquema/impacto/OS/portal/accesos/obra al árbol integrado.",
-    "Regresión sintética de Equipo/Relevos y navegador Chromium/WebKit 320/390/1440; red a negocio bloqueada.",
-    "Conservar correcciones de entrada/selección/readGoals y proyectos previos; sin API de negocio de prueba.",
-    "Comprobar geometría de lanzador sobre canvas normal, escena clicable fuera del botón y diálogo modal con datos sintéticos."
+    "Contrato puro Node20 y Node22; base transaccional Node22 con reinicio, dos procesos competidores, rollback, ledger inmutable e idempotencia.",
+    "Suite completa del portal, verificadores OS/portal/accesos/obra y esquema/impacto.",
+    "Sin llamadas a endpoints de negocio, nuevas inferencias ni escrituras de prueba en producción."
   ],
-  "rollback": "Retirar montaje Equipo/Relevos mediante PR conservando las correcciones publicadas de selección y metas, Buzón, historial, permisos y recibos."
+  "rollback": "Retirar módulos/CLI y workflow Core; preservar todas las bases privadas, bitácoras, contratos de metas y datos existentes."
 }

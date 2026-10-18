@@ -1,0 +1,50 @@
+name: YOD Core verification
+on:
+  pull_request:
+    paths:
+      - 'os/yod-core*'
+      - 'yod-core/**'
+      - 'tests/yod-core*'
+      - '.github/workflows/yod-core.yml'
+      - 'docs/arquitectura/yod-core*'
+  push:
+    branches: [main]
+    paths:
+      - 'os/yod-core*'
+      - 'yod-core/**'
+      - 'tests/yod-core*'
+      - '.github/workflows/yod-core.yml'
+permissions:
+  contents: read
+concurrency:
+  group: yod-core-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+      - name: Verify Core contracts
+        run: |
+          mkdir -p /tmp/yod-core-evidence
+          set -o pipefail
+          node --test tests/yod-core*.cjs yod-core/tests/*.cjs | tee /tmp/yod-core-evidence/core-tests.txt
+      - name: Reproducible public source snapshot
+        if: always()
+        run: |
+          mkdir -p /tmp/yod-core-evidence
+          git rev-parse HEAD > /tmp/yod-core-evidence/commit.txt
+          git archive --format=tar.gz HEAD -o /tmp/yod-core-evidence/public-source.tar.gz
+          cd /tmp/yod-core-evidence && sha256sum public-source.tar.gz > SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: yod-core-evidence-${{ github.run_id }}
+          path: /tmp/yod-core-evidence/
+          retention-days: 14
