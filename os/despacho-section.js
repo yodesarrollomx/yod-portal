@@ -18,18 +18,23 @@
       if(options.onTeardown)options.onTeardown();
     }
     function paint(){
-      var a=access(),on=active(),ok=authorized();
+      var a=access(),on=active(),ok=authorized(),scene=options.renderScene?options.renderScene()!==false:true;
+      canvas.hidden=!scene;
       host.hidden=!on;
       if(on)doc.body.setAttribute('data-workspace-route','despacho');else doc.body.removeAttribute('data-workspace-route');
       doc.querySelectorAll('#nav-modules a').forEach(function(link){if(link.getAttribute('href')==='#/despacho')link.classList.toggle('activo',on);});
       var home=doc.querySelector('.nav-item[href="#inicio"]');
       var internal=on||/^#\/embudo(\/|$)/.test(win.location.hash||'');
       if(home){home.classList.toggle('nav-item-activo-off',internal);home.classList.toggle('activo-no',internal);}
-      open.hidden=tray.hidden=!ok;
+      open.hidden=tray.hidden=!ok||!scene;
       if(!ok){
         teardown();open.removeAttribute('href');
         status.hidden=false;status.textContent=a.ready?'El Despacho no está incluido en los permisos de esta cuenta.':'Valida tu acceso a YOD OS para abrir El Despacho.';
         return;
+      }
+      if(!scene){
+        if(frame)teardown();
+        open.removeAttribute('href');status.hidden=true;return;
       }
       open.href=FRAME_PATH;
       if(frame&&mountedEpoch!==a.epoch)teardown();
