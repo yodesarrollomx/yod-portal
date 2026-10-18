@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-18.equipo-aceptacion.2",
+  "model_revision": "2026-10-18.equipo-aceptacion.3",
   "proposal_id": "CHG-EQUIPO-ACEPTACION-20261018",
-  "summary": "Aceptación previa sin cargar escena 3D, con misma autoridad y transporte; modo oficina normal conservado.",
+  "summary": "Recuperar sólo rechazo durable revision_conflict con nueva lectura explícita y nueva intención, sin reenviar ni borrar recibos.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
@@ -14,7 +14,8 @@
     "Transporte y modelo reutilizados: payload/autoridad/época, conflicto, respuesta incierta, recibo correlacionado.",
     "Aceptación con datos sintéticos: nota exacta, un solo envío, recuperación por lookup tras recarga sin segundo write, storage sin texto ni token y revocación.",
     "Atlas, suite Node, verificadores OS/portal/accesos/Obra y navegador aislado.",
-    "Modo aceptación no crea iframe antes/después de validar ni al revocar; gate conserva DP/sesión; modo normal mantiene iframe."
+    "Modo aceptación no crea iframe antes/después de validar ni al revocar; gate conserva DP/sesión; modo normal mantiene iframe.",
+    "Rechazo correlacionado permite nueva lectura explícita y nuevo ID; mismatch/not_found/incertidumbre no desbloquean; autoridad y fallos storage conservan guard."
   ],
   "rollback": "Retirar panel de aceptación y montaje; conservar notas, recibos, Buzón, backend, permisos y sesión original."
 }
