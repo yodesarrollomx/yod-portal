@@ -1,3 +1,4 @@
+#despachoEquipo{position:relative;z-index:66;width:max-content;max-width:calc(100% - 24px);margin:12px}
 .team-launcher,.team-desk{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#242a2c}
 .team-launcher{min-height:44px;padding:10px 18px;border:1px solid #cad3d1;border-radius:999px;background:#f9fbf8;cursor:pointer;font-weight:650}
 .team-desk{box-sizing:border-box;width:min(1080px,calc(100% - 32px));max-height:calc(100dvh - 32px);padding:28px;border:1px solid #dbe2dc;border-radius:24px;background:#f7f8f3;box-shadow:0 30px 100px #14292733}
