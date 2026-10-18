@@ -39,3 +39,11 @@ Este paso previo es una propuesta técnica para resolver la dependencia circular
 interfaz aún no publicada y recibo exigido antes de publicar dicha interfaz.
 
 Rollback: retirar la entrada/panel. Conservar notas, recibos, Buzón y backend.
+
+## Entrada liviana
+
+El parámetro de aceptación omite exclusivamente la escena iframe y controles 3D.
+La sección sigue exigiendo la misma ruta, sesión y permiso; el panel conserva
+además Dirección y correo verificado. No concede acceso ni cambia el transporte.
+La oficina sin ese parámetro mantiene su escena. Se corrige una dependencia
+inútil para esta aceptación; la causa de los timeouts CDP no está demostrada.
