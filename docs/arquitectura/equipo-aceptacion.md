@@ -47,3 +47,13 @@ La sección sigue exigiendo la misma ruta, sesión y permiso; el panel conserva
 además Dirección y correo verificado. No concede acceso ni cambia el transporte.
 La oficina sin ese parámetro mantiene su escena. Se corrige una dependencia
 inútil para esta aceptación; la causa de los timeouts CDP no está demostrada.
+
+## Rechazo durable por revisión
+
+Sólo lookup de un recibo rejected/revision_conflict completamente correlacionado
+permite ofrecer una acción explícita para releer y preparar una nueva nota. Esa
+acción vuelve a comprobar el recibo y lee una revisión actual antes de liberar
+el pendiente local; archiva sus IDs/hash en sessionStorage por identidad, sin
+texto ni tokens. El siguiente envío requiere otro clic y request_id nuevo.
+Not found, error, recibo distinto o incierto siguen bloqueados. No se borran
+recibos del servidor ni se considera guardada una nota rechazada.

@@ -352,7 +352,7 @@
       container:$('despachoAceptacion'),host:window,
       getAccess:function(){return {allowed:new URLSearchParams(location.search).get('equipo-aceptacion')==='1'&&state.role==='admin'&&Boolean(state.verifiedEmail)&&despachoSection.isAuthorized()&&mismaSesion(state.sessionToken,state.sesionEpoch),epoch:state.sesionEpoch};},
       transport:{read:function(){return window.YODCaseTransport.readTeam({});},write:function(intent){return window.YODCaseTransport.writeTeam(intent);},lookupReceipt:function(id){return window.YODCaseTransport.lookupTeamReceipt({request_id:id});}},
-      loadMount:async function(){var email=state.verifiedEmail;var hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(email));var scope=Array.from(new Uint8Array(hash),function(x){return x.toString(16).padStart(2,'0');}).join('');var module=await import('../despacho3d/equipo-aceptacion.mjs?v=1');return function(options){return module.mountAcceptance(Object.assign({},options,{storageScope:scope}));};}
+      loadMount:async function(){var email=state.verifiedEmail;var hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(email));var scope=Array.from(new Uint8Array(hash),function(x){return x.toString(16).padStart(2,'0');}).join('');var module=await import('../despacho3d/equipo-aceptacion.mjs?v=3');return function(options){return module.mountAcceptance(Object.assign({},options,{storageScope:scope}));};}
     });
   }
   window.revisarPuertaDespacho=function(){despachoSection.refresh();if(despachoAcceptance)void despachoAcceptance.refresh();};

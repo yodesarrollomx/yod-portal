@@ -1,18 +1,21 @@
 {
-  "model_revision": "2026-10-18.sala-titulo-corte.1",
-  "proposal_id": "CHG-SALA-TITULO-CORTE-20261018",
-  "summary": "Conservar el nombre completo de la pieza al titular su corte. El separador tipográfico no delimita identidad. No cambia IDs, origen, video, votos, transporte ni backend. Reparación de una entrega existente sólo mediante reemplazo condicional exacto de su celda titulo tras cotejar ID, origen y video; nunca volver a proponer o producir.",
+  "model_revision": "2026-10-18.equipo-aceptacion.3",
+  "proposal_id": "CHG-EQUIPO-ACEPTACION-20261018",
+  "summary": "Recuperar sólo rechazo durable revision_conflict con nueva lectura explícita y nueva intención, sin reenviar ni borrar recibos.",
   "components": [
+    "SYS-YOD-OS",
+    "SYS-DESPACHO",
+    "SYS-DESPACHO-3D",
     "SYS-SALA",
-    "SHEET-SALA",
-    "SVC-SALA-EJECUTOR",
-    "SYS-YOD-OS"
+    "GAS-PORTERO",
+    "EXT-DRIVE"
   ],
   "tests": [
-    "Regresión sintética título compuesto REEL · Pieza · segunda parte conserva nombre completo e identidad de la propuesta.",
-    "python3 -m unittest discover -s tests -p \"*entregar*test.py\" -v",
-    "python3 nube/verificar.py",
-    "git diff --check"
+    "Transporte y modelo reutilizados: payload/autoridad/época, conflicto, respuesta incierta, recibo correlacionado.",
+    "Aceptación con datos sintéticos: nota exacta, un solo envío, recuperación por lookup tras recarga sin segundo write, storage sin texto ni token y revocación.",
+    "Atlas, suite Node, verificadores OS/portal/accesos/Obra y navegador aislado.",
+    "Modo aceptación no crea iframe antes/después de validar ni al revocar; gate conserva DP/sesión; modo normal mantiene iframe.",
+    "Rechazo correlacionado permite nueva lectura explícita y nuevo ID; mismatch/not_found/incertidumbre no desbloquean; autoridad y fallos storage conservan guard."
   ],
-  "rollback": "Revertir código por PR. No borrar propuestas ni votos; reversión de título sólo con coincidencia exacta del valor corregido y recibo privado."
+  "rollback": "Retirar panel de aceptación y montaje; conservar notas, recibos, Buzón, backend, permisos y sesión original."
 }
