@@ -1,22 +1,19 @@
 {
-  "model_revision": "2026-10-18.sala-metadatos-corte.1",
-  "proposal_id": "CHG-SALA-METADATOS-CORTE-20261018",
-  "summary": "Corrección manual acotada de metadatos antiguos que contienen ubicaciones vetadas, mediante parche privado con valores anteriores y SHA de fuente. Preservar imágenes, texto visible elegido, narración efectiva y firmas. Validar contexto resuelto y todas las reglas. Respaldar antes, publicar snapshot con mutex y recibo exacto, y sólo después conciliar cada corte fallido vigente sin duplicarlo. Si cambia narración o identidad de dependencias, no reutilizar medios ni estados aprobados. Fuentes retiradas o formato Lámina no se convierten a video.",
+  "model_revision": "2026-10-18.equipo-aceptacion.1",
+  "proposal_id": "CHG-EQUIPO-ACEPTACION-20261018",
+  "summary": "Aceptación previa de nota Equipo con sesión existente y recibo durable; compositor general continúa retenido.",
   "components": [
+    "SYS-YOD-OS",
+    "SYS-DESPACHO",
+    "SYS-DESPACHO-3D",
     "SYS-SALA",
-    "SHEET-SALA",
-    "GAS-SALA",
-    "SVC-SALA-PRODUCTOR",
-    "SVC-SALA-EJECUTOR",
-    "EXT-ACTIONS",
-    "EXT-DRIVE",
-    "SYS-YOD-OS"
+    "GAS-PORTERO",
+    "EXT-DRIVE"
   ],
   "tests": [
-    "Parche sobre fuente distinta, campos no permitidos, texto visible o narración alterada bloquea antes de escritura.",
-    "Snapshot sin recibo, decisiones cambiantes, veto, dependencias incompletas o medio sin identidad impiden reencolado.",
-    "Resultado incierto sólo se concilia por lectura; no se duplica trabajo ni aprobación.",
-    "Pruebas sintéticas y recibos separados para parche, publicación, producción y entrega."
+    "Transporte y modelo reutilizados: payload/autoridad/época, conflicto, respuesta incierta, recibo correlacionado.",
+    "Aceptación con datos sintéticos: nota exacta, un solo envío, recuperación por lookup tras recarga sin segundo write, storage sin texto ni token y revocación.",
+    "Atlas, suite Node, verificadores OS/portal/accesos/Obra y navegador aislado."
   ],
-  "rollback": "Conservar originales y recibos privados. Restaurar sólo metadatos que aún coincidan con el parche; no borrar medios, propuestas ni votos. Revertir código por PR."
+  "rollback": "Retirar panel de aceptación y montaje; conservar notas, recibos, Buzón, backend, permisos y sesión original."
 }
