@@ -13297,6 +13297,24 @@
       "rollback": "Revertir PR de interfaz; no modificar registros ni estados de negocio."
     },
     {
+      "id": "CHG-MASTERBROKERS-PUBLIC-PREVIEW",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección solicita el 18-oct publicar en GitHub Pages sin inicio de sesión el prototipo de Master Brokers. Alcance: muestra pública estática con datos ficticios; no publicación de expedientes privados ni cambios a sus permisos.",
+      "proposal": "Migrar el prototipo visual desde hosting privado a master-brokers/ dentro de yodesarrollo-board. Entrada directa en Master Developer/equipo, navegación de carteras, prospectos, trabajos, historial y fichas PPP sintéticas. Sin Portero, shell autenticado, conectores ni llamadas a backends de negocio en esta ruta. Identificar siempre datos de ejemplo. brokers.html conserva su contrato productivo y autenticación. El sitio público no simula una conexión real ni ofrece guardado.",
+      "tests": [
+        "Sintaxis ESM, referencias de personas/trabajos y filtros con datos sintéticos.",
+        "Navegador sin cookies ni sesión: inicio MD, navegación, búsqueda, responsable/estatus, historial, PPP, enlaces profundos, diálogos y móvil sin desbordamiento.",
+        "Inspección de solicitudes: exclusivamente archivos estáticos del prototipo; sin recursos de autenticación ni backends.",
+        "GitHub Pages: descarga anónima de cada archivo y verificación de bytes después de integrar."
+      ],
+      "deployment": "Propuesta previa a implementación. La publicación anónima y la revisión visual se acreditarán con su commit y URL; no acredita integración de datos reales.",
+      "rollback": "Revertir sólo master-brokers/ y su documentación/manifiesto. Conservar el portal productivo, sus datos y todos los permisos."
+    },
+    {
       "id": "CHG-SALA-METADATOS-CORTE-20261018",
       "components": [
         "SYS-SALA",
