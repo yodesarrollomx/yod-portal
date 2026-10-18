@@ -1,14 +1,14 @@
 {
-  "model_revision": "2026-10-18.yod-core.1",
-  "proposal_id": "CHG-YOD-CORE-20261017",
-  "summary": "Núcleo de contratos y ledger SQLite transaccional opt-in para nuevos trabajos de integración: responsable único, evidencias ligadas a revisión, verificador distinto del ejecutor, request_id idempotente, conflictos explícitos, checkpoints y conciliación de escrituras inciertas. CLI sólo local y pruebas sin red. No sustituye metas/cola/almacenes existentes del motor privado ni añade registros de negocio al portal público.",
+  "model_revision": "2026-10-18.reel-tools.1",
+  "proposal_id": "CHG-REEL-TOOLS-20261018",
+  "summary": "Política local versionada para agentes y dos skills documentales bajo demanda; evaluación de herramientas del Reel. Sin cambios a transportes, proveedores, permisos ni ejecución de negocio.",
   "components": [
-    "SYS-YOD-OS"
+    "SYS-YOD-OS",
+    "EXT-JEV"
   ],
   "tests": [
-    "Contrato puro Node20 y Node22; base transaccional Node22 con reinicio, dos procesos competidores, rollback, ledger inmutable e idempotencia.",
-    "Suite completa del portal, verificadores OS/portal/accesos/obra y esquema/impacto.",
-    "Sin llamadas a endpoints de negocio, nuevas inferencias ni escrituras de prueba en producción."
+    "Revisión estática de políticas y archivos mediante API GitHub; verificación de lectura tras escritura.",
+    "Pendiente terminal: suite completa del portal, arquitectura, pruebas de skills con ChatGPT/Codex y Claude, evaluación aislada de Graphify sin red."
   ],
-  "rollback": "Retirar módulos/CLI y workflow Core; preservar todas las bases privadas, bitácoras, contratos de metas y datos existentes."
+  "rollback": "Revertir sólo los commits de esta propuesta; conservar Jev, instrucciones previas, históricos y configuración privada."
 }

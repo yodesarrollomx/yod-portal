@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "policy_version": "1.0.0",
+  "status": "draft_not_activated",
+  "date": "2026-10-18",
+  "scope": "yodesarrollomx/yod-portal",
+  "tools": [
+    {
+      "name": "Agent Skills",
+      "repository": "https://github.com/addyosmani/agent-skills",
+      "commit": "aeac41d4d005999432bb7312f7ff06383a91d59d",
+      "license": "MIT",
+      "mode": "vendored_markdown_on_demand",
+      "skills": [
+        {
+          "name": "context-engineering",
+          "path": "vendor/agent-skills/skills/context-engineering/SKILL.md",
+          "upstream_blob": "fb8bb5f85128302b231d301c1201da1e223f6869"
+        },
+        {
+          "name": "source-driven-development",
+          "path": "vendor/agent-skills/skills/source-driven-development/SKILL.md",
+          "upstream_blob": "2704f0e130bc4659951aa552373914b2d63d18c9"
+        }
+      ],
+      "runtime_tested": false
+    },
+    {
+      "name": "Graphify",
+      "repository": "https://github.com/Graphify-Labs/graphify",
+      "commit": "86c57be8204673c2a1b9849a3292a7dd3ab373d8",
+      "version": "0.9.92",
+      "package": "graphifyy",
+      "license": "Apache-2.0; MIT portions and NOTICE",
+      "requires": "Python >=3.10; inspect dependency/platform resolution",
+      "mode": "deferred_no_install",
+      "runtime_tested": false
+    },
+    {
+      "name": "Ponytail",
+      "repository": "https://github.com/DietrichGebert/ponytail",
+      "commit": "09c434ab73ca43761c5d8b0c5d341926c2fba710",
+      "license": "MIT",
+      "mode": "deferred_duplicate_guidance",
+      "runtime_tested": false
+    },
+    {
+      "name": "OmniRoute",
+      "repository": "https://github.com/diegosouzapw/OmniRoute",
+      "branch_observed": "release/v3.8.52",
+      "commit": null,
+      "license": "MIT",
+      "requires": "Node >=22.22.2 <23 || >=24.0.0 <27",
+      "mode": "deferred_no_routing",
+      "runtime_tested": false
+    }
+  ],
+  "private_data_external_routing_approved": false,
+  "global_settings_modified": false
+}
