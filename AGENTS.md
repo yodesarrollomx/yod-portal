@@ -14,3 +14,11 @@ El repositorio es público. Nunca publicar datos reales de clientes, secretos, e
 Prioridad del propietario: vender más, luego mejorar margen/control y después acelerar cobros. Seguridad e integridad de datos no se sacrifican por ese orden.
 
 Relevo del Despacho 3D (entorno del agente y versión de oficina): `docs/ENTORNO-AGENTE-RELEVO.md` (estado, interruptores, reglas, método de entrega y lo que sigue).
+
+## Herramientas del Reel · política local 1.0.0
+
+Leer [docs/agentes/POLITICA.md](docs/agentes/POLITICA.md) para búsqueda, triage Jev,
+pasajes, presupuesto, evidencia y entrega. Cargar sólo la skill documental pertinente
+indicada allí. Inventario, licencias y pendientes: docs/agentes/RESULTADOS.md y
+integraciones.lock.json en esa carpeta. No registrar skills globales ni cambiar
+proveedores por esta referencia; no enviar datos privados sin aprobación específica.
