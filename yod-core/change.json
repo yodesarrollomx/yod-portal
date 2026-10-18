@@ -1,0 +1,16 @@
+{
+  "id": "CHG-YOD-CORE-20261017",
+  "components": [
+    "SYS-YOD-OS"
+  ],
+  "status": "propuesto",
+  "approval": "Dirección autoriza implementar y terminar YOD Core utilizando bitácora, sin depender del Buzón ni de Claude. No cambia privacidad, permisos, decisiones comerciales ni tareas detenidas.",
+  "proposal": "Núcleo de contratos y ledger SQLite transaccional opt-in para nuevos trabajos de integración: responsable único, evidencias ligadas a revisión, verificador distinto del ejecutor, request_id idempotente, conflictos explícitos, checkpoints y conciliación de escrituras inciertas. CLI sólo local y pruebas sin red. No sustituye metas/cola/almacenes existentes del motor privado ni añade registros de negocio al portal público.",
+  "tests": [
+    "Contrato puro Node20 y Node22; base transaccional Node22 con reinicio, dos procesos competidores, rollback, ledger inmutable e idempotencia.",
+    "Suite completa del portal, verificadores OS/portal/accesos/obra y esquema/impacto.",
+    "Sin llamadas a endpoints de negocio, nuevas inferencias ni escrituras de prueba en producción."
+  ],
+  "deployment": "Implementación y validación en PR281. Integración a un transporte autenticado y aceptación productiva pendientes; no activar un segundo motor.",
+  "rollback": "Retirar módulos/CLI y workflow Core; preservar todas las bases privadas, bitácoras, contratos de metas y datos existentes."
+}

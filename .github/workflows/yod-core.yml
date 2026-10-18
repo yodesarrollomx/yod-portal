@@ -29,12 +29,12 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22.16.0'
       - name: Verify Core contracts
         run: |
           mkdir -p /tmp/yod-core-evidence
           set -o pipefail
-          node --test tests/yod-core*.cjs | tee /tmp/yod-core-evidence/core-tests.txt
+          node --test tests/yod-core*.cjs yod-core/tests/*.cjs | tee /tmp/yod-core-evidence/core-tests.txt
       - name: Reproducible public source snapshot
         if: always()
         run: |
