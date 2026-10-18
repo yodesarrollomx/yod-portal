@@ -13,7 +13,7 @@ function node(){
     appendChild(n){n.parent=this;this.children.push(n);},remove(){this.parent.children=this.parent.children.filter(n=>n!==this);}
   };
 }
-function harness(hash='#/despacho'){
+function harness(hash='#/despacho',renderScene){
   const nodes=new Map(['seccionDespacho','despachoCanvas','despachoEstado','despachoAbrir','despachoBandeja'].map(k=>[k,node()]));
   const home=node(),nav=node(),body=node(),frames=[],events={};nav.setAttribute('href','#/despacho');
   let clear=0,revalidations=0;
@@ -21,7 +21,7 @@ function harness(hash='#/despacho'){
   const win={location:{hash},addEventListener(k,f){(events[k]||=([])).push(f);}};
   const doc={body,getElementById:k=>nodes.get(k),querySelector:()=>home,querySelectorAll:()=>[nav],createElement(k){assert.equal(k,'iframe');const n=node();frames.push(n);return n;}};
   const c=vm.createContext({});vm.runInContext(source,c);
-  const section=c.YodDespachoSection.create({window:win,document:doc,
+  const section=c.YodDespachoSection.create({window:win,document:doc,renderScene,
     readAccess:()=>({ready:identity.ready&&identity.token===identity.currentToken,allowed:globalThis.YodAccessPolicy.canOpen(identity.boards,'SYS-DESPACHO',identity.role),epoch:identity.epoch}),
     onTeardown(){clear++;},revalidate(){identity.ready=false;revalidations++;section.refresh();}
   });
@@ -135,4 +135,20 @@ test('Immersive surface fills available height and retains compact controls and 
   const h=harness();h.identity.ready=true;h.section.refresh();
   assert.equal(h.body.getAttribute('data-workspace-route'),'despacho');
   assert.equal(h.nodes.get('despachoBandeja').hidden,false);
+});
+
+test('acceptance without scene preserves authority and never mounts a frame across validation or revocation',()=>{
+ const h=harness('#/despacho',()=>false);
+ assert.equal(h.frames.length,0);assert.equal(h.section.isAuthorized(),false);
+ h.identity.ready=true;h.section.refresh();assert.equal(h.section.isAuthorized(),true);
+ assert.equal(h.frames.length,0);assert.equal(h.section.getIframeWindow(),null);
+ assert.equal(h.nodes.get('despachoCanvas').hidden,true);assert.equal(h.nodes.get('despachoAbrir').hidden,true);assert.equal(h.nodes.get('despachoBandeja').hidden,true);
+ h.identity.boards='TA';h.section.refresh();assert.equal(h.section.isAuthorized(),false);assert.equal(h.frames.length,0);
+ h.identity.boards='DP';h.identity.currentToken='synthetic-B';h.section.refresh();assert.equal(h.section.isAuthorized(),false);assert.equal(h.frames.length,0);
+ h.identity.currentToken=h.identity.token;h.section.refresh();h.route('#inicio');assert.equal(h.section.isAuthorized(),false);assert.equal(h.frames.length,0);
+});
+test('presentation switch retires an existing scene without changing authorization',()=>{
+ let scene=true;const h=harness('#/despacho',()=>scene);h.identity.ready=true;h.section.refresh();assert.equal(h.frames.length,1);
+ const first=h.frames[0];scene=false;h.section.refresh();assert.equal(first.getAttribute('src'),null);assert.equal(h.section.getIframeWindow(),null);assert.equal(h.section.isAuthorized(),true);
+ scene=true;h.section.refresh();assert.equal(h.frames.length,2);assert.equal(h.nodes.get('despachoCanvas').hidden,false);
 });
