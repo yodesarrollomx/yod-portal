@@ -9,7 +9,8 @@
     "SVC-SALA-PRODUCTOR",
     "SVC-SALA-EJECUTOR",
     "EXT-ACTIONS",
-    "EXT-DRIVE"
+    "EXT-DRIVE",
+    "SYS-YOD-OS"
   ],
   "tests": [
     "Parche sobre fuente distinta, campos no permitidos, texto visible o narración alterada bloquea antes de escritura.",

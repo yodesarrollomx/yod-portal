@@ -13323,7 +13323,8 @@
         "SVC-SALA-PRODUCTOR",
         "SVC-SALA-EJECUTOR",
         "EXT-ACTIONS",
-        "EXT-DRIVE"
+        "EXT-DRIVE",
+        "SYS-YOD-OS"
       ],
       "status": "propuesto",
       "authorization": "Dirección autoriza completar entregas reales de Sala en coordinación con Claude; conservar todas las decisiones editoriales y permisos.",
