@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-18.equipo-aceptacion.3",
-  "proposal_id": "CHG-EQUIPO-ACEPTACION-20261018",
-  "summary": "Recuperar sólo rechazo durable revision_conflict con nueva lectura explícita y nueva intención, sin reenviar ni borrar recibos.",
+  "model_revision": "2026-10-18.equipo-relevo.4",
+  "proposal_id": "CHG-DESPACHO-EQUIPO-RELEVO-20261015",
+  "summary": "Conciliar PR225 con recuperación PR280 y Atlas Sala279, conservando único Equipo, modo sin 3D y apilamiento acotado.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
@@ -11,11 +11,10 @@
     "EXT-DRIVE"
   ],
   "tests": [
-    "Transporte y modelo reutilizados: payload/autoridad/época, conflicto, respuesta incierta, recibo correlacionado.",
-    "Aceptación con datos sintéticos: nota exacta, un solo envío, recuperación por lookup tras recarga sin segundo write, storage sin texto ni token y revocación.",
-    "Atlas, suite Node, verificadores OS/portal/accesos/Obra y navegador aislado.",
-    "Modo aceptación no crea iframe antes/después de validar ni al revocar; gate conserva DP/sesión; modo normal mantiene iframe.",
-    "Rechazo correlacionado permite nueva lectura explícita y nuevo ID; mismatch/not_found/incertidumbre no desbloquean; autoridad y fallos storage conservan guard."
+    "Suite Node completa y verificadores de atlas/esquema/impacto/OS/portal/accesos/obra al árbol integrado.",
+    "Regresión sintética de Equipo/Relevos y navegador Chromium/WebKit 320/390/1440; red a negocio bloqueada.",
+    "Conservar correcciones de entrada/selección/readGoals y proyectos previos; sin API de negocio de prueba.",
+    "Comprobar geometría de lanzador sobre canvas normal, escena clicable fuera del botón y diálogo modal con datos sintéticos."
   ],
-  "rollback": "Retirar panel de aceptación y montaje; conservar notas, recibos, Buzón, backend, permisos y sesión original."
+  "rollback": "Retirar montaje Equipo/Relevos mediante PR conservando las correcciones publicadas de selección y metas, Buzón, historial, permisos y recibos."
 }

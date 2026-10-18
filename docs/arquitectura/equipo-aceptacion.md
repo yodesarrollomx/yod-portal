@@ -40,6 +40,14 @@ interfaz aún no publicada y recibo exigido antes de publicar dicha interfaz.
 
 Rollback: retirar la entrada/panel. Conservar notas, recibos, Buzón y backend.
 
+## Transición preparada para PR225
+
+Después de comprobar la aceptación real, PR225 conserva este módulo, sus pruebas y
+el almacenamiento privado, pero sustituye su montaje por el único panel Equipo.
+La URL con `?equipo-aceptacion=1#/despacho` abre entonces Equipo; el parámetro ya
+no monta el panel previo. No hay dos compositores ni borrado de recibos. Esta
+conciliación local no acredita aceptación ni autoriza saltar su comprobación.
+
 ## Entrada liviana
 
 El parámetro de aceptación omite exclusivamente la escena iframe y controles 3D.
@@ -47,6 +55,10 @@ La sección sigue exigiendo la misma ruta, sesión y permiso; el panel conserva
 además Dirección y correo verificado. No concede acceso ni cambia el transporte.
 La oficina sin ese parámetro mantiene su escena. Se corrige una dependencia
 inútil para esta aceptación; la causa de los timeouts CDP no está demostrada.
+
+En PR225 conciliado, el mismo parámetro conserva la presentación sin iframe,
+pero monta sólo Equipo. El botón Equipo abre el diálogo completo; sin parámetro
+se mantiene la oficina 3D. No se elimina ni reenvía ninguna nota previa.
 
 ## Rechazo durable por revisión
 

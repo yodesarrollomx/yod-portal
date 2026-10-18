@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-18.equipo-aceptacion.3
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-18.equipo-relevo.4
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -1105,7 +1105,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 ### Oficina 3D y puesto del autón · SYS-DESPACHO-3D
 
-**Función:** Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.
+**Función:** Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto. Equipo se monta desde cabina Dirección con época real, transporte autorizado y teardown; conexión productiva pendiente.
 
 **Fuente oficial:** Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos.
 

@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-18.equipo-aceptacion.3 · 2026-10-18.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-18.equipo-relevo.4 · 2026-10-18.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -1002,7 +1002,7 @@ Persistir notas y ejes del Corcho en un archivo privado independiente, autorizad
 
 ## SYS-DESPACHO-3D · Oficina 3D y puesto del autón
 
-Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto.
+Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto. Equipo se monta desde cabina Dirección con época real, transporte autorizado y teardown; conexión productiva pendiente.
 
 - Tipo: interfaz. Dominio: Operación. Responsable: Dirección técnica.
 - Evidencia: codigo. Producción: Versión normal126 publicada por PR141 (0351157): presencia de tres proyectos autorizados, puestos PPP/Trabajo/Expediente y pantallas ligadas al caso. Siete recorridos de navegador aprobados con datos sintéticos; accesoGSI400 corregido en OS enviando sólo el origen. No acredita micrófono físico ni apariencia/datos del PPP nativo privado..
