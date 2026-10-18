@@ -13454,7 +13454,7 @@
         "Revisión estática de políticas y archivos mediante API GitHub; verificación de lectura tras escritura.",
         "Pendiente terminal: suite completa del portal, arquitectura, pruebas de skills con ChatGPT/Codex y Claude, evaluación aislada de Graphify sin red."
       ],
-      "deployment": "Rama y PR borrador; sin instalación ejecutable ni activación productiva. Regeneración del atlas y checks pendientes por falta de terminal.",
+      "deployment": "PR borrador; sin instalación ejecutable ni activación productiva. Vistas generadas con funciones originales en V8; pruebas/checks y coordinación con PR283 se registran en docs/agentes/RESULTADOS.md.",
       "rollback": "Revertir sólo los commits de esta propuesta; conservar Jev, instrucciones previas, históricos y configuración privada."
     }
   ],
@@ -17496,6 +17496,13 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": ".github/workflows/yod-core-register.yml",
+      "components": [
+        "SYS-YOD-OS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "docs/agentes/",
       "components": [
         "SYS-YOD-OS"
       ]
