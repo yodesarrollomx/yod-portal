@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-18.equipo-relevo.2",
+  "revision": "2026-10-18.equipo-relevo.3",
   "checked_at": "2026-10-18",
   "priorities": [
     "vender_mas",
@@ -13373,7 +13373,7 @@
       ],
       "status": "propuesto",
       "approval": "Dirección pide asumir el relevo de implementación pendiente y conserva la autorización de integrar/publicar la oficina existente. No concede permisos, nuevas audiencias ni cambios de negocio.",
-      "proposal": "Conciliar Equipo y Relevos sobre la cabina actual conservando selección explícita, entrada corregida, lecturas de metas concurrentes y propuestas de presentación. Un solo montaje autenticado, mismos contratos y Buzón; sin duplicar mini CRM ni fuentes. Conciliación 18-oct preserva coordinador de carga, continuidad entre pestañas, selección y limpieza de estado del plan al revocar la sección. Conserva las propuestas posteriores completas y sus propietarios; no reinstala backend ni acredita persistencia. Corregir ancho máximo nativo del diálogo y compactar cabecera móvil de Relevos para que la primera tarjeta comience dentro de pantalla; filtro legible sin recorte. Sin ocultar responsables ni señales. Conciliar PR277 conservando sus fuentes y recibos. Tras aceptación real y activación revisada de PR225, retirar sólo el montaje de aceptación: la misma URL abre Equipo sin dos compositores; no borrar almacenamiento privado ni archivos históricos.",
+      "proposal": "Conciliar Equipo y Relevos sobre la cabina actual conservando selección explícita, entrada corregida, lecturas de metas concurrentes y propuestas de presentación. Un solo montaje autenticado, mismos contratos y Buzón; sin duplicar mini CRM ni fuentes. Conciliación 18-oct preserva coordinador de carga, continuidad entre pestañas, selección y limpieza de estado del plan al revocar la sección. Conserva las propuestas posteriores completas y sus propietarios; no reinstala backend ni acredita persistencia. Corregir ancho máximo nativo del diálogo y compactar cabecera móvil de Relevos para que la primera tarjeta comience dentro de pantalla; filtro legible sin recorte. Sin ocultar responsables ni señales. Conciliar PR277 conservando sus fuentes y recibos. Tras aceptación real y activación revisada de PR225, retirar sólo el montaje de aceptación: la misma URL abre Equipo sin dos compositores; no borrar almacenamiento privado ni archivos históricos. Integrar presentación sin iframe de PR278: ?equipo-aceptacion=1 abre el único Equipo sin escena; ruta normal conserva 3D. Misma autoridad, época y backend. Corregir apilamiento del lanzador Equipo sobre canvas absoluto, con caja ajustada al botón para no bloquear interacción con la escena; diálogo modal conserva capa superior.",
       "tests": [
         "Suite Node completa y verificadores de atlas/esquema/impacto/OS/portal/accesos/obra al árbol integrado.",
         "Regresión sintética de Equipo/Relevos y navegador Chromium/WebKit 320/390/1440; red a negocio bloqueada.",
@@ -13394,11 +13394,12 @@
       ],
       "status": "propuesto",
       "approval": "Autorización vigente de Dirección para implementar y publicar Equipo; preparación separada para revisión técnica, sin nueva autorización genérica. No activar compositor general antes del recibo.",
-      "proposal": "Panel acotado dentro de la cabina y sesión existentes, habilitado sólo por entrada explícita y autoridad Dirección confirmada. Reutiliza transporte, fencing de época y modelo de recibos de PR225. Sólo nota a tarea existente, con ID/texto ingresados en runtime desde paquete privado. Sin nuevas solicitudes, permisos, credenciales ni bases. Conserva únicamente request_id en sessionStorage para consultar recibo tras recarga; texto y token no se almacenan por este panel. Después de recarga nunca reenvía una escritura automáticamente.",
+      "proposal": "Panel acotado dentro de la cabina y sesión existentes, habilitado sólo por entrada explícita y autoridad Dirección confirmada. Reutiliza transporte, fencing de época y modelo de recibos de PR225. Sólo nota a tarea existente, con ID/texto ingresados en runtime desde paquete privado. Sin nuevas solicitudes, permisos, credenciales ni bases. Conserva únicamente request_id en sessionStorage para consultar recibo tras recarga; texto y token no se almacenan por este panel. Después de recarga nunca reenvía una escritura automáticamente. Corrección de presentación: cuando equipo-aceptacion=1, omitir iframe 3D y sus controles, manteniendo ruta, autoridad, sesión, época, transporte y panel. Modo normal sin cambios; bloqueo CDP observado no prueba causalidad de WebGL.",
       "tests": [
         "Transporte y modelo reutilizados: payload/autoridad/época, conflicto, respuesta incierta, recibo correlacionado.",
         "Aceptación con datos sintéticos: nota exacta, un solo envío, recuperación por lookup tras recarga sin segundo write, storage sin texto ni token y revocación.",
-        "Atlas, suite Node, verificadores OS/portal/accesos/Obra y navegador aislado."
+        "Atlas, suite Node, verificadores OS/portal/accesos/Obra y navegador aislado.",
+        "Modo aceptación no crea iframe antes/después de validar ni al revocar; gate conserva DP/sesión; modo normal mantiene iframe."
       ],
       "deployment": "Sólo preparación local. Nota real, recibo, recarga y ACK de otro agente pendientes; compositor general retenido.",
       "rollback": "Retirar panel de aceptación y montaje; conservar notas, recibos, Buzón, backend, permisos y sesión original."

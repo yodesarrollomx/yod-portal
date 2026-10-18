@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-18.equipo-relevo.2",
+  "model_revision": "2026-10-18.equipo-relevo.3",
   "proposal_id": "CHG-DESPACHO-EQUIPO-RELEVO-20261015",
-  "summary": "Conciliar PR225 con aceptación PR277, conservar fuentes y recibos, montar sólo Equipo tras aceptación real; sin despliegue.",
+  "summary": "Conciliar Equipo con PR278: único panel Equipo con opción sin iframe 3D y mismos gates; sin activación productiva. Lanzador con apilamiento sobre canvas y caja ajustada, sin cubrir oficina.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
@@ -13,7 +13,8 @@
   "tests": [
     "Suite Node completa y verificadores de atlas/esquema/impacto/OS/portal/accesos/obra al árbol integrado.",
     "Regresión sintética de Equipo/Relevos y navegador Chromium/WebKit 320/390/1440; red a negocio bloqueada.",
-    "Conservar correcciones de entrada/selección/readGoals y proyectos previos; sin API de negocio de prueba."
+    "Conservar correcciones de entrada/selección/readGoals y proyectos previos; sin API de negocio de prueba.",
+    "Comprobar geometría de lanzador sobre canvas normal, escena clicable fuera del botón y diálogo modal con datos sintéticos."
   ],
   "rollback": "Retirar montaje Equipo/Relevos mediante PR conservando las correcciones publicadas de selección y metas, Buzón, historial, permisos y recibos."
 }

@@ -290,6 +290,7 @@
   var despachoPins=null,despachoConversation=null,despachoTeam=null;
   var despachoSection=window.YodDespachoSection.create({
     window:window,document:document,
+    renderScene:function(){return new URLSearchParams(location.search).get('equipo-aceptacion')!=='1';},
     readAccess:function(){return {ready:Boolean(state.sessionToken)&&mismaSesion(state.sessionToken,state.sesionEpoch),allowed:window.YodAccessPolicy.canOpen(state.boards,'SYS-DESPACHO',state.role),epoch:state.sesionEpoch};},
     onTeardown:function(){if(despachoTeam)despachoTeam.teardown();if(despachoPins)despachoPins.clear();if(despachoConversation)despachoConversation.clear();if(state.loadPlan)state.loadPlan.clearSelection();},
     revalidate:function(){loadIdentity();}
