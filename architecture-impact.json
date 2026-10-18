@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-18.equipo-relevo.3",
+  "model_revision": "2026-10-18.equipo-relevo.4",
   "proposal_id": "CHG-DESPACHO-EQUIPO-RELEVO-20261015",
-  "summary": "Conciliar Equipo con PR278: único panel Equipo con opción sin iframe 3D y mismos gates; sin activación productiva. Lanzador con apilamiento sobre canvas y caja ajustada, sin cubrir oficina.",
+  "summary": "Conciliar PR225 con recuperación PR280 y Atlas Sala279, conservando único Equipo, modo sin 3D y apilamiento acotado.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",

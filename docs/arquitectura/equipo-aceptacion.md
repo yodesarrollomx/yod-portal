@@ -59,3 +59,13 @@ inútil para esta aceptación; la causa de los timeouts CDP no está demostrada.
 En PR225 conciliado, el mismo parámetro conserva la presentación sin iframe,
 pero monta sólo Equipo. El botón Equipo abre el diálogo completo; sin parámetro
 se mantiene la oficina 3D. No se elimina ni reenvía ninguna nota previa.
+
+## Rechazo durable por revisión
+
+Sólo lookup de un recibo rejected/revision_conflict completamente correlacionado
+permite ofrecer una acción explícita para releer y preparar una nueva nota. Esa
+acción vuelve a comprobar el recibo y lee una revisión actual antes de liberar
+el pendiente local; archiva sus IDs/hash en sessionStorage por identidad, sin
+texto ni tokens. El siguiente envío requiere otro clic y request_id nuevo.
+Not found, error, recibo distinto o incierto siguen bloqueados. No se borran
+recibos del servidor ni se considera guardada una nota rechazada.
