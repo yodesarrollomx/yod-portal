@@ -1,24 +1,21 @@
 {
-  "model_revision": "2026-10-17.chinches-entregas.1",
-  "proposal_id": "CHG-CHINCHES-ENTREGAS-20261017",
-  "summary": "Compartir la promesa de lectura de metas dentro del mismo caso y época: abrir Entregas durante una consulta en curso debe esperar su resultado sin duplicar peticiones ni mostrar un error falso. Una mutación, revocación o cambio de caso conserva sus guardias. No aceptar un modelo histórico como consulta nueva. Mantener el mismo servidor y permisos.",
+  "model_revision": "2026-10-18.sala-metadatos-corte.1",
+  "proposal_id": "CHG-SALA-METADATOS-CORTE-20261018",
+  "summary": "Corrección manual acotada de metadatos antiguos que contienen ubicaciones vetadas, mediante parche privado con valores anteriores y SHA de fuente. Preservar imágenes, texto visible elegido, narración efectiva y firmas. Validar contexto resuelto y todas las reglas. Respaldar antes, publicar snapshot con mutex y recibo exacto, y sólo después conciliar cada corte fallido vigente sin duplicarlo. Si cambia narración o identidad de dependencias, no reutilizar medios ni estados aprobados. Fuentes retiradas o formato Lámina no se convierten a video.",
   "components": [
-    "EXT-DRIVE",
-    "GAS-PORTERO",
-    "SVC-AUTON-CLOUD",
-    "SYS-CONTROL",
-    "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
-    "SYS-TRACK",
-    "SYS-YOD-OS",
-    "SYS-TAREAS"
+    "SYS-SALA",
+    "SHEET-SALA",
+    "GAS-SALA",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-ACTIONS",
+    "EXT-DRIVE"
   ],
   "tests": [
-    "Lecturas simultáneas hacen una sola llamada y reciben el mismo resultado.",
-    "Respuesta fallida, cambio de caso y revocación no se convierten en éxito; escritura en curso no se comparte como lectura.",
-    "Suite Node completa, arquitectura, impacto, OS, portal, accesos, Obra y QA publicada."
+    "Parche sobre fuente distinta, campos no permitidos, texto visible o narración alterada bloquea antes de escritura.",
+    "Snapshot sin recibo, decisiones cambiantes, veto, dependencias incompletas o medio sin identidad impiden reencolado.",
+    "Resultado incierto sólo se concilia por lectura; no se duplica trabajo ni aprobación.",
+    "Pruebas sintéticas y recibos separados para parche, publicación, producción y entrega."
   ],
-  "rollback": "Revertir PR de interfaz; no modificar registros ni estados de negocio."
+  "rollback": "Conservar originales y recibos privados. Restaurar sólo metadatos que aún coincidan con el parche; no borrar medios, propuestas ni votos. Revertir código por PR."
 }

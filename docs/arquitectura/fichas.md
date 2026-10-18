@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-17.chinches-entregas.1 · 2026-10-17.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-18.sala-metadatos-corte.1 · 2026-10-17.
 
 ## SYS-DESPACHO · El Despacho
 
