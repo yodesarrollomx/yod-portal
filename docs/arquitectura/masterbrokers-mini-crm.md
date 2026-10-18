@@ -63,3 +63,12 @@ Las conexiones son referencias del expediente: no se presume sincronización tra
 Criterios aplicados al diseño: claridad de la oferta y menor esfuerzo para entender el siguiente paso (marco de valor de Acquisition.com); continuidad de seguimiento con CRM (Grant Cardone); información progresiva y contexto conservado (Nielsen Norman Group). No se incorporan técnicas de presión, promesas de rentabilidad ni automatizaciones de contacto. Referencias: https://www.acquisition.com/training/offers4 ; https://grantcardone.com/sales-prospecting-guide/ ; https://www.nngroup.com/articles/complex-application-design/ .
 
 Prueba: inicio MD sin broker preseleccionado, cartera propia separada, acceso individual aislado, cliente con varios terrenos, guardar/releer, fuentes/calendario, PPP sin recálculo, ausencia de overflow320/390/1440. Reversión sólo frontend: datos, perfiles, contratos y actividades intactos.
+
+
+## Muestra pública en GitHub Pages · 18-oct-2026
+
+CHG-MASTERBROKERS-PUBLIC-PREVIEW registra la petición de abrir el prototipo sin cuenta. La ruta `yodesarrollo-board/master-brokers/` sirve HTML, CSS y módulos estáticos con ejemplos ficticios. Entrada: Master Developer y su equipo; cada cartera permite recorrer prospecto → trabajos → historial / PPP de ejemplo.
+
+Esta ruta no incorpora Portero, shell autenticado, datos privados ni conectores. La indicación de muestra permanece visible; no implica que los expedientes o los cálculos PPP estén conectados. `brokers.html` y su contrato productivo siguen independientes. No se modifica el catálogo global ni se activa acceso de un broker.
+
+Pruebas: referencias y filtros; recorrido anónimo en escritorio y móvil; enlaces profundos, historial y PPP; ausencia de llamadas de negocio y verificación de archivos publicados. Reversión: retirar sólo la muestra pública, sin restaurar registros operativos.
