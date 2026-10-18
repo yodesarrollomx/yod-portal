@@ -5,7 +5,7 @@ export function projectMenu(conversation,goals){return {documents:conversation?.
 export const RADIAL_OPTIONS={
  ppp:[['ppp','Abrir tablero','El mismo plan de potencial'],['knowledge','Versiones y variantes','Comparar lo registrado']],
  conversaciones:[['conversaciones','Hablar por voz','Activa el micrófono'],['chat','Escribir','Conversación e historial']],
- pendientes:[['pendientes','Ver pendientes','Objetivos y próximos pasos'],['activity','Trabajo actual','Avance y siguiente paso']],
+ pendientes:[['moac','Acciones del MOAC','Meta, objetivo y acción originales'],['pendientes','Ver pendientes','Objetivos y próximos pasos'],['activity','Trabajo actual','Avance y siguiente paso']],
  notas:[['documentos','Fuentes del expediente','Documentos del proyecto'],['notas','Notas y versiones','Decisiones y conocimiento']]
 };
 export function sectorPath(index){
@@ -58,7 +58,7 @@ export function mountAgentMenu({win=window,doc=document}={}){
    if(dialog.open){let notice=dialog.querySelector('.radial-status');if(!notice){notice=el('p','','radial-status');notice.setAttribute('role','status');dialog.append(notice);}notice.textContent='El puesto se está cargando. Vuelve a elegir la opción en un momento.';}
    return false;
   }
-  const tabs={ppp:'ppp',pendientes:'tasks',documentos:'sources',conversaciones:'ppp',chat:'ppp',notas:'knowledge',moac:'tasks',historial:'knowledge'};
+  const tabs={ppp:'ppp',pendientes:'tasks',documentos:'sources',conversaciones:'ppp',chat:'ppp',notas:'knowledge',moac:'moac',historial:'knowledge'};
   if(dialog.open)close('transition');
   const ok=await win.YodVoiceWorkspace?.openForCase(caseId,tabs[target]||target,{startVoice:target==='conversaciones',compactOnly:target==='conversaciones'});
   if(ok&&target==='chat'&&win.YodResidentAgents?.getSelection?.()?.case_id===caseId){

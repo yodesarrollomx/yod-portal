@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-15.equipo-relevo.1 · 2026-10-15.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-18.equipo-relevo.1 · 2026-10-18.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 
@@ -527,3 +527,71 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 - Ruta avanza por recibos locales, no exploración.
 - Hilo/caso/borrador/ref/versión defendida/capacidades conservadas.
 - Colores y gráficos para decidir sin XP ni trabajo fingido.
+
+## NUBE · Sala existente con producción y publicación comprobables en nube
+
+- Tableros: SYS-SALA, SYS-CONTROL.
+- Problema: Una mesa sin pendientes, una ejecución solicitada o un producto generado pueden confundirse con falta de decisiones o con una publicación terminada; fallos de red y acumulación de medios dificultan la continuidad.
+- Beneficio esperado: Mantener producción autorizada continua y distinguir pendiente, producido y publicado mediante recibos conservando decisiones e historia.
+- Medición: Publicaciones comprobadas por recibo exacto; errores de lectura visibles; cero mutaciones inciertas reenviadas sin conciliación y cero cumplimientos sólo por dispatch.
+- Dependencias: Sin dependencias previas.
+- Esfuerzo: M. Decisión: **aprobada**.
+
+### Requisitos previos
+
+- Autorización técnica expresa de Dirección en la conversación actual, conservando revisión humana y ACL existentes.
+- Fuentes canónicas del backend vivo; un espejo de Apps Script no acredita su despliegue.
+- Propuesta y contratos registrados antes de la implementación; CI y PR de los repositorios afectados.
+- Rollout lector v1/v2 antes del emisor incremental; emisión v1 por defecto y drenaje acreditado antes de activar el flag.
+
+### Tareas
+
+1. Aplicar recuperación acotada sólo a lecturas declaradas y reconciliar mutaciones con efecto incierto.
+2. Acumular snapshots compatibles mediante manifiestos, padre y replay verificables; mutex por ejecución e intento real y presupuesto antes de Pages.
+3. Separar conteos históricos editoriales, producción durable y publicación confirmada en informes/correo existentes.
+4. Conciliar chinches por evidencia real y deduplicación; mantener el vigilante residente y comprobar su conexión por separado.
+
+### Criterios de aceptación
+
+- Restaurar snapshot histórico y sus deltas preserva medios; error, conflicto o exceso de presupuesto no publica ni monta.
+- El mismo run/attempt puede conciliar su recibo; otro attempt no hereda un candado ni una escritura incierta sin comprobarla.
+- Una mesa vacía no borra decisiones anteriores; error de lectura no se comunica como cero ni como producción terminada.
+- Dispatch de una idea sólo acredita solicitud; not_planned conserva su motivo; cumplimiento exige evidencia y registro confirmado sin duplicación.
+- Ninguna prueba decide por el editor, cambia permisos, destinatarios, reglas de negocio o publica a redes.
+- Un push de cierre no solicita entrada por correo ni repite comparación histórica; opciones manuales explícitas conservadas. Antes de rollback con deltas, snapshot completo v1 comprobado usando lector v2.
+
+## MEDIOS · Continuidad de Sala con historial completo e imágenes nuevas inmutables
+
+- Tableros: SYS-SALA, SYS-CONTROL.
+- Problema: El artefacto inspeccionado ocupa 897647868 bytes, cerca del 95% del presupuesto de 900 MiB; recomprimir históricos cambia huellas y sólo ahorró 2.57% en cinco muestras PNG. Además, limitar la lectura a14 días puede omitir fuentes no retiradas con decisiones históricas: omisión por ventana no equivale a desaparición o retiro.
+- Beneficio esperado: Frenar el crecimiento de imágenes nuevas sin romper rutas históricas, identidad editorial, snapshots ni permisos de Drive.
+- Medición: Bytes nuevos servidos por release inmutable y comprobados anónimamente; cero referencias sin pin/bytes verificados, cero históricos modificados y Pages siempre dentro de 900 MiB.
+- Dependencias: NUBE.
+- Esfuerzo: M. Decisión: **aprobada**.
+
+### Requisitos previos
+
+- Autorización técnica de migración de Sala del 14-oct-2026 persiste; no autoriza decisiones editoriales, nuevos pagos, ACL o ámbitos de App.
+- Instalar y publicar primero lectores compatibles de UI, FULL y consumidores; comprobar recibo fresco con media_manifest_sha256 y meta sala-medios-publicos=1 antes de cualquier emisión.
+- SALA_MEDIOS_PUBLICOS=1 es opt-in y permanece OFF. Inmutabilidad de release/activos, canario anónimo de bytes y ausencia de lectores antiguos incompatibles deben acreditarse antes de habilitarlo.
+- Mantener presupuesto 900 MiB y datos históricos. Sólo imágenes nuevas no presentes en Git ni baseline pueden externalizarse; ningún activo/configuración se crea o activa por este registro.
+- CTR-SALA-PRODUCCION-HISTORICA pertenece a la reparación NUBE ya autorizada. GET sólo lectura con el rol agente existente; SALA_PRODUCCION_HISTORICA=0 hasta despliegue por propietario y contrato completo verificado. No ampliar ACL, scopes ni activar backend por este registro.
+
+### Tareas
+
+1. Aplicar schema 1 estricto de datos/medios-publicos.json, límites antes de parse/emisión y pin SHA256 de sus bytes exactos en version-online.json.
+2. Resolver rutas lógicas en UI con comprobación del recibo y manifiesto; fallar cerrado ante ausencia de pin, error de lectura, hash distinto o schema inválido.
+3. Mantener snapshots privados y FULL compatibles: transportar el manifiesto y excluir sólo bytes externos ya comprobados; hidratar bytes verificados para Mesa/corte y file_is_published exacto.
+4. Publicar únicamente imágenes nuevas en releases públicos inmutables del mismo repo, con journal previo a POST, conciliación por GET y reentrada que no repite un POST ambiguo.
+5. Probar contratos sintéticos, despliegue de lectores y canario anónimo antes de habilitar emisión; conservar rutas, MD5 y aprobaciones existentes.
+6. Integrar el lector de historial completo y su esquema propuesto sin decidir nuevas aprobaciones ni reencolar históricos; resolver última PROP y DEC con sellos reales y vetos propios/ajenos conservados.
+
+### Criterios de aceptación
+
+- Manifest máximo 2 MiB; imagen de 1 a 25 MiB; máximo 1000 assets únicos por release, sin tope arbitrario de entradas distinto del límite de bytes del manifest.
+- Una URL o metadato no acredita publicación: exigir repo/tag/asset inmutable, GET anónimo de bytes exactos, SHA256/tamaño/tipo válidos y pin del recibo fresco.
+- Crash tras POST aceptado con ACK perdido, pérdida total del runner y nuevo attempt con el mismo payload: GET del mismo tag estable y asset, cero POST adicionales. Cambiar run/attempt/source no cambia la identidad; cambiar repo/proceso/archivo/hash/tamaño/MIME/nombre sí. Consulta inconclusa conserva pendiente sin mutación.
+- UI legacy acepta 404 del manifest sólo cuando el recibo tampoco declara pin; demás inconsistencias cierran imágenes/aprobaciones y no inventan estados de producción.
+- Todos los históricos conservan bytes y URLs. Vídeo, audio y muestras siguen en Pages en fase1; snapshots de datos siguen siendo releases draft privados.
+- Desactivar SALA_MEDIOS_PUBLICOS detiene sólo nuevas externalizaciones. Si ya existe un medio externo, conservar lector compatible, manifiesto, pin del recibo, releases inmutables y sus activos. No volver a un lector antiguo ni retirar activos hasta repatriar y verificar todos los bytes referenciados, publicar un FULL íntegro dentro de 900 MiB y comprobar recibo fresco y consumidores. No borrar históricos ni alterar ACL, decisiones, destinatarios o reglas de negocio.
+- Fuera de ventana14 días no equivale a retirada: lectura de historial completo declarada y validada, latest real por editor/pid/lámina y estado editorial vigente comprobado antes de producir. Retirada más reciente prevalece; cero elegibles actuales no autoriza nuevas decisiones o reencolados. Sin backend verificado, flag0 e historial no confirmado.

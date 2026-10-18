@@ -11,6 +11,9 @@
   function authorized(source,epoch){return !disposed&&options.isAuthorized()&&source===options.getIframeWindow()&&epoch===options.getEpoch();}
   async function receive(event){
    var m=event.data,epoch=options.getEpoch(),source=event.source;
+   if(event.origin===root.location.origin&&authorized(source,epoch)&&keys(m,['type','version','case_id'])&&m.type==='yod:case:selection'&&m.version===1&&str(m.case_id,200)){
+    if(options.onSelection)options.onSelection(m.case_id);return;
+   }
    if(event.origin!==root.location.origin||!authorized(source,epoch)||!keys(m,['type','version','id','method','payload'])||m.type!=='yod:case:request'||m.version!==1||!str(m.id,100)||!methods.includes(m.method))return;
    var p=m.payload;
    if(m.method==='listAuthorized'&&!keys(p,[]))return;
@@ -32,6 +35,33 @@
    var readKey=['listAuthorized','resolveCurrent','read','readGoals','mintFastSession'].includes(m.method)?m.method+'|'+JSON.stringify(p):null;
    if(readKey&&readFlights.has(readKey)){
     var shared=await readFlights.get(readKey);reply(shared.result,shared.error);return;
+   }
+   // Admission before lane acquisition. Existing lane/error/write contracts remain.
+   if(options.scheduleRead&&['listAuthorized','resolveCurrent','read','readGoals','readVisits','readOfficePermissions','readOfficePending'].includes(m.method)){
+    try{
+     var scheduled=await options.scheduleRead(m.method,p,lane,async function(){
+      if(own!==generation||!authorized(source,epoch))throw Error('session_changed');
+      if(busy[lane])return {result:null,error:'transport_busy'};
+      busy[lane]=true;
+      try{return {result:await transport[m.method](JSON.parse(JSON.stringify(p))),error:null};}
+      catch(e){return {result:null,error:['unauthorized','session_changed','session_pending','timeout','transport_busy','response_limit','invalid_response'].includes(e&&e.message)?e.message:'unavailable'};}
+      finally{if(own===generation)busy[lane]=false;}
+     },function(){return own===generation&&authorized(source,epoch);});
+     if(scheduled){reply(scheduled.result,scheduled.error);return;}
+    }catch(e){reply(null,['session_changed','timeout'].includes(e&&e.message)?e.message:'unavailable');return;}
+   }
+   if(options.scheduleWrite&&['enqueue','createGoal','reviewGoal','recordVisit'].includes(m.method)){
+    try{
+     var written=await options.scheduleWrite(m.method,p,async function(){
+      if(own!==generation||!authorized(source,epoch))throw Error('session_changed');
+      if(busy[lane])return {result:null,error:'transport_busy'};
+      busy[lane]=true;
+      try{return {result:await transport[m.method](JSON.parse(JSON.stringify(p))),error:null};}
+      catch(e){return {result:null,error:['unauthorized','session_changed','session_pending','timeout','transport_busy'].includes(e&&e.message)?e.message:'unavailable'};}
+      finally{if(own===generation)busy[lane]=false;}
+     },function(){return own===generation&&authorized(source,epoch);});
+     if(written){reply(written.result,written.error);return;}
+    }catch(e){reply(null,['session_changed','timeout'].includes(e&&e.message)?e.message:'unavailable');return;}
    }
    if(busy[lane]){reply(null,'transport_busy');return;}
    busy[lane]=true;

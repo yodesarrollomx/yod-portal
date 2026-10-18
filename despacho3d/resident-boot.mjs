@@ -1,12 +1,12 @@
-import {mountResidentDock} from './resident-dock.mjs?v=132';
-import {createOfficePreparation} from './office-preparation.mjs?v=2';
+import {mountResidentDock} from './resident-dock.mjs?v=283';
+import {createOfficePreparation} from './office-preparation.mjs?v=unified283';
 import {mountAgentMenu} from './agent-menu.mjs?v=132';
 import {createResidentOpening} from './resident-opening.mjs?v=132';
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
-import {createAuthorizedCases} from './authorized-cases.mjs?v=130';
+import {createAuthorizedCases} from './authorized-cases.mjs?v=unified283';
 import {createFrameTransport} from './conversation.mjs?v=142';
-import {createResidentAgents} from './resident-agents.mjs?v=selection-20261014';
-import {AUTHORITY_REFRESH_MS} from './authority-lease.mjs?v=127';
+import {createResidentAgents} from './resident-agents.mjs?v=unified283';
+import {AUTHORITY_REFRESH_MS,authorityRefreshDue} from './authority-lease.mjs?v=unified283';
 import {createCaseSelectionHandoff} from './case-selection-handoff.mjs?v=126';
 const host=document.getElementById('resident-agent');
 if(host){
@@ -30,25 +30,30 @@ if(host){
  }
  // Use the same canonical profile contract as the scene's pilot.
  const api={...resident};
- const officePreparation=createOfficePreparation({mint:p=>transport.mintFastSession(p),visible:()=>!document.hidden,
+ const officePreparation=createOfficePreparation({mint:p=>transport.mintFastSession(p),visible:()=>!document.hidden,selectedOnly:true,getSelectedCase:()=>resident.getSelection()?.case_id,
   onResult:(id,ok)=>{if(resident.getSelection()?.case_id===id)resident.markPrepared(id,ok);}});
  const prepareCatalog=()=>void officePreparation.update(authorized?.snapshot().cases||[]);
- const authorizedListeners=new Set();
+ const authorizedListeners=new Set(),catalogListeners=new Set();
  let authorized=null,catalogTimer=null;
  if(AUTONES_MULTIPLES){
   authorized=createAuthorizedCases({transport,reuseCatalog:true,beforeSelect:()=>['idle','error'].includes(voicePhase),onChange:state=>{
    selectionHandoff.reconcile(state);resident.reconcileCatalog(state);
+   for(const fn of catalogListeners)fn(state);
    if(state.phase==='unauthorized')officePreparation.clear();
    else if(state.phase==='current')void officePreparation.update(state.cases);
    for(const fn of authorizedListeners)fn(state.cases.map(c=>c.avatar).filter(Boolean));
   }});
+  api.subscribeCatalog=fn=>{catalogListeners.add(fn);fn(authorized.snapshot());return()=>catalogListeners.delete(fn);};
   api.subscribeAuthorizedProfiles=fn=>{authorizedListeners.add(fn);fn(api.getAuthorizedProfiles());return()=>authorizedListeners.delete(fn);};
   api.getAuthorizedProfiles=()=>authorized.snapshot().cases.map(c=>c.avatar).filter(Boolean);
   api.selectCase=async (id,{isCurrent=()=>true}={})=>{
+   if(!['idle','error'].includes(voicePhase))return false;
+   if(isCurrent()&&authorized.snapshot().cases.some(c=>c.case_id===id)&&window.parent!==window)window.parent.postMessage({type:'yod:case:selection',version:1,case_id:id},window.location.origin);
    const attempt=selectionHandoff.begin(id);
    try{
     const chosen=await authorized.select(id,{onResolved:raw=>selectionHandoff.capture(attempt,raw)});
-    return chosen&&selectionHandoff.current(attempt)&&isCurrent()&&['idle','error'].includes(voicePhase)?await resident.selectCase(id):false;
+    const ready=chosen&&selectionHandoff.current(attempt)&&isCurrent()&&['idle','error'].includes(voicePhase)?await resident.selectCase(id):false;
+    if(ready)prepareCatalog();return ready;
    }finally{selectionHandoff.finish(attempt);}
   };
   catalogTimer=setInterval(()=>{if(shouldRefreshAuthority())void authorized.refresh();},AUTHORITY_REFRESH_MS);void authorized.refresh().then(()=>resident.refresh());
@@ -67,8 +72,18 @@ if(host){
  window.addEventListener('yod-agents-visibility',e=>{panel=e.detail===true;host.hidden=true;});
  window.addEventListener('yod-agents-ready',()=>paint(resident.snapshot()));
  window.addEventListener('yod-office-ready',()=>paint(resident.snapshot()));
- window.addEventListener('online',()=>{void authorized?.refresh();void resident.refresh();});
- document.addEventListener('visibilitychange',()=>{if(!document.hidden){prepareCatalog();void authorized?.refresh();void resident.refresh();}});
+ function refreshOnWake(){
+  if(authorized&&authorityRefreshDue(authorized.snapshot()))void authorized.refresh();
+  if(authorityRefreshDue(resident.snapshot()))void resident.refresh();
+  prepareCatalog();
+ }
+ window.addEventListener('online',refreshOnWake);
+ window.addEventListener('yod-data-invalidated',()=>{
+  if(document.hidden)return;
+  if(authorized)void authorized.refresh();
+  void resident.refresh();
+ });
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshOnWake();});
  window.addEventListener('pagehide',()=>{officePreparation.close();selectionHandoff.invalidate();resident.dispose();transport.dispose();delete window.YodResidentAgents;});
  if(!AUTONES_MULTIPLES)void resident.refresh();
 }

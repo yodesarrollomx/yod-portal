@@ -67,12 +67,21 @@ export class DurableGoals {
  emit(){this.notify(this);for(const listener of this.listeners)listener(this.state());}
  context(){const c=this.getContext();return c?.selection?.goals?.ready===true&&c.selection.goals.schema===1&&id(c.selection.case_id)?c:null;}
  sync(){const current=this.context();if(!current)return false;if(this.caseId!==current.selection.case_id){this.reset();this.caseId=current.selection.case_id;}return true;}
- reset(){this.epoch++;this.caseId=null;this.model=null;this.pending=null;this.busy=false;this.status='disconnected';this.notice='';this.emit();}
- hide(){this.epoch++;this.model=null;this.busy=false;this.status=this.pending?'unconfirmed':'disconnected';this.emit();}
+ reset(){this.epoch++;this.reading=null;this.caseId=null;this.model=null;this.pending=null;this.busy=false;this.status='disconnected';this.notice='';this.emit();}
+ hide(){this.epoch++;this.reading=null;this.model=null;this.busy=false;this.status=this.pending?'unconfirmed':'disconnected';this.emit();}
  async call(method,payload){const transport=typeof this.transport==='function'?this.transport():this.transport;if(typeof transport?.[method]!=='function')throw Error('unavailable');let timer;try{return await Promise.race([transport[method](structuredClone(payload)),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('timeout')),this.timeout);})]);}finally{clearTimeout(timer);}}
  current(epoch,caseId){return epoch===this.epoch&&this.context()?.selection.case_id===caseId;}
- async read(){
-  if(this.busy||!this.sync()||this.context()?.busy)return false;
+ read(){
+  if(!this.sync()||this.context()?.busy)return Promise.resolve(false);
+  if(this.reading?.epoch===this.epoch&&this.reading.caseId===this.caseId)return this.reading.promise;
+  if(this.busy)return Promise.resolve(false);
+  const reading={epoch:this.epoch,caseId:this.caseId};
+  reading.promise=new Promise(resolve=>{reading.resolve=resolve;});this.reading=reading;
+  const finish=value=>{if(this.reading===reading)this.reading=null;reading.resolve(value);};
+  void this.readFresh().then(finish,()=>finish(false));
+  return reading.promise;
+ }
+ async readFresh(){
   const epoch=this.epoch,caseId=this.caseId;this.busy=true;this.status=this.pending?'unconfirmed':'loading';this.emit();
   try{const response=await this.call('readGoals',{case_id:caseId});if(!this.current(epoch,caseId))return false;if(response?.ok===false)throw Error(response.error);this.model=validateGoals(response,caseId);this.status=this.pending?'unconfirmed':'ready';this.notice=this.pending?'El último guardado no está confirmado. Puedes consultar lo que ya quedó guardado o reintentar la misma acción.':'';return true;}
   catch(error){if(this.current(epoch,caseId))this.failed(error,false);return false;}

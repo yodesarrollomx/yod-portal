@@ -16,6 +16,9 @@ Esta es la entrada para entender y modificar YOD OS. Prioridad de mejora acordad
 - [Cobertura y verificación](verificacion.md), [reglas de cambio](cambios.md) y [evolución](evolucion.md).
 - [Identidad del publicador automático](publicador-github.md): causa del bloqueo, permisos mínimos y registro pendiente.
 
+- [Sala · continuidad y publicación en nube](sala-nube-20261015.md): reparación técnica autorizada, contratos de transporte, snapshots, correo y chinches; implementación y producción se acreditan por separado.
+- [Sala · capacidad para imágenes nuevas](sala-medios-publicos-20261015.md): manifiesto schema 1, lectores antes del emisor, releases públicos inmutables y verificación anónima; emisor desactivado, históricos y presupuesto conservados.
+
 - [Capacidades compartidas de los agentes](despacho-capacidades.md): referencia Cubefarm, funciones conectadas y plan de instalación por agente.
 
 - [Entrega técnica de Control Maestro](control-maestro.md): versiones, aceptación, mantenimiento y reversión.
@@ -68,3 +71,13 @@ La auditoría no se considera completa mientras existan componentes críticos o 
 - [Masterbrokers · Mini CRM](masterbrokers-mini-crm.md): comparación de PPP guardados, historial fechado, fuentes y calendario sobre el mismo Sheet.
 
 - [Presentación simplificada de siete escenas](investor-simple-story.md): trazo grueso por escena, claridad comercial, lectura opcional y archivo anterior; registro previo.
+
+- [Presentación móvil · una superficie y chinches](investor-single-surface.md): interacción iPhone, anotaciones, almacenamiento local, pruebas y límites de recepción; registro previo.
+
+- [Chinches de presentaciones → Sala](presentation-pins-ingest.md): relevo entre orígenes, sobres privados y acuses reales; sin cambiar el calendario.
+
+- [Presentación guiada entre dispositivos](presentation-guided.md): sesión conductor/invitado, revisión temporal acotada y conservación de fuentes y chinches.
+
+- [Sala · correcciones y aprobación](sala-correcciones.md): dictado revisado, contexto fijado y acuses separados de entrega/aprobación.
+
+- [Despacho 2.0 · coordinador aislado](despacho-v2-coordinator.md): parte2, API, límites y pruebas; sin activación en pantallas.

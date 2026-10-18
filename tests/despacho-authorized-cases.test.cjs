@@ -40,3 +40,46 @@ test('retry cannot extend an expired lease or restore a revoked case',async()=>{
  const c=createAuthorizedCases({now:()=>clock,schedule:()=>1,cancel(){},transport:{listAuthorized:async()=>({ok:true,schema:1,cases:[profile('a')]}),resolveCurrent:async()=>{calls++;throw Error('timeout');}}});
  await c.refresh();await c.select('a');clock=500000;assert.equal(await c.select('a'),null);assert.equal(calls,1);c.clear();assert.equal(await c.select('a'),null);c.dispose();
 });
+
+test('brief catalogs hydrate only the selected case and pass its actual goals capability',async()=>{
+ const {createAuthorizedCases}=await import('../despacho3d/authorized-cases.mjs');
+ for(const descriptor of [undefined,{schema:2,ready:true,worker_ready:true},{schema:1,ready:'yes',worker_ready:true}]){
+  const calls=[],goals={schema:1,ready:true,worker_ready:false};let handed;
+  const c=createAuthorizedCases({reuseCatalog:true,schedule:()=>1,cancel(){},transport:{
+   listAuthorized:async()=>({ok:true,schema:1,cases:['a','b'].map(id=>({...profile(id),goals:descriptor}))}),
+   resolveCurrent:async p=>{calls.push(p);return {...profile(p.case_id),goals};}}});
+  await c.refresh();assert.equal(calls.length,0);
+  assert.deepEqual((await c.select('b',{onResolved:r=>handed=r})).goals,goals);
+  assert.deepEqual(calls,[{case_id:'b'}]);assert.deepEqual(handed.goals,goals);c.dispose();
+ }
+});
+test('an explicit disabled capability is reused without treating enqueue as goals permission',async()=>{
+ const {createAuthorizedCases}=await import('../despacho3d/authorized-cases.mjs');
+ const goals={schema:1,ready:false,worker_ready:false};
+ const c=createAuthorizedCases({reuseCatalog:true,schedule:()=>1,cancel(){},transport:{
+  listAuthorized:async()=>({ok:true,schema:1,cases:[{...profile('a'),can_enqueue:true,goals}]}),
+  resolveCurrent:async()=>{throw Error('must_not_probe');}}});
+ await c.refresh();assert.deepEqual((await c.select('a')).goals,goals);c.dispose();
+});
+test('hydration never invents goals on a legacy profile or accepts a different case',async()=>{
+ const {createAuthorizedCases}=await import('../despacho3d/authorized-cases.mjs');
+ for(const returned of ['a','other']){
+  const c=createAuthorizedCases({reuseCatalog:true,schedule:()=>1,cancel(){},transport:{
+   listAuthorized:async()=>({ok:true,schema:1,cases:[profile('a')]}),resolveCurrent:async()=>({...profile(returned),can_enqueue:true})}});
+  await c.refresh();const selected=await c.select('a');
+  if(returned==='a')assert.equal(selected.goals,null);else assert.equal(selected,null);c.dispose();
+ }
+});
+test('late brief-profile hydration cannot replace a newer selection or restore revoked authority',async()=>{
+ const {createAuthorizedCases}=await import('../despacho3d/authorized-cases.mjs');
+ for(const revoke of [false,true]){
+  let release;const goals={schema:1,ready:true,worker_ready:true};
+  const c=createAuthorizedCases({reuseCatalog:true,schedule:()=>1,cancel(){},transport:{
+   listAuthorized:async()=>({ok:true,schema:1,cases:[profile('a'),profile('b')]}),
+   resolveCurrent:p=>p.case_id==='a'?new Promise(r=>release=r):Promise.resolve({...profile('b'),goals})}});
+  await c.refresh();let handed=false;const first=c.select('a',{onResolved:()=>handed=true});await new Promise(r=>setImmediate(r));
+  if(revoke)c.clear();else await c.select('b');
+  release({...profile('a'),goals});assert.equal(await first,null);assert.equal(handed,false);
+  assert.equal(c.snapshot().selected?.case_id,revoke?undefined:'b');c.dispose();
+ }
+});

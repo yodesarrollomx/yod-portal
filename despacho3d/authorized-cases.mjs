@@ -1,5 +1,5 @@
 import {validateSelection} from './conversation.mjs?v=126';
-import {AUTHORITY_LEASE_MS,authorityIsCurrent,isTransientAuthorityError} from './authority-lease.mjs?v=127';
+import {AUTHORITY_LEASE_MS,authorityIsCurrent,isTransientAuthorityError} from './authority-lease.mjs?v=unified283';
 // Private catalog in memory. Selection may reuse a recently validated entry;
 // every business operation still validates its own exact case and authority.
 export function createAuthorizedCases({transport,onChange=()=>{},beforeSelect=()=>true,now=Date.now,schedule=setTimeout,cancel=clearTimeout,reuseCatalog=false}){
@@ -42,7 +42,10 @@ export function createAuthorizedCases({transport,onChange=()=>{},beforeSelect=()
   if(!selectable())return null;
   const own=epoch,selectionOwn=++selectionEpoch;selected=null;emit();
   try{
-   const r=reuseCatalog&&phase==='current'&&now()>=checkedAt&&now()-checkedAt<55000&&rawItems.has(caseId)
+   // Brief catalogs can omit capabilities. Hydrate only the selected case;
+   // absence is not an explicit denial, and enqueue access never implies goals.
+   const complete=items.find(x=>x.case_id===caseId)?.goals!=null;
+   const r=reuseCatalog&&complete&&phase==='current'&&now()>=checkedAt&&now()-checkedAt<55000&&rawItems.has(caseId)
     ? structuredClone(rawItems.get(caseId)) : await transport.resolveCurrent({case_id:caseId});
    if(disposed||own!==epoch||selectionOwn!==selectionEpoch)return null;
    if(r?.ok===false)throw Error(r.error||'unavailable');

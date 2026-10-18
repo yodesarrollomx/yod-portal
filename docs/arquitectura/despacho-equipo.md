@@ -108,3 +108,11 @@ el PR. La instalación declarada del servidor no sustituye una comprobación con
 sesión autorizada: lectura, instrucción vinculada, recibo durable y recuperación.
 Se mantiene retenida la integración a main hasta esa aceptación; no se presenta el
 composer como disponible por haber pasado CI sintética.
+
+## Conciliación local · 18-oct-2026
+
+Se conserva el coordinador de carga y la continuidad incorporados en main. Al cerrar
+la sección se revoca Equipo y se limpia la selección del plan; ninguno sustituye al otro.
+Las propuestas y fuentes posteriores permanecen completas. La instalación declarada
+del backend no se repite. Nota vinculada, recibo durable y recarga siguen pendientes
+de comprobar con sesión Dirección antes de activar la interfaz.

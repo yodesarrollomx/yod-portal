@@ -211,3 +211,11 @@ body>header>.chinche-ui-tools{width:auto}
 .resident-dock-notice{font:12px/1.4 system-ui;color:#345746;margin:6px 8px;max-width:50ch}
 .resident-dock-notice:empty{display:none}
 @media(max-width:700px){#resident-dock{bottom:82px;max-width:calc(100% - 28px);padding:5px}.resident-dock-cards button{min-width:96px;padding:6px 8px;gap:6px}.resident-dock-symbol{width:24px;height:24px}.resident-dock-cards b{max-width:80px;font-size:11px}}
+
+/* #283: small controls leave the room visible; touch targets remain 44px. */
+#office-load-status{position:absolute;top:76px;left:50%;transform:translateX(-50%);z-index:16;width:min(420px,calc(100% - 28px));box-sizing:border-box;padding:12px 16px;background:#fafbf6f5;border:1px solid #d9dfd4;border-radius:14px;color:#25463c;box-shadow:0 6px 24px #20343c16;font:13px/1.5 system-ui;pointer-events:none}
+#office-load-status[hidden]{display:none}#office-load-status span,#office-load-status small{display:block}#office-load-status small{font-size:11px;color:#63766b}#office-load-status progress{width:100%;height:5px;accent-color:#477b65}#office-load-status[data-blocked=true]{border-color:#b28c58}
+.resident-dock-card{display:flex;align-items:center;border-radius:12px;border:1px solid #dce3d9;flex:none}.resident-dock-card[data-activity=blocked]{border-color:#bb9274}
+.resident-dock-cards .resident-dock-card>button{min-height:44px;padding:5px 8px;min-width:96px}.resident-dock-cards .resident-dock-card>.resident-dock-talk{min-width:44px;font-size:10px;color:#295d4d;border-left:1px solid #dce3d9;border-radius:0 10px 10px 0;padding:5px}
+.resident-dock-symbol{width:22px;height:22px;font-size:12px}.resident-dock-cards small{margin-top:2px;max-width:112px}#resident-dock{padding:5px;border-radius:15px}
+@media(max-width:700px){#office-load-status{top:68px}.resident-dock-cards .resident-dock-card>button{min-width:84px}.resident-dock-cards .resident-dock-card>.resident-dock-talk{min-width:44px}.resident-dock-cards small{max-width:86px}}

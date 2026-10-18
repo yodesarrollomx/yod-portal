@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-15.equipo-relevo.1",
-  "checked_at": "2026-10-15",
+  "revision": "2026-10-18.equipo-relevo.1",
+  "checked_at": "2026-10-18",
   "priorities": [
     "vender_mas",
     "margen_y_control",
     "cobrar_antes"
   ],
   "coverage": {
-    "summary": "Inventario conciliado de 22 repositorios, 90 componentes y 137 conexiones. Sala: transferencia de decisiones, nuevas tarjetas y medios durables comprobados para el alcance inspeccionado; Bandeja espera consentimiento y relevo.",
+    "summary": "Inventario conciliado de 22 repositorios, 90 componentes y 142 conexiones. Sala: reparación de nube integrada y recibos de Pages comprobados para el alcance inspeccionado; externalización de nuevos medios propuesta con emisor desactivado. Bandeja espera consentimiento y relevo.",
     "production_verified": false,
     "limitations": [
       "No se ha comprobado la versión activa de todos los Apps Script",
@@ -19,7 +19,10 @@
       "La diferencia editor/versión51 corresponde a la auditoría histórica; recuperación PPP del 5-oct parte de V65 sin adaptador y registra publicación API V66 con editor/candidato/versión iguales. GET Patrimonial y 166 celdas cotejados según coordinador sólo para el caso inspeccionado; no certifica geometría, Vertical ni todos los módulos/casos.",
       "Obra requiere confirmar su libro efectivo y reglas de delegación antes de integrar el prototipo de identidad.",
       "Sala: recorrido de cinco decisiones guardadas contrastado con nuevas tarjetas y dos medios durables de la toma aprobada. Aceptación editorial, publicación a redes y conciliación de siete fallos históricos siguen separadas; la App publicadora general no está acreditada.",
-      "La cobertura de oficina asigna todo el inventario inspeccionado; responsables operativos por confirmar e integraciones pendientes siguen explícitos. No equivale a operación completa ni a descubrir todos los recursos de todas las cuentas."
+      "La cobertura de oficina asigna todo el inventario inspeccionado; responsables operativos por confirmar e integraciones pendientes siguen explícitos. No equivale a operación completa ni a descubrir todos los recursos de todas las cuentas.",
+      "CHG-SALA-NUBE-20261015: PR308 integrado y Pages, Plan, Revisión y Cierre comprobados por corridas concretas, sin acreditar correo recibido ni producción nueva. CHG-SALA-MEDIOS-PUBLICOS-20261015 es preparación local: no hay offload, canario anónimo ni inmutabilidad de nuevos activos acreditados; presupuesto Pages permanece en 900 MiB.",
+      "CHG-INVESTOR-SINGLE-SURFACE registra UX móvil y chinches locales autorizadas. No acredita implementación, publicación, recepción remota, sincronización entre orígenes ni aceptación física de iPhone.",
+      "CTR-SALA-PRODUCCION-HISTORICA es propuesto: backend no publicado, despliegue requiere propietario y SALA_PRODUCCION_HISTORICA=0. Omisión por ventana14d no equivale a fuente retirada. Auditoría actual encontró0 elegibles; no acredita aprobaciones nuevas ni autoriza reencolados."
     ]
   },
   "repositories": [
@@ -642,7 +645,7 @@
         "SYS-PORTAL"
       ],
       "status": "declarado",
-      "runtime_status": "Portal PR141 publicado en Pages (0351157). El clienteWeb y origen ya estaban registrados correctamente: OS recupera Referer de sólo origen y GSI devuelve200 en publicación escritorio/móvil. No acredita inicio de sesión personal, micrófono físico ni cobertura operativa completa de YOD."
+      "runtime_status": "Portal PR141 publicado en Pages (0351157). El clienteWeb y origen ya estaban registrados correctamente: OS recupera Referer de sólo origen y GSI devuelve200 en publicación escritorio/móvil. No acredita inicio de sesión personal, micrófono físico ni cobertura operativa completa de YOD. Implementado283 en rama: diagnóstico seguro de canje; publicación pendiente."
     },
     {
       "id": "SYS-PLAN-POTENCIAL",
@@ -845,6 +848,17 @@
           "commit": "4582fc3c42a2ac8459dea7d553c42f9719f07962",
           "claim": "PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes.",
           "status": "ejecucion"
+        },
+        {
+          "claim": "Ampliación técnica autorizada por Dirección en la conversación actual: recuperación de transporte, publicación acumulativa, correo trazable y conciliación de chinches. Registro previo; la fuente no acredita despliegue. Registro local: docs/arquitectura/sala-nube-20261015.md.",
+          "status": "propuesto"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "docs/SALA-ONLINE.md",
+          "commit": "e4da08887e45e984be8ea945ce607db464b0fb52",
+          "claim": "PR308 integrado; cinco CI del head revisado en verde. Pages 38688574369, Plan 38688574251 y Revisión 38688731578 success; hijos Pages 38688736093 y 38689030877 confirmaron snapshot y data_sha exactos. Cierre 38688574178 success con acuse privado byte-verificado y cero escrituras de negocio. No acredita correo recibido, producción nueva ni offload.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -863,7 +877,7 @@
       ],
       "source_of_truth": "SHEET-SALA: propuestas, decisiones, producción, reglas, motores y cola; archivos de repositorio son superficie o respaldo",
       "status": "ejecucion",
-      "runtime_status": "Cierre y rutas actuales de nube comprobados por run38166137118; producción habilitada y compuertas humanas. Revisión/correo supervisados. Comparación parcial original31.88s/nube48s, cinco láminas de fuente y sexta referencia del corte. Fuente/triggers originales y medios históricos siguen separados, sin equivalencia integral acreditada."
+      "runtime_status": "PR308 integrado y recorridos 38688574369/38688574251/38688731578/38688574178 success en el alcance auditado: Pages y snapshots exactos, productor sin trabajos nuevos y ejecutor sin pendientes. Recepción de correo, equivalencia completa, fallos históricos y producción nueva no acreditados. Nueva externalización de medios propuesta, desactivada y sin canario."
     },
     {
       "id": "SYS-SALA-OPERACION",
@@ -2001,6 +2015,10 @@
           "commit": "159d932cd81c2d2c3fda31a862ea60fc0b3ae667",
           "claim": "PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto.",
           "status": "ejecucion"
+        },
+        {
+          "claim": "Ampliación técnica autorizada por Dirección en la conversación actual: recuperación de transporte, publicación acumulativa, correo trazable y conciliación de chinches. Registro previo; la fuente no acredita despliegue. Registro local: docs/arquitectura/sala-nube-20261015.md.",
+          "status": "propuesto"
         }
       ],
       "data_entities": [
@@ -2525,6 +2543,17 @@
           "commit": "dde4ab0151c5cc36071882380afe7ecf495ecef6",
           "claim": "Lote38310054319: productor success. Ningún nuevo trabajo habilitado; las imágenes rehechas esperan revisión editorial.",
           "status": "ejecucion"
+        },
+        {
+          "claim": "Ampliación técnica autorizada por Dirección en la conversación actual: recuperación de transporte, publicación acumulativa, correo trazable y conciliación de chinches. Registro previo; la fuente no acredita despliegue. Registro local: docs/arquitectura/sala-nube-20261015.md.",
+          "status": "propuesto"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "docs/SALA-ONLINE.md",
+          "commit": "e4da08887e45e984be8ea945ce607db464b0fb52",
+          "claim": "PR308 integrado. Productor del Cierre 38688574178 success: 14 fuentes recuperadas/visibles, 29 decisiones sí y 153 trabajos ya existentes; cero nuevos. La ejecución acredita conciliación del proceso, no nueva producción ni aprobación editorial.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -2582,6 +2611,17 @@
           "path": "nube/sala_ejecutor.py",
           "commit": "dde4ab0151c5cc36071882380afe7ecf495ecef6",
           "claim": "Lote38310054319: ejecutor success; COLA124 registros,0 trabajos habilitados pendientes,0 entregables nuevos en esta vuelta.",
+          "status": "ejecucion"
+        },
+        {
+          "claim": "Ampliación técnica autorizada por Dirección en la conversación actual: recuperación de transporte, publicación acumulativa, correo trazable y conciliación de chinches. Registro previo; la fuente no acredita despliegue. Registro local: docs/arquitectura/sala-nube-20261015.md.",
+          "status": "propuesto"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "docs/SALA-ONLINE.md",
+          "commit": "e4da08887e45e984be8ea945ce607db464b0fb52",
+          "claim": "PR308 integrado. Ejecutor del Cierre 38688574178 success: cero pendientes; cola agregada 138 hecho, 11 fallo y 4 obsoleto. Sin ejecución nueva de medios ni acreditación de entrega de correo.",
           "status": "ejecucion"
         }
       ],
@@ -3901,12 +3941,19 @@
           "claim": "Conexión cliente/backend",
           "status": "declarado",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "claim": "Diseño local del contrato produccion-historica-v1 para corregir exclusión técnica por ventana14d. Aún sin despliegue Apps Script ni GET completo verificado; no cambia ACL/scopes ni habilita flag.",
+          "status": "propuesto"
         }
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
-      "contract_ids": []
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. Ampliación propuesta: CTR-SALA-TRANSPORTE-NUBE; reintentos sólo de lecturas declaradas y conciliación de mutaciones inciertas. CTR-SALA-PRODUCCION-HISTORICA propone GET produccion de historial completo con rol agente existente; backend no publicado y SALA_PRODUCCION_HISTORICA=0 hasta verificación por propietario.",
+      "contract_ids": [
+        "CTR-SALA-TRANSPORTE-NUBE",
+        "CTR-SALA-PRODUCCION-HISTORICA"
+      ]
     },
     {
       "id": "CON-032",
@@ -4973,8 +5020,10 @@
       ],
       "status": "codigo",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
-      "contract_ids": []
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. Ampliación propuesta: CTR-SALA-TRANSPORTE-NUBE; reintentos sólo de lecturas declaradas y conciliación de mutaciones inciertas.",
+      "contract_ids": [
+        "CTR-SALA-TRANSPORTE-NUBE"
+      ]
     },
     {
       "id": "CON-083",
@@ -5691,7 +5740,7 @@
       "to": "EXT-ACTIONS",
       "kind": "publicacion",
       "label": "Snapshots privados de datos públicos y Pages con recibo verificable",
-      "contract": "CTR-SALA-SNAPSHOT-ONLINE: datos aprobados y validados, draft privado, hash y recibo exactos antes del montaje; CI de código separado y obligatorio.",
+      "contract": "CTR-SALA-SNAPSHOT-ONLINE: datos aprobados y validados, draft privado, hash y recibo exactos antes del montaje; CI de código separado y obligatorio. CHG-SALA-NUBE-20261015 integrado en PR308 con recibos FULL exactos y guardas run_id/attempt/presupuesto; flag incremental sigue OFF, sin activación de deltas acreditada. CTR-SALA-MEDIOS-PUBLICOS prepara imágenes nuevas y no cambia la privacidad de los snapshots.",
       "status": "ejecucion",
       "runtime_verified": true,
       "evidence": [
@@ -5701,6 +5750,13 @@
           "commit": "73902861db96d213a07f788996f50fdcf3c65566",
           "claim": "Run 38141812652 publicó la revisión acumulativa y esperó el recibo exacto de Pages run 38141874311; ambos success. ZIP permitido, bloqueo CAS y release permanece draft:true.",
           "status": "ejecucion"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "nube/snapshots_online.py",
+          "commit": "e4da08887e45e984be8ea945ce607db464b0fb52",
+          "claim": "PR308 integrado. Pages 38688574369, Pages de Plan 38688736093 y Pages de Revisión 38689030877 success con snapshots413444031/413458897/413460646 y recibos exactos. FULL operativo en el alcance inspeccionado; incremental OFF y offload no activado.",
+          "status": "ejecucion"
         }
       ],
       "contract_ids": [
@@ -5709,7 +5765,7 @@
       "runtime_evidence": {
         "checked_at": "2026-10-11T13:08:02Z",
         "scope": "Revisión agregada de cola y rutinas en producción; publicación de snapshot privado y Pages con código/data SHA exactos. No acredita todos los registros históricos ni disparadores del Apps Script original.",
-        "receipt": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38141812652 ; https://github.com/yodesarrollomx/sala-edicion/actions/runs/38141874311 ; https://yodesarrollomx.github.io/sala-edicion/version-online.json ; snapshot_id=409673426 ; code_sha=73902861db96d213a07f788996f50fdcf3c65566 ; data_sha=beb4361a64e0b77206e313964514587b816de6184dc26a1d8b052e5c34e76c11"
+        "receipt": "https://github.com/yodesarrollomx/sala-edicion/actions/runs/38141812652 ; https://github.com/yodesarrollomx/sala-edicion/actions/runs/38141874311 ; https://yodesarrollomx.github.io/sala-edicion/version-online.json ; snapshot_id=409673426 ; code_sha=73902861db96d213a07f788996f50fdcf3c65566 ; data_sha=beb4361a64e0b77206e313964514587b816de 6184dc26a1d8b052e5c34e76c11"
       }
     },
     {
@@ -5871,7 +5927,7 @@
           "status": "ejecucion"
         }
       ],
-      "contract": "CTR-SALA-CIERRE-ONLINE; destinatario/compuertas existentes y comprobación por alcance.",
+      "contract": "CTR-SALA-CIERRE-ONLINE; destinatario/compuertas existentes y comprobación por alcance. CHG-SALA-NUBE-20261015 propone conteos históricos y producido/publicado separados; fuente GAS desplegada por comprobar.",
       "contract_ids": [
         "CTR-SALA-CIERRE-ONLINE"
       ]
@@ -6303,8 +6359,8 @@
       "from": "SVC-SALA-PRODUCTOR",
       "to": "EXT-MOTORES-MEDIA",
       "kind": "api",
-      "label": "Fotografía HiDream gratuita con recibo y cupo observable",
-      "contract": "CTR-SALA-HIDREAM",
+      "label": "Fotografía HiDream oficial con adaptadores I1 y O1 y recibos",
+      "contract": "CTR-SALA-HIDREAM Rechazo terminal explícito sin imagen permite reintento posterior con negativa privada; resultado incierto sólo conciliación. O1 es una selección explícita después de prueba real, no respaldo pagado; cambio de política distingue nuevas tomas de envíos I1 inciertos.",
       "contract_ids": [
         "CTR-SALA-HIDREAM"
       ],
@@ -6334,6 +6390,25 @@
           "claim": "Consumo propuesto del mismo contrato empleado por el PPP; lectura autorizada y campos guardados se comprobarán por separado.",
           "status": "propuesto"
         }
+      ]
+    },
+    {
+      "id": "CON-SALA-MEDIOS-PUBLICOS",
+      "from": "SYS-SALA",
+      "to": "EXT-ACTIONS",
+      "kind": "publicacion",
+      "label": "Imágenes nuevas en releases públicos inmutables con manifiesto fijado por recibo",
+      "contract": "CTR-SALA-MEDIOS-PUBLICOS: fase1 sólo nuevas imágenes; lector primero, pin SHA256 de bytes exactos, verificación anónima, journal de mutación e inmutabilidad antes de SALA_MEDIOS_PUBLICOS=1. Emisor OFF; conexión no comprobada en ejecución.",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "claim": "Diseño local en docs/arquitectura/sala-medios-publicos-20261015.md y schema 1 acordado por UI/snapshots/almacén. Sin release/asset, canario, activación o despliegue acreditado.",
+          "status": "propuesto"
+        }
+      ],
+      "contract_ids": [
+        "CTR-SALA-MEDIOS-PUBLICOS"
       ]
     }
   ],
@@ -7019,7 +7094,8 @@
         "Desacoplamiento editorial/producción corregido: las cinco decisiones inspeccionadas dieron nuevas tarjetas. Falta aceptación editorial de las nuevas láminas, terminar las etapas aprobables y conciliar siete fallos históricos sin reactivarlos automáticamente.",
         "Cuotas limitadas observadas en Cloudflare/Gemini imagen; HF ruta antigua410 y automático402. Pollinations720×960 corregido y probado con motor real; no certifica disponibilidad permanente de todos los proveedores.",
         "Tras el lote inspeccionado quedan18 láminas anteriores por preparar y7 fallos históricos por conciliar. Las nuevas láminas requieren aprobación editorial antes de sus etapas y cortes.",
-        "Tiny SD retirado de generación/respaldo/revisión por Dirección. La falta de cuota de motores permitidos conserva las regeneraciones pendientes; el primer lote observado tuvo7 sin toma, sin suplirlas con el modelo retirado."
+        "Tiny SD retirado de generación/respaldo/revisión por Dirección. La falta de cuota de motores permitidos conserva las regeneraciones pendientes; el primer lote observado tuvo7 sin toma, sin suplirlas con el modelo retirado.",
+        "CHG-SALA-NUBE-20261015: reparación técnica autorizada registrada; integración, compatibilidad histórica, recibo de Pages, fuente de correo viva y conciliación de chinches deben comprobarse por separado. Un dispatch no acredita producción o cumplimiento."
       ],
       "evidence": [
         {
@@ -7094,6 +7170,10 @@
           "claim": "Veto publicado de Tiny SD; prueba38287509000 filtró21 opciones de28 láminas pendientes,0 vetadas visibles. Referencias aprobadas y votos preservados.",
           "status": "ejecucion",
           "commit": "02b06521575ea6b938a7af7350dcae9bb6ea54ab"
+        },
+        {
+          "claim": "Ampliación técnica autorizada por Dirección en la conversación actual: recuperación de transporte, publicación acumulativa, correo trazable y conciliación de chinches. Registro previo; la fuente no acredita despliegue. Registro local: docs/arquitectura/sala-nube-20261015.md.",
+          "status": "propuesto"
         }
       ],
       "status": "ejecucion"
@@ -8479,6 +8559,80 @@
         "Ruta avanza por recibos locales, no exploración.",
         "Hilo/caso/borrador/ref/versión defendida/capacidades conservadas.",
         "Colores y gráficos para decidir sin XP ni trabajo fingido."
+      ]
+    },
+    {
+      "id": "NUBE",
+      "titulo": "Sala existente con producción y publicación comprobables en nube",
+      "boards": [
+        "SYS-SALA",
+        "SYS-CONTROL"
+      ],
+      "problem": "Una mesa sin pendientes, una ejecución solicitada o un producto generado pueden confundirse con falta de decisiones o con una publicación terminada; fallos de red y acumulación de medios dificultan la continuidad.",
+      "benefit": "Mantener producción autorizada continua y distinguir pendiente, producido y publicado mediante recibos conservando decisiones e historia.",
+      "metric": "Publicaciones comprobadas por recibo exacto; errores de lectura visibles; cero mutaciones inciertas reenviadas sin conciliación y cero cumplimientos sólo por dispatch.",
+      "dependencies": [],
+      "effort": "M",
+      "decision": "aprobada",
+      "prerequisites": [
+        "Autorización técnica expresa de Dirección en la conversación actual, conservando revisión humana y ACL existentes.",
+        "Fuentes canónicas del backend vivo; un espejo de Apps Script no acredita su despliegue.",
+        "Propuesta y contratos registrados antes de la implementación; CI y PR de los repositorios afectados.",
+        "Rollout lector v1/v2 antes del emisor incremental; emisión v1 por defecto y drenaje acreditado antes de activar el flag."
+      ],
+      "tasks": [
+        "Aplicar recuperación acotada sólo a lecturas declaradas y reconciliar mutaciones con efecto incierto.",
+        "Acumular snapshots compatibles mediante manifiestos, padre y replay verificables; mutex por ejecución e intento real y presupuesto antes de Pages.",
+        "Separar conteos históricos editoriales, producción durable y publicación confirmada en informes/correo existentes.",
+        "Conciliar chinches por evidencia real y deduplicación; mantener el vigilante residente y comprobar su conexión por separado."
+      ],
+      "acceptance": [
+        "Restaurar snapshot histórico y sus deltas preserva medios; error, conflicto o exceso de presupuesto no publica ni monta.",
+        "El mismo run/attempt puede conciliar su recibo; otro attempt no hereda un candado ni una escritura incierta sin comprobarla.",
+        "Una mesa vacía no borra decisiones anteriores; error de lectura no se comunica como cero ni como producción terminada.",
+        "Dispatch de una idea sólo acredita solicitud; not_planned conserva su motivo; cumplimiento exige evidencia y registro confirmado sin duplicación.",
+        "Ninguna prueba decide por el editor, cambia permisos, destinatarios, reglas de negocio o publica a redes.",
+        "Un push de cierre no solicita entrada por correo ni repite comparación histórica; opciones manuales explícitas conservadas. Antes de rollback con deltas, snapshot completo v1 comprobado usando lector v2."
+      ]
+    },
+    {
+      "id": "MEDIOS",
+      "titulo": "Continuidad de Sala con historial completo e imágenes nuevas inmutables",
+      "boards": [
+        "SYS-SALA",
+        "SYS-CONTROL"
+      ],
+      "problem": "El artefacto inspeccionado ocupa 897647868 bytes, cerca del 95% del presupuesto de 900 MiB; recomprimir históricos cambia huellas y sólo ahorró 2.57% en cinco muestras PNG. Además, limitar la lectura a14 días puede omitir fuentes no retiradas con decisiones históricas: omisión por ventana no equivale a desaparición o retiro.",
+      "benefit": "Frenar el crecimiento de imágenes nuevas sin romper rutas históricas, identidad editorial, snapshots ni permisos de Drive.",
+      "metric": "Bytes nuevos servidos por release inmutable y comprobados anónimamente; cero referencias sin pin/bytes verificados, cero históricos modificados y Pages siempre dentro de 900 MiB.",
+      "dependencies": [
+        "NUBE"
+      ],
+      "effort": "M",
+      "decision": "aprobada",
+      "prerequisites": [
+        "Autorización técnica de migración de Sala del 14-oct-2026 persiste; no autoriza decisiones editoriales, nuevos pagos, ACL o ámbitos de App.",
+        "Instalar y publicar primero lectores compatibles de UI, FULL y consumidores; comprobar recibo fresco con media_manifest_sha256 y meta sala-medios-publicos=1 antes de cualquier emisión.",
+        "SALA_MEDIOS_PUBLICOS=1 es opt-in y permanece OFF. Inmutabilidad de release/activos, canario anónimo de bytes y ausencia de lectores antiguos incompatibles deben acreditarse antes de habilitarlo.",
+        "Mantener presupuesto 900 MiB y datos históricos. Sólo imágenes nuevas no presentes en Git ni baseline pueden externalizarse; ningún activo/configuración se crea o activa por este registro.",
+        "CTR-SALA-PRODUCCION-HISTORICA pertenece a la reparación NUBE ya autorizada. GET sólo lectura con el rol agente existente; SALA_PRODUCCION_HISTORICA=0 hasta despliegue por propietario y contrato completo verificado. No ampliar ACL, scopes ni activar backend por este registro."
+      ],
+      "tasks": [
+        "Aplicar schema 1 estricto de datos/medios-publicos.json, límites antes de parse/emisión y pin SHA256 de sus bytes exactos en version-online.json.",
+        "Resolver rutas lógicas en UI con comprobación del recibo y manifiesto; fallar cerrado ante ausencia de pin, error de lectura, hash distinto o schema inválido.",
+        "Mantener snapshots privados y FULL compatibles: transportar el manifiesto y excluir sólo bytes externos ya comprobados; hidratar bytes verificados para Mesa/corte y file_is_published exacto.",
+        "Publicar únicamente imágenes nuevas en releases públicos inmutables del mismo repo, con journal previo a POST, conciliación por GET y reentrada que no repite un POST ambiguo.",
+        "Probar contratos sintéticos, despliegue de lectores y canario anónimo antes de habilitar emisión; conservar rutas, MD5 y aprobaciones existentes.",
+        "Integrar el lector de historial completo y su esquema propuesto sin decidir nuevas aprobaciones ni reencolar históricos; resolver última PROP y DEC con sellos reales y vetos propios/ajenos conservados."
+      ],
+      "acceptance": [
+        "Manifest máximo 2 MiB; imagen de 1 a 25 MiB; máximo 1000 assets únicos por release, sin tope arbitrario de entradas distinto del límite de bytes del manifest.",
+        "Una URL o metadato no acredita publicación: exigir repo/tag/asset inmutable, GET anónimo de bytes exactos, SHA256/tamaño/tipo válidos y pin del recibo fresco.",
+        "Crash tras POST aceptado con ACK perdido, pérdida total del runner y nuevo attempt con el mismo payload: GET del mismo tag estable y asset, cero POST adicionales. Cambiar run/attempt/source no cambia la identidad; cambiar repo/proceso/archivo/hash/tamaño/MIME/nombre sí. Consulta inconclusa conserva pendiente sin mutación.",
+        "UI legacy acepta 404 del manifest sólo cuando el recibo tampoco declara pin; demás inconsistencias cierran imágenes/aprobaciones y no inventan estados de producción.",
+        "Todos los históricos conservan bytes y URLs. Vídeo, audio y muestras siguen en Pages en fase1; snapshots de datos siguen siendo releases draft privados.",
+        "Desactivar SALA_MEDIOS_PUBLICOS detiene sólo nuevas externalizaciones. Si ya existe un medio externo, conservar lector compatible, manifiesto, pin del recibo, releases inmutables y sus activos. No volver a un lector antiguo ni retirar activos hasta repatriar y verificar todos los bytes referenciados, publicar un FULL íntegro dentro de 900 MiB y comprobar recibo fresco y consumidores. No borrar históricos ni alterar ACL, decisiones, destinatarios o reglas de negocio.",
+        "Fuera de ventana14 días no equivale a retirada: lectura de historial completo declarada y validada, latest real por editor/pid/lámina y estado editorial vigente comprobado antes de producir. Retirada más reciente prevalece; cero elegibles actuales no autoriza nuevas decisiones o reencolados. Sin backend verificado, flag0 e historial no confirmado."
       ]
     }
   ],
@@ -12220,13 +12374,17 @@
         "SYS-YOD-OS"
       ],
       "status": "propuesto",
-      "approval": "Dirección solicita implementar mini CRM en Masterbrokers el 13-oct: desplegables comparables, PPP en lectura, historial con fecha/fuente, calendario y reuniones con participantes, reutilizando el Sheet. Autorización de publicación vigente de Masterbrokers; no amplía identidad, permisos, reglas comerciales ni invitaciones externas.",
-      "proposal": "Vista progresiva sobre brokers.v1: una barra por expediente y varios desplegables abiertos; referencia del propietario/contacto sin inferir titularidad; GET del caso PPP existente muestra sólo inputs y resultados guardados con versión y fecha. Historial append-only en BROKERS_Actividades.note con sobre YOD-CRM-v1 (tipo, fecha ocurrida, estado, participantes, origen, URL, reemplazo y etapa observada), sin nueva tabla ni base. Calendario deriva hechos y reuniones programadas; confirmar/cancelar agrega evento que reemplaza la programación en calendario, preservando ambos en historial. Próximo paso y fecha se guardan mediante el contrato actual; importación de documentos verificados añade hechos históricos sin cambiar pendientes. No deduce actividad desde un clic de consulta ni convierte fecha de carga en fecha de reunión. WhatsApp requiere adjunto/fuente proporcionada, no existe escucha continua demostrada.",
+      "approval": "Dirección solicita implementar mini CRM en Masterbrokers el 13-oct: desplegables comparables, PPP en lectura, historial con fecha/fuente, calendario y reuniones con participantes, reutilizando el Sheet. Autorización de publicación vigente de Masterbrokers; no amplía identidad, permisos, reglas comerciales ni invitaciones externas. El 17-oct Dirección solicita ejecutar hasta terminar la jerarquía plaza → responsables → clientes → asuntos, conservando permisos. Segunda corrección directa17-oct: simplificar como sistema conectado, quitar Mi portal/Todos los clientes y contadores aislados; ejecutar nueva UX completa.",
+      "proposal": "Vista progresiva sobre brokers.v1: una barra por expediente y varios desplegables abiertos; referencia del propietario/contacto sin inferir titularidad; GET del caso PPP existente muestra sólo inputs y resultados guardados con versión y fecha. Historial append-only en BROKERS_Actividades.note con sobre YOD-CRM-v1 (tipo, fecha ocurrida, estado, participantes, origen, URL, reemplazo y etapa observada), sin nueva tabla ni base. Calendario deriva hechos y reuniones programadas; confirmar/cancelar agrega evento que reemplaza la programación en calendario, preservando ambos en historial. Próximo paso y fecha se guardan mediante el contrato actual; importación de documentos verificados añade hechos históricos sin cambiar pendientes. No deduce actividad desde un clic de consulta ni convierte fecha de carga en fecha de reunión. WhatsApp requiere adjunto/fuente proporcionada, no existe escucha continua demostrada. La entrada de Dirección muestra responsables y su cartera; el rol de sesión nunca cambia al navegar. Agrupación visual por contact_id explícito, con casos independientes por terrain_id/ppp_id. Sin contacto, conservar caso separado y avisar por vincular. La coincidencia única del nombre del actor sólo ordena su tarjeta; no autoriza, activa ni reasigna perfiles. Sonora es etiqueta de plaza solicitada, no una nueva frontera de ACL. Responsable nominal se codifica en next_action existente; conservar categorías anteriores sin convertirlas en nombres. Estado PPP y solicitud explícita de decisión se guardan en notes con sobre YOD-CASE-v1. Reprogramar agrega evento y reemplaza programación sólo en calendario, conserva historial. No inventar clientes, fechas ni decisiones. Refinamiento UX 17-oct: cabecera personal Master Developer, resumen operativo y equipo desplegable; cartera con acceso visible al PPP y ficha de asunto con historia, estado actual y siguiente paso. La entrada canónica siempre muestra Dirección; enlaces de gestión explícitos conservan alcance y botón Mi portal. Importación manual de conversaciones autorizadas con claves de origen, sin escucha continua ni nuevas identidades. Sin cambios de contrato ni reglas financieras. Sustitución UX17-oct: una sola superficie comercial. Dirección entra con alcance equipo, identidad MD y selector de carteras (incluye propia); nunca selecciona automáticamente un broker. Lista de clientes con asuntos directamente accionables, próximo compromiso nominal/fecha y detalle contextual que conserva la cartera en escritorio. En móvil detalle a pantalla completa con regreso explícito. Contactos sin asuntos se muestran separados y colapsados. Agenda y filtros son opcionales. Expediente conecta contacto, terreno/documentos, PPP guardado, acuerdos y proyecto mediante referencias existentes; ausencia es pendiente, no integración o aprobación. Sin contadores decorativos, métricas financieras agregadas ni porcentajes de avance inferidos. Historia y siguiente compromiso quedan en primer nivel; campos avanzados sólo al necesitarlos. Comparación mediante desplegables, fuentes y funciones anteriores se conservan.",
       "tests": [
         "node --test tests/brokers*.test.cjs: codec compatible, fecha real distinta de captura, eventos programados/reemplazados, calendario y resumen PPP sin motor propio.",
         "Chromium320/390/1440: varios expedientes desplegados, comparación alineada, calendario, editor y fuentes; cero overflow.",
         "Permisos existentes, preview sin guardado, sesión invalidada, ACK/revisión/reintentos idempotentes; cero escrituras de prueba en producción.",
-        "Atlas regenerado, checks del portal y pin del consumidor; publicación registrada aparte de integración y de lectura privada."
+        "Atlas regenerado, checks del portal y pin del consumidor; publicación registrada aparte de integración y de lectura privada.",
+        "Clientes múltiples, contactos homónimos, casos compartidos y sin contacto; identidad Dirección conservada y broker aislado.",
+        "Responsable nominal y estado PPP sobreviven roundtrip brokers.v1; programación/reprogramación/resultado; filtros decisión/hoy/vencidos/sin siguiente paso.",
+        "Recorrido de regreso Mi portal, equipo desplegable, enlace PPP visible, fuentes recientes deduplicadas y móvil sin desbordamiento.",
+        "Un único inicio, selector de cartera/propia, lista→detalle→regreso sin perder contexto, conexiones reales/faltantes, teclado y320/390/1440, búsqueda y filtros; preservación de contratos y guardado con readback."
       ],
       "deployment": "Registro previo a implementación. No demuestra publicación, lectura privada nueva, ingestión automática ni invitaciones de Calendar.",
       "rollback": "Revertir sólo frontend; conservar IDs, todas las actividades y sus notas legibles, fuentes, PPP, pendientes, permisos y datos operativos. No restaurar filas de negocio."
@@ -12352,6 +12510,835 @@
       "rollback": "Revertir sólo frontend móvil. Conservar Sheets, versiones anteriores, credenciales y permisos."
     },
     {
+      "id": "CHG-SALA-NUBE-20261015",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "EXT-GMAIL"
+      ],
+      "status": "publicado",
+      "approval": "Dirección autoriza expresamente en la conversación del 14-oct-2026 en Hermosillo (15-oct UTC) auditar y reparar la Sala existente para ejecutarla en nube, incluyendo publicación y correos. Esta autorización técnica conserva las compuertas editoriales y los permisos existentes.",
+      "proposal": "Reparar el proceso existente sin sustituirlo: lecturas declaradas resilientes y errores explícitos; mutaciones inciertas reconciliadas antes de cualquier reenvío; snapshots incrementales compatibles con históricos, padre verificable, replay y mutex por run_id más run_attempt; recibos y presupuesto de Pages comprobados antes de confirmar publicación; correo con decisiones históricas y separación entre producido y publicado; puente de chinches confirma sólo resultados reales y deduplica su registro. La vigilancia Render existente conserva su código y su conexión GitHub se verifica por separado. Despliegue de snapshots en dos fases: instalar lector v1/v2 y mantener emisión v1 por defecto; habilitar incremental sólo mediante SALA_SNAPSHOT_INCREMENTAL=1 después de un drenaje comprobado. El push de cierre no solicita entradas de correo ni repite comparaciones históricas; se conservan las opciones manuales explícitas.",
+      "tests": [
+        "Dobles de transporte: timeout, 429/5xx, Retry-After, respuesta no JSON, ok:false y POST con ACK perdido sin reenvío automático.",
+        "Snapshots históricos y deltas: restauración acumulativa, validación de padre/manifiesto/hash, repetición de una misma ejecución, conflictos entre attempts, lease ambiguo y escritura remota aplicada sin ACK.",
+        "Presupuesto Pages: límite antes de publicar; ningún medio histórico borrado para caber; recibo exacto y montaje rechazado si falta publicación.",
+        "Correo: decisiones de fechas previas y mesa vacía; lectura fallida no equivale a cero; producción durable separada de publicación comprobada. Fuente GAS y versión desplegada verificadas por separado.",
+        "Chinches: dispatch solicitado sin cumplimiento; completed frente a not_planned; registro por ID/proof, relectura después de etiqueta fallida o POST incierto, sin duplicados.",
+        "node scripts/arquitectura.cjs --check; suites existentes de los repositorios consumidores y verificación de impacto contra este modelo.",
+        "python3 -m unittest discover -s tests -p \"*_test.py\"; python3 nube/verificar.py en Sala con dobles y entorno de pruebas existente, antes de la ejecución autorizada.",
+        "Rollout en dos fases: lector v1/v2 con emisión v1 predeterminada; flag incremental sólo tras drenaje acreditado, y full v1 comprobado con lector v2 antes de rollback. Push de cierre sin entrada de correo ni comparación histórica; opciones manuales conservadas."
+      ],
+      "deployment": "Sala PR308 integrado en e4da08887e45e984be8ea945ce607db464b0fb52; cinco CI del head revisado en verde (394 pruebas Python, 18 Node y 13 verificaciones declaradas en el cierre de integración). Pages 38688574369 success (snapshot 413444031); Plan 38688574251 y su Pages 38688736093 success (snapshot 413458897); Revisión 38688731578 y Pages 38689030877 success (snapshot 413460646). Cierre 38688574178 success: acuse privado byte-verificado, cero escrituras de negocio, productor cero nuevos y ejecutor cero pendientes. La fuente/versión Apps Script y recepción real del próximo correo diario siguen separadas; no se envió correo de prueba. SALA_SNAPSHOT_INCREMENTAL permanece desactivado; esta evidencia no acredita offload ni producción nueva.",
+      "rollback": "Si hubo deltas, generar y comprobar primero un snapshot completo v1 con el lector v2. Después revertir PR de código y configuración técnica afectada, conservando bases, deltas, decisiones, colas, chinches, medios, recibos e historial. No desactivar rutinas ajenas ni cambiar ACL, destinatarios o reglas editoriales."
+    },
+    {
+      "id": "CHG-INVESTOR-MOBILE-GESTURE",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL",
+        "SYS-CONTROL"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección solicita misma familia visual e interacción del último Plan de Potencial aprobado: marca, rótulos, lienzo completo y rotor transparente.",
+      "proposal": "Actualizar presentación existente con cabecera corporativa centrada, lienzo móvil de ancho completo, narración inferior y etapas por nombre al pie. Rotor transparente44px sobre borde seguro sin reservar columna ni mostrar porcentajes; gesto relativo por velocidad, animación acotada y reversa inmediata. Preservar relato comercial, datos en Sheets, CTA, permisos y slider escritorio.",
+      "tests": [
+        "WebKit y Chromium: tamaños320/375/390/430 y horizontal844; gesto lento/rápido, tap/arrastre desde5alturas, límites/reversa, freno, etapas, rotación, teclado y movimiento reducido.",
+        "27momentos, texto/CTA accesibles, fuente editorial viva; archivos públicos exactos. Ninguna escritura de negocio."
+      ],
+      "deployment": "Registro previo. Evaluación física en iPhone se distingue de emulación.",
+      "rollback": "Revertir sólo frontend móvil y ayudas; conservar contenido, Sheets, historial, credenciales y permisos."
+    },
+    {
+      "id": "CHG-INVESTOR-SINGLE-SURFACE",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección pide el mismo sistema móvil del Plan de Potencial de referencia: una interacción en iPhone, cabecera Codesarrollo inmobiliario y Hermosillo secundario, chinches iguales, sin menú inferior móvil, con flechas y notas de plumón animadas; autorización expresa para ejecutar y mejorar.",
+      "proposal": "Actualizar la misma presentación pública con una sola superficie de gesto y continuidad de27momentos; retirar navegación inferior móvil y scroll independiente. Cabecera corporativa y subtítulo de ciudad. Simplificar el texto visible mediante flechas y anotaciones manuscritas que evolucionan con el progreso, conservando el relato íntegro de fuente en lector y acciones finales visibles. Reusar sólo código UX genérico del sistema de chinches D14/YODChinche: captura puntual o recorte, compositor/dictado según disponibilidad, IndexedDB y almacenamiento ArrayBuffer compatible con WebKit; historial local En revisión y compartir nativo tras gesto explícito. Mantener fuentes en Sheets, misma URL, versiones y permisos. No incorporar datos del caso de referencia al repositorio ni atribuir recepción o sincronización remota a un guardado local.",
+      "tests": [
+        "Atlas: node scripts/arquitectura.cjs --check; node --test tests/*.cjs; node verify-os.cjs; node verify-portal.cjs; node verify-accesos.cjs; node verify-obra-app.cjs.",
+        "Consumidor aislado WebKit y Chromium en tamaños iPhone y horizontal: una sola superficie táctil, gesto lento/rápido, reversa inmediata, freno, límites y orientación sin perder progreso.",
+        "27 momentos reversibles, anotaciones/flechas legibles sin colisiones, texto íntegro en lector, CTA final visible, teclado y movimiento reducido.",
+        "Chinches con fixtures sintéticos: punto/recorte de pantalla, comentario y captura guardados en IndexedDB y releídos tras recarga, cancelación y errores de captura/almacenamiento.",
+        "Compartir nativo simulado mediante doble; ninguna comunicación ni POST real. Mantener credencial Portero y cero escrituras de negocio.",
+        "Verificar código público exacto y fuente editorial viva después de integrar frontend; captura real del navegador. Emulación no acredita prueba en iPhone físico."
+      ],
+      "deployment": "Registro previo a implementación. Esta PR documenta contratos aprobados; no acredita publicación del nuevo frontend, recepción remota de chinches, funcionamiento del dictado en todos los dispositivos ni prueba física de iPhone.",
+      "rollback": "Revertir únicamente PR del frontend a la versión móvil previa dentro de la misma URL. Conservar todas las versiones, copy/configuración de Sheets, historial de chinches e IndexedDB, credenciales, permisos y expedientes; no restaurar ni sobrescribir datos de negocio."
+    },
+    {
+      "id": "CHG-SALA-MEDIOS-PUBLICOS-20261015",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "EXT-GMAIL"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección autorizó la migración técnica de Sala el 14-oct-2026; este contrato desarrolla esa autorización sin nueva decisión editorial, pago, ACL o scope. Preparación local: ninguna emisión, release, asset o flag activado por este registro.",
+      "proposal": "Fase1 sólo de imágenes nuevas: GitHub Releases públicos inmutables en yodesarrollomx/sala-edicion; schema 1 de manifiesto público con pin de bytes exactos y lector UI/snapshot instalado primero. Emisor SALA_MEDIOS_PUBLICOS desactivado por defecto. FULL evita duplicar medios externos ya verificados, hidrata bytes exactos para Mesa/corte y conserva file_is_published por identidad. Históricos, MD5, permisos privados de Drive, reglas editoriales y presupuesto de 900 MiB intactos. Integración relacionada de continuidad: CTR-SALA-PRODUCCION-HISTORICA elimina la ventana técnica de14 días como fuente de verdad para producir, mediante GET sólo lectura produccion del backend existente. SALA_PRODUCCION_HISTORICA=0 hasta despliegue por propietario y respuesta completa verificada; backend propuesto, no publicado, sin ACL o scopes nuevos. EXT-GMAIL se declara sólo por la propiedad compartida de gas/Code.gs; este GET histórico no altera envío, destinatarios, permisos ni operación del correo y no acredita recepción.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check; node --test tests/arquitectura.test.cjs; validación de impacto del atlas.",
+        "Consumidores Sala: manifest estricto, 2 MiB antes de parse/emisión, rutas/traversal, SHA256/bytes/MIME/tag/repo, 25 MiB por imagen y 1000 assets únicos por release.",
+        "Pin del recibo sobre bytes exactos incluida newline; 404 legacy condicionado al recibo, hash incorrecto y fallo de lectura cierran imágenes/aprobaciones.",
+        "FULL/restauración e hidratación: preservar Git/baseline/entries y verificar bytes externos sin token; file_is_published exige evidencia exacta, no sólo metadata.",
+        "Uploader sintético: POST aceptado, ACK perdido, crash y pérdida de runner/journal; nuevo run/attempt/source con payload idéntico concilia mismo tag/asset por GET y cero mutaciones adicionales. Payload distinto cambia tag; GET inconcluso queda pendiente. Inmutabilidad y canario anónimo acreditados antes de flag ON.",
+        "Comprobar compatibilidad de lectores anteriores y repatriación dentro de presupuesto antes de retirar el nuevo lector; ninguna prueba muta producción.",
+        "Historial sintético: fuentes fuera de14 días siguen disponibles; última PROP retirada no revive; sello real por editor/pid/lámina, pending conserva, borrar propio no borra NO ajeno, empate contradictorio cierra. GET incompleto/incompatible/auth/red falla cerrado; legacy declara historial no confirmado. Flag predeterminado0 y ningún reencolado/decisión de prueba."
+      ],
+      "deployment": "Sólo propuesta, contrato y modelo local. No se acredita código consumidor integrado, despliegue del lector, inmutabilidad remota, canario anónimo, media_manifest_sha256 vivo ni activación. No hay nueva capacidad operativa hasta superar esos controles; el artefacto inspeccionado sigue en 897647868 bytes y el presupuesto permanece en 900 MiB. Lector de historial y backend sólo propuestos: deployment propietario/GET de produccion-historica-v1 no acreditados; cuenta actual no administra ese despliegue. Flag histórico 0. Auditoría actual: cuatro cortes fallidos no vetados; tres corresponden a dos fuentes no retiradas en Sheet y uno a una tercera fuente retirada. No acredita aprobación vigente de guion/toma: elegibilidad nueva auditada 0 y cero reencolados.",
+      "rollback": "Desactivar SALA_MEDIOS_PUBLICOS detiene sólo nuevas externalizaciones. Si ya existe un medio externo, conservar lector compatible, manifiesto, pin del recibo, releases inmutables y sus activos. No volver a un lector antiguo ni retirar activos hasta repatriar y verificar todos los bytes referenciados, publicar un FULL íntegro dentro de 900 MiB y comprobar recibo fresco y consumidores. No borrar históricos ni alterar ACL, decisiones, destinatarios o reglas de negocio. Desactivar SALA_PRODUCCION_HISTORICA mantiene explícito historial no confirmado; conservar propuestas/decisiones originales y los sellos reales, sin volver a considerar la ventana14 días como historial completo ni reencolar por revertir código."
+    },
+    {
+      "id": "CHG-INVESTOR-INTENT-STORY",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-CONTROL",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección aprueba ejecutar el guion de intención de siete escenas en la misma presentación pública, después de rechazar anotaciones obligatorias y flechas cruzadas.",
+      "proposal": "Recorrido variable de siete preguntas del inversionista, mismo inmueble ilustrativo, composición por escena sin flechas decorativas obligatorias. Conservar gesto iPhone, chinches y detalle original. Nueva configuración editorial aditiva en Sheets, con compatibilidad para versiones previas. Capital como entrada principal; inmueble al evaluador como entrada secundaria.",
+      "tests": [
+        "Pruebas sintéticas de esquema, estados variables, reversa, error y compatibilidad.",
+        "WebKit y Chromium: iPhone pequeño y horizontal, controles, detalle y chinches; capturas de estados clave e intermedios.",
+        "Publicación anónima del código exacto y contenido editorial; enlace evaluador sin credenciales.",
+        "Atlas generado y contratos existentes."
+      ],
+      "deployment": "Registro previo; no acredita nueva publicación ni aceptación de público real.",
+      "rollback": "Revertir frontend y sólo nuevo campo editorial; conservar originales, revisiones, configuración histórica, datos, permisos y credenciales."
+    },
+    {
+      "id": "CHG-PRESENTATION-PINS-INGEST-20261015",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "EXT-ACTIONS",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-DRIVE"
+      ],
+      "status": "publicado",
+      "approval": "Dirección solicita corregir las chinches de ambas presentaciones para que entren al circuito automático vigente, preservando notas y verificando la frecuencia real; sin cambiar calendarios ni reactivar rutinas.",
+      "proposal": "Reutilizar PRODUCCION de Sala y su contrato ENCARGO/CHN. Captura/comentario/contexto completos permanecen en el JSON privado; el issue público contiene sólo un aviso técnico y su ID. El frontend conserva borradores y entrega inmediata con sesión YOD existente; origen externo utiliza relevo de navegador limitado a esos orígenes, sin transferir credenciales. Confirmar POST ok y lectura por ID/huella; un envío ambiguo sólo se concilia en lectura. Conservar ID al rescatar pendientes y distinguir local, recibido, tomado y cumplido. El revisor existente consulta el sobre privado y atiende destino GitHub o Sites. No nuevo Sheet, backend ni cron. Antes de habilitar consumidores, desplegar una proyección pública mínima por ID para relevos, snapshots y bundle final; los originales permanecen en la fuente privada. El cliente exige contrato servido de esa frontera. No basta que un issue no muestre la captura. El revisor debe leer la fuente privada completa, no limitarse a la ventana del día.",
+      "tests": [
+        "Contratos sintéticos: origen/emisor/nonce, payload acotado y captura privada, rol/clave existente sólo en origen YOD; no filtrar secretos en mensajes.",
+        "Entrega y acuse por ID/huella, deduplicación, offline, error auth, respuesta perdida y recarga; sin POST de prueba en producción.",
+        "WebKit/Chromium: captura, dictado, Clavar, historial, pendientes previos, conexión y cancelación; preservar gesto y27/68momentos.",
+        "Atlas/modelo/vistas/impacto y suites existentes; recibos públicos exactos separados de entrega real.",
+        "Proyección sin mutar originales, JSON de celda/truncado/anidado, rechazo de sobre sin proyectar en snapshot y bundle antes de cualquier efecto; conservar decisiones e históricos ordinarios. Consumidor sin contrato servido no escribe."
+      ],
+      "deployment": "Publicado15-oct-2026: Atlas240 define el contrato; Sala310/d8a8171 y Pages38762162219 acreditan proyección/capability. Board33/7435b2d y Pages38765885526 acreditan ambas entradas vigentes e histórica; su árbol54e20aee coincide con el probado, CI38765037795 SUCCESS. Consumidor externo Sites versión15 desplegado succeeded; sus activos publicados coinciden byte a byte. Transportes de consumidores idénticos; captura/contexto privados, recibo porID/huella y conciliación sin duplicados. Pruebas aisladas4flujosHTTPS/2engines más captura/recarga/pause/historial sobre recorridos vigentes; cero POST de negocio para QA. Esto acredita código/publicación, no recepción desde un dispositivo privado ni cumplimiento de una chinche. Lectura/ACK y adopción del resto de pantallas siguen pendientes; originales y base del proyecto intactos.",
+      "rollback": "Revertir sólo consumidores/relevo frontend; conservar IndexedDB, IDs, sobres privados y recibos de Sala. No reponer notas a nueva para reenviar un POST ambiguo; no borrar datos ni cambiar permisos, rutinas o backend."
+    },
+    {
+      "id": "CHG-DESPACHO-GOALS-HYDRATION-20261015",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO",
+        "SYS-DESPACHO"
+      ],
+      "status": "implementado_local",
+      "approval": "Dirección solicita conectar el seguimiento de metas como tarea dos; implementación y publicación autorizadas, sin reanudar metas antiguas ni crear encargos de prueba.",
+      "proposal": "Resolver el perfil individual del caso si el catálogo rápido no incluye descriptor válido de metas. Reusar perfiles completos frescos, incluidos ready:false; nunca inferir capacidad de can_enqueue. Mantener lease, revocación, selección concurrente y caso exacto. Sin cambios en motor, permisos, despliegues o datos.",
+      "tests": [
+        "Regresiones sintéticas de catálogo incompleto, ready:false, identidad, revocación y respuesta tardía.",
+        "Suite Node, verificadores OS/portal/accesos/obra, atlas e impacto.",
+        "QA autenticada de lectura y siguiente paso tras publicación; sin escrituras de negocio para probar."
+      ],
+      "deployment": "Cambio preparado con 699 pruebas Node aprobadas y verificadores OS/portal/accesos/obra/atlas correctos. Publicación y lectura autenticada pendientes.",
+      "rollback": "Revertir este cambio de selección y sus versiones de importación; conservar metas, historial, revisiones y permisos."
+    },
+    {
+      "id": "CHG-PRESENTATION-GUIDED-20261015",
+      "components": [
+        "SYS-PLAN-POTENCIAL",
+        "SYS-INVERSION",
+        "SYS-CONTROL"
+      ],
+      "status": "publicado",
+      "approval": "Dirección solicita conducir en tiempo real la presentación en celulares separados. Ajuste explícito: el invitado puede revisar hasta tres cuadros anteriores mientras mantiene el gesto, con resistencia creciente; nunca adelantarse y al soltar vuelve al conductor.",
+      "proposal": "Integrar sesiones efímeras en el mismo Sitio existente y conservar la presentación y su audiencia. El conductor publica progreso semántico secuenciado; el invitado lo recibe y adapta el encuadre a su pantalla. Base privada de estado técnico en runtime nativo de Sites, sin hojas nuevas ni usar Sheets como bus de movimiento. La revisión temporal del invitado queda local; sólo se comunica presencia/posición acotada al conductor. Enlace de invitado sólo lectura, cierre/expiración y recuperación del último estado. Primera integración en plan personalizado; extensión a carpeta comercial separada de la publicación inicial.",
+      "tests": [
+        "Dos navegadores independientes: avance, reversa, salto, llegada tardía, reconexión y orientación distinta.",
+        "Invitado: máximo tres cuadros hacia atrás, resistencia progresiva, nunca adelanta; mantener conserva revisión y soltar regresa al conductor vigente.",
+        "Servidor: identidad nativa para crear, capacidades separadas lectura/escritura, secuencia, expiración, cierre y versión del guion; cero escrituras de negocio durante QA.",
+        "Regresión del rotor, dibujos, A15 y chinches; pruebas y publicación separadas de aceptación en iPhone físico."
+      ],
+      "deployment": "Primer consumidor publicado en el mismo Sitio: versión16, fuente d16ec86fbc03dd0626b7480bf733dfc73c08cb0c, despliegue succeeded 15-oct-2026 17:23UTC. Runtime nativo con dos tablas técnicas D1 provisionadas y health200/ready. Documento y once activos servidos exactos; identidad anónima sin control y cabeceras de identidad no confiables rechazadas por plataforma. Ocho pruebas SQLite y dos parejas WebKit/Chromium con roles invertidos completan gesto, retorno, presencia, orientaciones, recarga, offline, chinches y cierre. Se conservan exactamente dibujo, rotor, transportes y compositor; sólo metadatos de edición del guion. No acredita primera sesión con SIWC real, latencia SSE hospedada ni aceptación táctil en iPhone físico. El invitado recupera instantánea periódica si no hay streaming. La integración de otras presentaciones queda pendiente; no se alteran sus motores, fuentes o calendarios.",
+      "rollback": "Revertir sólo la integración de presentación guiada a la versión previa del mismo Sitio. No borrar chinches, notas, versiones, datos originales ni cambiar audiencia o rutinas. Las sesiones expiran y se pueden cerrar sin tocar fuentes de negocio."
+    },
+    {
+      "id": "CHG-OFICINA-283-20261015",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO",
+        "SYS-DESPACHO"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección autoriza resolver íntegramente chinche283 el15oct2026 en conversación; implementación y publicación existentes, sin ampliar acceso ni ejecutar encargos de negocio.",
+      "proposal": "Carga por etapas comprobadas, actividad fresca por agente y acceso directo a hablar; tarjetas compactas y encuadre panorámico por orientación. Reutilizar el pool temporal existente para evitar canjes duplicados de observadores, sin cache persistente, permisos nuevos ni porcentajes simulados.",
+      "tests": [
+        "Regresión de progreso sin datos falsos, permisos/identidad y canje compartido.",
+        "Suite Node y verificadores; navegador desktop/móvil/fallback y PPP."
+      ],
+      "deployment": "Propuesta registrada antes de implementar; publicación pendiente.",
+      "rollback": "Revertir frontend de283; conservar perfiles, metas, decisiones y backend."
+    },
+    {
+      "id": "CHG-SALA-PERSISTENCIA-20261015",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-MOTORES-MEDIA",
+        "EXT-ACTIONS",
+        "SYS-YOD-OS",
+        "EXT-DRIVE"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección: adelante punto 3; continuación del proceso integral y trazabilidad de puntos 1 y 2. Sin cambiar aprobaciones editoriales.",
+      "proposal": "Corregir alcance negativo del texto, notas omitidas por fallback, límite de texto nuevo y hash original del recibo. Persistir plan, envío y resultado en releases draft separados del snapshot público, con identidad estable y bytes verificables; reusar resultado antes de llamar motores; envío incierto queda pendiente de conciliación. Instrucciones y configuración efectiva permanecen privadas. Integrar Mesa y Arranque al circuito existente.",
+      "tests": [
+        "Regresiones F1-F4 con proveedores sintéticos.",
+        "Recuperación en proceso nuevo: plan y resultado; ACK perdido, conflicto, recepción incompleta, negativa de cuota, envío incierto sin duplicación.",
+        "Prueba de aislamiento: recibos no llegan al snapshot ni Pages.",
+        "CI existente y prueba de recuperación en dos jobs sin credenciales de negocio."
+      ],
+      "deployment": "Propuesto antes de implementar. La ejecución de CI no acredita calidad de una pieza real ni publicación editorial.",
+      "rollback": "Revertir PR; conservar recibos privados, imágenes, snapshots, decisiones y colas. No borrar ni convertir drafts en releases públicos."
+    },
+    {
+      "id": "CHG-PRESENTATION-LINKS-20261015",
+      "components": [
+        "SYS-PLAN-POTENCIAL",
+        "SYS-INVERSION",
+        "SYS-CONTROL"
+      ],
+      "status": "publicado",
+      "approval": "Dirección solicita exactamente dos enlaces permanentes: control privado por posesión de llave, sin registro, y visor compartible/QR para todos los celulares y escritorios conectados, con objetivo de cien asistentes y vistas previas de marca.",
+      "proposal": "Extender el mismo runtime y contrato CTR-PRESENTATION-GUIDED con un canal permanente, capacidad secreta de control validada sólo en servidor, arrendamiento de conductor y recuperación del estado vigente. Conservar sesiones existentes y financieros. Lecturas coalescidas, streaming acotado, respaldo periódico y presencia espaciada para cien seguidores. Rutas de control y visor con metadatos y logo, sin incluir la llave en fuentes, registros compartidos o vistas previas.",
+      "tests": [
+        "Contratos aislados: llave ausente/incorrecta, origen, arrendamiento, relevo, secuencia, cierre/reinicio y no filtración de secretos.",
+        "Cien lectores concurrentes aislados: convergencia, orden y número de lecturas coalescidas; no equivale a cien teléfonos físicos.",
+        "WebKit y Chromium: móviles y escritorio, gesto elástico, reconexión y conservación de chinches.",
+        "Metadatos de ambas rutas e imágenes de marca servidos públicamente sin credenciales.",
+        "Trece contratos SQLite, dos parejas WebKit/Chromium y cien lectores aislados por cinco minutos aprobados.",
+        "Cien lectores hospedados con SSE activo por cinco minutos y prueba móvil→escritorio, recarga y compositor sin envío de negocio."
+      ],
+      "deployment": "Mismo Sitio, versión17 publicada15-oct-2026 18:29UTC, fuente2fee176464f02faeecb7d7dfa0fddab3710b3082, despliegue nativo succeeded con revisión de entorno2 y migración adicional sin eliminar sesiones. Rutas privadas/públicas con títulos, descripción y tarjetas de marca; llave ausente de documento, captura y estado público. Salud y13activos exactos verificados hospedados. Control móvil sin registro, visor escritorio, recarga privada y compositor de chinches pasan en producción sin enviar revisiones de negocio. Cien lectores hospedados durante304.3s, 65678eventos, todos convergen, latencia p95393ms en esta prueba. Clientes ligeros en20contextos de navegador; no certifica cien teléfonos físicos ni múltiples regiones. Trece contratos SQLite, dos parejas WebKit/Chromium y prueba aislada de cien lectores durante300.8s aprobadas. Conservados finanzas, dibujos, rotor, compositor y transporte de chinches; sólo dos referencias de captura se normalizan a la misma raíz autorizada. Aceptación física iPhone pendiente.",
+      "rollback": "Volver a la versión16 del mismo Sitio, conservando D1 y registros originales. La nueva tabla técnica no elimina las sesiones previas. No tocar cron, PPP ni audiencia."
+    },
+    {
+      "id": "CHG-CANJE-DIAGNOSTICO-283",
+      "components": [
+        "SYS-YOD-OS",
+        "GAS-PORTERO",
+        "SYS-DESPACHO",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE"
+      ],
+      "status": "propuesto",
+      "authorization": "Orden directa de Dirección: aplicar primera solución diagnóstica283.",
+      "proposal": "Distinguir fallos del canje con códigos/fase/duración seguros. No cambiar permisos, reintentos, plazos ni backend.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs"
+      ],
+      "deployment": "Implementado y probado en rama; publicación pendiente. No se acredita latencia resuelta.",
+      "rollback": "Revertir diagnóstico y cache-bump del frontend; sin cambios en datos/backend."
+    },
+    {
+      "id": "CHG-CANJE-ABORT-283",
+      "components": [
+        "SYS-YOD-OS",
+        "GAS-PORTERO",
+        "SYS-DESPACHO",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE"
+      ],
+      "status": "propuesto",
+      "authorization": "Orden directa de Dirección: aplicar solución dos de chinche283.",
+      "proposal": "Cancelar fetch de canje al vencer plazo de cabeceras y limpiar temporizadores. Conserva plazo, respaldo, autoridad y reintentos. No cancela ejecución servidor ni limita aún cuerpo.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs"
+      ],
+      "deployment": "Implementado y probado en rama: 705 pruebas Node; 20 rondas timeout con cero solicitudes residuales. Publicación pendiente. No acredita cancelación servidor ni mejora global de latencia.",
+      "rollback": "Revertir cancelación y cache-bump frontend; sin cambios backend/datos."
+    },
+    {
+      "id": "CHG-CANJE-BODY-283",
+      "components": [
+        "SYS-YOD-OS",
+        "GAS-PORTERO",
+        "SYS-DESPACHO",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE"
+      ],
+      "status": "propuesto",
+      "authorization": "Orden directa de Dirección: aplicar tercera solución283.",
+      "proposal": "Un único plazo de25s por intento cubre cabeceras y cuerpo de canje. Abortar al vencer; conservar diagnósticos, autoridad, identidad y reintentos.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs"
+      ],
+      "deployment": "Implementado y probado en rama:708Node;20/20cuerpos atascados terminan timeout y40/40intentos cancelados. Deadline único y rechazo de cuerpo tardío. Publicación pendiente.",
+      "rollback": "Revertir plazo completo y cache-bump; sin cambios backend/datos."
+    },
+    {
+      "id": "CHG-SALA-CORRECCIONES-20261015",
+      "components": [
+        "SYS-SALA",
+        "SYS-YOD-OS",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "EXT-ACTIONS",
+        "SYS-DESPACHO"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección: adelante con el paso 4; completar correcciones por voz/chinches y aprobación explícita.",
+      "proposal": "Congelar pieza, propuesta, lámina, versión y toma al abrir la anotación; revisar dictado antes de clavar. Conservar ID y checkpoint previo a envío, distinguir local/recibido/incierto/rechazado sin repetir append ambiguo. Las aprobaciones conservan el circuito exclusivo de editores. Cerrar un issue no acredita cumplimiento: exigir evidencia verificable y mostrar entrega/revisión por separado.",
+      "tests": [
+        "Dictado parcial/final y contexto cambiado durante captura.",
+        "ACK perdido, recarga, doble clic, permisos rechazados y ausencia de controles de Ajustes.",
+        "Contexto de tablero/zoom; navegación sin votos, aprobación explícita y cambio de versión.",
+        "Cierre de issue sin resultado y acuse no confirmado nunca cumplen.",
+        "Gates locales, CI y despliegue exacto; sólo fixtures sintéticos sin votos reales."
+      ],
+      "deployment": "Implementado en ramas aisladas; pruebas sintéticas de voz/contexto y compuertas locales. Integración/publicación por PR y comprobación HTTP pendientes.",
+      "rollback": "Revertir PR conservando cola, IndexedDB, historial, recibos, issues y datos. No reenviar estados inciertos."
+    },
+    {
+      "id": "CHG-CARGA-UNIFICADA-283",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE",
+        "SYS-DESPACHO-3D"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección autoriza agrupar parches y comprobar el resultado general.",
+      "proposal": "Carga integrada283: singleflight de identidad por token/época, Inicio diferido al entrar Despacho, preparación sólo del seleccionado y despertar con autoridad fresca sin renovación redundante. Preservar límites, revocación y ACL; evaluación general del conjunto.",
+      "tests": [
+        "Identidad concurrente, cambio de token/época, recuperación y revocación.",
+        "Entrada Despacho sin fanout de Inicio; retorno a Inicio.",
+        "Preparación seleccionada y cooldown de fallo; vigencia de autoridad.",
+        "Suite completa, CI público y QA publicada."
+      ],
+      "deployment": "Implementado en rama aislada; validación general y publicación por PR pendientes. No se atribuye reducción temporal individual ni cambio de GAS.",
+      "rollback": "Revertir PR sin cambiar datos, sesiones persistentes ni despliegue GAS."
+    },
+    {
+      "id": "CHG-SALA-EVALUACION-20261015",
+      "components": [
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "EXT-ACTIONS",
+        "SYS-YOD-OS",
+        "GAS-SALA"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección: ok hazlo bien y completa todo; cierre de los bloques de lógica creativa e interacción.",
+      "proposal": "Completar preselección local de hasta dos finalistas por editor, propuesta y versión, sin emitir votos ni trabajos. Separar láminas preparadas de tomas obtenidas en la telemetría Mesa, conservando alias históricos. La evaluación real de calidad/tiempo/costo/fallos no acredita aceptación editorial ni habilita autonomía nueva.",
+      "tests": [
+        "Persistencia tras recarga; aislamiento entre editores/versiones; máximo dos; falta de almacenamiento sin éxito aparente.",
+        "Recorrido real de UI con endpoints sintéticos: conservar finalistas no vota ni produce.",
+        "Una lámina con dos candidatas informa una lámina y dos tomas; cero y resultados parciales conservan unidades.",
+        "Regresiones existentes, impacto, CI y bytes publicados."
+      ],
+      "deployment": "Propuesta registrada antes de implementar; integración y comprobación pendientes.",
+      "rollback": "Revertir PR conservando preselecciones locales, decisiones, cola, recibos y medios. No cambiar backend ni cuotas."
+    },
+    {
+      "id": "CHG-DESPACHO-V2-P2",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección autoriza parte2 del plan escalonado: coordinador aislado y pruebas; sin integración ni activación.",
+      "proposal": "Coordinador opt-in sin efectos al importar: prioridades operativas, dependencias, deduplicación por ámbito y revisión, presupuestos y cancelación por consumidor. Escrituras iniciadas no abortables ni reintentadas. Adaptadores de pantallas, vigencia y pestañas en fases posteriores.",
+      "tests": [
+        "Pruebas deterministas con transporte sintético y reloj inyectado; límites, prioridad, aislamiento, cancelación compartida y resultado incierto de escrituras.",
+        "Regresiones Node, atlas, OS, portal, accesos, Obra e impacto."
+      ],
+      "deployment": "Implementado aislado en rama: 20 pruebas específicas y 738 Node PASS; verificadores locales PASS. Sin imports desde pantallas. PR sin integración/activación; partes3–6 pendientes de autorización.",
+      "rollback": "Retirar módulo aislado; ninguna migración de datos, permisos o backend."
+    },
+    {
+      "id": "CHG-DESPACHO-V2-P3",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE",
+        "EXT-DRIVE"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección: sigue tras entregaP2. Sólo integración de pantallas/consultas en rama; activación enP6.",
+      "proposal": "Adaptador compartido de admisión para lecturas de Inicio y Despacho. Selección explícita prioriza expediente, Inicio progresa en fondo y se promueve al abrirlo; carriles/ACL y mutaciones actuales conservados. Interruptor por defecto apagado.",
+      "tests": [
+        "Integración con transportes sintéticos, prioridad, aislamiento, selección, retorno Inicio y modo desactivado.",
+        "Suite Node y verificadores repositorio."
+      ],
+      "deployment": "Implementación opt-in en rama apilada sobre P2: 13 pruebas específicas de integración y 751 Node PASS; OS, portal, accesos y Obra PASS. Interruptor apagado; sin merge, activación ni medición de producción. Continuidad/escrituras, medios/voz y medición global corresponden a P4–6.",
+      "rollback": "Desactivar interruptor devuelve ruta previa; ningún dato ni backend modificado."
+    },
+    {
+      "id": "CHG-DESPACHO-V2-P4",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE",
+        "EXT-DRIVE"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección: echatelo después de entrega P3. Sólo P4 en rama, activación P6.",
+      "proposal": "Continuidad opt-in: vigencia en memoria por recurso, invalidación con barrera de revisión, conciliación de escrituras inciertas y señales no sensibles entre pestañas; regreso online/móvil agrupado sin desmontar voz.",
+      "tests": [
+        "Pruebas sintéticas de vigencia, invalidación en vuelo, ACK perdido, conflicto, aislamiento y pérdida del líder.",
+        "Suite Node, atlas/impacto con repositorio explícito y verificadores."
+      ],
+      "deployment": "Propuesta registrada antes de implementar. Sin activación ni backend nuevo.",
+      "rollback": "Interruptor de P3 apagado conserva camino anterior; ningún dato o permiso migrado."
+    },
+    {
+      "id": "CHG-DESPACHO-V2-P5",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE",
+        "EXT-DRIVE"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección: actival y continua a la 5, 15 octubre 2026. Autoriza activación P2–P4 y P5.",
+      "proposal": "Activación autorizada P2–P4; P5 presupuesto de frames, pausa visual y observación sin detener voz o agentes.",
+      "tests": [
+        "Pruebas sintéticas de frames, suspensión, retorno, pérdida de contexto y observación de agentes; suite completa y navegadores."
+      ],
+      "deployment": "Propuesta antes de implementación; publicación pendiente de verificaciones.",
+      "rollback": "Interruptor de P3 apagado conserva camino anterior; ningún dato o permiso migrado."
+    },
+    {
+      "id": "CHG-SALA-EJEMPLO-20261015",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "EXT-GMAIL",
+        "SYS-YOD-OS"
+      ],
+      "status": "implementado_local",
+      "authorization": "Dirección: siguiente etapa para dejarlo funcional, correr un ejemplo, comprobar qué estuvo bien y corregir lo que estuvo mal hasta terminar.",
+      "proposal": "Corregir lecturas CONFIG por cada firma editorial mediante memoización local de nombres por rol en cada fusión; preservar marcas, vetos y lectura fresca entre invocaciones. Ejecutar un ejemplo aislado con motores reales, comprobar bytes privados, imagen/audio/video y separar éxito técnico de aprobación editorial.",
+      "tests": [
+        "Comparar fusión antes/después con datos sintéticos: mismas decisiones, notas y vetos; lecturas CONFIG limitadas a roles únicos; nombres frescos en siguiente invocación.",
+        "Ejemplo aislado de imagen, voz, escena y corte: streams, duración, descarga privada y SHA256; revisión perceptual separada.",
+        "Lectura real de recursos, diagnóstico explícito y recibo de publicación; integración no equivale a backend desplegado."
+      ],
+      "deployment": "Autorizado por Dirección en el encargo. Verificación local: 776 tests atlas y verificadores OS, portal, accesos y obra; Sala 504 Python, 111 Node y 13 verificaciones. Ejemplo real 38814111428: 6 archivos verificados, corte 1080x1920 H264/AAC de 18.167s. La sonda 38814278019 falla sólo en dia. Función diaria original cotejada y respaldo privado; despliegue y relectura se acreditarán por separado.",
+      "rollback": "Revertir PR y restaurar las funciones exactas respaldadas en el backend original si se despliegan; conservar decisiones, cola, archivos, permisos y recibos. No activar histórico ni cambiar cuotas, crons o destinatarios."
+    },
+    {
+      "id": "CHG-SALA-MESA-VISIBLE-20261017",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "EXT-MOTORES-MEDIA",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección solicita completar Sala100%en línea y demostrar más de3 recorridos consecutivos con bitácoras y capturas reales.",
+      "proposal": "Separar inventario visible de publicaciones vigentes de pendientes diarios. Mesa proyecta únicamente IDs y estado técnico/editorial agregado de las tiras que verificó; el frontend conserva consulta de las aprobadas sin habilitar decisiones fuera del día vigente. Verificación real serializada de cuatro recorridos, con entregables y recibos explícitos; un no-op no acredita producción nueva.",
+      "tests": [
+        "Reproducir manifiesto vacío con catálogo poblado; comprobar columnas e imágenes reales tras publicación.",
+        "Datos sintéticos: veto, roles, fuente ausente, contrato inválido, cambio de día y lectura fallida no borran contenido ni autorizan votos.",
+        "Cuatro recorridos completos consecutivos con capturas desktop/móvil, bitácora de fases, bytes de medios y recibos; distinguir reutilización y producción nueva."
+      ],
+      "deployment": "Propuesta previa. Falta implementación, CI, publicación y cuatro recorridos reales; no se declara aceptada.",
+      "rollback": "Revertir código mediante PR conservando fuentes, decisiones, cola, snapshots y archivos; el campo adicional en estado Mesa es compatible con lectores anteriores."
+    },
+    {
+      "id": "CHG-SALA-HISTORICO-RETIROS-20261017",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "EXT-MOTORES-MEDIA",
+        "SYS-YOD-OS",
+        "EXT-GMAIL"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección solicita completar la activación del histórico y continuar hasta terminar; se conservan decisiones y permisos existentes.",
+      "proposal": "Resolver duplicados heredados de PROPUESTAS en la última fecha por PID: cualquier retiro explícito domina el empate; contenido activo contradictorio sigue cerrando la lectura. Si sólo cambia origen descriptivo, conservar todos los textos únicos ordenados en el campo origen. Nunca decidir por orden físico ni modificar filas.",
+      "tests": [
+        "Permutaciones sintéticas de retiros, contenido activo contradictorio y procedencia descriptiva; inmutabilidad y vetos.",
+        "Comprobador de sólo lectura en proyecto original; despliegue existente y GET autenticado con contrato validado antes de activar consumidor."
+      ],
+      "deployment": "Propuesta previa. Proyecto original y versión72 identificados; respaldo privado guardado. Comprobador detectó duplicados; candidato anterior revertido sin despliegue.",
+      "rollback": "Restaurar módulo respaldado y versión72 en la misma implementación; mantener SALA_PRODUCCION_HISTORICA=0 hasta contrato confirmado; conservar decisiones, cola, archivos y configuración."
+    },
+    {
+      "id": "CHG-SALA-GUION-HEREDADO-20261017",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "EXT-MOTORES-MEDIA",
+        "SYS-YOD-OS",
+        "EXT-GMAIL"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección solicita terminar activación histórica y producción; autenticación completada y flag histórico verificado en1. No autoriza nuevas decisiones editoriales.",
+      "proposal": "Compatibilidad con guiones históricos expresados como ruta o texto. Mesa procesa sus láminas existentes sin inventar continuación visual; deja contador y estado parcial. Productor conserva escena/voz de láminas aprobadas, pero no abre corte sin lista estructurada completa. Una lista inválida sigue fallando. No reescribir guiones ni modificar decisiones.",
+      "tests": [
+        "Guion heredado textual/ruta con primera aprobada no interrumpe Mesa ni fabrica láminas; fuente inmutable.",
+        "Guion heredado bloquea corte aunque las láminas existentes estén aprobadas; escena/voz conservan sus compuertas.",
+        "Lista duplicada o malformada sigue rechazándose; diagnóstico agregado y estado parcial verificables."
+      ],
+      "deployment": "Propuesta previa tras fallo real39069155006 en Mesa: guion sin lista de láminas. Backendv73 y sonda39045627647 comprobados; consumidor histórico activado por propietario y readback.",
+      "rollback": "Revertir PR; conservar guiones, marcas, cola, medios y snapshots. Ante incompatibilidad desactivar sólo flag histórico; misma URL/backend."
+    },
+    {
+      "id": "CHG-SALA-RECIBOS-FALLO-20261017",
+      "components": [
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "EXT-ACTIONS",
+        "EXT-MOTORES-MEDIA",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección solicita corregir y completar producción en nube, conservando decisiones y modelos retirados.",
+      "proposal": "Distinguir rechazo terminal de HiDream sin imagen y pedido no enviado del resultado incierto. Guardar negativa privada ligada al plan y al intento; permitir sólo un nuevo intento posterior. Timeout, descarga incompleta y respuesta ambigua conservan conciliación sin reenvío. No habilitar proveedores pagados ni modelos retirados.",
+      "tests": [
+        "Respuesta terminal status3 sin imagen conserva negativa durable; nueva ejecución puede intentar, mismo intento no duplica.",
+        "Circuito abierto antes de envío no deja recibo eternamente pendiente. Error incierto, conflicto o negativa corrupta sigue bloqueado.",
+        "Pruebas de regresión y ejecución real con recibos; un fallo o no-op no acredita producción."
+      ],
+      "deployment": "Propuesta previa tras ejecución39069605297: HiDream devolvió Task failed with status3; cero imágenes. Recuperación de recibos históricos exige evidencia del envío exacto; no se infiere por ausencia.",
+      "rollback": "Revertir adaptadores y lector de negativas; conservar planes, resultados, negativos y decisiones. Mantener conciliación cerrada ante estado desconocido."
+    },
+    {
+      "id": "CHG-SALA-HIDREAM-O1-20261017",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-MOTORES-MEDIA",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección pide recuperar producción gratuita en nube, cambiar motores deficientes y continuar hasta funcionamiento probado. Conserva revisión editorial humana.",
+      "proposal": "Adaptador explícito hidream_o1 al Space oficial HiDream-O1-Image-Dev, sin token pagado ni respaldo implícito. Congela receta, seed, modelo y versión; conserva resultado privado y recibos. Revisión de política nueva distingue planes nuevos de envíos I1 inciertos. Habilitar en REGLAS sólo tras pruebas, imagen real conservada e integración. Productor puede procesar etapas previamente aprobadas aunque Mesa falle; sus lecturas, vetos y compuertas se mantienen y el recorrido conserva estado fallido de Mesa.",
+      "tests": [
+        "Prueba real de la receta pendiente con modelo O1 y bytes conservados; no equivale a montaje ni aprobación.",
+        "Cache exacta evita regeneración; resultado incierto sólo consulta recibo; archivo inválido/no imagen/cambio de plan se bloquea; ningún respaldo pagado.",
+        "Regresiones Python/navegador, reglas y arquitectura; después activar regla existente con readback y ejecutar recorrido real con recibo de publicación."
+      ],
+      "deployment": "Propuesta previa. Primera prueba39070664400 entregó imagen en26.92s pero persistencia git falló por sparse-checkout. Segunda prueba con persistencia corregida en curso. Sin activación productiva acreditada.",
+      "rollback": "Restaurar imagen_motores anterior y política/adaptadores mediante PR, conservando bytes, planes, votos y recibos. No reenviar planes ambiguos ni reactivar modelos vetados. Revertir condición de orquestación si falla validación de compuertas."
+    },
+    {
+      "id": "CHG-SALA-COLA-UNICA-20261017",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "EXT-MOTORES-MEDIA",
+        "SYS-YOD-OS",
+        "EXT-GMAIL"
+      ],
+      "status": "propuesto",
+      "authorization": "Continuación técnica autorizada por Dirección hasta terminar; conservar decisiones, notas, guiones, claves, URL y archivos.",
+      "proposal": "Productor consolida trabajos equivalentes por identidad y conserva fuentes; notas o contenido distintos bloquean esa identidad. Ejecutor excluye duplicados activos antes de cualquier efecto. GAS rechaza IDs repetidos en un upsert antes de escribir. Conciliación técnica no destructiva de la cola existente: respaldo privado, lectura fresca, comparación previa, equivalentes excedentes obsoletos con procedencia conservada, conflictos bloqueados y ejecución cancelada sin acuse bloqueada. Nunca decidir por orden físico ni borrar historia.",
+      "tests": [
+        "Permutaciones sintéticas: equivalentes se consolidan, conflicto de notas no se encola, datos de entrada inmutables.",
+        "Duplicados activos no alcanzan ejecución ni rescate; un obsoleto no bloquea la fila vigente.",
+        "GAS rechaza lote con IDs repetidos sin una sola escritura; lote único conserva contrato.",
+        "Conciliación privada con plan por fila, readback y auditoría agregada antes de reanudar."
+      ],
+      "deployment": "Propuesta previa. Run39069978675 creó74filas; lectura real detectó17IDs repetidos y45excedentes. Ejecutor39070036439 cancelado antes de completar el primer medio; ningún entregable nuevo acreditado.",
+      "rollback": "Revertir código mediante PR. Conservar respaldo privado y auditoría por fila; restaurar sólo campos técnicos si su valor actual aún coincide, sin borrar filas o tocar decisiones."
+    },
+    {
+      "id": "CHG-CHINCHES-CHAT-ESTADOS-20261017",
+      "components": [
+        "EXT-DRIVE",
+        "GAS-PORTERO",
+        "SVC-AUTON-CLOUD",
+        "SYS-CONTROL",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-TRACK",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Alejandro: revisa todas las chinches y corrige lo solicitado; mantenimiento técnico y publicación autorizados. Sin cambiar decisiones, permisos ni rutinas.",
+      "proposal": "Permitir conversación rápida durante un trabajo durable sin reenviar fallos a la cola; mantener estado del trabajo y borradores. Diferenciar lectura fallida de presentación sin entrega, con recuperación explícita. Convertir la ficha del autón en accesos a su trabajo, expediente y PPP con capacidades autorizadas; mostrar recibo de consulta de fuentes y recuperación manual sin afirmar que cada documento fue leído.",
+      "tests": [
+        "Conversación sintética con trabajo activo, rechazo del canal, permisos revocados y ACK incierto.",
+        "QA de presentación con lectura fallida y recuperación; compilación y verificadores obligatorios."
+      ],
+      "deployment": "Pendiente de implementación y QA; no acredita producción ni cierra el alcance restante de las chinches.",
+      "rollback": "Revertir cliente y bundle; conservar mensajes, trabajos y documentos del servidor."
+    },
+    {
+      "id": "CHG-SALA-MEDIOS-DRAFT-20261017",
+      "components": [
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección autoriza reparar y completar la producción en nube con evidencia; sin decisiones editoriales nuevas.",
+      "proposal": "Corregir validación de URL temporal untagged de activos draft de GitHub. Antes de publicar, exigir ID/nombre/tamaño/MIME/SHA256 exactos y URL restringida al mismo repositorio y archivo. Después de publicar, exigir URL de tag definitiva exacta, release inmutable y descarga anónima de bytes exactos. Conservar contrato MEDIOS y límite900MiB.",
+      "tests": [
+        "Regresión de draft real untagged y rechazo de URL ajena, query, digest falso y URL temporal después de publicar.",
+        "Sonda técnica con reentrada sin mutaciones; sólo tras éxito habilitar emisor existente y recuperar8tomas de recibos.",
+        "Producción, snapshot, Pages, montaje y navegador requieren evidencia independiente."
+      ],
+      "deployment": "Mesa39071362170 generó8tomas/4láminas/0fallos, pero excede presupuesto Pages. Sonda39072235135 detectó URL temporal de draft; sin nueva publicación acreditada.",
+      "rollback": "Revertir validación por PR y mantener SALA_MEDIOS_PUBLICOS=0 hasta sonda verificada. Conservar todos los recibos, releases e históricos."
+    },
+    {
+      "id": "CHG-CHINCHES-MOAC-20261017",
+      "components": [
+        "EXT-DRIVE",
+        "GAS-PORTERO",
+        "SVC-AUTON-CLOUD",
+        "SYS-CONTROL",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-TRACK",
+        "SYS-YOD-OS",
+        "SYS-TAREAS"
+      ],
+      "status": "propuesto",
+      "authorization": "Continuación directa de Alejandro para concluir las chinches. Sólo consulta del contrato autenticado existente, sin asignar tareas ni cambiar negocio.",
+      "proposal": "Proyectar context.moac en el puesto: jerarquía Meta > Objetivo > Acción, estado y responsable originales, recibos disponibles separados de aprobación. Validar caso, IDs, relaciones y límites; ausencia/lectura fallida no equivalen a cero pendientes. Acceso directo desde Trabajo y Entregas al mismo MOAC. No crear una fuente paralela ni ampliar las vinculaciones por nombre. Admitir el estado inicial canónico sin fecha de conversación sólo con identidad coincidente, revisión/lease vacíos y cero mensajes, trabajos y eventos. No inventar fecha ni modificar fuentes; rechazar estados mixtos o historial sin fecha.",
+      "tests": [
+        "Regresiones de aislamiento por caso, FK, duplicados, ausente/unavailable/unlinked, recibos de acción existente y cambio de caso durante lectura.",
+        "QA de navegación real de módulos con fixture sintético y verificadores obligatorios.",
+        "Estado inicial exacto del backend: fuentes legibles y primer mensaje habilitado; historia sin fecha, identidad ajena o estado parcial rechazados."
+      ],
+      "deployment": "Pendiente: sólo se consume el campo de contexto existente; no se instala ni modifica backend.",
+      "rollback": "Revertir PR de interfaz, conservando todos los registros, vínculos y permisos."
+    },
+    {
+      "id": "CHG-SALA-ENTREGA-FUENTES-20261017",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "EXT-MOTORES-MEDIA",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección ordena continuar hasta entrega final en línea conservando decisiones y archivos. Reparación técnica, sin aprobación editorial automática.",
+      "proposal": "Conservar src de láminas históricas expresadas como texto al calcular identidad y preparar evidencia; rechazar identidades sin insumo. Aplicar a Productor y Ejecutor la misma regla vigente de Mesa: una pieza ya publicada no vuelve a producirse. Coincidencia exacta por nombre o slug en el registro publicado, sin búsquedas parciales. Conciliar sólo trabajos antiguos de piezas publicadas con respaldo, evidencia, comparación previa y readback; conservar historial y decisiones. No fabricar guiones ni ejecutar versiones vetadas. Verificar motor gratuito habilitado y entregas en la Sala, con originales durables y recibos separados de aprobación.",
+      "tests": [
+        "Distintas rutas históricas conservan src y producen distintas identidades; catálogo tiene prioridad; input vacío no crea trabajo.",
+        "Publicada exacta queda excluida antes de planificar, rescatar o ejecutar; pieza distinta con prefijo parecido sigue habilitada; no cambia votos ni filas originales.",
+        "Pruebas de regresión, cola estable antes de conciliación, respaldo y readback completos.",
+        "Ejecución real, archivo durable y visualización en Sala; no-op y CI no acreditan producción nueva."
+      ],
+      "deployment": "Propuesta previa. Fuentes e historial real inspeccionados; pruebas y entrega pendientes.",
+      "rollback": "Revertir código por PR; conservar respaldo y todas las filas, decisiones y medios. Restaurar sólo campos técnicos que sigan coincidiendo con la conciliación."
+    },
+    {
+      "id": "CHG-SALA-ENTREGA-CORTES-20261017",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección pide completar la Sala hasta entrega final en línea; conservar revisión editorial, claves, URL y permisos.",
+      "proposal": "Entregar automáticamente a revisión los cortes nuevos durables y aprobados en su fuente vigente. Verificar identidad, guion, plan exacto, bytes MD5 y audio/video en Drive; respaldar la preparación y releer antes de montar. La propuesta nueva usa ID derivado del hash, referencia de la fuente y visor autenticado de Drive, sin publicar el archivo ni ampliar ACL. Estado preparado se registra antes de proponer; si se pierde el acuse sólo se concilia por ID exacto, nunca se reenvía a ciegas. Conservar votos de imágenes y solicitar decisión independiente del corte. El Ejecutor despierta entrega tras trabajo real; entrega confirmada actualiza respaldo por el relevo existente. Un estado HECHO no equivale a entrega ni aceptación.",
+      "tests": [
+        "Medio alterado, fuente retirada, guion vetado, plan distinto, lectura cambiante y duplicados bloquean antes de proponer.",
+        "Un acuse perdido se concilia sólo si la propuesta exacta está presente; estado preparado sin confirmación no repite POST.",
+        "Vista Drive limitada a su URL de preview y archivo; MP4 existente conserva reproducción, otros orígenes no obtienen iframe.",
+        "Ejecución real con corte durable, propuesta en backend y reproducción en Sala; no socialización ni aprobación automática."
+      ],
+      "deployment": "Propuesta previa; corte real generado y guardado. Montaje y visor todavía no acreditados.",
+      "rollback": "Revertir código por PR. Conservar corte, respaldo privado, evidencia de entrega y votos. No retirar acceso ni borrar propuestas o archivos como rollback."
+    },
+    {
+      "id": "CHG-CHINCHES-ENTREGAS-20261017",
+      "components": [
+        "EXT-DRIVE",
+        "GAS-PORTERO",
+        "SVC-AUTON-CLOUD",
+        "SYS-CONTROL",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-TRACK",
+        "SYS-YOD-OS",
+        "SYS-TAREAS"
+      ],
+      "status": "implementado_local",
+      "authorization": "Dirección autoriza corregir las chinches técnicas en el sistema existente.",
+      "proposal": "Compartir la promesa de lectura de metas dentro del mismo caso y época: abrir Entregas durante una consulta en curso debe esperar su resultado sin duplicar peticiones ni mostrar un error falso. Una mutación, revocación o cambio de caso conserva sus guardias. No aceptar un modelo histórico como consulta nueva. Mantener el mismo servidor y permisos.",
+      "tests": [
+        "Lecturas simultáneas hacen una sola llamada y reciben el mismo resultado.",
+        "Respuesta fallida, cambio de caso y revocación no se convierten en éxito; escritura en curso no se comparte como lectura.",
+        "Suite Node completa, arquitectura, impacto, OS, portal, accesos, Obra y QA publicada."
+      ],
+      "deployment": "Implementado en rama: 789 pruebas Node PASS y verificadores locales PASS; publicación y QA autenticada pendientes.",
+      "rollback": "Revertir PR de interfaz; no modificar registros ni estados de negocio."
+    },
+    {
+      "id": "CHG-MASTERBROKERS-PUBLIC-PREVIEW",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección solicita el 18-oct publicar en GitHub Pages sin inicio de sesión el prototipo de Master Brokers. Alcance: muestra pública estática con datos ficticios; no publicación de expedientes privados ni cambios a sus permisos.",
+      "proposal": "Migrar el prototipo visual desde hosting privado a master-brokers/ dentro de yodesarrollo-board. Entrada directa en Master Developer/equipo, navegación de carteras, prospectos, trabajos, historial y fichas PPP sintéticas. Sin Portero, shell autenticado, conectores ni llamadas a backends de negocio en esta ruta. Identificar siempre datos de ejemplo. brokers.html conserva su contrato productivo y autenticación. El sitio público no simula una conexión real ni ofrece guardado.",
+      "tests": [
+        "Sintaxis ESM, referencias de personas/trabajos y filtros con datos sintéticos.",
+        "Navegador sin cookies ni sesión: inicio MD, navegación, búsqueda, responsable/estatus, historial, PPP, enlaces profundos, diálogos y móvil sin desbordamiento.",
+        "Inspección de solicitudes: exclusivamente archivos estáticos del prototipo; sin recursos de autenticación ni backends.",
+        "GitHub Pages: descarga anónima de cada archivo y verificación de bytes después de integrar."
+      ],
+      "deployment": "Propuesta previa a implementación. La publicación anónima y la revisión visual se acreditarán con su commit y URL; no acredita integración de datos reales.",
+      "rollback": "Revertir sólo master-brokers/ y su documentación/manifiesto. Conservar el portal productivo, sus datos y todos los permisos."
+    },
+    {
+      "id": "CHG-SALA-METADATOS-CORTE-20261018",
+      "components": [
+        "SYS-SALA",
+        "SHEET-SALA",
+        "GAS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección autoriza completar entregas reales de Sala en coordinación con Claude; conservar todas las decisiones editoriales y permisos.",
+      "proposal": "Corrección manual acotada de metadatos antiguos que contienen ubicaciones vetadas, mediante parche privado con valores anteriores y SHA de fuente. Preservar imágenes, texto visible elegido, narración efectiva y firmas. Validar contexto resuelto y todas las reglas. Respaldar antes, publicar snapshot con mutex y recibo exacto, y sólo después conciliar cada corte fallido vigente sin duplicarlo. Si cambia narración o identidad de dependencias, no reutilizar medios ni estados aprobados. Fuentes retiradas o formato Lámina no se convierten a video.",
+      "tests": [
+        "Parche sobre fuente distinta, campos no permitidos, texto visible o narración alterada bloquea antes de escritura.",
+        "Snapshot sin recibo, decisiones cambiantes, veto, dependencias incompletas o medio sin identidad impiden reencolado.",
+        "Resultado incierto sólo se concilia por lectura; no se duplica trabajo ni aprobación.",
+        "Pruebas sintéticas y recibos separados para parche, publicación, producción y entrega."
+      ],
+      "deployment": "Propuesta previa; implementación y ejecución no acreditadas.",
+      "rollback": "Conservar originales y recibos privados. Restaurar sólo metadatos que aún coincidan con el parche; no borrar medios, propuestas ni votos. Revertir código por PR."
+    },
+    {
       "id": "CHG-DESPACHO-EQUIPO-20261013",
       "components": [
         "SYS-YOD-OS",
@@ -12386,13 +13373,13 @@
       ],
       "status": "propuesto",
       "approval": "Dirección pide asumir el relevo de implementación pendiente y conserva la autorización de integrar/publicar la oficina existente. No concede permisos, nuevas audiencias ni cambios de negocio.",
-      "proposal": "Conciliar Equipo y Relevos sobre la cabina actual conservando selección explícita, entrada corregida, lecturas de metas concurrentes y propuestas de presentación. Un solo montaje autenticado, mismos contratos y Buzón; sin duplicar mini CRM ni fuentes.",
+      "proposal": "Conciliar Equipo y Relevos sobre la cabina actual conservando selección explícita, entrada corregida, lecturas de metas concurrentes y propuestas de presentación. Un solo montaje autenticado, mismos contratos y Buzón; sin duplicar mini CRM ni fuentes. Conciliación 18-oct preserva coordinador de carga, continuidad entre pestañas, selección y limpieza de estado del plan al revocar la sección. Conserva las propuestas posteriores completas y sus propietarios; no reinstala backend ni acredita persistencia. Corregir ancho máximo nativo del diálogo y compactar cabecera móvil de Relevos para que la primera tarjeta comience dentro de pantalla; filtro legible sin recorte. Sin ocultar responsables ni señales.",
       "tests": [
         "Suite Node completa y verificadores de atlas/esquema/impacto/OS/portal/accesos/obra al árbol integrado.",
         "Regresión sintética de Equipo/Relevos y navegador Chromium/WebKit 320/390/1440; red a negocio bloqueada.",
         "Conservar correcciones de entrada/selección/readGoals y proyectos previos; sin API de negocio de prueba."
       ],
-      "deployment": "Preparación en rama. La instalación del servidor declarada requiere comprobante independiente; no acredita nota durable, recarga ni aceptación. Mantener sin integrar a main hasta esos recibos.",
+      "deployment": "Preparado localmente sobre main bec30bf2 y PR225 1b47cd2. Instalación backend declarada en bitácora; readTeam/writeTeam, nota vinculada, recibo durable y recarga siguen pendientes. Sin publicación de esta conciliación.",
       "rollback": "Retirar montaje Equipo/Relevos mediante PR conservando las correcciones publicadas de selección y metas, Buzón, historial, permisos y recibos."
     }
   ],
@@ -13527,14 +14514,19 @@
       "input": [
         "Código aprobado de main; outputs públicos declarados por proceso; último snapshot publicado e inmutable",
         "Identidad automática del workflow del mismo repositorio; nunca credenciales del conector",
-        "Motor elegido, warnings y comprobación real del archivo para medios; producción CPU no es animación generativa LTX"
+        "Motor elegido, warnings y comprobación real del archivo para medios; producción CPU no es animación generativa LTX",
+        "Snapshots históricos conservados y deltas nuevos con manifiesto, padre, hashes y replay verificables; identidad real de Actions con run_id y run_attempt.",
+        "Presupuesto técnico configurado para archivos y bytes que llegarán a Pages; validación previa a la publicación.",
+        "Despliegue en dos fases: lectores compatibles v1/v2 primero; emisión v1 predeterminada y SALA_SNAPSHOT_INCREMENTAL=1 sólo tras comprobar drenaje de ejecuciones/consumidores anteriores."
       ],
       "output": [
         "Release en borrador privado con ZIP de datos públicos acumulados, SHA256 y manifiesto de archivos",
         "Pages con recibo version-online.json: code_sha, data_sha, snapshot_id y run_id exactos",
         "Estado publicado sólo tras comprobar el recibo del sitio; montaje sólo con archivo/hash en versión publicada",
         "Revisión diaria agregada de colas y rutinas; lecturas rechazadas representadas como errores, no ceros",
-        "Marketing: rama datos-online contiene únicamente agregados públicos, portadas y recibo; el frontend aprobado en Pages los consulta por raw.githubusercontent.com."
+        "Marketing: rama datos-online contiene únicamente agregados públicos, portadas y recibo; el frontend aprobado en Pages los consulta por raw.githubusercontent.com.",
+        "Restauración acumulativa compatible con el histórico y sus deltas; ninguna ausencia en un delta borra archivos anteriores.",
+        "Recibo de snapshot y de publicación ligados a su ejecución e intento; escritura remota incierta conciliada antes de volver a crearla."
       ],
       "invariants": [
         "Cambios de código pasan por PR y las comprobaciones existentes. Publicar datos validados es un contrato nuevo; nunca integrar los PR anteriores del bot omitiendo CI.",
@@ -13544,7 +14536,14 @@
         "Una escena CPU identifica cámara/parallax/profundidad aproximada según el motor real. Las decisiones, retirar, rehechas e identidad de piezas se conservan.",
         "Nunca autoaprobar editoriales ni enviar/publicar contenido a terceros. Prueba técnica no registra un proyecto o producción ficticia en Sheets.",
         "Si una API devuelve ok:false o error, conservar el backup anterior y mostrar fallo. HTTP200 no equivale a lectura válida.",
-        "La rama pública de datos no contiene código, credenciales, leads o registros nuevos de clientes. Una escritura del bot en esa rama publica únicamente datos validados; main conserva protecciones, PR y CI."
+        "La rama pública de datos no contiene código, credenciales, leads o registros nuevos de clientes. Una escritura del bot en esa rama publica únicamente datos validados; main conserva protecciones, PR y CI.",
+        "Mantener lectura compatible de snapshots históricos; un delta valida su padre y manifiesto antes del replay. No reescribir bases ni inferir un borrado por archivo ausente.",
+        "El propietario del mutex incluye run_id y run_attempt reales. Otra ejecución o intento no puede apropiarse de un lease activo por compartir run_id; liberación, recuperación y reintento requieren comprobar propietario y estado remoto.",
+        "Un ACK perdido de lease, release o activo no autoriza duplicarlo: releer la referencia y contrastar identidad, contenido y hash; conflicto o prueba insuficiente conserva fallo explícito.",
+        "Comprobar el presupuesto técnico de Pages antes de construir/publicar la salida. Exceso conserva el último sitio confirmado y medios históricos; no recortar o borrar contenido aprobado para aparentar éxito.",
+        "La emisión incremental queda apagada por defecto. Activar SALA_SNAPSHOT_INCREMENTAL=1 sólo después de publicar el lector v1/v2 y acreditar el drenaje de ejecuciones con lectores antiguos. El código integrado no acredita por sí solo ese drenaje.",
+        "Para revertir después de emitir deltas, generar y comprobar un snapshot completo v1 mediante el lector v2 antes de revertir lectores o publicador; conservar las bases y los deltas originales.",
+        "CTR-SALA-MEDIOS-PUBLICOS regula únicamente imágenes nuevas externas: FULL conserva su manifiesto schema1 fijado por media_manifest_sha256 y sólo omite bytes comprobados; consumidores hidratan bytes exactos antes de Mesa/corte. Los snapshots draft privados, históricos, presupuesto900MiB y flag incremental OFF se conservan."
       ]
     },
     {
@@ -13633,7 +14632,8 @@
       "output": [
         "Acuse privado de antes/después de configuración técnica y horario de correo, con conteos/hash y resumen público sin IDs o credenciales.",
         "Correo solicitado sólo mediante el backend existente. ok:true/bitácora acreditan únicamente el alcance observado; recepción requiere prueba separada.",
-        "Archivos de comparación en Drive privado, byte/hash verificados; publicación del tablero sólo con snapshots y código aprobados."
+        "Archivos de comparación en Drive privado, byte/hash verificados; publicación del tablero sólo con snapshots y código aprobados.",
+        "Correo e informe distinguen decisiones históricas fusionadas, pendientes editoriales, trabajos producidos y publicación confirmada; un listado actual vacío no equivale a ausencia de decisiones."
       ],
       "invariants": [
         "El agente no decide ni autoaprueba. Alejandro y Sayri conservan veto igual y ninguna pieza avanza con petición abierta.",
@@ -13643,7 +14643,10 @@
         "No publicar guiones privados, contenido de correos, fuentes con claves, filas de negocio ni archivos originales en repositorios/artifacts públicos.",
         "No presentar una prueba CPU/parallax como video generativo LTX ni equivalencia visual aceptada. Todo material regenerado conserva procedencia propia y no sustituye el original.",
         "Si no se acredita una facultad, se registra el pendiente exacto. No cancelar las rutinas anteriores de Claude por un diagnóstico parcial.",
-        "Sólo rutinas Sala declaradas en allowlist pueden habilitarse, sin PPP ni supervisores cancelados. Revisión diaria debe distinguir schedule declarado, workflow activo y última ejecución real."
+        "Sólo rutinas Sala declaradas en allowlist pueden habilitarse, sin PPP ni supervisores cancelados. Revisión diaria debe distinguir schedule declarado, workflow activo y última ejecución real.",
+        "Producido exige un resultado durable; publicado exige el recibo exacto de la versión accesible. Los conteos y el correo no intercambian estos estados.",
+        "Una lectura fallida se declara incompleta, conservando el último dato acreditado, nunca como cero ni como ausencia de publicaciones. La fuente .gs editada y su implementación activa se comprueban por separado.",
+        "El push del workflow de cierre no envía entradas de correo ni repite la comparación histórica. Las opciones manuales explícitas existentes siguen disponibles bajo la autorización y contratos vigentes; no se infieren de un push."
       ]
     },
     {
@@ -13803,7 +14806,9 @@
         "Si la preparación falla por completo, debe fallar el workflow. Un resultado parcial se declara parcial aunque se hayan publicado los archivos que sí salieron.",
         "Montaje recibe sólo la identidad de Actions de su propio repositorio para leer el snapshot privado; un fallo de lectura/hash/post detiene el paso, también a través de tee.",
         "Una generación sin montar no sustituye la fuente activa del Sheet. Reutilizar sólo con las mismas referencias aprobadas; cambio de referencia crea otra versión, sin pisar archivos.",
-        "mesa-estado.json se declara por nombre exacto entre los outputs de Mesa; nunca ampliar el permiso al directorio entero de datos."
+        "mesa-estado.json se declara por nombre exacto entre los outputs de Mesa; nunca ampliar el permiso al directorio entero de datos.",
+        "Los resúmenes y correos conservan el contexto de decisiones históricas fusionadas, aun si la mesa sólo presenta lo que falta responder. Distinguir encolado, producido durable y publicado con recibo comprobado.",
+        "CTR-SALA-MEDIOS-PUBLICOS sólo cambia transporte de imágenes nuevas: rutas lógicas, huellas MD5, selección, aprobaciones y compuertas conservadas. Resolución externa incierta no habilita aprobación ni acredita producción/publicación."
       ]
     },
     {
@@ -13980,9 +14985,361 @@
         "Fuentes verificadas se importan de forma idempotente por clave fuente/caso/hecho, sin alterar próximo paso ni fecha.",
         "No se envían invitaciones ni mensajes externos. Los clics de consulta no crean avances ficticios."
       ]
+    },
+    {
+      "id": "CTR-SALA-TRANSPORTE-NUBE",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS"
+      ],
+      "source": "Ampliación técnica autorizada en CHG-SALA-NUBE-20261015, registrada antes de implementar el cliente de la Sala existente.",
+      "input": [
+        "Acciones de lectura explícitamente declaradas y operaciones de escritura del backend existente; credencial actual y destinos canónicos.",
+        "Timeout y límites de reintento acotados; recibo y referencia de operación cuando el contrato existente los suministre."
+      ],
+      "output": [
+        "JSON de aplicación validado o error controlado y explícito; HTTP exitoso no suplanta ok ni la integridad del cuerpo.",
+        "Estado incierto diferenciado de rechazo explícito, con evidencia suficiente para conciliación posterior."
+      ],
+      "invariants": [
+        "Reintentar sólo acciones GET declaradas de lectura sin efectos, con límites y espera acotados. No presumir que cualquier GET es inocuo.",
+        "Una mutación POST no recibe reintento genérico después de timeout, fallo de transporte o ACK ambiguo: consultar el estado/recibo y reconciliar primero.",
+        "No duplicar correo, triggers, encolados, montajes o registros para recuperar una respuesta perdida. Un rechazo explícito se trata sólo mediante su contrato particular.",
+        "No registrar credenciales, URLs privadas, payloads de negocio o cuerpos remotos privados en informes públicos. Mantener ACL y validación de negocio existentes.",
+        "Los nombres visibles se resuelven una vez por rol dentro de cada fusión editorial. No cachear autorización ni nombres entre invocaciones; no modificar marca, nota, orden, veto o sello."
+      ]
+    },
+    {
+      "id": "CTR-SALA-CHINCHES-RECIBO",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "EXT-ACTIONS"
+      ],
+      "source": "Ajuste de conciliación del puente existente autorizado en CHG-SALA-NUBE-20261015; lectores y agente conservan sus competencias.",
+      "input": [
+        "Chinche e issue canónicos existentes; resultado y motivo de cierre comprobados en la fuente GitHub.",
+        "Identidad estable del encargo y proof del resultado; producción y etiquetas actuales releídas antes de reintentar."
+      ],
+      "output": [
+        "Solicitud de ejecución registrada como solicitada; cumplimiento sólo con resultado acreditado y registro confirmado.",
+        "Una sola anotación de cumplimiento por ID y proof, aunque falle una etiqueta o se pierda el ACK del POST."
+      ],
+      "invariants": [
+        "Aceptar un dispatch de idea no demuestra trabajo cumplido. El agente no decide ni altera el texto, la aprobación o el alcance original.",
+        "Un cierre not_planned no se convierte en resuelto o ENCARGO CUMPLIDO; conservar su motivo y pendientes correspondientes.",
+        "Antes de repetir tras una etiqueta fallida o un POST incierto, releer producción y comprobar ID/proof del registro. Resultado ambiguo permanece pendiente de conciliación; no duplicar el efecto.",
+        "Conservar lectores existentes, decisiones humanas, evidencias, comentarios e historial; no ampliar ACL ni cerrar trabajo pendiente sólo porque exista un issue."
+      ]
+    },
+    {
+      "id": "CTR-INVESTOR-SINGLE-SURFACE",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL"
+      ],
+      "source": "Petición explícita de Dirección; evolución del contrato público editorial existente y reutilización propuesta del código genérico D14/YODChinche, sin datos del caso de referencia.",
+      "input": [
+        "Contenido comercial y ayudas públicas de la presentación desde la hoja editorial vigente mediante el contrato de lectura existente; ningún dato privado en scripts o repositorio.",
+        "Progreso continuo0–26 de los27momentos existentes; gesto de una superficie, teclado y movimiento reducido comparten estado reversible.",
+        "Chinche sólo tras interacción explícita: posición normalizada o recorte, escena/progreso, comentario y captura del estado visible; dictado opcional condicionado a disponibilidad y permisos del navegador.",
+        "API YODChinche existente o adaptador compatible; captura gráfica local y bytes ArrayBuffer persistidos en IndexedDB para evitar incompatibilidad Blob de WebKit."
+      ],
+      "output": [
+        "Cabecera Codesarrollo inmobiliario y subtítulo Hermosillo; lienzo y notas animadas con flechas, sin menú móvil inferior desplazable ni un segundo scroll para avanzar la historia.",
+        "Relato completo accesible en lector; el texto abreviado visible conserva sentido, distinción de supuestos y cierre comercial.",
+        "Chinche local recuperable tras recarga con imagen y comentario; historial En revisión sin acuse remoto fabricado.",
+        "Compartir nativo únicamente por decisión explícita y cuando el navegador lo admita; cancelación o error conserva borrador/captura y no declara entrega."
+      ],
+      "invariants": [
+        "Los datos reales y el copy comercial siguen en Drive/Sheets. Referencia visual sólo permite reutilizar código UX genérico, nunca nombres, IDs, cifras, documentos o geometría privada de casos en logs, fixtures o repositorios.",
+        "Una superficie táctil mueve la historia; el gesto no activa doble navegación ni requiere arrastrar un control adicional. Chinche, lector y acciones son funciones explícitas, no superficies de avance paralelas.",
+        "No se retira información de la fuente: los27momentos y el lector completo conservan mercado, inmueble, producto, cuenta, condiciones, participación, ejecución y recuperación.",
+        "Anotaciones y flechas son explicación editorial, no nuevas verificaciones, reglas financieras, resultados garantizados ni datos de inmueble.",
+        "IndexedDB opera por origen del navegador; las notas de otro dominio no se sincronizan automáticamente. Guardado local no equivale a recepción, issue remoto, ACK, encargo tomado ni tarea cumplida.",
+        "El historial En revisión es local; no se afirma conexión con revisor remoto sin recibo verificable. Compartir nativo se abre sólo por gesto explícito y no registra envío confirmado sin evidencia.",
+        "ArrayBuffer/captura/comentario deben persistir juntos o conservar borrador visible ante fallo. Cancelar, cuota excedida o error no borra notas previas ni comunica éxito.",
+        "La captura excluye secretos de la sesión; no leer, modificar o borrar pyod_clave_v1. No transferir credenciales al enlace público, evaluador o paquete de chinche.",
+        "Preservar contratos y API YODChinche existentes mediante adaptador local; no cambiar el sistema común del portal ni migrar o eliminar bases ajenas.",
+        "Pruebas usan dobles sintéticos para almacenamiento, captura, dictado y compartir; sin POST de negocio ni envíos reales. Publicación y verificación de frontend se documentan separadas de aceptación física.",
+        "Misma URL pública, Material, originales y versiones conservadas; cierre al evaluador existente con URL validada y sin nuevo backend, ACL, reglas de dinero o datos de cartera."
+      ]
+    },
+    {
+      "id": "CTR-SALA-MEDIOS-PUBLICOS",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE"
+      ],
+      "source": "CHG-SALA-MEDIOS-PUBLICOS-20261015. Contrato schema 1 acordado entre lectores UI, snapshots y almacén; registro técnico local previo a integración y activación.",
+      "input": [
+        "datos/medios-publicos.json: objeto exacto {schema:1,repo:\"yodesarrollomx/sala-edicion\",entries:{rutaLogica:entrada}}; sin campos extra ni identificadores privados. MAX_MANIFEST_BYTES=2 MiB, comprobado antes de parse y emisión.",
+        "Ruta lógica de hasta 512 caracteres: ^laminas/(?:[A-Za-z0-9_-]+/)*[A-Za-z0-9_.-]+\\.(png|jpg|jpeg|webp)$; sin segmentos . ni .., únicamente imágenes nuevas no presentes en Git ni baseline.",
+        "Entrada exacta: sha256=64 hex minúsculas; bytes=entero1..25 MiB; mime=image/png|image/jpeg|image/webp coherente con sufijo; release_id y asset_id enteros positivos hasta 9007199254740991 (Number.isSafeInteger UI); tag=^sala-media-([0-9a-f]{64})-(mesa|arranque)$; url=https://github.com/yodesarrollomx/sala-edicion/releases/download/<tag>/<sha256>.<sufijo lógico>. Sin campos extra.",
+        "Como máximo 1000 activos únicos por release. El total de entries se limita por bytes del manifest, sin otro techo arbitrario de conteo.",
+        "Recibo fresco version-online.json.media_manifest_sha256: SHA256 de los bytes JSON exactos, incluida newline. Meta UI <meta name=\"sala-medios-publicos\" content=\"1\"> instalado antes de emisión.",
+        "SALA_MEDIOS_PUBLICOS=\"1\" sólo después de lectores publicados, inmutabilidad y canario anónimo comprobados; ausencia u otro valor mantiene emisor OFF. Ningún permiso de App nuevo ni cambio de Drive privado.",
+        "Digest del tag = SHA256 del JSON UTF-8 canónico SIN newline de {schema:1,repo,process,files:{rutaLogica:{sha256,bytes,mime,name}}}; sort_keys=True, separators=(\",\",\":\"), ensure_ascii=False. name=sha256+\".\"+sufijo lógico minúsculo. No incluye source_sha, run_id ni attempt; el digest de payload es distinto del hash de cada imagen."
+      ],
+      "output": [
+        "Manifiesto público mínimo y activos de imagen en releases públicos inmutables del mismo repositorio; ninguna fila/texto privado, ID Drive, token o credencial.",
+        "UI resuelve transporte desde ruta lógica conservando referencias, huellas MD5 de negocio y acciones editoriales; el pin del recibo fija el manifest consumido.",
+        "Snapshot ZIP schema 1 conserva formato y permite el nuevo JSON; FULL incluye manifest y sólo omite bytes externos ya confirmados. Mesa/corte hidratan bytes verificados antes de usarlos.",
+        "file_is_published acredita el archivo lógico exacto con manifest validado/pin del recibo y bytes anónimos verificados, no por existencia de URL/metadatos.",
+        "Checkpoint online.json en RUNNER_TEMP por run/attempt, persistido antes de cada POST; identidad remota estable por payload canónico independiente de run/attempt/source. Tras pérdida de runner, GET exacto de tag/asset concilia objetos existentes sin repetir POST. Descriptor conserva procedencia técnica inicial; no se sobrescribe por un nuevo intento."
+      ],
+      "invariants": [
+        "Preparación e integración no equivalen a activación. Emisor OFF y ningún activo/release/canario real creado por este registro; la autorización técnica persiste sin sustituir revisión editorial.",
+        "Sólo medios NUEVOS de laminas con sufijo png/jpg/jpeg/webp; los existentes en Git o baseline, sus URLs y las entries previas son inmutables: no borrar, cambiar, recomprimir ni externalizar históricos.",
+        "Vídeo, audio y muestras están fuera de fase1 y siguen en Pages; presupuesto 900 MiB sin ampliación. SHA256 de transporte no reemplaza MD5 ni identidad/selección editorial.",
+        "Snapshot de datos continúa en release draft privado. Release de medios es público e inmutable sólo después de verificación explícita; URL por hash no demuestra inmutabilidad.",
+        "Antes de habilitar emisor: lectores UI/FULL/consumidores publicados con recibo fresco y meta, guardas para lectores antiguos, prueba anónima canario con SHA256/bytes/MIME y evidencia de inmutabilidad. Ningún token llega al navegador.",
+        "Manifest existente sin pin, hash distinto, schema inválido, exceso de 2 MiB o lectura fallida cierra imágenes/aprobaciones; 404 del manifest sólo es legacy cuando el recibo no declara pin. No confirmar montaje ni publicación con lectura inconclusa.",
+        "Comprobar hash/tamaño/tipo de bytes obtenidos anónimamente, repo/tag/asset exactos y pin; una respuesta HTTP, URL, dispatch o metadata sola no acredita publicación. Permisos privados de Drive, ACL y reglas de negocio permanecen.",
+        "Persistir checkpoint por run/attempt antes de cada POST; reconciliar por tag de payload estable y GET de assets tras ACK perdido, incluida reentrada desde otro runner sin journal local. El mismo payload conserva tag y objetos; el descriptor conserva run/source iniciales sólo como procedencia. Consulta inconclusa o efecto invisible permanece pendiente sin nueva escritura. Exigir digest SHA256 del activo draft antes de publicar y SHA256 de bytes anónimos después.",
+        "Desactivar SALA_MEDIOS_PUBLICOS detiene sólo nuevas externalizaciones. Si ya existe un medio externo, conservar lector compatible, manifiesto, pin del recibo, releases inmutables y sus activos. No volver a un lector antiguo ni retirar activos hasta repatriar y verificar todos los bytes referenciados, publicar un FULL íntegro dentro de 900 MiB y comprobar recibo fresco y consumidores. No borrar históricos ni alterar ACL, decisiones, destinatarios o reglas de negocio."
+      ]
+    },
+    {
+      "id": "CTR-SALA-PRODUCCION-HISTORICA",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR"
+      ],
+      "source": "Reparación técnica de Sala NUBE autorizada; integración del consumidor registrada en CHG-SALA-MEDIOS-PUBLICOS-20261015. Schema propuesto por backend/lector el 15-oct-2026; no acredita despliegue del Apps Script ni activa flags.",
+      "input": [
+        "GET sólo lectura recurso=produccion con clave del rol agente EXISTENTE, mismo acceso a los datos diarios y sin ACL/scopes nuevos. Sólo SALA_PRODUCCION_HISTORICA=1 solicita este recurso; valor predeterminado0.",
+        "Envoltorio válido: ok:true, contrato:\"produccion-historica-v1\", version:\"produccion-historica-2026-10-15\", alcance:\"historial_completo\", fecha:hoy, dias:[], propuestas, decisiones y fuentes.",
+        "propuestas: lista de objetos con id,titulo,tipo,laminas,opciones,video,origen,estado,fecha_fuente,de_antes. PROP se resuelve por última fecha<=hoy; la última retirada excluye sin revivir una versión anterior; duplicada contradictoria de igual pid/fecha cierra.",
+        "decisiones:{propuestas:{pid:{laminas,nota,notas,firmas,firmas_nota}},editores,guardado?}. Cada firma contiene rol editor|editor2, quien, marca si|no|null, nota y guardado ISO UTC REAL. firmas es matriz alineada con laminas: máximo dos firmas con roles únicos por lámina; notas y firmas deben coincidir exactamente; firmas_nota es lista de hasta dos firmas de nota global.",
+        "fuentes:{leidas,activas,retiradas,decisiones_leidas}. Campo activas es conteo técnico de PROP vigente, no acreditación de aprobación de guion/toma.",
+        "Límites: 10000 PROP, 50000 DEC, 1000 láminas; Python limita a 4 MiB el valor JSON vuelto a serializar como UTF-8, no acredita límite del transporte antes de parsear. IDs cumplen ^[A-Za-z0-9_.-]{1,256}$ (GAS; equivalente Python con regex base y longitud1..256), sin / ni backslash. Error de límite, auth, red, forma o contrato cierra."
+      ],
+      "output": [
+        "Fuente de producción de historial completo, incluidos registros fuera de14 días; selección posterior mantiene todas las compuertas editoriales vigentes.",
+        "Última decisión por sello REAL de fila/editor/pid/lámina, sin fabricar sello con fecha de hoy, fecha de día, envío_id ni instante de lectura. firmas_nota conserva autoría y texto de nota global para evitar tomar una nota ajena.",
+        "El diagnóstico local _produccion.cuenta_historial sólo es exacta cuando se valida contrato/alcance completos. Legacy reconocido o flag0 declara no_confirmada, con alcance legacy_ventana_limitada; esos valores son telemetría del consumidor, no campos requeridos al backend ni historial completo inventado.",
+        "Diagnóstico agregado, sin filas/textos privados: diferencia entre fuera de ventana, PROP retirada, decisión incompleta y elegibilidad real; ningún reencolado o aprobación por la lectura."
+      ],
+      "invariants": [
+        "Contrato/backend propuestos y no desplegados. SALA_PRODUCCION_HISTORICA=0 hasta despliegue del propietario y GET completo verificado; la cuenta de Dirección inspeccionada no administra ese deployment. No crear nuevo backend, ACL, scope, pago o identidad para sortearlo.",
+        "Consultar TODO DEC y última PROP hasta hoy. Una fuente fuera de14 días no desapareció ni fue retirada por ese hecho; una PROP retirada más reciente impide revivir su versión anterior.",
+        "pending no borra una marca previa. borrar elimina únicamente la marca propia; NO vigente del otro editor conserva veto. Últimos sellos contradictorios empatados o estado inconsistente cierran antes de seleccionar.",
+        "Fecha de lectura estable no sustituye guardado real de cada decisión. No usar fecha de día/envío_id como precedencia. Firma de nota global debe coincidir en rol/autor/texto/sello; no heredar aprobación o nota de otra persona.",
+        "Historial y elegibilidad son distintos: cuatro cortes fallidos no vetados del diagnóstico no prueban aprobación actual. Tres corresponden a dos fuentes no retiradas en Sheet; el cuarto a una tercera fuente retirada. Nuevo audit halló 0 elegibles, sin crear decisiones ni reencolar.",
+        "No publicar respuestas con títulos, IDs o notas privadas en repositorio/logs. Fuente original conservada; errores no fabrican cero ni dan por completo el historial. No cambiar reglas editoriales, prioridades comerciales o marcas humanas.",
+        "Pruebas con dobles sintéticos; ningún GET de efecto de negocio, correo de prueba, reencolado o escritura real para demostrar funcionamiento. Despliegue, lectura completa y activación se acreditan por separado."
+      ]
+    },
+    {
+      "id": "CTR-INVESTOR-INTENT-STORY",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-CONTROL",
+        "GAS-PLAN-POTENCIAL",
+        "SHEET-PLAN-POTENCIAL"
+      ],
+      "source": "Guion editorial aprobado por Dirección; evolución aditiva de CTR-INVESTOR-SINGLE-SURFACE.",
+      "input": [
+        "Campo journey opcional de configuración editorial: siete escenas con cantidad variable de momentos, texto, etiquetas y tipos visuales validados.",
+        "Relato original y detalles conservados; geometría pública desde fuente vigente."
+      ],
+      "output": [
+        "Misma página con recorrido de selección, producto, economía, condiciones, ejecución y conversación de participación.",
+        "Contexto de chinche incluye escena y momento nuevos, sin cambiar almacenamiento ni compartir implícitamente."
+      ],
+      "invariants": [
+        "Copy y datos reales viven en Sheets, no en repositorio.",
+        "Sin anotaciones obligatorias ni conectores que crucen el texto.",
+        "Mismo gesto reversible y límites, sin menú inferior móvil.",
+        "Capitalista no necesita inmueble. Aportación de inmueble conserva valor. Medición no acredita autorización. Utilidad no equivale a caja.",
+        "No cifras, rendimientos, cabidas ni probabilidades fabricadas; sólo ilustración conceptual.",
+        "Todos los textos originales permanecen accesibles; versiones anteriores siguen operando.",
+        "Conservar contrato de chinches, credencial Portero, permisos, datos y backend existentes."
+      ]
+    },
+    {
+      "id": "CTR-PRESENTATION-PINS-INGEST",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "EXT-ACTIONS",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-DRIVE"
+      ],
+      "source": "La solicitud escrita/dictada y su captura; bandeja privada PRODUCCION de Sala.",
+      "input": [
+        "CHN estable, versión/escena/cámara/punto, destino, captura JPEG acotada con SHA256 y sesión YOD existente confinada a su origen."
+      ],
+      "output": [
+        "Sobre privado registrado; recibo verificado por ID/huella; marcador público saneado para el puente/revisor existente."
+      ],
+      "invariants": [
+        "Nunca confundir local con recibido ni recibido con cumplido.",
+        "No copiar claves a Sites ni postMessage ni publicar capturas/notas privadas en issues.",
+        "Mismo ID al recuperar pendientes; una respuesta ambigua sólo se concilia en lectura.",
+        "No nuevos cron, reactivaciones, backend, Sheet ni cambios de ACL.",
+        "Notas y capturas sólo en fuente privada. Exportaciones públicas conservan un marcador mínimo; frontera verificada antes de ingesta. La ventana del día no sustituye el historial de PRODUCCION."
+      ]
+    },
+    {
+      "id": "CTR-PRESENTATION-GUIDED",
+      "components": [
+        "SYS-PLAN-POTENCIAL",
+        "SYS-INVERSION",
+        "SYS-CONTROL"
+      ],
+      "source": "La misma presentación y versión publicada; la sesión sólo almacena estado técnico temporal. El plan y sus fuentes originales permanecen sin cambios.",
+      "input": [
+        "Conductor con enlace privado de capacidad, validación de llave sólo en servidor; versión, época, secuencia y posición semántica. Las sesiones anteriores conservan su frontera de identidad.",
+        "Visor público compartible para celular/escritorio; presencia técnica sin identidad personal compartida."
+      ],
+      "output": [
+        "Último estado del conductor con acuse y reloj del servidor; eventos de actualización y lectura de recuperación.",
+        "Margen local de revisión de hasta tres cuadros, retorno al soltar y estado de conexión visible.",
+        "Dos entradas permanentes con vistas previas de marca; raíz y visor siguen el mismo canal durante la presentación."
+      ],
+      "invariants": [
+        "No transmitir scroll en píxeles, pantallas privadas, voz, notas de chinches ni credenciales YOD.",
+        "Invitado nunca puede publicar el estado del conductor; las capacidades de lectura y escritura son diferentes.",
+        "Posiciones atrasadas se descartan por secuencia y los saltos recuperan la versión exacta del guion.",
+        "Nunca extrapolar el dibujo del invitado más allá del conductor recibido.",
+        "Revisión acotada sólo durante el gesto; al soltar, cancelar, perder foco o salir vuelve al conductor vigente.",
+        "Conservar el Sitio, público, rotor, dibujos y notas; no modificar modelos financieros, cron o datos de negocio.",
+        "Llave de control sólo en fragmento consumido al abrir, almacenada por pestaña y enviada en header; servidor conserva únicamente su hash. Excluirla de fuentes, QR, vistas previas y registros compartidos.",
+        "Un arrendamiento de conductor y época de control impiden escrituras anteriores tras relevo. Tomar control en otro dispositivo requiere acción expresa.",
+        "No compartir I/O o streams entre peticiones de Worker. Cachear sólo datos resueltos; limitar consultas reales por stream, cola pendiente, presencia y ritmos de escritura."
+      ]
+    },
+    {
+      "id": "CTR-SALA-CORRECCIONES",
+      "components": [
+        "SYS-SALA",
+        "SYS-YOD-OS",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "EXT-ACTIONS",
+        "SYS-DESPACHO"
+      ],
+      "source": "Decisiones autenticadas en Sheet; chinches locales y bandeja privada PRODUCCION.",
+      "input": [
+        "ID estable, texto revisado, identidad de pieza/propuesta/lámina/versión/toma capturada antes del dictado."
+      ],
+      "output": [
+        "Recibo del transporte o pendiente explícito; entrega técnica verificable separada de aprobación editorial."
+      ],
+      "invariants": [
+        "Dictar, navegar, comparar y clavar no aprueban.",
+        "Sólo un acuse válido o lectura coincidente marca recibido.",
+        "Checkpoint antes del POST; resultado incierto se concilia sólo por lectura.",
+        "Un cierre de issue no prueba ejecución ni aprobación.",
+        "No publicar texto privado de nuevas chinches en issues; marcador público mínimo.",
+        "GAS espejo no se despliega por modificar repositorio."
+      ]
+    },
+    {
+      "id": "CTR-SALA-FINALISTAS-METRICAS",
+      "components": [
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "EXT-ACTIONS",
+        "SYS-YOD-OS",
+        "GAS-SALA"
+      ],
+      "source": "Contrato de interacción de los puntos 1 y 2; evaluación del punto 5.",
+      "input": [
+        "Editor vigente, propuesta, lámina, versión y conjunto exacto de candidatas con identidad original.",
+        "Resultados obtenidos por Mesa, separados por lámina y cantidad de candidatas."
+      ],
+      "output": [
+        "Preselección local recuperable de cero, una o dos tomas; mensaje explícito de alcance en este navegador.",
+        "laminas_preparadas y tomas_obtenidas; campo generadas conservado como alias de láminas."
+      ],
+      "invariants": [
+        "Preseleccionar nunca envía decidir, producción, ni aprobación implícita.",
+        "Persistencia por propuesta/lámina/versión/conjunto de imágenes y rol; un cambio no hereda finalistas.",
+        "Escritura local fallida no se anuncia guardada; no se almacenan credenciales. No se afirma sincronización entre dispositivos.",
+        "Tomas obtenidas no equivalen a llamadas pagadas ni imágenes nuevas: pueden proceder de recibos. Costo desconocido nunca se convierte en cero.",
+        "Estado hecho en cola y checks exitosos no acreditan calidad editorial ni entrega externa."
+      ]
     }
   ],
   "path_ownership": [
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/load-plan.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/load-config.js",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/load-plan-boot.js",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/load-plan.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/load-coordinator.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/load-coordinator.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/os-chrome-browser.py",
@@ -15751,6 +17108,197 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO",
         "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": "nube/sala_cliente.py",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": "nube/snapshots_online.py",
+      "components": [
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": "nube/sala_chinches.py",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "EXT-ACTIONS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": "gas/Code.gs",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "EXT-GMAIL"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": "nube/correo_estado.py",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "EXT-GMAIL"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": "nube/publicar_git.py",
+      "components": [
+        "SYS-SALA",
+        "EXT-ACTIONS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": "nube/medios_publicos.py",
+      "components": [
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": "medios-publicos.js",
+      "components": [
+        "SYS-SALA"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": "datos/medios-publicos.json",
+      "components": [
+        "SYS-SALA",
+        "EXT-ACTIONS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": "tests/medios_publicos_test.py",
+      "components": [
+        "SYS-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/sala-edicion",
+      "prefix": "tests/medios-publicos.test.cjs",
+      "components": [
+        "SYS-SALA"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "docs/arquitectura/presentation-guided.md",
+      "components": [
+        "SYS-PLAN-POTENCIAL",
+        "SYS-INVERSION",
+        "SYS-CONTROL"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-loading283.test.cjs",
+      "components": [
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/probar-carga283-browser.cjs",
+      "components": [
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/chinche-dictado.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-SALA"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/data-continuity.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/tab-continuity.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/data-continuity.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/tab-continuity.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/data-continuity-boot.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "GAS-PORTERO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/frame-budget.mjs",
+      "components": [
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/frame-budget.test.cjs",
+      "components": [
+        "SYS-DESPACHO-3D"
       ]
     },
     {

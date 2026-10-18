@@ -36,7 +36,7 @@ const server=http.createServer((req,res)=>{
     if(m.method==='resolveCurrent')result=c;
     if(m.method==='mintFastSession')result={ok:true,case_id:c.case_id,token:c.case_id.padEnd(20,'x')+'.'+'a'.repeat(64),endpoint:'https://synthetic.onrender.com',expires_at:Date.now()+600000};
     if(m.method==='readGoals'){if(window.__goalMode==='fail')result={ok:false,error:'unavailable'};else if(window.__goalMode==='delay'){window.__heldGoals.push(()=>e.source.postMessage({type:'yod:case:result',version:1,id:m.id,result:{ok:true,schema:1,source_revision:'r1',goals:[goal(c.case_id)]}},e.origin));return;}else result={ok:true,schema:1,source_revision:'r1',goals:[goal(c.case_id)]};}
-    if(m.method==='read')result={ok:true,case_id:c.case_id,source_revision:'r1',context:{identity:{case_id:c.case_id,name:c.name},memory:[],documents:[['ppp','Plan de potencial',c.ppp.url,'Tablero registrado']]},state:{updated_at:new Date().toISOString()},conversation:[],jobs:[],events:[]};
+    if(m.method==='read')result={ok:true,case_id:c.case_id,source_revision:'r1',context:{identity:{case_id:c.case_id,name:c.name},memory:[],documents:[['ppp','Plan de potencial',c.ppp.url,'Tablero registrado']],moac:{schema:1,source:'native_moac',case_id:c.case_id,observed_at:new Date().toISOString(),source_revision:'m1',binding:'linked',metas:[{meta_id:'META-'+c.case_id,meta:'Meta canónica sintética'}],objetivos:[{objetivo_id:'OBJ-'+c.case_id,meta_id:'META-'+c.case_id,'objetivo / hito':'Objetivo original'}],tareas:[{tarea_id:'TASK-'+c.case_id,objetivo_id:'OBJ-'+c.case_id,meta_id:'META-'+c.case_id,revision:'t1',actividad:'Acción nativa '+c.case_id,estado:'En proceso',responsable:'Responsable de prueba'}],deliveries:[],warnings:[]}},state:{updated_at:new Date().toISOString()},conversation:[],jobs:[],events:[]};
     e.source.postMessage({type:'yod:case:result',version:1,id:m.id,result:result||{ok:false,error:'unavailable'}},e.origin);
    });
   });
@@ -49,7 +49,19 @@ const server=http.createServer((req,res)=>{
    await office.locator('.realtime-dialog').waitFor({state:'visible'});
    
    if(i===0){await office.locator('.workspace-brief[data-read-phase=loading]').waitFor();assert.doesNotMatch(await office.locator('.workspace-brief').innerText(),/Definir el siguiente encargo|Sin encargo registrado/);await page.evaluate(()=>window.__releaseGoals());}
-   if(i===1){await office.locator('.workspace-brief[data-read-phase=unavailable]').waitFor();assert.doesNotMatch(await office.locator('.workspace-brief').innerText(),/Sin encargo registrado/);await page.evaluate(()=>window.__goalMode='ready');await office.locator('.workspace-brief button').click();}
+   if(i===1){
+    await office.locator('.workspace-brief[data-read-phase=unavailable]').waitFor();assert.doesNotMatch(await office.locator('.workspace-brief').innerText(),/Sin encargo registrado/);
+    await office.locator('.workspace-primary [data-tab=activity]').click();
+    await office.locator('.workspace-subnav [data-tab=meeting]').click();
+    await office.getByText('No se pudo consultar la última entrega.',{exact:false}).waitFor();
+    assert.equal(await office.getByText('Todavía no hay una entrega preparada para presentar.',{exact:true}).count(),0);
+    if(evidence)await page.screenshot({path:path.join(evidence,'entrega-consulta-fallida.png')});
+    await page.evaluate(()=>window.__goalMode='ready');
+    await office.getByRole('button',{name:'Volver a consultar',exact:true}).click();
+    await office.locator('.workspace-brief[data-read-phase=ready]').waitFor();
+    assert.equal(await office.getByText('No se pudo consultar la última entrega.',{exact:false}).count(),0);
+    await office.locator('.workspace-primary [data-tab=ppp]').click();
+   }
    await office.locator('.workspace-brief h2').filter({hasText:'Meta '+id}).waitFor();
    const boardBox=await office.locator('.workspace-board iframe').boundingBox();assert.ok(boardBox.height>=400,'PPP occupies the first desktop surface: '+boardBox.height);
 
@@ -61,6 +73,28 @@ const server=http.createServer((req,res)=>{
    if(id==='case-a')assert.match(await office.locator('.workspace-brief').innerText(),/Consultar normativa/);
    else assert.match(await office.locator('.workspace-brief').innerText(),/Revisar la entrega contigo/);
    if(evidence&&i<3)await page.screenshot({path:path.join(evidence,'puesto-sintetico-'+id+'.png')});
+   if(i===2){
+    await office.locator('.workspace-primary [data-tab=activity]').click();
+    await office.getByRole('button',{name:'Ver acciones del MOAC',exact:true}).click();
+    await office.locator('[data-panel=moac][data-moac-phase=ready]').waitFor();
+    assert.match(await office.locator('[data-panel=moac]').innerText(),/TASK-case-c/);
+    assert.doesNotMatch(await office.locator('[data-panel=moac]').innerText(),/TASK-case-a|TASK-case-b/);
+    assert.equal(await office.getByRole('link',{name:'Abrir MOAC original',exact:true}).getAttribute('href'),'https://yodesarrollomx.github.io/board-aurum/');
+    if(evidence)await page.screenshot({path:path.join(evidence,'moac-canonico-sintetico.png')});
+    await office.locator('.workspace-primary [data-tab=sources]').click();
+    await office.locator('.workspace-source-receipt').waitFor();
+    assert.match(await office.locator('.workspace-source-receipt').innerText(),/1 fuente\(s\) registradas para Proyecto sintético 2/);
+    await office.locator('.workspace-subnav [data-tab=avatar]').click();
+    const actions=office.getByRole('navigation',{name:'Acciones del autón'});await actions.waitFor();
+    assert.match(await office.locator('[data-workspace-view=avatar]').innerText(),/Conversación habilitada para tu sesión/);
+    if(evidence)await page.screenshot({path:path.join(evidence,'auton-acciones-reales.png')});
+    await actions.getByRole('button',{name:'Consultar fuentes',exact:true}).click();
+    assert.equal(await office.locator('[data-workspace-view=sources]').count(),1);
+    await office.getByRole('button',{name:'Actualizar fuentes',exact:true}).click();
+    await office.locator('.workspace-source-receipt').waitFor();
+    await office.locator('.workspace-primary [data-tab=ppp]').click();
+   }
+
    if(i<3){await office.locator('.voice-close').click();if(i===0)await page.evaluate(()=>window.__goalMode='fail');if(i===1){await frame.evaluate(id=>window.YodVoiceWorkspace.openForCase(id,'ppp',{compactOnly:true}),id);await office.locator('.voice-capsule').waitFor({state:'visible'});}}
 
   }

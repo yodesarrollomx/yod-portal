@@ -233,5 +233,5 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   assert.deepEqual(errors,[]);
   console.log('Entry '+variant+': access, keyboard, one PPP, draft retained, identity switch, late activity discarded and revocation passed; synthetic authorization.');
   await context.close();
- }}finally{await browser.close();}
+ }await require('./probar-carga283-browser.cjs')(browser,out,ROOT); }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

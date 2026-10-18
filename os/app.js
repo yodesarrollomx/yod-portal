@@ -34,22 +34,47 @@
      Antes el relevo se pegaba en localStorage y, al reactivarse Google, el
      navegador seguía en el respaldo (que no conoce correos ni login de Google). */
   try{localStorage.removeItem('pyod_portero');}catch(e){}
-  function conLimite_(p,ms){return Promise.race([p,new Promise(function(_,rj){setTimeout(function(){rj(new Error('timeout'));},ms||LIMITE_MS);})]);}
+  function conLimite_(p,ms,cancelar){
+    var timer;
+    return Promise.race([p,new Promise(function(_,rj){timer=setTimeout(function(){
+      // Fijar timeout antes de abortar: AbortError no debe ocultar el diagnóstico.
+      rj(new Error('timeout'));if(cancelar)cancelar();
+    },ms||LIMITE_MS);})]).finally(function(){clearTimeout(timer);});
+  }
   // El Portero (Apps Script) hoy tarda entre 3 y 25 s: esperar 12 s lo daba por muerto
   // y el OS se ponía «Sin conexión» con el backend vivo. 25 s + reintento en fondo.
   var LIMITE_MS=25000, LIMITE_FRIO_MS=75000, REINTENTO_MS=15000, REINTENTOS_MAX=3;
   async function canjearConRelevo_(token){
-    async function intenta(base){
-      var r=await conLimite_(fetch(base+'?recurso=canje&t='+encodeURIComponent(token),{cache:'no-store',credentials:'omit'}));
-      if(r.status===401||r.status===403)return {ok:false,error:'HTTP '+r.status};
-      if(r.ok===false)throw new Error('HTTP '+r.status);
-      var raw=await r.text(); try{return JSON.parse(raw);}catch(e){return null;}
+    // Sólo metadatos permitidos: nunca URL, token, cuerpo ni mensajes de terceros.
+    var diagnostico=[];
+    async function intenta(base,origen){
+      var inicio=Date.now(),fase='cabeceras',status=0,codigo='red';
+      try{
+        var controller=new AbortController();
+        // El mismo plazo cubre cabeceras y cuerpo; no se reinicia al recibir headers.
+        return await conLimite_((async function(){
+          var r=await fetch(base+'?recurso=canje&t='+encodeURIComponent(token),{cache:'no-store',credentials:'omit',signal:controller.signal});
+          if(controller.signal.aborted)throw new Error('timeout');
+          status=Number(r.status)||0;
+          if(r.status===401||r.status===403){codigo='http';return {ok:false,error:'HTTP '+r.status};}
+          if(r.ok===false){codigo='http';return {ok:false,error:'http'};}
+          fase='cuerpo';var raw=await r.text();
+          if(controller.signal.aborted)throw new Error('timeout');
+          fase='formato';
+          var data;try{data=JSON.parse(raw);}catch(_e){codigo='formato';return {ok:false,error:'formato'};}
+          if(!data||typeof data!=='object'){codigo='formato';return {ok:false,error:'formato'};}
+          codigo=data.ok?'ok':'rechazo';return data;
+        })(),undefined,function(){controller.abort();});
+      }catch(e){codigo=e&&e.message==='timeout'?'timeout':'red';return {ok:false,error:codigo};}
+      finally{diagnostico.push({origen:origen,fase:fase,codigo:codigo,http:status,duracion_ms:Math.max(0,Date.now()-inicio)});}
     }
-    var d=null; try{ d=await intenta(PORTERO_ORIGINAL); }catch(e){ d=null; }
-    if(!d||(!d.ok&&!rechazoAcceso(d.error))){
-      // El respaldo no es autoridad para revocar sesiones del primario caído.
-      try{var backup=await intenta(PORTERO_RESPALDO);d=backup&&backup.ok?backup:null;}catch(e){d=null;}
+    var d=await intenta(PORTERO_ORIGINAL,'original');
+    if(!d.ok&&!rechazoAcceso(d.error)){
+      // El respaldo no puede revocar una sesión del primario inaccesible.
+      var backup=await intenta(PORTERO_RESPALDO,'respaldo');
+      if(backup&&backup.ok)d=backup;
     }
+    if(!d.ok)console.warn('[YOD OS] diagnóstico de transporte del canje',diagnostico);
     return d;
   }
   // Respaldo curado del catálogo (4-sep-2026). Los títulos y textos dicen LO MISMO que
@@ -110,6 +135,7 @@
   function mismaSesion(token,ep){return state.profileReady&&state.sessionToken===token&&tokenActual()===token&&state.sesionEpoch===ep;}
   function purgarDatosSensibles(){
     state.sesionEpoch++;state.pulseCache={};state.opsCache=null;state.allTasks=[];
+    if(state.loadPlan)state.loadPlan.revoke();
     if(window.cerrarDespachoPrivado)window.cerrarDespachoPrivado();
     SENSITIVE_CACHES.forEach(function(k){try{localStorage.removeItem(k);}catch(_e){}});
     try{sessionStorage.removeItem('yod_id_v1');}catch(_e){}
@@ -265,7 +291,7 @@
   var despachoSection=window.YodDespachoSection.create({
     window:window,document:document,
     readAccess:function(){return {ready:Boolean(state.sessionToken)&&mismaSesion(state.sessionToken,state.sesionEpoch),allowed:window.YodAccessPolicy.canOpen(state.boards,'SYS-DESPACHO',state.role),epoch:state.sesionEpoch};},
-    onTeardown:function(){if(despachoTeam)despachoTeam.teardown();if(despachoPins)despachoPins.clear();if(despachoConversation)despachoConversation.clear();},
+    onTeardown:function(){if(despachoTeam)despachoTeam.teardown();if(despachoPins)despachoPins.clear();if(despachoConversation)despachoConversation.clear();if(state.loadPlan)state.loadPlan.clearSelection();},
     revalidate:function(){loadIdentity();}
   });
   if(window.YodDespachoTransport)window.YODCaseTransport=window.YodDespachoTransport.create({
@@ -276,7 +302,49 @@
     isAuthorized:function(){return despachoSection.isAuthorized();},
     getIframeWindow:function(){return despachoSection.getIframeWindow();},
     getEpoch:function(){return state.sesionEpoch;},
-    getTransport:function(){return window.YODCaseTransport;}
+    getTransport:function(){return window.YODCaseTransport;},
+    onSelection:function(id){
+      if(!window.YodLoadConfig||!window.YodLoadConfig.enabled)return;
+      var ep=state.sesionEpoch,frame=despachoSection.getIframeWindow();
+      window.YodLoadPlanReady.then(function(plan){
+        if(!plan||ep!==state.sesionEpoch||frame!==despachoSection.getIframeWindow()||!despachoSection.isAuthorized())return;
+        state.loadPlan=plan;plan.setSession(ep);plan.select(id);
+      });
+    },
+    scheduleRead:window.YodLoadConfig&&window.YodLoadConfig.enabled?function(method,payload,lane,run,isCurrent){
+      var ep=state.sesionEpoch;
+      return window.YodLoadPlanReady.then(function(plan){
+        if(ep!==state.sesionEpoch||!isCurrent())throw Error('session_changed');
+        if(!plan)return null;state.loadPlan=plan;plan.setSession(ep);
+        return plan.readCase(method,payload,lane,run,isCurrent);
+      });
+    }:null,
+    scheduleWrite:window.YodLoadConfig&&window.YodLoadConfig.enabled?function(method,payload,run,isCurrent){
+      var ep=state.sesionEpoch;
+      return window.YodLoadPlanReady.then(function(plan){
+        if(ep!==state.sesionEpoch||!isCurrent())throw Error('session_changed');
+        if(!plan)return null;state.loadPlan=plan;plan.setSession(ep);
+        return plan.writeCase(method,payload,run,isCurrent,async function(){
+          plan.invalidate();
+          var readMethod=method==='enqueue'?'read':method==='recordVisit'?'readVisits':'readGoals';
+          await plan.readCase(readMethod,{case_id:payload.case_id},'reconcile',async function(){
+            if(!isCurrent())throw Error('session_changed');
+            return {result:await window.YODCaseTransport[readMethod]({case_id:payload.case_id}),error:null};
+          },isCurrent);
+          notifyContinuityFrame();
+        });
+      });
+    }:null
+  });
+  function notifyContinuityFrame(){
+    if(despachoSection.isAuthorized())despachoSection.getIframeWindow()?.postMessage({type:'yod:data:changed',version:1},location.origin);
+  }
+  if(window.YodLoadConfig&&window.YodLoadConfig.enabled)window.YodLoadPlanReady.then(function(plan){
+    if(!plan)return;
+    window.YodContinuityWake=async function(){
+      plan.invalidate();await loadIdentity();
+      if(state.profileReady)notifyContinuityFrame();
+    };
   });
   if(window.YodDespachoEquipoHost&&window.YODCaseTransport&&$('despachoEquipo')){
     despachoTeam=window.YodDespachoEquipoHost.create({
@@ -527,7 +595,7 @@
   }
   async function loadCatalog(){
     if(!state.profileReady)return;
-    var ep=state.sesionEpoch;
+    var ep=state.sesionEpoch;var readRevision=state.loadPlan?state.loadPlan.revision():null;
     if(state.loading&&state.catalogEpoch===ep)return;state.catalogEpoch=ep;state.loading=true;$('refresh').disabled=true;var _mr=$('mobile-refresh');if(_mr)_mr.disabled=true;setConnection('','Actualizando');
     /* Arranque en frío de Apps Script: medido el 9-sep, la MISMA llamada tardó
        64.9 s la primera vez y 2 s las siguientes. Con 25 s fijos el primer
@@ -539,9 +607,9 @@
     try{
       var _tk='';try{_tk=localStorage.getItem(TOKEN_KEY)||'';}catch(_e){}
       var response=await fetch(CATALOG_ENDPOINT+(_tk?'&k='+encodeURIComponent(_tk):'')+'&cb='+Date.now(),{cache:'no-store',credentials:'omit',signal:controller.signal});
-      if(!mismaSesion(_tk,ep))return;
+      if(!mismaSesion(_tk,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;
       if(!response.ok)throw new Error('HTTP '+response.status);var data=await response.json();
-      if(!mismaSesion(_tk,ep))return;
+      if(!mismaSesion(_tk,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;
       if(!data.ok||!Array.isArray(data.rows))throw new Error(data.error||'Respuesta incompleta');
       /* 9-sep-2026 · POR QUÉ CAMBIÓ ESTA GUARDA (el «Catálogo sin autenticar» eterno).
          Antes se daba por «no autenticado» cuando el catálogo llegaba con MENOS
@@ -566,7 +634,7 @@
       state.catRetry=0;renderModules(data.rows);nombrarAccionesRapidas();$('updated-at').textContent=selloDato(data);setConnection('ok','En línea');
       // El catálogo solo se conserva en memoria de esta sesión.
     }catch(error){
-      if(!mismaSesion(_tk,ep))return;
+      if(!mismaSesion(_tk,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;
       if(rechazoAcceso(error)){catalogoSinAcceso();return;}
       state.catRetry=(state.catRetry||0)+1;
       if(state.catRetry<=REINTENTOS_MAX){setConnection('error','Portero lento · reintentando');$('updated-at').textContent='Reintentando en fondo';setTimeout(loadCatalog,REINTENTO_MS);}
@@ -628,7 +696,7 @@
     // se queda (sostiene el mensaje de candado) pero la liga viva desaparece
     var opLink=document.querySelector('#operacion .section-link');
     if(opLink)opLink.classList.toggle('hidden',!window.YodAccessPolicy.canOpen(state.boards,'SYS-TAREAS',state.role));
-    montarTablero();
+    if(!enDespacho())montarTablero();
     if(window.revisarPuertaEmbudo)window.revisarPuertaEmbudo();
     if(window.revisarPuertaDespacho)window.revisarPuertaDespacho();
     if(state.rawRows.length)renderModules(state.rawRows);
@@ -645,17 +713,49 @@
       if(t&&strong)strong.textContent=t;
     });
   }
+  function enDespacho(){return /^#\/despacho(?:[/?]|$)/.test(location.hash||'');}
+  function iniciarInicioDiferido(){
+    if(enDespacho()||!state.profileReady||state.sessionToken!==tokenActual())return;
+    if(state.loadPlan)state.loadPlan.prioritizeHome();
+    montarTablero();
+    if(state.homeDataEpoch!==state.sesionEpoch)void startData(state.sessionToken);
+  }
   function startData(token){
+    if(enDespacho()&&!(window.YodLoadConfig&&window.YodLoadConfig.enabled))return Promise.resolve([]);
+    var homeEpoch=state.sesionEpoch;state.homeDataEpoch=homeEpoch;
     var requests=[loadPulse(token)];
-    if(window.YodAccessPolicy.hasCode(state.boards,'TA')||state.role==='admin')requests.push(loadOperations(token));else renderOperationsLocked();
-    return Promise.allSettled(requests);
+    if(window.YodAccessPolicy.hasCode(state.boards,'TA')||state.role==='admin')requests.push(coordinatedPortalLoad('operations',function(){return loadOperations(token);},enDespacho()?3:1,'operations'));else renderOperationsLocked();
+    return Promise.allSettled(requests).then(function(results){
+      if(state.sesionEpoch===homeEpoch&&results.some(function(r){return r.status==='rejected';}))state.homeDataEpoch=null;
+      return results;
+    });
+  }
+  function coordinatedPortalLoad(key,run,priority,origin){
+    if(!(window.YodLoadConfig&&window.YodLoadConfig.enabled))return run();
+    var token=state.sessionToken,ep=state.sesionEpoch;
+    return window.YodLoadPlanReady.then(function(plan){
+      if(!mismaSesion(token,ep))return;
+      if(!plan)return run();state.loadPlan=plan;plan.setSession(ep);
+      return plan.readPortal(key,run,function(){return mismaSesion(token,ep);},priority,origin);
+    });
   }
   // El diagnóstico técnico del canje se traduce a una frase corta en español.
   var FRASE_CANJE={'canje:clave':'Acceso vencido · vuelve a entrar','canje:liga':'Acceso vencido · vuelve a entrar',
                    'canje:revocado':'Acceso retirado · pídelo de nuevo','canje:expirado':'Acceso vencido · vuelve a entrar',
-                   'canje:sin-respuesta':'Google no contestó · toca ⟳','canje:timeout':'Google no contestó · toca ⟳'};
+                   'canje:sin-respuesta':'Google no contestó · toca ⟳','canje:timeout':'Google no contestó a tiempo · toca ⟳',
+                   'canje:red':'No se pudo conectar con Google · reintentando',
+                   'canje:http':'Google respondió con un error · reintentando',
+                   'canje:formato':'Google devolvió una respuesta inesperada · reintentando'};
   function frasePendiente(d){return FRASE_CANJE[d]||'Sin validar · toca ⟳';}
-  async function loadIdentity(){
+  function loadIdentity(){
+    var token=tokenActual(),old=state.identityFlight;
+    if(old&&old.token===token&&old.epoch===state.sesionEpoch)return old.promise;
+    var promise=loadIdentityOnce(),entry={token:token,epoch:state.sesionEpoch,promise:promise};
+    state.identityFlight=entry;
+    function done(){if(state.identityFlight===entry)state.identityFlight=null;}
+    promise.then(done,done);return promise;
+  }
+  async function loadIdentityOnce(){
     var token=tokenActual(),request=++state.identityRequest;
     // Si esta misma sesión ya fue validada en esta carga, revalidar en segundo
     // plano sin desmontar la identidad ni vaciar la pantalla. Un Portero lento
@@ -673,12 +773,14 @@
       if(!data||data.ok!==true||data.token!==token||typeof data.rol!=='string'||!data.rol.trim()||typeof data.boards!=='string'){var diag='canje:'+((data&&data.error)||'sin-respuesta');var err=new Error(diag);err._diag=diag;throw err;}
       try{localStorage.removeItem('yod_canje_fail');}catch(_e){}
       state.canjeRetry=0;state.sessionToken=token;state.verifiedAt=Date.now();applyIdentity(data);
-      await Promise.allSettled([loadCatalog(),startData(token)]);
+      var dataLoads=Promise.allSettled([coordinatedPortalLoad('catalog',loadCatalog,1,'catalog'),startData(token)]);
+      // Identity must settle even when another tab owns background admission.
+      if(!(window.YodLoadConfig&&window.YodLoadConfig.enabled))await dataLoads;
     }catch(err){
       if(!vigente())return;
       var d=(err&&err._diag)||'error';
       var LENTO={'canje:sin-respuesta':1,'canje:timeout':1,'canje:servidor':1,
-                 'canje:token_red':1,'error':1};
+                 'canje:token_red':1,'canje:red':1,'canje:http':1,'canje:formato':1,'error':1};
       var MUERTO={'canje:clave':1,'canje:liga':1,'canje:revocado':1,'canje:expirado':1};
       function reintentar(){
         state.canjeRetry=(state.canjeRetry||0)+1;
@@ -823,13 +925,13 @@
     renderOperations({tasks:tasks,summary:window.YodOperations.summarize(tasks),updatedAt:updatedAt,source:source,mine:mine,personName:who,personGeneric:nameIsGeneric(who),responsables:uniqueResponsables(all),totalEquipo:all.length,scope:scope});
   }
   async function loadOperations(token){
-    var ep=state.sesionEpoch;if(!mismaSesion(token,ep))return;
+    var ep=state.sesionEpoch;var readRevision=state.loadPlan?state.loadPlan.revision():null;if(!mismaSesion(token,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;
     var panel=$('operation-panel');panel.setAttribute('aria-busy','true');
     var cached=state.opsCache;
     if(cached&&cached.ep===ep){state.allTasks=cached.tasks;renderOpsScoped('cache',cached.updatedAt);}
     try{
       var result=await window.YodOperations.load(token);
-      if(!mismaSesion(token,ep))return;
+      if(!mismaSesion(token,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;
       // Una versión vieja del adaptador puede devolver caché sin dueño: no se usa.
       if(result.source==='cache')throw new Error(result.diag||'cache_sin_identidad');
       state.allTasks=Array.isArray(result.tasks)?result.tasks:[];
@@ -838,7 +940,7 @@
       if(state.role==='admin')renderDecisions(state.allTasks,result.source);
       renderOpsScoped(result.source,result.updatedAt);marcaNuevo('SYS-TAREAS',state.allTasks.map(function(t){return [t.id,t.estado,t.actualizado||''];}));
     }catch(error){
-      if(!mismaSesion(token,ep))return;
+      if(!mismaSesion(token,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;
       var diag=(error&&(error._diag||error.message))||'error';
       if(!rechazoAcceso(diag)&&cached&&cached.ep===ep){
         state.allTasks=cached.tasks;renderOpsScoped('cache',cached.updatedAt);
@@ -906,21 +1008,21 @@
   function sinKpis(result){return !!(result&&result.data)&&!(result.data.kpis&&Object.keys(result.data.kpis).length);}
   function renderMarketing(result){var card=$('marketing-card'),panel=$('marketing-panel'),s=result.summary,vacio=sinKpis(result);card.setAttribute('aria-busy','false');panel.replaceChildren();if(vacio){panel.innerHTML='<div class="pulse-message"><i class="ti ti-help-circle"></i><span>El CRM contestó sin cifras del periodo. No hay números que mostrar todavía.</span></div>';return;}var grid=document.createElement('div');grid.className='pulse-metrics';grid.append(pulseMetric('Leads',String(s.leads),s.period||'Periodo activo'),pulseMetric('Citas',String(s.appointments),percent(s.appointmentRate)+' de leads'),pulseMetric('Clientes',String(s.clients),percent(s.clientRate)+' de leads'),pulseMetric('Sin tocar 24 h',String(s.untouched24h),'Requieren seguimiento',s.untouched24h>0?'alert':''));panel.appendChild(grid);}
   async function loadFinance(token){
-    var ep=state.sesionEpoch;if(!mismaSesion(token,ep))return;
+    var ep=state.sesionEpoch;var readRevision=state.loadPlan?state.loadPlan.revision():null;if(!mismaSesion(token,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;
     var c=pulseCacheRead('finance',token);
     if(c){renderFinance({summary:c.summary});marcarCache('finance-panel',c.ts);}
-    try{var r=await window.YodFinance.load(token);if(!mismaSesion(token,ep))return;renderFinance(r);marcaNuevo('SYS-FLUJO',r.summary);if(!sinSaldo(r))pulseCacheWrite('finance',r.summary,token);}
-    catch(error){if(!mismaSesion(token,ep))return;if(rechazoAcceso(error)){delete state.pulseCache.finance;c=null;}if(!c)renderPulseError('finance-card','finance-panel','Flujo');else marcarCacheFallo('finance-panel');}
+    try{var r=await window.YodFinance.load(token);if(!mismaSesion(token,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;renderFinance(r);marcaNuevo('SYS-FLUJO',r.summary);if(!sinSaldo(r))pulseCacheWrite('finance',r.summary,token);}
+    catch(error){if(!mismaSesion(token,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;if(rechazoAcceso(error)){delete state.pulseCache.finance;c=null;}if(!c)renderPulseError('finance-card','finance-panel','Flujo');else marcarCacheFallo('finance-panel');}
   }
   async function loadMarketing(token){
-    var ep=state.sesionEpoch;if(!mismaSesion(token,ep))return;
+    var ep=state.sesionEpoch;var readRevision=state.loadPlan?state.loadPlan.revision():null;if(!mismaSesion(token,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;
     var c=pulseCacheRead('marketing',token);
     if(c){renderMarketing({summary:c.summary});marcarCache('marketing-panel',c.ts);}
-    try{var r=await window.YodMarketing.load(token);if(!mismaSesion(token,ep))return;renderMarketing(r);marcaNuevo('SYS-MARKETING',r.summary);if(!sinKpis(r))pulseCacheWrite('marketing',r.summary,token);}
-    catch(error){if(!mismaSesion(token,ep))return;if(rechazoAcceso(error)){delete state.pulseCache.marketing;c=null;}if(!c)renderPulseError('marketing-card','marketing-panel','Embudo comercial');else marcarCacheFallo('marketing-panel');}
+    try{var r=await window.YodMarketing.load(token);if(!mismaSesion(token,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;renderMarketing(r);marcaNuevo('SYS-MARKETING',r.summary);if(!sinKpis(r))pulseCacheWrite('marketing',r.summary,token);}
+    catch(error){if(!mismaSesion(token,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;if(rechazoAcceso(error)){delete state.pulseCache.marketing;c=null;}if(!c)renderPulseError('marketing-card','marketing-panel','Embudo comercial');else marcarCacheFallo('marketing-panel');}
   }
   async function loadPulse(token){
-    if(!mismaSesion(token,state.sesionEpoch))return;
+    var ep=state.sesionEpoch;if(!mismaSesion(token,ep))return;
     var financeAllowed=state.role==='admin';var marketingAllowed=state.role==='admin'||window.YodAccessPolicy.hasCode(state.boards,'MK');
     var decisionsAllowed=state.role==='admin';
     // La matriz y El Despacho tienen codigo propio (MZ / DP): no cuelgan de admin,
@@ -928,7 +1030,7 @@
     var despachoAllowed=window.YodAccessPolicy.canOpen(state.boards,'SYS-DESPACHO',state.role);
     $('finance-card').classList.toggle('hidden',!financeAllowed);$('marketing-card').classList.toggle('hidden',!marketingAllowed);$('decision-card').classList.toggle('hidden',!decisionsAllowed);$('despacho-card').classList.toggle('hidden',!despachoAllowed);$('pulso').classList.toggle('hidden',!financeAllowed&&!marketingAllowed&&!decisionsAllowed&&!despachoAllowed);
     if(window.revisarPuertaEmbudo)window.revisarPuertaEmbudo();   // misma regla MK para la pestaña Métricas
-    var requests=[];if(financeAllowed)requests.push(loadFinance(token));if(marketingAllowed)requests.push(loadMarketing(token));await Promise.allSettled(requests);
+    var requests=[];if(financeAllowed)requests.push(coordinatedPortalLoad('finance',function(){return loadFinance(token);},enDespacho()?3:1,'finance'));if(marketingAllowed)requests.push(coordinatedPortalLoad('marketing',function(){return loadMarketing(token);},enDespacho()?3:1,'marketing'));var results=await Promise.allSettled(requests);if(mismaSesion(token,ep)&&results.some(function(r){return r.status==='rejected';}))state.homeDataEpoch=null;
   }
 
   (function(){
@@ -988,6 +1090,8 @@
     var nav=$('nav-modules');if(nav)nav.addEventListener('click',function(e){if(e.target.closest('.nav-item'))closeNav();});
     if(window.matchMedia){var mq=window.matchMedia('(min-width:901px)');mq.addEventListener('change',function(m){if(m.matches)closeNav();});}
   })();
+  addEventListener('hashchange',iniciarInicioDiferido);
+  addEventListener('popstate',iniciarInicioDiferido);
   // Al recargar se valida antes de consultar y mostrar datos.
   loadIdentity();
   /* ── Entrar la clave DENTRO del tablero despierta al resto del OS ──

@@ -120,7 +120,7 @@ function chincheHarness() {
   h.context.fetch=async(url,options)=>{requests.push({url,options});return {ok:true,text:async()=>'{}'};};
   const injected=`
   window.__chincheTest={
-    codigoDespacho,guardDespacho,enviarDirecto,guardar,armarTexto,
+    codigoDespacho,guardDespacho,enviarDirecto,guardar,armarTexto,setContext:ctx=>{CTX=ctx;},
     register:(id,guard)=>despachoGuards.set(id,guard),
     setDatabaseWait:fn=>{abrirBD=fn;},
     setTransaction:fn=>{tx=fn;},
@@ -187,4 +187,12 @@ test('orthographic pins preserve actual projection and reject invalid or private
  for(const change of [v=>v.mode='walk',v=>v.mode='map',v=>v.fov=43,v=>v.orthographic.zoom=0,v=>v.orthographic.right=-30,v=>v.orthographic.top=Infinity,v=>v.orthographic.token='secret']){
   const bad=JSON.parse(JSON.stringify(p));change(bad.view);assert.equal(h.api.validPin(bad),false);
  }
+});
+
+test('Composer freezes host context before capture and before mutable navigation',async()=>{
+ const h=chincheHarness();const context={carta:{pid:'original',lamina:2,version:7}};
+ h.helper.setContext({valores:()=>context,alClavar:()=>{}});
+ await h.window.YODChinche.anotar(h.options());context.carta.pid='other';context.carta.version=8;
+ h.node('.chn-txt').value='Synthetic request';await h.node('[data-ok]').onclick();
+ assert.equal(h.saved[0].contexto.carta.pid,'original');assert.equal(h.saved[0].contexto.carta.version,7);
 });

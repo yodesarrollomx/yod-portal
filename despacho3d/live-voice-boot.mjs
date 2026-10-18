@@ -1,14 +1,14 @@
-import {officeFastSessions} from './office-preparation.mjs?v=2';
+import {officeFastSessions} from './office-preparation.mjs?v=unified283';
 import {mountAvatarCard} from './avatar-card.mjs?v=126';
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
 import {createEntryPreparation} from './voice-preparation.mjs?v=2';
-import {residentAccessDecision} from './resident-agents.mjs?v=127';
-import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=142';
+import {residentAccessDecision} from './resident-agents.mjs?v=unified283';
+import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=first292';
 import {stationIdentity} from './project-station.mjs?v=140';
 import {createLiveVoice} from './live-voice.mjs?v=141';
 import {voiceView} from './voice-view.mjs?v=141';
-import {createWorkspace} from './agent-workspace.mjs?v=142';
-import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=132';
+import {createWorkspace} from './agent-workspace.mjs?v=entregas291';
+import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=entregas291';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=132';
 import {groupTranscriptFragments} from './live-transcript.mjs';
 
@@ -107,16 +107,16 @@ if (open) {
     for(const turn of typedTurns.filter(t=>t.caseId===selection.case_id)){const p=document.createElement('p'),b=document.createElement('b'),body=document.createElement('span');b.textContent='Tú · texto durante voz';body.textContent=turn.text;p.append(b,body);host.append(p);}
     const voiceState=voice.snapshot();
     const live=dialog.dataset.voicePhase&&!['idle','error'].includes(dialog.dataset.voicePhase);
-    node('station-send').disabled=accessPaused||!selection?.can_enqueue||(voiceState.text_pending?voiceState.text_sending:live?voiceState.phase!=='listening'||voiceState.text_sending:state.busy||!!state.pending||!!state.accepted||!state.selection?.can_enqueue||state.stale);
-    node('station-send').textContent=voiceState.text_pending?'Comprobar envío':'Enviar';
+    node('station-send').disabled=accessPaused||!selection?.can_enqueue||(voiceState.text_pending?voiceState.text_sending:live?voiceState.phase!=='listening'||voiceState.text_sending:!state.canSend);
+    node('station-send').textContent=voiceState.text_pending?'Comprobar envío':state.pending?'Reintentar mismo mensaje':'Enviar';
     node('station-write').hidden=!live;node('station-write').disabled=dialog.dataset.voicePhase==='closing';
-    const messageStatus=voiceState.text_notice||(live?'Puedes escribir mientras conversas. El mensaje llegará a esta misma voz.':state.fastNotice||(state.pending?'Guardado pendiente. Actualizar comprobará la misma solicitud.':state.busy?'Consultando…':state.status==='unavailable'?'No se pudo cargar el historial. Puedes actualizar.':''));
+    const messageStatus=voiceState.text_notice||(live?'Puedes escribir mientras conversas. El mensaje llegará a esta misma voz.':state.fastNotice||(state.pending?'Guardado pendiente. Actualizar comprobará la misma solicitud.':state.busy?'Consultando…':state.status==='unavailable'?'No se pudo cargar el historial. Puedes actualizar.':state.status==='processing'&&state.canSend?'Puedes conversar mientras continúa el trabajo anterior.':''));
     const draftNotice=discussionDraftCase===selection.case_id&&node('station-message').value.trim()?'Borrador para discutir la entrega. Todavía no se envió ni se creó un encargo.':'';
     node('station-message-status').textContent=[messageStatus,draftNotice].filter(Boolean).join(' ');
   }
   dialog.querySelector('.station-chat').addEventListener('toggle',()=>{if(dialog.querySelector('.station-chat').open&&selection&&!chat.selection&&!chat.busy)void chat.open(AUTONES_MULTIPLES?selection.case_id:null);});
   node('station-message').addEventListener('input',()=>{if(discussionDraftCase)renderChat(chat);});
-  node('station-message-form').addEventListener('submit',async event=>{event.preventDefault();if(node('station-send').disabled)return;discussionDraftCase=null;const text=node('station-message').value,own=generation,id=selection?.case_id;const inVoice=active(voice.snapshot())||voice.snapshot().text_pending;const sent=await(inVoice?voice.sendText(text):chat.send(text));if(sent&&own===generation&&selection?.case_id===id){if(inVoice)typedTurns.push({caseId:id,text});if(node('station-message').value===text)node('station-message').value='';renderChat(chat);}});
+  node('station-message-form').addEventListener('submit',async event=>{event.preventDefault();if(node('station-send').disabled)return;discussionDraftCase=null;const text=node('station-message').value,own=generation,id=selection?.case_id;const inVoice=active(voice.snapshot())||voice.snapshot().text_pending;const sentText=inVoice?text:chat.pending?.message||text;const sent=await(inVoice?voice.sendText(text):chat.send(text));if(sent&&own===generation&&selection?.case_id===id){if(inVoice)typedTurns.push({caseId:id,text});if(node('station-message').value===sentText)node('station-message').value='';renderChat(chat);}});
   node('station-refresh').addEventListener('click',()=>void(chat.selection?chat.refresh():chat.open(AUTONES_MULTIPLES?selection?.case_id:null)));
   node('station-write').addEventListener('click',async()=>{
     if(!selection||accessPaused)return;const own=generation;suppressEncounter();node('station-write').disabled=true;
@@ -302,6 +302,11 @@ if (open) {
   window.addEventListener('pagehide', () => {generation++; voice.abandon();workspace.dispose();delete window.YodVoiceWorkspace;});
   // Visibility alone is not a hangup; mobile permission prompts and app switching can hide the page.
   document.addEventListener('visibilitychange', () => {if (!document.hidden) void voice.refresh();});
+  window.addEventListener('yod-data-invalidated',()=>{
+    if(!dialog.open||document.hidden||active(voice.snapshot()))return;
+    if(chat.selection&&!chat.busy)void chat.refresh();
+    if(selection?.goals?.ready&&!goalReader.busy)void goalReader.read();
+  });
   node('station-reconnect').addEventListener('click',async()=>{
     node('station-reconnect').disabled=true;
     try{

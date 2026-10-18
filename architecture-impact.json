@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-15.equipo-relevo.1",
+  "model_revision": "2026-10-18.equipo-relevo.1",
   "proposal_id": "CHG-DESPACHO-EQUIPO-RELEVO-20261015",
-  "summary": "Conciliar Equipo y Relevos sobre la cabina actual conservando selección explícita, entrada corregida, lecturas de metas concurrentes y propuestas de presentación. Un solo montaje autenticado, mismos contratos y Buzón; sin duplicar mini CRM ni fuentes.",
+  "summary": "Conciliar Equipo y Relevos con main 18-oct conservando coordinación de carga, continuidad, selección, propuestas y fuentes actuales. Backend existente sin reinstalación; aceptación privada pendiente.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
