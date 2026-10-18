@@ -13381,6 +13381,27 @@
       ],
       "deployment": "Preparación local sobre PR225 c9345dd y PR277 92ae2f9; sin activar ni integrar a main. Aceptación real y recibo son requisito previo a publicar Equipo.",
       "rollback": "Retirar montaje Equipo/Relevos mediante PR conservando las correcciones publicadas de selección y metas, Buzón, historial, permisos y recibos."
+    },
+    {
+      "id": "CHG-EQUIPO-ACEPTACION-20261018",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-SALA",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "status": "propuesto",
+      "approval": "Autorización vigente de Dirección para implementar y publicar Equipo; preparación separada para revisión técnica, sin nueva autorización genérica. No activar compositor general antes del recibo.",
+      "proposal": "Panel acotado dentro de la cabina y sesión existentes, habilitado sólo por entrada explícita y autoridad Dirección confirmada. Reutiliza transporte, fencing de época y modelo de recibos de PR225. Sólo nota a tarea existente, con ID/texto ingresados en runtime desde paquete privado. Sin nuevas solicitudes, permisos, credenciales ni bases. Conserva únicamente request_id en sessionStorage para consultar recibo tras recarga; texto y token no se almacenan por este panel. Después de recarga nunca reenvía una escritura automáticamente.",
+      "tests": [
+        "Transporte y modelo reutilizados: payload/autoridad/época, conflicto, respuesta incierta, recibo correlacionado.",
+        "Aceptación con datos sintéticos: nota exacta, un solo envío, recuperación por lookup tras recarga sin segundo write, storage sin texto ni token y revocación.",
+        "Atlas, suite Node, verificadores OS/portal/accesos/Obra y navegador aislado."
+      ],
+      "deployment": "Sólo preparación local. Nota real, recibo, recarga y ACK de otro agente pendientes; compositor general retenido.",
+      "rollback": "Retirar panel de aceptación y montaje; conservar notas, recibos, Buzón, backend, permisos y sesión original."
     }
   ],
   "data_contracts": [
@@ -17350,6 +17371,33 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/despacho-equipo-host.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/equipo-model.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/equipo-aceptacion.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/equipo-aceptacion.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-DESPACHO",

@@ -144,7 +144,7 @@
   // 14 caracteres, la otra ni siquiera eso) nunca conceden permisos.
   function bloquearSesion(validando){
     purgarDatosSensibles();state.profileReady=false;state.role='vista';state.boards='';
-    state.personName='';state.sessionToken='';state.rawRows=[];state.catalogIds=null;state.modules=[];
+    state.personName='';state.verifiedEmail='';state.sessionToken='';state.rawRows=[];state.catalogIds=null;state.modules=[];
     ['finance-panel','marketing-panel','decision-panel','reconcile-panel','search-results'].forEach(function(id){var p=$(id);if(p)p.replaceChildren();});
     ['pulso','reconcile','quick-section'].forEach(function(id){var p=$(id);if(p)p.classList.add('hidden');});
     var inicio=$('miInicio');if(inicio){inicio.hidden=true;inicio.replaceChildren();}
@@ -681,7 +681,7 @@
   }
   function applyIdentity(data){
     state.role=String(data.rol||'vista').toLowerCase();state.boards=data.boards||'';state.profileReady=true;
-    state.personName=String(data.nombre||'').trim();
+    state.personName=String(data.nombre||'').trim();state.verifiedEmail=String(data.correo||'').trim().toLowerCase();
     var name=data.nombre||data.correo||'Equipo YOD';$('user-name').textContent=name;$('user-role').textContent=state.role;$('avatar').textContent=initials(name);$('first-name').textContent=name.split(/\s|@/)[0];$('access-status').textContent=state.role==='admin'?'Dirección':'Autorizado';
     var persona=state.role==='admin'?'direccion':'colaborador';
     document.documentElement.setAttribute('data-persona',persona);
