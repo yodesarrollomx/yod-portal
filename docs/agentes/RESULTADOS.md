@@ -10,6 +10,10 @@ repositorio privado del runtime. Ya hay triage, ranking/caché, selección de ta
 MCP y cliente Jev: se reutilizan, no se copian ni modifican.
 No aparecieron rutas de Graphify/Ponytail/OmniRoute ni SKILL.md en esos dos árboles.
 Esto no inventaría otros repositorios, instalaciones del equipo, plugins o cuentas.
+También se encontraron PR283 (política de eficiencia, misma fecha, aún abierta) y PR64
+(consultas Jev). PR284 amplía revisión de fuentes/licencias y selección documental;
+no integrar dos políticas paralelas. Antes de integrar, consolidar con PR283, conservar
+una referencia canónica y revisar su diff. No se modificó ni cerró trabajo ajeno.
 
 El preview de conversación no incluye el Reel ni sus URLs; la herramienta read_thread
 no está disponible en esta sesión. Las identidades se verificaron mediante repositorios
@@ -71,9 +75,17 @@ OmniRoute; sus licencias no se utilizan como certificado de seguridad.
    source-driven-development 2704f0e130bc4659951aa552373914b2d63d18c9.
 4. Dos intentos de terminal fallaron antes de ejecutar comandos: entorno de ejecución
    no disponible. No se instalaron binarios ni se ejecutaron pruebas de runtime.
-5. Pendientes: suite requerida por AGENTS, regeneración del atlas, compatibilidad
-   en los hosts reales y revisión de seguridad/dependencias de cualquier ejecutable.
-   Los checks automáticos del PR se consultan por separado; este registro no los declara aprobados.
+5. Tras el primer fallo del CI por vistas desactualizadas, se ejecutaron las funciones
+   originales validate/render del generador en V8 con adaptador de plantilla de sólo
+   lectura. Se conservaron los scripts y se sincronizaron sus ocho salidas vía GitHub.
+   El CI Node20 del commit aedc1bc confirmó esquema y vistas sincronizados, 847/847
+   pruebas, y verify-obra-app OK. El job verificar también pasó (OS/portal/accesos).
+   El paso de impacto falló por propiedad demasiado amplia del manifiesto; se añadió
+   docs/agentes/ como ruta de SYS-YOD-OS y se regeneró index.html. Nuevo CI pendiente
+   al escribir este registro. Ver run39144591154 para el resultado anterior.
+6. Pendientes: CI de la última revisión, ensayos reales en ambos hosts, revisión
+   de dependencias/seguridad de ejecutables y consolidación con PR283. Las pruebas
+   del portal no acreditan comportamiento de las skills ni instalación de Graphify.
 
 ## Activación por etapas y aceptación
 A. En checkout de esta rama, leer instrucciones; inventariar skills y configuración
@@ -84,7 +96,8 @@ A. En checkout de esta rama, leer instrucciones; inventariar skills y configurac
 B. Ejecutar node scripts/arquitectura.cjs y revisar los archivos generados.
    Luego ejecutar los seis comandos requeridos en AGENTS.md, incluyendo suite
    tests/*.cjs y verify-obra-app. Resolver fallos sin omitirlos. Registrar commit,
-   versión de Node y resultados. El atlas generado de esta rama aún no fue regenerado.
+   versión de Node y resultados. El atlas de la rama ya fue regenerado; el CI anterior
+   confirmó esquema/vistas y suite. Volver a comprobar en la revisión final.
 
 C. Probar lectura bajo demanda de ambas skills en ChatGPT/Codex y Claude con datos
    sintéticos: pregunta simple sin búsqueda innecesaria; API que requiere fuente de
@@ -111,7 +124,7 @@ E. Ponytail: sólo reconsiderar si aporta beneficio medible frente a política v
    Probar con proveedores simulados: sin fallback externo, sin claves en logs,
    rechazo de destino no permitido y reversión. No hay activación preparada.
 
-F. Mantener PR borrador hasta pruebas y atlas correctos. Integrar conforme a checks
+F. Mantener PR borrador hasta pruebas y atlas correctos, y consolidación con PR283. Integrar conforme a checks
    del repositorio; registrar commit integrado y verificación de publicación por
    separado. Revertir sólo los commits de esta propuesta para retirar política y
    selección documental; preservar originales, Jev y configuración privada.
