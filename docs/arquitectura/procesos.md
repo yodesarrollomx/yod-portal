@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-18.yod-core.1 · 2026-10-18.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-18.reel-tools.1 · 2026-10-18.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
