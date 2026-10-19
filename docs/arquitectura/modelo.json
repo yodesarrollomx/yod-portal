@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-19.storyboard-github.1",
+  "revision": "2026-10-19.ppp-cartera-lectura.1",
   "checked_at": "2026-10-19",
   "priorities": [
     "vender_mas",
@@ -6409,6 +6409,28 @@
       ],
       "contract_ids": [
         "CTR-SALA-MEDIOS-PUBLICOS"
+      ]
+    },
+    {
+      "id": "CON-PPP-CARTERA-LECTURA",
+      "from": "SYS-POTENCIALES",
+      "to": "GAS-CRM",
+      "label": "Lee expedientes previos al PPP y su historial autorizado",
+      "kind": "api",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-cartera-lectura.md",
+          "claim": "Propuesta de lector brokers_snapshot sobre brokers.v1 existente; no acredita sesión privada real.",
+          "status": "propuesto",
+          "source_revision": "CHG-PPP-CARTERA-LECTURA-20261019"
+        }
+      ],
+      "status": "propuesto",
+      "runtime_verified": false,
+      "contract": "brokers_snapshot autenticado; mismos registros/ACL de brokers.v1; sin escrituras ni datos privados en Git.",
+      "contract_ids": [
+        "CTR-BROKERS-MINI-CRM"
       ]
     }
   ],
@@ -13479,6 +13501,26 @@
       ],
       "deployment": "Registro previo a implementación; no acredita publicación ni recepción desde Dirección.",
       "rollback": "Revertir frontend por PR conservando versiones, fuente, IDs, IndexedDB, sobres privados y permisos."
+    },
+    {
+      "id": "CHG-PPP-CARTERA-LECTURA-20261019",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-CRM",
+        "SHEET-CRM",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección pide incorporar todos los expedientes recientes registrados, conservar antecedentes y llevar cada caso a su última revisión documentada dentro del tablero PPP existente. Publicación en la misma URL y alcance; sin modificar permisos ni condiciones comerciales.",
+      "proposal": "La portada PPP consulta el snapshot autenticado brokers.v1 existente, exclusivamente mediante brokers_snapshot. Presenta expedientes sin modelo financiero con situación, próximo paso, documentos y cronología. Los expedientes con ppp_id explícito se enlazan al mismo caso guardado y aportan contexto sin duplicar su motor. No crea casos numéricos ni interpreta apuntes como una versión financiera aprobada. El backend sigue filtrando por actor y cartera; denegación, sesión cambiada o respuesta tardía retiran el contenido. Sin caché privada persistente, escrituras RPC, contratos nuevos ni listener de WhatsApp. Conciliación documental por IDs y fuentes fechadas en los registros originales.",
+      "tests": [
+        "Pruebas sintéticas: broker sólo ve su cartera, referencias autorizadas, denegación, cambio de sesión y respuestas tardías.",
+        "Deduplicación por opportunity_id/ppp_id explícitos, sin agrupar predios por nombre o contacto; historial por fecha del hecho y referencias HTTP seguras.",
+        "DOM móvil/escritorio: nuevas tarjetas visibles y fuentes progresivas; sin datos privados en archivos públicos ni POST de escritura de negocio.",
+        "Regresiones PPP y verificación de archivos servidos separadas de sesión autenticada real."
+      ],
+      "deployment": "Propuesta registrada antes de implementar. Consumidor potenciales-yod pinnea este modelo. Sin cambio de backend ni ACL. La lectura privada real y la publicación requieren recibos propios.",
+      "rollback": "Revertir consumidor y su referencia de atlas; conservar registros, documentos, versiones financieras, identidad y permisos."
     }
   ],
   "data_contracts": [

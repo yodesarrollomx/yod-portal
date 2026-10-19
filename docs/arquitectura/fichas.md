@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-19.storyboard-github.1 · 2026-10-19.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-19.ppp-cartera-lectura.1 · 2026-10-19.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -23,7 +23,7 @@ Evaluar alternativas y escenarios de desarrollo
 - Entidades: caso, escenario, variable_calculo, flujo_proyectado.
 - Fuente de verdad: SHEET-PORTERO registra casos; libro canónico Sheets para el piloto con lectura pública verificada en v53. Los casos pendientes de migrar aún usan modelos del frontend..
 - Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L17) — Sistema presente en el catálogo canónico; [potenciales-yod/mixto.html](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/mixto.html) — Frontend integrado por PR3 y publicado por Pages; código público incluye lectura del modelo nativo, cuerpos y flujo por etapas. Sesión y backend pendientes de verificación conjunta.; Lectura pública del caso y la lista del piloto comparadas con entradas, resultados, cuerpos y flujo nativos; coinciden. Evidencia operativa privada; no se ejecutaron POST de prueba.; Relevo del coordinador confirmado por Dirección el 5-oct: fuente activa/editor V65 idénticos, adaptador Patrimonial ausente y GET sheet-model Patrimonial con error servidor; recuperación #47 propuesta. Detalles y snapshots privados.; Coordinador reporta publicación API V66 desde V65: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma URL/scopes/ACL y editor == candidato == versión inmutable V66. GET funcional posterior pendiente; sin POST de pruebas de negocio.; Coordinador reporta GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; dos escenarios conservan IDs y 269 campos, geometría pendiente. Acta privada fuera del repositorio. Vertical y otros casos no acreditados.; [potenciales-yod/ppp-agent-cards.js](https://github.com/yodesarrollomx/potenciales-yod/blob/d150ee0c323803869cc52b084a1911f09e2cdc91/ppp-agent-cards.js) — Tarjetas nativas del PPP patrimonial con datos del Store; pruebas y despliegue de PR17..
-- Conexiones: CON-019 (SYS-POTENCIALES → GAS-PORTERO); CON-034 (SYS-YOD-OS → SYS-POTENCIALES); CON-DESPACHO-3D-PPP (SYS-DESPACHO-3D → SYS-POTENCIALES); CON-SALUD-ACCESOS (SYS-CONTROL → SYS-POTENCIALES).
+- Conexiones: CON-019 (SYS-POTENCIALES → GAS-PORTERO); CON-034 (SYS-YOD-OS → SYS-POTENCIALES); CON-DESPACHO-3D-PPP (SYS-DESPACHO-3D → SYS-POTENCIALES); CON-SALUD-ACCESOS (SYS-CONTROL → SYS-POTENCIALES); CON-PPP-CARTERA-LECTURA (SYS-POTENCIALES → GAS-CRM).
 - Mejoras: C · Cotización, plan y siguiente paso comercial; PPP · Unificar tablero y fórmulas de potencial en Sheets; NAV · Navegación constante y mesa compartida del autón; MINI · PPP persistente con mini dashboards y evidencia inspeccionable; DUMMY · Dummy integral de interacción del autón y PPP; HILO · Conversación fija y detalle útil por interacción; MANDO · Puesto de decisión del autón con avance trazable.
 - Pendientes: Backend de transporte v53 publicado en implementación existente. GET de caso y lista contrastados con el mismo libro y revisión; edición en pantalla y demás casos pendientes. Los casos no migrados conservan cálculo cliente.; GET Patrimonial y cotejo de 166 celdas sólo acreditan el caso inspeccionado; geometría, Vertical y otros casos pendientes. Parche visual y regresión Chromium aprobados según coordinador; WebKit en CI del consumer, publicación/aceptación frontend pendientes..
 
@@ -767,7 +767,7 @@ Servir leads y etapas del CRM al tablero cenital
 - Entidades: lead, etapa, seguimiento.
 - Fuente de verdad: Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos..
 - Evidencia: [yod-portal/tablero.html](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/tablero.html#L1800) — Endpoint específico del CRM; Registro backends-verificados.json: versión activa 20 comprobada por API el 2026-10-01, con misma implementación, URL y permisos; pruebas aisladas de la corrección..
-- Conexiones: CON-065 (SYS-YOD-OS → GAS-CRM); CON-066 (GAS-CRM → SHEET-CRM); CON-AUTH-CRM (GAS-CRM → GAS-PORTERO).
+- Conexiones: CON-065 (SYS-YOD-OS → GAS-CRM); CON-066 (GAS-CRM → SHEET-CRM); CON-AUTH-CRM (GAS-CRM → GAS-PORTERO); CON-PPP-CARTERA-LECTURA (SYS-POTENCIALES → GAS-CRM).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Quedan reglas de autorización y recorridos de negocio por comprobar; las pruebas aisladas no acreditan todos los permisos en producción..
 

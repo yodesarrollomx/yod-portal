@@ -1,19 +1,17 @@
 {
-  "model_revision": "2026-10-19.storyboard-github.1",
-  "proposal_id": "CHG-PRESENTATION-STORYBOARD-GITHUB-20261019",
-  "summary": "Consumidor estático de storyboard por proyecto, acceso explícito Portero y chinches mediante CTR-PRESENTATION-PINS-INGEST. Guion preliminar versionado a partir de fuente autorizada; correcciones privadas a Sala. Etapa2 sólo instrucción explícita. Sin otro backend, hojas, cron ni cambios de permisos.",
+  "model_revision": "2026-10-19.ppp-cartera-lectura.1",
+  "proposal_id": "CHG-PPP-CARTERA-LECTURA-20261019",
+  "summary": "Registrar lectura autenticada de expedientes e historial CRM en portada PPP, sin nuevos casos financieros ni cambios de backend/ACL.",
   "components": [
-    "SYS-INVERSION",
-    "SYS-YOD-OS",
-    "SYS-CONTROL",
-    "SYS-SALA",
-    "GAS-SALA",
-    "SHEET-SALA"
+    "SYS-POTENCIALES",
+    "GAS-CRM",
+    "SHEET-CRM",
+    "SYS-YOD-OS"
   ],
   "tests": [
-    "Privacidad de anotaciones y sesiones; fuente editorial identificada.",
-    "Pruebas sintéticas de acceso, cambio de sesión, captura, envío, recibos, offline y POST ambiguo.",
-    "Buildless y QA móvil/escritorio; publicación pública exacta; no escrituras de producción para QA."
+    "node scripts/arquitectura.cjs --check",
+    "node --test tests/*.cjs",
+    "node verify-os.cjs; node verify-portal.cjs; node verify-accesos.cjs; node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir frontend por PR conservando versiones, fuente, IDs, IndexedDB, sobres privados y permisos."
+  "rollback": "Revertir documentación y consumidor por PR, conservando fuentes, registros, versiones y permisos."
 }

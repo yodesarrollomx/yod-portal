@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-19.storyboard-github.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-19.ppp-cartera-lectura.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 26 sistemas y 90 componentes distribuidos exactamente una vez.
-- 10 áreas; 142 conexiones registradas, 10 marcadas como verificadas en el atlas.
+- 10 áreas; 143 conexiones registradas, 10 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -865,6 +865,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-065 · SYS-YOD-OS → GAS-CRM · lectura\_agregada · Consulta leads del CRM · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-066 · GAS-CRM → SHEET-CRM · persistencia · Persistencia comercial lógica · Estado: pendiente · Ejecución no verificada en el atlas.
 - CON-AUTH-CRM · GAS-CRM → GAS-PORTERO · autenticacion · Consulta identidad y alcance de lectura · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-PPP-CARTERA-LECTURA · SYS-POTENCIALES → GAS-CRM · api · Lee expedientes previos al PPP y su historial autorizado · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -876,10 +877,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-065 · Conector de CRM · Estado: codigo · yodesarrollomx/yod-portal · tablero.html · Revisión: HEAD\_baseline
 - CON-066 · Integración pendiente de verificar · Estado: pendiente · Sin revisión inmutable en esta referencia
 - CON-AUTH-CRM · Revisión de fuente activa GAS-CRM, versión 20; dependencia de Portero contrastada en código y mediante dobles. No acredita recorrido completo de un usuario real. · Estado: codigo · Revisión: Apps Script version 20
+- CON-PPP-CARTERA-LECTURA · Propuesta de lector brokers\_snapshot sobre brokers.v1 existente; no acredita sesión privada real. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-cartera-lectura.md · Revisión: CHG-PPP-CARTERA-LECTURA-20261019
 
 **Pendientes y límites:**
 
-- 3 conexiones sin verificación de ejecución registrada.
+- 4 conexiones sin verificación de ejecución registrada.
 - Quedan reglas de autorización y recorridos de negocio por comprobar; las pruebas aisladas no acreditan todos los permisos en producción.
 
 ### Datos de CRM comercial · SHEET-CRM
@@ -1044,6 +1046,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-034 · SYS-YOD-OS → SYS-POTENCIALES · navegacion · Navega al sistema autorizado · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-DESPACHO-3D-PPP · SYS-DESPACHO-3D → SYS-POTENCIALES · embed · Tablero original con contexto compartido, escenario y revisión · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-SALUD-ACCESOS · SYS-CONTROL → SYS-POTENCIALES · observacion · Informe técnico por proceso visible en Accesos · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-PPP-CARTERA-LECTURA · SYS-POTENCIALES → GAS-CRM · api · Lee expedientes previos al PPP y su historial autorizado · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -1062,10 +1065,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [CON-DESPACHO-3D-PPP · Tablero original con contexto compartido, escenario y revisión · Estado: codigo · yodesarrollomx/yod-portal · despacho3d/project-station.mjs · Revisión: 5eca769947e60bc5b51389244393e0f63817cf86](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/project-station.mjs)
 - CON-SALUD-ACCESOS · Solicitud explícita de Dirección el11-oct-2026; implementación pendiente. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - [CON-SALUD-ACCESOS · Frontend Accesos publicado byte exacto y8 recorridos aislados. Validación real del usuario al abrir conserva su autoridad; no certificar el rol personal por pruebas sintéticas. · Estado: codigo · yodesarrollomx/yod-portal · docs/SALUD-SISTEMAS.md · Revisión: de33d90af87e9b5b225b0405841145348d42b8b0](https://github.com/yodesarrollomx/yod-portal/blob/de33d90af87e9b5b225b0405841145348d42b8b0/docs/SALUD-SISTEMAS.md)
+- CON-PPP-CARTERA-LECTURA · Propuesta de lector brokers\_snapshot sobre brokers.v1 existente; no acredita sesión privada real. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-cartera-lectura.md · Revisión: CHG-PPP-CARTERA-LECTURA-20261019
 
 **Pendientes y límites:**
 
-- 4 conexiones sin verificación de ejecución registrada.
+- 5 conexiones sin verificación de ejecución registrada.
 - Backend de transporte v53 publicado en implementación existente. GET de caso y lista contrastados con el mismo libro y revisión; edición en pantalla y demás casos pendientes. Los casos no migrados conservan cálculo cliente.
 - GET Patrimonial y cotejo de 166 celdas sólo acreditan el caso inspeccionado; geometría, Vertical y otros casos pendientes. Parche visual y regresión Chromium aprobados según coordinador; WebKit en CI del consumer, publicación/aceptación frontend pendientes.
 
