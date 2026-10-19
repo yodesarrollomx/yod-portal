@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-18.core-observation-ui.1 · 2026-10-18.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-19.storyboard-github.1 · 2026-10-19.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 

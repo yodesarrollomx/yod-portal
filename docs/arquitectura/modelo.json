@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-18.core-observation-ui.1",
-  "checked_at": "2026-10-18",
+  "revision": "2026-10-19.storyboard-github.1",
+  "checked_at": "2026-10-19",
   "priorities": [
     "vender_mas",
     "margen_y_control",
@@ -13458,6 +13458,27 @@
       ],
       "deployment": "Propuesta previa a implementación; backend y frontend se verifican por separado.",
       "rollback": "Revertir consumidor Core conservando trabajo, historial, permisos y datos; backend admite YOD_CORE_ENABLED=off."
+    },
+    {
+      "id": "CHG-PRESENTATION-STORYBOARD-GITHUB-20261019",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección exige rehacer el storyboard en GitHub bajo la metodología del board YOD OS, con entrada pública y circuito existente de revisión; no Sites ni almacenamiento independiente.",
+      "proposal": "Consumidor estático de storyboard por proyecto, acceso explícito Portero y chinches mediante CTR-PRESENTATION-PINS-INGEST. Guion preliminar versionado a partir de fuente autorizada; correcciones privadas a Sala. Etapa2 sólo instrucción explícita. Sin otro backend, hojas, cron ni cambios de permisos.",
+      "tests": [
+        "Privacidad de anotaciones y sesiones; fuente editorial identificada.",
+        "Pruebas sintéticas de acceso, cambio de sesión, captura, envío, recibos, offline y POST ambiguo.",
+        "Buildless y QA móvil/escritorio; publicación pública exacta; no escrituras de producción para QA."
+      ],
+      "deployment": "Registro previo a implementación; no acredita publicación ni recepción desde Dirección.",
+      "rollback": "Revertir frontend por PR conservando versiones, fuente, IDs, IndexedDB, sobres privados y permisos."
     }
   ],
   "data_contracts": [

@@ -81,3 +81,5 @@ La auditoría no se considera completa mientras existan componentes críticos o 
 - [Sala · correcciones y aprobación](sala-correcciones.md): dictado revisado, contexto fijado y acuses separados de entrega/aprobación.
 
 - [Despacho 2.0 · coordinador aislado](despacho-v2-coordinator.md): parte2, API, límites y pruebas; sin activación en pantallas.
+
+- [Storyboard público en GitHub](presentation-storyboard-github.md): entrada pública, PorteroGoogle y correcciones privadas por Sala; reemplaza destinos independientes.
