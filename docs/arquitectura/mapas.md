@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-19.storyboard-github.1 · 2026-10-19.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-19.ppp-cartera-lectura.1 · 2026-10-19.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -174,6 +174,7 @@ flowchart LR
   n_SVC_SALA_PRODUCTOR -.->|Fotografía HiDream oficial con adaptadores I1 y O1 y recibos| n_EXT_MOTORES_MEDIA
   n_SYS_INVERSION -.->|Resumen guardado de PPP por expediente| n_GAS_PORTERO
   n_SYS_SALA -.->|Imágenes nuevas en releases públicos inmutables con manifiesto fijado por recibo| n_EXT_ACTIONS
+  n_SYS_POTENCIALES -.->|Lee expedientes previos al PPP y su historial autorizado| n_GAS_CRM
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PLAN_POTENCIAL pendiente;
@@ -704,3 +705,4 @@ flowchart LR
 | CON-SALA-HIDREAM | SVC-SALA-PRODUCTOR → EXT-MOTORES-MEDIA | api: Fotografía HiDream oficial con adaptadores I1 y O1 y recibos. CTR-SALA-HIDREAM Rechazo terminal explícito sin imagen permite reintento posterior con negativa privada; resultado incierto sólo conciliación. O1 es una selección explícita después de prueba real, no respaldo pagado; cambio de política distingue nuevas tomas de envíos I1 inciertos. | propuesto | Lote real38342683066 en rama operativa; integración recurrente propuesta. |
 | CON-BROKERS-PPP-SAVED | SYS-INVERSION → GAS-PORTERO | lectura: Resumen guardado de PPP por expediente. CTR-BROKERS-MINI-CRM; GET recurso=caso&id&tipo con sesión existente. No recalcular escenarios ni guardar. | propuesto | Consumo propuesto del mismo contrato empleado por el PPP; lectura autorizada y campos guardados se comprobarán por separado. |
 | CON-SALA-MEDIOS-PUBLICOS | SYS-SALA → EXT-ACTIONS | publicacion: Imágenes nuevas en releases públicos inmutables con manifiesto fijado por recibo. CTR-SALA-MEDIOS-PUBLICOS: fase1 sólo nuevas imágenes; lector primero, pin SHA256 de bytes exactos, verificación anónima, journal de mutación e inmutabilidad antes de SALA_MEDIOS_PUBLICOS=1. Emisor OFF; conexión no comprobada en ejecución. | propuesto | Diseño local en docs/arquitectura/sala-medios-publicos-20261015.md y schema 1 acordado por UI/snapshots/almacén. Sin release/asset, canario, activación o despliegue acreditado. |
+| CON-PPP-CARTERA-LECTURA | SYS-POTENCIALES → GAS-CRM | api: Lee expedientes previos al PPP y su historial autorizado. brokers_snapshot autenticado; mismos registros/ACL de brokers.v1; sin escrituras ni datos privados en Git. | propuesto | [yod-portal/docs/arquitectura/ppp-cartera-lectura.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-cartera-lectura.md) — Propuesta de lector brokers_snapshot sobre brokers.v1 existente; no acredita sesión privada real. |
