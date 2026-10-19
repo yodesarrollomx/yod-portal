@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-18.core-observation-ui.1 · 2026-10-18.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-19.storyboard-github.1 · 2026-10-19.
 
 ## SYS-DESPACHO · El Despacho
 
