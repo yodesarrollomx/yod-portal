@@ -1,0 +1,162 @@
+{
+  "status": "documented_handoff_patch_tested_not_applied_to_product",
+  "date": "2026-10-03",
+  "proposal_id": "CHG-DESPACHO-CAPACIDADES-001",
+  "portal": {
+    "repository": "yodesarrollomx/yod-portal",
+    "commit": "e1ae96e02efd4e6d45d77dfad14eefdc69d4a3ef"
+  },
+  "upstream": {
+    "repository": "leonvanzyl/cubefarm",
+    "version": "0.3.2",
+    "commit": "11237cf554f21312a2aecd9758d611f2817fc71e",
+    "license": "MIT",
+    "same_commit_as_video": "not_established"
+  },
+  "video": {
+    "url": "https://www.youtube.com/watch?v=NBZmxhcz5lo",
+    "review_method": "archived_frames_and_detail_images",
+    "frames_reviewed": 68,
+    "contact_sheets_reviewed": 8,
+    "detail_images_reviewed": 6,
+    "sampling_seconds": 15,
+    "first_frame": "00:00",
+    "last_frame": "16:45",
+    "direct_playback": false,
+    "complete_audio_reviewed": false,
+    "timestamps": "approximate_visual_references"
+  },
+  "private_reference_package": {
+    "manifest_sha256_entries_verified": 368,
+    "hash_mismatches": 0,
+    "private_files_published": false
+  },
+  "checks": {
+    "base_existing_tests": {
+      "passed": 255,
+      "failed": 0
+    },
+    "patched_existing_tests": {
+      "passed": 255,
+      "failed": 0
+    },
+    "patched_bundle_build": "passed",
+    "patch_apply_check_on_base": "passed",
+    "architecture": {
+      "status": "passed",
+      "components": 78,
+      "connections": 104,
+      "processes": 15
+    },
+    "portal_checks": {
+      "verify-os.cjs": "passed",
+      "verify-portal.cjs": "passed",
+      "verify-accesos.cjs": "passed",
+      "verify-obra-app.cjs": "passed",
+      "accesos_ref": "3ee8ca50bf14ef17d95e72523e54506eb996f262",
+      "node_env_proxy_used_for_accesos": true
+    },
+    "browser": {
+      "terminal_primary_navigation": true,
+      "mobile_navigation": {
+        "scrollWidth": 390,
+        "clientWidth": 390,
+        "buttons": [
+          {
+            "label": "◉\nConversación",
+            "width": 74,
+            "height": 57.5
+          },
+          {
+            "label": "▤\nExpediente",
+            "width": 74,
+            "height": 57.5
+          },
+          {
+            "label": "▦\nTareas",
+            "width": 74,
+            "height": 57.5
+          },
+          {
+            "label": "⌨\nTerminal",
+            "width": 74,
+            "height": 57.5
+          },
+          {
+            "label": "≡\nActividad",
+            "width": 74,
+            "height": 57.5
+          }
+        ]
+      },
+      "small_mobile_navigation": {
+        "scrollWidth": 400,
+        "clientWidth": 320,
+        "bodyWidth": 320,
+        "viewportWidth": 320,
+        "buttons": [
+          {
+            "label": "◉\nConversación",
+            "width": 76,
+            "height": 56
+          },
+          {
+            "label": "▤\nExpediente",
+            "width": 76,
+            "height": 56
+          },
+          {
+            "label": "▦\nTareas",
+            "width": 76,
+            "height": 56
+          },
+          {
+            "label": "⌨\nTerminal",
+            "width": 76,
+            "height": 56
+          },
+          {
+            "label": "≡\nActividad",
+            "width": 76,
+            "height": 56
+          }
+        ]
+      },
+      "api_open_terminal": true,
+      "api_terminal_selected": true,
+      "page_errors": [],
+      "methods": [
+        "read",
+        "readGoals",
+        "resolveCurrent"
+      ],
+      "production_requests": "blocked"
+    },
+    "documentation_impact": {
+      "changed_files": 8,
+      "behavioral_files": 0,
+      "result": "passed",
+      "method": "scripts/verificar-impacto.cjs exported verify with staged file list"
+    }
+  },
+  "not_verified_this_review": [
+    "authenticated_production_frontend",
+    "active_production_worker_version_and_capabilities",
+    "actual_model_latency",
+    "user_device_pty_pairing",
+    "microphone_or_speech_output_on_user_device",
+    "multiagent_execution",
+    "independent_qa_and_delivery",
+    "live_application_preview",
+    "continuous_availability_or_physical_host_restart"
+  ],
+  "files_sha256": {
+    "01-comparativa.md": "f7c41e74dac8c19feee6a82ab6f37ff5778d211030ec2f64da22e1124b1a23f5",
+    "02-plan-implementacion.md": "41228f553f722fc0e12e5be7b31be79b49e42bfe86983829a5d6a8e32d6d5458",
+    "03-diseno-y-aceptacion.md": "afbaaad4e0b4e15ea8a858230f682c04786f7e2fe1647caba3bd94d661f288b9",
+    "04-aplicar-parche.md": "c73e68db008ae24bd1f916a99976bd679ed102e184541255ecc868d646c90557",
+    "README.md": "27a339243ccf10ab25ab48586fff6fdda58ebc51b0f1c28fbfd4ceda6a274f74",
+    "contrato-tarea.example.json": "c8c37ea97f1ae054d67f5bc94aeb09d56530b7ffac7df6f660931f0fbb99a154",
+    "patches/001-terminal-y-tareas.patch": "de75dc1574c7dc5c45f4a14c2728eb569606a86fd792c4aa276ce20d0127be36"
+  }
+}
