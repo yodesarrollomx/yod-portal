@@ -74,9 +74,14 @@ export function mountPuestoAgente({dialog,sidebar,workspaceHost,workspace,getSel
   for(const node of [dialog.querySelector('.station-details'),dialog.querySelector('.voice-options'),byId('station-refresh'),byId('voice-save'),byId('voice-previous'),byId('voice-download'),byId('station-menu')])move(node,settingsBody);
   const technical=element('details'),technicalTitle=element('summary','Detalles de conexión');technical.append(technicalTitle);move(dialog.querySelector('.voice-state-card'),technical);settingsBody.append(technical);
   const presence=element('section',undefined,'puesto-presence'),presenceLabel=element('small','Conversemos','puesto-presence-label'),presenceWords=element('div',undefined,'puesto-presence-words');presenceWords.append(presenceLabel);move(byId('voice-title'),presenceWords);move(byId('voice-case'),presenceWords);presence.append(presenceWords);move(dialog.querySelector('.station-profile-portrait'),presence);presence.insertBefore(presence.lastChild,presenceWords);sidebar.insertBefore(presence,sidebar.firstChild);
-  const thread=element('div',undefined,'puesto-thread');thread.setAttribute('aria-label','Conversación e historial');chat.insertBefore(thread,form);move(byId('station-messages'),thread);move(dialog.querySelector('.voice-transcript-details'),thread);
+  // Native details keeps an anonymous content box; a real sibling owns flex
+  // sizing so the composer stays at the bottom on every supported browser.
+  // The original disclosure remains open for the existing history lifecycle.
+  const chatContent=element('div',undefined,'puesto-chat-content');sidebar.append(chatContent);
+  const thread=element('div',undefined,'puesto-thread');thread.setAttribute('aria-label','Conversación e historial');chatContent.append(thread);move(byId('station-messages'),thread);move(dialog.querySelector('.voice-transcript-details'),thread);
+  move(form,chatContent);move(byId('station-message-status'),chatContent);move(byId('station-write'),chatContent);
   const composerTools=element('div',undefined,'puesto-composer-tools');form.append(composerTools);for(const id of ['voice-start','voice-interrupt','voice-stop','voice-play','station-send'])move(byId(id),composerTools);
-  const prompts=element('div',undefined,'puesto-prompts');prompts.setAttribute('aria-label','Ideas para conversar');for(const label of ['¿Qué sigue?','Resumen del caso','¿Qué cambió?'])prompts.append(button(label,()=>{if(!valid())return;byId('station-message').value=label;byId('station-message').focus();}));chat.insertBefore(prompts,form);
+  const prompts=element('div',undefined,'puesto-prompts');prompts.setAttribute('aria-label','Ideas para conversar');for(const label of ['¿Qué sigue?','Resumen del caso','¿Qué cambió?'])prompts.append(button(label,()=>{if(!valid())return;byId('station-message').value=label;byId('station-message').focus();}));chatContent.insertBefore(prompts,form);
   previousChatOpen=chat.open;chat.open=true;
   const essential=element('details',undefined,'puesto-essential');essential.open=win.innerWidth>760;essential.append(element('summary','Lo esencial del caso'));const essentialBody=element('div',undefined,'puesto-essential-body'),version=element('p','Sin versión confirmada','puesto-version'),metrics=element('dl',undefined,'puesto-metrics'),nextTitle=element('small','QUÉ SIGUE','puesto-section-label'),next=element('p',undefined,'puesto-next'),decide=button('Ver siguiente decisión',()=>showView('activity'),'puesto-decide'),pendingHeading=element('h3','Pendientes'),pending=element('ul',undefined,'puesto-pending'),access=element('nav',undefined,'puesto-access');access.setAttribute('aria-label','Accesos del caso');
   for(const [tab,label]of [['ppp','Ver plan completo'],['activity','Trabajo'],['sources','Expediente']])access.append(button(label,()=>showView(tab)));
@@ -86,7 +91,7 @@ export function mountPuestoAgente({dialog,sidebar,workspaceHost,workspace,getSel
   let following=true;thread.addEventListener('scroll',()=>{following=thread.scrollHeight-thread.clientHeight-thread.scrollTop<80;});
   observer=new win.MutationObserver(()=>{if(!valid())return;updateWorkspace();updateStatus();if(following)thread.scrollTop=thread.scrollHeight;});
   observer.observe(byId('station-messages'),{childList:true,subtree:true});observer.observe(byId('voice-transcript'),{childList:true,subtree:true,characterData:true});observer.observe(workspace.root,{childList:true,subtree:true});
-  nodes={head,name,project,status,back,presence,presenceLabel,thread,composerTools,prompts,essential,version,metrics,next,pending,settings,settingsBody,technical,onTab,chat};return true;
+  nodes={head,name,project,status,back,presence,presenceLabel,thread,composerTools,prompts,essential,version,metrics,next,pending,settings,settingsBody,technical,onTab,chat,chatContent};return true;
  }
  function updateWorkspace(){
   if(!valid()||!nodes)return;
@@ -119,7 +124,7 @@ export function mountPuestoAgente({dialog,sidebar,workspaceHost,workspace,getSel
  }
  function deactivate(){
   observer?.disconnect();observer=null;
-  if(nodes){win.removeEventListener('yod-workspace-view',nodes.onTab);for(const {node,marker}of positions.reverse()){marker.replaceWith(node);}nodes.chat.open=previousChatOpen;for(const node of [nodes.head,nodes.presence,nodes.thread,nodes.composerTools,nodes.prompts,nodes.essential])node.remove();}
+  if(nodes){win.removeEventListener('yod-workspace-view',nodes.onTab);for(const {node,marker}of positions.reverse()){marker.replaceWith(node);}nodes.chat.open=previousChatOpen;for(const node of [nodes.head,nodes.presence,nodes.thread,nodes.composerTools,nodes.prompts,nodes.essential,nodes.chatContent])node.remove();}
   if(parentPill){parentPill.node.hidden=parentPill.hidden;parentPill=null;}
   positions=[];nodes=null;active=false;selection=null;voiceState={};delete dialog.dataset.puestoScreen;dialog.classList.remove('puesto2');doc.documentElement.classList.remove('puesto2-open');
  }

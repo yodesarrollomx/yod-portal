@@ -36,3 +36,7 @@ Las comprobaciones locales obligatorias del portal y la suite Node completa pasa
 Pendiente para cerrar publicación: PR y recibo de Pages, cotejo de archivos servidos con la versión integrada y recorrido Chromium HTTP de la fixture. El recibo de la fixture acredita presentación con datos sintéticos, no datos privados ni audio físico. El recorrido autenticado del piloto y la aceptación de Dirección se registran por separado.
 
 Reversión: usar `?puesto=clasico` o revertir la capa y sus inclusiones mediante PR. Conservar conversaciones, borradores, outbox, recibos, versiones, datos y permisos. No revertir ni limpiar hojas para deshacer una interfaz.
+
+## Ajuste tras recorrido HTTP
+
+Pages del PR297 sirvió los ocho recursos idénticos a los probados. Chromium detectó que el contenedor nativo details dejaba el compositor fuera de la zona visible en móvil y separado del fondo en ventanas altas. El ajuste conserva el disclosure para el ciclo existente, con un contenedor flex real para conversación y controles; el modo clásico restaura sus padres y orden originales. Prueba de regresión de identidad y restauración completa aprobada. Revalidación visual del ajuste pendiente de publicación.

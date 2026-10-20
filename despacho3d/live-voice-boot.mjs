@@ -1,4 +1,4 @@
-import {isPuesto2,mountPuestoAgente,presentationLocation} from './puesto-agente.mjs?v=puesto2';
+import {isPuesto2,mountPuestoAgente,presentationLocation} from './puesto-agente.mjs?v=puesto2fix1';
 import {officeFastSessions} from './office-preparation.mjs?v=unified283';
 import {mountAvatarCard} from './avatar-card.mjs?v=126';
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';

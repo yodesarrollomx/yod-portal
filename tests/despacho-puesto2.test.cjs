@@ -74,6 +74,7 @@ test('classic mode is inherited from the same-origin OS shell without crossing a
 
 test('Puesto2 reuses the original message and microphone handlers without starting either on entry',async()=>{
  const {mountPuestoAgente}=await load(),s=station();
+ const originalTree=new Map([s.dialog,...s.dialog.all()].map(node=>[node,{parent:node.parentNode,children:[...node.children]}]));
  const sendParent=s.send.parentNode,mic=s.doc.getElementById('voice-start'),micParent=mic.parentNode;
  const ui=mountPuestoAgente(s);assert.equal(ui.setSelection(s.getSelection()),true);
  assert.equal(s.dialog.querySelector('#station-send'),s.send);
@@ -81,6 +82,7 @@ test('Puesto2 reuses the original message and microphone handlers without starti
  assert.equal(s.dialog.querySelector('#station-messages'),s.messages);
  assert.equal(s.dialog.querySelector('#voice-start'),mic);
  assert.equal(s.chat.open,true,'history is visible on entry');
+ assert.equal(s.chat.contains(s.form),false,'the composer is outside the native disclosure so its intrinsic layout cannot strand the input in the middle');
  assert.deepEqual(s.counters(),{mic:0,sends:0,tab:'ppp'});
  s.textarea.value='Synthetic message';s.form.emit('submit');assert.equal(s.counters().sends,1);
  mic.click();assert.equal(s.counters().mic,1,'only the original explicit mic action requests media');
@@ -92,6 +94,8 @@ test('Puesto2 reuses the original message and microphone handlers without starti
  assert.equal(s.chat.open,false,'classic disclosure state is restored');
  assert.equal(s.dialog.classList.contains('puesto2'),false);
  assert.equal(s.textarea.value,'Synthetic message','mode changes preserve drafts');
+ assert.equal(s.dialog.all().length,originalTree.size-1,'classic mode removes all adapter-only wrappers');
+ for(const [node,before]of originalTree){assert.equal(node.parentNode,before.parent,'classic restores each original parent');assert.deepEqual(node.children,before.children,'classic restores the original child order');}
  assert.equal(s.counters().mic,1,'restoring classic does not start media');ui.dispose();
 });
 
