@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-20.ruisenor-interaccion-volumenes.2",
+  "revision": "2026-10-20.presentaciones-md.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -13779,6 +13779,27 @@
       ],
       "deployment": "Código frontend implementado localmente en consumidores Portal y PPP; PR, integración y Pages pendientes. QA final en curso. No acreditar guardado canónico de volúmenes, cálculo por cuerpos, edición financiera, backend nuevo ni control general de Workspace.",
       "rollback": "Deshabilitar el selector/routing del piloto o revertir frontend por PR conservando escenarios, historial, solicitudes, recibos y permisos; no borrar ni restaurar datos para revertir la interfaz."
+    },
+    {
+      "id": "CHG-PRESENTACIONES-MD-20261020",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección pidió ejecutar, terminar, publicar y entregar en línea el plan V1 de Presentaciones; autorización directa20-oct-2026. V2 creación desde portal fuera de alcance.",
+      "proposal": "Portal integrado en Master Developer real; una dirección por presentación, sesión Google existente, catálogo y borradores privados en Drive del servidor Sala actual, publicación por revisiones y conducción semántica con mando único. Chinches y revisor comunes.",
+      "tests": [
+        "Contratos de autorización, revisión, idempotencia, recibos y control de sesión en aislamiento.",
+        "QA móvil/escritorio y fallos A/B/C sin escrituras de negocio sintéticas.",
+        "Verificar código servido, implementación existente y compatibilidad con consumidores previos."
+      ],
+      "deployment": "Propuesta registrada antes de implementar; despliegue y comprobaciones se registran separadamente.",
+      "rollback": "Revertir frontend/manifiesto conservando archivos, versiones, chinches, recibos y permisos."
     }
   ],
   "data_contracts": [
@@ -15680,6 +15701,37 @@
         "Escritura local fallida no se anuncia guardada; no se almacenan credenciales. No se afirma sincronización entre dispositivos.",
         "Tomas obtenidas no equivalen a llamadas pagadas ni imágenes nuevas: pueden proceder de recibos. Costo desconocido nunca se convierte en cero.",
         "Estado hecho en cola y checks exitosos no acreditan calidad editorial ni entrega externa."
+      ]
+    },
+    {
+      "id": "CTR-PRESENTACIONES-MD-V1",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-YOD-OS",
+        "GAS-SALA",
+        "SHEET-SALA"
+      ],
+      "source": "docs/arquitectura/presentation-hub.md; GitHub público y archivos de control privados en GAS-SALA existente",
+      "input": [
+        "presentation_id",
+        "revision esperada",
+        "request_id y huella",
+        "credencial Portero",
+        "posición semántica, época y secuencia"
+      ],
+      "output": [
+        "catálogo autorizado",
+        "publicación vigente o fijada",
+        "recibo privado",
+        "estado público acotado de sesión"
+      ],
+      "invariants": [
+        "Una URL canónica; alias conservados",
+        "Borrador separado de publicación explícita",
+        "Autorización fresca en servidor en cada operación privada",
+        "Sesión fija revisión; un conductor y órdenes monotónicas",
+        "Respaldo no amplía permisos ni inventa recibos",
+        "Chinches conservan identidad, huella, audio, trazos y capturas"
       ]
     }
   ],

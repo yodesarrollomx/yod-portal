@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-20.ruisenor-interaccion-volumenes.2 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-20.presentaciones-md.1 · 2026-10-20.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -939,3 +939,17 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Escritura local fallida no se anuncia guardada; no se almacenan credenciales. No se afirma sincronización entre dispositivos.
 - Tomas obtenidas no equivalen a llamadas pagadas ni imágenes nuevas: pueden proceder de recibos. Costo desconocido nunca se convierte en cero.
 - Estado hecho en cola y checks exitosos no acreditan calidad editorial ni entrega externa.
+
+## CTR-PRESENTACIONES-MD-V1
+
+- Componentes: SYS-INVERSION, SYS-YOD-OS, GAS-SALA, SHEET-SALA.
+- Evidencia: docs/arquitectura/presentation-hub.md; GitHub público y archivos de control privados en GAS-SALA existente.
+- Entrada/campos: `presentation_id`, `revision esperada`, `request_id y huella`, `credencial Portero`, `posición semántica, época y secuencia`.
+- Salida: catálogo autorizado, publicación vigente o fijada, recibo privado, estado público acotado de sesión.
+
+- Una URL canónica; alias conservados
+- Borrador separado de publicación explícita
+- Autorización fresca en servidor en cada operación privada
+- Sesión fija revisión; un conductor y órdenes monotónicas
+- Respaldo no amplía permisos ni inventa recibos
+- Chinches conservan identidad, huella, audio, trazos y capturas
