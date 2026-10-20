@@ -30,13 +30,15 @@ export function parseDirectUserCommand(input){
 
 const copy=value=>structuredClone(value);
 function contextOf(raw){
- if(raw?.authorized!==true||raw.pilot!==true||!id(raw.case_id))return null;
+ if(raw?.authorized!==true||raw.ppp_enabled!==true||!id(raw.case_id))return null;
  const context={case_id:raw.case_id};
  for(const key of ['board_case_id','scenario_id'])if(id(raw[key]))context[key]=raw[key];
  if(revision(raw.revision))context.revision=raw.revision;
- context.capabilities={navigate:raw.capabilities?.navigate===true};
+ context.capabilities={navigate:raw.capabilities?.navigate===true,...(raw.capabilities?.volumes?.schema===2?{volumes:{schema:2,read:raw.capabilities.volumes.read===true,write:raw.capabilities.volumes.write===true}}:{})};
  return context;
 }
+export function nativeVolumeWrite(context){return context?.authorized===true&&context.ppp_enabled===true&&context.capabilities?.volumes?.schema===2&&context.capabilities.volumes.read===true&&context.capabilities.volumes.write===true;}
+function canonicalChange(context,command){return command?.kind==='change_request'&&context?.capabilities?.volumes?.schema===2&&context.capabilities.volumes.read===true&&context.capabilities.volumes.write===true;}
 function sameContext(a,b,includeBoard=true){
  if(!a||!b||a.case_id!==b.case_id)return false;
  return !includeBoard||['board_case_id','scenario_id','revision'].every(key=>!a[key]||a[key]===b[key]);
@@ -97,6 +99,7 @@ export function createAgentInteraction({getContext,openWorkspace,navigateBridge,
  }
  async function execute(record){
   const context=current(),own=epoch;if(!context||!records.includes(record)||!bound(record,own))return false;
+  if(!record.request_id&&canonicalChange(context,record)){patch(record,{state:'superseded',summary:'Esta petición se atiende en la conversación del agente.',next:'El cambio conserva su circuito de propuesta y recibo.'});return false;}
   if(record.request_id){
    patch(record,{state:'running',summary:'Comprobando la solicitud original.',next:'Se conserva el mismo identificador; no se vuelve a enviar el cambio.'});
    const result=await invoke(reconcile,{action_id:record.action_id,request_id:record.request_id,context:record.context});
@@ -133,6 +136,7 @@ export function createAgentInteraction({getContext,openWorkspace,navigateBridge,
   const context=current(),command=parseDirectUserCommand(input);if(!context)return{handled:false};
   const eventId=typeof input?.event_id==='string'&&input.event_id.length<=256?input.event_id:null,key=eventId?input.source+':'+eventId:null;
   const prior=key&&events.has(key)?records.find(item=>item.action_id===events.get(key)):null;
+  if(canonicalChange(context,command)){if(prior&&prior.state==='awaiting_confirmation')patch(prior,{state:'superseded',summary:'Esta petición se atiende en la conversación del agente.',next:'El cambio conserva su circuito de propuesta y recibo.'});return{handled:false,canonical:true,tab:'ppp'};}
   if(prior){
    if(input.source==='voice'&&prior.state==='awaiting_confirmation'&&input.text!==prior.text){
     if(!command){patch(prior,{state:'superseded',summary:'La transcripción cambió; esta intención necesita revisarse.',next:'Confirma el texto completo antes de continuar.'});return{handled:false,action_id:prior.action_id};}
@@ -167,4 +171,33 @@ export function createAgentInteraction({getContext,openWorkspace,navigateBridge,
   subscribe(fn){if(typeof fn!=='function')throw TypeError('listener_required');listeners.add(fn);fn(snapshot());return()=>listeners.delete(fn);},
   dispose(){disposed=true;current();listeners.clear();records=[];events.clear();flights.clear();}
  };
+}
+
+// Confirm the rendered view, independently of the Puesto2 presentation.
+export function workspacePresentationVisible({dialog,workspace,tab,win}){
+ if(!dialog?.open||dialog.classList?.contains('voice-compact')||workspace?.getTab?.()!==tab)return false;
+ const root=workspace.root,panel=root?.querySelector?.('[data-panel="'+tab+'"]');
+ if(!root?.isConnected||!panel)return false;
+ for(let node=panel;node;node=node.parentElement){
+  if(node.hidden||node.getAttribute?.('aria-hidden')==='true')return false;
+  const style=win.getComputedStyle(node);if(style.display==='none'||style.visibility==='hidden'||style.visibility==='collapse')return false;
+  if(node===dialog)break;
+ }
+ const rect=panel.getBoundingClientRect();
+ return rect.width>0&&rect.height>0&&rect.bottom>0&&rect.right>0&&rect.top<win.innerHeight&&rect.left<win.innerWidth;
+}
+export function renderInteractionCards({host,records=[],caseId,handlers={},isCurrent=()=>true,doc=host?.ownerDocument}){
+ if(!host)return;
+ const current=isCurrent()?records.filter(record=>record.context?.case_id===caseId).slice(-3):[];
+ host.replaceChildren();host.hidden=!current.length;
+ const node=(tag,text)=>{const value=doc.createElement(tag);value.textContent=text;return value;};
+ for(const record of current){
+  const card=doc.createElement('article');card.dataset.actionState=record.state;
+  card.append(node('small','Acción en esta pantalla'),node('p',record.text),node('strong',record.summary),node('p',record.next));
+  if(record.context.scenario_id)card.append(node('small','Versión '+record.context.scenario_id));
+  const action=(label,fn)=>{const b=node('button',label);b.type='button';b.addEventListener('click',()=>{if(isCurrent())void fn(record.action_id);});card.append(b);};
+  if(record.state==='awaiting_confirmation')action('Confirmar esta intención',id=>handlers.confirm?.(id));
+  if(['pending','uncertain'].includes(record.state))action(record.request_id?'Comprobar el mismo recibo':'Volver a abrir la sección',id=>handlers.retry?.(id));
+  host.append(card);
+ }
 }

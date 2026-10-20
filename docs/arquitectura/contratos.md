@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-20.chinches-audio-ipad.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-20.ppp-volumenes-nativos.7 · 2026-10-20.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -71,7 +71,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Servidor resuelve el destino y verifica permisos, límites y revisión antes de escribir
 - Una respuesta pendiente, conflicto o desconexión conserva el último dato confirmado con estado explícito
 - Auditar antes/después y no marcar producción comprobada sin lectura pública final
-- No modificar Portero ni crear otra implementación; conservar contratos y URL existentes
+- Extensión multivolumen autorizada dentro del Portero existente: conservar URL, scopes, ACL y contratos de otros modelos; no crear otra implementación ni inferir despliegue por fuente.
 - El transporte leído conserva entradas y resultados de todas las versiones; el flujo mensual puede enviarse solo para la activa. Validar ese flujo al abrirla y no exigir ni inventar flujo de versiones inactivas.
 
 ## CTR-PUBLICADOR-GITHUB
@@ -970,3 +970,33 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - No copiar credencial de Drive ni publicar MP4 en claro
 - El productor existente cifra una copia ligera; verifica original MD5, duración/audio y SHA256 antes de registrar llave privada
 - El original conserva permisos; cache técnico privado no cambia PROPUESTAS/DECISIONES ni introduce binarios en Sheets
+
+## CTR-PPP-VOLUMENES-NATIVOS
+
+- Componentes: SYS-POTENCIALES, GAS-PORTERO, SHEET-PORTERO, SHEET-PPP-MODELOS, SYS-DESPACHO-3D, SYS-YOD-OS, SVC-AUTON-CLOUD.
+- Evidencia: docs/arquitectura/ppp-volumenes-nativos.md y schema JSON; contrato conciliado con fuentes locales PPPVolumes, PPPVolumesProgram, PPPVolumesFormulas y consumidores. Fuente activa y datos se verifican privadamente por coordinador; no equivalen a despliegue..
+- Entrada/campos: `POST tipo sheet-volumes, caso_id, tipo_desarrollo VERTICAL, escenario_id, revision_esperada, request_id y sesión vigente; volumes schema2/count/shared_allocation_mode/rows[id,values14drivers].`, `Los21IDs del programa nativo y14drivers/7derivados se anuncian en capabilities.volumes.fields; POST jamás envía campos de autoridad ni valores derivados.`, `Capabilities por modelo autorizado; no nombre de proyecto,query ni flag del agente.`, `GET recurso sheet-volumes-receipt con caso_id, escenario_id y request_id; no escribe negocio, puede reconciliar ledger/auditoría de la operación original.`, `E units_per_level number, etiqueta Viviendas por planta · promedio, step 0.000001; F units readonly entero. GET autenticado sheet-volume-template devuelve preview de un cuerpo; POST guardar requiere seed WRITE14/template_revision/native_body_reviewed true e inputs originales.`, `Colección read/write tiene cuatro claves: schema2,count,shared_allocation_mode preserve|built_area,volumes. Capabilities.volumes plana agrega allocation_modes y shared_resources [{id,label}], sin importes. No aliases ni default cliente para modo ausente.`.
+- Salida: Modelo con volumes_by_scenario[escenario_id]={schema:2,count,shared_allocation_mode,volumes:[{id,values:21campos}]} y capabilities.volumes={schema:2,read,write,max_volumes:16,fields:metadatos21,allocation_modes:[preserve,built_area],shared_resources:[{id,label}]}., volume_receipt conserva request_id, caso_id, escenario_id, base_revision, result_revision, volumes FULL releído y calculated. Confirmación vigente coincide con modelo; proyección 14 drivers/count/IDs/modo coincide con solicitud., ACK normal: ok, request_id, case_id, scenario_id, revision, native_collection, calculated. Si revision actual es posterior: volume_receipt_status superseded y ACK status confirmed_superseded conserva original más current_revision/current_collection., Conciliación devuelve modelo+recibo, rechazo prewrite probado, operation_pending o receipt_not_found; sin POST de reenvío ni rollback automático., Rechazo terminal GAS: operation_rejected, volume_operation_status rejected, volume_rejection con actor/contexto/base_revision/payload_hash/stage prewrite/write_attempted false/error/rejected_at; ACK validado status rejected y prewrite_rejection., native_factory_preview persisted false, template_revision, inputs de plantilla, volumes FULL un cuerpo y capability21; no acredita alta ni finanzas calculadas., Modo por escenario se devuelve siempre explícito en colección canónica y volume_receipt.volumes; ACK/before/proyección/hash incluyen el modo exacto. Recursos compartidos anuncian sólo ID y etiqueta, nunca un precio transportado como policy..
+
+- Los volúmenes pertenecen al PPP de todos los casos verticales/departamentos; mixto.html conserva el tipo nativo VERTICAL sin crear otro permiso.
+- Cálculo financiero sólo en Sheets. Cliente/servidor no duplican fórmulas ni sustituyen cálculo por promedio; calculated:true requiere fórmula nativa validada y readback.
+- Programa nativo existente se lee íntegro, incluyendo3cuerpos y fórmulas distintas; no forzar1alabrir. Factorydeescenario nuevo inicia1compatible y preserva base/históricos. Escalar16medianteplantilla nativa con fórmulasprotegidas.
+- Núcleos,elevadores,terreno y áreas comunes tienen alcance explícito y se cuentan una vez. El DTO v1 no inventa ni multiplica recursos compartidos.
+- Actor,destino/caso/tipo/capability y revisión se validan de nuevo en el servidor. Fórmulas protegidas y campos allowlisted.
+- Mismo request_id conserva actor/caso/escenario/payload. Recibo previo se consulta antes de CAS; otro contenido se rechaza y timeout se concilia sin nuevo writer ni revisión elevada.
+- Pruebas financieras usan libros aislados. Publicación de frontend, fuente GAS, migración de libro y cálculo real necesitan recibos separados.
+- El contrato reducido de siete campos era borrador preliminar; no reemplaza el programa nativo ni sus drivers. Writer requiere schema2exacto y campos anunciados por el modelo real.
+- Unidades y superficie total derivadas son sólo lectura. Huella,patio,plantas,viviendas por piso,áreas,obraPB/sótano,ventas y etapas conservan sus drivers nativos; tipología/inventario se registran aparte sin inferencia.
+- capabilities.volumes.fields es autoridad del servidor:21IDs estables,14drivers y7derivados; el cliente rechaza metadata inconsistente y nunca envía derived en POST. Bounds técnicos se distinguen de norma o datos observados.
+- Reserva durable pending antes de cantidades; lote atómico escribe drivers/IDs/count y marcador applied ligado a request/actor/payload. finish exige marcador y readback exacto antes de confirmed; igualdad externa sola no acredita operación.
+- GET no modifica drivers, fórmulas, count ni versiones; permite reconciliar ledger/auditoría fuera de la revisión de negocio. Timeout, ausencia de recibo e incertidumbre no reenvían POST ni elevan revisión.
+- Recibo vigente coincide con modelo nativo; superseded conserva recibo original inmutable y separa revisión/colección actuales. No confundir relectura posterior con resultado original ni repetir escritura.
+- Sólo rechazo durable antes de intentar lote, validado con actor/caso/escenario/request/base_revision/payload y stage prewrite/write_attempted false, libera pendiente. Fallos tras intentar lote conservan incertidumbre.
+- Factory nuevo uno requiere plantilla monovolumen nativa y paridad contra baseline; duplicar preserva programa y asignaciones por versión. Capabilidad desactivada por falta de plantilla es pendiente, no entrega final.
+- Horizonte nativo de meses 1–120: validar ventanas de obra/ventas/entrega antes de lote. Bounds transporte hasta 1200 no extienden deuda/TIR/distribuciones.
+- Guardado y cálculo se acreditan por separado; calculated true exige manifiesto nativo, inventario original no tautológico y paridad comprobada. Fuentes de fórmula no prueban paridad numérica.
+- Promedio E permite total entero F=ROUND(D*E;0) sólo en Sheets. No truncar E a dos decimales ni inferir uniformidad/tipología. Petición 17 con tres niveles usa 5.666667 y sólo readback F17 confirma; geometría e inventario usan el total nativo coherente.
+- Alta revisa 14 drivers y preserva inputs capturados, sin resumen/flujo cliente. Variantes locales sin programa por versión se conservan y bloquean creación; preview no persiste un caso y un alta incierta no se reenvía automáticamente.
+- preserve conserva PA original y exige sus pesos activos válidos; built_area requiere selección/confirmación explícita para TODOS los recursos anunciados y usa fórmula Sheets Mactivo/SUM(Mactivos), área sobre rasante sin sótano N. No cambiar método ocultamente por count ni normalizar PA raw.
+- Modo por versión vive en columna K del índice y participa en revisionMaterial, hash del payload, before/after, marcador del mismo lote de negocio, recibo vigente e histórico superseded. Fórmulas referencian el modo; cambiarlo no reinstala un motor ni escribe dinero en JS.
+- Nueva fábrica/migración declara preserve explícito; collection sin modo o capability de política incompatible falla cerrada. built_area requiere áreas activas completas, finitas y suma positiva antes de intentar lote; resultados/costos siguen sólo en Sheets.

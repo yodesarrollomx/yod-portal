@@ -2,7 +2,7 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const load=()=>import('../despacho3d/agent-interaction.mjs');
 const deferred=()=>{let resolve,reject;const promise=new Promise((yes,no)=>{resolve=yes;reject=no;});return {promise,resolve,reject};};
-const context=()=>({authorized:true,pilot:true,case_id:'synthetic-ruisenor',board_case_id:'synthetic-board',scenario_id:'synthetic-scenario',revision:'r1',capabilities:{navigate:true}});
+const context=()=>({authorized:true,ppp_enabled:true,pilot:true,case_id:'synthetic-ruisenor',board_case_id:'synthetic-board',scenario_id:'synthetic-scenario',revision:'r1',capabilities:{navigate:true}});
 const confirmed=(request,patch={})=>({status:'confirmed',observed:{case_id:request.context.case_id,board_case_id:request.context.board_case_id,scenario_id:request.context.scenario_id,revision:request.context.revision,tab:request.tab||'ppp',...(request.section_id?{section_id:request.section_id}:{}),...patch}});
 const input=(text,event_id='synthetic-event',extra={})=>({role:'user',source:'text',text,complete:true,event_id,...extra});
 
@@ -53,8 +53,8 @@ test('a revision switch during plan navigation rejects the old confirmation',asy
  assert.equal(h.action(result.action_id).state,'stale');assert.equal(h.calls.some(x=>x.name==='assisted'),false);assert.deepEqual(h.action(result.action_id).evidence,[]);h.controller.dispose();
 });
 
-test('the pilot and current authorization are required, and revocation clears all prior interaction state',async()=>{
- for(const patch of [{authorized:false},{pilot:false},{pilot:undefined},{case_id:''}]){
+test('PPP capability and current authorization are required, and revocation clears all prior interaction state',async()=>{
+ for(const patch of [{authorized:false},{ppp_enabled:false},{ppp_enabled:undefined},{case_id:''}]){
   const h=await harness();h.setContext({...context(),...patch});assert.equal((await h.controller.receive(input('Abre costos'))).handled,false);assert.deepEqual(h.calls,[]);h.controller.dispose();
  }
  const h=await harness();await h.controller.receive(input('Abre costos'));assert.equal(h.actions().length,1);h.setContext({...context(),authorized:false});assert.deepEqual(h.actions(),[]);assert.equal(await h.controller.confirm('interaction-1'),false);h.controller.dispose();
@@ -108,4 +108,18 @@ test('a foreign-context rejection cannot close the active mutation as rejected',
  const h=await harness({reconcile:q=>({status:'rejected',request_id:q.request_id,observed:{...q.context,case_id:'foreign-case'}})}),intent=await h.controller.receive(input('Cambia a 17 departamentos'));
  h.controller.bindMutation(intent.action_id,{request_id:'synthetic-write-1',status:'uncertain'});await h.controller.retry(intent.action_id);
  assert.equal(h.action(intent.action_id).state,'uncertain');h.controller.dispose();
+});
+
+test('PPP capabilities enable presentation for nonpilot agents while native changes remain canonical',async()=>{
+ const h=await harness();h.setContext({...context(),pilot:false});await h.controller.receive(input('Abre costos','other-ppp-navigation'));
+ assert.deepEqual(h.calls.map(x=>x.name),['open','bridge']);h.calls.length=0;
+ h.setContext({...h.getContext(),capabilities:{navigate:true,volumes:{schema:2,read:true,write:true}}});
+ const result=await h.controller.receive(input('Cambia a 17 departamentos','native-change'));
+ assert.equal(result.handled,false);assert.equal(result.canonical,true);assert.deepEqual(h.calls,[]);assert.equal(h.actions().length,1);h.controller.dispose();
+});
+
+test('a legacy provisional change cannot execute locally after native schema2 writing becomes available',async()=>{
+ const h=await harness(),received=await h.controller.receive(input('Cambia a 17 departamentos','provisional-change',{source:'voice',complete:false}));
+ h.setContext({...context(),capabilities:{navigate:true,volumes:{schema:2,read:true,write:true}}});
+ assert.equal(await h.controller.confirm(received.action_id),false);assert.equal(h.action(received.action_id).state,'superseded');assert.deepEqual(h.calls,[]);h.controller.dispose();
 });

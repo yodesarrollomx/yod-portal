@@ -89,3 +89,5 @@ La auditoría no se considera completa mientras existan componentes críticos o 
 - [Puesto del agente 2.0](puesto-agente2.md): piloto de conversación con avatar, vistas móviles y contratos actuales; sin cambios de backend ni datos.
 
 - [Paquete y control de chinches](chinches-paquete.md): instalación repetible, releases inmutables, actualizaciones por huella, registro único y revisión incremental. [Abrir el control](../../chinche/control.html).
+
+- [Volúmenes nativos del PPP](ppp-volumenes-nativos.md): alcance para todos los casos de departamentos, contrato por escenario, fórmulas canónicas y recibos; ampliación autorizada y despliegue por verificar.
