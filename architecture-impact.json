@@ -1,22 +1,14 @@
 {
-  "model_revision": "2026-10-20.presentaciones-md.1",
-  "proposal_id": "CHG-PRESENTACIONES-MD-20261020",
-  "summary": "Registrar antes de implementación portal Presentaciones dentro de Master Developer, borrador/publicación y conducción en servidor Sala existente, con chinches comunes y fuentes conservadas.",
+  "model_revision": "2026-10-20.sala-video-iphone.1",
+  "proposal_id": "CHG-SALA-VIDEO-IPHONE-20261020",
+  "summary": "Entrega privada de video y reproductor nativo dentro de Sala e iframe del OS.",
   "components": [
-    "SYS-INVERSION",
-    "SYS-YOD-OS",
-    "SYS-CONTROL",
     "SYS-SALA",
     "GAS-SALA",
-    "SHEET-SALA",
-    "SYS-AMALAYA",
-    "SYS-EMD",
-    "EXT-GMAIL"
+    "SYS-YOD-OS"
   ],
   "tests": [
-    "Contratos de autorización, revisión, idempotencia, recibos y control de sesión en aislamiento.",
-    "QA móvil/escritorio y fallos A/B/C sin escrituras de negocio sintéticas.",
-    "Verificar código servido, implementación existente y compatibilidad con consumidores previos."
+    "node scripts/arquitectura.cjs --check"
   ],
-  "rollback": "Revertir frontend/manifiesto conservando archivos, versiones, chinches, recibos y permisos."
+  "rollback": "Revertir cambios de interfaz y nueva versión de backend conservando todos los datos."
 }
