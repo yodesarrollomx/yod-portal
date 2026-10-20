@@ -1,0 +1,62 @@
+[
+  {
+    "file": "despacho3d/index.html",
+    "status": 200,
+    "same": true,
+    "sha256": "593c9bde797df62fea82898da10effd30d4695f03cdcfe113c9d423a43a47963"
+  },
+  {
+    "file": "despacho3d/live-voice-boot.mjs",
+    "status": 200,
+    "same": true,
+    "sha256": "52ecb419b134dbfd2e24c7a2b4f1e29b743c9f8c6571dfce47849b49344424b0"
+  },
+  {
+    "file": "despacho3d/live-voice.mjs",
+    "status": 200,
+    "same": true,
+    "sha256": "c97860289eb69a0e3b00b52784e02cc83e2661ec6dce0e15185d0bc77e708401"
+  },
+  {
+    "file": "despacho3d/agent-workspace.mjs",
+    "status": 200,
+    "same": true,
+    "sha256": "2a8c70ae0fe80219d81a9c427c9185e512cbeae602a5c97f4cb3e2ab5782bfa4"
+  },
+  {
+    "file": "despacho3d/puesto-agente.mjs",
+    "status": 200,
+    "same": true,
+    "sha256": "2a9772a455a32573205b1ee3490462381a2fa0faf56a088d72a1319bbaf4a6ba"
+  },
+  {
+    "file": "despacho3d/puesto-agente.css",
+    "status": 200,
+    "same": true,
+    "sha256": "5c57cf3e68e4b4616a12a54ae6444ef805984081bb843372cf213f97dfff4b6b"
+  },
+  {
+    "file": "despacho3d/agent-interaction.mjs",
+    "status": 200,
+    "same": true,
+    "sha256": "5b0e19a1868b70d7e8fff00cf812cc2d48c6ecba2798b9dec05ecb9b94850776"
+  },
+  {
+    "file": "despacho3d/workspace-navigation.mjs",
+    "status": 200,
+    "same": true,
+    "sha256": "f0f1597054e11ecb3a577b8f034b3407268e6daf4fcde2c1323bdcbd26c97214"
+  },
+  {
+    "file": "despacho3d/ruisenor-interaction-test.html",
+    "status": 200,
+    "same": true,
+    "sha256": "40b6687857b854cb896e2de71b76ee6270c42b5d0100c826932cc4fb621fcf75"
+  },
+  {
+    "file": "despacho3d/ruisenor-interaction-fixture.mjs",
+    "status": 200,
+    "same": true,
+    "sha256": "8aa37af6c50dfb77dde1095c5f5f4de51646105bfe0b12c78d5b3d9a2a23f297"
+  }
+]

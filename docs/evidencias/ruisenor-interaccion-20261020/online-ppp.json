@@ -1,0 +1,206 @@
+{
+  "repository": "yodesarrollomx/potenciales-yod",
+  "pr": 39,
+  "expected_head_sha": "64710c9b31194ac065530098300d20827d4b28a1",
+  "merge_sha": "c8691031cdb6305325b5d7a8981fdd7934993b37",
+  "checked_at": "2026-10-20T20:12:21.834091+00:00",
+  "method": "Public static HTTP GET only; files compared byte for byte with validated local working tree. No browser, scripts, business endpoints or tests executed.",
+  "local_root": "/workspace/scratch/b8a51e205938/ppp-volumenes-readonly",
+  "resources": [
+    {
+      "path": "mixto.html",
+      "url": "https://yodesarrollomx.github.io/potenciales-yod/mixto.html?verify=c8691031cdb6305325b5d7a8981fdd7934993b37",
+      "status": 200,
+      "expected_bytes": 222599,
+      "actual_bytes": 222599,
+      "expected_sha256": "4091b96e49b50c1a440609ee19d91e905fb3d3ca487f0cd6152972b31105e008",
+      "actual_sha256": "4091b96e49b50c1a440609ee19d91e905fb3d3ca487f0cd6152972b31105e008",
+      "byte_match": true,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "last-modified": "Tue, 20 Oct 2026 20:12:01 GMT",
+        "etag": "\"6ad7cb11-36587\"",
+        "cache-control": "max-age=600",
+        "age": "0",
+        "date": "Tue, 20 Oct 2026 20:12:04 GMT"
+      }
+    },
+    {
+      "path": "ppp-ui.js",
+      "url": "https://yodesarrollomx.github.io/potenciales-yod/ppp-ui.js?verify=c8691031cdb6305325b5d7a8981fdd7934993b37",
+      "status": 200,
+      "expected_bytes": 43913,
+      "actual_bytes": 43913,
+      "expected_sha256": "99a600e0a4c97e5380365d3d2ef8c722b6f6861a848cd323568e7438e5b6bfb9",
+      "actual_sha256": "99a600e0a4c97e5380365d3d2ef8c722b6f6861a848cd323568e7438e5b6bfb9",
+      "byte_match": true,
+      "headers": {
+        "content-type": "application/javascript; charset=utf-8",
+        "last-modified": "Tue, 20 Oct 2026 20:12:01 GMT",
+        "etag": "\"6ad7cb11-ab89\"",
+        "cache-control": "max-age=600",
+        "age": "0",
+        "date": "Tue, 20 Oct 2026 20:12:07 GMT"
+      }
+    },
+    {
+      "path": "ppp-version-bridge.js",
+      "url": "https://yodesarrollomx.github.io/potenciales-yod/ppp-version-bridge.js?verify=c8691031cdb6305325b5d7a8981fdd7934993b37",
+      "status": 200,
+      "expected_bytes": 10196,
+      "actual_bytes": 10196,
+      "expected_sha256": "acb5b7e93ef94a9f0553e12e9efbe782199cae843002c141b6226e0985fe1f0a",
+      "actual_sha256": "acb5b7e93ef94a9f0553e12e9efbe782199cae843002c141b6226e0985fe1f0a",
+      "byte_match": true,
+      "headers": {
+        "content-type": "application/javascript; charset=utf-8",
+        "last-modified": "Tue, 20 Oct 2026 20:12:01 GMT",
+        "etag": "\"6ad7cb11-27d4\"",
+        "cache-control": "max-age=600",
+        "age": "0",
+        "date": "Tue, 20 Oct 2026 20:12:10 GMT"
+      }
+    },
+    {
+      "path": "ppp-volumes.js",
+      "url": "https://yodesarrollomx.github.io/potenciales-yod/ppp-volumes.js?verify=c8691031cdb6305325b5d7a8981fdd7934993b37",
+      "status": 200,
+      "expected_bytes": 13787,
+      "actual_bytes": 13787,
+      "expected_sha256": "91ffbe8ffd9eb03cac5ad654784d716e9bafb0226db58be37f3eddbd6e6076dd",
+      "actual_sha256": "91ffbe8ffd9eb03cac5ad654784d716e9bafb0226db58be37f3eddbd6e6076dd",
+      "byte_match": true,
+      "headers": {
+        "content-type": "application/javascript; charset=utf-8",
+        "last-modified": "Tue, 20 Oct 2026 20:12:01 GMT",
+        "etag": "\"6ad7cb11-35db\"",
+        "cache-control": "max-age=600",
+        "age": "0",
+        "date": "Tue, 20 Oct 2026 20:12:15 GMT"
+      }
+    },
+    {
+      "path": "ppp-volumes.css",
+      "url": "https://yodesarrollomx.github.io/potenciales-yod/ppp-volumes.css?verify=c8691031cdb6305325b5d7a8981fdd7934993b37",
+      "status": 200,
+      "expected_bytes": 4240,
+      "actual_bytes": 4240,
+      "expected_sha256": "c8a67dac378f6d52d2d2cd2f31ecb81f2e0a4da61283281a580bd3107b763230",
+      "actual_sha256": "c8a67dac378f6d52d2d2cd2f31ecb81f2e0a4da61283281a580bd3107b763230",
+      "byte_match": true,
+      "headers": {
+        "content-type": "text/css; charset=utf-8",
+        "last-modified": "Tue, 20 Oct 2026 20:12:01 GMT",
+        "etag": "\"6ad7cb11-1090\"",
+        "cache-control": "max-age=600",
+        "age": "0",
+        "date": "Tue, 20 Oct 2026 20:12:18 GMT"
+      }
+    },
+    {
+      "path": "tests/fixtures/ruisenor-volumenes.html",
+      "url": "https://yodesarrollomx.github.io/potenciales-yod/tests/fixtures/ruisenor-volumenes.html?verify=c8691031cdb6305325b5d7a8981fdd7934993b37",
+      "status": 200,
+      "expected_bytes": 9973,
+      "actual_bytes": 9973,
+      "expected_sha256": "0656a3ad8d0e036d4f483d5ac36275ee3f8aa63c610244e7b0f714eb7a578ea2",
+      "actual_sha256": "0656a3ad8d0e036d4f483d5ac36275ee3f8aa63c610244e7b0f714eb7a578ea2",
+      "byte_match": true,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "last-modified": "Tue, 20 Oct 2026 20:12:01 GMT",
+        "etag": "\"6ad7cb11-26f5\"",
+        "cache-control": "max-age=600",
+        "age": "0",
+        "date": "Tue, 20 Oct 2026 20:12:21 GMT"
+      }
+    }
+  ],
+  "all_resources_match": true,
+  "github": {
+    "checked_at": "2026-10-20T20:13:09.720Z",
+    "pull_request": {
+      "url": "https://github.com/yodesarrollomx/potenciales-yod/pull/39",
+      "number": 39,
+      "merged": true,
+      "merged_at": "2026-10-20T20:11:20Z",
+      "head_sha": "64710c9b31194ac065530098300d20827d4b28a1",
+      "merge_sha": "c8691031cdb6305325b5d7a8981fdd7934993b37"
+    },
+    "pages": {
+      "id": 39489842000,
+      "name": "pages build and deployment",
+      "head_sha": "c8691031cdb6305325b5d7a8981fdd7934993b37",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-20T20:11:23Z",
+      "updated_at": "2026-10-20T20:12:14Z",
+      "url": "https://github.com/yodesarrollomx/potenciales-yod/actions/runs/39489842000",
+      "exact_merge_match": true
+    },
+    "local_source": {
+      "commit": "5a74ce38c31fc2dd973fd6eac218009d72506fa8",
+      "tree": "1d1bbbb08e73e649cdce2c1e288b0ccbab40a9dc",
+      "merge_tree": "1d1bbbb08e73e649cdce2c1e288b0ccbab40a9dc",
+      "tree_match": true
+    },
+    "workflows": [
+      {
+        "id": 39489842837,
+        "name": "Verificar interfaz PPP",
+        "head_sha": "c8691031cdb6305325b5d7a8981fdd7934993b37",
+        "status": "in_progress",
+        "conclusion": null,
+        "created_at": "2026-10-20T20:11:23Z",
+        "updated_at": "2026-10-20T20:11:28Z",
+        "url": "https://github.com/yodesarrollomx/potenciales-yod/actions/runs/39489842837"
+      },
+      {
+        "id": 39489842000,
+        "name": "pages build and deployment",
+        "head_sha": "c8691031cdb6305325b5d7a8981fdd7934993b37",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-10-20T20:11:23Z",
+        "updated_at": "2026-10-20T20:12:14Z",
+        "url": "https://github.com/yodesarrollomx/potenciales-yod/actions/runs/39489842000"
+      },
+      {
+        "id": 39489842902,
+        "name": "Verificar acceso PPP",
+        "head_sha": "c8691031cdb6305325b5d7a8981fdd7934993b37",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-10-20T20:11:23Z",
+        "updated_at": "2026-10-20T20:12:26Z",
+        "url": "https://github.com/yodesarrollomx/potenciales-yod/actions/runs/39489842902"
+      },
+      {
+        "id": 39489842698,
+        "name": "Arquitectura YOD",
+        "head_sha": "c8691031cdb6305325b5d7a8981fdd7934993b37",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-10-20T20:11:23Z",
+        "updated_at": "2026-10-20T20:11:34Z",
+        "url": "https://github.com/yodesarrollomx/potenciales-yod/actions/runs/39489842698"
+      }
+    ],
+    "portal_pages": {
+      "id": 39488693154,
+      "name": "pages build and deployment",
+      "head_sha": "b42173ffda031575d991498095ebacfc36ee06f4",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-20T20:03:16Z",
+      "updated_at": "2026-10-20T20:03:54Z",
+      "url": "https://github.com/yodesarrollomx/yod-portal/actions/runs/39488693154"
+    },
+    "scope": {
+      "browser_used": false,
+      "tests_run": 0,
+      "external_writes": 0,
+      "business_endpoint_requests": 0
+    }
+  }
+}

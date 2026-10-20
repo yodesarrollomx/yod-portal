@@ -1,0 +1,63 @@
+{
+  "checked_at": "2026-10-20T20:19:21.435Z",
+  "portal": [
+    {
+      "id": 39488694045,
+      "name": "Verificar YOD OS",
+      "status": "completed",
+      "conclusion": "success",
+      "sha": "b42173ffda031575d991498095ebacfc36ee06f4"
+    },
+    {
+      "id": 39488693775,
+      "name": "Arquitectura YOD",
+      "status": "completed",
+      "conclusion": "success",
+      "sha": "b42173ffda031575d991498095ebacfc36ee06f4"
+    },
+    {
+      "id": 39488693694,
+      "name": "Conocimiento del Despacho",
+      "status": "completed",
+      "conclusion": "success",
+      "sha": "b42173ffda031575d991498095ebacfc36ee06f4"
+    },
+    {
+      "id": 39488693154,
+      "name": "pages build and deployment",
+      "status": "completed",
+      "conclusion": "success",
+      "sha": "b42173ffda031575d991498095ebacfc36ee06f4"
+    }
+  ],
+  "ppp": [
+    {
+      "id": 39489842000,
+      "name": "pages build and deployment",
+      "status": "completed",
+      "conclusion": "success",
+      "sha": "c8691031cdb6305325b5d7a8981fdd7934993b37"
+    },
+    {
+      "id": 39489842902,
+      "name": "Verificar acceso PPP",
+      "status": "completed",
+      "conclusion": "success",
+      "sha": "c8691031cdb6305325b5d7a8981fdd7934993b37"
+    },
+    {
+      "id": 39489842698,
+      "name": "Arquitectura YOD",
+      "status": "completed",
+      "conclusion": "success",
+      "sha": "c8691031cdb6305325b5d7a8981fdd7934993b37"
+    },
+    {
+      "id": 39489842837,
+      "name": "Verificar interfaz PPP",
+      "status": "completed",
+      "conclusion": "success",
+      "sha": "c8691031cdb6305325b5d7a8981fdd7934993b37"
+    }
+  ]
+}
