@@ -13559,6 +13559,22 @@
       ],
       "deployment": "Registro previo. Despliegue acreditado por PR consumidor y recibo Pages.",
       "rollback": "Revertir frontend por PR; conservar notas,cola,datos y medios."
+    },
+    {
+      "id": "CHG-SALA-REVISION-TOMAS-20261020",
+      "components": [
+        "SYS-SALA"
+      ],
+      "status": "propuesto",
+      "authorization": "Mantenimiento técnico de Sala autorizado por Dirección; correcciones de revisión situadas recibidas el20oct, sin adoptar decisiones editoriales.",
+      "proposal": "Abrir comparación en escritorio cuando existan varias tomas; tras el voto explícito avanzar a la siguiente lámina pendiente de la secuencia. Permitir petición de nueva revisión de aprobadas mediante el contrato existente de reapertura y nota obligatoria, conservando la aprobación histórica. No cambiar permisos, carga inicial, player, chinches universales ni producción.",
+      "tests": [
+        "Recorrido sintético escritorio/móvil: comparación inicial sin POST, aprobación única de toma visible y avance secuencial.",
+        "Reapertura con nota: destino original, sesión y contexto frescos; cancelar/nota vacía sin efectos. Roles de lectura y copia cacheada sin escritura.",
+        "Node, verificación de invariantes y QA de activos publicados con identidad de código."
+      ],
+      "deployment": "Registro previo; implementación, CI y publicación del consumidor requieren recibos independientes.",
+      "rollback": "Revertir PR de interfaz; conservar votos, notas, medios, fuentes y cola."
     }
   ],
   "data_contracts": [
