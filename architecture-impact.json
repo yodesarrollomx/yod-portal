@@ -1,13 +1,14 @@
 {
-  "model_revision": "2026-10-20.sala-mesa-local.1",
-  "proposal_id": "CHG-SALA-MESA-LOCAL-20261020",
-  "summary": "Registrar apertura de Sala desde última copia privada por sesión, consulta inmediata y revalidación sin alterar decisiones.",
+  "model_revision": "2026-10-20.sala-arranque-progresivo.1",
+  "proposal_id": "CHG-SALA-ARRANQUE-PROGRESIVO-20261020",
+  "summary": "Registrar arranque progresivo y medios diferidos de Sala.",
   "components": [
     "SYS-SALA",
     "SYS-YOD-OS"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check"
+    "node scripts/arquitectura.cjs --check",
+    "node scripts/verificar-impacto.cjs --base origin/main --head HEAD --repo yodesarrollomx/yod-portal"
   ],
-  "rollback": "Revertir PR de frontend; la clave sala_mesa_local_v1 queda ignorada o se elimina sin borrar borradores ni cola."
+  "rollback": "Revertir consumidor por PR sin borrar registros."
 }
