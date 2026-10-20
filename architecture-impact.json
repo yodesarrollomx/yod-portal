@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-10-20.puesto-agente2.1",
   "proposal_id": "CHG-PUESTO-AGENTE-2-20261020",
-  "summary": "Puesto2.0 piloto implementado localmente: misma conversación, avatar y datos autorizados en memoria; publicación y recorrido Chromium HTTP pendientes, sin backend ni caché nueva.",
+  "summary": "Corregir compositor del Puesto2 tras QA Chromium: contenedor flex real fuera del details nativo, mismos controles e historial.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",

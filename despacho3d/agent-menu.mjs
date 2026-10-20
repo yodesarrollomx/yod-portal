@@ -1,4 +1,4 @@
-import {isPuesto2,presentationLocation} from './puesto-agente.mjs?v=puesto2';
+import {isPuesto2,presentationLocation} from './puesto-agente.mjs?v=puesto2fix1';
 import {stationIdentity} from './project-station.mjs';
 export const MENU_SECTORS=[['ppp','PPP'],['conversaciones','Hablar'],['pendientes','Trabajo'],['notas','Expediente']];
 export const STATUS={queued:'En cola',running:'Trabajando',ready_for_review:'Para tu revisión',awaiting_data:'Faltan datos',stopped:'Detenido',completed:'Revisado'};
