@@ -1,13 +1,15 @@
 {
-  "model_revision": "2026-10-20.sala-mesa-local.1",
-  "proposal_id": "CHG-SALA-MESA-LOCAL-20261020",
-  "summary": "Registrar apertura de Sala desde última copia privada por sesión, consulta inmediata y revalidación sin alterar decisiones.",
+  "model_revision": "2026-10-20.chinches-secuencia.1",
+  "proposal_id": "CHG-CHINCHES-SECUENCIA-20261020",
+  "summary": "Voz y anotación sincronizadas, archivo privado y revisión integral de chinches.",
   "components": [
+    "SYS-YOD-OS",
     "SYS-SALA",
-    "SYS-YOD-OS"
+    "SYS-INVERSION"
   ],
   "tests": [
+    "node --test tests/chinche-secuencia.test.cjs",
     "node scripts/arquitectura.cjs --check"
   ],
-  "rollback": "Revertir PR de frontend; la clave sala_mesa_local_v1 queda ignorada o se elimina sin borrar borradores ni cola."
+  "rollback": "Revertir consumidores conservando paquetes privados, IDs, recibos e IndexedDB."
 }

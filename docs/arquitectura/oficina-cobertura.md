@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-20.sala-mesa-local.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-20.chinches-secuencia.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -112,6 +112,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - El portal integra tableros · Estado: declarado · yodesarrollomx/yod-portal · CLAUDE.md · Revisión: HEAD\_baseline
 - [PR \#14 integrado; doce archivos servidos comparados exactamente con commit 7e9094b y perfiles sintéticos sobre la publicación. No acredita sesiones ni escrituras reales. · Estado: ejecucion · yodesarrollomx/yod-portal · docs/arquitectura/control-maestro.md · Revisión: 7e9094bf2a70ea1ee4e790299370fe28cfc4d89b](https://github.com/yodesarrollomx/yod-portal/blob/7e9094bf2a70ea1ee4e790299370fe28cfc4d89b/docs/arquitectura/control-maestro.md)
 - [GSI recupera origen mediante strict-origin; A/B real pasa400→200 y confirma Referer sin rutas/query. No modifica clientesOAuth ni acredita login personal completo. · Estado: ejecucion · yodesarrollomx/yod-portal · os/index.html · Revisión: 0351157a71ec9fc3c5b3beae70702c92646ece58](https://github.com/yodesarrollomx/yod-portal/blob/0351157a71ec9fc3c5b3beae70702c92646ece58/os/index.html)
+- CHG-CHINCHES-SECUENCIA-20261020: voz, trazos y capturas sincronizados en componente común; archivo privado y recibo por ID/SHA256. Propuesta autorizada; publicación y backend se verifican aparte. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Evidencia de conexiones:**
 
@@ -1895,6 +1896,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Evidencia de la ficha:**
 
 - Sistema presente en el catálogo canónico · Estado: codigo · yodesarrollomx/yod-portal · os/catalogo.js · Revisión: HEAD\_baseline
+- CHG-CHINCHES-SECUENCIA-20261020: voz, trazos y capturas sincronizados en componente común; archivo privado y recibo por ID/SHA256. Propuesta autorizada; publicación y backend se verifican aparte. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Evidencia de conexiones:**
 
@@ -2193,6 +2195,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Ampliación técnica autorizada por Dirección en la conversación actual: recuperación de transporte, publicación acumulativa, correo trazable y conciliación de chinches. Registro previo; la fuente no acredita despliegue. Registro local: docs/arquitectura/sala-nube-20261015.md. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - [PR308 integrado; cinco CI del head revisado en verde. Pages 38688574369, Plan 38688574251 y Revisión 38688731578 success; hijos Pages 38688736093 y 38689030877 confirmaron snapshot y data\_sha exactos. Cierre 38688574178 success con acuse privado byte-verificado y cero escrituras de negocio. No acredita correo recibido, producción nueva ni offload. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-ONLINE.md · Revisión: e4da08887e45e984be8ea945ce607db464b0fb52](https://github.com/yodesarrollomx/sala-edicion/blob/e4da08887e45e984be8ea945ce607db464b0fb52/docs/SALA-ONLINE.md)
 - CHG-SALA-MESA-LOCAL-20261020: caché de consulta por sesión con actualización en segundo plano; registro previo, sin permisos restaurados ni rendimiento productivo acreditado. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CHG-CHINCHES-SECUENCIA-20261020: voz, trazos y capturas sincronizados en componente común; archivo privado y recibo por ID/SHA256. Propuesta autorizada; publicación y backend se verifican aparte. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Evidencia de conexiones:**
 

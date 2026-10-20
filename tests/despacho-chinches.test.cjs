@@ -111,8 +111,9 @@ function chincheHarness() {
   const h=harness(), nodes=new Map(), saved=[], notices=[], requests=[], marked=[], closed=[];
   delete h.window.YODChinche;
   let authorized=true, databaseWait=null;
-  function node(key){if(!nodes.has(key))nodes.set(key,{value:'',disabled:false,textContent:'',placeholder:'',remove(){this.removed=true;},focus(){},classList:{add(){},remove(){}}});return nodes.get(key);}
-  const composer={_urls:[],querySelector:node,querySelectorAll:()=>[]};
+  function node(key){if(!nodes.has(key))nodes.set(key,{value:'',disabled:false,textContent:'',placeholder:'',remove(){this.removed=true;},focus(){},before(){},prepend(){},classList:{add(){},remove(){}}});return nodes.get(key);}
+  const composer={isConnected:true,_urls:[],querySelector:node,querySelectorAll:()=>[]};
+  h.context.document={createElement:()=>({width:960,height:540,style:{},getContext:()=>({fillRect(){},fillText(){}}),toBlob:fn=>fn(null),querySelectorAll:()=>[]}),head:{appendChild(){} }};
   h.context.console=console;h.context.AbortController=AbortController;
   h.context.localStorage={getItem:()=>null};h.context.sessionStorage={getItem:()=>null};
   h.context.location={href:'https://example.invalid/os/#/despacho'};h.context.navigator={userAgent:'synthetic'};
@@ -137,6 +138,8 @@ function chincheHarness() {
   const position=chincheSource.lastIndexOf('})();');
   vm.runInContext(chincheSource.slice(0,position)+injected+chincheSource.slice(position),h.context);
   const hooks={composer,saved,notices,closed,marked};h.window.__chincheTest.setup(hooks);
+  h.window.YodChincheSecuencia={mount:()=>({canvas:{toBlob:fn=>fn(null)},hasContent:()=>false,value:async()=>({v:1,synthetic:true}),dispose(){}})};
+  h.window.YodChincheEntrega={bind:async()=>{},client:()=>({send:async(ch,guard)=>{if(!guard())return {state:'auth-required'};await h.context.fetch('synthetic-private',{method:'POST',body:JSON.stringify({accion:'chinche_secuencia_guardar',data:JSON.stringify(ch)})});return {state:'received',id:ch.id};}})};
   function options(){return {clase:'despacho3d',seccion:'Despacho3D',texto:'Zona case',vista:'3D',sinCaptura:true,
     puedeGuardar:()=>authorized,objeto:{id:'zone:case',tipo:'despacho3d',zona:'case',despacho3d:metadata()},valores:{referencia:'technical'},codigo:'https://must-not-copy.invalid'};}
   return {...h,nodes,node,composer,saved,notices,requests,marked,closed,hooks,options,setAuthorized:v=>{authorized=v;},helper:h.window.__chincheTest};
@@ -148,8 +151,8 @@ test('Real composer has no POST when opened; human Clavar alone persists validat
   assert.equal(h.saved.length,1);assert.equal(h.requests.length,1);assert.equal(h.requests[0].options.method,'POST');
   assert.ok(h.saved[0].codigo.includes('punto=[6.1,0.7,-4.2]'));assert.ok(h.saved[0].codigo.includes('quaternion=[0,0,0,1]'));
   assert.equal(h.saved[0].codigo.includes('must-not-copy'),false);assert.equal(Object.values(h.saved[0]).some(v=>typeof v==='function'),false);
-  const payload=JSON.parse(h.requests[0].options.body), detail=JSON.parse(payload.detalle);
-  assert.equal(payload.accion,'produccion');assert.equal(detail.codigo,h.saved[0].codigo);assert.equal(detail.objeto.despacho3d.modelVersion,'despacho-v2');
+  const payload=JSON.parse(h.requests[0].options.body), detail=JSON.parse(payload.data);
+  assert.equal(payload.accion,'chinche_secuencia_guardar');assert.equal(detail.codigo,h.saved[0].codigo);assert.equal(detail.objeto.despacho3d.modelVersion,'despacho-v2');
 });
 test('Stale composer cannot Clavar and stale awaits cannot POST under a new session',async()=>{
   const h=chincheHarness();await h.window.YODChinche.anotar(h.options());h.setAuthorized(false);h.node('.chn-txt').value='Old draft';await h.node('[data-ok]').onclick();
