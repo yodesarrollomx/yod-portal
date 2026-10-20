@@ -1,23 +1,12 @@
 {
-  "model_revision": "2026-10-20.chinches-secuencia.1",
-  "proposal_id": "CHG-CHINCHES-SECUENCIA-20261020",
-  "summary": "Voz y anotación sincronizadas, archivo privado y revisión integral de chinches.",
+  "model_revision": "2026-10-20.sala2-interfaz.1",
+  "proposal_id": "CHG-SALA2-INTERFAZ-20261020",
+  "summary": "Registrar capa de interfaz Sala2 sin cambiar contratos ni backend.",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-SALA",
-    "SYS-INVERSION",
-    "SYS-DESPACHO",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-CONTROL",
-    "SYS-OBRA-CLIENTE",
-    "GAS-SALA",
-    "SHEET-SALA",
-    "EXT-GMAIL"
+    "SYS-SALA"
   ],
   "tests": [
-    "node --test tests/chinche-secuencia.test.cjs",
     "node scripts/arquitectura.cjs --check"
   ],
-  "rollback": "Revertir consumidores conservando paquetes privados, IDs, recibos e IndexedDB."
+  "rollback": "Revertir propuesta, sin tocar datos de Sala."
 }

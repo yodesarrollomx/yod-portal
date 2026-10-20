@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-20.chinches-secuencia.1",
+  "revision": "2026-10-20.sala2-interfaz.1",
   "checked_at": "2026-10-19",
   "priorities": [
     "vender_mas",
@@ -13615,6 +13615,21 @@
       ],
       "deployment": "Backend y consumidores requieren verificación independiente; no acreditar por fuente.",
       "rollback": "Revertir código sin borrar registros privados ni IndexedDB."
+    },
+    {
+      "id": "CHG-SALA2-INTERFAZ-20261020",
+      "components": [
+        "SYS-SALA"
+      ],
+      "status": "propuesto",
+      "authorization": "Alejandro autoriza integrar y publicar la interfaz preparada por Claude el20oct2026.",
+      "proposal": "Capa sala2.js/css sobre el motor existente: turno directo con mesa vigente, dock de decisiones y video vertical; copia de consulta conservada mientras actualiza. Vista anterior con clasica=1. Mismos datos, llaves, decisiones y Apps Script.",
+      "tests": [
+        "Chromium sintético móvil/escritorio: cinco cortes, aprobar, nota, NO VA, segundo, deshacer, consulta sin voto y vista clásica.",
+        "Node, invariantes nube y comparación de archivos publicados."
+      ],
+      "deployment": "Registro previo; publicación y comportamiento real se acreditan aparte.",
+      "rollback": "Revertir interfaz y sus dos includes; conservar datos, cola y borradores."
     }
   ],
   "data_contracts": [
