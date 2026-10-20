@@ -3,7 +3,8 @@
   "proposal_id": "CHG-SALA-MESA-LOCAL-20261020",
   "summary": "Registrar apertura de Sala desde última copia privada por sesión, consulta inmediata y revalidación sin alterar decisiones.",
   "components": [
-    "SYS-SALA"
+    "SYS-SALA",
+    "SYS-YOD-OS"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check"

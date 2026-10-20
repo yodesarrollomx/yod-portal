@@ -13529,7 +13529,8 @@
     {
       "id": "CHG-SALA-MESA-LOCAL-20261020",
       "components": [
-        "SYS-SALA"
+        "SYS-SALA",
+        "SYS-YOD-OS"
       ],
       "status": "propuesto",
       "authorization": "Dirección: empieza y ejecuta la hipótesis 2; última mesa guardada y actualización en segundo plano, 20-oct-2026.",
