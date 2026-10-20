@@ -953,3 +953,20 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Sesión fija revisión; un conductor y órdenes monotónicas
 - Respaldo no amplía permisos ni inventa recibos
 - Chinches conservan identidad, huella, audio, trazos y capturas
+
+## CTR-SALA-VIDEO-PRIVADO-V1
+
+- Componentes: SYS-SALA, GAS-SALA.
+- Evidencia: Propuesta y referencia video en SHEET-SALA; original Drive conserva acceso..
+- Entrada/campos: `credencial Sala vigente`, `prop_id`, `referencia Drive exacta asociada a propuesta`.
+- Salida: MP4 ligero autenticado en reproductor nativo, descriptor AES-256-GCM autorizado por credencial Sala, objeto cifrado inmutable por commit y SHA256; llaves sólo en propiedades privadas del backend.
+
+- Validar rol antes de leer bytes
+- No aceptar URL/DriveID arbitrario fuera de propuesta
+- Nunca persistir claves ni videos privados en publicación o telemetría
+- Ningún POST decide ni cambia permisos
+- Una carta activa/una descarga coalescida; liberar Blob al salir
+- Error visible y reintento acotado; decisiones no cambian por fallo del medio
+- No copiar credencial de Drive ni publicar MP4 en claro
+- El productor existente cifra una copia ligera; verifica original MD5, duración/audio y SHA256 antes de registrar llave privada
+- El original conserva permisos; cache técnico privado no cambia PROPUESTAS/DECISIONES ni introduce binarios en Sheets

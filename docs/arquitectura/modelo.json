@@ -13805,6 +13805,27 @@
       "rollback": "Revertir frontend/manifiesto conservando archivos, versiones, chinches, recibos y permisos."
     },
     {
+      "id": "CHG-SALA-VIDEO-IPHONE-20261020",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SHEET-SALA",
+        "EXT-GMAIL"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección solicita corregir y publicar reproducción en iPhone dentro de Sala; autorización directa en conversación20-oct.",
+      "proposal": "PlanA probado en editor: cinco lecturas Drive no disponibles para backend. PlanB productor existente prepara MP4 ligero privado, cifra AES256GCM, publica únicamente ciphertext inmutable y registra llave por propuesta en backend autenticado. Reproductor nativo verifica hashes, descifra en memoria, limpia al salir y permite fullscreen en el OS.",
+      "tests": [
+        "Contrato sintético: rol, propuesta, archivo Drive estricto, tamaño y mime; rechazo de recursos arbitrarios.",
+        "Chromium/WebKit: bytes reales sintéticos, reproducción, seek, revocación de Blob al cambiar carta, reintento, fullscreen y cero decisiones reales.",
+        "Recorrido publicado: corte actual y cero escrituras de negocio; aceptación iPhone físico separada."
+      ],
+      "deployment": "Backend original v79 publicado y fuente releída, preserva Presentaciones v78 y URL/as/acceso. Frontend, copias actuales y verificación publicada pendientes; reproducción sintética Chromium/WebKit390/1280 comprobada.",
+      "rollback": "Revertir interfaz y versión de implementación; conservar archivos, permisos, propuestas y decisiones."
+    },
+    {
       "id": "CHG-CHINCHES-AUDIO-IPAD-20261020",
       "components": [
         "SYS-YOD-OS",
@@ -13814,7 +13835,7 @@
         "SYS-AMALAYA",
         "SYS-EMD"
       ],
-      "status": "propuesto",
+      "status": "implementado_local",
       "authorization": "Reporte directo de Alejandro20oct: Audio inválido bloquea Clavar tras voz y dibujo en iPad. Orden vigente integrar y mantener la misma mecánica común y publicar reparación.",
       "proposal": "Normalizar únicamente sintaxis MIME de contenedores conocidos conservando bytes y cabecera original. Persistir borrador local antes de validar, con recuperación explícita y descarga del original aun si audio no pasa validación. No intercambiar código de una grabación abierta, descartar medios ni crear recibo de entrega sin archivo completo.",
       "tests": [
@@ -13822,7 +13843,7 @@
         "Dobles aislados de grabador, IndexedDB, errores de cuota, recarga y recuperación de voz/trazos/capturas; Chromium/WebKit.",
         "Paquete versionado, hashes y consumidores observados; QA de regresión y publicación separadas."
       ],
-      "deployment": "Propuesta previa; paquete1.0.0 observado. Reparación aún no implementada ni publicada. Pestaña iPad ya abierta no recuperada.",
+      "deployment": "996 pruebas locales PASS; Chromium recuperación/recarga/cuota/rescate1.0.0 y micrófono sintético real PASS. Paquete1.1.0 en PR308, sin despliegue acreditado aún; iPad particular no recuperado.",
       "rollback": "Reactivar snapshot1.0.0 por PR y herramientas canónicas conservando borradores, originales, IDs y recibos."
     }
   ],
@@ -15756,6 +15777,35 @@
         "Sesión fija revisión; un conductor y órdenes monotónicas",
         "Respaldo no amplía permisos ni inventa recibos",
         "Chinches conservan identidad, huella, audio, trazos y capturas"
+      ]
+    },
+    {
+      "id": "CTR-SALA-VIDEO-PRIVADO-V1",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA"
+      ],
+      "source": "Propuesta y referencia video en SHEET-SALA; original Drive conserva acceso.",
+      "input": [
+        "credencial Sala vigente",
+        "prop_id",
+        "referencia Drive exacta asociada a propuesta"
+      ],
+      "output": [
+        "MP4 ligero autenticado en reproductor nativo",
+        "descriptor AES-256-GCM autorizado por credencial Sala",
+        "objeto cifrado inmutable por commit y SHA256; llaves sólo en propiedades privadas del backend"
+      ],
+      "invariants": [
+        "Validar rol antes de leer bytes",
+        "No aceptar URL/DriveID arbitrario fuera de propuesta",
+        "Nunca persistir claves ni videos privados en publicación o telemetría",
+        "Ningún POST decide ni cambia permisos",
+        "Una carta activa/una descarga coalescida; liberar Blob al salir",
+        "Error visible y reintento acotado; decisiones no cambian por fallo del medio",
+        "No copiar credencial de Drive ni publicar MP4 en claro",
+        "El productor existente cifra una copia ligera; verifica original MD5, duración/audio y SHA256 antes de registrar llave privada",
+        "El original conserva permisos; cache técnico privado no cambia PROPUESTAS/DECISIONES ni introduce binarios en Sheets"
       ]
     }
   ],
