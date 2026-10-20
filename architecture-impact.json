@@ -1,22 +1,17 @@
 {
-  "model_revision": "2026-10-20.chinches-paquete.1",
-  "proposal_id": "CHG-CHINCHES-PAQUETE-20261020",
-  "summary": "Paquete semver con hashes/snapshots inmutables; instalación y actualización condicional por bloques; registro único por consumidor; revisión incremental privada separando recibido/revisado/cumplido; skill persistida. Refinamiento de cobertura: entradas auditadas sin módulo propio conservan instalación pendiente; el plan sólo reutiliza la auditoría con commit y cargadores externos observados idénticos.",
+  "model_revision": "2026-10-20.ruisenor-interaccion-volumenes.2",
+  "proposal_id": "CHG-RUISENOR-INTERACCION-VOLUMENES-20261020",
+  "summary": "Interacción y volúmenes frontend implementados localmente: A puente conACK/contexto visible; B DOM sin foco y confirmación sólo nativa; C intención recuperable. Borrador porcaso/escenario/base sinStore/finanzas/autosave. QA final y PR/Pages pendientes; persistencia/cálculo canónicos requieren ampliar alcance Apps Script/Sheets.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-SALA",
-    "SYS-INVERSION",
-    "SYS-AMALAYA",
-    "SYS-EMD"
+    "SYS-DESPACHO",
+    "SYS-DESPACHO-3D",
+    "SYS-POTENCIALES"
   ],
   "tests": [
-    "node scripts/chinches-paquete.cjs verificar",
-    "node --test tests/chinches-paquete.test.cjs tests/chinches-revision.test.cjs tests/chinches-reporte.test.cjs tests/chinches-estado.test.cjs",
-    "node scripts/arquitectura.cjs --check",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs"
+    "Bloques locales informados: controller23, workspace-navigation24, live70 y boot10nuevos+11previos; consumidorPPP suite150. Conteo total Portal y QA final se concilian por root antes de publicar.",
+    "Cobertura de origen/ventana/nonce, ACK/contexto visible, lectura nativa frente a legacy, edición en curso, respuestas tardías, intención recuperable, duplicados y conciliación sin reenvío de mutación.",
+    "Validación final pendiente: recorrido Chromium escritorio/móvil con datos sintéticos sin escrituras, suite y verificadores obligatorios, PR/Pages y cotejo de archivos; aceptación privada y audio físico se acreditan aparte."
   ],
-  "rollback": "Revertir release/registro y bloque administrado a snapshot anterior; preservar IDs, medios, recibos, permisos y almacenamiento."
+  "rollback": "Deshabilitar el selector/routing del piloto o revertir frontend por PR conservando escenarios, historial, solicitudes, recibos y permisos; no borrar ni restaurar datos para revertir la interfaz."
 }

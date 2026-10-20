@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-20.chinches-paquete.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-20.ruisenor-interaccion-volumenes.2
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -1058,6 +1058,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Coordinador reporta publicación API V66 desde V65: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma URL/scopes/ACL y editor == candidato == versión inmutable V66. GET funcional posterior pendiente; sin POST de pruebas de negocio. · Estado: declarado · Revisión: Apps Script version 66; 2026-10-05
 - Coordinador reporta GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; dos escenarios conservan IDs y 269 campos, geometría pendiente. Acta privada fuera del repositorio. Vertical y otros casos no acreditados. · Estado: declarado · Revisión: Apps Script version 66; cotejo Patrimonial 2026-10-05
 - [Tarjetas nativas del PPP patrimonial con datos del Store; pruebas y despliegue de PR17. · Estado: codigo · yodesarrollomx/potenciales-yod · ppp-agent-cards.js · Revisión: d150ee0c323803869cc52b084a1911f09e2cdc91](https://github.com/yodesarrollomx/potenciales-yod/blob/d150ee0c323803869cc52b084a1911f09e2cdc91/ppp-agent-cards.js)
+- Borrador local aislado por caso/escenario/base de1/2/3volúmenes; cantidades independientes sin cálculo financiero, Store ni autosave; producción pendiente. · Estado: codigo · yodesarrollomx/potenciales-yod · ppp-volumes.js · Revisión: working\_tree\_2026-10-20
 
 **Evidencia de conexiones:**
 
@@ -1136,6 +1137,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [Puesto compartido con PPP y ejecución de intención explícita; observar no otorga permisos. · Estado: codigo · yodesarrollomx/yod-portal · despacho3d/agent-workspace.mjs · Revisión: 5eca769947e60bc5b51389244393e0f63817cf86](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/agent-workspace.mjs)
 - [Publicación126 con bitácora, geometría de avatar, presencia y estaciones aisladas por caso; evidencia de navegador distingue fixtures de solicitudesGSI reales. · Estado: ejecucion · yodesarrollomx/yod-portal · docs/arquitectura/despacho126-resultados.md · Revisión: 0351157a71ec9fc3c5b3beae70702c92646ece58](https://github.com/yodesarrollomx/yod-portal/blob/0351157a71ec9fc3c5b3beae70702c92646ece58/docs/arquitectura/despacho126-resultados.md)
 - Puesto2.0 implementado localmente en puesto-agente.mjs/css: avatar existente, hilo visible, vistas propias, resumen de snapshot confirmado y retorno clásico; publicación y recorrido Chromium HTTP pendientes. · Estado: codigo · yodesarrollomx/yod-portal · docs/arquitectura/puesto-agente2.md · Sin revisión inmutable en esta referencia
+- Interacción frontend local por rutas A/B/C, voz con confirmación y tarjetas con evidencia; producción pendiente. · Estado: codigo · yodesarrollomx/yod-portal · despacho3d/agent-interaction.mjs · Revisión: working\_tree\_2026-10-20
 
 **Evidencia de conexiones:**
 

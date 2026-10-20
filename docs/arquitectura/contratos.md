@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-20.chinches-paquete.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-20.ruisenor-interaccion-volumenes.2 · 2026-10-20.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 

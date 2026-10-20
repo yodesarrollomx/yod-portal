@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-20.chinches-paquete.1",
+  "revision": "2026-10-20.ruisenor-interaccion-volumenes.2",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -294,6 +294,13 @@
           "commit": "d150ee0c323803869cc52b084a1911f09e2cdc91",
           "claim": "Tarjetas nativas del PPP patrimonial con datos del Store; pruebas y despliegue de PR17.",
           "status": "codigo"
+        },
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "ppp-volumes.js",
+          "source_revision": "working_tree_2026-10-20",
+          "status": "codigo",
+          "claim": "Borrador local aislado por caso/escenario/base de1/2/3volúmenes; cantidades independientes sin cálculo financiero, Store ni autosave; producción pendiente."
         }
       ],
       "data_entities": [
@@ -2947,6 +2954,13 @@
           "path": "docs/arquitectura/puesto-agente2.md",
           "claim": "Puesto2.0 implementado localmente en puesto-agente.mjs/css: avatar existente, hilo visible, vistas propias, resumen de snapshot confirmado y retorno clásico; publicación y recorrido Chromium HTTP pendientes.",
           "status": "codigo"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "despacho3d/agent-interaction.mjs",
+          "source_revision": "working_tree_2026-10-20",
+          "status": "codigo",
+          "claim": "Interacción frontend local por rutas A/B/C, voz con confirmación y tarjetas con evidencia; producción pendiente."
         }
       ],
       "data_entities": [
@@ -8678,6 +8692,78 @@
         "Desactivar SALA_MEDIOS_PUBLICOS detiene sólo nuevas externalizaciones. Si ya existe un medio externo, conservar lector compatible, manifiesto, pin del recibo, releases inmutables y sus activos. No volver a un lector antiguo ni retirar activos hasta repatriar y verificar todos los bytes referenciados, publicar un FULL íntegro dentro de 900 MiB y comprobar recibo fresco y consumidores. No borrar históricos ni alterar ACL, decisiones, destinatarios o reglas de negocio.",
         "Fuera de ventana14 días no equivale a retirada: lectura de historial completo declarada y validada, latest real por editor/pid/lámina y estado editorial vigente comprobado antes de producir. Retirada más reciente prevalece; cero elegibles actuales no autoriza nuevas decisiones o reencolados. Sin backend verificado, flag0 e historial no confirmado."
       ]
+    },
+    {
+      "id": "VOLUMENES",
+      "titulo": "Piloto de navegación del agente y borrador por volúmenes",
+      "boards": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES"
+      ],
+      "problem": "El puesto requería navegación visible y una captura independiente de uno, dos o tres volúmenes sin confundir consulta, intención y aplicación.",
+      "benefit": "Navega el PPP real por protocolos comprobables y conserva la intención cuando no hay confirmación; captura cantidades por volumen en un borrador explícito.",
+      "metric": "Una navegación se confirma sólo con vista y contexto exactos; cero escrituras de negocio por fallback o selector. Borrador aislado por caso/escenario/base con valor inicial1.",
+      "dependencies": [],
+      "effort": "Frontend implementado localmente; QA y publicación pendientes. Segunda etapa canónica separada.",
+      "decision": "implementada",
+      "prerequisites": [
+        "Perfil autorizado y piloto exacto; contexto actual del mismo caso, escenario y revisión.",
+        "Puente nativo y capacidad de navegación anunciados para certificar sección/versión; DOM legacy sólo acredita apertura visual pendiente.",
+        "Editor de volúmenes aislado: captura cantidades; no activa writer nativo, autosave ni cálculo financiero."
+      ],
+      "tasks": [
+        "A: enviar navegación al puente y aceptar sólo ACK/contexto/visibilidad exactos.",
+        "B: abrir y mostrar la sección DOM sin focus, click ni input/change; sólo confirmar con contexto nativo fresco, mantener legacy pendiente.",
+        "C: conservar tarjeta de intención con reintento/confirmación; cambios numéricos siguen sin aplicar y recibos inciertos sólo se concilian.",
+        "Ofrecer1/2/3 volúmenes inicial1, campos independientes y descarga manual del borrador sin persistencia del navegador, Store ni efectos financieros.",
+        "Completar QA final, PR/Pages y evidencia diferenciada de publicación y aceptación."
+      ],
+      "acceptance": [
+        "Texto completo del usuario puede navegar; deltas de voz no ejecutan sin confirmación. Prosa del agente, citas y documentos no son instrucciones ejecutables.",
+        "Origen, ventana, nonce, caso, escenario, revisión y capacidad coinciden. Cambio de contexto descarta respuestas tardías y revocación limpia datos.",
+        "RutaB no roba foco ni dispara edición; legacy no se promueve a contexto nativo confirmado.",
+        "Cambiar de ruta no reenvía mutaciones inciertas; la tarjeta conserva intención y límites reales.",
+        "Volúmenes capturan cantidades independientes por caso/escenario/revisión base. No producen utilidad, deuda, TIR, presupuesto ni guardado canónico."
+      ]
+    },
+    {
+      "id": "VOLUMENESCANONICOS",
+      "titulo": "Cuerpos y etapas canónicos por versión del PPP",
+      "boards": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SYS-DESPACHO-3D"
+      ],
+      "problem": "El borrador frontend por volúmenes aún no está guardado en el modelo canónico ni participa en fórmulas y flujo por etapas.",
+      "benefit": "Comparar versiones con cuerpos independientes, recursos comunes contados una sola vez y cálculo nativo trazable.",
+      "metric": "Compatibilidad exacta del caso legado de un cuerpo; agregados sin duplicación y guardado con CAS, recibo y conciliación por solicitud.",
+      "dependencies": [
+        "VOLUMENES"
+      ],
+      "effort": "Por estimar tras acordar esquema y fórmulas sobre el modelo canónico.",
+      "decision": "pendiente",
+      "prerequisites": [
+        "Alejandro debe ampliar explícitamente la restricción original «No tocar Apps Script ni Sheets» para esta etapa; no hay autorización técnica implícita por publicar el frontend.",
+        "Inventariar libros, fórmulas, versiones y etapas vigentes; definir esquema versionado y migración reversible sin alterar la base inmutable.",
+        "Confirmar capacidades, campos editables y semántica de endpoints existentes; cualquier extensión se propone y revisa antes de instalarse."
+      ],
+      "tasks": [
+        "Definir esquema por case_id/version_id/base_revision con cuerpos y etapas independientes, IDs estables y recursos comunes asignados sin duplicar.",
+        "Migrar el modelo de un cuerpo como cuerpo1 compatible; conservar originales y versión base inmutable, sin multiplicar importes al elegir2/3.",
+        "Instalar lectura y escritura canónicas sólo tras aprobación, con capability guard, actor/caso/version/revisión y request_id estable; conciliación de recibo perdido.",
+        "Calcular con fórmulas nativas cantidades/costos/ingresos por cuerpo/etapa y consolidación explícita; separar núcleos, elevadores y áreas comunes.",
+        "Validar con fixtures aislados, compatibilidad1cuerpo, escenarios2/3, conflictos, reentrada y recibos; aceptación real separada."
+      ],
+      "acceptance": [
+        "Históricos/base no se sobrescriben ni migran a ciegas; una versión nueva registra el origen y su revisión.",
+        "Núcleos, elevadores y áreas comunes tienen identidad y alcance explícitos y se suman una sola vez; no se multiplican automáticamente por número de cuerpos.",
+        "No se crea motor financiero paralelo: las fórmulas del libro canónico producen resultados y flujos por etapas.",
+        "Sin capability, permiso, revisión o esquema compatibles se rechaza antes de escribir. Request_id ambiguo se concilia sin reenviar ni elevar revisión.",
+        "No se publica backend ni se modifican hojas de producción hasta ampliar el alcance y completar pruebas aisladas y recibos de despliegue."
+      ]
     }
   ],
   "changes": [
@@ -13674,6 +13760,25 @@
       ],
       "deployment": "Herramientas y registro se publican por PR. No acredita recepción/replay privados ni versión GAS por fuente. Actualización coordinada, no hot-swap durante grabaciones.",
       "rollback": "Revertir release/registro y bloque administrado a snapshot anterior; preservar IDs, medios, recibos, permisos y almacenamiento."
+    },
+    {
+      "id": "CHG-RUISENOR-INTERACCION-VOLUMENES-20261020",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES"
+      ],
+      "status": "implementado_local",
+      "authorization": "Continuación solicitada por Dirección20oct: selector de uno, dos o tres volúmenes por escenario y control visible del PPP desde el agente; root coordina diagnóstico, alcance y publicación.",
+      "proposal": "Frontend local implementado: agent-interaction conserva la intención directa del humano y elige A puente de navegación con ACK y contexto visible; B apertura DOM sin foco/eventos de edición, confirmada sólo con contexto nativo y legacy pendiente; C tarjeta de intención recuperable que no cambia cifras. Texto cerrado ejecuta navegación; deltas de voz requieren confirmación explícita y notifyInteraction comunica estado comprobado. workspace-navigation valida origen, ventana, nonce, caso, escenario, revisión, capabilities y visibilidad. Puesto renderiza tarjetas y conserva el avatar. PPPVersionBridge y PPPView permiten navegación de consulta; editor PPPVolumes aislado por caso/escenario/revisión base permite1/2/3 volúmenes inicial1 y cantidades independientes, sin finanzas, Store, persistencia ni autosave. No escribe hojas ni añade GAS ni un controlador general de Workspace. La persistencia/cálculo canónicos por versión y etapas son segunda etapa pendiente de decisión y de ampliar la restricción original sobre Apps Script/Sheets. Las declaraciones de navegación y el pin PPP de la comprobación automatizada sólo describen compatibilidad de frontend; no amplían ACL ni capabilities de negocio.",
+      "tests": [
+        "Bloques locales informados: controller23, workspace-navigation24, live70 y boot10nuevos+11previos; consumidorPPP suite150. Conteo total Portal y QA final se concilian por root antes de publicar.",
+        "Cobertura de origen/ventana/nonce, ACK/contexto visible, lectura nativa frente a legacy, edición en curso, respuestas tardías, intención recuperable, duplicados y conciliación sin reenvío de mutación.",
+        "Validación final pendiente: recorrido Chromium escritorio/móvil con datos sintéticos sin escrituras, suite y verificadores obligatorios, PR/Pages y cotejo de archivos; aceptación privada y audio físico se acreditan aparte."
+      ],
+      "deployment": "Código frontend implementado localmente en consumidores Portal y PPP; PR, integración y Pages pendientes. QA final en curso. No acreditar guardado canónico de volúmenes, cálculo por cuerpos, edición financiera, backend nuevo ni control general de Workspace.",
+      "rollback": "Deshabilitar el selector/routing del piloto o revertir frontend por PR conservando escenarios, historial, solicitudes, recibos y permisos; no borrar ni restaurar datos para revertir la interfaz."
     }
   ],
   "data_contracts": [
@@ -16410,7 +16515,9 @@
       "prefix": ".github/workflows/conocimiento-browser.yml",
       "components": [
         "SYS-YOD-OS",
-        "SYS-DESPACHO"
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES"
       ]
     },
     {
@@ -17959,6 +18066,114 @@
         "SYS-INVERSION",
         "SYS-AMALAYA",
         "SYS-EMD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "docs/arquitectura/ruisenor-interaccion-volumenes.md",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/agent-interaction.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/agent-interaction-integration.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/agent-interaction-boot.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-live-interaction.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/workspace-navigation.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/ruisenor-interaction-test.html",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/ruisenor-interaction-fixture.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "ppp-version-bridge.js",
+      "components": [
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "ppp-volumes.js",
+      "components": [
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "ppp-volumes.css",
+      "components": [
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "tests/fixtures/ruisenor-volumenes.html",
+      "components": [
+        "SYS-POTENCIALES"
       ]
     }
   ],

@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-20.chinches-paquete.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-20.ruisenor-interaccion-volumenes.2 · 2026-10-20.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 
@@ -595,3 +595,65 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 - Todos los históricos conservan bytes y URLs. Vídeo, audio y muestras siguen en Pages en fase1; snapshots de datos siguen siendo releases draft privados.
 - Desactivar SALA_MEDIOS_PUBLICOS detiene sólo nuevas externalizaciones. Si ya existe un medio externo, conservar lector compatible, manifiesto, pin del recibo, releases inmutables y sus activos. No volver a un lector antiguo ni retirar activos hasta repatriar y verificar todos los bytes referenciados, publicar un FULL íntegro dentro de 900 MiB y comprobar recibo fresco y consumidores. No borrar históricos ni alterar ACL, decisiones, destinatarios o reglas de negocio.
 - Fuera de ventana14 días no equivale a retirada: lectura de historial completo declarada y validada, latest real por editor/pid/lámina y estado editorial vigente comprobado antes de producir. Retirada más reciente prevalece; cero elegibles actuales no autoriza nuevas decisiones o reencolados. Sin backend verificado, flag0 e historial no confirmado.
+
+## VOLUMENES · Piloto de navegación del agente y borrador por volúmenes
+
+- Tableros: SYS-YOD-OS, SYS-DESPACHO, SYS-DESPACHO-3D, SYS-POTENCIALES.
+- Problema: El puesto requería navegación visible y una captura independiente de uno, dos o tres volúmenes sin confundir consulta, intención y aplicación.
+- Beneficio esperado: Navega el PPP real por protocolos comprobables y conserva la intención cuando no hay confirmación; captura cantidades por volumen en un borrador explícito.
+- Medición: Una navegación se confirma sólo con vista y contexto exactos; cero escrituras de negocio por fallback o selector. Borrador aislado por caso/escenario/base con valor inicial1.
+- Dependencias: Sin dependencias previas.
+- Esfuerzo: Frontend implementado localmente; QA y publicación pendientes. Segunda etapa canónica separada.. Decisión: **implementada**.
+
+### Requisitos previos
+
+- Perfil autorizado y piloto exacto; contexto actual del mismo caso, escenario y revisión.
+- Puente nativo y capacidad de navegación anunciados para certificar sección/versión; DOM legacy sólo acredita apertura visual pendiente.
+- Editor de volúmenes aislado: captura cantidades; no activa writer nativo, autosave ni cálculo financiero.
+
+### Tareas
+
+1. A: enviar navegación al puente y aceptar sólo ACK/contexto/visibilidad exactos.
+2. B: abrir y mostrar la sección DOM sin focus, click ni input/change; sólo confirmar con contexto nativo fresco, mantener legacy pendiente.
+3. C: conservar tarjeta de intención con reintento/confirmación; cambios numéricos siguen sin aplicar y recibos inciertos sólo se concilian.
+4. Ofrecer1/2/3 volúmenes inicial1, campos independientes y descarga manual del borrador sin persistencia del navegador, Store ni efectos financieros.
+5. Completar QA final, PR/Pages y evidencia diferenciada de publicación y aceptación.
+
+### Criterios de aceptación
+
+- Texto completo del usuario puede navegar; deltas de voz no ejecutan sin confirmación. Prosa del agente, citas y documentos no son instrucciones ejecutables.
+- Origen, ventana, nonce, caso, escenario, revisión y capacidad coinciden. Cambio de contexto descarta respuestas tardías y revocación limpia datos.
+- RutaB no roba foco ni dispara edición; legacy no se promueve a contexto nativo confirmado.
+- Cambiar de ruta no reenvía mutaciones inciertas; la tarjeta conserva intención y límites reales.
+- Volúmenes capturan cantidades independientes por caso/escenario/revisión base. No producen utilidad, deuda, TIR, presupuesto ni guardado canónico.
+
+## VOLUMENESCANONICOS · Cuerpos y etapas canónicos por versión del PPP
+
+- Tableros: SYS-POTENCIALES, GAS-PORTERO, SHEET-PPP-MODELOS, SYS-DESPACHO-3D.
+- Problema: El borrador frontend por volúmenes aún no está guardado en el modelo canónico ni participa en fórmulas y flujo por etapas.
+- Beneficio esperado: Comparar versiones con cuerpos independientes, recursos comunes contados una sola vez y cálculo nativo trazable.
+- Medición: Compatibilidad exacta del caso legado de un cuerpo; agregados sin duplicación y guardado con CAS, recibo y conciliación por solicitud.
+- Dependencias: VOLUMENES.
+- Esfuerzo: Por estimar tras acordar esquema y fórmulas sobre el modelo canónico.. Decisión: **pendiente**.
+
+### Requisitos previos
+
+- Alejandro debe ampliar explícitamente la restricción original «No tocar Apps Script ni Sheets» para esta etapa; no hay autorización técnica implícita por publicar el frontend.
+- Inventariar libros, fórmulas, versiones y etapas vigentes; definir esquema versionado y migración reversible sin alterar la base inmutable.
+- Confirmar capacidades, campos editables y semántica de endpoints existentes; cualquier extensión se propone y revisa antes de instalarse.
+
+### Tareas
+
+1. Definir esquema por case_id/version_id/base_revision con cuerpos y etapas independientes, IDs estables y recursos comunes asignados sin duplicar.
+2. Migrar el modelo de un cuerpo como cuerpo1 compatible; conservar originales y versión base inmutable, sin multiplicar importes al elegir2/3.
+3. Instalar lectura y escritura canónicas sólo tras aprobación, con capability guard, actor/caso/version/revisión y request_id estable; conciliación de recibo perdido.
+4. Calcular con fórmulas nativas cantidades/costos/ingresos por cuerpo/etapa y consolidación explícita; separar núcleos, elevadores y áreas comunes.
+5. Validar con fixtures aislados, compatibilidad1cuerpo, escenarios2/3, conflictos, reentrada y recibos; aceptación real separada.
+
+### Criterios de aceptación
+
+- Históricos/base no se sobrescriben ni migran a ciegas; una versión nueva registra el origen y su revisión.
+- Núcleos, elevadores y áreas comunes tienen identidad y alcance explícitos y se suman una sola vez; no se multiplican automáticamente por número de cuerpos.
+- No se crea motor financiero paralelo: las fórmulas del libro canónico producen resultados y flujos por etapas.
+- Sin capability, permiso, revisión o esquema compatibles se rechaza antes de escribir. Request_id ambiguo se concilia sin reenviar ni elevar revisión.
+- No se publica backend ni se modifican hojas de producción hasta ampliar el alcance y completar pruebas aisladas y recibos de despliegue.

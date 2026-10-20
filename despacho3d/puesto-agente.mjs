@@ -82,6 +82,7 @@ export function mountPuestoAgente({dialog,sidebar,workspaceHost,workspace,getSel
   move(form,chatContent);move(byId('station-message-status'),chatContent);move(byId('station-write'),chatContent);
   const composerTools=element('div',undefined,'puesto-composer-tools');form.append(composerTools);for(const id of ['voice-start','voice-interrupt','voice-stop','voice-play','station-send'])move(byId(id),composerTools);
   const prompts=element('div',undefined,'puesto-prompts');prompts.setAttribute('aria-label','Ideas para conversar');for(const label of ['¿Qué sigue?','Resumen del caso','¿Qué cambió?'])prompts.append(button(label,()=>{if(!valid())return;byId('station-message').value=label;byId('station-message').focus();}));chatContent.insertBefore(prompts,form);
+  const actions=element('section',undefined,'puesto-interactions');actions.setAttribute('aria-label','Acciones del agente');actions.hidden=true;thread.append(actions);
   previousChatOpen=chat.open;chat.open=true;
   const essential=element('details',undefined,'puesto-essential');essential.open=win.innerWidth>760;essential.append(element('summary','Lo esencial del caso'));const essentialBody=element('div',undefined,'puesto-essential-body'),version=element('p','Sin versión confirmada','puesto-version'),metrics=element('dl',undefined,'puesto-metrics'),nextTitle=element('small','QUÉ SIGUE','puesto-section-label'),next=element('p',undefined,'puesto-next'),decide=button('Ver siguiente decisión',()=>showView('activity'),'puesto-decide'),pendingHeading=element('h3','Pendientes'),pending=element('ul',undefined,'puesto-pending'),access=element('nav',undefined,'puesto-access');access.setAttribute('aria-label','Accesos del caso');
   for(const [tab,label]of [['ppp','Ver plan completo'],['activity','Trabajo'],['sources','Expediente']])access.append(button(label,()=>showView(tab)));
@@ -91,7 +92,7 @@ export function mountPuestoAgente({dialog,sidebar,workspaceHost,workspace,getSel
   let following=true;thread.addEventListener('scroll',()=>{following=thread.scrollHeight-thread.clientHeight-thread.scrollTop<80;});
   observer=new win.MutationObserver(()=>{if(!valid())return;updateWorkspace();updateStatus();if(following)thread.scrollTop=thread.scrollHeight;});
   observer.observe(byId('station-messages'),{childList:true,subtree:true});observer.observe(byId('voice-transcript'),{childList:true,subtree:true,characterData:true});observer.observe(workspace.root,{childList:true,subtree:true});
-  nodes={head,name,project,status,back,presence,presenceLabel,thread,composerTools,prompts,essential,version,metrics,next,pending,settings,settingsBody,technical,onTab,chat,chatContent};return true;
+  nodes={head,name,project,status,back,presence,presenceLabel,thread,composerTools,prompts,actions,essential,version,metrics,next,pending,settings,settingsBody,technical,onTab,chat,chatContent};return true;
  }
  function updateWorkspace(){
   if(!valid()||!nodes)return;
@@ -135,5 +136,20 @@ export function mountPuestoAgente({dialog,sidebar,workspaceHost,workspace,getSel
   dialog.classList.add('puesto2');doc.documentElement.classList.add('puesto2-open');
   try{if(win.parent!==win&&win.parent.location.origin===win.location.origin){const pill=win.parent.document.getElementById('despachoEquipo');if(pill){parentPill={node:pill,hidden:pill.hidden};pill.hidden=true;}}}catch{}nodes.name.textContent=value.avatar?.name||value.name;nodes.project.textContent=value.name;showView('conversation');updateWorkspace();updateStatus();return true;
  }
- return{setSelection,renderState(state={}){voiceState=state;updateStatus();},updateWorkspace,showView,isActive:()=>valid(),dispose:deactivate};
+ function renderInteractions(records=[],handlers={}){
+  if(!valid()||!nodes)return;
+  const current=records.filter(r=>r.context?.case_id===selection.case_id).slice(-3);
+  nodes.actions.hidden=!current.length;nodes.actions.replaceChildren();
+  for(const record of current){
+   const card=element('article',undefined,'puesto-interaction');card.dataset.actionState=record.state;
+   card.append(element('small','Acción en esta pantalla'),element('p',record.text,'puesto-interaction-text'),element('strong',record.summary),element('p',record.next));
+   if(record.context.scenario_id)card.append(element('small','Versión '+record.context.scenario_id));
+   if(record.state==='awaiting_confirmation')card.append(button('Confirmar esta intención',()=>{if(valid())void handlers.confirm?.(record.action_id);}));
+   if(['pending','uncertain'].includes(record.state))card.append(button(record.request_id?'Comprobar el mismo recibo':'Volver a abrir la sección',()=>{if(valid())void handlers.retry?.(record.action_id);}));
+   const evidence=record.evidence?.at(-1);
+   if(evidence)card.append(element('small',evidence.kind==='mutation_receipt'?'Recibo comprobado · '+record.request_id:'Vista comprobada · '+new Date(evidence.observed_at).toLocaleTimeString('es-MX',{timeZone:'America/Hermosillo'})));
+   nodes.actions.append(card);
+  }
+ }
+ return{setSelection,renderState(state={}){voiceState=state;updateStatus();},renderInteractions,updateWorkspace,showView,isActive:()=>valid(),dispose:deactivate};
 }

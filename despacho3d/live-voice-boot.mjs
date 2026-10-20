@@ -1,4 +1,5 @@
-import {isPuesto2,mountPuestoAgente,presentationLocation} from './puesto-agente.mjs?v=puesto2fix1';
+import {isPuesto2,mountPuestoAgente,presentationLocation} from './puesto-agente.mjs?v=ruisenor1';
+import {createAgentInteraction} from './agent-interaction.mjs?v=ruisenor1';
 import {officeFastSessions} from './office-preparation.mjs?v=unified283';
 import {mountAvatarCard} from './avatar-card.mjs?v=126';
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
@@ -6,9 +7,9 @@ import {createEntryPreparation} from './voice-preparation.mjs?v=2';
 import {residentAccessDecision} from './resident-agents.mjs?v=unified283';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=first292';
 import {stationIdentity} from './project-station.mjs?v=140';
-import {createLiveVoice} from './live-voice.mjs?v=141';
+import {createLiveVoice} from './live-voice.mjs?v=ruisenor1';
 import {voiceView} from './voice-view.mjs?v=141';
-import {createWorkspace} from './agent-workspace.mjs?v=puesto2';
+import {createWorkspace} from './agent-workspace.mjs?v=ruisenor1';
 import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=entregas291';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=132';
 import {groupTranscriptFragments} from './live-transcript.mjs';
@@ -65,6 +66,7 @@ if (open) {
   const node = id => dialog.querySelector('#' + id);
   const portraitHost=document.createElement('div');portraitHost.className='station-profile-portrait';sidebar.insertBefore(portraitHost,node('voice-title'));const portrait=mountAvatarCard({container:portraitHost,compact:true});
   const fragments = []; let selection = null, discussionDraftCase = null, generation = 0, dismissing = false, transcriptCase = null, freshTranscript = false, previousFocus = null, voiceCaseId = null, accessPaused = false;
+  let interaction=null,voiceInteractionEpoch=window.crypto.randomUUID();
   const agentName=()=>selection?stationIdentity(selection).name:'Autón';
   const visibility=value=>window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:value}));
   const setText = (id,text) => {if(node(id).textContent!==text)node(id).textContent=text;};
@@ -89,7 +91,21 @@ if (open) {
     }
     return false;
   }
-  const workspace=createWorkspace({container:workspaceHost,transport,onDiscuss:value=>{if(accessPaused||selection?.case_id!==value.case_id)return;discussionDraftCase=value.case_id;chatPanel.open=true;const field=node('station-message');const draft='Sobre la entrega «'+value.title+'» (revisión '+value.revision+'): ';field.value=field.value?field.value+'\n'+draft:draft;field.focus();field.setSelectionRange(field.value.length,field.value.length);node('station-message-status').textContent='Borrador para discutir la entrega. Todavía no se envió ni se creó un encargo.';},getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision,selection?.case_id);},onPresent:presentMeetingSlide,onPresentation:()=>puesto?.updateWorkspace()});
+  const workspace=createWorkspace({container:workspaceHost,transport,onDiscuss:value=>{if(accessPaused||selection?.case_id!==value.case_id)return;discussionDraftCase=value.case_id;chatPanel.open=true;const field=node('station-message');const draft='Sobre la entrega «'+value.title+'» (revisión '+value.revision+'): ';field.value=field.value?field.value+'\n'+draft:draft;field.focus();field.setSelectionRange(field.value.length,field.value.length);node('station-message-status').textContent='Borrador para discutir la entrega. Todavía no se envió ni se creó un encargo.';},getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision,selection?.case_id);},onPresent:presentMeetingSlide,onPresentation:()=>{puesto?.updateWorkspace();interaction?.observe();}});
+  const interactionContext=()=>{const c=workspace.interactionContext();return c?{...c,authorized:c.authorized&&!accessPaused&&dialog.open&&selection?.case_id===window.YodResidentAgents?.getSelection?.()?.case_id,pilot:pilot(selection)}:null;};
+  function renderInteractions(records){puesto?.renderInteractions(records,{confirm:id=>interaction.confirm(id),retry:id=>interaction.retry(id)});}
+  interaction=createAgentInteraction({getContext:interactionContext,
+    openWorkspace:async value=>{
+      const before=interactionContext();if(!before?.authorized||before.case_id!==value.context.case_id||!['ppp','activity','sources','knowledge'].includes(value.tab))return{status:'unavailable'};
+      workspace.setTab(value.tab);const shown=puesto?.showView(value.tab);
+      const after=interactionContext();if(!shown||!after?.authorized||after.case_id!==value.context.case_id||workspace.getTab()!==value.tab||dialog.dataset.puestoScreen!==value.tab)return{status:'unavailable'};
+      return{status:'confirmed',observed:{...after,tab:value.tab}};
+    },navigateBridge:value=>workspace.navigateInteraction(value),navigateAssisted:value=>workspace.navigateAssisted(value),
+    // Existing business writes keep their own proposal/receipt circuit. This
+    // presentation controller cannot create a replacement write on a timeout.
+    reconcile:async()=>({status:'unavailable'}),
+    onChange:records=>{renderInteractions(records);const last=records.at(-1);if(last&&['awaiting_confirmation','confirmed','pending','uncertain'].includes(last.state))voice?.notifyInteraction?.(last);}
+  });
   window.YodVoiceWorkspace={isOpen:()=>dialog.open&&!compactVoice,openForCase,prepareNearby:caseId=>{const s=window.YodResidentAgents?.getSelection?.();if(s?.case_id===caseId&&s.can_enqueue&&!active(voice.snapshot()))void voice.prepare(caseId,{connection:true});},releaseNearby:()=>{/* Entry preparation remains warm outside the approach radius. */},pauseEncounter:caseId=>{if(encounterCase===caseId&&voice.snapshot().phase==='listening'&&!voice.snapshot().muted){encounterPaused=true;voice.mute();}},show:tab=>{openBoard(tab);workspaceHost.scrollIntoView({block:'nearest'});}};
   window.dispatchEvent(new CustomEvent('yod-voice-workspace-ready'));
   let stopWatching=null,encounterCase=null,encounterPaused=false,micGrantedInPage=false,encounterNeedsMic=false;
@@ -104,7 +120,7 @@ if (open) {
     node('voice-work').textContent=route.goal?route.goal.title+' · '+goalDisplay(route.goal).label+' · '+route.next:'En espera · listo para el siguiente objetivo.';
   });
   const chat=new Conversation({transport,notify:renderChat});
-  let chatTimer=null,lastChatVoicePhase='idle';const typedTurns=[];
+  let chatTimer=null,lastChatVoicePhase='idle',stationSubmission=null;const typedTurns=[];
   function renderChat(state){
     if(!selection||state.selection&&state.selection.case_id!==selection.case_id)return;
     const host=node('station-messages'),messages=state.model?.messages||[];
@@ -122,7 +138,39 @@ if (open) {
   }
   dialog.querySelector('.station-chat').addEventListener('toggle',()=>{if(dialog.querySelector('.station-chat').open&&selection&&!chat.selection&&!chat.busy)void chat.open(AUTONES_MULTIPLES?selection.case_id:null);});
   node('station-message').addEventListener('input',()=>{if(discussionDraftCase)renderChat(chat);});
-  node('station-message-form').addEventListener('submit',async event=>{event.preventDefault();if(node('station-send').disabled)return;discussionDraftCase=null;const text=node('station-message').value,own=generation,id=selection?.case_id;const inVoice=active(voice.snapshot())||voice.snapshot().text_pending;const sentText=inVoice?text:chat.pending?.message||text;const sent=await(inVoice?voice.sendText(text):chat.send(text));if(sent&&own===generation&&selection?.case_id===id){if(inVoice)typedTurns.push({caseId:id,text});if(node('station-message').value===sentText)node('station-message').value='';renderChat(chat);}});
+  function stationMessageContext(own,id){
+    const resident=window.YodResidentAgents,current=resident?.getSelection?.();
+    return own===generation&&!accessPaused&&dialog.open&&selection?.case_id===id&&selection?.can_enqueue===true&&(!resident||current?.case_id===id&&current?.can_enqueue===true);
+  }
+  async function sendStationMessage(event){
+    event.preventDefault();if(node('station-send').disabled)return false;
+    const text=node('station-message').value,own=generation,id=selection?.case_id;
+    if(!stationMessageContext(own,id))return false;
+    if(stationSubmission&&!stationMessageContext(stationSubmission.own,stationSubmission.id))stationSubmission=null;
+    if(stationSubmission)return stationSubmission.text===text?stationSubmission.promise:false;
+    discussionDraftCase=null;
+    const submission={text,own,id,event_id:'text-'+window.crypto.randomUUID(),promise:null};stationSubmission=submission;
+    submission.promise=(async()=>{
+      const initialVoice=voice.snapshot(),inVoice=active(initialVoice)||initialVoice.text_pending;
+      if(pilot(selection)&&!chat.pending&&!initialVoice.text_pending){
+        let local;
+        try{local=await interaction.receive({role:'user',source:'text',complete:true,text,event_id:submission.event_id});}
+        catch{return false;}
+        if(!stationMessageContext(own,id))return false;
+        if(local.handled){if(node('station-message').value===text)node('station-message').value='';return true;}
+      }
+      if(!stationMessageContext(own,id))return false;
+      const sentText=inVoice?text:chat.pending?.message||text;
+      const sent=await(inVoice?voice.sendText(text):chat.send(text));
+      if(sent&&stationMessageContext(own,id)){
+        if(inVoice)typedTurns.push({caseId:id,text});
+        if(node('station-message').value===sentText)node('station-message').value='';renderChat(chat);
+      }
+      return !!sent;
+    })().finally(()=>{if(stationSubmission===submission)stationSubmission=null;});
+    return submission.promise;
+  }
+  node('station-message-form').addEventListener('submit',sendStationMessage);
   node('station-refresh').addEventListener('click',()=>void(chat.selection?chat.refresh():chat.open(AUTONES_MULTIPLES?selection?.case_id:null)));
   node('station-write').addEventListener('click',async()=>{
     if(!selection||accessPaused)return;const own=generation;suppressEncounter();node('station-write').disabled=true;
@@ -132,12 +180,18 @@ if (open) {
     if(own===generation)node('station-message').focus();
   });
   chatTimer=setInterval(()=>{if(dialog.open&&!document.hidden&&dialog.querySelector('.station-chat').open&&chat.selection&&!chat.busy&&!active(voice.snapshot()))void chat.refresh();},12000);
-  window.addEventListener('pagehide',()=>{clearInterval(chatTimer);chat.close();stopWatching?.();});
+  window.addEventListener('pagehide',()=>{clearInterval(chatTimer);interaction?.dispose();chat.close();stopWatching?.();});
+  function receiveStationTranscript(fragment){
+      if(selection?.case_id===voiceCaseId){renderTranscript(fragment);
+        if(pilot(selection)&&fragment.role==='user'){
+          const group=groupTranscriptFragments(fragments).find(g=>g.role==='user'&&g.fragments.includes(fragment));
+          if(group)void interaction.receive({role:'user',source:'voice',complete:false,text:group.text,event_id:'voice-'+voiceInteractionEpoch+'-'+group.start_ms});
+        }
+      }
+  }
   const voice = createLiveVoice({canOperate:()=>!accessPaused&&!!selection,actions:actionExecutor,audio: node('voice-audio'), forgetCredential:id=>officeFastSessions.forget(id), mint: value => officeFastSessions.ensure(value.case_id,p=>transport.mintFastSession(p),{priority:true}),
     onChange: renderVoiceState,
-    onTranscript: fragment => {
-      if(selection?.case_id===voiceCaseId)renderTranscript(fragment);
-    }});
+    onTranscript: receiveStationTranscript});
   puesto=mountPuestoAgente({dialog,sidebar,workspaceHost,workspace,getSelection:()=>selection,doc:document,win:window});
   function renderVoiceState(state) {
       if(selection)state=voice.stateForCase(selection.case_id);
@@ -147,7 +201,7 @@ if (open) {
       dialog.dataset.voicePhase=state.phase;
       if(wasLive&&['idle','error'].includes(state.phase)&&selection&&!accessPaused&&!chat.busy)void(chat.selection?chat.refresh():chat.open(AUTONES_MULTIPLES?selection.case_id:null));
       if(state.phase==='listening')micGrantedInPage=true;
-      if(state.phase==='listening'&&freshTranscript){fragments.length=0;node('voice-transcript').replaceChildren();freshTranscript=false;node('voice-download').disabled=true;}
+      if(state.phase==='listening'&&freshTranscript){fragments.length=0;voiceInteractionEpoch=window.crypto.randomUUID();node('voice-transcript').replaceChildren();freshTranscript=false;node('voice-download').disabled=true;}
       setText('voice-transcript-label',freshTranscript&&fragments.length?'Transcripción anterior · se conserva mientras conectas':'Transcripción de esta conversación');
       setText('voice-phase',view.title);
       if(dialog.open&&!compactVoice&&selection?.goals?.ready&&!stopWatching)stopWatching=watchGoals(goalReader,{visible:()=>dialog.open&&!document.hidden&&!voice.snapshot().actions_pending});
@@ -192,6 +246,7 @@ if (open) {
       node('compact-notice').hidden=!warning;
       setText('compact-notice',accessPaused?node('station-access').textContent:encounterNeedsMic?micConsentNotice:state.playback_blocked?'Pulsa el micrófono para activar el sonido.':state.incomplete||state.pending?view.history:connectionNotice);
       puesto?.renderState({...state,accessPaused});
+      interaction?.observe();
   }
   function renderTranscript(fragment) {
       if(!selection)return;
@@ -227,7 +282,7 @@ if (open) {
       const fresh = resident?.getSelection?.() || validateSelection(await transport.resolveCurrent(caseId?{case_id:caseId}:{}));
       if (current !== generation || !dialog.open || caseId&&fresh.case_id!==caseId) return false;
       if(pilot(fresh)){startVoice=false;compactOnly=false;encounter=false;present(false);}
-      selection = fresh;puesto?.setSelection(fresh);node('voice-audio').muted=false; node('voice-case').textContent = fresh.name;
+      selection = fresh;puesto?.setSelection(fresh);interaction?.observe();node('voice-audio').muted=false; node('voice-case').textContent = fresh.name;
       if(transcriptCase!==fresh.case_id){discussionDraftCase=null;fragments.length=0;node('voice-transcript').replaceChildren();node('voice-download').disabled=true;node('voice-previous').hidden=true;node('station-message').value='';node('station-messages').replaceChildren();chat.close();transcriptCase=fresh.case_id;}
       dialog.querySelector('.voice-transcript-details').hidden=false;
       if(!compactVoice){workspace.open(fresh,tab);if(pilot(fresh)&&tab!=='ppp')puesto?.showView(tab);void portrait.open(fresh);}else workspace.setActive(false);
