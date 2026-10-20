@@ -8,7 +8,9 @@
     "SYS-CONTROL",
     "SYS-SALA",
     "GAS-SALA",
-    "SHEET-SALA"
+    "SHEET-SALA",
+    "SYS-AMALAYA",
+    "SYS-EMD"
   ],
   "tests": [
     "Contratos de autorización, revisión, idempotencia, recibos y control de sesión en aislamiento.",
