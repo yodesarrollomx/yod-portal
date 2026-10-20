@@ -1,9 +1,9 @@
 {
   "schema": 1,
-  "generado_en": "2026-10-20T07:36:40.093Z",
+  "generado_en": "2026-10-20T13:01:39.744Z",
   "zona_horaria": "America/Hermosillo",
   "code_sha": "3dbd0265702cef0b9882ee990eef0768e30ae7c0",
-  "run_id": "39387633269",
+  "run_id": "39426911717",
   "model_revision": "2026-10-12.sala-imagen-publicacion.1",
   "checks": [
     {
@@ -13,8 +13,8 @@
         "SYS-YOD-OS"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/yod-portal/os/"
@@ -26,8 +26,8 @@
         "SYS-POTENCIALES"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/potenciales-yod/"
@@ -39,8 +39,8 @@
         "SYS-DESPACHO"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/yod-despacho/"
@@ -52,8 +52,8 @@
         "SYS-TRACK"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/yod-portal/track-codesarrollos.html"
@@ -65,8 +65,8 @@
         "SYS-MIRAMAR"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/real-miramar-board/"
@@ -78,8 +78,8 @@
         "SYS-TAREAS"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/board-aurum/"
@@ -91,8 +91,8 @@
         "SYS-FLUJO"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/board-flujo-yod/"
@@ -104,8 +104,8 @@
         "SYS-INTERIORES"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/interiores-aurum/"
@@ -117,8 +117,8 @@
         "SYS-INVERSION"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/yodesarrollo-board/brokers.html"
@@ -130,8 +130,8 @@
         "SYS-MARKETING"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/aurum-board/"
@@ -143,8 +143,8 @@
         "SYS-OBRA"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/yod-portal/obra.html"
@@ -156,8 +156,8 @@
         "SYS-SALA"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/sala-edicion/"
@@ -169,8 +169,8 @@
         "SYS-PLAN-POTENCIAL"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/plan-potencial/"
@@ -182,8 +182,8 @@
         "SYS-CROKISS"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/crokiss/"
@@ -195,8 +195,8 @@
         "SYS-CODES-PORTAL"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/Co-desarrolladores-Yod/"
@@ -208,8 +208,8 @@
         "SYS-ALQUIMIA"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/alquimia-urbana/"
@@ -221,8 +221,8 @@
         "SYS-OBRA-CLIENTE"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/yod-portal/obra-app/"
@@ -234,8 +234,8 @@
         "SYS-AURUM-EXPERIENCIA"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/aurum-experiencia/"
@@ -247,8 +247,8 @@
         "SYS-EMD"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/emd-evaluacion-360/"
@@ -260,8 +260,8 @@
         "SYS-PINTARRON"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/pintarron/"
@@ -273,8 +273,8 @@
         "SYS-SITIO-ORG"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/"
@@ -286,8 +286,8 @@
         "SYS-PRUEBA-DOMINIO"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "HTML publicado disponible; operaciones y permisos requieren sus propias pruebas",
       "alcance": "Disponibilidad de la página",
       "evidencia_url": "https://yodesarrollomx.github.io/prueba-dominio/"
@@ -300,8 +300,8 @@
         "SYS-CONTROL"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "Bytes servidos coinciden con el código aprobado de esta corrida",
       "alcance": "Publicación byte exacta",
       "evidencia_url": "https://yodesarrollomx.github.io/yod-portal/os/yod-salud.js"
@@ -314,8 +314,8 @@
         "SYS-CONTROL"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "Bytes servidos coinciden con el código aprobado de esta corrida",
       "alcance": "Publicación byte exacta",
       "evidencia_url": "https://yodesarrollomx.github.io/yod-portal/os/salud-catalogo.json"
@@ -327,8 +327,8 @@
         "GAS-PORTERO"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "Contrato público meta/pong; el canje de sesión y los permisos se validan en Accesos",
       "alcance": "Respuesta del backend"
     },
@@ -339,8 +339,8 @@
         "SYS-SALA"
       ],
       "estado": "ok",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "Recibo publicado corresponde al código vigente de main",
       "alcance": "Versión publicada",
       "evidencia_url": "https://yodesarrollomx.github.io/sala-edicion/version-online.json"
@@ -353,8 +353,8 @@
         "GAS-SALA"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "Revisión no vigente o sin contrato; no se acredita lectura actual",
       "alcance": "Lectura autorizada"
     },
@@ -435,8 +435,8 @@
         "EXT-MOTORES-MEDIA"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "Este canario comprueba Kokoro, parallax y corte; imagen generativa y otros motores requieren una prueba propia",
       "alcance": "Cobertura pendiente"
     },
@@ -447,8 +447,8 @@
         "SYS-SALA-OPERACION"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -459,8 +459,8 @@
         "SHEET-PORTERO"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -471,8 +471,8 @@
         "GAS-CATALOGO"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -483,8 +483,8 @@
         "SHEET-CATALOGO"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -495,8 +495,8 @@
         "GAS-OPERACION"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -507,8 +507,8 @@
         "SHEET-OPERACION"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -519,8 +519,8 @@
         "GAS-FLUJO"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -531,8 +531,8 @@
         "SHEET-FLUJO"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -543,8 +543,8 @@
         "GAS-MARKETING"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -555,8 +555,8 @@
         "SHEET-MARKETING"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -567,8 +567,8 @@
         "GAS-PLAN-POTENCIAL"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -579,8 +579,8 @@
         "SHEET-PLAN-POTENCIAL"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -591,8 +591,8 @@
         "GAS-CROKISS"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -603,8 +603,8 @@
         "SHEET-CROKISS"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -615,8 +615,8 @@
         "GAS-CODES"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -627,8 +627,8 @@
         "SHEET-CODES"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -639,8 +639,8 @@
         "GAS-MIRAMAR"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -651,8 +651,8 @@
         "SHEET-MIRAMAR"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -663,8 +663,8 @@
         "GAS-INTERIORES"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -675,8 +675,8 @@
         "SHEET-INTERIORES"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -687,8 +687,8 @@
         "GAS-ALQUIMIA"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -699,8 +699,8 @@
         "SHEET-ALQUIMIA"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -711,8 +711,8 @@
         "GAS-OBRA"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -723,8 +723,8 @@
         "SHEET-OBRA"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -735,8 +735,8 @@
         "GAS-OBRA-CLIENTE"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -747,8 +747,8 @@
         "SHEET-OBRA-CLIENTE"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -759,8 +759,8 @@
         "SHEET-SALA"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -771,8 +771,8 @@
         "GAS-EMD"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -783,8 +783,8 @@
         "SHEET-EMD"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -795,8 +795,8 @@
         "EXT-CALENDAR"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -807,8 +807,8 @@
         "EXT-META"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -819,8 +819,8 @@
         "EXT-GMAIL"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -831,8 +831,8 @@
         "EXT-ACTIONS"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -843,8 +843,8 @@
         "GAS-CRM"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -855,8 +855,8 @@
         "SHEET-CRM"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -867,8 +867,8 @@
         "GAS-MOAC-METAS"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -879,8 +879,8 @@
         "SHEET-MOAC-METAS"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -891,8 +891,8 @@
         "GAS-INVERSION"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -903,8 +903,8 @@
         "SHEET-INVERSION"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -915,8 +915,8 @@
         "GAS-PORTERO-RESPALDO"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -927,8 +927,8 @@
         "EXT-AURUM-WEB"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -939,8 +939,8 @@
         "GAS-AUX-METRICAS"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -951,8 +951,8 @@
         "SVC-SALA-PRODUCTOR"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -963,8 +963,8 @@
         "SHEET-PPP-MODELOS"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -975,8 +975,8 @@
         "EXT-GITHUB-PUBLISHER-APP"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -987,8 +987,8 @@
         "STORE-EMD-DRAFTS"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -999,8 +999,8 @@
         "SYS-AMALAYA"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -1011,8 +1011,8 @@
         "GAS-AMALAYA"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -1023,8 +1023,8 @@
         "SHEET-AMALAYA"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -1035,8 +1035,8 @@
         "STORE-DESPACHO-CORCHO"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -1047,8 +1047,8 @@
         "SYS-DESPACHO-3D"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -1059,8 +1059,8 @@
         "SVC-AUTON-CLOUD"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -1071,8 +1071,8 @@
         "STORE-AUTON-ESTADO"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -1083,8 +1083,8 @@
         "EXT-JEV"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -1095,8 +1095,8 @@
         "EXT-OPENAI"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -1107,8 +1107,8 @@
         "EXT-RENDER"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -1119,8 +1119,8 @@
         "EXT-OBSIDIAN"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -1131,8 +1131,8 @@
         "EXT-NOTEBOOKLM"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -1143,8 +1143,8 @@
         "SVC-HORARIOS-CLOUD"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -1155,8 +1155,8 @@
         "STORE-HORARIOS-CLOUD"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -1167,8 +1167,8 @@
         "GAS-BANDEJA-NUBE"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     },
@@ -1179,494 +1179,13 @@
         "STORE-BANDEJA-RECIBOS"
       ],
       "estado": "sin_confirmar",
-      "revisado_en": "2026-10-20T07:36:40.093Z",
-      "vence_en": "2026-10-20T08:21:40.093Z",
+      "revisado_en": "2026-10-20T13:01:39.744Z",
+      "vence_en": "2026-10-20T13:46:39.744Z",
       "detalle": "No hay una comprobación segura conectada para esta facultad",
       "alcance": "Cobertura pendiente"
     }
   ],
   "historial": [
-    {
-      "generado_en": "2026-10-19T01:45:40.526Z",
-      "run_id": "39186813843",
-      "checks": [
-        {
-          "id": "pagina:SYS-YOD-OS",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pagina:SYS-POTENCIALES",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pagina:SYS-DESPACHO",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pagina:SYS-TRACK",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pagina:SYS-MIRAMAR",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pagina:SYS-TAREAS",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pagina:SYS-FLUJO",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pagina:SYS-INTERIORES",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pagina:SYS-INVERSION",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pagina:SYS-MARKETING",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pagina:SYS-OBRA",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pagina:SYS-SALA",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pagina:SYS-PLAN-POTENCIAL",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pagina:SYS-CROKISS",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pagina:SYS-CODES-PORTAL",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pagina:SYS-ALQUIMIA",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pagina:SYS-OBRA-CLIENTE",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pagina:SYS-AURUM-EXPERIENCIA",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pagina:SYS-EMD",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pagina:SYS-PINTARRON",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pagina:SYS-SITIO-ORG",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pagina:SYS-PRUEBA-DOMINIO",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "cliente-publicado",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "catalogo-publicado",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "portero-meta",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "sala-publicacion",
-          "estado": "ok",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "sala-lectura",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "canario-reglas",
-          "estado": "ok",
-          "revisado_en": "2026-10-18T15:59:27.472884+00:00"
-        },
-        {
-          "id": "motor-voz",
-          "estado": "ok",
-          "revisado_en": "2026-10-18T15:59:27.472884+00:00"
-        },
-        {
-          "id": "motor-escena",
-          "estado": "ok",
-          "revisado_en": "2026-10-18T15:59:27.472884+00:00"
-        },
-        {
-          "id": "motor-corte",
-          "estado": "ok",
-          "revisado_en": "2026-10-18T15:59:27.472884+00:00"
-        },
-        {
-          "id": "drive-transferencia",
-          "estado": "ok",
-          "revisado_en": "2026-10-18T15:59:27.472884+00:00"
-        },
-        {
-          "id": "motor-otros",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SYS-SALA-OPERACION",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SHEET-PORTERO",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:GAS-CATALOGO",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SHEET-CATALOGO",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:GAS-OPERACION",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SHEET-OPERACION",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:GAS-FLUJO",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SHEET-FLUJO",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:GAS-MARKETING",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SHEET-MARKETING",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:GAS-PLAN-POTENCIAL",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SHEET-PLAN-POTENCIAL",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:GAS-CROKISS",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SHEET-CROKISS",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:GAS-CODES",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SHEET-CODES",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:GAS-MIRAMAR",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SHEET-MIRAMAR",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:GAS-INTERIORES",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SHEET-INTERIORES",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:GAS-ALQUIMIA",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SHEET-ALQUIMIA",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:GAS-OBRA",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SHEET-OBRA",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:GAS-OBRA-CLIENTE",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SHEET-OBRA-CLIENTE",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SHEET-SALA",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:GAS-EMD",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SHEET-EMD",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:EXT-CALENDAR",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:EXT-META",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:EXT-GMAIL",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:EXT-ACTIONS",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:GAS-CRM",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SHEET-CRM",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:GAS-MOAC-METAS",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SHEET-MOAC-METAS",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:GAS-INVERSION",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SHEET-INVERSION",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:GAS-PORTERO-RESPALDO",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:EXT-AURUM-WEB",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:GAS-AUX-METRICAS",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SVC-SALA-PRODUCTOR",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SHEET-PPP-MODELOS",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:EXT-GITHUB-PUBLISHER-APP",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:STORE-EMD-DRAFTS",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SYS-AMALAYA",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:GAS-AMALAYA",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SHEET-AMALAYA",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:STORE-DESPACHO-CORCHO",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SYS-DESPACHO-3D",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SVC-AUTON-CLOUD",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:STORE-AUTON-ESTADO",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:EXT-JEV",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:EXT-OPENAI",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:EXT-RENDER",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:EXT-OBSIDIAN",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:EXT-NOTEBOOKLM",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:SVC-HORARIOS-CLOUD",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:STORE-HORARIOS-CLOUD",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:GAS-BANDEJA-NUBE",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        },
-        {
-          "id": "pendiente:STORE-BANDEJA-RECIBOS",
-          "estado": "sin_confirmar",
-          "revisado_en": "2026-10-19T01:45:40.526Z"
-        }
-      ]
-    },
     {
       "generado_en": "2026-10-19T06:56:03.436Z",
       "run_id": "39212787203",
@@ -4114,6 +3633,487 @@
           "id": "pendiente:STORE-BANDEJA-RECIBOS",
           "estado": "sin_confirmar",
           "revisado_en": "2026-10-20T02:08:00.406Z"
+        }
+      ]
+    },
+    {
+      "generado_en": "2026-10-20T07:36:40.093Z",
+      "run_id": "39387633269",
+      "checks": [
+        {
+          "id": "pagina:SYS-YOD-OS",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pagina:SYS-POTENCIALES",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pagina:SYS-DESPACHO",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pagina:SYS-TRACK",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pagina:SYS-MIRAMAR",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pagina:SYS-TAREAS",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pagina:SYS-FLUJO",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pagina:SYS-INTERIORES",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pagina:SYS-INVERSION",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pagina:SYS-MARKETING",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pagina:SYS-OBRA",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pagina:SYS-SALA",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pagina:SYS-PLAN-POTENCIAL",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pagina:SYS-CROKISS",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pagina:SYS-CODES-PORTAL",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pagina:SYS-ALQUIMIA",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pagina:SYS-OBRA-CLIENTE",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pagina:SYS-AURUM-EXPERIENCIA",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pagina:SYS-EMD",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pagina:SYS-PINTARRON",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pagina:SYS-SITIO-ORG",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pagina:SYS-PRUEBA-DOMINIO",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "cliente-publicado",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "catalogo-publicado",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "portero-meta",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "sala-publicacion",
+          "estado": "ok",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "sala-lectura",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "canario-reglas",
+          "estado": "ok",
+          "revisado_en": "2026-10-19T18:46:23.938125+00:00"
+        },
+        {
+          "id": "motor-voz",
+          "estado": "ok",
+          "revisado_en": "2026-10-19T18:46:23.938125+00:00"
+        },
+        {
+          "id": "motor-escena",
+          "estado": "ok",
+          "revisado_en": "2026-10-19T18:46:23.938125+00:00"
+        },
+        {
+          "id": "motor-corte",
+          "estado": "ok",
+          "revisado_en": "2026-10-19T18:46:23.938125+00:00"
+        },
+        {
+          "id": "drive-transferencia",
+          "estado": "ok",
+          "revisado_en": "2026-10-19T18:46:23.938125+00:00"
+        },
+        {
+          "id": "motor-otros",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SYS-SALA-OPERACION",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SHEET-PORTERO",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:GAS-CATALOGO",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SHEET-CATALOGO",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:GAS-OPERACION",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SHEET-OPERACION",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:GAS-FLUJO",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SHEET-FLUJO",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:GAS-MARKETING",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SHEET-MARKETING",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:GAS-PLAN-POTENCIAL",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SHEET-PLAN-POTENCIAL",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:GAS-CROKISS",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SHEET-CROKISS",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:GAS-CODES",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SHEET-CODES",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:GAS-MIRAMAR",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SHEET-MIRAMAR",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:GAS-INTERIORES",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SHEET-INTERIORES",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:GAS-ALQUIMIA",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SHEET-ALQUIMIA",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:GAS-OBRA",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SHEET-OBRA",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:GAS-OBRA-CLIENTE",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SHEET-OBRA-CLIENTE",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SHEET-SALA",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:GAS-EMD",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SHEET-EMD",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:EXT-CALENDAR",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:EXT-META",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:EXT-GMAIL",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:EXT-ACTIONS",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:GAS-CRM",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SHEET-CRM",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:GAS-MOAC-METAS",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SHEET-MOAC-METAS",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:GAS-INVERSION",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SHEET-INVERSION",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:GAS-PORTERO-RESPALDO",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:EXT-AURUM-WEB",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:GAS-AUX-METRICAS",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SVC-SALA-PRODUCTOR",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SHEET-PPP-MODELOS",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:EXT-GITHUB-PUBLISHER-APP",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:STORE-EMD-DRAFTS",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SYS-AMALAYA",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:GAS-AMALAYA",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SHEET-AMALAYA",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:STORE-DESPACHO-CORCHO",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SYS-DESPACHO-3D",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SVC-AUTON-CLOUD",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:STORE-AUTON-ESTADO",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:EXT-JEV",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:EXT-OPENAI",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:EXT-RENDER",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:EXT-OBSIDIAN",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:EXT-NOTEBOOKLM",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:SVC-HORARIOS-CLOUD",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:STORE-HORARIOS-CLOUD",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:GAS-BANDEJA-NUBE",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
+        },
+        {
+          "id": "pendiente:STORE-BANDEJA-RECIBOS",
+          "estado": "sin_confirmar",
+          "revisado_en": "2026-10-20T07:36:40.093Z"
         }
       ]
     }
