@@ -3,7 +3,8 @@
   "proposal_id": "CHG-SALA2-INTERFAZ-20261020",
   "summary": "Registrar capa de interfaz Sala2 sin cambiar contratos ni backend.",
   "components": [
-    "SYS-SALA"
+    "SYS-SALA",
+    "SYS-YOD-OS"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check"
