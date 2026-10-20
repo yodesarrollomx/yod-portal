@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-20.sala-mesa-local.1 · 2026-10-19.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-20.sala-arranque-progresivo.1 · 2026-10-19.
 
 ## SYS-DESPACHO · El Despacho
 
