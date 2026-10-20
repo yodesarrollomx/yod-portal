@@ -13810,7 +13810,9 @@
         "SYS-SALA",
         "GAS-SALA",
         "SYS-YOD-OS",
-        "SYS-DESPACHO"
+        "SYS-DESPACHO",
+        "SHEET-SALA",
+        "EXT-GMAIL"
       ],
       "status": "propuesto",
       "approval": "Dirección solicita corregir y publicar reproducción en iPhone dentro de Sala; autorización directa en conversación20-oct.",
@@ -13820,7 +13822,7 @@
         "Chromium/WebKit: bytes reales sintéticos, reproducción, seek, revocación de Blob al cambiar carta, reintento, fullscreen y cero decisiones reales.",
         "Recorrido publicado: corte actual y cero escrituras de negocio; aceptación iPhone físico separada."
       ],
-      "deployment": "Propuesta previa. Fuente pública sin claves; backend vigente se coteja y despliega conservando URL.",
+      "deployment": "Backend original v79 publicado y fuente releída, preserva Presentaciones v78 y URL/as/acceso. Frontend, copias actuales y verificación publicada pendientes; reproducción sintética Chromium/WebKit390/1280 comprobada.",
       "rollback": "Revertir interfaz y versión de implementación; conservar archivos, permisos, propuestas y decisiones."
     }
   ],
