@@ -85,3 +85,5 @@ La auditoría no se considera completa mientras existan componentes críticos o 
 - [Storyboard público en GitHub](presentation-storyboard-github.md): entrada pública, PorteroGoogle y correcciones privadas por Sala; reemplaza destinos independientes.
 
 - [Chinches con voz y dibujo sincronizados](chinches-secuencia.md): contrato compartido, consumidores, evidencia privada y revisión.
+
+- [Puesto del agente 2.0](puesto-agente2.md): piloto de conversación con avatar, vistas móviles y contratos actuales; sin cambios de backend ni datos.

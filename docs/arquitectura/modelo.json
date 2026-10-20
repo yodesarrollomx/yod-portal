@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-20.sala2-interfaz.1",
-  "checked_at": "2026-10-19",
+  "revision": "2026-10-20.puesto-agente2.1",
+  "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
     "margen_y_control",
@@ -2926,7 +2926,7 @@
       "dominio": "Operación",
       "proposito": "Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto. Equipo se monta desde cabina Dirección con época real, transporte autorizado y teardown; conexión productiva pendiente.",
       "source_of_truth": "Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos.",
-      "runtime_status": "Versión normal126 publicada por PR141 (0351157): presencia de tres proyectos autorizados, puestos PPP/Trabajo/Expediente y pantallas ligadas al caso. Siete recorridos de navegador aprobados con datos sintéticos; accesoGSI400 corregido en OS enviando sólo el origen. No acredita micrófono físico ni apariencia/datos del PPP nativo privado.",
+      "runtime_status": "Versión normal126 publicada por PR141 (0351157): presencia de tres proyectos autorizados, puestos PPP/Trabajo/Expediente y pantallas ligadas al caso. Siete recorridos de navegador aprobados con datos sintéticos; accesoGSI400 corregido en OS enviando sólo el origen. No acredita micrófono físico ni apariencia/datos del PPP nativo privado. Puesto2.0 piloto implementado localmente por CHG-PUESTO-AGENTE-2-20261020; sin publicación ni recorrido Chromium HTTP verificados todavía.",
       "evidence": [
         {
           "repo": "yodesarrollomx/yod-portal",
@@ -2941,6 +2941,12 @@
           "commit": "0351157a71ec9fc3c5b3beae70702c92646ece58",
           "claim": "Publicación126 con bitácora, geometría de avatar, presencia y estaciones aisladas por caso; evidencia de navegador distingue fixtures de solicitudesGSI reales.",
           "status": "ejecucion"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/puesto-agente2.md",
+          "claim": "Puesto2.0 implementado localmente en puesto-agente.mjs/css: avatar existente, hilo visible, vistas propias, resumen de snapshot confirmado y retorno clásico; publicación y recorrido Chromium HTTP pendientes.",
+          "status": "codigo"
         }
       ],
       "data_entities": [
@@ -13631,6 +13637,24 @@
       ],
       "deployment": "Registro previo; publicación y comportamiento real se acreditan aparte.",
       "rollback": "Revertir interfaz y sus dos includes; conservar datos, cola y borradores."
+    },
+    {
+      "id": "CHG-PUESTO-AGENTE-2-20261020",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "status": "implementado_local",
+      "authorization": "Dirección20oct autoriza implementar y publicar únicamente el puesto2.0 piloto con interruptor por agente; incluye avatar visible y adaptación a celular.",
+      "proposal": "Puesto2.0 implementado como capa de presentación puesto-agente.mjs/css sobre el puesto y transportes actuales. Interruptor exacto perfil/caso del piloto; entrada directa sin anillo y sin arrancar micrófono. Mueve los nodos originales del avatar y conversación; acercamiento CSS al entrar, historial visible, caja amplia y estado único. Lo esencial proyecta cuatro cifras de un snapshot confirmado del mismo caso/escenario con versión, revisión y fecha de consulta; no lo denomina aprobado. Plan, Trabajo y Expediente son vistas propias con retorno; móvil conserva avatar y conversación. Reutiliza lectura autorizada ya retenida en memoria, sin caché durable nueva. Vista anterior puesto=clasico. No cambia plano, backend, Render, Apps Script, hojas de negocio, seguridad, fórmulas, historial, guardado ni contratos. El PPP vertical actual conserva consulta; no se añade navegación o edición por conversación.",
+      "tests": [
+        "Suite Node completa864/864 aprobada y verificadores OS/portal/accesos/obra aprobados en la rama; publicación y recorrido HTTP se acreditan por separado.",
+        "tests/despacho-puesto2.test.cjs y helpers DOM sintéticos: perfil/caso piloto, reversión clásica, cifras/versión del mismo snapshot, rechazo de datos ajenos o pendientes, tres pendientes máximo, mismos nodos y handlers, sin voz automática y retirada del caso.",
+        "Fixture tests/fixtures/puesto2.html prevista para Chromium HTTP escritorio1280/celular390 sin escrituras. Navegador local no alcanzó el servidor y rechazó data:; no hubo bypass. Recorrido HTTP y cotejo Pages pendientes."
+      ],
+      "deployment": "Implementación local y verificaciones locales; PR, integración y Pages pendientes. El recorrido Chromium HTTP del piloto aún no se acredita. Sin modificación de backend ni datos. No acreditar edición del PPP por apertura o por el escenario sintético.",
+      "rollback": "Activar puesto=clasico o revertir capa e inclusiones por PR, conservando historial, recibos, permisos, datos y versiones."
     }
   ],
   "data_contracts": [
@@ -17693,6 +17717,42 @@
         "SYS-DESPACHO",
         "SYS-DESPACHO-3D",
         "SVC-AUTON-CLOUD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "docs/arquitectura/puesto-agente2.md",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/helpers/puesto-dom.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/fixtures/puesto2.html",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-puesto2.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
       ]
     }
   ],

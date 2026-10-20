@@ -1,13 +1,21 @@
 {
-  "model_revision": "2026-10-20.sala2-interfaz.1",
-  "proposal_id": "CHG-SALA2-INTERFAZ-20261020",
-  "summary": "Registrar capa de interfaz Sala2 sin cambiar contratos ni backend.",
+  "model_revision": "2026-10-20.puesto-agente2.1",
+  "proposal_id": "CHG-PUESTO-AGENTE-2-20261020",
+  "summary": "Puesto2.0 piloto implementado localmente: misma conversación, avatar y datos autorizados en memoria; publicación y recorrido Chromium HTTP pendientes, sin backend ni caché nueva.",
   "components": [
-    "SYS-SALA",
-    "SYS-YOD-OS"
+    "SYS-YOD-OS",
+    "SYS-DESPACHO",
+    "SYS-DESPACHO-3D"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check"
+    "node scripts/arquitectura.cjs --check",
+    "node --test tests/*.cjs",
+    "node --test tests/despacho-puesto2.test.cjs",
+    "node verify-os.cjs",
+    "node verify-portal.cjs",
+    "node verify-accesos.cjs",
+    "node verify-obra-app.cjs",
+    "Chromium HTTP sintético1280/390 pendiente; sin escrituras reales"
   ],
-  "rollback": "Revertir propuesta, sin tocar datos de Sala."
+  "rollback": "Activar puesto=clasico o revertir capa e inclusiones por PR, conservando historial, recibos, permisos, datos y versiones."
 }

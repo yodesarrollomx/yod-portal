@@ -1,3 +1,4 @@
+import {isPuesto2,presentationLocation} from './puesto-agente.mjs?v=puesto2';
 import {stationIdentity} from './project-station.mjs';
 export const MENU_SECTORS=[['ppp','PPP'],['conversaciones','Hablar'],['pendientes','Trabajo'],['notas','Expediente']];
 export const STATUS={queued:'En cola',running:'Trabajando',ready_for_review:'Para tu revisión',awaiting_data:'Faltan datos',stopped:'Detenido',completed:'Revisado'};
@@ -29,6 +30,8 @@ export function mountAgentMenu({win=window,doc=document}={}){
  function pendingProfile(caseId){return win.YodResidentAgents?.getAuthorizedProfiles?.().find(p=>p.case_id===caseId&&p.id===caseId&&p.entity_kind==='case');}
  function showPending(caseId,{message=null,retry=false}={}){
   const profile=pendingProfile(caseId);if(!profile)return false;
+  const pilot=profile.id===profile.case_id&&profile.entity_kind==='case'&&profile.name?.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()==='ruisenor'&&new URLSearchParams(presentationLocation(win)?.search||'').get('puesto')!=='clasico';
+  dialog.classList.toggle('puesto-pending',pilot);
   const ticket=++pendingEpoch;pendingCase=caseId;selection=null;selectSector=()=>{};proximityMode=false;dialog.classList.remove('proximity-radial');
   if(!dialog.open)previousFocus=doc.activeElement;dialog.replaceChildren();
   const exit=button('×',()=>close());exit.className='radial-close';exit.setAttribute('aria-label','Cerrar opciones');
@@ -37,6 +40,7 @@ export function mountAgentMenu({win=window,doc=document}={}){
   dialog.append(exit,el('p','PUESTO DEL PROYECTO','radial-eyebrow'),title,status);
   if(retry){const again=button('Volver a intentar',()=>void win.YodResidentAgents?.openForCase(caseId));again.className='radial-retry';dialog.append(again);}
   else if(message){dialog.append(button('Volver a la conversación',()=>close('transition')));}
+  else if(pilot){const presence=el('div','◉','puesto-pending-avatar');presence.setAttribute('aria-hidden','true');dialog.append(presence);}
   else{
    const wheel=el('div',undefined,'station-wheel');wheel.setAttribute('aria-busy','true');
    const svg=doc.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 400 400');svg.setAttribute('aria-hidden','true');wheel.append(svg);
@@ -60,7 +64,7 @@ export function mountAgentMenu({win=window,doc=document}={}){
   }
   const tabs={ppp:'ppp',pendientes:'tasks',documentos:'sources',conversaciones:'ppp',chat:'ppp',notas:'knowledge',moac:'moac',historial:'knowledge'};
   if(dialog.open)close('transition');
-  const ok=await win.YodVoiceWorkspace?.openForCase(caseId,tabs[target]||target,{startVoice:target==='conversaciones',compactOnly:target==='conversaciones'});
+  const ok=await win.YodVoiceWorkspace?.openForCase(caseId,tabs[target]||target,{startVoice:target==='conversaciones'&&!isPuesto2(fresh,presentationLocation(win)),compactOnly:target==='conversaciones'&&!isPuesto2(fresh,presentationLocation(win))});
   if(ok&&target==='chat'&&win.YodResidentAgents?.getSelection?.()?.case_id===caseId){
    const chat=doc.querySelector('.realtime-dialog .station-chat');if(chat){chat.open=true;chat.querySelector('textarea')?.focus();}
   }
@@ -68,6 +72,8 @@ export function mountAgentMenu({win=window,doc=document}={}){
  }
  function showRadial(caseId,{proximity=false}={}){
   const fresh=win.YodResidentAgents?.getSelection?.();if(!fresh||fresh.case_id!==caseId||!fresh.avatar)return false;
+  if(isPuesto2(fresh,presentationLocation(win)))return openForCase(caseId,'chat');
+  dialog.classList.remove('puesto-pending');
   if(dialog.open&&selection?.case_id===caseId)return true;
   proximityMode=proximity;dialog.classList.toggle('proximity-radial',proximityMode);
   if(!dialog.open)previousFocus=doc.activeElement;pendingCase=null;pendingEpoch++;selection=fresh;sector='ppp';const identity=stationIdentity(fresh);

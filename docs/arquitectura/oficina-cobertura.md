@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-20.sala2-interfaz.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-20.puesto-agente2.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -1116,7 +1116,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dirección técnica
 
-**Estado registrado:** codigo. Versión normal126 publicada por PR141 (0351157): presencia de tres proyectos autorizados, puestos PPP/Trabajo/Expediente y pantallas ligadas al caso. Siete recorridos de navegador aprobados con datos sintéticos; accesoGSI400 corregido en OS enviando sólo el origen. No acredita micrófono físico ni apariencia/datos del PPP nativo privado.
+**Estado registrado:** codigo. Versión normal126 publicada por PR141 (0351157): presencia de tres proyectos autorizados, puestos PPP/Trabajo/Expediente y pantallas ligadas al caso. Siete recorridos de navegador aprobados con datos sintéticos; accesoGSI400 corregido en OS enviando sólo el origen. No acredita micrófono físico ni apariencia/datos del PPP nativo privado. Puesto2.0 piloto implementado localmente por CHG-PUESTO-AGENTE-2-20261020; sin publicación ni recorrido Chromium HTTP verificados todavía.
 
 **Entradas registradas:**
 
@@ -1135,6 +1135,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - [Puesto compartido con PPP y ejecución de intención explícita; observar no otorga permisos. · Estado: codigo · yodesarrollomx/yod-portal · despacho3d/agent-workspace.mjs · Revisión: 5eca769947e60bc5b51389244393e0f63817cf86](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/agent-workspace.mjs)
 - [Publicación126 con bitácora, geometría de avatar, presencia y estaciones aisladas por caso; evidencia de navegador distingue fixtures de solicitudesGSI reales. · Estado: ejecucion · yodesarrollomx/yod-portal · docs/arquitectura/despacho126-resultados.md · Revisión: 0351157a71ec9fc3c5b3beae70702c92646ece58](https://github.com/yodesarrollomx/yod-portal/blob/0351157a71ec9fc3c5b3beae70702c92646ece58/docs/arquitectura/despacho126-resultados.md)
+- Puesto2.0 implementado localmente en puesto-agente.mjs/css: avatar existente, hilo visible, vistas propias, resumen de snapshot confirmado y retorno clásico; publicación y recorrido Chromium HTTP pendientes. · Estado: codigo · yodesarrollomx/yod-portal · docs/arquitectura/puesto-agente2.md · Sin revisión inmutable en esta referencia
 
 **Evidencia de conexiones:**
 

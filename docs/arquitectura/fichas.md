@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-20.sala2-interfaz.1 · 2026-10-19.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-20.puesto-agente2.1 · 2026-10-20.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -1005,10 +1005,10 @@ Persistir notas y ejes del Corcho en un archivo privado independiente, autorizad
 Observar y conversar con el autón del proyecto, consultar su PPP y seguir el trabajo en un único puesto. Equipo se monta desde cabina Dirección con época real, transporte autorizado y teardown; conexión productiva pendiente.
 
 - Tipo: interfaz. Dominio: Operación. Responsable: Dirección técnica.
-- Evidencia: codigo. Producción: Versión normal126 publicada por PR141 (0351157): presencia de tres proyectos autorizados, puestos PPP/Trabajo/Expediente y pantallas ligadas al caso. Siete recorridos de navegador aprobados con datos sintéticos; accesoGSI400 corregido en OS enviando sólo el origen. No acredita micrófono físico ni apariencia/datos del PPP nativo privado..
+- Evidencia: codigo. Producción: Versión normal126 publicada por PR141 (0351157): presencia de tres proyectos autorizados, puestos PPP/Trabajo/Expediente y pantallas ligadas al caso. Siete recorridos de navegador aprobados con datos sintéticos; accesoGSI400 corregido en OS enviando sólo el origen. No acredita micrófono físico ni apariencia/datos del PPP nativo privado. Puesto2.0 piloto implementado localmente por CHG-PUESTO-AGENTE-2-20261020; sin publicación ni recorrido Chromium HTTP verificados todavía..
 - Entidades: caso, sesion, tablero, tarea, recibo.
 - Fuente de verdad: Perfil y expediente autorizados por servidor; PPP conserva su libro y Store canónicos..
-- Evidencia: [yod-portal/despacho3d/agent-workspace.mjs](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/agent-workspace.mjs) — Puesto compartido con PPP y ejecución de intención explícita; observar no otorga permisos.; [yod-portal/docs/arquitectura/despacho126-resultados.md](https://github.com/yodesarrollomx/yod-portal/blob/0351157a71ec9fc3c5b3beae70702c92646ece58/docs/arquitectura/despacho126-resultados.md) — Publicación126 con bitácora, geometría de avatar, presencia y estaciones aisladas por caso; evidencia de navegador distingue fixtures de solicitudesGSI reales..
+- Evidencia: [yod-portal/despacho3d/agent-workspace.mjs](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/agent-workspace.mjs) — Puesto compartido con PPP y ejecución de intención explícita; observar no otorga permisos.; [yod-portal/docs/arquitectura/despacho126-resultados.md](https://github.com/yodesarrollomx/yod-portal/blob/0351157a71ec9fc3c5b3beae70702c92646ece58/docs/arquitectura/despacho126-resultados.md) — Publicación126 con bitácora, geometría de avatar, presencia y estaciones aisladas por caso; evidencia de navegador distingue fixtures de solicitudesGSI reales.; [yod-portal/docs/arquitectura/puesto-agente2.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/puesto-agente2.md) — Puesto2.0 implementado localmente en puesto-agente.mjs/css: avatar existente, hilo visible, vistas propias, resumen de snapshot confirmado y retorno clásico; publicación y recorrido Chromium HTTP pendientes..
 - Conexiones: CON-OS-DESPACHO-3D (SYS-YOD-OS → SYS-DESPACHO-3D); CON-DESPACHO-3D-MOTOR (SYS-DESPACHO-3D → SVC-AUTON-CLOUD); CON-DESPACHO-3D-PPP (SYS-DESPACHO-3D → SYS-POTENCIALES); CON-ESTADO-EXPORTACION (STORE-AUTON-ESTADO → SYS-DESPACHO-3D); CON-DESPACHO-EXPORTAR-OBSIDIAN (SYS-DESPACHO-3D → EXT-OBSIDIAN); CON-BIBLIOTECA-NOTEBOOKLM (SYS-DESPACHO-3D → EXT-NOTEBOOKLM).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 
