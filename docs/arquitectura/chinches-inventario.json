@@ -133,10 +133,10 @@
     "repo": "yodesarrollo-board",
     "commit": "851d9a5cc0bb31dad21611fe516de56fdc336228",
     "capturador": "copia compartida y adaptadores",
-    "secuencia": "PR53 listo; pruebas funcionales Chromium/WebKit pasan, integración pendiente del check de arquitectura",
+    "secuencia": "PR53 integrado; todos checks pasan, publicación y recibo autenticado pendientes",
     "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
     "actualizado": "2026-10-20",
-    "implementacion": "05a9e2f6cf65f1e4ad41402a2386affc1017c55c"
+    "implementacion": "b700782c42a71cf2b72605e8d4765ae05f400a7e"
   },
   {
     "repo": "sala-edicion",
