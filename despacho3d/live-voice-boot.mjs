@@ -1,3 +1,4 @@
+import {isPuesto2,mountPuestoAgente,presentationLocation} from './puesto-agente.mjs?v=puesto2';
 import {officeFastSessions} from './office-preparation.mjs?v=unified283';
 import {mountAvatarCard} from './avatar-card.mjs?v=126';
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
@@ -7,7 +8,7 @@ import {createFrameTransport, validateSelection, Conversation} from './conversat
 import {stationIdentity} from './project-station.mjs?v=140';
 import {createLiveVoice} from './live-voice.mjs?v=141';
 import {voiceView} from './voice-view.mjs?v=141';
-import {createWorkspace} from './agent-workspace.mjs?v=core1';
+import {createWorkspace} from './agent-workspace.mjs?v=puesto2';
 import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=entregas291';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=132';
 import {groupTranscriptFragments} from './live-transcript.mjs';
@@ -35,8 +36,10 @@ if (open) {
   const capsule=document.createElement('div');capsule.className='voice-capsule';
   capsule.innerHTML='<button id="compact-mic" aria-label="Hablar"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></svg></button><button id="compact-expand" aria-label="Abrir plan de potencial"><b id="compact-name">Tu autón</b><small id="compact-phase">Preparando voz…</small><span aria-hidden="true">↗</span></button><button id="compact-interrupt" hidden aria-label="Escúchame">Escúchame</button><button id="compact-stop" aria-label="Finalizar conversación">×</button><p id="compact-notice" role="status" hidden></p>';
   dialog.append(capsule);document.body.append(dialog);
-  let compactVoice=false;
+  let compactVoice=false,puesto=null;
+  const pilot=value=>isPuesto2(value,presentationLocation(window));
   function present(compactOnly){
+    if(pilot(selection||window.YodResidentAgents?.getSelection?.()))compactOnly=false;
     const switching=dialog.open&&compactVoice!==compactOnly;
     if(switching)dialog.close();
     compactVoice=compactOnly;dialog.classList.toggle('voice-compact',compactVoice);
@@ -45,7 +48,7 @@ if (open) {
   }
   function openBoard(tab='ppp'){
     if(!selection||accessPaused)return;
-    present(false);workspace.open(selection,tab);void portrait.open(selection);
+    present(false);workspace.open(selection,tab);puesto?.showView(tab);void portrait.open(selection);
     renderVoiceState(voice.snapshot());
   }
   // Conversation stays beside the original board. Secondary information is disclosed once.
@@ -73,7 +76,10 @@ if (open) {
   }});
   async function presentMeetingSlide(value){
     if(accessPaused||selection?.case_id!==value.case_id||window.YodResidentAgents?.getSelection?.()?.case_id!==value.case_id)return false;
-    if(!active(voice.snapshot()))begin();
+    if(!active(voice.snapshot())){
+      if(pilot(selection)){setText('station-message-status','Activa el micrófono para escuchar la presentación.');return false;}
+      begin();
+    }
     const deadline=Date.now()+25000;
     while(Date.now()<deadline){
       if(accessPaused||selection?.case_id!==value.case_id||!dialog.open||workspace.getTab()!=='meeting')return false;
@@ -83,7 +89,7 @@ if (open) {
     }
     return false;
   }
-  const workspace=createWorkspace({container:workspaceHost,transport,onDiscuss:value=>{if(accessPaused||selection?.case_id!==value.case_id)return;discussionDraftCase=value.case_id;chatPanel.open=true;const field=node('station-message');const draft='Sobre la entrega «'+value.title+'» (revisión '+value.revision+'): ';field.value=field.value?field.value+'\n'+draft:draft;field.focus();field.setSelectionRange(field.value.length,field.value.length);node('station-message-status').textContent='Borrador para discutir la entrega. Todavía no se envió ni se creó un encargo.';},getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision,selection?.case_id);},onPresent:presentMeetingSlide});
+  const workspace=createWorkspace({container:workspaceHost,transport,onDiscuss:value=>{if(accessPaused||selection?.case_id!==value.case_id)return;discussionDraftCase=value.case_id;chatPanel.open=true;const field=node('station-message');const draft='Sobre la entrega «'+value.title+'» (revisión '+value.revision+'): ';field.value=field.value?field.value+'\n'+draft:draft;field.focus();field.setSelectionRange(field.value.length,field.value.length);node('station-message-status').textContent='Borrador para discutir la entrega. Todavía no se envió ni se creó un encargo.';},getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision,selection?.case_id);},onPresent:presentMeetingSlide,onPresentation:()=>puesto?.updateWorkspace()});
   window.YodVoiceWorkspace={isOpen:()=>dialog.open&&!compactVoice,openForCase,prepareNearby:caseId=>{const s=window.YodResidentAgents?.getSelection?.();if(s?.case_id===caseId&&s.can_enqueue&&!active(voice.snapshot()))void voice.prepare(caseId,{connection:true});},releaseNearby:()=>{/* Entry preparation remains warm outside the approach radius. */},pauseEncounter:caseId=>{if(encounterCase===caseId&&voice.snapshot().phase==='listening'&&!voice.snapshot().muted){encounterPaused=true;voice.mute();}},show:tab=>{openBoard(tab);workspaceHost.scrollIntoView({block:'nearest'});}};
   window.dispatchEvent(new CustomEvent('yod-voice-workspace-ready'));
   let stopWatching=null,encounterCase=null,encounterPaused=false,micGrantedInPage=false,encounterNeedsMic=false;
@@ -132,6 +138,7 @@ if (open) {
     onTranscript: fragment => {
       if(selection?.case_id===voiceCaseId)renderTranscript(fragment);
     }});
+  puesto=mountPuestoAgente({dialog,sidebar,workspaceHost,workspace,getSelection:()=>selection,doc:document,win:window});
   function renderVoiceState(state) {
       if(selection)state=voice.stateForCase(selection.case_id);
       window.dispatchEvent(new CustomEvent('yod-voice-state',{detail:{phase:state.phase}}));
@@ -184,6 +191,7 @@ if (open) {
       const warning=encounterNeedsMic||state.credential_pending||state.session_ending||state.phase==='error'||state.ended_remotely||state.interruption_error||state.playback_blocked||state.incomplete||state.pending||accessPaused;
       node('compact-notice').hidden=!warning;
       setText('compact-notice',accessPaused?node('station-access').textContent:encounterNeedsMic?micConsentNotice:state.playback_blocked?'Pulsa el micrófono para activar el sonido.':state.incomplete||state.pending?view.history:connectionNotice);
+      puesto?.renderState({...state,accessPaused});
   }
   function renderTranscript(fragment) {
       if(!selection)return;
@@ -202,6 +210,7 @@ if (open) {
   }
   async function openForCase(caseId,tab='ppp',{startVoice=false,encounter=false,compactOnly=encounter}={}) {
     const currentSelection=window.YodResidentAgents?.getSelection?.();
+    if(pilot(currentSelection)){startVoice=false;compactOnly=false;encounter=false;}
     if(active(voice.snapshot())&&voiceCaseId!==currentSelection?.case_id)return false;
     if(caseId&&(!currentSelection||currentSelection.case_id!==caseId))return false;
     if(dialog.open&&selection){
@@ -217,10 +226,11 @@ if (open) {
       const resident = window.YodResidentAgents;
       const fresh = resident?.getSelection?.() || validateSelection(await transport.resolveCurrent(caseId?{case_id:caseId}:{}));
       if (current !== generation || !dialog.open || caseId&&fresh.case_id!==caseId) return false;
-      selection = fresh; node('voice-audio').muted=false; node('voice-case').textContent = fresh.name;
+      if(pilot(fresh)){startVoice=false;compactOnly=false;encounter=false;present(false);}
+      selection = fresh;puesto?.setSelection(fresh);node('voice-audio').muted=false; node('voice-case').textContent = fresh.name;
       if(transcriptCase!==fresh.case_id){discussionDraftCase=null;fragments.length=0;node('voice-transcript').replaceChildren();node('voice-download').disabled=true;node('voice-previous').hidden=true;node('station-message').value='';node('station-messages').replaceChildren();chat.close();transcriptCase=fresh.case_id;}
       dialog.querySelector('.voice-transcript-details').hidden=false;
-      if(!compactVoice){workspace.open(fresh,tab);void portrait.open(fresh);}else workspace.setActive(false);
+      if(!compactVoice){workspace.open(fresh,tab);if(pilot(fresh)&&tab!=='ppp')puesto?.showView(tab);void portrait.open(fresh);}else workspace.setActive(false);
       if(!fresh.goals?.ready)node('voice-work').textContent='El seguimiento de objetivos aún no está conectado para este proyecto.';
       if(dialog.querySelector('.station-chat').open&&!chat.selection)void chat.open(AUTONES_MULTIPLES?selection.case_id:null);
       setText('voice-title',agentName());
@@ -237,6 +247,7 @@ if (open) {
   }
   open.addEventListener('click',()=>void openForCase(window.YodResidentAgents?.getSelection?.()?.case_id,'ppp',{startVoice:true,compactOnly:true}));
   async function requestBegin(encounter){
+    if(encounter&&pilot(selection)){encounterNeedsMic=true;renderVoiceState(voice.snapshot());return;}
     const own=generation,id=selection?.case_id;
     if(!encounter){encounterCase=null;begin();return;}
     encounterCase=id;
@@ -285,7 +296,7 @@ if (open) {
     const link=document.createElement('a');link.href=url;link.download='conversacion-proyecto.txt';link.click();
     setTimeout(()=>URL.revokeObjectURL(url),1000);
   });
-  node('voice-view-tasks').addEventListener('click',()=>workspace.setTab('tasks'));
+  node('voice-view-tasks').addEventListener('click',()=>{workspace.setTab('tasks');puesto?.showView('tasks');});
   window.addEventListener('yod-goals-changed',()=>{if(stopWatching)void goalReader.read();});
   node('voice-retry-context').addEventListener('click',()=>{void voice.retryContext();});
   node('voice-retry-actions').addEventListener('click',()=>voice.retryActions());
@@ -295,11 +306,11 @@ if (open) {
     if (dismissing) return; dismissing = true;suppressEncounter();
     const wasLive = active(voice.snapshot()), result = await voice.stop();
     if (wasLive && (result?.incomplete || result?.pending)) {dismissing = false; return;}
-    generation++; selection = null; stopWatching?.();stopWatching=null;goalReader.hide();workspace.setActive(false);dialog.close();visibility(false);previousFocus?.focus?.(); dismissing = false;
+    generation++; selection = null;puesto?.setSelection(null);stopWatching?.();stopWatching=null;goalReader.hide();workspace.setActive(false);dialog.close();visibility(false);previousFocus?.focus?.(); dismissing = false;
   }
-  dialog.querySelector('.voice-close').addEventListener('click', () => {if(active(voice.snapshot())){present(true);stopWatching?.();stopWatching=null;}else void dismiss();});
-  dialog.addEventListener('cancel', event => {event.preventDefault();if(!compactVoice&&active(voice.snapshot()))present(true);else void dismiss();});
-  window.addEventListener('pagehide', () => {generation++; voice.abandon();workspace.dispose();delete window.YodVoiceWorkspace;});
+  dialog.querySelector('.voice-close').addEventListener('click', () => {if(active(voice.snapshot())&&!pilot(selection)){present(true);stopWatching?.();stopWatching=null;}else void dismiss();});
+  dialog.addEventListener('cancel', event => {event.preventDefault();if(!compactVoice&&active(voice.snapshot())&&!pilot(selection))present(true);else void dismiss();});
+  window.addEventListener('pagehide', () => {generation++;voice.abandon();puesto?.dispose();workspace.dispose();delete window.YodVoiceWorkspace;});
   // Visibility alone is not a hangup; mobile permission prompts and app switching can hide the page.
   document.addEventListener('visibilitychange', () => {if (!document.hidden) void voice.refresh();});
   window.addEventListener('yod-data-invalidated',()=>{
@@ -339,11 +350,11 @@ if (open) {
         return;
       }
       if(access==='current'&&accessPaused){
-        accessPaused=false;selection=s;node('station-access').hidden=true;node('station-reconnect').hidden=true;
+        accessPaused=false;selection=s;puesto?.setSelection(s);node('station-access').hidden=true;node('station-reconnect').hidden=true;
         workspace.setActive(dialog.open&&!compactVoice);renderVoiceState(voice.snapshot());
       }
       if(access==='lost'){
-        entrance.clear();generation++;selection=null;encounterNeedsMic=false;stopWatching?.();stopWatching=null;goalReader.hide();chat.close();workspace.reset();portrait.clear();workspace.setActive(false);
+        entrance.clear();generation++;selection=null;puesto?.setSelection(null);encounterNeedsMic=false;stopWatching?.();stopWatching=null;goalReader.hide();chat.close();workspace.reset();portrait.clear();workspace.setActive(false);
         fragments.length=0;freshTranscript=false;node('voice-transcript').replaceChildren();node('voice-work').replaceChildren();node('voice-task').textContent='';
         node('voice-download').disabled=true;node('voice-start').disabled=true;node('voice-previous').hidden=true;node('voice-audio').muted=true;
         setText('voice-case','El acceso al expediente cambió.');setText('voice-title','Tu autón');discussionDraftCase=null;node('station-message').value='';node('station-messages').replaceChildren();
