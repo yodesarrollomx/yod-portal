@@ -5,7 +5,8 @@
   "components": [
     "SYS-YOD-OS",
     "SYS-SALA",
-    "SYS-INVERSION"
+    "SYS-INVERSION",
+    "SYS-DESPACHO"
   ],
   "tests": [
     "node --test tests/chinche-secuencia.test.cjs",

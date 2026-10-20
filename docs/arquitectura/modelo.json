@@ -13597,7 +13597,8 @@
         "SYS-AMALAYA",
         "GAS-AMALAYA",
         "SYS-EMD",
-        "GAS-EMD"
+        "GAS-EMD",
+        "SYS-DESPACHO"
       ],
       "status": "propuesto",
       "authorization": "Dirección20oct: implementar voz y dibujo sincronizados en todas las chinches y revisión periódica.",
