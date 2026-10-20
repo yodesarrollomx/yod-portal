@@ -10,7 +10,8 @@
     "GAS-SALA",
     "SHEET-SALA",
     "SYS-AMALAYA",
-    "SYS-EMD"
+    "SYS-EMD",
+    "EXT-GMAIL"
   ],
   "tests": [
     "Contratos de autorización, revisión, idempotencia, recibos y control de sesión en aislamiento.",
