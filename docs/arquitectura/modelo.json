@@ -13602,7 +13602,10 @@
         "SYS-TRACK",
         "SYS-OBRA",
         "SYS-CONTROL",
-        "SYS-OBRA-CLIENTE"
+        "SYS-OBRA-CLIENTE",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "EXT-GMAIL"
       ],
       "status": "propuesto",
       "authorization": "Dirección20oct: implementar voz y dibujo sincronizados en todas las chinches y revisión periódica.",
