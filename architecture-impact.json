@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-10-20.puesto-agente2.1",
   "proposal_id": "CHG-PUESTO-AGENTE-2-20261020",
-  "summary": "Corregir compositor del Puesto2 tras QA Chromium: contenedor flex real fuera del details nativo, mismos controles e historial.",
+  "summary": "Aislar prioridad CSS del Puesto2 frente a reglas móviles clásicas; sidebar flexible conserva conversación y compositor dentro de pantalla.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
