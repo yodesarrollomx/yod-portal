@@ -40,3 +40,5 @@ Reversión: usar `?puesto=clasico` o revertir la capa y sus inclusiones mediante
 ## Ajuste tras recorrido HTTP
 
 Pages del PR297 sirvió los ocho recursos idénticos a los probados. Chromium detectó que el contenedor nativo details dejaba el compositor fuera de la zona visible en móvil y separado del fondo en ventanas altas. El ajuste conserva el disclosure para el ciclo existente, con un contenedor flex real para conversación y controles; el modo clásico restaura sus padres y orden originales. Prueba de regresión de identidad y restauración completa aprobada. Revalidación visual del ajuste pendiente de publicación.
+
+El segundo recorrido mostró una regla móvil clásica de mayor especificidad que fijaba la columna en82px. La hoja del piloto se delimita por el selector completo del dialog para que prevalezca únicamente dentro de Puesto2. No cambia la hoja clásica ni su modo de consulta. Revalidación de geometría pendiente del siguiente despliegue.
