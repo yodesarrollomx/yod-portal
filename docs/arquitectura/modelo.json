@@ -13556,6 +13556,39 @@
       "rollback": "Revertir PR de frontend; la clave sala_mesa_local_v1 queda ignorada o se elimina sin borrar borradores ni cola."
     },
     {
+      "id": "CHG-SALA-ARRANQUE-PROGRESIVO-20261020",
+      "components": [
+        "SYS-SALA",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección solicita integrar opciones1 y6 y publicar: arranque sin bloqueo y medios diferidos,20-oct-2026. Dirección amplía autorización a hipótesis8 y mediciones9 en la misma corrida.",
+      "proposal": "Mostrar consulta fechada del manifiesto público existente sin esperar Apps Script, si no hay cache local. No publica nuevos datos ni restaura permisos. Servidor vigente habilita decisiones; rechazo retira consulta. Inventario y tiras se cargan progresivamente con concurrencia limitada y deduplicación. Manifiesto de medios mantiene validación fail-closed pero no bloquea texto/navegación. Imágenes fuera de vista y videos no se descargan anticipadamente. Borradores y cola se conservan. Lecturas del día con timeout8000ms incluyendo cuerpo, máximo2peticiones totales y backoff400ms; sin bucles automáticos después. Snapshot solicitado en paralelo, cacheado incrementalmente como consulta publicada incluso si servidor no termina. Medición separada de contenido visible y lecturas reales Apps Script; no llamar frío/caliente sin cache hit/miss o evidencia del servidor. Diagnóstico de lectura con agente no cambia permisos ni negocio.",
+      "tests": [
+        "Navegador sintético: primera visita con servidor,medios e inventario retenidos; primera publicación visible antes de las demás; sin POST ni decisiones antes de validación.",
+        "Regresiones cache,carga,imágenes,video,tablero y nube/verificar.py; archivos servidos y recibo Pages.",
+        "Presupuesto de reintentos, timeout durante cuerpo, cache desde snapshot antes de completar tiras; mediciones reales sin payloads ni credenciales en logs."
+      ],
+      "deployment": "Registro previo. Despliegue acreditado por PR consumidor y recibo Pages.",
+      "rollback": "Revertir frontend por PR; conservar notas,cola,datos y medios."
+    },
+    {
+      "id": "CHG-SALA-REVISION-TOMAS-20261020",
+      "components": [
+        "SYS-SALA"
+      ],
+      "status": "propuesto",
+      "authorization": "Mantenimiento técnico de Sala autorizado por Dirección; correcciones de revisión situadas recibidas el20oct, sin adoptar decisiones editoriales.",
+      "proposal": "Abrir comparación en escritorio cuando existan varias tomas; tras el voto explícito avanzar a la siguiente lámina pendiente de la secuencia. Permitir petición de nueva revisión de aprobadas mediante el contrato existente de reapertura y nota obligatoria, conservando la aprobación histórica. No cambiar permisos, carga inicial, player, chinches universales ni producción.",
+      "tests": [
+        "Recorrido sintético escritorio/móvil: comparación inicial sin POST, aprobación única de toma visible y avance secuencial.",
+        "Reapertura con nota: destino original, sesión y contexto frescos; cancelar/nota vacía sin efectos. Roles de lectura y copia cacheada sin escritura.",
+        "Node, verificación de invariantes y QA de activos publicados con identidad de código."
+      ],
+      "deployment": "Registro previo; implementación, CI y publicación del consumidor requieren recibos independientes.",
+      "rollback": "Revertir PR de interfaz; conservar votos, notas, medios, fuentes y cola."
+    },
+    {
       "id": "CHG-CHINCHES-SECUENCIA-20261020",
       "components": [
         "SYS-YOD-OS",
