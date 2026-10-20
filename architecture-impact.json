@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-20.sala-arranque-progresivo.1",
+  "model_revision": "2026-10-20.sala-arranque-progresivo.2",
   "proposal_id": "CHG-SALA-ARRANQUE-PROGRESIVO-20261020",
-  "summary": "Registrar arranque progresivo y medios diferidos de Sala.",
+  "summary": "Ampliar apertura progresiva con presupuesto de red, cache del snapshot y mediciones separadas.",
   "components": [
     "SYS-SALA",
     "SYS-YOD-OS"

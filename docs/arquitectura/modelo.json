@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-20.sala-arranque-progresivo.1",
+  "revision": "2026-10-20.sala-arranque-progresivo.2",
   "checked_at": "2026-10-19",
   "priorities": [
     "vender_mas",
@@ -13550,11 +13550,12 @@
         "SYS-YOD-OS"
       ],
       "status": "propuesto",
-      "authorization": "Dirección solicita integrar opciones1 y6 y publicar: arranque sin bloqueo y medios diferidos,20-oct-2026.",
-      "proposal": "Mostrar consulta fechada del manifiesto público existente sin esperar Apps Script, si no hay cache local. No publica nuevos datos ni restaura permisos. Servidor vigente habilita decisiones; rechazo retira consulta. Inventario y tiras se cargan progresivamente con concurrencia limitada y deduplicación. Manifiesto de medios mantiene validación fail-closed pero no bloquea texto/navegación. Imágenes fuera de vista y videos no se descargan anticipadamente. Borradores y cola se conservan.",
+      "authorization": "Dirección solicita integrar opciones1 y6 y publicar: arranque sin bloqueo y medios diferidos,20-oct-2026. Dirección amplía autorización a hipótesis8 y mediciones9 en la misma corrida.",
+      "proposal": "Mostrar consulta fechada del manifiesto público existente sin esperar Apps Script, si no hay cache local. No publica nuevos datos ni restaura permisos. Servidor vigente habilita decisiones; rechazo retira consulta. Inventario y tiras se cargan progresivamente con concurrencia limitada y deduplicación. Manifiesto de medios mantiene validación fail-closed pero no bloquea texto/navegación. Imágenes fuera de vista y videos no se descargan anticipadamente. Borradores y cola se conservan. Lecturas del día con timeout8000ms incluyendo cuerpo, máximo2peticiones totales y backoff400ms; sin bucles automáticos después. Snapshot solicitado en paralelo, cacheado incrementalmente como consulta publicada incluso si servidor no termina. Medición separada de contenido visible y lecturas reales Apps Script; no llamar frío/caliente sin cache hit/miss o evidencia del servidor. Diagnóstico de lectura con agente no cambia permisos ni negocio.",
       "tests": [
         "Navegador sintético: primera visita con servidor,medios e inventario retenidos; primera publicación visible antes de las demás; sin POST ni decisiones antes de validación.",
-        "Regresiones cache,carga,imágenes,video,tablero y nube/verificar.py; archivos servidos y recibo Pages."
+        "Regresiones cache,carga,imágenes,video,tablero y nube/verificar.py; archivos servidos y recibo Pages.",
+        "Presupuesto de reintentos, timeout durante cuerpo, cache desde snapshot antes de completar tiras; mediciones reales sin payloads ni credenciales en logs."
       ],
       "deployment": "Registro previo. Despliegue acreditado por PR consumidor y recibo Pages.",
       "rollback": "Revertir frontend por PR; conservar notas,cola,datos y medios."
