@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-20.chinches-secuencia.1 · 2026-10-19.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-20.sala2-interfaz.1 · 2026-10-19.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
