@@ -11,16 +11,18 @@
     ],
     "commit": "9db34a902f4e1f6f1f9b727b974f813625b5e16d",
     "capturador": "shell central",
-    "revision": "ronda diaria ampliada; recibos vivos pendientes",
-    "secuencia": "propuesta en rama; no desplegada"
+    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
+    "secuencia": "capturador central publicado; recibo y reproducción en este consumidor pendientes",
+    "actualizado": "2026-10-20"
   },
   {
     "repo": "plan-potencial",
     "files": [],
     "commit": "9f036c72513d07b4b89d402ab9aa27264b56a534",
     "capturador": "integración indirecta por verificar",
-    "revision": "ronda diaria ampliada; recibos vivos pendientes",
-    "secuencia": "propuesta en rama; no desplegada"
+    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
+    "secuencia": "integración y cobertura pendientes de verificar",
+    "actualizado": "2026-10-20"
   },
   {
     "repo": "interiores-aurum",
@@ -29,8 +31,9 @@
     ],
     "commit": "8bcdfc35b98c83d2a33f802abe0064e971c4fa92",
     "capturador": "shell central",
-    "revision": "ronda diaria ampliada; recibos vivos pendientes",
-    "secuencia": "propuesta en rama; no desplegada"
+    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
+    "secuencia": "capturador central publicado; recibo y reproducción en este consumidor pendientes",
+    "actualizado": "2026-10-20"
   },
   {
     "repo": "aurum-board",
@@ -39,16 +42,18 @@
     ],
     "commit": "e3dd428a01b01d1c8b5775c7fcca408735c98357",
     "capturador": "shell central",
-    "revision": "ronda diaria ampliada; recibos vivos pendientes",
-    "secuencia": "propuesta en rama; no desplegada"
+    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
+    "secuencia": "capturador central publicado; recibo y reproducción en este consumidor pendientes",
+    "actualizado": "2026-10-20"
   },
   {
     "repo": "Co-desarrolladores-Yod",
     "files": [],
     "commit": "bdaf46b44735255811d164824ec35f89a592d0cd",
     "capturador": "integración indirecta por verificar",
-    "revision": "ronda diaria ampliada; recibos vivos pendientes",
-    "secuencia": "propuesta en rama; no desplegada"
+    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
+    "secuencia": "integración y cobertura pendientes de verificar",
+    "actualizado": "2026-10-20"
   },
   {
     "repo": "board-flujo-yod",
@@ -57,8 +62,9 @@
     ],
     "commit": "e9d122f090f7fdf3a6d5478fbf27b2d91bc6b3eb",
     "capturador": "shell central",
-    "revision": "ronda diaria ampliada; recibos vivos pendientes",
-    "secuencia": "propuesta en rama; no desplegada"
+    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
+    "secuencia": "capturador central publicado; recibo y reproducción en este consumidor pendientes",
+    "actualizado": "2026-10-20"
   },
   {
     "repo": "yodesarrollomx.github.io",
@@ -67,8 +73,9 @@
     ],
     "commit": "a5680f2cf2cd37c5a9035c250a7ad7a5424197e2",
     "capturador": "shell central",
-    "revision": "ronda diaria ampliada; recibos vivos pendientes",
-    "secuencia": "propuesta en rama; no desplegada"
+    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
+    "secuencia": "capturador central publicado; recibo y reproducción en este consumidor pendientes",
+    "actualizado": "2026-10-20"
   },
   {
     "repo": "potenciales-yod",
@@ -84,8 +91,9 @@
     ],
     "commit": "48ee29f848e727a0f7e12470ce056085a7aec580",
     "capturador": "shell central",
-    "revision": "ronda diaria ampliada; recibos vivos pendientes",
-    "secuencia": "propuesta en rama; no desplegada"
+    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
+    "secuencia": "capturador central publicado; recibo y reproducción en este consumidor pendientes",
+    "actualizado": "2026-10-20"
   },
   {
     "repo": "board-aurum",
@@ -94,8 +102,9 @@
     ],
     "commit": "93bf6241c8f9c9b40dd5888e81936588fe4ebafa",
     "capturador": "shell central",
-    "revision": "ronda diaria ampliada; recibos vivos pendientes",
-    "secuencia": "propuesta en rama; no desplegada"
+    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
+    "secuencia": "capturador central publicado; recibo y reproducción en este consumidor pendientes",
+    "actualizado": "2026-10-20"
   },
   {
     "repo": "yod-despacho",
@@ -107,42 +116,53 @@
     ],
     "commit": "d89b15114ffbca61bfd8e2b4eb61661642adebee",
     "capturador": "shell central",
-    "revision": "ronda diaria ampliada; recibos vivos pendientes",
-    "secuencia": "propuesta en rama; no desplegada"
+    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
+    "secuencia": "capturador central publicado; recibo y reproducción en este consumidor pendientes",
+    "actualizado": "2026-10-20"
   },
   {
     "repo": "yod-portal",
     "commit": "baa5e318e752a3dae2ff3da9fb94c3014bf16384",
     "capturador": "central",
-    "secuencia": "implementación en rama; no desplegada",
-    "revision": "incluida en rutina diaria; pruebas de activación pendientes"
+    "secuencia": "capturador publicado; Chromium/WebKit y 856 pruebas pasan",
+    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
+    "actualizado": "2026-10-20",
+    "implementacion": "597c4daf9d3c8059279222616b249438ae861a68"
   },
   {
     "repo": "yodesarrollo-board",
     "commit": "851d9a5cc0bb31dad21611fe516de56fdc336228",
     "capturador": "copia compartida y adaptadores",
-    "secuencia": "implementación en rama; no desplegada",
-    "revision": "incluida en rutina diaria; pruebas de activación pendientes"
+    "secuencia": "PR53 listo; pruebas funcionales Chromium/WebKit pasan, integración pendiente del check de arquitectura",
+    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
+    "actualizado": "2026-10-20",
+    "implementacion": "05a9e2f6cf65f1e4ad41402a2386affc1017c55c"
   },
   {
     "repo": "sala-edicion",
     "commit": "c528567c2b844f79f67fb5e10d8a4667c88a63b4",
     "capturador": "central con entrega privada",
-    "secuencia": "implementación en rama; no desplegada",
-    "revision": "incluida en rutina diaria; pruebas de activación pendientes"
+    "secuencia": "frontend integrado; backend v76 comprobado, v77 reportado por responsable conservando chinches; recibo real pendiente",
+    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
+    "actualizado": "2026-10-20",
+    "implementacion": "7f825acb951d495022c30908adf4c3e6bcb1771e"
   },
   {
     "repo": "amalaya-board",
     "commit": "a3d8fb71148c7e24e243e4fc3a6e4b8929a2dadf",
     "capturador": "adaptador nativo",
-    "secuencia": "implementación en rama; no desplegada",
-    "revision": "incluida en rutina diaria; pruebas de activación pendientes"
+    "secuencia": "PR88 preparado y CI pasa; falta localizar editor productivo antes de desplegar servidor y frontend",
+    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
+    "actualizado": "2026-10-20",
+    "implementacion": "07fc03783af32ee08c034b9f490471a2dbba6a80"
   },
   {
     "repo": "EMDevaluacion360",
     "commit": "e046a1a7cf9f45e7d111d4c69cdfb3c4adb5be26",
     "capturador": "adaptador nativo privado",
-    "secuencia": "implementación en rama; no desplegada",
-    "revision": "incluida en rutina diaria; pruebas de activación pendientes"
+    "secuencia": "interfaz y servidor publicados en versión40; prueba de recepción real con sesión pendiente",
+    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
+    "actualizado": "2026-10-20",
+    "implementacion": "40b279afe9953f34a12d222a909f94183c3c5c90"
   }
 ]
