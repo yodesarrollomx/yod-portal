@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "package": "chinche/paquete.json",
-  "updatedAt": "2026-10-20T18:49:04.534408+00:00",
+  "updatedAt": "2026-10-20T19:16:26.092700+00:00",
   "controlTask": "CG-CHINCHES-AUDIO-SECUENCIA-20261020",
   "reviewState": "private external state; never audio, notes or private identifiers in public repo",
   "reviewPolicy": {
@@ -62,15 +62,58 @@
       "repository": "yodesarrollomx/plan-potencial",
       "mode": "indirect",
       "targetVersion": "1.0.0",
-      "surfaces": [],
+      "surfaces": [
+        "index.html",
+        "board.html"
+      ],
       "targets": [],
       "capturePolicy": "dom-guarded",
       "integrationConfirmed": false,
-      "inventoryStatus": "pending",
+      "inventoryStatus": "source-not-installed",
       "source": {
         "commit": "9f036c72513d07b4b89d402ab9aa27264b56a534",
         "auditedCommit": "9f036c72513d07b4b89d402ab9aa27264b56a534",
-        "basis": "unconfirmed"
+        "basis": "entrypoints-audited-no-loader",
+        "auditedAt": "2026-10-20T19:14:31.132921+00:00",
+        "finding": "Instalación pendiente en las entradas propias auditadas. La cadena del Portero no carga shell ni chinche. Esta comprobación de fuentes no acredita ausencia global de chinches ni exclusión intencional.",
+        "evidence": [
+          {
+            "repository": "yodesarrollomx/plan-potencial",
+            "path": "index.html",
+            "commit": "9f036c72513d07b4b89d402ab9aa27264b56a534",
+            "finding": "Entrada pública: código inline, Facebook, Leaflet y agenda; sin cargador del módulo de chinches."
+          },
+          {
+            "repository": "yodesarrollomx/plan-potencial",
+            "path": "board.html",
+            "commit": "9f036c72513d07b4b89d402ab9aa27264b56a534",
+            "finding": "La línea 160 carga potenciales-yod/portero.js."
+          },
+          {
+            "repository": "yodesarrollomx/potenciales-yod",
+            "path": "portero.js",
+            "commit": "48ee29f848e727a0f7e12470ce056085a7aec580",
+            "finding": "Carga os/yod-acceso.js y Google GSI; no carga shell ni chinche."
+          },
+          {
+            "repository": "yodesarrollomx/yod-portal",
+            "path": "os/yod-acceso.js",
+            "commit": "bbf14cf67f98b5db98bcf3d89c71d7859501b784",
+            "finding": "Sólo define YOD_PORTERO; termina la cadena sin cargar shell ni chinche."
+          }
+        ],
+        "dependencies": [
+          {
+            "repository": "yodesarrollomx/potenciales-yod",
+            "path": "portero.js",
+            "commit": "48ee29f848e727a0f7e12470ce056085a7aec580"
+          },
+          {
+            "repository": "yodesarrollomx/yod-portal",
+            "path": "os/yod-acceso.js",
+            "commit": "bbf14cf67f98b5db98bcf3d89c71d7859501b784"
+          }
+        ]
       },
       "runtime": {
         "version": null,
@@ -168,15 +211,59 @@
       "repository": "yodesarrollomx/Co-desarrolladores-Yod",
       "mode": "indirect",
       "targetVersion": "1.0.0",
-      "surfaces": [],
+      "surfaces": [
+        "index.html",
+        "src/main.jsx",
+        "src/App.jsx"
+      ],
       "targets": [],
       "capturePolicy": "dom-guarded",
       "integrationConfirmed": false,
-      "inventoryStatus": "pending",
+      "inventoryStatus": "source-not-installed",
       "source": {
         "commit": "bdaf46b44735255811d164824ec35f89a592d0cd",
         "auditedCommit": "bdaf46b44735255811d164824ec35f89a592d0cd",
-        "basis": "unconfirmed"
+        "basis": "entrypoints-audited-no-loader",
+        "auditedAt": "2026-10-20T19:14:31.132921+00:00",
+        "finding": "Instalación pendiente en las entradas propias auditadas. La aplicación React y su PWA no cargan shell ni chinche. No está en el catálogo técnico estático de YOD OS; el repositorio no está archivado ni deshabilitado. No se acredita que Masterbrokers lo sustituya ni ausencia global de chinches.",
+        "evidence": [
+          {
+            "repository": "yodesarrollomx/Co-desarrolladores-Yod",
+            "path": "index.html",
+            "commit": "bdaf46b44735255811d164824ec35f89a592d0cd",
+            "finding": "La línea 22 carga src/main.jsx."
+          },
+          {
+            "repository": "yodesarrollomx/Co-desarrolladores-Yod",
+            "path": "src/main.jsx",
+            "commit": "bdaf46b44735255811d164824ec35f89a592d0cd",
+            "finding": "Importa React, ReactDOM, App.jsx e index.css."
+          },
+          {
+            "repository": "yodesarrollomx/Co-desarrolladores-Yod",
+            "path": "src/App.jsx",
+            "commit": "bdaf46b44735255811d164824ec35f89a592d0cd",
+            "finding": "Importa React, lucide y logo; importa jsPDF/autotable bajo demanda. Sin iframe, inyección HTML ni cargador de shell o chinche."
+          },
+          {
+            "repository": "yodesarrollomx/Co-desarrolladores-Yod",
+            "path": "vite.config.js",
+            "commit": "bdaf46b44735255811d164824ec35f89a592d0cd",
+            "finding": "VitePWA registra el service worker y cachea fuentes; no carga el módulo de chinches."
+          },
+          {
+            "repository": "yodesarrollomx/yod-portal",
+            "path": "os/catalogo.js",
+            "commit": "bbf14cf67f98b5db98bcf3d89c71d7859501b784",
+            "finding": "No incluye este portal financiero. SYS-INVERSION apunta a Masterbrokers, lo que no demuestra sustitución funcional."
+          }
+        ],
+        "repositoryStatus": {
+          "archived": false,
+          "disabled": false,
+          "observedAt": "2026-10-20T19:14:31.132921+00:00",
+          "basis": "github-repository-metadata"
+        }
       },
       "runtime": {
         "version": null,
