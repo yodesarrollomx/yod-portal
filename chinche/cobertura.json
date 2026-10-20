@@ -1,0 +1,310 @@
+{
+  "schemaVersion": 1,
+  "version": "1.0.0",
+  "sequenceProtocol": 1,
+  "registered": 15,
+  "sourceConfirmed": 13,
+  "unknown": [
+    "plan-potencial",
+    "co-desarrolladores-yod"
+  ],
+  "pendingReceipt": [
+    "real-miramar-board",
+    "plan-potencial",
+    "interiores-aurum",
+    "aurum-board",
+    "co-desarrolladores-yod",
+    "board-flujo-yod",
+    "yodesarrollomx.github.io",
+    "potenciales-yod",
+    "board-aurum",
+    "yod-despacho",
+    "yod-portal",
+    "yodesarrollo-board",
+    "sala-edicion",
+    "amalaya-board",
+    "emdevaluacion360"
+  ],
+  "pendingReplay": [
+    "real-miramar-board",
+    "plan-potencial",
+    "interiores-aurum",
+    "aurum-board",
+    "co-desarrolladores-yod",
+    "board-flujo-yod",
+    "yodesarrollomx.github.io",
+    "potenciales-yod",
+    "board-aurum",
+    "yod-despacho",
+    "yod-portal",
+    "yodesarrollo-board",
+    "sala-edicion",
+    "amalaya-board",
+    "emdevaluacion360"
+  ],
+  "integrations": [
+    {
+      "id": "real-miramar-board",
+      "repository": "yodesarrollomx/real-miramar-board",
+      "mode": "shared",
+      "targetVersion": "1.0.0",
+      "integrationConfirmed": true,
+      "surfaces": [
+        "costos-oficiales.html",
+        "cuentas.html",
+        "direccion.html",
+        "evidencia.html",
+        "index.html",
+        "tramites.html"
+      ],
+      "capturePolicy": "dom-guarded",
+      "sourceCommit": "9db34a902f4e1f6f1f9b727b974f813625b5e16d",
+      "runtimeVersion": null,
+      "receiptVerified": false,
+      "replayVerified": false,
+      "backendVersion": null
+    },
+    {
+      "id": "plan-potencial",
+      "repository": "yodesarrollomx/plan-potencial",
+      "mode": "indirect",
+      "targetVersion": "1.0.0",
+      "integrationConfirmed": false,
+      "surfaces": [],
+      "capturePolicy": "dom-guarded",
+      "sourceCommit": "9f036c72513d07b4b89d402ab9aa27264b56a534",
+      "runtimeVersion": null,
+      "receiptVerified": false,
+      "replayVerified": false,
+      "backendVersion": null
+    },
+    {
+      "id": "interiores-aurum",
+      "repository": "yodesarrollomx/interiores-aurum",
+      "mode": "shared",
+      "targetVersion": "1.0.0",
+      "integrationConfirmed": true,
+      "surfaces": [
+        "llave-maestra.html"
+      ],
+      "capturePolicy": "dom-guarded",
+      "sourceCommit": "8bcdfc35b98c83d2a33f802abe0064e971c4fa92",
+      "runtimeVersion": null,
+      "receiptVerified": false,
+      "replayVerified": false,
+      "backendVersion": null
+    },
+    {
+      "id": "aurum-board",
+      "repository": "yodesarrollomx/aurum-board",
+      "mode": "shared",
+      "targetVersion": "1.0.0",
+      "integrationConfirmed": true,
+      "surfaces": [
+        "index.html"
+      ],
+      "capturePolicy": "dom-guarded",
+      "sourceCommit": "e3dd428a01b01d1c8b5775c7fcca408735c98357",
+      "runtimeVersion": null,
+      "receiptVerified": false,
+      "replayVerified": false,
+      "backendVersion": null
+    },
+    {
+      "id": "co-desarrolladores-yod",
+      "repository": "yodesarrollomx/Co-desarrolladores-Yod",
+      "mode": "indirect",
+      "targetVersion": "1.0.0",
+      "integrationConfirmed": false,
+      "surfaces": [],
+      "capturePolicy": "dom-guarded",
+      "sourceCommit": "bdaf46b44735255811d164824ec35f89a592d0cd",
+      "runtimeVersion": null,
+      "receiptVerified": false,
+      "replayVerified": false,
+      "backendVersion": null
+    },
+    {
+      "id": "board-flujo-yod",
+      "repository": "yodesarrollomx/board-flujo-yod",
+      "mode": "shared",
+      "targetVersion": "1.0.0",
+      "integrationConfirmed": true,
+      "surfaces": [
+        "index.html"
+      ],
+      "capturePolicy": "dom-guarded",
+      "sourceCommit": "e9d122f090f7fdf3a6d5478fbf27b2d91bc6b3eb",
+      "runtimeVersion": null,
+      "receiptVerified": false,
+      "replayVerified": false,
+      "backendVersion": null
+    },
+    {
+      "id": "yodesarrollomx.github.io",
+      "repository": "yodesarrollomx/yodesarrollomx.github.io",
+      "mode": "shared",
+      "targetVersion": "1.0.0",
+      "integrationConfirmed": true,
+      "surfaces": [
+        "propuestas/inicio/index.html"
+      ],
+      "capturePolicy": "dom-guarded",
+      "sourceCommit": "a5680f2cf2cd37c5a9035c250a7ad7a5424197e2",
+      "runtimeVersion": null,
+      "receiptVerified": false,
+      "replayVerified": false,
+      "backendVersion": null
+    },
+    {
+      "id": "potenciales-yod",
+      "repository": "yodesarrollomx/potenciales-yod",
+      "mode": "shared",
+      "targetVersion": "1.0.0",
+      "integrationConfirmed": true,
+      "surfaces": [
+        "accesos.html",
+        "index.html",
+        "macrolotes.html",
+        "mapa.html",
+        "mixto.html",
+        "patrimonial.html",
+        "residencial.html",
+        "unifamiliar.html"
+      ],
+      "capturePolicy": "dom-guarded",
+      "sourceCommit": "48ee29f848e727a0f7e12470ce056085a7aec580",
+      "runtimeVersion": null,
+      "receiptVerified": false,
+      "replayVerified": false,
+      "backendVersion": null
+    },
+    {
+      "id": "board-aurum",
+      "repository": "yodesarrollomx/board-aurum",
+      "mode": "shared",
+      "targetVersion": "1.0.0",
+      "integrationConfirmed": true,
+      "surfaces": [
+        "index.html"
+      ],
+      "capturePolicy": "dom-guarded",
+      "sourceCommit": "93bf6241c8f9c9b40dd5888e81936588fe4ebafa",
+      "runtimeVersion": null,
+      "receiptVerified": false,
+      "replayVerified": false,
+      "backendVersion": null
+    },
+    {
+      "id": "yod-despacho",
+      "repository": "yodesarrollomx/yod-despacho",
+      "mode": "shared",
+      "targetVersion": "1.0.0",
+      "integrationConfirmed": true,
+      "surfaces": [
+        "clasico.html",
+        "corcho.js",
+        "hilo.html",
+        "index.html"
+      ],
+      "capturePolicy": "dom-guarded",
+      "sourceCommit": "d89b15114ffbca61bfd8e2b4eb61661642adebee",
+      "runtimeVersion": null,
+      "receiptVerified": false,
+      "replayVerified": false,
+      "backendVersion": null
+    },
+    {
+      "id": "yod-portal",
+      "repository": "yodesarrollomx/yod-portal",
+      "mode": "bundle",
+      "targetVersion": "1.0.0",
+      "integrationConfirmed": true,
+      "surfaces": [
+        "os/index.html",
+        "tablero.html",
+        "obra.html",
+        "os/shell.js",
+        "os/despacho-chinches.js",
+        "chinche/revisar.html",
+        "despacho3d/chinches3d.mjs"
+      ],
+      "capturePolicy": "dom-guarded",
+      "sourceCommit": "597c4daf9d3c8059279222616b249438ae861a68",
+      "runtimeVersion": null,
+      "receiptVerified": false,
+      "replayVerified": false,
+      "backendVersion": null
+    },
+    {
+      "id": "yodesarrollo-board",
+      "repository": "yodesarrollomx/yodesarrollo-board",
+      "mode": "bundle",
+      "targetVersion": "1.0.0",
+      "integrationConfirmed": true,
+      "surfaces": [
+        "presentacion/",
+        "master-brokers/"
+      ],
+      "capturePolicy": "dom-guarded",
+      "sourceCommit": "b700782c42a71cf2b72605e8d4765ae05f400a7e",
+      "runtimeVersion": null,
+      "receiptVerified": false,
+      "replayVerified": false,
+      "backendVersion": null
+    },
+    {
+      "id": "sala-edicion",
+      "repository": "yodesarrollomx/sala-edicion",
+      "mode": "shared",
+      "targetVersion": "1.0.0",
+      "integrationConfirmed": true,
+      "surfaces": [
+        "index.html",
+        "tablero-sala.js"
+      ],
+      "capturePolicy": "dom-guarded",
+      "sourceCommit": "7f825acb951d495022c30908adf4c3e6bcb1771e",
+      "runtimeVersion": null,
+      "receiptVerified": false,
+      "replayVerified": false,
+      "backendVersion": "76 observed;77 reported by responsible"
+    },
+    {
+      "id": "amalaya-board",
+      "repository": "yodesarrollo/amalaya-board",
+      "mode": "native-prefix",
+      "targetVersion": "1.0.0",
+      "integrationConfirmed": true,
+      "surfaces": [
+        "src/App.jsx",
+        "public/chinche.js"
+      ],
+      "capturePolicy": "dom-guarded",
+      "sourceCommit": "5809816629f2bca74ebcdf53b3b70bb686aa6543",
+      "runtimeVersion": null,
+      "receiptVerified": false,
+      "replayVerified": false,
+      "backendVersion": "7"
+    },
+    {
+      "id": "emdevaluacion360",
+      "repository": "yodesarrollomx/EMDevaluacion360",
+      "mode": "native-prefix",
+      "targetVersion": "1.0.0",
+      "integrationConfirmed": true,
+      "surfaces": [
+        "web/pins.js",
+        "index.html",
+        "apps-script/Index.html"
+      ],
+      "capturePolicy": "technical-card",
+      "sourceCommit": "40b279afe9953f34a12d222a909f94183c3c5c90",
+      "runtimeVersion": null,
+      "receiptVerified": false,
+      "replayVerified": false,
+      "backendVersion": "40"
+    }
+  ],
+  "scope": "Public source inventory only; runtime and private review require independent evidence."
+}

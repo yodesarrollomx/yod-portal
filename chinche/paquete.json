@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "name": "@yod/chinches",
+  "version": "1.0.0",
+  "sequenceProtocol": 1,
+  "releasesDir": "chinche/releases",
+  "entrypoint": "https://yodesarrollomx.github.io/yod-portal/chinche.js",
+  "assets": [
+    {
+      "path": "chinche/secuencia.js",
+      "sha256": "76ad3bae5fefc6f78a4141d4e93c5b7e66f27ce0fded268506b0fc2c1b8541e0"
+    },
+    {
+      "path": "chinche/entrega.js",
+      "sha256": "908a1da68fb4023aaf0aa6a0a862b33a54d5796010cc9f864b3ed80e0697ef46"
+    },
+    {
+      "path": "chinche/microfono.html",
+      "sha256": "0ee191ab30f20fa12c4d81e5fe2d5258194515dabda4c78749ff05b281870cd1"
+    }
+  ]
+}

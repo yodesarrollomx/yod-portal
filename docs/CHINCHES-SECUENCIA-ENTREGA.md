@@ -1,25 +1,13 @@
 # Chinches con audio y secuencia · entrega técnica
 
-Estado: implementación en rama, pendiente de activación y verificación en producción. No es un recibo de despliegue.
+Las cinco integraciones principales se publicaron el20oct2026: Portal, Sala, presentaciones, Amalaya y Evaluación360. Fuente de estado técnico: [registro canónico](../chinche/registro.json) y [control de versiones](../chinche/control.html). El registro conserva por separado los recibos reales y la reproducción pendientes; no certifica la entrega por fuente o CI.
 
-Mecánica compartida: audio MediaRecorder, lápiz/marcador/formas, tiempo por punto, deshacer, capturas intermedias y reproducción sincronizada. Se conserva contexto y archivo local; la entrega sólo se confirma por ID y SHA256. No se sustituye un audio fallido por texto ni se publica contenido privado en issues.
+El [paquete reutilizable](arquitectura/chinches-paquete.md) fija release SemVer, formato de secuencia y huellas. La skill `instalar-mantener-chinches` instala, registra, propone actualizaciones coordinadas y aplica una reversión conocida. No volver a copiar o reescribir módulos manualmente por proyecto.
 
-Fuentes centrales: yod-portal/chinche/secuencia.js y entrega.js. `scripts/chinche-bundle.cjs` actualiza core y copia de presentaciones. Amalaya y EMD incorporan el mismo grabador y conservan sus autenticaciones/bandejas. Las superficies técnicas privadas no capturan nombres ni respuestas automáticamente.
+Audio MediaRecorder, trazos temporales, capturas intermedias y reproducción siguen en el mismo componente. Se conservan los adaptadores y autenticaciones de cada host, los IDs y el SHA256 del paquete privado. Amalaya publicó el backend original versión7; Evaluación360 versión40; Sala versión76 observada y77 reportada por el responsable conservando chinches. Los proyectos originales y permisos se mantienen. Estas referencias no sustituyen una prueba privada de recepción y reproducción.
 
-## Instalación pendiente
+La revisión usa [el registro](../chinche/registro.json), metadatos por fuente y `scripts/chinches-revision.cjs`: procesa nuevos, modificados y pendientes; no vuelve a cargar medios ya revisados con la misma huella. Una paginación incompleta conserva el corte anterior. La rutina diaria existente conserva horario, pausas y reservas; no se crea otra. Configuración no equivale a corrida exitosa.
 
-1. Comparar código VIVO y despliegue existente de cada Apps Script con el cambio del PR; respaldar la fuente privada. El espejo público no sustituye la fuente viva.
-2. Sala: agregar ChincheSecuencia.gs y el despacho de acciones acotado a doPost; configurar carpeta privada mediante configurarChincheSecuencia. Conservar roles, URL /exec y demás funciones. Revisar autorización de Drive del propietario. Nunca crear otra implementación ni cambiar compartición.
-3. Amalaya: agregar ChincheSecuencia.gs y adaptador Code.gs al motor existente, conservando CARPETA_ID y roles. EMD: igual con FOLDER_ID, regenerar Index.html; la columna M de Chinches guarda hash de secuencia, sin desplazar A:L. Conservar acceso por autor y separación QA.
-4. Actualizar versión de la implementación EXISTENTE, comprobar identidad, permisos y lectura. No utilizar registros productivos ficticios como pruebas. Activar los consumidores sólo después de confirmar la capacidad de almacenamiento.
-5. Verificar una entrega real autorizada: archivo privado completo, mismo ID/hash, reproducción de audio y pasos, recuperación tras recarga y revisión desde otra sesión autorizada. No cerrar el encargo sin esta evidencia.
+Privacidad: no publicar audio, capturas, comentarios, nombres, respuestas, IDs de archivos privados ni llaves. Evaluación360 conserva su tarjeta técnica. Las fuentes indirectas no comprobadas y los borradores locales de otros dispositivos permanecen como cobertura desconocida.
 
-Revisor diario ampliado y releído el20oct: misma rutina08:00Hermosillo; todas las superficies detectadas, descubrimiento de faltantes y paquetes completos. La rutina no puede observar IndexedDB de todos los aparatos.
-
-## Evidencia local y límites
-
-Portal:856 pruebas y verificadores OS/portal/accesos/obra. Presentaciones:151 pruebas. Sala:verificador sin red y4 pruebas de almacenamiento/idempotencia/roles/integridad. Grabador:prueba Chromium con MediaRecorder y micrófono simulado, trazos/capturas/reproducción en390/768/1280px. Amalaya:build y pruebas. EMD:comprobación local separada. Estos resultados no acreditan permisos del micrófono en Safari real ni backend publicado.
-
-Bloqueo de activación observado: navegador de nube sin sesión Google, Apps Script redirige a página pública. No se ha editado el servidor ni ampliado permisos. Mantener PR en borrador hasta completar integración y QA nativa. No sustituir faltantes por una demo.
-
-Reversión: revertir cambios de código, conservando IDs, paquetes, recibos y borradores. No borrar registros ni archivos privados.
+Reversión: restaurar el bloque administrado y release anterior por PR, preservando IndexedDB, medios, IDs, recibos, permisos y registros privados.

@@ -11,6 +11,10 @@ Antes de modificar código, leer `docs/arquitectura/README.md`, el componente y 
 
 El repositorio es público. Nunca publicar datos reales de clientes, secretos, exportaciones de hojas privadas o detalles de vulnerabilidades pendientes. Usar ejemplos sintéticos y avisos privados de seguridad para los hallazgos restringidos.
 
+## Instalar y mantener chinches
+
+Usar la skill `instalar-mantener-chinches` y `docs/arquitectura/chinches-paquete.md` al añadir una superficie, cambiar el grabador o revisar cobertura. La fuente canónica es `chinche/paquete.json` + `chinche/registro.json`; no crear otra copia artesanal ni una rutina duplicada. Ejecutar el plan antes de escribir, comprobar huellas reales y registrar la integración nueva. Separar instalación, publicación, recibo, revisión y corrección. Los estados de revisión se guardan privadamente fuera de Git.
+
 Prioridad del propietario: vender más, luego mejorar margen/control y después acelerar cobros. Seguridad e integridad de datos no se sacrifican por ese orden.
 
 Relevo del Despacho 3D (entorno del agente y versión de oficina): `docs/ENTORNO-AGENTE-RELEVO.md` (estado, interruptores, reglas, método de entrega y lo que sigue).

@@ -1,21 +1,22 @@
 {
-  "model_revision": "2026-10-20.puesto-agente2.1",
-  "proposal_id": "CHG-PUESTO-AGENTE-2-20261020",
-  "summary": "Aislar prioridad CSS del Puesto2 frente a reglas móviles clásicas; sidebar flexible conserva conversación y compositor dentro de pantalla.",
+  "model_revision": "2026-10-20.chinches-paquete.1",
+  "proposal_id": "CHG-CHINCHES-PAQUETE-20261020",
+  "summary": "Paquete semver con hashes/snapshots inmutables; instalación y actualización condicional por bloques; registro único por consumidor; revisión incremental privada separando recibido/revisado/cumplido; skill persistida.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "SYS-DESPACHO-3D"
+    "SYS-SALA",
+    "SYS-INVERSION",
+    "SYS-AMALAYA",
+    "SYS-EMD"
   ],
   "tests": [
+    "node scripts/chinches-paquete.cjs verificar",
+    "node --test tests/chinches-paquete.test.cjs tests/chinches-revision.test.cjs",
     "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node --test tests/despacho-puesto2.test.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
-    "node verify-obra-app.cjs",
-    "Chromium HTTP sintético1280/390 pendiente; sin escrituras reales"
+    "node verify-obra-app.cjs"
   ],
-  "rollback": "Activar puesto=clasico o revertir capa e inclusiones por PR, conservando historial, recibos, permisos, datos y versiones."
+  "rollback": "Revertir release/registro y bloque administrado a snapshot anterior; preservar IDs, medios, recibos, permisos y almacenamiento."
 }
