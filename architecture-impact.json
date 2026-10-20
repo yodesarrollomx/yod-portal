@@ -1,17 +1,21 @@
 {
-  "model_revision": "2026-10-20.ruisenor-interaccion-volumenes.2",
-  "proposal_id": "CHG-RUISENOR-INTERACCION-VOLUMENES-20261020",
-  "summary": "Interacción y volúmenes frontend implementados localmente: A puente conACK/contexto visible; B DOM sin foco y confirmación sólo nativa; C intención recuperable. Borrador porcaso/escenario/base sinStore/finanzas/autosave. QA final y PR/Pages pendientes; persistencia/cálculo canónicos requieren ampliar alcance Apps Script/Sheets.",
+  "model_revision": "2026-10-20.presentaciones-md.1",
+  "proposal_id": "CHG-PRESENTACIONES-MD-20261020",
+  "summary": "Registrar antes de implementación portal Presentaciones dentro de Master Developer, borrador/publicación y conducción en servidor Sala existente, con chinches comunes y fuentes conservadas.",
   "components": [
+    "SYS-INVERSION",
     "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "SYS-POTENCIALES"
+    "SYS-CONTROL",
+    "SYS-SALA",
+    "GAS-SALA",
+    "SHEET-SALA",
+    "SYS-AMALAYA",
+    "SYS-EMD"
   ],
   "tests": [
-    "Bloques locales informados: controller23, workspace-navigation24, live70 y boot10nuevos+11previos; consumidorPPP suite150. Conteo total Portal y QA final se concilian por root antes de publicar.",
-    "Cobertura de origen/ventana/nonce, ACK/contexto visible, lectura nativa frente a legacy, edición en curso, respuestas tardías, intención recuperable, duplicados y conciliación sin reenvío de mutación.",
-    "Validación final pendiente: recorrido Chromium escritorio/móvil con datos sintéticos sin escrituras, suite y verificadores obligatorios, PR/Pages y cotejo de archivos; aceptación privada y audio físico se acreditan aparte."
+    "Contratos de autorización, revisión, idempotencia, recibos y control de sesión en aislamiento.",
+    "QA móvil/escritorio y fallos A/B/C sin escrituras de negocio sintéticas.",
+    "Verificar código servido, implementación existente y compatibilidad con consumidores previos."
   ],
-  "rollback": "Deshabilitar el selector/routing del piloto o revertir frontend por PR conservando escenarios, historial, solicitudes, recibos y permisos; no borrar ni restaurar datos para revertir la interfaz."
+  "rollback": "Revertir frontend/manifiesto conservando archivos, versiones, chinches, recibos y permisos."
 }

@@ -291,14 +291,19 @@
   {
     "repo": "yodesarrollo-board",
     "files": [
+      "HEAD:brokers.html",
+      "HEAD:presentaciones.html",
       "HEAD:presentacion/",
+      "HEAD:presentacion/distrito-abasto/",
+      "HEAD:presentacion/distrito-obregon/",
+      "HEAD:presentacion/gaston-madrid/",
       "HEAD:master-brokers/"
     ],
     "commit": "851d9a5cc0bb31dad21611fe516de56fdc336228",
     "capturador": "bundle",
     "inventoryStatus": "source-audited",
     "sourceBasis": "exact-shared-block",
-    "sourceFinding": null,
+    "sourceFinding": "PMD-1.0.0 incorpora catálogo y cuatro adaptadores al mismo paquete común; publicación y revisión física pendientes de comprobar por separado.",
     "sourceDependencies": [],
     "sourceEvidence": [],
     "secuencia": "Paquete objetivo 1.0.0; publicación, recibo y reproducción se acreditan por separado.",
