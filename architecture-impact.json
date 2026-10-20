@@ -10,7 +10,10 @@
     "SYS-TRACK",
     "SYS-OBRA",
     "SYS-CONTROL",
-    "SYS-OBRA-CLIENTE"
+    "SYS-OBRA-CLIENTE",
+    "GAS-SALA",
+    "SHEET-SALA",
+    "EXT-GMAIL"
   ],
   "tests": [
     "node --test tests/chinche-secuencia.test.cjs",
