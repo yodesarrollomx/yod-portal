@@ -8,7 +8,10 @@
     "SYS-SALA",
     "GAS-SALA",
     "SYS-AMALAYA",
-    "SYS-EMD"
+    "SYS-EMD",
+    "SYS-DESPACHO",
+    "GAS-EMD",
+    "GAS-AMALAYA"
   ],
   "tests": [
     "Reproducir MIME Safari con espacio/comillas y conservar exactamente payload; rechazar contenedor distinto y audio corrupto.",

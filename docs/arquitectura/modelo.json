@@ -13833,7 +13833,10 @@
         "SYS-SALA",
         "GAS-SALA",
         "SYS-AMALAYA",
-        "SYS-EMD"
+        "SYS-EMD",
+        "SYS-DESPACHO",
+        "GAS-EMD",
+        "GAS-AMALAYA"
       ],
       "status": "implementado_local",
       "authorization": "Reporte directo de Alejandro20oct: Audio inválido bloquea Clavar tras voz y dibujo en iPad. Orden vigente integrar y mantener la misma mecánica común y publicar reparación.",
