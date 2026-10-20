@@ -147,7 +147,7 @@ function chincheHarness() {
 test('Real composer has no POST when opened; human Clavar alone persists validated code then sends',async()=>{
   const h=chincheHarness();const controller=await h.window.YODChinche.anotar(h.options());assert.equal(typeof controller.cancel,'function');
   assert.equal(h.requests.length,0);assert.equal(h.saved.length,0);assert.equal(h.node('.chn-foto').removed,true);
-  h.node('.chn-txt').value='Synthetic human request';await h.node('[data-ok]').onclick();await Promise.resolve();
+  h.composer._secuencia.hasContent=()=>true;h.node('.chn-txt').value='Synthetic human request';await h.node('[data-ok]').onclick();await Promise.resolve();
   assert.equal(h.saved.length,1);assert.equal(h.requests.length,1);assert.equal(h.requests[0].options.method,'POST');
   assert.ok(h.saved[0].codigo.includes('punto=[6.1,0.7,-4.2]'));assert.ok(h.saved[0].codigo.includes('quaternion=[0,0,0,1]'));
   assert.equal(h.saved[0].codigo.includes('must-not-copy'),false);assert.equal(Object.values(h.saved[0]).some(v=>typeof v==='function'),false);
