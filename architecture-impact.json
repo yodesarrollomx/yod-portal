@@ -5,7 +5,8 @@
   "components": [
     "SYS-SALA",
     "GAS-SALA",
-    "SYS-YOD-OS"
+    "SYS-YOD-OS",
+    "SYS-DESPACHO"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check"

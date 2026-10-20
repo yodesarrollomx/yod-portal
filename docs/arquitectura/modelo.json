@@ -13809,7 +13809,8 @@
       "components": [
         "SYS-SALA",
         "GAS-SALA",
-        "SYS-YOD-OS"
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
       ],
       "status": "propuesto",
       "approval": "Dirección solicita corregir y publicar reproducción en iPhone dentro de Sala; autorización directa en conversación20-oct.",
