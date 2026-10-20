@@ -87,3 +87,5 @@ La auditoría no se considera completa mientras existan componentes críticos o 
 - [Chinches con voz y dibujo sincronizados](chinches-secuencia.md): contrato compartido, consumidores, evidencia privada y revisión.
 
 - [Puesto del agente 2.0](puesto-agente2.md): piloto de conversación con avatar, vistas móviles y contratos actuales; sin cambios de backend ni datos.
+
+- [Paquete y control de chinches](chinches-paquete.md): instalación repetible, releases inmutables, actualizaciones por huella, registro único y revisión incremental. [Abrir el control](../../chinche/control.html).

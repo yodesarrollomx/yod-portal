@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-20.puesto-agente2.1",
+  "revision": "2026-10-20.chinches-paquete.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -13655,6 +13655,25 @@
       ],
       "deployment": "Implementación local y verificaciones locales; PR, integración y Pages pendientes. El recorrido Chromium HTTP del piloto aún no se acredita. Sin modificación de backend ni datos. No acreditar edición del PPP por apertura o por el escenario sintético.",
       "rollback": "Activar puesto=clasico o revertir capa e inclusiones por PR, conservando historial, recibos, permisos, datos y versiones."
+    },
+    {
+      "id": "CHG-CHINCHES-PAQUETE-20261020",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ],
+      "status": "propuesto",
+      "authorization": "Alejandro20oct: ejecutar paquete reutilizable, control central de versiones, registro completo y revisión incremental.",
+      "proposal": "Paquete semver con hashes/snapshots inmutables; instalación y actualización condicional por bloques; registro único por consumidor; revisión incremental privada separando recibido/revisado/cumplido; skill persistida.",
+      "tests": [
+        "CLI dry-run, idempotencia, conflicto, conservación de adaptadores, rollback, límites de rutas y revisión parcial/sin medios.",
+        "Verificadores obligatorios de portal y arquitectura."
+      ],
+      "deployment": "Herramientas y registro se publican por PR. No acredita recepción/replay privados ni versión GAS por fuente. Actualización coordinada, no hot-swap durante grabaciones.",
+      "rollback": "Revertir release/registro y bloque administrado a snapshot anterior; preservar IDs, medios, recibos, permisos y almacenamiento."
     }
   ],
   "data_contracts": [
@@ -17753,6 +17772,193 @@
         "SYS-YOD-OS",
         "SYS-DESPACHO",
         "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "chinche/paquete.json",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "chinche/registro.json",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "chinche/releases/",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "chinche/control.html",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/chinches-paquete.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/chinches-revision.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/chinches-reporte.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/chinches-paquete.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/chinches-revision.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": ".github/workflows/chinches-paquete.yml",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "AGENTS.md",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "docs/arquitectura/chinches-paquete.md",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "docs/CHINCHES-SECUENCIA-ENTREGA.md",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/chinches-reporte.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "chinche/cobertura.json",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/chinches-estado.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/chinches-estado.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD"
       ]
     }
   ],

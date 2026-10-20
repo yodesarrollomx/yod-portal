@@ -10,19 +10,23 @@
       "HEAD:tramites.html"
     ],
     "commit": "9db34a902f4e1f6f1f9b727b974f813625b5e16d",
-    "capturador": "shell central",
-    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
-    "secuencia": "capturador central publicado; recibo y reproducción en este consumidor pendientes",
-    "actualizado": "2026-10-20"
+    "capturador": "shared",
+    "secuencia": "Paquete objetivo 1.0.0; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "9db34a902f4e1f6f1f9b727b974f813625b5e16d",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.0.0"
   },
   {
     "repo": "plan-potencial",
     "files": [],
     "commit": "9f036c72513d07b4b89d402ab9aa27264b56a534",
-    "capturador": "integración indirecta por verificar",
-    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
-    "secuencia": "integración y cobertura pendientes de verificar",
-    "actualizado": "2026-10-20"
+    "capturador": "indirect",
+    "secuencia": "Integración pendiente de verificar; no equivale a ausencia de chinches.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "9f036c72513d07b4b89d402ab9aa27264b56a534",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.0.0"
   },
   {
     "repo": "interiores-aurum",
@@ -30,10 +34,12 @@
       "HEAD:llave-maestra.html"
     ],
     "commit": "8bcdfc35b98c83d2a33f802abe0064e971c4fa92",
-    "capturador": "shell central",
-    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
-    "secuencia": "capturador central publicado; recibo y reproducción en este consumidor pendientes",
-    "actualizado": "2026-10-20"
+    "capturador": "shared",
+    "secuencia": "Paquete objetivo 1.0.0; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "8bcdfc35b98c83d2a33f802abe0064e971c4fa92",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.0.0"
   },
   {
     "repo": "aurum-board",
@@ -41,19 +47,23 @@
       "HEAD:index.html"
     ],
     "commit": "e3dd428a01b01d1c8b5775c7fcca408735c98357",
-    "capturador": "shell central",
-    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
-    "secuencia": "capturador central publicado; recibo y reproducción en este consumidor pendientes",
-    "actualizado": "2026-10-20"
+    "capturador": "shared",
+    "secuencia": "Paquete objetivo 1.0.0; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "e3dd428a01b01d1c8b5775c7fcca408735c98357",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.0.0"
   },
   {
     "repo": "Co-desarrolladores-Yod",
     "files": [],
     "commit": "bdaf46b44735255811d164824ec35f89a592d0cd",
-    "capturador": "integración indirecta por verificar",
-    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
-    "secuencia": "integración y cobertura pendientes de verificar",
-    "actualizado": "2026-10-20"
+    "capturador": "indirect",
+    "secuencia": "Integración pendiente de verificar; no equivale a ausencia de chinches.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "bdaf46b44735255811d164824ec35f89a592d0cd",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.0.0"
   },
   {
     "repo": "board-flujo-yod",
@@ -61,10 +71,12 @@
       "HEAD:index.html"
     ],
     "commit": "e9d122f090f7fdf3a6d5478fbf27b2d91bc6b3eb",
-    "capturador": "shell central",
-    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
-    "secuencia": "capturador central publicado; recibo y reproducción en este consumidor pendientes",
-    "actualizado": "2026-10-20"
+    "capturador": "shared",
+    "secuencia": "Paquete objetivo 1.0.0; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "e9d122f090f7fdf3a6d5478fbf27b2d91bc6b3eb",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.0.0"
   },
   {
     "repo": "yodesarrollomx.github.io",
@@ -72,10 +84,12 @@
       "HEAD:propuestas/inicio/index.html"
     ],
     "commit": "a5680f2cf2cd37c5a9035c250a7ad7a5424197e2",
-    "capturador": "shell central",
-    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
-    "secuencia": "capturador central publicado; recibo y reproducción en este consumidor pendientes",
-    "actualizado": "2026-10-20"
+    "capturador": "shared",
+    "secuencia": "Paquete objetivo 1.0.0; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "a5680f2cf2cd37c5a9035c250a7ad7a5424197e2",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.0.0"
   },
   {
     "repo": "potenciales-yod",
@@ -90,10 +104,12 @@
       "HEAD:unifamiliar.html"
     ],
     "commit": "48ee29f848e727a0f7e12470ce056085a7aec580",
-    "capturador": "shell central",
-    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
-    "secuencia": "capturador central publicado; recibo y reproducción en este consumidor pendientes",
-    "actualizado": "2026-10-20"
+    "capturador": "shared",
+    "secuencia": "Paquete objetivo 1.0.0; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "48ee29f848e727a0f7e12470ce056085a7aec580",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.0.0"
   },
   {
     "repo": "board-aurum",
@@ -101,10 +117,12 @@
       "HEAD:index.html"
     ],
     "commit": "93bf6241c8f9c9b40dd5888e81936588fe4ebafa",
-    "capturador": "shell central",
-    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
-    "secuencia": "capturador central publicado; recibo y reproducción en este consumidor pendientes",
-    "actualizado": "2026-10-20"
+    "capturador": "shared",
+    "secuencia": "Paquete objetivo 1.0.0; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "93bf6241c8f9c9b40dd5888e81936588fe4ebafa",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.0.0"
   },
   {
     "repo": "yod-despacho",
@@ -115,54 +133,87 @@
       "HEAD:index.html"
     ],
     "commit": "d89b15114ffbca61bfd8e2b4eb61661642adebee",
-    "capturador": "shell central",
-    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
-    "secuencia": "capturador central publicado; recibo y reproducción en este consumidor pendientes",
-    "actualizado": "2026-10-20"
+    "capturador": "shared",
+    "secuencia": "Paquete objetivo 1.0.0; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "d89b15114ffbca61bfd8e2b4eb61661642adebee",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.0.0"
   },
   {
     "repo": "yod-portal",
+    "files": [
+      "HEAD:os/index.html",
+      "HEAD:tablero.html",
+      "HEAD:obra.html",
+      "HEAD:os/shell.js",
+      "HEAD:os/despacho-chinches.js",
+      "HEAD:chinche/revisar.html",
+      "HEAD:despacho3d/chinches3d.mjs"
+    ],
     "commit": "baa5e318e752a3dae2ff3da9fb94c3014bf16384",
-    "capturador": "central",
-    "secuencia": "capturador publicado; Chromium/WebKit y 856 pruebas pasan",
-    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
-    "actualizado": "2026-10-20",
-    "implementacion": "597c4daf9d3c8059279222616b249438ae861a68"
+    "capturador": "bundle",
+    "secuencia": "Paquete objetivo 1.0.0; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "597c4daf9d3c8059279222616b249438ae861a68",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.0.0"
   },
   {
     "repo": "yodesarrollo-board",
+    "files": [
+      "HEAD:presentacion/",
+      "HEAD:master-brokers/"
+    ],
     "commit": "851d9a5cc0bb31dad21611fe516de56fdc336228",
-    "capturador": "copia compartida y adaptadores",
-    "secuencia": "publicado en Pages; todos checks pasan; recepción autenticada por consumidor pendiente",
-    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
-    "actualizado": "2026-10-20",
-    "implementacion": "b700782c42a71cf2b72605e8d4765ae05f400a7e"
+    "capturador": "bundle",
+    "secuencia": "Paquete objetivo 1.0.0; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "b700782c42a71cf2b72605e8d4765ae05f400a7e",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.0.0"
   },
   {
     "repo": "sala-edicion",
+    "files": [
+      "HEAD:index.html",
+      "HEAD:tablero-sala.js"
+    ],
     "commit": "c528567c2b844f79f67fb5e10d8a4667c88a63b4",
-    "capturador": "central con entrega privada",
-    "secuencia": "frontend integrado; backend v76 comprobado, v77 reportado por responsable conservando chinches; recibo real pendiente",
-    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
-    "actualizado": "2026-10-20",
-    "implementacion": "7f825acb951d495022c30908adf4c3e6bcb1771e"
+    "capturador": "shared",
+    "secuencia": "Paquete objetivo 1.0.0; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "7f825acb951d495022c30908adf4c3e6bcb1771e",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.0.0"
   },
   {
     "repo": "amalaya-board",
+    "files": [
+      "HEAD:src/App.jsx",
+      "HEAD:public/chinche.js"
+    ],
     "commit": "a3d8fb71148c7e24e243e4fc3a6e4b8929a2dadf",
-    "capturador": "adaptador nativo",
-    "secuencia": "servidor original versión7 e interfaz publicados; CI construir/publicar PASS; envío y reproducción autenticados pendientes",
-    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
-    "actualizado": "2026-10-20",
-    "implementacion": "5809816629f2bca74ebcdf53b3b70bb686aa6543"
+    "capturador": "native-prefix",
+    "secuencia": "Paquete objetivo 1.0.0; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "5809816629f2bca74ebcdf53b3b70bb686aa6543",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.0.0"
   },
   {
     "repo": "EMDevaluacion360",
+    "files": [
+      "HEAD:web/pins.js",
+      "HEAD:index.html",
+      "HEAD:apps-script/Index.html"
+    ],
     "commit": "e046a1a7cf9f45e7d111d4c69cdfb3c4adb5be26",
-    "capturador": "adaptador nativo privado",
-    "secuencia": "interfaz y servidor publicados en versión40; prueba de recepción real con sesión pendiente",
-    "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
-    "actualizado": "2026-10-20",
-    "implementacion": "40b279afe9953f34a12d222a909f94183c3c5c90"
+    "capturador": "native-prefix",
+    "secuencia": "Paquete objetivo 1.0.0; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "40b279afe9953f34a12d222a909f94183c3c5c90",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.0.0"
   }
 ]
