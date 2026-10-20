@@ -6,7 +6,9 @@
     "SYS-SALA",
     "GAS-SALA",
     "SYS-YOD-OS",
-    "SYS-DESPACHO"
+    "SYS-DESPACHO",
+    "SHEET-SALA",
+    "EXT-GMAIL"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check"
