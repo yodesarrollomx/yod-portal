@@ -6,7 +6,11 @@
     "SYS-YOD-OS",
     "SYS-SALA",
     "SYS-INVERSION",
-    "SYS-DESPACHO"
+    "SYS-DESPACHO",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-CONTROL",
+    "SYS-OBRA-CLIENTE"
   ],
   "tests": [
     "node --test tests/chinche-secuencia.test.cjs",

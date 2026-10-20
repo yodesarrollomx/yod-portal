@@ -27,3 +27,7 @@ Ampliar la rutina diaria existente; conservar pausas y reservas. Inventariar tod
 ## Reversión
 
 Revertir código consumidor y rutas nuevas, conservando archivos privados, IndexedDB, IDs, recibos y estados. No borrar originales ni reenviar operaciones inciertas.
+
+## Micrófono en contenedores restringidos
+
+El marco exterior de Apps Script observado el 20-oct-2026 no delega micrófono. Si la política del documento lo bloquea, la misma chinche abre `chinche/microfono.html` como ventana superior. Allí el usuario pulsa Grabar y concede micrófono; vuelve al dibujo para continuar. El audio vuelve exclusivamente al opener verificado por origen, ventana y nonce aleatorio, sin servidor intermedio. Cierre prematuro, rechazo o fallo no confirman entrega. La chinche conserva su reloj de trazos y capturas durante esa grabación. Prueba sintética: `node scripts/probar-microfono-marco.cjs`. Publicar primero el capturador antes de consumidores nativos.

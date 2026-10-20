@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'chinche.js'
+      - 'chinche/**'
+      - 'scripts/probar-microfono-marco.cjs'
       - 'os/despacho-chinches.js'
       - 'despacho3d/**'
       - 'scripts/probar-chinche*.cjs'
@@ -44,6 +46,7 @@ jobs:
           NODE_PATH: ${{ runner.temp }}/chinche-browser/node_modules
           BROWSER_EVIDENCE_DIR: ${{ runner.temp }}/chinche-evidence
         run: |
+          node scripts/probar-microfono-marco.cjs
           node scripts/probar-autones-browser.cjs
           node scripts/probar-puesto-browser.cjs
       - uses: actions/upload-artifact@v4

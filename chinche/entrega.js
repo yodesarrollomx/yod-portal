@@ -19,7 +19,7 @@ function client(io={}){
   const seen=await call('chinche_secuencia_recibo',{id:ch.id},k);
   if(!guard()||credential()!==k)return {state:'auth-required'};
   if(seen.contrato!==CONTRACT||seen.ok!==true)return {state:'waiting',reason:'backend'};
-  if(seen.hash){if(seen.hash!==sha256)return {state:'conflict'};return {state:'received',id:ch.id,hash:sha256};}
+  if(seen.hash){if(seen.id!==ch.id)return {state:'uncertain'};if(seen.hash!==sha256)return {state:'conflict'};return {state:'received',id:ch.id,hash:sha256};}
   // Safe to retry this action: backend lock, immutable ID/hash and ledger reconciliation.
   const ack=await call('chinche_secuencia_guardar',{id:ch.id,hash:sha256,data},k);
   if(!guard()||credential()!==k)return {state:'auth-required'};
