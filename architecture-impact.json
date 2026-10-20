@@ -11,7 +11,11 @@
     "SYS-EMD",
     "SYS-DESPACHO",
     "GAS-EMD",
-    "GAS-AMALAYA"
+    "GAS-AMALAYA",
+    "SYS-CONTROL",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "SYS-TRACK"
   ],
   "tests": [
     "Reproducir MIME Safari con espacio/comillas y conservar exactamente payload; rechazar contenedor distinto y audio corrupto.",
