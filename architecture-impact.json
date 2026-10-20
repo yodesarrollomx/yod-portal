@@ -1,14 +1,20 @@
 {
-  "model_revision": "2026-10-20.sala-arranque-progresivo.2",
-  "proposal_id": "CHG-SALA-ARRANQUE-PROGRESIVO-20261020",
-  "summary": "Ampliar apertura progresiva con presupuesto de red, cache del snapshot y mediciones separadas.",
+  "model_revision": "2026-10-20.chinches-secuencia.1",
+  "proposal_id": "CHG-CHINCHES-SECUENCIA-20261020",
+  "summary": "Voz y anotación sincronizadas, archivo privado y revisión integral de chinches.",
   "components": [
+    "SYS-YOD-OS",
     "SYS-SALA",
-    "SYS-YOD-OS"
+    "SYS-INVERSION",
+    "SYS-DESPACHO",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-CONTROL",
+    "SYS-OBRA-CLIENTE"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check",
-    "node scripts/verificar-impacto.cjs --base origin/main --head HEAD --repo yodesarrollomx/yod-portal"
+    "node --test tests/chinche-secuencia.test.cjs",
+    "node scripts/arquitectura.cjs --check"
   ],
-  "rollback": "Revertir consumidor por PR sin borrar registros."
+  "rollback": "Revertir consumidores conservando paquetes privados, IDs, recibos e IndexedDB."
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-20.sala-arranque-progresivo.2",
+  "revision": "2026-10-20.chinches-secuencia.1",
   "checked_at": "2026-10-19",
   "priorities": [
     "vender_mas",
@@ -476,6 +476,10 @@
           "claim": "Sistema presente en el catálogo canónico",
           "status": "codigo",
           "source_revision": "HEAD_baseline"
+        },
+        {
+          "claim": "CHG-CHINCHES-SECUENCIA-20261020: voz, trazos y capturas sincronizados en componente común; archivo privado y recibo por ID/SHA256. Propuesta autorizada; publicación y backend se verifican aparte.",
+          "status": "propuesto"
         }
       ],
       "data_entities": [
@@ -631,6 +635,10 @@
           "commit": "0351157a71ec9fc3c5b3beae70702c92646ece58",
           "claim": "GSI recupera origen mediante strict-origin; A/B real pasa400→200 y confirma Referer sin rutas/query. No modifica clientesOAuth ni acredita login personal completo.",
           "status": "ejecucion"
+        },
+        {
+          "claim": "CHG-CHINCHES-SECUENCIA-20261020: voz, trazos y capturas sincronizados en componente común; archivo privado y recibo por ID/SHA256. Propuesta autorizada; publicación y backend se verifican aparte.",
+          "status": "propuesto"
         }
       ],
       "data_entities": [
@@ -862,6 +870,10 @@
         },
         {
           "claim": "CHG-SALA-MESA-LOCAL-20261020: caché de consulta por sesión con actualización en segundo plano; registro previo, sin permisos restaurados ni rendimiento productivo acreditado.",
+          "status": "propuesto"
+        },
+        {
+          "claim": "CHG-CHINCHES-SECUENCIA-20261020: voz, trazos y capturas sincronizados en componente común; archivo privado y recibo por ID/SHA256. Propuesta autorizada; publicación y backend se verifican aparte.",
           "status": "propuesto"
         }
       ],
@@ -13575,6 +13587,31 @@
       ],
       "deployment": "Registro previo; implementación, CI y publicación del consumidor requieren recibos independientes.",
       "rollback": "Revertir PR de interfaz; conservar votos, notas, medios, fuentes y cola."
+    },
+    {
+      "id": "CHG-CHINCHES-SECUENCIA-20261020",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "GAS-AMALAYA",
+        "SYS-EMD",
+        "GAS-EMD",
+        "SYS-DESPACHO",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección20oct: implementar voz y dibujo sincronizados en todas las chinches y revisión periódica.",
+      "proposal": "Componente común, secuencia por reloj monotónico, archivo privado, recibo ID/SHA256, adaptadores de sesión propios.",
+      "tests": [
+        "Grabación, trazos, undo, reproducción, permisos, integridad, duplicado y respuesta perdida con datos sintéticos."
+      ],
+      "deployment": "Backend y consumidores requieren verificación independiente; no acreditar por fuente.",
+      "rollback": "Revertir código sin borrar registros privados ni IndexedDB."
     }
   ],
   "data_contracts": [
