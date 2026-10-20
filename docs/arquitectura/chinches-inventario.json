@@ -151,7 +151,7 @@
     "repo": "amalaya-board",
     "commit": "a3d8fb71148c7e24e243e4fc3a6e4b8929a2dadf",
     "capturador": "adaptador nativo",
-    "secuencia": "backend original versión7 publicado y frontend integrado; publicación de interfaz y recepción autenticada pendientes",
+    "secuencia": "servidor original versión7 e interfaz publicados; CI construir/publicar PASS; envío y reproducción autenticados pendientes",
     "revision": "incluida en rutina diaria 08:00 America/Hermosillo; ejecución20oct fallida; recibos reales pendientes",
     "actualizado": "2026-10-20",
     "implementacion": "5809816629f2bca74ebcdf53b3b70bb686aa6543"
