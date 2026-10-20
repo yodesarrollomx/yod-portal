@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-20.presentaciones-md.1",
+  "revision": "2026-10-20.chinches-audio-ipad.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -13803,6 +13803,27 @@
       ],
       "deployment": "Propuesta registrada antes de implementar; despliegue y comprobaciones se registran separadamente.",
       "rollback": "Revertir frontend/manifiesto conservando archivos, versiones, chinches, recibos y permisos."
+    },
+    {
+      "id": "CHG-CHINCHES-AUDIO-IPAD-20261020",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-INVERSION",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ],
+      "status": "propuesto",
+      "authorization": "Reporte directo de Alejandro20oct: Audio inválido bloquea Clavar tras voz y dibujo en iPad. Orden vigente integrar y mantener la misma mecánica común y publicar reparación.",
+      "proposal": "Normalizar únicamente sintaxis MIME de contenedores conocidos conservando bytes y cabecera original. Persistir borrador local antes de validar, con recuperación explícita y descarga del original aun si audio no pasa validación. No intercambiar código de una grabación abierta, descartar medios ni crear recibo de entrega sin archivo completo.",
+      "tests": [
+        "Reproducir MIME Safari con espacio/comillas y conservar exactamente payload; rechazar contenedor distinto y audio corrupto.",
+        "Dobles aislados de grabador, IndexedDB, errores de cuota, recarga y recuperación de voz/trazos/capturas; Chromium/WebKit.",
+        "Paquete versionado, hashes y consumidores observados; QA de regresión y publicación separadas."
+      ],
+      "deployment": "Propuesta previa; paquete1.0.0 observado. Reparación aún no implementada ni publicada. Pestaña iPad ya abierta no recuperada.",
+      "rollback": "Reactivar snapshot1.0.0 por PR y herramientas canónicas conservando borradores, originales, IDs y recibos."
     }
   ],
   "data_contracts": [

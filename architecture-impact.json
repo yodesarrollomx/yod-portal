@@ -1,22 +1,19 @@
 {
-  "model_revision": "2026-10-20.presentaciones-md.1",
-  "proposal_id": "CHG-PRESENTACIONES-MD-20261020",
-  "summary": "Registrar antes de implementación portal Presentaciones dentro de Master Developer, borrador/publicación y conducción en servidor Sala existente, con chinches comunes y fuentes conservadas.",
+  "model_revision": "2026-10-20.chinches-audio-ipad.1",
+  "proposal_id": "CHG-CHINCHES-AUDIO-IPAD-20261020",
+  "summary": "Normalizar únicamente sintaxis MIME de contenedores conocidos conservando bytes y cabecera original. Persistir borrador local antes de validar, con recuperación explícita y descarga del original aun si audio no pasa validación. No intercambiar código de una grabación abierta, descartar medios ni crear recibo de entrega sin archivo completo.",
   "components": [
-    "SYS-INVERSION",
     "SYS-YOD-OS",
-    "SYS-CONTROL",
+    "SYS-INVERSION",
     "SYS-SALA",
     "GAS-SALA",
-    "SHEET-SALA",
     "SYS-AMALAYA",
-    "SYS-EMD",
-    "EXT-GMAIL"
+    "SYS-EMD"
   ],
   "tests": [
-    "Contratos de autorización, revisión, idempotencia, recibos y control de sesión en aislamiento.",
-    "QA móvil/escritorio y fallos A/B/C sin escrituras de negocio sintéticas.",
-    "Verificar código servido, implementación existente y compatibilidad con consumidores previos."
+    "Reproducir MIME Safari con espacio/comillas y conservar exactamente payload; rechazar contenedor distinto y audio corrupto.",
+    "Dobles aislados de grabador, IndexedDB, errores de cuota, recarga y recuperación de voz/trazos/capturas; Chromium/WebKit.",
+    "Paquete versionado, hashes y consumidores observados; QA de regresión y publicación separadas."
   ],
-  "rollback": "Revertir frontend/manifiesto conservando archivos, versiones, chinches, recibos y permisos."
+  "rollback": "Reactivar snapshot1.0.0 por PR y herramientas canónicas conservando borradores, originales, IDs y recibos."
 }
