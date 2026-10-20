@@ -153,11 +153,14 @@ test('ausencia con cargadores externos exige también dependencias idénticas y 
   const f = fixture(t, 'indirect'), auditedCommit = 'a'.repeat(40), dependencies = [{ repository: 'owner/loader', path: 'portero.js', commit: 'b'.repeat(40) }, { repository: 'owner/core', path: 'os/shell.js', commit: 'c'.repeat(40) }];
   Object.assign(f.context.registry.integrations[0], { integrationConfirmed: false, inventoryStatus: 'source-not-installed', source: { auditedCommit, dependencies } });
   const matching = pkg.upgradePlan(f.context, { integrations: [{ id: 'host', commit: auditedCommit, dependencies: dependencies.map(x => ({ ...x })) }] }); assert.deepEqual(matching.actions.map(a => a.action), ['instalar-integracion']);
-  const cases = [undefined, [], [dependencies[0]], [{ ...dependencies[0], commit: 'd'.repeat(40) }, dependencies[1]], [dependencies[0], { ...dependencies[1], path: 'other.js' }], [dependencies[0], dependencies[0], dependencies[1]]];
+  const cases = [undefined, [], [dependencies[0]], [{ ...dependencies[0], commit: 'd'.repeat(40) }, dependencies[1]], [dependencies[0], { ...dependencies[1], path: 'other.js' }], [dependencies[0], dependencies[0], dependencies[1]], [...dependencies, { repository: 'owner/new-loader', path: 'new.js', commit: 'd'.repeat(40) }]];
   for (const observed of cases) {
     const actions = pkg.upgradePlan(f.context, { integrations: [{ id: 'host', commit: auditedCommit, dependencies: observed }] }).actions;
     assert.ok(actions.some(a => a.action === 'auditar-fuente')); assert.ok(actions.some(a => a.action === 'verificar-integracion')); assert.ok(!actions.some(a => a.action === 'instalar-integracion'));
   }
+  delete f.context.registry.integrations[0].source.dependencies;
+  const extra = pkg.upgradePlan(f.context, { integrations: [{ id: 'host', commit: auditedCommit, dependencies: [dependencies[0]] }] }).actions;
+  assert.ok(extra.some(a => a.action === 'auditar-fuente')); assert.ok(extra.some(a => a.action === 'verificar-integracion')); assert.ok(!extra.some(a => a.action === 'instalar-integracion'));
 });
 test('CLI instalar dryrun produce JSON sin código y no escribe', t => {
   const f = fixture(t); const result = spawnSync(process.execPath, [path.resolve(__dirname, '../scripts/chinches-paquete.cjs'), 'instalar', '--root', f.root, '--id', 'host', '--dest', f.dest, '--json'], { encoding: 'utf8' });

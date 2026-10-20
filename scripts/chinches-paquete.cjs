@@ -265,9 +265,10 @@ function upgradePlan(context, snapshot) {
   for (const target of context.registry.integrations) {
     const current = observed.get(target.id), requiredVersion = target.targetVersion || context.pkg.version;
     const absenceAudited = target.inventoryStatus === 'source-not-installed', auditedCommit = target.source?.auditedCommit;
-    const dependencies = target.source?.dependencies || [], dependenciesMatch = Array.isArray(dependencies) && dependencies.every(dependency => {
-      if (!dependency || typeof dependency.repository !== 'string' || typeof dependency.path !== 'string' || !/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/.test(dependency.commit || '') || !Array.isArray(current?.dependencies)) return false;
-      const matches = current.dependencies.filter(observed => observed && observed.repository === dependency.repository && observed.path === dependency.path);
+    const dependencies = target.source?.dependencies || [], observedDependencies = current?.dependencies ?? [];
+    const dependenciesMatch = Array.isArray(dependencies) && Array.isArray(observedDependencies) && observedDependencies.length === dependencies.length && dependencies.every(dependency => {
+      if (!dependency || typeof dependency.repository !== 'string' || typeof dependency.path !== 'string' || !/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/.test(dependency.commit || '')) return false;
+      const matches = observedDependencies.filter(observed => observed && observed.repository === dependency.repository && observed.path === dependency.path);
       return matches.length === 1 && matches[0].commit === dependency.commit;
     });
     if (absenceAudited && typeof auditedCommit === 'string' && /^(?:[a-f0-9]{40}|[a-f0-9]{64})$/.test(auditedCommit) && current?.commit === auditedCommit && dependenciesMatch) {
