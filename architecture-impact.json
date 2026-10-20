@@ -1,17 +1,12 @@
 {
-  "model_revision": "2026-10-19.ppp-cartera-lectura.1",
-  "proposal_id": "CHG-PPP-CARTERA-LECTURA-20261019",
-  "summary": "Registrar lectura autenticada de expedientes e historial CRM en portada PPP, sin nuevos casos financieros ni cambios de backend/ACL.",
+  "model_revision": "2026-10-20.sala-mesa-local.1",
+  "proposal_id": "CHG-SALA-MESA-LOCAL-20261020",
+  "summary": "Registrar apertura de Sala desde última copia privada por sesión, consulta inmediata y revalidación sin alterar decisiones.",
   "components": [
-    "SYS-POTENCIALES",
-    "GAS-CRM",
-    "SHEET-CRM",
-    "SYS-YOD-OS"
+    "SYS-SALA"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node verify-os.cjs; node verify-portal.cjs; node verify-accesos.cjs; node verify-obra-app.cjs"
+    "node scripts/arquitectura.cjs --check"
   ],
-  "rollback": "Revertir documentación y consumidor por PR, conservando fuentes, registros, versiones y permisos."
+  "rollback": "Revertir PR de frontend; la clave sala_mesa_local_v1 queda ignorada o se elimina sin borrar borradores ni cola."
 }

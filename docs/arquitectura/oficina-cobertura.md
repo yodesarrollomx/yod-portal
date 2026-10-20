@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-19.ppp-cartera-lectura.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-20.sala-mesa-local.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -2192,6 +2192,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-CIERRE-ONLINE.md · Revisión: 4582fc3c42a2ac8459dea7d553c42f9719f07962](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md)
 - Ampliación técnica autorizada por Dirección en la conversación actual: recuperación de transporte, publicación acumulativa, correo trazable y conciliación de chinches. Registro previo; la fuente no acredita despliegue. Registro local: docs/arquitectura/sala-nube-20261015.md. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - [PR308 integrado; cinco CI del head revisado en verde. Pages 38688574369, Plan 38688574251 y Revisión 38688731578 success; hijos Pages 38688736093 y 38689030877 confirmaron snapshot y data\_sha exactos. Cierre 38688574178 success con acuse privado byte-verificado y cero escrituras de negocio. No acredita correo recibido, producción nueva ni offload. · Estado: ejecucion · yodesarrollomx/sala-edicion · docs/SALA-ONLINE.md · Revisión: e4da08887e45e984be8ea945ce607db464b0fb52](https://github.com/yodesarrollomx/sala-edicion/blob/e4da08887e45e984be8ea945ce607db464b0fb52/docs/SALA-ONLINE.md)
+- CHG-SALA-MESA-LOCAL-20261020: caché de consulta por sesión con actualización en segundo plano; registro previo, sin permisos restaurados ni rendimiento productivo acreditado. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Evidencia de conexiones:**
 

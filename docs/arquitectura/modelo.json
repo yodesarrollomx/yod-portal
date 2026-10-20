@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-19.ppp-cartera-lectura.1",
+  "revision": "2026-10-20.sala-mesa-local.1",
   "checked_at": "2026-10-19",
   "priorities": [
     "vender_mas",
@@ -859,6 +859,10 @@
           "commit": "e4da08887e45e984be8ea945ce607db464b0fb52",
           "claim": "PR308 integrado; cinco CI del head revisado en verde. Pages 38688574369, Plan 38688574251 y Revisión 38688731578 success; hijos Pages 38688736093 y 38689030877 confirmaron snapshot y data_sha exactos. Cierre 38688574178 success con acuse privado byte-verificado y cero escrituras de negocio. No acredita correo recibido, producción nueva ni offload.",
           "status": "ejecucion"
+        },
+        {
+          "claim": "CHG-SALA-MESA-LOCAL-20261020: caché de consulta por sesión con actualización en segundo plano; registro previo, sin permisos restaurados ni rendimiento productivo acreditado.",
+          "status": "propuesto"
         }
       ],
       "data_entities": [
@@ -13521,6 +13525,22 @@
       ],
       "deployment": "Propuesta registrada antes de implementar. Consumidor potenciales-yod pinnea este modelo. Sin cambio de backend ni ACL. La lectura privada real y la publicación requieren recibos propios.",
       "rollback": "Revertir consumidor y su referencia de atlas; conservar registros, documentos, versiones financieras, identidad y permisos."
+    },
+    {
+      "id": "CHG-SALA-MESA-LOCAL-20261020",
+      "components": [
+        "SYS-SALA"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección: empieza y ejecuta la hipótesis 2; última mesa guardada y actualización en segundo plano, 20-oct-2026.",
+      "proposal": "Caché privada en el navegador del día y sus grupos renderizables, aislada por hash SHA256 de endpoint, credenciales y rol. No almacena claves en el snapshot. Copia fechada de consulta antes de la red; no restaura permisos ni permite votar antes de revalidar. Respuesta vigente conserva borradores y cola existentes; rechazo invalida copia, cambio de sesión la descarta. Límite de tamaño y caducidad; almacenamiento no disponible conserva arranque actual. No modifica Sheets, backend ni medios.",
+      "tests": [
+        "Node: aislamiento, expiración, corrupción, cuota, eliminación de credenciales.",
+        "Navegador con datos sintéticos: segunda carga visible con red retenida, cero POST, decisiones locales intactas, transición a datos frescos y rechazo.",
+        "Regresiones sala-carga, tablero y nube/verificar.py. Primera visita y reapertura se miden por separado; no se acredita menos de un segundo en producción sin medir."
+      ],
+      "deployment": "Propuesta previa autorizada. Implementación y publicación se acreditarán en PR consumidor.",
+      "rollback": "Revertir PR de frontend; la clave sala_mesa_local_v1 queda ignorada o se elimina sin borrar borradores ni cola."
     }
   ],
   "data_contracts": [
