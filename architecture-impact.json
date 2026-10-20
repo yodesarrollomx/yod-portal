@@ -1,17 +1,26 @@
 {
-  "model_revision": "2026-10-20.sala-video-iphone.1",
-  "proposal_id": "CHG-SALA-VIDEO-IPHONE-20261020",
-  "summary": "Entrega privada de video y reproductor nativo dentro de Sala e iframe del OS.",
+  "model_revision": "2026-10-20.chinches-audio-ipad.1",
+  "proposal_id": "CHG-CHINCHES-AUDIO-IPAD-20261020",
+  "summary": "Normalizar únicamente sintaxis MIME de contenedores conocidos conservando bytes y cabecera original. Persistir borrador local antes de validar, con recuperación explícita y descarga del original aun si audio no pasa validación. No intercambiar código de una grabación abierta, descartar medios ni crear recibo de entrega sin archivo completo.",
   "components": [
+    "SYS-YOD-OS",
+    "SYS-INVERSION",
     "SYS-SALA",
     "GAS-SALA",
-    "SYS-YOD-OS",
+    "SYS-AMALAYA",
+    "SYS-EMD",
     "SYS-DESPACHO",
-    "SHEET-SALA",
-    "EXT-GMAIL"
+    "GAS-EMD",
+    "GAS-AMALAYA",
+    "SYS-CONTROL",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "SYS-TRACK"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check"
+    "Reproducir MIME Safari con espacio/comillas y conservar exactamente payload; rechazar contenedor distinto y audio corrupto.",
+    "Dobles aislados de grabador, IndexedDB, errores de cuota, recarga y recuperación de voz/trazos/capturas; Chromium/WebKit.",
+    "Paquete versionado, hashes y consumidores observados; QA de regresión y publicación separadas."
   ],
-  "rollback": "Revertir cambios de interfaz y nueva versión de backend conservando todos los datos."
+  "rollback": "Reactivar snapshot1.0.0 por PR y herramientas canónicas conservando borradores, originales, IDs y recibos."
 }

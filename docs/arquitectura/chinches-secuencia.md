@@ -31,3 +31,13 @@ Revertir código consumidor y rutas nuevas, conservando archivos privados, Index
 ## Micrófono en contenedores restringidos
 
 El marco exterior de Apps Script observado el 20-oct-2026 no delega micrófono. Si la política del documento lo bloquea, la misma chinche abre `chinche/microfono.html` como ventana superior. Allí el usuario pulsa Grabar y concede micrófono; vuelve al dibujo para continuar. El audio vuelve exclusivamente al opener verificado por origen, ventana y nonce aleatorio, sin servidor intermedio. Cierre prematuro, rechazo o fallo no confirman entrega. La chinche conserva su reloj de trazos y capturas durante esa grabación. Prueba sintética: `node scripts/probar-microfono-marco.cjs`. Publicar primero el capturador antes de consumidores nativos.
+
+## Audio Safari y recuperación · paquete1.1.0
+
+El capturador acepta espacios y comillas en el parámetro `codecs` de audio MP4/WebM/Ogg. Antes de entregar normaliza sólo la cabecera MIME; conserva exactamente el payload y registra la cabecera original. No cambia el contenedor, transcodifica, borra audio ni convierte un error en una entrega confirmada. El servidor del protocolo1 existente acepta esta representación canónica sin cambios ni ampliación de permisos.
+
+El borrador privado del aparato se escribe antes de validar y al recibir trazos/chunks. Guarda audio original, reloj, trazos, base y capturas; no viaja a Git ni a otro servidor. `Recuperar borrador` permite reabrirlo en la misma pantalla; `Descargar respaldo` funciona aun con audio rechazado o cuota agotada y `Importar respaldo` permite recuperarlo. Un respaldo de una grabación interrumpida puede contener audio parcial y se identifica como tal. Sólo la confirmación del guardado local de la chinche elimina su borrador; un recibo remoto continúa siendo un estado independiente.
+
+Para una pestaña anterior ya abierta, **no recargar**: [rescate local](../../chinche/rescate.html) explica cómo cargar el ayudante en esa misma pestaña. El ayudante prepara cabeceras compatibles durante la lectura, restaura inmediatamente las APIs del navegador, ofrece descarga íntegra y del audio original y deja `Clavar` a cargo del humano. No sube medios ni clava automáticamente. Si no logra preparar el paquete, conserva la pestaña y comunica el fallo. Publicar una reparación no acredita haber recuperado la grabación particular de un iPad.
+
+QA aislada: formatos Safari con espacios/comillas y payload idéntico; recuperación tras recarga de audio/trazos/capturas; cuota agotada y audio inválido conservados; rescate del compositor1.0.0 sin recargar; micrófono real sintético en ventana superior con política denegada en padre. La comprobación física del iPad y su recibo se registran separadamente.

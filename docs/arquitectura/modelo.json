@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-20.sala-video-iphone.1",
+  "revision": "2026-10-20.chinches-audio-ipad.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -13795,11 +13795,12 @@
       ],
       "status": "propuesto",
       "approval": "Dirección pidió ejecutar, terminar, publicar y entregar en línea el plan V1 de Presentaciones; autorización directa20-oct-2026. V2 creación desde portal fuera de alcance.",
-      "proposal": "Portal integrado en Master Developer real; una dirección por presentación, sesión Google existente, catálogo y borradores privados en Drive del servidor Sala actual, publicación por revisiones y conducción semántica con mando único. Chinches y revisor comunes.",
+      "proposal": "Portal integrado en Master Developer real; una dirección por presentación, sesión Google existente, catálogo y borradores privados en Drive del servidor Sala actual, publicación por revisiones y conducción semántica con mando único. Chinches y revisor comunes. La verificación privada solicita canje fresco al Portero original mediante el contrato HTTP ya usado por Sala; no exige acceso directo del propietario Apps Script a la hoja de sesiones ni amplia compartición. Denegación explícita no se reintenta contra respaldo; sólo fallos de transporte permiten continuidad. Se conserva revocación y roles del servidor.",
       "tests": [
         "Contratos de autorización, revisión, idempotencia, recibos y control de sesión en aislamiento.",
         "QA móvil/escritorio y fallos A/B/C sin escrituras de negocio sintéticas.",
-        "Verificar código servido, implementación existente y compatibilidad con consumidores previos."
+        "Verificar código servido, implementación existente y compatibilidad con consumidores previos.",
+        "Canje fresco sin caché por solicitud, denegación sin respaldo, fallo de transporte con respaldo configurado y permisos sin ampliación; UI privada real antes de cerrar."
       ],
       "deployment": "Propuesta registrada antes de implementar; despliegue y comprobaciones se registran separadamente.",
       "rollback": "Revertir frontend/manifiesto conservando archivos, versiones, chinches, recibos y permisos."
@@ -13824,6 +13825,34 @@
       ],
       "deployment": "Backend original v79 publicado y fuente releída, preserva Presentaciones v78 y URL/as/acceso. Frontend, copias actuales y verificación publicada pendientes; reproducción sintética Chromium/WebKit390/1280 comprobada.",
       "rollback": "Revertir interfaz y versión de implementación; conservar archivos, permisos, propuestas y decisiones."
+    },
+    {
+      "id": "CHG-CHINCHES-AUDIO-IPAD-20261020",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-INVERSION",
+        "SYS-SALA",
+        "GAS-SALA",
+        "SYS-AMALAYA",
+        "SYS-EMD",
+        "SYS-DESPACHO",
+        "GAS-EMD",
+        "GAS-AMALAYA",
+        "SYS-CONTROL",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-TRACK"
+      ],
+      "status": "implementado_local",
+      "authorization": "Reporte directo de Alejandro20oct: Audio inválido bloquea Clavar tras voz y dibujo en iPad. Orden vigente integrar y mantener la misma mecánica común y publicar reparación.",
+      "proposal": "Normalizar únicamente sintaxis MIME de contenedores conocidos conservando bytes y cabecera original. Persistir borrador local antes de validar, con recuperación explícita y descarga del original aun si audio no pasa validación. No intercambiar código de una grabación abierta, descartar medios ni crear recibo de entrega sin archivo completo.",
+      "tests": [
+        "Reproducir MIME Safari con espacio/comillas y conservar exactamente payload; rechazar contenedor distinto y audio corrupto.",
+        "Dobles aislados de grabador, IndexedDB, errores de cuota, recarga y recuperación de voz/trazos/capturas; Chromium/WebKit.",
+        "Paquete versionado, hashes y consumidores observados; QA de regresión y publicación separadas."
+      ],
+      "deployment": "996 pruebas locales PASS; Chromium recuperación/recarga/cuota/rescate1.0.0 y micrófono sintético real PASS. Paquete1.1.0 en PR308, sin despliegue acreditado aún; iPad particular no recuperado.",
+      "rollback": "Reactivar snapshot1.0.0 por PR y herramientas canónicas conservando borradores, originales, IDs y recibos."
     }
   ],
   "data_contracts": [
