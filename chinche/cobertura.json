@@ -4,10 +4,11 @@
   "sequenceProtocol": 1,
   "registered": 15,
   "sourceConfirmed": 13,
-  "unknown": [
+  "pendingInstallation": [
     "plan-potencial",
     "co-desarrolladores-yod"
   ],
+  "unknown": [],
   "pendingReceipt": [
     "real-miramar-board",
     "plan-potencial",
@@ -49,6 +50,7 @@
       "mode": "shared",
       "targetVersion": "1.0.0",
       "integrationConfirmed": true,
+      "inventoryStatus": "source-audited",
       "surfaces": [
         "costos-oficiales.html",
         "cuentas.html",
@@ -59,6 +61,10 @@
       ],
       "capturePolicy": "dom-guarded",
       "sourceCommit": "9db34a902f4e1f6f1f9b727b974f813625b5e16d",
+      "sourceBasis": "shared-import",
+      "sourceFinding": null,
+      "sourceDependencies": [],
+      "sourceEvidence": [],
       "runtimeVersion": null,
       "receiptVerified": false,
       "replayVerified": false,
@@ -70,9 +76,53 @@
       "mode": "indirect",
       "targetVersion": "1.0.0",
       "integrationConfirmed": false,
-      "surfaces": [],
+      "inventoryStatus": "source-not-installed",
+      "surfaces": [
+        "index.html",
+        "board.html"
+      ],
       "capturePolicy": "dom-guarded",
       "sourceCommit": "9f036c72513d07b4b89d402ab9aa27264b56a534",
+      "sourceBasis": "entrypoints-audited-no-loader",
+      "sourceFinding": "Instalación pendiente en las entradas propias auditadas. La cadena del Portero no carga shell ni chinche. Esta comprobación de fuentes no acredita ausencia global de chinches ni exclusión intencional.",
+      "sourceDependencies": [
+        {
+          "repository": "yodesarrollomx/potenciales-yod",
+          "path": "portero.js",
+          "commit": "48ee29f848e727a0f7e12470ce056085a7aec580"
+        },
+        {
+          "repository": "yodesarrollomx/yod-portal",
+          "path": "os/yod-acceso.js",
+          "commit": "bbf14cf67f98b5db98bcf3d89c71d7859501b784"
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "repository": "yodesarrollomx/plan-potencial",
+          "path": "index.html",
+          "commit": "9f036c72513d07b4b89d402ab9aa27264b56a534",
+          "finding": "Entrada pública: código inline, Facebook, Leaflet y agenda; sin cargador del módulo de chinches."
+        },
+        {
+          "repository": "yodesarrollomx/plan-potencial",
+          "path": "board.html",
+          "commit": "9f036c72513d07b4b89d402ab9aa27264b56a534",
+          "finding": "La línea 160 carga potenciales-yod/portero.js."
+        },
+        {
+          "repository": "yodesarrollomx/potenciales-yod",
+          "path": "portero.js",
+          "commit": "48ee29f848e727a0f7e12470ce056085a7aec580",
+          "finding": "Carga os/yod-acceso.js y Google GSI; no carga shell ni chinche."
+        },
+        {
+          "repository": "yodesarrollomx/yod-portal",
+          "path": "os/yod-acceso.js",
+          "commit": "bbf14cf67f98b5db98bcf3d89c71d7859501b784",
+          "finding": "Sólo define YOD_PORTERO; termina la cadena sin cargar shell ni chinche."
+        }
+      ],
       "runtimeVersion": null,
       "receiptVerified": false,
       "replayVerified": false,
@@ -84,11 +134,16 @@
       "mode": "shared",
       "targetVersion": "1.0.0",
       "integrationConfirmed": true,
+      "inventoryStatus": "source-audited",
       "surfaces": [
         "llave-maestra.html"
       ],
       "capturePolicy": "dom-guarded",
       "sourceCommit": "8bcdfc35b98c83d2a33f802abe0064e971c4fa92",
+      "sourceBasis": "shared-import",
+      "sourceFinding": null,
+      "sourceDependencies": [],
+      "sourceEvidence": [],
       "runtimeVersion": null,
       "receiptVerified": false,
       "replayVerified": false,
@@ -100,11 +155,16 @@
       "mode": "shared",
       "targetVersion": "1.0.0",
       "integrationConfirmed": true,
+      "inventoryStatus": "source-audited",
       "surfaces": [
         "index.html"
       ],
       "capturePolicy": "dom-guarded",
       "sourceCommit": "e3dd428a01b01d1c8b5775c7fcca408735c98357",
+      "sourceBasis": "shared-import",
+      "sourceFinding": null,
+      "sourceDependencies": [],
+      "sourceEvidence": [],
       "runtimeVersion": null,
       "receiptVerified": false,
       "replayVerified": false,
@@ -116,9 +176,49 @@
       "mode": "indirect",
       "targetVersion": "1.0.0",
       "integrationConfirmed": false,
-      "surfaces": [],
+      "inventoryStatus": "source-not-installed",
+      "surfaces": [
+        "index.html",
+        "src/main.jsx",
+        "src/App.jsx"
+      ],
       "capturePolicy": "dom-guarded",
       "sourceCommit": "bdaf46b44735255811d164824ec35f89a592d0cd",
+      "sourceBasis": "entrypoints-audited-no-loader",
+      "sourceFinding": "Instalación pendiente en las entradas propias auditadas. La aplicación React y su PWA no cargan shell ni chinche. No está en el catálogo técnico estático de YOD OS; el repositorio no está archivado ni deshabilitado. No se acredita que Masterbrokers lo sustituya ni ausencia global de chinches.",
+      "sourceDependencies": [],
+      "sourceEvidence": [
+        {
+          "repository": "yodesarrollomx/Co-desarrolladores-Yod",
+          "path": "index.html",
+          "commit": "bdaf46b44735255811d164824ec35f89a592d0cd",
+          "finding": "La línea 22 carga src/main.jsx."
+        },
+        {
+          "repository": "yodesarrollomx/Co-desarrolladores-Yod",
+          "path": "src/main.jsx",
+          "commit": "bdaf46b44735255811d164824ec35f89a592d0cd",
+          "finding": "Importa React, ReactDOM, App.jsx e index.css."
+        },
+        {
+          "repository": "yodesarrollomx/Co-desarrolladores-Yod",
+          "path": "src/App.jsx",
+          "commit": "bdaf46b44735255811d164824ec35f89a592d0cd",
+          "finding": "Importa React, lucide y logo; importa jsPDF/autotable bajo demanda. Sin iframe, inyección HTML ni cargador de shell o chinche."
+        },
+        {
+          "repository": "yodesarrollomx/Co-desarrolladores-Yod",
+          "path": "vite.config.js",
+          "commit": "bdaf46b44735255811d164824ec35f89a592d0cd",
+          "finding": "VitePWA registra el service worker y cachea fuentes; no carga el módulo de chinches."
+        },
+        {
+          "repository": "yodesarrollomx/yod-portal",
+          "path": "os/catalogo.js",
+          "commit": "bbf14cf67f98b5db98bcf3d89c71d7859501b784",
+          "finding": "No incluye este portal financiero. SYS-INVERSION apunta a Masterbrokers, lo que no demuestra sustitución funcional."
+        }
+      ],
       "runtimeVersion": null,
       "receiptVerified": false,
       "replayVerified": false,
@@ -130,11 +230,16 @@
       "mode": "shared",
       "targetVersion": "1.0.0",
       "integrationConfirmed": true,
+      "inventoryStatus": "source-audited",
       "surfaces": [
         "index.html"
       ],
       "capturePolicy": "dom-guarded",
       "sourceCommit": "e9d122f090f7fdf3a6d5478fbf27b2d91bc6b3eb",
+      "sourceBasis": "shared-import",
+      "sourceFinding": null,
+      "sourceDependencies": [],
+      "sourceEvidence": [],
       "runtimeVersion": null,
       "receiptVerified": false,
       "replayVerified": false,
@@ -146,11 +251,16 @@
       "mode": "shared",
       "targetVersion": "1.0.0",
       "integrationConfirmed": true,
+      "inventoryStatus": "source-audited",
       "surfaces": [
         "propuestas/inicio/index.html"
       ],
       "capturePolicy": "dom-guarded",
       "sourceCommit": "a5680f2cf2cd37c5a9035c250a7ad7a5424197e2",
+      "sourceBasis": "shared-import",
+      "sourceFinding": null,
+      "sourceDependencies": [],
+      "sourceEvidence": [],
       "runtimeVersion": null,
       "receiptVerified": false,
       "replayVerified": false,
@@ -162,6 +272,7 @@
       "mode": "shared",
       "targetVersion": "1.0.0",
       "integrationConfirmed": true,
+      "inventoryStatus": "source-audited",
       "surfaces": [
         "accesos.html",
         "index.html",
@@ -174,6 +285,10 @@
       ],
       "capturePolicy": "dom-guarded",
       "sourceCommit": "48ee29f848e727a0f7e12470ce056085a7aec580",
+      "sourceBasis": "shared-import",
+      "sourceFinding": null,
+      "sourceDependencies": [],
+      "sourceEvidence": [],
       "runtimeVersion": null,
       "receiptVerified": false,
       "replayVerified": false,
@@ -185,11 +300,16 @@
       "mode": "shared",
       "targetVersion": "1.0.0",
       "integrationConfirmed": true,
+      "inventoryStatus": "source-audited",
       "surfaces": [
         "index.html"
       ],
       "capturePolicy": "dom-guarded",
       "sourceCommit": "93bf6241c8f9c9b40dd5888e81936588fe4ebafa",
+      "sourceBasis": "shared-import",
+      "sourceFinding": null,
+      "sourceDependencies": [],
+      "sourceEvidence": [],
       "runtimeVersion": null,
       "receiptVerified": false,
       "replayVerified": false,
@@ -201,6 +321,7 @@
       "mode": "shared",
       "targetVersion": "1.0.0",
       "integrationConfirmed": true,
+      "inventoryStatus": "source-audited",
       "surfaces": [
         "clasico.html",
         "corcho.js",
@@ -209,6 +330,10 @@
       ],
       "capturePolicy": "dom-guarded",
       "sourceCommit": "d89b15114ffbca61bfd8e2b4eb61661642adebee",
+      "sourceBasis": "shared-import",
+      "sourceFinding": null,
+      "sourceDependencies": [],
+      "sourceEvidence": [],
       "runtimeVersion": null,
       "receiptVerified": false,
       "replayVerified": false,
@@ -220,6 +345,7 @@
       "mode": "bundle",
       "targetVersion": "1.0.0",
       "integrationConfirmed": true,
+      "inventoryStatus": "source-audited",
       "surfaces": [
         "os/index.html",
         "tablero.html",
@@ -231,6 +357,10 @@
       ],
       "capturePolicy": "dom-guarded",
       "sourceCommit": "597c4daf9d3c8059279222616b249438ae861a68",
+      "sourceBasis": "exact-shared-block",
+      "sourceFinding": null,
+      "sourceDependencies": [],
+      "sourceEvidence": [],
       "runtimeVersion": null,
       "receiptVerified": false,
       "replayVerified": false,
@@ -242,12 +372,17 @@
       "mode": "bundle",
       "targetVersion": "1.0.0",
       "integrationConfirmed": true,
+      "inventoryStatus": "source-audited",
       "surfaces": [
         "presentacion/",
         "master-brokers/"
       ],
       "capturePolicy": "dom-guarded",
       "sourceCommit": "b700782c42a71cf2b72605e8d4765ae05f400a7e",
+      "sourceBasis": "exact-shared-block",
+      "sourceFinding": null,
+      "sourceDependencies": [],
+      "sourceEvidence": [],
       "runtimeVersion": null,
       "receiptVerified": false,
       "replayVerified": false,
@@ -259,12 +394,17 @@
       "mode": "shared",
       "targetVersion": "1.0.0",
       "integrationConfirmed": true,
+      "inventoryStatus": "source-audited",
       "surfaces": [
         "index.html",
         "tablero-sala.js"
       ],
       "capturePolicy": "dom-guarded",
       "sourceCommit": "7f825acb951d495022c30908adf4c3e6bcb1771e",
+      "sourceBasis": "shared-import",
+      "sourceFinding": null,
+      "sourceDependencies": [],
+      "sourceEvidence": [],
       "runtimeVersion": null,
       "receiptVerified": false,
       "replayVerified": false,
@@ -276,12 +416,17 @@
       "mode": "native-prefix",
       "targetVersion": "1.0.0",
       "integrationConfirmed": true,
+      "inventoryStatus": "source-audited",
       "surfaces": [
         "src/App.jsx",
         "public/chinche.js"
       ],
       "capturePolicy": "dom-guarded",
       "sourceCommit": "5809816629f2bca74ebcdf53b3b70bb686aa6543",
+      "sourceBasis": "exact-shared-block",
+      "sourceFinding": null,
+      "sourceDependencies": [],
+      "sourceEvidence": [],
       "runtimeVersion": null,
       "receiptVerified": false,
       "replayVerified": false,
@@ -293,6 +438,7 @@
       "mode": "native-prefix",
       "targetVersion": "1.0.0",
       "integrationConfirmed": true,
+      "inventoryStatus": "source-audited",
       "surfaces": [
         "web/pins.js",
         "index.html",
@@ -300,11 +446,15 @@
       ],
       "capturePolicy": "technical-card",
       "sourceCommit": "40b279afe9953f34a12d222a909f94183c3c5c90",
+      "sourceBasis": "exact-shared-block",
+      "sourceFinding": null,
+      "sourceDependencies": [],
+      "sourceEvidence": [],
       "runtimeVersion": null,
       "receiptVerified": false,
       "replayVerified": false,
       "backendVersion": "40"
     }
   ],
-  "scope": "Public source inventory only; runtime and private review require independent evidence."
+  "scope": "Public source inventory only; source-not-installed describes audited entrypoints, not global absence. Runtime and private review require independent evidence."
 }

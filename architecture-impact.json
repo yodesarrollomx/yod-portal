@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-10-20.chinches-paquete.1",
   "proposal_id": "CHG-CHINCHES-PAQUETE-20261020",
-  "summary": "Paquete semver con hashes/snapshots inmutables; instalación y actualización condicional por bloques; registro único por consumidor; revisión incremental privada separando recibido/revisado/cumplido; skill persistida.",
+  "summary": "Paquete semver con hashes/snapshots inmutables; instalación y actualización condicional por bloques; registro único por consumidor; revisión incremental privada separando recibido/revisado/cumplido; skill persistida. Refinamiento de cobertura: entradas auditadas sin módulo propio conservan instalación pendiente; el plan sólo reutiliza la auditoría con commit y cargadores externos observados idénticos.",
   "components": [
     "SYS-YOD-OS",
     "SYS-SALA",
@@ -11,7 +11,7 @@
   ],
   "tests": [
     "node scripts/chinches-paquete.cjs verificar",
-    "node --test tests/chinches-paquete.test.cjs tests/chinches-revision.test.cjs",
+    "node --test tests/chinches-paquete.test.cjs tests/chinches-revision.test.cjs tests/chinches-reporte.test.cjs tests/chinches-estado.test.cjs",
     "node scripts/arquitectura.cjs --check",
     "node verify-os.cjs",
     "node verify-portal.cjs",

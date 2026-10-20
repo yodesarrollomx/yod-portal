@@ -264,8 +264,20 @@ function upgradePlan(context, snapshot) {
   const actions = []; let checkedShared = false;
   for (const target of context.registry.integrations) {
     const current = observed.get(target.id), requiredVersion = target.targetVersion || context.pkg.version;
+    const absenceAudited = target.inventoryStatus === 'source-not-installed', auditedCommit = target.source?.auditedCommit;
+    const dependencies = target.source?.dependencies || [], observedDependencies = current?.dependencies ?? [];
+    const dependenciesMatch = Array.isArray(dependencies) && Array.isArray(observedDependencies) && observedDependencies.length === dependencies.length && dependencies.every(dependency => {
+      if (!dependency || typeof dependency.repository !== 'string' || typeof dependency.path !== 'string' || !/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/.test(dependency.commit || '')) return false;
+      const matches = observedDependencies.filter(observed => observed && observed.repository === dependency.repository && observed.path === dependency.path);
+      return matches.length === 1 && matches[0].commit === dependency.commit;
+    });
+    if (absenceAudited && typeof auditedCommit === 'string' && /^(?:[a-f0-9]{40}|[a-f0-9]{64})$/.test(auditedCommit) && current?.commit === auditedCommit && dependenciesMatch) {
+      actions.push({ id: target.id, action: 'instalar-integracion', reason: 'Ausencia de instalación comprobada en este mismo commit; preparar la adaptación sin repetir la auditoría de esa fuente', commit: auditedCommit, surfaces: [...target.surfaces], writes: false });
+      observed.delete(target.id); continue;
+    }
     if (target.integrationConfirmed !== true) actions.push({ id: target.id, action: 'verificar-integracion', reason: 'Registro sin importación comprobada; versión y huella no acreditan instalación' });
     if (!current) { actions.push({ id: target.id, action: 'auditar-fuente', reason: 'Sin observación; no equivale a instalación ausente' }); continue; }
+    if (absenceAudited) actions.push({ id: target.id, action: 'auditar-fuente', reason: current.commit === auditedCommit && !dependenciesMatch ? 'Faltan dependencias comprobadas o cambiaron; el commit del host no acredita la vigencia del cargador externo' : current.commit ? 'El commit cambió; la evidencia anterior de ausencia no acredita la fuente actual' : 'Falta el commit actual; no se puede dar vigencia a la evidencia anterior de ausencia' });
     if (target.mode === 'indirect') { if (target.integrationConfirmed === true) actions.push({ id: target.id, action: 'verificar-integracion', reason: 'Cobertura indirecta sin acreditar' }); continue; }
     const desired = requiredVersion === context.pkg.version ? context : selectRelease(context, requiredVersion);
     if (target.mode === 'shared') {

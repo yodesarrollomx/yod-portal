@@ -132,6 +132,36 @@ test('registro sin importación comprobada requiere verificación aunque versió
   assert.ok(pkg.upgradePlan(f.context, { integrations, sharedCoreSha256 }).actions.some(a => a.id === 'host' && a.action === 'verificar-integracion'));
   delete f.context.registry.integrations[0].integrationConfirmed; assert.ok(pkg.upgradePlan(f.context, { integrations, sharedCoreSha256 }).actions.some(a => a.action === 'verificar-integracion'));
 });
+test('ausencia acreditada al mismo commit planifica instalar sin repetir auditoría ni verificar esa integración', t => {
+  const f = fixture(t, 'indirect'), auditedCommit = 'a'.repeat(40), target = f.context.registry.integrations[0];
+  Object.assign(target, { integrationConfirmed: false, inventoryStatus: 'source-not-installed', source: { auditedCommit } });
+  f.context.registry.integrations.push({ ...target, id: 'other', repository: 'owner/other', inventoryStatus: 'unknown', source: {} });
+  const before = JSON.stringify(f.context.registry), plan = pkg.upgradePlan(f.context, { integrations: [{ id: 'host', commit: auditedCommit }] }), hostActions = plan.actions.filter(a => a.id === 'host');
+  assert.deepEqual(hostActions.map(a => a.action), ['instalar-integracion']); assert.deepEqual(hostActions[0].surfaces, ['index.html']); assert.equal(hostActions[0].commit, auditedCommit); assert.equal(hostActions[0].writes, false);
+  assert.ok(plan.actions.some(a => a.id === 'other' && a.action === 'auditar-fuente')); assert.equal(JSON.stringify(f.context.registry), before);
+});
+test('commit distinto o faltante no reutiliza la evidencia anterior de ausencia', t => {
+  const f = fixture(t, 'shared'), target = f.context.registry.integrations[0]; Object.assign(target, { integrationConfirmed: false, inventoryStatus: 'source-not-installed', source: { auditedCommit: 'a'.repeat(40) } });
+  const current = { id: 'host', version: '1.0.0', publishedVersion: '1.0.0', receiptVerified: true, replayVerified: true }, sharedCoreSha256 = pkg.sha256(pkg.componentData(f.context, ['secuencia.js', 'entrega.js']));
+  for (const observation of [{ ...current, commit: 'b'.repeat(40) }, current]) {
+    const actions = pkg.upgradePlan(f.context, { integrations: [observation], sharedCoreSha256 }).actions;
+    assert.ok(actions.some(a => a.id === 'host' && a.action === 'auditar-fuente')); assert.ok(actions.some(a => a.id === 'host' && a.action === 'verificar-integracion')); assert.ok(!actions.some(a => a.action === 'instalar-integracion'));
+  }
+  const missing = pkg.upgradePlan(f.context, { integrations: [] }).actions; assert.equal(missing.filter(a => a.action === 'auditar-fuente').length, 1); assert.ok(!missing.some(a => a.action === 'instalar-integracion'));
+});
+test('ausencia con cargadores externos exige también dependencias idénticas y no ambiguas', t => {
+  const f = fixture(t, 'indirect'), auditedCommit = 'a'.repeat(40), dependencies = [{ repository: 'owner/loader', path: 'portero.js', commit: 'b'.repeat(40) }, { repository: 'owner/core', path: 'os/shell.js', commit: 'c'.repeat(40) }];
+  Object.assign(f.context.registry.integrations[0], { integrationConfirmed: false, inventoryStatus: 'source-not-installed', source: { auditedCommit, dependencies } });
+  const matching = pkg.upgradePlan(f.context, { integrations: [{ id: 'host', commit: auditedCommit, dependencies: dependencies.map(x => ({ ...x })) }] }); assert.deepEqual(matching.actions.map(a => a.action), ['instalar-integracion']);
+  const cases = [undefined, [], [dependencies[0]], [{ ...dependencies[0], commit: 'd'.repeat(40) }, dependencies[1]], [dependencies[0], { ...dependencies[1], path: 'other.js' }], [dependencies[0], dependencies[0], dependencies[1]], [...dependencies, { repository: 'owner/new-loader', path: 'new.js', commit: 'd'.repeat(40) }]];
+  for (const observed of cases) {
+    const actions = pkg.upgradePlan(f.context, { integrations: [{ id: 'host', commit: auditedCommit, dependencies: observed }] }).actions;
+    assert.ok(actions.some(a => a.action === 'auditar-fuente')); assert.ok(actions.some(a => a.action === 'verificar-integracion')); assert.ok(!actions.some(a => a.action === 'instalar-integracion'));
+  }
+  delete f.context.registry.integrations[0].source.dependencies;
+  const extra = pkg.upgradePlan(f.context, { integrations: [{ id: 'host', commit: auditedCommit, dependencies: [dependencies[0]] }] }).actions;
+  assert.ok(extra.some(a => a.action === 'auditar-fuente')); assert.ok(extra.some(a => a.action === 'verificar-integracion')); assert.ok(!extra.some(a => a.action === 'instalar-integracion'));
+});
 test('CLI instalar dryrun produce JSON sin código y no escribe', t => {
   const f = fixture(t); const result = spawnSync(process.execPath, [path.resolve(__dirname, '../scripts/chinches-paquete.cjs'), 'instalar', '--root', f.root, '--id', 'host', '--dest', f.dest, '--json'], { encoding: 'utf8' });
   assert.equal(result.status, 0, result.stderr); const output = JSON.parse(result.stdout); assert.equal(output.dryRun, true); assert.equal(output.written, 0); assert.equal(output.changes[0].data, undefined); assert.equal(fs.existsSync(path.join(f.dest, 'chinche.lock.json')), false);
