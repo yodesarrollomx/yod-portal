@@ -91,3 +91,5 @@ La auditoría no se considera completa mientras existan componentes críticos o 
 - [Paquete y control de chinches](chinches-paquete.md): instalación repetible, releases inmutables, actualizaciones por huella, registro único y revisión incremental. [Abrir el control](../../chinche/control.html).
 
 - [Volúmenes nativos del PPP](ppp-volumenes-nativos.md): alcance para todos los casos de departamentos, contrato por escenario, fórmulas canónicas y recibos; ampliación autorizada y despliegue por verificar.
+
+- [Master Developer y pizarra personal](masterdeveloper-pizarra.md): alcance, contrato privado y despliegue.

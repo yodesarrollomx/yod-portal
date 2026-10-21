@@ -1,25 +1,18 @@
 {
-  "model_revision": "2026-10-20.ppp-volumenes-nativos.7",
-  "proposal_id": "CHG-PPP-VOLUMENES-NATIVOS-20261020",
-  "summary": "Multivolumen nativo schema2: programa 21 campos/14 drivers, lote de negocio con marcador atómico, GET de negocio sólo lectura con reconciliación de ledger, recibos históricos superseded y rechazo terminal prewrite probado. Horizonte 120, fábrica monovolumen y clonación por versión; fuentes locales preparadas, ejecución y despliegues se acreditan aparte. Revisión .6: promedio decimal de departamentos por nivel (step 0.000001), F entero calculado en Sheets y revisión explícita de plantilla antes del alta, conservando 21 campos/14 drivers. Revisión .7 registrada antes de producto: política preserve/built_area explícita por versión, cap plana con recursos sin importes, misma transacción y fórmula Sheets sobre área sobre rasante, conservando PA original.",
+  "model_revision": "2026-10-20.masterdeveloper-pizarra.1",
+  "proposal_id": "CHG-MASTERDEVELOPER-PIZARRA-20261020",
+  "summary": "Nombre Master Developer para Dirección y Master Broker para otras cuentas autorizadas; entrada por brokers y recorrido canónico por proyecto. Pizarra separada con carátulas, posición, zoom, montones, carpetas, búsqueda y deshacer. Estado personal privado por actor verificado en GAS-SALA existente, revisión esperada y recibo idempotente. Conservar CRM, IDs, fuentes, permisos, versiones, chinches y URLs; no inferir avance comercial del tipo de oportunidad.",
   "components": [
-    "SYS-POTENCIALES",
-    "GAS-PORTERO",
-    "SHEET-PORTERO",
-    "SHEET-PPP-MODELOS",
-    "SYS-DESPACHO-3D",
+    "SYS-INVERSION",
     "SYS-YOD-OS",
-    "SVC-AUTON-CLOUD",
-    "SYS-DESPACHO"
+    "GAS-SALA",
+    "SYS-SALA"
   ],
   "tests": [
-    "Pendiente de cierre del coordinador: paridad numérica de un cuerpo con su baseline y tres cuerpos distintos, 21 campos/fórmulas y flujos, recursos comunes una vez, factory nuevo uno y clonación por versión, horizonte completo 120 meses e históricos conservados.",
-    "Pendiente de cierre: permisos/capability, CAS, request_id/actor/payload, marcador atómico, ACK perdido, igualdad externa sin marcador, conciliación ledger sin negocio, recibo superseded y prueba terminal prewrite; sin escrituras de prueba en casos reales.",
-    "Pruebas y verificadores de cada consumidor/servidor, migración aislada y lectura final del libro; PR/Pages y despliegue existente se acreditan por recibos separados.",
-    "Bloque Portal controller/boot:41pruebas focales aprobadas; regresiones live/Puesto2/workspace45aprobadas. Handlerreal deCambia17 prueba envío único chat/live paraPPPnopiloto, borrador pendiente, fallo local, confirmaciónclassicDOM/cards y revocación; todo con dobles sin negocio real.",
-    "Evidencia de revisión .5: Portal sobre main b3b2614, Node 1026/1026 y arquitectura/OS/portal/obra/accesos/impacto PASS. La revisión .6 cambia materialmente el promedio y repite la suite completa antes de actualizar PR; no acredita despliegue ni paridad productiva.",
-    "Revisión .7 pendiente: baseline3 y nuevo1 preserve iguales, elección explícita built_area permite1/2/3 con recursos contados una vez por fórmula Sheets, denominador positivo, PA original recuperable, modo ligado a revisión/operación/recibo y comparación FULL; cap plana sin importes.",
-    "Portal .7 sobre main 7796d27 con Sala preservada: Node 1033/1033 PASS; arquitectura/impacto/OS/portal/obra/accesos/diff PASS; cache imports native-volumes3/multivolumen3. Chromium PPP colaborativo 1280/860/390px PASS, sin escrituras reales; corrige selectores antiguos del test, no producto. Recurso/método en FULL/WRITE/ACK y metadata exacta con ejemplo promedio17 cubiertos."
+    "Roles y separación de carteras con snapshots sintéticos.",
+    "Pizarra: mover, agrupar, sacar, recargar, deshacer, móvil y teclado.",
+    "Persistencia: identidad, CAS, ACK perdido, reintento idéntico y conflicto sin sobrescribir.",
+    "Regresiones existentes y comparación de archivos publicados; sesiones reales separadas de pruebas sintéticas."
   ],
-  "rollback": "Deshabilitar las capabilities nuevas y revertir consumidores/handlers en implementaciones existentes conservando IDs, versiones, cuerpos, recibos, ACL y libros; no borrar datos ni restaurar históricos a ciegas."
+  "rollback": "Revertir PR de interfaz/servidor manteniendo archivos de organización, expedientes, recibos, permisos y originales."
 }

@@ -161,6 +161,7 @@
   function set(id, t) { var e = document.getElementById(id); if (e) e.textContent = t; }
   function currentSys() { var here = location.href, best = ''; Object.keys(DEST).forEach(function (k) { if (here.indexOf(DEST[k].replace(/\/$/, '')) === 0) best = k; }); return best; }
 
+  function moduleTitle(row) { return row.system_id === 'SYS-INVERSION' ? (state.role === 'admin' ? 'Master Developer' : 'Master Broker') : (row.titulo_portal || NAME[row.system_id] || row.system_id); }
   function defaultRows() { return Object.keys(DEST).map(function (k) { return { system_id: k, titulo_portal: NAME[k] }; }); }
   /* Un tablero que ya vive aqui (DEST + NAME + CODES) pero al que nadie dio de
      alta en la pestaña Portal quedaba fuera del menu de TODOS los tableros,
@@ -187,7 +188,7 @@
     var a = el('a', 'yod-nav-item' + (row.system_id === cur || row.system_id === NAV_PARENT[cur] ? ' active' : '') + (nuevo ? ' hay-nuevo' : ''));
     if (nuevo) a.title = 'Hay algo nuevo desde tu última visita';
     a.href = url; a.setAttribute('rel', 'noopener'); if(!esPropioShell(url)) a.setAttribute('target','_blank');
-    a.innerHTML = '<i class="ti ti-' + (ICON[row.system_id] || 'layout-dashboard') + '"></i><span>' + esc(row.titulo_portal || NAME[row.system_id] || row.system_id) + '</span>';
+    a.innerHTML = '<i class="ti ti-' + (ICON[row.system_id] || 'layout-dashboard') + '"></i><span>' + esc(moduleTitle(row)) + '</span>';
     return a;
   }
   function renderNav(rows, cur) {
@@ -200,7 +201,7 @@
       var people = el('a', 'yod-nav-item'); people.href = 'https://yodesarrollomx.github.io/potenciales-yod/accesos.html';
       people.innerHTML = '<i class="ti ti-users"></i><span>Personas y accesos</span>'; box.appendChild(people);
     }
-    rows.forEach(function (r) { if (r.system_id === cur && r.titulo_portal) set('yodCrumbHere', r.titulo_portal); });
+    rows.forEach(function (r) { if (r.system_id === cur && r.titulo_portal) set('yodCrumbHere', moduleTitle(r)); });
     if (!box.children.length) box.innerHTML = '<span class="yod-nav-loading">Sin tableros</span>';
   }
 
@@ -544,10 +545,10 @@
     function results(q) {
       var box = document.getElementById('yodRes'); if (!box) return; box.innerHTML = '';
       var t = (q || '').toLowerCase();
-      state.modules.filter(function (r) { return vivo(r) && (!t || [r.titulo_portal || NAME[r.system_id] || '', NAME[r.system_id] || '', (CODES[r.system_id] || []).join(' ')].join(' ').toLowerCase().indexOf(t) >= 0); }).forEach(function (r) {
+      state.modules.filter(function (r) { return vivo(r) && (!t || [moduleTitle(r), r.titulo_portal || NAME[r.system_id] || '', NAME[r.system_id] || '', (CODES[r.system_id] || []).join(' ')].join(' ').toLowerCase().indexOf(t) >= 0); }).forEach(function (r) {
         var url = enlace(r); if (!url) return;
         var a = el('a'); a.href = url; a.setAttribute('rel', 'noopener'); if(!esPropioShell(url)) a.setAttribute('target','_blank');
-        a.innerHTML = '<i class="ti ti-' + (ICON[r.system_id] || 'layout-dashboard') + '"></i><span><strong>' + esc(r.titulo_portal || NAME[r.system_id]) + '</strong></span>';
+        a.innerHTML = '<i class="ti ti-' + (ICON[r.system_id] || 'layout-dashboard') + '"></i><span><strong>' + esc(moduleTitle(r)) + '</strong></span>';
         box.appendChild(a);
       });
       // OS-2 · también proyectos por folio o nombre (registro os/proyectos.js)
