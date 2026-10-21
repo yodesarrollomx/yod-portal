@@ -13890,7 +13890,8 @@
         "SYS-YOD-OS",
         "GAS-SALA",
         "SYS-SALA",
-        "GAS-PORTERO"
+        "GAS-PORTERO",
+        "SYS-DESPACHO"
       ],
       "status": "propuesto",
       "approval": "Dirección autoriza recuperar el chat interrumpido y completar hasta publicación las siete etapas: jerarquía comercial y pizarra personal de presentaciones, 20-oct-2026.",
