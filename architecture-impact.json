@@ -6,7 +6,8 @@
     "SYS-INVERSION",
     "SYS-YOD-OS",
     "GAS-SALA",
-    "SYS-SALA"
+    "SYS-SALA",
+    "GAS-PORTERO"
   ],
   "tests": [
     "Roles y separación de carteras con snapshots sintéticos.",
