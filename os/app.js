@@ -214,7 +214,7 @@
     var top=document.createElement('div');top.className='module-top';
     var icon=document.createElement('span');icon.className='module-icon';icon.innerHTML='<i class="ti ti-'+(ICONS[row.system_id]||window.PortalCore.safeIcon(row.icono))+'"></i>';
     var status=document.createElement('span');status.className='module-state';status.textContent=on?'Disponible':b.text;top.append(icon,status);
-    var title=document.createElement('h3');title.textContent=safeText(row.titulo_portal)||safeText(row.system_id);
+    var title=document.createElement('h3');title.textContent=moduleTitle(row);
     var desc=document.createElement('p');desc.textContent=safeText(row.descripcion_portal)||'Abrir espacio de trabajo.';
     var foot=document.createElement('footer');var audience=document.createElement('span');audience.textContent=safeText(row.audiencia)||'Equipo autorizado';var arrow=document.createElement('i');arrow.className='ti ti-arrow-up-right';foot.append(audience,arrow);
     link.append(top,title,desc,foot);return link;
@@ -257,6 +257,7 @@
     box.hidden=false;
     if(sube&&sube.parentNode===cont&&sube.nextElementSibling!==tab)cont.insertBefore(sube,tab);
   }
+  function moduleTitle(row){return row.system_id==='SYS-INVERSION'?(state.role==='admin'?'Master Developer':'Master Broker'):(safeText(row.titulo_portal)||safeText(row.system_id));}
   function sidebarNode(row){
     var url=window.PortalCore.resolveUrl(row);if(!url)return null;
     var on=window.PortalCore.enabled(row);
@@ -264,7 +265,7 @@
     if(on){a.href=hrefDe(url);a.rel='noopener';if(!esPropio(hrefDe(url)))a.target='_blank';}else{a.setAttribute('aria-disabled','true');}
     a.dataset.systemId=row.system_id;if(nuevos[row.system_id]){a.classList.add('hay-nuevo');a.title='Hay algo nuevo desde tu última visita';}
     var i=document.createElement('i');i.className='ti ti-'+(ICONS[row.system_id]||window.PortalCore.safeIcon(row.icono));
-    var s=document.createElement('span');s.textContent=safeText(row.titulo_portal)||safeText(row.system_id);
+    var s=document.createElement('span');s.textContent=moduleTitle(row);
     a.append(i,s);return a;
   }
 

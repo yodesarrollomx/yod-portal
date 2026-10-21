@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-20.ppp-volumenes-nativos.7",
+  "revision": "2026-10-20.masterdeveloper-pizarra.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -13882,6 +13882,33 @@
       ],
       "deployment": "Propuesta registrada antes del producto y revisiones materiales antes de implementarlas. Consumidor Portal .7 implementado y probado localmente; PR305 pendiente de revisión/publicación. GAS/PPP/backend, migración/fábrica, paridad numérica aislada, implementación existente y lectura final se acreditan por separado por el coordinador. No afirmar cálculo productivo por presencia de fuente.",
       "rollback": "Deshabilitar las capabilities nuevas y revertir consumidores/handlers en implementaciones existentes conservando IDs, versiones, cuerpos, recibos, ACL y libros; no borrar datos ni restaurar históricos a ciegas."
+    },
+    {
+      "id": "CHG-MASTERDEVELOPER-PIZARRA-20261020",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-YOD-OS",
+        "GAS-SALA",
+        "SYS-SALA",
+        "GAS-PORTERO",
+        "SYS-DESPACHO",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE",
+        "SHEET-SALA"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección autoriza recuperar el chat interrumpido y completar hasta publicación las siete etapas: jerarquía comercial y pizarra personal de presentaciones, 20-oct-2026.",
+      "proposal": "Nombre Master Developer para Dirección y Master Broker para otras cuentas autorizadas; entrada por brokers y recorrido canónico por proyecto. Pizarra separada con carátulas, posición, zoom, montones, carpetas, búsqueda y deshacer. Estado personal privado por actor verificado en GAS-SALA existente, revisión esperada y recibo idempotente. Conservar CRM, IDs, fuentes, permisos, versiones, chinches y URLs; no inferir avance comercial del tipo de oportunidad.",
+      "tests": [
+        "Roles y separación de carteras con snapshots sintéticos.",
+        "Pizarra: mover, agrupar, sacar, recargar, deshacer, móvil y teclado.",
+        "Persistencia: identidad, CAS, ACK perdido, reintento idéntico y conflicto sin sobrescribir.",
+        "Regresiones existentes y comparación de archivos publicados; sesiones reales separadas de pruebas sintéticas."
+      ],
+      "deployment": "Registro previo. Implementación, publicación y QA se acreditarán al cierre.",
+      "rollback": "Revertir PR de interfaz/servidor manteniendo archivos de organización, expedientes, recibos, permisos y originales."
     }
   ],
   "data_contracts": [
