@@ -8,7 +8,12 @@
     "GAS-SALA",
     "SYS-SALA",
     "GAS-PORTERO",
-    "SYS-DESPACHO"
+    "SYS-DESPACHO",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-CONTROL",
+    "SYS-OBRA-CLIENTE",
+    "SHEET-SALA"
   ],
   "tests": [
     "Roles y separación de carteras con snapshots sintéticos.",
