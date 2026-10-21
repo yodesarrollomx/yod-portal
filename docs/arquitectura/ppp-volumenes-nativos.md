@@ -115,3 +115,7 @@ Publicar los consumidores y herramientas compatibles antes de habilitar el model
 Las pruebas usan fuentes/libros aislados. El coordinador comprueba la fuente activa y el libro real fuera del repositorio; código, migración de modelo, backend, Pages y lectura final se acreditan por separado. Una fuente GAS preparada no demuestra que ya corra ni que un libro sea compatible.
 
 Reversión: deshabilitar capabilities nuevas y volver a consumidores/handlers anteriores en las mismas implementaciones, conservando datos, IDs, recibos, ACL y versiones. No borrar cuerpos ni restaurar hojas o históricos a ciegas.
+
+## Recuperación de cantidades · 21-oct-2026
+
+CHG-PPP-RECUPERACION-PRECISA-20261021 conserva las conexiones y el contrato schema2. La representación decimal de un control no cambia su cantidad canónica. La copia pendiente sigue sin capacidad de escritura; sólo una lectura autenticada vigente del mismo caso y credencial restablece el editor. Lecturas concurrentes se reúnen en una solicitud; el borrador real requiere la confirmación de descarte existente. La evidencia aislada y la aceptación en producción se registran por separado.

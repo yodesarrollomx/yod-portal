@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-21.sala-cloud-adaptativa.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-21.ppp-recuperacion-precisa.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
