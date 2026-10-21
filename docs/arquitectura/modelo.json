@@ -18603,6 +18603,14 @@
         "SYS-POTENCIALES",
         "SVC-AUTON-CLOUD"
       ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/chat-draft-polling.test.cjs",
+      "components": [
+        "SYS-DESPACHO-3D",
+        "SYS-YOD-OS"
+      ]
     }
   ],
   "office_coverage": {
