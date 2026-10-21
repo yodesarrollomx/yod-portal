@@ -13920,7 +13920,8 @@
         "SVC-SALA-EJECUTOR",
         "EXT-MOTORES-MEDIA",
         "EXT-DRIVE",
-        "EXT-ACTIONS"
+        "EXT-ACTIONS",
+        "SYS-YOD-OS"
       ],
       "status": "propuesto",
       "authorization": "Dirección solicita ejecutar chunk3 del plan de recuperación: aplicar una corrección real de voz y animación ya guardada y producir una nueva versión. Notas autenticadas del20oct retiran zoom, cámara y parallax para las escenas; conservar decisiones y originales.",

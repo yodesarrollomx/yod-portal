@@ -10,7 +10,8 @@
     "SVC-SALA-EJECUTOR",
     "EXT-MOTORES-MEDIA",
     "EXT-DRIVE",
-    "EXT-ACTIONS"
+    "EXT-ACTIONS",
+    "SYS-YOD-OS"
   ],
   "tests": [
     "Rechazo de corte produce escena/voz/corte nuevos con nota y linaje, sin cambiar aprobaciones visuales; repetición idempotente y cambio de nota cambia versión.",
