@@ -58,6 +58,7 @@ export function createLiveVoice({mint, forgetCredential=()=>{}, fetchImpl = (...
   let typedMessage = null, typing = false;
   let inputMonitor = null, remoteSpeechObserved = false, automaticInterruptionId = null;
   let credentialRenewal = null, credentialRetryAt = 0;
+  let closeReceipt = null, receiptTimer = null, leaving = false;
   const credentialMargin = 120000;
   // A confirmed uncertainty belongs to the credential's case, even after a cancelled attempt.
   // Readiness, discardPreparation and closing a different session do not prove its remote closure.
@@ -162,6 +163,39 @@ export function createLiveVoice({mint, forgetCredential=()=>{}, fetchImpl = (...
   }
   const report = result => publish({fragments: result.fragments, blocks: result.blocks, saved: result.saved,
     pending: result.pending, incomplete: state.incomplete || result.incomplete === true});
+  function forgetCloseReceipt() {
+    closeReceipt = null;
+    if (receiptTimer !== null) cancel(receiptTimer);
+    receiptTimer = null;
+  }
+  async function refreshCloseReceipt() {
+    const receipt = closeReceipt;
+    if (!receipt || receipt.busy) return;
+    if (leaving || !canOperate() || now() >= receipt.until || activeCaseId !== receipt.caseId) {
+      forgetCloseReceipt(); return;
+    }
+    receipt.busy = true;
+    try {
+      const result = await post('/voice/status', {session_id: receipt.id}, receipt.credential, AbortSignal.timeout(12000));
+      if (closeReceipt !== receipt || receipt.epoch !== epoch) return;
+      if (!canOperate() || now() >= receipt.until) {forgetCloseReceipt(); return;}
+      // A close receipt only updates persistence; it cannot revive media or execute actions.
+      if (result.active !== false || result.finalized !== true ||
+          !['fragments','blocks','saved','pending'].every(key => Number.isSafeInteger(result[key]) && result[key] >= 0) ||
+          result.saved + result.pending > result.blocks || result.blocks < state.blocks || result.saved < state.saved)
+        throw Error('invalid_close_receipt');
+      report(result); publish({status_pending:false});
+      if (!result.pending) {
+        if (!state.incomplete && state.finalized && result.saved === result.blocks)
+          publish({notice:'Conversación finalizada. Historial confirmado.'});
+        forgetCloseReceipt();
+      }
+    } catch (error) {
+      if (closeReceipt !== receipt || receipt.epoch !== epoch) return;
+      publish({status_pending:true});
+      if (['unauthorized','session_unavailable'].includes(error?.code)) forgetCloseReceipt();
+    } finally {receipt.busy = false;}
+  }
   const ready = (notice = 'Conexión lista. Puedes hablar.') => {
     if (closing || !started || state.phase !== 'starting') return;
     clearTimeout(startTimer); startTimer = null;
@@ -210,6 +244,11 @@ export function createLiveVoice({mint, forgetCredential=()=>{}, fetchImpl = (...
       } finally {
         clearTimeout(timer); closedResolve = null; epoch++; release(); credential = null; sessionId = null;
         closing = null; retryingContext = false; publish({phase: 'idle', muted: false, playback_blocked: false, output_paused:false,interruption_pending:false, context_retry_pending: false, credential_pending:false, session_ending:false, notice});
+        if (!leaving && id && current && (state.pending || !result) && Number.isFinite(current.expires_at)) {
+          closeReceipt = {id, credential:current, caseId:activeCaseId, epoch, busy:false,
+            until:Math.min(current.expires_at, now()+300000)};
+          receiptTimer = schedule(() => {void refreshCloseReceipt();}, 10000);
+        }
       }
       return {...state};
     });
@@ -283,6 +322,7 @@ export function createLiveVoice({mint, forgetCredential=()=>{}, fetchImpl = (...
   }
   async function start(caseId,{encounter=false}={}) {
     if (closing || !['idle','error'].includes(state.phase)) return false;
+    forgetCloseReceipt(); leaving = false;
     if(uncertainCreations.has(caseId)){activeCaseId=caseId;publish({phase:'error',creation_uncertain:true,notice:NOTICES.voice_creation_uncertain});return false;}
     const token = ++epoch; controller = new AbortController(); began = now();activeCaseId=caseId;boardSent=null;boardRetryAt=0;interactionSent.clear();
     interruptionId=null;automaticInterruptionId=null;remoteSpeechObserved=false;
@@ -545,9 +585,9 @@ export function createLiveVoice({mint, forgetCredential=()=>{}, fetchImpl = (...
   }
   function abandon() {
     // Navigation cannot guarantee a final event. Never report it as a confirmed close.
-    discardPreparation();
+    leaving = true; forgetCloseReceipt(); discardPreparation();
     disconnected = true; closedResolve?.(false); publish({incomplete: true});
     void stop('Finalización incompleta al salir de esta pantalla.');
   }
-  return {prepare, discardPreparation, start, stop, stateForCase, sendText, mute, playAudio, retryContext, notifyBoard, notifyInteraction, presentSlide, interrupt, resumeAudio, abandon, refresh: () => status(epoch), retryActions:()=>{actions?.retry();void status(epoch);}, snapshot: () => ({...state})};
+  return {prepare, discardPreparation, start, stop, stateForCase, sendText, mute, playAudio, retryContext, notifyBoard, notifyInteraction, presentSlide, interrupt, resumeAudio, abandon, refresh: () => closeReceipt ? refreshCloseReceipt() : status(epoch), retryActions:()=>{actions?.retry();void status(epoch);}, snapshot: () => ({...state})};
 }

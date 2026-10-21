@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-21.chat-borrador.1",
+  "revision": "2026-10-21.voice-close-receipt.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -13994,6 +13994,23 @@
       ],
       "deployment": "Registro previo al código. Observado envío bloqueado durante consultas periódicas lentas; publicación y aceptación pendientes.",
       "rollback": "Revertir el PR del frontend; conservar historiales, borradores, permisos y datos de negocio."
+    },
+    {
+      "id": "CHG-VOICE-CLOSE-RECEIPT-20261021",
+      "components": [
+        "SYS-DESPACHO-3D",
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
+      ],
+      "status": "implementado_local",
+      "authorization": "Dirección solicita completar la prueba integral y corregir bloqueos observados.",
+      "proposal": "Comprobar el recibo de la misma sesión después de cerrar el micrófono. Consultas acotadas de estado con la credencial original; sin reenviar mensajes, crear sesiones ni alterar permisos. Conservar avisos de cierre incompleto.",
+      "tests": [
+        "Cierre pendiente seguido de recibo confirmado, fallos transitorios, credencial vencida, cancelación y respuestas tardías al cambiar sesión.",
+        "Suite completa, verificadores y aceptación del frontend publicado."
+      ],
+      "deployment": "Implementado y probado en rama: cierre seguido de consultas de estado acotadas a cinco minutos y al vencimiento original. Sin sesiones nuevas, sin reenvíos y sin ocultar cierres incompletos. Publicación y aceptación de esta revisión pendientes.",
+      "rollback": "Revertir el PR de frontend. Los historiales y recibos del servidor se conservan."
     }
   ],
   "data_contracts": [

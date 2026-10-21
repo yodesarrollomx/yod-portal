@@ -7,7 +7,7 @@ import {createEntryPreparation} from './voice-preparation.mjs?v=2';
 import {residentAccessDecision} from './resident-agents.mjs?v=unified283';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=first292';
 import {stationIdentity} from './project-station.mjs?v=native-volumes3';
-import {createLiveVoice} from './live-voice.mjs?v=ruisenor1';
+import {createLiveVoice} from './live-voice.mjs?v=close-receipt1';
 import {voiceView} from './voice-view.mjs?v=141';
 import {createWorkspace} from './agent-workspace.mjs?v=native-volumes3';
 import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=entregas291';
@@ -186,7 +186,7 @@ if (open) {
     return submission.promise;
   }
   node('station-message-form').addEventListener('submit',sendStationMessage);
-  node('station-refresh').addEventListener('click',()=>void(chat.selection?chat.refresh():chat.open(AUTONES_MULTIPLES?selection?.case_id:null)));
+  node('station-refresh').addEventListener('click',()=>{void voice.refresh();void(chat.selection?chat.refresh():chat.open(AUTONES_MULTIPLES?selection?.case_id:null));});
   node('station-write').addEventListener('click',async()=>{
     if(!selection||accessPaused)return;const own=generation;suppressEncounter();node('station-write').disabled=true;
     const result=await voice.stop();if(own!==generation||!selection)return;
