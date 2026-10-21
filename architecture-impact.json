@@ -1,25 +1,22 @@
 {
-  "model_revision": "2026-10-20.masterdeveloper-pizarra.1",
-  "proposal_id": "CHG-MASTERDEVELOPER-PIZARRA-20261020",
-  "summary": "Nombre Master Developer para Dirección y Master Broker para otras cuentas autorizadas; entrada por brokers y recorrido canónico por proyecto. Pizarra separada con carátulas, posición, zoom, montones, carpetas, búsqueda y deshacer. Estado personal privado por actor verificado en GAS-SALA existente, revisión esperada y recibo idempotente. Conservar CRM, IDs, fuentes, permisos, versiones, chinches y URLs; no inferir avance comercial del tipo de oportunidad.",
+  "model_revision": "2026-10-20.sala-revision-video.1",
+  "proposal_id": "CHG-SALA-REVISION-VIDEO-20261020",
+  "summary": "Revisión de corte por rechazo autenticado, con linaje hacia corte durable y fuente visual aprobada; IDs nuevos derivados de la decisión y política. Ejecución valida vigencia antes de consumir motores. Video generativo obligatorio, voz Gemini separada de nombres Kokoro y montaje sin seis segundos de silencio ni congelación de escenas. Piloto acotado por familia en REGLAS; nuevas revisiones nunca aprueban.",
   "components": [
-    "SYS-INVERSION",
-    "SYS-YOD-OS",
-    "GAS-SALA",
     "SYS-SALA",
-    "GAS-PORTERO",
-    "SYS-DESPACHO",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-CONTROL",
-    "SYS-OBRA-CLIENTE",
-    "SHEET-SALA"
+    "GAS-SALA",
+    "SHEET-SALA",
+    "SVC-SALA-PRODUCTOR",
+    "SVC-SALA-EJECUTOR",
+    "EXT-MOTORES-MEDIA",
+    "EXT-DRIVE",
+    "EXT-ACTIONS"
   ],
   "tests": [
-    "Roles y separación de carteras con snapshots sintéticos.",
-    "Pizarra: mover, agrupar, sacar, recargar, deshacer, móvil y teclado.",
-    "Persistencia: identidad, CAS, ACK perdido, reintento idéntico y conflicto sin sobrescribir.",
-    "Regresiones existentes y comparación de archivos publicados; sesiones reales separadas de pruebas sintéticas."
+    "Rechazo de corte produce escena/voz/corte nuevos con nota y linaje, sin cambiar aprobaciones visuales; repetición idempotente y cambio de nota cambia versión.",
+    "Fuente retirada, firma ausente, cambio de decisiones, corte no durable o dependencias distintas bloquean la revisión.",
+    "Motor generativo sin cuota queda pendiente sin cámara/parallax; voz no usa IDs Kokoro; montaje alinea cada voz y no congela un clip corto.",
+    "Verificadores y regresiones aisladas; producción real requiere medios durables y nuevo recibo, aceptación editorial separada."
   ],
-  "rollback": "Revertir PR de interfaz/servidor manteniendo archivos de organización, expedientes, recibos, permisos y originales."
+  "rollback": "Desactivar familias de revisión y revertir código por PR; conservar COLA, originales, rechazos, propuestas, archivos y recibos. No restaurar datos de negocio."
 }
