@@ -1,15 +1,15 @@
 {
-  "model_revision": "2026-10-21.chat-borrador.1",
-  "proposal_id": "CHG-CHAT-BORRADOR-20261021",
-  "summary": "Pausar la actualización periódica del historial mientras exista texto por enviar y el chat esté validado para enviarlo. Conservar recuperación de estado obsoleto, actualización manual, lectura después del envío y todas las validaciones de acceso y servidor. Evitar que cada consulta lenta vuelva a deshabilitar Enviar durante la composición.",
+  "model_revision": "2026-10-21.voice-close-receipt.1",
+  "proposal_id": "CHG-VOICE-CLOSE-RECEIPT-20261021",
+  "summary": "Comprobar el recibo de la misma sesión después de cerrar el micrófono. Consultas acotadas de estado con la credencial original; sin reenviar mensajes, crear sesiones ni alterar permisos. Conservar avisos de cierre incompleto.",
   "components": [
     "SYS-DESPACHO-3D",
     "SYS-YOD-OS",
     "SYS-DESPACHO"
   ],
   "tests": [
-    "Temporizador real: borrador enviable no inicia consulta; borrador con estado obsoleto sí recupera; historial vuelve a consultarse al vaciar el borrador; voz activa, cierre y operación en curso siguen bloqueando consultas.",
-    "Regresiones completas del portal y comprobación de envío en navegador tras publicar; prueba de voz separada."
+    "Cierre pendiente seguido de recibo confirmado, fallos transitorios, credencial vencida, cancelación y respuestas tardías al cambiar sesión.",
+    "Suite completa, verificadores y aceptación del frontend publicado."
   ],
-  "rollback": "Revertir el PR del frontend; conservar historiales, borradores, permisos y datos de negocio."
+  "rollback": "Revertir el PR de frontend. Los historiales y recibos del servidor se conservan."
 }

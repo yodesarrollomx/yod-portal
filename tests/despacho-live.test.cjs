@@ -3,11 +3,11 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const load=()=>import('../despacho3d/live-voice.mjs');
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
-function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12000,maxStatusFailures=3,mode='expediente',failStatus=false,Stream,startTimeout=60000,signallingTimeout=90000,mintOverride,sessionOverride,statusOverride,monitorFactory,now,messageOverride}={}){
+function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12000,maxStatusFailures=3,mode='expediente',failStatus=false,Stream,startTimeout=60000,signallingTimeout=90000,mintOverride,sessionOverride,statusOverride,closeOverride,canOperate,monitorFactory,now,messageOverride}={}){
  const calls=[],captions=[],track={enabled:true,stops:0,stop(){this.stops++;}},
    stream={getTracks:()=>[track],getAudioTracks:()=>[track]},
    audio={srcObject:null,pause(){},play:async()=>{}};
- let peer,captures=0;
+ let peer,captures=0,timerId=0;const timers=new Map();
  class Peer{
   constructor(){peer=this;this.connectionState='connected';this.iceGatheringState='complete';this.closed=false;
    this.channel={readyState:'open',sent:[],send(raw){this.sent.push(JSON.parse(raw));},close(){this.closed=true;}};}
@@ -19,22 +19,23 @@ function fixture(createLiveVoice,{closed=true,closeTimeout=50,disconnectGrace=12
  }
  const base={ok:true,active:true,started:false,context_ready:true,finalized:false,expires_at:Date.now()+600000,
   fragments:0,blocks:0,saved:0,pending:0,incomplete:false};
- const voice=createLiveVoice({audio,Peer,Stream,monitorFactory,now,closeTimeout,disconnectGrace,maxStatusFailures,startTimeout,signallingTimeout,media:{getUserMedia:async()=>{captures++;return stream;}},
-  schedule:()=>1,cancel:()=>{},onTranscript:f=>captions.push(f),
+ const voice=createLiveVoice({audio,Peer,Stream,monitorFactory,now,canOperate,closeTimeout,disconnectGrace,maxStatusFailures,startTimeout,signallingTimeout,media:{getUserMedia:async()=>{captures++;return stream;}},
+  schedule:(fn,ms)=>{timers.set(++timerId,{fn,ms});return timerId;},cancel:id=>timers.delete(id),onTranscript:f=>captions.push(f),
   mint:mintOverride||(async({case_id})=>({ok:true,case_id,token:'A'.repeat(30)+'.'+'a'.repeat(64),
    endpoint:'https://synthetic-engine.onrender.com',expires_at:Date.now()+600000})),
   fetchImpl:async(url,options)=>{
    calls.push({url,options});
    if(url.endsWith('/voice/message')&&messageOverride)return {ok:true,json:async()=>messageOverride(JSON.parse(options.body))};
    if(failStatus && url.endsWith('/status'))throw Error('record unavailable');
-   if(url.endsWith('/status')&&statusOverride)return {ok:true,json:async()=>({...base,...statusOverride()})};
+   if(url.endsWith('/status')&&statusOverride)return {ok:true,json:async()=>({...base,...await statusOverride()})};
+   if(url.endsWith('/close')&&closeOverride)return {ok:true,json:async()=>({...base,...await closeOverride()})};
    if(url.endsWith('/session')&&sessionOverride){const override=await sessionOverride(url,options);if(override)return override;}
    const value=url.endsWith('/voice/ready')?{ok:true,available:true}:url.endsWith('/session')?{ok:true,mode,session:{id:'live:opaque/session'},transport:{type:'webrtc',sdp:'v=0\r\nanswer'}}:
     url.endsWith('/close')?{...base,active:false,finalized:closed,fragments:1,blocks:1,saved:closed?1:0,pending:closed?0:1,incomplete:!closed}:base;
    return {ok:true,json:async()=>value};
   }});
  const event=value=>peer.channel.onmessage({data:JSON.stringify(value)});
- return {voice,calls,captions,track,audio,event,get captures(){return captures;},get peer(){return peer;}};
+ return {voice,calls,captions,track,audio,event,timers,get captures(){return captures;},get peer(){return peer;}};
 }
 test('WebRTC uses remote audio and oai-events, and never enables microphone before session.started',async()=>{
  const {createLiveVoice}=await load(),f=fixture(createLiveVoice);
@@ -797,4 +798,73 @@ test('uncertain creation confirmed after cancellation remains explained on reope
  assert.equal(voiceView(a).startDisabled,true);assert.doesNotMatch(voiceView(a).title,/Disponible/);
  const b=f.voice.stateForCase('synthetic-b');assert.equal(b.phase,'idle');assert.equal(voiceView(b).startDisabled,false);
  assert.equal(f.voice.stateForCase('synthetic-a').creation_uncertain,true);assert.equal(f.calls.filter(c=>c.url.endsWith('/voice/session')).length,1);
+});
+
+const pendingClose={active:false,finalized:true,fragments:3,blocks:1,saved:0,pending:1,incomplete:false};
+async function stopWithFinalEvent(f){const stopping=f.voice.stop();await tick();f.event({type:'session.closed'});return stopping;}
+test('closed microphone keeps checking the same receipt until history confirms, without another session or write',async()=>{
+ const {createLiveVoice}=await load();let result={active:true};
+ const f=fixture(createLiveVoice,{closeOverride:()=>pendingClose,statusOverride:()=>result});
+ await f.voice.start('synthetic-case');await stopWithFinalEvent(f);
+ assert.equal(f.voice.snapshot().pending,1);assert.equal(f.track.stops,1);assert.equal(f.peer.closed,true);
+ const timer=[...f.timers.values()][0];assert.equal(timer.ms,10000);
+ result={...pendingClose,saved:1,pending:0};timer.fn();await tick();
+ assert.equal(f.voice.snapshot().saved,1);assert.equal(f.voice.snapshot().pending,0);
+ assert.equal(f.voice.snapshot().phase,'idle');assert.equal(f.timers.size,0);
+ assert.equal(f.captures,1);assert.equal(f.calls.filter(c=>c.url.endsWith('/session')).length,1);
+ assert.equal(f.calls.filter(c=>c.url.endsWith('/close')).length,1);
+ const receiptCall=f.calls.at(-1),closeCall=f.calls.find(c=>c.url.endsWith('/close'));
+ assert.equal(receiptCall.url.endsWith('/status'),true);assert.equal(receiptCall.options.body,closeCall.options.body);
+ assert.equal(receiptCall.options.headers.Authorization,closeCall.options.headers.Authorization);
+ assert.match(f.voice.snapshot().notice,/Historial confirmado/);
+});
+test('receipt failures keep pending counts and manual refresh recovers without hiding incomplete closure',async()=>{
+ const {createLiveVoice}=await load();let fail=true;
+ const f=fixture(createLiveVoice,{closeOverride:()=>({...pendingClose,incomplete:true}),statusOverride:()=>{if(fail)throw Error('offline');return {...pendingClose,saved:1,pending:0};}});
+ await f.voice.start('synthetic-case');await stopWithFinalEvent(f);await f.voice.refresh();
+ assert.equal(f.voice.snapshot().pending,1);assert.equal(f.voice.snapshot().status_pending,true);
+ fail=false;await f.voice.refresh();assert.equal(f.voice.snapshot().saved,1);
+ assert.equal(f.voice.snapshot().status_pending,false);assert.equal(f.voice.snapshot().incomplete,true);
+ assert.equal(f.timers.size,0);
+});
+test('receipt polling ends after five minutes or credential expiry and leaves uncertainty visible',async()=>{
+ const {createLiveVoice}=await load();
+ for(const credentialLife of [30000,600000]){
+  let clock=Date.now();const expires=clock+credentialLife;
+  const f=fixture(createLiveVoice,{now:()=>clock,closeOverride:()=>pendingClose,
+   mintOverride:async({case_id})=>({ok:true,case_id,token:'A'.repeat(30)+'.'+'a'.repeat(64),endpoint:'https://synthetic-engine.onrender.com',expires_at:expires})});
+  await f.voice.start('synthetic-case');await stopWithFinalEvent(f);
+  const count=f.calls.length;clock+=Math.min(credentialLife,300000)+1;await f.voice.refresh();
+  assert.equal(f.calls.length,count);assert.equal(f.timers.size,0);assert.equal(f.voice.snapshot().pending,1);
+ }
+});
+test('late close receipts cannot modify a newer session or survive navigation',async()=>{
+ const {createLiveVoice}=await load();let resolve,hold=false;
+ const f=fixture(createLiveVoice,{closeOverride:()=>pendingClose,statusOverride:()=>hold?new Promise(r=>resolve=r):{active:true}});
+ await f.voice.start('synthetic-a');await stopWithFinalEvent(f);hold=true;
+ const checking=f.voice.refresh();await tick();hold=false;await f.voice.start('synthetic-b');
+ resolve({...pendingClose,saved:1,pending:0});await checking;
+ assert.equal(f.voice.snapshot().phase,'starting');assert.equal(f.voice.snapshot().saved,0);
+ await stopWithFinalEvent(f);f.voice.abandon();await tick();
+ const count=f.calls.length;await f.voice.refresh();assert.equal(f.calls.length,count);assert.equal(f.timers.size,0);
+});
+test('overlapping close checks coalesce and malformed counters cannot claim a save',async()=>{
+ const {createLiveVoice}=await load();let resolve,hold=false;
+ const f=fixture(createLiveVoice,{closeOverride:()=>pendingClose,statusOverride:()=>hold?new Promise(r=>resolve=r):{active:true}});
+ await f.voice.start('synthetic-case');await stopWithFinalEvent(f);hold=true;
+ const count=f.calls.length,checking=f.voice.refresh();await tick();await f.voice.refresh();
+ assert.equal(f.calls.length,count+1);resolve({...pendingClose,saved:2,pending:0});await checking;
+ assert.equal(f.voice.snapshot().saved,0);assert.equal(f.voice.snapshot().pending,1);
+ assert.equal(f.voice.snapshot().status_pending,true);f.voice.abandon();
+});
+test('revoked access and expired authorization cannot turn a pending close into success',async()=>{
+ const {createLiveVoice}=await load();let allowed=true,resolve,hold=false;
+ const f=fixture(createLiveVoice,{canOperate:()=>allowed,closeOverride:()=>pendingClose,statusOverride:()=>hold?new Promise(r=>resolve=r):{active:true}});
+ await f.voice.start('synthetic-case');await stopWithFinalEvent(f);hold=true;
+ const checking=f.voice.refresh();await tick();allowed=false;resolve({...pendingClose,saved:1,pending:0});await checking;
+ assert.equal(f.voice.snapshot().saved,0);assert.equal(f.voice.snapshot().pending,1);assert.equal(f.timers.size,0);
+ let expired=false;const g=fixture(createLiveVoice,{closeOverride:()=>pendingClose,statusOverride:()=>expired?{ok:false,error:'unauthorized'}:{active:true}});
+ await g.voice.start('synthetic-case');await stopWithFinalEvent(g);expired=true;await g.voice.refresh();
+ assert.equal(g.timers.size,0);assert.equal(g.voice.snapshot().pending,1);
+ const count=g.calls.length;await g.voice.refresh();assert.equal(g.calls.length,count);
 });
