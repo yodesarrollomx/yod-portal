@@ -13982,7 +13982,8 @@
       "id": "CHG-CHAT-BORRADOR-20261021",
       "components": [
         "SYS-DESPACHO-3D",
-        "SYS-YOD-OS"
+        "SYS-YOD-OS",
+        "SYS-DESPACHO"
       ],
       "status": "propuesto",
       "authorization": "Dirección solicita completar la prueba integral y corregir bloqueos observados.",

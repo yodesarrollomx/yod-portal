@@ -4,7 +4,8 @@
   "summary": "Pausar la actualización periódica del historial mientras exista texto por enviar y el chat esté validado para enviarlo. Conservar recuperación de estado obsoleto, actualización manual, lectura después del envío y todas las validaciones de acceso y servidor. Evitar que cada consulta lenta vuelva a deshabilitar Enviar durante la composición.",
   "components": [
     "SYS-DESPACHO-3D",
-    "SYS-YOD-OS"
+    "SYS-YOD-OS",
+    "SYS-DESPACHO"
   ],
   "tests": [
     "Temporizador real: borrador enviable no inicia consulta; borrador con estado obsoleto sí recupera; historial vuelve a consultarse al vaciar el borrador; voz activa, cierre y operación en curso siguen bloqueando consultas.",
