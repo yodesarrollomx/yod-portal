@@ -39,6 +39,7 @@ jobs:
         run: |
           node scripts/probar-chinche-recuperacion.cjs
           node scripts/probar-chinche-compartida.cjs
+          node scripts/probar-chinche-controles.cjs
           node scripts/probar-chinches-browser.cjs
           node scripts/probar-equipo-browser.cjs
       - name: Residentes autorizados y movimiento en la misma oficina

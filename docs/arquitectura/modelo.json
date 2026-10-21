@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-21.voice-close-receipt.1",
+  "revision": "2026-10-21.single-chrome.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -14011,6 +14011,28 @@
       ],
       "deployment": "Implementado y probado en rama: cierre seguido de consultas de estado acotadas a cinco minutos y al vencimiento original. Sin sesiones nuevas, sin reenvíos y sin ocultar cierres incompletos. Publicación y aceptación de esta revisión pendientes.",
       "rollback": "Revertir el PR de frontend. Los historiales y recibos del servidor se conservan."
+    },
+    {
+      "id": "CHG-SINGLE-CHROME-371",
+      "components": [
+        "GAS-PORTERO",
+        "SYS-CONTROL",
+        "SYS-DESPACHO",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-SALA",
+        "SYS-TRACK",
+        "SYS-YOD-OS"
+      ],
+      "status": "implementado_local",
+      "authorization": "Dirección solicita corregir controles duplicados y comportamiento inconsistente de navegación.",
+      "proposal": "Una instancia de controles por documento y un marco exterior por recorrido; conservar API local de anotaciones, callbacks privados, permisos y catálogo canónico.",
+      "tests": [
+        "Regresión sintética de init repetido, marcos anidados, carga tardía, captura local y preferencia de barra lateral; Chromium y WebKit.",
+        "Suite y verificadores del portal."
+      ],
+      "deployment": "Regresión reproducida antes (dos botones tras init repetido); Chromium 390/1024/1440 verifica botón único, herencia/fallback por marco, menú en URL embed directa, compactación y borrador conservado. Pendiente CI WebKit y publicación. Núcleo de secuencias 1.1.0 sin cambios.",
+      "rollback": "Revertir PR sin borrar borradores ni alterar fuentes privadas."
     }
   ],
   "data_contracts": [

@@ -1,15 +1,20 @@
 {
-  "model_revision": "2026-10-21.voice-close-receipt.1",
-  "proposal_id": "CHG-VOICE-CLOSE-RECEIPT-20261021",
-  "summary": "Comprobar el recibo de la misma sesión después de cerrar el micrófono. Consultas acotadas de estado con la credencial original; sin reenviar mensajes, crear sesiones ni alterar permisos. Conservar avisos de cierre incompleto.",
+  "model_revision": "2026-10-21.single-chrome.1",
+  "proposal_id": "CHG-SINGLE-CHROME-371",
+  "summary": "Una instancia de controles por documento y un marco exterior por recorrido; conservar API local de anotaciones, callbacks privados, permisos y catálogo canónico.",
   "components": [
-    "SYS-DESPACHO-3D",
-    "SYS-YOD-OS",
-    "SYS-DESPACHO"
+    "GAS-PORTERO",
+    "SYS-CONTROL",
+    "SYS-DESPACHO",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "SYS-SALA",
+    "SYS-TRACK",
+    "SYS-YOD-OS"
   ],
   "tests": [
-    "Cierre pendiente seguido de recibo confirmado, fallos transitorios, credencial vencida, cancelación y respuestas tardías al cambiar sesión.",
-    "Suite completa, verificadores y aceptación del frontend publicado."
+    "Regresión sintética de init repetido, marcos anidados, carga tardía, captura local y preferencia de barra lateral; Chromium y WebKit.",
+    "Suite y verificadores del portal."
   ],
-  "rollback": "Revertir el PR de frontend. Los historiales y recibos del servidor se conservan."
+  "rollback": "Revertir PR sin borrar borradores ni alterar fuentes privadas."
 }

@@ -31,7 +31,17 @@
   /* NAVIGATION-END */
   if (window.__YOD_SHELL__) return; window.__YOD_SHELL__ = 1;
   // Embebido dentro de la máscara del OS: el marco ya lo pone el padre.
-  try { if (/[?&]embed=1/.test(location.search)) return; } catch (e) { }
+  try {
+    if (window.parent !== window) {
+      if (/[?&]embed=1/.test(location.search)) return;
+      var ancestor = window.parent;
+      while (true) {
+        if (ancestor.document.querySelector('.app-shell,.yod-shell')) return;
+        if (ancestor.parent === ancestor) break;
+        ancestor = ancestor.parent;
+      }
+    }
+  } catch (e) { /* Cross-origin standalone consumers keep their own shell. */ }
 
   var SELF = (document.currentScript && document.currentScript.src) || 'https://yodesarrollomx.github.io/yod-portal/os/shell.js';
   var LSC = 'pyod_clave_v1';
@@ -377,7 +387,7 @@
      (yod-portal/chinche.js), en modo "contexto" (DOM). Cada chinche guarda la tarjeta
      donde se picó por última vez y el repo de la página, para que el encargo llegue al
      repo correcto. Si el board ya la trae, no se carga dos veces. */
-  var CHINCHE_V = "ch10-contexto";
+  var CHINCHE_V = "ch11-single-controls";
   function cargarChinche() {
     if (window.YODChinche) return;
     var ultimo = null;
@@ -392,6 +402,7 @@
     s.src = SELF.replace(/os\/shell\.js.*$/, 'chinche.js') + '?v=' + CHINCHE_V;
     s.onload = function () {
       try {
+        if (window.YODChinche && window.YODChinche.inicializada) return;
         var pag = (location.pathname.split('/').pop() || 'index.html').replace(/\.html?$/, '') || 'index';
         window.YODChinche && YODChinche.init({ pantalla: pag,
           vista: function () { return document.title || pag; },
