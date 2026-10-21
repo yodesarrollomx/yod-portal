@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-21.sala-cloud-adaptativa.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-21.ppp-recuperacion-precisa.1 · 2026-10-20.
 
 ## SYS-DESPACHO · El Despacho
 

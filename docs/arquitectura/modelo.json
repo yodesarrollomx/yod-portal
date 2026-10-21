@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-21.sala-cloud-adaptativa.1",
+  "revision": "2026-10-21.ppp-recuperacion-precisa.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -13957,6 +13957,26 @@
       ],
       "deployment": "Propuesta previa al código; ejecución de producción pendiente.",
       "rollback": "Desactivar nube_adaptativa y revertir PR; conservar cola, decisiones y archivos."
+    },
+    {
+      "id": "CHG-PPP-RECUPERACION-PRECISA-20261021",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SYS-DESPACHO-3D",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección solicita repetir y completar la prueba integral del agente y corregir los fallos observados.",
+      "proposal": "Conservar el valor canónico de cada cantidad mientras su control no cambie: la serialización decimal de input range no es una edición. Restaurar cantidades canónicas cuando no existe borrador pendiente. Una recarga autenticada válida restablece el contexto de volúmenes para el mismo caso y credencial; nunca desde la copia local. Coalescer lecturas simultáneas y mostrar que Sheets sigue respondiendo. Conservar borradores reales, confirmación de descarte, revisiones, permisos y recibos; sin cambiar fórmulas ni contratos de escritura.",
+      "tests": [
+        "Chromium aislado: decimales largos sin falsa edición ni POST, recarga y edición real diferenciadas.",
+        "Borrador real: cancelar conserva; aceptar lectura vigente restaura cuerpos; cuenta cambiada y respuesta tardía no promueven datos.",
+        "Lecturas concurrentes: una solicitud activa; error recuperable y regresiones completas PPP. Recorrido productivo de lectura separado de escrituras sintéticas."
+      ],
+      "deployment": "Reproducción aislada confirmada antes de implementar: input range redondea el valor serializado y crea un pendiente falso. Corrección y publicación pendientes.",
+      "rollback": "Revertir el PR de frontend conservando copias de borradores, libros, fórmulas, escenarios y recibos; sin restaurar datos de negocio."
     }
   ],
   "data_contracts": [
