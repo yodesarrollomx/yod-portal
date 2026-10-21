@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-20.sala-revision-video.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-21.sala-cloud-adaptativa.1 · 2026-10-20.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -1014,3 +1014,16 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - No congelar el último cuadro para cubrir voz; clip insuficiente queda pendiente.
 - Sin cuota o voz disponible no afirmar producción ni habilitar pago.
 - Revisar fuente y rechazo antes de ejecutar y entregar; conservar historial.
+
+## CTR-SALA-CLOUD-ADAPTATIVA-V1
+
+- Componentes: SYS-SALA, SHEET-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-MOTORES-MEDIA, EXT-DRIVE, EXT-ACTIONS.
+- Evidencia: REGLAS/MOTORES/COLA en Sheet; puntajes derivados de revisiones; archivos Drive..
+- Entrada/campos: `trabajo vigente`, `motores autorizados gratuitos`, `veto explícito`, `cuota y puntuación conocidas`.
+- Salida: medio durable con formato/motor y razón de selección, espera explícita sin pago cuando no hay alternativa.
+
+- Runtime solamente Actions/APIs/Drive/Sheets; ninguna sesión de Mac, Claude o Codex.
+- No activar modelos pagos ni motores retirados.
+- Animación por código no se declara generativa.
+- Cuota agotada no penaliza calidad; puntuación sólo de decisiones vinculadas al corte.
+- No congelar video para cubrir voz; preservar aprobación manual y linaje.
