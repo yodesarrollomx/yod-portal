@@ -194,7 +194,7 @@ if (open) {
     if(!chat.selection)await chat.open(AUTONES_MULTIPLES?selection.case_id:null);
     if(own===generation)node('station-message').focus();
   });
-  chatTimer=setInterval(()=>{if(dialog.open&&!document.hidden&&dialog.querySelector('.station-chat').open&&chat.selection&&!chat.busy&&!active(voice.snapshot()))void chat.refresh();},12000);
+  chatTimer=setInterval(()=>{if(dialog.open&&!document.hidden&&dialog.querySelector('.station-chat').open&&chat.selection&&!chat.busy&&!active(voice.snapshot())&&!(node('station-message').value.trim()&&chat.canSend))void chat.refresh();},12000);
   window.addEventListener('pagehide',()=>{clearInterval(chatTimer);interaction?.dispose();chat.close();stopWatching?.();});
   function receiveStationTranscript(fragment){
       if(selection?.case_id===voiceCaseId){renderTranscript(fragment);
