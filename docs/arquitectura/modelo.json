@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-20.masterdeveloper-pizarra.1",
+  "revision": "2026-10-20.sala-revision-video.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -13909,6 +13909,31 @@
       ],
       "deployment": "Registro previo. Implementación, publicación y QA se acreditarán al cierre.",
       "rollback": "Revertir PR de interfaz/servidor manteniendo archivos de organización, expedientes, recibos, permisos y originales."
+    },
+    {
+      "id": "CHG-SALA-REVISION-VIDEO-20261020",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-MOTORES-MEDIA",
+        "EXT-DRIVE",
+        "EXT-ACTIONS",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección solicita ejecutar chunk3 del plan de recuperación: aplicar una corrección real de voz y animación ya guardada y producir una nueva versión. Notas autenticadas del20oct retiran zoom, cámara y parallax para las escenas; conservar decisiones y originales.",
+      "proposal": "Revisión de corte por rechazo autenticado, con linaje hacia corte durable y fuente visual aprobada; IDs nuevos derivados de la decisión y política. Ejecución valida vigencia antes de consumir motores. Video generativo obligatorio, voz Gemini separada de nombres Kokoro y montaje sin seis segundos de silencio ni congelación de escenas. Piloto acotado por familia en REGLAS; nuevas revisiones nunca aprueban.",
+      "tests": [
+        "Rechazo de corte produce escena/voz/corte nuevos con nota y linaje, sin cambiar aprobaciones visuales; repetición idempotente y cambio de nota cambia versión.",
+        "Fuente retirada, firma ausente, cambio de decisiones, corte no durable o dependencias distintas bloquean la revisión.",
+        "Motor generativo sin cuota queda pendiente sin cámara/parallax; voz no usa IDs Kokoro; montaje alinea cada voz y no congela un clip corto.",
+        "Verificadores y regresiones aisladas; producción real requiere medios durables y nuevo recibo, aceptación editorial separada."
+      ],
+      "deployment": "Registro previo a implementación. No acredita generación ni publicación.",
+      "rollback": "Desactivar familias de revisión y revertir código por PR; conservar COLA, originales, rechazos, propuestas, archivos y recibos. No restaurar datos de negocio."
     }
   ],
   "data_contracts": [
@@ -15924,6 +15949,38 @@
         "preserve conserva PA original y exige sus pesos activos válidos; built_area requiere selección/confirmación explícita para TODOS los recursos anunciados y usa fórmula Sheets Mactivo/SUM(Mactivos), área sobre rasante sin sótano N. No cambiar método ocultamente por count ni normalizar PA raw.",
         "Modo por versión vive en columna K del índice y participa en revisionMaterial, hash del payload, before/after, marcador del mismo lote de negocio, recibo vigente e histórico superseded. Fórmulas referencian el modo; cambiarlo no reinstala un motor ni escribe dinero en JS.",
         "Nueva fábrica/migración declara preserve explícito; collection sin modo o capability de política incompatible falla cerrada. built_area requiere áreas activas completas, finitas y suma positiva antes de intentar lote; resultados/costos siguen sólo en Sheets."
+      ]
+    },
+    {
+      "id": "CTR-SALA-REVISION-VIDEO-V1",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-MOTORES-MEDIA",
+        "EXT-DRIVE",
+        "EXT-ACTIONS"
+      ],
+      "source": "Rechazo firmado de corte en SHEET-SALA y linaje durable de COLA; fuentes activas y aprobaciones visuales canónicas.",
+      "input": [
+        "corte rechazado",
+        "decisión y firma vigentes",
+        "corte durable original",
+        "política de motores y familia habilitada"
+      ],
+      "output": [
+        "trabajos de revisión con IDs nuevos",
+        "MP4 privado durable para una revisión posterior"
+      ],
+      "invariants": [
+        "Nunca cambia DECISIONES ni aprueba por el editor.",
+        "Una nota nueva tiene otra identidad; notas iguales no duplican trabajos.",
+        "No reutilizar una escena no generativa como video real ni usar cámara/parallax como respaldo.",
+        "No congelar el último cuadro para cubrir voz; clip insuficiente queda pendiente.",
+        "Sin cuota o voz disponible no afirmar producción ni habilitar pago.",
+        "Revisar fuente y rechazo antes de ejecutar y entregar; conservar historial."
       ]
     }
   ],

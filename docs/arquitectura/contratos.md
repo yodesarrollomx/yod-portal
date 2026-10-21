@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-20.masterdeveloper-pizarra.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-20.sala-revision-video.1 · 2026-10-20.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -1000,3 +1000,17 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - preserve conserva PA original y exige sus pesos activos válidos; built_area requiere selección/confirmación explícita para TODOS los recursos anunciados y usa fórmula Sheets Mactivo/SUM(Mactivos), área sobre rasante sin sótano N. No cambiar método ocultamente por count ni normalizar PA raw.
 - Modo por versión vive en columna K del índice y participa en revisionMaterial, hash del payload, before/after, marcador del mismo lote de negocio, recibo vigente e histórico superseded. Fórmulas referencian el modo; cambiarlo no reinstala un motor ni escribe dinero en JS.
 - Nueva fábrica/migración declara preserve explícito; collection sin modo o capability de política incompatible falla cerrada. built_area requiere áreas activas completas, finitas y suma positiva antes de intentar lote; resultados/costos siguen sólo en Sheets.
+
+## CTR-SALA-REVISION-VIDEO-V1
+
+- Componentes: SYS-SALA, GAS-SALA, SHEET-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-MOTORES-MEDIA, EXT-DRIVE, EXT-ACTIONS.
+- Evidencia: Rechazo firmado de corte en SHEET-SALA y linaje durable de COLA; fuentes activas y aprobaciones visuales canónicas..
+- Entrada/campos: `corte rechazado`, `decisión y firma vigentes`, `corte durable original`, `política de motores y familia habilitada`.
+- Salida: trabajos de revisión con IDs nuevos, MP4 privado durable para una revisión posterior.
+
+- Nunca cambia DECISIONES ni aprueba por el editor.
+- Una nota nueva tiene otra identidad; notas iguales no duplican trabajos.
+- No reutilizar una escena no generativa como video real ni usar cámara/parallax como respaldo.
+- No congelar el último cuadro para cubrir voz; clip insuficiente queda pendiente.
+- Sin cuota o voz disponible no afirmar producción ni habilitar pago.
+- Revisar fuente y rechazo antes de ejecutar y entregar; conservar historial.
