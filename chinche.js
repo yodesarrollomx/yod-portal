@@ -211,7 +211,7 @@ var db = null, PANT = "os", CTX = {}, abierta = false;
 // Guards are ephemeral callbacks, never stored or transmitted. A 3D draft cannot
 // auto-send after reload or under another person without its live composer guard.
 var despachoGuards = new Map();
-var botonesObservados = false;
+var botonesObservados = false, inicializada = false, controlesObservados = false;
 var SUPERFICIES_PRIVADAS = ['despacho-trabajo','despacho-corcho','despacho-hilo'];
 function rutaTecnica(el){
   var partes = [];
@@ -1389,7 +1389,9 @@ async function marcarIdas(ids, soltarFotos){
 
 /* ═══════════════════════ ESTILO ═══════════════════════ */
 function estilo(){
+  if (document.getElementById('chn-estilo')) return;
   var s = document.createElement("style");
+  s.id = 'chn-estilo';
   s.textContent = [
 /* 436+: encima de porteros (obra z:50, tablero z:60), del cajón móvil de
    YOD OS (scrim 205, sidebar 210) y de la máscara del Embudo/Sala (400);
@@ -1400,6 +1402,7 @@ function estilo(){
 " text-align:center;cursor:pointer;backdrop-filter:blur(6px);box-shadow:0 3px 14px rgba(0,0,0,.22);",
 " -webkit-tap-highlight-color:transparent}",
 ".chn-pastilla.con{background:#E8A02B;color:#231C0E}",
+"[data-chn-control-heredado]{display:none!important}",
 ".chn-pastilla.llena{background:#D93A34;color:#fff}",
 /* el Portero pone su 🌙 en right:14px;bottom:14px y, si eres admin, el ⚙️ en
    bottom:64px — la pastilla se sube para que se vean los tres */
@@ -1473,12 +1476,47 @@ function estilo(){
 }
 
 /* ═══════════════════════ ARRANQUE ═══════════════════════ */
+// Keep the local annotation API and private delivery callback in every frame.
+// Only duplicate floating controls yield to an accessible ancestor's control.
+function observarControles(){
+  if (controlesObservados) return;
+  controlesObservados = true;
+  var docs = [], w = window, pending = false;
+  while (w.parent !== w) {
+    try { w = w.parent; docs.push(w.document); } catch (e) { break; }
+  }
+  function visible(n){ return n && n.getClientRects().length && n.ownerDocument.defaultView.getComputedStyle(n).visibility !== 'hidden'; }
+  function refresh(){
+    pending = false;
+    ['.chn-pastilla','#temaBtn','#engraneBtn'].forEach(function(selector){
+      var inherited = docs.some(function(d){return Array.from(d.querySelectorAll(selector)).some(visible);});
+      document.querySelectorAll(selector).forEach(function(n){
+        if (inherited) n.setAttribute('data-chn-control-heredado','');
+        else n.removeAttribute('data-chn-control-heredado');
+      });
+    });
+  }
+  function schedule(){ if (!pending) { pending = true; queueMicrotask(refresh); } }
+  var observer = new MutationObserver(schedule);
+  function watch(){
+    [document].concat(docs).forEach(function(d){ observer.observe(d.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['class','style','hidden']}); });
+    schedule();
+  }
+  watch();
+  window.addEventListener('pagehide',function(){observer.disconnect();});
+  window.addEventListener('pageshow',watch);
+  window.addEventListener('resize',schedule);
+  refresh();
+}
 function init(op){
   op = op || {};
-  PANT = op.pantalla || "os";
-  CTX = op;
+  PANT = op.pantalla || PANT;
+  CTX = Object.assign({}, CTX, op);
   estilo();
   instalarBotones();
+  observarControles();
+  if (inicializada) { pintarPastilla(); return; }
+  inicializada = true;
   if (op.sinPastilla) { pintarPastilla(); return; }
   addEventListener("message", function (ev) {
     /* solo el conteo, y solo si es un número, y solo del mismo origen */
@@ -1507,6 +1545,7 @@ function init(op){
 }
 
 window.YODChinche = { reproducir:async function(id,host){var list=await todas(),ch=list.find(function(x){return x.id===id;});if(!ch||!ch.secuencia)throw Error("No hay secuencia local");return window.YodChincheSecuencia.replay(host,ch.secuencia);},
+  get inicializada(){ return inicializada; },
   init: init, anotar: anotar, anotarElemento: anotarElemento, pila: pila, senalar: modoSenalar, cuantas: leerN,
   salirSenalar: function(){ if (senalando) senalando(); } };
 })();
