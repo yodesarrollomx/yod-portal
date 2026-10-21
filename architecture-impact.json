@@ -1,18 +1,14 @@
 {
-  "model_revision": "2026-10-21.ppp-recuperacion-precisa.1",
-  "proposal_id": "CHG-PPP-RECUPERACION-PRECISA-20261021",
-  "summary": "Conservar el valor canónico de cada cantidad mientras su control no cambie: la serialización decimal de input range no es una edición. Restaurar cantidades canónicas cuando no existe borrador pendiente. Una recarga autenticada válida restablece el contexto de volúmenes para el mismo caso y credencial; nunca desde la copia local. Coalescer lecturas simultáneas y mostrar que Sheets sigue respondiendo. Conservar borradores reales, confirmación de descarte, revisiones, permisos y recibos; sin cambiar fórmulas ni contratos de escritura.",
+  "model_revision": "2026-10-21.chat-borrador.1",
+  "proposal_id": "CHG-CHAT-BORRADOR-20261021",
+  "summary": "Pausar la actualización periódica del historial mientras exista texto por enviar y el chat esté validado para enviarlo. Conservar recuperación de estado obsoleto, actualización manual, lectura después del envío y todas las validaciones de acceso y servidor. Evitar que cada consulta lenta vuelva a deshabilitar Enviar durante la composición.",
   "components": [
-    "SYS-POTENCIALES",
-    "GAS-PORTERO",
-    "SHEET-PPP-MODELOS",
     "SYS-DESPACHO-3D",
     "SYS-YOD-OS"
   ],
   "tests": [
-    "Chromium aislado: decimales largos sin falsa edición ni POST, recarga y edición real diferenciadas.",
-    "Borrador real: cancelar conserva; aceptar lectura vigente restaura cuerpos; cuenta cambiada y respuesta tardía no promueven datos.",
-    "Lecturas concurrentes: una solicitud activa; error recuperable y regresiones completas PPP. Recorrido productivo de lectura separado de escrituras sintéticas."
+    "Temporizador real: borrador enviable no inicia consulta; borrador con estado obsoleto sí recupera; historial vuelve a consultarse al vaciar el borrador; voz activa, cierre y operación en curso siguen bloqueando consultas.",
+    "Regresiones completas del portal y comprobación de envío en navegador tras publicar; prueba de voz separada."
   ],
-  "rollback": "Revertir el PR de frontend conservando copias de borradores, libros, fórmulas, escenarios y recibos; sin restaurar datos de negocio."
+  "rollback": "Revertir el PR del frontend; conservar historiales, borradores, permisos y datos de negocio."
 }

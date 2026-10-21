@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-21.ppp-recuperacion-precisa.1",
+  "revision": "2026-10-21.chat-borrador.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -13977,6 +13977,22 @@
       ],
       "deployment": "Reproducción aislada confirmada antes de implementar: input range redondea el valor serializado y crea un pendiente falso. Corrección y publicación pendientes.",
       "rollback": "Revertir el PR de frontend conservando copias de borradores, libros, fórmulas, escenarios y recibos; sin restaurar datos de negocio."
+    },
+    {
+      "id": "CHG-CHAT-BORRADOR-20261021",
+      "components": [
+        "SYS-DESPACHO-3D",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección solicita completar la prueba integral y corregir bloqueos observados.",
+      "proposal": "Pausar la actualización periódica del historial mientras exista texto por enviar y el chat esté validado para enviarlo. Conservar recuperación de estado obsoleto, actualización manual, lectura después del envío y todas las validaciones de acceso y servidor. Evitar que cada consulta lenta vuelva a deshabilitar Enviar durante la composición.",
+      "tests": [
+        "Temporizador real: borrador enviable no inicia consulta; borrador con estado obsoleto sí recupera; historial vuelve a consultarse al vaciar el borrador; voz activa, cierre y operación en curso siguen bloqueando consultas.",
+        "Regresiones completas del portal y comprobación de envío en navegador tras publicar; prueba de voz separada."
+      ],
+      "deployment": "Registro previo al código. Observado envío bloqueado durante consultas periódicas lentas; publicación y aceptación pendientes.",
+      "rollback": "Revertir el PR del frontend; conservar historiales, borradores, permisos y datos de negocio."
     }
   ],
   "data_contracts": [
