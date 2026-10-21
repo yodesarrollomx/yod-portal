@@ -1,7 +1,7 @@
 // Public synthetic UI regression; this file cannot connect to a business service.
 import {mountPuestoAgente,isPuesto2} from './puesto-agente.mjs?v=ruisenor1';
-import {createAgentInteraction} from './agent-interaction.mjs?v=ruisenor1';
-import {createWorkspaceNavigation} from './workspace-navigation.mjs?v=ruisenor1';
+import {createAgentInteraction} from './agent-interaction.mjs?v=multivolumen3';
+import {createWorkspaceNavigation} from './workspace-navigation.mjs?v=native-volumes3';
 const logical='synthetic-ruisenor-agent',boardId='synthetic-ruisenor-board',scenario='synthetic-base',revision='synthetic-rev1';
 let selection={case_id:logical,name:'Torre Ruiseñor',avatar:{case_id:logical,name:'Ruiseñor'},goals:{ready:true}},tab='ppp',mic=0,sends=0,network=0,route='auto';
 const originalSelection=selection,dialog=document.querySelector('dialog'),sidebar=dialog.querySelector('.voice-sidebar'),workspaceHost=dialog.querySelector('.voice-workspace'),root=workspaceHost.querySelector('.agent-workspace'),frame=root.querySelector('iframe');
@@ -10,7 +10,7 @@ const workspace={root,getTab:()=>tab,presentationSnapshot:()=>fixtureSnapshot,se
 const ui=mountPuestoAgente({dialog,sidebar,workspaceHost,workspace,getSelection:()=>selection});
 let interaction;
 const navigation=createWorkspaceNavigation({win:window,getFrame:()=>frame,getBinding:()=>({bridge:true,origin:location.origin,nonce:'synthetic-navigation-nonce',board_case_id:boardId}),getContext:()=>({authorized:!!selection,pilot:isPuesto2(selection,location),case_id:selection?.case_id,board_case_id:boardId,scenario_id:scenario,revision,confirmed:true,pending:false}),onContext:()=>interaction?.observe()});
-const context=()=>{const value=navigation.context();return value?{...value,capabilities:{navigate:route==='auto'&&value.capabilities.navigate}}:null;};
+const context=()=>{const value=navigation.context();return value?{...value,ppp_enabled:value.ppp_enabled===true,capabilities:{...value.capabilities,navigate:route==='auto'&&value.capabilities.navigate}}:null;};
 interaction=createAgentInteraction({getContext:context,openWorkspace:async value=>{workspace.setTab(value.tab);ui.showView(value.tab);return{status:'confirmed',observed:{...context(),tab:workspace.getTab()}};},navigateBridge:value=>navigation.navigate(value),navigateAssisted:value=>route==='pending'?{status:'unavailable'}:navigation.assisted(value),onChange:records=>ui.renderInteractions(records,{confirm:id=>interaction.confirm(id),retry:id=>interaction.retry(id)})});
 const counter=()=>document.querySelector('#fixture-counters').textContent='mic '+mic+' · envíos '+sends+' · red '+network;
 const mode=document.createElement('select');mode.setAttribute('aria-label','Vía de prueba');for(const [value,label]of [['auto','A · Puente'],['assisted','B · Sin puente'],['pending','C · Sin navegación']]){const o=document.createElement('option');o.value=value;o.textContent=label;mode.append(o);}document.querySelector('#fixture-bar').insertBefore(mode,document.querySelector('#fixture-counters'));mode.addEventListener('change',()=>{route=mode.value;interaction.observe();});

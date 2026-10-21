@@ -6,7 +6,7 @@ const parentHTML='<!doctype html><html><meta name="viewport" content="width=devi
 const childHTML='<!doctype html><html lang="es"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/yod-portal/despacho3d/live-voice.css"><link rel="stylesheet" href="/yod-portal/despacho3d/agent-workspace.css"><link rel="stylesheet" href="/yod-portal/despacho3d/knowledge-board.css"><link rel="stylesheet" href="/yod-portal/despacho3d/circulo.css"><body><button id="circulo-open">Menú de Gastón</button><button id="voice-open">Hablar con Gastón</button><button id="computer-open">Ver puesto</button><script type="module" src="/yod-portal/despacho3d/agent-workspace-boot.mjs"></script><script type="module" src="/yod-portal/despacho3d/live-voice-boot.mjs"></script><script type="module" src="/yod-portal/despacho3d/circulo-boot.mjs"></script></body></html>';
 const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><label>Superficie <input id=\"area\" value=\"120\" type=\"number\"></label><output id=\"result\">100</output><script>\nconst CASE=new URL(location.href).searchParams.get('open');let nonce=null,proposal=null;window.applies=0;window.receiptAcks=[];window.boardSilent=true;\nwindow.board={case_id:CASE,scenario_id:'scenario-1',scenario_name:'Base',revision:'r1',confirmed:true,pending:false,observed_at:new Date().toISOString(),fields:[{id:'inTerrenoM2',label:'Superficie',min:1,max:9999,editable:true,nullable:false,kind:'number'}],inputs:{inTerrenoM2:120},results:{noi:100}};\nwindow.publish=()=>{if(nonce)parent.postMessage({type:'yod:ppp:state',version:1,nonce,board:window.board},location.origin);};\narea.oninput=()=>{board.pending=true;board.confirmed=false;publish();};\nwindow.confirmDraft=()=>{board.pending=false;board.confirmed=true;area.value=120;publish();};\nwindow.confirmApply=()=>{board.revision='r'+(window.applies+1);board.inputs.inTerrenoM2=proposal.cambios[0].valor;board.results.noi=130;board.pending=false;board.confirmed=true;area.value=board.inputs.inTerrenoM2;result.textContent=130;publish();parent.postMessage({type:'yod:ppp:state',version:1,nonce,receipt:{request_id:proposal.request_id,ok:true,revision:board.revision}},location.origin);};\naddEventListener('message',e=>{if(e.origin!==location.origin||e.source!==parent||e.data.case_id!==CASE||e.data.version!==1)return;const m=e.data;\nif(m.type==='yod:ppp:hello'){if(window.boardSilent)return;nonce=m.nonce;publish();return;}if(m.nonce!==nonce)return;\nif(m.type==='yod:ppp:read')publish();\nif(m.type==='yod:ppp:receipt-ack')window.receiptAcks.push({request_id:m.request_id,revision:m.revision});\nif(m.type==='yod:ppp:apply'){window.applies++;proposal=m.proposal;board.pending=true;board.confirmed=false;publish();}\n});</script></body></html>";
 (async()=>{
- const browser=await chromium.launch({headless:true}),out=process.env.BROWSER_EVIDENCE_DIR||'/tmp/ppp-collab-evidence';fs.mkdirSync(out,{recursive:true});
+ const browser=await chromium.launch({headless:true,...(process.env.PPP_CHROMIUM_EXECUTABLE_PATH?{executablePath:process.env.PPP_CHROMIUM_EXECUTABLE_PATH}:{})}),out=process.env.BROWSER_EVIDENCE_DIR||'/tmp/ppp-collab-evidence';fs.mkdirSync(out,{recursive:true});
  try{for(const viewport of [{width:1280,height:900},{width:860,height:900},{width:390,height:844}]){
   const context=await browser.newContext({viewport}),page=await context.newPage(),errors=[];let sessions=0,board=null,proposals=[],resolved=[],resolveAttempts=[],failNextResolve=false,wrongResolveIdentity=false,boardNotices=[];
   page.on('pageerror',e=>errors.push(e.message));
@@ -106,16 +106,16 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   assert.equal(resolved.length,0);
   failNextResolve=true;
   await ppp.evaluate(()=>window.confirmApply());
-  await frame.getByRole('button',{name:'Comprobar confirmación',exact:true}).waitFor();
+  await frame.getByRole('button',{name:'Comprobar la misma solicitud',exact:true}).waitFor();
   assert.equal(await frame.getByRole('button',{name:'Aplicando…',exact:true}).count(),0);
   assert.equal(await ppp.evaluate(()=>window.applies),1);assert.equal(resolved.length,0);assert.deepEqual(await ppp.evaluate(()=>window.receiptAcks),[],'a failed resolve cannot acknowledge a receipt');
   wrongResolveIdentity=true;
-  await frame.getByRole('button',{name:'Comprobar confirmación',exact:true}).click();
-  await frame.getByRole('button',{name:'Comprobar confirmación',exact:true}).waitFor();
-  await frame.waitForFunction(()=>{const b=[...document.querySelectorAll('button')].find(b=>b.textContent==='Comprobar confirmación');return b&&!b.disabled;});
+  await frame.getByRole('button',{name:'Comprobar la misma solicitud',exact:true}).click();
+  await frame.getByRole('button',{name:'Comprobar la misma solicitud',exact:true}).waitFor();
+  await frame.waitForFunction(()=>{const b=[...document.querySelectorAll('button')].find(b=>b.textContent==='Comprobar la misma solicitud');return b&&!b.disabled;});
   assert.deepEqual(await ppp.evaluate(()=>window.receiptAcks),[],'ok:true for another request must not acknowledge this receipt');
   assert.equal(resolved.length,0);assert.equal(await ppp.evaluate(()=>window.applies),1);
-  await frame.getByRole('button',{name:'Comprobar confirmación',exact:true}).click();
+  await frame.getByRole('button',{name:'Comprobar la misma solicitud',exact:true}).click();
   await frame.locator('.workspace-apply-status').filter({hasText:'guardado y confirmado'}).waitFor();
   assert.deepEqual(resolveAttempts[0],resolveAttempts[1]);assert.deepEqual(resolveAttempts[1],resolveAttempts[2]);assert.equal(await ppp.evaluate(()=>window.applies),1,'receipt retry never writes PPP twice');
   assert.equal(resolved.length,1);assert.equal(await ppp.locator('#result').innerText(),'130');

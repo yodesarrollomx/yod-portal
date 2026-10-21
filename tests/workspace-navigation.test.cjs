@@ -104,8 +104,8 @@ test('context changes and a replaced frame never promote stale ACKs',async t=>{
  assert.deepEqual(await pending,{status:'unavailable',reason:'navigation_ack_timeout'});
 });
 
-test('navigation requires current authorization, pilot, confirmed revision and a supported target',async t=>{
- for(const change of [{authorized:false},{pilot:false},{case_id:'not a valid case'},{confirmed:false},{pending:true}]){
+test('navigation requires current authorization, confirmed revision and a supported target',async t=>{
+ for(const change of [{authorized:false},{case_id:'not a valid case'},{confirmed:false},{pending:true}]){
   const s=await setup();t.after(()=>s.nav.dispose());s.advertise();s.patchContext(change);
   assert.equal((await s.nav.navigate(s.payload())).status,'unavailable');
   assert.equal((await s.nav.assisted(s.payload())).status,'unavailable');
@@ -267,7 +267,7 @@ test('native blocking codes stop assisted fallback even when child labels the re
 
 test('a legacy visible section remains pending in the interaction controller until child version is verified',async t=>{
  const {createAgentInteraction}=await import('../despacho3d/agent-interaction.mjs');
- const s=await setup();t.after(()=>s.nav.dispose());
+ const s=await setup();t.after(()=>s.nav.dispose());s.advertise();
  const controller=createAgentInteraction({getContext:()=>s.nav.context(),uuid:()=>1,
   openWorkspace:p=>({status:'confirmed',observed:{...p.context,tab:'ppp'}}),navigateAssisted:p=>s.nav.assisted(p)});
  t.after(()=>controller.dispose());
@@ -315,4 +315,28 @@ test('local presentation errors, pending reads and invisible results cannot conf
   if(mode==='throw')assert.equal(navigations,0);
   assert.equal(s.target.open,false);assert.deepEqual(s.effects,{scroll:0,input:0,change:0,focus:0,blur:0,click:0,write:0});assert.deepEqual(s.values,{departments:20,volumes:1});assert.equal(s.posts.length,0);
  }
+});
+
+test('negotiated PPP capabilities enable any authorized case independently of the Puesto2 pilot',async t=>{
+ const s=await setup();t.after(()=>s.nav.dispose());s.patchContext({pilot:false});
+ assert.equal(s.nav.context().ppp_enabled,false);
+ s.advertise();assert.equal(s.nav.context().ppp_enabled,true);assert.equal(s.nav.context().pilot,false);
+ const work=s.nav.navigate(s.payload('classic-authorized'));assert.equal(s.posts.length,1);s.ack('classic-authorized');assert.equal((await work).status,'confirmed');
+ s.patchContext({authorized:false});assert.equal(s.nav.context(),null);s.patchContext({authorized:true});assert.equal(s.nav.context().ppp_enabled,false,'revocation withdraws the capability');
+});
+
+test('native volume capability is bound to the exact frame and can enable a nonpilot read without granting writes',async t=>{
+ const s=await setup();t.after(()=>s.nav.dispose());s.patchContext({pilot:false});
+ const fields=structuredClone(require('../docs/arquitectura/ppp-volumenes-nativos.schema.json')['x-native-fields']);
+ const cap={schema:2,read:true,write:false,max_volumes:16,allocation_modes:['preserve','built_area'],shared_resources:[],fields};
+ const state={type:'yod:ppp:state',board:{case_id:'synthetic-board',metadata:{model_type:'vertical'},capabilities:{volumes:cap}},capabilities:{navigate:false},navigation_context:{...s.context()}};
+ s.emit(state,{source:{}});assert.equal(s.nav.context().ppp_enabled,false);
+ s.emit(state);assert.equal(s.nav.context().ppp_enabled,true);assert.equal(s.nav.context().capabilities.volumes.write,false);assert.equal(s.nav.context().capabilities.navigate,false);
+ s.setBinding({nonce:'another-handshake'});assert.equal(s.nav.context().ppp_enabled,false);
+ s.emit({...state,board:{...state.board,capabilities:{volumes:{...cap,schema:1}}}});assert.equal(s.nav.context().ppp_enabled,false);
+});
+
+test('a verified child read cannot erase a local application or receipt pending in its host',async t=>{
+ const s=await setup();t.after(()=>s.nav.dispose());s.navigationContext({...s.context()});s.patchContext({pending:true,local_pending:true});
+ assert.equal(s.nav.context().pending,true);assert.equal((await s.nav.navigate(s.payload())).status,'unavailable');assert.equal((await s.nav.assisted(s.payload())).status,'unavailable');assert.equal(s.posts.length,0);assert.equal(s.target.open,false);
 });

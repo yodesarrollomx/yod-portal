@@ -1,5 +1,5 @@
 import {nativeMoac,paintNativeMoac} from './native-moac.mjs?v=1';
-import {createWorkspaceNavigation} from './workspace-navigation.mjs?v=ruisenor1';
+import {createWorkspaceNavigation} from './workspace-navigation.mjs?v=native-volumes3';
 import {isPuesto2,presentationLocation} from './puesto-agente.mjs?v=ruisenor1';
 import {mountMeetingArchive} from './meeting-archive.mjs?v=1';
 import {mountDocumentTray} from './document-tray.mjs?v=1';
@@ -8,7 +8,7 @@ import {mountMeeting} from './meeting-view.mjs?v=132';
 import {mountAvatarCard} from './avatar-card.mjs?v=controls293';
 import {mountWorkView} from './work-view.mjs?v=core1';
 import {PROFILE_WORK_LANES,profileWorkView,nextRecordedTask} from './profile-work.mjs?v=140';
-import {registeredBoard,resolveBoard,stationIdentity,nativeBoardState} from './project-station.mjs?v=140';
+import {registeredBoard,resolveBoard,stationIdentity,nativeBoardState,nativeVolumeCapability,nativeVolumeProposal,nativeVolumeReceipt,nativeVolumeReconciliation,proposalDiscardPayload,nativeVolumeRejection} from './project-station.mjs?v=native-volumes3';
 import {mountKnowledgeBoard} from './knowledge-board.mjs?v=128';
 import {createFrameTransport,validateWorkspaceSources,workspaceSourceNotice} from './conversation.mjs?v=first292';
 import {validateFastSession} from './fast-lane.mjs';
@@ -33,22 +33,58 @@ export async function reviewPresentedGoal(controller,value,isCurrent=()=>true){
  const goal=controller.model?.goals.find(g=>g.goal_id===value.goal_id);
  return goal?.case_id===value.case_id&&goal.status==='completed'?goal:null;
 }
-export function proposalState(board,proposal,application=null){
- if(application?.request_id===proposal.request_id)return application.status;
+export function proposalState(board,proposal,application=null,link=null,now=Date.now()){
+ if(application)return application.request_id===proposal.request_id?application.status:'board_pending';
+ if(proposal.kind==='native_volumes'){try{nativeVolumeProposal(board,proposal,link,{now});return 'ready';}catch(error){return error.message;}}
  if(!board?.confirmed||board.pending)return 'board_pending';
  if(board.case_id!==proposal.case_id||board.scenario_id!==proposal.scenario_id||board.revision!==proposal.revision)return 'stale';
  return 'ready';
 }
 export function boardURL(caseId,source){const board=registeredBoard(source,caseId);if(!board)throw Error('unregistered_board');return board.url;}
 
+// A journal intent present at reload is uncertain. Only a draft-to-confirmed
+// transition witnessed in this instance may send the first write.
+export function createNativeVolumeRecovery(){
+ const entries=new Map();let initialized=false,baseline=null;
+ const fingerprint=p=>JSON.stringify([p.case_id,p.board_case_id,p.scenario_id,p.revision,p.before_volumes,p.volumes],(_key,v)=>v&&typeof v==='object'&&!Array.isArray(v)?Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b))):v);
+ function observe(proposals,{serverAt}={}){
+  const previouslyInitialized=initialized,stamp=Date.parse(serverAt);
+  if(!initialized){initialized=true;if(Number.isFinite(stamp))baseline=stamp;}else if(baseline===null&&Number.isFinite(stamp))baseline=stamp;
+  for(const p of proposals||[]){
+   if(p?.kind!=='native_volumes'||typeof p.request_id!=='string')continue;
+   const key=fingerprint(p),prior=entries.get(p.request_id);
+   if(prior){if(prior.key!==key)prior.changed=true;continue;}
+   if(entries.size<80)entries.set(p.request_id,{key,draft:!p.apply_requested_at||previouslyInitialized&&baseline!==null&&Number.isFinite(Date.parse(p.created_at))&&Date.parse(p.created_at)>baseline,written:false,read:false,automatic:false,resolved:false,changed:false});
+  }
+ }
+ const entry=p=>{const e=entries.get(p?.request_id);return e&&e.key===fingerprint(p)&&!e.changed?e:null;};
+ const writeAllowed=p=>{const e=entry(p);return !!e&&e.draft&&!e.written&&!e.read&&!e.resolved;};
+ const lookupNeeded=p=>{const e=entry(p);return !!e&&!e.resolved&&!!p.apply_requested_at&&!writeAllowed(p);};
+ return{observe,writeAllowed,lookupNeeded,
+  takeWrite(p){if(!writeAllowed(p))return false;entry(p).written=true;return true;},
+  takeLookup(p,{automatic=false}={}){const e=entry(p);if(!e||e.resolved||!p.apply_requested_at||automatic&&e.automatic)return false;e.read=true;e.automatic=true;return true;},
+  resolve(requestId){const e=entries.get(requestId);if(e)e.resolved=true;},clear(){entries.clear();initialized=false;baseline=null;}};
+}
+
 export function createReceiptQueue({resolve,ack,eligible=()=>true,onAttempt=()=>{},onResult=()=>{}}){
  const pending=new Map();let epoch=0,running=null;
+ const signature=value=>JSON.stringify(value,(_key,v)=>v&&typeof v==='object'&&!Array.isArray(v)?Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b))):v);
+ const collection=value=>value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).length===4&&Object.keys(value).every(key=>['schema','count','shared_allocation_mode','volumes'].includes(key))&&value.schema===2&&['preserve','built_area'].includes(value.shared_allocation_mode)&&Number.isInteger(value.count)&&value.count>=1&&value.count<=16&&Array.isArray(value.volumes)&&value.volumes.length>=value.count&&value.volumes.length<=16;
  function enqueue(value){
-  if(!value||typeof value.request_id!=='string'||!/^[A-Za-z0-9_.:-]{1,256}$/.test(value.request_id)||typeof value.revision!=='string'||!value.revision||value.revision.length>256)return false;
+  const rejected=value?.kind==='native_volumes'&&value.status==='rejected';
+  if(!value||typeof value.request_id!=='string'||!/^[A-Za-z0-9_.:-]{1,256}$/.test(value.request_id)||!rejected&&(typeof value.revision!=='string'||!value.revision||value.revision.length>256))return false;
+  let receipt={request_id:value.request_id,revision:value.revision};
+  if(rejected){
+   try{receipt=nativeVolumeRejection({...value,ok:false},{...value,revision:value.base_revision},value.case_id,{board_case_id:value.board_case_id});}catch{return false;}
+  }else if(value.kind==='native_volumes'){
+   if(![value.case_id,value.board_case_id,value.scenario_id].every(x=>typeof x==='string'&&/^[A-Za-z0-9_.:-]{1,200}$/.test(x))||typeof value.base_revision!=='string'||!value.base_revision||typeof value.calculated!=='boolean'||!collection(value.native_collection))return false;
+   receipt={kind:'native_volumes',...receipt,case_id:value.case_id,board_case_id:value.board_case_id,scenario_id:value.scenario_id,base_revision:value.base_revision,native_collection:structuredClone(value.native_collection),calculated:value.calculated,...(value.status==='confirmed_superseded'?{status:value.status,current_revision:value.current_revision,current_collection:structuredClone(value.current_collection)}:{})};
+   if(receipt.status==='confirmed_superseded'&&(typeof receipt.current_revision!=='string'||!receipt.current_revision||receipt.current_revision===receipt.revision||!collection(receipt.current_collection)))return false;
+  }
   const prior=pending.get(value.request_id);
-  if(prior)return prior.revision===value.revision;
+  if(prior)return signature(prior)===signature(receipt);
   if(pending.size>=8)return false;
-  pending.set(value.request_id,{request_id:value.request_id,revision:value.revision});return true;
+  pending.set(value.request_id,receipt);return true;
  }
  function drain(){
   if(running)return running;
@@ -62,7 +98,14 @@ export function createReceiptQueue({resolve,ack,eligible=()=>true,onAttempt=()=>
      const result=await resolve(receipt);
      if(own!==epoch)return false;
      if(!eligible(receipt))continue;
-     if(result?.ok!==true||result.request_id!==receipt.request_id||result.status!=='applied')throw Error('receipt_response_mismatch');
+     if(result?.ok!==true||result.request_id!==receipt.request_id||result.status!==(receipt.status==='rejected'?'rejected':receipt.status==='confirmed_superseded'?'confirmed_superseded':'applied'))throw Error('receipt_response_mismatch');
+     if(receipt.kind==='native_volumes'&&receipt.status==='rejected'){
+      if(result.kind!==receipt.kind||result.revision!==null||['case_id','board_case_id','scenario_id','base_revision'].some(key=>result[key]!==receipt[key])||signature(result.prewrite_rejection)!==signature(receipt.prewrite_rejection))throw Error('rejection_response_mismatch');
+     }else if(receipt.kind==='native_volumes'){
+      const r=result.receipt;
+      if(result.kind!==receipt.kind||['case_id','board_case_id','scenario_id','base_revision','revision'].some(key=>result[key]!==receipt[key])||!r||['request_id','case_id','board_case_id','scenario_id','base_revision','calculated'].some(key=>r[key]!==receipt[key])||r.result_revision!==receipt.revision||signature(r.native_collection)!==signature(receipt.native_collection))throw Error('receipt_response_mismatch');
+      if(receipt.status==='confirmed_superseded'&&(result.receipt_status!=='superseded'||result.current_revision!==receipt.current_revision||signature(result.current_collection)!==signature(receipt.current_collection)))throw Error('receipt_response_mismatch');
+     }
      ack(receipt);pending.delete(receipt.request_id);onResult(receipt,true);
     }catch(error){if(own!==epoch)return false;onResult(receipt,false);}
    }
@@ -77,14 +120,15 @@ export function createReceiptQueue({resolve,ack,eligible=()=>true,onAttempt=()=>
 export function createWorkspace({container,getSelection,transport=createFrameTransport(window),win=window,doc=document,onBoard=()=>{},onPresent=async()=>false,onDiscuss=()=>{},onPresentation=()=>{}}){
  const el=(tag,text,cls)=>{const n=doc.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
  const button=(label,click)=>{const b=el('button',label);b.type='button';b.addEventListener('click',click);return b;};
+ const nativeRecovery=createNativeVolumeRecovery();
  let documentTray=null,moacModel={phase:'loading',notice:'Consultando el MOAC del proyecto…'};
  function paintMoac(){paintNativeMoac({container:sections.moac,model:moacModel,refresh:()=>void readSources(),doc});}
- let selected=null,credential=null,disposed=false,timer=null,busy=false,tab='ppp',frame=null,nonce=null,board=null,boardRevision=null,conversation=null,proposals=[],generation=0,fetching=false,active=true,lastTaskRead=0,application=null,applyTimer=null,boardHandshakeTimer=null,boardHandshakeTimedOut=false,boardLink=null,readingSources=null,sourceAttempts=0,sourceRetryAt=0,goalDraft={title:'',instruction:'',criterion:''},goalSnapshot=null,goalState={model:null,status:'disconnected',notice:'',pending:null},taskModelKey=null,focusedGoal=null;
+ let selected=null,credential=null,disposed=false,timer=null,busy=false,tab='ppp',frame=null,nonce=null,board=null,boardRevision=null,conversation=null,proposals=[],generation=0,fetching=false,active=true,lastTaskRead=0,application=null,lastAppliedCalculated=null,lastAppliedSuperseded=false,lastAppliedRejection=false,applyTimer=null,boardHandshakeTimer=null,boardHandshakeTimedOut=false,boardLink=null,readingSources=null,sourceAttempts=0,sourceRetryAt=0,goalDraft={title:'',instruction:'',criterion:''},goalSnapshot=null,goalState={model:null,status:'disconnected',notice:'',pending:null},taskModelKey=null,focusedGoal=null;
  const navigation=createWorkspaceNavigation({win,getFrame:()=>frame,getBinding:()=>boardLink&&{...boardLink,nonce},onContext:()=>onPresentation(),getContext:()=>({
   authorized:!disposed&&active&&!!selected&&getSelection()?.case_id===selected.case_id,
   pilot:!!selected&&isPuesto2(selected,presentationLocation(win)),case_id:selected?.case_id,
   board_case_id:boardLink?.board_case_id,scenario_id:board?.scenario_id||selected?.ppp?.scenario_id,
-  revision:board?.revision,confirmed:board?.confirmed===true,pending:board?.pending===true||!!application||receipts?.size>0
+  revision:board?.revision,confirmed:board?.confirmed===true,pending:board?.pending===true||!!application||receipts?.size>0,local_pending:!!application||receipts?.size>0
  })});
  const root=el('section',undefined,'agent-workspace');root.setAttribute('aria-label','Puesto del proyecto');
  const nav=el('nav'),notice=el('p','Preparando el puesto…','workspace-status'),body=el('div',undefined,'workspace-body');
@@ -131,13 +175,13 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
  const pppActions=el('details',undefined,'workspace-board-options');pppActions.append(el('summary','Conexión y variantes'));
  pppActions.append(button('Actualizar conexión',async()=>{await readSources();if(boardLink?.bridge&&!board){startBoardHandshake(true);postBoard('yod:ppp:hello');}void refresh();}),button('Conservar y comparar variantes',()=>setTab('knowledge')));
  const receipts=createReceiptQueue({
-  resolve:r=>request('/board/resolve',{request_id:r.request_id,status:'applied',revision:r.revision}),
+  resolve:r=>request('/board/resolve',{...r,status:r.status==='rejected'?'rejected':r.status==='confirmed_superseded'?'confirmed_superseded':'applied'}),
   ack:r=>postBoard('yod:ppp:receipt-ack',r),
   eligible:r=>!!selected&&getSelection()?.case_id===selected.case_id&&(active||application?.request_id===r.request_id),
   onAttempt:r=>{if(application?.request_id===r.request_id)application.status='confirming';paintProposals();},
-  onResult:(r,ok)=>{if(application?.request_id===r.request_id){if(ok)application=null;else application.status='unconfirmed';}}
+  onResult:(r,ok)=>{if(ok&&r.kind==='native_volumes'){nativeRecovery.resolve(r.request_id);lastAppliedCalculated=typeof r.calculated==='boolean'?r.calculated:null;lastAppliedSuperseded=r.status==='confirmed_superseded';lastAppliedRejection=r.status==='rejected';}if(application?.request_id===r.request_id){if(ok)application=null;else application.status='unconfirmed';}}
  });
- const receiptRetry=button('Comprobar confirmación',()=>void confirmReceipt());receiptRetry.hidden=true;
+ const receiptRetry=button('Comprobar la misma solicitud',()=>void confirmReceipt());receiptRetry.hidden=true;
  const pppToolbar=el('div',undefined,'workspace-ppp-toolbar');const boardRetry=button('Recuperar PPP',async()=>{await readSources();if(boardLink?.bridge&&!board){startBoardHandshake(true);postBoard('yod:ppp:hello');}void refresh();});boardRetry.className='workspace-board-retry';boardRetry.hidden=true;pppToolbar.append(pppNote,boardRetry,pppActions);pppActions.append(boardSummary);ppp.append(pppToolbar,applyNotice,receiptRetry,proposalHost,pppHost);
  const tasks=new DurableGoals({transport,getContext:()=>selected&&getSelection()?.case_id===selected.case_id?{selection:getSelection(),busy:false}:null,onUnauthorized:()=>clear()});
  const taskList=el('div'),newGoal=el('details',undefined,'workspace-new-goal'),goalForm=el('form'),goalNotice=el('p');
@@ -250,26 +294,40 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   links.replaceChildren(...(s.links||[]).slice(0,10).map(l=>button(l.title,()=>void command('navegador_abrir',{url:l.url}))));
   activity.replaceChildren(...(s.activity||[]).slice(0,8).map(a=>el('li',a.action+' · '+({working:'en curso',completed:'completado',failed:'sin completar'}[a.status]||a.status)+' · '+new Date(a.at).toLocaleTimeString())));
  }
- function postBoard(type,extra={}){if(frame&&selected&&boardLink?.bridge)frame.contentWindow?.postMessage({type,version:1,nonce,case_id:boardLink.board_case_id,...{board_case_id:boardLink.board_case_id,...(selected.ppp?.scenario_id?{scenario_id:selected.ppp.scenario_id}:{})},...(type==='yod:ppp:hello'&&getSelection()?.case_id===selected.case_id&&isPuesto2(selected,presentationLocation(win))?{agent_case_id:selected.case_id,presentation:{volume_draft:true}}:{}),...extra},boardLink.origin);}
+ function postBoard(type,extra={}){if(frame&&selected&&boardLink?.bridge)frame.contentWindow?.postMessage({type,version:1,nonce,case_id:boardLink.board_case_id,...{board_case_id:boardLink.board_case_id,...(selected.ppp?.scenario_id?{scenario_id:selected.ppp.scenario_id}:{})},...(type==='yod:ppp:hello'&&getSelection()?.case_id===selected.case_id?{agent_case_id:selected.case_id,presentation:{volume_draft:true}}:{}),...extra},boardLink.origin);}
  function applyProposal(p){
 
-    if(receipts.size>=8||receipts.has(p.request_id)||!getSelection()?.can_enqueue||getSelection()?.case_id!==selected?.case_id||proposalState(board,p,application)!=='ready')return;
-    application={request_id:p.request_id,status:'sending'};
+    if(p.kind==='native_volumes'&&!nativeRecovery.writeAllowed(p))return reconcileNative(p);
+    if(application||receipts.size>=8||receipts.has(p.request_id)||!getSelection()?.can_enqueue||getSelection()?.case_id!==selected?.case_id||proposalState(board,p,application,boardLink)!=='ready')return;
+    let proposal;try{proposal=p.kind==='native_volumes'?nativeVolumeProposal(board,p,boardLink):{...p,case_id:boardLink.board_case_id};}catch{return;}
+    if(p.kind==='native_volumes'&&!nativeRecovery.takeWrite(p))return;
+    application={request_id:p.request_id,status:'sending',proposal};lastAppliedCalculated=null;lastAppliedSuperseded=false;lastAppliedRejection=false;
     applyNotice.textContent='Ajuste enviado. Esperando guardado y recálculo; no repitas la solicitud.';
-    paintProposals();postBoard('yod:ppp:apply',{proposal:{...p,case_id:boardLink.board_case_id}});
-    clearTimeout(applyTimer);const own=generation;
-    applyTimer=setTimeout(()=>{if(own!==generation||application?.request_id!==p.request_id)return;
-     application.status='unconfirmed';applyNotice.textContent='El guardado no se confirmó. Revisa los pendientes del tablero; conserva la misma solicitud.';paintProposals();},35000);
-   
+    paintProposals();postBoard('yod:ppp:apply',{proposal});
+    waitForReceipt(p);
+ }
+ function waitForReceipt(p){
+  clearTimeout(applyTimer);const own=generation;
+  applyTimer=setTimeout(()=>{if(own!==generation||application?.request_id!==p.request_id)return;
+   application.status='unconfirmed';applyNotice.textContent='La solicitud sigue sin confirmar. Comprobarla conserva el mismo identificador y no vuelve a enviar cantidades.';receiptRetry.hidden=false;receiptRetry.disabled=false;paintProposals();dispatchRequested();},35000);
+ }
+ function reconcileNative(p,{automatic=false}={}){
+  if(!selected||getSelection()?.case_id!==selected.case_id||!boardLink?.bridge||receipts.has(p.request_id)||application&&application.request_id!==p.request_id||application&&['sending','confirming','reconciling'].includes(application.status))return false;
+  let proposal;try{proposal=nativeVolumeReconciliation(board,p,boardLink);}catch{return false;}
+  if(!nativeRecovery.takeLookup(p,{automatic}))return false;
+  application={request_id:p.request_id,status:'reconciling',proposal};
+  applyNotice.textContent='Consultando el recibo original. No se vuelven a enviar cantidades.';receiptRetry.hidden=false;receiptRetry.disabled=true;
+  paintProposals();postBoard('yod:ppp:volumes-receipt',{proposal});waitForReceipt(p);return true;
  }
  async function confirmReceipt(){
-  if(!receipts.size||!selected)return false;
+  if(!selected)return false;
+  if(!receipts.size){const p=application?.proposal||proposals.find(p=>nativeRecovery.lookupNeeded(p));return p?.kind==='native_volumes'?reconcileNative(p):false;}
   const own=generation;receiptRetry.disabled=true;
   const complete=await receipts.drain();
   if(own!==generation||disposed)return false;
   receiptRetry.hidden=!receipts.size;receiptRetry.disabled=receipts.busy;
   if(complete){
-   applyNotice.textContent=application?'Confirmaciones registradas. El ajuste en curso todavía espera su recibo.':'Ajuste guardado y confirmado. Los recibos se registraron sin reenviar cantidades.';
+   applyNotice.textContent=application?'Confirmaciones registradas. El ajuste en curso todavía espera su recibo.':lastAppliedRejection?'La solicitud fue rechazada antes de escribir cantidades. Revisa la lectura actual antes de preparar otra propuesta.':lastAppliedSuperseded?'Solicitud original conciliada. El PPP conserva una revisión posterior.':lastAppliedCalculated===false?'Volúmenes guardados. Faltan datos para confirmar todos los resultados.':lastAppliedCalculated===true?'Volúmenes guardados y recálculo confirmado por Sheets.':'Ajuste guardado y confirmado. Los recibos se registraron sin reenviar cantidades.';
    pppNote.textContent=application?'El ajuste en curso conserva su estado pendiente.':'Seguimiento confirmado por el servidor del autón.';
    void refresh();
   }else{
@@ -279,25 +337,44 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   paintProposals();return complete;
  }
  function dispatchRequested(){
-  if(!active||tab!=='ppp'||application||receipts.size>=8)return;
-  const p=proposals.find(p=>!receipts.has(p.request_id)&&p.apply_requested_at&&Number.isFinite(Date.parse(p.apply_expires_at))&&Date.parse(p.apply_expires_at)>Date.now()&&proposalState(board,p)==='ready');
+  if(!active||tab!=='ppp'||receipts.size>=8)return;
+  if(application){if(application.status==='unconfirmed'&&application.proposal?.kind==='native_volumes')reconcileNative(application.proposal,{automatic:true});return;}
+  const lookup=proposals.find(p=>nativeRecovery.lookupNeeded(p)&&!receipts.has(p.request_id));
+  if(lookup){reconcileNative(lookup,{automatic:true});return;}
+  const p=proposals.find(p=>(p.kind!=='native_volumes'||nativeRecovery.writeAllowed(p))&&!receipts.has(p.request_id)&&p.apply_requested_at&&Number.isFinite(Date.parse(p.apply_expires_at))&&Date.parse(p.apply_expires_at)>Date.now()&&proposalState(board,p,null,boardLink)==='ready');
   if(p)applyProposal(p);
  }
  function paintProposals(){
-  proposalHost.replaceChildren();
+  const restore=rememberReading(proposalHost);proposalHost.replaceChildren();
   for(const p of proposals){
    const article=el('article',undefined,'workspace-card');article.append(el('h3','Ajuste propuesto por el autón'),el('p',p.motivo));
-   for(const c of p.cambios)article.append(el('p',c.label+': '+(c.antes??'pendiente')+' → '+(c.valor??'pendiente')));
-   const eligibility=proposalState(board,p,application);
-   const apply=button(eligibility==='sending'?'Aplicando…':eligibility==='confirming'?'Confirmando…':eligibility==='unconfirmed'?'Confirmación pendiente':'Aplicar en el tablero',()=>applyProposal(p));
-   apply.disabled=eligibility!=='ready'||receipts.size>=8||receipts.has(p.request_id)||!getSelection()?.can_enqueue;
-   const discard=button('Retirar propuesta',async()=>{try{await request('/board/resolve',{request_id:p.request_id,status:'discarded'});if(application?.request_id===p.request_id){clearTimeout(applyTimer);applyTimer=null;application=null;}applyNotice.textContent='Propuesta retirada. Los cambios ya guardados, si los hay, se conservan.';await refresh();}catch{pppNote.textContent='No se confirmó el descarte. La propuesta sigue pendiente.';}});
-   discard.disabled=eligibility==='sending'||eligibility==='confirming'||receipts.has(p.request_id)||!getSelection()?.can_enqueue;
+   if(p.kind==='native_volumes'){
+    article.append(el('p',(p.before_volumes?.count??'—')+' → '+(p.volumes?.count??'—')+' volúmenes activos'));
+    const nativeCap=nativeVolumeCapability(board?.capabilities?.volumes),mode=p.volumes?.shared_allocation_mode,beforeMode=p.before_volumes?.shared_allocation_mode;
+    const allocationLabel=value=>value==='preserve'?'conservar la asignación actual':value==='built_area'?'repartir por área construida sobre rasante, sin sótanos':'asignación pendiente de confirmar';
+    article.append(el('p','Costos compartidos: '+(beforeMode!==mode?allocationLabel(beforeMode)+' → ':'')+allocationLabel(mode)+'.'));
+    const resources=nativeCap?.shared_resources||[];
+    if(resources.length){const collapsed=resources.length>6,scope=el(collapsed?'details':'div');if(collapsed)scope.dataset.disclosure='shared-resources-'+p.request_id;scope.append(el(collapsed?'summary':'p',collapsed?'Ver los '+resources.length+' recursos compartidos incluidos':resources.length+(resources.length===1?' recurso compartido incluido':' recursos compartidos incluidos')));const list=el('ul');for(const resource of resources)list.append(el('li',resource.label));scope.append(list);article.append(scope);}else article.append(el('p',nativeCap?'Este modelo no tiene recursos compartidos.':'El alcance de recursos compartidos aún no está confirmado.'));
+    const labels=new Map((nativeCap?.fields||[]).map(f=>[f.id,f.label]));
+    for(const row of Array.isArray(p.volumes?.volumes)?p.volumes.volumes:[]){const before=Array.isArray(p.before_volumes?.volumes)?p.before_volumes.volumes.find(v=>v.id===row?.id):null;article.append(el('h4',row?.values?.name||row?.id||'Volumen'));for(const[key,value]of Object.entries(row?.values||{}))if(value!==before?.values?.[key])article.append(el('p',(labels.get(key)||key)+': '+(before?.values?.[key]??'pendiente')+' → '+(value??'pendiente')));}
+   }else for(const c of p.cambios||[])article.append(el('p',c.label+': '+(c.antes??'pendiente')+' → '+(c.valor??'pendiente')));
+   const eligibility=proposalState(board,p,application,boardLink);
+   const lookup=p.kind==='native_volumes'&&nativeRecovery.lookupNeeded(p);
+   let lookupReady=false;if(lookup)try{nativeVolumeReconciliation(board,p,boardLink);lookupReady=true;}catch{}
+   const apply=button(eligibility==='sending'?'Aplicando…':eligibility==='confirming'?'Confirmando…':eligibility==='reconciling'?'Comprobando…':lookup?'Comprobar solicitud original':eligibility==='unconfirmed'?'Confirmación pendiente':'Aplicar en el tablero',()=>lookup?reconcileNative(p):applyProposal(p));
+   apply.disabled=lookup?!lookupReady||!!application&&['sending','confirming','reconciling'].includes(application.status)||receipts.has(p.request_id):eligibility!=='ready'||receipts.size>=8||receipts.has(p.request_id)||!getSelection()?.can_enqueue;
+   const discard=button('Retirar propuesta',async()=>{try{await request('/board/resolve',proposalDiscardPayload(p));if(application?.request_id===p.request_id){clearTimeout(applyTimer);applyTimer=null;application=null;}applyNotice.textContent='Propuesta retirada. Los cambios ya guardados, si los hay, se conservan.';await refresh();}catch(error){pppNote.textContent=error.code==='confirmation_pending'||error.message==='confirmation_pending'?'La solicitud ya tiene una confirmación registrada. Comprueba su recibo antes de retirarla.':'No se confirmó el descarte. La propuesta sigue pendiente.';}});
+   discard.disabled=eligibility==='sending'||eligibility==='confirming'||receipts.has(p.request_id)||!getSelection()?.can_enqueue||p.kind==='native_volumes'&&(!!p.apply_requested_at||application?.request_id===p.request_id);
    article.append(apply,discard,el('small','Retirar una propuesta no deshace cambios ya guardados.'));
-   if(eligibility==='stale')article.append(el('p','Cambió el escenario o su revisión. Pide a el autón un ajuste sobre la lectura vigente.'));
+   if(lookup)article.append(el('p','Se conserva la solicitud original. Comprobar consulta su recibo sin volver a escribir cantidades.'));
+   if(eligibility==='stale'&&!lookup)article.append(el('p','Cambió el escenario o su revisión. Pide a el autón un ajuste sobre la lectura vigente.'));
    if(eligibility==='board_pending')article.append(el('p','Primero confirma o recupera los cambios pendientes del tablero.'));
+   if(p.kind==='native_volumes'&&eligibility==='confirmation_required')article.append(el('p','Pídele al autón aplicar esta propuesta después de revisarla.'));
+   if(p.kind==='native_volumes'&&!lookup&&eligibility==='confirmation_expired')article.append(el('p','La confirmación venció. Revisa la versión actual y confírmala de nuevo con el autón.'));
+   if(p.kind==='native_volumes'&&['unsupported','invalid_volumes'].includes(eligibility))article.append(el('p','La edición nativa no está disponible para esta lectura. Conserva la propuesta y recupera el PPP.'));
    proposalHost.append(article);
   }
+  restore();
  }
  function clearBoardHandshake(){clearTimeout(boardHandshakeTimer);boardHandshakeTimer=null;}
  function startBoardHandshake(retry=false){
@@ -342,7 +419,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
     if(shared){
      const r=await request('/board/snapshot',shared);if(own!==generation||!selected)return;board=r.tablero;clearBoardHandshake();boardHandshakeTimedOut=false;boardRetry.hidden=true;
      boardSummary.textContent='Escenario: '+(board.scenario_name||board.scenario_id)+' · Revisión: '+board.revision+(board.confirmed&&!board.pending?' · Lectura confirmada':' · Cambios o lectura pendientes');
-     pppNote.textContent=board.version_context?.read_only?'Versiones compartidas en consulta. Los ajustes se hacen en el tablero original.':board.confirmed&&!board.pending?'PPP compartido con el autón · lectura confirmada del tablero.':'El tablero tiene una lectura o cambios por confirmar.';
+     pppNote.textContent=nativeVolumeCapability(board.capabilities?.volumes)?.write?'PPP conectado. Revisa los volúmenes propuestos antes de confirmarlos con el autón.':board.version_context?.read_only?'Versiones compartidas en consulta. Los ajustes se hacen en el tablero original.':board.confirmed&&!board.pending?'PPP compartido con el autón · lectura confirmada del tablero.':'El tablero tiene una lectura o cambios por confirmar.';
      if(board.version_context)boardSummary.textContent='Defiende: '+(board.scenario_name||board.scenario_id)+' · Estás viendo: '+(board.version_context.viewed_scenario_name||board.version_context.viewed_scenario_id)+' · Revisión: '+board.revision+(board.pending?' · Cambios pendientes':'');
      const signature=JSON.stringify([board.revision,board.scenario_id,board.confirmed,board.pending]);
      if(signature!==boardRevision){boardRevision=signature;onBoard(board.revision);win.dispatchEvent(new CustomEvent('yod-shared-board',{detail:{revision:board.revision}}));}
@@ -351,11 +428,23 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
     if(data.receipt){
      const r=data.receipt;
      if(application?.request_id===r.request_id){clearTimeout(applyTimer);applyTimer=null;}
-     if(r.ok===true){
-      if(receipts.enqueue(r))await confirmReceipt();
+     if(r.ok===false&&r.status==='rejected'){
+      const proposal=application?.request_id===r.request_id?application.proposal:proposals.find(p=>p.request_id===r.request_id);
+      try{
+       const receipt=nativeVolumeRejection(r,proposal,selected.case_id,boardLink);
+       if(!receipts.enqueue(receipt))throw Error('rejection_response_mismatch');
+       await confirmReceipt();
+      }catch{if(application?.request_id===r.request_id)application.status='unconfirmed';applyNotice.textContent='El rechazo todavía no tiene una confirmación completa. Conserva la misma solicitud y comprueba su recibo.';receiptRetry.hidden=false;receiptRetry.disabled=false;paintProposals();dispatchRequested();}
+     }else if(r.ok===true){
+      let receipt=r;
+      const proposal=application?.request_id===r.request_id?application.proposal:proposals.find(p=>p.request_id===r.request_id);
+      if(proposal?.kind==='native_volumes'||r.native_collection){
+       try{receipt=nativeVolumeReceipt(r,proposal,board,boardLink);}catch{if(application?.request_id===r.request_id)application.status='unconfirmed';applyNotice.textContent='El recibo no coincide con la versión nativa visible. Conserva la misma solicitud y recupera el PPP.';receiptRetry.hidden=false;receiptRetry.disabled=false;paintProposals();dispatchRequested();return;}
+      }
+      if(receipts.enqueue(receipt))await confirmReceipt();
       else{if(application?.request_id===r.request_id)application.status='unconfirmed';applyNotice.textContent='No se pudo incorporar esta confirmación. El tablero conserva su recibo; comprueba los pendientes antes de otro ajuste.';receiptRetry.hidden=!receipts.size;paintProposals();}
      }
-     else{if(application?.request_id===r.request_id)application.status='unconfirmed';applyNotice.textContent='Ajuste sin confirmar. El resultado no se marca como aplicado.';pppNote.textContent=r.error==='recibos_pendientes'?'Hay confirmaciones anteriores pendientes. Comprueba su registro antes de pedir otro ajuste; no se escribió de nuevo.':r.error==='conflicto_revision'?'El tablero cambió. La propuesta no se aplicó.':'El ajuste quedó sin confirmación. Revisa Reintentar pendientes en el tablero; conserva la misma solicitud.';paintProposals();}
+     else{if(application?.request_id===r.request_id)application.status='unconfirmed';applyNotice.textContent='Ajuste sin confirmar. El resultado no se marca como aplicado.';pppNote.textContent=r.error==='receipt_not_found'?'Todavía no hay un recibo guardado para la solicitud original. No se volvió a enviar ningún cambio.':r.error==='operation_pending'?'La solicitud original continúa pendiente. Comprueba su recibo sin volver a enviarla.':r.error==='recibos_pendientes'?'Hay confirmaciones anteriores pendientes. Comprueba su registro antes de pedir otro ajuste; no se escribió de nuevo.':r.error==='conflicto_revision'?'El tablero cambió. La propuesta no se aplicó.':'El ajuste quedó sin confirmación. Conserva la misma solicitud y comprueba su recibo.';receiptRetry.hidden=!application&&!receipts.size;receiptRetry.disabled=false;paintProposals();dispatchRequested();}
     }
    }catch{pppNote.textContent='El tablero sigue abierto; el autón no recibió todavía su última lectura.';}
   });
@@ -378,7 +467,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
    if(getSelection()?.case_id!==selected.case_id){clear();return;}
    if(!frame&&!readingSources&&sourceAttempts<3&&Date.now()>=sourceRetryAt)void readSources();
    if(tab==='browser')paintBrowser(await request('/computer/state'));
-   if(boardLink?.bridge){startBoardHandshake();postBoard(board?'yod:ppp:read':'yod:ppp:hello');const r=await request('/board/state');proposals=r.proposals||[];paintProposals();dispatchRequested();}
+   if(boardLink?.bridge){startBoardHandshake();postBoard(board?'yod:ppp:read':'yod:ppp:hello');const r=await request('/board/state');proposals=r.proposals||[];nativeRecovery.observe(proposals,{serverAt:r.server_at});paintProposals();dispatchRequested();}
   }catch{if(own===generation)notice.textContent='El puesto no respondió. Reintentando; la conversación puede continuar.';}
   finally{if(fetching===token)fetching=null;}
  }
@@ -396,7 +485,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   if(goal)meeting.open(goal,id,selected.avatar?.name||selected.name);
   else presentationHost.replaceChildren(el('p','Todavía no hay una entrega preparada para presentar.'),button('Ver pendientes',()=>setTab('tasks')));
  }
- function clear(){navigation.reset();moacModel={phase:'loading',notice:'Consultando el MOAC del proyecto…'};sections.moac.replaceChildren();archive.clear();documentTray?.destroy();documentTray=null;meeting.clear();avatarCard.clear();workView.clear();generation++;fetching=null;clearBoardHandshake();boardHandshakeTimedOut=false;clearTimeout(applyTimer);applyTimer=null;application=null;receipts.clear();receiptRetry.hidden=true;receiptRetry.disabled=false;applyNotice.textContent='';boardSummary.textContent='Todavía no hay una lectura compartida.';boardRetry.hidden=true;focusedGoal=null;workBoard.replaceChildren();knowledge.reset();lastTaskRead=0;goalSnapshot=null;taskModelKey=null;brief.replaceChildren();credential=null;selected=null;board=null;boardRevision=null;conversation=null;readingSources=null;sourceAttempts=0;sourceRetryAt=0;boardLink=null;proposals=[];goalDraft={title:'',instruction:'',criterion:''};for(const input of Object.values(goalInputs))input.value='';newGoal.open=false;frame?.remove();frame=null;image.removeAttribute('src');image.hidden=true;activity.replaceChildren();links.replaceChildren();taskList.replaceChildren();sections.sources.replaceChildren();proposalHost.replaceChildren();pppHost.replaceChildren();pppActions.querySelector('.workspace-external-board')?.remove();goalState={model:null,status:'disconnected',notice:'',pending:null};tasks.hide();notice.textContent='El acceso cambió. Vuelve a abrir tu despacho.';onPresentation();}
+ function clear(){nativeRecovery.clear();navigation.reset();moacModel={phase:'loading',notice:'Consultando el MOAC del proyecto…'};sections.moac.replaceChildren();archive.clear();documentTray?.destroy();documentTray=null;meeting.clear();avatarCard.clear();workView.clear();generation++;fetching=null;clearBoardHandshake();boardHandshakeTimedOut=false;clearTimeout(applyTimer);applyTimer=null;application=null;lastAppliedCalculated=null;lastAppliedSuperseded=false;lastAppliedRejection=false;receipts.clear();receiptRetry.hidden=true;receiptRetry.disabled=false;applyNotice.textContent='';boardSummary.textContent='Todavía no hay una lectura compartida.';boardRetry.hidden=true;focusedGoal=null;workBoard.replaceChildren();knowledge.reset();lastTaskRead=0;goalSnapshot=null;taskModelKey=null;brief.replaceChildren();credential=null;selected=null;board=null;boardRevision=null;conversation=null;readingSources=null;sourceAttempts=0;sourceRetryAt=0;boardLink=null;proposals=[];goalDraft={title:'',instruction:'',criterion:''};for(const input of Object.values(goalInputs))input.value='';newGoal.open=false;frame?.remove();frame=null;image.removeAttribute('src');image.hidden=true;activity.replaceChildren();links.replaceChildren();taskList.replaceChildren();sections.sources.replaceChildren();proposalHost.replaceChildren();pppHost.replaceChildren();pppActions.querySelector('.workspace-external-board')?.remove();goalState={model:null,status:'disconnected',notice:'',pending:null};tasks.hide();notice.textContent='El acceso cambió. Vuelve a abrir tu despacho.';onPresentation();}
  function open(selection,target='ppp'){if(selected?.case_id===selection.case_id){active=true;setTab(target);void readSources();return;}clear();selected=selection;if(!selection.goals?.ready)taskList.append(el('p','El seguimiento de objetivos aún no está conectado para este proyecto.'));root.setAttribute('aria-label','Puesto de '+stationIdentity(selection).name);active=true;generation++;notice.textContent='Preparando el puesto de '+selection.name+'…';paintBrief();setTab(target);void readSources();if(!timer)timer=setInterval(()=>void refresh(),tab==='tasks'?12000:4000);}
  win.addEventListener('message',receive);
  return{open,setTab,getTab:()=>tab,interactionContext:()=>navigation.context(),navigateInteraction:value=>navigation.navigate(value),navigateAssisted:value=>navigation.assisted(value),presentationSnapshot:()=>({case_id:selected?.case_id||null,board,goalState,boardLink,selected,active}),reset:clear,setActive(value){if(active===value)return;active=value;if(!value){meeting.hide();knowledge.hide();clearBoardHandshake();}if(value)void refresh();},dispose(){disposed=true;clear();navigation.dispose();workView.dispose();knowledge.dispose();clearInterval(timer);win.removeEventListener('message',receive);root.remove();transport.dispose?.();},root};

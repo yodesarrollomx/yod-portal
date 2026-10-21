@@ -1,26 +1,25 @@
 {
-  "model_revision": "2026-10-20.chinches-audio-ipad.1",
-  "proposal_id": "CHG-CHINCHES-AUDIO-IPAD-20261020",
-  "summary": "Normalizar únicamente sintaxis MIME de contenedores conocidos conservando bytes y cabecera original. Persistir borrador local antes de validar, con recuperación explícita y descarga del original aun si audio no pasa validación. No intercambiar código de una grabación abierta, descartar medios ni crear recibo de entrega sin archivo completo.",
+  "model_revision": "2026-10-20.ppp-volumenes-nativos.7",
+  "proposal_id": "CHG-PPP-VOLUMENES-NATIVOS-20261020",
+  "summary": "Multivolumen nativo schema2: programa 21 campos/14 drivers, lote de negocio con marcador atómico, GET de negocio sólo lectura con reconciliación de ledger, recibos históricos superseded y rechazo terminal prewrite probado. Horizonte 120, fábrica monovolumen y clonación por versión; fuentes locales preparadas, ejecución y despliegues se acreditan aparte. Revisión .6: promedio decimal de departamentos por nivel (step 0.000001), F entero calculado en Sheets y revisión explícita de plantilla antes del alta, conservando 21 campos/14 drivers. Revisión .7 registrada antes de producto: política preserve/built_area explícita por versión, cap plana con recursos sin importes, misma transacción y fórmula Sheets sobre área sobre rasante, conservando PA original.",
   "components": [
+    "SYS-POTENCIALES",
+    "GAS-PORTERO",
+    "SHEET-PORTERO",
+    "SHEET-PPP-MODELOS",
+    "SYS-DESPACHO-3D",
     "SYS-YOD-OS",
-    "SYS-INVERSION",
-    "SYS-SALA",
-    "GAS-SALA",
-    "SYS-AMALAYA",
-    "SYS-EMD",
-    "SYS-DESPACHO",
-    "GAS-EMD",
-    "GAS-AMALAYA",
-    "SYS-CONTROL",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
-    "SYS-TRACK"
+    "SVC-AUTON-CLOUD",
+    "SYS-DESPACHO"
   ],
   "tests": [
-    "Reproducir MIME Safari con espacio/comillas y conservar exactamente payload; rechazar contenedor distinto y audio corrupto.",
-    "Dobles aislados de grabador, IndexedDB, errores de cuota, recarga y recuperación de voz/trazos/capturas; Chromium/WebKit.",
-    "Paquete versionado, hashes y consumidores observados; QA de regresión y publicación separadas."
+    "Pendiente de cierre del coordinador: paridad numérica de un cuerpo con su baseline y tres cuerpos distintos, 21 campos/fórmulas y flujos, recursos comunes una vez, factory nuevo uno y clonación por versión, horizonte completo 120 meses e históricos conservados.",
+    "Pendiente de cierre: permisos/capability, CAS, request_id/actor/payload, marcador atómico, ACK perdido, igualdad externa sin marcador, conciliación ledger sin negocio, recibo superseded y prueba terminal prewrite; sin escrituras de prueba en casos reales.",
+    "Pruebas y verificadores de cada consumidor/servidor, migración aislada y lectura final del libro; PR/Pages y despliegue existente se acreditan por recibos separados.",
+    "Bloque Portal controller/boot:41pruebas focales aprobadas; regresiones live/Puesto2/workspace45aprobadas. Handlerreal deCambia17 prueba envío único chat/live paraPPPnopiloto, borrador pendiente, fallo local, confirmaciónclassicDOM/cards y revocación; todo con dobles sin negocio real.",
+    "Evidencia de revisión .5: Portal sobre main b3b2614, Node 1026/1026 y arquitectura/OS/portal/obra/accesos/impacto PASS. La revisión .6 cambia materialmente el promedio y repite la suite completa antes de actualizar PR; no acredita despliegue ni paridad productiva.",
+    "Revisión .7 pendiente: baseline3 y nuevo1 preserve iguales, elección explícita built_area permite1/2/3 con recursos contados una vez por fórmula Sheets, denominador positivo, PA original recuperable, modo ligado a revisión/operación/recibo y comparación FULL; cap plana sin importes.",
+    "Portal .7 sobre main 7796d27 con Sala preservada: Node 1033/1033 PASS; arquitectura/impacto/OS/portal/obra/accesos/diff PASS; cache imports native-volumes3/multivolumen3. Chromium PPP colaborativo 1280/860/390px PASS, sin escrituras reales; corrige selectores antiguos del test, no producto. Recurso/método en FULL/WRITE/ACK y metadata exacta con ejemplo promedio17 cubiertos."
   ],
-  "rollback": "Reactivar snapshot1.0.0 por PR y herramientas canónicas conservando borradores, originales, IDs y recibos."
+  "rollback": "Deshabilitar las capabilities nuevas y revertir consumidores/handlers en implementaciones existentes conservando IDs, versiones, cuerpos, recibos, ACL y libros; no borrar datos ni restaurar históricos a ciegas."
 }

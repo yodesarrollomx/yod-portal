@@ -1,15 +1,15 @@
 import {isPuesto2,mountPuestoAgente,presentationLocation} from './puesto-agente.mjs?v=ruisenor1';
-import {createAgentInteraction} from './agent-interaction.mjs?v=ruisenor1';
+import {createAgentInteraction,parseDirectUserCommand,nativeVolumeWrite,workspacePresentationVisible,renderInteractionCards} from './agent-interaction.mjs?v=multivolumen3';
 import {officeFastSessions} from './office-preparation.mjs?v=unified283';
 import {mountAvatarCard} from './avatar-card.mjs?v=126';
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
 import {createEntryPreparation} from './voice-preparation.mjs?v=2';
 import {residentAccessDecision} from './resident-agents.mjs?v=unified283';
 import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=first292';
-import {stationIdentity} from './project-station.mjs?v=140';
+import {stationIdentity} from './project-station.mjs?v=native-volumes3';
 import {createLiveVoice} from './live-voice.mjs?v=ruisenor1';
 import {voiceView} from './voice-view.mjs?v=141';
-import {createWorkspace} from './agent-workspace.mjs?v=ruisenor1';
+import {createWorkspace} from './agent-workspace.mjs?v=native-volumes3';
 import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=entregas291';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=132';
 import {groupTranscriptFragments} from './live-transcript.mjs';
@@ -48,9 +48,9 @@ if (open) {
     workspace.setActive(!compactVoice);visibility(!compactVoice);
   }
   function openBoard(tab='ppp'){
-    if(!selection||accessPaused)return;
+    if(!selection||accessPaused)return false;
     present(false);workspace.open(selection,tab);puesto?.showView(tab);void portrait.open(selection);
-    renderVoiceState(voice.snapshot());
+    renderVoiceState(voice.snapshot());return true;
   }
   // Conversation stays beside the original board. Secondary information is disclosed once.
   const activityCard=sidebar.querySelector('.station-activity'),voiceCard=sidebar.querySelector('.voice-state-card');
@@ -67,6 +67,7 @@ if (open) {
   const portraitHost=document.createElement('div');portraitHost.className='station-profile-portrait';sidebar.insertBefore(portraitHost,node('voice-title'));const portrait=mountAvatarCard({container:portraitHost,compact:true});
   const fragments = []; let selection = null, discussionDraftCase = null, generation = 0, dismissing = false, transcriptCase = null, freshTranscript = false, previousFocus = null, voiceCaseId = null, accessPaused = false;
   let interaction=null,voiceInteractionEpoch=window.crypto.randomUUID();
+  const classicInteractions=document.createElement('section');classicInteractions.className='station-interactions';classicInteractions.setAttribute('aria-label','Acciones en esta pantalla');classicInteractions.hidden=true;chatPanel.append(classicInteractions);
   const agentName=()=>selection?stationIdentity(selection).name:'Autón';
   const visibility=value=>window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:value}));
   const setText = (id,text) => {if(node(id).textContent!==text)node(id).textContent=text;};
@@ -93,14 +94,23 @@ if (open) {
   }
   const workspace=createWorkspace({container:workspaceHost,transport,onDiscuss:value=>{if(accessPaused||selection?.case_id!==value.case_id)return;discussionDraftCase=value.case_id;chatPanel.open=true;const field=node('station-message');const draft='Sobre la entrega «'+value.title+'» (revisión '+value.revision+'): ';field.value=field.value?field.value+'\n'+draft:draft;field.focus();field.setSelectionRange(field.value.length,field.value.length);node('station-message-status').textContent='Borrador para discutir la entrega. Todavía no se envió ni se creó un encargo.';},getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision,selection?.case_id);},onPresent:presentMeetingSlide,onPresentation:()=>{puesto?.updateWorkspace();interaction?.observe();}});
   const interactionContext=()=>{const c=workspace.interactionContext();return c?{...c,authorized:c.authorized&&!accessPaused&&dialog.open&&selection?.case_id===window.YodResidentAgents?.getSelection?.()?.case_id,pilot:pilot(selection)}:null;};
-  function renderInteractions(records){puesto?.renderInteractions(records,{confirm:id=>interaction.confirm(id),retry:id=>interaction.retry(id)});}
+  function renderInteractions(records){
+    const handlers={confirm:id=>interaction.confirm(id),retry:id=>interaction.retry(id)};
+    puesto?.renderInteractions(records,handlers);
+    const current=()=>!accessPaused&&dialog.open&&selection?.case_id===window.YodResidentAgents?.getSelection?.()?.case_id&&interactionContext()?.authorized===true&&interactionContext()?.ppp_enabled===true;
+    renderInteractionCards({host:classicInteractions,records:puesto?.isActive()?[]:records,caseId:selection?.case_id,handlers,isCurrent:current,doc:document});
+    if(!classicInteractions.hidden){chatPanel.open=true;if(compactVoice)present(false);}
+  }
+  function openInteractionWorkspace(value){
+    const before=interactionContext();if(!before?.authorized||before.case_id!==value.context.case_id||!['ppp','activity','sources','knowledge'].includes(value.tab))return{status:'unavailable'};
+    if(!openBoard(value.tab))return{status:'unavailable'};
+    workspace.root.querySelector('[data-panel="'+value.tab+'"]')?.scrollIntoView?.({block:'nearest',behavior:'instant'});
+    const after=interactionContext();
+    if(!after?.authorized||after.case_id!==value.context.case_id||!workspacePresentationVisible({dialog,workspace,tab:value.tab,win:window}))return{status:'unavailable'};
+    return{status:'confirmed',observed:{...after,tab:value.tab}};
+  }
   interaction=createAgentInteraction({getContext:interactionContext,
-    openWorkspace:async value=>{
-      const before=interactionContext();if(!before?.authorized||before.case_id!==value.context.case_id||!['ppp','activity','sources','knowledge'].includes(value.tab))return{status:'unavailable'};
-      workspace.setTab(value.tab);const shown=puesto?.showView(value.tab);
-      const after=interactionContext();if(!shown||!after?.authorized||after.case_id!==value.context.case_id||workspace.getTab()!==value.tab||dialog.dataset.puestoScreen!==value.tab)return{status:'unavailable'};
-      return{status:'confirmed',observed:{...after,tab:value.tab}};
-    },navigateBridge:value=>workspace.navigateInteraction(value),navigateAssisted:value=>workspace.navigateAssisted(value),
+    openWorkspace:openInteractionWorkspace,navigateBridge:value=>workspace.navigateInteraction(value),navigateAssisted:value=>workspace.navigateAssisted(value),
     // Existing business writes keep their own proposal/receipt circuit. This
     // presentation controller cannot create a replacement write on a timeout.
     reconcile:async()=>({status:'unavailable'}),
@@ -152,12 +162,17 @@ if (open) {
     const submission={text,own,id,event_id:'text-'+window.crypto.randomUUID(),promise:null};stationSubmission=submission;
     submission.promise=(async()=>{
       const initialVoice=voice.snapshot(),inVoice=active(initialVoice)||initialVoice.text_pending;
-      if(pilot(selection)&&!chat.pending&&!initialVoice.text_pending){
-        let local;
-        try{local=await interaction.receive({role:'user',source:'text',complete:true,text,event_id:submission.event_id});}
-        catch{return false;}
-        if(!stationMessageContext(own,id))return false;
-        if(local.handled){if(node('station-message').value===text)node('station-message').value='';return true;}
+      if(!chat.pending&&!initialVoice.text_pending){
+        // Opening an explicitly requested view never starts voice or writes quantities.
+        const command=parseDirectUserCommand({role:'user',source:'text',text});
+        if(command)openBoard(command.tab);
+        if(!(command?.kind==='change_request'&&nativeVolumeWrite(interactionContext()))){
+          let local;
+          try{local=await interaction.receive({role:'user',source:'text',complete:true,text,event_id:submission.event_id});}
+          catch{return false;}
+          if(!stationMessageContext(own,id))return false;
+          if(local.handled){if(node('station-message').value===text)node('station-message').value='';return true;}
+        }
       }
       if(!stationMessageContext(own,id))return false;
       const sentText=inVoice?text:chat.pending?.message||text;
@@ -183,7 +198,7 @@ if (open) {
   window.addEventListener('pagehide',()=>{clearInterval(chatTimer);interaction?.dispose();chat.close();stopWatching?.();});
   function receiveStationTranscript(fragment){
       if(selection?.case_id===voiceCaseId){renderTranscript(fragment);
-        if(pilot(selection)&&fragment.role==='user'){
+        if(interactionContext()?.ppp_enabled===true&&fragment.role==='user'){
           const group=groupTranscriptFragments(fragments).find(g=>g.role==='user'&&g.fragments.includes(fragment));
           if(group)void interaction.receive({role:'user',source:'voice',complete:false,text:group.text,event_id:'voice-'+voiceInteractionEpoch+'-'+group.start_ms});
         }
@@ -361,7 +376,7 @@ if (open) {
     if (dismissing) return; dismissing = true;suppressEncounter();
     const wasLive = active(voice.snapshot()), result = await voice.stop();
     if (wasLive && (result?.incomplete || result?.pending)) {dismissing = false; return;}
-    generation++; selection = null;puesto?.setSelection(null);stopWatching?.();stopWatching=null;goalReader.hide();workspace.setActive(false);dialog.close();visibility(false);previousFocus?.focus?.(); dismissing = false;
+    generation++; selection = null;puesto?.setSelection(null);interaction?.observe();stopWatching?.();stopWatching=null;goalReader.hide();workspace.setActive(false);dialog.close();visibility(false);previousFocus?.focus?.(); dismissing = false;
   }
   dialog.querySelector('.voice-close').addEventListener('click', () => {if(active(voice.snapshot())&&!pilot(selection)){present(true);stopWatching?.();stopWatching=null;}else void dismiss();});
   dialog.addEventListener('cancel', event => {event.preventDefault();if(!compactVoice&&active(voice.snapshot())&&!pilot(selection))present(true);else void dismiss();});
@@ -409,7 +424,7 @@ if (open) {
         workspace.setActive(dialog.open&&!compactVoice);renderVoiceState(voice.snapshot());
       }
       if(access==='lost'){
-        entrance.clear();generation++;selection=null;puesto?.setSelection(null);encounterNeedsMic=false;stopWatching?.();stopWatching=null;goalReader.hide();chat.close();workspace.reset();portrait.clear();workspace.setActive(false);
+        entrance.clear();generation++;selection=null;puesto?.setSelection(null);interaction?.observe();encounterNeedsMic=false;stopWatching?.();stopWatching=null;goalReader.hide();chat.close();workspace.reset();portrait.clear();workspace.setActive(false);
         fragments.length=0;freshTranscript=false;node('voice-transcript').replaceChildren();node('voice-work').replaceChildren();node('voice-task').textContent='';
         node('voice-download').disabled=true;node('voice-start').disabled=true;node('voice-previous').hidden=true;node('voice-audio').muted=true;
         setText('voice-case','El acceso al expediente cambió.');setText('voice-title','Tu autón');discussionDraftCase=null;node('station-message').value='';node('station-messages').replaceChildren();

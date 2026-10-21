@@ -1,13 +1,14 @@
 // Read-only navigation. This adapter never emits input/change, calls a business
 // endpoint, switches scenarios or supplies authority to the embedded board.
+import {nativeVolumeCapability} from './project-station.mjs?v=native-volumes3';
 const sections=new Set(['dArq','dVentas','dCostos','dMacro','dDota','dVolumenes']);
 const blockingCodes=new Set(['revision_changed','scenario_changed','case_changed','reading_unconfirmed','editing_in_progress','pending_write','unauthorized','session_changed']);
 const identifier=value=>typeof value==='string'&&/^[A-Za-z0-9_.:-]{1,256}$/.test(value);
 export function createWorkspaceNavigation({win,getFrame,getBinding,getContext,onContext=()=>{},timeoutMs=1800}){
- let capability=null,verifiedContext=null,nativeContextAnnounced=null,authorizedCase=null,disposed=false;const pending=new Map();
+ let capability=null,volumeCapability=null,verifiedContext=null,nativeContextAnnounced=null,authorizedCase=null,disposed=false;const pending=new Map();
  const binding=()=>{const frame=getFrame(),b=getBinding();return frame&&b?.bridge&&b.origin&&b.nonce&&b.board_case_id?{frame,...b}:null;};
  const same=(a,b)=>!!a&&!!b&&a.frame===b.frame&&a.nonce===b.nonce&&a.board_case_id===b.board_case_id&&a.origin===b.origin;
- const current=()=>{const c=!disposed&&getContext?.(),valid=c?.authorized===true&&c.pilot===true&&identifier(c.case_id);if(!valid||authorizedCase&&authorizedCase!==c.case_id){capability=null;verifiedContext=null;nativeContextAnnounced=null;}authorizedCase=valid?c.case_id:null;return valid?c:null;};
+ const current=()=>{const c=!disposed&&getContext?.(),valid=c?.authorized===true&&identifier(c.case_id);if(!valid||authorizedCase&&authorizedCase!==c.case_id){capability=null;volumeCapability=null;verifiedContext=null;nativeContextAnnounced=null;}authorizedCase=valid?c.case_id:null;return valid?c:null;};
  function trusted(event,b){const caseId=event.data?.type==='yod:ppp:state'?event.data.board?.case_id:event.data?.case_id;return !!b&&event.origin===b.origin&&event.source===b.frame.contentWindow&&event.data?.version===1&&event.data.nonce===b.nonce&&caseId===b.board_case_id;}
  function contextMatches(a,b){return !!a&&!!b&&['case_id','board_case_id','scenario_id','revision'].every(k=>!a[k]||a[k]===b[k]);}
  function receive(event){
@@ -16,6 +17,8 @@ export function createWorkspaceNavigation({win,getFrame,getBinding,getContext,on
   if(d.type==='yod:ppp:state'){
    if(d.capabilities?.navigate===true)capability=b;
    else if(d.capabilities&&Object.hasOwn(d.capabilities,'navigate'))capability=null;
+   const volumes=d.board?.metadata?.model_type==='vertical'&&nativeVolumeCapability(d.board.capabilities?.volumes);
+   volumeCapability=volumes?{binding:b,value:volumes}:null;
    if(Object.hasOwn(d,'navigation_context'))nativeContextAnnounced=b;
    const c=d.navigation_context,host=current();
    verifiedContext=same(b,nativeContextAnnounced)&&c&&c.case_id===host.case_id&&c.board_case_id===b.board_case_id&&identifier(c.scenario_id)&&identifier(c.revision)&&c.confirmed===true&&c.pending===false&&!c.error&&!d.error?{binding:b,case_id:host.case_id,scenario_id:c.scenario_id,revision:c.revision,confirmed:true,pending:false}:null;
@@ -37,7 +40,7 @@ export function createWorkspaceNavigation({win,getFrame,getBinding,getContext,on
    board_case_id:b.board_case_id,scenario_id:observed.scenario_id,revision:observed.revision}});
  }
  win.addEventListener('message',receive);
- function context(){const c=current(),b=binding(),n=verifiedContext,announced=same(b,nativeContextAnnounced);return c?{...c,...(n&&n.case_id===c.case_id&&same(b,n.binding)?{scenario_id:n.scenario_id,revision:n.revision,confirmed:n.confirmed,pending:n.pending}:announced?{confirmed:false,pending:true}:{}),capabilities:{navigate:same(b,capability)}}:null;}
+ function context(){const c=current(),b=binding(),n=verifiedContext,announced=same(b,nativeContextAnnounced),volumes=same(b,volumeCapability?.binding)?volumeCapability.value:null,navigate=same(b,capability);return c?{...c,...(n&&n.case_id===c.case_id&&same(b,n.binding)?{scenario_id:n.scenario_id,revision:n.revision,confirmed:n.confirmed,pending:n.pending}:announced?{confirmed:false,pending:true}:{}),...(c.local_pending===true?{pending:true}:{}),ppp_enabled:navigate||!!volumes?.read,capabilities:{navigate,...(volumes?{volumes}:{})}}:null;}
  function eligible(payload){const c=context(),b=binding();return c&&b&&c.board_case_id===b.board_case_id&&contextMatches(payload.context,c)&&
    c.confirmed===true&&!c.pending&&sections.has(payload.section_id)?{context:c,binding:b}:null;}
  function navigate(payload){
@@ -96,6 +99,6 @@ export function createWorkspaceNavigation({win,getFrame,getBinding,getContext,on
     board_case_id:selected.binding.board_case_id,scenario_id:selected.context.scenario_id,revision:selected.context.revision}};
   }catch{return{status:'unavailable',reason:'assisted_navigation_unavailable'};}
  }
- function reset(){capability=null;verifiedContext=null;nativeContextAnnounced=null;for(const job of [...pending.values()])job.finish({status:'unavailable',reason:'context_changed'});}
+ function reset(){capability=null;volumeCapability=null;verifiedContext=null;nativeContextAnnounced=null;for(const job of [...pending.values()])job.finish({status:'unavailable',reason:'context_changed'});}
  return{context,navigate,assisted,reset,dispose(){disposed=true;reset();win.removeEventListener('message',receive);}};
 }

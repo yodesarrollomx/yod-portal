@@ -1,5 +1,7 @@
 # Ruiseñor · interacción y volúmenes
 
+> Alcance actualizado el20oct: Dirección autorizó volúmenes nativos para todos los PPP de departamentos, con cambios en Apps Script/Sheets/backend y publicación. La limitación de piloto y la autorización pendiente de esta nota se conservan como antecedente; rige [el contrato nativo posterior](ppp-volumenes-nativos.md).
+
 CHG-RUISENOR-INTERACCION-VOLUMENES-20261020 · 20-oct-2026. El frontend está implementado localmente; QA final, PR y Pages siguen pendientes de sus recibos. El piloto mantiene el PPP original, sus fórmulas, permisos y datos. Este cambio no instala Apps Script ni modifica hojas de negocio.
 
 ## Hablar y ver la acción

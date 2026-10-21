@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-20.chinches-audio-ipad.1",
+  "revision": "2026-10-20.ppp-volumenes-nativos.7",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -8730,12 +8730,15 @@
     },
     {
       "id": "VOLUMENESCANONICOS",
-      "titulo": "Cuerpos y etapas canónicos por versión del PPP",
+      "titulo": "Volúmenes nativos en todos los PPP verticales y mixtos",
       "boards": [
         "SYS-POTENCIALES",
         "GAS-PORTERO",
+        "SHEET-PORTERO",
         "SHEET-PPP-MODELOS",
-        "SYS-DESPACHO-3D"
+        "SYS-DESPACHO-3D",
+        "SYS-YOD-OS",
+        "SVC-AUTON-CLOUD"
       ],
       "problem": "El borrador frontend por volúmenes aún no está guardado en el modelo canónico ni participa en fórmulas y flujo por etapas.",
       "benefit": "Comparar versiones con cuerpos independientes, recursos comunes contados una sola vez y cálculo nativo trazable.",
@@ -8744,25 +8747,24 @@
         "VOLUMENES"
       ],
       "effort": "Por estimar tras acordar esquema y fórmulas sobre el modelo canónico.",
-      "decision": "pendiente",
+      "decision": "aprobada",
       "prerequisites": [
-        "Alejandro debe ampliar explícitamente la restricción original «No tocar Apps Script ni Sheets» para esta etapa; no hay autorización técnica implícita por publicar el frontend.",
-        "Inventariar libros, fórmulas, versiones y etapas vigentes; definir esquema versionado y migración reversible sin alterar la base inmutable.",
-        "Confirmar capacidades, campos editables y semántica de endpoints existentes; cualquier extensión se propone y revisa antes de instalarse."
+        "Ampliación expresa autorizada por Dirección20oct: Apps Script, Sheets y backend/Render permitidos dentro de este encargo; conservar identidad, ACL y despliegues existentes.",
+        "Contrastar fuente y esquema vigentes; los contratos propuestos no acreditan despliegue.",
+        "Garantizar equivalencia del modelo de un volumen y cálculo financiero sólo en Sheets."
       ],
       "tasks": [
-        "Definir esquema por case_id/version_id/base_revision con cuerpos y etapas independientes, IDs estables y recursos comunes asignados sin duplicar.",
-        "Migrar el modelo de un cuerpo como cuerpo1 compatible; conservar originales y versión base inmutable, sin multiplicar importes al elegir2/3.",
-        "Instalar lectura y escritura canónicas sólo tras aprobación, con capability guard, actor/caso/version/revisión y request_id estable; conciliación de recibo perdido.",
-        "Calcular con fórmulas nativas cantidades/costos/ingresos por cuerpo/etapa y consolidación explícita; separar núcleos, elevadores y áreas comunes.",
-        "Validar con fixtures aislados, compatibilidad1cuerpo, escenarios2/3, conflictos, reentrada y recibos; aceptación real separada."
+        "Conciliar contrato por caso/escenario/versión/revisión y capability del modelo, independiente del agente.",
+        "Persistir cantidades por cuerpo y recursos compartidos una sola vez en el libro canónico, con migración1cuerpo compatible.",
+        "Extender el backend/puente existente con CAS/request_id/recibo y conciliación; proteger fórmulas y conservar permisos.",
+        "Validar en aislamiento y publicar consumidores y backend con recibos independientes."
       ],
       "acceptance": [
         "Históricos/base no se sobrescriben ni migran a ciegas; una versión nueva registra el origen y su revisión.",
         "Núcleos, elevadores y áreas comunes tienen identidad y alcance explícitos y se suman una sola vez; no se multiplican automáticamente por número de cuerpos.",
         "No se crea motor financiero paralelo: las fórmulas del libro canónico producen resultados y flujos por etapas.",
         "Sin capability, permiso, revisión o esquema compatibles se rechaza antes de escribir. Request_id ambiguo se concilia sin reenviar ni elevar revisión.",
-        "No se publica backend ni se modifican hojas de producción hasta ampliar el alcance y completar pruebas aisladas y recibos de despliegue."
+        "Autorización de alcance ya concedida; publicar sólo tras pruebas aisladas, recibos de despliegue existente y comprobación de cálculo. No dar por completo un caso que siga pendiente de fábrica/plantilla."
       ]
     }
   ],
@@ -13853,6 +13855,33 @@
       ],
       "deployment": "996 pruebas locales PASS; Chromium recuperación/recarga/cuota/rescate1.0.0 y micrófono sintético real PASS. Paquete1.1.0 en PR308, sin despliegue acreditado aún; iPad particular no recuperado.",
       "rollback": "Reactivar snapshot1.0.0 por PR y herramientas canónicas conservando borradores, originales, IDs y recibos."
+    },
+    {
+      "id": "CHG-PPP-VOLUMENES-NATIVOS-20261020",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SYS-DESPACHO-3D",
+        "SYS-YOD-OS",
+        "SVC-AUTON-CLOUD",
+        "SYS-DESPACHO"
+      ],
+      "status": "propuesto",
+      "authorization": "Corrección y autorización expresa de Dirección20oct: los volúmenes pertenecen al PPP de departamentos en todos los casos vertical/mixto, no al agente ni al piloto; puede modificar Apps Script, Sheets, backend/Render y publicar. Conserva permisos y contratos vigentes. No requiere nueva pregunta para ese alcance.",
+      "proposal": "Contrato schema2 sobre el programa financiero nativo de 21 columnas: 14 drivers editables, 7 derivados de Sheets y metadata de autoridad en capabilities.volumes.fields. Todos los casos de departamentos VERTICAL, incluida la superficie mixto, conservan sus cuerpos reales; un escenario nuevo parte de una plantilla monovolumen validada y duplicar conserva el programa por versión. Hasta 16 cuerpos mediante fórmulas nativas, recursos comunes una sola vez e históricos inmutables. El lote de drivers/IDs/count incluye el marcador applied de la operación; la conciliación exige marcador y readback, no sólo igualdad. GET no cambia negocio, pero puede reconciliar ledger/auditoría excluidos de revisión. Recibos históricos superseded se conservan separados del modelo actual. Sólo prueba durable stage prewrite/write_attempted false puede terminar un rechazo antes del lote. Horizonte nativo 1–120 validado antes de escribir; el límite de transporte 1200 no amplía las fórmulas. Boot/controller Portal implementados localmente: ppp_enabled/capabilities autorizan todos los PPP, piloto sólo UX; cambios con schema2write pasan al chat/voz canónicos y la presentación no inicia micrófono. Classic comprueba DOM visible y muestra confirmación/reintento en chat; deltas de voz provisionales. Corrección autorizada de E: units_per_level es promedio number con step 0.000001; F units sigue entero derivado por ROUND(D*E;0) en Sheets. Ejemplo 17 en tres niveles propone 5.666667 y exige readback F17, sin afirmar distribución ni tipologías; geometría e inventario conservan coherencia nativa. Alta exige preview autenticado de plantilla uno y revisión explícita de 14 drivers antes de guardar, sin sustituir inputs capturados ni crear con variantes sin programa. Extensión .7 registrada antes de producto: colección de cuatro claves incluye shared_allocation_mode preserve|built_area. Capability plana anuncia allocation_modes y shared_resources id/label sin importes. preserve conserva pesos PA nativos; built_area se elige y confirma explícitamente para repartir TODOS los recursos por área construida sobre rasante M, excluyendo sótano N, con fórmula de Sheets. PA original se conserva para volver a preserve. Modo por escenario en columna K del índice, revisión, hash, before, lote atómico, marcador y recibo; cliente no infiere ni activa política por cambiar count.",
+      "tests": [
+        "Pendiente de cierre del coordinador: paridad numérica de un cuerpo con su baseline y tres cuerpos distintos, 21 campos/fórmulas y flujos, recursos comunes una vez, factory nuevo uno y clonación por versión, horizonte completo 120 meses e históricos conservados.",
+        "Pendiente de cierre: permisos/capability, CAS, request_id/actor/payload, marcador atómico, ACK perdido, igualdad externa sin marcador, conciliación ledger sin negocio, recibo superseded y prueba terminal prewrite; sin escrituras de prueba en casos reales.",
+        "Pruebas y verificadores de cada consumidor/servidor, migración aislada y lectura final del libro; PR/Pages y despliegue existente se acreditan por recibos separados.",
+        "Bloque Portal controller/boot:41pruebas focales aprobadas; regresiones live/Puesto2/workspace45aprobadas. Handlerreal deCambia17 prueba envío único chat/live paraPPPnopiloto, borrador pendiente, fallo local, confirmaciónclassicDOM/cards y revocación; todo con dobles sin negocio real.",
+        "Evidencia de revisión .5: Portal sobre main b3b2614, Node 1026/1026 y arquitectura/OS/portal/obra/accesos/impacto PASS. La revisión .6 cambia materialmente el promedio y repite la suite completa antes de actualizar PR; no acredita despliegue ni paridad productiva.",
+        "Revisión .7 pendiente: baseline3 y nuevo1 preserve iguales, elección explícita built_area permite1/2/3 con recursos contados una vez por fórmula Sheets, denominador positivo, PA original recuperable, modo ligado a revisión/operación/recibo y comparación FULL; cap plana sin importes.",
+        "Portal .7 sobre main 7796d27 con Sala preservada: Node 1033/1033 PASS; arquitectura/impacto/OS/portal/obra/accesos/diff PASS; cache imports native-volumes3/multivolumen3. Chromium PPP colaborativo 1280/860/390px PASS, sin escrituras reales; corrige selectores antiguos del test, no producto. Recurso/método en FULL/WRITE/ACK y metadata exacta con ejemplo promedio17 cubiertos."
+      ],
+      "deployment": "Propuesta registrada antes del producto y revisiones materiales antes de implementarlas. Consumidor Portal .7 implementado y probado localmente; PR305 pendiente de revisión/publicación. GAS/PPP/backend, migración/fábrica, paridad numérica aislada, implementación existente y lectura final se acreditan por separado por el coordinador. No afirmar cálculo productivo por presencia de fuente.",
+      "rollback": "Deshabilitar las capabilities nuevas y revertir consumidores/handlers en implementaciones existentes conservando IDs, versiones, cuerpos, recibos, ACL y libros; no borrar datos ni restaurar históricos a ciegas."
     }
   ],
   "data_contracts": [
@@ -14030,7 +14059,7 @@
         "Servidor resuelve el destino y verifica permisos, límites y revisión antes de escribir",
         "Una respuesta pendiente, conflicto o desconexión conserva el último dato confirmado con estado explícito",
         "Auditar antes/después y no marcar producción comprobada sin lectura pública final",
-        "No modificar Portero ni crear otra implementación; conservar contratos y URL existentes",
+        "Extensión multivolumen autorizada dentro del Portero existente: conservar URL, scopes, ACL y contratos de otros modelos; no crear otra implementación ni inferir despliegue por fuente.",
         "El transporte leído conserva entradas y resultados de todas las versiones; el flujo mensual puede enviarse solo para la activa. Validar ese flujo al abrirla y no exigir ni inventar flujo de versiones inactivas."
       ]
     },
@@ -15814,6 +15843,60 @@
         "No copiar credencial de Drive ni publicar MP4 en claro",
         "El productor existente cifra una copia ligera; verifica original MD5, duración/audio y SHA256 antes de registrar llave privada",
         "El original conserva permisos; cache técnico privado no cambia PROPUESTAS/DECISIONES ni introduce binarios en Sheets"
+      ]
+    },
+    {
+      "id": "CTR-PPP-VOLUMENES-NATIVOS",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SYS-DESPACHO-3D",
+        "SYS-YOD-OS",
+        "SVC-AUTON-CLOUD"
+      ],
+      "source": "docs/arquitectura/ppp-volumenes-nativos.md y schema JSON; contrato conciliado con fuentes locales PPPVolumes, PPPVolumesProgram, PPPVolumesFormulas y consumidores. Fuente activa y datos se verifican privadamente por coordinador; no equivalen a despliegue.",
+      "input": [
+        "POST tipo sheet-volumes, caso_id, tipo_desarrollo VERTICAL, escenario_id, revision_esperada, request_id y sesión vigente; volumes schema2/count/shared_allocation_mode/rows[id,values14drivers].",
+        "Los21IDs del programa nativo y14drivers/7derivados se anuncian en capabilities.volumes.fields; POST jamás envía campos de autoridad ni valores derivados.",
+        "Capabilities por modelo autorizado; no nombre de proyecto,query ni flag del agente.",
+        "GET recurso sheet-volumes-receipt con caso_id, escenario_id y request_id; no escribe negocio, puede reconciliar ledger/auditoría de la operación original.",
+        "E units_per_level number, etiqueta Viviendas por planta · promedio, step 0.000001; F units readonly entero. GET autenticado sheet-volume-template devuelve preview de un cuerpo; POST guardar requiere seed WRITE14/template_revision/native_body_reviewed true e inputs originales.",
+        "Colección read/write tiene cuatro claves: schema2,count,shared_allocation_mode preserve|built_area,volumes. Capabilities.volumes plana agrega allocation_modes y shared_resources [{id,label}], sin importes. No aliases ni default cliente para modo ausente."
+      ],
+      "output": [
+        "Modelo con volumes_by_scenario[escenario_id]={schema:2,count,shared_allocation_mode,volumes:[{id,values:21campos}]} y capabilities.volumes={schema:2,read,write,max_volumes:16,fields:metadatos21,allocation_modes:[preserve,built_area],shared_resources:[{id,label}]}.",
+        "volume_receipt conserva request_id, caso_id, escenario_id, base_revision, result_revision, volumes FULL releído y calculated. Confirmación vigente coincide con modelo; proyección 14 drivers/count/IDs/modo coincide con solicitud.",
+        "ACK normal: ok, request_id, case_id, scenario_id, revision, native_collection, calculated. Si revision actual es posterior: volume_receipt_status superseded y ACK status confirmed_superseded conserva original más current_revision/current_collection.",
+        "Conciliación devuelve modelo+recibo, rechazo prewrite probado, operation_pending o receipt_not_found; sin POST de reenvío ni rollback automático.",
+        "Rechazo terminal GAS: operation_rejected, volume_operation_status rejected, volume_rejection con actor/contexto/base_revision/payload_hash/stage prewrite/write_attempted false/error/rejected_at; ACK validado status rejected y prewrite_rejection.",
+        "native_factory_preview persisted false, template_revision, inputs de plantilla, volumes FULL un cuerpo y capability21; no acredita alta ni finanzas calculadas.",
+        "Modo por escenario se devuelve siempre explícito en colección canónica y volume_receipt.volumes; ACK/before/proyección/hash incluyen el modo exacto. Recursos compartidos anuncian sólo ID y etiqueta, nunca un precio transportado como policy."
+      ],
+      "invariants": [
+        "Los volúmenes pertenecen al PPP de todos los casos verticales/departamentos; mixto.html conserva el tipo nativo VERTICAL sin crear otro permiso.",
+        "Cálculo financiero sólo en Sheets. Cliente/servidor no duplican fórmulas ni sustituyen cálculo por promedio; calculated:true requiere fórmula nativa validada y readback.",
+        "Programa nativo existente se lee íntegro, incluyendo3cuerpos y fórmulas distintas; no forzar1alabrir. Factorydeescenario nuevo inicia1compatible y preserva base/históricos. Escalar16medianteplantilla nativa con fórmulasprotegidas.",
+        "Núcleos,elevadores,terreno y áreas comunes tienen alcance explícito y se cuentan una vez. El DTO v1 no inventa ni multiplica recursos compartidos.",
+        "Actor,destino/caso/tipo/capability y revisión se validan de nuevo en el servidor. Fórmulas protegidas y campos allowlisted.",
+        "Mismo request_id conserva actor/caso/escenario/payload. Recibo previo se consulta antes de CAS; otro contenido se rechaza y timeout se concilia sin nuevo writer ni revisión elevada.",
+        "Pruebas financieras usan libros aislados. Publicación de frontend, fuente GAS, migración de libro y cálculo real necesitan recibos separados.",
+        "El contrato reducido de siete campos era borrador preliminar; no reemplaza el programa nativo ni sus drivers. Writer requiere schema2exacto y campos anunciados por el modelo real.",
+        "Unidades y superficie total derivadas son sólo lectura. Huella,patio,plantas,viviendas por piso,áreas,obraPB/sótano,ventas y etapas conservan sus drivers nativos; tipología/inventario se registran aparte sin inferencia.",
+        "capabilities.volumes.fields es autoridad del servidor:21IDs estables,14drivers y7derivados; el cliente rechaza metadata inconsistente y nunca envía derived en POST. Bounds técnicos se distinguen de norma o datos observados.",
+        "Reserva durable pending antes de cantidades; lote atómico escribe drivers/IDs/count y marcador applied ligado a request/actor/payload. finish exige marcador y readback exacto antes de confirmed; igualdad externa sola no acredita operación.",
+        "GET no modifica drivers, fórmulas, count ni versiones; permite reconciliar ledger/auditoría fuera de la revisión de negocio. Timeout, ausencia de recibo e incertidumbre no reenvían POST ni elevan revisión.",
+        "Recibo vigente coincide con modelo nativo; superseded conserva recibo original inmutable y separa revisión/colección actuales. No confundir relectura posterior con resultado original ni repetir escritura.",
+        "Sólo rechazo durable antes de intentar lote, validado con actor/caso/escenario/request/base_revision/payload y stage prewrite/write_attempted false, libera pendiente. Fallos tras intentar lote conservan incertidumbre.",
+        "Factory nuevo uno requiere plantilla monovolumen nativa y paridad contra baseline; duplicar preserva programa y asignaciones por versión. Capabilidad desactivada por falta de plantilla es pendiente, no entrega final.",
+        "Horizonte nativo de meses 1–120: validar ventanas de obra/ventas/entrega antes de lote. Bounds transporte hasta 1200 no extienden deuda/TIR/distribuciones.",
+        "Guardado y cálculo se acreditan por separado; calculated true exige manifiesto nativo, inventario original no tautológico y paridad comprobada. Fuentes de fórmula no prueban paridad numérica.",
+        "Promedio E permite total entero F=ROUND(D*E;0) sólo en Sheets. No truncar E a dos decimales ni inferir uniformidad/tipología. Petición 17 con tres niveles usa 5.666667 y sólo readback F17 confirma; geometría e inventario usan el total nativo coherente.",
+        "Alta revisa 14 drivers y preserva inputs capturados, sin resumen/flujo cliente. Variantes locales sin programa por versión se conservan y bloquean creación; preview no persiste un caso y un alta incierta no se reenvía automáticamente.",
+        "preserve conserva PA original y exige sus pesos activos válidos; built_area requiere selección/confirmación explícita para TODOS los recursos anunciados y usa fórmula Sheets Mactivo/SUM(Mactivos), área sobre rasante sin sótano N. No cambiar método ocultamente por count ni normalizar PA raw.",
+        "Modo por versión vive en columna K del índice y participa en revisionMaterial, hash del payload, before/after, marcador del mismo lote de negocio, recibo vigente e histórico superseded. Fórmulas referencian el modo; cambiarlo no reinstala un motor ni escribe dinero en JS.",
+        "Nueva fábrica/migración declara preserve explícito; collection sin modo o capability de política incompatible falla cerrada. built_area requiere áreas activas completas, finitas y suma positiva antes de intentar lote; resultados/costos siguen sólo en Sheets."
       ]
     }
   ],
@@ -18308,6 +18391,43 @@
       "prefix": "tests/fixtures/ruisenor-volumenes.html",
       "components": [
         "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "docs/arquitectura/ppp-volumenes-nativos.md",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SYS-DESPACHO-3D",
+        "SYS-YOD-OS",
+        "SVC-AUTON-CLOUD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "docs/arquitectura/ppp-volumenes-nativos.schema.json",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SYS-DESPACHO-3D",
+        "SYS-YOD-OS",
+        "SVC-AUTON-CLOUD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/workspace-native-volumes.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES",
+        "SVC-AUTON-CLOUD"
       ]
     }
   ],

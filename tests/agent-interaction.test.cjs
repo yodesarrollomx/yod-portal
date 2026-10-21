@@ -1,6 +1,6 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const load=()=>import('../despacho3d/agent-interaction.mjs');
-const context=()=>({authorized:true,pilot:true,case_id:'synthetic-case',board_case_id:'synthetic-board',scenario_id:'scenario-1',revision:'r1',capabilities:{navigate:false}});
+const context=()=>({authorized:true,ppp_enabled:true,pilot:true,case_id:'synthetic-case',board_case_id:'synthetic-board',scenario_id:'scenario-1',revision:'r1',capabilities:{navigate:false}});
 const text=value=>({role:'user',source:'text',text:value,complete:true});
 const navigationReceipt=(payload,section=payload.section_id)=>({status:'confirmed',observed:{...payload.context,tab:payload.tab,...(section?{section_id:section}:{})}});
 test('closed commands accept direct user navigation and preserve changes without inventing quantities',async()=>{
@@ -57,8 +57,8 @@ test('a matching mutation receipt can advance revision; a malformed receipt cann
  assert.equal(controller.bindMutation(action_id,{status:'confirmed',request_id:'request-2',observed:{...context(),revision:'r2'}}),false);
  controller.bindMutation(action_id,{status:'confirmed',request_id:'request-1',observed:{...context(),revision:'r2'}});assert.equal(controller.snapshot()[0].state,'confirmed');assert.equal(controller.snapshot()[0].evidence[0].observed.revision,'r2');
 });
-test('nonpilot input never creates or executes an intention',async()=>{
- const {createAgentInteraction}=await load();let opens=0;const controller=createAgentInteraction({getContext:()=>({...context(),pilot:false}),openWorkspace:()=>opens++});
+test('a case without an authorized PPP capability never creates an intention',async()=>{
+ const {createAgentInteraction}=await load();let opens=0;const controller=createAgentInteraction({getContext:()=>({...context(),ppp_enabled:false}),openWorkspace:()=>opens++});
  assert.deepEqual(await controller.receive(text('Abre el plan')),{handled:false});assert.equal(opens,0);assert.deepEqual(controller.snapshot(),[]);
 });
 test('an agent reply with a colliding event cannot replace the user intention',async()=>{
