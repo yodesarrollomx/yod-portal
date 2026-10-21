@@ -1,10 +1,9 @@
 {
-  "model_revision": "2026-10-20.sala-revision-video.1",
-  "proposal_id": "CHG-SALA-REVISION-VIDEO-20261020",
-  "summary": "Revisión de corte por rechazo autenticado, con linaje hacia corte durable y fuente visual aprobada; IDs nuevos derivados de la decisión y política. Ejecución valida vigencia antes de consumir motores. Video generativo obligatorio, voz Gemini separada de nombres Kokoro y montaje sin seis segundos de silencio ni congelación de escenas. Piloto acotado por familia en REGLAS; nuevas revisiones nunca aprueban.",
+  "model_revision": "2026-10-21.sala-cloud-adaptativa.1",
+  "proposal_id": "CHG-SALA-CLOUD-ADAPTATIVA-20261021",
+  "summary": "Selector determinista con exploración 20%, exclusión de pagos/locales/vetos, límites diarios y evidencia de intentos. Animación tipográfica por código en Actions cubre la voz completa; distinta de video generativo. La aprobación editorial continúa manual.",
   "components": [
     "SYS-SALA",
-    "GAS-SALA",
     "SHEET-SALA",
     "SVC-SALA-PRODUCTOR",
     "SVC-SALA-EJECUTOR",
@@ -14,10 +13,9 @@
     "SYS-YOD-OS"
   ],
   "tests": [
-    "Rechazo de corte produce escena/voz/corte nuevos con nota y linaje, sin cambiar aprobaciones visuales; repetición idempotente y cambio de nota cambia versión.",
-    "Fuente retirada, firma ausente, cambio de decisiones, corte no durable o dependencias distintas bloquean la revisión.",
-    "Motor generativo sin cuota queda pendiente sin cámara/parallax; voz no usa IDs Kokoro; montaje alinea cada voz y no congela un clip corto.",
-    "Verificadores y regresiones aisladas; producción real requiere medios durables y nuevo recibo, aceptación editorial separada."
+    "Selector: veto, cuota, pago, repetición determinista y exploración.",
+    "Render real sintético y duración con ffprobe; montaje sin congelación.",
+    "Regresiones aisladas y ejecución Actions con recibo durable separada de aprobación."
   ],
-  "rollback": "Desactivar familias de revisión y revertir código por PR; conservar COLA, originales, rechazos, propuestas, archivos y recibos. No restaurar datos de negocio."
+  "rollback": "Desactivar nube_adaptativa y revertir PR; conservar cola, decisiones y archivos."
 }

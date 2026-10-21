@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-20.sala-revision-video.1",
+  "revision": "2026-10-21.sala-cloud-adaptativa.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -13934,6 +13934,29 @@
       ],
       "deployment": "Registro previo a implementación. No acredita generación ni publicación.",
       "rollback": "Desactivar familias de revisión y revertir código por PR; conservar COLA, originales, rechazos, propuestas, archivos y recibos. No restaurar datos de negocio."
+    },
+    {
+      "id": "CHG-SALA-CLOUD-ADAPTATIVA-20261021",
+      "components": [
+        "SYS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-MOTORES-MEDIA",
+        "EXT-DRIVE",
+        "EXT-ACTIONS",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección pide implementar selección adaptativa gratuita, animación por código y operación exclusivamente en nube, sin Mac ni sesiones Claude/Codex.",
+      "proposal": "Selector determinista con exploración 20%, exclusión de pagos/locales/vetos, límites diarios y evidencia de intentos. Animación tipográfica por código en Actions cubre la voz completa; distinta de video generativo. La aprobación editorial continúa manual.",
+      "tests": [
+        "Selector: veto, cuota, pago, repetición determinista y exploración.",
+        "Render real sintético y duración con ffprobe; montaje sin congelación.",
+        "Regresiones aisladas y ejecución Actions con recibo durable separada de aprobación."
+      ],
+      "deployment": "Propuesta previa al código; ejecución de producción pendiente.",
+      "rollback": "Desactivar nube_adaptativa y revertir PR; conservar cola, decisiones y archivos."
     }
   ],
   "data_contracts": [
@@ -15981,6 +16004,36 @@
         "No congelar el último cuadro para cubrir voz; clip insuficiente queda pendiente.",
         "Sin cuota o voz disponible no afirmar producción ni habilitar pago.",
         "Revisar fuente y rechazo antes de ejecutar y entregar; conservar historial."
+      ]
+    },
+    {
+      "id": "CTR-SALA-CLOUD-ADAPTATIVA-V1",
+      "components": [
+        "SYS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-MOTORES-MEDIA",
+        "EXT-DRIVE",
+        "EXT-ACTIONS"
+      ],
+      "source": "REGLAS/MOTORES/COLA en Sheet; puntajes derivados de revisiones; archivos Drive.",
+      "input": [
+        "trabajo vigente",
+        "motores autorizados gratuitos",
+        "veto explícito",
+        "cuota y puntuación conocidas"
+      ],
+      "output": [
+        "medio durable con formato/motor y razón de selección",
+        "espera explícita sin pago cuando no hay alternativa"
+      ],
+      "invariants": [
+        "Runtime solamente Actions/APIs/Drive/Sheets; ninguna sesión de Mac, Claude o Codex.",
+        "No activar modelos pagos ni motores retirados.",
+        "Animación por código no se declara generativa.",
+        "Cuota agotada no penaliza calidad; puntuación sólo de decisiones vinculadas al corte.",
+        "No congelar video para cubrir voz; preservar aprobación manual y linaje."
       ]
     }
   ],
