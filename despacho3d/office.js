@@ -1,10 +1,11 @@
+import {createCouncilAvatars} from './avatars/council.mjs?v=1';
 import {createFrameBudget} from './frame-budget.mjs?v=v2p5';
 import {openOfficeDestination} from './office-destination.mjs?v=126';
 import {nearbyResident} from './nearby-resident.mjs?v=126';
 import {createAvatarHUD} from './avatar-hud.mjs?v=129';
 import {assignStationOwners} from './station-ownership.mjs?v=126';
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
-import {createOfficeResidents} from './avatars/office-residents.mjs?v=127';
+import {createOfficeResidents} from './avatars/office-residents.mjs?v=council1';
 import * as T from 'three';
 import {createEncounterGate,createPreparationGate,ENCOUNTER_RANGE} from './agent-proximity.mjs?v=4';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
@@ -44,7 +45,11 @@ let mode='overview',selected='entry',yaw=0,pitch=0,near=null,sheet=null,look=nul
 const reducedMotion=matchMedia('(prefers-reduced-motion:reduce)');
 let avatarShadowAt=0;
 const pilot=(AUTONES_MULTIPLES?createOfficeResidents:createOfficePilot)({scene,beforeOpen:()=>closeSheets(false),onChange:()=>{dirty=true;renderer.shadowMap.needsUpdate=true;avatarShadowAt=performance.now();}});
-const bindPilot=()=>pilot.bind(window.YodResidentAgents||window.CubefarmYOD);
+const council=createCouncilAvatars({scene,onSelect:()=>openPanel('decisions'),onChange:()=>{dirty=true;renderer.shadowMap.needsUpdate=true;}});
+let stopCouncilAuthority=null;
+const bindPilot=()=>{const api=window.YodResidentAgents||window.CubefarmYOD;pilot.bind(api);stopCouncilAuthority?.();stopCouncilAuthority=api?.subscribeProfile?.(p=>council.setAuthorized(!!p));};
+window.addEventListener('yod-council-state',e=>{const id=window.YodResidentAgents?.getSelection?.()?.case_id;const state=e.detail?.case_id===id?e.detail:null;council.observe(state);pilot.observeCouncil?.(state);});
+window.addEventListener('pagehide',()=>{stopCouncilAuthority?.();council.dispose();});
 window.addEventListener('yod-agents-ready',bindPilot);
 window.addEventListener('yod-residents-ready',bindPilot);
 window.addEventListener('pagehide',()=>pilot.disconnect());
@@ -171,11 +176,11 @@ const raycaster=new T.Raycaster();let press=null;const pointers=new Set();render
 renderer.domElement.addEventListener('pointermove',e=>{if(mode==='walk'&&look?.id===e.pointerId&&!sheet){const dx=e.clientX-look.x,dy=e.clientY-look.y;yaw-=dx*.0036;pitch=T.MathUtils.clamp(pitch-dy*.0036,-.75,.75);camera.rotation.set(pitch,yaw,0,'YXZ');look.x=e.clientX;look.y=e.clientY;dirty=true;}});
 function release(e,cancel=false){pointers.delete(e.pointerId);if(look?.id===e.pointerId)look=null;if(!cancel&&press&&press.id===e.pointerId&&!press.multiple&&pointers.size===0&&Math.hypot(e.clientX-press.x,e.clientY-press.y)<7&&!sheet){const r=renderer.domElement.getBoundingClientRect();raycaster.setFromCamera(new T.Vector2((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1),camera);const hits=[];for(const pick of office.pickBoxes){const p=raycaster.ray.intersectBox(new T.Box3(new T.Vector3(...pick.min),new T.Vector3(...pick.max)),new T.Vector3());if(p)hits.push({id:pick.id,d:p.distanceTo(camera.position)});}hits.sort((a,b)=>a.d-b.d);if(chinches.isSelecting()){const surface=raycaster.intersectObject(office.model,true).filter(hit=>visibleOfficeHit(hit,office.getCutaway())).find(hit=>{const {x,y,z}=hit.point;const within=b=>x>=b.minX&&x<=b.maxX&&z>=b.minZ&&z<=b.maxZ;return y>=-.35&&y<=5&&(within(office.bounds)||within(office.annex));});if(surface){const p=surface.point;const hitZone=office.pickBoxes.find(box=>p.x>=box.min[0]&&p.x<=box.max[0]&&p.y>=box.min[1]&&p.y<=box.max[1]&&p.z>=box.min[2]&&p.z<=box.max[2])?.id;
 // The model intersection wins; outside a known pick volume, use the current visited location.
-chinches.selectPoint(p.toArray(),hitZone==='computer'?'case':hitZone||selected);}}else{const selection=chooseOfficeHit({avatarHit:raycaster.intersectObjects(pilot.pickables(),true)[0],boxHits:hits,sceneHits:raycaster.intersectObject(office.model,true).filter(hit=>visibleOfficeHit(hit,office.getCutaway()))});if(selection?.type==='avatar')pilot.selectIntersection(selection.hit);else if(selection?.type==='panel')openPanel(selection.id);}}press=null;}
+chinches.selectPoint(p.toArray(),hitZone==='computer'?'case':hitZone||selected);}}else{const selection=chooseOfficeHit({avatarHit:raycaster.intersectObjects([...pilot.pickables(),...council.pickables()],true)[0],boxHits:hits,sceneHits:raycaster.intersectObject(office.model,true).filter(hit=>visibleOfficeHit(hit,office.getCutaway()))});if(selection?.type==='avatar'){if(!council.selectIntersection(selection.hit))pilot.selectIntersection(selection.hit);}else if(selection?.type==='panel')openPanel(selection.id);}}press=null;}
 renderer.domElement.addEventListener('pointerup',e=>release(e));renderer.domElement.addEventListener('pointercancel',e=>release(e,true));renderer.domElement.addEventListener('lostpointercapture',e=>{if(look?.id===e.pointerId)look=null;});
 orbit.addEventListener('change',()=>{dirty=true;});
 function resize(){const width=mount.clientWidth,height=mount.clientHeight;renderer.setSize(width,height);walkCamera.aspect=width/Math.max(1,height);walkCamera.updateProjectionMatrix();if(mode==='overview')fitOverview();else updateChrome();dirty=true;}new ResizeObserver(resize).observe(mount);resize();setMode('overview');
-let rendererLost=false;let shadowBaked=false;function animate(now){const dt=Math.min((now-last)/1000,.1);last=now;const avatarChanged=pilot.update(now,{hidden:document.hidden,overlay:agentOverlay,reducedMotion:reducedMotion.matches});if(avatarChanged){dirty=true;if(now-avatarShadowAt>=400){renderer.shadowMap.needsUpdate=true;avatarShadowAt=now;}}if(document.hidden)return;updateAgentProximity(now);if(mode==='walk'&&!sheet&&!agentOverlay){dirty=movement(dt)||dirty;updateNear();}else if(mode==='overview'&&!sheet&&!agentOverlay)orbit.update();if(office.model.userData.needsRender){dirty=true;office.model.userData.needsRender=false;}if(dirty&&!rendererLost){renderer.render(scene,camera);paintAgentMarker();frames++;dirty=false;if(!shadowBaked){renderer.shadowMap.autoUpdate=false;shadowBaked=true;}}}
+let rendererLost=false;let shadowBaked=false;function animate(now){const dt=Math.min((now-last)/1000,.1);last=now;const avatarChanged=pilot.update(now,{hidden:document.hidden,overlay:agentOverlay,reducedMotion:reducedMotion.matches});if(council.update(now,{hidden:document.hidden,overlay:agentOverlay,reducedMotion:reducedMotion.matches})||avatarChanged){dirty=true;if(now-avatarShadowAt>=400){renderer.shadowMap.needsUpdate=true;avatarShadowAt=now;}}if(document.hidden)return;updateAgentProximity(now);if(mode==='walk'&&!sheet&&!agentOverlay){dirty=movement(dt)||dirty;updateNear();}else if(mode==='overview'&&!sheet&&!agentOverlay)orbit.update();if(office.model.userData.needsRender){dirty=true;office.model.userData.needsRender=false;}if(dirty&&!rendererLost){renderer.render(scene,camera);paintAgentMarker();frames++;dirty=false;if(!shadowBaked){renderer.shadowMap.autoUpdate=false;shadowBaked=true;}}}
 const frameBudget=createFrameBudget({draw:animate,compact:compactBudget});
 function syncFrameBudget(){frameBudget.state({hidden:document.hidden,overlay:agentOverlay,lost:rendererLost});}
 document.addEventListener('visibilitychange',syncFrameBudget);window.addEventListener('yod-agents-visibility',syncFrameBudget);

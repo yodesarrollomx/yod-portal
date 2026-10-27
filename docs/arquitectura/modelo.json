@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-21.single-chrome.1",
+  "revision": "2026-10-27.consejo-autones.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -14033,6 +14033,22 @@
       ],
       "deployment": "Regresión reproducida antes (dos botones tras init repetido); Chromium 390/1024/1440 verifica botón único, herencia/fallback por marco, menú en URL embed directa, compactación y borrador conservado. Pendiente CI WebKit y publicación. Núcleo de secuencias 1.1.0 sin cambios.",
       "rollback": "Revertir PR sin borrar borradores ni alterar fuentes privadas."
+    },
+    {
+      "id": "CHG-CONSEJO-AUTONES-20261027",
+      "components": [
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD"
+      ],
+      "status": "implementado_local",
+      "authorization": "Dirección solicita consejo con avatares en juntas, continuidad del autón por etapas, retroalimentación y aviso al terminar.",
+      "proposal": "Integrar consejo de cinco perspectivas en la sala existente. Identidad canónica estable del expediente; revisiones y observaciones versionadas; tareas de corrección, límites de rondas y notificación con recibo. Separar consenso de aceptación humana y de cambio de etapa comercial.",
+      "tests": [
+        "Aislamiento de caso, revisión obsoleta, duplicados, reinicio e incertidumbre de entrega.",
+        "Consejo en sala, móvil, revocación y suite del portal."
+      ],
+      "deployment": "Código preparado en rama. 1048 pruebas portal y verificadores aprobados; motor privado probado aisladamente. Sin publicación, correo conectado ni validación visual WebGL.",
+      "rollback": "Revertir interfaz y apagar capacidad del consejo conservando expedientes, sesiones y recibos privados."
     }
   ],
   "data_contracts": [

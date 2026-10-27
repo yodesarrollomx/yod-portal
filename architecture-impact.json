@@ -1,20 +1,15 @@
 {
-  "model_revision": "2026-10-21.single-chrome.1",
-  "proposal_id": "CHG-SINGLE-CHROME-371",
-  "summary": "Una instancia de controles por documento y un marco exterior por recorrido; conservar API local de anotaciones, callbacks privados, permisos y catálogo canónico.",
+  "model_revision": "2026-10-27.consejo-autones.1",
+  "proposal_id": "CHG-CONSEJO-AUTONES-20261027",
+  "summary": "Consejo dentro del despacho, continuidad de autones y circuito versionado de revisión.",
   "components": [
-    "GAS-PORTERO",
-    "SYS-CONTROL",
-    "SYS-DESPACHO",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
-    "SYS-SALA",
-    "SYS-TRACK",
-    "SYS-YOD-OS"
+    "SYS-DESPACHO-3D",
+    "SVC-AUTON-CLOUD"
   ],
   "tests": [
-    "Regresión sintética de init repetido, marcos anidados, carga tardía, captura local y preferencia de barra lateral; Chromium y WebKit.",
-    "Suite y verificadores del portal."
+    "node --test tests/*.cjs",
+    "node scripts/arquitectura.cjs --check",
+    "Verificadores portal, OS, accesos y obra; pruebas aisladas del motor y UI."
   ],
-  "rollback": "Revertir PR sin borrar borradores ni alterar fuentes privadas."
+  "rollback": "Revertir PR y desactivar consejo; conservar historial privado."
 }

@@ -1,0 +1,39 @@
+# Consejo en el despacho
+
+CHG-CONSEJO-AUTONES-20261027. Implementación en rama, no producción.
+
+Un autón representa un expediente (terreno, potencial, desarrollo o vivienda), no una persona. Conserva `case_id`, fuentes e historial mientras recorre Potencial → Codesarrollo → Proyecto → Obra → Ventas. La apariencia no determina la etapa. El consejo representa cinco perspectivas de IA: Desarrollo, Mercado, Capital, Operación y Contraste. Son evaluaciones secuenciales con el proveedor existente; no cinco personas ni cinco proveedores independientes.
+
+## Circuito
+
+1. El worker entrega un resultado y confirma su guardado canónico.
+2. Antes de liberar su outbox, registra una recepción idempotente en el consejo privado.
+3. Cada perspectiva revisa el mismo entregable y cita sus evidencias. Las objeciones originan tareas con criterio de aceptación.
+4. El autón corrige el análisis con las fuentes disponibles. El consejo vuelve a revisar. Máximo tres rondas por ciclo, seis por entrega; datos o capacidades faltantes detienen el ciclo.
+5. El resultado preparado aparece para Dirección. Sus observaciones se guardan con revisión e identificador; una respuesta repetida no genera otra tarea.
+6. Aceptar la entrega conserva la historia y no autoriza automáticamente la siguiente etapa de negocio.
+
+La interfaz está dentro del tab `meeting` del puesto existente. Los cinco avatares ocupan cinco asientos de juntas y los proyectos presentan desde el lateral sin compartir las sillas. El mismo renderer y la geometría actual se conservan. La animación no escribe ni demuestra una inferencia. Los movimientos consumen estados observados, caducan y respetan reducción de movimiento. La superficie reutiliza las chinches existentes del despacho; no instala otro grabador ni modifica su paquete.
+
+## Contrato
+
+`POST /council/read {}` devuelve `{ok,schema:1,case_id,sessions}` con autorización actual. `POST /council/respond` recibe `{request_id,session_id,expected_revision,action,text}`; acciones `feedback` y `accept`. Respuesta incluye el mismo `request_id`. El servicio verifica sesión firmada, origen, caso y propietario configurado. La selección visual nunca concede permiso.
+
+Estados: queued, reviewing, correcting, ready, needs_input, interrupted, accepted. El frontend distingue ausencia de conexión, falta de información y guardado incierto. Un reintento usa la misma operación. El servidor registra revisiones, tareas, observaciones, historial de resúmenes y recibos en almacenamiento privado. Las fuentes originales y PPP no cambian.
+
+## Validación y límites
+
+- 1048 pruebas de portal aprobadas, incluidas cuatro nuevas sobre límites de caso, identidad, respuesta tardía y reintento estable.
+- Arquitectura, OS, portal, accesos y obra aprobados. Matriz de accesos consultada en main durante la comprobación.
+- Prueba aislada `qa/consejo-preview.html` usa los módulos reales y datos sintéticos; no llama modelos ni envía correo.
+- El navegador de QA no crea contexto WebGL. No se acredita apariencia 3D final ni aceptación en dispositivo. La oficina conserva su mapa accesible.
+- Motor complementario en el repositorio privado: pruebas de consenso, corrección, permisos, persistencia/reapertura, ACK e incertidumbre de notificación. No equivale a despliegue ni a inferencia real.
+- El conector de notificación aún no está conectado. `not_configured` es visible; no se promete envío, recepción ni lectura de respuestas por correo. El adaptador futuro debe emitir recibo y vincular la reunión exacta.
+- La etapa comercial necesita una fuente canónica por expediente. Hasta conectarla, `unconfirmed`; no se deduce de nombres ni aspecto.
+- Las correcciones de esta versión son análisis del entregable. Ejecutar obra, ventas, cambios PPP o tareas externas requiere sus contratos vigentes; no se agregan permisos por consenso.
+
+## Activación y reversión
+
+Revisar y probar primero el backend y sus rutas, identidad de Dirección y estado privado. Conectar el envío y retorno autenticado del correo, la etapa canónica y aceptación WebGL antes de declarar completado el encargo. Conservar la implementación y dominio actuales. El frontend muestra conexión pendiente cuando el backend no está activado.
+
+Revertir los PR y apagar `YOD_COUNCIL_ENABLED`; conservar expedientes, metas, recepción privada y recibos. No borrar historial para volver a la versión anterior.

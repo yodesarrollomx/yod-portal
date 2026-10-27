@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-21.single-chrome.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-27.consejo-autones.1 · 2026-10-20.
 
 ## SYS-DESPACHO · El Despacho
 
