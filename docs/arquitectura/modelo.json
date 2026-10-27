@@ -14042,7 +14042,7 @@
       ],
       "status": "implementado_local",
       "authorization": "Dirección solicita consejo con avatares en juntas, continuidad del autón por etapas, retroalimentación y aviso al terminar.",
-      "proposal": "Integrar consejo de cinco perspectivas en la sala existente. Identidad canónica estable del expediente; revisiones y observaciones versionadas; tareas de corrección, límites de rondas y notificación con recibo. Separar consenso de aceptación humana y de cambio de etapa comercial.",
+      "proposal": "Integrar consejo de cinco perspectivas en la sala existente. Identidad canónica estable del expediente; revisiones y observaciones versionadas; tareas de corrección, límites de rondas y notificación con recibo. Separar consenso de aceptación humana y de cambio de etapa comercial. Bloque visual de historial: distinguir etapa actual registrada en consejo de etapa histórica de una reunión; no afirmar sincronización comercial con PPP sin fuente verificada.",
       "tests": [
         "Aislamiento de caso, revisión obsoleta, duplicados, reinicio e incertidumbre de entrega.",
         "Consejo en sala, móvil, revocación y suite del portal."

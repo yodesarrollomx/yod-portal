@@ -11,6 +11,7 @@ export const COUNCIL_STATES=Object.freeze({queued:'Esperando consejo',reviewing:
 const text=(v,n)=>typeof v==='string'&&v.length<=n;
 export function validateCouncil(value,caseId){
  if(value?.schema!==1||value.case_id!==caseId||!Array.isArray(value.sessions)||value.sessions.length>100)throw Error('invalid_council');
+ if(value.lifecycle!==undefined)validateLifecycle(value.lifecycle,caseId);
  for(const s of value.sessions){
   if(s.case_id!==caseId||!text(s.id,200)||!s.id||!text(s.goal_id,200)||!text(s.title,200)||!Number.isSafeInteger(s.revision)||s.revision<1||!Object.hasOwn(COUNCIL_STATES,s.state)||!Object.hasOwn(STAGE_LABELS,s.stage)||!Array.isArray(s.reviews)||s.reviews.length>30||!Array.isArray(s.feedback)||s.feedback.length>50||!Array.isArray(s.tasks)||s.tasks.length>50||!text(s.summary,8000)||!Number.isFinite(Date.parse(s.updated_at)))throw Error('invalid_council');
   for(const r of s.reviews)if(!COUNCIL_ROLES.some(x=>x.id===r.role)||!['pass','revise','needs_input'].includes(r.verdict)||!text(r.comment,2500)||!Array.isArray(r.evidence_ids)||r.evidence_ids.length>8||!Number.isInteger(r.round))throw Error('invalid_council');
@@ -22,3 +23,16 @@ export function validateCouncil(value,caseId){
 }
 // State comes from the private service, never from a timer or an avatar animation.
 export function councilLocation(session){return ['queued','reviewing','ready','needs_input'].includes(session?.state)?'decisions':session?.state==='correcting'?'inicio':null;}
+
+// This is the council's milestone journal, not a synchronized PPP status.
+export function validateLifecycle(life,caseId){
+ const invalid=()=>{throw Error('invalid_lifecycle');};
+ if(!life||life.case_id!==caseId||!Number.isSafeInteger(life.revision)||life.revision<0||!Object.hasOwn(STAGE_LABELS,life.stage)||!Array.isArray(life.events)||life.events.length>100||life.revision!==life.events.length)invalid();
+ let previous='unconfirmed';const ids=new Set();
+ for(const [i,e] of life.events.entries()){
+  if(!e||e.case_id!==caseId||!text(e.id,200)||!e.id||ids.has(e.id)||e.revision!==i+1||e.from!==previous||!AUTON_STAGES.includes(e.to)||!text(e.actor,254)||!e.actor.trim()||!text(e.reason,2000)||!e.reason.trim()||!text(e.source_ref,1000)||!e.source_ref.trim()||!Number.isFinite(Date.parse(e.at))||e.kind!==(i===0?'initial_registration':'transition'))invalid();
+  if(i>0&&AUTON_STAGES.indexOf(e.to)!==AUTON_STAGES.indexOf(previous)+1)invalid();
+  ids.add(e.id);previous=e.to;
+ }
+ if(previous!==life.stage)invalid();return structuredClone(life);
+}

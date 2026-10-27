@@ -37,3 +37,9 @@ Estados: queued, reviewing, correcting, ready, needs_input, interrupted, accepte
 Revisar y probar primero el backend y sus rutas, identidad de Dirección y estado privado. Conectar el envío y retorno autenticado del correo, la etapa canónica y aceptación WebGL antes de declarar completado el encargo. Conservar la implementación y dominio actuales. El frontend muestra conexión pendiente cuando el backend no está activado.
 
 Revertir los PR y apagar `YOD_COUNCIL_ENABLED`; conservar expedientes, metas, recepción privada y recibos. No borrar historial para volver a la versión anterior.
+
+## Bloque de historial visible
+
+La sala recibe `lifecycle` del motor privado y valida caso, revisiones, IDs únicos y continuidad de hitos antes de mostrarlo. Presenta etapa actual registrada, recorrido e historial plegable con actor, fecha en Hermosillo, motivo y referencia declarada como texto. Las reuniones conservan la etiqueta de su etapa histórica. Si falta `lifecycle`, no deduce la etapa actual de una reunión antigua. La vista funciona aun sin reuniones.
+
+Fuente comercial PPP pendiente de integración: el journal del consejo no prueba una transición del PPP. No se añadieron botones que cambien la etapa ni se hicieron escrituras a casos reales. La vista lo indica expresamente. Prueba sintética con etapa actual Codesarrollo y entrega anterior Potencial en `qa/consejo-preview.html`.

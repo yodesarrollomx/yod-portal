@@ -1,4 +1,4 @@
-import {COUNCIL_ROLES,AUTON_STAGES,STAGE_LABELS,COUNCIL_STATES,validateCouncil} from './council-model.mjs?v=1';
+import {COUNCIL_ROLES,AUTON_STAGES,STAGE_LABELS,COUNCIL_STATES,validateCouncil} from './council-model.mjs?v=2';
 export function mountCouncil({container,request,getCase,canWrite=()=>false,onState=()=>{},doc=document,uuid=()=>crypto.randomUUID()}){
  let epoch=0,caseId=null,model=null,selected=null,pending=null,busy=false,notice='',draft='';
  const el=(tag,text,cls)=>{const n=doc.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
@@ -13,11 +13,27 @@ export function mountCouncil({container,request,getCase,canWrite=()=>false,onSta
   const status=el('p',notice,'council-notice');status.setAttribute('role','status');container.append(status);
   const refresh=button(busy?'Consultando…':'Actualizar consejo',()=>void read());refresh.disabled=busy;container.append(refresh);
   if(!model)return;
+  const life=model.lifecycle;
+  const timeline=el('section',undefined,'council-lifecycle');timeline.setAttribute('aria-label','Historia del autón');
+  timeline.append(el('h3','Un autón · una historia'),el('small','Expediente: '+model.case_id),el('p','Etapa registrada en el consejo: '+STAGE_LABELS[life?.stage||'unconfirmed']));
+  const stages=el('ol',undefined,'council-stages');stages.setAttribute('aria-label','Etapa actual registrada del autón');
+  for(const stage of AUTON_STAGES){const n=el('li',STAGE_LABELS[stage]);if(life?.stage===stage)n.setAttribute('aria-current','step');stages.append(n);}timeline.append(stages);
+  timeline.append(el('p','La etapa comercial del PPP todavía no está vinculada a este registro.','council-note'));
+  if(life?.events.length){
+   const details=el('details'),summary=el('summary','Historial de etapas · '+life.events.length);details.append(summary);
+   const history=el('ol',undefined,'council-history');
+   for(const event of [...life.events].reverse()){
+    const item=el('li');item.append(el('strong',event.kind==='initial_registration'?'Registro inicial: '+STAGE_LABELS[event.to]:STAGE_LABELS[event.from]+' → '+STAGE_LABELS[event.to]));
+    const date=el('time',new Intl.DateTimeFormat('es-MX',{timeZone:'America/Hermosillo',dateStyle:'medium',timeStyle:'short'}).format(new Date(event.at))+' · Hermosillo');date.setAttribute('datetime',event.at);
+    item.append(date,el('small','Registró: '+event.actor),el('p',event.reason),el('small','Referencia declarada: '+event.source_ref));history.append(item);
+   }
+   details.append(history);timeline.append(details);
+  }else timeline.append(el('p','Aún no hay cambios de etapa registrados.'));
+  container.append(timeline);
   const s=model.sessions.find(x=>x.id===selected)||model.sessions.at(-1);if(!s){container.append(el('p','Todavía no hay una entrega recibida por el consejo. Las nuevas entregas aparecerán cuando el motor esté conectado.'));return;}
   selected=s.id;
   const selector=el('select');selector.setAttribute('aria-label','Reunión del consejo');for(const x of [...model.sessions].reverse()){const o=el('option',x.title+' · '+COUNCIL_STATES[x.state]);o.value=x.id;o.selected=x.id===s.id;selector.append(o);}selector.onchange=()=>{selected=selector.value;draft='';paint();};container.append(selector);
-  const stages=el('ol',undefined,'council-stages');stages.setAttribute('aria-label','Etapas del mismo autón');for(const stage of AUTON_STAGES){const n=el('li',STAGE_LABELS[stage]);if(s.stage===stage)n.setAttribute('aria-current','step');stages.append(n);}container.append(stages);
-  container.append(el('small',STAGE_LABELS[s.stage]+' · Revisión '+s.revision),el('h3',s.title),el('strong',COUNCIL_STATES[s.state]),el('p',s.summary||'Esperando revisión con evidencia.'));
+  container.append(el('small','Etapa al presentar: '+STAGE_LABELS[s.stage]+' · Revisión '+s.revision),el('h3',s.title),el('strong',COUNCIL_STATES[s.state]),el('p',s.summary||'Esperando revisión con evidencia.'));
   const reviews=el('div',undefined,'council-reviews');for(const r of s.reviews){const c=el('article');c.append(el('strong',COUNCIL_ROLES.find(x=>x.id===r.role).name+' · ronda '+r.round),el('small',{pass:'Conforme',revise:'Solicita corrección',needs_input:'Falta información'}[r.verdict]),el('p',r.comment),el('small',r.evidence_ids.length?'Evidencia: '+r.evidence_ids.join(', '):'Sin evidencia citada'));reviews.append(c);}container.append(reviews);
   if(s.tasks.length){container.append(el('h3','Tareas devueltas al autón'));const list=el('ul');for(const t of s.tasks)list.append(el('li',t.title+' — '+t.criterion+' · '+({pending:'pendiente',resolved:'resuelta',needs_input:'necesita información'}[t.state])));container.append(list);}
   for(const f of s.feedback)container.append(el('blockquote',f.text));
