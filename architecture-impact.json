@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-27.consejo-autones.1",
+  "model_revision": "2026-10-28.despacho-estados.1",
   "proposal_id": "CHG-CONSEJO-AUTONES-20261027",
-  "summary": "Consejo dentro del despacho e historial visible del mismo autón; separar registro del consejo de etapa comercial PPP.",
+  "summary": "Consejo, estados derivados por caso, lugares y poses, entrada en primera persona. Fuente privada autenticada; separar aprobación del consejo de etapa comercial PPP.",
   "components": [
     "SYS-DESPACHO-3D",
     "SVC-AUTON-CLOUD"

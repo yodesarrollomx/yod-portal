@@ -1,12 +1,13 @@
 import {stationIdentity} from './project-station.mjs';
 import {workHeadline} from './work-observer.mjs?v=126';
-import {avatarPresence} from './avatar-presence.mjs?v=126';
+import {avatarPresence} from './avatar-presence.mjs?v=status1';
 
 // A view of the authorized selection, never a second registry or a source of permission.
 export function entryView(selection,presence={},observation={}){
  if(!selection)return {ready:false,name:'Tu despacho',project:'',status:presence.phase==='reconnecting'?'Recuperando conexión…':presence.phase==='unauthorized'?'Entra a YOD OS para ver tus proyectos.':presence.phase==='selection_required'?'Elige un proyecto':'Preparando tus proyectos…',detail:'',caseId:null};
  const identity=stationIdentity(selection),same=observation.case_id===selection.case_id;
- const projected=same?avatarPresence({profile:selection.avatar,observation}):null;
+ const profile=selection.avatar?.id?selection.avatar:{...selection.avatar,id:selection.case_id,case_id:selection.case_id,entity_kind:'case'};
+ const projected=same?avatarPresence({profile:Object.hasOwn(observation,'auton_status')?profile:selection.avatar,observation}):null;
  const headline=projected?.label||workHeadline(observation);
  // Older profiles can lack the presentation contract. Never expose a raw tool identifier.
  const status=/^[a-z][a-z0-9]*(_[a-z0-9]+)+$/i.test(headline||'')?'Consultando herramienta':headline;
@@ -18,10 +19,12 @@ export function mountOfficeEntry({win=window,doc=document}={}){
  const host=doc.getElementById('office-entry'),trigger=doc.getElementById('case-open');
  if(!host||!trigger)return null;
  const name=host.querySelector('[data-entry-name]'),project=host.querySelector('[data-entry-project]'),status=host.querySelector('[data-entry-status]'),detail=host.querySelector('[data-entry-detail]');
- let resident=null,observer=null,stopResident=null,stopObserver=null,disposed=false;
+ let resident=null,observer=null,roomObserver=null,roomStates=[],stopResident=null,stopObserver=null,stopRoom=null,disposed=false;
  function paint(){
   if(disposed)return;
-  const selection=resident?.getSelection?.(),presence=resident?.snapshot?.(),view=entryView(selection,presence,observer?.snapshot?.());
+  const selection=resident?.getSelection?.(),presence=resident?.snapshot?.(),selectedWork=observer?.snapshot?.(),roomWork=roomStates.find(s=>s.case_id===selection?.case_id);
+  const work=selectedWork?.case_id===selection?.case_id?{...roomWork,...selectedWork,...(Object.hasOwn(roomWork||{},'auton_status')?{auton_status:roomWork.auton_status}:{})}:roomWork;
+  const view=entryView(selection,presence,work);
   const needsSelection=presence?.phase==='selection_required';
   const operable=view.ready&&typeof win.YodAgentMenu?.showRadial==='function';
   name.textContent=view.name;project.textContent=view.project===view.name?'':view.project;project.hidden=!project.textContent;
@@ -39,12 +42,13 @@ export function mountOfficeEntry({win=window,doc=document}={}){
  function bind(){
   if(resident!==win.YodResidentAgents){stopResident?.();resident=win.YodResidentAgents;stopResident=resident?.subscribe?.(paint);}
   if(observer!==win.YodWorkObserver){stopObserver?.();observer=win.YodWorkObserver;stopObserver=observer?.subscribe?.(paint);}
+  if(roomObserver!==win.YodRoomWork){stopRoom?.();roomObserver=win.YodRoomWork;roomStates=[];stopRoom=roomObserver?.subscribe?.(states=>{roomStates=states||[];paint();});}
   paint();
  }
  // Capture keeps the same route in both renderers; the old walking shortcut must not fire.
  function click(e){e.preventDefault();e.stopImmediatePropagation();void open();}
  trigger.addEventListener('click',click,true);
- win.addEventListener('yod-agent-menu-ready',bind);win.addEventListener('yod-voice-workspace-ready',bind);win.addEventListener('yod-residents-ready',bind);win.addEventListener('yod-work-observer-ready',bind);bind();
- const api={open,paint,dispose(){disposed=true;stopResident?.();stopObserver?.();trigger.removeEventListener('click',click,true);win.removeEventListener('yod-agent-menu-ready',bind);win.removeEventListener('yod-voice-workspace-ready',bind);win.removeEventListener('yod-residents-ready',bind);win.removeEventListener('yod-work-observer-ready',bind);}};
+ win.addEventListener('yod-agent-menu-ready',bind);win.addEventListener('yod-voice-workspace-ready',bind);win.addEventListener('yod-residents-ready',bind);win.addEventListener('yod-work-observer-ready',bind);win.addEventListener('yod-room-work-ready',bind);bind();
+ const api={open,paint,dispose(){disposed=true;stopResident?.();stopObserver?.();stopRoom?.();trigger.removeEventListener('click',click,true);win.removeEventListener('yod-agent-menu-ready',bind);win.removeEventListener('yod-voice-workspace-ready',bind);win.removeEventListener('yod-residents-ready',bind);win.removeEventListener('yod-work-observer-ready',bind);win.removeEventListener('yod-room-work-ready',bind);}};
  return api;
 }

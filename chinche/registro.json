@@ -74,8 +74,8 @@
         "commit": "9f036c72513d07b4b89d402ab9aa27264b56a534",
         "auditedCommit": "9f036c72513d07b4b89d402ab9aa27264b56a534",
         "basis": "entrypoints-audited-no-loader",
-        "auditedAt": "2026-10-20T19:14:31.132921+00:00",
-        "finding": "Instalación pendiente en las entradas propias auditadas. La cadena del Portero no carga shell ni chinche. Esta comprobación de fuentes no acredita ausencia global de chinches ni exclusión intencional.",
+        "auditedAt": "2026-10-28T15:13:23+00:00",
+        "finding": "Instalación pendiente en las entradas propias auditadas. La cadena vigente del Portero no carga shell ni chinche. La landing pública no debe exponer la herramienta de revisión interna; antes de instalar hay que fijar una superficie autenticada y un adaptador que preserve su privacidad. Esta comprobación de fuentes no acredita ausencia global de chinches ni exclusión intencional.",
         "evidence": [
           {
             "repository": "yodesarrollomx/plan-potencial",
@@ -92,13 +92,13 @@
           {
             "repository": "yodesarrollomx/potenciales-yod",
             "path": "portero.js",
-            "commit": "48ee29f848e727a0f7e12470ce056085a7aec580",
+            "commit": "38fe41260ac88cfaa5f0e21a368181ddbb25d818",
             "finding": "Carga os/yod-acceso.js y Google GSI; no carga shell ni chinche."
           },
           {
             "repository": "yodesarrollomx/yod-portal",
             "path": "os/yod-acceso.js",
-            "commit": "bbf14cf67f98b5db98bcf3d89c71d7859501b784",
+            "commit": "f5dce4465dd66bdd200eaebe22ad0dc8b55da825",
             "finding": "Sólo define YOD_PORTERO; termina la cadena sin cargar shell ni chinche."
           }
         ],
@@ -106,12 +106,12 @@
           {
             "repository": "yodesarrollomx/potenciales-yod",
             "path": "portero.js",
-            "commit": "48ee29f848e727a0f7e12470ce056085a7aec580"
+            "commit": "38fe41260ac88cfaa5f0e21a368181ddbb25d818"
           },
           {
             "repository": "yodesarrollomx/yod-portal",
             "path": "os/yod-acceso.js",
-            "commit": "bbf14cf67f98b5db98bcf3d89c71d7859501b784"
+            "commit": "f5dce4465dd66bdd200eaebe22ad0dc8b55da825"
           }
         ]
       },

@@ -1,3 +1,5 @@
+import {autonResidence} from './resident-motion.mjs?v=status1';
+import {OFICINA_ESTADOS_REALES} from './office-config.mjs?v=4';
 // One read-only presentation contract for 3D, accessible map and a future light view.
 const clean=(v,n=80)=>typeof v==='string'?v.replace(/[\u0000-\u001f\u007f]/g,'').trim().slice(0,n):'';
 // Display name is authorized server metadata. Never infer identity from a similar title.
@@ -10,7 +12,7 @@ function activity(w){
  if(/web|browser|internet|investiga|navega|página|pantalla/i.test(tool))return['research','Investigando en internet'];
  return phases[w.phase]||['wait','En espera'];
 }
-export function avatarPresence({profile,observation,movement,now=Date.now()}={}){
+function legacyAvatarPresence({profile,observation,movement,now=Date.now()}={}){
  if(!profile||profile.entity_kind!=='case'||!profile.case_id||profile.case_id!==profile.id)return null;
  const out={case_id:profile.case_id,name:shortAvatarName(profile),color:/^#[a-f\d]{6}$/i.test(profile.color||'')?profile.color:'#57827d',activity:'wait',label:'Sin actividad confirmada',fresh:false,progress:null,observed_at:null,updated_at:null,goal_id:null};
  const o=observation;
@@ -35,4 +37,16 @@ export function avatarPresence({profile,observation,movement,now=Date.now()}={})
  }
  if(movement?.motion==='walk'&&['analysis','library','research'].includes(out.activity))out.label='En camino · '+(out.activity==='library'?'documentos':out.activity==='research'?'investigación':'su puesto');
  return out;
+}
+
+// Admission and position are read from one private status contract, even when a prior task remains stored.
+export function avatarPresence({profile,observation,movement,now=Date.now(),authoritative=OFICINA_ESTADOS_REALES}={}){
+ const base=legacyAvatarPresence({profile,observation,movement,now});
+ if(!base||(!authoritative&&!Object.hasOwn(observation||{},'auton_status')))return base;
+ const status=autonResidence(observation?.auton_status,profile.case_id,now);
+ const key=status.admission==='alta'?status.activity:status.admission;
+ const [activity,label]=({working:['analysis','Alta · trabajando'],waiting:['wait','Alta · en espera'],presenting:['review','Alta · presentando'],standby:['wait','Stand-by'],baja:['library','Baja · biblioteca'],unconfirmed:['offline','Estado sin confirmar']})[key];
+ const progressAllowed=['working','presenting'].includes(key),fresh=key!=='unconfirmed';
+ const observed=observation?.auton_status?.observed_at;
+ return {...base,activity,label,admission:status.admission,residence_activity:status.activity,library_only:key==='baja',fresh,observed_at:fresh?(typeof observed==='number'?observed:Date.parse(observed)):null,...(!progressAllowed?{progress:null,goal_id:null,updated_at:null}:{})};
 }

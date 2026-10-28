@@ -1,7 +1,8 @@
+import {validateAutonStatus} from './auton-status.mjs?v=1';
 import {validateObservation,observationCaptureKey,validatedCapture} from './work-observer.mjs?v=129';
 // One serial round refreshes the whole authorized roster; the pause is between rounds.
 // This observes persisted work. It never starts execution or changes selected project.
-export function createRoomWork({request,now=Date.now,schedule=setTimeout,cancel=clearTimeout,isVisible=()=>true,intervalMs=5000,maxImageBytes=1800200}){
+export function createRoomWork({request,now=Date.now,schedule=setTimeout,cancel=clearTimeout,isVisible=()=>true,intervalMs=5000,maxImageBytes=1800200,observeAutonStatus=false}){
  const profiles=new Map(),states=new Map(),listeners=new Set(),attempts=new Map();let timer=null,flight=false,disposed=false,epoch=0;
  const snapshot=()=>[...states.values()].map(s=>structuredClone(s));
  function emit(){for(const fn of listeners)fn(snapshot());}
@@ -24,6 +25,12 @@ export function createRoomWork({request,now=Date.now,schedule=setTimeout,cancel=
    const value=validateObservation(await request('/computer/work',{},id),id);if(!valid())return;
    const prior=states.get(id),key=observationCaptureKey(value);
    const state={...value,image:key&&key===observationCaptureKey(prior)?prior.image||null:null,phase:value.available?'ready':'unavailable',checked_at:now()};
+   if(observeAutonStatus){
+    state.auton_status=null;
+    try{state.auton_status=validateAutonStatus(await request('/fast/auton-status',{},id),id,now());}
+    catch(error){if(['unauthorized','forbidden'].includes(error?.message))throw error;}
+    if(!valid())return;
+   }
    states.set(id,state);emit();
    const attempted=attempts.get(id);
    if(key&&!state.image&&(!attempted||attempted.key!==key||now()-attempted.at>=30000)){

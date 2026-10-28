@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-27.consejo-autones.1",
+  "revision": "2026-10-28.despacho-estados.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -14035,6 +14035,42 @@
       "rollback": "Revertir PR sin borrar borradores ni alterar fuentes privadas."
     },
     {
+      "id": "CHG-PPP-TERRENO-AMPLIADO-20261027",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección solicita corregir el límite del tablero para admitir predios de mayor superficie.",
+      "proposal": "Ampliar el rango del control de superficie del planificador mixto hasta 40,000 m² conservando los valores de entrada previos, fórmulas, identidad, escenarios y permisos. La superficie aceptada por la interfaz no acredita cabida ni permisos urbanísticos.",
+      "tests": [
+        "Prueba de rango y recálculo con 2,500, 20,000, 35,000 y 40,000 m² usando transporte sintético.",
+        "Regresión de los demás controles y motor previo, y verificación del activo publicado."
+      ],
+      "deployment": "Propuesta de frontend; ningún caso ni dato de negocio se ha escrito.",
+      "rollback": "Revertir el cambio de frontend y conservar libros, escenarios y registros existentes."
+    },
+    {
+      "id": "CHG-PPP-TIPOLOGIAS-FLEXIBLES-20261027",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-YOD-OS",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección solicita que el tablero admita individualmente los tipos necesarios del proyecto sin limitarlo a tres categorías.",
+      "proposal": "Ampliar la captura por escenario para al menos cinco tipologías independientes con cantidad o porcentaje y superficie, preservar los tres tipos y sus resultados históricos, calcular y conciliar cantidades, área y promedio ponderado desde la misma fuente canónica. No confirmar persistencia nativa ni activar escrituras hasta verificar esquema de plantilla, validación, fórmulas, revisión y recibos del backend vivo.",
+      "tests": [
+        "Reproducir compatibilidad de escenarios históricos y verificar mezcla de cinco tipos, cantidades enteras y área ponderada con datos sintéticos.",
+        "Probar persistencia por escenario, recarga, cambio de versión y conflicto de revisión; no usar POST de prueba sobre datos de negocio.",
+        "Conciliar con resultados nativos en copia privada antes de declarar el cálculo y guardado en vivo."
+      ],
+      "deployment": "Propuesta previa al código; depende del inventario y validación del modelo nativo y del backend vigente.",
+      "rollback": "Desactivar la edición ampliada y revertir frontend y migración mediante cambios versionados; conservar datos, versiones y recibos."
+    },
+    {
       "id": "CHG-CONSEJO-AUTONES-20261027",
       "components": [
         "SYS-DESPACHO-3D",
@@ -14042,12 +14078,12 @@
       ],
       "status": "implementado_local",
       "authorization": "Dirección solicita consejo con avatares en juntas, continuidad del autón por etapas, retroalimentación y aviso al terminar.",
-      "proposal": "Integrar consejo de cinco perspectivas en la sala existente. Identidad canónica estable del expediente; revisiones y observaciones versionadas; tareas de corrección, límites de rondas y notificación con recibo. Separar consenso de aceptación humana y de cambio de etapa comercial. Bloque visual de historial: distinguir etapa actual registrada en consejo de etapa histórica de una reunión; no afirmar sincronización comercial con PPP sin fuente verificada.",
+      "proposal": "Integrar consejo de cinco perspectivas en la sala existente. Identidad canónica estable del expediente; revisiones y observaciones versionadas; tareas de corrección, límites de rondas y notificación con recibo. Separar consenso de aceptación humana y de cambio de etapa comercial. Bloque visual de historial: distinguir etapa actual registrada en consejo de etapa histórica de una reunión; no afirmar sincronización comercial con PPP sin fuente verificada. Estados del autón derivados de fuentes privadas y actividad reciente por identidad del caso; posiciones y poses según alta, espera, stand-by, presentación y baja. Entrada en primera persona con avatar de Dirección y retorno a vista superior. Interruptores independientes, ausencia de evidencia como sin confirmar, sin datos reales en el repositorio público.",
       "tests": [
         "Aislamiento de caso, revisión obsoleta, duplicados, reinicio e incertidumbre de entrega.",
         "Consejo en sala, móvil, revocación y suite del portal."
       ],
-      "deployment": "Código preparado en rama. 1048 pruebas portal y verificadores aprobados; motor privado probado aisladamente. Sin publicación, correo conectado ni validación visual WebGL.",
+      "deployment": "Implementación preparada. 1061 pruebas portal y verificadores aprobados; 694 pruebas privadas aprobadas y una integración opcional omitida. QA Chromium WebGL local en escritorio/móvil, posiciones con casos sintéticos. Sin despliegue; fuente privada pendiente de instalación, workflow Apps Script deshabilitado manualmente. Estados reales apagados; Vertical no verificado.",
       "rollback": "Revertir interfaz y apagar capacidad del consejo conservando expedientes, sesiones y recibos privados."
     }
   ],
