@@ -1,15 +1,14 @@
 {
   "model_revision": "2026-10-27.ppp-capacidad-tipologias.1",
-  "proposal_id": "CHG-CHINCHES-PAQUETE-20261020",
-  "summary": "Reauditar la cadena de cargadores de Plan de Potencial, fijar sus commits vigentes y conservar la instalación pendiente hasta definir una superficie autenticada y un adaptador de privacidad; sin instalar la herramienta interna en la landing pública.",
+  "proposal_id": "CHG-PPP-TERRENO-AMPLIADO-20261027",
+  "summary": "Registrar en el atlas las propuestas de ampliar la superficie admitida por el PPP y admitir más tipologías por escenario, sin declarar que estén implementadas ni cambiar datos de negocio.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-PLAN-POTENCIAL"
+    "SYS-POTENCIALES"
   ],
   "tests": [
-    "node scripts/chinches-paquete.cjs verificar",
-    "node --test tests/chinches-paquete.test.cjs tests/chinches-reporte.test.cjs",
-    "node scripts/arquitectura.cjs --check y verificadores del portal, sin escrituras a producción"
+    "Validar el modelo y regenerar sus vistas; verificar el inventario y los identificadores existentes.",
+    "Ejecutar las regresiones y verificadores del portal sin escrituras a producción."
   ],
-  "rollback": "Revertir el PR de registro y cobertura; conservar paquete, versiones, borradores, recibos, permisos y datos privados."
+  "rollback": "Revertir el PR del atlas sin borrar modelos, casos o expedientes privados."
 }
