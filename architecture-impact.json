@@ -3,7 +3,11 @@
   "proposal_id": "CHG-CHINCHES-PAQUETE-20261020",
   "summary": "Reauditar la cadena de cargadores de Plan de Potencial, fijar sus commits vigentes y conservar la instalación pendiente hasta definir una superficie autenticada y un adaptador de privacidad; sin instalar la herramienta interna en la landing pública.",
   "components": [
-    "SYS-YOD-OS"
+    "SYS-YOD-OS",
+    "SYS-SALA",
+    "SYS-INVERSION",
+    "SYS-AMALAYA",
+    "SYS-EMD"
   ],
   "tests": [
     "node scripts/chinches-paquete.cjs verificar",
