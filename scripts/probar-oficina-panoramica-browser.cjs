@@ -33,6 +33,10 @@ const server=http.createServer((req,res)=>{
    await page.goto(base+'/despacho3d/');
    await page.waitForFunction(()=>window.despacho?.view==='3d'&&window.despacho.getState().frames>1,{},{timeout:60000});
    let state=await page.evaluate(()=>window.despacho.getState());
+   assert.equal(state.mode,'walk');assert.equal(state.projection,'perspective');assert.equal(state.cutaway,false);
+   if(mobile)assert.equal(await page.locator('#joystick').isVisible(),true);
+   await page.locator('#overview').click();
+   state=await page.evaluate(()=>window.despacho.getState());
    assert.equal(state.mode,'overview');assert.equal(state.projection,'orthographic');assert.equal(state.cutaway,true);
    assert.equal(state.avatar.count,1);
    assert.equal(await page.locator('#joystick').isVisible(),false);

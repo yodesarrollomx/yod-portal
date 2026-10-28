@@ -93,3 +93,5 @@ La auditoría no se considera completa mientras existan componentes críticos o 
 - [Volúmenes nativos del PPP](ppp-volumenes-nativos.md): alcance para todos los casos de departamentos, contrato por escenario, fórmulas canónicas y recibos; ampliación autorizada y despliegue por verificar.
 
 - [Master Developer y pizarra personal](masterdeveloper-pizarra.md): alcance, contrato privado y despliegue.
+
+- [Consejo de autones dentro del despacho](consejo-autones.md): recepción de entregas, cinco perspectivas, tareas, observaciones y límites de activación.

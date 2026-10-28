@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-27.ppp-capacidad-tipologias.1",
+  "revision": "2026-10-28.despacho-estados.2",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -14069,6 +14069,25 @@
       ],
       "deployment": "Propuesta previa al código; depende del inventario y validación del modelo nativo y del backend vigente.",
       "rollback": "Desactivar la edición ampliada y revertir frontend y migración mediante cambios versionados; conservar datos, versiones y recibos."
+    },
+    {
+      "id": "CHG-CONSEJO-AUTONES-20261027",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD",
+        "SYS-POTENCIALES"
+      ],
+      "status": "implementado_local",
+      "authorization": "Dirección solicita consejo con avatares en juntas, continuidad del autón por etapas, retroalimentación y aviso al terminar.",
+      "proposal": "Integrar consejo de cinco perspectivas en la sala existente. Identidad canónica estable del expediente; revisiones y observaciones versionadas; tareas de corrección, límites de rondas y notificación con recibo. Separar consenso de aceptación humana y de cambio de etapa comercial. Bloque visual de historial: distinguir etapa actual registrada en consejo de etapa histórica de una reunión; no afirmar sincronización comercial con PPP sin fuente verificada. Estados del autón derivados de fuentes privadas y actividad reciente por identidad del caso; posiciones y poses según alta, espera, stand-by, presentación y baja. Entrada en primera persona con avatar de Dirección y retorno a vista superior. Interruptores independientes, ausencia de evidencia como sin confirmar, sin datos reales en el repositorio público. Registrar los propietarios concretos de las pruebas nuevas y ejecutar Chromium sobre Ubuntu 24.04 compatible con la versión fijada de Playwright.",
+      "tests": [
+        "Aislamiento de caso, revisión obsoleta, duplicados, reinicio e incertidumbre de entrega.",
+        "Consejo en sala, móvil, revocación y suite del portal."
+      ],
+      "deployment": "1061 pruebas del portal aprobadas también en CI. Publicación pendiente: se corrige cobertura del impacto y versión de Ubuntu del runner Chromium. Motor privado integrado; primera actualización Render rechazada por falta de dependencia de pruebas en el build. Fuente privada y lectura Vertical aún sin verificar; estados reales apagados.",
+      "rollback": "Revertir interfaz y apagar capacidad del consejo conservando expedientes, sesiones y recibos privados."
     }
   ],
   "data_contracts": [
@@ -18685,6 +18704,41 @@
       "components": [
         "SYS-DESPACHO-3D",
         "SYS-YOD-OS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "qa/consejo-preview.html",
+      "components": [
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "qa/consejo-preview.mjs",
+      "components": [
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/council.test.cjs",
+      "components": [
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-auton-status.test.cjs",
+      "components": [
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-residence-status.test.cjs",
+      "components": [
+        "SYS-DESPACHO-3D"
       ]
     }
   ],
