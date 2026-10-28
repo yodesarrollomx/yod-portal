@@ -1,5 +1,5 @@
 import * as T from 'three';
-import {avatarPresence} from './avatar-presence.mjs?v=records1';
+import {avatarPresence} from './avatar-presence.mjs?v=records2';
 import {avatarConnector} from './avatar-label-layout.mjs?v=126';
 const paths={
  analysis:'M4 14V9m4 5V5m4 9V2m4 12V7M2 17h16',

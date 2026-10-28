@@ -1,4 +1,4 @@
-import {validateSelection} from './conversation.mjs?v=records1';
+import {validateSelection} from './conversation.mjs?v=records2';
 import {AUTHORITY_LEASE_MS,authorityIsCurrent,isTransientAuthorityError} from './authority-lease.mjs?v=unified283';
 // Private catalog in memory. Selection may reuse a recently validated entry;
 // every business operation still validates its own exact case and authority.

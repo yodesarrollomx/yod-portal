@@ -1,2 +1,2 @@
-import {montarEntorno} from './entorno.mjs?v=records1';
+import {montarEntorno} from './entorno.mjs?v=records2';
 montarEntorno();

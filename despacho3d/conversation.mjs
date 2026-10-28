@@ -29,6 +29,10 @@ export function validateSelection(v){
   const status=validateAutonStatus(v.auton_status,v.case_id);
   if(['working','presenting'].includes(status.activity))throw Error('invalid_selection');
   avatar.record_only=true;avatar.auton_status={ok:true,...status};
+ }else if(v.auton_status!==undefined&&avatar){
+  const status=validateAutonStatus(v.auton_status,v.case_id);
+  if(['working','presenting'].includes(status.activity))throw Error('invalid_selection');
+  avatar.auton_status={ok:true,...status};
  }
  return {...selection,avatar,goals,ppp,...(v.record_only===true?{record_only:true}:{})};
 }

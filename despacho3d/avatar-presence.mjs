@@ -1,5 +1,5 @@
 import {autonResidence} from './resident-motion.mjs?v=status1';
-import {OFICINA_ESTADOS_REALES} from './office-config.mjs?v=records1';
+import {OFICINA_ESTADOS_REALES} from './office-config.mjs?v=records2';
 // One read-only presentation contract for 3D, accessible map and a future light view.
 const clean=(v,n=80)=>typeof v==='string'?v.replace(/[\u0000-\u001f\u007f]/g,'').trim().slice(0,n):'';
 // Display name is authorized server metadata. Never infer identity from a similar title.

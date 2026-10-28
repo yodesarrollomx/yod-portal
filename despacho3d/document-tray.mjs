@@ -1,6 +1,6 @@
 import {HL} from './vendor/hairline/kernel.mjs';
 import {drawDocuments} from './document-drawing.mjs';
-import {safeDocumentUrl} from './conversation.mjs?v=records1';
+import {safeDocumentUrl} from './conversation.mjs?v=records2';
 
 // Only a view of the caller's already-authorized documents. No storage or API calls.
 export function mountDocumentTray({container,documents,doc=container.ownerDocument}) {

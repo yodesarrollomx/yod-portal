@@ -50,3 +50,27 @@ test('computer outage still reads independent source status; access revocation d
  r.reconcile([profile('case-a')]);await settle();assert.equal(r.snapshot()[0].auton_status.activity,'waiting');assert.equal(r.snapshot()[0].available,false);
  calls.length=0;error='forbidden';await r.refresh();assert.deepEqual(calls,['/computer/work']);assert.equal(r.snapshot()[0].phase,'unauthorized');assert.equal(r.snapshot()[0].auton_status,undefined);r.dispose();
 });
+
+test('current catalog source remains readable when worker mint is unavailable or denied',async()=>{
+ const {createRoomWork}=await import('../despacho3d/room-work.mjs');let time=now,error='unavailable';
+ const r=createRoomWork({observeAutonStatus:true,now:()=>time,schedule:()=>1,cancel:()=>{},request:async()=>{throw Error(error);}});
+ r.reconcile([{...profile('case-a'),auton_status:status()}]);await settle();
+ assert.equal(r.snapshot()[0].auton_status.activity,'waiting');assert.equal(r.snapshot()[0].available,false);
+ error='unauthorized';await r.refresh();assert.equal(r.snapshot()[0].auton_status.activity,'waiting');assert.equal(r.snapshot()[0].work,null);
+ time+=90001;await r.refresh();assert.equal(r.snapshot()[0].auton_status,undefined);
+ r.reconcile([]);assert.deepEqual(r.snapshot(),[]);r.dispose();
+});
+test('new catalog baja removes a resident before slow engine response and cannot be undone by it',async()=>{
+ const {createRoomWork}=await import('../despacho3d/room-work.mjs');let resolve;
+ const r=createRoomWork({observeAutonStatus:true,now:()=>now,schedule:()=>1,cancel:()=>{},request:async(path,_,id)=>path==='/computer/work'?work(id):new Promise(r=>resolve=r)});
+ r.reconcile([{...profile('case-a'),auton_status:status()}]);await settle();
+ r.reconcile([{...profile('case-a'),auton_status:{...status(),admission:'baja',activity:null,library_only:true,source_revision:'new-decision',reason:'recorded_baja'}}]);
+ assert.equal(r.snapshot()[0].auton_status.admission,'baja');resolve({...status(),activity:'working',reason:'live_execution'});await settle();assert.equal(r.snapshot()[0].auton_status.admission,'baja');r.dispose();
+});
+test('catalog cannot claim working or carry a status from another case',async()=>{
+ const {createRoomWork}=await import('../despacho3d/room-work.mjs');
+ for(const s of [{...status(),activity:'working'},status('case-b')]){
+  const r=createRoomWork({observeAutonStatus:true,now:()=>now,schedule:()=>1,cancel:()=>{},request:async()=>{throw Error('unavailable');}});
+  r.reconcile([{...profile('case-a'),auton_status:s}]);await settle();assert.ok(r.snapshot()[0].auton_status==null);r.dispose();
+ }
+});

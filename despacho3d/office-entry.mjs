@@ -1,6 +1,6 @@
 import {stationIdentity} from './project-station.mjs';
 import {workHeadline} from './work-observer.mjs?v=126';
-import {avatarPresence} from './avatar-presence.mjs?v=records1';
+import {avatarPresence} from './avatar-presence.mjs?v=records2';
 
 // A view of the authorized selection, never a second registry or a source of permission.
 export function entryView(selection,presence={},observation={}){
