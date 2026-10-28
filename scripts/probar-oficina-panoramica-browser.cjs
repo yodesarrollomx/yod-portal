@@ -23,7 +23,7 @@ const server=http.createServer((req,res)=>{
    await page.addInitScript(()=>{
     let profile={id:'synthetic-office',case_id:'synthetic-office',entity_kind:'case',name:'Proyecto de prueba',form:'child',color:'#547e75',visual:{hairStyle:'crop'}};
     const listeners=new Set();window.__opened=[];window.__arrivals=[];
-    const roomListeners=new Set();let activity='working';const roomState=()=>[{case_id:profile?.case_id,phase:'ready',checked_at:Date.now(),work:null,auton_status:{ok:true,schema:1,case_id:profile?.case_id,admission:'alta',activity,reason:'live_execution',source_ref:'Proyectos!2',source_revision:'fixture',observed_at:new Date().toISOString(),library_only:false}}];
+    const roomListeners=new Set();let activity='working';const roomState=()=>[{case_id:profile?.case_id,phase:'ready',checked_at:Date.now(),work:null,auton_status:{ok:true,schema:1,case_id:profile?.case_id,admission:'alta',activity,reason:activity==='presenting'?'live_presentation':'live_execution',source_ref:'Proyectos!2',source_revision:'fixture',observed_at:new Date().toISOString(),library_only:false}}];
     window.YodRoomWork={subscribe(fn){roomListeners.add(fn);fn(roomState());return()=>roomListeners.delete(fn);}};window.__publishResidence=value=>{activity=value;for(const fn of roomListeners)fn(roomState());};
     // This geometry fixture strips the UI boots; observe the radial route used by the marker.
     window.__prepares=[];window.__voiceStarts=[];window.YodVoiceWorkspace={isOpen:()=>false,prepareNearby:id=>window.__prepares.push(id),releaseNearby:()=>{},openForCase:async(id,tab,options)=>{window.__voiceStarts.push({id,tab,options});return true;}};
@@ -32,9 +32,11 @@ const server=http.createServer((req,res)=>{
     window.__revoke=()=>{profile=null;for(const fn of listeners)fn(null);};
     window.addEventListener('yod-agent-arrived',e=>window.__arrivals.push(e.detail.lugar));
    });
+   await page.emulateMedia({reducedMotion:'reduce'});
    await page.goto(base+'/despacho3d/');
    await page.waitForFunction(()=>window.despacho?.view==='3d'&&window.despacho.getState().frames>1,{},{timeout:60000});
    await page.waitForFunction(()=>window.despacho.getAgentState().place==='inicio'&&window.despacho.getAgentState().motion!=='walk',{},{timeout:45000});
+   await page.emulateMedia({reducedMotion:'no-preference'});
    let state=await page.evaluate(()=>window.despacho.getState());
    assert.equal(state.mode,'walk');assert.equal(state.projection,'perspective');assert.equal(state.cutaway,false);
    if(mobile)assert.equal(await page.locator('#joystick').isVisible(),true);

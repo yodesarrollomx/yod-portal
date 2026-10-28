@@ -50,7 +50,8 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await frame.waitForFunction(()=>window.despacho&&window.YodVoiceWorkspace&&document.querySelector('#case-open').disabled);
   assert.equal(await frame.locator('[data-entry-status]').innerText(),'Entra a YOD OS para ver tus proyectos.');
   await page.screenshot({path:path.join(out,'entrada-'+variant+'-sin-acceso.png')});
-  // This fixture works at its own computer; library travel is covered by the multi-resident browser run.
+  // Complete initial placement with the supported reduced-motion setting; geometry is independent of GPU frame rate.
+  await page.emulateMedia({reducedMotion:'reduce'});
   await frame.evaluate(()=>{window.__select('A');window.__observe({case_id:'synthetic-A',phase:'ready',checked_at:Date.now(),work:{case_id:'synthetic-A',goal_id:'synthetic-goal-A',updated_at:new Date().toISOString(),title:'Revisando fuentes · prueba',phase:'tool',current_tool:'navegador_abrir'}});});
   await frame.locator('#case-open').waitFor({state:'visible'});
   assert.equal(await frame.locator('#case-open').isEnabled(),true);
@@ -69,6 +70,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
     return {position:avatar.position.toArray(),rotation:avatar.rotation.y};
    });
    assert.deepEqual(alignment.position,[7,0,-6.25]);assert.equal(alignment.rotation,Math.PI);
+   await page.emulateMedia({reducedMotion:'no-preference'});
    await frame.evaluate(async()=>{await window.despacho.visit('case');window.despacho.camera.position.set(9,2.8,-4.4);window.despacho.camera.lookAt(7,1,-7.1);});
    await page.waitForTimeout(300);
    await page.screenshot({path:path.join(out,'puesto-alineado-'+variant+'.png')});
