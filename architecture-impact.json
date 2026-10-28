@@ -1,20 +1,14 @@
 {
-  "model_revision": "2026-10-21.single-chrome.1",
-  "proposal_id": "CHG-SINGLE-CHROME-371",
-  "summary": "Una instancia de controles por documento y un marco exterior por recorrido; conservar API local de anotaciones, callbacks privados, permisos y catálogo canónico.",
+  "model_revision": "2026-10-27.ppp-capacidad-tipologias.1",
+  "proposal_id": "CHG-PPP-TERRENO-AMPLIADO-20261027",
+  "summary": "Registrar en el atlas las propuestas de ampliar la superficie admitida por el PPP y admitir más tipologías por escenario, sin declarar que estén implementadas ni cambiar datos de negocio.",
   "components": [
-    "GAS-PORTERO",
-    "SYS-CONTROL",
-    "SYS-DESPACHO",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
-    "SYS-SALA",
-    "SYS-TRACK",
-    "SYS-YOD-OS"
+    "SYS-YOD-OS",
+    "SYS-POTENCIALES"
   ],
   "tests": [
-    "Regresión sintética de init repetido, marcos anidados, carga tardía, captura local y preferencia de barra lateral; Chromium y WebKit.",
-    "Suite y verificadores del portal."
+    "Validar el modelo y regenerar sus vistas; verificar el inventario y los identificadores existentes.",
+    "Ejecutar las regresiones y verificadores del portal sin escrituras a producción."
   ],
-  "rollback": "Revertir PR sin borrar borradores ni alterar fuentes privadas."
+  "rollback": "Revertir el PR del atlas sin borrar modelos, casos o expedientes privados."
 }
