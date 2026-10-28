@@ -4,6 +4,17 @@ const status=(id='case-a')=>({ok:true,schema:1,case_id:id,admission:'alta',activ
 const work=id=>({ok:true,available:false,case_id:id,work:null,screen:null});
 const profile=id=>({id,case_id:id,entity_kind:'case'});
 const settle=()=>new Promise(r=>setImmediate(r));
+test('documentary case shows source status without calling or claiming an execution engine',async()=>{
+ const {createRoomWork}=await import('../despacho3d/room-work.mjs');let time=now,calls=0;
+ const r=createRoomWork({observeAutonStatus:true,now:()=>time,schedule:()=>1,cancel:()=>{},request:async()=>{calls++;throw Error('must_not_request');}});
+ r.reconcile([{...profile('case-a'),record_only:true,auton_status:status()}]);await settle();assert.equal(calls,0);assert.equal(r.snapshot()[0].auton_status.activity,'waiting');assert.equal(r.snapshot()[0].available,false);
+ time+=90001;await r.refresh();assert.equal(r.snapshot()[0].auton_status,undefined);assert.equal(r.snapshot()[0].phase,'unavailable');assert.equal(calls,0);r.dispose();
+});
+test('seven authorized cases are observed without dropping the last one',async()=>{
+ const {createRoomWork}=await import('../despacho3d/room-work.mjs');const seen=[];
+ const r=createRoomWork({now:()=>now,schedule:()=>1,cancel:()=>{},request:async(_,__,id)=>{seen.push(id);return work(id);}});
+ r.reconcile(Array.from({length:7},(_,i)=>profile('case-'+i)));await settle();assert.equal(seen.length,7);assert.equal(r.snapshot().length,7);r.dispose();
+});
 test('status validates case, freshness, semantic pairs and strips private extras',async()=>{
  const {validateAutonStatus:v}=await import('../despacho3d/auton-status.mjs');
  assert.equal(v({...status(),notes:'private'},'case-a',now).notes,undefined);

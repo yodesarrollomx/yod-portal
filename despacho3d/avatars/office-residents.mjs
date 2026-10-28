@@ -1,7 +1,7 @@
 import {crearAgenteIr,rutaEntre} from '../entorno-ruta.mjs?v=4';
 import {places,allowed as walkable,bounds,annex} from '../office-layout.mjs?v=124';
 import {createResidentMotion,autonResidence,residencePlacement} from '../resident-motion.mjs?v=status1';
-import {OFICINA_ESTADOS_REALES} from '../office-config.mjs?v=4';
+import {OFICINA_ESTADOS_REALES} from '../office-config.mjs?v=records1';
 import {createOfficePilot} from './office-pilot.mjs?v=126';
 import {deskSeat,PROJECT_SEAT} from '../office-station.mjs?v=1';
 const MEETING=[[3.25,5.0],[3.25,6.0],[3.25,7.0],[-3.8,5.0],[-3.8,6.0],[-3.8,7.0]];
@@ -18,8 +18,9 @@ export function createOfficeResidents({scene,beforeOpen=()=>{},onChange=()=>{},a
   else if(!entry.active){entry.active=true;entry.pilot.bind(entry.binding);entry.motion.observe(observations.get(entry.profile.case_id)||null);entry.motion.update(0,{reducedMotion:true,force:true});}
  }
  const selected=()=>residents.get(current?.case_id)?.pilot;
+ const visibleProfiles=()=>profiles.filter(p=>!authoritative||autonResidence(observations.get(p.case_id)?.auton_status,p.case_id,now()).admission!=='baja').slice(0,SEATS.length);
  function reconcile(){
-  const allowed=new Map(profiles.map(p=>[p.case_id,p]));
+  const allowed=new Map(visibleProfiles().map(p=>[p.case_id,p]));
   // A resident refresh cannot restore a profile removed from the authorized catalog.
   if(current&&allowed.has(current.case_id))allowed.set(current.case_id,current);
   for(const [id,entry]of residents)if(!allowed.has(id)){entry.pilot.dispose();residents.delete(id);}
@@ -55,9 +56,9 @@ export function createOfficeResidents({scene,beforeOpen=()=>{},onChange=()=>{},a
   const hasCatalog=typeof next.subscribeAuthorizedProfiles==='function';
   stopCurrent=next.subscribeProfile(p=>{current=p;if(!hasCatalog)profiles=p?[p]:[];reconcile();});
   if(hasCatalog)stopList=next.subscribeAuthorizedProfiles(p=>{profiles=p;reconcile();});
- },disconnect,update(now,options){let changed=false;for(const [id,e]of residents){syncResidence(e);e.motion?.update(now,{...options,selected:current?.case_id===id});changed=e.pilot.update(now,options)||changed;}return changed;},
+ },disconnect,update(now,options){const visible=visibleProfiles();if(visible.length!==residents.size||visible.some(p=>!residents.has(p.case_id)))reconcile();let changed=false;for(const [id,e]of residents){syncResidence(e);e.motion?.update(now,{...options,selected:current?.case_id===id});changed=e.pilot.update(now,options)||changed;}return changed;},
  observeCouncil(session){for(const [id,e]of residents)e.motion.observeCouncil(session?.case_id===id?session:null);},
- observeWork(states){observations=new Map((states||[]).map(s=>[s.case_id,s]));for(const[id,e]of residents){e.motion.observe(observations.get(id)||null);syncResidence(e);}},
+ observeWork(states){observations=new Map((states||[]).map(s=>[s.case_id,s]));reconcile();for(const[id,e]of residents){e.motion.observe(observations.get(id)||null);syncResidence(e);}},
  presentations:()=>[...residents.values()].flatMap(e=>e.pilot.presentations()),
  seatProfiles:()=>[...residents.values()].filter(e=>e.active).map(e=>({slot:e.slot,case_id:e.profile.case_id,name:e.profile.name})),
  pickables:()=>[...residents.values()].flatMap(e=>e.pilot.pickables()),selectIntersection(hit){for(const e of residents.values())if(e.pilot.selectIntersection(hit))return true;return false;},

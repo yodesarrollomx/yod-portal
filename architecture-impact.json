@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-28.despacho-estados.2",
+  "model_revision": "2026-10-28.despacho-registro.3",
   "proposal_id": "CHG-CONSEJO-AUTONES-20261027",
-  "summary": "Consejo, estados derivados por caso, lugares y poses, entrada en primera persona. Fuente privada autenticada; separar aprobación del consejo de etapa comercial PPP. Cobertura explícita de OS/Despacho y sus pruebas; runner Chromium fijado a Ubuntu 24.04.",
+  "summary": "Activar proyección de fuentes privadas y permitir expedientes documentales sin motor; catálogo16 y baja libera plaza visual. Mantener identidad, permisos, versiones y etapa comercial.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
@@ -13,7 +13,8 @@
     "node --test tests/*.cjs",
     "node scripts/arquitectura.cjs --check",
     "Verificadores portal, OS, accesos y obra; pruebas aisladas del motor y UI.",
-    "Chromium escritorio y móvil: entrada inicial walk/perspective, botón arriba, selección y recorridos; sin errores JS."
+    "Chromium escritorio y móvil: entrada inicial walk/perspective, botón arriba, selección y recorridos; sin errores JS.",
+    "Regresión catálogo siete casos, expediente sin motor sin llamadas fast, autoridad y baja sin consumir plaza."
   ],
   "rollback": "Revertir PR y desactivar consejo; conservar historial privado."
 }

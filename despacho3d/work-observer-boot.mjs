@@ -1,5 +1,5 @@
 import {officeFastSessions} from './office-preparation.mjs?v=unified283';
-import {createFrameTransport} from './conversation.mjs?v=142';
+import {createFrameTransport} from './conversation.mjs?v=records1';
 import {validateFastSession} from './fast-lane.mjs';
 import {createWorkObserver} from './work-observer.mjs?v=core1';
 const transport=createFrameTransport(window);

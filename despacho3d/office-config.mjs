@@ -5,5 +5,5 @@ export const OFICINA_LEGIBLE=true;
 export const AUTONES_MULTIPLES=true;
 
 // Independent rollback switches. Enable authoritative residence only with the private reader.
-export const OFICINA_ESTADOS_REALES=false;
+export const OFICINA_ESTADOS_REALES=true;
 export const OFICINA_PRIMERA_PERSONA=true;

@@ -1,4 +1,4 @@
-import {validateSelection} from './conversation.mjs?v=126';
+import {validateSelection} from './conversation.mjs?v=records1';
 import {AUTHORITY_LEASE_MS,authorityIsCurrent,isTransientAuthorityError} from './authority-lease.mjs?v=unified283';
 // Private catalog in memory. Selection may reuse a recently validated entry;
 // every business operation still validates its own exact case and authority.
@@ -22,7 +22,7 @@ export function createAuthorizedCases({transport,onChange=()=>{},beforeSelect=()
    try{
     const r=await transport.listAuthorized({});if(disposed||own!==epoch)return false;
     if(r?.ok===false)throw Error(r.error||'unavailable');
-    if(r?.ok!==true||r.schema!==1||!Array.isArray(r.cases)||r.cases.length>6)throw Error('invalid_catalog');
+    if(r?.ok!==true||r.schema!==1||!Array.isArray(r.cases)||r.cases.length>16)throw Error('invalid_catalog');
     const next=r.cases.map(validateSelection);if(new Set(next.map(x=>x.case_id)).size!==next.length)throw Error('invalid_catalog');
     rawItems=new Map(r.cases.map(c=>[c.case_id,structuredClone(c)]));items=next;if(selected&&!next.some(x=>x.case_id===selected.case_id)){selected=null;selectionEpoch++;}
     checkedAt=now();phase='current';error=null;retryAttempt=0;armLease();emit();return true;

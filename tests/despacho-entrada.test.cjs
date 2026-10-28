@@ -42,14 +42,14 @@ test('mounted entry distinguishes choosing a project from access validation and 
  entry.dispose();
 });
 
-test('entry reuses the avatar activity label instead of rendering raw tool identifiers',async()=>{
+test('entry requires authoritative status instead of rendering an unconfirmed tool as current activity',async()=>{
  const {entryView}=await import('../despacho3d/office-entry.mjs');
  const id='synthetic-a',selection={case_id:id,name:'Proyecto A',avatar:{id,case_id:id,entity_kind:'case',name:'Autón A'}};
  const observation={case_id:id,phase:'ready',checked_at:Date.now(),work:{case_id:id,goal_id:'goal-a',phase:'tool',current_tool:'navegador_abrir',title:'Consulta de una fuente',updated_at:new Date().toISOString()}};
- assert.equal(entryView(selection,{},observation).status,'Investigando en internet');
- assert.equal(entryView(selection,{}, {...observation,work:{...observation.work,current_tool:'drive_leer'}}).status,'Consultando documentos');
+ assert.equal(entryView(selection,{},observation).status,'Estado sin confirmar');
+ assert.equal(entryView(selection,{}, {...observation,work:{...observation.work,current_tool:'drive_leer'}}).status,'Estado sin confirmar');
  const legacy={...selection,avatar:{name:'Autón A'}};
  assert.equal(entryView(legacy,{}, {...observation,work:{...observation.work,current_tool:'tool_unknown'}}).status,'Consultando herramienta');
  const queued=entryView(selection,{}, {...observation,runtime:{phase:'waiting_capacity'}});
- assert.equal(queued.status,'Encargo en cola');assert.equal(queued.detail,'','prior goal is not presented as the new queued task');
+ assert.equal(queued.status,'Estado sin confirmar');assert.equal(queued.detail,'','prior goal is not presented as the new queued task');
 });

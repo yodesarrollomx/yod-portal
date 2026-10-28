@@ -1,5 +1,10 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const profile=id=>({ok:true,case_id:id,name:'Proyecto sintético',url:'https://docs.google.com/spreadsheets/d/SYNTHETIC_ONLY/edit',can_enqueue:false,agent_ready:false});
+test('catalog retains seven identities including a documentary case without execution capabilities',async()=>{
+ const {createAuthorizedCases}=await import('../despacho3d/authorized-cases.mjs');const {validateSelection}=await import('../despacho3d/conversation.mjs');
+ const cases=Array.from({length:7},(_,i)=>profile('case-'+i)),p=cases[6];Object.assign(p,{record_only:true,goals:{schema:1,ready:false,worker_ready:false},avatar:{id:p.case_id,case_id:p.case_id,entity_kind:'case',name:p.name,form:'woman',color:'#abcdef'},auton_status:{ok:true,schema:1,case_id:p.case_id,admission:'standby',activity:null,reason:'recorded_standby',observed_at:new Date().toISOString(),source_ref:'Proyectos!3',source_revision:'test',library_only:false}});
+ const c=createAuthorizedCases({transport:{listAuthorized:async()=>({ok:true,schema:1,cases}),resolveCurrent:async()=>p}});assert.equal(await c.refresh(),true);assert.equal(c.snapshot().cases.length,7);assert.equal((await c.select(p.case_id)).avatar.record_only,true);assert.throws(()=>validateSelection({...p,can_enqueue:true}),/invalid_selection/);assert.throws(()=>validateSelection({...p,auton_status:{...p.auton_status,admission:'alta',activity:'working'}}),/invalid_selection/);c.dispose();
+});
 test('catalog alone does not select or grant access; selection revalidates the exact case',async()=>{
  const {createAuthorizedCases}=await import('../despacho3d/authorized-cases.mjs');let calls=[];
  const c=createAuthorizedCases({transport:{listAuthorized:async()=>({ok:true,schema:1,cases:[profile('a'),profile('b')]}),resolveCurrent:async p=>{calls.push(p);return profile(p.case_id);}}});
