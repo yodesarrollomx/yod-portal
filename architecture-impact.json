@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-10-28.despacho-registro.3",
   "proposal_id": "CHG-CONSEJO-AUTONES-20261027",
-  "summary": "Activar proyección de fuentes privadas y permitir expedientes documentales sin motor; catálogo16 y baja libera plaza visual. Mantener identidad, permisos, versiones y etapa comercial.",
+  "summary": "Versionar el marco del Despacho y su cargador en YOD OS para descartar HTML anterior al catálogo documental; mismas rutas, sesión, permisos y estados publicados.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
@@ -12,9 +12,9 @@
   "tests": [
     "node --test tests/*.cjs",
     "node scripts/arquitectura.cjs --check",
-    "Verificadores portal, OS, accesos y obra; pruebas aisladas del motor y UI.",
-    "Chromium escritorio y móvil: entrada inicial walk/perspective, botón arriba, selección y recorridos; sin errores JS.",
-    "Regresión catálogo siete casos, expediente sin motor sin llamadas fast, autoridad y baja sin consumir plaza."
+    "node verify-os.cjs",
+    "node verify-portal.cjs",
+    "Regresión existente del marco fijo y sus límites de autorización; comprobación del script records1 en el navegador."
   ],
-  "rollback": "Revertir PR y desactivar consejo; conservar historial privado."
+  "rollback": "Revertir únicamente las versiones del marco y su cargador; conservar estado privado, catálogo, sesiones y autorizaciones."
 }
