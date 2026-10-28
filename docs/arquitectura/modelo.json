@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-28.despacho-registro.3",
+  "revision": "2026-10-28.despacho-registro.4",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -14077,16 +14077,22 @@
         "SYS-DESPACHO",
         "SYS-DESPACHO-3D",
         "SVC-AUTON-CLOUD",
-        "SYS-POTENCIALES"
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "EXT-DRIVE",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE"
       ],
       "status": "implementado_local",
       "authorization": "Dirección solicita consejo con avatares en juntas, continuidad del autón por etapas, retroalimentación y aviso al terminar.",
-      "proposal": "Integrar consejo de cinco perspectivas en la sala existente. Identidad canónica estable del expediente; revisiones y observaciones versionadas; tareas de corrección, límites de rondas y notificación con recibo. Separar consenso de aceptación humana y de cambio de etapa comercial. Bloque visual de historial: distinguir etapa actual registrada en consejo de etapa histórica de una reunión; no afirmar sincronización comercial con PPP sin fuente verificada. Estados del autón derivados de fuentes privadas y actividad reciente por identidad del caso; posiciones y poses según alta, espera, stand-by, presentación y baja. Entrada en primera persona con avatar de Dirección y retorno a vista superior. Interruptores independientes, ausencia de evidencia como sin confirmar, sin datos reales en el repositorio público. Registrar los propietarios concretos de las pruebas nuevas y ejecutar Chromium sobre Ubuntu 24.04 compatible con la versión fijada de Playwright. Ampliación: expedientes sin motor conservan avatar y estado documental, con lectura exclusiva de Dirección y sin concesiones nuevas. Catálogo hasta16; baja libera plaza visual sin borrar expediente. Registro privado preserva alias de modelos como referencias.",
+      "proposal": "Integrar consejo de cinco perspectivas en la sala existente. Identidad canónica estable del expediente; revisiones y observaciones versionadas; tareas de corrección, límites de rondas y notificación con recibo. Separar consenso de aceptación humana y de cambio de etapa comercial. Bloque visual de historial: distinguir etapa actual registrada en consejo de etapa histórica de una reunión; no afirmar sincronización comercial con PPP sin fuente verificada. Estados del autón derivados de fuentes privadas y actividad reciente por identidad del caso; posiciones y poses según alta, espera, stand-by, presentación y baja. Entrada en primera persona con avatar de Dirección y retorno a vista superior. Interruptores independientes, ausencia de evidencia como sin confirmar, sin datos reales en el repositorio público. Registrar los propietarios concretos de las pruebas nuevas y ejecutar Chromium sobre Ubuntu 24.04 compatible con la versión fijada de Playwright. Ampliación: expedientes sin motor conservan avatar y estado documental, con lectura exclusiva de Dirección y sin concesiones nuevas. Catálogo hasta16; baja libera plaza visual sin borrar expediente. Registro privado preserva alias de modelos como referencias. El catálogo autorizado del Portero entrega admisión documental aunque el trabajador no tenga heartbeat; no genera credenciales ni afirma ejecución. El cliente vincula estado vivo con la misma revisión y retira la residencia al caducar o revocar la fuente.",
       "tests": [
         "Aislamiento de caso, revisión obsoleta, duplicados, reinicio e incertidumbre de entrega.",
         "Consejo en sala, móvil, revocación y suite del portal."
       ],
-      "deployment": "Portal PR316 y motor PR144 integrados. Portero versión101 y motor con estados activos comprobados; ampliación de catálogo documental y activación visual en preparación. Vertical y correo no acreditados.",
+      "deployment": "Portal PR316, PR319 y PR320 publicados; motor PR144 y catálogo privado PR145 activos. Portero versión102 conserva siete expedientes autorizados. PR146 desacopla estado documental de disponibilidad del motor; su publicación y la comprobación visual final están en curso. Vertical y correo no acreditados.",
       "rollback": "Revertir interfaz y apagar capacidad del consejo conservando expedientes, sesiones y recibos privados."
     }
   ],

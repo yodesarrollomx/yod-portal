@@ -3,12 +3,12 @@ import {places,bounds,annex,collisions,allowed} from './office-layout.mjs?v=1';
 import {ENTORNO_AGENTE_CAMINA} from './entorno-config.mjs';
 import {crearAgenteIr} from './entorno-ruta.mjs?v=4';
 import {createOfficePilot} from './avatars/office-pilot.mjs?v=126';
-import {createOfficeResidents} from './avatars/office-residents.mjs?v=records1';
-import {AUTONES_MULTIPLES,OFICINA_ESTADOS_REALES} from './office-config.mjs?v=records1';
+import {createOfficeResidents} from './avatars/office-residents.mjs?v=records2';
+import {AUTONES_MULTIPLES,OFICINA_ESTADOS_REALES} from './office-config.mjs?v=records2';
 import {autonResidence} from './resident-motion.mjs?v=status1';
 import * as T from 'three';
 import {panels} from './office-panels.mjs?v=2';
-import {ESPACIOS} from './entorno.mjs?v=records1';
+import {ESPACIOS} from './entorno.mjs?v=records2';
 
 const el=(tag,text='',attrs={})=>{
  const node=document.createElement(tag);node.textContent=text;

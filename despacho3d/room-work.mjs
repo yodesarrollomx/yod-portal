@@ -11,12 +11,29 @@ export function createRoomWork({request,now=Date.now,schedule=setTimeout,cancel=
   let used=0;const list=[...states.entries()].filter(([,s])=>s.image).sort((a,b)=>(b[0]===preferred)-(a[0]===preferred)||(b[1].checked_at||0)-(a[1].checked_at||0)||a[0].localeCompare(b[0]));
   for(const [,s] of list){if(used+s.image.length<=maxImageBytes)used+=s.image.length;else s.image=null;}
  }
+ // Catalog authority survives an unavailable engine, but never claims live activity.
+ function catalogStatus(id){
+  if(!observeAutonStatus)return null;
+  try{const s=validateAutonStatus(profiles.get(id)?.profile.auton_status,id,now());return ['working','presenting'].includes(s.activity)?null:s;}catch{return null;}
+ }
+ function currentStatus(id,live){
+  const source=catalogStatus(id);
+  if(!source)return live;
+  // A delayed execution response cannot undo a new source decision.
+  return live&&live.source_revision===source.source_revision&&live.admission===source.admission?live:source;
+ }
+ function sourceState(id){const status=catalogStatus(id);return status?{phase:'ready',available:false,case_id:id,work:null,screen:null,image:null,checked_at:now(),auton_status:status}:null;}
  function reconcile(list){
   if(disposed)return;
   const incoming=new Map((list||[]).filter(p=>p?.case_id===p?.id&&p.entity_kind==='case').slice(0,16).map(p=>[p.case_id,p]));
   for(const id of profiles.keys())if(!incoming.has(id)){states.delete(id);profiles.delete(id);attempts.delete(id);}
   // Keep the lease identity across metadata refreshes; a remove/re-add gets a new one.
   for(const [id,p]of incoming){const prior=profiles.get(id);profiles.set(id,prior?{...prior,profile:p}:{profile:p,lease:{}});}
+  for(const id of profiles.keys()){
+   const source=sourceState(id),prior=states.get(id);if(!source)continue;
+   const live=prior?.auton_status,at=Date.parse(live?.observed_at);
+   if(!live||!Number.isFinite(at)||now()-at>90000||live.source_revision!==source.auton_status.source_revision)states.set(id,source);
+  }
   emit();if(!flight)void refresh();
  }
  async function observe(id,lease,own){
@@ -44,6 +61,7 @@ export function createRoomWork({request,now=Date.now,schedule=setTimeout,cancel=
     try{state.auton_status=validateAutonStatus(await request('/fast/auton-status',{},id),id,now());}
     catch(error){if(['unauthorized','forbidden'].includes(error?.message))throw error;}
     if(!valid())return;
+    state.auton_status=currentStatus(id,state.auton_status);
    }
    states.set(id,state);emit();
    const attempted=attempts.get(id);
@@ -54,7 +72,7 @@ export function createRoomWork({request,now=Date.now,schedule=setTimeout,cancel=
      state.image=validatedCapture(capture,value);trimImages(id);emit();
     }catch(error){if(['unauthorized','forbidden'].includes(error?.message))throw error;}
    }else if(!key)attempts.delete(id);
-  }catch(e){if(valid()){states.set(id,{phase:['unauthorized','forbidden'].includes(e?.message)?'unauthorized':'unavailable',case_id:id,work:null,screen:null,image:null,checked_at:now()});attempts.delete(id);emit();}}
+  }catch(e){if(valid()){states.set(id,sourceState(id)||{phase:['unauthorized','forbidden'].includes(e?.message)?'unauthorized':'unavailable',case_id:id,work:null,screen:null,image:null,checked_at:now()});attempts.delete(id);emit();}}
  }
  async function refresh(){
   if(disposed||flight)return;if(!isVisible()){later();return;}

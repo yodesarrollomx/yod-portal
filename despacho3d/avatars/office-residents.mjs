@@ -1,7 +1,7 @@
 import {crearAgenteIr,rutaEntre} from '../entorno-ruta.mjs?v=4';
 import {places,allowed as walkable,bounds,annex} from '../office-layout.mjs?v=124';
 import {createResidentMotion,autonResidence,residencePlacement} from '../resident-motion.mjs?v=status1';
-import {OFICINA_ESTADOS_REALES} from '../office-config.mjs?v=records1';
+import {OFICINA_ESTADOS_REALES} from '../office-config.mjs?v=records2';
 import {createOfficePilot} from './office-pilot.mjs?v=126';
 import {deskSeat,PROJECT_SEAT} from '../office-station.mjs?v=1';
 const MEETING=[[3.25,5.0],[3.25,6.0],[3.25,7.0],[-3.8,5.0],[-3.8,6.0],[-3.8,7.0]];

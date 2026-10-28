@@ -1,8 +1,8 @@
 import {officeFastSessions} from './office-preparation.mjs?v=unified283';
-import {createFrameTransport} from './conversation.mjs?v=records1';
+import {createFrameTransport} from './conversation.mjs?v=records2';
 import {validateFastSession} from './fast-lane.mjs';
-import {createRoomWork} from './room-work.mjs?v=records1';
-import {OFICINA_ESTADOS_REALES} from './office-config.mjs?v=records1';
+import {createRoomWork} from './room-work.mjs?v=records2';
+import {OFICINA_ESTADOS_REALES} from './office-config.mjs?v=records2';
 const transport=createFrameTransport(window),credentials=new Map();let stop=null,bound=null;
 async function request(path,data,caseId){
  if(!room.has(caseId))throw Error('unauthorized');

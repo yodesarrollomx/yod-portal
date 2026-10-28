@@ -1,20 +1,26 @@
 {
-  "model_revision": "2026-10-28.despacho-registro.3",
+  "model_revision": "2026-10-28.despacho-registro.4",
   "proposal_id": "CHG-CONSEJO-AUTONES-20261027",
-  "summary": "Versionar el marco del Despacho y su cargador en YOD OS para descartar HTML anterior al catálogo documental; mismas rutas, sesión, permisos y estados publicados.",
+  "summary": "Mantener la residencia documental desde el catálogo autorizado cuando el motor carece de señal reciente; el trabajo y la presentación siguen exigiendo prueba de ejecución. Respetar revisión, caducidad y revocación del caso.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
     "SYS-DESPACHO-3D",
     "SVC-AUTON-CLOUD",
-    "SYS-POTENCIALES"
+    "SYS-POTENCIALES",
+    "GAS-PORTERO",
+    "EXT-DRIVE",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-CONTROL",
+    "SYS-OBRA-CLIENTE"
   ],
   "tests": [
     "node --test tests/*.cjs",
     "node scripts/arquitectura.cjs --check",
     "node verify-os.cjs",
     "node verify-portal.cjs",
-    "Regresión existente del marco fijo y sus límites de autorización; comprobación del script records1 en el navegador."
+    "Estado documental con motor no disponible, baja durante respuesta pendiente, caducidad, revocación y prevención de trabajo inventado."
   ],
-  "rollback": "Revertir únicamente las versiones del marco y su cargador; conservar estado privado, catálogo, sesiones y autorizaciones."
+  "rollback": "Revertir la proyección documental del catálogo en cliente y Portero, o desactivar OFICINA_ESTADOS_REALES; no cambia permisos, concesiones ni etapas."
 }

@@ -1,5 +1,5 @@
-import {createFrameTransport} from './conversation.mjs?v=records1';
-import {createLibraryClient} from './biblioteca.mjs?v=records1';
+import {createFrameTransport} from './conversation.mjs?v=records2';
+import {createLibraryClient} from './biblioteca.mjs?v=records2';
 const open=document.querySelector('[data-resident-library]');
 if(open){
  const transport=createFrameTransport(window),client=createLibraryClient({mint:p=>transport.mintFastSession(p)});
