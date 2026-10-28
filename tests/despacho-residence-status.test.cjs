@@ -51,6 +51,13 @@ test('real residents sit to wait, stand before council, leave on baja and remain
  now+=90001;residents.update(20000,{reducedMotion:true});assert.equal(residents.getMovementState().place,'unconfirmed');assert.equal(scene.children.length,1);
  list([]);residents.observeWork([{case_id:profile.id,auton_status:sample('alta','working',now)}]);residents.update(24000,{reducedMotion:true});assert.equal(scene.children.length,0);residents.dispose();
 });
+test('baja frees a visual place without dropping the seventh authorized identity',async()=>{
+ const [T,{createOfficeResidents}]=await Promise.all([import(vendor),import(moduleURL(path.join(base,'avatars/office-residents.mjs')))]);const now=100000;
+ const profiles=Array.from({length:7},(_,i)=>({id:'case-'+i,case_id:'case-'+i,entity_kind:'case',name:'Synthetic '+i,form:'visitor',color:'#547e75'}));
+ const scene=new T.Scene(),r=createOfficeResidents({scene,authoritative:true,now:()=>now});r.bind({subscribeProfile(fn){fn(null);return()=>{};},subscribeAuthorizedProfiles(fn){fn(profiles);return()=>{};}});
+ r.observeWork(profiles.map((p,i)=>({case_id:p.id,auton_status:{...sample(i===2?'baja':'standby',null,now),case_id:p.id}})));r.update(4000,{reducedMotion:true});
+ assert.equal(r.getState().count,6);assert.ok(r.seatProfiles().some(p=>p.case_id==='case-6'));assert.ok(!r.seatProfiles().some(p=>p.case_id==='case-2'));r.dispose();
+});
 test('HUD and entry use admission rather than an earlier stored work record',async()=>{
  const {avatarPresence}=await import('../despacho3d/avatar-presence.mjs'),{entryView}=await import('../despacho3d/office-entry.mjs');
  const id='example-case',profile={id,case_id:id,entity_kind:'case',name:'Caso de prueba'},now=Date.now();

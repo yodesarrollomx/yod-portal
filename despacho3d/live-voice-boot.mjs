@@ -2,16 +2,16 @@ import {isPuesto2,mountPuestoAgente,presentationLocation} from './puesto-agente.
 import {createAgentInteraction,parseDirectUserCommand,nativeVolumeWrite,workspacePresentationVisible,renderInteractionCards} from './agent-interaction.mjs?v=multivolumen3';
 import {officeFastSessions} from './office-preparation.mjs?v=unified283';
 import {mountAvatarCard} from './avatar-card.mjs?v=126';
-import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
+import {AUTONES_MULTIPLES} from './office-config.mjs?v=records1';
 import {createEntryPreparation} from './voice-preparation.mjs?v=2';
-import {residentAccessDecision} from './resident-agents.mjs?v=unified283';
-import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=first292';
+import {residentAccessDecision} from './resident-agents.mjs?v=records1';
+import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=records1';
 import {stationIdentity} from './project-station.mjs?v=native-volumes3';
 import {createLiveVoice} from './live-voice.mjs?v=close-receipt1';
 import {voiceView} from './voice-view.mjs?v=141';
-import {createWorkspace} from './agent-workspace.mjs?v=council2';
+import {createWorkspace} from './agent-workspace.mjs?v=records1';
 import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=entregas291';
-import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=132';
+import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=records1';
 import {groupTranscriptFragments} from './live-transcript.mjs';
 
 const open = document.getElementById('voice-open');

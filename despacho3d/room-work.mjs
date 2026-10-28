@@ -13,7 +13,7 @@ export function createRoomWork({request,now=Date.now,schedule=setTimeout,cancel=
  }
  function reconcile(list){
   if(disposed)return;
-  const incoming=new Map((list||[]).filter(p=>p?.case_id===p?.id&&p.entity_kind==='case').slice(0,6).map(p=>[p.case_id,p]));
+  const incoming=new Map((list||[]).filter(p=>p?.case_id===p?.id&&p.entity_kind==='case').slice(0,16).map(p=>[p.case_id,p]));
   for(const id of profiles.keys())if(!incoming.has(id)){states.delete(id);profiles.delete(id);attempts.delete(id);}
   // Keep the lease identity across metadata refreshes; a remove/re-add gets a new one.
   for(const [id,p]of incoming){const prior=profiles.get(id);profiles.set(id,prior?{...prior,profile:p}:{profile:p,lease:{}});}
@@ -22,7 +22,21 @@ export function createRoomWork({request,now=Date.now,schedule=setTimeout,cancel=
  async function observe(id,lease,own){
   const valid=()=>!disposed&&own===epoch&&profiles.get(id)?.lease===lease;
   try{
-   const value=validateObservation(await request('/computer/work',{},id),id);if(!valid())return;
+   const profile=profiles.get(id)?.profile;
+   if(profile?.record_only===true){
+    const status=validateAutonStatus(profile.auton_status,id,now());
+    if(['working','presenting'].includes(status.activity))throw Error('invalid_auton_status');
+    if(valid()){states.set(id,{phase:'ready',available:false,case_id:id,work:null,screen:null,image:null,checked_at:now(),auton_status:status});emit();}
+    return;
+   }
+   let value;
+   try{value=validateObservation(await request('/computer/work',{},id),id);}
+   catch(error){
+    if(!observeAutonStatus||['unauthorized','forbidden'].includes(error?.message))throw error;
+    // A missing computer feed cannot suppress an independently authenticated source status.
+    value={ok:true,available:false,case_id:id,work:null,screen:null};
+   }
+   if(!valid())return;
    const prior=states.get(id),key=observationCaptureKey(value);
    const state={...value,image:key&&key===observationCaptureKey(prior)?prior.image||null:null,phase:value.available?'ready':'unavailable',checked_at:now()};
    if(observeAutonStatus){

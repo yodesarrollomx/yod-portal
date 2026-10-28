@@ -1,4 +1,4 @@
-import {avatarPresence} from './avatar-presence.mjs?v=129';
+import {avatarPresence} from './avatar-presence.mjs?v=records1';
 
 // Compact selection uses the same authorized catalog and opening path as avatar clicks.
 export function mountResidentDock({win=window,doc=document}={}){

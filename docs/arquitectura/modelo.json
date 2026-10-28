@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-28.despacho-estados.2",
+  "revision": "2026-10-28.despacho-registro.3",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -14081,12 +14081,12 @@
       ],
       "status": "implementado_local",
       "authorization": "Dirección solicita consejo con avatares en juntas, continuidad del autón por etapas, retroalimentación y aviso al terminar.",
-      "proposal": "Integrar consejo de cinco perspectivas en la sala existente. Identidad canónica estable del expediente; revisiones y observaciones versionadas; tareas de corrección, límites de rondas y notificación con recibo. Separar consenso de aceptación humana y de cambio de etapa comercial. Bloque visual de historial: distinguir etapa actual registrada en consejo de etapa histórica de una reunión; no afirmar sincronización comercial con PPP sin fuente verificada. Estados del autón derivados de fuentes privadas y actividad reciente por identidad del caso; posiciones y poses según alta, espera, stand-by, presentación y baja. Entrada en primera persona con avatar de Dirección y retorno a vista superior. Interruptores independientes, ausencia de evidencia como sin confirmar, sin datos reales en el repositorio público. Registrar los propietarios concretos de las pruebas nuevas y ejecutar Chromium sobre Ubuntu 24.04 compatible con la versión fijada de Playwright.",
+      "proposal": "Integrar consejo de cinco perspectivas en la sala existente. Identidad canónica estable del expediente; revisiones y observaciones versionadas; tareas de corrección, límites de rondas y notificación con recibo. Separar consenso de aceptación humana y de cambio de etapa comercial. Bloque visual de historial: distinguir etapa actual registrada en consejo de etapa histórica de una reunión; no afirmar sincronización comercial con PPP sin fuente verificada. Estados del autón derivados de fuentes privadas y actividad reciente por identidad del caso; posiciones y poses según alta, espera, stand-by, presentación y baja. Entrada en primera persona con avatar de Dirección y retorno a vista superior. Interruptores independientes, ausencia de evidencia como sin confirmar, sin datos reales en el repositorio público. Registrar los propietarios concretos de las pruebas nuevas y ejecutar Chromium sobre Ubuntu 24.04 compatible con la versión fijada de Playwright. Ampliación: expedientes sin motor conservan avatar y estado documental, con lectura exclusiva de Dirección y sin concesiones nuevas. Catálogo hasta16; baja libera plaza visual sin borrar expediente. Registro privado preserva alias de modelos como referencias.",
       "tests": [
         "Aislamiento de caso, revisión obsoleta, duplicados, reinicio e incertidumbre de entrega.",
         "Consejo en sala, móvil, revocación y suite del portal."
       ],
-      "deployment": "1061 pruebas del portal aprobadas también en CI. Publicación pendiente: se corrige cobertura del impacto y versión de Ubuntu del runner Chromium. Motor privado integrado; primera actualización Render rechazada por falta de dependencia de pruebas en el build. Fuente privada y lectura Vertical aún sin verificar; estados reales apagados.",
+      "deployment": "Portal PR316 y motor PR144 integrados. Portero versión101 y motor con estados activos comprobados; ampliación de catálogo documental y activación visual en preparación. Vertical y correo no acreditados.",
       "rollback": "Revertir interfaz y apagar capacidad del consejo conservando expedientes, sesiones y recibos privados."
     }
   ],

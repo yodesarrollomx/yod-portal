@@ -3,16 +3,19 @@ import {places,bounds,annex,collisions,allowed} from './office-layout.mjs?v=1';
 import {ENTORNO_AGENTE_CAMINA} from './entorno-config.mjs';
 import {crearAgenteIr} from './entorno-ruta.mjs?v=4';
 import {createOfficePilot} from './avatars/office-pilot.mjs?v=126';
+import {createOfficeResidents} from './avatars/office-residents.mjs?v=records1';
+import {AUTONES_MULTIPLES,OFICINA_ESTADOS_REALES} from './office-config.mjs?v=records1';
+import {autonResidence} from './resident-motion.mjs?v=status1';
 import * as T from 'three';
 import {panels} from './office-panels.mjs?v=2';
-import {ESPACIOS} from './entorno.mjs?v=126';
+import {ESPACIOS} from './entorno.mjs?v=records1';
 
 const el=(tag,text='',attrs={})=>{
  const node=document.createElement(tag);node.textContent=text;
  for(const [key,value] of Object.entries(attrs))node.setAttribute(key,String(value));
  return node;
 };
-const label=id=>id==='inicio'?'Puesto del caso':places[id]?.label||'Sin ubicación confirmada';
+const label=id=>({inicio:'Puesto del caso',waiting:'Sillones de entrada',standby:'Zona de espera',presenting:'Ante la mesa del consejo',unconfirmed:'Zona sin actividad confirmada'}[id]||places[id]?.label||'Sin ubicación confirmada');
 const authorized=p=>p&&typeof p.case_id==='string'&&p.id===p.case_id&&p.entity_kind==='case';
 const coords=p=>Array.isArray(p)&&p.every(Number.isFinite)?p.map(n=>n.toFixed(2)).join(', '):'—';
 const svgEl=(tag,attrs={})=>{const n=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const[k,v]of Object.entries(attrs))n.setAttribute(k,String(v));return n;};
@@ -21,9 +24,20 @@ const svgEl=(tag,attrs={})=>{const n=document.createElementNS('http://www.w3.org
 export function startAccessibleOffice({onPanelOpened=()=>{}}={}){
  const scene=new T.Scene();
  let selected='entry',sheet=null,agentOverlay=false,lastFocus=null;
- const pilot=createOfficePilot({scene,beforeOpen:()=>closeSheets()});
+ const pilot=(AUTONES_MULTIPLES?createOfficeResidents:createOfficePilot)({scene,beforeOpen:()=>closeSheets()});
  const bind=()=>pilot.bind(window.YodResidentAgents||window.CubefarmYOD);
  window.addEventListener('yod-agents-ready',bind);window.addEventListener('yod-residents-ready',bind);window.addEventListener('pagehide',()=>pilot.disconnect());window.addEventListener('pageshow',bind);bind();
+ let roomStates=[],selectedWork=null,stopWork=null,stopRoom=null;
+ const paintWork=()=>{
+  const id=window.YodResidentAgents?.getSelection?.()?.case_id,all=new Map(roomStates.map(s=>[s.case_id,s]));
+  if(selectedWork?.case_id===id){const prior=all.get(id);all.set(id,{...prior,...selectedWork,...(Object.hasOwn(prior||{},'auton_status')?{auton_status:prior.auton_status}:{})});}
+  pilot.observeWork?.([...all.values()]);
+ };
+ const bindWork=()=>{stopWork?.();stopWork=window.YodWorkObserver?.subscribe(s=>{selectedWork=s;paintWork();});};
+ const bindRoom=()=>{stopRoom?.();stopRoom=window.YodRoomWork?.subscribe(s=>{roomStates=s;paintWork();});};
+ window.addEventListener('yod-work-observer-ready',bindWork);window.addEventListener('yod-room-work-ready',bindRoom);bindWork();bindRoom();
+ window.addEventListener('pagehide',()=>{stopWork?.();stopRoom?.();});
+ window.addEventListener('pageshow',()=>{bindWork();bindRoom();});
  const closeSheets=()=>{
   document.querySelectorAll('.sheet').forEach(n=>n.hidden=true);document.getElementById('scrim').hidden=true;
   document.querySelector('header').inert=agentOverlay;
@@ -51,7 +65,7 @@ export function startAccessibleOffice({onPanelOpened=()=>{}}={}){
  const api={setAgentActivity:pilot.setActivity,view:'map',layout:{bounds,annex,collisions},visit,setMode:()=>closeSheets(),openPanel,closeSheets,allowed,
   getAgentState:()=>pilot.getMovementState(),
   getState:()=>({mode:'map',selected,sheet,position:[places[selected].eye[0],1.65,places[selected].eye[2]],avatar:pilot.getState()})};
- if(ENTORNO_AGENTE_CAMINA||/(?:^|[?&])camina=1(?:&|$)/.test(location.search))api.agenteIr=crearAgenteIr({lugares:places,piloto:pilot,permitido:allowed,limites:[bounds,annex],reducido:()=>matchMedia('(prefers-reduced-motion:reduce)').matches,alLlegar:lugar=>window.dispatchEvent(new CustomEvent('yod-agent-arrived',{detail:{lugar}}))});
+ if(!OFICINA_ESTADOS_REALES&&(ENTORNO_AGENTE_CAMINA||/(?:^|[?&])camina=1(?:&|$)/.test(location.search)))api.agenteIr=crearAgenteIr({lugares:places,piloto:pilot,permitido:allowed,limites:[bounds,annex],reducido:()=>matchMedia('(prefers-reduced-motion:reduce)').matches,alLlegar:lugar=>window.dispatchEvent(new CustomEvent('yod-agent-arrived',{detail:{lugar}}))});
  window.despacho=api;
  document.body.classList.add('office-map-fallback');
  for(const id of ['loading','fallback','joystick','crosshair','walk-guide','nearby'])document.getElementById(id).hidden=true;
@@ -145,7 +159,9 @@ export function mountAccessibleView(api){
   root.setAttribute('data-agent-motion',has?a.motion:'unavailable');root.setAttribute('data-agent-place',has?(a.place||''):'');root.setAttribute('data-agent-destination',has?(a.destination||''):'');
   const v='Tu vista: '+(s.mode==='overview'?'Vista general':label(s.selected));
   const name=typeof p?.name==='string'?p.name:'Agente del caso';
-  const t=!has?'Agente sin perfil autorizado. Entra desde El Despacho en YOD OS para validar tu acceso.':name+': '+(a.motion==='walk'?'En camino a '+label(a.destination):'Llegada confirmada · '+label(a.place));
+  const source=window.YodRoomWork?.snapshot?.().find(s=>s.case_id===p?.case_id)?.auton_status||window.YodWorkObserver?.snapshot?.()?.auton_status;
+  const residence=OFICINA_ESTADOS_REALES?autonResidence(source,p?.case_id):null;
+  const t=!authorized(p)?'Agente sin perfil autorizado. Entra desde El Despacho en YOD OS para validar tu acceso.':!has?name+': '+(residence?.admission==='baja'?'Fuera de la oficina · Solo biblioteca':'Sin ubicación activa confirmada'):name+': '+(a.motion==='walk'?'En camino a '+label(a.destination):'Llegada confirmada · '+label(a.place));
   const key=v+'\n'+t;if(key!==fingerprint){visitorText.textContent=v;agentText.textContent=t;fingerprint=key;}
   root.querySelectorAll('[data-agent-destination]').forEach(n=>{n.disabled=!has||typeof api.agenteIr!=='function';});
  }

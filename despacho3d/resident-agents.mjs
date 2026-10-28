@@ -1,4 +1,4 @@
-import {validateSelection} from './conversation.mjs?v=142';
+import {validateSelection} from './conversation.mjs?v=records1';
 import {AUTHORITY_LEASE_MS,AUTHORITY_REFRESH_MS,authorityIsCurrent,isTransientAuthorityError} from './authority-lease.mjs?v=unified283';
 
 // Presence belongs to the authorized room, independently of its conversation panel.

@@ -24,3 +24,9 @@ Capturas de QA local: primera persona, vista superior y proyección sintética. 
 ![Entrada en primera persona — QA local](evidencia/despacho-20261028/primera-persona.png)
 
 ![Estados sintéticos — QA local](evidencia/despacho-20261028/estados-sinteticos.png)
+
+## Activación y catálogo documental
+
+Proyección privada comprobada en Portero101 y servicio publicado: cuatro consultas autenticadas de lectura devolvieron200 con identidad y referencia correctas. Se admite lectura lenta hasta45s (máximo observado26.5s); las rondas siguen seriales. No se etiqueta trabajando sin telemetría reciente. Registros documentales no solicitan sesiones del motor ni afirman puente PPP operativo. Catálogo hasta16, seis plazas visibles y baja libera plaza conservando expediente. Reversión: apagar OFICINA_ESTADOS_REALES y YOD_AUTON_RECORDS_ENABLED; no borrar fuentes ni registros.
+
+Pruebas ampliadas:1065 portal aprobadas;703 privadas aprobadas y1opcional omitida. Se conserva la prueba de proyección anterior con interruptor apagado de forma explícita. La expectativa activa ante herramientas sin fuente de estado es «Estado sin confirmar».

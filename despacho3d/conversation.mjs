@@ -1,3 +1,4 @@
+import {validateAutonStatus} from './auton-status.mjs?v=1';
 import {registeredBoard} from './project-station.mjs';
 // Local transport contract. The authenticated server chooses the private case.
 // No endpoint, credential, business record or browser persistence lives here.
@@ -22,7 +23,14 @@ export function validateSelection(v){
  const selection={...validateDriveSelection(v),case_id:v.case_id,can_enqueue:v.can_enqueue,agent_ready:v.agent_ready};
  const goals=v.goals?.schema===1&&typeof v.goals.ready==='boolean'&&typeof v.goals.worker_ready==='boolean'?{schema:1,ready:v.goals.ready,worker_ready:v.goals.worker_ready}:null;
  const ppp=v.ppp?.case_id===v.case_id&&registeredBoard(v.ppp.url,v.case_id,v.ppp.board_case_id||v.case_id)?{case_id:v.case_id,url:v.ppp.url,board_case_id:v.ppp.board_case_id||v.case_id,...(text(v.ppp.scenario_id)?{scenario_id:v.ppp.scenario_id}:{})}:null;
- return {...selection,avatar:validateAvatarProfile(v.avatar,selection),goals,ppp};
+ const avatar=validateAvatarProfile(v.avatar,selection);
+ if(v.record_only===true){
+  if(v.can_enqueue||v.agent_ready||!avatar||goals?.ready||goals?.worker_ready)throw Error('invalid_selection');
+  const status=validateAutonStatus(v.auton_status,v.case_id);
+  if(['working','presenting'].includes(status.activity))throw Error('invalid_selection');
+  avatar.record_only=true;avatar.auton_status={ok:true,...status};
+ }
+ return {...selection,avatar,goals,ppp,...(v.record_only===true?{record_only:true}:{})};
 }
 export function safeDocumentUrl(value){
  try{return validateDriveSelection({name:'Documento',url:value}).url;}catch{return null;}

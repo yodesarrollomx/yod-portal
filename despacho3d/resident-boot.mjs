@@ -1,11 +1,11 @@
-import {mountResidentDock} from './resident-dock.mjs?v=283';
+import {mountResidentDock} from './resident-dock.mjs?v=records1';
 import {createOfficePreparation} from './office-preparation.mjs?v=unified283';
 import {mountAgentMenu} from './agent-menu.mjs?v=132';
 import {createResidentOpening} from './resident-opening.mjs?v=132';
-import {AUTONES_MULTIPLES} from './office-config.mjs?v=4';
-import {createAuthorizedCases} from './authorized-cases.mjs?v=unified283';
-import {createFrameTransport} from './conversation.mjs?v=142';
-import {createResidentAgents} from './resident-agents.mjs?v=unified283';
+import {AUTONES_MULTIPLES} from './office-config.mjs?v=records1';
+import {createAuthorizedCases} from './authorized-cases.mjs?v=records1';
+import {createFrameTransport} from './conversation.mjs?v=records1';
+import {createResidentAgents} from './resident-agents.mjs?v=records1';
 import {AUTHORITY_REFRESH_MS,authorityRefreshDue} from './authority-lease.mjs?v=unified283';
 import {createCaseSelectionHandoff} from './case-selection-handoff.mjs?v=126';
 const host=document.getElementById('resident-agent');

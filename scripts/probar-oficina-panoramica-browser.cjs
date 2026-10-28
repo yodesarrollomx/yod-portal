@@ -23,6 +23,8 @@ const server=http.createServer((req,res)=>{
    await page.addInitScript(()=>{
     let profile={id:'synthetic-office',case_id:'synthetic-office',entity_kind:'case',name:'Proyecto de prueba',form:'child',color:'#547e75',visual:{hairStyle:'crop'}};
     const listeners=new Set();window.__opened=[];window.__arrivals=[];
+    const roomListeners=new Set();let activity='working';const roomState=()=>[{case_id:profile?.case_id,phase:'ready',checked_at:Date.now(),work:null,auton_status:{ok:true,schema:1,case_id:profile?.case_id,admission:'alta',activity,reason:activity==='presenting'?'live_presentation':'live_execution',source_ref:'Proyectos!2',source_revision:'fixture',observed_at:new Date().toISOString(),library_only:false}}];
+    window.YodRoomWork={subscribe(fn){roomListeners.add(fn);fn(roomState());return()=>roomListeners.delete(fn);}};window.__publishResidence=value=>{activity=value;for(const fn of roomListeners)fn(roomState());};
     // This geometry fixture strips the UI boots; observe the radial route used by the marker.
     window.__prepares=[];window.__voiceStarts=[];window.YodVoiceWorkspace={isOpen:()=>false,prepareNearby:id=>window.__prepares.push(id),releaseNearby:()=>{},openForCase:async(id,tab,options)=>{window.__voiceStarts.push({id,tab,options});return true;}};
     window.addEventListener('yod-agent-menu-open',e=>window.__opened.push(e.detail.case_id));
@@ -30,8 +32,11 @@ const server=http.createServer((req,res)=>{
     window.__revoke=()=>{profile=null;for(const fn of listeners)fn(null);};
     window.addEventListener('yod-agent-arrived',e=>window.__arrivals.push(e.detail.lugar));
    });
+   await page.emulateMedia({reducedMotion:'reduce'});
    await page.goto(base+'/despacho3d/');
    await page.waitForFunction(()=>window.despacho?.view==='3d'&&window.despacho.getState().frames>1,{},{timeout:60000});
+   await page.waitForFunction(()=>window.despacho.getAgentState().place==='inicio'&&window.despacho.getAgentState().motion!=='walk',{},{timeout:45000});
+   await page.emulateMedia({reducedMotion:'no-preference'});
    let state=await page.evaluate(()=>window.despacho.getState());
    assert.equal(state.mode,'walk');assert.equal(state.projection,'perspective');assert.equal(state.cutaway,false);
    if(mobile)assert.equal(await page.locator('#joystick').isVisible(),true);
@@ -123,14 +128,16 @@ const server=http.createServer((req,res)=>{
    await page.screenshot({path:path.join(out,'puesto-sentado-'+(mobile?'movil':'escritorio')+'.png')});
    await page.locator('#overview').click();
    const start=await page.evaluate(()=>window.despacho.getAgentState().position);
-   assert.equal(await page.evaluate(()=>window.despacho.agenteIr('decisions')),true);
+   await page.evaluate(()=>window.__publishResidence('presenting'));
    await page.waitForFunction(()=>window.despacho.getAgentState().motion==='walk');
    await page.waitForFunction(p=>Math.hypot(...window.despacho.getAgentState().position.map((v,i)=>v-p[i]))>.2,start);
    await residentLabel.waitFor({state:'visible'});
    // Reduced motion completes the accepted route without a long animated wait.
    await page.emulateMedia({reducedMotion:'reduce'});
-   await page.waitForFunction(()=>window.despacho.getAgentState().place==='decisions');
-   assert.deepEqual(await page.evaluate(()=>window.__arrivals),['decisions']);
+   await page.waitForFunction(()=>window.despacho.getAgentState().place==='presenting');
+   const arrival=await page.evaluate(()=>window.despacho.getAgentState());
+   assert.equal(arrival.destination,null);assert.equal(arrival.motion,'idle');
+   assert.deepEqual(arrival.position,[3.25,5],'the source-driven route ends at the council presentation spot');
    await page.evaluate(()=>window.__revoke());
    await page.waitForFunction(()=>window.despacho.getState().avatar.count===0&&!document.querySelector('.avatar-presence[data-case-id="synthetic-office"]'));
    await page.setViewportSize(mobile?{width:844,height:390}:{width:1000,height:700});

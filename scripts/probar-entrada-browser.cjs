@@ -17,7 +17,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
    const state=()=>({phase:selection?'observe':'unauthorized',prepared:true,checked_at:Date.now(),selection});
    window.YodResidentAgents={getSelection:()=>selection,getProfile:()=>selection?.avatar||null,snapshot:state,subscribe(fn){states.add(fn);fn(state());return()=>states.delete(fn);},subscribeProfile(fn){profiles.add(fn);fn(selection?.avatar||null);return()=>profiles.delete(fn);},openForCase(id){return window.YodAgentMenu.showRadial(id);}};
    window.YodWorkObserver={snapshot:()=>observation,subscribe(fn){works.add(fn);fn(observation);return()=>works.delete(fn);},refresh:async()=>{}};
-   window.__observe=value=>{observation=value;for(const fn of works)fn(value);};
+   window.__observe=value=>{if(value.phase==='ready'&&value.case_id)value={...value,auton_status:{ok:true,schema:1,case_id:value.case_id,admission:'alta',activity:'working',reason:'live_execution',source_ref:'Proyectos!2',source_revision:'fixture',observed_at:new Date().toISOString(),library_only:false}};observation=value;for(const fn of works)fn(value);};
    window.__select=(key,canTalk=false)=>{
     selection=key?{ok:true,case_id:'synthetic-'+key,name:'Proyecto '+key+' · prueba',can_enqueue:canTalk,agent_ready:true,goals:{ready:false},avatar:{id:'synthetic-'+key,case_id:'synthetic-'+key,entity_kind:'case',name:'Autón '+key+' · prueba',form:'child',color:'#547e75',visual:{hairStyle:'crop'}},ppp:{case_id:'synthetic-'+key,url:'https://yodesarrollomx.github.io/potenciales-yod/patrimonial.html?open=synthetic-'+key}}:null;
     for(const fn of states)fn(state());for(const fn of profiles)fn(selection?.avatar||null);
@@ -50,7 +50,8 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   await frame.waitForFunction(()=>window.despacho&&window.YodVoiceWorkspace&&document.querySelector('#case-open').disabled);
   assert.equal(await frame.locator('[data-entry-status]').innerText(),'Entra a YOD OS para ver tus proyectos.');
   await page.screenshot({path:path.join(out,'entrada-'+variant+'-sin-acceso.png')});
-  // This fixture works at its own computer; library travel is covered by the multi-resident browser run.
+  // Complete initial placement with the supported reduced-motion setting; geometry is independent of GPU frame rate.
+  await page.emulateMedia({reducedMotion:'reduce'});
   await frame.evaluate(()=>{window.__select('A');window.__observe({case_id:'synthetic-A',phase:'ready',checked_at:Date.now(),work:{case_id:'synthetic-A',goal_id:'synthetic-goal-A',updated_at:new Date().toISOString(),title:'Revisando fuentes · prueba',phase:'tool',current_tool:'navegador_abrir'}});});
   await frame.locator('#case-open').waitFor({state:'visible'});
   assert.equal(await frame.locator('#case-open').isEnabled(),true);
@@ -61,13 +62,16 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   assert.ok(chrome.header<=61,'the office header must stay on one compact row');
   if(variant!=='fallback')assert.equal(chrome.inside,true,'project identity and primary action must share one card');
   assert.equal(await frame.locator('[data-entry-detail]').textContent(),'Revisando fuentes · prueba');
-  assert.equal(await frame.locator('[data-entry-status]').textContent(),'Investigando en internet','the entry uses a human activity from a fresh case-bound observation');
+  assert.equal(await frame.locator('[data-entry-status]').textContent(),'Alta · trabajando','the entry uses authoritative status from a fresh case-bound observation');
+  await frame.waitForFunction(()=>window.despacho.getAgentState().place==='inicio'&&window.despacho.getAgentState().motion!=='walk',{},{timeout:45000});
   if(variant!=='fallback'){
+   await frame.waitForFunction(()=>window.despacho.getAgentState().place==='inicio'&&window.despacho.getAgentState().motion!=='walk',{},{timeout:45000});
    const alignment=await frame.evaluate(()=>{
     const avatar=window.despacho.scene.children.find(o=>o.name==='avatar');
     return {position:avatar.position.toArray(),rotation:avatar.rotation.y};
    });
    assert.deepEqual(alignment.position,[7,0,-6.25]);assert.equal(alignment.rotation,Math.PI);
+   await page.emulateMedia({reducedMotion:'no-preference'});
    await frame.evaluate(async()=>{await window.despacho.visit('case');window.despacho.camera.position.set(9,2.8,-4.4);window.despacho.camera.lookAt(7,1,-7.1);});
    await page.waitForTimeout(300);
    await page.screenshot({path:path.join(out,'puesto-alineado-'+variant+'.png')});
@@ -214,7 +218,11 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   if(variant!=='fallback'){
    // Real scene + actual voice boot: approach opens the capsule and a permission
    // explanation, without starting capture or a provider session behind a prompt.
-   await frame.evaluate(async()=>{navigator.permissions.query=async()=>({state:'prompt'});window.__select('C',true);await window.despacho.visit('case');window.despacho.camera.position.set(7,1.65,-4.35);});
+   await page.emulateMedia({reducedMotion:'reduce'});
+   await frame.evaluate(()=>{navigator.permissions.query=async()=>({state:'prompt'});window.__select('C',true);window.__observe({case_id:'synthetic-C',phase:'ready',checked_at:Date.now(),work:null});});
+   await frame.waitForFunction(()=>window.despacho.getAgentState().place==='inicio'&&window.despacho.getAgentState().motion!=='walk');
+   await page.emulateMedia({reducedMotion:'no-preference'});
+   await frame.evaluate(async()=>{await window.despacho.visit('case');window.despacho.camera.position.set(7,1.65,-4.35);});
    await frame.locator('#scene').focus();await page.keyboard.down('w');
    await frame.locator('.station-radial').waitFor();await page.keyboard.up('w');
    try{await frame.locator('#compact-notice').waitFor({timeout:10000});}catch(error){
@@ -229,6 +237,17 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
    assert.equal(await frame.evaluate(()=>window.__captures),0);
    console.log('ACTUAL_ENCOUNTER_CAPSULE_'+variant+':'+(await page.screenshot({type:'jpeg',quality:75})).toString('base64'));
    await frame.locator('#compact-stop').click();
+  }
+  if(variant==='fallback'){
+   await page.emulateMedia({reducedMotion:'reduce'});
+   for(const [admission,activity,place]of [['alta','waiting','waiting'],['standby',null,'standby'],['baja',null,null]]){
+    await frame.evaluate(({admission,activity})=>{window.__select('D');window.__observe({phase:'unavailable',case_id:'synthetic-D',checked_at:Date.now(),work:null,auton_status:{ok:true,schema:1,case_id:'synthetic-D',admission,activity,reason:'recorded_status',source_ref:'Proyectos!2',source_revision:'fixture',observed_at:new Date().toISOString(),library_only:admission==='baja'}});},{admission,activity});
+    await frame.waitForFunction(place=>window.despacho.getAgentState().place===place&&window.despacho.getAgentState().motion!=='walk',place);
+    if(admission==='baja'){
+     assert.equal(await frame.evaluate(()=>window.despacho.getAgentState().position),null,'baja is outside the accessible office too');
+     await frame.locator('.office-map-status').getByText(/Fuera de la oficina/).waitFor();
+    }
+   }
   }
   assert.deepEqual(errors,[]);
   console.log('Entry '+variant+': access, keyboard, one PPP, draft retained, identity switch, late activity discarded and revocation passed; synthetic authorization.');
