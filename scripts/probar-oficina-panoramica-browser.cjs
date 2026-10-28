@@ -135,7 +135,9 @@ const server=http.createServer((req,res)=>{
    // Reduced motion completes the accepted route without a long animated wait.
    await page.emulateMedia({reducedMotion:'reduce'});
    await page.waitForFunction(()=>window.despacho.getAgentState().place==='presenting');
-   assert.equal(await page.evaluate(()=>window.__arrivals.at(-1)),'presenting');
+   const arrival=await page.evaluate(()=>window.despacho.getAgentState());
+   assert.equal(arrival.destination,null);assert.equal(arrival.motion,'idle');
+   assert.deepEqual(arrival.position,[3.25,5],'the source-driven route ends at the council presentation spot');
    await page.evaluate(()=>window.__revoke());
    await page.waitForFunction(()=>window.despacho.getState().avatar.count===0&&!document.querySelector('.avatar-presence[data-case-id="synthetic-office"]'));
    await page.setViewportSize(mobile?{width:844,height:390}:{width:1000,height:700});

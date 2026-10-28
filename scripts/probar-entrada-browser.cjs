@@ -217,7 +217,11 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   if(variant!=='fallback'){
    // Real scene + actual voice boot: approach opens the capsule and a permission
    // explanation, without starting capture or a provider session behind a prompt.
-   await frame.evaluate(async()=>{navigator.permissions.query=async()=>({state:'prompt'});window.__select('C',true);await window.despacho.visit('case');window.despacho.camera.position.set(7,1.65,-4.35);});
+   await page.emulateMedia({reducedMotion:'reduce'});
+   await frame.evaluate(()=>{navigator.permissions.query=async()=>({state:'prompt'});window.__select('C',true);window.__observe({case_id:'synthetic-C',phase:'ready',checked_at:Date.now(),work:null});});
+   await frame.waitForFunction(()=>window.despacho.getAgentState().place==='inicio'&&window.despacho.getAgentState().motion!=='walk');
+   await page.emulateMedia({reducedMotion:'no-preference'});
+   await frame.evaluate(async()=>{await window.despacho.visit('case');window.despacho.camera.position.set(7,1.65,-4.35);});
    await frame.locator('#scene').focus();await page.keyboard.down('w');
    await frame.locator('.station-radial').waitFor();await page.keyboard.up('w');
    try{await frame.locator('#compact-notice').waitFor({timeout:10000});}catch(error){
