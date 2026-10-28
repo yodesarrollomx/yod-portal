@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-28.despacho-registro.3",
+  "model_revision": "2026-10-28.despacho-registro.4",
   "proposal_id": "CHG-CONSEJO-AUTONES-20261027",
   "summary": "Mantener la residencia documental desde el catálogo autorizado cuando el motor carece de señal reciente; el trabajo y la presentación siguen exigiendo prueba de ejecución. Respetar revisión, caducidad y revocación del caso.",
   "components": [
@@ -7,7 +7,8 @@
     "SYS-DESPACHO",
     "SYS-DESPACHO-3D",
     "SVC-AUTON-CLOUD",
-    "SYS-POTENCIALES"
+    "SYS-POTENCIALES",
+    "GAS-PORTERO"
   ],
   "tests": [
     "node --test tests/*.cjs",
