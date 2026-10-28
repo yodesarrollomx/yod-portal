@@ -1,10 +1,13 @@
 {
-  "model_revision": "2026-10-28.despacho-estados.1",
+  "model_revision": "2026-10-28.despacho-estados.2",
   "proposal_id": "CHG-CONSEJO-AUTONES-20261027",
-  "summary": "Consejo, estados derivados por caso, lugares y poses, entrada en primera persona. Fuente privada autenticada; separar aprobación del consejo de etapa comercial PPP.",
+  "summary": "Consejo, estados derivados por caso, lugares y poses, entrada en primera persona. Fuente privada autenticada; separar aprobación del consejo de etapa comercial PPP. Cobertura explícita de OS/Despacho y sus pruebas; runner Chromium fijado a Ubuntu 24.04.",
   "components": [
+    "SYS-YOD-OS",
+    "SYS-DESPACHO",
     "SYS-DESPACHO-3D",
-    "SVC-AUTON-CLOUD"
+    "SVC-AUTON-CLOUD",
+    "SYS-POTENCIALES"
   ],
   "tests": [
     "node --test tests/*.cjs",
