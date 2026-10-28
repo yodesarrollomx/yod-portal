@@ -14078,7 +14078,12 @@
         "SYS-DESPACHO-3D",
         "SVC-AUTON-CLOUD",
         "SYS-POTENCIALES",
-        "GAS-PORTERO"
+        "GAS-PORTERO",
+        "EXT-DRIVE",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE"
       ],
       "status": "implementado_local",
       "authorization": "Dirección solicita consejo con avatares en juntas, continuidad del autón por etapas, retroalimentación y aviso al terminar.",

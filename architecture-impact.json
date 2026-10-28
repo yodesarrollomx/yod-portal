@@ -8,7 +8,12 @@
     "SYS-DESPACHO-3D",
     "SVC-AUTON-CLOUD",
     "SYS-POTENCIALES",
-    "GAS-PORTERO"
+    "GAS-PORTERO",
+    "EXT-DRIVE",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-CONTROL",
+    "SYS-OBRA-CLIENTE"
   ],
   "tests": [
     "node --test tests/*.cjs",
