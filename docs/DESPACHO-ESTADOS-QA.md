@@ -1,6 +1,6 @@
 # Despacho: estados, lugares y entrada — 28 octubre 2026
 
-Implementación preparada en PR316. Los estados operativos se consultan por POST autenticado `/fast/auton-status`, cuerpo vacío, para cada identidad autorizada. La fuente privada decide admisión y actividad; el navegador valida caso, frescura y coherencia. Un error de lectura no significa baja. Aprobar una presentación conserva la etapa comercial.
+Publicado mediante PR316, PR319, PR320 y PR321. Portero104 devuelve al propietario autorizado el estado documental de cada caso desde sus fuentes privadas, aunque el motor no tenga señal reciente. Los estados de ejecución se consultan por POST autenticado `/fast/auton-status`, cuerpo vacío, para cada identidad autorizada. El navegador valida caso, frescura, revisión y coherencia: el catálogo nunca acredita trabajo ni presentación en curso. Un error de lectura no significa baja. Aprobar una presentación conserva la etapa comercial.
 
 | Evidencia | Lugar y pose |
 | --- | --- |
@@ -11,13 +11,13 @@ Implementación preparada en PR316. Los estados operativos se consultan por POST
 | Baja | Fuera de escena, expediente conservado |
 | Sin datos o datos vencidos | Zona neutral, estado sin confirmar |
 
-La entrada usa cámara en primera persona. Dirección tiene avatar propio independiente de los casos, controles de movimiento y botón para volver a vista superior conservando posición. `OFICINA_PRIMERA_PERSONA` permite revertir esta entrada. `OFICINA_ESTADOS_REALES` permanece apagado hasta instalar y verificar el lector privado. El interruptor multicaso existente sigue activo.
+La entrada usa cámara en primera persona. Dirección tiene avatar propio independiente de los casos, controles de movimiento y botón para volver a vista superior conservando posición. `OFICINA_PRIMERA_PERSONA` permite revertir esta entrada. `OFICINA_ESTADOS_REALES` y el interruptor multicaso están activos. Un navegador sin WebGL recibe el plano accesible, con el mismo estado y lugar autorizado.
 
-Validación local: 1061 pruebas del portal y 694 del motor privado pasan; una integración privada opcional de navegador queda omitida. Suite privada sin credenciales heredadas y con salida externa bloqueada. Verificadores OS, portal, accesos, obra, arquitectura y paquete de chinches pasan. Chromium con WebGL muestra entrada, cambio a vista superior y tamaño móvil 390×844; la captura de seis estados usa identidades sintéticas y no acredita actividad productiva. Baja queda fuera: cinco figuras de seis casos. No se publican nombres, fuentes ni identidades de casos reales.
+Validación final: 1070 pruebas del portal aprobadas; 706 privadas aprobadas y una integración opcional omitida. Verificadores OS, portal, accesos, obra y arquitectura aprobados. El CI de PR321 verificó entrada, identidad, puesto, reunión, trabajo observable, recorrido, conocimiento, voz y PPP colaborativo. Chromium y WebKit aprobaron sus comprobaciones. Chromium local con WebGL mostró primera persona, vista superior y tamaño móvil 390×844. Las capturas de seis estados usan identidades sintéticas y no acreditan actividad productiva. Baja queda fuera: cinco figuras de seis casos. No se publican nombres, fuentes ni identidades de casos reales.
 
-El repositorio privado contiene el lector de Proyectos, el endpoint, el registro con vínculos de proyecto y múltiples modelos por caso, y la preparación de patch de Portero con comprobación de hash. El nuevo caso aún necesita registro/grant real; el puente Vertical no se ha verificado. Fuente de admisión de un piloto sin fila de Proyectos sigue pendiente. No inferir alta ni trabajo a partir de la apariencia del avatar.
+El repositorio privado contiene el lector de Proyectos, el endpoint y el registro con vínculos de proyecto y múltiples modelos por caso. Dos expedientes documentales adicionales están activos sin crear trabajadores ni permisos de ejecución. El puente Vertical no se ha verificado. El correo de cierre y respuesta del consejo sigue sin conexión verificada. No inferir actividad por la apariencia del avatar ni por una respuesta HTTP correcta del servicio.
 
-Instalación bloqueada: el workflow de Apps Script está deshabilitado manualmente, confirmado en GitHub. La solicitud actual sólo lee el Portero para obtener un snapshot previo a cualquier patch. Rehabilitar ese canal requiere decisión de Dirección. No es una aprobación del consejo ni cambia etapas. La configuración privada y la lectura autenticada deben comprobarse antes de encender estados reales.
+La instalación autorizada se completó en la implementación existente de Apps Script, conservando su URL y permisos. Portero104 revalida al propietario también después de leer las fuentes. La interfaz publicada usa la versión `records2`. La prueba autenticada en producción confirmó espera en sillones de entrada, stand-by en zona de espera y baja fuera de la oficina. Las capturas de producción con datos reales se conservan privadamente.
 
 Capturas de QA local: primera persona, vista superior y proyección sintética. No son capturas de producción.
 
@@ -27,6 +27,8 @@ Capturas de QA local: primera persona, vista superior y proyección sintética. 
 
 ## Activación y catálogo documental
 
-Proyección privada comprobada en Portero101 y servicio publicado: cuatro consultas autenticadas de lectura devolvieron200 con identidad y referencia correctas. Se admite lectura lenta hasta45s (máximo observado26.5s); las rondas siguen seriales. No se etiqueta trabajando sin telemetría reciente. Registros documentales no solicitan sesiones del motor ni afirman puente PPP operativo. Catálogo hasta16, seis plazas visibles y baja libera plaza conservando expediente. Reversión: apagar OFICINA_ESTADOS_REALES y YOD_AUTON_RECORDS_ENABLED; no borrar fuentes ni registros.
+Cuatro consultas autenticadas de lectura devolvieron HTTP200 con identidad y referencia correctas. Se admite lectura lenta hasta 45s; las rondas siguen seriales. La comprobación operativa no encontró señal reciente de trabajador conectado en esos cuatro casos: el catálogo permite ver su admisión documental, pero no acredita ejecución. Registros documentales no solicitan sesiones del motor ni afirman puente PPP operativo. Catálogo hasta 16, seis plazas visibles y baja libera plaza conservando expediente. Reversión: apagar `OFICINA_ESTADOS_REALES` y `YOD_AUTON_RECORDS_ENABLED`; no borrar fuentes ni registros.
 
-Pruebas ampliadas:1065 portal aprobadas;703 privadas aprobadas y1opcional omitida. Se conserva la prueba de proyección anterior con interruptor apagado de forma explícita. La expectativa activa ante herramientas sin fuente de estado es «Estado sin confirmar».
+La expectativa activa sin una fuente vigente es «Estado sin confirmar». Una respuesta tardía del motor no puede deshacer una baja de una revisión posterior. La revocación del catálogo elimina perfiles, estados y credenciales de memoria.
+
+El clic de Dirección selecciona el caso y abre sus opciones. En el consejo, «Devolver al consejo» guarda observaciones; «Aceptar esta entrega» requiere una sesión lista y conserva la etapa comercial. Estos controles no reparan una conexión ausente ni acreditan lectura del modelo financiero.
