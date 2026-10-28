@@ -44,3 +44,9 @@ test('revoked case cannot return a pending status to the office',async()=>{
  const r=createRoomWork({observeAutonStatus:true,now:()=>now,schedule:()=>1,cancel:()=>{},request:async(path,_,id)=>path==='/computer/work'?work(id):new Promise(r=>resolve=r)});
  r.reconcile([profile('case-a')]);await settle();r.reconcile([]);resolve(status());await settle();assert.deepEqual(r.snapshot(),[]);r.dispose();
 });
+test('computer outage still reads independent source status; access revocation does not',async()=>{
+ const {createRoomWork}=await import('../despacho3d/room-work.mjs');let error='unavailable';const calls=[];
+ const r=createRoomWork({observeAutonStatus:true,now:()=>now,schedule:()=>1,cancel:()=>{},request:async(path,_,id)=>{calls.push(path);if(path==='/computer/work')throw Error(error);return status(id);}});
+ r.reconcile([profile('case-a')]);await settle();assert.equal(r.snapshot()[0].auton_status.activity,'waiting');assert.equal(r.snapshot()[0].available,false);
+ calls.length=0;error='forbidden';await r.refresh();assert.deepEqual(calls,['/computer/work']);assert.equal(r.snapshot()[0].phase,'unauthorized');assert.equal(r.snapshot()[0].auton_status,undefined);r.dispose();
+});

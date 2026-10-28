@@ -29,7 +29,14 @@ export function createRoomWork({request,now=Date.now,schedule=setTimeout,cancel=
     if(valid()){states.set(id,{phase:'ready',available:false,case_id:id,work:null,screen:null,image:null,checked_at:now(),auton_status:status});emit();}
     return;
    }
-   const value=validateObservation(await request('/computer/work',{},id),id);if(!valid())return;
+   let value;
+   try{value=validateObservation(await request('/computer/work',{},id),id);}
+   catch(error){
+    if(!observeAutonStatus||['unauthorized','forbidden'].includes(error?.message))throw error;
+    // A missing computer feed cannot suppress an independently authenticated source status.
+    value={ok:true,available:false,case_id:id,work:null,screen:null};
+   }
+   if(!valid())return;
    const prior=states.get(id),key=observationCaptureKey(value);
    const state={...value,image:key&&key===observationCaptureKey(prior)?prior.image||null:null,phase:value.available?'ready':'unavailable',checked_at:now()};
    if(observeAutonStatus){

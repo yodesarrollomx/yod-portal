@@ -63,6 +63,7 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
   if(variant!=='fallback')assert.equal(chrome.inside,true,'project identity and primary action must share one card');
   assert.equal(await frame.locator('[data-entry-detail]').textContent(),'Revisando fuentes · prueba');
   assert.equal(await frame.locator('[data-entry-status]').textContent(),'Alta · trabajando','the entry uses authoritative status from a fresh case-bound observation');
+  await frame.waitForFunction(()=>window.despacho.getAgentState().place==='inicio'&&window.despacho.getAgentState().motion!=='walk',{},{timeout:45000});
   if(variant!=='fallback'){
    await frame.waitForFunction(()=>window.despacho.getAgentState().place==='inicio'&&window.despacho.getAgentState().motion!=='walk',{},{timeout:45000});
    const alignment=await frame.evaluate(()=>{
@@ -236,6 +237,17 @@ const boardHTML="<!doctype html><html lang=\"es\"><body><h1>PPP sintético</h1><
    assert.equal(await frame.evaluate(()=>window.__captures),0);
    console.log('ACTUAL_ENCOUNTER_CAPSULE_'+variant+':'+(await page.screenshot({type:'jpeg',quality:75})).toString('base64'));
    await frame.locator('#compact-stop').click();
+  }
+  if(variant==='fallback'){
+   await page.emulateMedia({reducedMotion:'reduce'});
+   for(const [admission,activity,place]of [['alta','waiting','waiting'],['standby',null,'standby'],['baja',null,null]]){
+    await frame.evaluate(({admission,activity})=>{window.__select('D');window.__observe({phase:'unavailable',case_id:'synthetic-D',checked_at:Date.now(),work:null,auton_status:{ok:true,schema:1,case_id:'synthetic-D',admission,activity,reason:'recorded_status',source_ref:'Proyectos!2',source_revision:'fixture',observed_at:new Date().toISOString(),library_only:admission==='baja'}});},{admission,activity});
+    await frame.waitForFunction(place=>window.despacho.getAgentState().place===place&&window.despacho.getAgentState().motion!=='walk',place);
+    if(admission==='baja'){
+     assert.equal(await frame.evaluate(()=>window.despacho.getAgentState().position),null,'baja is outside the accessible office too');
+     await frame.locator('.office-map-status').getByText(/Fuera de la oficina/).waitFor();
+    }
+   }
   }
   assert.deepEqual(errors,[]);
   console.log('Entry '+variant+': access, keyboard, one PPP, draft retained, identity switch, late activity discarded and revocation passed; synthetic authorization.');
