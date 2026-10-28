@@ -12,7 +12,8 @@
   "tests": [
     "node --test tests/*.cjs",
     "node scripts/arquitectura.cjs --check",
-    "Verificadores portal, OS, accesos y obra; pruebas aisladas del motor y UI."
+    "Verificadores portal, OS, accesos y obra; pruebas aisladas del motor y UI.",
+    "Chromium escritorio y móvil: entrada inicial walk/perspective, botón arriba, selección y recorridos; sin errores JS."
   ],
   "rollback": "Revertir PR y desactivar consejo; conservar historial privado."
 }
