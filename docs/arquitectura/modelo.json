@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-21.single-chrome.1",
+  "revision": "2026-10-27.ppp-capacidad-tipologias.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -14033,6 +14033,42 @@
       ],
       "deployment": "Regresión reproducida antes (dos botones tras init repetido); Chromium 390/1024/1440 verifica botón único, herencia/fallback por marco, menú en URL embed directa, compactación y borrador conservado. Pendiente CI WebKit y publicación. Núcleo de secuencias 1.1.0 sin cambios.",
       "rollback": "Revertir PR sin borrar borradores ni alterar fuentes privadas."
+    },
+    {
+      "id": "CHG-PPP-TERRENO-AMPLIADO-20261027",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección solicita corregir el límite del tablero para admitir predios de mayor superficie.",
+      "proposal": "Ampliar el rango del control de superficie del planificador mixto hasta 40,000 m² conservando los valores de entrada previos, fórmulas, identidad, escenarios y permisos. La superficie aceptada por la interfaz no acredita cabida ni permisos urbanísticos.",
+      "tests": [
+        "Prueba de rango y recálculo con 2,500, 20,000, 35,000 y 40,000 m² usando transporte sintético.",
+        "Regresión de los demás controles y motor previo, y verificación del activo publicado."
+      ],
+      "deployment": "Propuesta de frontend; ningún caso ni dato de negocio se ha escrito.",
+      "rollback": "Revertir el cambio de frontend y conservar libros, escenarios y registros existentes."
+    },
+    {
+      "id": "CHG-PPP-TIPOLOGIAS-FLEXIBLES-20261027",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-YOD-OS",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección solicita que el tablero admita individualmente los tipos necesarios del proyecto sin limitarlo a tres categorías.",
+      "proposal": "Ampliar la captura por escenario para al menos cinco tipologías independientes con cantidad o porcentaje y superficie, preservar los tres tipos y sus resultados históricos, calcular y conciliar cantidades, área y promedio ponderado desde la misma fuente canónica. No confirmar persistencia nativa ni activar escrituras hasta verificar esquema de plantilla, validación, fórmulas, revisión y recibos del backend vivo.",
+      "tests": [
+        "Reproducir compatibilidad de escenarios históricos y verificar mezcla de cinco tipos, cantidades enteras y área ponderada con datos sintéticos.",
+        "Probar persistencia por escenario, recarga, cambio de versión y conflicto de revisión; no usar POST de prueba sobre datos de negocio.",
+        "Conciliar con resultados nativos en copia privada antes de declarar el cálculo y guardado en vivo."
+      ],
+      "deployment": "Propuesta previa al código; depende del inventario y validación del modelo nativo y del backend vigente.",
+      "rollback": "Desactivar la edición ampliada y revertir frontend y migración mediante cambios versionados; conservar datos, versiones y recibos."
     }
   ],
   "data_contracts": [
