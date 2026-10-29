@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-29.ppp-read-validation.1",
+  "revision": "2026-10-29.council-resume.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -14305,6 +14305,25 @@
       ],
       "deployment": "Candidatos locales y pruebas aisladas; producción pendiente. Editor Apps Script reservado por otra ejecución: no publicar su borrador ni sustituir HEAD sin coordinación y comprobación de hash. Mantener separadas integración, Pages, Render y versión GAS.",
       "rollback": "Revertir consumidores y versión de la misma implementación GAS mediante revisión; conservar todas las cantidades, fórmulas, escenarios, recibos y permisos. El rollback puede volver a bloquear la lectura del legado inactivo; declararlo, sin restaurar libros ni inventar tasas."
+    },
+    {
+      "id": "CHG-CONSEJO-RECUPERACION-20261029",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD",
+        "SYS-DESPACHO"
+      ],
+      "status": "implementado_local",
+      "authorization": "Dirección pide continuar el circuito existente, corregir bloqueo, integrar y comprobar observación, tarea, ejecución, nueva entrega y revisión conservando historial.",
+      "proposal": "Recuperación explícita de una ronda parcial sólo cuando el servicio autorizado indica resume_available. Acción resume con revisión e identificador estable; lectura y reapertura no ejecutan. El bloqueo determinista task_limit presenta motivo y nueva entrega requerida, sin ofrecer reintentos ni otras mutaciones. Mantener identidad, fuentes, revisiones, tareas, recibos y presupuestos existentes.",
+      "tests": [
+        "Pruebas sintéticas de prefijo parcial, CAS, acuse perdido, doble clic, revocación y ausencia de mutaciones en reapertura.",
+        "Bloqueo determinista visible sin controles de feedback, aceptación o reanudación; modelo valida señales coherentes.",
+        "Suite portal, arquitectura y verificadores; comprobación autenticada productiva separada."
+      ],
+      "deployment": "Interfaz y validación local implementadas; depende de publicación coordinada del backend privado. Pruebas productivas y recorrido completo pendientes.",
+      "rollback": "Revertir interfaz y versiones de recursos mediante revisión; conservar sesión, historial y recibos privados."
     }
   ],
   "data_contracts": [

@@ -1,7 +1,7 @@
 (function(root){
   'use strict';
   // Escena estática del mismo portal: no recibe sesión, rutas ni datos del OS.
-  var FRAME_PATH='../despacho3d/index.html?v=ppp-connect1';
+  var FRAME_PATH='../despacho3d/index.html?v=council-resume1';
   function create(options){
     var win=options.window,doc=options.document,host=doc.getElementById('seccionDespacho'),
         canvas=doc.getElementById('despachoCanvas'),status=doc.getElementById('despachoEstado'),
@@ -58,3 +58,4 @@
   }
   root.YodDespachoSection=Object.freeze({create:create});
 })(typeof globalThis!=='undefined'?globalThis:this);
+
