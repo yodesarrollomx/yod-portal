@@ -14,8 +14,8 @@ const initialState=(v,id)=>v.state?.case_id===id&&v.state.revision===''&&v.state
 const active=new Set(['queued','running','claimed']);
 const FAST_FALLBACK=new Set(['unavailable','unauthorized','fast_lane_unavailable','model_unavailable','context_unavailable']);
 const FAST_NOTICES={busy:'El autón sigue respondiendo el mensaje anterior. Espera un momento y vuelve a enviar.',rate_limited:'Demasiados mensajes seguidos. Espera unos minutos.',model_failed:'La respuesta no se completó. Tu mensaje no se guardó; puedes volver a enviarlo.',auth_unavailable:'El servicio del modelo rechazó la conexión. Tu mensaje no se guardó.',provider_busy:'El modelo está saturado. Tu mensaje no se guardó; vuelve a intentarlo.',cancelled:'',invalid_request:'No se pudo enviar ese mensaje.'};
-const diagnosticCodes=new Set(['unauthorized','session_changed','timeout','unavailable','despacho_not_ready','invalid_selection','invalid_snapshot','invalid_message','invalid_job','invalid_event','seleccion_invalida','enlace_invalido','outside_os','case_changed','session_pending','transport_busy','response_limit','invalid_response']);
-const transientCodes=new Set(['timeout','unavailable','transport_busy','session_pending']);
+const diagnosticCodes=new Set(['unauthorized','session_changed','timeout','unavailable','despacho_not_ready','invalid_selection','invalid_snapshot','invalid_message','invalid_job','invalid_event','seleccion_invalida','enlace_invalido','outside_os','case_changed','session_pending','transport_busy','lock_busy','response_limit','invalid_response']);
+const transientCodes=new Set(['timeout','unavailable','transport_busy','lock_busy','session_pending']);
 const diagnosticCode=e=>diagnosticCodes.has(e?.message)?e.message:'unavailable';
 function checked(v){if(v?.ok===false)throw Error(diagnosticCodes.has(v.error)?v.error:'unavailable');return v;}
 export function validateSelection(v){
@@ -69,6 +69,7 @@ export function workspaceSourceNotice(error){
  if(fields[error?.sourceMetadata])return fields[error.sourceMetadata]+' Puedes volver a consultar; no se cambió ningún documento.';
  const code=diagnosticCode(error);
  return ({
+  lock_busy:'El expediente está atendiendo otra consulta. Recupera su lectura en unos segundos; tu PPP y tu conversación se conservan.',
   response_limit:'La lectura del expediente supera el límite admitido. El vínculo del PPP todavía no se ha recuperado.',
   invalid_response:'El servidor devolvió una lectura ilegible del expediente. Recupera su conexión sin cerrar el puesto.',
   invalid_snapshot:'La lectura del expediente no contiene metadatos válidos para este proyecto. El PPP no se abrirá con datos de otro caso.',

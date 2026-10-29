@@ -11,10 +11,10 @@ import {mountWorkView} from './work-view.mjs?v=core1';
 import {PROFILE_WORK_LANES,profileWorkView,nextRecordedTask} from './profile-work.mjs?v=140';
 import {registeredBoard,resolveBoard,stationIdentity,nativeBoardState,nativeVolumeCapability,nativeVolumeProposal,nativeVolumeReceipt,nativeVolumeReconciliation,proposalDiscardPayload,nativeVolumeRejection} from './project-station.mjs?v=native-volumes3';
 import {mountKnowledgeBoard} from './knowledge-board.mjs?v=128';
-import {createFrameTransport,validateWorkspaceSources,workspaceSourceNotice} from './conversation.mjs?v=records2';
+import {createFrameTransport,validateWorkspaceSources,workspaceSourceNotice} from './conversation.mjs?v=ppp-connect1';
 import {validateFastSession} from './fast-lane.mjs';
-import {DurableGoals,goalDisplay,taskDisplay,goalReviewActions,goalRoadmap,orderedGoals,goalReadView} from './goals.mjs?v=entregas291';
-export {taskDisplay} from './goals.mjs?v=entregas291';
+import {DurableGoals,goalDisplay,taskDisplay,goalReviewActions,goalRoadmap,orderedGoals,goalReadView} from './goals.mjs?v=ppp-connect1';
+export {taskDisplay} from './goals.mjs?v=ppp-connect1';
 export const WORKSPACE_TABS=[['ppp','Plan de potencial'],['activity','Trabajo'],['tasks','Encargos'],['moac','MOAC'],['sources','Expediente'],['browser','Navegador'],['knowledge','Notas y versiones'],['meeting','Consejo y entregas'],['avatar','Conocer al autón']];
 export const WORKSPACE_GROUPS={ppp:['ppp'],activity:['activity','tasks','moac','browser','meeting'],sources:['sources','knowledge','avatar']};
 export const workspaceGroup=id=>Object.keys(WORKSPACE_GROUPS).find(key=>WORKSPACE_GROUPS[key].includes(id))||'ppp';
@@ -124,7 +124,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
  const nativeRecovery=createNativeVolumeRecovery();
  let documentTray=null,moacModel={phase:'loading',notice:'Consultando el MOAC del proyecto…'};
  function paintMoac(){paintNativeMoac({container:sections.moac,model:moacModel,refresh:()=>void readSources(),doc});}
- let selected=null,credential=null,disposed=false,timer=null,busy=false,tab='ppp',frame=null,nonce=null,board=null,boardRevision=null,conversation=null,proposals=[],generation=0,fetching=false,active=true,lastTaskRead=0,application=null,lastAppliedCalculated=null,lastAppliedSuperseded=false,lastAppliedRejection=false,applyTimer=null,boardHandshakeTimer=null,boardHandshakeTimedOut=false,boardLink=null,readingSources=null,sourceAttempts=0,sourceRetryAt=0,goalDraft={title:'',instruction:'',criterion:''},goalSnapshot=null,goalState={model:null,status:'disconnected',notice:'',pending:null},taskModelKey=null,focusedGoal=null;
+ let selected=null,credential=null,disposed=false,timer=null,busy=false,tab='ppp',frame=null,nonce=null,board=null,boardRevision=null,conversation=null,proposals=[],generation=0,fetching=false,active=true,lastTaskRead=0,application=null,lastAppliedCalculated=null,lastAppliedSuperseded=false,lastAppliedRejection=false,applyTimer=null,boardHandshakeTimer=null,boardHandshakeTimedOut=false,boardReadingReceived=false,boardLink=null,readingSources=null,sourceAttempts=0,sourceRetryAt=0,goalDraft={title:'',instruction:'',criterion:''},goalSnapshot=null,goalState={model:null,status:'disconnected',notice:'',pending:null},taskModelKey=null,focusedGoal=null;
  const navigation=createWorkspaceNavigation({win,getFrame:()=>frame,getBinding:()=>boardLink&&{...boardLink,nonce},onContext:()=>onPresentation(),getContext:()=>({
   authorized:!disposed&&active&&!!selected&&getSelection()?.case_id===selected.case_id,
   pilot:!!selected&&isPuesto2(selected,presentationLocation(win)),case_id:selected?.case_id,
@@ -382,8 +382,8 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
  function clearBoardHandshake(){clearTimeout(boardHandshakeTimer);boardHandshakeTimer=null;}
  function startBoardHandshake(retry=false){
   if(!boardLink?.bridge||board)return;
-  if(retry){clearBoardHandshake();boardHandshakeTimedOut=false;pppNote.textContent='Comprobando de nuevo la lectura compartida del PPP…';}
-  if(boardHandshakeTimer||boardHandshakeTimedOut)return;
+  if(retry){clearBoardHandshake();boardHandshakeTimedOut=false;boardReadingReceived=false;pppNote.textContent='Comprobando de nuevo la lectura del PPP…';}
+  if(boardHandshakeTimer||boardHandshakeTimedOut||boardReadingReceived)return;
   const own=generation;
   boardHandshakeTimer=setTimeout(()=>{
    boardHandshakeTimer=null;
@@ -417,9 +417,25 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   const data=e.data,own=generation;
   boardQueue=boardQueue.catch(()=>{}).then(async()=>{
    if(own!==generation||disposed||!acceptsBoardState(data))return;
+    // A documentary case has no worker session and cannot reconcile worker receipts.
+    if(selected.record_only===true&&!data.board)return;
    try{
     const shared=nativeBoardState(data.board,selected,boardLink);
     if(shared){
+      // Documentary previews have no server validator: validate every displayed identity/state field here.
+      if(selected.record_only===true){
+       const boundedText=value=>typeof value==='string'&&value.trim().length>0&&value.length<=256;
+       if(!boundedText(shared.scenario_id)||!boundedText(shared.revision)||typeof shared.confirmed!=='boolean'||typeof shared.pending!=='boolean')return;
+      }
+      // The iframe has answered. Waiting for a worker acknowledgement is a separate phase.
+      clearBoardHandshake();boardHandshakeTimedOut=false;boardReadingReceived=true;boardRetry.hidden=true;
+      if(selected.record_only===true){
+       const name=typeof shared.scenario_name==='string'&&shared.scenario_name.trim()?shared.scenario_name.slice(0,160):shared.scenario_id;
+       boardSummary.textContent='Lectura del PPP · Escenario: '+name+' · Revisión: '+shared.revision+(shared.pending?' · Cambios pendientes':shared.confirmed?'':' · Lectura por confirmar');
+       pppNote.textContent='PPP disponible para consulta. Este expediente no tiene un motor conectado; la lectura no se comparte con un autón.';
+       onPresentation();return;
+      }
+      if(!board)pppNote.textContent='Lectura recibida del PPP. Esperando confirmación de conexión con el autón…';
      const r=await request('/board/snapshot',shared);if(own!==generation||!selected)return;board=r.tablero;clearBoardHandshake();boardHandshakeTimedOut=false;boardRetry.hidden=true;
      boardSummary.textContent='Escenario: '+(board.scenario_name||board.scenario_id)+' · Revisión: '+board.revision+(board.confirmed&&!board.pending?' · Lectura confirmada':' · Cambios o lectura pendientes');
      pppNote.textContent=nativeVolumeCapability(board.capabilities?.volumes)?.write?'PPP conectado. Revisa los volúmenes propuestos antes de confirmarlos con el autón.':board.version_context?.read_only?'Versiones compartidas en consulta. Los ajustes se hacen en el tablero original.':board.confirmed&&!board.pending?'PPP compartido con el autón · lectura confirmada del tablero.':'El tablero tiene una lectura o cambios por confirmar.';
@@ -428,6 +444,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
      if(signature!==boardRevision){boardRevision=signature;onBoard(board.revision);win.dispatchEvent(new CustomEvent('yod-shared-board',{detail:{revision:board.revision}}));}
      paintProposals();dispatchRequested();onPresentation();
     }
+    if(selected.record_only===true)return;
     if(data.receipt){
      const r=data.receipt;
      if(application?.request_id===r.request_id){clearTimeout(applyTimer);applyTimer=null;}
@@ -449,7 +466,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
      }
      else{if(application?.request_id===r.request_id)application.status='unconfirmed';applyNotice.textContent='Ajuste sin confirmar. El resultado no se marca como aplicado.';pppNote.textContent=r.error==='receipt_not_found'?'Todavía no hay un recibo guardado para la solicitud original. No se volvió a enviar ningún cambio.':r.error==='operation_pending'?'La solicitud original continúa pendiente. Comprueba su recibo sin volver a enviarla.':r.error==='recibos_pendientes'?'Hay confirmaciones anteriores pendientes. Comprueba su registro antes de pedir otro ajuste; no se escribió de nuevo.':r.error==='conflicto_revision'?'El tablero cambió. La propuesta no se aplicó.':'El ajuste quedó sin confirmación. Conserva la misma solicitud y comprueba su recibo.';receiptRetry.hidden=!application&&!receipts.size;receiptRetry.disabled=false;paintProposals();dispatchRequested();}
     }
-   }catch{pppNote.textContent='El tablero sigue abierto; el autón no recibió todavía su última lectura.';}
+   }catch{if(own!==generation||disposed||!acceptsBoardState(data))return;pppNote.textContent='La lectura del PPP llegó, pero el motor no confirmó la conexión. Puedes recuperarla sin cerrar el tablero.';boardRetry.hidden=false;}
   });
  }
  async function readSources(){
@@ -471,7 +488,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
    if(!frame&&!readingSources&&sourceAttempts<3&&Date.now()>=sourceRetryAt)void readSources();
    if(tab==='meeting')void council.refresh();
    if(tab==='browser')paintBrowser(await request('/computer/state'));
-   if(boardLink?.bridge){startBoardHandshake();postBoard(board?'yod:ppp:read':'yod:ppp:hello');const r=await request('/board/state');proposals=r.proposals||[];nativeRecovery.observe(proposals,{serverAt:r.server_at});paintProposals();dispatchRequested();}
+   if(boardLink?.bridge){startBoardHandshake();postBoard(board?'yod:ppp:read':'yod:ppp:hello');if(selected.record_only!==true){const r=await request('/board/state');proposals=r.proposals||[];nativeRecovery.observe(proposals,{serverAt:r.server_at});paintProposals();dispatchRequested();}}
   }catch{if(own===generation)notice.textContent='El puesto no respondió. Reintentando; la conversación puede continuar.';}
   finally{if(fetching===token)fetching=null;}
  }
@@ -489,7 +506,7 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
   if(goal)meeting.open(goal,id,selected.avatar?.name||selected.name);
   else presentationHost.replaceChildren(el('p','Todavía no hay una entrega preparada para presentar.'),button('Ver pendientes',()=>setTab('tasks')));
  }
- function clear(){council.clear();nativeRecovery.clear();navigation.reset();moacModel={phase:'loading',notice:'Consultando el MOAC del proyecto…'};sections.moac.replaceChildren();archive.clear();documentTray?.destroy();documentTray=null;meeting.clear();avatarCard.clear();workView.clear();generation++;fetching=null;clearBoardHandshake();boardHandshakeTimedOut=false;clearTimeout(applyTimer);applyTimer=null;application=null;lastAppliedCalculated=null;lastAppliedSuperseded=false;lastAppliedRejection=false;receipts.clear();receiptRetry.hidden=true;receiptRetry.disabled=false;applyNotice.textContent='';boardSummary.textContent='Todavía no hay una lectura compartida.';boardRetry.hidden=true;focusedGoal=null;workBoard.replaceChildren();knowledge.reset();lastTaskRead=0;goalSnapshot=null;taskModelKey=null;brief.replaceChildren();credential=null;selected=null;board=null;boardRevision=null;conversation=null;readingSources=null;sourceAttempts=0;sourceRetryAt=0;boardLink=null;proposals=[];goalDraft={title:'',instruction:'',criterion:''};for(const input of Object.values(goalInputs))input.value='';newGoal.open=false;frame?.remove();frame=null;image.removeAttribute('src');image.hidden=true;activity.replaceChildren();links.replaceChildren();taskList.replaceChildren();sections.sources.replaceChildren();proposalHost.replaceChildren();pppHost.replaceChildren();pppActions.querySelector('.workspace-external-board')?.remove();goalState={model:null,status:'disconnected',notice:'',pending:null};tasks.hide();notice.textContent='El acceso cambió. Vuelve a abrir tu despacho.';onPresentation();}
+ function clear(){council.clear();nativeRecovery.clear();navigation.reset();moacModel={phase:'loading',notice:'Consultando el MOAC del proyecto…'};sections.moac.replaceChildren();archive.clear();documentTray?.destroy();documentTray=null;meeting.clear();avatarCard.clear();workView.clear();generation++;fetching=null;clearBoardHandshake();boardHandshakeTimedOut=false;boardReadingReceived=false;clearTimeout(applyTimer);applyTimer=null;application=null;lastAppliedCalculated=null;lastAppliedSuperseded=false;lastAppliedRejection=false;receipts.clear();receiptRetry.hidden=true;receiptRetry.disabled=false;applyNotice.textContent='';boardSummary.textContent='Todavía no hay una lectura compartida.';boardRetry.hidden=true;focusedGoal=null;workBoard.replaceChildren();knowledge.reset();lastTaskRead=0;goalSnapshot=null;taskModelKey=null;brief.replaceChildren();credential=null;selected=null;board=null;boardRevision=null;conversation=null;readingSources=null;sourceAttempts=0;sourceRetryAt=0;boardLink=null;proposals=[];goalDraft={title:'',instruction:'',criterion:''};for(const input of Object.values(goalInputs))input.value='';newGoal.open=false;frame?.remove();frame=null;image.removeAttribute('src');image.hidden=true;activity.replaceChildren();links.replaceChildren();taskList.replaceChildren();sections.sources.replaceChildren();proposalHost.replaceChildren();pppHost.replaceChildren();pppActions.querySelector('.workspace-external-board')?.remove();goalState={model:null,status:'disconnected',notice:'',pending:null};tasks.hide();notice.textContent='El acceso cambió. Vuelve a abrir tu despacho.';onPresentation();}
  function open(selection,target='ppp'){if(selected?.case_id===selection.case_id){active=true;setTab(target);void readSources();return;}clear();selected=selection;if(!selection.goals?.ready)taskList.append(el('p','El seguimiento de objetivos aún no está conectado para este proyecto.'));root.setAttribute('aria-label','Puesto de '+stationIdentity(selection).name);active=true;generation++;notice.textContent='Preparando el puesto de '+selection.name+'…';paintBrief();setTab(target);void readSources();if(!timer)timer=setInterval(()=>void refresh(),tab==='tasks'?12000:4000);}
  win.addEventListener('message',receive);
  return{open,setTab,getTab:()=>tab,interactionContext:()=>navigation.context(),navigateInteraction:value=>navigation.navigate(value),navigateAssisted:value=>navigation.assisted(value),presentationSnapshot:()=>({case_id:selected?.case_id||null,board,goalState,boardLink,selected,active}),reset:clear,setActive(value){if(active===value)return;active=value;if(!value){meeting.hide();knowledge.hide();clearBoardHandshake();}if(value)void refresh();},dispose(){disposed=true;clear();navigation.dispose();workView.dispose();knowledge.dispose();clearInterval(timer);win.removeEventListener('message',receive);root.remove();transport.dispose?.();},root};

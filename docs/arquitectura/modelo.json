@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-28.despacho-registro.4",
+  "revision": "2026-10-28.despacho-ppp-connection.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -2961,6 +2961,13 @@
           "source_revision": "working_tree_2026-10-20",
           "status": "codigo",
           "claim": "Interacción frontend local por rutas A/B/C, voz con confirmación y tarjetas con evidencia; producción pendiente."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/despacho-ppp-connection.md",
+          "source_revision": "working_tree_2026-10-28",
+          "status": "codigo",
+          "claim": "Recepción del iframe y confirmación del motor se muestran separadamente; expedientes documentales consultan el PPP sin sesión de trabajador. Seis pruebas aisladas; producción pendiente."
         }
       ],
       "data_entities": [
@@ -14094,6 +14101,30 @@
       ],
       "deployment": "Portal PR316, PR319 y PR320 publicados; motor PR144 y catálogo privado PR145 activos. Portero versión102 conserva siete expedientes autorizados. PR146 desacopla estado documental de disponibilidad del motor; su publicación y la comprobación visual final están en curso. Vertical y correo no acreditados.",
       "rollback": "Revertir interfaz y apagar capacidad del consejo conservando expedientes, sesiones y recibos privados."
+    },
+    {
+      "id": "CHG-DESPACHO-PPP-CONNECTION-20261028",
+      "components": [
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES",
+        "SVC-AUTON-CLOUD",
+        "SYS-YOD-OS",
+        "EXT-DRIVE",
+        "GAS-PORTERO",
+        "SYS-DESPACHO"
+      ],
+      "status": "implementado_local",
+      "authorization": "Dirección solicita retomar el análisis y completar pendientes del despacho. Continuación acotada al puesto PPP; backend reservado por otra ejecución.",
+      "proposal": "Separar lectura recibida del iframe PPP de confirmación del motor. El temporizador de handshake describe sólo ausencia de mensaje válido. Los expedientes documentales pueden consultar el PPP registrado sin solicitar credenciales de trabajador ni declarar lectura compartida con un motor. Conservar origen, ventana, nonce, caso, escenario, revisión y recibos existentes. Ampliación propuesta: read/readGoals del navegador recuperan sólo rechazo explícito lock_busy previo a ejecución, máximo tres intentos dentro del límite total vigente. Preservar payload e identidad; cancelar por cierre, vetar cambios de sesión y no repetir timeouts, errores de red, denegaciones ni escrituras. Mensaje de bloqueo distinguible al agotar; no atribuirle todavía el fallo productivo observado.",
+      "tests": [
+        "Snapshot válido recibido con confirmación demorada no se confunde con iframe que no respondió.",
+        "Snapshot inválido conserva espera, respuesta tardía tras cambiar caso no altera el puesto.",
+        "Expediente documental no llama mintFastSession ni rutas /board; no habilita propuestas.",
+        "Lecturas recuperan bloqueo explícito y conservan presupuesto total, identidad y payload.",
+        "Agotamiento, cierre y cambio de sesión interrumpen recuperación; timeouts, red, denegación y mutaciones no se reintentan."
+      ],
+      "deployment": "Preparado y revisado localmente: siete pruebas de conexión PPP y21 de transporte aprobadas;14 regresiones nuevas en total. Suite local1083/1084: único fallo es un activo PNG no materializado por el conector, presente y sin cambios en GitHub. Arquitectura, impacto,OS,portal,obra y matriz canónica aprobados. CI completo requerido antes de integrar. La carga privada del piloto y el circuito del consejo requieren verificación productiva separada.",
+      "rollback": "Revertir sólo interfaz y mensajes de conexión; conservar registro, permisos, modelos y recibos."
     }
   ],
   "data_contracts": [
@@ -18743,6 +18774,13 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/despacho-residence-status.test.cjs",
+      "components": [
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-ppp-connection.test.cjs",
       "components": [
         "SYS-DESPACHO-3D"
       ]

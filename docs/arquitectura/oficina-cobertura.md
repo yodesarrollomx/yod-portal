@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-28.despacho-registro.4
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-28.despacho-ppp-connection.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -1138,6 +1138,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [Publicación126 con bitácora, geometría de avatar, presencia y estaciones aisladas por caso; evidencia de navegador distingue fixtures de solicitudesGSI reales. · Estado: ejecucion · yodesarrollomx/yod-portal · docs/arquitectura/despacho126-resultados.md · Revisión: 0351157a71ec9fc3c5b3beae70702c92646ece58](https://github.com/yodesarrollomx/yod-portal/blob/0351157a71ec9fc3c5b3beae70702c92646ece58/docs/arquitectura/despacho126-resultados.md)
 - Puesto2.0 implementado localmente en puesto-agente.mjs/css: avatar existente, hilo visible, vistas propias, resumen de snapshot confirmado y retorno clásico; publicación y recorrido Chromium HTTP pendientes. · Estado: codigo · yodesarrollomx/yod-portal · docs/arquitectura/puesto-agente2.md · Sin revisión inmutable en esta referencia
 - Interacción frontend local por rutas A/B/C, voz con confirmación y tarjetas con evidencia; producción pendiente. · Estado: codigo · yodesarrollomx/yod-portal · despacho3d/agent-interaction.mjs · Revisión: working\_tree\_2026-10-20
+- Recepción del iframe y confirmación del motor se muestran separadamente; expedientes documentales consultan el PPP sin sesión de trabajador. Seis pruebas aisladas; producción pendiente. · Estado: codigo · yodesarrollomx/yod-portal · docs/arquitectura/despacho-ppp-connection.md · Revisión: working\_tree\_2026-10-28
 
 **Evidencia de conexiones:**
 

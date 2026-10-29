@@ -1,26 +1,23 @@
 {
-  "model_revision": "2026-10-28.despacho-registro.4",
-  "proposal_id": "CHG-CONSEJO-AUTONES-20261027",
-  "summary": "Mantener la residencia documental desde el catálogo autorizado cuando el motor carece de señal reciente; el trabajo y la presentación siguen exigiendo prueba de ejecución. Respetar revisión, caducidad y revocación del caso.",
+  "model_revision": "2026-10-28.despacho-ppp-connection.1",
+  "proposal_id": "CHG-DESPACHO-PPP-CONNECTION-20261028",
+  "summary": "Distinguir recepción PPP, confirmación del motor y consulta documental sin trabajador. Recuperación acotada de lecturas ante bloqueo explícito previo a ejecución.",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-DESPACHO",
     "SYS-DESPACHO-3D",
-    "SVC-AUTON-CLOUD",
     "SYS-POTENCIALES",
-    "GAS-PORTERO",
+    "SVC-AUTON-CLOUD",
+    "SYS-YOD-OS",
     "EXT-DRIVE",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-CONTROL",
-    "SYS-OBRA-CLIENTE"
+    "GAS-PORTERO",
+    "SYS-DESPACHO"
   ],
   "tests": [
     "node --test tests/*.cjs",
     "node scripts/arquitectura.cjs --check",
     "node verify-os.cjs",
     "node verify-portal.cjs",
-    "Estado documental con motor no disponible, baja durante respuesta pendiente, caducidad, revocación y prevención de trabajo inventado."
+    "node verify-accesos.cjs",
+    "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir la proyección documental del catálogo en cliente y Portero, o desactivar OFICINA_ESTADOS_REALES; no cambia permisos, concesiones ni etapas."
+  "rollback": "Revertir el estado visual de conexión y la consulta documental del puesto; no altera permisos, datos ni recibos. Revertir recuperación de lecturas en el transporte del OS; no requiere migración ni cambia plazos."
 }

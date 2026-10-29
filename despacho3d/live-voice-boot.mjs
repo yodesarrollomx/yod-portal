@@ -5,12 +5,12 @@ import {mountAvatarCard} from './avatar-card.mjs?v=126';
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=records2';
 import {createEntryPreparation} from './voice-preparation.mjs?v=2';
 import {residentAccessDecision} from './resident-agents.mjs?v=records2';
-import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=records2';
+import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=ppp-connect1';
 import {stationIdentity} from './project-station.mjs?v=native-volumes3';
 import {createLiveVoice} from './live-voice.mjs?v=close-receipt1';
 import {voiceView} from './voice-view.mjs?v=141';
-import {createWorkspace} from './agent-workspace.mjs?v=records2';
-import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=entregas291';
+import {createWorkspace} from './agent-workspace.mjs?v=ppp-connect1';
+import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=ppp-connect1';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=records2';
 import {groupTranscriptFragments} from './live-transcript.mjs';
 
