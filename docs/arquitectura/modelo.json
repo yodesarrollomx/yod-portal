@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-28.despacho-registro.4",
+  "revision": "2026-10-29.ppp-ficha-etapas.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -8,7 +8,7 @@
     "cobrar_antes"
   ],
   "coverage": {
-    "summary": "Inventario conciliado de 22 repositorios, 90 componentes y 142 conexiones. Sala: reparación de nube integrada y recibos de Pages comprobados para el alcance inspeccionado; externalización de nuevos medios propuesta con emisor desactivado. Bandeja espera consentimiento y relevo.",
+    "summary": "Inventario conciliado de 22 repositorios, 90 componentes y 145 conexiones. Sala: reparación de nube integrada y recibos de Pages comprobados para el alcance inspeccionado; externalización de nuevos medios propuesta con emisor desactivado. Bandeja espera consentimiento y relevo.",
     "production_verified": false,
     "limitations": [
       "No se ha comprobado la versión activa de todos los Apps Script",
@@ -301,6 +301,13 @@
           "source_revision": "working_tree_2026-10-20",
           "status": "codigo",
           "claim": "Borrador local aislado por caso/escenario/base de1/2/3volúmenes; cantidades independientes sin cálculo financiero, Store ni autosave; producción pendiente."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-ficha-etapas.md",
+          "source_revision": "2026-10-29.ppp-ficha-etapas.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva."
         }
       ],
       "data_entities": [
@@ -1165,6 +1172,13 @@
           "claim": "V72 verificada en ejecución privada37888901829: HEAD y versión coinciden en hash189630ca1ab4d19c17f54f9e13caacbfb6aa99c44ad34240ad6275d806224d3d; mismos IDs/implementación/URL. display_name separado de avatar.name canónico; no certifica escrituras de negocio.",
           "status": "ejecucion",
           "source_revision": "Apps Script version72; 2026-10-09"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-ficha-etapas.md",
+          "source_revision": "2026-10-29.ppp-ficha-etapas.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva."
         }
       ],
       "data_entities": [
@@ -1195,6 +1209,13 @@
         {
           "claim": "Integración pendiente de verificar",
           "status": "pendiente"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-ficha-etapas.md",
+          "source_revision": "2026-10-29.ppp-ficha-etapas.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva."
         }
       ],
       "data_entities": [
@@ -2724,6 +2745,13 @@
           "claim": "Lectura nativa de programa por cuerpos y flujo por etapas. Campos ausentes quedan pendientes; comparación con proforma activa sin sustituir datos globales. Detalle en registro privado.",
           "status": "ejecucion",
           "source_revision": "2026-10-01"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-ficha-etapas.md",
+          "source_revision": "2026-10-29.ppp-ficha-etapas.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva."
         }
       ],
       "data_entities": [
@@ -3004,6 +3032,13 @@
           "commit": "7f1297cbf1ba9fe12f663faf2f843f35f79d411e",
           "claim": "Puente de propósito exclusivo e idempotencia desplegado en servicio existente: diagnóstico de crédito/ritmo, una solicitud nueva por minuto y recibos persistentes;559 pruebas pasadas y0 fallos antes del arranque vigente.",
           "status": "ejecucion"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-ficha-etapas.md",
+          "source_revision": "2026-10-29.ppp-ficha-etapas.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva."
         }
       ],
       "data_entities": [
@@ -5173,11 +5208,19 @@
           "claim": "Coordinador reporta GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; dos escenarios conservan IDs y 269 campos, geometría pendiente. Acta privada fuera del repositorio. Vertical y otros casos no acreditados.",
           "status": "declarado",
           "source_revision": "Apps Script version 66; cotejo Patrimonial 2026-10-05"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-ficha-etapas.md",
+          "source_revision": "2026-10-29.ppp-ficha-etapas.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva."
         }
       ],
-      "contract": "Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente. Recuperación #47: conservar compatibilidad Vertical; ausencia del adaptador Patrimonial observada en V65 según relevo, publicación API V66 reportada posteriormente, con GET Patrimonial y cotejo de 166 celdas aprobados según coordinador sólo para el caso inspeccionado; geometría y Vertical pendientes. Reconciliar job exacto y recibos antes de CAS conforme CTR-PPP-PATRIMONIAL-NATIVO.",
+      "contract": "Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente. Recuperación #47: conservar compatibilidad Vertical; ausencia del adaptador Patrimonial observada en V65 según relevo, publicación API V66 reportada posteriormente, con GET Patrimonial y cotejo de 166 celdas aprobados según coordinador sólo para el caso inspeccionado; geometría y Vertical pendientes. Reconciliar job exacto y recibos antes de CAS conforme CTR-PPP-PATRIMONIAL-NATIVO. Ampliación propuesta CHG-PPP-FICHA-ETAPAS-20261029: reorganizar etapas del mismo caso/escenario mediante datos y fórmulas canónicas, con coherencia por modificación; implementación y despliegue de esta ampliación pendientes.",
       "contract_ids": [
-        "CTR-PPP-PATRIMONIAL-NATIVO"
+        "CTR-PPP-PATRIMONIAL-NATIVO",
+        "CTR-PPP-FICHA-ETAPAS"
       ]
     },
     {
@@ -6467,6 +6510,51 @@
       "contract": "brokers_snapshot autenticado; mismos registros/ACL de brokers.v1; sin escrituras ni datos privados en Git.",
       "contract_ids": [
         "CTR-BROKERS-MINI-CRM"
+      ]
+    },
+    {
+      "id": "CON-PPP-ETAPAS-INTENCION",
+      "from": "SVC-AUTON-CLOUD",
+      "to": "SYS-POTENCIALES",
+      "label": "Propone etapas desde la intención final y contexto vigente",
+      "kind": "api",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-ficha-etapas.md",
+          "source_revision": "2026-10-29.ppp-ficha-etapas.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva."
+        }
+      ],
+      "contract": "Conserva caso, escenario, revisión e identidad de la operación. El agente estructura el encargo; no recibe autoridad de escritura por la conversación ni implementa cálculo financiero. Escritura y recibo permanecen en el contrato autorizado de PPP.",
+      "contract_ids": [
+        "CTR-PPP-FICHA-ETAPAS"
+      ]
+    },
+    {
+      "id": "CON-PPP-ETAPAS-ESCRITURA",
+      "from": "SYS-POTENCIALES",
+      "to": "GAS-PORTERO",
+      "label": "Solicita etapas y relee coherencia del modelo",
+      "kind": "api",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-ficha-etapas.md",
+          "source_revision": "2026-10-29.ppp-ficha-etapas.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva."
+        }
+      ],
+      "contract": "Extensión propuesta sheet-stages en Portero existente: caso_id/escenario_id/revision_esperada/request_id y stages schema1 con count, duration_months, mode sequential y allocation preserve. Validar actor, capacidades y revisión; devolver stages_by_scenario, stage_receipt.calculated y checks del mismo modelo. PPPStages.gs/PPPStagesProgram.gs preparados por separado; host vigente y readback productivo pendientes.",
+      "contract_ids": [
+        "CTR-PPP-FICHA-ETAPAS",
+        "CTR-PPP-SHEETS"
       ]
     }
   ],
@@ -14094,6 +14182,30 @@
       ],
       "deployment": "Portal PR316, PR319 y PR320 publicados; motor PR144 y catálogo privado PR145 activos. Portero versión102 conserva siete expedientes autorizados. PR146 desacopla estado documental de disponibilidad del motor; su publicación y la comprobación visual final están en curso. Vertical y correo no acreditados.",
       "rollback": "Revertir interfaz y apagar capacidad del consejo conservando expedientes, sesiones y recibos privados."
+    },
+    {
+      "id": "CHG-PPP-FICHA-ETAPAS-20261029",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD"
+      ],
+      "status": "propuesto",
+      "authorization": "Dirección solicita el 29-oct-2026 la implementación real en PPP de ficha mínima común a cinco motores, tablero habitual, paneles clicables, una etapa inicial y reorganización por voz/dictado/texto con Sheets, fórmulas y coherencia tras cada modificación; autoriza entregar visible mediante GitHub. No exige nueva aprobación comercial para este alcance.",
+      "proposal": "Implementar el recorrido común en los cinco HTML reales y preservar casos/escenarios. Nueva alta compatible parte de una etapa; el agente estructura la intención final 3 etapas de 12 meses con contexto vigente. Escritor autorizado conserva permisos, CAS, idempotencia y recibo. Sheets mantiene datos y fórmulas, valida inventario/áreas/recursos/calendario/flujos y devuelve el mismo modelo al tablero y conversación. Faltantes, capacidad ausente, conflictos y confirmación incierta siguen visibles; no se introduce motor financiero paralelo ni sitio de demostración. Contrato propuesto CTR-PPP-FICHA-ETAPAS, complementario a CTR-PPP-SHEETS. Transporte previsto sheet-stages con stages schema1 count/duration_months/mode sequential/allocation preserve. Lectura stages_by_scenario y stage_receipt.calculated/checks; módulos PPPStages.gs y PPPStagesProgram.gs. Etapas no alteran volúmenes schema2 ni inventan reparto financiero. Ficha sólo usa defaults estructurales y conserva faltantes explícitos.",
+      "tests": [
+        "FICHA-5/PANEL: recorrer los cinco HTML con datos sintéticos, abrir tablero nativo y paneles en escritorio/móvil sin perder accesos, documentos ni escenarios.",
+        "ETAPA-1/INTENCION-3X12: alta compatible con una etapa; caso existente conserva etapas; texto final 3 etapas de 12 meses comparte ruta con dictado/voz y no aplica negaciones ni audio provisional.",
+        "COHERENCIA: comparar inventario, áreas, recursos únicos, calendario completo y flujos en fixtures y fórmulas nativas aisladas; no aceptar cálculo financiero paralelo.",
+        "CONCURRENCIA/CONFIRMADO: permisos, revisión obsoleta, cambio de caso/usuario, duplicado, ACK perdido y recibo exacto sin repetir escrituras inciertas.",
+        "ENTREGA: pruebas locales, CI, Pages, versión existente de GAS y lectura final se registran por separado; sin POST de pruebas a producción."
+      ],
+      "deployment": "Propuesta, contrato DTO/ruta y criterios registrados antes de implementación. Código en preparación coordinada; pendientes pruebas aisladas, PR/CI, Pages, host y versión GAS existentes, capacidad de libros y readback real. Cada evidencia se incorporará sin generalizar de un motor o piloto a los cinco.",
+      "rollback": "Deshabilitar sólo la capacidad nueva de etapas y revertir consumidores/handlers mediante commits y la versión previa de la misma implementación GAS. Conservar casos, escenarios, etapas, recibos, fórmulas, ACL e históricos; no restaurar libros completos ni borrar registros."
     }
   ],
   "data_contracts": [
@@ -16171,6 +16283,48 @@
         "Animación por código no se declara generativa.",
         "Cuota agotada no penaliza calidad; puntuación sólo de decisiones vinculadas al corte.",
         "No congelar video para cubrir voz; preservar aprobación manual y linaje."
+      ]
+    },
+    {
+      "id": "CTR-PPP-FICHA-ETAPAS",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD"
+      ],
+      "source": "Encargo directo de Dirección del 29-oct-2026; propuesta previa a implementación en docs/arquitectura/ppp-ficha-etapas.md. Extiende CTR-PPP-SHEETS sin cambiar permisos ni cálculo canónico.",
+      "input": [
+        "Ficha mínima por plantilla; sólo defaults estructurales y faltantes financieros explícitos",
+        "caso_id",
+        "escenario_id",
+        "revision_esperada",
+        "request_id",
+        "actor autenticado por el Portero existente",
+        "stages: {schema:1,count,duration_months,mode:sequential,allocation:preserve}",
+        "texto final enviado por la persona o dictado confirmado con contexto vigente"
+      ],
+      "output": [
+        "tablero normal del motor y paneles existentes",
+        "stages_by_scenario en la lectura nativa del mismo caso",
+        "revisión y resultados calculados en Sheets",
+        "stage_receipt.calculated y checks ligados a operación y lectura",
+        "recibo o pendiente explícito"
+      ],
+      "invariants": [
+        "Una ficha común abre los cinco tableros existentes; las capacidades reales del modelo determinan escritura, no el nombre del motor ni la UI.",
+        "Una nueva alta compatible parte de una etapa; abrir un caso conserva sus etapas, escenarios e históricos.",
+        "Voz, dictado y texto comparten intención final y contexto. Audio provisional, lectura de documentos o mensajes de terceros no autorizan aplicar.",
+        "El servidor conserva autorización, allowlist, revisión esperada, idempotencia y recibos; no se reintenta una operación incierta con un ID nuevo.",
+        "Datos y fórmulas viven en Sheets. Reorganizar etapas no multiplica inventario, terreno, importes ni recursos comunes.",
+        "Cada modificación cruza coherencia del modelo completo y relee resultados; no confundir persistido con calculado o comprobado.",
+        "El agente no recibe rangos ni fórmulas arbitrarias para ejecutar. Una migración de fórmulas exige registro anterior/nuevo, motivo, versión y validación aislada.",
+        "PR, CI, Pages, GAS, libro y micrófono físico se acreditan por separado; esta extensión está propuesta.",
+        "sheet-stages conserva allocation preserve: no infiere reparto financiero uniforme ni altera la colección schema2 de volúmenes.",
+        "La fuente preparada PPPStages.gs/PPPStagesProgram.gs requiere integración con el host vigente, capacidad del libro y readback real antes de declarar operación productiva."
       ]
     }
   ],
@@ -18745,6 +18899,26 @@
       "prefix": "tests/despacho-residence-status.test.cjs",
       "components": [
         "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "server/PPPStages.gs",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "server/PPPStagesProgram.gs",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS"
       ]
     }
   ],

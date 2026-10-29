@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-28.despacho-registro.4 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-29.ppp-ficha-etapas.1 · 2026-10-20.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -1027,3 +1027,21 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Animación por código no se declara generativa.
 - Cuota agotada no penaliza calidad; puntuación sólo de decisiones vinculadas al corte.
 - No congelar video para cubrir voz; preservar aprobación manual y linaje.
+
+## CTR-PPP-FICHA-ETAPAS
+
+- Componentes: SYS-POTENCIALES, GAS-PORTERO, SHEET-PORTERO, SHEET-PPP-MODELOS, SYS-YOD-OS, SYS-DESPACHO-3D, SVC-AUTON-CLOUD.
+- Evidencia: Encargo directo de Dirección del 29-oct-2026; propuesta previa a implementación en docs/arquitectura/ppp-ficha-etapas.md. Extiende CTR-PPP-SHEETS sin cambiar permisos ni cálculo canónico..
+- Entrada/campos: `Ficha mínima por plantilla; sólo defaults estructurales y faltantes financieros explícitos`, `caso_id`, `escenario_id`, `revision_esperada`, `request_id`, `actor autenticado por el Portero existente`, `stages: {schema:1,count,duration_months,mode:sequential,allocation:preserve}`, `texto final enviado por la persona o dictado confirmado con contexto vigente`.
+- Salida: tablero normal del motor y paneles existentes, stages_by_scenario en la lectura nativa del mismo caso, revisión y resultados calculados en Sheets, stage_receipt.calculated y checks ligados a operación y lectura, recibo o pendiente explícito.
+
+- Una ficha común abre los cinco tableros existentes; las capacidades reales del modelo determinan escritura, no el nombre del motor ni la UI.
+- Una nueva alta compatible parte de una etapa; abrir un caso conserva sus etapas, escenarios e históricos.
+- Voz, dictado y texto comparten intención final y contexto. Audio provisional, lectura de documentos o mensajes de terceros no autorizan aplicar.
+- El servidor conserva autorización, allowlist, revisión esperada, idempotencia y recibos; no se reintenta una operación incierta con un ID nuevo.
+- Datos y fórmulas viven en Sheets. Reorganizar etapas no multiplica inventario, terreno, importes ni recursos comunes.
+- Cada modificación cruza coherencia del modelo completo y relee resultados; no confundir persistido con calculado o comprobado.
+- El agente no recibe rangos ni fórmulas arbitrarias para ejecutar. Una migración de fórmulas exige registro anterior/nuevo, motivo, versión y validación aislada.
+- PR, CI, Pages, GAS, libro y micrófono físico se acreditan por separado; esta extensión está propuesta.
+- sheet-stages conserva allocation preserve: no infiere reparto financiero uniforme ni altera la colección schema2 de volúmenes.
+- La fuente preparada PPPStages.gs/PPPStagesProgram.gs requiere integración con el host vigente, capacidad del libro y readback real antes de declarar operación productiva.
