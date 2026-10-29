@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-29.council-trace-notification.1",
+  "revision": "2026-10-29.council-refresh.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -14363,6 +14363,24 @@
       ],
       "deployment": "Cliente y pruebas focales preparados localmente. Verificación completa, publicación y comprobación productiva pendientes; backend se publica después del consumidor compatible.",
       "rollback": "Revertir la interfaz por revisión sólo si el backend no emite suppressed; conservar expedientes, sesiones, recibos y notificaciones históricas."
+    },
+    {
+      "id": "CHG-COUNCIL-REFRESH-20261029",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "status": "implementado_local",
+      "authorization": "Dirección solicita corregir la consulta que impide seleccionar el historial del consejo durante lecturas lentas.",
+      "proposal": "Consultar automáticamente sólo mientras alguna sesión esté queued, reviewing o correcting. Mantener Actualizar consejo explícito para las reuniones terminales y permitir selección local durante una lectura, sin habilitar mutaciones hasta terminar ni durante un acuse incierto. Conservar revisión, request_id, revocación y coalescencia de lecturas.",
+      "tests": [
+        "Lectura diferida sin solapamiento lógico, selección de historial y consulta manual.",
+        "Estados activos, ausencia de duplicados al mutar y respuesta tardía de caso revocado.",
+        "Suite del portal, arquitectura y verificadores existentes."
+      ],
+      "deployment": "Cliente y pruebas focales implementados localmente; integración completa y verificación productiva pendientes.",
+      "rollback": "Revertir sólo la política de sondeo y sus versiones de recurso; mantener el consumidor compatible con suppressed y el historial privado."
     }
   ],
   "data_contracts": [

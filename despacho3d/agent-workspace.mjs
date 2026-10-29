@@ -1,4 +1,4 @@
-import {mountCouncil} from './council-view.mjs?v=council-trace4';
+import {mountCouncil} from './council-view.mjs?v=council-trace5';
 import {nativeMoac,paintNativeMoac} from './native-moac.mjs?v=1';
 import {createWorkspaceNavigation} from './workspace-navigation.mjs?v=native-volumes3';
 import {isPuesto2,presentationLocation} from './puesto-agente.mjs?v=ruisenor1';

@@ -1,12 +1,11 @@
 {
-  "model_revision": "2026-10-29.council-trace-notification.1",
-  "proposal_id": "CHG-COUNCIL-TRACE-NOTIFICATION-20261029",
-  "summary": "Identificadores de tareas visibles y compatibilidad con correo no solicitado, sin nuevos efectos externos.",
+  "model_revision": "2026-10-29.council-refresh.1",
+  "proposal_id": "CHG-COUNCIL-REFRESH-20261029",
+  "summary": "Sondeo del consejo limitado a estados activos, selección de historial disponible y actualización manual sin nuevas mutaciones.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "SVC-AUTON-CLOUD"
+    "SYS-DESPACHO-3D"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -16,5 +15,5 @@
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir la interfaz por revisión sólo si el backend no emite suppressed; conservar expedientes, sesiones, recibos y notificaciones históricas."
+  "rollback": "Revertir sólo la política de sondeo y sus versiones de recurso; mantener el consumidor compatible con suppressed y el historial privado."
 }
