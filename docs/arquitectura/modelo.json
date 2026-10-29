@@ -14289,7 +14289,8 @@
         "GAS-PORTERO",
         "SHEET-PPP-MODELOS",
         "SYS-DESPACHO-3D",
-        "SVC-AUTON-CLOUD"
+        "SVC-AUTON-CLOUD",
+        "SHEET-PORTERO"
       ],
       "status": "implementado_local",
       "authorization": "Continuación de la recuperación del consejo y PPP solicitada por Dirección; corrección de transporte sin alterar cantidades, fórmulas, supuestos, permisos ni etapas.",
