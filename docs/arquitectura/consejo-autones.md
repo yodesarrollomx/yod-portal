@@ -54,3 +54,8 @@ La interfaz ofrece **Reanudar revisión** sólo si el backend devuelve `resume_a
 `blocked_reason: task_limit` y `next_action: new_delivery_required` muestran el mensaje acotado del servicio y retiran controles de observaciones, aceptación y reanudación. Se mantiene el historial y la revisión que excedió el límite permanece en el journal privado del motor. No se amplían presupuestos ni se convierten bloqueos deterministas en reintentos. El frontend no autoriza cambios de etapa ni escribe al PPP.
 
 Trece pruebas de interfaz/modelo incluyen apertura sin mutaciones, doble clic, acuse perdido seguido de lectura de la cola, idempotencia de solicitud, conflicto, falta de permiso, señales incoherentes y bloqueo visible sin escrituras. Las pruebas sintéticas no acreditan recuperación de una sesión real.
+
+
+## Controles de encargos durante la recuperación
+
+CHG-ENCARGOS-RECUPERACION-20261029. Implementado localmente; publicación y comprobación productiva pendientes. El puesto mantiene el sondeo mientras un encargo está en cola o ejecución y permite una consulta explícita con Actualizar encargos. Las metas detenidas, entregadas o en espera de datos dejan libres los controles; cualquier acción vuelve a leer antes de escribir con CAS y el identificador durable existente. Un acuse incierto conserva su misma operación y pausa la lectura pasiva. Reabrir el mismo caso actualiza sus capacidades desde la selección autorizada recibida sin borrar el trabajo ni cambiar de proyecto.

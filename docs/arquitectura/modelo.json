@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-29.council-resume.1",
+  "revision": "2026-10-29.goals-recovery.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -14324,6 +14324,23 @@
       ],
       "deployment": "Interfaz y validación local implementadas; depende de publicación coordinada del backend privado. Pruebas productivas y recorrido completo pendientes.",
       "rollback": "Revertir interfaz y versiones de recursos mediante revisión; conservar sesión, historial y recibos privados."
+    },
+    {
+      "id": "CHG-ENCARGOS-RECUPERACION-20261029",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D"
+      ],
+      "status": "implementado_local",
+      "authorization": "Dirección pide terminar el circuito productivo existente y corregir bloqueos conservando historial.",
+      "proposal": "Evitar que la lectura automática ocupe los controles de encargos que esperan decisión. Mantener sondeo para cola/ejecución y recuperación inicial, lectura manual explícita y lectura fresca/CAS antes de cualquier escritura. Al reabrir el mismo puesto, usar sólo la selección autorizada vigente recibida para recuperar capacidades.",
+      "tests": [
+        "Regresión con backend lento: sin sondeo de metas detenidas ni acuses pendientes; cola y ejecución siguen observables.",
+        "Lectura manual y escritura con revisión fresca, recuperación de selección sin nuevo caso ni mutaciones.",
+        "Suite portal, arquitectura y verificadores obligatorios."
+      ],
+      "deployment": "Implementado localmente: sondeo de metas activas, consulta manual y selección autorizada renovada al reabrir. Prueba sintética24/24; publicación y comprobación productiva pendientes.",
+      "rollback": "Revertir cambios de lectura y versiones de recursos mediante PR; conservar metas, evidencias y recibos."
     }
   ],
   "data_contracts": [

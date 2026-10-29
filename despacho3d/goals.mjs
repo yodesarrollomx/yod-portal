@@ -111,6 +111,11 @@ export class DurableGoals {
   return success;
  }
 }
+// Explicit actions re-read before writing. Passive polling remains useful only
+// while work can advance without a person, or before the first valid snapshot.
+export function shouldPollGoals(state){
+ return !state.pending&&(!state.model||state.model.goals.some(goal=>['queued','running'].includes(goal.status)));
+}
 // Polling only consults the canonical store. Hidden panels/tabs make no requests.
 export function watchGoals(controller,{visible=()=>true,interval=8000,setTimer=setTimeout,clearTimer=clearTimeout}={}){
  let stopped=false,timer;

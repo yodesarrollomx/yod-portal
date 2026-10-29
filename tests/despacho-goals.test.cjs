@@ -154,7 +154,7 @@ test('explicit goal recovery still shows loading after a failed observation',asy
  assert.equal(goalReadView(h.controller.state()).phase,'ready');
 });
 test('workspace background goals wait twelve seconds after a slow read finishes, preserving the failure while recovering',async()=>{
- const {goalReadView}=await load(),h=await harness(),pending=[];let now=100000;
+ const {goalReadView,shouldPollGoals}=await load(),h=await harness(),pending=[];let now=100000;
  h.server.readGoals=()=>new Promise(resolve=>pending.push(resolve));
  const source=fs.readFileSync(require.resolve('../despacho3d/agent-workspace.mjs'),'utf8');
  const from=source.indexOf(' async function refresh()'),to=source.indexOf(' function setTab(',from);
@@ -162,7 +162,7 @@ test('workspace background goals wait twelve seconds after a slow read finishes,
  const api=vm.runInNewContext('(function(){'+
   'let disposed=false,active=true,fetching=null,selected=selection,generation=1,lastTaskRead=0,frame={},readingSources=null,sourceAttempts=0,sourceRetryAt=0,tab="ppp",boardLink=null;'+
   'const getSelection=()=>selected;'+source.slice(from,to)+'return{refresh};})()',
-  {selection,tasks:h.controller,Date:{now:()=>now},doc:{hidden:false}});
+  {selection,tasks:h.controller,shouldPollGoals,Date:{now:()=>now},doc:{hidden:false}});
  await api.refresh();assert.equal(pending.length,1);
  now+=45000;await api.refresh();assert.equal(pending.length,1,'an unfinished read is shared, never replaced');
  pending.shift()({ok:false,error:'unavailable'});await new Promise(resolve=>setImmediate(resolve));
@@ -171,6 +171,26 @@ test('workspace background goals wait twelve seconds after a slow read finishes,
  now++;await api.refresh();assert.equal(pending.length,1);assert.deepEqual(goalReadView(h.controller.state()),failed);
  pending.shift()({ok:true,schema:1,source_revision:'source-2',goals:[goal()]});await new Promise(resolve=>setImmediate(resolve));
  assert.equal(goalReadView(h.controller.state()).phase,'ready');
+});
+test('stopped goals and uncertain writes leave passive polling idle; explicit recovery still reads the current revision',async()=>{
+ const {shouldPollGoals}=await load(),h=await harness();
+ h.server.state.goals=[goal({status:'stopped'})];await h.controller.read();
+ assert.equal(shouldPollGoals(h.controller.state()),false);
+ for(const status of ['queued','running'])assert.equal(shouldPollGoals({model:{goals:[goal({status})]},pending:null}),true);
+ for(const status of ['ready_for_review','awaiting_data','completed'])assert.equal(shouldPollGoals({model:{goals:[goal({status})]},pending:null}),false);
+ assert.equal(shouldPollGoals({model:null,pending:null}),true);
+ assert.equal(shouldPollGoals({model:null,pending:{method:'reviewGoal'}}),false);
+ Object.assign(h.server.state.goals[0],{revision:'fresh-after-other-tab',updated_at:'2026-10-03T00:05:00Z'});
+ await h.controller.read();assert.equal(await h.controller.review('goal-synthetic','resume'),true);
+ assert.equal(h.server.calls.at(-1).payload.expected_revision,'fresh-after-other-tab');
+ assert.equal(shouldPollGoals(h.controller.state()),true,'a resumed goal becomes observable again');
+});
+test('reopening the same workspace uses the fresh authorized capabilities without clearing saved work',()=>{
+ const source=fs.readFileSync(require.resolve('../despacho3d/agent-workspace.mjs'),'utf8');
+ const open=source.split('\n').find(line=>line.startsWith(' function open(selection,'));assert.ok(open);
+ const api=vm.runInNewContext('(function(){let selected={case_id:"same",can_enqueue:true,goals:{ready:false}},active=false,cleared=0,reads=0,tab;const clear=()=>cleared++,setTab=value=>tab=value,readSources=()=>reads++;'+open+';return{open,state:()=>({selected,active,cleared,reads,tab})};})()');
+ const fresh={case_id:'same',can_enqueue:false,goals:{ready:true}};api.open(fresh,'tasks');
+ const s=api.state();assert.equal(s.selected,fresh);assert.equal(s.active,true);assert.equal(s.cleared,0);assert.equal(s.reads,1);assert.equal(s.tab,'tasks');
 });
 test('a case switch cannot share the previous case read or accept its late response',async()=>{
  const h=await harness(),pending=[];h.server.readGoals=payload=>new Promise(resolve=>pending.push({payload,resolve}));

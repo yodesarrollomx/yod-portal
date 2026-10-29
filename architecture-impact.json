@@ -1,22 +1,19 @@
 {
-  "model_revision": "2026-10-29.council-resume.1",
-  "proposal_id": "CHG-CONSEJO-RECUPERACION-20261029",
-  "summary": "Recuperación explícita y comprobable de la misma ronda del consejo; el sondeo automático deja disponible la acción de recuperación y la comprobación del mismo envío, conservando lectura manual, CAS y autorización.",
+  "model_revision": "2026-10-29.goals-recovery.1",
+  "proposal_id": "CHG-ENCARGOS-RECUPERACION-20261029",
+  "summary": "Recuperación de encargos sin interferencia de consultas automáticas; lectura manual y CAS vigentes, selección autorizada fresca al reabrir el mismo caso.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-DESPACHO-3D",
-    "SVC-AUTON-CLOUD",
-    "SYS-DESPACHO"
+    "SYS-DESPACHO-3D"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "node --test tests/council.test.cjs",
+    "node --test tests/despacho-goals.test.cjs",
     "node --test tests/*.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
-    "node verify-obra-app.cjs",
-    "node --test tests/council.test.cjs tests/despacho-section.test.cjs"
+    "node verify-obra-app.cjs"
   ],
   "rollback": "Revertir interfaz y versiones de recursos mediante revisión; conservar sesión, historial y recibos privados."
 }
