@@ -18,3 +18,7 @@ Usar la skill `instalar-mantener-chinches` y `docs/arquitectura/chinches-paquete
 Prioridad del propietario: vender más, luego mejorar margen/control y después acelerar cobros. Seguridad e integridad de datos no se sacrifican por ese orden.
 
 Relevo del Despacho 3D (entorno del agente y versión de oficina): `docs/ENTORNO-AGENTE-RELEVO.md` (estado, interruptores, reglas, método de entrega y lo que sigue).
+
+## Relevo de Jev Images · 28-oct-2026
+
+Leer [protocolo visual experimental](docs/JEV-IMAGENES-RELEVO-20261028.md) antes de clasificar fotografías, planos o capturas mediante Jev. La guía define un piloto en sombra y **no acredita ejecución ni despliegue**. Mantener los contratos, CI, reservas, pruebas y rutas canónicas vigentes; no usar Jev textual como visión ni dar por notificados a otros chats hasta observar su acuse.
