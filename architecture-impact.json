@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-10-29.council-resume.1",
   "proposal_id": "CHG-CONSEJO-RECUPERACION-20261029",
-  "summary": "Recuperación explícita y comprobable de la misma ronda del consejo; bloqueos deterministas sin reintentos.",
+  "summary": "Recuperación explícita y comprobable de la misma ronda del consejo; el sondeo automático deja disponible la acción de recuperación y la comprobación del mismo envío, conservando lectura manual, CAS y autorización.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO-3D",
@@ -15,7 +15,8 @@
     "node verify-os.cjs",
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
-    "node verify-obra-app.cjs"
+    "node verify-obra-app.cjs",
+    "node --test tests/council.test.cjs tests/despacho-section.test.cjs"
   ],
   "rollback": "Revertir interfaz y versiones de recursos mediante revisión; conservar sesión, historial y recibos privados."
 }
