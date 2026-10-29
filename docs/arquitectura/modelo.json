@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-29.council-refresh.1",
+  "revision": "2026-10-29.ppp40-semilla.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -315,6 +315,13 @@
           "source_revision": "2026-10-29.ppp-read-validation.1",
           "status": "propuesto",
           "claim": "Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp40-semilla.md",
+          "source_revision": "2026-10-29.ppp40-semilla.1",
+          "status": "propuesto",
+          "claim": "PPP4 incremental: catálogo literal, grafo puro y semilla incompleta versionada dentro del frontend existente. Persistencia propuesta por módulo opt-in en la MISMA implementación GAS y tablas del master. Sin nueva URL, ACL, segundo motor financiero ni datos privados. Seed_id pre-alta es identidad de borrador, no board_case_id; promoción debe preservar vínculo explícito y no se presenta implementada."
         }
       ],
       "data_entities": [
@@ -1193,6 +1200,13 @@
           "source_revision": "2026-10-29.ppp-read-validation.1",
           "status": "propuesto",
           "claim": "Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp40-semilla.md",
+          "source_revision": "2026-10-29.ppp40-semilla.1",
+          "status": "propuesto",
+          "claim": "PPP4 incremental: catálogo literal, grafo puro y semilla incompleta versionada dentro del frontend existente. Persistencia propuesta por módulo opt-in en la MISMA implementación GAS y tablas del master. Sin nueva URL, ACL, segundo motor financiero ni datos privados. Seed_id pre-alta es identidad de borrador, no board_case_id; promoción debe preservar vínculo explícito y no se presenta implementada."
         }
       ],
       "data_entities": [
@@ -1230,6 +1244,13 @@
           "source_revision": "2026-10-29.ppp-ficha-etapas.1",
           "status": "propuesto",
           "claim": "Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp40-semilla.md",
+          "source_revision": "2026-10-29.ppp40-semilla.1",
+          "status": "propuesto",
+          "claim": "PPP4 incremental: catálogo literal, grafo puro y semilla incompleta versionada dentro del frontend existente. Persistencia propuesta por módulo opt-in en la MISMA implementación GAS y tablas del master. Sin nueva URL, ACL, segundo motor financiero ni datos privados. Seed_id pre-alta es identidad de borrador, no board_case_id; promoción debe preservar vínculo explícito y no se presenta implementada."
         }
       ],
       "data_entities": [
@@ -2773,6 +2794,13 @@
           "source_revision": "2026-10-29.ppp-read-validation.1",
           "status": "propuesto",
           "claim": "Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp40-semilla.md",
+          "source_revision": "2026-10-29.ppp40-semilla.1",
+          "status": "propuesto",
+          "claim": "PPP4 incremental: catálogo literal, grafo puro y semilla incompleta versionada dentro del frontend existente. Persistencia propuesta por módulo opt-in en la MISMA implementación GAS y tablas del master. Sin nueva URL, ACL, segundo motor financiero ni datos privados. Seed_id pre-alta es identidad de borrador, no board_case_id; promoción debe preservar vínculo explícito y no se presenta implementada."
         }
       ],
       "data_entities": [
@@ -3081,6 +3109,13 @@
           "source_revision": "2026-10-29.ppp-read-validation.1",
           "status": "propuesto",
           "claim": "Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp40-semilla.md",
+          "source_revision": "2026-10-29.ppp40-semilla.1",
+          "status": "propuesto",
+          "claim": "PPP4 incremental: catálogo literal, grafo puro y semilla incompleta versionada dentro del frontend existente. Persistencia propuesta por módulo opt-in en la MISMA implementación GAS y tablas del master. Sin nueva URL, ACL, segundo motor financiero ni datos privados. Seed_id pre-alta es identidad de borrador, no board_case_id; promoción debe preservar vínculo explícito y no se presenta implementada."
         }
       ],
       "data_entities": [
@@ -14381,6 +14416,29 @@
       ],
       "deployment": "Cliente y pruebas focales implementados localmente; integración completa y verificación productiva pendientes.",
       "rollback": "Revertir sólo la política de sondeo y sus versiones de recurso; mantener el consumidor compatible con suppressed y el historial privado."
+    },
+    {
+      "id": "CHG-PPP40-SEMILLA-20261029",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SVC-AUTON-CLOUD",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Continuidad PPP4 y primera versión solicitadas explícitamente por Dirección en conversación; plan canónico aportado localmente. Sin autorización derivada de este archivo.",
+      "proposal": "PPP4 incremental: catálogo literal, grafo puro y semilla incompleta versionada dentro del frontend existente. Persistencia propuesta por módulo opt-in en la MISMA implementación GAS y tablas del master. Sin nueva URL, ACL, segundo motor financiero ni datos privados. Seed_id pre-alta es identidad de borrador, no board_case_id; promoción debe preservar vínculo explícito y no se presenta implementada.",
+      "tests": [
+        "Semilla incompleta preserva null y fuente literal; superficie conocida debe ser positiva. Estado durable requiere recibo y lectura; el grafo distingue cero de ausencia.",
+        "ACL vertical existente, revisión/CAS, repetición/payload mismatch y recuperación por lectura sin segundo POST.",
+        "Catálogo 18 módulos/96 preguntas extraído sin convertir texto en reglas; grafo separa pertenencia y cálculo, rechaza ciclos.",
+        "UI descarta respuesta al cambiar identidad/revisión; propuesta sólo manualmente confirmada; conexión ausente no simula éxito.",
+        "Agente real, promoción a caso, calendario y recorrido online aún requieren integración/QA antes de nivel Básico."
+      ],
+      "deployment": "Candidato local en preparación. No integrado ni publicado; G0–G4 no acreditados.",
+      "rollback": "Revertir commits de consumidores y desactivar capacidad semilla en la implementación existente. Preservar semillas, casos, recibos e historia; no borrar ni restaurar libros."
     }
   ],
   "data_contracts": [
