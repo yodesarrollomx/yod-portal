@@ -43,3 +43,14 @@ Revertir los PR y apagar `YOD_COUNCIL_ENABLED`; conservar expedientes, metas, re
 La sala recibe `lifecycle` del motor privado y valida caso, revisiones, IDs únicos y continuidad de hitos antes de mostrarlo. Presenta etapa actual registrada, recorrido e historial plegable con actor, fecha en Hermosillo, motivo y referencia declarada como texto. Las reuniones conservan la etiqueta de su etapa histórica. Si falta `lifecycle`, no deduce la etapa actual de una reunión antigua. La vista funciona aun sin reuniones.
 
 Fuente comercial PPP pendiente de integración: el journal del consejo no prueba una transición del PPP. No se añadieron botones que cambien la etapa ni se hicieron escrituras a casos reales. La vista lo indica expresamente. Prueba sintética con etapa actual Codesarrollo y entrega anterior Potencial en `qa/consejo-preview.html`.
+
+
+## Recuperar una ronda interrumpida
+
+CHG-CONSEJO-RECUPERACION-20261029. Preparado y probado localmente; integración y recorrido productivo pendientes.
+
+La interfaz ofrece **Reanudar revisión** sólo si el backend devuelve `resume_available: true` para una sesión `interrupted`. Envía `action: resume`, texto vacío, la revisión esperada y un identificador estable. Una respuesta perdida conserva exactamente la misma operación; actualizar y reabrir sólo leen. La reanudación conserva la sesión, ronda, revisiones y observaciones. Un conflicto de revisión exige releer antes de otra acción.
+
+`blocked_reason: task_limit` y `next_action: new_delivery_required` muestran el mensaje acotado del servicio y retiran controles de observaciones, aceptación y reanudación. Se mantiene el historial y la revisión que excedió el límite permanece en el journal privado del motor. No se amplían presupuestos ni se convierten bloqueos deterministas en reintentos. El frontend no autoriza cambios de etapa ni escribe al PPP.
+
+Trece pruebas de interfaz/modelo incluyen apertura sin mutaciones, doble clic, acuse perdido seguido de lectura de la cola, idempotencia de solicitud, conflicto, falta de permiso, señales incoherentes y bloqueo visible sin escrituras. Las pruebas sintéticas no acreditan recuperación de una sesión real.

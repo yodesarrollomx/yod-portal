@@ -14,6 +14,8 @@ export function validateCouncil(value,caseId){
  if(value.lifecycle!==undefined)validateLifecycle(value.lifecycle,caseId);
  for(const s of value.sessions){
   if(s.case_id!==caseId||!text(s.id,200)||!s.id||!text(s.goal_id,200)||!text(s.title,200)||!Number.isSafeInteger(s.revision)||s.revision<1||!Object.hasOwn(COUNCIL_STATES,s.state)||!Object.hasOwn(STAGE_LABELS,s.stage)||!Array.isArray(s.reviews)||s.reviews.length>30||!Array.isArray(s.feedback)||s.feedback.length>50||!Array.isArray(s.tasks)||s.tasks.length>50||!text(s.summary,8000)||!Number.isFinite(Date.parse(s.updated_at)))throw Error('invalid_council');
+  if(s.resume_available!==undefined&&(typeof s.resume_available!=='boolean'||s.resume_available&&s.state!=='interrupted'))throw Error('invalid_council');
+  if(s.blocked_reason!==undefined&&(s.blocked_reason!=='task_limit'||s.state!=='needs_input'||s.resume_available===true||s.next_action!=='new_delivery_required'||!text(s.blocked_message,1000)||!s.blocked_message.trim()))throw Error('invalid_council');
   for(const r of s.reviews)if(!COUNCIL_ROLES.some(x=>x.id===r.role)||!['pass','revise','needs_input'].includes(r.verdict)||!text(r.comment,2500)||!Array.isArray(r.evidence_ids)||r.evidence_ids.length>8||!Number.isInteger(r.round))throw Error('invalid_council');
   for(const t of s.tasks)if(!text(t.id,200)||!text(t.title,600)||!text(t.criterion,1000)||!['pending','resolved','needs_input'].includes(t.state))throw Error('invalid_council');
   for(const f of s.feedback)if(!text(f.text,4000)||!Number.isFinite(Date.parse(f.at)))throw Error('invalid_council');
@@ -36,3 +38,4 @@ export function validateLifecycle(life,caseId){
  }
  if(previous!==life.stage)invalid();return structuredClone(life);
 }
+

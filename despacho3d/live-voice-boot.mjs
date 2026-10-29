@@ -9,7 +9,7 @@ import {createFrameTransport, validateSelection, Conversation} from './conversat
 import {stationIdentity} from './project-station.mjs?v=native-volumes3';
 import {createLiveVoice} from './live-voice.mjs?v=close-receipt1';
 import {voiceView} from './voice-view.mjs?v=141';
-import {createWorkspace} from './agent-workspace.mjs?v=ppp-connect1';
+import {createWorkspace} from './agent-workspace.mjs?v=council-resume1';
 import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=ppp-connect1';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=records2';
 import {groupTranscriptFragments} from './live-transcript.mjs';
@@ -452,3 +452,4 @@ if (open) {
   window.addEventListener('yod-residents-ready',bindResident);bindResident();
   window.addEventListener('pagehide',()=>{clearInterval(preparationTimer);entrance.clear();unbind?.();transport.dispose();});
 }
+

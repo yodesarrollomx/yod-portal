@@ -1,4 +1,4 @@
-import {mountCouncil} from './council-view.mjs?v=2';
+import {mountCouncil} from './council-view.mjs?v=council-resume1';
 import {nativeMoac,paintNativeMoac} from './native-moac.mjs?v=1';
 import {createWorkspaceNavigation} from './workspace-navigation.mjs?v=native-volumes3';
 import {isPuesto2,presentationLocation} from './puesto-agente.mjs?v=ruisenor1';
@@ -513,3 +513,4 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
  win.addEventListener('message',receive);
  return{open,setTab,getTab:()=>tab,interactionContext:()=>navigation.context(),navigateInteraction:value=>navigation.navigate(value),navigateAssisted:value=>navigation.assisted(value),presentationSnapshot:()=>({case_id:selected?.case_id||null,board,goalState,boardLink,selected,active}),reset:clear,setActive(value){if(active===value)return;active=value;if(!value){meeting.hide();knowledge.hide();clearBoardHandshake();}if(value)void refresh();},dispose(){disposed=true;clear();navigation.dispose();workView.dispose();knowledge.dispose();clearInterval(timer);win.removeEventListener('message',receive);root.remove();transport.dispose?.();},root};
 }
+
