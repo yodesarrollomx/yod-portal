@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-29.despacho-ppp-connection-ficha-etapas.1",
+  "revision": "2026-10-29.ppp-read-validation.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -308,6 +308,13 @@
           "source_revision": "2026-10-29.ppp-ficha-etapas.1",
           "status": "propuesto",
           "claim": "Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-read-validation.md",
+          "source_revision": "2026-10-29.ppp-read-validation.1",
+          "status": "propuesto",
+          "claim": "Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes."
         }
       ],
       "data_entities": [
@@ -1179,6 +1186,13 @@
           "source_revision": "2026-10-29.ppp-ficha-etapas.1",
           "status": "propuesto",
           "claim": "Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-read-validation.md",
+          "source_revision": "2026-10-29.ppp-read-validation.1",
+          "status": "propuesto",
+          "claim": "Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes."
         }
       ],
       "data_entities": [
@@ -2752,6 +2766,13 @@
           "source_revision": "2026-10-29.ppp-ficha-etapas.1",
           "status": "propuesto",
           "claim": "Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-read-validation.md",
+          "source_revision": "2026-10-29.ppp-read-validation.1",
+          "status": "propuesto",
+          "claim": "Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes."
         }
       ],
       "data_entities": [
@@ -2996,6 +3017,13 @@
           "source_revision": "working_tree_2026-10-28",
           "status": "codigo",
           "claim": "Recepción del iframe y confirmación del motor se muestran separadamente; expedientes documentales consultan el PPP sin sesión de trabajador. Seis pruebas aisladas; producción pendiente."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-read-validation.md",
+          "source_revision": "2026-10-29.ppp-read-validation.1",
+          "status": "propuesto",
+          "claim": "Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes."
         }
       ],
       "data_entities": [
@@ -3046,6 +3074,13 @@
           "source_revision": "2026-10-29.ppp-ficha-etapas.1",
           "status": "propuesto",
           "claim": "Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-read-validation.md",
+          "source_revision": "2026-10-29.ppp-read-validation.1",
+          "status": "propuesto",
+          "claim": "Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes."
         }
       ],
       "data_entities": [
@@ -3771,8 +3806,10 @@
       ],
       "status": "declarado",
       "runtime_verified": false,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
-      "contract_ids": []
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. Ampliación preparada: CTR-PPP-INACTIVE-FIELDS; aplicabilidad explícita de campos inactivos y diagnóstico sanitizado. Publicación y lectura final pendientes.",
+      "contract_ids": [
+        "CTR-PPP-INACTIVE-FIELDS"
+      ]
     },
     {
       "id": "CON-020",
@@ -5224,10 +5261,11 @@
           "claim": "Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva."
         }
       ],
-      "contract": "Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente. Recuperación #47: conservar compatibilidad Vertical; ausencia del adaptador Patrimonial observada en V65 según relevo, publicación API V66 reportada posteriormente, con GET Patrimonial y cotejo de 166 celdas aprobados según coordinador sólo para el caso inspeccionado; geometría y Vertical pendientes. Reconciliar job exacto y recibos antes de CAS conforme CTR-PPP-PATRIMONIAL-NATIVO. Ampliación propuesta CHG-PPP-FICHA-ETAPAS-20261029: reorganizar etapas del mismo caso/escenario mediante datos y fórmulas canónicas, con coherencia por modificación; implementación y despliegue de esta ampliación pendientes.",
+      "contract": "Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente. Recuperación #47: conservar compatibilidad Vertical; ausencia del adaptador Patrimonial observada en V65 según relevo, publicación API V66 reportada posteriormente, con GET Patrimonial y cotejo de 166 celdas aprobados según coordinador sólo para el caso inspeccionado; geometría y Vertical pendientes. Reconciliar job exacto y recibos antes de CAS conforme CTR-PPP-PATRIMONIAL-NATIVO. Ampliación propuesta CHG-PPP-FICHA-ETAPAS-20261029: reorganizar etapas del mismo caso/escenario mediante datos y fórmulas canónicas, con coherencia por modificación; implementación y despliegue de esta ampliación pendientes. Ampliación preparada: CTR-PPP-INACTIVE-FIELDS; aplicabilidad explícita de campos inactivos y diagnóstico sanitizado. Publicación y lectura final pendientes.",
       "contract_ids": [
         "CTR-PPP-PATRIMONIAL-NATIVO",
-        "CTR-PPP-FICHA-ETAPAS"
+        "CTR-PPP-FICHA-ETAPAS",
+        "CTR-PPP-INACTIVE-FIELDS"
       ]
     },
     {
@@ -5587,7 +5625,7 @@
       "to": "SVC-AUTON-CLOUD",
       "kind": "api",
       "label": "Conversación y operaciones del puesto ligadas al caso y actor",
-      "contract": "CTR-DESPACHO-AGENTE-OPERATIVO; CTR-PPP-AJUSTE-CONVERSADO",
+      "contract": "CTR-DESPACHO-AGENTE-OPERATIVO; CTR-PPP-AJUSTE-CONVERSADO Ampliación preparada: CTR-PPP-INACTIVE-FIELDS; aplicabilidad explícita de campos inactivos y diagnóstico sanitizado. Publicación y lectura final pendientes.",
       "status": "codigo",
       "runtime_verified": false,
       "evidence": [
@@ -5601,7 +5639,8 @@
       ],
       "contract_ids": [
         "CTR-DESPACHO-AGENTE-OPERATIVO",
-        "CTR-PPP-AJUSTE-CONVERSADO"
+        "CTR-PPP-AJUSTE-CONVERSADO",
+        "CTR-PPP-INACTIVE-FIELDS"
       ]
     },
     {
@@ -5610,7 +5649,7 @@
       "to": "SYS-POTENCIALES",
       "kind": "embed",
       "label": "Tablero original con contexto compartido, escenario y revisión",
-      "contract": "CTR-PPP-AJUSTE-CONVERSADO",
+      "contract": "CTR-PPP-AJUSTE-CONVERSADO Ampliación preparada: CTR-PPP-INACTIVE-FIELDS; aplicabilidad explícita de campos inactivos y diagnóstico sanitizado. Publicación y lectura final pendientes.",
       "status": "codigo",
       "runtime_verified": false,
       "evidence": [
@@ -5623,7 +5662,8 @@
         }
       ],
       "contract_ids": [
-        "CTR-PPP-AJUSTE-CONVERSADO"
+        "CTR-PPP-AJUSTE-CONVERSADO",
+        "CTR-PPP-INACTIVE-FIELDS"
       ]
     },
     {
@@ -5632,7 +5672,7 @@
       "to": "GAS-PORTERO",
       "kind": "api",
       "label": "Identidad, contexto, objetivos y cola autorizados",
-      "contract": "CTR-DESPACHO-AGENTE-OPERATIVO",
+      "contract": "CTR-DESPACHO-AGENTE-OPERATIVO Ampliación preparada: CTR-PPP-INACTIVE-FIELDS; aplicabilidad explícita de campos inactivos y diagnóstico sanitizado. Publicación y lectura final pendientes.",
       "status": "codigo",
       "runtime_verified": false,
       "evidence": [
@@ -5645,7 +5685,8 @@
         }
       ],
       "contract_ids": [
-        "CTR-DESPACHO-AGENTE-OPERATIVO"
+        "CTR-DESPACHO-AGENTE-OPERATIVO",
+        "CTR-PPP-INACTIVE-FIELDS"
       ]
     },
     {
@@ -14240,6 +14281,30 @@
       ],
       "deployment": "PR323: CI del segundo commit aprobó1093/1093,Chromium/WebKit,entrada/reunión/trabajo. Panorámica detectó inicio del fixture dentro de un tabique; corregido a corredor lateral con geometría/movimiento reales, orientación verificada y observación fresca de salida/entrada. Suite local final1094/1095: única falta es PNG2.5MB no materializado por conector, presente sin cambios en GitHub. Publicación depende de CI completo y comprobación productiva; no se acredita aquí el circuito del consejo.",
       "rollback": "Revertir sólo interfaz y mensajes de conexión; conservar registro, permisos, modelos y recibos."
+    },
+    {
+      "id": "CHG-PPP-READ-VALIDATION-20261029",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD",
+        "SHEET-PORTERO"
+      ],
+      "status": "implementado_local",
+      "authorization": "Continuación de la recuperación del consejo y PPP solicitada por Dirección; corrección de transporte sin alterar cantidades, fórmulas, supuestos, permisos ni etapas.",
+      "proposal": "Reconocer explícitamente un cap de mercado legado igual a cero como campo inactivo únicamente cuando la valuación nativa por m² está confirmada por entradas y resultados coherentes. Conservar límites de captura y rechazar cambios que activen capitalización sin tasa válida. Propagar aplicabilidad a interfaz, contexto del autón y voz. Clasificar errores de validación conocidos con cuatro identificadores acotados, sin valores ni detalles internos; mantener fallos desconocidos genéricos.",
+      "tests": [
+        "Lector exacto de la versión inspeccionada: escenarios válidos equivalentes y excepción limitada a cap0 con valor/m² positivo, porM2 true y p.capMercado0.",
+        "Escritor sin cambios: cap0 nuevo rechazado; volver al modo cap sin tasa válida revierte; cambio conjunto con tasa válida permitido.",
+        "Errores tipados: lista cerrada, autenticación previa, identidad interna del error y ausencia de cantidades, fórmulas o stack.",
+        "Cliente: marcador coherente obligatorio, etiqueta No aplicado, límites conservados, cero original sin convertir y propuestas inválidas rechazadas.",
+        "Motor: conservar campos inactivos en snapshot y contexto, no interpretarlos como tasas aplicadas; rechazar marcadores incoherentes.",
+        "CI y QA visual sintética; lectura productiva posterior con mismo caso/escenario/revisión, sin POST de prueba."
+      ],
+      "deployment": "Candidatos locales y pruebas aisladas; producción pendiente. Editor Apps Script reservado por otra ejecución: no publicar su borrador ni sustituir HEAD sin coordinación y comprobación de hash. Mantener separadas integración, Pages, Render y versión GAS.",
+      "rollback": "Revertir consumidores y versión de la misma implementación GAS mediante revisión; conservar todas las cantidades, fórmulas, escenarios, recibos y permisos. El rollback puede volver a bloquear la lectura del legado inactivo; declararlo, sin restaurar libros ni inventar tasas."
     }
   ],
   "data_contracts": [
@@ -16359,6 +16424,34 @@
         "PR, CI, Pages, GAS, libro y micrófono físico se acreditan por separado; esta extensión está propuesta.",
         "sheet-stages conserva allocation preserve: no infiere reparto financiero uniforme ni altera la colección schema2 de volúmenes.",
         "La fuente preparada PPPStages.gs/PPPStagesProgram.gs requiere integración con el host vigente, capacidad del libro y readback real antes de declarar operación productiva."
+      ]
+    },
+    {
+      "id": "CTR-PPP-INACTIVE-FIELDS",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD"
+      ],
+      "source": "Revisión de lector nativo y fórmulas del modelo. Evidencia operativa y fuentes privadas permanecen fuera del atlas público.",
+      "input": [
+        "Entradas canónicas, métricas nativas y escenario de la misma revisión.",
+        "Captura y propuestas sujetas al schema existente, actor y CAS."
+      ],
+      "output": [
+        "state.inactive_fields y metadata.inactive_fields limitados a inCapRateMercado en el caso legado comprobado.",
+        "Modelo sin cambios en cantidades, unidades, fórmulas ni digest del libro.",
+        "Error modelo_invalido con validation.code, field_id, scenario_id y reason de listas cerradas."
+      ],
+      "invariants": [
+        "Cap0 sólo es transportable como inactivo si inValorM2Zona>0, porM2===true y p.capMercado===0. No representa una tasa válida ni un dato imputado.",
+        "No ampliar min/max/nullable del schema ni permitir nuevas escrituras de cap0. Activar capitalización exige tasa válida; el escritor revierte estados inválidos.",
+        "El cliente exige marcador coherente, muestra No aplicado: valuación por m² y conserva el cero canónico sin sustituirlo por un valor de referencia.",
+        "Autón y voz conservan la aplicabilidad; no presentan cap0 como tasa usada ni recomiendan sustituirlo automáticamente.",
+        "Errores autenticados conocidos incluyen sólo identificadores acotados; no valores, fórmulas, libros, credenciales, stack o texto arbitrario.",
+        "No reintentar automáticamente validación determinista ni ampliar ACL. Una publicación requiere fuente vigente, reserva compatible, pruebas y lectura final."
       ]
     }
   ],
@@ -18960,6 +19053,17 @@
       "prefix": "tests/despacho-ppp-connection.test.cjs",
       "components": [
         "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "docs/arquitectura/ppp-read-validation.md",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD"
       ]
     }
   ],
