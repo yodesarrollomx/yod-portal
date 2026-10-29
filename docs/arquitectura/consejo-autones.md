@@ -59,3 +59,10 @@ Trece pruebas de interfaz/modelo incluyen apertura sin mutaciones, doble clic, a
 ## Controles de encargos durante la recuperación
 
 CHG-ENCARGOS-RECUPERACION-20261029. Implementado localmente; publicación y comprobación productiva pendientes. El puesto mantiene el sondeo mientras un encargo está en cola o ejecución y permite una consulta explícita con Actualizar encargos. Las metas detenidas, entregadas o en espera de datos dejan libres los controles; cualquier acción vuelve a leer antes de escribir con CAS y el identificador durable existente. Un acuse incierto conserva su misma operación y pausa la lectura pasiva. Reabrir el mismo caso actualiza sus capacidades desde la selección autorizada recibida sin borrar el trabajo ni cambiar de proyecto.
+
+
+## Identificadores y notificación no solicitada
+
+CHG-COUNCIL-TRACE-NOTIFICATION-20261029. Implementado localmente; publicación y comprobación productiva pendientes. La lista muestra el ID literal que devuelve el servicio junto al título, criterio y estado. No deduce perspectiva, ronda ni procedencia de un corte histórico por el orden de las filas; el identificador visible no reemplaza esa evidencia.
+
+El consumidor admite `notification.state=suppressed` y muestra «Correo: no solicitado». Este recibo describe una nueva publicación automática sin autorización estructurada de envío. No reinterpreta estados históricos `pending`, `uncertain` o `sent`, y abrir o actualizar la vista no envía ni reintenta mensajes. La política se ejecuta en el backend privado; la interfaz no concede permisos. Publicar y comprobar este consumidor antes del backend que emita el nuevo estado.
