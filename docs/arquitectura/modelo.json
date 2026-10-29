@@ -14126,7 +14126,7 @@
         "Recorrido por teclado, encuentro medido en su callback entre 1.9 y 2m y señal sintética fresca durante CI lento.",
         "Launcher padre no intercepta el retorno del puesto; visibilidad previa se restaura al cerrar y al retirar sesión."
       ],
-      "deployment": "PR323: primer CI aprobó1084/1084,Chromium yWebKit; recorrido panorámico falló al medir distancia. Ajuste de fixture conserva umbrales y renueva sólo señal sintética. Añadidas nueve regresiones de sondeo silencioso, launcher padre y fixture. Suite local final1092/1093: única falta es PNG2.5MB no materializado por conector, presente sin cambios en GitHub. Publicación depende de CI completo y comprobación productiva; no se acredita aquí el circuito del consejo.",
+      "deployment": "PR323: CI del segundo commit aprobó1093/1093,Chromium/WebKit,entrada/reunión/trabajo. Panorámica detectó inicio del fixture dentro de un tabique; corregido a corredor lateral con geometría/movimiento reales, orientación verificada y observación fresca de salida/entrada. Suite local final1094/1095: única falta es PNG2.5MB no materializado por conector, presente sin cambios en GitHub. Publicación depende de CI completo y comprobación productiva; no se acredita aquí el circuito del consejo.",
       "rollback": "Revertir sólo interfaz y mensajes de conexión; conservar registro, permisos, modelos y recibos."
     }
   ],

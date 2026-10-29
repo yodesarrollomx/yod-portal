@@ -29,11 +29,19 @@ const server=http.createServer((req,res)=>{
     // otherwise a slow screenshot run legitimately sends the resident away after 90 seconds.
     setInterval(()=>{if(profile)window.__publishResidence(activity);},5000);
     // This geometry fixture strips the UI boots; observe the radial route used by the marker.
-    window.__prepares=[];window.__voiceStarts=[];window.YodVoiceWorkspace={isOpen:()=>false,prepareNearby:id=>window.__prepares.push(id),releaseNearby:()=>{},openForCase:async(id,tab,options)=>{
+    window.__prepares=[];window.__voiceStarts=[];window.__nearbyPrepared=false;window.YodVoiceWorkspace={isOpen:()=>false,prepareNearby:id=>{window.__prepares.push(id);window.__nearbyPrepared=true;},releaseNearby:()=>{window.__nearbyPrepared=false;},openForCase:async(id,tab,options)=>{
      const p=window.despacho.getAgentState().position,c=window.despacho.camera.position;
      window.__voiceStarts.push({id,tab,options,distance:Math.hypot(c.x-p[0],c.z-p[1]),agent_position:[...p],camera_position:[c.x,c.z]});return true;
     }};
     window.__menuStops=[];window.__stopAtRadial=false;
+    // The lateral corridor in front of the desks is clear; the old northward start
+    // at z=-3.55 was inside the partition's collision margin.
+    window.__placeApproach=distance=>{const p=window.despacho.getAgentState().position;window.despacho.camera.position.set(p[0]+distance,1.65,p[1]);};
+    const walkKeys=new Set();window.__walkEvents=[];window.__watchWalk=false;
+    window.__walkSnapshot=()=>({state:window.despacho.getState?.(),agent:window.despacho.getAgentState(),camera:[window.despacho.camera.position.x,window.despacho.camera.position.y,window.despacho.camera.position.z],focus:document.activeElement?.id,hidden:document.hidden,observedKeys:[...walkKeys],prepared:window.__nearbyPrepared,menuStops:window.__menuStops,voiceStarts:window.__voiceStarts});
+    window.__recordWalk=(type,key)=>{if(window.__watchWalk){window.__walkEvents.push({type,key,at:performance.now(),...window.__walkSnapshot()});if(window.__walkEvents.length>24)window.__walkEvents.shift();}};
+    for(const type of ['keydown','keyup','blur'])window.addEventListener(type,event=>{if(type==='keydown')walkKeys.add(event.key);else if(type==='keyup')walkKeys.delete(event.key);else walkKeys.clear();window.__recordWalk(type,event.key);});
+    document.addEventListener?.('visibilitychange',()=>{walkKeys.clear();window.__recordWalk('visibilitychange');});
     window.addEventListener('yod-agent-menu-open',e=>{
      window.__opened.push(e.detail.case_id);
      if(window.__stopAtRadial){
@@ -102,16 +110,39 @@ const server=http.createServer((req,res)=>{
    await page.evaluate(()=>{window.despacho.camera.quaternion.copy(window.__savedCameraQuaternion);delete window.__savedCameraQuaternion;});
    if(mobile)assert.equal(await page.locator('#joystick').isVisible(),true);
    // Actual renderer and nonmodal radial: enter by walking, then keep walking closer.
-   await page.evaluate(()=>window.despacho.camera.position.set(7,1.65,3.5));
-   await page.waitForFunction(()=>window.__prepares.length>0);
+   // Observe a release and fresh preparation, so prior manual dismissals have
+   // passed through the production leave radius before this new approach.
+   await page.evaluate(()=>window.__placeApproach(-13));
+   await page.waitForFunction(()=>window.__nearbyPrepared===false);
+   await page.evaluate(()=>window.__placeApproach(-9.75));
+   await page.waitForFunction(()=>window.__nearbyPrepared===true);
    assert.equal(await page.evaluate(()=>window.__voiceStarts.length),0,'preparation does not open voice');
-   const viewYaw=await page.evaluate(()=>window.despacho.camera.rotation.y);
-   await page.mouse.move(180,220);await page.mouse.down();await page.mouse.move(180+viewYaw/.0036,220,{steps:3});await page.mouse.up();
+   // Pointer gestures must start on the renderer, not the overlaid entry card.
+   // The production pointer handler updates both private yaw and camera rotation.
+   for(let turn=0;turn<8;turn++){
+    const gesture=await page.evaluate(()=>{
+     const canvas=document.querySelector('#scene canvas'),r=canvas.getBoundingClientRect(),delta=(window.despacho.camera.rotation.y-Math.PI/2)/.0036;
+     if(Math.abs(delta)<.01)return null;
+     const dx=Math.max(-r.width*.6,Math.min(r.width*.6,delta));
+     for(const fy of [.5,.7,.4])for(const fx of [.8,.2,.5]){const x=r.x+r.width*fx,y=r.y+r.height*fy,end=x+dx;
+      if(end>r.left+8&&end<r.right-8&&document.elementFromPoint(x,y)===canvas&&document.elementFromPoint(end,y)===canvas)return {x,y,dx};
+     }
+     throw Error('No clear canvas gesture for approach orientation');
+    });
+    if(!gesture)break;
+    await page.mouse.move(gesture.x,gesture.y);await page.mouse.down();await page.mouse.move(gesture.x+gesture.dx,gesture.y,{steps:3});await page.mouse.up();
+   }
+   const approachYaw=await page.evaluate(()=>window.despacho.camera.rotation.y);
+   assert.ok(Math.abs(approachYaw-Math.PI/2)<.001,'W must point left along the clear corridor: '+approachYaw);
    // Walk with real input into the radial zone and stop in the same event turn.
    // A delayed automation roundtrip must not leave W held through the voice zone.
-   await page.evaluate(()=>{const p=window.despacho.getAgentState().position;window.__stopAtRadial=true;window.despacho.camera.position.set(p[0],1.65,p[1]+2.7);});
+   await page.evaluate(()=>{window.__placeApproach(2.7);window.__stopAtRadial=true;window.__watchWalk=true;window.__recordWalk('start');});
+   assert.equal(await page.evaluate(()=>{const c=window.despacho.camera.position;return window.despacho.allowed(c.x,c.z);}),true,'the approach must start outside every collision');
    await page.keyboard.down('w');
-   try{await page.waitForFunction(()=>document.querySelector('.station-radial')?.open);}finally{await page.keyboard.up('w');}
+   try{await page.waitForFunction(()=>document.querySelector('.station-radial')?.open);}catch(error){
+    console.log('PANORAMA_RADIAL_TIMEOUT',JSON.stringify(await page.evaluate(()=>({...window.__walkSnapshot(),events:window.__walkEvents}))));
+    await page.screenshot({path:path.join(out,'radial-timeout-'+(mobile?'movil':'escritorio')+'.png')}).catch(()=>{});throw error;
+   }finally{await page.keyboard.up('w');await page.evaluate(()=>{window.__watchWalk=false;});}
    const menuStop=await page.evaluate(()=>window.__menuStops.at(-1));
    assert.ok(menuStop?.distance>2&&menuStop.distance<=2.6,'walking stops in the radial zone before voice: '+JSON.stringify(menuStop));
    assert.equal(await page.locator('.station-radial').evaluate(e=>e.matches(':modal')),false);
@@ -120,7 +151,7 @@ const server=http.createServer((req,res)=>{
    await page.screenshot({path:path.join(out,'encuentro-circulo-'+(mobile?'movil':'escritorio')+'.png')});
    assert.equal(await page.evaluate(()=>window.__voiceStarts.length),0,'no encounter before approaching within two metres');
    // Stop 1.95 m from the actual seated figure, then let the production dwell gate run.
-   await page.evaluate(()=>{const p=window.despacho.getAgentState().position;window.despacho.camera.position.set(p[0],1.65,p[1]+1.95);});
+   await page.evaluate(()=>window.__placeApproach(1.95));
    await page.waitForFunction(()=>window.__voiceStarts.length===1);
    const encounter=await page.evaluate(()=>window.__voiceStarts[0]),encounterDistance=encounter.distance;
    assert.ok(encounterDistance>=1.9&&encounterDistance<=2,'encounter must happen at two metres, not centimetres: '+JSON.stringify(encounter));

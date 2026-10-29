@@ -26,11 +26,11 @@ Siete pruebas adicionales cubren recuperación, agotamiento, plazo total, result
 
 Las actualizaciones automáticas de metas conservan el último resultado o error visible. La primera lectura y la recuperación explícita sí muestran su carga. El siguiente sondeo espera doce segundos desde la terminación de la lectura anterior, para evitar que una respuesta lenta deje visible el fallo sólo unos instantes antes de volver a empezar.
 
-La revisión visual detectó que el botón Equipo del OS se superponía al retorno del puesto clásico. El cierre por teclado funcionaba: no se acreditó reapertura espontánea. La corrección debe ocultar ese botón durante el puesto completo y restaurar su visibilidad anterior al salir.
+La revisión visual detectó que el botón Equipo del OS se superponía al retorno del puesto clásico. El cierre por teclado funcionaba: no se acreditó reapertura espontánea. La corrección oculta ese botón durante el puesto completo y restaurar su visibilidad anterior al salir.
 
 ## Recorrido en navegador
 
-El primer CI aprobó las 1,084 pruebas del portal, Chromium y WebKit, pero falló al medir la distancia del encuentro en la prueba panorámica. El fixture dejaba vencer su observación sintética tras noventa segundos y medía la distancia después de otras operaciones. La corrección renueva exclusivamente la observación de prueba y toma la distancia en el callback real de encuentro. Conserva el recorrido por teclado, comprueba que el radial aparece a más de dos metros y exige voz entre 1.9 y 2 metros. No modifica el reloj, la caducidad ni el umbral del producto. La distancia original no quedó registrada, por lo que no se atribuye el fallo a una sola causa.
+El primer CI aprobó las 1,084 pruebas del portal, Chromium y WebKit, pero falló al medir la distancia del encuentro en la prueba panorámica. El fixture dejaba vencer su observación sintética tras noventa segundos y medía la distancia después de otras operaciones. La corrección renueva exclusivamente la observación de prueba y toma la distancia en el callback real de encuentro. Conserva el recorrido por teclado, comprueba que el radial aparece a más de dos metros y exige voz entre 1.9 y 2 metros. No modifica el reloj, la caducidad ni el umbral del producto. La distancia original no quedó registrada, por lo que no se atribuye el fallo a una sola causa. El segundo CI detectó que el nuevo inicio del fixture caía dentro de un tabique: se comprobó con las funciones reales de colisión y movimiento, y se sustituyó por un corredor lateral permitido. La prueba verifica orientación mediante gestos sobre el canvas y una salida/entrada fresca que rearma el encuentro anterior.
 
 ## Reversión
 
