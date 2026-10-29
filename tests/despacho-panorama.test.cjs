@@ -21,3 +21,39 @@ test('cutaway picking removes clipped walls, keeps furniture and restores walls 
  assert.equal(visibleOfficeHit({...wall,point:{y:.5}},true),true);
  assert.equal(visibleOfficeHit({object:{material:{}},point:{y:2}},true),true);
 });
+function panoramaFixture(){
+ const vm=require('node:vm'),code=fs.readFileSync(path.join(__dirname,'../scripts/probar-oficina-panoramica-browser.cjs'),'utf8');
+ const marker='await page.addInitScript(()=>{',start=code.indexOf(marker)+marker.length,end=code.indexOf('\n   });',start);
+ assert.ok(start>=marker.length&&end>start);
+ let now=0;const listeners=new Map(),pulses=[];
+ const window={addEventListener(type,fn){if(!listeners.has(type))listeners.set(type,[]);listeners.get(type).push(fn);},dispatchEvent(event){for(const fn of listeners.get(event.type)||[])fn(event);},despacho:{getAgentState:()=>({position:[7,-6.25]}),camera:{position:{x:7,z:-4.3}}}};
+ class Clock extends Date{constructor(...args){super(...(args.length?args:[now]));}static now(){return now;}}
+ const KeyboardEvent=function(type,options){Object.assign(this,{type},options);};
+ vm.runInNewContext(code.slice(start,end),{window,Date:Clock,KeyboardEvent,setInterval(fn,ms){pulses.push({fn,ms});return pulses.length;}});
+ return {window,pulses,advance(ms){now+=ms;for(const pulse of pulses)pulse.fn();}};
+}
+test('panorama fixture records encounter distance at callback time, before later camera movement',async()=>{
+ const f=panoramaFixture(),w=f.window;
+ await w.YodVoiceWorkspace.openForCase('synthetic-office','ppp',{encounter:true});
+ w.despacho.camera.position.z=10;
+ assert.ok(Math.abs(w.__voiceStarts[0].distance-1.95)<1e-10,'the recorded encounter does not reread a later camera position');
+ assert.deepEqual(Array.from(w.__voiceStarts[0].agent_position),[7,-6.25]);
+});
+test('geometry fixture maintains its synthetic observation beyond the real expiry without changing production TTL',async()=>{
+ const {autonResidence}=await import('../despacho3d/resident-motion.mjs');
+ const f=panoramaFixture();let reading;
+ f.window.YodRoomWork.subscribe(value=>reading=value[0]);
+ const initial=reading;
+ assert.equal(autonResidence(initial.auton_status,'synthetic-office',90001).destination,'unconfirmed','the real expiry remains enforced');
+ f.advance(90001);
+ assert.equal(autonResidence(reading.auton_status,'synthetic-office',90001).destination,'inicio','the fixture emits a fresh observation for its unchanged working state');
+ assert.ok(f.pulses.some(p=>p.ms<=5000));
+});
+test('radial appearance releases the fixture walking key synchronously instead of waiting for a driver roundtrip',()=>{
+ const f=panoramaFixture(),events=[];f.window.addEventListener('keyup',event=>events.push(event.key));
+ f.window.__stopAtRadial=true;
+ f.window.dispatchEvent({type:'yod-agent-menu-open',detail:{case_id:'synthetic-office'}});
+ assert.deepEqual(events,['w']);assert.equal(f.window.__stopAtRadial,false);
+ f.window.dispatchEvent({type:'yod-agent-menu-open',detail:{case_id:'synthetic-office'}});
+ assert.deepEqual(events,['w'],'ordinary later opens do not release unrelated input');
+});

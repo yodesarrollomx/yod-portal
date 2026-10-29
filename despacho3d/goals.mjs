@@ -71,18 +71,21 @@ export class DurableGoals {
  hide(){this.epoch++;this.reading=null;this.model=null;this.busy=false;this.status=this.pending?'unconfirmed':'disconnected';this.emit();}
  async call(method,payload){const transport=typeof this.transport==='function'?this.transport():this.transport;if(typeof transport?.[method]!=='function')throw Error('unavailable');let timer;try{return await Promise.race([transport[method](structuredClone(payload)),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('timeout')),this.timeout);})]);}finally{clearTimeout(timer);}}
  current(epoch,caseId){return epoch===this.epoch&&this.context()?.selection.case_id===caseId;}
- read(){
+ read({background=false}={}){
   if(!this.sync()||this.context()?.busy)return Promise.resolve(false);
   if(this.reading?.epoch===this.epoch&&this.reading.caseId===this.caseId)return this.reading.promise;
   if(this.busy)return Promise.resolve(false);
   const reading={epoch:this.epoch,caseId:this.caseId};
   reading.promise=new Promise(resolve=>{reading.resolve=resolve;});this.reading=reading;
   const finish=value=>{if(this.reading===reading)this.reading=null;reading.resolve(value);};
-  void this.readFresh().then(finish,()=>finish(false));
+  void this.readFresh({background}).then(finish,()=>finish(false));
   return reading.promise;
  }
- async readFresh(){
-  const epoch=this.epoch,caseId=this.caseId;this.busy=true;this.status=this.pending?'unconfirmed':'loading';this.emit();
+ async readFresh({background=false}={}){
+  const epoch=this.epoch,caseId=this.caseId;this.busy=true;
+  // A background observation keeps the last result visible, including a failure.
+  // Initial loading and explicit recovery still describe the in-flight read.
+  if(this.pending)this.status='unconfirmed';else if(!background||this.status==='disconnected')this.status='loading';this.emit();
   try{const response=await this.call('readGoals',{case_id:caseId});if(!this.current(epoch,caseId))return false;if(response?.ok===false)throw Error(response.error);this.model=validateGoals(response,caseId);this.status=this.pending?'unconfirmed':'ready';this.notice=this.pending?'El último guardado no está confirmado. Puedes consultar lo que ya quedó guardado o reintentar la misma acción.':'';return true;}
   catch(error){if(this.current(epoch,caseId))this.failed(error,false);return false;}
   finally{if(epoch===this.epoch){this.busy=false;this.emit();}}
@@ -111,7 +114,7 @@ export class DurableGoals {
 // Polling only consults the canonical store. Hidden panels/tabs make no requests.
 export function watchGoals(controller,{visible=()=>true,interval=8000,setTimer=setTimeout,clearTimer=clearTimeout}={}){
  let stopped=false,timer;
- async function tick(){if(stopped)return;if(visible()&&!controller.busy)await controller.read();if(!stopped)timer=setTimer(tick,interval);}
+ async function tick(){if(stopped)return;if(visible()&&!controller.busy)await controller.read({background:true});if(!stopped)timer=setTimer(tick,interval);}
  void tick();return()=>{stopped=true;clearTimer(timer);};
 }
 

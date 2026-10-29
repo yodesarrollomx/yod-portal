@@ -25,9 +25,23 @@ const server=http.createServer((req,res)=>{
     const listeners=new Set();window.__opened=[];window.__arrivals=[];
     const roomListeners=new Set();let activity='working';const roomState=()=>[{case_id:profile?.case_id,phase:'ready',checked_at:Date.now(),work:null,auton_status:{ok:true,schema:1,case_id:profile?.case_id,admission:'alta',activity,reason:activity==='presenting'?'live_presentation':'live_execution',source_ref:'Proyectos!2',source_revision:'fixture',observed_at:new Date().toISOString(),library_only:false}}];
     window.YodRoomWork={subscribe(fn){roomListeners.add(fn);fn(roomState());return()=>roomListeners.delete(fn);}};window.__publishResidence=value=>{activity=value;for(const fn of roomListeners)fn(roomState());};
+    // This geometry test models a connected worker. Keep its synthetic observations fresh;
+    // otherwise a slow screenshot run legitimately sends the resident away after 90 seconds.
+    setInterval(()=>{if(profile)window.__publishResidence(activity);},5000);
     // This geometry fixture strips the UI boots; observe the radial route used by the marker.
-    window.__prepares=[];window.__voiceStarts=[];window.YodVoiceWorkspace={isOpen:()=>false,prepareNearby:id=>window.__prepares.push(id),releaseNearby:()=>{},openForCase:async(id,tab,options)=>{window.__voiceStarts.push({id,tab,options});return true;}};
-    window.addEventListener('yod-agent-menu-open',e=>window.__opened.push(e.detail.case_id));
+    window.__prepares=[];window.__voiceStarts=[];window.YodVoiceWorkspace={isOpen:()=>false,prepareNearby:id=>window.__prepares.push(id),releaseNearby:()=>{},openForCase:async(id,tab,options)=>{
+     const p=window.despacho.getAgentState().position,c=window.despacho.camera.position;
+     window.__voiceStarts.push({id,tab,options,distance:Math.hypot(c.x-p[0],c.z-p[1]),agent_position:[...p],camera_position:[c.x,c.z]});return true;
+    }};
+    window.__menuStops=[];window.__stopAtRadial=false;
+    window.addEventListener('yod-agent-menu-open',e=>{
+     window.__opened.push(e.detail.case_id);
+     if(window.__stopAtRadial){
+      window.__stopAtRadial=false;window.dispatchEvent(new KeyboardEvent('keyup',{key:'w',bubbles:true}));
+      const p=window.despacho.getAgentState().position,c=window.despacho.camera.position;
+      window.__menuStops.push({distance:Math.hypot(c.x-p[0],c.z-p[1]),agent_position:[...p],camera_position:[c.x,c.z]});
+     }
+    });
     window.YodResidentAgents={getSelection:()=>profile?{case_id:profile.case_id,name:profile.name,avatar:profile,can_enqueue:true}:null,subscribe(fn){fn();return()=>{};},getProfile:()=>profile,subscribeProfile(fn){listeners.add(fn);fn(profile);return()=>listeners.delete(fn);},openForCase(id){if(id===profile?.case_id)window.YodAgentMenu.showRadial(id);}};
     window.__revoke=()=>{profile=null;for(const fn of listeners)fn(null);};
     window.addEventListener('yod-agent-arrived',e=>window.__arrivals.push(e.detail.lugar));
@@ -93,19 +107,23 @@ const server=http.createServer((req,res)=>{
    assert.equal(await page.evaluate(()=>window.__voiceStarts.length),0,'preparation does not open voice');
    const viewYaw=await page.evaluate(()=>window.despacho.camera.rotation.y);
    await page.mouse.move(180,220);await page.mouse.down();await page.mouse.move(180+viewYaw/.0036,220,{steps:3});await page.mouse.up();
-   await page.evaluate(()=>window.despacho.camera.position.set(7,1.65,-4.15));
+   // Walk with real input into the radial zone and stop in the same event turn.
+   // A delayed automation roundtrip must not leave W held through the voice zone.
+   await page.evaluate(()=>{const p=window.despacho.getAgentState().position;window.__stopAtRadial=true;window.despacho.camera.position.set(p[0],1.65,p[1]+2.7);});
    await page.keyboard.down('w');
-   await page.waitForFunction(()=>document.querySelector('.station-radial')?.open);
-   await page.keyboard.up('w');
+   try{await page.waitForFunction(()=>document.querySelector('.station-radial')?.open);}finally{await page.keyboard.up('w');}
+   const menuStop=await page.evaluate(()=>window.__menuStops.at(-1));
+   assert.ok(menuStop?.distance>2&&menuStop.distance<=2.6,'walking stops in the radial zone before voice: '+JSON.stringify(menuStop));
    assert.equal(await page.locator('.station-radial').evaluate(e=>e.matches(':modal')),false);
    assert.equal(await page.evaluate(()=>document.getElementById('workspace').inert),false);
    assert.equal(await page.evaluate(()=>window.__voiceStarts.length),0);
    await page.screenshot({path:path.join(out,'encuentro-circulo-'+(mobile?'movil':'escritorio')+'.png')});
-   // Hold for a bounded movement interval and then face the actual figure.
-   await page.evaluate(()=>window.despacho.camera.position.set(7,1.65,-4.30));
+   assert.equal(await page.evaluate(()=>window.__voiceStarts.length),0,'no encounter before approaching within two metres');
+   // Stop 1.95 m from the actual seated figure, then let the production dwell gate run.
+   await page.evaluate(()=>{const p=window.despacho.getAgentState().position;window.despacho.camera.position.set(p[0],1.65,p[1]+1.95);});
    await page.waitForFunction(()=>window.__voiceStarts.length===1);
-   const encounterDistance=await page.evaluate(()=>{const p=window.despacho.getAgentState().position,c=window.despacho.camera.position;return Math.hypot(c.x-p[0],c.z-p[1]);});
-   assert.ok(encounterDistance>=1.9&&encounterDistance<=2,'encounter must happen at two metres, not centimetres');
+   const encounter=await page.evaluate(()=>window.__voiceStarts[0]),encounterDistance=encounter.distance;
+   assert.ok(encounterDistance>=1.9&&encounterDistance<=2,'encounter must happen at two metres, not centimetres: '+JSON.stringify(encounter));
    assert.equal(await page.evaluate(()=>window.__voiceStarts[0].options.encounter),true);
    assert.equal(await page.evaluate(()=>window.__voiceStarts[0].options.compactOnly),true);
    await page.waitForTimeout(1200);
@@ -143,7 +161,7 @@ const server=http.createServer((req,res)=>{
    await page.setViewportSize(mobile?{width:844,height:390}:{width:1000,height:700});
    assert.equal((await page.evaluate(()=>window.despacho.getState())).projection,'orthographic');
    assert.deepEqual(errors,[]);
-   console.log(JSON.stringify({viewport:mobile?'mobile':'desktop',overview:true,cutaway:true,meshSelection:true,marker:true,route:true,revocation:true,errors}));
+   console.log(JSON.stringify({viewport:mobile?'mobile':'desktop',overview:true,cutaway:true,meshSelection:true,marker:true,route:true,revocation:true,menu_distance_m:menuStop.distance,encounter_distance_m:encounterDistance,errors}));
    await context.close();
   }
  }finally{await browser.close();await new Promise(resolve=>server.close(resolve));}

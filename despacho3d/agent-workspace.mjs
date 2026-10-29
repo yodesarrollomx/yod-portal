@@ -482,7 +482,9 @@ export function createWorkspace({container,getSelection,transport=createFrameTra
  }
  async function refresh(){
   if(disposed||!active||fetching||doc.hidden||!selected)return;const own=generation,token={generation:own};fetching=token;
-  if(selected.goals?.ready&&Date.now()-lastTaskRead>=12000){lastTaskRead=Date.now();void tasks.read();}
+  if(selected.goals?.ready&&!tasks.busy&&Date.now()-lastTaskRead>=12000){
+   lastTaskRead=Date.now();void tasks.read({background:true}).finally(()=>{if(own===generation)lastTaskRead=Date.now();});
+  }
   try{
    if(getSelection()?.case_id!==selected.case_id){clear();return;}
    if(!frame&&!readingSources&&sourceAttempts<3&&Date.now()>=sourceRetryAt)void readSources();

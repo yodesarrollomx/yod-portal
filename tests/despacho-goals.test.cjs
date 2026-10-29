@@ -130,6 +130,48 @@ test('shared goal reads report a real failure to every view and permit a later r
  const recovery=h.controller.read();release({ok:true,schema:1,source_revision:'source-2',goals:[]});
  assert.equal(await recovery,true);
 });
+test('background goal reads preserve a failed observation and update it only when fresh evidence arrives',async()=>{
+ const {goalReadView}=await load(),h=await harness();let release;
+ h.server.readGoals=()=>new Promise(resolve=>release=resolve);
+ const first=h.controller.read({background:true});assert.equal(goalReadView(h.controller.state()).phase,'loading');
+ release({ok:false,error:'unavailable'});await first;
+ const failed=goalReadView(h.controller.state()),poll=h.controller.read({background:true});
+ assert.equal(h.controller.busy,true);assert.deepEqual(goalReadView(h.controller.state()),failed);
+ release({ok:false,error:'unavailable'});await poll;
+ const recovery=h.controller.read({background:true});assert.deepEqual(goalReadView(h.controller.state()),failed);
+ release({ok:true,schema:1,source_revision:'source-2',goals:[goal({title:'Meta recuperada'})]});await recovery;
+ assert.equal(goalReadView(h.controller.state()).phase,'ready');assert.equal(goalReadView(h.controller.state()).title,'Meta recuperada');
+ const last=goalReadView(h.controller.state()),next=h.controller.read({background:true});assert.deepEqual(goalReadView(h.controller.state()),last);
+ release({ok:true,schema:1,source_revision:'source-3',goals:[goal({title:'Meta actualizada'})]});await next;
+ assert.equal(goalReadView(h.controller.state()).title,'Meta actualizada');
+});
+test('explicit goal recovery still shows loading after a failed observation',async()=>{
+ const {goalReadView}=await load(),h=await harness();let release;
+ h.server.readGoals=()=>new Promise(resolve=>release=resolve);
+ const first=h.controller.read();release({ok:false,error:'unavailable'});await first;
+ const recovery=h.controller.read();assert.equal(goalReadView(h.controller.state()).phase,'loading');
+ release({ok:true,schema:1,source_revision:'source-2',goals:[]});await recovery;
+ assert.equal(goalReadView(h.controller.state()).phase,'ready');
+});
+test('workspace background goals wait twelve seconds after a slow read finishes, preserving the failure while recovering',async()=>{
+ const {goalReadView}=await load(),h=await harness(),pending=[];let now=100000;
+ h.server.readGoals=()=>new Promise(resolve=>pending.push(resolve));
+ const source=fs.readFileSync(require.resolve('../despacho3d/agent-workspace.mjs'),'utf8');
+ const from=source.indexOf(' async function refresh()'),to=source.indexOf(' function setTab(',from);
+ assert.ok(from>=0&&to>from);
+ const api=vm.runInNewContext('(function(){'+
+  'let disposed=false,active=true,fetching=null,selected=selection,generation=1,lastTaskRead=0,frame={},readingSources=null,sourceAttempts=0,sourceRetryAt=0,tab="ppp",boardLink=null;'+
+  'const getSelection=()=>selected;'+source.slice(from,to)+'return{refresh};})()',
+  {selection,tasks:h.controller,Date:{now:()=>now},doc:{hidden:false}});
+ await api.refresh();assert.equal(pending.length,1);
+ now+=45000;await api.refresh();assert.equal(pending.length,1,'an unfinished read is shared, never replaced');
+ pending.shift()({ok:false,error:'unavailable'});await new Promise(resolve=>setImmediate(resolve));
+ const failed=goalReadView(h.controller.state());assert.equal(failed.phase,'unavailable');
+ now+=11999;await api.refresh();assert.equal(pending.length,0,'the old start time cannot trigger an early poll');
+ now++;await api.refresh();assert.equal(pending.length,1);assert.deepEqual(goalReadView(h.controller.state()),failed);
+ pending.shift()({ok:true,schema:1,source_revision:'source-2',goals:[goal()]});await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(goalReadView(h.controller.state()).phase,'ready');
+});
 test('a case switch cannot share the previous case read or accept its late response',async()=>{
  const h=await harness(),pending=[];h.server.readGoals=payload=>new Promise(resolve=>pending.push({payload,resolve}));
  const old=h.controller.read();

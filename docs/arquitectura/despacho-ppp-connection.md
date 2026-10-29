@@ -22,6 +22,16 @@ El transporte permite hasta tres intentos exclusivamente para `read` y `readGoal
 
 Siete pruebas adicionales cubren recuperación, agotamiento, plazo total, resultado incierto, métodos excluidos, cambio de sesión y cancelación. El bloqueo es una causa compatible con el mensaje observado, pero no se confirmó como respuesta productiva en la revisión previa a publicar.
 
+## Metas y retorno al despacho
+
+Las actualizaciones automáticas de metas conservan el último resultado o error visible. La primera lectura y la recuperación explícita sí muestran su carga. El siguiente sondeo espera doce segundos desde la terminación de la lectura anterior, para evitar que una respuesta lenta deje visible el fallo sólo unos instantes antes de volver a empezar.
+
+La revisión visual detectó que el botón Equipo del OS se superponía al retorno del puesto clásico. El cierre por teclado funcionaba: no se acreditó reapertura espontánea. La corrección debe ocultar ese botón durante el puesto completo y restaurar su visibilidad anterior al salir.
+
+## Recorrido en navegador
+
+El primer CI aprobó las 1,084 pruebas del portal, Chromium y WebKit, pero falló al medir la distancia del encuentro en la prueba panorámica. El fixture dejaba vencer su observación sintética tras noventa segundos y medía la distancia después de otras operaciones. La corrección renueva exclusivamente la observación de prueba y toma la distancia en el callback real de encuentro. Conserva el recorrido por teclado, comprueba que el radial aparece a más de dos metros y exige voz entre 1.9 y 2 metros. No modifica el reloj, la caducidad ni el umbral del producto. La distancia original no quedó registrada, por lo que no se atribuye el fallo a una sola causa.
+
 ## Reversión
 
 Revertir este cambio de interfaz. No cambia permisos, modelos financieros, registros, etapas comerciales ni recibos durables.

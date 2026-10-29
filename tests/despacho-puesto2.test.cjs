@@ -134,6 +134,42 @@ function bootFunction(name,environment){
  const remainder=source.slice(start),end=remainder.search(/\n  (?:async function|function|const workspace|open\.addEventListener)/);
  assert.ok(end>0);return new vm.Script(remainder.slice(0,end)+'\n'+name).runInNewContext(environment);
 }
+function visibilityRuntime(win,extra={}){
+ const source=fs.readFileSync(path.join(__dirname,'../despacho3d/live-voice-boot.mjs'),'utf8');
+ const functions=['setParentTeamHidden','visibility','dismiss'].map(name=>{
+  const start=[source.indexOf('  function '+name+'('),source.indexOf('  async function '+name+'(')].find(index=>index>=0);
+  assert.ok(start>=0,name+' exists');const end=source.indexOf('\n  }\n',start);assert.ok(end>start);
+  return source.slice(start,end+5);
+ }).join('\n');
+ return new vm.Script(functions+'\n({visibility,dismiss})').runInNewContext({window:win,CustomEvent:win.CustomEvent,parentTeam:null,...extra});
+}
+
+test('full stations hide the parent Equipo launcher and restore its prior state after compacting',()=>{
+ const {win}=createDOM(),parent=createDOM(),pill=parent.doc.createElement('div');pill.id='despachoEquipo';parent.doc.body.append(pill);
+ win.location.origin='https://example.test';win.parent={location:{origin:win.location.origin},document:parent.doc};
+ const runtime=visibilityRuntime(win);
+ runtime.visibility(true);assert.equal(pill.hidden,true,'the parent launcher cannot intercept the station back button');
+ runtime.visibility(true);runtime.visibility(false);assert.equal(pill.hidden,false,'repeated presentation does not replace the original state');
+ pill.hidden=true;runtime.visibility(true);runtime.visibility(false);assert.equal(pill.hidden,true,'a launcher hidden by its owner stays hidden');
+});
+
+test('closing the pilot restores Equipo after its own nested visibility lifecycle',async()=>{
+ const {mountPuestoAgente}=await load(),s=station(),parent=createDOM(),pill=parent.doc.createElement('div');pill.id='despachoEquipo';parent.doc.body.append(pill);
+ s.win.location.origin='https://example.test';s.win.parent={location:{origin:s.win.location.origin},document:parent.doc};
+ const ui=mountPuestoAgente(s);let closed=0,deactivated=0;
+ const runtime=visibilityRuntime(s.win,{dismissing:false,suppressEncounter(){},active:()=>false,voice:{snapshot:()=>({phase:'idle'}),stop:async()=>({phase:'idle'})},generation:1,selection:s.getSelection(),puesto:ui,interaction:null,stopWatching:null,goalReader:{hide(){}},workspace:{setActive:value=>{assert.equal(value,false);deactivated++;}},dialog:{close(){closed++;}},previousFocus:null});
+ runtime.visibility(true);ui.setSelection(s.getSelection());assert.equal(pill.hidden,true);
+ await runtime.dismiss();assert.equal(closed,1);assert.equal(deactivated,1);assert.equal(pill.hidden,false,'pilot cleanup restores its nested state before the common owner restores the launcher');
+ ui.dispose();
+});
+
+test('standalone and cross-origin stations do not touch a parent launcher',()=>{
+ for(const crossOrigin of [false,true]){
+  const {win}=createDOM();win.location.origin='https://example.test';
+  win.parent=crossOrigin?{get location(){throw Error('cross-origin');}}:win;
+  const runtime=visibilityRuntime(win);assert.doesNotThrow(()=>{runtime.visibility(true);runtime.visibility(false);});
+ }
+});
 test('pilot reopening suppresses a caller asking for automatic voice and proximity cannot request a microphone',async()=>{
  const selected=pilot();let requests=0,opened=0,started=0;
  const voice={snapshot:()=>({phase:'idle'})},base={selection:selected,pilot:()=>true,voice,active:()=>false,accessPaused:false,window:{YodResidentAgents:{getSelection:()=>selected}}};

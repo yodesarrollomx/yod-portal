@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-10-28.despacho-ppp-connection.1",
   "proposal_id": "CHG-DESPACHO-PPP-CONNECTION-20261028",
-  "summary": "Distinguir recepción PPP, confirmación del motor y consulta documental sin trabajador. Recuperación acotada de lecturas ante bloqueo explícito previo a ejecución.",
+  "summary": "Distinguir recepción PPP, confirmación del motor y consulta documental sin trabajador. Recuperación acotada de lecturas ante bloqueo explícito previo a ejecución. Mantener estado de metas durante sondeo silencioso y corregir medición temporal del fixture de proximidad. Evitar que Equipo intercepte el retorno del puesto clásico.",
   "components": [
     "SYS-DESPACHO-3D",
     "SYS-POTENCIALES",
@@ -17,7 +17,8 @@
     "node verify-os.cjs",
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
-    "node verify-obra-app.cjs"
+    "node verify-obra-app.cjs",
+    "node scripts/probar-oficina-panoramica-browser.cjs"
   ],
   "rollback": "Revertir el estado visual de conexión y la consulta documental del puesto; no altera permisos, datos ni recibos. Revertir recuperación de lecturas en el transporte del OS; no requiere migración ni cambia plazos."
 }
