@@ -95,3 +95,5 @@ La auditoría no se considera completa mientras existan componentes críticos o 
 - [Master Developer y pizarra personal](masterdeveloper-pizarra.md): alcance, contrato privado y despliegue.
 
 - [Consejo de autones dentro del despacho](consejo-autones.md): recepción de entregas, cinco perspectivas, tareas, observaciones y límites de activación.
+
+- [PPP · ficha común y etapas conversadas](ppp-ficha-etapas.md): propuesta autorizada para los cinco motores, tablero nativo, datos y fórmulas en Sheets, criterios por modificación y reversión.
