@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-29.despacho-ppp-connection-ficha-etapas.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-29.ppp-read-validation.1 · 2026-10-20.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -1045,3 +1045,17 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - PR, CI, Pages, GAS, libro y micrófono físico se acreditan por separado; esta extensión está propuesta.
 - sheet-stages conserva allocation preserve: no infiere reparto financiero uniforme ni altera la colección schema2 de volúmenes.
 - La fuente preparada PPPStages.gs/PPPStagesProgram.gs requiere integración con el host vigente, capacidad del libro y readback real antes de declarar operación productiva.
+
+## CTR-PPP-INACTIVE-FIELDS
+
+- Componentes: SYS-POTENCIALES, GAS-PORTERO, SHEET-PPP-MODELOS, SYS-DESPACHO-3D, SVC-AUTON-CLOUD.
+- Evidencia: Revisión de lector nativo y fórmulas del modelo. Evidencia operativa y fuentes privadas permanecen fuera del atlas público..
+- Entrada/campos: `Entradas canónicas, métricas nativas y escenario de la misma revisión.`, `Captura y propuestas sujetas al schema existente, actor y CAS.`.
+- Salida: state.inactive_fields y metadata.inactive_fields limitados a inCapRateMercado en el caso legado comprobado., Modelo sin cambios en cantidades, unidades, fórmulas ni digest del libro., Error modelo_invalido con validation.code, field_id, scenario_id y reason de listas cerradas..
+
+- Cap0 sólo es transportable como inactivo si inValorM2Zona>0, porM2===true y p.capMercado===0. No representa una tasa válida ni un dato imputado.
+- No ampliar min/max/nullable del schema ni permitir nuevas escrituras de cap0. Activar capitalización exige tasa válida; el escritor revierte estados inválidos.
+- El cliente exige marcador coherente, muestra No aplicado: valuación por m² y conserva el cero canónico sin sustituirlo por un valor de referencia.
+- Autón y voz conservan la aplicabilidad; no presentan cap0 como tasa usada ni recomiendan sustituirlo automáticamente.
+- Errores autenticados conocidos incluyen sólo identificadores acotados; no valores, fórmulas, libros, credenciales, stack o texto arbitrario.
+- No reintentar automáticamente validación determinista ni ampliar ACL. Una publicación requiere fuente vigente, reserva compatible, pruebas y lectura final.

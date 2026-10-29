@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-29.despacho-ppp-connection-ficha-etapas.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-29.ppp-read-validation.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -261,6 +261,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Coordinador reporta GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; dos escenarios conservan IDs y 269 campos, geometría pendiente. Acta privada fuera del repositorio. Vertical y otros casos no acreditados. · Estado: declarado · Revisión: Apps Script version 66; cotejo Patrimonial 2026-10-05
 - V72 verificada en ejecución privada37888901829: HEAD y versión coinciden en hash189630ca1ab4d19c17f54f9e13caacbfb6aa99c44ad34240ad6275d806224d3d; mismos IDs/implementación/URL. display\_name separado de avatar.name canónico; no certifica escrituras de negocio. · Estado: ejecucion · Revisión: Apps Script version72; 2026-10-09
 - Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
+- Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-read-validation.md · Revisión: 2026-10-29.ppp-read-validation.1
 
 **Evidencia de conexiones:**
 
@@ -1067,6 +1068,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [Tarjetas nativas del PPP patrimonial con datos del Store; pruebas y despliegue de PR17. · Estado: codigo · yodesarrollomx/potenciales-yod · ppp-agent-cards.js · Revisión: d150ee0c323803869cc52b084a1911f09e2cdc91](https://github.com/yodesarrollomx/potenciales-yod/blob/d150ee0c323803869cc52b084a1911f09e2cdc91/ppp-agent-cards.js)
 - Borrador local aislado por caso/escenario/base de1/2/3volúmenes; cantidades independientes sin cálculo financiero, Store ni autosave; producción pendiente. · Estado: codigo · yodesarrollomx/potenciales-yod · ppp-volumes.js · Revisión: working\_tree\_2026-10-20
 - Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
+- Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-read-validation.md · Revisión: 2026-10-29.ppp-read-validation.1
 
 **Evidencia de conexiones:**
 
@@ -1105,6 +1107,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Lectura directa autorizada de un libro piloto; fórmulas nativas y versiones contrastadas. Evidencia detallada en registro operativo privado, sin publicar identificadores ni cifras. · Estado: ejecucion · Revisión: 2026-09-30
 - Lectura nativa de programa por cuerpos y flujo por etapas. Campos ausentes quedan pendientes; comparación con proforma activa sin sustituir datos globales. Detalle en registro privado. · Estado: ejecucion · Revisión: 2026-10-01
 - Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
+- Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-read-validation.md · Revisión: 2026-10-29.ppp-read-validation.1
 
 **Evidencia de conexiones:**
 
@@ -1151,6 +1154,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Puesto2.0 implementado localmente en puesto-agente.mjs/css: avatar existente, hilo visible, vistas propias, resumen de snapshot confirmado y retorno clásico; publicación y recorrido Chromium HTTP pendientes. · Estado: codigo · yodesarrollomx/yod-portal · docs/arquitectura/puesto-agente2.md · Sin revisión inmutable en esta referencia
 - Interacción frontend local por rutas A/B/C, voz con confirmación y tarjetas con evidencia; producción pendiente. · Estado: codigo · yodesarrollomx/yod-portal · despacho3d/agent-interaction.mjs · Revisión: working\_tree\_2026-10-20
 - Recepción del iframe y confirmación del motor se muestran separadamente; expedientes documentales consultan el PPP sin sesión de trabajador. Seis pruebas aisladas; producción pendiente. · Estado: codigo · yodesarrollomx/yod-portal · docs/arquitectura/despacho-ppp-connection.md · Revisión: working\_tree\_2026-10-28
+- Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-read-validation.md · Revisión: 2026-10-29.ppp-read-validation.1
 
 **Evidencia de conexiones:**
 
@@ -2910,6 +2914,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [Historia por ejecución, FIFO, progreso confirmado y recuperación; 282 pruebas aprobadas y una omitida, navegadores aprobados; recibo Render dep-db47qobncjis73c3vrp0 live. · Estado: ejecucion · alexpueblag/yod-agent-cloud · cloud/AUTONOMY-126.md · Revisión: dfe9c7a45ddeb997c32b8bd39483be3874e68658](https://github.com/alexpueblag/yod-agent-cloud/blob/dfe9c7a45ddeb997c32b8bd39483be3874e68658/cloud/AUTONOMY-126.md)
 - [Puente de propósito exclusivo e idempotencia desplegado en servicio existente: diagnóstico de crédito/ritmo, una solicitud nueva por minuto y recibos persistentes;559 pruebas pasadas y0 fallos antes del arranque vigente. · Estado: ejecucion · alexpueblag/yod-agent-cloud · cloud/sala-image-broker.mjs · Revisión: 7f1297cbf1ba9fe12f663faf2f843f35f79d411e](https://github.com/alexpueblag/yod-agent-cloud/blob/7f1297cbf1ba9fe12f663faf2f843f35f79d411e/cloud/sala-image-broker.mjs)
 - Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
+- Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-read-validation.md · Revisión: 2026-10-29.ppp-read-validation.1
 
 **Evidencia de conexiones:**
 

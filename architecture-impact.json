@@ -1,24 +1,17 @@
 {
-  "model_revision": "2026-10-29.despacho-ppp-connection-ficha-etapas.1",
-  "proposal_id": "CHG-DESPACHO-PPP-CONNECTION-20261028",
-  "summary": "Distinguir recepción PPP, confirmación del motor y consulta documental sin trabajador. Recuperación acotada de lecturas ante bloqueo explícito previo a ejecución. Mantener estado de metas durante sondeo silencioso y corregir medición temporal del fixture de proximidad. Evitar que Equipo intercepte el retorno del puesto clásico.",
+  "model_revision": "2026-10-29.ppp-read-validation.1",
+  "proposal_id": "CHG-PPP-READ-VALIDATION-20261029",
+  "summary": "Documentar contrato de campos inactivos en PPP, diagnóstico autenticado y preservación de datos hasta el autón.",
   "components": [
-    "SYS-DESPACHO-3D",
     "SYS-POTENCIALES",
-    "SVC-AUTON-CLOUD",
-    "SYS-YOD-OS",
-    "EXT-DRIVE",
     "GAS-PORTERO",
-    "SYS-DESPACHO"
+    "SHEET-PPP-MODELOS",
+    "SYS-DESPACHO-3D",
+    "SVC-AUTON-CLOUD"
   ],
   "tests": [
-    "node --test tests/*.cjs",
     "node scripts/arquitectura.cjs --check",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs",
-    "node scripts/probar-oficina-panoramica-browser.cjs"
+    "node --test tests/arquitectura.test.cjs"
   ],
-  "rollback": "Revertir el estado visual de conexión y la consulta documental del puesto; no altera permisos, datos ni recibos. Revertir recuperación de lecturas en el transporte del OS; no requiere migración ni cambia plazos."
+  "rollback": "Revertir sólo documentación/contrato de esta propuesta; no alterar libros ni permisos."
 }

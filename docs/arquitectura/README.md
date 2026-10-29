@@ -97,3 +97,6 @@ La auditoría no se considera completa mientras existan componentes críticos o 
 - [Consejo de autones dentro del despacho](consejo-autones.md): recepción de entregas, cinco perspectivas, tareas, observaciones y límites de activación.
 
 - [PPP · ficha común y etapas conversadas](ppp-ficha-etapas.md): propuesta autorizada para los cinco motores, tablero nativo, datos y fórmulas en Sheets, criterios por modificación y reversión.
+
+- [PPP · lectura y campos inactivos](ppp-read-validation.md): aplicabilidad explícita, diagnóstico de validación y conservación de cantidades y permisos.
+
