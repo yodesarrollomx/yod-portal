@@ -66,3 +66,8 @@ CHG-ENCARGOS-RECUPERACION-20261029. Implementado localmente; publicación y comp
 CHG-COUNCIL-TRACE-NOTIFICATION-20261029. Implementado localmente; publicación y comprobación productiva pendientes. La lista muestra el ID literal que devuelve el servicio junto al título, criterio y estado. No deduce perspectiva, ronda ni procedencia de un corte histórico por el orden de las filas; el identificador visible no reemplaza esa evidencia.
 
 El consumidor admite `notification.state=suppressed` y muestra «Correo: no solicitado». Este recibo describe una nueva publicación automática sin autorización estructurada de envío. No reinterpreta estados históricos `pending`, `uncertain` o `sent`, y abrir o actualizar la vista no envía ni reintenta mensajes. La política se ejecuta en el backend privado; la interfaz no concede permisos. Publicar y comprobar este consumidor antes del backend que emita el nuevo estado.
+
+
+## Consultar el historial sin sondeo continuo
+
+CHG-COUNCIL-REFRESH-20261029. Implementado localmente; publicación pendiente. El sondeo automático sólo continúa si existe una sesión queued, reviewing o correcting. Para reuniones terminales se conserva Actualizar consejo. Seleccionar una reunión ya recibida es una operación local disponible durante una lectura; las mutaciones permanecen bloqueadas mientras esa lectura termina y durante un acuse incierto. La lectura coalescida y el veto de respuestas tardías por caso se conservan.
