@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-29.ppp-ficha-etapas.1",
+  "revision": "2026-10-29.despacho-ppp-connection-ficha-etapas.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -2989,6 +2989,13 @@
           "source_revision": "working_tree_2026-10-20",
           "status": "codigo",
           "claim": "Interacción frontend local por rutas A/B/C, voz con confirmación y tarjetas con evidencia; producción pendiente."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/despacho-ppp-connection.md",
+          "source_revision": "working_tree_2026-10-28",
+          "status": "codigo",
+          "claim": "Recepción del iframe y confirmación del motor se muestran separadamente; expedientes documentales consultan el PPP sin sesión de trabajador. Seis pruebas aisladas; producción pendiente."
         }
       ],
       "data_entities": [
@@ -14206,6 +14213,33 @@
       ],
       "deployment": "Propuesta, contrato DTO/ruta y criterios registrados antes de implementación. Código en preparación coordinada; pendientes pruebas aisladas, PR/CI, Pages, host y versión GAS existentes, capacidad de libros y readback real. Cada evidencia se incorporará sin generalizar de un motor o piloto a los cinco.",
       "rollback": "Deshabilitar sólo la capacidad nueva de etapas y revertir consumidores/handlers mediante commits y la versión previa de la misma implementación GAS. Conservar casos, escenarios, etapas, recibos, fórmulas, ACL e históricos; no restaurar libros completos ni borrar registros."
+    },
+    {
+      "id": "CHG-DESPACHO-PPP-CONNECTION-20261028",
+      "components": [
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES",
+        "SVC-AUTON-CLOUD",
+        "SYS-YOD-OS",
+        "EXT-DRIVE",
+        "GAS-PORTERO",
+        "SYS-DESPACHO"
+      ],
+      "status": "implementado_local",
+      "authorization": "Dirección solicita retomar el análisis y completar pendientes del despacho. Continuación acotada al puesto PPP; backend reservado por otra ejecución.",
+      "proposal": "Separar lectura recibida del iframe PPP de confirmación del motor. El temporizador de handshake describe sólo ausencia de mensaje válido. Los expedientes documentales pueden consultar el PPP registrado sin solicitar credenciales de trabajador ni declarar lectura compartida con un motor. Conservar origen, ventana, nonce, caso, escenario, revisión y recibos existentes. Ampliación propuesta: read/readGoals del navegador recuperan sólo rechazo explícito lock_busy previo a ejecución, máximo tres intentos dentro del límite total vigente. Preservar payload e identidad; cancelar por cierre, vetar cambios de sesión y no repetir timeouts, errores de red, denegaciones ni escrituras. Mensaje de bloqueo distinguible al agotar; no atribuirle todavía el fallo productivo observado. Ampliación tras comprobar la UI: mantener el último error o modelo de metas visible durante sondeos automáticos, y separar el siguiente sondeo del final de la lectura; la primera lectura y recuperación explícita conservan su carga. QA panorámica: renovar sólo evidencia sintética mientras el fixture está activo y medir la distancia en el evento real de encuentro, sin ampliar el umbral de 1.9–2m ni retirar el recorrido por teclado. La verificación visual detectó además que el launcher Equipo del OS cubre el retorno del puesto clásico: ocultarlo durante el puesto completo y restaurar su visibilidad previa al salir, incluyendo ruta existente Puesto2.",
+      "tests": [
+        "Snapshot válido recibido con confirmación demorada no se confunde con iframe que no respondió.",
+        "Snapshot inválido conserva espera, respuesta tardía tras cambiar caso no altera el puesto.",
+        "Expediente documental no llama mintFastSession ni rutas /board; no habilita propuestas.",
+        "Lecturas recuperan bloqueo explícito y conservan presupuesto total, identidad y payload.",
+        "Agotamiento, cierre y cambio de sesión interrumpen recuperación; timeouts, red, denegación y mutaciones no se reintentan.",
+        "Fallo de metas seguido de sondeo automático conserva el error visible y un éxito posterior actualiza el modelo.",
+        "Recorrido por teclado, encuentro medido en su callback entre 1.9 y 2m y señal sintética fresca durante CI lento.",
+        "Launcher padre no intercepta el retorno del puesto; visibilidad previa se restaura al cerrar y al retirar sesión."
+      ],
+      "deployment": "PR323: CI del segundo commit aprobó1093/1093,Chromium/WebKit,entrada/reunión/trabajo. Panorámica detectó inicio del fixture dentro de un tabique; corregido a corredor lateral con geometría/movimiento reales, orientación verificada y observación fresca de salida/entrada. Suite local final1094/1095: única falta es PNG2.5MB no materializado por conector, presente sin cambios en GitHub. Publicación depende de CI completo y comprobación productiva; no se acredita aquí el circuito del consejo.",
+      "rollback": "Revertir sólo interfaz y mensajes de conexión; conservar registro, permisos, modelos y recibos."
     }
   ],
   "data_contracts": [
@@ -18919,6 +18953,13 @@
         "GAS-PORTERO",
         "SHEET-PORTERO",
         "SHEET-PPP-MODELOS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-ppp-connection.test.cjs",
+      "components": [
+        "SYS-DESPACHO-3D"
       ]
     }
   ],

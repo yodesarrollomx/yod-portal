@@ -5,12 +5,12 @@ import {mountAvatarCard} from './avatar-card.mjs?v=126';
 import {AUTONES_MULTIPLES} from './office-config.mjs?v=records2';
 import {createEntryPreparation} from './voice-preparation.mjs?v=2';
 import {residentAccessDecision} from './resident-agents.mjs?v=records2';
-import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=records2';
+import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=ppp-connect1';
 import {stationIdentity} from './project-station.mjs?v=native-volumes3';
 import {createLiveVoice} from './live-voice.mjs?v=close-receipt1';
 import {voiceView} from './voice-view.mjs?v=141';
-import {createWorkspace} from './agent-workspace.mjs?v=records2';
-import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=entregas291';
+import {createWorkspace} from './agent-workspace.mjs?v=ppp-connect1';
+import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=ppp-connect1';
 import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=records2';
 import {groupTranscriptFragments} from './live-transcript.mjs';
 
@@ -69,7 +69,20 @@ if (open) {
   let interaction=null,voiceInteractionEpoch=window.crypto.randomUUID();
   const classicInteractions=document.createElement('section');classicInteractions.className='station-interactions';classicInteractions.setAttribute('aria-label','Acciones en esta pantalla');classicInteractions.hidden=true;chatPanel.append(classicInteractions);
   const agentName=()=>selection?stationIdentity(selection).name:'Autón';
-  const visibility=value=>window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:value}));
+  let parentTeam=null;
+  function setParentTeamHidden(value){
+    if(!value){if(parentTeam){parentTeam.node.hidden=parentTeam.hidden;parentTeam=null;}return;}
+    if(parentTeam)return;
+    try{
+      if(window.parent===window||window.parent.location.origin!==window.location.origin)return;
+      const node=window.parent.document.getElementById('despachoEquipo');
+      if(node){parentTeam={node,hidden:node.hidden};node.hidden=true;}
+    }catch{}
+  }
+  function visibility(value){
+    setParentTeamHidden(value);
+    window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:value}));
+  }
   const setText = (id,text) => {if(node(id).textContent!==text)node(id).textContent=text;};
   const active = state => !['idle','error'].includes(state.phase);
   const actionExecutor=createVoiceActionExecutor({transport,onChange:event=>{
@@ -380,7 +393,7 @@ if (open) {
   }
   dialog.querySelector('.voice-close').addEventListener('click', () => {if(active(voice.snapshot())&&!pilot(selection)){present(true);stopWatching?.();stopWatching=null;}else void dismiss();});
   dialog.addEventListener('cancel', event => {event.preventDefault();if(!compactVoice&&active(voice.snapshot())&&!pilot(selection))present(true);else void dismiss();});
-  window.addEventListener('pagehide', () => {generation++;voice.abandon();puesto?.dispose();workspace.dispose();delete window.YodVoiceWorkspace;});
+  window.addEventListener('pagehide', () => {generation++;voice.abandon();puesto?.dispose();workspace.dispose();setParentTeamHidden(false);delete window.YodVoiceWorkspace;});
   // Visibility alone is not a hangup; mobile permission prompts and app switching can hide the page.
   document.addEventListener('visibilitychange', () => {if (!document.hidden) void voice.refresh();});
   window.addEventListener('yod-data-invalidated',()=>{
