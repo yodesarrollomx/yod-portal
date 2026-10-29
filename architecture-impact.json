@@ -3,8 +3,11 @@
   "proposal_id": "CHG-ENCARGOS-RECUPERACION-20261029",
   "summary": "Recuperación de encargos sin interferencia de consultas automáticas; lectura manual y CAS vigentes, selección autorizada fresca al reabrir el mismo caso.",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-DESPACHO-3D"
+    "EXT-DRIVE",
+    "GAS-PORTERO",
+    "SYS-DESPACHO",
+    "SYS-DESPACHO-3D",
+    "SYS-YOD-OS"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",

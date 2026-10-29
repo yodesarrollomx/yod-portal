@@ -14328,8 +14328,11 @@
     {
       "id": "CHG-ENCARGOS-RECUPERACION-20261029",
       "components": [
-        "SYS-YOD-OS",
-        "SYS-DESPACHO-3D"
+        "EXT-DRIVE",
+        "GAS-PORTERO",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-YOD-OS"
       ],
       "status": "implementado_local",
       "authorization": "Dirección pide terminar el circuito productivo existente y corregir bloqueos conservando historial.",
