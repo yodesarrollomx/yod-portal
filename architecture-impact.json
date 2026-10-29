@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-28.despacho-ppp-connection.1",
+  "model_revision": "2026-10-29.despacho-ppp-connection-ficha-etapas.1",
   "proposal_id": "CHG-DESPACHO-PPP-CONNECTION-20261028",
   "summary": "Distinguir recepción PPP, confirmación del motor y consulta documental sin trabajador. Recuperación acotada de lecturas ante bloqueo explícito previo a ejecución. Mantener estado de metas durante sondeo silencioso y corregir medición temporal del fixture de proximidad. Evitar que Equipo intercepte el retorno del puesto clásico.",
   "components": [

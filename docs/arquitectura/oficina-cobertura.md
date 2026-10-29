@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-28.despacho-ppp-connection.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-29.despacho-ppp-connection-ficha-etapas.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 26 sistemas y 90 componentes distribuidos exactamente una vez.
-- 10 áreas; 143 conexiones registradas, 10 marcadas como verificadas en el atlas.
+- 10 áreas; 145 conexiones registradas, 10 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -247,6 +247,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-BROKER-PREEVALUATION · SYS-INVERSION → GAS-PORTERO · api · Preevaluación y retorno de terreno a cartera · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-BANDEJA-PORTERO · GAS-BANDEJA-NUBE → GAS-PORTERO · autorizacion · Revalidar identidad de Dirección para aprobar y antes de enviar · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-BROKERS-PPP-SAVED · SYS-INVERSION → GAS-PORTERO · lectura · Resumen guardado de PPP por expediente · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-PPP-ETAPAS-ESCRITURA · SYS-POTENCIALES → GAS-PORTERO · api · Solicita etapas y relee coherencia del modelo · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -259,6 +260,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Coordinador reporta publicación API V66 desde V65: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma URL/scopes/ACL y editor == candidato == versión inmutable V66. GET funcional posterior pendiente; sin POST de pruebas de negocio. · Estado: declarado · Revisión: Apps Script version 66; 2026-10-05
 - Coordinador reporta GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; dos escenarios conservan IDs y 269 campos, geometría pendiente. Acta privada fuera del repositorio. Vertical y otros casos no acreditados. · Estado: declarado · Revisión: Apps Script version 66; cotejo Patrimonial 2026-10-05
 - V72 verificada en ejecución privada37888901829: HEAD y versión coinciden en hash189630ca1ab4d19c17f54f9e13caacbfb6aa99c44ad34240ad6275d806224d3d; mismos IDs/implementación/URL. display\_name separado de avatar.name canónico; no certifica escrituras de negocio. · Estado: ejecucion · Revisión: Apps Script version72; 2026-10-09
+- Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
 
 **Evidencia de conexiones:**
 
@@ -280,6 +282,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PPP-MODELO · Relevo del coordinador confirmado por Dirección el 5-oct: fuente activa/editor V65 idénticos, adaptador Patrimonial ausente y GET sheet-model Patrimonial con error servidor; recuperación \#47 propuesta. Detalles y snapshots privados. · Estado: declarado · Revisión: Apps Script version 65; 2026-10-05
 - CON-PPP-MODELO · Coordinador reporta publicación API V66 desde V65: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma URL/scopes/ACL y editor == candidato == versión inmutable V66. GET funcional posterior pendiente; sin POST de pruebas de negocio. · Estado: declarado · Revisión: Apps Script version 66; 2026-10-05
 - CON-PPP-MODELO · Coordinador reporta GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; dos escenarios conservan IDs y 269 campos, geometría pendiente. Acta privada fuera del repositorio. Vertical y otros casos no acreditados. · Estado: declarado · Revisión: Apps Script version 66; cotejo Patrimonial 2026-10-05
+- CON-PPP-MODELO · Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
 - CON-PPP-AUDITORIA · Registro operativo privado actualizado; auditoría de transporte desplegada y activador de edición directa instalado. Primer evento real y recorrido de edición todavía sin observar. · Estado: codigo · Revisión: Apps Script version 53
 - CON-AUTH-FLUJO · Revisión de fuente activa GAS-FLUJO, versión 15; dependencia de Portero contrastada en código y mediante dobles. No acredita recorrido completo de un usuario real. · Estado: codigo · Revisión: Apps Script version 15
 - CON-AUTH-CRM · Revisión de fuente activa GAS-CRM, versión 20; dependencia de Portero contrastada en código y mediante dobles. No acredita recorrido completo de un usuario real. · Estado: codigo · Revisión: Apps Script version 20
@@ -292,10 +295,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-BANDEJA-PORTERO · Permiso privado ligado a sesión real, tarjeta, huella y última aprobación; veto aparte de comentarios. Regresiones sintéticas aprobadas; consentimiento y sesión real pendientes. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/Approval.gs · Sin revisión inmutable en esta referencia
 - CON-BANDEJA-PORTERO · Código publicado; su compuerta o consentimiento reales todavía no se acreditan. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/README.md · Sin revisión inmutable en esta referencia
 - CON-BROKERS-PPP-SAVED · Consumo propuesto del mismo contrato empleado por el PPP; lectura autorizada y campos guardados se comprobarán por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-PPP-ETAPAS-ESCRITURA · Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
 
 **Pendientes y límites:**
 
-- 26 conexiones sin verificación de ejecución registrada.
+- 27 conexiones sin verificación de ejecución registrada.
 - La revisión acotada no certifica todas las operaciones de negocio ni sustituye la aceptación con usuarios reales.
 - Las cachés de consumidores ajenos a esta entrega pueden conservar permisos temporalmente; revisarlos al continuar cada tablero.
 
@@ -317,6 +321,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Evidencia de la ficha:**
 
 - Integración pendiente de verificar · Estado: pendiente · Sin revisión inmutable en esta referencia
+- Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
 
 **Evidencia de conexiones:**
 
@@ -1048,6 +1053,8 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-DESPACHO-3D-PPP · SYS-DESPACHO-3D → SYS-POTENCIALES · embed · Tablero original con contexto compartido, escenario y revisión · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-SALUD-ACCESOS · SYS-CONTROL → SYS-POTENCIALES · observacion · Informe técnico por proceso visible en Accesos · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-PPP-CARTERA-LECTURA · SYS-POTENCIALES → GAS-CRM · api · Lee expedientes previos al PPP y su historial autorizado · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-PPP-ETAPAS-INTENCION · SVC-AUTON-CLOUD → SYS-POTENCIALES · api · Propone etapas desde la intención final y contexto vigente · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-PPP-ETAPAS-ESCRITURA · SYS-POTENCIALES → GAS-PORTERO · api · Solicita etapas y relee coherencia del modelo · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -1059,6 +1066,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Coordinador reporta GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; dos escenarios conservan IDs y 269 campos, geometría pendiente. Acta privada fuera del repositorio. Vertical y otros casos no acreditados. · Estado: declarado · Revisión: Apps Script version 66; cotejo Patrimonial 2026-10-05
 - [Tarjetas nativas del PPP patrimonial con datos del Store; pruebas y despliegue de PR17. · Estado: codigo · yodesarrollomx/potenciales-yod · ppp-agent-cards.js · Revisión: d150ee0c323803869cc52b084a1911f09e2cdc91](https://github.com/yodesarrollomx/potenciales-yod/blob/d150ee0c323803869cc52b084a1911f09e2cdc91/ppp-agent-cards.js)
 - Borrador local aislado por caso/escenario/base de1/2/3volúmenes; cantidades independientes sin cálculo financiero, Store ni autosave; producción pendiente. · Estado: codigo · yodesarrollomx/potenciales-yod · ppp-volumes.js · Revisión: working\_tree\_2026-10-20
+- Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
 
 **Evidencia de conexiones:**
 
@@ -1068,10 +1076,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-SALUD-ACCESOS · Solicitud explícita de Dirección el11-oct-2026; implementación pendiente. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - [CON-SALUD-ACCESOS · Frontend Accesos publicado byte exacto y8 recorridos aislados. Validación real del usuario al abrir conserva su autoridad; no certificar el rol personal por pruebas sintéticas. · Estado: codigo · yodesarrollomx/yod-portal · docs/SALUD-SISTEMAS.md · Revisión: de33d90af87e9b5b225b0405841145348d42b8b0](https://github.com/yodesarrollomx/yod-portal/blob/de33d90af87e9b5b225b0405841145348d42b8b0/docs/SALUD-SISTEMAS.md)
 - CON-PPP-CARTERA-LECTURA · Propuesta de lector brokers\_snapshot sobre brokers.v1 existente; no acredita sesión privada real. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-cartera-lectura.md · Revisión: CHG-PPP-CARTERA-LECTURA-20261019
+- CON-PPP-ETAPAS-INTENCION · Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
+- CON-PPP-ETAPAS-ESCRITURA · Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
 
 **Pendientes y límites:**
 
-- 5 conexiones sin verificación de ejecución registrada.
+- 7 conexiones sin verificación de ejecución registrada.
 - Backend de transporte v53 publicado en implementación existente. GET de caso y lista contrastados con el mismo libro y revisión; edición en pantalla y demás casos pendientes. Los casos no migrados conservan cálculo cliente.
 - GET Patrimonial y cotejo de 166 celdas sólo acreditan el caso inspeccionado; geometría, Vertical y otros casos pendientes. Parche visual y regresión Chromium aprobados según coordinador; WebKit en CI del consumer, publicación/aceptación frontend pendientes.
 
@@ -1094,6 +1104,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - Lectura directa autorizada de un libro piloto; fórmulas nativas y versiones contrastadas. Evidencia detallada en registro operativo privado, sin publicar identificadores ni cifras. · Estado: ejecucion · Revisión: 2026-09-30
 - Lectura nativa de programa por cuerpos y flujo por etapas. Campos ausentes quedan pendientes; comparación con proforma activa sin sustituir datos globales. Detalle en registro privado. · Estado: ejecucion · Revisión: 2026-10-01
+- Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
 
 **Evidencia de conexiones:**
 
@@ -1101,6 +1112,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PPP-MODELO · Relevo del coordinador confirmado por Dirección el 5-oct: fuente activa/editor V65 idénticos, adaptador Patrimonial ausente y GET sheet-model Patrimonial con error servidor; recuperación \#47 propuesta. Detalles y snapshots privados. · Estado: declarado · Revisión: Apps Script version 65; 2026-10-05
 - CON-PPP-MODELO · Coordinador reporta publicación API V66 desde V65: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma URL/scopes/ACL y editor == candidato == versión inmutable V66. GET funcional posterior pendiente; sin POST de pruebas de negocio. · Estado: declarado · Revisión: Apps Script version 66; 2026-10-05
 - CON-PPP-MODELO · Coordinador reporta GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; dos escenarios conservan IDs y 269 campos, geometría pendiente. Acta privada fuera del repositorio. Vertical y otros casos no acreditados. · Estado: declarado · Revisión: Apps Script version 66; cotejo Patrimonial 2026-10-05
+- CON-PPP-MODELO · Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
 - CON-PPP-REGISTRO · Registro del piloto creado; organización y generación para todos los casos pendientes. · Estado: declarado · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
@@ -2890,12 +2902,14 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-MOTOR-OPENAI · SVC-AUTON-CLOUD → EXT-OPENAI · integracion · Voz y herramientas con claves de servidor · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-RENDER-MOTOR · EXT-RENDER → SVC-AUTON-CLOUD · alojamiento · Servicio y volumen persistentes en la versión efectiva · Estado: declarado · Ejecución no verificada en el atlas.
 - CON-SALA-IMAGEN-OPENAI · SVC-SALA-PRODUCTOR → SVC-AUTON-CLOUD · api · Imagen para Sala con modelo fijo y recibo · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-PPP-ETAPAS-INTENCION · SVC-AUTON-CLOUD → SYS-POTENCIALES · api · Propone etapas desde la intención final y contexto vigente · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
 - [Compone motor, voz, investigación, objetivos y conocimiento por caso. · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/server.mjs · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/server.mjs)
 - [Historia por ejecución, FIFO, progreso confirmado y recuperación; 282 pruebas aprobadas y una omitida, navegadores aprobados; recibo Render dep-db47qobncjis73c3vrp0 live. · Estado: ejecucion · alexpueblag/yod-agent-cloud · cloud/AUTONOMY-126.md · Revisión: dfe9c7a45ddeb997c32b8bd39483be3874e68658](https://github.com/alexpueblag/yod-agent-cloud/blob/dfe9c7a45ddeb997c32b8bd39483be3874e68658/cloud/AUTONOMY-126.md)
 - [Puente de propósito exclusivo e idempotencia desplegado en servicio existente: diagnóstico de crédito/ritmo, una solicitud nueva por minuto y recibos persistentes;559 pruebas pasadas y0 fallos antes del arranque vigente. · Estado: ejecucion · alexpueblag/yod-agent-cloud · cloud/sala-image-broker.mjs · Revisión: 7f1297cbf1ba9fe12f663faf2f843f35f79d411e](https://github.com/alexpueblag/yod-agent-cloud/blob/7f1297cbf1ba9fe12f663faf2f843f35f79d411e/cloud/sala-image-broker.mjs)
+- Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
 
 **Evidencia de conexiones:**
 
@@ -2907,10 +2921,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [CON-MOTOR-OPENAI · Voz y herramientas con claves de servidor · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/voice-lane.mjs · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/voice-lane.mjs)
 - [CON-RENDER-MOTOR · Servicio y volumen persistentes en la versión efectiva · Estado: declarado · alexpueblag/yod-agent-cloud · cloud/README.txt · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/README.txt)
 - CON-SALA-IMAGEN-OPENAI · Propuesta autorizada para usar el servicio existente, aún sin prueba de generación. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-PPP-ETAPAS-INTENCION · Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
 
 **Pendientes y límites:**
 
-- 8 conexiones sin verificación de ejecución registrada.
+- 9 conexiones sin verificación de ejecución registrada.
 
 ### OpenAI · conversación y ejecución · EXT-OPENAI
 
