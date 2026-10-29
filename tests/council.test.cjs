@@ -20,22 +20,33 @@ test('resume is an explicit capability: opening and reopening only read the same
  view.clear();view.open('test-case');await tick();assert.equal(calls.length,2);assert.ok(calls.every(x=>x.path==='/council/read'));assert.equal(findButton(host,'Reanudar revisión').disabled,false);view.clear();
 });
 test('resume keeps the exact id and revision after a lost acknowledgement and does not send feedback',async()=>{
- const {mountCouncil}=await import('../despacho3d/council-view.mjs');const {doc}=createDOM(),host=doc.createElement('section'),writes=[];let server=partial(),lost=true,ids=0;
+ const {mountCouncil}=await import('../despacho3d/council-view.mjs');const {doc}=createDOM(),host=doc.createElement('section'),writes=[];let server=partial(),lost=true,ids=0,reads=0;
  const view=mountCouncil({container:host,doc,getCase:()=>'test-case',canWrite:()=>true,uuid:()=>{ids++;return 'resume-id';},request:async(path,body)=>{
-  if(path==='/council/read')return server;writes.push(structuredClone(body));server=partial();Object.assign(server.sessions[0],{state:'queued',revision:27,resume_available:false});
+  if(path==='/council/read'){reads++;return server;}writes.push(structuredClone(body));server=partial();Object.assign(server.sessions[0],{state:'queued',revision:27,resume_available:false});
   if(lost){lost=false;throw Error('timeout');}return {...server,request_id:body.request_id};
  }});
  view.open('test-case');await tick();const control=findButton(host,'Reanudar revisión');control.onclick();control.onclick();await tick();assert.equal(writes.length,1);assert.equal(ids,1);
  assert.deepEqual(writes[0],{request_id:'resume-id',session_id:'session-1',expected_revision:26,action:'resume',text:''});
  host.querySelector('form').onsubmit({preventDefault(){}});await tick();assert.equal(writes.length,1);assert.equal(host.querySelector('select').disabled,true);
- await view.refresh();assert.equal(writes.length,1);assert.match(host.textContent,/Comprobar la misma reanudación/);
+ for(let i=0;i<5;i++)assert.equal(await view.refresh(),false);assert.equal(reads,1);assert.equal(writes.length,1);assert.equal(findButton(host,'Comprobar la misma reanudación').disabled,false);
+ findButton(host,'Actualizar consejo').onclick();await tick();assert.equal(reads,2);assert.equal(writes.length,1);assert.match(host.textContent,/Comprobar la misma reanudación/);
  findButton(host,'Comprobar la misma reanudación').onclick();await tick();assert.deepEqual(writes[1],writes[0]);assert.equal(ids,1);assert.equal(server.sessions[0].feedback.length,0);assert.match(host.textContent,/Reanudación guardada/);assert.equal(findButton(host,'Reanudar revisión'),undefined);view.clear();
 });
 test('resume requires a fresh read after a stale revision without silently issuing another request',async()=>{
  const {mountCouncil}=await import('../despacho3d/council-view.mjs');const {doc}=createDOM(),host=doc.createElement('section');let writes=0;
  const view=mountCouncil({container:host,doc,getCase:()=>'test-case',canWrite:()=>true,request:async(path)=>{if(path==='/council/read')return partial();writes++;throw Error('stale_revision');}});
  view.open('test-case');await tick();findButton(host,'Reanudar revisión').onclick();await tick();assert.match(host.textContent,/Actualiza antes de responder/);assert.equal(findButton(host,'Reanudar revisión').disabled,true);
- findButton(host,'Reanudar revisión').onclick();await tick();assert.equal(writes,1);await view.refresh();assert.equal(findButton(host,'Reanudar revisión').disabled,false);view.clear();
+ findButton(host,'Reanudar revisión').onclick();await tick();assert.equal(writes,1);assert.equal(await view.refresh(),false);assert.equal(findButton(host,'Reanudar revisión').disabled,true);findButton(host,'Actualizar consejo').onclick();await tick();assert.equal(findButton(host,'Reanudar revisión').disabled,false);view.clear();
+});
+test('background polling leaves the selected resumable session actionable while manual refresh still reads',async()=>{
+ const {mountCouncil}=await import('../despacho3d/council-view.mjs');const {doc}=createDOM(),host=doc.createElement('section'),calls=[],value=partial();
+ value.sessions.push({...fixture().sessions[0],id:'session-2'});
+ const view=mountCouncil({container:host,doc,getCase:()=>'test-case',canWrite:()=>true,request:async(path,body)=>{calls.push({path,body});return value;}});
+ view.open('test-case');await tick();assert.equal(calls.length,1);assert.equal(await view.refresh(),true);assert.equal(calls.length,2);
+ const selector=host.querySelector('select');selector.value='session-1';selector.onchange();
+ for(let i=0;i<8;i++){assert.equal(await view.refresh(),false);assert.equal(findButton(host,'Reanudar revisión').disabled,false);}
+ assert.equal(calls.length,2);assert.ok(calls.every(c=>c.path==='/council/read'));
+ findButton(host,'Actualizar consejo').onclick();await tick();assert.equal(calls.length,3);assert.equal(findButton(host,'Reanudar revisión').disabled,false);assert.ok(calls.every(c=>c.path==='/council/read'));view.clear();
 });
 test('deterministic task limit explains the next step and offers no feedback, acceptance or resume',async()=>{
  const {mountCouncil}=await import('../despacho3d/council-view.mjs');const {doc}=createDOM(),host=doc.createElement('section'),value=partial();let writes=0;

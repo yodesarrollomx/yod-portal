@@ -1,4 +1,4 @@
-import {COUNCIL_ROLES,AUTON_STAGES,STAGE_LABELS,COUNCIL_STATES,validateCouncil} from './council-model.mjs?v=council-resume1';
+import {COUNCIL_ROLES,AUTON_STAGES,STAGE_LABELS,COUNCIL_STATES,validateCouncil} from './council-model.mjs?v=council-resume2';
 export function mountCouncil({container,request,getCase,canWrite=()=>false,onState=()=>{},doc=document,uuid=()=>crypto.randomUUID()}){
  let epoch=0,caseId=null,model=null,selected=null,pending=null,busy=false,mustRefresh=false,notice='',draft='';
  const el=(tag,text,cls)=>{const n=doc.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
@@ -69,6 +69,13 @@ export function mountCouncil({container,request,getCase,canWrite=()=>false,onSta
   catch(e){if(own===epoch){if(['stale_revision','invalid_state','invalid_request','forbidden','new_delivery_required','request_id_reused'].includes(e.message)){pending=null;mustRefresh=true;notice=e.message==='new_delivery_required'?'Hace falta una nueva entrega para continuar. Actualiza el registro del consejo.':'La reunión cambió o no admite esta acción. Actualiza antes de responder.';}else notice='Guardado sin confirmar. Comprobar conserva el mismo envío.';}return false;}
   finally{if(own===epoch){busy=false;paint();}}
  }
- return {open(id){if(id!==getCase())return false;if(caseId!==id){this.clear();caseId=id;}paint();void read();return true;},refresh:()=>container.contains(doc.activeElement)?Promise.resolve(false):read(),clear(){epoch++;caseId=null;model=null;selected=null;pending=null;busy=false;mustRefresh=false;draft='';container.replaceChildren();onState(null);}};
+ async function refresh(){
+  const s=model?.sessions.find(x=>x.id===selected);
+  // Background polling must leave an explicit recovery action available.
+  // Manual refresh and reopening still revalidate; writes keep server CAS/auth.
+  if(container.contains(doc.activeElement)||pending||s?.state==='interrupted'&&s.resume_available===true)return false;
+  return read();
+ }
+ return {open(id){if(id!==getCase())return false;if(caseId!==id){this.clear();caseId=id;}paint();void read();return true;},refresh,clear(){epoch++;caseId=null;model=null;selected=null;pending=null;busy=false;mustRefresh=false;draft='';container.replaceChildren();onState(null);}};
 }
 
