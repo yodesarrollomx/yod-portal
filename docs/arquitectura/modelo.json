@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-29.goals-recovery.1",
+  "revision": "2026-10-29.council-trace-notification.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -14344,6 +14344,25 @@
       ],
       "deployment": "Implementado localmente: sondeo de metas activas, consulta manual y selección autorizada renovada al reabrir. Prueba sintética24/24; publicación y comprobación productiva pendientes.",
       "rollback": "Revertir cambios de lectura y versiones de recursos mediante PR; conservar metas, evidencias y recibos."
+    },
+    {
+      "id": "CHG-COUNCIL-TRACE-NOTIFICATION-20261029",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SVC-AUTON-CLOUD"
+      ],
+      "status": "implementado_local",
+      "authorization": "Dirección solicita conservar y comprobar el circuito documental existente y respetar sus límites de efectos externos.",
+      "proposal": "Mostrar el identificador literal existente de cada tarea del consejo, sin inferir ronda, perspectiva ni procedencia histórica por posición. Aceptar y mostrar suppressed como correo no solicitado para consumir la política privada de nuevas publicaciones automáticas; conservar estados históricos e incertidumbre. La interfaz sólo representa el recibo del servicio y no concede permiso ni envía mensajes. Actualizar la cadena de versiones para servir consumidores compatibles antes del backend.",
+      "tests": [
+        "Render seguro de IDs literales, identificador vacío, rechazo de DTO incompleto y límites de caso.",
+        "Estado suppressed visible sin escrituras ni reintento de correo; estados históricos conservados.",
+        "Suite completa del portal, arquitectura, OS, portal, accesos y obra."
+      ],
+      "deployment": "Cliente y pruebas focales preparados localmente. Verificación completa, publicación y comprobación productiva pendientes; backend se publica después del consumidor compatible.",
+      "rollback": "Revertir la interfaz por revisión sólo si el backend no emite suppressed; conservar expedientes, sesiones, recibos y notificaciones históricas."
     }
   ],
   "data_contracts": [

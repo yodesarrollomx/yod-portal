@@ -19,7 +19,7 @@ export function validateCouncil(value,caseId){
   for(const r of s.reviews)if(!COUNCIL_ROLES.some(x=>x.id===r.role)||!['pass','revise','needs_input'].includes(r.verdict)||!text(r.comment,2500)||!Array.isArray(r.evidence_ids)||r.evidence_ids.length>8||!Number.isInteger(r.round))throw Error('invalid_council');
   for(const t of s.tasks)if(!text(t.id,200)||!text(t.title,600)||!text(t.criterion,1000)||!['pending','resolved','needs_input'].includes(t.state))throw Error('invalid_council');
   for(const f of s.feedback)if(!text(f.text,4000)||!Number.isFinite(Date.parse(f.at)))throw Error('invalid_council');
-  if(!['not_configured','pending','sent','uncertain'].includes(s.notification?.state))throw Error('invalid_council');
+  if(!['not_configured','pending','sent','uncertain','suppressed'].includes(s.notification?.state))throw Error('invalid_council');
  }
  return structuredClone(value);
 }

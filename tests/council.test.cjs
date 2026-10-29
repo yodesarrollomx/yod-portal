@@ -2,6 +2,31 @@ const test=require('node:test'),assert=require('node:assert/strict');
 const {createDOM}=require('./helpers/puesto-dom.cjs');
 const tick=()=>new Promise(r=>setImmediate(r));
 const fixture=()=>({ok:true,schema:1,case_id:'test-case',sessions:[{id:'session-1',case_id:'test-case',goal_id:'goal-1',title:'Prueba <script>',revision:1,state:'ready',stage:'potential',reviews:[],feedback:[],tasks:[],summary:'Resultado sintético',updated_at:new Date().toISOString(),notification:{state:'not_configured'}}]});
+test('returned tasks show literal IDs safely and retain tasks with an empty ID',async()=>{
+ const {mountCouncil}=await import('../despacho3d/council-view.mjs');const {doc}=createDOM(),host=doc.createElement('section'),data=fixture();
+ data.sessions[0].tasks=[{id:'task-synthetic-1',title:'Revisar',criterion:'Criterio',state:'pending'},{id:'<img src=x onerror=alert(1)>',title:'Otra',criterion:'Texto',state:'resolved'},{id:'',title:'Sin identificador',criterion:'Conservar',state:'needs_input'}];
+ const view=mountCouncil({container:host,doc,getCase:()=>'test-case',request:async()=>data});view.open('test-case');await tick();
+ assert.match(host.textContent,/ID: task-synthetic-1 · Revisar/);assert.match(host.textContent,/ID: <img src=x onerror=alert\(1\)> · Otra/);assert.match(host.textContent,/Sin identificador — Conservar · necesita información/);
+ assert.equal(host.querySelector('img'),null);assert.equal(host.querySelector('script'),null);view.clear();
+});
+test('tasks without an ID property remain invalid under the existing DTO contract',async()=>{const {validateCouncil}=await import('../despacho3d/council-model.mjs');const data=fixture();data.sessions[0].tasks=[{title:'Legado',criterion:'Lectura',state:'pending'}];assert.throws(()=>validateCouncil(data,'test-case'),/invalid_council/);});
+test('notification status is displayed without sending or replaying mail',async()=>{
+ const {mountCouncil}=await import('../despacho3d/council-view.mjs');const {validateCouncil}=await import('../despacho3d/council-model.mjs');
+ for(const [state,label] of [['not_configured','conexión pendiente'],['pending','por enviar'],['sent','envío confirmado'],['uncertain','envío sin confirmar'],['suppressed','no solicitado']]){
+  const {doc}=createDOM(),host=doc.createElement('section'),data=fixture(),calls=[];data.sessions[0].notification={state};if(state==='suppressed')data.sessions[0].notification_policy='suppressed_unspecified';
+  const view=mountCouncil({container:host,doc,getCase:()=>'test-case',canWrite:()=>false,request:async(path,body)=>{calls.push({path,body});return data;}});
+  view.open('test-case');await tick();assert.ok(host.textContent.includes('Correo: '+label));assert.deepEqual(calls.map(c=>c.path),['/council/read']);
+  assert.equal(host.querySelectorAll('button').find(b=>b.textContent==='Aceptar esta entrega').disabled,true);
+  assert.throws(()=>validateCouncil(data,'other-case'),/invalid_council/);view.clear();
+ }
+ const unknown=fixture();unknown.sessions[0].notification.state='unknown';assert.throws(()=>validateCouncil(unknown,'test-case'),/invalid_council/);
+});
+test('suppressed mail remains visible when a task limit prevents actions',async()=>{
+ const {mountCouncil}=await import('../despacho3d/council-view.mjs');const data=fixture(),{doc}=createDOM(),host=doc.createElement('section'),calls=[];
+ Object.assign(data.sessions[0],{state:'needs_input',blocked_reason:'task_limit',next_action:'new_delivery_required',blocked_message:'Nueva entrega requerida',notification:{state:'suppressed'}});
+ const view=mountCouncil({container:host,doc,getCase:()=>'test-case',request:async path=>{calls.push(path);return data;}});view.open('test-case');await tick();
+ assert.match(host.textContent,/Correo: no solicitado/);assert.deepEqual(calls,['/council/read']);view.clear();
+});
 test('council validates case boundaries and uses persisted state for location',async()=>{const {validateCouncil,councilLocation,AUTON_STAGES}=await import('../despacho3d/council-model.mjs');assert.equal(validateCouncil(fixture(),'test-case').sessions.length,1);assert.throws(()=>validateCouncil(fixture(),'other'));assert.throws(()=>validateCouncil({...fixture(),sessions:[{...fixture().sessions[0],state:'fake'}]},'test-case'));assert.equal(councilLocation({state:'reviewing'}),'decisions');assert.equal(councilLocation({state:'correcting'}),'inicio');assert.equal(councilLocation({state:'interrupted'}),null);assert.deepEqual(AUTON_STAGES,['potential','codevelopment','project','construction','sales']);});
 test('late council read cannot restore a revoked case',async()=>{const {mountCouncil}=await import('../despacho3d/council-view.mjs');const {doc}=createDOM(),host=doc.createElement('section');let id='test-case',resolve;const view=mountCouncil({container:host,doc,getCase:()=>id,request:()=>new Promise(r=>resolve=r)});view.open(id);id=null;view.clear();resolve(fixture());await tick();assert.equal(host.children.length,0);});
 test('uncertain feedback retries same id and text; accept disabled until confirmed',async()=>{const {mountCouncil}=await import('../despacho3d/council-view.mjs');const {doc}=createDOM(),host=doc.createElement('section'),writes=[];let lost=true;const view=mountCouncil({container:host,doc,getCase:()=>'test-case',canWrite:()=>true,uuid:()=>'stable-id',request:async(path,body)=>{if(path.endsWith('read'))return fixture();writes.push(structuredClone(body));if(lost){lost=false;throw Error('timeout');}return {...fixture(),request_id:body.request_id};}});view.open('test-case');await tick();assert.match(host.textContent,/Prueba <script>/);const input=host.querySelector('textarea');input.value='Mi observación';input.oninput();host.querySelector('form').onsubmit({preventDefault(){}});await tick();assert.equal(host.querySelector('textarea').disabled,true);assert.equal(host.querySelectorAll('button').find(x=>x.textContent==='Aceptar esta entrega').disabled,true);host.querySelector('form').onsubmit({preventDefault(){}});await tick();assert.deepEqual(writes[0],writes[1]);assert.equal(writes[0].text,'Mi observación');assert.match(host.textContent,/Observaciones guardadas/);view.clear();});

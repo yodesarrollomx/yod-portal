@@ -1,22 +1,20 @@
 {
-  "model_revision": "2026-10-29.goals-recovery.1",
-  "proposal_id": "CHG-ENCARGOS-RECUPERACION-20261029",
-  "summary": "Recuperación de encargos sin interferencia de consultas automáticas; lectura manual y CAS vigentes, selección autorizada fresca al reabrir el mismo caso.",
+  "model_revision": "2026-10-29.council-trace-notification.1",
+  "proposal_id": "CHG-COUNCIL-TRACE-NOTIFICATION-20261029",
+  "summary": "Identificadores de tareas visibles y compatibilidad con correo no solicitado, sin nuevos efectos externos.",
   "components": [
-    "EXT-DRIVE",
-    "GAS-PORTERO",
+    "SYS-YOD-OS",
     "SYS-DESPACHO",
     "SYS-DESPACHO-3D",
-    "SYS-YOD-OS"
+    "SVC-AUTON-CLOUD"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "node --test tests/despacho-goals.test.cjs",
     "node --test tests/*.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs"
   ],
-  "rollback": "Revertir interfaz y versiones de recursos mediante revisión; conservar sesión, historial y recibos privados."
+  "rollback": "Revertir la interfaz por revisión sólo si el backend no emite suppressed; conservar expedientes, sesiones, recibos y notificaciones históricas."
 }

@@ -1,4 +1,4 @@
-import {COUNCIL_ROLES,AUTON_STAGES,STAGE_LABELS,COUNCIL_STATES,validateCouncil} from './council-model.mjs?v=council-resume2';
+import {COUNCIL_ROLES,AUTON_STAGES,STAGE_LABELS,COUNCIL_STATES,validateCouncil} from './council-model.mjs?v=council-trace4';
 export function mountCouncil({container,request,getCase,canWrite=()=>false,onState=()=>{},doc=document,uuid=()=>crypto.randomUUID()}){
  let epoch=0,caseId=null,model=null,selected=null,pending=null,busy=false,mustRefresh=false,notice='',draft='';
  const el=(tag,text,cls)=>{const n=doc.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
@@ -35,8 +35,9 @@ export function mountCouncil({container,request,getCase,canWrite=()=>false,onSta
   const selector=el('select');selector.setAttribute('aria-label','Reunión del consejo');for(const x of [...model.sessions].reverse()){const o=el('option',x.title+' · '+COUNCIL_STATES[x.state]);o.value=x.id;o.selected=x.id===s.id;selector.append(o);}selector.disabled=busy||!!pending;selector.onchange=()=>{if(busy||pending)return;selected=selector.value;draft='';paint();};container.append(selector);
   container.append(el('small','Etapa al presentar: '+STAGE_LABELS[s.stage]+' · Revisión '+s.revision),el('h3',s.title),el('strong',COUNCIL_STATES[s.state]),el('p',s.summary||'Esperando revisión con evidencia.'));
   const reviews=el('div',undefined,'council-reviews');for(const r of s.reviews){const c=el('article');c.append(el('strong',COUNCIL_ROLES.find(x=>x.id===r.role).name+' · ronda '+r.round),el('small',{pass:'Conforme',revise:'Solicita corrección',needs_input:'Falta información'}[r.verdict]),el('p',r.comment),el('small',r.evidence_ids.length?'Evidencia: '+r.evidence_ids.join(', '):'Sin evidencia citada'));reviews.append(c);}container.append(reviews);
-  if(s.tasks.length){container.append(el('h3','Tareas devueltas al autón'));const list=el('ul');for(const t of s.tasks)list.append(el('li',t.title+' — '+t.criterion+' · '+({pending:'pendiente',resolved:'resuelta',needs_input:'necesita información'}[t.state])));container.append(list);}
+  if(s.tasks.length){container.append(el('h3','Tareas devueltas al autón'));const list=el('ul');for(const t of s.tasks){const id=t.id?'ID: '+t.id+' · ':'';list.append(el('li',id+t.title+' — '+t.criterion+' · '+({pending:'pendiente',resolved:'resuelta',needs_input:'necesita información'}[t.state])));}container.append(list);}
   for(const f of s.feedback)container.append(el('blockquote',f.text));
+  container.append(el('small','Correo: '+({not_configured:'conexión pendiente',pending:'por enviar',sent:'envío confirmado',uncertain:'envío sin confirmar',suppressed:'no solicitado'}[s.notification.state])));
   if(s.blocked_reason==='task_limit'){
    const blocked=el('section',undefined,'council-notice');blocked.setAttribute('role','status');blocked.append(el('strong','Hace falta una nueva entrega'),el('p',s.blocked_message),el('p','La sesión y su historial se conservan. Actualizar esta vista no reinicia la revisión.'));container.append(blocked);return;
   }
@@ -50,7 +51,7 @@ export function mountCouncil({container,request,getCase,canWrite=()=>false,onSta
   const send=el('button',pending?.action==='feedback'?'Comprobar el mismo envío':'Devolver al consejo');send.type='submit';send.disabled=busy||mustRefresh||!canWrite()||canResume||!!pending&&pending.action!=='feedback';input.disabled=!!pending||busy||mustRefresh||canResume;
   form.append(label,send);form.onsubmit=e=>{e.preventDefault();void mutate('feedback',draft);};container.append(form);
   const accept=button('Aceptar esta entrega',()=>void mutate('accept',''));accept.disabled=busy||mustRefresh||!!pending||!canWrite()||s.state!=='ready';container.append(accept);
-  container.append(el('p','Aceptar esta entrega conserva el expediente y no cambia su etapa comercial.','council-note'),el('small','Correo: '+({not_configured:'conexión pendiente',pending:'por enviar',sent:'envío confirmado',uncertain:'envío sin confirmar'}[s.notification.state])));
+  container.append(el('p','Aceptar esta entrega conserva el expediente y no cambia su etapa comercial.','council-note'));
  }
  async function read(){
   if(busy||!current())return false;const own=epoch;busy=true;notice='Consultando el registro del consejo…';paint();
