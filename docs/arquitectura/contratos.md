@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-29.council-refresh.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-30.despacho-retro.1 · 2026-10-30.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -1059,3 +1059,18 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Autón y voz conservan la aplicabilidad; no presentan cap0 como tasa usada ni recomiendan sustituirlo automáticamente.
 - Errores autenticados conocidos incluyen sólo identificadores acotados; no valores, fórmulas, libros, credenciales, stack o texto arbitrario.
 - No reintentar automáticamente validación determinista ni ampliar ACL. Una publicación requiere fuente vigente, reserva compatible, pruebas y lectura final.
+
+## CTR-DESPACHO-RETRO-PRESENTACION
+
+- Componentes: SYS-YOD-OS, SYS-DESPACHO, SYS-DESPACHO-3D.
+- Evidencia: Contrato propuesto en docs/retro-office/contrato-integracion.md, inspección de office-layout.mjs, office-destination.mjs y os/despacho-section.js sobre base 2ab2361d813315fef0b47427eeda4e312f602a23. No implementado..
+- Entrada/campos: `lugares, bounds, annex, collisions y allowed canónicos`, `selección actual y perfiles autorizados del transporte vigente`, `estado de sesión y época vigentes del host`, `intención explícita de navegación o apertura de panel`.
+- Salida: presentación retro futura con 13 lugares y DOM accesible, delegación de intenciones a adaptadores actuales sin nueva operación de negocio, estado visible de carga, denegación o indisponibilidad sin actividad inventada.
+
+- La entrada retro futura tiene grafo propio sin Three ni WebGL; Canvas2D y DOM son candidatos, no implementación acreditada.
+- El renderer cambia presentación, nunca contratos Portero/Sheets/GAS/agentes, IDs o permisos.
+- La distribución y los 13 IDs proceden de office-layout.mjs; computer es una intención adicional y no un lugar nuevo.
+- case abre menú del caso; computer abre ppp, library abre activity y decisions abre meeting usando selección autorizada vigente.
+- Cambio de actor, caso o época invalida respuestas tardías; desmontaje libera listeners, temporizadores, animación y datos visibles.
+- Navegar o recuperar sólo observa; una llegada visual no acredita visita durable, ejecución, escritura ni recibo.
+- La versión 3D se conserva como respaldo; no se modifica ni se activa una nueva ruta en este bloque.

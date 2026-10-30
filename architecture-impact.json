@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-29.council-refresh.1",
-  "proposal_id": "CHG-COUNCIL-REFRESH-20261029",
-  "summary": "Sondeo del consejo limitado a estados activos, selección de historial disponible y actualización manual sin nuevas mutaciones.",
+  "model_revision": "2026-10-30.despacho-retro.1",
+  "proposal_id": "CHG-DESPACHO-RETRO-20261030",
+  "summary": "Registro previo y contrato de la oficina retro: 13 lugares y backend vigentes, ruta futura independiente de Three/WebGL; primer bloque sólo documental.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
@@ -9,11 +9,7 @@
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs"
+    "node --test tests/arquitectura.test.cjs"
   ],
-  "rollback": "Revertir sólo la política de sondeo y sus versiones de recurso; mantener el consumidor compatible con suppressed y el historial privado."
+  "rollback": "Revertir únicamente propuesta, contrato y vistas generadas de esta tanda. En implementación futura restaurar selector 3D conservando datos e historial."
 }

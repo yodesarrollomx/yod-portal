@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-29.council-refresh.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-30.despacho-retro.1 · 2026-10-30.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 
@@ -656,3 +656,33 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 - No se crea motor financiero paralelo: las fórmulas del libro canónico producen resultados y flujos por etapas.
 - Sin capability, permiso, revisión o esquema compatibles se rechaza antes de escribir. Request_id ambiguo se concilia sin reenviar ni elevar revisión.
 - Autorización de alcance ya concedida; publicar sólo tras pruebas aisladas, recibos de despliegue existente y comprobación de cálculo. No dar por completo un caso que siga pendiente de fábrica/plantilla.
+
+## RETRO · Oficina retro con distribución y funciones vigentes
+
+- Tableros: SYS-YOD-OS, SYS-DESPACHO, SYS-DESPACHO-3D.
+- Problema: La oficina requiere una presentación retro independiente de Three/WebGL sin perder lugares, selección autorizada ni funciones existentes. El mapa accesible actual aún importa Three y no cumple esa independencia.
+- Beneficio esperado: Ofrecer una oficina legible con el mismo plano y acceso a los sistemas actuales, conservando la versión 3D como respaldo.
+- Medición: 13/13 lugares canónicos conservados; cero dependencias Three/WebGL en el grafo retro; paridad documentada y validada con fixtures; cero cambios de backend.
+- Dependencias: Sin dependencias previas.
+- Esfuerzo: Por bloques: contrato, prototipo aislado, integración autorizada, aceptación y publicación separadas.. Decisión: **aprobada**.
+
+### Requisitos previos
+
+- Contrato de integración y mapa de paridad revisados sobre la base 2ab2361d813315fef0b47427eeda4e312f602a23.
+- Resolver con evidencia las dependencias visuales antes de reutilizar módulos: office-accessible.mjs aún importa Three.
+- Cambios fuera de producción, sin endpoints de negocio para pruebas, sin activaciones ni publicación en este bloque.
+
+### Tareas
+
+1. Conciliar mapa de paridad, UX y contratos existentes en docs/retro-office/.
+2. Implementar una entrada retro independiente con Canvas2D y DOM como candidato, reutilizando geometría e intenciones puras sin importar el arranque 3D.
+3. Validar autorización, selección, época, revocación, recuperación y salida antes de conectar la ruta a la cabina.
+4. Verificar navegador y repositorio con datos sintéticos; registrar publicación y aceptación por separado.
+
+### Criterios de aceptación
+
+- La propuesta no se presenta como implementación o publicación; este primer bloque sólo cambia documentación y modelo.
+- La ruta retro futura conserva los 13 IDs de office-layout.mjs, su distribución, obstáculos e intenciones existentes.
+- No se importan Three ni WebGL directa o transitivamente desde la entrada retro; Canvas2D y DOM se evalúan antes de fijar el renderer.
+- Se conservan Portero, Sheets, GAS, agentes, IDs, contratos, permisos y recibos; llegar a un lugar no concede facultades.
+- La oficina 3D permanece disponible como respaldo y la reversión del selector no elimina historial ni datos.
