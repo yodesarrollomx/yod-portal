@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-29.council-refresh.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-30.despacho-retro.3
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -1155,6 +1155,8 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Interacción frontend local por rutas A/B/C, voz con confirmación y tarjetas con evidencia; producción pendiente. · Estado: codigo · yodesarrollomx/yod-portal · despacho3d/agent-interaction.mjs · Revisión: working\_tree\_2026-10-20
 - Recepción del iframe y confirmación del motor se muestran separadamente; expedientes documentales consultan el PPP sin sesión de trabajador. Seis pruebas aisladas; producción pendiente. · Estado: codigo · yodesarrollomx/yod-portal · docs/arquitectura/despacho-ppp-connection.md · Revisión: working\_tree\_2026-10-28
 - Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-read-validation.md · Revisión: 2026-10-29.ppp-read-validation.1
+- RETRO autorizada: contrato de presentación independiente de Three/WebGL con 13 lugares y backend vigente; primera tanda documental, runtime y publicación pendientes. · Estado: propuesto · yodesarrollomx/yod-portal · docs/retro-office/contrato-integracion.md · Revisión: 2026-10-30.despacho-retro.1
+- Oficina retro implementada localmente con opt-in en host actual, layout canónico y consumidores vigentes; núcleos Live/Workspace sin renderer3D por fábrica inyectada. Pruebas sintéticas y aceptación productiva separadas. · Estado: codigo · yodesarrollomx/yod-portal · despacho-retro/retro-runtime.mjs · Revisión: working\_tree\_2026-10-30
 
 **Evidencia de conexiones:**
 

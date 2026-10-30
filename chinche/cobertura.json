@@ -353,7 +353,8 @@
         "os/shell.js",
         "os/despacho-chinches.js",
         "chinche/revisar.html",
-        "despacho3d/chinches3d.mjs"
+        "despacho3d/chinches3d.mjs",
+        "despacho-retro/retro-chinches.mjs"
       ],
       "capturePolicy": "dom-guarded",
       "sourceCommit": "597c4daf9d3c8059279222616b249438ae861a68",

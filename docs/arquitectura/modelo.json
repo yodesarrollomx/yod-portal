@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-29.council-refresh.1",
-  "checked_at": "2026-10-20",
+  "revision": "2026-10-30.despacho-retro.3",
+  "checked_at": "2026-10-30",
   "priorities": [
     "vender_mas",
     "margen_y_control",
@@ -3024,6 +3024,20 @@
           "source_revision": "2026-10-29.ppp-read-validation.1",
           "status": "propuesto",
           "claim": "Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/retro-office/contrato-integracion.md",
+          "source_revision": "2026-10-30.despacho-retro.1",
+          "status": "propuesto",
+          "claim": "RETRO autorizada: contrato de presentación independiente de Three/WebGL con 13 lugares y backend vigente; primera tanda documental, runtime y publicación pendientes."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "despacho-retro/retro-runtime.mjs",
+          "status": "codigo",
+          "source_revision": "working_tree_2026-10-30",
+          "claim": "Oficina retro implementada localmente con opt-in en host actual, layout canónico y consumidores vigentes; núcleos Live/Workspace sin renderer3D por fábrica inyectada. Pruebas sintéticas y aceptación productiva separadas."
         }
       ],
       "data_entities": [
@@ -8902,6 +8916,39 @@
         "Sin capability, permiso, revisión o esquema compatibles se rechaza antes de escribir. Request_id ambiguo se concilia sin reenviar ni elevar revisión.",
         "Autorización de alcance ya concedida; publicar sólo tras pruebas aisladas, recibos de despliegue existente y comprobación de cálculo. No dar por completo un caso que siga pendiente de fábrica/plantilla."
       ]
+    },
+    {
+      "id": "RETRO",
+      "titulo": "Oficina retro con distribución y funciones vigentes",
+      "boards": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "problem": "La oficina requiere una presentación retro independiente de Three/WebGL sin perder lugares, selección autorizada ni funciones existentes. El mapa accesible actual aún importa Three y no cumple esa independencia.",
+      "benefit": "Ofrecer una oficina legible con el mismo plano y acceso a los sistemas actuales, conservando la versión 3D como respaldo.",
+      "metric": "13/13 lugares canónicos conservados; cero dependencias Three/WebGL en el grafo retro; paridad documentada y validada con fixtures; cero cambios de backend.",
+      "dependencies": [],
+      "effort": "Por bloques: contrato, prototipo aislado, integración autorizada, aceptación y publicación separadas.",
+      "decision": "aprobada",
+      "tasks": [
+        "Conciliar mapa de paridad, UX y contratos existentes en docs/retro-office/.",
+        "Implementar una entrada retro independiente con Canvas2D y DOM como candidato, reutilizando geometría e intenciones puras sin importar el arranque 3D.",
+        "Validar autorización, selección, época, revocación, recuperación y salida antes de conectar la ruta a la cabina.",
+        "Verificar navegador y repositorio con datos sintéticos; registrar publicación y aceptación por separado."
+      ],
+      "acceptance": [
+        "La propuesta no se presenta como implementación o publicación; este primer bloque sólo cambia documentación y modelo.",
+        "La ruta retro futura conserva los 13 IDs de office-layout.mjs, su distribución, obstáculos e intenciones existentes.",
+        "No se importan Three ni WebGL directa o transitivamente desde la entrada retro; Canvas2D y DOM se evalúan antes de fijar el renderer.",
+        "Se conservan Portero, Sheets, GAS, agentes, IDs, contratos, permisos y recibos; llegar a un lugar no concede facultades.",
+        "La oficina 3D permanece disponible como respaldo y la reversión del selector no elimina historial ni datos."
+      ],
+      "prerequisites": [
+        "Contrato de integración y mapa de paridad revisados sobre la base 2ab2361d813315fef0b47427eeda4e312f602a23.",
+        "Resolver con evidencia las dependencias visuales antes de reutilizar módulos: office-accessible.mjs aún importa Three.",
+        "Cambios fuera de producción, sin endpoints de negocio para pruebas, sin activaciones ni publicación en este bloque."
+      ]
     }
   ],
   "changes": [
@@ -14381,6 +14428,78 @@
       ],
       "deployment": "Cliente y pruebas focales implementados localmente; integración completa y verificación productiva pendientes.",
       "rollback": "Revertir sólo la política de sondeo y sus versiones de recurso; mantener el consumidor compatible con suppressed y el historial privado."
+    },
+    {
+      "id": "CHG-DESPACHO-RETRO-20261030",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "proposal": "RETRO: preparar una presentación retro de la misma oficina conservando distribución, funciones y backend. Contrato previo en docs/retro-office/contrato-integracion.md; Canvas2D y DOM candidatos con entrada independiente del grafo Three/WebGL.",
+      "status": "propuesto",
+      "authorization": "Encargo autorizado de Dirección: oficina retro con la misma distribución, funciones y backend; primera tanda limitada a contratos, propuesta e impacto.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/arquitectura.test.cjs",
+        "Validaciones de paridad, grafo sin Three/WebGL, autorización, selección y revocación previstas para futura implementación."
+      ],
+      "deployment": "Sólo propuesta y contrato en repositorio local. Sin runtime retro, cambios de ruta, backend, despliegue ni aceptación productiva.",
+      "rollback": "Revertir este registro documental; en la implementación futura restaurar selector 3D sin borrar datos, sesiones, recibos ni historial."
+    },
+    {
+      "id": "CHG-DESPACHO-RETRO-I1-20261030",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "proposal": "RETRO I1: implementar demo sintética aislada en despacho-retro/index.html, retro.css, retro-app.mjs y retro-map.mjs; pruebas en tests/despacho-retro.test.cjs. Plano de 13 lugares desde geometría canónica, Canvas2D y DOM, movimiento allowed, zoom, tacto, lista y desmontaje. Sin seleccionar ruta OS ni conectar servicios.",
+      "status": "implementado_local",
+      "authorization": "Continuación I1 autorizada por Alejandro; registro previo de rutas y contrato antes de escritura runtime.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Prueba navegador aislada sin Three/WebGL; 13 destinos, lista/teclado/tacto, movimiento permitido, zoom y desmontaje."
+      ],
+      "deployment": "Demo sintética Canvas2D+DOM implementada localmente, 13 lugares canónicos y movimiento/zoom/desmontaje; cinco pruebas focales aprobadas. Publicación y aceptación productiva no realizadas.",
+      "rollback": "Retirar sólo despacho-retro y su prueba I1, conservando documentación, oficina 3D, rutas OS, backend, datos e historial."
+    },
+    {
+      "id": "CHG-DESPACHO-RETRO-INTEGRACION-20261030",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD",
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "EXT-DRIVE"
+      ],
+      "proposal": "RETRO I2/I3: conectar presentación retro opt-in office=retro en el mismo host autorizado; conservar default3D, gates, época y teardown. Reutilizar boots/consumidores actuales con DOM soporte, adaptador retro-office y retro-runtime. Separar live-voice-core sin renderer de avatar, preservando wrapper3D y fábrica de retrato inyectada. Integrar chinches canónicas en modo map con cámara nula y registro veraz. I2-M2: presencia 2D desde snapshots de residentes autorizados; limpiar al revocar, sprite→case con revalidación y sin inferir actividad. Rutas afectadas siguen retro-map.mjs, retro-office.mjs y retro-runtime.mjs. Versionar el wrapper Live en despacho3d/index.html para que el respaldo3D consuma el núcleo compartido sin caché anterior. Separar también agent-workspace-core.mjs de su wrapper3D agent-workspace.mjs, propagando la misma fábrica de retrato inyectada al panel Conocer al autón; no cargar avatar-card desde el grafo retro.",
+      "status": "implementado_local",
+      "authorization": "Alejandro pide continuar y terminar en equipo; raíz autoriza I2/I3 y entrega revisable sin publicación/merge. Sol Flujo asigna ownership exclusivo por productor.",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs",
+        "node verify-portal.cjs",
+        "ACCESOS_REF=4694f7db9a3de4d5415e711d090140e6a2875f01 node verify-accesos.cjs",
+        "node verify-obra-app.cjs",
+        "Navegador con dobles sin endpoints negocio: retro opt-in, default3D, autoridad/epoch, grafo/red sin Three/WebGL y 13 lugares.",
+        "Conservar regresiones textuales de Live en despacho-puesto2, despacho-workspace, chat-draft-polling y agent-interaction-boot apuntando al núcleo compartido.",
+        "tests/despacho-retro-browser.cjs: navegador con caso autorizado sintético, destinos/voz/PPP/actividad/consejo/avatar sin endpoints de negocio ni Three.",
+        "Cierre 2026-10-30: 1126/1126 Node; 14/14 focales; harness Chromium --run PASS con cinco superficies y sin endpoints reales; verificación de impacto worktree incluida."
+      ],
+      "deployment": "Implementación local verificada: opt-in del mismo host y respaldo3D, consumidores actuales y fábrica DOM en núcleos Live/Workspace compartidos. Corrida final 1126/1126 y 14/14 focales aprobadas; arquitectura/OS/portal/accesos/obra y diff aprobados. Harness Chromium sintético reporta cinco superficies, revocación, chinche v2/ACK simulado, exclusión library y teclado modal; cero errores y cargas Three. No publicado ni aceptado en producción.",
+      "rollback": "Retirar opt-in del host y restaurar wrapper live anterior por PR; conservar default3D, contratos, historial, visitas, recibos, fuentes y datos. Ningún GAS por revertir."
     }
   ],
   "data_contracts": [
@@ -16528,6 +16647,35 @@
         "Autón y voz conservan la aplicabilidad; no presentan cap0 como tasa usada ni recomiendan sustituirlo automáticamente.",
         "Errores autenticados conocidos incluyen sólo identificadores acotados; no valores, fórmulas, libros, credenciales, stack o texto arbitrario.",
         "No reintentar automáticamente validación determinista ni ampliar ACL. Una publicación requiere fuente vigente, reserva compatible, pruebas y lectura final."
+      ]
+    },
+    {
+      "id": "CTR-DESPACHO-RETRO-PRESENTACION",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ],
+      "source": "Contrato en docs/retro-office/contrato-integracion.md y fuente local I1–I3: despacho-retro/, os/despacho-section.js y núcleos Live/Workspace compartidos; implementación local, sin publicación ni aceptación productiva.",
+      "input": [
+        "lugares, bounds, annex, collisions y allowed canónicos",
+        "selección actual y perfiles autorizados del transporte vigente",
+        "estado de sesión y época vigentes del host",
+        "intención explícita de navegación o apertura de panel"
+      ],
+      "output": [
+        "presentación retro futura con 13 lugares y DOM accesible",
+        "delegación de intenciones a adaptadores actuales sin nueva operación de negocio",
+        "estado visible de carga, denegación o indisponibilidad sin actividad inventada"
+      ],
+      "invariants": [
+        "La entrada retro tiene grafo propio sin Three ni WebGL; Canvas2D y DOM implementados localmente, con pruebas sintéticas y producción por separado.",
+        "El renderer cambia presentación, nunca contratos Portero/Sheets/GAS/agentes, IDs o permisos.",
+        "La distribución y los 13 IDs proceden de office-layout.mjs; computer es una intención adicional y no un lugar nuevo.",
+        "case abre menú del caso; computer abre ppp, library abre activity y decisions abre meeting usando selección autorizada vigente.",
+        "Cambio de actor, caso o época invalida respuestas tardías; desmontaje libera listeners, temporizadores, animación y datos visibles.",
+        "Navegar o recuperar sólo observa; una llegada visual no acredita visita durable, ejecución, escritura ni recibo.",
+        "La versión 3D se conserva como respaldo; no se modifica ni se activa una nueva ruta en este bloque."
       ]
     }
   ],
@@ -19140,6 +19288,99 @@
         "SHEET-PPP-MODELOS",
         "SYS-DESPACHO-3D",
         "SVC-AUTON-CLOUD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "docs/retro-office/",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho-retro/",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-retro.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/live-voice-core.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-retro-host.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-retro-integration.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/index.html",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "despacho3d/agent-workspace-core.mjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/despacho-retro-browser.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D"
       ]
     }
   ],

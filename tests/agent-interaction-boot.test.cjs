@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
-const source=fs.readFileSync(path.join(__dirname,'../despacho3d/live-voice-boot.mjs'),'utf8');
+const source=fs.readFileSync(path.join(__dirname,'../despacho3d/live-voice-core.mjs'),'utf8');
 const deferred=()=>{let resolve,reject;const promise=new Promise((yes,no)=>{resolve=yes;reject=no;});return {promise,resolve,reject};};
 function bootSource(name){
  const candidates=['  async function '+name+'(','  function '+name+'('],start=candidates.map(prefix=>source.indexOf(prefix)).find(index=>index>=0);assert.ok(start>=0,name+' exists');

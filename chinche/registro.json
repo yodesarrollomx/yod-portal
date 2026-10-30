@@ -486,7 +486,8 @@
         "os/shell.js",
         "os/despacho-chinches.js",
         "chinche/revisar.html",
-        "despacho3d/chinches3d.mjs"
+        "despacho3d/chinches3d.mjs",
+        "despacho-retro/retro-chinches.mjs"
       ],
       "targets": [
         {
