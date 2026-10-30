@@ -156,7 +156,7 @@ test('explicit goal recovery still shows loading after a failed observation',asy
 test('workspace background goals wait twelve seconds after a slow read finishes, preserving the failure while recovering',async()=>{
  const {goalReadView,shouldPollGoals}=await load(),h=await harness(),pending=[];let now=100000;
  h.server.readGoals=()=>new Promise(resolve=>pending.push(resolve));
- const source=fs.readFileSync(require.resolve('../despacho3d/agent-workspace.mjs'),'utf8');
+ const source=fs.readFileSync(require.resolve('../despacho3d/agent-workspace-core.mjs'),'utf8');
  const from=source.indexOf(' async function refresh()'),to=source.indexOf(' function setTab(',from);
  assert.ok(from>=0&&to>from);
  const api=vm.runInNewContext('(function(){'+
@@ -186,7 +186,7 @@ test('stopped goals and uncertain writes leave passive polling idle; explicit re
  assert.equal(shouldPollGoals(h.controller.state()),true,'a resumed goal becomes observable again');
 });
 test('reopening the same workspace uses the fresh authorized capabilities without clearing saved work',()=>{
- const source=fs.readFileSync(require.resolve('../despacho3d/agent-workspace.mjs'),'utf8');
+ const source=fs.readFileSync(require.resolve('../despacho3d/agent-workspace-core.mjs'),'utf8');
  const open=source.split('\n').find(line=>line.startsWith(' function open(selection,'));assert.ok(open);
  const api=vm.runInNewContext('(function(){let selected={case_id:"same",can_enqueue:true,goals:{ready:false}},active=false,cleared=0,reads=0,tab;const clear=()=>cleared++,setTab=value=>tab=value,readSources=()=>reads++;'+open+';return{open,state:()=>({selected,active,cleared,reads,tab})};})()');
  const fresh={case_id:'same',can_enqueue:false,goals:{ready:true}};api.open(fresh,'tasks');

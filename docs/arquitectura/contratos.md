@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-30.despacho-retro.1 · 2026-10-30.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-30.despacho-retro.3 · 2026-10-30.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -1063,11 +1063,11 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 ## CTR-DESPACHO-RETRO-PRESENTACION
 
 - Componentes: SYS-YOD-OS, SYS-DESPACHO, SYS-DESPACHO-3D.
-- Evidencia: Contrato propuesto en docs/retro-office/contrato-integracion.md, inspección de office-layout.mjs, office-destination.mjs y os/despacho-section.js sobre base 2ab2361d813315fef0b47427eeda4e312f602a23. No implementado..
+- Evidencia: Contrato en docs/retro-office/contrato-integracion.md y fuente local I1–I3: despacho-retro/, os/despacho-section.js y núcleos Live/Workspace compartidos; implementación local, sin publicación ni aceptación productiva..
 - Entrada/campos: `lugares, bounds, annex, collisions y allowed canónicos`, `selección actual y perfiles autorizados del transporte vigente`, `estado de sesión y época vigentes del host`, `intención explícita de navegación o apertura de panel`.
 - Salida: presentación retro futura con 13 lugares y DOM accesible, delegación de intenciones a adaptadores actuales sin nueva operación de negocio, estado visible de carga, denegación o indisponibilidad sin actividad inventada.
 
-- La entrada retro futura tiene grafo propio sin Three ni WebGL; Canvas2D y DOM son candidatos, no implementación acreditada.
+- La entrada retro tiene grafo propio sin Three ni WebGL; Canvas2D y DOM implementados localmente, con pruebas sintéticas y producción por separado.
 - El renderer cambia presentación, nunca contratos Portero/Sheets/GAS/agentes, IDs o permisos.
 - La distribución y los 13 IDs proceden de office-layout.mjs; computer es una intención adicional y no un lugar nuevo.
 - case abre menú del caso; computer abre ppp, library abre activity y decisions abre meeting usando selección autorizada vigente.

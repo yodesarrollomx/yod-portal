@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>YoDesarrollo · Despacho retro</title>
+  <link rel="stylesheet" href="./retro.css">
+</head>
+<body>
+  <header class="topbar">
+    <div><span class="brand">YoDesarrollo</span><h1>Despacho retro</h1></div>
+    <p class="demo">Vista de desarrollo · datos de ejemplo · servicios aún sin conectar</p>
+    <button type="button" id="retro-pin-control" hidden>Señalar control con chinche</button>
+    <button type="button" id="help-open" aria-expanded="false" aria-controls="help">Ayuda</button>
+  </header>
+  <main id="workspace" class="layout">
+    <section id="office-accessible" class="map-section" aria-labelledby="map-title">
+      <div class="section-heading"><div><span class="eyebrow">Tu oficina</span><h2 id="map-title">Explora el Despacho</h2></div><p id="map-status" role="status">Preparando el plano…</p></div>
+      <div class="map-frame" id="map-host"><canvas id="office-map" aria-hidden="true"></canvas><p class="map-fallback" id="map-fallback" hidden>El plano no está disponible. Elige cualquier lugar en la lista.</p></div>
+      <div class="map-controls" aria-label="Controles del plano">
+        <div class="dpad" aria-label="Mover personaje"><button type="button" data-move="up" aria-label="Mover arriba">↑</button><button type="button" data-move="left" aria-label="Mover a la izquierda">←</button><button type="button" data-move="down" aria-label="Mover abajo">↓</button><button type="button" data-move="right" aria-label="Mover a la derecha">→</button></div>
+        <div class="zoom"><button type="button" id="map-fit">Ver oficina completa</button><button type="button" id="zoom-out" aria-label="Alejar plano">−</button><span>Zoom</span><button type="button" id="zoom-in" aria-label="Acercar plano">+</button></div>
+      </div>
+      <p class="hint">Elige un lugar directamente en el plano o en la lista. También puedes usar flechas o WASD para mover al personaje.</p>
+    </section>
+    <aside class="side">
+      <section id="retro-session" class="card" hidden aria-label="Proyecto autorizado"><h2>Tu proyecto</h2><p id="retro-session-status" role="status">Validando acceso…</p><div id="retro-cases"></div><div id="office-entry" aria-label="Proyecto del despacho"><h3 data-entry-name>Tu despacho</h3><p data-entry-project hidden></p><p data-entry-status role="status">Preparando tus proyectos…</p><p data-entry-detail hidden></p><button id="case-open" type="button" disabled><span class="case-number">Proyecto</span> <span data-entry-action>Abrir puesto</span></button></div><div id="resident-agent" hidden><h2>Tu autón</h2><p data-resident-status></p><p data-resident-case></p><button data-resident-talk disabled>Hablar</button><button data-resident-write disabled>Escribir</button><button data-resident-library disabled>Biblioteca</button><button data-resident-visit disabled>Acercarme a su puesto</button></div><div class="retro-tools"><button id="voice-open" type="button" disabled>Hablar</button><button id="agents-open" type="button" disabled>Conversaciones</button><button id="computer-open" type="button" disabled>Ver puesto</button><button id="circulo-open" type="button" hidden>Círculo</button><button id="entorno-open" type="button" hidden>Entorno</button></div></section>
+      <section class="card selection" aria-labelledby="selection-title"><span class="eyebrow">Lugar seleccionado</span><h2 id="selection-title">Entrada al Despacho</h2><p id="selection-description"></p><p id="selection-detail" class="notice"></p><button id="open-place" type="button" hidden>Abrir ficha o puesto</button></section>
+      <section id="areas" class="card places" aria-labelledby="places-title"><span class="eyebrow">Acceso directo</span><h2 id="places-title">Áreas y lugares</h2><div id="place-list"></div></section>
+    </aside>
+  </main>
+  <div id="cubefarm-agents"></div>
+  <dialog id="panel" aria-labelledby="panel-title"><div class="dialog-head"><div><span id="panel-tag" class="eyebrow"></span><h2 id="panel-title"></h2></div><button type="button" id="panel-close" aria-label="Cerrar ficha">×</button></div><div id="panel-body"></div></dialog>
+  <dialog id="help" aria-labelledby="help-title"><div class="dialog-head"><h2 id="help-title">Cómo explorar</h2><button type="button" id="help-close" aria-label="Cerrar ayuda">×</button></div><p>Elige un lugar de la lista o toca el plano para seleccionarlo. No necesitas caminar para llegar.</p><p>Usa la cruz o las flechas del teclado para mover al personaje y los botones − y + para acercar o alejar. Tab recorre los controles y Escape cierra esta ayuda.</p><p id="help-demo">Esta vista usa datos de ejemplo. Los casos, la conversación, el PPP y demás servicios aún no están conectados aquí.</p></dialog>
+  <script type="module" src="./retro-app.mjs"></script>
+</body>
+</html>

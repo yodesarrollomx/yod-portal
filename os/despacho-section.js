@@ -2,11 +2,14 @@
   'use strict';
   // Escena estática del mismo portal: no recibe sesión, rutas ni datos del OS.
   var FRAME_PATH='../despacho3d/index.html?v=council-trace5';
+  var RETRO_FRAME_PATH='../despacho-retro/index.html?office=retro&v=retro1';
   function create(options){
     var win=options.window,doc=options.document,host=doc.getElementById('seccionDespacho'),
         canvas=doc.getElementById('despachoCanvas'),status=doc.getElementById('despachoEstado'),
         open=doc.getElementById('despachoAbrir'),tray=doc.getElementById('despachoBandeja'),
         frame=null,mountedEpoch=null,suspended=false,recoveringFromHistory=false;
+    // Presentation opt-in carries no credentials and never bypasses access/epoch checks.
+    var retro=/(?:^|[?&])office=retro(?:&|$)/.test(win.location.search||''),framePath=retro?RETRO_FRAME_PATH:FRAME_PATH;
     if(!host||!canvas||!status||!open||!tray)throw new Error('Sección Despacho incompleta');
     function active(){return win.location.hash==='#/despacho';}
     function access(){return options.readAccess();}
@@ -36,16 +39,16 @@
         if(frame)teardown();
         open.removeAttribute('href');status.hidden=true;return;
       }
-      open.href=FRAME_PATH;
+      open.href=framePath;
       if(frame&&mountedEpoch!==a.epoch)teardown();
       if(!frame){
         status.hidden=false;status.textContent='Abriendo la oficina…';
         frame=doc.createElement('iframe');
-        frame.id='despachoFrame';frame.title='El Despacho · oficina 3D';
+        frame.id='despachoFrame';frame.title='El Despacho · oficina '+(retro?'retro':'3D');
         frame.setAttribute('referrerpolicy','no-referrer');frame.setAttribute('allow','fullscreen; microphone; autoplay');
         var current=frame;
         frame.addEventListener('load',function(){if(frame===current&&authorized())status.hidden=true;});
-        frame.setAttribute('src',FRAME_PATH+(recoveringFromHistory?'&office_recovery=history':''));canvas.appendChild(frame);mountedEpoch=a.epoch;recoveringFromHistory=false;
+        frame.setAttribute('src',framePath+(recoveringFromHistory?'&office_recovery=history':''));canvas.appendChild(frame);mountedEpoch=a.epoch;recoveringFromHistory=false;
       }
     }
     [open,tray].forEach(function(link){link.addEventListener('click',function(event){if(!authorized()){event.preventDefault();paint();}});});

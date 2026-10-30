@@ -1,15 +1,27 @@
 {
-  "model_revision": "2026-10-30.despacho-retro.1",
-  "proposal_id": "CHG-DESPACHO-RETRO-20261030",
-  "summary": "Registro previo y contrato de la oficina retro: 13 lugares y backend vigentes, ruta futura independiente de Three/WebGL; primer bloque sólo documental.",
+  "model_revision": "2026-10-30.despacho-retro.3",
+  "proposal_id": "CHG-DESPACHO-RETRO-INTEGRACION-20261030",
+  "summary": "RETRO I1-I3: plano y adaptación de consumidores vigentes con opt-in office=retro, wrapper3D conservado y núcleo Live sin dependencia gráfica; sin cambios backend ni publicación.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-DESPACHO-3D"
+    "SYS-DESPACHO-3D",
+    "SYS-SALA",
+    "SYS-INVERSION",
+    "SYS-AMALAYA",
+    "SYS-EMD",
+    "SYS-POTENCIALES",
+    "GAS-PORTERO",
+    "EXT-DRIVE"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "node --test tests/arquitectura.test.cjs"
+    "node --test tests/*.cjs",
+    "node verify-os.cjs",
+    "node verify-portal.cjs",
+    "ACCESOS_REF=4694f7db9a3de4d5415e711d090140e6a2875f01 node verify-accesos.cjs",
+    "node verify-obra-app.cjs",
+    "Navegador con dobles sin endpoints negocio: retro opt-in, default3D, autoridad/epoch, grafo/red sin Three/WebGL y 13 lugares."
   ],
-  "rollback": "Revertir únicamente propuesta, contrato y vistas generadas de esta tanda. En implementación futura restaurar selector 3D conservando datos e historial."
+  "rollback": "Restaurar entrada3D y wrapper Live anteriores; retirar opt-in y módulos retro conservando documentos, datos, historial, recibos y backend."
 }
