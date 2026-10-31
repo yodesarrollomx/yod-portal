@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-30.versiones-fase0.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-31.ppp-presentaciones.1 · 2026-10-20.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -1059,3 +1059,23 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Autón y voz conservan la aplicabilidad; no presentan cap0 como tasa usada ni recomiendan sustituirlo automáticamente.
 - Errores autenticados conocidos incluyen sólo identificadores acotados; no valores, fórmulas, libros, credenciales, stack o texto arbitrario.
 - No reintentar automáticamente validación determinista ni ampliar ACL. Una publicación requiere fuente vigente, reserva compatible, pruebas y lectura final.
+
+## CTR-PPP-PRESENTACIONES
+
+- Componentes: SYS-POTENCIALES, GAS-PORTERO, SHEET-PPP-MODELOS, SVC-AUTON-CLOUD, STORE-AUTON-ESTADO, SYS-INVERSION, GAS-SALA, SHEET-SALA, SYS-DESPACHO.
+- Evidencia: docs/arquitectura/ppp-presentaciones.md; propuesta autorizada 31-oct-2026. Números canónicos de SHEET-PPP-MODELOS, contexto del expediente, estado privado del agente y registro de presentaciones existente de GAS-SALA..
+- Entrada/campos: `request_id, actor autenticado y alcance presentation_draft_v1`, `board_case_id, viewed_scenario_id, ppp_revision, model_type y model_revision`, `case_id y source_revision del expediente, distintos de la revisión PPP`, `Referencia y huella privada del snapshot: entradas, resultados nativos, unidades, flujos, etapas, volúmenes y evidencia de la misma lectura`, `Audiencia, decisión, modalidad, faltantes y restricciones autorizadas`, `Versiones ADN, plantilla y renderer; presentation_id y versión editorial base cuando existan`.
+- Salida: job_id y estado durable con lease/época y recibo idempotente, Storyboard visual navegable y privado, manifiesto de origen, QA y referencias de artefactos, presentation_id estable, presentation_version_id inmutable y versión anterior, registry_revision de concurrencia y release_revision de publicación independientes, Misma versión consultable desde PPP y biblioteca Master Developer; conflicto o pendiente explícito cuando no haya recibo.
+
+- Usar el escenario visible confirmado: nunca mezclar viewed_inputs con resultados activos, base o defendidos de otra revisión. El servidor relee y valida el origen antes de aceptar.
+- Revisión PPP y revisión del expediente son distintas. Los cambios sin guardar utilizan el flujo nativo; el agente no modifica cantidades ni fórmulas.
+- MODELO_PENDIENTE o calculated:false sólo permiten diagnóstico con faltantes; no cifras calculadas ni supuestos importados de otros casos.
+- presentation_draft_v1 limita lectura de contexto y escritura de artefacto/versión al caso autorizado. local_analysis_v1 no adquiere permisos de escritura.
+- Snapshot y estado privados sobreviven cierre y reinicio. La observación efímera RAM no es fuente durable.
+- Una solicitud crea un solo trabajo/versión; ante acuse incierto se concilia recibo. Lease vencido o revocación impiden completar efectos.
+- Una meta ready_for_review ajena se conserva; la admisión no la aprueba, cierra ni cancela automáticamente.
+- La primera entrega es Guion visual con dibujo, navegación y chinches. Etapa dos necesita instrucción expresa posterior sobre esa versión; guardado, revisión, producción y publicación son estados separados.
+- Un solo registro y URL canónica por presentación; contenido, PPP, expediente, concurrencia y publicación mantienen versiones separadas. Ediciones concurrentes no se sobrescriben.
+- Proyección de visitante sin guion, fuentes ni notas privadas. Sesión de reunión fija release y no cambia al regenerar.
+- Reutilizar Hairline y motores existentes con adaptadores declarativos; no introducir código arbitrario, otro backend, Sheet, cron, catálogo o cálculo financiero.
+- Pruebas sintéticas y comprobantes independientes para código, CI, frontend, backend, lectura, job, artefacto y registro; un estado listo no prueba el recorrido completo.

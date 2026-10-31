@@ -1,15 +1,19 @@
 {
-  "model_revision": "2026-10-30.versiones-fase0.1",
-  "proposal_id": "CHG-VERSIONES-FASE0-001",
-  "summary": "Una sola etiqueta ?v= por repositorio (os/versiones.json), aplicada y comprobada por scripts/versiones.cjs en CI; sin cambios de lógica, permisos ni datos.",
+  "model_revision": "2026-10-31.ppp-presentaciones.1",
+  "proposal_id": "CHG-PPP-PRESENTACIONES-20261031",
+  "summary": "Contrato autorizado para generar storyboard visual desde la versión visible del PPP y conservar sus versiones en el registro privado compartido con Master Developer.",
   "components": [
-    "SYS-YOD-OS",
+    "SYS-POTENCIALES",
+    "GAS-PORTERO",
+    "SHEET-PPP-MODELOS",
+    "SVC-AUTON-CLOUD",
+    "STORE-AUTON-ESTADO",
+    "SYS-INVERSION",
+    "GAS-SALA",
+    "SHEET-SALA",
     "SYS-DESPACHO",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
-    "SYS-CONTROL",
-    "GAS-PORTERO"
+    "SYS-YOD-OS",
+    "SYS-CONTROL"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -20,5 +24,5 @@
     "node verify-obra-app.cjs",
     "node scripts/versiones.cjs --check"
   ],
-  "rollback": "Revertir el PR: vuelven las etiquetas anteriores y se retira el paso de CI; no hay datos que migrar."
+  "rollback": "Deshabilitar admisión de nuevos trabajos de presentación y revertir código/configuración propios. Conservar modelos, snapshots, trabajos, recibos, artefactos, versiones, sesiones y permisos."
 }

@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-30.versiones-fase0.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-31.ppp-presentaciones.1 · 2026-10-20.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 
@@ -656,3 +656,35 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 - No se crea motor financiero paralelo: las fórmulas del libro canónico producen resultados y flujos por etapas.
 - Sin capability, permiso, revisión o esquema compatibles se rechaza antes de escribir. Request_id ambiguo se concilia sin reenviar ni elevar revisión.
 - Autorización de alcance ya concedida; publicar sólo tras pruebas aisladas, recibos de despliegue existente y comprobación de cálculo. No dar por completo un caso que siga pendiente de fábrica/plantilla.
+
+## PPPPRESENTACIONES · Generar y versionar presentaciones desde el PPP visible
+
+- Tableros: SYS-POTENCIALES, GAS-PORTERO, SHEET-PPP-MODELOS, SVC-AUTON-CLOUD, STORE-AUTON-ESTADO, SYS-INVERSION, GAS-SALA, SHEET-SALA, SYS-DESPACHO.
+- Problema: El PPP y el portal de presentaciones no tienen un recorrido acreditado para encargar un storyboard con datos de la revisión visible y conservar versiones editoriales en el mismo contexto.
+- Beneficio esperado: Convertir el know-how de YOD y los números confirmados en una presentación visual trazable, recuperable y reutilizable desde ambos tableros.
+- Medición: Cinco motores con fuente exacta; coincidencia de IDs/versiones entre PPP y Master Developer; ningún duplicado tras reintento ni exposición de guion privado.
+- Dependencias: Sin dependencias previas.
+- Esfuerzo: Implementación coordinada de contratos, PPP, agente, registro y renderer con validación por capa.. Decisión: **aprobada**.
+
+### Requisitos previos
+
+- Autorización directa por chat de Dirección el31-oct-2026: ejecutar el plan en equipo. No aprueba futuras presentaciones de clientes ni publicación automática.
+- Confirmar fuentes, capacidades, reservas y contratos reales; conservar Portero, orquestación, registro y cálculo existentes.
+- Registrar CHG-PPP-PRESENTACIONES-20261031 y fijar su commit en consumidores antes de integrar.
+
+### Tareas
+
+1. Confirmar snapshot del escenario visible y revisiones separadas; introducir alcance acotado de presentación.
+2. Conectar botón y seguimiento en cinco motores al trabajo durable existente.
+3. Generar storyboard visual mediante ADN y adaptador Hairline, validar y registrar versión privada.
+4. Mostrar el mismo historial en PPP y Master Developer; preservar ediciones, chinches y continuación de etapa dos.
+5. Probar recuperación, autorización, concurrencia y recorrido completo; desplegar por capas con recibos independientes.
+
+### Criterios de aceptación
+
+- No sustituir el escenario visible por activo/base/defendido ni mezclar entradas y resultados de revisiones distintas.
+- Storyboard visual navegable guardado con origen exacto, método, renderer y recibo; no sólo texto o JSON.
+- Reintentos recuperan la misma versión; nuevas elaboraciones y cambios crean versiones independientes sin borrar anteriores.
+- Cierre/reinicio no pierde el trabajo; revocación y lease vencido bloquean efectos; metas existentes se conservan.
+- PPP y biblioteca consultan el mismo registro; sesión fija release; visitante no recibe guion ni fuentes privadas.
+- Producción exige instrucción posterior sobre storyboard; guardado y QA no equivalen a aprobación o publicación.

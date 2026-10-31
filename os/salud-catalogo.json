@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "model_revision": "2026-10-12.sala-imagen-publicacion.1",
+  "model_revision": "2026-10-31.ppp-presentaciones.1",
   "components": [
     {
       "id": "SYS-DESPACHO",
@@ -1489,6 +1489,69 @@
             "GAS-BANDEJA-NUBE",
             "SVC-HORARIOS-CLOUD",
             "SYS-CONTROL"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROC-PPP-PRESENTACIONES",
+      "nombre": "Presentación versionada desde el PPP visible",
+      "steps": [
+        {
+          "id": "PROC-PPP-PRESENTACIONES:0",
+          "nombre": "Elegir versión visible y encargar presentación",
+          "modo": "manual",
+          "components": [
+            "SYS-POTENCIALES"
+          ]
+        },
+        {
+          "id": "PROC-PPP-PRESENTACIONES:1",
+          "nombre": "Autorizar, releer y fijar snapshot privado",
+          "modo": "pendiente",
+          "components": [
+            "GAS-PORTERO",
+            "SHEET-PPP-MODELOS",
+            "SVC-AUTON-CLOUD",
+            "STORE-AUTON-ESTADO"
+          ]
+        },
+        {
+          "id": "PROC-PPP-PRESENTACIONES:2",
+          "nombre": "Preparar ADN y storyboard visual",
+          "modo": "pendiente",
+          "components": [
+            "SVC-AUTON-CLOUD",
+            "STORE-AUTON-ESTADO",
+            "SYS-INVERSION"
+          ]
+        },
+        {
+          "id": "PROC-PPP-PRESENTACIONES:3",
+          "nombre": "Validar y registrar versión con recibo",
+          "modo": "pendiente",
+          "components": [
+            "SVC-AUTON-CLOUD",
+            "GAS-SALA"
+          ]
+        },
+        {
+          "id": "PROC-PPP-PRESENTACIONES:4",
+          "nombre": "Consultar la misma versión en PPP y Master Developer",
+          "modo": "pendiente",
+          "components": [
+            "SYS-POTENCIALES",
+            "SYS-INVERSION",
+            "GAS-SALA"
+          ]
+        },
+        {
+          "id": "PROC-PPP-PRESENTACIONES:5",
+          "nombre": "Revisar y ordenar etapa dos",
+          "modo": "manual",
+          "components": [
+            "SYS-INVERSION",
+            "SYS-DESPACHO"
           ]
         }
       ]
