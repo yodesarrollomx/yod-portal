@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-30.versiones-fase0.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-30.cargador-fase1.1 · 2026-10-20.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 

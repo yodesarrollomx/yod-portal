@@ -1,15 +1,17 @@
 {
-  "model_revision": "2026-10-30.versiones-fase0.1",
-  "proposal_id": "CHG-VERSIONES-FASE0-001",
-  "summary": "Una sola etiqueta ?v= por repositorio (os/versiones.json), aplicada y comprobada por scripts/versiones.cjs en CI; sin cambios de lógica, permisos ni datos.",
+  "model_revision": "2026-10-30.cargador-fase1.1",
+  "proposal_id": "CHG-CARGADOR-FASE1-001",
+  "summary": "Fase 1 (Un cargador), entrega 1: os/yod-cargador.js compartido (un canje por página con caché y refresco en fondo, catálogo y datos PPP con caché, telemetría de primer dato, chinche diferida, interruptor ?cargador=legacy); lo adoptan la cabina y el marco; el marco deja de intentar el respaldo muerto del Portero. Sin cambios de backend, hojas ni permisos.",
   "components": [
     "SYS-YOD-OS",
+    "SYS-POTENCIALES",
     "SYS-DESPACHO",
     "SYS-TRACK",
     "SYS-OBRA",
     "SYS-OBRA-CLIENTE",
     "SYS-CONTROL",
-    "GAS-PORTERO"
+    "GAS-PORTERO",
+    "GAS-CATALOGO"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -20,5 +22,5 @@
     "node verify-obra-app.cjs",
     "node scripts/versiones.cjs --check"
   ],
-  "rollback": "Revertir el PR: vuelven las etiquetas anteriores y se retira el paso de CI; no hay datos que migrar."
+  "rollback": "Revertir el PR (merge commit) o abrir con ?cargador=legacy / localStorage yodcg_legacy=1: todo vuelve al camino actual. Las cachés yodcg_* se borran con YodCargador.purgar(); sin datos que migrar ni backend que revertir."
 }
