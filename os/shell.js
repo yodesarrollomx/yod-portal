@@ -643,7 +643,7 @@
         state.identity = 'pending';state.role = '';state.boards = '';state.modules = [];
         state.sessionToken = '';purgeAll();applyNav();maybeLock();location.reload();return;
       }
-      state.sessionIdentity = identity;state.sessionToken = k;
+      state.sessionIdentity = identity;state.sessionToken = k;state.rechazadoEnFondo = '';
       // verifiedAt dice la verdad: una identidad de copia guardada tiene la edad de la copia, no la de ahora
       state.verifiedAt = Date.now() - (j.origen === 'cache' ? Math.max(0, Number(j.edadMs) || 0) : 0);state.reconnectAttempts = 0;
       aplicaIdentidad(j);
@@ -693,7 +693,7 @@
     var k = tok();
     if (!k || !d || (d.token && d.token !== k)) return;
     if (state.retryTimer) { clearTimeout(state.retryTimer); state.retryTimer = null; }
-    state.identityRequest++;
+    state.identityRequest++;state.rechazadoEnFondo = k;
     rechazoDefinitivo_(String(d.error || 'revocado').trim().toLowerCase());
   }
   function suscribirCargador_() {
@@ -739,7 +739,9 @@
           }
           if (!d || !d.ok || !Array.isArray(d.rows)) return;
           aplicaCatalogo_(d);
-        }).catch(function () { });
+        }).catch(function () { })
+        // el Portero rechazó esta credencial MIENTRAS el catálogo volaba: el cargador acaba de guardar su copia tras la purga
+        .then(function () { if (k && state.rechazadoEnFondo === k) purgarCargador_(); });
     } catch (e) { return Promise.resolve(); }
   }
   window.addEventListener('storage',function(e){if(e.key===LSC||e.key===null)loadIdentity();});

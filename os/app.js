@@ -197,7 +197,11 @@
           var grid=$('module-grid');grid.setAttribute('aria-busy','false');grid.innerHTML='<div class="empty-state">Control Maestro no respondió. Por seguridad no se habilitaron enlaces. Intenta actualizar de nuevo.</div>';
         }
       }
-    }finally{if(state.catalogEpoch===ep){state.loading=false;$('refresh').disabled=false;var _mr2=$('mobile-refresh');if(_mr2)_mr2.disabled=false;}}
+    }finally{
+      if(state.catalogEpoch===ep){state.loading=false;$('refresh').disabled=false;var _mr2=$('mobile-refresh');if(_mr2)_mr2.disabled=false;}
+      // el Portero rechazó esta credencial MIENTRAS el catálogo volaba: el cargador acaba de guardar su copia tras la purga
+      if(_tk&&state.rechazadoEnFondo===_tk)purgarCargador_();
+    }
   }
   // Copia deliberada de loadIdentityOnce (ver nota del bloque): pide el canje al cargador ANTES de bloquear.
   // Si la respuesta es la copia guardada (origen:'cache') NO se bloquea ni se parpadea: se aplica la identidad
@@ -232,6 +236,7 @@
       if(!data||data.ok!==true||data.token!==token||typeof data.rol!=='string'||!data.rol.trim()||typeof data.boards!=='string'){var diag='canje:'+((data&&data.error)||'sin-respuesta');var err=new Error(diag);err._diag=diag;throw err;}
       // una copia sólo existe después de un éxito vivo posterior a la última purga (los rechazos la tiran): limpia los golpes
       try{localStorage.removeItem('yod_canje_fail');}catch(_e){}
+      state.rechazadoEnFondo='';
       var viva=data.origen!=='cache';
       // verifiedAt dice la verdad: una identidad de copia guardada tiene la edad de la copia, no la de ahora
       state.canjeRetry=0;state.sessionToken=token;state.verifiedAt=Date.now()-(viva?0:Math.max(0,Number(data.edadMs)||0));applyIdentity(data);
@@ -293,7 +298,7 @@
     if(!token||!d||(d.token&&d.token!==token))return;
     var diag='canje:'+String(d.error||'revocado');
     var MUERTO={'canje:clave':1,'canje:liga':1,'canje:revocado':1,'canje:expirado':1};
-    purgarCargador_();state.canjeRetry=Math.max(1,state.canjeRetry||0);
+    purgarCargador_();state.rechazadoEnFondo=token;state.canjeRetry=Math.max(1,state.canjeRetry||0);
     bloquearSesion();
     if(MUERTO[diag]){
       var n=0;try{n=(parseInt(localStorage.getItem('yod_canje_fail')||'0',10)||0)+1;localStorage.setItem('yod_canje_fail',String(n));}catch(_e){}

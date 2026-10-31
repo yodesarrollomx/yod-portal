@@ -294,6 +294,20 @@ test('App · catálogo: dedupe intacto (una segunda llamada en vuelo no repite l
   assert.equal(h.fake.calls.catalogo.length, 1);red.resolve({ ok: true, status: 200, origen: 'red', data: cuerpo([filaCatalogo('SYS-FRESCO')]) });await Promise.all([a, b]);
 });
 
+test('App · el rechazo en fondo llega con el catálogo en vuelo: lo que el cargador guarde después se vuelve a tirar', async () => {
+  const red = deferred();const h = appHarness({ cargador: { catalogo: () => red.promise } });
+  h.c.suscribirCargador_();h.autoriza();const cargando = h.c.loadCatalog();
+  h.fake.emitir('yodcargador:sesion-rechazada', { error: 'revocado', token: 'tok-A' });
+  assert.equal(h.fake.calls.purgar, 1, 'la purga del rechazo');
+  red.resolve({ ok: true, status: 200, origen: 'red', data: cuerpo([filaCatalogo('SYS-TARDE')]) });await cargando;
+  assert.equal(h.fake.calls.purgar, 2, 'y otra cuando el cargador ya escribió su copia');assert.ok(h.renders.every(r => r.every(x => x.system_id !== 'SYS-TARDE')), 'nada de la respuesta tardía se pinta en una sesión rechazada');
+  const limpio = appHarness({ cargador: { catalogo: () => Promise.resolve({ ok: true, status: 200, origen: 'red', data: cuerpo([filaCatalogo('SYS-OK')]) }) } });
+  limpio.autoriza();await limpio.c.loadCatalog();assert.equal(limpio.fake.calls.purgar, 0, 'sin rechazo no se purga de más');
+  const rev = appHarness({ cargador: { canjear: () => sesionRed() } });rev.c.suscribirCargador_();rev.autoriza();
+  rev.fake.emitir('yodcargador:sesion-rechazada', { error: 'revocado', token: 'tok-A' });assert.equal(rev.state.rechazadoEnFondo, 'tok-A');
+  await rev.c.loadIdentity();assert.deepEqual(rev.applied, ['Persona en vivo']);assert.equal(rev.state.rechazadoEnFondo, '', 'una identidad validada de nuevo borra la marca');
+});
+
 test('App · el cargador recibe la BASE del catálogo una sola vez (config) y suscribe una sola vez', async () => {
   const h = appHarness();h.c.suscribirCargador_();h.c.suscribirCargador_();h.autoriza();await h.c.loadCatalog();await h.c.loadCatalog();
   assert.equal(J(h.fake.calls.config), J([{ catalogo: { url: 'https://example.invalid/catalogo' } }]));
@@ -401,6 +415,17 @@ test('Marco · rechazo (en el canje o en fondo): cierra el lienzo, purga el carg
   assert.equal(fondo.localStorage.getItem('pyod_clave_v1'), 'tok-A', 'el marco no cierra la sesión de TODO el OS');assert.equal(fondo.fake.calls.cerrar.length, 0);
   const ajeno = shellHarness({ cargador: { canjear: () => sesionCache() } });ajeno.c.suscribirCargador_();await ajeno.c.loadIdentity();
   ajeno.fake.emitir('yodcargador:sesion-rechazada', { error: 'revocado', token: 'otro' });assert.equal(ajeno.state.identity, 'ok');
+});
+
+test('Marco · el rechazo en fondo llega con el catálogo en vuelo: se vuelve a tirar lo que el cargador guarde después', async () => {
+  const red = deferred();const h = shellHarness({ cargador: { canjear: () => sesionCache(), catalogo: () => red.promise } });
+  h.c.suscribirCargador_();const cargando = h.c.loadIdentity();await asienta();
+  assert.equal(h.state.identity, 'ok', 'la copia ya destrabó el tablero y el catálogo sigue en vuelo');
+  h.fake.emitir('yodcargador:sesion-rechazada', { error: 'revocado', token: 'tok-A' });
+  assert.equal(h.fake.calls.purgar, 1);assert.equal(h.state.identity, 'fail');
+  red.resolve({ ok: true, status: 200, origen: 'red', data: cuerpo([{ system_id: 'SYS-TAREAS', visible: 'SI', orden: '1' }]) });await cargando;
+  assert.equal(h.fake.calls.purgar, 2, 'segunda purga: el cargador acababa de guardar la copia de esa credencial');assert.equal(h.state.catalogRows, null, 'nada se pinta de una sesión rechazada');
+  assert.equal(h.localStorage.getItem('pyod_clave_v1'), 'tok-A', 'regla 5: el marco no borra la credencial');
 });
 
 test('Marco · yodcargador:sesion con otros permisos oculta todo y recarga; con los mismos sólo rejuvenece', async () => {
