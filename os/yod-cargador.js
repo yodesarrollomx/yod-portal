@@ -112,7 +112,7 @@
     function portero() {
       if (!accesoListo) accesoListo = env.YOD_PORTERO ? Promise.resolve() : new Promise(function (ok) {
         try {
-          var sc = doc.createElement('script'); sc.src = new URL('yod-acceso.js?v=20261030-fase0', SELF).href; // misma carpeta que este archivo
+          var sc = doc.createElement('script'); sc.src = new URL('yod-acceso.js?v=20261031-fase1', SELF).href; // misma carpeta que este archivo
           sc.onload = sc.onerror = function () { ok(); }; doc.head.appendChild(sc);
         } catch (e) { ok(); }
       });

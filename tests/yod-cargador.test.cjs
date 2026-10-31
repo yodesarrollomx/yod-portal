@@ -8,6 +8,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const crear = require('../os/yod-cargador.js');
+const ETIQUETA = require('../os/versiones.json').propia; // la etiqueta la gobierna scripts/versiones.cjs --aplicar
 
 const ORIGINAL = 'https://portero.invalid/exec';
 const RESPALDO = 'https://respaldo.invalid/exec';
@@ -369,7 +370,7 @@ test('S2 · sin YOD_PORTERO inyecta yod-acceso.js junto a este archivo y espera;
   const p = m.core.sesion.canjear();
   await asentar();
   assert.equal(m.insertados.length, 1);
-  assert.equal(m.insertados[0].src, 'https://pages.invalid/yod-portal/os/yod-acceso.js?v=20261030-fase0');
+  assert.equal(m.insertados[0].src, 'https://pages.invalid/yod-portal/os/yod-acceso.js?v=' + ETIQUETA);
   assert.equal(m.rd.llamadas.length, 0, 'espera a que cargue la dirección');
   m.env.YOD_PORTERO = { original: ORIGINAL, respaldo: RESPALDO };
   m.insertados[0].onload();
@@ -383,7 +384,7 @@ test('S2 · sin YOD_PORTERO inyecta yod-acceso.js junto a este archivo y espera;
   n.insertados[0].onerror();
   assert.deepEqual(await q, { ok: false, error: 'red', rechazo: false, origen: 'sin_red', token: TOK });
   assert.equal(n.rd.llamadas.length, 0);
-  assert.equal(n.insertados[0].src, 'https://yodesarrollomx.github.io/yod-portal/os/yod-acceso.js?v=20261030-fase0');
+  assert.equal(n.insertados[0].src, 'https://yodesarrollomx.github.io/yod-portal/os/yod-acceso.js?v=' + ETIQUETA);
 });
 
 /* ───────────── datos · get, catálogo, arranque ───────────── */
