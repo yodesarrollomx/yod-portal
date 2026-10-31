@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-31.cargador-fase1.2",
+  "revision": "2026-10-31.cargador-fase1.3",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -14789,6 +14789,33 @@
       ],
       "deployment": "GitHub Pages desde main tras el merge de los dos PR (primero yod-portal, que sirve os/yod-cargador.js; luego potenciales-yod, que lo pide). Sin despliegue de Apps Script. Comprobación posterior: el paso «Comprobar archivos publicados» de potenciales y un recorrido manual en Chromebook e iPhone (segunda apertura de un tablero con datos en menos de 2 s; códigos pd: en la hoja BITACORA).",
       "rollback": "Revertir los dos PR (merge commits) o, sin revertir, abrir cualquier tablero con ?cargador=legacy o fijar localStorage yodcg_legacy=1: todo vuelve al camino actual. Las cachés yodcg_* se pueden borrar con YodCargador.purgar(); no hay datos que migrar ni backend que revertir."
+    },
+    {
+      "id": "CHG-CARGADOR-FASE1-002",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-POTENCIALES",
+        "SYS-DESPACHO",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-CONTROL",
+        "GAS-PORTERO",
+        "GAS-CATALOGO"
+      ],
+      "status": "propuesto",
+      "approval": "Fase 1 (Un cargador), entrega 2, aprobada por Dirección el 31-oct-2026 («Entrega 2 de la Fase 1 primero», antes de abrir la Fase 2; Buzón CL-YODOS-FASE1-E2-20261031). Pendiente de revisión humana y merge. Sin cambios de backend, hojas, permisos de servidor ni lógica de negocio.",
+      "proposal": "Segunda entrega del cargador compartido os/yod-cargador.js (CHG-CARGADOR-FASE1-001). (1) Cargador v2: recordar(clave, cargar, o) memoriza cualquier lectura que haga el adoptante (GET o POST de lectura) con plazo, caché ligada al hash del token (12 h), refresco en fondo y aviso yodcargador:dato; el reintento del canje usa 75 s (el Portero en frío tarda hasta 65 s); un rechazo de credencial que llega de un backend de DATOS ya no se toma como sesión muerta sin preguntar: el cargador verifica una vez con el Portero (canje) y sólo si éste rechaza purga y avisa (si contesta ok, la fuente queda «Sin acceso» con yodcargador:dato-negado); los códigos de telemetría llevan la clase de dispositivo (pd:<tablero>:<ms>:<c|r>@<ios|and|cros|win|mac|lin|otro>) para medir la puerta de salida en Chromebook e iPhone; sesion.peek() lee la identidad guardada sin red. (2) Tablero cenital (tablero.html): el candado valida con el canje compartido (ya no con ?recurso=track&track=alysa, que desde el Portero v47 exige el código AL y dejaba fuera a sesiones válidas sin AL); cada conector pregunta por su código con los boards/rol del canje; las 7 fuentes pasan por recordar con plazo de 45 s, pintan la última copia al instante y se repintan al llegar la red, y una fuente colgada ya no deja «Cargando N de 7 fuentes…» para siempre; la sonda de Tesorería sólo corre para admin; el tablero nunca borra pyod_clave_v1. (3) Avance de obra (obra.html): canje compartido con plazo y sin respaldo; las lecturas van por el cargador con plazo de 45 s y SIN caché (Obra autoriza pagos); carga del tablero y de producción en paralelo; las escrituras y su cola sin señal no cambian. (4) Cabina: el camino legacy deja de consultar el respaldo del Portero (404 desde el 23-sep; como T-105 en el marco); el tiempo ⏱ sólo lo ve Dirección o quien abra con ?tiempos=1; «Sin conexión · datos guardados» deja de pintarse como error. (5) potenciales-yod: al cerrar la sesión por un rechazo de credencial los motores y la portada usan YodCargador.sesion.cerrar (borra la llave sólo si sigue siendo el token rechazado y purga las copias del cargador); prueba de paridad de cifras entre el camino del cargador y el legacy en los 5 motores; en CI la prueba de navegador del cargador falla si el atlas no lo trae. Con ?cargador=legacy o localStorage yodcg_legacy=1 cada adoptante vuelve al camino anterior, salvo las correcciones del respaldo muerto.",
+      "tests": [
+        "tests/yod-cargador.test.cjs: recordar (cache-primero, red-primero, frescoMs, plazo y abort, ok:false no se guarda, legacy, otro token), reintento del canje a 75 s, verificación por canje ante un dato negado (ok → dato-negado sin purga; rechazo → purga y sesion-rechazada; red → nada; una sola verificación con varias fuentes), dispositivo en los códigos, peek.",
+        "tests/tablero-cargador.test.cjs: candado por canje sin borrar la llave, puedo con boards del canje, fuentes con copia/refresco/plazo/dato-negado, legacy sin respaldo, sonda sólo admin; tests/portal-data-sources.cjs sigue verde.",
+        "tests/obra-cargador.test.cjs: canje con y sin cargador (rechazo concluyente, segundo intento al original, nunca respaldo), pedir por el cargador sin caché, arranque en paralelo; verify-obra-app.",
+        "tests/portal-identity.cjs y tests/cargador-adopcion.cjs: la cabina legacy ya no consulta el respaldo; ⏱ sólo admin o ?tiempos=1; cache-fallback sin chip de error.",
+        "potenciales-yod: tests/ppp-session-guard.test.cjs sigue verde con el cierre por el cargador; tests/ppp-paridad-cargador-browser.cjs (5 motores, mismas cifras con y sin cargador); tests/ppp-cargador-browser.cjs falla en CI si falta el cargador.",
+        "Suites completas de ambos repos, verify-os/portal/obra-app/accesos, versiones --check, arquitectura --check, verificar-impacto y recorridos Playwright de potenciales con el atlas fijado al commit de yod-portal que trae el cargador v2."
+      ],
+      "deployment": "GitHub Pages desde main tras el merge de los dos PR (primero yod-portal, que sirve el cargador v2 y los adoptantes; luego potenciales-yod). Sin despliegue de Apps Script. Comprobación posterior: «Comprobar archivos publicados» de potenciales y recorrido manual (tablero cenital abre sin AL, fuentes con copia al segundo acceso, códigos pd:…@<disp> en BITACORA).",
+      "rollback": "Revertir los dos PR (merge commits) o abrir con ?cargador=legacy / localStorage yodcg_legacy=1 (camino anterior en cada adoptante, salvo las correcciones del respaldo muerto). YodCargador.purgar() borra las cachés yodcg_*. Sin backend ni datos que migrar."
     }
   ],
   "data_contracts": [
@@ -19640,6 +19667,23 @@
       "prefix": "tests/cargador-adopcion.cjs",
       "components": [
         "SYS-YOD-OS",
+        "GAS-PORTERO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/tablero-cargador.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "GAS-PORTERO"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/obra-cargador.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-OBRA",
         "GAS-PORTERO"
       ]
     }

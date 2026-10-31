@@ -29,13 +29,13 @@
   var CATALOG_BASE=CATALOG_ENDPOINT.split('?')[0];
   /* El portal validaba la sesión SIEMPRE contra el portero del dominio
      aurumarquitectos.com (hoy suspendido): aunque el gate ya te dejara pasar, el
-     portal se quedaba en "Verificando Acceso…" para siempre. Ahora usa el mismo
-     relevo que el resto del sistema: original primero, respaldo si falla. */
+     portal se quedaba en "Verificando Acceso…" para siempre. Después usó un relevo
+     original → respaldo; desde O6 (T-203) el respaldo ya no se consulta (ver
+     canjearConRelevo_) y la cabina habla SOLO con el ORIGINAL. */
   var PORTERO_ORIGINAL=(window.YOD_PORTERO||{}).original;   // única copia: os/yod-acceso.js
-  var PORTERO_RESPALDO=(window.YOD_PORTERO||{}).respaldo;
-  /* El ORIGINAL siempre primero; el respaldo solo si aquel falla en esta llamada.
-     Antes el relevo se pegaba en localStorage y, al reactivarse Google, el
-     navegador seguía en el respaldo (que no conoce correos ni login de Google). */
+  /* El ORIGINAL siempre. Antes el relevo se pegaba en localStorage y, al reactivarse
+     Google, el navegador seguía en el respaldo (que no conoce correos ni login de
+     Google); esa llave sobrante se limpia aquí. */
   try{localStorage.removeItem('pyod_portero');}catch(e){}
   function conLimite_(p,ms,cancelar){
     var timer;
@@ -74,9 +74,15 @@
     }
     var d=await intenta(PORTERO_ORIGINAL,'original');
     if(!d.ok&&!rechazoAcceso(d.error)){
-      // El respaldo no puede revocar una sesión del primario inaccesible.
-      var backup=await intenta(PORTERO_RESPALDO,'respaldo');
-      if(backup&&backup.ok)d=backup;
+      // O6 (T-203, 31-oct-2026) · el respaldo contesta 404 «Page Not Found» desde el 23-sep (esa implementación ya
+      // no existe en Google): saltar a él convertía cada tardanza del ORIGINAL en una sesión «por validar». El
+      // segundo intento vuelve a ser el ORIGINAL tras 1.5 s, igual que el marco (shell.js, T-105). Un rechazo
+      // explícito del primero es concluyente y ni entra aquí. Si el segundo intento contesta con éxito o con un
+      // rechazo explícito del propio Portero, esa es la respuesta; si cae otra vez queda el diagnóstico del primero
+      // (los dos van al log: 'original' y 'original-2').
+      await new Promise(function(listo){setTimeout(listo,1500);});
+      var otra=await intenta(PORTERO_ORIGINAL,'original-2');
+      if(otra&&(otra.ok||rechazoAcceso(otra.error)))d=otra;
     }
     if(!d.ok)console.warn('[YOD OS] diagnóstico de transporte del canje',diagnostico);
     return d;
@@ -121,6 +127,10 @@
   function edadCopia_(ms){return ms>0?' '+edadTexto(ms):'';}
   function mostrarTiempo_(ms,origen){
     var el=$('yodTiempo');if(!el||!(ms>0))return;
+    // O5 (T-203): el tiempo del primer dato es de diagnóstico, no de operación. Lo ve Dirección (rol admin de la
+    // identidad aplicada) o quien lo pida con ?tiempos=1; para el resto la etiqueta sigue oculta (y vacía).
+    var pedido=false;try{pedido=/[?&]tiempos=1(?:[&#]|$)/.test(String(location.search||''));}catch(_e){}
+    if(state.role!=='admin'&&!pedido)return;
     el.textContent='⏱ '+(ms/1000).toFixed(1)+' s · '+(origen==='cache'?'caché':'red');el.hidden=false;
   }
   // Primer dato REAL de la cabina (catálogo pintado, de caché o de red): una vez por página.
@@ -174,7 +184,8 @@
       var edadFinal=Number(r.edadMs)||edadGuardada;
       if(r.origen==='cache-fallback'){
         // Sin red pero con copia: NO es un fallo (nada de reintentos ni de respaldo de relleno); se dice con calma.
-        pintarCatalogo_(data,'cache','Sin conexión · datos guardados'+edadCopia_(edadFinal));setConnection('error','Sin conexión');return;
+        // O5 (T-203): ya no se pinta con el chip de error (rojo): el estado de aviso es el mismo chip en color neutro.
+        pintarCatalogo_(data,'cache','Sin conexión · datos guardados'+edadCopia_(edadFinal));setConnection('aviso','Sin conexión · datos guardados');return;
       }
       if(r.origen==='cache'){pintarCatalogo_(data,'cache','Datos guardados'+edadCopia_(edadFinal));setConnection('ok','En línea');return;}
       pintarCatalogo_(data,'red');setConnection('ok','En línea');
@@ -358,7 +369,7 @@
   };
   // Etiqueta del tablero embebido (caché de 10 min de Pages). No se edita aquí: la escribe
   // node scripts/versiones.cjs --aplicar desde os/versiones.json, igual que todos los ?v=.
-  var TABLERO_V='20261031-fase1';
+  var TABLERO_V='20261031-fase1-e2';
   var state={modules:[],rawRows:[],role:'vista',boards:'',profileReady:false,loading:false,opsScope:'mias',allTasks:[],sesionEpoch:0,sessionToken:'',identityRequest:0,pulseCache:{},opsCache:null,verifiedAt:0};
   var $=function(id){return document.getElementById(id);};
   // ¿hay clave guardada? distingue «sin sesión» de «sesión validándose»
@@ -431,7 +442,7 @@
     }
     return 'Consultado a las '+timeLabel(new Date());
   }
-  function setConnection(kind,text){var el=$('connection');el.className='connection '+kind;el.innerHTML='<i class="ti ti-'+(kind==='ok'?'cloud-check':kind==='error'?'cloud-off':'loader-2 spin')+'"></i> '+text;}
+  function setConnection(kind,text){var el=$('connection');el.className='connection '+kind;el.innerHTML='<i class="ti ti-'+(kind==='ok'?'cloud-check':(kind==='error'||kind==='aviso')?'cloud-off':'loader-2 spin')+'"></i> '+text;}
   function safeText(value){return String(value==null?'':value);}
   function initials(name){return safeText(name).split(/\s+/).filter(Boolean).slice(0,2).map(function(v){return v.charAt(0);}).join('').toUpperCase()||'YO';}
   function money(value){return new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',maximumFractionDigits:0}).format(Number(value)||0);}
@@ -598,7 +609,7 @@
         write:function(intent){return window.YODCaseTransport.writeTeam(intent);},
         lookupReceipt:function(requestId){return window.YODCaseTransport.lookupTeamReceipt({request_id:requestId});}
       },
-      loadMount:function(){return import('../despacho3d/equipo.mjs?v=20261031-fase1').then(function(module){return module.mountTeamDesk;});},
+      loadMount:function(){return import('../despacho3d/equipo.mjs?v=20261031-fase1-e2').then(function(module){return module.mountTeamDesk;});},
       onError:function(){var status=$('despachoEquipoEstado');if(status)status.textContent='No se pudo abrir Equipo. Puedes volver a validar tu acceso.';}
     });
   }

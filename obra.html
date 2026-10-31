@@ -1,7 +1,8 @@
 <!doctype html>
 <html lang="es">
 <head>
-<script src="os/yod-acceso.js?v=20261031-fase1"></script>
+<script src="os/yod-acceso.js?v=20261031-fase1-e2"></script>
+<script src="os/yod-cargador.js?v=20261031-fase1-e2"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow,noarchive">
@@ -252,17 +253,16 @@ textarea{width:100%;padding:.55rem .65rem;background:var(--panel2);border:1px so
   <div class="cadena" id="pieCadena"></div>
 </div>
 
-<script src="os/access-policy.js?v=20261031-fase1"></script>
+<script src="os/access-policy.js?v=20261031-fase1-e2"></script>
 <script>
 (function(){
 "use strict";
 const GAS="https://script.google.com/macros/s/AKfycbyVb6Y7m00FyhoGa9ZoQul1j6IlHdgsCNalaZVGmA0Csh91TqxNvyDT0YQurz-hViA0/exec";
 const LSK="pyod_clave_v1", LSQ="yod_obra_quien";
 /* Quién eres NO se escoge en un combo: sale del canje del Portero (nombre,
-   correo y rol de la sesión). Mismo relevo que el resto del OS: original
-   primero, respaldo solo si aquel falla. */
+   correo y rol de la sesión). Solo el ORIGINAL: el respaldo contesta 404 desde
+   el 23-sep y ya no se consulta (T-203, Fase 1). */
 const PORTERO_ORIGINAL=(window.YOD_PORTERO||{}).original;   // única copia: os/yod-acceso.js
-const PORTERO_RESPALDO=(window.YOD_PORTERO||{}).respaldo;
 const SINYO="Tu sesión no trae nombre en Roles: no puedes firmar. Pídeselo a Dirección.";
 let K=localStorage.getItem(LSK)||"", D=null, QUIEN="", ROL="", SES=null;
 
@@ -270,8 +270,9 @@ const $=s=>document.querySelector(s);
 const dinero=n=>"$"+(Number(n)||0).toLocaleString("es-MX",{minimumFractionDigits:2,maximumFractionDigits:2});
 const pct=n=>((Number(n)||0)*100).toFixed(1)+"%";
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-/* los errores de red no se enseñan crudos ni en inglés */
-const razon=e=>typeof e==="string"?e:"sin conexión con el motor";
+/* los errores de red no se enseñan crudos ni en inglés. Con el cargador, pedir()
+   avisa la caída de transporte con la cadena «red» (sin él era un TypeError). */
+const razon=e=>(typeof e==="string"&&e!=="red")?e:"sin conexión con el motor";
 /* "2026-09-05" a secas lo lee el navegador en UTC y en Hermosillo cae un día
    antes desde las 5pm: las fechas de día se arman a mano, en hora local */
 const dparse=f=>{ const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(f));
@@ -285,7 +286,21 @@ const REVISIONES=[["cimbra","Cimbra aplomada y apuntalada"],["acero","Acero: cal
   ["instalaciones","Instalaciones ahogadas y probadas"],["limpieza","Limpieza y humedecido"],
   ["acceso","Acceso para la bomba"]];
 
+/* Fase 1 · «Un cargador» (T-203). Con window.YodCargador (os/yod-cargador.js) las lecturas de Obra salen por su
+   transporte (plazo de 45 s y un reintento a 1.5 s) y el canje es el compartido con la cabina y el marco. Sin
+   cargador, o con ?cargador=legacy (o localStorage.yodcg_legacy='1'), todo corre como siempre. */
+function cargadorActivo(){ const c=window.YodCargador; return !!(c&&c.v&&!c.legacy); }
 async function pedir(recurso,extra){
+  if(cargadorActivo()){
+    /* SIN caché a propósito (no se pasa viejoMs): Obra autoriza pagos y no puede enseñar una copia vieja. */
+    const params={recurso:recurso,k:K};
+    new URLSearchParams(extra||"").forEach((v,n)=>{ if(!Object.prototype.hasOwnProperty.call(params,n)) params[n]=v; });   // extra = "&a=b&c=d"; recurso y k mandan
+    const r=await window.YodCargador.get(GAS,params,{timeoutMs:45000,reintentos:1});
+    const j=r&&r.data;
+    if(r&&r.ok&&j&&j.ok) return j;
+    if(j) throw (j.error||"error");   // el motor contestó que no
+    throw "red";                      // transporte: red, plazo, HTTP o cuerpo ilegible
+  }
   const u=GAS+"?recurso="+recurso+"&k="+encodeURIComponent(K)+(extra||"")+"&cb="+Date.now();
   const r=await fetch(u,{cache:"no-store"});
   const j=await r.json();
@@ -331,14 +346,30 @@ async function drenarCola(){
 addEventListener("online",drenarCola);
 
 /* ── sesión: el Portero dice quién eres y qué tableros traes ── */
-async function canjear(){
-  async function intenta(base){
-    const r=await fetch(base+"?recurso=canje&t="+encodeURIComponent(K),{cache:"no-store",credentials:"omit"});
-    const t=await r.text(); try{ return JSON.parse(t); }catch(_e){ return null; }
+/* Sin cargador: UNA llamada al ORIGINAL; si el transporte cae (el fetch lanza o el cuerpo no es JSON) se repite
+   contra el ORIGINAL tras 1.5 s. Un {ok:false} es concluyente y no se reintenta. Antes se probaba el respaldo
+   (muerto desde el 23-sep) ante CUALQUIER !ok, incluso un rechazo explícito del Portero. */
+async function canjearDirecto(){
+  async function intenta(){
+    try{
+      const r=await fetch(PORTERO_ORIGINAL+"?recurso=canje&t="+encodeURIComponent(K),{cache:"no-store",credentials:"omit"});
+      const t=await r.text(); try{ const v=JSON.parse(t); return (v&&typeof v==="object")?v:null; }catch(_e){ return null; }
+    }catch(_e){ return null; }
   }
-  let j=null; try{ j=await intenta(PORTERO_ORIGINAL); }catch(_e){ j=null; }
-  if(!j||!j.ok){ try{ j=await intenta(PORTERO_RESPALDO); }catch(_e){ j=null; } }
+  let j=await intenta();
+  if(!j){ await new Promise(listo=>setTimeout(listo,1500)); j=await intenta(); }
   return (j&&j.ok)?j:null;
+}
+function llaveGuardada(){ try{ return localStorage.getItem(LSK)||""; }catch(_e){ return K; } }
+async function canjear(){
+  /* Con cargador y la llave guardada, el canje es el compartido: copia ≤ 12 h que el Portero revalida en fondo,
+     un solo vuelo y plazo de 25 s (nunca el respaldo). La llave tecleada en el candado todavía no está guardada
+     (se guarda al abrir): ésa se canjea directa. Un rechazo NO borra pyod_clave_v1 (regla 5). */
+  if(cargadorActivo() && K===llaveGuardada()){
+    try{ const r=await window.YodCargador.sesion.canjear(); return (r&&r.ok===true)?r:null; }
+    catch(_e){ return null; }
+  }
+  return canjearDirecto();
 }
 /* fail-closed: sin canje válido no se pide un solo dato, y sin el código OB
    en tus accesos tampoco — se queda el candado con su razón. */
@@ -365,7 +396,10 @@ async function entrar(){
   catch(e){ $("#gerr").textContent=mensajeGate(e); $("#gvolver").hidden=(e==="clave"); }
   $("#btnEntrar").disabled=false;
 }
-function abrir(){ $("#gate").classList.add("off"); $("#app").style.display=""; pintar(); }
+/* Telemetría de la Fase 1: el primer dato REAL de la página (ya pintado) cuenta una vez. Obra nunca pinta copias
+   viejas, así que el origen es siempre 'red'. Sin cargador (o legacy) no hace nada. */
+function primerDato(){ if(!cargadorActivo()) return; try{ window.YodCargador.telemetria.primerDato("red"); }catch(_e){} }
+function abrir(){ $("#gate").classList.add("off"); $("#app").style.display=""; pintar(); primerDato(); }
 
 /* ── datos ── */
 async function cargar(){ D=await pedir("board"); }
@@ -916,17 +950,25 @@ $("#clave").addEventListener("keydown",e=>{ if(e.key==="Enter") entrar(); });
 
 /* Un rechazo del motor de obra NO borra pyod_clave_v1: esa llave es la sesión
    de TODO el OS y solo el cierre de sesión del shell debe soltarla. */
+/* Arranque con la sesión guardada. Con cargador, el tablero y los frenos se piden A LA VEZ (cargarProd no usa D y
+   atrapa sus propios errores); sin él, en serie como siempre. */
+function arrancar(){
+  const datos = cargadorActivo()
+    ? sesion().then(()=>Promise.all([cargar(),cargarProd()]))
+    : sesion().then(cargar).then(cargarProd);
+  return datos.then(abrir).then(drenarCola).catch(e=>{
+    K="";
+    $("#gerr").textContent = e==="clave"
+      ? "Tu sesión no abre el motor de obra. Entra desde YOD OS."
+      : mensajeGate(e);
+    $("#gvolver").hidden=false;
+  });
+}
 pintarColaLocal();
-if(K) sesion().then(cargar).then(cargarProd).then(abrir).then(drenarCola).catch(e=>{
-  K="";
-  $("#gerr").textContent = e==="clave"
-    ? "Tu sesión no abre el motor de obra. Entra desde YOD OS."
-    : mensajeGate(e);
-  $("#gvolver").hidden=false;
-});
+if(K) arrancar();
 })();
 </script>
-<script src="chinche.js?v=20261031-fase1"></script>
+<script src="chinche.js?v=20261031-fase1-e2"></script>
 <script>if(window.YODChinche) YODChinche.init({pantalla:"obra",
   vista:function(){ var t=document.querySelector('[role="tab"][aria-selected="true"]');
     return t ? t.textContent.replace(/\s+/g," ").trim() : ""; }});</script>

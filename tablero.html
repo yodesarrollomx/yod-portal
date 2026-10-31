@@ -1,6 +1,7 @@
 <!doctype html>
 <meta charset="utf-8">
-<script src="os/yod-acceso.js?v=20261031-fase1"></script>
+<script src="os/yod-acceso.js?v=20261031-fase1-e2"></script>
+<script src="os/yod-cargador.js?v=20261031-fase1-e2"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>YOD OS · Tablero</title>
 <style>
@@ -103,9 +104,12 @@
  <button data-v="abaco">2 &middot; El &aacute;baco</button>
  <i id="leyHex">el hex&aacute;gono se pinta por su n&uacute;mero; el punto dice de d&oacute;nde sale el dato: <span data-punto="linea">&#9679;</span> en l&iacute;nea &middot; <span data-punto="fuente">&#9679;</span> fuente lista, sin conectar &middot; <span data-punto="ciego">&#9679;</span> ciego: no contest&oacute; &middot; <span data-punto="tentativo">&#9679;</span> tentativo, sin fuente<em>&times;N en la canica = varios casos: p&iacute;cala</em></i></div>
 <canvas id="c" width="1536" height="1056"></canvas><canvas id="luz" width="1536" height="1056"></canvas><div id="f"></div></div>
-<script src="chinche.js?v=20261031-fase1"></script>
-<script src="os/access-policy.js?v=20261031-fase1"></script>
-<script src="os/proyectos.js?v=20261031-fase1"></script>
+<!-- La chinche se carga DESPUÉS del primer dato (YodCargador.cargarDespues); sin cargador, o con ?cargador=legacy,
+     se inserta en el acto, como siempre. Esta etiqueta es inerte (type=text/plain: el navegador no la baja) y
+     existe para que scripts/versiones.cjs siga gobernando la etiqueta ?v= de chinche.js. -->
+<script type="text/plain" id="yodChincheSrc" src="chinche.js?v=20261031-fase1-e2"></script>
+<script src="os/access-policy.js?v=20261031-fase1-e2"></script>
+<script src="os/proyectos.js?v=20261031-fase1-e2"></script>
 <style>
 /* Fase 3 · folio: la tira de etapas (Potencial → Trámite → Obra → Venta) */
 #etapas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 12px}
@@ -155,7 +159,15 @@ if(EMBED){ document.body.classList.add("embed");
    los boards del canje, no solo que la llave sea válida. */
 const BOARDS=QS.get("boards")||"", ROL=QS.get("rol")||"";
 const SESION_OS=EMBED && (QS.has("boards")||QS.has("rol"));
+/* Fase 1 (T-202) · con el cargador compartido la autoridad de los códigos es el CANJE del Portero
+   (SESION = {boards,rol} del canje), embebido o suelto: la liga del iframe (?boards=&rol=) ya no decide.
+   Sin canje resuelto no se consulta nada. Sin cargador (o con ?cargador=legacy): como antes. */
+let SESION=null;
 function puedo(sys){
+  if(cargadorActivo()){
+    if(!SESION) return false;                 // sin canje resuelto: nada se consulta
+    return !!(window.YodAccessPolicy && window.YodAccessPolicy.canOpen(SESION.boards,sys,SESION.rol));
+  }
   if(!SESION_OS) return true;                 // suelto o sin códigos en la liga: como antes
   return !!(window.YodAccessPolicy && window.YodAccessPolicy.canOpen(BOARDS,sys,ROL));
 }
@@ -1504,11 +1516,68 @@ ver(guardada==="surcos"?"surcos":"abaco");
 // equivale a una fuente sana: también puede haber acceso rechazado o caché.
 function estadoErrorFuente(e){
   const codigo=String(e&&e.message||e||"").trim().toLowerCase();
-  return ["liga","clave","expirado","revocado","sin_acceso","sin acceso","denegado",
-    "no autorizado","forbidden","unauthorized","401","403"].includes(codigo)?"sinacceso":"error";
+  return ["liga","clave","expirado","revocado","sin_sesion","sin_acceso","sin acceso","denegado",
+    "no autorizado","forbidden","unauthorized","401","403","http 401","http 403"].includes(codigo)?"sinacceso":"error";
 }
 function motivoErrorFuente(e,nombre){
-  return estadoErrorFuente(e)==="sinacceso"?"acceso no autorizado a esta fuente":nombre+" sin respuesta válida";
+  if(estadoErrorFuente(e)==="sinacceso") return "acceso no autorizado a esta fuente";
+  if(String(e&&e.message||e||"").trim().toLowerCase()==="timeout") return nombre+" sin respuesta en "+(FUENTE_PLAZO_MS/1000)+" s";
+  return nombre+" sin respuesta válida";
+}
+/* ═══ FASE 1 · UN CARGADOR (T-202) · una sola puerta para las fuentes ═══════════════════════════════
+   Con os/yod-cargador.js v2 (YodCargador.recordar) cada fuente se pinta YA con su última copia buena y se
+   refresca en fondo; sin él (o con ?cargador=legacy / localStorage yodcg_legacy='1') es la misma petición de
+   siempre, pero con un plazo de 45 s: una fuente que no contesta termina en «error» y deja de contar en
+   «Cargando N de 7 fuentes…». La URL, el cuerpo y la credencial de cada petición son los de siempre; el
+   cargador nunca hace la petición (cada conector entrega su propio fetch). La copia no concede permisos:
+   cada conector sigue preguntando puedo() antes de pedir, y el muro sigue siendo cada backend. */
+const FUENTE_FRESCO_MS=60000, FUENTE_VIEJO_MS=43200000, FUENTE_PLAZO_MS=45000;
+const ORIGEN={};      // por petición («PPP», «Tracks:alysa»…): "red" · "copia" (fresca, <60 s) · "cache" (vieja: se refresca en fondo)
+const ULTIMA={};      // por petición: el JSON que leyó la última corrida del conector (para no repetirla por un refresco idéntico)
+const NEGADO={};      // por fuente: el Portero confirmó que ESTA fuente niega la credencial (yodcargador:dato-negado)
+function cargadorActivo(){
+  const c=typeof window!=="undefined"?window.YodCargador:null;
+  return !!(c&&c.v&&!c.legacy&&typeof c.recordar==="function");
+}
+function fuenteDe(nombre){ return String(nombre).split(":")[0]; }
+/* Una promesa con plazo: pasado `ms` rechaza con "timeout" y aborta el fetch (signal). Sin reloj (pruebas en vm) no hay plazo. */
+function conPlazo(hacer,ms){
+  return new Promise(function(resolve,reject){
+    const ctl=typeof AbortController==="function"?new AbortController():null;
+    let t=null;
+    if(typeof setTimeout==="function") t=setTimeout(function(){ reject("timeout"); try{ if(ctl) ctl.abort(); }catch(_){} },ms);
+    Promise.resolve().then(function(){ return hacer(ctl?ctl.signal:undefined); }).then(
+      function(v){ if(t!==null) clearTimeout(t); resolve(v); },
+      function(e){ if(t!==null) clearTimeout(t); reject(e); });
+  });
+}
+/* cargar(signal) = la petición de hoy (fetch + leerFuente) → Promise<JSON>. Devuelve el JSON, o RECHAZA con el código
+   del error ("timeout", "red", "liga", "clave"…), el mismo contrato que tenían los conectores con fetch. */
+function pedirFuente(nombre,cargar,plazoMs){
+  const fuente=fuenteDe(nombre), plazo=plazoMs||FUENTE_PLAZO_MS;
+  if(NEGADO[fuente]) return Promise.reject(NEGADO[fuente]);
+  if(!cargadorActivo()){ ORIGEN[nombre]="red"; return conPlazo(cargar,plazo); }
+  const C=window.YodCargador;
+  // 401/403 HTTP = credencial negada: se entrega como cuerpo {ok:false} para que el cargador lo trate como rechazo
+  // (verifica el canje y avisa) y no como «red caída».
+  const traer=function(signal){
+    return Promise.resolve().then(function(){ return cargar(signal); }).catch(function(e){
+      const m=/^(401|403)$/.exec(String(e&&e.message||e||"").trim());
+      if(m) return {ok:false,error:"http "+m[1]};
+      throw e;
+    });
+  };
+  // el cargador ya acota con timeoutMs; este plazo (+2 s) es el cinturón: aunque recordar no contestara, no hay fuente colgada
+  return conPlazo(function(){
+    return C.recordar("tablero:"+nombre,traer,{modo:"cache-primero",frescoMs:FUENTE_FRESCO_MS,viejoMs:FUENTE_VIEJO_MS,
+      timeoutMs:plazo,token:CLAVE_OK||undefined});
+  },plazo+2000).then(function(r){
+    if(!r||!r.ok) throw (r&&r.error)||"error";
+    const vieja=r.origen==="cache-fallback"||(r.origen==="cache"&&!(r.edadMs<FUENTE_FRESCO_MS));
+    ORIGEN[nombre]=vieja?"cache":(r.origen==="red"?"red":"copia");
+    try{ ULTIMA[nombre]=JSON.stringify(r.data); }catch(_){ ULTIMA[nombre]=undefined; }   // lo último que leyó el conector
+    return r.data;
+  });
 }
 async function leerFuente(r){
   if(r.status===401||r.status===403) throw String(r.status);
@@ -1523,9 +1592,9 @@ async function conectarPPP(){
   try{
     // La credencial va como en los demás tramos (Miramar, Obra, CRM): el GAS del
     // plan-potencial ya la exige y sin ella este tramo salía SIEMPRE ciego.
-    const r=await fetch(PPP_GAS+"?recurso=board&k="+encodeURIComponent(CLAVE_OK||"")+
-      "&t="+Date.now(),{cache:"no-store"});
-    const j=await leerFuente(r); if(!j.ok||!j.kpis) throw j&&j.error||0;
+    const j=await pedirFuente("PPP",signal=>fetch(PPP_GAS+"?recurso=board&k="+encodeURIComponent(CLAVE_OK||"")+
+      "&t="+Date.now(),{cache:"no-store",signal}).then(leerFuente));
+    if(!j.ok||!j.kpis) throw j&&j.error||0;
     const kp=j.kpis;
     const dias=j.actividad_por_dia;
     KPIHEX_TOP[1] = cifra(kp.clientes)===null
@@ -1562,9 +1631,9 @@ async function conectarMiramar(){
   try{
     // Manda la credencial como el resto de conectores: el backend de Miramar
     // ya la exige (antes servia el board completo sin clave a cualquiera).
-    const r=await fetch(MIRA_GAS+"?recurso=board&k="+encodeURIComponent(CLAVE_OK||"")+
-      "&cb="+Date.now(),{cache:"no-store"});
-    const j=await leerFuente(r); if(!j.ok||!j.tablas) throw j&&j.error||0;
+    const j=await pedirFuente("Miramar",signal=>fetch(MIRA_GAS+"?recurso=board&k="+encodeURIComponent(CLAVE_OK||"")+
+      "&cb="+Date.now(),{cache:"no-store",signal}).then(leerFuente));
+    if(!j.ok||!j.tablas) throw j&&j.error||0;
     const tr=j.tablas.TRAMITES||[], lo=j.tablas.LOTES||[];
     const est=e=>String(e.estado||"").trim().toLowerCase();
     // Una tabla VACÍA es ausencia de dato, no un cero: antes salía "0/47" (el 47
@@ -1624,9 +1693,9 @@ async function conectarObra(){
   if(!puedo("SYS-OBRA")){                        // sin código no se llama al GAS
     cegar(KPIHEX_BOT,[7],"sin código de este módulo"); pintar(); return "sinacceso"; }
   try{
-    const r=await fetch(OBRA_GAS+"?recurso=board&k="+encodeURIComponent(CLAVE_OK||"")+
-      "&cb="+Date.now(),{cache:"no-store"});
-    const j=await leerFuente(r); if(!j.ok) throw j&&j.error||0;
+    const j=await pedirFuente("Obra",signal=>fetch(OBRA_GAS+"?recurso=board&k="+encodeURIComponent(CLAVE_OK||"")+
+      "&cb="+Date.now(),{cache:"no-store",signal}).then(leerFuente));
+    if(!j.ok) throw j&&j.error||0;
     const k=j.kpi||{}, fr=j.frentes||{};
     const nombres=Object.keys(fr);
     const listos=nombres.filter(n=>fr[n].importe>0 && fr[n].ejecutado>=fr[n].importe*0.999).length;
@@ -1702,8 +1771,8 @@ async function conectarTracks(){
   if(!puedo("SYS-TRACK")){                       // sin código no se llama al GAS
     cegar(KPIHEX_BOT,[3],"sin código de este módulo"); pintar(); return "sinacceso"; }
   const uno=async (track,idx)=>{
-    const r=await fetch(GATE_GAS+"?recurso=track&track="+track+"&k="+encodeURIComponent(CLAVE_OK||""))
-      .then(leerFuente);
+    const r=await pedirFuente("Tracks:"+track,signal=>fetch(GATE_GAS+"?recurso=track&track="+track+"&k="+encodeURIComponent(CLAVE_OK||""),{signal})
+      .then(leerFuente));
     if(!r.ok||!Array.isArray(r.items)) throw r.error||0;
     const tot=r.items.length,
           hechos=r.items.filter(i=>String(i.estado||"").toLowerCase()==="hecho").length;
@@ -1739,9 +1808,8 @@ async function conectarTaller(){
   if(!puedo("SYS-TAREAS")){cegar(KPIHEX_BOT,[2],"sin código de este módulo");pintar();return "sinacceso";}
   let tasks=null, via="live";
   try{
-    const r=await fetch(TALLER_GAS,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
-      body:JSON.stringify({k:CLAVE_OK||"",action:"getAll"}),redirect:"follow",cache:"no-store"});
-    const j=await leerFuente(r);
+    const j=await pedirFuente("Taller",signal=>fetch(TALLER_GAS,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify({k:CLAVE_OK||"",action:"getAll"}),redirect:"follow",cache:"no-store",signal}).then(leerFuente));
     if(j&&j.ok&&Array.isArray(j.tasks||j.data)) tasks=j.tasks||j.data; else throw j&&j.error||0;
   }catch(e){
     // El respaldo legacy no tiene identidad ni fecha; nunca se presenta como
@@ -1776,23 +1844,26 @@ function sumaInversiones(data){
 async function conectarCodes(){
   if(!puedo("SYS-TRACK")){                       // sin código no se llama al GAS
     cegar(KPIHEX_BOT,[4,6],"sin código de este módulo"); pintar(); return "sinacceso"; }
-  let res=null, via="live";
+  let res=null, via="live", e1=null;
+  const t0=Date.now();
   // 1º el AGREGADO PÚBLICO: cuatro números, sin credencial. El portal de
   // codesarrolladores tiene su propia ADMIN_PASS y no se pone en un HTML público
   // (daría acceso de escritura a todo). Ver PARCHE-CODES.md.
   try{
-    const r=await fetch(CODES_GAS,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
-      body:JSON.stringify({action:"resumenPublico"}),redirect:"follow",cache:"no-store"});
-    const j=await leerFuente(r);
+    const j=await pedirFuente("Codes",signal=>fetch(CODES_GAS,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify({action:"resumenPublico"}),redirect:"follow",cache:"no-store",signal}).then(leerFuente));
     if(j&&j.ok&&j.total!=null){ res={total:j.total,n:j.n,recibido:j.recibido,pct:j.pct}; via="agregado público"; }
-  }catch(_){}
+  }catch(e){ e1=e; }
   // El agregado válido, incluso vacío, basta. Solo se intenta getAll cuando
   // no existe agregado; no se reutilizan copias legacy sin sesión ni fecha.
   if(!res){
     try{
-      const r=await fetch(CODES_GAS,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
-        body:JSON.stringify({action:"getAll",pass:CLAVE_OK||""}),redirect:"follow",cache:"no-store"});
-      const j=await leerFuente(r);
+      // el plazo es de la FUENTE, no de cada petición: si el agregado ya agotó los 45 s no se le pide otra vez, y
+      // si falló antes, getAll sólo cuenta con lo que queda
+      if(String(e1&&e1.message||e1||"").trim().toLowerCase()==="timeout") throw e1;
+      const j=await pedirFuente("Codes:todo",signal=>fetch(CODES_GAS,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+        body:JSON.stringify({action:"getAll",pass:CLAVE_OK||""}),redirect:"follow",cache:"no-store",signal}).then(leerFuente),
+        Math.max(1000,FUENTE_PLAZO_MS-(Date.now()-t0)));
       if(j&&j.ok&&j.data) res=sumaInversiones(j.data); else throw (j&&j.error)||0;
     }catch(e){
       cegar(KPIHEX_BOT,[4,6],motivoErrorFuente(e,"portal codesarrolladores")); pintar();
@@ -1831,9 +1902,9 @@ async function conectarCRM(){
     pintar(); return "sinacceso"; }
   CRMEST="pidiendo"; pintar();                             // sin endpoint aún: charola sin línea
   try{
-    const r=await fetch(CRM_GAS+"?recurso=crm&k="+encodeURIComponent(CLAVE_OK||"")+
-      "&t="+Date.now(),{cache:"no-store"});
-    const j=await leerFuente(r); if(!j.ok||!Array.isArray(j.leads)) throw j&&j.error||0;
+    const j=await pedirFuente("CRM",signal=>fetch(CRM_GAS+"?recurso=crm&k="+encodeURIComponent(CLAVE_OK||"")+
+      "&t="+Date.now(),{cache:"no-store",signal}).then(leerFuente));
+    if(!j.ok||!Array.isArray(j.leads)) throw j&&j.error||0;
     const EI={ADA:0,PPP:1,OBR:2,LOT:3,CDS:4}, FI={"CONTACTABLE":0,"CALIFICADO":1,"PROPUESTA":2,"NEGOCIACIÓN":3};
     const porEmb=[0,0,0,0,0], avanz=[0,0,0,0,0];
     const m=[0,1,2,3,4].map(()=> [ [],[],[],[] ]);
@@ -1896,8 +1967,12 @@ async function conectarCRM(){
      console.warn("CRM sin línea", e); return estadoErrorFuente(e); }
 }
 
-/* ═══ SONDA finance · solo reporta la forma del dato, no pinta nada ═══ */
+/* ═══ SONDA finance · solo reporta la forma del dato, no pinta nada ═══
+   Sólo para Dirección: rol admin del canje (sin cargador, el ?rol= de la liga del OS). Antes mandaba el token a
+   Tesorería aunque la persona no tuviera acceso a ese módulo. */
 async function sondaFinance(){
+  const rol=String((cargadorActivo()?(SESION&&SESION.rol):ROL)||"").trim().toLowerCase();
+  if(rol!=="admin") return;
   try{
     const r=await fetch("https://script.google.com/macros/s/AKfycbxbQpBn7fpbrjXppE3e-DFMBjDmZ8Yy9CZqfuZa4vHNWthS0fl2EzrKnMHHOtPGzTA/exec",
       {method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
@@ -1908,20 +1983,25 @@ async function sondaFinance(){
   }catch(e){}
 }
 
-/* ═══ EL CANDADO · valida contra el mismo GAS que los tracks ═══
-   Con relevo, como el OS: si el portero original no contesta se prueba el
-   respaldo y el tablero ENTERO se queda con ese endpoint — conectarTracks
-   también pega aquí, así que parchar solo validar() abría la puerta y dejaba
-   los hexágonos ciegos contra un portero muerto. */
+/* ═══ EL CANDADO · valida contra el Portero ═══
+   Con el cargador compartido (os/yod-cargador.js v2) la sesión se canjea UNA vez por página y se comparte con la
+   cabina: con identidad en caché el tablero abre al instante y el canje de fondo lo cierra si el Portero la
+   rechaza. Ya no depende de ?recurso=track&track=alysa (desde el Portero v47 exige AL y dejaba fuera a quien
+   tiene sesión válida sin ese código). Sin cargador (o con ?cargador=legacy): la validación de siempre, pero el
+   segundo intento ya no salta al respaldo —esa implementación contesta 404 desde el 23-sep— sino que repite
+   contra el ORIGINAL a los 1.5 s; GATE_GAS (que también usa conectarTracks) nunca cambia de dueño. */
 const PORTERO_ORIGINAL=(window.YOD_PORTERO||{}).original;   // única copia: os/yod-acceso.js
-const PORTERO_RESPALDO=(window.YOD_PORTERO||{}).respaldo;
-let GATE_GAS=PORTERO_ORIGINAL;
+const GATE_GAS=PORTERO_ORIGINAL;
 const LSK="pyod_clave_v1", GT=document.getElementById("gate");
-let CLAVE_OK=null;
+const MSG=document.getElementById("gateMsg"), MSG0=MSG.textContent;
+let CLAVE_OK=null, CERRADO=false;
 /* Una sesión vencida NO es "sin conexión": cada error dice lo que es. */
 function mensajeGate(e){
-  if(e==="clave") return "La clave cambió";
-  if(e==="liga"||e==="expirado"||e==="revocado") return "La sesión venció — vuelve a entrar al OS";
+  const c=String(e&&e.message||e||"").trim().toLowerCase();
+  if(c==="clave") return "La clave cambió";
+  if(c==="liga"||c==="expirado"||c==="revocado") return "La sesión venció — vuelve a entrar al OS";
+  if(c==="sin_sesion") return "No hay sesión — entra a YOD OS con tu cuenta de Google";
+  if(estadoErrorFuente(c)==="sinacceso") return "Tu cuenta no tiene acceso a este tablero";   // sin_acceso, denegado, forbidden, http 401/403…
   return "Sin conexión con el Sheet";
 }
 async function pedirPortero(base,k){
@@ -1929,15 +2009,41 @@ async function pedirPortero(base,k){
   return await r.json();
 }
 async function validar(k){
+  const C=typeof window!=="undefined"?window.YodCargador:null;
+  /* Con cargador: el CANJE decide (boards/rol son la autoridad de puedo()). Sólo para la llave guardada: una clave
+     tecleada a mano (entrar) aún no está en localStorage y el canje no puede dar fe de ella. */
+  if(cargadorActivo()&&C.sesion&&k===C.sesion.token()){
+    const r=await C.sesion.canjear();
+    if(r&&r.ok){ SESION={boards:r.boards,rol:r.rol}; CLAVE_OK=k; return; }
+    if(r&&r.rechazo){                            // concluyente: lo guardado ya no vale. NO se borra pyod_clave_v1 (regla 5):
+      try{ C.purgar(); }catch(_){}               // la dueña de la sesión es la cabina; aquí sólo se tiran las copias
+      throw String(r.error||"clave");
+    }
+    throw "red";                                 // red / timeout / formato: no hay veredicto, no es una sesión muerta
+  }
   let j=null;
   try{ j=await pedirPortero(GATE_GAS,k); }catch(e){ j=null; }
-  if(!j && GATE_GAS!==PORTERO_RESPALDO){         // no contestó: el relevo, una sola vez
-    try{ const j2=await pedirPortero(PORTERO_RESPALDO,k);
-      if(j2){ j=j2; GATE_GAS=PORTERO_RESPALDO; } }catch(e){}
+  if(!j){                                        // no contestó: segundo intento al ORIGINAL a los 1.5 s (el respaldo está muerto)
+    await new Promise(function(ok){ setTimeout(ok,1500); });
+    try{ j=await pedirPortero(GATE_GAS,k); }catch(e){ j=null; }
   }
   if(!j) throw "red";
   if(!j.ok) throw j.error||"error";
   CLAVE_OK=k;
+}
+/* La sesión dejó de valer (el canje de fondo la rechazó, o se cerró): el tablero se cierra —candado con mensaje,
+   #w oculto, lienzos, ficha y resumen vacíos— y NO toca pyod_clave_v1 (regla 5 de CLAUDE.md: la dueña de la
+   sesión es la cabina; el cargador ya purgó las copias). Un nuevo canje exige volver a entrar al OS. */
+function cerrarTablero(msg){
+  CERRADO=true; SESION=null; CLAVE_OK=null;
+  const w=document.getElementById("w"); if(w) w.style.display="none";
+  try{ F.style.display="none"; F.innerHTML=""; }catch(_){}
+  try{ g.clearRect(0,0,W,H); LG.clearRect(0,0,LZ.width,LZ.height); }catch(_){}
+  HIT.length=0; FOCOS.length=0; NUEVOS.length=0; TAPAS.length=0; RECIEN=[]; BAJAN=[];
+  const fu=document.getElementById("fuentes"); if(fu) fu.innerHTML="";
+  GT.classList.remove("off","validando"); MSG.textContent=MSG0;
+  document.getElementById("gateErr").textContent=msg;
+  avisarAlto();
 }
 let _ultimoAlto=0;
 function avisarAlto(){
@@ -1979,16 +2085,57 @@ function marcaFuente(n,estado){
   });
   box.innerHTML=partes.join(" ");
 }
+/* ═══ FASE 1 (T-202) · correr una fuente, y volver a correrla cuando llega algo nuevo ═══════════════════
+   FUENTES_DEF = [[nombre en el resumen, conector, clave de memoria]] (lo arma abrir() con los conectores vigentes).
+   Una fuente con copia se pinta YA y queda «Datos guardados, sin actualizar» (cache) hasta que el refresco en fondo
+   llega (yodcargador:dato): si trae algo distinto el conector corre otra vez —ahora lee la copia fresca, sin red— y
+   queda «ok»; si trae lo mismo sólo se confirma. Sólo «ok» se rebaja a «cache»: sindatos/incompleto dicen más. */
+let FUENTES_DEF=[];
+const EN_VUELO={}, PENDIENTE={};
+let PRIMER_DATO=false;
+function fuenteVieja(k){ return Object.keys(ORIGEN).some(function(c){ return fuenteDe(c)===k&&ORIGEN[c]==="cache"; }); }
+/* Telemetría: UNA vez por página, cuando la primera fuente pinta datos reales (copia o red). */
+function primerDatoTablero(k){
+  if(PRIMER_DATO) return;
+  PRIMER_DATO=true;
+  const copia=Object.keys(ORIGEN).some(function(c){ return fuenteDe(c)===k&&ORIGEN[c]!=="red"; });
+  try{
+    const C=typeof window!=="undefined"?window.YodCargador:null;
+    if(C&&C.telemetria&&typeof C.telemetria.primerDato==="function") C.telemetria.primerDato(copia?"cache":"red");
+  }catch(_){}
+}
+/* siCambio = {petición: JSON} → si el conector ya está corriendo, se repite al terminar SÓLO si ese dato sigue
+   siendo distinto del que leyó (el refresco puede llegar justo antes de que la primera corrida lo consuma). */
+function correrFuente(def,siCambio){
+  const n=def[0], f=def[1], k=def[2];
+  if(EN_VUELO[k]){
+    if(!siCambio) PENDIENTE[k]=true;
+    else if(PENDIENTE[k]!==true) PENDIENTE[k]=Object.assign(PENDIENTE[k]||{},siCambio);
+    return EN_VUELO[k];
+  }
+  Object.keys(ORIGEN).forEach(function(c){ if(fuenteDe(c)===k) delete ORIGEN[c]; });
+  const p=Promise.resolve().then(f).then(function(estado){
+    marcaFuente(n,estado==="ok"&&fuenteVieja(k)?"cache":estado);
+    if(estado==="ok"||estado==="incompleto") primerDatoTablero(k);
+  },function(e){ marcaFuente(n,estadoErrorFuente(e)); }).catch(function(x){ console.warn("tablero · fuente "+n,x); }).then(function(){
+    EN_VUELO[k]=null;                              // pase lo que pase al pintar, la fuente puede volver a correr
+    const q=PENDIENTE[k]; PENDIENTE[k]=null;
+    if(q===true||(q&&Object.keys(q).some(function(c){ return ULTIMA[c]!==q[c]; }))) return correrFuente(def);
+  });
+  EN_VUELO[k]=p;
+  return p;
+}
 function abrir(){
   GT.classList.add("off");
   document.getElementById("w").style.display="";
   pintar();                                                 // el lienzo ya tiene tamaño real
   /* TC-5 · cada fuente dice si contestó y a qué hora (las 7 van en paralelo:
      cada hexágono se pinta en cuanto llega lo suyo) */
-  [["PPP",conectarPPP],["Miramar",conectarMiramar],["Tracks",conectarTracks],["Taller",conectarTaller],
-   ["Códigos",conectarCodes],["CRM",conectarCRM],["Obra",conectarObra]].forEach(function(f){
+  FUENTES_DEF=[["PPP",conectarPPP,"PPP"],["Miramar",conectarMiramar,"Miramar"],["Tracks",conectarTracks,"Tracks"],["Taller",conectarTaller,"Taller"],
+   ["Códigos",conectarCodes,"Codes"],["CRM",conectarCRM,"CRM"],["Obra",conectarObra,"Obra"]];
+  FUENTES_DEF.forEach(function(f){
     marcaFuente(f[0],null);
-    Promise.resolve().then(f[1]).then(function(estado){marcaFuente(f[0],estado);},function(e){marcaFuente(f[0],estadoErrorFuente(e));});
+    correrFuente(f);
   });
   sondaFinance();
   avisarAlto(); setTimeout(avisarAlto,400); setTimeout(avisarAlto,1600);
@@ -2000,6 +2147,8 @@ async function entrar(){
   if(!v){ err.textContent="Escribe la clave"; return; }
   document.getElementById("gateBtn").disabled=true; err.textContent="";
   try{ await validar(v); localStorage.setItem(LSK,v);
+    if(cargadorActivo()) await validar(v);      // ya guardada: el canje le da boards/rol (SESION) a puedo()
+    CERRADO=false; Object.keys(NEGADO).forEach(function(k){ delete NEGADO[k]; });   // entrada nueva: sesión y veredictos nuevos
     // el dueño de la sesión es el OS: se le avisa que aquí ya hay llave viva
     if(window.parent!==window){
       try{ parent.postMessage({yodTablero:"sesion"}, location.origin); }catch(_){}
@@ -2010,22 +2159,112 @@ async function entrar(){
 }
 document.getElementById("gateBtn").onclick=entrar;
 document.getElementById("gateClave").addEventListener("keydown",e=>{ if(e.key==="Enter") entrar(); });
+/* ═══ FASE 1 (T-202) · lo que el cargador avisa ═══════════════════════════════════════════════════════════
+   sesion-rechazada / sesion-cerrada → el tablero se cierra (cerrarTablero) · sesion con otros boards/rol → otros
+   permisos · dato → llegó el refresco en fondo de una fuente · dato-negado → el Portero dice que la sesión vale pero
+   ESA fuente niega la credencial. Sólo con cargador activo; ningún handler lanza.
+   Los conectores sólo ciegan hexágonos: lo que una fuente ya pintó (la copia) no se retira solo. Si una fuente con
+   datos pintados queda negada, el tablero arranca de nuevo (la identidad nueva ya quedó guardada y la copia negada
+   ya la borró el cargador, así que no se repite); si no puede recargar, los conectores sólo vuelven a correr. */
+const SYS_DE={PPP:"SYS-POTENCIALES",Miramar:"SYS-MIRAMAR",Tracks:"SYS-TRACK",Taller:"SYS-TAREAS",Codes:"SYS-TRACK",CRM:"SYS-POTENCIALES",Obra:"SYS-OBRA"};
+const CON_DATOS=["ok","cache","incompleto","sindatos"];
+function recargarLimpio(){
+  try{
+    const ahora=Date.now(), antes=Number(sessionStorage.getItem("yodTbRecarga")||0);
+    if(antes&&ahora-antes<60000) return false;     // una vez por minuto: sin bucle de recargas
+    sessionStorage.setItem("yodTbRecarga",String(ahora));
+    location.reload();
+    return true;
+  }catch(_){ return false; }
+}
+function datosRetirados(){                         // ¿hay una fuente ya pintada (o corriendo) que ahora no se puede ver?
+  return FUENTES_DEF.some(function(f){
+    const e=FUENTES[f[0]]&&FUENTES[f[0]].estado;
+    return !!e&&e!=="sinacceso"&&e!=="sinconfigurar"&&!puedo(SYS_DE[f[2]]);
+  });
+}
+function codigosDe(b){
+  const P=window.YodAccessPolicy;
+  return P&&typeof P.codes==="function"?P.codes(b).slice().sort().join("|"):String(b||"");
+}
+function alCambiarSesion(d){
+  if(CERRADO||!d||d.ok!==true||!SESION) return;
+  if(codigosDe(d.boards)===codigosDe(SESION.boards)&&String(d.rol||"").toLowerCase()===String(SESION.rol||"").toLowerCase()) return;
+  SESION={boards:d.boards,rol:d.rol};
+  Object.keys(NEGADO).forEach(function(k){ delete NEGADO[k]; });
+  if(!FUENTES_DEF.length) return;                  // aún no abre: abrir() evaluará con la sesión nueva
+  if(datosRetirados()&&recargarLimpio()) return;
+  FUENTES_DEF.forEach(function(f){ correrFuente(f); });   // los 7 conectores vuelven a preguntar puedo()
+}
+function fuenteDeClave(clave){                     // «memo:tablero:Tracks:alysa» → {nombre:"Tracks:alysa", def}
+  const m=/^memo:tablero:(.+)$/.exec(String(clave||""));
+  if(!m) return null;
+  const k=fuenteDe(m[1]), def=FUENTES_DEF.filter(function(f){ return f[2]===k; })[0];
+  return def?{nombre:m[1],def:def}:null;
+}
+function alLlegarDato(d){
+  const u=fuenteDeClave(d&&d.clave);
+  if(!u||CERRADO||(d.origen&&d.origen!=="red")) return;
+  let json; try{ json=JSON.stringify(d.data); }catch(_){ json=undefined; }
+  if(d.igual===false&&json!==ULTIMA[u.nombre]){ const c={}; c[u.nombre]=json; correrFuente(u.def,c); return; }   // trae algo nuevo: otra corrida
+  ORIGEN[u.nombre]="red";                          // el refresco confirmó lo que ya está pintado
+  const f=FUENTES[u.def[0]], k=u.def[2];
+  if(f&&f.estado==="cache"&&!fuenteVieja(k)) marcaFuente(u.def[0],"ok");
+}
+function alNegarDato(d){
+  const u=fuenteDeClave(d&&d.clave);
+  if(!u||CERRADO||NEGADO[u.def[2]]) return;
+  const e=FUENTES[u.def[0]]&&FUENTES[u.def[0]].estado;
+  if(e==="sinacceso") return;                      // el conector ya la pintó «Sin acceso»
+  NEGADO[u.def[2]]=String((d&&d.error)||"sin_acceso");
+  if(CON_DATOS.indexOf(e)>=0&&recargarLimpio()) return;
+  correrFuente(u.def);                             // el conector vuelve a correr y la deja «Sin acceso»
+}
+function escucharCargador(){
+  if(!cargadorActivo()) return;
+  const on=function(nombre,fn){
+    addEventListener(nombre,function(e){ try{ fn((e&&e.detail)||{}); }catch(x){ console.warn("tablero · "+nombre,x); } });
+  };
+  on("yodcargador:sesion-rechazada",function(d){ cerrarTablero(mensajeGate(d.error||"revocado")); });
+  on("yodcargador:sesion-cerrada",function(){ cerrarTablero("La sesión se cerró — vuelve a entrar al OS"); });
+  on("yodcargador:sesion",alCambiarSesion);
+  on("yodcargador:dato",alLlegarDato);
+  on("yodcargador:dato-negado",alNegarDato);
+}
+escucharCargador();
 const CLV=localStorage.getItem(LSK)||"";
-// la Chinche vive FUERA del candado: si el portero falla, clavar la queja
-// de que no abre es exactamente lo que se necesita
-if(window.YODChinche) YODChinche.init({ pantalla:"tablero", canvas:CV, luz:LZ,
-  vista:()=>VISTA, sinPastilla:EMBED });   // en iframe manda la pastilla del portal
-const MSG=document.getElementById("gateMsg"), MSG0=MSG.textContent;
+/* La Chinche vive FUERA del candado: si el portero falla, clavar la queja de que no abre es exactamente lo que se
+   necesita. Fase 1 (T-202): se carga DESPUÉS del primer dato (YodCargador.cargarDespues, tope 4 s: si el portero no
+   deja pintar nada, entra igual); sin cargador, o con ?cargador=legacy, se inserta en el acto, como siempre.
+   La etiqueta #yodChincheSrc es inerte (type=text/plain) y sólo existe para que scripts/versiones.cjs gobierne su ?v=. */
+(function(){
+  const tag=document.getElementById("yodChincheSrc"); if(!tag) return;
+  const src=tag.getAttribute("src"); let listo=false;
+  function iniciar(){
+    if(listo||!window.YODChinche) return; listo=true;
+    YODChinche.init({ pantalla:"tablero", canvas:CV, luz:LZ,
+      vista:()=>VISTA, sinPastilla:EMBED });   // en iframe manda la pastilla del portal
+  }
+  function insertar(){ const s=document.createElement("script"); s.src=src; s.onload=iniciar; document.body.appendChild(s); }
+  const c=window.YodCargador;
+  if(c&&c.v&&!c.legacy&&typeof c.cargarDespues==="function"){
+    c.cargarDespues(src,{cuando:"primer-dato",maxMs:4000}).then(function(s){
+      if(window.YODChinche) iniciar(); else if(s&&s.addEventListener) s.addEventListener("load",iniciar,{once:true});
+    },insertar);
+  }else insertar();
+})();
 if(CLV){
   // Con sesión guardada no se vuelve a pedir la clave: se avisa que se verifica.
   // Antes salía el formulario «Escribe la clave del portal» (hoy «Entrar con Google») ~4 s en cada carga
   // del OS y se leía como «me volvió a sacar».
   GT.classList.add("validando"); MSG.textContent="Verificando acceso…";
-  validar(CLV).then(abrir).catch(e=>{
+  // (si el canje de fondo rechazó la sesión mientras se validaba, el candado ya lleva su mensaje: no se abre)
+  validar(CLV).then(function(){ if(!CERRADO) abrir(); }).catch(e=>{
     GT.classList.remove("validando"); MSG.textContent=MSG0;
     // el dueño del token es el OS (tolera 3 rechazos y tiene relevo): embebido,
-    // el tablero solo pinta su candado y NO le tira la sesión al padre
-    if(e==="clave" && !EMBED){ try{ localStorage.removeItem(LSK); }catch(_){} }
+    // el tablero solo pinta su candado y NO le tira la sesión al padre. Con el cargador
+    // nunca se borra: pyod_clave_v1 es de la cabina (regla 5 de CLAUDE.md).
+    if(e==="clave" && !EMBED && !cargadorActivo()){ try{ localStorage.removeItem(LSK); }catch(_){} }
     document.getElementById("gateErr").textContent=mensajeGate(e);
     avisarAlto();
   });
