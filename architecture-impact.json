@@ -1,33 +1,30 @@
 {
-  "model_revision": "2026-10-31.ppp-presentaciones.1",
-  "proposal_id": "CHG-PPP-PRESENTACIONES-20261031",
-  "summary": "Contrato autorizado para generar storyboard visual desde la versión visible del PPP y conservar sus versiones en el registro privado compartido con Master Developer.",
+  "model_revision": "2026-10-31.chinches-clock.1",
+  "proposal_id": "CHG-CHINCHES-STROKE-CLOCK-20261031",
+  "summary": "Corrección del tiempo del primer punto de un trazo y release patch1.1.1 del grabador canónico; protocolo, validación y datos conservados.",
   "components": [
-    "SYS-POTENCIALES",
-    "GAS-PORTERO",
-    "SHEET-PPP-MODELOS",
-    "SVC-AUTON-CLOUD",
-    "STORE-AUTON-ESTADO",
-    "SYS-INVERSION",
-    "GAS-SALA",
-    "SHEET-SALA",
-    "SYS-DESPACHO",
     "SYS-YOD-OS",
-    "SYS-CONTROL",
+    "SYS-DESPACHO",
     "SYS-SALA",
+    "SYS-INVERSION",
     "SYS-AMALAYA",
-    "SYS-EMD"
+    "SYS-EMD",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-CONTROL",
+    "SYS-OBRA-CLIENTE",
+    "GAS-PORTERO"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
+    "node scripts/arquitectura.cjs --check",
+    "node scripts/chinches-paquete.cjs verificar",
+    "node scripts/chinches-reporte.cjs --check",
+    "node scripts/versiones.cjs --check",
     "node verify-os.cjs",
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
-    "node verify-obra-app.cjs",
-    "node scripts/versiones.cjs --check",
-    "node scripts/chinches-paquete.cjs verificar",
-    "node scripts/chinches-reporte.cjs --check"
+    "node verify-obra-app.cjs"
   ],
-  "rollback": "Deshabilitar admisión de nuevos trabajos de presentación y revertir código/configuración propios. Conservar modelos, snapshots, trabajos, recibos, artefactos, versiones, sesiones y permisos."
+  "rollback": "Activar el snapshot previo mediante herramientas del paquete y revertir PRs/caché afectados. Conservar IndexedDB, chinches, capturas, audio, IDs, recibos y permisos; no eliminar ni reescribir borradores."
 }

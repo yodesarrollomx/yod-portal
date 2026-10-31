@@ -16,11 +16,11 @@
     "sourceFinding": null,
     "sourceDependencies": [],
     "sourceEvidence": [],
-    "secuencia": "Paquete objetivo 1.1.0; publicación, recibo y reproducción se acreditan por separado.",
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
     "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
     "implementacion": "9db34a902f4e1f6f1f9b727b974f813625b5e16d",
     "canonicalRegistry": "chinche/registro.json",
-    "targetVersion": "1.1.0"
+    "targetVersion": "1.1.1"
   },
   {
     "repo": "plan-potencial",
@@ -75,7 +75,7 @@
     "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
     "implementacion": null,
     "canonicalRegistry": "chinche/registro.json",
-    "targetVersion": "1.1.0"
+    "targetVersion": "1.1.1"
   },
   {
     "repo": "interiores-aurum",
@@ -89,11 +89,11 @@
     "sourceFinding": null,
     "sourceDependencies": [],
     "sourceEvidence": [],
-    "secuencia": "Paquete objetivo 1.1.0; publicación, recibo y reproducción se acreditan por separado.",
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
     "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
     "implementacion": "8bcdfc35b98c83d2a33f802abe0064e971c4fa92",
     "canonicalRegistry": "chinche/registro.json",
-    "targetVersion": "1.1.0"
+    "targetVersion": "1.1.1"
   },
   {
     "repo": "aurum-board",
@@ -107,11 +107,11 @@
     "sourceFinding": null,
     "sourceDependencies": [],
     "sourceEvidence": [],
-    "secuencia": "Paquete objetivo 1.1.0; publicación, recibo y reproducción se acreditan por separado.",
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
     "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
     "implementacion": "e3dd428a01b01d1c8b5775c7fcca408735c98357",
     "canonicalRegistry": "chinche/registro.json",
-    "targetVersion": "1.1.0"
+    "targetVersion": "1.1.1"
   },
   {
     "repo": "Co-desarrolladores-Yod",
@@ -162,7 +162,7 @@
     "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
     "implementacion": null,
     "canonicalRegistry": "chinche/registro.json",
-    "targetVersion": "1.1.0"
+    "targetVersion": "1.1.1"
   },
   {
     "repo": "board-flujo-yod",
@@ -176,11 +176,11 @@
     "sourceFinding": null,
     "sourceDependencies": [],
     "sourceEvidence": [],
-    "secuencia": "Paquete objetivo 1.1.0; publicación, recibo y reproducción se acreditan por separado.",
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
     "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
     "implementacion": "e9d122f090f7fdf3a6d5478fbf27b2d91bc6b3eb",
     "canonicalRegistry": "chinche/registro.json",
-    "targetVersion": "1.1.0"
+    "targetVersion": "1.1.1"
   },
   {
     "repo": "yodesarrollomx.github.io",
@@ -194,11 +194,11 @@
     "sourceFinding": null,
     "sourceDependencies": [],
     "sourceEvidence": [],
-    "secuencia": "Paquete objetivo 1.1.0; publicación, recibo y reproducción se acreditan por separado.",
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
     "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
     "implementacion": "a5680f2cf2cd37c5a9035c250a7ad7a5424197e2",
     "canonicalRegistry": "chinche/registro.json",
-    "targetVersion": "1.1.0"
+    "targetVersion": "1.1.1"
   },
   {
     "repo": "potenciales-yod",
@@ -219,11 +219,11 @@
     "sourceFinding": null,
     "sourceDependencies": [],
     "sourceEvidence": [],
-    "secuencia": "Paquete objetivo 1.1.0; publicación, recibo y reproducción se acreditan por separado.",
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
     "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
     "implementacion": "48ee29f848e727a0f7e12470ce056085a7aec580",
     "canonicalRegistry": "chinche/registro.json",
-    "targetVersion": "1.1.0"
+    "targetVersion": "1.1.1"
   },
   {
     "repo": "board-aurum",
@@ -237,11 +237,11 @@
     "sourceFinding": null,
     "sourceDependencies": [],
     "sourceEvidence": [],
-    "secuencia": "Paquete objetivo 1.1.0; publicación, recibo y reproducción se acreditan por separado.",
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
     "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
     "implementacion": "93bf6241c8f9c9b40dd5888e81936588fe4ebafa",
     "canonicalRegistry": "chinche/registro.json",
-    "targetVersion": "1.1.0"
+    "targetVersion": "1.1.1"
   },
   {
     "repo": "yod-despacho",
@@ -258,11 +258,11 @@
     "sourceFinding": null,
     "sourceDependencies": [],
     "sourceEvidence": [],
-    "secuencia": "Paquete objetivo 1.1.0; publicación, recibo y reproducción se acreditan por separado.",
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
     "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
     "implementacion": "d89b15114ffbca61bfd8e2b4eb61661642adebee",
     "canonicalRegistry": "chinche/registro.json",
-    "targetVersion": "1.1.0"
+    "targetVersion": "1.1.1"
   },
   {
     "repo": "yod-portal",
@@ -282,11 +282,11 @@
     "sourceFinding": null,
     "sourceDependencies": [],
     "sourceEvidence": [],
-    "secuencia": "Paquete objetivo 1.1.0; publicación, recibo y reproducción se acreditan por separado.",
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
     "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
     "implementacion": "597c4daf9d3c8059279222616b249438ae861a68",
     "canonicalRegistry": "chinche/registro.json",
-    "targetVersion": "1.1.0"
+    "targetVersion": "1.1.1"
   },
   {
     "repo": "yodesarrollo-board",
@@ -306,11 +306,11 @@
     "sourceFinding": "PMD-1.0.0 incorpora catálogo y cuatro adaptadores al mismo paquete común; publicación y revisión física pendientes de comprobar por separado.",
     "sourceDependencies": [],
     "sourceEvidence": [],
-    "secuencia": "Paquete objetivo 1.1.0; publicación, recibo y reproducción se acreditan por separado.",
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
     "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
     "implementacion": "b700782c42a71cf2b72605e8d4765ae05f400a7e",
     "canonicalRegistry": "chinche/registro.json",
-    "targetVersion": "1.1.0"
+    "targetVersion": "1.1.1"
   },
   {
     "repo": "sala-edicion",
@@ -325,11 +325,11 @@
     "sourceFinding": null,
     "sourceDependencies": [],
     "sourceEvidence": [],
-    "secuencia": "Paquete objetivo 1.1.0; publicación, recibo y reproducción se acreditan por separado.",
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
     "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
     "implementacion": "7f825acb951d495022c30908adf4c3e6bcb1771e",
     "canonicalRegistry": "chinche/registro.json",
-    "targetVersion": "1.1.0"
+    "targetVersion": "1.1.1"
   },
   {
     "repo": "amalaya-board",
@@ -344,11 +344,11 @@
     "sourceFinding": null,
     "sourceDependencies": [],
     "sourceEvidence": [],
-    "secuencia": "Paquete objetivo 1.1.0; publicación, recibo y reproducción se acreditan por separado.",
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
     "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
     "implementacion": "5809816629f2bca74ebcdf53b3b70bb686aa6543",
     "canonicalRegistry": "chinche/registro.json",
-    "targetVersion": "1.1.0"
+    "targetVersion": "1.1.1"
   },
   {
     "repo": "EMDevaluacion360",
@@ -364,11 +364,11 @@
     "sourceFinding": null,
     "sourceDependencies": [],
     "sourceEvidence": [],
-    "secuencia": "Paquete objetivo 1.1.0; publicación, recibo y reproducción se acreditan por separado.",
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
     "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
     "implementacion": "40b279afe9953f34a12d222a909f94183c3c5c90",
     "canonicalRegistry": "chinche/registro.json",
-    "targetVersion": "1.1.0"
+    "targetVersion": "1.1.1"
   },
   {
     "repo": "yodesarrollo-board",
@@ -427,6 +427,6 @@
     "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
     "implementacion": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
     "canonicalRegistry": "chinche/registro.json",
-    "targetVersion": "1.1.0"
+    "targetVersion": "1.1.1"
   }
 ]

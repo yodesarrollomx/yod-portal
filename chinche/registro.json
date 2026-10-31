@@ -20,7 +20,7 @@
       "id": "real-miramar-board",
       "repository": "yodesarrollomx/real-miramar-board",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "costos-oficiales.html",
         "cuentas.html",
@@ -61,7 +61,7 @@
       "id": "plan-potencial",
       "repository": "yodesarrollomx/plan-potencial",
       "mode": "indirect",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "index.html",
         "board.html"
@@ -138,7 +138,7 @@
       "id": "interiores-aurum",
       "repository": "yodesarrollomx/interiores-aurum",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "llave-maestra.html"
       ],
@@ -174,7 +174,7 @@
       "id": "aurum-board",
       "repository": "yodesarrollomx/aurum-board",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "index.html"
       ],
@@ -210,7 +210,7 @@
       "id": "co-desarrolladores-yod",
       "repository": "yodesarrollomx/Co-desarrolladores-Yod",
       "mode": "indirect",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "index.html",
         "src/main.jsx",
@@ -288,7 +288,7 @@
       "id": "board-flujo-yod",
       "repository": "yodesarrollomx/board-flujo-yod",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "index.html"
       ],
@@ -324,7 +324,7 @@
       "id": "yodesarrollomx.github.io",
       "repository": "yodesarrollomx/yodesarrollomx.github.io",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "propuestas/inicio/index.html"
       ],
@@ -360,7 +360,7 @@
       "id": "potenciales-yod",
       "repository": "yodesarrollomx/potenciales-yod",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "accesos.html",
         "index.html",
@@ -403,7 +403,7 @@
       "id": "board-aurum",
       "repository": "yodesarrollomx/board-aurum",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "index.html"
       ],
@@ -439,7 +439,7 @@
       "id": "yod-despacho",
       "repository": "yodesarrollomx/yod-despacho",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "clasico.html",
         "corcho.js",
@@ -478,7 +478,7 @@
       "id": "yod-portal",
       "repository": "yodesarrollomx/yod-portal",
       "mode": "bundle",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "os/index.html",
         "tablero.html",
@@ -507,6 +507,10 @@
             {
               "sha256": "4d97f4b0dab00970b90d7500c62190096732efab1a8dd9f305320cab6e14295c",
               "bytes": 30274
+            },
+            {
+              "sha256": "904b2b6fbe4c09721fd62243dca2384a5c2867e22fb4d75ba1ebee5ebe6b546b",
+              "bytes": 30341
             }
           ]
         }
@@ -542,7 +546,7 @@
       "id": "yodesarrollo-board",
       "repository": "yodesarrollomx/yodesarrollo-board",
       "mode": "bundle",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "brokers.html",
         "presentaciones.html",
@@ -571,6 +575,10 @@
             {
               "sha256": "4d97f4b0dab00970b90d7500c62190096732efab1a8dd9f305320cab6e14295c",
               "bytes": 30274
+            },
+            {
+              "sha256": "904b2b6fbe4c09721fd62243dca2384a5c2867e22fb4d75ba1ebee5ebe6b546b",
+              "bytes": 30341
             }
           ]
         }
@@ -607,7 +615,7 @@
       "id": "sala-edicion",
       "repository": "yodesarrollomx/sala-edicion",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "index.html",
         "tablero-sala.js"
@@ -650,7 +658,7 @@
       "id": "amalaya-board",
       "repository": "yodesarrollo/amalaya-board",
       "mode": "native-prefix",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "src/App.jsx",
         "public/chinche.js"
@@ -674,6 +682,10 @@
             {
               "sha256": "682df06721e0163f89f0a0a06530d09a55b11cfc38421d4ba087bdd16b129e8a",
               "bytes": 26689
+            },
+            {
+              "sha256": "bb5a4d835e8c1015d26535bd84dc03d0b81bd96fa68d674ccc980b89b3d1bea8",
+              "bytes": 26756
             }
           ],
           "prefixOffset": 28,
@@ -717,7 +729,7 @@
       "id": "emdevaluacion360",
       "repository": "yodesarrollomx/EMDevaluacion360",
       "mode": "native-prefix",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "web/pins.js",
         "index.html",
@@ -742,6 +754,10 @@
             {
               "sha256": "682df06721e0163f89f0a0a06530d09a55b11cfc38421d4ba087bdd16b129e8a",
               "bytes": 26689
+            },
+            {
+              "sha256": "bb5a4d835e8c1015d26535bd84dc03d0b81bd96fa68d674ccc980b89b3d1bea8",
+              "bytes": 26756
             }
           ]
         }
@@ -792,7 +808,7 @@
         "presentacion/ppp/index.html"
       ],
       "capturePolicy": "dom-guarded",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "integrationConfirmed": false,
       "targets": [
         {
@@ -813,6 +829,10 @@
             {
               "sha256": "4d97f4b0dab00970b90d7500c62190096732efab1a8dd9f305320cab6e14295c",
               "bytes": 30274
+            },
+            {
+              "sha256": "904b2b6fbe4c09721fd62243dca2384a5c2867e22fb4d75ba1ebee5ebe6b546b",
+              "bytes": 30341
             }
           ]
         }

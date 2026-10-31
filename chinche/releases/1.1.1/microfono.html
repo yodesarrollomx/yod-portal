@@ -1,0 +1,33 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><title>Voz para tu chinche</title>
+<style>body{font:18px system-ui;background:#f7f5ed;color:#263c30;margin:28px;max-width:500px}button{font:inherit;padding:14px 20px;border:0;border-radius:10px;background:#263c30;color:white;margin:8px 4px 8px 0}button:disabled{opacity:.5}p{line-height:1.5}</style>
+<h1>Voz para tu chinche</h1><p id="status" role="status">Conectando con tu dibujo…</p><button id="record" disabled>Grabar</button><button id="stop" hidden>Detener y conservar</button><button id="backup" disabled>Descargar audio original</button><div id="recovery"></div><p>Después de pulsar Grabar, vuelve a la pantalla del dibujo. Mantén esta ventana abierta hasta terminar. El audio se devuelve a tu chinche; esta ventana no lo sube a ningún servidor.</p>
+<script src="secuencia.js?v=1.1.0"></script>
+<script>
+'use strict';
+const type='yod:chinche:microphone',status=document.getElementById('status'),record=document.getElementById('record'),stop=document.getElementById('stop');
+let parentOrigin=null,nonce=null,recorder=null,stream=null,chunks=[],bytes=0,timer=null,starting=false,complete=false,original=null,checkpointTimer=null;
+const backup=document.getElementById('backup'),store=YodChincheSecuencia.draftStore(),scope=location.origin+location.pathname,id='voice-'+crypto.randomUUID();
+const toData=blob=>new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok({mime:blob.type,data:r.result});r.onerror=()=>no(Error('read'));r.readAsDataURL(blob);});
+function audioBlob(){return new Blob(chunks,{type:chunks.find(c=>c.type)?.type||recorder?.mimeType||''});}
+let writing=Promise.resolve();function checkpoint(){writing=writing.catch(()=>{}).then(async()=>{if(!chunks.length)return;const audio=original||await toData(audioBlob());await store.put({v:1,id,scope,updated:Date.now(),complete,audio});});return writing;}
+function download(audio){const payload=audio.data.split(',').slice(1).join(','),raw=Uint8Array.from(atob(payload),c=>c.charCodeAt(0)),mime=YodChincheSecuencia.audioType(audio.mime),url=URL.createObjectURL(new Blob([raw],{type:mime||'application/octet-stream'})),a=document.createElement('a');a.href=url;a.download='chinche-voz-original-'+Date.now()+({ 'audio/mp4':'.m4a','audio/webm':'.webm','audio/ogg':'.ogg'}[mime]||'.bin');document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}
+backup.onclick=async()=>{if(recorder?.state==='recording'){recorder.stop();await new Promise(resolve=>recorder.addEventListener('stop',resolve,{once:true}));}download(original||await toData(audioBlob()));};
+store.list(scope).then(records=>{for(const d of records){const b=document.createElement('button');b.textContent='Descargar voz conservada · '+new Date(d.updated).toLocaleString();b.onclick=async()=>{const saved=await store.get(d.id);if(saved?.audio)download(saved.audio);};document.getElementById('recovery').append(b);}}).catch(()=>{});
+function send(action,extra={}){if(parentOrigin&&nonce)opener.postMessage({type,action,nonce,...extra},parentOrigin);}
+function release(){clearTimeout(timer);stream?.getTracks().forEach(t=>t.stop());stream=null;}
+function error(kind){release();status.textContent='No se pudo conservar el audio. Vuelve al dibujo para intentar de nuevo.';send('error',{message:kind});record.disabled=true;stop.hidden=true;}
+addEventListener('message',e=>{if(e.source!==opener||!e.data||e.data.type!==type)return;const m=e.data;
+ if(m.action==='init'&&!nonce&&/^[a-f0-9]{48}$/.test(m.nonce)&&e.origin!=='null'){parentOrigin=e.origin;nonce=m.nonce;record.disabled=false;status.textContent='Pulsa Grabar y vuelve al dibujo.';return;}
+ if(e.origin!==parentOrigin||m.nonce!==nonce)return;
+ if(m.action==='stop'){if(recorder?.state==='recording')recorder.stop();else if(!starting&&!complete)error('cancelled');}
+ if(m.action==='received'&&complete){status.textContent='Audio conservado en tu chinche.';writing.finally(()=>store.remove(id)).finally(()=>window.close());}
+});
+record.onclick=async()=>{if(!nonce||starting||recorder)return;starting=true;record.disabled=true;status.textContent='Esperando permiso del micrófono…';
+ try{stream=await navigator.mediaDevices.getUserMedia({audio:true});const mime=['audio/webm;codecs=opus','audio/mp4','audio/ogg;codecs=opus'].find(t=>MediaRecorder.isTypeSupported(t));recorder=new MediaRecorder(stream,{...(mime?{mimeType:mime}:{}),audioBitsPerSecond:48000});
+ recorder.ondataavailable=e=>{if(e.data?.size){chunks.push(e.data);bytes+=e.data.size;backup.disabled=false;if(!checkpointTimer)checkpointTimer=setTimeout(()=>{checkpointTimer=null;checkpoint().catch(()=>{status.textContent='Respaldo local no disponible. Descarga el audio antes de cerrar.';});},2000);if(bytes>5000000&&recorder.state==='recording')recorder.stop();}};
+ recorder.onstop=async()=>{if(complete)return;complete=true;release();clearTimeout(checkpointTimer);const blob=audioBlob();if(!blob.size){error('empty');return;}try{original=await toData(blob);await checkpoint().catch(()=>{});send('complete',original);status.textContent='Conservando audio en tu chinche… Si no vuelve, descarga el original.';stop.hidden=true;}catch(e){error('read');}};
+ recorder.onerror=()=>{if(recorder.state==='recording')recorder.stop();else recorder.onstop();};recorder.start(1000);send('started');stop.hidden=false;status.textContent='Grabando. Vuelve al dibujo y explica mientras dibujas.';timer=setTimeout(()=>{if(recorder.state==='recording')recorder.stop();},600000);
+ }catch(e){error(e.name==='NotAllowedError'?'denied':'recorder');}finally{starting=false;}};
+stop.onclick=()=>{if(recorder?.state==='recording')recorder.stop();};
+if(opener)opener.postMessage({type,action:'ready'},'*');else status.textContent='Abre esta ventana desde una chinche para grabar.';
+</script></html>
