@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "package": "chinche/paquete.json",
-  "updatedAt": "2026-10-31T03:59:53.073Z",
+  "updatedAt": "2026-10-31T04:23:42.040Z",
   "controlTask": "CG-CHINCHES-AUDIO-SECUENCIA-20261020",
   "reviewState": "private external state; never audio, notes or private identifiers in public repo",
   "reviewPolicy": {
@@ -822,7 +822,7 @@
         "repository": "yodesarrollomx/yodesarrollo-board",
         "label": "chinche",
         "requiresPrivateReceipt": true,
-        "status": "pending-source-commit-and-real-receipt",
+        "status": "pending-publication-and-real-receipt",
         "localDrafts": "not-visible-from-server"
       },
       "deployment": {
@@ -837,12 +837,12 @@
       "parentIntegration": "yodesarrollo-board",
       "inventoryStatus": "source-prepared",
       "source": {
-        "commit": null,
-        "auditedCommit": null,
-        "basis": "working-tree-adapter-prepared",
-        "observedAt": "2026-10-31T03:59:53.073Z",
+        "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+        "auditedCommit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+        "basis": "draft-pr-source-audited",
+        "observedAt": "2026-10-31T04:23:42.040Z",
         "preparedAgainst": "99ade959cedde1c4b7fb24e862ab8da45f862826",
-        "finding": "Superficie PPP privada preparada localmente; captura sólo tras verificar owner y leer una versión autorizada. Reutiliza storyboard-reviews, pin-delivery y el bundle común existente. Falta fijar commit final del consumidor, publicación y prueba funcional; estas huellas no acreditan instalación en producción.",
+        "finding": "Superficie PPP privada preparada en PR63 borrador, commit y cinco archivos exactos contrastados por huella. Inicializa captura tras verificar owner y leer una versión autorizada; reutiliza storyboard-reviews, pin-delivery y bundle común existente. No acredita despliegue, recibo central ni reproducción real.",
         "managed": {
           "path": "presentacion/vendor/yod-chinche.js",
           "sha256": "4d97f4b0dab00970b90d7500c62190096732efab1a8dd9f305320cab6e14295c",
@@ -852,39 +852,45 @@
           {
             "repository": "yodesarrollomx/yodesarrollo-board",
             "path": "presentacion/ppp/index.html",
-            "sha256": "f678d4822f0612a42ab17dec9e2638eb271e5ea2055098bdaf03141df4c2b89d",
-            "status": "working-tree",
-            "finding": "Bytes locales inspeccionados; commit final y publicación pendientes."
+            "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+            "sha256": "6f238b413634ebce7f21c92e594e3aba65667e4102be15a5e270a7ec86f27763",
+            "status": "draft-pr-source",
+            "finding": "Bytes del commit exacto contrastados; publicación y prueba funcional pendientes."
           },
           {
             "repository": "yodesarrollomx/yodesarrollo-board",
             "path": "presentacion/ppp/app.mjs",
-            "sha256": "107afe156615dcc0ec643eae38d876e2dc82a0268d5b0c5971884106b2a3ef0c",
-            "status": "working-tree",
-            "finding": "Inicialización privada después de owner y lectura de versión; liga fuente PPP, versión editorial y momento."
+            "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+            "sha256": "dfadc369a8b5389b47498cc4ba21270281d540eb460b566e969657f6726447f8",
+            "status": "draft-pr-source",
+            "finding": "Inicialización privada después de owner y lectura de versión; liga fuente PPP, versión editorial y momento. Fuente de PR verificada; operación productiva pendiente."
           },
           {
             "repository": "yodesarrollomx/yodesarrollo-board",
             "path": "presentacion/storyboard-reviews.js",
+            "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
             "sha256": "7d0d40c068b552ba294dacb7737e2d525b0126e5414de7719fc95e136b83d5c2",
-            "status": "working-tree",
-            "finding": "Bytes locales inspeccionados; commit final y publicación pendientes."
+            "status": "draft-pr-source",
+            "finding": "Bytes del commit exacto contrastados; publicación y prueba funcional pendientes."
           },
           {
             "repository": "yodesarrollomx/yodesarrollo-board",
             "path": "presentacion/pin-delivery.js",
+            "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
             "sha256": "c7be4645d9e8ccbca63ee7cd61e44a51f21453a5887000626a8cc2c81c9b9c0c",
-            "status": "working-tree",
-            "finding": "Bytes locales inspeccionados; commit final y publicación pendientes."
+            "status": "draft-pr-source",
+            "finding": "Bytes del commit exacto contrastados; publicación y prueba funcional pendientes."
           },
           {
             "repository": "yodesarrollomx/yodesarrollo-board",
             "path": "presentacion/vendor/yod-chinche.js",
+            "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
             "sha256": "da3081573f436457da1724ec04e17db451cdfc3922eba0e29f6e9902ca0010a3",
-            "status": "working-tree",
-            "finding": "Bytes locales inspeccionados; commit final y publicación pendientes."
+            "status": "draft-pr-source",
+            "finding": "Bytes del commit exacto contrastados; publicación y prueba funcional pendientes."
           }
-        ]
+        ],
+        "pullRequest": "https://github.com/yodesarrollomx/yodesarrollo-board/pull/63"
       },
       "runtime": {
         "version": null,
