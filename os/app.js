@@ -24,6 +24,9 @@
   /* NAVIGATION-END */
 
   var CATALOG_ENDPOINT='https://script.google.com/macros/s/AKfycby5LKYKRwl0EsNgppOIeD_ArST8vSXRgNO4ns8XZbFW4yjfglzu4io_vhabB8h-J792Tw/exec?action=read&resource=Portal';
+  // Fase 1: el cargador recibe sólo la BASE (él arma ?action=read&resource=Portal&k=…); el camino legacy
+  // sigue usando CATALOG_ENDPOINT tal cual. Una sola copia del id: la de arriba.
+  var CATALOG_BASE=CATALOG_ENDPOINT.split('?')[0];
   /* El portal validaba la sesión SIEMPRE contra el portero del dominio
      aurumarquitectos.com (hoy suspendido): aunque el gate ya te dejara pasar, el
      portal se quedaba en "Verificando Acceso…" para siempre. Ahora usa el mismo
@@ -110,6 +113,92 @@
   }
   // Un rechazo vivo tira TODA copia guardada: una recarga no puede resucitar la identidad.
   function purgarCargador_(){try{window.YodCargador.purgar();}catch(_e){}}
+  function configurarCatalogo_(){
+    var c=window.YodCargador;
+    if(state.cargadorConfigurado||!c||typeof c.config!=='function')return;
+    try{c.config({catalogo:{url:CATALOG_BASE}});state.cargadorConfigurado=true;}catch(_e){}
+  }
+  function edadCopia_(ms){return ms>0?' '+edadTexto(ms):'';}
+  function mostrarTiempo_(ms,origen){
+    var el=$('yodTiempo');if(!el||!(ms>0))return;
+    el.textContent='⏱ '+(ms/1000).toFixed(1)+' s · '+(origen==='cache'?'caché':'red');el.hidden=false;
+  }
+  // Primer dato REAL de la cabina (catálogo pintado, de caché o de red): una vez por página.
+  function marcarPrimerDato_(origen){
+    if(state.primerDatoMarcado)return;state.primerDatoMarcado=true;
+    var o=origen==='cache'?'cache':'red',t=0;
+    try{var m=window.YodCargador.telemetria.primerDato(o);t=Number(m&&m.t)||0;}catch(_e){}
+    if(!t){try{t=Math.round(performance.now());}catch(_e){}}
+    mostrarTiempo_(t,o);
+  }
+  // Mismas guardas que la respuesta en vivo: el backend firma actor='SESSION'; cualquier otra cosa no se pinta.
+  function catalogoAutenticado_(body){return !!(body&&body.ok&&Array.isArray(body.rows)&&body.actor==='SESSION');}
+  function pintarCatalogo_(data,origen,nota){
+    state.catalogIds=Array.isArray(data.known_system_ids)?data.known_system_ids.filter(function(id){return typeof id==='string';}):null;
+    renderModules(data.rows);nombrarAccionesRapidas();
+    $('updated-at').textContent=nota||selloDato(data);
+    marcarPrimerDato_(origen);
+  }
+  async function loadCatalogConCargador_(){
+    if(!state.profileReady)return;
+    var ep=state.sesionEpoch;var readRevision=state.loadPlan?state.loadPlan.revision():null;
+    if(state.loading&&state.catalogEpoch===ep)return;state.catalogEpoch=ep;state.loading=true;$('refresh').disabled=true;var _mr=$('mobile-refresh');if(_mr)_mr.disabled=true;setConnection('','Actualizando');
+    var c=window.YodCargador,_tk='',edadGuardada=0;
+    var vigente=function(){return mismaSesion(_tk,ep)&&!(state.loadPlan&&state.loadPlan.revision()!==readRevision);};
+    try{
+      try{_tk=localStorage.getItem(TOKEN_KEY)||'';}catch(_e){}
+      configurarCatalogo_();
+      // 1) Lo último bueno se pinta ANTES de la red, con las guardas de la respuesta en vivo; si no hay
+      //    copia, la rejilla espera como siempre (nunca se asoma CAT_RESPALDO de relleno).
+      var r=await c.catalogo({token:_tk,alViejo:function(body,meta){
+        if(!vigente()||!catalogoAutenticado_(body))return;
+        edadGuardada=Number(meta&&meta.edadMs)||0;
+        pintarCatalogo_(body,'cache','Datos guardados'+edadCopia_(edadGuardada)+' · actualizando…');
+      }});
+      if(!vigente())return;
+      // 2) Una copia que el backend firmó SIN sesión (no pudo autenticar ese día) no sirve: una vez, en vivo y sin caché.
+      if(r&&r.origen==='cache'&&r.data&&!catalogoAutenticado_(r.data)){
+        r=await c.get(CATALOG_BASE,{action:'read',resource:'Portal',k:_tk},{viejoMs:0,frescoMs:0,telemetria:'catalogo'});
+        if(!vigente())return;
+      }
+      var data=r&&r.data;
+      if(!r||(r.ok===false&&!data)){var st=Number(r&&r.status)||0;throw new Error(st===401||st===403?'HTTP '+st:String((r&&r.error)||'sin-respuesta'));}
+      if(!data||!data.ok||!Array.isArray(data.rows))throw new Error((data&&data.error)||'Respuesta incompleta');
+      // Solo 'SESSION' confirma el canje de esta fuente (ver loadCatalog): actor ausente, desconocido o 'PUBLIC'
+      // exige el respaldo autorizado.
+      var _autenticado=data.actor==='SESSION';
+      var _tokenVivo=!!_tk&&state.profileReady;
+      if(_tokenVivo&&!_autenticado){catalogoSinAcceso();return;}
+      state.catRetry=0;
+      // una copia fresca se entrega sin pasar por alViejo: su edad viene en la propia respuesta
+      var edadFinal=Number(r.edadMs)||edadGuardada;
+      if(r.origen==='cache-fallback'){
+        // Sin red pero con copia: NO es un fallo (nada de reintentos ni de respaldo de relleno); se dice con calma.
+        pintarCatalogo_(data,'cache','Sin conexión · datos guardados'+edadCopia_(edadFinal));setConnection('error','Sin conexión');return;
+      }
+      if(r.origen==='cache'){pintarCatalogo_(data,'cache','Datos guardados'+edadCopia_(edadFinal));setConnection('ok','En línea');return;}
+      pintarCatalogo_(data,'red');setConnection('ok','En línea');
+    }catch(error){
+      if(!vigente())return;
+      if(rechazoAcceso(error)){catalogoSinAcceso();return;}
+      state.catRetry=(state.catRetry||0)+1;
+      if(state.catRetry<=REINTENTOS_MAX){setConnection('error','Portero lento · reintentando');$('updated-at').textContent='Reintentando en fondo';setTimeout(loadCatalog,REINTENTO_MS);}
+      else{setConnection('error','Sin conexión');$('updated-at').textContent='No se pudo actualizar';}
+      // Igual que loadCatalog: teniendo sesión y sin nada pintado, el mejor catálogo conocido (último bueno o respaldo curado).
+      if(!state.modules.length){
+        var _tk2='';try{_tk2=localStorage.getItem(TOKEN_KEY)||'';}catch(_e){}
+        var _ant2=state.rawRows;
+        if(!Array.isArray(_ant2))_ant2=[];
+        var _mejor2=(_ant2.length>=CAT_RESPALDO.length)?_ant2:CAT_RESPALDO;
+        if(_tk2&&state.profileReady){
+          renderModules(_mejor2);nombrarAccionesRapidas();
+          $('updated-at').textContent=(_mejor2===CAT_RESPALDO)?'Mostrando la lista de respaldo':'Mostrando el último catálogo bueno';
+        }else{
+          var grid=$('module-grid');grid.setAttribute('aria-busy','false');grid.innerHTML='<div class="empty-state">Control Maestro no respondió. Por seguridad no se habilitaron enlaces. Intenta actualizar de nuevo.</div>';
+        }
+      }
+    }finally{if(state.catalogEpoch===ep){state.loading=false;$('refresh').disabled=false;var _mr2=$('mobile-refresh');if(_mr2)_mr2.disabled=false;}}
+  }
   // Copia deliberada de loadIdentityOnce (ver nota del bloque): pide el canje al cargador ANTES de bloquear.
   // Si la respuesta es la copia guardada (origen:'cache') NO se bloquea ni se parpadea: se aplica la identidad
   // al instante y el cargador la revalida en segundo plano (sesionRefrescada_ / sesionRechazadaEnFondo_).
@@ -216,7 +305,7 @@
   function suscribirCargador_(){
     var c=window.YodCargador;
     if(!cargadorActivo_()||state.cargadorSuscrito||!c.sesion||typeof c.sesion.alCambiar!=='function')return;
-    state.cargadorSuscrito=true;
+    state.cargadorSuscrito=true;configurarCatalogo_();
     c.sesion.alCambiar(function(ev){
       var tipo=String(ev&&ev.type||''),d=(ev&&ev.detail)||{};
       if(tipo==='yodcargador:sesion-rechazada')sesionRechazadaEnFondo_(d);
@@ -743,6 +832,7 @@
     setConnection('error','Catálogo sin acceso');$('updated-at').textContent='Lista de respaldo según tus permisos';
   }
   async function loadCatalog(){
+    if(typeof cargadorActivo_==='function'&&cargadorActivo_())return loadCatalogConCargador_();
     if(!state.profileReady)return;
     var ep=state.sesionEpoch;var readRevision=state.loadPlan?state.loadPlan.revision():null;
     if(state.loading&&state.catalogEpoch===ep)return;state.catalogEpoch=ep;state.loading=true;$('refresh').disabled=true;var _mr=$('mobile-refresh');if(_mr)_mr.disabled=true;setConnection('','Actualizando');
