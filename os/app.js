@@ -127,6 +127,10 @@
   function edadCopia_(ms){return ms>0?' '+edadTexto(ms):'';}
   function mostrarTiempo_(ms,origen){
     var el=$('yodTiempo');if(!el||!(ms>0))return;
+    // O5 (T-203): el tiempo del primer dato es de diagnóstico, no de operación. Lo ve Dirección (rol admin de la
+    // identidad aplicada) o quien lo pida con ?tiempos=1; para el resto la etiqueta sigue oculta (y vacía).
+    var pedido=false;try{pedido=/[?&]tiempos=1(?:[&#]|$)/.test(String(location.search||''));}catch(_e){}
+    if(state.role!=='admin'&&!pedido)return;
     el.textContent='⏱ '+(ms/1000).toFixed(1)+' s · '+(origen==='cache'?'caché':'red');el.hidden=false;
   }
   // Primer dato REAL de la cabina (catálogo pintado, de caché o de red): una vez por página.
@@ -180,7 +184,8 @@
       var edadFinal=Number(r.edadMs)||edadGuardada;
       if(r.origen==='cache-fallback'){
         // Sin red pero con copia: NO es un fallo (nada de reintentos ni de respaldo de relleno); se dice con calma.
-        pintarCatalogo_(data,'cache','Sin conexión · datos guardados'+edadCopia_(edadFinal));setConnection('error','Sin conexión');return;
+        // O5 (T-203): ya no se pinta con el chip de error (rojo): el estado de aviso es el mismo chip en color neutro.
+        pintarCatalogo_(data,'cache','Sin conexión · datos guardados'+edadCopia_(edadFinal));setConnection('aviso','Sin conexión · datos guardados');return;
       }
       if(r.origen==='cache'){pintarCatalogo_(data,'cache','Datos guardados'+edadCopia_(edadFinal));setConnection('ok','En línea');return;}
       pintarCatalogo_(data,'red');setConnection('ok','En línea');
@@ -437,7 +442,7 @@
     }
     return 'Consultado a las '+timeLabel(new Date());
   }
-  function setConnection(kind,text){var el=$('connection');el.className='connection '+kind;el.innerHTML='<i class="ti ti-'+(kind==='ok'?'cloud-check':kind==='error'?'cloud-off':'loader-2 spin')+'"></i> '+text;}
+  function setConnection(kind,text){var el=$('connection');el.className='connection '+kind;el.innerHTML='<i class="ti ti-'+(kind==='ok'?'cloud-check':(kind==='error'||kind==='aviso')?'cloud-off':'loader-2 spin')+'"></i> '+text;}
   function safeText(value){return String(value==null?'':value);}
   function initials(name){return safeText(name).split(/\s+/).filter(Boolean).slice(0,2).map(function(v){return v.charAt(0);}).join('').toUpperCase()||'YO';}
   function money(value){return new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',maximumFractionDigits:0}).format(Number(value)||0);}

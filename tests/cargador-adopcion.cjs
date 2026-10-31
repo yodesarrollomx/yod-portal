@@ -218,7 +218,7 @@ const cuerpo = (rows, extra = {}) => ({ ok: true, actor: 'SESSION', rows, ...ext
 test('App · catálogo: pinta la copia ANTES de la red y nunca asoma CAT_RESPALDO si hay copia', async () => {
   const red = deferred();
   const h = appHarness({ cargador: { catalogo: o => { o.alViejo(cuerpo([filaCatalogo('SYS-GUARDADO')]), { edadMs: 7 * 60000 });return red.promise; } } });
-  h.autoriza();h.node('yodTiempo').hidden = true;
+  h.autoriza({ role: 'admin' });h.node('yodTiempo').hidden = true;   // O5 (T-203): el tiempo del primer dato sólo se muestra a Dirección (o con ?tiempos=1)
   const cargando = h.c.loadCatalog();
   assert.equal(h.renders.length, 1, 'la copia se pintó sin esperar a la red');assert.equal(h.renders[0][0].system_id, 'SYS-GUARDADO');
   assert.match(h.node('updated-at').textContent, /Datos guardados hace 7 min · actualizando…/);
@@ -236,7 +236,63 @@ test('App · catálogo: la red falla con copia → cache-fallback es ÉXITO sile
   h.autoriza();await h.c.loadCatalog();
   assert.equal(h.timers.length, 0, 'ningún reintento programado');assert.equal(h.state.catRetry || 0, 0);
   assert.ok(h.renders.every(r => r.every(x => x.system_id !== 'SYNTH-RESPALDO')));
-  assert.match(h.node('updated-at').textContent, /^Sin conexión · datos guardados hace 2 horas$/);assert.deepEqual(h.conexion.at(-1), ['error', 'Sin conexión']);
+  assert.match(h.node('updated-at').textContent, /^Sin conexión · datos guardados hace 2 horas$/);
+  // O5 (T-203): antes pintaba el chip de ERROR (rojo) aunque no fuera un fallo; ahora es el chip de aviso y jamás uno de error
+  assert.deepEqual(h.conexion.at(-1), ['aviso', 'Sin conexión · datos guardados']);assert.ok(h.conexion.every(([kind]) => kind !== 'error'), 'ningún chip de error en un cache-fallback');
+});
+
+/* ── O5 (T-203): chip de aviso y tiempo del primer dato sólo para Dirección ── */
+test('App · O5: el tiempo del primer dato se ve con rol admin o con ?tiempos=1; para el resto la etiqueta sigue oculta y vacía', () => {
+  const casos = [
+    { role: 'admin', search: '', visible: true, nota: 'Dirección' },
+    { role: 'vista', search: '', visible: false, nota: 'colaborador' },
+    { role: 'vista', search: '?tiempos=1', visible: true, nota: 'colaborador que lo pide' },
+    { role: 'vista', search: '?x=2&tiempos=1', visible: true, nota: 'entre otros parámetros' },
+    { role: 'vista', search: '?tiempos=1&x=2', visible: true, nota: 'seguido de otros parámetros' },
+    { role: 'vista', search: '?tiempos=0', visible: false, nota: 'apagado' },
+    { role: 'vista', search: '?tiempos=10', visible: false, nota: 'sólo el 1 exacto' },
+    { role: 'vista', search: '?xtiempos=1', visible: false, nota: 'otro parámetro que termina igual' },
+    { role: 'editor', search: '?cargador=legacy', visible: false, nota: 'cualquier otro rol' }
+  ];
+  for (const caso of casos) {
+    const h = appHarness();h.autoriza({ role: caso.role });h.node('yodTiempo').hidden = true;h.c.location.search = caso.search;
+    h.c.mostrarTiempo_(1800, 'cache');
+    assert.equal(h.node('yodTiempo').hidden, !caso.visible, caso.nota);
+    assert.equal(h.node('yodTiempo').textContent, caso.visible ? '⏱ 1.8 s · caché' : '', caso.nota);
+  }
+  const sinBusqueda = appHarness();sinBusqueda.autoriza({ role: 'vista' });sinBusqueda.node('yodTiempo').hidden = true;
+  delete sinBusqueda.c.location.search;                                 // un location sin search (o sin location) no rompe nada
+  sinBusqueda.c.mostrarTiempo_(900, 'red');assert.equal(sinBusqueda.node('yodTiempo').hidden, true);assert.equal(sinBusqueda.node('yodTiempo').textContent, '');
+  const adminSinBusqueda = appHarness();adminSinBusqueda.autoriza({ role: 'admin' });adminSinBusqueda.node('yodTiempo').hidden = true;delete adminSinBusqueda.c.location.search;
+  adminSinBusqueda.c.mostrarTiempo_(900, 'red');assert.equal(adminSinBusqueda.node('yodTiempo').hidden, false);assert.equal(adminSinBusqueda.node('yodTiempo').textContent, '⏱ 0.9 s · red');
+  const sinTiempo = appHarness();sinTiempo.autoriza({ role: 'admin' });sinTiempo.node('yodTiempo').hidden = true;
+  sinTiempo.c.mostrarTiempo_(0, 'red');assert.equal(sinTiempo.node('yodTiempo').hidden, true, 'sin medida no hay etiqueta, ni para Dirección');
+});
+
+test('App · O5: marcarPrimerDato_ sigue contando el primer dato (telemetría) aunque la etiqueta no se muestre al colaborador', () => {
+  const h = appHarness();h.autoriza({ role: 'vista' });h.node('yodTiempo').hidden = true;
+  h.c.marcarPrimerDato_('cache');h.c.marcarPrimerDato_('red');
+  assert.equal(h.fake.calls.primerDato.length, 1, 'una sola vez por página');assert.equal(h.fake.calls.primerDato[0], 'cache');
+  assert.equal(h.node('yodTiempo').hidden, true, 'la etiqueta no es visible para un colaborador');assert.equal(h.node('yodTiempo').textContent, '');
+  const admin = appHarness();admin.autoriza({ role: 'admin' });admin.node('yodTiempo').hidden = true;admin.c.marcarPrimerDato_('cache');
+  assert.equal(admin.node('yodTiempo').hidden, false);assert.match(admin.node('yodTiempo').textContent, /^⏱ 1\.8 s · caché$/);
+});
+
+test('App · O5: setConnection tiene un estado «aviso» (icono de sin conexión, no el girador) y el CSS le da su propio color neutro', () => {
+  const chip = { className: '', innerHTML: '' };
+  const c = vm.createContext({ $: id => (id === 'connection' ? chip : null) });
+  vm.runInContext(fn(appSource, 'setConnection'), c);
+  const pinta = (kind, texto) => { c.setConnection(kind, texto);return { clase: chip.className, html: chip.innerHTML }; };
+  assert.deepEqual(pinta('aviso', 'Sin conexión · datos guardados'), { clase: 'connection aviso', html: '<i class="ti ti-cloud-off"></i> Sin conexión · datos guardados' });
+  assert.deepEqual(pinta('error', 'Sin conexión'), { clase: 'connection error', html: '<i class="ti ti-cloud-off"></i> Sin conexión' });
+  assert.deepEqual(pinta('ok', 'En línea'), { clase: 'connection ok', html: '<i class="ti ti-cloud-check"></i> En línea' });
+  assert.equal(pinta('', 'Actualizando').html, '<i class="ti ti-loader-2 spin"></i> Actualizando', 'los demás estados siguen igual');
+  const css = fs.readFileSync(require.resolve('../os/styles.css'), 'utf8');
+  const aviso = /\.connection\.aviso\{color:var\((--[a-z-]+)\)\}/.exec(css);
+  assert.ok(aviso, 'regla .connection.aviso en os/styles.css');
+  assert.ok(new RegExp('[{;]' + aviso[1] + ':#[0-9a-fA-F]{3,8}[;}]').test(css), 'el color del aviso existe en :root');
+  assert.notEqual(aviso[1], '--danger', 'no es el rojo del error');assert.notEqual(aviso[1], '--success', 'ni el verde del éxito');
+  assert.ok(css.indexOf('.connection.aviso{') > css.indexOf('.connection{font-size:12px'), 'después de la regla base del chip (mismo tamaño y separación)');
 });
 
 test('App · catálogo: una copia FRESCA llega sin pasar por alViejo y su edad sale de la propia respuesta', async () => {
