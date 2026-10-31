@@ -1,7 +1,8 @@
 <!doctype html>
 <html lang="es">
 <head>
-<script src="yod-acceso.js?v=20261031-chinches-clock"></script>
+<script src="yod-acceso.js?v=20261031-fase1"></script>
+<script src="yod-cargador.js?v=20261031-fase1"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow,noarchive">
@@ -18,10 +19,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
-  <link rel="stylesheet" href="styles.css?v=20261031-chinches-clock">
-  <link rel="stylesheet" href="ui-chrome.css?v=20261031-chinches-clock">
-  <link rel="stylesheet" href="../despacho3d/equipo.css?v=20261031-chinches-clock">
-  <script src="ui-chrome.js?v=20261031-chinches-clock" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20261031-fase1">
+  <link rel="stylesheet" href="ui-chrome.css?v=20261031-fase1">
+  <link rel="stylesheet" href="../despacho3d/equipo.css?v=20261031-fase1">
+  <script src="ui-chrome.js?v=20261031-fase1" defer></script>
 </head>
 <body>
   <div class="app-shell">
@@ -82,6 +83,7 @@
           <div class="freshness">
             <span>Última actualización</span>
             <strong id="updated-at">Pendiente</strong>
+            <small id="yodTiempo" style="font-size:10px;color:var(--muted)" hidden></small>
           </div>
         </section>
 
@@ -244,23 +246,39 @@
     </div>
   </div>
 
-  <script src="../portal-core.js?v=20261031-chinches-clock"></script>
-  <script src="access-policy.js?v=20261031-chinches-clock"></script>
-  <script src="adapters/operations.js?v=20261031-chinches-clock"></script>
-  <script src="adapters/finance.js?v=20261031-chinches-clock"></script>
-  <script src="adapters/marketing.js?v=20261031-chinches-clock"></script>
-  <script src="despacho-section.js?v=20261031-chinches-clock"></script>
-  <script src="despacho-chinches.js?v=20261031-chinches-clock"></script>
-  <script src="despacho-conversation.js?v=20261031-chinches-clock"></script>
-  <script src="despacho-transport.js?v=20261031-chinches-clock"></script>
-  <script src="despacho-equipo-host.js?v=20261031-chinches-clock"></script>
-  <script src="load-config.js?v=20261031-chinches-clock"></script>
-  <script src="load-plan-boot.js?v=20261031-chinches-clock"></script>
-  <script src="app.js?v=20261031-chinches-clock"></script>
-  <script src="maquinas.js?v=20261031-chinches-clock"></script>
-  <script src="https://yodesarrollomx.github.io/potenciales-yod/portero.js?v=20261030-fase0"></script>
-  <script src="../chinche.js?v=20261031-chinches-clock"></script>
-  <script>if(window.YODChinche) YODChinche.init({pantalla:"os"});</script>
+  <script src="../portal-core.js?v=20261031-fase1"></script>
+  <script src="access-policy.js?v=20261031-fase1"></script>
+  <script src="adapters/operations.js?v=20261031-fase1"></script>
+  <script src="adapters/finance.js?v=20261031-fase1"></script>
+  <script src="adapters/marketing.js?v=20261031-fase1"></script>
+  <script src="despacho-section.js?v=20261031-fase1"></script>
+  <script src="despacho-chinches.js?v=20261031-fase1"></script>
+  <script src="despacho-conversation.js?v=20261031-fase1"></script>
+  <script src="despacho-transport.js?v=20261031-fase1"></script>
+  <script src="despacho-equipo-host.js?v=20261031-fase1"></script>
+  <script src="load-config.js?v=20261031-fase1"></script>
+  <script src="load-plan-boot.js?v=20261031-fase1"></script>
+  <script src="app.js?v=20261031-fase1"></script>
+  <script src="maquinas.js?v=20261031-fase1"></script>
+  <script src="https://yodesarrollomx.github.io/potenciales-yod/portero.js?v=20261031-fase1"></script>
+  <!-- La chinche se carga DESPUÉS del primer dato (YodCargador.cargarDespues); sin cargador, o con ?cargador=legacy,
+       se inserta en el acto, como siempre. Esta etiqueta es inerte (type=text/plain: el navegador no la baja) y
+       existe para que scripts/versiones.cjs siga gobernando la etiqueta ?v= de chinche.js. -->
+  <script type="text/plain" id="yodChincheSrc" src="../chinche.js?v=20261031-fase1"></script>
+  <script>
+(function(){
+  var tag=document.getElementById('yodChincheSrc');if(!tag)return;
+  var src=tag.getAttribute('src'),listo=false;
+  function iniciar(){if(listo||!window.YODChinche)return;listo=true;YODChinche.init({pantalla:"os"});}
+  function insertar(){var s=document.createElement('script');s.src=src;s.onload=iniciar;document.body.appendChild(s);}
+  var c=window.YodCargador;
+  if(c&&c.v&&!c.legacy&&typeof c.cargarDespues==='function'){
+    c.cargarDespues(src,{cuando:'primer-dato',maxMs:4000}).then(function(s){
+      if(window.YODChinche)iniciar();else if(s&&s.addEventListener)s.addEventListener('load',iniciar,{once:true});
+    },insertar);
+  }else insertar();
+})();
+  </script>
 
   <script>
 /* Fase 4 · «Dónde estoy»: las mismas migas que el marco de los tableros (shell.js) */

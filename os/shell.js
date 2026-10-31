@@ -53,7 +53,7 @@
   /* La dirección del Portero vive SOLO en os/yod-acceso.js. Si la página no la
      cargó, se pide aquí (misma carpeta que este archivo) antes del primer canje. */
   var ACCESO_LISTO = window.YOD_PORTERO ? Promise.resolve() : new Promise(function (ok) {
-    var sc = document.createElement('script'); sc.src = SELF.replace(/shell\.js(\?.*)?$/, 'yod-acceso.js?v=20261031-chinches-clock');
+    var sc = document.createElement('script'); sc.src = SELF.replace(/shell\.js(\?.*)?$/, 'yod-acceso.js?v=20261031-fase1');
     sc.onload = sc.onerror = function () { ok(); }; document.head.appendChild(sc);
   });
   /* El ORIGINAL siempre primero; el respaldo solo si aquel falla en esta
@@ -64,7 +64,14 @@
   function rechazoAcceso(error) {
     return ['liga','clave','expirado','revocado','sin_sesion','sin_acceso','sin acceso','denegado','no autorizado','unauthorized','forbidden','http 401','http 403'].includes(String(error && error.message || error || '').trim().toLowerCase());
   }
-  async function canjeConRelevo(k) {
+  async function canjeConRelevo(k, opts) {
+    if (typeof cargadorActivo_ === 'function' && cargadorActivo_()) return canjeConCargador_(k, opts);
+    /* T-105 (30-oct-2026) · el respaldo contesta 404 «Page Not Found» desde el 23-sep (esa implementación ya no
+       existe en Google; lo midió el vigía de yod-portal). Saltar a él convertía cada tardanza del ORIGINAL en una
+       sesión «por validar». Mientras no haya un respaldo vivo, el segundo intento vuelve a ser el ORIGINAL tras
+       1.5 s, igual que potenciales-yod/portero.js (RESPALDO_VIVO). Para reactivar el respaldo: respaldoVivo = true
+       con una URL que conteste (y devolver a la prueba 'caída de transporte' su expectativa de dos direcciones). */
+    var respaldoVivo = false;
     async function intenta(base) {
       var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
       var timer = controller ? setTimeout(function () { controller.abort(); }, 25000) : null;
@@ -79,9 +86,42 @@
     var P = window.YOD_PORTERO; if (!P) return null;
     var j = null; try { j = await intenta(P.original); } catch (e) { }
     if (j && (j.ok || rechazoAcceso(j.error))) return j;
+    if (!respaldoVivo) {
+      // T-105: el segundo intento es el ORIGINAL otra vez (el respaldo está muerto). Un rechazo explícito del
+      // original sí es concluyente; cualquier otra cosa sigue siendo «sin respuesta» (null) y se reintenta en fondo.
+      await new Promise(function (listo) { setTimeout(listo, 1500); });
+      try { var otra = await intenta(P.original); return otra && (otra.ok || rechazoAcceso(otra.error)) ? otra : null; } catch (e) { return null; }
+    }
     // El respaldo puede usar otra base de sesiones. Un rechazo suyo no puede
     // invalidar una credencial cuando el primario simplemente no respondió.
     try { var backup = await intenta(P.respaldo); return backup && backup.ok ? backup : null; } catch (e) { return null; }
+  }
+  /* ══ FASE 1 · «UN CARGADOR» (T-102) ═══════════════════════════════════════════
+     Si la página cargó os/yod-cargador.js (window.YodCargador), el marco lo usa para destrabar el tablero y
+     pintar el menú desde la última copia buena, y las revalida en segundo plano. Es ADITIVO: canjeConRelevo,
+     loadIdentity, loadCatalog, cargarChinche y logout abren con UNA línea que delega aquí sólo si
+     cargadorActivo_(); sin cargador, o con ?cargador=legacy (o localStorage.yodcg_legacy='1'), corre el código
+     de siempre. El marco NUNCA borra pyod_clave_v1 por un rechazo propio (regla 5 de CLAUDE.md): sólo
+     purga las copias del cargador; la dueña de la sesión es la cabina. El muro sigue siendo cada backend. */
+  function cargadorActivo_() { var c = window.YodCargador; return !!(c && c.v && !c.legacy); }
+  // Misma forma de salida que canjeConRelevo: {ok:true,token,rol,boards,nombre,correo[,origen,edadMs]},
+  // {ok:false,error[,rechazo,origen]} o null. fuerzaRed ignora la copia (revalidar una sesión ya confirmada, reintentos).
+  async function canjeConCargador_(k, opts) {
+    var fuerzaRed = opts && opts.fuerzaRed !== undefined ? Boolean(opts.fuerzaRed)
+      : (state.identity === 'ok' && state.sessionToken === k) || (state.reconnectAttempts || 0) > 0;
+    try {
+      var r = await window.YodCargador.sesion.canjear({ modo: fuerzaRed ? 'red' : 'cache-primero' });
+      return r && typeof r === 'object' ? r : null;
+    } catch (e) { return null; }
+  }
+  // Un rechazo vivo tira TODA copia guardada: una recarga no puede resucitar la identidad.
+  function purgarCargador_() { try { window.YodCargador.purgar(); } catch (e) { } }
+  function cerrarCargador_(token, motivo) { try { return window.YodCargador.sesion.cerrar({ token: token, motivo: motivo }); } catch (e) { return false; } }
+  var CATALOG_BASE = PORTAL.split('?')[0];
+  function configurarCatalogo_() {
+    var c = window.YodCargador;
+    if (state.cargadorConfigurado || !c || typeof c.config !== 'function') return;
+    try { c.config({ catalogo: { url: CATALOG_BASE } }); state.cargadorConfigurado = true; } catch (e) { }
   }
   var OS = 'https://yodesarrollomx.github.io/yod-portal/os/';
   var CORPORATE = 'https://yodesarrollo.mx/'; // sitio público; la marca del shell ya NO cuelga de aquí (lleva al OS)
@@ -270,6 +310,7 @@
   // lista sobrevive). Vital en dispositivos compartidos (una tablet del equipo)
   // para no dejar la sesión ni los datos de una persona al alcance de la siguiente.
   function logout() {
+    if (typeof cargadorActivo_ === 'function' && cargadorActivo_()) cerrarCargador_(tok(), 'salir');
     state.identityRequest++;state.identity='fail';state.sessionToken='';maybeLock();
     try { localStorage.removeItem(LSC); sessionStorage.removeItem('pyod_rol'); sessionStorage.removeItem('yod_id_v1'); localStorage.removeItem('yod_pulse_v1'); } catch (e) { }
     purgeAll();
@@ -327,7 +368,7 @@
   }
   function boot() {
     // registro de proyectos (folio): lo usan el buscador ⌘K y la chinche
-    if (!window.YodProyectos) { var sp = document.createElement('script'); sp.src = SELF.replace(/shell\.js(\?.*)?$/, 'proyectos.js?v=20261031-chinches-clock'); document.head.appendChild(sp); }
+    if (!window.YodProyectos) { var sp = document.createElement('script'); sp.src = SELF.replace(/shell\.js(\?.*)?$/, 'proyectos.js?v=20261031-fase1'); document.head.appendChild(sp); }
     if (document.querySelector('.yod-shell')) return;
     /* Los íconos de la barra son de Tabler: los tableros que no traían su hoja (MOAC)
        mostraban botones vacíos. El marco la carga él mismo, y las fuentes de la marca. */
@@ -366,8 +407,8 @@
     document.body.appendChild(shell);
 
     // The shared visual layer preserves this shell's identity and routing.
-    var chromeCSS=document.createElement('link');chromeCSS.rel='stylesheet';chromeCSS.href=new URL('ui-chrome.css?v=20261031-chinches-clock',SELF).href;document.head.appendChild(chromeCSS);
-    var chromeJS=document.createElement('script');chromeJS.src=new URL('ui-chrome.js?v=20261031-chinches-clock',SELF).href;document.head.appendChild(chromeJS);
+    var chromeCSS=document.createElement('link');chromeCSS.rel='stylesheet';chromeCSS.href=new URL('ui-chrome.css?v=20261031-fase1',SELF).href;document.head.appendChild(chromeCSS);
+    var chromeJS=document.createElement('script');chromeJS.src=new URL('ui-chrome.js?v=20261031-fase1',SELF).href;document.head.appendChild(chromeJS);
     wireDrawer(shell, scrim);
     // «hay algo nuevo»: entrar a este tablero cuenta como visita; su punto se apaga
     try { if (cur) { localStorage.setItem('yod_visto_' + cur, String(Date.now())); localStorage.removeItem('yod_nuevo_' + cur); } } catch (e) { }
@@ -379,6 +420,7 @@
     if (out) out.addEventListener('click', function () { if (confirm('¿Cerrar tu sesión en este dispositivo?')) logout(); });
     // El menú NO se pinta hasta validar la sesión (fail-closed): queda "Cargando…"
     wireSearch();
+    suscribirCargador_();
     loadIdentity();
     cargarChinche();
   }
@@ -387,7 +429,7 @@
      (yod-portal/chinche.js), en modo "contexto" (DOM). Cada chinche guarda la tarjeta
      donde se picó por última vez y el repo de la página, para que el encargo llegue al
      repo correcto. Si el board ya la trae, no se carga dos veces. */
-  var CHINCHE_V = "20261031-chinches-clock";
+  var CHINCHE_V = "20261031-fase1";
   function cargarChinche() {
     if (window.YODChinche) return;
     var ultimo = null;
@@ -410,7 +452,20 @@
           valores: function () { var t = ultimo && ultimo.textContent ? ultimo.textContent.replace(/\s+/g, ' ').trim().slice(0, 140) : ''; return t ? { picado: t } : {}; } });
       } catch (e) { }
     };
+    if (typeof cargadorActivo_ === 'function' && cargadorActivo_()) { insertarDespues_(s); return; }
     document.head.appendChild(s);
+  }
+  // Con cargador, la chinche se baja DESPUÉS del primer dato (o a los 4 s), no compitiendo con él. Se inserta lo
+  // que armó cargarChinche (s) y su onload corre cuando el cargador lo termina de bajar; si el cargador falla,
+  // se inserta en el acto como siempre.
+  function insertarDespues_(s) {
+    var corrio = false;
+    function alCargar() { if (corrio) return; corrio = true; try { s.onload(); } catch (e) { } }
+    try {
+      window.YodCargador.cargarDespues(s.src, { cuando: 'primer-dato', maxMs: 4000 }).then(function (el) {
+        if (window.YODChinche) alCargar(); else if (el && el.addEventListener) el.addEventListener('load', alCargar, { once: true });
+      }, function () { document.head.appendChild(s); });
+    } catch (e) { document.head.appendChild(s); }
   }
 
   function wireBack() {
@@ -446,6 +501,7 @@
   }
 
   function loadCatalog(cur) {
+    if (typeof cargadorActivo_ === 'function' && cargadorActivo_()) return loadCatalogConCargador_(cur);
     var k = tok(), request = state.identityRequest;
     return fetch(PORTAL + (k ? '&k=' + encodeURIComponent(k) : '') + '&cb=' + Date.now(), { cache: 'no-store', credentials: 'omit' })
       .then(function (r) {
@@ -476,6 +532,7 @@
     applyNav(); maybeLock();
   }
   function loadIdentity() {
+    if (typeof cargadorActivo_ === 'function' && cargadorActivo_()) return loadIdentityConCargador_();
     var k = tok(), previous = state.sessionToken, request = ++state.identityRequest;
     var confirmedHere = !!k && previous === k && state.identity === 'ok';
     if (state.retryTimer) { clearTimeout(state.retryTimer); state.retryTimer = null; }
@@ -544,6 +601,148 @@
       state.reconnectAttempts = 0;pastilla('fail');
       set('yodRole', rechazoAcceso(reason) ? 'Acceso vencido o retirado' : 'Validando acceso…');applyNav();maybeLock();
     });
+  }
+  // Rechazo definitivo (lo mismo que hace loadIdentity al recibirlo): se cierra el lienzo y se tira lo privado, sin
+  // borrar el token (regla 5); lo único nuevo es que también se purgan las copias del cargador.
+  function rechazoDefinitivo_(reason) {
+    purgarCargador_();
+    purgeAll(); state.identity = 'fail'; state.sessionToken = ''; state.verifiedAt = 0;
+    state.reconnectAttempts = 0; pastilla('fail');
+    set('yodRole', rechazoAcceso(reason) ? 'Acceso vencido o retirado' : 'Validando acceso…'); applyNav(); maybeLock();
+  }
+  // Copia deliberada de loadIdentity (ver nota del bloque). El orden es el de siempre: primero se cierra el
+  // lienzo (carga en frío) y luego se pide el canje; si la respuesta es la copia guardada (origen:'cache') llega
+  // por microtareas, aplicaIdentidad() → maybeLock() lo abre en la MISMA tarea (sin parpadeo ni esperar a la red)
+  // y el cargador la revalida en segundo plano (sesionRefrescada_ / sesionRechazada_).
+  async function loadIdentityConCargador_() {
+    var k = tok(), previous = state.sessionToken, request = ++state.identityRequest;
+    var confirmedHere = !!k && previous === k && state.identity === 'ok';
+    if (state.retryTimer) { clearTimeout(state.retryTimer); state.retryTimer = null; }
+    if (!confirmedHere) {
+      state.identity = k ? 'pending' : 'fail';state.role = '';state.boards = '';state.modules = [];
+      state.catalogRows = null;state.catalogIds = null;state.catalogUnavailable = false;purgeAll();
+      set('yodName', 'Equipo YOD');set('yodRole', k ? 'Validando acceso…' : 'Sin sesión');set('yodAv', 'YO');
+      var chip = document.getElementById('yodChip');if(chip)chip.style.display='none';
+      var results = document.getElementById('yodRes');if(results)results.replaceChildren();
+      pastilla(k ? 'wait' : 'fail');applyNav();maybeLock();
+    } else {
+      pastilla('wait');set('yodRole', 'Sesión activa · verificando');
+    }
+    if (previous && previous !== k) { state.sessionToken = '';location.reload();return; }
+    if (!k) { state.reconnectAttempts = 0;state.verifiedAt = 0;return; }
+    try {
+      // ⟳, reintentos y sesión ya confirmada piden red; sólo la carga en frío puede salir de la copia guardada.
+      var j = await canjeConRelevo(k, { fuerzaRed: confirmedHere || (state.reconnectAttempts || 0) > 0 });
+      if (request !== state.identityRequest || k !== tok()) return;
+      if (!j) throw new Error('sin-respuesta');
+      if (j.ok !== true || j.token !== k || typeof j.rol !== 'string' || !j.rol.trim() || typeof j.boards !== 'string') {
+        throw new Error(j.ok === false && j.error ? j.error : 'respuesta-invalida');
+      }
+      var identity = JSON.stringify([j.correo || '',j.nombre || '',j.rol || 'vista',j.boards || '']);
+      if (state.sessionIdentity && state.sessionIdentity !== identity) {
+        state.identity = 'pending';state.role = '';state.boards = '';state.modules = [];
+        state.sessionToken = '';purgeAll();applyNav();maybeLock();location.reload();return;
+      }
+      state.sessionIdentity = identity;state.sessionToken = k;state.rechazadoEnFondo = '';
+      // verifiedAt dice la verdad: una identidad de copia guardada tiene la edad de la copia, no la de ahora
+      state.verifiedAt = Date.now() - (j.origen === 'cache' ? Math.max(0, Number(j.edadMs) || 0) : 0);state.reconnectAttempts = 0;
+      aplicaIdentidad(j);
+      return await loadCatalog(currentSys());
+    } catch (err) {
+      if (request !== state.identityRequest || k !== tok()) return;
+      var reason = String(err && err.message || err || 'sin-respuesta').trim().toLowerCase();
+      var temporal = !rechazoAcceso(reason);
+      if (temporal) {
+        var fresh = reason !== 'respuesta-invalida' && confirmedHere && state.verifiedAt && Date.now() - state.verifiedAt < 5 * 60000;
+        if (fresh) {
+          state.identity = 'ok';
+          pastilla('wait');set('yodRole', 'Sesión activa · reconectando');
+        } else {
+          state.identity = 'pending';state.role = '';state.boards = '';state.modules = [];
+          state.sessionToken = '';pastilla('wait');set('yodRole', 'Sin conexión · reintentando');
+          applyNav();maybeLock();
+        }
+        state.reconnectAttempts = (state.reconnectAttempts || 0) + 1;
+        var wait = Math.min(30000, 15000 * Math.pow(2, Math.min(5, state.reconnectAttempts - 1)));
+        state.retryTimer = setTimeout(function() {
+          state.retryTimer = null;
+          if (request === state.identityRequest && tok() === k) loadIdentity();
+        }, wait);
+        return;
+      }
+      rechazoDefinitivo_(reason);
+    }
+  }
+  // Resultado FRESCO de la revalidación en segundo plano (yodcargador:sesion): si cambió quién eres o qué puedes
+  // ver, se oculta todo ANTES de recargar (igual que loadIdentity); si no, sólo se anota que ya es verdad de ahora.
+  function sesionRefrescada_(d) {
+    var k = tok();
+    if (!d || d.ok !== true || !k || state.identity !== 'ok' || state.sessionToken !== k) return;
+    if (d.token !== undefined && d.token !== k) return;
+    if (typeof d.rol !== 'string' || !d.rol.trim() || typeof d.boards !== 'string') return;
+    var identity = JSON.stringify([d.correo || '',d.nombre || '',d.rol || 'vista',d.boards || '']);
+    state.verifiedAt = Date.now();
+    if (state.sessionIdentity && state.sessionIdentity !== identity) {
+      state.identity = 'pending';state.role = '';state.boards = '';state.modules = [];
+      state.sessionToken = '';purgeAll();applyNav();maybeLock();location.reload();
+    }
+  }
+  // El Portero rechazó, en segundo plano, la sesión con la que se destrabó el tablero: el mismo trato que un
+  // rechazo explícito del canje (cierra el lienzo, sin borrar el token) más la purga de las copias del cargador.
+  function sesionRechazada_(d) {
+    var k = tok();
+    if (!k || !d || (d.token && d.token !== k)) return;
+    if (state.retryTimer) { clearTimeout(state.retryTimer); state.retryTimer = null; }
+    state.identityRequest++;state.rechazadoEnFondo = k;
+    rechazoDefinitivo_(String(d.error || 'revocado').trim().toLowerCase());
+  }
+  function suscribirCargador_() {
+    var c = window.YodCargador;
+    if (!cargadorActivo_() || state.cargadorSuscrito || !c.sesion || typeof c.sesion.alCambiar !== 'function') return;
+    state.cargadorSuscrito = true; configurarCatalogo_();
+    c.sesion.alCambiar(function (ev) {
+      var tipo = String(ev && ev.type || ''), d = (ev && ev.detail) || {};
+      if (tipo === 'yodcargador:sesion-rechazada') sesionRechazada_(d);
+      else if (tipo === 'yodcargador:sesion') sesionRefrescada_(d);
+      // 'sesion-cerrada' y el 'storage' de otra pestaña ya los atiende este marco (logout, addEventListener('storage'))
+    });
+  }
+  function aplicaCatalogo_(d) {
+    var rows = d.rows.filter(function (r) { return r && r.visible === 'SI' && r.system_id && DEST[r.system_id]; })
+      .sort(function (a, b) { return Number(a.orden) - Number(b.orden); });
+    writeCatIds(Array.isArray(d.known_system_ids) ? d.known_system_ids.filter(function(id){return typeof id==='string';}) : d.rows.map(function (r) { return r && r.system_id; }).filter(Boolean));
+    writeCatCache(rows);state.catalogUnavailable=false;applyNav();
+  }
+  // Copia deliberada de loadCatalog: el menú se pinta YA desde la última copia buena (alViejo) y se refresca en
+  // segundo plano; mismas guardas que la respuesta en vivo (actor SESSION, visible==='SI', DEST).
+  function loadCatalogConCargador_(cur) {
+    var k = tok(), request = state.identityRequest, c = window.YodCargador;
+    function vigente() { return request === state.identityRequest && k === tok() && state.identity === 'ok'; }
+    function conSesion(d) { return !!(d && d.ok === true && d.actor === 'SESSION' && Array.isArray(d.rows)); }
+    // El catálogo jamás tira la identidad: si el cargador truena al pedirlo, el menú se queda como estaba.
+    try {
+      configurarCatalogo_();
+      return c.catalogo({ token: k, alViejo: function (d) { if (vigente() && conSesion(d)) aplicaCatalogo_(d); } })
+        .then(function (r) {
+          // Una copia que el backend firmó SIN sesión no sirve: una vez, en vivo y sin caché.
+          if (vigente() && r && r.origen === 'cache' && r.data && !conSesion(r.data)) {
+            return c.get(CATALOG_BASE, { action: 'read', resource: 'Portal', k: k }, { viejoMs: 0, frescoMs: 0, telemetria: 'catalogo' });
+          }
+          return r;
+        })
+        .then(function (r) {
+          if (!vigente()) return;
+          var d = r && r.data;
+          if (!d && r && (r.status === 401 || r.status === 403)) d = { ok: false, error: 'HTTP ' + r.status };
+          if (d && ((d.ok === true && d.actor !== 'SESSION') || (!d.ok && rechazoAcceso(d.error)))) {
+            state.catalogRows=null;state.catalogIds=null;state.catalogUnavailable=true;applyNav();return;
+          }
+          if (!d || !d.ok || !Array.isArray(d.rows)) return;
+          aplicaCatalogo_(d);
+        }).catch(function () { })
+        // el Portero rechazó esta credencial MIENTRAS el catálogo volaba: el cargador acaba de guardar su copia tras la purga
+        .then(function () { if (k && state.rechazadoEnFondo === k) purgarCargador_(); });
+    } catch (e) { return Promise.resolve(); }
   }
   window.addEventListener('storage',function(e){if(e.key===LSC||e.key===null)loadIdentity();});
   window.addEventListener('focus',function(){if(state.sessionToken!==tok())loadIdentity();});

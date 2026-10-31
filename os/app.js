@@ -24,6 +24,9 @@
   /* NAVIGATION-END */
 
   var CATALOG_ENDPOINT='https://script.google.com/macros/s/AKfycby5LKYKRwl0EsNgppOIeD_ArST8vSXRgNO4ns8XZbFW4yjfglzu4io_vhabB8h-J792Tw/exec?action=read&resource=Portal';
+  // Fase 1: el cargador recibe sólo la BASE (él arma ?action=read&resource=Portal&k=…); el camino legacy
+  // sigue usando CATALOG_ENDPOINT tal cual. Una sola copia del id: la de arriba.
+  var CATALOG_BASE=CATALOG_ENDPOINT.split('?')[0];
   /* El portal validaba la sesión SIEMPRE contra el portero del dominio
      aurumarquitectos.com (hoy suspendido): aunque el gate ya te dejara pasar, el
      portal se quedaba en "Verificando Acceso…" para siempre. Ahora usa el mismo
@@ -44,7 +47,8 @@
   // El Portero (Apps Script) hoy tarda entre 3 y 25 s: esperar 12 s lo daba por muerto
   // y el OS se ponía «Sin conexión» con el backend vivo. 25 s + reintento en fondo.
   var LIMITE_MS=25000, LIMITE_FRIO_MS=75000, REINTENTO_MS=15000, REINTENTOS_MAX=3;
-  async function canjearConRelevo_(token){
+  async function canjearConRelevo_(token,opts){
+    if(typeof cargadorActivo_==='function'&&cargadorActivo_())return canjearConCargador_(token,opts);
     // Sólo metadatos permitidos: nunca URL, token, cuerpo ni mensajes de terceros.
     var diagnostico=[];
     async function intenta(base,origen){
@@ -76,6 +80,243 @@
     }
     if(!d.ok)console.warn('[YOD OS] diagnóstico de transporte del canje',diagnostico);
     return d;
+  }
+  /* ══ FASE 1 · «UN CARGADOR» (T-102) ═══════════════════════════════════════════
+     La cabina usa window.YodCargador (os/yod-cargador.js) para abrir rápido: la
+     identidad y el catálogo salen de la última copia buena y se revalidan en
+     segundo plano. Este bloque es ADITIVO: las funciones de siempre
+     (canjearConRelevo_, loadIdentityOnce, loadCatalog, cerrarSesion) abren con UNA
+     línea que delega aquí sólo si cargadorActivo_(); sin cargador, o con
+     ?cargador=legacy (o localStorage.yodcg_legacy='1'), corre el código de siempre
+     sin cambiarle una coma. Esas funciones se retiran cuando se retire el interruptor.
+     Lo que NO cambia con el cargador: el muro sigue siendo cada backend (regla 6),
+     el catálogo no otorga permisos (regla 3), un token distinto nunca hereda la
+     identidad pintada (se bloquea primero) y un rechazo oculta TODO lo privado y
+     a la tercera cierra la sesión, igual que hoy. */
+  function cargadorActivo_(){var c=window.YodCargador;return !!(c&&c.v&&!c.legacy);}
+  // Misma forma de salida que canjearConRelevo_: {ok:true,token,rol,boards,nombre,correo[,origen,edadMs]}
+  // o {ok:false,error[,rechazo,origen]}. fuerzaRed ignora la copia guardada (⟳, reintentos, sesión ya pintada).
+  async function canjearConCargador_(token,opts){
+    var fuerzaRed=opts&&opts.fuerzaRed!==undefined?Boolean(opts.fuerzaRed):((state.profileReady&&state.sessionToken===token)||(state.canjeRetry||0)>0);
+    try{
+      var r=await window.YodCargador.sesion.canjear({modo:fuerzaRed?'red':'cache-primero'});
+      return r&&typeof r==='object'?r:{ok:false,error:'sin-respuesta'};
+    }catch(e){return {ok:false,error:e&&e.message==='timeout'?'timeout':'red'};}
+  }
+  // ¿Ya hay respuesta? Una copia guardada resuelve por microtareas y gana esta carrera; la red no.
+  // Si pierde, el flujo sigue exactamente como antes (se bloquea y se espera).
+  function respuestaInmediata_(promesa){
+    return Promise.race([promesa,new Promise(function(res){setTimeout(function(){res(null);},0);})]);
+  }
+  function cerrarCargador_(token,motivo){
+    try{return window.YodCargador.sesion.cerrar({token:token,motivo:motivo});}catch(_e){return false;}
+  }
+  // Un rechazo vivo tira TODA copia guardada: una recarga no puede resucitar la identidad.
+  function purgarCargador_(){try{window.YodCargador.purgar();}catch(_e){}}
+  function configurarCatalogo_(){
+    var c=window.YodCargador;
+    if(state.cargadorConfigurado||!c||typeof c.config!=='function')return;
+    try{c.config({catalogo:{url:CATALOG_BASE}});state.cargadorConfigurado=true;}catch(_e){}
+  }
+  function edadCopia_(ms){return ms>0?' '+edadTexto(ms):'';}
+  function mostrarTiempo_(ms,origen){
+    var el=$('yodTiempo');if(!el||!(ms>0))return;
+    el.textContent='⏱ '+(ms/1000).toFixed(1)+' s · '+(origen==='cache'?'caché':'red');el.hidden=false;
+  }
+  // Primer dato REAL de la cabina (catálogo pintado, de caché o de red): una vez por página.
+  function marcarPrimerDato_(origen){
+    if(state.primerDatoMarcado)return;state.primerDatoMarcado=true;
+    var o=origen==='cache'?'cache':'red',t=0;
+    try{var m=window.YodCargador.telemetria.primerDato(o);t=Number(m&&m.t)||0;}catch(_e){}
+    if(!t){try{t=Math.round(performance.now());}catch(_e){}}
+    mostrarTiempo_(t,o);
+  }
+  // Mismas guardas que la respuesta en vivo: el backend firma actor='SESSION'; cualquier otra cosa no se pinta.
+  function catalogoAutenticado_(body){return !!(body&&body.ok&&Array.isArray(body.rows)&&body.actor==='SESSION');}
+  function pintarCatalogo_(data,origen,nota){
+    state.catalogIds=Array.isArray(data.known_system_ids)?data.known_system_ids.filter(function(id){return typeof id==='string';}):null;
+    renderModules(data.rows);nombrarAccionesRapidas();
+    $('updated-at').textContent=nota||selloDato(data);
+    marcarPrimerDato_(origen);
+  }
+  async function loadCatalogConCargador_(){
+    if(!state.profileReady)return;
+    var ep=state.sesionEpoch;var readRevision=state.loadPlan?state.loadPlan.revision():null;
+    if(state.loading&&state.catalogEpoch===ep)return;state.catalogEpoch=ep;state.loading=true;$('refresh').disabled=true;var _mr=$('mobile-refresh');if(_mr)_mr.disabled=true;setConnection('','Actualizando');
+    var c=window.YodCargador,_tk='',edadGuardada=0;
+    var vigente=function(){return mismaSesion(_tk,ep)&&!(state.loadPlan&&state.loadPlan.revision()!==readRevision);};
+    try{
+      try{_tk=localStorage.getItem(TOKEN_KEY)||'';}catch(_e){}
+      configurarCatalogo_();
+      // 1) Lo último bueno se pinta ANTES de la red, con las guardas de la respuesta en vivo; si no hay
+      //    copia, la rejilla espera como siempre (nunca se asoma CAT_RESPALDO de relleno).
+      var r=await c.catalogo({token:_tk,alViejo:function(body,meta){
+        if(!vigente()||!catalogoAutenticado_(body))return;
+        edadGuardada=Number(meta&&meta.edadMs)||0;
+        pintarCatalogo_(body,'cache','Datos guardados'+edadCopia_(edadGuardada)+' · actualizando…');
+      }});
+      if(!vigente())return;
+      // 2) Una copia que el backend firmó SIN sesión (no pudo autenticar ese día) no sirve: una vez, en vivo y sin caché.
+      if(r&&r.origen==='cache'&&r.data&&!catalogoAutenticado_(r.data)){
+        r=await c.get(CATALOG_BASE,{action:'read',resource:'Portal',k:_tk},{viejoMs:0,frescoMs:0,telemetria:'catalogo'});
+        if(!vigente())return;
+      }
+      var data=r&&r.data;
+      if(!r||(r.ok===false&&!data)){var st=Number(r&&r.status)||0;throw new Error(st===401||st===403?'HTTP '+st:String((r&&r.error)||'sin-respuesta'));}
+      if(!data||!data.ok||!Array.isArray(data.rows))throw new Error((data&&data.error)||'Respuesta incompleta');
+      // Solo 'SESSION' confirma el canje de esta fuente (ver loadCatalog): actor ausente, desconocido o 'PUBLIC'
+      // exige el respaldo autorizado.
+      var _autenticado=data.actor==='SESSION';
+      var _tokenVivo=!!_tk&&state.profileReady;
+      if(_tokenVivo&&!_autenticado){catalogoSinAcceso();return;}
+      state.catRetry=0;
+      // una copia fresca se entrega sin pasar por alViejo: su edad viene en la propia respuesta
+      var edadFinal=Number(r.edadMs)||edadGuardada;
+      if(r.origen==='cache-fallback'){
+        // Sin red pero con copia: NO es un fallo (nada de reintentos ni de respaldo de relleno); se dice con calma.
+        pintarCatalogo_(data,'cache','Sin conexión · datos guardados'+edadCopia_(edadFinal));setConnection('error','Sin conexión');return;
+      }
+      if(r.origen==='cache'){pintarCatalogo_(data,'cache','Datos guardados'+edadCopia_(edadFinal));setConnection('ok','En línea');return;}
+      pintarCatalogo_(data,'red');setConnection('ok','En línea');
+    }catch(error){
+      if(!vigente())return;
+      if(rechazoAcceso(error)){catalogoSinAcceso();return;}
+      state.catRetry=(state.catRetry||0)+1;
+      if(state.catRetry<=REINTENTOS_MAX){setConnection('error','Portero lento · reintentando');$('updated-at').textContent='Reintentando en fondo';setTimeout(loadCatalog,REINTENTO_MS);}
+      else{setConnection('error','Sin conexión');$('updated-at').textContent='No se pudo actualizar';}
+      // Igual que loadCatalog: teniendo sesión y sin nada pintado, el mejor catálogo conocido (último bueno o respaldo curado).
+      if(!state.modules.length){
+        var _tk2='';try{_tk2=localStorage.getItem(TOKEN_KEY)||'';}catch(_e){}
+        var _ant2=state.rawRows;
+        if(!Array.isArray(_ant2))_ant2=[];
+        var _mejor2=(_ant2.length>=CAT_RESPALDO.length)?_ant2:CAT_RESPALDO;
+        if(_tk2&&state.profileReady){
+          renderModules(_mejor2);nombrarAccionesRapidas();
+          $('updated-at').textContent=(_mejor2===CAT_RESPALDO)?'Mostrando la lista de respaldo':'Mostrando el último catálogo bueno';
+        }else{
+          var grid=$('module-grid');grid.setAttribute('aria-busy','false');grid.innerHTML='<div class="empty-state">Control Maestro no respondió. Por seguridad no se habilitaron enlaces. Intenta actualizar de nuevo.</div>';
+        }
+      }
+    }finally{
+      if(state.catalogEpoch===ep){state.loading=false;$('refresh').disabled=false;var _mr2=$('mobile-refresh');if(_mr2)_mr2.disabled=false;}
+      // el Portero rechazó esta credencial MIENTRAS el catálogo volaba: el cargador acaba de guardar su copia tras la purga
+      if(_tk&&state.rechazadoEnFondo===_tk)purgarCargador_();
+    }
+  }
+  // Copia deliberada de loadIdentityOnce (ver nota del bloque): pide el canje al cargador ANTES de bloquear.
+  // Si la respuesta es la copia guardada (origen:'cache') NO se bloquea ni se parpadea: se aplica la identidad
+  // al instante y el cargador la revalida en segundo plano (sesionRefrescada_ / sesionRechazadaEnFondo_).
+  async function loadIdentityConCargador_(){
+    var token=tokenActual(),request=++state.identityRequest;
+    var yaValidada=Boolean(token)&&state.profileReady&&state.sessionToken===token;
+    // ⟳ y los reintentos piden red; sólo una carga en frío (sin nada pintado) puede salir de la copia guardada.
+    var fuerzaRed=yaValidada||(state.canjeRetry||0)>0;
+    var ep=state.sesionEpoch;
+    function vigente(){return request===state.identityRequest&&ep===state.sesionEpoch&&token===tokenActual();}
+    var promesa=token?canjearConRelevo_(token,{fuerzaRed:fuerzaRed}):null;
+    var rapido=null;
+    if(promesa&&!fuerzaRed&&!state.profileReady){
+      // un rechazo de la promesa no se atiende aquí: abajo, con el resto de los fallos del canje
+      try{rapido=await respuestaInmediata_(promesa);}catch(_e){rapido=null;}
+      if(!vigente())return;
+    }
+    var desdeCopia=Boolean(rapido&&rapido.ok===true&&rapido.origen==='cache'&&rapido.token===token);
+    if(!desdeCopia){
+      if(!yaValidada){
+        bloquearSesion(Boolean(token));ep=state.sesionEpoch;
+        // el bloqueo subió la época: el vuelo en curso la sigue para que los avisos simultáneos se deduplicen igual
+        var vuelo=state.identityFlight;if(vuelo&&vuelo.token===token)vuelo.epoch=ep;
+      }else setConnection('loading','Sesión activa · comprobando acceso');
+    }
+    if(!token){$('access-status').textContent='Requiere acceso';return;}
+    if(!desdeCopia)$('access-status').textContent='Validando tu acceso…';
+    try{
+      var data=rapido||await promesa;
+      if(!vigente())return;
+      if(!data||data.ok!==true||data.token!==token||typeof data.rol!=='string'||!data.rol.trim()||typeof data.boards!=='string'){var diag='canje:'+((data&&data.error)||'sin-respuesta');var err=new Error(diag);err._diag=diag;throw err;}
+      // una copia sólo existe después de un éxito vivo posterior a la última purga (los rechazos la tiran): limpia los golpes
+      try{localStorage.removeItem('yod_canje_fail');}catch(_e){}
+      state.rechazadoEnFondo='';
+      var viva=data.origen!=='cache';
+      // verifiedAt dice la verdad: una identidad de copia guardada tiene la edad de la copia, no la de ahora
+      state.canjeRetry=0;state.sessionToken=token;state.verifiedAt=Date.now()-(viva?0:Math.max(0,Number(data.edadMs)||0));applyIdentity(data);
+      var dataLoads=Promise.allSettled([coordinatedPortalLoad('catalog',loadCatalog,1,'catalog'),startData(token)]);
+      if(!(window.YodLoadConfig&&window.YodLoadConfig.enabled))await dataLoads;
+    }catch(err){
+      if(!vigente())return;
+      var d=(err&&err._diag)||'error';
+      var LENTO={'canje:sin-respuesta':1,'canje:timeout':1,'canje:servidor':1,
+                 'canje:token_red':1,'canje:red':1,'canje:http':1,'canje:formato':1,'error':1,
+                 // el cargador avisa «token_distinto» donde el camino viejo (data.token!==token) decía «sin-respuesta»: igual de transitorio
+                 'canje:token_distinto':1};
+      var MUERTO={'canje:clave':1,'canje:liga':1,'canje:revocado':1,'canje:expirado':1};
+      function reintentar(){
+        state.canjeRetry=(state.canjeRetry||0)+1;
+        var espera=Math.min(30000,REINTENTO_MS*Math.pow(2,Math.min(5,state.canjeRetry-1)));
+        setTimeout(function(){if(request===state.identityRequest&&tokenActual()===token)loadIdentity();},espera);
+      }
+      if(LENTO[d]&&yaValidada&&state.verifiedAt&&Date.now()-state.verifiedAt<5*60000){
+        setConnection('error','Sesión activa · reconectando');
+        $('access-status').textContent='Sesión activa · reintentando';
+        reintentar();
+        console.warn('[YOD OS] Portero temporalmente no disponible; se conserva la sesión validada:',d);
+        return;
+      }
+      bloquearSesion();
+      if(LENTO[d]){
+        setConnection('error','Portero lento · reintentando');
+        reintentar();
+      }
+      if(rechazoAcceso(d.replace(/^canje:/,'')))purgarCargador_();
+      if(MUERTO[d]){
+        var n=0;try{n=(parseInt(localStorage.getItem('yod_canje_fail')||'0',10)||0)+1;localStorage.setItem('yod_canje_fail',String(n));}catch(_e){}
+        if(n>=3){cerrarCargador_(token,'rechazado');try{localStorage.removeItem('yod_canje_fail');}catch(_e){}location.reload();return;}
+      }
+      $('user-role').textContent=LENTO[d]?'Reconectando…':'Sesión por validar';$('access-status').textContent=frasePendiente(d);
+      console.warn('[YOD OS] identidad no validada:',d);
+    }
+  }
+  // Resultado FRESCO de la revalidación en segundo plano (yodcargador:sesion). Si no cambió nada, sólo se anota
+  // que ya es verdad de ahora; si cambió quién eres o qué puedes ver, se trata como identidad nueva.
+  function sesionRefrescada_(d){
+    var token=tokenActual();
+    if(!d||d.ok!==true||!token||!state.profileReady||state.sessionToken!==token)return;
+    if(d.token!==undefined&&d.token!==token)return;
+    if(d.token===undefined&&d.correo&&String(d.correo).trim().toLowerCase()!==state.verifiedEmail)return;
+    if(typeof d.rol!=='string'||!d.rol.trim()||typeof d.boards!=='string')return;
+    var igual=String(d.rol).toLowerCase()===state.role&&d.boards===state.boards&&String(d.nombre||'').trim()===state.personName&&String(d.correo||'').trim().toLowerCase()===state.verifiedEmail;
+    state.verifiedAt=Date.now();
+    if(igual)return;
+    bloquearSesion(true);
+    state.canjeRetry=0;state.sessionToken=token;state.verifiedAt=Date.now();applyIdentity(d);
+    Promise.allSettled([coordinatedPortalLoad('catalog',loadCatalog,1,'catalog'),startData(token)]);
+  }
+  // El Portero rechazó, en segundo plano, la sesión que se pintó desde la copia guardada: mismo trato que un
+  // rechazo explícito del canje (loadIdentityOnce) — se oculta todo lo privado y a la tercera se cierra la sesión.
+  function sesionRechazadaEnFondo_(d){
+    var token=tokenActual();
+    if(!token||!d||(d.token&&d.token!==token))return;
+    var diag='canje:'+String(d.error||'revocado');
+    var MUERTO={'canje:clave':1,'canje:liga':1,'canje:revocado':1,'canje:expirado':1};
+    purgarCargador_();state.rechazadoEnFondo=token;state.canjeRetry=Math.max(1,state.canjeRetry||0);
+    bloquearSesion();
+    if(MUERTO[diag]){
+      var n=0;try{n=(parseInt(localStorage.getItem('yod_canje_fail')||'0',10)||0)+1;localStorage.setItem('yod_canje_fail',String(n));}catch(_e){}
+      if(n>=3){cerrarCargador_(token,'rechazado');try{localStorage.removeItem('yod_canje_fail');}catch(_e){}location.reload();return;}
+    }
+    $('user-role').textContent='Sesión por validar';$('access-status').textContent=frasePendiente(diag);
+    console.warn('[YOD OS] el Portero rechazó la sesión en segundo plano:',diag);
+  }
+  function suscribirCargador_(){
+    var c=window.YodCargador;
+    if(!cargadorActivo_()||state.cargadorSuscrito||!c.sesion||typeof c.sesion.alCambiar!=='function')return;
+    state.cargadorSuscrito=true;configurarCatalogo_();
+    c.sesion.alCambiar(function(ev){
+      var tipo=String(ev&&ev.type||''),d=(ev&&ev.detail)||{};
+      if(tipo==='yodcargador:sesion-rechazada')sesionRechazadaEnFondo_(d);
+      else if(tipo==='yodcargador:sesion')sesionRefrescada_(d);
+      // 'sesion-cerrada' y el 'storage' de otra pestaña ya los atiende esta página (cerrarSesion, addEventListener('storage'))
+    });
   }
   // Respaldo curado del catálogo (4-sep-2026). Los títulos y textos dicen LO MISMO que
   // la pestaña Portal del Control Maestro — si allá se renombra un tablero, aquí también.
@@ -117,7 +358,7 @@
   };
   // Etiqueta del tablero embebido (caché de 10 min de Pages). No se edita aquí: la escribe
   // node scripts/versiones.cjs --aplicar desde os/versiones.json, igual que todos los ?v=.
-  var TABLERO_V='20261031-chinches-clock';
+  var TABLERO_V='20261031-fase1';
   var state={modules:[],rawRows:[],role:'vista',boards:'',profileReady:false,loading:false,opsScope:'mias',allTasks:[],sesionEpoch:0,sessionToken:'',identityRequest:0,pulseCache:{},opsCache:null,verifiedAt:0};
   var $=function(id){return document.getElementById(id);};
   // ¿hay clave guardada? distingue «sin sesión» de «sesión validándose»
@@ -168,7 +409,7 @@
   // Si la consulta en vivo falla y había caché, el sello deja de mentir con un
   // «actualizando…» que ya no está pasando: se conserva el dato con su edad real.
   function marcarCacheFallo(panelId){var p=$(panelId);if(!p)return;var n=p.querySelector('.pulse-cache-note');if(n)n.textContent=n.textContent.replace(' · actualizando…',' · no se pudo actualizar');}
-  function cerrarSesion(){try{localStorage.removeItem(TOKEN_KEY);LLAVES_SALA.forEach(function(k){localStorage.removeItem(k);});}catch(_e){}purgarDatosSensibles();try{location.reload();}catch(_e){location.href=location.pathname;}}
+  function cerrarSesion(){if(typeof cargadorActivo_==='function'&&cargadorActivo_())cerrarCargador_(tokenActual(),'salir');try{localStorage.removeItem(TOKEN_KEY);LLAVES_SALA.forEach(function(k){localStorage.removeItem(k);});}catch(_e){}purgarDatosSensibles();try{location.reload();}catch(_e){location.href=location.pathname;}}
 
   function greeting(){var h=new Date().getHours();return h<12?'Buenos días':h<19?'Buenas tardes':'Buenas noches';}
   function timeLabel(date){return new Intl.DateTimeFormat('es-MX',{hour:'2-digit',minute:'2-digit'}).format(date);}
@@ -357,7 +598,7 @@
         write:function(intent){return window.YODCaseTransport.writeTeam(intent);},
         lookupReceipt:function(requestId){return window.YODCaseTransport.lookupTeamReceipt({request_id:requestId});}
       },
-      loadMount:function(){return import('../despacho3d/equipo.mjs?v=20261031-chinches-clock').then(function(module){return module.mountTeamDesk;});},
+      loadMount:function(){return import('../despacho3d/equipo.mjs?v=20261031-fase1').then(function(module){return module.mountTeamDesk;});},
       onError:function(){var status=$('despachoEquipoEstado');if(status)status.textContent='No se pudo abrir Equipo. Puedes volver a validar tu acceso.';}
     });
   }
@@ -596,6 +837,7 @@
     setConnection('error','Catálogo sin acceso');$('updated-at').textContent='Lista de respaldo según tus permisos';
   }
   async function loadCatalog(){
+    if(typeof cargadorActivo_==='function'&&cargadorActivo_())return loadCatalogConCargador_();
     if(!state.profileReady)return;
     var ep=state.sesionEpoch;var readRevision=state.loadPlan?state.loadPlan.revision():null;
     if(state.loading&&state.catalogEpoch===ep)return;state.catalogEpoch=ep;state.loading=true;$('refresh').disabled=true;var _mr=$('mobile-refresh');if(_mr)_mr.disabled=true;setConnection('','Actualizando');
@@ -758,6 +1000,7 @@
     promise.then(done,done);return promise;
   }
   async function loadIdentityOnce(){
+    if(typeof cargadorActivo_==='function'&&cargadorActivo_())return loadIdentityConCargador_();
     var token=tokenActual(),request=++state.identityRequest;
     // Si esta misma sesión ya fue validada en esta carga, revalidar en segundo
     // plano sin desmontar la identidad ni vaciar la pantalla. Un Portero lento
@@ -1095,6 +1338,7 @@
   addEventListener('hashchange',iniciarInicioDiferido);
   addEventListener('popstate',iniciarInicioDiferido);
   // Al recargar se valida antes de consultar y mostrar datos.
+  suscribirCargador_();
   loadIdentity();
   /* ── Entrar la clave DENTRO del tablero despierta al resto del OS ──
      Antes había que recargar a mano: el iframe guardaba la llave y el padre

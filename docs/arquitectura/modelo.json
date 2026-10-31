@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-31.chinches-clock.1",
+  "revision": "2026-10-31.cargador-fase1.2",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -14764,6 +14764,31 @@
       ],
       "deployment": "Implementado y probado en checkout aislado desde main 79a0aa5. Release 1.1.1 preparado y activado localmente con CLI canónica; 1136 pruebas y verificadores locales pasan. Publicación central, adopción por consumidores y recepción real pendientes de evidencia independiente.",
       "rollback": "Activar el snapshot previo mediante herramientas del paquete y revertir PRs/caché afectados. Conservar IndexedDB, chinches, capturas, audio, IDs, recibos y permisos; no eliminar ni reescribir borradores."
+    },
+    {
+      "id": "CHG-CARGADOR-FASE1-001",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-POTENCIALES",
+        "SYS-DESPACHO",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-CONTROL",
+        "GAS-PORTERO",
+        "GAS-CATALOGO"
+      ],
+      "status": "propuesto",
+      "approval": "Fase 1 (Un cargador) de la reestructuración de YOD OS, aprobada por Dirección el 30-oct-2026 («Adelante con fase 1», Buzón CL-YODOS-FASE1-20261030). Pendiente de revisión humana y merge. No cambia backends, hojas, permisos ni lógica de negocio: sólo cómo y cuántas veces el navegador pide sesión, catálogo y datos PPP, y qué guarda entre cargas.",
+      "proposal": "Un solo cargador compartido, os/yod-cargador.js (el plan lo llamaba yod-core/client.js; se renombra porque «YOD Core» ya es el módulo de estados de tareas de este repo), que importan la cabina (os/index.html + os/app.js), el marco (os/shell.js) y las ocho páginas de potenciales-yod antes de su propio código. Contrato: (1) sesión: un solo canje ?recurso=canje por página compartido entre app.js, shell.js y portero.js (promesa en vuelo única), con caché local yodcg_sesion_v1 ligada a un hash del token (nunca el token) que se devuelve de inmediato si tiene menos de 12 h y se refresca en fondo pasados 10 min; fail-closed: un rechazo del refresco (liga, clave, expirado, revocado, sin_sesion, unauthorized, forbidden, HTTP 401/403, lista única) borra la caché y avisa para que el adoptante cierre; la llave pyod_clave_v1 sólo se borra si su valor sigue siendo el token rechazado (guardia de carrera); (2) catálogo del Portal: caché yodcg_cache_v1 por hash de token, pintada antes de ir a red y refrescada en fondo, de modo que la cabina y el menú del marco dejan de pintar primero CAT_RESPALDO cuando ya se conoce el catálogo real; (3) transporte PPP: lista/catalogo/mapa caché-primero con refresco en fondo, caso red-primero con caché de respaldo, timeout 25 s y credentials omit en todas las llamadas, devolviendo un objeto tipo Response para que las funciones viejas de los motores sigan intactas; (4) telemetría: tiempo a primer dato por tablero (origen caché o red) guardado en un anillo local y enviado como códigos cortos (pd:<tablero>:<ms>:<c|r>) dentro de la bitácora que portero.js ya manda al Portero, sin endpoint nuevo; (5) chinche.js se carga después del primer dato (o a los 4 s) en la cabina y en los tableros envueltos por shell.js; (6) interruptor ?cargador=legacy (o localStorage yodcg_legacy=1) que deja todo como hoy; los adoptantes conservan su camino viejo literal durante al menos dos semanas. Incluye T-105: el marco deja de intentar el respaldo del Portero (esa implementación contesta 404 desde el 23-sep, como ya registró portero.js) y repite contra el original. Fuera de esta entrega (siguientes de la misma fase): tablero.html (7 fuentes sin plazo y candado track=alysa), obra.html, el endpoint ?recurso=arranque (pedido al Portero por el Buzón; el cargador cae al camino de dos llamadas si no existe) y el retiro de las copias viejas de apiGet/cargarLista en los motores. Alcance de datos en caché: claims de sesión (rol, boards, nombre, correo), filas del catálogo visibles para esa sesión y respuestas de lista/caso de PPP, todas ligadas al hash del token, purgadas al cerrar o ante rechazo y nunca compartidas entre tokens distintos; equivalen a lo que ya ve el mismo dispositivo con ese token.",
+      "tests": [
+        "tests/yod-cargador.test.cjs: canje sin token, caché fresca/vieja, refresco en fondo, rechazo que purga, dedupe de llamadas concurrentes, timeout con un reintento, token distinto, lista de rechazos, cerrar con guardia de carrera, get con alViejo y cache-fallback, ppp.get lista/caso, telemetría (primerDato único, códigos ≤40, resumen), cargarDespues, legacy, ?sesion= en URL, localStorage que lanza.",
+        "tests/portal-identity.cjs y/o tests/cargador-adopcion.cjs: la cabina con identidad en caché no bloquea; rechazo en fondo cierra con cerrar({token}); catálogo pinta caché antes de red y no pinta CAT_RESPALDO si hubo caché; con legacy o sin cargador el comportamiento actual se conserva; el marco nunca va al respaldo y desbloquea con identidad en caché.",
+        "potenciales-yod tests/ppp-cargador.test.cjs: los 8 HTML cargan el cargador tras yod-acceso.js con la misma etiqueta; apiGet de los 5 motores delega con cargador y conserva fetch sin él; ppp-catalog usa el cargador con su timeout literal; portero.js comparte el canje y añade los códigos de telemetría a la bitácora; tests/ppp-session-guard.test.cjs y tests/access-gates.cjs siguen verdes.",
+        "Suites completas de ambos repos, verify-os/portal/obra-app/accesos, versiones --check, arquitectura --check y verificar-impacto; recorridos Playwright de potenciales con el atlas fijado al commit de yod-portal que trae el cargador."
+      ],
+      "deployment": "GitHub Pages desde main tras el merge de los dos PR (primero yod-portal, que sirve os/yod-cargador.js; luego potenciales-yod, que lo pide). Sin despliegue de Apps Script. Comprobación posterior: el paso «Comprobar archivos publicados» de potenciales y un recorrido manual en Chromebook e iPhone (segunda apertura de un tablero con datos en menos de 2 s; códigos pd: en la hoja BITACORA).",
+      "rollback": "Revertir los dos PR (merge commits) o, sin revertir, abrir cualquier tablero con ?cargador=legacy o fijar localStorage yodcg_legacy=1: todo vuelve al camino actual. Las cachés yodcg_* se pueden borrar con YodCargador.purgar(); no hay datos que migrar ni backend que revertir."
     }
   ],
   "data_contracts": [
@@ -19588,6 +19613,34 @@
       "prefix": "tests/versiones.test.cjs",
       "components": [
         "SYS-YOD-OS"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "os/yod-cargador.js",
+      "components": [
+        "SYS-YOD-OS",
+        "GAS-PORTERO",
+        "GAS-CATALOGO",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/yod-cargador.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "GAS-PORTERO",
+        "GAS-CATALOGO",
+        "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/cargador-adopcion.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "GAS-PORTERO"
       ]
     }
   ],

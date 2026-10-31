@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-31.chinches-clock.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-31.cargador-fase1.2 · 2026-10-20.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 

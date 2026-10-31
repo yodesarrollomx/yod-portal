@@ -169,7 +169,8 @@ for (const [name, source, functionName] of [['app',appSource,'canjearConRelevo_'
     });vm.runInContext(fn(source,'rechazoAcceso')+'\n'+fn(source,functionName),c);
     assert.equal((await c[functionName]('synthetic')).error,'revocado');assert.equal(calls.length,1);
   });
-  test(name + ': caída de transporte sí permite el respaldo', async () => {
+  // T-105 (30-oct-2026): el marco ya no salta al respaldo (404 desde el 23-sep); su versión de esta prueba es la de abajo.
+  if (name === 'app') test(name + ': caída de transporte sí permite el respaldo', async () => {
     const calls = [], response = { ok: true, rol: 'vista', boards: 'TA' };
     const c = vm.createContext({
       ACCESO_LISTO: Promise.resolve(), window: { YOD_PORTERO: { original: 'original', respaldo: 'respaldo' } },
@@ -179,6 +180,34 @@ for (const [name, source, functionName] of [['app',appSource,'canjearConRelevo_'
     assert.equal((await c[functionName]('synthetic')).ok,true);assert.equal(calls.length,2);
   });
 }
+// T-105: en el marco (shell.js) el segundo intento vuelve al ORIGINAL tras 1.5 s, como potenciales-yod/portero.js.
+function shellCanje(respuestas) {
+  const urls = [], esperas = [];
+  const c = vm.createContext({
+    ACCESO_LISTO: Promise.resolve(), window: { YOD_PORTERO: { original: 'original', respaldo: 'respaldo' } },
+    setTimeout: (f, ms) => { esperas.push(ms);if (ms === 1500) f();return 0; }, clearTimeout() {},
+    fetch: async url => { urls.push(url);const r = respuestas[urls.length - 1] || respuestas.at(-1);if (r instanceof Error) throw r;return { ok: true, status: 200, json: async () => r }; }
+  });
+  vm.runInContext(fn(shellSource, 'rechazoAcceso') + '\n' + fn(shellSource, 'canjeConRelevo'), c);
+  return { c, urls, esperas };
+}
+test('shell (T-105): caída de transporte → el segundo intento es el ORIGINAL tras 1.5 s y nunca el respaldo', async () => {
+  const h = shellCanje([new Error('offline'), { ok: true, rol: 'vista', boards: 'TA' }]);
+  assert.equal((await h.c.canjeConRelevo('synthetic')).ok, true);
+  assert.deepEqual(h.urls.map(u => u.split('?')[0]), ['original', 'original']);assert.deepEqual(h.esperas, [1500]);
+});
+test('shell (T-105): respuesta no concluyente del original también se repite contra el ORIGINAL', async () => {
+  const h = shellCanje([{ ok: false, error: 'servidor' }, { ok: true, rol: 'vista', boards: 'TA' }]);
+  assert.equal((await h.c.canjeConRelevo('synthetic')).ok, true);
+  assert.ok(h.urls.every(u => u.startsWith('original?')));assert.equal(h.urls.length, 2);
+});
+test('shell (T-105): un rechazo del ORIGINAL en el segundo intento es concluyente; dos fallos son null; el respaldo no se toca', async () => {
+  const rechazo = shellCanje([new Error('offline'), { ok: false, error: 'revocado' }]);
+  assert.equal((await rechazo.c.canjeConRelevo('synthetic')).error, 'revocado');
+  const caido = shellCanje([new Error('offline'), { ok: false, error: 'servidor' }]);
+  assert.equal(await caido.c.canjeConRelevo('synthetic'), null);
+  for (const h of [rechazo, caido]) {assert.equal(h.urls.length, 2);assert.ok(h.urls.every(u => !u.startsWith('respaldo')));}
+});
 
 function shellHarness(token = 'A') {
   const nodes = new Map(), canvas = element(), main = element(), applied = [], reloads = [], timers = [];
@@ -370,16 +399,21 @@ test('Shell: respuesta de Portero no concluyente no elimina token y reintenta co
   assert.equal(h.timers.length,1);assert.equal(h.timers[0].ms,15000);
 });
 
-test('Shell: respaldo que no reconoce token no revoca credencial del primario inaccesible',async()=>{
+// T-105: antes el segundo intento era el respaldo (y se vigilaba que su «liga» no revocara al primario inaccesible);
+// ahora el respaldo ni se consulta — el segundo intento es el ORIGINAL — y la garantía de fondo es la misma:
+// un primario que no contesta jamás revoca la credencial.
+test('Shell: con el primario inaccesible nunca se consulta el respaldo (T-105) y la credencial no se revoca',async()=>{
+  const urls=[];
   const c=vm.createContext({
     window:{YOD_PORTERO:{original:'https://original.invalid',respaldo:'https://backup.invalid'}},
-    ACCESO_LISTO:Promise.resolve(),AbortController,setTimeout,clearTimeout,encodeURIComponent,
-    fetch:async url=>url.startsWith('https://original.invalid')?Promise.reject(Error('sin conexion')):{
+    ACCESO_LISTO:Promise.resolve(),AbortController,setTimeout:(f,ms)=>{if(ms===1500)f();return 0;},clearTimeout,encodeURIComponent,
+    fetch:async url=>{urls.push(url);return url.startsWith('https://original.invalid')?Promise.reject(Error('sin conexion')):{
       ok:true,status:200,json:async()=>({ok:false,error:'liga'})
-    }
+    };}
   });
   vm.runInContext(fn(shellSource,'rechazoAcceso')+'\n'+fn(shellSource,'canjeConRelevo'),c);
   assert.equal(await c.canjeConRelevo('A'),null);
+  assert.equal(urls.length,2);assert.ok(urls.every(u=>u.startsWith('https://original.invalid')),'ambos intentos van al original');
 });
 
 test('App: distingue fallos del canje con diagnóstico seguro y conserva autoridad del primario',async()=>{

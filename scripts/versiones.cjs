@@ -45,6 +45,7 @@ const USO = 'Uso: node scripts/versiones.cjs --check | --aplicar [--root <carpet
 const TAG = '[A-Za-z0-9._-]*';
 const REGLAS_JS = Object.freeze([
   { archivo: 'os/shell.js', nombre: 'yod-acceso.js inyectado', patron: new RegExp(String.raw`(yod-acceso\.js\?v=)(${TAG})`, 'g') },
+  { archivo: 'os/yod-cargador.js', nombre: 'yod-acceso.js inyectado', patron: new RegExp(String.raw`(yod-acceso\.js\?v=)(${TAG})`, 'g') },
   { archivo: 'os/shell.js', nombre: 'proyectos.js inyectado', patron: new RegExp(String.raw`(proyectos\.js\?v=)(${TAG})`, 'g') },
   { archivo: 'os/shell.js', nombre: 'ui-chrome.css y ui-chrome.js inyectados', patron: new RegExp(String.raw`(ui-chrome\.(?:css|js)\?v=)(${TAG})`, 'g') },
   { archivo: 'os/shell.js', nombre: 'CHINCHE_V (chinche.js inyectado)', patron: /(var CHINCHE_V\s*=\s*["'])([^"'\n]*)/g },

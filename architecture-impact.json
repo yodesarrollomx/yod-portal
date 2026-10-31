@@ -1,30 +1,26 @@
 {
-  "model_revision": "2026-10-31.chinches-clock.1",
-  "proposal_id": "CHG-CHINCHES-STROKE-CLOCK-20261031",
-  "summary": "Corrección del tiempo del primer punto de un trazo y release patch1.1.1 del grabador canónico; protocolo, validación y datos conservados.",
+  "model_revision": "2026-10-31.cargador-fase1.2",
+  "proposal_id": "CHG-CARGADOR-FASE1-001",
+  "summary": "Fase 1 (Un cargador), entrega 1: os/yod-cargador.js compartido (un canje por página con caché y refresco en fondo, catálogo y datos PPP con caché, telemetría de primer dato, chinche diferida, interruptor ?cargador=legacy); lo adoptan la cabina y el marco; el marco deja de intentar el respaldo muerto del Portero. Sin cambios de backend, hojas ni permisos.",
   "components": [
     "SYS-YOD-OS",
+    "SYS-POTENCIALES",
     "SYS-DESPACHO",
-    "SYS-SALA",
-    "SYS-INVERSION",
-    "SYS-AMALAYA",
-    "SYS-EMD",
     "SYS-TRACK",
     "SYS-OBRA",
-    "SYS-CONTROL",
     "SYS-OBRA-CLIENTE",
-    "GAS-PORTERO"
+    "SYS-CONTROL",
+    "GAS-PORTERO",
+    "GAS-CATALOGO"
   ],
   "tests": [
-    "node --test tests/*.cjs",
     "node scripts/arquitectura.cjs --check",
-    "node scripts/chinches-paquete.cjs verificar",
-    "node scripts/chinches-reporte.cjs --check",
-    "node scripts/versiones.cjs --check",
+    "node --test tests/*.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
-    "node verify-obra-app.cjs"
+    "node verify-obra-app.cjs",
+    "node scripts/versiones.cjs --check"
   ],
-  "rollback": "Activar el snapshot previo mediante herramientas del paquete y revertir PRs/caché afectados. Conservar IndexedDB, chinches, capturas, audio, IDs, recibos y permisos; no eliminar ni reescribir borradores."
+  "rollback": "Revertir el PR (merge commit) o abrir con ?cargador=legacy / localStorage yodcg_legacy=1: todo vuelve al camino actual. Las cachés yodcg_* se borran con YodCargador.purgar(); sin datos que migrar ni backend que revertir."
 }
