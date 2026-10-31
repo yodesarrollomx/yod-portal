@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-29.council-refresh.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-30.versiones-fase0.1 · 2026-10-20.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 

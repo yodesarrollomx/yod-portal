@@ -1,11 +1,15 @@
 {
-  "model_revision": "2026-10-29.council-refresh.1",
-  "proposal_id": "CHG-COUNCIL-REFRESH-20261029",
-  "summary": "Sondeo del consejo limitado a estados activos, selección de historial disponible y actualización manual sin nuevas mutaciones.",
+  "model_revision": "2026-10-30.versiones-fase0.1",
+  "proposal_id": "CHG-VERSIONES-FASE0-001",
+  "summary": "Una sola etiqueta ?v= por repositorio (os/versiones.json), aplicada y comprobada por scripts/versiones.cjs en CI; sin cambios de lógica, permisos ni datos.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-DESPACHO-3D"
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "SYS-CONTROL",
+    "GAS-PORTERO"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -13,7 +17,8 @@
     "node verify-os.cjs",
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
-    "node verify-obra-app.cjs"
+    "node verify-obra-app.cjs",
+    "node scripts/versiones.cjs --check"
   ],
-  "rollback": "Revertir sólo la política de sondeo y sus versiones de recurso; mantener el consumidor compatible con suppressed y el historial privado."
+  "rollback": "Revertir el PR: vuelven las etiquetas anteriores y se retira el paso de CI; no hay datos que migrar."
 }

@@ -115,9 +115,9 @@
     'SYS-MARKETING':'speakerphone',
     'SYS-OBRA':'building-skyscraper'
   };
-  // Versión corta del tablero embebido: se sube a mano cuando cambia tablero.html
-  // (sin esto, el caché de 10 min de Pages servía el tablero viejo tras un deploy).
-  var TABLERO_V='os4';
+  // Etiqueta del tablero embebido (caché de 10 min de Pages). No se edita aquí: la escribe
+  // node scripts/versiones.cjs --aplicar desde os/versiones.json, igual que todos los ?v=.
+  var TABLERO_V='20261030-fase0';
   var state={modules:[],rawRows:[],role:'vista',boards:'',profileReady:false,loading:false,opsScope:'mias',allTasks:[],sesionEpoch:0,sessionToken:'',identityRequest:0,pulseCache:{},opsCache:null,verifiedAt:0};
   var $=function(id){return document.getElementById(id);};
   // ¿hay clave guardada? distingue «sin sesión» de «sesión validándose»
@@ -357,7 +357,7 @@
         write:function(intent){return window.YODCaseTransport.writeTeam(intent);},
         lookupReceipt:function(requestId){return window.YODCaseTransport.lookupTeamReceipt({request_id:requestId});}
       },
-      loadMount:function(){return import('../despacho3d/equipo.mjs?v=equipo-relevos-2').then(function(module){return module.mountTeamDesk;});},
+      loadMount:function(){return import('../despacho3d/equipo.mjs?v=20261030-fase0').then(function(module){return module.mountTeamDesk;});},
       onError:function(){var status=$('despachoEquipoEstado');if(status)status.textContent='No se pudo abrir Equipo. Puedes volver a validar tu acceso.';}
     });
   }
