@@ -13,7 +13,10 @@
     "SHEET-SALA",
     "SYS-DESPACHO",
     "SYS-YOD-OS",
-    "SYS-CONTROL"
+    "SYS-CONTROL",
+    "SYS-SALA",
+    "SYS-AMALAYA",
+    "SYS-EMD"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -22,7 +25,9 @@
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "node scripts/versiones.cjs --check"
+    "node scripts/versiones.cjs --check",
+    "node scripts/chinches-paquete.cjs verificar",
+    "node scripts/chinches-reporte.cjs --check"
   ],
   "rollback": "Deshabilitar admisión de nuevos trabajos de presentación y revertir código/configuración propios. Conservar modelos, snapshots, trabajos, recibos, artefactos, versiones, sesiones y permisos."
 }

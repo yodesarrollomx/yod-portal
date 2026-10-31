@@ -369,5 +369,59 @@
     "implementacion": "40b279afe9953f34a12d222a909f94183c3c5c90",
     "canonicalRegistry": "chinche/registro.json",
     "targetVersion": "1.1.0"
+  },
+  {
+    "repo": "yodesarrollo-board",
+    "files": [
+      "HEAD:presentacion/ppp/index.html"
+    ],
+    "commit": null,
+    "capturador": "bundle",
+    "inventoryStatus": "source-prepared",
+    "sourceBasis": "working-tree-adapter-prepared",
+    "sourceFinding": "Superficie PPP privada preparada localmente; captura sólo tras verificar owner y leer una versión autorizada. Reutiliza storyboard-reviews, pin-delivery y el bundle común existente. Falta fijar commit final del consumidor, publicación y prueba funcional; estas huellas no acreditan instalación en producción.",
+    "sourceDependencies": [],
+    "sourceEvidence": [
+      {
+        "repository": "yodesarrollomx/yodesarrollo-board",
+        "path": "presentacion/ppp/index.html",
+        "sha256": "f678d4822f0612a42ab17dec9e2638eb271e5ea2055098bdaf03141df4c2b89d",
+        "status": "working-tree",
+        "finding": "Bytes locales inspeccionados; commit final y publicación pendientes."
+      },
+      {
+        "repository": "yodesarrollomx/yodesarrollo-board",
+        "path": "presentacion/ppp/app.mjs",
+        "sha256": "107afe156615dcc0ec643eae38d876e2dc82a0268d5b0c5971884106b2a3ef0c",
+        "status": "working-tree",
+        "finding": "Inicialización privada después de owner y lectura de versión; liga fuente PPP, versión editorial y momento."
+      },
+      {
+        "repository": "yodesarrollomx/yodesarrollo-board",
+        "path": "presentacion/storyboard-reviews.js",
+        "sha256": "7d0d40c068b552ba294dacb7737e2d525b0126e5414de7719fc95e136b83d5c2",
+        "status": "working-tree",
+        "finding": "Bytes locales inspeccionados; commit final y publicación pendientes."
+      },
+      {
+        "repository": "yodesarrollomx/yodesarrollo-board",
+        "path": "presentacion/pin-delivery.js",
+        "sha256": "c7be4645d9e8ccbca63ee7cd61e44a51f21453a5887000626a8cc2c81c9b9c0c",
+        "status": "working-tree",
+        "finding": "Bytes locales inspeccionados; commit final y publicación pendientes."
+      },
+      {
+        "repository": "yodesarrollomx/yodesarrollo-board",
+        "path": "presentacion/vendor/yod-chinche.js",
+        "sha256": "da3081573f436457da1724ec04e17db451cdfc3922eba0e29f6e9902ca0010a3",
+        "status": "working-tree",
+        "finding": "Bytes locales inspeccionados; commit final y publicación pendientes."
+      }
+    ],
+    "secuencia": "Integración pendiente de verificar; no equivale a ausencia de chinches.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": null,
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.1.0"
   }
 ]

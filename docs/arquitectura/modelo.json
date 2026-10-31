@@ -14718,11 +14718,14 @@
         "SHEET-SALA",
         "SYS-DESPACHO",
         "SYS-YOD-OS",
-        "SYS-CONTROL"
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "SYS-AMALAYA",
+        "SYS-EMD"
       ],
       "status": "propuesto",
       "authorization": "autorizado_por_chat: Dirección solicita ejecutar en equipo el plan del agente embebido en PPP el31-oct-2026. Esta autorización no aprueba storyboards futuros ni condiciones comerciales.",
-      "proposal": "Ampliar el recorrido existente PPP→agente→registro de presentaciones: escenario visible confirmado, snapshot privado, presentation_draft_v1, storyboard ADN/Hairline, versión de contenido y recibo consultables desde PPP y Master Developer. Conservar cinco motores, modelos canónicos, orquestación, permisos, registro y URL actuales. El catálogo derivado de salud incorpora el proceso propuesto sin crear ni activar monitores.",
+      "proposal": "Ampliar el recorrido existente PPP→agente→registro de presentaciones: escenario visible confirmado, snapshot privado, presentation_draft_v1, storyboard ADN/Hairline, versión de contenido y recibo consultables desde PPP y Master Developer. Conservar cinco motores, modelos canónicos, orquestación, permisos, registro y URL actuales. El catálogo derivado de salud incorpora el proceso propuesto sin crear ni activar monitores. Registrar la superficie privada PPP en chinche/registro.json y regenerar cobertura; las dependencias del registro común no autorizan cambios de código en otros consumidores.",
       "tests": [
         "PPP-VIEWED-5/PPP-SOURCE: selección visible distinta de activa/defendida, revisión conflictiva, datos sucios y modelos pendientes.",
         "JOB-DURABLE/JOB-ONCE/JOB-COEXIST: reinicio, reintento, ACK incierto, lease vencido, revocación y otra meta esperando revisión.",
