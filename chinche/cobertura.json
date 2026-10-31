@@ -2,13 +2,15 @@
   "schemaVersion": 1,
   "version": "1.1.0",
   "sequenceProtocol": 1,
-  "registered": 15,
+  "registered": 16,
   "sourceConfirmed": 13,
   "pendingInstallation": [
     "plan-potencial",
     "co-desarrolladores-yod"
   ],
-  "unknown": [],
+  "unknown": [
+    "yodesarrollo-board-ppp"
+  ],
   "pendingReceipt": [
     "real-miramar-board",
     "plan-potencial",
@@ -24,7 +26,8 @@
     "yodesarrollo-board",
     "sala-edicion",
     "amalaya-board",
-    "emdevaluacion360"
+    "emdevaluacion360",
+    "yodesarrollo-board-ppp"
   ],
   "pendingReplay": [
     "real-miramar-board",
@@ -41,7 +44,8 @@
     "yodesarrollo-board",
     "sala-edicion",
     "amalaya-board",
-    "emdevaluacion360"
+    "emdevaluacion360",
+    "yodesarrollo-board-ppp"
   ],
   "integrations": [
     {
@@ -459,6 +463,68 @@
       "receiptVerified": false,
       "replayVerified": false,
       "backendVersion": "40"
+    },
+    {
+      "id": "yodesarrollo-board-ppp",
+      "repository": "yodesarrollomx/yodesarrollo-board",
+      "mode": "bundle",
+      "targetVersion": "1.1.0",
+      "integrationConfirmed": false,
+      "inventoryStatus": "source-prepared",
+      "surfaces": [
+        "presentacion/ppp/index.html"
+      ],
+      "capturePolicy": "dom-guarded",
+      "sourceCommit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+      "sourceBasis": "draft-pr-source-audited",
+      "sourceFinding": "Superficie PPP privada preparada en PR63 borrador, commit y cinco archivos exactos contrastados por huella. Inicializa captura tras verificar owner y leer una versión autorizada; reutiliza storyboard-reviews, pin-delivery y bundle común existente. No acredita despliegue, recibo central ni reproducción real.",
+      "sourceDependencies": [],
+      "sourceEvidence": [
+        {
+          "repository": "yodesarrollomx/yodesarrollo-board",
+          "path": "presentacion/ppp/index.html",
+          "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+          "sha256": "6f238b413634ebce7f21c92e594e3aba65667e4102be15a5e270a7ec86f27763",
+          "status": "draft-pr-source",
+          "finding": "Bytes del commit exacto contrastados; publicación y prueba funcional pendientes."
+        },
+        {
+          "repository": "yodesarrollomx/yodesarrollo-board",
+          "path": "presentacion/ppp/app.mjs",
+          "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+          "sha256": "dfadc369a8b5389b47498cc4ba21270281d540eb460b566e969657f6726447f8",
+          "status": "draft-pr-source",
+          "finding": "Inicialización privada después de owner y lectura de versión; liga fuente PPP, versión editorial y momento. Fuente de PR verificada; operación productiva pendiente."
+        },
+        {
+          "repository": "yodesarrollomx/yodesarrollo-board",
+          "path": "presentacion/storyboard-reviews.js",
+          "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+          "sha256": "7d0d40c068b552ba294dacb7737e2d525b0126e5414de7719fc95e136b83d5c2",
+          "status": "draft-pr-source",
+          "finding": "Bytes del commit exacto contrastados; publicación y prueba funcional pendientes."
+        },
+        {
+          "repository": "yodesarrollomx/yodesarrollo-board",
+          "path": "presentacion/pin-delivery.js",
+          "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+          "sha256": "c7be4645d9e8ccbca63ee7cd61e44a51f21453a5887000626a8cc2c81c9b9c0c",
+          "status": "draft-pr-source",
+          "finding": "Bytes del commit exacto contrastados; publicación y prueba funcional pendientes."
+        },
+        {
+          "repository": "yodesarrollomx/yodesarrollo-board",
+          "path": "presentacion/vendor/yod-chinche.js",
+          "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+          "sha256": "da3081573f436457da1724ec04e17db451cdfc3922eba0e29f6e9902ca0010a3",
+          "status": "draft-pr-source",
+          "finding": "Bytes del commit exacto contrastados; publicación y prueba funcional pendientes."
+        }
+      ],
+      "runtimeVersion": null,
+      "receiptVerified": false,
+      "replayVerified": false,
+      "backendVersion": null
     }
   ],
   "scope": "Public source inventory only; source-not-installed describes audited entrypoints, not global absence. Runtime and private review require independent evidence."
