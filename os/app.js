@@ -115,8 +115,8 @@
     'SYS-MARKETING':'speakerphone',
     'SYS-OBRA':'building-skyscraper'
   };
-  // Versión corta del tablero embebido: se sube a mano cuando cambia tablero.html
-  // (sin esto, el caché de 10 min de Pages servía el tablero viejo tras un deploy).
+  // Etiqueta del tablero embebido (caché de 10 min de Pages). No se edita aquí: la escribe
+  // node scripts/versiones.cjs --aplicar desde os/versiones.json, igual que todos los ?v=.
   var TABLERO_V='os4';
   var state={modules:[],rawRows:[],role:'vista',boards:'',profileReady:false,loading:false,opsScope:'mias',allTasks:[],sesionEpoch:0,sessionToken:'',identityRequest:0,pulseCache:{},opsCache:null,verifiedAt:0};
   var $=function(id){return document.getElementById(id);};
