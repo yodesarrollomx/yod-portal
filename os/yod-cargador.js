@@ -1,5 +1,5 @@
 /* ==========================================================================
-   YOD OS · Cargador compartido — os/yod-cargador.js (Fase 1, 30-oct-2026 · entrega 2, 31-oct-2026)
+   YOD OS · Cargador compartido — os/yod-cargador.js (Fase 1 · entrega 2, 31-oct-2026)
    Un solo canje de sesión, un solo transporte y una sola caché para la cabina, el
    marco (shell.js) y los motores PPP. Va después de yod-acceso.js y antes del código
    de la página; portero.js y shell.js lo usan SI está, nunca lo exigen.
@@ -11,7 +11,7 @@
   'use strict';
   function crear(env) {
     var K_CLAVE = 'pyod_clave_v1', K_SES = 'yodcg_sesion_v1', K_TEL = 'yodcg_telemetria_v1', P_CACHE = 'yodcg_cache_v1:';
-    var ESPERA = 1500, cfg = { catalogo: null, timeoutMs: 25000, timeoutFrioMs: 75000, frescoMs: 600000, viejoMs: 43200000 }; // sesión: 12 h; reintento del canje: 75 s (Apps Script en frío)
+    var ESPERA = 1500, cfg = { catalogo: null, timeoutMs: 25000, timeoutFrioMs: 75000, frescoMs: 600000, viejoMs: 43200000 }; // sesión 12 h; reintento del canje 75 s
     var vuelo = {}, fondo = {}, vistos = {}, pend = [], marcas = {}, cargados = {}, yaPD = false, frio = true, accesoListo = null, avisado = '', DISP = dispositivo();
     var loc = env.location || {}, doc = env.document, perf = env.performance, ls = null;
     try { ls = env.storage !== undefined ? env.storage : env.localStorage; } catch (e) { } // localStorage puede lanzar (cookies bloqueadas)
@@ -145,14 +145,14 @@
       }
       return pedir(tok, board, h);
     }
-    /* La identidad guardada, SIN red y síncrona, para pintar al instante. No autoriza: el canje de fondo y cada backend mandan. */
+    /* La identidad guardada, SIN red y síncrona, para pintar al instante; no autoriza (manda el canje de fondo). */
     function peek() {
       var tok = token(), c = legacy || !tok ? null : guardada(tok, '');
       return c && Object.assign({}, c.data, { edadMs: c.edad });
     }
     /* UNA promesa en vuelo por (h, board): portero.js, shell.js y app.js comparten el mismo canje. */
     function pedir(tok, board, h) {
-      var k = h + '|' + board, t0 = reloj();
+      var k = h + '|' + board, t0 = reloj(), yaRechazado = avisado === tok;
       if (!legacy && vuelo[k]) return vuelo[k].then(copia);
       var p = portero().then(function (base) {
         if (!base) return { ok: false, error: 'red', rechazo: false, origen: 'sin_red', token: tok };
@@ -162,9 +162,10 @@
           if (r.ok && d.ok === true) {
             if (d.token && d.token !== tok) return { ok: false, error: 'token_distinto', rechazo: false, origen: 'red', token: tok };
             var data = { ok: true, rol: d.rol, boards: d.boards, nombre: d.nombre, correo: d.correo };
-            // si la persona cambió durante el vuelo, no se guarda
-            if (!legacy && token() === tok) escribir(K_SES, { h: h, board: board, data: data, ts: ahora() });
-            avisado = '';
+            if (avisado !== tok || yaRechazado) { // rechazado MIENTRAS volaba: respuesta vieja, ni se guarda ni limpia la marca
+              if (!legacy && token() === tok) escribir(K_SES, { h: h, board: board, data: data, ts: ahora() });
+              if (avisado === tok) avisado = '';
+            }
             registrar('cj', reloj() - t0, 'red');
             return Object.assign({}, data, { origen: 'red', edadMs: 0, token: tok });
           }
@@ -186,15 +187,15 @@
     function refrescar(tok, board, h) {
       enFondo(h + '|' + board, function () {
         return pedir(tok, board, h).then(function (r) {
-          if (token() !== tok) return; // cambió la persona mientras tanto: nada que avisar
+          if (token() !== tok || r.ok && avisado === tok) return; // otra persona, o un OK viejo (se rechazó mientras volaba): nada que avisar
           if (r.ok) emitir('yodcargador:sesion', r);
           else if (r.rechazo) rechazar(tok, r.error);
         });
       });
     }
     function rechazoDe(r) { return !r.ok ? (r.rechazo ? r.error : '') : r.data.ok === false && esRechazo(r.data.error) ? String(r.data.error) : ''; } // el rechazo de un traer(), o ''
-    /* Rechazo concluyente (del canje o de su verificación): se purga TODO lo guardado y se avisa UNA vez por token (hasta el próximo canje
-       bueno o cerrar()). Sin credencial, o de otra persona, no hay nada que avisar. */
+    /* Rechazo concluyente (del canje o de su verificación): se purga TODO lo guardado y se avisa UNA vez por token. Ese token queda marcado
+       en avisado: nada que volaba antes se vuelve a guardar hasta un canje bueno (que salga después) o cerrar(). */
     function rechazar(tok, error) {
       if (!tok || token() !== tok) return;
       purgar();
@@ -202,18 +203,18 @@
       avisado = tok;
       emitir('yodcargador:sesion-rechazada', { error: error, token: tok });
     }
-    /* Un backend de DATOS negó la credencial: no prueba que la sesión murió (quizá sólo falta acceso a esa fuente). El Portero decide, con
-       UN canje (sin caché de sesión): pedir() comparte el vuelo, así que varias fuentes a la vez o el canje de la página en curso no lo repiten. */
+    /* Un backend de DATOS negó la credencial: quizá sólo falta acceso a esa fuente, no murió la sesión. El Portero decide, con UN canje
+       (sin caché de sesión): pedir() comparte el vuelo, así que varias fuentes a la vez, o el canje en curso, no lo repiten. */
     function verificar(tok) {
       return pedir(tok, '', hash(tok)).then(function (r) {
         if (r.rechazo) rechazar(tok, r.error); // el canje también rechaza: sesión muerta → purga + sesion-rechazada
         return r.ok ? 'ok' : r.rechazo ? 'rechazo' : 'incierto';
       });
     }
-    function negado(clave, dueno, error) { // sólo con copia en juego; sin ella el adoptante ya ve el rechazo en su respuesta
+    function negado(clave, dueno, error) { // sólo con copia en juego: sin ella el adoptante ya ve el rechazo
       if (legacy || !dueno || token() !== dueno) return; // sin credencial, o ya es otra persona: no dice nada de esta sesión
       if (avisado === dueno) return rechazar(dueno, error); // ya se dio por muerta: sólo se vuelve a purgar
-      verificar(dueno).then(function (d) { if (d === 'ok' && token() === dueno) emitir('yodcargador:dato-negado', { clave: clave, error: error }); });
+      verificar(dueno).then(function (d) { if (d === 'ok' && token() === dueno && avisado !== dueno) emitir('yodcargador:dato-negado', { clave: clave, error: error }); });
     }
     /* La guardia de carrera: sólo se borra la llave si sigue siendo el token rechazado. */
     function cerrar(o) {
@@ -256,8 +257,10 @@
       var c = max > 0 ? leer(llave) : null, edad = c && typeof c.ts === 'number' ? Math.max(0, ahora() - c.ts) : -1;
       return edad >= 0 && edad < max && c.data !== undefined ? { data: c.data, edad: edad } : null;
     }
-    /* Dato fresco de la red: se guarda (si toca) y se avisa. dueno = con quién se pidió: si la persona cambió durante el vuelo no se guarda. */
+    /* Dato fresco de la red: se guarda (si toca) y se avisa. dueno = con quién se pidió: si la persona cambió durante el vuelo no se guarda;
+       si su token se rechazó (volaba antes) ni se guarda ni se anuncia hasta un canje bueno o cerrar(). */
     function dato(llave, clave, d, previo, dueno, guardar) {
+      if (dueno && avisado === dueno) return;
       if (guardar && (!dueno || token() === dueno)) escribir(llave, { ts: ahora(), data: d });
       emitir('yodcargador:dato', { clave: clave, origen: 'red', data: d, igual: !!previo && JSON.stringify(previo.data) === JSON.stringify(d) });
     }
@@ -291,9 +294,8 @@
       });
     }
     /* recordar(clave, cargar, o): memoria para CUALQUIER lectura del adoptante; el fetch es suyo (cargar(signal) → Promise<JSON>). o: modo
-       (cache-primero | red-primero), frescoMs, viejoMs, timeoutMs, reintentos, alViejo, telemetria, token. La llave lleva el hash del token
-       (jamás se lee la copia de otra persona) y un ok:false no se guarda. */
-    function intentoMemo(cargar, ms) { // → {ok:true, body} | {ok:false, error}; nunca rechaza
+       (cache-primero | red-primero), frescoMs, viejoMs, timeoutMs, reintentos, alViejo, telemetria, token. La llave lleva el hash del token. */
+    function intentoMemo(cargar, ms) { // nunca rechaza
       return conPlazo(ms, function (signal, listo) {
         return new Promise(function (ok) { ok(cargar(signal)); }).then(function (b) {
           listo(b && typeof b === 'object' ? { ok: true, body: b } : { ok: false, error: 'formato' });
@@ -308,7 +310,7 @@
       var t0 = reloj(), tk = o.token != null ? String(o.token) : token(), id = 'memo:' + clave, llave = P_CACHE + id + ':' + hash(tk);
       var fresco = o.frescoMs >= 0 ? o.frescoMs : 60000, viejo = legacy ? 0 : o.viejoMs >= 0 ? o.viejoMs : 43200000, ms = o.timeoutMs > 0 ? o.timeoutMs : cfg.timeoutMs, v = viejoDe(llave, viejo);
       function salida(x) { x.ms = Math.round(reloj() - t0); return x; }
-      function red(anunciar) { // un dato bueno se guarda (en fondo, además se anuncia); un rechazo borra la llave y se verifica
+      function red(anunciar) { // bueno: se guarda (en fondo, además se anuncia); rechazo: borra la llave y se verifica
         return reintentar(function (t) { return intentoMemo(cargar, t); }, ms, o.reintentos | 0, ms).then(function (r) {
           var b = r.body, e, rc;
           if (!r.ok) return { ok: false, error: r.error, rechazo: false, origen: r.error === 'formato' ? 'red' : 'sin_red' };
@@ -317,7 +319,7 @@
             if (rc) { lsDel(llave); if (v) negado(id, tk, e); }
             return { ok: false, data: b, error: e, rechazo: rc, origen: 'red' };
           }
-          if (!tk || token() === tk) { // si la persona cambió o salió durante el vuelo, su respuesta no se guarda ni se anuncia
+          if (!tk || token() === tk && avisado !== tk) { // si la persona cambió o su token se rechazó durante el vuelo, ni se guarda ni se anuncia
             if (anunciar) dato(llave, id, b, v, tk, viejo > 0); else if (viejo > 0) escribir(llave, { ts: ahora(), data: b });
           }
           return { ok: true, data: b, origen: 'red' };
@@ -390,8 +392,8 @@
     }
 
     /* ---------- telemetría: anillo de ≤ 60 muestras + códigos para la bitácora ---------- */
-    /* ios · and · cros · win · mac · lin · otro, de userAgentData.platform o del userAgent; sin navigator, «otro». iOS antes que Mac y Android
-       antes que Linux (sus agentes también los nombran); un iPad «de escritorio» se delata por los toques. */
+    /* ios · and · cros · win · mac · lin · otro, de userAgentData.platform o del userAgent (sin navigator, «otro»). iOS antes que Mac y
+       Android antes que Linux; un iPad «de escritorio» se delata por los toques. */
     function dispositivo() {
       try {
         var n = env.navigator, u = n && n.userAgentData;

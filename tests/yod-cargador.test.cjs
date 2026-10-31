@@ -1409,6 +1409,143 @@ test('V9 · un token vacío no verifica (nadie a quien avisar); el canje de veri
   assert.ok(k.rd.urls().filter(u => u.includes('recurso=canje')).every(u => u.startsWith(ORIGINAL + '?') && !u.includes('board=') && !u.startsWith(RESPALDO)));
 });
 
+/* ───────────── un token rechazado no resucita sus copias (T-201, hallazgo de Terra 2 al adoptar recordar) ─────────────
+   Tras sesion-rechazada el token SIGUE en pyod_clave_v1 (sólo cerrar() lo borra), así que lo que YA volaba (get, ppp.get,
+   recordar, el canje en fondo) terminaba y volvía a escribir su copia. Ahora el token rechazado queda marcado en esta página
+   (avisado): nada suyo se guarda ni se anuncia hasta un canje bueno que salga DESPUÉS de la marca, o hasta cerrar(). */
+
+const VUELOS = [
+  { nombre: 'get', arrancar: m => m.core.get(ORIGINAL, { recurso: 'lista', k: TOK }, { clave: 'lista-x', viejoMs: HORA }), llegar: (d, b) => d.ok(respuesta({ json: b })) },
+  { nombre: 'ppp.get (lista, primer plano)', arrancar: m => m.core.ppp.get(PPP, LISTA), llegar: (d, b) => d.ok(respuesta({ json: b })) },
+  { nombre: 'ppp.get (lista, revalidación en fondo)', sembrar: m => { m.rd.pon({ json: cuerpo('p') }); return m.core.ppp.get(PPP, LISTA); },
+    arrancar: m => m.core.ppp.get(PPP, LISTA), llegar: (d, b) => d.ok(respuesta({ json: b })) },
+  { nombre: 'recordar (primer plano)', arrancar: (m, d) => m.core.recordar('a', () => d.promesa, { modo: 'red-primero' }), llegar: (d, b) => d.ok(b) },
+  { nombre: 'recordar (revalidación en fondo)', sembrar: m => m.core.recordar('a', () => Promise.resolve(cuerpo('a'))),
+    arrancar: (m, d) => m.core.recordar('a', () => d.promesa), llegar: (d, b) => d.ok(b) }
+];
+
+for (const f of VUELOS) {
+  test(`G1 · ${f.nombre}: si el Portero rechaza la sesión (canje en fondo) ANTES de que llegue el dato, el dato tardío no vuelve a guardarse ni a anunciarse`, async () => {
+    const m = montar(), canjeD = diferido(), datoD = diferido();
+    m.rd.pon({ json: CANJE_OK }); await m.core.sesion.canjear();              // sesión guardada (board «»)
+    if (f.sembrar) await f.sembrar(m);                                         // la fuente ya tenía copia: lo que vuela es su revalidación
+    await m.rl.avanzar(11 * MIN);                                              // la sesión ya no es fresca: canjear() sirve la guardada y revalida en fondo
+    const anunciados = de(m, 'dato').length;                                   // (ppp.get anuncia hasta en primer plano: se cuenta desde aquí)
+    m.rd.defecto = url => url.includes('recurso=canje') ? canjeD.promesa : datoD.promesa;
+    const p = f.arrancar(m, datoD);                                            // el dato vuela...
+    assert.equal((await m.core.sesion.canjear()).origen, 'cache');             // ...y el canje en fondo también
+    await asentar();
+    canjeD.ok(respuesta({ json: { ok: false, error: 'revocado' } })); await asentar();   // el Portero rechaza ANTES de que llegue el dato
+    assert.deepEqual(rechazos(m), [{ error: 'revocado', token: TOK }]);
+    assert.deepEqual(m.st.claves('yodcg_cache_v1:'), [], 'la purga dejó todo limpio');
+    f.llegar(datoD, cuerpo('tarde')); await p; await asentar();               // el dato llega tarde y bien
+    assert.deepEqual(m.st.claves('yodcg_cache_v1:'), [], 'nada de ese token reaparece');
+    assert.equal(m.st.getItem('yodcg_sesion_v1'), null);
+    assert.equal(de(m, 'dato').length, anunciados, 'ni se anuncia como dato fresco');
+    assert.equal(m.st.getItem('pyod_clave_v1'), TOK, 'la llave no se toca: cerrar() es del adoptante');
+  });
+}
+
+test('G2 · un canje en fondo que salió ANTES del rechazo y llega bien DESPUÉS es una respuesta vieja: no reescribe la sesión, no anuncia sesion y no limpia la marca', async () => {
+  const m = montar(), viejo = diferido(), verif = diferido();
+  m.rd.pon({ json: CANJE_OK }); await m.core.sesion.canjear({ board: 'MA' });   // sesión guardada con board «MA»
+  await m.core.recordar('a', () => Promise.resolve(cuerpo('a')));
+  await m.rl.avanzar(11 * MIN);
+  m.rd.defecto = url => url.includes('board=MA') ? viejo.promesa : verif.promesa;
+  assert.equal((await m.core.sesion.canjear({ board: 'MA' })).origen, 'cache'); await asentar();   // el canje en fondo (board MA) vuela
+  await m.core.recordar('a', niega(), { modo: 'red-primero' }); await asentar();                   // un dato negado: verificación (sin board)
+  verif.ok(respuesta({ json: { ok: false, error: 'revocado' } })); await asentar();
+  assert.deepEqual(rechazos(m), [{ error: 'revocado', token: TOK }]);
+  viejo.ok(respuesta({ json: CANJE_OK })); await asentar();                      // y llega el viejo, bien
+  assert.equal(m.st.getItem('yodcg_sesion_v1'), null, 'la sesión no resucita');
+  assert.equal(m.core.sesion.peek(), null);
+  assert.deepEqual(de(m, 'sesion'), [], 'ni se anuncia como vigente');
+  await m.core.recordar('b', () => Promise.resolve(cuerpo('b')));              // la marca sigue: lo que se pide después tampoco se guarda
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:'), []);
+  assert.equal(rechazos(m).length, 1, 'y sigue habiendo un solo aviso');
+});
+
+test('G3 · dato-negado no sale si el token se rechazó mientras volaba la verificación (el veredicto bueno ya es viejo)', async () => {
+  const m = montar(), refresco = diferido(), verif = diferido();
+  m.rd.pon({ json: CANJE_OK }); await m.core.sesion.canjear({ board: 'MA' });
+  await m.core.recordar('a', () => Promise.resolve(cuerpo('a')));
+  await m.rl.avanzar(11 * MIN);
+  m.rd.defecto = url => url.includes('board=MA') ? refresco.promesa : verif.promesa;
+  await m.core.sesion.canjear({ board: 'MA' }); await asentar();
+  await m.core.recordar('a', niega(), { modo: 'red-primero' }); await asentar();   // la verificación (sin board) vuela
+  refresco.ok(respuesta({ json: { ok: false, error: 'expirado' } })); await asentar();   // el otro canje rechaza primero: purga y marca
+  verif.ok(respuesta({ json: CANJE_OK })); await asentar();                      // y la verificación vuelve «ok» tarde
+  assert.deepEqual(rechazos(m), [{ error: 'expirado', token: TOK }]);
+  assert.deepEqual(de(m, 'dato-negado'), [], 'sería contradecir sesion-rechazada');
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:'), []);
+});
+
+test('G4 · un canje bueno con el MISMO token, pedido después de la marca, la limpia: vuelve a guardar y a anunciar; cerrar() también; el de otro token no', async () => {
+  const m = montar();
+  m.rd.pon({ json: CANJE_OK }); await m.core.sesion.canjear();
+  await m.core.recordar('a', () => Promise.resolve(cuerpo('a'))); await m.rl.avanzar(2 * MIN);
+  m.rd.pon({ json: { ok: false, error: 'revocado' } });
+  await m.core.recordar('a', niega('clave'), { modo: 'red-primero' }); await asentar();
+  assert.equal(rechazos(m).length, 1);
+  const pedir = async () => {                                                    // las tres vías de lectura
+    await m.core.recordar('b', () => Promise.resolve(cuerpo('b')));
+    m.rd.pon({ json: cuerpo('g') }); await m.core.get(ORIGINAL, { recurso: 'lista', k: TOK }, { clave: 'lista-x', viejoMs: HORA });
+    m.rd.pon({ json: cuerpo('p') }); await m.core.ppp.get(PPP, LISTA);
+    return m.st.claves('yodcg_cache_v1:').length;
+  };
+  assert.equal(await pedir(), 0, 'marcado: no se guarda nada');
+  assert.deepEqual(de(m, 'dato'), [], 'ni se anuncia');
+
+  m.st.setItem('pyod_clave_v1', OTRO);                                           // el canje bueno de OTRA persona no limpia la marca de TOK
+  m.rd.pon({ json: Object.assign({}, CANJE_OK, { token: OTRO }) }); assert.equal((await m.core.sesion.canjear()).ok, true);
+  m.st.setItem('pyod_clave_v1', TOK); m.core.purgar();
+  assert.equal(await pedir(), 0, 'sigue marcado');
+
+  m.rd.pon({ json: CANJE_OK });                                                  // un canje bueno con TOK, pedido ya marcado: limpia
+  const c = await m.core.sesion.canjear(); assert.deepEqual([c.ok, c.origen], [true, 'red']);
+  assert.ok(m.st.getItem('yodcg_sesion_v1') && m.core.sesion.peek(), 'y la identidad vuelve a guardarse');
+  assert.equal(await pedir(), 3, 'ahora sí se guarda todo');
+  await m.rl.avanzar(2 * MIN); await m.core.recordar('b', () => Promise.resolve(cuerpo('b2'))); await asentar();
+  assert.deepEqual(de(m, 'dato').map(e => e.detalle.clave), ['lista-x', 'ppp:lista:MACROLOTES::' + m.core.hash(TOK), 'memo:b'], 'y vuelve a anunciar');
+
+  m.rd.pon({ json: { ok: false, error: 'clave' } });                             // otro rechazo: marca y aviso de nuevo
+  await m.core.recordar('b', niega('clave'), { modo: 'red-primero' }); await asentar();
+  assert.deepEqual(rechazos(m).map(x => x.error), ['revocado', 'clave']);
+  assert.equal(await pedir(), 0);
+  m.core.sesion.cerrar({ token: TOK, motivo: 'salir' }); m.st.setItem('pyod_clave_v1', TOK);   // cerrar() limpia la marca
+  assert.equal(await pedir(), 3, 'tras cerrar() la misma credencial vuelve a guardar');
+});
+
+test('G5 · la marca es sólo del token rechazado: el anillo de telemetría, los datos sin credencial y otra persona siguen escribiendo', async () => {
+  const m = montar();
+  m.rd.pon({ json: CANJE_OK }); await m.core.sesion.canjear();
+  await m.core.recordar('a', () => Promise.resolve(cuerpo('a'))); await m.rl.avanzar(2 * MIN);
+  m.rd.pon({ json: { ok: false, error: 'revocado' } });
+  await m.core.recordar('a', niega('clave'), { modo: 'red-primero' }); await asentar();   // TOK rechazado y marcado
+  assert.equal(rechazos(m).length, 1);
+
+  const antes = JSON.parse(m.st.getItem('yodcg_telemetria_v1') || '[]').length;   // 1. el anillo de telemetría
+  const t = await m.core.recordar('t', () => Promise.resolve(cuerpo('t')), { telemetria: 'flujo' });
+  const anillo = JSON.parse(m.st.getItem('yodcg_telemetria_v1'));
+  assert.equal(t.ok, true, 'quien pidió igual recibe su respuesta');
+  assert.ok(anillo.length > antes && anillo.some(x => x.p === 'flujo' && x.origen === 'red'), 'la telemetría se sigue anotando');
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:'), [], 'pero la copia de TOK no');
+
+  m.rd.pon({ json: cuerpo('pub') });                                             // 2. lo que se pide sin credencial no es de nadie
+  await m.core.get(ORIGINAL, { recurso: 'publico' }, { clave: 'publico', viejoMs: HORA });
+  assert.ok(m.st.getItem('yodcg_cache_v1:publico'), 'sin k se guarda');
+  assert.deepEqual(de(m, 'dato').map(e => e.detalle.clave), ['publico'], 'y se anuncia');
+
+  m.st.setItem('pyod_clave_v1', OTRO);                                           // 3. otra persona en el mismo navegador
+  await m.core.recordar('o', () => Promise.resolve(cuerpo('o')));
+  m.rd.pon({ json: cuerpo('g') }); await m.core.get(ORIGINAL, { recurso: 'lista', k: OTRO }, { clave: 'lista-o', viejoMs: HORA });
+  m.rd.pon({ json: cuerpo('p') }); await m.core.ppp.get(PPP, { recurso: 'lista', tipo: 'MACROLOTES', k: OTRO });
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:').sort(), ['yodcg_cache_v1:lista-o', 'yodcg_cache_v1:publico', llaveMemo(m, 'o', OTRO), 'yodcg_cache_v1:ppp:lista:MACROLOTES::' + m.core.hash(OTRO)].sort());
+  const n0 = de(m, 'dato').length;
+  await m.rl.avanzar(2 * MIN); await m.core.recordar('o', () => Promise.resolve(cuerpo('o2'))); await asentar();
+  assert.deepEqual(de(m, 'dato').slice(n0).map(e => e.detalle.clave), ['memo:o'], 'y a OTRO sí se le anuncia lo fresco');
+});
+
 /* ───────────── telemetría, página, hash ───────────── */
 
 test('13 · telemetría: primerDato una vez; codigos() ≤ 40 sin espacios y sin repetir; resumen() con mediana y p90', async () => {
