@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-31.cargador-fase1.2 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-31.cargador-fase1.3 · 2026-10-20.
 
 ## SYS-DESPACHO · El Despacho
 

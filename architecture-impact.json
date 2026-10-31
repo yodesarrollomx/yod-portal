@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-10-31.cargador-fase1.2",
-  "proposal_id": "CHG-CARGADOR-FASE1-001",
-  "summary": "Fase 1 (Un cargador), entrega 1: os/yod-cargador.js compartido (un canje por página con caché y refresco en fondo, catálogo y datos PPP con caché, telemetría de primer dato, chinche diferida, interruptor ?cargador=legacy); lo adoptan la cabina y el marco; el marco deja de intentar el respaldo muerto del Portero. Sin cambios de backend, hojas ni permisos.",
+  "model_revision": "2026-10-31.cargador-fase1.3",
+  "proposal_id": "CHG-CARGADOR-FASE1-002",
+  "summary": "Fase 1 (Un cargador), entrega 2: cargador v2 (recordar, canje frío a 75 s, verificación por canje ante datos negados, dispositivo en la telemetría, peek); el tablero cenital valida con el canje (sin depender de AL) y sus 7 fuentes van con plazo y caché; obra.html con canje compartido y lecturas con plazo sin caché; la cabina legacy deja el respaldo muerto, ⏱ sólo para Dirección y «sin conexión» sin estilo de error. Sin cambios de backend, hojas ni permisos de servidor.",
   "components": [
     "SYS-YOD-OS",
     "SYS-POTENCIALES",
@@ -22,5 +22,5 @@
     "node verify-obra-app.cjs",
     "node scripts/versiones.cjs --check"
   ],
-  "rollback": "Revertir el PR (merge commit) o abrir con ?cargador=legacy / localStorage yodcg_legacy=1: todo vuelve al camino actual. Las cachés yodcg_* se borran con YodCargador.purgar(); sin datos que migrar ni backend que revertir."
+  "rollback": "Revertir el PR (merge commit) o abrir con ?cargador=legacy / localStorage yodcg_legacy=1. Sin datos que migrar ni backend que revertir."
 }
