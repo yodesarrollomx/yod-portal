@@ -170,15 +170,8 @@ for (const [name, source, functionName] of [['app',appSource,'canjearConRelevo_'
     assert.equal((await c[functionName]('synthetic')).error,'revocado');assert.equal(calls.length,1);
   });
   // T-105 (30-oct-2026): el marco ya no salta al respaldo (404 desde el 23-sep); su versión de esta prueba es la de abajo.
-  if (name === 'app') test(name + ': caída de transporte sí permite el respaldo', async () => {
-    const calls = [], response = { ok: true, rol: 'vista', boards: 'TA' };
-    const c = vm.createContext({
-      ACCESO_LISTO: Promise.resolve(), window: { YOD_PORTERO: { original: 'original', respaldo: 'respaldo' } },
-      PORTERO_ORIGINAL: 'original', PORTERO_RESPALDO: 'respaldo', AbortController:name==='app'?AbortController:undefined,conLimite_: p => p,
-      fetch: async url => { calls.push(url);if(url.startsWith('original'))throw new Error('offline');return { ok: true, text: async () => JSON.stringify(response), json: async () => response }; }
-    });vm.runInContext(fn(source,'rechazoAcceso')+'\n'+fn(source,functionName),c);
-    assert.equal((await c[functionName]('synthetic')).ok,true);assert.equal(calls.length,2);
-  });
+  // O6 (T-203, 31-oct-2026): la cabina tampoco; su versión de «caída de transporte» son las pruebas «cabina (O6)» de abajo
+  // (segundo intento al ORIGINAL tras 1.5 s, jamás el respaldo).
 }
 // T-105: en el marco (shell.js) el segundo intento vuelve al ORIGINAL tras 1.5 s, como potenciales-yod/portero.js.
 function shellCanje(respuestas) {
@@ -207,6 +200,54 @@ test('shell (T-105): un rechazo del ORIGINAL en el segundo intento es concluyent
   const caido = shellCanje([new Error('offline'), { ok: false, error: 'servidor' }]);
   assert.equal(await caido.c.canjeConRelevo('synthetic'), null);
   for (const h of [rechazo, caido]) {assert.equal(h.urls.length, 2);assert.ok(h.urls.every(u => !u.startsWith('respaldo')));}
+});
+
+// O6 (T-203, 31-oct-2026): lo mismo en la cabina (app.js). El contexto trae PORTERO_RESPALDO a propósito: si alguien devolviera el
+// salto al respaldo, estas pruebas lo verían como una URL que empieza con «respaldo».
+function appCanje(respuestas) {
+  const urls = [], esperas = [], logs = [];
+  const c = vm.createContext({
+    Date, console: { warn: (...a) => logs.push(a) }, AbortController, conLimite_: p => p,
+    PORTERO_ORIGINAL: 'original', PORTERO_RESPALDO: 'respaldo',
+    setTimeout: (f, ms) => { esperas.push(ms);if (ms === 1500) f();return 0; }, clearTimeout() {},
+    fetch: async url => {
+      urls.push(url);const r = respuestas[urls.length - 1] || respuestas.at(-1);
+      if (r instanceof Error) throw r;
+      return { ok: r.status === undefined || r.status < 400, status: r.status || 200, text: async () => JSON.stringify(r.cuerpo || r) };
+    }
+  });
+  vm.runInContext(fn(appSource, 'rechazoAcceso') + '\n' + fn(appSource, 'canjearConRelevo_'), c);
+  return { c, urls, esperas, logs, origenes: () => (logs[0] ? Array.from(logs[0][1], x => x.origen) : []) };  // Array.from: el arreglo del vm tiene otro prototipo
+}
+test('cabina (O6): caída de transporte → el segundo intento es el ORIGINAL tras 1.5 s y nunca el respaldo', async () => {
+  const h = appCanje([new Error('offline'), { ok: true, rol: 'vista', boards: 'TA' }]);
+  assert.equal((await h.c.canjearConRelevo_('synthetic')).ok, true);
+  assert.deepEqual(h.urls.map(u => u.split('?')[0]), ['original', 'original']);assert.deepEqual(h.esperas, [1500]);
+  assert.equal(h.logs.length, 0, 'recuperado: sin aviso falso');
+});
+test('cabina (O6): respuesta no concluyente del original (servidor, HTTP 5xx, cuerpo ilegible) también se repite contra el ORIGINAL', async () => {
+  for (const primero of [{ ok: false, error: 'servidor' }, { status: 503, cuerpo: {} }, { cuerpo: 'no-es-un-objeto' }]) {
+    const h = appCanje([primero, { ok: true, rol: 'vista', boards: 'TA' }]);
+    assert.equal((await h.c.canjearConRelevo_('synthetic')).ok, true);
+    assert.ok(h.urls.every(u => u.startsWith('original?')));assert.equal(h.urls.length, 2);assert.deepEqual(h.esperas, [1500]);
+  }
+});
+test('cabina (O6): un rechazo explícito del original es concluyente: una sola llamada, sin espera de 1.5 s ni segundo intento', async () => {
+  for (const rechazo of [{ ok: false, error: 'revocado' }, { ok: false, error: 'clave' }, { ok: false, error: 'liga' }, { status: 401, cuerpo: {} }, { status: 403, cuerpo: {} }]) {
+    const h = appCanje([rechazo, { ok: true, rol: 'admin', boards: '*' }]);
+    const d = await h.c.canjearConRelevo_('synthetic');
+    assert.equal(d.ok, false);assert.equal(h.urls.length, 1);assert.deepEqual(h.esperas, []);
+  }
+});
+test('cabina (O6): un rechazo del ORIGINAL en el segundo intento es concluyente; si cae otra vez queda el primer diagnóstico; los dos van al log y el respaldo no se toca', async () => {
+  const rechazo = appCanje([new Error('offline'), { ok: false, error: 'revocado' }]);
+  assert.equal((await rechazo.c.canjearConRelevo_('synthetic')).error, 'revocado');
+  const caido = appCanje([new Error('offline'), { ok: false, error: 'servidor' }]);
+  assert.equal((await caido.c.canjearConRelevo_('synthetic')).error, 'red', 'el segundo intento no concluyente no pisa el diagnóstico del primero');
+  for (const h of [rechazo, caido]) {
+    assert.equal(h.urls.length, 2);assert.ok(h.urls.every(u => u.startsWith('original?')), 'ambos intentos van al original');
+    assert.deepEqual(h.origenes(), ['original', 'original-2']);assert.equal(h.logs.length, 1);
+  }
 });
 
 function shellHarness(token = 'A') {
@@ -416,13 +457,17 @@ test('Shell: con el primario inaccesible nunca se consulta el respaldo (T-105) y
   assert.equal(urls.length,2);assert.ok(urls.every(u=>u.startsWith('https://original.invalid')),'ambos intentos van al original');
 });
 
+// O6 (T-203): los dos intentos de cada caída van al ORIGINAL (el segundo tras 1.5 s); el contexto sigue trayendo PORTERO_RESPALDO
+// para que un salto al respaldo se vea como una URL «backup».
 test('App: distingue fallos del canje con diagnóstico seguro y conserva autoridad del primario',async()=>{
   for(const kind of ['red','http','formato','timeout']){
     const logs=[],calls=[];
     const c=vm.createContext({Date,console:{warn:(...x)=>logs.push(x)},PORTERO_ORIGINAL:'original',PORTERO_RESPALDO:'backup',
+      setTimeout:(f,ms)=>{if(ms===1500)f();return 0;},clearTimeout,
       AbortController,conLimite_:p=>p,fetch:async(url)=>{calls.push(url);if(kind==='red')throw Error('private-token-in-exception');if(kind==='timeout')throw Error('timeout');return {ok:kind!=='http',status:kind==='http'?503:200,text:async()=>'<html>private-body</html>'};}});
     vm.runInContext(fn(appSource,'rechazoAcceso')+'\n'+fn(appSource,'canjearConRelevo_'),c);
     const r=await c.canjearConRelevo_('private-token');assert.equal(r.error,kind);assert.equal(calls.length,2);
+    assert.ok(calls.every(u=>u.startsWith('original?')),'los dos intentos van al original, nunca al respaldo');
     assert.equal(logs[0][1].length,2);assert.equal(logs[0][1][0].codigo,kind);
     assert.doesNotMatch(JSON.stringify(logs),/private-token|private-body|https:|\?recurso/);
     assert.deepEqual(Object.keys(logs[0][1][0]),['origen','fase','codigo','http','duracion_ms']);
@@ -430,12 +475,17 @@ test('App: distingue fallos del canje con diagnóstico seguro y conserva autorid
     assert.equal(h.timers.length,1);assert.equal(h.state.profileReady,false);assert.ok(h.localStorage.getItem('pyod_clave_v1'));
   }
 });
-test('App: fallo primario conserva diagnóstico aunque respaldo rechace y puede recuperar sin aviso falso',async()=>{
-  for(const backupOk of [false,true]){
-    let n=0;const logs=[];const c=vm.createContext({Date,console:{warn:(...a)=>logs.push(a)},PORTERO_ORIGINAL:'original',PORTERO_RESPALDO:'backup',AbortController,conLimite_:p=>p,
-      fetch:async()=>{if(!n++)throw Error('network');return {ok:true,status:200,text:async()=>JSON.stringify(backupOk?{ok:true,token:'synthetic',rol:'vista',boards:'TA'}:{ok:false,error:'revocado'})};}});
+// O6 (T-203): antes el segundo intento era el respaldo y su «revocado» no pisaba el diagnóstico del primario; ahora el segundo
+// intento es el ORIGINAL: un {ok:false} NO concluyente (aquí «servidor») sigue sin pisar el diagnóstico del primero, y su éxito
+// recupera sin aviso falso. (Su rechazo explícito sí es concluyente: lo cubre «cabina (O6)» más arriba.)
+test('App: fallo del primer intento conserva el diagnóstico si el segundo tampoco concluye y puede recuperar sin aviso falso',async()=>{
+  for(const segundoOk of [false,true]){
+    let n=0;const logs=[],urls=[];const c=vm.createContext({Date,console:{warn:(...a)=>logs.push(a)},PORTERO_ORIGINAL:'original',PORTERO_RESPALDO:'backup',AbortController,conLimite_:p=>p,
+      setTimeout:(f,ms)=>{if(ms===1500)f();return 0;},clearTimeout,
+      fetch:async url=>{urls.push(url);if(!n++)throw Error('network');return {ok:true,status:200,text:async()=>JSON.stringify(segundoOk?{ok:true,token:'synthetic',rol:'vista',boards:'TA'}:{ok:false,error:'servidor'})};}});
     vm.runInContext(fn(appSource,'rechazoAcceso')+'\n'+fn(appSource,'canjearConRelevo_'),c);
-    const r=await c.canjearConRelevo_('synthetic');assert.equal(r.ok,backupOk);assert.equal(logs.length,backupOk?0:1);if(!backupOk)assert.equal(r.error,'red');
+    const r=await c.canjearConRelevo_('synthetic');assert.equal(r.ok,segundoOk);assert.equal(logs.length,segundoOk?0:1);if(!segundoOk)assert.equal(r.error,'red');
+    assert.equal(urls.length,2);assert.ok(urls.every(u=>u.startsWith('original?')));
   }
 });
 
@@ -443,7 +493,8 @@ function abortCanjeHarness(source=appSource){
   const timers=new Map(),calls=[],logs=[];let serial=0,active=0,peak=0;
   const c=vm.createContext({AbortController,Date,Promise,Error,LIMITE_MS:25000,
     PORTERO_ORIGINAL:'original',PORTERO_RESPALDO:'backup',console:{warn:(...a)=>logs.push(a)},
-    setTimeout(f,ms){const id=++serial;timers.set(id,{f,ms});return id;},clearTimeout(id){timers.delete(id);},
+    // O6 (T-203): la espera de 1.5 s entre intentos corre sola; los plazos de 25 s siguen en `timers` para que cada prueba los venza a mano
+    setTimeout(f,ms){if(ms===1500){f();return 0;}const id=++serial;timers.set(id,{f,ms});return id;},clearTimeout(id){timers.delete(id);},
     fetch(url,options){
       const d=deferred();active++;peak=Math.max(peak,active);
       let done=false;const finish=f=>v=>{if(!done){done=true;active--;}f(v);};
@@ -456,7 +507,7 @@ function abortCanjeHarness(source=appSource){
   return {c,timers,calls,logs,get active(){return active;},get peak(){return peak;},expire(){const [id,t]=timers.entries().next().value;timers.delete(id);assert.equal(t.ms,25000);t.f();}};
 }
 const flushCanje=()=>new Promise(resolve=>setImmediate(resolve));
-test('App: canje vencido cancela original antes del respaldo, sin acumulación en 20 rondas',async()=>{
+test('App: canje vencido cancela el primer intento antes del segundo (ambos al original), sin acumulación en 20 rondas',async()=>{
   const h=abortCanjeHarness();
   for(let round=0;round<20;round++){
     const p=h.c.canjearConRelevo_('synthetic');
@@ -479,12 +530,13 @@ test('App: éxito/error de red limpia temporizador y no aborta respuesta válida
     assert.ok(h.calls.every(x=>!x.signal.aborted));assert.equal(h.logs.length,0);
   }
 });
-test('App: timeout primario puede recuperar con respaldo fresco sin revocar identidad',async()=>{
+test('App: timeout del primer intento puede recuperar con el segundo (al ORIGINAL) sin revocar identidad',async()=>{
   const h=abortCanjeHarness(),p=h.c.canjearConRelevo_('synthetic');
   h.expire();await flushCanje();
   h.calls[1].resolve({ok:true,status:200,text:async()=>JSON.stringify({ok:true,rol:'vista',boards:'TA'})});
   assert.equal((await p).ok,true);assert.equal(h.active,0);assert.equal(h.timers.size,0);assert.equal(h.logs.length,0);
   assert.equal(h.calls[0].signal.aborted,true);assert.equal(h.calls[1].signal.aborted,false);
+  assert.ok(h.calls.every(x=>x.url.startsWith('original?')),'el segundo intento es el ORIGINAL, no el respaldo (O6)');
 });
 
 test('App: un único plazo cubre cuerpo atascado y cancela ambos intentos en20 rondas',async()=>{
@@ -505,19 +557,24 @@ test('App: un único plazo cubre cuerpo atascado y cancela ambos intentos en20 r
     assert.equal(h.logs[0][1].map(x=>x.codigo).join(','),'timeout,timeout');
   }
 });
-test('App: cuerpo tardío que ignora abort no sustituye éxito del respaldo ni altera diagnóstico',async()=>{
+test('App: cuerpo tardío que ignora abort no sustituye el éxito del segundo intento ni altera diagnóstico',async()=>{
   const h=abortCanjeHarness(),late=deferred(),p=h.c.canjearConRelevo_('synthetic');
   h.calls[0].resolve({ok:true,status:200,text:()=>late.promise});await flushCanje();h.expire();await flushCanje();
-  h.calls[1].resolve({ok:true,status:200,text:async()=>JSON.stringify({ok:true,token:'synthetic',nombre:'backup',rol:'vista',boards:'TA'})});
-  const result=await p;assert.equal(result.nombre,'backup');assert.equal(h.timers.size,0);
+  h.calls[1].resolve({ok:true,status:200,text:async()=>JSON.stringify({ok:true,token:'synthetic',nombre:'segundo-intento',rol:'vista',boards:'TA'})});
+  const result=await p;assert.equal(result.nombre,'segundo-intento');assert.equal(h.timers.size,0);
   late.resolve(JSON.stringify({ok:true,nombre:'late-original',rol:'admin',boards:'*'}));await flushCanje();
-  assert.equal(result.nombre,'backup');assert.equal(h.logs.length,0);
+  assert.equal(result.nombre,'segundo-intento');assert.equal(h.logs.length,0);
 });
-test('App: fallo al leer cuerpo conserva diagnóstico red y recupera respaldo',async()=>{
+test('App: fallo al leer cuerpo conserva diagnóstico red si el segundo intento no concluye (O6); su rechazo explícito sí concluye',async()=>{
   const h=abortCanjeHarness(),p=h.c.canjearConRelevo_('synthetic');
   h.calls[0].resolve({ok:true,status:200,text:async()=>{throw Error('network-body');}});await flushCanje();
-  h.calls[1].resolve({ok:true,status:200,text:async()=>JSON.stringify({ok:false,error:'revocado'})});
+  h.calls[1].resolve({ok:true,status:200,text:async()=>JSON.stringify({ok:false,error:'servidor'})});
   assert.equal((await p).error,'red');assert.equal(h.logs[0][1][0].fase,'cuerpo');assert.equal(h.timers.size,0);
+  // O6: antes el «revocado» del respaldo no pisaba el diagnóstico; el del ORIGINAL en el segundo intento sí es la respuesta del Portero
+  const r=abortCanjeHarness(),q=r.c.canjearConRelevo_('synthetic');
+  r.calls[0].resolve({ok:true,status:200,text:async()=>{throw Error('network-body');}});await flushCanje();
+  r.calls[1].resolve({ok:true,status:200,text:async()=>JSON.stringify({ok:false,error:'revocado'})});
+  assert.equal((await q).error,'revocado');assert.equal(r.timers.size,0);
 });
 
 test('283 conjunto: avisos simultáneos de la misma identidad comparten canje y carga',async()=>{

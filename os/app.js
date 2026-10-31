@@ -29,13 +29,13 @@
   var CATALOG_BASE=CATALOG_ENDPOINT.split('?')[0];
   /* El portal validaba la sesión SIEMPRE contra el portero del dominio
      aurumarquitectos.com (hoy suspendido): aunque el gate ya te dejara pasar, el
-     portal se quedaba en "Verificando Acceso…" para siempre. Ahora usa el mismo
-     relevo que el resto del sistema: original primero, respaldo si falla. */
+     portal se quedaba en "Verificando Acceso…" para siempre. Después usó un relevo
+     original → respaldo; desde O6 (T-203) el respaldo ya no se consulta (ver
+     canjearConRelevo_) y la cabina habla SOLO con el ORIGINAL. */
   var PORTERO_ORIGINAL=(window.YOD_PORTERO||{}).original;   // única copia: os/yod-acceso.js
-  var PORTERO_RESPALDO=(window.YOD_PORTERO||{}).respaldo;
-  /* El ORIGINAL siempre primero; el respaldo solo si aquel falla en esta llamada.
-     Antes el relevo se pegaba en localStorage y, al reactivarse Google, el
-     navegador seguía en el respaldo (que no conoce correos ni login de Google). */
+  /* El ORIGINAL siempre. Antes el relevo se pegaba en localStorage y, al reactivarse
+     Google, el navegador seguía en el respaldo (que no conoce correos ni login de
+     Google); esa llave sobrante se limpia aquí. */
   try{localStorage.removeItem('pyod_portero');}catch(e){}
   function conLimite_(p,ms,cancelar){
     var timer;
@@ -74,9 +74,15 @@
     }
     var d=await intenta(PORTERO_ORIGINAL,'original');
     if(!d.ok&&!rechazoAcceso(d.error)){
-      // El respaldo no puede revocar una sesión del primario inaccesible.
-      var backup=await intenta(PORTERO_RESPALDO,'respaldo');
-      if(backup&&backup.ok)d=backup;
+      // O6 (T-203, 31-oct-2026) · el respaldo contesta 404 «Page Not Found» desde el 23-sep (esa implementación ya
+      // no existe en Google): saltar a él convertía cada tardanza del ORIGINAL en una sesión «por validar». El
+      // segundo intento vuelve a ser el ORIGINAL tras 1.5 s, igual que el marco (shell.js, T-105). Un rechazo
+      // explícito del primero es concluyente y ni entra aquí. Si el segundo intento contesta con éxito o con un
+      // rechazo explícito del propio Portero, esa es la respuesta; si cae otra vez queda el diagnóstico del primero
+      // (los dos van al log: 'original' y 'original-2').
+      await new Promise(function(listo){setTimeout(listo,1500);});
+      var otra=await intenta(PORTERO_ORIGINAL,'original-2');
+      if(otra&&(otra.ok||rechazoAcceso(otra.error)))d=otra;
     }
     if(!d.ok)console.warn('[YOD OS] diagnóstico de transporte del canje',diagnostico);
     return d;
