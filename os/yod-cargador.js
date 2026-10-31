@@ -12,8 +12,8 @@
   'use strict';
   function crear(env) {
     var K_CLAVE = 'pyod_clave_v1', K_SES = 'yodcg_sesion_v1', K_TEL = 'yodcg_telemetria_v1', P_CACHE = 'yodcg_cache_v1:';
-    var ESPERA = 1500, cfg = { catalogo: null, timeoutMs: 25000, frescoMs: 600000, viejoMs: 86400000 };
-    var vuelo = {}, fondo = {}, vistos = {}, pend = [], marcas = {}, cargados = {}, yaPD = false, frio = true, accesoListo = null;
+    var ESPERA = 1500, cfg = { catalogo: null, timeoutMs: 25000, frescoMs: 600000, viejoMs: 43200000 }; // sesión: 12 h, como las listas
+    var vuelo = {}, fondo = {}, vistos = {}, pend = [], marcas = {}, cargados = {}, yaPD = false, frio = true, accesoListo = null, avisado = '';
     var loc = env.location || {}, doc = env.document, perf = env.performance, ls = null;
     try { ls = env.storage !== undefined ? env.storage : env.localStorage; } catch (e) { } // localStorage puede lanzar (cookies bloqueadas)
     var ahora = typeof env.now === 'function' ? env.now : Date.now, T0 = ahora();
@@ -150,6 +150,7 @@
             var data = { ok: true, rol: d.rol, boards: d.boards, nombre: d.nombre, correo: d.correo };
             // si la persona cambió o cerró sesión durante el vuelo, esa respuesta no se guarda
             if (!legacy && token() === tok) escribir(K_SES, { h: h, board: board, data: data, ts: ahora() });
+            avisado = '';
             registrar('cj', reloj() - t0, 'red');
             return Object.assign({}, data, { origen: 'red', edadMs: 0, token: tok });
           }
@@ -171,15 +172,26 @@
         delete fondo[k];
         if (token() !== tok) return; // cambió la persona mientras tanto: nada que avisar
         if (r.ok) emitir('yodcargador:sesion', r);
-        else if (r.rechazo) emitir('yodcargador:sesion-rechazada', { error: r.error, token: tok });
+        else if (r.rechazo) rechazar(tok, r.error);
       });
+    }
+    /* Rechazo de credencial que llega con algo guardado de por medio (refresco en fondo del canje o de un
+       dato): se tira TODO lo guardado y se avisa UNA vez por token (hasta el próximo canje bueno o cerrar()).
+       No toca pyod_clave_v1: eso es de cerrar(). Sin credencial, o de otra persona, no hay nada que avisar. */
+    function rechazoDe(r) { return !r.ok ? (r.rechazo ? r.error : '') : r.data.ok === false && esRechazo(r.data.error) ? String(r.data.error) : ''; }
+    function rechazar(tok, error) {
+      if (!tok || token() !== tok) return;
+      purgar();
+      if (avisado === tok) return;
+      avisado = tok;
+      emitir('yodcargador:sesion-rechazada', { error: error, token: tok });
     }
     /* La guardia de carrera: sólo se borra la llave si sigue siendo el token rechazado. */
     function cerrar(o) {
       o = o || {};
       var igual = !!o.token && lsGet(K_CLAVE) === o.token;
       if (igual) lsDel(K_CLAVE);
-      purgar();
+      purgar(); avisado = '';
       emitir('yodcargador:sesion-cerrada', { motivo: o.motivo || '' });
       return igual;
     }
@@ -238,20 +250,18 @@
         medir(o.telemetria, t0, 'cache');
       }
       return traer(unir(url, params), { timeoutMs: o.timeoutMs, reintentos: o.reintentos }).then(function (r) {
-        var ms = Math.round(reloj() - t0), d = r.data;
+        var ms = Math.round(reloj() - t0), d = r.data, rc = rechazoDe(r);
+        if (rc) { lsDel(llave); if (v) rechazar(tk, rc); } // el servidor negó la credencial: nada guardado se sigue sirviendo
         if (r.ok) {
           if (d.ok !== false) {
             dato(llave, clave, d, v, tk, viejo > 0);
             medir(o.telemetria, t0, 'red');
             return { ok: true, status: r.status, data: d, origen: 'red', ms: ms };
           }
-          var err = String(d.error || 'servidor'), rc = esRechazo(err);
-          if (rc) lsDel(llave);
-          return { ok: false, status: r.status, data: d, error: err, rechazo: rc, origen: 'red', ms: ms };
+          return { ok: false, status: r.status, data: d, error: String(d.error || 'servidor'), rechazo: !!rc, origen: 'red', ms: ms };
         }
-        if (r.rechazo) lsDel(llave); // el servidor negó la credencial: no se sirve nada guardado
-        else if (v) return { ok: true, status: 200, data: v.data, origen: 'cache-fallback', ms: ms, edadMs: v.edad, error: r.error };
-        return { ok: false, status: r.status || 0, error: r.error, rechazo: !!r.rechazo, origen: r.error === 'red' || r.error === 'timeout' ? 'sin_red' : 'red', ms: ms };
+        if (!rc && v) return { ok: true, status: 200, data: v.data, origen: 'cache-fallback', ms: ms, edadMs: v.edad, error: r.error };
+        return { ok: false, status: r.status || 0, error: r.error, rechazo: !!rc, origen: r.error === 'red' || r.error === 'timeout' ? 'sin_red' : 'red', ms: ms };
       });
     }
     function catalogo(o) {
@@ -274,16 +284,22 @@
     function falla(r) { var e = new Error(r.error || 'red'); e.rechazo = !!r.rechazo; e.status = r.status || 0; return Promise.reject(e); } // como fetch: el motor cae en su catch
     function pppGet(endpoint, params, o) {
       params = params || {}; o = o || {};
-      var rec = params.recurso, tk = params.k || params.t || token(), t0 = reloj(), url = unir(endpoint, params);
-      var modo = legacy ? 0 : rec === 'lista' || rec === 'catalogo' || rec === 'mapa' ? 1 : rec === 'caso' ? 2 : 0; // 1 caché-primero · 2 red-primero · 0 directo
-      var clave = 'ppp:' + rec + ':' + (params.tipo || '') + ':' + (params.caso_id || params.palabra || '') + ':' + hash(tk);
+      var rec = params.recurso, dueno = params.k || params.t || '', tk = dueno || token(), t0 = reloj(), url = unir(endpoint, params);
+      /* Qué caso es: los motores piden «id», el resto «caso_id» o «palabra». Sin ninguno no hay forma de
+         distinguir un caso de otro, así que ese caso no se guarda (ni se lee) y va siempre a la red. */
+      var cid = [params.caso_id, params.id, params.palabra].filter(function (x) { return x != null && x !== ''; })[0];
+      cid = cid == null ? '' : String(cid);
+      var modo = legacy ? 0 : rec === 'lista' || rec === 'catalogo' || rec === 'mapa' ? 1 : rec === 'caso' && cid ? 2 : 0; // 1 caché-primero · 2 red-primero · 0 directo
+      var clave = 'ppp:' + rec + ':' + (params.tipo || '') + ':' + cid + ':' + hash(tk);
       var llave = P_CACHE + clave, v = viejoDe(llave, modo === 1 ? 43200000 : modo === 2 ? 86400000 : 0); // 12 h · 24 h
       var nom = rec === 'lista' || rec === 'caso' || rec === 'mapa' ? rec : '';
       function ms() { return Math.round(reloj() - t0); }
       function red() { // sin reintento por omisión: el motor ya sabe qué hacer sin conexión
         return traer(url, { timeoutMs: o.timeoutMs, reintentos: o.reintentos | 0 }).then(function (r) {
+          var rc = rechazoDe(r);
+          if (rc) { lsDel(llave); if (v) rechazar(dueno, rc); } // credencial negada: lo guardado ya no se sirve y se avisa
           if (!r.ok) return falla(r);
-          if (modo && r.data.ok !== false) dato(llave, clave, r.data, v, params.k || params.t, true);
+          if (modo && r.data.ok !== false) dato(llave, clave, r.data, v, dueno, true);
           medir(nom, t0, 'red');
           return resp(r.data, 'red', ms());
         });
@@ -298,7 +314,7 @@
         return Promise.resolve(resp(v.data, 'cache', ms()));
       }
       if (modo === 2 && v) return red().catch(function (e) { // un caso se pide a la red; la caché sólo cubre si la red cae
-        if (e.rechazo) { lsDel(llave); throw e; }
+        if (e.rechazo) throw e; // red() ya tiró lo guardado
         return resp(v.data, 'cache-fallback', ms());
       });
       return red();

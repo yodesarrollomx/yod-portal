@@ -16,7 +16,7 @@ const PPP = 'https://ppp.invalid/exec';
 const TOK = 'sy-prueba-0000000000000001';
 const OTRO = 'sy-prueba-0000000000000002';
 const MIN = 60000, HORA = 3600000;
-const LIMITE_BYTES = 25000;                                               // tope de regresión (hoy ~24.4 KB; el objetivo de diseño era 14 KB, ver el reporte de T-101)
+const LIMITE_BYTES = 26500;                                               // tope de regresión (hoy ~25.7 KB; el objetivo de diseño era 14 KB, ver el reporte de T-101)
 const CANJE_OK = { ok: true, token: TOK, rol: 'editor', boards: 'MA,MX', nombre: 'Persona de prueba', correo: 'correo-de-prueba' };
 
 /* vacía las microtareas pendientes sin tocar el reloj del cargador */
@@ -165,15 +165,18 @@ test('3 · caché vieja (> fresco, < viejo): se pinta con ella, UN refresco en f
   assert.equal(m.rd.llamadas.length, 2);
 });
 
-test('4 · refresco rechazado (revocado): borra la caché, avisa y NO toca pyod_clave_v1', async () => {
+test('4 · refresco rechazado (revocado): borra la caché de sesión Y las de datos, avisa y NO toca pyod_clave_v1', async () => {
   const m = montar();
-  m.rd.pon({ json: CANJE_OK }, { json: { ok: false, error: 'revocado' } });
+  m.rd.pon({ json: CANJE_OK }, { json: { ok: true, casos: [] } }, { json: { ok: false, error: 'revocado' } });
   await m.core.sesion.canjear();
+  await m.core.ppp.get(PPP, { recurso: 'lista', tipo: 'MACROLOTES', k: TOK });
+  assert.equal(m.st.claves('yodcg_cache_v1:').length, 1, 'hay una lista guardada que sigue vigente (12 h)');
   await m.rl.avanzar(2 * HORA);
   const r = await m.core.sesion.canjear();
   assert.equal(r.origen, 'cache');
   await asentar();
   assert.equal(m.st.getItem('yodcg_sesion_v1'), null);
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:'), [], 'ni la lista de la persona rechazada se sigue sirviendo');
   assert.equal(m.st.getItem('pyod_clave_v1'), TOK, 'cerrar() lo decide el adoptante');
   const ev = de(m, 'sesion-rechazada');
   assert.equal(ev.length, 1); assert.deepEqual(ev[0].detalle, { error: 'revocado', token: TOK });
@@ -181,6 +184,32 @@ test('4 · refresco rechazado (revocado): borra la caché, avisa y NO toca pyod_
   m.rd.pon({ json: { ok: false, error: 'revocado' } });
   const otra = await m.core.sesion.canjear();
   assert.deepEqual([otra.ok, otra.rechazo, otra.origen, otra.error], [false, true, 'red', 'revocado']);
+});
+
+test('4b · la sesión guardada vale 12 h (como las listas): a 12 h menos 1 ms sigue siendo caché; a las 12 h se pide a la red', async () => {
+  const a = montar();
+  assert.equal(a.core.config().viejoMs, 12 * HORA);
+  a.rd.pon({ json: CANJE_OK }, { json: CANJE_OK });
+  await a.core.sesion.canjear();
+  await a.rl.avanzar(12 * HORA - 1);
+  const x = await a.core.sesion.canjear();
+  assert.deepEqual([x.origen, x.edadMs, x.rol], ['cache', 12 * HORA - 1, 'editor']);
+  await asentar();
+  const b = montar();
+  b.rd.pon({ json: CANJE_OK }, { json: Object.assign({}, CANJE_OK, { rol: 'admin' }) });
+  await b.core.sesion.canjear();
+  await b.rl.avanzar(12 * HORA);
+  const y = await b.core.sesion.canjear();
+  assert.deepEqual([y.origen, y.rol, b.rd.llamadas.length], ['red', 'admin', 2], 'cumplidas las 12 h ya no se pinta con la caché');
+  const c = montar();                                                      // el adoptante puede ampliar o reducir la ventana
+  c.core.config({ viejoMs: 3 * HORA });
+  c.rd.pon({ json: CANJE_OK }, { json: CANJE_OK });
+  await c.core.sesion.canjear(); await c.rl.avanzar(3 * HORA - 1);
+  assert.equal((await c.core.sesion.canjear()).origen, 'cache'); await asentar();
+  const d = montar(); d.core.config({ viejoMs: 3 * HORA });
+  d.rd.pon({ json: CANJE_OK }, { json: CANJE_OK });
+  await d.core.sesion.canjear(); await d.rl.avanzar(3 * HORA);
+  assert.equal((await d.core.sesion.canjear()).origen, 'red');
 });
 
 test('5 · dedupe: tres canjes concurrentes hacen UN fetch; modo red también comparte la promesa en vuelo', async () => {
@@ -469,7 +498,7 @@ test('D1 · catálogo: sin config → sin_config; con config usa clave catalogo:
   const m = montar();
   assert.deepEqual(await m.core.catalogo(), { ok: false, status: 0, error: 'sin_config', rechazo: false, origen: 'sin_red', ms: 0 });
   assert.equal(m.core.config({ catalogo: { url: 'http://inseguro.invalid/exec' } }).catalogo, null, 'sólo https');
-  assert.deepEqual(m.core.config({ catalogo: { url: CATALOGO }, timeoutMs: 1000, frescoMs: -5, viejoMs: 'x' }), { catalogo: { url: CATALOGO }, timeoutMs: 1000, frescoMs: 600000, viejoMs: 86400000 });
+  assert.deepEqual(m.core.config({ catalogo: { url: CATALOGO }, timeoutMs: 1000, frescoMs: -5, viejoMs: 'x' }), { catalogo: { url: CATALOGO }, timeoutMs: 1000, frescoMs: 600000, viejoMs: 12 * HORA });
   m.core.config({ timeoutMs: 25000 });
   assert.equal(m.rd.llamadas.length, 0);
   m.rd.pon({ json: { ok: true, rows: ['a'] } });
@@ -577,7 +606,7 @@ test('11c · ppp.get mapa y catálogo también van caché-primero; otros recurso
   assert.deepEqual([r.ok, (await r.json()).error, w.st.claves('yodcg_cache_v1:').length], [true, 'clave', 0]);
 });
 
-test('12 · ppp.get caso: red primero aunque haya caché; si la red cae, cache-fallback (24 h) sin esperar; clave por caso_id o palabra', async () => {
+test('12 · ppp.get caso: red primero aunque haya caché; si la red cae, cache-fallback (24 h) sin esperar; clave por caso_id o palabra (id: ver 12b)', async () => {
   const m = montar(), H = m.core.hash(TOK), P = { recurso: 'caso', caso_id: 'C-001', k: TOK };
   const llave = 'yodcg_cache_v1:ppp:caso::C-001:' + H;
   m.rd.pon({ json: { ok: true, caso: { v: 1 } } }, { json: { ok: true, caso: { v: 2 } } });
@@ -602,6 +631,214 @@ test('12 · ppp.get caso: red primero aunque haya caché; si la red cae, cache-f
   m.rd.pon({ json: { ok: false, error: 'no_encontrado' } });
   const nf = await m.core.ppp.get(PPP, { recurso: 'caso', caso_id: 'C-9', k: TOK });
   assert.equal((await nf.json()).error, 'no_encontrado'); assert.equal(m.st.claves('yodcg_cache_v1:').length, 1);
+});
+
+test('12b · ppp.get caso con «id» (como lo piden los motores): cada caso su llave y su fallback; precedencia caso_id > id > palabra; sin identificador no hay caché', async () => {
+  const m = montar(), H = m.core.hash(TOK), L = id => 'yodcg_cache_v1:ppp:caso:MACROLOTES:' + id + ':' + H;
+  const caso = extra => m.core.ppp.get(PPP, Object.assign({ recurso: 'caso', tipo: 'MACROLOTES', k: TOK }, extra));
+  const quien = async r => (await r.json()).caso.quien;
+  m.rd.pon({ json: { ok: true, caso: { quien: 'A' } } }, { json: { ok: true, caso: { quien: 'B' } } });
+  await caso({ id: 'A' }); await caso({ id: 'B' });
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:').sort(), [L('A'), L('B')], 'dos id distintos, dos llaves distintas');
+  m.rd.pon('caida', 'caida');                                              // sin red cada quien recibe SU caso, nunca el del otro
+  const fa = await caso({ id: 'A' }), fb = await caso({ id: 'B' });
+  assert.deepEqual([fa.yod.origen, await quien(fa), fb.yod.origen, await quien(fb)], ['cache-fallback', 'A', 'cache-fallback', 'B']);
+  assert.equal(m.rd.llamadas.length, 4);
+
+  m.rd.pon({ json: { ok: true, caso: { quien: 'C' } } }, { json: { ok: true, caso: { quien: 'I' } } }, { json: { ok: true, caso: { quien: 'P' } } });
+  await caso({ caso_id: 'C1', id: 'I1', palabra: 'p1' });                  // gana caso_id
+  await caso({ id: 'I2', palabra: 'p2' });                                 // luego id
+  await caso({ palabra: 'p3' });                                           // y al final la palabra
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:').sort(), [L('A'), L('B'), L('C1'), L('I2'), L('p3')].sort());
+
+  const n = m.st.claves('yodcg_cache_v1:').length, datos = de(m, 'dato').length;
+  m.rd.pon({ json: { ok: true, caso: { quien: 'nadie' } } }, { json: { ok: true, caso: { quien: 'nadie' } } }, 'caida');
+  assert.equal(await quien(await caso({})), 'nadie');                      // sin id, ni caso_id ni palabra: a la red y no se guarda
+  assert.equal(await quien(await caso({ id: '', palabra: '' })), 'nadie', 'vacío cuenta como ausente');
+  assert.equal(m.st.claves('yodcg_cache_v1:').length, n); assert.equal(de(m, 'dato').length, datos, 'tampoco avisa un dato guardado');
+  await assert.rejects(caso({}), e => e.message === 'red' && e.rechazo === false);   // y sin red no hay con qué responder
+  assert.equal(m.st.claves('yodcg_cache_v1:').filter(k => k.startsWith('yodcg_cache_v1:ppp:caso:MACROLOTES::')).length, 0);
+
+  m.rd.pon({ json: { ok: true, caso: { quien: 'otro tipo' } } });          // el tipo también distingue
+  await m.core.ppp.get(PPP, { recurso: 'caso', tipo: 'MIXTO', id: 'A', k: TOK });
+  assert.ok(m.st.getItem('yodcg_cache_v1:ppp:caso:MIXTO:A:' + H));
+  assert.equal(JSON.parse(m.st.getItem(L('A'))).data.caso.quien, 'A');
+});
+
+/* ───────────── rechazo de credencial en un refresco de datos (checkpoint de Sol) ───────────── */
+
+const LISTA = { recurso: 'lista', tipo: 'MACROLOTES', k: TOK }, MAPA = { recurso: 'mapa', k: TOK };
+async function sembrada(op) {                                              // sesión canjeada + una lista y un mapa guardados
+  const m = montar(op);
+  m.rd.pon({ json: CANJE_OK }, { json: { ok: true, casos: [1] } }, { json: { ok: true, puntos: 1 } });
+  await m.core.sesion.canjear({ board: 'MA' });
+  await m.core.ppp.get(PPP, LISTA); await m.core.ppp.get(PPP, MAPA);
+  assert.equal(m.st.claves('yodcg_cache_v1:').length, 2); assert.ok(m.st.getItem('yodcg_sesion_v1'));
+  return m;
+}
+const rechazos = m => de(m, 'sesion-rechazada').map(e => e.detalle);
+
+test('R1 · ppp.get lista: el refresco en fondo rechazado (revocado) purga TODO lo guardado y avisa; con error de servidor no pasa nada', async () => {
+  const s = await sembrada();                                              // servidor: ni purga ni avisa
+  s.rd.pon({ json: { ok: false, error: 'servidor' } });
+  assert.equal((await s.core.ppp.get(PPP, LISTA)).yod.origen, 'cache'); await asentar();
+  assert.equal(s.st.claves('yodcg_cache_v1:').length, 2); assert.ok(s.st.getItem('yodcg_sesion_v1')); assert.deepEqual(rechazos(s), []);
+  s.rd.pon({ status: 500 }); await s.core.ppp.get(PPP, LISTA); await asentar();   // HTTP 500, caída de red y timeout tampoco
+  s.rd.pon('caida'); await s.core.ppp.get(PPP, LISTA); await asentar();
+  s.rd.pon('colgado'); await s.core.ppp.get(PPP, LISTA); await s.rl.avanzar(25000);
+  assert.equal(s.st.claves('yodcg_cache_v1:').length, 2); assert.deepEqual(rechazos(s), []);
+
+  const m = await sembrada();                                              // revocado: purga y un solo aviso
+  m.rd.pon({ json: { ok: false, error: 'revocado' } });
+  const r = await m.core.ppp.get(PPP, LISTA);
+  assert.equal(r.yod.origen, 'cache', 'al motor se le sigue pintando lo guardado, como siempre'); await asentar();
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:'), [], 'ni la lista ni el mapa ni nada de esa persona');
+  assert.equal(m.st.getItem('yodcg_sesion_v1'), null);
+  assert.equal(m.st.getItem('pyod_clave_v1'), TOK, 'cerrar() lo decide el adoptante');
+  assert.deepEqual(rechazos(m), [{ error: 'revocado', token: TOK }]);
+  m.rd.pon({ json: { ok: false, error: 'revocado' } });                    // ya sin caché: el motor ve el error en el JSON y nadie más
+  const sin = await m.core.ppp.get(PPP, LISTA);
+  assert.deepEqual(await sin.json(), { ok: false, error: 'revocado' }); assert.equal(rechazos(m).length, 1);
+});
+
+test('R2 · HTTP 401 y 403 en un refresco en fondo también purgan y avisan, con el error «http NNN»', async () => {
+  for (const status of [401, 403]) {
+    const m = await sembrada();
+    m.rd.pon({ status });
+    assert.equal((await m.core.ppp.get(PPP, MAPA)).yod.origen, 'cache'); await asentar();
+    assert.deepEqual(m.st.claves('yodcg_cache_v1:'), [], 'HTTP ' + status);
+    assert.equal(m.st.getItem('yodcg_sesion_v1'), null);
+    assert.deepEqual(rechazos(m), [{ error: 'http ' + status, token: TOK }]);
+    assert.equal(m.rd.llamadas.length, 4, 'sin reintento');
+  }
+  for (const error of ['clave', 'expirado', 'sin_sesion', 'forbidden']) {
+    const m = await sembrada();
+    m.rd.pon({ json: { ok: false, error } }); await m.core.ppp.get(PPP, LISTA); await asentar();
+    assert.deepEqual([m.st.claves('yodcg_cache_v1:').length, rechazos(m).map(x => x.error)], [0, [error]], error);
+  }
+});
+
+test('R3 · get y catálogo: el rechazo llega DESPUÉS de pintar lo guardado → purga y aviso; sin nada guardado sólo se devuelve el rechazo', async () => {
+  const m = montar(), P = { recurso: 'lista', k: TOK }, o = { clave: 'lista-x', viejoMs: HORA };
+  m.rd.pon({ json: { ok: true, filas: [1] } }, { json: { ok: true, casos: [7] } });
+  await m.core.get(ORIGINAL, P, o);
+  await m.core.ppp.get(PPP, LISTA);                                        // otra caché de la misma persona
+  let pintado = null;
+  m.rd.pon({ json: { ok: false, error: 'expirado' } });
+  const r = await m.core.get(ORIGINAL, P, Object.assign({ alViejo: d => { pintado = d.filas; } }, o));
+  assert.deepEqual(pintado, [1], 'alViejo ya había pintado lo guardado');
+  assert.deepEqual([r.ok, r.error, r.rechazo], [false, 'expirado', true]);
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:'), []);
+  assert.deepEqual(rechazos(m), [{ error: 'expirado', token: TOK }]);
+
+  const c = montar(); c.core.config({ catalogo: { url: CATALOGO } });
+  c.rd.pon({ json: { ok: true, rows: ['a'] } });
+  await c.core.catalogo(); await c.rl.avanzar(10 * MIN);                   // guardado, pero ya no fresco: se pide a la red
+  c.rd.pon({ status: 403 });
+  let vio = null;
+  const k = await c.core.catalogo({ alViejo: d => { vio = d.rows; } });
+  assert.deepEqual([vio, k.ok, k.error, k.rechazo], [['a'], false, 'http 403', true]);
+  assert.deepEqual(c.st.claves('yodcg_cache_v1:'), []); assert.deepEqual(rechazos(c), [{ error: 'http 403', token: TOK }]);
+
+  const s = montar();                                                      // sin nada guardado: el adoptante ya ve el rechazo en la respuesta
+  s.rd.pon({ status: 403 });
+  const rs = await s.core.get(ORIGINAL, P, o);
+  assert.deepEqual([rs.ok, rs.rechazo, rs.error], [false, true, 'http 403']);
+  s.rd.pon({ json: { ok: false, error: 'clave' } });
+  assert.equal((await s.core.get(ORIGINAL, P, o)).rechazo, true);
+  assert.deepEqual(rechazos(s), [], 'y no se emite nada: no había nada que purgar');
+  const e = montar(); e.rd.pon({ json: { ok: true, filas: [1] } }, { json: { ok: false, error: 'servidor' } });   // error transitorio con caché: ni purga ni aviso
+  await e.core.get(ORIGINAL, P, o); const ee = await e.core.get(ORIGINAL, P, o);
+  assert.deepEqual([ee.ok, ee.rechazo, e.st.claves('yodcg_cache_v1:').length, rechazos(e)], [false, false, 1, []]);
+});
+
+test('R4 · ppp.get caso con caché: payload revocado o HTTP 403 → purga y aviso (el 403 además rechaza); un 500 cae a la caché sin avisar', async () => {
+  const P = { recurso: 'caso', tipo: 'MACROLOTES', id: 'C-1', k: TOK };
+  const m = montar();
+  m.rd.pon({ json: { ok: true, caso: { v: 1 } } }, { json: { ok: true, caso: { v: 2 } } });
+  await m.core.ppp.get(PPP, P); await m.core.ppp.get(PPP, Object.assign({}, P, { id: 'C-2' }));
+  assert.equal(m.st.claves('yodcg_cache_v1:').length, 2);
+  m.rd.pon({ json: { ok: false, error: 'revocado' } });
+  const r = await m.core.ppp.get(PPP, P);
+  assert.deepEqual(await r.json(), { ok: false, error: 'revocado' }, 'el motor ve el JSON tal cual');
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:'), [], 'se fue también el otro caso'); assert.deepEqual(rechazos(m), [{ error: 'revocado', token: TOK }]);
+
+  const n = montar(); n.rd.pon({ json: { ok: true, caso: { v: 1 } } }); await n.core.ppp.get(PPP, P);
+  n.rd.pon({ status: 403 });
+  await assert.rejects(n.core.ppp.get(PPP, P), e => e.rechazo === true && e.status === 403);
+  assert.deepEqual(n.st.claves('yodcg_cache_v1:'), []); assert.deepEqual(rechazos(n), [{ error: 'http 403', token: TOK }]);
+
+  const s = montar(); s.rd.pon({ json: { ok: true, caso: { v: 1 } } }); await s.core.ppp.get(PPP, P);
+  s.rd.pon({ status: 500 });
+  const f = await s.core.ppp.get(PPP, P);
+  assert.deepEqual([f.yod.origen, (await f.json()).caso.v, s.st.claves('yodcg_cache_v1:').length, rechazos(s)], ['cache-fallback', 1, 1, []]);
+});
+
+test('R5 · varios refrescos rechazados a la vez: se purga y se avisa UNA vez; tras un canje bueno (o cerrar) vuelve a avisar', async () => {
+  const m = await sembrada();
+  m.rd.pon({ json: { ok: false, error: 'revocado' } }, { json: { ok: false, error: 'revocado' } });
+  const pendientes = [m.core.ppp.get(PPP, LISTA), m.core.ppp.get(PPP, MAPA)];   // dos refrescos en vuelo a la vez
+  await Promise.all(pendientes); await asentar();
+  assert.deepEqual(rechazos(m), [{ error: 'revocado', token: TOK }]);
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:'), []);
+
+  m.rd.pon({ json: CANJE_OK }, { json: { ok: true, casos: [9] } });
+  await m.core.sesion.canjear({ modo: 'red' });                            // un canje bueno: la credencial vuelve a valer
+  await m.core.ppp.get(PPP, LISTA);
+  assert.equal(m.st.claves('yodcg_cache_v1:').length, 1, 'la lista otra vez'); assert.ok(m.st.getItem('yodcg_sesion_v1'), 'y la sesión');
+  m.rd.pon({ json: { ok: false, error: 'clave' } });
+  await m.core.ppp.get(PPP, LISTA); await asentar();
+  assert.deepEqual(rechazos(m).map(x => x.error), ['revocado', 'clave']);
+
+  m.core.sesion.cerrar({ token: TOK, motivo: 'rechazo' });                 // el adoptante cierra; la misma credencial, si volviera, avisa de nuevo
+  m.st.setItem('pyod_clave_v1', TOK);
+  m.rd.pon({ json: { ok: true, casos: [10] } }, { json: { ok: false, error: 'expirado' } });
+  await m.core.ppp.get(PPP, LISTA); await m.core.ppp.get(PPP, LISTA); await asentar();
+  assert.deepEqual(rechazos(m).map(x => x.error), ['revocado', 'clave', 'expirado']);
+});
+
+test('R6 · si la persona cambia o sale MIENTRAS vuela el refresco, su rechazo no purga a la nueva ni avisa; sin credencial en la petición tampoco', async () => {
+  const m = await sembrada(), d = diferido();
+  m.rd.pon({ diferido: d });
+  await m.core.ppp.get(PPP, LISTA);                                        // pinta la caché y deja el refresco en vuelo
+  await asentar();
+  m.st.setItem('pyod_clave_v1', OTRO);                                     // entra otra persona en el mismo navegador
+  d.ok(respuesta({ json: { ok: false, error: 'revocado' } })); await asentar();
+  assert.deepEqual(rechazos(m), []);
+  assert.ok(m.st.getItem('yodcg_sesion_v1'), 'la sesión y el resto de cachés siguen: el rechazo era de la persona anterior');
+  assert.equal(m.st.claves('yodcg_cache_v1:').length, 1, 'sólo cayó la lista cuya respuesta fue negada');
+
+  const n = await sembrada(), e = diferido();
+  n.rd.pon({ diferido: e });
+  await n.core.ppp.get(PPP, LISTA); await asentar();
+  n.core.sesion.cerrar({ token: TOK, motivo: 'salir' });                   // la persona sale mientras el refresco vuela
+  e.ok(respuesta({ json: { ok: false, error: 'revocado' } })); await asentar();
+  assert.deepEqual(rechazos(n), [], 'ya no hay a quién avisar');
+
+  const q = await sembrada();                                              // petición sin k: no presentó credencial, así que su rechazo no dice nada de la sesión
+  q.rd.pon({ json: { ok: true, filas: [1] } });
+  await q.core.ppp.get(PPP, { recurso: 'lista', tipo: 'MIXTO' });
+  assert.equal(q.st.claves('yodcg_cache_v1:').length, 3);
+  q.rd.pon({ json: { ok: false, error: 'clave' } });
+  assert.equal((await q.core.ppp.get(PPP, { recurso: 'lista', tipo: 'MIXTO' })).yod.origen, 'cache'); await asentar();
+  assert.deepEqual(rechazos(q), []); assert.equal(q.st.claves('yodcg_cache_v1:').length, 2, 'sólo cae la entrada negada; lo demás sigue');
+  assert.ok(q.st.getItem('yodcg_sesion_v1'));
+
+  const a = montar({ token: '' }); a.core.config({ catalogo: { url: CATALOGO } });   // sin sesión ni credencial: el catálogo público
+  a.rd.pon({ json: { ok: true, rows: [] } });
+  await a.core.catalogo(); await a.rl.avanzar(10 * MIN);
+  a.st.setItem('yodcg_cache_v1:de-otra-persona', JSON.stringify({ ts: a.rl.t, data: { ok: true } }));
+  a.rd.pon({ status: 403 });
+  const k = await a.core.catalogo();
+  assert.deepEqual([k.ok, k.rechazo, rechazos(a)], [false, true, []], 'sin sesión no hay a quién avisar');
+  assert.deepEqual(a.st.claves('yodcg_cache_v1:'), ['yodcg_cache_v1:de-otra-persona'], 'ni a quién purgar: sólo cae la entrada negada');
+});
+
+test('R7 · legacy: sin caché no hay nada que purgar ni que avisar', async () => {
+  const m = montar({ search: '?cargador=legacy' });
+  m.rd.pon({ json: { ok: false, error: 'revocado' } }, { status: 403 });
+  await m.core.ppp.get(PPP, LISTA); await assert.rejects(m.core.ppp.get(PPP, LISTA), e => e.rechazo === true);
+  assert.deepEqual(rechazos(m), []);
 });
 
 /* ───────────── telemetría, página, hash ───────────── */
