@@ -261,8 +261,24 @@
   <script src="app.js?v=20261030-fase0"></script>
   <script src="maquinas.js?v=20261030-fase0"></script>
   <script src="https://yodesarrollomx.github.io/potenciales-yod/portero.js?v=20261030-fase0"></script>
-  <script src="../chinche.js?v=20261030-fase0"></script>
-  <script>if(window.YODChinche) YODChinche.init({pantalla:"os"});</script>
+  <!-- La chinche se carga DESPUÉS del primer dato (YodCargador.cargarDespues); sin cargador, o con ?cargador=legacy,
+       se inserta en el acto, como siempre. Esta etiqueta es inerte (type=text/plain: el navegador no la baja) y
+       existe para que scripts/versiones.cjs siga gobernando la etiqueta ?v= de chinche.js. -->
+  <script type="text/plain" id="yodChincheSrc" src="../chinche.js?v=20261030-fase0"></script>
+  <script>
+(function(){
+  var tag=document.getElementById('yodChincheSrc');if(!tag)return;
+  var src=tag.getAttribute('src'),listo=false;
+  function iniciar(){if(listo||!window.YODChinche)return;listo=true;YODChinche.init({pantalla:"os"});}
+  function insertar(){var s=document.createElement('script');s.src=src;s.onload=iniciar;document.body.appendChild(s);}
+  var c=window.YodCargador;
+  if(c&&c.v&&!c.legacy&&typeof c.cargarDespues==='function'){
+    c.cargarDespues(src,{cuando:'primer-dato',maxMs:4000}).then(function(s){
+      if(window.YODChinche)iniciar();else if(s&&s.addEventListener)s.addEventListener('load',iniciar,{once:true});
+    },insertar);
+  }else insertar();
+})();
+  </script>
 
   <script>
 /* Fase 4 · «Dónde estoy»: las mismas migas que el marco de los tableros (shell.js) */
