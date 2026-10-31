@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "1.1.0",
+  "version": "1.1.1",
   "sequenceProtocol": 1,
   "registered": 16,
   "sourceConfirmed": 13,
@@ -52,7 +52,7 @@
       "id": "real-miramar-board",
       "repository": "yodesarrollomx/real-miramar-board",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "integrationConfirmed": true,
       "inventoryStatus": "source-audited",
       "surfaces": [
@@ -78,7 +78,7 @@
       "id": "plan-potencial",
       "repository": "yodesarrollomx/plan-potencial",
       "mode": "indirect",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "integrationConfirmed": false,
       "inventoryStatus": "source-not-installed",
       "surfaces": [
@@ -136,7 +136,7 @@
       "id": "interiores-aurum",
       "repository": "yodesarrollomx/interiores-aurum",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "integrationConfirmed": true,
       "inventoryStatus": "source-audited",
       "surfaces": [
@@ -157,7 +157,7 @@
       "id": "aurum-board",
       "repository": "yodesarrollomx/aurum-board",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "integrationConfirmed": true,
       "inventoryStatus": "source-audited",
       "surfaces": [
@@ -178,7 +178,7 @@
       "id": "co-desarrolladores-yod",
       "repository": "yodesarrollomx/Co-desarrolladores-Yod",
       "mode": "indirect",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "integrationConfirmed": false,
       "inventoryStatus": "source-not-installed",
       "surfaces": [
@@ -232,7 +232,7 @@
       "id": "board-flujo-yod",
       "repository": "yodesarrollomx/board-flujo-yod",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "integrationConfirmed": true,
       "inventoryStatus": "source-audited",
       "surfaces": [
@@ -253,7 +253,7 @@
       "id": "yodesarrollomx.github.io",
       "repository": "yodesarrollomx/yodesarrollomx.github.io",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "integrationConfirmed": true,
       "inventoryStatus": "source-audited",
       "surfaces": [
@@ -274,7 +274,7 @@
       "id": "potenciales-yod",
       "repository": "yodesarrollomx/potenciales-yod",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "integrationConfirmed": true,
       "inventoryStatus": "source-audited",
       "surfaces": [
@@ -302,7 +302,7 @@
       "id": "board-aurum",
       "repository": "yodesarrollomx/board-aurum",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "integrationConfirmed": true,
       "inventoryStatus": "source-audited",
       "surfaces": [
@@ -323,7 +323,7 @@
       "id": "yod-despacho",
       "repository": "yodesarrollomx/yod-despacho",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "integrationConfirmed": true,
       "inventoryStatus": "source-audited",
       "surfaces": [
@@ -347,7 +347,7 @@
       "id": "yod-portal",
       "repository": "yodesarrollomx/yod-portal",
       "mode": "bundle",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "integrationConfirmed": true,
       "inventoryStatus": "source-audited",
       "surfaces": [
@@ -374,7 +374,7 @@
       "id": "yodesarrollo-board",
       "repository": "yodesarrollomx/yodesarrollo-board",
       "mode": "bundle",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "integrationConfirmed": true,
       "inventoryStatus": "source-audited",
       "surfaces": [
@@ -401,7 +401,7 @@
       "id": "sala-edicion",
       "repository": "yodesarrollomx/sala-edicion",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "integrationConfirmed": true,
       "inventoryStatus": "source-audited",
       "surfaces": [
@@ -423,7 +423,7 @@
       "id": "amalaya-board",
       "repository": "yodesarrollo/amalaya-board",
       "mode": "native-prefix",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "integrationConfirmed": true,
       "inventoryStatus": "source-audited",
       "surfaces": [
@@ -445,7 +445,7 @@
       "id": "emdevaluacion360",
       "repository": "yodesarrollomx/EMDevaluacion360",
       "mode": "native-prefix",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "integrationConfirmed": true,
       "inventoryStatus": "source-audited",
       "surfaces": [
@@ -468,7 +468,7 @@
       "id": "yodesarrollo-board-ppp",
       "repository": "yodesarrollomx/yodesarrollo-board",
       "mode": "bundle",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "integrationConfirmed": false,
       "inventoryStatus": "source-prepared",
       "surfaces": [

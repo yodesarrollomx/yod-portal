@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-31.ppp-presentaciones.1",
+  "revision": "2026-10-31.chinches-clock.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -14735,6 +14735,35 @@
       ],
       "deployment": "Propuesta autorizada y registrada antes de implementación. No acredita generación, guardado, Pages, backend activo, piloto ni aceptación física de móvil.",
       "rollback": "Deshabilitar nuevas admisiones y revertir código/configuración propios; conservar casos, PPP, snapshots, trabajos, recibos, artefactos, versiones, sesiones y permisos."
+    },
+    {
+      "id": "CHG-CHINCHES-STROKE-CLOCK-20261031",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE",
+        "GAS-PORTERO"
+      ],
+      "status": "implementado_local",
+      "authorization": "Dirección autoriza ejecutar la integración PPP/presentaciones; el coordinador autoriza corregir el fallo focal del grabador común que impide conservar la chinche. Mismo encargo; no modifica decisiones editoriales ni datos de negocio.",
+      "proposal": "Crear el evento de trazo antes de su primer punto y fijar el tiempo inicial al del evento. Mantener los tiempos de movimientos/cierre, validación estricta, protocolo1 y borradores previos. Preparar release1.1.1 inmutable con herramientas canónicas, actualizar el bundle central por huella y consumidores mediante instalador. El bump de caché usa versiones.json y no cambia lógica en las superficies dependientes.",
+      "tests": [
+        "Reproducción determinista del fallo antes del fix con redondeo y salto de reloj; secuencia/checkpoint y guardado final válidos después.",
+        "El validador sigue rechazando puntos anteriores al evento; no reparar ni descartar borradores existentes.",
+        "node --test tests/chinche-secuencia.test.cjs tests/chinches-paquete.test.cjs tests/chinches-reporte.test.cjs",
+        "node scripts/chinches-paquete.cjs verificar; node scripts/chinches-reporte.cjs --check; instalador en dry-run y huellas reales.",
+        "node scripts/arquitectura.cjs --check; node scripts/versiones.cjs --check; suite y verificadores portal.",
+        "Consumidor: WebKit y Chromium exactos con captura, anotación, guardado y reapertura; publicación y recibo real separados."
+      ],
+      "deployment": "Implementado y probado en checkout aislado desde main 79a0aa5. Release 1.1.1 preparado y activado localmente con CLI canónica; 1136 pruebas y verificadores locales pasan. Publicación central, adopción por consumidores y recepción real pendientes de evidencia independiente.",
+      "rollback": "Activar el snapshot previo mediante herramientas del paquete y revertir PRs/caché afectados. Conservar IndexedDB, chinches, capturas, audio, IDs, recibos y permisos; no eliminar ni reescribir borradores."
     }
   ],
   "data_contracts": [

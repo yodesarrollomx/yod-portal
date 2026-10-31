@@ -4,7 +4,7 @@
  if(window.YodChrome)return;
  var source=document.currentScript&&document.currentScript.src;
  var base=new URL('.',source||location.href),pref='yod_os_sidebar_v1',installed=new WeakSet();
- var figures=import(new URL('ui-figures.bundle.mjs?v=20261030-fase0',base).href);
+ var figures=import(new URL('ui-figures.bundle.mjs?v=20261031-chinches-clock',base).href);
  figures.catch(function(){/* Existing accessible labels remain available if a visual asset fails. */});
  var ids={'SYS-DESPACHO':'office','SYS-POTENCIALES':'plan','SYS-TRACK':'route','SYS-MIRAMAR':'buildings','SYS-TAREAS':'tasks','SYS-FLUJO':'wallet','SYS-INTERIORES':'chair','SYS-INVERSION':'present','SYS-MARKETING':'funnel','SYS-OBRA':'tower','SYS-CONTROL':'grid'};
  var icons={'home-2':'home','layout-dashboard':'home','layout-grid':'office','map-2':'plan','route':'route','building-community':'buildings','checklist':'tasks','wallet':'wallet','armchair-2':'chair','presentation-analytics':'present','speakerphone':'funnel','chart-funnel':'funnel','filter':'funnel','building-skyscraper':'tower','users':'people','photo-edit':'edit','search':'search'};
