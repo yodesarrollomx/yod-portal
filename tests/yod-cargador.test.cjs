@@ -90,7 +90,7 @@ function red() {
 function montar(op = {}) {
   const rl = op.reloj || reloj(), rd = red(), bus = new EventTarget();
   const st = op.storage || almacen(op.token === undefined ? { pyod_clave_v1: TOK } : op.token ? { pyod_clave_v1: op.token } : {});
-  const loc = { pathname: op.pathname || '/potenciales-yod/macrolotes.html', search: op.search || '', hash: op.hash || '' };
+  const loc = { pathname: op.pathname !== undefined ? op.pathname : '/potenciales-yod/macrolotes.html', search: op.search || '', hash: op.hash || '' };
   const hist = { reemplazos: [], replaceState(_s, _t, url) {
     hist.reemplazos.push(url);
     const m = /^([^?#]*)(\?[^#]*)?(#.*)?$/.exec(url);
@@ -354,6 +354,419 @@ test('10b · sin YOD_PORTERO inyecta yod-acceso.js junto a este archivo y espera
   assert.deepEqual(await q, { ok: false, error: 'red', rechazo: false, origen: 'sin_red', token: TOK });
   assert.equal(n.rd.llamadas.length, 0);
   assert.equal(n.insertados[0].src, 'https://yodesarrollomx.github.io/yod-portal/os/yod-acceso.js?v=20261030-fase0');
+});
+
+/* ───────────── datos · get, catálogo, arranque ───────────── */
+
+test('10 · get: alViejo corre SINCRÓNICO con la caché y luego resuelve la red; red caída → cache-fallback; jamás cachea ok:false', async () => {
+  const m = montar(), P = { recurso: 'lista', k: TOK }, o = { clave: 'lista-x', viejoMs: HORA, telemetria: 'lista' };
+  const llave = 'yodcg_cache_v1:lista-x';
+  m.rd.pon({ json: { ok: true, filas: [1, 2] } });
+  const a = await m.core.get(ORIGINAL, P, o);
+  assert.deepEqual([a.ok, a.status, a.origen, a.data.filas], [true, 200, 'red', [1, 2]]);
+  assert.equal(m.rd.urls()[0], ORIGINAL + '?recurso=lista&k=' + encodeURIComponent(TOK));
+  assert.deepEqual([m.rd.llamadas[0].opt.cache, m.rd.llamadas[0].opt.credentials], ['no-store', 'omit']);
+  assert.deepEqual(JSON.parse(m.st.getItem(llave)).data, { ok: true, filas: [1, 2] });
+  assert.ok(!m.st.getItem(llave).includes(TOK));
+
+  let visto = null;
+  m.rd.pon({ json: { ok: true, filas: [1, 2, 3] } });
+  const p = m.core.get(ORIGINAL, P, Object.assign({ alViejo: (data, meta) => { visto = { data, meta, fetchs: m.rd.llamadas.length }; } }, o));
+  assert.deepEqual(visto.data, { ok: true, filas: [1, 2] }, 'alViejo ya corrió, sin esperar nada');
+  assert.equal(visto.fetchs, 1, 'y corrió ANTES de ir a red'); assert.equal(visto.meta.edadMs, 0);
+  const b = await p;
+  assert.deepEqual([b.origen, b.data.filas], ['red', [1, 2, 3]]);
+  assert.deepEqual(de(m, 'dato').map(e => [e.detalle.clave, e.detalle.origen, e.detalle.igual]), [['lista-x', 'red', false], ['lista-x', 'red', false]]);
+
+  m.rd.pon({ json: { ok: true, filas: [1, 2, 3] } });                       // la red trae lo mismo: igualmente resuelve
+  const c = await m.core.get(ORIGINAL, P, Object.assign({ alViejo() { } }, o));
+  assert.equal(c.origen, 'red'); assert.equal(de(m, 'dato').pop().detalle.igual, true);
+
+  await m.rl.avanzar(10 * MIN);
+  m.rd.pon('caida', 'caida');
+  const q = m.core.get(ORIGINAL, P, o); await m.rl.avanzar(1500);
+  const d = await q;
+  assert.deepEqual([d.ok, d.origen, d.data.filas, d.edadMs, d.error], [true, 'cache-fallback', [1, 2, 3], 10 * MIN, 'red']);
+
+  m.rd.pon({ json: { ok: false, error: 'servidor' } });                     // ok:false con caché previa: se informa y no se pisa
+  const e = await m.core.get(ORIGINAL, P, o);
+  assert.deepEqual([e.ok, e.error, e.rechazo, e.origen], [false, 'servidor', false, 'red']);
+  assert.deepEqual(JSON.parse(m.st.getItem(llave)).data.filas, [1, 2, 3]);
+
+  m.rd.pon({ json: { ok: false, error: 'servidor' } });                     // ok:false sin caché: nada se guarda
+  assert.equal((await m.core.get(ORIGINAL, P, { clave: 'otra', viejoMs: HORA })).ok, false);
+  m.rd.pon({ status: 500 }, { status: 500 });
+  const f = m.core.get(ORIGINAL, P, { clave: 'otra', viejoMs: HORA }); await m.rl.avanzar(1500);
+  assert.deepEqual([(await f).ok, m.st.getItem('yodcg_cache_v1:otra')], [false, null]);
+});
+
+test('10c · get: rechazo borra lo guardado y NO sirve caché; frescoMs/viejoMs; sin viejoMs no guarda; sin red ni caché falla limpio', async () => {
+  const m = montar(), P = { recurso: 'lista', k: TOK }, llave = 'yodcg_cache_v1:z';
+  m.rd.pon({ json: { ok: true, n: 1 } });
+  await m.core.get(ORIGINAL, P, { clave: 'z', viejoMs: HORA, frescoMs: 5 * MIN });
+  await m.rl.avanzar(4 * MIN);
+  let pintado = 0;
+  const fresca = await m.core.get(ORIGINAL, P, { clave: 'z', viejoMs: HORA, frescoMs: 5 * MIN, alViejo() { pintado++; } });
+  assert.deepEqual([fresca.origen, fresca.edadMs, m.rd.llamadas.length, pintado], ['cache', 4 * MIN, 1, 0]);
+  await m.rl.avanzar(2 * MIN);
+  m.rd.pon({ json: { ok: true, n: 2 } });
+  const vieja = await m.core.get(ORIGINAL, P, { clave: 'z', viejoMs: HORA, frescoMs: 5 * MIN, alViejo() { pintado++; } });
+  assert.deepEqual([vieja.origen, vieja.data.n, m.rd.llamadas.length, pintado], ['red', 2, 2, 1]);
+  await m.rl.avanzar(2 * HORA);                                             // pasó viejoMs: ya no es utilizable
+  m.rd.pon('caida', 'caida');
+  const sin = m.core.get(ORIGINAL, P, { clave: 'z', viejoMs: HORA, alViejo() { pintado++; } }); await m.rl.avanzar(1500);
+  assert.deepEqual([(await sin).ok, (await sin).error, (await sin).origen, pintado], [false, 'red', 'sin_red', 1]);
+  m.rd.pon({ json: { ok: true, n: 3 } });
+  await m.core.get(ORIGINAL, P, { clave: 'z', viejoMs: HORA });
+  m.rd.pon({ status: 403 });
+  const r403 = await m.core.get(ORIGINAL, P, { clave: 'z', viejoMs: HORA });
+  assert.deepEqual([r403.ok, r403.error, r403.rechazo, m.st.getItem(llave)], [false, 'http 403', true, null]);
+  m.rd.pon({ json: { ok: true, n: 4 } }); await m.core.get(ORIGINAL, P, { clave: 'z', viejoMs: HORA });
+  m.rd.pon({ json: { ok: false, error: 'clave' } });
+  const rj = await m.core.get(ORIGINAL, P, { clave: 'z', viejoMs: HORA });
+  assert.deepEqual([rj.ok, rj.rechazo, m.st.getItem(llave)], [false, true, null]);
+  m.rd.pon({ json: { ok: true, n: 5 } });
+  await m.core.get(ORIGINAL, P, { clave: 'sin-cache' });
+  assert.equal(m.st.getItem('yodcg_cache_v1:sin-cache'), null, 'sin viejoMs no se guarda nada');
+  m.rd.pon({ json: { ok: true, n: 6 } });
+  await m.core.get(ORIGINAL, { recurso: 'lista', k: OTRO }, { clave: 'ajena', viejoMs: HORA });
+  assert.equal(m.st.getItem('yodcg_cache_v1:ajena'), null, 'con la credencial de otra persona no se guarda');
+});
+
+test('10d · get: URL con encodeURIComponent, omite undefined/null, une con & si ya hay ?, clave por defecto sin k ni t', async () => {
+  const m = montar();
+  m.rd.pon({ json: [1, 2] }, { json: { ok: true } });
+  await m.core.get(ORIGINAL, { q: 'a b&c/ñ', x: undefined, n: 0, z: null, v: false }, { viejoMs: HORA });
+  assert.equal(m.rd.urls()[0], ORIGINAL + '?q=a%20b%26c%2F%C3%B1&n=0&v=false');
+  await m.core.get(ORIGINAL + '?action=read', { t: TOK, tipo: 'MA' }, { viejoMs: HORA });
+  assert.equal(m.rd.urls()[1], ORIGINAL + '?action=read&t=' + encodeURIComponent(TOK) + '&tipo=MA');
+  const llaves = m.st.claves('yodcg_cache_v1:');
+  assert.deepEqual(llaves, ['yodcg_cache_v1:' + ORIGINAL + '?q=a%20b%26c%2F%C3%B1&n=0&v=false', 'yodcg_cache_v1:' + ORIGINAL + '?action=read?tipo=MA:' + m.core.hash(TOK)]);
+  assert.ok(llaves.every(k => !k.includes(TOK) && !k.includes('t=')), 'la clave no lleva t ni el token');
+  assert.deepEqual(JSON.parse(m.st.getItem(llaves[0])).data, [1, 2], 'una respuesta sin campo ok también es válida');
+});
+
+test('11a · catálogo: sin config → sin_config; con config usa clave catalogo:<h>, fresco 5 min, viejo 7 días y alViejo', async () => {
+  const m = montar();
+  assert.deepEqual(await m.core.catalogo(), { ok: false, status: 0, error: 'sin_config', rechazo: false, origen: 'sin_red', ms: 0 });
+  assert.equal(m.core.config({ catalogo: { url: 'http://inseguro.invalid/exec' } }).catalogo, null, 'sólo https');
+  assert.deepEqual(m.core.config({ catalogo: { url: CATALOGO }, timeoutMs: 1000, frescoMs: -5, viejoMs: 'x' }), { catalogo: { url: CATALOGO }, timeoutMs: 1000, frescoMs: 600000, viejoMs: 86400000 });
+  m.core.config({ timeoutMs: 25000 });
+  assert.equal(m.rd.llamadas.length, 0);
+  m.rd.pon({ json: { ok: true, rows: ['a'] } });
+  const a = await m.core.catalogo();
+  assert.equal(m.rd.urls()[0], CATALOGO + '?action=read&resource=Portal&k=' + encodeURIComponent(TOK));
+  assert.deepEqual([a.ok, a.origen, a.data.rows], [true, 'red', ['a']]);
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:'), ['yodcg_cache_v1:catalogo:' + m.core.hash(TOK)]);
+  await m.rl.avanzar(4 * MIN);
+  assert.equal((await m.core.catalogo()).origen, 'cache'); assert.equal(m.rd.llamadas.length, 1);
+  await m.rl.avanzar(2 * MIN);
+  let pintado = null; m.rd.pon({ json: { ok: true, rows: ['b'] } });
+  const b = await m.core.catalogo({ alViejo: d => { pintado = d.rows; } });
+  assert.deepEqual([pintado, b.origen, b.data.rows], [['a'], 'red', ['b']]);
+  await m.rl.avanzar(8 * 24 * HORA);
+  m.rd.pon('caida', 'caida');
+  const c = m.core.catalogo({ alViejo() { assert.fail('7 días: ya no sirve'); } }); await m.rl.avanzar(1500);
+  assert.deepEqual([(await c).ok, (await c).error], [false, 'red']);
+  const sin = montar({ token: '' }); sin.core.config({ catalogo: { url: CATALOGO } });
+  sin.rd.pon({ json: { ok: true, rows: [] } }); await sin.core.catalogo();
+  assert.equal(sin.rd.urls()[0], CATALOGO + '?action=read&resource=Portal', 'sin sesión no manda k');
+  assert.deepEqual(sin.st.claves('yodcg_cache_v1:'), ['yodcg_cache_v1:catalogo:' + sin.core.hash('')]);
+});
+
+test('11b · arranque: canje y catálogo salen a la vez (en paralelo) y vuelven juntos', async () => {
+  const m = montar(), dc = diferido(), dk = diferido();
+  m.core.config({ catalogo: { url: CATALOGO } });
+  const segunUrl = url => (url.startsWith(CATALOGO) ? dk : dc).promesa;      // el orden de salida es incidental
+  m.rd.pon(segunUrl, segunUrl);
+  const p = m.core.arranque({ board: 'MA' });
+  await asentar();
+  assert.equal(m.rd.llamadas.length, 2, 'ambos pedidos en vuelo antes de que conteste alguno');
+  assert.deepEqual(m.rd.urls().map(u => u.split('?')[0]).sort(), [CATALOGO, ORIGINAL]);
+  dk.ok(respuesta({ json: { ok: true, rows: [1] } })); dc.ok(respuesta({ json: CANJE_OK }));
+  const r = await p;
+  assert.deepEqual([r.sesion.ok, r.sesion.rol, r.catalogo.ok, r.catalogo.data.rows], [true, 'editor', true, [1]]);
+  const sin = montar();                                                      // sin config de catálogo el canje sigue andando
+  sin.rd.pon({ json: CANJE_OK });
+  const s = await sin.core.arranque();
+  assert.deepEqual([s.sesion.ok, s.catalogo.error], [true, 'sin_config']);
+});
+
+/* ───────────── adaptador PPP ───────────── */
+
+test('11 · ppp.get lista: con caché resuelve YA como Response (json/text/yod) y revalida en fondo; sin caché y red caída RECHAZA', async () => {
+  const m = montar(), P = { recurso: 'lista', tipo: 'MACROLOTES', k: TOK }, H = m.core.hash(TOK);
+  const llave = 'yodcg_cache_v1:ppp:lista:MACROLOTES::' + H;
+  const v1 = { ok: true, casos: [{ id: 'c1' }] }, v2 = { ok: true, casos: [{ id: 'c1' }, { id: 'c2' }] };
+  m.rd.pon({ json: v1 });
+  const a = await m.core.ppp.get(PPP, P);
+  assert.deepEqual([a.ok, a.status, a.yod.origen, typeof a.yod.ms], [true, 200, 'red', 'number']);
+  const da = await a.json(); da.casos.push('mutado por el motor');
+  assert.deepEqual(await a.json(), v1, 'cada json() es una copia: el motor no ensucia la caché');
+  assert.equal(await a.text(), JSON.stringify(v1));
+  assert.equal(m.rd.urls()[0], PPP + '?recurso=lista&tipo=MACROLOTES&k=' + encodeURIComponent(TOK));
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:'), [llave]);
+  assert.ok(!llave.includes(TOK) && !m.st.getItem(llave).includes(TOK));
+
+  m.rd.pon({ json: v2 });
+  const b = await m.core.ppp.get(PPP, P);
+  assert.equal(b.yod.origen, 'cache'); assert.deepEqual(await b.json(), v1, 'lo guardado, ya');
+  await asentar();
+  assert.equal(m.rd.llamadas.length, 2, 'y se revalida en fondo');
+  assert.deepEqual(de(m, 'dato').pop().detalle, { clave: 'ppp:lista:MACROLOTES::' + H, origen: 'red', data: v2, igual: false });
+  m.rd.pon({ json: v2 });
+  assert.deepEqual(await (await m.core.ppp.get(PPP, P)).json(), v2, 'la revalidación dejó la caché al día');
+  await asentar(); assert.equal(de(m, 'dato').pop().detalle.igual, true);
+
+  const n0 = m.rd.llamadas.length;
+  const [x, y] = [m.core.ppp.get(PPP, P), m.core.ppp.get(PPP, P)];       // dos llamadas seguidas = una sola revalidación
+  m.rd.pon({ json: v2 });
+  await Promise.all([x, y]); await asentar();
+  assert.equal(m.rd.llamadas.length, n0 + 1);
+  const antes = m.rd.llamadas.length;
+  m.rd.pon('caida');                                                       // revalidar y fallar no molesta a nadie
+  assert.equal((await m.core.ppp.get(PPP, P)).yod.origen, 'cache'); await asentar();
+  assert.equal(m.rd.llamadas.length, antes + 1);
+  await m.core.ppp.get(PPP, P, { frescoMs: 10 * MIN }); await asentar();
+  assert.equal(m.rd.llamadas.length, antes + 1, 'con frescoMs la caché reciente no se revalida');
+
+  await m.rl.avanzar(13 * HORA);                                           // pasó el límite de 12 h: no hay caché que valga
+  m.rd.pon('caida');
+  await assert.rejects(m.core.ppp.get(PPP, P), e => e instanceof Error && e.message === 'red' && e.rechazo === false);
+  const s = montar({ token: TOK }); s.rd.pon('colgado');
+  const rechazada = assert.rejects(s.core.ppp.get(PPP, P), e => e.message === 'timeout');
+  await s.rl.avanzar(25000); await rechazada;
+  assert.equal(s.rd.llamadas.length, 1, 'ppp no reintenta por omisión');
+});
+
+test('11b · ppp.get mapa y catálogo también van caché-primero; otros recursos van directo y sin caché; ok:false no se guarda', async () => {
+  const m = montar(), H = m.core.hash(TOK);
+  m.rd.pon({ json: { ok: true, puntos: 1 } }, { json: { ok: true, puntos: 2 } });
+  await m.core.ppp.get(PPP, { recurso: 'mapa', k: TOK });
+  assert.equal((await m.core.ppp.get(PPP, { recurso: 'mapa', k: TOK })).yod.origen, 'cache');
+  await asentar();
+  m.rd.pon({ json: { ok: true, items: [] } });
+  await m.core.ppp.get(PPP, { recurso: 'catalogo', k: TOK });
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:').sort(), ['yodcg_cache_v1:ppp:catalogo:::' + H, 'yodcg_cache_v1:ppp:mapa:::' + H]);
+  const n = m.rd.llamadas.length;
+  m.rd.pon({ json: { ok: true, t: 1 } }, { json: { ok: true, t: 2 } });
+  assert.equal((await (await m.core.ppp.get(PPP, { recurso: 'track', k: TOK })).json()).t, 1);
+  assert.equal((await (await m.core.ppp.get(PPP, { recurso: 'track', k: TOK })).json()).t, 2, 'sin caché: cada vez a la red');
+  assert.equal(m.rd.llamadas.length, n + 2); assert.equal(m.st.claves('yodcg_cache_v1:').length, 2);
+  const w = montar(); w.rd.pon({ json: { ok: false, error: 'clave' } });
+  const r = await w.core.ppp.get(PPP, { recurso: 'lista', k: TOK });
+  assert.deepEqual([r.ok, (await r.json()).error, w.st.claves('yodcg_cache_v1:').length], [true, 'clave', 0]);
+});
+
+test('12 · ppp.get caso: red primero aunque haya caché; si la red cae, cache-fallback (24 h) sin esperar; clave por caso_id o palabra', async () => {
+  const m = montar(), H = m.core.hash(TOK), P = { recurso: 'caso', caso_id: 'C-001', k: TOK };
+  const llave = 'yodcg_cache_v1:ppp:caso::C-001:' + H;
+  m.rd.pon({ json: { ok: true, caso: { v: 1 } } }, { json: { ok: true, caso: { v: 2 } } });
+  assert.equal((await (await m.core.ppp.get(PPP, P)).json()).caso.v, 1);
+  const b = await m.core.ppp.get(PPP, P);
+  assert.deepEqual([b.yod.origen, (await b.json()).caso.v, m.rd.llamadas.length], ['red', 2, 2]);
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:'), [llave]);
+  await m.rl.avanzar(20 * HORA);
+  m.rd.pon('caida');
+  const c = await m.core.ppp.get(PPP, P);
+  assert.deepEqual([c.ok, c.yod.origen, (await c.json()).caso.v], [true, 'cache-fallback', 2]);
+  assert.equal(m.rd.llamadas.length, 3, 'cayó a la caché sin reintentar ni esperar');
+  await m.rl.avanzar(5 * HORA);                                            // 25 h: la caché del caso ya no vale
+  m.rd.pon('caida');
+  await assert.rejects(m.core.ppp.get(PPP, P), e => e.message === 'red');
+  m.rd.pon({ json: { ok: true, caso: { v: 3 } } }); await m.core.ppp.get(PPP, P);
+  m.rd.pon({ status: 403 });
+  await assert.rejects(m.core.ppp.get(PPP, P), e => e.rechazo === true && e.status === 403 && e.message === 'http 403');
+  assert.equal(m.st.getItem(llave), null, 'un rechazo no se disfraza con caché');
+  m.rd.pon({ json: { ok: true, caso: { v: 4 } } }); await m.core.ppp.get(PPP, { recurso: 'caso', palabra: 'amanecer', k: TOK });
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:'), ['yodcg_cache_v1:ppp:caso::amanecer:' + H]);
+  m.rd.pon({ json: { ok: false, error: 'no_encontrado' } });
+  const nf = await m.core.ppp.get(PPP, { recurso: 'caso', caso_id: 'C-9', k: TOK });
+  assert.equal((await nf.json()).error, 'no_encontrado'); assert.equal(m.st.claves('yodcg_cache_v1:').length, 1);
+});
+
+/* ───────────── telemetría, página, hash ───────────── */
+
+test('13 · telemetría: primerDato una vez; codigos() ≤ 40 sin espacios y sin repetir; resumen() con mediana y p90', async () => {
+  const m = montar({ pathname: '/potenciales-yod/macrolotes.html' }), T = m.core.telemetria;
+  await m.rl.avanzar(1832);
+  assert.equal(T.primerDato('red', { via: 'lista' }), true);
+  assert.equal(T.primerDato('cache'), false, 'sólo la primera cuenta');
+  assert.deepEqual(de(m, 'primer-dato').map(e => e.detalle), [{ t: 1832, origen: 'red', tablero: 'MA', frio: true, extra: { via: 'lista' } }]);
+  assert.deepEqual(T.codigos(), ['pd:MA:1832:r']);
+  assert.deepEqual(T.codigos(), [], 'ya reportado');
+  assert.deepEqual(JSON.parse(m.st.getItem('yodcg_telemetria_v1')), [{ t: 1832, p: 'pd', tablero: 'MA', origen: 'red', frio: true }]);
+
+  m.core.config({ catalogo: { url: CATALOGO } });
+  m.rd.pon(async () => { await m.rl.avanzar(250); return respuesta({ json: CANJE_OK }); }, async () => { await m.rl.avanzar(120); return respuesta({ json: { ok: true, rows: [] } }); });
+  await m.core.sesion.canjear();
+  await m.core.catalogo();
+  m.rd.pon({ json: CANJE_OK }); await m.core.sesion.canjear({ modo: 'red' });
+  await m.core.sesion.canjear(); await m.core.catalogo();
+  const cods = T.codigos();
+  assert.deepEqual(cods, ['cj:MA:250:r', 'cat:120:r'], 'un código por tipo y por página');
+  assert.ok(cods.every(c => /^\S{1,40}$/.test(c)));
+  assert.deepEqual(T.codigos(), []);
+  assert.equal(T.marca('arranque'), m.rl.perfNow());
+
+  const r = montar({ token: TOK });                                        // otra página, misma sesión ya en caché: arranca «caliente»
+  r.rd.pon({ json: CANJE_OK }); await r.core.sesion.canjear();
+  const r2 = crear(Object.assign({}, r.env, { location: { pathname: '/yod-portal/os/', search: '', hash: '' } }));
+  r2.telemetria.primerDato('cache');
+  assert.deepEqual(r2.telemetria.codigos(), ['pd:OS:0:c']);
+  assert.equal(JSON.parse(r.st.getItem('yodcg_telemetria_v1')).pop().frio, false);
+
+  const q = montar();
+  const anillo = [{ t: 100, p: 'pd', tablero: 'MA' }, { t: 200, p: 'cj', tablero: 'MA' }, { t: 300, p: 'pd', tablero: 'MA' }, { t: 400, p: 'cat', tablero: 'MA' }, { t: 1000, p: 'pd', tablero: 'MA' }, { t: 50, p: 'pd', tablero: 'MX' }];
+  q.st.setItem('yodcg_telemetria_v1', JSON.stringify(anillo.concat([{ t: 'x' }, null, 7])));
+  assert.deepEqual(q.core.telemetria.resumen(), { n: 6, mediana_ms: 250, p90_ms: 1000, ultimos: anillo });
+  assert.deepEqual([q.core.telemetria.resumen({ tablero: 'MA' }).n, q.core.telemetria.resumen({ tablero: 'MA' }).mediana_ms, q.core.telemetria.resumen({ tablero: 'MA' }).p90_ms], [5, 300, 1000]);
+  assert.deepEqual([q.core.telemetria.resumen({ p: 'pd' }).mediana_ms, q.core.telemetria.resumen({ tablero: 'MX' }).n, q.core.telemetria.resumen({ tablero: 'ZZ' }).n], [200, 1, 0]);
+  const largo = Array.from({ length: 12 }, (_, i) => ({ t: (i + 1) * 10, p: 'pd', tablero: 'MA' }));
+  q.st.setItem('yodcg_telemetria_v1', JSON.stringify(largo));
+  assert.deepEqual(q.core.telemetria.resumen().ultimos.map(x => x.t), [30, 40, 50, 60, 70, 80, 90, 100, 110, 120]);
+  q.core.telemetria.limpiar();
+  assert.deepEqual(q.core.telemetria.resumen(), { n: 0, mediana_ms: 0, p90_ms: 0, ultimos: [] });
+  q.st.setItem('yodcg_telemetria_v1', '{no es json');
+  assert.equal(q.core.telemetria.resumen().n, 0, 'un anillo dañado cuenta como vacío');
+});
+
+test('13b · el anillo guarda como mucho 60 muestras (las más recientes) y limpiar() no toca la sesión', async () => {
+  const m = montar(), viejo = Array.from({ length: 60 }, (_, i) => ({ t: i + 1, p: 'lista', tablero: 'MA', origen: 'red', frio: false }));
+  m.st.setItem('yodcg_telemetria_v1', JSON.stringify(viejo));
+  m.rd.pon({ json: { ok: true } }, { json: { ok: true } });
+  await m.core.get(ORIGINAL, { recurso: 'lista' }, { telemetria: 'lista' });
+  await m.core.get(ORIGINAL, { recurso: 'lista' }, { telemetria: 'lista' });
+  const a = JSON.parse(m.st.getItem('yodcg_telemetria_v1'));
+  assert.equal(a.length, 60); assert.equal(a[0].t, 4, 'salieron las 3 más viejas (2 nuevas + el primer dato)');
+  assert.deepEqual(a.pop(), { t: 0, p: 'lista', tablero: 'MA', origen: 'red', frio: true });
+  m.core.telemetria.limpiar();
+  assert.equal(m.st.getItem('yodcg_telemetria_v1'), null); assert.equal(m.st.getItem('pyod_clave_v1'), TOK);
+  m.core.purgar();
+  m.st.setItem('yodcg_telemetria_v1', '[]'); m.core.purgar(); m.core.sesion.cerrar({ token: OTRO });
+  assert.equal(m.st.getItem('yodcg_telemetria_v1'), '[]', 'ni purgar ni cerrar borran la telemetría');
+});
+
+test('pagina(): mismo criterio que portero.js más tablero, obra y la cabina (os/index)', () => {
+  const casos = [
+    ['/potenciales-yod/index.html', 'PT'], ['/potenciales-yod/', 'PT'], ['/', 'PT'], ['', 'PT'], ['/potenciales-yod/mapa.html', 'MP'], ['/potenciales-yod/macrolotes.html', 'MA'],
+    ['/potenciales-yod/mixto.html', 'MX'], ['/potenciales-yod/unifamiliar.html', 'UN'], ['/potenciales-yod/residencial.html', 'RE'], ['/potenciales-yod/patrimonial.html', 'PA'],
+    ['/potenciales-yod/accesos.html', 'AC'], ['/yod-portal/tablero.html', 'TB'], ['/yod-portal/obra.html', 'OB'], ['/yod-portal/os/', 'OS'], ['/yod-portal/os/index.html', 'OS'],
+    ['/yod-portal/track-alysa.html', 'TA'], ['/yod-portal/track-maria.html', 'TM'], ['/yod-portal/track-codesarrollos.html', 'TC'],
+    ['/real-miramar-board/', 'MR'], ['/real-miramar-board/index.html', 'MR'], ['/real-miramar-board/tramites.html', 'MT'], ['/real-miramar-board/direccion.html', 'MD'],
+    ['/real-miramar-board/evidencia.html', 'ME'], ['/real-miramar-board/cuentas.html', 'MC'], ['/real-miramar-board/otra.html', 'MO'],
+    ['/yod-portal/despacho.html', 'DE'], ['/x/constructor.html', 'CO'], ['/x/ab', 'AB']
+  ];
+  for (const [ruta, esperado] of casos) assert.equal(montar({ pathname: ruta }).core.pagina(), esperado, ruta || '(vacío)');
+});
+
+test('hash: FNV-1a de 32 bits (vectores conocidos), siempre 8 hex y determinista', () => {
+  const { hash } = montar().core;
+  assert.deepEqual(['', 'a', 'foobar'].map(hash), ['811c9dc5', 'e40c292c', 'bf9cf968']);
+  for (const s of [TOK, OTRO, 'ñandú 📌', undefined, null, 12345]) assert.match(hash(s), /^[0-9a-f]{8}$/);
+  assert.equal(hash(undefined), hash('')); assert.notEqual(hash(TOK), hash(OTRO));
+});
+
+/* ───────────── carga diferida, reversión, ?sesion= ───────────── */
+
+test('14 · cargarDespues: entra con el primer dato, o a los maxMs, o en idle; nunca dos veces el mismo src; resuelve con el script', async () => {
+  const SRC = 'https://cdn.invalid/pesado.js';
+  const m = montar();
+  const p = m.core.cargarDespues(SRC, { atributos: { async: true, crossorigin: 'anonymous', 'data-x': 7 } });
+  await asentar(); await m.rl.avanzar(3999);
+  assert.equal(m.insertados.length, 0, 'todavía no hay nada que mirar');
+  assert.equal(m.core.cargarDespues(SRC, { cuando: 'idle' }), p, 'misma promesa para el mismo src');
+  m.core.telemetria.primerDato('red');
+  assert.equal(m.insertados.length, 1);
+  const sc = m.insertados[0];
+  assert.equal(sc.src, SRC); assert.deepEqual(sc.attrs, { async: '', crossorigin: 'anonymous', 'data-x': '7' });
+  assert.equal(m.rl.timers.length, 0, 'el plazo maxMs se canceló');
+  sc.onload(); assert.equal(await p, sc);
+  assert.equal(m.core.cargarDespues(SRC), p); m.core.telemetria.primerDato('cache');
+  assert.equal(m.insertados.length, 1);
+
+  const b = montar(); b.core.cargarDespues('https://cdn.invalid/b.js');   // maxMs por omisión: 4 s
+  await b.rl.avanzar(3999); assert.equal(b.insertados.length, 0);
+  await b.rl.avanzar(1); assert.equal(b.insertados.length, 1);
+  b.core.telemetria.primerDato('red'); assert.equal(b.insertados.length, 1, 'el evento tardío ya no inserta de nuevo');
+
+  const c = montar(); c.core.cargarDespues('https://cdn.invalid/c.js', { maxMs: 100 });
+  await c.rl.avanzar(100); assert.equal(c.insertados.length, 1);
+
+  const d = montar(); d.core.telemetria.primerDato('cache');               // el primer dato ya pasó: entra de inmediato
+  const pd = d.core.cargarDespues('https://cdn.invalid/d.js');
+  assert.equal(d.insertados.length, 1); d.insertados[0].onerror();
+  await assert.rejects(pd, /carga/);
+
+  let idle = null; const e = montar({ idle: (f, o) => { idle = { f, o }; return 7; } });
+  e.core.cargarDespues('https://cdn.invalid/e.js', { cuando: 'idle', maxMs: 900 });
+  assert.equal(idle.o.timeout, 900); e.core.telemetria.primerDato('red');
+  assert.equal(e.insertados.length, 0, 'en idle el primer dato no cuenta'); idle.f(); assert.equal(e.insertados.length, 1);
+  await e.rl.avanzar(900); assert.equal(e.insertados.length, 1);
+  const f = montar(); f.core.cargarDespues('https://cdn.invalid/f.js', { cuando: 'idle', maxMs: 250 });   // Safari: sin requestIdleCallback
+  await f.rl.avanzar(250); assert.equal(f.insertados.length, 1);
+});
+
+test('15 · legacy (?cargador=legacy, #…&cargador=legacy o yodcg_legacy=1): todo sigue existiendo pero sin caché, sin dedupe y sin esperas', async () => {
+  const activos = [{ search: '?cargador=legacy' }, { search: '?a=1&cargador=legacy&b=2' }, { hash: '#x=1&cargador=legacy' }, { hash: '#cargador=legacy' }, { storage: almacen({ pyod_clave_v1: TOK, yodcg_legacy: '1' }) }];
+  for (const op of activos) assert.equal(montar(op).core.legacy, true, JSON.stringify(Object.keys(op)) + JSON.stringify(op.search || op.hash || ''));
+  for (const op of [{}, { search: '?cargador=nuevo' }, { search: '?cargador=legacyx' }, { search: '?x=cargador=legacy' }, { hash: '#a=cargador-legacy' }, { storage: almacen({ pyod_clave_v1: TOK, yodcg_legacy: '0' }) }]) assert.equal(montar(op).core.legacy, false);
+  assert.equal(typeof montar().core.legacy, 'boolean');
+
+  const m = montar({ search: '?cargador=legacy' });
+  m.rd.pon({ json: CANJE_OK }, { json: CANJE_OK }, { json: CANJE_OK });
+  const [a, b] = await Promise.all([m.core.sesion.canjear(), m.core.sesion.canjear()]);
+  assert.equal(m.rd.llamadas.length, 2, 'sin dedupe'); assert.ok(a.ok && b.ok && a.origen === 'red');
+  assert.equal(m.st.getItem('yodcg_sesion_v1'), null, 'no guarda caché de sesión');
+  assert.equal((await m.core.sesion.canjear()).origen, 'red'); assert.equal(m.rd.llamadas.length, 3);
+
+  const g = montar({ search: '?cargador=legacy' });                        // aunque haya caché sembrada de otro tiempo, se ignora
+  g.st.setItem('yodcg_cache_v1:z', JSON.stringify({ ts: g.rl.t, data: { ok: true, viejo: true } }));
+  g.st.setItem('yodcg_cache_v1:ppp:lista:MACROLOTES::' + g.core.hash(TOK), JSON.stringify({ ts: g.rl.t, data: { ok: true, viejo: true } }));
+  g.rd.pon({ json: { ok: true, nuevo: true } }, { json: { ok: true, nuevo: true } }, { json: { ok: true, nuevo: 2 } }, { json: { ok: true, nuevo: 3 } });
+  let pintado = false;
+  const r = await g.core.get(ORIGINAL, { k: TOK }, { clave: 'z', viejoMs: HORA, frescoMs: HORA, alViejo() { pintado = true; } });
+  assert.deepEqual([r.origen, r.data.nuevo, pintado], ['red', true, false]);
+  const l1 = await g.core.ppp.get(PPP, { recurso: 'lista', tipo: 'MACROLOTES', k: TOK });
+  assert.deepEqual([l1.yod.origen, (await l1.json()).nuevo], ['red', true]);
+  const l2 = await g.core.ppp.get(PPP, { recurso: 'lista', tipo: 'MACROLOTES', k: TOK });
+  assert.equal((await l2.json()).nuevo, 2); assert.equal(g.rd.llamadas.length, 3, 'ppp.get: cada llamada va a la red');
+  assert.equal(JSON.parse(g.st.getItem('yodcg_cache_v1:z')).data.viejo, true, 'legacy no toca la caché de nadie');
+  assert.deepEqual(de(g, 'dato').map(e => e.detalle.clave), ['z'], 'get avisa cada resolución de red; ppp.get en legacy no revalida y no avisa');
+
+  g.core.cargarDespues('https://cdn.invalid/l.js');
+  assert.equal(g.insertados.length, 1, 'inmediato');
+  g.core.telemetria.primerDato('red');
+  assert.deepEqual(g.core.telemetria.codigos(), ['pd:MA:0:r'], 'la telemetría sigue midiendo');
+  assert.equal(JSON.parse(g.st.getItem('yodcg_telemetria_v1')).length >= 2, true);
+  const s = montar({ search: '?cargador=legacy&sesion=' + TOK, token: '' });
+  assert.equal(s.st.getItem('pyod_clave_v1'), TOK, '?sesion= se procesa también en legacy');
+});
+
+test('16 · ?sesion= se guarda y se quita de la URL conservando el resto; ?liga= no se toca', () => {
+  const m = montar({ token: '', pathname: '/potenciales-yod/macrolotes.html', search: '?x=1&sesion=' + TOK + '&y=2', hash: '#mapa' });
+  assert.equal(m.st.getItem('pyod_clave_v1'), TOK); assert.equal(m.core.sesion.token(), TOK);
+  assert.deepEqual(m.hist.reemplazos, ['/potenciales-yod/macrolotes.html?x=1&y=2#mapa']);
+  assert.equal(m.loc.search, '?x=1&y=2');
+
+  const solo = montar({ token: '', pathname: '/yod-portal/os/', search: '?sesion=' + OTRO });
+  assert.deepEqual(solo.hist.reemplazos, ['/yod-portal/os/']); assert.equal(solo.st.getItem('pyod_clave_v1'), OTRO);
+
+  const liga = montar({ token: '', search: '?liga=lg-prueba-1' });
+  assert.deepEqual(liga.hist.reemplazos, []); assert.equal(liga.st.getItem('pyod_clave_v1'), null);
+  assert.equal(liga.loc.search, '?liga=lg-prueba-1'); assert.equal(liga.rd.llamadas.length, 0, 'canjear la liga es de portero.js');
+
+  const ambas = montar({ token: '', search: '?liga=lg-prueba-2&sesion=' + TOK });
+  assert.equal(ambas.st.getItem('pyod_clave_v1'), TOK); assert.equal(ambas.loc.search, '?liga=lg-prueba-2');
+
+  const vacia = montar({ search: '?sesion=' });                            // ya había sesión: un ?sesion= vacío no la pisa
+  assert.equal(vacia.st.getItem('pyod_clave_v1'), TOK); assert.deepEqual(vacia.hist.reemplazos, []);
+  const pisa = montar({ search: '?sesion=' + OTRO });
+  assert.equal(pisa.st.getItem('pyod_clave_v1'), OTRO, 'la liga nueva reemplaza a la sesión anterior, como portero.js');
+
+  const sinHist = montar({ token: '', search: '?sesion=' + TOK }); // eslint-disable-line
+  const env = Object.assign({}, sinHist.env, { history: undefined, location: { pathname: '/p.html', search: '?sesion=' + TOK, hash: '' }, storage: almacen() });
+  assert.doesNotThrow(() => crear(env)); assert.equal(env.storage.getItem('pyod_clave_v1'), TOK);
 });
 
 //@@T
