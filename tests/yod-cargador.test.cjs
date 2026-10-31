@@ -1,6 +1,6 @@
 'use strict';
-/* Pruebas de os/yod-cargador.js (T-101). Sin red y sin reloj real: fetch, storage, timers,
-   location, document y performance son falsos y los controla cada prueba, así que todas son
+/* Pruebas de os/yod-cargador.js (T-101; entrega 2, T-201). Sin red y sin reloj real: fetch, storage, timers,
+   location, document, navigator y performance son falsos y los controla cada prueba, así que todas son
    deterministas. Sólo hay datos sintéticos (hosts .invalid, tokens de mentira, sin correos). */
 const test = require('node:test');
 const assert = require('node:assert/strict');
@@ -17,7 +17,7 @@ const PPP = 'https://ppp.invalid/exec';
 const TOK = 'sy-prueba-0000000000000001';
 const OTRO = 'sy-prueba-0000000000000002';
 const MIN = 60000, HORA = 3600000;
-const LIMITE_BYTES = 26500;                                               // tope de regresión (hoy ~25.7 KB; el objetivo de diseño era 14 KB, ver el reporte de T-101)
+const LIMITE_BYTES = 32000;                                               // tope de regresión (entrega 2: recordar, peek, verificación y dispositivo; el objetivo de diseño era 14 KB, ver el reporte de T-101)
 const CANJE_OK = { ok: true, token: TOK, rol: 'editor', boards: 'MA,MX', nombre: 'Persona de prueba', correo: 'correo-de-prueba' };
 
 /* vacía las microtareas pendientes sin tocar el reloj del cargador */
@@ -112,8 +112,9 @@ function montar(op = {}) {
     YOD_PORTERO: op.sinPortero ? undefined : { original: ORIGINAL, respaldo: RESPALDO }
   };
   if (op.idle) env.requestIdleCallback = op.idle;
+  if (op.navigator) env.navigator = op.navigator;                          // sin él (como en Node) el dispositivo es «otro»
   const eventos = [];
-  ['sesion', 'sesion-rechazada', 'sesion-cerrada', 'dato', 'primer-dato'].forEach(n => bus.addEventListener('yodcargador:' + n, e => eventos.push({ tipo: n, detalle: e.detail })));
+  ['sesion', 'sesion-rechazada', 'sesion-cerrada', 'dato', 'dato-negado', 'primer-dato'].forEach(n => bus.addEventListener('yodcargador:' + n, e => eventos.push({ tipo: n, detalle: e.detail })));
   const core = crear(env);
   return { core, env, rl, st, rd, bus, loc, hist, insertados, eventos, doc };
 }
@@ -229,18 +230,22 @@ test('5 · dedupe: tres canjes concurrentes hacen UN fetch; modo red también co
   assert.equal(m.rd.llamadas.length, 2);
 });
 
-test('6 · timeout: espera 1.5 s, reintenta UNA vez contra el MISMO original y no inventa rechazo', async () => {
+test('6 · timeout: espera 1.5 s y reintenta UNA vez contra el MISMO original con el plazo de frío (75 s); no inventa rechazo', async () => {
   const m = montar();
   const p = m.core.sesion.canjear({ board: 'MA' });
   await asentar();
   assert.equal(m.rd.llamadas.length, 1);
-  await m.rl.avanzar(24999); assert.equal(m.rd.llamadas.length, 1);
+  await m.rl.avanzar(24999); assert.equal(m.rd.llamadas.length, 1, 'el primer intento sigue con 25 s');
   await m.rl.avanzar(1);
   assert.equal(m.rd.llamadas[0].opt.signal.aborted, true, 'el plazo aborta la petición');
   await m.rl.avanzar(1499); assert.equal(m.rd.llamadas.length, 1, 'aún espera el 1.5 s');
   await m.rl.avanzar(1); assert.equal(m.rd.llamadas.length, 2);
-  await m.rl.avanzar(25000);
+  let resuelto = false; p.then(() => { resuelto = true; });
+  await m.rl.avanzar(74999);
+  assert.equal(resuelto, false, 'el reintento aguanta 75 s (Apps Script arrancando en frío), no 25'); assert.equal(m.rd.llamadas[1].opt.signal.aborted, false);
+  await m.rl.avanzar(1);
   const r = await p;
+  assert.equal(m.rd.llamadas[1].opt.signal.aborted, true);
   assert.deepEqual(r, { ok: false, error: 'timeout', rechazo: false, origen: 'sin_red', token: TOK });
   assert.equal(m.rd.llamadas.length, 2, 'una sola reintentada');
   assert.deepEqual(m.rd.urls(), [claveCanje(TOK, 'MA'), claveCanje(TOK, 'MA')]);
@@ -260,6 +265,41 @@ test('6b · una caída de red se reintenta tras 1.5 s; si el segundo intento res
   const m2 = montar(); m2.rd.pon('caida', 'caida');
   const p2 = m2.core.sesion.canjear(); await m2.rl.avanzar(1500);
   assert.deepEqual(await p2, { ok: false, error: 'red', rechazo: false, origen: 'sin_red', token: TOK });
+});
+
+test('O4 · canje en frío: si el primer intento muere a los 25 s, el reintento todavía puede tardar hasta 75 s y entrar; sólo el canje; configurable', async () => {
+  const m = montar(), d = diferido();
+  m.rd.pon('colgado', { diferido: d });                                    // Apps Script arrancando: el primer intento nunca contesta
+  const p = m.core.sesion.canjear();
+  await m.rl.avanzar(25000 + 1500);                                        // 25 s de plazo + 1.5 s de espera
+  assert.equal(m.rd.llamadas.length, 2);
+  await m.rl.avanzar(60000);                                               // 60 s después de lanzar el reintento: todavía vive (con 25 s ya habría muerto)
+  d.ok(respuesta({ json: CANJE_OK }));
+  const r = await p;
+  assert.deepEqual([r.ok, r.origen, r.rol], [true, 'red', 'editor']);
+  assert.equal(m.rd.llamadas[1].opt.signal.aborted, false);
+
+  const c = montar(); assert.equal(c.core.config().timeoutFrioMs, 75000);   // los plazos por omisión
+  assert.equal(c.core.config({ timeoutFrioMs: 5000 }).timeoutFrioMs, 5000);
+  assert.equal(c.core.config({ timeoutFrioMs: 0 }).timeoutFrioMs, 5000, 'un plazo de 0 ms no vale');
+  assert.equal(c.core.config({ timeoutFrioMs: 'x' }).timeoutFrioMs, 5000);
+  assert.equal(c.core.config({ timeoutFrioMs: -1 }).timeoutFrioMs, 5000);
+  c.rd.pon('colgado', 'colgado');
+  const q = c.core.sesion.canjear(); let fin = false; q.then(() => { fin = true; });
+  await c.rl.avanzar(25000 + 1500 + 4999); assert.equal(fin, false);
+  await c.rl.avanzar(1);
+  assert.deepEqual([(await q).error, c.rd.llamadas.length], ['timeout', 2]);
+
+  const g = montar();                                                      // get y ppp.get no cambian: su reintento sigue con timeoutMs
+  g.rd.pon('colgado', 'colgado');
+  const pg = g.core.get(ORIGINAL, { recurso: 'lista' }, {}); let finG = false; pg.then(() => { finG = true; });
+  await g.rl.avanzar(25000 + 1500 + 24999); assert.equal(finG, false);
+  await g.rl.avanzar(1);
+  assert.deepEqual([(await pg).error, g.rd.llamadas.length], ['timeout', 2]);
+  const w = montar(); w.rd.pon('colgado', 'colgado');
+  const pw = w.core.ppp.get(PPP, { recurso: 'lista', k: TOK }, { reintentos: 1 }); let finW = false; pw.catch(() => { finW = true; });
+  await w.rl.avanzar(25000 + 1500 + 24999); assert.equal(finW, false);
+  await w.rl.avanzar(1); await assert.rejects(pw, e => e.message === 'timeout');
 });
 
 test('7 · token distinto: la caché del anterior no sirve y no se guarda tras un cambio en el vuelo', async () => {
@@ -340,6 +380,77 @@ test('9b · alCambiar: eventos propios y cambios de pyod_clave_v1 en otra pesta�
   try { m2.core.sesion.cerrar(); } finally { console.warn = w; }
   assert.deepEqual(quien, ['b'], 'un adoptante que lanza no tumba a los demás');
   assert.equal(avisos.length, 1);
+});
+
+/* ───────────── sesion.peek(): la identidad guardada, síncrona y sin red (T-201 punto 5) ───────────── */
+
+test('P1 · peek: sin identidad guardada es null; tras un canje devuelve {ok, rol, boards, nombre, correo, edadMs} al instante y sin tocar la red', async () => {
+  const m = montar();
+  assert.equal(m.core.sesion.peek(), null, 'nada guardado');
+  m.rd.pon({ json: CANJE_OK }); await m.core.sesion.canjear();
+  const n = m.rd.llamadas.length, p = m.core.sesion.peek();
+  assert.deepEqual(p, { ok: true, rol: 'editor', boards: 'MA,MX', nombre: 'Persona de prueba', correo: 'correo-de-prueba', edadMs: 0 });
+  assert.equal(typeof p.then, 'undefined', 'síncrona: no es una promesa');
+  assert.ok(!('token' in p) && !JSON.stringify(p).includes(TOK), 'jamás lleva el token');
+  await m.rl.avanzar(3 * MIN);
+  assert.equal(m.core.sesion.peek().edadMs, 3 * MIN);
+  p.rol = 'admin'; assert.equal(m.core.sesion.peek().rol, 'editor', 'cada llamada devuelve una copia');
+  assert.equal(m.rd.llamadas.length, n, 'no toca la red (ni refresca aunque la identidad ya no sea fresca)');
+  assert.deepEqual(de(m, 'sesion'), []);
+});
+
+test('P2 · peek: otro token, sin token, board distinto de «», identidad dañada o con ok:false → null', async () => {
+  const m = montar();
+  m.rd.pon({ json: CANJE_OK }); await m.core.sesion.canjear();
+  assert.ok(m.core.sesion.peek());
+  m.st.setItem('pyod_clave_v1', OTRO);
+  assert.equal(m.core.sesion.peek(), null, 'la identidad es de otra persona');
+  m.st.setItem('pyod_clave_v1', TOK); assert.ok(m.core.sesion.peek(), 'y vuelve con la suya');
+  m.st.removeItem('pyod_clave_v1'); assert.equal(m.core.sesion.peek(), null, 'sin credencial no hay identidad');
+  m.st.setItem('pyod_clave_v1', TOK);
+
+  const guardada = (ext = {}) => JSON.stringify(Object.assign({ h: m.core.hash(TOK), board: '', data: { ok: true, rol: 'lector', boards: '*', nombre: 'N', correo: 'c' }, ts: m.rl.t }, ext));
+  m.st.setItem('yodcg_sesion_v1', guardada({ board: 'MA' })); assert.equal(m.core.sesion.peek(), null, 'canjeada con un board: no es la identidad general');
+  m.st.setItem('yodcg_sesion_v1', guardada({ board: undefined })); assert.equal(m.core.sesion.peek().rol, 'lector', 'sin campo board vale como «»');
+  m.st.setItem('yodcg_sesion_v1', guardada({ data: { ok: false, error: 'revocado' } })); assert.equal(m.core.sesion.peek(), null);
+  m.st.setItem('yodcg_sesion_v1', guardada({ data: null })); assert.equal(m.core.sesion.peek(), null);
+  m.st.setItem('yodcg_sesion_v1', guardada({ ts: 'ayer' })); assert.equal(m.core.sesion.peek(), null, 'una marca de tiempo dañada no vale');
+  m.st.setItem('yodcg_sesion_v1', guardada({ ts: undefined })); assert.equal(m.core.sesion.peek(), null);
+  m.st.setItem('yodcg_sesion_v1', guardada({ ts: m.rl.t + 5000 })); assert.equal(m.core.sesion.peek().edadMs, 0, 'un reloj adelantado no da edades negativas');
+  m.st.setItem('yodcg_sesion_v1', '{no es json'); assert.equal(m.core.sesion.peek(), null);
+  m.st.removeItem('yodcg_sesion_v1'); assert.equal(m.core.sesion.peek(), null);
+});
+
+test('P3 · peek: vence a las 12 h (viejoMs, configurable) y un rechazo del canje la deja en null', async () => {
+  const m = montar();
+  m.rd.pon({ json: CANJE_OK }); await m.core.sesion.canjear();
+  await m.rl.avanzar(12 * HORA - 1);
+  assert.equal(m.core.sesion.peek().edadMs, 12 * HORA - 1, 'a un ms de las 12 h todavía vale');
+  await m.rl.avanzar(1);
+  assert.equal(m.core.sesion.peek(), null, 'a las 12 h ya no');
+  m.core.config({ viejoMs: 13 * HORA });
+  assert.equal(m.core.sesion.peek().edadMs, 12 * HORA, 'config({viejoMs}) la alarga');
+  m.core.config({ viejoMs: 5 * MIN });
+  assert.equal(m.core.sesion.peek(), null, 'y la acorta');
+  m.core.config({ viejoMs: 12 * HORA });
+
+  const r = montar();
+  r.rd.pon({ json: CANJE_OK }, { json: { ok: false, error: 'revocado' } });
+  await r.core.sesion.canjear(); assert.ok(r.core.sesion.peek());
+  assert.equal((await r.core.sesion.canjear({ modo: 'red' })).rechazo, true);
+  assert.equal(r.core.sesion.peek(), null, 'el rechazo tiró la identidad guardada');
+});
+
+test('P4 · peek con legacy → null aunque haya una identidad guardada válida; cerrar() y purgar() también la quitan', async () => {
+  const sembrar = m => m.st.setItem('yodcg_sesion_v1', JSON.stringify({ h: m.core.hash(TOK), board: '', data: { ok: true, rol: 'editor', boards: 'MA', nombre: 'N', correo: 'c' }, ts: m.rl.t }));
+  for (const op of [{ search: '?cargador=legacy' }, { hash: '#a&cargador=legacy' }, { storage: almacen({ pyod_clave_v1: TOK, yodcg_legacy: '1' }) }]) {
+    const m = montar(op); sembrar(m);
+    assert.equal(m.core.sesion.peek(), null, JSON.stringify(op)); assert.equal(m.rd.llamadas.length, 0);
+  }
+  const v = montar(); sembrar(v);
+  assert.equal(v.core.sesion.peek().rol, 'editor', 'la misma identidad, sin legacy, sí se ve');
+  v.core.purgar(); assert.equal(v.core.sesion.peek(), null);
+  sembrar(v); v.core.sesion.cerrar({ token: TOK }); assert.equal(v.core.sesion.peek(), null);
 });
 
 test('S1 · HTTP 401/403 = rechazo sin reintento; 500 reintenta una vez; JSON inválido no reintenta', async () => {
@@ -449,13 +560,18 @@ test('10c · get: rechazo borra lo guardado y NO sirve caché; frescoMs/viejoMs;
   assert.deepEqual([(await sin).ok, (await sin).error, (await sin).origen, pintado], [false, 'red', 'sin_red', 1]);
   m.rd.pon({ json: { ok: true, n: 3 } });
   await m.core.get(ORIGINAL, P, { clave: 'z', viejoMs: HORA });
-  m.rd.pon({ status: 403 });
+  m.rd.pon({ status: 403 }, { json: CANJE_OK });                            // con copia en juego: el dato, y después el canje que verifica (la sesión sigue viva)
   const r403 = await m.core.get(ORIGINAL, P, { clave: 'z', viejoMs: HORA });
   assert.deepEqual([r403.ok, r403.error, r403.rechazo, m.st.getItem(llave)], [false, 'http 403', true, null]);
+  await asentar();
+  assert.deepEqual(de(m, 'dato-negado').map(e => e.detalle), [{ clave: 'z', error: 'http 403' }]);
   m.rd.pon({ json: { ok: true, n: 4 } }); await m.core.get(ORIGINAL, P, { clave: 'z', viejoMs: HORA });
-  m.rd.pon({ json: { ok: false, error: 'clave' } });
+  m.rd.pon({ json: { ok: false, error: 'clave' } }, { json: CANJE_OK });
   const rj = await m.core.get(ORIGINAL, P, { clave: 'z', viejoMs: HORA });
   assert.deepEqual([rj.ok, rj.rechazo, m.st.getItem(llave)], [false, true, null]);
+  await asentar();
+  assert.deepEqual(de(m, 'dato-negado').map(e => e.detalle), [{ clave: 'z', error: 'http 403' }, { clave: 'z', error: 'clave' }]);
+  assert.deepEqual(rechazos(m), [], 'el rechazo de un dato, con el canje bueno, no cierra la sesión');
   m.rd.pon({ json: { ok: true, n: 5 } });
   await m.core.get(ORIGINAL, P, { clave: 'sin-cache' });
   assert.equal(m.st.getItem('yodcg_cache_v1:sin-cache'), null, 'sin viejoMs no se guarda nada');
@@ -499,7 +615,7 @@ test('D1 · catálogo: sin config → sin_config; con config usa clave catalogo:
   const m = montar();
   assert.deepEqual(await m.core.catalogo(), { ok: false, status: 0, error: 'sin_config', rechazo: false, origen: 'sin_red', ms: 0 });
   assert.equal(m.core.config({ catalogo: { url: 'http://inseguro.invalid/exec' } }).catalogo, null, 'sólo https');
-  assert.deepEqual(m.core.config({ catalogo: { url: CATALOGO }, timeoutMs: 1000, frescoMs: -5, viejoMs: 'x' }), { catalogo: { url: CATALOGO }, timeoutMs: 1000, frescoMs: 600000, viejoMs: 12 * HORA });
+  assert.deepEqual(m.core.config({ catalogo: { url: CATALOGO }, timeoutMs: 1000, frescoMs: -5, viejoMs: 'x' }), { catalogo: { url: CATALOGO }, timeoutMs: 1000, timeoutFrioMs: 75000, frescoMs: 600000, viejoMs: 12 * HORA });
   m.core.config({ timeoutMs: 25000 });
   assert.equal(m.rd.llamadas.length, 0);
   m.rd.pon({ json: { ok: true, rows: ['a'] } });
@@ -666,7 +782,11 @@ test('12b · ppp.get caso con «id» (como lo piden los motores): cada caso su l
   assert.equal(JSON.parse(m.st.getItem(L('A'))).data.caso.quien, 'A');
 });
 
-/* ───────────── rechazo de credencial en un refresco de datos (checkpoint de Sol) ───────────── */
+/* ───────────── rechazo de credencial en un refresco de datos (checkpoint de Sol; entrega 2: lo decide el Portero) ─────────────
+   Un 403 / sin_acceso / «clave» de UN backend de datos no prueba que la sesión murió: el cargador verifica con UN canje
+   (pedir(token,'',h): ignora la caché de sesión) y sólo si el canje TAMBIÉN rechaza purga y avisa; si el canje contesta ok sólo
+   cae la llave de ese dato y se emite dato-negado; si el canje falla por red no pasa nada más. En estas pruebas la cola de
+   fetch lleva primero la respuesta del DATO y después la del canje de verificación. */
 
 const LISTA = { recurso: 'lista', tipo: 'MACROLOTES', k: TOK }, MAPA = { recurso: 'mapa', k: TOK };
 async function sembrada(op) {                                              // sesión canjeada + una lista y un mapa guardados
@@ -679,8 +799,8 @@ async function sembrada(op) {                                              // se
 }
 const rechazos = m => de(m, 'sesion-rechazada').map(e => e.detalle);
 
-test('R1 · ppp.get lista: el refresco en fondo rechazado (revocado) purga TODO lo guardado y avisa; con error de servidor no pasa nada', async () => {
-  const s = await sembrada();                                              // servidor: ni purga ni avisa
+test('R1 · ppp.get lista: el refresco en fondo rechazado (revocado) se VERIFICA con el Portero y, si el canje también rechaza, purga TODO y avisa; con error de servidor no pasa nada', async () => {
+  const s = await sembrada();                                              // servidor: ni verifica, ni purga ni avisa
   s.rd.pon({ json: { ok: false, error: 'servidor' } });
   assert.equal((await s.core.ppp.get(PPP, LISTA)).yod.origen, 'cache'); await asentar();
   assert.equal(s.st.claves('yodcg_cache_v1:').length, 2); assert.ok(s.st.getItem('yodcg_sesion_v1')); assert.deepEqual(rechazos(s), []);
@@ -688,57 +808,62 @@ test('R1 · ppp.get lista: el refresco en fondo rechazado (revocado) purga TODO 
   s.rd.pon('caida'); await s.core.ppp.get(PPP, LISTA); await asentar();
   s.rd.pon('colgado'); await s.core.ppp.get(PPP, LISTA); await s.rl.avanzar(25000);
   assert.equal(s.st.claves('yodcg_cache_v1:').length, 2); assert.deepEqual(rechazos(s), []);
+  assert.equal(s.rd.urls().filter(u => u.includes('recurso=canje')).length, 1, 'ningún error transitorio provoca una verificación');
 
-  const m = await sembrada();                                              // revocado: purga y un solo aviso
-  m.rd.pon({ json: { ok: false, error: 'revocado' } });
+  const m = await sembrada();                                              // revocado: verificación → el canje también rechaza → purga y un solo aviso
+  m.rd.pon({ json: { ok: false, error: 'revocado' } }, { json: { ok: false, error: 'revocado' } });
   const r = await m.core.ppp.get(PPP, LISTA);
   assert.equal(r.yod.origen, 'cache', 'al motor se le sigue pintando lo guardado, como siempre'); await asentar();
+  assert.deepEqual(m.rd.urls().slice(-1), [claveCanje()], 'la verificación es un canje contra el Portero (sin board)');
   assert.deepEqual(m.st.claves('yodcg_cache_v1:'), [], 'ni la lista ni el mapa ni nada de esa persona');
   assert.equal(m.st.getItem('yodcg_sesion_v1'), null);
   assert.equal(m.st.getItem('pyod_clave_v1'), TOK, 'cerrar() lo decide el adoptante');
-  assert.deepEqual(rechazos(m), [{ error: 'revocado', token: TOK }]);
+  assert.deepEqual(rechazos(m), [{ error: 'revocado', token: TOK }]); assert.deepEqual(de(m, 'dato-negado'), []);
   m.rd.pon({ json: { ok: false, error: 'revocado' } });                    // ya sin caché: el motor ve el error en el JSON y nadie más
+  const n = m.rd.llamadas.length;
   const sin = await m.core.ppp.get(PPP, LISTA);
   assert.deepEqual(await sin.json(), { ok: false, error: 'revocado' }); assert.equal(rechazos(m).length, 1);
+  assert.equal(m.rd.llamadas.length, n + 1, 'sin copia en juego no hay verificación: el motor ya tiene el rechazo');
 });
 
-test('R2 · HTTP 401 y 403 en un refresco en fondo también purgan y avisan, con el error «http NNN»', async () => {
+test('R2 · HTTP 401 y 403 en un refresco en fondo: si el canje también los recibe, purga y avisa con «http NNN»; igual los códigos del cuerpo', async () => {
   for (const status of [401, 403]) {
     const m = await sembrada();
-    m.rd.pon({ status });
+    m.rd.pon({ status }, { status });                                      // el dato y el canje de verificación
     assert.equal((await m.core.ppp.get(PPP, MAPA)).yod.origen, 'cache'); await asentar();
     assert.deepEqual(m.st.claves('yodcg_cache_v1:'), [], 'HTTP ' + status);
     assert.equal(m.st.getItem('yodcg_sesion_v1'), null);
     assert.deepEqual(rechazos(m), [{ error: 'http ' + status, token: TOK }]);
-    assert.equal(m.rd.llamadas.length, 4, 'sin reintento');
+    assert.equal(m.rd.llamadas.length, 5, 'sin reintento: canje + lista + mapa + el dato negado + UNA verificación');
   }
   for (const error of ['clave', 'expirado', 'sin_sesion', 'forbidden']) {
     const m = await sembrada();
-    m.rd.pon({ json: { ok: false, error } }); await m.core.ppp.get(PPP, LISTA); await asentar();
+    m.rd.pon({ json: { ok: false, error } }, { json: { ok: false, error } }); await m.core.ppp.get(PPP, LISTA); await asentar();
     assert.deepEqual([m.st.claves('yodcg_cache_v1:').length, rechazos(m).map(x => x.error)], [0, [error]], error);
   }
 });
 
-test('R3 · get y catálogo: el rechazo llega DESPUÉS de pintar lo guardado → purga y aviso; sin nada guardado sólo se devuelve el rechazo', async () => {
+test('R3 · get y catálogo: el rechazo llega DESPUÉS de pintar lo guardado → verificación y, si el canje rechaza, purga y aviso; sin nada guardado sólo se devuelve el rechazo', async () => {
   const m = montar(), P = { recurso: 'lista', k: TOK }, o = { clave: 'lista-x', viejoMs: HORA };
   m.rd.pon({ json: { ok: true, filas: [1] } }, { json: { ok: true, casos: [7] } });
   await m.core.get(ORIGINAL, P, o);
   await m.core.ppp.get(PPP, LISTA);                                        // otra caché de la misma persona
   let pintado = null;
-  m.rd.pon({ json: { ok: false, error: 'expirado' } });
+  m.rd.pon({ json: { ok: false, error: 'expirado' } }, { json: { ok: false, error: 'expirado' } });
   const r = await m.core.get(ORIGINAL, P, Object.assign({ alViejo: d => { pintado = d.filas; } }, o));
   assert.deepEqual(pintado, [1], 'alViejo ya había pintado lo guardado');
   assert.deepEqual([r.ok, r.error, r.rechazo], [false, 'expirado', true]);
-  assert.deepEqual(m.st.claves('yodcg_cache_v1:'), []);
+  assert.equal(m.st.getItem('yodcg_cache_v1:lista-x'), null, 'esa llave cae en el acto'); await asentar();
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:'), [], 'y, con el canje rechazado, también la otra caché de la persona');
   assert.deepEqual(rechazos(m), [{ error: 'expirado', token: TOK }]);
 
   const c = montar(); c.core.config({ catalogo: { url: CATALOGO } });
   c.rd.pon({ json: { ok: true, rows: ['a'] } });
   await c.core.catalogo(); await c.rl.avanzar(10 * MIN);                   // guardado, pero ya no fresco: se pide a la red
-  c.rd.pon({ status: 403 });
+  c.rd.pon({ status: 403 }, { status: 403 });
   let vio = null;
   const k = await c.core.catalogo({ alViejo: d => { vio = d.rows; } });
-  assert.deepEqual([vio, k.ok, k.error, k.rechazo], [['a'], false, 'http 403', true]);
+  assert.deepEqual([vio, k.ok, k.error, k.rechazo], [['a'], false, 'http 403', true]); await asentar();
   assert.deepEqual(c.st.claves('yodcg_cache_v1:'), []); assert.deepEqual(rechazos(c), [{ error: 'http 403', token: TOK }]);
 
   const s = montar();                                                      // sin nada guardado: el adoptante ya ve el rechazo en la respuesta
@@ -747,26 +872,27 @@ test('R3 · get y catálogo: el rechazo llega DESPUÉS de pintar lo guardado →
   assert.deepEqual([rs.ok, rs.rechazo, rs.error], [false, true, 'http 403']);
   s.rd.pon({ json: { ok: false, error: 'clave' } });
   assert.equal((await s.core.get(ORIGINAL, P, o)).rechazo, true);
-  assert.deepEqual(rechazos(s), [], 'y no se emite nada: no había nada que purgar');
+  assert.deepEqual(rechazos(s), [], 'y no se emite nada: no había nada que purgar'); await asentar();
+  assert.equal(s.rd.llamadas.length, 2, 'ni se verifica: sin copia en juego el adoptante ya tiene el rechazo');
   const e = montar(); e.rd.pon({ json: { ok: true, filas: [1] } }, { json: { ok: false, error: 'servidor' } });   // error transitorio con caché: ni purga ni aviso
   await e.core.get(ORIGINAL, P, o); const ee = await e.core.get(ORIGINAL, P, o);
-  assert.deepEqual([ee.ok, ee.rechazo, e.st.claves('yodcg_cache_v1:').length, rechazos(e)], [false, false, 1, []]);
+  assert.deepEqual([ee.ok, ee.rechazo, e.st.claves('yodcg_cache_v1:').length, rechazos(e), e.rd.llamadas.length], [false, false, 1, [], 2]);
 });
 
-test('R4 · ppp.get caso con caché: payload revocado o HTTP 403 → purga y aviso (el 403 además rechaza); un 500 cae a la caché sin avisar', async () => {
+test('R4 · ppp.get caso con caché: payload revocado o HTTP 403 → verificación y, si el canje rechaza, purga y aviso (el 403 además rechaza); un 500 cae a la caché sin avisar', async () => {
   const P = { recurso: 'caso', tipo: 'MACROLOTES', id: 'C-1', k: TOK };
   const m = montar();
   m.rd.pon({ json: { ok: true, caso: { v: 1 } } }, { json: { ok: true, caso: { v: 2 } } });
   await m.core.ppp.get(PPP, P); await m.core.ppp.get(PPP, Object.assign({}, P, { id: 'C-2' }));
   assert.equal(m.st.claves('yodcg_cache_v1:').length, 2);
-  m.rd.pon({ json: { ok: false, error: 'revocado' } });
+  m.rd.pon({ json: { ok: false, error: 'revocado' } }, { json: { ok: false, error: 'revocado' } });
   const r = await m.core.ppp.get(PPP, P);
-  assert.deepEqual(await r.json(), { ok: false, error: 'revocado' }, 'el motor ve el JSON tal cual');
+  assert.deepEqual(await r.json(), { ok: false, error: 'revocado' }, 'el motor ve el JSON tal cual'); await asentar();
   assert.deepEqual(m.st.claves('yodcg_cache_v1:'), [], 'se fue también el otro caso'); assert.deepEqual(rechazos(m), [{ error: 'revocado', token: TOK }]);
 
   const n = montar(); n.rd.pon({ json: { ok: true, caso: { v: 1 } } }); await n.core.ppp.get(PPP, P);
-  n.rd.pon({ status: 403 });
-  await assert.rejects(n.core.ppp.get(PPP, P), e => e.rechazo === true && e.status === 403);
+  n.rd.pon({ status: 403 }, { status: 403 });
+  await assert.rejects(n.core.ppp.get(PPP, P), e => e.rechazo === true && e.status === 403); await asentar();
   assert.deepEqual(n.st.claves('yodcg_cache_v1:'), []); assert.deepEqual(rechazos(n), [{ error: 'http 403', token: TOK }]);
 
   const s = montar(); s.rd.pon({ json: { ok: true, caso: { v: 1 } } }); await s.core.ppp.get(PPP, P);
@@ -775,25 +901,26 @@ test('R4 · ppp.get caso con caché: payload revocado o HTTP 403 → purga y avi
   assert.deepEqual([f.yod.origen, (await f.json()).caso.v, s.st.claves('yodcg_cache_v1:').length, rechazos(s)], ['cache-fallback', 1, 1, []]);
 });
 
-test('R5 · varios refrescos rechazados a la vez: se purga y se avisa UNA vez; tras un canje bueno (o cerrar) vuelve a avisar', async () => {
+test('R5 · varios refrescos rechazados a la vez: UNA verificación, una purga y un aviso; tras un canje bueno (o cerrar) vuelve a avisar', async () => {
   const m = await sembrada();
-  m.rd.pon({ json: { ok: false, error: 'revocado' } }, { json: { ok: false, error: 'revocado' } });
+  m.rd.pon({ json: { ok: false, error: 'revocado' } }, { json: { ok: false, error: 'revocado' } }, { json: { ok: false, error: 'revocado' } });   // dos datos y UN canje
   const pendientes = [m.core.ppp.get(PPP, LISTA), m.core.ppp.get(PPP, MAPA)];   // dos refrescos en vuelo a la vez
   await Promise.all(pendientes); await asentar();
   assert.deepEqual(rechazos(m), [{ error: 'revocado', token: TOK }]);
   assert.deepEqual(m.st.claves('yodcg_cache_v1:'), []);
+  assert.equal(m.rd.urls().filter(u => u.includes('recurso=canje')).length, 2, 'el canje de la sesión + UNA verificación para los dos');
 
   m.rd.pon({ json: CANJE_OK }, { json: { ok: true, casos: [9] } });
   await m.core.sesion.canjear({ modo: 'red' });                            // un canje bueno: la credencial vuelve a valer
   await m.core.ppp.get(PPP, LISTA);
   assert.equal(m.st.claves('yodcg_cache_v1:').length, 1, 'la lista otra vez'); assert.ok(m.st.getItem('yodcg_sesion_v1'), 'y la sesión');
-  m.rd.pon({ json: { ok: false, error: 'clave' } });
+  m.rd.pon({ json: { ok: false, error: 'clave' } }, { json: { ok: false, error: 'clave' } });
   await m.core.ppp.get(PPP, LISTA); await asentar();
   assert.deepEqual(rechazos(m).map(x => x.error), ['revocado', 'clave']);
 
   m.core.sesion.cerrar({ token: TOK, motivo: 'rechazo' });                 // el adoptante cierra; la misma credencial, si volviera, avisa de nuevo
   m.st.setItem('pyod_clave_v1', TOK);
-  m.rd.pon({ json: { ok: true, casos: [10] } }, { json: { ok: false, error: 'expirado' } });
+  m.rd.pon({ json: { ok: true, casos: [10] } }, { json: { ok: false, error: 'expirado' } }, { json: { ok: false, error: 'expirado' } });
   await m.core.ppp.get(PPP, LISTA); await m.core.ppp.get(PPP, LISTA); await asentar();
   assert.deepEqual(rechazos(m).map(x => x.error), ['revocado', 'clave', 'expirado']);
 });
@@ -842,6 +969,446 @@ test('R7 · legacy: sin caché no hay nada que purgar ni que avisar', async () =
   assert.deepEqual(rechazos(m), []);
 });
 
+/* ───────────── recordar: memoria con plazo para CUALQUIER lectura del adoptante (T-201 punto 1) ───────────── */
+
+const llaveMemo = (m, clave, tok = TOK) => 'yodcg_cache_v1:memo:' + clave + ':' + m.core.hash(tok);
+const cuerpo = n => ({ ok: true, filas: [n] });
+const sinFin = () => new Promise(() => { });                               // un cargar que nunca contesta
+const niega = (error = 'sin_acceso') => () => Promise.resolve({ ok: false, error });
+const canjes = m => m.rd.urls().filter(u => u.includes('recurso=canje')).length;
+
+test('M1 · recordar (cache-primero): sin copia va a la red y guarda bajo memo:<clave>:<hash> sin el token; después contesta desde caché sin llamar a cargar', async () => {
+  const m = montar(); let n = 0;
+  const cargar = () => { n++; return Promise.resolve(cuerpo(n)); };
+  const a = await m.core.recordar('tablero:Flujo', cargar);
+  assert.deepEqual([a.ok, a.origen, a.data, typeof a.ms, n], [true, 'red', cuerpo(1), 'number', 1]);
+  const llave = llaveMemo(m, 'tablero:Flujo');
+  assert.equal(llave, 'yodcg_cache_v1:memo:tablero:Flujo:' + m.core.hash(TOK));
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:'), [llave]);
+  assert.ok(!llave.includes(TOK) && !m.st.getItem(llave).includes(TOK), 'ni la llave ni el valor llevan el token');
+  assert.deepEqual(JSON.parse(m.st.getItem(llave)), { ts: m.rl.t, data: cuerpo(1) });
+  assert.deepEqual(de(m, 'dato'), [], 'la lectura en primer plano no anuncia: quien la pidió ya tiene la respuesta');
+  await m.rl.avanzar(30000);                                               // menos que frescoMs (60 s): ni siquiera revalida
+  const b = await m.core.recordar('tablero:Flujo', cargar); await asentar();
+  assert.deepEqual([b.ok, b.origen, b.data, b.edadMs, typeof b.ms, n], [true, 'cache', cuerpo(1), 30000, 'number', 1]);
+  assert.deepEqual(de(m, 'dato'), []);
+  const c = await m.core.recordar('otra-clave', cargar);                    // cada clave la suya
+  assert.deepEqual([c.origen, c.data, n], ['red', cuerpo(2), 2]);
+});
+
+test('M2 · recordar (cache-primero) con copia vieja: contesta YA con ella y revalida UNA vez en fondo; el refresco anuncia yodcargador:dato y frescoMs evita el bucle', async () => {
+  const m = montar(), d = diferido(); let cargas = 0;
+  await m.core.recordar('c', () => Promise.resolve(cuerpo(1)));
+  await m.rl.avanzar(2 * MIN);                                             // más vieja que frescoMs (1 min) y mucho menos que viejoMs (12 h)
+  const lento = () => { cargas++; return d.promesa; };
+  const r = await m.core.recordar('c', lento);                              // no espera a la red
+  assert.deepEqual([r.ok, r.origen, r.data, r.edadMs], [true, 'cache', cuerpo(1), 2 * MIN]);
+  await m.core.recordar('c', lento); await m.core.recordar('c', lento); await asentar();
+  assert.equal(cargas, 1, 'mientras vuela un refresco de esa llave nadie lanza otro');
+  assert.deepEqual(de(m, 'dato'), [], 'y hasta que llega no hay anuncio');
+  d.ok(cuerpo(2)); await asentar();
+  assert.deepEqual(de(m, 'dato').map(e => e.detalle), [{ clave: 'memo:c', origen: 'red', data: cuerpo(2), igual: false }]);
+  assert.deepEqual(JSON.parse(m.st.getItem(llaveMemo(m, 'c'))), { ts: m.rl.t, data: cuerpo(2) }, 'la copia nueva se guardó ANTES de anunciar');
+  const s = await m.core.recordar('c', lento); await asentar();             // el adoptante re-corre su conector al recibir el evento
+  assert.deepEqual([s.origen, s.data, s.edadMs, cargas, de(m, 'dato').length], ['cache', cuerpo(2), 0, 1, 1], 'copia fresca: ni red ni otro evento (sin bucle)');
+  await m.rl.avanzar(2 * MIN);
+  await m.core.recordar('c', () => Promise.resolve(cuerpo(2))); await asentar();   // la red trae lo mismo
+  assert.deepEqual(de(m, 'dato').pop().detalle, { clave: 'memo:c', origen: 'red', data: cuerpo(2), igual: true });
+  await m.rl.avanzar(2 * MIN);                                             // un refresco que cae no anuncia ni borra la copia
+  await m.core.recordar('c', () => Promise.reject(new TypeError('sin red'))); await asentar();
+  await m.core.recordar('c', niega('servidor')); await asentar();
+  assert.equal(de(m, 'dato').length, 2); assert.deepEqual(JSON.parse(m.st.getItem(llaveMemo(m, 'c'))).data, cuerpo(2));
+  const e = await m.core.recordar('c', () => Promise.resolve(cuerpo(3))); await asentar();   // y puede volver a revalidar cuando el vuelo termina
+  assert.deepEqual([e.origen, de(m, 'dato').length], ['cache', 3]);
+});
+
+test('M3 · recordar: frescoMs (60 s) y viejoMs (12 h) por omisión, a un milisegundo de cada borde, y configurables por llamada', async () => {
+  const m = montar(); let cargas = 0;
+  const cargar = () => { cargas++; return Promise.resolve(cuerpo(cargas)); };
+  await m.core.recordar('c', cargar);
+  await m.rl.avanzar(59999);
+  assert.equal((await m.core.recordar('c', cargar)).origen, 'cache'); await asentar();
+  assert.equal(cargas, 1, 'a 59,999 ms todavía es fresca');
+  await m.rl.avanzar(1);                                                    // edad = frescoMs
+  assert.equal((await m.core.recordar('c', cargar)).edadMs, 60000); await asentar();
+  assert.equal(cargas, 2, 'a frescoMs revalida en fondo');
+
+  const k = montar(); cargas = 0;                                           // frescoMs propio, y 0 = revalida siempre
+  await k.core.recordar('c', cargar, { frescoMs: 10 * MIN });
+  await k.rl.avanzar(5 * MIN); await k.core.recordar('c', cargar, { frescoMs: 10 * MIN }); await asentar();
+  assert.equal(cargas, 1);
+  await k.core.recordar('c', cargar, { frescoMs: 0 }); await asentar();
+  await k.core.recordar('c', cargar, { frescoMs: 0 }); await asentar();
+  assert.equal(cargas, 3, 'con frescoMs 0 cada lectura revalida (una vez por vuelo)');
+
+  const v = montar(), vistas = [];                                          // viejoMs: a 4,999 ms la copia sirve; a 5,000 ya no
+  await v.core.recordar('a', cargar, { viejoMs: 5000 }); await v.core.recordar('b', cargar, { viejoMs: 5000 });
+  await v.rl.avanzar(4999);
+  const caida = () => Promise.reject(new TypeError('sin red')), o = { modo: 'red-primero', viejoMs: 5000, alViejo: (d, meta) => vistas.push(meta.edadMs) };
+  const a = await v.core.recordar('a', caida, o);
+  assert.deepEqual([a.origen, a.edadMs, vistas], ['cache-fallback', 4999, [4999]]);
+  await v.rl.avanzar(1);
+  const b = await v.core.recordar('b', caida, o);
+  assert.deepEqual([b.ok, b.error, b.origen, vistas], [false, 'red', 'sin_red', [4999]], 'con 5,000 ms de edad la copia ya no existe');
+  const w = montar();                                                       // sin viejoMs válido: 12 h
+  await w.core.recordar('c', cargar); await w.rl.avanzar(12 * HORA - 1);
+  assert.equal((await w.core.recordar('c', cargar)).origen, 'cache');
+  const x = montar(); await x.core.recordar('c', cargar, { viejoMs: 0 });   // viejoMs 0 = no se guarda nada
+  assert.deepEqual(x.st.claves('yodcg_cache_v1:'), []);
+});
+
+test('M4 · recordar (red-primero): alViejo corre ANTES de cargar, la red gana, y si cae o se acaba el plazo la copia cubre; sin copia falla limpio', async () => {
+  const m = montar(), orden = [];
+  await m.core.recordar('c', () => Promise.resolve(cuerpo(1)));
+  await m.rl.avanzar(5 * MIN);
+  const r = await m.core.recordar('c', () => { orden.push('cargar'); return Promise.resolve(cuerpo(2)); }, { modo: 'red-primero', alViejo: (d, meta) => orden.push(['viejo', d, meta]) });
+  assert.deepEqual(orden, [['viejo', cuerpo(1), { edadMs: 5 * MIN }], 'cargar']);
+  assert.deepEqual([r.ok, r.origen, r.data, typeof r.ms], [true, 'red', cuerpo(2), 'number']);
+  assert.deepEqual(JSON.parse(m.st.getItem(llaveMemo(m, 'c'))), { ts: m.rl.t, data: cuerpo(2) });
+  assert.deepEqual(de(m, 'dato'), [], 'en primer plano no se anuncia');
+
+  await m.rl.avanzar(5 * MIN);                                              // la red cae: la copia cubre y lo dice
+  const f = await m.core.recordar('c', () => Promise.reject(new TypeError('fallo de red')), { modo: 'red-primero' });
+  assert.deepEqual([f.ok, f.data, f.origen, f.error, f.edadMs], [true, cuerpo(2), 'cache-fallback', 'red', 5 * MIN]);
+  const t = m.core.recordar('c', sinFin, { modo: 'red-primero', timeoutMs: 2000 }); await m.rl.avanzar(2000);
+  assert.deepEqual([(await t).origen, (await t).error, (await t).data], ['cache-fallback', 'timeout', cuerpo(2)]);
+
+  const s = await m.core.recordar('nueva', () => Promise.reject(new TypeError('fallo de red')), { modo: 'red-primero' });   // sin copia
+  assert.deepEqual([s.ok, s.error, s.origen, s.rechazo], [false, 'red', 'sin_red', false]);
+  const u = m.core.recordar('nueva', sinFin, { modo: 'red-primero', timeoutMs: 1500 }); await m.rl.avanzar(1500);
+  assert.deepEqual([(await u).ok, (await u).error, (await u).origen], [false, 'timeout', 'sin_red']);
+  let pintado = 0;
+  const n = await m.core.recordar('nueva', () => Promise.resolve(cuerpo(9)), { modo: 'red-primero', alViejo() { pintado++; } });
+  assert.deepEqual([n.origen, n.data, pintado], ['red', cuerpo(9), 0], 'sin copia no hay nada que pintar');
+  const avisos = []; const w = console.warn; console.warn = (...a) => avisos.push(a.join(' '));   // alViejo que lanza no tumba la lectura
+  try { await m.core.recordar('c', () => Promise.resolve(cuerpo(3)), { modo: 'red-primero', alViejo() { throw new Error('el adoptante falló al pintar'); } }); } finally { console.warn = w; }
+  assert.deepEqual(JSON.parse(m.st.getItem(llaveMemo(m, 'c'))).data, cuerpo(3)); assert.equal(avisos.length, 1);
+});
+
+test('M5 · recordar: el plazo cubre al cargar (25 s por omisión), aborta su señal, y una respuesta tardía ni se guarda ni se anuncia; reintentos opcionales', async () => {
+  const m = montar(); let senal = null, fin = false;
+  const p = m.core.recordar('lento', s => { senal = s; return sinFin(); }); p.then(() => { fin = true; });
+  await m.rl.avanzar(24999);
+  assert.deepEqual([fin, senal && senal.aborted], [false, false]);
+  await m.rl.avanzar(1);
+  const r = await p;
+  assert.deepEqual([r.ok, r.error, r.origen, r.rechazo, senal.aborted], [false, 'timeout', 'sin_red', false, true]);
+
+  const d = diferido(); let s2 = null;                                      // la respuesta llega tarde: ya nadie la espera
+  const q = m.core.recordar('tarde', s => { s2 = s; return d.promesa; }, { timeoutMs: 1000 }); await m.rl.avanzar(1000);
+  assert.equal((await q).error, 'timeout'); d.ok(cuerpo(7)); await asentar();
+  assert.deepEqual([m.st.claves('yodcg_cache_v1:'), de(m, 'dato'), s2.aborted], [[], [], true]);
+
+  m.core.config({ timeoutMs: 3000 });                                       // el plazo por omisión es el de config()
+  let fin3 = false; const c = m.core.recordar('cfg', sinFin); c.then(() => { fin3 = true; });
+  await m.rl.avanzar(2999); assert.equal(fin3, false);
+  await m.rl.avanzar(1); assert.equal((await c).error, 'timeout');
+
+  let i0 = 0, i1 = 0;                                                        // sin reintento por omisión; con reintentos:1, a 1.5 s
+  const sin = m.core.recordar('r0', () => { i0++; return Promise.reject(new TypeError('x')); }); await m.rl.avanzar(5000);
+  assert.deepEqual([(await sin).error, i0], ['red', 1]);
+  const con = m.core.recordar('r1', () => { i1++; return i1 < 2 ? Promise.reject(new TypeError('x')) : Promise.resolve(cuerpo(1)); }, { reintentos: 1 });
+  await m.rl.avanzar(1499); assert.equal(i1, 1); await m.rl.avanzar(1);
+  assert.deepEqual([(await con).ok, (await con).origen, i1], [true, 'red', 2]);
+});
+
+test('M6 · recordar: un cuerpo ok:false se informa tal cual y NUNCA se guarda ni pisa la copia; un ok:false sin error es «servidor»', async () => {
+  const m = montar();
+  const a = await m.core.recordar('c', niega('servidor'));
+  assert.deepEqual([a.ok, a.error, a.rechazo, a.origen, a.data], [false, 'servidor', false, 'red', { ok: false, error: 'servidor' }]);
+  const b = await m.core.recordar('c', () => Promise.resolve({ ok: false }));
+  assert.deepEqual([b.error, b.rechazo], ['servidor', false]);
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:'), [], 'nada guardado');
+  await m.core.recordar('c', () => Promise.resolve(cuerpo(1)));
+  await m.rl.avanzar(2 * MIN);
+  for (const modo of ['red-primero', 'cache-primero']) {                    // con copia: una respuesta mala no la pisa ni la borra
+    const r = await m.core.recordar('c', niega('servidor'), { modo }); await asentar();
+    assert.equal(r.ok, modo === 'cache-primero', modo);
+    assert.deepEqual(JSON.parse(m.st.getItem(llaveMemo(m, 'c'))).data, cuerpo(1), modo);
+    assert.deepEqual(m.eventos.filter(e => e.tipo !== 'dato').length, 0);
+  }
+  assert.deepEqual(de(m, 'dato'), [], 'ni se anuncia');
+  const e = await m.core.recordar('c', niega('servidor'), { modo: 'red-primero' });
+  assert.deepEqual([e.ok, e.error], [false, 'servidor'], 'un error de servidor no se disfraza con la copia: sólo la caída de red lo hace');
+});
+
+test('M7 · recordar: lo que no es un objeto JSON es «formato»; un cargar que lanza o rechaza es «red» (o «timeout» si así se llama); sin cargar no revienta', async () => {
+  const m = montar();
+  for (const raro of [null, undefined, 'texto', 42, true]) {
+    const r = await m.core.recordar('f', () => Promise.resolve(raro));
+    assert.deepEqual([r.ok, r.error, r.origen, r.rechazo], [false, 'formato', 'red', false], String(raro));
+  }
+  const l = await m.core.recordar('f', () => { throw new Error('boom'); });             // lanza síncrono
+  assert.deepEqual([l.ok, l.error, l.origen], [false, 'red', 'sin_red']);
+  assert.equal((await m.core.recordar('f', () => Promise.reject(new Error('timeout')))).error, 'timeout');
+  assert.equal((await m.core.recordar('f', () => Promise.reject(undefined))).error, 'red');
+  assert.equal((await m.core.recordar('f')).error, 'red');
+  assert.equal((await m.core.recordar('f', 'no es función')).error, 'red');
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:'), []);
+  await m.core.recordar('f', () => Promise.resolve(cuerpo(1)));            // con copia, «formato» sí deja la copia en su sitio
+  await m.rl.avanzar(2 * MIN);
+  const c = await m.core.recordar('f', () => Promise.resolve('basura'), { modo: 'red-primero' });
+  assert.deepEqual([c.ok, c.origen, c.error, c.data], [true, 'cache-fallback', 'formato', cuerpo(1)]);
+});
+
+test('M8 · recordar: un rechazo LANZADO por el adoptante («403», Error HTTP 403, {status}, «revocado») es rechazo, no caída: no sirve la copia y la borra', async () => {
+  const lanzados = [
+    ['cadena 403', () => Promise.reject('403'), 'http 403'], ['cadena 401', () => Promise.reject('401'), 'http 401'],
+    ['número 403', () => Promise.reject(403), 'http 403'], ['Error HTTP 403', () => Promise.reject(new Error('HTTP 403')), 'http 403'],
+    ['Error con status 401', () => Promise.reject(Object.assign(new Error('x'), { status: 401 })), 'http 401'],
+    ['Error revocado', () => Promise.reject(new Error('revocado')), 'revocado'], ['lanzado síncrono', () => { throw '403'; }, 'http 403']
+  ];
+  for (const [nombre, cargar, error] of lanzados) {
+    const m = montar();
+    await m.core.recordar('c', () => Promise.resolve(cuerpo(1))); await m.rl.avanzar(2 * MIN);
+    m.rd.pon({ json: CANJE_OK });                                          // el Portero decide: la sesión sigue viva
+    const r = await m.core.recordar('c', cargar, { modo: 'red-primero' }); await asentar();
+    assert.deepEqual([r.ok, r.rechazo, r.error, r.origen], [false, true, error, 'red'], nombre);
+    assert.equal(m.st.getItem(llaveMemo(m, 'c')), null, nombre + ': la copia cae');
+    assert.deepEqual(de(m, 'dato-negado').map(e => e.detalle), [{ clave: 'memo:c', error }], nombre);
+  }
+  for (const [nombre, cargar] of [['HTTP 500', () => Promise.reject(new Error('HTTP 500'))], ['TypeError', () => Promise.reject(new TypeError('Failed to fetch'))], ['status 500', () => Promise.reject(Object.assign(new Error('x'), { status: 500 }))]]) {
+    const m = montar();
+    await m.core.recordar('c', () => Promise.resolve(cuerpo(1))); await m.rl.avanzar(2 * MIN);
+    const r = await m.core.recordar('c', cargar, { modo: 'red-primero' }); await asentar();
+    assert.deepEqual([r.ok, r.origen, r.rechazo, r.data], [true, 'cache-fallback', undefined, cuerpo(1)], nombre);
+    assert.equal(canjes(m), 0, nombre + ': una caída no se verifica');
+  }
+});
+
+test('M9 · recordar: nunca lee la copia de otra persona (llave por hash del token); si la persona cambia o sale MIENTRAS vuela, su respuesta no se guarda', async () => {
+  const m = montar(); let n = 0;
+  const cargar = () => { n++; return Promise.resolve(cuerpo(n)); };
+  await m.core.recordar('c', cargar);                                       // TOK
+  m.st.setItem('pyod_clave_v1', OTRO);
+  const o = await m.core.recordar('c', cargar);
+  assert.deepEqual([o.origen, o.data, n], ['red', cuerpo(2), 2], 'la copia de TOK no le sirve a OTRO');
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:').sort(), [llaveMemo(m, 'c', OTRO), llaveMemo(m, 'c', TOK)].sort());
+  m.st.setItem('pyod_clave_v1', TOK);
+  assert.deepEqual([(await m.core.recordar('c', cargar)).data, n], [cuerpo(1), 2], 'y cada quien conserva la suya');
+  let pintado = 0;
+  const x = await m.core.recordar('c', cargar, { token: 'sy-ajeno-0000000000000003', modo: 'red-primero', alViejo() { pintado++; } });
+  assert.deepEqual([x.origen, n, pintado], ['red', 3, 0], 'la copia de TOK no se le pinta a un token ajeno');
+  assert.equal(m.st.getItem(llaveMemo(m, 'c', 'sy-ajeno-0000000000000003')), null, 'con un token que no es el vigente no se guarda (como get)');
+
+  const k = montar(), d = diferido();                                       // cambia la persona durante el vuelo
+  const p = k.core.recordar('v', () => d.promesa, { modo: 'red-primero' }); await asentar();
+  k.st.setItem('pyod_clave_v1', OTRO); d.ok(cuerpo(1));
+  assert.equal((await p).ok, true, 'quien pidió igual recibe su respuesta');
+  assert.deepEqual([k.st.claves('yodcg_cache_v1:'), de(k, 'dato')], [[], []]);
+  const s = montar(), e = diferido();                                       // y sale durante el refresco en fondo
+  await s.core.recordar('v', () => Promise.resolve(cuerpo(1))); await s.rl.avanzar(2 * MIN);
+  await s.core.recordar('v', () => e.promesa); await asentar();
+  s.core.sesion.cerrar({ token: TOK, motivo: 'salir' }); e.ok(cuerpo(2)); await asentar();
+  assert.deepEqual([s.st.claves('yodcg_cache_v1:'), de(s, 'dato')], [[], []], 'ni quedó guardado ni se anunció');
+});
+
+test('M10 · recordar con legacy (?cargador=legacy, #…&cargador=legacy, yodcg_legacy=1): ni lee ni guarda caché, ni alViejo; sólo cargar con su plazo', async () => {
+  for (const op of [{ search: '?cargador=legacy' }, { hash: '#x&cargador=legacy' }, { storage: almacen({ pyod_clave_v1: TOK, yodcg_legacy: '1' }) }]) {
+    const m = montar(op); let n = 0, viejo = 0;
+    m.st.setItem(llaveMemo(m, 'c'), JSON.stringify({ ts: m.rl.t, data: cuerpo(99) }));   // una copia sembrada a mano tampoco se lee
+    const cargar = () => { n++; return Promise.resolve(cuerpo(n)); };
+    const a = await m.core.recordar('c', cargar, { alViejo() { viejo++; } });
+    const b = await m.core.recordar('c', cargar, { alViejo() { viejo++; }, modo: 'red-primero' });
+    assert.deepEqual([a.origen, a.data, b.origen, n, viejo, de(m, 'dato')], ['red', cuerpo(1), 'red', 2, 0, []], JSON.stringify(op));
+    assert.deepEqual(JSON.parse(m.st.getItem(llaveMemo(m, 'c'))).data, cuerpo(99), 'la sembrada sigue intacta: no se pisa');
+    const t = m.core.recordar('l', sinFin, { timeoutMs: 1000 }); await m.rl.avanzar(1000);
+    assert.deepEqual([(await t).error, (await t).origen], ['timeout', 'sin_red']);
+    const caida = await m.core.recordar('c', () => Promise.reject(new TypeError('x')));
+    assert.deepEqual([caida.ok, caida.error], [false, 'red'], 'sin copia que cubra');
+    const neg = await m.core.recordar('c', niega('clave')); await asentar();
+    assert.deepEqual([neg.rechazo, canjes(m), de(m, 'dato-negado'), rechazos(m)], [true, 0, [], []], 'sin caché no hay nada que verificar');
+  }
+});
+
+test('M11 · recordar con telemetria: mide como get (red o cache) y dispara el primer dato de la página una sola vez', async () => {
+  const m = montar();
+  await m.core.recordar('c', () => Promise.resolve(cuerpo(1)), { telemetria: 'flujo' });
+  assert.deepEqual(JSON.parse(m.st.getItem('yodcg_telemetria_v1')).map(x => [x.p, x.origen]), [['flujo', 'red'], ['pd', 'red']]);
+  assert.deepEqual(m.core.telemetria.codigos(), ['pd:MA:0:r@otro']);
+  await m.core.recordar('c', () => Promise.resolve(cuerpo(1)), { telemetria: 'flujo' });
+  assert.deepEqual(JSON.parse(m.st.getItem('yodcg_telemetria_v1')).slice(2).map(x => [x.p, x.origen]), [['flujo', 'cache']]);
+  assert.deepEqual(de(m, 'primer-dato').length, 1);
+  await m.core.recordar('d', () => Promise.resolve(cuerpo(1)));            // sin nombre no mide
+  assert.equal(JSON.parse(m.st.getItem('yodcg_telemetria_v1')).length, 3);
+});
+
+/* ───────────── el rechazo de un DATO lo decide el Portero (T-201 punto 3) ─────────────
+   get, ppp.get y recordar comparten la regla: si un backend de datos niega la credencial y había una copia en juego, se pide UN
+   canje (pedir(token,'',h): sin board y sin mirar la caché de sesión). Rechaza → purga y sesion-rechazada; contesta ok → sólo cae
+   la llave de ese dato y sale dato-negado; falla por red → nada más. En cada prueba la cola de fetch lleva primero la respuesta
+   del DATO y después la del canje de verificación (recordar no usa la cola: cargar es del adoptante). */
+
+const HTOK = montar().core.hash(TOK);
+const FUENTES = {
+  'recordar (primer plano)': {
+    clave: 'memo:a', llave: m => llaveMemo(m, 'a'),
+    sembrar: m => m.core.recordar('a', () => Promise.resolve(cuerpo('a'))),
+    negar: (m, e) => m.core.recordar('a', niega(e), { modo: 'red-primero' })
+  },
+  'recordar (revalidación en fondo)': {
+    clave: 'memo:a', llave: m => llaveMemo(m, 'a'),
+    sembrar: m => m.core.recordar('a', () => Promise.resolve(cuerpo('a'))),
+    negar: (m, e) => m.core.recordar('a', niega(e))
+  },
+  get: {
+    clave: 'lista-x', llave: () => 'yodcg_cache_v1:lista-x',
+    sembrar: m => { m.rd.pon({ json: cuerpo('g') }); return m.core.get(ORIGINAL, { recurso: 'lista', k: TOK }, { clave: 'lista-x', viejoMs: HORA }); },
+    negar: (m, e) => { m.rd.pon({ json: { ok: false, error: e } }); return m.core.get(ORIGINAL, { recurso: 'lista', k: TOK }, { clave: 'lista-x', viejoMs: HORA }); }
+  },
+  'ppp.get': {
+    clave: 'ppp:lista:MACROLOTES::' + HTOK, llave() { return 'yodcg_cache_v1:' + this.clave; },
+    sembrar: m => { m.rd.pon({ json: cuerpo('p') }); return m.core.ppp.get(PPP, LISTA); },
+    negar: (m, e) => { m.rd.pon({ json: { ok: false, error: e } }); return m.core.ppp.get(PPP, LISTA); }
+  }
+};
+async function preparar(f, op) {                                           // sesión canjeada (board '' y fresca) + una copia de la fuente + otra ajena a ella
+  const m = montar(op);
+  m.rd.pon({ json: CANJE_OK }); await m.core.sesion.canjear();
+  await f.sembrar(m);
+  await m.core.recordar('otra', () => Promise.resolve(cuerpo('otra')));
+  await m.rl.avanzar(2 * MIN);
+  assert.ok(m.st.getItem(f.llave(m)), 'precondición: la fuente tiene copia'); assert.ok(m.core.sesion.peek(), 'y la sesión guardada está fresca');
+  return m;
+}
+const FALLAS = {
+  'caída de red': { cola: ['caida', 'caida'], ms: 1500 }, 'HTTP 500': { cola: [{ status: 500 }, { status: 500 }], ms: 1500 },
+  'JSON inválido': { cola: [{ texto: '<html>' }], ms: 0 }, 'timeout (25 s + 1.5 s + 75 s)': { cola: ['colgado', 'colgado'], ms: 25000 + 1500 + 75000 }
+};
+
+for (const [nombre, f] of Object.entries(FUENTES)) {
+  test(`V1 · ${nombre}: si el canje contesta ok, sólo cae la llave de ese dato y sale dato-negado {clave, error}: ni purga, ni sesion-rechazada, ni se toca pyod_clave_v1`, async () => {
+    const m = await preparar(f), antes = canjes(m), otras = m.st.claves('yodcg_cache_v1:').filter(k => k !== f.llave(m)).sort();
+    const p = f.negar(m, 'sin_acceso'); m.rd.pon({ json: CANJE_OK });
+    await p; await asentar();
+    assert.equal(m.st.getItem(f.llave(m)), null, 'esa llave cae');
+    assert.deepEqual(de(m, 'dato-negado').map(e => e.detalle), [{ clave: f.clave, error: 'sin_acceso' }]);
+    assert.equal(canjes(m) - antes, 1, 'UNA verificación, aunque la sesión guardada estaba fresca (la verificación la ignora)');
+    assert.deepEqual(m.rd.urls().slice(-1), [claveCanje()], 'pedir(token, "") : sin board');
+    assert.deepEqual(m.st.claves('yodcg_cache_v1:').sort(), otras, 'las demás copias de la persona siguen');
+    assert.ok(m.st.getItem('yodcg_sesion_v1')); assert.equal(m.st.getItem('pyod_clave_v1'), TOK);
+    assert.deepEqual([rechazos(m), de(m, 'sesion-cerrada').length], [[], 0]);
+  });
+
+  test(`V2 · ${nombre}: si el canje también rechaza, purga TODO y avisa UNA vez (sesion-rechazada con el error del Portero); pyod_clave_v1 lo cierra el adoptante`, async () => {
+    for (const canje of [{ json: { ok: false, error: 'revocado' } }, { status: 403 }, { status: 401 }]) {
+      const m = await preparar(f);
+      const p = f.negar(m, 'sin_acceso'); m.rd.pon(canje);
+      await p; await asentar();
+      const error = canje.status ? 'http ' + canje.status : 'revocado';
+      assert.deepEqual(m.st.claves('yodcg_cache_v1:'), [], error);
+      assert.equal(m.st.getItem('yodcg_sesion_v1'), null);
+      assert.deepEqual(rechazos(m), [{ error, token: TOK }]);
+      assert.deepEqual(de(m, 'dato-negado'), [], 'si la sesión murió no es un dato negado');
+      assert.equal(m.st.getItem('pyod_clave_v1'), TOK, 'cerrar() lo decide el adoptante');
+    }
+  });
+
+  test(`V3 · ${nombre}: si el canje de verificación falla por red (caída, HTTP 500, timeout, JSON inválido) no pasa nada más: ni purga ni eventos`, async () => {
+    for (const [cual, falla] of Object.entries(f === FUENTES['recordar (primer plano)'] ? FALLAS : { 'caída de red': FALLAS['caída de red'] })) {
+      const m = await preparar(f), antes = canjes(m), otras = m.st.claves('yodcg_cache_v1:').filter(k => k !== f.llave(m)).sort();
+      const p = f.negar(m, 'sin_acceso'); m.rd.pon(...falla.cola);
+      await p; await m.rl.avanzar(falla.ms); await asentar();
+      assert.equal(m.st.getItem(f.llave(m)), null, cual + ': el dato negado igual deja de servirse');
+      assert.deepEqual([de(m, 'dato-negado'), rechazos(m), de(m, 'sesion-cerrada')], [[], [], []], cual);
+      assert.deepEqual(m.st.claves('yodcg_cache_v1:').sort(), otras, cual + ': lo demás sigue');
+      assert.ok(m.st.getItem('yodcg_sesion_v1') && m.st.getItem('pyod_clave_v1') === TOK, cual);
+      assert.ok(canjes(m) - antes >= 1, cual + ': sí se intentó verificar');
+    }
+  });
+}
+
+test('V4 · tres fuentes negadas a la vez (recordar, get y ppp.get): UNA sola verificación; canje ok → tres dato-negado; canje rechaza → una purga y un aviso', async () => {
+  for (const ok of [true, false]) {
+    const m = montar();
+    m.rd.pon({ json: CANJE_OK }); await m.core.sesion.canjear();
+    m.rd.pon({ json: cuerpo('g') }, { json: cuerpo('p') });
+    await m.core.get(ORIGINAL, { recurso: 'lista', k: TOK }, { clave: 'lista-x', viejoMs: HORA }); await m.core.ppp.get(PPP, LISTA);
+    await m.core.recordar('a', () => Promise.resolve(cuerpo('a'))); await m.rl.avanzar(2 * MIN);
+    const antes = canjes(m);
+    m.rd.pon({ json: { ok: false, error: 'sin_acceso' } }, { json: { ok: false, error: 'sin_acceso' } });   // get y ppp.get
+    const ps = [m.core.recordar('a', niega(), { modo: 'red-primero' }), m.core.get(ORIGINAL, { recurso: 'lista', k: TOK }, { clave: 'lista-x', viejoMs: HORA }), m.core.ppp.get(PPP, LISTA)];
+    m.rd.pon({ json: ok ? CANJE_OK : { ok: false, error: 'revocado' } });    // y UN canje de verificación
+    await Promise.all(ps); await asentar();
+    assert.equal(canjes(m) - antes, 1, 'una verificación para toda la página');
+    if (ok) {
+      assert.deepEqual(de(m, 'dato-negado').map(e => e.detalle.clave).sort(), ['lista-x', 'memo:a', FUENTES['ppp.get'].clave].sort());
+      assert.deepEqual(rechazos(m), []); assert.ok(m.st.getItem('yodcg_sesion_v1'));
+    } else {
+      assert.deepEqual(rechazos(m), [{ error: 'revocado', token: TOK }]); assert.deepEqual(de(m, 'dato-negado'), []);
+      assert.deepEqual(m.st.claves('yodcg_cache_v1:'), []);
+    }
+  }
+});
+
+test('V5 · si el canje de la página ya está en vuelo la verificación NO reentra: se sube a él y espera su veredicto', async () => {
+  for (const ok of [true, false]) {
+    const m = await preparar(FUENTES['recordar (primer plano)']), d = diferido(), antes = canjes(m);
+    m.rd.pon({ diferido: d });
+    const enVuelo = m.core.sesion.canjear({ modo: 'red' });                  // el canje de la página (board '') vuela
+    await asentar();
+    const r = await m.core.recordar('a', niega(), { modo: 'red-primero' }); await asentar();
+    assert.equal(r.rechazo, true); assert.equal(canjes(m) - antes, 1, 'un solo canje en el aire');
+    assert.deepEqual([de(m, 'dato-negado'), rechazos(m)], [[], []], 'todavía no hay veredicto');
+    d.ok(respuesta({ json: ok ? CANJE_OK : { ok: false, error: 'expirado' } })); await enVuelo; await asentar();
+    assert.equal(canjes(m) - antes, 1);
+    if (ok) assert.deepEqual(de(m, 'dato-negado').map(e => e.detalle), [{ clave: 'memo:a', error: 'sin_acceso' }]);
+    else { assert.deepEqual(rechazos(m), [{ error: 'expirado', token: TOK }]); assert.deepEqual(m.st.claves('yodcg_cache_v1:'), []); }
+  }
+});
+
+test('V6 · si la persona cambia o sale MIENTRAS vuela la verificación, su veredicto no purga ni avisa ni emite a la nueva', async () => {
+  for (const [cual, canje] of [['ok', { json: CANJE_OK }], ['rechazo', { json: { ok: false, error: 'revocado' } }]]) {
+    for (const cambio of ['otra persona', 'sale']) {
+      const m = await preparar(FUENTES['recordar (primer plano)']), d = diferido(), otras = m.st.claves('yodcg_cache_v1:').filter(k => k !== llaveMemo(m, 'a')).sort();
+      m.rd.pon({ diferido: d });
+      await m.core.recordar('a', niega(), { modo: 'red-primero' }); await asentar();
+      if (cambio === 'sale') m.core.sesion.cerrar({ token: TOK, motivo: 'salir' }); else m.st.setItem('pyod_clave_v1', OTRO);
+      const antes = m.eventos.length;
+      d.ok(respuesta(canje)); await asentar();
+      assert.deepEqual([de(m, 'dato-negado'), rechazos(m)], [[], []], cual + '/' + cambio);
+      assert.equal(m.eventos.length, antes, 'ningún evento más');
+      if (cambio === 'otra persona') assert.deepEqual(m.st.claves('yodcg_cache_v1:').sort(), otras, 'no se purga a la persona nueva');
+    }
+  }
+});
+
+test('V7 · una sesión ya dada por muerta no se vuelve a verificar: otro dato negado sólo vuelve a purgar (sin segundo aviso) hasta un canje bueno o cerrar()', async () => {
+  const m = await preparar(FUENTES['recordar (primer plano)']);
+  m.rd.pon({ json: { ok: false, error: 'revocado' } });
+  await m.core.recordar('a', niega(), { modo: 'red-primero' }); await asentar();
+  assert.equal(rechazos(m).length, 1); const antes = canjes(m);
+  await m.core.recordar('d', () => Promise.resolve(cuerpo('d')));            // el adoptante no cerró: sigue con el mismo token
+  await m.core.recordar('d', niega('clave'), { modo: 'red-primero' }); await asentar();
+  assert.deepEqual([canjes(m) - antes, rechazos(m).length, m.st.claves('yodcg_cache_v1:')], [0, 1, []]);
+  m.rd.pon({ json: CANJE_OK }); await m.core.sesion.canjear({ modo: 'red' });   // un canje bueno: la credencial vuelve a valer
+  await m.core.recordar('d', () => Promise.resolve(cuerpo('d')));
+  m.rd.pon({ json: CANJE_OK });
+  await m.core.recordar('d', niega('clave'), { modo: 'red-primero' }); await asentar();
+  assert.deepEqual([de(m, 'dato-negado').map(e => e.detalle.clave), rechazos(m).length], [['memo:d'], 1]);
+});
+
+test('V8 · sin copia en juego (o con legacy) un rechazo no dispara verificación: el adoptante ya lo tiene en su respuesta', async () => {
+  const m = montar();
+  const r = await m.core.recordar('nueva', niega('sin_acceso')); await asentar();
+  assert.deepEqual([r.ok, r.rechazo, r.error, canjes(m), m.rd.llamadas.length, m.eventos], [false, true, 'sin_acceso', 0, 0, []]);
+  const l = montar({ search: '?cargador=legacy' });
+  await l.core.recordar('x', () => Promise.resolve(cuerpo(1)));
+  assert.equal((await l.core.recordar('x', niega('clave'))).rechazo, true); await asentar();
+  assert.deepEqual([l.rd.llamadas.length, l.eventos], [0, []]);
+});
+
+test('V9 · un token vacío no verifica (nadie a quien avisar); el canje de verificación nunca lleva board ni toca el respaldo', async () => {
+  const m = montar({ token: '' });
+  await m.core.recordar('a', () => Promise.resolve(cuerpo(1)), { token: '' }); await m.rl.avanzar(2 * MIN);
+  const r = await m.core.recordar('a', niega('clave'), { modo: 'red-primero', token: '' }); await asentar();
+  assert.deepEqual([r.rechazo, m.rd.llamadas.length, m.eventos], [true, 0, []]);
+  const k = await preparar(FUENTES['recordar (primer plano)']);
+  k.rd.pon({ json: CANJE_OK });
+  await k.core.recordar('a', niega(), { modo: 'red-primero' }); await asentar();
+  assert.ok(k.rd.urls().filter(u => u.includes('recurso=canje')).every(u => u.startsWith(ORIGINAL + '?') && !u.includes('board=') && !u.startsWith(RESPALDO)));
+});
+
 /* ───────────── telemetría, página, hash ───────────── */
 
 test('13 · telemetría: primerDato una vez; codigos() ≤ 40 sin espacios y sin repetir; resumen() con mediana y p90', async () => {
@@ -850,9 +1417,9 @@ test('13 · telemetría: primerDato una vez; codigos() ≤ 40 sin espacios y sin
   assert.equal(T.primerDato('red', { via: 'lista' }), true);
   assert.equal(T.primerDato('cache'), false, 'sólo la primera cuenta');
   assert.deepEqual(de(m, 'primer-dato').map(e => e.detalle), [{ t: 1832, origen: 'red', tablero: 'MA', frio: true, extra: { via: 'lista' } }]);
-  assert.deepEqual(T.codigos(), ['pd:MA:1832:r']);
+  assert.deepEqual(T.codigos(), ['pd:MA:1832:r@otro'], 'sin navigator (Node) el dispositivo es «otro»');
   assert.deepEqual(T.codigos(), [], 'ya reportado');
-  assert.deepEqual(JSON.parse(m.st.getItem('yodcg_telemetria_v1')), [{ t: 1832, p: 'pd', tablero: 'MA', origen: 'red', frio: true }]);
+  assert.deepEqual(JSON.parse(m.st.getItem('yodcg_telemetria_v1')), [{ t: 1832, p: 'pd', tablero: 'MA', origen: 'red', frio: true, disp: 'otro' }]);
 
   m.core.config({ catalogo: { url: CATALOGO } });
   m.rd.pon(async () => { await m.rl.avanzar(250); return respuesta({ json: CANJE_OK }); }, async () => { await m.rl.avanzar(120); return respuesta({ json: { ok: true, rows: [] } }); });
@@ -861,7 +1428,7 @@ test('13 · telemetría: primerDato una vez; codigos() ≤ 40 sin espacios y sin
   m.rd.pon({ json: CANJE_OK }); await m.core.sesion.canjear({ modo: 'red' });
   await m.core.sesion.canjear(); await m.core.catalogo();
   const cods = T.codigos();
-  assert.deepEqual(cods, ['cj:MA:250:r', 'cat:120:r'], 'un código por tipo y por página');
+  assert.deepEqual(cods, ['cj:MA:250:r@otro', 'cat:120:r@otro'], 'un código por tipo y por página');
   assert.ok(cods.every(c => /^\S{1,40}$/.test(c)));
   assert.deepEqual(T.codigos(), []);
   assert.equal(T.marca('arranque'), m.rl.perfNow());
@@ -870,7 +1437,7 @@ test('13 · telemetría: primerDato una vez; codigos() ≤ 40 sin espacios y sin
   r.rd.pon({ json: CANJE_OK }); await r.core.sesion.canjear();
   const r2 = crear(Object.assign({}, r.env, { location: { pathname: '/yod-portal/os/', search: '', hash: '' } }));
   r2.telemetria.primerDato('cache');
-  assert.deepEqual(r2.telemetria.codigos(), ['pd:OS:0:c']);
+  assert.deepEqual(r2.telemetria.codigos(), ['pd:OS:0:c@otro']);
   assert.equal(JSON.parse(r.st.getItem('yodcg_telemetria_v1')).pop().frio, false);
 
   const q = montar();
@@ -896,12 +1463,104 @@ test('13b · el anillo guarda como mucho 60 muestras (las más recientes) y limp
   await m.core.get(ORIGINAL, { recurso: 'lista' }, { telemetria: 'lista' });
   const a = JSON.parse(m.st.getItem('yodcg_telemetria_v1'));
   assert.equal(a.length, 60); assert.equal(a[0].t, 4, 'salieron las 3 más viejas (2 nuevas + el primer dato)');
-  assert.deepEqual(a.pop(), { t: 0, p: 'lista', tablero: 'MA', origen: 'red', frio: true });
+  assert.deepEqual(a.pop(), { t: 0, p: 'lista', tablero: 'MA', origen: 'red', frio: true, disp: 'otro' });
   m.core.telemetria.limpiar();
   assert.equal(m.st.getItem('yodcg_telemetria_v1'), null); assert.equal(m.st.getItem('pyod_clave_v1'), TOK);
   m.core.purgar();
   m.st.setItem('yodcg_telemetria_v1', '[]'); m.core.purgar(); m.core.sesion.cerrar({ token: OTRO });
   assert.equal(m.st.getItem('yodcg_telemetria_v1'), '[]', 'ni purgar ni cerrar borran la telemetría');
+});
+
+/* ───────────── dispositivo en la telemetría (T-201 punto 4) ───────────── */
+
+const UA = {
+  iphone: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1',
+  ipad: 'Mozilla/5.0 (iPad; CPU OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1',
+  ipod: 'Mozilla/5.0 (iPod touch; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1',
+  mac: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15',
+  android: 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36',
+  cros: 'Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+  win: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+  lin: 'Mozilla/5.0 (X11; Linux x86_64; rv:127.0) Gecko/20100101 Firefox/127.0'
+};
+const PLATAFORMAS = [
+  ['iPhone', { userAgent: UA.iphone }, 'ios'], ['iPad', { userAgent: UA.ipad }, 'ios'], ['iPod', { userAgent: UA.ipod }, 'ios'],
+  ['iPad en modo escritorio (Macintosh con toques)', { userAgent: UA.mac, maxTouchPoints: 5 }, 'ios'],
+  ['Mac con exactamente 2 toques', { userAgent: UA.mac, maxTouchPoints: 2 }, 'ios'],
+  ['Mac de verdad (0 toques)', { userAgent: UA.mac, maxTouchPoints: 0 }, 'mac'], ['Mac con 1 solo toque no es iPad', { userAgent: UA.mac, maxTouchPoints: 1 }, 'mac'],
+  ['Mac sin maxTouchPoints', { userAgent: UA.mac }, 'mac'],
+  ['Android (su agente también dice Linux)', { userAgent: UA.android }, 'and'], ['ChromeOS (CrOS)', { userAgent: UA.cros }, 'cros'],
+  ['Windows', { userAgent: UA.win }, 'win'], ['Linux', { userAgent: UA.lin }, 'lin'],
+  ['userAgentData.platform «Android»', { userAgentData: { platform: 'Android' }, userAgent: UA.lin }, 'and'],
+  ['userAgentData.platform «Chrome OS»', { userAgentData: { platform: 'Chrome OS' } }, 'cros'],
+  ['userAgentData.platform «Chromium OS»', { userAgentData: { platform: 'Chromium OS' } }, 'cros'],
+  ['userAgentData.platform «Windows»', { userAgentData: { platform: 'Windows' } }, 'win'],
+  ['userAgentData.platform «macOS»', { userAgentData: { platform: 'macOS' }, maxTouchPoints: 0 }, 'mac'],
+  ['userAgentData.platform «macOS» con toques', { userAgentData: { platform: 'macOS' }, maxTouchPoints: 5 }, 'ios'],
+  ['userAgentData.platform «Linux»', { userAgentData: { platform: 'Linux' } }, 'lin'],
+  ['userAgentData.platform manda sobre el userAgent', { userAgentData: { platform: 'Windows' }, userAgent: UA.android }, 'win'],
+  ['platform vacía → userAgent', { userAgentData: { platform: '' }, userAgent: UA.win }, 'win'],
+  ['platform «Unknown» → userAgent', { userAgentData: { platform: 'Unknown' }, userAgent: UA.android }, 'and'],
+  ['userAgentData sin platform → userAgent', { userAgentData: {}, userAgent: UA.cros }, 'cros'],
+  ['agente irreconocible', { userAgent: 'curl/8.0' }, 'otro'], ['navigator vacío', {}, 'otro'], ['userAgent vacío', { userAgent: '' }, 'otro']
+];
+
+test('T1 · dispositivo: ios (iPhone/iPad/iPod o Macintosh con maxTouchPoints > 1), and, cros, win, mac, lin u otro, de userAgentData.platform o del userAgent', () => {
+  for (const [nombre, nav, esperado] of PLATAFORMAS) {
+    const m = montar({ navigator: nav });
+    m.core.telemetria.primerDato('red');
+    assert.deepEqual(m.core.telemetria.codigos(), ['pd:MA:0:r@' + esperado], nombre);
+    assert.equal(JSON.parse(m.st.getItem('yodcg_telemetria_v1'))[0].disp, esperado, nombre + ' (el anillo guarda disp)');
+  }
+  const sin = montar();                                                    // sin navigator (Node, workers) no revienta
+  sin.core.telemetria.primerDato('cache');
+  assert.deepEqual(sin.core.telemetria.codigos(), ['pd:MA:0:c@otro']);
+  for (const prop of ['userAgent', 'userAgentData', 'maxTouchPoints']) {   // un navigator hostil (getters que lanzan) tampoco
+    const nav = {}; Object.defineProperty(nav, prop, { get() { throw new Error('bloqueado'); } });
+    const m = montar({ navigator: nav });
+    m.core.telemetria.primerDato('red'); assert.deepEqual(m.core.telemetria.codigos(), ['pd:MA:0:r@otro'], prop);
+  }
+  const falso = montar({ navigator: { userAgentData: { get platform() { throw new Error('x'); } }, userAgent: UA.win } });
+  falso.core.telemetria.primerDato('red'); assert.deepEqual(falso.core.telemetria.codigos(), ['pd:MA:0:r@otro'], 'si el dato falla, «otro»; no se adivina');
+});
+
+test('T2 · los códigos de la bitácora (pd:, cj: y cat:) terminan en @<disp>, siguen ≤ 40 caracteres sin espacios y el anillo guarda disp; el dispositivo se calcula una vez', async () => {
+  for (const [nav, disp] of [[{ userAgent: UA.iphone }, 'ios'], [{ userAgent: UA.cros }, 'cros'], [{ userAgentData: { platform: 'Windows' } }, 'win']]) {
+    const m = montar({ navigator: nav, pathname: '/real-miramar-board/tramites.html' });
+    m.core.config({ catalogo: { url: CATALOGO } });
+    m.rd.pon(async () => { await m.rl.avanzar(250); return respuesta({ json: CANJE_OK }); }, async () => { await m.rl.avanzar(120); return respuesta({ json: { ok: true, rows: [] } }); });
+    await m.core.sesion.canjear(); await m.core.catalogo();                  // el catálogo mide y dispara el primer dato de la página
+    const cods = m.core.telemetria.codigos();
+    assert.deepEqual(cods, ['cj:MT:250:r@' + disp, 'cat:120:r@' + disp, 'pd:MT:370:r@' + disp]);
+    assert.ok(cods.every(c => /^\S{1,40}$/.test(c)), 'sin espacios y ≤ 40');
+    const anillo = JSON.parse(m.st.getItem('yodcg_telemetria_v1'));
+    assert.ok(anillo.length >= 3 && anillo.every(x => x.disp === disp), 'todas las muestras llevan disp');
+    assert.deepEqual(anillo.map(x => Object.keys(x).sort().join()).filter((v, i, a) => a.indexOf(v) === i), ['disp,frio,origen,p,t,tablero']);
+  }
+  const nav = { userAgent: UA.win }, m = montar({ navigator: nav });
+  nav.userAgent = UA.iphone;                                                // el dispositivo no cambia durante la página
+  m.core.telemetria.primerDato('red'); assert.deepEqual(m.core.telemetria.codigos(), ['pd:MA:0:r@win']);
+  const largo = montar({ navigator: { userAgent: UA.cros } });              // el tope de 40 se conserva con el sufijo más largo (cros)
+  await largo.rl.avanzar(999999999); largo.core.telemetria.primerDato('cache');
+  const [cod] = largo.core.telemetria.codigos(); assert.deepEqual([cod, cod.length <= 40], ['pd:MA:999999999:c@cros', true]);
+});
+
+test('T3 · resumen(o) acepta o.disp (y se combina con tablero y p); las muestras viejas sin disp no entran en un filtro por dispositivo', () => {
+  const m = montar();
+  const anillo = [
+    { t: 100, p: 'pd', tablero: 'MA', disp: 'ios' }, { t: 200, p: 'pd', tablero: 'MA', disp: 'ios' }, { t: 900, p: 'pd', tablero: 'MA', disp: 'win' },
+    { t: 300, p: 'cj', tablero: 'MA', disp: 'ios' }, { t: 50, p: 'pd', tablero: 'MX', disp: 'ios' }, { t: 7000, p: 'pd', tablero: 'MA' }
+  ];
+  m.st.setItem('yodcg_telemetria_v1', JSON.stringify(anillo));
+  const r = o => { const x = m.core.telemetria.resumen(o); return [x.n, x.mediana_ms, x.p90_ms]; };
+  assert.deepEqual(r(), [6, 250, 7000]);
+  assert.deepEqual(r({ disp: 'ios' }), [4, 150, 300]);
+  assert.deepEqual(r({ disp: 'win' }), [1, 900, 900]);
+  assert.deepEqual(r({ disp: 'ios', tablero: 'MA' }), [3, 200, 300]);
+  assert.deepEqual(r({ disp: 'ios', tablero: 'MA', p: 'pd' }), [2, 150, 200]);
+  assert.deepEqual(r({ disp: 'cros' }), [0, 0, 0]);
+  assert.deepEqual(r({ tablero: 'MA' }), [5, 300, 7000], 'sin o.disp no se filtra por dispositivo (incluye la muestra vieja sin disp)');
+  assert.deepEqual(m.core.telemetria.resumen({ disp: 'ios' }).ultimos.map(x => x.t), [100, 200, 300, 50]);
 });
 
 test('pagina(): mismo criterio que portero.js más tablero, obra y la cabina (os/index)', () => {
@@ -994,7 +1653,7 @@ test('15 · legacy (?cargador=legacy, #…&cargador=legacy o yodcg_legacy=1): to
   g.core.cargarDespues('https://cdn.invalid/l.js');
   assert.equal(g.insertados.length, 1, 'inmediato');
   g.core.telemetria.primerDato('red');
-  assert.deepEqual(g.core.telemetria.codigos(), ['pd:MA:0:r'], 'la telemetría sigue midiendo');
+  assert.deepEqual(g.core.telemetria.codigos(), ['pd:MA:0:r@otro'], 'la telemetría sigue midiendo');
   assert.equal(JSON.parse(g.st.getItem('yodcg_telemetria_v1')).length >= 2, true);
   const s = montar({ search: '?cargador=legacy&sesion=' + TOK, token: '' });
   assert.equal(s.st.getItem('pyod_clave_v1'), TOK, '?sesion= se procesa también en legacy');
@@ -1098,7 +1757,7 @@ test('la telemetría nunca expulsa cachés de datos para hacerse sitio (los dato
   assert.equal(m.core.telemetria.primerDato('red'), true);
   assert.deepEqual(st.claves('yodcg_cache_v1:'), ['yodcg_cache_v1:a', 'yodcg_cache_v1:b']);
   assert.equal(st.getItem('yodcg_telemetria_v1'), null);
-  assert.deepEqual(m.core.telemetria.codigos(), ['pd:MA:0:r'], 'el código para la bitácora sale igual');
+  assert.deepEqual(m.core.telemetria.codigos(), ['pd:MA:0:r@otro'], 'el código para la bitácora sale igual');
 });
 
 /* ───────────── el archivo en sí ───────────── */
@@ -1126,11 +1785,11 @@ test('fábrica exportable en Node; en el navegador se autoinstancia como window.
   ctx.window = ctx; vm.createContext(ctx);
   vm.runInContext(FUENTE, ctx);
   const primera = ctx.YodCargador;
-  assert.equal(primera.v, '1'); assert.equal(primera.legacy, false); assert.equal(primera.pagina(), 'OS'); assert.equal(primera.sesion.token(), TOK);
+  assert.equal(primera.v, '2'); assert.equal(primera.legacy, false); assert.equal(primera.pagina(), 'OS'); assert.equal(primera.sesion.token(), TOK);
   vm.runInContext(FUENTE, ctx);
   assert.equal(ctx.YodCargador, primera, 'el segundo script no hace nada');
-  assert.deepEqual(Object.keys(primera).sort(), ['arranque', 'cargarDespues', 'catalogo', 'config', 'get', 'hash', 'legacy', 'pagina', 'ppp', 'purgar', 'sesion', 'telemetria', 'v']);
-  assert.deepEqual(Object.keys(primera.sesion).sort(), ['alCambiar', 'canjear', 'cerrar', 'esRechazo', 'token']);
+  assert.deepEqual(Object.keys(primera).sort(), ['arranque', 'cargarDespues', 'catalogo', 'config', 'get', 'hash', 'legacy', 'pagina', 'ppp', 'purgar', 'recordar', 'sesion', 'telemetria', 'v']);
+  assert.deepEqual(Object.keys(primera.sesion).sort(), ['alCambiar', 'canjear', 'cerrar', 'esRechazo', 'peek', 'token']);
   assert.deepEqual(Object.keys(primera.telemetria).sort(), ['codigos', 'limpiar', 'marca', 'primerDato', 'resumen']);
 });
 
