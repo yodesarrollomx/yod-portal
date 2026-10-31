@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-30.cargador-fase1.1",
+  "model_revision": "2026-10-31.cargador-fase1.2",
   "proposal_id": "CHG-CARGADOR-FASE1-001",
   "summary": "Fase 1 (Un cargador), entrega 1: os/yod-cargador.js compartido (un canje por página con caché y refresco en fondo, catálogo y datos PPP con caché, telemetría de primer dato, chinche diferida, interruptor ?cargador=legacy); lo adoptan la cabina y el marco; el marco deja de intentar el respaldo muerto del Portero. Sin cambios de backend, hojas ni permisos.",
   "components": [

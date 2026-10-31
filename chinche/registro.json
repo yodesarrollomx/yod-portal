@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "package": "chinche/paquete.json",
-  "updatedAt": "2026-10-20T19:16:26.092700+00:00",
+  "updatedAt": "2026-10-31T04:23:42.040Z",
   "controlTask": "CG-CHINCHES-AUDIO-SECUENCIA-20261020",
   "reviewState": "private external state; never audio, notes or private identifiers in public repo",
   "reviewPolicy": {
@@ -20,7 +20,7 @@
       "id": "real-miramar-board",
       "repository": "yodesarrollomx/real-miramar-board",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "costos-oficiales.html",
         "cuentas.html",
@@ -61,7 +61,7 @@
       "id": "plan-potencial",
       "repository": "yodesarrollomx/plan-potencial",
       "mode": "indirect",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "index.html",
         "board.html"
@@ -138,7 +138,7 @@
       "id": "interiores-aurum",
       "repository": "yodesarrollomx/interiores-aurum",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "llave-maestra.html"
       ],
@@ -174,7 +174,7 @@
       "id": "aurum-board",
       "repository": "yodesarrollomx/aurum-board",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "index.html"
       ],
@@ -210,7 +210,7 @@
       "id": "co-desarrolladores-yod",
       "repository": "yodesarrollomx/Co-desarrolladores-Yod",
       "mode": "indirect",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "index.html",
         "src/main.jsx",
@@ -288,7 +288,7 @@
       "id": "board-flujo-yod",
       "repository": "yodesarrollomx/board-flujo-yod",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "index.html"
       ],
@@ -324,7 +324,7 @@
       "id": "yodesarrollomx.github.io",
       "repository": "yodesarrollomx/yodesarrollomx.github.io",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "propuestas/inicio/index.html"
       ],
@@ -360,7 +360,7 @@
       "id": "potenciales-yod",
       "repository": "yodesarrollomx/potenciales-yod",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "accesos.html",
         "index.html",
@@ -403,7 +403,7 @@
       "id": "board-aurum",
       "repository": "yodesarrollomx/board-aurum",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "index.html"
       ],
@@ -439,7 +439,7 @@
       "id": "yod-despacho",
       "repository": "yodesarrollomx/yod-despacho",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "clasico.html",
         "corcho.js",
@@ -478,7 +478,7 @@
       "id": "yod-portal",
       "repository": "yodesarrollomx/yod-portal",
       "mode": "bundle",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "os/index.html",
         "tablero.html",
@@ -507,6 +507,10 @@
             {
               "sha256": "4d97f4b0dab00970b90d7500c62190096732efab1a8dd9f305320cab6e14295c",
               "bytes": 30274
+            },
+            {
+              "sha256": "904b2b6fbe4c09721fd62243dca2384a5c2867e22fb4d75ba1ebee5ebe6b546b",
+              "bytes": 30341
             }
           ]
         }
@@ -542,7 +546,7 @@
       "id": "yodesarrollo-board",
       "repository": "yodesarrollomx/yodesarrollo-board",
       "mode": "bundle",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "brokers.html",
         "presentaciones.html",
@@ -571,6 +575,10 @@
             {
               "sha256": "4d97f4b0dab00970b90d7500c62190096732efab1a8dd9f305320cab6e14295c",
               "bytes": 30274
+            },
+            {
+              "sha256": "904b2b6fbe4c09721fd62243dca2384a5c2867e22fb4d75ba1ebee5ebe6b546b",
+              "bytes": 30341
             }
           ]
         }
@@ -607,7 +615,7 @@
       "id": "sala-edicion",
       "repository": "yodesarrollomx/sala-edicion",
       "mode": "shared",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "index.html",
         "tablero-sala.js"
@@ -650,7 +658,7 @@
       "id": "amalaya-board",
       "repository": "yodesarrollo/amalaya-board",
       "mode": "native-prefix",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "src/App.jsx",
         "public/chinche.js"
@@ -674,6 +682,10 @@
             {
               "sha256": "682df06721e0163f89f0a0a06530d09a55b11cfc38421d4ba087bdd16b129e8a",
               "bytes": 26689
+            },
+            {
+              "sha256": "bb5a4d835e8c1015d26535bd84dc03d0b81bd96fa68d674ccc980b89b3d1bea8",
+              "bytes": 26756
             }
           ],
           "prefixOffset": 28,
@@ -717,7 +729,7 @@
       "id": "emdevaluacion360",
       "repository": "yodesarrollomx/EMDevaluacion360",
       "mode": "native-prefix",
-      "targetVersion": "1.1.0",
+      "targetVersion": "1.1.1",
       "surfaces": [
         "web/pins.js",
         "index.html",
@@ -742,6 +754,10 @@
             {
               "sha256": "682df06721e0163f89f0a0a06530d09a55b11cfc38421d4ba087bdd16b129e8a",
               "bytes": 26689
+            },
+            {
+              "sha256": "bb5a4d835e8c1015d26535bd84dc03d0b81bd96fa68d674ccc980b89b3d1bea8",
+              "bytes": 26756
             }
           ]
         }
@@ -782,6 +798,129 @@
         "protocol": 1,
         "publishedVersion": "40",
         "resource": "Buzon:CG-CHINCHES-AUDIO-SECUENCIA-20261020"
+      }
+    },
+    {
+      "id": "yodesarrollo-board-ppp",
+      "repository": "yodesarrollomx/yodesarrollo-board",
+      "mode": "bundle",
+      "surfaces": [
+        "presentacion/ppp/index.html"
+      ],
+      "capturePolicy": "dom-guarded",
+      "targetVersion": "1.1.1",
+      "integrationConfirmed": false,
+      "targets": [
+        {
+          "path": "presentacion/vendor/yod-chinche.js",
+          "kind": "markers",
+          "components": [
+            "secuencia.js",
+            "entrega.js"
+          ],
+          "acceptedSha256": [
+            "c685c95efb42e2ed81be4d1583b9dab43c533d257b851177a510f346fac4dad0"
+          ],
+          "acceptedBlocks": [
+            {
+              "sha256": "c685c95efb42e2ed81be4d1583b9dab43c533d257b851177a510f346fac4dad0",
+              "bytes": 21640
+            },
+            {
+              "sha256": "4d97f4b0dab00970b90d7500c62190096732efab1a8dd9f305320cab6e14295c",
+              "bytes": 30274
+            },
+            {
+              "sha256": "904b2b6fbe4c09721fd62243dca2384a5c2867e22fb4d75ba1ebee5ebe6b546b",
+              "bytes": 30341
+            }
+          ]
+        }
+      ],
+      "review": {
+        "source": "github-issues-and-authorized-private-package",
+        "repository": "yodesarrollomx/yodesarrollo-board",
+        "label": "chinche",
+        "requiresPrivateReceipt": true,
+        "status": "pending-publication-and-real-receipt",
+        "localDrafts": "not-visible-from-server"
+      },
+      "deployment": {
+        "status": "pendiente"
+      },
+      "receipt": {
+        "status": "pendiente"
+      },
+      "replay": {
+        "status": "pendiente"
+      },
+      "parentIntegration": "yodesarrollo-board",
+      "inventoryStatus": "source-prepared",
+      "source": {
+        "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+        "auditedCommit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+        "basis": "draft-pr-source-audited",
+        "observedAt": "2026-10-31T04:23:42.040Z",
+        "preparedAgainst": "99ade959cedde1c4b7fb24e862ab8da45f862826",
+        "finding": "Superficie PPP privada preparada en PR63 borrador, commit y cinco archivos exactos contrastados por huella. Inicializa captura tras verificar owner y leer una versión autorizada; reutiliza storyboard-reviews, pin-delivery y bundle común existente. No acredita despliegue, recibo central ni reproducción real.",
+        "managed": {
+          "path": "presentacion/vendor/yod-chinche.js",
+          "sha256": "4d97f4b0dab00970b90d7500c62190096732efab1a8dd9f305320cab6e14295c",
+          "bytes": 30274
+        },
+        "evidence": [
+          {
+            "repository": "yodesarrollomx/yodesarrollo-board",
+            "path": "presentacion/ppp/index.html",
+            "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+            "sha256": "6f238b413634ebce7f21c92e594e3aba65667e4102be15a5e270a7ec86f27763",
+            "status": "draft-pr-source",
+            "finding": "Bytes del commit exacto contrastados; publicación y prueba funcional pendientes."
+          },
+          {
+            "repository": "yodesarrollomx/yodesarrollo-board",
+            "path": "presentacion/ppp/app.mjs",
+            "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+            "sha256": "dfadc369a8b5389b47498cc4ba21270281d540eb460b566e969657f6726447f8",
+            "status": "draft-pr-source",
+            "finding": "Inicialización privada después de owner y lectura de versión; liga fuente PPP, versión editorial y momento. Fuente de PR verificada; operación productiva pendiente."
+          },
+          {
+            "repository": "yodesarrollomx/yodesarrollo-board",
+            "path": "presentacion/storyboard-reviews.js",
+            "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+            "sha256": "7d0d40c068b552ba294dacb7737e2d525b0126e5414de7719fc95e136b83d5c2",
+            "status": "draft-pr-source",
+            "finding": "Bytes del commit exacto contrastados; publicación y prueba funcional pendientes."
+          },
+          {
+            "repository": "yodesarrollomx/yodesarrollo-board",
+            "path": "presentacion/pin-delivery.js",
+            "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+            "sha256": "c7be4645d9e8ccbca63ee7cd61e44a51f21453a5887000626a8cc2c81c9b9c0c",
+            "status": "draft-pr-source",
+            "finding": "Bytes del commit exacto contrastados; publicación y prueba funcional pendientes."
+          },
+          {
+            "repository": "yodesarrollomx/yodesarrollo-board",
+            "path": "presentacion/vendor/yod-chinche.js",
+            "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+            "sha256": "da3081573f436457da1724ec04e17db451cdfc3922eba0e29f6e9902ca0010a3",
+            "status": "draft-pr-source",
+            "finding": "Bytes del commit exacto contrastados; publicación y prueba funcional pendientes."
+          }
+        ],
+        "pullRequest": "https://github.com/yodesarrollomx/yodesarrollo-board/pull/63"
+      },
+      "runtime": {
+        "version": null,
+        "receiptVerified": false,
+        "replayVerified": false
+      },
+      "update": {
+        "strategy": "managed-block-pr",
+        "backendPublish": "manual-original-deployment-if-backend-or-htmlservice-changes",
+        "noRuntimeHotSwap": true
       }
     }
   ]

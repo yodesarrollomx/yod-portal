@@ -100,3 +100,7 @@ La auditoría no se considera completa mientras existan componentes críticos o 
 
 - [PPP · lectura y campos inactivos](ppp-read-validation.md): aplicabilidad explícita, diagnóstico de validación y conservación de cantidades y permisos.
 
+
+- [PPP · Presentaciones desde la versión visible](ppp-presentaciones.md): generación autorizada con ADN/Hairline, snapshot exacto, trabajo durable y versiones privadas compartidas con Master Developer; propuesta previa a implementación.
+
+- [Chinches · reloj del inicio del trazo](chinches-reloj-trazo.md): corrección focal y patch1.1.1, con validación estricta y borradores conservados.

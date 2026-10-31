@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-30.cargador-fase1.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-10-31.cargador-fase1.2 · 2026-10-20.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
@@ -520,3 +520,35 @@ flowchart TD
 Vacíos: Consentimiento inicial de Google y confirmación del libro efectivo mediante sesión de Dirección.; Corte de la rutina Claude sólo después de dos ciclos de observación y pruebas; primer envío aprobado real se acredita por separado.; Si la rutina original captaba correos/creaba tarjetas, portar esas reglas antes de dar por sustituido su alcance; este ejecutor sólo procesa BANDEJA y cambios/respuestas existentes..
 
 Evidencia: CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.; Proceso de nube implementado con observación, aprobación privada, reserva y conciliación; publicación comprobada, ejecución Google pendiente..
+
+## PROC-PPP-PRESENTACIONES · Presentación versionada desde el PPP visible
+
+Estado: propuesto.
+
+```mermaid
+flowchart TD
+  p0["Elegir versión visible y encargar presentación · Persona autorizada"]
+  p1["Autorizar, releer y fijar snapshot privado · Servidor existente"]
+  p0 -.-> p1
+  p2["Preparar ADN y storyboard visual · Agente existente"]
+  p1 -.-> p2
+  p3["Validar y registrar versión con recibo · Agente y registro existentes"]
+  p2 -.-> p3
+  p4["Consultar la misma versión en PPP y Master Developer · Persona autorizada"]
+  p3 -.-> p4
+  p5["Revisar y ordenar etapa dos · Dirección"]
+  p4 -.-> p5
+```
+
+| Paso | Responsable | Componentes | Entrada → salida | Ejecución |
+|---|---|---|---|---|
+| 1. Elegir versión visible y encargar presentación | Persona autorizada | SYS-POTENCIALES | Caso, escenario visible y revisión confirmada → Solicitud con identidad estable y contexto conocido | manual |
+| 2. Autorizar, releer y fijar snapshot privado | Servidor existente | GAS-PORTERO, SHEET-PPP-MODELOS, SVC-AUTON-CLOUD, STORE-AUTON-ESTADO | Solicitud y sesión vigente → Snapshot inmutable y trabajo reservado o conflicto explícito | pendiente |
+| 3. Preparar ADN y storyboard visual | Agente existente | SVC-AUTON-CLOUD, STORE-AUTON-ESTADO, SYS-INVERSION | Snapshot y método fijados → Guion, escenas declarativas y dibujo navegable con evidencia | pendiente |
+| 4. Validar y registrar versión con recibo | Agente y registro existentes | SVC-AUTON-CLOUD, GAS-SALA | Artefacto privado, revisión base y lease vigente → Versión inmutable y recibo o pendiente de conciliación | pendiente |
+| 5. Consultar la misma versión en PPP y Master Developer | Persona autorizada | SYS-POTENCIALES, SYS-INVERSION, GAS-SALA | Identidad de presentación y permiso vigente → Historial, origen exacto y storyboard revisable | pendiente |
+| 6. Revisar y ordenar etapa dos | Dirección | SYS-INVERSION, SYS-DESPACHO | Storyboard de versión identificada y chinches → Instrucción expresa o correcciones; publicación sigue separada | manual |
+
+Vacíos: Implementación, integración y despliegue se verifican por separado; el registro de este flujo no habilita el botón.; La aprobación de etapa dos corresponde a cada storyboard revisado; no se deduce de la autorización para implementar la herramienta.; Faltantes materiales del brief se preguntan sólo cuando no estén disponibles en contexto autorizado..
+
+Evidencia: [yod-portal/docs/arquitectura/ppp-presentaciones.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-presentaciones.md) — Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards..

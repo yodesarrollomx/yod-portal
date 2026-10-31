@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-30.cargador-fase1.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-31.cargador-fase1.2
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 26 sistemas y 90 componentes distribuidos exactamente una vez.
-- 10 áreas; 145 conexiones registradas, 10 marcadas como verificadas en el atlas.
+- 10 áreas; 149 conexiones registradas, 10 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -54,6 +54,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Sistema presente en el catálogo canónico · Estado: codigo · yodesarrollomx/yod-portal · os/catalogo.js · Revisión: HEAD\_baseline
 - Catálogo vivo conciliado el 1-oct-2026: SYS-DESPACHO en Portal y Sistemas, destino canónico, fórmulas/validaciones comprobadas, permisos DP conservados. Seguimiento yod-portal\#3 completado. · Estado: ejecucion · Sin revisión inmutable en esta referencia
 - [Frontend Corcho integrado con CAS global, archivo/restauración y ACK; no acredita persistencia en servidor. · Estado: codigo · yodesarrollomx/yod-despacho · corcho.js · Revisión: 32330badba66dd9b23a7413498f421aeb628c9cb](https://github.com/yodesarrollomx/yod-despacho/blob/32330badba66dd9b23a7413498f421aeb628c9cb/corcho.js)
+- Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
 
 **Evidencia de conexiones:**
 
@@ -262,6 +263,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - V72 verificada en ejecución privada37888901829: HEAD y versión coinciden en hash189630ca1ab4d19c17f54f9e13caacbfb6aa99c44ad34240ad6275d806224d3d; mismos IDs/implementación/URL. display\_name separado de avatar.name canónico; no certifica escrituras de negocio. · Estado: ejecucion · Revisión: Apps Script version72; 2026-10-09
 - Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
 - Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-read-validation.md · Revisión: 2026-10-29.ppp-read-validation.1
+- Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
 
 **Evidencia de conexiones:**
 
@@ -292,6 +294,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PORTERO-CORCHO-STORE · CHG-DESPACHO-CORCHO-PROVISIONAL-035: Integración provisional autorizada, pendiente en PR consumidores; preflight V57 no acredita despliegue del adapter. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - CON-PORTERO-CORCHO-DRIVE · CHG-DESPACHO-CORCHO-PROVISIONAL-035: Integración provisional autorizada, pendiente en PR consumidores; preflight V57 no acredita despliegue del adapter. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - [CON-MOTOR-PORTERO · Identidad, contexto, objetivos y cola autorizados · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/server.mjs · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/server.mjs)
+- CON-MOTOR-PORTERO · Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
 - [CON-BROKER-PREEVALUATION · PR12 integrado: lanzamiento de un solo uso y retorno autorizado; backend v92 publicado, flujo individual comprobado con servicios sintéticos. · Estado: codigo · yodesarrollomx/yodesarrollo-board · brokers-evaluator.js · Revisión: 19fbe950af458778607f2ae0baa70b8bc7894105](https://github.com/yodesarrollomx/yodesarrollo-board/blob/19fbe950af458778607f2ae0baa70b8bc7894105/brokers-evaluator.js)
 - CON-BANDEJA-PORTERO · Permiso privado ligado a sesión real, tarjeta, huella y última aprobación; veto aparte de comentarios. Regresiones sintéticas aprobadas; consentimiento y sesión real pendientes. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/Approval.gs · Sin revisión inmutable en esta referencia
 - CON-BANDEJA-PORTERO · Código publicado; su compuerta o consentimiento reales todavía no se acreditan. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/README.md · Sin revisión inmutable en esta referencia
@@ -1056,6 +1059,8 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PPP-CARTERA-LECTURA · SYS-POTENCIALES → GAS-CRM · api · Lee expedientes previos al PPP y su historial autorizado · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-PPP-ETAPAS-INTENCION · SVC-AUTON-CLOUD → SYS-POTENCIALES · api · Propone etapas desde la intención final y contexto vigente · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-PPP-ETAPAS-ESCRITURA · SYS-POTENCIALES → GAS-PORTERO · api · Solicita etapas y relee coherencia del modelo · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-PPP-PRESENTACIONES-JOB · SYS-POTENCIALES → SVC-AUTON-CLOUD · api · Encarga storyboard desde la versión visible · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-PPP-PRESENTACIONES-LISTA · SYS-POTENCIALES → GAS-SALA · api · Consulta las presentaciones de ese PPP y revisión · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -1069,6 +1074,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Borrador local aislado por caso/escenario/base de1/2/3volúmenes; cantidades independientes sin cálculo financiero, Store ni autosave; producción pendiente. · Estado: codigo · yodesarrollomx/potenciales-yod · ppp-volumes.js · Revisión: working\_tree\_2026-10-20
 - Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
 - Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-read-validation.md · Revisión: 2026-10-29.ppp-read-validation.1
+- Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
 
 **Evidencia de conexiones:**
 
@@ -1080,10 +1086,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PPP-CARTERA-LECTURA · Propuesta de lector brokers\_snapshot sobre brokers.v1 existente; no acredita sesión privada real. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-cartera-lectura.md · Revisión: CHG-PPP-CARTERA-LECTURA-20261019
 - CON-PPP-ETAPAS-INTENCION · Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
 - CON-PPP-ETAPAS-ESCRITURA · Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
+- CON-PPP-PRESENTACIONES-JOB · Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
+- CON-PPP-PRESENTACIONES-LISTA · Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
 
 **Pendientes y límites:**
 
-- 7 conexiones sin verificación de ejecución registrada.
+- 9 conexiones sin verificación de ejecución registrada.
 - Backend de transporte v53 publicado en implementación existente. GET de caso y lista contrastados con el mismo libro y revisión; edición en pantalla y demás casos pendientes. Los casos no migrados conservan cálculo cliente.
 - GET Patrimonial y cotejo de 166 celdas sólo acreditan el caso inspeccionado; geometría, Vertical y otros casos pendientes. Parche visual y regresión Chromium aprobados según coordinador; WebKit en CI del consumer, publicación/aceptación frontend pendientes.
 
@@ -1108,6 +1116,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Lectura nativa de programa por cuerpos y flujo por etapas. Campos ausentes quedan pendientes; comparación con proforma activa sin sustituir datos globales. Detalle en registro privado. · Estado: ejecucion · Revisión: 2026-10-01
 - Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
 - Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-read-validation.md · Revisión: 2026-10-29.ppp-read-validation.1
+- Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
 
 **Evidencia de conexiones:**
 
@@ -1912,11 +1921,13 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-BROKER-PREEVALUATION · SYS-INVERSION → GAS-PORTERO · api · Preevaluación y retorno de terreno a cartera · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-INVESTOR-STORY-TEXTS · SYS-INVERSION → GAS-PLAN-POTENCIAL · lectura · Lee copy público de presentación por recurso=textos · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-BROKERS-PPP-SAVED · SYS-INVERSION → GAS-PORTERO · lectura · Resumen guardado de PPP por expediente · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-MD-PRESENTACIONES-PPP · SYS-INVERSION → GAS-SALA · api · Abre el mismo historial de presentación y origen PPP · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
 - Sistema presente en el catálogo canónico · Estado: codigo · yodesarrollomx/yod-portal · os/catalogo.js · Revisión: HEAD\_baseline
 - CHG-CHINCHES-SECUENCIA-20261020: voz, trazos y capturas sincronizados en componente común; archivo privado y recibo por ID/SHA256. Propuesta autorizada; publicación y backend se verifican aparte. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
 
 **Evidencia de conexiones:**
 
@@ -1928,10 +1939,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [CON-BROKER-PREEVALUATION · PR12 integrado: lanzamiento de un solo uso y retorno autorizado; backend v92 publicado, flujo individual comprobado con servicios sintéticos. · Estado: codigo · yodesarrollomx/yodesarrollo-board · brokers-evaluator.js · Revisión: 19fbe950af458778607f2ae0baa70b8bc7894105](https://github.com/yodesarrollomx/yodesarrollo-board/blob/19fbe950af458778607f2ae0baa70b8bc7894105/brokers-evaluator.js)
 - CON-INVESTOR-STORY-TEXTS · GET de textos comerciales ya utilizado por la landing pública; propuesta de consumo por la primera escena de inversión. · Estado: codigo · yodesarrollomx/plan-potencial · index.html · Sin revisión inmutable en esta referencia
 - CON-BROKERS-PPP-SAVED · Consumo propuesto del mismo contrato empleado por el PPP; lectura autorizada y campos guardados se comprobarán por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-MD-PRESENTACIONES-PPP · Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
 
 **Pendientes y límites:**
 
-- 7 conexiones sin verificación de ejecución registrada.
+- 8 conexiones sin verificación de ejecución registrada.
 
 ### Carpeta de inversión · GAS-INVERSION
 
@@ -2289,6 +2301,9 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-086 · GAS-SALA → GAS-PORTERO-RESPALDO · autenticacion · Consulta respaldo de identidad · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-SALA-RECONEXION-MEDIOS · SVC-SALA-EJECUTOR → GAS-SALA · conciliacion · Mantenimiento limitado de evidencia de voces originales recuperadas · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-SALA-CORREO-ONLINE · GAS-SALA → EXT-GMAIL · correo · Correo diario y entrada al destinatario existente · Estado: ejecucion · Ejecución no verificada en el atlas.
+- CON-PRESENTACIONES-REGISTRO · SVC-AUTON-CLOUD → GAS-SALA · api · Registra versión privada con origen y recibo · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-PPP-PRESENTACIONES-LISTA · SYS-POTENCIALES → GAS-SALA · api · Consulta las presentaciones de ese PPP y revisión · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-MD-PRESENTACIONES-PPP · SYS-INVERSION → GAS-SALA · api · Abre el mismo historial de presentación y origen PPP · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2297,6 +2312,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Esquemas de tablas de Sala · Estado: codigo · yodesarrollomx/sala-edicion · gas/Code.gs · Revisión: HEAD\_baseline
 - [PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/medios\_reconexion.py · Revisión: 159d932cd81c2d2c3fda31a862ea60fc0b3ae667](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py)
 - Ampliación técnica autorizada por Dirección en la conversación actual: recuperación de transporte, publicación acumulativa, correo trazable y conciliación de chinches. Registro previo; la fuente no acredita despliegue. Registro local: docs/arquitectura/sala-nube-20261015.md. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
 
 **Evidencia de conexiones:**
 
@@ -2309,10 +2325,13 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-086 · Consulta respaldo de identidad · Estado: codigo · yodesarrollomx/sala-edicion · gas/Code.gs · Revisión: HEAD\_baseline
 - [CON-SALA-RECONEXION-MEDIOS · PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/medios\_reconexion.py · Revisión: 159d932cd81c2d2c3fda31a862ea60fc0b3ae667](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py)
 - [CON-SALA-CORREO-ONLINE · Bitácora del backend registra correo diario tres días a07:13Hermosillo; solicitud de entrada38166137118 aceptada y acuse privado byte-verificado. Recepción en Gmail y fuente/inventario completo de disparadores siguen sin verificar. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/correo\_estado.py · Revisión: 4582fc3c42a2ac8459dea7d553c42f9719f07962](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/nube/correo_estado.py)
+- CON-PRESENTACIONES-REGISTRO · Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
+- CON-PPP-PRESENTACIONES-LISTA · Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
+- CON-MD-PRESENTACIONES-PPP · Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
 
 **Pendientes y límites:**
 
-- 7 conexiones sin verificación de ejecución registrada.
+- 10 conexiones sin verificación de ejecución registrada.
 - Código desplegado y permisos reales no contrastados
 
 ### Datos de Sala de Edición · SHEET-SALA
@@ -2333,6 +2352,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - Integración pendiente de verificar · Estado: pendiente · Sin revisión inmutable en esta referencia
 - [PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto. · Estado: ejecucion · yodesarrollomx/sala-edicion · nube/medios\_reconexion.py · Revisión: 159d932cd81c2d2c3fda31a862ea60fc0b3ae667](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py)
+- Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
 
 **Evidencia de conexiones:**
 
@@ -2741,10 +2761,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Evidencia de la ficha:**
 
 - [Conocimiento por caso, revisiones, versiones y recuperación. · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/case-knowledge.mjs · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/case-knowledge.mjs)
+- Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
 
 **Evidencia de conexiones:**
 
 - [CON-MOTOR-ESTADO · Conocimiento y recibos por expediente con revisión · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/case-knowledge.mjs · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/case-knowledge.mjs)
+- CON-MOTOR-ESTADO · Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
 - [CON-ESTADO-EXPORTACION · Leer versiones, decisiones y exportación autorizadas · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/case-knowledge.mjs · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/case-knowledge.mjs)
 
 **Pendientes y límites:**
@@ -2907,6 +2929,8 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-RENDER-MOTOR · EXT-RENDER → SVC-AUTON-CLOUD · alojamiento · Servicio y volumen persistentes en la versión efectiva · Estado: declarado · Ejecución no verificada en el atlas.
 - CON-SALA-IMAGEN-OPENAI · SVC-SALA-PRODUCTOR → SVC-AUTON-CLOUD · api · Imagen para Sala con modelo fijo y recibo · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-PPP-ETAPAS-INTENCION · SVC-AUTON-CLOUD → SYS-POTENCIALES · api · Propone etapas desde la intención final y contexto vigente · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-PPP-PRESENTACIONES-JOB · SYS-POTENCIALES → SVC-AUTON-CLOUD · api · Encarga storyboard desde la versión visible · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-PRESENTACIONES-REGISTRO · SVC-AUTON-CLOUD → GAS-SALA · api · Registra versión privada con origen y recibo · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2915,22 +2939,27 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [Puente de propósito exclusivo e idempotencia desplegado en servicio existente: diagnóstico de crédito/ritmo, una solicitud nueva por minuto y recibos persistentes;559 pruebas pasadas y0 fallos antes del arranque vigente. · Estado: ejecucion · alexpueblag/yod-agent-cloud · cloud/sala-image-broker.mjs · Revisión: 7f1297cbf1ba9fe12f663faf2f843f35f79d411e](https://github.com/alexpueblag/yod-agent-cloud/blob/7f1297cbf1ba9fe12f663faf2f843f35f79d411e/cloud/sala-image-broker.mjs)
 - Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
 - Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-read-validation.md · Revisión: 2026-10-29.ppp-read-validation.1
+- Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
 
 **Evidencia de conexiones:**
 
 - [CON-DESPACHO-3D-MOTOR · Conversación y operaciones del puesto ligadas al caso y actor · Estado: codigo · yodesarrollomx/yod-portal · despacho3d/agent-workspace.mjs · Revisión: 5eca769947e60bc5b51389244393e0f63817cf86](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/agent-workspace.mjs)
 - [CON-MOTOR-PORTERO · Identidad, contexto, objetivos y cola autorizados · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/server.mjs · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/server.mjs)
+- CON-MOTOR-PORTERO · Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
 - [CON-MOTOR-ESTADO · Conocimiento y recibos por expediente con revisión · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/case-knowledge.mjs · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/case-knowledge.mjs)
+- CON-MOTOR-ESTADO · Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
 - [CON-MOTOR-JEV · Orientar y ordenar fuentes autorizadas · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/RESEARCH.md · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/RESEARCH.md)
 - [CON-MOTOR-DRIVE · Leer originales, documentos y pasajes del expediente · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/RESEARCH.md · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/RESEARCH.md)
 - [CON-MOTOR-OPENAI · Voz y herramientas con claves de servidor · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/voice-lane.mjs · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/voice-lane.mjs)
 - [CON-RENDER-MOTOR · Servicio y volumen persistentes en la versión efectiva · Estado: declarado · alexpueblag/yod-agent-cloud · cloud/README.txt · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/README.txt)
 - CON-SALA-IMAGEN-OPENAI · Propuesta autorizada para usar el servicio existente, aún sin prueba de generación. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - CON-PPP-ETAPAS-INTENCION · Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
+- CON-PPP-PRESENTACIONES-JOB · Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
+- CON-PRESENTACIONES-REGISTRO · Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
 
 **Pendientes y límites:**
 
-- 9 conexiones sin verificación de ejecución registrada.
+- 11 conexiones sin verificación de ejecución registrada.
 
 ### OpenAI · conversación y ejecución · EXT-OPENAI
 

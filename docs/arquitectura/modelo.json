@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-30.cargador-fase1.1",
+  "revision": "2026-10-31.cargador-fase1.2",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -22,7 +22,8 @@
       "La cobertura de oficina asigna todo el inventario inspeccionado; responsables operativos por confirmar e integraciones pendientes siguen explícitos. No equivale a operación completa ni a descubrir todos los recursos de todas las cuentas.",
       "CHG-SALA-NUBE-20261015: PR308 integrado y Pages, Plan, Revisión y Cierre comprobados por corridas concretas, sin acreditar correo recibido ni producción nueva. CHG-SALA-MEDIOS-PUBLICOS-20261015 es preparación local: no hay offload, canario anónimo ni inmutabilidad de nuevos activos acreditados; presupuesto Pages permanece en 900 MiB.",
       "CHG-INVESTOR-SINGLE-SURFACE registra UX móvil y chinches locales autorizadas. No acredita implementación, publicación, recepción remota, sincronización entre orígenes ni aceptación física de iPhone.",
-      "CTR-SALA-PRODUCCION-HISTORICA es propuesto: backend no publicado, despliegue requiere propietario y SALA_PRODUCCION_HISTORICA=0. Omisión por ventana14d no equivale a fuente retirada. Auditoría actual encontró0 elegibles; no acredita aprobaciones nuevas ni autoriza reencolados."
+      "CTR-SALA-PRODUCCION-HISTORICA es propuesto: backend no publicado, despliegue requiere propietario y SALA_PRODUCCION_HISTORICA=0. Omisión por ventana14d no equivale a fuente retirada. Auditoría actual encontró0 elegibles; no acredita aprobaciones nuevas ni autoriza reencolados.",
+      "CHG-PPP-PRESENTACIONES-20261031: propuesta autorizada por chat y registrada antes de implementar. No acredita lectura exacta del escenario visible, generación, registro, despliegue ni piloto productivo; cada capa requiere evidencia propia."
     ]
   },
   "repositories": [
@@ -231,6 +232,13 @@
           "source_revision": "32330badba66dd9b23a7413498f421aeb628c9cb",
           "claim": "Frontend Corcho integrado con CAS global, archivo/restauración y ACK; no acredita persistencia en servidor.",
           "status": "codigo"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-presentaciones.md",
+          "source_revision": "2026-10-31.ppp-presentaciones.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards."
         }
       ],
       "data_entities": [
@@ -315,6 +323,13 @@
           "source_revision": "2026-10-29.ppp-read-validation.1",
           "status": "propuesto",
           "claim": "Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-presentaciones.md",
+          "source_revision": "2026-10-31.ppp-presentaciones.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards."
         }
       ],
       "data_entities": [
@@ -501,6 +516,13 @@
         {
           "claim": "CHG-CHINCHES-SECUENCIA-20261020: voz, trazos y capturas sincronizados en componente común; archivo privado y recibo por ID/SHA256. Propuesta autorizada; publicación y backend se verifican aparte.",
           "status": "propuesto"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-presentaciones.md",
+          "source_revision": "2026-10-31.ppp-presentaciones.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards."
         }
       ],
       "data_entities": [
@@ -1193,6 +1215,13 @@
           "source_revision": "2026-10-29.ppp-read-validation.1",
           "status": "propuesto",
           "claim": "Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-presentaciones.md",
+          "source_revision": "2026-10-31.ppp-presentaciones.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards."
         }
       ],
       "data_entities": [
@@ -2077,6 +2106,13 @@
         {
           "claim": "Ampliación técnica autorizada por Dirección en la conversación actual: recuperación de transporte, publicación acumulativa, correo trazable y conciliación de chinches. Registro previo; la fuente no acredita despliegue. Registro local: docs/arquitectura/sala-nube-20261015.md.",
           "status": "propuesto"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-presentaciones.md",
+          "source_revision": "2026-10-31.ppp-presentaciones.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards."
         }
       ],
       "data_entities": [
@@ -2111,6 +2147,13 @@
           "commit": "159d932cd81c2d2c3fda31a862ea60fc0b3ae667",
           "claim": "PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto.",
           "status": "ejecucion"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-presentaciones.md",
+          "source_revision": "2026-10-31.ppp-presentaciones.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards."
         }
       ],
       "data_entities": [
@@ -2773,6 +2816,13 @@
           "source_revision": "2026-10-29.ppp-read-validation.1",
           "status": "propuesto",
           "claim": "Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-presentaciones.md",
+          "source_revision": "2026-10-31.ppp-presentaciones.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards."
         }
       ],
       "data_entities": [
@@ -3081,6 +3131,13 @@
           "source_revision": "2026-10-29.ppp-read-validation.1",
           "status": "propuesto",
           "claim": "Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-presentaciones.md",
+          "source_revision": "2026-10-31.ppp-presentaciones.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards."
         }
       ],
       "data_entities": [
@@ -3110,6 +3167,13 @@
           "commit": "b88ce380d7e437cf535facdbd5592a0b8bc14dc1",
           "claim": "Conocimiento por caso, revisiones, versiones y recuperación.",
           "status": "codigo"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-presentaciones.md",
+          "source_revision": "2026-10-31.ppp-presentaciones.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards."
         }
       ],
       "data_entities": [
@@ -5682,11 +5746,19 @@
           "commit": "b88ce380d7e437cf535facdbd5592a0b8bc14dc1",
           "claim": "Identidad, contexto, objetivos y cola autorizados",
           "status": "codigo"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-presentaciones.md",
+          "source_revision": "2026-10-31.ppp-presentaciones.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards."
         }
       ],
       "contract_ids": [
         "CTR-DESPACHO-AGENTE-OPERATIVO",
-        "CTR-PPP-INACTIVE-FIELDS"
+        "CTR-PPP-INACTIVE-FIELDS",
+        "CTR-PPP-PRESENTACIONES"
       ]
     },
     {
@@ -5705,10 +5777,18 @@
           "commit": "b88ce380d7e437cf535facdbd5592a0b8bc14dc1",
           "claim": "Conocimiento y recibos por expediente con revisión",
           "status": "codigo"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-presentaciones.md",
+          "source_revision": "2026-10-31.ppp-presentaciones.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards."
         }
       ],
       "contract_ids": [
-        "CTR-DESPACHO-CONOCIMIENTO"
+        "CTR-DESPACHO-CONOCIMIENTO",
+        "CTR-PPP-PRESENTACIONES"
       ]
     },
     {
@@ -6603,6 +6683,94 @@
       "contract_ids": [
         "CTR-PPP-FICHA-ETAPAS",
         "CTR-PPP-SHEETS"
+      ]
+    },
+    {
+      "id": "CON-PPP-PRESENTACIONES-JOB",
+      "from": "SYS-POTENCIALES",
+      "to": "SVC-AUTON-CLOUD",
+      "label": "Encarga storyboard desde la versión visible",
+      "kind": "api",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-presentaciones.md",
+          "source_revision": "2026-10-31.ppp-presentaciones.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards."
+        }
+      ],
+      "contract": "Transporte autorizado existente; request_id, identidad PPP/expediente, escenario visible y revisiones. El servidor confirma fuente y reserva durable antes de ejecutar. Ruta concreta y activación por comprobar.",
+      "contract_ids": [
+        "CTR-PPP-PRESENTACIONES"
+      ]
+    },
+    {
+      "id": "CON-PRESENTACIONES-REGISTRO",
+      "from": "SVC-AUTON-CLOUD",
+      "to": "GAS-SALA",
+      "label": "Registra versión privada con origen y recibo",
+      "kind": "api",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-presentaciones.md",
+          "source_revision": "2026-10-31.ppp-presentaciones.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards."
+        }
+      ],
+      "contract": "Extensión acotada del registro existente: presentation_id, versión de contenido, snapshot_hash, job/request_id y revisión esperada. Idempotencia, concurrencia y autorización antes del efecto.",
+      "contract_ids": [
+        "CTR-PPP-PRESENTACIONES"
+      ]
+    },
+    {
+      "id": "CON-PPP-PRESENTACIONES-LISTA",
+      "from": "SYS-POTENCIALES",
+      "to": "GAS-SALA",
+      "label": "Consulta las presentaciones de ese PPP y revisión",
+      "kind": "api",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-presentaciones.md",
+          "source_revision": "2026-10-31.ppp-presentaciones.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards."
+        }
+      ],
+      "contract": "Vista privada del catálogo existente, filtrada por caso/escenario/revisión y permiso. Sin catálogo paralelo ni publicación implícita.",
+      "contract_ids": [
+        "CTR-PPP-PRESENTACIONES"
+      ]
+    },
+    {
+      "id": "CON-MD-PRESENTACIONES-PPP",
+      "from": "SYS-INVERSION",
+      "to": "GAS-SALA",
+      "label": "Abre el mismo historial de presentación y origen PPP",
+      "kind": "api",
+      "status": "propuesto",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-presentaciones.md",
+          "source_revision": "2026-10-31.ppp-presentaciones.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards."
+        }
+      ],
+      "contract": "Mismo registro de versiones y URL canónica; origen, versión editorial y estado visibles. Proyección visitante separada del guion/contexto privado.",
+      "contract_ids": [
+        "CTR-PPP-PRESENTACIONES"
       ]
     }
   ],
@@ -8085,6 +8253,96 @@
           "status": "codigo"
         }
       ]
+    },
+    {
+      "id": "PROC-PPP-PRESENTACIONES",
+      "nombre": "Presentación versionada desde el PPP visible",
+      "status": "propuesto",
+      "steps": [
+        {
+          "label": "Elegir versión visible y encargar presentación",
+          "role": "Persona autorizada",
+          "components": [
+            "SYS-POTENCIALES"
+          ],
+          "input": "Caso, escenario visible y revisión confirmada",
+          "output": "Solicitud con identidad estable y contexto conocido",
+          "mode": "manual"
+        },
+        {
+          "label": "Autorizar, releer y fijar snapshot privado",
+          "role": "Servidor existente",
+          "components": [
+            "GAS-PORTERO",
+            "SHEET-PPP-MODELOS",
+            "SVC-AUTON-CLOUD",
+            "STORE-AUTON-ESTADO"
+          ],
+          "input": "Solicitud y sesión vigente",
+          "output": "Snapshot inmutable y trabajo reservado o conflicto explícito",
+          "mode": "pendiente"
+        },
+        {
+          "label": "Preparar ADN y storyboard visual",
+          "role": "Agente existente",
+          "components": [
+            "SVC-AUTON-CLOUD",
+            "STORE-AUTON-ESTADO",
+            "SYS-INVERSION"
+          ],
+          "input": "Snapshot y método fijados",
+          "output": "Guion, escenas declarativas y dibujo navegable con evidencia",
+          "mode": "pendiente"
+        },
+        {
+          "label": "Validar y registrar versión con recibo",
+          "role": "Agente y registro existentes",
+          "components": [
+            "SVC-AUTON-CLOUD",
+            "GAS-SALA"
+          ],
+          "input": "Artefacto privado, revisión base y lease vigente",
+          "output": "Versión inmutable y recibo o pendiente de conciliación",
+          "mode": "pendiente"
+        },
+        {
+          "label": "Consultar la misma versión en PPP y Master Developer",
+          "role": "Persona autorizada",
+          "components": [
+            "SYS-POTENCIALES",
+            "SYS-INVERSION",
+            "GAS-SALA"
+          ],
+          "input": "Identidad de presentación y permiso vigente",
+          "output": "Historial, origen exacto y storyboard revisable",
+          "mode": "pendiente"
+        },
+        {
+          "label": "Revisar y ordenar etapa dos",
+          "role": "Dirección",
+          "components": [
+            "SYS-INVERSION",
+            "SYS-DESPACHO"
+          ],
+          "input": "Storyboard de versión identificada y chinches",
+          "output": "Instrucción expresa o correcciones; publicación sigue separada",
+          "mode": "manual"
+        }
+      ],
+      "manual_gaps": [
+        "Implementación, integración y despliegue se verifican por separado; el registro de este flujo no habilita el botón.",
+        "La aprobación de etapa dos corresponde a cada storyboard revisado; no se deduce de la autorización para implementar la herramienta.",
+        "Faltantes materiales del brief se preguntan sólo cuando no estén disponibles en contexto autorizado."
+      ],
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-presentaciones.md",
+          "source_revision": "2026-10-31.ppp-presentaciones.1",
+          "status": "propuesto",
+          "claim": "Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards."
+        }
+      ]
     }
   ],
   "proposals": [
@@ -8901,6 +9159,47 @@
         "No se crea motor financiero paralelo: las fórmulas del libro canónico producen resultados y flujos por etapas.",
         "Sin capability, permiso, revisión o esquema compatibles se rechaza antes de escribir. Request_id ambiguo se concilia sin reenviar ni elevar revisión.",
         "Autorización de alcance ya concedida; publicar sólo tras pruebas aisladas, recibos de despliegue existente y comprobación de cálculo. No dar por completo un caso que siga pendiente de fábrica/plantilla."
+      ]
+    },
+    {
+      "id": "PPPPRESENTACIONES",
+      "titulo": "Generar y versionar presentaciones desde el PPP visible",
+      "boards": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SVC-AUTON-CLOUD",
+        "STORE-AUTON-ESTADO",
+        "SYS-INVERSION",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SYS-DESPACHO"
+      ],
+      "problem": "El PPP y el portal de presentaciones no tienen un recorrido acreditado para encargar un storyboard con datos de la revisión visible y conservar versiones editoriales en el mismo contexto.",
+      "benefit": "Convertir el know-how de YOD y los números confirmados en una presentación visual trazable, recuperable y reutilizable desde ambos tableros.",
+      "metric": "Cinco motores con fuente exacta; coincidencia de IDs/versiones entre PPP y Master Developer; ningún duplicado tras reintento ni exposición de guion privado.",
+      "dependencies": [],
+      "effort": "Implementación coordinada de contratos, PPP, agente, registro y renderer con validación por capa.",
+      "decision": "aprobada",
+      "prerequisites": [
+        "Autorización directa por chat de Dirección el31-oct-2026: ejecutar el plan en equipo. No aprueba futuras presentaciones de clientes ni publicación automática.",
+        "Confirmar fuentes, capacidades, reservas y contratos reales; conservar Portero, orquestación, registro y cálculo existentes.",
+        "Registrar CHG-PPP-PRESENTACIONES-20261031 y fijar su commit en consumidores antes de integrar."
+      ],
+      "tasks": [
+        "Confirmar snapshot del escenario visible y revisiones separadas; introducir alcance acotado de presentación.",
+        "Conectar botón y seguimiento en cinco motores al trabajo durable existente.",
+        "Generar storyboard visual mediante ADN y adaptador Hairline, validar y registrar versión privada.",
+        "Mostrar el mismo historial en PPP y Master Developer; preservar ediciones, chinches y continuación de etapa dos.",
+        "Probar recuperación, autorización, concurrencia y recorrido completo; desplegar por capas con recibos independientes."
+      ],
+      "acceptance": [
+        "No sustituir el escenario visible por activo/base/defendido ni mezclar entradas y resultados de revisiones distintas.",
+        "Storyboard visual navegable guardado con origen exacto, método, renderer y recibo; no sólo texto o JSON.",
+        "Reintentos recuperan la misma versión; nuevas elaboraciones y cambios crean versiones independientes sin borrar anteriores.",
+        "Cierre/reinicio no pierde el trabajo; revocación y lease vencido bloquean efectos; metas existentes se conservan.",
+        "PPP y biblioteca consultan el mismo registro; sesión fija release; visitante no recibe guion ni fuentes privadas.",
+        "Producción exige instrucción posterior sobre storyboard; guardado y QA no equivalen a aprobación o publicación."
       ]
     }
   ],
@@ -14407,6 +14706,66 @@
       "rollback": "Revertir el PR: vuelven las etiquetas anteriores y se retiran os/versiones.json, scripts/versiones.cjs, su prueba y el paso de CI. Pages vuelve a servir las URL previas; no hay datos que migrar."
     },
     {
+      "id": "CHG-PPP-PRESENTACIONES-20261031",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SVC-AUTON-CLOUD",
+        "STORE-AUTON-ESTADO",
+        "SYS-INVERSION",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SYS-DESPACHO",
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-SALA",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ],
+      "status": "propuesto",
+      "authorization": "autorizado_por_chat: Dirección solicita ejecutar en equipo el plan del agente embebido en PPP el31-oct-2026. Esta autorización no aprueba storyboards futuros ni condiciones comerciales.",
+      "proposal": "Ampliar el recorrido existente PPP→agente→registro de presentaciones: escenario visible confirmado, snapshot privado, presentation_draft_v1, storyboard ADN/Hairline, versión de contenido y recibo consultables desde PPP y Master Developer. Conservar cinco motores, modelos canónicos, orquestación, permisos, registro y URL actuales. El catálogo derivado de salud incorpora el proceso propuesto sin crear ni activar monitores. Registrar la superficie privada PPP en chinche/registro.json y regenerar cobertura; las dependencias del registro común no autorizan cambios de código en otros consumidores.",
+      "tests": [
+        "PPP-VIEWED-5/PPP-SOURCE: selección visible distinta de activa/defendida, revisión conflictiva, datos sucios y modelos pendientes.",
+        "JOB-DURABLE/JOB-ONCE/JOB-COEXIST: reinicio, reintento, ACK incierto, lease vencido, revocación y otra meta esperando revisión.",
+        "VISUAL/VERSIONS/ONE-REGISTRY: recorrido móvil/escritorio, historial inmutable, edición concurrente y misma versión en ambos tableros.",
+        "PRIVATE/STAGES/DELIVERY: lecturas sin permiso, proyección visitante, etapa dos explícita y comprobantes separados por capa.",
+        "node scripts/arquitectura.cjs --check; verificadores y suites de cada repositorio con fixtures sintéticas."
+      ],
+      "deployment": "Propuesta autorizada y registrada antes de implementación. No acredita generación, guardado, Pages, backend activo, piloto ni aceptación física de móvil.",
+      "rollback": "Deshabilitar nuevas admisiones y revertir código/configuración propios; conservar casos, PPP, snapshots, trabajos, recibos, artefactos, versiones, sesiones y permisos."
+    },
+    {
+      "id": "CHG-CHINCHES-STROKE-CLOCK-20261031",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-SALA",
+        "SYS-INVERSION",
+        "SYS-AMALAYA",
+        "SYS-EMD",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE",
+        "GAS-PORTERO"
+      ],
+      "status": "implementado_local",
+      "authorization": "Dirección autoriza ejecutar la integración PPP/presentaciones; el coordinador autoriza corregir el fallo focal del grabador común que impide conservar la chinche. Mismo encargo; no modifica decisiones editoriales ni datos de negocio.",
+      "proposal": "Crear el evento de trazo antes de su primer punto y fijar el tiempo inicial al del evento. Mantener los tiempos de movimientos/cierre, validación estricta, protocolo1 y borradores previos. Preparar release1.1.1 inmutable con herramientas canónicas, actualizar el bundle central por huella y consumidores mediante instalador. El bump de caché usa versiones.json y no cambia lógica en las superficies dependientes.",
+      "tests": [
+        "Reproducción determinista del fallo antes del fix con redondeo y salto de reloj; secuencia/checkpoint y guardado final válidos después.",
+        "El validador sigue rechazando puntos anteriores al evento; no reparar ni descartar borradores existentes.",
+        "node --test tests/chinche-secuencia.test.cjs tests/chinches-paquete.test.cjs tests/chinches-reporte.test.cjs",
+        "node scripts/chinches-paquete.cjs verificar; node scripts/chinches-reporte.cjs --check; instalador en dry-run y huellas reales.",
+        "node scripts/arquitectura.cjs --check; node scripts/versiones.cjs --check; suite y verificadores portal.",
+        "Consumidor: WebKit y Chromium exactos con captura, anotación, guardado y reapertura; publicación y recibo real separados."
+      ],
+      "deployment": "Implementado y probado en checkout aislado desde main 79a0aa5. Release 1.1.1 preparado y activado localmente con CLI canónica; 1136 pruebas y verificadores locales pasan. Publicación central, adopción por consumidores y recepción real pendientes de evidencia independiente.",
+      "rollback": "Activar el snapshot previo mediante herramientas del paquete y revertir PRs/caché afectados. Conservar IndexedDB, chinches, capturas, audio, IDs, recibos y permisos; no eliminar ni reescribir borradores."
+    },
+    {
       "id": "CHG-CARGADOR-FASE1-001",
       "components": [
         "SYS-YOD-OS",
@@ -14421,7 +14780,7 @@
       ],
       "status": "propuesto",
       "approval": "Fase 1 (Un cargador) de la reestructuración de YOD OS, aprobada por Dirección el 30-oct-2026 («Adelante con fase 1», Buzón CL-YODOS-FASE1-20261030). Pendiente de revisión humana y merge. No cambia backends, hojas, permisos ni lógica de negocio: sólo cómo y cuántas veces el navegador pide sesión, catálogo y datos PPP, y qué guarda entre cargas.",
-      "proposal": "Un solo cargador compartido, os/yod-cargador.js (el plan lo llamaba yod-core/client.js; se renombra porque «YOD Core» ya es el módulo de estados de tareas de este repo), que importan la cabina (os/index.html + os/app.js), el marco (os/shell.js) y las ocho páginas de potenciales-yod antes de su propio código. Contrato: (1) sesión: un solo canje ?recurso=canje por página compartido entre app.js, shell.js y portero.js (promesa en vuelo única), con caché local yodcg_sesion_v1 ligada a un hash del token (nunca el token) que se devuelve de inmediato si tiene menos de 24 h y se refresca en fondo pasados 10 min; fail-closed: un rechazo del refresco (liga, clave, expirado, revocado, sin_sesion, unauthorized, forbidden, HTTP 401/403, lista única) borra la caché y avisa para que el adoptante cierre; la llave pyod_clave_v1 sólo se borra si su valor sigue siendo el token rechazado (guardia de carrera); (2) catálogo del Portal: caché yodcg_cache_v1 por hash de token, pintada antes de ir a red y refrescada en fondo, de modo que la cabina y el menú del marco dejan de pintar primero CAT_RESPALDO cuando ya se conoce el catálogo real; (3) transporte PPP: lista/catalogo/mapa caché-primero con refresco en fondo, caso red-primero con caché de respaldo, timeout 25 s y credentials omit en todas las llamadas, devolviendo un objeto tipo Response para que las funciones viejas de los motores sigan intactas; (4) telemetría: tiempo a primer dato por tablero (origen caché o red) guardado en un anillo local y enviado como códigos cortos (pd:<tablero>:<ms>:<c|r>) dentro de la bitácora que portero.js ya manda al Portero, sin endpoint nuevo; (5) chinche.js se carga después del primer dato (o a los 4 s) en la cabina y en los tableros envueltos por shell.js; (6) interruptor ?cargador=legacy (o localStorage yodcg_legacy=1) que deja todo como hoy; los adoptantes conservan su camino viejo literal durante al menos dos semanas. Incluye T-105: el marco deja de intentar el respaldo del Portero (esa implementación contesta 404 desde el 23-sep, como ya registró portero.js) y repite contra el original. Fuera de esta entrega (siguientes de la misma fase): tablero.html (7 fuentes sin plazo y candado track=alysa), obra.html, el endpoint ?recurso=arranque (pedido al Portero por el Buzón; el cargador cae al camino de dos llamadas si no existe) y el retiro de las copias viejas de apiGet/cargarLista en los motores. Alcance de datos en caché: claims de sesión (rol, boards, nombre, correo), filas del catálogo visibles para esa sesión y respuestas de lista/caso de PPP, todas ligadas al hash del token, purgadas al cerrar o ante rechazo y nunca compartidas entre tokens distintos; equivalen a lo que ya ve el mismo dispositivo con ese token.",
+      "proposal": "Un solo cargador compartido, os/yod-cargador.js (el plan lo llamaba yod-core/client.js; se renombra porque «YOD Core» ya es el módulo de estados de tareas de este repo), que importan la cabina (os/index.html + os/app.js), el marco (os/shell.js) y las ocho páginas de potenciales-yod antes de su propio código. Contrato: (1) sesión: un solo canje ?recurso=canje por página compartido entre app.js, shell.js y portero.js (promesa en vuelo única), con caché local yodcg_sesion_v1 ligada a un hash del token (nunca el token) que se devuelve de inmediato si tiene menos de 12 h y se refresca en fondo pasados 10 min; fail-closed: un rechazo del refresco (liga, clave, expirado, revocado, sin_sesion, unauthorized, forbidden, HTTP 401/403, lista única) borra la caché y avisa para que el adoptante cierre; la llave pyod_clave_v1 sólo se borra si su valor sigue siendo el token rechazado (guardia de carrera); (2) catálogo del Portal: caché yodcg_cache_v1 por hash de token, pintada antes de ir a red y refrescada en fondo, de modo que la cabina y el menú del marco dejan de pintar primero CAT_RESPALDO cuando ya se conoce el catálogo real; (3) transporte PPP: lista/catalogo/mapa caché-primero con refresco en fondo, caso red-primero con caché de respaldo, timeout 25 s y credentials omit en todas las llamadas, devolviendo un objeto tipo Response para que las funciones viejas de los motores sigan intactas; (4) telemetría: tiempo a primer dato por tablero (origen caché o red) guardado en un anillo local y enviado como códigos cortos (pd:<tablero>:<ms>:<c|r>) dentro de la bitácora que portero.js ya manda al Portero, sin endpoint nuevo; (5) chinche.js se carga después del primer dato (o a los 4 s) en la cabina y en los tableros envueltos por shell.js; (6) interruptor ?cargador=legacy (o localStorage yodcg_legacy=1) que deja todo como hoy; los adoptantes conservan su camino viejo literal durante al menos dos semanas. Incluye T-105: el marco deja de intentar el respaldo del Portero (esa implementación contesta 404 desde el 23-sep, como ya registró portero.js) y repite contra el original. Fuera de esta entrega (siguientes de la misma fase): tablero.html (7 fuentes sin plazo y candado track=alysa), obra.html, el endpoint ?recurso=arranque (pedido al Portero por el Buzón; el cargador cae al camino de dos llamadas si no existe) y el retiro de las copias viejas de apiGet/cargarLista en los motores. Alcance de datos en caché: claims de sesión (rol, boards, nombre, correo), filas del catálogo visibles para esa sesión y respuestas de lista/caso de PPP, todas ligadas al hash del token, purgadas al cerrar o ante rechazo y nunca compartidas entre tokens distintos; equivalen a lo que ya ve el mismo dispositivo con ese token.",
       "tests": [
         "tests/yod-cargador.test.cjs: canje sin token, caché fresca/vieja, refresco en fondo, rechazo que purga, dedupe de llamadas concurrentes, timeout con un reintento, token distinto, lista de rechazos, cerrar con guardia de carrera, get con alViejo y cache-fallback, ppp.get lista/caso, telemetría (primerDato único, códigos ≤40, resumen), cargarDespues, legacy, ?sesion= en URL, localStorage que lanza.",
         "tests/portal-identity.cjs y/o tests/cargador-adopcion.cjs: la cabina con identidad en caché no bloquea; rechazo en fondo cierra con cerrar({token}); catálogo pinta caché antes de red y no pinta CAT_RESPALDO si hubo caché; con legacy o sin cargador el comportamiento actual se conserva; el marco nunca va al respaldo y desbloquea con identidad en caché.",
@@ -16577,6 +16936,50 @@
         "Autón y voz conservan la aplicabilidad; no presentan cap0 como tasa usada ni recomiendan sustituirlo automáticamente.",
         "Errores autenticados conocidos incluyen sólo identificadores acotados; no valores, fórmulas, libros, credenciales, stack o texto arbitrario.",
         "No reintentar automáticamente validación determinista ni ampliar ACL. Una publicación requiere fuente vigente, reserva compatible, pruebas y lectura final."
+      ]
+    },
+    {
+      "id": "CTR-PPP-PRESENTACIONES",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SVC-AUTON-CLOUD",
+        "STORE-AUTON-ESTADO",
+        "SYS-INVERSION",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SYS-DESPACHO"
+      ],
+      "source": "docs/arquitectura/ppp-presentaciones.md; propuesta autorizada 31-oct-2026. Números canónicos de SHEET-PPP-MODELOS, contexto del expediente, estado privado del agente y registro de presentaciones existente de GAS-SALA.",
+      "input": [
+        "request_id, actor autenticado y alcance presentation_draft_v1",
+        "board_case_id, viewed_scenario_id, ppp_revision, model_type y model_revision",
+        "case_id y source_revision del expediente, distintos de la revisión PPP",
+        "Referencia y huella privada del snapshot: entradas, resultados nativos, unidades, flujos, etapas, volúmenes y evidencia de la misma lectura",
+        "Audiencia, decisión, modalidad, faltantes y restricciones autorizadas",
+        "Versiones ADN, plantilla y renderer; presentation_id y versión editorial base cuando existan"
+      ],
+      "output": [
+        "job_id y estado durable con lease/época y recibo idempotente",
+        "Storyboard visual navegable y privado, manifiesto de origen, QA y referencias de artefactos",
+        "presentation_id estable, presentation_version_id inmutable y versión anterior",
+        "registry_revision de concurrencia y release_revision de publicación independientes",
+        "Misma versión consultable desde PPP y biblioteca Master Developer; conflicto o pendiente explícito cuando no haya recibo"
+      ],
+      "invariants": [
+        "Usar el escenario visible confirmado: nunca mezclar viewed_inputs con resultados activos, base o defendidos de otra revisión. El servidor relee y valida el origen antes de aceptar.",
+        "Revisión PPP y revisión del expediente son distintas. Los cambios sin guardar utilizan el flujo nativo; el agente no modifica cantidades ni fórmulas.",
+        "MODELO_PENDIENTE o calculated:false sólo permiten diagnóstico con faltantes; no cifras calculadas ni supuestos importados de otros casos.",
+        "presentation_draft_v1 limita lectura de contexto y escritura de artefacto/versión al caso autorizado. local_analysis_v1 no adquiere permisos de escritura.",
+        "Snapshot y estado privados sobreviven cierre y reinicio. La observación efímera RAM no es fuente durable.",
+        "Una solicitud crea un solo trabajo/versión; ante acuse incierto se concilia recibo. Lease vencido o revocación impiden completar efectos.",
+        "Una meta ready_for_review ajena se conserva; la admisión no la aprueba, cierra ni cancela automáticamente.",
+        "La primera entrega es Guion visual con dibujo, navegación y chinches. Etapa dos necesita instrucción expresa posterior sobre esa versión; guardado, revisión, producción y publicación son estados separados.",
+        "Un solo registro y URL canónica por presentación; contenido, PPP, expediente, concurrencia y publicación mantienen versiones separadas. Ediciones concurrentes no se sobrescriben.",
+        "Proyección de visitante sin guion, fuentes ni notas privadas. Sesión de reunión fija release y no cambia al regenerar.",
+        "Reutilizar Hairline y motores existentes con adaptadores declarativos; no introducir código arbitrario, otro backend, Sheet, cron, catálogo o cálculo financiero.",
+        "Pruebas sintéticas y comprobantes independientes para código, CI, frontend, backend, lectura, job, artefacto y registro; un estado listo no prueba el recorrido completo."
       ]
     }
   ],
