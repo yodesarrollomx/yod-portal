@@ -182,7 +182,8 @@ const FUENTES_JS = v => ({
     "loadMount:function(){return import('../despacho3d/equipo.mjs?v=" + v + "').then(function(module){return module.mountTeamDesk;});},",
     "'&rol='+encodeURIComponent(state.role)+'&v='+TABLERO_V;"
   ].join('\n'),
-  'os/despacho-section.js': "var FRAME_PATH='../despacho3d/index.html?v=" + v + "';"
+  'os/despacho-section.js': "var FRAME_PATH='../despacho3d/index.html?v=" + v + "';",
+  'os/yod-cargador.js': "sc.src = SELF.replace(/yod-cargador\\.js(\\?.*)?$/, 'yod-acceso.js?v=" + v + "');"
 });
 
 test('constantes JS: cada regla reescribe su etiqueta, deja intacto lo demás y es idempotente', () => {
@@ -220,7 +221,7 @@ test('constantes JS: una regla que ya no encuentra su constante se reporta; la o
 });
 
 test('la tabla REGLAS_JS está bien formada', () => {
-  assert.deepEqual([...new Set(V.REGLAS_JS.map(r => r.archivo))].sort(), ['os/app.js', 'os/despacho-section.js', 'os/shell.js', 'os/ui-chrome.js']);
+  assert.deepEqual([...new Set(V.REGLAS_JS.map(r => r.archivo))].sort(), ['os/app.js', 'os/despacho-section.js', 'os/shell.js', 'os/ui-chrome.js', 'os/yod-cargador.js']);
   const nombres = new Set();
   for (const regla of V.REGLAS_JS) {
     assert.ok(regla.patron instanceof RegExp && regla.patron.flags.includes('g'), regla.nombre + ': el patrón debe ser global');
@@ -351,7 +352,7 @@ test('repo real: alcance — las páginas esperadas están, las excluidas no, y 
   const { archivos } = V.auditar(RAIZ);
   for (const a of archivos) assert.deepEqual(a.faltantes, [], a.ruta);
   const rutasJs = archivos.filter(a => /\.js$/.test(a.ruta)).map(a => a.ruta).sort();
-  assert.deepEqual(rutasJs, ['os/app.js', 'os/despacho-section.js', 'os/shell.js', 'os/ui-chrome.js']);
+  assert.deepEqual(rutasJs, ['os/app.js', 'os/despacho-section.js', 'os/shell.js', 'os/ui-chrome.js', 'os/yod-cargador.js']);
 });
 
 test('repo real: el bug original — chinche.js, portero.js y el tablero se piden siempre con la misma etiqueta', () => {

@@ -16,6 +16,7 @@ const PPP = 'https://ppp.invalid/exec';
 const TOK = 'sy-prueba-0000000000000001';
 const OTRO = 'sy-prueba-0000000000000002';
 const MIN = 60000, HORA = 3600000;
+const LIMITE_BYTES = 25000;                                               // se afina al final del recorte
 const CANJE_OK = { ok: true, token: TOK, rol: 'editor', boards: 'MA,MX', nombre: 'Persona de prueba', correo: 'correo-de-prueba' };
 
 /* vacía las microtareas pendientes sin tocar el reloj del cargador */
@@ -89,7 +90,7 @@ function red() {
 
 function montar(op = {}) {
   const rl = op.reloj || reloj(), rd = red(), bus = new EventTarget();
-  const st = op.storage || almacen(op.token === undefined ? { pyod_clave_v1: TOK } : op.token ? { pyod_clave_v1: op.token } : {});
+  const st = op.storage !== undefined ? op.storage : almacen(op.token === undefined ? { pyod_clave_v1: TOK } : op.token ? { pyod_clave_v1: op.token } : {});
   const loc = { pathname: op.pathname !== undefined ? op.pathname : '/potenciales-yod/macrolotes.html', search: op.search || '', hash: op.hash || '' };
   const hist = { reemplazos: [], replaceState(_s, _t, url) {
     hist.reemplazos.push(url);
@@ -311,7 +312,7 @@ test('9b · alCambiar: eventos propios y cambios de pyod_clave_v1 en otra pesta�
   assert.equal(avisos.length, 1);
 });
 
-test('10a · HTTP 401/403 = rechazo sin reintento; 500 reintenta una vez; JSON inválido no reintenta', async () => {
+test('S1 · HTTP 401/403 = rechazo sin reintento; 500 reintenta una vez; JSON inválido no reintenta', async () => {
   for (const status of [401, 403]) {
     const m = montar(); m.rd.pon({ status });
     const r = await m.core.sesion.canjear();
@@ -333,7 +334,7 @@ test('10a · HTTP 401/403 = rechazo sin reintento; 500 reintenta una vez; JSON i
   assert.equal(g.st.getItem('pyod_clave_v1'), TOK);
 });
 
-test('10b · sin YOD_PORTERO inyecta yod-acceso.js junto a este archivo y espera; sin dirección no hay fetch; nunca usa el respaldo', async () => {
+test('S2 · sin YOD_PORTERO inyecta yod-acceso.js junto a este archivo y espera; sin dirección no hay fetch; nunca usa el respaldo', async () => {
   const m = montar({ sinPortero: true, script: 'https://pages.invalid/yod-portal/os/yod-cargador.js?v=abc' });
   m.rd.pon({ json: CANJE_OK });
   const p = m.core.sesion.canjear();
@@ -433,6 +434,24 @@ test('10c · get: rechazo borra lo guardado y NO sirve caché; frescoMs/viejoMs;
   assert.equal(m.st.getItem('yodcg_cache_v1:ajena'), null, 'con la credencial de otra persona no se guarda');
 });
 
+test('10e · si la persona cierra sesión o cambia MIENTRAS get/ppp.get vuelan, su respuesta no queda guardada', async () => {
+  const m = montar(), d1 = diferido(), d2 = diferido();
+  m.rd.pon({ diferido: d1 }, { diferido: d2 });
+  const a = m.core.get(ORIGINAL, { recurso: 'lista', k: TOK }, { clave: 'c1', viejoMs: HORA });
+  const b = m.core.ppp.get(PPP, { recurso: 'lista', k: TOK });
+  await asentar();
+  m.core.sesion.cerrar({ token: TOK, motivo: 'salir' });                    // la persona sale mientras los datos viajan
+  d1.ok(respuesta({ json: { ok: true, privado: 1 } })); d2.ok(respuesta({ json: { ok: true, privado: 2 } }));
+  assert.equal((await a).ok, true); assert.equal((await b).ok, true, 'quien pidió igual recibe su respuesta');
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:'), [], 'pero ya no queda nada guardado de esa persona');
+  m.st.setItem('pyod_clave_v1', OTRO);                                       // entra otra persona en el mismo navegador
+  const d3 = diferido(); m.rd.pon({ diferido: d3 });
+  const c = m.core.get(ORIGINAL, { recurso: 'lista', k: OTRO }, { clave: 'c2', viejoMs: HORA });
+  await asentar(); m.st.setItem('pyod_clave_v1', TOK);
+  d3.ok(respuesta({ json: { ok: true } })); await c;
+  assert.equal(m.st.getItem('yodcg_cache_v1:c2'), null);
+});
+
 test('10d · get: URL con encodeURIComponent, omite undefined/null, une con & si ya hay ?, clave por defecto sin k ni t', async () => {
   const m = montar();
   m.rd.pon({ json: [1, 2] }, { json: { ok: true } });
@@ -446,7 +465,7 @@ test('10d · get: URL con encodeURIComponent, omite undefined/null, une con & si
   assert.deepEqual(JSON.parse(m.st.getItem(llaves[0])).data, [1, 2], 'una respuesta sin campo ok también es válida');
 });
 
-test('11a · catálogo: sin config → sin_config; con config usa clave catalogo:<h>, fresco 5 min, viejo 7 días y alViejo', async () => {
+test('D1 · catálogo: sin config → sin_config; con config usa clave catalogo:<h>, fresco 5 min, viejo 7 días y alViejo', async () => {
   const m = montar();
   assert.deepEqual(await m.core.catalogo(), { ok: false, status: 0, error: 'sin_config', rechazo: false, origen: 'sin_red', ms: 0 });
   assert.equal(m.core.config({ catalogo: { url: 'http://inseguro.invalid/exec' } }).catalogo, null, 'sólo https');
@@ -474,7 +493,7 @@ test('11a · catálogo: sin config → sin_config; con config usa clave catalogo
   assert.deepEqual(sin.st.claves('yodcg_cache_v1:'), ['yodcg_cache_v1:catalogo:' + sin.core.hash('')]);
 });
 
-test('11b · arranque: canje y catálogo salen a la vez (en paralelo) y vuelven juntos', async () => {
+test('D2 · arranque: canje y catálogo salen a la vez (en paralelo) y vuelven juntos', async () => {
   const m = montar(), dc = diferido(), dk = diferido();
   m.core.config({ catalogo: { url: CATALOGO } });
   const segunUrl = url => (url.startsWith(CATALOGO) ? dk : dc).promesa;      // el orden de salida es incidental
@@ -539,7 +558,7 @@ test('11 · ppp.get lista: con caché resuelve YA como Response (json/text/yod) 
   assert.equal(s.rd.llamadas.length, 1, 'ppp no reintenta por omisión');
 });
 
-test('11b · ppp.get mapa y catálogo también van caché-primero; otros recursos van directo y sin caché; ok:false no se guarda', async () => {
+test('11c · ppp.get mapa y catálogo también van caché-primero; otros recursos van directo y sin caché; ok:false no se guarda', async () => {
   const m = montar(), H = m.core.hash(TOK);
   m.rd.pon({ json: { ok: true, puntos: 1 } }, { json: { ok: true, puntos: 2 } });
   await m.core.ppp.get(PPP, { recurso: 'mapa', k: TOK });
@@ -769,4 +788,128 @@ test('16 · ?sesion= se guarda y se quita de la URL conservando el resto; ?liga=
   assert.doesNotThrow(() => crear(env)); assert.equal(env.storage.getItem('pyod_clave_v1'), TOK);
 });
 
-//@@T
+/* ───────────── almacenamiento roto o lleno ───────────── */
+
+async function recorrido(m) { // usa casi toda la API; nada puede lanzar
+  const T = m.core.telemetria;
+  m.rd.pon({ json: CANJE_OK }, { json: { ok: true, n: 1 } }, { json: { ok: true, n: 2 } }, { json: { ok: true, n: 3 } }, { json: { ok: true, n: 4 } });
+  const out = {};
+  out.canje = await m.core.sesion.canjear({ board: 'MA' });
+  out.get = await m.core.get(ORIGINAL, { recurso: 'lista', k: TOK }, { clave: 'q', viejoMs: HORA, telemetria: 'lista' });
+  out.ppp1 = await m.core.ppp.get(PPP, { recurso: 'lista', k: TOK });
+  out.ppp2 = await m.core.ppp.get(PPP, { recurso: 'lista', k: TOK }); await asentar();
+  T.primerDato('red'); T.marca('x'); out.codigos = T.codigos(); out.resumen = T.resumen(); T.limpiar();
+  m.core.purgar(); out.cerrar = m.core.sesion.cerrar({ token: TOK, motivo: 'prueba' }); out.token = m.core.sesion.token();
+  return out;
+}
+
+test('17 · localStorage que lanza (cuota llena, bloqueado o ausente): ninguna llamada revienta y todo sigue andando sin caché', async () => {
+  const lleno = almacen({ pyod_clave_v1: TOK }); lleno.cuota = 0;          // leer sí, escribir nunca (ni podando)
+  const a = await recorrido(montar({ storage: lleno }));
+  assert.deepEqual([a.canje.ok, a.canje.origen, a.get.ok, a.get.origen, a.ppp1.yod.origen, a.ppp2.yod.origen], [true, 'red', true, 'red', 'red', 'red']);
+  assert.deepEqual(a.codigos.map(c => c.split(':')[0]).sort(), ['cj', 'pd'], 'la telemetría de la página sigue andando aunque no pueda guardar el anillo');
+  assert.deepEqual([a.resumen.n, a.cerrar], [0, true]);
+  assert.equal(lleno.claves('yodcg_').length, 0);
+
+  for (const storage of [Object.assign(almacen(), { rota: true }), null]) {
+    const m = montar({ storage }), b = await (async () => { m.rd.pon({ json: { ok: true, n: 1 } }, { json: { ok: true, n: 2 } }, { json: { ok: true, n: 3 } }); return recorrido(m); })();
+    assert.deepEqual([b.token, b.canje.error, b.canje.rechazo, b.cerrar], ['', 'sin_sesion', true, false], 'sin storage no hay sesión que canjear');
+    assert.deepEqual([b.get.ok, b.ppp1.yod.origen, b.ppp2.yod.origen], [true, 'red', 'red']);
+    assert.equal(m.core.legacy, false);
+  }
+  const bloqueado = montar({ storage: Object.assign(almacen(), { rota: true }), search: '?sesion=' + TOK });
+  assert.deepEqual(bloqueado.hist.reemplazos, [], 'si no pudo guardar el token, la URL queda tal cual para portero.js');
+
+  const roto = { fetch: red().fetch, setTimeout: reloj().setTimeout, clearTimeout() { }, YOD_PORTERO: { original: ORIGINAL } };
+  Object.defineProperty(roto, 'localStorage', { get() { throw new Error('SecurityError: acceso denegado'); } });
+  const core = crear(roto);                                               // sin document, performance, location, now ni dispatchEvent
+  assert.deepEqual([core.sesion.token(), core.pagina(), core.legacy], ['', 'PT', false]);
+  assert.equal((await core.sesion.canjear()).error, 'sin_sesion');
+  assert.equal(core.telemetria.primerDato('red'), true);
+  assert.equal(core.telemetria.codigos()[0].startsWith('pd:PT:'), true);
+  await assert.rejects(core.cargarDespues('https://cdn.invalid/x.js', { maxMs: 0 }));
+  const r = red(); r.pon({ json: { ok: true } });
+  const sinNada = crear({ fetch: r.fetch, setTimeout: reloj().setTimeout, clearTimeout() { }, storage: almacen({ pyod_clave_v1: TOK }), YOD_PORTERO: { original: ORIGINAL } });
+  r.pon({ json: CANJE_OK });
+  assert.equal((await sinNada.sesion.canjear()).ok, true);
+});
+
+test('cuota llena: se borran las cachés más viejas (no las ajenas) y se reintenta UNA vez; si sigue llena, se sigue sin caché', async () => {
+  const st = almacen({ pyod_clave_v1: TOK });
+  for (let i = 1; i <= 4; i++) st.setItem('yodcg_cache_v1:viejo' + i, JSON.stringify({ ts: i * 1000, data: 'x'.repeat(100) }));
+  st.setItem('otra_app', 'z'.repeat(50));
+  const usado = [...st.mapa].reduce((n, [k, v]) => n + k.length + v.length, 0);
+  st.cuota = usado + 30;
+  const m = montar({ storage: st });
+  m.rd.pon({ json: { ok: true, n: 1 } }, { json: { ok: true, n: 2 } });
+  assert.equal((await m.core.get(ORIGINAL, {}, { clave: 'nuevo', viejoMs: HORA })).ok, true);
+  assert.deepEqual(st.claves('yodcg_cache_v1:'), ['yodcg_cache_v1:viejo3', 'yodcg_cache_v1:viejo4', 'yodcg_cache_v1:nuevo'], 'salieron las dos MÁS viejas');
+  assert.equal(st.getItem('otra_app'), 'z'.repeat(50)); assert.equal(st.getItem('pyod_clave_v1'), TOK);
+  st.cuota = 10;                                                           // ya nada cabe
+  const r = await m.core.get(ORIGINAL, {}, { clave: 'nuevo2', viejoMs: HORA });
+  assert.equal(r.ok, true); assert.equal(st.getItem('yodcg_cache_v1:nuevo2'), null);
+  assert.deepEqual(st.claves('yodcg_cache_v1:'), ['yodcg_cache_v1:viejo4', 'yodcg_cache_v1:nuevo'], 'una sola poda por intento, sin bucle');
+});
+
+/* ───────────── el archivo en sí ───────────── */
+
+const FUENTE = fs.readFileSync(path.join(__dirname, '../os/yod-cargador.js'), 'utf8');
+
+test('el archivo es público y clásico: sin ids de Apps Script, correos, hojas ni respaldo; sin POST; sólo ES2017', () => {
+  assert.doesNotMatch(FUENTE, /AKfy|AIza|gh[pousr]_|docs\.google|script\.google|@[A-Za-z0-9._-]+\.[A-Za-z]/);
+  assert.doesNotMatch(FUENTE, /\.respaldo|\[\s*['"]respaldo['"]/, 'nunca se lee la dirección de respaldo');
+  assert.doesNotMatch(FUENTE, /method\s*:|sendBeacon|XMLHttpRequest|\.send\(/, 'sólo lectura: ningún POST');
+  assert.doesNotMatch(FUENTE, /console\.(log|info|debug)/, 'en operación normal no se imprime nada');
+  assert.doesNotMatch(FUENTE, /^\s*(import|export)\s|\beval\s*\(|new Function|document\.write|innerHTML|\.finally\(|\?\?|\?\.[A-Za-z_$(\[]|\{\s*\.\.\.|\(\?<[=!]/m);
+  assert.match(FUENTE, /^\/\*[\s\S]*?\*\/\s*\(function \(raiz\) \{\s*'use strict';/, 'IIFE clásico con use strict');
+  assert.ok(Buffer.byteLength(FUENTE) <= LIMITE_BYTES, 'tamaño ' + Buffer.byteLength(FUENTE) + ' B > ' + LIMITE_BYTES);
+});
+
+test('fábrica exportable en Node; en el navegador se autoinstancia como window.YodCargador y es idempotente', () => {
+  assert.equal(typeof crear, 'function'); assert.equal(crear.length, 1);
+  assert.equal(typeof globalThis.YodCargador, 'undefined', 'en Node no se instancia nada global');
+  const ctx = {
+    fetch() { return new Promise(() => { }); }, localStorage: almacen({ pyod_clave_v1: TOK }), location: { pathname: '/yod-portal/os/', search: '', hash: '' },
+    document: { currentScript: null }, performance: { now: () => 5 }, setTimeout, clearTimeout, console, URLSearchParams, AbortController, CustomEvent,
+    addEventListener() { }, removeEventListener() { }, dispatchEvent() { return true; }
+  };
+  ctx.window = ctx; vm.createContext(ctx);
+  vm.runInContext(FUENTE, ctx);
+  const primera = ctx.YodCargador;
+  assert.equal(primera.v, '1'); assert.equal(primera.legacy, false); assert.equal(primera.pagina(), 'OS'); assert.equal(primera.sesion.token(), TOK);
+  vm.runInContext(FUENTE, ctx);
+  assert.equal(ctx.YodCargador, primera, 'el segundo script no hace nada');
+  assert.deepEqual(Object.keys(primera).sort(), ['arranque', 'cargarDespues', 'catalogo', 'config', 'get', 'hash', 'legacy', 'pagina', 'ppp', 'purgar', 'sesion', 'telemetria', 'v']);
+  assert.deepEqual(Object.keys(primera.sesion).sort(), ['alCambiar', 'canjear', 'cerrar', 'esRechazo', 'token']);
+  assert.deepEqual(Object.keys(primera.telemetria).sort(), ['codigos', 'limpiar', 'marca', 'primerDato', 'resumen']);
+});
+
+test('transporte tolerante: vale un fetch con sólo json(); sin AbortController no hay signal; el catálogo con token ajeno no se guarda', async () => {
+  const m = montar();
+  m.rd.pon(async () => ({ ok: true, json: async () => CANJE_OK }), async () => ({ json: async () => ({ ok: true, x: 1 }) }), async () => ({ ok: false }), async () => ({ ok: false }), async () => ({ status: 200, text: async () => '[1,2]' }), async () => ({ status: 200, text: async () => '7' }));
+  assert.equal((await m.core.sesion.canjear()).ok, true);
+  const b = await m.core.get(ORIGINAL, {}, {});
+  assert.deepEqual([b.ok, b.data.x, b.status], [true, 1, 200]);
+  const c = m.core.get(ORIGINAL, {}, {}); await m.rl.avanzar(1500);
+  assert.deepEqual([(await c).ok, (await c).error, (await c).status], [false, 'http', 0]);
+  assert.deepEqual((await m.core.get(ORIGINAL, {}, {})).data, [1, 2]);
+  const d = await m.core.get(ORIGINAL, {}, {});
+  assert.deepEqual([d.ok, d.error], [false, 'formato'], 'un JSON que no es objeto ni lista no es un dato');
+
+  m.core.config({ catalogo: { url: CATALOGO } });
+  m.rd.pon({ json: { ok: true, rows: [] } });
+  await m.core.catalogo({ token: OTRO });
+  assert.equal(m.rd.urls().pop(), CATALOGO + '?action=read&resource=Portal&k=' + encodeURIComponent(OTRO));
+  assert.deepEqual(m.st.claves('yodcg_cache_v1:'), [], 'con la credencial de otra persona no se guarda');
+
+  const vistos = [];
+  const ctx = {
+    fetch: (u, o) => { vistos.push(o); return Promise.resolve(respuesta({ json: CANJE_OK })); }, localStorage: almacen({ pyod_clave_v1: TOK }),
+    location: { pathname: '/p.html', search: '', hash: '' }, document: { currentScript: null }, performance: { now: () => 5 },
+    setTimeout, clearTimeout, console, URLSearchParams, CustomEvent, addEventListener() { }, removeEventListener() { }, dispatchEvent() { return true; },
+    YOD_PORTERO: { original: ORIGINAL }
+  };
+  ctx.window = ctx; vm.createContext(ctx); vm.runInContext(FUENTE, ctx);   // contexto sin AbortController
+  const r = await ctx.YodCargador.sesion.canjear();
+  assert.equal(r.ok, true); assert.equal('signal' in vistos[0], false); assert.deepEqual([vistos[0].cache, vistos[0].credentials], ['no-store', 'omit']);
+});

@@ -18,13 +18,13 @@
     try { ls = env.storage !== undefined ? env.storage : env.localStorage; } catch (e) { } // localStorage puede lanzar (cookies bloqueadas)
     var ahora = typeof env.now === 'function' ? env.now : Date.now, T0 = ahora();
     var reloj = perf && typeof perf.now === 'function' ? function () { return perf.now(); } : function () { return ahora() - T0; };
-    var CE = env.CustomEvent || (typeof CustomEvent === 'function' ? CustomEvent : null);
+    var CE = env.CustomEvent || (typeof CustomEvent === 'function' ? CustomEvent : null); // sin CE, emitir falla en silencio
     var AC = env.AbortController || (typeof AbortController === 'function' ? AbortController : null);
     function st(f, ms) { return (env.setTimeout || setTimeout).call(env, f, ms); }
     function ct(t) { return (env.clearTimeout || clearTimeout).call(env, t); }
     function aviso(e) { try { console.warn('[YOD cargador]', e && e.message || e); } catch (x) { } }
     function copia(o) { return Object.assign({}, o); }
-    function emitir(n, d) { try { env.dispatchEvent(CE ? new CE(n, { detail: d }) : { type: n, detail: d }); } catch (e) { } }
+    function emitir(n, d) { try { env.dispatchEvent(new CE(n, { detail: d })); } catch (e) { } }
 
     /* FNV-1a de 32 bits en hex: identifica la sesión en las llaves sin guardar el token. */
     function hash(s) {
@@ -39,10 +39,7 @@
     function leer(k) { try { var v = lsGet(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
     function claves(pre) {
       var r = [];
-      try {
-        if (ls && typeof ls.key === 'function') { for (var i = 0, n = ls.length; i < n; i++) { var k = ls.key(i); if (k && k.indexOf(pre) === 0) r.push(k); } }
-        else if (ls) r = Object.keys(ls).filter(function (k) { return k.indexOf(pre) === 0; });
-      } catch (e) { }
+      try { for (var i = 0, n = ls.length; i < n; i++) { var k = ls.key(i); if (k && k.indexOf(pre) === 0) r.push(k); } } catch (e) { }
       return r;
     }
     function podar() { // cuota llena: fuera la mitad más vieja de las cachés
@@ -109,7 +106,7 @@
       });
     }
     /* La dirección sale de window.YOD_PORTERO (os/yod-acceso.js); si la página no la trajo se pide
-       aquí, igual que portero.js y shell.js. Nunca se lee .respaldo. */
+       aquí, igual que portero.js y shell.js. La dirección de respaldo ni se mira. */
     var SELF = (doc && doc.currentScript && doc.currentScript.src) || 'https://yodesarrollomx.github.io/yod-portal/os/yod-cargador.js';
     function portero() {
       if (!accesoListo) accesoListo = env.YOD_PORTERO ? Promise.resolve() : new Promise(function (ok) {
@@ -214,29 +211,36 @@
       return { catalogo: cfg.catalogo && { url: cfg.catalogo.url }, timeoutMs: cfg.timeoutMs, frescoMs: cfg.frescoMs, viejoMs: cfg.viejoMs };
     }
     function medir(n, t0, orig) { if (n) { registrar(n, reloj() - t0, orig); primerDato(orig); } }
+    function viejoDe(llave, max) { // lo guardado, si todavía vale: {data, edad} | null
+      var c = max > 0 ? leer(llave) : null, edad = c && typeof c.ts === 'number' ? Math.max(0, ahora() - c.ts) : -1;
+      return edad >= 0 && edad < max && c.data !== undefined ? { data: c.data, edad: edad } : null;
+    }
+    /* Dato fresco de la red: se guarda (si toca) y se avisa. «dueno» = la credencial con que se pidió: si
+       la persona cambió o cerró sesión durante el vuelo, no se guarda. igual = no hubo novedad. */
+    function dato(llave, clave, d, previo, dueno, guardar) {
+      if (guardar && (!dueno || token() === dueno)) escribir(llave, { ts: ahora(), data: d });
+      emitir('yodcargador:dato', { clave: clave, origen: 'red', data: d, igual: !!previo && JSON.stringify(previo.data) === JSON.stringify(d) });
+    }
     /* get genérico con caché opcional (sólo si viejoMs > 0). La clave nunca lleva k ni t: si hace falta
        distinguir por persona se le suma h. Nunca guarda ok:false ni HTTP distinto de 200. */
     function get(url, params, o) {
       o = o || {};
       var t0 = reloj(), tk = params && (params.k || params.t) || '', viejo = legacy ? 0 : o.viejoMs | 0, fresco = o.frescoMs | 0;
       var clave = o.clave != null ? String(o.clave) : url + '?' + qs(params, ['k', 't']) + (tk ? ':' + hash(tk) : '');
-      var llave = P_CACHE + clave, c = viejo > 0 ? leer(llave) : null;
-      var edad = c && typeof c.ts === 'number' ? Math.max(0, ahora() - c.ts) : -1, util = edad >= 0 && edad < viejo && c.data !== undefined;
-      var guardar = viejo > 0 && (!tk || token() === tk); // con la credencial de otra persona no se guarda
-      if (util && fresco > 0 && edad < fresco) {
+      var llave = P_CACHE + clave, v = viejoDe(llave, viejo);
+      if (v && fresco > 0 && v.edad < fresco) {
         medir(o.telemetria, t0, 'cache');
-        return Promise.resolve({ ok: true, status: 200, data: c.data, origen: 'cache', ms: Math.round(reloj() - t0), edadMs: edad });
+        return Promise.resolve({ ok: true, status: 200, data: v.data, origen: 'cache', ms: Math.round(reloj() - t0), edadMs: v.edad });
       }
-      if (util && o.alViejo) { // el adoptante pinta lo último conocido mientras llega la red
-        try { o.alViejo(c.data, { edadMs: edad }); } catch (e) { aviso(e); }
+      if (v && o.alViejo) { // el adoptante pinta lo último conocido mientras llega la red
+        try { o.alViejo(v.data, { edadMs: v.edad }); } catch (e) { aviso(e); }
         medir(o.telemetria, t0, 'cache');
       }
       return traer(unir(url, params), { timeoutMs: o.timeoutMs, reintentos: o.reintentos }).then(function (r) {
         var ms = Math.round(reloj() - t0), d = r.data;
         if (r.ok) {
           if (d.ok !== false) {
-            if (guardar) escribir(llave, { ts: ahora(), data: d });
-            emitir('yodcargador:dato', { clave: clave, origen: 'red', data: d, igual: !!util && JSON.stringify(c.data) === JSON.stringify(d) });
+            dato(llave, clave, d, v, tk, viejo > 0);
             medir(o.telemetria, t0, 'red');
             return { ok: true, status: r.status, data: d, origen: 'red', ms: ms };
           }
@@ -245,7 +249,7 @@
           return { ok: false, status: r.status, data: d, error: err, rechazo: rc, origen: 'red', ms: ms };
         }
         if (r.rechazo) lsDel(llave); // el servidor negó la credencial: no se sirve nada guardado
-        else if (util) return { ok: true, status: 200, data: c.data, origen: 'cache-fallback', ms: ms, edadMs: edad, error: r.error };
+        else if (v) return { ok: true, status: 200, data: v.data, origen: 'cache-fallback', ms: ms, edadMs: v.edad, error: r.error };
         return { ok: false, status: r.status || 0, error: r.error, rechazo: !!r.rechazo, origen: r.error === 'red' || r.error === 'timeout' ? 'sin_red' : 'red', ms: ms };
       });
     }
@@ -272,34 +276,29 @@
       var rec = params.recurso, tk = params.k || params.t || token(), t0 = reloj(), url = unir(endpoint, params);
       var modo = legacy ? 0 : rec === 'lista' || rec === 'catalogo' || rec === 'mapa' ? 1 : rec === 'caso' ? 2 : 0; // 1 caché-primero · 2 red-primero · 0 directo
       var clave = 'ppp:' + rec + ':' + (params.tipo || '') + ':' + (params.caso_id || params.palabra || '') + ':' + hash(tk);
-      var llave = P_CACHE + clave, c = modo ? leer(llave) : null, max = modo === 1 ? 43200000 : 86400000; // 12 h · 24 h
-      var edad = c && typeof c.ts === 'number' ? Math.max(0, ahora() - c.ts) : -1, util = edad >= 0 && edad < max && c.data !== undefined;
+      var llave = P_CACHE + clave, v = viejoDe(llave, modo === 1 ? 43200000 : modo === 2 ? 86400000 : 0); // 12 h · 24 h
       var nom = rec === 'lista' || rec === 'caso' || rec === 'mapa' ? rec : '';
       function ms() { return Math.round(reloj() - t0); }
       function red() { // sin reintento por omisión: el motor ya sabe qué hacer sin conexión
         return traer(url, { timeoutMs: o.timeoutMs, reintentos: o.reintentos | 0 }).then(function (r) {
           if (!r.ok) return falla(r);
-          var d = r.data;
-          if (modo && d.ok !== false && (!params.k || token() === params.k)) {
-            escribir(llave, { ts: ahora(), data: d });
-            emitir('yodcargador:dato', { clave: clave, origen: 'red', data: d, igual: !!util && JSON.stringify(c.data) === JSON.stringify(d) });
-          }
+          if (modo && r.data.ok !== false) dato(llave, clave, r.data, v, params.k || params.t, true);
           medir(nom, t0, 'red');
-          return resp(d, 'red', ms());
+          return resp(r.data, 'red', ms());
         });
       }
-      if (modo === 1 && util) { // se resuelve YA con lo guardado y se revalida en fondo (error en silencio)
-        if (!(o.frescoMs > 0 && edad < o.frescoMs) && !fondo[llave]) {
+      if (modo === 1 && v) { // se resuelve YA con lo guardado y se revalida en fondo (error en silencio)
+        if (!(o.frescoMs > 0 && v.edad < o.frescoMs) && !fondo[llave]) {
           fondo[llave] = 1;
           var fin = function () { delete fondo[llave]; };
           red().then(fin, fin);
         }
         medir(nom, t0, 'cache');
-        return Promise.resolve(resp(c.data, 'cache', ms()));
+        return Promise.resolve(resp(v.data, 'cache', ms()));
       }
-      if (modo === 2 && util) return red().catch(function (e) { // un caso se pide a la red; la caché sólo cubre si la red cae
+      if (modo === 2 && v) return red().catch(function (e) { // un caso se pide a la red; la caché sólo cubre si la red cae
         if (e.rechazo) { lsDel(llave); throw e; }
-        return resp(c.data, 'cache-fallback', ms());
+        return resp(v.data, 'cache-fallback', ms());
       });
       return red();
     }
@@ -349,10 +348,7 @@
           hecho = true; quitar.forEach(function (f) { f(); });
           try {
             var sc = doc.createElement('script'); sc.src = src;
-            Object.keys(o.atributos || {}).forEach(function (k) {
-              var v = o.atributos[k];
-              if (typeof sc.setAttribute === 'function') sc.setAttribute(k, v === true ? '' : String(v)); else sc[k] = v;
-            });
+            Object.keys(o.atributos || {}).forEach(function (k) { sc.setAttribute(k, o.atributos[k] === true ? '' : String(o.atributos[k])); });
             sc.onload = function () { resolve(sc); }; sc.onerror = function () { reject(new Error('carga')); };
             doc.head.appendChild(sc);
           } catch (e) { reject(e); }
