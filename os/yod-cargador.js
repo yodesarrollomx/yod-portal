@@ -46,13 +46,14 @@
       var xs = claves(P_CACHE).map(function (k) { var o = leer(k); return { k: k, ts: o && o.ts || 0 }; }).sort(function (a, b) { return a.ts - b.ts; });
       xs.slice(0, Math.max(1, xs.length >> 1)).forEach(function (x) { lsDel(x.k); });
     }
-    function lsSet(k, v) {
+    function lsSet(k, v, sinPoda) { // sinPoda: lo secundario (telemetría) no expulsa cachés de datos
       if (!ls) return false;
       try { ls.setItem(k, v); return true; } catch (e) { }
+      if (sinPoda) return false;
       podar();
       try { ls.setItem(k, v); return true; } catch (e) { return false; }
     }
-    function escribir(k, o) { try { return lsSet(k, JSON.stringify(o)); } catch (e) { return false; } }
+    function escribir(k, o, sinPoda) { try { return lsSet(k, JSON.stringify(o), sinPoda); } catch (e) { return false; } }
     function purgar() { claves(P_CACHE).forEach(lsDel); lsDel(K_SES); }
 
     /* ---------- página, reversión, rechazos ---------- */
@@ -111,7 +112,7 @@
     function portero() {
       if (!accesoListo) accesoListo = env.YOD_PORTERO ? Promise.resolve() : new Promise(function (ok) {
         try {
-          var sc = doc.createElement('script'); sc.src = SELF.replace(/yod-cargador\.js(\?.*)?$/, 'yod-acceso.js?v=20261030-fase0');
+          var sc = doc.createElement('script'); sc.src = new URL('yod-acceso.js?v=20261030-fase0', SELF).href; // misma carpeta que este archivo
           sc.onload = sc.onerror = function () { ok(); }; doc.head.appendChild(sc);
         } catch (e) { ok(); }
       });
@@ -309,7 +310,7 @@
       var t = Math.max(0, Math.round(ms)), tab = pagina(), a = leer(K_TEL);
       a = Array.isArray(a) ? a : [];
       a.push({ t: t, p: p, tablero: tab, origen: orig, frio: frio });
-      escribir(K_TEL, a.length > 60 ? a.slice(-60) : a);
+      escribir(K_TEL, a.length > 60 ? a.slice(-60) : a, true);
       if ((p === 'pd' || p === 'cj' || p === 'cat') && !vistos[p]) { // un código por página y tipo
         vistos[p] = 1;
         pend.push({ s: (p === 'cat' ? 'cat:' : p + ':' + tab + ':') + t + ':' + (orig === 'cache' ? 'c' : 'r'), e: 0 });
@@ -355,12 +356,8 @@
         }
         if (legacy) return poner();
         var t = st(poner, max); quitar.push(function () { ct(t); });
-        if (o.cuando === 'idle') {
-          if (typeof env.requestIdleCallback === 'function') {
-            var id = env.requestIdleCallback(poner, { timeout: max });
-            quitar.push(function () { if (typeof env.cancelIdleCallback === 'function') env.cancelIdleCallback(id); });
-          }
-        } else if (yaPD) poner();
+        if (o.cuando === 'idle') { if (typeof env.requestIdleCallback === 'function') env.requestIdleCallback(poner, { timeout: max }); }
+        else if (yaPD) poner();
         else { env.addEventListener('yodcargador:primer-dato', poner); quitar.push(function () { env.removeEventListener('yodcargador:primer-dato', poner); }); }
       }));
     }

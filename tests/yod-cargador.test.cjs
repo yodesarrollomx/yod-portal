@@ -16,7 +16,7 @@ const PPP = 'https://ppp.invalid/exec';
 const TOK = 'sy-prueba-0000000000000001';
 const OTRO = 'sy-prueba-0000000000000002';
 const MIN = 60000, HORA = 3600000;
-const LIMITE_BYTES = 25000;                                               // se afina al final del recorte
+const LIMITE_BYTES = 25000;                                               // tope de regresión (hoy ~24.4 KB; el objetivo de diseño era 14 KB, ver el reporte de T-101)
 const CANJE_OK = { ok: true, token: TOK, rol: 'editor', boards: 'MA,MX', nombre: 'Persona de prueba', correo: 'correo-de-prueba' };
 
 /* vacía las microtareas pendientes sin tocar el reloj del cargador */
@@ -849,6 +849,18 @@ test('cuota llena: se borran las cachés más viejas (no las ajenas) y se reinte
   const r = await m.core.get(ORIGINAL, {}, { clave: 'nuevo2', viejoMs: HORA });
   assert.equal(r.ok, true); assert.equal(st.getItem('yodcg_cache_v1:nuevo2'), null);
   assert.deepEqual(st.claves('yodcg_cache_v1:'), ['yodcg_cache_v1:viejo4', 'yodcg_cache_v1:nuevo'], 'una sola poda por intento, sin bucle');
+});
+
+test('la telemetría nunca expulsa cachés de datos para hacerse sitio (los datos sí podan a las viejas)', () => {
+  const st = almacen({ pyod_clave_v1: TOK });
+  st.setItem('yodcg_cache_v1:a', JSON.stringify({ ts: 1, data: 'x'.repeat(50) }));
+  st.setItem('yodcg_cache_v1:b', JSON.stringify({ ts: 2, data: 'x'.repeat(50) }));
+  st.cuota = [...st.mapa].reduce((n, [k, v]) => n + k.length + v.length, 0);   // lleno hasta el tope
+  const m = montar({ storage: st });
+  assert.equal(m.core.telemetria.primerDato('red'), true);
+  assert.deepEqual(st.claves('yodcg_cache_v1:'), ['yodcg_cache_v1:a', 'yodcg_cache_v1:b']);
+  assert.equal(st.getItem('yodcg_telemetria_v1'), null);
+  assert.deepEqual(m.core.telemetria.codigos(), ['pd:MA:0:r'], 'el código para la bitácora sale igual');
 });
 
 /* ───────────── el archivo en sí ───────────── */

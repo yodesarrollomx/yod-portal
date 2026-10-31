@@ -183,7 +183,7 @@ const FUENTES_JS = v => ({
     "'&rol='+encodeURIComponent(state.role)+'&v='+TABLERO_V;"
   ].join('\n'),
   'os/despacho-section.js': "var FRAME_PATH='../despacho3d/index.html?v=" + v + "';",
-  'os/yod-cargador.js': "sc.src = SELF.replace(/yod-cargador\\.js(\\?.*)?$/, 'yod-acceso.js?v=" + v + "');"
+  'os/yod-cargador.js': "sc.src = new URL('yod-acceso.js?v=" + v + "', SELF).href;"
 });
 
 test('constantes JS: cada regla reescribe su etiqueta, deja intacto lo demás y es idempotente', () => {
