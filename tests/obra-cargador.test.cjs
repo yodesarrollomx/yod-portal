@@ -446,8 +446,8 @@ test('cargador REAL · arranque en frío: canje compartido y los dos datos a la 
   assert.deepEqual(guardadas.filter(k => k.startsWith('yodcg_cache_v1:')), [], 'Obra autoriza pagos: ninguna copia de datos');
   for (const [k, v] of h.guardado) if (k !== 'pyod_clave_v1') assert.ok(!k.includes(TOK) && !v.includes(TOK), 'el token no puede estar en ' + k);
   const codigos = Array.from(h.window.YodCargador.telemetria.codigos());
-  assert.equal(codigos.filter(c => /^pd:OB:\d+:r$/.test(c)).length, 1, 'un solo primer dato, con origen red: ' + codigos.join(' '));
-  assert.ok(codigos.some(c => /^cj:OB:\d+:r$/.test(c)), 'y el canje: ' + codigos.join(' '));
+  assert.equal(codigos.filter(c => /^pd:OB:\d+:r(@(ios|and|cros|win|mac|lin|otro))?$/.test(c)).length, 1, 'un solo primer dato, con origen red: ' + codigos.join(' '));
+  assert.ok(codigos.some(c => /^cj:OB:\d+:r(@(ios|and|cros|win|mac|lin|otro))?$/.test(c)), 'y el canje: ' + codigos.join(' '));
 });
 
 test('cargador REAL · segunda carga: la sesión sale de lo guardado (sin otra ida al Portero) y los datos siguen yendo a la red', async () => {
