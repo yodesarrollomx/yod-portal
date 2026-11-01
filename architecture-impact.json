@@ -1,9 +1,11 @@
 {
   "model_revision": "2026-11-01.mercado-hmo.1",
   "proposal_id": "CHG-MERCADO-HMO-20261101",
-  "summary": "Nuevo tablero estático mercado/hermosillo-2020-2030/ (oferta y demanda de vivienda nueva, municipio de Hermosillo, 2020–2030): index.html + data.json + base de 1,331 valores con fuente + auditoría. Sin marco YOD OS, sin chinche, sin backend, sin datos privados; no toca os/, portal-core.js ni versiones. La entrada en el menú bajo Plan de Potencial se propone aparte (código de acceso + Control Maestro).",
+  "summary": "Nuevo tablero estático mercado/hermosillo-2020-2030/ (oferta y demanda de vivienda nueva, municipio de Hermosillo, 2020–2030): index.html + data.json + base de 1,331 valores con fuente + auditoría. Sin marco YOD OS, sin chinche, sin backend, sin datos privados; no toca os/, portal-core.js ni versiones. La entrada en el menú bajo Plan de Potencial se propone aparte (código de acceso + Control Maestro). Toca os/salud-catalogo.json sólo para espejar el nuevo componente (dato, no código).",
   "components": [
-    "SYS-MERCADO-HMO"
+    "SYS-MERCADO-HMO",
+    "SYS-YOD-OS",
+    "SYS-CONTROL"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",

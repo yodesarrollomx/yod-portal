@@ -14859,11 +14859,13 @@
     {
       "id": "CHG-MERCADO-HMO-20261101",
       "components": [
-        "SYS-MERCADO-HMO"
+        "SYS-MERCADO-HMO",
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
       ],
       "status": "implementado_local",
       "approval": "Dirección pidió por chat el 1-nov-2026: «me fabricas un HTML para que lo tengamos en GitHub de Yodesarrollo para que podamos cruzar datos después… pónmelo en una liga abajo de Plan de Potencial». Esta entrega cubre la publicación de la página y sus datos; la entrada en el menú de YOD OS (catálogo, código de acceso, Control Maestro) queda como propuesta separada pendiente de confirmar ubicación y código con Dirección.",
-      "proposal": "Nueva carpeta estática mercado/hermosillo-2020-2030/ con index.html (diagrama de oferta y demanda por año con curvas que se desplazan, rango del punto, desplazadores con fuente, supuestos ajustables, tabla de la década y fuentes), data.json generado desde la base, base/ (series integradas, fuentes, notas, contrato, supuestos, scripts del pipeline) y auditoria/ (criterios, método de curvas, checklist, re-extracción independiente). Sin marco YOD OS, sin chinche, sin backend, sin datos privados. No toca os/, portal-core.js ni versiones.json.",
+      "proposal": "Nueva carpeta estática mercado/hermosillo-2020-2030/ con index.html (diagrama de oferta y demanda por año con curvas que se desplazan, rango del punto, desplazadores con fuente, supuestos ajustables, tabla de la década y fuentes), data.json generado desde la base, base/ (series integradas, fuentes, notas, contrato, supuestos, scripts del pipeline) y auditoria/ (criterios, método de curvas, checklist, re-extracción independiente). Sin marco YOD OS, sin chinche, sin backend, sin datos privados. No toca os/, portal-core.js ni versiones.json. Además, os/salud-catalogo.json (inventario publicado de salud) añade SYS-MERCADO-HMO para reflejar el modelo; no cambia comportamiento del cliente de salud.",
       "tests": [
         "Render real con Chrome headless (Playwright) a 430×932 (iPhone) y 1280×900: sin desbordamiento horizontal (scrollWidth = clientWidth), curvas, rastro de la década, punto hueco de 2026, tarjeta por año, tabla y fuentes; capturas en el expediente de trabajo.",
         "Paleta categórica (demanda #BA5230, oferta #0A7FA8 sobre #F7F3EC) validada con scripts/validate_palette.js del skill dataviz: lightness, chroma, CVD y contraste en PASS.",
