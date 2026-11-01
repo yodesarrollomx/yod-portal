@@ -14913,11 +14913,15 @@
     {
       "id": "CHG-MERCADO-HMO-F2-20261101",
       "components": [
-        "SYS-MERCADO"
+        "SYS-MERCADO",
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES"
       ],
       "status": "implementado_local",
       "approval": "Dirección, 1-nov-2026 por chat: «Adelante ya con la fase dos en equipo… ejecuta con puros opus, sonnets y haikus en enjambre» y después «si falta algo ejecútalo». Encargo del Buzón fila 505 (CG-HMO-OFERTA-DEMANDA-20261101): escenarios 2027–2030 y cierre 2026.",
-      "proposal": "Fase 2 del tablero Mercado Hermosillo dentro de mercado/hermosillo-2020-2030/ (sin tocar os/, catálogo, accesos ni versiones): (1) P real por omisión a precios de 2025 con INPC promedio anual y base del índice SHF corregida a 2017=100; (2) cierre 2026 estimado con rango (participación ene–jul 2021–2025); (3) escenarios 2027–2030 «más demanda y más oferta / base / menos demanda y menos oferta» más dos cruces de precio, con banda por arranque × cinco elasticidades y techo de absorción; (4) tabla «qué tendría que pasar», prueba del método preregistrada (no superó a la inercia, visible en el cuerpo), cartera por etapa sin sumas, inventario terminado en meses de ventas RUV; (5) base/fase2 (un folder por chunk), base/motor (escenarios.py, cierre2026.py, pruebas) y auditoria/ (criterios-fase2 y dictámenes por chunk).",
+      "proposal": "Fase 2 del tablero Mercado Hermosillo dentro de mercado/hermosillo-2020-2030/ (sin tocar os/, catálogo, accesos ni versiones): (1) P real por omisión a precios de 2025 con INPC promedio anual y base del índice SHF corregida a 2017=100; (2) cierre 2026 estimado con rango (participación ene–jul 2021–2025); (3) escenarios 2027–2030 «más demanda y más oferta / base / menos demanda y menos oferta» más dos cruces de precio, con banda por arranque × cinco elasticidades y techo de absorción; (4) tabla «qué tendría que pasar», prueba del método preregistrada (no superó a la inercia, visible en el cuerpo), cartera por etapa sin sumas, inventario terminado en meses de ventas RUV; (5) base/fase2 (un folder por chunk), base/motor (escenarios.py, cierre2026.py, pruebas) y auditoria/ (criterios-fase2 y dictámenes por chunk). Incluye los dos commits del PR #341 (sin fusionar): estilo del marco en la página Mercado (shell.css, Tabler, yod-acceso, yod-cargador) y ACCESOS_REF del workflow Conocimiento del Despacho (.github/workflows/conocimiento-browser.yml, propiedad de SYS-YOD-OS, SYS-DESPACHO, SYS-DESPACHO-3D y SYS-POTENCIALES); sin cambios adicionales a esos componentes.",
       "tests": [
         "python3 -I base/motor/tests/test_escenarios.py: 7/7 (techo sobre oferta, techo igual en sensibilidad de hogares, regla M3, rechazos con mensaje, determinismo).",
         "escenarios.py: dos corridas con el mismo sha256 de escenarios.json.",
