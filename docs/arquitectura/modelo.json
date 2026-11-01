@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-01.mercado-menu.1",
+  "revision": "2026-11-01.mercado-menu.2",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -14896,18 +14896,19 @@
         "SYS-OBRA-CLIENTE",
         "SYS-POTENCIALES",
         "SYS-TRACK",
-        "SYS-YOD-OS"
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D"
       ],
-      "status": "implementado_local",
+      "status": "publicado",
       "approval": "Dirección, 1-nov-2026 por chat: «pónmelo en una liga abajo de plan de potencial» y después «hazlo tú directamente… haz todo tú». El mismo día autorizó el merge del PR #339 (tablero). Esta entrada ejecuta la liga en el menú; la fila del Control Maestro se agrega con el conector de Sheets autorizado.",
-      "proposal": "Mercado Hermosillo entra al catálogo canónico (os/catalogo.js) como SYS-MERCADO justo debajo de SYS-POTENCIALES, sin navParent (entrada propia del menú), icono chart-line, código MH y destino https://yodesarrollomx.github.io/yod-portal/mercado/hermosillo-2020-2030/. Copias regeneradas (shell.js, access-policy.js, app.js), allowlist en portal-core.js con las tres bases, fila de respaldo en CAT_RESPALDO (sensibilidad Interno), tabla CODIGOS-BOARDS.md, etiqueta propia 20261101-mercado-hmo aplicada a todos los HTML, y la carpeta mercado/hermosillo-2020-2030 entra al alcance de scripts/versiones.cjs. La página carga portero.js (data-singate) y os/shell.js como los demás tableros de la casa (menú, identidad, chinche; ?embed=1 lo quita). Tercera tabla: potenciales-yod/accesos.html agrega MH a CODES y SYS-MERCADO a TABLEROS en un PR coordinado (atlas fijado a este commit). El código sólo decide visibilidad en el menú: la página no tiene backend ni datos privados. Renombre del ID SYS-MERCADO-HMO → SYS-MERCADO (alias conservado) porque verify-os sólo admite IDs SYS-[A-Z]+ en CAT_RESPALDO.",
+      "proposal": "Mercado Hermosillo entra al catálogo canónico (os/catalogo.js) como SYS-MERCADO justo debajo de SYS-POTENCIALES, sin navParent (entrada propia del menú), icono chart-line, código MH y destino https://yodesarrollomx.github.io/yod-portal/mercado/hermosillo-2020-2030/. Copias regeneradas (shell.js, access-policy.js, app.js), allowlist en portal-core.js con las tres bases, fila de respaldo en CAT_RESPALDO (sensibilidad Interno), tabla CODIGOS-BOARDS.md, etiqueta propia 20261101-mercado-hmo aplicada a todos los HTML, y la carpeta mercado/hermosillo-2020-2030 entra al alcance de scripts/versiones.cjs. La página carga portero.js (data-singate) y os/shell.js como los demás tableros de la casa (menú, identidad, chinche; ?embed=1 lo quita). Tercera tabla: potenciales-yod/accesos.html agrega MH a CODES y SYS-MERCADO a TABLEROS en un PR coordinado (atlas fijado a este commit). El código sólo decide visibilidad en el menú: la página no tiene backend ni datos privados. Renombre del ID SYS-MERCADO-HMO → SYS-MERCADO (alias conservado) porque verify-os sólo admite IDs SYS-[A-Z]+ en CAT_RESPALDO. Post-merge: el workflow Conocimiento del Despacho fija ACCESOS_REF al commit de potenciales-yod que ya trae MH (3558576), porque su pin anterior (eff67c2) hacía fallar verify-accesos en main.",
       "tests": [
         "node scripts/catalogo.cjs --check, node verify-os.cjs, node verify-portal.cjs, node verify-obra-app.cjs, node scripts/versiones.cjs --check, node scripts/arquitectura.cjs --check: en verde en local.",
         "node --test tests/*.cjs: 1381 pass; 1 fallo preexistente (tablero-cargador: git show f79867a en clon superficial).",
         "node verify-accesos.cjs: en verde sólo cuando potenciales-yod main trae MH (PR coordinado); se corre tras ese merge.",
         "Comprobación en vivo tras publicar: la cabina muestra «Mercado Hermosillo» debajo de PPP con sesión de Dirección y el tablero abre con marco."
       ],
-      "deployment": "Orden: (1) merge del PR de potenciales-yod (MH en accesos.html, atlas fijado a este commit); (2) merge de este PR; Pages sirve os/ con etiqueta 20261101-mercado-hmo. Reversión: revertir ambos merges; no hay backend ni datos."
+      "deployment": "Orden: (1) merge del PR de potenciales-yod (MH en accesos.html, atlas fijado a este commit); (2) merge de este PR; Pages sirve os/ con etiqueta 20261101-mercado-hmo. Reversión: revertir ambos merges; no hay backend ni datos. Publicado: potenciales-yod#58 (3558576) y yod-portal#340 (e3f11d7, Pages desplegado 20:48Z)."
     }
   ],
   "data_contracts": [

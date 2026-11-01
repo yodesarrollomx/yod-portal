@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-11-01.mercado-menu.1",
+  "model_revision": "2026-11-01.mercado-menu.2",
   "proposal_id": "CHG-MERCADO-MENU-20261101",
-  "summary": "Mercado Hermosillo entra al menú de YOD OS debajo de PPP: SYS-MERCADO en os/catalogo.js (código MH, icono chart-line, destino en este repo), copias regeneradas, allowlist portal-core, fila de respaldo, CODIGOS-BOARDS, etiqueta propia 20261101-mercado-hmo, la página carga portero.js+shell.js, y mercado/ entra al alcance de versiones.cjs. Tercera tabla (potenciales-yod/accesos.html) en PR coordinado. ID renombrado SYS-MERCADO-HMO → SYS-MERCADO (alias).",
+  "summary": "Mercado Hermosillo entra al menú de YOD OS debajo de PPP: SYS-MERCADO en os/catalogo.js (código MH, icono chart-line, destino en este repo), copias regeneradas, allowlist portal-core, fila de respaldo, CODIGOS-BOARDS, etiqueta propia 20261101-mercado-hmo, la página carga portero.js+shell.js, y mercado/ entra al alcance de versiones.cjs. Tercera tabla (potenciales-yod/accesos.html) en PR coordinado. ID renombrado SYS-MERCADO-HMO → SYS-MERCADO (alias). Post-merge: ACCESOS_REF del workflow Conocimiento del Despacho → 3558576 (potenciales-yod main con MH).",
   "components": [
     "GAS-CATALOGO",
     "GAS-PORTERO",
@@ -12,7 +12,8 @@
     "SYS-OBRA-CLIENTE",
     "SYS-POTENCIALES",
     "SYS-TRACK",
-    "SYS-YOD-OS"
+    "SYS-YOD-OS",
+    "SYS-DESPACHO-3D"
   ],
   "tests": [
     "node scripts/catalogo.cjs --check",
