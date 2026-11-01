@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-01.mercado-hmo.1",
+  "revision": "2026-11-01.mercado-menu.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -3468,7 +3468,7 @@
       "source_of_truth": "Sólo intención/resultado técnico de los efectos producidos por GAS-BANDEJA-NUBE."
     },
     {
-      "id": "SYS-MERCADO-HMO",
+      "id": "SYS-MERCADO",
       "nombre": "Mercado Hermosillo 2020–2030",
       "tipo": "tablero",
       "repo": "yodesarrollomx/yod-portal",
@@ -3476,7 +3476,7 @@
       "dominio": "Mercado",
       "owner_role": "Dirección",
       "status": "codigo",
-      "runtime_status": "Página estática sin backend ni sesión; publicación en Pages por verificar tras el merge. Fase 1 (base 2020–2026) con dictamen de Astra pendiente; eje de precio provisional (crédito promedio, no precio de vivienda).",
+      "runtime_status": "Tablero estático publicado en Pages por PR #339 (merge 9a1c8e5); entra al menú de YOD OS bajo PPP con código MH y marco shell.js (este cambio). Fase 1: base 2020–2026 con eje de precio provisional (crédito promedio, no precio de vivienda); dictamen de cifras y escenarios 2027–2030 pendientes.",
       "evidence": [
         {
           "repo": "yodesarrollomx/yod-portal",
@@ -3495,6 +3495,13 @@
         {
           "claim": "Encargo de Dirección 1-nov-2026 (Buzón Claude ↔ ChatGPT fila 505, ID CG-HMO-OFERTA-DEMANDA-20261101): publicar el HTML en GitHub de Yodesarrollo para cruzar datos después y enlazarlo bajo Plan de Potencial; el enlace en el menú se registra como propuesta aparte (código de acceso y Control Maestro)",
           "status": "declarado"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "os/catalogo.js",
+          "claim": "Sistema presente en el catálogo canónico, debajo de SYS-POTENCIALES, con código MH y destino en este repo",
+          "status": "codigo",
+          "source_revision": "HEAD_baseline"
         }
       ],
       "data_entities": [
@@ -3504,7 +3511,10 @@
         "supuesto"
       ],
       "risks_sanitized": [],
-      "source_of_truth": "mercado/hermosillo-2020-2030/base/series-integradas.csv (fuentes públicas: SNIIV/SEDATU, INEGI, Banxico, SHF, CANADEVI/prensa); sin hojas privadas"
+      "source_of_truth": "mercado/hermosillo-2020-2030/base/series-integradas.csv (fuentes públicas: SNIIV/SEDATU, INEGI, Banxico, SHF, CANADEVI/prensa); sin hojas privadas",
+      "aliases": [
+        "SYS-MERCADO-HMO"
+      ]
     }
   ],
   "connections": [
@@ -14859,7 +14869,7 @@
     {
       "id": "CHG-MERCADO-HMO-20261101",
       "components": [
-        "SYS-MERCADO-HMO",
+        "SYS-MERCADO",
         "SYS-YOD-OS",
         "SYS-CONTROL"
       ],
@@ -14873,6 +14883,31 @@
         "node scripts/arquitectura.cjs --check, node verify-os.cjs, node verify-portal.cjs, node scripts/versiones.cjs --check: sin cambios en os/ ni en versiones (la carpeta nueva no está en el catálogo)."
       ],
       "deployment": "Al fusionar a main, Pages publica https://yodesarrollomx.github.io/yod-portal/mercado/hermosillo-2020-2030/ ; comprobar con una lectura HTTP de index.html y data.json después del despliegue. Reversión: revertir el merge; no hay backend ni datos que migrar."
+    },
+    {
+      "id": "CHG-MERCADO-MENU-20261101",
+      "components": [
+        "GAS-CATALOGO",
+        "GAS-PORTERO",
+        "SYS-CONTROL",
+        "SYS-DESPACHO",
+        "SYS-MERCADO",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-POTENCIALES",
+        "SYS-TRACK",
+        "SYS-YOD-OS"
+      ],
+      "status": "implementado_local",
+      "approval": "Dirección, 1-nov-2026 por chat: «pónmelo en una liga abajo de plan de potencial» y después «hazlo tú directamente… haz todo tú». El mismo día autorizó el merge del PR #339 (tablero). Esta entrada ejecuta la liga en el menú; la fila del Control Maestro se agrega con el conector de Sheets autorizado.",
+      "proposal": "Mercado Hermosillo entra al catálogo canónico (os/catalogo.js) como SYS-MERCADO justo debajo de SYS-POTENCIALES, sin navParent (entrada propia del menú), icono chart-line, código MH y destino https://yodesarrollomx.github.io/yod-portal/mercado/hermosillo-2020-2030/. Copias regeneradas (shell.js, access-policy.js, app.js), allowlist en portal-core.js con las tres bases, fila de respaldo en CAT_RESPALDO (sensibilidad Interno), tabla CODIGOS-BOARDS.md, etiqueta propia 20261101-mercado-hmo aplicada a todos los HTML, y la carpeta mercado/hermosillo-2020-2030 entra al alcance de scripts/versiones.cjs. La página carga portero.js (data-singate) y os/shell.js como los demás tableros de la casa (menú, identidad, chinche; ?embed=1 lo quita). Tercera tabla: potenciales-yod/accesos.html agrega MH a CODES y SYS-MERCADO a TABLEROS en un PR coordinado (atlas fijado a este commit). El código sólo decide visibilidad en el menú: la página no tiene backend ni datos privados. Renombre del ID SYS-MERCADO-HMO → SYS-MERCADO (alias conservado) porque verify-os sólo admite IDs SYS-[A-Z]+ en CAT_RESPALDO.",
+      "tests": [
+        "node scripts/catalogo.cjs --check, node verify-os.cjs, node verify-portal.cjs, node verify-obra-app.cjs, node scripts/versiones.cjs --check, node scripts/arquitectura.cjs --check: en verde en local.",
+        "node --test tests/*.cjs: 1381 pass; 1 fallo preexistente (tablero-cargador: git show f79867a en clon superficial).",
+        "node verify-accesos.cjs: en verde sólo cuando potenciales-yod main trae MH (PR coordinado); se corre tras ese merge.",
+        "Comprobación en vivo tras publicar: la cabina muestra «Mercado Hermosillo» debajo de PPP con sesión de Dirección y el tablero abre con marco."
+      ],
+      "deployment": "Orden: (1) merge del PR de potenciales-yod (MH en accesos.html, atlas fijado a este commit); (2) merge de este PR; Pages sirve os/ con etiqueta 20261101-mercado-hmo. Reversión: revertir ambos merges; no hay backend ni datos."
     }
   ],
   "data_contracts": [
@@ -19748,7 +19783,7 @@
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "mercado/hermosillo-2020-2030/",
       "components": [
-        "SYS-MERCADO-HMO"
+        "SYS-MERCADO"
       ]
     }
   ],
@@ -19857,7 +19892,7 @@
           "SYS-POTENCIALES",
           "SHEET-PPP-MODELOS",
           "SYS-DESPACHO-3D",
-          "SYS-MERCADO-HMO"
+          "SYS-MERCADO"
         ]
       },
       {

@@ -15,6 +15,11 @@
   var CATALOGO = [
     { id: "SYS-DESPACHO", nombre: "El Despacho", icono: "layout-grid", codigos: ["DP"], destino: "https://yodesarrollomx.github.io/yod-despacho/" },
     { id: "SYS-POTENCIALES", nombre: "PPP", icono: "map-2", codigos: ["PT","MP","MA","MX","UN","RE","PA"], destino: "https://yodesarrollomx.github.io/potenciales-yod/" },
+    /* Mercado Hermosillo (1-nov-2026): tablero estático de oferta y demanda de vivienda nueva
+       (mercado/hermosillo-2020-2030/). Va justo debajo de PPP por decisión de Dirección; sin
+       navParent para que aparezca como entrada propia del menú. Código MH: sólo decide si se
+       muestra; la página no tiene backend ni datos privados. */
+    { id: "SYS-MERCADO", nombre: "Mercado Hermosillo", icono: "chart-line", codigos: ["MH"], destino: "https://yodesarrollomx.github.io/yod-portal/mercado/hermosillo-2020-2030/" },
     { id: "SYS-TRACK", nombre: "Codesarrollos", icono: "route", codigos: ["CO","TC"], destino: "https://yodesarrollomx.github.io/yod-portal/track-codesarrollos.html" },
     { id: "SYS-MIRAMAR", navParent: "SYS-TRACK", nombre: "Real de Miramar", icono: "building-community", codigos: ["RM"], destino: "https://yodesarrollomx.github.io/real-miramar-board/" },
     { id: "SYS-TAREAS", nombre: "MOAC", icono: "checklist", codigos: ["TA"], destino: "https://yodesarrollomx.github.io/board-aurum/" },

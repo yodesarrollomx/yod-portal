@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-01.mercado-hmo.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-01.mercado-menu.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -19,7 +19,7 @@ La ubicación es propuesta. Este documento no concede permisos, no activa herram
 
 **Técnico:** SYS-DESPACHO, SYS-POTENCIALES, SYS-TRACK, SYS-MIRAMAR, SYS-TAREAS, SYS-FLUJO, SYS-INTERIORES, SYS-INVERSION, SYS-MARKETING, SYS-OBRA, SYS-CONTROL
 
-**Equivalencias declaradas:** SYS-PORTAL → SYS-YOD-OS
+**Equivalencias declaradas:** SYS-PORTAL → SYS-YOD-OS; SYS-MERCADO-HMO → SYS-MERCADO
 
 Los IDs originales se conservan; resolver un alias no modifica permisos.
 
@@ -1178,7 +1178,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - 6 conexiones sin verificación de ejecución registrada.
 
-### Mercado Hermosillo 2020–2030 · SYS-MERCADO-HMO
+### Mercado Hermosillo 2020–2030 · SYS-MERCADO
 
 **Función:** Diagrama de oferta y demanda de vivienda nueva del municipio de Hermosillo por año (2020–2026 observado, 2027–2030 escenarios pendientes), con cada cifra rastreable a su fuente y la pendiente de las curvas declarada como supuesto
 
@@ -1186,7 +1186,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dirección
 
-**Estado registrado:** codigo. Página estática sin backend ni sesión; publicación en Pages por verificar tras el merge. Fase 1 (base 2020–2026) con dictamen de Astra pendiente; eje de precio provisional (crédito promedio, no precio de vivienda).
+**Estado registrado:** codigo. Tablero estático publicado en Pages por PR \#339 (merge 9a1c8e5); entra al menú de YOD OS bajo PPP con código MH y marco shell.js (este cambio). Fase 1: base 2020–2026 con eje de precio provisional (crédito promedio, no precio de vivienda); dictamen de cifras y escenarios 2027–2030 pendientes.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -1197,6 +1197,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Tablero estático: curvas de elasticidad constante ancladas al punto observado (P\_t, Q\_t) por año, lee data.json por fetch · Estado: codigo · yodesarrollomx/yod-portal · mercado/hermosillo-2020-2030/index.html · Revisión: HEAD\_baseline
 - Base de 1,331 valores con fuente, URL, localizador, corte y calidad (contrato en base/CONTRATO.md); muestreo independiente 26/26 coincidencias en auditoria/ · Estado: codigo · yodesarrollomx/yod-portal · mercado/hermosillo-2020-2030/base/series-integradas.csv · Revisión: HEAD\_baseline
 - Encargo de Dirección 1-nov-2026 (Buzón Claude ↔ ChatGPT fila 505, ID CG-HMO-OFERTA-DEMANDA-20261101): publicar el HTML en GitHub de Yodesarrollo para cruzar datos después y enlazarlo bajo Plan de Potencial; el enlace en el menú se registra como propuesta aparte (código de acceso y Control Maestro) · Estado: declarado · Sin revisión inmutable en esta referencia
+- Sistema presente en el catálogo canónico, debajo de SYS-POTENCIALES, con código MH y destino en este repo · Estado: codigo · yodesarrollomx/yod-portal · os/catalogo.js · Revisión: HEAD\_baseline
 
 **Pendientes y límites:**
 

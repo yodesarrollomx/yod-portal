@@ -1,20 +1,28 @@
 {
-  "model_revision": "2026-11-01.mercado-hmo.1",
-  "proposal_id": "CHG-MERCADO-HMO-20261101",
-  "summary": "Nuevo tablero estático mercado/hermosillo-2020-2030/ (oferta y demanda de vivienda nueva, municipio de Hermosillo, 2020–2030): index.html + data.json + base de 1,331 valores con fuente + auditoría. Sin marco YOD OS, sin chinche, sin backend, sin datos privados; no toca os/, portal-core.js ni versiones. La entrada en el menú bajo Plan de Potencial se propone aparte (código de acceso + Control Maestro). Toca os/salud-catalogo.json sólo para espejar el nuevo componente (dato, no código).",
+  "model_revision": "2026-11-01.mercado-menu.1",
+  "proposal_id": "CHG-MERCADO-MENU-20261101",
+  "summary": "Mercado Hermosillo entra al menú de YOD OS debajo de PPP: SYS-MERCADO en os/catalogo.js (código MH, icono chart-line, destino en este repo), copias regeneradas, allowlist portal-core, fila de respaldo, CODIGOS-BOARDS, etiqueta propia 20261101-mercado-hmo, la página carga portero.js+shell.js, y mercado/ entra al alcance de versiones.cjs. Tercera tabla (potenciales-yod/accesos.html) en PR coordinado. ID renombrado SYS-MERCADO-HMO → SYS-MERCADO (alias).",
   "components": [
-    "SYS-MERCADO-HMO",
-    "SYS-YOD-OS",
-    "SYS-CONTROL"
+    "GAS-CATALOGO",
+    "GAS-PORTERO",
+    "SYS-CONTROL",
+    "SYS-DESPACHO",
+    "SYS-MERCADO",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "SYS-POTENCIALES",
+    "SYS-TRACK",
+    "SYS-YOD-OS"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check",
+    "node scripts/catalogo.cjs --check",
     "node verify-os.cjs",
     "node verify-portal.cjs",
+    "node verify-obra-app.cjs",
     "node scripts/versiones.cjs --check",
-    "Render real Chrome headless 430×932 y 1280×900 (Playwright): sin overflow; capturas en el expediente",
-    "validate_palette.js (dataviz): PASS",
-    "Re-extracción independiente 26/26 cifras"
+    "node scripts/arquitectura.cjs --check",
+    "node --test tests/*.cjs",
+    "node verify-accesos.cjs (tras el merge coordinado de potenciales-yod)"
   ],
-  "rollback": "Revertir el merge del PR; carpeta aislada, sin backend ni datos que migrar."
+  "rollback": "Revertir este merge y el de potenciales-yod; sin backend ni datos."
 }

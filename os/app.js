@@ -3,7 +3,7 @@
 
   /* NAVIGATION-BEGIN */
   // Generado desde os/catalogo.js: presentación común; no concede accesos.
-  var NAV_ORDER = ["SYS-DESPACHO","SYS-POTENCIALES","SYS-TRACK","SYS-MIRAMAR","SYS-TAREAS","SYS-FLUJO","SYS-INTERIORES","SYS-INVERSION","SYS-MARKETING","SYS-OBRA","SYS-CONTROL"];
+  var NAV_ORDER = ["SYS-DESPACHO","SYS-POTENCIALES","SYS-MERCADO","SYS-TRACK","SYS-MIRAMAR","SYS-TAREAS","SYS-FLUJO","SYS-INTERIORES","SYS-INVERSION","SYS-MARKETING","SYS-OBRA","SYS-CONTROL"];
   var NAV_PARENT = {"SYS-MIRAMAR":"SYS-TRACK"};
   function orderedModules(rows) {
     var seen = Object.create(null);
@@ -342,6 +342,7 @@
   var CAT_RESPALDO=[
     {system_id:'SYS-DESPACHO',orden:'1',visible:'SI',titulo_portal:'El Despacho',descripcion_portal:'Tu pantalla de trabajo: por cada frente del negocio, quien te esta esperando mas. Se firma aqui y se escribe en el tablero.',audiencia:'Direccion',icono:'message-2',miniatura:'thumbs/track.svg',url:'',estado:'Activo',sensibilidad:'Confidencial'},
     {system_id:'SYS-POTENCIALES',orden:'2',visible:'SI',titulo_portal:'PPP',descripcion_portal:'Planes de Potencial Personalizados: mapa de terrenos, escenarios y números para decidir qué construir y cuánto rinde.',audiencia:'Dirección y análisis',icono:'map-pin',miniatura:'thumbs/potenciales.svg',url:'',estado:'Activo',sensibilidad:'Confidencial'},
+    {system_id:'SYS-MERCADO',orden:'2',visible:'SI',titulo_portal:'Mercado Hermosillo',descripcion_portal:'Oferta y demanda de vivienda nueva en Hermosillo, año por año 2020–2030: curvas que se mueven, cada cifra con su fuente y la pendiente como supuesto visible.',audiencia:'Dirección y análisis',icono:'chart-line',miniatura:'thumbs/track.svg',url:'',estado:'Activo',sensibilidad:'Interno'},
     {system_id:'SYS-TRACK',orden:'3',visible:'SI',titulo_portal:'Codesarrollos',descripcion_portal:'Los codesarrollos en curso (Real de Miramar, Casa Alysa, Casa María), cada uno con su etapa y su tablero.',audiencia:'Dirección y tramitología',icono:'route',miniatura:'thumbs/track.svg',url:'',estado:'Activo',sensibilidad:'Interno'},
     /* Real de Miramar faltaba en el respaldo: si el Sheet no contestaba, el
        codesarrollo mas grande desaparecia de la rejilla sin que nadie lo notara. */
@@ -358,6 +359,7 @@
   var ICONS={
     'SYS-DESPACHO':'layout-grid',
     'SYS-POTENCIALES':'map-2',
+    'SYS-MERCADO':'chart-line',
     'SYS-TRACK':'route',
     'SYS-MIRAMAR':'building-community',
     'SYS-TAREAS':'checklist',
@@ -369,7 +371,7 @@
   };
   // Etiqueta del tablero embebido (caché de 10 min de Pages). No se edita aquí: la escribe
   // node scripts/versiones.cjs --aplicar desde os/versiones.json, igual que todos los ?v=.
-  var TABLERO_V='20261031-fase1-e2';
+  var TABLERO_V='20261101-mercado-hmo';
   var state={modules:[],rawRows:[],role:'vista',boards:'',profileReady:false,loading:false,opsScope:'mias',allTasks:[],sesionEpoch:0,sessionToken:'',identityRequest:0,pulseCache:{},opsCache:null,verifiedAt:0};
   var $=function(id){return document.getElementById(id);};
   // ¿hay clave guardada? distingue «sin sesión» de «sesión validándose»
@@ -609,7 +611,7 @@
         write:function(intent){return window.YODCaseTransport.writeTeam(intent);},
         lookupReceipt:function(requestId){return window.YODCaseTransport.lookupTeamReceipt({request_id:requestId});}
       },
-      loadMount:function(){return import('../despacho3d/equipo.mjs?v=20261031-fase1-e2').then(function(module){return module.mountTeamDesk;});},
+      loadMount:function(){return import('../despacho3d/equipo.mjs?v=20261101-mercado-hmo').then(function(module){return module.mountTeamDesk;});},
       onError:function(){var status=$('despachoEquipoEstado');if(status)status.textContent='No se pudo abrir Equipo. Puedes volver a validar tu acceso.';}
     });
   }

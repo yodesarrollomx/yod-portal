@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-01.mercado-hmo.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-01.mercado-menu.1 · 2026-10-20.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -574,7 +574,7 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  n_SYS_MERCADO_HMO["Mercado Hermosillo 2020–2030"]
+  n_SYS_MERCADO["Mercado Hermosillo 2020–2030"]
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
 ```
 

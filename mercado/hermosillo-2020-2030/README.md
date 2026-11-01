@@ -34,4 +34,4 @@ con las curvas desplazándose en el tiempo, cada número rastreable a su fuente 
 
 Calidad de cada cifra: `observado` (leída en fuente oficial), `estimado` (cálculo propio con fórmula visible), `declarado` (lo dijo un actor), `prensa`, `por verificar` (no se pudo reabrir la fuente).
 
-Sin marco YOD OS ni chinche por ahora: página independiente. La entrada en el menú (bajo Plan de Potencial) se registra como propuesta aparte, porque implica código de acceso y Control Maestro.
+Entra al menú de YOD OS justo debajo de PPP (`os/catalogo.js`, `SYS-MERCADO`, código `MH`) y carga el marco `shell.js` (menú, identidad, chinche) como cualquier tablero de la casa; con `?embed=1` se ve sin marco. Los datos (`data.json`, `base/`) siguen siendo públicos en el repositorio.

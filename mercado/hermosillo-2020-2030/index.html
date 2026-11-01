@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="color-scheme" content="light">
-<title>Hermosillo 2020–2030 · Oferta y demanda</title>
+<title>Mercado Hermosillo 2020–2030 · YOD OS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -451,5 +451,9 @@
   }).catch(err=>{ $('#estado').innerHTML = `<span class="punto" style="background:var(--verificar)"></span><span>No se pudo cargar data.json (${err}). Abre esta página desde el servidor, no desde el archivo.</span>`; });
 })();
 </script>
+<!-- Marco YOD OS: menú, identidad y chinche, igual que los demás tableros de la casa.
+     Con ?embed=1 el marco no se monta. Los ?v= los fija os/versiones.json (scripts/versiones.cjs). -->
+<script src="https://yodesarrollomx.github.io/potenciales-yod/portero.js?v=20261031-fase1-e2" data-singate></script>
+<script src="https://yodesarrollomx.github.io/yod-portal/os/shell.js?v=20261101-mercado-hmo"></script>
 </body>
 </html>
