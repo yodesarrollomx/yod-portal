@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-10-31.cargador-fase1.3",
+  "revision": "2026-11-01.mercado-hmo.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -3466,6 +3466,45 @@
         "Cupo de ScriptProperties: los resultados inciertos no se podan ni se reintentan por falta de espacio."
       ],
       "source_of_truth": "Sólo intención/resultado técnico de los efectos producidos por GAS-BANDEJA-NUBE."
+    },
+    {
+      "id": "SYS-MERCADO-HMO",
+      "nombre": "Mercado Hermosillo 2020–2030",
+      "tipo": "tablero",
+      "repo": "yodesarrollomx/yod-portal",
+      "proposito": "Diagrama de oferta y demanda de vivienda nueva del municipio de Hermosillo por año (2020–2026 observado, 2027–2030 escenarios pendientes), con cada cifra rastreable a su fuente y la pendiente de las curvas declarada como supuesto",
+      "dominio": "Mercado",
+      "owner_role": "Dirección",
+      "status": "codigo",
+      "runtime_status": "Página estática sin backend ni sesión; publicación en Pages por verificar tras el merge. Fase 1 (base 2020–2026) con dictamen de Astra pendiente; eje de precio provisional (crédito promedio, no precio de vivienda).",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "mercado/hermosillo-2020-2030/index.html",
+          "claim": "Tablero estático: curvas de elasticidad constante ancladas al punto observado (P_t, Q_t) por año, lee data.json por fetch",
+          "status": "codigo",
+          "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "mercado/hermosillo-2020-2030/base/series-integradas.csv",
+          "claim": "Base de 1,331 valores con fuente, URL, localizador, corte y calidad (contrato en base/CONTRATO.md); muestreo independiente 26/26 coincidencias en auditoria/",
+          "status": "codigo",
+          "source_revision": "HEAD_baseline"
+        },
+        {
+          "claim": "Encargo de Dirección 1-nov-2026 (Buzón Claude ↔ ChatGPT fila 505, ID CG-HMO-OFERTA-DEMANDA-20261101): publicar el HTML en GitHub de Yodesarrollo para cruzar datos después y enlazarlo bajo Plan de Potencial; el enlace en el menú se registra como propuesta aparte (código de acceso y Control Maestro)",
+          "status": "declarado"
+        }
+      ],
+      "data_entities": [
+        "serie",
+        "fuente",
+        "equilibrio",
+        "supuesto"
+      ],
+      "risks_sanitized": [],
+      "source_of_truth": "mercado/hermosillo-2020-2030/base/series-integradas.csv (fuentes públicas: SNIIV/SEDATU, INEGI, Banxico, SHF, CANADEVI/prensa); sin hojas privadas"
     }
   ],
   "connections": [
@@ -14816,6 +14855,22 @@
       ],
       "deployment": "GitHub Pages desde main tras el merge de los dos PR (primero yod-portal, que sirve el cargador v2 y los adoptantes; luego potenciales-yod). Sin despliegue de Apps Script. Comprobación posterior: «Comprobar archivos publicados» de potenciales y recorrido manual (tablero cenital abre sin AL, fuentes con copia al segundo acceso, códigos pd:…@<disp> en BITACORA).",
       "rollback": "Revertir los dos PR (merge commits) o abrir con ?cargador=legacy / localStorage yodcg_legacy=1 (camino anterior en cada adoptante, salvo las correcciones del respaldo muerto). YodCargador.purgar() borra las cachés yodcg_*. Sin backend ni datos que migrar."
+    },
+    {
+      "id": "CHG-MERCADO-HMO-20261101",
+      "components": [
+        "SYS-MERCADO-HMO"
+      ],
+      "status": "implementado_local",
+      "approval": "Dirección pidió por chat el 1-nov-2026: «me fabricas un HTML para que lo tengamos en GitHub de Yodesarrollo para que podamos cruzar datos después… pónmelo en una liga abajo de Plan de Potencial». Esta entrega cubre la publicación de la página y sus datos; la entrada en el menú de YOD OS (catálogo, código de acceso, Control Maestro) queda como propuesta separada pendiente de confirmar ubicación y código con Dirección.",
+      "proposal": "Nueva carpeta estática mercado/hermosillo-2020-2030/ con index.html (diagrama de oferta y demanda por año con curvas que se desplazan, rango del punto, desplazadores con fuente, supuestos ajustables, tabla de la década y fuentes), data.json generado desde la base, base/ (series integradas, fuentes, notas, contrato, supuestos, scripts del pipeline) y auditoria/ (criterios, método de curvas, checklist, re-extracción independiente). Sin marco YOD OS, sin chinche, sin backend, sin datos privados. No toca os/, portal-core.js ni versiones.json.",
+      "tests": [
+        "Render real con Chrome headless (Playwright) a 430×932 (iPhone) y 1280×900: sin desbordamiento horizontal (scrollWidth = clientWidth), curvas, rastro de la década, punto hueco de 2026, tarjeta por año, tabla y fuentes; capturas en el expediente de trabajo.",
+        "Paleta categórica (demanda #BA5230, oferta #0A7FA8 sobre #F7F3EC) validada con scripts/validate_palette.js del skill dataviz: lightness, chroma, CVD y contraste en PASS.",
+        "Re-extracción independiente de 26 cifras (13 oferta, 13 demanda) por agentes aparte reabriendo URL+localizador: 26/26 coinciden (auditoria/luna-resultado-*.csv).",
+        "node scripts/arquitectura.cjs --check, node verify-os.cjs, node verify-portal.cjs, node scripts/versiones.cjs --check: sin cambios en os/ ni en versiones (la carpeta nueva no está en el catálogo)."
+      ],
+      "deployment": "Al fusionar a main, Pages publica https://yodesarrollomx.github.io/yod-portal/mercado/hermosillo-2020-2030/ ; comprobar con una lectura HTTP de index.html y data.json después del despliegue. Reversión: revertir el merge; no hay backend ni datos que migrar."
     }
   ],
   "data_contracts": [
@@ -19686,6 +19741,13 @@
         "SYS-OBRA",
         "GAS-PORTERO"
       ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "mercado/hermosillo-2020-2030/",
+      "components": [
+        "SYS-MERCADO-HMO"
+      ]
     }
   ],
   "office_coverage": {
@@ -19792,7 +19854,8 @@
         "components": [
           "SYS-POTENCIALES",
           "SHEET-PPP-MODELOS",
-          "SYS-DESPACHO-3D"
+          "SYS-DESPACHO-3D",
+          "SYS-MERCADO-HMO"
         ]
       },
       {

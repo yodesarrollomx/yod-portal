@@ -1,26 +1,18 @@
 {
-  "model_revision": "2026-10-31.cargador-fase1.3",
-  "proposal_id": "CHG-CARGADOR-FASE1-002",
-  "summary": "Fase 1 (Un cargador), entrega 2: cargador v2 (recordar, canje frío a 75 s, verificación por canje ante datos negados, dispositivo en la telemetría, peek); el tablero cenital valida con el canje (sin depender de AL) y sus 7 fuentes van con plazo y caché; obra.html con canje compartido y lecturas con plazo sin caché; la cabina legacy deja el respaldo muerto, ⏱ sólo para Dirección y «sin conexión» sin estilo de error. Sin cambios de backend, hojas ni permisos de servidor.",
+  "model_revision": "2026-11-01.mercado-hmo.1",
+  "proposal_id": "CHG-MERCADO-HMO-20261101",
+  "summary": "Nuevo tablero estático mercado/hermosillo-2020-2030/ (oferta y demanda de vivienda nueva, municipio de Hermosillo, 2020–2030): index.html + data.json + base de 1,331 valores con fuente + auditoría. Sin marco YOD OS, sin chinche, sin backend, sin datos privados; no toca os/, portal-core.js ni versiones. La entrada en el menú bajo Plan de Potencial se propone aparte (código de acceso + Control Maestro).",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-POTENCIALES",
-    "SYS-DESPACHO",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
-    "SYS-CONTROL",
-    "GAS-PORTERO",
-    "GAS-CATALOGO"
+    "SYS-MERCADO-HMO"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs",
-    "node scripts/versiones.cjs --check"
+    "node scripts/versiones.cjs --check",
+    "Render real Chrome headless 430×932 y 1280×900 (Playwright): sin overflow; capturas en el expediente",
+    "validate_palette.js (dataviz): PASS",
+    "Re-extracción independiente 26/26 cifras"
   ],
-  "rollback": "Revertir el PR (merge commit) o abrir con ?cargador=legacy / localStorage yodcg_legacy=1. Sin datos que migrar ni backend que revertir."
+  "rollback": "Revertir el merge del PR; carpeta aislada, sin backend ni datos que migrar."
 }
