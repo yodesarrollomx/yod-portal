@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "model_revision": "2026-10-31.chinches-clock.1",
+  "model_revision": "2026-11-01.mercado-hmo.1",
   "components": [
     {
       "id": "SYS-DESPACHO",
@@ -541,6 +541,12 @@
       "nombre": "Recibos privados de Bandeja",
       "tipo": "almacen_tecnico",
       "repo": "alexpueblag/yod-agent-cloud"
+    },
+    {
+      "id": "SYS-MERCADO-HMO",
+      "nombre": "Mercado Hermosillo 2020–2030",
+      "tipo": "tablero",
+      "repo": "yodesarrollomx/yod-portal"
     }
   ],
   "processes": [
