@@ -23,6 +23,11 @@
       'https://tableros.yodesarrollo.mx/potenciales-yod/',
       'https://alexpueblag.github.io/potenciales-yod/'
     ],
+    'SYS-MERCADO':[
+      'https://yodesarrollomx.github.io/yod-portal/mercado/hermosillo-2020-2030/',
+      'https://tableros.yodesarrollo.mx/yod-portal/mercado/hermosillo-2020-2030/',
+      'https://alexpueblag.github.io/yod-portal/mercado/hermosillo-2020-2030/'
+    ],
     'SYS-TRACK':[
       'https://yodesarrollomx.github.io/yod-portal/track-codesarrollos.html',
       'https://tableros.yodesarrollo.mx/yod-portal/track-codesarrollos.html',

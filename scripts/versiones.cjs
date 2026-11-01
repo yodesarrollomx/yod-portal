@@ -35,7 +35,7 @@ const ETIQUETA_VALIDA = /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/;
 const HOST_PAGES = 'https://yodesarrollomx.github.io';
 const REPOS_ABSOLUTOS = [['/yod-portal/', 'propia'], ['/potenciales-yod/', 'potenciales']];
 const EXTENSIONES = new Set(['.js', '.mjs', '.css']);
-const DIRECTORIOS_HTML = ['', 'os', 'obra-app'];
+const DIRECTORIOS_HTML = ['', 'os', 'obra-app', 'mercado/hermosillo-2020-2030'];
 const PAGINA_EXCLUIDA = /^(?:agent-|design-preview)/i;
 const USO = 'Uso: node scripts/versiones.cjs --check | --aplicar [--root <carpeta>]';
 

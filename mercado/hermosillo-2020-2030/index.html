@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="color-scheme" content="light">
-<title>Hermosillo 2020–2030 · Oferta y demanda</title>
+<title>Mercado Hermosillo 2020–2030 · YOD OS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -149,10 +149,10 @@
   <section class="tarjeta">
     <details>
       <summary><h2>Qué es P y qué es Q</h2></summary>
-      <p class="lectura"><b>Q (viviendas)</b> = créditos de adquisición de vivienda <b>nueva</b> colocados en el municipio en el año: INFONAVIT + FOVISSSTE + banca (SNIIV, SEDATU). El rango del punto va del mínimo (quitando cofinanciamientos) al máximo (todos los organismos, incluido CONAVI). No es producción ni "necesidad de vivienda".</p>
+      <p class="lectura"><b>Q (viviendas)</b> = viviendas <b>nuevas</b> financiadas en el municipio en el año (SNIIV, SEDATU): INFONAVIT contando una vivienda por cada crédito Conyugal o Unamos Créditos (son dos créditos para una casa) y descontando los esquemas que también pasan por un banco, más FOVISSSTE y banca (CNBV). El bigote llega hasta la suma simple de acciones de crédito. Excluye CONAVI (precio administrado), vivienda usada, compras de contado y lo informal. No es producción ni "necesidad de vivienda".</p>
       <p class="lectura"><b>P (precio)</b> = <span id="p-def"></span></p>
       <div class="toggle" id="toggle-p"></div>
-      <p class="nota">Lo que falta para un precio de verdad: niveles del índice SHF de precios para Hermosillo (hoy sólo hay variaciones anuales sueltas) y un precio medio de vivienda nueva vendida por año. Está en la lista de correcciones de la auditoría.</p>
+      <p class="nota">Límites: el índice no separa vivienda nueva de usada a nivel municipio, y no es un precio en pesos. Un precio medio de vivienda nueva vendida por año (en pesos) sigue pendiente: CANADEVI sólo publicó bandas de 2026.</p>
     </details>
   </section>
 
@@ -206,19 +206,19 @@
   function punto(a){
     const e = D.equilibrio[String(a)]; if(!e) return null;
     let P=null, Pmin=null, Pmax=null, Q=null, Qmin=null, Qmax=null, estado=e.estado;
+    const pk = proxyP==='real' ? e.P.real : e.P.base;
     if(estado==='observado'){
-      const pk = e.P[proxyP==='banca'?'alt_banca':'base'];
       P = pk ? pk.valor : null;
       const cands = [e.Q.base, e.Q.min, e.Q.max].filter(x=>x&&x.valor!=null).map(x=>x.valor);
       Q = e.Q.base ? e.Q.base.valor : null; Qmin = Math.min(...cands); Qmax = Math.max(...cands);
-    } else { // 2026 al corte
+    } else { // 2026 al corte: Q = cierre estimado al ritmo de ene–jul; P = promedio ene–jun observado
       const prev = punto(2025); if(!prev) return null;
       const q26 = e.Q.base && e.Q.base.valor, q25 = e.Q.mismo_periodo_2025 && e.Q.mismo_periodo_2025.valor;
-      Q = (q26 && q25) ? prev.Q * (q26/q25) : null;        // cierre estimado: mismo ritmo que ene–jul
+      Q = (q26 && q25) ? prev.Q * (q26/q25) : null;
       Qmin = Q ? Math.min(prev.Q, Q) : null; Qmax = Q ? Math.max(prev.Q, Q) : null;
-      const shf = (D.desplazadores.shf_var_anual_hermosillo||[]).filter(x=>x.periodo.startsWith('2026')).map(x=>x.valor);
-      const var26 = shf.length ? Math.max(...shf)/100 : 0;
-      Pmin = prev.P; Pmax = prev.P*(1+var26); P = (Pmin+Pmax)/2;
+      P = pk ? pk.valor : null;
+      const f = (e.P.real && e.P.real.factor) || 1, k = proxyP==='real' ? 1/f : 1;
+      Pmin = e.P.q1 ? e.P.q1.valor*k : P; Pmax = e.P.q2 ? e.P.q2.valor*k : P;
     }
     return {anio:a, P, Pmin, Pmax, Q, Qmin, Qmax, estado};
   }
@@ -260,11 +260,11 @@
     // rejilla ligera
     const tq = ticks(dom.Qmin, dom.Qmax, 4), tp = ticks(dom.Pmin, dom.Pmax, 4);
     tq.forEach(v=>{ s += `<line x1="${sx(v)}" y1="${m.t}" x2="${sx(v)}" y2="${m.t+ih}" stroke="#E9E3D8" stroke-width="1"/>`; s += `<text class="tick" x="${sx(v)}" y="${m.t+ih+15}" text-anchor="middle">${fmt(v)}</text>`; });
-    tp.forEach(v=>{ s += `<line x1="${m.l}" y1="${sy(v)}" x2="${m.l+iw}" y2="${sy(v)}" stroke="#E9E3D8" stroke-width="1"/>`; s += `<text class="tick" x="${m.l-6}" y="${sy(v)+4}" text-anchor="end">${fmtP(v)}</text>`; });
+    tp.forEach(v=>{ s += `<line x1="${m.l}" y1="${sy(v)}" x2="${m.l+iw}" y2="${sy(v)}" stroke="#E9E3D8" stroke-width="1"/>`; s += `<text class="tick" x="${m.l-6}" y="${sy(v)+4}" text-anchor="end">${fmt(v)}</text>`; });
     // ejes
     s += `<path class="eje" d="M${m.l} ${m.t} L${m.l} ${m.t+ih} L${m.l+iw} ${m.t+ih}"/>`;
-    s += `<text class="titulo-eje" x="${m.l+6}" y="${m.t-6}">Precio${proxyP==='banca'?' (crédito banca)':' (crédito INFONAVIT)'}</text>`;
-    s += `<text class="titulo-eje" x="${m.l+iw}" y="${m.t+ih+34}" text-anchor="end">Viviendas (créditos de vivienda nueva / año)</text>`;
+    s += `<text class="titulo-eje" x="${m.l+6}" y="${m.t-6}">Precio · índice SHF ${proxyP==='real'?'real (pesos de 2020)':'(2018 = 100)'}</text>`;
+    s += `<text class="titulo-eje" x="${m.l+iw}" y="${m.t+ih+34}" text-anchor="end">Viviendas nuevas financiadas / año</text>`;
     // rastro de la década
     if(pts.length>1) s += `<path class="rastro" d="M${pts.map(p=>sx(p.Q).toFixed(1)+' '+sy(p.P).toFixed(1)).join(' L ')}"/>`;
     const puestas = [[sx(cur.Q)+11, sy(cur.P)-9, 32, 12]]; // cajas de etiquetas ya colocadas (x,y,w,h), empezando por la del año activo
@@ -337,17 +337,17 @@
     $('#sliders').querySelectorAll('input').forEach(i=>i.oninput=()=>{ const v=parseFloat(i.value); if(i.dataset.p==='e_d') ed=v; else es=v; $('#v-'+i.dataset.p).textContent=v.toFixed(2); dominio(); render(tween?tween.cur:punto(anio)); pintarTarjeta(anio); });
   }
   function pintarToggleP(){
-    $('#toggle-p').innerHTML = `<button data-p="base" class="${proxyP==='base'?'activo':''}">Crédito INFONAVIT</button><button data-p="banca" class="${proxyP==='banca'?'activo':''}">Crédito banca</button>`;
+    $('#toggle-p').innerHTML = `<button data-p="base" class="${proxyP==='base'?'activo':''}">Nominal</button><button data-p="real" class="${proxyP==='real'?'activo':''}">Real (sin inflación)</button>`;
     $('#toggle-p').querySelectorAll('button').forEach(b=>b.onclick=()=>{ proxyP=b.dataset.p; pintarToggleP(); dominio(); irA(anio,false); });
     $('#p-def').innerHTML = proxyP==='base'
-      ? 'crédito promedio INFONAVIT para vivienda nueva en el municipio (monto total ÷ créditos, SNIIV). Es un <b>proxy</b>: sigue al precio pero también a los topes de crédito del Instituto. <span class="chip estimado">estimado</span>'
-      : 'crédito promedio de la banca (CNBV) para vivienda nueva en el municipio (monto total ÷ créditos, SNIIV). Es un <b>proxy</b> del segmento medio-alto; la mezcla de segmentos lo mueve. <span class="chip estimado">estimado</span>';
+      ? 'Índice SHF de precios de la vivienda para el municipio de Hermosillo (Sociedad Hipotecaria Federal, vía el API del SNIIV), promedio anual, base 2018 = 100. Mide el precio a calidad constante de toda la vivienda con avalúo (nueva y usada: la SHF no separa por municipio). <span class="chip observado">observado</span> niveles trimestrales · <span class="chip estimado">estimado</span> el promedio anual'
+      : 'el mismo índice SHF dividido entre la inflación acumulada (INPC nacional dic–dic) desde 2020: lo que subió la vivienda por encima de todo lo demás. <span class="chip estimado">estimado</span>';
   }
 
   // ---------- tarjeta del año ----------
   function fila(nombre, pk, extra=''){
     if(!pk || pk.valor==null) return '';
-    const u = pk.unidad||''; const v = /MXN/.test(u) ? fmtP(pk.valor) : (u==='%' ? fmt(pk.valor,2)+'%' : fmt(pk.valor, (Math.abs(pk.valor)<100 && !Number.isInteger(pk.valor))?2:0));
+    const u = pk.unidad||''; const v = /MXN/.test(u) ? fmtP(pk.valor) : (u==='%' ? fmt(pk.valor,2)+'%' : (/índice/.test(u) ? fmt(pk.valor,2) : fmt(pk.valor, (Math.abs(pk.valor)<100 && !Number.isInteger(pk.valor))?2:0)));
     const per = pk.periodo && !/^\d{4}$/.test(pk.periodo) ? ` <span class="nota" style="margin:0">(${pk.periodo})</span>` : '';
     return `<div class="dato"><span class="n">${nombre}${per}</span><span class="v">${v}${chip(pk.calidad)}</span><span class="s">${extra}<button class="fuente-btn" data-f='${encodeURIComponent(JSON.stringify(pk))}'>fuente</button></span></div>`;
   }
@@ -367,24 +367,29 @@
       else if(dP<-0.005 && dQ<-0.005) lectura = `Bajaron precio y cantidad: la <b class="d">demanda se movió a la izquierda</b> (robusto).`;
       else lectura = `Precio o cantidad casi estables: las dos curvas se movieron; el reparto depende por completo del supuesto.`;
       h += `<div class="par">
-        <div class="celda"><div class="n">Precio (proxy)</div><div class="grande">${fmtP(p.P)}</div><div class="delta">${pct(dP)} vs ${a-1}</div></div>
-        <div class="celda"><div class="n">Viviendas</div><div class="grande">${fmt(p.Q)}</div><div class="delta">${pct(dQ)} vs ${a-1} · rango ${fmt(p.Qmin)}–${fmt(p.Qmax)}</div></div>
+        <div class="celda"><div class="n">Precio · índice SHF${proxyP==='real'?' real':''}</div><div class="grande">${fmt(p.P,1)}</div><div class="delta">${pct(dP)} vs ${a-1}</div></div>
+        <div class="celda"><div class="n">Viviendas financiadas</div><div class="grande">${fmt(p.Q)}</div><div class="delta">${pct(dQ)} vs ${a-1} · hasta ${fmt(p.Qmax)} sin deduplicar</div></div>
         <div class="celda"><div class="n">Demanda se desplazó</div><div class="grande" style="color:var(--demanda)">${pct(d)}</div><div class="delta">con e<sub>d</sub>=${ed.toFixed(2)} <span class="chip supuesto">supuesto</span></div></div>
         <div class="celda"><div class="n">Oferta se desplazó</div><div class="grande" style="color:var(--oferta)">${pct(s)}</div><div class="delta">con e<sub>s</sub>=${es.toFixed(2)} <span class="chip supuesto">supuesto</span></div></div>
       </div><p class="lectura">${lectura}</p>`;
     } else if(p.estado==='observado'){
-      h += `<div class="par"><div class="celda"><div class="n">Precio (proxy)</div><div class="grande">${fmtP(p.P)}</div></div><div class="celda"><div class="n">Viviendas</div><div class="grande">${fmt(p.Q)}</div><div class="delta">rango ${fmt(p.Qmin)}–${fmt(p.Qmax)}</div></div></div><p class="lectura">Primer año de la serie: el movimiento se lee a partir de 2021.</p>`;
+      h += `<div class="par"><div class="celda"><div class="n">Precio · índice SHF</div><div class="grande">${fmt(p.P,1)}</div><div class="delta">2018 = 100</div></div><div class="celda"><div class="n">Viviendas financiadas</div><div class="grande">${fmt(p.Q)}</div><div class="delta">hasta ${fmt(p.Qmax)} sin deduplicar</div></div></div><p class="lectura">Primer año de la serie: el movimiento se lee a partir de 2021.</p>`;
     } else {
       const q26 = e.Q.base.valor, q25 = e.Q.mismo_periodo_2025.valor;
+      const prevP = punto(2025);
       h += `<div class="par"><div class="celda"><div class="n">Viviendas ene–jul</div><div class="grande">${fmt(q26)}</div><div class="delta">${pct(q26/q25-1)} vs ene–jul 2025 (${fmt(q25)})</div></div>
         <div class="celda"><div class="n">Cierre estimado</div><div class="grande">${fmt(p.Q)}</div><div class="delta">si el ritmo se mantiene <span class="chip estimado">estimado</span></div></div>
-        <div class="celda"><div class="n">Precio</div><div class="grande">—</div><div class="delta">sin dato limpio al corte; SHF 2T26 ${fmt(((D.desplazadores.shf_var_anual_hermosillo||[]).find(x=>x.periodo==='2026-Q2')||{}).valor,2)}% <span class="chip verificar">por verificar</span></div></div></div>
+        <div class="celda"><div class="n">Precio · índice SHF ene–jun</div><div class="grande">${fmt(p.P,1)}</div><div class="delta">${prevP?pct(p.P/prevP.P-1):'—'} vs promedio 2025 · Q1 ${fmt(e.P.q1&&e.P.q1.valor,1)} → Q2 ${fmt(e.P.q2&&e.P.q2.valor,1)}</div></div></div>
         <p class="lectura">El punto hueco es una proyección simple del semestre, no un cierre. Las curvas de 2026 son punteadas por esa razón.</p>`;
     }
     // desplazadores
     const comp = e.Q.componentes||{};
     h += `<h3>Demanda · lo que empuja al comprador</h3>`;
-    h += fila('Créditos INFONAVIT vivienda nueva', comp.infonavit) + fila('Créditos FOVISSSTE vivienda nueva', comp.fovissste) + fila('Créditos banca (CNBV) vivienda nueva', comp.cnbv) + fila('Acciones CONAVI (subsidio/Bienestar)', comp.conavi);
+    h += fila('Viviendas nuevas financiadas por INFONAVIT (deduplicadas)', comp.infonavit_viviendas, 'Conyugal y Unamos Créditos: dos créditos por vivienda. ') + fila('— acciones de crédito INFONAVIT (sin deduplicar)', comp.infonavit_acciones);
+    if(comp.tipo){ h += fila('— tipo Individual', comp.tipo.individual) + fila('— tipo Conyugal', comp.tipo.conyugal) + fila('— tipo Unamos Créditos 2', comp.tipo.unamos); }
+    if(comp.esquemas_banco){ h += fila('— esquemas con banco: Cofinavit', comp.esquemas_banco.cofinavit) + fila('— Apoyo Infonavit', comp.esquemas_banco['apoyo-infonavit']) + fila('— Infonavit total', comp.esquemas_banco['infonavit-total']); }
+    h += fila('Créditos FOVISSSTE vivienda nueva', comp.fovissste) + fila('Créditos banca (CNBV) vivienda nueva', comp.cnbv) + fila('Acciones CONAVI (subsidio/Bienestar, fuera de Q)', comp.conavi);
+    if(e.P && e.P.credito_promedio_infonavit) h += fila('Crédito promedio INFONAVIT vivienda nueva (contexto)', Object.assign({unidad:'MXN', periodo:String(a), geografia:'municipio Hermosillo', localizador:'monto ÷ acciones (SNIIV)'}, e.P.credito_promedio_infonavit));
     h += fila('Créditos INFONAVIT vivienda usada', buscar(D.desplazadores.creditos_usada_infonavit,a));
     h += fila('Tasa hipotecaria bancaria, nuevos créditos (nacional, dic.)', buscar(D.desplazadores.tasa_hipotecaria_banxico_dic,a));
     h += fila('Tasa objetivo Banxico (dic.)', buscar(D.desplazadores.tasa_objetivo_banxico,a));
@@ -397,7 +402,9 @@
     h += fila('Viviendas terminadas (DTU, RUV)', o.dtu || o.dtu_ene_jul) + fila('Viviendas registradas en RUV', o.registro || o.registro_ene_jul) + fila('Inventario RUV al cierre', o.inventario_dic || o.inventario_jul, 'Registradas y no vendidas (obra no iniciada, en proceso y terminada). ');
     h += fila('Escrituras CANADEVI (vivienda nueva)', buscar(D.desplazadores.escrituras_canadevi,a)) + fila('Producción según HCV/CANADEVI', buscar(D.desplazadores.hcv_produccion_declarada,a), 'Cifra declarada; en 2024 contradice al SNIIV. ');
     h += fila('Costo de construcción residencial CEICO (var. anual)', buscar(D.desplazadores.costo_construccion_ceico_hermosillo,a));
-    h += fila('Índice SHF precios vivienda Hermosillo (var. anual)', buscar(D.desplazadores.shf_var_anual_hermosillo,a));
+    const shfq = (D.desplazadores.shf_indice_hermosillo_trimestral||[]).filter(x=>x.periodo.startsWith(String(a)));
+    if(shfq.length) h += `<div class="dato"><span class="n">Índice SHF Hermosillo por trimestre (2018 = 100)</span><span class="v">${shfq.map(x=>fmt(x.valor,1)).join(' · ')}<span class="chip observado">observado</span></span><span class="s">${shfq.map(x=>x.periodo.slice(5)).join(' · ')} · <button class="fuente-btn" data-f='${encodeURIComponent(JSON.stringify(shfq[shfq.length-1]))}'>fuente</button></span></div>`;
+    h += fila('Índice SHF precios vivienda Hermosillo (var. anual publicada en boletín/ficha)', buscar(D.desplazadores.shf_var_anual_hermosillo,a));
     const progs = (D.desplazadores.programas_hermosillo||[]).filter(x=>x.periodo.startsWith(String(a)));
     if(progs.length){ h += `<h3>Programas y cartera anunciada · no sumar entre sí</h3>` + progs.map(x=>fila(x.variable || 'Programa', x)).join(''); }
     t.innerHTML = h;
@@ -413,18 +420,20 @@
   function pintarTabla(){
     const anios = ANIOS.filter(a=>D.equilibrio[String(a)]);
     const filas = [
-      ['Créditos vivienda nueva (Q)', a=>{const p=punto(a); return p? (p.estado==='al corte'? fmt(D.equilibrio['2026'].Q.base.valor)+'*' : fmt(p.Q)) : '—';}],
-      ['— INFONAVIT', a=>fmt(((D.equilibrio[String(a)].Q.componentes||{}).infonavit||{}).valor)],
+      ['Viviendas nuevas financiadas (Q, deduplicadas)', a=>{const e=D.equilibrio[String(a)]; return e.Q.base? fmt(e.Q.base.valor)+(a===2026?'*':''):'—';}],
+      ['Acciones de crédito, suma simple (máx.)', a=>{const e=D.equilibrio[String(a)]; return e.Q.max? fmt(e.Q.max.valor)+(a===2026?'*':''):'—';}],
+      ['— INFONAVIT viviendas (dedup)', a=>fmt(((D.equilibrio[String(a)].Q.componentes||{}).infonavit_viviendas||{}).valor)],
+      ['— INFONAVIT acciones', a=>fmt(((D.equilibrio[String(a)].Q.componentes||{}).infonavit_acciones||{}).valor)],
       ['— FOVISSSTE', a=>fmt(((D.equilibrio[String(a)].Q.componentes||{}).fovissste||{}).valor)],
       ['— Banca CNBV', a=>fmt(((D.equilibrio[String(a)].Q.componentes||{}).cnbv||{}).valor)],
-      ['— CONAVI', a=>fmt(((D.equilibrio[String(a)].Q.componentes||{}).conavi||{}).valor)],
-      ['Crédito prom. INFONAVIT nueva (P)', a=>{const e=D.equilibrio[String(a)]; return e.P.base? fmtP(e.P.base.valor):'—';}],
-      ['Crédito prom. banca nueva', a=>{const e=D.equilibrio[String(a)]; return e.P.alt_banca? fmtP(e.P.alt_banca.valor):'—';}],
+      ['— CONAVI (fuera de Q)', a=>fmt(((D.equilibrio[String(a)].Q.componentes||{}).conavi||{}).valor)],
+      ['Índice SHF Hermosillo, promedio anual (P)', a=>{const e=D.equilibrio[String(a)]; return e.P.base? fmt(e.P.base.valor,1)+(a===2026?'*':''):'—';}],
+      ['Índice SHF real (pesos de 2020)', a=>{const e=D.equilibrio[String(a)]; return e.P.real? fmt(e.P.real.valor,1):'—';}],
       ['Viviendas terminadas DTU', a=>{const o=D.oferta[String(a)]||{}; return fmt((o.dtu||o.dtu_ene_jul||{}).valor)+(o.dtu?'':'*');}],
       ['Registradas RUV', a=>{const o=D.oferta[String(a)]||{}; return fmt((o.registro||o.registro_ene_jul||{}).valor)+(o.registro?'':'*');}],
       ['Inventario RUV (dic / jul*)', a=>{const o=D.oferta[String(a)]||{}; return fmt((o.inventario_dic||o.inventario_jul||{}).valor)+(o.inventario_dic?'':'*');}],
       ['Tasa hipotecaria dic. (nac.)', a=>{const x=buscar(D.desplazadores.tasa_hipotecaria_banxico_dic,a); return x? fmt(x.valor,2)+'%':'—';}],
-      ['SHF Hermosillo var. anual', a=>{const x=buscar(D.desplazadores.shf_var_anual_hermosillo,a); return x? fmt(x.valor,1)+'%'+(x.calidad==='por verificar'?'?':''):'—';}],
+      ['Índice SHF var. anual (promedio vs promedio)', a=>{const e=D.equilibrio[String(a)], e0=D.equilibrio[String(a-1)]; return (e&&e0&&e.P.base&&e0.P.base&&a!==2026)? pct(e.P.base.valor/e0.P.base.valor-1):'—';}],
     ];
     $('#tabla').innerHTML = `<thead><tr><th>Serie</th>${anios.map(a=>`<th>${a}${a===2026?'*':''}</th>`).join('')}</tr></thead><tbody>` + filas.map(f=>`<tr><td>${f[0]}</td>${anios.map(a=>`<td>${f[1](a)}</td>`).join('')}</tr>`).join('') + `</tbody>`;
   }
@@ -451,5 +460,9 @@
   }).catch(err=>{ $('#estado').innerHTML = `<span class="punto" style="background:var(--verificar)"></span><span>No se pudo cargar data.json (${err}). Abre esta página desde el servidor, no desde el archivo.</span>`; });
 })();
 </script>
+<!-- Marco YOD OS: menú, identidad y chinche, igual que los demás tableros de la casa.
+     Con ?embed=1 el marco no se monta. Los ?v= los fija os/versiones.json (scripts/versiones.cjs). -->
+<script src="https://yodesarrollomx.github.io/potenciales-yod/portero.js?v=20261031-fase1-e2" data-singate></script>
+<script src="https://yodesarrollomx.github.io/yod-portal/os/shell.js?v=20261101-mercado-hmo"></script>
 </body>
 </html>

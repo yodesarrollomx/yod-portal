@@ -5,6 +5,7 @@
   var SYSTEM_CODES=Object.freeze({
     'SYS-DESPACHO':['DP'],
     'SYS-POTENCIALES':['PT','MP','MA','MX','UN','RE','PA'],
+    'SYS-MERCADO':['MH'],
     'SYS-TRACK':['CO','TC'],
     'SYS-MIRAMAR':['RM'],
     'SYS-TAREAS':['TA'],

@@ -543,7 +543,7 @@
       "repo": "alexpueblag/yod-agent-cloud"
     },
     {
-      "id": "SYS-MERCADO-HMO",
+      "id": "SYS-MERCADO",
       "nombre": "Mercado Hermosillo 2020–2030",
       "tipo": "tablero",
       "repo": "yodesarrollomx/yod-portal"
