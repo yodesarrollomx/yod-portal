@@ -128,6 +128,10 @@
   .aviso{background:rgba(154,47,47,.07);border:1px solid rgba(154,47,47,.25);border-radius:12px;padding:10px 12px;font-size:14px;color:var(--tinta);margin:10px 0 0}
   .aviso b{color:var(--verificar)}
   td.izq,th.izq{text-align:left;white-space:normal}
+  .scroll{position:relative}
+  .scroll td:first-child,.scroll th:first-child{white-space:normal;min-width:118px;max-width:150px;box-shadow:2px 0 0 var(--linea)}
+  .desliza{display:none;font-size:12px;color:var(--tinta3);margin:6px 0 0}
+  @media (max-width:599px){ .desliza{display:block} }
   @media (min-width:600px){ h1{font-size:36px} .par{grid-template-columns:repeat(4,1fr)} }
 </style>
 </head>
@@ -199,6 +203,7 @@
   <section class="tarjeta">
     <details>
       <summary><h2>La década en números</h2></summary>
+      <p class="desliza">Desliza la tabla hacia la izquierda para ver todos los años →</p>
       <div class="scroll"><table id="tabla"></table></div>
       <p class="nota">2026 = enero–julio (corte SNIIV 31-jul-2026), no año completo. Fuente de cada cifra: toca el año arriba y luego la cifra.</p>
     </details>
@@ -239,10 +244,11 @@
   const $ = s => document.querySelector(s);
   const fmt = (n, d=0) => n==null || isNaN(n) ? '—' : Number(n).toLocaleString('es-MX', {maximumFractionDigits:d, minimumFractionDigits:d});
   const fmtP = n => n==null ? '—' : (n>=1e6 ? (n/1e6).toLocaleString('es-MX',{maximumFractionDigits:2})+' mdp' : (n>=10000 ? Math.round(n/1000).toLocaleString('es-MX')+' mil' : '$'+Number(n).toLocaleString('es-MX',{maximumFractionDigits:2})));
-  const pct = x => x==null || isNaN(x) ? '—' : (x>0?'+':'')+ (x*100).toFixed(1).replace('.',',')+'%';
-  const pctN = x => x==null || isNaN(x) ? '—' : (x>0?'+':'')+ Number(x).toFixed(1).replace('.',',')+'%';
+  const pct = x => x==null || isNaN(x) ? '—' : (x>0?'+':'')+ (x*100).toFixed(1)+'%';
+  const pctN = x => x==null || isNaN(x) ? '—' : (x>0?'+':'')+ Number(x).toFixed(1)+'%';
   const chip = c => { const k = c==='por verificar' ? 'verificar' : (c||''); return k ? `<span class="chip ${k}">${c}</span>` : ''; };
   const esc_ = t => String(t==null?'':t).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  const r50 = x => Math.round(x/50)*50, r10 = x => Math.round(x/10)*10;
   let D=null, anio=2020, ed=0.7, es=1.5, proxyP='real', esc='base', tween=null, playTimer=null;
 
   const ANIOS = [2020,2021,2022,2023,2024,2025,2026,2027,2028,2029,2030];
@@ -325,7 +331,7 @@
       const q0=Math.min(...fs.map(f=>f.Q_min), ...cz.map(f=>f.Q)), q1=Math.max(...fs.map(f=>f.Q_max), ...cz.map(f=>f.Q));
       const p0=Math.min(...fs.map(f=>f.P_real_min), ...cz.map(f=>f.P_real)), p1raw=Math.max(...fs.map(f=>f.P_real_max), ...cz.map(f=>f.P_real)), p1=Math.min(p1raw, dom.Pmax);
       s += `<rect class="envolvente" x="${sx(q0)}" y="${sy(p1)}" width="${Math.max(1,sx(q1)-sx(q0))}" height="${Math.max(1,sy(Math.max(p0,dom.Pmin))-sy(p1))}" rx="4"/>`;
-      if(p1raw>dom.Pmax) s += `<text class="etiq-rastro" x="${sx(q0)+4}" y="${m.t+10}">el rango continúa ↑</text>`;
+      if(p1raw>dom.Pmax) s += `<text class="etiq-rastro" x="${sx(q0)+4}" y="${m.t+24}">el rango continúa ↑</text>`;
       fs.filter(f=>f.escenario!==esc).forEach(f=>{ s += `<circle class="pto-otro" cx="${sx(f.Q)}" cy="${sy(f.P_real)}" r="4.5"/><text class="etiq-rastro" x="${sx(f.Q)+7}" y="${sy(f.P_real)+4}">${CORTO_ESC[f.escenario]}</text>`; });
       cz.filter(f=>f.P_real<=dom.Pmax).forEach(f=>{ s += `<rect class="pto-otro" x="${sx(f.Q)-3.5}" y="${sy(f.P_real)-3.5}" width="7" height="7" transform="rotate(45 ${sx(f.Q)} ${sy(f.P_real)})"/><text class="etiq-rastro" x="${sx(f.Q)+7}" y="${sy(f.P_real)+4}">${CORTO_ESC[f.escenario]}</text>`; });
       const tf = cur.f || filaEsc(cur.anio);
@@ -366,7 +372,7 @@
     const destino = punto(a); if(!destino){ return; }
     const origen = tween ? tween.cur : punto(anio) || destino;
     anio = a; pintarAnios(); pintarToggleEsc(); pintarTarjeta(a);
-    if(!animar || !origen){ render(destino); tween=null; return; }
+    if(!animar || !origen){ if(tween) cancelAnimationFrame(tween.raf); tween=null; render(destino); return; }
     const t0 = performance.now(), dur=650;
     cancelAnimationFrame(tween && tween.raf);
     const step = now => {
@@ -437,18 +443,26 @@
     if(dlP<-0.005 && dlQ<-0.005) return `Bajaron precio y cantidad: la <b class="d">demanda se movió a la izquierda</b> (robusto).`;
     return `Precio o cantidad casi estables: las dos curvas se movieron; el reparto depende por completo del supuesto.`;
   }
+  function precioReal(a){   // §2.2: los desplazamientos se calculan SIEMPRE con P real, aunque la vista sea nominal
+    const e = D.equilibrio[String(a)]; if(!e) return null;
+    if(e.estado==='observado') return e.P.real ? e.P.real.valor : null;
+    return e.cierre && e.cierre.P_real ? e.cierre.P_real.centro : null;
+  }
   function celdasMovimiento(p, prev, a, etiquetaQ, notaQ){
     // §2.1: aritmética en logaritmos; se muestra % = e^x − 1
-    const dlP = Math.log(p.P/prev.P), dlQ = Math.log(p.Q/prev.Q);
+    const dlPv = Math.log(p.P/prev.P), dlQ = Math.log(p.Q/prev.Q);
+    const pr = precioReal(p.anio), prr = precioReal(prev.anio);
+    const dlP = (pr && prr) ? Math.log(pr/prr) : dlPv;
     const d = dlQ + ed*dlP, s = dlQ - es*dlP;
+    const qTxt = p.estado==='al corte' ? '≈'+fmt(r10(p.Q)) : fmt(p.Q);
+    const notaReal = proxyP==='real' ? '' : '<p class="nota">Los desplazamientos y la lectura se calculan con el precio real, aunque la vista muestre el nominal.</p>';
     return {html:`<div class="par">
-        <div class="celda"><div class="n">Precio · índice SHF${proxyP==='real'?' real':''}</div><div class="grande">${fmt(p.P,1)}</div><div class="delta">${pct(Math.expm1(dlP))} vs ${prev.anio}</div></div>
-        <div class="celda"><div class="n">${etiquetaQ}</div><div class="grande">${fmt(p.Q)}</div><div class="delta">${pct(Math.expm1(dlQ))} vs ${prev.anio}${notaQ||''}</div></div>
+        <div class="celda"><div class="n">Precio · índice SHF${proxyP==='real'?' real':' nominal'}</div><div class="grande">${fmt(p.P,1)}</div><div class="delta">${pct(Math.expm1(dlPv))} vs ${prev.anio}</div></div>
+        <div class="celda"><div class="n">${etiquetaQ}</div><div class="grande">${qTxt}</div><div class="delta">${pct(Math.expm1(dlQ))} vs ${prev.anio}${notaQ||''}</div></div>
         <div class="celda"><div class="n">Demanda se desplazó</div><div class="grande" style="color:var(--demanda)">${pct(Math.expm1(d))}</div><div class="delta">con e<sub>d</sub>=${ed.toFixed(2)} <span class="chip supuesto">supuesto</span></div></div>
         <div class="celda"><div class="n">Oferta se desplazó</div><div class="grande" style="color:var(--oferta)">${pct(Math.expm1(s))}</div><div class="delta">con e<sub>s</sub>=${es.toFixed(2)} <span class="chip supuesto">supuesto</span></div></div>
-      </div>`, dlP, dlQ};
+      </div>${notaReal}`, dlP, dlQ};
   }
-  const r50 = x => Math.round(x/50)*50, r10 = x => Math.round(x/10)*10;
   const NOMBRE_VAR = {g_empleo:'Empleo formal (crecimiento anual)', g_hogares:'Hogares (crecimiento anual)', g_ingreso_real:'Ingreso real por trabajador', g_tasa_hip_rel:'Tasa hipotecaria (cambio relativo)', d_otro:'Otro factor de demanda',
                       s_pipeline:'Tubería RUV (entregas esperadas vs observadas)', s_cartera:'Cartera con crédito (× probabilidad)', s_inventario:'Inventario terminado (freno)', s_otro:'Otro factor de oferta'};
   const APORTE = {g_empleo:'d_margen_pct', g_hogares:'d_margen_pct', g_ingreso_real:'d_ingreso_pct', g_tasa_hip_rel:'d_tasa_pct', d_otro:'d_otro_pct', s_pipeline:'s_pipeline_pct', s_cartera:'s_cartera_pct', s_inventario:'s_inventario_pct', s_otro:'s_otro_pct'};
@@ -550,11 +564,11 @@
     const celda = (f, k) => f ? `${fmt(f.disp[k])}<br><span class="nota" style="margin:0">${fmt(f.disp[k+'_min'])}–${fmt(f.disp[k+'_max'])}</span>` : '—';
     let h = `<p class="nota">${esc_(E.leyenda_rango)} Punto de partida: cierre estimado de 2026 (Q ≈${fmt(r10(E.arranque_2026.Q.centro))}, P real ≈${fmt(E.arranque_2026.P_real.centro,1)}). El rango de 2027 ya incluye la incertidumbre de ese cierre. Cantidades redondeadas a 50 viviendas y precio a 1 punto del índice.</p>`;
     if(usaSonora()) h += AVISO_EMPLEO;
-    h += `<div class="scroll"><table><thead><tr><th>Escenario</th>${anios.map(a=>`<th>${a}</th>`).join('')}</tr></thead><tbody>`;
+    h += `<p class="desliza">Desliza la tabla hacia la izquierda para ver todos los años →</p><div class="scroll"><table><thead><tr><th>Escenario</th>${anios.map(a=>`<th>${a}</th>`).join('')}</tr></thead><tbody>`;
     ESCS.forEach(e=>{ h += `<tr><td>${NOMBRE_ESC[e]} · viviendas</td>${anios.map(a=>`<td>${celda(filaEsc(a,e),'Q')}</td>`).join('')}</tr><tr><td>${NOMBRE_ESC[e]} · precio real</td>${anios.map(a=>`<td>${celda(filaEsc(a,e),'P_real')}</td>`).join('')}</tr>`; });
     h += `</tbody></table></div>`;
     if(cruces().length){
-      h += `<h3>Cruces: hasta dónde podría ir el precio</h3><p class="nota">${esc_(D.escenarios.nota_cruces||'')}</p><div class="scroll"><table><thead><tr><th>Cruce</th>${anios.map(a=>`<th>${a}</th>`).join('')}</tr></thead><tbody>`;
+      h += `<h3>Cruces: hasta dónde podría ir el precio</h3><p class="nota">${esc_(D.escenarios.nota_cruces||'')}</p><p class="desliza">Desliza la tabla →</p><div class="scroll"><table><thead><tr><th>Cruce</th>${anios.map(a=>`<th>${a}</th>`).join('')}</tr></thead><tbody>`;
       ['presion','alivio'].forEach(e=>{ h += `<tr><td>${NOMBRE_ESC[e]} · precio real</td>${anios.map(a=>`<td>${celda(filaCruce(a,e),'P_real')}</td>`).join('')}</tr><tr><td>${NOMBRE_ESC[e]} · viviendas</td>${anios.map(a=>`<td>${celda(filaCruce(a,e),'Q')}</td>`).join('')}</tr>`; });
       h += `</tbody></table></div>`;
     }
@@ -574,7 +588,8 @@
     const tabla = b.tabla || (b.metricas && b.metricas.tabla);
     if(Array.isArray(tabla) && tabla.length){
       const cols = Object.keys(tabla[0]);
-      h += `<div class="scroll"><table><thead><tr>${cols.map(c=>`<th class="izq">${esc_(c)}</th>`).join('')}</tr></thead><tbody>${tabla.map(r=>`<tr>${cols.map(c=>`<td class="izq">${typeof r[c]==='number'?fmt(r[c],3):esc_(r[c])}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+      const num = (c, v) => /%/.test(c) ? fmt(v,1)+'%' : (Math.abs(v)>=1000 ? fmt(v,0) : fmt(v,1));
+      h += `<p class="desliza">Desliza la tabla →</p><div class="scroll"><table><thead><tr>${cols.map(c=>`<th class="izq">${esc_(c)}</th>`).join('')}</tr></thead><tbody>${tabla.map(r=>`<tr>${cols.map(c=>`<td class="izq">${typeof r[c]==='number'?num(c,r[c]):esc_(r[c])}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
     }
     if(Array.isArray(b.precisiones) && b.precisiones.length) h += `<ol class="honesta">${b.precisiones.map(x=>`<li>${esc_(x)}</li>`).join('')}</ol>`;
     if(b.nota_preregistro) h += `<p class="nota">${esc_(b.nota_preregistro)}</p>`;
