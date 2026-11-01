@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-01.mercado-menu.2",
+  "revision": "2026-11-01.mercado-f2.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -3472,11 +3472,11 @@
       "nombre": "Mercado Hermosillo 2020–2030",
       "tipo": "tablero",
       "repo": "yodesarrollomx/yod-portal",
-      "proposito": "Diagrama de oferta y demanda de vivienda nueva del municipio de Hermosillo por año (2020–2026 observado, 2027–2030 escenarios pendientes), con cada cifra rastreable a su fuente y la pendiente de las curvas declarada como supuesto",
+      "proposito": "Diagrama de oferta y demanda de vivienda nueva del municipio de Hermosillo por año (2020–2025 observado, 2026 cierre estimado con rango, 2027–2030 escenarios condicionados a supuestos con cruces de precio), con cada cifra rastreable a su fuente y la pendiente de las curvas declarada como supuesto",
       "dominio": "Mercado",
       "owner_role": "Dirección",
       "status": "codigo",
-      "runtime_status": "Tablero estático publicado en Pages por PR #339 (merge 9a1c8e5); entra al menú de YOD OS bajo PPP con código MH y marco shell.js (este cambio). Fase 1: base 2020–2026 con eje de precio provisional (crédito promedio, no precio de vivienda); dictamen de cifras y escenarios 2027–2030 pendientes.",
+      "runtime_status": "Tablero estático en Pages, en el menú de YOD OS bajo PPP (código MH, marco shell.js). Fase 2 (CHG-MERCADO-HMO-F2-20261101): P = índice SHF Hermosillo base 2017=100, real a precios de 2025 (INPC promedio anual); cierre 2026 estimado; escenarios 2027–2030 del motor base/motor/escenarios.py con supuestos de base/fase2/f2-c09-supuestos; cada chunk con dictamen independiente en auditoria/.",
       "evidence": [
         {
           "repo": "yodesarrollomx/yod-portal",
@@ -14909,6 +14909,24 @@
         "Comprobación en vivo tras publicar: la cabina muestra «Mercado Hermosillo» debajo de PPP con sesión de Dirección y el tablero abre con marco."
       ],
       "deployment": "Orden: (1) merge del PR de potenciales-yod (MH en accesos.html, atlas fijado a este commit); (2) merge de este PR; Pages sirve os/ con etiqueta 20261101-mercado-hmo. Reversión: revertir ambos merges; no hay backend ni datos. Publicado: potenciales-yod#58 (3558576) y yod-portal#340 (e3f11d7, Pages desplegado 20:48Z)."
+    },
+    {
+      "id": "CHG-MERCADO-HMO-F2-20261101",
+      "components": [
+        "SYS-MERCADO"
+      ],
+      "status": "implementado_local",
+      "approval": "Dirección, 1-nov-2026 por chat: «Adelante ya con la fase dos en equipo… ejecuta con puros opus, sonnets y haikus en enjambre» y después «si falta algo ejecútalo». Encargo del Buzón fila 505 (CG-HMO-OFERTA-DEMANDA-20261101): escenarios 2027–2030 y cierre 2026.",
+      "proposal": "Fase 2 del tablero Mercado Hermosillo dentro de mercado/hermosillo-2020-2030/ (sin tocar os/, catálogo, accesos ni versiones): (1) P real por omisión a precios de 2025 con INPC promedio anual y base del índice SHF corregida a 2017=100; (2) cierre 2026 estimado con rango (participación ene–jul 2021–2025); (3) escenarios 2027–2030 «más demanda y más oferta / base / menos demanda y menos oferta» más dos cruces de precio, con banda por arranque × cinco elasticidades y techo de absorción; (4) tabla «qué tendría que pasar», prueba del método preregistrada (no superó a la inercia, visible en el cuerpo), cartera por etapa sin sumas, inventario terminado en meses de ventas RUV; (5) base/fase2 (un folder por chunk), base/motor (escenarios.py, cierre2026.py, pruebas) y auditoria/ (criterios-fase2 y dictámenes por chunk).",
+      "tests": [
+        "python3 -I base/motor/tests/test_escenarios.py: 7/7 (techo sobre oferta, techo igual en sensibilidad de hogares, regla M3, rechazos con mensaje, determinismo).",
+        "escenarios.py: dos corridas con el mismo sha256 de escenarios.json.",
+        "integrar.py: 0 errores de contrato en todos los chunks f2-*.",
+        "Render real con Playwright a 390×844 y 1440×900: sin desbordamiento horizontal ni errores de página; años 2026–2030, cambio de escenario y vuelta a precio nominal.",
+        "Dictámenes independientes por chunk (auditoria/dictamen-*.md), incluido el motor (aceptado tras reentrega) y C09 (re-auditoría).",
+        "node verify-os.cjs, node verify-portal.cjs, node verify-accesos.cjs, node verify-obra-app.cjs, node scripts/versiones.cjs --check, node scripts/arquitectura.cjs --check."
+      ],
+      "deployment": "Al fusionar a main, Pages publica la misma URL; comprobar con lectura HTTP de index.html y data.json (version «v3 · 2026-11-01», bloque escenarios). Reversión: revertir el merge; no hay backend ni datos privados."
     }
   ],
   "data_contracts": [

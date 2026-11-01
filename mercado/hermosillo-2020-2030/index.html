@@ -118,6 +118,16 @@
   #hoja .panel h4{margin:0 0 8px;font-family:Fraunces,Georgia,serif;font-size:19px}
   #hoja .panel p{margin:6px 0;font-size:14px;color:var(--tinta2);word-break:break-word}
   #hoja .panel a{color:var(--oferta)}
+  .pto.esc{fill:var(--papel2);stroke:var(--tinta);stroke-width:2.5;stroke-dasharray:4 3}
+  .pto-rastro.esc{fill:var(--papel2);stroke:var(--tinta2);stroke-width:1.5;stroke-dasharray:2 2}
+  .pto-otro{fill:var(--papel2);stroke:var(--tinta3);stroke-width:1.5}
+  .rastro.futuro{stroke-dasharray:5 5}
+  .envolvente{fill:rgba(31,27,22,.06);stroke:rgba(31,27,22,.25);stroke-width:1;stroke-dasharray:3 3}
+  .escenario-fila{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 0 0}
+  .toggle button[disabled]{opacity:.45;cursor:not-allowed}
+  .aviso{background:rgba(154,47,47,.07);border:1px solid rgba(154,47,47,.25);border-radius:12px;padding:10px 12px;font-size:14px;color:var(--tinta);margin:10px 0 0}
+  .aviso b{color:var(--verificar)}
+  td.izq,th.izq{text-align:left;white-space:normal}
   @media (min-width:600px){ h1{font-size:36px} .par{grid-template-columns:repeat(4,1fr)} }
 </style>
 </head>
@@ -132,12 +142,15 @@
 
   <section class="tarjeta" aria-label="Diagrama de oferta y demanda">
     <div class="leyenda"><span class="ld">Demanda</span><span class="lo">Oferta</span><span class="le">Equilibrio observado</span></div>
+    <p class="nota" id="nota-leyenda" style="margin:0 0 4px">Punto lleno = dato · punto hueco = cierre estimado 2026 o escenario 2027–2030 (curvas punteadas).</p>
     <svg id="grafica" viewBox="0 0 400 360" role="img" aria-label="Curvas de oferta y demanda por año"></svg>
     <div class="controles">
       <button class="boton primario" id="play" aria-label="Reproducir la década" style="white-space:nowrap">▶ Década</button>
       <span class="nota" id="pie-grafica" style="margin:0">Desliza sobre la gráfica o toca un año.</span>
     </div>
     <div class="anios" id="anios"></div>
+    <div class="escenario-fila"><span class="nota" style="margin:0">Escenarios 2027–2030 · demanda y oferta:</span><div class="toggle" id="toggle-esc" style="margin:0"></div></div>
+    <p class="nota" id="nota-esc"></p>
   </section>
 
   <section class="tarjeta" id="tarjeta-anio"></section>
@@ -161,6 +174,28 @@
     </details>
   </section>
 
+  <section class="tarjeta" id="sec-escenarios" hidden>
+    <details>
+      <summary><h2>Escenarios 2027–2030 <span class="chip supuesto">supuesto</span></h2></summary>
+      <div id="escenarios"></div>
+    </details>
+  </section>
+
+  <section class="tarjeta" id="sec-backtest" hidden>
+    <details>
+      <summary><h2>Prueba del método con 2024–2025</h2></summary>
+      <div id="backtest"></div>
+    </details>
+  </section>
+
+  <section class="tarjeta" id="sec-cartera" hidden>
+    <details>
+      <summary><h2>Cartera anunciada por etapa <span class="nota" id="n-cartera"></span></h2></summary>
+      <p class="nota">Programas y desarrollos con viviendas anunciadas, en obra o entregadas. Cada fila es lo que dijo una fuente en una fecha. <b>No se suman</b>: un mismo conjunto aparece en varias notas y las metas contienen a los proyectos.</p>
+      <div class="scroll"><table id="cartera"></table></div>
+    </details>
+  </section>
+
   <section class="tarjeta">
     <details>
       <summary><h2>La década en números</h2></summary>
@@ -179,6 +214,9 @@
         <li>Que el punto es "todo el mercado": excluye compras de contado, informales y vivienda usada.</li>
         <li>Que 2026 cerró en algún valor mientras la fuente esté al corte.</li>
         <li>Que los programas públicos entregarán lo anunciado: son metas, no entregas.</li>
+        <li>Qué va a pasar en 2027–2030: los escenarios dicen qué resultaría <i>si</i> se cumplen sus supuestos. No se les asigna probabilidad a ninguno de ellos.</li>
+        <li>Que un desplazador futuro causará el resultado, ni una precisión mayor que la del rango.</li>
+        <li>Un precio en pesos para 2027–2030: no hay un ancla validada; el precio de los escenarios es un índice real.</li>
       </ol>
     </details>
   </section>
@@ -199,46 +237,57 @@
 (function(){
   'use strict';
   const $ = s => document.querySelector(s);
-  const fmt = (n, d=0) => n==null ? '—' : Number(n).toLocaleString('es-MX', {maximumFractionDigits:d, minimumFractionDigits:d});
+  const fmt = (n, d=0) => n==null || isNaN(n) ? '—' : Number(n).toLocaleString('es-MX', {maximumFractionDigits:d, minimumFractionDigits:d});
   const fmtP = n => n==null ? '—' : (n>=1e6 ? (n/1e6).toLocaleString('es-MX',{maximumFractionDigits:2})+' mdp' : (n>=10000 ? Math.round(n/1000).toLocaleString('es-MX')+' mil' : '$'+Number(n).toLocaleString('es-MX',{maximumFractionDigits:2})));
-  const pct = x => x==null ? '—' : (x>0?'+':'')+ (x*100).toFixed(1).replace('.',',')+'%';
+  const pct = x => x==null || isNaN(x) ? '—' : (x>0?'+':'')+ (x*100).toFixed(1).replace('.',',')+'%';
+  const pctN = x => x==null || isNaN(x) ? '—' : (x>0?'+':'')+ Number(x).toFixed(1).replace('.',',')+'%';
   const chip = c => { const k = c==='por verificar' ? 'verificar' : (c||''); return k ? `<span class="chip ${k}">${c}</span>` : ''; };
-  let D=null, anio=2020, ed=0.7, es=1.5, proxyP='base', animando=false, tween=null, playTimer=null;
+  const esc_ = t => String(t==null?'':t).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  let D=null, anio=2020, ed=0.7, es=1.5, proxyP='real', esc='base', tween=null, playTimer=null;
 
   const ANIOS = [2020,2021,2022,2023,2024,2025,2026,2027,2028,2029,2030];
+  const ESCS = ['bajo','base','alto'];
+  const NOMBRE_ESC = {bajo:'Menos demanda y menos oferta', base:'Base', alto:'Más demanda y más oferta', presion:'Más demanda con menos oferta (cruce)', alivio:'Menos demanda con más oferta (cruce)'};
+  const CORTO_ESC = {bajo:'menos', base:'base', alto:'más', presion:'cruce ↑', alivio:'cruce ↓'};
+  const BOTON_ESC = {bajo:'Menos', base:'Base', alto:'Más'};
+  const cruces = () => (D && D.escenarios && D.escenarios.cruces_precio) || [];
+  const filaCruce = (a, e) => cruces().find(f=>f.anio===a && f.escenario===e);
+  const hayEsc = () => !!(D && D.escenarios && D.escenarios.filas && D.escenarios.filas.length);
+  const filaEsc = (a, e) => hayEsc() ? D.escenarios.filas.find(f=>f.anio===a && f.escenario===(e||esc)) : null;
 
   // ---------- datos por año ----------
   function punto(a){
-    const e = D.equilibrio[String(a)]; if(!e) return null;
-    let P=null, Pmin=null, Pmax=null, Q=null, Qmin=null, Qmax=null, estado=e.estado;
-    const pk = proxyP==='real' ? e.P.real : e.P.base;
-    if(estado==='observado'){
-      P = pk ? pk.valor : null;
-      const cands = [e.Q.base, e.Q.min, e.Q.max].filter(x=>x&&x.valor!=null).map(x=>x.valor);
-      Q = e.Q.base ? e.Q.base.valor : null; Qmin = Math.min(...cands); Qmax = Math.max(...cands);
-    } else { // 2026 al corte: Q = cierre estimado al ritmo de ene–jul; P = promedio ene–jun observado
-      const prev = punto(2025); if(!prev) return null;
-      const q26 = e.Q.base && e.Q.base.valor, q25 = e.Q.mismo_periodo_2025 && e.Q.mismo_periodo_2025.valor;
-      Q = (q26 && q25) ? prev.Q * (q26/q25) : null;
-      Qmin = Q ? Math.min(prev.Q, Q) : null; Qmax = Q ? Math.max(prev.Q, Q) : null;
-      P = pk ? pk.valor : null;
-      const f = (e.P.real && e.P.real.factor) || 1, k = proxyP==='real' ? 1/f : 1;
-      Pmin = e.P.q1 ? e.P.q1.valor*k : P; Pmax = e.P.q2 ? e.P.q2.valor*k : P;
+    if(a>=2027){
+      if(proxyP!=='real') return null;               // §2.2: los escenarios sólo existen en precio real
+      const f = filaEsc(a); if(!f) return null;
+      return {anio:a, estado:'escenario', P:f.P_real, Q:f.Q, Pmin:f.P_real_min, Pmax:f.P_real_max, Qmin:f.Q_min, Qmax:f.Q_max, f};
     }
-    return {anio:a, P, Pmin, Pmax, Q, Qmin, Qmax, estado};
+    const e = D.equilibrio[String(a)]; if(!e) return null;
+    if(e.estado==='observado'){
+      const pk = proxyP==='real' ? e.P.real : e.P.base;
+      const cands = [e.Q.base, e.Q.min, e.Q.max].filter(x=>x&&x.valor!=null).map(x=>x.valor);
+      return {anio:a, estado:'observado', P: pk ? pk.valor : null, Q: e.Q.base ? e.Q.base.valor : null, Qmin: Math.min(...cands), Qmax: Math.max(...cands), Pmin:null, Pmax:null};
+    }
+    const c = e.cierre; if(!c) return null;           // 2026: cierre estimado (02_cruces/cierre2026.json)
+    const pp = proxyP==='real' ? c.P_real : c.P_nominal; if(!pp) return null;
+    return {anio:a, estado:'al corte', P:pp.centro, Pmin:pp.min, Pmax:pp.max, Q:c.Q.centro, Qmin:c.Q.min, Qmax:c.Q.max};
   }
-  function observados(){ return ANIOS.map(punto).filter(p=>p && p.P!=null && p.Q!=null); }
+  function puntos(){ return ANIOS.map(punto).filter(p=>p && p.P!=null && p.Q!=null); }
 
   // ---------- geometría ----------
   const W=400, H=360, m={t:22, r:18, b:44, l:54};
   const iw = W-m.l-m.r, ih = H-m.t-m.b;
   let dom = null;
   function dominio(){
-    const pts = observados();
-    const Ps = pts.map(p=>p.P), Qs = pts.flatMap(p=>[p.Q, p.Qmin||p.Q, p.Qmax||p.Q]);
-    const Pmin = Math.min(...Ps)*0.62, Pmax = Math.max(...Ps)*1.38;
+    const pts = puntos();
+    const extra = (proxyP==='real' && hayEsc()) ? D.escenarios.filas : [];
+    const cx = (proxyP==='real' && hayEsc()) ? cruces() : [];
+    const Pobs = pts.filter(p=>p.estado!=='escenario').map(p=>p.P);
+    const Ps = pts.flatMap(p=>[p.P, p.Pmin||p.P, p.Pmax||p.P]).concat(extra.flatMap(f=>[f.P_real_min, f.P_real_max]), cx.map(f=>f.P_real));
+    const Qs = pts.flatMap(p=>[p.Q, p.Qmin||p.Q, p.Qmax||p.Q]).concat(extra.flatMap(f=>[f.Q_min, f.Q_max]), cx.map(f=>f.Q));
+    // el eje de precio se acota a 1.8× el máximo observado para que la historia siga legible; lo que pase de ahí se marca «continúa ↑»
+    const Pmin = Math.min(...Ps)*0.8, Pmax = Math.min(Math.max(...Ps)*1.12, Math.max(...Pobs)*1.8);
     let Qlo = Math.min(...Qs), Qhi = Math.max(...Qs);
-    // alcance de las curvas en los extremos (con las elasticidades vigentes)
     Qlo = Math.min(Qlo, ...pts.map(p=>p.Q*Math.pow(1.35,-ed)), ...pts.map(p=>p.Q*Math.pow(0.65,es)));
     Qhi = Math.max(Qhi, ...pts.map(p=>p.Q*Math.pow(0.65,-ed)), ...pts.map(p=>p.Q*Math.pow(1.35,es)));
     dom = {Pmin, Pmax, Qmin: Qlo*0.92, Qmax: Qhi*1.06};
@@ -257,46 +306,58 @@
   }
   function ticks(lo,hi,n){ const step = niceStep((hi-lo)/n); const out=[]; for(let v=Math.ceil(lo/step)*step; v<=hi; v+=step) out.push(v); return out; }
   function niceStep(x){ const e=Math.pow(10,Math.floor(Math.log10(x))); const f=x/e; return (f<1.5?1:f<3?2:f<7?5:10)*e; }
+  const hueco = p => p.estado==='al corte' || p.estado==='escenario';
 
   function render(cur){
     const svg = $('#grafica'); if(!dom) dominio();
-    const pts = observados();
+    const pts = puntos();
     let s = '';
-    // rejilla ligera
     const tq = ticks(dom.Qmin, dom.Qmax, 4), tp = ticks(dom.Pmin, dom.Pmax, 4);
     tq.forEach(v=>{ s += `<line x1="${sx(v)}" y1="${m.t}" x2="${sx(v)}" y2="${m.t+ih}" stroke="#E9E3D8" stroke-width="1"/>`; s += `<text class="tick" x="${sx(v)}" y="${m.t+ih+15}" text-anchor="middle">${fmt(v)}</text>`; });
     tp.forEach(v=>{ s += `<line x1="${m.l}" y1="${sy(v)}" x2="${m.l+iw}" y2="${sy(v)}" stroke="#E9E3D8" stroke-width="1"/>`; s += `<text class="tick" x="${m.l-6}" y="${sy(v)+4}" text-anchor="end">${fmt(v)}</text>`; });
-    // ejes
     s += `<path class="eje" d="M${m.l} ${m.t} L${m.l} ${m.t+ih} L${m.l+iw} ${m.t+ih}"/>`;
-    s += `<text class="titulo-eje" x="${m.l+6}" y="${m.t-6}">Precio · índice SHF ${proxyP==='real'?'real (pesos de 2020)':'(2018 = 100)'}</text>`;
+    s += `<text class="titulo-eje" x="${m.l+6}" y="${m.t-6}">Precio · índice SHF ${proxyP==='real'?'real (precios de 2025)':'nominal (2017 = 100)'}</text>`;
     s += `<text class="titulo-eje" x="${m.l+iw}" y="${m.t+ih+34}" text-anchor="end">Viviendas nuevas financiadas / año</text>`;
-    // rastro de la década
-    if(pts.length>1) s += `<path class="rastro" d="M${pts.map(p=>sx(p.Q).toFixed(1)+' '+sy(p.P).toFixed(1)).join(' L ')}"/>`;
-    const puestas = [[sx(cur.Q)+11, sy(cur.P)-9, 32, 12]]; // cajas de etiquetas ya colocadas (x,y,w,h), empezando por la del año activo
+    // envolvente del año de escenario (3 escenarios × abanico × arranque)
+    if(cur.estado==='escenario'){
+      const fs = ESCS.map(e=>filaEsc(cur.anio,e)).filter(Boolean);
+      const cz = ['presion','alivio'].map(e=>filaCruce(cur.anio,e)).filter(Boolean);
+      const q0=Math.min(...fs.map(f=>f.Q_min), ...cz.map(f=>f.Q)), q1=Math.max(...fs.map(f=>f.Q_max), ...cz.map(f=>f.Q));
+      const p0=Math.min(...fs.map(f=>f.P_real_min), ...cz.map(f=>f.P_real)), p1raw=Math.max(...fs.map(f=>f.P_real_max), ...cz.map(f=>f.P_real)), p1=Math.min(p1raw, dom.Pmax);
+      s += `<rect class="envolvente" x="${sx(q0)}" y="${sy(p1)}" width="${Math.max(1,sx(q1)-sx(q0))}" height="${Math.max(1,sy(Math.max(p0,dom.Pmin))-sy(p1))}" rx="4"/>`;
+      if(p1raw>dom.Pmax) s += `<text class="etiq-rastro" x="${sx(q0)+4}" y="${m.t+10}">el rango continúa ↑</text>`;
+      fs.filter(f=>f.escenario!==esc).forEach(f=>{ s += `<circle class="pto-otro" cx="${sx(f.Q)}" cy="${sy(f.P_real)}" r="4.5"/><text class="etiq-rastro" x="${sx(f.Q)+7}" y="${sy(f.P_real)+4}">${CORTO_ESC[f.escenario]}</text>`; });
+      cz.filter(f=>f.P_real<=dom.Pmax).forEach(f=>{ s += `<rect class="pto-otro" x="${sx(f.Q)-3.5}" y="${sy(f.P_real)-3.5}" width="7" height="7" transform="rotate(45 ${sx(f.Q)} ${sy(f.P_real)})"/><text class="etiq-rastro" x="${sx(f.Q)+7}" y="${sy(f.P_real)+4}">${CORTO_ESC[f.escenario]}</text>`; });
+      const tf = cur.f || filaEsc(cur.anio);
+      if(tf && tf.techo_q && tf.techo_activo_en_banda && tf.techo_q>dom.Qmin && tf.techo_q<dom.Qmax){
+        s += `<line x1="${sx(tf.techo_q)}" y1="${m.t}" x2="${sx(tf.techo_q)}" y2="${m.t+ih}" stroke="var(--verificar)" stroke-width="1.2" stroke-dasharray="2 4"/><text class="etiq-rastro" x="${sx(tf.techo_q)-4}" y="${m.t+10}" text-anchor="end" style="fill:var(--verificar)">techo de absorción</text>`;
+      }
+    }
+    // rastro: dato (sólido) y estimado/escenario (punteado)
+    const obs = pts.filter(p=>p.estado==='observado'), fut = pts.filter(p=>p.estado!=='observado');
+    if(obs.length>1) s += `<path class="rastro" d="M${obs.map(p=>sx(p.Q).toFixed(1)+' '+sy(p.P).toFixed(1)).join(' L ')}"/>`;
+    if(fut.length && obs.length) { const ch=[obs[obs.length-1]].concat(fut); s += `<path class="rastro futuro" d="M${ch.map(p=>sx(p.Q).toFixed(1)+' '+sy(p.P).toFixed(1)).join(' L ')}"/>`; }
+    const puestas = [[sx(cur.Q)+11, sy(cur.P)-9, 32, 12]];
     pts.forEach(p=>{ if(p.anio===cur.anio) return;
       const cx=sx(p.Q), cy=sy(p.P);
-      s += `<circle class="pto-rastro ${p.estado==='al corte'?'hueco':''}" cx="${cx}" cy="${cy}" r="3.5"/>`;
+      s += `<circle class="pto-rastro ${hueco(p)?'esc':''}" cx="${cx}" cy="${cy}" r="3.5"/>`;
       const candidatos = [[cx+6, cy-5],[cx+6, cy+13],[cx-32, cy-5],[cx-32, cy+13],[cx-13, cy-9],[cx-13, cy+17],[cx+10, cy+24],[cx+10, cy-18],[cx-40, cy+24]];
       const libre = c => !puestas.some(b => Math.abs(c[0]-b[0])<34 && Math.abs(c[1]-b[1])<12);
       const pos = candidatos.find(libre);
       if(pos){ puestas.push([pos[0],pos[1],28,10]); s += `<text class="etiq-rastro" x="${pos[0]}" y="${pos[1]}">${p.anio}</text>`; }
     });
-    // fantasma del año anterior
     const prev = pts.filter(p=>p.anio<cur.anio).slice(-1)[0];
     if(prev){ s += `<path class="fantasma d" d="${pathCurva(prev.P,prev.Q,'d')}"/><path class="fantasma o" d="${pathCurva(prev.P,prev.Q,'o')}"/>`; }
-    // curvas del año
     const dd = pathCurva(cur.P,cur.Q,'d'), oo = pathCurva(cur.P,cur.Q,'o');
-    const corte = cur.estado==='al corte' ? ' stroke-dasharray="7 6"' : '';
-    s += `<path class="curva d" d="${dd}"${corte}/><path class="curva o" d="${oo}"${corte}/>`;
-    // etiquetas de curva en sus extremos derechos/altos
+    const punteada = hueco(cur) ? ' stroke-dasharray="7 6"' : '';
+    s += `<path class="curva d" d="${dd}"${punteada}/><path class="curva o" d="${oo}"${punteada}/>`;
     const Pd = cur.P*0.68, Qd = cur.Q*Math.pow(0.68,-ed); if(Qd<dom.Qmax&&Pd>dom.Pmin) s += `<text class="etiq-curva d" x="${Math.min(sx(Qd)+4, m.l+iw-60)}" y="${sy(Pd)+4}">Demanda</text>`;
     const Po = cur.P*1.32, Qo = cur.Q*Math.pow(1.32,es); if(Qo<dom.Qmax&&Po<dom.Pmax) s += `<text class="etiq-curva o" x="${Math.min(sx(Qo)+4, m.l+iw-50)}" y="${sy(Po)+4}">Oferta</text>`;
-    // bigote Q y P
     if(cur.Qmin!=null && cur.Qmax!=null && cur.Qmax>cur.Qmin) s += `<line class="bigote" x1="${sx(cur.Qmin)}" y1="${sy(cur.P)}" x2="${sx(cur.Qmax)}" y2="${sy(cur.P)}"/>`;
     if(cur.Pmin!=null && cur.Pmax!=null && cur.Pmax>cur.Pmin) s += `<line class="bigote" x1="${sx(cur.Q)}" y1="${sy(cur.Pmin)}" x2="${sx(cur.Q)}" y2="${sy(cur.Pmax)}" stroke-dasharray="3 3"/>`;
-    // punto
-    s += `<circle class="pto ${cur.estado==='al corte'?'hueco':''}" cx="${sx(cur.Q)}" cy="${sy(cur.P)}" r="7"/>`;
-    s += `<text class="etiq" x="${sx(cur.Q)+11}" y="${sy(cur.P)-9}">${cur.anio}${cur.estado==='al corte'?' · al corte':''}</text>`;
+    s += `<circle class="pto ${hueco(cur)?'esc':''}" cx="${sx(cur.Q)}" cy="${sy(cur.P)}" r="7"/>`;
+    const sufijo = cur.estado==='al corte' ? ' · cierre estimado' : (cur.estado==='escenario' ? ` · ${CORTO_ESC[esc]}` : '');
+    s += `<text class="etiq" x="${sx(cur.Q)+11}" y="${sy(cur.P)-9}">${cur.anio}${sufijo}</text>`;
     svg.innerHTML = s;
   }
 
@@ -304,13 +365,13 @@
   function irA(a, animar=true){
     const destino = punto(a); if(!destino){ return; }
     const origen = tween ? tween.cur : punto(anio) || destino;
-    anio = a; pintarAnios(); pintarTarjeta(a);
+    anio = a; pintarAnios(); pintarToggleEsc(); pintarTarjeta(a);
     if(!animar || !origen){ render(destino); tween=null; return; }
     const t0 = performance.now(), dur=650;
     cancelAnimationFrame(tween && tween.raf);
     const step = now => {
       const k = Math.min(1,(now-t0)/dur), e = 1-Math.pow(1-k,3);
-      const cur = {anio:destino.anio, estado:destino.estado, P:origen.P+(destino.P-origen.P)*e, Q:origen.Q+(destino.Q-origen.Q)*e,
+      const cur = {anio:destino.anio, estado:destino.estado, f:destino.f, P:origen.P+(destino.P-origen.P)*e, Q:origen.Q+(destino.Q-origen.Q)*e,
         Qmin: k<1?null:destino.Qmin, Qmax: k<1?null:destino.Qmax, Pmin: k<1?null:destino.Pmin, Pmax: k<1?null:destino.Pmax};
       tween = {cur, raf:null}; render(cur);
       if(k<1) tween.raf = requestAnimationFrame(step); else tween=null;
@@ -319,34 +380,46 @@
   }
   function play(){
     if(playTimer){ clearInterval(playTimer); playTimer=null; $('#play').textContent='▶ Década'; return; }
-    const lista = observados().map(p=>p.anio); let i = Math.max(0, lista.indexOf(anio));
+    const lista = puntos().map(p=>p.anio); let i = Math.max(0, lista.indexOf(anio));
+    if(i===lista.length-1) i = -1;
     $('#play').textContent='❚❚ Pausa';
-    const paso = () => { i = (i+1) % lista.length; irA(lista[i]); if(i===lista.length-1){ clearInterval(playTimer); playTimer=null; $('#play').textContent='▶ Década'; } };
-    irA(lista[i]); playTimer = setInterval(paso, 1500);
+    const paso = () => { i = i+1; irA(lista[i]); if(i>=lista.length-1){ clearInterval(playTimer); playTimer=null; $('#play').textContent='▶ Década'; } };
+    paso(); playTimer = setInterval(paso, 1500);
   }
 
   // ---------- controles ----------
   function pintarAnios(){
-    const obs = new Set(observados().map(p=>p.anio));
+    const disp = new Set(puntos().map(p=>p.anio));
     $('#anios').innerHTML = ANIOS.map(a=>{
-      const e = D.equilibrio[String(a)]; const corte = e && e.estado==='al corte';
-      const dis = !obs.has(a);
-      return `<button class="anio ${a===anio?'activo':''} ${corte?'corte':''}" data-a="${a}" ${dis?'disabled title="Fase 2: escenarios base/alto/bajo, en construcción"':''}>${a}${corte?'<span class="mini">al corte</span>':(dis?'<span class="mini">escenario</span>':'')}</button>`;
+      const corte = a===2026, futuro = a>=2027;
+      const dis = !disp.has(a);
+      const motivo = futuro ? (!hayEsc() ? 'Escenarios 2027–2030 en construcción' : 'Los escenarios están en precio real: cambia a «Real»') : '';
+      return `<button class="anio ${a===anio?'activo':''} ${corte||futuro?'corte':''}" data-a="${a}" ${dis?`disabled title="${motivo}"`:''}>${a}${corte?'<span class="mini">cierre est.</span>':(futuro?'<span class="mini">escenario</span>':'')}</button>`;
     }).join('');
     $('#anios').querySelectorAll('.anio:not([disabled])').forEach(b=>b.onclick=()=>irA(+b.dataset.a));
     const act = $('#anios .activo'); if(act && act.scrollIntoView) act.scrollIntoView({inline:'center', block:'nearest', behavior:'smooth'});
   }
+  function pintarToggleEsc(){
+    const ok = hayEsc() && proxyP==='real';
+    $('#toggle-esc').innerHTML = ESCS.map(e=>`<button data-e="${e}" class="${e===esc?'activo':''}" ${ok?'':'disabled'} title="${NOMBRE_ESC[e]}">${BOTON_ESC[e]}</button>`).join('');
+    $('#toggle-esc').querySelectorAll('button:not([disabled])').forEach(b=>b.onclick=()=>{ esc=b.dataset.e; irA(anio>=2027?anio:anio, false); });
+    $('#nota-esc').innerHTML = !hayEsc() ? 'Escenarios 2027–2030: en construcción.'
+      : (proxyP!=='real' ? 'Los escenarios sólo se dibujan en precio real.' : `<b>Más</b> = más demanda y más oferta · <b>Menos</b> = menos demanda y menos oferta: son extremos de la <b>cantidad</b>, no del precio. ${esc_(D.escenarios.nota_cruces||'')} El recuadro gris cubre los tres escenarios con su rango y el punto central de los dos cruces. ${esc_(D.escenarios.leyenda_rango)}`);
+  }
   function pintarSliders(){
     const S = D.supuestos.filter(s=>s.parametro==='e_d'||s.parametro==='e_s');
-    $('#sliders').innerHTML = S.map(s=>`<div class="slider-fila"><span class="n">${s.parametro==='e_d'?'Demanda e<sub>d</sub>':'Oferta e<sub>s</sub>'}</span><input type="range" min="${s.minimo}" max="${s.maximo}" step="0.05" value="${s.base}" data-p="${s.parametro}"><span class="v" id="v-${s.parametro}">${s.base}</span></div><p class="nota">${s.justificacion} <a href="${s.url}" target="_blank" rel="noopener">referencia</a></p>`).join('');
+    $('#sliders').innerHTML = S.map(s=>`<div class="slider-fila"><span class="n">${s.parametro==='e_d'?'Demanda e<sub>d</sub>':'Oferta e<sub>s</sub>'}</span><input type="range" min="${s.minimo}" max="${s.maximo}" step="0.05" value="${s.base}" data-p="${s.parametro}"><span class="v" id="v-${s.parametro}">${s.base}</span></div><p class="nota">${esc_(s.justificacion)} <a href="${s.url}" target="_blank" rel="noopener">referencia</a></p>`).join('')
+      + (hayEsc() ? `<p class="nota">Las pendientes de esta sección redibujan las curvas de cada año. Los puntos 2027–2030 no se mueven con ellas: su rango ya recorre toda la malla de pendientes (mínimo, base y máximo).</p>` : '');
     $('#sliders').querySelectorAll('input').forEach(i=>i.oninput=()=>{ const v=parseFloat(i.value); if(i.dataset.p==='e_d') ed=v; else es=v; $('#v-'+i.dataset.p).textContent=v.toFixed(2); dominio(); render(tween?tween.cur:punto(anio)); pintarTarjeta(anio); });
   }
   function pintarToggleP(){
-    $('#toggle-p').innerHTML = `<button data-p="base" class="${proxyP==='base'?'activo':''}">Nominal</button><button data-p="real" class="${proxyP==='real'?'activo':''}">Real (sin inflación)</button>`;
-    $('#toggle-p').querySelectorAll('button').forEach(b=>b.onclick=()=>{ proxyP=b.dataset.p; pintarToggleP(); dominio(); irA(anio,false); });
+    $('#toggle-p').innerHTML = `<button data-p="real" class="${proxyP==='real'?'activo':''}">Real (precios de 2025)</button><button data-p="base" class="${proxyP==='base'?'activo':''}">Nominal</button>`;
+    $('#toggle-p').querySelectorAll('button').forEach(b=>b.onclick=()=>{ proxyP=b.dataset.p; if(proxyP!=='real' && anio>=2027) anio=2026; pintarToggleP(); dominio(); irA(anio,false); });
+    const r25 = D.equilibrio['2025'] && D.equilibrio['2025'].P.real;
+    const provisional = r25 && r25.deflactor_definitivo===false;
     $('#p-def').innerHTML = proxyP==='base'
-      ? 'Índice SHF de precios de la vivienda para el municipio de Hermosillo (Sociedad Hipotecaria Federal, vía el API del SNIIV), promedio anual, base 2018 = 100. Mide el precio a calidad constante de toda la vivienda con avalúo (nueva y usada: la SHF no separa por municipio). <span class="chip observado">observado</span> niveles trimestrales · <span class="chip estimado">estimado</span> el promedio anual'
-      : 'el mismo índice SHF dividido entre la inflación acumulada (INPC nacional dic–dic) desde 2020: lo que subió la vivienda por encima de todo lo demás. <span class="chip estimado">estimado</span>';
+      ? 'Índice SHF de precios de la vivienda para el municipio de Hermosillo (Sociedad Hipotecaria Federal, vía el API del SNIIV), promedio anual, base 2017 = 100 (la página del SNIIV indica como año base 2018, pero el promedio de 2017 de sus propios datos es 100.00). Mide el precio a calidad constante de toda la vivienda con avalúo (nueva y usada: la SHF no separa por municipio). <span class="chip observado">observado</span> niveles trimestrales · <span class="chip estimado">estimado</span> el promedio anual'
+      : `el mismo índice SHF a precios de 2025: se multiplica por el INPC nacional promedio de 2025 y se divide entre el INPC promedio del año (INEGI). Es lo que subió la vivienda por encima de los demás precios, y es la escala de los desplazamientos y de los escenarios. ${provisional?'<b>Deflactor provisional (dic–dic)</b> ':''}<span class="chip estimado">estimado</span>`;
   }
 
   // ---------- tarjeta del año ----------
@@ -356,38 +429,59 @@
     const per = pk.periodo && !/^\d{4}$/.test(pk.periodo) ? ` <span class="nota" style="margin:0">(${pk.periodo})</span>` : '';
     return `<div class="dato"><span class="n">${nombre}${per}</span><span class="v">${v}${chip(pk.calidad)}</span><span class="s">${extra}<button class="fuente-btn" data-f='${encodeURIComponent(JSON.stringify(pk))}'>fuente</button></span></div>`;
   }
-  function buscar(lista, a, pref=''){ return (lista||[]).filter(x=>x.periodo && x.periodo.startsWith(String(a))).sort((x,y)=>x.periodo<y.periodo?1:-1)[0]; }
+  function buscar(lista, a){ return (lista||[]).filter(x=>x.periodo && x.periodo.startsWith(String(a))).sort((x,y)=>x.periodo<y.periodo?1:-1)[0]; }
+  function lecturaRobusta(dlP, dlQ){
+    if(dlP>0.005 && dlQ>0.005) return `Subieron precio y cantidad: la <b class="d">demanda se movió a la derecha</b> (robusto). Cuánto se movió la oferta depende del supuesto.`;
+    if(dlP>0.005 && dlQ<-0.005) return `Subió el precio y bajó la cantidad: la <b class="o">oferta se movió a la izquierda</b> (robusto). Cuánto se movió la demanda depende del supuesto.`;
+    if(dlP<-0.005 && dlQ>0.005) return `Bajó el precio y subió la cantidad: la <b class="o">oferta se movió a la derecha</b> (robusto).`;
+    if(dlP<-0.005 && dlQ<-0.005) return `Bajaron precio y cantidad: la <b class="d">demanda se movió a la izquierda</b> (robusto).`;
+    return `Precio o cantidad casi estables: las dos curvas se movieron; el reparto depende por completo del supuesto.`;
+  }
+  function celdasMovimiento(p, prev, a, etiquetaQ, notaQ){
+    // §2.1: aritmética en logaritmos; se muestra % = e^x − 1
+    const dlP = Math.log(p.P/prev.P), dlQ = Math.log(p.Q/prev.Q);
+    const d = dlQ + ed*dlP, s = dlQ - es*dlP;
+    return {html:`<div class="par">
+        <div class="celda"><div class="n">Precio · índice SHF${proxyP==='real'?' real':''}</div><div class="grande">${fmt(p.P,1)}</div><div class="delta">${pct(Math.expm1(dlP))} vs ${prev.anio}</div></div>
+        <div class="celda"><div class="n">${etiquetaQ}</div><div class="grande">${fmt(p.Q)}</div><div class="delta">${pct(Math.expm1(dlQ))} vs ${prev.anio}${notaQ||''}</div></div>
+        <div class="celda"><div class="n">Demanda se desplazó</div><div class="grande" style="color:var(--demanda)">${pct(Math.expm1(d))}</div><div class="delta">con e<sub>d</sub>=${ed.toFixed(2)} <span class="chip supuesto">supuesto</span></div></div>
+        <div class="celda"><div class="n">Oferta se desplazó</div><div class="grande" style="color:var(--oferta)">${pct(Math.expm1(s))}</div><div class="delta">con e<sub>s</sub>=${es.toFixed(2)} <span class="chip supuesto">supuesto</span></div></div>
+      </div>`, dlP, dlQ};
+  }
+  const r50 = x => Math.round(x/50)*50, r10 = x => Math.round(x/10)*10;
+  const NOMBRE_VAR = {g_empleo:'Empleo formal (crecimiento anual)', g_hogares:'Hogares (crecimiento anual)', g_ingreso_real:'Ingreso real por trabajador', g_tasa_hip_rel:'Tasa hipotecaria (cambio relativo)', d_otro:'Otro factor de demanda',
+                      s_pipeline:'Tubería RUV (entregas esperadas vs observadas)', s_cartera:'Cartera con crédito (× probabilidad)', s_inventario:'Inventario terminado (freno)', s_otro:'Otro factor de oferta'};
+  const APORTE = {g_empleo:'d_margen_pct', g_hogares:'d_margen_pct', g_ingreso_real:'d_ingreso_pct', g_tasa_hip_rel:'d_tasa_pct', d_otro:'d_otro_pct', s_pipeline:'s_pipeline_pct', s_cartera:'s_cartera_pct', s_inventario:'s_inventario_pct', s_otro:'s_otro_pct'};
+  function avisoBacktest(){
+    const b = D.backtest; if(!b || !b.veredicto_texto) return '';
+    const malo = /no contuvo|no superó/i.test(b.veredicto_texto);
+    return `<div class="aviso">${malo?'<b>Prueba del método:</b> ':'Prueba del método: '}${esc_(b.veredicto_texto)}${Array.isArray(b.precisiones)?' '+b.precisiones.map(esc_).join(' '):''}</div>`;
+  }
   function pintarTarjeta(a){
-    const e = D.equilibrio[String(a)], o = D.oferta[String(a)]||{}, p = punto(a), prev = punto(a-1);
-    const t = $('#tarjeta-anio'); if(!e||!p){ t.innerHTML=''; return; }
-    let h = `<h2>${a}${p.estado==='al corte'?' · al corte (enero–julio)':''}</h2>`;
-    // movimiento
+    const t = $('#tarjeta-anio'); const p = punto(a); if(!p){ t.innerHTML=''; return; }
+    if(p.estado==='escenario') return pintarTarjetaEscenario(a, p, t);
+    const e = D.equilibrio[String(a)], o = D.oferta[String(a)]||{}, prev = punto(a-1);
+    let h = `<h2>${a}${p.estado==='al corte'?' · cierre estimado':''}</h2>`;
     if(prev && p.estado==='observado'){
-      const dP = p.P/prev.P-1, dQ = p.Q/prev.Q-1;
-      const d = dQ + ed*dP, s = dQ - es*dP;
-      let lectura;
-      if(dP>0.005 && dQ>0.005) lectura = `Subieron precio y cantidad: la <b class="d">demanda se movió a la derecha</b> (robusto). Cuánto se movió la oferta depende del supuesto.`;
-      else if(dP>0.005 && dQ<-0.005) lectura = `Subió el precio y bajó la cantidad: la <b class="o">oferta se movió a la izquierda</b> (robusto). Cuánto se movió la demanda depende del supuesto.`;
-      else if(dP<-0.005 && dQ>0.005) lectura = `Bajó el precio y subió la cantidad: la <b class="o">oferta se movió a la derecha</b> (robusto).`;
-      else if(dP<-0.005 && dQ<-0.005) lectura = `Bajaron precio y cantidad: la <b class="d">demanda se movió a la izquierda</b> (robusto).`;
-      else lectura = `Precio o cantidad casi estables: las dos curvas se movieron; el reparto depende por completo del supuesto.`;
-      h += `<div class="par">
-        <div class="celda"><div class="n">Precio · índice SHF${proxyP==='real'?' real':''}</div><div class="grande">${fmt(p.P,1)}</div><div class="delta">${pct(dP)} vs ${a-1}</div></div>
-        <div class="celda"><div class="n">Viviendas financiadas</div><div class="grande">${fmt(p.Q)}</div><div class="delta">${pct(dQ)} vs ${a-1} · hasta ${fmt(p.Qmax)} sin deduplicar</div></div>
-        <div class="celda"><div class="n">Demanda se desplazó</div><div class="grande" style="color:var(--demanda)">${pct(d)}</div><div class="delta">con e<sub>d</sub>=${ed.toFixed(2)} <span class="chip supuesto">supuesto</span></div></div>
-        <div class="celda"><div class="n">Oferta se desplazó</div><div class="grande" style="color:var(--oferta)">${pct(s)}</div><div class="delta">con e<sub>s</sub>=${es.toFixed(2)} <span class="chip supuesto">supuesto</span></div></div>
-      </div><p class="lectura">${lectura}</p>`;
+      const c = celdasMovimiento(p, prev, a, 'Viviendas financiadas', ` · hasta ${fmt(p.Qmax)} sin deduplicar`);
+      h += c.html + `<p class="lectura">${lecturaRobusta(c.dlP, c.dlQ)}</p>`;
     } else if(p.estado==='observado'){
-      h += `<div class="par"><div class="celda"><div class="n">Precio · índice SHF</div><div class="grande">${fmt(p.P,1)}</div><div class="delta">2018 = 100</div></div><div class="celda"><div class="n">Viviendas financiadas</div><div class="grande">${fmt(p.Q)}</div><div class="delta">hasta ${fmt(p.Qmax)} sin deduplicar</div></div></div><p class="lectura">Primer año de la serie: el movimiento se lee a partir de 2021.</p>`;
+      h += `<div class="par"><div class="celda"><div class="n">Precio · índice SHF${proxyP==='real'?' real':''}</div><div class="grande">${fmt(p.P,1)}</div><div class="delta">${proxyP==='real'?'precios de 2025':'2017 = 100'}</div></div><div class="celda"><div class="n">Viviendas financiadas</div><div class="grande">${fmt(p.Q)}</div><div class="delta">hasta ${fmt(p.Qmax)} sin deduplicar</div></div></div><p class="lectura">Primer año de la serie: el movimiento se lee a partir de 2021.</p>`;
     } else {
-      const q26 = e.Q.base.valor, q25 = e.Q.mismo_periodo_2025.valor;
-      const prevP = punto(2025);
-      h += `<div class="par"><div class="celda"><div class="n">Viviendas ene–jul</div><div class="grande">${fmt(q26)}</div><div class="delta">${pct(q26/q25-1)} vs ene–jul 2025 (${fmt(q25)})</div></div>
-        <div class="celda"><div class="n">Cierre estimado</div><div class="grande">${fmt(p.Q)}</div><div class="delta">si el ritmo se mantiene <span class="chip estimado">estimado</span></div></div>
-        <div class="celda"><div class="n">Precio · índice SHF ene–jun</div><div class="grande">${fmt(p.P,1)}</div><div class="delta">${prevP?pct(p.P/prevP.P-1):'—'} vs promedio 2025 · Q1 ${fmt(e.P.q1&&e.P.q1.valor,1)} → Q2 ${fmt(e.P.q2&&e.P.q2.valor,1)}</div></div></div>
-        <p class="lectura">El punto hueco es una proyección simple del semestre, no un cierre. Las curvas de 2026 son punteadas por esa razón.</p>`;
+      const c = e.cierre, q26 = e.Q.base.valor, q25 = e.Q.mismo_periodo_2025 && e.Q.mismo_periodo_2025.valor;
+      const parts = Object.values(c.participacion_ene_jul||{}), rz = Object.values(c.razon_anual_1S||{});
+      const anios = Object.keys(c.participacion_ene_jul||{});
+      const p1s = proxyP==='real' ? (e.P.real && e.P.real.valor) : (e.P.base && e.P.base.valor);
+      h += `<div class="par">
+        <div class="celda"><div class="n">Viviendas ene–jul (dato)</div><div class="grande">${fmt(q26)}</div><div class="delta">${q25?pct(q26/q25-1)+' vs ene–jul '+(a-1)+' ('+fmt(q25)+')':''}</div></div>
+        <div class="celda"><div class="n">Cierre estimado 2026</div><div class="grande">≈${fmt(r10(p.Q))}</div><div class="delta">rango ${fmt(r10(p.Qmin))}–${fmt(r10(p.Qmax))} <span class="chip estimado">estimado</span></div></div>
+        <div class="celda"><div class="n">Precio ene–jun${proxyP==='real'?' real':''} (dato)</div><div class="grande">${fmt(p1s,1)}</div><div class="delta">Q1 ${fmt(e.P.q1&&e.P.q1.valor,1)} → Q2 ${fmt(e.P.q2&&e.P.q2.valor,1)} (nominal)</div></div>
+        <div class="celda"><div class="n">Precio cierre estimado</div><div class="grande">≈${fmt(p.P,1)}</div><div class="delta">rango ${fmt(p.Pmin,1)}–${fmt(p.Pmax,1)} <span class="chip estimado">estimado</span></div></div></div>
+        <p class="lectura">El SNIIV está al corte del 31 de julio, así que 2026 todavía no es un año completo. El cierre se estima dividiendo enero–julio entre lo que esos meses pesaron en el año completo de ${anios[0]} a ${anios[anios.length-1]}: entre ${fmt(Math.min(...parts)*100)} % y ${fmt(Math.max(...parts)*100)} %. El centro usa la mediana. El precio estimado es el promedio del primer semestre por lo que subió el segundo semestre en esos mismos años (de +${fmt((Math.min(...rz)-1)*100,1)} % a +${fmt((Math.max(...rz)-1)*100,1)} %). El punto hueco y las curvas punteadas indican que es una estimación.</p>
+        <p class="nota">Años usados: ${anios.join(', ')} (2020 no tiene meses en el SNIIV). El centro es la mediana de esos años y el rango va del mínimo al máximo: el rango importa más que el centro. ${(c.meses_ausentes_como_cero||[]).length?`Meses sin registro en el API que se tomaron como cero porque los meses presentes suman el total anual: ${(c.meses_ausentes_como_cero).map(x=>x.split(' ')[1]).join(', ')} (esquema Infonavit total).`:''}</p>`;
+      const prev25 = punto(a-1);
+      if(prev25){ const cm = celdasMovimiento(p, prev25, a, 'Viviendas (cierre estimado)', ''); h += `<h3>Movimiento implícito 2025 → cierre estimado</h3>` + cm.html; }
     }
-    // desplazadores
     const comp = e.Q.componentes||{};
     h += `<h3>Demanda · lo que empuja al comprador</h3>`;
     h += fila('Viviendas nuevas financiadas por INFONAVIT (deduplicadas)', comp.infonavit_viviendas, 'Conyugal y Unamos Créditos: dos créditos por vivienda. ') + fila('— acciones de crédito INFONAVIT (sin deduplicar)', comp.infonavit_acciones);
@@ -407,13 +501,40 @@
     h += fila('Viviendas terminadas (DTU, RUV)', o.dtu || o.dtu_ene_jul) + fila('Viviendas registradas en RUV', o.registro || o.registro_ene_jul) + fila('Inventario RUV al cierre', o.inventario_dic || o.inventario_jul, 'Registradas y no vendidas (obra no iniciada, en proceso y terminada). ');
     h += fila('Escrituras CANADEVI (vivienda nueva)', buscar(D.desplazadores.escrituras_canadevi,a)) + fila('Producción según HCV/CANADEVI', buscar(D.desplazadores.hcv_produccion_declarada,a), 'Cifra declarada; en 2024 contradice al SNIIV. ');
     h += fila('Costo de construcción residencial CEICO (var. anual)', buscar(D.desplazadores.costo_construccion_ceico_hermosillo,a));
+    h += fila('Terminadas sin vender (proxy: categorías HBT del RUV; la sigla no tiene definición publicada)', buscar(D.desplazadores.inventario_terminado_proxy,a), 'Cota superior: el crédito privado no se individualiza. ');
+    h += fila('— meses para venderlas al ritmo de ventas del universo RUV', buscar(D.desplazadores.inventario_meses_ventas_ruv,a), 'Ventas RUV = viviendas INFONAVIT deduplicadas + FOVISSSTE, promedio de 12 meses. ');
+    h += fila('Registradas en RUV en 12 meses sin terminar (tubería)', buscar(D.desplazadores.tuberia_12m_sin_dtu,a), 'No es inventario: es obra registrada que aún no recibe dictamen. ');
     const shfq = (D.desplazadores.shf_indice_hermosillo_trimestral||[]).filter(x=>x.periodo.startsWith(String(a)));
-    if(shfq.length) h += `<div class="dato"><span class="n">Índice SHF Hermosillo por trimestre (2018 = 100)</span><span class="v">${shfq.map(x=>fmt(x.valor,1)).join(' · ')}<span class="chip observado">observado</span></span><span class="s">${shfq.map(x=>x.periodo.slice(5)).join(' · ')} · <button class="fuente-btn" data-f='${encodeURIComponent(JSON.stringify(shfq[shfq.length-1]))}'>fuente</button></span></div>`;
-    h += fila('Índice SHF precios vivienda Hermosillo (var. anual publicada en boletín/ficha)', buscar(D.desplazadores.shf_var_anual_hermosillo,a));
-    const progs = (D.desplazadores.programas_hermosillo||[]).filter(x=>x.periodo.startsWith(String(a)));
-    if(progs.length){ h += `<h3>Programas y cartera anunciada · no sumar entre sí</h3>` + progs.map(x=>fila(x.variable || 'Programa', x)).join(''); }
+    if(shfq.length) h += `<div class="dato"><span class="n">Índice SHF Hermosillo por trimestre (2017 = 100, nominal)</span><span class="v" style="white-space:normal;font-size:16px">${shfq.map(x=>fmt(x.valor,1)).join(' · ')}<span class="chip observado">observado</span></span><span class="s">${shfq.map(x=>x.periodo.slice(5)).join(' · ')} · <button class="fuente-btn" data-f='${encodeURIComponent(JSON.stringify(shfq[shfq.length-1]))}'>fuente</button></span></div>`;
     t.innerHTML = h;
     t.querySelectorAll('.fuente-btn').forEach(b=>b.onclick=()=>hoja(JSON.parse(decodeURIComponent(b.dataset.f))));
+  }
+  const usaSonora = () => hayEsc() && (D.escenarios.parametros||[]).some(x=>x.variable==='g_empleo' && /sonora/i.test((x.nota||'')+' '+(x.fuente||'')));
+  const AVISO_EMPLEO = '<p class="nota"><b>Empleo formal municipal 2019–2024 no disponible</b> en fuentes abiertas: el escenario usa el empleo de Sonora como aproximación, con un rango que incluye cero.</p>';
+  function pintarTarjetaEscenario(a, p, t){
+    const f = p.f, d = f.disp || {};
+    const pars = (D.escenarios.parametros||[]).filter(x=>x.escenario===esc && x.anio===a);
+    let h = `<h2>${a} · ${esc==='base'?'escenario base':NOMBRE_ESC[esc].toLowerCase()} <span class="chip supuesto">supuesto</span></h2>`;
+    h += avisoBacktest();
+    h += `<div class="par">
+      <div class="celda"><div class="n">Precio · índice SHF real</div><div class="grande">${fmt(d.P_real)}</div><div class="delta">rango ${fmt(d.P_real_min)}–${fmt(d.P_real_max)} · precios de 2025</div></div>
+      <div class="celda"><div class="n">Viviendas financiadas</div><div class="grande">${fmt(d.Q)}</div><div class="delta">rango ${fmt(d.Q_min)}–${fmt(d.Q_max)}</div></div>
+      <div class="celda"><div class="n">Demanda se desplaza</div><div class="grande" style="color:var(--demanda)">${pctN(f.pct_D)}</div><div class="delta">al año, a precio constante</div></div>
+      <div class="celda"><div class="n">Oferta se desplaza</div><div class="grande" style="color:var(--oferta)">${pctN(f.pct_S)}</div><div class="delta">al año, a precio constante</div></div></div>`;
+    const TECHO_PROXY = 'El techo usa el empleo de Sonora como aproximación, que probablemente lo sesga a la baja: con el empleo de Hermosillo, el techo del escenario base probablemente no se activaría.';
+    const todoTecho = (D.escenarios.filas||[]).filter(x=>x.escenario===esc).every(x=>x.techo_activo);
+    if(f.techo_activo) h += `<p class="aviso"><b>Techo activo.</b> Con estos supuestos la cantidad rebasaría el techo de absorción: el máximo histórico escalado por el empleo, ≈${fmt(r50(f.techo_q))} viviendas. Por eso la cantidad se fija en el techo y el precio sale de la curva de oferta. ${todoTecho?'En este escenario la cantidad de todos los años es el propio techo. ':''}${TECHO_PROXY}</p>`;
+    else if(f.techo_activo_en_banda) h += `<p class="nota">En una parte del rango la cantidad toca el techo de absorción (≈${fmt(r50(f.techo_q))} viviendas, línea roja punteada). ${TECHO_PROXY}</p>`;
+    h += `<p class="lectura">Es lo que resultaría <b>si</b> se cumplen los supuestos de abajo, partiendo del cierre estimado de 2026. ${esc!=='base'?'Este escenario es un extremo de la cantidad, no del precio. ':''}${esc_(D.escenarios.leyenda_rango)}</p>`;
+    const cP = ['presion','alivio'].map(e=>filaCruce(a,e)).filter(Boolean);
+    if(cP.length) h += `<p class="nota">Si la demanda y la oferta no se mueven juntas (cruces), el precio real de ${a} iría de ≈${fmt(Math.min(...cP.map(x=>x.disp.P_real)))} a ≈${fmt(Math.max(...cP.map(x=>x.disp.P_real)))} en el punto central.</p>`;
+    h += `<h3>Qué tendría que pasar · ${NOMBRE_ESC[esc].toLowerCase()} ${a}</h3><div class="scroll"><table><thead><tr><th class="izq">Supuesto</th><th>Valor</th><th>Aporta</th><th class="izq">Rótulo y fuente</th></tr></thead><tbody>`;
+    h += pars.map(x=>{ const ap = f[APORTE[x.variable]]; const url = /^https?:/.test(x.fuente) ? `<a href="${x.fuente}" target="_blank" rel="noopener">fuente</a>` : esc_(x.fuente);
+      const nota = String(x.nota||''); const corta = nota.length>170 ? nota.slice(0,170).replace(/\s+\S*$/,'')+'…' : nota;
+      const notaHtml = nota.length>170 ? `<details><summary class="nota" style="margin:0;display:block">${esc_(corta)} <u>nota completa</u></summary><span class="nota" style="margin:0">${esc_(nota)}</span></details>` : `<span class="nota" style="margin:0">${esc_(nota)}</span>`;
+      return `<tr><td class="izq">${NOMBRE_VAR[x.variable]||x.variable}</td><td>${pctN(x.valor)}</td><td>${ap==null?'—':pctN(ap)}</td><td class="izq">${chip(x.calidad)} <span class="nota" style="margin:0;word-break:break-word">${url}</span>${notaHtml}</td></tr>`; }).join('');
+    h += `</tbody></table></div>${usaSonora()?AVISO_EMPLEO:''}<p class="nota">«Aporta» = efecto sobre la curva, ya multiplicado por su elasticidad (empleo × e<sub>ext</sub>, ingreso × e<sub>y</sub>, tasa × e<sub>r</sub>). La suma de los aportes de demanda da el desplazamiento de la demanda y la de los de oferta, el de la oferta.</p>`;
+    t.innerHTML = h;
   }
   function hoja(pk){
     $('#hoja-panel').innerHTML = `<h4>Fuente de esta cifra</h4><p><b>${fmt(pk.valor,2)}</b> ${pk.unidad||''} · ${pk.periodo||''} · ${pk.geografia||''} ${chip(pk.calidad)}</p>${pk.formula?`<p><b>Fórmula:</b> ${pk.formula}</p>`:''}<p><b>Dónde:</b> ${pk.localizador||'—'}</p><p><b>Corte:</b> ${pk.fecha_corte||'n/d'}</p>${pk.url?`<p><a href="${pk.url}" target="_blank" rel="noopener">${pk.url}</a></p>`:''}${pk.nota?`<p>${pk.nota}</p>`:''}<p style="text-align:right"><button class="boton" id="cerrar">Cerrar</button></p>`;
@@ -421,24 +542,73 @@
   }
   $('#hoja').addEventListener('click', ev=>{ if(ev.target.id==='hoja') $('#hoja').classList.remove('abierta'); });
 
+  // ---------- secciones de escenarios, prueba del método y cartera ----------
+  function pintarEscenarios(){
+    if(!hayEsc()) return;
+    $('#sec-escenarios').hidden = false;
+    const E = D.escenarios, anios = [...new Set(E.filas.map(f=>f.anio))].sort();
+    const celda = (f, k) => f ? `${fmt(f.disp[k])}<br><span class="nota" style="margin:0">${fmt(f.disp[k+'_min'])}–${fmt(f.disp[k+'_max'])}</span>` : '—';
+    let h = `<p class="nota">${esc_(E.leyenda_rango)} Punto de partida: cierre estimado de 2026 (Q ≈${fmt(r10(E.arranque_2026.Q.centro))}, P real ≈${fmt(E.arranque_2026.P_real.centro,1)}). El rango de 2027 ya incluye la incertidumbre de ese cierre. Cantidades redondeadas a 50 viviendas y precio a 1 punto del índice.</p>`;
+    if(usaSonora()) h += AVISO_EMPLEO;
+    h += `<div class="scroll"><table><thead><tr><th>Escenario</th>${anios.map(a=>`<th>${a}</th>`).join('')}</tr></thead><tbody>`;
+    ESCS.forEach(e=>{ h += `<tr><td>${NOMBRE_ESC[e]} · viviendas</td>${anios.map(a=>`<td>${celda(filaEsc(a,e),'Q')}</td>`).join('')}</tr><tr><td>${NOMBRE_ESC[e]} · precio real</td>${anios.map(a=>`<td>${celda(filaEsc(a,e),'P_real')}</td>`).join('')}</tr>`; });
+    h += `</tbody></table></div>`;
+    if(cruces().length){
+      h += `<h3>Cruces: hasta dónde podría ir el precio</h3><p class="nota">${esc_(D.escenarios.nota_cruces||'')}</p><div class="scroll"><table><thead><tr><th>Cruce</th>${anios.map(a=>`<th>${a}</th>`).join('')}</tr></thead><tbody>`;
+      ['presion','alivio'].forEach(e=>{ h += `<tr><td>${NOMBRE_ESC[e]} · precio real</td>${anios.map(a=>`<td>${celda(filaCruce(a,e),'P_real')}</td>`).join('')}</tr><tr><td>${NOMBRE_ESC[e]} · viviendas</td>${anios.map(a=>`<td>${celda(filaCruce(a,e),'Q')}</td>`).join('')}</tr>`; });
+      h += `</tbody></table></div>`;
+    }
+    if(E.sensibilidad_hogares && E.sensibilidad_hogares.length){
+      h += `<h3>Sensibilidad: hogares en lugar de empleo</h3><div class="scroll"><table><thead><tr><th>Escenario</th>${anios.map(a=>`<th>${a}</th>`).join('')}</tr></thead><tbody>`;
+      ESCS.forEach(e=>{ const fs = E.sensibilidad_hogares.filter(f=>f.escenario===e); if(!fs.length) return; h += `<tr><td>${NOMBRE_ESC[e]} · viviendas</td>${anios.map(a=>`<td>${celda(fs.find(f=>f.anio===a),'Q')}</td>`).join('')}</tr>`; });
+      h += `</tbody></table></div><p class="nota">El crecimiento de los hogares sustituye al del empleo, sin sumarse a él: sumar los dos contaría dos veces el mismo efecto.</p>`;
+    }
+    h += `<h3>Parámetros del motor</h3>` + Object.entries(E.supuestos||{}).filter(([k])=>/^e_/.test(k)).map(([k,v])=>`<div class="dato"><span class="n">${k} · ${esc_(v.unidad||'')}</span><span class="v">${fmt(v.base,2)}<span class="chip ${v.tipo==='supuesto'?'supuesto':'estimado'}">${esc_(v.tipo||'supuesto')}</span></span><span class="s">rango ${fmt(v.minimo,2)} a ${fmt(v.maximo,2)} · ${esc_(v.justificacion||'')} ${v.url&&/^https?:/.test(v.url)?`<a href="${v.url}" target="_blank" rel="noopener">referencia</a>`:''}</span></div>`).join('');
+    h += `<p class="nota">Método: ${esc_(E.metodo)}.</p>`;
+    $('#escenarios').innerHTML = h;
+  }
+  function pintarBacktest(){
+    const b = D.backtest; if(!b) return;
+    $('#sec-backtest').hidden = false;
+    let h = b.veredicto_texto ? `<p class="lectura">${esc_(b.veredicto_texto)}</p>` : '';
+    const tabla = b.tabla || (b.metricas && b.metricas.tabla);
+    if(Array.isArray(tabla) && tabla.length){
+      const cols = Object.keys(tabla[0]);
+      h += `<div class="scroll"><table><thead><tr>${cols.map(c=>`<th class="izq">${esc_(c)}</th>`).join('')}</tr></thead><tbody>${tabla.map(r=>`<tr>${cols.map(c=>`<td class="izq">${typeof r[c]==='number'?fmt(r[c],3):esc_(r[c])}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+    }
+    if(Array.isArray(b.precisiones) && b.precisiones.length) h += `<ol class="honesta">${b.precisiones.map(x=>`<li>${esc_(x)}</li>`).join('')}</ol>`;
+    if(b.nota_preregistro) h += `<p class="nota">${esc_(b.nota_preregistro)}</p>`;
+    $('#backtest').innerHTML = h;
+  }
+  function pintarCartera(){
+    const C = (D.cartera||[]).filter(r=>r.geografia==='municipio Hermosillo'); if(!C.length) return;
+    $('#sec-cartera').hidden = false;
+    C.sort((x,y)=> x.cartera_id===y.cartera_id ? (x.fecha_dato<y.fecha_dato?-1:1) : (x.cartera_id<y.cartera_id?-1:1));
+    $('#n-cartera').textContent = `· ${C.length} registros de ${new Set(C.map(r=>r.cartera_id)).size} programas o desarrollos`;
+    $('#cartera').innerHTML = `<thead><tr><th class="izq">Programa</th><th class="izq">Etapa</th><th>Viviendas</th><th>Fecha</th><th class="izq">Fuente</th></tr></thead><tbody>` +
+      C.map(r=>`<tr><td class="izq">${esc_(r.programa)}<br><span class="nota" style="margin:0">${esc_(r.tipo)}${r.posible_duplicado_de?` · posible duplicado de ${esc_(r.posible_duplicado_de)}`:''}</span></td><td class="izq">${esc_(r.etapa.replace(/_/g,' '))}</td><td>${fmt(+r.unidades)}</td><td>${esc_(r.fecha_dato)}</td><td class="izq">${chip(r.calidad)} ${/^https?:/.test(r.url)?`<a href="${r.url}" target="_blank" rel="noopener">abrir</a>`:''}</td></tr>`).join('') + `</tbody>`;
+  }
+
   // ---------- tabla y fuentes ----------
   function pintarTabla(){
     const anios = ANIOS.filter(a=>D.equilibrio[String(a)]);
+    const c26 = D.equilibrio['2026'] && D.equilibrio['2026'].cierre;
     const filas = [
       ['Viviendas nuevas financiadas (Q, deduplicadas)', a=>{const e=D.equilibrio[String(a)]; return e.Q.base? fmt(e.Q.base.valor)+(a===2026?'*':''):'—';}],
+      ['Q · cierre estimado 2026 (rango)', a=> a===2026 && c26 ? `≈${fmt(r10(c26.Q.centro))} (${fmt(r10(c26.Q.min))}–${fmt(r10(c26.Q.max))})` : ''],
       ['Acciones de crédito, suma simple (máx.)', a=>{const e=D.equilibrio[String(a)]; return e.Q.max? fmt(e.Q.max.valor)+(a===2026?'*':''):'—';}],
       ['— INFONAVIT viviendas (dedup)', a=>fmt(((D.equilibrio[String(a)].Q.componentes||{}).infonavit_viviendas||{}).valor)],
       ['— INFONAVIT acciones', a=>fmt(((D.equilibrio[String(a)].Q.componentes||{}).infonavit_acciones||{}).valor)],
       ['— FOVISSSTE', a=>fmt(((D.equilibrio[String(a)].Q.componentes||{}).fovissste||{}).valor)],
       ['— Banca CNBV', a=>fmt(((D.equilibrio[String(a)].Q.componentes||{}).cnbv||{}).valor)],
       ['— CONAVI (fuera de Q)', a=>fmt(((D.equilibrio[String(a)].Q.componentes||{}).conavi||{}).valor)],
-      ['Índice SHF Hermosillo, promedio anual (P)', a=>{const e=D.equilibrio[String(a)]; return e.P.base? fmt(e.P.base.valor,1)+(a===2026?'*':''):'—';}],
-      ['Índice SHF real (pesos de 2020)', a=>{const e=D.equilibrio[String(a)]; return e.P.real? fmt(e.P.real.valor,1):'—';}],
+      ['Índice SHF Hermosillo, promedio anual (P nominal)', a=>{const e=D.equilibrio[String(a)]; return e.P.base? fmt(e.P.base.valor,1)+(a===2026?'*':''):'—';}],
+      ['Índice SHF real (precios de 2025)', a=>{const e=D.equilibrio[String(a)]; return e.P.real? fmt(e.P.real.valor,1)+(a===2026?'*':''):'—';}],
       ['Viviendas terminadas DTU', a=>{const o=D.oferta[String(a)]||{}; return fmt((o.dtu||o.dtu_ene_jul||{}).valor)+(o.dtu?'':'*');}],
       ['Registradas RUV', a=>{const o=D.oferta[String(a)]||{}; return fmt((o.registro||o.registro_ene_jul||{}).valor)+(o.registro?'':'*');}],
       ['Inventario RUV (dic / jul*)', a=>{const o=D.oferta[String(a)]||{}; return fmt((o.inventario_dic||o.inventario_jul||{}).valor)+(o.inventario_dic?'':'*');}],
       ['Tasa hipotecaria dic. (nac.)', a=>{const x=buscar(D.desplazadores.tasa_hipotecaria_banxico_dic,a); return x? fmt(x.valor,2)+'%':'—';}],
-      ['Índice SHF var. anual (promedio vs promedio)', a=>{const e=D.equilibrio[String(a)], e0=D.equilibrio[String(a-1)]; return (e&&e0&&e.P.base&&e0.P.base&&a!==2026)? pct(e.P.base.valor/e0.P.base.valor-1):'—';}],
+      ['Índice SHF real, var. anual', a=>{const e=D.equilibrio[String(a)], e0=D.equilibrio[String(a-1)]; return (e&&e0&&e.P.real&&e0.P.real&&a!==2026)? pct(e.P.real.valor/e0.P.real.valor-1):'—';}],
     ];
     $('#tabla').innerHTML = `<thead><tr><th>Serie</th>${anios.map(a=>`<th>${a}${a===2026?'*':''}</th>`).join('')}</tr></thead><tbody>` + filas.map(f=>`<tr><td>${f[0]}</td>${anios.map(a=>`<td>${f[1](a)}</td>`).join('')}</tr>`).join('') + `</tbody>`;
   }
@@ -449,18 +619,20 @@
 
   // ---------- gestos ----------
   (function(){ let x0=null; const g=$('#grafica');
+    const mover = paso => { const lista=puntos().map(p=>p.anio); let i=lista.indexOf(anio); i = Math.max(0, Math.min(lista.length-1, i+paso)); irA(lista[i]); };
     g.addEventListener('touchstart', e=>{ x0=e.touches[0].clientX; }, {passive:true});
-    g.addEventListener('touchend', e=>{ if(x0==null) return; const dx=e.changedTouches[0].clientX-x0; x0=null; if(Math.abs(dx)<40) return;
-      const lista=observados().map(p=>p.anio); let i=lista.indexOf(anio); i = dx<0 ? Math.min(lista.length-1,i+1) : Math.max(0,i-1); irA(lista[i]); }, {passive:true});
-    document.addEventListener('keydown', e=>{ const lista=observados().map(p=>p.anio); let i=lista.indexOf(anio); if(e.key==='ArrowRight'){ irA(lista[Math.min(lista.length-1,i+1)]); } if(e.key==='ArrowLeft'){ irA(lista[Math.max(0,i-1)]); } });
+    g.addEventListener('touchend', e=>{ if(x0==null) return; const dx=e.changedTouches[0].clientX-x0; x0=null; if(Math.abs(dx)<40) return; mover(dx<0?1:-1); }, {passive:true});
+    document.addEventListener('keydown', e=>{ if(e.key==='ArrowRight') mover(1); if(e.key==='ArrowLeft') mover(-1); });
   })();
   $('#play').onclick = play;
 
   // ---------- arranque ----------
   fetch('data.json', {cache:'no-cache'}).then(r=>r.json()).then(d=>{
-    D=d; dominio(); pintarSliders(); pintarToggleP(); pintarTabla(); pintarFuentes();
+    D=d;
+    if(!(D.equilibrio['2025'] && D.equilibrio['2025'].P.real)) proxyP='base';
+    dominio(); pintarSliders(); pintarToggleP(); pintarTabla(); pintarFuentes(); pintarEscenarios(); pintarBacktest(); pintarCartera();
     $('#estado').innerHTML = `<span class="punto"></span><span><b>${D.meta.version}</b> · ${D.meta.estado_auditoria}</span>`;
-    $('#pie').innerHTML = `${D.meta.alcance} · Corte SNIIV ${D.meta.corte_sniiv} · consulta ${D.meta.fecha_consulta} · ${fmt(D.meta.filas_base)} valores en la base (observado ${fmt(D.meta.calidad.observado)}, estimado ${fmt(D.meta.calidad.estimado)}, declarado ${fmt(D.meta.calidad.declarado)}, prensa ${fmt(D.meta.calidad.prensa)}, por verificar ${fmt(D.meta.calidad['por verificar'])}). Datos abiertos: <a href="data.json">data.json</a> · método: curvas de elasticidad constante ancladas al punto observado (Astra, 1-nov-2026).`;
+    $('#pie').innerHTML = `${D.meta.alcance} · Corte SNIIV ${D.meta.corte_sniiv} · consulta ${D.meta.fecha_consulta} · ${fmt(D.meta.filas_base)} valores en la base (observado ${fmt(D.meta.calidad.observado)}, estimado ${fmt(D.meta.calidad.estimado)}, declarado ${fmt(D.meta.calidad.declarado)}, prensa ${fmt(D.meta.calidad.prensa)}, supuesto ${fmt(D.meta.calidad.supuesto||0)}, por verificar ${fmt(D.meta.calidad['por verificar'])}). Datos abiertos: <a href="data.json">data.json</a> · método: curvas de elasticidad constante ancladas al punto observado; escenarios con desplazamientos en logaritmos (auditoría, 1-nov-2026).`;
     irA(2020, false);
   }).catch(err=>{ $('#estado').innerHTML = `<span class="punto" style="background:var(--verificar)"></span><span>No se pudo cargar data.json (${err}). Abre esta página desde el servidor, no desde el archivo.</span>`; });
 })();
