@@ -344,6 +344,7 @@
     if(obs.length>1) s += `<path class="rastro" d="M${obs.map(p=>sx(p.Q).toFixed(1)+' '+sy(p.P).toFixed(1)).join(' L ')}"/>`;
     if(fut.length && obs.length) { const ch=[obs[obs.length-1]].concat(fut); s += `<path class="rastro futuro" d="M${ch.map(p=>sx(p.Q).toFixed(1)+' '+sy(p.P).toFixed(1)).join(' L ')}"/>`; }
     const puestas = [[sx(cur.Q)+11, sy(cur.P)-9, 32, 12]];
+    if(cur.estado==='escenario'){ ESCS.map(e=>filaEsc(cur.anio,e)).concat(['presion','alivio'].map(e=>filaCruce(cur.anio,e))).filter(f=>f && f.escenario!==esc && f.P_real<=dom.Pmax).forEach(f=>puestas.push([sx(f.Q)+7, sy(f.P_real)+4, 40, 12])); }
     pts.forEach(p=>{ if(p.anio===cur.anio) return;
       const cx=sx(p.Q), cy=sy(p.P);
       s += `<circle class="pto-rastro ${hueco(p)?'esc':''}" cx="${cx}" cy="${cy}" r="3.5"/>`;
@@ -359,8 +360,9 @@
     s += `<path class="curva d" d="${dd}"${punteada}/><path class="curva o" d="${oo}"${punteada}/>`;
     const Pd = cur.P*0.68, Qd = cur.Q*Math.pow(0.68,-ed); if(Qd<dom.Qmax&&Pd>dom.Pmin) s += `<text class="etiq-curva d" x="${Math.min(sx(Qd)+4, m.l+iw-60)}" y="${sy(Pd)+4}">Demanda</text>`;
     const Po = cur.P*1.32, Qo = cur.Q*Math.pow(1.32,es); if(Qo<dom.Qmax&&Po<dom.Pmax) s += `<text class="etiq-curva o" x="${Math.min(sx(Qo)+4, m.l+iw-50)}" y="${sy(Po)+4}">Oferta</text>`;
-    if(cur.Qmin!=null && cur.Qmax!=null && cur.Qmax>cur.Qmin) s += `<line class="bigote" x1="${sx(cur.Qmin)}" y1="${sy(cur.P)}" x2="${sx(cur.Qmax)}" y2="${sy(cur.P)}"/>`;
-    if(cur.Pmin!=null && cur.Pmax!=null && cur.Pmax>cur.Pmin) s += `<line class="bigote" x1="${sx(cur.Q)}" y1="${sy(cur.Pmin)}" x2="${sx(cur.Q)}" y2="${sy(cur.Pmax)}" stroke-dasharray="3 3"/>`;
+    const cq = q => Math.min(dom.Qmax, Math.max(dom.Qmin, q)), cp = v => Math.min(dom.Pmax, Math.max(dom.Pmin, v));
+    if(cur.Qmin!=null && cur.Qmax!=null && cur.Qmax>cur.Qmin) s += `<line class="bigote" x1="${sx(cq(cur.Qmin))}" y1="${sy(cur.P)}" x2="${sx(cq(cur.Qmax))}" y2="${sy(cur.P)}"/>`;
+    if(cur.Pmin!=null && cur.Pmax!=null && cur.Pmax>cur.Pmin) s += `<line class="bigote" x1="${sx(cur.Q)}" y1="${sy(cp(cur.Pmin))}" x2="${sx(cur.Q)}" y2="${sy(cp(cur.Pmax))}" stroke-dasharray="3 3"/>`;
     s += `<circle class="pto ${hueco(cur)?'esc':''}" cx="${sx(cur.Q)}" cy="${sy(cur.P)}" r="7"/>`;
     const sufijo = cur.estado==='al corte' ? ' · cierre estimado' : (cur.estado==='escenario' ? ` · ${CORTO_ESC[esc]}` : '');
     s += `<text class="etiq" x="${sx(cur.Q)+11}" y="${sy(cur.P)-9}">${cur.anio}${sufijo}</text>`;
