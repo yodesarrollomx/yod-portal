@@ -11,7 +11,7 @@ import csv, os, re, sys
 from collections import Counter, defaultdict
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FRENTES = ["oferta", "demanda", "precios-financiamiento"]
+FRENTES = ["oferta", "demanda", "precios-financiamiento", "integracion"]
 COLS = ["serie_id","variable","unidad","geografia","segmento","periodo","valor",
         "fuente_id","url","localizador","fecha_corte","fecha_consulta","calidad","nota"]
 CALIDADES = {"observado","declarado","prensa","estimado","por verificar"}
@@ -90,6 +90,7 @@ def main():
     tabla = defaultdict(dict)
     for f in anuales:
         key = f["serie_id"] if f["segmento"] in ("n/a","total","nueva") else f"{f['serie_id']}[{f['segmento']}]"
+        if f["geografia"] != "municipio Hermosillo": key += "{" + f["geografia"] + "}"
         tabla[f["periodo"]][key] = f["valor_num"]
     cols = sorted({k for a in tabla.values() for k in a})
     with open(os.path.join(RAIZ, "02_cruces", "tabla-anual.csv"), "w", newline="", encoding="utf-8") as f:

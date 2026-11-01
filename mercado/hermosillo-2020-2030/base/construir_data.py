@@ -36,31 +36,47 @@ def pack(r, formula=None):
     return d
 
 ANIOS = ["2020", "2021", "2022", "2023", "2024", "2025"]
+# Deflactor: INPC nacional dic–dic (frente precios), factor acumulado con 2020 = 1
+infl = {r["periodo"]: r for r in serie("precios-financiamiento", "inflacion-nacional-dic-dic")}
+def factor_precios(a):
+    f = 1.0
+    for y in range(2021, int(a) + 1):
+        r = infl.get(str(y))
+        if r and r["valor_num"] is not None: f *= (1 + r["valor_num"] / 100)
+    return f
 eq = {}
 for a in ANIOS:
     inf = get("demanda", "creditos-infonavit-nueva", a); fov = get("demanda", "creditos-fovissste-nueva", a); cnbv = get("demanda", "creditos-cnbv-nueva", a)
     suma3 = get("demanda", "estimado-creditos-nueva-suma-infonavit-fovissste-cnbv", a)
-    cota = get("demanda", "estimado-compras-nueva-sin-doble-conteo-cofinanciamiento", a)
     cubo = get("demanda", "financiamientos-sniiv-nueva-total", a)
     conavi = get("demanda", "financ-sniiv-nueva-conavi", a)
-    m_inf = get("demanda", "monto-infonavit-nueva", a); m_cnbv = get("demanda", "monto-cnbv-nueva", a)
-    p_inf = (m_inf["valor_num"] / inf["valor_num"]) if (m_inf and inf and inf["valor_num"]) else None
-    p_cnbv = (m_cnbv["valor_num"] / cnbv["valor_num"]) if (m_cnbv and cnbv and cnbv["valor_num"]) else None
-    p_total = get("precios-financiamiento", "fin-sniiv-nueva-monto-medio", a)
+    qd = get("integracion", "q-viviendas-financiadas-nueva-dedup", a)
+    viv_inf = get("integracion", "viviendas-infonavit-nueva-dedup", a)
+    tipo = {k: get("integracion", f"creditos-infonavit-nueva-tipo-{k}", a) for k in ("individual", "conyugal", "unamos", "no-disponible")}
+    esq = {k: get("demanda", f"creditos-infonavit-nueva-esq-{k}", a) for k in ("cofinavit", "apoyo-infonavit", "infonavit-total")}
+    p_idx = get("integracion", "p-shf-indice-hermosillo-anual", a)
+    m_inf = get("demanda", "monto-infonavit-nueva", a)
+    p_cred = (m_inf["valor_num"] / inf["valor_num"]) if (m_inf and inf and inf["valor_num"]) else None
+    fp = factor_precios(a)
     eq[a] = {
         "anio": int(a), "estado": "observado",
-        "Q": {"base": pack(suma3, "INFONAVIT nueva + FOVISSSTE nueva + CNBV nueva (suma simple; cofinanciamientos sin deduplicar)"),
-              "min": pack(cota, "suma simple − Cofinavit − Apoyo INFONAVIT (pareo con banca, sin verificar)"),
-              "max": pack(cubo, "cubo SNIIV Financiamientos, destino vivienda nueva, todos los organismos (incluye CONAVI y Banjército)"),
-              "componentes": {"infonavit": pack(inf), "fovissste": pack(fov), "cnbv": pack(cnbv), "conavi": pack(conavi)}},
-        "P": {"base": {"valor": round(p_inf) if p_inf else None, "calidad": "estimado", "formula": "monto total INFONAVIT vivienda nueva ÷ créditos INFONAVIT vivienda nueva (SNIIV, municipio)",
-                       "insumos": {"monto": pack(m_inf), "creditos": pack(inf)}, "unidad": "MXN por crédito", "nombre": "Crédito promedio INFONAVIT · vivienda nueva"},
-              "alt_banca": {"valor": round(p_cnbv) if p_cnbv else None, "calidad": "estimado", "formula": "monto total banca (CNBV) vivienda nueva ÷ créditos banca vivienda nueva (SNIIV, municipio)",
-                            "insumos": {"monto": pack(m_cnbv), "creditos": pack(cnbv)}, "unidad": "MXN por crédito", "nombre": "Crédito promedio banca · vivienda nueva"},
-              "alt_total": pack(p_total, "monto total de financiamientos vivienda nueva ÷ acciones (todos los organismos; 2025 incluye CONAVI)")},
+        "Q": {"base": pack(qd, "viviendas financiadas deduplicadas (ver fórmula en la fila)"),
+              "min": pack(qd, "igual a la base: la deduplicación ya es la cota conservadora"),
+              "max": pack(suma3, "suma simple de acciones INFONAVIT + FOVISSSTE + CNBV (sin deduplicar; cota superior)"),
+              "cubo": pack(cubo, "cubo SNIIV Financiamientos, destino vivienda nueva, todos los organismos (incluye CONAVI y Banjército)"),
+              "componentes": {"infonavit_acciones": pack(inf), "infonavit_viviendas": pack(viv_inf), "fovissste": pack(fov), "cnbv": pack(cnbv), "conavi": pack(conavi),
+                               "tipo": {k: pack(v) for k, v in tipo.items() if v}, "esquemas_banco": {k: pack(v) for k, v in esq.items() if v}}},
+        "P": {"base": pack(p_idx, "promedio anual del índice SHF de precios de la vivienda, Hermosillo (2018=100)"),
+              "real": {"valor": round(p_idx["valor_num"] / fp, 2) if p_idx else None, "calidad": "estimado", "unidad": "índice 2018=100, pesos de 2020",
+                       "formula": "índice SHF nominal ÷ factor acumulado del INPC nacional dic–dic desde 2020 (2020 = 1)", "factor": round(fp, 4),
+                       "nombre": "Índice SHF Hermosillo en términos reales"},
+              "credito_promedio_infonavit": {"valor": round(p_cred) if p_cred else None, "calidad": "estimado", "formula": "monto total INFONAVIT vivienda nueva ÷ acciones (contexto, no es precio)",
+                                             "unidad": "MXN por crédito"}},
     }
 
 # 2026 al corte (ene–jul) y mismo periodo 2025
+q26 = get("integracion", "q-viviendas-financiadas-nueva-dedup", "2026-07")
+q25p = get("integracion", "q-viviendas-financiadas-nueva-dedup-ene-jul-2025", "2025-07")
 def suma_mensual(frente, sid, anio, meses):
     vals = [get(frente, sid, f"{anio}-{m:02d}") for m in meses]
     if any(v is None for v in vals): return None, vals
@@ -73,19 +89,20 @@ tot26, _ = suma_mensual("demanda", "financiamientos-sniiv-nueva-total-mensual", 
 inf25p, _ = suma_mensual("demanda", "creditos-infonavit-nueva-mensual", 2025, meses)
 fov25p, _ = suma_mensual("demanda", "creditos-fovissste-nueva-mensual", 2025, meses)
 cnbv25p, _ = suma_mensual("demanda", "creditos-cnbv-nueva-mensual", 2025, meses)
-tot25p, _ = suma_mensual("demanda", "financiamientos-sniiv-nueva-total-mensual", 2025, meses)
-p26 = get("precios-financiamiento", "fin-sniiv-nueva-monto-medio", "2026-07")
-ref_mensual = get("demanda", "creditos-infonavit-nueva-mensual", "2026-07")
+p26 = get("integracion", "p-shf-indice-hermosillo-anual", "2026-Q2")
+p26q1 = get("integracion", "shf-indice-hermosillo", "2026-Q1"); p26q2 = get("integracion", "shf-indice-hermosillo", "2026-Q2")
+fp26 = factor_precios("2025")
 eq["2026"] = {
     "anio": 2026, "estado": "al corte", "corte": "2026-07-31", "meses": "enero–julio",
-    "Q": {"base": {"valor": (inf26 + fov26 + cnbv26) if None not in (inf26, fov26, cnbv26) else None, "calidad": "estimado",
-                   "formula": "suma ene–jul 2026 de INFONAVIT + FOVISSSTE + CNBV vivienda nueva (series mensuales SNIIV)",
-                   "url": ref_mensual["url"] if ref_mensual else "", "localizador": "series mensuales 2026-01..2026-07 en series.csv (frente demanda)"},
-          "mismo_periodo_2025": {"valor": (inf25p + fov25p + cnbv25p) if None not in (inf25p, fov25p, cnbv25p) else None, "calidad": "estimado", "formula": "misma suma, ene–jul 2025"},
-          "max": {"valor": tot26, "calidad": "estimado", "formula": "cubo Financiamientos vivienda nueva, suma ene–jul 2026 (todos los organismos)"},
-          "max_mismo_periodo_2025": {"valor": tot25p, "calidad": "estimado", "formula": "cubo Financiamientos vivienda nueva, suma ene–jul 2025"},
-          "componentes": {"infonavit": {"valor": inf26}, "fovissste": {"valor": fov26}, "cnbv": {"valor": cnbv26}}},
-    "P": {"base": None, "alt_total": pack(p26, "monto total ÷ acciones, ene–jul 2026, todos los organismos (incluye CONAVI)")},
+    "Q": {"base": pack(q26, "viviendas financiadas deduplicadas, ene–jul 2026"),
+          "mismo_periodo_2025": pack(q25p, "misma fórmula, ene–jul 2025"),
+          "max": {"valor": (inf26 + fov26 + cnbv26) if None not in (inf26, fov26, cnbv26) else None, "calidad": "estimado", "formula": "suma simple de acciones ene–jul 2026 (INFONAVIT + FOVISSSTE + CNBV)"},
+          "max_mismo_periodo_2025": {"valor": (inf25p + fov25p + cnbv25p) if None not in (inf25p, fov25p, cnbv25p) else None, "calidad": "estimado", "formula": "suma simple de acciones ene–jul 2025"},
+          "cubo": {"valor": tot26, "calidad": "estimado", "formula": "cubo Financiamientos vivienda nueva, suma ene–jul 2026 (todos los organismos)"},
+          "componentes": {"infonavit_acciones": {"valor": inf26}, "fovissste": {"valor": fov26}, "cnbv": {"valor": cnbv26}}},
+    "P": {"base": pack(p26, "promedio de Q1 y Q2 2026 del índice SHF Hermosillo (al corte)"),
+          "q1": pack(p26q1), "q2": pack(p26q2),
+          "real": {"valor": round(p26["valor_num"] / fp26, 2) if p26 else None, "calidad": "estimado", "formula": "índice nominal ÷ factor INPC acumulado a 2025 (la inflación de 2026 aún no se aplica)", "factor": round(fp26, 4)}},
 }
 
 # Oferta por año
@@ -113,6 +130,10 @@ despl = {
     "inflacion_hermosillo_dic_dic": pk_list("precios-financiamiento", "inflacion-hermosillo-dic-dic"),
     "infonavit_monto_max": pk_list("precios-financiamiento", "infonavit-monto-max-credito"),
     "shf_var_anual_hermosillo": pk_list("precios-financiamiento", "precio-shf-var-acum-anual", None, "municipio Hermosillo") + pk_list("precios-financiamiento", "precio-shf-var-4t-anual", None, "municipio Hermosillo"),
+    "shf_indice_hermosillo_trimestral": pk_list("integracion", "shf-indice-hermosillo"),
+    "shf_indice_sonora_trimestral": pk_list("integracion", "shf-indice-sonora"),
+    "viviendas_infonavit_dedup": pk_list("integracion", "viviendas-infonavit-nueva-dedup"),
+    "q_dedup": pk_list("integracion", "q-viviendas-financiadas-nueva-dedup"),
     "shf_precio_medio_sonora": pk_list("precios-financiamiento", "precio-shf-medio-mxn", None, "Sonora"),
     "costo_construccion_ceico_hermosillo": pk_list("oferta", "costo-ceico-hermosillo-total"),
     "empleo_imss_hermosillo": pk_list("demanda", "empleo-imss-hermosillo-stock"),
@@ -148,10 +169,11 @@ from collections import Counter
 cal = Counter(r["calidad"] for r in rows)
 
 data = {
-    "meta": {"titulo": "Hermosillo 2020–2030 · Oferta y demanda de vivienda nueva", "version": "v1 · 2026-11-01",
-             "estado_auditoria": "Fase 1: 1,331 valores extraídos por tres frentes; muestreo independiente 26/26 coincidencias (Lunas); dictamen de Astra pendiente. Eje de precio provisional (crédito promedio, no precio de vivienda).",
+    "meta": {"titulo": "Hermosillo 2020–2030 · Oferta y demanda de vivienda nueva", "version": "v2 · 2026-11-01",
+             "estado_auditoria": "Fase 1 auditada (dictamen 1-nov-2026): oferta y demanda aprobadas en básico; precios reentregado por el integrador con el índice SHF oficial (API SNIIV). Q deduplicada (dos créditos = una vivienda) y P = índice SHF Hermosillo; correcciones R1–R6 aplicadas; pendientes R7–R12 (IMSS histórico, cartera por etapa, HBT). Escenarios 2027–2030: Fase 2.",
              "alcance": "Vivienda nueva formal, municipio de Hermosillo (clave 26/030). Usada y renta fuera del diagrama.",
              "corte_sniiv": "2026-07-31", "fecha_consulta": "2026-11-01", "filas_base": len(rows), "calidad": dict(cal),
+             "ejes": {"P": "Índice SHF de precios de la vivienda, Hermosillo, promedio anual, 2018=100 (toda la vivienda con avalúo; nominal, con opción real deflactada por INPC nacional)", "Q": "Viviendas nuevas financiadas en el municipio por año: INFONAVIT (deduplicando Conyugal y Unamos Créditos: dos créditos, una vivienda; y descontando esquemas con banco) + FOVISSSTE + banca CNBV. Rango hasta la suma simple de acciones."},
              "metodo": "Curvas de elasticidad constante que pasan por el punto observado (P_t, Q_t): Q_D = Q_t·(P/P_t)^(−e_d), Q_S = Q_t·(P/P_t)^(e_s). Las pendientes (e_d, e_s) son SUPUESTO ajustable, no dato. Ver 04_auditoria/metodo-curvas.md."},
     "equilibrio": eq, "oferta": of, "desplazadores": despl, "supuestos": sup, "fuentes": sorted(fuentes.values(), key=lambda f: -f["n"]),
 }
@@ -159,8 +181,6 @@ os.makedirs(os.path.dirname(OUT), exist_ok=True)
 json.dump(data, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("OK", OUT, os.path.getsize(OUT), "bytes;", len(fuentes), "fuentes")
 for a in ANIOS + ["2026"]:
-    e = eq[a]; q = e["Q"]["base"]["valor"] if e["Q"]["base"] else None
-    p = e["P"]["base"]["valor"] if e["P"]["base"] else None
-    pt = e["P"]["alt_total"]["valor"] if e["P"]["alt_total"] else None
-    print(a, "Q", q, "Qmin", (e["Q"].get("min") or {}).get("valor"), "Qmax", (e["Q"].get("max") or {}).get("valor"), "P_inf", p, "P_total", pt,
+    e = eq[a]; q = (e["Q"]["base"] or {}).get("valor"); p = (e["P"]["base"] or {}).get("valor"); pr = (e["P"].get("real") or {}).get("valor")
+    print(a, "Q", q, "Qmax", (e["Q"].get("max") or {}).get("valor"), "P", p, "P_real", pr,
           "| DTU", (of[a]["dtu"] or {}).get("valor"), "reg", (of[a]["registro"] or {}).get("valor"), "inv", (of[a]["inventario_dic"] or {}).get("valor"))
