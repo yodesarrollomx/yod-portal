@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-31.cargador-fase1.3 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-01.mercado-hmo.1 · 2026-10-20.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -1147,3 +1147,15 @@ Reservar efectos antes de Gmail y conciliar resultados inciertos sin repetir env
 - Conexiones: CON-BANDEJA-RECIBOS (GAS-BANDEJA-NUBE → STORE-BANDEJA-RECIBOS).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Cupo de ScriptProperties: los resultados inciertos no se podan ni se reintentan por falta de espacio..
+
+## SYS-MERCADO-HMO · Mercado Hermosillo 2020–2030
+
+Diagrama de oferta y demanda de vivienda nueva del municipio de Hermosillo por año (2020–2026 observado, 2027–2030 escenarios pendientes), con cada cifra rastreable a su fuente y la pendiente de las curvas declarada como supuesto
+
+- Tipo: tablero. Dominio: Mercado. Responsable: Dirección.
+- Evidencia: codigo. Producción: Página estática sin backend ni sesión; publicación en Pages por verificar tras el merge. Fase 1 (base 2020–2026) con dictamen de Astra pendiente; eje de precio provisional (crédito promedio, no precio de vivienda)..
+- Entidades: serie, fuente, equilibrio, supuesto.
+- Fuente de verdad: mercado/hermosillo-2020-2030/base/series-integradas.csv (fuentes públicas: SNIIV/SEDATU, INEGI, Banxico, SHF, CANADEVI/prensa); sin hojas privadas.
+- Evidencia: [yod-portal/mercado/hermosillo-2020-2030/index.html](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/mercado/hermosillo-2020-2030/index.html) — Tablero estático: curvas de elasticidad constante ancladas al punto observado (P_t, Q_t) por año, lee data.json por fetch; [yod-portal/mercado/hermosillo-2020-2030/base/series-integradas.csv](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/mercado/hermosillo-2020-2030/base/series-integradas.csv) — Base de 1,331 valores con fuente, URL, localizador, corte y calidad (contrato en base/CONTRATO.md); muestreo independiente 26/26 coincidencias en auditoria/; Encargo de Dirección 1-nov-2026 (Buzón Claude ↔ ChatGPT fila 505, ID CG-HMO-OFERTA-DEMANDA-20261101): publicar el HTML en GitHub de Yodesarrollo para cruzar datos después y enlazarlo bajo Plan de Potencial; el enlace en el menú se registra como propuesta aparte (código de acceso y Control Maestro).
+- Conexiones: Ninguna integración comprobada.
+- Mejoras: Conservar y verificar alcance antes de ampliar.

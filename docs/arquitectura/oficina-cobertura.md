@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-10-31.cargador-fase1.3
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-01.mercado-hmo.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -8,7 +8,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
-- 26 sistemas y 90 componentes distribuidos exactamente una vez.
+- 27 sistemas y 91 componentes distribuidos exactamente una vez.
 - 10 áreas; 149 conexiones registradas, 10 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
@@ -1038,7 +1038,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 ## Plan de Potencial y puesto
 
-**Ubicación propuesta:** potential · 3 componentes.
+**Ubicación propuesta:** potential · 4 componentes.
 
 ### PPP · Potenciales · SYS-POTENCIALES
 
@@ -1177,6 +1177,30 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Pendientes y límites:**
 
 - 6 conexiones sin verificación de ejecución registrada.
+
+### Mercado Hermosillo 2020–2030 · SYS-MERCADO-HMO
+
+**Función:** Diagrama de oferta y demanda de vivienda nueva del municipio de Hermosillo por año (2020–2026 observado, 2027–2030 escenarios pendientes), con cada cifra rastreable a su fuente y la pendiente de las curvas declarada como supuesto
+
+**Fuente oficial:** mercado/hermosillo-2020-2030/base/series-integradas.csv (fuentes públicas: SNIIV/SEDATU, INEGI, Banxico, SHF, CANADEVI/prensa); sin hojas privadas
+
+**Responsable operativo:** Dirección
+
+**Estado registrado:** codigo. Página estática sin backend ni sesión; publicación en Pages por verificar tras el merge. Fase 1 (base 2020–2026) con dictamen de Astra pendiente; eje de precio provisional (crédito promedio, no precio de vivienda).
+
+**Conexiones registradas; no habilitan operaciones:**
+
+- Sin conexiones registradas.
+
+**Evidencia de la ficha:**
+
+- Tablero estático: curvas de elasticidad constante ancladas al punto observado (P\_t, Q\_t) por año, lee data.json por fetch · Estado: codigo · yodesarrollomx/yod-portal · mercado/hermosillo-2020-2030/index.html · Revisión: HEAD\_baseline
+- Base de 1,331 valores con fuente, URL, localizador, corte y calidad (contrato en base/CONTRATO.md); muestreo independiente 26/26 coincidencias en auditoria/ · Estado: codigo · yodesarrollomx/yod-portal · mercado/hermosillo-2020-2030/base/series-integradas.csv · Revisión: HEAD\_baseline
+- Encargo de Dirección 1-nov-2026 (Buzón Claude ↔ ChatGPT fila 505, ID CG-HMO-OFERTA-DEMANDA-20261101): publicar el HTML en GitHub de Yodesarrollo para cruzar datos después y enlazarlo bajo Plan de Potencial; el enlace en el menú se registra como propuesta aparte (código de acceso y Control Maestro) · Estado: declarado · Sin revisión inmutable en esta referencia
+
+**Pendientes y límites:**
+
+- No hay conexiones registradas para este componente.
 
 ## Proyectos y diseño
 

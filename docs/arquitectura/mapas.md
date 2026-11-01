@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-31.cargador-fase1.3 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-01.mercado-hmo.1 · 2026-10-20.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -567,6 +567,14 @@ flowchart LR
   n_SVC_AUTON_CLOUD -->|Orientar y ordenar fuentes autorizadas| n_EXT_JEV
   n_SYS_DESPACHO_3D -->|Descarga manual de bóveda portable; no sincronización| n_EXT_OBSIDIAN
   n_SYS_DESPACHO_3D -.->|Consulta documental prevista, conexión sin verificar| n_EXT_NOTEBOOKLM
+  classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
+```
+
+## Mercado
+
+```mermaid
+flowchart LR
+  n_SYS_MERCADO_HMO["Mercado Hermosillo 2020–2030"]
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
 ```
 
