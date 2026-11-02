@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-01.mercado-f2.1",
+  "revision": "2026-11-01.mercado-f2.2",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -14931,6 +14931,23 @@
         "node verify-os.cjs, node verify-portal.cjs, node verify-accesos.cjs, node verify-obra-app.cjs, node scripts/versiones.cjs --check, node scripts/arquitectura.cjs --check."
       ],
       "deployment": "Al fusionar a main, Pages publica la misma URL; comprobar con lectura HTTP de index.html y data.json (version «v3 · 2026-11-01», bloque escenarios). Reversión: revertir el merge; no hay backend ni datos privados."
+    },
+    {
+      "id": "CHG-MERCADO-ANCLAS-20261101",
+      "components": [
+        "SYS-MERCADO",
+        "SYS-POTENCIALES",
+        "SYS-INVERSION"
+      ],
+      "status": "implementado_local",
+      "approval": "Dirección, 1-nov-2026 por chat: «el HTML tendría que estar anclado a GitHub en la parte de Master Developers o en la parte de planes de potencial» y, al preguntarle dónde, eligió «En los dos» (tarjeta en PPP y en Master Developer; la liga del menú se queda).",
+      "proposal": "Anclar el tablero Mercado Hermosillo 2020–2030 dentro de dos tableros, sin quitar su entrada del menú de YOD OS: (1) potenciales-yod/index.html (portada de Planes de potencial): un bloque destacado con la clase existente .featured-ppp, debajo del expediente Distrito Abasto, con liga al tablero; (2) yodesarrollo-board/brokers.html (Master Developer / Master Brokers): una liga en la cabecera junto a «Presentaciones», con la clase existente .presentation-entry. Sólo HTML, sin CSS/JS nuevos ni cambios de versión, sin datos privados. Cada repo fija su atlas a la revisión que contiene esta propuesta.",
+      "tests": [
+        "potenciales-yod: node --test tests/ppp-distrito-abasto.test.cjs y git diff --check; verificar-impacto contra el atlas fijado.",
+        "yodesarrollo-board: git diff --check; verificar-impacto contra el atlas fijado.",
+        "Render real (Playwright) de la portada PPP y de brokers.html con la liga visible; la liga abre https://yodesarrollomx.github.io/yod-portal/mercado/hermosillo-2020-2030/."
+      ],
+      "deployment": "Al fusionar cada PR, Pages publica la portada de PPP y la de Master Developer con la liga. Reversión: revertir cada merge; no hay backend ni datos."
     }
   ],
   "data_contracts": [

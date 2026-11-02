@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-11-01.mercado-f2.1",
+  "model_revision": "2026-11-01.mercado-f2.2",
   "proposal_id": "CHG-MERCADO-HMO-F2-20261101",
   "summary": "Fase 2 de Mercado Hermosillo (sólo mercado/hermosillo-2020-2030/): P real por omisión (INPC promedio anual, base SHF 2017=100), cierre 2026 estimado con rango, escenarios 2027–2030 con cruces de precio y techo de absorción, prueba del método preregistrada, cartera por etapa, base/fase2 + base/motor + dictámenes por chunk. Incluye los commits del PR #341 (estilo del marco y ACCESOS_REF del workflow Conocimiento del Despacho).",
   "components": [
