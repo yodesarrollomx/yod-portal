@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-01.mercado-menu.1",
+  "revision": "2026-11-01.mercado-f2.2",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -3472,11 +3472,11 @@
       "nombre": "Mercado Hermosillo 2020–2030",
       "tipo": "tablero",
       "repo": "yodesarrollomx/yod-portal",
-      "proposito": "Diagrama de oferta y demanda de vivienda nueva del municipio de Hermosillo por año (2020–2026 observado, 2027–2030 escenarios pendientes), con cada cifra rastreable a su fuente y la pendiente de las curvas declarada como supuesto",
+      "proposito": "Diagrama de oferta y demanda de vivienda nueva del municipio de Hermosillo por año (2020–2025 observado, 2026 cierre estimado con rango, 2027–2030 escenarios condicionados a supuestos con cruces de precio), con cada cifra rastreable a su fuente y la pendiente de las curvas declarada como supuesto",
       "dominio": "Mercado",
       "owner_role": "Dirección",
       "status": "codigo",
-      "runtime_status": "Tablero estático publicado en Pages por PR #339 (merge 9a1c8e5); entra al menú de YOD OS bajo PPP con código MH y marco shell.js (este cambio). Fase 1: base 2020–2026 con eje de precio provisional (crédito promedio, no precio de vivienda); dictamen de cifras y escenarios 2027–2030 pendientes.",
+      "runtime_status": "Tablero estático en Pages, en el menú de YOD OS bajo PPP (código MH, marco shell.js). Fase 2 (CHG-MERCADO-HMO-F2-20261101): P = índice SHF Hermosillo base 2017=100, real a precios de 2025 (INPC promedio anual); cierre 2026 estimado; escenarios 2027–2030 del motor base/motor/escenarios.py con supuestos de base/fase2/f2-c09-supuestos; cada chunk con dictamen independiente en auditoria/.",
       "evidence": [
         {
           "repo": "yodesarrollomx/yod-portal",
@@ -14896,18 +14896,58 @@
         "SYS-OBRA-CLIENTE",
         "SYS-POTENCIALES",
         "SYS-TRACK",
-        "SYS-YOD-OS"
+        "SYS-YOD-OS",
+        "SYS-DESPACHO-3D"
       ],
-      "status": "implementado_local",
+      "status": "publicado",
       "approval": "Dirección, 1-nov-2026 por chat: «pónmelo en una liga abajo de plan de potencial» y después «hazlo tú directamente… haz todo tú». El mismo día autorizó el merge del PR #339 (tablero). Esta entrada ejecuta la liga en el menú; la fila del Control Maestro se agrega con el conector de Sheets autorizado.",
-      "proposal": "Mercado Hermosillo entra al catálogo canónico (os/catalogo.js) como SYS-MERCADO justo debajo de SYS-POTENCIALES, sin navParent (entrada propia del menú), icono chart-line, código MH y destino https://yodesarrollomx.github.io/yod-portal/mercado/hermosillo-2020-2030/. Copias regeneradas (shell.js, access-policy.js, app.js), allowlist en portal-core.js con las tres bases, fila de respaldo en CAT_RESPALDO (sensibilidad Interno), tabla CODIGOS-BOARDS.md, etiqueta propia 20261101-mercado-hmo aplicada a todos los HTML, y la carpeta mercado/hermosillo-2020-2030 entra al alcance de scripts/versiones.cjs. La página carga portero.js (data-singate) y os/shell.js como los demás tableros de la casa (menú, identidad, chinche; ?embed=1 lo quita). Tercera tabla: potenciales-yod/accesos.html agrega MH a CODES y SYS-MERCADO a TABLEROS en un PR coordinado (atlas fijado a este commit). El código sólo decide visibilidad en el menú: la página no tiene backend ni datos privados. Renombre del ID SYS-MERCADO-HMO → SYS-MERCADO (alias conservado) porque verify-os sólo admite IDs SYS-[A-Z]+ en CAT_RESPALDO.",
+      "proposal": "Mercado Hermosillo entra al catálogo canónico (os/catalogo.js) como SYS-MERCADO justo debajo de SYS-POTENCIALES, sin navParent (entrada propia del menú), icono chart-line, código MH y destino https://yodesarrollomx.github.io/yod-portal/mercado/hermosillo-2020-2030/. Copias regeneradas (shell.js, access-policy.js, app.js), allowlist en portal-core.js con las tres bases, fila de respaldo en CAT_RESPALDO (sensibilidad Interno), tabla CODIGOS-BOARDS.md, etiqueta propia 20261101-mercado-hmo aplicada a todos los HTML, y la carpeta mercado/hermosillo-2020-2030 entra al alcance de scripts/versiones.cjs. La página carga portero.js (data-singate) y os/shell.js como los demás tableros de la casa (menú, identidad, chinche; ?embed=1 lo quita). Tercera tabla: potenciales-yod/accesos.html agrega MH a CODES y SYS-MERCADO a TABLEROS en un PR coordinado (atlas fijado a este commit). El código sólo decide visibilidad en el menú: la página no tiene backend ni datos privados. Renombre del ID SYS-MERCADO-HMO → SYS-MERCADO (alias conservado) porque verify-os sólo admite IDs SYS-[A-Z]+ en CAT_RESPALDO. Post-merge: el workflow Conocimiento del Despacho fija ACCESOS_REF al commit de potenciales-yod que ya trae MH (3558576), porque su pin anterior (eff67c2) hacía fallar verify-accesos en main.",
       "tests": [
         "node scripts/catalogo.cjs --check, node verify-os.cjs, node verify-portal.cjs, node verify-obra-app.cjs, node scripts/versiones.cjs --check, node scripts/arquitectura.cjs --check: en verde en local.",
         "node --test tests/*.cjs: 1381 pass; 1 fallo preexistente (tablero-cargador: git show f79867a en clon superficial).",
         "node verify-accesos.cjs: en verde sólo cuando potenciales-yod main trae MH (PR coordinado); se corre tras ese merge.",
         "Comprobación en vivo tras publicar: la cabina muestra «Mercado Hermosillo» debajo de PPP con sesión de Dirección y el tablero abre con marco."
       ],
-      "deployment": "Orden: (1) merge del PR de potenciales-yod (MH en accesos.html, atlas fijado a este commit); (2) merge de este PR; Pages sirve os/ con etiqueta 20261101-mercado-hmo. Reversión: revertir ambos merges; no hay backend ni datos."
+      "deployment": "Orden: (1) merge del PR de potenciales-yod (MH en accesos.html, atlas fijado a este commit); (2) merge de este PR; Pages sirve os/ con etiqueta 20261101-mercado-hmo. Reversión: revertir ambos merges; no hay backend ni datos. Publicado: potenciales-yod#58 (3558576) y yod-portal#340 (e3f11d7, Pages desplegado 20:48Z)."
+    },
+    {
+      "id": "CHG-MERCADO-HMO-F2-20261101",
+      "components": [
+        "SYS-MERCADO",
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES"
+      ],
+      "status": "implementado_local",
+      "approval": "Dirección, 1-nov-2026 por chat: «Adelante ya con la fase dos en equipo… ejecuta con puros opus, sonnets y haikus en enjambre» y después «si falta algo ejecútalo». Encargo del Buzón fila 505 (CG-HMO-OFERTA-DEMANDA-20261101): escenarios 2027–2030 y cierre 2026.",
+      "proposal": "Fase 2 del tablero Mercado Hermosillo dentro de mercado/hermosillo-2020-2030/ (sin tocar os/, catálogo, accesos ni versiones): (1) P real por omisión a precios de 2025 con INPC promedio anual y base del índice SHF corregida a 2017=100; (2) cierre 2026 estimado con rango (participación ene–jul 2021–2025); (3) escenarios 2027–2030 «más demanda y más oferta / base / menos demanda y menos oferta» más dos cruces de precio, con banda por arranque × cinco elasticidades y techo de absorción; (4) tabla «qué tendría que pasar», prueba del método preregistrada (no superó a la inercia, visible en el cuerpo), cartera por etapa sin sumas, inventario terminado en meses de ventas RUV; (5) base/fase2 (un folder por chunk), base/motor (escenarios.py, cierre2026.py, pruebas) y auditoria/ (criterios-fase2 y dictámenes por chunk). Incluye los dos commits del PR #341 (sin fusionar): estilo del marco en la página Mercado (shell.css, Tabler, yod-acceso, yod-cargador) y ACCESOS_REF del workflow Conocimiento del Despacho (.github/workflows/conocimiento-browser.yml, propiedad de SYS-YOD-OS, SYS-DESPACHO, SYS-DESPACHO-3D y SYS-POTENCIALES); sin cambios adicionales a esos componentes.",
+      "tests": [
+        "python3 -I base/motor/tests/test_escenarios.py: 7/7 (techo sobre oferta, techo igual en sensibilidad de hogares, regla M3, rechazos con mensaje, determinismo).",
+        "escenarios.py: dos corridas con el mismo sha256 de escenarios.json.",
+        "integrar.py: 0 errores de contrato en todos los chunks f2-*.",
+        "Render real con Playwright a 390×844 y 1440×900: sin desbordamiento horizontal ni errores de página; años 2026–2030, cambio de escenario y vuelta a precio nominal.",
+        "Dictámenes independientes por chunk (auditoria/dictamen-*.md), incluido el motor (aceptado tras reentrega) y C09 (re-auditoría).",
+        "node verify-os.cjs, node verify-portal.cjs, node verify-accesos.cjs, node verify-obra-app.cjs, node scripts/versiones.cjs --check, node scripts/arquitectura.cjs --check."
+      ],
+      "deployment": "Al fusionar a main, Pages publica la misma URL; comprobar con lectura HTTP de index.html y data.json (version «v3 · 2026-11-01», bloque escenarios). Reversión: revertir el merge; no hay backend ni datos privados."
+    },
+    {
+      "id": "CHG-MERCADO-ANCLAS-20261101",
+      "components": [
+        "SYS-MERCADO",
+        "SYS-POTENCIALES",
+        "SYS-INVERSION"
+      ],
+      "status": "implementado_local",
+      "approval": "Dirección, 1-nov-2026 por chat: «el HTML tendría que estar anclado a GitHub en la parte de Master Developers o en la parte de planes de potencial» y, al preguntarle dónde, eligió «En los dos» (tarjeta en PPP y en Master Developer; la liga del menú se queda).",
+      "proposal": "Anclar el tablero Mercado Hermosillo 2020–2030 dentro de dos tableros, sin quitar su entrada del menú de YOD OS: (1) potenciales-yod/index.html (portada de Planes de potencial): un bloque destacado con la clase existente .featured-ppp, debajo del expediente Distrito Abasto, con liga al tablero; (2) yodesarrollo-board/brokers.html (Master Developer / Master Brokers): una liga en la cabecera junto a «Presentaciones», con la clase existente .presentation-entry. Sólo HTML, sin CSS/JS nuevos ni cambios de versión, sin datos privados. Cada repo fija su atlas a la revisión que contiene esta propuesta.",
+      "tests": [
+        "potenciales-yod: node --test tests/ppp-distrito-abasto.test.cjs y git diff --check; verificar-impacto contra el atlas fijado.",
+        "yodesarrollo-board: git diff --check; verificar-impacto contra el atlas fijado.",
+        "Render real (Playwright) de la portada PPP y de brokers.html con la liga visible; la liga abre https://yodesarrollomx.github.io/yod-portal/mercado/hermosillo-2020-2030/."
+      ],
+      "deployment": "Al fusionar cada PR, Pages publica la portada de PPP y la de Master Developer con la liga. Reversión: revertir cada merge; no hay backend ni datos."
     }
   ],
   "data_contracts": [

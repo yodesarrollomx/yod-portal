@@ -11,10 +11,13 @@ import csv, os, re, sys
 from collections import Counter, defaultdict
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FRENTES = ["oferta", "demanda", "precios-financiamiento", "integracion"]
+FRENTES_BASE = ["oferta", "demanda", "precios-financiamiento", "integracion"]
+# Fase 2: cada chunk entrega en 01_base/f2-<chunk>/series.csv; se descubren solos (orden alfabético).
+_f2 = sorted(d for d in os.listdir(os.path.join(RAIZ, "01_base")) if d.startswith("f2-") and os.path.exists(os.path.join(RAIZ, "01_base", d, "series.csv")))
+FRENTES = FRENTES_BASE + _f2
 COLS = ["serie_id","variable","unidad","geografia","segmento","periodo","valor",
         "fuente_id","url","localizador","fecha_corte","fecha_consulta","calidad","nota"]
-CALIDADES = {"observado","declarado","prensa","estimado","por verificar"}
+CALIDADES = {"observado","declarado","prensa","estimado","por verificar","supuesto"}
 GEOS = {"municipio Hermosillo","ciudad Hermosillo (ENOE)","ZM Hermosillo","Sonora","nacional"}
 PERIODO = re.compile(r"^\d{4}(-(0[1-9]|1[0-2])|-Q[1-4])?$")
 

@@ -17,13 +17,19 @@ def num(v):
     except ValueError: return None
 for r in rows: r["valor_num"] = num(r["valor"])
 
+# Precondición de Astra (criterios-fase2.md, C11): series multi-geografía, multi-unidad, claves prog-* duplicadas y la suma heredada
+# de programas NO se leen. Cualquier intento aborta.
+VETADAS = re.compile(r"^(precio-shf-var-|precio-shf-medi.*-mxn$|canadevi-hermosillo-escrituradas-anual$|prog-|cartera-)|derrama")  # cartera-*: superada por f2-c03/f2-c04 cartera.csv (R-C03-6)
+
 def get(frente, sid, periodo, segmento=None):
+    assert not VETADAS.search(sid), f"serie vetada por la auditoría: {sid}"
     for r in rows:
         if r["frente"] == frente and r["serie_id"] == sid and r["periodo"] == periodo and (segmento is None or r["segmento"] == segmento):
             return r
     return None
 
 def serie(frente, sid, segmento=None, geografia=None):
+    assert not VETADAS.search(sid), f"serie vetada por la auditoría: {sid}"
     out = [r for r in rows if r["frente"] == frente and r["serie_id"] == sid and (segmento is None or r["segmento"] == segmento) and (geografia is None or r["geografia"] == geografia)]
     return sorted(out, key=lambda r: r["periodo"])
 
@@ -36,14 +42,23 @@ def pack(r, formula=None):
     return d
 
 ANIOS = ["2020", "2021", "2022", "2023", "2024", "2025"]
-# Deflactor: INPC nacional dic–dic (frente precios), factor acumulado con 2020 = 1
+# Deflactor (criterios-fase2 §2.2): INPC nacional PROMEDIO ANUAL (C07), precios de 2025: P_real = P × INPC̄_2025 / INPC̄_t.
+# Si C07 aún no entrega el promedio anual, se usa el dic–dic de la Fase 1 rotulado «provisional».
+inpc_prom = {r["periodo"]: r for r in rows if r["serie_id"] == "f2-inpc-promedio-anual" and r["valor_num"] is not None and re.fullmatch(r"\d{4}", r["periodo"])}
+DEFLACTOR_OK = all(str(y) in inpc_prom for y in range(2020, 2026))
 infl = {r["periodo"]: r for r in serie("precios-financiamiento", "inflacion-nacional-dic-dic")}
 def factor_precios(a):
+    """Divide el índice nominal entre este factor para pasarlo a precios de 2025."""
+    a = int(a)
+    if DEFLACTOR_OK:
+        return inpc_prom[str(a)]["valor_num"] / inpc_prom["2025"]["valor_num"]
     f = 1.0
-    for y in range(2021, int(a) + 1):
+    for y in range(a + 1, 2026):
         r = infl.get(str(y))
-        if r and r["valor_num"] is not None: f *= (1 + r["valor_num"] / 100)
+        if r and r["valor_num"] is not None: f /= (1 + r["valor_num"] / 100)
     return f
+DEFL_TXT = ("índice SHF nominal × INPC promedio anual 2025 ÷ INPC promedio anual del año (INEGI, C07): precios de 2025" if DEFLACTOR_OK
+            else "PROVISIONAL: índice nominal ÷ inflación dic–dic acumulada hasta 2025 (falta el INPC promedio anual de C07)")
 eq = {}
 for a in ANIOS:
     inf = get("demanda", "creditos-infonavit-nueva", a); fov = get("demanda", "creditos-fovissste-nueva", a); cnbv = get("demanda", "creditos-cnbv-nueva", a)
@@ -66,9 +81,9 @@ for a in ANIOS:
               "cubo": pack(cubo, "cubo SNIIV Financiamientos, destino vivienda nueva, todos los organismos (incluye CONAVI y Banjército)"),
               "componentes": {"infonavit_acciones": pack(inf), "infonavit_viviendas": pack(viv_inf), "fovissste": pack(fov), "cnbv": pack(cnbv), "conavi": pack(conavi),
                                "tipo": {k: pack(v) for k, v in tipo.items() if v}, "esquemas_banco": {k: pack(v) for k, v in esq.items() if v}}},
-        "P": {"base": pack(p_idx, "promedio anual del índice SHF de precios de la vivienda, Hermosillo (2018=100)"),
-              "real": {"valor": round(p_idx["valor_num"] / fp, 2) if p_idx else None, "calidad": "estimado", "unidad": "índice 2018=100, pesos de 2020",
-                       "formula": "índice SHF nominal ÷ factor acumulado del INPC nacional dic–dic desde 2020 (2020 = 1)", "factor": round(fp, 4),
+        "P": {"base": pack(p_idx, "promedio anual del índice SHF de precios de la vivienda, Hermosillo (2017=100)"),
+              "real": {"valor": round(p_idx["valor_num"] / fp, 2) if p_idx else None, "calidad": "estimado", "unidad": "índice 2017=100, precios de 2025",
+                       "formula": DEFL_TXT, "factor": round(fp, 6), "deflactor_definitivo": DEFLACTOR_OK,
                        "nombre": "Índice SHF Hermosillo en términos reales"},
               "credito_promedio_infonavit": {"valor": round(p_cred) if p_cred else None, "calidad": "estimado", "formula": "monto total INFONAVIT vivienda nueva ÷ acciones (contexto, no es precio)",
                                              "unidad": "MXN por crédito"}},
@@ -91,7 +106,8 @@ fov25p, _ = suma_mensual("demanda", "creditos-fovissste-nueva-mensual", 2025, me
 cnbv25p, _ = suma_mensual("demanda", "creditos-cnbv-nueva-mensual", 2025, meses)
 p26 = get("integracion", "p-shf-indice-hermosillo-anual", "2026-Q2")
 p26q1 = get("integracion", "shf-indice-hermosillo", "2026-Q1"); p26q2 = get("integracion", "shf-indice-hermosillo", "2026-Q2")
-fp26 = factor_precios("2025")
+CIERRE = os.path.join(RAIZ, "02_cruces", "cierre2026.json")
+cierre = json.load(open(CIERRE, encoding="utf-8")) if os.path.exists(CIERRE) else None
 eq["2026"] = {
     "anio": 2026, "estado": "al corte", "corte": "2026-07-31", "meses": "enero–julio",
     "Q": {"base": pack(q26, "viviendas financiadas deduplicadas, ene–jul 2026"),
@@ -102,7 +118,10 @@ eq["2026"] = {
           "componentes": {"infonavit_acciones": {"valor": inf26}, "fovissste": {"valor": fov26}, "cnbv": {"valor": cnbv26}}},
     "P": {"base": pack(p26, "promedio de Q1 y Q2 2026 del índice SHF Hermosillo (al corte)"),
           "q1": pack(p26q1), "q2": pack(p26q2),
-          "real": {"valor": round(p26["valor_num"] / fp26, 2) if p26 else None, "calidad": "estimado", "formula": "índice nominal ÷ factor INPC acumulado a 2025 (la inflación de 2026 aún no se aplica)", "factor": round(fp26, 4)}},
+          "real": ({"valor": round(p26["valor_num"] * cierre["inpc"]["factor_a_precios_2025"], 2), "calidad": "estimado", "unidad": "índice 2017=100, precios de 2025",
+                    "formula": "promedio ene–jun 2026 × INPC̄ 2025 ÷ INPC̄ 2026 estimado (cierre2026.json)", "factor": cierre["inpc"]["factor_a_precios_2025"]}
+                   if cierre and cierre.get("P_real") else None)},
+    "cierre": cierre,
 }
 
 # Oferta por año
@@ -129,12 +148,10 @@ despl = {
     "inflacion_nacional_dic_dic": pk_list("precios-financiamiento", "inflacion-nacional-dic-dic"),
     "inflacion_hermosillo_dic_dic": pk_list("precios-financiamiento", "inflacion-hermosillo-dic-dic"),
     "infonavit_monto_max": pk_list("precios-financiamiento", "infonavit-monto-max-credito"),
-    "shf_var_anual_hermosillo": pk_list("precios-financiamiento", "precio-shf-var-acum-anual", None, "municipio Hermosillo") + pk_list("precios-financiamiento", "precio-shf-var-4t-anual", None, "municipio Hermosillo"),
     "shf_indice_hermosillo_trimestral": pk_list("integracion", "shf-indice-hermosillo"),
     "shf_indice_sonora_trimestral": pk_list("integracion", "shf-indice-sonora"),
     "viviendas_infonavit_dedup": pk_list("integracion", "viviendas-infonavit-nueva-dedup"),
     "q_dedup": pk_list("integracion", "q-viviendas-financiadas-nueva-dedup"),
-    "shf_precio_medio_sonora": pk_list("precios-financiamiento", "precio-shf-medio-mxn", None, "Sonora"),
     "costo_construccion_ceico_hermosillo": pk_list("oferta", "costo-ceico-hermosillo-total"),
     "empleo_imss_hermosillo": pk_list("demanda", "empleo-imss-hermosillo-stock"),
     "remesas_hermosillo_anual": pk_list("demanda", "remesas-hermosillo-anual"),
@@ -143,14 +160,52 @@ despl = {
     "creditos_usada_infonavit": pk_list("demanda", "creditos-infonavit-usada"),
     "escrituras_canadevi": pk_list("oferta", "escrit-canadevi-nueva") + pk_list("oferta", "escrit-canadevi-nueva-acum-ene-jun"),
     "hcv_produccion_declarada": pk_list("oferta", "prod-hcv-canadevi"),
-    "programas_hermosillo": pk_list("precios-financiamiento", "prog-hermosillo-viviendas") + pk_list("precios-financiamiento", "prog-sello-h-hermosillo") + pk_list("precios-financiamiento", "prog-canadevi-plan-privado") + pk_list("oferta", "cartera-suma-programas-hermosillo"),
     "itaee_sonora": pk_list("precios-financiamiento", "macro-itaee-sonora-4t"),
+    # Fase 2
+    "inventario_terminado_proxy": pk_list("f2-c02-inventario", "f2-inv-terminado-proxy"),
+    "inventario_meses_ventas_ruv": pk_list("f2-c02-inventario", "f2-inv-terminado-proxy-meses-ventas-ruv12"),
+    "tuberia_12m_sin_dtu": pk_list("f2-c01-pipeline", "f2-pipeline-registradas-12m-sin-dtu"),
+    "rezago_registro_dtu": pk_list("f2-c01-pipeline", "f2-rezago-registro-dtu-meses"),
 }
 
-# Supuestos
-sup = list(csv.DictReader(open(os.path.join(RAIZ, "02_cruces", "supuestos.csv"), newline="", encoding="utf-8-sig")))
+# Escenarios (C11), backtest (C10) y cartera por etapa (C03/C04), si existen
+def leer_json(*partes):
+    ruta = os.path.join(RAIZ, *partes)
+    return json.load(open(ruta, encoding="utf-8")) if os.path.exists(ruta) else None
+escenarios = leer_json("02_cruces", "escenarios.json")
+backtest = None
+_bt = leer_json("01_base", "f2-c10-backtest", "resultados.json")
+if _bt:
+    tabla = []
+    for k, r in sorted(((_bt.get("metricas") or {}).get("A") or {}).get("por_anio", {}).items()):
+        serie, anio_bt = k.rsplit("_", 1)
+        tabla.append({"Serie": "Viviendas (Q)" if serie == "Q" else "Precio real (P)", "Año": anio_bt, "Observado": r["observado"], "Método (A)": r["proyectado"],
+                      "Error método %": r["error_pct"], "Inercia": r["ingenuo"], "Error inercia %": r["error_pct_ingenuo"], "Dentro del rango": "sí" if r["dentro_banda"] else "no"})
+    frases = re.findall(r"«([^»]+)»", (_bt.get("veredicto_texto") or "").split("R1")[0])
+    backtest = {"veredicto_texto": ("Prueba con información hasta 2023: " + "; ".join(frases) + ".") if frases else "Prueba con información hasta 2023: sin frases de alerta activadas.",
+                "veredicto_completo": _bt.get("veredicto_texto"), "tabla": tabla,
+                "nota_preregistro": "Parámetros fijados antes de correr (01_base/f2-c10-backtest/preregistro.md). Variante A: reglas de escenario con datos ≤ 2023. "
+                                    "Inercia: Q igual a 2023 y P creciendo al promedio real 2021–2023.",
+                # dictamen-C10 §D: el titular va acompañado de estas cinco precisiones (texto del auditor, sin números propios)
+                "precisiones": ["Es una prueba pseudo-fuera de muestra: las elasticidades se fijaron conociendo 2020–2025.",
+                                "Dos años no prueban exactitud.",
+                                "La variante condicional no pudo correrse con datos de Hermosillo (falta el empleo municipal); con aproximaciones no contuvo el precio.",
+                                "La dirección del precio se equivocó en los dos años.",
+                                "A dos años, el rango de viviendas es muy ancho: contener el dato no es acertar."],
+                "fuente": "01_base/f2-c10-backtest/resultados.json"}
+cartera = []
+for ch in ("f2-c03-cartera-publica", "f2-c04-cartera-privada"):
+    ruta = os.path.join(RAIZ, "01_base", ch, "cartera.csv")
+    if os.path.exists(ruta):
+        for r in csv.DictReader(open(ruta, newline="", encoding="utf-8-sig")):
+            r["chunk"] = ch
+            cartera.append(r)
+
+# Supuestos (C09 manda cuando existe)
+SUP_C09 = os.path.join(RAIZ, "01_base", "f2-c09-supuestos", "supuestos.csv")
+sup = list(csv.DictReader(open(SUP_C09 if os.path.exists(SUP_C09) else os.path.join(RAIZ, "02_cruces", "supuestos.csv"), newline="", encoding="utf-8-sig")))
 for s in sup:
-    for k in ("base", "minimo", "maximo"): s[k] = float(s[k])
+    for k in ("base", "minimo", "maximo"): s[k] = float(s[k]) if s.get(k) not in (None, "") else None
 
 # Fuentes citadas (dedup por url)
 fuentes = {}
@@ -162,20 +217,21 @@ def add_f(d):
         for v in d.values(): add_f(v)
     elif isinstance(d, list):
         for v in d: add_f(v)
-add_f(eq); add_f(of); add_f(despl)
+add_f(eq); add_f(of); add_f(despl); add_f(cartera)
 
 # Conteos de calidad
 from collections import Counter
 cal = Counter(r["calidad"] for r in rows)
 
 data = {
-    "meta": {"titulo": "Hermosillo 2020–2030 · Oferta y demanda de vivienda nueva", "version": "v2 · 2026-11-01",
-             "estado_auditoria": "Fase 1 auditada (dictamen 1-nov-2026): oferta y demanda aprobadas en básico; precios reentregado por el integrador con el índice SHF oficial (API SNIIV). Q deduplicada (dos créditos = una vivienda) y P = índice SHF Hermosillo; correcciones R1–R6 aplicadas; pendientes R7–R12 (IMSS histórico, cartera por etapa, HBT). Escenarios 2027–2030: Fase 2.",
+    "meta": {"titulo": "Hermosillo 2020–2030 · Oferta y demanda de vivienda nueva", "version": "v3 · 2026-11-01",
+             "estado_auditoria": ("Fase 2 en curso: cierre estimado 2026 y escenarios 2027–2030 con supuestos auditados por chunk (04_auditoria/). " if escenarios else "Fase 2 en curso: cierre estimado 2026 publicado; escenarios 2027–2030 en auditoría. ") + "Precio real a precios de 2025 (INPC promedio anual); índice SHF base 2017 = 100.",
              "alcance": "Vivienda nueva formal, municipio de Hermosillo (clave 26/030). Usada y renta fuera del diagrama.",
              "corte_sniiv": "2026-07-31", "fecha_consulta": "2026-11-01", "filas_base": len(rows), "calidad": dict(cal),
-             "ejes": {"P": "Índice SHF de precios de la vivienda, Hermosillo, promedio anual, 2018=100 (toda la vivienda con avalúo; nominal, con opción real deflactada por INPC nacional)", "Q": "Viviendas nuevas financiadas en el municipio por año: INFONAVIT (deduplicando Conyugal y Unamos Créditos: dos créditos, una vivienda; y descontando esquemas con banco) + FOVISSSTE + banca CNBV. Rango hasta la suma simple de acciones."},
+             "ejes": {"P": "Índice SHF de precios de la vivienda, Hermosillo, promedio anual, 2017=100 (toda la vivienda con avalúo, nueva y usada). Real: precios de 2025 con INPC nacional promedio anual; nominal como referencia histórica.", "Q": "Viviendas nuevas financiadas en el municipio por año: INFONAVIT (deduplicando Conyugal y Unamos Créditos: dos créditos, una vivienda; y descontando esquemas con banco) + FOVISSSTE + banca CNBV. Rango hasta la suma simple de acciones."},
              "metodo": "Curvas de elasticidad constante que pasan por el punto observado (P_t, Q_t): Q_D = Q_t·(P/P_t)^(−e_d), Q_S = Q_t·(P/P_t)^(e_s). Las pendientes (e_d, e_s) son SUPUESTO ajustable, no dato. Ver 04_auditoria/metodo-curvas.md."},
     "equilibrio": eq, "oferta": of, "desplazadores": despl, "supuestos": sup, "fuentes": sorted(fuentes.values(), key=lambda f: -f["n"]),
+    "escenarios": escenarios, "backtest": backtest, "cartera": cartera,
 }
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 json.dump(data, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)

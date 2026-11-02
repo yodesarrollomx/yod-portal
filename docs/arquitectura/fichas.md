@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-01.mercado-menu.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-01.mercado-f2.2 · 2026-10-20.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -1150,10 +1150,10 @@ Reservar efectos antes de Gmail y conciliar resultados inciertos sin repetir env
 
 ## SYS-MERCADO · Mercado Hermosillo 2020–2030
 
-Diagrama de oferta y demanda de vivienda nueva del municipio de Hermosillo por año (2020–2026 observado, 2027–2030 escenarios pendientes), con cada cifra rastreable a su fuente y la pendiente de las curvas declarada como supuesto
+Diagrama de oferta y demanda de vivienda nueva del municipio de Hermosillo por año (2020–2025 observado, 2026 cierre estimado con rango, 2027–2030 escenarios condicionados a supuestos con cruces de precio), con cada cifra rastreable a su fuente y la pendiente de las curvas declarada como supuesto
 
 - Tipo: tablero. Dominio: Mercado. Responsable: Dirección.
-- Evidencia: codigo. Producción: Tablero estático publicado en Pages por PR #339 (merge 9a1c8e5); entra al menú de YOD OS bajo PPP con código MH y marco shell.js (este cambio). Fase 1: base 2020–2026 con eje de precio provisional (crédito promedio, no precio de vivienda); dictamen de cifras y escenarios 2027–2030 pendientes..
+- Evidencia: codigo. Producción: Tablero estático en Pages, en el menú de YOD OS bajo PPP (código MH, marco shell.js). Fase 2 (CHG-MERCADO-HMO-F2-20261101): P = índice SHF Hermosillo base 2017=100, real a precios de 2025 (INPC promedio anual); cierre 2026 estimado; escenarios 2027–2030 del motor base/motor/escenarios.py con supuestos de base/fase2/f2-c09-supuestos; cada chunk con dictamen independiente en auditoria/..
 - Entidades: serie, fuente, equilibrio, supuesto.
 - Fuente de verdad: mercado/hermosillo-2020-2030/base/series-integradas.csv (fuentes públicas: SNIIV/SEDATU, INEGI, Banxico, SHF, CANADEVI/prensa); sin hojas privadas.
 - Evidencia: [yod-portal/mercado/hermosillo-2020-2030/index.html](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/mercado/hermosillo-2020-2030/index.html) — Tablero estático: curvas de elasticidad constante ancladas al punto observado (P_t, Q_t) por año, lee data.json por fetch; [yod-portal/mercado/hermosillo-2020-2030/base/series-integradas.csv](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/mercado/hermosillo-2020-2030/base/series-integradas.csv) — Base de 1,331 valores con fuente, URL, localizador, corte y calidad (contrato en base/CONTRATO.md); muestreo independiente 26/26 coincidencias en auditoria/; Encargo de Dirección 1-nov-2026 (Buzón Claude ↔ ChatGPT fila 505, ID CG-HMO-OFERTA-DEMANDA-20261101): publicar el HTML en GitHub de Yodesarrollo para cruzar datos después y enlazarlo bajo Plan de Potencial; el enlace en el menú se registra como propuesta aparte (código de acceso y Control Maestro); [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js) — Sistema presente en el catálogo canónico, debajo de SYS-POTENCIALES, con código MH y destino en este repo.

@@ -12,7 +12,7 @@ rows = []
 def add(sid, var, unidad, geo, seg, per, val, fid, url, loc, corte, cal, nota):
     rows.append(dict(serie_id=sid, variable=var, unidad=unidad, geografia=geo, segmento=seg, periodo=per, valor=val, fuente_id=fid, url=url, localizador=loc, fecha_corte=corte, fecha_consulta=HOY, calidad=cal, nota=nota))
 
-# ── 1. Índice SHF de precios de la vivienda, niveles trimestrales (base 2018=100), API ShfPriceAPI del SNIIV ──
+# ── 1. Índice SHF de precios de la vivienda, niveles trimestrales (base 2017=100), API ShfPriceAPI del SNIIV ──
 SHF_URL = "https://sniiv.sedatu.gob.mx/api/ShfPriceAPI/GetTerritorialVariation?baseYear={y1}&baseQuarter={q1}&finalYear={y2}&finalQuarter={q2}"
 # (año, trimestre, Hermosillo, Sonora) leídos por pares base→final; cada par devuelve initialValue y finalValue
 shf = {
@@ -25,7 +25,7 @@ shf = {
  (2025,1):(191.74,188.03),(2025,2):(197.11,193.55),(2025,3):(201.14,197.81),(2025,4):(203.73,200.57),
  (2026,1):(209.36,206.10),(2026,2):(214.71,211.35),
 }
-NOTA_SHF = ("Índice SHF de Precios de la Vivienda (SHF), nivel trimestral, año base 2018=100, tal como lo sirve el API ShfPriceAPI "
+NOTA_SHF = ("Índice SHF de Precios de la Vivienda (SHF), nivel trimestral, año base 2017=100 (promedio de 2017 = 100.00 verificado en los datos de Hermosillo, Sonora y nacional por la auditoría, dictamen-C08; la página del SNIIV indica como año base 2018, lo que sus propios datos contradicen), tal como lo sirve el API ShfPriceAPI "
             "del SNIIV (página Inicio/Precios_de_vivienda). Vigencia actual del índice: la SHF revisa trimestres previos, por eso las "
             "variaciones derivadas pueden diferir en décimas de los boletines de la época. Cada llamada base→final devuelve initialValue "
             "(trimestre base) y finalValue (trimestre final). Cubre toda la vivienda con avalúo (nueva y usada): no hay desglose nueva/usada por municipio.")
@@ -34,13 +34,13 @@ for (y,q),(h,s) in sorted(shf.items()):
     q1, q2 = (1,2) if q in (1,2) else (3,4)
     url = SHF_URL.format(y1=y,q1=q1,y2=y,q2=q2)
     campo = "initialValue" if q==q1 else "finalValue"
-    add("shf-indice-hermosillo","Índice SHF de precios de la vivienda · Hermosillo (nivel)","índice 2018=100","municipio Hermosillo","total",f"{y}-Q{q}",h,"INT-01",url,f"objeto municipalities con stateCode='26' y municipalityCode='030', campo '{campo}'","2026-Q2","observado",NOTA_SHF)
-    add("shf-indice-sonora","Índice SHF de precios de la vivienda · Sonora (nivel)","índice 2018=100","Sonora","total",f"{y}-Q{q}",s,"INT-01",url,f"objeto states con stateCode='26', campo '{campo}'","2026-Q2","observado",NOTA_SHF)
+    add("shf-indice-hermosillo","Índice SHF de precios de la vivienda · Hermosillo (nivel)","índice 2017=100","municipio Hermosillo","total",f"{y}-Q{q}",h,"INT-01",url,f"objeto municipalities con stateCode='26' y municipalityCode='030', campo '{campo}'","2026-Q2","observado",NOTA_SHF)
+    add("shf-indice-sonora","Índice SHF de precios de la vivienda · Sonora (nivel)","índice 2017=100","Sonora","total",f"{y}-Q{q}",s,"INT-01",url,f"objeto states con stateCode='26', campo '{campo}'","2026-Q2","observado",NOTA_SHF)
 # promedio anual (P del diagrama)
 for y in range(2019, 2026):
     vals=[shf[(y,q)][0] for q in (1,2,3,4)]
-    add("p-shf-indice-hermosillo-anual","Índice SHF Hermosillo · promedio anual (P del diagrama)","índice 2018=100","municipio Hermosillo","total",str(y),round(sum(vals)/4,2),"INT-01",SHF_URL.format(y1=y,q1=1,y2=y,q2=4),"promedio simple de los cuatro trimestres de shf-indice-hermosillo","2026-Q2","estimado","Promedio simple de Q1–Q4 del nivel trimestral observado. Es el eje de precio del diagrama: índice de precios a calidad constante (SHF), nominal; el tablero ofrece deflactarlo con INPC nacional.")
-add("p-shf-indice-hermosillo-anual","Índice SHF Hermosillo · promedio ene–jun (al corte)","índice 2018=100","municipio Hermosillo","total","2026-Q2",round((shf[(2026,1)][0]+shf[(2026,2)][0])/2,2),"INT-01",SHF_URL.format(y1=2026,q1=1,y2=2026,q2=2),"promedio simple de Q1 y Q2 2026","2026-Q2","estimado","Promedio de los dos trimestres disponibles de 2026: NO es cierre anual.")
+    add("p-shf-indice-hermosillo-anual","Índice SHF Hermosillo · promedio anual (P del diagrama)","índice 2017=100","municipio Hermosillo","total",str(y),round(sum(vals)/4,2),"INT-01",SHF_URL.format(y1=y,q1=1,y2=y,q2=4),"promedio simple de los cuatro trimestres de shf-indice-hermosillo","2026-Q2","estimado","Promedio simple de Q1–Q4 del nivel trimestral observado. Es el eje de precio del diagrama: índice de precios a calidad constante (SHF), nominal; el tablero ofrece deflactarlo con INPC nacional.")
+add("p-shf-indice-hermosillo-anual","Índice SHF Hermosillo · promedio ene–jun (al corte)","índice 2017=100","municipio Hermosillo","total","2026-Q2",round((shf[(2026,1)][0]+shf[(2026,2)][0])/2,2),"INT-01",SHF_URL.format(y1=2026,q1=1,y2=2026,q2=2),"promedio simple de Q1 y Q2 2026","2026-Q2","estimado","Promedio de los dos trimestres disponibles de 2026: NO es cierre anual.")
 
 # ── 2. INFONAVIT vivienda nueva por tipo de crédito (acciones), anual ──
 TIPO_URL = "https://sniiv.sedatu.gob.mx/api/CuboAPI/GetInfonavit/2020,2026/26/030/anio,tipo_credito,modalidad"

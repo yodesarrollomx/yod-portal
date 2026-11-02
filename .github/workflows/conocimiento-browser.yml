@@ -33,7 +33,7 @@ jobs:
           node-version: '20'
       - name: Accesos del PPP previsto
         env:
-          ACCESOS_REF: eff67c2dccfb762ca52365255945daefee678861
+          ACCESOS_REF: 3558576f87c66452929c731fa0941fc86f3d3dfd
         run: node verify-accesos.cjs
       - name: Preparar Chromium aislado
         run: |

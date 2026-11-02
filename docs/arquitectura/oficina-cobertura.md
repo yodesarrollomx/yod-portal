@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-01.mercado-menu.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-01.mercado-f2.2
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -1180,13 +1180,13 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 ### Mercado Hermosillo 2020–2030 · SYS-MERCADO
 
-**Función:** Diagrama de oferta y demanda de vivienda nueva del municipio de Hermosillo por año (2020–2026 observado, 2027–2030 escenarios pendientes), con cada cifra rastreable a su fuente y la pendiente de las curvas declarada como supuesto
+**Función:** Diagrama de oferta y demanda de vivienda nueva del municipio de Hermosillo por año (2020–2025 observado, 2026 cierre estimado con rango, 2027–2030 escenarios condicionados a supuestos con cruces de precio), con cada cifra rastreable a su fuente y la pendiente de las curvas declarada como supuesto
 
 **Fuente oficial:** mercado/hermosillo-2020-2030/base/series-integradas.csv (fuentes públicas: SNIIV/SEDATU, INEGI, Banxico, SHF, CANADEVI/prensa); sin hojas privadas
 
 **Responsable operativo:** Dirección
 
-**Estado registrado:** codigo. Tablero estático publicado en Pages por PR \#339 (merge 9a1c8e5); entra al menú de YOD OS bajo PPP con código MH y marco shell.js (este cambio). Fase 1: base 2020–2026 con eje de precio provisional (crédito promedio, no precio de vivienda); dictamen de cifras y escenarios 2027–2030 pendientes.
+**Estado registrado:** codigo. Tablero estático en Pages, en el menú de YOD OS bajo PPP (código MH, marco shell.js). Fase 2 (CHG-MERCADO-HMO-F2-20261101): P = índice SHF Hermosillo base 2017=100, real a precios de 2025 (INPC promedio anual); cierre 2026 estimado; escenarios 2027–2030 del motor base/motor/escenarios.py con supuestos de base/fase2/f2-c09-supuestos; cada chunk con dictamen independiente en auditoria/.
 
 **Conexiones registradas; no habilitan operaciones:**
 

@@ -1,28 +1,22 @@
 {
-  "model_revision": "2026-11-01.mercado-menu.1",
-  "proposal_id": "CHG-MERCADO-MENU-20261101",
-  "summary": "Mercado Hermosillo entra al menú de YOD OS debajo de PPP: SYS-MERCADO en os/catalogo.js (código MH, icono chart-line, destino en este repo), copias regeneradas, allowlist portal-core, fila de respaldo, CODIGOS-BOARDS, etiqueta propia 20261101-mercado-hmo, la página carga portero.js+shell.js, y mercado/ entra al alcance de versiones.cjs. Tercera tabla (potenciales-yod/accesos.html) en PR coordinado. ID renombrado SYS-MERCADO-HMO → SYS-MERCADO (alias).",
+  "model_revision": "2026-11-01.mercado-f2.2",
+  "proposal_id": "CHG-MERCADO-HMO-F2-20261101",
+  "summary": "Fase 2 de Mercado Hermosillo (sólo mercado/hermosillo-2020-2030/): P real por omisión (INPC promedio anual, base SHF 2017=100), cierre 2026 estimado con rango, escenarios 2027–2030 con cruces de precio y techo de absorción, prueba del método preregistrada, cartera por etapa, base/fase2 + base/motor + dictámenes por chunk. Incluye los commits del PR #341 (estilo del marco y ACCESOS_REF del workflow Conocimiento del Despacho).",
   "components": [
-    "GAS-CATALOGO",
-    "GAS-PORTERO",
-    "SYS-CONTROL",
-    "SYS-DESPACHO",
     "SYS-MERCADO",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
-    "SYS-POTENCIALES",
-    "SYS-TRACK",
-    "SYS-YOD-OS"
+    "SYS-YOD-OS",
+    "SYS-DESPACHO",
+    "SYS-DESPACHO-3D",
+    "SYS-POTENCIALES"
   ],
   "tests": [
-    "node scripts/catalogo.cjs --check",
+    "python3 -I mercado/hermosillo-2020-2030/base/motor/tests/test_escenarios.py",
     "node verify-os.cjs",
     "node verify-portal.cjs",
+    "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
     "node scripts/versiones.cjs --check",
-    "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node verify-accesos.cjs (tras el merge coordinado de potenciales-yod)"
+    "node scripts/arquitectura.cjs --check"
   ],
-  "rollback": "Revertir este merge y el de potenciales-yod; sin backend ni datos."
+  "rollback": "Revertir el merge del PR: la carpeta vuelve a la v2; no hay backend, datos privados ni cambios en os/."
 }

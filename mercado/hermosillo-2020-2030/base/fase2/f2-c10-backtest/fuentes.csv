@@ -1,0 +1,2 @@
+fuente_id,nombre,organismo,nivel,url,tipo,cobertura,periodicidad,acceso,fecha_consulta,estado,limite
+F2C10-01,Backtest C10 (cálculo propio sobre series del proyecto),Terra-8 / estudio Hermosillo 2020-2030,sectorial,01_base/f2-c10-backtest/backtest.py,cubo,municipio Hermosillo (Q y P real); proxies Sonora y nacionales rotulados,anual,abierto,2026-11-01,extraída,"Calidad estimado: cálculo propio sobre series-integradas.csv y C01/C05/C07 a su corte; pseudo-fuera de muestra (vintage actual); dos años no prueban exactitud"
