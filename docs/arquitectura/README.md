@@ -106,3 +106,5 @@ La auditoría no se considera completa mientras existan componentes críticos o 
 - [Chinches · reloj del inicio del trazo](chinches-reloj-trazo.md): corrección focal y patch1.1.1, con validación estricta y borradores conservados.
 
 - [EMD · contratos de guardado, versión e interacción](emd-contratos-20261102.md): propuesta compatible, pruebas sintéticas, publicación y recuperación acreditadas por separado.
+
+- [EMD · dashboard y mejora continua](emd-mejora-continua-20261103.md): administración por capacidades, campañas aisladas, acciones persistentes y política de resultados versionada, inicialmente sin activar.

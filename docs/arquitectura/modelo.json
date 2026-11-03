@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-02.emd-contratos.1",
+  "revision": "2026-11-03.emd-mejora-continua.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -3827,8 +3827,13 @@
       "status": "pendiente",
       "runtime_verified": false,
       "restricted_evidence_omitted": true,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. Propuesta CHG-EMD-CONTRATOS-20261102: CTR-EMD-WRITE-RECEIPT y CTR-EMD-INSTRUMENT-VERSION; sin migración ni reinterpretación de datos históricos.",
-      "contract_ids": []
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. Propuesta CHG-EMD-CONTRATOS-20261102: CTR-EMD-WRITE-RECEIPT y CTR-EMD-INSTRUMENT-VERSION; sin migración ni reinterpretación de datos históricos. Propuesta CHG-EMD-MEJORA-CONTINUA-20261103: dashboard operativo, administración con capacidades explícitas, acciones persistentes y política de resultados versionada; sin activación implícita ni cálculo sin política.",
+      "contract_ids": [
+        "CTR-EMD-CONTINUOUS-DASHBOARD",
+        "CTR-EMD-CONTINUOUS-ADMIN",
+        "CTR-EMD-IMPROVEMENT-ACTIONS",
+        "CTR-EMD-VERSIONED-RESULTS-POLICY"
+      ]
     },
     {
       "id": "CON-016",
@@ -4198,8 +4203,13 @@
       "status": "pendiente",
       "runtime_verified": false,
       "restricted_evidence_omitted": true,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. Propuesta CHG-EMD-CONTRATOS-20261102: CTR-EMD-WRITE-RECEIPT, CTR-EMD-INSTRUMENT-VERSION, CTR-EMD-RUNTIME-MODE y CTR-EMD-INTERACTION-RECOVERY; implementación y despliegue se acreditan por separado.",
-      "contract_ids": []
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. Propuesta CHG-EMD-CONTRATOS-20261102: CTR-EMD-WRITE-RECEIPT, CTR-EMD-INSTRUMENT-VERSION, CTR-EMD-RUNTIME-MODE y CTR-EMD-INTERACTION-RECOVERY; implementación y despliegue se acreditan por separado. Propuesta CHG-EMD-MEJORA-CONTINUA-20261103: dashboard operativo, administración con capacidades explícitas, acciones persistentes y política de resultados versionada; sin activación implícita ni cálculo sin política.",
+      "contract_ids": [
+        "CTR-EMD-CONTINUOUS-DASHBOARD",
+        "CTR-EMD-CONTINUOUS-ADMIN",
+        "CTR-EMD-IMPROVEMENT-ACTIONS",
+        "CTR-EMD-VERSIONED-RESULTS-POLICY"
+      ]
     },
     {
       "id": "CON-033",
@@ -5568,9 +5578,10 @@
       "status": "propuesto",
       "runtime_verified": false,
       "restricted_evidence_omitted": true,
-      "contract": "CTR-EMD-DRAFTS: cifrado por enlace vigente, aislamiento de pestañas, confirmación transaccional local y recuperación explícita; el servidor mantiene revisión y cierre. Propuesta CHG-EMD-CONTRATOS-20261102: CTR-EMD-INSTRUMENT-VERSION y CTR-EMD-INTERACTION-RECOVERY complementan compatibilidad y recuperación sin retirar cifrado ni consentimiento.",
+      "contract": "CTR-EMD-DRAFTS: cifrado por enlace vigente, aislamiento de pestañas, confirmación transaccional local y recuperación explícita; el servidor mantiene revisión y cierre. Propuesta CHG-EMD-CONTRATOS-20261102: CTR-EMD-INSTRUMENT-VERSION y CTR-EMD-INTERACTION-RECOVERY complementan compatibilidad y recuperación sin retirar cifrado ni consentimiento. CHG-EMD-MEJORA-CONTINUA-20261103 mantiene aislamiento y compatibilidad de cada campaña; el cambio de campaña no reinterpreta ni elimina borradores.",
       "contract_ids": [
-        "CTR-EMD-DRAFTS"
+        "CTR-EMD-DRAFTS",
+        "CTR-EMD-CONTINUOUS-ADMIN"
       ]
     },
     {
@@ -6821,6 +6832,26 @@
       "contract_ids": [
         "CTR-PPP-PRESENTACIONES"
       ]
+    },
+    {
+      "id": "CON-EMD-CONTINUOUS-BACKUP",
+      "from": "GAS-EMD",
+      "to": "EXT-DRIVE",
+      "label": "Propuesta: respaldo privado de administración",
+      "kind": "respaldo",
+      "status": "propuesto",
+      "evidence": [
+        {
+          "claim": "Extensión administrativa propuesta sobre los servicios privados existentes; ejecución no acreditada.",
+          "status": "propuesto"
+        }
+      ],
+      "contract": "CTR-EMD-CONTINUOUS-ADMIN: respaldo privado verificado antes de cambios administrativos; sin creación en lecturas, ampliación de ACL o restauración ciega.",
+      "contract_ids": [
+        "CTR-EMD-CONTINUOUS-ADMIN"
+      ],
+      "runtime_verified": false,
+      "restricted_evidence_omitted": true
     }
   ],
   "processes": [
@@ -8390,6 +8421,99 @@
           "source_revision": "2026-10-31.ppp-presentaciones.1",
           "status": "propuesto",
           "claim": "Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards."
+        }
+      ]
+    },
+    {
+      "id": "PROC-EMD-CONTINUOUS-IMPROVEMENT",
+      "nombre": "Ciclo de evaluación y seguimiento de mejora",
+      "status": "propuesto",
+      "steps": [
+        {
+          "label": "Consultar campaña y cobertura",
+          "role": "Coordinación reviewer",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD"
+          ],
+          "input": "Sesión vigente y campaña seleccionada",
+          "output": "Avance, cobertura y seguimiento confirmados con fecha y denominadores",
+          "mode": "automatico"
+        },
+        {
+          "label": "Preparar personas y campaña",
+          "role": "Actor con capacidad administrativa explícita",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD",
+            "EXT-DRIVE"
+          ],
+          "input": "Cambios revisados, contexto e identidades canónicas",
+          "output": "Vista previa y operación respaldada con recibo o conflicto",
+          "mode": "manual"
+        },
+        {
+          "label": "Responder y confirmar evaluación",
+          "role": "Participante asignado",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD",
+            "STORE-EMD-DRAFTS"
+          ],
+          "input": "Instrumento/campaña compatibles y respuestas propias",
+          "output": "Borrador o confirmación/cierre individual conforme a contratos existentes",
+          "mode": "manual"
+        },
+        {
+          "label": "Revisar y activar política metodológica",
+          "role": "Actor con capacidades separadas de método y activación",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD"
+          ],
+          "input": "Política versionada con universo/corte, audiencia, umbral y tratamiento explícitos",
+          "output": "Versión activada inmutable o borrador pendiente; la configuración inicial permanece vacía",
+          "mode": "manual"
+        },
+        {
+          "label": "Consultar distribuciones elegibles",
+          "role": "Actor autorizado con viewResults",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD"
+          ],
+          "input": "Política activa y datos elegibles de campaña/instrumento compatibles",
+          "output": "Histogramas por ítem o razón de indisponibilidad; NA/ausentes separados",
+          "mode": "automatico"
+        },
+        {
+          "label": "Acordar y seguir acciones",
+          "role": "Gestor autorizado y responsable de su acción",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD"
+          ],
+          "input": "Objetivo y seguimiento aportados con revisión vigente",
+          "output": "Acción y eventos persistentes confirmados, sin inferir cumplimiento",
+          "mode": "manual"
+        }
+      ],
+      "manual_gaps": [
+        "La definición metodológica oficial y su activación no se infieren de la autorización para desarrollar el sistema.",
+        "Capacidades de escritura/resultados se mantienen false hasta configuración explícita del actor autorizado.",
+        "La publicación del código, la versión de Apps Script y la operación con personas se verifican por separado.",
+        "No hay nuevos triggers, cron, invitaciones o automatizaciones creados por este proceso."
+      ],
+      "evidence": [
+        {
+          "claim": "Propuesta previa a implementación; datos, configuración y evidencia operativa privados.",
+          "status": "propuesto"
         }
       ]
     }
@@ -14969,6 +15093,30 @@
         "Checks de cada repositorio y regeneración determinista del atlas; uso con participantes y versión desplegada requieren evidencia adicional."
       ],
       "deployment": "Registro previo a implementación aislada. Integrar atlas mediante PR y fijar su commit en el consumidor antes de integrar o publicar EMD. Respaldar y comparar la fuente/configuración activas, publicar en implementación existente conservando URL y permisos, y registrar versión y comprobación por separado. No activar envíos, alterar datos históricos ni conceder roles. Reversión compatible del código conserva registros, versiones, copias locales y guards vigentes; una versión previa incompatible no es un rollback válido."
+    },
+    {
+      "id": "CHG-EMD-MEJORA-CONTINUA-20261103",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "STORE-EMD-DRAFTS",
+        "EXT-DRIVE",
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
+      ],
+      "proposal": "Ampliar la evaluación privada a un ciclo continuo con dashboard operativo, gestión segura de personas/campañas, acciones persistentes y política de resultados versionada. Conservar los servicios y roles existentes; capacidades explícitas por actor, todas las escrituras y lectura de resultados deshabilitadas por defecto. El motor inicial solo prepara distribuciones por ítem bajo una política activada: no hay método oficial aportado, por lo que la política inicial es un borrador vacío sin activación ni cálculo real. SYS-YOD-OS participa por el atlas documental y SYS-CONTROL solo como consumidor de su catálogo de procesos; sin nuevos monitores o automatizaciones.",
+      "status": "propuesto",
+      "tests": [
+        "Autorización por sesión/actor/capacidad/objeto; participante limitado a sus asignaciones y acciones, sin tablero global o resultados ajenos.",
+        "Aislamiento de campañas, IDs inmutables, transiciones permitidas, compatibilidad de instrumento/borrador y preservación de respuestas históricas.",
+        "Mutaciones idempotentes ligadas al contenido, revisión optimista, errores antes de escritura, respaldo privado y recuperación tras interrupciones.",
+        "Acciones persistentes: propietario autorizado, revisiones, historial, fechas y confirmación; errores/red no fabrican cumplimiento.",
+        "Política vacía no produce resultados; activation separada exige capacidad y versión exactas. distribution_v1: histogramas1–5 por ítem, NA/ausentes separados, audiencia y umbral explícitos.",
+        "Interfaz sintética móvil/escritorio y teclado: tareas claras, estados confirmados, filtros por campaña, errores navegables y lectura sin efectos.",
+        "Checks de ambos repositorios, vistas deterministas y regresiones anteriores. Despliegue y operación con personas requieren evidencia separada."
+      ],
+      "deployment": "Propuesta local previa a implementación, pendiente de revisión de contrato e integración por PR. No publicar app ni activar capacidades, políticas o automatizaciones desde este registro. La entrega privada requiere integrar atlas, fijar su commit, preparar y probar fuentes compatibles, comparar/resguardar la versión activa y actualizar el deployment existente solo con acceso verificado. Rollback de código conserva campañas, personas, acciones, eventos, políticas, respuestas y guards; no restaurar un respaldo encima de cambios posteriores."
     }
   ],
   "data_contracts": [
@@ -17261,6 +17409,133 @@
         "La incertidumbre de una integración se concilia antes de repetir efectos; preservar identificadores y deduplicación existentes.",
         "Ensayos usan dobles o copias aisladas; no crean correos, respuestas, accesos ni movimientos de prueba en producción.",
         "Pruebas automáticas no acreditan comprensión de personas ni uso en dispositivo físico."
+      ]
+    },
+    {
+      "id": "CTR-EMD-CONTINUOUS-DASHBOARD",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD"
+      ],
+      "source": "Propuesta autorizada CHG-EMD-MEJORA-CONTINUA-20261103; diseño y pruebas detalladas en repositorio privado.",
+      "input": [
+        "Sesión reviewer vigente, campaña solicitada y capacidades autorizadas por el servidor",
+        "Registros confirmados de cobertura, estado de captura, acciones y configuración metodológica"
+      ],
+      "output": [
+        "Dashboard operativo con denominadores, campaña y fecha de actualización explícitos",
+        "Estado de política/metodología separado de resultados; sin puntuaciones cuando no existe política activada"
+      ],
+      "invariants": [
+        "La lectura operativa de reviewer no concede facultades de administración o lectura de resultados.",
+        "El participante solo accede a sus evaluaciones y acciones; no al tablero global ni a información ajena.",
+        "Leer no crea campañas, hojas, acciones, métodos, respaldos ni automatizaciones y no altera estados.",
+        "Ningún indicador de avance equivale a resultado360, entrega de invitación, anonimato o mejora causal comprobada.",
+        "Conservar actualización controlada por visibilidad, aislamiento de sesión/campaña y errores accesibles.",
+        "No duplicar rondas, triggers o cron; continuidad del producto no implica una nueva automatización programada.",
+        "DTO operativos acotados y paginados, sin respuestas individuales, tokens, hashes de credenciales o IDs privados; ordenar por ID y vincular cursor a filtros/campaña/revisión. Cambio de revisión invalida la paginación en vez de mezclar cortes.",
+        "La operación distingue configured, checked, unavailable, failed y not_checked con fecha y alcance; configuración presente no acredita lectura, respaldo restaurable o disponibilidad permanente.",
+        "Los eventos históricos ausentes no se reconstruyen desde última actualización ni se convierten en una serie temporal inventada."
+      ]
+    },
+    {
+      "id": "CTR-EMD-CONTINUOUS-ADMIN",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "STORE-EMD-DRAFTS",
+        "EXT-DRIVE"
+      ],
+      "source": "Propuesta autorizada CHG-EMD-MEJORA-CONTINUA-20261103; sin nuevos roles o servicios.",
+      "input": [
+        "Sesión reviewer y capacidades explícitas por actor canónico: managePeople y manageCampaigns",
+        "Comando revisado, revisión esperada, identidad de mutación y contexto de campaña/instrumento"
+      ],
+      "output": [
+        "Persona o campaña confirmada con identidad estable, recibo e historial, o rechazo sin persistencia parcial",
+        "Vista previa/impacto y respaldo privado antes de operaciones que lo requieran"
+      ],
+      "invariants": [
+        "Las capacidades de escritura se resuelven por actor en servidor, son false por defecto y se revalidan en cada operación; rol reviewer por sí solo no las concede.",
+        "No aceptar capacidades ni identidad administrativa declaradas por el cliente. Revocación, inactividad o cambio de sesión invalidan escrituras y callbacks pendientes.",
+        "Campañas usan draft/open/paused/closed/archived con transiciones explícitas; cerrar una evaluación no cierra la campaña. La activación no se infiere de crear o guardar un borrador.",
+        "Campaña y EVAL_ID son inmutables y conservan su procedencia; nueva campaña no recicla ni reetiqueta respuestas, asignaciones o borradores históricos.",
+        "Personas conservan identificadores canónicos y referencias; no inventar integrantes, fusionar identidades por semejanza, borrar historia o emitir accesos automáticamente.",
+        "Mantener autorización por objeto, bloqueo, revisión, vínculo mutación/contenido y compatibilidad del instrumento en cada escritura.",
+        "Respaldo e historial permanecen privados; nuevas columnas o tablas son aditivas y no se crean durante consultas. Validar antes de escribir y documentar recuperación.",
+        "Conservar permisos de archivos, scopes, endpoints y contratos de invitación: esta ampliación no autoriza correos ni nuevas credenciales.",
+        "Campañas legadas se descubren como no gestionadas, sin crear registros o fechas al leer. Su adopción y estado requieren una operación explícita.",
+        "Campaña paused/closed/archived bloquea nuevas mutaciones de respuesta, pero permite recuperar el recibo exacto ya confirmado mientras el permiso siga vigente.",
+        "Cerrar una campaña requiere vista previa, incidencias y confirmación: fijar/verificar manifiesto privado del corte antes de confirmar closed. Pendientes aceptados explícitamente permanecen identificados y no se rellenan.",
+        "Cruces explícitos usan planHash y revisión de campaña; aplicar valida de nuevo, respalda y confirma sólo tras readback. Una operación multihoja parcial conserva plan/recibo y se reanuda por ID, sin afirmar atomicidad ni restaurar encima de trabajo posterior.",
+        "Alta de persona, asignación, acceso e invitación son operaciones distintas; alta permite persona sin cruces. Corrección de identidad o nombre existente requiere impacto explícito, sin reescribir etiquetas históricas.",
+        "Identidades QA no acceden a entidades reales mediante estos RPC; se rechazan o se usa un almacén QA completamente aislado."
+      ]
+    },
+    {
+      "id": "CTR-EMD-IMPROVEMENT-ACTIONS",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD"
+      ],
+      "source": "Propuesta autorizada CHG-EMD-MEJORA-CONTINUA-20261103; acciones de mejora persistentes, sin inferencias automáticas de desempeño.",
+      "input": [
+        "Sesión vigente y acceso al objeto; manageActions para gestión de acciones",
+        "Acción vinculada a persona/campaña, responsable, objetivo y seguimiento aportados explícitamente",
+        "Revisión esperada e identificador de mutación ligado al comando"
+      ],
+      "output": [
+        "Acción confirmada con estado, revisión e historial de seguimiento, o conflicto explícito",
+        "Vista individual limitada a acciones propias y vista de coordinación conforme a sus capacidades"
+      ],
+      "invariants": [
+        "No generar diagnósticos, compromisos, responsables o conclusiones causales a partir de una correlación no validada.",
+        "El participante no edita ni consulta acciones ajenas; las operaciones propias permitidas deben estar definidas y comprobarse en servidor.",
+        "Una acción y sus eventos persisten en el almacén privado con IDs estables; recargar la pantalla no crea duplicados ni pierde seguimiento.",
+        "El estado de cumplimiento exige una mutación válida y una confirmación del servidor; el color, la fecha prevista o un envío pendiente no acreditan cumplimiento.",
+        "Separar corrección del dato, cambio de estado y evidencia de ejecución; mantener historial sin sobrescritura ciega.",
+        "No enviar avisos, correos o crear automatizaciones como efecto secundario de leer o registrar una acción.",
+        "La fuente canónica es un log privado append-only de eventos con postestado completo y recibo; la última revisión proyecta el estado, sin simular una transacción entre estado e historia separados.",
+        "Estados open, in_progress, blocked, ready_for_review, done y cancelled. El participante sólo reporta avance/evidencia, bloqueo o envío a revisión; no crea, reasigna, cierra, cancela ni cambia objetivo/plazo/campaña.",
+        "Cerrar o reabrir corresponde a coordinación autorizada con revisión y motivo/evidencia. overdue se deriva del plazo/estado y no es otro estado persistido.",
+        "Evidencia inicial admite texto y enlaces HTTPS revisables; no crear un servicio de uploads ni copiar respuestas o inferir identidad del evaluador en la referencia de origen."
+      ]
+    },
+    {
+      "id": "CTR-EMD-VERSIONED-RESULTS-POLICY",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD"
+      ],
+      "source": "Propuesta autorizada CHG-EMD-MEJORA-CONTINUA-20261103. No se ha aportado una regla oficial; se prepara configuración y motor, no se activa metodología por inferencia.",
+      "input": [
+        "Sesión reviewer con manageMethod, activateMethod o viewResults según la operación; capacidades false por defecto",
+        "Política versionada ligada al instrumento/campaña, con audiencia, umbral y universo/corte explícitos",
+        "Datos elegibles confirmados bajo la versión de política activada"
+      ],
+      "output": [
+        "Política borrador revisable; activación explícita separada y versión inmutable",
+        "Solo bajo política activa y acceso permitido: histograma1–5 y porcentajes sobre respuestas numéricas elegibles por ítem; NA/ausentes y evaluadores independientes diferenciados, con denominadores verificables.",
+        "Estado no disponible cuando falta método, compatibilidad, suficiencia o autorización"
+      ],
+      "invariants": [
+        "La configuración inicial es un borrador vacío. Guardar un borrador no lo activa y no produce resultados reales.",
+        "distribution_v1 es el único motor inicial: histogramas por ítem; no inventa ponderaciones, promedio global, ranking, percentiles, brechas ni objetivos.",
+        "La política debe declarar audiencia, umbral de confidencialidad, tratamiento de NA/ausencias, universo y corte antes de activar; no sustituirlos por valores implícitos.",
+        "manageMethod no concede activateMethod ni viewResults; cada operación valida la capacidad y la versión exactas en servidor.",
+        "Una versión activada se conserva inmutable; los cambios crean una versión nueva y no reinterpretan silenciosamente resultados históricos.",
+        "El resultado queda ligado a campaña, instrumento, método, corte y universo; no mezclar campañas o versiones incompatibles.",
+        "Aplicar permisos y supresión antes de devolver agregados; un filtro o subtotal no puede eludir el umbral ni revelar información individual.",
+        "Mostrar los denominadores y la razón de no disponibilidad sin revelar valores suprimidos. NA y ausencia no equivalen a cero ni a una respuesta1–5.",
+        "No usar resultados sintéticos como resultados humanos ni presentar distribuciones como prueba de causalidad o de mejora efectiva.",
+        "El umbral se mide por evaluadores independientes por celda, no por número de preguntas. Sólo evaluaciones cerradas elegibles en un corte fijo; relaciones, agrupación y tratamiento de autoevaluación se seleccionan explícitamente.",
+        "La agrupación inicial se limita a persona evaluada y grupo de relaciones fijado por política; no filtros arbitrarios ni combinaciones que permitan reconstruir valores suprimidos por resta.",
+        "El informe usa una copia privada de los datos elegibles o un agregado materializado con fuente fijada; no reconstruye un corte histórico consultando datos cambiantes o usando UPDATED como fecha de cierre.",
+        "Sin validación de comparabilidad de instrumento, política y denominadores se muestran fichas/cortes separados, no curvas de mejora ni comparaciones inferidas."
       ]
     }
   ],

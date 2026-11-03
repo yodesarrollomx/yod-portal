@@ -1,13 +1,15 @@
 {
-  "model_revision": "2026-11-02.emd-contratos.1",
-  "proposal_id": "CHG-EMD-CONTRATOS-20261102",
-  "summary": "Registrar contratos compatibles de evaluación privada antes de implementación; cambios exclusivamente documentales en el atlas.",
+  "model_revision": "2026-11-03.emd-mejora-continua.1",
+  "proposal_id": "CHG-EMD-MEJORA-CONTINUA-20261103",
+  "summary": "Registrar el dashboard continuo de evaluación, administración por capacidades, acciones persistentes y política metodológica versionada antes de implementación privada. Sincronizar el catálogo derivado de procesos sin alterar monitores ni disparadores.",
   "components": [
     "SYS-EMD",
     "GAS-EMD",
     "SHEET-EMD",
     "STORE-EMD-DRAFTS",
-    "SYS-YOD-OS"
+    "EXT-DRIVE",
+    "SYS-YOD-OS",
+    "SYS-CONTROL"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -18,5 +20,5 @@
     "node verify-obra-app.cjs",
     "git diff --check"
   ],
-  "rollback": "Revertir por PR los cambios de atlas y regenerar vistas preservando contribuciones concurrentes. El rollback documental no borra registros, copias locales ni guards del sistema privado."
+  "rollback": "Revertir el PR documental y regenerar vistas preservando aportes concurrentes. No borrar ni restaurar personas, campañas, acciones, políticas, respuestas, eventos o borradores del sistema privado ni retirar sus controles."
 }

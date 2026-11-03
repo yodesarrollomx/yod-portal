@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-02.emd-contratos.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-03.emd-mejora-continua.1 · 2026-10-20.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
@@ -552,3 +552,35 @@ flowchart TD
 Vacíos: Implementación, integración y despliegue se verifican por separado; el registro de este flujo no habilita el botón.; La aprobación de etapa dos corresponde a cada storyboard revisado; no se deduce de la autorización para implementar la herramienta.; Faltantes materiales del brief se preguntan sólo cuando no estén disponibles en contexto autorizado..
 
 Evidencia: [yod-portal/docs/arquitectura/ppp-presentaciones.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-presentaciones.md) — Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards..
+
+## PROC-EMD-CONTINUOUS-IMPROVEMENT · Ciclo de evaluación y seguimiento de mejora
+
+Estado: propuesto.
+
+```mermaid
+flowchart TD
+  p0["Consultar campaña y cobertura · Coordinación reviewer"]
+  p1["Preparar personas y campaña · Actor con capacidad administrativa explícita"]
+  p0 -.-> p1
+  p2["Responder y confirmar evaluación · Participante asignado"]
+  p1 -.-> p2
+  p3["Revisar y activar política metodológica · Actor con capacidades separadas de método y activación"]
+  p2 -.-> p3
+  p4["Consultar distribuciones elegibles · Actor autorizado con viewResults"]
+  p3 --> p4
+  p5["Acordar y seguir acciones · Gestor autorizado y responsable de su acción"]
+  p4 -.-> p5
+```
+
+| Paso | Responsable | Componentes | Entrada → salida | Ejecución |
+|---|---|---|---|---|
+| 1. Consultar campaña y cobertura | Coordinación reviewer | SYS-EMD, GAS-EMD, SHEET-EMD | Sesión vigente y campaña seleccionada → Avance, cobertura y seguimiento confirmados con fecha y denominadores | automatico |
+| 2. Preparar personas y campaña | Actor con capacidad administrativa explícita | SYS-EMD, GAS-EMD, SHEET-EMD, EXT-DRIVE | Cambios revisados, contexto e identidades canónicas → Vista previa y operación respaldada con recibo o conflicto | manual |
+| 3. Responder y confirmar evaluación | Participante asignado | SYS-EMD, GAS-EMD, SHEET-EMD, STORE-EMD-DRAFTS | Instrumento/campaña compatibles y respuestas propias → Borrador o confirmación/cierre individual conforme a contratos existentes | manual |
+| 4. Revisar y activar política metodológica | Actor con capacidades separadas de método y activación | SYS-EMD, GAS-EMD, SHEET-EMD | Política versionada con universo/corte, audiencia, umbral y tratamiento explícitos → Versión activada inmutable o borrador pendiente; la configuración inicial permanece vacía | manual |
+| 5. Consultar distribuciones elegibles | Actor autorizado con viewResults | SYS-EMD, GAS-EMD, SHEET-EMD | Política activa y datos elegibles de campaña/instrumento compatibles → Histogramas por ítem o razón de indisponibilidad; NA/ausentes separados | automatico |
+| 6. Acordar y seguir acciones | Gestor autorizado y responsable de su acción | SYS-EMD, GAS-EMD, SHEET-EMD | Objetivo y seguimiento aportados con revisión vigente → Acción y eventos persistentes confirmados, sin inferir cumplimiento | manual |
+
+Vacíos: La definición metodológica oficial y su activación no se infieren de la autorización para desarrollar el sistema.; Capacidades de escritura/resultados se mantienen false hasta configuración explícita del actor autorizado.; La publicación del código, la versión de Apps Script y la operación con personas se verifican por separado.; No hay nuevos triggers, cron, invitaciones o automatizaciones creados por este proceso..
+
+Evidencia: Propuesta previa a implementación; datos, configuración y evidencia operativa privados..

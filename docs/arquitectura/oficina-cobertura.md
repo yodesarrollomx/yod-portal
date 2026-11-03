@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-02.emd-contratos.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-03.emd-mejora-continua.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 27 sistemas y 91 componentes distribuidos exactamente una vez.
-- 10 áreas; 149 conexiones registradas, 10 marcadas como verificadas en el atlas.
+- 10 áreas; 150 conexiones registradas, 10 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -2577,6 +2577,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-015 · GAS-EMD → SHEET-EMD · persistencia · Lee/escribe registros del dominio · Estado: pendiente · Ejecución no verificada en el atlas.
 - CON-032 · SYS-EMD → GAS-EMD · api · Consume contrato del backend · Estado: pendiente · Ejecución no verificada en el atlas.
 - CON-EMD-PROFILES-DRIVE · GAS-EMD → EXT-DRIVE · persistencia · Propuesta: fotos privadas de perfil · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-EMD-CONTINUOUS-BACKUP · GAS-EMD → EXT-DRIVE · respaldo · Propuesta: respaldo privado de administración · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2587,10 +2588,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-015 · Integración pendiente de verificar · Estado: pendiente · Sin revisión inmutable en esta referencia
 - CON-032 · Integración pendiente de verificar · Estado: pendiente · Sin revisión inmutable en esta referencia
 - CON-EMD-PROFILES-DRIVE · Propuesta registrada; implementación y despliegue privados pendientes de pruebas · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-EMD-CONTINUOUS-BACKUP · Extensión administrativa propuesta sobre los servicios privados existentes; ejecución no acreditada. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 3 conexiones sin verificación de ejecución registrada.
+- 4 conexiones sin verificación de ejecución registrada.
 - Código desplegado y permisos reales no contrastados
 
 ### Datos de Evaluación privada · SHEET-EMD
@@ -2671,6 +2673,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-EMD-PROFILES-DRIVE · GAS-EMD → EXT-DRIVE · persistencia · Propuesta: fotos privadas de perfil · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-PORTERO-CORCHO-DRIVE · GAS-PORTERO → EXT-DRIVE · autorizacion · Corcho: principal y ACL completos por GET · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-MOTOR-DRIVE · SVC-AUTON-CLOUD → EXT-DRIVE · lectura · Leer originales, documentos y pasajes del expediente · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-EMD-CONTINUOUS-BACKUP · GAS-EMD → EXT-DRIVE · respaldo · Propuesta: respaldo privado de administración · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2683,11 +2686,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-EMD-PROFILES-DRIVE · Propuesta registrada; implementación y despliegue privados pendientes de pruebas · Estado: propuesto · Sin revisión inmutable en esta referencia
 - CON-PORTERO-CORCHO-DRIVE · CHG-DESPACHO-CORCHO-PROVISIONAL-035: Integración provisional autorizada, pendiente en PR consumidores; preflight V57 no acredita despliegue del adapter. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - [CON-MOTOR-DRIVE · Leer originales, documentos y pasajes del expediente · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/RESEARCH.md · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/RESEARCH.md)
+- CON-EMD-CONTINUOUS-BACKUP · Extensión administrativa propuesta sobre los servicios privados existentes; ejecución no acreditada. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
 - Responsable operativo pendiente de confirmación; el encargado de verificación no sustituye esa asignación.
-- 5 conexiones sin verificación de ejecución registrada.
+- 6 conexiones sin verificación de ejecución registrada.
 - Estado y permisos no comprobados
 
 ### JEV · búsqueda y selección · EXT-JEV
