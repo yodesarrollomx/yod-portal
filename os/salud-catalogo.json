@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "model_revision": "2026-11-01.mercado-hmo.1",
+  "model_revision": "2026-11-03.emd-mejora-continua.1",
   "components": [
     {
       "id": "SYS-DESPACHO",
@@ -1558,6 +1558,74 @@
           "components": [
             "SYS-INVERSION",
             "SYS-DESPACHO"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROC-EMD-CONTINUOUS-IMPROVEMENT",
+      "nombre": "Ciclo de evaluación y seguimiento de mejora",
+      "steps": [
+        {
+          "id": "PROC-EMD-CONTINUOUS-IMPROVEMENT:0",
+          "nombre": "Consultar campaña y cobertura",
+          "modo": "automatico",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD"
+          ]
+        },
+        {
+          "id": "PROC-EMD-CONTINUOUS-IMPROVEMENT:1",
+          "nombre": "Preparar personas y campaña",
+          "modo": "manual",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD",
+            "EXT-DRIVE"
+          ]
+        },
+        {
+          "id": "PROC-EMD-CONTINUOUS-IMPROVEMENT:2",
+          "nombre": "Responder y confirmar evaluación",
+          "modo": "manual",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD",
+            "STORE-EMD-DRAFTS"
+          ]
+        },
+        {
+          "id": "PROC-EMD-CONTINUOUS-IMPROVEMENT:3",
+          "nombre": "Revisar y activar política metodológica",
+          "modo": "manual",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD"
+          ]
+        },
+        {
+          "id": "PROC-EMD-CONTINUOUS-IMPROVEMENT:4",
+          "nombre": "Consultar distribuciones elegibles",
+          "modo": "automatico",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD"
+          ]
+        },
+        {
+          "id": "PROC-EMD-CONTINUOUS-IMPROVEMENT:5",
+          "nombre": "Acordar y seguir acciones",
+          "modo": "manual",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD"
           ]
         }
       ]

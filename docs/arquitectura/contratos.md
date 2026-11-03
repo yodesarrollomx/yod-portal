@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-02.emd-contratos.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-03.emd-mejora-continua.1 · 2026-10-20.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -1134,3 +1134,81 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - La incertidumbre de una integración se concilia antes de repetir efectos; preservar identificadores y deduplicación existentes.
 - Ensayos usan dobles o copias aisladas; no crean correos, respuestas, accesos ni movimientos de prueba en producción.
 - Pruebas automáticas no acreditan comprensión de personas ni uso en dispositivo físico.
+
+## CTR-EMD-CONTINUOUS-DASHBOARD
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD.
+- Evidencia: Propuesta autorizada CHG-EMD-MEJORA-CONTINUA-20261103; diseño y pruebas detalladas en repositorio privado..
+- Entrada/campos: `Sesión reviewer vigente, campaña solicitada y capacidades autorizadas por el servidor`, `Registros confirmados de cobertura, estado de captura, acciones y configuración metodológica`.
+- Salida: Dashboard operativo con denominadores, campaña y fecha de actualización explícitos, Estado de política/metodología separado de resultados; sin puntuaciones cuando no existe política activada.
+
+- La lectura operativa de reviewer no concede facultades de administración o lectura de resultados.
+- El participante solo accede a sus evaluaciones y acciones; no al tablero global ni a información ajena.
+- Leer no crea campañas, hojas, acciones, métodos, respaldos ni automatizaciones y no altera estados.
+- Ningún indicador de avance equivale a resultado360, entrega de invitación, anonimato o mejora causal comprobada.
+- Conservar actualización controlada por visibilidad, aislamiento de sesión/campaña y errores accesibles.
+- No duplicar rondas, triggers o cron; continuidad del producto no implica una nueva automatización programada.
+- DTO operativos acotados y paginados, sin respuestas individuales, tokens, hashes de credenciales o IDs privados; ordenar por ID y vincular cursor a filtros/campaña/revisión. Cambio de revisión invalida la paginación en vez de mezclar cortes.
+- La operación distingue configured, checked, unavailable, failed y not_checked con fecha y alcance; configuración presente no acredita lectura, respaldo restaurable o disponibilidad permanente.
+- Los eventos históricos ausentes no se reconstruyen desde última actualización ni se convierten en una serie temporal inventada.
+
+## CTR-EMD-CONTINUOUS-ADMIN
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD, STORE-EMD-DRAFTS, EXT-DRIVE.
+- Evidencia: Propuesta autorizada CHG-EMD-MEJORA-CONTINUA-20261103; sin nuevos roles o servicios..
+- Entrada/campos: `Sesión reviewer y capacidades explícitas por actor canónico: managePeople y manageCampaigns`, `Comando revisado, revisión esperada, identidad de mutación y contexto de campaña/instrumento`.
+- Salida: Persona o campaña confirmada con identidad estable, recibo e historial, o rechazo sin persistencia parcial, Vista previa/impacto y respaldo privado antes de operaciones que lo requieran.
+
+- Las capacidades de escritura se resuelven por actor en servidor, son false por defecto y se revalidan en cada operación; rol reviewer por sí solo no las concede.
+- No aceptar capacidades ni identidad administrativa declaradas por el cliente. Revocación, inactividad o cambio de sesión invalidan escrituras y callbacks pendientes.
+- Campañas usan draft/open/paused/closed/archived con transiciones explícitas; cerrar una evaluación no cierra la campaña. La activación no se infiere de crear o guardar un borrador.
+- Campaña y EVAL_ID son inmutables y conservan su procedencia; nueva campaña no recicla ni reetiqueta respuestas, asignaciones o borradores históricos.
+- Personas conservan identificadores canónicos y referencias; no inventar integrantes, fusionar identidades por semejanza, borrar historia o emitir accesos automáticamente.
+- Mantener autorización por objeto, bloqueo, revisión, vínculo mutación/contenido y compatibilidad del instrumento en cada escritura.
+- Respaldo e historial permanecen privados; nuevas columnas o tablas son aditivas y no se crean durante consultas. Validar antes de escribir y documentar recuperación.
+- Conservar permisos de archivos, scopes, endpoints y contratos de invitación: esta ampliación no autoriza correos ni nuevas credenciales.
+- Campañas legadas se descubren como no gestionadas, sin crear registros o fechas al leer. Su adopción y estado requieren una operación explícita.
+- Campaña paused/closed/archived bloquea nuevas mutaciones de respuesta, pero permite recuperar el recibo exacto ya confirmado mientras el permiso siga vigente.
+- Cerrar una campaña requiere vista previa, incidencias y confirmación: fijar/verificar manifiesto privado del corte antes de confirmar closed. Pendientes aceptados explícitamente permanecen identificados y no se rellenan.
+- Cruces explícitos usan planHash y revisión de campaña; aplicar valida de nuevo, respalda y confirma sólo tras readback. Una operación multihoja parcial conserva plan/recibo y se reanuda por ID, sin afirmar atomicidad ni restaurar encima de trabajo posterior.
+- Alta de persona, asignación, acceso e invitación son operaciones distintas; alta permite persona sin cruces. Corrección de identidad o nombre existente requiere impacto explícito, sin reescribir etiquetas históricas.
+- Identidades QA no acceden a entidades reales mediante estos RPC; se rechazan o se usa un almacén QA completamente aislado.
+
+## CTR-EMD-IMPROVEMENT-ACTIONS
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD.
+- Evidencia: Propuesta autorizada CHG-EMD-MEJORA-CONTINUA-20261103; acciones de mejora persistentes, sin inferencias automáticas de desempeño..
+- Entrada/campos: `Sesión vigente y acceso al objeto; manageActions para gestión de acciones`, `Acción vinculada a persona/campaña, responsable, objetivo y seguimiento aportados explícitamente`, `Revisión esperada e identificador de mutación ligado al comando`.
+- Salida: Acción confirmada con estado, revisión e historial de seguimiento, o conflicto explícito, Vista individual limitada a acciones propias y vista de coordinación conforme a sus capacidades.
+
+- No generar diagnósticos, compromisos, responsables o conclusiones causales a partir de una correlación no validada.
+- El participante no edita ni consulta acciones ajenas; las operaciones propias permitidas deben estar definidas y comprobarse en servidor.
+- Una acción y sus eventos persisten en el almacén privado con IDs estables; recargar la pantalla no crea duplicados ni pierde seguimiento.
+- El estado de cumplimiento exige una mutación válida y una confirmación del servidor; el color, la fecha prevista o un envío pendiente no acreditan cumplimiento.
+- Separar corrección del dato, cambio de estado y evidencia de ejecución; mantener historial sin sobrescritura ciega.
+- No enviar avisos, correos o crear automatizaciones como efecto secundario de leer o registrar una acción.
+- La fuente canónica es un log privado append-only de eventos con postestado completo y recibo; la última revisión proyecta el estado, sin simular una transacción entre estado e historia separados.
+- Estados open, in_progress, blocked, ready_for_review, done y cancelled. El participante sólo reporta avance/evidencia, bloqueo o envío a revisión; no crea, reasigna, cierra, cancela ni cambia objetivo/plazo/campaña.
+- Cerrar o reabrir corresponde a coordinación autorizada con revisión y motivo/evidencia. overdue se deriva del plazo/estado y no es otro estado persistido.
+- Evidencia inicial admite texto y enlaces HTTPS revisables; no crear un servicio de uploads ni copiar respuestas o inferir identidad del evaluador en la referencia de origen.
+
+## CTR-EMD-VERSIONED-RESULTS-POLICY
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD.
+- Evidencia: Propuesta autorizada CHG-EMD-MEJORA-CONTINUA-20261103. No se ha aportado una regla oficial; se prepara configuración y motor, no se activa metodología por inferencia..
+- Entrada/campos: `Sesión reviewer con manageMethod, activateMethod o viewResults según la operación; capacidades false por defecto`, `Política versionada ligada al instrumento/campaña, con audiencia, umbral y universo/corte explícitos`, `Datos elegibles confirmados bajo la versión de política activada`.
+- Salida: Política borrador revisable; activación explícita separada y versión inmutable, Solo bajo política activa y acceso permitido: histograma1–5 y porcentajes sobre respuestas numéricas elegibles por ítem; NA/ausentes y evaluadores independientes diferenciados, con denominadores verificables., Estado no disponible cuando falta método, compatibilidad, suficiencia o autorización.
+
+- La configuración inicial es un borrador vacío. Guardar un borrador no lo activa y no produce resultados reales.
+- distribution_v1 es el único motor inicial: histogramas por ítem; no inventa ponderaciones, promedio global, ranking, percentiles, brechas ni objetivos.
+- La política debe declarar audiencia, umbral de confidencialidad, tratamiento de NA/ausencias, universo y corte antes de activar; no sustituirlos por valores implícitos.
+- manageMethod no concede activateMethod ni viewResults; cada operación valida la capacidad y la versión exactas en servidor.
+- Una versión activada se conserva inmutable; los cambios crean una versión nueva y no reinterpretan silenciosamente resultados históricos.
+- El resultado queda ligado a campaña, instrumento, método, corte y universo; no mezclar campañas o versiones incompatibles.
+- Aplicar permisos y supresión antes de devolver agregados; un filtro o subtotal no puede eludir el umbral ni revelar información individual.
+- Mostrar los denominadores y la razón de no disponibilidad sin revelar valores suprimidos. NA y ausencia no equivalen a cero ni a una respuesta1–5.
+- No usar resultados sintéticos como resultados humanos ni presentar distribuciones como prueba de causalidad o de mejora efectiva.
+- El umbral se mide por evaluadores independientes por celda, no por número de preguntas. Sólo evaluaciones cerradas elegibles en un corte fijo; relaciones, agrupación y tratamiento de autoevaluación se seleccionan explícitamente.
+- La agrupación inicial se limita a persona evaluada y grupo de relaciones fijado por política; no filtros arbitrarios ni combinaciones que permitan reconstruir valores suprimidos por resta.
+- El informe usa una copia privada de los datos elegibles o un agregado materializado con fuente fijada; no reconstruye un corte histórico consultando datos cambiantes o usando UPDATED como fecha de cierre.
+- Sin validación de comparabilidad de instrumento, política y denominadores se muestran fichas/cortes separados, no curvas de mejora ni comparaciones inferidas.

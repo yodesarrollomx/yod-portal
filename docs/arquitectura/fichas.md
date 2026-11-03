@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-02.emd-contratos.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-03.emd-mejora-continua.1 · 2026-10-20.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -676,7 +676,7 @@ Servir el contrato de Evaluación privada
 - Entidades: evaluacion, revision, contacto_preparado.
 - Fuente de verdad: Sistema privado; detalle técnico restringido.
 - Evidencia: Integración pendiente de verificar.
-- Conexiones: CON-015 (GAS-EMD → SHEET-EMD); CON-032 (SYS-EMD → GAS-EMD); CON-EMD-PROFILES-DRIVE (GAS-EMD → EXT-DRIVE).
+- Conexiones: CON-015 (GAS-EMD → SHEET-EMD); CON-032 (SYS-EMD → GAS-EMD); CON-EMD-PROFILES-DRIVE (GAS-EMD → EXT-DRIVE); CON-EMD-CONTINUOUS-BACKUP (GAS-EMD → EXT-DRIVE).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Código desplegado y permisos reales no contrastados.
 
@@ -702,7 +702,7 @@ Dependencia externa de procesos YOD OS
 - Entidades: .
 - Fuente de verdad: Datos del servicio externo; no inspeccionados.
 - Evidencia: Integración pendiente de verificar.
-- Conexiones: CON-062 (GAS-CODES → EXT-DRIVE); CON-084 (SVC-SALA-EJECUTOR → EXT-DRIVE); CON-EMD-PROFILES-DRIVE (GAS-EMD → EXT-DRIVE); CON-PORTERO-CORCHO-DRIVE (GAS-PORTERO → EXT-DRIVE); CON-MOTOR-DRIVE (SVC-AUTON-CLOUD → EXT-DRIVE).
+- Conexiones: CON-062 (GAS-CODES → EXT-DRIVE); CON-084 (SVC-SALA-EJECUTOR → EXT-DRIVE); CON-EMD-PROFILES-DRIVE (GAS-EMD → EXT-DRIVE); CON-PORTERO-CORCHO-DRIVE (GAS-PORTERO → EXT-DRIVE); CON-MOTOR-DRIVE (SVC-AUTON-CLOUD → EXT-DRIVE); CON-EMD-CONTINUOUS-BACKUP (GAS-EMD → EXT-DRIVE).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Estado y permisos no comprobados.
 
