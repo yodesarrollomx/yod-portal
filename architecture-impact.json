@@ -1,22 +1,22 @@
 {
-  "model_revision": "2026-11-01.mercado-f2.2",
-  "proposal_id": "CHG-MERCADO-HMO-F2-20261101",
-  "summary": "Fase 2 de Mercado Hermosillo (sólo mercado/hermosillo-2020-2030/): P real por omisión (INPC promedio anual, base SHF 2017=100), cierre 2026 estimado con rango, escenarios 2027–2030 con cruces de precio y techo de absorción, prueba del método preregistrada, cartera por etapa, base/fase2 + base/motor + dictámenes por chunk. Incluye los commits del PR #341 (estilo del marco y ACCESOS_REF del workflow Conocimiento del Despacho).",
+  "model_revision": "2026-11-02.emd-contratos.1",
+  "proposal_id": "CHG-EMD-CONTRATOS-20261102",
+  "summary": "Registrar contratos compatibles de evaluación privada antes de implementación; cambios exclusivamente documentales en el atlas.",
   "components": [
-    "SYS-MERCADO",
-    "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "SYS-POTENCIALES"
+    "SYS-EMD",
+    "GAS-EMD",
+    "SHEET-EMD",
+    "STORE-EMD-DRAFTS",
+    "SYS-YOD-OS"
   ],
   "tests": [
-    "python3 -I mercado/hermosillo-2020-2030/base/motor/tests/test_escenarios.py",
+    "node scripts/arquitectura.cjs --check",
+    "node --test tests/*.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
     "node verify-accesos.cjs",
     "node verify-obra-app.cjs",
-    "node scripts/versiones.cjs --check",
-    "node scripts/arquitectura.cjs --check"
+    "git diff --check"
   ],
-  "rollback": "Revertir el merge del PR: la carpeta vuelve a la v2; no hay backend, datos privados ni cambios en os/."
+  "rollback": "Revertir por PR los cambios de atlas y regenerar vistas preservando contribuciones concurrentes. El rollback documental no borra registros, copias locales ni guards del sistema privado."
 }

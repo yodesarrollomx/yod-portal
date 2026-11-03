@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-01.mercado-f2.2 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-02.emd-contratos.1 · 2026-10-20.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -1079,3 +1079,58 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Proyección de visitante sin guion, fuentes ni notas privadas. Sesión de reunión fija release y no cambia al regenerar.
 - Reutilizar Hairline y motores existentes con adaptadores declarativos; no introducir código arbitrario, otro backend, Sheet, cron, catálogo o cálculo financiero.
 - Pruebas sintéticas y comprobantes independientes para código, CI, frontend, backend, lectura, job, artefacto y registro; un estado listo no prueba el recorrido completo.
+
+## CTR-EMD-WRITE-RECEIPT
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD.
+- Evidencia: Propuesta autorizada CHG-EMD-CONTRATOS-20261102; detalle técnico y evidencia sintética en el sistema privado..
+- Entrada/campos: `Sesión vigente, asignación propia, revisión esperada e identificador estable de comando`, `Snapshot inmutable de respuestas y acción de guardado/cierre con versión compatible`.
+- Salida: Confirmación verificable del mismo comando persistido o rechazo explícito, Reintento del comando idéntico devuelve su confirmación sin una segunda escritura.
+
+- El servidor conserva autorización por objeto, bloqueo, revisión optimista y cierre terminal.
+- La identidad del comando queda vinculada al contenido semántico y a su alcance; no confirmar como equivalente contenido diferente.
+- Validar el lote antes de persistir; una confirmación anterior no acredita modificaciones posteriores del cliente.
+- Conservar ediciones hechas durante una solicitud pendiente y rechazar confirmaciones tardías de otra sesión o evaluación.
+- Compatibilidad de clientes y registros anteriores se define y prueba explícitamente; no reescribir respuestas históricas ni reabrir evaluaciones.
+
+## CTR-EMD-INSTRUMENT-VERSION
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD, STORE-EMD-DRAFTS.
+- Evidencia: Propuesta autorizada CHG-EMD-CONTRATOS-20261102; refina la compatibilidad sin sustituir CTR-EMD-DRAFTS ni CTR-EMD-ESCALA-CAPTURA..
+- Entrada/campos: `Identidad estable de campaña y asignación y versión verificable del instrumento`, `Evaluación o borrador con versión conocida, compatible o legado explícito`.
+- Salida: Evaluación y copia local ligadas a un instrumento identificable, Incompatibilidad legible que conserva contenido para inspección y recuperación autorizada.
+
+- La versión del formato de matriz es distinta de la versión del instrumento.
+- IDs, textos y reglas de captura definen compatibilidad; cambiar presentación no reinterpreta respuestas.
+- Un registro legado sin versión no prueba cuál instrumento recibió: reconocerlo solo por una política acotada a la fuente previa comprobada; no afirmar una migración histórica por inferencia.
+- Una versión incompatible no se restaura ni envía automáticamente, no se convierte a la actual y no se elimina silenciosamente.
+- Conservar autenticación, cifrado, aislamiento por enlace/evaluación/escritor, revisión, cierre y consentimiento de recuperación existentes.
+- Conservar los 28 textos e IDs, escala de captura aprobada e históricos; metodología, ponderaciones y resultados requieren definición separada.
+
+## CTR-EMD-RUNTIME-MODE
+
+- Componentes: SYS-EMD, GAS-EMD.
+- Evidencia: Propuesta autorizada CHG-EMD-CONTRATOS-20261102; conserva CTR-EMD-GITHUB-EMBED..
+- Entrada/campos: `Artefacto con modo demo u operativo declarado y build/contrato identificables`, `Transporte autorizado y handshake vigente cuando corresponda`.
+- Salida: Demo identificada y aislada o operación mediante backend vigente, Indisponibilidad explícita cuando un artefacto operativo carece de transporte.
+
+- No deducir el modo deseado únicamente de la existencia de transporte.
+- Un fallo inicial o posterior del modo operativo no activa datos de muestra.
+- La versión declarada por fuente no acredita el backend desplegado: comparar ambos y registrar evidencia.
+- No ampliar orígenes, permisos, scopes ni endpoints; no enviar identidad o respuestas al wrapper público.
+- La demo y pruebas usan datos sintéticos y no producen escrituras o envíos de negocio.
+
+## CTR-EMD-INTERACTION-RECOVERY
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD, STORE-EMD-DRAFTS.
+- Evidencia: Propuesta autorizada CHG-EMD-CONTRATOS-20261102; interacción y comprobaciones de recuperación, sin nuevas reglas de negocio..
+- Entrada/campos: `Visibilidad y sesión vigentes, estado confirmado y omisiones del cuestionario`, `Operación administrativa preparada, respaldo y punto de recuperación comprobable`.
+- Salida: Actualización de listas y coordinación pausada mientras la vista está oculta y reanudada sin solapamientos, Omisiones asociadas a cada pregunta y resumen navegable, Evidencia de recuperación sobre datos sintéticos y límites explícitos del ensayo.
+
+- Pausar sondeo de lectura no cancela ni oculta un guardado pendiente, ni reinicia estado confirmado.
+- Volver a una vista solicita actualización controlada; respuestas tardías no cruzan sesiones o vistas.
+- No depender solo del color; mantener preguntas, foco, controles semánticos y anuncios accesibles.
+- Un respaldo existente no demuestra restauración; una solicitud aceptada no demuestra entrega.
+- La incertidumbre de una integración se concilia antes de repetir efectos; preservar identificadores y deduplicación existentes.
+- Ensayos usan dobles o copias aisladas; no crean correos, respuestas, accesos ni movimientos de prueba en producción.
+- Pruebas automáticas no acreditan comprensión de personas ni uso en dispositivo físico.
