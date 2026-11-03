@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-01.mercado-f2.2",
+  "revision": "2026-11-02.emd-contratos.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -3827,7 +3827,7 @@
       "status": "pendiente",
       "runtime_verified": false,
       "restricted_evidence_omitted": true,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. Propuesta CHG-EMD-CONTRATOS-20261102: CTR-EMD-WRITE-RECEIPT y CTR-EMD-INSTRUMENT-VERSION; sin migración ni reinterpretación de datos históricos.",
       "contract_ids": []
     },
     {
@@ -4198,7 +4198,7 @@
       "status": "pendiente",
       "runtime_verified": false,
       "restricted_evidence_omitted": true,
-      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar.",
+      "contract": "Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. Propuesta CHG-EMD-CONTRATOS-20261102: CTR-EMD-WRITE-RECEIPT, CTR-EMD-INSTRUMENT-VERSION, CTR-EMD-RUNTIME-MODE y CTR-EMD-INTERACTION-RECOVERY; implementación y despliegue se acreditan por separado.",
       "contract_ids": []
     },
     {
@@ -5568,7 +5568,7 @@
       "status": "propuesto",
       "runtime_verified": false,
       "restricted_evidence_omitted": true,
-      "contract": "CTR-EMD-DRAFTS: cifrado por enlace vigente, aislamiento de pestañas, confirmación transaccional local y recuperación explícita; el servidor mantiene revisión y cierre.",
+      "contract": "CTR-EMD-DRAFTS: cifrado por enlace vigente, aislamiento de pestañas, confirmación transaccional local y recuperación explícita; el servidor mantiene revisión y cierre. Propuesta CHG-EMD-CONTRATOS-20261102: CTR-EMD-INSTRUMENT-VERSION y CTR-EMD-INTERACTION-RECOVERY complementan compatibilidad y recuperación sin retirar cifrado ni consentimiento.",
       "contract_ids": [
         "CTR-EMD-DRAFTS"
       ]
@@ -14948,6 +14948,27 @@
         "Render real (Playwright) de la portada PPP y de brokers.html con la liga visible; la liga abre https://yodesarrollomx.github.io/yod-portal/mercado/hermosillo-2020-2030/."
       ],
       "deployment": "Al fusionar cada PR, Pages publica la portada de PPP y la de Master Developer con la liga. Reversión: revertir cada merge; no hay backend ni datos."
+    },
+    {
+      "id": "CHG-EMD-CONTRATOS-20261102",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "STORE-EMD-DRAFTS",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Fortalecer los contratos existentes de evaluación privada: confirmación ligada al comando, compatibilidad de instrumento y borrador, modo de arranque y versión identificables, actualización visible controlada, errores accesibles y recuperación comprobable. Conservar backend modular, herramientas, preguntas, escala aprobada, identidades, permisos, cierres e históricos. SYS-YOD-OS participa solo mediante el atlas documental. Autorización directa del propietario del 2 de noviembre de 2026; implementación y producción se acreditan por separado.",
+      "status": "propuesto",
+      "tests": [
+        "Dobles sintéticos de confirmación, reintento exacto, conflicto, cierre e identidad; ninguna escritura de prueba a producción.",
+        "Compatibilidad de instrumento/evaluación/borrador, captura histórica, cliente anterior y respuestas tardías; sin reinterpretar datos existentes.",
+        "Arranque explícito, transporte ausente, error posterior, publicación identificable y handshake vigente conservado.",
+        "Interfaz sintética móvil/escritorio: pausa de consultas oculta, reanudación sin solapamientos y resumen de omisiones navegable con etiquetas por pregunta.",
+        "Recuperación aislada de importación e integración; mantener respaldos, deduplicación y recibos existentes.",
+        "Checks de cada repositorio y regeneración determinista del atlas; uso con participantes y versión desplegada requieren evidencia adicional."
+      ],
+      "deployment": "Registro previo a implementación aislada. Integrar atlas mediante PR y fijar su commit en el consumidor antes de integrar o publicar EMD. Respaldar y comparar la fuente/configuración activas, publicar en implementación existente conservando URL y permisos, y registrar versión y comprobación por separado. No activar envíos, alterar datos históricos ni conceder roles. Reversión compatible del código conserva registros, versiones, copias locales y guards vigentes; una versión previa incompatible no es un rollback válido."
     }
   ],
   "data_contracts": [
@@ -17139,6 +17160,107 @@
         "Proyección de visitante sin guion, fuentes ni notas privadas. Sesión de reunión fija release y no cambia al regenerar.",
         "Reutilizar Hairline y motores existentes con adaptadores declarativos; no introducir código arbitrario, otro backend, Sheet, cron, catálogo o cálculo financiero.",
         "Pruebas sintéticas y comprobantes independientes para código, CI, frontend, backend, lectura, job, artefacto y registro; un estado listo no prueba el recorrido completo."
+      ]
+    },
+    {
+      "id": "CTR-EMD-WRITE-RECEIPT",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD"
+      ],
+      "source": "Propuesta autorizada CHG-EMD-CONTRATOS-20261102; detalle técnico y evidencia sintética en el sistema privado.",
+      "input": [
+        "Sesión vigente, asignación propia, revisión esperada e identificador estable de comando",
+        "Snapshot inmutable de respuestas y acción de guardado/cierre con versión compatible"
+      ],
+      "output": [
+        "Confirmación verificable del mismo comando persistido o rechazo explícito",
+        "Reintento del comando idéntico devuelve su confirmación sin una segunda escritura"
+      ],
+      "invariants": [
+        "El servidor conserva autorización por objeto, bloqueo, revisión optimista y cierre terminal.",
+        "La identidad del comando queda vinculada al contenido semántico y a su alcance; no confirmar como equivalente contenido diferente.",
+        "Validar el lote antes de persistir; una confirmación anterior no acredita modificaciones posteriores del cliente.",
+        "Conservar ediciones hechas durante una solicitud pendiente y rechazar confirmaciones tardías de otra sesión o evaluación.",
+        "Compatibilidad de clientes y registros anteriores se define y prueba explícitamente; no reescribir respuestas históricas ni reabrir evaluaciones."
+      ]
+    },
+    {
+      "id": "CTR-EMD-INSTRUMENT-VERSION",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "STORE-EMD-DRAFTS"
+      ],
+      "source": "Propuesta autorizada CHG-EMD-CONTRATOS-20261102; refina la compatibilidad sin sustituir CTR-EMD-DRAFTS ni CTR-EMD-ESCALA-CAPTURA.",
+      "input": [
+        "Identidad estable de campaña y asignación y versión verificable del instrumento",
+        "Evaluación o borrador con versión conocida, compatible o legado explícito"
+      ],
+      "output": [
+        "Evaluación y copia local ligadas a un instrumento identificable",
+        "Incompatibilidad legible que conserva contenido para inspección y recuperación autorizada"
+      ],
+      "invariants": [
+        "La versión del formato de matriz es distinta de la versión del instrumento.",
+        "IDs, textos y reglas de captura definen compatibilidad; cambiar presentación no reinterpreta respuestas.",
+        "Un registro legado sin versión no prueba cuál instrumento recibió: reconocerlo solo por una política acotada a la fuente previa comprobada; no afirmar una migración histórica por inferencia.",
+        "Una versión incompatible no se restaura ni envía automáticamente, no se convierte a la actual y no se elimina silenciosamente.",
+        "Conservar autenticación, cifrado, aislamiento por enlace/evaluación/escritor, revisión, cierre y consentimiento de recuperación existentes.",
+        "Conservar los 28 textos e IDs, escala de captura aprobada e históricos; metodología, ponderaciones y resultados requieren definición separada."
+      ]
+    },
+    {
+      "id": "CTR-EMD-RUNTIME-MODE",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD"
+      ],
+      "source": "Propuesta autorizada CHG-EMD-CONTRATOS-20261102; conserva CTR-EMD-GITHUB-EMBED.",
+      "input": [
+        "Artefacto con modo demo u operativo declarado y build/contrato identificables",
+        "Transporte autorizado y handshake vigente cuando corresponda"
+      ],
+      "output": [
+        "Demo identificada y aislada o operación mediante backend vigente",
+        "Indisponibilidad explícita cuando un artefacto operativo carece de transporte"
+      ],
+      "invariants": [
+        "No deducir el modo deseado únicamente de la existencia de transporte.",
+        "Un fallo inicial o posterior del modo operativo no activa datos de muestra.",
+        "La versión declarada por fuente no acredita el backend desplegado: comparar ambos y registrar evidencia.",
+        "No ampliar orígenes, permisos, scopes ni endpoints; no enviar identidad o respuestas al wrapper público.",
+        "La demo y pruebas usan datos sintéticos y no producen escrituras o envíos de negocio."
+      ]
+    },
+    {
+      "id": "CTR-EMD-INTERACTION-RECOVERY",
+      "components": [
+        "SYS-EMD",
+        "GAS-EMD",
+        "SHEET-EMD",
+        "STORE-EMD-DRAFTS"
+      ],
+      "source": "Propuesta autorizada CHG-EMD-CONTRATOS-20261102; interacción y comprobaciones de recuperación, sin nuevas reglas de negocio.",
+      "input": [
+        "Visibilidad y sesión vigentes, estado confirmado y omisiones del cuestionario",
+        "Operación administrativa preparada, respaldo y punto de recuperación comprobable"
+      ],
+      "output": [
+        "Actualización de listas y coordinación pausada mientras la vista está oculta y reanudada sin solapamientos",
+        "Omisiones asociadas a cada pregunta y resumen navegable",
+        "Evidencia de recuperación sobre datos sintéticos y límites explícitos del ensayo"
+      ],
+      "invariants": [
+        "Pausar sondeo de lectura no cancela ni oculta un guardado pendiente, ni reinicia estado confirmado.",
+        "Volver a una vista solicita actualización controlada; respuestas tardías no cruzan sesiones o vistas.",
+        "No depender solo del color; mantener preguntas, foco, controles semánticos y anuncios accesibles.",
+        "Un respaldo existente no demuestra restauración; una solicitud aceptada no demuestra entrega.",
+        "La incertidumbre de una integración se concilia antes de repetir efectos; preservar identificadores y deduplicación existentes.",
+        "Ensayos usan dobles o copias aisladas; no crean correos, respuestas, accesos ni movimientos de prueba en producción.",
+        "Pruebas automáticas no acreditan comprensión de personas ni uso en dispositivo físico."
       ]
     }
   ],
