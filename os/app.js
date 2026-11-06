@@ -371,7 +371,7 @@
   };
   // Etiqueta del tablero embebido (caché de 10 min de Pages). No se edita aquí: la escribe
   // node scripts/versiones.cjs --aplicar desde os/versiones.json, igual que todos los ?v=.
-  var TABLERO_V='20261101-mercado-hmo';
+  var TABLERO_V='20261106-ui-consistency';
   var state={modules:[],rawRows:[],role:'vista',boards:'',profileReady:false,loading:false,opsScope:'mias',allTasks:[],sesionEpoch:0,sessionToken:'',identityRequest:0,pulseCache:{},opsCache:null,verifiedAt:0};
   var $=function(id){return document.getElementById(id);};
   // ¿hay clave guardada? distingue «sin sesión» de «sesión validándose»
@@ -403,7 +403,7 @@
     ['pulso','reconcile','quick-section'].forEach(function(id){var p=$(id);if(p)p.classList.add('hidden');});
     var inicio=$('miInicio');if(inicio){inicio.hidden=true;inicio.replaceChildren();}
     document.querySelectorAll('.admin-only').forEach(function(el){el.classList.add('hidden');});
-    $('user-name').textContent='Equipo YOD';$('first-name').textContent='';$('avatar').textContent='YO';
+    $('user-name').textContent='Equipo YOD';$('first-name').textContent='equipo';$('avatar').textContent='YO';
     $('user-role').textContent=validando?'Validando acceso…':(tokenActual()?'Sesión por validar':'Sin sesión');
     var chip=$('role-chip');if(chip){chip.textContent='Por validar';chip.className='role-chip';}
     renderOperationsSinSesion();tableroSinSesion();renderModules([]);
@@ -531,7 +531,7 @@
     if(!container)return function(){};
     function foco(){return Array.prototype.filter.call(container.querySelectorAll(FOCO_SEL),function(el){return el.offsetParent!==null||el===document.activeElement;});}
     function onKey(e){
-      if(e.key!=='Tab')return;
+      if(e.key!=='Tab'||document.querySelector('dialog[open]'))return;
       var f=foco();if(!f.length)return;
       var pri=f[0],ult=f[f.length-1],dentro=container.contains(document.activeElement);
       if(e.shiftKey&&(!dentro||document.activeElement===pri)){e.preventDefault();ult.focus();}
@@ -611,7 +611,7 @@
         write:function(intent){return window.YODCaseTransport.writeTeam(intent);},
         lookupReceipt:function(requestId){return window.YODCaseTransport.lookupTeamReceipt({request_id:requestId});}
       },
-      loadMount:function(){return import('../despacho3d/equipo.mjs?v=20261101-mercado-hmo').then(function(module){return module.mountTeamDesk;});},
+      loadMount:function(){return import('../despacho3d/equipo.mjs?v=20261106-ui-consistency').then(function(module){return module.mountTeamDesk;});},
       onError:function(){var status=$('despachoEquipoEstado');if(status)status.textContent='No se pudo abrir Equipo. Puedes volver a validar tu acceso.';}
     });
   }
@@ -1300,9 +1300,10 @@
     document.addEventListener('keydown',function(e){if(e.key==='Escape')cerrar();});
   })();
 
+  function searchText(value){return safeText(value).normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();}
   function buildSearch(query){
-    var box=$('search-results');box.replaceChildren();var term=safeText(query).trim().toLowerCase();
-    var matches=state.modules.filter(function(row){return !term||[row.titulo_portal,row.descripcion_portal,row.audiencia].join(' ').toLowerCase().includes(term);});
+    var box=$('search-results');box.replaceChildren();var term=searchText(query);
+    var matches=state.modules.filter(function(row){return !term||searchText([moduleTitle(row),row.titulo_portal,row.descripcion_portal,row.audiencia,(window.YodAccessPolicy.systemCodes[row.system_id]||[]).join(' ')].join(' ')).includes(term);});
     // el buscador respeta a Control Maestro igual que las tarjetas: lo que está en
     // Mantenimiento/Revisión aparece, dice por qué, y NO es enlace
     matches.forEach(function(row){
@@ -1311,7 +1312,7 @@
       if(on){a.href=hrefDe(window.PortalCore.resolveUrl(row));a.rel='noopener';a.addEventListener('click',function(){try{$('search-dialog').close();}catch(_e){}});}
       else{a.setAttribute('aria-disabled','true');}
       a.innerHTML='<i class="ti ti-'+(ICONS[row.system_id]||'layout-dashboard')+'"></i>';
-      var text=document.createElement('span');var strong=document.createElement('strong');strong.textContent=safeText(row.titulo_portal);
+      var text=document.createElement('span');var strong=document.createElement('strong');strong.textContent=moduleTitle(row);
       var small=document.createElement('small');small.textContent=on?(safeText(row.audiencia)||'Equipo autorizado'):b.text;
       text.append(strong,small);a.appendChild(text);box.appendChild(a);
     });
@@ -1320,7 +1321,11 @@
     if(cuenta)cuenta.textContent=matches.length===1?'1 resultado':(matches.length+' resultados');
   }
 
-  function openSearch(){var dialog=$('search-dialog');dialog.showModal();$('search-input').value='';buildSearch('');setTimeout(function(){$('search-input').focus();},0);}
+  function openSearch(){var dialog=$('search-dialog');if(!dialog.open)dialog.showModal();$('search-input').value='';buildSearch('');setTimeout(function(){$('search-input').focus();},0);}
+  $('search-dialog').querySelector('form').addEventListener('submit',function(e){
+    e.preventDefault();var first=$('search-results').querySelector('a[href]');if(first)first.click();
+  });
+  $('search-close').addEventListener('click',function(){$('search-dialog').close();});
   $('welcome-title').firstChild.textContent=greeting()+', ';
   // ⟳ también revalida la identidad: tras un fallo pasajero del canje el OS se
   // quedaba en «Sesión por validar» hasta recargar a mano.
@@ -1335,6 +1340,7 @@
     // contenido que queda tapado detrás del velo
     function sync(){
       var a=shell.classList.contains('nav-open');
+      if(lateral)lateral.inert=window.matchMedia('(max-width:900px)').matches&&!a;
       if(burger){burger.setAttribute('aria-expanded',String(a));burger.setAttribute('aria-label',a?'Cerrar menú':'Abrir menú');}
       if(a&&!soltar)soltar=trapFocus(lateral);
       if(!a&&soltar){soltar();soltar=null;if(disparador&&disparador.focus)disparador.focus();disparador=null;}
@@ -1344,9 +1350,9 @@
     function closeNav(){shell.classList.remove('nav-open');sync();}
     if(burger)burger.addEventListener('click',function(){disparador=burger;shell.classList.toggle('nav-open');sync();});
     if(scrim)scrim.addEventListener('click',closeNav);
-    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNav();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!document.querySelector('dialog[open]'))closeNav();});
     var nav=$('nav-modules');if(nav)nav.addEventListener('click',function(e){if(e.target.closest('.nav-item'))closeNav();});
-    if(window.matchMedia){var mq=window.matchMedia('(min-width:901px)');mq.addEventListener('change',function(m){if(m.matches)closeNav();});}
+    if(window.matchMedia){var mq=window.matchMedia('(min-width:901px)');mq.addEventListener('change',function(){closeNav();});}
   })();
   addEventListener('hashchange',iniciarInicioDiferido);
   addEventListener('popstate',iniciarInicioDiferido);

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-03.emd-mejora-continua.1",
+  "revision": "2026-11-06.ui-consistency.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -15117,6 +15117,29 @@
         "Checks de ambos repositorios, vistas deterministas y regresiones anteriores. Despliegue y operación con personas requieren evidencia separada."
       ],
       "deployment": "Propuesta local previa a implementación, pendiente de revisión de contrato e integración por PR. No publicar app ni activar capacidades, políticas o automatizaciones desde este registro. La entrega privada requiere integrar atlas, fijar su commit, preparar y probar fuentes compatibles, comparar/resguardar la versión activa y actualizar el deployment existente solo con acceso verificado. Rollback de código conserva campañas, personas, acciones, eventos, políticas, respuestas y guards; no restaurar un respaldo encima de cambios posteriores."
+    },
+    {
+      "id": "CHG-OS-UI-CONSISTENCY-20261106",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-MERCADO",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-TRACK",
+        "SYS-CONTROL",
+        "GAS-PORTERO",
+        "SYS-DESPACHO",
+        "GAS-CATALOGO",
+        "SYS-POTENCIALES"
+      ],
+      "proposal": "Homologar búsqueda por nombre/código y teclado, corregir consulta residual al reabrir y saludo vacío; completar estado accesible, foco y cierre del menú móvil compartido. Sin cambios de identidad, ACL, datos, endpoints ni catálogo. Los consumidores de etiquetas sólo reciben actualización de versión; conservan comportamiento.",
+      "status": "propuesto",
+      "tests": [
+        "Regresiones sintéticas de búsqueda Enter/cerrar/reapertura y nombres con acentos/códigos.",
+        "Menú móvil: aria-expanded, foco circular, Escape, retorno de foco y transición escritorio.",
+        "Checks de arquitectura, suite Node y verificadores de portal. Recorrido público de destinos canónicos; sesión interna pendiente."
+      ],
+      "deployment": "Implementación aislada y PR antes de integración. Producción y recorrido autenticado se acreditan por separado. Reversión del PR sin modificar datos ni permisos."
     }
   ],
   "data_contracts": [
