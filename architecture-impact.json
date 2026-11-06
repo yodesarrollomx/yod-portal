@@ -1,15 +1,18 @@
 {
-  "model_revision": "2026-11-03.emd-mejora-continua.1",
-  "proposal_id": "CHG-EMD-MEJORA-CONTINUA-20261103",
-  "summary": "Registrar el dashboard continuo de evaluación, administración por capacidades, acciones persistentes y política metodológica versionada antes de implementación privada. Sincronizar el catálogo derivado de procesos sin alterar monitores ni disparadores.",
+  "model_revision": "2026-11-06.ui-consistency.1",
+  "proposal_id": "CHG-OS-UI-CONSISTENCY-20261106",
+  "summary": "Homologar búsqueda por nombre/código y teclado, corregir consulta residual al reabrir y saludo vacío; completar estado accesible, foco y cierre del menú móvil compartido. Sin cambios de identidad, ACL, datos, endpoints ni catálogo.",
   "components": [
-    "SYS-EMD",
-    "GAS-EMD",
-    "SHEET-EMD",
-    "STORE-EMD-DRAFTS",
-    "EXT-DRIVE",
     "SYS-YOD-OS",
-    "SYS-CONTROL"
+    "SYS-MERCADO",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "SYS-TRACK",
+    "SYS-CONTROL",
+    "GAS-PORTERO",
+    "SYS-DESPACHO",
+    "GAS-CATALOGO",
+    "SYS-POTENCIALES"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
@@ -20,5 +23,5 @@
     "node verify-obra-app.cjs",
     "git diff --check"
   ],
-  "rollback": "Revertir el PR documental y regenerar vistas preservando aportes concurrentes. No borrar ni restaurar personas, campañas, acciones, políticas, respuestas, eventos o borradores del sistema privado ni retirar sus controles."
+  "rollback": "Revertir el PR y regenerar vistas/versiones; conservar datos, identidad, permisos e historial."
 }
