@@ -1,24 +1,17 @@
 {
-  "model_revision": "2026-11-03.emd-mejora-continua.1",
-  "proposal_id": "CHG-EMD-MEJORA-CONTINUA-20261103",
-  "summary": "Registrar el dashboard continuo de evaluación, administración por capacidades, acciones persistentes y política metodológica versionada antes de implementación privada. Sincronizar el catálogo derivado de procesos sin alterar monitores ni disparadores.",
+  "model_revision": "2026-11-07.roast-room.1",
+  "proposal_id": "CHG-SALA-ROAST-ROOM-20261107",
+  "summary": "Registrar en el atlas el Roast Room de la Sala: rol consejo con llave propia que autoriza cartas de la mesa, precedencia de la marca humana, pestañas privadas CANDADOS y CONSEJO, workflow horario con competencia Sol/Opus. Sólo documentación del modelo; la implementación vive en sala-edicion.",
   "components": [
-    "SYS-EMD",
-    "GAS-EMD",
-    "SHEET-EMD",
-    "STORE-EMD-DRAFTS",
-    "EXT-DRIVE",
     "SYS-YOD-OS",
-    "SYS-CONTROL"
+    "SYS-SALA",
+    "GAS-SALA",
+    "SHEET-SALA"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs",
     "git diff --check"
   ],
-  "rollback": "Revertir el PR documental y regenerar vistas preservando aportes concurrentes. No borrar ni restaurar personas, campañas, acciones, políticas, respuestas, eventos o borradores del sistema privado ni retirar sus controles."
+  "rollback": "Revertir el PR documental y regenerar vistas preservando aportes concurrentes. No borrar decisiones, candados ni bitácora del consejo en el Sheet privado."
 }

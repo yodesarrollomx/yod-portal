@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-03.emd-mejora-continua.1",
+  "revision": "2026-11-07.roast-room.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -15117,6 +15117,33 @@
         "Checks de ambos repositorios, vistas deterministas y regresiones anteriores. Despliegue y operación con personas requieren evidencia separada."
       ],
       "deployment": "Propuesta local previa a implementación, pendiente de revisión de contrato e integración por PR. No publicar app ni activar capacidades, políticas o automatizaciones desde este registro. La entrega privada requiere integrar atlas, fijar su commit, preparar y probar fuentes compatibles, comparar/resguardar la versión activa y actualizar el deployment existente solo con acceso verificado. Rollback de código conserva campañas, personas, acciones, eventos, políticas, respuestas y guards; no restaurar un respaldo encima de cambios posteriores."
+    },
+    {
+      "id": "CHG-SALA-ROAST-ROOM-20261107",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-GMAIL",
+        "EXT-ACTIONS",
+        "EXT-OPENAI",
+        "EXT-MOTORES-MEDIA",
+        "EXT-DRIVE",
+        "SYS-YOD-OS"
+      ],
+      "status": "implementado_local",
+      "authorization": "autorizado_por_chat: Dirección (7-nov-2026) decide que el Roast Room autorice las cartas de la mesa de la Sala en vivo desde ese día; veto de Alejandro y Sayri por encima; jurado Hormozi, Chris Do, Zuckerberg, especialista de etapa, Alejandro virtual y Sayri virtual; motores Sol u Opus al azar en competencia. Publicar sigue siendo sólo el clic de Dirección.",
+      "proposal": "Nuevo rol consejo en el GAS de la Sala con llave propia en CONFIG (clave_consejo) y nombre «Roast Room». Decide con accion decidir sobre cartas laminas y eje; en fusionDia_ y fusionProduccion_ la marca de un editor manda sobre la del consejo en la misma lámina. Pestañas privadas CANDADOS (reglas con origen) y CONSEJO (votos, veredictos, motor, marcador); recurso candados y accion consejo_registro. Workflow horario sala-consejo.yml corre nube/sala_consejo.py: lee la mesa como agente, juzga sólo láminas sin marca, seis jueces por carta con el mismo motor elegido al azar entre los disponibles (OpenAI gpt-6.1-sol; Anthropic claude-opus-5-5 sólo si existe su secret), oído Gemini para cortes, regla 4 de 6 sin veto de Alejandro virtual, abstención si faltan jueces o material. Freno: REGLAS consejo_activo. No publica, no usa la llave del agente para decidir, no toca la parrilla.",
+      "tests": [
+        "python3 -m unittest tests.sala_consejo_test: veredicto, veto, abstención, cartas pendientes, contrato de producción con precedencia humana y candado de llave.",
+        "node --test tests/roast-room-gas.test.cjs: rol consejo, nombre, precedencia humana en producción y mesa, rol desconocido bloqueado.",
+        "python3 nube/verificar.py: sólo sala_consejo.py decide y sólo con _clave_consejo().",
+        "Pendiente: despliegue de la versión del GAS vivo, secret SALA_CLAVE_CONSEJO, primera corrida real y su lectura en la Sala."
+      ],
+      "deployment": "Código en PR de sala-edicion. El GAS vivo se actualiza a mano en el editor (nueva versión del mismo despliegue). No acredita corrida real ni decisiones en producción.",
+      "rollback": "REGLAS consejo_activo=0 o desactivar el workflow; quitar clave_consejo de CONFIG revoca la llave. Revertir el PR y la versión del GAS. Conservar DECISIONES, CANDADOS y CONSEJO; no borrar marcas del consejo, que ceden ante cualquier marca humana posterior."
     }
   ],
   "data_contracts": [
