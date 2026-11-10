@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-09.sala-corta.2 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-09.os-monton.1 · 2026-10-20.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -185,6 +185,7 @@ flowchart LR
   n_SVC_AUTON_CLOUD -.->|Registra versión privada con origen y recibo| n_GAS_SALA
   n_SYS_POTENCIALES -.->|Consulta las presentaciones de ese PPP y revisión| n_GAS_SALA
   n_SYS_INVERSION -.->|Abre el mismo historial de presentación y origen PPP| n_GAS_SALA
+  n_SYS_SALA -->|Cuántas publicaciones hay listas para lanzar (llave local sala_resumen_v1, mismo origen)| n_SYS_YOD_OS
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PLAN_POTENCIAL pendiente;
@@ -352,6 +353,7 @@ flowchart LR
   n_SYS_SALA -->|Lecturas agregadas y canario aislado de Sala| n_SYS_CONTROL
   n_SYS_CONTROL -->|Pruebas programadas y evidencia de ejecución| n_EXT_ACTIONS
   n_SVC_HORARIOS_CLOUD -->|Resultados sanitizados observados desde Accesos| n_SYS_CONTROL
+  n_SYS_SALA -->|Cuántas publicaciones hay listas para lanzar (llave local sala_resumen_v1, mismo origen)| n_SYS_YOD_OS
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_EMD pendiente;
@@ -734,3 +736,4 @@ flowchart LR
 | CON-PPP-PRESENTACIONES-LISTA | SYS-POTENCIALES → GAS-SALA | api: Consulta las presentaciones de ese PPP y revisión. Vista privada del catálogo existente, filtrada por caso/escenario/revisión y permiso. Sin catálogo paralelo ni publicación implícita. | propuesto | [yod-portal/docs/arquitectura/ppp-presentaciones.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-presentaciones.md) — Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. |
 | CON-MD-PRESENTACIONES-PPP | SYS-INVERSION → GAS-SALA | api: Abre el mismo historial de presentación y origen PPP. Mismo registro de versiones y URL canónica; origen, versión editorial y estado visibles. Proyección visitante separada del guion/contexto privado. | propuesto | [yod-portal/docs/arquitectura/ppp-presentaciones.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-presentaciones.md) — Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. |
 | CON-EMD-CONTINUOUS-BACKUP | GAS-EMD → EXT-DRIVE | respaldo: Propuesta: respaldo privado de administración. CTR-EMD-CONTINUOUS-ADMIN: respaldo privado verificado antes de cambios administrativos; sin creación en lecturas, ampliación de ACL o restauración ciega. | propuesto | Extensión administrativa propuesta sobre los servicios privados existentes; ejecución no acreditada. |
+| CON-SALA-RESUMEN-OS | SYS-SALA → SYS-YOD-OS | lectura: Cuántas publicaciones hay listas para lanzar (llave local sala_resumen_v1, mismo origen). La Sala escribe en el almacenamiento del navegador {listas: entero, cuando: milisegundos} cuando su hoja contesta y lo borra con su copia local. YOD OS sólo lee, con sesión validada; acepta 0 a 999 y hasta siete días; fuera de eso muestra texto fijo. Sin títulos, textos, llaves ni red. No es una cifra en vivo ni un permiso. | codigo | [yod-portal/os/app.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/app.js) — salaListas() y pintarSalaListas(): lectura local validada y texto fijo de respaldo.; [sala-edicion/sala-salida.js](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/sala-salida.js) — recordar() escribe sala_resumen_v1 y olvidar() lo borra (PR 383, pendiente de fusión al registrar). |

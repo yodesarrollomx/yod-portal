@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-09.sala-corta.2
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-09.os-monton.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 27 sistemas y 91 componentes distribuidos exactamente una vez.
-- 10 áreas; 150 conexiones registradas, 10 marcadas como verificadas en el atlas.
+- 10 áreas; 151 conexiones registradas, 10 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -107,6 +107,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-073 · SYS-YOD-OS → GAS-PORTERO-RESPALDO · autenticacion · Respaldo de identidad · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-EMD-GITHUB-EMBED · SYS-YOD-OS → SYS-EMD · embed · Wrapper EMD en dominio GitHub propio; legado compatible · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-OS-DESPACHO-3D · SYS-YOD-OS → SYS-DESPACHO-3D · navegacion · Ruta interna del despacho con sesión y permiso vigentes · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-SALA-RESUMEN-OS · SYS-SALA → SYS-YOD-OS · lectura · Cuántas publicaciones hay listas para lanzar (llave local sala\_resumen\_v1, mismo origen) · Estado: codigo · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -139,10 +140,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-073 · Configuración del respaldo · Estado: codigo · yodesarrollomx/yod-portal · os/yod-acceso.js · Revisión: HEAD\_baseline
 - CON-EMD-GITHUB-EMBED · Propietario confirma Pages main/raíz y ruta canónica /yod-portal/emd/; wrapper pendiente en PR separado, no evidencia de despliegue. · Estado: declarado · Sin revisión inmutable en esta referencia
 - [CON-OS-DESPACHO-3D · Ruta interna del despacho con sesión y permiso vigentes · Estado: codigo · yodesarrollomx/yod-portal · os/despacho-section.js · Revisión: 5eca769947e60bc5b51389244393e0f63817cf86](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/os/despacho-section.js)
+- CON-SALA-RESUMEN-OS · salaListas() y pintarSalaListas(): lectura local validada y texto fijo de respaldo. · Estado: codigo · yodesarrollomx/yod-portal · os/app.js · Sin revisión inmutable en esta referencia
+- CON-SALA-RESUMEN-OS · recordar() escribe sala\_resumen\_v1 y olvidar() lo borra (PR 383, pendiente de fusión al registrar). · Estado: declarado · yodesarrollomx/sala-edicion · sala-salida.js · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 22 conexiones sin verificación de ejecución registrada.
+- 23 conexiones sin verificación de ejecución registrada.
 
 ### Control Maestro · SYS-CONTROL
 
@@ -2238,6 +2241,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PLAN-METRICAS-ONLINE · SYS-SALA → SYS-MARKETING · lectura · Marketing consume agregados de Plan publicados con hash · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-SALUD-SALA · SYS-SALA → SYS-CONTROL · observacion · Lecturas agregadas y canario aislado de Sala · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-SALA-MEDIOS-PUBLICOS · SYS-SALA → EXT-ACTIONS · publicacion · Imágenes nuevas en releases públicos inmutables con manifiesto fijado por recibo · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-SALA-RESUMEN-OS · SYS-SALA → SYS-YOD-OS · lectura · Cuántas publicaciones hay listas para lanzar (llave local sala\_resumen\_v1, mismo origen) · Estado: codigo · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2268,10 +2272,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-SALUD-SALA · Solicitud explícita de Dirección el11-oct-2026; implementación pendiente. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - [CON-SALUD-SALA · Monitor38170852821 y canario38170259463 success; resultados técnicos y fuentes leídas realmente, con alcance/caducidad.40 correctos,59 pendientes; sin operaciones comerciales como prueba. · Estado: ejecucion · yodesarrollomx/yod-portal · docs/SALUD-SISTEMAS.md · Revisión: de33d90af87e9b5b225b0405841145348d42b8b0](https://github.com/yodesarrollomx/yod-portal/blob/de33d90af87e9b5b225b0405841145348d42b8b0/docs/SALUD-SISTEMAS.md)
 - CON-SALA-MEDIOS-PUBLICOS · Diseño local en docs/arquitectura/sala-medios-publicos-20261015.md y schema 1 acordado por UI/snapshots/almacén. Sin release/asset, canario, activación o despliegue acreditado. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-SALA-RESUMEN-OS · salaListas() y pintarSalaListas(): lectura local validada y texto fijo de respaldo. · Estado: codigo · yodesarrollomx/yod-portal · os/app.js · Sin revisión inmutable en esta referencia
+- CON-SALA-RESUMEN-OS · recordar() escribe sala\_resumen\_v1 y olvidar() lo borra (PR 383, pendiente de fusión al registrar). · Estado: declarado · yodesarrollomx/sala-edicion · sala-salida.js · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 5 conexiones sin verificación de ejecución registrada.
+- 6 conexiones sin verificación de ejecución registrada.
 - Cambios de infraestructura y documentos históricos requieren reconciliación
 
 ### Herramientas de producción · SYS-SALA-OPERACION

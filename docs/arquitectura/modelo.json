@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-09.sala-corta.2",
+  "revision": "2026-11-09.os-monton.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -6852,6 +6852,31 @@
       ],
       "runtime_verified": false,
       "restricted_evidence_omitted": true
+    },
+    {
+      "id": "CON-SALA-RESUMEN-OS",
+      "from": "SYS-SALA",
+      "to": "SYS-YOD-OS",
+      "kind": "lectura",
+      "label": "Cuántas publicaciones hay listas para lanzar (llave local sala_resumen_v1, mismo origen)",
+      "contract": "La Sala escribe en el almacenamiento del navegador {listas: entero, cuando: milisegundos} cuando su hoja contesta y lo borra con su copia local. YOD OS sólo lee, con sesión validada; acepta 0 a 999 y hasta siete días; fuera de eso muestra texto fijo. Sin títulos, textos, llaves ni red. No es una cifra en vivo ni un permiso.",
+      "contract_ids": [],
+      "status": "codigo",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "os/app.js",
+          "claim": "salaListas() y pintarSalaListas(): lectura local validada y texto fijo de respaldo.",
+          "status": "codigo"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "sala-salida.js",
+          "claim": "recordar() escribe sala_resumen_v1 y olvidar() lo borra (PR 383, pendiente de fusión al registrar).",
+          "status": "declarado"
+        }
+      ]
     }
   ],
   "processes": [
@@ -15171,6 +15196,33 @@
       ],
       "deployment": "Las REGLAS se cambian en el Sheet y son inmediatas. Los horarios y la regla del semillero entran por PR de sala-edicion a main. El consejo de nube y el botón Publicar llevan PR y evidencia propios. Este registro no acredita publicaciones ni corridas.",
       "rollback": "REGLAS: nube_ejecuta_etapas=voz,escena,corte,prospecto, consejo_motores=sol,opus y semillero_activo=1 (o borrar la fila). Revertir el PR de horarios restaura los latidos anteriores. Conservar DECISIONES, CANDADOS, CONSEJO, IDEAS, medios y paquetes de Drive; nada se borra, lo retirado se archiva."
+    },
+    {
+      "id": "CHG-OS-MONTON-20261109",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "GAS-PORTERO",
+        "GAS-CATALOGO",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-CONTROL",
+        "SYS-MERCADO"
+      ],
+      "status": "implementado_local",
+      "authorization": "autorizado_por_chat: Dirección (9-nov-2026, 18:16 de Hermosillo), tras ver la Sala con 24 publicaciones listas: «conecta todo listo en yod os para poder publicar… no voy a publicar aún, quiero hacer montón para nunca quedarnos, quiero que vayamos armando un paquete para ir lanzando».",
+      "proposal": "YOD OS dice cuántas publicaciones hay listas para lanzar y lleva al montón de la Sala en un toque. (1) La Sala de Edición, que vive en el mismo origen, deja en el aparato la llave `sala_resumen_v1` = {listas, cuando} cada vez que su hoja contesta: sólo un número y una hora, sin títulos ni textos; la borra junto con su copia local (sala-edicion PR 383). (2) YOD OS la lee sin red y sin llaves nuevas, sólo con sesión validada, y pinta ese número en la tarjeta nueva «Publicaciones» del inicio de Dirección, en la tarjeta de la Sala del inicio de Sayri y en la puerta de la Sala de «Embudo comercial»; las tres llevan a #/embudo/sala, donde «Te toca» abre con el montón. Sin dato, con dato inválido o con más de siete días se muestra el texto fijo. (3) Al cerrar sesión YOD OS borra también las tres llaves locales que la Sala guarda de su montón. No otorga permisos, no llama a ningún backend, no cambia el catálogo ni el orden de navegación; los demás archivos sólo cambian su etiqueta de versión.",
+      "tests": [
+        "node --test tests/*.cjs, con tests/os-sala-listas.test.cjs: el número sólo se acepta entero de 0 a 999 y con menos de siete días; dato ausente, roto, del futuro o viejo usa el texto fijo; las tarjetas y la puerta llevan a #/embudo/sala; cerrar sesión borra las llaves locales de la Sala.",
+        "node scripts/arquitectura.cjs --check, node verify-os.cjs, node verify-portal.cjs, node verify-accesos.cjs, node verify-obra-app.cjs y node scripts/versiones.cjs --check.",
+        "Recorrido en navegador con datos sintéticos: sin sesión, texto fijo; con sesión y la llave, el número; al cambiar la llave desde otro documento del mismo origen, la tarjeta se actualiza.",
+        "Pendiente: verlo en el navegador de Dirección tras publicar las dos partes."
+      ],
+      "deployment": "Dos PR independientes: sala-edicion 383 (la Sala deja la llave) y este de yod-portal (YOD OS la lee). Cualquiera puede publicarse primero: sin la llave YOD OS muestra el texto fijo. Publicar no acredita la vista en el aparato de Dirección.",
+      "rollback": "Revertir el PR de yod-portal devuelve las tarjetas y la puerta anteriores; la llave local de la Sala queda sin lector y caduca sola. Sin backend ni datos que restaurar."
     }
   ],
   "data_contracts": [
