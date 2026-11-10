@@ -15,6 +15,12 @@ test('Codesarrollos: espera 30 s, reintenta una vez y ya no dice «ningún desti
   assert.match(html,/data\.ok===false\)\{src\.textContent='Codesarrollos no aceptó la sesión/,'un rechazo de sesión no se reintenta');
 });
 
+test('Codesarrollos: el mapa usa teselas de OpenStreetMap (CARTO ahora pide API key)',()=>{
+  const html=leer('track-codesarrollos.html');
+  assert.doesNotMatch(html,/basemaps\.cartocdn\.com/,'CARTO tapizaba el mapa con «API KEY REQUIRED»');
+  assert.match(html,/L\.tileLayer\('https:\/\/tile\.openstreetmap\.org\/\{z\}\/\{x\}\/\{y\}\.png'/);
+});
+
 test('Obra en vivo abre con el marco de YOD OS (menú y «Atrás»), sin tocar la app del cliente',()=>{
   const html=leer('obra.html');
   const shell=html.indexOf('<script src="os/shell.js?v=');
