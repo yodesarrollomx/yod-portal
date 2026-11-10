@@ -371,7 +371,7 @@
   };
   // Etiqueta del tablero embebido (caché de 10 min de Pages). No se edita aquí: la escribe
   // node scripts/versiones.cjs --aplicar desde os/versiones.json, igual que todos los ?v=.
-  var TABLERO_V='20261110-barrido';
+  var TABLERO_V='20261110-despacho';
   var state={modules:[],rawRows:[],role:'vista',boards:'',profileReady:false,loading:false,opsScope:'mias',allTasks:[],sesionEpoch:0,sessionToken:'',identityRequest:0,pulseCache:{},opsCache:null,verifiedAt:0};
   var $=function(id){return document.getElementById(id);};
   // ¿hay clave guardada? distingue «sin sesión» de «sesión validándose»
@@ -637,7 +637,13 @@
       if(state.profileReady)notifyContinuityFrame();
     };
   });
-  if(window.YodDespachoEquipoHost&&window.YODCaseTransport&&$('despachoEquipo')){
+  /* Equipo (bitácora Claude ↔ ChatGPT) se monta sólo cuando su adaptador del Portero esté
+     instalado (docs/arquitectura/despacho-equipo.md). Hoy readTeam contesta «unavailable»:
+     el botón abría una ventana que nunca cargaba y, encima, tapaba «Volver a la sala 3D»,
+     el título del Entorno y los velos de los diálogos (barrido del Despacho, 10-nov-2026).
+     Para encenderlo: EQUIPO_CONECTADO=true en el mismo PR que acredite el adaptador. */
+  var EQUIPO_CONECTADO=false;
+  if(EQUIPO_CONECTADO&&window.YodDespachoEquipoHost&&window.YODCaseTransport&&$('despachoEquipo')){
     despachoTeam=window.YodDespachoEquipoHost.create({
       container:$('despachoEquipo'),host:window,
       getAccess:function(){return {allowed:state.role==='admin'&&despachoSection.isAuthorized()&&mismaSesion(state.sessionToken,state.sesionEpoch),epoch:state.sesionEpoch};},
@@ -646,7 +652,7 @@
         write:function(intent){return window.YODCaseTransport.writeTeam(intent);},
         lookupReceipt:function(requestId){return window.YODCaseTransport.lookupTeamReceipt({request_id:requestId});}
       },
-      loadMount:function(){return import('../despacho3d/equipo.mjs?v=20261110-barrido').then(function(module){return module.mountTeamDesk;});},
+      loadMount:function(){return import('../despacho3d/equipo.mjs?v=20261110-despacho').then(function(module){return module.mountTeamDesk;});},
       onError:function(){var status=$('despachoEquipoEstado');if(status)status.textContent='No se pudo abrir Equipo. Puedes volver a validar tu acceso.';}
     });
   }

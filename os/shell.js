@@ -53,7 +53,7 @@
   /* La dirección del Portero vive SOLO en os/yod-acceso.js. Si la página no la
      cargó, se pide aquí (misma carpeta que este archivo) antes del primer canje. */
   var ACCESO_LISTO = window.YOD_PORTERO ? Promise.resolve() : new Promise(function (ok) {
-    var sc = document.createElement('script'); sc.src = SELF.replace(/shell\.js(\?.*)?$/, 'yod-acceso.js?v=20261110-barrido');
+    var sc = document.createElement('script'); sc.src = SELF.replace(/shell\.js(\?.*)?$/, 'yod-acceso.js?v=20261110-despacho');
     sc.onload = sc.onerror = function () { ok(); }; document.head.appendChild(sc);
   });
   /* El ORIGINAL siempre primero; el respaldo solo si aquel falla en esta
@@ -230,8 +230,13 @@
   /* El Embudo comercial no se abre "pelón": vive en la máscara de la cabina
      (Sala · Métricas · Plan de Potencial). Desde cualquier tablero envuelto,
      su enlace lleva a esa ruta del OS, igual que un clic en la cabina. */
+  /* El Despacho tampoco: dentro de la cabina su enlace ya es #/despacho (app.js hrefDe),
+     pero desde los demás tableros mandaba a yod-despacho/, la Bandeja anterior, que
+     Dirección no reconocía como su Despacho (10-nov-2026). La Bandeja sigue a un clic
+     en «••• › Bandeja actual» dentro del Despacho. */
   function enlace(row) {
     var url = destino(row); if (!url) return '';
+    if (row && row.system_id === 'SYS-DESPACHO') return OS + '#/despacho';
     return (row && row.system_id === 'SYS-MARKETING') ? OS + '#/embudo/metricas' : url;
   }
   function navItem(row, cur) {
@@ -376,7 +381,7 @@
   }
   function boot() {
     // registro de proyectos (folio): lo usan el buscador ⌘K y la chinche
-    if (!window.YodProyectos) { var sp = document.createElement('script'); sp.src = SELF.replace(/shell\.js(\?.*)?$/, 'proyectos.js?v=20261110-barrido'); document.head.appendChild(sp); }
+    if (!window.YodProyectos) { var sp = document.createElement('script'); sp.src = SELF.replace(/shell\.js(\?.*)?$/, 'proyectos.js?v=20261110-despacho'); document.head.appendChild(sp); }
     if (document.querySelector('.yod-shell')) return;
     /* Los íconos de la barra son de Tabler: los tableros que no traían su hoja (MOAC)
        mostraban botones vacíos. El marco la carga él mismo, y las fuentes de la marca. */
@@ -415,8 +420,8 @@
     document.body.appendChild(shell);
 
     // The shared visual layer preserves this shell's identity and routing.
-    var chromeCSS=document.createElement('link');chromeCSS.rel='stylesheet';chromeCSS.href=new URL('ui-chrome.css?v=20261110-barrido',SELF).href;document.head.appendChild(chromeCSS);
-    var chromeJS=document.createElement('script');chromeJS.src=new URL('ui-chrome.js?v=20261110-barrido',SELF).href;document.head.appendChild(chromeJS);
+    var chromeCSS=document.createElement('link');chromeCSS.rel='stylesheet';chromeCSS.href=new URL('ui-chrome.css?v=20261110-despacho',SELF).href;document.head.appendChild(chromeCSS);
+    var chromeJS=document.createElement('script');chromeJS.src=new URL('ui-chrome.js?v=20261110-despacho',SELF).href;document.head.appendChild(chromeJS);
     wireDrawer(shell, scrim);
     // «hay algo nuevo»: entrar a este tablero cuenta como visita; su punto se apaga
     try { if (cur) { localStorage.setItem('yod_visto_' + cur, String(Date.now())); localStorage.removeItem('yod_nuevo_' + cur); } } catch (e) { }
@@ -437,7 +442,7 @@
      (yod-portal/chinche.js), en modo "contexto" (DOM). Cada chinche guarda la tarjeta
      donde se picó por última vez y el repo de la página, para que el encargo llegue al
      repo correcto. Si el board ya la trae, no se carga dos veces. */
-  var CHINCHE_V = "20261110-barrido";
+  var CHINCHE_V = "20261110-despacho";
   function cargarChinche() {
     if (window.YODChinche) return;
     var ultimo = null;

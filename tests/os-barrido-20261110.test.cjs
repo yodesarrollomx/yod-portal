@@ -48,3 +48,18 @@ test('Personas y accesos se ilumina en el menú (antes se iluminaba PPP)',()=>{
   assert.match(js,/if \(enAccesos\) set\('yodCrumbHere', 'Personas y accesos'\);/);
   assert.match(js,/var cur = currentSys\(\);if \(!cur\) return;/,'el candado sigue usando el tablero real (PPP)');
 });
+
+test('El Despacho desde cualquier tablero abre el Despacho de YOD OS, no la Bandeja anterior',()=>{
+  const js=leer('os/shell.js');
+  const m=js.match(/function enlace\(row\) \{[\s\S]*?\n  \}/);
+  assert.ok(m,'enlace() existe');
+  const vm=require('node:vm');
+  const ctx={OS:'https://yodesarrollomx.github.io/yod-portal/os/',destino:r=>r.url};
+  vm.runInNewContext(m[0]+';this.enlace=enlace;',ctx);
+  assert.equal(ctx.enlace({system_id:'SYS-DESPACHO',url:'https://yodesarrollomx.github.io/yod-despacho/'}),'https://yodesarrollomx.github.io/yod-portal/os/#/despacho');
+  assert.equal(ctx.enlace({system_id:'SYS-MARKETING',url:'https://yodesarrollomx.github.io/aurum-board/'}),'https://yodesarrollomx.github.io/yod-portal/os/#/embudo/metricas');
+  assert.equal(ctx.enlace({system_id:'SYS-TAREAS',url:'https://yodesarrollomx.github.io/board-aurum/'}),'https://yodesarrollomx.github.io/board-aurum/','los demás tableros no cambian');
+  assert.equal(ctx.enlace({system_id:'SYS-DESPACHO',url:''}),'','sin destino autorizado no hay enlace');
+  const app=leer('os/app.js');
+  assert.match(app,/if\(window\.PortalCore\.safeUrl\(url,'SYS-DESPACHO'\)\)return '#\/despacho';/,'la cabina ya lo hacía: mismo destino en ambos lados');
+});

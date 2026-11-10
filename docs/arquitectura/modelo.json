@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-10.os-barrido.2",
+  "revision": "2026-11-10.os-barrido.3",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -15271,6 +15271,33 @@
       ],
       "deployment": "Un PR de yod-portal a main (GitHub Pages). Sin backend.",
       "rollback": "Revertir el PR devuelve las teselas de CARTO (que hoy piden llave). Sin datos que restaurar."
+    },
+    {
+      "id": "CHG-DESPACHO-RUTA-20261110",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-MERCADO",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-TRACK",
+        "SYS-CONTROL",
+        "GAS-PORTERO",
+        "GAS-CATALOGO",
+        "SYS-POTENCIALES"
+      ],
+      "status": "implementado_local",
+      "authorization": "autorizado_por_chat: Dirección (10-nov-2026, tarde): «me gustaría que dejara de aparecerme esa parte del despacho y me apareciera el despacho tradicional… haz un recorrido al dashboard en todos sus botones… arréglala aquí y en su código… hazle pruebas manuales».",
+      "proposal": "(1) Ruta: desde cualquier tablero envuelto, «El Despacho» del menú y del buscador del marco (os/shell.js enlace) llevaba a yod-despacho/, la Bandeja anterior (Mi trabajo / Mi corcho, mismas tareas de MOAC, Ejecutor sin corridas), que Dirección no reconocía. Ahora lleva a la cabina #/despacho, igual que app.js hrefDe dentro de YOD OS. La Bandeja sigue en «••• › Bandeja anterior y Corcho». (2) Equipo: readTeam contesta «unavailable» porque su adaptador del Portero no está instalado (despacho-equipo.md); el botón abría una ventana que no cargaba y tapaba «Volver a la sala 3D», el título del Entorno y los velos. Se monta sólo con EQUIPO_CONECTADO=true; si la lectura falla, ya no dice «Conservamos tu texto». (3) Entorno: la «×» queda fija al bajar; las ligas a demos con datos sintéticos no se ven (siguen accesibles por su dirección). (4) Plano y estado: la barra de autones ya no queda encima del plano. (5) Mesa de trabajo (sala.html): Sala y Embudo se abren en la máscara de YOD OS y MOAC en la misma pestaña, sin pestañas nuevas. (6) En la ruta del Despacho, 🌙 y ⚙️ del OS se ocultan (tapaban «Ayuda» y «Cancelar señalamiento») y 📌 sube sobre la barra. Sin cambios de permisos, datos ni backends; los demás archivos sólo cambian su etiqueta (20261110-despacho).",
+      "tests": [
+        "node --test tests/*.cjs (1403), con tests/despacho-barrido-20261110.test.cjs (7) y la prueba nueva de enlace() en tests/os-barrido-20261110.test.cjs, que falla con el código anterior.",
+        "node scripts/arquitectura.cjs --check, node scripts/versiones.cjs --check, verify-os, verify-portal, verify-accesos y verify-obra-app.",
+        "Recorrido manual en el navegador de Dirección: Equipo (readTeam unavailable en 6 s), Entorno, Plano y estado, Áreas (8 lugares), Ayuda, Opciones del autón (círculo y puesto), chinche, Mesa de trabajo; las reglas nuevas inyectadas en vivo quitan los traslapes medidos.",
+        "Pendiente: verlo en el navegador de Dirección tras publicar."
+      ],
+      "deployment": "Un PR de yod-portal a main (GitHub Pages). Sin Apps Script ni Sheets.",
+      "rollback": "Revertir el PR devuelve el enlace a la Bandeja, el botón Equipo y los estilos anteriores. Sin datos que restaurar."
     }
   ],
   "data_contracts": [

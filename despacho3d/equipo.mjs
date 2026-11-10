@@ -50,8 +50,13 @@ export function mountTeamDesk({container,transport,isAuthorized,identityEpoch,ho
   dialog.append(header,toolbar,status,people,nav,filter,ownerLabel,stream,form,foot);container.append(launcher,dialog);
   const speech=bindTeamDictation({button:mic,textarea,status:voiceStatus,host,canStart:()=>!disposed&&!sending&&!session.pending()&&isAuthorized()===true&&identityEpoch()===mountedEpoch});
   function alive(){return !disposed&&isAuthorized()===true&&identityEpoch()===mountedEpoch;}
-  function errorMessage(error){
+  function errorMessage(error,during){
     if(error.message==='session_changed'){revoke();return;}
+    if(during==='read'&&!['read_superseded','instruction_invalid'].includes(error.message)){
+      if(!snapshot)freshness.textContent='Sin lectura de la bitácora';
+      status.textContent=snapshot?'No se pudo actualizar la bitácora; ves la última lectura.':'La bitácora del equipo no contestó. No se guardó nada; los encargos siguen en MOAC y en el Buzón.';
+      return;
+    }
     status.textContent=error.message==='read_superseded'?'':error.message==='instruction_invalid'?'Revisa el texto y el encargo seleccionado.':'No pudimos confirmar la actualización. Conservamos tu texto.';
   }
   function sourceLink(value,node){const href=safeLink(value);if(!href)return;const a=el('a','team-source','Ver fuente ↗');a.href=href;a.target='_blank';a.rel='noopener noreferrer';node.append(a);}
@@ -132,7 +137,7 @@ export function mountTeamDesk({container,transport,isAuthorized,identityEpoch,ho
   async function read(){
     refresh.disabled=true;
     try{const result=await session.read();if(!alive())return;snapshot=result;renderSnapshot();status.textContent='Bitácora actualizada.';}
-    catch(error){errorMessage(error);}
+    catch(error){errorMessage(error,'read');}
     finally{refresh.disabled=false;if(alive())lock();}
   }
   function lock(){
