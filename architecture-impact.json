@@ -1,28 +1,21 @@
 {
-  "model_revision": "2026-11-10.os-barrido.1",
-  "proposal_id": "CHG-OS-BARRIDO-20261110",
-  "summary": "Barrido de uso real de YOD OS (Dirección, 10-nov-2026): cuatro fallas reproducidas y corregidas sin reestructurar. Codesarrollos espera 30 s, reintenta una vez y deja de decir «ningún destino habilitado» (era un plazo de 8 s contra un servidor que tarda ~8 s). El Inicio lee las fechas de MOAC («Miércoles 7») y por fin cuenta las vencidas (antes todo salía «Sin fecha» y 0 vencidas). Obra en vivo abre con el marco de YOD OS (menú y «Atrás»), conservando su tema oscuro; la app del cliente sigue sin marco. En el Despacho la tarjeta «Tu despacho» deja de quedar bajo la barra de autones en «Ver todo». En Personas y accesos el menú ilumina su propio renglón. Los demás archivos sólo cambian su etiqueta de versión (20261110-barrido).",
+  "model_revision": "2026-11-10.os-barrido.2",
+  "proposal_id": "CHG-OS-BARRIDO-MAPA-20261110",
+  "summary": "Codesarrollos: el mapa usa teselas de OpenStreetMap. Al verificar en vivo el barrido del 10-nov, los datos ya llegaban pero CARTO tapizaba el fondo con «API KEY REQUIRED» (ahora exige llave); PPP ya había hecho el mismo cambio.",
   "components": [
-    "SYS-YOD-OS",
     "SYS-TRACK",
-    "SYS-TAREAS",
+    "SYS-YOD-OS",
     "SYS-OBRA",
-    "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "SYS-POTENCIALES",
-    "SYS-OBRA-CLIENTE",
-    "SYS-MERCADO",
     "SYS-CONTROL",
-    "GAS-PORTERO",
-    "GAS-CATALOGO"
+    "SYS-OBRA-CLIENTE"
   ],
   "tests": [
-    "node --test tests/*.cjs (incluye tests/os-fechas-moac.test.cjs y tests/os-barrido-20261110.test.cjs: 8 pruebas nuevas)",
+    "node --test tests/*.cjs (prueba nueva en tests/os-barrido-20261110.test.cjs)",
     "node scripts/arquitectura.cjs --check",
     "node scripts/versiones.cjs --check",
     "node verify-os.cjs · node verify-portal.cjs · node verify-accesos.cjs · node verify-obra-app.cjs",
-    "Recorrido en el navegador de Dirección antes y después de publicar",
+    "Recorrido en el navegador de Dirección tras publicar",
     "git diff --check"
   ],
-  "rollback": "Revertir el PR devuelve el comportamiento anterior de los cinco puntos. Sin backend ni datos que restaurar."
+  "rollback": "Revertir el PR devuelve las teselas de CARTO. Sin backend ni datos que restaurar."
 }

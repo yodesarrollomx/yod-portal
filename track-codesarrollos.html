@@ -80,7 +80,8 @@
   function inicia(PINES){
   if(!PINES.length){document.getElementById('source').textContent='No hay proyectos visibles configurados';return}
   const map=L.map('map',{zoomControl:false,attributionControl:true,gestureHandling:true,gestureHandlingOptions:{duration:1200,text:{touch:'Usa dos dedos para mover el mapa',scroll:'Usa ctrl + scroll para hacer zoom',scrollMac:'Usa ⌘ + scroll para hacer zoom'}}}).setView([28.5,-110.9],7);L.control.zoom({position:'bottomleft'}).addTo(map);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',subdomains:'abcd',maxZoom:19}).addTo(map);
+  /* CARTO ahora exige API key: sus tiles salían tapizados de «API KEY REQUIRED» (barrido 10-nov-2026). OSM, igual que PPP. */
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap',maxZoom:19}).addTo(map);
   window._map=map;
   let bounds=L.latLngBounds(PINES.map(p=>[p.lat,p.lng])).pad(0.5);
   PINES.forEach(p=>{
