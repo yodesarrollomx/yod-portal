@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-09.os-monton.1",
+  "revision": "2026-11-10.os-barrido.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -15223,6 +15223,34 @@
       ],
       "deployment": "Dos PR independientes: sala-edicion 383 (la Sala deja la llave) y este de yod-portal (YOD OS la lee). Cualquiera puede publicarse primero: sin la llave YOD OS muestra el texto fijo. Publicar no acredita la vista en el aparato de Dirección.",
       "rollback": "Revertir el PR de yod-portal devuelve las tarjetas y la puerta anteriores; la llave local de la Sala queda sin lector y caduca sola. Sin backend ni datos que restaurar."
+    },
+    {
+      "id": "CHG-OS-BARRIDO-20261110",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-TRACK",
+        "SYS-TAREAS",
+        "SYS-OBRA",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES",
+        "SYS-OBRA-CLIENTE",
+        "SYS-MERCADO",
+        "SYS-CONTROL",
+        "GAS-PORTERO",
+        "GAS-CATALOGO"
+      ],
+      "status": "implementado_local",
+      "authorization": "autorizado_por_chat: Dirección (10-nov-2026, mañana de Hermosillo), tras el barrido de uso real de YOD OS, eligió «Arreglos técnicos 1–6 (Recomendado)» y «Limpieza de datos 7–9». Pidió mejoras fáciles «sin una reestructuración general, sino un cierto acomodo».",
+      "proposal": "Cuatro fallas vistas en el navegador de Dirección el 10-nov-2026 y reproducidas dos veces, corregidas sin reestructurar. (1) Codesarrollos (track-codesarrollos.html): la lectura del Control Maestro tardaba ~8 s y el plazo era de 8 s; se cortaba y decía «Track temporalmente no disponible · ningún destino habilitado», que era falso. Ahora espera 30 s, reintenta una vez sola, ofrece un botón «Reintentar», no reintenta un rechazo de sesión y crea el mapa una sola vez. (2) Inicio (os/adapters/operations.js): MOAC guarda el día como «Miércoles 7»; el adaptador sólo aceptaba el número al principio, así que las 28 tareas abiertas salían «Sin fecha» y el resumen decía 0 vencidas mientras MOAC marcaba 25 atrasadas. dueDate() busca el número en cualquier parte, igual que getDayNumber() de board-aurum; con los datos del día quedan 26 vencidas y 2 sin fecha, como en MOAC. (3) Obra en vivo (obra.html) abría sin el marco: sin menú ni «Atrás». Carga os/shell.css y os/shell.js como los demás tableros (después de su chinche, que el marco no duplica) y conserva su fondo oscuro dentro del marco; obra-app, la del cliente, sigue sin marco. (4) El Despacho: en «Ver todo» la barra de autones tapaba la tarjeta «Tu despacho» y su botón; con la barra visible la tarjeta sube a top:104px como al caminar (office-entry.css?v=127). (5) En Personas y accesos el menú del marco iluminaba «PPP»; ahora ilumina «Personas y accesos» y la miga lo dice; el candado sigue con el tablero real. No cambia permisos, catálogo, orden del menú, backends ni datos. Los demás archivos sólo cambian su etiqueta de versión (20261110-barrido).",
+      "tests": [
+        "node --test tests/*.cjs, con tests/os-fechas-moac.test.cjs (4 pruebas: «Miércoles 7», formatos anteriores, sin fecha y resumen; 2 fallan con el código anterior) y tests/os-barrido-20261110.test.cjs (4 pruebas estáticas de Codesarrollos, Obra, Despacho y Accesos).",
+        "node scripts/arquitectura.cjs --check, node scripts/versiones.cjs --check, node verify-os.cjs, node verify-portal.cjs, node verify-accesos.cjs y node verify-obra-app.cjs.",
+        "Navegador de Dirección antes de publicar: Codesarrollos abortaba a los 7999 ms (dos veces); la fórmula nueva de fechas, aplicada a la lectura del día, da 26 vencidas y 2 sin fecha en el equipo y 7 de 7 vencidas para Alejandro; el marco inyectado en Obra pinta menú, «Atrás» y tarjetas legibles; la regla del Despacho deja la tarjeta en 164–385 px y la barra en 666–725 px (antes se enciman).",
+        "Pendiente: verlo en el navegador de Dirección tras publicar."
+      ],
+      "deployment": "Un PR de yod-portal a main (GitHub Pages). Sin Apps Script ni Sheets. Publicar no acredita la vista en el aparato de Dirección.",
+      "rollback": "Revertir el PR devuelve el plazo de 8 s, la lectura anterior de fechas, Obra sin marco, la tarjeta del Despacho abajo y el menú anterior en Accesos. Sin datos que restaurar."
     }
   ],
   "data_contracts": [
