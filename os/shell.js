@@ -53,7 +53,7 @@
   /* La dirección del Portero vive SOLO en os/yod-acceso.js. Si la página no la
      cargó, se pide aquí (misma carpeta que este archivo) antes del primer canje. */
   var ACCESO_LISTO = window.YOD_PORTERO ? Promise.resolve() : new Promise(function (ok) {
-    var sc = document.createElement('script'); sc.src = SELF.replace(/shell\.js(\?.*)?$/, 'yod-acceso.js?v=20261109-monton');
+    var sc = document.createElement('script'); sc.src = SELF.replace(/shell\.js(\?.*)?$/, 'yod-acceso.js?v=20261110-barrido');
     sc.onload = sc.onerror = function () { ok(); }; document.head.appendChild(sc);
   });
   /* El ORIGINAL siempre primero; el respaldo solo si aquel falla en esta
@@ -246,14 +246,20 @@
   function renderNav(rows, cur) {
     var box = document.getElementById('yodNav'); if (!box) return; box.innerHTML = '';
     rows = orderedModules(rows); state.modules = rows;
+    /* Barrido 10-nov-2026: accesos.html vive en el repo de PPP y currentSys() la
+       reconoce como PPP; el menú iluminaba «PPP» estando en «Personas y accesos».
+       Sólo cambia qué renglón se ilumina y la miga: el candado sigue con cur. */
+    var enAccesos = /\/potenciales-yod\/accesos\.html$/.test(location.pathname);
+    var navCur = enAccesos ? '' : cur;
     sidebarModules(rows, vivo).forEach(function (r) {
-      var n = navItem(r, cur); if (n) box.appendChild(n);
+      var n = navItem(r, navCur); if (n) box.appendChild(n);
     });
     if (state.role === 'admin') {
-      var people = el('a', 'yod-nav-item'); people.href = 'https://yodesarrollomx.github.io/potenciales-yod/accesos.html';
+      var people = el('a', 'yod-nav-item' + (enAccesos ? ' active' : '')); people.href = 'https://yodesarrollomx.github.io/potenciales-yod/accesos.html';
       people.innerHTML = '<i class="ti ti-users"></i><span>Personas y accesos</span>'; box.appendChild(people);
     }
-    rows.forEach(function (r) { if (r.system_id === cur && r.titulo_portal) set('yodCrumbHere', moduleTitle(r)); });
+    if (enAccesos) set('yodCrumbHere', 'Personas y accesos');
+    else rows.forEach(function (r) { if (r.system_id === cur && r.titulo_portal) set('yodCrumbHere', moduleTitle(r)); });
     if (!box.children.length) box.innerHTML = '<span class="yod-nav-loading">Sin tableros</span>';
   }
 
@@ -370,7 +376,7 @@
   }
   function boot() {
     // registro de proyectos (folio): lo usan el buscador ⌘K y la chinche
-    if (!window.YodProyectos) { var sp = document.createElement('script'); sp.src = SELF.replace(/shell\.js(\?.*)?$/, 'proyectos.js?v=20261109-monton'); document.head.appendChild(sp); }
+    if (!window.YodProyectos) { var sp = document.createElement('script'); sp.src = SELF.replace(/shell\.js(\?.*)?$/, 'proyectos.js?v=20261110-barrido'); document.head.appendChild(sp); }
     if (document.querySelector('.yod-shell')) return;
     /* Los íconos de la barra son de Tabler: los tableros que no traían su hoja (MOAC)
        mostraban botones vacíos. El marco la carga él mismo, y las fuentes de la marca. */
@@ -409,8 +415,8 @@
     document.body.appendChild(shell);
 
     // The shared visual layer preserves this shell's identity and routing.
-    var chromeCSS=document.createElement('link');chromeCSS.rel='stylesheet';chromeCSS.href=new URL('ui-chrome.css?v=20261109-monton',SELF).href;document.head.appendChild(chromeCSS);
-    var chromeJS=document.createElement('script');chromeJS.src=new URL('ui-chrome.js?v=20261109-monton',SELF).href;document.head.appendChild(chromeJS);
+    var chromeCSS=document.createElement('link');chromeCSS.rel='stylesheet';chromeCSS.href=new URL('ui-chrome.css?v=20261110-barrido',SELF).href;document.head.appendChild(chromeCSS);
+    var chromeJS=document.createElement('script');chromeJS.src=new URL('ui-chrome.js?v=20261110-barrido',SELF).href;document.head.appendChild(chromeJS);
     wireDrawer(shell, scrim);
     // «hay algo nuevo»: entrar a este tablero cuenta como visita; su punto se apaga
     try { if (cur) { localStorage.setItem('yod_visto_' + cur, String(Date.now())); localStorage.removeItem('yod_nuevo_' + cur); } } catch (e) { }
@@ -431,7 +437,7 @@
      (yod-portal/chinche.js), en modo "contexto" (DOM). Cada chinche guarda la tarjeta
      donde se picó por última vez y el repo de la página, para que el encargo llegue al
      repo correcto. Si el board ya la trae, no se carga dos veces. */
-  var CHINCHE_V = "20261109-monton";
+  var CHINCHE_V = "20261110-barrido";
   function cargarChinche() {
     if (window.YODChinche) return;
     var ultimo = null;
