@@ -1,17 +1,27 @@
 {
-  "model_revision": "2026-11-09.sala-corta.2",
-  "proposal_id": "CHG-SALA-CORTA-20261109",
-  "summary": "Registrar en el atlas la Sala corta (decisión de Dirección del 9-nov-2026): una sola línea hasta publicar, pausas reversibles de video e ideas por REGLAS, menos latidos, paquete de publicación en Drive y Roast Room al frente y en la nube. Sólo documentación del modelo; la implementación vive en sala-edicion.",
+  "model_revision": "2026-11-09.os-monton.1",
+  "proposal_id": "CHG-OS-MONTON-20261109",
+  "summary": "YOD OS dice cuántas publicaciones hay listas para lanzar y lleva al montón de la Sala en un toque (Dirección, 9-nov-2026: «conecta todo listo en yod os para poder publicar… quiero hacer montón… armando un paquete para ir lanzando»). La Sala, en el mismo origen, deja en el aparato sala_resumen_v1 = {listas, cuando}: sólo un número y una hora. YOD OS lo lee sin red ni llaves nuevas, sólo con sesión validada, y lo pinta en la tarjeta nueva «Publicaciones» del inicio de Dirección, en la tarjeta de la Sala del inicio de Sayri y en la puerta de la Sala de «Embudo comercial»; las tres llevan a #/embudo/sala. Sin dato, con dato inválido o con más de siete días muestra texto fijo. Al cerrar sesión también borra las llaves locales del montón de la Sala. Los demás archivos sólo cambian su etiqueta de versión (20261109-monton).",
   "components": [
     "SYS-YOD-OS",
     "SYS-SALA",
-    "SHEET-SALA",
-    "EXT-ACTIONS"
+    "GAS-PORTERO",
+    "GAS-CATALOGO",
+    "SYS-DESPACHO",
+    "SYS-POTENCIALES",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "SYS-CONTROL",
+    "SYS-MERCADO"
   ],
   "tests": [
+    "node --test tests/*.cjs (incluye tests/os-sala-listas.test.cjs: 4 pruebas nuevas)",
     "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
+    "node scripts/versiones.cjs --check",
+    "node verify-os.cjs · node verify-portal.cjs · node verify-accesos.cjs · node verify-obra-app.cjs",
+    "Recorrido en navegador con datos sintéticos (sin sesión: texto fijo; con sesión: el número; cambio desde otro documento: se actualiza)",
     "git diff --check"
   ],
-  "rollback": "Revertir el PR documental y regenerar vistas preservando aportes concurrentes. No borrar reglas, decisiones, candados ni paquetes."
+  "rollback": "Revertir el PR devuelve las tarjetas y la puerta anteriores. La llave local de la Sala queda sin lector y caduca sola. Sin backend ni datos que restaurar."
 }
