@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-10.os-barrido.1",
+  "revision": "2026-11-10.os-barrido.2",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -15251,6 +15251,26 @@
       ],
       "deployment": "Un PR de yod-portal a main (GitHub Pages). Sin Apps Script ni Sheets. Publicar no acredita la vista en el aparato de Dirección.",
       "rollback": "Revertir el PR devuelve el plazo de 8 s, la lectura anterior de fechas, Obra sin marco, la tarjeta del Despacho abajo y el menú anterior en Accesos. Sin datos que restaurar."
+    },
+    {
+      "id": "CHG-OS-BARRIDO-MAPA-20261110",
+      "components": [
+        "SYS-TRACK",
+        "SYS-YOD-OS",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE"
+      ],
+      "status": "implementado_local",
+      "authorization": "autorizado_por_chat: Dirección (10-nov-2026), mismos arreglos técnicos del barrido de YOD OS («Arreglos técnicos 1–6»). Hallado al verificar en vivo CHG-OS-BARRIDO-20261110.",
+      "proposal": "Al verificar en el navegador de Dirección el arreglo de Codesarrollos (CHG-OS-BARRIDO-20261110), los datos ya llegaban (3 proyectos, 3 pines) pero el fondo del mapa salía tapizado de «API KEY REQUIRED»: las teselas de CARTO (basemaps.cartocdn.com) ahora exigen llave. PPP ya había pasado a OpenStreetMap por la misma causa. track-codesarrollos.html usa ahora tile.openstreetmap.org con su atribución, igual que potenciales-yod. No cambia datos, permisos, catálogo ni etiquetas de versión (sólo cambia la página).",
+      "tests": [
+        "node --test tests/*.cjs, con la prueba nueva de tests/os-barrido-20261110.test.cjs (sin cartocdn y con la capa de OpenStreetMap).",
+        "node scripts/arquitectura.cjs --check, node scripts/versiones.cjs --check, node verify-os.cjs, node verify-portal.cjs, node verify-accesos.cjs y node verify-obra-app.cjs.",
+        "Pendiente: verlo en el navegador de Dirección tras publicar."
+      ],
+      "deployment": "Un PR de yod-portal a main (GitHub Pages). Sin backend.",
+      "rollback": "Revertir el PR devuelve las teselas de CARTO (que hoy piden llave). Sin datos que restaurar."
     }
   ],
   "data_contracts": [
