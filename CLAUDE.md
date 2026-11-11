@@ -47,7 +47,7 @@ Repo: `yodesarrollomx/yod-portal` (`git remote -v`), público, Pages desde `main
 1. **Las tres tablas de códigos dicen LO MISMO, siempre.** `os/access-policy.js` (`SYSTEM_CODES`),
    `os/shell.js` (`CODES`) y `potenciales-yod/accesos.html` (`CODES`). Si divergen, un colaborador
    con acceso queda bloqueado — fue el bug `BA`→`TA` del 15-jul-2026 (`CODIGOS-BOARDS.md`).
-   Las dos primeras las compara `node verify-os.cjs`; la tercera vive en otro repo y va a ojo.
+   Las dos primeras las compara `node verify-os.cjs`; la tercera vive en otro repo y la compara `node verify-accesos.cjs`.
 2. **Una sola etiqueta de versión (`os/versiones.json`).** Cada cambio a un archivo servido (p. ej. `os/app.js`)
    exige editar `propia` (`potenciales` para los de `potenciales-yod`) y correr `node scripts/versiones.cjs --aplicar`,
    que reescribe los `?v=` de los HTML y las constantes `CHINCHE_V`, `TABLERO_V`… `verify` falla (`--check`) si una
@@ -183,15 +183,17 @@ guarda sus **direcciones** (`portal-core.js` `DESTINATIONS`) y sus **códigos** 
 
 ## Pendientes
 
+El tablero vivo de lo abierto es [`docs/CIERRE.md`](docs/CIERRE.md) (pasada del 11-nov-2026). Lo tachado aquí se conserva como historia.
+
 | Tema | Dueño | Evidencia para darlo por cerrado |
 |---|---|---|
-| DNS `tableros.yodesarrollo.mx` (CNAME → `yodesarrollomx.github.io.`) | Alejandro + Miguel Reina (cPanel) | `curl -o /dev/null -w "%{http_code}" https://tableros.yodesarrollo.mx/yod-portal/` devuelve 200 (hoy: 000) |
+| DNS `tableros.yodesarrollo.mx` (CNAME → `yodesarrollomx.github.io.`) | Alejandro + Miguel Reina (cPanel) | `curl -o /dev/null -w "%{http_code}" https://tableros.yodesarrollo.mx/yod-portal/` devuelve 200 (4-sep: 000; 11-nov-2026: 000) |
 | Revisar CON credencial la columna `url` del Control Maestro: las filas que no se ven sin `k` son las que podrían traer `alexpueblag` escrito a mano | Alejandro (edita el Sheet) | El GET anónimo devuelve hoy `"url":""` en las 2 filas visibles, o sea heredan la base canónica de `portal-core.js`, que ya es yodesarrollomx (verificado 2026-09-04). Falta el mismo GET **con `k`**: se cierra cuando ninguna fila traiga `alexpueblag` |
-| `CODES` de `potenciales-yod/accesos.html` sin prueba automática (regla 3 de `CODIGOS-BOARDS.md`) | quien toque `potenciales-yod` | Una prueba que compare las 3 tablas, o la revisión a ojo firmada con fecha |
-| `TA` significa dos tableros en el Code.gs del Portero (MOAC y track Alysa); el Portero trata `boards` vacío como `*` y `access-policy` como nada | backend del Portero | El Code.gs pegado en el editor, con `TA` desambiguado y `boards` vacío = sin acceso |
-| SHELL-10 (header pegajoso bajo la topbar del shell) y TABLERO-48 (mini-tablero ilegible en iPhone) | quien retome el enjambre | Captura de pantalla en iPhone y en un board con `shell.js` |
-| `obra.html` carga `os/access-policy.js` **sin `?v=`** (la etiqueta `<script src="os/access-policy.js">`) — Pages puede servir la copia vieja tras un cambio de códigos | quien toque `access-policy.js` | La línea con su `?v=` alineado al de `os/index.html:211` |
-| `os/embudo-c.html` y `os/embudo-dummy.html` no los referencia nadie (grep en todo el repo) | Alejandro decide | Borrados, o una nota diciendo para qué se conservan |
+| ~~`CODES` de `potenciales-yod/accesos.html` sin prueba automática~~ **CERRADO:** la compara `verify-accesos.cjs` (regla 8) | — | — |
+| ~~`TA` significa dos tableros en el Portero; `boards` vacío como `*`~~ **CERRADO 4-sep-2026** según `docs/EXPEDIENTE.md` (temas 4 y 5, Portero v47: `AL`/`TM`/`TC` y blanco = sin acceso). La versión activa de hoy no se volvió a leer el 11-nov | — | — |
+| ~~SHELL-10 y TABLERO-48~~ **CERRADO 4-sep-2026** según `docs/EXPEDIENTE.md` (tema 8) | — | — |
+| ~~`obra.html` carga `os/access-policy.js` sin `?v=`~~ **CERRADO:** ya lleva la etiqueta de `os/versiones.json` y la vigila `scripts/versiones.cjs --check` (comprobado 11-nov-2026) | — | — |
+| ~~`os/embudo-c.html` y `os/embudo-dummy.html` sin referencias~~ **CERRADO:** ya no existen en el repo (comprobado 11-nov-2026) | — | — |
 
 ## Por confirmar (NO afirmar sin respuesta)
 
@@ -199,10 +201,9 @@ guarda sus **direcciones** (`portal-core.js` `DESTINATIONS`) y sus **códigos** 
   desde la máscara del Embudo pero **no tiene `system_id` ni código propio** en `access-policy.js`.
   Pregunta a Alejandro: ¿la Sala debe entrar al Control Maestro con su código, o se queda colgada de `MK`?
 - `track-codesarrollos.html:114` carga `shell.js` por URL absoluta de **este mismo repo**
-  (`yodesarrollomx.github.io/yod-portal/os/shell.js?v=relevo5`). Pregunta: ¿es a propósito (para que
+  (`yodesarrollomx.github.io/yod-portal/os/shell.js?v=…`; la etiqueta ya sale de `os/versiones.json`). Pregunta: ¿es a propósito (para que
   el marco se actualice solo en todos lados) o debería ser ruta relativa?
-- El `README.md` describe el portal v1 (6 tarjetas, "El portal no autentica", tarjeta de Obra en
-  "Próximamente"). Pregunta: ¿se reescribe para que hable de YOD OS, o se deja como historia?
+- ~~El `README.md` describe el portal v1.~~ **RESUELTO:** el `README.md` ya habla de YOD OS y del atlas (comprobado 11-nov-2026).
 
 ## YOD Obra (`obra-app/`, 25-sep-2026)
 

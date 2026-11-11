@@ -7,6 +7,11 @@
 
 **Última pasada:** 4-sep-2026 · **Quien la corrió:** Claude (sesión «YOD OS a nivel Fable»).
 
+> **11-nov-2026:** este expediente queda como historia fechada del 4-sep. Lo abierto hoy, con su
+> dueño y su evidencia de cierre, vive en [`CIERRE.md`](CIERRE.md). Los temas 2, 6, 7, 9, 10, 12 y 13
+> de abajo no se han vuelto a comprobar contra las versiones activas; no darlos por abiertos ni por
+> cerrados sin leer la versión que corre.
+
 ---
 
 ## Cómo se usa (la mecánica, en 5 reglas)

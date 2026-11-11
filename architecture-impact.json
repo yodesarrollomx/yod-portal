@@ -1,27 +1,16 @@
 {
-  "model_revision": "2026-11-10.os-barrido.3",
-  "proposal_id": "CHG-DESPACHO-RUTA-20261110",
-  "summary": "El Despacho desde cualquier tablero abre el Despacho de YOD OS (#/despacho) y ya no la Bandeja anterior; el botón Equipo se oculta mientras su bitácora no tenga adaptador; Entorno con «×» fija y sin demos sintéticas; el plano ya no queda bajo la barra de autones; la Mesa de trabajo abre Sala y Embudo dentro de YOD OS; en el Despacho, 🌙 y ⚙️ ya no tapan sus botones y 📌 sube. Los demás archivos sólo cambian su etiqueta (20261110-despacho).",
+  "model_revision": "2026-11-11.cierre.1",
+  "proposal_id": "CHG-CIERRE-20261111",
+  "summary": "Cierre de YOD OS: docs/CIERRE.md como tablero vivo, scripts/cierre.cjs que cuenta el estado de los cambios desde el modelo, cuatro cambios de noviembre pasados a publicado con evidencia HTTP y limpieza de pendientes resueltos en CLAUDE.md y EXPEDIENTE.md. Nada servido cambia.",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "SYS-MERCADO",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
-    "SYS-TRACK",
-    "SYS-CONTROL",
-    "GAS-PORTERO",
-    "GAS-CATALOGO",
-    "SYS-POTENCIALES"
+    "SYS-YOD-OS"
   ],
   "tests": [
-    "node --test tests/*.cjs (incluye tests/despacho-barrido-20261110.test.cjs y la prueba de enlace() en tests/os-barrido-20261110.test.cjs)",
+    "node --test tests/*.cjs (incluye tests/cierre.test.cjs)",
     "node scripts/arquitectura.cjs --check",
     "node scripts/versiones.cjs --check",
-    "node verify-os.cjs · node verify-portal.cjs · node verify-accesos.cjs · node verify-obra-app.cjs",
-    "Recorrido manual en el navegador de Dirección antes y después de publicar",
+    "node verify-os.cjs · node verify-portal.cjs · node verify-obra-app.cjs",
     "git diff --check"
   ],
-  "rollback": "Revertir el PR devuelve el comportamiento anterior. Sin backend ni datos que restaurar."
+  "rollback": "Revertir el PR. Sin backend ni datos que restaurar."
 }
