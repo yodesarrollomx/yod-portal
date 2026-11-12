@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-11.ppp-cadena.1",
+  "revision": "2026-11-11.grafo-accesos.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -15320,6 +15320,22 @@
       ],
       "deployment": "Un PR de potenciales-yod a main (GitHub Pages) con el atlas fijado en el commit de esta propuesta. Sin Apps Script ni cambios de hojas.",
       "rollback": "Revertir el PR de potenciales-yod quita el diagrama y devuelve el tablero vertical a su estado anterior (incluido el criterio móvil original de las pruebas). No hay datos, hojas ni sesiones que restaurar."
+    },
+    {
+      "id": "CHG-GRAFO-ACCESOS-20261111",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-CONTROL"
+      ],
+      "status": "implementado_local",
+      "approval": "Dirección, 11-nov-2026 por chat: «ponlo dentro del tablero de GitHub en la pantalla de acceso para que siempre esté presente»; al preguntar dónde: «hasta abajo, en la parte de accesos… embebido dentro del HTML que ya hay», y que marque dónde falló, lleve registro y abra una chinche. El 11-nov a las 20:52 confirmó el permiso para registrar este cambio en el atlas.",
+      "proposal": "potenciales-yod/accesos.html agrega al final la sección «Grafo del sistema»: un marco que carga grafo/index.html (láminas estáticas generadas con Graphify; sólo piezas ya públicas: sin nombres de tratos, repos privados ni clientes externos), visible sólo con sesión de admin y cargado hasta que la sección entra a la vista. Nuevo flujo «Grafo · estado» en potenciales-yod (cada hora, sólo lectura de la API de GitHub y GET a páginas estáticas; ningún /exec) que escribe grafo/estado.json y grafo/registro.jsonl y abre una chinche por cada flujo o página que falla. Sin cambios en portero.js, backend, hojas ni permisos.",
+      "tests": [
+        "potenciales-yod: node --test tests/accesos-admin-session.test.cjs tests/access-gates.cjs; node tests/salud-accesos-browser.cjs en CI; node --check scripts/grafo-estado.cjs; git diff --check.",
+        "Las láminas de grafo/ abiertas en Chromium sin errores de JavaScript; revisión de texto sin nombres de tratos, correos ni identificadores completos de /exec.",
+        "verificar-impacto contra el atlas fijado."
+      ],
+      "deployment": "Al fusionar el PR de potenciales-yod, Pages publica accesos.html con la sección y el flujo empieza a escribir grafo/estado.json en main cada hora. Reversión: revertir el merge y desactivar el flujo; no hay backend ni datos."
     }
   ],
   "data_contracts": [
