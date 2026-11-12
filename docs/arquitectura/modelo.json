@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-10.os-barrido.3",
+  "revision": "2026-11-11.ppp-cadena.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -15298,6 +15298,28 @@
       ],
       "deployment": "Un PR de yod-portal a main (GitHub Pages). Sin Apps Script ni Sheets.",
       "rollback": "Revertir el PR devuelve el enlace a la Bandeja, el botón Equipo y los estilos anteriores. Sin datos que restaurar."
+    },
+    {
+      "id": "CHG-PPP-CADENA-20261111",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-CONTROL",
+        "SYS-YOD-OS"
+      ],
+      "status": "implementado_local",
+      "authorization": "autorizado_por_chat: Dirección (11-nov-2026, 18:38 HMO): «Ponlo dentro de la misma tablero de Master Developer y de plan de potencial, porque esto al final es un diagrama del plan de potencial… yo me imagino este diagrama hasta arriba, explicando todo lo que está sucediendo abajo, así que tiene que estar referenciado hacia los cálculos y datos que estemos poniendo abajo… Empieza por el de Moreo, pero en realidad va a ser para todos».",
+      "proposal": "Diagrama en cadena arriba de cada Plan de Potencial: cuatro eslabones (1 Se vende → 2 Entra y sale → 3 En el banco y prestado → 4 Lo que queda) con notas a mano, leyendas y la línea de «antes». Pieza común nueva en potenciales-yod (ppp-cadena.js + ppp-cadena.css): sólo presentación. Un adaptador por tipo de plan traduce el estado que ya confirmó el motor del tablero (computar() o el estado nativo de Sheets) al mismo modelo de cuatro eslabones; no calcula resultados financieros, no usa la red y no guarda nada. Primera instalación: VERTICAL (mixto.html), montado después del encabezado de resultados y antes de las cinco tarjetas; recibe el mismo estado que PPPView.update al final de render(). Los botones del diagrama son las versiones que ya existen en el caso y llaman a la función del tablero (escCambiar), sin ruta nueva de escritura. Cada eslabón liga a la tarjeta de donde sale y al control que lo mueve (PPPView.reveal lo muestra sin enfocarlo). Al cambiar de versión la cadena corre 1→4; al mover un dato abajo se repinta con el «antes». ppp-intake.js vacía el diagrama mientras se captura un plan nuevo y el CSS lo oculta en los mismos modos que el encabezado de resultados. Criterio móvil restablecido en pruebas por tener ahora el diagrama arriba: las cinco tarjetas conservan su bloque (<728 px), el diagrama ocupa <0.9 pantallas y todo cabe en ≤2 pantallas (antes: cinco tarjetas en ≤1.2 pantallas). Macrolotes, Residencial, Unifamiliar y Patrimonial quedan con su contrato en docs/ppp-cadena.md y se instalan con su propio adaptador en cambios posteriores. Tipografía de las notas (Caveat 700, OFL) servida desde el propio repo. La etiqueta propia pasa a 20261111-cadena: accesos.html (SYS-CONTROL) y las demás páginas sólo cambian su etiqueta. SYS-YOD-OS: sólo este registro en el atlas; el marco no cambia. Sin backend, hojas, permisos ni datos de casos en el repositorio.",
+      "tests": [
+        "node --test tests/ppp-cadena.test.cjs: 7 pruebas; los cuatro eslabones suman lo que reporta el motor en 11 variantes sintéticas y 400 combinaciones al azar de los controles; sin estado no hay diagrama; el módulo no contiene red, almacenamiento ni motor.",
+        "node tests/ppp-cadena-browser.cjs (Chromium y WebKit, transporte sintético): montaje arriba de las cinco tarjetas, 81 controles y 40 KPI intactos, misma utilidad que el encabezado, acordeón en teléfono y cuadrícula en escritorio, versiones del caso como botones, cadena 1→4 con «antes», repetir e interrumpir, edición viva, ligas a tarjeta y control sin foco, modelo nativo, 320/390/430/1280 px, tema oscuro, cero escrituras y cero lecturas de red propias.",
+        "node --test tests/ppp-ui.test.cjs (motor byte a byte igual al de referencia) y el resto de pruebas de nodo del flujo «Verificar interfaz PPP».",
+        "Recorridos de navegador existentes del flujo «Verificar interfaz PPP», con el criterio móvil restablecido en tests/ppp-browser.cjs y tests/ppp-terrain-browser.cjs.",
+        "Paleta validada por tablero (separación para daltonismo ≥ 10 y contraste ≥ 3:1) sobre las superficies clara y oscura.",
+        "node scripts/versiones.cjs --check y git diff --check.",
+        "Pendiente: verlo en el navegador de Dirección con un caso real tras publicar; alta del caso Moréo por el flujo normal del tablero."
+      ],
+      "deployment": "Un PR de potenciales-yod a main (GitHub Pages) con el atlas fijado en el commit de esta propuesta. Sin Apps Script ni cambios de hojas.",
+      "rollback": "Revertir el PR de potenciales-yod quita el diagrama y devuelve el tablero vertical a su estado anterior (incluido el criterio móvil original de las pruebas). No hay datos, hojas ni sesiones que restaurar."
     }
   ],
   "data_contracts": [
