@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-12.ppp2.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-12.grafo-vivo.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -8,8 +8,8 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
-- 28 sistemas y 94 componentes distribuidos exactamente una vez.
-- 10 áreas; 159 conexiones registradas, 10 marcadas como verificadas en el atlas.
+- 28 sistemas y 95 componentes distribuidos exactamente una vez.
+- 10 áreas; 160 conexiones registradas, 14 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -165,8 +165,8 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-SALUD-SALA · SYS-SALA → SYS-CONTROL · observacion · Lecturas agregadas y canario aislado de Sala · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-SALUD-ACTIONS · SYS-CONTROL → EXT-ACTIONS · observacion · Pruebas programadas y evidencia de ejecución · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-HORARIOS-ACCESOS · SVC-HORARIOS-CLOUD → SYS-CONTROL · integracion · Resultados sanitizados observados desde Accesos · Estado: codigo · Ejecución no verificada en el atlas.
-- CON-GRAFO-ACCESOS · SYS-CONTROL → SYS-POTENCIALES · observacion · Grafo del sistema en Accesos: versión aprobada, borrador y estado de cada pieza · Estado: declarado · Ejecución no verificada en el atlas.
-- CON-GRAFO-ACTIONS · SYS-CONTROL → EXT-ACTIONS · automatizacion · Rehacer el grafo a pedido y vigilar su estado cada hora · Estado: declarado · Ejecución no verificada en el atlas.
+- CON-GRAFO-ACCESOS · SYS-CONTROL → SYS-POTENCIALES · observacion · Grafo del sistema en Accesos: versión aprobada, borrador y estado de cada pieza · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
+- CON-GRAFO-ACTIONS · SYS-CONTROL → EXT-ACTIONS · automatizacion · Rehacer el grafo a pedido y vigilar su estado cada hora · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
@@ -185,12 +185,13 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [CON-SALUD-ACTIONS · Monitor38170852821 y canario38170259463 success; resultados técnicos y fuentes leídas realmente, con alcance/caducidad.40 correctos,59 pendientes; sin operaciones comerciales como prueba. · Estado: ejecucion · yodesarrollomx/yod-portal · docs/SALUD-SISTEMAS.md · Revisión: de33d90af87e9b5b225b0405841145348d42b8b0](https://github.com/yodesarrollomx/yod-portal/blob/de33d90af87e9b5b225b0405841145348d42b8b0/docs/SALUD-SISTEMAS.md)
 - CON-HORARIOS-ACCESOS · Prioridad1 autorizada; implementação y aceptación real por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - [CON-HORARIOS-ACCESOS · Cliente publicado y doce recorridos aislados; sesión administradora personal no operada por el agente. · Estado: codigo · yodesarrollomx/yod-portal · os/yod-salud.js · Revisión: 9b2e5f4497878223aba26531076c64894e17823e](https://github.com/yodesarrollomx/yod-portal/blob/9b2e5f4497878223aba26531076c64894e17823e/os/yod-salud.js)
-- CON-GRAFO-ACCESOS · Controles junto al grafo: versión aprobada, aviso de borrador, botón para rehacer y registro. Código en el PR 61, pendiente de fusión al registrar. · Estado: declarado · yodesarrollomx/potenciales-yod · grafo-control.js · Sin revisión inmutable en esta referencia
-- CON-GRAFO-ACTIONS · Flujos «Grafo · rehacer» y «Grafo · estado». Código en el PR 61, pendiente de fusión al registrar. · Estado: declarado · yodesarrollomx/potenciales-yod · .github/workflows/grafo-rehacer.yml · Sin revisión inmutable en esta referencia
+- [CON-GRAFO-ACCESOS · Fusionado en los PR 61, 69 y 74. Visto en vivo el 12-nov-2026 con la sesión de admin de Dirección: el grafo aprobado al final de Accesos, también cuando la lista de usuarios tarda (PR 74). · Estado: ejecucion · yodesarrollomx/potenciales-yod · grafo-control.js · Revisión: 685ed2ccb0e1d7cf1224fe4216bc071349e7751c](https://github.com/yodesarrollomx/potenciales-yod/blob/685ed2ccb0e1d7cf1224fe4216bc071349e7751c/grafo-control.js)
+- [CON-GRAFO-ACTIONS · Ciclo completo el 12-nov-2026: pedido, borrador en el PR 71, aprobación y publicación de G-20261112-1203 con una sola línea de aprobación y sin falso «cambió». Aprobar son dos toques porque GitHub retiene las pruebas de un PR abierto por un flujo: «Approve workflows to run» y luego «Merge pull request». · Estado: ejecucion · yodesarrollomx/potenciales-yod · .github/workflows/grafo-rehacer.yml · Revisión: 685ed2ccb0e1d7cf1224fe4216bc071349e7751c](https://github.com/yodesarrollomx/potenciales-yod/blob/685ed2ccb0e1d7cf1224fe4216bc071349e7751c/.github/workflows/grafo-rehacer.yml)
+- [CON-GRAFO-ACTIONS · La vigilancia corre por cambios y por horario; al registrar sólo se había observado una corrida por horario (16:01Z). La regularidad del reloj y la chinche automática ante una falla nueva están por comprobar. · Estado: codigo · yodesarrollomx/potenciales-yod · .github/workflows/grafo-estado.yml · Revisión: 685ed2ccb0e1d7cf1224fe4216bc071349e7751c](https://github.com/yodesarrollomx/potenciales-yod/blob/685ed2ccb0e1d7cf1224fe4216bc071349e7751c/.github/workflows/grafo-estado.yml)
 
 **Pendientes y límites:**
 
-- 6 conexiones sin verificación de ejecución registrada.
+- 4 conexiones sin verificación de ejecución registrada.
 - Catálogo local y Control Maestro deben reconciliarse sin editar silenciosamente datos operativos
 
 ### Pintarrón · SYS-PINTARRON
@@ -1070,8 +1071,8 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PPP-ETAPAS-ESCRITURA · SYS-POTENCIALES → GAS-PORTERO · api · Solicita etapas y relee coherencia del modelo · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-PPP-PRESENTACIONES-JOB · SYS-POTENCIALES → SVC-AUTON-CLOUD · api · Encarga storyboard desde la versión visible · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-PPP-PRESENTACIONES-LISTA · SYS-POTENCIALES → GAS-SALA · api · Consulta las presentaciones de ese PPP y revisión · Estado: propuesto · Ejecución no verificada en el atlas.
-- CON-GRAFO-ACCESOS · SYS-CONTROL → SYS-POTENCIALES · observacion · Grafo del sistema en Accesos: versión aprobada, borrador y estado de cada pieza · Estado: declarado · Ejecución no verificada en el atlas.
-- CON-PRESENTACION-GRAFO · SYS-INVERSION → SYS-POTENCIALES · lectura · Lee el grafo aprobado (recetas por audiencia y contrato del plan) para armar presentaciones y avisar si hay otra versión en trabajo · Estado: declarado · Ejecución no verificada en el atlas.
+- CON-GRAFO-ACCESOS · SYS-CONTROL → SYS-POTENCIALES · observacion · Grafo del sistema en Accesos: versión aprobada, borrador y estado de cada pieza · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
+- CON-PRESENTACION-GRAFO · SYS-INVERSION → SYS-POTENCIALES · lectura · Lee el grafo aprobado (recetas por audiencia y contrato del plan) para armar presentaciones y avisar si hay otra versión en trabajo · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
@@ -1099,12 +1100,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PPP-ETAPAS-ESCRITURA · Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
 - CON-PPP-PRESENTACIONES-JOB · Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
 - CON-PPP-PRESENTACIONES-LISTA · Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
-- CON-GRAFO-ACCESOS · Controles junto al grafo: versión aprobada, aviso de borrador, botón para rehacer y registro. Código en el PR 61, pendiente de fusión al registrar. · Estado: declarado · yodesarrollomx/potenciales-yod · grafo-control.js · Sin revisión inmutable en esta referencia
-- CON-PRESENTACION-GRAFO · Página que arma la presentación con el grafo aprobado y el plan guardado. Código en la rama claude/presentacion-desde-grafo, pendiente de fusión al registrar. · Estado: declarado · yodesarrollomx/yodesarrollo-board · presentacion/grafo/app.mjs · Sin revisión inmutable en esta referencia
+- [CON-GRAFO-ACCESOS · Fusionado en los PR 61, 69 y 74. Visto en vivo el 12-nov-2026 con la sesión de admin de Dirección: el grafo aprobado al final de Accesos, también cuando la lista de usuarios tarda (PR 74). · Estado: ejecucion · yodesarrollomx/potenciales-yod · grafo-control.js · Revisión: 685ed2ccb0e1d7cf1224fe4216bc071349e7751c](https://github.com/yodesarrollomx/potenciales-yod/blob/685ed2ccb0e1d7cf1224fe4216bc071349e7751c/grafo-control.js)
+- [CON-PRESENTACION-GRAFO · Fusionado en el PR 69. Visto en vivo el 12-nov-2026: el ejemplo (?demo=1) lee el grafo aprobado G-20261112-1203 y arma las tres audiencias. Por comprobar: un plan real con una sesión real y la pastilla de aviso con un borrador abierto. · Estado: ejecucion · yodesarrollomx/yodesarrollo-board · presentacion/grafo/app.mjs · Revisión: 888cbd0d611f777c0214daa2359bfbecc3f0b490](https://github.com/yodesarrollomx/yodesarrollo-board/blob/888cbd0d611f777c0214daa2359bfbecc3f0b490/presentacion/grafo/app.mjs)
 
 **Pendientes y límites:**
 
-- 11 conexiones sin verificación de ejecución registrada.
+- 9 conexiones sin verificación de ejecución registrada.
 - Backend de transporte v53 publicado en implementación existente. GET de caso y lista contrastados con el mismo libro y revisión; edición en pantalla y demás casos pendientes. Los casos no migrados conservan cálculo cliente.
 - GET Patrimonial y cotejo de 166 celdas sólo acreditan el caso inspeccionado; geometría, Vertical y otros casos pendientes. Parche visual y regresión Chromium aprobados según coordinador; WebKit en CI del consumer, publicación/aceptación frontend pendientes.
 
@@ -2054,7 +2055,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-INVESTOR-STORY-TEXTS · SYS-INVERSION → GAS-PLAN-POTENCIAL · lectura · Lee copy público de presentación por recurso=textos · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-BROKERS-PPP-SAVED · SYS-INVERSION → GAS-PORTERO · lectura · Resumen guardado de PPP por expediente · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-MD-PRESENTACIONES-PPP · SYS-INVERSION → GAS-SALA · api · Abre el mismo historial de presentación y origen PPP · Estado: propuesto · Ejecución no verificada en el atlas.
-- CON-PRESENTACION-GRAFO · SYS-INVERSION → SYS-POTENCIALES · lectura · Lee el grafo aprobado (recetas por audiencia y contrato del plan) para armar presentaciones y avisar si hay otra versión en trabajo · Estado: declarado · Ejecución no verificada en el atlas.
+- CON-PRESENTACION-GRAFO · SYS-INVERSION → SYS-POTENCIALES · lectura · Lee el grafo aprobado (recetas por audiencia y contrato del plan) para armar presentaciones y avisar si hay otra versión en trabajo · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
@@ -2073,11 +2074,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-INVESTOR-STORY-TEXTS · GET de textos comerciales ya utilizado por la landing pública; propuesta de consumo por la primera escena de inversión. · Estado: codigo · yodesarrollomx/plan-potencial · index.html · Sin revisión inmutable en esta referencia
 - CON-BROKERS-PPP-SAVED · Consumo propuesto del mismo contrato empleado por el PPP; lectura autorizada y campos guardados se comprobarán por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - CON-MD-PRESENTACIONES-PPP · Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
-- CON-PRESENTACION-GRAFO · Página que arma la presentación con el grafo aprobado y el plan guardado. Código en la rama claude/presentacion-desde-grafo, pendiente de fusión al registrar. · Estado: declarado · yodesarrollomx/yodesarrollo-board · presentacion/grafo/app.mjs · Sin revisión inmutable en esta referencia
+- [CON-PRESENTACION-GRAFO · Fusionado en el PR 69. Visto en vivo el 12-nov-2026: el ejemplo (?demo=1) lee el grafo aprobado G-20261112-1203 y arma las tres audiencias. Por comprobar: un plan real con una sesión real y la pastilla de aviso con un borrador abierto. · Estado: ejecucion · yodesarrollomx/yodesarrollo-board · presentacion/grafo/app.mjs · Revisión: 888cbd0d611f777c0214daa2359bfbecc3f0b490](https://github.com/yodesarrollomx/yodesarrollo-board/blob/888cbd0d611f777c0214daa2359bfbecc3f0b490/presentacion/grafo/app.mjs)
 
 **Pendientes y límites:**
 
-- 9 conexiones sin verificación de ejecución registrada.
+- 8 conexiones sin verificación de ejecución registrada.
 
 ### Carpeta de inversión · GAS-INVERSION
 
@@ -2918,7 +2919,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 ## Soporte técnico
 
-**Ubicación propuesta:** reception · 9 componentes.
+**Ubicación propuesta:** reception · 10 componentes.
 
 ### Sitio de organización · SYS-SITIO-ORG
 
@@ -2990,8 +2991,9 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-SALUD-ACTIONS · SYS-CONTROL → EXT-ACTIONS · observacion · Pruebas programadas y evidencia de ejecución · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-HORARIOS-ACTIONS · SVC-HORARIOS-CLOUD → EXT-ACTIONS · integracion · Observar ejecuciones y recuperar horarios omitidos con GitHub App · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-SALA-MEDIOS-PUBLICOS · SYS-SALA → EXT-ACTIONS · publicacion · Imágenes nuevas en releases públicos inmutables con manifiesto fijado por recibo · Estado: propuesto · Ejecución no verificada en el atlas.
-- CON-GRAFO-ACTIONS · SYS-CONTROL → EXT-ACTIONS · automatizacion · Rehacer el grafo a pedido y vigilar su estado cada hora · Estado: declarado · Ejecución no verificada en el atlas.
-- CON-GRAFO-IA · EXT-ACTIONS → EXT-OPENAI · api · Explicación de los cambios del grafo; a la vez se consulta a Claude por API y se usa la primera respuesta válida · Estado: declarado · Ejecución no verificada en el atlas.
+- CON-GRAFO-ACTIONS · SYS-CONTROL → EXT-ACTIONS · automatizacion · Rehacer el grafo a pedido y vigilar su estado cada hora · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
+- CON-GRAFO-IA · EXT-ACTIONS → EXT-OPENAI · api · Explicación de los cambios del grafo con OpenAI; se usa la primera respuesta válida entre los proveedores con clave · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-GRAFO-IA-CLAUDE · EXT-ACTIONS → EXT-ANTHROPIC · api · Explicación de los cambios del grafo con Claude por API; se usa la primera respuesta válida entre los proveedores con clave · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
@@ -3014,13 +3016,16 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-HORARIOS-ACTIONS · Prioridad1 autorizada; implementação y aceptación real por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - [CON-HORARIOS-ACTIONS · Código entregado y probado con dobles; instalación personal y recuperación real pendientes. · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/scheduler/github-app.mjs · Revisión: b41a98751ae3ae89f43372557d61e77461aa086c](https://github.com/alexpueblag/yod-agent-cloud/blob/b41a98751ae3ae89f43372557d61e77461aa086c/cloud/scheduler/github-app.mjs)
 - CON-SALA-MEDIOS-PUBLICOS · Diseño local en docs/arquitectura/sala-medios-publicos-20261015.md y schema 1 acordado por UI/snapshots/almacén. Sin release/asset, canario, activación o despliegue acreditado. · Estado: propuesto · Sin revisión inmutable en esta referencia
-- CON-GRAFO-ACTIONS · Flujos «Grafo · rehacer» y «Grafo · estado». Código en el PR 61, pendiente de fusión al registrar. · Estado: declarado · yodesarrollomx/potenciales-yod · .github/workflows/grafo-rehacer.yml · Sin revisión inmutable en esta referencia
-- CON-GRAFO-IA · Peticiones a los dos proveedores con claves tomadas de secretos del flujo. Código en el PR 61, pendiente de fusión al registrar. · Estado: declarado · yodesarrollomx/potenciales-yod · grafo-motor/ia.py · Sin revisión inmutable en esta referencia
+- [CON-GRAFO-ACTIONS · Ciclo completo el 12-nov-2026: pedido, borrador en el PR 71, aprobación y publicación de G-20261112-1203 con una sola línea de aprobación y sin falso «cambió». Aprobar son dos toques porque GitHub retiene las pruebas de un PR abierto por un flujo: «Approve workflows to run» y luego «Merge pull request». · Estado: ejecucion · yodesarrollomx/potenciales-yod · .github/workflows/grafo-rehacer.yml · Revisión: 685ed2ccb0e1d7cf1224fe4216bc071349e7751c](https://github.com/yodesarrollomx/potenciales-yod/blob/685ed2ccb0e1d7cf1224fe4216bc071349e7751c/.github/workflows/grafo-rehacer.yml)
+- [CON-GRAFO-ACTIONS · La vigilancia corre por cambios y por horario; al registrar sólo se había observado una corrida por horario (16:01Z). La regularidad del reloj y la chinche automática ante una falla nueva están por comprobar. · Estado: codigo · yodesarrollomx/potenciales-yod · .github/workflows/grafo-estado.yml · Revisión: 685ed2ccb0e1d7cf1224fe4216bc071349e7751c](https://github.com/yodesarrollomx/potenciales-yod/blob/685ed2ccb0e1d7cf1224fe4216bc071349e7751c/.github/workflows/grafo-estado.yml)
+- [CON-GRAFO-IA · Código fusionado. Sin uso comprobado: al registrar, el flujo sólo tiene la clave de Claude, así que OpenAI no ha contestado ninguna vez. · Estado: codigo · yodesarrollomx/potenciales-yod · grafo-motor/ia.py · Revisión: e3217cca26d63fbaa65cf90b50c3a2958af0ad13](https://github.com/yodesarrollomx/potenciales-yod/blob/e3217cca26d63fbaa65cf90b50c3a2958af0ad13/grafo-motor/ia.py)
+- [CON-GRAFO-IA-CLAUDE · Petición con herramienta y esquema fijo, y reintento. · Estado: codigo · yodesarrollomx/potenciales-yod · grafo-motor/ia.py · Revisión: e3217cca26d63fbaa65cf90b50c3a2958af0ad13](https://github.com/yodesarrollomx/potenciales-yod/blob/e3217cca26d63fbaa65cf90b50c3a2958af0ad13/grafo-motor/ia.py)
+- [CON-GRAFO-IA-CLAUDE · Corridas 43283429071 y 43286094367 del 12-nov-2026 con explicación de Claude (ia=claude en el registro). · Estado: ejecucion · yodesarrollomx/potenciales-yod · .github/workflows/grafo-rehacer.yml · Revisión: 685ed2ccb0e1d7cf1224fe4216bc071349e7751c](https://github.com/yodesarrollomx/potenciales-yod/blob/685ed2ccb0e1d7cf1224fe4216bc071349e7751c/.github/workflows/grafo-rehacer.yml)
 
 **Pendientes y límites:**
 
 - Responsable operativo pendiente de confirmación; el encargado de verificación no sustituye esa asignación.
-- 8 conexiones sin verificación de ejecución registrada.
+- 7 conexiones sin verificación de ejecución registrada.
 - Estado y permisos no comprobados
 
 ### Identidad de publicación GitHub · EXT-GITHUB-PUBLISHER-APP
@@ -3122,7 +3127,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - CON-MOTOR-OPENAI · SVC-AUTON-CLOUD → EXT-OPENAI · integracion · Voz y herramientas con claves de servidor · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-BANDEJA-IA · GAS-BANDEJA-NUBE → EXT-OPENAI · api · Redactar cambios con API de pago por uso · Estado: codigo · Ejecución no verificada en el atlas.
-- CON-GRAFO-IA · EXT-ACTIONS → EXT-OPENAI · api · Explicación de los cambios del grafo; a la vez se consulta a Claude por API y se usa la primera respuesta válida · Estado: declarado · Ejecución no verificada en el atlas.
+- CON-GRAFO-IA · EXT-ACTIONS → EXT-OPENAI · api · Explicación de los cambios del grafo con OpenAI; se usa la primera respuesta válida entre los proveedores con clave · Estado: codigo · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -3134,11 +3139,39 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [CON-MOTOR-OPENAI · Voz y herramientas con claves de servidor · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/voice-lane.mjs · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/voice-lane.mjs)
 - CON-BANDEJA-IA · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - CON-BANDEJA-IA · Código publicado; su compuerta o consentimiento reales todavía no se acreditan. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/README.md · Sin revisión inmutable en esta referencia
-- CON-GRAFO-IA · Peticiones a los dos proveedores con claves tomadas de secretos del flujo. Código en el PR 61, pendiente de fusión al registrar. · Estado: declarado · yodesarrollomx/potenciales-yod · grafo-motor/ia.py · Sin revisión inmutable en esta referencia
+- [CON-GRAFO-IA · Código fusionado. Sin uso comprobado: al registrar, el flujo sólo tiene la clave de Claude, así que OpenAI no ha contestado ninguna vez. · Estado: codigo · yodesarrollomx/potenciales-yod · grafo-motor/ia.py · Revisión: e3217cca26d63fbaa65cf90b50c3a2958af0ad13](https://github.com/yodesarrollomx/potenciales-yod/blob/e3217cca26d63fbaa65cf90b50c3a2958af0ad13/grafo-motor/ia.py)
 
 **Pendientes y límites:**
 
 - 3 conexiones sin verificación de ejecución registrada.
+
+### Claude · API de Anthropic · EXT-ANTHROPIC
+
+**Función:** Explicar en palabras qué cambió entre la versión aprobada del grafo y la rehecha a pedido.
+
+**Fuente oficial:** El grafo rehecho y su diferencia contra el aprobado. La explicación es un resumen validado contra un esquema fijo; no decide ni publica nada.
+
+**Responsable operativo:** Dirección técnica
+
+**Estado registrado:** ejecucion. Comprobado el 12-nov-2026: los borradores G-20261112-1147 y G-20261112-1203 salieron con explicación de Claude por API (registro de la rama grafo-datos, ia=claude). La clave vive sólo como secreto del flujo.
+
+**Conexiones registradas; no habilitan operaciones:**
+
+- CON-GRAFO-IA-CLAUDE · EXT-ACTIONS → EXT-ANTHROPIC · api · Explicación de los cambios del grafo con Claude por API; se usa la primera respuesta válida entre los proveedores con clave · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
+
+**Evidencia de la ficha:**
+
+- [Petición con herramienta y esquema fijo, y un segundo intento si la primera respuesta llega mal formada. · Estado: codigo · yodesarrollomx/potenciales-yod · grafo-motor/ia.py · Revisión: e3217cca26d63fbaa65cf90b50c3a2958af0ad13](https://github.com/yodesarrollomx/potenciales-yod/blob/e3217cca26d63fbaa65cf90b50c3a2958af0ad13/grafo-motor/ia.py)
+- [Corridas 43283429071 y 43286094367 del 12-nov-2026: pedidos de rehacer con explicación de Claude. · Estado: ejecucion · yodesarrollomx/potenciales-yod · .github/workflows/grafo-rehacer.yml · Revisión: 685ed2ccb0e1d7cf1224fe4216bc071349e7751c](https://github.com/yodesarrollomx/potenciales-yod/blob/685ed2ccb0e1d7cf1224fe4216bc071349e7751c/.github/workflows/grafo-rehacer.yml)
+
+**Evidencia de conexiones:**
+
+- [CON-GRAFO-IA-CLAUDE · Petición con herramienta y esquema fijo, y reintento. · Estado: codigo · yodesarrollomx/potenciales-yod · grafo-motor/ia.py · Revisión: e3217cca26d63fbaa65cf90b50c3a2958af0ad13](https://github.com/yodesarrollomx/potenciales-yod/blob/e3217cca26d63fbaa65cf90b50c3a2958af0ad13/grafo-motor/ia.py)
+- [CON-GRAFO-IA-CLAUDE · Corridas 43283429071 y 43286094367 del 12-nov-2026 con explicación de Claude (ia=claude en el registro). · Estado: ejecucion · yodesarrollomx/potenciales-yod · .github/workflows/grafo-rehacer.yml · Revisión: 685ed2ccb0e1d7cf1224fe4216bc071349e7751c](https://github.com/yodesarrollomx/potenciales-yod/blob/685ed2ccb0e1d7cf1224fe4216bc071349e7751c/.github/workflows/grafo-rehacer.yml)
+
+**Pendientes y límites:**
+
+- Costo por uso. Sin clave o sin respuesta, el grafo se rehace igual, sin explicación.
 
 ### Render · alojamiento del motor · EXT-RENDER
 

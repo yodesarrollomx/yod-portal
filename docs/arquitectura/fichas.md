@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-12.ppp2.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-12.grafo-vivo.1 · 2026-10-20.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -754,7 +754,7 @@ Dependencia externa de procesos YOD OS
 - Entidades: .
 - Fuente de verdad: Datos del servicio externo; no inspeccionados.
 - Evidencia: Integración pendiente de verificar.
-- Conexiones: CON-063 (SYS-SALA → EXT-ACTIONS); CON-079 (EXT-ACTIONS → SVC-SALA-PRODUCTOR); CON-081 (EXT-ACTIONS → SVC-SALA-EJECUTOR); CON-PUBLICADOR-IDENTIDAD (EXT-ACTIONS → EXT-GITHUB-PUBLISHER-APP); CON-SALA-SNAPSHOT-ONLINE (SYS-SALA → EXT-ACTIONS); CON-MARKETING-DATOS-ONLINE (SYS-MARKETING → EXT-ACTIONS); CON-SALA-CIERRE-ONLINE (SVC-SALA-EJECUTOR → EXT-ACTIONS); CON-SALUD-ACTIONS (SYS-CONTROL → EXT-ACTIONS); CON-HORARIOS-ACTIONS (SVC-HORARIOS-CLOUD → EXT-ACTIONS); CON-SALA-MEDIOS-PUBLICOS (SYS-SALA → EXT-ACTIONS); CON-GRAFO-ACTIONS (SYS-CONTROL → EXT-ACTIONS); CON-GRAFO-IA (EXT-ACTIONS → EXT-OPENAI).
+- Conexiones: CON-063 (SYS-SALA → EXT-ACTIONS); CON-079 (EXT-ACTIONS → SVC-SALA-PRODUCTOR); CON-081 (EXT-ACTIONS → SVC-SALA-EJECUTOR); CON-PUBLICADOR-IDENTIDAD (EXT-ACTIONS → EXT-GITHUB-PUBLISHER-APP); CON-SALA-SNAPSHOT-ONLINE (SYS-SALA → EXT-ACTIONS); CON-MARKETING-DATOS-ONLINE (SYS-MARKETING → EXT-ACTIONS); CON-SALA-CIERRE-ONLINE (SVC-SALA-EJECUTOR → EXT-ACTIONS); CON-SALUD-ACTIONS (SYS-CONTROL → EXT-ACTIONS); CON-HORARIOS-ACTIONS (SVC-HORARIOS-CLOUD → EXT-ACTIONS); CON-SALA-MEDIOS-PUBLICOS (SYS-SALA → EXT-ACTIONS); CON-GRAFO-ACTIONS (SYS-CONTROL → EXT-ACTIONS); CON-GRAFO-IA (EXT-ACTIONS → EXT-OPENAI); CON-GRAFO-IA-CLAUDE (EXT-ACTIONS → EXT-ANTHROPIC).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Estado y permisos no comprobados.
 
@@ -1198,3 +1198,16 @@ Registro de planes y un libro por plan con todas las fórmulas: tres versiones, 
 - Conexiones: CON-PPP2-LIBROS (GAS-PPP2 → SHEET-PPP2).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Quien edita el libro a mano puede romper una fórmula: las pestañas calculadas llevan protección de aviso; Los identificadores de los libros no se publican.
+
+## EXT-ANTHROPIC · Claude · API de Anthropic
+
+Explicar en palabras qué cambió entre la versión aprobada del grafo y la rehecha a pedido.
+
+- Tipo: servicio_externo. Dominio: Infraestructura. Responsable: Dirección técnica.
+- Evidencia: ejecucion. Producción: Comprobado el 12-nov-2026: los borradores G-20261112-1147 y G-20261112-1203 salieron con explicación de Claude por API (registro de la rama grafo-datos, ia=claude). La clave vive sólo como secreto del flujo..
+- Entidades: diferencia_grafo, explicacion.
+- Fuente de verdad: El grafo rehecho y su diferencia contra el aprobado. La explicación es un resumen validado contra un esquema fijo; no decide ni publica nada..
+- Evidencia: [potenciales-yod/grafo-motor/ia.py](https://github.com/yodesarrollomx/potenciales-yod/blob/e3217cca26d63fbaa65cf90b50c3a2958af0ad13/grafo-motor/ia.py) — Petición con herramienta y esquema fijo, y un segundo intento si la primera respuesta llega mal formada.; [potenciales-yod/.github/workflows/grafo-rehacer.yml](https://github.com/yodesarrollomx/potenciales-yod/blob/685ed2ccb0e1d7cf1224fe4216bc071349e7751c/.github/workflows/grafo-rehacer.yml) — Corridas 43283429071 y 43286094367 del 12-nov-2026: pedidos de rehacer con explicación de Claude..
+- Conexiones: CON-GRAFO-IA-CLAUDE (EXT-ACTIONS → EXT-ANTHROPIC).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Pendientes: Costo por uso. Sin clave o sin respuesta, el grafo se rehace igual, sin explicación..
