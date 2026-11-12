@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-11.grafo-accesos.3",
+  "revision": "2026-11-12.ppp2.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -3515,6 +3515,133 @@
       "aliases": [
         "SYS-MERCADO-HMO"
       ]
+    },
+    {
+      "id": "SYS-PPP2",
+      "nombre": "PPP 2 · el vivero de planes",
+      "tipo": "tablero",
+      "repo": "yodesarrollomx/potenciales-yod",
+      "proposito": "Cultivar cada plan de potencial: nace como semilla, se nutre de datos con fuente, investiga y propone versiones; muestra primero lo que recibe el dueño y en cuánto tiempo",
+      "dominio": "Ventas",
+      "owner_role": "Dirección",
+      "status": "codigo",
+      "runtime_status": "Página lista en el PR; se publica al integrarlo. Lecturas del servidor con sesión de Dirección comprobadas el 12-nov-2026.",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "ppp2.js",
+          "claim": "Vivero y plan vivo; sólo presenta lo que calcula el libro y nunca borra la credencial del Portero",
+          "status": "codigo",
+          "source_revision": "PR claude/ppp2-moreo (potenciales-yod)"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "os/catalogo.js",
+          "claim": "Entrada PPP 2 del menú con el código PT",
+          "status": "codigo",
+          "source_revision": "PR claude/ppp2-atlas"
+        }
+      ],
+      "data_entities": [
+        "plan",
+        "version",
+        "dato",
+        "pregunta",
+        "candado",
+        "hallazgo",
+        "voto_consejo",
+        "prueba_estres"
+      ],
+      "risks_sanitized": [
+        "La siguiente pregunta se ordena con un criterio del oficio, no con un cálculo de sensibilidad",
+        "Sin una ronda programada del autón, los pedidos de investigación esperan"
+      ],
+      "source_of_truth": "El libro de cada plan en Google Sheets (SHEET-PPP2)"
+    },
+    {
+      "id": "GAS-PPP2",
+      "nombre": "PPP 2 · servidor",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/potenciales-yod",
+      "proposito": "Validar la sesión con el Portero, leer el libro del plan y escribir sólo celdas permitidas con bitácora, revisión y request_id; no calcula finanzas",
+      "dominio": "Ventas",
+      "owner_role": "Responsable técnico del backend",
+      "status": "ejecucion",
+      "runtime_status": "Versión 1 activa (proyecto nuevo, implementación propia, aparte del Portero). Comprobado en vivo: ppp2-meta, rechazo de una liga inválida vía canje, y lecturas de vivero y plan con la sesión de Dirección. Escrituras reales sin probar: sólo con dobles.",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "server/ppp2/PPP2.gs",
+          "claim": "Contrato ppp2-servidor-v1: canje con board=PT, allowlist de escrituras, LockService, revisión y bitácora",
+          "status": "codigo",
+          "source_revision": "PR claude/ppp2-moreo (potenciales-yod)"
+        },
+        {
+          "claim": "Versión 1 desplegada el 12-nov-2026 12:40 (Hermosillo) y autorizada por Dirección; lecturas reales comprobadas desde el navegador de Dirección.",
+          "status": "ejecucion",
+          "source_revision": "Apps Script version 1"
+        }
+      ],
+      "data_entities": [
+        "plan",
+        "version",
+        "dato",
+        "pregunta",
+        "candado",
+        "hallazgo",
+        "pedido",
+        "bitacora"
+      ],
+      "risks_sanitized": [
+        "Revocar una sesión tarda hasta 10 minutos por la caché del canje, igual que en el Portero",
+        "Una prueba de estrés escribe y restablece la columna Prueba del libro; si se interrumpe, la próxima corrida la restablece"
+      ],
+      "backend_source_status": "fuente_repositorio_igual_a_version_1",
+      "source_of_truth": "Fuente en GitHub pegada sin cambios en la versión 1; los datos viven en los libros"
+    },
+    {
+      "id": "SHEET-PPP2",
+      "nombre": "PPP 2 · vivero y libros de plan",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/potenciales-yod",
+      "proposito": "Registro de planes y un libro por plan con todas las fórmulas: tres versiones, revisión para fondos, reparto, preguntas del oficio, candados, hallazgos, consejo, pruebas y bitácora",
+      "dominio": "Ventas",
+      "owner_role": "Dirección / propietario del libro",
+      "status": "ejecucion",
+      "runtime_status": "Plantilla ppp2-libro-v1 y primer libro creados el 12-nov-2026; Google Sheets recalcula las tres versiones y cuadran con el borrador previo (comparación privada, sin cifras públicas).",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "ppp2/libro/generar.py",
+          "claim": "Generador de la plantilla con fórmulas nativas",
+          "status": "codigo",
+          "source_revision": "PR claude/ppp2-moreo (potenciales-yod)"
+        },
+        {
+          "claim": "Libros reales creados en el Drive de Dirección; comparación de resultados contra el borrador hecha en privado.",
+          "status": "ejecucion",
+          "source_revision": "2026-11-12"
+        }
+      ],
+      "data_entities": [
+        "plan",
+        "dato",
+        "producto",
+        "palanca",
+        "flujo_mensual",
+        "version",
+        "reparto",
+        "pregunta",
+        "candado",
+        "hallazgo",
+        "voto_consejo",
+        "bitacora"
+      ],
+      "risks_sanitized": [
+        "Quien edita el libro a mano puede romper una fórmula: las pestañas calculadas llevan protección de aviso",
+        "Los identificadores de los libros no se publican"
+      ],
+      "physical_mapping_status": "registro_y_libros_por_plan"
     }
   ],
   "connections": [
@@ -6959,6 +7086,90 @@
           "status": "declarado"
         }
       ]
+    },
+    {
+      "id": "CON-PPP2-SERVIDOR",
+      "from": "SYS-PPP2",
+      "to": "GAS-PPP2",
+      "label": "Lee el vivero y el plan; envía datos, respuestas, palancas, aprobaciones y pruebas",
+      "kind": "api",
+      "status": "codigo",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "ppp2.js",
+          "claim": "fetch al /exec de PPP 2 con la sesión del Portero",
+          "status": "codigo",
+          "source_revision": "PR claude/ppp2-moreo (potenciales-yod)"
+        }
+      ],
+      "runtime_verified": false,
+      "contract": "CTR-PPP2",
+      "contract_ids": [
+        "CTR-PPP2"
+      ]
+    },
+    {
+      "id": "CON-PPP2-PORTERO",
+      "from": "GAS-PPP2",
+      "to": "GAS-PORTERO",
+      "label": "Canje de sesión con board=PT; el respaldo sólo si el original falla en esa llamada",
+      "kind": "lectura",
+      "status": "codigo",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "server/ppp2/PPP2.gs",
+          "claim": "canje_ con caché de 10 minutos",
+          "status": "codigo",
+          "source_revision": "PR claude/ppp2-moreo (potenciales-yod)"
+        }
+      ],
+      "runtime_verified": false,
+      "contract": "Contrato de canje del Portero (recurso=canje) sin cambios",
+      "contract_ids": []
+    },
+    {
+      "id": "CON-PPP2-LIBROS",
+      "from": "GAS-PPP2",
+      "to": "SHEET-PPP2",
+      "label": "Lee el resumen y las tablas; escribe celdas permitidas y la bitácora",
+      "kind": "persistencia",
+      "status": "codigo",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "server/ppp2/PPP2.gs",
+          "claim": "SpreadsheetApp sobre el vivero y los libros",
+          "status": "codigo",
+          "source_revision": "PR claude/ppp2-moreo (potenciales-yod)"
+        }
+      ],
+      "runtime_verified": false,
+      "contract": "CTR-PPP2",
+      "contract_ids": [
+        "CTR-PPP2"
+      ]
+    },
+    {
+      "id": "CON-PPP2-DRIVE",
+      "from": "GAS-PPP2",
+      "to": "EXT-DRIVE",
+      "label": "Copia la plantilla al sembrar un plan",
+      "kind": "persistencia",
+      "status": "codigo",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "server/ppp2/PPP2.gs",
+          "claim": "DriveApp.makeCopy de la plantilla",
+          "status": "codigo",
+          "source_revision": "PR claude/ppp2-moreo (potenciales-yod)"
+        }
+      ],
+      "runtime_verified": false,
+      "contract": "Copia en la carpeta del vivero",
+      "contract_ids": []
     }
   ],
   "processes": [
@@ -15440,6 +15651,40 @@
       ],
       "deployment": "Al fusionar el PR de yodesarrollo-board (rama claude/presentacion-desde-grafo), Pages publica la página y el aviso. Depende de que potenciales-yod ya publique grafo/versiones.json y grafo/datos/ (CHG-GRAFO-ACCESOS-20261111): sin ellos la página dice que no pudo leer el grafo y el aviso no pinta nada.",
       "rollback": "Revertir el merge. No hay backend, hojas, permisos ni datos."
+    },
+    {
+      "id": "CHG-PPP2-20261112",
+      "components": [
+        "GAS-CATALOGO",
+        "GAS-PORTERO",
+        "GAS-PPP2",
+        "SHEET-PPP2",
+        "SYS-CONTROL",
+        "SYS-DESPACHO",
+        "SYS-MERCADO",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "SYS-TRACK",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "PPP 2: un portal nuevo del Plan de Potencial que empieza de cero sin tocar el PPP actual. Cada plan es un libro de Google Sheets con todas las fórmulas (plantilla ppp2-libro-v1): tres versiones con el mismo motor de flujo mensual (ventas por producto, cobranza con enganche, pagos durante la obra y saldos al individualizar, obra en campana, capital primero, banco contra avance con tope y caja mínima, respaldo si falta dinero y devolución con rendimiento), la revisión para fondos de nueve pruebas, cinco esquemas de reparto con el dueño sobre el resultado real del flujo, las 96 preguntas del oficio ordenadas por la edad del plan, candados, hallazgos del autón, votos del consejo de planes, pruebas de estrés en una columna que se restablece y bitácora. La edad (semilla, plántula, árbol, flor, fruto) la calcula el libro. Un Apps Script aparte (GAS-PPP2, ligado al registro del vivero) valida la sesión con el Portero (board PT; el respaldo sólo si el original falla en esa llamada), escribe sólo celdas permitidas con revisión, request_id y bitácora, y no calcula finanzas; sólo admin vuelve vigente una versión. La página ppp2.html de potenciales-yod muestra el vivero y el plan vivo con lo que recibe el dueño primero, y el menú de YOD OS agrega «PPP 2» con el código PT, después de Mercado.",
+      "approval": "Dirección, 12-nov-2026 por chat: «me abras un nuevo portal de plan de potencial… ponle en el tablero PPP2… no borrar nada de lo que tenemos, pero empezar de cero»; a las 11:45, tras la propuesta esquemática y el consejo: edades con esos nombres, el PPP que se cobra lleva de plántula a árbol, la radiografía muestra primero lo que recibe el dueño, «hay que integrar jueces del oficio», «empecemos por Moreo… sigue adelante y ejecútalo tú todo completo». A las 12:41 autorizó en su navegador el acceso del servidor nuevo.",
+      "status": "implementado_local",
+      "tests": [
+        "potenciales-yod: node --test tests/ppp2-servidor.test.cjs (20: canje con board=PT y respaldo sólo ante falla, permisos por rol, rangos y claves inventadas, revisión vieja, request_id repetido, palancas y renglones calculados, aprobación sólo de Dirección, preguntas, pedidos, candados con evidencia, estrés que restablece, sembrar y pausa)",
+        "potenciales-yod: node --test tests/ppp2-libro.test.cjs (el libro de ejemplo recalculado cuadra: flujo, cobranza, unidades, ganancia y reparto)",
+        "potenciales-yod: node tests/ppp2-browser.cjs (9 recorridos: sin servidor, sin sesión, sesión rechazada sin borrar la credencial, vivero → plan, escrituras con revisión, aprobación sólo admin, lector sin controles, teléfono sin desborde, sin datos reales en la página)",
+        "yod-portal: node scripts/catalogo.cjs --check · verify-os · verify-portal · verify-accesos · node --test tests/*.cjs · node scripts/arquitectura.cjs --check",
+        "En vivo (12-nov-2026): ppp2-meta, rechazo de liga inválida vía canje y lecturas de vivero y plan con la sesión de Dirección; el primer libro recalculado por Google Sheets cuadra con el borrador (privado)."
+      ],
+      "deployment": "Apps Script nuevo «PPP 2 · servidor» ligado al registro del vivero, versión 1 como implementación propia (proyecto nuevo); futuras versiones siempre con «Nueva versión» sobre la misma implementación. Página y menú por GitHub Pages al integrar los PR de potenciales-yod y yod-portal. Rollback: revertir los PR; el servidor puede quedar en sólo lectura con Config!pausa.",
+      "invariants": [
+        "El PPP actual y el Portero no cambian.",
+        "Sin fórmulas financieras fuera del libro.",
+        "Repo y atlas públicos sin nombres de planes, cifras ni identificadores de libros o /exec."
+      ]
     }
   ],
   "data_contracts": [
@@ -17889,6 +18134,30 @@
         "Las recetas no traen cifras ni cálculo: nombran campos guardados del plan y lo ausente se muestra como no definido",
         "Las claves de IA viven sólo como secretos del flujo; no aparecen en archivos, páginas ni registros",
         "La rama de datos no se sirve por Pages y escribir en ella no dispara otros flujos"
+      ]
+    },
+    {
+      "id": "CTR-PPP2",
+      "components": [
+        "SYS-PPP2",
+        "GAS-PPP2",
+        "SHEET-PPP2"
+      ],
+      "source": "server/ppp2/PPP2.gs (ppp2-servidor-v1) y ppp2/libro/generar.py (ppp2-libro-v1) en potenciales-yod; docs/ppp2.md.",
+      "input": [
+        "GET ppp2-meta sin credencial; ppp2-vivero y ppp2-plan con k = sesión del Portero (board PT).",
+        "POST text/plain JSON: ppp2-dato, ppp2-producto, ppp2-palanca, ppp2-version, ppp2-responder, ppp2-investigar, ppp2-hallazgo, ppp2-candado, ppp2-reparto, ppp2-estres y ppp2-sembrar, con request_id y la revisión vista."
+      ],
+      "output": [
+        "Resumen clave → valor del libro, tablas del plan y la serie mensual del dinero de las tres versiones.",
+        "Cada escritura devuelve la revisión nueva y el resumen recalculado por el libro; deja renglón en la Bitácora."
+      ],
+      "invariants": [
+        "Ninguna fórmula financiera fuera del libro; el servidor sólo escribe celdas permitidas y lee lo calculado.",
+        "Sólo admin vuelve vigente una versión; admin y editor capturan; quien tiene PT lee.",
+        "Una revisión vieja no sobrescribe; el mismo request_id no escribe dos veces.",
+        "El PPP actual, sus motores y el Portero no cambian; el respaldo del Portero no se guarda como destino.",
+        "La página no lleva datos de planes ni identificadores de libros."
       ]
     }
   ],
@@ -20575,6 +20844,98 @@
       "components": [
         "SYS-MERCADO"
       ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "ppp2.html",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "ppp2.js",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "GAS-PPP2"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "ppp2.css",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "ppp2/",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "SHEET-PPP2"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "server/ppp2/",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "GAS-PPP2",
+        "SHEET-PPP2"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "tests/ppp2-browser.cjs",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "GAS-PPP2",
+        "SHEET-PPP2"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "tests/ppp2-libro.test.cjs",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "SHEET-PPP2"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "tests/ppp2-mundo.cjs",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "GAS-PPP2",
+        "SHEET-PPP2"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "tests/ppp2-servidor.test.cjs",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "GAS-PPP2",
+        "SHEET-PPP2"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "tests/fixtures/ppp2-libro-ejemplo.json",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "SHEET-PPP2"
+      ]
     }
   ],
   "office_coverage": {
@@ -20682,7 +21043,10 @@
           "SYS-POTENCIALES",
           "SHEET-PPP-MODELOS",
           "SYS-DESPACHO-3D",
-          "SYS-MERCADO"
+          "SYS-MERCADO",
+          "SYS-PPP2",
+          "GAS-PPP2",
+          "SHEET-PPP2"
         ]
       },
       {
