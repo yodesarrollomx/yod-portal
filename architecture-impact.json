@@ -1,26 +1,21 @@
 {
-  "model_revision": "2026-11-12.ppp2.1",
-  "proposal_id": "CHG-PPP2-20261112",
-  "summary": "Registra PPP 2 en el atlas y lo pone en el menú. El atlas agrega SYS-PPP2 (vivero en potenciales-yod/ppp2.html), GAS-PPP2 (Apps Script aparte, versión 1 activa, lecturas comprobadas en vivo) y SHEET-PPP2 (registro del vivero y un libro por plan con todas las fórmulas), el contrato CTR-PPP2, cuatro conexiones (página → servidor, servidor → Portero para el canje, servidor → libros, servidor → Drive para copiar la plantilla) y la propiedad de sus rutas. En YOD OS, os/catalogo.js agrega «PPP 2» (código PT, después de Mercado para que Mercado siga justo debajo de PPP) y se regeneran sus copias en shell.js, access-policy.js y app.js; portal-core.js admite el destino en las tres casas y os/versiones.json sube la etiqueta propia para que Pages no sirva el marco viejo. No cambia la matriz de códigos (PT ya existe), ni el Portero, ni el PPP actual.",
+  "model_revision": "2026-11-12.grafo-vivo.1",
+  "proposal_id": "CHG-ATLAS-GRAFO-VIVO-20261112",
+  "summary": "Pone al día en el atlas el grafo del sistema y la presentación desde el grafo con lo comprobado en producción el 12-nov-2026. CHG-GRAFO-ACCESOS-20261111 y CHG-PRESENTACION-GRAFO-20261111 pasan de implementado_local a publicado, con lo comprobado y lo que falta. Las conexiones del grafo en Accesos, del flujo de rehacer y aprobar y de la presentación pasan a ejecución con recibo fechado y alcance. Claude por API entra como componente externo (EXT-ANTHROPIC) con su conexión CON-GRAFO-IA-CLAUDE; la de OpenAI queda en código, sin uso comprobado. El contrato CTR-GRAFO-VERSIONES agrega que el grafo no refleja sistemas hechos para otros clientes y que aprobar un borrador abierto por un flujo pide antes «Approve workflows to run». Sólo documentación del atlas y su inventario de salud; sin cambios de código, permisos, backend ni hojas.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-PPP2",
-    "SYS-POTENCIALES",
-    "GAS-PORTERO",
-    "GAS-CATALOGO",
     "SYS-CONTROL",
-    "SYS-DESPACHO",
-    "SYS-MERCADO",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
-    "SYS-TRACK"
+    "SYS-POTENCIALES",
+    "SYS-INVERSION",
+    "EXT-ACTIONS",
+    "EXT-OPENAI",
+    "EXT-ANTHROPIC"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "node scripts/catalogo.cjs --check · node scripts/versiones.cjs --check",
-    "node verify-os.cjs · node verify-portal.cjs · node verify-accesos.cjs · node verify-obra-app.cjs",
     "node --test tests/*.cjs",
+    "node verify-os.cjs · node verify-portal.cjs · node verify-accesos.cjs · node verify-obra-app.cjs",
     "git diff --check"
   ],
-  "rollback": "Revertir el PR quita la entrada PPP 2 del menú, su destino permitido y el registro del atlas; la etiqueta de versión vuelve a la anterior. La página y el servidor de PPP 2 viven en potenciales-yod y en su Apps Script: se revierten aparte."
+  "rollback": "Revertir el PR devuelve las entradas a implementado_local y declarado y quita EXT-ANTHROPIC y su conexión del atlas y del inventario de salud; no toca código ni producción."
 }

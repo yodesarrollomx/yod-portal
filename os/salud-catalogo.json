@@ -501,6 +501,12 @@
       "repo": "alexpueblag/yod-agent-cloud"
     },
     {
+      "id": "EXT-ANTHROPIC",
+      "nombre": "Claude · API de Anthropic",
+      "tipo": "servicio_externo",
+      "repo": "yodesarrollomx/potenciales-yod"
+    },
+    {
       "id": "EXT-RENDER",
       "nombre": "Render · alojamiento del motor",
       "tipo": "infraestructura",
