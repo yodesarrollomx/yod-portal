@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-11.grafo-accesos.1",
+  "revision": "2026-11-11.grafo-accesos.2",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -6874,6 +6874,88 @@
           "repo": "yodesarrollomx/sala-edicion",
           "path": "sala-salida.js",
           "claim": "recordar() escribe sala_resumen_v1 y olvidar() lo borra (PR 383, pendiente de fusión al registrar).",
+          "status": "declarado"
+        }
+      ]
+    },
+    {
+      "id": "CON-GRAFO-ACCESOS",
+      "from": "SYS-CONTROL",
+      "to": "SYS-POTENCIALES",
+      "kind": "observacion",
+      "label": "Grafo del sistema en Accesos: versión aprobada, borrador y estado de cada pieza",
+      "contract": "CTR-GRAFO-VERSIONES; sólo lectura de archivos estáticos y de la rama de datos; visible con sesión de admin. Si un archivo falta, la sección lo dice y no inventa estado.",
+      "contract_ids": [
+        "CTR-GRAFO-VERSIONES"
+      ],
+      "status": "declarado",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "grafo-control.js",
+          "claim": "Controles junto al grafo: versión aprobada, aviso de borrador, botón para rehacer y registro. Código en el PR 61, pendiente de fusión al registrar.",
+          "status": "declarado"
+        }
+      ]
+    },
+    {
+      "id": "CON-GRAFO-ACTIONS",
+      "from": "SYS-CONTROL",
+      "to": "EXT-ACTIONS",
+      "kind": "automatizacion",
+      "label": "Rehacer el grafo a pedido y vigilar su estado cada hora",
+      "contract": "CTR-GRAFO-VERSIONES; el pedido es un issue de alguien con permiso de escritura; el resultado es un PR de borrador, nunca una escritura directa a la rama principal. La vigilancia sólo lee la API de GitHub y páginas estáticas.",
+      "contract_ids": [
+        "CTR-GRAFO-VERSIONES"
+      ],
+      "status": "declarado",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": ".github/workflows/grafo-rehacer.yml",
+          "claim": "Flujos «Grafo · rehacer» y «Grafo · estado». Código en el PR 61, pendiente de fusión al registrar.",
+          "status": "declarado"
+        }
+      ]
+    },
+    {
+      "id": "CON-PRESENTACION-GRAFO",
+      "from": "SYS-INVERSION",
+      "to": "SYS-POTENCIALES",
+      "kind": "lectura",
+      "label": "Lee el grafo aprobado (recetas por audiencia y contrato del plan) para armar presentaciones y avisar si hay otra versión en trabajo",
+      "contract": "CTR-GRAFO-VERSIONES; lectura sin credenciales de archivos estáticos. El plan guardado se lee aparte, con sesión, por CON-BROKERS-PPP-SAVED. Si falta el grafo, la página lo dice y no arma nada; el aviso no pinta nada.",
+      "contract_ids": [
+        "CTR-GRAFO-VERSIONES"
+      ],
+      "status": "declarado",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/yodesarrollo-board",
+          "path": "presentacion/grafo/app.mjs",
+          "claim": "Página que arma la presentación con el grafo aprobado y el plan guardado. Código en la rama claude/presentacion-desde-grafo, pendiente de fusión al registrar.",
+          "status": "declarado"
+        }
+      ]
+    },
+    {
+      "id": "CON-GRAFO-IA",
+      "from": "EXT-ACTIONS",
+      "to": "EXT-OPENAI",
+      "kind": "api",
+      "label": "Explicación de los cambios del grafo; a la vez se consulta a Claude por API y se usa la primera respuesta válida",
+      "contract": "Se envían sólo diferencias del grafo público (cuentas y nombres de piezas); la respuesta se valida contra un esquema fijo. Sin clave o sin respuesta, el grafo se rehace igual. Costo por uso. Claude (API de Anthropic) es el segundo proveedor y todavía no tiene componente propio en este modelo.",
+      "contract_ids": [],
+      "status": "declarado",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "grafo-motor/ia.py",
+          "claim": "Peticiones a los dos proveedores con claves tomadas de secretos del flujo. Código en el PR 61, pendiente de fusión al registrar.",
           "status": "declarado"
         }
       ]
@@ -15329,14 +15411,35 @@
         "SYS-CONTROL"
       ],
       "status": "implementado_local",
-      "approval": "Dirección, 11-nov-2026 por chat: «ponlo dentro del tablero de GitHub en la pantalla de acceso para que siempre esté presente»; al preguntar dónde: «hasta abajo, en la parte de accesos… embebido dentro del HTML que ya hay», y que marque dónde falló, lleve registro y abra una chinche. El 11-nov a las 20:52 confirmó el permiso para registrar este cambio en el atlas.",
-      "proposal": "potenciales-yod/accesos.html agrega al final la sección «Grafo del sistema»: un marco que carga grafo/index.html (láminas estáticas generadas con Graphify; sólo piezas ya públicas: sin nombres de tratos, repos privados ni clientes externos), visible sólo con sesión de admin y cargado hasta que la sección entra a la vista. Nuevo flujo «Grafo · estado» en potenciales-yod (cada hora, sólo lectura de la API de GitHub y GET a páginas estáticas; ningún /exec) que escribe grafo/estado.json y grafo/registro.jsonl y abre una chinche por cada flujo o página que falla. Sin cambios en portero.js, backend, hojas ni permisos.",
+      "approval": "Dirección, 11-nov-2026 por chat: «ponlo dentro del tablero de GitHub en la pantalla de acceso para que siempre esté presente»; al preguntar dónde: «hasta abajo, en la parte de accesos… embebido dentro del HTML que ya hay», y que marque dónde falló, lleve registro y abra una chinche. A las 20:52 confirmó el permiso para registrar este cambio en el atlas y pidió, junto al grafo, «un botón que activara ya sea la clave que tenemos de OpenAI o la de Claude… que pregunten los dos, al primero que solucione, y que rehaga el grafo», preguntando al terminar si se rehace ya o queda como borrador. A las 21:25: «Hazlo todo tú completo, aprobado».",
+      "proposal": "(1) Grafo en Accesos. potenciales-yod/accesos.html agrega al final la sección «Grafo del sistema»: un marco que carga grafo/index.html (láminas estáticas; sólo piezas de repositorios públicos: sin nombres de tratos, repositorios privados, clientes externos ni identificadores completos de backends), visible sólo con sesión de admin y cargado hasta que la sección entra a la vista. (2) Motor dentro del repositorio. grafo-motor/ guarda la base pública del grafo, sus reglas y el generador determinista de las láminas; refrescar.py vuelve a leer los repositorios públicos y este atlas (archivos, símbolos, importaciones, llamadas abreviadas a Apps Script, hojas, llaves del navegador y flujos). Las capas curadas a mano (pantallas propuestas, plan, hallazgos y pestañas de hojas) no se regeneran solas. (3) Rehacer a pedido. El botón «Rehacer grafo» de Accesos abre un issue; el flujo «Grafo · rehacer» comprueba que quien lo pide tiene permiso de escritura en el repositorio, rehace el grafo y pide a OpenAI y a Claude, a la vez, una explicación de lo que cambió: se usa la primera respuesta válida y, si no hay claves o ninguna responde, el grafo se rehace igual, sin explicación. Las claves existen sólo como secretos del flujo, nunca en una página ni en un archivo. (4) Borrador y aprobación. La rama principal está protegida, así que el grafo rehecho queda en la rama grafo-borrador con un PR: dejarlo abierto es borrador (nada publicado cambia), fusionarlo es aprobar (Pages publica el grafo nuevo y grafo/versiones.json lo marca como aprobado) y cerrarlo lo descarta. Accesos enseña el borrador sin publicarlo y liga al PR donde se aprueba o descarta. (5) Vigilancia. El flujo «Grafo · estado» corre cada hora, sólo lee la API de GitHub y páginas estáticas (ningún /exec) y escribe estado, registro y puntero de borrador en la rama de datos grafo-datos, no en la principal; marca en el grafo los flujos y páginas que fallan y los cambios aún no reflejados, y abre una chinche por cada falla. (6) Cada versión aprobada publica grafo/datos/<id>.json con el contrato del Plan de Potencial (nombres de campos, sin valores) y las recetas por audiencia que consumen las presentaciones (CHG-PRESENTACION-GRAFO-20261111). Sin cambios en portero.js, backend, hojas ni permisos.",
       "tests": [
-        "potenciales-yod: node --test tests/accesos-admin-session.test.cjs tests/access-gates.cjs; node tests/salud-accesos-browser.cjs en CI; node --check scripts/grafo-estado.cjs; git diff --check.",
-        "Las láminas de grafo/ abiertas en Chromium sin errores de JavaScript; revisión de texto sin nombres de tratos, correos ni identificadores completos de /exec.",
-        "verificar-impacto contra el atlas fijado."
+        "potenciales-yod: python -m unittest discover -s grafo-motor/pruebas (recetas contra el contrato del plan, carrera de las dos IA con servidores locales, refresco sobre un repositorio sintético, versiones, avisos y láminas deterministas).",
+        "potenciales-yod: node --test tests/grafo-estado.test.cjs tests/grafo-control.test.cjs tests/accesos-admin-session.test.cjs tests/access-gates.cjs; node scripts/versiones.cjs --check; git diff --check.",
+        "Trabajo «ensayo» del flujo «Grafo · rehacer» en cada PR que toca el grafo: pruebas, láminas publicadas idénticas a las que genera el motor, rehacer en seco sin IA y presencia de las claves (sólo sí o no).",
+        "Navegador con dobles: Accesos con sesión de admin en 390 y 1280 px, borrador visible sin publicarse y sin errores de JavaScript; revisión del texto publicado sin nombres de tratos, correos ni identificadores completos de backends.",
+        "verificar-impacto contra el atlas fijado. Pendiente de comprobar en producción después de fusionar: issue → flujo → PR de borrador, primera corrida de «Grafo · estado» (crea la rama grafo-datos) y publicación de Pages."
       ],
-      "deployment": "Al fusionar el PR de potenciales-yod, Pages publica accesos.html con la sección y el flujo empieza a escribir grafo/estado.json en main cada hora. Reversión: revertir el merge y desactivar el flujo; no hay backend ni datos."
+      "deployment": "Al fusionar el PR 61 de potenciales-yod, Pages publica accesos.html con la sección y quedan activos los dos flujos; la primera corrida horaria crea la rama grafo-datos. Para la explicación con IA hacen falta los secretos OPENAI_API_KEY y ANTHROPIC_API_KEY del repositorio (basta uno; los administra Dirección). Sin ellos el botón rehace el grafo igual. Pendiente en el atlas: Claude por API no tiene componente propio; darlo de alta exige ampliar el inventario de salud que sirve la cabina y se propone por separado.",
+      "rollback": "Revertir el merge, desactivar los flujos «Grafo · rehacer» y «Grafo · estado» y borrar las ramas grafo-datos y grafo-borrador. No hay backend, hojas ni datos de negocio."
+    },
+    {
+      "id": "CHG-PRESENTACION-GRAFO-20261111",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-POTENCIALES"
+      ],
+      "status": "implementado_local",
+      "approval": "Dirección, 11-nov-2026 por chat: la presentación «la va a estar leyendo el último grafo… para la versión del cliente, para el dueño del terreno, para lo de los depas… opciones múltiples»; al rehacer el grafo se pregunta si se rehace ya o es borrador: «al aprobar el grafo sale automáticamente la presentación; si decimos que es sólo borrador, lo va a mantener igual»; y «en la página del Master Broker o de la presentación… una simple alerta pequeña, sin llamar mucho la atención». A las 21:25: «Hazlo todo tú completo, aprobado».",
+      "proposal": "yodesarrollo-board agrega presentacion/grafo/: una página que arma en el navegador una presentación con (a) el grafo aprobado que publica potenciales-yod (grafo/versiones.json y grafo/datos/<id>.json: recetas por audiencia y contrato del plan, sin valores) y (b) el Plan de Potencial guardado del caso, leído con la sesión de quien abre por la misma lectura recurso=caso del Mini CRM (CTR-BROKERS-MINI-CRM; sin cambios de backend). Opción múltiple de audiencia (cliente o inversionista; dueño del terreno; producto: departamentos, lotes o casas) y de extensión (completa o corta); la elección viaja en la liga. La página no calcula: cada cifra es un campo guardado del plan con su procedencia y lo que el plan no trae se muestra «No definido». Usa el formato de guion yod.storyboard.v1 y el mismo motor de dibujo de las presentaciones del PPP. Borrador y aprobado: sólo se lee el grafo aprobado; mientras un grafo rehecho está en borrador, las presentaciones y sus ligas no cambian; al aprobarse, la siguiente apertura usa el nuevo sin más pasos y quien la tiene abierta puede actualizar con un toque. Aviso discreto (presentacion/grafo-aviso.js): una pastilla pequeña en Master Brokers, Presentaciones y la propia página, visible sólo con sesión de YOD y sólo cuando hay otra versión del grafo en trabajo o una más nueva ya aprobada; el detalle aparece al tocarla. Master Brokers agrega en el cajón del plan la liga «Presentar desde el grafo». Sin escrituras, sin almacenamiento y sin secretos; nunca borra la credencial del Portero. No sustituye las presentaciones registradas del PPP (CTR-PPP-PRESENTACIONES): es una vista interna que se arma al abrirla.",
+      "tests": [
+        "yodesarrollo-board: node --test tests/ppp-grafo-presentacion.test.cjs (cada audiencia, tipo de plan y extensión arma un guion válido; cada cifra sale de un campo guardado; lo que falta queda «No definido»; ligas aceptadas; estados del aviso; páginas que lo montan; sólo lectura y sin secretos).",
+        "yodesarrollo-board: node tests/ppp-grafo-browser.cjs con dobles (tres tamaños, tres audiencias, versión corta, modo presentar, una sola lectura del plan, ejemplo sin sesión, puerta sin datos, borrador sin cambios, actualización al aprobar y pastilla en Master Brokers y Presentaciones).",
+        "Regresión: node --test tests/brokers*.test.cjs tests/ppp-*.test.cjs y las pruebas de navegador de Master Brokers, mesa de presentaciones y guion del PPP.",
+        "verificar-impacto contra el atlas fijado. Pendiente de comprobar en producción: lectura real del plan con una sesión real y los archivos del grafo ya publicados."
+      ],
+      "deployment": "Al fusionar el PR de yodesarrollo-board (rama claude/presentacion-desde-grafo), Pages publica la página y el aviso. Depende de que potenciales-yod ya publique grafo/versiones.json y grafo/datos/ (CHG-GRAFO-ACCESOS-20261111): sin ellos la página dice que no pudo leer el grafo y el aviso no pinta nada.",
+      "rollback": "Revertir el merge. No hay backend, hojas, permisos ni datos."
     }
   ],
   "data_contracts": [
@@ -17756,6 +17859,36 @@
         "La agrupación inicial se limita a persona evaluada y grupo de relaciones fijado por política; no filtros arbitrarios ni combinaciones que permitan reconstruir valores suprimidos por resta.",
         "El informe usa una copia privada de los datos elegibles o un agregado materializado con fuente fijada; no reconstruye un corte histórico consultando datos cambiantes o usando UPDATED como fecha de cierre.",
         "Sin validación de comparabilidad de instrumento, política y denominadores se muestran fichas/cortes separados, no curvas de mejora ni comparaciones inferidas."
+      ]
+    },
+    {
+      "id": "CTR-GRAFO-VERSIONES",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-CONTROL",
+        "SYS-INVERSION",
+        "EXT-ACTIONS"
+      ],
+      "source": "Archivos estáticos que publica potenciales-yod y su rama de datos grafo-datos. Implementado en el PR 61 de potenciales-yod y en la rama claude/presentacion-desde-grafo de yodesarrollo-board; publicación pendiente de fusión.",
+      "input": [
+        "grafo/versiones.json: esquema, aprobado, actualizado, versiones[id, armado, fecha, estado, huella, piezas, ligas, repos, nota]",
+        "grafo/datos/<id>.json: esquema, id, armado, huella, ppp (por tipo de plan: nombres de resultados y entradas), recetas (audiencias, escenas, datos, objetos, formatos), sin_campo",
+        "rama grafo-datos · borrador.json: id, fecha, pr, liga, rama, antes, piezas, ligas, titulo, resumen, recomendacion, ia, audiencias, sin_campo",
+        "rama grafo-datos · estado.json y registro.jsonl: estado observado por pieza, chinches abiertas y bitácora"
+      ],
+      "output": [
+        "Versión aprobada del grafo y su historial",
+        "Borrador en revisión, cuando lo hay",
+        "Recetas por audiencia y contrato del plan para armar presentaciones",
+        "Estado observado de cada pieza del sistema"
+      ],
+      "invariants": [
+        "Sólo se publica lo que ya es público: sin nombres de tratos, repositorios privados, correos ni identificadores completos de backends",
+        "El grafo aprobado sólo cambia al fusionar el PR del borrador; un borrador nunca altera lo publicado",
+        "Quien consume lee únicamente el aprobado; el borrador es informativo",
+        "Las recetas no traen cifras ni cálculo: nombran campos guardados del plan y lo ausente se muestra como no definido",
+        "Las claves de IA viven sólo como secretos del flujo; no aparecen en archivos, páginas ni registros",
+        "La rama de datos no se sirve por Pages y escribir en ella no dispara otros flujos"
       ]
     }
   ],
