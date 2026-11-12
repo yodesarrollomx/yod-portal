@@ -1,17 +1,26 @@
 {
-  "model_revision": "2026-11-11.grafo-accesos.3",
-  "proposal_id": "CHG-GRAFO-ACCESOS-20261111",
-  "summary": "Sólo registro en el atlas. CHG-GRAFO-ACCESOS-20261111 queda descrita como se implementó: sección «Grafo del sistema» al final de accesos.html de potenciales-yod, motor del grafo dentro de ese repositorio, botón para rehacerlo a pedido (carrera OpenAI/Claude sólo para explicar el cambio), borrador como PR en la rama grafo-borrador y vigilancia horaria que escribe en la rama de datos grafo-datos. Se agrega CHG-PRESENTACION-GRAFO-20261111 (yodesarrollo-board: presentación por audiencia armada con el grafo aprobado y el plan guardado, y aviso discreto), el contrato CTR-GRAFO-VERSIONES y cuatro conexiones declaradas. En este repo cambian únicamente docs/arquitectura/modelo.json y sus vistas regeneradas; sin código servido, backend, permisos ni datos.",
+  "model_revision": "2026-11-12.ppp2.1",
+  "proposal_id": "CHG-PPP2-20261112",
+  "summary": "Registra PPP 2 en el atlas y lo pone en el menú. El atlas agrega SYS-PPP2 (vivero en potenciales-yod/ppp2.html), GAS-PPP2 (Apps Script aparte, versión 1 activa, lecturas comprobadas en vivo) y SHEET-PPP2 (registro del vivero y un libro por plan con todas las fórmulas), el contrato CTR-PPP2, cuatro conexiones (página → servidor, servidor → Portero para el canje, servidor → libros, servidor → Drive para copiar la plantilla) y la propiedad de sus rutas. En YOD OS, os/catalogo.js agrega «PPP 2» (código PT, después de Mercado para que Mercado siga justo debajo de PPP) y se regeneran sus copias en shell.js, access-policy.js y app.js; portal-core.js admite el destino en las tres casas y os/versiones.json sube la etiqueta propia para que Pages no sirva el marco viejo. No cambia la matriz de códigos (PT ya existe), ni el Portero, ni el PPP actual.",
   "components": [
     "SYS-YOD-OS",
+    "SYS-PPP2",
     "SYS-POTENCIALES",
-    "SYS-CONTROL"
+    "GAS-PORTERO",
+    "GAS-CATALOGO",
+    "SYS-CONTROL",
+    "SYS-DESPACHO",
+    "SYS-MERCADO",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "SYS-TRACK"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs · node verify-obra-app.cjs",
-    "node verify-os.cjs · node verify-portal.cjs · node verify-accesos.cjs",
+    "node scripts/catalogo.cjs --check · node scripts/versiones.cjs --check",
+    "node verify-os.cjs · node verify-portal.cjs · node verify-accesos.cjs · node verify-obra-app.cjs",
+    "node --test tests/*.cjs",
     "git diff --check"
   ],
-  "rollback": "Revertir el PR quita el registro de las dos propuestas, el contrato y las conexiones. Sin efectos en producción, backend ni datos."
+  "rollback": "Revertir el PR quita la entrada PPP 2 del menú, su destino permitido y el registro del atlas; la etiqueta de versión vuelve a la anterior. La página y el servidor de PPP 2 viven en potenciales-yod y en su Apps Script: se revierten aparte."
 }

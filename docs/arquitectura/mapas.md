@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-11.grafo-accesos.3 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-12.ppp2.1 · 2026-10-20.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -116,6 +116,9 @@ flowchart LR
   n_EXT_GITHUB_PUBLISHER_APP["Identidad de publicación GitHub"]
   n_SYS_DESPACHO_3D["Oficina 3D y puesto del autón"]
   n_SVC_AUTON_CLOUD["Motor de nube del autón"]
+  n_SYS_PPP2["PPP 2 · el vivero de planes"]
+  n_GAS_PPP2["PPP 2 · servidor"]
+  n_SHEET_PPP2["PPP 2 · vivero y libros de plan"]
   n_GAS_MARKETING -->|Lee/escribe registros del dominio| n_SHEET_MARKETING
   n_GAS_PLAN_POTENCIAL -.->|Lee/escribe registros del dominio| n_SHEET_PLAN_POTENCIAL
   n_GAS_CROKISS -->|Lee/escribe registros del dominio| n_SHEET_CROKISS
@@ -188,6 +191,10 @@ flowchart LR
   n_SYS_SALA -->|Cuántas publicaciones hay listas para lanzar (llave local sala_resumen_v1, mismo origen)| n_SYS_YOD_OS
   n_SYS_CONTROL -.->|Grafo del sistema en Accesos: versión aprobada, borrador y estado de cada pieza| n_SYS_POTENCIALES
   n_SYS_INVERSION -.->|Lee el grafo aprobado (recetas por audiencia y contrato del plan) para armar presentaciones y avisar si hay otra versión en trabajo| n_SYS_POTENCIALES
+  n_SYS_PPP2 -->|Lee el vivero y el plan; envía datos, respuestas, palancas, aprobaciones y pruebas| n_GAS_PPP2
+  n_GAS_PPP2 -->|Canje de sesión con board=PT; el respaldo sólo si el original falla en esa llamada| n_GAS_PORTERO
+  n_GAS_PPP2 -->|Lee el resumen y las tablas; escribe celdas permitidas y la bitácora| n_SHEET_PPP2
+  n_GAS_PPP2 -->|Copia la plantilla al sembrar un plan| n_EXT_DRIVE
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PLAN_POTENCIAL pendiente;
@@ -418,6 +425,7 @@ flowchart LR
   n_SVC_HORARIOS_CLOUD["Vigilante y programador en nube"]
   n_STORE_HORARIOS_CLOUD["Estado privado de horarios"]
   n_GAS_BANDEJA_NUBE["Ejecutor de Bandeja en nube"]
+  n_GAS_PPP2["PPP 2 · servidor"]
   n_GAS_PLAN_POTENCIAL -.->|Confirma cita agendada| n_EXT_CALENDAR
   n_EXT_META -.->|Obtiene métricas mediante Actions| n_SYS_MARKETING
   n_SYS_DESPACHO -.->|Aprobación de borradores por protocolo BANDEJA| n_EXT_GMAIL
@@ -450,6 +458,7 @@ flowchart LR
   n_GAS_EMD -.->|Propuesta: respaldo privado de administración| n_EXT_DRIVE
   n_SYS_CONTROL -.->|Rehacer el grafo a pedido y vigilar su estado cada hora| n_EXT_ACTIONS
   n_EXT_ACTIONS -.->|Explicación de los cambios del grafo; a la vez se consulta a Claude por API y se usa la primera respuesta válida| n_EXT_OPENAI
+  n_GAS_PPP2 -->|Copia la plantilla al sembrar un plan| n_EXT_DRIVE
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_SITIO_ORG pendiente;
   class n_GAS_EMD pendiente;
@@ -488,6 +497,7 @@ flowchart LR
   n_STORE_DESPACHO_CORCHO["Mi Corcho · almacén privado de Dirección"]
   n_SVC_AUTON_CLOUD["Motor de nube del autón"]
   n_GAS_BANDEJA_NUBE["Ejecutor de Bandeja en nube"]
+  n_GAS_PPP2["PPP 2 · servidor"]
   n_GAS_PORTERO -.->|Lee/escribe registros del dominio| n_SHEET_PORTERO
   n_SYS_POTENCIALES -.->|Consume contrato del backend| n_GAS_PORTERO
   n_SYS_TRACK -->|Consume contrato del backend| n_GAS_PORTERO
@@ -518,6 +528,7 @@ flowchart LR
   n_GAS_BANDEJA_NUBE -->|Revalidar identidad de Dirección para aprobar y antes de enviar| n_GAS_PORTERO
   n_SYS_INVERSION -.->|Resumen guardado de PPP por expediente| n_GAS_PORTERO
   n_SYS_POTENCIALES -.->|Solicita etapas y relee coherencia del modelo| n_GAS_PORTERO
+  n_GAS_PPP2 -->|Canje de sesión con board=PT; el respaldo sólo si el original falla en esa llamada| n_GAS_PORTERO
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SHEET_PORTERO pendiente;
@@ -747,3 +758,7 @@ flowchart LR
 | CON-GRAFO-ACTIONS | SYS-CONTROL → EXT-ACTIONS | automatizacion: Rehacer el grafo a pedido y vigilar su estado cada hora. CTR-GRAFO-VERSIONES; el pedido es un issue de alguien con permiso de escritura; el resultado es un PR de borrador, nunca una escritura directa a la rama principal. La vigilancia sólo lee la API de GitHub y páginas estáticas. | declarado | [potenciales-yod/.github/workflows/grafo-rehacer.yml](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/.github/workflows/grafo-rehacer.yml) — Flujos «Grafo · rehacer» y «Grafo · estado». Código en el PR 61, pendiente de fusión al registrar. |
 | CON-PRESENTACION-GRAFO | SYS-INVERSION → SYS-POTENCIALES | lectura: Lee el grafo aprobado (recetas por audiencia y contrato del plan) para armar presentaciones y avisar si hay otra versión en trabajo. CTR-GRAFO-VERSIONES; lectura sin credenciales de archivos estáticos. El plan guardado se lee aparte, con sesión, por CON-BROKERS-PPP-SAVED. Si falta el grafo, la página lo dice y no arma nada; el aviso no pinta nada. | declarado | [yodesarrollo-board/presentacion/grafo/app.mjs](https://github.com/yodesarrollomx/yodesarrollo-board/blob/4774888ede9caf53684ed7509d36ef7ffe1e126e/presentacion/grafo/app.mjs) — Página que arma la presentación con el grafo aprobado y el plan guardado. Código en la rama claude/presentacion-desde-grafo, pendiente de fusión al registrar. |
 | CON-GRAFO-IA | EXT-ACTIONS → EXT-OPENAI | api: Explicación de los cambios del grafo; a la vez se consulta a Claude por API y se usa la primera respuesta válida. Se envían sólo diferencias del grafo público (cuentas y nombres de piezas); la respuesta se valida contra un esquema fijo. Sin clave o sin respuesta, el grafo se rehace igual. Costo por uso. Claude (API de Anthropic) es el segundo proveedor y todavía no tiene componente propio en este modelo. | declarado | [potenciales-yod/grafo-motor/ia.py](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/grafo-motor/ia.py) — Peticiones a los dos proveedores con claves tomadas de secretos del flujo. Código en el PR 61, pendiente de fusión al registrar. |
+| CON-PPP2-SERVIDOR | SYS-PPP2 → GAS-PPP2 | api: Lee el vivero y el plan; envía datos, respuestas, palancas, aprobaciones y pruebas. CTR-PPP2 | codigo | [potenciales-yod/ppp2.js](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/ppp2.js) — fetch al /exec de PPP 2 con la sesión del Portero |
+| CON-PPP2-PORTERO | GAS-PPP2 → GAS-PORTERO | lectura: Canje de sesión con board=PT; el respaldo sólo si el original falla en esa llamada. Contrato de canje del Portero (recurso=canje) sin cambios | codigo | [potenciales-yod/server/ppp2/PPP2.gs](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/server/ppp2/PPP2.gs) — canje_ con caché de 10 minutos |
+| CON-PPP2-LIBROS | GAS-PPP2 → SHEET-PPP2 | persistencia: Lee el resumen y las tablas; escribe celdas permitidas y la bitácora. CTR-PPP2 | codigo | [potenciales-yod/server/ppp2/PPP2.gs](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/server/ppp2/PPP2.gs) — SpreadsheetApp sobre el vivero y los libros |
+| CON-PPP2-DRIVE | GAS-PPP2 → EXT-DRIVE | persistencia: Copia la plantilla al sembrar un plan. Copia en la carpeta del vivero | codigo | [potenciales-yod/server/ppp2/PPP2.gs](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/server/ppp2/PPP2.gs) — DriveApp.makeCopy de la plantilla |

@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-11.grafo-accesos.3 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-12.ppp2.1 · 2026-10-20.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -1226,3 +1226,16 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Las recetas no traen cifras ni cálculo: nombran campos guardados del plan y lo ausente se muestra como no definido
 - Las claves de IA viven sólo como secretos del flujo; no aparecen en archivos, páginas ni registros
 - La rama de datos no se sirve por Pages y escribir en ella no dispara otros flujos
+
+## CTR-PPP2
+
+- Componentes: SYS-PPP2, GAS-PPP2, SHEET-PPP2.
+- Evidencia: server/ppp2/PPP2.gs (ppp2-servidor-v1) y ppp2/libro/generar.py (ppp2-libro-v1) en potenciales-yod; docs/ppp2.md..
+- Entrada/campos: `GET ppp2-meta sin credencial; ppp2-vivero y ppp2-plan con k = sesión del Portero (board PT).`, `POST text/plain JSON: ppp2-dato, ppp2-producto, ppp2-palanca, ppp2-version, ppp2-responder, ppp2-investigar, ppp2-hallazgo, ppp2-candado, ppp2-reparto, ppp2-estres y ppp2-sembrar, con request_id y la revisión vista.`.
+- Salida: Resumen clave → valor del libro, tablas del plan y la serie mensual del dinero de las tres versiones., Cada escritura devuelve la revisión nueva y el resumen recalculado por el libro; deja renglón en la Bitácora..
+
+- Ninguna fórmula financiera fuera del libro; el servidor sólo escribe celdas permitidas y lee lo calculado.
+- Sólo admin vuelve vigente una versión; admin y editor capturan; quien tiene PT lee.
+- Una revisión vieja no sobrescribe; el mismo request_id no escribe dos veces.
+- El PPP actual, sus motores y el Portero no cambian; el respaldo del Portero no se guarda como destino.
+- La página no lleva datos de planes ni identificadores de libros.

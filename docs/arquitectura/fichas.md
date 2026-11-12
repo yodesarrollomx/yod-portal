@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-11.grafo-accesos.3 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-12.ppp2.1 · 2026-10-20.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -313,7 +313,7 @@ Servir el contrato de Portero y Potenciales
 - Entidades: acceso, sesion, caso, escenario, track.
 - Fuente de verdad: Implementación existente y hojas canónicas. V72 verificada el 2026-10-09 para metadatos autorizados de autones; pruebas de negocio históricas conservan su alcance específico..
 - Evidencia: [potenciales-yod/CLAUDE.md](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/CLAUDE.md#L35) — Tipo de fuente disponible: ausente; Registro backends-verificados.json: versión activa 51 comprobada por API el 2026-10-01, con misma implementación, URL y permisos; pruebas aisladas de la corrección.; CHG-CONTROL-MAESTRO-001: versión 52; publicación contrastada por API y pruebas HTTP de lectura y rechazo el 2026-10-01. Detalle en control-maestro.md y registro de backends.; CHG-PPP-BACKEND-001: versión53 observada tras actualizar la implementación existente; fuente de editor releída idéntica, configuración conservada y lectura HTTP autorizada de caso/lista conciliada. Activador directo instalado; sin POST de prueba.; Preflight privado de Corcho comunicado por el coordinador: implementación existente V57, editor igual a fuente activa, principal de Dirección y scopes Drive completos ya autorizados. No acredita adapter Corcho desplegado.; Relevo del coordinador confirmado por Dirección el 5-oct: fuente activa/editor V65 idénticos, adaptador Patrimonial ausente y GET sheet-model Patrimonial con error servidor; recuperación #47 propuesta. Detalles y snapshots privados.; Coordinador reporta publicación API V66 desde V65: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma URL/scopes/ACL y editor == candidato == versión inmutable V66. GET funcional posterior pendiente; sin POST de pruebas de negocio.; Coordinador reporta GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; dos escenarios conservan IDs y 269 campos, geometría pendiente. Acta privada fuera del repositorio. Vertical y otros casos no acreditados.; V72 verificada en ejecución privada37888901829: HEAD y versión coinciden en hash189630ca1ab4d19c17f54f9e13caacbfb6aa99c44ad34240ad6275d806224d3d; mismos IDs/implementación/URL. display_name separado de avatar.name canónico; no certifica escrituras de negocio.; [yod-portal/docs/arquitectura/ppp-ficha-etapas.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-ficha-etapas.md) — Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva.; [yod-portal/docs/arquitectura/ppp-read-validation.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-read-validation.md) — Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes.; [yod-portal/docs/arquitectura/ppp-presentaciones.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-presentaciones.md) — Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards..
-- Conexiones: CON-001 (GAS-PORTERO → SHEET-PORTERO); CON-019 (SYS-POTENCIALES → GAS-PORTERO); CON-020 (SYS-TRACK → GAS-PORTERO); CON-044 (SYS-YOD-OS → GAS-PORTERO); CON-045 (SYS-TAREAS → GAS-PORTERO); CON-046 (SYS-FLUJO → GAS-PORTERO); CON-047 (SYS-DESPACHO → GAS-PORTERO); CON-048 (SYS-INTERIORES → GAS-PORTERO); CON-049 (SYS-MARKETING → GAS-PORTERO); CON-050 (SYS-MIRAMAR → GAS-PORTERO); CON-051 (SYS-OBRA → GAS-PORTERO); CON-054 (GAS-PORTERO → SYS-YOD-OS); CON-071 (SYS-INVERSION → GAS-PORTERO); CON-085 (GAS-SALA → GAS-PORTERO); CON-PPP-MODELO (GAS-PORTERO → SHEET-PPP-MODELOS); CON-PPP-AUDITORIA (GAS-PORTERO → SYS-CONTROL); CON-AUTH-FLUJO (GAS-FLUJO → GAS-PORTERO); CON-AUTH-CRM (GAS-CRM → GAS-PORTERO); CON-AUTH-OBRA (GAS-OBRA → GAS-PORTERO); CON-DESPACHO-CORCHO-PORTERO (SYS-DESPACHO → GAS-PORTERO); CON-PORTERO-CORCHO-STORE (GAS-PORTERO → STORE-DESPACHO-CORCHO); CON-PORTERO-CORCHO-DRIVE (GAS-PORTERO → EXT-DRIVE); CON-MOTOR-PORTERO (SVC-AUTON-CLOUD → GAS-PORTERO); CON-BROKER-PREEVALUATION (SYS-INVERSION → GAS-PORTERO); CON-BANDEJA-PORTERO (GAS-BANDEJA-NUBE → GAS-PORTERO); CON-BROKERS-PPP-SAVED (SYS-INVERSION → GAS-PORTERO); CON-PPP-ETAPAS-ESCRITURA (SYS-POTENCIALES → GAS-PORTERO).
+- Conexiones: CON-001 (GAS-PORTERO → SHEET-PORTERO); CON-019 (SYS-POTENCIALES → GAS-PORTERO); CON-020 (SYS-TRACK → GAS-PORTERO); CON-044 (SYS-YOD-OS → GAS-PORTERO); CON-045 (SYS-TAREAS → GAS-PORTERO); CON-046 (SYS-FLUJO → GAS-PORTERO); CON-047 (SYS-DESPACHO → GAS-PORTERO); CON-048 (SYS-INTERIORES → GAS-PORTERO); CON-049 (SYS-MARKETING → GAS-PORTERO); CON-050 (SYS-MIRAMAR → GAS-PORTERO); CON-051 (SYS-OBRA → GAS-PORTERO); CON-054 (GAS-PORTERO → SYS-YOD-OS); CON-071 (SYS-INVERSION → GAS-PORTERO); CON-085 (GAS-SALA → GAS-PORTERO); CON-PPP-MODELO (GAS-PORTERO → SHEET-PPP-MODELOS); CON-PPP-AUDITORIA (GAS-PORTERO → SYS-CONTROL); CON-AUTH-FLUJO (GAS-FLUJO → GAS-PORTERO); CON-AUTH-CRM (GAS-CRM → GAS-PORTERO); CON-AUTH-OBRA (GAS-OBRA → GAS-PORTERO); CON-DESPACHO-CORCHO-PORTERO (SYS-DESPACHO → GAS-PORTERO); CON-PORTERO-CORCHO-STORE (GAS-PORTERO → STORE-DESPACHO-CORCHO); CON-PORTERO-CORCHO-DRIVE (GAS-PORTERO → EXT-DRIVE); CON-MOTOR-PORTERO (SVC-AUTON-CLOUD → GAS-PORTERO); CON-BROKER-PREEVALUATION (SYS-INVERSION → GAS-PORTERO); CON-BANDEJA-PORTERO (GAS-BANDEJA-NUBE → GAS-PORTERO); CON-BROKERS-PPP-SAVED (SYS-INVERSION → GAS-PORTERO); CON-PPP-ETAPAS-ESCRITURA (SYS-POTENCIALES → GAS-PORTERO); CON-PPP2-PORTERO (GAS-PPP2 → GAS-PORTERO).
 - Mejoras: PPP · Unificar tablero y fórmulas de potencial en Sheets; VOLUMENESCANONICOS · Volúmenes nativos en todos los PPP verticales y mixtos; PPPPRESENTACIONES · Generar y versionar presentaciones desde el PPP visible.
 - Pendientes: La revisión acotada no certifica todas las operaciones de negocio ni sustituye la aceptación con usuarios reales.; Las cachés de consumidores ajenos a esta entrega pueden conservar permisos temporalmente; revisarlos al continuar cada tablero..
 
@@ -702,7 +702,7 @@ Dependencia externa de procesos YOD OS
 - Entidades: .
 - Fuente de verdad: Datos del servicio externo; no inspeccionados.
 - Evidencia: Integración pendiente de verificar.
-- Conexiones: CON-062 (GAS-CODES → EXT-DRIVE); CON-084 (SVC-SALA-EJECUTOR → EXT-DRIVE); CON-EMD-PROFILES-DRIVE (GAS-EMD → EXT-DRIVE); CON-PORTERO-CORCHO-DRIVE (GAS-PORTERO → EXT-DRIVE); CON-MOTOR-DRIVE (SVC-AUTON-CLOUD → EXT-DRIVE); CON-EMD-CONTINUOUS-BACKUP (GAS-EMD → EXT-DRIVE).
+- Conexiones: CON-062 (GAS-CODES → EXT-DRIVE); CON-084 (SVC-SALA-EJECUTOR → EXT-DRIVE); CON-EMD-PROFILES-DRIVE (GAS-EMD → EXT-DRIVE); CON-PORTERO-CORCHO-DRIVE (GAS-PORTERO → EXT-DRIVE); CON-MOTOR-DRIVE (SVC-AUTON-CLOUD → EXT-DRIVE); CON-EMD-CONTINUOUS-BACKUP (GAS-EMD → EXT-DRIVE); CON-PPP2-DRIVE (GAS-PPP2 → EXT-DRIVE).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Estado y permisos no comprobados.
 
@@ -1159,3 +1159,42 @@ Diagrama de oferta y demanda de vivienda nueva del municipio de Hermosillo por a
 - Evidencia: [yod-portal/mercado/hermosillo-2020-2030/index.html](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/mercado/hermosillo-2020-2030/index.html) — Tablero estático: curvas de elasticidad constante ancladas al punto observado (P_t, Q_t) por año, lee data.json por fetch; [yod-portal/mercado/hermosillo-2020-2030/base/series-integradas.csv](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/mercado/hermosillo-2020-2030/base/series-integradas.csv) — Base de 1,331 valores con fuente, URL, localizador, corte y calidad (contrato en base/CONTRATO.md); muestreo independiente 26/26 coincidencias en auditoria/; Encargo de Dirección 1-nov-2026 (Buzón Claude ↔ ChatGPT fila 505, ID CG-HMO-OFERTA-DEMANDA-20261101): publicar el HTML en GitHub de Yodesarrollo para cruzar datos después y enlazarlo bajo Plan de Potencial; el enlace en el menú se registra como propuesta aparte (código de acceso y Control Maestro); [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js) — Sistema presente en el catálogo canónico, debajo de SYS-POTENCIALES, con código MH y destino en este repo.
 - Conexiones: Ninguna integración comprobada.
 - Mejoras: Conservar y verificar alcance antes de ampliar.
+
+## SYS-PPP2 · PPP 2 · el vivero de planes
+
+Cultivar cada plan de potencial: nace como semilla, se nutre de datos con fuente, investiga y propone versiones; muestra primero lo que recibe el dueño y en cuánto tiempo
+
+- Tipo: tablero. Dominio: Ventas. Responsable: Dirección.
+- Evidencia: codigo. Producción: Página lista en el PR; se publica al integrarlo. Lecturas del servidor con sesión de Dirección comprobadas el 12-nov-2026..
+- Entidades: plan, version, dato, pregunta, candado, hallazgo, voto_consejo, prueba_estres.
+- Fuente de verdad: El libro de cada plan en Google Sheets (SHEET-PPP2).
+- Evidencia: [potenciales-yod/ppp2.js](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/ppp2.js) — Vivero y plan vivo; sólo presenta lo que calcula el libro y nunca borra la credencial del Portero; [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js) — Entrada PPP 2 del menú con el código PT.
+- Conexiones: CON-PPP2-SERVIDOR (SYS-PPP2 → GAS-PPP2).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Pendientes: La siguiente pregunta se ordena con un criterio del oficio, no con un cálculo de sensibilidad; Sin una ronda programada del autón, los pedidos de investigación esperan.
+
+## GAS-PPP2 · PPP 2 · servidor
+
+Validar la sesión con el Portero, leer el libro del plan y escribir sólo celdas permitidas con bitácora, revisión y request_id; no calcula finanzas
+
+- Tipo: apps_script. Dominio: Ventas. Responsable: Responsable técnico del backend.
+- Evidencia: ejecucion. Producción: Versión 1 activa (proyecto nuevo, implementación propia, aparte del Portero). Comprobado en vivo: ppp2-meta, rechazo de una liga inválida vía canje, y lecturas de vivero y plan con la sesión de Dirección. Escrituras reales sin probar: sólo con dobles..
+- Entidades: plan, version, dato, pregunta, candado, hallazgo, pedido, bitacora.
+- Fuente de verdad: Fuente en GitHub pegada sin cambios en la versión 1; los datos viven en los libros.
+- Evidencia: [potenciales-yod/server/ppp2/PPP2.gs](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/server/ppp2/PPP2.gs) — Contrato ppp2-servidor-v1: canje con board=PT, allowlist de escrituras, LockService, revisión y bitácora; Versión 1 desplegada el 12-nov-2026 12:40 (Hermosillo) y autorizada por Dirección; lecturas reales comprobadas desde el navegador de Dirección..
+- Conexiones: CON-PPP2-SERVIDOR (SYS-PPP2 → GAS-PPP2); CON-PPP2-PORTERO (GAS-PPP2 → GAS-PORTERO); CON-PPP2-LIBROS (GAS-PPP2 → SHEET-PPP2); CON-PPP2-DRIVE (GAS-PPP2 → EXT-DRIVE).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Pendientes: Revocar una sesión tarda hasta 10 minutos por la caché del canje, igual que en el Portero; Una prueba de estrés escribe y restablece la columna Prueba del libro; si se interrumpe, la próxima corrida la restablece.
+
+## SHEET-PPP2 · PPP 2 · vivero y libros de plan
+
+Registro de planes y un libro por plan con todas las fórmulas: tres versiones, revisión para fondos, reparto, preguntas del oficio, candados, hallazgos, consejo, pruebas y bitácora
+
+- Tipo: google_sheets. Dominio: Ventas. Responsable: Dirección / propietario del libro.
+- Evidencia: ejecucion. Producción: Plantilla ppp2-libro-v1 y primer libro creados el 12-nov-2026; Google Sheets recalcula las tres versiones y cuadran con el borrador previo (comparación privada, sin cifras públicas)..
+- Entidades: plan, dato, producto, palanca, flujo_mensual, version, reparto, pregunta, candado, hallazgo, voto_consejo, bitacora.
+- Fuente de verdad: Ver relaciones de persistencia; confirmar deployment y esquema.
+- Evidencia: [potenciales-yod/ppp2/libro/generar.py](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/ppp2/libro/generar.py) — Generador de la plantilla con fórmulas nativas; Libros reales creados en el Drive de Dirección; comparación de resultados contra el borrador hecha en privado..
+- Conexiones: CON-PPP2-LIBROS (GAS-PPP2 → SHEET-PPP2).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Pendientes: Quien edita el libro a mano puede romper una fórmula: las pestañas calculadas llevan protección de aviso; Los identificadores de los libros no se publican.

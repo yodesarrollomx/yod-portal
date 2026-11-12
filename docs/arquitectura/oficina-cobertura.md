@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-11.grafo-accesos.3
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-12.ppp2.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -8,8 +8,8 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
-- 27 sistemas y 91 componentes distribuidos exactamente una vez.
-- 10 áreas; 155 conexiones registradas, 10 marcadas como verificadas en el atlas.
+- 28 sistemas y 94 componentes distribuidos exactamente una vez.
+- 10 áreas; 159 conexiones registradas, 10 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -256,6 +256,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-BANDEJA-PORTERO · GAS-BANDEJA-NUBE → GAS-PORTERO · autorizacion · Revalidar identidad de Dirección para aprobar y antes de enviar · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-BROKERS-PPP-SAVED · SYS-INVERSION → GAS-PORTERO · lectura · Resumen guardado de PPP por expediente · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-PPP-ETAPAS-ESCRITURA · SYS-POTENCIALES → GAS-PORTERO · api · Solicita etapas y relee coherencia del modelo · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-PPP2-PORTERO · GAS-PPP2 → GAS-PORTERO · lectura · Canje de sesión con board=PT; el respaldo sólo si el original falla en esa llamada · Estado: codigo · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -307,10 +308,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-BANDEJA-PORTERO · Código publicado; su compuerta o consentimiento reales todavía no se acreditan. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/README.md · Sin revisión inmutable en esta referencia
 - CON-BROKERS-PPP-SAVED · Consumo propuesto del mismo contrato empleado por el PPP; lectura autorizada y campos guardados se comprobarán por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - CON-PPP-ETAPAS-ESCRITURA · Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
+- CON-PPP2-PORTERO · canje\_ con caché de 10 minutos · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR claude/ppp2-moreo (potenciales-yod)
 
 **Pendientes y límites:**
 
-- 27 conexiones sin verificación de ejecución registrada.
+- 28 conexiones sin verificación de ejecución registrada.
 - La revisión acotada no certifica todas las operaciones de negocio ni sustituye la aceptación con usuarios reales.
 - Las cachés de consumidores ajenos a esta entrega pueden conservar permisos temporalmente; revisarlos al continuar cada tablero.
 
@@ -1045,7 +1047,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 ## Plan de Potencial y puesto
 
-**Ubicación propuesta:** potential · 4 componentes.
+**Ubicación propuesta:** potential · 7 componentes.
 
 ### PPP · Potenciales · SYS-POTENCIALES
 
@@ -1213,6 +1215,100 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Pendientes y límites:**
 
 - No hay conexiones registradas para este componente.
+
+### PPP 2 · el vivero de planes · SYS-PPP2
+
+**Función:** Cultivar cada plan de potencial: nace como semilla, se nutre de datos con fuente, investiga y propone versiones; muestra primero lo que recibe el dueño y en cuánto tiempo
+
+**Fuente oficial:** El libro de cada plan en Google Sheets (SHEET-PPP2)
+
+**Responsable operativo:** Dirección
+
+**Estado registrado:** codigo. Página lista en el PR; se publica al integrarlo. Lecturas del servidor con sesión de Dirección comprobadas el 12-nov-2026.
+
+**Conexiones registradas; no habilitan operaciones:**
+
+- CON-PPP2-SERVIDOR · SYS-PPP2 → GAS-PPP2 · api · Lee el vivero y el plan; envía datos, respuestas, palancas, aprobaciones y pruebas · Estado: codigo · Ejecución no verificada en el atlas.
+
+**Evidencia de la ficha:**
+
+- Vivero y plan vivo; sólo presenta lo que calcula el libro y nunca borra la credencial del Portero · Estado: codigo · yodesarrollomx/potenciales-yod · ppp2.js · Revisión: PR claude/ppp2-moreo (potenciales-yod)
+- Entrada PPP 2 del menú con el código PT · Estado: codigo · yodesarrollomx/yod-portal · os/catalogo.js · Revisión: PR claude/ppp2-atlas
+
+**Evidencia de conexiones:**
+
+- CON-PPP2-SERVIDOR · fetch al /exec de PPP 2 con la sesión del Portero · Estado: codigo · yodesarrollomx/potenciales-yod · ppp2.js · Revisión: PR claude/ppp2-moreo (potenciales-yod)
+
+**Pendientes y límites:**
+
+- 1 conexiones sin verificación de ejecución registrada.
+- La siguiente pregunta se ordena con un criterio del oficio, no con un cálculo de sensibilidad
+- Sin una ronda programada del autón, los pedidos de investigación esperan
+
+### PPP 2 · servidor · GAS-PPP2
+
+**Función:** Validar la sesión con el Portero, leer el libro del plan y escribir sólo celdas permitidas con bitácora, revisión y request\_id; no calcula finanzas
+
+**Fuente oficial:** Fuente en GitHub pegada sin cambios en la versión 1; los datos viven en los libros
+
+**Responsable operativo:** Responsable técnico del backend
+
+**Estado registrado:** ejecucion. Versión 1 activa (proyecto nuevo, implementación propia, aparte del Portero). Comprobado en vivo: ppp2-meta, rechazo de una liga inválida vía canje, y lecturas de vivero y plan con la sesión de Dirección. Escrituras reales sin probar: sólo con dobles.
+
+**Conexiones registradas; no habilitan operaciones:**
+
+- CON-PPP2-SERVIDOR · SYS-PPP2 → GAS-PPP2 · api · Lee el vivero y el plan; envía datos, respuestas, palancas, aprobaciones y pruebas · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-PPP2-PORTERO · GAS-PPP2 → GAS-PORTERO · lectura · Canje de sesión con board=PT; el respaldo sólo si el original falla en esa llamada · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-PPP2-LIBROS · GAS-PPP2 → SHEET-PPP2 · persistencia · Lee el resumen y las tablas; escribe celdas permitidas y la bitácora · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-PPP2-DRIVE · GAS-PPP2 → EXT-DRIVE · persistencia · Copia la plantilla al sembrar un plan · Estado: codigo · Ejecución no verificada en el atlas.
+
+**Evidencia de la ficha:**
+
+- Contrato ppp2-servidor-v1: canje con board=PT, allowlist de escrituras, LockService, revisión y bitácora · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR claude/ppp2-moreo (potenciales-yod)
+- Versión 1 desplegada el 12-nov-2026 12:40 (Hermosillo) y autorizada por Dirección; lecturas reales comprobadas desde el navegador de Dirección. · Estado: ejecucion · Revisión: Apps Script version 1
+
+**Evidencia de conexiones:**
+
+- CON-PPP2-SERVIDOR · fetch al /exec de PPP 2 con la sesión del Portero · Estado: codigo · yodesarrollomx/potenciales-yod · ppp2.js · Revisión: PR claude/ppp2-moreo (potenciales-yod)
+- CON-PPP2-PORTERO · canje\_ con caché de 10 minutos · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR claude/ppp2-moreo (potenciales-yod)
+- CON-PPP2-LIBROS · SpreadsheetApp sobre el vivero y los libros · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR claude/ppp2-moreo (potenciales-yod)
+- CON-PPP2-DRIVE · DriveApp.makeCopy de la plantilla · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR claude/ppp2-moreo (potenciales-yod)
+
+**Pendientes y límites:**
+
+- 4 conexiones sin verificación de ejecución registrada.
+- Revocar una sesión tarda hasta 10 minutos por la caché del canje, igual que en el Portero
+- Una prueba de estrés escribe y restablece la columna Prueba del libro; si se interrumpe, la próxima corrida la restablece
+
+### PPP 2 · vivero y libros de plan · SHEET-PPP2
+
+**Función:** Registro de planes y un libro por plan con todas las fórmulas: tres versiones, revisión para fondos, reparto, preguntas del oficio, candados, hallazgos, consejo, pruebas y bitácora
+
+**Fuente oficial:** Pendiente en ficha.
+
+**Responsable operativo:** Dirección / propietario del libro
+
+**Estado registrado:** ejecucion. Plantilla ppp2-libro-v1 y primer libro creados el 12-nov-2026; Google Sheets recalcula las tres versiones y cuadran con el borrador previo (comparación privada, sin cifras públicas).
+
+**Conexiones registradas; no habilitan operaciones:**
+
+- CON-PPP2-LIBROS · GAS-PPP2 → SHEET-PPP2 · persistencia · Lee el resumen y las tablas; escribe celdas permitidas y la bitácora · Estado: codigo · Ejecución no verificada en el atlas.
+
+**Evidencia de la ficha:**
+
+- Generador de la plantilla con fórmulas nativas · Estado: codigo · yodesarrollomx/potenciales-yod · ppp2/libro/generar.py · Revisión: PR claude/ppp2-moreo (potenciales-yod)
+- Libros reales creados en el Drive de Dirección; comparación de resultados contra el borrador hecha en privado. · Estado: ejecucion · Revisión: 2026-11-12
+
+**Evidencia de conexiones:**
+
+- CON-PPP2-LIBROS · SpreadsheetApp sobre el vivero y los libros · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR claude/ppp2-moreo (potenciales-yod)
+
+**Pendientes y límites:**
+
+- Fuente oficial pendiente de identificar en la ficha.
+- 1 conexiones sin verificación de ejecución registrada.
+- Quien edita el libro a mano puede romper una fórmula: las pestañas calculadas llevan protección de aviso
+- Los identificadores de los libros no se publican
 
 ## Proyectos y diseño
 
@@ -2690,6 +2786,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PORTERO-CORCHO-DRIVE · GAS-PORTERO → EXT-DRIVE · autorizacion · Corcho: principal y ACL completos por GET · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-MOTOR-DRIVE · SVC-AUTON-CLOUD → EXT-DRIVE · lectura · Leer originales, documentos y pasajes del expediente · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-EMD-CONTINUOUS-BACKUP · GAS-EMD → EXT-DRIVE · respaldo · Propuesta: respaldo privado de administración · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-PPP2-DRIVE · GAS-PPP2 → EXT-DRIVE · persistencia · Copia la plantilla al sembrar un plan · Estado: codigo · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2703,11 +2800,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PORTERO-CORCHO-DRIVE · CHG-DESPACHO-CORCHO-PROVISIONAL-035: Integración provisional autorizada, pendiente en PR consumidores; preflight V57 no acredita despliegue del adapter. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - [CON-MOTOR-DRIVE · Leer originales, documentos y pasajes del expediente · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/RESEARCH.md · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/RESEARCH.md)
 - CON-EMD-CONTINUOUS-BACKUP · Extensión administrativa propuesta sobre los servicios privados existentes; ejecución no acreditada. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-PPP2-DRIVE · DriveApp.makeCopy de la plantilla · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR claude/ppp2-moreo (potenciales-yod)
 
 **Pendientes y límites:**
 
 - Responsable operativo pendiente de confirmación; el encargado de verificación no sustituye esa asignación.
-- 6 conexiones sin verificación de ejecución registrada.
+- 7 conexiones sin verificación de ejecución registrada.
 - Estado y permisos no comprobados
 
 ### JEV · búsqueda y selección · EXT-JEV

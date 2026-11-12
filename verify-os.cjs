@@ -128,7 +128,7 @@ console.log('La matriz + El Despacho: accesos por código y URLs sin deriva: pas
    lo que EXISTE en CAT_RESPALDO. Real de Miramar no estaba y desaparecía sin ruido.
    SYS-CONTROL es la excepción declarada: es el Sheet, no un tablero. */
 const appJs = fs.readFileSync(require.resolve('./os/app.js'), 'utf8');
-const respaldoIds = [...appJs.matchAll(/system_id:'(SYS-[A-Z]+)'/g)].map((m) => m[1]);
+const respaldoIds = [...appJs.matchAll(/system_id:'(SYS-[A-Z0-9-]+)'/g)].map((m) => m[1]);   // ids con números o guiones (SYS-PPP2)
 for (const sysId of Object.keys(portal.destinations)) {
   if (sysId === 'SYS-CONTROL') continue;
   assert.ok(respaldoIds.includes(sysId), sysId + ' no tiene fila en CAT_RESPALDO: desaparece si el Sheet falla');

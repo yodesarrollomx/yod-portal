@@ -11,8 +11,10 @@ const url='https://raw.githubusercontent.com/yodesarrollomx/potenciales-yod/'+re
 fetch(url).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status+' '+url);return r.text();}).then(src=>{
   const m=/const CODES=(\[\[.*?\]\]);/.exec(src);
   assert.ok(m,'no se encontró CODES en accesos.html');
-  const matriz=JSON.parse(m[1].replace(/'/g,'"')).map(c=>c[0]).filter(c=>c!=='*').sort();
-  const esperado=Object.keys(sys).filter(k=>k!=='SYS-CONTROL').map(k=>sys[k][0]).sort();
+  // Un mismo código puede abrir dos tableros (PT abre PPP y PPP 2): la matriz lo ofrece una sola vez.
+  const unicos=a=>[...new Set(a)].sort();
+  const matriz=unicos(JSON.parse(m[1].replace(/'/g,'"')).map(c=>c[0]).filter(c=>c!=='*'));
+  const esperado=unicos(Object.keys(sys).filter(k=>k!=='SYS-CONTROL').map(k=>sys[k][0]));
   assert.deepEqual(matriz,esperado,'accesos.html y access-policy.js no dicen lo mismo');
   console.log('Matriz de accesos = SYSTEM_CODES ('+ref+'): passed');
 }).catch(e=>{console.error(e.message);process.exit(1);});
