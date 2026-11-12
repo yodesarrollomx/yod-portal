@@ -15324,6 +15324,7 @@
     {
       "id": "CHG-GRAFO-ACCESOS-20261111",
       "components": [
+        "SYS-YOD-OS",
         "SYS-POTENCIALES",
         "SYS-CONTROL"
       ],
