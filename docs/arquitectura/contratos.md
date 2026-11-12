@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-11.ppp-cadena.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-11.grafo-accesos.3 · 2026-10-20.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -1212,3 +1212,17 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - La agrupación inicial se limita a persona evaluada y grupo de relaciones fijado por política; no filtros arbitrarios ni combinaciones que permitan reconstruir valores suprimidos por resta.
 - El informe usa una copia privada de los datos elegibles o un agregado materializado con fuente fijada; no reconstruye un corte histórico consultando datos cambiantes o usando UPDATED como fecha de cierre.
 - Sin validación de comparabilidad de instrumento, política y denominadores se muestran fichas/cortes separados, no curvas de mejora ni comparaciones inferidas.
+
+## CTR-GRAFO-VERSIONES
+
+- Componentes: SYS-POTENCIALES, SYS-CONTROL, SYS-INVERSION, EXT-ACTIONS.
+- Evidencia: Archivos estáticos que publica potenciales-yod y su rama de datos grafo-datos. Implementado en el PR 61 de potenciales-yod y en la rama claude/presentacion-desde-grafo de yodesarrollo-board; publicación pendiente de fusión..
+- Entrada/campos: `grafo/versiones.json: esquema, aprobado, actualizado, versiones[id, armado, fecha, estado, huella, piezas, ligas, repos, nota]`, `grafo/datos/<id>.json: esquema, id, armado, huella, ppp (por tipo de plan: nombres de resultados y entradas), recetas (audiencias, escenas, datos, objetos, formatos), sin_campo`, `rama grafo-datos · borrador.json: id, fecha, pr, liga, rama, antes, piezas, ligas, titulo, resumen, recomendacion, ia, audiencias, sin_campo`, `rama grafo-datos · estado.json y registro.jsonl: estado observado por pieza, chinches abiertas y bitácora`.
+- Salida: Versión aprobada del grafo y su historial, Borrador en revisión, cuando lo hay, Recetas por audiencia y contrato del plan para armar presentaciones, Estado observado de cada pieza del sistema.
+
+- Lo publicado es la versión completa que eligió Dirección (identificadores y pestañas de hojas y plan propuesto), y nunca lleva repositorios privados, clientes externos, hallazgos de seguridad, nombres de personas, folios o nombres de tratos, correos, claves ni identificadores completos de backends /exec
+- El grafo aprobado sólo cambia al fusionar el PR del borrador; un borrador nunca altera lo publicado
+- Quien consume lee únicamente el aprobado; el borrador es informativo
+- Las recetas no traen cifras ni cálculo: nombran campos guardados del plan y lo ausente se muestra como no definido
+- Las claves de IA viven sólo como secretos del flujo; no aparecen en archivos, páginas ni registros
+- La rama de datos no se sirve por Pages y escribir en ella no dispara otros flujos

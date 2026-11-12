@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-11.ppp-cadena.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-11.grafo-accesos.3 · 2026-10-20.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 

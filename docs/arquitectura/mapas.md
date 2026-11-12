@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-11.ppp-cadena.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-11.grafo-accesos.3 · 2026-10-20.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -186,6 +186,8 @@ flowchart LR
   n_SYS_POTENCIALES -.->|Consulta las presentaciones de ese PPP y revisión| n_GAS_SALA
   n_SYS_INVERSION -.->|Abre el mismo historial de presentación y origen PPP| n_GAS_SALA
   n_SYS_SALA -->|Cuántas publicaciones hay listas para lanzar (llave local sala_resumen_v1, mismo origen)| n_SYS_YOD_OS
+  n_SYS_CONTROL -.->|Grafo del sistema en Accesos: versión aprobada, borrador y estado de cada pieza| n_SYS_POTENCIALES
+  n_SYS_INVERSION -.->|Lee el grafo aprobado (recetas por audiencia y contrato del plan) para armar presentaciones y avisar si hay otra versión en trabajo| n_SYS_POTENCIALES
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PLAN_POTENCIAL pendiente;
@@ -354,6 +356,8 @@ flowchart LR
   n_SYS_CONTROL -->|Pruebas programadas y evidencia de ejecución| n_EXT_ACTIONS
   n_SVC_HORARIOS_CLOUD -->|Resultados sanitizados observados desde Accesos| n_SYS_CONTROL
   n_SYS_SALA -->|Cuántas publicaciones hay listas para lanzar (llave local sala_resumen_v1, mismo origen)| n_SYS_YOD_OS
+  n_SYS_CONTROL -.->|Grafo del sistema en Accesos: versión aprobada, borrador y estado de cada pieza| n_SYS_POTENCIALES
+  n_SYS_CONTROL -.->|Rehacer el grafo a pedido y vigilar su estado cada hora| n_EXT_ACTIONS
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_EMD pendiente;
@@ -444,6 +448,8 @@ flowchart LR
   n_GAS_BANDEJA_NUBE -->|Recibo técnico leído por el vigilante y mostrado en Accesos| n_SVC_HORARIOS_CLOUD
   n_SYS_SALA -.->|Imágenes nuevas en releases públicos inmutables con manifiesto fijado por recibo| n_EXT_ACTIONS
   n_GAS_EMD -.->|Propuesta: respaldo privado de administración| n_EXT_DRIVE
+  n_SYS_CONTROL -.->|Rehacer el grafo a pedido y vigilar su estado cada hora| n_EXT_ACTIONS
+  n_EXT_ACTIONS -.->|Explicación de los cambios del grafo; a la vez se consulta a Claude por API y se usa la primera respuesta válida| n_EXT_OPENAI
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_SITIO_ORG pendiente;
   class n_GAS_EMD pendiente;
@@ -737,3 +743,7 @@ flowchart LR
 | CON-MD-PRESENTACIONES-PPP | SYS-INVERSION → GAS-SALA | api: Abre el mismo historial de presentación y origen PPP. Mismo registro de versiones y URL canónica; origen, versión editorial y estado visibles. Proyección visitante separada del guion/contexto privado. | propuesto | [yod-portal/docs/arquitectura/ppp-presentaciones.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-presentaciones.md) — Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. |
 | CON-EMD-CONTINUOUS-BACKUP | GAS-EMD → EXT-DRIVE | respaldo: Propuesta: respaldo privado de administración. CTR-EMD-CONTINUOUS-ADMIN: respaldo privado verificado antes de cambios administrativos; sin creación en lecturas, ampliación de ACL o restauración ciega. | propuesto | Extensión administrativa propuesta sobre los servicios privados existentes; ejecución no acreditada. |
 | CON-SALA-RESUMEN-OS | SYS-SALA → SYS-YOD-OS | lectura: Cuántas publicaciones hay listas para lanzar (llave local sala_resumen_v1, mismo origen). La Sala escribe en el almacenamiento del navegador {listas: entero, cuando: milisegundos} cuando su hoja contesta y lo borra con su copia local. YOD OS sólo lee, con sesión validada; acepta 0 a 999 y hasta siete días; fuera de eso muestra texto fijo. Sin títulos, textos, llaves ni red. No es una cifra en vivo ni un permiso. | codigo | [yod-portal/os/app.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/app.js) — salaListas() y pintarSalaListas(): lectura local validada y texto fijo de respaldo.; [sala-edicion/sala-salida.js](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/sala-salida.js) — recordar() escribe sala_resumen_v1 y olvidar() lo borra (PR 383, pendiente de fusión al registrar). |
+| CON-GRAFO-ACCESOS | SYS-CONTROL → SYS-POTENCIALES | observacion: Grafo del sistema en Accesos: versión aprobada, borrador y estado de cada pieza. CTR-GRAFO-VERSIONES; sólo lectura de archivos estáticos y de la rama de datos; visible con sesión de admin. Si un archivo falta, la sección lo dice y no inventa estado. | declarado | [potenciales-yod/grafo-control.js](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/grafo-control.js) — Controles junto al grafo: versión aprobada, aviso de borrador, botón para rehacer y registro. Código en el PR 61, pendiente de fusión al registrar. |
+| CON-GRAFO-ACTIONS | SYS-CONTROL → EXT-ACTIONS | automatizacion: Rehacer el grafo a pedido y vigilar su estado cada hora. CTR-GRAFO-VERSIONES; el pedido es un issue de alguien con permiso de escritura; el resultado es un PR de borrador, nunca una escritura directa a la rama principal. La vigilancia sólo lee la API de GitHub y páginas estáticas. | declarado | [potenciales-yod/.github/workflows/grafo-rehacer.yml](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/.github/workflows/grafo-rehacer.yml) — Flujos «Grafo · rehacer» y «Grafo · estado». Código en el PR 61, pendiente de fusión al registrar. |
+| CON-PRESENTACION-GRAFO | SYS-INVERSION → SYS-POTENCIALES | lectura: Lee el grafo aprobado (recetas por audiencia y contrato del plan) para armar presentaciones y avisar si hay otra versión en trabajo. CTR-GRAFO-VERSIONES; lectura sin credenciales de archivos estáticos. El plan guardado se lee aparte, con sesión, por CON-BROKERS-PPP-SAVED. Si falta el grafo, la página lo dice y no arma nada; el aviso no pinta nada. | declarado | [yodesarrollo-board/presentacion/grafo/app.mjs](https://github.com/yodesarrollomx/yodesarrollo-board/blob/4774888ede9caf53684ed7509d36ef7ffe1e126e/presentacion/grafo/app.mjs) — Página que arma la presentación con el grafo aprobado y el plan guardado. Código en la rama claude/presentacion-desde-grafo, pendiente de fusión al registrar. |
+| CON-GRAFO-IA | EXT-ACTIONS → EXT-OPENAI | api: Explicación de los cambios del grafo; a la vez se consulta a Claude por API y se usa la primera respuesta válida. Se envían sólo diferencias del grafo público (cuentas y nombres de piezas); la respuesta se valida contra un esquema fijo. Sin clave o sin respuesta, el grafo se rehace igual. Costo por uso. Claude (API de Anthropic) es el segundo proveedor y todavía no tiene componente propio en este modelo. | declarado | [potenciales-yod/grafo-motor/ia.py](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/grafo-motor/ia.py) — Peticiones a los dos proveedores con claves tomadas de secretos del flujo. Código en el PR 61, pendiente de fusión al registrar. |

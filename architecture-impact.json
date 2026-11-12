@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-11-11.ppp-cadena.1",
-  "proposal_id": "CHG-PPP-CADENA-20261111",
-  "summary": "Sólo registro en el atlas de la propuesta CHG-PPP-CADENA-20261111: diagrama en cadena arriba de cada Plan de Potencial (pieza común en potenciales-yod; primera instalación en el tablero vertical). El marco y el portal no cambian: no se modifica ningún archivo servido de yod-portal ni sus etiquetas de versión.",
+  "model_revision": "2026-11-11.grafo-accesos.3",
+  "proposal_id": "CHG-GRAFO-ACCESOS-20261111",
+  "summary": "Sólo registro en el atlas. CHG-GRAFO-ACCESOS-20261111 queda descrita como se implementó: sección «Grafo del sistema» al final de accesos.html de potenciales-yod, motor del grafo dentro de ese repositorio, botón para rehacerlo a pedido (carrera OpenAI/Claude sólo para explicar el cambio), borrador como PR en la rama grafo-borrador y vigilancia horaria que escribe en la rama de datos grafo-datos. Se agrega CHG-PRESENTACION-GRAFO-20261111 (yodesarrollo-board: presentación por audiencia armada con el grafo aprobado y el plan guardado, y aviso discreto), el contrato CTR-GRAFO-VERSIONES y cuatro conexiones declaradas. En este repo cambian únicamente docs/arquitectura/modelo.json y sus vistas regeneradas; sin código servido, backend, permisos ni datos.",
   "components": [
     "SYS-YOD-OS",
     "SYS-POTENCIALES",
@@ -9,10 +9,9 @@
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node scripts/versiones.cjs --check",
-    "node verify-os.cjs · node verify-portal.cjs · node verify-accesos.cjs · node verify-obra-app.cjs",
+    "node --test tests/*.cjs · node verify-obra-app.cjs",
+    "node verify-os.cjs · node verify-portal.cjs · node verify-accesos.cjs",
     "git diff --check"
   ],
-  "rollback": "Revertir el PR quita el registro de la propuesta. Sin efectos en producción, backend ni datos."
+  "rollback": "Revertir el PR quita el registro de las dos propuestas, el contrato y las conexiones. Sin efectos en producción, backend ni datos."
 }

@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-11.ppp-cadena.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-11.grafo-accesos.3
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 27 sistemas y 91 componentes distribuidos exactamente una vez.
-- 10 áreas; 151 conexiones registradas, 10 marcadas como verificadas en el atlas.
+- 10 áreas; 155 conexiones registradas, 10 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -165,6 +165,8 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-SALUD-SALA · SYS-SALA → SYS-CONTROL · observacion · Lecturas agregadas y canario aislado de Sala · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-SALUD-ACTIONS · SYS-CONTROL → EXT-ACTIONS · observacion · Pruebas programadas y evidencia de ejecución · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-HORARIOS-ACCESOS · SVC-HORARIOS-CLOUD → SYS-CONTROL · integracion · Resultados sanitizados observados desde Accesos · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-GRAFO-ACCESOS · SYS-CONTROL → SYS-POTENCIALES · observacion · Grafo del sistema en Accesos: versión aprobada, borrador y estado de cada pieza · Estado: declarado · Ejecución no verificada en el atlas.
+- CON-GRAFO-ACTIONS · SYS-CONTROL → EXT-ACTIONS · automatizacion · Rehacer el grafo a pedido y vigilar su estado cada hora · Estado: declarado · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -183,10 +185,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [CON-SALUD-ACTIONS · Monitor38170852821 y canario38170259463 success; resultados técnicos y fuentes leídas realmente, con alcance/caducidad.40 correctos,59 pendientes; sin operaciones comerciales como prueba. · Estado: ejecucion · yodesarrollomx/yod-portal · docs/SALUD-SISTEMAS.md · Revisión: de33d90af87e9b5b225b0405841145348d42b8b0](https://github.com/yodesarrollomx/yod-portal/blob/de33d90af87e9b5b225b0405841145348d42b8b0/docs/SALUD-SISTEMAS.md)
 - CON-HORARIOS-ACCESOS · Prioridad1 autorizada; implementação y aceptación real por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - [CON-HORARIOS-ACCESOS · Cliente publicado y doce recorridos aislados; sesión administradora personal no operada por el agente. · Estado: codigo · yodesarrollomx/yod-portal · os/yod-salud.js · Revisión: 9b2e5f4497878223aba26531076c64894e17823e](https://github.com/yodesarrollomx/yod-portal/blob/9b2e5f4497878223aba26531076c64894e17823e/os/yod-salud.js)
+- CON-GRAFO-ACCESOS · Controles junto al grafo: versión aprobada, aviso de borrador, botón para rehacer y registro. Código en el PR 61, pendiente de fusión al registrar. · Estado: declarado · yodesarrollomx/potenciales-yod · grafo-control.js · Sin revisión inmutable en esta referencia
+- CON-GRAFO-ACTIONS · Flujos «Grafo · rehacer» y «Grafo · estado». Código en el PR 61, pendiente de fusión al registrar. · Estado: declarado · yodesarrollomx/potenciales-yod · .github/workflows/grafo-rehacer.yml · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 4 conexiones sin verificación de ejecución registrada.
+- 6 conexiones sin verificación de ejecución registrada.
 - Catálogo local y Control Maestro deben reconciliarse sin editar silenciosamente datos operativos
 
 ### Pintarrón · SYS-PINTARRON
@@ -1064,6 +1068,8 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PPP-ETAPAS-ESCRITURA · SYS-POTENCIALES → GAS-PORTERO · api · Solicita etapas y relee coherencia del modelo · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-PPP-PRESENTACIONES-JOB · SYS-POTENCIALES → SVC-AUTON-CLOUD · api · Encarga storyboard desde la versión visible · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-PPP-PRESENTACIONES-LISTA · SYS-POTENCIALES → GAS-SALA · api · Consulta las presentaciones de ese PPP y revisión · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-GRAFO-ACCESOS · SYS-CONTROL → SYS-POTENCIALES · observacion · Grafo del sistema en Accesos: versión aprobada, borrador y estado de cada pieza · Estado: declarado · Ejecución no verificada en el atlas.
+- CON-PRESENTACION-GRAFO · SYS-INVERSION → SYS-POTENCIALES · lectura · Lee el grafo aprobado (recetas por audiencia y contrato del plan) para armar presentaciones y avisar si hay otra versión en trabajo · Estado: declarado · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -1091,10 +1097,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PPP-ETAPAS-ESCRITURA · Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
 - CON-PPP-PRESENTACIONES-JOB · Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
 - CON-PPP-PRESENTACIONES-LISTA · Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
+- CON-GRAFO-ACCESOS · Controles junto al grafo: versión aprobada, aviso de borrador, botón para rehacer y registro. Código en el PR 61, pendiente de fusión al registrar. · Estado: declarado · yodesarrollomx/potenciales-yod · grafo-control.js · Sin revisión inmutable en esta referencia
+- CON-PRESENTACION-GRAFO · Página que arma la presentación con el grafo aprobado y el plan guardado. Código en la rama claude/presentacion-desde-grafo, pendiente de fusión al registrar. · Estado: declarado · yodesarrollomx/yodesarrollo-board · presentacion/grafo/app.mjs · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 9 conexiones sin verificación de ejecución registrada.
+- 11 conexiones sin verificación de ejecución registrada.
 - Backend de transporte v53 publicado en implementación existente. GET de caso y lista contrastados con el mismo libro y revisión; edición en pantalla y demás casos pendientes. Los casos no migrados conservan cálculo cliente.
 - GET Patrimonial y cotejo de 166 celdas sólo acreditan el caso inspeccionado; geometría, Vertical y otros casos pendientes. Parche visual y regresión Chromium aprobados según coordinador; WebKit en CI del consumer, publicación/aceptación frontend pendientes.
 
@@ -1950,6 +1958,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-INVESTOR-STORY-TEXTS · SYS-INVERSION → GAS-PLAN-POTENCIAL · lectura · Lee copy público de presentación por recurso=textos · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-BROKERS-PPP-SAVED · SYS-INVERSION → GAS-PORTERO · lectura · Resumen guardado de PPP por expediente · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-MD-PRESENTACIONES-PPP · SYS-INVERSION → GAS-SALA · api · Abre el mismo historial de presentación y origen PPP · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-PRESENTACION-GRAFO · SYS-INVERSION → SYS-POTENCIALES · lectura · Lee el grafo aprobado (recetas por audiencia y contrato del plan) para armar presentaciones y avisar si hay otra versión en trabajo · Estado: declarado · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -1968,10 +1977,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-INVESTOR-STORY-TEXTS · GET de textos comerciales ya utilizado por la landing pública; propuesta de consumo por la primera escena de inversión. · Estado: codigo · yodesarrollomx/plan-potencial · index.html · Sin revisión inmutable en esta referencia
 - CON-BROKERS-PPP-SAVED · Consumo propuesto del mismo contrato empleado por el PPP; lectura autorizada y campos guardados se comprobarán por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - CON-MD-PRESENTACIONES-PPP · Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
+- CON-PRESENTACION-GRAFO · Página que arma la presentación con el grafo aprobado y el plan guardado. Código en la rama claude/presentacion-desde-grafo, pendiente de fusión al registrar. · Estado: declarado · yodesarrollomx/yodesarrollo-board · presentacion/grafo/app.mjs · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 8 conexiones sin verificación de ejecución registrada.
+- 9 conexiones sin verificación de ejecución registrada.
 
 ### Carpeta de inversión · GAS-INVERSION
 
@@ -2882,6 +2892,8 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-SALUD-ACTIONS · SYS-CONTROL → EXT-ACTIONS · observacion · Pruebas programadas y evidencia de ejecución · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-HORARIOS-ACTIONS · SVC-HORARIOS-CLOUD → EXT-ACTIONS · integracion · Observar ejecuciones y recuperar horarios omitidos con GitHub App · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-SALA-MEDIOS-PUBLICOS · SYS-SALA → EXT-ACTIONS · publicacion · Imágenes nuevas en releases públicos inmutables con manifiesto fijado por recibo · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-GRAFO-ACTIONS · SYS-CONTROL → EXT-ACTIONS · automatizacion · Rehacer el grafo a pedido y vigilar su estado cada hora · Estado: declarado · Ejecución no verificada en el atlas.
+- CON-GRAFO-IA · EXT-ACTIONS → EXT-OPENAI · api · Explicación de los cambios del grafo; a la vez se consulta a Claude por API y se usa la primera respuesta válida · Estado: declarado · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2904,11 +2916,13 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-HORARIOS-ACTIONS · Prioridad1 autorizada; implementação y aceptación real por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - [CON-HORARIOS-ACTIONS · Código entregado y probado con dobles; instalación personal y recuperación real pendientes. · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/scheduler/github-app.mjs · Revisión: b41a98751ae3ae89f43372557d61e77461aa086c](https://github.com/alexpueblag/yod-agent-cloud/blob/b41a98751ae3ae89f43372557d61e77461aa086c/cloud/scheduler/github-app.mjs)
 - CON-SALA-MEDIOS-PUBLICOS · Diseño local en docs/arquitectura/sala-medios-publicos-20261015.md y schema 1 acordado por UI/snapshots/almacén. Sin release/asset, canario, activación o despliegue acreditado. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-GRAFO-ACTIONS · Flujos «Grafo · rehacer» y «Grafo · estado». Código en el PR 61, pendiente de fusión al registrar. · Estado: declarado · yodesarrollomx/potenciales-yod · .github/workflows/grafo-rehacer.yml · Sin revisión inmutable en esta referencia
+- CON-GRAFO-IA · Peticiones a los dos proveedores con claves tomadas de secretos del flujo. Código en el PR 61, pendiente de fusión al registrar. · Estado: declarado · yodesarrollomx/potenciales-yod · grafo-motor/ia.py · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
 - Responsable operativo pendiente de confirmación; el encargado de verificación no sustituye esa asignación.
-- 6 conexiones sin verificación de ejecución registrada.
+- 8 conexiones sin verificación de ejecución registrada.
 - Estado y permisos no comprobados
 
 ### Identidad de publicación GitHub · EXT-GITHUB-PUBLISHER-APP
@@ -3010,6 +3024,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - CON-MOTOR-OPENAI · SVC-AUTON-CLOUD → EXT-OPENAI · integracion · Voz y herramientas con claves de servidor · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-BANDEJA-IA · GAS-BANDEJA-NUBE → EXT-OPENAI · api · Redactar cambios con API de pago por uso · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-GRAFO-IA · EXT-ACTIONS → EXT-OPENAI · api · Explicación de los cambios del grafo; a la vez se consulta a Claude por API y se usa la primera respuesta válida · Estado: declarado · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -3021,10 +3036,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [CON-MOTOR-OPENAI · Voz y herramientas con claves de servidor · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/voice-lane.mjs · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/voice-lane.mjs)
 - CON-BANDEJA-IA · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - CON-BANDEJA-IA · Código publicado; su compuerta o consentimiento reales todavía no se acreditan. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/README.md · Sin revisión inmutable en esta referencia
+- CON-GRAFO-IA · Peticiones a los dos proveedores con claves tomadas de secretos del flujo. Código en el PR 61, pendiente de fusión al registrar. · Estado: declarado · yodesarrollomx/potenciales-yod · grafo-motor/ia.py · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 2 conexiones sin verificación de ejecución registrada.
+- 3 conexiones sin verificación de ejecución registrada.
 
 ### Render · alojamiento del motor · EXT-RENDER
 
