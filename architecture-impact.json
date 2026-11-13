@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-11-13.tu-palabra.1",
+  "model_revision": "2026-11-13.tu-palabra.2",
   "proposal_id": "CHG-TU-PALABRA-20261113",
-  "summary": "PLAN-04 «Tu palabra»: las preguntas abiertas de la pestaña Decisiones del Buzón aparecen en la tarjeta «Decisiones» del Inicio de Dirección y se contestan ahí (Opción 1, Opción 2 u «Otra respuesta», con confirmación). os/tu-palabra.js (nuevo) lee ?recurso=decisiones del Portero y manda decision-responder; app.js lo monta con una línea en loadPulse; index.html suma la caja y el script. Etiqueta propia 20261113-tu-palabra. Incluye el registro del PR 360 (método para publicar Apps Script y Portero 110/111), sobre el que se apoya.",
+  "summary": "PLAN-04 «Tu palabra»: las preguntas abiertas de la pestaña Decisiones del Buzón aparecen en la tarjeta «Decisiones» del Inicio de Dirección y se contestan ahí (Opción 1, Opción 2 u «Otra respuesta», con confirmación). os/tu-palabra.js (nuevo) lee ?recurso=decisiones del Portero y manda decision-responder; app.js lo monta con una línea en loadPulse; index.html suma la caja y el script. Etiqueta propia 20261113-tu-palabra. Incluye el registro del PR 360 (método para publicar Apps Script y Portero 110/111), sobre el que se apoya. Registra además la propuesta CHG-FLUJO-CAJA-PROYECTO-20261113 (PLAN-05) para el PR de board-flujo-yod.",
   "components": [
     "SYS-YOD-OS",
     "GAS-PORTERO",
