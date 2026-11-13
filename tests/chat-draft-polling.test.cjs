@@ -2,7 +2,7 @@ const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
-const source=fs.readFileSync('despacho3d/live-voice-boot.mjs','utf8');
+const source=fs.readFileSync('despacho3d/live-voice-core.mjs','utf8');
 // Execute the production interval, with controlled UI and conversation state.
 function harness(){
  let tick,reads=0;

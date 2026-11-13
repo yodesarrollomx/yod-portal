@@ -129,13 +129,13 @@ test('the pilot bypasses the ring for clicks and proximity without requesting au
 // Run the actual closed boot functions with isolated collaborators. This avoids
 // a media-capable browser and checks the extra entry paths, not a second implementation.
 function bootFunction(name,environment){
- const source=fs.readFileSync(path.join(__dirname,'../despacho3d/live-voice-boot.mjs'),'utf8');
+ const source=fs.readFileSync(path.join(__dirname,'../despacho3d/live-voice-core.mjs'),'utf8');
  const start=source.indexOf('  async function '+name+'(');assert.ok(start>=0);
  const remainder=source.slice(start),end=remainder.search(/\n  (?:async function|function|const workspace|open\.addEventListener)/);
  assert.ok(end>0);return new vm.Script(remainder.slice(0,end)+'\n'+name).runInNewContext(environment);
 }
 function visibilityRuntime(win,extra={}){
- const source=fs.readFileSync(path.join(__dirname,'../despacho3d/live-voice-boot.mjs'),'utf8');
+ const source=fs.readFileSync(path.join(__dirname,'../despacho3d/live-voice-core.mjs'),'utf8');
  const functions=['setParentTeamHidden','visibility','dismiss'].map(name=>{
   const start=[source.indexOf('  function '+name+'('),source.indexOf('  async function '+name+'(')].find(index=>index>=0);
   assert.ok(start>=0,name+' exists');const end=source.indexOf('\n  }\n',start);assert.ok(end>start);

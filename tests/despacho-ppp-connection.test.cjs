@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const path = require('node:path');
-const source = fs.readFileSync(path.join(__dirname, '../despacho3d/agent-workspace.mjs'), 'utf8');
+const source = fs.readFileSync(path.join(__dirname, '../despacho3d/agent-workspace-core.mjs'), 'utf8');
 // Execute the production connection block, with only DOM labels, clock and network replaced.
 // Keep the message/source/nonce checks and native case/scenario validator real.
 const section = (start, end) => {

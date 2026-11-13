@@ -273,7 +273,8 @@
       "HEAD:os/shell.js",
       "HEAD:os/despacho-chinches.js",
       "HEAD:chinche/revisar.html",
-      "HEAD:despacho3d/chinches3d.mjs"
+      "HEAD:despacho3d/chinches3d.mjs",
+      "HEAD:despacho-retro/retro-chinches.mjs"
     ],
     "commit": "baa5e318e752a3dae2ff3da9fb94c3014bf16384",
     "capturador": "bundle",

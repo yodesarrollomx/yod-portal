@@ -6,11 +6,11 @@ test('workspace keeps same case in board URL and rejects arbitrary identifiers',
  assert.throws(()=>m.boardURL('../other'));assert.equal(m.WORKSPACE_TABS[0][0],'ppp');
 });
 test('workspace and voice are mounted together without a second media request',()=>{
- const s=read('despacho3d/live-voice-boot.mjs');
+ const s=read('despacho3d/live-voice-core.mjs');
  assert.match(s,/voice-layout/);assert.match(s,/workspace\.open\(fresh,tab\)/);
  assert.match(s,/voice-view-tasks.*workspace.setTab/);
- assert.doesNotMatch(read('despacho3d/agent-workspace.mjs'),/getUserMedia|sessionStorage|localStorage|innerHTML/);
- assert.match(read('despacho3d/agent-workspace.mjs'),/e\.source!==frame\?\.contentWindow/);
+ assert.doesNotMatch(read('despacho3d/agent-workspace-core.mjs'),/getUserMedia|sessionStorage|localStorage|innerHTML/);
+ assert.match(read('despacho3d/agent-workspace-core.mjs'),/e\.source!==frame\?\.contentWindow/);
  assert.match(read('despacho3d/index.html'),/agent-workspace-boot\.mjs\?v=6/);
 });
 

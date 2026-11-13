@@ -1,46 +1,27 @@
 {
-  "model_revision": "2026-11-13.jev-consultas.1",
-  "proposal_id": "CHG-JEV-CONSULTAS-001",
+  "model_revision": "2026-11-13.despacho-retro.1",
+  "proposal_id": "CHG-DESPACHO-RETRO-INTEGRACION-20261030",
+  "summary": "RETRO I1-I3: plano y adaptación de consumidores vigentes con opt-in office=retro, wrapper3D conservado y núcleo Live sin dependencia gráfica; sin cambios backend ni publicación.",
   "components": [
     "SYS-YOD-OS",
     "SYS-DESPACHO",
+    "SYS-DESPACHO-3D",
+    "SYS-SALA",
+    "SYS-INVERSION",
+    "SYS-AMALAYA",
+    "SYS-EMD",
+    "SYS-POTENCIALES",
     "GAS-PORTERO",
-    "EXT-DRIVE",
-    "SHEET-PORTERO",
-    "SHEET-CATALOGO",
-    "SHEET-OPERACION",
-    "SHEET-FLUJO",
-    "SHEET-MARKETING",
-    "SHEET-PLAN-POTENCIAL",
-    "SHEET-CROKISS",
-    "SHEET-CODES",
-    "SHEET-MIRAMAR",
-    "SHEET-INTERIORES",
-    "SHEET-ALQUIMIA",
-    "SHEET-OBRA",
-    "SHEET-OBRA-CLIENTE",
-    "SHEET-SALA",
-    "SHEET-EMD",
-    "SHEET-CRM",
-    "SHEET-MOAC-METAS",
-    "SHEET-INVERSION",
-    "SHEET-PPP-MODELOS",
-    "SHEET-AMALAYA"
-  ],
-  "summary": "Prueba inicial de Jev para comparar PPP y consultar el uso de suelo de Gastón Madrid. Lee rangos autorizados de Sheets y texto recuperado de Drive al momento de la consulta; conserva enlaces y revisión. Confianza mínima fija de 0.92. El atlas conserva todas las fuentes lógicas, pero sólo estos flujos quedan habilitados en el piloto; IDs físicos, adaptadores privados y activación por puesto no se publican ni se presumen instalados.",
-  "contracts": [
-    "CTR-DESPACHO-CONVERSACION",
-    "CTR-DESPACHO-TERMINAL-LOCAL",
-    "CTR-JEV-CONSULTAS"
+    "EXT-DRIVE"
   ],
   "tests": [
-    "node --test tests/despacho-fast-lane.test.cjs",
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
     "node verify-os.cjs",
     "node verify-portal.cjs",
-    "node scripts/verificar-impacto.cjs --base origin/main --repo yodesarrollomx/yod-portal",
-    "git diff --check"
+    "ACCESOS_REF=4694f7db9a3de4d5415e711d090140e6a2875f01 node verify-accesos.cjs",
+    "node verify-obra-app.cjs",
+    "Navegador con dobles sin endpoints negocio: retro opt-in, default3D, autoridad/epoch, grafo/red sin Three/WebGL y 13 lugares."
   ],
-  "rollback": "Retirar la capacidad opcional del agente y revertir el PR. Sin cambios de datos, permisos, sesiones o despliegues existentes."
+  "rollback": "Restaurar entrada3D y wrapper Live anteriores; retirar opt-in y módulos retro conservando documentos, datos, historial, recibos y backend."
 }
