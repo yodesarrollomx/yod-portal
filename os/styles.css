@@ -198,6 +198,10 @@ body[data-workspace-route="despacho"] .content{width:100%;max-width:none;min-hei
 .despacho-tools{position:relative;display:none;z-index:65;color:var(--ink)}
 body[data-workspace-route="despacho"] .despacho-tools{display:block}
 body[data-workspace-route="despacho"] #role-chip{display:none!important}
+/* Barrido 10-nov-2026: 🌙 y ⚙️ tapaban «Ayuda» y «Cancelar señalamiento» del Despacho, y 📌 la barra de
+   autones. En el Despacho no aplican (tema y Accesos siguen en el menú): se ocultan y 📌 sube. */
+body[data-workspace-route="despacho"] #temaBtn,body[data-workspace-route="despacho"] #engraneBtn{display:none!important}
+body[data-workspace-route="despacho"] .chn-pastilla{bottom:calc(196px + env(safe-area-inset-bottom,0px))!important}
 .despacho-tools summary{display:grid;place-items:center;width:44px;height:44px;list-style:none;border:1px solid var(--line);border-radius:12px;background:rgba(246,243,237,.94);box-shadow:0 3px 15px rgba(35,29,20,.1);cursor:pointer;font-size:21px}
 .despacho-tools summary::-webkit-details-marker{display:none}
 .despacho-tools summary:focus-visible{outline:2px solid var(--gold);outline-offset:2px}

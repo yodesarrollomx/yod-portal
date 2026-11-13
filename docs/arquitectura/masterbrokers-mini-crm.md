@@ -72,3 +72,12 @@ CHG-MASTERBROKERS-PUBLIC-PREVIEW registra la petición de abrir el prototipo sin
 Esta ruta no incorpora Portero, shell autenticado, datos privados ni conectores. La indicación de muestra permanece visible; no implica que los expedientes o los cálculos PPP estén conectados. `brokers.html` y su contrato productivo siguen independientes. No se modifica el catálogo global ni se activa acceso de un broker.
 
 Pruebas: referencias y filtros; recorrido anónimo en escritorio y móvil; enlaces profundos, historial y PPP; ausencia de llamadas de negocio y verificación de archivos publicados. Reversión: retirar sólo la muestra pública, sin restaurar registros operativos.
+
+
+## Portal operativo con la nueva jerarquía · 18-oct-2026
+
+CHG-MASTERBROKERS-PORTAL-INTEGRATED traslada la experiencia visual de la muestra al consumidor real `brokers.html`. La entrada MD reúne su cartera y equipo; un broker ve únicamente la cartera validada. Cada contacto tiene un renglón aunque posea varios asuntos. El expediente de relación reúne trabajos, fuentes e historial; cada asunto conserva su PPP, compromisos, acuerdos y proyecto propios.
+
+Se reutilizan `brokers.v1`, fuentes canónicas y sesión vigente. La capa de presentación no concede permisos ni importa datos de demostración. La vista anterior de asuntos permanece como herramienta de comparación, sin ser la portada. Se preservan el recorrido de inmuebles y las garantías de retorno/guardado de PR43; los cambios concurrentes se concilian antes de integrar. La muestra pública conserva su indicación y enlaza al portal real.
+
+Aceptación: jerarquía y contacto único, filtros nominales, historial por fecha ocurrida, PPP por referencia real; edición y readback, agenda, acuerdos, presentación, evaluación/retorno y permisos; escritorio/móvil, navegación con historial y publicación verificadas por separado. Reversión sólo frontend.

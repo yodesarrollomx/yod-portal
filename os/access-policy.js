@@ -6,6 +6,7 @@
     'SYS-DESPACHO':['DP'],
     'SYS-POTENCIALES':['PT','MP','MA','MX','UN','RE','PA'],
     'SYS-MERCADO':['MH'],
+    'SYS-PPP2':['PT'],
     'SYS-TRACK':['CO','TC'],
     'SYS-MIRAMAR':['RM'],
     'SYS-TAREAS':['TA'],

@@ -10,7 +10,7 @@
 
   /* NAVIGATION-BEGIN */
   // Generado desde os/catalogo.js: presentación común; no concede accesos.
-  var NAV_ORDER = ["SYS-DESPACHO","SYS-POTENCIALES","SYS-MERCADO","SYS-TRACK","SYS-MIRAMAR","SYS-TAREAS","SYS-FLUJO","SYS-INTERIORES","SYS-INVERSION","SYS-MARKETING","SYS-OBRA","SYS-CONTROL"];
+  var NAV_ORDER = ["SYS-DESPACHO","SYS-POTENCIALES","SYS-MERCADO","SYS-PPP2","SYS-TRACK","SYS-MIRAMAR","SYS-TAREAS","SYS-FLUJO","SYS-INTERIORES","SYS-INVERSION","SYS-MARKETING","SYS-OBRA","SYS-CONTROL"];
   var NAV_PARENT = {"SYS-MIRAMAR":"SYS-TRACK"};
   function orderedModules(rows) {
     var seen = Object.create(null);
@@ -53,7 +53,7 @@
   /* La dirección del Portero vive SOLO en os/yod-acceso.js. Si la página no la
      cargó, se pide aquí (misma carpeta que este archivo) antes del primer canje. */
   var ACCESO_LISTO = window.YOD_PORTERO ? Promise.resolve() : new Promise(function (ok) {
-    var sc = document.createElement('script'); sc.src = SELF.replace(/shell\.js(\?.*)?$/, 'yod-acceso.js?v=20261106-ui-consistency');
+    var sc = document.createElement('script'); sc.src = SELF.replace(/shell\.js(\?.*)?$/, 'yod-acceso.js?v=20261113-ui-consistencia');
     sc.onload = sc.onerror = function () { ok(); }; document.head.appendChild(sc);
   });
   /* El ORIGINAL siempre primero; el respaldo solo si aquel falla en esta
@@ -130,6 +130,7 @@
     'SYS-DESPACHO': 'https://yodesarrollomx.github.io/yod-despacho/',
     'SYS-POTENCIALES': 'https://yodesarrollomx.github.io/potenciales-yod/',
     'SYS-MERCADO': 'https://yodesarrollomx.github.io/yod-portal/mercado/hermosillo-2020-2030/',
+    'SYS-PPP2': 'https://yodesarrollomx.github.io/potenciales-yod/ppp2.html',
     'SYS-TRACK': 'https://yodesarrollomx.github.io/yod-portal/track-codesarrollos.html',
     'SYS-MIRAMAR': 'https://yodesarrollomx.github.io/real-miramar-board/',
     'SYS-TAREAS': 'https://yodesarrollomx.github.io/board-aurum/',
@@ -139,11 +140,11 @@
     'SYS-MARKETING': 'https://yodesarrollomx.github.io/aurum-board/',
     'SYS-OBRA': 'https://yodesarrollomx.github.io/yod-portal/obra.html'
   };
-  var ICON = { 'SYS-DESPACHO': 'layout-grid', 'SYS-POTENCIALES': 'map-2', 'SYS-MERCADO': 'chart-line', 'SYS-TRACK': 'route', 'SYS-MIRAMAR': 'building-community', 'SYS-TAREAS': 'checklist', 'SYS-FLUJO': 'wallet', 'SYS-INTERIORES': 'armchair-2', 'SYS-INVERSION': 'presentation-analytics', 'SYS-MARKETING': 'speakerphone', 'SYS-OBRA': 'building-skyscraper' };
+  var ICON = { 'SYS-DESPACHO': 'layout-grid', 'SYS-POTENCIALES': 'map-2', 'SYS-MERCADO': 'chart-line', 'SYS-PPP2': 'seedling', 'SYS-TRACK': 'route', 'SYS-MIRAMAR': 'building-community', 'SYS-TAREAS': 'checklist', 'SYS-FLUJO': 'wallet', 'SYS-INTERIORES': 'armchair-2', 'SYS-INVERSION': 'presentation-analytics', 'SYS-MARKETING': 'speakerphone', 'SYS-OBRA': 'building-skyscraper' };
   /* Los títulos oficiales viven en la pestaña Portal del Control Maestro
      (titulo_portal); estos son solo el respaldo si aquella no contesta.
      Deben decir LO MISMO que el Sheet — si renombras allá, renombra acá. */
-  var NAME = { 'SYS-DESPACHO': 'El Despacho', 'SYS-POTENCIALES': 'PPP', 'SYS-MERCADO': 'Mercado Hermosillo', 'SYS-TRACK': 'Codesarrollos', 'SYS-MIRAMAR': 'Real de Miramar', 'SYS-TAREAS': 'MOAC', 'SYS-FLUJO': 'Flujo', 'SYS-INTERIORES': 'AURUM', 'SYS-INVERSION': 'Masterbrokers', 'SYS-MARKETING': 'Embudo comercial', 'SYS-OBRA': 'Obra en vivo' };
+  var NAME = { 'SYS-DESPACHO': 'El Despacho', 'SYS-POTENCIALES': 'PPP', 'SYS-MERCADO': 'Mercado Hermosillo', 'SYS-PPP2': 'PPP 2', 'SYS-TRACK': 'Codesarrollos', 'SYS-MIRAMAR': 'Real de Miramar', 'SYS-TAREAS': 'MOAC', 'SYS-FLUJO': 'Flujo', 'SYS-INTERIORES': 'AURUM', 'SYS-INVERSION': 'Masterbrokers', 'SYS-MARKETING': 'Embudo comercial', 'SYS-OBRA': 'Obra en vivo' };
   // Códigos por tablero — MISMA matriz que YOD OS (access-policy.js). El menú
   // solo enseña lo que tu sesión permite; el muro real sigue siendo cada backend.
   var CODES = {
@@ -151,6 +152,7 @@
     'SYS-DESPACHO': ['DP'],
     'SYS-POTENCIALES': ['PT', 'MP', 'MA', 'MX', 'UN', 'RE', 'PA'],
     'SYS-MERCADO': ['MH'],
+    'SYS-PPP2': ['PT'],
     'SYS-TRACK': ['CO', 'TC'],
     'SYS-MIRAMAR': ['RM'],
     'SYS-TAREAS': ['TA'],
@@ -230,8 +232,13 @@
   /* El Embudo comercial no se abre "pelón": vive en la máscara de la cabina
      (Sala · Métricas · Plan de Potencial). Desde cualquier tablero envuelto,
      su enlace lleva a esa ruta del OS, igual que un clic en la cabina. */
+  /* El Despacho tampoco: dentro de la cabina su enlace ya es #/despacho (app.js hrefDe),
+     pero desde los demás tableros mandaba a yod-despacho/, la Bandeja anterior, que
+     Dirección no reconocía como su Despacho (10-nov-2026). La Bandeja sigue a un clic
+     en «••• › Bandeja actual» dentro del Despacho. */
   function enlace(row) {
     var url = destino(row); if (!url) return '';
+    if (row && row.system_id === 'SYS-DESPACHO') return OS + '#/despacho';
     return (row && row.system_id === 'SYS-MARKETING') ? OS + '#/embudo/metricas' : url;
   }
   function navItem(row, cur) {
@@ -246,14 +253,20 @@
   function renderNav(rows, cur) {
     var box = document.getElementById('yodNav'); if (!box) return; box.innerHTML = '';
     rows = orderedModules(rows); state.modules = rows;
+    /* Barrido 10-nov-2026: accesos.html vive en el repo de PPP y currentSys() la
+       reconoce como PPP; el menú iluminaba «PPP» estando en «Personas y accesos».
+       Sólo cambia qué renglón se ilumina y la miga: el candado sigue con cur. */
+    var enAccesos = /\/potenciales-yod\/accesos\.html$/.test(location.pathname);
+    var navCur = enAccesos ? '' : cur;
     sidebarModules(rows, vivo).forEach(function (r) {
-      var n = navItem(r, cur); if (n) box.appendChild(n);
+      var n = navItem(r, navCur); if (n) box.appendChild(n);
     });
     if (state.role === 'admin') {
-      var people = el('a', 'yod-nav-item'); people.href = 'https://yodesarrollomx.github.io/potenciales-yod/accesos.html';
+      var people = el('a', 'yod-nav-item' + (enAccesos ? ' active' : '')); people.href = 'https://yodesarrollomx.github.io/potenciales-yod/accesos.html';
       people.innerHTML = '<i class="ti ti-users"></i><span>Personas y accesos</span>'; box.appendChild(people);
     }
-    rows.forEach(function (r) { if (r.system_id === cur && r.titulo_portal) set('yodCrumbHere', moduleTitle(r)); });
+    if (enAccesos) set('yodCrumbHere', 'Personas y accesos');
+    else rows.forEach(function (r) { if (r.system_id === cur && r.titulo_portal) set('yodCrumbHere', moduleTitle(r)); });
     if (!box.children.length) box.innerHTML = '<span class="yod-nav-loading">Sin tableros</span>';
   }
 
@@ -370,7 +383,7 @@
   }
   function boot() {
     // registro de proyectos (folio): lo usan el buscador ⌘K y la chinche
-    if (!window.YodProyectos) { var sp = document.createElement('script'); sp.src = SELF.replace(/shell\.js(\?.*)?$/, 'proyectos.js?v=20261106-ui-consistency'); document.head.appendChild(sp); }
+    if (!window.YodProyectos) { var sp = document.createElement('script'); sp.src = SELF.replace(/shell\.js(\?.*)?$/, 'proyectos.js?v=20261113-ui-consistencia'); document.head.appendChild(sp); }
     if (document.querySelector('.yod-shell')) return;
     /* Los íconos de la barra son de Tabler: los tableros que no traían su hoja (MOAC)
        mostraban botones vacíos. El marco la carga él mismo, y las fuentes de la marca. */
@@ -409,8 +422,8 @@
     document.body.appendChild(shell);
 
     // The shared visual layer preserves this shell's identity and routing.
-    var chromeCSS=document.createElement('link');chromeCSS.rel='stylesheet';chromeCSS.href=new URL('ui-chrome.css?v=20261106-ui-consistency',SELF).href;document.head.appendChild(chromeCSS);
-    var chromeJS=document.createElement('script');chromeJS.src=new URL('ui-chrome.js?v=20261106-ui-consistency',SELF).href;document.head.appendChild(chromeJS);
+    var chromeCSS=document.createElement('link');chromeCSS.rel='stylesheet';chromeCSS.href=new URL('ui-chrome.css?v=20261113-ui-consistencia',SELF).href;document.head.appendChild(chromeCSS);
+    var chromeJS=document.createElement('script');chromeJS.src=new URL('ui-chrome.js?v=20261113-ui-consistencia',SELF).href;document.head.appendChild(chromeJS);
     wireDrawer(shell, scrim);
     // «hay algo nuevo»: entrar a este tablero cuenta como visita; su punto se apaga
     try { if (cur) { localStorage.setItem('yod_visto_' + cur, String(Date.now())); localStorage.removeItem('yod_nuevo_' + cur); } } catch (e) { }
@@ -431,7 +444,7 @@
      (yod-portal/chinche.js), en modo "contexto" (DOM). Cada chinche guarda la tarjeta
      donde se picó por última vez y el repo de la página, para que el encargo llegue al
      repo correcto. Si el board ya la trae, no se carga dos veces. */
-  var CHINCHE_V = "20261106-ui-consistency";
+  var CHINCHE_V = "20261113-ui-consistencia";
   function cargarChinche() {
     if (window.YODChinche) return;
     var ultimo = null;

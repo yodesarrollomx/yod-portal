@@ -3,7 +3,7 @@
 
   /* NAVIGATION-BEGIN */
   // Generado desde os/catalogo.js: presentación común; no concede accesos.
-  var NAV_ORDER = ["SYS-DESPACHO","SYS-POTENCIALES","SYS-MERCADO","SYS-TRACK","SYS-MIRAMAR","SYS-TAREAS","SYS-FLUJO","SYS-INTERIORES","SYS-INVERSION","SYS-MARKETING","SYS-OBRA","SYS-CONTROL"];
+  var NAV_ORDER = ["SYS-DESPACHO","SYS-POTENCIALES","SYS-MERCADO","SYS-PPP2","SYS-TRACK","SYS-MIRAMAR","SYS-TAREAS","SYS-FLUJO","SYS-INTERIORES","SYS-INVERSION","SYS-MARKETING","SYS-OBRA","SYS-CONTROL"];
   var NAV_PARENT = {"SYS-MIRAMAR":"SYS-TRACK"};
   function orderedModules(rows) {
     var seen = Object.create(null);
@@ -343,6 +343,8 @@
     {system_id:'SYS-DESPACHO',orden:'1',visible:'SI',titulo_portal:'El Despacho',descripcion_portal:'Tu pantalla de trabajo: por cada frente del negocio, quien te esta esperando mas. Se firma aqui y se escribe en el tablero.',audiencia:'Direccion',icono:'message-2',miniatura:'thumbs/track.svg',url:'',estado:'Activo',sensibilidad:'Confidencial'},
     {system_id:'SYS-POTENCIALES',orden:'2',visible:'SI',titulo_portal:'PPP',descripcion_portal:'Planes de Potencial Personalizados: mapa de terrenos, escenarios y números para decidir qué construir y cuánto rinde.',audiencia:'Dirección y análisis',icono:'map-pin',miniatura:'thumbs/potenciales.svg',url:'',estado:'Activo',sensibilidad:'Confidencial'},
     {system_id:'SYS-MERCADO',orden:'2',visible:'SI',titulo_portal:'Mercado Hermosillo',descripcion_portal:'Oferta y demanda de vivienda nueva en Hermosillo, año por año 2020–2030: curvas que se mueven, cada cifra con su fuente y la pendiente como supuesto visible.',audiencia:'Dirección y análisis',icono:'chart-line',miniatura:'thumbs/track.svg',url:'',estado:'Activo',sensibilidad:'Interno'},
+    /* PPP 2 (CHG-PPP2-20261112): el vivero de planes; sin fila en el Sheet todavía. */
+    {system_id:'SYS-PPP2',orden:'2',visible:'SI',titulo_portal:'PPP 2',descripcion_portal:'El vivero de planes de potencial: cada plan nace, se nutre de datos con fuente e investiga; muestra primero lo que recibe el dueño y en cuánto tiempo.',audiencia:'Dirección y análisis',icono:'seedling',miniatura:'thumbs/track.svg',url:'',estado:'Activo',sensibilidad:'Interno'},
     {system_id:'SYS-TRACK',orden:'3',visible:'SI',titulo_portal:'Codesarrollos',descripcion_portal:'Los codesarrollos en curso (Real de Miramar, Casa Alysa, Casa María), cada uno con su etapa y su tablero.',audiencia:'Dirección y tramitología',icono:'route',miniatura:'thumbs/track.svg',url:'',estado:'Activo',sensibilidad:'Interno'},
     /* Real de Miramar faltaba en el respaldo: si el Sheet no contestaba, el
        codesarrollo mas grande desaparecia de la rejilla sin que nadie lo notara. */
@@ -360,6 +362,7 @@
     'SYS-DESPACHO':'layout-grid',
     'SYS-POTENCIALES':'map-2',
     'SYS-MERCADO':'chart-line',
+    'SYS-PPP2':'seedling',
     'SYS-TRACK':'route',
     'SYS-MIRAMAR':'building-community',
     'SYS-TAREAS':'checklist',
@@ -371,7 +374,7 @@
   };
   // Etiqueta del tablero embebido (caché de 10 min de Pages). No se edita aquí: la escribe
   // node scripts/versiones.cjs --aplicar desde os/versiones.json, igual que todos los ?v=.
-  var TABLERO_V='20261106-ui-consistency';
+  var TABLERO_V='20261113-ui-consistencia';
   var state={modules:[],rawRows:[],role:'vista',boards:'',profileReady:false,loading:false,opsScope:'mias',allTasks:[],sesionEpoch:0,sessionToken:'',identityRequest:0,pulseCache:{},opsCache:null,verifiedAt:0};
   var $=function(id){return document.getElementById(id);};
   // ¿hay clave guardada? distingue «sin sesión» de «sesión validándose»
@@ -381,7 +384,7 @@
   var SENSITIVE_CACHES=['aurum-cache-v5','yod_ops_me','yod_pulse_v1','yod_portal_cat_v1','codeyod-cache-v1'];
   // Las llaves de la Sala SOLO se borran al cerrar sesión a propósito: un rechazo pasajero del
   // Portero no debe tirar la llave propia de la Sala ni la cola de decisiones sin subir.
-  var LLAVES_SALA=['sala_clave','sala_gas','sala_rol'];
+  var LLAVES_SALA=['sala_clave','sala_gas','sala_rol','sala_resumen_v1','sala_salida_local_v1','sala_salida_plan_v1'];   // 9-nov: también lo que la Sala guarda de su montón
   // sesionEpoch: cada purga invalida las cargas en vuelo, para que una respuesta
   // que llegue tarde no vuelva a pintar (ni a cachear) datos de la sesión anterior.
   function tokenActual(){try{return localStorage.getItem(TOKEN_KEY)||'';}catch(_e){return '';}}
@@ -398,6 +401,7 @@
   // 14 caracteres, la otra ni siquiera eso) nunca conceden permisos.
   function bloquearSesion(validando){
     purgarDatosSensibles();state.profileReady=false;state.role='vista';state.boards='';
+    document.querySelectorAll('[data-sala-listas]').forEach(function(el){el.textContent=el.getAttribute('data-sala-listas');});   // sin sesión, el texto fijo
     state.personName='';state.verifiedEmail='';state.sessionToken='';state.rawRows=[];state.catalogIds=null;state.modules=[];
     ['finance-panel','marketing-panel','decision-panel','reconcile-panel','search-results'].forEach(function(id){var p=$(id);if(p)p.replaceChildren();});
     ['pulso','reconcile','quick-section'].forEach(function(id){var p=$(id);if(p)p.classList.add('hidden');});
@@ -490,25 +494,59 @@
       document.querySelectorAll('[data-system-id="'+sys+'"]').forEach(function(a){a.classList.toggle('hay-nuevo',!!nuevos[sys]);a.title=nuevos[sys]?'Hay algo nuevo desde tu última visita':'';});
     }catch(_e){}
   }
+  /* SALA-LISTAS-BEGIN */
+  /* Lo listo para lanzar (9-nov-2026 · Dirección: «conecta todo listo en YOD OS para poder publicar… quiero hacer
+     montón… armando un paquete para ir lanzando»). La Sala de Edición vive en este mismo origen y deja en el aparato
+     `sala_resumen_v1` = {listas, cuando}: cuántas publicaciones tiene listas y cuándo lo vio. Aquí sólo se lee ese
+     número: sin red, sin llaves y sin títulos. No es un permiso ni una cifra en vivo: si falta, es inválido o tiene
+     más de siete días, se usa el texto fijo. La verdad sigue viviendo en la Sala y en su hoja. */
+  var SALA_RESUMEN='sala_resumen_v1',SALA_RESUMEN_VIGENCIA=7*24*60*60*1000;
+  function salaListas(){
+    try{
+      var r=JSON.parse(localStorage.getItem(SALA_RESUMEN)||'null');
+      if(!r||typeof r!=='object'||Array.isArray(r))return null;
+      var n=r.listas,t=r.cuando,ahora=Date.now();
+      if(typeof n!=='number'||!Number.isInteger(n)||n<0||n>999)return null;
+      if(typeof t!=='number'||!Number.isFinite(t)||t>ahora+60000||ahora-t>SALA_RESUMEN_VIGENCIA)return null;
+      return {listas:n,cuando:t};
+    }catch(_e){return null;}
+  }
+  function textoSalaListas(fijo){
+    var r=salaListas();if(!r)return fijo;
+    return r.listas===0?'Nada listo todavía':r.listas===1?'1 lista para lanzar':r.listas+' listas para lanzar';
+  }
+  /* SALA-LISTAS-END */
+  // Las tarjetas que dicen cuántas hay listas se repintan cuando la Sala (en la máscara) actualiza su número.
+  function pintarSalaListas(){
+    // sin sesión validada sólo se ve el texto fijo: el número es para quien ya entró
+    var r=state.profileReady?salaListas():null;
+    document.querySelectorAll('[data-sala-listas]').forEach(function(el){var fijo=el.getAttribute('data-sala-listas');el.textContent=state.profileReady?textoSalaListas(fijo):fijo;
+      // no es una cifra en vivo: se dice de cuándo es
+      el.title=r?'Lo que la Sala vio en este aparato '+edadTexto(Date.now()-r.cuando):'';});
+  }
+  window.addEventListener('storage',function(e){if(e.key===SALA_RESUMEN||e.key===null)pintarSalaListas();});
   /* Fase 4 · un inicio por persona. Dirección arranca en dinero y decisiones
      (el Pulso sube arriba del tablero); Sayri, en la Sala y sus pendientes (la
      operación sube, filtrada a su nombre). El resto ve el Inicio de siempre. */
   function pintarMiInicio(data,persona){
+    pintarSalaListas();   // la puerta de la Sala en «Embudo comercial» vale para cualquier persona con sesión
     var box=$('miInicio'),cont=document.querySelector('.content'),tab=$('tablero');if(!box||!cont||!tab)return;
     var quien=String((data&&(data.nombre||''))+' '+(data&&(data.correo||''))).toLowerCase();
     var tarjetas=null,sube=null,titulo='';
     function t(ic,h,p,href){return '<a class="mi-card" href="'+href+'"><i class="ti ti-'+ic+'"></i><b>'+h+'</b><span>'+p+'</span></a>';}
+    // la tarjeta que lleva al montón de la Sala: el texto fijo viaja en el atributo y el número se pinta aparte
+    function tSala(ic,h,fijo){return '<a class="mi-card" href="#/embudo/sala"><i class="ti ti-'+ic+'"></i><b>'+h+'</b><span data-sala-listas="'+fijo+'">'+fijo+'</span></a>';}
     if(persona==='direccion'){
       titulo='Dinero y decisiones';sube=$('pulso');
-      tarjetas=t('wallet','Tesorería','Saldo, pagos y lo que entra','#pulso')+t('gavel','Decisiones','Lo que espera tu palabra','#pulso')+t('layout-grid','El Despacho','Tu pantalla de trabajo','#/despacho');
+      tarjetas=t('wallet','Tesorería','Saldo, pagos y lo que entra','#pulso')+t('gavel','Decisiones','Lo que espera tu palabra','#pulso')+tSala('send','Publicaciones','Tu montón listo para lanzar')+t('layout-grid','El Despacho','Tu pantalla de trabajo','#/despacho');
     }else if(/sayri/.test(quien)){
       titulo='La Sala y tus pendientes';sube=$('operacion');
       try{if(!localStorage.getItem('yod_ops_me')&&data.nombre)localStorage.setItem('yod_ops_me',data.nombre);}catch(_e){}
-      tarjetas=t('movie','Sala de Edición','Lo que se produce hoy','#/embudo/sala')+t('checklist','Mis pendientes','Tus tareas de la semana','#operacion')+t('armchair-2','AURUM','Interiores de los clientes','https://yodesarrollomx.github.io/interiores-aurum/');
+      tarjetas=tSala('movie','Sala de Edición','Lo que se produce hoy')+t('checklist','Mis pendientes','Tus tareas de la semana','#operacion')+t('armchair-2','AURUM','Interiores de los clientes','https://yodesarrollomx.github.io/interiores-aurum/');
     }
     if(!tarjetas){box.hidden=true;return;}
     box.innerHTML='<div class="section-head"><div><p class="eyebrow">Tu inicio</p><h2>'+titulo+'</h2></div></div><div class="mi-grid">'+tarjetas+'</div>';
-    box.hidden=false;
+    box.hidden=false;pintarSalaListas();
     if(sube&&sube.parentNode===cont&&sube.nextElementSibling!==tab)cont.insertBefore(sube,tab);
   }
   function moduleTitle(row){return row.system_id==='SYS-INVERSION'?(state.role==='admin'?'Master Developer':'Master Broker'):(safeText(row.titulo_portal)||safeText(row.system_id));}
@@ -602,7 +640,13 @@
       if(state.profileReady)notifyContinuityFrame();
     };
   });
-  if(window.YodDespachoEquipoHost&&window.YODCaseTransport&&$('despachoEquipo')){
+  /* Equipo (bitácora Claude ↔ ChatGPT) se monta sólo cuando su adaptador del Portero esté
+     instalado (docs/arquitectura/despacho-equipo.md). Hoy readTeam contesta «unavailable»:
+     el botón abría una ventana que nunca cargaba y, encima, tapaba «Volver a la sala 3D»,
+     el título del Entorno y los velos de los diálogos (barrido del Despacho, 10-nov-2026).
+     Para encenderlo: EQUIPO_CONECTADO=true en el mismo PR que acredite el adaptador. */
+  var EQUIPO_CONECTADO=false;
+  if(EQUIPO_CONECTADO&&window.YodDespachoEquipoHost&&window.YODCaseTransport&&$('despachoEquipo')){
     despachoTeam=window.YodDespachoEquipoHost.create({
       container:$('despachoEquipo'),host:window,
       getAccess:function(){return {allowed:state.role==='admin'&&despachoSection.isAuthorized()&&mismaSesion(state.sessionToken,state.sesionEpoch),epoch:state.sesionEpoch};},
@@ -611,7 +655,7 @@
         write:function(intent){return window.YODCaseTransport.writeTeam(intent);},
         lookupReceipt:function(requestId){return window.YODCaseTransport.lookupTeamReceipt({request_id:requestId});}
       },
-      loadMount:function(){return import('../despacho3d/equipo.mjs?v=20261106-ui-consistency').then(function(module){return module.mountTeamDesk;});},
+      loadMount:function(){return import('../despacho3d/equipo.mjs?v=20261113-ui-consistencia').then(function(module){return module.mountTeamDesk;});},
       onError:function(){var status=$('despachoEquipoEstado');if(status)status.textContent='No se pudo abrir Equipo. Puedes volver a validar tu acceso.';}
     });
   }
@@ -767,6 +811,7 @@
         if(/#inicio|^#$/.test(a.getAttribute('href')||'')) a.classList.toggle('activo-no', enEmbudo);
       });
       if(enEmbudo) window.scrollTo(0,0);
+      pintarSalaListas();
       if(window.revisarPuertaDespacho)window.revisarPuertaDespacho();
     }
     window.pintarSeccionEmbudo=pintarSeccionEmbudo;

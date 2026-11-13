@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-06.ui-consistency.1",
+  "revision": "2026-11-13.ui-consistencia.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -330,6 +330,13 @@
           "source_revision": "2026-10-31.ppp-presentaciones.1",
           "status": "propuesto",
           "claim": "Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp40-semilla.md",
+          "source_revision": "2026-10-29.ppp40-semilla.1",
+          "status": "propuesto",
+          "claim": "PPP4 incremental: catálogo literal, grafo puro y semilla incompleta versionada dentro del frontend existente. Persistencia propuesta por módulo opt-in en la MISMA implementación GAS y tablas del master. Sin nueva URL, ACL, segundo motor financiero ni datos privados. Seed_id pre-alta es identidad de borrador, no board_case_id; promoción debe preservar vínculo explícito y no se presenta implementada."
         }
       ],
       "data_entities": [
@@ -1222,6 +1229,13 @@
           "source_revision": "2026-10-31.ppp-presentaciones.1",
           "status": "propuesto",
           "claim": "Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp40-semilla.md",
+          "source_revision": "2026-10-29.ppp40-semilla.1",
+          "status": "propuesto",
+          "claim": "PPP4 incremental: catálogo literal, grafo puro y semilla incompleta versionada dentro del frontend existente. Persistencia propuesta por módulo opt-in en la MISMA implementación GAS y tablas del master. Sin nueva URL, ACL, segundo motor financiero ni datos privados. Seed_id pre-alta es identidad de borrador, no board_case_id; promoción debe preservar vínculo explícito y no se presenta implementada."
         }
       ],
       "data_entities": [
@@ -1259,6 +1273,13 @@
           "source_revision": "2026-10-29.ppp-ficha-etapas.1",
           "status": "propuesto",
           "claim": "Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp40-semilla.md",
+          "source_revision": "2026-10-29.ppp40-semilla.1",
+          "status": "propuesto",
+          "claim": "PPP4 incremental: catálogo literal, grafo puro y semilla incompleta versionada dentro del frontend existente. Persistencia propuesta por módulo opt-in en la MISMA implementación GAS y tablas del master. Sin nueva URL, ACL, segundo motor financiero ni datos privados. Seed_id pre-alta es identidad de borrador, no board_case_id; promoción debe preservar vínculo explícito y no se presenta implementada."
         }
       ],
       "data_entities": [
@@ -2823,6 +2844,13 @@
           "source_revision": "2026-10-31.ppp-presentaciones.1",
           "status": "propuesto",
           "claim": "Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp40-semilla.md",
+          "source_revision": "2026-10-29.ppp40-semilla.1",
+          "status": "propuesto",
+          "claim": "PPP4 incremental: catálogo literal, grafo puro y semilla incompleta versionada dentro del frontend existente. Persistencia propuesta por módulo opt-in en la MISMA implementación GAS y tablas del master. Sin nueva URL, ACL, segundo motor financiero ni datos privados. Seed_id pre-alta es identidad de borrador, no board_case_id; promoción debe preservar vínculo explícito y no se presenta implementada."
         }
       ],
       "data_entities": [
@@ -3138,6 +3166,13 @@
           "source_revision": "2026-10-31.ppp-presentaciones.1",
           "status": "propuesto",
           "claim": "Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp40-semilla.md",
+          "source_revision": "2026-10-29.ppp40-semilla.1",
+          "status": "propuesto",
+          "claim": "PPP4 incremental: catálogo literal, grafo puro y semilla incompleta versionada dentro del frontend existente. Persistencia propuesta por módulo opt-in en la MISMA implementación GAS y tablas del master. Sin nueva URL, ACL, segundo motor financiero ni datos privados. Seed_id pre-alta es identidad de borrador, no board_case_id; promoción debe preservar vínculo explícito y no se presenta implementada."
         }
       ],
       "data_entities": [
@@ -3514,6 +3549,202 @@
       "source_of_truth": "mercado/hermosillo-2020-2030/base/series-integradas.csv (fuentes públicas: SNIIV/SEDATU, INEGI, Banxico, SHF, CANADEVI/prensa); sin hojas privadas",
       "aliases": [
         "SYS-MERCADO-HMO"
+      ]
+    },
+    {
+      "id": "SYS-PPP2",
+      "nombre": "PPP 2 · el vivero de planes",
+      "tipo": "tablero",
+      "repo": "yodesarrollomx/potenciales-yod",
+      "proposito": "Cultivar cada plan de potencial: nace como semilla, se nutre de datos con fuente, investiga y propone versiones; muestra primero lo que recibe el dueño y en cuánto tiempo",
+      "dominio": "Ventas",
+      "owner_role": "Dirección",
+      "status": "codigo",
+      "runtime_status": "Página lista en el PR; se publica al integrarlo. Lecturas del servidor con sesión de Dirección comprobadas el 12-nov-2026.",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "ppp2.js",
+          "claim": "Vivero y plan vivo; sólo presenta lo que calcula el libro y nunca borra la credencial del Portero",
+          "status": "codigo",
+          "source_revision": "PR claude/ppp2-moreo (potenciales-yod)"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "os/catalogo.js",
+          "claim": "Entrada PPP 2 del menú con el código PT",
+          "status": "codigo",
+          "source_revision": "PR claude/ppp2-atlas"
+        }
+      ],
+      "data_entities": [
+        "plan",
+        "version",
+        "dato",
+        "pregunta",
+        "candado",
+        "hallazgo",
+        "voto_consejo",
+        "prueba_estres"
+      ],
+      "risks_sanitized": [
+        "La siguiente pregunta se ordena con un criterio del oficio, no con un cálculo de sensibilidad",
+        "Sin una ronda programada del autón, los pedidos de investigación esperan"
+      ],
+      "source_of_truth": "El libro de cada plan en Google Sheets (SHEET-PPP2)"
+    },
+    {
+      "id": "GAS-PPP2",
+      "nombre": "PPP 2 · servidor",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/potenciales-yod",
+      "proposito": "Validar la sesión con el Portero, leer el libro del plan y escribir sólo celdas permitidas con bitácora, revisión y request_id; no calcula finanzas",
+      "dominio": "Ventas",
+      "owner_role": "Responsable técnico del backend",
+      "status": "ejecucion",
+      "runtime_status": "Versión 1 activa (proyecto nuevo, implementación propia, aparte del Portero). Comprobado en vivo: ppp2-meta, rechazo de una liga inválida vía canje, y lecturas de vivero y plan con la sesión de Dirección. Escrituras reales sin probar: sólo con dobles.",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "server/ppp2/PPP2.gs",
+          "claim": "Contrato ppp2-servidor-v1: canje con board=PT, allowlist de escrituras, LockService, revisión y bitácora",
+          "status": "codigo",
+          "source_revision": "PR claude/ppp2-moreo (potenciales-yod)"
+        },
+        {
+          "claim": "Versión 1 desplegada el 12-nov-2026 12:40 (Hermosillo) y autorizada por Dirección; lecturas reales comprobadas desde el navegador de Dirección.",
+          "status": "ejecucion",
+          "source_revision": "Apps Script version 1"
+        }
+      ],
+      "data_entities": [
+        "plan",
+        "version",
+        "dato",
+        "pregunta",
+        "candado",
+        "hallazgo",
+        "pedido",
+        "bitacora"
+      ],
+      "risks_sanitized": [
+        "Revocar una sesión tarda hasta 10 minutos por la caché del canje, igual que en el Portero",
+        "Una prueba de estrés escribe y restablece la columna Prueba del libro; si se interrumpe, la próxima corrida la restablece"
+      ],
+      "backend_source_status": "fuente_repositorio_igual_a_version_1",
+      "source_of_truth": "Fuente en GitHub pegada sin cambios en la versión 1; los datos viven en los libros"
+    },
+    {
+      "id": "SHEET-PPP2",
+      "nombre": "PPP 2 · vivero y libros de plan",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/potenciales-yod",
+      "proposito": "Registro de planes y un libro por plan con todas las fórmulas: tres versiones, revisión para fondos, reparto, preguntas del oficio, candados, hallazgos, consejo, pruebas y bitácora",
+      "dominio": "Ventas",
+      "owner_role": "Dirección / propietario del libro",
+      "status": "ejecucion",
+      "runtime_status": "Plantilla ppp2-libro-v1 y primer libro creados el 12-nov-2026; Google Sheets recalcula las tres versiones y cuadran con el borrador previo (comparación privada, sin cifras públicas).",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "ppp2/libro/generar.py",
+          "claim": "Generador de la plantilla con fórmulas nativas",
+          "status": "codigo",
+          "source_revision": "PR claude/ppp2-moreo (potenciales-yod)"
+        },
+        {
+          "claim": "Libros reales creados en el Drive de Dirección; comparación de resultados contra el borrador hecha en privado.",
+          "status": "ejecucion",
+          "source_revision": "2026-11-12"
+        }
+      ],
+      "data_entities": [
+        "plan",
+        "dato",
+        "producto",
+        "palanca",
+        "flujo_mensual",
+        "version",
+        "reparto",
+        "pregunta",
+        "candado",
+        "hallazgo",
+        "voto_consejo",
+        "bitacora"
+      ],
+      "risks_sanitized": [
+        "Quien edita el libro a mano puede romper una fórmula: las pestañas calculadas llevan protección de aviso",
+        "Los identificadores de los libros no se publican"
+      ],
+      "physical_mapping_status": "registro_y_libros_por_plan"
+    },
+    {
+      "owner_role": "Dirección técnica",
+      "status": "ejecucion",
+      "risks_sanitized": [
+        "Costo por uso. Sin clave o sin respuesta, el grafo se rehace igual, sin explicación."
+      ],
+      "id": "EXT-ANTHROPIC",
+      "nombre": "Claude · API de Anthropic",
+      "tipo": "servicio_externo",
+      "repo": "yodesarrollomx/potenciales-yod",
+      "dominio": "Infraestructura",
+      "proposito": "Explicar en palabras qué cambió entre la versión aprobada del grafo y la rehecha a pedido.",
+      "source_of_truth": "El grafo rehecho y su diferencia contra el aprobado. La explicación es un resumen validado contra un esquema fijo; no decide ni publica nada.",
+      "runtime_status": "Comprobado el 12-nov-2026: los borradores G-20261112-1147 y G-20261112-1203 salieron con explicación de Claude por API (registro de la rama grafo-datos, ia=claude). La clave vive sólo como secreto del flujo.",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "grafo-motor/ia.py",
+          "commit": "e3217cca26d63fbaa65cf90b50c3a2958af0ad13",
+          "claim": "Petición con herramienta y esquema fijo, y un segundo intento si la primera respuesta llega mal formada.",
+          "status": "codigo"
+        },
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": ".github/workflows/grafo-rehacer.yml",
+          "commit": "685ed2ccb0e1d7cf1224fe4216bc071349e7751c",
+          "claim": "Corridas 43283429071 y 43286094367 del 12-nov-2026: pedidos de rehacer con explicación de Claude.",
+          "status": "ejecucion"
+        }
+      ],
+      "data_entities": [
+        "diferencia_grafo",
+        "explicacion"
+      ]
+    },
+    {
+      "owner_role": "Dirección técnica",
+      "status": "ejecucion",
+      "risks_sanitized": [
+        "Credencial con escritura de contenido y PR en un solo repositorio; su llave vive sólo como secreto de Actions. Si falla o falta, el flujo vuelve a los dos toques."
+      ],
+      "id": "EXT-GRAFO-APP",
+      "nombre": "GitHub App · YOD Grafo borrador",
+      "tipo": "servicio_externo",
+      "repo": "yodesarrollomx/potenciales-yod",
+      "dominio": "Infraestructura",
+      "proposito": "Abrir y poner al día el PR del borrador del grafo para que sus pruebas corran sin la aprobación manual que GitHub pide a los PR de un flujo.",
+      "source_of_truth": "Instalación de la App en la organización (sólo potenciales-yod) y los secretos GRAFO_APP_ID y GRAFO_APP_PRIVATE_KEY del repositorio.",
+      "runtime_status": "Instalada el 12-nov-2026 (hora de Hermosillo) por decisión de Dirección (DEC-21). Comprobada el 13-nov-2026: el PR 97 lo abrió la App, sus pruebas corrieron solas y se aprobó con un solo «Merge pull request».",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": ".github/workflows/grafo-rehacer.yml",
+          "commit": "6b5cc19a0ff4cecc17ff230e843de853df2045e2",
+          "claim": "Si existen los secretos, el flujo saca un token de la App (acción fijada por commit) sólo para subir la rama del borrador y abrir o poner al día su PR.",
+          "status": "codigo"
+        },
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": ".github/workflows/grafo-rehacer.yml",
+          "commit": "6b5cc19a0ff4cecc17ff230e843de853df2045e2",
+          "claim": "PR 97 abierto por yod-grafo-borrador[bot] el 13-nov-2026; pruebas sin «Approve workflows to run»; fusionado 02:03:10Z.",
+          "status": "ejecucion"
+        }
+      ],
+      "data_entities": [
+        "pr_borrador"
       ]
     }
   ],
@@ -6852,6 +7083,289 @@
       ],
       "runtime_verified": false,
       "restricted_evidence_omitted": true
+    },
+    {
+      "id": "CON-SALA-RESUMEN-OS",
+      "from": "SYS-SALA",
+      "to": "SYS-YOD-OS",
+      "kind": "lectura",
+      "label": "Cuántas publicaciones hay listas para lanzar (llave local sala_resumen_v1, mismo origen)",
+      "contract": "La Sala escribe en el almacenamiento del navegador {listas: entero, cuando: milisegundos} cuando su hoja contesta y lo borra con su copia local. YOD OS sólo lee, con sesión validada; acepta 0 a 999 y hasta siete días; fuera de eso muestra texto fijo. Sin títulos, textos, llaves ni red. No es una cifra en vivo ni un permiso.",
+      "contract_ids": [],
+      "status": "codigo",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "os/app.js",
+          "claim": "salaListas() y pintarSalaListas(): lectura local validada y texto fijo de respaldo.",
+          "status": "codigo"
+        },
+        {
+          "repo": "yodesarrollomx/sala-edicion",
+          "path": "sala-salida.js",
+          "claim": "recordar() escribe sala_resumen_v1 y olvidar() lo borra (PR 383, pendiente de fusión al registrar).",
+          "status": "declarado"
+        }
+      ]
+    },
+    {
+      "id": "CON-GRAFO-ACCESOS",
+      "from": "SYS-CONTROL",
+      "to": "SYS-POTENCIALES",
+      "kind": "observacion",
+      "label": "Grafo del sistema en Accesos: versión aprobada, borrador y estado de cada pieza",
+      "contract": "CTR-GRAFO-VERSIONES; sólo lectura de archivos estáticos y de la rama de datos; visible con sesión de admin. Si un archivo falta, la sección lo dice y no inventa estado.",
+      "contract_ids": [
+        "CTR-GRAFO-VERSIONES"
+      ],
+      "status": "ejecucion",
+      "runtime_verified": true,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "grafo-control.js",
+          "commit": "685ed2ccb0e1d7cf1224fe4216bc071349e7751c",
+          "claim": "Fusionado en los PR 61, 69 y 74. Visto en vivo el 12-nov-2026 con la sesión de admin de Dirección: el grafo aprobado al final de Accesos, también cuando la lista de usuarios tarda (PR 74).",
+          "status": "ejecucion"
+        }
+      ],
+      "runtime_evidence": {
+        "checked_at": "2026-11-12T19:57:00Z",
+        "scope": "Accesos publicado, abierto con la sesión de admin de Dirección en su Chrome después de fusionar el PR 74: el grafo aprobado G-20261112-1203 se ve al final de la página. No acredita el aviso de borrador con un borrador abierto.",
+        "receipt": "https://github.com/yodesarrollomx/potenciales-yod/pull/74 ; https://github.com/yodesarrollomx/potenciales-yod/commit/685ed2ccb0e1d7cf1224fe4216bc071349e7751c ; https://yodesarrollomx.github.io/potenciales-yod/grafo/versiones.json"
+      }
+    },
+    {
+      "id": "CON-GRAFO-ACTIONS",
+      "from": "SYS-CONTROL",
+      "to": "EXT-ACTIONS",
+      "kind": "automatizacion",
+      "label": "Rehacer el grafo a pedido y vigilar su estado cada hora",
+      "contract": "CTR-GRAFO-VERSIONES; el pedido es un issue de alguien con permiso de escritura; el resultado es un PR de borrador, nunca una escritura directa a la rama principal. La vigilancia sólo lee la API de GitHub y páginas estáticas.",
+      "contract_ids": [
+        "CTR-GRAFO-VERSIONES"
+      ],
+      "status": "ejecucion",
+      "runtime_verified": true,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": ".github/workflows/grafo-rehacer.yml",
+          "commit": "685ed2ccb0e1d7cf1224fe4216bc071349e7751c",
+          "claim": "Ciclo completo el 12-nov-2026: pedido, borrador en el PR 71, aprobación y publicación de G-20261112-1203 con una sola línea de aprobación y sin falso «cambió». Aprobar son dos toques porque GitHub retiene las pruebas de un PR abierto por un flujo: «Approve workflows to run» y luego «Merge pull request».",
+          "status": "ejecucion"
+        },
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": ".github/workflows/grafo-estado.yml",
+          "commit": "685ed2ccb0e1d7cf1224fe4216bc071349e7751c",
+          "claim": "La vigilancia corre por cambios y por horario; al registrar sólo se había observado una corrida por horario (16:01Z). La regularidad del reloj y la chinche automática ante una falla nueva están por comprobar.",
+          "status": "codigo"
+        }
+      ],
+      "runtime_evidence": {
+        "checked_at": "2026-11-12T19:36:41Z",
+        "scope": "Ciclo pedido → borrador → aprobación en producción: pedido de rehacer, PR 71 abierto por el flujo, pruebas aprobadas por Dirección, fusión y cierre del borrador; una línea «grafo aprobado» en el registro de grafo-datos. No acredita la regularidad del horario del vigilante.",
+        "receipt": "https://github.com/yodesarrollomx/potenciales-yod/actions/runs/43286094367 ; https://github.com/yodesarrollomx/potenciales-yod/pull/71 ; https://github.com/yodesarrollomx/potenciales-yod/actions/runs/43291902494 ; rama grafo-datos registro.jsonl"
+      }
+    },
+    {
+      "id": "CON-PRESENTACION-GRAFO",
+      "from": "SYS-INVERSION",
+      "to": "SYS-POTENCIALES",
+      "kind": "lectura",
+      "label": "Lee el grafo aprobado (recetas por audiencia y contrato del plan) para armar presentaciones y avisar si hay otra versión en trabajo",
+      "contract": "CTR-GRAFO-VERSIONES; lectura sin credenciales de archivos estáticos. El plan guardado se lee aparte, con sesión, por CON-BROKERS-PPP-SAVED. Si falta el grafo, la página lo dice y no arma nada; el aviso no pinta nada.",
+      "contract_ids": [
+        "CTR-GRAFO-VERSIONES"
+      ],
+      "status": "ejecucion",
+      "runtime_verified": true,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/yodesarrollo-board",
+          "path": "presentacion/grafo/app.mjs",
+          "commit": "888cbd0d611f777c0214daa2359bfbecc3f0b490",
+          "claim": "Fusionado en el PR 69. Visto en vivo el 12-nov-2026: el ejemplo (?demo=1) lee el grafo aprobado G-20261112-1203 y arma las tres audiencias. Por comprobar: un plan real con una sesión real y la pastilla de aviso con un borrador abierto.",
+          "status": "ejecucion"
+        }
+      ],
+      "runtime_evidence": {
+        "checked_at": "2026-11-12T20:26:18Z",
+        "scope": "Página publicada en modo ejemplo (?demo=1, sin sesión): lee el grafo aprobado G-20261112-1203 y ofrece las tres audiencias. No acredita la lectura de un plan real con sesión ni la pastilla de aviso.",
+        "receipt": "https://yodesarrollomx.github.io/yodesarrollo-board/presentacion/grafo/?demo=1&tipo=mixto&audiencia=cliente ; https://github.com/yodesarrollomx/yodesarrollo-board/pull/69"
+      }
+    },
+    {
+      "id": "CON-GRAFO-IA",
+      "from": "EXT-ACTIONS",
+      "to": "EXT-OPENAI",
+      "kind": "api",
+      "label": "Explicación de los cambios del grafo con OpenAI; se usa la primera respuesta válida entre los proveedores con clave",
+      "contract": "Se envían sólo diferencias del grafo público (cuentas y nombres de piezas); la respuesta se valida contra un esquema fijo. Sin clave o sin respuesta, el grafo se rehace igual. Costo por uso. El otro proveedor es Claude por API (CON-GRAFO-IA-CLAUDE, EXT-ANTHROPIC).",
+      "contract_ids": [],
+      "status": "codigo",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "grafo-motor/ia.py",
+          "commit": "e3217cca26d63fbaa65cf90b50c3a2958af0ad13",
+          "claim": "Código fusionado. Sin uso comprobado: al registrar, el flujo sólo tiene la clave de Claude, así que OpenAI no ha contestado ninguna vez.",
+          "status": "codigo"
+        }
+      ]
+    },
+    {
+      "id": "CON-PPP2-SERVIDOR",
+      "from": "SYS-PPP2",
+      "to": "GAS-PPP2",
+      "label": "Lee el vivero y el plan; envía datos, respuestas, palancas, aprobaciones y pruebas",
+      "kind": "api",
+      "status": "codigo",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "ppp2.js",
+          "claim": "fetch al /exec de PPP 2 con la sesión del Portero",
+          "status": "codigo",
+          "source_revision": "PR claude/ppp2-moreo (potenciales-yod)"
+        }
+      ],
+      "runtime_verified": false,
+      "contract": "CTR-PPP2",
+      "contract_ids": [
+        "CTR-PPP2"
+      ]
+    },
+    {
+      "id": "CON-PPP2-PORTERO",
+      "from": "GAS-PPP2",
+      "to": "GAS-PORTERO",
+      "label": "Canje de sesión con board=PT; el respaldo sólo si el original falla en esa llamada",
+      "kind": "lectura",
+      "status": "codigo",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "server/ppp2/PPP2.gs",
+          "claim": "canje_ con caché de 10 minutos",
+          "status": "codigo",
+          "source_revision": "PR claude/ppp2-moreo (potenciales-yod)"
+        }
+      ],
+      "runtime_verified": false,
+      "contract": "Contrato de canje del Portero (recurso=canje) sin cambios",
+      "contract_ids": []
+    },
+    {
+      "id": "CON-PPP2-LIBROS",
+      "from": "GAS-PPP2",
+      "to": "SHEET-PPP2",
+      "label": "Lee el resumen y las tablas; escribe celdas permitidas y la bitácora",
+      "kind": "persistencia",
+      "status": "codigo",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "server/ppp2/PPP2.gs",
+          "claim": "SpreadsheetApp sobre el vivero y los libros",
+          "status": "codigo",
+          "source_revision": "PR claude/ppp2-moreo (potenciales-yod)"
+        }
+      ],
+      "runtime_verified": false,
+      "contract": "CTR-PPP2",
+      "contract_ids": [
+        "CTR-PPP2"
+      ]
+    },
+    {
+      "id": "CON-PPP2-DRIVE",
+      "from": "GAS-PPP2",
+      "to": "EXT-DRIVE",
+      "label": "Copia la plantilla al sembrar un plan",
+      "kind": "persistencia",
+      "status": "codigo",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "server/ppp2/PPP2.gs",
+          "claim": "DriveApp.makeCopy de la plantilla",
+          "status": "codigo",
+          "source_revision": "PR claude/ppp2-moreo (potenciales-yod)"
+        }
+      ],
+      "runtime_verified": false,
+      "contract": "Copia en la carpeta del vivero",
+      "contract_ids": []
+    },
+    {
+      "id": "CON-GRAFO-IA-CLAUDE",
+      "from": "EXT-ACTIONS",
+      "to": "EXT-ANTHROPIC",
+      "kind": "api",
+      "label": "Explicación de los cambios del grafo con Claude por API; se usa la primera respuesta válida entre los proveedores con clave",
+      "contract": "Se envían sólo diferencias del grafo público (cuentas y nombres de piezas). Respuesta por herramienta con esquema fijo y un segundo intento si llega mal formada. Sin clave o sin respuesta, el grafo se rehace igual. Costo por uso.",
+      "contract_ids": [],
+      "status": "ejecucion",
+      "runtime_verified": true,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "grafo-motor/ia.py",
+          "commit": "e3217cca26d63fbaa65cf90b50c3a2958af0ad13",
+          "claim": "Petición con herramienta y esquema fijo, y reintento.",
+          "status": "codigo"
+        },
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": ".github/workflows/grafo-rehacer.yml",
+          "commit": "685ed2ccb0e1d7cf1224fe4216bc071349e7751c",
+          "claim": "Corridas 43283429071 y 43286094367 del 12-nov-2026 con explicación de Claude (ia=claude en el registro).",
+          "status": "ejecucion"
+        }
+      ],
+      "runtime_evidence": {
+        "checked_at": "2026-11-12T19:03:56Z",
+        "scope": "Explicación de un borrador rehecho a pedido, recibida de Claude por API y validada contra el esquema (ia=claude en el registro). No acredita a OpenAI.",
+        "receipt": "https://github.com/yodesarrollomx/potenciales-yod/actions/runs/43283429071 ; https://github.com/yodesarrollomx/potenciales-yod/actions/runs/43286094367 ; rama grafo-datos registro.jsonl"
+      }
+    },
+    {
+      "id": "CON-GRAFO-APP",
+      "from": "EXT-ACTIONS",
+      "to": "EXT-GRAFO-APP",
+      "kind": "automatizacion",
+      "label": "El flujo «Grafo · rehacer» abre el PR del borrador con el token de la App del grafo",
+      "contract": "CTR-GRAFO-VERSIONES; el token vale una hora, sólo para este repositorio, con escritura de contenido y PR, y sólo se usa para la rama grafo-borrador y su PR. Sin los secretos, todo sigue con la credencial del flujo (dos toques).",
+      "contract_ids": [
+        "CTR-GRAFO-VERSIONES"
+      ],
+      "status": "ejecucion",
+      "runtime_verified": true,
+      "runtime_evidence": {
+        "checked_at": "2026-11-13T02:03:10Z",
+        "scope": "Un borrador real (G-20261112-1900) abierto por la App: pruebas sin aprobación manual y aprobado con un solo toque. No acredita la rotación de la llave.",
+        "receipt": "https://github.com/yodesarrollomx/potenciales-yod/pull/97 ; https://github.com/yodesarrollomx/potenciales-yod/issues/96"
+      },
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": ".github/workflows/grafo-rehacer.yml",
+          "commit": "6b5cc19a0ff4cecc17ff230e843de853df2045e2",
+          "claim": "Uso del token de la App sólo en el paso del borrador.",
+          "status": "codigo"
+        },
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": ".github/workflows/grafo-rehacer.yml",
+          "commit": "6b5cc19a0ff4cecc17ff230e843de853df2045e2",
+          "claim": "PR 97 abierto por yod-grafo-borrador[bot]; aprobado con un toque.",
+          "status": "ejecucion"
+        }
+      ]
     }
   ],
   "processes": [
@@ -15119,6 +15633,364 @@
       "deployment": "Propuesta local previa a implementación, pendiente de revisión de contrato e integración por PR. No publicar app ni activar capacidades, políticas o automatizaciones desde este registro. La entrega privada requiere integrar atlas, fijar su commit, preparar y probar fuentes compatibles, comparar/resguardar la versión activa y actualizar el deployment existente solo con acceso verificado. Rollback de código conserva campañas, personas, acciones, eventos, políticas, respuestas y guards; no restaurar un respaldo encima de cambios posteriores."
     },
     {
+      "id": "CHG-SALA-ROAST-ROOM-20261107",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-GMAIL",
+        "EXT-ACTIONS",
+        "EXT-OPENAI",
+        "EXT-MOTORES-MEDIA",
+        "EXT-DRIVE",
+        "SYS-YOD-OS"
+      ],
+      "status": "implementado_local",
+      "authorization": "autorizado_por_chat: Dirección (7-nov-2026) decide que el Roast Room autorice las cartas de la mesa de la Sala en vivo desde ese día; veto de Alejandro y Sayri por encima; jurado Hormozi, Chris Do, Zuckerberg, especialista de etapa, Alejandro virtual y Sayri virtual; motores Sol u Opus al azar en competencia. Publicar sigue siendo sólo el clic de Dirección.",
+      "proposal": "Nuevo rol consejo en el GAS de la Sala con llave propia en CONFIG (clave_consejo) y nombre «Roast Room». Decide con accion decidir sobre cartas laminas y eje; en fusionDia_ y fusionProduccion_ la marca de un editor manda sobre la del consejo en la misma lámina. Pestañas privadas CANDADOS (reglas con origen) y CONSEJO (votos, veredictos, motor, marcador); recurso candados y accion consejo_registro. Workflow horario sala-consejo.yml corre nube/sala_consejo.py: lee la mesa como agente, juzga sólo láminas sin marca, seis jueces por carta con el mismo motor elegido al azar entre los disponibles (OpenAI gpt-6.1-sol; Anthropic claude-opus-5-5 sólo si existe su secret), oído Gemini para cortes, regla 4 de 6 sin veto de Alejandro virtual, abstención si faltan jueces o material. Freno: REGLAS consejo_activo. No publica, no usa la llave del agente para decidir, no toca la parrilla.",
+      "tests": [
+        "python3 -m unittest tests.sala_consejo_test: veredicto, veto, abstención, cartas pendientes, contrato de producción con precedencia humana y candado de llave.",
+        "node --test tests/roast-room-gas.test.cjs: rol consejo, nombre, precedencia humana en producción y mesa, rol desconocido bloqueado.",
+        "python3 nube/verificar.py: sólo sala_consejo.py decide y sólo con _clave_consejo().",
+        "Pendiente: despliegue de la versión del GAS vivo, secret SALA_CLAVE_CONSEJO, primera corrida real y su lectura en la Sala."
+      ],
+      "deployment": "Código en PR de sala-edicion. El GAS vivo se actualiza a mano en el editor (nueva versión del mismo despliegue). No acredita corrida real ni decisiones en producción.",
+      "rollback": "REGLAS consejo_activo=0 o desactivar el workflow; quitar clave_consejo de CONFIG revoca la llave. Revertir el PR y la versión del GAS. Conservar DECISIONES, CANDADOS y CONSEJO; no borrar marcas del consejo, que ceden ante cualquier marca humana posterior."
+    },
+    {
+      "id": "CHG-SALA-CORTA-20261109",
+      "components": [
+        "SYS-SALA",
+        "GAS-SALA",
+        "SHEET-SALA",
+        "SVC-SALA-PRODUCTOR",
+        "SVC-SALA-EJECUTOR",
+        "EXT-ACTIONS",
+        "EXT-DRIVE",
+        "EXT-MOTORES-MEDIA",
+        "EXT-META",
+        "EXT-OBSIDIAN",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "autorizado_por_chat: Dirección (9-nov-2026), tras el diagnóstico de la Sala (3 publicaciones en total, la última el 14-sep; mesa en 0; cortes de video de nube rechazados el 20/21/31-oct; sin copy ni publicador desde que se fue la Mac), decide en cuatro respuestas: «Paquete ya, botón después» (publicar es siempre su clic), «Pausa; primero carruseles» (video), «Al frente y en la nube» (Roast Room) y «Sí, pausa y archiva» (generador de ideas, video gratuito y automatizaciones sobrantes).",
+      "proposal": "La Sala corta: una sola línea idea → guion → láminas → paquete listo (imágenes + copy) → clic de Dirección para publicar → métricas, medida por publicaciones por semana. (1) Pausas reversibles por REGLAS: nube_ejecuta_etapas=prospecto (el ejecutor sólo rehace imágenes; escena, voz y corte en pausa) y semillero_activo=0 (regla nueva que sala_arranque respeta; por omisión sigue encendido). (2) Menos latidos: productor y ejecutor quedan sólo a mano (sirven a la línea de video en pausa; las láminas rechazadas las rehace el montador de la mesa) y la revisión agregada pasa de cada 15 minutos a diaria. Mesa, arranque, chinches, relevo y semáforo conservan su horario declarado: medido el 9-nov-2026 sobre 68 corridas de la puerta «Cada hora», GitHub entrega cada horario cada 3 a 7 horas sin importar lo declarado, así que bajar esos horarios no ordena nada y el reloj confiable del ciclo será la tarea programada del consejo (punto 4). Ningún proceso se elimina: conserva su archivo y su botón. (3) Paquete de publicación en Drive (YOD Editorial/_LISTAS PARA PUBLICAR): tomas elegidas en orden y un documento de copy; no publica. (4) El Roast Room pasa al frente y a la nube: juzga guion y láminas con CANDADOS antes de la mesa de Dirección, como tarea programada con la suscripción de Dirección, que además es el reloj del ciclo: al terminar de juzgar lanza la mesa y el arranque por workflow_dispatch para que la siguiente ronda salga enseguida; las decisiones siguen entrando sólo con la llave del consejo desde Actions. (5) Después, con su propio PR: botón Publicar en la Sala (Meta) accionado por Dirección y archivo de workflows sobrantes. Sin pagos, sin llaves nuevas en el repositorio y sin publicar por cuenta propia.",
+      "tests": [
+        "python3 -m unittest discover -s tests -p '*_test.py' en sala-edicion, con casos nuevos: semillero en pausa por regla no escribe ideas; tabla de rutinas de la revisión coincide con los horarios declarados en los workflows.",
+        "python3 nube/verificar.py y node scripts/arquitectura.cjs --check.",
+        "Lectura fresca de REGLAS tras cada cambio (nube_ejecuta_etapas, consejo_motores, semillero_activo).",
+        "Pendiente: primera publicación desde un paquete, consejo de nube con una carta real y siete días de latidos en verde."
+      ],
+      "deployment": "Las REGLAS se cambian en el Sheet y son inmediatas. Los horarios y la regla del semillero entran por PR de sala-edicion a main. El consejo de nube y el botón Publicar llevan PR y evidencia propios. Este registro no acredita publicaciones ni corridas.",
+      "rollback": "REGLAS: nube_ejecuta_etapas=voz,escena,corte,prospecto, consejo_motores=sol,opus y semillero_activo=1 (o borrar la fila). Revertir el PR de horarios restaura los latidos anteriores. Conservar DECISIONES, CANDADOS, CONSEJO, IDEAS, medios y paquetes de Drive; nada se borra, lo retirado se archiva."
+    },
+    {
+      "id": "CHG-OS-MONTON-20261109",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "GAS-PORTERO",
+        "GAS-CATALOGO",
+        "SYS-DESPACHO",
+        "SYS-POTENCIALES",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-CONTROL",
+        "SYS-MERCADO"
+      ],
+      "status": "implementado_local",
+      "authorization": "autorizado_por_chat: Dirección (9-nov-2026, 18:16 de Hermosillo), tras ver la Sala con 24 publicaciones listas: «conecta todo listo en yod os para poder publicar… no voy a publicar aún, quiero hacer montón para nunca quedarnos, quiero que vayamos armando un paquete para ir lanzando».",
+      "proposal": "YOD OS dice cuántas publicaciones hay listas para lanzar y lleva al montón de la Sala en un toque. (1) La Sala de Edición, que vive en el mismo origen, deja en el aparato la llave `sala_resumen_v1` = {listas, cuando} cada vez que su hoja contesta: sólo un número y una hora, sin títulos ni textos; la borra junto con su copia local (sala-edicion PR 383). (2) YOD OS la lee sin red y sin llaves nuevas, sólo con sesión validada, y pinta ese número en la tarjeta nueva «Publicaciones» del inicio de Dirección, en la tarjeta de la Sala del inicio de Sayri y en la puerta de la Sala de «Embudo comercial»; las tres llevan a #/embudo/sala, donde «Te toca» abre con el montón. Sin dato, con dato inválido o con más de siete días se muestra el texto fijo. (3) Al cerrar sesión YOD OS borra también las tres llaves locales que la Sala guarda de su montón. No otorga permisos, no llama a ningún backend, no cambia el catálogo ni el orden de navegación; los demás archivos sólo cambian su etiqueta de versión.",
+      "tests": [
+        "node --test tests/*.cjs, con tests/os-sala-listas.test.cjs: el número sólo se acepta entero de 0 a 999 y con menos de siete días; dato ausente, roto, del futuro o viejo usa el texto fijo; las tarjetas y la puerta llevan a #/embudo/sala; cerrar sesión borra las llaves locales de la Sala.",
+        "node scripts/arquitectura.cjs --check, node verify-os.cjs, node verify-portal.cjs, node verify-accesos.cjs, node verify-obra-app.cjs y node scripts/versiones.cjs --check.",
+        "Recorrido en navegador con datos sintéticos: sin sesión, texto fijo; con sesión y la llave, el número; al cambiar la llave desde otro documento del mismo origen, la tarjeta se actualiza.",
+        "Pendiente: verlo en el navegador de Dirección tras publicar las dos partes."
+      ],
+      "deployment": "Dos PR independientes: sala-edicion 383 (la Sala deja la llave) y este de yod-portal (YOD OS la lee). Cualquiera puede publicarse primero: sin la llave YOD OS muestra el texto fijo. Publicar no acredita la vista en el aparato de Dirección.",
+      "rollback": "Revertir el PR de yod-portal devuelve las tarjetas y la puerta anteriores; la llave local de la Sala queda sin lector y caduca sola. Sin backend ni datos que restaurar."
+    },
+    {
+      "id": "CHG-OS-BARRIDO-20261110",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-TRACK",
+        "SYS-TAREAS",
+        "SYS-OBRA",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES",
+        "SYS-OBRA-CLIENTE",
+        "SYS-MERCADO",
+        "SYS-CONTROL",
+        "GAS-PORTERO",
+        "GAS-CATALOGO"
+      ],
+      "status": "implementado_local",
+      "authorization": "autorizado_por_chat: Dirección (10-nov-2026, mañana de Hermosillo), tras el barrido de uso real de YOD OS, eligió «Arreglos técnicos 1–6 (Recomendado)» y «Limpieza de datos 7–9». Pidió mejoras fáciles «sin una reestructuración general, sino un cierto acomodo».",
+      "proposal": "Cuatro fallas vistas en el navegador de Dirección el 10-nov-2026 y reproducidas dos veces, corregidas sin reestructurar. (1) Codesarrollos (track-codesarrollos.html): la lectura del Control Maestro tardaba ~8 s y el plazo era de 8 s; se cortaba y decía «Track temporalmente no disponible · ningún destino habilitado», que era falso. Ahora espera 30 s, reintenta una vez sola, ofrece un botón «Reintentar», no reintenta un rechazo de sesión y crea el mapa una sola vez. (2) Inicio (os/adapters/operations.js): MOAC guarda el día como «Miércoles 7»; el adaptador sólo aceptaba el número al principio, así que las 28 tareas abiertas salían «Sin fecha» y el resumen decía 0 vencidas mientras MOAC marcaba 25 atrasadas. dueDate() busca el número en cualquier parte, igual que getDayNumber() de board-aurum; con los datos del día quedan 26 vencidas y 2 sin fecha, como en MOAC. (3) Obra en vivo (obra.html) abría sin el marco: sin menú ni «Atrás». Carga os/shell.css y os/shell.js como los demás tableros (después de su chinche, que el marco no duplica) y conserva su fondo oscuro dentro del marco; obra-app, la del cliente, sigue sin marco. (4) El Despacho: en «Ver todo» la barra de autones tapaba la tarjeta «Tu despacho» y su botón; con la barra visible la tarjeta sube a top:104px como al caminar (office-entry.css?v=127). (5) En Personas y accesos el menú del marco iluminaba «PPP»; ahora ilumina «Personas y accesos» y la miga lo dice; el candado sigue con el tablero real. No cambia permisos, catálogo, orden del menú, backends ni datos. Los demás archivos sólo cambian su etiqueta de versión (20261110-barrido).",
+      "tests": [
+        "node --test tests/*.cjs, con tests/os-fechas-moac.test.cjs (4 pruebas: «Miércoles 7», formatos anteriores, sin fecha y resumen; 2 fallan con el código anterior) y tests/os-barrido-20261110.test.cjs (4 pruebas estáticas de Codesarrollos, Obra, Despacho y Accesos).",
+        "node scripts/arquitectura.cjs --check, node scripts/versiones.cjs --check, node verify-os.cjs, node verify-portal.cjs, node verify-accesos.cjs y node verify-obra-app.cjs.",
+        "Navegador de Dirección antes de publicar: Codesarrollos abortaba a los 7999 ms (dos veces); la fórmula nueva de fechas, aplicada a la lectura del día, da 26 vencidas y 2 sin fecha en el equipo y 7 de 7 vencidas para Alejandro; el marco inyectado en Obra pinta menú, «Atrás» y tarjetas legibles; la regla del Despacho deja la tarjeta en 164–385 px y la barra en 666–725 px (antes se enciman).",
+        "Pendiente: verlo en el navegador de Dirección tras publicar."
+      ],
+      "deployment": "Un PR de yod-portal a main (GitHub Pages). Sin Apps Script ni Sheets. Publicar no acredita la vista en el aparato de Dirección.",
+      "rollback": "Revertir el PR devuelve el plazo de 8 s, la lectura anterior de fechas, Obra sin marco, la tarjeta del Despacho abajo y el menú anterior en Accesos. Sin datos que restaurar."
+    },
+    {
+      "id": "CHG-OS-BARRIDO-MAPA-20261110",
+      "components": [
+        "SYS-TRACK",
+        "SYS-YOD-OS",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-OBRA-CLIENTE"
+      ],
+      "status": "implementado_local",
+      "authorization": "autorizado_por_chat: Dirección (10-nov-2026), mismos arreglos técnicos del barrido de YOD OS («Arreglos técnicos 1–6»). Hallado al verificar en vivo CHG-OS-BARRIDO-20261110.",
+      "proposal": "Al verificar en el navegador de Dirección el arreglo de Codesarrollos (CHG-OS-BARRIDO-20261110), los datos ya llegaban (3 proyectos, 3 pines) pero el fondo del mapa salía tapizado de «API KEY REQUIRED»: las teselas de CARTO (basemaps.cartocdn.com) ahora exigen llave. PPP ya había pasado a OpenStreetMap por la misma causa. track-codesarrollos.html usa ahora tile.openstreetmap.org con su atribución, igual que potenciales-yod. No cambia datos, permisos, catálogo ni etiquetas de versión (sólo cambia la página).",
+      "tests": [
+        "node --test tests/*.cjs, con la prueba nueva de tests/os-barrido-20261110.test.cjs (sin cartocdn y con la capa de OpenStreetMap).",
+        "node scripts/arquitectura.cjs --check, node scripts/versiones.cjs --check, node verify-os.cjs, node verify-portal.cjs, node verify-accesos.cjs y node verify-obra-app.cjs.",
+        "Pendiente: verlo en el navegador de Dirección tras publicar."
+      ],
+      "deployment": "Un PR de yod-portal a main (GitHub Pages). Sin backend.",
+      "rollback": "Revertir el PR devuelve las teselas de CARTO (que hoy piden llave). Sin datos que restaurar."
+    },
+    {
+      "id": "CHG-DESPACHO-RUTA-20261110",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-MERCADO",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-TRACK",
+        "SYS-CONTROL",
+        "GAS-PORTERO",
+        "GAS-CATALOGO",
+        "SYS-POTENCIALES"
+      ],
+      "status": "implementado_local",
+      "authorization": "autorizado_por_chat: Dirección (10-nov-2026, tarde): «me gustaría que dejara de aparecerme esa parte del despacho y me apareciera el despacho tradicional… haz un recorrido al dashboard en todos sus botones… arréglala aquí y en su código… hazle pruebas manuales».",
+      "proposal": "(1) Ruta: desde cualquier tablero envuelto, «El Despacho» del menú y del buscador del marco (os/shell.js enlace) llevaba a yod-despacho/, la Bandeja anterior (Mi trabajo / Mi corcho, mismas tareas de MOAC, Ejecutor sin corridas), que Dirección no reconocía. Ahora lleva a la cabina #/despacho, igual que app.js hrefDe dentro de YOD OS. La Bandeja sigue en «••• › Bandeja anterior y Corcho». (2) Equipo: readTeam contesta «unavailable» porque su adaptador del Portero no está instalado (despacho-equipo.md); el botón abría una ventana que no cargaba y tapaba «Volver a la sala 3D», el título del Entorno y los velos. Se monta sólo con EQUIPO_CONECTADO=true; si la lectura falla, ya no dice «Conservamos tu texto». (3) Entorno: la «×» queda fija al bajar; las ligas a demos con datos sintéticos no se ven (siguen accesibles por su dirección). (4) Plano y estado: la barra de autones ya no queda encima del plano. (5) Mesa de trabajo (sala.html): Sala y Embudo se abren en la máscara de YOD OS y MOAC en la misma pestaña, sin pestañas nuevas. (6) En la ruta del Despacho, 🌙 y ⚙️ del OS se ocultan (tapaban «Ayuda» y «Cancelar señalamiento») y 📌 sube sobre la barra. Sin cambios de permisos, datos ni backends; los demás archivos sólo cambian su etiqueta (20261110-despacho).",
+      "tests": [
+        "node --test tests/*.cjs (1403), con tests/despacho-barrido-20261110.test.cjs (7) y la prueba nueva de enlace() en tests/os-barrido-20261110.test.cjs, que falla con el código anterior.",
+        "node scripts/arquitectura.cjs --check, node scripts/versiones.cjs --check, verify-os, verify-portal, verify-accesos y verify-obra-app.",
+        "Recorrido manual en el navegador de Dirección: Equipo (readTeam unavailable en 6 s), Entorno, Plano y estado, Áreas (8 lugares), Ayuda, Opciones del autón (círculo y puesto), chinche, Mesa de trabajo; las reglas nuevas inyectadas en vivo quitan los traslapes medidos.",
+        "Pendiente: verlo en el navegador de Dirección tras publicar."
+      ],
+      "deployment": "Un PR de yod-portal a main (GitHub Pages). Sin Apps Script ni Sheets.",
+      "rollback": "Revertir el PR devuelve el enlace a la Bandeja, el botón Equipo y los estilos anteriores. Sin datos que restaurar."
+    },
+    {
+      "id": "CHG-PPP-CADENA-20261111",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-CONTROL",
+        "SYS-YOD-OS"
+      ],
+      "status": "implementado_local",
+      "authorization": "autorizado_por_chat: Dirección (11-nov-2026, 18:38 HMO): «Ponlo dentro de la misma tablero de Master Developer y de plan de potencial, porque esto al final es un diagrama del plan de potencial… yo me imagino este diagrama hasta arriba, explicando todo lo que está sucediendo abajo, así que tiene que estar referenciado hacia los cálculos y datos que estemos poniendo abajo… Empieza por el de Moreo, pero en realidad va a ser para todos».",
+      "proposal": "Diagrama en cadena arriba de cada Plan de Potencial: cuatro eslabones (1 Se vende → 2 Entra y sale → 3 En el banco y prestado → 4 Lo que queda) con notas a mano, leyendas y la línea de «antes». Pieza común nueva en potenciales-yod (ppp-cadena.js + ppp-cadena.css): sólo presentación. Un adaptador por tipo de plan traduce el estado que ya confirmó el motor del tablero (computar() o el estado nativo de Sheets) al mismo modelo de cuatro eslabones; no calcula resultados financieros, no usa la red y no guarda nada. Primera instalación: VERTICAL (mixto.html), montado después del encabezado de resultados y antes de las cinco tarjetas; recibe el mismo estado que PPPView.update al final de render(). Los botones del diagrama son las versiones que ya existen en el caso y llaman a la función del tablero (escCambiar), sin ruta nueva de escritura. Cada eslabón liga a la tarjeta de donde sale y al control que lo mueve (PPPView.reveal lo muestra sin enfocarlo). Al cambiar de versión la cadena corre 1→4; al mover un dato abajo se repinta con el «antes». ppp-intake.js vacía el diagrama mientras se captura un plan nuevo y el CSS lo oculta en los mismos modos que el encabezado de resultados. Criterio móvil restablecido en pruebas por tener ahora el diagrama arriba: las cinco tarjetas conservan su bloque (<728 px), el diagrama ocupa <0.9 pantallas y todo cabe en ≤2 pantallas (antes: cinco tarjetas en ≤1.2 pantallas). Macrolotes, Residencial, Unifamiliar y Patrimonial quedan con su contrato en docs/ppp-cadena.md y se instalan con su propio adaptador en cambios posteriores. Tipografía de las notas (Caveat 700, OFL) servida desde el propio repo. La etiqueta propia pasa a 20261111-cadena: accesos.html (SYS-CONTROL) y las demás páginas sólo cambian su etiqueta. SYS-YOD-OS: sólo este registro en el atlas; el marco no cambia. Sin backend, hojas, permisos ni datos de casos en el repositorio.",
+      "tests": [
+        "node --test tests/ppp-cadena.test.cjs: 7 pruebas; los cuatro eslabones suman lo que reporta el motor en 11 variantes sintéticas y 400 combinaciones al azar de los controles; sin estado no hay diagrama; el módulo no contiene red, almacenamiento ni motor.",
+        "node tests/ppp-cadena-browser.cjs (Chromium y WebKit, transporte sintético): montaje arriba de las cinco tarjetas, 81 controles y 40 KPI intactos, misma utilidad que el encabezado, acordeón en teléfono y cuadrícula en escritorio, versiones del caso como botones, cadena 1→4 con «antes», repetir e interrumpir, edición viva, ligas a tarjeta y control sin foco, modelo nativo, 320/390/430/1280 px, tema oscuro, cero escrituras y cero lecturas de red propias.",
+        "node --test tests/ppp-ui.test.cjs (motor byte a byte igual al de referencia) y el resto de pruebas de nodo del flujo «Verificar interfaz PPP».",
+        "Recorridos de navegador existentes del flujo «Verificar interfaz PPP», con el criterio móvil restablecido en tests/ppp-browser.cjs y tests/ppp-terrain-browser.cjs.",
+        "Paleta validada por tablero (separación para daltonismo ≥ 10 y contraste ≥ 3:1) sobre las superficies clara y oscura.",
+        "node scripts/versiones.cjs --check y git diff --check.",
+        "Pendiente: verlo en el navegador de Dirección con un caso real tras publicar; alta del caso Moréo por el flujo normal del tablero."
+      ],
+      "deployment": "Un PR de potenciales-yod a main (GitHub Pages) con el atlas fijado en el commit de esta propuesta. Sin Apps Script ni cambios de hojas.",
+      "rollback": "Revertir el PR de potenciales-yod quita el diagrama y devuelve el tablero vertical a su estado anterior (incluido el criterio móvil original de las pruebas). No hay datos, hojas ni sesiones que restaurar."
+    },
+    {
+      "id": "CHG-GRAFO-ACCESOS-20261111",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-POTENCIALES",
+        "SYS-CONTROL"
+      ],
+      "status": "publicado",
+      "approval": "Dirección, 11-nov-2026 por chat: «ponlo dentro del tablero de GitHub en la pantalla de acceso para que siempre esté presente»; al preguntar dónde: «hasta abajo, en la parte de accesos… embebido dentro del HTML que ya hay», y que marque dónde falló, lleve registro y abra una chinche. Al preguntarle qué versión subir a un repositorio público, eligió «Completa en el portal» sobre la versión limpia recomendada. A las 20:52 confirmó el permiso para registrar este cambio en el atlas y pidió, junto al grafo, «un botón que activara ya sea la clave que tenemos de OpenAI o la de Claude… que pregunten los dos, al primero que solucione, y que rehaga el grafo», preguntando al terminar si se rehace ya o queda como borrador. A las 21:25: «Hazlo todo tú completo, aprobado».",
+      "proposal": "(1) Grafo en Accesos. potenciales-yod/accesos.html agrega al final la sección «Grafo del sistema»: un marco que carga grafo/index.html (láminas estáticas), visible sólo con sesión de admin y cargado hasta que la sección entra a la vista. Qué trae: el repositorio es público y sus archivos los abre cualquiera con la liga; al preguntarlo, Dirección eligió publicar la versión completa, que además del código de los repositorios públicos y de este atlas incluye los identificadores y nombres de pestañas de las hojas de la operación (sin filas ni valores) y el plan propuesto por tablero. Nunca lleva repositorios privados, clientes externos, hallazgos de seguridad, nombres de personas, folios o nombres de tratos, correos, claves ni identificadores completos de backends /exec; una prueba del motor lo vigila. (2) Motor dentro del repositorio. grafo-motor/ guarda la base pública del grafo, sus reglas y el generador determinista de las láminas; refrescar.py vuelve a leer los repositorios públicos y este atlas (archivos, símbolos, importaciones, llamadas abreviadas a Apps Script, hojas, llaves del navegador y flujos). Las capas curadas a mano (pantallas propuestas, plan, hallazgos y pestañas de hojas) no se regeneran solas. (3) Rehacer a pedido. El botón «Rehacer grafo» de Accesos abre un issue; el flujo «Grafo · rehacer» comprueba que quien lo pide tiene permiso de escritura en el repositorio, rehace el grafo y pide a OpenAI y a Claude, a la vez, una explicación de lo que cambió: se usa la primera respuesta válida y, si no hay claves o ninguna responde, el grafo se rehace igual, sin explicación. Las claves existen sólo como secretos del flujo, nunca en una página ni en un archivo. (4) Borrador y aprobación. La rama principal está protegida, así que el grafo rehecho queda en la rama grafo-borrador con un PR: dejarlo abierto es borrador (nada publicado cambia), fusionarlo es aprobar (Pages publica el grafo nuevo y grafo/versiones.json lo marca como aprobado) y cerrarlo lo descarta. Accesos enseña el borrador sin publicarlo, pregunta si se aprueba ya o se deja en borrador y liga al PR donde se aprueba o descarta. El borrador lleva su propio registro de impacto para pasar la comprobación obligatoria de la rama principal. Si el repositorio no permite que un flujo abra PR, queda la rama y una liga para abrirlo con un toque, y el flujo lo completa. (5) Vigilancia. El flujo «Grafo · estado» corre cada hora, sólo lee la API de GitHub y páginas estáticas (ningún /exec) y escribe estado, registro y puntero de borrador en la rama de datos grafo-datos, no en la principal; marca en el grafo los flujos y páginas que fallan y los cambios aún no reflejados, y abre una chinche por cada falla. (6) Cada versión aprobada publica grafo/datos/<id>.json con el contrato del Plan de Potencial (nombres de campos, sin valores) y las recetas por audiencia que consumen las presentaciones (CHG-PRESENTACION-GRAFO-20261111). Sin cambios en portero.js, backend, hojas ni permisos.",
+      "tests": [
+        "potenciales-yod: python -m unittest discover -s grafo-motor/pruebas (recetas contra el contrato del plan, carrera de las dos IA con servidores locales, refresco sobre un repositorio sintético, versiones, avisos y láminas deterministas).",
+        "potenciales-yod: node --test tests/grafo-estado.test.cjs tests/grafo-control.test.cjs tests/accesos-admin-session.test.cjs tests/access-gates.cjs; node scripts/versiones.cjs --check; git diff --check.",
+        "Trabajo «ensayo» del flujo «Grafo · rehacer» en cada PR que toca el grafo: pruebas, láminas publicadas idénticas a las que genera el motor, rehacer en seco sin IA y presencia de las claves (sólo sí o no).",
+        "Navegador con dobles: Accesos con sesión de admin en 1280 y 390 px, con y sin borrador, vista previa del borrador sin publicarse y sin errores de JavaScript (tests/grafo-accesos-browser.cjs). Prueba «LoPublicado» del motor: sin correos, claves, folios de tratos, repositorios privados, hallazgos de seguridad ni identificadores completos de /exec.",
+        "verificar-impacto contra el atlas fijado. Pendiente de comprobar en producción después de fusionar: issue → flujo → PR de borrador, primera corrida de «Grafo · estado» (crea la rama grafo-datos) y publicación de Pages."
+      ],
+      "deployment": "Fusionado en potenciales-yod (PR 61, 62, 67, 69, 72 y 74; main en 685ed2c) y publicado por Pages. Comprobado en producción el 12-nov-2026: (a) el grafo aprobado se ve al final de Accesos con la sesión de admin de Dirección, también si la lista de usuarios tarda; (b) rehacer a pedido abre el borrador con su PR y la explicación de Claude por API; (c) aprobar publica la versión nueva (G-20261112-1203, PR 71) con una sola línea en el registro y sin falso «cambió»; aprobar era de dos toques porque GitHub retiene las pruebas de un PR abierto por un flujo; desde el 13-nov-2026 lo abre la App del grafo (EXT-GRAFO-APP) y es un toque; (d) el grafo no refleja sistemas hechos para otros clientes, aunque el atlas publique su descripción saneada (regla excluir del motor, también en el resumen del borrador, PR 72). Por comprobar: la regularidad del reloj del vigilante, la chinche automática ante una falla nueva y la respuesta de OpenAI (sin clave al registrar).",
+      "rollback": "Revertir el merge, desactivar los flujos «Grafo · rehacer» y «Grafo · estado» y borrar las ramas grafo-datos y grafo-borrador. No hay backend, hojas ni datos de negocio."
+    },
+    {
+      "id": "CHG-PRESENTACION-GRAFO-20261111",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-POTENCIALES"
+      ],
+      "status": "publicado",
+      "approval": "Dirección, 11-nov-2026 por chat: la presentación «la va a estar leyendo el último grafo… para la versión del cliente, para el dueño del terreno, para lo de los depas… opciones múltiples»; al rehacer el grafo se pregunta si se rehace ya o es borrador: «al aprobar el grafo sale automáticamente la presentación; si decimos que es sólo borrador, lo va a mantener igual»; y «en la página del Master Broker o de la presentación… una simple alerta pequeña, sin llamar mucho la atención». A las 21:25: «Hazlo todo tú completo, aprobado».",
+      "proposal": "yodesarrollo-board agrega presentacion/grafo/: una página que arma en el navegador una presentación con (a) el grafo aprobado que publica potenciales-yod (grafo/versiones.json y grafo/datos/<id>.json: recetas por audiencia y contrato del plan, sin valores) y (b) el Plan de Potencial guardado del caso, leído con la sesión de quien abre por la misma lectura recurso=caso del Mini CRM (CTR-BROKERS-MINI-CRM; sin cambios de backend). Opción múltiple de audiencia (cliente o inversionista; dueño del terreno; producto: departamentos, lotes o casas) y de extensión (completa o corta); la elección viaja en la liga. La página no calcula: cada cifra es un campo guardado del plan con su procedencia y lo que el plan no trae se muestra «No definido». Usa el formato de guion yod.storyboard.v1 y el mismo motor de dibujo de las presentaciones del PPP. Borrador y aprobado: sólo se lee el grafo aprobado; mientras un grafo rehecho está en borrador, las presentaciones y sus ligas no cambian; al aprobarse, la siguiente apertura usa el nuevo sin más pasos y quien la tiene abierta puede actualizar con un toque. Aviso discreto (presentacion/grafo-aviso.js): una pastilla pequeña en Master Brokers, Presentaciones y la propia página, visible sólo con sesión de YOD y sólo cuando hay otra versión del grafo en trabajo o una más nueva ya aprobada; el detalle aparece al tocarla. Master Brokers agrega en el cajón del plan la liga «Presentar desde el grafo». Sin escrituras, sin almacenamiento y sin secretos; nunca borra la credencial del Portero. No sustituye las presentaciones registradas del PPP (CTR-PPP-PRESENTACIONES): es una vista interna que se arma al abrirla.",
+      "tests": [
+        "yodesarrollo-board: node --test tests/ppp-grafo-presentacion.test.cjs (cada audiencia, tipo de plan y extensión arma un guion válido; cada cifra sale de un campo guardado; lo que falta queda «No definido»; ligas aceptadas; estados del aviso; páginas que lo montan; sólo lectura y sin secretos).",
+        "yodesarrollo-board: node tests/ppp-grafo-browser.cjs con dobles (tres tamaños, tres audiencias, versión corta, modo presentar, una sola lectura del plan, ejemplo sin sesión, puerta sin datos, borrador sin cambios, actualización al aprobar y pastilla en Master Brokers y Presentaciones).",
+        "Regresión: node --test tests/brokers*.test.cjs tests/ppp-*.test.cjs y las pruebas de navegador de Master Brokers, mesa de presentaciones y guion del PPP.",
+        "verificar-impacto contra el atlas fijado. Pendiente de comprobar en producción: lectura real del plan con una sesión real y los archivos del grafo ya publicados."
+      ],
+      "deployment": "Fusionado en yodesarrollo-board (PR 69, 888cbd0) y publicado por Pages. Comprobado en producción el 12-nov-2026: el ejemplo (?demo=1) lee el grafo aprobado G-20261112-1203 y arma las tres audiencias. Por comprobar: la lectura de un plan real con una sesión real y la pastilla de aviso con un borrador abierto.",
+      "rollback": "Revertir el merge. No hay backend, hojas, permisos ni datos."
+    },
+    {
+      "id": "CHG-PPP2-20261112",
+      "components": [
+        "GAS-CATALOGO",
+        "GAS-PORTERO",
+        "GAS-PPP2",
+        "SHEET-PPP2",
+        "SYS-CONTROL",
+        "SYS-DESPACHO",
+        "SYS-MERCADO",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "SYS-TRACK",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "PPP 2: un portal nuevo del Plan de Potencial que empieza de cero sin tocar el PPP actual. Cada plan es un libro de Google Sheets con todas las fórmulas (plantilla ppp2-libro-v1): tres versiones con el mismo motor de flujo mensual (ventas por producto, cobranza con enganche, pagos durante la obra y saldos al individualizar, obra en campana, capital primero, banco contra avance con tope y caja mínima, respaldo si falta dinero y devolución con rendimiento), la revisión para fondos de nueve pruebas, cinco esquemas de reparto con el dueño sobre el resultado real del flujo, las 96 preguntas del oficio ordenadas por la edad del plan, candados, hallazgos del autón, votos del consejo de planes, pruebas de estrés en una columna que se restablece y bitácora. La edad (semilla, plántula, árbol, flor, fruto) la calcula el libro. Un Apps Script aparte (GAS-PPP2, ligado al registro del vivero) valida la sesión con el Portero (board PT; el respaldo sólo si el original falla en esa llamada), escribe sólo celdas permitidas con revisión, request_id y bitácora, y no calcula finanzas; sólo admin vuelve vigente una versión. La página ppp2.html de potenciales-yod muestra el vivero y el plan vivo con lo que recibe el dueño primero, y el menú de YOD OS agrega «PPP 2» con el código PT, después de Mercado.",
+      "approval": "Dirección, 12-nov-2026 por chat: «me abras un nuevo portal de plan de potencial… ponle en el tablero PPP2… no borrar nada de lo que tenemos, pero empezar de cero»; a las 11:45, tras la propuesta esquemática y el consejo: edades con esos nombres, el PPP que se cobra lleva de plántula a árbol, la radiografía muestra primero lo que recibe el dueño, «hay que integrar jueces del oficio», «empecemos por Moreo… sigue adelante y ejecútalo tú todo completo». A las 12:41 autorizó en su navegador el acceso del servidor nuevo.",
+      "status": "implementado_local",
+      "tests": [
+        "potenciales-yod: node --test tests/ppp2-servidor.test.cjs (20: canje con board=PT y respaldo sólo ante falla, permisos por rol, rangos y claves inventadas, revisión vieja, request_id repetido, palancas y renglones calculados, aprobación sólo de Dirección, preguntas, pedidos, candados con evidencia, estrés que restablece, sembrar y pausa)",
+        "potenciales-yod: node --test tests/ppp2-libro.test.cjs (el libro de ejemplo recalculado cuadra: flujo, cobranza, unidades, ganancia y reparto)",
+        "potenciales-yod: node tests/ppp2-browser.cjs (9 recorridos: sin servidor, sin sesión, sesión rechazada sin borrar la credencial, vivero → plan, escrituras con revisión, aprobación sólo admin, lector sin controles, teléfono sin desborde, sin datos reales en la página)",
+        "yod-portal: node scripts/catalogo.cjs --check · verify-os · verify-portal · verify-accesos · node --test tests/*.cjs · node scripts/arquitectura.cjs --check",
+        "En vivo (12-nov-2026): ppp2-meta, rechazo de liga inválida vía canje y lecturas de vivero y plan con la sesión de Dirección; el primer libro recalculado por Google Sheets cuadra con el borrador (privado)."
+      ],
+      "deployment": "Apps Script nuevo «PPP 2 · servidor» ligado al registro del vivero, versión 1 como implementación propia (proyecto nuevo); futuras versiones siempre con «Nueva versión» sobre la misma implementación. Página y menú por GitHub Pages al integrar los PR de potenciales-yod y yod-portal. Rollback: revertir los PR; el servidor puede quedar en sólo lectura con Config!pausa.",
+      "invariants": [
+        "El PPP actual y el Portero no cambian.",
+        "Sin fórmulas financieras fuera del libro.",
+        "Repo y atlas públicos sin nombres de planes, cifras ni identificadores de libros o /exec."
+      ]
+    },
+    {
+      "id": "CHG-ATLAS-GRAFO-VIVO-20261112",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-POTENCIALES",
+        "SYS-INVERSION",
+        "EXT-ACTIONS",
+        "EXT-OPENAI",
+        "EXT-ANTHROPIC"
+      ],
+      "proposal": "Poner el atlas al día con lo comprobado en producción el 12-nov-2026 para el grafo del sistema (CHG-GRAFO-ACCESOS-20261111) y la presentación desde el grafo (CHG-PRESENTACION-GRAFO-20261111): ambos pasan a publicado con lo comprobado y lo que falta; las conexiones CON-GRAFO-ACCESOS, CON-GRAFO-ACTIONS y CON-PRESENTACION-GRAFO pasan a ejecución con recibo fechado y alcance; Claude por API entra como componente externo EXT-ANTHROPIC (área Soporte técnico, inventario de salud) con la conexión CON-GRAFO-IA-CLAUDE; CON-GRAFO-IA (OpenAI) queda en código sin uso comprobado; CTR-GRAFO-VERSIONES agrega la exclusión de sistemas hechos para otros clientes y los dos toques para aprobar un borrador abierto por un flujo. Sólo documentación; sin cambios de código, permisos, backend ni hojas.",
+      "approval": "Dirección, 12-nov-2026 por chat: «hazlo tu tienes mi autorización para todo proceso necesario en github» y, tras ver el grafo en Accesos y la presentación, «que sigue en el plan adelante», con el atlas al día como siguiente punto del plan registrado en el Buzón (GRAFO-07).",
+      "status": "publicado",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "node verify-os.cjs · node verify-portal.cjs · node verify-accesos.cjs · node verify-obra-app.cjs",
+        "verificar-impacto contra origin/main"
+      ],
+      "deployment": "Fusionado en yod-portal (PR 355, f6f342b) y publicado por Pages el 12-nov-2026.",
+      "rollback": "Revertir el PR; no toca código ni producción."
+    },
+    {
+      "id": "CHG-PANORAMA-REFRESCO-20261112",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES"
+      ],
+      "status": "implementado_local",
+      "approval": "Dirección pide que las chinches se corrijan, no sólo que se registren (chinche 76 de potenciales-yod, 12-nov-2026: falló el paso «Recorrido real y encuentro por cercanía» del flujo «Conocimiento del Despacho»).",
+      "proposal": "Sólo prueba y automatización; la escena del Despacho no cambia. La prueba scripts/probar-oficina-panoramica-browser.cjs refresca cada 5 s la observación sintética del residente para que no se vaya a los 90 s; cada refresco repinta la pantalla del puesto sin trabajo, y si cae entre la carga del trabajo sintético y la lectura (unos 300 ms) la cuenta sale vacía en lugar de «1/2 para revisar». Falló así en tres corridas (2-nov intento 1 de un PR y push a main, 12-nov push a main) y el mismo commit pasó al volver a correr. Arreglo: la prueba pausa ese refresco mientras revisa la pantalla y su captura, y lo reanuda después. Además el flujo corre en push a main cuando cambian sus pruebas de navegador (las mismas rutas que ya lo disparan en PR), para que el arreglo se compruebe en main al fusionarse.",
+      "tests": [
+        "Reproducción enfocada local con Chromium (misma escena y mismo fixture): sin pausa, un refresco deja la cuenta vacía; con pausa, 0 refrescos en 5,6 s y la cuenta se conserva.",
+        "Flujo «Conocimiento del Despacho» en el PR y, tras fusionar, en push a main.",
+        "node scripts/arquitectura.cjs --check · node --test tests/*.cjs · node verify-os.cjs · node verify-portal.cjs · node verify-accesos.cjs · node verify-obra-app.cjs"
+      ],
+      "deployment": "Sin despliegue: sólo prueba y flujo de CI. Se da por cerrado cuando el flujo pase en main.",
+      "rollback": "Revertir el PR; la prueba vuelve a refrescar sin pausa y el flujo a sus rutas anteriores."
+    },
+    {
+      "id": "CHG-ATLAS-GRAFO-APP-20261113",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-POTENCIALES",
+        "EXT-ACTIONS",
+        "EXT-GRAFO-APP"
+      ],
+      "proposal": "Registrar la GitHub App del grafo (EXT-GRAFO-APP) y su conexión con el flujo de rehacer (CON-GRAFO-APP), y poner al día lo que decía «dos toques»: desde el 13-nov-2026 aprobar un borrador es un toque. Marca como publicado CHG-ATLAS-GRAFO-VIVO-20261112. Sólo documentación.",
+      "approval": "Dirección, 12-nov-2026 por chat (DEC-21): «Hazlo todo tú, yo sólo doy un click final para aprobar» y «Sigue con eso que no nos falte nada».",
+      "status": "implementado_local",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "verificar-impacto contra origin/main"
+      ],
+      "deployment": "Se publica al fusionar el PR en yod-portal.",
+      "rollback": "Revertir el PR; la App se revoca aparte (organización → GitHub Apps)."
+    },
+    {
+      "id": "CHG-MASTERBROKERS-PORTAL-INTEGRATED",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-CRM",
+        "SHEET-CRM",
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección solicita18-oct integrar en el board YOD OS la experiencia del prototipo, con todo lo existente, completar publicación y bitácora. Conserva fuentes y alcances autorizados; no publica datos privados en Git.",
+      "proposal": "Misma entrada brokers.html y contrato brokers.v1: MD abre equipo y cartera propia, broker abre únicamente su cartera validada. Un renglón por contacto; al abrirlo muestra asuntos separados, historial agregado con fuente y PPP por asunto. Responsable, etapa, último hecho y siguiente compromiso provienen de los registros, sin inventar estados agregados o finanzas. Breadcrumbs y URL conservan navegación autorizada, nunca otorgan permisos. Se conserva la vista de comparación de asuntos como herramienta opcional. Reutiliza edición, guardado idempotente/readback, agenda/reprogramación, acuerdos, documentos, presentación común, evaluación y retorno recuperable de PR43. No importa fixtures de la muestra pública ni crea otra base. La conexión real utiliza sesión existente de YOD OS; no se crea otro acceso. Preservar cambios concurrentes de roles/beneficios/pregunta clave del encargado original.",
+      "tests": [
+        "Proyección por contacto/expediente, responsable nominal, última actividad real y sin mezclar carteras; no duplicar personas por varios asuntos.",
+        "Navegador320/390/1440: MD→broker→cliente→asunto→PPP/historial/avance, regreso y recarga; broker aislado, sesión revocada, datos sintéticos sólo en pruebas.",
+        "Regresiones de edición, nueva oportunidad/contacto, guardado con ACK viejo, agenda y reprogramación, presentación, acuerdos y retorno evaluador en Chromium/WebKit.",
+        "Atlas, manifiesto/pin, CI, bytes publicados y recorrido autenticado se comprueban por separado."
+      ],
+      "deployment": "Propuesta antes de implementar. Mantener separadas implementación, publicación y QA autenticada; la ausencia de sesión de prueba no acredita lectura privada.",
+      "rollback": "Revertir sólo interfaz y manifiestos; conservar todas las fuentes, IDs, historia, acuerdos, PPP, datos y permisos."
+    },
+    {
+      "id": "CHG-PPP40-SEMILLA-20261029",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SHEET-PPP-MODELOS",
+        "SVC-AUTON-CLOUD",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "authorization": "Continuidad PPP4 y primera versión solicitadas explícitamente por Dirección en conversación; plan canónico aportado localmente. Sin autorización derivada de este archivo.",
+      "proposal": "PPP4 incremental: catálogo literal, grafo puro y semilla incompleta versionada dentro del frontend existente. Persistencia propuesta por módulo opt-in en la MISMA implementación GAS y tablas del master. Sin nueva URL, ACL, segundo motor financiero ni datos privados. Seed_id pre-alta es identidad de borrador, no board_case_id; promoción debe preservar vínculo explícito y no se presenta implementada.",
+      "tests": [
+        "Semilla incompleta preserva null y fuente literal; superficie conocida debe ser positiva. Estado durable requiere recibo y lectura; el grafo distingue cero de ausencia.",
+        "ACL vertical existente, revisión/CAS, repetición/payload mismatch y recuperación por lectura sin segundo POST.",
+        "Catálogo 18 módulos/96 preguntas extraído sin convertir texto en reglas; grafo separa pertenencia y cálculo, rechaza ciclos.",
+        "UI descarta respuesta al cambiar identidad/revisión; propuesta sólo manualmente confirmada; conexión ausente no simula éxito.",
+        "Agente real, promoción a caso, calendario y recorrido online aún requieren integración/QA antes de nivel Básico."
+      ],
+      "deployment": "Candidato local en preparación. No integrado ni publicado; G0–G4 no acreditados.",
+      "rollback": "Revertir commits de consumidores y desactivar capacidad semilla en la implementación existente. Preservar semillas, casos, recibos e historia; no borrar ni restaurar libros."
+    },
+    {
       "id": "CHG-OS-UI-CONSISTENCY-20261106",
       "components": [
         "SYS-YOD-OS",
@@ -17559,6 +18431,63 @@
         "La agrupación inicial se limita a persona evaluada y grupo de relaciones fijado por política; no filtros arbitrarios ni combinaciones que permitan reconstruir valores suprimidos por resta.",
         "El informe usa una copia privada de los datos elegibles o un agregado materializado con fuente fijada; no reconstruye un corte histórico consultando datos cambiantes o usando UPDATED como fecha de cierre.",
         "Sin validación de comparabilidad de instrumento, política y denominadores se muestran fichas/cortes separados, no curvas de mejora ni comparaciones inferidas."
+      ]
+    },
+    {
+      "id": "CTR-GRAFO-VERSIONES",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-CONTROL",
+        "SYS-INVERSION",
+        "EXT-ACTIONS",
+        "EXT-GRAFO-APP"
+      ],
+      "source": "Archivos estáticos que publica potenciales-yod y su rama de datos grafo-datos. Publicado (potenciales-yod PR 61 y siguientes; yodesarrollo-board PR 69) y comprobado en producción el 12-nov-2026 con la versión aprobada G-20261112-1203.",
+      "input": [
+        "grafo/versiones.json: esquema, aprobado, actualizado, versiones[id, armado, fecha, estado, huella, piezas, ligas, repos, nota]",
+        "grafo/datos/<id>.json: esquema, id, armado, huella, ppp (por tipo de plan: nombres de resultados y entradas), recetas (audiencias, escenas, datos, objetos, formatos), sin_campo",
+        "rama grafo-datos · borrador.json: id, fecha, pr, liga, rama, antes, piezas, ligas, titulo, resumen, recomendacion, ia, audiencias, sin_campo",
+        "rama grafo-datos · estado.json y registro.jsonl: estado observado por pieza, chinches abiertas y bitácora"
+      ],
+      "output": [
+        "Versión aprobada del grafo y su historial",
+        "Borrador en revisión, cuando lo hay",
+        "Recetas por audiencia y contrato del plan para armar presentaciones",
+        "Estado observado de cada pieza del sistema"
+      ],
+      "invariants": [
+        "Lo publicado es la versión completa que eligió Dirección (identificadores y pestañas de hojas y plan propuesto), y nunca lleva repositorios privados, clientes externos, hallazgos de seguridad, nombres de personas, folios o nombres de tratos, correos, claves ni identificadores completos de backends /exec",
+        "Nunca refleja sistemas hechos para otros clientes, aunque este atlas publique su descripción saneada: la regla excluir del motor los saca en cada refresco y en el resumen de cada borrador",
+        "El grafo aprobado sólo cambia al fusionar el PR del borrador; un borrador nunca altera lo publicado",
+        "Aprobar es fusionar el PR del borrador. Lo abre la App del grafo (EXT-GRAFO-APP) y basta «Merge pull request»; si faltan sus secretos, lo abre el flujo y GitHub pide antes «Approve workflows to run»",
+        "Quien consume lee únicamente el aprobado; el borrador es informativo",
+        "Las recetas no traen cifras ni cálculo: nombran campos guardados del plan y lo ausente se muestra como no definido",
+        "Las claves de IA viven sólo como secretos del flujo; no aparecen en archivos, páginas ni registros",
+        "La rama de datos no se sirve por Pages y escribir en ella no dispara otros flujos"
+      ]
+    },
+    {
+      "id": "CTR-PPP2",
+      "components": [
+        "SYS-PPP2",
+        "GAS-PPP2",
+        "SHEET-PPP2"
+      ],
+      "source": "server/ppp2/PPP2.gs (ppp2-servidor-v1) y ppp2/libro/generar.py (ppp2-libro-v1) en potenciales-yod; docs/ppp2.md.",
+      "input": [
+        "GET ppp2-meta sin credencial; ppp2-vivero y ppp2-plan con k = sesión del Portero (board PT).",
+        "POST text/plain JSON: ppp2-dato, ppp2-producto, ppp2-palanca, ppp2-version, ppp2-responder, ppp2-investigar, ppp2-hallazgo, ppp2-candado, ppp2-reparto, ppp2-estres y ppp2-sembrar, con request_id y la revisión vista."
+      ],
+      "output": [
+        "Resumen clave → valor del libro, tablas del plan y la serie mensual del dinero de las tres versiones.",
+        "Cada escritura devuelve la revisión nueva y el resumen recalculado por el libro; deja renglón en la Bitácora."
+      ],
+      "invariants": [
+        "Ninguna fórmula financiera fuera del libro; el servidor sólo escribe celdas permitidas y lee lo calculado.",
+        "Sólo admin vuelve vigente una versión; admin y editor capturan; quien tiene PT lee.",
+        "Una revisión vieja no sobrescribe; el mismo request_id no escribe dos veces.",
+        "El PPP actual, sus motores y el Portero no cambian; el respaldo del Portero no se guarda como destino.",
+        "La página no lleva datos de planes ni identificadores de libros."
       ]
     }
   ],
@@ -20245,6 +21174,98 @@
       "components": [
         "SYS-MERCADO"
       ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "ppp2.html",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "ppp2.js",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "GAS-PPP2"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "ppp2.css",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "ppp2/",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "SHEET-PPP2"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "server/ppp2/",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "GAS-PPP2",
+        "SHEET-PPP2"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "tests/ppp2-browser.cjs",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "GAS-PPP2",
+        "SHEET-PPP2"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "tests/ppp2-libro.test.cjs",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "SHEET-PPP2"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "tests/ppp2-mundo.cjs",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "GAS-PPP2",
+        "SHEET-PPP2"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "tests/ppp2-servidor.test.cjs",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "GAS-PPP2",
+        "SHEET-PPP2"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "tests/fixtures/ppp2-libro-ejemplo.json",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "SHEET-PPP2"
+      ]
     }
   ],
   "office_coverage": {
@@ -20352,7 +21373,10 @@
           "SYS-POTENCIALES",
           "SHEET-PPP-MODELOS",
           "SYS-DESPACHO-3D",
-          "SYS-MERCADO"
+          "SYS-MERCADO",
+          "SYS-PPP2",
+          "GAS-PPP2",
+          "SHEET-PPP2"
         ]
       },
       {
@@ -20465,9 +21489,11 @@
           "EXT-GITHUB-PUBLISHER-APP",
           "SVC-AUTON-CLOUD",
           "EXT-OPENAI",
+          "EXT-ANTHROPIC",
           "EXT-RENDER",
           "SVC-HORARIOS-CLOUD",
-          "STORE-HORARIOS-CLOUD"
+          "STORE-HORARIOS-CLOUD",
+          "EXT-GRAFO-APP"
         ]
       }
     ]

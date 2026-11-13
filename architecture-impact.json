@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-11-06.ui-consistency.1",
+  "model_revision": "2026-11-13.ui-consistencia.1",
   "proposal_id": "CHG-OS-UI-CONSISTENCY-20261106",
-  "summary": "Homologar búsqueda por nombre/código y teclado, corregir consulta residual al reabrir y saludo vacío; completar estado accesible, foco y cierre del menú móvil compartido. Sin cambios de identidad, ACL, datos, endpoints ni catálogo.",
+  "summary": "Homologar búsqueda por nombre/código y teclado, corregir consulta residual al reabrir y saludo vacío; completar estado accesible, foco y cierre del menú móvil compartido. Sin cambios de identidad, ACL, datos, endpoints ni catálogo. (13-nov-2026: reaplicado sobre main; etiqueta de versión 20261113-ui-consistencia.)",
   "components": [
     "SYS-YOD-OS",
     "SYS-MERCADO",

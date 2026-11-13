@@ -501,6 +501,18 @@
       "repo": "alexpueblag/yod-agent-cloud"
     },
     {
+      "id": "EXT-GRAFO-APP",
+      "nombre": "GitHub App · YOD Grafo borrador",
+      "tipo": "servicio_externo",
+      "repo": "yodesarrollomx/potenciales-yod"
+    },
+    {
+      "id": "EXT-ANTHROPIC",
+      "nombre": "Claude · API de Anthropic",
+      "tipo": "servicio_externo",
+      "repo": "yodesarrollomx/potenciales-yod"
+    },
+    {
       "id": "EXT-RENDER",
       "nombre": "Render · alojamiento del motor",
       "tipo": "infraestructura",
@@ -547,6 +559,24 @@
       "nombre": "Mercado Hermosillo 2020–2030",
       "tipo": "tablero",
       "repo": "yodesarrollomx/yod-portal"
+    },
+    {
+      "id": "SYS-PPP2",
+      "nombre": "PPP 2 · el vivero de planes",
+      "tipo": "tablero",
+      "repo": "yodesarrollomx/potenciales-yod"
+    },
+    {
+      "id": "GAS-PPP2",
+      "nombre": "PPP 2 · servidor",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/potenciales-yod"
+    },
+    {
+      "id": "SHEET-PPP2",
+      "nombre": "PPP 2 · vivero y libros de plan",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/potenciales-yod"
     }
   ],
   "processes": [

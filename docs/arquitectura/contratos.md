@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-06.ui-consistency.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-13.ui-consistencia.1 · 2026-10-20.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -1212,3 +1212,32 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - La agrupación inicial se limita a persona evaluada y grupo de relaciones fijado por política; no filtros arbitrarios ni combinaciones que permitan reconstruir valores suprimidos por resta.
 - El informe usa una copia privada de los datos elegibles o un agregado materializado con fuente fijada; no reconstruye un corte histórico consultando datos cambiantes o usando UPDATED como fecha de cierre.
 - Sin validación de comparabilidad de instrumento, política y denominadores se muestran fichas/cortes separados, no curvas de mejora ni comparaciones inferidas.
+
+## CTR-GRAFO-VERSIONES
+
+- Componentes: SYS-POTENCIALES, SYS-CONTROL, SYS-INVERSION, EXT-ACTIONS, EXT-GRAFO-APP.
+- Evidencia: Archivos estáticos que publica potenciales-yod y su rama de datos grafo-datos. Publicado (potenciales-yod PR 61 y siguientes; yodesarrollo-board PR 69) y comprobado en producción el 12-nov-2026 con la versión aprobada G-20261112-1203..
+- Entrada/campos: `grafo/versiones.json: esquema, aprobado, actualizado, versiones[id, armado, fecha, estado, huella, piezas, ligas, repos, nota]`, `grafo/datos/<id>.json: esquema, id, armado, huella, ppp (por tipo de plan: nombres de resultados y entradas), recetas (audiencias, escenas, datos, objetos, formatos), sin_campo`, `rama grafo-datos · borrador.json: id, fecha, pr, liga, rama, antes, piezas, ligas, titulo, resumen, recomendacion, ia, audiencias, sin_campo`, `rama grafo-datos · estado.json y registro.jsonl: estado observado por pieza, chinches abiertas y bitácora`.
+- Salida: Versión aprobada del grafo y su historial, Borrador en revisión, cuando lo hay, Recetas por audiencia y contrato del plan para armar presentaciones, Estado observado de cada pieza del sistema.
+
+- Lo publicado es la versión completa que eligió Dirección (identificadores y pestañas de hojas y plan propuesto), y nunca lleva repositorios privados, clientes externos, hallazgos de seguridad, nombres de personas, folios o nombres de tratos, correos, claves ni identificadores completos de backends /exec
+- Nunca refleja sistemas hechos para otros clientes, aunque este atlas publique su descripción saneada: la regla excluir del motor los saca en cada refresco y en el resumen de cada borrador
+- El grafo aprobado sólo cambia al fusionar el PR del borrador; un borrador nunca altera lo publicado
+- Aprobar es fusionar el PR del borrador. Lo abre la App del grafo (EXT-GRAFO-APP) y basta «Merge pull request»; si faltan sus secretos, lo abre el flujo y GitHub pide antes «Approve workflows to run»
+- Quien consume lee únicamente el aprobado; el borrador es informativo
+- Las recetas no traen cifras ni cálculo: nombran campos guardados del plan y lo ausente se muestra como no definido
+- Las claves de IA viven sólo como secretos del flujo; no aparecen en archivos, páginas ni registros
+- La rama de datos no se sirve por Pages y escribir en ella no dispara otros flujos
+
+## CTR-PPP2
+
+- Componentes: SYS-PPP2, GAS-PPP2, SHEET-PPP2.
+- Evidencia: server/ppp2/PPP2.gs (ppp2-servidor-v1) y ppp2/libro/generar.py (ppp2-libro-v1) en potenciales-yod; docs/ppp2.md..
+- Entrada/campos: `GET ppp2-meta sin credencial; ppp2-vivero y ppp2-plan con k = sesión del Portero (board PT).`, `POST text/plain JSON: ppp2-dato, ppp2-producto, ppp2-palanca, ppp2-version, ppp2-responder, ppp2-investigar, ppp2-hallazgo, ppp2-candado, ppp2-reparto, ppp2-estres y ppp2-sembrar, con request_id y la revisión vista.`.
+- Salida: Resumen clave → valor del libro, tablas del plan y la serie mensual del dinero de las tres versiones., Cada escritura devuelve la revisión nueva y el resumen recalculado por el libro; deja renglón en la Bitácora..
+
+- Ninguna fórmula financiera fuera del libro; el servidor sólo escribe celdas permitidas y lee lo calculado.
+- Sólo admin vuelve vigente una versión; admin y editor capturan; quien tiene PT lee.
+- Una revisión vieja no sobrescribe; el mismo request_id no escribe dos veces.
+- El PPP actual, sus motores y el Portero no cambian; el respaldo del Portero no se guarda como destino.
+- La página no lleva datos de planes ni identificadores de libros.

@@ -28,6 +28,12 @@
       'https://tableros.yodesarrollo.mx/yod-portal/mercado/hermosillo-2020-2030/',
       'https://alexpueblag.github.io/yod-portal/mercado/hermosillo-2020-2030/'
     ],
+    /* PPP 2 (CHG-PPP2-20261112): página aparte dentro de potenciales-yod. */
+    'SYS-PPP2':[
+      'https://yodesarrollomx.github.io/potenciales-yod/ppp2.html',
+      'https://tableros.yodesarrollo.mx/potenciales-yod/ppp2.html',
+      'https://alexpueblag.github.io/potenciales-yod/ppp2.html'
+    ],
     'SYS-TRACK':[
       'https://yodesarrollomx.github.io/yod-portal/track-codesarrollos.html',
       'https://tableros.yodesarrollo.mx/yod-portal/track-codesarrollos.html',
