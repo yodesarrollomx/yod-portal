@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-13.ppp40-semilla.1",
+  "revision": "2026-11-13.ui-consistencia.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -15989,6 +15989,29 @@
       ],
       "deployment": "Candidato local en preparación. No integrado ni publicado; G0–G4 no acreditados.",
       "rollback": "Revertir commits de consumidores y desactivar capacidad semilla en la implementación existente. Preservar semillas, casos, recibos e historia; no borrar ni restaurar libros."
+    },
+    {
+      "id": "CHG-OS-UI-CONSISTENCY-20261106",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-MERCADO",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-TRACK",
+        "SYS-CONTROL",
+        "GAS-PORTERO",
+        "SYS-DESPACHO",
+        "GAS-CATALOGO",
+        "SYS-POTENCIALES"
+      ],
+      "proposal": "Homologar búsqueda por nombre/código y teclado, corregir consulta residual al reabrir y saludo vacío; completar estado accesible, foco y cierre del menú móvil compartido. Sin cambios de identidad, ACL, datos, endpoints ni catálogo. Los consumidores de etiquetas sólo reciben actualización de versión; conservan comportamiento.",
+      "status": "propuesto",
+      "tests": [
+        "Regresiones sintéticas de búsqueda Enter/cerrar/reapertura y nombres con acentos/códigos.",
+        "Menú móvil: aria-expanded, foco circular, Escape, retorno de foco y transición escritorio.",
+        "Checks de arquitectura, suite Node y verificadores de portal. Recorrido público de destinos canónicos; sesión interna pendiente."
+      ],
+      "deployment": "Implementación aislada y PR antes de integración. Producción y recorrido autenticado se acreditan por separado. Reversión del PR sin modificar datos ni permisos."
     }
   ],
   "data_contracts": [

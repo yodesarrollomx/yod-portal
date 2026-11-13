@@ -1,21 +1,27 @@
 {
-  "model_revision": "2026-11-13.ppp40-semilla.1",
-  "proposal_id": "CHG-PPP40-SEMILLA-20261029",
-  "summary": "PPP4 incremental: catálogo literal, grafo puro y semilla incompleta versionada dentro del frontend existente. Persistencia propuesta por módulo opt-in en la MISMA implementación GAS y tablas del master. Sin nueva URL, ACL, segundo motor financiero ni datos privados. Seed_id pre-alta es identidad de borrador, no board_case_id; promoción debe preservar vínculo explícito y no se presenta implementada.",
+  "model_revision": "2026-11-13.ui-consistencia.1",
+  "proposal_id": "CHG-OS-UI-CONSISTENCY-20261106",
+  "summary": "Homologar búsqueda por nombre/código y teclado, corregir consulta residual al reabrir y saludo vacío; completar estado accesible, foco y cierre del menú móvil compartido. Sin cambios de identidad, ACL, datos, endpoints ni catálogo. (13-nov-2026: reaplicado sobre main; etiqueta de versión 20261113-ui-consistencia.)",
   "components": [
-    "SYS-POTENCIALES",
+    "SYS-YOD-OS",
+    "SYS-MERCADO",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "SYS-TRACK",
+    "SYS-CONTROL",
     "GAS-PORTERO",
-    "SHEET-PORTERO",
-    "SHEET-PPP-MODELOS",
-    "SVC-AUTON-CLOUD",
-    "SYS-YOD-OS"
+    "SYS-DESPACHO",
+    "GAS-CATALOGO",
+    "SYS-POTENCIALES"
   ],
   "tests": [
-    "Semilla incompleta preserva null y fuente literal; superficie conocida debe ser positiva. Estado durable requiere recibo y lectura; el grafo distingue cero de ausencia.",
-    "ACL vertical existente, revisión/CAS, repetición/payload mismatch y recuperación por lectura sin segundo POST.",
-    "Catálogo 18 módulos/96 preguntas extraído sin convertir texto en reglas; grafo separa pertenencia y cálculo, rechaza ciclos.",
-    "UI descarta respuesta al cambiar identidad/revisión; propuesta sólo manualmente confirmada; conexión ausente no simula éxito.",
-    "Agente real, promoción a caso, calendario y recorrido online aún requieren integración/QA antes de nivel Básico."
+    "node scripts/arquitectura.cjs --check",
+    "node --test tests/*.cjs",
+    "node verify-os.cjs",
+    "node verify-portal.cjs",
+    "node verify-accesos.cjs",
+    "node verify-obra-app.cjs",
+    "git diff --check"
   ],
-  "rollback": "Revertir commits de consumidores y desactivar capacidad semilla en la implementación existente. Preservar semillas, casos, recibos e historia; no borrar ni restaurar libros."
+  "rollback": "Revertir el PR y regenerar vistas/versiones; conservar datos, identidad, permisos e historial."
 }

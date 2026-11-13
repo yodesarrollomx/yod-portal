@@ -53,7 +53,7 @@
   /* La dirección del Portero vive SOLO en os/yod-acceso.js. Si la página no la
      cargó, se pide aquí (misma carpeta que este archivo) antes del primer canje. */
   var ACCESO_LISTO = window.YOD_PORTERO ? Promise.resolve() : new Promise(function (ok) {
-    var sc = document.createElement('script'); sc.src = SELF.replace(/shell\.js(\?.*)?$/, 'yod-acceso.js?v=20261112-ppp2');
+    var sc = document.createElement('script'); sc.src = SELF.replace(/shell\.js(\?.*)?$/, 'yod-acceso.js?v=20261113-ui-consistencia');
     sc.onload = sc.onerror = function () { ok(); }; document.head.appendChild(sc);
   });
   /* El ORIGINAL siempre primero; el respaldo solo si aquel falla en esta
@@ -383,7 +383,7 @@
   }
   function boot() {
     // registro de proyectos (folio): lo usan el buscador ⌘K y la chinche
-    if (!window.YodProyectos) { var sp = document.createElement('script'); sp.src = SELF.replace(/shell\.js(\?.*)?$/, 'proyectos.js?v=20261112-ppp2'); document.head.appendChild(sp); }
+    if (!window.YodProyectos) { var sp = document.createElement('script'); sp.src = SELF.replace(/shell\.js(\?.*)?$/, 'proyectos.js?v=20261113-ui-consistencia'); document.head.appendChild(sp); }
     if (document.querySelector('.yod-shell')) return;
     /* Los íconos de la barra son de Tabler: los tableros que no traían su hoja (MOAC)
        mostraban botones vacíos. El marco la carga él mismo, y las fuentes de la marca. */
@@ -422,8 +422,8 @@
     document.body.appendChild(shell);
 
     // The shared visual layer preserves this shell's identity and routing.
-    var chromeCSS=document.createElement('link');chromeCSS.rel='stylesheet';chromeCSS.href=new URL('ui-chrome.css?v=20261112-ppp2',SELF).href;document.head.appendChild(chromeCSS);
-    var chromeJS=document.createElement('script');chromeJS.src=new URL('ui-chrome.js?v=20261112-ppp2',SELF).href;document.head.appendChild(chromeJS);
+    var chromeCSS=document.createElement('link');chromeCSS.rel='stylesheet';chromeCSS.href=new URL('ui-chrome.css?v=20261113-ui-consistencia',SELF).href;document.head.appendChild(chromeCSS);
+    var chromeJS=document.createElement('script');chromeJS.src=new URL('ui-chrome.js?v=20261113-ui-consistencia',SELF).href;document.head.appendChild(chromeJS);
     wireDrawer(shell, scrim);
     // «hay algo nuevo»: entrar a este tablero cuenta como visita; su punto se apaga
     try { if (cur) { localStorage.setItem('yod_visto_' + cur, String(Date.now())); localStorage.removeItem('yod_nuevo_' + cur); } } catch (e) { }
@@ -444,7 +444,7 @@
      (yod-portal/chinche.js), en modo "contexto" (DOM). Cada chinche guarda la tarjeta
      donde se picó por última vez y el repo de la página, para que el encargo llegue al
      repo correcto. Si el board ya la trae, no se carga dos veces. */
-  var CHINCHE_V = "20261112-ppp2";
+  var CHINCHE_V = "20261113-ui-consistencia";
   function cargarChinche() {
     if (window.YODChinche) return;
     var ultimo = null;
@@ -495,24 +495,54 @@
   }
 
   function wireDrawer(shell, scrim) {
-    function open() { shell.classList.add('yod-nav-open'); }
-    function close() { shell.classList.remove('yod-nav-open'); }
-    function toggle() { shell.classList.toggle('yod-nav-open'); }
-    // En móvil el menú se abre SOLO la primera vez de la sesión (para descubrirlo);
-    // navegar entre tableros recarga la página, así que no lo reabrimos en cada carga.
-    if (window.matchMedia && window.matchMedia('(max-width:900px)').matches) {
+    var burger = document.getElementById('yodBurger');
+    var side = shell.querySelector('.yod-sidebar');
+    var trigger = null;
+    var mobile = window.matchMedia('(max-width:900px)');
+    function focusable() {
+      return Array.prototype.filter.call(side.querySelectorAll('a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])'), function (n) { return n.offsetParent !== null; });
+    }
+    function sync() {
+      var opened = shell.classList.contains('yod-nav-open');
+      if (burger) {
+        burger.setAttribute('aria-expanded', String(opened));
+        burger.setAttribute('aria-label', opened ? 'Cerrar menú' : 'Abrir menú');
+      }
+      // An offscreen mobile drawer must not remain reachable with Tab.
+      side.inert = mobile.matches && !opened;
+    }
+    function open() {
+      trigger = document.activeElement;
+      shell.classList.add('yod-nav-open'); sync();
+      var first = focusable()[0]; if (first) first.focus();
+    }
+    function close() {
+      var opened = shell.classList.contains('yod-nav-open');
+      shell.classList.remove('yod-nav-open'); sync();
+      if (opened && trigger && trigger.isConnected && trigger.offsetParent !== null) trigger.focus();
+      trigger = null;
+    }
+    function toggle() { if (shell.classList.contains('yod-nav-open')) close(); else open(); }
+    if (mobile.matches) {
       var seen = false; try { seen = sessionStorage.getItem('yod_drawer_seen') === '1'; } catch (e) {}
       if (!seen) { open(); try { sessionStorage.setItem('yod_drawer_seen', '1'); } catch (e) {} }
     }
-    var burger = document.getElementById('yodBurger');
+    sync();
     if (burger) burger.addEventListener('click', toggle);
     scrim.addEventListener('click', close);
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
-    // al tocar un tablero, cerrar el cajón (aunque navegue, se siente app-nativo)
+    document.addEventListener('keydown', function (e) {
+      // Native modal dialogs own their focus and Escape while open.
+      if (!mobile.matches || !shell.classList.contains('yod-nav-open') || document.querySelector('dialog[open]')) return;
+      if (e.key === 'Escape') { e.preventDefault(); close(); }
+      if (e.key !== 'Tab') return;
+      var items = focusable(); if (!items.length) return;
+      var first = items[0], last = items[items.length - 1], active = document.activeElement;
+      if (e.shiftKey && (active === first || !side.contains(active))) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && (active === last || !side.contains(active))) { e.preventDefault(); first.focus(); }
+    });
     var nav = document.getElementById('yodNav');
     if (nav) nav.addEventListener('click', function (e) { if (e.target.closest('.yod-nav-item')) close(); });
-    // cerrar al pasar a escritorio
-    if (window.matchMedia) window.matchMedia('(min-width:901px)').addEventListener('change', function (m) { if (m.matches) close(); });
+    mobile.addEventListener('change', function () { close(); });
   }
 
   function loadCatalog(cur) {
@@ -762,15 +792,17 @@
   window.addEventListener('storage',function(e){if(e.key===LSC||e.key===null)loadIdentity();});
   window.addEventListener('focus',function(){if(state.sessionToken!==tok())loadIdentity();});
 
+  function searchText(value) { return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase(); }
   function wireSearch() {
     var trig = document.getElementById('yodSearch'); if (!trig) return;
     var dlg = el('dialog', 'yod-dialog');
-    dlg.innerHTML = '<form method="dialog"><i class="ti ti-search" style="color:var(--ymuted);font-size:20px"></i><input id="yodQ" type="search" placeholder="Buscar tablero, código o proyecto (RM, Miramar…)" autocomplete="off"><button value="cancel" type="submit" style="border:0;background:none;cursor:pointer;color:var(--ymuted);font-size:19px"><i class="ti ti-x"></i></button></form><div class="yr" id="yodRes"></div>';
+    dlg.setAttribute('aria-label', 'Buscar un tablero');
+    dlg.innerHTML = '<form method="dialog"><i class="ti ti-search" style="color:var(--ymuted);font-size:20px"></i><input id="yodQ" aria-label="Buscar tablero, código o proyecto" type="search" placeholder="Buscar tablero, código o proyecto (RM, Miramar…)" autocomplete="off"><button id="yodSearchClose" aria-label="Cerrar buscador" type="button" style="border:0;background:none;cursor:pointer;color:var(--ymuted);font-size:19px"><i class="ti ti-x"></i></button></form><div class="yr" id="yodRes"></div>';
     document.body.appendChild(dlg);
     function results(q) {
       var box = document.getElementById('yodRes'); if (!box) return; box.innerHTML = '';
-      var t = (q || '').toLowerCase();
-      state.modules.filter(function (r) { return vivo(r) && (!t || [moduleTitle(r), r.titulo_portal || NAME[r.system_id] || '', NAME[r.system_id] || '', (CODES[r.system_id] || []).join(' ')].join(' ').toLowerCase().indexOf(t) >= 0); }).forEach(function (r) {
+      var t = searchText(q);
+      state.modules.filter(function (r) { return vivo(r) && (!t || searchText([moduleTitle(r), r.titulo_portal || NAME[r.system_id] || '', NAME[r.system_id] || '', (CODES[r.system_id] || []).join(' ')].join(' ')).indexOf(t) >= 0); }).forEach(function (r) {
         var url = enlace(r); if (!url) return;
         var a = el('a'); a.href = url; a.setAttribute('rel', 'noopener'); if(!esPropioShell(url)) a.setAttribute('target','_blank');
         a.innerHTML = '<i class="ti ti-' + (ICON[r.system_id] || 'layout-dashboard') + '"></i><span><strong>' + esc(moduleTitle(r)) + '</strong></span>';
@@ -779,7 +811,7 @@
       // OS-2 · también proyectos por folio o nombre (registro os/proyectos.js)
       var RP = window.YodProyectos;
       if (RP && t) RP.lista.filter(function (p) {
-        return canOpenProject(p) && [p.folio, p.codigo, p.nombre].concat(p.alias || []).join(' ').toLowerCase().indexOf(t) >= 0;
+        return canOpenProject(p) && searchText([p.folio, p.codigo, p.nombre].concat(p.alias || []).join(' ')).indexOf(t) >= 0;
       }).forEach(function (p) {
         var a = el('a'); a.href = p.tablero;
         a.innerHTML = '<i class="ti ti-folder"></i><span><strong>' + esc(p.nombre) + '</strong> <small style="opacity:.6">' + esc(p.folio) + ' · ' + esc(p.etapa_actual || '') + '</small></span>';
@@ -790,16 +822,18 @@
           (state.identity === 'ok' ? 'Sin tableros con ese nombre' : 'Sesión por validar') + '</span>';
       }
     }
-    function open() { results(''); if (dlg.showModal) dlg.showModal(); setTimeout(function () { var q = document.getElementById('yodQ'); if (q) q.focus(); }, 0); }
+    function open() { document.getElementById('yodQ').value = ''; results(''); if (!dlg.open && dlg.showModal) dlg.showModal(); setTimeout(function () { var q = document.getElementById('yodQ'); if (q) q.focus(); }, 0); }
     trig.addEventListener('click', open);
+    document.getElementById('yodSearchClose').addEventListener('click', function () { dlg.close(); });
+    dlg.addEventListener('click', function (e) { if (e.target.closest('#yodRes a')) dlg.close(); });
     dlg.addEventListener('input', function (e) { results(e.target.value); });
     // Enter abre el primer resultado (antes el envío implícito solo cerraba el diálogo).
     var frm = dlg.querySelector('form');
     if (frm) frm.addEventListener('submit', function (e) {
-      if (e.submitter && e.submitter.value === 'cancel') return;
+      e.preventDefault();
       var first = dlg.querySelector('#yodRes a');
       if (!first) return;
-      e.preventDefault(); if (dlg.close) dlg.close(); location.href = first.href;
+      first.click();
     });
     document.addEventListener('keydown', function (e) { if ((e.metaKey || e.ctrlKey) && e.key && e.key.toLowerCase() === 'k') { e.preventDefault(); open(); } });
   }
