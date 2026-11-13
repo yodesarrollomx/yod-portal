@@ -16354,6 +16354,27 @@
       ],
       "deployment": "Publicado. Tablero: PR 359 fusionado (66dc402); la tira de siete carriles se ve en vivo en el Inicio. Portero: versión 110 del 13-nov-2026 (15:22 de Hermosillo) sobre la implementación existente, misma URL, publicada por Claude desde el Chrome de Dirección con el método de docs/agentes/publicar-apps-script.md: base 109 + Cartera.gs + una línea en doGet. Lo guardado se releyó por Drive archivo por archivo. Lo guardado traía además HermesAccess.gs y su línea de ruta, de otro agente y sin visto bueno para publicarse: la línea se quitó para la versión (el archivo viaja inerte) y se restauró en el editor. Versión 111 (15:48 de Hermosillo), mismo método: puertas por proyecto. acceso-alta acepta «proyectos» (validado en Cartera.gs; un folio mal escrito no se guarda) y accesos-lista lo devuelve; con la columna en blanco el equipo ve toda la cartera y un externo, sin ningún tablero interno, no ve ninguno. El campo de Accesos va en el PR potenciales-yod 108. Falta probar en vivo el recorte de una cuenta externa con folios asignados (llega con el primer broker, PLAN-03).",
       "rollback": "Revertir el PR (vuelve la foto de cuatro etapas). Las columnas etapa_folio y proyectos se pueden dejar: nadie más las lee. En el Portero, volver a la versión anterior en Administrar implementaciones."
+    },
+    {
+      "id": "CHG-PLAN-FOLIO-20261113",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "GAS-PPP2",
+        "GAS-PORTERO",
+        "SYS-CONTROL",
+        "SHEET-CATALOGO"
+      ],
+      "proposal": "Etapa 2 del análisis «YOD OS tablero por tablero» (PLAN-02): el PPP con su folio. Cada plan —PPP 2 y los cinco motores del PPP— enseña junto a su nombre el terreno de la cartera y su etapa del folio (p. ej. «PRJ-QUINTAS · 2 · Evaluado»), leídos con una sola lectura por página de ?recurso=cartera del Portero (ppp-folio.js, en potenciales-yod). La etapa no se copia al plan: el Control Maestro (columnas etapa_folio y plan) es la única fuente; sin sesión, sin respuesta o sin terreno ligado no se pinta nada. El reparto ya se calcula en el libro de PPP 2 y se enseña en «Versiones y reparto»; la liga de la cartera a cada plan quedó en CHG-FOLIO-CARTERA-20261113. Sin cambios en Apps Script.",
+      "approval": "Dirección, 13-nov-2026 en el chat «Análisis del sistema Yodo»: «retoma bien lo que estábamos haciendo» y el orden del programa (2 · PPP con Reparto), registrado en Tareas PLAN-02 del Buzón.",
+      "status": "implementado_local",
+      "tests": [
+        "node --test tests/ppp-folio.test.cjs (9: sello del terreno, una lectura por página, PPP 2 y pausa, sin terreno/sesión/motor no pinta, claves inválidas, escape, Portero caído sin insistir, sesión rechazada, respuesta tardía de otro plan)",
+        "node --test tests/*.test.cjs y los recorridos de navegador de verificar-ppp (CI)",
+        "node scripts/versiones.cjs --check (etiqueta propia 20261113-plan-folio)"
+      ],
+      "deployment": "Se publica al fusionar el PR de potenciales-yod (Pages). No cambia ningún Apps Script ni hoja.",
+      "rollback": "Revertir el PR: los planes vuelven a no enseñar su folio. Nada que regresar en Sheets ni en el Portero."
     }
   ],
   "data_contracts": [
