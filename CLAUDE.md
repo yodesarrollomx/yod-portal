@@ -12,6 +12,8 @@ como contexto: no acreditan el estado actual. Una fuente Apps Script en GitHub
 no acredita que esté desplegada. No usar caches de identidad o datos legacy para
 restaurar permisos; la cabina y el marco deben completar el canje vigente.
 
+**Matiz de la Fase 1 (30-oct-2026, plan aprobado por Dirección; propuesta `CHG-CARGADOR-FASE1-001`):** la cabina y el marco pueden **pintar** con la identidad que `os/yod-cargador.js` guardó en la carga anterior (`yodcg_sesion_v1`, ligada al hash del token, máximo 12 h) mientras **completan el canje vigente en fondo**; si ese canje rechaza (`liga, clave, expirado, revocado, sin_sesion, unauthorized, forbidden, HTTP 401/403`) se cierra y se purga (fail-closed). Eso NO es restaurar permisos desde una caché legacy: la copia sólo existe tras un canje real con ese mismo token, nunca otorga más de lo que ese canje dio, y el muro sigue siendo cada backend. `?cargador=legacy` (o `localStorage.yodcg_legacy='1'`) devuelve el comportamiento anterior.
+
 ## Qué es
 
 Es la **cabeza** del tablero YOD. No es "un tablero más": es el marco donde entran todos.
@@ -46,10 +48,10 @@ Repo: `yodesarrollomx/yod-portal` (`git remote -v`), público, Pages desde `main
    `os/shell.js` (`CODES`) y `potenciales-yod/accesos.html` (`CODES`). Si divergen, un colaborador
    con acceso queda bloqueado — fue el bug `BA`→`TA` del 15-jul-2026 (`CODIGOS-BOARDS.md`).
    Las dos primeras las compara `node verify-os.cjs`; la tercera vive en otro repo y va a ojo.
-2. **Cada cambio a `os/app.js` exige subir el `?v=` en `os/index.html`** (la etiqueta de `app.js`,
-   línea 215; la de `styles.css`, línea 19 — no copies el valor de aquí, léelo del archivo, cambia
-   seguido). Sin el bump, Pages sirve el JS viejo y "no se ve el cambio"
-   (memoria `yod-os-menu-catalogo`).
+2. **Una sola etiqueta de versión (`os/versiones.json`).** Cada cambio a un archivo servido (p. ej. `os/app.js`)
+   exige editar `propia` (`potenciales` para los de `potenciales-yod`) y correr `node scripts/versiones.cjs --aplicar`,
+   que reescribe los `?v=` de los HTML y las constantes `CHINCHE_V`, `TABLERO_V`… `verify` falla (`--check`) si una
+   etiqueta no coincide. Sin el bump, Pages sirve el JS viejo y "no se ve el cambio" (memoria `yod-os-menu-catalogo`).
 3. **El catálogo no otorga permisos.** La cabina puede tener nombres/destinos de respaldo;
    la sesión debe validarse y las URLs deben pasar el allowlist. Distinguir metadatos
    del catálogo de caches de identidad o datos operativos. Ver el código y el atlas vigente.

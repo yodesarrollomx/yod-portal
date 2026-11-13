@@ -1,0 +1,1592 @@
+{
+ "ingenuo": {
+  "definicion": "Q_t = Q_2023; P real crece a ḡ = (ln P_2023 − ln P_2020)/3 por año.",
+  "g_P_real_anual_pct": 2.885934,
+  "proyeccion": {
+   "2024": {
+    "P_real": 182.358,
+    "Q": 3093.0
+   },
+   "2025": {
+    "P_real": 187.621,
+    "Q": 3093.0
+   }
+  }
+ },
+ "meta": {
+  "deflactor_titular": "INPC promedio anual (C07 f2-inpc-promedio-anual)",
+  "e_ext_nota": "fijada en preregistro (1.0 [0.5–1.5]); no está en supuestos.csv",
+  "elasticidades": {
+   "e_d": {
+    "base": 0.7,
+    "maximo": 1.5,
+    "minimo": 0.3
+   },
+   "e_ext": {
+    "base": 1.0,
+    "maximo": 1.5,
+    "minimo": 0.5
+   },
+   "e_r": {
+    "base": -0.39,
+    "maximo": -0.2,
+    "minimo": -0.6
+   },
+   "e_s": {
+    "base": 1.5,
+    "maximo": 3.0,
+    "minimo": 0.5
+   },
+   "e_y": {
+    "base": 0.8,
+    "maximo": 1.0,
+    "minimo": 0.5
+   }
+  },
+  "insumos": {
+   "P_nominal": {
+    "calidad": [
+     "estimado"
+    ],
+    "serie_id": "p-shf-indice-hermosillo-anual"
+   },
+   "Q": {
+    "calidad": [
+     "estimado"
+    ],
+    "serie_id": "q-viviendas-financiadas-nueva-dedup"
+   },
+   "deflactor": {
+    "calidad": [
+     "estimado"
+    ],
+    "serie_id": "f2-inpc-promedio-anual"
+   },
+   "deflactor_ingreso": {
+    "nota": "stock de diciembre ÷ deflactor de diciembre",
+    "serie_id": "inpc-nacional-var-dic (C05)"
+   },
+   "oferta": {
+    "nota": "abr-2020 imputado 0 por C01 (estimado)",
+    "serie_ids": [
+     "f2-registro-mensual",
+     "f2-dtu-mensual",
+     "f2-verificacion-mensual"
+    ]
+   },
+   "tasa": {
+    "geografia": "nacional",
+    "periodo": "diciembre",
+    "serie_id": "tasa-hipotecaria-banxico-nuevos"
+   }
+  },
+  "malla_e_d_x_e_s": [
+   [
+    0.3,
+    0.5
+   ],
+   [
+    0.3,
+    1.5
+   ],
+   [
+    0.3,
+    3.0
+   ],
+   [
+    0.7,
+    0.5
+   ],
+   [
+    0.7,
+    1.5
+   ],
+   [
+    0.7,
+    3.0
+   ],
+   [
+    1.5,
+    0.5
+   ],
+   [
+    1.5,
+    1.5
+   ],
+   [
+    1.5,
+    3.0
+   ]
+  ]
+ },
+ "metricas": {
+  "A": {
+   "mae_log": {
+    "P_real": {
+     "ingenuo": 0.042989,
+     "metodo": 0.0893,
+     "metodo_supera_a_ingenuo": false
+    },
+    "Q": {
+     "ingenuo": 0.043855,
+     "metodo": 0.051352,
+     "metodo_supera_a_ingenuo": false
+    }
+   },
+   "max_abs_error_log_h2": 0.117762,
+   "por_anio": {
+    "P_real_2024": {
+     "abs_error_log": 0.060838,
+     "ancho_banda_log": 0.066356,
+     "banda": [
+      176.813948,
+      188.944558
+     ],
+     "banda_ancha": [
+      115.251995,
+      297.584224
+     ],
+     "cambio_observado_vs_2023_pct": 6.015458,
+     "dentro_banda": true,
+     "dentro_banda_ancha": true,
+     "error_log": -0.060838,
+     "error_log_ingenuo": -0.029964,
+     "error_pct": -5.902437,
+     "error_pct_ingenuo": -2.951951,
+     "ingenuo": 182.358058,
+     "metodo_mejor_que_ingenuo": false,
+     "observado": 187.904919,
+     "proyectado": 176.813948,
+     "signo_ok": false
+    },
+    "P_real_2025": {
+     "abs_error_log": 0.117762,
+     "ancho_banda_log": 0.132711,
+     "banda": [
+      176.385992,
+      201.418717
+     ],
+     "banda_ancha": [
+      74.942461,
+      499.632701
+     ],
+     "cambio_observado_vs_2023_pct": 11.953682,
+     "dentro_banda": true,
+     "dentro_banda_ancha": true,
+     "error_log": -0.117762,
+     "error_log_ingenuo": -0.056014,
+     "error_pct": -11.109211,
+     "error_pct_ingenuo": -5.447366,
+     "ingenuo": 187.620792,
+     "metodo_mejor_que_ingenuo": false,
+     "observado": 198.43,
+     "proyectado": 176.385992,
+     "signo_ok": false
+    },
+    "Q_2024": {
+     "abs_error_log": 0.007019,
+     "ancho_banda_log": 0.392113,
+     "banda": [
+      2662.223344,
+      3940.368457
+     ],
+     "banda_ancha": [
+      2662.223344,
+      3940.368457
+     ],
+     "cambio_observado_vs_2023_pct": -6.369221,
+     "dentro_banda": true,
+     "dentro_banda_ancha": true,
+     "error_log": 0.007019,
+     "error_log_ingenuo": 0.065811,
+     "error_pct": 0.704372,
+     "error_pct_ingenuo": 6.802486,
+     "ingenuo": 3093.0,
+     "metodo_mejor_que_ingenuo": true,
+     "observado": 2896.0,
+     "proyectado": 2916.398613,
+     "signo_ok": true
+    },
+    "Q_2025": {
+     "abs_error_log": 0.095684,
+     "ancho_banda_log": 0.784225,
+     "banda": [
+      2291.442979,
+      5019.884764
+     ],
+     "banda_ancha": [
+      2291.442979,
+      5019.884764
+     ],
+     "cambio_observado_vs_2023_pct": -2.166182,
+     "dentro_banda": true,
+     "dentro_banda_ancha": true,
+     "error_log": -0.095684,
+     "error_log_ingenuo": 0.0219,
+     "error_pct": -9.124896,
+     "error_pct_ingenuo": 2.214144,
+     "ingenuo": 3093.0,
+     "metodo_mejor_que_ingenuo": false,
+     "observado": 3026.0,
+     "proyectado": 2749.880656,
+     "signo_ok": true
+    }
+   }
+  },
+  "B_titular": "no disponible",
+  "correlacion_delta_d_sensibilidades": {
+   "B-parcial-solo-tasa": {
+    "aciertos_signo": 4,
+    "anios": [
+     2021,
+     2022,
+     2023,
+     2024,
+     2025
+    ],
+    "construido": [
+     -0.00172,
+     -0.04118,
+     -0.01031,
+     -0.00263,
+     0.00794
+    ],
+    "implicito": [
+     0.25882,
+     -0.06049,
+     -0.08854,
+     -0.02492,
+     0.08206
+    ],
+    "n": 5,
+    "pearson": 0.494676,
+    "spearman": 0.8
+   },
+   "B-sonora": {
+    "aciertos_signo": 1,
+    "anios": [
+     2022,
+     2023,
+     2024,
+     2025
+    ],
+    "construido": [
+     0.01323,
+     0.06453,
+     0.03406,
+     0.01743
+    ],
+    "implicito": [
+     -0.06049,
+     -0.08854,
+     -0.02492,
+     0.08206
+    ],
+    "n": 4,
+    "pearson": -0.567874,
+    "spearman": -0.4
+   }
+  },
+  "correlacion_delta_d_titular": "no disponible",
+  "reglas_veredicto": {
+   "R1_detalle": [],
+   "R1_fuera_de_banda": false,
+   "R2_detalle": [
+    "A · Q",
+    "A · P_real"
+   ],
+   "R2_no_supero_ingenuo": true,
+   "R3_aplica": false,
+   "R3_ensanche_minimo_log": 0.117762,
+   "R3_ensanche_minimo_pct": 12.497596,
+   "R3_error_h2_por_variable": {
+    "P_real": 0.117762,
+    "Q": 0.095684
+   }
+  },
+  "sensibilidad_mismo_P_ingenuo": {
+   "g_P_real_anual_pct": 2.885934
+  }
+ },
+ "variante_A": {
+  "banda_ancha": {
+   "2024": {
+    "P_real": [
+     115.251995,
+     297.584224
+    ],
+    "Q": [
+     2662.223344,
+     3940.368457
+    ]
+   },
+   "2025": {
+    "P_real": [
+     74.942461,
+     499.632701
+    ],
+    "Q": [
+     2291.442979,
+     5019.884764
+    ]
+   }
+  },
+  "banda_titular": {
+   "2024": {
+    "P_real": [
+     176.813948,
+     188.944558
+    ],
+    "Q": [
+     2662.223344,
+     3940.368457
+    ]
+   },
+   "2025": {
+    "P_real": [
+     176.385992,
+     201.418717
+    ],
+    "Q": [
+     2291.442979,
+     5019.884764
+    ]
+   }
+  },
+  "definicion": "Incondicional: δd y δs implícitos 2021–2023 (mediana=base; mín/máx conjuntos=bajo/alto), mismas elasticidades en descomposición y proyección, malla e_d×e_s 3×3; acumulado desde 2023.",
+  "deflactor": "INPC promedio anual (C07 f2-inpc-promedio-anual)",
+  "delta_d_base": -0.060488,
+  "delta_s_base": -0.055157,
+  "historia": {
+   "2021": {
+    "INPC": 113.542,
+    "P_nominal": 134.65,
+    "P_real": 166.669429,
+    "Q": 3748.0,
+    "delta_d_implicito": 0.258823,
+    "delta_s_implicito": 0.206368,
+    "dlnP_real": 0.023843,
+    "dlnQ": 0.242133,
+    "pct_D": 29.540456,
+    "pct_P_real": 2.412982,
+    "pct_Q": 27.396329,
+    "pct_S": 22.920521
+   },
+   "2022": {
+    "INPC": 122.507,
+    "P_nominal": 144.93,
+    "P_real": 166.266026,
+    "Q": 3534.0,
+    "delta_d_implicito": -0.060488,
+    "delta_s_implicito": -0.055157,
+    "dlnP_real": -0.002423,
+    "dlnQ": -0.058792,
+    "pct_D": -5.869523,
+    "pct_P_real": -0.242038,
+    "pct_Q": -5.709712,
+    "pct_S": -5.366346
+   },
+   "2023": {
+    "INPC": 129.28,
+    "P_nominal": 163.04,
+    "P_real": 177.242943,
+    "Q": 3093.0,
+    "delta_d_implicito": -0.088536,
+    "delta_s_implicito": -0.229187,
+    "dlnP_real": 0.063932,
+    "dlnQ": -0.133289,
+    "pct_D": -8.47301,
+    "pct_P_real": 6.60202,
+    "pct_Q": -12.478778,
+    "pct_S": -20.482042
+   },
+   "2024": {
+    "INPC": 135.385,
+    "P_nominal": 181.01,
+    "P_real": 187.904919,
+    "Q": 2896.0,
+    "delta_d_implicito": -0.024921,
+    "delta_s_implicito": -0.153433,
+    "dlnP_real": 0.058415,
+    "dlnQ": -0.065811,
+    "pct_D": -2.461275,
+    "pct_P_real": 6.015458,
+    "pct_Q": -6.369221,
+    "pct_S": -14.224187
+   },
+   "2025": {
+    "INPC": 140.542,
+    "P_nominal": 198.43,
+    "P_real": 198.43,
+    "Q": 3026.0,
+    "delta_d_implicito": 0.082061,
+    "delta_s_implicito": -0.037839,
+    "dlnP_real": 0.0545,
+    "dlnQ": 0.043911,
+    "pct_D": 8.552241,
+    "pct_P_real": 5.60128,
+    "pct_Q": 4.48895,
+    "pct_S": -3.713236
+   }
+  },
+  "pct_D_base": -5.869523,
+  "pct_S_base": -5.366346,
+  "punto_titular": {
+   "2024": {
+    "P_real": 176.814,
+    "Q": 2916.4
+   },
+   "2025": {
+    "P_real": 176.386,
+    "Q": 2749.9
+   }
+  }
+ },
+ "variante_B": {
+  "definicion": "Condicional: δd con desplazadores realizados (e_ext·Δln empleo + e_y·Δln ingreso real + e_r·Δln tasa) y δs = pipeline RUV (registro→DTU, L=14; 10–24); sin cartera ni inventario por no existir vintage 2023; malla e_d×e_s × rezago; acumulado desde 2023.",
+  "diagnostico_oferta": {
+   "a_L14": 0.509061,
+   "corr_ds": {
+    "aciertos_signo": 4,
+    "anios": [
+     2022,
+     2023,
+     2024,
+     2025
+    ],
+    "construido": [
+     -0.05985,
+     -0.30245,
+     -0.56842,
+     -0.40059
+    ],
+    "implicito": [
+     -0.05516,
+     -0.22919,
+     -0.15343,
+     -0.03784
+    ],
+    "n": 4,
+    "pearson": 0.292743,
+    "spearman": 0.0
+   },
+   "ds_pipeline_por_rezago": {
+    "10": {
+     "2022": -0.049671,
+     "2023": -0.320366,
+     "2024": -0.406679,
+     "2025": -0.123746
+    },
+    "14": {
+     "2022": -0.059848,
+     "2023": -0.302446,
+     "2024": -0.56842,
+     "2025": -0.40059
+    },
+    "24": {
+     "2022": -0.694235,
+     "2023": 0.293991,
+     "2024": -0.32224,
+     "2025": -0.491237
+    }
+   },
+   "nota": "δs implícito (e_s=1.5) vs δs pipeline registro→DTU L=14; a calibrada con 2022–2023, así que 2022–2023 son in-sample; n=4"
+  },
+  "sensibilidades": {
+   "A+S1-deflactor-dic-dic": {
+    "metricas": {
+     "mae_log": {
+      "P_real": {
+       "ingenuo": 0.051728,
+       "metodo": 0.093542,
+       "metodo_supera_a_ingenuo": false
+      },
+      "Q": {
+       "ingenuo": 0.043855,
+       "metodo": 0.051352,
+       "metodo_supera_a_ingenuo": false
+      }
+     },
+     "max_abs_error_log_h2": 0.122134,
+     "por_anio": {
+      "P_real_2024": {
+       "abs_error_log": 0.06495,
+       "ancho_banda_log": 0.074307,
+       "banda": [
+        175.886268,
+        189.453638
+       ],
+       "cambio_observado_vs_2023_pct": 6.546867,
+       "dentro_banda": true,
+       "error_log": -0.06495,
+       "error_log_ingenuo": -0.037074,
+       "error_pct": -6.288586,
+       "error_pct_ingenuo": -3.639509,
+       "ingenuo": 180.858301,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 187.689269,
+       "proyectado": 175.886268,
+       "signo_ok": false
+      },
+      "P_real_2025": {
+       "abs_error_log": 0.122134,
+       "ancho_banda_log": 0.148614,
+       "banda": [
+        175.616415,
+        203.754468
+       ],
+       "cambio_observado_vs_2023_pct": 12.644132,
+       "dentro_banda": true,
+       "error_log": -0.122134,
+       "error_log_ingenuo": -0.066382,
+       "error_pct": -11.497044,
+       "error_pct_ingenuo": -6.422637,
+       "ingenuo": 185.685561,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 198.43,
+       "proyectado": 175.616415,
+       "signo_ok": false
+      },
+      "Q_2024": {
+       "abs_error_log": 0.007019,
+       "ancho_banda_log": 0.400064,
+       "banda": [
+        2641.139481,
+        3940.368457
+       ],
+       "cambio_observado_vs_2023_pct": -6.369221,
+       "dentro_banda": true,
+       "error_log": 0.007019,
+       "error_log_ingenuo": 0.065811,
+       "error_pct": 0.704372,
+       "error_pct_ingenuo": 6.802486,
+       "ingenuo": 3093.0,
+       "metodo_mejor_que_ingenuo": true,
+       "observado": 2896.0,
+       "proyectado": 2916.398613,
+       "signo_ok": true
+      },
+      "Q_2025": {
+       "abs_error_log": 0.095684,
+       "ancho_banda_log": 0.800128,
+       "banda": [
+        2255.291871,
+        5019.884764
+       ],
+       "cambio_observado_vs_2023_pct": -2.166182,
+       "dentro_banda": true,
+       "error_log": -0.095684,
+       "error_log_ingenuo": 0.0219,
+       "error_pct": -9.124896,
+       "error_pct_ingenuo": 2.214144,
+       "ingenuo": 3093.0,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 3026.0,
+       "proyectado": 2749.880656,
+       "signo_ok": true
+      }
+     }
+    },
+    "punto": {
+     "2024": {
+      "P_real": 175.886,
+      "Q": 2916.4
+     },
+     "2025": {
+      "P_real": 175.616,
+      "Q": 2749.9
+     }
+    },
+    "rotulo": "SENSIBILIDAD S1 · deflactor provisional dic–dic"
+   },
+   "A+S3-delta-fijos-base": {
+    "metricas": {
+     "mae_log": {
+      "P_real": {
+       "ingenuo": 0.042989,
+       "metodo": 0.0893,
+       "metodo_supera_a_ingenuo": false
+      },
+      "Q": {
+       "ingenuo": 0.043855,
+       "metodo": 0.051352,
+       "metodo_supera_a_ingenuo": false
+      }
+     },
+     "max_abs_error_log_h2": 0.117762,
+     "por_anio": {
+      "P_real_2024": {
+       "abs_error_log": 0.060838,
+       "ancho_banda_log": 0.182478,
+       "banda": [
+        176.065705,
+        211.311874
+       ],
+       "cambio_observado_vs_2023_pct": 6.015458,
+       "dentro_banda": true,
+       "error_log": -0.060838,
+       "error_log_ingenuo": -0.029964,
+       "error_pct": -5.902437,
+       "error_pct_ingenuo": -2.951951,
+       "ingenuo": 182.358058,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 187.904919,
+       "proyectado": 176.813948,
+       "signo_ok": false
+      },
+      "P_real_2025": {
+       "abs_error_log": 0.117762,
+       "ancho_banda_log": 0.364956,
+       "banda": [
+        174.896285,
+        251.929399
+       ],
+       "cambio_observado_vs_2023_pct": 11.953682,
+       "dentro_banda": true,
+       "error_log": -0.117762,
+       "error_log_ingenuo": -0.056014,
+       "error_pct": -11.109211,
+       "error_pct_ingenuo": -5.447366,
+       "ingenuo": 187.620792,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 198.43,
+       "proyectado": 176.385992,
+       "signo_ok": false
+      },
+      "Q_2024": {
+       "abs_error_log": 0.007019,
+       "ancho_banda_log": 0.448079,
+       "banda": [
+        2547.511369,
+        3987.625279
+       ],
+       "cambio_observado_vs_2023_pct": -6.369221,
+       "dentro_banda": true,
+       "error_log": 0.007019,
+       "error_log_ingenuo": 0.065811,
+       "error_pct": 0.704372,
+       "error_pct_ingenuo": 6.802486,
+       "ingenuo": 3093.0,
+       "metodo_mejor_que_ingenuo": true,
+       "observado": 2896.0,
+       "proyectado": 2916.398613,
+       "signo_ok": true
+      },
+      "Q_2025": {
+       "abs_error_log": 0.095684,
+       "ancho_banda_log": 0.896158,
+       "banda": [
+        2098.226374,
+        5141.013696
+       ],
+       "cambio_observado_vs_2023_pct": -2.166182,
+       "dentro_banda": true,
+       "error_log": -0.095684,
+       "error_log_ingenuo": 0.0219,
+       "error_pct": -9.124896,
+       "error_pct_ingenuo": 2.214144,
+       "ingenuo": 3093.0,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 3026.0,
+       "proyectado": 2749.880656,
+       "signo_ok": true
+      }
+     }
+    },
+    "punto": {
+     "2024": {
+      "P_real": 176.814,
+      "Q": 2916.4
+     },
+     "2025": {
+      "P_real": 176.386,
+      "Q": 2749.9
+     }
+    },
+    "rotulo": "SENSIBILIDAD S3 · δ implícitos con elasticidades base; la malla sólo entra en cruce()"
+   },
+   "A+S4-media": {
+    "metricas": {
+     "mae_log": {
+      "P_real": {
+       "ingenuo": 0.042989,
+       "metodo": 0.042989,
+       "metodo_supera_a_ingenuo": false
+      },
+      "Q": {
+       "ingenuo": 0.043855,
+       "metodo": 0.068881,
+       "metodo_supera_a_ingenuo": false
+      }
+     },
+     "max_abs_error_log_h2": 0.056014,
+     "por_anio": {
+      "P_real_2024": {
+       "abs_error_log": 0.029964,
+       "ancho_banda_log": 0.040089,
+       "banda": [
+        181.519784,
+        188.944558
+       ],
+       "cambio_observado_vs_2023_pct": 6.015458,
+       "dentro_banda": true,
+       "error_log": -0.029964,
+       "error_log_ingenuo": -0.029964,
+       "error_pct": -2.951951,
+       "error_pct_ingenuo": -2.951951,
+       "ingenuo": 182.358058,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 187.904919,
+       "proyectado": 182.358058,
+       "signo_ok": true
+      },
+      "P_real_2025": {
+       "abs_error_log": 0.056014,
+       "ancho_banda_log": 0.080178,
+       "banda": [
+        185.899824,
+        201.418717
+       ],
+       "cambio_observado_vs_2023_pct": 11.953682,
+       "dentro_banda": true,
+       "error_log": -0.056014,
+       "error_log_ingenuo": -0.056014,
+       "error_pct": -5.447366,
+       "error_pct_ingenuo": -5.447366,
+       "ingenuo": 187.620792,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 198.43,
+       "proyectado": 187.620792,
+       "signo_ok": true
+      },
+      "Q_2024": {
+       "abs_error_log": 0.082495,
+       "ancho_banda_log": 0.392113,
+       "banda": [
+        2662.223344,
+        3940.368457
+       ],
+       "cambio_observado_vs_2023_pct": -6.369221,
+       "dentro_banda": true,
+       "error_log": 0.082495,
+       "error_log_ingenuo": 0.065811,
+       "error_pct": 8.599322,
+       "error_pct_ingenuo": 6.802486,
+       "ingenuo": 3093.0,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 2896.0,
+       "proyectado": 3145.036359,
+       "signo_ok": false
+      },
+      "Q_2025": {
+       "abs_error_log": 0.055268,
+       "ancho_banda_log": 0.784225,
+       "banda": [
+        2291.442979,
+        5019.884764
+       ],
+       "cambio_observado_vs_2023_pct": -2.166182,
+       "dentro_banda": true,
+       "error_log": 0.055268,
+       "error_log_ingenuo": 0.0219,
+       "error_pct": 5.682359,
+       "error_pct_ingenuo": 2.214144,
+       "ingenuo": 3093.0,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 3026.0,
+       "proyectado": 3197.948172,
+       "signo_ok": false
+      }
+     }
+    },
+    "punto": {
+     "2024": {
+      "P_real": 182.358,
+      "Q": 3145.0
+     },
+     "2025": {
+      "P_real": 187.621,
+      "Q": 3197.9
+     }
+    },
+    "rotulo": "SENSIBILIDAD S4 · media en lugar de mediana"
+   },
+   "B-parcial-solo-tasa": {
+    "a_calibrada": 0.509061,
+    "banda": {
+     "2024": {
+      "P_real": [
+       190.289388,
+       359.516612
+      ],
+      "Q": [
+       2018.125828,
+       2996.536589
+      ]
+     },
+     "2025": {
+      "P_real": [
+       199.65162,
+       599.09647
+      ],
+      "Q": [
+       1497.372773,
+       2961.658822
+      ]
+     }
+    },
+    "correlacion_delta_d": {
+     "aciertos_signo": 4,
+     "anios": [
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+     ],
+     "construido": [
+      -0.00172,
+      -0.04118,
+      -0.01031,
+      -0.00263,
+      0.00794
+     ],
+     "implicito": [
+      0.25882,
+      -0.06049,
+      -0.08854,
+      -0.02492,
+      0.08206
+     ],
+     "n": 5,
+     "pearson": 0.494676,
+     "spearman": 0.8
+    },
+    "delta_d_construido": {
+     "2021": -0.001724,
+     "2022": -0.041177,
+     "2023": -0.010309,
+     "2024": -0.002629,
+     "2025": 0.00794
+    },
+    "delta_s_pipeline": {
+     "2022": -0.059848,
+     "2023": -0.302446,
+     "2024": -0.56842,
+     "2025": -0.40059
+    },
+    "estado": "calculada",
+    "etiqueta_dd": "e_r·Δln(tasa)",
+    "metricas": {
+     "mae_log": {
+      "P_real": {
+       "ingenuo": 0.042989,
+       "metodo": 0.264361,
+       "metodo_supera_a_ingenuo": false
+      },
+      "Q": {
+       "ingenuo": 0.043855,
+       "metodo": 0.199821,
+       "metodo_supera_a_ingenuo": false
+      }
+     },
+     "max_abs_error_log_h2": 0.329958,
+     "por_anio": {
+      "P_real_2024": {
+       "abs_error_log": 0.198763,
+       "ancho_banda_log": 0.636214,
+       "banda": [
+        190.289388,
+        359.516612
+       ],
+       "cambio_observado_vs_2023_pct": 6.015458,
+       "dentro_banda": false,
+       "error_log": 0.198763,
+       "error_log_ingenuo": -0.029964,
+       "error_pct": 21.989294,
+       "error_pct_ingenuo": -2.951951,
+       "ingenuo": 182.358058,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 187.904919,
+       "proyectado": 229.223883,
+       "signo_ok": true
+      },
+      "P_real_2025": {
+       "abs_error_log": 0.329958,
+       "ancho_banda_log": 1.098849,
+       "banda": [
+        199.65162,
+        599.09647
+       ],
+       "cambio_observado_vs_2023_pct": 11.953682,
+       "dentro_banda": false,
+       "error_log": 0.329958,
+       "error_log_ingenuo": -0.056014,
+       "error_pct": 39.090992,
+       "error_pct_ingenuo": -5.447366,
+       "ingenuo": 187.620792,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 198.43,
+       "proyectado": 275.998256,
+       "signo_ok": true
+      },
+      "Q_2024": {
+       "abs_error_log": 0.116842,
+       "ancho_banda_log": 0.395288,
+       "banda": [
+        2018.125828,
+        2996.536589
+       ],
+       "cambio_observado_vs_2023_pct": -6.369221,
+       "dentro_banda": true,
+       "error_log": -0.116842,
+       "error_log_ingenuo": 0.065811,
+       "error_pct": -11.027448,
+       "error_pct_ingenuo": 6.802486,
+       "ingenuo": 3093.0,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 2896.0,
+       "proyectado": 2576.645119,
+       "signo_ok": true
+      },
+      "Q_2025": {
+       "abs_error_log": 0.2828,
+       "ancho_banda_log": 0.682037,
+       "banda": [
+        1497.372773,
+        2961.658822
+       ],
+       "cambio_observado_vs_2023_pct": -2.166182,
+       "dentro_banda": false,
+       "error_log": -0.2828,
+       "error_log_ingenuo": 0.0219,
+       "error_pct": -24.632949,
+       "error_pct_ingenuo": 2.214144,
+       "ingenuo": 3093.0,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 3026.0,
+       "proyectado": 2280.606972,
+       "signo_ok": true
+      }
+     }
+    },
+    "punto": {
+     "2024": {
+      "P_real": 229.224,
+      "Q": 2576.6
+     },
+     "2025": {
+      "P_real": 275.998,
+      "Q": 2280.6
+     }
+    },
+    "rotulo": "SENSIBILIDAD · δd = solo el término de tasa hipotecaria (nacional, dic/dic); NO es el δd completo; sin empleo ni ingreso"
+   },
+   "B-parcial-solo-tasa+S2-verificacion": {
+    "a_calibrada": 0.630447,
+    "banda": {
+     "2024": {
+      "P_real": [
+       188.21138,
+       397.81135
+      ],
+      "Q": [
+       1899.211432,
+       3010.02715
+      ]
+     },
+     "2025": {
+      "P_real": [
+       194.336315,
+       1096.604726
+      ],
+      "Q": [
+       1041.832547,
+       2994.533061
+      ]
+     }
+    },
+    "correlacion_delta_d": {
+     "aciertos_signo": 4,
+     "anios": [
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+     ],
+     "construido": [
+      -0.00172,
+      -0.04118,
+      -0.01031,
+      -0.00263,
+      0.00794
+     ],
+     "implicito": [
+      0.25882,
+      -0.06049,
+      -0.08854,
+      -0.02492,
+      0.08206
+     ],
+     "n": 5,
+     "pearson": 0.494676,
+     "spearman": 0.8
+    },
+    "delta_d_construido": {
+     "2021": -0.001724,
+     "2022": -0.041177,
+     "2023": -0.010309,
+     "2024": -0.002629,
+     "2025": 0.00794
+    },
+    "delta_s_pipeline": {
+     "2022": 0.071708,
+     "2023": -0.582339,
+     "2024": -0.47076,
+     "2025": -0.314195
+    },
+    "estado": "calculada",
+    "etiqueta_dd": "",
+    "metricas": {
+     "mae_log": {
+      "P_real": {
+       "ingenuo": 0.042989,
+       "metodo": 0.200335,
+       "metodo_supera_a_ingenuo": false
+      },
+      "Q": {
+       "ingenuo": 0.043855,
+       "metodo": 0.155003,
+       "metodo_supera_a_ingenuo": false
+      }
+     },
+     "max_abs_error_log_h2": 0.246297,
+     "por_anio": {
+      "P_real_2024": {
+       "abs_error_log": 0.154372,
+       "ancho_banda_log": 0.748412,
+       "banda": [
+        188.21138,
+        397.81135
+       ],
+       "cambio_observado_vs_2023_pct": 6.015458,
+       "dentro_banda": false,
+       "error_log": 0.154372,
+       "error_log_ingenuo": -0.029964,
+       "error_pct": 16.692524,
+       "error_pct_ingenuo": -2.951951,
+       "ingenuo": 182.358058,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 187.904919,
+       "proyectado": 219.270993,
+       "signo_ok": true
+      },
+      "P_real_2025": {
+       "abs_error_log": 0.246297,
+       "ancho_banda_log": 1.730384,
+       "banda": [
+        194.336315,
+        1096.604726
+       ],
+       "cambio_observado_vs_2023_pct": 11.953682,
+       "dentro_banda": true,
+       "error_log": 0.246297,
+       "error_log_ingenuo": -0.056014,
+       "error_pct": 27.927962,
+       "error_pct_ingenuo": -5.447366,
+       "ingenuo": 187.620792,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 198.43,
+       "proyectado": 253.847455,
+       "signo_ok": true
+      },
+      "Q_2024": {
+       "abs_error_log": 0.085769,
+       "ancho_banda_log": 0.46051,
+       "banda": [
+        1899.211432,
+        3010.02715
+       ],
+       "cambio_observado_vs_2023_pct": -6.369221,
+       "dentro_banda": true,
+       "error_log": -0.085769,
+       "error_log_ingenuo": 0.065811,
+       "error_pct": -8.21935,
+       "error_pct_ingenuo": 6.802486,
+       "ingenuo": 3093.0,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 2896.0,
+       "proyectado": 2657.967615,
+       "signo_ok": true
+      },
+      "Q_2025": {
+       "abs_error_log": 0.224237,
+       "ancho_banda_log": 1.055807,
+       "banda": [
+        1041.832547,
+        2994.533061
+       ],
+       "cambio_observado_vs_2023_pct": -2.166182,
+       "dentro_banda": false,
+       "error_log": -0.224237,
+       "error_log_ingenuo": 0.0219,
+       "error_pct": -20.08745,
+       "error_pct_ingenuo": 2.214144,
+       "ingenuo": 3093.0,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 3026.0,
+       "proyectado": 2418.153771,
+       "signo_ok": true
+      }
+     }
+    },
+    "punto": {
+     "2024": {
+      "P_real": 219.271,
+      "Q": 2658.0
+     },
+     "2025": {
+      "P_real": 253.847,
+      "Q": 2418.2
+     }
+    },
+    "rotulo": "SENSIBILIDAD S2 · oferta con verificación→DTU (L=12; 9–23) en lugar de registro→DTU"
+   },
+   "B-por-verificar-Hermosillo": {
+    "estado": "no disponible",
+    "motivo": "δd no construible para 2024 y 2025 con los insumos admitidos",
+    "rotulo": "SENSIBILIDAD · valores de Hermosillo de C05 con calidad `por verificar` (fuente no reabierta); no son dato"
+   },
+   "B-por-verificar-Hermosillo+S2-verificacion": {
+    "estado": "no disponible",
+    "motivo": "δd no construible para 2024 y 2025 con los insumos admitidos",
+    "rotulo": "SENSIBILIDAD S2 · oferta con verificación→DTU (L=12; 9–23) en lugar de registro→DTU"
+   },
+   "B-sonora": {
+    "a_calibrada": 0.509061,
+    "banda": {
+     "2024": {
+      "P_real": [
+       191.847094,
+       376.387473
+      ],
+      "Q": [
+       2036.720714,
+       3098.161788
+      ]
+     },
+     "2025": {
+      "P_real": [
+       201.71076,
+       634.692018
+      ],
+      "Q": [
+       1514.757764,
+       3088.624028
+      ]
+     }
+    },
+    "correlacion_delta_d": {
+     "aciertos_signo": 1,
+     "anios": [
+      2022,
+      2023,
+      2024,
+      2025
+     ],
+     "construido": [
+      0.01323,
+      0.06453,
+      0.03406,
+      0.01743
+     ],
+     "implicito": [
+      -0.06049,
+      -0.08854,
+      -0.02492,
+      0.08206
+     ],
+     "n": 4,
+     "pearson": -0.567874,
+     "spearman": -0.4
+    },
+    "delta_d_construido": {
+     "2022": 0.013234,
+     "2023": 0.064531,
+     "2024": 0.034058,
+     "2025": 0.017427
+    },
+    "delta_s_pipeline": {
+     "2022": -0.059848,
+     "2023": -0.302446,
+     "2024": -0.56842,
+     "2025": -0.40059
+    },
+    "estado": "calculada",
+    "etiqueta_dd": "e_ext·Δln(puestos Sonora)+e_y·Δln(salario real Sonora)+e_r·Δln(tasa)",
+    "metricas": {
+     "mae_log": {
+      "P_real": {
+       "ingenuo": 0.042989,
+       "metodo": 0.283193,
+       "metodo_supera_a_ingenuo": false
+      },
+      "Q": {
+       "ingenuo": 0.043855,
+       "metodo": 0.171573,
+       "metodo_supera_a_ingenuo": false
+      }
+     },
+     "max_abs_error_log_h2": 0.350946,
+     "por_anio": {
+      "P_real_2024": {
+       "abs_error_log": 0.215439,
+       "ancho_banda_log": 0.67392,
+       "banda": [
+        191.847094,
+        376.387473
+       ],
+       "cambio_observado_vs_2023_pct": 6.015458,
+       "dentro_banda": false,
+       "error_log": 0.215439,
+       "error_log_ingenuo": -0.029964,
+       "error_pct": 24.040632,
+       "error_pct_ingenuo": -2.951951,
+       "ingenuo": 182.358058,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 187.904919,
+       "proyectado": 233.078449,
+       "signo_ok": true
+      },
+      "P_real_2025": {
+       "abs_error_log": 0.350946,
+       "ancho_banda_log": 1.146305,
+       "banda": [
+        201.71076,
+        634.692018
+       ],
+       "cambio_observado_vs_2023_pct": 11.953682,
+       "dentro_banda": false,
+       "error_log": 0.350946,
+       "error_log_ingenuo": -0.056014,
+       "error_pct": 42.041096,
+       "error_pct_ingenuo": -5.447366,
+       "ingenuo": 187.620792,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 198.43,
+       "proyectado": 281.852147,
+       "signo_ok": true
+      },
+      "Q_2024": {
+       "abs_error_log": 0.091828,
+       "ancho_banda_log": 0.419468,
+       "banda": [
+        2036.720714,
+        3098.161788
+       ],
+       "cambio_observado_vs_2023_pct": -6.369221,
+       "dentro_banda": true,
+       "error_log": -0.091828,
+       "error_log_ingenuo": 0.065811,
+       "error_pct": -8.773832,
+       "error_pct_ingenuo": 6.802486,
+       "ingenuo": 3093.0,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 2896.0,
+       "proyectado": 2641.909815,
+       "signo_ok": true
+      },
+      "Q_2025": {
+       "abs_error_log": 0.251318,
+       "ancho_banda_log": 0.71247,
+       "banda": [
+        1514.757764,
+        3088.624028
+       ],
+       "cambio_observado_vs_2023_pct": -2.166182,
+       "dentro_banda": true,
+       "error_log": -0.251318,
+       "error_log_ingenuo": 0.0219,
+       "error_pct": -22.22249,
+       "error_pct_ingenuo": 2.214144,
+       "ingenuo": 3093.0,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 3026.0,
+       "proyectado": 2353.547467,
+       "signo_ok": true
+      }
+     }
+    },
+    "punto": {
+     "2024": {
+      "P_real": 233.078,
+      "Q": 2641.9
+     },
+     "2025": {
+      "P_real": 281.852,
+      "Q": 2353.5
+     }
+    },
+    "rotulo": "SENSIBILIDAD · empleo y salario de SONORA (no Hermosillo) + tasa nacional; 2021 sin δd (falta dic-2020 de la misma definición); declarado como proxy estatal"
+   },
+   "B-sonora+S2-verificacion": {
+    "a_calibrada": 0.630447,
+    "banda": {
+     "2024": {
+      "P_real": [
+       189.752076,
+       416.47925
+      ],
+      "Q": [
+       1916.710648,
+       3112.109871
+      ]
+     },
+     "2025": {
+      "P_real": [
+       196.340635,
+       1161.759919
+      ],
+      "Q": [
+       1053.928566,
+       3122.907573
+      ]
+     }
+    },
+    "correlacion_delta_d": {
+     "aciertos_signo": 1,
+     "anios": [
+      2022,
+      2023,
+      2024,
+      2025
+     ],
+     "construido": [
+      0.01323,
+      0.06453,
+      0.03406,
+      0.01743
+     ],
+     "implicito": [
+      -0.06049,
+      -0.08854,
+      -0.02492,
+      0.08206
+     ],
+     "n": 4,
+     "pearson": -0.567874,
+     "spearman": -0.4
+    },
+    "delta_d_construido": {
+     "2022": 0.013234,
+     "2023": 0.064531,
+     "2024": 0.034058,
+     "2025": 0.017427
+    },
+    "delta_s_pipeline": {
+     "2022": 0.071708,
+     "2023": -0.582339,
+     "2024": -0.47076,
+     "2025": -0.314195
+    },
+    "estado": "calculada",
+    "etiqueta_dd": "",
+    "metricas": {
+     "mae_log": {
+      "P_real": {
+       "ingenuo": 0.042989,
+       "metodo": 0.219167,
+       "metodo_supera_a_ingenuo": false
+      },
+      "Q": {
+       "ingenuo": 0.043855,
+       "metodo": 0.126755,
+       "metodo_supera_a_ingenuo": false
+      }
+     },
+     "max_abs_error_log_h2": 0.267285,
+     "por_anio": {
+      "P_real_2024": {
+       "abs_error_log": 0.171048,
+       "ancho_banda_log": 0.786118,
+       "banda": [
+        189.752076,
+        416.47925
+       ],
+       "cambio_observado_vs_2023_pct": 6.015458,
+       "dentro_banda": false,
+       "error_log": 0.171048,
+       "error_log_ingenuo": -0.029964,
+       "error_pct": 18.654794,
+       "error_pct_ingenuo": -2.951951,
+       "ingenuo": 182.358058,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 187.904919,
+       "proyectado": 222.958193,
+       "signo_ok": true
+      },
+      "P_real_2025": {
+       "abs_error_log": 0.267285,
+       "ancho_banda_log": 1.77784,
+       "banda": [
+        196.340635,
+        1161.759919
+       ],
+       "cambio_observado_vs_2023_pct": 11.953682,
+       "dentro_banda": true,
+       "error_log": 0.267285,
+       "error_log_ingenuo": -0.056014,
+       "error_pct": 30.641299,
+       "error_pct_ingenuo": -5.447366,
+       "ingenuo": 187.620792,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 198.43,
+       "proyectado": 259.23153,
+       "signo_ok": true
+      },
+      "Q_2024": {
+       "abs_error_log": 0.060755,
+       "ancho_banda_log": 0.48469,
+       "banda": [
+        1916.710648,
+        3112.109871
+       ],
+       "cambio_observado_vs_2023_pct": -6.369221,
+       "dentro_banda": true,
+       "error_log": -0.060755,
+       "error_log_ingenuo": 0.065811,
+       "error_pct": -5.894608,
+       "error_pct_ingenuo": 6.802486,
+       "ingenuo": 3093.0,
+       "metodo_mejor_que_ingenuo": true,
+       "observado": 2896.0,
+       "proyectado": 2725.292156,
+       "signo_ok": true
+      },
+      "Q_2025": {
+       "abs_error_log": 0.192755,
+       "ancho_banda_log": 1.08624,
+       "banda": [
+        1053.928566,
+        3122.907573
+       ],
+       "cambio_observado_vs_2023_pct": -2.166182,
+       "dentro_banda": true,
+       "error_log": -0.192755,
+       "error_log_ingenuo": 0.0219,
+       "error_pct": -17.531612,
+       "error_pct_ingenuo": 2.214144,
+       "ingenuo": 3093.0,
+       "metodo_mejor_que_ingenuo": false,
+       "observado": 3026.0,
+       "proyectado": 2495.493416,
+       "signo_ok": true
+      }
+     }
+    },
+    "punto": {
+     "2024": {
+      "P_real": 222.958,
+      "Q": 2725.3
+     },
+     "2025": {
+      "P_real": 259.232,
+      "Q": 2495.5
+     }
+    },
+    "rotulo": "SENSIBILIDAD S2 · oferta con verificación→DTU (L=12; 9–23) en lugar de registro→DTU"
+   },
+   "S6-extremos-e_ext-e_y-e_r": {
+    "combinaciones": {
+     "B-por-verificar-Hermosillo": [],
+     "B-sonora": [
+      {
+       "e_ext": 0.5,
+       "e_r": -0.6,
+       "e_y": 0.5,
+       "error_log_P_2024": 0.209147,
+       "error_log_P_2025": 0.346386,
+       "error_log_Q_2024": -0.101266,
+       "error_log_Q_2025": -0.258158
+      },
+      {
+       "e_ext": 0.5,
+       "e_r": -0.2,
+       "e_y": 0.5,
+       "error_log_P_2024": 0.210373,
+       "error_log_P_2025": 0.34391,
+       "error_log_Q_2024": -0.099428,
+       "error_log_Q_2025": -0.261872
+      },
+      {
+       "e_ext": 0.5,
+       "e_r": -0.6,
+       "e_y": 1.0,
+       "error_log_P_2024": 0.222596,
+       "error_log_P_2025": 0.369557,
+       "error_log_Q_2024": -0.081093,
+       "error_log_Q_2025": -0.223402
+      },
+      {
+       "e_ext": 0.5,
+       "e_r": -0.2,
+       "e_y": 1.0,
+       "error_log_P_2024": 0.223822,
+       "error_log_P_2025": 0.36708,
+       "error_log_Q_2024": -0.079254,
+       "error_log_Q_2025": -0.227117
+      },
+      {
+       "e_ext": 1.5,
+       "e_r": -0.6,
+       "e_y": 0.5,
+       "error_log_P_2024": 0.204305,
+       "error_log_P_2025": 0.330302,
+       "error_log_Q_2024": -0.108529,
+       "error_log_Q_2025": -0.282284
+      },
+      {
+       "e_ext": 1.5,
+       "e_r": -0.2,
+       "e_y": 0.5,
+       "error_log_P_2024": 0.205531,
+       "error_log_P_2025": 0.327826,
+       "error_log_Q_2024": -0.106691,
+       "error_log_Q_2025": -0.285999
+      },
+      {
+       "e_ext": 1.5,
+       "e_r": -0.6,
+       "e_y": 1.0,
+       "error_log_P_2024": 0.217754,
+       "error_log_P_2025": 0.353472,
+       "error_log_Q_2024": -0.088356,
+       "error_log_Q_2025": -0.247529
+      },
+      {
+       "e_ext": 1.5,
+       "e_r": -0.2,
+       "e_y": 1.0,
+       "error_log_P_2024": 0.21898,
+       "error_log_P_2025": 0.350996,
+       "error_log_Q_2024": -0.086518,
+       "error_log_Q_2025": -0.251243
+      }
+     ]
+    },
+    "rotulo": "SENSIBILIDAD S6 · e_ext, e_y, e_r en extremos (punto central, e_d=0.7, e_s=1.5, L=14)"
+   }
+  },
+  "titular": {
+   "empleo_hermosillo_calidad_admitida": {
+    "2025": 260693.0
+   },
+   "estado": "no disponible",
+   "motivo": "C05 no obtuvo empleo IMSS ni salario de cotización de Hermosillo para 2020–2024 con calidad admitida (sólo dic-2025 en prensa; 2019–2024 `por verificar`). No se completa con Sonora ni con valores por verificar (preregistro §7).",
+   "salario_hermosillo_calidad_admitida": {}
+  },
+  "vintage": "No existe vintage de cartera de 2023; la oferta de B es sólo pipeline RUV (s_cartera = s_inventario = 0). Datos al 2026-11-01 (pseudo-fuera de muestra)."
+ },
+ "veredicto_texto": "Frases de §3 activadas (criterios-fase2): «en 2024–2025 el método no superó a la inercia». Variante A (incondicional, titular): 2024: Q proyectado 2916 vs observado 2896 (error +0.7 %; ingenuo +6.8 %); P real proyectado 176.8 vs observado 187.9 (error -5.9 %; ingenuo -3.0 %) | 2025: Q proyectado 2750 vs observado 3026 (error -9.1 %; ingenuo +2.2 %); P real proyectado 176.4 vs observado 198.4 (error -11.1 %; ingenuo -5.4 %). R1 (fuera de banda titular) NO se activa: no se emite «el método no contuvo 2024/2025». Contexto de la banda titular de A: Q 2024 [2662, 3940] y 2025 [2291, 5020] (ancho log 0.39 y 0.78); P real 2024 [176.8, 188.9] y 2025 [176.4, 201.4]. Posición del observado dentro de la banda (0 = borde inferior, 1 = superior): Q 0.21 y 0.35; P real 0.92 y 0.89. Acierto de signo del punto central de A (cambio vs 2023): Q 2024: sí; Q 2025: sí; P real 2024: no; P real 2025: no. En la variante A los observados de Q y P real de 2024 y 2025 quedaron dentro de la banda titular (escenarios × malla de elasticidades). Frente a la inercia, el MAE log 2024–2025 no mejoró en: A · Q, A · P_real. Variante B titular: NO DISPONIBLE: no existe empleo IMSS ni salario de cotización de Hermosillo 2020–2024 con calidad admitida (C05); lo que sigue es sensibilidad con proxies (Sonora / por verificar / sólo tasa), no titular. Sensibilidad B-parcial-solo-tasa (no titular): fuera de banda: Q 2025, P real 2024, P real 2025; MAE log Q 0.200 y P real 0.264 (ingenuo 0.044 y 0.043); correlación δd implícito vs construido Pearson 0.49, Spearman 0.80, n=5. Sensibilidad B-sonora (no titular): fuera de banda: P real 2024, P real 2025; MAE log Q 0.172 y P real 0.283 (ingenuo 0.044 y 0.043); correlación δd implícito vs construido Pearson -0.57, Spearman -0.40, n=4. Diagnóstico de oferta: el pipeline registro→DTU (L=14) anunciaba δs de -43 % (2024) y -33 % (2025) mientras el DTU observado creció +16 % y +20 %; correlación con el δs implícito Pearson 0.29, Spearman 0.00, n=4: el rezago de C01 no está identificado (como C01 advierte), por eso la oferta de B no es confiable. Ensanche mínimo exigido a la banda 2027–2030 si R1 aplica: error absoluto máximo de h=2 = 0.118 en log (12.5 %); aplica = False. Pseudo-fuera de muestra: vintage de datos actual y elasticidades fijadas con la serie 2020–2025 ya disponible; favorece al método. Dos puntos (2024, 2025) no prueban exactitud ni su ausencia."
+}

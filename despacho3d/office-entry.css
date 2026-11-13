@@ -15,6 +15,10 @@
 #case-open:focus-visible{outline:3px solid #4fbe98;outline-offset:4px}
 body:has(#office-entry)>header>#circulo-open{display:none}
 @media(min-width:701px){body:has(#walk[aria-pressed="true"]) #office-entry{top:104px;bottom:auto}}
+/* Barrido 10-nov-2026 (CHG-OS-BARRIDO-20261110): en «Ver todo» la barra de autones (#resident-dock,
+   abajo al centro) tapaba esta tarjeta y su botón «Opciones del autón». Con la barra visible, la
+   tarjeta sube a la misma altura que al caminar. */
+@media(min-width:701px){body:has(#resident-dock:not([hidden])) #office-entry{top:104px;bottom:auto}}
 @media(max-width:700px){
  #office-entry{left:14px;top:76px;bottom:auto;width:calc(100% - 28px);max-width:none;padding:12px 14px;border-radius:18px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px}
  #office-entry .entry-eyebrow{grid-column:1/-1;font-size:9px}

@@ -1,15 +1,17 @@
+import {isPuesto2,mountPuestoAgente,presentationLocation} from './puesto-agente.mjs?v=ruisenor1';
+import {createAgentInteraction,parseDirectUserCommand,nativeVolumeWrite,workspacePresentationVisible,renderInteractionCards} from './agent-interaction.mjs?v=multivolumen3';
 import {officeFastSessions} from './office-preparation.mjs?v=unified283';
 import {mountAvatarCard} from './avatar-card.mjs?v=126';
-import {AUTONES_MULTIPLES} from './office-config.mjs?v=3';
+import {AUTONES_MULTIPLES} from './office-config.mjs?v=records2';
 import {createEntryPreparation} from './voice-preparation.mjs?v=2';
-import {residentAccessDecision} from './resident-agents.mjs?v=unified283';
-import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=first292';
-import {stationIdentity} from './project-station.mjs?v=140';
-import {createLiveVoice} from './live-voice.mjs?v=141';
+import {residentAccessDecision} from './resident-agents.mjs?v=records2';
+import {createFrameTransport, validateSelection, Conversation} from './conversation.mjs?v=ppp-connect1';
+import {stationIdentity} from './project-station.mjs?v=native-volumes3';
+import {createLiveVoice} from './live-voice.mjs?v=close-receipt1';
 import {voiceView} from './voice-view.mjs?v=141';
-import {createWorkspace} from './agent-workspace.mjs?v=entregas291';
-import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=entregas291';
-import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=132';
+import {createWorkspace} from './agent-workspace.mjs?v=council-trace5';
+import {DurableGoals,watchGoals,goalRoadmap,goalDisplay} from './goals.mjs?v=ppp-connect1';
+import {createVoiceActionExecutor,coalesceGoalReads} from './voice-actions.mjs?v=records2';
 import {groupTranscriptFragments} from './live-transcript.mjs';
 
 const open = document.getElementById('voice-open');
@@ -35,8 +37,10 @@ if (open) {
   const capsule=document.createElement('div');capsule.className='voice-capsule';
   capsule.innerHTML='<button id="compact-mic" aria-label="Hablar"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></svg></button><button id="compact-expand" aria-label="Abrir plan de potencial"><b id="compact-name">Tu autón</b><small id="compact-phase">Preparando voz…</small><span aria-hidden="true">↗</span></button><button id="compact-interrupt" hidden aria-label="Escúchame">Escúchame</button><button id="compact-stop" aria-label="Finalizar conversación">×</button><p id="compact-notice" role="status" hidden></p>';
   dialog.append(capsule);document.body.append(dialog);
-  let compactVoice=false;
+  let compactVoice=false,puesto=null;
+  const pilot=value=>isPuesto2(value,presentationLocation(window));
   function present(compactOnly){
+    if(pilot(selection||window.YodResidentAgents?.getSelection?.()))compactOnly=false;
     const switching=dialog.open&&compactVoice!==compactOnly;
     if(switching)dialog.close();
     compactVoice=compactOnly;dialog.classList.toggle('voice-compact',compactVoice);
@@ -44,9 +48,9 @@ if (open) {
     workspace.setActive(!compactVoice);visibility(!compactVoice);
   }
   function openBoard(tab='ppp'){
-    if(!selection||accessPaused)return;
-    present(false);workspace.open(selection,tab);void portrait.open(selection);
-    renderVoiceState(voice.snapshot());
+    if(!selection||accessPaused)return false;
+    present(false);workspace.open(selection,tab);puesto?.showView(tab);void portrait.open(selection);
+    renderVoiceState(voice.snapshot());return true;
   }
   // Conversation stays beside the original board. Secondary information is disclosed once.
   const activityCard=sidebar.querySelector('.station-activity'),voiceCard=sidebar.querySelector('.voice-state-card');
@@ -62,8 +66,23 @@ if (open) {
   const node = id => dialog.querySelector('#' + id);
   const portraitHost=document.createElement('div');portraitHost.className='station-profile-portrait';sidebar.insertBefore(portraitHost,node('voice-title'));const portrait=mountAvatarCard({container:portraitHost,compact:true});
   const fragments = []; let selection = null, discussionDraftCase = null, generation = 0, dismissing = false, transcriptCase = null, freshTranscript = false, previousFocus = null, voiceCaseId = null, accessPaused = false;
+  let interaction=null,voiceInteractionEpoch=window.crypto.randomUUID();
+  const classicInteractions=document.createElement('section');classicInteractions.className='station-interactions';classicInteractions.setAttribute('aria-label','Acciones en esta pantalla');classicInteractions.hidden=true;chatPanel.append(classicInteractions);
   const agentName=()=>selection?stationIdentity(selection).name:'Autón';
-  const visibility=value=>window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:value}));
+  let parentTeam=null;
+  function setParentTeamHidden(value){
+    if(!value){if(parentTeam){parentTeam.node.hidden=parentTeam.hidden;parentTeam=null;}return;}
+    if(parentTeam)return;
+    try{
+      if(window.parent===window||window.parent.location.origin!==window.location.origin)return;
+      const node=window.parent.document.getElementById('despachoEquipo');
+      if(node){parentTeam={node,hidden:node.hidden};node.hidden=true;}
+    }catch{}
+  }
+  function visibility(value){
+    setParentTeamHidden(value);
+    window.dispatchEvent(new CustomEvent('yod-agents-visibility',{detail:value}));
+  }
   const setText = (id,text) => {if(node(id).textContent!==text)node(id).textContent=text;};
   const active = state => !['idle','error'].includes(state.phase);
   const actionExecutor=createVoiceActionExecutor({transport,onChange:event=>{
@@ -73,7 +92,10 @@ if (open) {
   }});
   async function presentMeetingSlide(value){
     if(accessPaused||selection?.case_id!==value.case_id||window.YodResidentAgents?.getSelection?.()?.case_id!==value.case_id)return false;
-    if(!active(voice.snapshot()))begin();
+    if(!active(voice.snapshot())){
+      if(pilot(selection)){setText('station-message-status','Activa el micrófono para escuchar la presentación.');return false;}
+      begin();
+    }
     const deadline=Date.now()+25000;
     while(Date.now()<deadline){
       if(accessPaused||selection?.case_id!==value.case_id||!dialog.open||workspace.getTab()!=='meeting')return false;
@@ -83,7 +105,30 @@ if (open) {
     }
     return false;
   }
-  const workspace=createWorkspace({container:workspaceHost,transport,onDiscuss:value=>{if(accessPaused||selection?.case_id!==value.case_id)return;discussionDraftCase=value.case_id;chatPanel.open=true;const field=node('station-message');const draft='Sobre la entrega «'+value.title+'» (revisión '+value.revision+'): ';field.value=field.value?field.value+'\n'+draft:draft;field.focus();field.setSelectionRange(field.value.length,field.value.length);node('station-message-status').textContent='Borrador para discutir la entrega. Todavía no se envió ni se creó un encargo.';},getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision,selection?.case_id);},onPresent:presentMeetingSlide});
+  const workspace=createWorkspace({container:workspaceHost,transport,onDiscuss:value=>{if(accessPaused||selection?.case_id!==value.case_id)return;discussionDraftCase=value.case_id;chatPanel.open=true;const field=node('station-message');const draft='Sobre la entrega «'+value.title+'» (revisión '+value.revision+'): ';field.value=field.value?field.value+'\n'+draft:draft;field.focus();field.setSelectionRange(field.value.length,field.value.length);node('station-message-status').textContent='Borrador para discutir la entrega. Todavía no se envió ni se creó un encargo.';},getSelection:()=>window.YodResidentAgents?.getSelection?.(),onBoard:revision=>{void voice.notifyBoard(revision,selection?.case_id);},onPresent:presentMeetingSlide,onPresentation:()=>{puesto?.updateWorkspace();interaction?.observe();}});
+  const interactionContext=()=>{const c=workspace.interactionContext();return c?{...c,authorized:c.authorized&&!accessPaused&&dialog.open&&selection?.case_id===window.YodResidentAgents?.getSelection?.()?.case_id,pilot:pilot(selection)}:null;};
+  function renderInteractions(records){
+    const handlers={confirm:id=>interaction.confirm(id),retry:id=>interaction.retry(id)};
+    puesto?.renderInteractions(records,handlers);
+    const current=()=>!accessPaused&&dialog.open&&selection?.case_id===window.YodResidentAgents?.getSelection?.()?.case_id&&interactionContext()?.authorized===true&&interactionContext()?.ppp_enabled===true;
+    renderInteractionCards({host:classicInteractions,records:puesto?.isActive()?[]:records,caseId:selection?.case_id,handlers,isCurrent:current,doc:document});
+    if(!classicInteractions.hidden){chatPanel.open=true;if(compactVoice)present(false);}
+  }
+  function openInteractionWorkspace(value){
+    const before=interactionContext();if(!before?.authorized||before.case_id!==value.context.case_id||!['ppp','activity','sources','knowledge'].includes(value.tab))return{status:'unavailable'};
+    if(!openBoard(value.tab))return{status:'unavailable'};
+    workspace.root.querySelector('[data-panel="'+value.tab+'"]')?.scrollIntoView?.({block:'nearest',behavior:'instant'});
+    const after=interactionContext();
+    if(!after?.authorized||after.case_id!==value.context.case_id||!workspacePresentationVisible({dialog,workspace,tab:value.tab,win:window}))return{status:'unavailable'};
+    return{status:'confirmed',observed:{...after,tab:value.tab}};
+  }
+  interaction=createAgentInteraction({getContext:interactionContext,
+    openWorkspace:openInteractionWorkspace,navigateBridge:value=>workspace.navigateInteraction(value),navigateAssisted:value=>workspace.navigateAssisted(value),
+    // Existing business writes keep their own proposal/receipt circuit. This
+    // presentation controller cannot create a replacement write on a timeout.
+    reconcile:async()=>({status:'unavailable'}),
+    onChange:records=>{renderInteractions(records);const last=records.at(-1);if(last&&['awaiting_confirmation','confirmed','pending','uncertain'].includes(last.state))voice?.notifyInteraction?.(last);}
+  });
   window.YodVoiceWorkspace={isOpen:()=>dialog.open&&!compactVoice,openForCase,prepareNearby:caseId=>{const s=window.YodResidentAgents?.getSelection?.();if(s?.case_id===caseId&&s.can_enqueue&&!active(voice.snapshot()))void voice.prepare(caseId,{connection:true});},releaseNearby:()=>{/* Entry preparation remains warm outside the approach radius. */},pauseEncounter:caseId=>{if(encounterCase===caseId&&voice.snapshot().phase==='listening'&&!voice.snapshot().muted){encounterPaused=true;voice.mute();}},show:tab=>{openBoard(tab);workspaceHost.scrollIntoView({block:'nearest'});}};
   window.dispatchEvent(new CustomEvent('yod-voice-workspace-ready'));
   let stopWatching=null,encounterCase=null,encounterPaused=false,micGrantedInPage=false,encounterNeedsMic=false;
@@ -98,7 +143,7 @@ if (open) {
     node('voice-work').textContent=route.goal?route.goal.title+' · '+goalDisplay(route.goal).label+' · '+route.next:'En espera · listo para el siguiente objetivo.';
   });
   const chat=new Conversation({transport,notify:renderChat});
-  let chatTimer=null,lastChatVoicePhase='idle';const typedTurns=[];
+  let chatTimer=null,lastChatVoicePhase='idle',stationSubmission=null;const typedTurns=[];
   function renderChat(state){
     if(!selection||state.selection&&state.selection.case_id!==selection.case_id)return;
     const host=node('station-messages'),messages=state.model?.messages||[];
@@ -116,8 +161,45 @@ if (open) {
   }
   dialog.querySelector('.station-chat').addEventListener('toggle',()=>{if(dialog.querySelector('.station-chat').open&&selection&&!chat.selection&&!chat.busy)void chat.open(AUTONES_MULTIPLES?selection.case_id:null);});
   node('station-message').addEventListener('input',()=>{if(discussionDraftCase)renderChat(chat);});
-  node('station-message-form').addEventListener('submit',async event=>{event.preventDefault();if(node('station-send').disabled)return;discussionDraftCase=null;const text=node('station-message').value,own=generation,id=selection?.case_id;const inVoice=active(voice.snapshot())||voice.snapshot().text_pending;const sentText=inVoice?text:chat.pending?.message||text;const sent=await(inVoice?voice.sendText(text):chat.send(text));if(sent&&own===generation&&selection?.case_id===id){if(inVoice)typedTurns.push({caseId:id,text});if(node('station-message').value===sentText)node('station-message').value='';renderChat(chat);}});
-  node('station-refresh').addEventListener('click',()=>void(chat.selection?chat.refresh():chat.open(AUTONES_MULTIPLES?selection?.case_id:null)));
+  function stationMessageContext(own,id){
+    const resident=window.YodResidentAgents,current=resident?.getSelection?.();
+    return own===generation&&!accessPaused&&dialog.open&&selection?.case_id===id&&selection?.can_enqueue===true&&(!resident||current?.case_id===id&&current?.can_enqueue===true);
+  }
+  async function sendStationMessage(event){
+    event.preventDefault();if(node('station-send').disabled)return false;
+    const text=node('station-message').value,own=generation,id=selection?.case_id;
+    if(!stationMessageContext(own,id))return false;
+    if(stationSubmission&&!stationMessageContext(stationSubmission.own,stationSubmission.id))stationSubmission=null;
+    if(stationSubmission)return stationSubmission.text===text?stationSubmission.promise:false;
+    discussionDraftCase=null;
+    const submission={text,own,id,event_id:'text-'+window.crypto.randomUUID(),promise:null};stationSubmission=submission;
+    submission.promise=(async()=>{
+      const initialVoice=voice.snapshot(),inVoice=active(initialVoice)||initialVoice.text_pending;
+      if(!chat.pending&&!initialVoice.text_pending){
+        // Opening an explicitly requested view never starts voice or writes quantities.
+        const command=parseDirectUserCommand({role:'user',source:'text',text});
+        if(command)openBoard(command.tab);
+        if(!(command?.kind==='change_request'&&nativeVolumeWrite(interactionContext()))){
+          let local;
+          try{local=await interaction.receive({role:'user',source:'text',complete:true,text,event_id:submission.event_id});}
+          catch{return false;}
+          if(!stationMessageContext(own,id))return false;
+          if(local.handled){if(node('station-message').value===text)node('station-message').value='';return true;}
+        }
+      }
+      if(!stationMessageContext(own,id))return false;
+      const sentText=inVoice?text:chat.pending?.message||text;
+      const sent=await(inVoice?voice.sendText(text):chat.send(text));
+      if(sent&&stationMessageContext(own,id)){
+        if(inVoice)typedTurns.push({caseId:id,text});
+        if(node('station-message').value===sentText)node('station-message').value='';renderChat(chat);
+      }
+      return !!sent;
+    })().finally(()=>{if(stationSubmission===submission)stationSubmission=null;});
+    return submission.promise;
+  }
+  node('station-message-form').addEventListener('submit',sendStationMessage);
+  node('station-refresh').addEventListener('click',()=>{void voice.refresh();void(chat.selection?chat.refresh():chat.open(AUTONES_MULTIPLES?selection?.case_id:null));});
   node('station-write').addEventListener('click',async()=>{
     if(!selection||accessPaused)return;const own=generation;suppressEncounter();node('station-write').disabled=true;
     const result=await voice.stop();if(own!==generation||!selection)return;
@@ -125,13 +207,20 @@ if (open) {
     if(!chat.selection)await chat.open(AUTONES_MULTIPLES?selection.case_id:null);
     if(own===generation)node('station-message').focus();
   });
-  chatTimer=setInterval(()=>{if(dialog.open&&!document.hidden&&dialog.querySelector('.station-chat').open&&chat.selection&&!chat.busy&&!active(voice.snapshot()))void chat.refresh();},12000);
-  window.addEventListener('pagehide',()=>{clearInterval(chatTimer);chat.close();stopWatching?.();});
+  chatTimer=setInterval(()=>{if(dialog.open&&!document.hidden&&dialog.querySelector('.station-chat').open&&chat.selection&&!chat.busy&&!active(voice.snapshot())&&!(node('station-message').value.trim()&&chat.canSend))void chat.refresh();},12000);
+  window.addEventListener('pagehide',()=>{clearInterval(chatTimer);interaction?.dispose();chat.close();stopWatching?.();});
+  function receiveStationTranscript(fragment){
+      if(selection?.case_id===voiceCaseId){renderTranscript(fragment);
+        if(interactionContext()?.ppp_enabled===true&&fragment.role==='user'){
+          const group=groupTranscriptFragments(fragments).find(g=>g.role==='user'&&g.fragments.includes(fragment));
+          if(group)void interaction.receive({role:'user',source:'voice',complete:false,text:group.text,event_id:'voice-'+voiceInteractionEpoch+'-'+group.start_ms});
+        }
+      }
+  }
   const voice = createLiveVoice({canOperate:()=>!accessPaused&&!!selection,actions:actionExecutor,audio: node('voice-audio'), forgetCredential:id=>officeFastSessions.forget(id), mint: value => officeFastSessions.ensure(value.case_id,p=>transport.mintFastSession(p),{priority:true}),
     onChange: renderVoiceState,
-    onTranscript: fragment => {
-      if(selection?.case_id===voiceCaseId)renderTranscript(fragment);
-    }});
+    onTranscript: receiveStationTranscript});
+  puesto=mountPuestoAgente({dialog,sidebar,workspaceHost,workspace,getSelection:()=>selection,doc:document,win:window});
   function renderVoiceState(state) {
       if(selection)state=voice.stateForCase(selection.case_id);
       window.dispatchEvent(new CustomEvent('yod-voice-state',{detail:{phase:state.phase}}));
@@ -140,7 +229,7 @@ if (open) {
       dialog.dataset.voicePhase=state.phase;
       if(wasLive&&['idle','error'].includes(state.phase)&&selection&&!accessPaused&&!chat.busy)void(chat.selection?chat.refresh():chat.open(AUTONES_MULTIPLES?selection.case_id:null));
       if(state.phase==='listening')micGrantedInPage=true;
-      if(state.phase==='listening'&&freshTranscript){fragments.length=0;node('voice-transcript').replaceChildren();freshTranscript=false;node('voice-download').disabled=true;}
+      if(state.phase==='listening'&&freshTranscript){fragments.length=0;voiceInteractionEpoch=window.crypto.randomUUID();node('voice-transcript').replaceChildren();freshTranscript=false;node('voice-download').disabled=true;}
       setText('voice-transcript-label',freshTranscript&&fragments.length?'Transcripción anterior · se conserva mientras conectas':'Transcripción de esta conversación');
       setText('voice-phase',view.title);
       if(dialog.open&&!compactVoice&&selection?.goals?.ready&&!stopWatching)stopWatching=watchGoals(goalReader,{visible:()=>dialog.open&&!document.hidden&&!voice.snapshot().actions_pending});
@@ -184,6 +273,8 @@ if (open) {
       const warning=encounterNeedsMic||state.credential_pending||state.session_ending||state.phase==='error'||state.ended_remotely||state.interruption_error||state.playback_blocked||state.incomplete||state.pending||accessPaused;
       node('compact-notice').hidden=!warning;
       setText('compact-notice',accessPaused?node('station-access').textContent:encounterNeedsMic?micConsentNotice:state.playback_blocked?'Pulsa el micrófono para activar el sonido.':state.incomplete||state.pending?view.history:connectionNotice);
+      puesto?.renderState({...state,accessPaused});
+      interaction?.observe();
   }
   function renderTranscript(fragment) {
       if(!selection)return;
@@ -202,6 +293,7 @@ if (open) {
   }
   async function openForCase(caseId,tab='ppp',{startVoice=false,encounter=false,compactOnly=encounter}={}) {
     const currentSelection=window.YodResidentAgents?.getSelection?.();
+    if(pilot(currentSelection)){startVoice=false;compactOnly=false;encounter=false;}
     if(active(voice.snapshot())&&voiceCaseId!==currentSelection?.case_id)return false;
     if(caseId&&(!currentSelection||currentSelection.case_id!==caseId))return false;
     if(dialog.open&&selection){
@@ -217,10 +309,11 @@ if (open) {
       const resident = window.YodResidentAgents;
       const fresh = resident?.getSelection?.() || validateSelection(await transport.resolveCurrent(caseId?{case_id:caseId}:{}));
       if (current !== generation || !dialog.open || caseId&&fresh.case_id!==caseId) return false;
-      selection = fresh; node('voice-audio').muted=false; node('voice-case').textContent = fresh.name;
+      if(pilot(fresh)){startVoice=false;compactOnly=false;encounter=false;present(false);}
+      selection = fresh;puesto?.setSelection(fresh);interaction?.observe();node('voice-audio').muted=false; node('voice-case').textContent = fresh.name;
       if(transcriptCase!==fresh.case_id){discussionDraftCase=null;fragments.length=0;node('voice-transcript').replaceChildren();node('voice-download').disabled=true;node('voice-previous').hidden=true;node('station-message').value='';node('station-messages').replaceChildren();chat.close();transcriptCase=fresh.case_id;}
       dialog.querySelector('.voice-transcript-details').hidden=false;
-      if(!compactVoice){workspace.open(fresh,tab);void portrait.open(fresh);}else workspace.setActive(false);
+      if(!compactVoice){workspace.open(fresh,tab);if(pilot(fresh)&&tab!=='ppp')puesto?.showView(tab);void portrait.open(fresh);}else workspace.setActive(false);
       if(!fresh.goals?.ready)node('voice-work').textContent='El seguimiento de objetivos aún no está conectado para este proyecto.';
       if(dialog.querySelector('.station-chat').open&&!chat.selection)void chat.open(AUTONES_MULTIPLES?selection.case_id:null);
       setText('voice-title',agentName());
@@ -237,6 +330,7 @@ if (open) {
   }
   open.addEventListener('click',()=>void openForCase(window.YodResidentAgents?.getSelection?.()?.case_id,'ppp',{startVoice:true,compactOnly:true}));
   async function requestBegin(encounter){
+    if(encounter&&pilot(selection)){encounterNeedsMic=true;renderVoiceState(voice.snapshot());return;}
     const own=generation,id=selection?.case_id;
     if(!encounter){encounterCase=null;begin();return;}
     encounterCase=id;
@@ -285,7 +379,7 @@ if (open) {
     const link=document.createElement('a');link.href=url;link.download='conversacion-proyecto.txt';link.click();
     setTimeout(()=>URL.revokeObjectURL(url),1000);
   });
-  node('voice-view-tasks').addEventListener('click',()=>workspace.setTab('tasks'));
+  node('voice-view-tasks').addEventListener('click',()=>{workspace.setTab('tasks');puesto?.showView('tasks');});
   window.addEventListener('yod-goals-changed',()=>{if(stopWatching)void goalReader.read();});
   node('voice-retry-context').addEventListener('click',()=>{void voice.retryContext();});
   node('voice-retry-actions').addEventListener('click',()=>voice.retryActions());
@@ -295,11 +389,11 @@ if (open) {
     if (dismissing) return; dismissing = true;suppressEncounter();
     const wasLive = active(voice.snapshot()), result = await voice.stop();
     if (wasLive && (result?.incomplete || result?.pending)) {dismissing = false; return;}
-    generation++; selection = null; stopWatching?.();stopWatching=null;goalReader.hide();workspace.setActive(false);dialog.close();visibility(false);previousFocus?.focus?.(); dismissing = false;
+    generation++; selection = null;puesto?.setSelection(null);interaction?.observe();stopWatching?.();stopWatching=null;goalReader.hide();workspace.setActive(false);dialog.close();visibility(false);previousFocus?.focus?.(); dismissing = false;
   }
-  dialog.querySelector('.voice-close').addEventListener('click', () => {if(active(voice.snapshot())){present(true);stopWatching?.();stopWatching=null;}else void dismiss();});
-  dialog.addEventListener('cancel', event => {event.preventDefault();if(!compactVoice&&active(voice.snapshot()))present(true);else void dismiss();});
-  window.addEventListener('pagehide', () => {generation++; voice.abandon();workspace.dispose();delete window.YodVoiceWorkspace;});
+  dialog.querySelector('.voice-close').addEventListener('click', () => {if(active(voice.snapshot())&&!pilot(selection)){present(true);stopWatching?.();stopWatching=null;}else void dismiss();});
+  dialog.addEventListener('cancel', event => {event.preventDefault();if(!compactVoice&&active(voice.snapshot())&&!pilot(selection))present(true);else void dismiss();});
+  window.addEventListener('pagehide', () => {generation++;voice.abandon();puesto?.dispose();workspace.dispose();setParentTeamHidden(false);delete window.YodVoiceWorkspace;});
   // Visibility alone is not a hangup; mobile permission prompts and app switching can hide the page.
   document.addEventListener('visibilitychange', () => {if (!document.hidden) void voice.refresh();});
   window.addEventListener('yod-data-invalidated',()=>{
@@ -339,11 +433,11 @@ if (open) {
         return;
       }
       if(access==='current'&&accessPaused){
-        accessPaused=false;selection=s;node('station-access').hidden=true;node('station-reconnect').hidden=true;
+        accessPaused=false;selection=s;puesto?.setSelection(s);node('station-access').hidden=true;node('station-reconnect').hidden=true;
         workspace.setActive(dialog.open&&!compactVoice);renderVoiceState(voice.snapshot());
       }
       if(access==='lost'){
-        entrance.clear();generation++;selection=null;encounterNeedsMic=false;stopWatching?.();stopWatching=null;goalReader.hide();chat.close();workspace.reset();portrait.clear();workspace.setActive(false);
+        entrance.clear();generation++;selection=null;puesto?.setSelection(null);interaction?.observe();encounterNeedsMic=false;stopWatching?.();stopWatching=null;goalReader.hide();chat.close();workspace.reset();portrait.clear();workspace.setActive(false);
         fragments.length=0;freshTranscript=false;node('voice-transcript').replaceChildren();node('voice-work').replaceChildren();node('voice-task').textContent='';
         node('voice-download').disabled=true;node('voice-start').disabled=true;node('voice-previous').hidden=true;node('voice-audio').muted=true;
         setText('voice-case','El acceso al expediente cambió.');setText('voice-title','Tu autón');discussionDraftCase=null;node('station-message').value='';node('station-messages').replaceChildren();
@@ -358,3 +452,4 @@ if (open) {
   window.addEventListener('yod-residents-ready',bindResident);bindResident();
   window.addEventListener('pagehide',()=>{clearInterval(preparationTimer);entrance.clear();unbind?.();transport.dispose();});
 }
+

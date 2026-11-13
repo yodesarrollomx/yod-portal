@@ -1,4 +1,5 @@
-import {workHeadline,safeWorkURL} from './work-observer.mjs?v=129';
+import {coreHeadline} from './core-observation.mjs?v=core1';
+import {workHeadline,safeWorkURL} from './work-observer.mjs?v=core1';
 // The next step describes a human decision, never an automatic execution.
 export function recoveryNextStep(state){
  if(state.phase!=='ready')return 'Actualiza la conexión antes de decidir. El último registro puede haber cambiado.';
@@ -18,6 +19,7 @@ export function mountWorkView({container,getCase,win=window,doc=document,onTasks
  title.className='work-title';status.className='work-state';resultBlock.className='work-result';nextBlock.className='work-next';stamp.className='work-stamp';
  resultBlock.append(el('h4','Resultado'),result);nextBlock.append(el('h4','Siguiente paso'),next,tasks);
  tasks.type='button';tasks.onclick=onTasks;status.setAttribute('aria-live','polite');details.append(summary,body);root.append(label,title,status,step,stamp,resultBlock,nextBlock,details);container.append(root);
+ const control=el('section');control.className='work-core';control.hidden=true;control.setAttribute('aria-label','Control del trabajo');control.setAttribute('aria-live','polite');root.append(control);
  const historySection=el('section'),historyButton=el('button','Ver historial de ejecuciones'),historyStatus=el('p'),historyBody=el('div');
  historySection.className='work-history';historySection.append(el('h4','Historial del proyecto'),historyButton,historyStatus,historyBody);root.append(historySection);
  historyButton.type='button';historyStatus.setAttribute('aria-live','polite');
@@ -64,11 +66,13 @@ export function mountWorkView({container,getCase,win=window,doc=document,onTasks
   if(!valid||state.phase==='unauthorized'||historyCase&&historyCase!==getCase())resetHistory();
   historySection.hidden=!valid||state.phase==='unauthorized';historyButton.hidden=state.history_available!==true;
   if(valid&&state.history_available!==true){resetHistory();historyStatus.textContent='El historial aún no está disponible en esta conexión.';historyBody.replaceChildren();}
-  const key=JSON.stringify({case_id:getCase(),phase:state.phase,work:w,runtime:state.runtime,history_available:state.history_available});if(lastPaint===key)return;lastPaint=key;
+  const key=JSON.stringify({case_id:getCase(),phase:state.phase,work:w,runtime:state.runtime,history_available:state.history_available,core:state.core?.checkpoint_key,core_error:state.core_error});if(lastPaint===key)return;lastPaint=key;
   status.textContent=valid?workHeadline(state):'Sin actividad de este proyecto';title.textContent=w?.title||'Tu trabajo en este puesto';body.replaceChildren();step.textContent='';result.textContent='';stamp.textContent='';details.hidden=!w;
   root.dataset.workId=w?.run_id||'';root.dataset.goalId=w?.goal_id||'';
   resultBlock.hidden=!w;nextBlock.hidden=!valid||state.phase==='unauthorized'||state.phase==='loading';
   next.textContent=valid?recoveryNextStep(state):'';
+  control.replaceChildren();const core=valid&&state.phase==='ready'?state.core:null;control.hidden=!(core||valid&&state.phase==='ready'&&state.core_error);
+  if(!control.hidden){control.append(el('h4','Control del trabajo'));if(core){control.dataset.phase=core.phase;control.append(el('strong',coreHeadline(core)));for(const alert of core.alerts){const row=el('div');row.append(el('p',alert.label),el('p',alert.next_step));control.append(row);}control.append(el('small','Comprobado · '+new Date(core.observed_at).toLocaleString()));}else{control.append(el('p','No se pudo verificar el control del trabajo. Conservamos el último avance recibido.'));}}
   if(!w)return;
   const live=['working','tool'].includes(w.phase)&&state.phase==='ready'&&(!state.runtime||state.runtime.phase==='working'),current=w.progress.progress.tasks.find(t=>t.status==='running');
   const prior=state.runtime&&(['waiting_capacity','waiting_recovery','starting','reconnecting','unavailable','disabled','stopped'].includes(state.runtime.phase)||state.runtime.phase==='working'&&!['working','tool'].includes(w.phase));

@@ -1,3 +1,3 @@
-import {mountOfficeEntry} from './office-entry.mjs?v=143';
+import {mountOfficeEntry} from './office-entry.mjs?v=records2';
 const entry=mountOfficeEntry();
 window.addEventListener('pagehide',()=>entry?.dispose());

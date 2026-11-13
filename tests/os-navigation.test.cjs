@@ -33,3 +33,5 @@ test('ambos marcos provienen del mismo catálogo y no cambian permisos',()=>{
  assert.deepEqual(JSON.parse(JSON.stringify(app.NAV_PARENT)),Object.fromEntries(C.filter(x=>x.navParent).map(x=>[x.id,x.navParent])));
  assert.deepEqual(JSON.parse(JSON.stringify(app.NAV_PARENT)),JSON.parse(JSON.stringify(shell.NAV_PARENT)));
 });
+
+for(const file of ['../os/app.js','../os/shell.js'])test(file+': role label is presentation only and keeps module identity',()=>{const source=fs.readFileSync(require.resolve(file),'utf8');const fn=source.match(/function moduleTitle\(row\)\s*\{[^}]+\}/)[0];const scope=vm.createContext({state:{role:'admin'},safeText:v=>String(v||''),NAME:{}});vm.runInContext(fn,scope);const row={system_id:'SYS-INVERSION',titulo_portal:'Inversión'};assert.equal(scope.moduleTitle(row),'Master Developer');scope.state.role='vista';assert.equal(scope.moduleTitle(row),'Master Broker');assert.equal(row.system_id,'SYS-INVERSION');assert.equal(row.titulo_portal,'Inversión');assert.equal(scope.moduleTitle({system_id:'SYS-OBRA',titulo_portal:'Obra'}),'Obra');});

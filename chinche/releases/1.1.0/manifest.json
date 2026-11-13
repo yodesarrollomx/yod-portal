@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "name": "@yod/chinches",
+  "version": "1.1.0",
+  "sequenceProtocol": 1,
+  "assets": [
+    {
+      "path": "secuencia.js",
+      "source": "chinche/secuencia.js",
+      "sha256": "682df06721e0163f89f0a0a06530d09a55b11cfc38421d4ba087bdd16b129e8a",
+      "bytes": 26689
+    },
+    {
+      "path": "entrega.js",
+      "source": "chinche/entrega.js",
+      "sha256": "908a1da68fb4023aaf0aa6a0a862b33a54d5796010cc9f864b3ed80e0697ef46",
+      "bytes": 3584
+    },
+    {
+      "path": "microfono.html",
+      "source": "chinche/microfono.html",
+      "sha256": "644fc0b7a642149453ecb632dd0243801b11c9fa424b900c7be0968fcd2f4ed3",
+      "bytes": 5971
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="os/proyectos.js?v=2"></script>
+<script src="os/proyectos.js?v=20261113-ui-consistencia"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
 <title>Track de Codesarrollos · Yo Desarrollo</title>
@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <link rel="stylesheet" href="https://unpkg.com/leaflet-gesture-handling@1.2.2/dist/leaflet-gesture-handling.min.css">
-<link rel="stylesheet" href="https://yodesarrollomx.github.io/yod-portal/os/shell.css">
+<link rel="stylesheet" href="https://yodesarrollomx.github.io/yod-portal/os/shell.css?v=20261113-ui-consistencia">
 <style>
   :root{--bg:#f6f3ed;--card:#ffffff;--text:#231d14;--muted:#766f62;--suave:#4c4536;--linea:#e1dacb;--lineaf:#d8cfbb;--gold:#9a7b3f;--goldc:#b98b3c;--green:#39744b;--orange:#9a6a1e;--red:#a94438}
   *{box-sizing:border-box}
@@ -36,6 +36,7 @@
   .panel h1{font-size:20px;margin:0}
   .panel .sub{font-size:10.5px;color:var(--muted);margin:2px 0 0;line-height:1.45}
   .panel .source{font-size:9px;color:#705725;margin:6px 0 0;letter-spacing:.03em}
+  .panel .source .reintentar{font:inherit;font-weight:700;color:#231C0E;background:#F1E4C4;border:1px solid #C9B27C;border-radius:8px;padding:3px 9px;margin-left:4px;cursor:pointer}
   .leyenda{display:flex;gap:10px;margin-top:9px;font-size:10px;font-weight:700;color:var(--suave)}
   .leyenda i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
   .pie{position:absolute;z-index:1100;bottom:10px;left:12px;font-size:9.5px;color:var(--muted);background:rgba(255,255,255,.85);border-radius:8px;padding:4px 8px}
@@ -70,7 +71,7 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script src="https://unpkg.com/leaflet-gesture-handling@1.2.2/dist/leaflet-gesture-handling.min.js"></script>
-<script src="portal-core.js?v=1.0.3"></script>
+<script src="portal-core.js?v=20261113-ui-consistencia"></script>
 <script>
 (()=>{
   const ENDPOINT='https://script.google.com/macros/s/AKfycby5LKYKRwl0EsNgppOIeD_ArST8vSXRgNO4ns8XZbFW4yjfglzu4io_vhabB8h-J792Tw/exec?action=read&resource=Track';
@@ -79,7 +80,8 @@
   function inicia(PINES){
   if(!PINES.length){document.getElementById('source').textContent='No hay proyectos visibles configurados';return}
   const map=L.map('map',{zoomControl:false,attributionControl:true,gestureHandling:true,gestureHandlingOptions:{duration:1200,text:{touch:'Usa dos dedos para mover el mapa',scroll:'Usa ctrl + scroll para hacer zoom',scrollMac:'Usa ⌘ + scroll para hacer zoom'}}}).setView([28.5,-110.9],7);L.control.zoom({position:'bottomleft'}).addTo(map);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',subdomains:'abcd',maxZoom:19}).addTo(map);
+  /* CARTO ahora exige API key: sus tiles salían tapizados de «API KEY REQUIRED» (barrido 10-nov-2026). OSM, igual que PPP. */
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap',maxZoom:19}).addTo(map);
   window._map=map;
   let bounds=L.latLngBounds(PINES.map(p=>[p.lat,p.lng])).pad(0.5);
   PINES.forEach(p=>{
@@ -100,18 +102,37 @@
     document.getElementById('source').textContent='Inicia sesión en YOD OS para ver la ruta de proyectos';
     setTimeout(()=>{location.href='https://yodesarrollomx.github.io/yod-portal/os/';},1800);
   }else{
-    const controller=new AbortController();
-    const timeout=setTimeout(()=>controller.abort(),8000);
-    fetch(ENDPOINT+'&k='+encodeURIComponent(_k),{credentials:'omit',signal:controller.signal}).then(r=>{if(!r.ok)throw Error('backend');return r.json()}).then(data=>{
-      clearTimeout(timeout);
-      if(data&&data.error==='liga'){document.getElementById('source').textContent='Tu sesión no tiene acceso a Codesarrollos';return;}
-      if(!data.ok||!Array.isArray(data.rows))throw Error('payload');
-      document.getElementById('source').textContent=`Datos en vivo desde Sheets · ${data.rows.length} proyectos`; inicia(data.rows.map(normaliza));
-    }).catch(()=>{clearTimeout(timeout);document.getElementById('source').textContent='Track temporalmente no disponible · ningún destino habilitado'});
+    // Barrido 10-nov-2026 (CHG-OS-BARRIDO-20261110): el Control Maestro tarda 5–24 s en
+    // frío y el plazo de 8 s cortaba la lectura a la mitad; la pantalla decía «ningún
+    // destino habilitado», que era falso. Plazo de 30 s, un reintento automático y un
+    // botón para volver a pedir. Un rechazo de la sesión no se reintenta.
+    const src=document.getElementById('source');
+    const PLAZO_MS=30000, INTENTOS=2;
+    let pintado=false;
+    function pedir(intento){
+      src.textContent=intento>1?'El servidor tardó; reintentando…':'Consultando los codesarrollos…';
+      const controller=new AbortController();
+      const timeout=setTimeout(()=>controller.abort(),PLAZO_MS);
+      fetch(ENDPOINT+'&k='+encodeURIComponent(_k),{credentials:'omit',signal:controller.signal}).then(r=>{if(!r.ok)throw Error('backend');return r.json()}).then(data=>{
+        clearTimeout(timeout);
+        if(data&&data.error==='liga'){src.textContent='Tu sesión no tiene acceso a Codesarrollos';return;}
+        if(data&&data.ok===false){src.textContent='Codesarrollos no aceptó la sesión · vuelve a entrar desde YOD OS';return;}
+        if(!data||!data.ok||!Array.isArray(data.rows))throw Error('payload');
+        src.textContent=`Datos en vivo desde Sheets · ${data.rows.length} proyectos`;
+        if(!pintado){pintado=true;inicia(data.rows.map(normaliza));}
+      }).catch(()=>{
+        clearTimeout(timeout);
+        if(intento<INTENTOS){pedir(intento+1);return;}
+        src.textContent='El servidor de Codesarrollos no contestó a tiempo. ';
+        const b=document.createElement('button');b.type='button';b.className='reintentar';b.textContent='Reintentar';
+        b.onclick=()=>pedir(1);src.appendChild(b);
+      });
+    }
+    pedir(1);
   }
 })();
 </script>
-<script src="https://yodesarrollomx.github.io/potenciales-yod/portero.js?v=relevo8"></script>
-<script src="https://yodesarrollomx.github.io/yod-portal/os/shell.js?v=audit-20260930"></script>
+<script src="https://yodesarrollomx.github.io/potenciales-yod/portero.js?v=20261031-fase1-e2"></script>
+<script src="https://yodesarrollomx.github.io/yod-portal/os/shell.js?v=20261113-ui-consistencia"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-18.reel-tools.1 · 2026-10-18.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-13.reel-herramientas.1 · 2026-10-20.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 
@@ -595,3 +595,96 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 - Todos los históricos conservan bytes y URLs. Vídeo, audio y muestras siguen en Pages en fase1; snapshots de datos siguen siendo releases draft privados.
 - Desactivar SALA_MEDIOS_PUBLICOS detiene sólo nuevas externalizaciones. Si ya existe un medio externo, conservar lector compatible, manifiesto, pin del recibo, releases inmutables y sus activos. No volver a un lector antiguo ni retirar activos hasta repatriar y verificar todos los bytes referenciados, publicar un FULL íntegro dentro de 900 MiB y comprobar recibo fresco y consumidores. No borrar históricos ni alterar ACL, decisiones, destinatarios o reglas de negocio.
 - Fuera de ventana14 días no equivale a retirada: lectura de historial completo declarada y validada, latest real por editor/pid/lámina y estado editorial vigente comprobado antes de producir. Retirada más reciente prevalece; cero elegibles actuales no autoriza nuevas decisiones o reencolados. Sin backend verificado, flag0 e historial no confirmado.
+
+## VOLUMENES · Piloto de navegación del agente y borrador por volúmenes
+
+- Tableros: SYS-YOD-OS, SYS-DESPACHO, SYS-DESPACHO-3D, SYS-POTENCIALES.
+- Problema: El puesto requería navegación visible y una captura independiente de uno, dos o tres volúmenes sin confundir consulta, intención y aplicación.
+- Beneficio esperado: Navega el PPP real por protocolos comprobables y conserva la intención cuando no hay confirmación; captura cantidades por volumen en un borrador explícito.
+- Medición: Una navegación se confirma sólo con vista y contexto exactos; cero escrituras de negocio por fallback o selector. Borrador aislado por caso/escenario/base con valor inicial1.
+- Dependencias: Sin dependencias previas.
+- Esfuerzo: Frontend implementado localmente; QA y publicación pendientes. Segunda etapa canónica separada.. Decisión: **implementada**.
+
+### Requisitos previos
+
+- Perfil autorizado y piloto exacto; contexto actual del mismo caso, escenario y revisión.
+- Puente nativo y capacidad de navegación anunciados para certificar sección/versión; DOM legacy sólo acredita apertura visual pendiente.
+- Editor de volúmenes aislado: captura cantidades; no activa writer nativo, autosave ni cálculo financiero.
+
+### Tareas
+
+1. A: enviar navegación al puente y aceptar sólo ACK/contexto/visibilidad exactos.
+2. B: abrir y mostrar la sección DOM sin focus, click ni input/change; sólo confirmar con contexto nativo fresco, mantener legacy pendiente.
+3. C: conservar tarjeta de intención con reintento/confirmación; cambios numéricos siguen sin aplicar y recibos inciertos sólo se concilian.
+4. Ofrecer1/2/3 volúmenes inicial1, campos independientes y descarga manual del borrador sin persistencia del navegador, Store ni efectos financieros.
+5. Completar QA final, PR/Pages y evidencia diferenciada de publicación y aceptación.
+
+### Criterios de aceptación
+
+- Texto completo del usuario puede navegar; deltas de voz no ejecutan sin confirmación. Prosa del agente, citas y documentos no son instrucciones ejecutables.
+- Origen, ventana, nonce, caso, escenario, revisión y capacidad coinciden. Cambio de contexto descarta respuestas tardías y revocación limpia datos.
+- RutaB no roba foco ni dispara edición; legacy no se promueve a contexto nativo confirmado.
+- Cambiar de ruta no reenvía mutaciones inciertas; la tarjeta conserva intención y límites reales.
+- Volúmenes capturan cantidades independientes por caso/escenario/revisión base. No producen utilidad, deuda, TIR, presupuesto ni guardado canónico.
+
+## VOLUMENESCANONICOS · Volúmenes nativos en todos los PPP verticales y mixtos
+
+- Tableros: SYS-POTENCIALES, GAS-PORTERO, SHEET-PORTERO, SHEET-PPP-MODELOS, SYS-DESPACHO-3D, SYS-YOD-OS, SVC-AUTON-CLOUD.
+- Problema: El borrador frontend por volúmenes aún no está guardado en el modelo canónico ni participa en fórmulas y flujo por etapas.
+- Beneficio esperado: Comparar versiones con cuerpos independientes, recursos comunes contados una sola vez y cálculo nativo trazable.
+- Medición: Compatibilidad exacta del caso legado de un cuerpo; agregados sin duplicación y guardado con CAS, recibo y conciliación por solicitud.
+- Dependencias: VOLUMENES.
+- Esfuerzo: Por estimar tras acordar esquema y fórmulas sobre el modelo canónico.. Decisión: **aprobada**.
+
+### Requisitos previos
+
+- Ampliación expresa autorizada por Dirección20oct: Apps Script, Sheets y backend/Render permitidos dentro de este encargo; conservar identidad, ACL y despliegues existentes.
+- Contrastar fuente y esquema vigentes; los contratos propuestos no acreditan despliegue.
+- Garantizar equivalencia del modelo de un volumen y cálculo financiero sólo en Sheets.
+
+### Tareas
+
+1. Conciliar contrato por caso/escenario/versión/revisión y capability del modelo, independiente del agente.
+2. Persistir cantidades por cuerpo y recursos compartidos una sola vez en el libro canónico, con migración1cuerpo compatible.
+3. Extender el backend/puente existente con CAS/request_id/recibo y conciliación; proteger fórmulas y conservar permisos.
+4. Validar en aislamiento y publicar consumidores y backend con recibos independientes.
+
+### Criterios de aceptación
+
+- Históricos/base no se sobrescriben ni migran a ciegas; una versión nueva registra el origen y su revisión.
+- Núcleos, elevadores y áreas comunes tienen identidad y alcance explícitos y se suman una sola vez; no se multiplican automáticamente por número de cuerpos.
+- No se crea motor financiero paralelo: las fórmulas del libro canónico producen resultados y flujos por etapas.
+- Sin capability, permiso, revisión o esquema compatibles se rechaza antes de escribir. Request_id ambiguo se concilia sin reenviar ni elevar revisión.
+- Autorización de alcance ya concedida; publicar sólo tras pruebas aisladas, recibos de despliegue existente y comprobación de cálculo. No dar por completo un caso que siga pendiente de fábrica/plantilla.
+
+## PPPPRESENTACIONES · Generar y versionar presentaciones desde el PPP visible
+
+- Tableros: SYS-POTENCIALES, GAS-PORTERO, SHEET-PPP-MODELOS, SVC-AUTON-CLOUD, STORE-AUTON-ESTADO, SYS-INVERSION, GAS-SALA, SHEET-SALA, SYS-DESPACHO.
+- Problema: El PPP y el portal de presentaciones no tienen un recorrido acreditado para encargar un storyboard con datos de la revisión visible y conservar versiones editoriales en el mismo contexto.
+- Beneficio esperado: Convertir el know-how de YOD y los números confirmados en una presentación visual trazable, recuperable y reutilizable desde ambos tableros.
+- Medición: Cinco motores con fuente exacta; coincidencia de IDs/versiones entre PPP y Master Developer; ningún duplicado tras reintento ni exposición de guion privado.
+- Dependencias: Sin dependencias previas.
+- Esfuerzo: Implementación coordinada de contratos, PPP, agente, registro y renderer con validación por capa.. Decisión: **aprobada**.
+
+### Requisitos previos
+
+- Autorización directa por chat de Dirección el31-oct-2026: ejecutar el plan en equipo. No aprueba futuras presentaciones de clientes ni publicación automática.
+- Confirmar fuentes, capacidades, reservas y contratos reales; conservar Portero, orquestación, registro y cálculo existentes.
+- Registrar CHG-PPP-PRESENTACIONES-20261031 y fijar su commit en consumidores antes de integrar.
+
+### Tareas
+
+1. Confirmar snapshot del escenario visible y revisiones separadas; introducir alcance acotado de presentación.
+2. Conectar botón y seguimiento en cinco motores al trabajo durable existente.
+3. Generar storyboard visual mediante ADN y adaptador Hairline, validar y registrar versión privada.
+4. Mostrar el mismo historial en PPP y Master Developer; preservar ediciones, chinches y continuación de etapa dos.
+5. Probar recuperación, autorización, concurrencia y recorrido completo; desplegar por capas con recibos independientes.
+
+### Criterios de aceptación
+
+- No sustituir el escenario visible por activo/base/defendido ni mezclar entradas y resultados de revisiones distintas.
+- Storyboard visual navegable guardado con origen exacto, método, renderer y recibo; no sólo texto o JSON.
+- Reintentos recuperan la misma versión; nuevas elaboraciones y cambios crean versiones independientes sin borrar anteriores.
+- Cierre/reinicio no pierde el trabajo; revocación y lease vencido bloquean efectos; metas existentes se conservan.
+- PPP y biblioteca consultan el mismo registro; sesión fija release; visitante no recibe guion ni fuentes privadas.
+- Producción exige instrucción posterior sobre storyboard; guardado y QA no equivalen a aprobación o publicación.

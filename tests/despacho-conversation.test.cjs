@@ -266,3 +266,11 @@ test('source diagnostics cross the actual OS bridge without exposing private ser
  }
  b.binding.dispose();
 });
+
+test('live catalog carries documentary state with exact identity but cannot assert execution',async()=>{
+ const {validateSelection}=await load(),id=current.case_id;
+ const raw={...current,can_enqueue:false,agent_ready:false,avatar:{id,case_id:id,entity_kind:'case',name:current.name,form:'child',color:'#547e75',visual:{}},auton_status:{ok:true,schema:1,case_id:id,admission:'alta',activity:'waiting',reason:'recorded_wait_not_live',source_ref:'Proyectos!2',source_revision:'synthetic-revision',observed_at:new Date().toISOString(),library_only:false}};
+ const selection=validateSelection(raw);assert.equal(selection.avatar.auton_status.activity,'waiting');assert.equal(selection.can_enqueue,false);
+ assert.throws(()=>validateSelection({...raw,auton_status:{...raw.auton_status,activity:'working'}}),/invalid_selection/);
+ assert.throws(()=>validateSelection({...raw,auton_status:{...raw.auton_status,case_id:'other'}}),/invalid_auton_status/);
+});
