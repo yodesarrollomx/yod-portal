@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-13.grafo-app.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-13.brokers-atlas.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 

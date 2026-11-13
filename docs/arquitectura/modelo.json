@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-13.grafo-app.1",
+  "revision": "2026-11-13.brokers-atlas.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -15908,6 +15908,29 @@
       ],
       "deployment": "Se publica al fusionar el PR en yod-portal.",
       "rollback": "Revertir el PR; la App se revoca aparte (organización → GitHub Apps)."
+    },
+    {
+      "id": "CHG-MASTERBROKERS-PORTAL-INTEGRATED",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-CRM",
+        "SHEET-CRM",
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SYS-YOD-OS"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección solicita18-oct integrar en el board YOD OS la experiencia del prototipo, con todo lo existente, completar publicación y bitácora. Conserva fuentes y alcances autorizados; no publica datos privados en Git.",
+      "proposal": "Misma entrada brokers.html y contrato brokers.v1: MD abre equipo y cartera propia, broker abre únicamente su cartera validada. Un renglón por contacto; al abrirlo muestra asuntos separados, historial agregado con fuente y PPP por asunto. Responsable, etapa, último hecho y siguiente compromiso provienen de los registros, sin inventar estados agregados o finanzas. Breadcrumbs y URL conservan navegación autorizada, nunca otorgan permisos. Se conserva la vista de comparación de asuntos como herramienta opcional. Reutiliza edición, guardado idempotente/readback, agenda/reprogramación, acuerdos, documentos, presentación común, evaluación y retorno recuperable de PR43. No importa fixtures de la muestra pública ni crea otra base. La conexión real utiliza sesión existente de YOD OS; no se crea otro acceso. Preservar cambios concurrentes de roles/beneficios/pregunta clave del encargado original.",
+      "tests": [
+        "Proyección por contacto/expediente, responsable nominal, última actividad real y sin mezclar carteras; no duplicar personas por varios asuntos.",
+        "Navegador320/390/1440: MD→broker→cliente→asunto→PPP/historial/avance, regreso y recarga; broker aislado, sesión revocada, datos sintéticos sólo en pruebas.",
+        "Regresiones de edición, nueva oportunidad/contacto, guardado con ACK viejo, agenda y reprogramación, presentación, acuerdos y retorno evaluador en Chromium/WebKit.",
+        "Atlas, manifiesto/pin, CI, bytes publicados y recorrido autenticado se comprueban por separado."
+      ],
+      "deployment": "Propuesta antes de implementar. Mantener separadas implementación, publicación y QA autenticada; la ausencia de sesión de prueba no acredita lectura privada.",
+      "rollback": "Revertir sólo interfaz y manifiestos; conservar todas las fuentes, IDs, historia, acuerdos, PPP, datos y permisos."
     }
   ],
   "data_contracts": [

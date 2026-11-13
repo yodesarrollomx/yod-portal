@@ -1,19 +1,21 @@
 {
-  "model_revision": "2026-11-13.grafo-app.1",
-  "proposal_id": "CHG-ATLAS-GRAFO-APP-20261113",
-  "summary": "Registra en el atlas la GitHub App del grafo (EXT-GRAFO-APP) y su conexión CON-GRAFO-APP, comprobada con el PR 97 de potenciales-yod; pone al día los textos de «dos toques» (ahora un toque con la App) y marca como publicado CHG-ATLAS-GRAFO-VIVO-20261112. Sólo documentación del atlas y su inventario de salud.",
+  "model_revision": "2026-11-13.brokers-atlas.1",
+  "proposal_id": "CHG-MASTERBROKERS-PORTAL-INTEGRATED",
+  "summary": "Misma entrada brokers.html y contrato brokers.v1: MD abre equipo y cartera propia, broker abre únicamente su cartera validada. Un renglón por contacto; al abrirlo muestra asuntos separados, historial agregado con fuente y PPP por asunto. Responsable, etapa, último hecho y siguiente compromiso provienen de los registros, sin inventar estados agregados o finanzas. Breadcrumbs y URL conservan navegación autorizada, nunca otorgan permisos. Se conserva la vista de comparación de asuntos como herramienta opcional. Reutiliza edición, guardado idempotente/readback, agenda/reprogramación, acuerdos, documentos, presentación común, evaluación y retorno recuperable de PR43. No importa fixtures de la muestra pública ni crea otra base. La conexión real utiliza sesión existente de YOD OS; no se crea otro acceso. Preservar cambios concurrentes de roles/beneficios/pregunta clave del encargado original.",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-CONTROL",
+    "SYS-INVERSION",
+    "GAS-CRM",
+    "SHEET-CRM",
     "SYS-POTENCIALES",
-    "EXT-ACTIONS",
-    "EXT-GRAFO-APP"
+    "GAS-PORTERO",
+    "SHEET-PORTERO",
+    "SYS-YOD-OS"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "verify-os · verify-portal · verify-accesos · verify-obra-app",
-    "git diff --check"
+    "Proyección por contacto/expediente, responsable nominal, última actividad real y sin mezclar carteras; no duplicar personas por varios asuntos.",
+    "Navegador320/390/1440: MD→broker→cliente→asunto→PPP/historial/avance, regreso y recarga; broker aislado, sesión revocada, datos sintéticos sólo en pruebas.",
+    "Regresiones de edición, nueva oportunidad/contacto, guardado con ACK viejo, agenda y reprogramación, presentación, acuerdos y retorno evaluador en Chromium/WebKit.",
+    "Atlas, manifiesto/pin, CI, bytes publicados y recorrido autenticado se comprueban por separado."
   ],
-  "rollback": "Revertir el PR; no toca código ni producción."
+  "rollback": "Revertir sólo interfaz y manifiestos; conservar todas las fuentes, IDs, historia, acuerdos, PPP, datos y permisos."
 }
