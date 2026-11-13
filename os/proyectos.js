@@ -104,7 +104,7 @@
   /* Filas de ?recurso=cm&hoja=Proyectos (encabezado + filas) → la misma forma que ?recurso=cartera.
      Sólo columnas sin riesgo: nada de notas, ligas, responsables ni cifras. */
   var CM_COLS = { folio: 'project_id', nombre: 'proyecto', codigo: 'código', ubicacion: 'ubicación', tipo: 'tipo',
-    etapa_actual: 'etapa_actual', etapa_folio: 'etapa_folio', estado: 'estado', admision: 'admision', actualizado: 'actualizado' };
+    etapa_actual: 'etapa_actual', etapa_folio: 'etapa_folio', estado: 'estado', admision: 'admision', actualizado: 'actualizado', plan: 'plan' };
   function desdeControlMaestro(filas) {
     if (!Array.isArray(filas) || !filas.length) return [];
     var hdr = (filas[0] || []).map(function (x) { return String(x == null ? '' : x).trim(); }), idx = {};
@@ -117,9 +117,20 @@
       var e = etapaFolio(v(r, 'etapa_folio'));
       out.push({ folio: folio, nombre: v(r, 'nombre'), codigo: v(r, 'codigo'), ubicacion: v(r, 'ubicacion'), tipo: v(r, 'tipo'),
         etapa_actual: v(r, 'etapa_actual'), etapa_n: e.n, etapa: e.nombre, estado: v(r, 'estado'),
-        admision: v(r, 'admision').toLowerCase(), actualizado: v(r, 'actualizado') });
+        admision: v(r, 'admision').toLowerCase(), actualizado: v(r, 'actualizado'), plan: ligaPlan(v(r, 'plan')) ? v(r, 'plan') : '' });
     });
     return out;
+  }
+  /* Dónde vive el plan de un terreno (columna «plan» del Control Maestro, «motor:caso»).
+     PPP 2 abre su ruta #/plan/<id>; los cinco motores del PPP abren ?open=<caso>.
+     Cualquier otra cosa no da liga. El tablero del plan valida su propio acceso. */
+  var BASE_PPP = BASE + 'potenciales-yod/';
+  var MOTOR_PAG = { mixto: 'mixto.html', macrolotes: 'macrolotes.html', unifamiliar: 'unifamiliar.html', residencial: 'residencial.html', patrimonial: 'patrimonial.html' };
+  function ligaPlan(plan) {
+    var m = /^(ppp2|mixto|macrolotes|unifamiliar|residencial|patrimonial):([A-Za-z0-9-]{6,48})$/.exec(String(plan == null ? '' : plan).trim());
+    if (!m) return '';
+    if (m[1] === 'ppp2') return /^p2[a-z0-9]{6,20}$/.test(m[2]) ? BASE_PPP + 'ppp2.html#/plan/' + m[2] : '';
+    return BASE_PPP + MOTOR_PAG[m[1]] + '?open=' + encodeURIComponent(m[2]);
   }
   /* Siete carriles en orden. Lo dado de baja va aparte («fuera»); lo que no tiene etapa
      (frentes de trabajo, no terrenos) no entra a la cartera. */
@@ -136,7 +147,7 @@
   }
 
   var api = { lista: PROYECTOS, etapas: ETAPAS, buscar: buscar, folio: folio, auditar: auditar, porEtapa: porEtapa, huella: huella, parecidas: parecidas, duplicados: duplicados,
-    etapasFolio: ETAPAS_FOLIO, etapaFolio: etapaFolio, desdeControlMaestro: desdeControlMaestro, porEtapaFolio: porEtapaFolio };
+    etapasFolio: ETAPAS_FOLIO, etapaFolio: etapaFolio, desdeControlMaestro: desdeControlMaestro, porEtapaFolio: porEtapaFolio, ligaPlan: ligaPlan };
   root.YodProyectos = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof window !== 'undefined' ? window : globalThis);

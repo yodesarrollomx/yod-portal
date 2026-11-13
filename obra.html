@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="es">
 <head>
-<script src="os/yod-acceso.js?v=20261113-folio-cartera"></script>
-<script src="os/yod-cargador.js?v=20261113-folio-cartera"></script>
+<script src="os/yod-acceso.js?v=20261113-folio-plan"></script>
+<script src="os/yod-cargador.js?v=20261113-folio-plan"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow,noarchive">
@@ -11,7 +11,7 @@
 <!-- Marco YOD OS (barrido 10-nov-2026, CHG-OS-BARRIDO-20261110): menú, identidad y «Atrás», igual que los
      demás tableros. Antes Obra abría sin menú y no había cómo regresar al OS. obra-app (lo del cliente) NO lo carga. -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
-<link rel="stylesheet" href="os/shell.css?v=20261113-folio-cartera">
+<link rel="stylesheet" href="os/shell.css?v=20261113-folio-plan">
 <style>
 :root{
   --ground:#0B0D11; --panel:#13161C; --panel2:#181C23; --line:#252A33;
@@ -262,7 +262,7 @@ textarea{width:100%;padding:.55rem .65rem;background:var(--panel2);border:1px so
   <div class="cadena" id="pieCadena"></div>
 </div>
 
-<script src="os/access-policy.js?v=20261113-folio-cartera"></script>
+<script src="os/access-policy.js?v=20261113-folio-plan"></script>
 <script>
 (function(){
 "use strict";
@@ -977,11 +977,11 @@ pintarColaLocal();
 if(K) arrancar();
 })();
 </script>
-<script src="chinche.js?v=20261113-folio-cartera"></script>
+<script src="chinche.js?v=20261113-folio-plan"></script>
 <script>if(window.YODChinche) YODChinche.init({pantalla:"obra",
   vista:function(){ var t=document.querySelector('[role="tab"][aria-selected="true"]');
     return t ? t.textContent.replace(/\s+/g," ").trim() : ""; }});</script>
 <!-- Marco YOD OS: con ?embed=1 no se monta; la chinche ya viene arriba y el marco no la carga dos veces. -->
-<script src="os/shell.js?v=20261113-folio-cartera"></script>
+<script src="os/shell.js?v=20261113-folio-plan"></script>
 </body>
 </html>

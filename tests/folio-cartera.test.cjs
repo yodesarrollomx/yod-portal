@@ -54,3 +54,15 @@ test('tablero.html lee la cartera en vivo, cae a la pestaña sólo para admin y 
   assert.match(s,/sondaFinance\(\);\n  cargarCartera\(\);/,'abrir() pide la cartera');
   assert.match(s,/#etapas\.folio7\{grid-template-columns:repeat\(7,/);
 });
+
+test('el plan de cada terreno: PPP 2 por su ruta y los cinco motores por ?open=',()=>{
+  assert.equal(P.ligaPlan('ppp2:p2a3wzcf09eu'),'https://yodesarrollomx.github.io/potenciales-yod/ppp2.html#/plan/p2a3wzcf09eu');
+  assert.equal(P.ligaPlan('mixto:ptmvrhzjyo5e0nn'),'https://yodesarrollomx.github.io/potenciales-yod/mixto.html?open=ptmvrhzjyo5e0nn');
+  assert.equal(P.ligaPlan('residencial:pt-ruben-molina-x'),'https://yodesarrollomx.github.io/potenciales-yod/residencial.html?open=pt-ruben-molina-x');
+  assert.equal(P.ligaPlan('macrolotes:ptmtisz708n0hqf'),'https://yodesarrollomx.github.io/potenciales-yod/macrolotes.html?open=ptmtisz708n0hqf');
+  for (const malo of ['','javascript:alert(1)','mixto:<x>','ppp2:otro123','otro:ptmvrhzjyo5e0nn',null,'mixto:ab']) assert.equal(P.ligaPlan(malo),'','sin liga: '+malo);
+  const l=P.desdeControlMaestro([[...HDR,'plan'],[...fila('PRJ-Q','Quintas','2 · Evaluado'),'mixto:ptmvrhzjyo5e0nn'],[...fila('PRJ-Z','Z','1 · Captado'),'javascript:alert(1)']]);
+  assert.equal(l[0].plan,'mixto:ptmvrhzjyo5e0nn'); assert.equal(l[1].plan,'','un plan con otro formato no pasa');
+  const s=fs.readFileSync(path.join(__dirname,'..','tablero.html'),'utf8');
+  assert.match(s,/RP\.ligaPlan\(p\.plan\)/,'la tira liga cada terreno a su plan');
+});

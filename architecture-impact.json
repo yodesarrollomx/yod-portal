@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-11-13.folio-cartera.1",
   "proposal_id": "CHG-FOLIO-CARTERA-20261113",
-  "summary": "Etapa 1 del análisis tablero por tablero: folio único y cartera. Siete etapas por terreno en el Control Maestro (columna etapa_folio) y tres folios nuevos; la tira de etapas del tablero cenital pasa a siete carriles leídos en vivo (Portero ?recurso=cartera; mientras no esté publicada, admin lee la pestaña con ?recurso=cm). Puertas por proyecto mínimas: columna «proyectos» en ACCESOS y Cartera.gs en el Portero (publicar es clic de Dirección). Etiqueta propia 20261113-folio-cartera.",
+  "summary": "Etapa 2 del análisis tablero por tablero, primer paso: cada terreno de la cartera liga a su plan. La columna «plan» del Control Maestro (motor:caso) da la liga: PPP 2 abre #/plan/<id> y los cinco motores del PPP abren ?open=<caso>; cualquier otro formato no da liga y el tablero del plan valida su propio acceso. os/proyectos.js suma ligaPlan y desdeControlMaestro lleva la columna; la tira de siete carriles pinta «plan» junto a cada terreno. Etiqueta propia 20261113-folio-plan. Sigue bajo CHG-FOLIO-CARTERA-20261113.",
   "components": [
     "SYS-YOD-OS",
     "SYS-CONTROL",
@@ -17,9 +17,9 @@
     "SYS-DESPACHO"
   ],
   "tests": [
-    "node --test tests/folio-cartera.test.cjs (5 pruebas: etapas, columnas sin riesgo, carriles, respuesta del Portero, cableado de tablero.html)",
-    "Prueba local de Cartera.gs con un Apps Script de mentira: 11 comprobaciones (Dirección, clave maestra, broker recortado, columna en blanco, admin, acceso revocado, credencial inválida, sin pestaña)",
-    "node --test tests/*.cjs · verify-os · verify-portal · verify-accesos · verify-obra-app · node scripts/versiones.cjs --check · node scripts/arquitectura.cjs --check"
+    "node --test tests/folio-cartera.test.cjs (6 pruebas, una nueva: ligas de PPP 2 y de los cinco motores, formatos que no dan liga)",
+    "Prueba local de Cartera.gs: 12 comprobaciones (suma la columna plan y descarta formatos ajenos)",
+    "node --test tests/*.cjs · verify-os · verify-portal · verify-accesos · verify-obra-app · versiones --check · arquitectura --check"
   ],
   "rollback": "Revertir el PR (vuelve la foto de cuatro etapas). Las columnas etapa_folio y proyectos se pueden dejar: nadie más las lee. En el Portero, volver a la versión anterior en Administrar implementaciones."
 }

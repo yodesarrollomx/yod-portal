@@ -1,7 +1,7 @@
 <!doctype html>
 <meta charset="utf-8">
-<script src="os/yod-acceso.js?v=20261113-folio-cartera"></script>
-<script src="os/yod-cargador.js?v=20261113-folio-cartera"></script>
+<script src="os/yod-acceso.js?v=20261113-folio-plan"></script>
+<script src="os/yod-cargador.js?v=20261113-folio-plan"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>YOD OS · Tablero</title>
 <style>
@@ -107,9 +107,9 @@
 <!-- La chinche se carga DESPUÉS del primer dato (YodCargador.cargarDespues); sin cargador, o con ?cargador=legacy,
      se inserta en el acto, como siempre. Esta etiqueta es inerte (type=text/plain: el navegador no la baja) y
      existe para que scripts/versiones.cjs siga gobernando la etiqueta ?v= de chinche.js. -->
-<script type="text/plain" id="yodChincheSrc" src="chinche.js?v=20261113-folio-cartera"></script>
-<script src="os/access-policy.js?v=20261113-folio-cartera"></script>
-<script src="os/proyectos.js?v=20261113-folio-cartera"></script>
+<script type="text/plain" id="yodChincheSrc" src="chinche.js?v=20261113-folio-plan"></script>
+<script src="os/access-policy.js?v=20261113-folio-plan"></script>
+<script src="os/proyectos.js?v=20261113-folio-plan"></script>
 <style>
 /* Fase 3 · folio: la tira de etapas (Potencial → Trámite → Obra → Venta) */
 #etapas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 12px}
@@ -129,6 +129,7 @@
 #etapas.folio7 .et strong{font-size:22px}
 #etapas .fuera{grid-column:1/-1;margin:0;font-size:11px;opacity:.7}
 #etapas .pausa{opacity:.65;font-style:italic}
+#etapas .et a.plan{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#9a7b3f;border-bottom:0;margin-left:-2px}
 @media (max-width:900px){#etapas.folio7{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media (max-width:520px){#etapas.folio7{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
@@ -2031,9 +2032,11 @@ function pintaFolio(lista,rol){
     const texto=escH(p.nombre||p.folio)+(pausa?' <span class="pausa">· en pausa</span>':'');
     const tit=escH(p.folio+(p.etapa_actual?' · '+p.etapa_actual:'')+(pausa?' · en pausa':''));
     const base=foto&&foto.tablero?foto.tablero:(rol==="admin"?MOAC:"");
-    if(!base) return '<span title="'+tit+'">'+texto+'</span>';
+    const plan=RP.ligaPlan?RP.ligaPlan(p.plan):"";              // etapa 2 · el plan del terreno, desde su folio
+    const pl=plan?' <a class="plan" href="'+escH(plan)+'" target="_top" title="Abrir el plan de '+escH(p.nombre||p.folio)+'">plan</a>':'';
+    if(!base) return '<span title="'+tit+'">'+texto+'</span>'+pl;
     const dest=base+(base.indexOf('?')>-1?'&':'?')+'folio='+encodeURIComponent(p.folio);
-    return '<a href="'+escH(dest)+'" target="_top" title="'+tit+'">'+texto+'</a>';
+    return '<a href="'+escH(dest)+'" target="_top" title="'+tit+'">'+texto+'</a>'+pl;
   }
   box.classList.add("folio7"); box.setAttribute("data-fuente","folio");
   box.innerHTML=g.carriles.map(function(c,i){
