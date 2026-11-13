@@ -1,14 +1,46 @@
 {
-  "model_revision": "2026-11-13.reel-herramientas.1",
-  "proposal_id": "CHG-REEL-TOOLS-20261018",
-  "summary": "Política local versionada para agentes y dos skills documentales bajo demanda; evaluación de herramientas del Reel. Sin cambios a transportes, proveedores, permisos ni ejecución de negocio.",
+  "model_revision": "2026-11-13.jev-consultas.1",
+  "proposal_id": "CHG-JEV-CONSULTAS-001",
   "components": [
     "SYS-YOD-OS",
-    "EXT-JEV"
+    "SYS-DESPACHO",
+    "GAS-PORTERO",
+    "EXT-DRIVE",
+    "SHEET-PORTERO",
+    "SHEET-CATALOGO",
+    "SHEET-OPERACION",
+    "SHEET-FLUJO",
+    "SHEET-MARKETING",
+    "SHEET-PLAN-POTENCIAL",
+    "SHEET-CROKISS",
+    "SHEET-CODES",
+    "SHEET-MIRAMAR",
+    "SHEET-INTERIORES",
+    "SHEET-ALQUIMIA",
+    "SHEET-OBRA",
+    "SHEET-OBRA-CLIENTE",
+    "SHEET-SALA",
+    "SHEET-EMD",
+    "SHEET-CRM",
+    "SHEET-MOAC-METAS",
+    "SHEET-INVERSION",
+    "SHEET-PPP-MODELOS",
+    "SHEET-AMALAYA"
+  ],
+  "summary": "Prueba inicial de Jev para comparar PPP y consultar el uso de suelo de Gastón Madrid. Lee rangos autorizados de Sheets y texto recuperado de Drive al momento de la consulta; conserva enlaces y revisión. Confianza mínima fija de 0.92. El atlas conserva todas las fuentes lógicas, pero sólo estos flujos quedan habilitados en el piloto; IDs físicos, adaptadores privados y activación por puesto no se publican ni se presumen instalados.",
+  "contracts": [
+    "CTR-DESPACHO-CONVERSACION",
+    "CTR-DESPACHO-TERMINAL-LOCAL",
+    "CTR-JEV-CONSULTAS"
   ],
   "tests": [
-    "Revisión estática de políticas y archivos mediante API GitHub; verificación de lectura tras escritura.",
-    "Pendiente terminal: suite completa del portal, arquitectura, pruebas de skills con ChatGPT/Codex y Claude, evaluación aislada de Graphify sin red."
+    "node --test tests/despacho-fast-lane.test.cjs",
+    "node scripts/arquitectura.cjs --check",
+    "node --test tests/*.cjs",
+    "node verify-os.cjs",
+    "node verify-portal.cjs",
+    "node scripts/verificar-impacto.cjs --base origin/main --repo yodesarrollomx/yod-portal",
+    "git diff --check"
   ],
-  "rollback": "Revertir sólo los commits de esta propuesta; conservar Jev, instrucciones previas, históricos y configuración privada."
+  "rollback": "Retirar la capacidad opcional del agente y revertir el PR. Sin cambios de datos, permisos, sesiones o despliegues existentes."
 }
