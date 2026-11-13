@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-12.grafo-vivo.1",
+  "revision": "2026-11-12.panorama-refresco.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -15801,6 +15801,25 @@
       ],
       "deployment": "Se publica al fusionar el PR en yod-portal; no hay nada que desplegar fuera de Pages.",
       "rollback": "Revertir el PR; no toca código ni producción."
+    },
+    {
+      "id": "CHG-PANORAMA-REFRESCO-20261112",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "SYS-DESPACHO-3D",
+        "SYS-POTENCIALES"
+      ],
+      "status": "implementado_local",
+      "approval": "Dirección pide que las chinches se corrijan, no sólo que se registren (chinche 76 de potenciales-yod, 12-nov-2026: falló el paso «Recorrido real y encuentro por cercanía» del flujo «Conocimiento del Despacho»).",
+      "proposal": "Sólo prueba y automatización; la escena del Despacho no cambia. La prueba scripts/probar-oficina-panoramica-browser.cjs refresca cada 5 s la observación sintética del residente para que no se vaya a los 90 s; cada refresco repinta la pantalla del puesto sin trabajo, y si cae entre la carga del trabajo sintético y la lectura (unos 300 ms) la cuenta sale vacía en lugar de «1/2 para revisar». Falló así en tres corridas (2-nov intento 1 de un PR y push a main, 12-nov push a main) y el mismo commit pasó al volver a correr. Arreglo: la prueba pausa ese refresco mientras revisa la pantalla y su captura, y lo reanuda después. Además el flujo corre en push a main cuando cambian sus pruebas de navegador (las mismas rutas que ya lo disparan en PR), para que el arreglo se compruebe en main al fusionarse.",
+      "tests": [
+        "Reproducción enfocada local con Chromium (misma escena y mismo fixture): sin pausa, un refresco deja la cuenta vacía; con pausa, 0 refrescos en 5,6 s y la cuenta se conserva.",
+        "Flujo «Conocimiento del Despacho» en el PR y, tras fusionar, en push a main.",
+        "node scripts/arquitectura.cjs --check · node --test tests/*.cjs · node verify-os.cjs · node verify-portal.cjs · node verify-accesos.cjs · node verify-obra-app.cjs"
+      ],
+      "deployment": "Sin despliegue: sólo prueba y flujo de CI. Se da por cerrado cuando el flujo pase en main.",
+      "rollback": "Revertir el PR; la prueba vuelve a refrescar sin pausa y el flujo a sus rutas anteriores."
     }
   ],
   "data_contracts": [
