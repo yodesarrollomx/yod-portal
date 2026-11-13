@@ -1,8 +1,8 @@
 (function(root){
   'use strict';
   // Escena estática del mismo portal: no recibe sesión, rutas ni datos del OS.
-  var FRAME_PATH='../despacho3d/index.html?v=20261113-tu-palabra';
-  var RETRO_FRAME_PATH='../despacho-retro/index.html?office=retro&v=20261113-tu-palabra';
+  var FRAME_PATH='../despacho3d/index.html?v=20261113-atorados';
+  var RETRO_FRAME_PATH='../despacho-retro/index.html?office=retro&v=20261113-atorados';
   function create(options){
     var win=options.window,doc=options.document,host=doc.getElementById('seccionDespacho'),
         canvas=doc.getElementById('despachoCanvas'),status=doc.getElementById('despachoEstado'),

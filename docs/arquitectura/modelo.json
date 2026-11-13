@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-13.tu-palabra.2",
+  "revision": "2026-11-13.atorados.1",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -16417,6 +16417,32 @@
       ],
       "deployment": "El tablero se publica al fusionar el PR de board-flujo-yod. Falta confirmar que getAll del Apps Script del Flujo devuelve las columnas nuevas de Bolsas (si lee por encabezado, ya las devuelve) y que Dirección dé el costo de obra de cada proyecto (pregunta en el Buzón).",
       "rollback": "Revertir el PR del tablero. Las columnas de Bolsas se pueden dejar: nadie más las lee."
+    },
+    {
+      "id": "CHG-ATORADOS-LINEA-20261113",
+      "components": [
+        "SYS-YOD-OS",
+        "GAS-PORTERO",
+        "SYS-DESPACHO",
+        "SYS-CONTROL",
+        "GAS-CATALOGO",
+        "SYS-POTENCIALES",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-MERCADO"
+      ],
+      "proposal": "PLAN-04 y PLAN-03 del análisis «YOD OS tablero por tablero». (1) Atorados: en la tarjeta «Decisiones» del Inicio de Dirección, debajo de «Tu palabra», una sola lista con lo que lleva días sin moverse: de los asistentes (el Portero lee el Buzón con ?recurso=atorados: tareas tomadas sin latido de 24 h o más, bloqueadas y frentes del Mando en «Atorado») y de las personas (tareas abiertas de MOAC ya vencidas, las mismas de Operación semanal), con sus días y de mayor a menor. Módulo nuevo os/atorados.js montado con una línea en loadPulse y alimentado con las tareas de MOAC al cargarlas. (2) La historia de cada terreno: el tablero cenital lee una vez ?recurso=historial (libro «YOD · Historial Master Brokers (fuente)», cuya pestaña Proyectos gana la columna «folio») y en cada terreno de la cartera de siete carriles que tenga registros pone «historia N», que abre en un panel sus reuniones, minutas, presentaciones y decisiones, del más nuevo al más viejo. El Portero recorta igual que la cartera: Dirección ve todo; quien ve todos los proyectos ve lo «compartido» con acuerdos y fuente; un externo sólo lo «compartido» cuyos proyectos son todos suyos, sin acuerdos, ligas ni broker. Ambas lecturas son de sólo lectura, en dos archivos nuevos del Portero (Atorados.gs e Historial.gs) y dos líneas de ruta. Etiqueta propia 20261113-atorados.",
+      "approval": "Dirección, 13-nov-2026 en el chat «Análisis del sistema Yodo»: programa tablero por tablero (PLAN-03 línea de tiempo por broker y por proyecto; PLAN-04 atorados de personas y agentes en una sola lista) y «hazlo todo tú completo hasta el final».",
+      "status": "implementado_local",
+      "tests": [
+        "node --test tests/atorados.test.cjs (4: junta y ordena, una lectura sin cookies y escape, Portero caído o sin la lectura nueva, sin permiso y nada atorado)",
+        "node --test tests/folio-cartera.test.cjs (7, incluye la historia: una lectura, botón con su cuenta, panel escapado, liga sólo https)",
+        "Prueba privada del Portero: Historial.gs 24 comprobaciones (recortes de Dirección, equipo, externo y sesión falsa; minuta de varios terrenos no sale al externo; textos largos) y Atorados.gs 14 comprobaciones",
+        "node --test tests/*.cjs · verify-os · verify-portal · verify-accesos · verify-obra-app · versiones --check · arquitectura --check"
+      ],
+      "deployment": "El portal se publica al fusionar el PR. El Portero necesita su versión 113 (Atorados.gs, Historial.gs y dos líneas de ruta) sobre la implementación existente, después de la 112. Mientras no se publique, los atorados enseñan sólo los de personas con un aviso y la cartera no pone botones de historia.",
+      "rollback": "Revertir el PR. En el Portero, volver a la versión anterior en Gestionar implementaciones; la columna «folio» del Historial puede quedarse (nadie más la lee)."
     }
   ],
   "data_contracts": [

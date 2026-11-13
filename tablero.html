@@ -1,7 +1,7 @@
 <!doctype html>
 <meta charset="utf-8">
-<script src="os/yod-acceso.js?v=20261113-tu-palabra"></script>
-<script src="os/yod-cargador.js?v=20261113-tu-palabra"></script>
+<script src="os/yod-acceso.js?v=20261113-atorados"></script>
+<script src="os/yod-cargador.js?v=20261113-atorados"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>YOD OS · Tablero</title>
 <style>
@@ -107,9 +107,9 @@
 <!-- La chinche se carga DESPUÉS del primer dato (YodCargador.cargarDespues); sin cargador, o con ?cargador=legacy,
      se inserta en el acto, como siempre. Esta etiqueta es inerte (type=text/plain: el navegador no la baja) y
      existe para que scripts/versiones.cjs siga gobernando la etiqueta ?v= de chinche.js. -->
-<script type="text/plain" id="yodChincheSrc" src="chinche.js?v=20261113-tu-palabra"></script>
-<script src="os/access-policy.js?v=20261113-tu-palabra"></script>
-<script src="os/proyectos.js?v=20261113-tu-palabra"></script>
+<script type="text/plain" id="yodChincheSrc" src="chinche.js?v=20261113-atorados"></script>
+<script src="os/access-policy.js?v=20261113-atorados"></script>
+<script src="os/proyectos.js?v=20261113-atorados"></script>
 <style>
 /* Fase 3 · folio: la tira de etapas (Potencial → Trámite → Obra → Venta) */
 #etapas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 12px}
@@ -132,6 +132,19 @@
 #etapas .et a.plan{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#9a7b3f;border-bottom:0;margin-left:-2px}
 @media (max-width:900px){#etapas.folio7{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media (max-width:520px){#etapas.folio7{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* PLAN-03 (13-nov-2026) · la historia de cada terreno (Historial Master Brokers), en un panel */
+#etapas .et button.hist{font:inherit;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#9a7b3f;background:none;border:0;padding:0 0 0 4px;cursor:pointer}
+#historia{position:fixed;inset:0;z-index:60;background:rgba(20,16,10,.45);display:flex;justify-content:flex-end;align-items:flex-start}
+#historia[hidden]{display:none}
+#historia .hpanel{width:min(520px,100%);max-height:100vh;overflow:auto;background:#fbf8f1;color:#211c14;padding:18px 18px 28px;box-shadow:-8px 0 24px rgba(0,0,0,.18);box-sizing:border-box}
+#historia h3{margin:0 0 4px;font-size:18px}#historia .hsub{margin:0 0 14px;font-size:12px;opacity:.7}
+#historia .hcerrar{float:right;font:inherit;font-size:12px;border:1px solid rgba(154,123,63,.5);background:transparent;color:inherit;border-radius:999px;padding:3px 10px;cursor:pointer}
+#historia .hev{border-left:2px solid rgba(154,123,63,.45);padding:2px 0 12px 12px;margin-left:4px}
+#historia .hfecha{font-size:11px;letter-spacing:.04em;opacity:.7}
+#historia .htit{margin:2px 0 3px;font-size:14px;font-weight:600}
+#historia .hres{margin:0;font-size:13px;line-height:1.45}
+#historia .hdec{margin:6px 0 0;font-size:12px;line-height:1.45;color:#5c4a24}
+#historia .hfu{display:inline-block;margin-top:4px;font-size:11px;color:#80611e}
 </style>
 <script>
 (function(){
@@ -2021,8 +2034,42 @@ async function cargarCartera(){
     const c=await pedirCartera("recurso=cm&hoja=Proyectos");
     if(c&&c.ok&&c.datos&&Array.isArray(c.datos.Proyectos)) lista=RP.desdeControlMaestro(c.datos.Proyectos);
   }
-  if(lista&&!CERRADO) pintaFolio(lista,rol);
+  if(lista&&!CERRADO){ pintaFolio(lista,rol); cargarHistoria(); }
 }
+/* ═══ PLAN-03 (13-nov-2026) · LA HISTORIA DE CADA TERRENO ═══
+   Una sola lectura de ?recurso=historial (libro «Historial Master Brokers», ya recortado por el Portero: un externo
+   sólo ve lo compartido que es todo de sus terrenos, sin acuerdos internos ni ligas) y, en cada terreno de la
+   cartera que tenga registros, un botón «historia N» que abre sus reuniones, minutas, presentaciones y decisiones,
+   del más nuevo al más viejo. Sólo lectura. Si el Portero aún no tiene esa lectura, no aparece ningún botón. */
+let HISTORIA=null, ULTIMA_CARTERA=null;
+const TIPO_HIST={reunion:"Reunión",minuta:"Minuta",presentacion:"Presentación",documento:"Documento",whatsapp:"WhatsApp",decision:"Decisión",pendiente:"Pendiente",reunion_agendada:"Cita",llamada:"Llamada"};
+function eventosDe(folio){ return (HISTORIA||[]).filter(function(e){ return e&&Array.isArray(e.folios)&&e.folios.indexOf(folio)>-1; }); }
+async function cargarHistoria(){
+  const j=await pedirCartera("recurso=historial");
+  if(!(j&&j.ok&&Array.isArray(j.eventos))||CERRADO) return;
+  HISTORIA=j.eventos;
+  if(ULTIMA_CARTERA&&HISTORIA.length) pintaFolio(ULTIMA_CARTERA.lista,ULTIMA_CARTERA.rol);
+}
+function abrirHistoria(folio,nombre){
+  let caja=document.getElementById("historia");
+  if(!caja){
+    caja=document.createElement("div"); caja.id="historia"; caja.hidden=true; document.body.appendChild(caja);
+    caja.addEventListener("click",function(e){ if(e.target===caja||(e.target.closest&&e.target.closest(".hcerrar"))) cerrarHistoria(); });
+    document.addEventListener("keydown",function(e){ if(e.key==="Escape") cerrarHistoria(); });
+  }
+  const evs=eventosDe(folio);
+  caja.innerHTML='<div class="hpanel" role="dialog" aria-modal="true" aria-label="Historia de '+escH(nombre)+'"><button type="button" class="hcerrar">Cerrar</button>'+
+    '<h3>'+escH(nombre)+'</h3><p class="hsub">'+escH(folio)+' · '+evs.length+(evs.length===1?' registro':' registros')+' del historial, del más nuevo al más viejo</p>'+
+    evs.map(function(e){
+      const fuente=e.fuente_url&&/^https:\/\//.test(e.fuente_url)?'<a class="hfu" href="'+escH(e.fuente_url)+'" target="_blank" rel="noopener noreferrer">'+escH(e.fuente||'Ver la fuente')+'</a>':(e.fuente?'<span class="hfu">'+escH(e.fuente)+'</span>':'');
+      return '<div class="hev"><div class="hfecha">'+escH(e.fecha)+(e.hora?' · '+escH(e.hora):'')+' · '+escH(TIPO_HIST[e.tipo]||e.tipo||'Registro')+'</div>'+
+        '<p class="htit">'+escH(e.titulo)+'</p>'+(e.resumen?'<p class="hres">'+escH(e.resumen)+'</p>':'')+
+        (e.decisiones?'<p class="hdec"><b>Acuerdos:</b> '+escH(e.decisiones)+'</p>':'')+fuente+'</div>';
+    }).join('')+'</div>';
+  caja.hidden=false;
+  const b=caja.querySelector(".hcerrar"); if(b&&b.focus) b.focus();
+}
+function cerrarHistoria(){ const c=document.getElementById("historia"); if(c&&!c.hidden){ c.hidden=true; c.innerHTML=""; } }
 function pintaFolio(lista,rol){
   const box=document.getElementById("etapas"), RP=window.YodProyectos; if(!box||!RP||!RP.porEtapaFolio) return;
   const g=RP.porEtapaFolio(lista), MOAC='https://yodesarrollomx.github.io/board-aurum/';
@@ -2034,10 +2081,16 @@ function pintaFolio(lista,rol){
     const base=foto&&foto.tablero?foto.tablero:(rol==="admin"?MOAC:"");
     const plan=RP.ligaPlan?RP.ligaPlan(p.plan):"";              // etapa 2 · el plan del terreno, desde su folio
     const pl=plan?' <a class="plan" href="'+escH(plan)+'" target="_top" title="Abrir el plan de '+escH(p.nombre||p.folio)+'">plan</a>':'';
-    if(!base) return '<span title="'+tit+'">'+texto+'</span>'+pl;
+    const nh=eventosDe(p.folio).length;                      // PLAN-03 · su historia, si el historial la trae
+    const hi=nh?' <button type="button" class="hist" data-folio="'+escH(p.folio)+'" data-nombre="'+escH(p.nombre||p.folio)+'" title="Reuniones, minutas y acuerdos de '+escH(p.nombre||p.folio)+'">historia '+nh+'</button>':'';
+    if(!base) return '<span title="'+tit+'">'+texto+'</span>'+pl+hi;
     const dest=base+(base.indexOf('?')>-1?'&':'?')+'folio='+encodeURIComponent(p.folio);
-    return '<a href="'+escH(dest)+'" target="_top" title="'+tit+'">'+texto+'</a>'+pl;
+    return '<a href="'+escH(dest)+'" target="_top" title="'+tit+'">'+texto+'</a>'+pl+hi;
   }
+  ULTIMA_CARTERA={lista:lista,rol:rol};
+  if(!box.getAttribute("data-hist")){ box.setAttribute("data-hist","1");
+    box.addEventListener("click",function(e){ const b=e.target&&e.target.closest?e.target.closest("button.hist"):null;
+      if(b){ e.preventDefault(); abrirHistoria(b.getAttribute("data-folio"),b.getAttribute("data-nombre")); } }); }
   box.classList.add("folio7"); box.setAttribute("data-fuente","folio");
   box.innerHTML=g.carriles.map(function(c,i){
     return '<div class="et"><b>'+(i?'<span class="flecha">→ </span>':'')+c.n+' · '+escH(c.nombre)+'</b><strong>'+c.proyectos.length+'</strong>'+c.proyectos.map(liga).join('')+'</div>';

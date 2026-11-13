@@ -66,3 +66,38 @@ test('el plan de cada terreno: PPP 2 por su ruta y los cinco motores por ?open='
   const s=fs.readFileSync(path.join(__dirname,'..','tablero.html'),'utf8');
   assert.match(s,/RP\.ligaPlan\(p\.plan\)/,'la tira liga cada terreno a su plan');
 });
+
+test('PLAN-03 · la historia de cada terreno: una lectura, botón con su cuenta y panel escapado', async ()=>{
+  const vm=require('vm');
+  const s=fs.readFileSync(path.join(__dirname,'..','tablero.html'),'utf8');
+  const bloque=s.slice(s.indexOf('function escH('),s.indexOf('/* ═══ EL CANDADO'));
+  const pedidos=[];
+  const RESP={cartera:{ok:true,proyectos:[{folio:'PRJ-QUINTAS',nombre:'Las Quintas',etapa_folio:'2 · Evaluado'},{folio:'PRJ-RM',nombre:'Real de Miramar',etapa_folio:'6 · En venta y cobro'}]},
+    historial:{ok:true,eventos:[
+      {id:'EV-2',fecha:'2026-10-27',hora:'13:30',tipo:'minuta',titulo:'Minuta <b>',resumen:'Acuerdos varios',decisiones:'TIR 15%',fuente:'Docs',fuente_url:'javascript:alert(1)',folios:['PRJ-QUINTAS']},
+      {id:'EV-1',fecha:'2026-10-20',hora:'',tipo:'reunion',titulo:'Visita',resumen:'',fuente:'Gemini',fuente_url:'https://docs.google.com/x',folios:['PRJ-QUINTAS','PRJ-HMO-SUR']}]}};
+  function el(id){ return {id,hidden:false,html:'',attrs:{},handlers:{},classList:{add(){}},set innerHTML(v){this.html=v;},get innerHTML(){return this.html;},
+    setAttribute(k,v){this.attrs[k]=v;},getAttribute(k){return this.attrs[k]||null;},addEventListener(t,f){this.handlers[t]=f;},querySelector(){return {focus(){}};}}; }
+  const etapas=el('etapas'); let historia=null;
+  const ctx={console,setTimeout,clearTimeout,AbortController,Promise,JSON,Object,String,Array,encodeURIComponent,
+    window:{YodProyectos:P},PORTERO_ORIGINAL:'https://portero.invalid/exec',CLAVE_OK:'sy-sintetica-0000000000',CERRADO:false,ROL:'admin',SESION:null,
+    cargadorActivo:()=>false,avisarAlto:()=>{},
+    document:{getElementById:id=>id==='etapas'?etapas:(id==='historia'?historia:null),createElement:()=>{historia=el('');return historia;},body:{appendChild(){}},addEventListener(){}},
+    fetch:(url,o)=>{pedidos.push({url,o});const r=/recurso=historial/.test(url)?RESP.historial:(/recurso=cartera/.test(url)?RESP.cartera:{ok:false});return Promise.resolve({json:async()=>r});}};
+  vm.createContext(ctx); vm.runInContext(bloque,ctx);
+  await vm.runInContext('cargarCartera()',ctx);
+  await new Promise(r=>setTimeout(r,0)); await new Promise(r=>setTimeout(r,0));
+  assert.equal(pedidos.length,2,'una lectura de la cartera y una del historial');
+  assert.match(pedidos[1].url,/\?recurso=historial&k=sy-sintetica/); assert.equal(pedidos[1].o.credentials,'omit');
+  assert.ok(etapas.html.includes('historia 2</button>'),'Las Quintas trae dos registros');
+  assert.equal((etapas.html.match(/class="hist"/g)||[]).length,1,'Miramar no trae historia: sin botón');
+  etapas.handlers.click({target:{closest:()=>({getAttribute:k=>k==='data-folio'?'PRJ-QUINTAS':'Las Quintas'})},preventDefault(){}});
+  assert.ok(historia&&historia.hidden===false);
+  const h=historia.html;
+  assert.ok(h.includes('Minuta &lt;b&gt;')&&!h.includes('Minuta <b>'),'escapado');
+  assert.ok(h.indexOf('Minuta')<h.indexOf('Visita'),'del más nuevo al más viejo');
+  assert.ok(h.includes('<b>Acuerdos:</b> TIR 15%'));
+  assert.ok(!h.includes('javascript:'),'una liga que no es https no se pinta como liga');
+  assert.ok(h.includes('href="https://docs.google.com/x"')&&h.includes('rel="noopener noreferrer"'));
+  assert.ok(h.includes('2 registros'));
+});

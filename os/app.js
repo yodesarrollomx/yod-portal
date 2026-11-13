@@ -374,7 +374,7 @@
   };
   // Etiqueta del tablero embebido (caché de 10 min de Pages). No se edita aquí: la escribe
   // node scripts/versiones.cjs --aplicar desde os/versiones.json, igual que todos los ?v=.
-  var TABLERO_V='20261113-tu-palabra';
+  var TABLERO_V='20261113-atorados';
   var state={modules:[],rawRows:[],role:'vista',boards:'',profileReady:false,loading:false,opsScope:'mias',allTasks:[],sesionEpoch:0,sessionToken:'',identityRequest:0,pulseCache:{},opsCache:null,verifiedAt:0};
   var $=function(id){return document.getElementById(id);};
   // ¿hay clave guardada? distingue «sin sesión» de «sesión validándose»
@@ -655,7 +655,7 @@
         write:function(intent){return window.YODCaseTransport.writeTeam(intent);},
         lookupReceipt:function(requestId){return window.YODCaseTransport.lookupTeamReceipt({request_id:requestId});}
       },
-      loadMount:function(){return import('../despacho3d/equipo.mjs?v=20261113-tu-palabra').then(function(module){return module.mountTeamDesk;});},
+      loadMount:function(){return import('../despacho3d/equipo.mjs?v=20261113-atorados').then(function(module){return module.mountTeamDesk;});},
       onError:function(){var status=$('despachoEquipoEstado');if(status)status.textContent='No se pudo abrir Equipo. Puedes volver a validar tu acceso.';}
     });
   }
@@ -1241,6 +1241,7 @@
       state.opsCache={tasks:state.allTasks,updatedAt:result.updatedAt,ep:ep};
       if(state.role==='admin')loadReconcile(token);
       if(state.role==='admin')renderDecisions(state.allTasks,result.source);
+      if(state.role==='admin'&&window.YodAtorados)window.YodAtorados.personas(state.allTasks);
       renderOpsScoped(result.source,result.updatedAt);marcaNuevo('SYS-TAREAS',state.allTasks.map(function(t){return [t.id,t.estado,t.actualizado||''];}));
     }catch(error){
       if(!mismaSesion(token,ep)||(state.loadPlan&&state.loadPlan.revision()!==readRevision))return;
@@ -1335,6 +1336,8 @@
     if(window.revisarPuertaEmbudo)window.revisarPuertaEmbudo();   // misma regla MK para la pestaña Métricas
     // PLAN-04 · Tu palabra: las preguntas del Buzón (pestaña Decisiones), contestadas desde aquí por el Portero (os/tu-palabra.js)
     if(decisionsAllowed&&window.YodTuPalabra)window.YodTuPalabra.montar({token:token,portero:PORTERO_ORIGINAL,vigente:function(){return mismaSesion(token,ep);}});
+    // PLAN-04 · Atorados: lo que lleva días sin moverse, de asistentes (Buzón, por el Portero) y personas (MOAC vencidas), en una lista (os/atorados.js)
+    if(decisionsAllowed&&window.YodAtorados)window.YodAtorados.montar({token:token,portero:PORTERO_ORIGINAL,vigente:function(){return mismaSesion(token,ep);}});
     var requests=[];if(financeAllowed)requests.push(coordinatedPortalLoad('finance',function(){return loadFinance(token);},enDespacho()?3:1,'finance'));if(marketingAllowed)requests.push(coordinatedPortalLoad('marketing',function(){return loadMarketing(token);},enDespacho()?3:1,'marketing'));var results=await Promise.allSettled(requests);if(mismaSesion(token,ep)&&results.some(function(r){return r.status==='rejected';}))state.homeDataEpoch=null;
   }
 
