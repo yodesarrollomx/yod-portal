@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-11-13.folio-cartera.1",
+  "model_revision": "2026-11-13.folio-cartera.2",
   "proposal_id": "CHG-FOLIO-CARTERA-20261113",
-  "summary": "Etapa 2 del análisis tablero por tablero, primer paso: cada terreno de la cartera liga a su plan. La columna «plan» del Control Maestro (motor:caso) da la liga: PPP 2 abre #/plan/<id> y los cinco motores del PPP abren ?open=<caso>; cualquier otro formato no da liga y el tablero del plan valida su propio acceso. os/proyectos.js suma ligaPlan y desdeControlMaestro lleva la columna; la tira de siete carriles pinta «plan» junto a cada terreno. Etiqueta propia 20261113-folio-plan. Sigue bajo CHG-FOLIO-CARTERA-20261113.",
+  "summary": "Cierre de la publicación del folio: el Portero quedó en la versión 110 con recurso=cartera (verificado en vivo) y el registro pasa a publicado. Se deja el método para que cualquier agente publique un Apps Script desde el Chrome de Dirección: docs/agentes/publicar-apps-script.md y una sección en AGENTS.md (Buzón: Guías G37, regla 27). Sólo documentación y atlas; sin cambios de código.",
   "components": [
     "SYS-YOD-OS",
     "SYS-CONTROL",
@@ -17,9 +17,9 @@
     "SYS-DESPACHO"
   ],
   "tests": [
-    "node --test tests/folio-cartera.test.cjs (6 pruebas, una nueva: ligas de PPP 2 y de los cinco motores, formatos que no dan liga)",
-    "Prueba local de Cartera.gs: 12 comprobaciones (suma la columna plan y descarta formatos ajenos)",
-    "node --test tests/*.cjs · verify-os · verify-portal · verify-accesos · verify-obra-app · versiones --check · arquitectura --check"
+    "node scripts/arquitectura.cjs --check",
+    "node scripts/verificar-impacto.cjs (impacto válido, 0 archivos de comportamiento)",
+    "node --test tests/*.cjs · verify-os · verify-portal · verify-accesos · verify-obra-app"
   ],
-  "rollback": "Revertir el PR (vuelve la foto de cuatro etapas). Las columnas etapa_folio y proyectos se pueden dejar: nadie más las lee. En el Portero, volver a la versión anterior en Administrar implementaciones."
+  "rollback": "Revertir el PR (sólo documentación y atlas). Si hiciera falta en el Portero: Gestionar implementaciones → Editar → volver a la versión 109."
 }

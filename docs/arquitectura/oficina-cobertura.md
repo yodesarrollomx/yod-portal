@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-13.folio-cartera.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-13.folio-cartera.2
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -274,6 +274,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-read-validation.md · Revisión: 2026-10-29.ppp-read-validation.1
 - Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
 - PPP4 incremental: catálogo literal, grafo puro y semilla incompleta versionada dentro del frontend existente. Persistencia propuesta por módulo opt-in en la MISMA implementación GAS y tablas del master. Sin nueva URL, ACL, segundo motor financiero ni datos privados. Seed\_id pre-alta es identidad de borrador, no board\_case\_id; promoción debe preservar vínculo explícito y no se presenta implementada. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp40-semilla.md · Revisión: 2026-10-29.ppp40-semilla.1
+- CHG-FOLIO-CARTERA-20261113: versión 110 publicada el 2026-11-13 sobre la implementación existente (misma URL), base 109 + Cartera.gs + una línea de doGet (recurso=cartera, sólo lectura). Releída por Drive; GET con sesión de Dirección → ok (19 proyectos, 7 etapas) y con clave falsa → error clave. HermesAccess.gs de otro agente viaja inerte: su línea de ruta se quitó para la versión y se restauró en el editor. · Estado: ejecucion · Revisión: Apps Script version 110; 2026-11-13
 
 **Evidencia de conexiones:**
 
