@@ -1,25 +1,19 @@
 {
-  "model_revision": "2026-10-03.52-emd-tierra-pala",
-  "proposal_id": "CHG-EMD-TIERRA-PALA-047",
+  "model_revision": "2026-11-13.grafo-app.1",
+  "proposal_id": "CHG-ATLAS-GRAFO-APP-20261113",
+  "summary": "Registra en el atlas la GitHub App del grafo (EXT-GRAFO-APP) y su conexión CON-GRAFO-APP, comprobada con el PR 97 de potenciales-yod; pone al día los textos de «dos toques» (ahora un toque con la App) y marca como publicado CHG-ATLAS-GRAFO-VIVO-20261112. Sólo documentación del atlas y su inventario de salud.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-EMD",
-    "GAS-EMD",
-    "SHEET-EMD"
-  ],
-  "summary": "Registrar antes de implementación el porcentaje descubierto por la máquina y tierra alimentada por la pala. Reinicio operativo autorizado por separado, con respaldo privado y perfiles conservados.",
-  "contracts": [
-    "CTR-DESPACHO-CORCHO"
+    "SYS-CONTROL",
+    "SYS-POTENCIALES",
+    "EXT-ACTIONS",
+    "EXT-GRAFO-APP"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "ACCESOS_REF=3ee8ca50bf14ef17d95e72523e54506eb996f262 node verify-accesos.cjs",
-    "node verify-obra-app.cjs",
-    "node scripts/verificar-impacto.cjs --base origin/main --repo yodesarrollomx/yod-portal",
+    "verify-os · verify-portal · verify-accesos · verify-obra-app",
     "git diff --check"
   ],
-  "rollback": "Revertir PR documental y regenerar vistas; frontend vuelve a GAS34. El reinicio operativo no es rollback de código ni restaura otros datos."
+  "rollback": "Revertir el PR; no toca código ni producción."
 }

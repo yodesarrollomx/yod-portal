@@ -64,7 +64,7 @@ test('Las tareas horarias antiguas dejan de estar verdes; despliegues por evento
   const h = harness({ age: 5 * 3600000 });
   await h.api.carga(true);
   const rows = h.saved.value.filas;
-  assert.equal(rows.find(r => r.mq.w === 'vigia-diario.yml').color, 'ambar');
+  assert.equal(rows.find(r => r.mq.w === 'salud-online.yml').color, 'ambar');
   assert.equal(rows.find(r => r.mq.w === 'refresh-board.yml').color, 'ambar');
   assert.equal(rows.find(r => r.mq.w === 'sala-cada-hora.yml').color, 'ambar');
   assert.equal(rows.find(r => r.mq.w === 'sala-diario.yml').color, 'verde');

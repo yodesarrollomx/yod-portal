@@ -1,0 +1,976 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PPP · programa nativo multivolumen schema2",
+  "description": "Fuente estructural: programa nativo de 21 columnas y 14 drivers. units_per_level es promedio numérico; units sigue derivado entero de Sheets. Bounds técnicos de transporte, no norma ni dataValidation observada. count<=rows e IDs únicos se verifican además del schema. No contiene un motor financiero.",
+  "$ref": "#/$defs/canonical_collection",
+  "$defs": {
+    "canonical_collection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "count",
+        "volumes",
+        "shared_allocation_mode"
+      ],
+      "properties": {
+        "schema": {
+          "const": 2
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        },
+        "volumes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "values"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200,
+                "pattern": "^[A-Za-z0-9_.:-]+$"
+              },
+              "values": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "footprint_m2",
+                  "open_courtyard_m2",
+                  "residential_levels",
+                  "units_per_level",
+                  "units",
+                  "private_area_per_unit_m2",
+                  "private_residential_area_m2",
+                  "built_residential_area_m2",
+                  "commercial_ground_m2",
+                  "ground_services_m2",
+                  "covered_ground_m2",
+                  "gross_area_m2",
+                  "basement_area_m2",
+                  "direct_cost",
+                  "construction_start_month",
+                  "construction_duration_months",
+                  "construction_end_month",
+                  "sales_start_month",
+                  "presale_months",
+                  "delivery_months"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "footprint_m2": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1000000000
+                  },
+                  "open_courtyard_m2": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1000000000
+                  },
+                  "residential_levels": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1,
+                    "maximum": 500
+                  },
+                  "units_per_level": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1000000,
+                    "description": "Promedio de departamentos por nivel; no describe distribución tipológica. F lo redondea a total entero sólo en Sheets."
+                  },
+                  "units": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0
+                  },
+                  "private_area_per_unit_m2": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1000000000
+                  },
+                  "private_residential_area_m2": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0
+                  },
+                  "built_residential_area_m2": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0
+                  },
+                  "commercial_ground_m2": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1000000000
+                  },
+                  "ground_services_m2": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1000000000
+                  },
+                  "covered_ground_m2": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0
+                  },
+                  "gross_area_m2": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0
+                  },
+                  "basement_area_m2": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1000000000
+                  },
+                  "direct_cost": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0
+                  },
+                  "construction_start_month": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1200
+                  },
+                  "construction_duration_months": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1,
+                    "maximum": 1200
+                  },
+                  "construction_end_month": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0
+                  },
+                  "sales_start_month": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1200
+                  },
+                  "presale_months": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1,
+                    "maximum": 1200
+                  },
+                  "delivery_months": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1,
+                    "maximum": 1200
+                  }
+                }
+              }
+            }
+          }
+        },
+        "shared_allocation_mode": {
+          "enum": [
+            "preserve",
+            "built_area"
+          ]
+        }
+      }
+    },
+    "write_collection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "count",
+        "volumes",
+        "shared_allocation_mode"
+      ],
+      "properties": {
+        "schema": {
+          "const": 2
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        },
+        "volumes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "values"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200,
+                "pattern": "^[A-Za-z0-9_.:-]+$"
+              },
+              "values": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "footprint_m2",
+                  "open_courtyard_m2",
+                  "residential_levels",
+                  "units_per_level",
+                  "private_area_per_unit_m2",
+                  "commercial_ground_m2",
+                  "ground_services_m2",
+                  "basement_area_m2",
+                  "construction_start_month",
+                  "construction_duration_months",
+                  "sales_start_month",
+                  "presale_months",
+                  "delivery_months"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "footprint_m2": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1000000000
+                  },
+                  "open_courtyard_m2": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1000000000
+                  },
+                  "residential_levels": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1,
+                    "maximum": 500
+                  },
+                  "units_per_level": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1000000,
+                    "description": "Promedio de departamentos por nivel; no describe distribución tipológica. F lo redondea a total entero sólo en Sheets."
+                  },
+                  "private_area_per_unit_m2": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1000000000
+                  },
+                  "commercial_ground_m2": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1000000000
+                  },
+                  "ground_services_m2": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1000000000
+                  },
+                  "basement_area_m2": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1000000000
+                  },
+                  "construction_start_month": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1200
+                  },
+                  "construction_duration_months": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1,
+                    "maximum": 1200
+                  },
+                  "sales_start_month": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 1200
+                  },
+                  "presale_months": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1,
+                    "maximum": 1200
+                  },
+                  "delivery_months": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1,
+                    "maximum": 1200
+                  }
+                }
+              }
+            }
+          }
+        },
+        "shared_allocation_mode": {
+          "enum": [
+            "preserve",
+            "built_area"
+          ]
+        }
+      }
+    },
+    "business_write": {
+      "type": "object",
+      "required": [
+        "tipo",
+        "caso_id",
+        "tipo_desarrollo",
+        "escenario_id",
+        "revision_esperada",
+        "request_id",
+        "volumes"
+      ],
+      "properties": {
+        "tipo": {
+          "const": "sheet-volumes"
+        },
+        "caso_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9_.:-]+$"
+        },
+        "tipo_desarrollo": {
+          "const": "VERTICAL"
+        },
+        "escenario_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9_.:-]+$"
+        },
+        "revision_esperada": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9_.:-]+$"
+        },
+        "volumes": {
+          "$ref": "#/$defs/write_collection"
+        }
+      }
+    },
+    "volume_receipt": {
+      "type": "object",
+      "required": [
+        "request_id",
+        "caso_id",
+        "escenario_id",
+        "base_revision",
+        "result_revision",
+        "volumes",
+        "calculated"
+      ],
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9_.:-]+$"
+        },
+        "caso_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9_.:-]+$"
+        },
+        "escenario_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9_.:-]+$"
+        },
+        "base_revision": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "result_revision": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "volumes": {
+          "$ref": "#/$defs/canonical_collection"
+        },
+        "calculated": {
+          "type": "boolean"
+        }
+      }
+    },
+    "receipt_query": {
+      "type": "object",
+      "required": [
+        "recurso",
+        "caso_id",
+        "escenario_id",
+        "request_id"
+      ],
+      "properties": {
+        "recurso": {
+          "const": "sheet-volumes-receipt"
+        },
+        "caso_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9_.:-]+$"
+        },
+        "escenario_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9_.:-]+$"
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9_.:-]+$"
+        }
+      }
+    },
+    "prewrite_rejection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request_id",
+        "caso_id",
+        "escenario_id",
+        "base_revision",
+        "actor",
+        "payload_hash",
+        "stage",
+        "write_attempted",
+        "error",
+        "rejected_at"
+      ],
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "caso_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "escenario_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "base_revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "actor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "payload_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "stage": {
+          "const": "prewrite"
+        },
+        "write_attempted": {
+          "const": false
+        },
+        "error": {
+          "enum": [
+            "revision_conflict",
+            "active_driver_missing",
+            "protected_native_driver",
+            "native_formula_missing",
+            "native_formula_manifest_changed",
+            "native_geometry_conflict",
+            "native_horizon_conflict",
+            "shared_allocation_requires_reconciliation",
+            "volume_identity_conflict"
+          ]
+        },
+        "rejected_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "native_factory_preview": {
+      "type": "object",
+      "required": [
+        "ok",
+        "kind",
+        "persisted",
+        "template_revision",
+        "inputs",
+        "volumes",
+        "capability"
+      ],
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "kind": {
+          "const": "native_factory_preview"
+        },
+        "persisted": {
+          "const": false
+        },
+        "template_revision": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "inputs": {
+          "type": "object",
+          "description": "Supuestos de la plantilla nativa, sin sustituir los inputs capturados por el usuario."
+        },
+        "volumes": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/canonical_collection"
+            },
+            {
+              "properties": {
+                "count": {
+                  "const": 1
+                },
+                "volumes": {
+                  "maxItems": 1
+                },
+                "shared_allocation_mode": {
+                  "const": "preserve"
+                }
+              }
+            }
+          ]
+        },
+        "capability": {
+          "type": "object",
+          "required": [
+            "schema",
+            "read",
+            "write",
+            "max_volumes",
+            "fields",
+            "allocation_modes",
+            "shared_resources"
+          ],
+          "properties": {
+            "schema": {
+              "const": 2
+            },
+            "read": {
+              "const": true
+            },
+            "write": {
+              "const": true
+            },
+            "max_volumes": {
+              "const": 16
+            },
+            "fields": {
+              "type": "array",
+              "minItems": 21,
+              "maxItems": 21
+            },
+            "allocation_modes": {
+              "$ref": "#/$defs/allocation_modes"
+            },
+            "shared_resources": {
+              "$ref": "#/$defs/shared_resources"
+            }
+          }
+        }
+      }
+    },
+    "shared_resources": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "label"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.:-]{1,200}$"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          }
+        }
+      }
+    },
+    "allocation_modes": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "prefixItems": [
+        {
+          "const": "preserve"
+        },
+        {
+          "const": "built_area"
+        }
+      ],
+      "items": false
+    }
+  },
+  "x-native-fields": [
+    {
+      "id": "name",
+      "label": "Nombre",
+      "type": "text",
+      "nullable": false,
+      "writable": true,
+      "derived": false
+    },
+    {
+      "id": "footprint_m2",
+      "label": "Huella",
+      "type": "number",
+      "nullable": true,
+      "writable": true,
+      "derived": false,
+      "min": 0,
+      "max": 1000000000,
+      "step": 0.01
+    },
+    {
+      "id": "open_courtyard_m2",
+      "label": "Patio abierto",
+      "type": "number",
+      "nullable": true,
+      "writable": true,
+      "derived": false,
+      "min": 0,
+      "max": 1000000000,
+      "step": 0.01
+    },
+    {
+      "id": "residential_levels",
+      "label": "Plantas residenciales",
+      "type": "integer",
+      "nullable": true,
+      "writable": true,
+      "derived": false,
+      "min": 1,
+      "max": 500,
+      "step": 1
+    },
+    {
+      "id": "units_per_level",
+      "label": "Viviendas por planta · promedio",
+      "type": "number",
+      "nullable": true,
+      "writable": true,
+      "derived": false,
+      "min": 0,
+      "max": 1000000,
+      "step": 1e-06
+    },
+    {
+      "id": "units",
+      "label": "Viviendas",
+      "type": "integer",
+      "nullable": true,
+      "writable": false,
+      "derived": true,
+      "min": 0,
+      "step": 1
+    },
+    {
+      "id": "private_area_per_unit_m2",
+      "label": "Área privada por vivienda",
+      "type": "number",
+      "nullable": true,
+      "writable": true,
+      "derived": false,
+      "min": 0,
+      "max": 1000000000,
+      "step": 0.01
+    },
+    {
+      "id": "private_residential_area_m2",
+      "label": "Área privada residencial",
+      "type": "number",
+      "nullable": true,
+      "writable": false,
+      "derived": true,
+      "min": 0,
+      "step": 0.01
+    },
+    {
+      "id": "built_residential_area_m2",
+      "label": "Área construida residencial",
+      "type": "number",
+      "nullable": true,
+      "writable": false,
+      "derived": true,
+      "min": 0,
+      "step": 0.01
+    },
+    {
+      "id": "commercial_ground_m2",
+      "label": "Comercio PB",
+      "type": "number",
+      "nullable": true,
+      "writable": true,
+      "derived": false,
+      "min": 0,
+      "max": 1000000000,
+      "step": 0.01
+    },
+    {
+      "id": "ground_services_m2",
+      "label": "Servicios PB",
+      "type": "number",
+      "nullable": true,
+      "writable": true,
+      "derived": false,
+      "min": 0,
+      "max": 1000000000,
+      "step": 0.01
+    },
+    {
+      "id": "covered_ground_m2",
+      "label": "PB cubierta",
+      "type": "number",
+      "nullable": true,
+      "writable": false,
+      "derived": true,
+      "min": 0,
+      "step": 0.01
+    },
+    {
+      "id": "gross_area_m2",
+      "label": "Área construida total",
+      "type": "number",
+      "nullable": true,
+      "writable": false,
+      "derived": true,
+      "min": 0,
+      "step": 0.01
+    },
+    {
+      "id": "basement_area_m2",
+      "label": "Sótano",
+      "type": "number",
+      "nullable": true,
+      "writable": true,
+      "derived": false,
+      "min": 0,
+      "max": 1000000000,
+      "step": 0.01
+    },
+    {
+      "id": "direct_cost",
+      "label": "Costo directo",
+      "type": "number",
+      "nullable": true,
+      "writable": false,
+      "derived": true,
+      "min": 0,
+      "step": 0.01
+    },
+    {
+      "id": "construction_start_month",
+      "label": "Inicio de obra",
+      "type": "integer",
+      "nullable": true,
+      "writable": true,
+      "derived": false,
+      "min": 0,
+      "max": 1200,
+      "step": 1
+    },
+    {
+      "id": "construction_duration_months",
+      "label": "Duración de obra",
+      "type": "integer",
+      "nullable": true,
+      "writable": true,
+      "derived": false,
+      "min": 1,
+      "max": 1200,
+      "step": 1
+    },
+    {
+      "id": "construction_end_month",
+      "label": "Fin de obra",
+      "type": "integer",
+      "nullable": true,
+      "writable": false,
+      "derived": true,
+      "min": 0,
+      "step": 1
+    },
+    {
+      "id": "sales_start_month",
+      "label": "Inicio de ventas",
+      "type": "integer",
+      "nullable": true,
+      "writable": true,
+      "derived": false,
+      "min": 0,
+      "max": 1200,
+      "step": 1
+    },
+    {
+      "id": "presale_months",
+      "label": "Meses de preventa",
+      "type": "integer",
+      "nullable": true,
+      "writable": true,
+      "derived": false,
+      "min": 1,
+      "max": 1200,
+      "step": 1
+    },
+    {
+      "id": "delivery_months",
+      "label": "Meses de entrega",
+      "type": "integer",
+      "nullable": true,
+      "writable": true,
+      "derived": false,
+      "min": 1,
+      "max": 1200,
+      "step": 1
+    }
+  ],
+  "x-invariants": [
+    "count <= volumes.length <= capability.max_volumes <= 16; IDs únicos y estables; inactivos preservados fuera de cálculo.",
+    "Metadata 21 es autoridad del servidor; POST sólo 14 drivers y nunca derivados ni fórmulas.",
+    "Recibo vigente FULL == modelo; proyección 14 drivers/count/IDs == solicitud. Superseded conserva resultado original y separa current_revision/current_collection.",
+    "Lote atómico incluye drivers/IDs/count y marcador applied ligado a operación; confirmación exige marcador y relectura, no sólo igualdad.",
+    "GET no escribe negocio; puede reconciliar ledger/auditoría fuera de revisión. No replay ni rollback automático.",
+    "Sólo rechazo prewrite durable con write_attempted false y actor/contexto/payload exactos permite liberar pendiente.",
+    "Fórmulas financieras sólo Sheets; 7 derivados de sólo lectura. Horizonte nativo 1–120 validado antes de escribir.",
+    "Factory nuevo uno y clone por versión requieren plantillas nativas y paridad aislada; no forzar históricos a uno.",
+    "E units_per_level es promedio number con step 0.000001; F units entero y sólo lectura = ROUND(D*E;0) en Sheets. Ejemplo 3 niveles y 5.666667 de promedio requieren readback F17; no implica reparto o tipología y no relaja reconciliación de inventario.",
+    "Colección cuatro claves: schema/count/shared_allocation_mode/volumes. Modo presente en before/write/hash/readback/receipt/superseded; no default cliente.",
+    "Capability plana agrega allocation_modes y shared_resources id/label sin importes; IDs recursos únicos, etiquetas sin caracteres de control.",
+    "preserve conserva PA raw. built_area requiere revisión explícita para todos los recursos y fórmula Sheets Mactivo/SUM(Mactivos), sobre rasante excluye N; áreas activas completas y suma positiva antes del lote."
+  ]
+}

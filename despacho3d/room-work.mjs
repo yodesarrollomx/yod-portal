@@ -1,0 +1,90 @@
+import {validateAutonStatus} from './auton-status.mjs?v=1';
+import {validateObservation,observationCaptureKey,validatedCapture} from './work-observer.mjs?v=129';
+// One serial round refreshes the whole authorized roster; the pause is between rounds.
+// This observes persisted work. It never starts execution or changes selected project.
+export function createRoomWork({request,now=Date.now,schedule=setTimeout,cancel=clearTimeout,isVisible=()=>true,intervalMs=5000,maxImageBytes=1800200,observeAutonStatus=false}){
+ const profiles=new Map(),states=new Map(),listeners=new Set(),attempts=new Map();let timer=null,flight=false,disposed=false,epoch=0;
+ const snapshot=()=>[...states.values()].map(s=>structuredClone(s));
+ function emit(){for(const fn of listeners)fn(snapshot());}
+ function later(){cancel(timer);if(!disposed&&profiles.size)timer=schedule(()=>{timer=null;void refresh();},Math.max(1000,intervalMs));}
+ function trimImages(preferred){
+  let used=0;const list=[...states.entries()].filter(([,s])=>s.image).sort((a,b)=>(b[0]===preferred)-(a[0]===preferred)||(b[1].checked_at||0)-(a[1].checked_at||0)||a[0].localeCompare(b[0]));
+  for(const [,s] of list){if(used+s.image.length<=maxImageBytes)used+=s.image.length;else s.image=null;}
+ }
+ // Catalog authority survives an unavailable engine, but never claims live activity.
+ function catalogStatus(id){
+  if(!observeAutonStatus)return null;
+  try{const s=validateAutonStatus(profiles.get(id)?.profile.auton_status,id,now());return ['working','presenting'].includes(s.activity)?null:s;}catch{return null;}
+ }
+ function currentStatus(id,live){
+  const source=catalogStatus(id);
+  if(!source)return live;
+  // A delayed execution response cannot undo a new source decision.
+  return live&&live.source_revision===source.source_revision&&live.admission===source.admission?live:source;
+ }
+ function sourceState(id){const status=catalogStatus(id);return status?{phase:'ready',available:false,case_id:id,work:null,screen:null,image:null,checked_at:now(),auton_status:status}:null;}
+ function reconcile(list){
+  if(disposed)return;
+  const incoming=new Map((list||[]).filter(p=>p?.case_id===p?.id&&p.entity_kind==='case').slice(0,16).map(p=>[p.case_id,p]));
+  for(const id of profiles.keys())if(!incoming.has(id)){states.delete(id);profiles.delete(id);attempts.delete(id);}
+  // Keep the lease identity across metadata refreshes; a remove/re-add gets a new one.
+  for(const [id,p]of incoming){const prior=profiles.get(id);profiles.set(id,prior?{...prior,profile:p}:{profile:p,lease:{}});}
+  for(const id of profiles.keys()){
+   const source=sourceState(id),prior=states.get(id);if(!source)continue;
+   const live=prior?.auton_status,at=Date.parse(live?.observed_at);
+   if(!live||!Number.isFinite(at)||now()-at>90000||live.source_revision!==source.auton_status.source_revision)states.set(id,source);
+  }
+  emit();if(!flight)void refresh();
+ }
+ async function observe(id,lease,own){
+  const valid=()=>!disposed&&own===epoch&&profiles.get(id)?.lease===lease;
+  try{
+   const profile=profiles.get(id)?.profile;
+   if(profile?.record_only===true){
+    const status=validateAutonStatus(profile.auton_status,id,now());
+    if(['working','presenting'].includes(status.activity))throw Error('invalid_auton_status');
+    if(valid()){states.set(id,{phase:'ready',available:false,case_id:id,work:null,screen:null,image:null,checked_at:now(),auton_status:status});emit();}
+    return;
+   }
+   let value;
+   try{value=validateObservation(await request('/computer/work',{},id),id);}
+   catch(error){
+    if(!observeAutonStatus||['unauthorized','forbidden'].includes(error?.message))throw error;
+    // A missing computer feed cannot suppress an independently authenticated source status.
+    value={ok:true,available:false,case_id:id,work:null,screen:null};
+   }
+   if(!valid())return;
+   const prior=states.get(id),key=observationCaptureKey(value);
+   const state={...value,image:key&&key===observationCaptureKey(prior)?prior.image||null:null,phase:value.available?'ready':'unavailable',checked_at:now()};
+   if(observeAutonStatus){
+    state.auton_status=null;
+    try{state.auton_status=validateAutonStatus(await request('/fast/auton-status',{},id),id,now());}
+    catch(error){if(['unauthorized','forbidden'].includes(error?.message))throw error;}
+    if(!valid())return;
+    state.auton_status=currentStatus(id,state.auton_status);
+   }
+   states.set(id,state);emit();
+   const attempted=attempts.get(id);
+   if(key&&!state.image&&(!attempted||attempted.key!==key||now()-attempted.at>=30000)){
+    attempts.set(id,{key,at:now()});
+    try{
+     const capture=await request('/computer/state',{},id);if(!valid())return;
+     state.image=validatedCapture(capture,value);trimImages(id);emit();
+    }catch(error){if(['unauthorized','forbidden'].includes(error?.message))throw error;}
+   }else if(!key)attempts.delete(id);
+  }catch(e){if(valid()){states.set(id,sourceState(id)||{phase:['unauthorized','forbidden'].includes(e?.message)?'unauthorized':'unavailable',case_id:id,work:null,screen:null,image:null,checked_at:now()});attempts.delete(id);emit();}}
+ }
+ async function refresh(){
+  if(disposed||flight)return;if(!isVisible()){later();return;}
+  if(!profiles.size)return;cancel(timer);timer=null;flight=true;const own=epoch,visited=new Set();
+  try{
+   // Reconciliation may add members during a request. Include them in this same round.
+   while(!disposed&&own===epoch&&isVisible()){
+    const next=[...profiles.entries()].find(([id])=>!visited.has(id));if(!next)break;
+    const [id,p]=next;visited.add(id);await observe(id,p.lease,own);
+   }
+  }finally{flight=false;later();}
+ }
+ return{reconcile,refresh,snapshot,has:id=>profiles.has(id),subscribe(fn){listeners.add(fn);fn(snapshot());return()=>listeners.delete(fn);},
+ dispose(){disposed=true;epoch++;cancel(timer);profiles.clear();states.clear();attempts.clear();emit();listeners.clear();}};
+}

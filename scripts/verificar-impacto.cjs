@@ -14,7 +14,7 @@ function verify({model, impact, changed, repository}) {
   if (!proposal) throw new Error('La propuesta debe existir primero en el modelo: '+impact.proposal_id);
   for (const id of impact.components) if (!proposal.components.includes(id)) throw new Error('La propuesta no incluye '+id);
   if (repository && !impact.components.some(id=>model.components.some(c=>c.id===id&&c.repo===repository))) throw new Error('Declarar al menos un componente de este repositorio');
-  const behavioral = changed.filter(p=>!p.startsWith('docs/arquitectura/') && (p.startsWith('.github/workflows/') || /\.(?:[cm]?[jt]sx?|gs|py|html|css|sql|sh|json)$/i.test(p)) && p!=='architecture-impact.json');
+  const behavioral = changed.filter(p=>!p.startsWith('docs/arquitectura/') && (p.startsWith('.github/workflows/') || /\.(?:[cm]?[jt]sx?|gs|py|html|css|sql|sh|json|ya?ml)$/i.test(p)) && p!=='architecture-impact.json');
   if (behavioral.length && !changed.includes('architecture-impact.json')) throw new Error('Cambió código o automatización sin actualizar architecture-impact.json: '+behavioral.join(', '));
   if (repository) for (const file of behavioral) {
     const rules=(model.path_ownership||[]).filter(r=>r.repo===repository&&(r.prefix===''||file===r.prefix||(r.prefix.endsWith('/')&&file.startsWith(r.prefix)))).sort((a,b)=>b.prefix.length-a.prefix.length);

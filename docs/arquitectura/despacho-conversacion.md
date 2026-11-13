@@ -39,3 +39,11 @@ Reversión: revertir el PR del cliente. Conservar hojas, historial, identificado
 El panel distingue autorización denegada, cambio de sesión, espera agotada, formato inválido y apertura fuera de YOD OS. Solo propaga códigos permitidos y el paso fallido; descarta mensajes crudos del proveedor. El propietario reportó un fallo inicial de carga que se recuperó; su causa no se confirmó. La memoria entre turnos ya se comprobó; el último cierre/reapertura fue confirmado por el propietario.
 
 Cuando el último mensaje aparece detenido en el servidor, el panel muestra que quedó sin respuesta y ofrece «Volver a enviar». Solo ese clic explícito crea un turno nuevo con el mismo texto y un identificador nuevo; la recuperación de un recibo perdido conserva el identificador anterior. Ninguna lectura reencola mensajes. Las esperas acotadas son 45 segundos en HTTP, 50 en el puente y 55 en el cliente; cerrar o cambiar sesión sigue descartando respuestas tardías.
+
+## Carril rápido (propuesto: CHG-DESPACHO-FAST-049)
+
+Estado: backend Apps Script r6-fast y motor en la nube comprobados con el piloto; este cambio de interfaz sigue en revisión. Al abrir la conversación el panel pide al Portero, por el puente existente, una credencial corta ligada al expediente (`mintFastSession`, solo `{case_id}`, carril propio del puente). La credencial no es la sesión del OS ni una clave del motor: caduca en minutos, solo sirve para conversar con ese expediente y se descarta al cerrar o cambiar de sesión.
+
+Con ella el panel conversa por streaming con el motor en la nube, que elige modelo y esfuerzo según la pregunta, contesta con la evidencia del expediente y guarda el turno en Sheets en segundo plano con un recibo idempotente. El panel muestra el texto mientras llega, conserva el turno como «guardando respaldo» hasta que Sheets lo refleja (el seguidor común sigue leyendo) y nunca duplica mensajes. Si el carril no existe o falla antes de aceptar el turno, el envío usa la cola de Sheets sin cambios. Un fallo posterior no reenvía por la cola: el borrador se conserva y se avisa que no se guardó.
+
+Pruebas: `tests/despacho-fast-lane.test.cjs` (sintético, sin red). Reversión: revertir el PR; backend y motor conservan ambos caminos.

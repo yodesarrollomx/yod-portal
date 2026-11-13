@@ -1,11 +1,13 @@
 <!doctype html>
 <html lang="es">
 <head>
-<script src="yod-acceso.js?v=1"></script>
+<script src="yod-acceso.js?v=20261112-ppp2"></script>
+<script src="yod-cargador.js?v=20261112-ppp2"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow,noarchive">
-  <meta name="referrer" content="no-referrer">
+  <!-- GSI necesita el origen; strict-origin evita transmitir rutas y consultas. -->
+  <meta name="referrer" content="strict-origin">
   <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icono-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,16 +19,18 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
-  <link rel="stylesheet" href="styles.css?v=despacho-github-20261003">
+  <link rel="stylesheet" href="styles.css?v=20261112-ppp2">
+  <link rel="stylesheet" href="ui-chrome.css?v=20261112-ppp2">
+  <link rel="stylesheet" href="../despacho3d/equipo.css?v=20261112-ppp2">
+  <script src="ui-chrome.js?v=20261112-ppp2" defer></script>
 </head>
 <body>
   <div class="app-shell">
     <aside class="sidebar" aria-label="Navegación principal">
-      <a class="brand" href="https://yodesarrollo.mx/" aria-label="YOD, ir a yodesarrollo.mx" title="Ir a yodesarrollo.mx">
+      <a class="brand" href="#inicio" aria-label="YOD OS, ir a Inicio" title="Ir a Inicio de YOD OS">
         <span class="brand-mark">YOD</span><span class="brand-os">OS</span>
       </a>
       <nav class="side-nav">
-        <a class="nav-item active" href="#inicio"><i class="ti ti-home-2"></i><span>Inicio</span></a>
         <!-- CHN-20260909-1417-213f · «Quitar, se me hace repetitivo» (Alejandro, 9-sep).
              Era un atajo que sólo bajaba a la sección «El tablero de la operación» de esta
              misma página, y el menú ya trae el rótulo «Tableros» tres renglones abajo con
@@ -49,7 +53,7 @@
     <main class="main" id="inicio">
       <header class="topbar">
         <button class="burger" id="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false"><i class="ti ti-menu-2"></i></button>
-        <a class="topbar-brand" href="https://yodesarrollo.mx/" title="Ir a yodesarrollo.mx" aria-label="YOD, ir a yodesarrollo.mx"><span>YOD</span><small>OS</small></a>
+        <a class="topbar-brand" href="#inicio" title="Ir a Inicio de YOD OS" aria-label="YOD OS, ir a Inicio"><span>YOD</span><small>OS</small></a>
         <nav class="os-crumbs" id="osCrumbs" aria-label="Dónde estoy"><span>YOD OS</span><i class="ti ti-chevron-right"></i><b id="osCrumbHere">Inicio</b></nav>
         <button class="search-trigger" id="search-trigger" type="button" aria-haspopup="dialog">
           <i class="ti ti-search"></i><span>Buscar un módulo…</span><kbd>⌘ K</kbd>
@@ -58,8 +62,7 @@
           <details class="despacho-tools" id="despachoTools">
             <summary aria-label="Opciones del Despacho"><i class="ti ti-dots" aria-hidden="true"></i><span class="sr-only">Opciones del Despacho</span></summary>
             <nav aria-label="Acciones del Despacho">
-              <a class="section-link" href="#inicio" aria-label="Cerrar El Despacho y volver a Inicio"><i class="ti ti-arrow-left" aria-hidden="true"></i>Volver a Inicio</a>
-              <a class="section-link" id="despachoBandeja" href="https://yodesarrollomx.github.io/yod-despacho/" target="_blank" rel="noopener noreferrer" hidden><i class="ti ti-inbox" aria-hidden="true"></i>Bandeja actual</a>
+              <a class="section-link" id="despachoBandeja" href="https://yodesarrollomx.github.io/yod-despacho/" target="_blank" rel="noopener noreferrer" hidden><i class="ti ti-inbox" aria-hidden="true"></i>Bandeja anterior y Corcho</a>
               <a class="section-link" id="despachoAbrir" target="_blank" rel="noopener noreferrer" hidden><i class="ti ti-arrow-up-right" aria-hidden="true"></i>Abrir aparte</a>
             </nav>
           </details>
@@ -80,6 +83,7 @@
           <div class="freshness">
             <span>Última actualización</span>
             <strong id="updated-at">Pendiente</strong>
+            <small id="yodTiempo" style="font-size:10px;color:var(--muted)" hidden></small>
           </div>
         </section>
 
@@ -137,6 +141,7 @@
           <h2 class="sr-only" id="despachoTitulo">El Despacho</h2>
 
           <p class="operation-message" id="despachoEstado" role="status">Validando tu acceso…</p>
+          <div id="despachoEquipo"><p id="despachoEquipoEstado" class="sr-only" role="status"></p></div>
           <div class="despacho-canvas" id="despachoCanvas"></div>
         </section>
 
@@ -146,7 +151,7 @@
           <div class="emb-cards">
             <a class="emb-card destacada" href="#/embudo/sala">
               <span class="emb-ico"><i class="ti ti-photo-edit"></i></span>
-              <div><p class="emb-t">Sala de Edición</p><p class="emb-s">Lo que espera tu palabra hoy</p></div>
+              <div><p class="emb-t">Sala de Edición</p><p class="emb-s" data-sala-listas="Tu montón listo para lanzar y lo que espera tu palabra">Tu montón listo para lanzar y lo que espera tu palabra</p></div>
               <span class="emb-cta">Entrar <i class="ti ti-arrow-right"></i></span></a>
             <a class="emb-card" href="#/embudo/metricas">
               <span class="emb-ico"><i class="ti ti-chart-funnel"></i></span>
@@ -231,7 +236,7 @@
       </div>
       <div class="mask-body">
         <div class="mask-load" id="embudoLoad"><i class="ti ti-loader-2 spin" style="font-size:26px"></i><span>Abriendo…</span></div>
-        <iframe id="embudoFrame" title="Embudo comercial" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <iframe id="embudoFrame" title="Embudo comercial" allow="fullscreen; autoplay; picture-in-picture" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
       <div class="mask-foot">
         <span id="embudoPie">La Sala guarda en su Sheet — tus decisiones no se quedan aquí.</span>
@@ -241,20 +246,39 @@
     </div>
   </div>
 
-  <script src="../portal-core.js?v=1.0.5"></script>
-  <script src="access-policy.js?v=control-20261001"></script>
-  <script src="adapters/operations.js?v=audit-20260930"></script>
-  <script src="adapters/finance.js?v=audit-20260930"></script>
-  <script src="adapters/marketing.js?v=0.1.0"></script>
-  <script src="despacho-section.js?v=github-20261003"></script>
-  <script src="despacho-chinches.js?v=github-20261003"></script>
-  <script src="despacho-conversation.js?v=20261003-4"></script>
-  <script src="despacho-transport.js?v=20261003-3"></script>
-  <script src="app.js?v=despacho-transporte-20261003"></script>
-  <script src="maquinas.js?v=audit-20260930"></script>
-  <script src="https://yodesarrollomx.github.io/potenciales-yod/portero.js?v=relevo9"></script>
-  <script src="../chinche.js?v=despacho-20261002"></script>
-  <script>if(window.YODChinche) YODChinche.init({pantalla:"os"});</script>
+  <script src="../portal-core.js?v=20261112-ppp2"></script>
+  <script src="access-policy.js?v=20261112-ppp2"></script>
+  <script src="adapters/operations.js?v=20261112-ppp2"></script>
+  <script src="adapters/finance.js?v=20261112-ppp2"></script>
+  <script src="adapters/marketing.js?v=20261112-ppp2"></script>
+  <script src="despacho-section.js?v=20261112-ppp2"></script>
+  <script src="despacho-chinches.js?v=20261112-ppp2"></script>
+  <script src="despacho-conversation.js?v=20261112-ppp2"></script>
+  <script src="despacho-transport.js?v=20261112-ppp2"></script>
+  <script src="despacho-equipo-host.js?v=20261112-ppp2"></script>
+  <script src="load-config.js?v=20261112-ppp2"></script>
+  <script src="load-plan-boot.js?v=20261112-ppp2"></script>
+  <script src="app.js?v=20261112-ppp2"></script>
+  <script src="maquinas.js?v=20261112-ppp2"></script>
+  <script src="https://yodesarrollomx.github.io/potenciales-yod/portero.js?v=20261031-fase1-e2"></script>
+  <!-- La chinche se carga DESPUÉS del primer dato (YodCargador.cargarDespues); sin cargador, o con ?cargador=legacy,
+       se inserta en el acto, como siempre. Esta etiqueta es inerte (type=text/plain: el navegador no la baja) y
+       existe para que scripts/versiones.cjs siga gobernando la etiqueta ?v= de chinche.js. -->
+  <script type="text/plain" id="yodChincheSrc" src="../chinche.js?v=20261112-ppp2"></script>
+  <script>
+(function(){
+  var tag=document.getElementById('yodChincheSrc');if(!tag)return;
+  var src=tag.getAttribute('src'),listo=false;
+  function iniciar(){if(listo||!window.YODChinche)return;listo=true;YODChinche.init({pantalla:"os"});}
+  function insertar(){var s=document.createElement('script');s.src=src;s.onload=iniciar;document.body.appendChild(s);}
+  var c=window.YodCargador;
+  if(c&&c.v&&!c.legacy&&typeof c.cargarDespues==='function'){
+    c.cargarDespues(src,{cuando:'primer-dato',maxMs:4000}).then(function(s){
+      if(window.YODChinche)iniciar();else if(s&&s.addEventListener)s.addEventListener('load',iniciar,{once:true});
+    },insertar);
+  }else insertar();
+})();
+  </script>
 
   <script>
 /* Fase 4 · «Dónde estoy»: las mismas migas que el marco de los tableros (shell.js) */
@@ -272,3 +296,4 @@
 </script>
 </body>
 </html>
+

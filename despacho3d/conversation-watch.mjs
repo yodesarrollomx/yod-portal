@@ -4,7 +4,7 @@ export function watchConversation(conversation,{visible=()=>true,now=()=>Date.no
  let stopped=false,timer,notified=false;const started=now();
  const stop=()=>{stopped=true;cancel(timer);};
  const delay=()=>now()-started>=limit?30000:now()-started<30000?5000:10000;
- const needsRead=()=>conversation.model?.processing||conversation.status==='processing'||conversation.recoverable||conversation.status==='unconfirmed'||conversation.status==='conflict'||(conversation.status==='ready'&&conversation.selection?.agent_ready===false);
+ const needsRead=()=>conversation.fastPending===true||conversation.model?.processing||conversation.status==='processing'||conversation.recoverable||conversation.status==='unconfirmed'||conversation.status==='conflict'||(conversation.status==='ready'&&conversation.selection?.agent_ready===false);
  const queue=()=>{if(!stopped)timer=schedule(tick,delay());};
  const tick=async()=>{
   if(stopped||!needsRead())return;

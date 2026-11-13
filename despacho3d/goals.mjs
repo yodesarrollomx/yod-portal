@@ -31,9 +31,35 @@ export function validateGoals(value,caseId){
  const goals=value.goals.map(item=>{const goal=validateGoal(item,caseId);if(ids.has(goal.goal_id))fail();ids.add(goal.goal_id);return goal;});
  return {source_revision:value.source_revision,goals};
 }
-const notices={unavailable:'No pude consultar las metas. Puedes volver a actualizar.',timeout:'La conexión tardó demasiado. Puedes volver a actualizar.',invalid_goals:'La respuesta de metas no tiene el formato esperado. Actualiza para consultar su estado.',stale_revision:'El expediente o la meta cambió. Actualiza y revisa el estado antes de continuar.',goal_busy:'Ya hay una meta en curso. Actualiza para verla.',case_busy:'Ya hay trabajo en curso. Actualiza para consultar su estado.',request_id_reused:'El servidor rechazó ese identificador. Actualiza antes de intentar una nueva acción.',invalid_state:'La meta cambió de estado. Actualiza antes de continuar.',invalid_transition:'La meta cambió de estado. Actualiza antes de continuar.',goals_not_ready:'Todavía falta preparar el guardado de metas.',schema_not_initialized:'Todavía falta preparar el guardado de metas.',invalid_request:'El servidor rechazó la solicitud. Actualiza antes de continuar.',unauthorized:'Tu sesión ya no autoriza estas metas. Vuelve a entrar desde YOD OS.',session_changed:'La sesión cambió. Vuelve a entrar desde YOD OS.'};
+const notices={lock_busy:'El expediente está atendiendo otra consulta. Puedes recuperar las metas en unos segundos.',unavailable:'No pude consultar las metas. Puedes volver a actualizar.',timeout:'La conexión tardó demasiado. Puedes volver a actualizar.',invalid_goals:'La respuesta de metas no tiene el formato esperado. Actualiza para consultar su estado.',stale_revision:'El expediente o la meta cambió. Actualiza y revisa el estado antes de continuar.',goal_busy:'Ya hay una meta en curso. Actualiza para verla.',case_busy:'Ya hay trabajo en curso. Actualiza para consultar su estado.',request_id_reused:'El servidor rechazó ese identificador. Actualiza antes de intentar una nueva acción.',invalid_state:'La meta cambió de estado. Actualiza antes de continuar.',invalid_transition:'La meta cambió de estado. Actualiza antes de continuar.',goals_not_ready:'Todavía falta preparar el guardado de metas.',schema_not_initialized:'Todavía falta preparar el guardado de metas.',invalid_request:'El servidor rechazó la solicitud. Actualiza antes de continuar.',unauthorized:'Tu sesión ya no autoriza estas metas. Vuelve a entrar desde YOD OS.',session_changed:'La sesión cambió. Vuelve a entrar desde YOD OS.'};
 const denied=code=>['unauthorized','session_changed'].includes(code);
 const definitive=code=>['stale_revision','goal_busy','case_busy','request_id_reused','invalid_state','invalid_transition','goals_not_ready','schema_not_initialized','invalid_payload','invalid_request','goal_not_found'].includes(code);
+// Canonical goal status is a durable record, not proof that a worker is active.
+// can_resume only describes the server's permitted transition; it reveals no lease.
+export function goalDisplay(goal){
+ if(goal.status==='running')return goal.can_resume===true
+  ? {label:'Necesita retomar',notice:'El servidor permite retomar esta meta. Los avances guardados se conservan.'}
+  : {label:'Ejecución registrada',notice:'Este es el estado guardado de la meta. Consulta Trabajo para ver la actividad observada.'};
+ return {label:{queued:'En cola',ready_for_review:'Para tu revisión',awaiting_data:'Faltan datos',stopped:'Detenido',completed:'Revisado'}[goal.status]||'Estado no disponible',notice:''};
+}
+export function taskDisplay(task,parent){
+ const status=typeof parent==='string'?parent:parent?.status;
+ if(task.status==='running'){
+  if(status==='queued')return 'Pendiente de reanudación';
+  if(status==='running')return parent?.can_resume===true?'Por retomar':'Ejecución registrada';
+  if(['stopped','awaiting_data','ready_for_review','completed'].includes(status))return 'Interrumpida · pendiente de conciliación';
+  return 'Sin ejecución confirmada';
+ }
+ return {pending:'Pendiente',ready_for_review:'Para revisión',blocked:'Bloqueada'}[task.status]||task.status;
+}
+export function goalReviewActions(goal){
+ if(goal.status==='ready_for_review')return ['approve','stop'];
+ if(goal.status==='stopped')return ['resume'];
+ if(goal.status==='awaiting_data')return ['resume','stop'];
+ if(goal.status==='running')return goal.can_resume===true?['resume','stop']:['stop'];
+ return goal.status==='queued'?['stop']:[];
+}
+
 export class DurableGoals {
  constructor({transport,getContext,notify=()=>{},onUnauthorized=()=>{},uuid=()=>crypto.randomUUID(),timeout=55000}){Object.assign(this,{transport,getContext,notify,onUnauthorized,uuid,timeout,epoch:0,caseId:null,model:null,pending:null,busy:false,status:'disconnected',notice:'',listeners:new Set()});}
  state(){return {model:this.model,pending:this.pending?{method:this.pending.method,action:this.pending.payload.action}:null,busy:this.busy,status:this.status,notice:this.notice};}
@@ -41,13 +67,25 @@ export class DurableGoals {
  emit(){this.notify(this);for(const listener of this.listeners)listener(this.state());}
  context(){const c=this.getContext();return c?.selection?.goals?.ready===true&&c.selection.goals.schema===1&&id(c.selection.case_id)?c:null;}
  sync(){const current=this.context();if(!current)return false;if(this.caseId!==current.selection.case_id){this.reset();this.caseId=current.selection.case_id;}return true;}
- reset(){this.epoch++;this.caseId=null;this.model=null;this.pending=null;this.busy=false;this.status='disconnected';this.notice='';this.emit();}
- hide(){this.epoch++;this.model=null;this.busy=false;this.status=this.pending?'unconfirmed':'disconnected';this.emit();}
+ reset(){this.epoch++;this.reading=null;this.caseId=null;this.model=null;this.pending=null;this.busy=false;this.status='disconnected';this.notice='';this.emit();}
+ hide(){this.epoch++;this.reading=null;this.model=null;this.busy=false;this.status=this.pending?'unconfirmed':'disconnected';this.emit();}
  async call(method,payload){const transport=typeof this.transport==='function'?this.transport():this.transport;if(typeof transport?.[method]!=='function')throw Error('unavailable');let timer;try{return await Promise.race([transport[method](structuredClone(payload)),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('timeout')),this.timeout);})]);}finally{clearTimeout(timer);}}
  current(epoch,caseId){return epoch===this.epoch&&this.context()?.selection.case_id===caseId;}
- async read(){
-  if(this.busy||!this.sync()||this.context()?.busy)return false;
-  const epoch=this.epoch,caseId=this.caseId;this.busy=true;this.status=this.pending?'unconfirmed':'loading';this.emit();
+ read({background=false}={}){
+  if(!this.sync()||this.context()?.busy)return Promise.resolve(false);
+  if(this.reading?.epoch===this.epoch&&this.reading.caseId===this.caseId)return this.reading.promise;
+  if(this.busy)return Promise.resolve(false);
+  const reading={epoch:this.epoch,caseId:this.caseId};
+  reading.promise=new Promise(resolve=>{reading.resolve=resolve;});this.reading=reading;
+  const finish=value=>{if(this.reading===reading)this.reading=null;reading.resolve(value);};
+  void this.readFresh({background}).then(finish,()=>finish(false));
+  return reading.promise;
+ }
+ async readFresh({background=false}={}){
+  const epoch=this.epoch,caseId=this.caseId;this.busy=true;
+  // A background observation keeps the last result visible, including a failure.
+  // Initial loading and explicit recovery still describe the in-flight read.
+  if(this.pending)this.status='unconfirmed';else if(!background||this.status==='disconnected')this.status='loading';this.emit();
   try{const response=await this.call('readGoals',{case_id:caseId});if(!this.current(epoch,caseId))return false;if(response?.ok===false)throw Error(response.error);this.model=validateGoals(response,caseId);this.status=this.pending?'unconfirmed':'ready';this.notice=this.pending?'El último guardado no está confirmado. Puedes consultar lo que ya quedó guardado o reintentar la misma acción.':'';return true;}
   catch(error){if(this.current(epoch,caseId))this.failed(error,false);return false;}
   finally{if(epoch===this.epoch){this.busy=false;this.emit();}}
@@ -73,9 +111,44 @@ export class DurableGoals {
   return success;
  }
 }
+// Explicit actions re-read before writing. Passive polling remains useful only
+// while work can advance without a person, or before the first valid snapshot.
+export function shouldPollGoals(state){
+ return !state.pending&&(!state.model||state.model.goals.some(goal=>['queued','running'].includes(goal.status)));
+}
 // Polling only consults the canonical store. Hidden panels/tabs make no requests.
 export function watchGoals(controller,{visible=()=>true,interval=8000,setTimer=setTimeout,clearTimer=clearTimeout}={}){
  let stopped=false,timer;
- async function tick(){if(stopped)return;if(visible()&&!controller.busy)await controller.read();if(!stopped)timer=setTimer(tick,interval);}
+ async function tick(){if(stopped)return;if(visible()&&!controller.busy)await controller.read({background:true});if(!stopped)timer=setTimer(tick,interval);}
  void tick();return()=>{stopped=true;clearTimer(timer);};
+}
+
+export function orderedGoals(goals=[]){
+ return [...goals].sort((a,b)=>Number(['stopped','completed'].includes(a.status))-Number(['stopped','completed'].includes(b.status))||Date.parse(b.updated_at)-Date.parse(a.updated_at));
+}
+// This is a projection of saved records. It neither assigns work nor proves a worker is live.
+export function goalRoadmap(goals=[]){
+ const goal=orderedGoals(goals)[0];
+ if(!goal)return {goal:null,task:null,next:'Definir el siguiente encargo',why:'Todavía no hay una meta registrada.',mode:'empty'};
+ const task=[...(goal.tasks||[])].sort((a,b)=>Number(a.id?.slice(5))-Number(b.id?.slice(5))).find(t=>t.status!=='ready_for_review')||null;
+ let next,why,mode;
+ if(goal.status==='ready_for_review'){mode='review';next='Revisar la entrega contigo';why=goal.criterion;}
+ else if(goal.status==='completed'){mode='history';next='Definir un nuevo encargo';why='Esta entrega ya fue revisada. Se conserva como antecedente.';}
+ else if(goal.status==='stopped'){mode='stopped';next='Trabajo detenido';why=goal.summary||'Retomar requiere una instrucción explícita; abrir el puesto no reinicia esta meta.';}
+ else if(goal.status==='awaiting_data'||task?.status==='blocked'){mode='blocked';next=task?.title||'Resolver los datos o capacidades faltantes';why=task?.summary||goal.summary||task?.criterion||goal.criterion;}
+ else if(task){mode='task';next=task.title;why=task.criterion;}
+ else{mode='plan';next=goal.tasks?.length?'Conciliar y entregar el análisis':'Preparar la ruta de tareas';why=goal.criterion;}
+ return {goal,task,next,why,mode};
+}
+
+// Readiness describes a saved observation, not the lifetime of a worker.
+export function goalReadView(state={},enabled=true){
+ const model=state.model||null,route=model?goalRoadmap(model.goals):null;
+ const phase=!enabled?'unavailable':state.status==='writing'||state.pending?'unconfirmed':state.status==='loading'?'loading':state.status==='unavailable'||state.status==='conflict'?'unavailable':model?'ready':'loading';
+ const historical=!!model&&['loading','unavailable'].includes(phase);
+ const label=phase==='loading'?(historical?'Actualizando registro':'Consultando meta'):phase==='unavailable'?(historical?'Último registro · sin conexión':'Lectura no disponible'):phase==='unconfirmed'?'Guardado por confirmar':route?.goal?'Registro consultado':'Sin encargo registrado';
+ return {phase,historical,label,route,
+  title:route?.goal?.title||(!model?(phase==='unavailable'?'No se pudo consultar la meta':'Consultando su meta…'):'Sin encargo registrado'),
+  next:route?.next|| (phase==='unavailable'?'Recuperar la lectura':'Esperando lectura del proyecto'),
+  why:!enabled?'El seguimiento de objetivos todavía no está conectado.':state.notice||route?.why||'La carga no demuestra que el proyecto esté vacío.'};
 }
