@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-12.panorama-refresco.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-13.grafo-app.1 · 2026-10-20.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -754,7 +754,7 @@ Dependencia externa de procesos YOD OS
 - Entidades: .
 - Fuente de verdad: Datos del servicio externo; no inspeccionados.
 - Evidencia: Integración pendiente de verificar.
-- Conexiones: CON-063 (SYS-SALA → EXT-ACTIONS); CON-079 (EXT-ACTIONS → SVC-SALA-PRODUCTOR); CON-081 (EXT-ACTIONS → SVC-SALA-EJECUTOR); CON-PUBLICADOR-IDENTIDAD (EXT-ACTIONS → EXT-GITHUB-PUBLISHER-APP); CON-SALA-SNAPSHOT-ONLINE (SYS-SALA → EXT-ACTIONS); CON-MARKETING-DATOS-ONLINE (SYS-MARKETING → EXT-ACTIONS); CON-SALA-CIERRE-ONLINE (SVC-SALA-EJECUTOR → EXT-ACTIONS); CON-SALUD-ACTIONS (SYS-CONTROL → EXT-ACTIONS); CON-HORARIOS-ACTIONS (SVC-HORARIOS-CLOUD → EXT-ACTIONS); CON-SALA-MEDIOS-PUBLICOS (SYS-SALA → EXT-ACTIONS); CON-GRAFO-ACTIONS (SYS-CONTROL → EXT-ACTIONS); CON-GRAFO-IA (EXT-ACTIONS → EXT-OPENAI); CON-GRAFO-IA-CLAUDE (EXT-ACTIONS → EXT-ANTHROPIC).
+- Conexiones: CON-063 (SYS-SALA → EXT-ACTIONS); CON-079 (EXT-ACTIONS → SVC-SALA-PRODUCTOR); CON-081 (EXT-ACTIONS → SVC-SALA-EJECUTOR); CON-PUBLICADOR-IDENTIDAD (EXT-ACTIONS → EXT-GITHUB-PUBLISHER-APP); CON-SALA-SNAPSHOT-ONLINE (SYS-SALA → EXT-ACTIONS); CON-MARKETING-DATOS-ONLINE (SYS-MARKETING → EXT-ACTIONS); CON-SALA-CIERRE-ONLINE (SVC-SALA-EJECUTOR → EXT-ACTIONS); CON-SALUD-ACTIONS (SYS-CONTROL → EXT-ACTIONS); CON-HORARIOS-ACTIONS (SVC-HORARIOS-CLOUD → EXT-ACTIONS); CON-SALA-MEDIOS-PUBLICOS (SYS-SALA → EXT-ACTIONS); CON-GRAFO-ACTIONS (SYS-CONTROL → EXT-ACTIONS); CON-GRAFO-IA (EXT-ACTIONS → EXT-OPENAI); CON-GRAFO-IA-CLAUDE (EXT-ACTIONS → EXT-ANTHROPIC); CON-GRAFO-APP (EXT-ACTIONS → EXT-GRAFO-APP).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Estado y permisos no comprobados.
 
@@ -1211,3 +1211,16 @@ Explicar en palabras qué cambió entre la versión aprobada del grafo y la rehe
 - Conexiones: CON-GRAFO-IA-CLAUDE (EXT-ACTIONS → EXT-ANTHROPIC).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Costo por uso. Sin clave o sin respuesta, el grafo se rehace igual, sin explicación..
+
+## EXT-GRAFO-APP · GitHub App · YOD Grafo borrador
+
+Abrir y poner al día el PR del borrador del grafo para que sus pruebas corran sin la aprobación manual que GitHub pide a los PR de un flujo.
+
+- Tipo: servicio_externo. Dominio: Infraestructura. Responsable: Dirección técnica.
+- Evidencia: ejecucion. Producción: Instalada el 12-nov-2026 (hora de Hermosillo) por decisión de Dirección (DEC-21). Comprobada el 13-nov-2026: el PR 97 lo abrió la App, sus pruebas corrieron solas y se aprobó con un solo «Merge pull request»..
+- Entidades: pr_borrador.
+- Fuente de verdad: Instalación de la App en la organización (sólo potenciales-yod) y los secretos GRAFO_APP_ID y GRAFO_APP_PRIVATE_KEY del repositorio..
+- Evidencia: [potenciales-yod/.github/workflows/grafo-rehacer.yml](https://github.com/yodesarrollomx/potenciales-yod/blob/6b5cc19a0ff4cecc17ff230e843de853df2045e2/.github/workflows/grafo-rehacer.yml) — Si existen los secretos, el flujo saca un token de la App (acción fijada por commit) sólo para subir la rama del borrador y abrir o poner al día su PR.; [potenciales-yod/.github/workflows/grafo-rehacer.yml](https://github.com/yodesarrollomx/potenciales-yod/blob/6b5cc19a0ff4cecc17ff230e843de853df2045e2/.github/workflows/grafo-rehacer.yml) — PR 97 abierto por yod-grafo-borrador[bot] el 13-nov-2026; pruebas sin «Approve workflows to run»; fusionado 02:03:10Z..
+- Conexiones: CON-GRAFO-APP (EXT-ACTIONS → EXT-GRAFO-APP).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Pendientes: Credencial con escritura de contenido y PR en un solo repositorio; su llave vive sólo como secreto de Actions. Si falla o falta, el flujo vuelve a los dos toques..

@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-12.panorama-refresco.1 · 2026-10-20.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-13.grafo-app.1 · 2026-10-20.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -427,6 +427,7 @@ flowchart LR
   n_GAS_BANDEJA_NUBE["Ejecutor de Bandeja en nube"]
   n_GAS_PPP2["PPP 2 · servidor"]
   n_EXT_ANTHROPIC["Claude · API de Anthropic"]
+  n_EXT_GRAFO_APP["GitHub App · YOD Grafo borrador"]
   n_GAS_PLAN_POTENCIAL -.->|Confirma cita agendada| n_EXT_CALENDAR
   n_EXT_META -.->|Obtiene métricas mediante Actions| n_SYS_MARKETING
   n_SYS_DESPACHO -.->|Aprobación de borradores por protocolo BANDEJA| n_EXT_GMAIL
@@ -461,6 +462,7 @@ flowchart LR
   n_EXT_ACTIONS -->|Explicación de los cambios del grafo con OpenAI; se usa la primera respuesta válida entre los proveedores con clave| n_EXT_OPENAI
   n_GAS_PPP2 -->|Copia la plantilla al sembrar un plan| n_EXT_DRIVE
   n_EXT_ACTIONS -->|Explicación de los cambios del grafo con Claude por API; se usa la primera respuesta válida entre los proveedores con clave| n_EXT_ANTHROPIC
+  n_EXT_ACTIONS -->|El flujo «Grafo · rehacer» abre el PR del borrador con el token de la App del grafo| n_EXT_GRAFO_APP
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_SITIO_ORG pendiente;
   class n_GAS_EMD pendiente;
@@ -765,3 +767,4 @@ flowchart LR
 | CON-PPP2-LIBROS | GAS-PPP2 → SHEET-PPP2 | persistencia: Lee el resumen y las tablas; escribe celdas permitidas y la bitácora. CTR-PPP2 | codigo | [potenciales-yod/server/ppp2/PPP2.gs](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/server/ppp2/PPP2.gs) — SpreadsheetApp sobre el vivero y los libros |
 | CON-PPP2-DRIVE | GAS-PPP2 → EXT-DRIVE | persistencia: Copia la plantilla al sembrar un plan. Copia en la carpeta del vivero | codigo | [potenciales-yod/server/ppp2/PPP2.gs](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/server/ppp2/PPP2.gs) — DriveApp.makeCopy de la plantilla |
 | CON-GRAFO-IA-CLAUDE | EXT-ACTIONS → EXT-ANTHROPIC | api: Explicación de los cambios del grafo con Claude por API; se usa la primera respuesta válida entre los proveedores con clave. Se envían sólo diferencias del grafo público (cuentas y nombres de piezas). Respuesta por herramienta con esquema fijo y un segundo intento si llega mal formada. Sin clave o sin respuesta, el grafo se rehace igual. Costo por uso. | ejecucion | [potenciales-yod/grafo-motor/ia.py](https://github.com/yodesarrollomx/potenciales-yod/blob/e3217cca26d63fbaa65cf90b50c3a2958af0ad13/grafo-motor/ia.py) — Petición con herramienta y esquema fijo, y reintento.; [potenciales-yod/.github/workflows/grafo-rehacer.yml](https://github.com/yodesarrollomx/potenciales-yod/blob/685ed2ccb0e1d7cf1224fe4216bc071349e7751c/.github/workflows/grafo-rehacer.yml) — Corridas 43283429071 y 43286094367 del 12-nov-2026 con explicación de Claude (ia=claude en el registro). |
+| CON-GRAFO-APP | EXT-ACTIONS → EXT-GRAFO-APP | automatizacion: El flujo «Grafo · rehacer» abre el PR del borrador con el token de la App del grafo. CTR-GRAFO-VERSIONES; el token vale una hora, sólo para este repositorio, con escritura de contenido y PR, y sólo se usa para la rama grafo-borrador y su PR. Sin los secretos, todo sigue con la credencial del flujo (dos toques). | ejecucion | [potenciales-yod/.github/workflows/grafo-rehacer.yml](https://github.com/yodesarrollomx/potenciales-yod/blob/6b5cc19a0ff4cecc17ff230e843de853df2045e2/.github/workflows/grafo-rehacer.yml) — Uso del token de la App sólo en el paso del borrador.; [potenciales-yod/.github/workflows/grafo-rehacer.yml](https://github.com/yodesarrollomx/potenciales-yod/blob/6b5cc19a0ff4cecc17ff230e843de853df2045e2/.github/workflows/grafo-rehacer.yml) — PR 97 abierto por yod-grafo-borrador[bot]; aprobado con un toque. |

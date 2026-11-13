@@ -501,6 +501,12 @@
       "repo": "alexpueblag/yod-agent-cloud"
     },
     {
+      "id": "EXT-GRAFO-APP",
+      "nombre": "GitHub App · YOD Grafo borrador",
+      "tipo": "servicio_externo",
+      "repo": "yodesarrollomx/potenciales-yod"
+    },
+    {
       "id": "EXT-ANTHROPIC",
       "nombre": "Claude · API de Anthropic",
       "tipo": "servicio_externo",

@@ -1,20 +1,19 @@
 {
-  "model_revision": "2026-11-12.panorama-refresco.1",
-  "proposal_id": "CHG-PANORAMA-REFRESCO-20261112",
-  "summary": "Estabiliza el paso «Recorrido real y encuentro por cercanía» del flujo «Conocimiento del Despacho». La prueba refresca cada 5 s la observación sintética del residente y cada refresco repintaba la pantalla del puesto sin trabajo; si caía entre la carga del trabajo sintético y la lectura, la cuenta salía vacía (fallo intermitente del 2 y 12-nov). Ahora la prueba pausa ese refresco mientras revisa la pantalla. El flujo también corre en push a main cuando cambian sus pruebas de navegador. Sin cambios en la escena, permisos, backend ni hojas.",
+  "model_revision": "2026-11-13.grafo-app.1",
+  "proposal_id": "CHG-ATLAS-GRAFO-APP-20261113",
+  "summary": "Registra en el atlas la GitHub App del grafo (EXT-GRAFO-APP) y su conexión CON-GRAFO-APP, comprobada con el PR 97 de potenciales-yod; pone al día los textos de «dos toques» (ahora un toque con la App) y marca como publicado CHG-ATLAS-GRAFO-VIVO-20261112. Sólo documentación del atlas y su inventario de salud.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "SYS-DESPACHO-3D",
-    "SYS-POTENCIALES"
+    "SYS-CONTROL",
+    "SYS-POTENCIALES",
+    "EXT-ACTIONS",
+    "EXT-GRAFO-APP"
   ],
   "tests": [
-    "Reproducción enfocada local con Chromium: sin pausa la cuenta queda vacía tras un refresco; con pausa se conserva",
-    "Flujo «Conocimiento del Despacho» en el PR y en main tras fusionar",
     "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
-    "node verify-os.cjs · node verify-portal.cjs · node verify-accesos.cjs · node verify-obra-app.cjs",
+    "verify-os · verify-portal · verify-accesos · verify-obra-app",
     "git diff --check"
   ],
-  "rollback": "Revertir el PR: la prueba vuelve a refrescar sin pausa y el flujo a sus rutas anteriores; no toca la escena ni producción."
+  "rollback": "Revertir el PR; no toca código ni producción."
 }
