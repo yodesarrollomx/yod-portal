@@ -3,7 +3,7 @@
 
   /* NAVIGATION-BEGIN */
   // Generado desde os/catalogo.js: presentación común; no concede accesos.
-  var NAV_ORDER = ["SYS-DESPACHO","SYS-POTENCIALES","SYS-TRACK","SYS-MIRAMAR","SYS-TAREAS","SYS-FLUJO","SYS-INTERIORES","SYS-INVERSION","SYS-MARKETING","SYS-OBRA","SYS-CONTROL"];
+  var NAV_ORDER = ["SYS-DESPACHO","SYS-POTENCIALES","SYS-MERCADO","SYS-PPP2","SYS-TRACK","SYS-MIRAMAR","SYS-TAREAS","SYS-FLUJO","SYS-INTERIORES","SYS-INVERSION","SYS-MARKETING","SYS-OBRA","SYS-CONTROL"];
   var NAV_PARENT = {"SYS-MIRAMAR":"SYS-TRACK"};
   function orderedModules(rows) {
     var seen = Object.create(null);
@@ -24,15 +24,18 @@
   /* NAVIGATION-END */
 
   var CATALOG_ENDPOINT='https://script.google.com/macros/s/AKfycby5LKYKRwl0EsNgppOIeD_ArST8vSXRgNO4ns8XZbFW4yjfglzu4io_vhabB8h-J792Tw/exec?action=read&resource=Portal';
+  // Fase 1: el cargador recibe sólo la BASE (él arma ?action=read&resource=Portal&k=…); el camino legacy
+  // sigue usando CATALOG_ENDPOINT tal cual. Una sola copia del id: la de arriba.
+  var CATALOG_BASE=CATALOG_ENDPOINT.split('?')[0];
   /* El portal validaba la sesión SIEMPRE contra el portero del dominio
      aurumarquitectos.com (hoy suspendido): aunque el gate ya te dejara pasar, el
-     portal se quedaba en "Verificando Acceso…" para siempre. Ahora usa el mismo
-     relevo que el resto del sistema: original primero, respaldo si falla. */
+     portal se quedaba en "Verificando Acceso…" para siempre. Después usó un relevo
+     original → respaldo; desde O6 (T-203) el respaldo ya no se consulta (ver
+     canjearConRelevo_) y la cabina habla SOLO con el ORIGINAL. */
   var PORTERO_ORIGINAL=(window.YOD_PORTERO||{}).original;   // única copia: os/yod-acceso.js
-  var PORTERO_RESPALDO=(window.YOD_PORTERO||{}).respaldo;
-  /* El ORIGINAL siempre primero; el respaldo solo si aquel falla en esta llamada.
-     Antes el relevo se pegaba en localStorage y, al reactivarse Google, el
-     navegador seguía en el respaldo (que no conoce correos ni login de Google). */
+  /* El ORIGINAL siempre. Antes el relevo se pegaba en localStorage y, al reactivarse
+     Google, el navegador seguía en el respaldo (que no conoce correos ni login de
+     Google); esa llave sobrante se limpia aquí. */
   try{localStorage.removeItem('pyod_portero');}catch(e){}
   function conLimite_(p,ms,cancelar){
     var timer;
@@ -44,7 +47,8 @@
   // El Portero (Apps Script) hoy tarda entre 3 y 25 s: esperar 12 s lo daba por muerto
   // y el OS se ponía «Sin conexión» con el backend vivo. 25 s + reintento en fondo.
   var LIMITE_MS=25000, LIMITE_FRIO_MS=75000, REINTENTO_MS=15000, REINTENTOS_MAX=3;
-  async function canjearConRelevo_(token){
+  async function canjearConRelevo_(token,opts){
+    if(typeof cargadorActivo_==='function'&&cargadorActivo_())return canjearConCargador_(token,opts);
     // Sólo metadatos permitidos: nunca URL, token, cuerpo ni mensajes de terceros.
     var diagnostico=[];
     async function intenta(base,origen){
@@ -70,12 +74,260 @@
     }
     var d=await intenta(PORTERO_ORIGINAL,'original');
     if(!d.ok&&!rechazoAcceso(d.error)){
-      // El respaldo no puede revocar una sesión del primario inaccesible.
-      var backup=await intenta(PORTERO_RESPALDO,'respaldo');
-      if(backup&&backup.ok)d=backup;
+      // O6 (T-203, 31-oct-2026) · el respaldo contesta 404 «Page Not Found» desde el 23-sep (esa implementación ya
+      // no existe en Google): saltar a él convertía cada tardanza del ORIGINAL en una sesión «por validar». El
+      // segundo intento vuelve a ser el ORIGINAL tras 1.5 s, igual que el marco (shell.js, T-105). Un rechazo
+      // explícito del primero es concluyente y ni entra aquí. Si el segundo intento contesta con éxito o con un
+      // rechazo explícito del propio Portero, esa es la respuesta; si cae otra vez queda el diagnóstico del primero
+      // (los dos van al log: 'original' y 'original-2').
+      await new Promise(function(listo){setTimeout(listo,1500);});
+      var otra=await intenta(PORTERO_ORIGINAL,'original-2');
+      if(otra&&(otra.ok||rechazoAcceso(otra.error)))d=otra;
     }
     if(!d.ok)console.warn('[YOD OS] diagnóstico de transporte del canje',diagnostico);
     return d;
+  }
+  /* ══ FASE 1 · «UN CARGADOR» (T-102) ═══════════════════════════════════════════
+     La cabina usa window.YodCargador (os/yod-cargador.js) para abrir rápido: la
+     identidad y el catálogo salen de la última copia buena y se revalidan en
+     segundo plano. Este bloque es ADITIVO: las funciones de siempre
+     (canjearConRelevo_, loadIdentityOnce, loadCatalog, cerrarSesion) abren con UNA
+     línea que delega aquí sólo si cargadorActivo_(); sin cargador, o con
+     ?cargador=legacy (o localStorage.yodcg_legacy='1'), corre el código de siempre
+     sin cambiarle una coma. Esas funciones se retiran cuando se retire el interruptor.
+     Lo que NO cambia con el cargador: el muro sigue siendo cada backend (regla 6),
+     el catálogo no otorga permisos (regla 3), un token distinto nunca hereda la
+     identidad pintada (se bloquea primero) y un rechazo oculta TODO lo privado y
+     a la tercera cierra la sesión, igual que hoy. */
+  function cargadorActivo_(){var c=window.YodCargador;return !!(c&&c.v&&!c.legacy);}
+  // Misma forma de salida que canjearConRelevo_: {ok:true,token,rol,boards,nombre,correo[,origen,edadMs]}
+  // o {ok:false,error[,rechazo,origen]}. fuerzaRed ignora la copia guardada (⟳, reintentos, sesión ya pintada).
+  async function canjearConCargador_(token,opts){
+    var fuerzaRed=opts&&opts.fuerzaRed!==undefined?Boolean(opts.fuerzaRed):((state.profileReady&&state.sessionToken===token)||(state.canjeRetry||0)>0);
+    try{
+      var r=await window.YodCargador.sesion.canjear({modo:fuerzaRed?'red':'cache-primero'});
+      return r&&typeof r==='object'?r:{ok:false,error:'sin-respuesta'};
+    }catch(e){return {ok:false,error:e&&e.message==='timeout'?'timeout':'red'};}
+  }
+  // ¿Ya hay respuesta? Una copia guardada resuelve por microtareas y gana esta carrera; la red no.
+  // Si pierde, el flujo sigue exactamente como antes (se bloquea y se espera).
+  function respuestaInmediata_(promesa){
+    return Promise.race([promesa,new Promise(function(res){setTimeout(function(){res(null);},0);})]);
+  }
+  function cerrarCargador_(token,motivo){
+    try{return window.YodCargador.sesion.cerrar({token:token,motivo:motivo});}catch(_e){return false;}
+  }
+  // Un rechazo vivo tira TODA copia guardada: una recarga no puede resucitar la identidad.
+  function purgarCargador_(){try{window.YodCargador.purgar();}catch(_e){}}
+  function configurarCatalogo_(){
+    var c=window.YodCargador;
+    if(state.cargadorConfigurado||!c||typeof c.config!=='function')return;
+    try{c.config({catalogo:{url:CATALOG_BASE}});state.cargadorConfigurado=true;}catch(_e){}
+  }
+  function edadCopia_(ms){return ms>0?' '+edadTexto(ms):'';}
+  function mostrarTiempo_(ms,origen){
+    var el=$('yodTiempo');if(!el||!(ms>0))return;
+    // O5 (T-203): el tiempo del primer dato es de diagnóstico, no de operación. Lo ve Dirección (rol admin de la
+    // identidad aplicada) o quien lo pida con ?tiempos=1; para el resto la etiqueta sigue oculta (y vacía).
+    var pedido=false;try{pedido=/[?&]tiempos=1(?:[&#]|$)/.test(String(location.search||''));}catch(_e){}
+    if(state.role!=='admin'&&!pedido)return;
+    el.textContent='⏱ '+(ms/1000).toFixed(1)+' s · '+(origen==='cache'?'caché':'red');el.hidden=false;
+  }
+  // Primer dato REAL de la cabina (catálogo pintado, de caché o de red): una vez por página.
+  function marcarPrimerDato_(origen){
+    if(state.primerDatoMarcado)return;state.primerDatoMarcado=true;
+    var o=origen==='cache'?'cache':'red',t=0;
+    try{var m=window.YodCargador.telemetria.primerDato(o);t=Number(m&&m.t)||0;}catch(_e){}
+    if(!t){try{t=Math.round(performance.now());}catch(_e){}}
+    mostrarTiempo_(t,o);
+  }
+  // Mismas guardas que la respuesta en vivo: el backend firma actor='SESSION'; cualquier otra cosa no se pinta.
+  function catalogoAutenticado_(body){return !!(body&&body.ok&&Array.isArray(body.rows)&&body.actor==='SESSION');}
+  function pintarCatalogo_(data,origen,nota){
+    state.catalogIds=Array.isArray(data.known_system_ids)?data.known_system_ids.filter(function(id){return typeof id==='string';}):null;
+    renderModules(data.rows);nombrarAccionesRapidas();
+    $('updated-at').textContent=nota||selloDato(data);
+    marcarPrimerDato_(origen);
+  }
+  async function loadCatalogConCargador_(){
+    if(!state.profileReady)return;
+    var ep=state.sesionEpoch;var readRevision=state.loadPlan?state.loadPlan.revision():null;
+    if(state.loading&&state.catalogEpoch===ep)return;state.catalogEpoch=ep;state.loading=true;$('refresh').disabled=true;var _mr=$('mobile-refresh');if(_mr)_mr.disabled=true;setConnection('','Actualizando');
+    var c=window.YodCargador,_tk='',edadGuardada=0;
+    var vigente=function(){return mismaSesion(_tk,ep)&&!(state.loadPlan&&state.loadPlan.revision()!==readRevision);};
+    try{
+      try{_tk=localStorage.getItem(TOKEN_KEY)||'';}catch(_e){}
+      configurarCatalogo_();
+      // 1) Lo último bueno se pinta ANTES de la red, con las guardas de la respuesta en vivo; si no hay
+      //    copia, la rejilla espera como siempre (nunca se asoma CAT_RESPALDO de relleno).
+      var r=await c.catalogo({token:_tk,alViejo:function(body,meta){
+        if(!vigente()||!catalogoAutenticado_(body))return;
+        edadGuardada=Number(meta&&meta.edadMs)||0;
+        pintarCatalogo_(body,'cache','Datos guardados'+edadCopia_(edadGuardada)+' · actualizando…');
+      }});
+      if(!vigente())return;
+      // 2) Una copia que el backend firmó SIN sesión (no pudo autenticar ese día) no sirve: una vez, en vivo y sin caché.
+      if(r&&r.origen==='cache'&&r.data&&!catalogoAutenticado_(r.data)){
+        r=await c.get(CATALOG_BASE,{action:'read',resource:'Portal',k:_tk},{viejoMs:0,frescoMs:0,telemetria:'catalogo'});
+        if(!vigente())return;
+      }
+      var data=r&&r.data;
+      if(!r||(r.ok===false&&!data)){var st=Number(r&&r.status)||0;throw new Error(st===401||st===403?'HTTP '+st:String((r&&r.error)||'sin-respuesta'));}
+      if(!data||!data.ok||!Array.isArray(data.rows))throw new Error((data&&data.error)||'Respuesta incompleta');
+      // Solo 'SESSION' confirma el canje de esta fuente (ver loadCatalog): actor ausente, desconocido o 'PUBLIC'
+      // exige el respaldo autorizado.
+      var _autenticado=data.actor==='SESSION';
+      var _tokenVivo=!!_tk&&state.profileReady;
+      if(_tokenVivo&&!_autenticado){catalogoSinAcceso();return;}
+      state.catRetry=0;
+      // una copia fresca se entrega sin pasar por alViejo: su edad viene en la propia respuesta
+      var edadFinal=Number(r.edadMs)||edadGuardada;
+      if(r.origen==='cache-fallback'){
+        // Sin red pero con copia: NO es un fallo (nada de reintentos ni de respaldo de relleno); se dice con calma.
+        // O5 (T-203): ya no se pinta con el chip de error (rojo): el estado de aviso es el mismo chip en color neutro.
+        pintarCatalogo_(data,'cache','Sin conexión · datos guardados'+edadCopia_(edadFinal));setConnection('aviso','Sin conexión · datos guardados');return;
+      }
+      if(r.origen==='cache'){pintarCatalogo_(data,'cache','Datos guardados'+edadCopia_(edadFinal));setConnection('ok','En línea');return;}
+      pintarCatalogo_(data,'red');setConnection('ok','En línea');
+    }catch(error){
+      if(!vigente())return;
+      if(rechazoAcceso(error)){catalogoSinAcceso();return;}
+      state.catRetry=(state.catRetry||0)+1;
+      if(state.catRetry<=REINTENTOS_MAX){setConnection('error','Portero lento · reintentando');$('updated-at').textContent='Reintentando en fondo';setTimeout(loadCatalog,REINTENTO_MS);}
+      else{setConnection('error','Sin conexión');$('updated-at').textContent='No se pudo actualizar';}
+      // Igual que loadCatalog: teniendo sesión y sin nada pintado, el mejor catálogo conocido (último bueno o respaldo curado).
+      if(!state.modules.length){
+        var _tk2='';try{_tk2=localStorage.getItem(TOKEN_KEY)||'';}catch(_e){}
+        var _ant2=state.rawRows;
+        if(!Array.isArray(_ant2))_ant2=[];
+        var _mejor2=(_ant2.length>=CAT_RESPALDO.length)?_ant2:CAT_RESPALDO;
+        if(_tk2&&state.profileReady){
+          renderModules(_mejor2);nombrarAccionesRapidas();
+          $('updated-at').textContent=(_mejor2===CAT_RESPALDO)?'Mostrando la lista de respaldo':'Mostrando el último catálogo bueno';
+        }else{
+          var grid=$('module-grid');grid.setAttribute('aria-busy','false');grid.innerHTML='<div class="empty-state">Control Maestro no respondió. Por seguridad no se habilitaron enlaces. Intenta actualizar de nuevo.</div>';
+        }
+      }
+    }finally{
+      if(state.catalogEpoch===ep){state.loading=false;$('refresh').disabled=false;var _mr2=$('mobile-refresh');if(_mr2)_mr2.disabled=false;}
+      // el Portero rechazó esta credencial MIENTRAS el catálogo volaba: el cargador acaba de guardar su copia tras la purga
+      if(_tk&&state.rechazadoEnFondo===_tk)purgarCargador_();
+    }
+  }
+  // Copia deliberada de loadIdentityOnce (ver nota del bloque): pide el canje al cargador ANTES de bloquear.
+  // Si la respuesta es la copia guardada (origen:'cache') NO se bloquea ni se parpadea: se aplica la identidad
+  // al instante y el cargador la revalida en segundo plano (sesionRefrescada_ / sesionRechazadaEnFondo_).
+  async function loadIdentityConCargador_(){
+    var token=tokenActual(),request=++state.identityRequest;
+    var yaValidada=Boolean(token)&&state.profileReady&&state.sessionToken===token;
+    // ⟳ y los reintentos piden red; sólo una carga en frío (sin nada pintado) puede salir de la copia guardada.
+    var fuerzaRed=yaValidada||(state.canjeRetry||0)>0;
+    var ep=state.sesionEpoch;
+    function vigente(){return request===state.identityRequest&&ep===state.sesionEpoch&&token===tokenActual();}
+    var promesa=token?canjearConRelevo_(token,{fuerzaRed:fuerzaRed}):null;
+    var rapido=null;
+    if(promesa&&!fuerzaRed&&!state.profileReady){
+      // un rechazo de la promesa no se atiende aquí: abajo, con el resto de los fallos del canje
+      try{rapido=await respuestaInmediata_(promesa);}catch(_e){rapido=null;}
+      if(!vigente())return;
+    }
+    var desdeCopia=Boolean(rapido&&rapido.ok===true&&rapido.origen==='cache'&&rapido.token===token);
+    if(!desdeCopia){
+      if(!yaValidada){
+        bloquearSesion(Boolean(token));ep=state.sesionEpoch;
+        // el bloqueo subió la época: el vuelo en curso la sigue para que los avisos simultáneos se deduplicen igual
+        var vuelo=state.identityFlight;if(vuelo&&vuelo.token===token)vuelo.epoch=ep;
+      }else setConnection('loading','Sesión activa · comprobando acceso');
+    }
+    if(!token){$('access-status').textContent='Requiere acceso';return;}
+    if(!desdeCopia)$('access-status').textContent='Validando tu acceso…';
+    try{
+      var data=rapido||await promesa;
+      if(!vigente())return;
+      if(!data||data.ok!==true||data.token!==token||typeof data.rol!=='string'||!data.rol.trim()||typeof data.boards!=='string'){var diag='canje:'+((data&&data.error)||'sin-respuesta');var err=new Error(diag);err._diag=diag;throw err;}
+      // una copia sólo existe después de un éxito vivo posterior a la última purga (los rechazos la tiran): limpia los golpes
+      try{localStorage.removeItem('yod_canje_fail');}catch(_e){}
+      state.rechazadoEnFondo='';
+      var viva=data.origen!=='cache';
+      // verifiedAt dice la verdad: una identidad de copia guardada tiene la edad de la copia, no la de ahora
+      state.canjeRetry=0;state.sessionToken=token;state.verifiedAt=Date.now()-(viva?0:Math.max(0,Number(data.edadMs)||0));applyIdentity(data);
+      var dataLoads=Promise.allSettled([coordinatedPortalLoad('catalog',loadCatalog,1,'catalog'),startData(token)]);
+      if(!(window.YodLoadConfig&&window.YodLoadConfig.enabled))await dataLoads;
+    }catch(err){
+      if(!vigente())return;
+      var d=(err&&err._diag)||'error';
+      var LENTO={'canje:sin-respuesta':1,'canje:timeout':1,'canje:servidor':1,
+                 'canje:token_red':1,'canje:red':1,'canje:http':1,'canje:formato':1,'error':1,
+                 // el cargador avisa «token_distinto» donde el camino viejo (data.token!==token) decía «sin-respuesta»: igual de transitorio
+                 'canje:token_distinto':1};
+      var MUERTO={'canje:clave':1,'canje:liga':1,'canje:revocado':1,'canje:expirado':1};
+      function reintentar(){
+        state.canjeRetry=(state.canjeRetry||0)+1;
+        var espera=Math.min(30000,REINTENTO_MS*Math.pow(2,Math.min(5,state.canjeRetry-1)));
+        setTimeout(function(){if(request===state.identityRequest&&tokenActual()===token)loadIdentity();},espera);
+      }
+      if(LENTO[d]&&yaValidada&&state.verifiedAt&&Date.now()-state.verifiedAt<5*60000){
+        setConnection('error','Sesión activa · reconectando');
+        $('access-status').textContent='Sesión activa · reintentando';
+        reintentar();
+        console.warn('[YOD OS] Portero temporalmente no disponible; se conserva la sesión validada:',d);
+        return;
+      }
+      bloquearSesion();
+      if(LENTO[d]){
+        setConnection('error','Portero lento · reintentando');
+        reintentar();
+      }
+      if(rechazoAcceso(d.replace(/^canje:/,'')))purgarCargador_();
+      if(MUERTO[d]){
+        var n=0;try{n=(parseInt(localStorage.getItem('yod_canje_fail')||'0',10)||0)+1;localStorage.setItem('yod_canje_fail',String(n));}catch(_e){}
+        if(n>=3){cerrarCargador_(token,'rechazado');try{localStorage.removeItem('yod_canje_fail');}catch(_e){}location.reload();return;}
+      }
+      $('user-role').textContent=LENTO[d]?'Reconectando…':'Sesión por validar';$('access-status').textContent=frasePendiente(d);
+      console.warn('[YOD OS] identidad no validada:',d);
+    }
+  }
+  // Resultado FRESCO de la revalidación en segundo plano (yodcargador:sesion). Si no cambió nada, sólo se anota
+  // que ya es verdad de ahora; si cambió quién eres o qué puedes ver, se trata como identidad nueva.
+  function sesionRefrescada_(d){
+    var token=tokenActual();
+    if(!d||d.ok!==true||!token||!state.profileReady||state.sessionToken!==token)return;
+    if(d.token!==undefined&&d.token!==token)return;
+    if(d.token===undefined&&d.correo&&String(d.correo).trim().toLowerCase()!==state.verifiedEmail)return;
+    if(typeof d.rol!=='string'||!d.rol.trim()||typeof d.boards!=='string')return;
+    var igual=String(d.rol).toLowerCase()===state.role&&d.boards===state.boards&&String(d.nombre||'').trim()===state.personName&&String(d.correo||'').trim().toLowerCase()===state.verifiedEmail;
+    state.verifiedAt=Date.now();
+    if(igual)return;
+    bloquearSesion(true);
+    state.canjeRetry=0;state.sessionToken=token;state.verifiedAt=Date.now();applyIdentity(d);
+    Promise.allSettled([coordinatedPortalLoad('catalog',loadCatalog,1,'catalog'),startData(token)]);
+  }
+  // El Portero rechazó, en segundo plano, la sesión que se pintó desde la copia guardada: mismo trato que un
+  // rechazo explícito del canje (loadIdentityOnce) — se oculta todo lo privado y a la tercera se cierra la sesión.
+  function sesionRechazadaEnFondo_(d){
+    var token=tokenActual();
+    if(!token||!d||(d.token&&d.token!==token))return;
+    var diag='canje:'+String(d.error||'revocado');
+    var MUERTO={'canje:clave':1,'canje:liga':1,'canje:revocado':1,'canje:expirado':1};
+    purgarCargador_();state.rechazadoEnFondo=token;state.canjeRetry=Math.max(1,state.canjeRetry||0);
+    bloquearSesion();
+    if(MUERTO[diag]){
+      var n=0;try{n=(parseInt(localStorage.getItem('yod_canje_fail')||'0',10)||0)+1;localStorage.setItem('yod_canje_fail',String(n));}catch(_e){}
+      if(n>=3){cerrarCargador_(token,'rechazado');try{localStorage.removeItem('yod_canje_fail');}catch(_e){}location.reload();return;}
+    }
+    $('user-role').textContent='Sesión por validar';$('access-status').textContent=frasePendiente(diag);
+    console.warn('[YOD OS] el Portero rechazó la sesión en segundo plano:',diag);
+  }
+  function suscribirCargador_(){
+    var c=window.YodCargador;
+    if(!cargadorActivo_()||state.cargadorSuscrito||!c.sesion||typeof c.sesion.alCambiar!=='function')return;
+    state.cargadorSuscrito=true;configurarCatalogo_();
+    c.sesion.alCambiar(function(ev){
+      var tipo=String(ev&&ev.type||''),d=(ev&&ev.detail)||{};
+      if(tipo==='yodcargador:sesion-rechazada')sesionRechazadaEnFondo_(d);
+      else if(tipo==='yodcargador:sesion')sesionRefrescada_(d);
+      // 'sesion-cerrada' y el 'storage' de otra pestaña ya los atiende esta página (cerrarSesion, addEventListener('storage'))
+    });
   }
   // Respaldo curado del catálogo (4-sep-2026). Los títulos y textos dicen LO MISMO que
   // la pestaña Portal del Control Maestro — si allá se renombra un tablero, aquí también.
@@ -90,6 +342,9 @@
   var CAT_RESPALDO=[
     {system_id:'SYS-DESPACHO',orden:'1',visible:'SI',titulo_portal:'El Despacho',descripcion_portal:'Tu pantalla de trabajo: por cada frente del negocio, quien te esta esperando mas. Se firma aqui y se escribe en el tablero.',audiencia:'Direccion',icono:'message-2',miniatura:'thumbs/track.svg',url:'',estado:'Activo',sensibilidad:'Confidencial'},
     {system_id:'SYS-POTENCIALES',orden:'2',visible:'SI',titulo_portal:'PPP',descripcion_portal:'Planes de Potencial Personalizados: mapa de terrenos, escenarios y números para decidir qué construir y cuánto rinde.',audiencia:'Dirección y análisis',icono:'map-pin',miniatura:'thumbs/potenciales.svg',url:'',estado:'Activo',sensibilidad:'Confidencial'},
+    {system_id:'SYS-MERCADO',orden:'2',visible:'SI',titulo_portal:'Mercado Hermosillo',descripcion_portal:'Oferta y demanda de vivienda nueva en Hermosillo, año por año 2020–2030: curvas que se mueven, cada cifra con su fuente y la pendiente como supuesto visible.',audiencia:'Dirección y análisis',icono:'chart-line',miniatura:'thumbs/track.svg',url:'',estado:'Activo',sensibilidad:'Interno'},
+    /* PPP 2 (CHG-PPP2-20261112): el vivero de planes; sin fila en el Sheet todavía. */
+    {system_id:'SYS-PPP2',orden:'2',visible:'SI',titulo_portal:'PPP 2',descripcion_portal:'El vivero de planes de potencial: cada plan nace, se nutre de datos con fuente e investiga; muestra primero lo que recibe el dueño y en cuánto tiempo.',audiencia:'Dirección y análisis',icono:'seedling',miniatura:'thumbs/track.svg',url:'',estado:'Activo',sensibilidad:'Interno'},
     {system_id:'SYS-TRACK',orden:'3',visible:'SI',titulo_portal:'Codesarrollos',descripcion_portal:'Los codesarrollos en curso (Real de Miramar, Casa Alysa, Casa María), cada uno con su etapa y su tablero.',audiencia:'Dirección y tramitología',icono:'route',miniatura:'thumbs/track.svg',url:'',estado:'Activo',sensibilidad:'Interno'},
     /* Real de Miramar faltaba en el respaldo: si el Sheet no contestaba, el
        codesarrollo mas grande desaparecia de la rejilla sin que nadie lo notara. */
@@ -106,6 +361,8 @@
   var ICONS={
     'SYS-DESPACHO':'layout-grid',
     'SYS-POTENCIALES':'map-2',
+    'SYS-MERCADO':'chart-line',
+    'SYS-PPP2':'seedling',
     'SYS-TRACK':'route',
     'SYS-MIRAMAR':'building-community',
     'SYS-TAREAS':'checklist',
@@ -115,9 +372,9 @@
     'SYS-MARKETING':'speakerphone',
     'SYS-OBRA':'building-skyscraper'
   };
-  // Versión corta del tablero embebido: se sube a mano cuando cambia tablero.html
-  // (sin esto, el caché de 10 min de Pages servía el tablero viejo tras un deploy).
-  var TABLERO_V='os4';
+  // Etiqueta del tablero embebido (caché de 10 min de Pages). No se edita aquí: la escribe
+  // node scripts/versiones.cjs --aplicar desde os/versiones.json, igual que todos los ?v=.
+  var TABLERO_V='20261112-ppp2';
   var state={modules:[],rawRows:[],role:'vista',boards:'',profileReady:false,loading:false,opsScope:'mias',allTasks:[],sesionEpoch:0,sessionToken:'',identityRequest:0,pulseCache:{},opsCache:null,verifiedAt:0};
   var $=function(id){return document.getElementById(id);};
   // ¿hay clave guardada? distingue «sin sesión» de «sesión validándose»
@@ -127,7 +384,7 @@
   var SENSITIVE_CACHES=['aurum-cache-v5','yod_ops_me','yod_pulse_v1','yod_portal_cat_v1','codeyod-cache-v1'];
   // Las llaves de la Sala SOLO se borran al cerrar sesión a propósito: un rechazo pasajero del
   // Portero no debe tirar la llave propia de la Sala ni la cola de decisiones sin subir.
-  var LLAVES_SALA=['sala_clave','sala_gas','sala_rol'];
+  var LLAVES_SALA=['sala_clave','sala_gas','sala_rol','sala_resumen_v1','sala_salida_local_v1','sala_salida_plan_v1'];   // 9-nov: también lo que la Sala guarda de su montón
   // sesionEpoch: cada purga invalida las cargas en vuelo, para que una respuesta
   // que llegue tarde no vuelva a pintar (ni a cachear) datos de la sesión anterior.
   function tokenActual(){try{return localStorage.getItem(TOKEN_KEY)||'';}catch(_e){return '';}}
@@ -144,6 +401,7 @@
   // 14 caracteres, la otra ni siquiera eso) nunca conceden permisos.
   function bloquearSesion(validando){
     purgarDatosSensibles();state.profileReady=false;state.role='vista';state.boards='';
+    document.querySelectorAll('[data-sala-listas]').forEach(function(el){el.textContent=el.getAttribute('data-sala-listas');});   // sin sesión, el texto fijo
     state.personName='';state.verifiedEmail='';state.sessionToken='';state.rawRows=[];state.catalogIds=null;state.modules=[];
     ['finance-panel','marketing-panel','decision-panel','reconcile-panel','search-results'].forEach(function(id){var p=$(id);if(p)p.replaceChildren();});
     ['pulso','reconcile','quick-section'].forEach(function(id){var p=$(id);if(p)p.classList.add('hidden');});
@@ -168,7 +426,7 @@
   // Si la consulta en vivo falla y había caché, el sello deja de mentir con un
   // «actualizando…» que ya no está pasando: se conserva el dato con su edad real.
   function marcarCacheFallo(panelId){var p=$(panelId);if(!p)return;var n=p.querySelector('.pulse-cache-note');if(n)n.textContent=n.textContent.replace(' · actualizando…',' · no se pudo actualizar');}
-  function cerrarSesion(){try{localStorage.removeItem(TOKEN_KEY);LLAVES_SALA.forEach(function(k){localStorage.removeItem(k);});}catch(_e){}purgarDatosSensibles();try{location.reload();}catch(_e){location.href=location.pathname;}}
+  function cerrarSesion(){if(typeof cargadorActivo_==='function'&&cargadorActivo_())cerrarCargador_(tokenActual(),'salir');try{localStorage.removeItem(TOKEN_KEY);LLAVES_SALA.forEach(function(k){localStorage.removeItem(k);});}catch(_e){}purgarDatosSensibles();try{location.reload();}catch(_e){location.href=location.pathname;}}
 
   function greeting(){var h=new Date().getHours();return h<12?'Buenos días':h<19?'Buenas tardes':'Buenas noches';}
   function timeLabel(date){return new Intl.DateTimeFormat('es-MX',{hour:'2-digit',minute:'2-digit'}).format(date);}
@@ -190,7 +448,7 @@
     }
     return 'Consultado a las '+timeLabel(new Date());
   }
-  function setConnection(kind,text){var el=$('connection');el.className='connection '+kind;el.innerHTML='<i class="ti ti-'+(kind==='ok'?'cloud-check':kind==='error'?'cloud-off':'loader-2 spin')+'"></i> '+text;}
+  function setConnection(kind,text){var el=$('connection');el.className='connection '+kind;el.innerHTML='<i class="ti ti-'+(kind==='ok'?'cloud-check':(kind==='error'||kind==='aviso')?'cloud-off':'loader-2 spin')+'"></i> '+text;}
   function safeText(value){return String(value==null?'':value);}
   function initials(name){return safeText(name).split(/\s+/).filter(Boolean).slice(0,2).map(function(v){return v.charAt(0);}).join('').toUpperCase()||'YO';}
   function money(value){return new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',maximumFractionDigits:0}).format(Number(value)||0);}
@@ -236,25 +494,59 @@
       document.querySelectorAll('[data-system-id="'+sys+'"]').forEach(function(a){a.classList.toggle('hay-nuevo',!!nuevos[sys]);a.title=nuevos[sys]?'Hay algo nuevo desde tu última visita':'';});
     }catch(_e){}
   }
+  /* SALA-LISTAS-BEGIN */
+  /* Lo listo para lanzar (9-nov-2026 · Dirección: «conecta todo listo en YOD OS para poder publicar… quiero hacer
+     montón… armando un paquete para ir lanzando»). La Sala de Edición vive en este mismo origen y deja en el aparato
+     `sala_resumen_v1` = {listas, cuando}: cuántas publicaciones tiene listas y cuándo lo vio. Aquí sólo se lee ese
+     número: sin red, sin llaves y sin títulos. No es un permiso ni una cifra en vivo: si falta, es inválido o tiene
+     más de siete días, se usa el texto fijo. La verdad sigue viviendo en la Sala y en su hoja. */
+  var SALA_RESUMEN='sala_resumen_v1',SALA_RESUMEN_VIGENCIA=7*24*60*60*1000;
+  function salaListas(){
+    try{
+      var r=JSON.parse(localStorage.getItem(SALA_RESUMEN)||'null');
+      if(!r||typeof r!=='object'||Array.isArray(r))return null;
+      var n=r.listas,t=r.cuando,ahora=Date.now();
+      if(typeof n!=='number'||!Number.isInteger(n)||n<0||n>999)return null;
+      if(typeof t!=='number'||!Number.isFinite(t)||t>ahora+60000||ahora-t>SALA_RESUMEN_VIGENCIA)return null;
+      return {listas:n,cuando:t};
+    }catch(_e){return null;}
+  }
+  function textoSalaListas(fijo){
+    var r=salaListas();if(!r)return fijo;
+    return r.listas===0?'Nada listo todavía':r.listas===1?'1 lista para lanzar':r.listas+' listas para lanzar';
+  }
+  /* SALA-LISTAS-END */
+  // Las tarjetas que dicen cuántas hay listas se repintan cuando la Sala (en la máscara) actualiza su número.
+  function pintarSalaListas(){
+    // sin sesión validada sólo se ve el texto fijo: el número es para quien ya entró
+    var r=state.profileReady?salaListas():null;
+    document.querySelectorAll('[data-sala-listas]').forEach(function(el){var fijo=el.getAttribute('data-sala-listas');el.textContent=state.profileReady?textoSalaListas(fijo):fijo;
+      // no es una cifra en vivo: se dice de cuándo es
+      el.title=r?'Lo que la Sala vio en este aparato '+edadTexto(Date.now()-r.cuando):'';});
+  }
+  window.addEventListener('storage',function(e){if(e.key===SALA_RESUMEN||e.key===null)pintarSalaListas();});
   /* Fase 4 · un inicio por persona. Dirección arranca en dinero y decisiones
      (el Pulso sube arriba del tablero); Sayri, en la Sala y sus pendientes (la
      operación sube, filtrada a su nombre). El resto ve el Inicio de siempre. */
   function pintarMiInicio(data,persona){
+    pintarSalaListas();   // la puerta de la Sala en «Embudo comercial» vale para cualquier persona con sesión
     var box=$('miInicio'),cont=document.querySelector('.content'),tab=$('tablero');if(!box||!cont||!tab)return;
     var quien=String((data&&(data.nombre||''))+' '+(data&&(data.correo||''))).toLowerCase();
     var tarjetas=null,sube=null,titulo='';
     function t(ic,h,p,href){return '<a class="mi-card" href="'+href+'"><i class="ti ti-'+ic+'"></i><b>'+h+'</b><span>'+p+'</span></a>';}
+    // la tarjeta que lleva al montón de la Sala: el texto fijo viaja en el atributo y el número se pinta aparte
+    function tSala(ic,h,fijo){return '<a class="mi-card" href="#/embudo/sala"><i class="ti ti-'+ic+'"></i><b>'+h+'</b><span data-sala-listas="'+fijo+'">'+fijo+'</span></a>';}
     if(persona==='direccion'){
       titulo='Dinero y decisiones';sube=$('pulso');
-      tarjetas=t('wallet','Tesorería','Saldo, pagos y lo que entra','#pulso')+t('gavel','Decisiones','Lo que espera tu palabra','#pulso')+t('layout-grid','El Despacho','Tu pantalla de trabajo','#/despacho');
+      tarjetas=t('wallet','Tesorería','Saldo, pagos y lo que entra','#pulso')+t('gavel','Decisiones','Lo que espera tu palabra','#pulso')+tSala('send','Publicaciones','Tu montón listo para lanzar')+t('layout-grid','El Despacho','Tu pantalla de trabajo','#/despacho');
     }else if(/sayri/.test(quien)){
       titulo='La Sala y tus pendientes';sube=$('operacion');
       try{if(!localStorage.getItem('yod_ops_me')&&data.nombre)localStorage.setItem('yod_ops_me',data.nombre);}catch(_e){}
-      tarjetas=t('movie','Sala de Edición','Lo que se produce hoy','#/embudo/sala')+t('checklist','Mis pendientes','Tus tareas de la semana','#operacion')+t('armchair-2','AURUM','Interiores de los clientes','https://yodesarrollomx.github.io/interiores-aurum/');
+      tarjetas=tSala('movie','Sala de Edición','Lo que se produce hoy')+t('checklist','Mis pendientes','Tus tareas de la semana','#operacion')+t('armchair-2','AURUM','Interiores de los clientes','https://yodesarrollomx.github.io/interiores-aurum/');
     }
     if(!tarjetas){box.hidden=true;return;}
     box.innerHTML='<div class="section-head"><div><p class="eyebrow">Tu inicio</p><h2>'+titulo+'</h2></div></div><div class="mi-grid">'+tarjetas+'</div>';
-    box.hidden=false;
+    box.hidden=false;pintarSalaListas();
     if(sube&&sube.parentNode===cont&&sube.nextElementSibling!==tab)cont.insertBefore(sube,tab);
   }
   function moduleTitle(row){return row.system_id==='SYS-INVERSION'?(state.role==='admin'?'Master Developer':'Master Broker'):(safeText(row.titulo_portal)||safeText(row.system_id));}
@@ -348,7 +640,13 @@
       if(state.profileReady)notifyContinuityFrame();
     };
   });
-  if(window.YodDespachoEquipoHost&&window.YODCaseTransport&&$('despachoEquipo')){
+  /* Equipo (bitácora Claude ↔ ChatGPT) se monta sólo cuando su adaptador del Portero esté
+     instalado (docs/arquitectura/despacho-equipo.md). Hoy readTeam contesta «unavailable»:
+     el botón abría una ventana que nunca cargaba y, encima, tapaba «Volver a la sala 3D»,
+     el título del Entorno y los velos de los diálogos (barrido del Despacho, 10-nov-2026).
+     Para encenderlo: EQUIPO_CONECTADO=true en el mismo PR que acredite el adaptador. */
+  var EQUIPO_CONECTADO=false;
+  if(EQUIPO_CONECTADO&&window.YodDespachoEquipoHost&&window.YODCaseTransport&&$('despachoEquipo')){
     despachoTeam=window.YodDespachoEquipoHost.create({
       container:$('despachoEquipo'),host:window,
       getAccess:function(){return {allowed:state.role==='admin'&&despachoSection.isAuthorized()&&mismaSesion(state.sessionToken,state.sesionEpoch),epoch:state.sesionEpoch};},
@@ -357,7 +655,7 @@
         write:function(intent){return window.YODCaseTransport.writeTeam(intent);},
         lookupReceipt:function(requestId){return window.YODCaseTransport.lookupTeamReceipt({request_id:requestId});}
       },
-      loadMount:function(){return import('../despacho3d/equipo.mjs?v=equipo-relevos-2').then(function(module){return module.mountTeamDesk;});},
+      loadMount:function(){return import('../despacho3d/equipo.mjs?v=20261112-ppp2').then(function(module){return module.mountTeamDesk;});},
       onError:function(){var status=$('despachoEquipoEstado');if(status)status.textContent='No se pudo abrir Equipo. Puedes volver a validar tu acceso.';}
     });
   }
@@ -513,6 +811,7 @@
         if(/#inicio|^#$/.test(a.getAttribute('href')||'')) a.classList.toggle('activo-no', enEmbudo);
       });
       if(enEmbudo) window.scrollTo(0,0);
+      pintarSalaListas();
       if(window.revisarPuertaDespacho)window.revisarPuertaDespacho();
     }
     window.pintarSeccionEmbudo=pintarSeccionEmbudo;
@@ -596,6 +895,7 @@
     setConnection('error','Catálogo sin acceso');$('updated-at').textContent='Lista de respaldo según tus permisos';
   }
   async function loadCatalog(){
+    if(typeof cargadorActivo_==='function'&&cargadorActivo_())return loadCatalogConCargador_();
     if(!state.profileReady)return;
     var ep=state.sesionEpoch;var readRevision=state.loadPlan?state.loadPlan.revision():null;
     if(state.loading&&state.catalogEpoch===ep)return;state.catalogEpoch=ep;state.loading=true;$('refresh').disabled=true;var _mr=$('mobile-refresh');if(_mr)_mr.disabled=true;setConnection('','Actualizando');
@@ -758,6 +1058,7 @@
     promise.then(done,done);return promise;
   }
   async function loadIdentityOnce(){
+    if(typeof cargadorActivo_==='function'&&cargadorActivo_())return loadIdentityConCargador_();
     var token=tokenActual(),request=++state.identityRequest;
     // Si esta misma sesión ya fue validada en esta carga, revalidar en segundo
     // plano sin desmontar la identidad ni vaciar la pantalla. Un Portero lento
@@ -1095,6 +1396,7 @@
   addEventListener('hashchange',iniciarInicioDiferido);
   addEventListener('popstate',iniciarInicioDiferido);
   // Al recargar se valida antes de consultar y mostrar datos.
+  suscribirCargador_();
   loadIdentity();
   /* ── Entrar la clave DENTRO del tablero despierta al resto del OS ──
      Antes había que recargar a mano: el iframe guardaba la llave y el padre

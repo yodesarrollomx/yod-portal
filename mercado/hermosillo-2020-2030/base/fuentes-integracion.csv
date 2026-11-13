@@ -1,0 +1,3 @@
+fuente_id,nombre,organismo,nivel,url,tipo,cobertura,periodicidad,acceso,fecha_consulta,estado,limite
+INT-01,Índice SHF de Precios de la Vivienda · API ShfPriceAPI (SNIIV),SHF / SEDATU,federal,https://sniiv.sedatu.gob.mx/Inicio/Precios_de_vivienda,api,"municipio, estado",trimestral 2005-I a 2026-II,abierto,2026-11-01,extraída,Toda la vivienda con avalúo (nueva+usada); vigencia actual del índice (revisado).
+INT-02,Cálculo propio Q deduplicada,Sol Integración,n/a,,derivado,municipio,anual + ene–jul,n/a,2026-11-01,derivada,Depende de dos supuestos declarados (dos acciones por vivienda en Conyugal/Unamos; esquemas con banco también en CNBV).

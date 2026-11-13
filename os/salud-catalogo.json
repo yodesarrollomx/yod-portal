@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "model_revision": "2026-10-12.sala-imagen-publicacion.1",
+  "model_revision": "2026-11-03.emd-mejora-continua.1",
   "components": [
     {
       "id": "SYS-DESPACHO",
@@ -501,6 +501,18 @@
       "repo": "alexpueblag/yod-agent-cloud"
     },
     {
+      "id": "EXT-GRAFO-APP",
+      "nombre": "GitHub App · YOD Grafo borrador",
+      "tipo": "servicio_externo",
+      "repo": "yodesarrollomx/potenciales-yod"
+    },
+    {
+      "id": "EXT-ANTHROPIC",
+      "nombre": "Claude · API de Anthropic",
+      "tipo": "servicio_externo",
+      "repo": "yodesarrollomx/potenciales-yod"
+    },
+    {
       "id": "EXT-RENDER",
       "nombre": "Render · alojamiento del motor",
       "tipo": "infraestructura",
@@ -541,6 +553,30 @@
       "nombre": "Recibos privados de Bandeja",
       "tipo": "almacen_tecnico",
       "repo": "alexpueblag/yod-agent-cloud"
+    },
+    {
+      "id": "SYS-MERCADO",
+      "nombre": "Mercado Hermosillo 2020–2030",
+      "tipo": "tablero",
+      "repo": "yodesarrollomx/yod-portal"
+    },
+    {
+      "id": "SYS-PPP2",
+      "nombre": "PPP 2 · el vivero de planes",
+      "tipo": "tablero",
+      "repo": "yodesarrollomx/potenciales-yod"
+    },
+    {
+      "id": "GAS-PPP2",
+      "nombre": "PPP 2 · servidor",
+      "tipo": "apps_script",
+      "repo": "yodesarrollomx/potenciales-yod"
+    },
+    {
+      "id": "SHEET-PPP2",
+      "nombre": "PPP 2 · vivero y libros de plan",
+      "tipo": "google_sheets",
+      "repo": "yodesarrollomx/potenciales-yod"
     }
   ],
   "processes": [
@@ -1489,6 +1525,137 @@
             "GAS-BANDEJA-NUBE",
             "SVC-HORARIOS-CLOUD",
             "SYS-CONTROL"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROC-PPP-PRESENTACIONES",
+      "nombre": "Presentación versionada desde el PPP visible",
+      "steps": [
+        {
+          "id": "PROC-PPP-PRESENTACIONES:0",
+          "nombre": "Elegir versión visible y encargar presentación",
+          "modo": "manual",
+          "components": [
+            "SYS-POTENCIALES"
+          ]
+        },
+        {
+          "id": "PROC-PPP-PRESENTACIONES:1",
+          "nombre": "Autorizar, releer y fijar snapshot privado",
+          "modo": "pendiente",
+          "components": [
+            "GAS-PORTERO",
+            "SHEET-PPP-MODELOS",
+            "SVC-AUTON-CLOUD",
+            "STORE-AUTON-ESTADO"
+          ]
+        },
+        {
+          "id": "PROC-PPP-PRESENTACIONES:2",
+          "nombre": "Preparar ADN y storyboard visual",
+          "modo": "pendiente",
+          "components": [
+            "SVC-AUTON-CLOUD",
+            "STORE-AUTON-ESTADO",
+            "SYS-INVERSION"
+          ]
+        },
+        {
+          "id": "PROC-PPP-PRESENTACIONES:3",
+          "nombre": "Validar y registrar versión con recibo",
+          "modo": "pendiente",
+          "components": [
+            "SVC-AUTON-CLOUD",
+            "GAS-SALA"
+          ]
+        },
+        {
+          "id": "PROC-PPP-PRESENTACIONES:4",
+          "nombre": "Consultar la misma versión en PPP y Master Developer",
+          "modo": "pendiente",
+          "components": [
+            "SYS-POTENCIALES",
+            "SYS-INVERSION",
+            "GAS-SALA"
+          ]
+        },
+        {
+          "id": "PROC-PPP-PRESENTACIONES:5",
+          "nombre": "Revisar y ordenar etapa dos",
+          "modo": "manual",
+          "components": [
+            "SYS-INVERSION",
+            "SYS-DESPACHO"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PROC-EMD-CONTINUOUS-IMPROVEMENT",
+      "nombre": "Ciclo de evaluación y seguimiento de mejora",
+      "steps": [
+        {
+          "id": "PROC-EMD-CONTINUOUS-IMPROVEMENT:0",
+          "nombre": "Consultar campaña y cobertura",
+          "modo": "automatico",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD"
+          ]
+        },
+        {
+          "id": "PROC-EMD-CONTINUOUS-IMPROVEMENT:1",
+          "nombre": "Preparar personas y campaña",
+          "modo": "manual",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD",
+            "EXT-DRIVE"
+          ]
+        },
+        {
+          "id": "PROC-EMD-CONTINUOUS-IMPROVEMENT:2",
+          "nombre": "Responder y confirmar evaluación",
+          "modo": "manual",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD",
+            "STORE-EMD-DRAFTS"
+          ]
+        },
+        {
+          "id": "PROC-EMD-CONTINUOUS-IMPROVEMENT:3",
+          "nombre": "Revisar y activar política metodológica",
+          "modo": "manual",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD"
+          ]
+        },
+        {
+          "id": "PROC-EMD-CONTINUOUS-IMPROVEMENT:4",
+          "nombre": "Consultar distribuciones elegibles",
+          "modo": "automatico",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD"
+          ]
+        },
+        {
+          "id": "PROC-EMD-CONTINUOUS-IMPROVEMENT:5",
+          "nombre": "Acordar y seguir acciones",
+          "modo": "manual",
+          "components": [
+            "SYS-EMD",
+            "GAS-EMD",
+            "SHEET-EMD"
           ]
         }
       ]

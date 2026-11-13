@@ -17,3 +17,36 @@ test('normalization rejects MIME/container mismatch, empty payload and unsupport
  for(const audio of [{mime:'audio/mp4',data:'data:audio/webm;base64,AA=='},{mime:'audio/mp4; codecs="x";evil=1',data:'data:audio/mp4;base64,AA=='},{mime:'video/mp4',data:'data:video/mp4;base64,AA=='},{mime:'audio/mp4',data:'data:audio/mp4;base64,'}]){const before=JSON.stringify(audio);assert.throws(()=>S.normalizeAudio(audio));assert.equal(JSON.stringify(audio),before);}
 });
 test('restored timeline continues the original clock and strokes',()=>{let now=100;const line=S.timeline(()=>now,500,[{t:400,type:'undo'}]);now=150;line.add('undo',{});assert.equal(line.time(),550);assert.deepEqual(line.events.map(e=>e.t),[400,550]);});
+
+// Exercise the real pointer callbacks across a rounding boundary, without DOM,
+// microphone or network dependencies. The same packet must be valid when
+// checkpointed, returned to the host and restored later.
+function strokeHarness(){
+ const fs=require('node:fs'),vm=require('node:vm');let now=100,times=[],drafts=[];
+ const clock=()=>{if(times.length)now=times.shift();return now;},noop=()=>{};
+ const drawing=new Proxy({},{get:()=>noop,set:()=>true});
+ class Element{
+  constructor(tag){this.children=[];this.listeners={};this.style={};this.value=tag==='select'?'pen':'';this.width=100;this.height=100;this.classList={toggle:()=>false};}
+  append(...items){this.children.push(...items);}setAttribute(){}remove(){}
+  addEventListener(type,fn){(this.listeners[type]||(this.listeners[type]=[])).push(fn);}
+  getContext(){return drawing;}getBoundingClientRect(){return {left:0,top:0,width:100,height:100};}
+  setPointerCapture(){}toDataURL(){return 'data:image/jpeg;base64,AA==';}querySelectorAll(){return [];}
+ }
+ const document={head:new Element('head'),createElement:tag=>new Element(tag),getElementById:()=>null,addEventListener:noop,removeEventListener:noop};
+ const context={module:{exports:{}},document,location:{origin:'https://synthetic.invalid',pathname:'/test'},performance:{now:clock},crypto:{randomUUID:()=> 'synthetic-draft'},setTimeout:()=>1,clearTimeout:noop,setInterval:()=>1,clearInterval:noop,addEventListener:noop,removeEventListener:noop,TextEncoder,Promise};
+ vm.createContext(context);vm.runInContext(fs.readFileSync(require.resolve('../chinche/secuencia.js'),'utf8'),context);
+ const api=context.module.exports,mounted=api.mount(new Element('div'),new Element('canvas'),{draftStore:{put:async d=>drafts.push(JSON.parse(JSON.stringify(d))),list:async()=>[],remove:async()=>{},get:async()=>null}});
+ return {api,mounted,drafts,dispatch(type,readings,x,y){times=readings.slice();const event={button:0,isPrimary:true,pointerId:1,clientX:x,clientY:y,pressure:.5,preventDefault:noop};for(const fn of mounted.canvas.listeners[type]||[])fn(event);},at(value){times=[];now=value;}};
+}
+for(const [label,first,next] of [['rounding boundary',100.49,100.51],['same rounding bucket',100.2,100.25],['clock gap',101,117]]){
+ test('stroke starts with one timestamp: '+label,async()=>{
+  const h=strokeHarness();h.dispatch('pointerdown',[100.1,first,next,next+.1],20,20);
+  const event=h.mounted.events[0];assert.equal(event.points[0][2],event.t,'first point cannot precede its stroke event');
+  h.dispatch('pointermove',[130,130],50,35);h.dispatch('pointerup',[140,140,140],70,50);
+  assert.deepEqual(Array.from(event.points.slice(1),p=>p[2]),[30,40],'later points preserve their own clock');
+  h.at(150);const draft=await h.mounted.checkpoint();assert.equal(draft.complete,true);h.api.validate(draft.sequence);
+  h.at(160);const value=await h.mounted.value();h.api.validate(value);h.api.validate(h.drafts.at(-1).sequence);
+  const invalid=JSON.parse(JSON.stringify(value));invalid.events[0].t=2;invalid.events[0].points[0][2]=1;
+  assert.throws(()=>h.api.validate(invalid),/Punto inválido/,'strict chronology is unchanged');
+ });
+}

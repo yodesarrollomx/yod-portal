@@ -27,7 +27,9 @@ const server=http.createServer((req,res)=>{
     window.YodRoomWork={subscribe(fn){roomListeners.add(fn);fn(roomState());return()=>roomListeners.delete(fn);}};window.__publishResidence=value=>{activity=value;for(const fn of roomListeners)fn(roomState());};
     // This geometry test models a connected worker. Keep its synthetic observations fresh;
     // otherwise a slow screenshot run legitimately sends the resident away after 90 seconds.
-    setInterval(()=>{if(profile)window.__publishResidence(activity);},5000);
+    // Each refresh repaints the station screen without work, so the screen check pauses it.
+    window.__holdResidence=false;
+    setInterval(()=>{if(profile&&!window.__holdResidence)window.__publishResidence(activity);},5000);
     // This geometry fixture strips the UI boots; observe the radial route used by the marker.
     window.__prepares=[];window.__voiceStarts=[];window.__nearbyPrepared=false;window.YodVoiceWorkspace={isOpen:()=>false,prepareNearby:id=>{window.__prepares.push(id);window.__nearbyPrepared=true;},releaseNearby:()=>{window.__nearbyPrepared=false;},openForCase:async(id,tab,options)=>{
      const p=window.despacho.getAgentState().position,c=window.despacho.camera.position;
@@ -169,12 +171,14 @@ const server=http.createServer((req,res)=>{
    // Measure the rendered thighs against the actual 0.62 m chair top, independent of either rig's hip offset.
    assert.equal(seat.length,2);for(const side of seat){assert.ok(Math.abs(side.contactY-.62)<.001,JSON.stringify(side));assert.equal(side.leg,-Math.PI/2);}
    await page.evaluate(async()=>{const T=await import('/despacho3d/vendor/three.module.js');const w=window.despacho;
+    window.__holdResidence=true;
     w.layout.computerScreen.update({phase:'ready',case_id:'synthetic-office',checked_at:Date.now(),projectName:'Proyecto de prueba',work:{case_id:'synthetic-office',goal_id:'synthetic-goal',run_id:'synthetic-run',title:'Comparar variantes',phase:'working',updated_at:new Date().toISOString(),progress:{sequence:2,progress:{tasks:[{title:'Verificar superficie',status:'running'},{title:'Fuente preparada',status:'ready_for_review'}],summary:''}}}});
     w.camera.position.set(8.8,2.1,-4.8);w.camera.lookAt(new T.Vector3(7,1.2,-6.8));
    });
    await page.waitForTimeout(300);
    assert.equal(await page.evaluate(()=>window.despacho.getState().computer.progress.counts),'1/2 para revisar');
    await page.screenshot({path:path.join(out,'puesto-sentado-'+(mobile?'movil':'escritorio')+'.png')});
+   await page.evaluate(()=>{window.__holdResidence=false;});
    await page.locator('#overview').click();
    const start=await page.evaluate(()=>window.despacho.getAgentState().position);
    await page.evaluate(()=>window.__publishResidence('presenting'));
