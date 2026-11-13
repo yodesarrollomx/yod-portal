@@ -1,6 +1,7 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const source=fs.readFileSync(require.resolve('../os/despacho-section.js'),'utf8');
+const V=JSON.parse(fs.readFileSync(require.resolve('../os/versiones.json'),'utf8')).propia;   // la etiqueta ?v= la gobierna scripts/versiones.cjs
 function node(){const attrs=new Map(),listeners={};return {hidden:false,children:[],contentWindow:{},classList:{toggle(){},contains(){return false;}},getAttribute:k=>attrs.get(k)||null,setAttribute(k,v){attrs.set(k,v);},removeAttribute(k){attrs.delete(k);},addEventListener(k,f){listeners[k]=f;},appendChild(n){n.parent=this;this.children.push(n);},remove(){this.parent.children=this.parent.children.filter(x=>x!==this);}};}
 function harness(search){
  const nodes=new Map(['seccionDespacho','despachoCanvas','despachoEstado','despachoAbrir','despachoBandeja'].map(k=>[k,node()])),frames=[],events={};
@@ -14,7 +15,7 @@ test('retro es opt-in exacto y conserva puerta de acceso y revocación del host'
  for(const [query,retro] of [['',false],['?office=retro',true],['?x=1&office=retro&v=1',true],['?office=retro2',false],['?office=Retro',false]]){
   const h=harness(query);h.section.refresh();assert.equal(h.frames.length,0);
   h.identity.ready=true;h.section.refresh();assert.equal(h.frames.length,1);
-  assert.equal(h.frames[0].getAttribute('src'),retro?'../despacho-retro/index.html?office=retro&v=retro1':'../despacho3d/index.html?v=council-trace5');
+  assert.equal(h.frames[0].getAttribute('src'),retro?'../despacho-retro/index.html?office=retro&v='+V:'../despacho3d/index.html?v='+V);
   h.identity.allowed=false;h.section.refresh();assert.equal(h.section.getIframeWindow(),null);assert.equal(h.frames[0].getAttribute('src'),null);
  }
 });
@@ -23,7 +24,7 @@ test('recuperación retro descarta iframe anterior y exige revalidar sesión',()
  h.event('pagehide',{persisted:true});h.event('pageshow',{persisted:true});h.section.refresh();
  assert.equal(old.getAttribute('src'),null);assert.equal(h.section.getIframeWindow(),null);
  h.identity.ready=true;h.identity.epoch++;h.section.refresh();
- assert.equal(h.frames[1].getAttribute('src'),'../despacho-retro/index.html?office=retro&v=retro1&office_recovery=history');
+ assert.equal(h.frames[1].getAttribute('src'),'../despacho-retro/index.html?office=retro&v='+V+'&office_recovery=history');
  assert.notEqual(h.section.getIframeWindow(),old.contentWindow);
 });
 
