@@ -1,0 +1,31 @@
+# Prepared configuration, not a deployment receipt. One persistent disk and one instance.
+services:
+  - type: web
+    name: yod-reuniones
+    runtime: docker
+    plan: pro
+    region: oregon
+    rootDir: reuniones/service
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeployTrigger: 'off'
+    numInstances: 1
+    maxShutdownDelaySeconds: 60
+    disk:
+      name: reuniones-private
+      mountPath: /data
+      sizeGB: 50
+    envVars:
+      - key: MEETINGS_GRANTS
+        sync: false
+      - key: MEETINGS_ORIGINS
+        value: https://yodesarrollomx.github.io
+      - key: MEETINGS_DRIVE_FOLDERS
+        sync: false
+      - key: MEETINGS_GOOGLE_CREDENTIALS_JSON
+        sync: false
+      - key: WHISPER_MODEL
+        value: turbo
+      - key: WHISPER_PREVIEW_MODEL
+        value: base

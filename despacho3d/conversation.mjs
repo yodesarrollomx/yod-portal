@@ -1,23 +1,40 @@
+import {validateAutonStatus} from './auton-status.mjs?v=1';
+import {registeredBoard} from './project-station.mjs';
 // Local transport contract. The authenticated server chooses the private case.
 // No endpoint, credential, business record or browser persistence lives here.
 import {validateDriveSelection} from './drive-selection.mjs';
-import {validateAvatarProfile} from './avatar-profile.mjs';
+import {validateAvatarProfile} from './avatar-profile.mjs?v=126';
 import {createFastLaneClient} from './fast-lane.mjs';
 
 const text=(v,max=256)=>typeof v==='string'&&v.length>0&&v.length<=max;
 const date=v=>typeof v==='string'&&Number.isFinite(Date.parse(v));
+// The canonical backend returns this exact empty state before the first turn.
+// A missing history timestamp is not a missing or unauthorized source index.
+const initialState=(v,id)=>v.state?.case_id===id&&v.state.revision===''&&v.state.active_job_id===''&&v.state.updated_at===''&&['conversation','jobs','events'].every(k=>Array.isArray(v[k])&&v[k].length===0);
 const active=new Set(['queued','running','claimed']);
 const FAST_FALLBACK=new Set(['unavailable','unauthorized','fast_lane_unavailable','model_unavailable','context_unavailable']);
-const FAST_NOTICES={busy:'Gastón sigue respondiendo el mensaje anterior. Espera un momento y vuelve a enviar.',rate_limited:'Demasiados mensajes seguidos. Espera unos minutos.',model_failed:'La respuesta no se completó. Tu mensaje no se guardó; puedes volver a enviarlo.',auth_unavailable:'El servicio del modelo rechazó la conexión. Tu mensaje no se guardó.',provider_busy:'El modelo está saturado. Tu mensaje no se guardó; vuelve a intentarlo.',cancelled:'',invalid_request:'No se pudo enviar ese mensaje.'};
-const diagnosticCodes=new Set(['unauthorized','session_changed','timeout','unavailable','despacho_not_ready','invalid_selection','invalid_snapshot','invalid_message','invalid_job','invalid_event','seleccion_invalida','enlace_invalido','outside_os','case_changed','session_pending','transport_busy']);
-const transientCodes=new Set(['timeout','unavailable','transport_busy','session_pending']);
+const FAST_NOTICES={busy:'El autón sigue respondiendo el mensaje anterior. Espera un momento y vuelve a enviar.',rate_limited:'Demasiados mensajes seguidos. Espera unos minutos.',model_failed:'La respuesta no se completó. Tu mensaje no se guardó; puedes volver a enviarlo.',auth_unavailable:'El servicio del modelo rechazó la conexión. Tu mensaje no se guardó.',provider_busy:'El modelo está saturado. Tu mensaje no se guardó; vuelve a intentarlo.',cancelled:'',invalid_request:'No se pudo enviar ese mensaje.'};
+const diagnosticCodes=new Set(['unauthorized','session_changed','timeout','unavailable','despacho_not_ready','invalid_selection','invalid_snapshot','invalid_message','invalid_job','invalid_event','seleccion_invalida','enlace_invalido','outside_os','case_changed','session_pending','transport_busy','lock_busy','response_limit','invalid_response']);
+const transientCodes=new Set(['timeout','unavailable','transport_busy','lock_busy','session_pending']);
 const diagnosticCode=e=>diagnosticCodes.has(e?.message)?e.message:'unavailable';
 function checked(v){if(v?.ok===false)throw Error(diagnosticCodes.has(v.error)?v.error:'unavailable');return v;}
 export function validateSelection(v){
  if(!v||v.ok!==true||!text(v.case_id)||!text(v.name,120)||typeof v.can_enqueue!=='boolean'||typeof v.agent_ready!=='boolean')throw Error('invalid_selection');
  const selection={...validateDriveSelection(v),case_id:v.case_id,can_enqueue:v.can_enqueue,agent_ready:v.agent_ready};
  const goals=v.goals?.schema===1&&typeof v.goals.ready==='boolean'&&typeof v.goals.worker_ready==='boolean'?{schema:1,ready:v.goals.ready,worker_ready:v.goals.worker_ready}:null;
- return {...selection,avatar:validateAvatarProfile(v.avatar,selection),goals};
+ const ppp=v.ppp?.case_id===v.case_id&&registeredBoard(v.ppp.url,v.case_id,v.ppp.board_case_id||v.case_id)?{case_id:v.case_id,url:v.ppp.url,board_case_id:v.ppp.board_case_id||v.case_id,...(text(v.ppp.scenario_id)?{scenario_id:v.ppp.scenario_id}:{})}:null;
+ const avatar=validateAvatarProfile(v.avatar,selection);
+ if(v.record_only===true){
+  if(v.can_enqueue||v.agent_ready||!avatar||goals?.ready||goals?.worker_ready)throw Error('invalid_selection');
+  const status=validateAutonStatus(v.auton_status,v.case_id);
+  if(['working','presenting'].includes(status.activity))throw Error('invalid_selection');
+  avatar.record_only=true;avatar.auton_status={ok:true,...status};
+ }else if(v.auton_status!==undefined&&avatar){
+  const status=validateAutonStatus(v.auton_status,v.case_id);
+  if(['working','presenting'].includes(status.activity))throw Error('invalid_selection');
+  avatar.auton_status={ok:true,...status};
+ }
+ return {...selection,avatar,goals,ppp,...(v.record_only===true?{record_only:true}:{})};
 }
 export function safeDocumentUrl(value){
  try{return validateDriveSelection({name:'Documento',url:value}).url;}catch{return null;}
@@ -30,8 +47,41 @@ function sourceRows(value){
   return row.map(cell=>cell.replace(/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/g,''));
  }).filter(row=>row.some(cell=>cell.trim()));
 }
+// The PPP/document surface depends on authorized source metadata, not on the
+// validity of unrelated conversation history or old jobs. No data is cached here.
+export function validateWorkspaceSources(v,id){
+ if(v?.ok===false&&text(v.error))checked(v);
+ const invalid=field=>{const error=Error('invalid_snapshot');error.sourceMetadata=field;throw error;};
+ if(!v||v.ok!==true||v.case_id!==id||!v.context||v.context.identity?.case_id!==id)invalid('identity');
+ if(!text(v.context.identity.name,200))invalid('name');
+ if(!text(v.source_revision))invalid('revision');
+ if(!date(v.state?.updated_at)&&!initialState(v,id))invalid('date');
+ let rows;try{rows=sourceRows(v.context.documents);}catch{invalid('documents');}
+ const documents=rows.map(([source_id,title,source,role],index)=>({id:'document-'+index,source_id,title,source,role,url:safeDocumentUrl(source)}));
+ const projection={case_id:id,revision:v.source_revision,updated_at:v.state.updated_at||null,documents};
+ // Old messages and jobs cannot invalidate a small, authorized PPP source tray.
+ // Its own metadata remains bounded; this does not change the chat validator.
+ if(JSON.stringify(projection).length>524288)throw Error('response_limit');
+ return projection;
+}
+export function workspaceSourceNotice(error){
+ const fields={identity:'El servidor no confirmó la identidad de este expediente.',name:'El servidor no entregó un nombre válido para este expediente.',revision:'El servidor no entregó la revisión del expediente.',date:'El servidor no entregó una fecha válida de actualización del expediente.',documents:'El índice de documentos llegó con un formato que no se puede leer con seguridad.'};
+ if(fields[error?.sourceMetadata])return fields[error.sourceMetadata]+' Puedes volver a consultar; no se cambió ningún documento.';
+ const code=diagnosticCode(error);
+ return ({
+  lock_busy:'El expediente está atendiendo otra consulta. Recupera su lectura en unos segundos; tu PPP y tu conversación se conservan.',
+  response_limit:'La lectura del expediente supera el límite admitido. El vínculo del PPP todavía no se ha recuperado.',
+  invalid_response:'El servidor devolvió una lectura ilegible del expediente. Recupera su conexión sin cerrar el puesto.',
+  invalid_snapshot:'La lectura del expediente no contiene metadatos válidos para este proyecto. El PPP no se abrirá con datos de otro caso.',
+  unauthorized:'Tu acceso a este expediente no se validó. Vuelve a validar tu acceso para recuperar su PPP.',
+  session_changed:'La sesión cambió mientras se leía el expediente. Abre de nuevo el proyecto con tu sesión actual.',
+  session_pending:'Se está validando tu acceso al expediente. Su PPP se recuperará cuando termine.',
+  timeout:'El expediente tardó demasiado en responder. Puedes recuperar su PPP sin cerrar el puesto.',
+  despacho_not_ready:'El expediente no está disponible en el servidor. Su PPP todavía no se ha recuperado.'
+ })[code]||'No se pudo conectar con el expediente para recuperar su PPP. Puedes recuperar su conexión sin cerrar el puesto.';
+}
 export function validateConversation(v,id){
- if(!v||v.ok!==true||v.case_id!==id||!text(v.source_revision)||!v.context||v.context.identity?.case_id!==id||!text(v.context.identity.name,200)||!date(v.state?.updated_at)||!Array.isArray(v.conversation)||v.conversation.length>1000||!Array.isArray(v.jobs)||v.jobs.length>1000||!Array.isArray(v.events)||v.events.length>1000||JSON.stringify(v).length>524288)throw Error('invalid_snapshot');
+ if(!v||v.ok!==true||v.case_id!==id||!text(v.source_revision)||!v.context||v.context.identity?.case_id!==id||!text(v.context.identity.name,200)||(!date(v.state?.updated_at)&&!initialState(v,id))||!Array.isArray(v.conversation)||v.conversation.length>1000||!Array.isArray(v.jobs)||v.jobs.length>1000||!Array.isArray(v.events)||v.events.length>1000||JSON.stringify(v).length>2097152)throw Error('invalid_snapshot');
  const ids=new Set();
  const messages=v.conversation.map(row=>{
   if(row.case_id!==id||!text(row.message_id)||ids.has(row.message_id)||!['user','assistant'].includes(row.role)||!text(row.body_json,16000)||!date(row.created_at))throw Error('invalid_message');
@@ -49,7 +99,11 @@ export function validateConversation(v,id){
  });
  const memory=sourceRows(v.context.memory).map(([title,body,evidence,next],index)=>({id:'memory-'+index,title,body,evidence,next,url:safeDocumentUrl(evidence)}));
  const documents=sourceRows(v.context.documents).map(([source_id,title,source,role],index)=>({id:'document-'+index,source_id,title,source,role,url:safeDocumentUrl(source)}));
- return {case_id:id,revision:v.source_revision,updated_at:v.state.updated_at,messages,jobs,events,memory,documents,decisions:[],processing:jobs.some(j=>active.has(j.status))};
+ const model={case_id:id,revision:v.source_revision,updated_at:v.state.updated_at||null,messages,jobs,events,memory,documents,decisions:[],processing:jobs.some(j=>active.has(j.status))};
+ // Preserve every validated row and the existing model fields; unrendered transport
+ // payloads do not consume the history budget. No truncation or mutation permission.
+ if(JSON.stringify(model).length>524288)throw Error('invalid_snapshot');
+ return model;
 }
 export class Conversation {
  constructor({transport,notify=()=>{},uuid=()=>crypto.randomUUID(),timeout=55000,fast=null,now=()=>Date.now()}){Object.assign(this,{transport,notify,uuid,timeout,now,fastOverride:fast,fastClientRef:null,fastTurns:[],fastNotice:'',fastDownUntil:0,fastAbort:null,selection:null,model:null,pending:null,accepted:null,status:'disconnected',busy:false,epoch:0,profile:null,stale:false,profileListeners:new Set()});}
@@ -65,6 +119,13 @@ export class Conversation {
   return this.fastClientRef.client;
  }
  get fastPending(){return this.fastTurns.some(t=>t.phase==='done');}
+ get canSend(){
+  if(this.busy||this.stale||!this.selection?.can_enqueue||!this.selection?.agent_ready||!this.model)return false;
+  if(this.pending)return this.status==='unconfirmed';
+  if(!['ready','processing'].includes(this.status))return false;
+  return !(this.accepted||this.model.processing)||this.now()>=this.fastDownUntil&&!!this.fastClient();
+ }
+ get idleStatus(){return this.accepted||this.model?.processing?'processing':'ready';}
  reconcileFast(){
   const messages=this.model?.messages||[],cutoff=this.now()-10*60000;
   this.fastTurns=this.fastTurns.filter(t=>{
@@ -85,13 +146,15 @@ export class Conversation {
   if(!transport||typeof transport[method]!=='function')throw Error('unavailable');
   let timer;try{return await Promise.race([transport[method](structuredClone(payload)),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('timeout')),this.timeout);})]);}finally{clearTimeout(timer);}
  }
- close(){this.epoch++;this.fastAbort?.abort();this.fastAbort=null;this.fastTurns=[];this.fastNotice='';this.fastClientRef=null;this.selection=null;this.model=null;this.pending=null;this.accepted=null;this.diagnostic=null;this.stale=false;this.status='disconnected';this.busy=false;this.emit();}
- async open(){
-  this.close();const epoch=this.epoch;this.busy=true;this.status='loading';this.emit();
+ close(){this.epoch++;this.fastAbort?.abort();this.fastAbort=null;this.fastTurns=[];this.fastNotice='';this.fastClientRef=null;this.requestedCaseId=null;this.selection=null;this.model=null;this.pending=null;this.accepted=null;this.diagnostic=null;this.stale=false;this.status='disconnected';this.busy=false;this.emit();}
+ async open(caseId=null){
+  if(caseId!==null&&!text(caseId))return false;
+  this.close();this.requestedCaseId=caseId;this.forgetProfile();const epoch=this.epoch;this.busy=true;this.status='loading';this.emit();
   let step='expediente';
   try{
-   const selection=validateSelection(checked(await this.call('resolveCurrent',{})));
+   const selection=validateSelection(checked(await this.call('resolveCurrent',this.requestedCaseId?{case_id:this.requestedCaseId}:{})));
    if(epoch!==this.epoch)return false;
+   if(this.requestedCaseId&&selection.case_id!==this.requestedCaseId)throw Error('case_changed');
    step='historial';
    const model=validateConversation(checked(await this.call('read',{case_id:selection.case_id})),selection.case_id);
    if(epoch!==this.epoch)return false;
@@ -104,7 +167,7 @@ export class Conversation {
   if(this.busy||!this.selection)return false;
   const epoch=this.epoch;this.busy=true;this.emit();
   try{
-   const selection=validateSelection(checked(await this.call('resolveCurrent',{})));
+   const selection=validateSelection(checked(await this.call('resolveCurrent',this.requestedCaseId?{case_id:this.requestedCaseId}:{})));
    if(epoch!==this.epoch)return false;
    if(selection.case_id!==this.selection.case_id)throw Error('case_changed');
    const model=validateConversation(checked(await this.call('read',{case_id:this.selection.case_id})),this.selection.case_id);
@@ -143,10 +206,10 @@ export class Conversation {
    if(epoch!==this.epoch)return false;
    turn.reply=result.final.reply;turn.phase='done';turn.finished=this.now();turn.saved=result.saved===true;
    turn.meta={...turn.meta,model:result.final.model,tier:result.final.tier,ttft_ms:result.final.ttft_ms,total_ms:result.final.total_ms};
-   this.status='ready';return true;
+   this.status=this.idleStatus;return true;
   }catch(error){
    if(epoch!==this.epoch)return false;
-   this.fastTurns=this.fastTurns.filter(t=>t!==turn);this.status='ready';
+   this.fastTurns=this.fastTurns.filter(t=>t!==turn);this.status=this.idleStatus;
    if(FAST_FALLBACK.has(error?.code)&&!error.started){this.fastDownUntil=this.now()+60000;return 'fallback';}
    this.fastNotice=FAST_NOTICES[error?.code]??'No se pudo completar la respuesta. Tu mensaje no se guardó.';return false;
   }finally{
@@ -155,9 +218,12 @@ export class Conversation {
   }
  }
  async send(message){
-  if(!this.pending&&this.status==='ready'&&!this.busy&&!this.stale&&this.selection?.can_enqueue&&this.selection?.agent_ready&&this.model&&!this.model.processing&&typeof message==='string'&&message.trim()&&message.length<=8000&&this.now()>=this.fastDownUntil&&this.fastClient()){
+  if(!this.pending&&this.canSend&&typeof message==='string'&&message.trim()&&message.length<=8000&&this.now()>=this.fastDownUntil&&this.fastClient()){
    const outcome=await this.sendFast(message);
    if(outcome!=='fallback')return outcome;
+   if(this.accepted||this.model?.processing){
+    this.fastNotice='La conversación no está disponible por el momento. Tu borrador se conserva y el trabajo anterior continúa; no se creó otro encargo.';this.emit();return false;
+   }
   }
   if(this.busy||this.stale||!['ready','unconfirmed'].includes(this.status)||!this.selection?.can_enqueue||!this.selection?.agent_ready)return false;
   if(!this.pending){
@@ -195,5 +261,5 @@ export function createFrameTransport(win,timeout=55000){
   const id=win.crypto.randomUUID();const timer=setTimeout(()=>{waiting.delete(id);reject(Error('timeout'));},timeout);
   waiting.set(id,{resolve,reject,timer});win.parent.postMessage({type:'yod:case:request',version:1,id,method,payload},win.location.origin);
  });
- return {mintFastSession:p=>request('mintFastSession',p),resolveCurrent:p=>request('resolveCurrent',p),read:p=>request('read',p),enqueue:p=>request('enqueue',p),readGoals:p=>request('readGoals',p),createGoal:p=>request('createGoal',p),reviewGoal:p=>request('reviewGoal',p),dispose(){alive=false;win.removeEventListener('message',receive);for(const item of waiting.values()){clearTimeout(item.timer);item.reject(Error('closed'));}waiting.clear();}};
+ return {listAuthorized:p=>request('listAuthorized',p),readOfficePermissions:p=>request('readOfficePermissions',p),readOfficePending:p=>request('readOfficePending',p),readVisits:p=>request('readVisits',p),recordVisit:p=>request('recordVisit',p),mintFastSession:p=>request('mintFastSession',p),resolveCurrent:p=>request('resolveCurrent',p),read:p=>request('read',p),enqueue:p=>request('enqueue',p),readGoals:p=>request('readGoals',p),createGoal:p=>request('createGoal',p),reviewGoal:p=>request('reviewGoal',p),dispose(){alive=false;win.removeEventListener('message',receive);for(const item of waiting.values()){clearTimeout(item.timer);item.reject(Error('closed'));}waiting.clear();}};
 }

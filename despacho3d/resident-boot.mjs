@@ -1,0 +1,89 @@
+import {mountResidentDock} from './resident-dock.mjs?v=records2';
+import {createOfficePreparation} from './office-preparation.mjs?v=unified283';
+import {mountAgentMenu} from './agent-menu.mjs?v=132';
+import {createResidentOpening} from './resident-opening.mjs?v=132';
+import {AUTONES_MULTIPLES} from './office-config.mjs?v=records2';
+import {createAuthorizedCases} from './authorized-cases.mjs?v=records2';
+import {createFrameTransport} from './conversation.mjs?v=records2';
+import {createResidentAgents} from './resident-agents.mjs?v=records2';
+import {AUTHORITY_REFRESH_MS,authorityRefreshDue} from './authority-lease.mjs?v=unified283';
+import {createCaseSelectionHandoff} from './case-selection-handoff.mjs?v=126';
+const host=document.getElementById('resident-agent');
+if(host){
+ const transport=createFrameTransport(window);
+ const label=host.querySelector('[data-resident-status]'),caseName=host.querySelector('[data-resident-case]'),
+  talk=host.querySelector('[data-resident-talk]'),write=host.querySelector('[data-resident-write]'),visit=host.querySelector('[data-resident-visit]');
+ const notices={loading:'Preparando tu despacho…',preparing:'Preparando conversación…',standby:'En espera · disponible',observe:'Disponible para consultar',offline:'Presente · sin conexión',reconnecting:'Recuperando conexión…',selection_required:'Elige un proyecto autorizado para entrar.',unauthorized:'Valida tu acceso a YOD OS'};
+ let voicePhase='idle',panel=false;
+ const shouldRefreshAuthority=()=>!document.hidden||!['idle','error'].includes(voicePhase);
+ const selectionHandoff=createCaseSelectionHandoff();
+ const resident=createResidentAgents({transport,onChange:paint,isVisible:shouldRefreshAuthority,takeSelection:id=>selectionHandoff.consume(id)});
+ function paint(state){
+  const active=!['idle','error'].includes(voicePhase),sel=state.selection;
+  host.hidden=true;if(host.querySelector('h2'))host.querySelector('h2').textContent=sel?.avatar?.name||sel?.name||'Autón';
+  host.dataset.state=active?'talking':state.phase;
+  label.textContent=active?(voicePhase==='listening'?'Conversando contigo':voicePhase==='reconnecting'?'Recuperando voz…':voicePhase==='closing'?'Guardando conversación…':'Conectando voz…'):notices[state.phase];
+  caseName.textContent=sel?.name||'Tu expediente autorizado se prepara al entrar.';
+  const operable=!!resident?.getSelection?.();
+  talk.disabled=!(operable&&sel.can_enqueue)||active;
+  write.disabled=!operable;visit.disabled=!sel?.avatar||!window.despacho;
+ }
+ // Use the same canonical profile contract as the scene's pilot.
+ const api={...resident};
+ const officePreparation=createOfficePreparation({mint:p=>transport.mintFastSession(p),visible:()=>!document.hidden,selectedOnly:true,getSelectedCase:()=>resident.getSelection()?.case_id,
+  onResult:(id,ok)=>{if(resident.getSelection()?.case_id===id)resident.markPrepared(id,ok);}});
+ const prepareCatalog=()=>void officePreparation.update(authorized?.snapshot().cases||[]);
+ const authorizedListeners=new Set(),catalogListeners=new Set();
+ let authorized=null,catalogTimer=null;
+ if(AUTONES_MULTIPLES){
+  authorized=createAuthorizedCases({transport,reuseCatalog:true,beforeSelect:()=>['idle','error'].includes(voicePhase),onChange:state=>{
+   selectionHandoff.reconcile(state);resident.reconcileCatalog(state);
+   for(const fn of catalogListeners)fn(state);
+   if(state.phase==='unauthorized')officePreparation.clear();
+   else if(state.phase==='current')void officePreparation.update(state.cases);
+   for(const fn of authorizedListeners)fn(state.cases.map(c=>c.avatar).filter(Boolean));
+  }});
+  api.subscribeCatalog=fn=>{catalogListeners.add(fn);fn(authorized.snapshot());return()=>catalogListeners.delete(fn);};
+  api.subscribeAuthorizedProfiles=fn=>{authorizedListeners.add(fn);fn(api.getAuthorizedProfiles());return()=>authorizedListeners.delete(fn);};
+  api.getAuthorizedProfiles=()=>authorized.snapshot().cases.map(c=>c.avatar).filter(Boolean);
+  api.selectCase=async (id,{isCurrent=()=>true}={})=>{
+   if(!['idle','error'].includes(voicePhase))return false;
+   if(isCurrent()&&authorized.snapshot().cases.some(c=>c.case_id===id)&&window.parent!==window)window.parent.postMessage({type:'yod:case:selection',version:1,case_id:id},window.location.origin);
+   const attempt=selectionHandoff.begin(id);
+   try{
+    const chosen=await authorized.select(id,{onResolved:raw=>selectionHandoff.capture(attempt,raw)});
+    const ready=chosen&&selectionHandoff.current(attempt)&&isCurrent()&&['idle','error'].includes(voicePhase)?await resident.selectCase(id):false;
+    if(ready)prepareCatalog();return ready;
+   }finally{selectionHandoff.finish(attempt);}
+  };
+  catalogTimer=setInterval(()=>{if(shouldRefreshAuthority())void authorized.refresh();},AUTHORITY_REFRESH_MS);void authorized.refresh().then(()=>resident.refresh());
+  window.addEventListener('pagehide',()=>{clearInterval(catalogTimer);authorized.dispose();});
+ }
+ api.openForCase=createResidentOpening({getResidents:()=>api,getMenu:()=>window.YodAgentMenu,beforeOpen:()=>window.despacho?.closeSheets?.(false),canSelect:()=>['idle','error'].includes(voicePhase),openStation:async id=>window.YodVoiceWorkspace?.openForCase(id,'ppp')||false});
+ window.YodResidentAgents=api;mountAgentMenu();mountResidentDock();
+ window.dispatchEvent(new CustomEvent('yod-residents-ready',{detail:null}));
+ talk.onclick=()=>document.getElementById('voice-open')?.click();
+ write.onclick=()=>window.CubefarmYOD?.open('chat');
+ visit.onclick=async()=>{if(resident.getSelection()?.avatar&&window.despacho)await window.despacho.visit('case');};
+ window.addEventListener('yod-voice-state',e=>{
+  voicePhase=e.detail?.phase||'idle';paint(resident.snapshot());
+  window.despacho?.setAgentActivity?.(voicePhase==='listening'?'talk':'sit');
+ });
+ window.addEventListener('yod-agents-visibility',e=>{panel=e.detail===true;host.hidden=true;});
+ window.addEventListener('yod-agents-ready',()=>paint(resident.snapshot()));
+ window.addEventListener('yod-office-ready',()=>paint(resident.snapshot()));
+ function refreshOnWake(){
+  if(authorized&&authorityRefreshDue(authorized.snapshot()))void authorized.refresh();
+  if(authorityRefreshDue(resident.snapshot()))void resident.refresh();
+  prepareCatalog();
+ }
+ window.addEventListener('online',refreshOnWake);
+ window.addEventListener('yod-data-invalidated',()=>{
+  if(document.hidden)return;
+  if(authorized)void authorized.refresh();
+  void resident.refresh();
+ });
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshOnWake();});
+ window.addEventListener('pagehide',()=>{officePreparation.close();selectionHandoff.invalidate();resident.dispose();transport.dispose();delete window.YodResidentAgents;});
+ if(!AUTONES_MULTIPLES)void resident.refresh();
+}

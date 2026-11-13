@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.55-jev-piloto · 2026-10-03.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-13.jev-consultas.1 · 2026-10-20.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -9,15 +9,28 @@ Línea continua: conexión observada en código o ejecución. Discontinua: manua
 ```mermaid
 flowchart LR
   n_SYS_DESPACHO["El Despacho"]
+  n_SYS_POTENCIALES["PPP · Potenciales"]
   n_SYS_TAREAS["MOAC"]
   n_SYS_YOD_OS["YOD OS"]
   n_GAS_PORTERO["Portero y Potenciales"]
   n_GAS_OPERACION["Operación y tareas"]
   n_SHEET_OPERACION["Datos de Operación y tareas"]
+  n_GAS_SALA["Sala de Edición"]
+  n_EXT_DRIVE["Google Drive"]
   n_EXT_GMAIL["Gmail"]
   n_GAS_MOAC_METAS["Metas y objetivos de MOAC"]
   n_SHEET_MOAC_METAS["Metas, objetivos y acciones"]
+  n_SVC_SALA_PRODUCTOR["Productor de Sala"]
   n_STORE_DESPACHO_CORCHO["Mi Corcho · almacén privado de Dirección"]
+  n_SYS_DESPACHO_3D["Oficina 3D y puesto del autón"]
+  n_SVC_AUTON_CLOUD["Motor de nube del autón"]
+  n_STORE_AUTON_ESTADO["Estado y conocimiento del autón"]
+  n_EXT_JEV["JEV · búsqueda y selección"]
+  n_EXT_OPENAI["OpenAI · conversación y ejecución"]
+  n_EXT_RENDER["Render · alojamiento del motor"]
+  n_EXT_OBSIDIAN["Obsidian · bóveda de conocimiento"]
+  n_EXT_NOTEBOOKLM["NotebookLM · consulta documental prevista"]
+  n_GAS_BANDEJA_NUBE["Ejecutor de Bandeja en nube"]
   n_GAS_OPERACION -->|Lee/escribe registros del dominio| n_SHEET_OPERACION
   n_SYS_DESPACHO -.->|Tareas ordinarias getAll/update en Operación| n_GAS_OPERACION
   n_SYS_TAREAS -.->|Consume contrato del backend| n_GAS_OPERACION
@@ -31,9 +44,27 @@ flowchart LR
   n_GAS_MOAC_METAS -->|Lee y vincula estrategia| n_SHEET_MOAC_METAS
   n_GAS_OPERACION -.->|Futuro Ops: mismo almacén Corcho tras identificar proyecto| n_STORE_DESPACHO_CORCHO
   n_SYS_DESPACHO -.->|Provisional: sólo corchoGet/corchoSave| n_GAS_PORTERO
+  n_SYS_YOD_OS -->|Ruta interna del despacho con sesión y permiso vigentes| n_SYS_DESPACHO_3D
+  n_SYS_DESPACHO_3D -->|Conversación y operaciones del puesto ligadas al caso y actor| n_SVC_AUTON_CLOUD
+  n_SYS_DESPACHO_3D -->|Tablero original con contexto compartido, escenario y revisión| n_SYS_POTENCIALES
+  n_SVC_AUTON_CLOUD -->|Identidad, contexto, objetivos y cola autorizados| n_GAS_PORTERO
+  n_SVC_AUTON_CLOUD -->|Conocimiento y recibos por expediente con revisión| n_STORE_AUTON_ESTADO
+  n_SVC_AUTON_CLOUD -->|Orientar y ordenar fuentes autorizadas| n_EXT_JEV
+  n_SVC_AUTON_CLOUD -->|Leer originales, documentos y pasajes del expediente| n_EXT_DRIVE
+  n_SVC_AUTON_CLOUD -->|Voz y herramientas con claves de servidor| n_EXT_OPENAI
+  n_EXT_RENDER -.->|Servicio y volumen persistentes en la versión efectiva| n_SVC_AUTON_CLOUD
+  n_STORE_AUTON_ESTADO -->|Leer versiones, decisiones y exportación autorizadas| n_SYS_DESPACHO_3D
+  n_SYS_DESPACHO_3D -->|Descarga manual de bóveda portable; no sincronización| n_EXT_OBSIDIAN
+  n_SYS_DESPACHO_3D -.->|Consulta documental prevista, conexión sin verificar| n_EXT_NOTEBOOKLM
+  n_GAS_BANDEJA_NUBE -->|Leer BANDEJA y añadir resultados al mismo libro| n_SHEET_OPERACION
+  n_SVC_SALA_PRODUCTOR -.->|Imagen para Sala con modelo fijo y recibo| n_SVC_AUTON_CLOUD
+  n_SVC_AUTON_CLOUD -.->|Propone etapas desde la intención final y contexto vigente| n_SYS_POTENCIALES
+  n_SYS_POTENCIALES -.->|Encarga storyboard desde la versión visible| n_SVC_AUTON_CLOUD
+  n_SVC_AUTON_CLOUD -.->|Registra versión privada con origen y recibo| n_GAS_SALA
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SHEET_OPERACION pendiente;
+  class n_EXT_DRIVE pendiente;
   class n_EXT_GMAIL pendiente;
   class n_SHEET_MOAC_METAS pendiente;
   class n_STORE_DESPACHO_CORCHO pendiente;
@@ -44,8 +75,9 @@ flowchart LR
 ```mermaid
 flowchart LR
   n_SYS_POTENCIALES["PPP · Potenciales"]
-  n_SYS_INVERSION["Presentación a inversionistas"]
+  n_SYS_INVERSION["Masterbrokers"]
   n_SYS_MARKETING["Embudo comercial"]
+  n_SYS_CONTROL["Control Maestro"]
   n_SYS_YOD_OS["YOD OS"]
   n_SYS_PLAN_POTENCIAL["Plan de Potencial"]
   n_SYS_CROKISS["CroKiss"]
@@ -68,6 +100,7 @@ flowchart LR
   n_EXT_DRIVE["Google Drive"]
   n_EXT_CALENDAR["Google Calendar"]
   n_EXT_META["Meta"]
+  n_EXT_GMAIL["Gmail"]
   n_EXT_ACTIONS["GitHub Actions"]
   n_GAS_CRM["CRM comercial"]
   n_SHEET_CRM["Datos de CRM comercial"]
@@ -81,6 +114,11 @@ flowchart LR
   n_EXT_MOTORES_MEDIA["Motores de generación de contenido"]
   n_SHEET_PPP_MODELOS["PPP · Libros de cálculo por caso"]
   n_EXT_GITHUB_PUBLISHER_APP["Identidad de publicación GitHub"]
+  n_SYS_DESPACHO_3D["Oficina 3D y puesto del autón"]
+  n_SVC_AUTON_CLOUD["Motor de nube del autón"]
+  n_SYS_PPP2["PPP 2 · el vivero de planes"]
+  n_GAS_PPP2["PPP 2 · servidor"]
+  n_SHEET_PPP2["PPP 2 · vivero y libros de plan"]
   n_GAS_MARKETING -->|Lee/escribe registros del dominio| n_SHEET_MARKETING
   n_GAS_PLAN_POTENCIAL -.->|Lee/escribe registros del dominio| n_SHEET_PLAN_POTENCIAL
   n_GAS_CROKISS -->|Lee/escribe registros del dominio| n_SHEET_CROKISS
@@ -127,6 +165,36 @@ flowchart LR
   n_EXT_GITHUB_PUBLISHER_APP -.->|Crea PR del commit preparado de Sala| n_SYS_SALA
   n_EXT_GITHUB_PUBLISHER_APP -.->|Crea PR del commit preparado de Marketing| n_SYS_MARKETING
   n_GAS_CRM -->|Consulta identidad y alcance de lectura| n_GAS_PORTERO
+  n_SYS_DESPACHO_3D -->|Tablero original con contexto compartido, escenario y revisión| n_SYS_POTENCIALES
+  n_SYS_SALA -->|Snapshots privados de datos públicos y Pages con recibo verificable| n_EXT_ACTIONS
+  n_SYS_MARKETING -->|Agregados públicos en rama de datos; UI de Pages conserva código aprobado| n_EXT_ACTIONS
+  n_SHEET_PLAN_POTENCIAL -->|Lectura de Plan por cuenta de servicio y salida agregada| n_SYS_SALA
+  n_SYS_SALA -->|Marketing consume agregados de Plan publicados con hash| n_SYS_MARKETING
+  n_SVC_SALA_EJECUTOR -->|Mantenimiento limitado de evidencia de voces originales recuperadas| n_GAS_SALA
+  n_SYS_INVERSION -->|Preevaluación y retorno de terreno a cartera| n_GAS_PORTERO
+  n_GAS_SALA -->|Correo diario y entrada al destinatario existente| n_EXT_GMAIL
+  n_SVC_SALA_EJECUTOR -->|Cierre, activación acotada y comparación aislada| n_EXT_ACTIONS
+  n_SYS_CONTROL -->|Informe técnico por proceso visible en Accesos| n_SYS_POTENCIALES
+  n_SYS_SALA -->|Lecturas agregadas y canario aislado de Sala| n_SYS_CONTROL
+  n_SYS_INVERSION -.->|Lee copy público de presentación por recurso=textos| n_GAS_PLAN_POTENCIAL
+  n_SVC_SALA_PRODUCTOR -.->|Imagen para Sala con modelo fijo y recibo| n_SVC_AUTON_CLOUD
+  n_SVC_SALA_PRODUCTOR -.->|Fotografía HiDream oficial con adaptadores I1 y O1 y recibos| n_EXT_MOTORES_MEDIA
+  n_SYS_INVERSION -.->|Resumen guardado de PPP por expediente| n_GAS_PORTERO
+  n_SYS_SALA -.->|Imágenes nuevas en releases públicos inmutables con manifiesto fijado por recibo| n_EXT_ACTIONS
+  n_SYS_POTENCIALES -.->|Lee expedientes previos al PPP y su historial autorizado| n_GAS_CRM
+  n_SVC_AUTON_CLOUD -.->|Propone etapas desde la intención final y contexto vigente| n_SYS_POTENCIALES
+  n_SYS_POTENCIALES -.->|Solicita etapas y relee coherencia del modelo| n_GAS_PORTERO
+  n_SYS_POTENCIALES -.->|Encarga storyboard desde la versión visible| n_SVC_AUTON_CLOUD
+  n_SVC_AUTON_CLOUD -.->|Registra versión privada con origen y recibo| n_GAS_SALA
+  n_SYS_POTENCIALES -.->|Consulta las presentaciones de ese PPP y revisión| n_GAS_SALA
+  n_SYS_INVERSION -.->|Abre el mismo historial de presentación y origen PPP| n_GAS_SALA
+  n_SYS_SALA -->|Cuántas publicaciones hay listas para lanzar (llave local sala_resumen_v1, mismo origen)| n_SYS_YOD_OS
+  n_SYS_CONTROL -->|Grafo del sistema en Accesos: versión aprobada, borrador y estado de cada pieza| n_SYS_POTENCIALES
+  n_SYS_INVERSION -->|Lee el grafo aprobado (recetas por audiencia y contrato del plan) para armar presentaciones y avisar si hay otra versión en trabajo| n_SYS_POTENCIALES
+  n_SYS_PPP2 -->|Lee el vivero y el plan; envía datos, respuestas, palancas, aprobaciones y pruebas| n_GAS_PPP2
+  n_GAS_PPP2 -->|Canje de sesión con board=PT; el respaldo sólo si el original falla en esa llamada| n_GAS_PORTERO
+  n_GAS_PPP2 -->|Lee el resumen y las tablas; escribe celdas permitidas y la bitácora| n_SHEET_PPP2
+  n_GAS_PPP2 -->|Copia la plantilla al sembrar un plan| n_EXT_DRIVE
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PLAN_POTENCIAL pendiente;
@@ -134,13 +202,13 @@ flowchart LR
   class n_SYS_SALA_OPERACION pendiente;
   class n_SHEET_PORTERO pendiente;
   class n_SHEET_MARKETING pendiente;
-  class n_SHEET_PLAN_POTENCIAL pendiente;
   class n_SHEET_CROKISS pendiente;
   class n_SHEET_CODES pendiente;
   class n_SHEET_SALA pendiente;
   class n_EXT_DRIVE pendiente;
   class n_EXT_CALENDAR pendiente;
   class n_EXT_META pendiente;
+  class n_EXT_GMAIL pendiente;
   class n_EXT_ACTIONS pendiente;
   class n_SHEET_CRM pendiente;
   class n_GAS_INVERSION pendiente;
@@ -244,11 +312,12 @@ flowchart LR
   n_SYS_TAREAS["MOAC"]
   n_SYS_FLUJO["Tesorería"]
   n_SYS_INTERIORES["Aurum · Interiores"]
-  n_SYS_INVERSION["Presentación a inversionistas"]
+  n_SYS_INVERSION["Masterbrokers"]
   n_SYS_MARKETING["Embudo comercial"]
   n_SYS_OBRA["Obra en vivo"]
   n_SYS_CONTROL["Control Maestro"]
   n_SYS_YOD_OS["YOD OS"]
+  n_SYS_SALA["Sala de Edición"]
   n_SYS_EMD["Evaluación de personas"]
   n_SYS_PINTARRON["Pintarrón"]
   n_GAS_PORTERO["Portero y Potenciales"]
@@ -259,8 +328,11 @@ flowchart LR
   n_GAS_CODES["Portal de codesarrolladores"]
   n_GAS_MIRAMAR["Miramar"]
   n_GAS_OBRA["Motor de obra"]
+  n_EXT_ACTIONS["GitHub Actions"]
   n_GAS_CRM["CRM comercial"]
   n_GAS_PORTERO_RESPALDO["Portero de respaldo"]
+  n_SYS_DESPACHO_3D["Oficina 3D y puesto del autón"]
+  n_SVC_HORARIOS_CLOUD["Vigilante y programador en nube"]
   n_GAS_CATALOGO -.->|Lee/escribe registros del dominio| n_SHEET_CATALOGO
   n_SYS_YOD_OS -->|Navega al sistema autorizado| n_SYS_DESPACHO
   n_SYS_YOD_OS -->|Navega al sistema autorizado| n_SYS_POTENCIALES
@@ -285,10 +357,19 @@ flowchart LR
   n_SYS_YOD_OS -->|Respaldo de identidad| n_GAS_PORTERO_RESPALDO
   n_GAS_PORTERO -->|Registra antes, después, actor y siguiente paso| n_SYS_CONTROL
   n_SYS_YOD_OS -.->|Wrapper EMD en dominio GitHub propio; legado compatible| n_SYS_EMD
+  n_SYS_YOD_OS -->|Ruta interna del despacho con sesión y permiso vigentes| n_SYS_DESPACHO_3D
+  n_SYS_CONTROL -->|Informe técnico por proceso visible en Accesos| n_SYS_POTENCIALES
+  n_SYS_SALA -->|Lecturas agregadas y canario aislado de Sala| n_SYS_CONTROL
+  n_SYS_CONTROL -->|Pruebas programadas y evidencia de ejecución| n_EXT_ACTIONS
+  n_SVC_HORARIOS_CLOUD -->|Resultados sanitizados observados desde Accesos| n_SYS_CONTROL
+  n_SYS_SALA -->|Cuántas publicaciones hay listas para lanzar (llave local sala_resumen_v1, mismo origen)| n_SYS_YOD_OS
+  n_SYS_CONTROL -->|Grafo del sistema en Accesos: versión aprobada, borrador y estado de cada pieza| n_SYS_POTENCIALES
+  n_SYS_CONTROL -->|Rehacer el grafo a pedido y vigilar su estado cada hora| n_EXT_ACTIONS
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_EMD pendiente;
   class n_SYS_PINTARRON pendiente;
+  class n_EXT_ACTIONS pendiente;
 ```
 
 ## Personas
@@ -306,6 +387,7 @@ flowchart LR
   n_GAS_EMD -.->|Propuesta: fotos privadas de perfil| n_EXT_DRIVE
   n_SYS_EMD -.->|Propuesta: copia cifrada local| n_STORE_EMD_DRAFTS
   n_SYS_YOD_OS -.->|Wrapper EMD en dominio GitHub propio; legado compatible| n_SYS_EMD
+  n_GAS_EMD -.->|Propuesta: respaldo privado de administración| n_EXT_DRIVE
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_EMD pendiente;
@@ -320,12 +402,14 @@ flowchart LR
 flowchart LR
   n_SYS_DESPACHO["El Despacho"]
   n_SYS_MARKETING["Embudo comercial"]
+  n_SYS_CONTROL["Control Maestro"]
   n_SYS_SALA["Sala de Edición"]
   n_SYS_SITIO_ORG["Sitio de organización"]
   n_SYS_PRUEBA_DOMINIO["Prueba de dominio"]
   n_GAS_PORTERO["Portero y Potenciales"]
   n_GAS_PLAN_POTENCIAL["Captación de Plan Potencial"]
   n_GAS_CODES["Portal de codesarrolladores"]
+  n_GAS_SALA["Sala de Edición"]
   n_GAS_EMD["Evaluación privada"]
   n_EXT_DRIVE["Google Drive"]
   n_EXT_CALENDAR["Google Calendar"]
@@ -335,6 +419,15 @@ flowchart LR
   n_SVC_SALA_PRODUCTOR["Productor de Sala"]
   n_SVC_SALA_EJECUTOR["Ejecutor de Sala"]
   n_EXT_GITHUB_PUBLISHER_APP["Identidad de publicación GitHub"]
+  n_SVC_AUTON_CLOUD["Motor de nube del autón"]
+  n_EXT_OPENAI["OpenAI · conversación y ejecución"]
+  n_EXT_RENDER["Render · alojamiento del motor"]
+  n_SVC_HORARIOS_CLOUD["Vigilante y programador en nube"]
+  n_STORE_HORARIOS_CLOUD["Estado privado de horarios"]
+  n_GAS_BANDEJA_NUBE["Ejecutor de Bandeja en nube"]
+  n_GAS_PPP2["PPP 2 · servidor"]
+  n_EXT_ANTHROPIC["Claude · API de Anthropic"]
+  n_EXT_GRAFO_APP["GitHub App · YOD Grafo borrador"]
   n_GAS_PLAN_POTENCIAL -.->|Confirma cita agendada| n_EXT_CALENDAR
   n_EXT_META -.->|Obtiene métricas mediante Actions| n_SYS_MARKETING
   n_SYS_DESPACHO -.->|Aprobación de borradores por protocolo BANDEJA| n_EXT_GMAIL
@@ -348,6 +441,28 @@ flowchart LR
   n_EXT_GITHUB_PUBLISHER_APP -.->|Crea PR del commit preparado de Marketing| n_SYS_MARKETING
   n_GAS_EMD -.->|Propuesta: fotos privadas de perfil| n_EXT_DRIVE
   n_GAS_PORTERO -.->|Corcho: principal y ACL completos por GET| n_EXT_DRIVE
+  n_SVC_AUTON_CLOUD -->|Leer originales, documentos y pasajes del expediente| n_EXT_DRIVE
+  n_SVC_AUTON_CLOUD -->|Voz y herramientas con claves de servidor| n_EXT_OPENAI
+  n_EXT_RENDER -.->|Servicio y volumen persistentes en la versión efectiva| n_SVC_AUTON_CLOUD
+  n_SYS_SALA -->|Snapshots privados de datos públicos y Pages con recibo verificable| n_EXT_ACTIONS
+  n_SYS_MARKETING -->|Agregados públicos en rama de datos; UI de Pages conserva código aprobado| n_EXT_ACTIONS
+  n_GAS_SALA -->|Correo diario y entrada al destinatario existente| n_EXT_GMAIL
+  n_SVC_SALA_EJECUTOR -->|Cierre, activación acotada y comparación aislada| n_EXT_ACTIONS
+  n_SYS_CONTROL -->|Pruebas programadas y evidencia de ejecución| n_EXT_ACTIONS
+  n_EXT_RENDER -->|Alojar un vigilante ligero dentro del servicio existente| n_SVC_HORARIOS_CLOUD
+  n_SVC_HORARIOS_CLOUD -->|Reservas durables y configuración privada cifrada| n_STORE_HORARIOS_CLOUD
+  n_SVC_HORARIOS_CLOUD -->|Observar ejecuciones y recuperar horarios omitidos con GitHub App| n_EXT_ACTIONS
+  n_SVC_HORARIOS_CLOUD -->|Resultados sanitizados observados desde Accesos| n_SYS_CONTROL
+  n_GAS_BANDEJA_NUBE -->|Borradores y envíos aprobados por API| n_EXT_GMAIL
+  n_GAS_BANDEJA_NUBE -->|Redactar cambios con API de pago por uso| n_EXT_OPENAI
+  n_GAS_BANDEJA_NUBE -->|Recibo técnico leído por el vigilante y mostrado en Accesos| n_SVC_HORARIOS_CLOUD
+  n_SYS_SALA -.->|Imágenes nuevas en releases públicos inmutables con manifiesto fijado por recibo| n_EXT_ACTIONS
+  n_GAS_EMD -.->|Propuesta: respaldo privado de administración| n_EXT_DRIVE
+  n_SYS_CONTROL -->|Rehacer el grafo a pedido y vigilar su estado cada hora| n_EXT_ACTIONS
+  n_EXT_ACTIONS -->|Explicación de los cambios del grafo con OpenAI; se usa la primera respuesta válida entre los proveedores con clave| n_EXT_OPENAI
+  n_GAS_PPP2 -->|Copia la plantilla al sembrar un plan| n_EXT_DRIVE
+  n_EXT_ACTIONS -->|Explicación de los cambios del grafo con Claude por API; se usa la primera respuesta válida entre los proveedores con clave| n_EXT_ANTHROPIC
+  n_EXT_ACTIONS -->|El flujo «Grafo · rehacer» abre el PR del borrador con el token de la App del grafo| n_EXT_GRAFO_APP
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_SITIO_ORG pendiente;
   class n_GAS_EMD pendiente;
@@ -369,7 +484,7 @@ flowchart LR
   n_SYS_TAREAS["MOAC"]
   n_SYS_FLUJO["Tesorería"]
   n_SYS_INTERIORES["Aurum · Interiores"]
-  n_SYS_INVERSION["Presentación a inversionistas"]
+  n_SYS_INVERSION["Masterbrokers"]
   n_SYS_MARKETING["Embudo comercial"]
   n_SYS_OBRA["Obra en vivo"]
   n_SYS_CONTROL["Control Maestro"]
@@ -384,6 +499,9 @@ flowchart LR
   n_GAS_PORTERO_RESPALDO["Portero de respaldo"]
   n_SHEET_PPP_MODELOS["PPP · Libros de cálculo por caso"]
   n_STORE_DESPACHO_CORCHO["Mi Corcho · almacén privado de Dirección"]
+  n_SVC_AUTON_CLOUD["Motor de nube del autón"]
+  n_GAS_BANDEJA_NUBE["Ejecutor de Bandeja en nube"]
+  n_GAS_PPP2["PPP 2 · servidor"]
   n_GAS_PORTERO -.->|Lee/escribe registros del dominio| n_SHEET_PORTERO
   n_SYS_POTENCIALES -.->|Consume contrato del backend| n_GAS_PORTERO
   n_SYS_TRACK -->|Consume contrato del backend| n_GAS_PORTERO
@@ -409,6 +527,12 @@ flowchart LR
   n_SYS_DESPACHO -.->|Provisional: sólo corchoGet/corchoSave| n_GAS_PORTERO
   n_GAS_PORTERO -.->|Provisional: CAS en Mi Corcho privado| n_STORE_DESPACHO_CORCHO
   n_GAS_PORTERO -.->|Corcho: principal y ACL completos por GET| n_EXT_DRIVE
+  n_SVC_AUTON_CLOUD -->|Identidad, contexto, objetivos y cola autorizados| n_GAS_PORTERO
+  n_SYS_INVERSION -->|Preevaluación y retorno de terreno a cartera| n_GAS_PORTERO
+  n_GAS_BANDEJA_NUBE -->|Revalidar identidad de Dirección para aprobar y antes de enviar| n_GAS_PORTERO
+  n_SYS_INVERSION -.->|Resumen guardado de PPP por expediente| n_GAS_PORTERO
+  n_SYS_POTENCIALES -.->|Solicita etapas y relee coherencia del modelo| n_GAS_PORTERO
+  n_GAS_PPP2 -->|Canje de sesión con board=PT; el respaldo sólo si el original falla en esa llamada| n_GAS_PORTERO
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SHEET_PORTERO pendiente;
@@ -435,11 +559,48 @@ flowchart LR
 flowchart LR
   n_GAS_PORTERO["Portero y Potenciales"]
   n_GAS_OPERACION["Operación y tareas"]
+  n_SHEET_OPERACION["Datos de Operación y tareas"]
+  n_EXT_GMAIL["Gmail"]
   n_STORE_DESPACHO_CORCHO["Mi Corcho · almacén privado de Dirección"]
+  n_EXT_OPENAI["OpenAI · conversación y ejecución"]
+  n_SVC_HORARIOS_CLOUD["Vigilante y programador en nube"]
+  n_GAS_BANDEJA_NUBE["Ejecutor de Bandeja en nube"]
+  n_STORE_BANDEJA_RECIBOS["Recibos privados de Bandeja"]
   n_GAS_OPERACION -.->|Futuro Ops: mismo almacén Corcho tras identificar proyecto| n_STORE_DESPACHO_CORCHO
   n_GAS_PORTERO -.->|Provisional: CAS en Mi Corcho privado| n_STORE_DESPACHO_CORCHO
+  n_GAS_BANDEJA_NUBE -->|Leer BANDEJA y añadir resultados al mismo libro| n_SHEET_OPERACION
+  n_GAS_BANDEJA_NUBE -->|Borradores y envíos aprobados por API| n_EXT_GMAIL
+  n_GAS_BANDEJA_NUBE -->|Redactar cambios con API de pago por uso| n_EXT_OPENAI
+  n_GAS_BANDEJA_NUBE -->|Intención durable antes del efecto| n_STORE_BANDEJA_RECIBOS
+  n_GAS_BANDEJA_NUBE -->|Recibo técnico leído por el vigilante y mostrado en Accesos| n_SVC_HORARIOS_CLOUD
+  n_GAS_BANDEJA_NUBE -->|Revalidar identidad de Dirección para aprobar y antes de enviar| n_GAS_PORTERO
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
+  class n_SHEET_OPERACION pendiente;
+  class n_EXT_GMAIL pendiente;
   class n_STORE_DESPACHO_CORCHO pendiente;
+```
+
+## Conocimiento
+
+```mermaid
+flowchart LR
+  n_SYS_DESPACHO_3D["Oficina 3D y puesto del autón"]
+  n_SVC_AUTON_CLOUD["Motor de nube del autón"]
+  n_EXT_JEV["JEV · búsqueda y selección"]
+  n_EXT_OBSIDIAN["Obsidian · bóveda de conocimiento"]
+  n_EXT_NOTEBOOKLM["NotebookLM · consulta documental prevista"]
+  n_SVC_AUTON_CLOUD -->|Orientar y ordenar fuentes autorizadas| n_EXT_JEV
+  n_SYS_DESPACHO_3D -->|Descarga manual de bóveda portable; no sincronización| n_EXT_OBSIDIAN
+  n_SYS_DESPACHO_3D -.->|Consulta documental prevista, conexión sin verificar| n_EXT_NOTEBOOKLM
+  classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
+```
+
+## Mercado
+
+```mermaid
+flowchart LR
+  n_SYS_MERCADO["Mercado Hermosillo 2020–2030"]
+  classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
 ```
 
 ## Contratos y evidencia de cada conexión
@@ -460,11 +621,11 @@ flowchart LR
 | CON-012 | GAS-OBRA → SHEET-OBRA | persistencia: Lee/escribe registros del dominio. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [yod-portal/obra.html](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/obra.html#L259) — Backend asociado al almacén de su dominio |
 | CON-013 | GAS-OBRA-CLIENTE → SHEET-OBRA-CLIENTE | persistencia: Lee/escribe registros del dominio. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [yod-portal/obra-app/motor/ObraCliente.gs](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/obra-app/motor/ObraCliente.gs#L175) — Backend asociado al almacén de su dominio |
 | CON-014 | GAS-SALA → SHEET-SALA | persistencia: Lee/escribe registros del dominio. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [sala-edicion/gas/Code.gs](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/gas/Code.gs#L713) — Backend asociado al almacén de su dominio |
-| CON-015 | GAS-EMD → SHEET-EMD | persistencia: Lee/escribe registros del dominio. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | pendiente | Integración pendiente de verificar |
+| CON-015 | GAS-EMD → SHEET-EMD | persistencia: Lee/escribe registros del dominio. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. Propuesta CHG-EMD-CONTRATOS-20261102: CTR-EMD-WRITE-RECEIPT y CTR-EMD-INSTRUMENT-VERSION; sin migración ni reinterpretación de datos históricos. Propuesta CHG-EMD-MEJORA-CONTINUA-20261103: dashboard operativo, administración con capacidades explícitas, acciones persistentes y política de resultados versionada; sin activación implícita ni cálculo sin política. | pendiente | Integración pendiente de verificar |
 | CON-016 | SYS-DESPACHO → GAS-OPERACION | api: Tareas ordinarias getAll/update en Operación. getAll/update siguen en GAS-OPERACION, con contrato y autorización existentes. CHG-DESPACHO-CORCHO-PROVISIONAL-035 propone separar exclusivamente corchoGet/corchoSave hacia GAS-PORTERO; ninguna otra acción cambia de endpoint. | declarado | [yod-despacho/README.md](https://github.com/yodesarrollomx/yod-despacho/blob/5ad406a6b8584ee49466b15e03a9a3bf8a9ca4b9/README.md#L13) — Conexión cliente/backend; [yod-despacho/app.js](https://github.com/yodesarrollomx/yod-despacho/blob/32330badba66dd9b23a7413498f421aeb628c9cb/app.js) — Cliente existente de tareas; separación de Corcho preparada por coordinador, todavía no integrada en el frontend publicado. |
 | CON-017 | SYS-TAREAS → GAS-OPERACION | api: Consume contrato del backend. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | declarado | [board-aurum/README.md](https://github.com/yodesarrollomx/board-aurum/blob/096550e5647a63048450b9be848be71901a32a3a/README.md#L11) — Conexión cliente/backend |
 | CON-018 | SYS-FLUJO → GAS-FLUJO | api: Consume contrato del backend. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [board-flujo-yod/index.html](https://github.com/yodesarrollomx/board-flujo-yod/blob/ef2e6e1fade1b515d10af239bc60519417d906c4/index.html#L379) — Conexión cliente/backend |
-| CON-019 | SYS-POTENCIALES → GAS-PORTERO | api: Consume contrato del backend. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | declarado | [potenciales-yod/CLAUDE.md](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/CLAUDE.md#L47) — Conexión cliente/backend |
+| CON-019 | SYS-POTENCIALES → GAS-PORTERO | api: Consume contrato del backend. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. Ampliación preparada: CTR-PPP-INACTIVE-FIELDS; aplicabilidad explícita de campos inactivos y diagnóstico sanitizado. Publicación y lectura final pendientes. | declarado | [potenciales-yod/CLAUDE.md](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/CLAUDE.md#L47) — Conexión cliente/backend |
 | CON-020 | SYS-TRACK → GAS-PORTERO | api: Consume contrato del backend. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [yod-portal/tablero.html](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/tablero.html#L1683) — Conexión cliente/backend |
 | CON-021 | SYS-MARKETING → GAS-MARKETING | api: Consume contrato del backend. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | declarado | [aurum-board/CLAUDE.md](https://github.com/yodesarrollomx/aurum-board/blob/ed41c34892aa8554b9599f0f50f325bb7b1d4deb/CLAUDE.md#L95) — Conexión cliente/backend |
 | CON-022 | SYS-MARKETING → GAS-PLAN-POTENCIAL | api: Consume contrato del backend. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | declarado | [aurum-board/CLAUDE.md](https://github.com/yodesarrollomx/aurum-board/blob/ed41c34892aa8554b9599f0f50f325bb7b1d4deb/CLAUDE.md#L99) — Conexión cliente/backend |
@@ -476,8 +637,8 @@ flowchart LR
 | CON-028 | SYS-ALQUIMIA → GAS-ALQUIMIA | api: Consume contrato del backend. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | declarado | [alquimia-urbana/CLAUDE.md](https://github.com/yodesarrollomx/alquimia-urbana/blob/bf295e2970ad008e58fa3f216a8cfc14353cf7e8/CLAUDE.md#L48) — Conexión cliente/backend |
 | CON-029 | SYS-OBRA → GAS-OBRA | api: Consume contrato del backend. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [yod-portal/obra.html](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/obra.html#L259) — Conexión cliente/backend |
 | CON-030 | SYS-OBRA-CLIENTE → GAS-OBRA-CLIENTE | api: Consume contrato del backend. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [yod-portal/obra-app/obras.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/obra-app/obras.js#L13) — Conexión cliente/backend |
-| CON-031 | SYS-SALA → GAS-SALA | api: Consume contrato del backend. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | declarado | [sala-edicion/CLAUDE.md](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/CLAUDE.md#L24) — Conexión cliente/backend |
-| CON-032 | SYS-EMD → GAS-EMD | api: Consume contrato del backend. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | pendiente | Integración pendiente de verificar |
+| CON-031 | SYS-SALA → GAS-SALA | api: Consume contrato del backend. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. Ampliación propuesta: CTR-SALA-TRANSPORTE-NUBE; reintentos sólo de lecturas declaradas y conciliación de mutaciones inciertas. CTR-SALA-PRODUCCION-HISTORICA propone GET produccion de historial completo con rol agente existente; backend no publicado y SALA_PRODUCCION_HISTORICA=0 hasta verificación por propietario. | declarado | [sala-edicion/CLAUDE.md](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/CLAUDE.md#L24) — Conexión cliente/backend; Diseño local del contrato produccion-historica-v1 para corregir exclusión técnica por ventana14d. Aún sin despliegue Apps Script ni GET completo verificado; no cambia ACL/scopes ni habilita flag. |
+| CON-032 | SYS-EMD → GAS-EMD | api: Consume contrato del backend. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. Propuesta CHG-EMD-CONTRATOS-20261102: CTR-EMD-WRITE-RECEIPT, CTR-EMD-INSTRUMENT-VERSION, CTR-EMD-RUNTIME-MODE y CTR-EMD-INTERACTION-RECOVERY; implementación y despliegue se acreditan por separado. Propuesta CHG-EMD-MEJORA-CONTINUA-20261103: dashboard operativo, administración con capacidades explícitas, acciones persistentes y política de resultados versionada; sin activación implícita ni cálculo sin política. | pendiente | Integración pendiente de verificar |
 | CON-033 | SYS-YOD-OS → SYS-DESPACHO | navegacion: Navega al sistema autorizado. Navegación existente al Despacho autorizado. CTR-DESPACHO-3D-SECTION: sección inmersiva bajo sesión confirmada y DP; frontend neutro alojado en GitHub, sin autenticación ChatGPT. Chinches geométricas por origen/ventana exactos. Datos operativos y motor autónomo requieren transportes autorizados comprobados. | codigo | [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L16) — Destino del catálogo |
 | CON-034 | SYS-YOD-OS → SYS-POTENCIALES | navegacion: Navega al sistema autorizado. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L17) — Destino del catálogo |
 | CON-035 | SYS-YOD-OS → SYS-TRACK | navegacion: Navega al sistema autorizado. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L18) — Destino del catálogo |
@@ -527,12 +688,12 @@ flowchart LR
 | CON-079 | EXT-ACTIONS → SVC-SALA-PRODUCTOR | automatizacion: Programa productor cada veinte minutos. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [sala-edicion/.github/workflows/sala-cada-hora.yml](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/.github/workflows/sala-cada-hora.yml#L9) — Frecuencia configurada en workflow, no evidencia de corridas |
 | CON-080 | SVC-SALA-PRODUCTOR → GAS-SALA | api: Lee decisiones/reglas y escribe cola. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [sala-edicion/nube/sala_productor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_productor.py#L130) — Planificador de compuertas |
 | CON-081 | EXT-ACTIONS → SVC-SALA-EJECUTOR | automatizacion: Programa ejecución de etapas habilitadas. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [sala-edicion/.github/workflows/sala-cada-hora.yml](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/.github/workflows/sala-cada-hora.yml#L8) — Disparador declarado cada dos horas |
-| CON-082 | SVC-SALA-EJECUTOR → GAS-SALA | api: Lee cola y registra resultado. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_ejecutor.py#L88) — Procesamiento de trabajo |
+| CON-082 | SVC-SALA-EJECUTOR → GAS-SALA | api: Lee cola y registra resultado. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. Ampliación propuesta: CTR-SALA-TRANSPORTE-NUBE; reintentos sólo de lecturas declaradas y conciliación de mutaciones inciertas. | codigo | [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_ejecutor.py#L88) — Procesamiento de trabajo |
 | CON-083 | SVC-SALA-EJECUTOR → EXT-MOTORES-MEDIA | integracion: Selecciona motor según configuración. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [sala-edicion/nube/sala_motores.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_motores.py#L37) — Registro de motores de producción |
 | CON-084 | SVC-SALA-EJECUTOR → EXT-DRIVE | documentos: Sube activos producidos. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_ejecutor.py#L67) — Publicación de resultado en Drive |
 | CON-085 | GAS-SALA → GAS-PORTERO | autenticacion: Valida credencial del OS desde servidor. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [sala-edicion/gas/Code.gs](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/gas/Code.gs#L193) — Valida credencial del OS desde servidor |
 | CON-086 | GAS-SALA → GAS-PORTERO-RESPALDO | autenticacion: Consulta respaldo de identidad. Ver contrato en las fuentes citadas; versión desplegada, frecuencia, errores y recuperación pendientes de verificar. | codigo | [sala-edicion/gas/Code.gs](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/gas/Code.gs#L191) — Consulta respaldo de identidad |
-| CON-PPP-MODELO | GAS-PORTERO → SHEET-PPP-MODELOS | persistencia: Lee resultados nativos; escribe cantidades permitidas. Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente. | ejecucion | Versión53 publicada; lectura HTTP de caso y lista conciliada con el libro piloto. Escritura permitida desplegada y probada con dobles; recorrido público de edición pendiente. |
+| CON-PPP-MODELO | GAS-PORTERO → SHEET-PPP-MODELOS | persistencia: Lee resultados nativos; escribe cantidades permitidas. Resolver libro por caso y versión; autorizar en servidor; validar campo, tipo, límites y revisión esperada; escribir cantidades y releer cálculo. Rechazar fórmulas o rangos arbitrarios; conservar URL existente. Recuperación #47: conservar compatibilidad Vertical; ausencia del adaptador Patrimonial observada en V65 según relevo, publicación API V66 reportada posteriormente, con GET Patrimonial y cotejo de 166 celdas aprobados según coordinador sólo para el caso inspeccionado; geometría y Vertical pendientes. Reconciliar job exacto y recibos antes de CAS conforme CTR-PPP-PATRIMONIAL-NATIVO. Ampliación propuesta CHG-PPP-FICHA-ETAPAS-20261029: reorganizar etapas del mismo caso/escenario mediante datos y fórmulas canónicas, con coherencia por modificación; implementación y despliegue de esta ampliación pendientes. Ampliación preparada: CTR-PPP-INACTIVE-FIELDS; aplicabilidad explícita de campos inactivos y diagnóstico sanitizado. Publicación y lectura final pendientes. | ejecucion | Versión53 publicada; lectura HTTP de caso y lista conciliada con el libro piloto. Escritura permitida desplegada y probada con dobles; recorrido público de edición pendiente.; Relevo del coordinador confirmado por Dirección el 5-oct: fuente activa/editor V65 idénticos, adaptador Patrimonial ausente y GET sheet-model Patrimonial con error servidor; recuperación #47 propuesta. Detalles y snapshots privados.; Coordinador reporta publicación API V66 desde V65: CAS/readback confirma siete archivos idénticos y sólo Code PPP adaptado; misma URL/scopes/ACL y editor == candidato == versión inmutable V66. GET funcional posterior pendiente; sin POST de pruebas de negocio.; Coordinador reporta GET real Patrimonial V66 aprobado y 166 celdas exactas con Sheets en el caso inspeccionado; dos escenarios conservan IDs y 269 campos, geometría pendiente. Acta privada fuera del repositorio. Vertical y otros casos no acreditados.; [yod-portal/docs/arquitectura/ppp-ficha-etapas.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-ficha-etapas.md) — Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. |
 | CON-PPP-REGISTRO | SHEET-PORTERO → SHEET-PPP-MODELOS | registro: Registra caso, libro, carpeta y revisión del modelo. IDs estables; un libro por caso y hoja por versión; no sustituir historial ni compartir archivos por efecto de registrar un enlace. | propuesto | Registro del piloto creado; organización y generación para todos los casos pendientes. |
 | CON-PPP-AUDITORIA | GAS-PORTERO → SYS-CONTROL | auditoria: Registra antes, después, actor y siguiente paso. Auditoría en libro y Control Maestro con actor autenticado, entidad, versión, revisión, campo/rango, fuente y validación. No inventar valores previos ausentes ni declarar publicada una operación no confirmada. | codigo | Registro operativo privado actualizado; auditoría de transporte desplegada y activador de edición directa instalado. Primer evento real y recorrido de edición todavía sin observar. |
 | CON-PUBLICADOR-IDENTIDAD | EXT-ACTIONS → EXT-GITHUB-PUBLISHER-APP | autenticacion: Solicita identidad temporal limitada al repositorio. CTR-PUBLICADOR-GITHUB. App con contents:read y pull_requests:write, exclusivamente para crear el PR. Las revisiones requeridas deben pasar antes del merge normal. | propuesto | Diseño registrado para corregir el bloqueo observado de los workflows de PR creados por GITHUB_TOKEN; requiere registro e instalación personal de una App privada de la organización. |
@@ -542,7 +703,7 @@ flowchart LR
 | CON-AUTH-CRM | GAS-CRM → GAS-PORTERO | autenticacion: Consulta identidad y alcance de lectura. CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada. | codigo | Revisión de fuente activa GAS-CRM, versión 20; dependencia de Portero contrastada en código y mediante dobles. No acredita recorrido completo de un usuario real. |
 | CON-AUTH-OBRA | GAS-OBRA → GAS-PORTERO | autenticacion: Verifica credencial para operar. CTR-AUTORIZACION-OPERACIONES. La fuente acredita la consulta; revisar identidad, recurso, caché y rol por operación. Los vacíos funcionales permanecen en la matriz privada. | codigo | Revisión de fuente activa GAS-OBRA, versión 16; dependencia de Portero contrastada en código y mediante dobles. No acredita recorrido completo de un usuario real. |
 | CON-EMD-PROFILES-DRIVE | GAS-EMD → EXT-DRIVE | persistencia: Propuesta: fotos privadas de perfil. CTR-EMD-PROFILES: carpeta dedicada privada, carga y retirada propias, lectura autorizada y confirmación por revisión/mutación; sin nuevas autorizaciones OAuth. | propuesto | Propuesta registrada; implementación y despliegue privados pendientes de pruebas |
-| CON-EMD-DRAFTS-LOCAL | SYS-EMD → STORE-EMD-DRAFTS | persistencia_local: Propuesta: copia cifrada local. CTR-EMD-DRAFTS: cifrado por enlace vigente, aislamiento de pestañas, confirmación transaccional local y recuperación explícita; el servidor mantiene revisión y cierre. | propuesto | Diseño propuesto de persistencia local; sin evidencia de publicación |
+| CON-EMD-DRAFTS-LOCAL | SYS-EMD → STORE-EMD-DRAFTS | persistencia_local: Propuesta: copia cifrada local. CTR-EMD-DRAFTS: cifrado por enlace vigente, aislamiento de pestañas, confirmación transaccional local y recuperación explícita; el servidor mantiene revisión y cierre. Propuesta CHG-EMD-CONTRATOS-20261102: CTR-EMD-INSTRUMENT-VERSION y CTR-EMD-INTERACTION-RECOVERY complementan compatibilidad y recuperación sin retirar cifrado ni consentimiento. CHG-EMD-MEJORA-CONTINUA-20261103 mantiene aislamiento y compatibilidad de cada campaña; el cambio de campaña no reinterpreta ni elimina borradores. | propuesto | Diseño propuesto de persistencia local; sin evidencia de publicación |
 | CON-AMALAYA-CLIENT | SYS-AMALAYA → GAS-AMALAYA | api: Consume contrato autenticado del tablero. CTR-AMALAYA-CHINCHES-ESTADO registra la extensión propuesta. Identidad, token, roles, implementación y URL actuales se conservan. | codigo | [amalaya-board/apps-script/Code.gs](https://github.com/yodesarrollo/amalaya-board/blob/a3cf36f508015d288a04288fef040130f30ec3b7/apps-script/Code.gs) — Contratos de chinches existentes y extensión de estado propuesta. |
 | CON-AMALAYA-STORE | GAS-AMALAYA → SHEET-AMALAYA | persistencia: Conserva chinches y su historial. CTR-AMALAYA-CHINCHES-ESTADO registra la extensión propuesta. Identidad, token, roles, implementación y URL actuales se conservan. | codigo | [amalaya-board/apps-script/Code.gs](https://github.com/yodesarrollo/amalaya-board/blob/a3cf36f508015d288a04288fef040130f30ec3b7/apps-script/Code.gs) — Contratos de chinches existentes y extensión de estado propuesta. |
 | CON-DESPACHO-CORCHO-STORE | GAS-OPERACION → STORE-DESPACHO-CORCHO | persistencia: Futuro Ops: mismo almacén Corcho tras identificar proyecto. CTR-DESPACHO-CORCHO; futuro adapter en GAS-OPERACION. Sólo cambiar endpoint/adapter, sin mover ni recrear Sheet, notas, ejes o versiones; nunca dos escritores con locks independientes. | propuesto | CHG-DESPACHO-CORCHO-PROVISIONAL-035: Migración futura condicionada a identificar editor/implementación Ops y validar el mismo principal, ACL y contrato; conservar archivo e IDs. |
@@ -550,3 +711,60 @@ flowchart LR
 | CON-DESPACHO-CORCHO-PORTERO | SYS-DESPACHO → GAS-PORTERO | api: Provisional: sólo corchoGet/corchoSave. POST text/plain; {action,k} para corchoGet y {action,k,version,data} para corchoSave. CTR-DESPACHO-CORCHO; URL Portero conocida actual, sin fallback de servidor ni desvío de getAll/update. | propuesto | CHG-DESPACHO-CORCHO-PROVISIONAL-035: Integración provisional autorizada, pendiente en PR consumidores; preflight V57 no acredita despliegue del adapter. |
 | CON-PORTERO-CORCHO-STORE | GAS-PORTERO → STORE-DESPACHO-CORCHO | persistencia: Provisional: CAS en Mi Corcho privado. CTR-DESPACHO-CORCHO; canjearLigaLento_(key,'DP') local fresco, owner exacto, principal efectivo y ACL Drive exhaustiva, LockService, CAS global y ACK con snapshot; no renovar/cache ni publicar notas. | propuesto | CHG-DESPACHO-CORCHO-PROVISIONAL-035: Integración provisional autorizada, pendiente en PR consumidores; preflight V57 no acredita despliegue del adapter. |
 | CON-PORTERO-CORCHO-DRIVE | GAS-PORTERO → EXT-DRIVE | autorizacion: Corcho: principal y ACL completos por GET. Drive full guard en cada operación: about.user del token de ejecución, propietario único exacto, archivo y todos los ancestros hasta raíz, permissions.list paginado incluidos permisos publicados; scopes Drive existentes completos, fail-closed sin fallback. | propuesto | CHG-DESPACHO-CORCHO-PROVISIONAL-035: Integración provisional autorizada, pendiente en PR consumidores; preflight V57 no acredita despliegue del adapter. |
+| CON-OS-DESPACHO-3D | SYS-YOD-OS → SYS-DESPACHO-3D | navegacion: Ruta interna del despacho con sesión y permiso vigentes. CTR-DESPACHO-3D-SECTION | codigo | [yod-portal/os/despacho-section.js](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/os/despacho-section.js) — Ruta interna del despacho con sesión y permiso vigentes |
+| CON-DESPACHO-3D-MOTOR | SYS-DESPACHO-3D → SVC-AUTON-CLOUD | api: Conversación y operaciones del puesto ligadas al caso y actor. CTR-DESPACHO-AGENTE-OPERATIVO; CTR-PPP-AJUSTE-CONVERSADO Ampliación preparada: CTR-PPP-INACTIVE-FIELDS; aplicabilidad explícita de campos inactivos y diagnóstico sanitizado. Publicación y lectura final pendientes. | codigo | [yod-portal/despacho3d/agent-workspace.mjs](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/agent-workspace.mjs) — Conversación y operaciones del puesto ligadas al caso y actor |
+| CON-DESPACHO-3D-PPP | SYS-DESPACHO-3D → SYS-POTENCIALES | embed: Tablero original con contexto compartido, escenario y revisión. CTR-PPP-AJUSTE-CONVERSADO Ampliación preparada: CTR-PPP-INACTIVE-FIELDS; aplicabilidad explícita de campos inactivos y diagnóstico sanitizado. Publicación y lectura final pendientes. | codigo | [yod-portal/despacho3d/project-station.mjs](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/project-station.mjs) — Tablero original con contexto compartido, escenario y revisión |
+| CON-MOTOR-PORTERO | SVC-AUTON-CLOUD → GAS-PORTERO | api: Identidad, contexto, objetivos y cola autorizados. CTR-DESPACHO-AGENTE-OPERATIVO Ampliación preparada: CTR-PPP-INACTIVE-FIELDS; aplicabilidad explícita de campos inactivos y diagnóstico sanitizado. Publicación y lectura final pendientes. | codigo | Identidad, contexto, objetivos y cola autorizados; [yod-portal/docs/arquitectura/ppp-presentaciones.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-presentaciones.md) — Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. |
+| CON-MOTOR-ESTADO | SVC-AUTON-CLOUD → STORE-AUTON-ESTADO | persistencia: Conocimiento y recibos por expediente con revisión. CTR-DESPACHO-CONOCIMIENTO | codigo | Conocimiento y recibos por expediente con revisión; [yod-portal/docs/arquitectura/ppp-presentaciones.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-presentaciones.md) — Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. |
+| CON-MOTOR-JEV | SVC-AUTON-CLOUD → EXT-JEV | integracion: Orientar y ordenar fuentes autorizadas. CTR-DESPACHO-BIBLIOTECA | codigo | Orientar y ordenar fuentes autorizadas |
+| CON-MOTOR-DRIVE | SVC-AUTON-CLOUD → EXT-DRIVE | lectura: Leer originales, documentos y pasajes del expediente. CTR-DESPACHO-BIBLIOTECA | codigo | Leer originales, documentos y pasajes del expediente |
+| CON-MOTOR-OPENAI | SVC-AUTON-CLOUD → EXT-OPENAI | integracion: Voz y herramientas con claves de servidor. CTR-DESPACHO-VOZ-BASICA | codigo | Voz y herramientas con claves de servidor |
+| CON-RENDER-MOTOR | EXT-RENDER → SVC-AUTON-CLOUD | alojamiento: Servicio y volumen persistentes en la versión efectiva. Alojamiento de un piloto; desplegar sólo en servicio existente. | declarado | Servicio y volumen persistentes en la versión efectiva |
+| CON-ESTADO-EXPORTACION | STORE-AUTON-ESTADO → SYS-DESPACHO-3D | lectura: Leer versiones, decisiones y exportación autorizadas. CTR-DESPACHO-CONOCIMIENTO | codigo | Leer versiones, decisiones y exportación autorizadas |
+| CON-DESPACHO-EXPORTAR-OBSIDIAN | SYS-DESPACHO-3D → EXT-OBSIDIAN | exportacion: Descarga manual de bóveda portable; no sincronización. CTR-DESPACHO-CONOCIMIENTO | codigo | [yod-portal/docs/arquitectura/despacho-conocimiento.md](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/docs/arquitectura/despacho-conocimiento.md) — Descarga manual de bóveda portable; no sincronización |
+| CON-BIBLIOTECA-NOTEBOOKLM | SYS-DESPACHO-3D → EXT-NOTEBOOKLM | propuesta: Consulta documental prevista, conexión sin verificar. Acceso/API/sincronización pendientes de comprobar. | propuesto | [yod-portal/despacho3d/entorno.mjs](https://github.com/yodesarrollomx/yod-portal/blob/5eca769947e60bc5b51389244393e0f63817cf86/despacho3d/entorno.mjs) — Consulta documental prevista, conexión sin verificar |
+| CON-SALA-SNAPSHOT-ONLINE | SYS-SALA → EXT-ACTIONS | publicacion: Snapshots privados de datos públicos y Pages con recibo verificable. CTR-SALA-SNAPSHOT-ONLINE: datos aprobados y validados, draft privado, hash y recibo exactos antes del montaje; CI de código separado y obligatorio. CHG-SALA-NUBE-20261015 integrado en PR308 con recibos FULL exactos y guardas run_id/attempt/presupuesto; flag incremental sigue OFF, sin activación de deltas acreditada. CTR-SALA-MEDIOS-PUBLICOS prepara imágenes nuevas y no cambia la privacidad de los snapshots. | ejecucion | [sala-edicion/nube/snapshots_online.py](https://github.com/yodesarrollomx/sala-edicion/blob/73902861db96d213a07f788996f50fdcf3c65566/nube/snapshots_online.py) — Run 38141812652 publicó la revisión acumulativa y esperó el recibo exacto de Pages run 38141874311; ambos success. ZIP permitido, bloqueo CAS y release permanece draft:true.; [sala-edicion/nube/snapshots_online.py](https://github.com/yodesarrollomx/sala-edicion/blob/e4da08887e45e984be8ea945ce607db464b0fb52/nube/snapshots_online.py) — PR308 integrado. Pages 38688574369, Pages de Plan 38688736093 y Pages de Revisión 38689030877 success con snapshots413444031/413458897/413460646 y recibos exactos. FULL operativo en el alcance inspeccionado; incremental OFF y offload no activado. |
+| CON-MARKETING-DATOS-ONLINE | SYS-MARKETING → EXT-ACTIONS | publicacion: Agregados públicos en rama de datos; UI de Pages conserva código aprobado. CTR-SALA-SNAPSHOT-ONLINE. Permiso nativo contents:write; compare-and-swap, hash y recibo antes de confirmar. Sin Administration:write. | ejecucion | [aurum-board/scripts/snapshots_online.py](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/scripts/snapshots_online.py) — Run 38141736288 success: actualizó y publicó 76 publicaciones de Meta, confirmó hash/recibo del HTTP real y conservó el snapshot como draft privado.; [aurum-board/metrics-online.js](https://github.com/yodesarrollomx/aurum-board/blob/6ad059cd1ed97edee894df5a9b2032d919143e0f/metrics-online.js) — LECTOR_ONLINE ok:true, posts:76, run_id:38141736288. El navegador recibe sólo agregados/covers y verifica SHA256. Plan rechazado mantiene último dato acreditado y señal de medición incompleta.; [aurum-board/metrics-online.js](https://github.com/yodesarrollomx/aurum-board/blob/e3dd428a01b01d1c8b5775c7fcca408735c98357/metrics-online.js) — PR78 integrado; run 38157069665 success. Plan lectura confirmada con hash y frescura; leads_medicion_caida=false, 76 publicaciones Meta. El lector HTTP comprueba bytes/recibo de snapshot409795880. |
+| CON-PLAN-SHEETS-ONLINE | SHEET-PLAN-POTENCIAL → SYS-SALA | lectura: Lectura de Plan por cuenta de servicio y salida agregada. CTR-PLAN-AGREGADOS-ONLINE; identidad sólo lectora, columnas permitidas y ningún registro de cliente en salida. | ejecucion | [sala-edicion/nube/plan_agregados.py](https://github.com/yodesarrollomx/sala-edicion/blob/a3b6c7053b3cd26333dd06878e74bb666288ce51/nube/plan_agregados.py) — PR266/267/268 integrados. Run 38156397507 success: cuenta de servicio existente con permiso lector, consulta autenticada GViz sólo cuando Sheets API está deshabilitada, columnas permitidas, exclusión de prueba y publicación verificada. Fuente no modificada. |
+| CON-PLAN-METRICAS-ONLINE | SYS-SALA → SYS-MARKETING | lectura: Marketing consume agregados de Plan publicados con hash. CTR-PLAN-AGREGADOS-ONLINE; recibo exacto, frescura y no sustituir errores por cero. | ejecucion | [aurum-board/scripts/pull_metrics.py](https://github.com/yodesarrollomx/aurum-board/blob/e3dd428a01b01d1c8b5775c7fcca408735c98357/scripts/pull_metrics.py) — PR78 integrado; run 38157069665 success. Plan lectura confirmada con hash y frescura; leads_medicion_caida=false, 76 publicaciones Meta. El lector HTTP comprueba bytes/recibo de snapshot409795880. |
+| CON-SALA-RECONEXION-MEDIOS | SVC-SALA-EJECUTOR → GAS-SALA | conciliacion: Mantenimiento limitado de evidencia de voces originales recuperadas. CTR-SALA-RECONECTAR-MEDIOS; sólo evidencia técnica con archivo original exacto, sin estados ni decisiones. | ejecucion | [sala-edicion/nube/medios_reconexion.py](https://github.com/yodesarrollomx/sala-edicion/blob/159d932cd81c2d2c3fda31a862ea60fc0b3ae667/nube/medios_reconexion.py) — PR269 integrado. Run38159239581 success: dos voces originales recuperadas verificadas por MD5/SHA256/tamaño y dos referencias técnicas de COLA actualizadas y leídas de vuelta. Todos los campos operativos/aprobaciones conservados; acuse privado subido y releído byte exacto. |
+| CON-BROKER-PREEVALUATION | SYS-INVERSION → GAS-PORTERO | api: Preevaluación y retorno de terreno a cartera. POST autenticado valida alcance con brokers_snapshot de CRM; liga corta de un solo uso abre evaluador. Regreso contiene sólo ID; lectura exige sesión vigente y cartera autorizada. Alta CRM usa brokers_save existente y confirmación explícita. | codigo | [yodesarrollo-board/brokers-evaluator.js](https://github.com/yodesarrollomx/yodesarrollo-board/blob/4774888ede9caf53684ed7509d36ef7ffe1e126e/brokers-evaluator.js) — PR12 integrado: lanzamiento de un solo uso y retorno autorizado; backend v92 publicado, flujo individual comprobado con servicios sintéticos. |
+| CON-SALA-CORREO-ONLINE | GAS-SALA → EXT-GMAIL | correo: Correo diario y entrada al destinatario existente. CTR-SALA-CIERRE-ONLINE; destinatario/compuertas existentes y comprobación por alcance. CHG-SALA-NUBE-20261015 propone conteos históricos y producido/publicado separados; fuente GAS desplegada por comprobar. | ejecucion | [sala-edicion/nube/correo_estado.py](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/nube/correo_estado.py) — Bitácora del backend registra correo diario tres días a07:13Hermosillo; solicitud de entrada38166137118 aceptada y acuse privado byte-verificado. Recepción en Gmail y fuente/inventario completo de disparadores siguen sin verificar. |
+| CON-SALA-CIERRE-ONLINE | SVC-SALA-EJECUTOR → EXT-ACTIONS | automatizacion: Cierre, activación acotada y comparación aislada. CTR-SALA-CIERRE-ONLINE; destinatario/compuertas existentes y comprobación por alcance. | ejecucion | [sala-edicion/docs/SALA-CIERRE-ONLINE.md](https://github.com/yodesarrollomx/sala-edicion/blob/4582fc3c42a2ac8459dea7d553c42f9719f07962/docs/SALA-CIERRE-ONLINE.md) — PR270/271 y run38166137118 acreditan cierre, productor/ejecutor y comparación aislada con16 archivos privados byte-verificados. Correo diario registrado y entrada aceptada; recepción y equivalencia completa pendientes. |
+| CON-SALUD-ACCESOS | SYS-CONTROL → SYS-POTENCIALES | observacion: Informe técnico por proceso visible en Accesos. CTR-SALUD-ACCESOS; resultados con alcance, vigencia y evidencia; ninguna operación de negocio por la sonda. | codigo | Solicitud explícita de Dirección el11-oct-2026; implementación pendiente.; [yod-portal/docs/SALUD-SISTEMAS.md](https://github.com/yodesarrollomx/yod-portal/blob/de33d90af87e9b5b225b0405841145348d42b8b0/docs/SALUD-SISTEMAS.md) — Frontend Accesos publicado byte exacto y8 recorridos aislados. Validación real del usuario al abrir conserva su autoridad; no certificar el rol personal por pruebas sintéticas. |
+| CON-SALUD-SALA | SYS-SALA → SYS-CONTROL | observacion: Lecturas agregadas y canario aislado de Sala. CTR-SALUD-ACCESOS; resultados con alcance, vigencia y evidencia; ninguna operación de negocio por la sonda. | ejecucion | Solicitud explícita de Dirección el11-oct-2026; implementación pendiente.; [yod-portal/docs/SALUD-SISTEMAS.md](https://github.com/yodesarrollomx/yod-portal/blob/de33d90af87e9b5b225b0405841145348d42b8b0/docs/SALUD-SISTEMAS.md) — Monitor38170852821 y canario38170259463 success; resultados técnicos y fuentes leídas realmente, con alcance/caducidad.40 correctos,59 pendientes; sin operaciones comerciales como prueba. |
+| CON-SALUD-ACTIONS | SYS-CONTROL → EXT-ACTIONS | observacion: Pruebas programadas y evidencia de ejecución. CTR-SALUD-ACCESOS; resultados con alcance, vigencia y evidencia; ninguna operación de negocio por la sonda. | ejecucion | Solicitud explícita de Dirección el11-oct-2026; implementación pendiente.; [yod-portal/docs/SALUD-SISTEMAS.md](https://github.com/yodesarrollomx/yod-portal/blob/de33d90af87e9b5b225b0405841145348d42b8b0/docs/SALUD-SISTEMAS.md) — Monitor38170852821 y canario38170259463 success; resultados técnicos y fuentes leídas realmente, con alcance/caducidad.40 correctos,59 pendientes; sin operaciones comerciales como prueba. |
+| CON-HORARIOS-RENDER | EXT-RENDER → SVC-HORARIOS-CLOUD | integracion: Alojar un vigilante ligero dentro del servicio existente. CTR-HORARIOS-NUBE | ejecucion | Prioridad1 autorizada; implementação y aceptación real por separado.; Vigilancia residente en servicio existente; dos ciclos reales y versión exacta. No acredita despacho por App. |
+| CON-HORARIOS-ESTADO | SVC-HORARIOS-CLOUD → STORE-HORARIOS-CLOUD | integracion: Reservas durables y configuración privada cifrada. CTR-HORARIOS-NUBE | ejecucion | Prioridad1 autorizada; implementação y aceptación real por separado.; Persistencia del informe técnico cifrado/readback; no acredita efectos de negocio o reservas reales de despacho. |
+| CON-HORARIOS-ACTIONS | SVC-HORARIOS-CLOUD → EXT-ACTIONS | integracion: Observar ejecuciones y recuperar horarios omitidos con GitHub App. CTR-HORARIOS-NUBE | codigo | Prioridad1 autorizada; implementação y aceptación real por separado.; Código entregado y probado con dobles; instalación personal y recuperación real pendientes. |
+| CON-HORARIOS-ACCESOS | SVC-HORARIOS-CLOUD → SYS-CONTROL | integracion: Resultados sanitizados observados desde Accesos. CTR-HORARIOS-NUBE | codigo | Prioridad1 autorizada; implementação y aceptación real por separado.; [yod-portal/os/yod-salud.js](https://github.com/yodesarrollomx/yod-portal/blob/9b2e5f4497878223aba26531076c64894e17823e/os/yod-salud.js) — Cliente publicado y doce recorridos aislados; sesión administradora personal no operada por el agente. |
+| CON-BANDEJA-TAREAS | GAS-BANDEJA-NUBE → SHEET-OPERACION | persistencia: Leer BANDEJA y añadir resultados al mismo libro. CTR-BANDEJA-NUBE | codigo | CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.; Código publicado; su compuerta o consentimiento reales todavía no se acreditan. |
+| CON-BANDEJA-GMAIL | GAS-BANDEJA-NUBE → EXT-GMAIL | api: Borradores y envíos aprobados por API. CTR-BANDEJA-NUBE | codigo | CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.; Código publicado; su compuerta o consentimiento reales todavía no se acreditan. |
+| CON-BANDEJA-IA | GAS-BANDEJA-NUBE → EXT-OPENAI | api: Redactar cambios con API de pago por uso. CTR-BANDEJA-NUBE | codigo | CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.; Código publicado; su compuerta o consentimiento reales todavía no se acreditan. |
+| CON-BANDEJA-RECIBOS | GAS-BANDEJA-NUBE → STORE-BANDEJA-RECIBOS | persistencia: Intención durable antes del efecto. CTR-BANDEJA-NUBE | codigo | CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.; Código publicado; su compuerta o consentimiento reales todavía no se acreditan. |
+| CON-BANDEJA-SALUD | GAS-BANDEJA-NUBE → SVC-HORARIOS-CLOUD | observacion: Recibo técnico leído por el vigilante y mostrado en Accesos. CTR-BANDEJA-NUBE | codigo | CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.; Render publicó seis comprobaciones de Bandeja pendientes, en el mismo servidor. Pruebas públicas de lectura y bytes separadas del consentimiento y la ejecución Google. |
+| CON-BANDEJA-PORTERO | GAS-BANDEJA-NUBE → GAS-PORTERO | autorizacion: Revalidar identidad de Dirección para aprobar y antes de enviar. CTR-BANDEJA-NUBE | codigo | Permiso privado ligado a sesión real, tarjeta, huella y última aprobación; veto aparte de comentarios. Regresiones sintéticas aprobadas; consentimiento y sesión real pendientes.; Código publicado; su compuerta o consentimiento reales todavía no se acreditan. |
+| CON-INVESTOR-STORY-TEXTS | SYS-INVERSION → GAS-PLAN-POTENCIAL | lectura: Lee copy público de presentación por recurso=textos. CTR-INVESTOR-STORY1; contenido comercial exclusivamente; fallo visible sin respaldo de datos privados. | propuesto | [plan-potencial/index.html](https://github.com/yodesarrollomx/plan-potencial/blob/78e616f858ad593f16891d2f5158cd46d5617bc2/index.html#L1244) — GET de textos comerciales ya utilizado por la landing pública; propuesta de consumo por la primera escena de inversión. |
+| CON-SALA-IMAGEN-OPENAI | SVC-SALA-PRODUCTOR → SVC-AUTON-CLOUD | api: Imagen para Sala con modelo fijo y recibo. CTR-SALA-IMAGEN-OPENAI-NUBE | propuesto | Propuesta autorizada para usar el servicio existente, aún sin prueba de generación. |
+| CON-SALA-HIDREAM | SVC-SALA-PRODUCTOR → EXT-MOTORES-MEDIA | api: Fotografía HiDream oficial con adaptadores I1 y O1 y recibos. CTR-SALA-HIDREAM Rechazo terminal explícito sin imagen permite reintento posterior con negativa privada; resultado incierto sólo conciliación. O1 es una selección explícita después de prueba real, no respaldo pagado; cambio de política distingue nuevas tomas de envíos I1 inciertos. | propuesto | Lote real38342683066 en rama operativa; integración recurrente propuesta. |
+| CON-BROKERS-PPP-SAVED | SYS-INVERSION → GAS-PORTERO | lectura: Resumen guardado de PPP por expediente. CTR-BROKERS-MINI-CRM; GET recurso=caso&id&tipo con sesión existente. No recalcular escenarios ni guardar. | propuesto | Consumo propuesto del mismo contrato empleado por el PPP; lectura autorizada y campos guardados se comprobarán por separado. |
+| CON-SALA-MEDIOS-PUBLICOS | SYS-SALA → EXT-ACTIONS | publicacion: Imágenes nuevas en releases públicos inmutables con manifiesto fijado por recibo. CTR-SALA-MEDIOS-PUBLICOS: fase1 sólo nuevas imágenes; lector primero, pin SHA256 de bytes exactos, verificación anónima, journal de mutación e inmutabilidad antes de SALA_MEDIOS_PUBLICOS=1. Emisor OFF; conexión no comprobada en ejecución. | propuesto | Diseño local en docs/arquitectura/sala-medios-publicos-20261015.md y schema 1 acordado por UI/snapshots/almacén. Sin release/asset, canario, activación o despliegue acreditado. |
+| CON-PPP-CARTERA-LECTURA | SYS-POTENCIALES → GAS-CRM | api: Lee expedientes previos al PPP y su historial autorizado. brokers_snapshot autenticado; mismos registros/ACL de brokers.v1; sin escrituras ni datos privados en Git. | propuesto | [yod-portal/docs/arquitectura/ppp-cartera-lectura.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-cartera-lectura.md) — Propuesta de lector brokers_snapshot sobre brokers.v1 existente; no acredita sesión privada real. |
+| CON-PPP-ETAPAS-INTENCION | SVC-AUTON-CLOUD → SYS-POTENCIALES | api: Propone etapas desde la intención final y contexto vigente. Conserva caso, escenario, revisión e identidad de la operación. El agente estructura el encargo; no recibe autoridad de escritura por la conversación ni implementa cálculo financiero. Escritura y recibo permanecen en el contrato autorizado de PPP. | propuesto | [yod-portal/docs/arquitectura/ppp-ficha-etapas.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-ficha-etapas.md) — Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. |
+| CON-PPP-ETAPAS-ESCRITURA | SYS-POTENCIALES → GAS-PORTERO | api: Solicita etapas y relee coherencia del modelo. Extensión propuesta sheet-stages en Portero existente: caso_id/escenario_id/revision_esperada/request_id y stages schema1 con count, duration_months, mode sequential y allocation preserve. Validar actor, capacidades y revisión; devolver stages_by_scenario, stage_receipt.calculated y checks del mismo modelo. PPPStages.gs/PPPStagesProgram.gs preparados por separado; host vigente y readback productivo pendientes. | propuesto | [yod-portal/docs/arquitectura/ppp-ficha-etapas.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-ficha-etapas.md) — Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. |
+| CON-PPP-PRESENTACIONES-JOB | SYS-POTENCIALES → SVC-AUTON-CLOUD | api: Encarga storyboard desde la versión visible. Transporte autorizado existente; request_id, identidad PPP/expediente, escenario visible y revisiones. El servidor confirma fuente y reserva durable antes de ejecutar. Ruta concreta y activación por comprobar. | propuesto | [yod-portal/docs/arquitectura/ppp-presentaciones.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-presentaciones.md) — Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. |
+| CON-PRESENTACIONES-REGISTRO | SVC-AUTON-CLOUD → GAS-SALA | api: Registra versión privada con origen y recibo. Extensión acotada del registro existente: presentation_id, versión de contenido, snapshot_hash, job/request_id y revisión esperada. Idempotencia, concurrencia y autorización antes del efecto. | propuesto | [yod-portal/docs/arquitectura/ppp-presentaciones.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-presentaciones.md) — Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. |
+| CON-PPP-PRESENTACIONES-LISTA | SYS-POTENCIALES → GAS-SALA | api: Consulta las presentaciones de ese PPP y revisión. Vista privada del catálogo existente, filtrada por caso/escenario/revisión y permiso. Sin catálogo paralelo ni publicación implícita. | propuesto | [yod-portal/docs/arquitectura/ppp-presentaciones.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-presentaciones.md) — Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. |
+| CON-MD-PRESENTACIONES-PPP | SYS-INVERSION → GAS-SALA | api: Abre el mismo historial de presentación y origen PPP. Mismo registro de versiones y URL canónica; origen, versión editorial y estado visibles. Proyección visitante separada del guion/contexto privado. | propuesto | [yod-portal/docs/arquitectura/ppp-presentaciones.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-presentaciones.md) — Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. |
+| CON-EMD-CONTINUOUS-BACKUP | GAS-EMD → EXT-DRIVE | respaldo: Propuesta: respaldo privado de administración. CTR-EMD-CONTINUOUS-ADMIN: respaldo privado verificado antes de cambios administrativos; sin creación en lecturas, ampliación de ACL o restauración ciega. | propuesto | Extensión administrativa propuesta sobre los servicios privados existentes; ejecución no acreditada. |
+| CON-SALA-RESUMEN-OS | SYS-SALA → SYS-YOD-OS | lectura: Cuántas publicaciones hay listas para lanzar (llave local sala_resumen_v1, mismo origen). La Sala escribe en el almacenamiento del navegador {listas: entero, cuando: milisegundos} cuando su hoja contesta y lo borra con su copia local. YOD OS sólo lee, con sesión validada; acepta 0 a 999 y hasta siete días; fuera de eso muestra texto fijo. Sin títulos, textos, llaves ni red. No es una cifra en vivo ni un permiso. | codigo | [yod-portal/os/app.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/app.js) — salaListas() y pintarSalaListas(): lectura local validada y texto fijo de respaldo.; [sala-edicion/sala-salida.js](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/sala-salida.js) — recordar() escribe sala_resumen_v1 y olvidar() lo borra (PR 383, pendiente de fusión al registrar). |
+| CON-GRAFO-ACCESOS | SYS-CONTROL → SYS-POTENCIALES | observacion: Grafo del sistema en Accesos: versión aprobada, borrador y estado de cada pieza. CTR-GRAFO-VERSIONES; sólo lectura de archivos estáticos y de la rama de datos; visible con sesión de admin. Si un archivo falta, la sección lo dice y no inventa estado. | ejecucion | [potenciales-yod/grafo-control.js](https://github.com/yodesarrollomx/potenciales-yod/blob/685ed2ccb0e1d7cf1224fe4216bc071349e7751c/grafo-control.js) — Fusionado en los PR 61, 69 y 74. Visto en vivo el 12-nov-2026 con la sesión de admin de Dirección: el grafo aprobado al final de Accesos, también cuando la lista de usuarios tarda (PR 74). |
+| CON-GRAFO-ACTIONS | SYS-CONTROL → EXT-ACTIONS | automatizacion: Rehacer el grafo a pedido y vigilar su estado cada hora. CTR-GRAFO-VERSIONES; el pedido es un issue de alguien con permiso de escritura; el resultado es un PR de borrador, nunca una escritura directa a la rama principal. La vigilancia sólo lee la API de GitHub y páginas estáticas. | ejecucion | [potenciales-yod/.github/workflows/grafo-rehacer.yml](https://github.com/yodesarrollomx/potenciales-yod/blob/685ed2ccb0e1d7cf1224fe4216bc071349e7751c/.github/workflows/grafo-rehacer.yml) — Ciclo completo el 12-nov-2026: pedido, borrador en el PR 71, aprobación y publicación de G-20261112-1203 con una sola línea de aprobación y sin falso «cambió». Aprobar son dos toques porque GitHub retiene las pruebas de un PR abierto por un flujo: «Approve workflows to run» y luego «Merge pull request».; [potenciales-yod/.github/workflows/grafo-estado.yml](https://github.com/yodesarrollomx/potenciales-yod/blob/685ed2ccb0e1d7cf1224fe4216bc071349e7751c/.github/workflows/grafo-estado.yml) — La vigilancia corre por cambios y por horario; al registrar sólo se había observado una corrida por horario (16:01Z). La regularidad del reloj y la chinche automática ante una falla nueva están por comprobar. |
+| CON-PRESENTACION-GRAFO | SYS-INVERSION → SYS-POTENCIALES | lectura: Lee el grafo aprobado (recetas por audiencia y contrato del plan) para armar presentaciones y avisar si hay otra versión en trabajo. CTR-GRAFO-VERSIONES; lectura sin credenciales de archivos estáticos. El plan guardado se lee aparte, con sesión, por CON-BROKERS-PPP-SAVED. Si falta el grafo, la página lo dice y no arma nada; el aviso no pinta nada. | ejecucion | [yodesarrollo-board/presentacion/grafo/app.mjs](https://github.com/yodesarrollomx/yodesarrollo-board/blob/888cbd0d611f777c0214daa2359bfbecc3f0b490/presentacion/grafo/app.mjs) — Fusionado en el PR 69. Visto en vivo el 12-nov-2026: el ejemplo (?demo=1) lee el grafo aprobado G-20261112-1203 y arma las tres audiencias. Por comprobar: un plan real con una sesión real y la pastilla de aviso con un borrador abierto. |
+| CON-GRAFO-IA | EXT-ACTIONS → EXT-OPENAI | api: Explicación de los cambios del grafo con OpenAI; se usa la primera respuesta válida entre los proveedores con clave. Se envían sólo diferencias del grafo público (cuentas y nombres de piezas); la respuesta se valida contra un esquema fijo. Sin clave o sin respuesta, el grafo se rehace igual. Costo por uso. El otro proveedor es Claude por API (CON-GRAFO-IA-CLAUDE, EXT-ANTHROPIC). | codigo | [potenciales-yod/grafo-motor/ia.py](https://github.com/yodesarrollomx/potenciales-yod/blob/e3217cca26d63fbaa65cf90b50c3a2958af0ad13/grafo-motor/ia.py) — Código fusionado. Sin uso comprobado: al registrar, el flujo sólo tiene la clave de Claude, así que OpenAI no ha contestado ninguna vez. |
+| CON-PPP2-SERVIDOR | SYS-PPP2 → GAS-PPP2 | api: Lee el vivero y el plan; envía datos, respuestas, palancas, aprobaciones y pruebas. CTR-PPP2 | codigo | [potenciales-yod/ppp2.js](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/ppp2.js) — fetch al /exec de PPP 2 con la sesión del Portero |
+| CON-PPP2-PORTERO | GAS-PPP2 → GAS-PORTERO | lectura: Canje de sesión con board=PT; el respaldo sólo si el original falla en esa llamada. Contrato de canje del Portero (recurso=canje) sin cambios | codigo | [potenciales-yod/server/ppp2/PPP2.gs](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/server/ppp2/PPP2.gs) — canje_ con caché de 10 minutos |
+| CON-PPP2-LIBROS | GAS-PPP2 → SHEET-PPP2 | persistencia: Lee el resumen y las tablas; escribe celdas permitidas y la bitácora. CTR-PPP2 | codigo | [potenciales-yod/server/ppp2/PPP2.gs](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/server/ppp2/PPP2.gs) — SpreadsheetApp sobre el vivero y los libros |
+| CON-PPP2-DRIVE | GAS-PPP2 → EXT-DRIVE | persistencia: Copia la plantilla al sembrar un plan. Copia en la carpeta del vivero | codigo | [potenciales-yod/server/ppp2/PPP2.gs](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/server/ppp2/PPP2.gs) — DriveApp.makeCopy de la plantilla |
+| CON-GRAFO-IA-CLAUDE | EXT-ACTIONS → EXT-ANTHROPIC | api: Explicación de los cambios del grafo con Claude por API; se usa la primera respuesta válida entre los proveedores con clave. Se envían sólo diferencias del grafo público (cuentas y nombres de piezas). Respuesta por herramienta con esquema fijo y un segundo intento si llega mal formada. Sin clave o sin respuesta, el grafo se rehace igual. Costo por uso. | ejecucion | [potenciales-yod/grafo-motor/ia.py](https://github.com/yodesarrollomx/potenciales-yod/blob/e3217cca26d63fbaa65cf90b50c3a2958af0ad13/grafo-motor/ia.py) — Petición con herramienta y esquema fijo, y reintento.; [potenciales-yod/.github/workflows/grafo-rehacer.yml](https://github.com/yodesarrollomx/potenciales-yod/blob/685ed2ccb0e1d7cf1224fe4216bc071349e7751c/.github/workflows/grafo-rehacer.yml) — Corridas 43283429071 y 43286094367 del 12-nov-2026 con explicación de Claude (ia=claude en el registro). |
+| CON-GRAFO-APP | EXT-ACTIONS → EXT-GRAFO-APP | automatizacion: El flujo «Grafo · rehacer» abre el PR del borrador con el token de la App del grafo. CTR-GRAFO-VERSIONES; el token vale una hora, sólo para este repositorio, con escritura de contenido y PR, y sólo se usa para la rama grafo-borrador y su PR. Sin los secretos, todo sigue con la credencial del flujo (dos toques). | ejecucion | [potenciales-yod/.github/workflows/grafo-rehacer.yml](https://github.com/yodesarrollomx/potenciales-yod/blob/6b5cc19a0ff4cecc17ff230e843de853df2045e2/.github/workflows/grafo-rehacer.yml) — Uso del token de la App sólo en el paso del borrador.; [potenciales-yod/.github/workflows/grafo-rehacer.yml](https://github.com/yodesarrollomx/potenciales-yod/blob/6b5cc19a0ff4cecc17ff230e843de853df2045e2/.github/workflows/grafo-rehacer.yml) — PR 97 abierto por yod-grafo-borrador[bot]; aprobado con un toque. |

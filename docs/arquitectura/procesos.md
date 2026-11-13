@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-03.55-jev-piloto · 2026-10-03.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-13.jev-consultas.1 · 2026-10-20.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
@@ -216,7 +216,7 @@ Evidencia: [yod-despacho/EJECUTOR.md](https://github.com/yodesarrollomx/yod-desp
 
 ## PROC-CONTENIDO · Producción de contenido con compuertas
 
-Estado: codigo.
+Estado: ejecucion.
 
 ```mermaid
 flowchart TD
@@ -242,9 +242,9 @@ flowchart TD
 | 5. Aprobación final | Editor | SYS-SALA, GAS-SALA, EXT-ACTIONS | Correcciones → Aprobación final | manual |
 | 6. Publicación y medición por verificar | Marketing | SYS-SALA, GAS-SALA, EXT-ACTIONS | Aprobación final → Publicación y medición por verificar | pendiente |
 
-Vacíos: Atribución pieza a lead y venta no comprobada; Migración histórica a nube necesita reconciliación de dependencias; Atribución campaña/pieza a leads/citas sí existe en Marketing; cierre a venta/margen no comprobado; No se comprobaron reglas habilitadas, secrets, cuotas, cola ni ejecución viva; fuente presente no prueba producción.
+Vacíos: Atribución pieza a lead y venta no comprobada; Migración histórica a nube necesita reconciliación de dependencias; Atribución campaña/pieza a leads/citas sí existe en Marketing; cierre a venta/margen no comprobado; Sala: reglas, cola y ejecución viva contrastadas en el recorrido inspeccionado; cuota y disponibilidad de todos los respaldos/motores y publicación a redes siguen sin certificarse.; Desacoplamiento editorial/producción corregido: las cinco decisiones inspeccionadas dieron nuevas tarjetas. Falta aceptación editorial de las nuevas láminas, terminar las etapas aprobables y conciliar siete fallos históricos sin reactivarlos automáticamente.; Cuotas limitadas observadas en Cloudflare/Gemini imagen; HF ruta antigua410 y automático402. Pollinations720×960 corregido y probado con motor real; no certifica disponibilidad permanente de todos los proveedores.; Tras el lote inspeccionado quedan18 láminas anteriores por preparar y7 fallos históricos por conciliar. Las nuevas láminas requieren aprobación editorial antes de sus etapas y cortes.; Tiny SD retirado de generación/respaldo/revisión por Dirección. La falta de cuota de motores permitidos conserva las regeneraciones pendientes; el primer lote observado tuvo7 sin toma, sin suplirlas con el modelo retirado.; CHG-SALA-NUBE-20261015: reparación técnica autorizada registrada; integración, compatibilidad histórica, recibo de Pages, fuente de correo viva y conciliación de chinches deben comprobarse por separado. Un dispatch no acredita producción o cumplimiento..
 
-Evidencia: [sala-edicion/CLAUDE.md](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/CLAUDE.md#L29) — Compuerta de aprobación humana; [sala-edicion/nube/sala_cliente.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_cliente.py#L42) — Decisiones humanas protegidas en cliente de nube; [sala-edicion/nube/sala_productor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_productor.py#L130) — Planificación en fuente versionada; [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_ejecutor.py#L48) — Etapas configurables.
+Evidencia: [sala-edicion/CLAUDE.md](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/CLAUDE.md#L29) — Compuerta de aprobación humana; [sala-edicion/nube/sala_cliente.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_cliente.py#L42) — Decisiones humanas protegidas en cliente de nube; [sala-edicion/nube/sala_productor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_productor.py#L130) — Planificación en fuente versionada; [sala-edicion/nube/sala_ejecutor.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_ejecutor.py#L48) — Etapas configurables; [sala-edicion/nube/sala_produccion.py](https://github.com/yodesarrollomx/sala-edicion/blob/dd62430eda613b73b703a3b9052214cbdd432ea7/nube/sala_produccion.py#L1) — Fuente de producción canónica recupera propuestas activas con decisiones vigentes, selección explícita y referencias; [sala-edicion/.github/workflows/sala-recorrido.yml](https://github.com/yodesarrollomx/sala-edicion/blob/0db8a5432a76f9d91fb7562714e30d0c8ee0b196/.github/workflows/sala-recorrido.yml#L1) — Run38204774271: montaje real de siete tarjetas incluidas cinco decisiones recientes; escena y voz durables, aceptación editorial pendiente; [sala-edicion/nube/motores/imagen.py](https://github.com/yodesarrollomx/sala-edicion/blob/0db8a5432a76f9d91fb7562714e30d0c8ee0b196/nube/motores/imagen.py#L1) — Prueba38207824685: pedido720×960 entregó foto en2.76s;1080×1440 respondió402. Proveedores primarios limitados en las pruebas actuales.; [sala-edicion/nube/motores/imagen.py](https://github.com/yodesarrollomx/sala-edicion/blob/1b555ccad93b66fbc21432f7294061defc681a90/nube/motores/imagen.py#L1) — Run38208936448: motor real, reglas frescas, respaldo operativo3.23s y recorte4:5 comprobado; sin escritura de negocio.; [sala-edicion/politica-imagen.json](https://github.com/yodesarrollomx/sala-edicion/blob/02b06521575ea6b938a7af7350dcae9bb6ea54ab/politica-imagen.json#L1) — Veto publicado de Tiny SD; prueba38287509000 filtró21 opciones de28 láminas pendientes,0 vetadas visibles. Referencias aprobadas y votos preservados.; Ampliación técnica autorizada por Dirección en la conversación actual: recuperación de transporte, publicación acumulativa, correo trazable y conciliación de chinches. Registro previo; la fuente no acredita despliegue. Registro local: docs/arquitectura/sala-nube-20261015.md..
 
 ## PROC-COBRO · Cobranza y caja
 
@@ -465,3 +465,122 @@ flowchart TD
 Vacíos: La duración depende también del arranque de Google y la conexión. La medición de peso no garantiza una latencia universal.; El almacén permite vincular identidad y respuestas: confidencialidad y acceso restringido no equivalen a anonimato..
 
 Evidencia: Diseño autorizado; publicación y prueba real pendientes.
+
+## PROC-BROKER-PREEVALUATION · Preevaluar un terreno desde Masterbrokers
+
+Estado: codigo.
+
+```mermaid
+flowchart TD
+  p0["Abrir preevaluación desde cartera · Masterbroker"]
+  p1["Localizar y trazar inmueble · Masterbroker"]
+  p0 -.-> p1
+  p2["Guardar expediente · Masterbroker"]
+  p1 -.-> p2
+  p3["Registrar oportunidad con preevaluación · Masterbroker"]
+  p2 -.-> p3
+```
+
+| Paso | Responsable | Componentes | Entrada → salida | Ejecución |
+|---|---|---|---|---|
+| 1. Abrir preevaluación desde cartera | Masterbroker | SYS-INVERSION, GAS-CRM, GAS-PORTERO | Sesión vigente → Cartera autorizada | automatico |
+| 2. Localizar y trazar inmueble | Masterbroker | SYS-POTENCIALES, GAS-PORTERO | Ubicación y trazos → Mediciones y contexto de zona | manual |
+| 3. Guardar expediente | Masterbroker | GAS-PORTERO, EXT-DRIVE | Mediciones y supuestos → Preevaluación por broker | manual |
+| 4. Registrar oportunidad con preevaluación | Masterbroker | SYS-INVERSION, GAS-CRM, SHEET-CRM | Referencia autorizada y datos prellenados → Alta confirmada en cartera | manual |
+
+Vacíos: Los correos individuales deben estar vinculados canónicamente en CRM; Cobertura de fuentes de entorno variable; preevaluación no equivale a aprobación del plan.
+
+Evidencia: [yodesarrollo-board/brokers-evaluator.js](https://github.com/yodesarrollomx/yodesarrollo-board/blob/4774888ede9caf53684ed7509d36ef7ffe1e126e/brokers-evaluator.js) — PR12 integrado: lanzamiento de un solo uso y retorno autorizado; backend v92 publicado, flujo individual comprobado con servicios sintéticos..
+
+## PROC-BANDEJA-NUBE · Bandeja del Despacho con APIs de nube
+
+Estado: codigo.
+
+```mermaid
+flowchart TD
+  p0["Revisar encargos existentes cada cinco minutos · Ejecutor nube"]
+  p1["Preparar o rehacer borrador · Ejecutor nube"]
+  p0 --> p1
+  p2["Aprobar contenido y destinatarios · Dirección"]
+  p1 -.-> p2
+  p3["Reservar y enviar versión aprobada · Ejecutor nube"]
+  p2 --> p3
+  p4["Conciliar y observar funcionamiento · Ejecutor nube"]
+  p3 --> p4
+```
+
+| Paso | Responsable | Componentes | Entrada → salida | Ejecución |
+|---|---|---|---|---|
+| 1. Revisar encargos existentes cada cinco minutos | Ejecutor nube | GAS-BANDEJA-NUBE, SHEET-OPERACION | Libro efectivo y rutina instalada → Estado actual sin decisiones automáticas | automatico |
+| 2. Preparar o rehacer borrador | Ejecutor nube | GAS-BANDEJA-NUBE, EXT-GMAIL, EXT-OPENAI | Encargo o CAMBIO/RESPUESTA de Dirección → LISTO/REHECHO con huella | automatico |
+| 3. Aprobar contenido y destinatarios | Dirección | SYS-DESPACHO, SHEET-OPERACION | Versión exacta para revisar → APROBADO o veto | manual |
+| 4. Reservar y enviar versión aprobada | Ejecutor nube | GAS-BANDEJA-NUBE, STORE-BANDEJA-RECIBOS, EXT-GMAIL | Última aprobación vigente → Recibo o efecto incierto sin repetición | automatico |
+| 5. Conciliar y observar funcionamiento | Ejecutor nube | GAS-BANDEJA-NUBE, SVC-HORARIOS-CLOUD, SYS-CONTROL | Recibos reales y latido → Estado por alcance en Accesos | automatico |
+
+Vacíos: Consentimiento inicial de Google y confirmación del libro efectivo mediante sesión de Dirección.; Corte de la rutina Claude sólo después de dos ciclos de observación y pruebas; primer envío aprobado real se acredita por separado.; Si la rutina original captaba correos/creaba tarjetas, portar esas reglas antes de dar por sustituido su alcance; este ejecutor sólo procesa BANDEJA y cambios/respuestas existentes..
+
+Evidencia: CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.; Proceso de nube implementado con observación, aprobación privada, reserva y conciliación; publicación comprobada, ejecución Google pendiente..
+
+## PROC-PPP-PRESENTACIONES · Presentación versionada desde el PPP visible
+
+Estado: propuesto.
+
+```mermaid
+flowchart TD
+  p0["Elegir versión visible y encargar presentación · Persona autorizada"]
+  p1["Autorizar, releer y fijar snapshot privado · Servidor existente"]
+  p0 -.-> p1
+  p2["Preparar ADN y storyboard visual · Agente existente"]
+  p1 -.-> p2
+  p3["Validar y registrar versión con recibo · Agente y registro existentes"]
+  p2 -.-> p3
+  p4["Consultar la misma versión en PPP y Master Developer · Persona autorizada"]
+  p3 -.-> p4
+  p5["Revisar y ordenar etapa dos · Dirección"]
+  p4 -.-> p5
+```
+
+| Paso | Responsable | Componentes | Entrada → salida | Ejecución |
+|---|---|---|---|---|
+| 1. Elegir versión visible y encargar presentación | Persona autorizada | SYS-POTENCIALES | Caso, escenario visible y revisión confirmada → Solicitud con identidad estable y contexto conocido | manual |
+| 2. Autorizar, releer y fijar snapshot privado | Servidor existente | GAS-PORTERO, SHEET-PPP-MODELOS, SVC-AUTON-CLOUD, STORE-AUTON-ESTADO | Solicitud y sesión vigente → Snapshot inmutable y trabajo reservado o conflicto explícito | pendiente |
+| 3. Preparar ADN y storyboard visual | Agente existente | SVC-AUTON-CLOUD, STORE-AUTON-ESTADO, SYS-INVERSION | Snapshot y método fijados → Guion, escenas declarativas y dibujo navegable con evidencia | pendiente |
+| 4. Validar y registrar versión con recibo | Agente y registro existentes | SVC-AUTON-CLOUD, GAS-SALA | Artefacto privado, revisión base y lease vigente → Versión inmutable y recibo o pendiente de conciliación | pendiente |
+| 5. Consultar la misma versión en PPP y Master Developer | Persona autorizada | SYS-POTENCIALES, SYS-INVERSION, GAS-SALA | Identidad de presentación y permiso vigente → Historial, origen exacto y storyboard revisable | pendiente |
+| 6. Revisar y ordenar etapa dos | Dirección | SYS-INVERSION, SYS-DESPACHO | Storyboard de versión identificada y chinches → Instrucción expresa o correcciones; publicación sigue separada | manual |
+
+Vacíos: Implementación, integración y despliegue se verifican por separado; el registro de este flujo no habilita el botón.; La aprobación de etapa dos corresponde a cada storyboard revisado; no se deduce de la autorización para implementar la herramienta.; Faltantes materiales del brief se preguntan sólo cuando no estén disponibles en contexto autorizado..
+
+Evidencia: [yod-portal/docs/arquitectura/ppp-presentaciones.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-presentaciones.md) — Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards..
+
+## PROC-EMD-CONTINUOUS-IMPROVEMENT · Ciclo de evaluación y seguimiento de mejora
+
+Estado: propuesto.
+
+```mermaid
+flowchart TD
+  p0["Consultar campaña y cobertura · Coordinación reviewer"]
+  p1["Preparar personas y campaña · Actor con capacidad administrativa explícita"]
+  p0 -.-> p1
+  p2["Responder y confirmar evaluación · Participante asignado"]
+  p1 -.-> p2
+  p3["Revisar y activar política metodológica · Actor con capacidades separadas de método y activación"]
+  p2 -.-> p3
+  p4["Consultar distribuciones elegibles · Actor autorizado con viewResults"]
+  p3 --> p4
+  p5["Acordar y seguir acciones · Gestor autorizado y responsable de su acción"]
+  p4 -.-> p5
+```
+
+| Paso | Responsable | Componentes | Entrada → salida | Ejecución |
+|---|---|---|---|---|
+| 1. Consultar campaña y cobertura | Coordinación reviewer | SYS-EMD, GAS-EMD, SHEET-EMD | Sesión vigente y campaña seleccionada → Avance, cobertura y seguimiento confirmados con fecha y denominadores | automatico |
+| 2. Preparar personas y campaña | Actor con capacidad administrativa explícita | SYS-EMD, GAS-EMD, SHEET-EMD, EXT-DRIVE | Cambios revisados, contexto e identidades canónicas → Vista previa y operación respaldada con recibo o conflicto | manual |
+| 3. Responder y confirmar evaluación | Participante asignado | SYS-EMD, GAS-EMD, SHEET-EMD, STORE-EMD-DRAFTS | Instrumento/campaña compatibles y respuestas propias → Borrador o confirmación/cierre individual conforme a contratos existentes | manual |
+| 4. Revisar y activar política metodológica | Actor con capacidades separadas de método y activación | SYS-EMD, GAS-EMD, SHEET-EMD | Política versionada con universo/corte, audiencia, umbral y tratamiento explícitos → Versión activada inmutable o borrador pendiente; la configuración inicial permanece vacía | manual |
+| 5. Consultar distribuciones elegibles | Actor autorizado con viewResults | SYS-EMD, GAS-EMD, SHEET-EMD | Política activa y datos elegibles de campaña/instrumento compatibles → Histogramas por ítem o razón de indisponibilidad; NA/ausentes separados | automatico |
+| 6. Acordar y seguir acciones | Gestor autorizado y responsable de su acción | SYS-EMD, GAS-EMD, SHEET-EMD | Objetivo y seguimiento aportados con revisión vigente → Acción y eventos persistentes confirmados, sin inferir cumplimiento | manual |
+
+Vacíos: La definición metodológica oficial y su activación no se infieren de la autorización para desarrollar el sistema.; Capacidades de escritura/resultados se mantienen false hasta configuración explícita del actor autorizado.; La publicación del código, la versión de Apps Script y la operación con personas se verifican por separado.; No hay nuevos triggers, cron, invitaciones o automatizaciones creados por este proceso..
+
+Evidencia: Propuesta previa a implementación; datos, configuración y evidencia operativa privados..

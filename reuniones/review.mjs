@@ -1,0 +1,13 @@
+import {validateDelivery} from './delivery.mjs';
+import {mountResultsView} from './results-view.mjs';
+import {openLocalResults} from './results-local.mjs';
+export function mountReview(container,getCase=()=>null){
+ const el=(t,text)=>{const n=document.createElement(t);if(text!==undefined)n.textContent=text;return n;};
+ const heading=el('h2','Resultados y seguimiento'),input=el('input'),notice=el('p'),list=el('div'),host=el('div');input.type='file';input.accept='.json,application/json';input.setAttribute('aria-label','Importar ficha de resultados de la reunión');notice.setAttribute('role','status');
+ container.append(heading,el('p','Importa la ficha de resultados entregada por el asistente. Puedes revisar y conservar propuestas sin crear un PPP. Esta bandeja es local: conserva también la ficha en Drive.'),input,notice,list,host);
+ let store=null,view=null,generation=0;const ready=openLocalResults().then(s=>store=s).catch(()=>{notice.textContent='No se pudo abrir la copia local. Conserva tu ficha en Drive y vuelve a intentar.';});
+ async function refresh(){list.replaceChildren();if(!store)return;for(const row of await store.list()){const b=el('button',row.delivery.meeting.title+' · '+(row.delivery.meeting.case_id||'Sin PPP'));b.type='button';b.onclick=()=>{if(view?.isDirty()){notice.textContent='Guarda los cambios antes de abrir otra reunión.';return;}void store.list().then(rows=>show(rows.find(r=>r.id===row.id))).catch(e=>notice.textContent=e.message);};list.append(b);}}
+ function show(row){if(!row)return;view?.destroy();host.replaceChildren();let current=row;notice.textContent='Copia local disponible. No acredita archivo con el agente ni tareas MOAC.';view=mountResultsView({container:host,delivery:row.delivery,review:row.review,onReload:async()=>{try{show((await store.list()).find(r=>r.id===row.id));}catch(e){notice.textContent=e.message;}},onSave:async rows=>{current=await store.save(current.id,current.revision,rows);}});}
+ input.onchange=async()=>{const own=++generation;try{const f=input.files[0];if(!f)return;if(view?.isDirty())throw Error('Guarda los cambios antes de importar otra reunión.');if(f.size>200000)throw Error('La ficha es demasiado grande.');const d=validateDelivery(JSON.parse(await f.text()),getCase());await ready;if(own!==generation)return;if(!store)throw Error('Copia local no disponible. Conserva la ficha original.');const row=await store.import(d);if(own!==generation)return;await refresh();show(row);}catch(e){if(own===generation)notice.textContent=e.message;}finally{if(own===generation)input.value='';}};
+ void ready.then(refresh).catch(()=>{notice.textContent='No se pudo recuperar la copia local. Conserva la ficha de Drive.';});
+}

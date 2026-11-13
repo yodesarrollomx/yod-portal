@@ -1,0 +1,210 @@
+# Relevo del entorno del agente y la versión de oficina (El Despacho 3D)
+
+Documento para el siguiente agente o persona que continúe este trabajo. Está en un repositorio **público**: aquí no van datos de clientes, contactos, llaves ni identificadores reales. Última actualización: 2026-10-04.
+
+## 1. Qué se pidió y en qué orden
+
+Dirección pidió dos cosas: el **entorno del agente** (Gastón, el agente de cada expediente, se mueve entre espacios y cada espacio es una herramienta con su permiso y su registro de visitas) y la **versión de oficina** (el Despacho 3D como lugar de trabajo). El plan por bloques vive en el documento «15 · punto 13» del Drive de Dirección; resumen:
+
+| Bloque | Contenido | Estado |
+|---|---|---|
+| A | Cerrar lo iniciado (PR #64 de consultas PPP/uso de suelo, meta real) | Fuera de alcance por ahora: Dirección pidió dejar de hablar de metas. PR #64 no se mezcla sin su visto bueno |
+| B | Círculo de seis sectores | Hecho y publicado **apagado** (PR #69, #70, #71) |
+| C1 | Base del entorno: 9 espacios, permisos, registro de visitas | Hecho, **encendido** (PR #72, #74) |
+| C2 | La figura del agente camina entre espacios | Hecho, **encendido** (PR #73, #74) |
+| D1 | Sala de juntas: «Ver entregas por aprobar» (solo lectura) | Hecho, **encendido** (PR #75 y el PR que añade este documento) |
+| D2 | Centro de comunicación: WhatsApp y Gmail | **Pendiente** (ver §6) |
+| E | Biblioteca (NotebookLM), sala de navegación, suite de Drive | Pendiente |
+| F | Sala de edición y embudo comercial, oficina de Dirección, salón de usos múltiples, museo de maquetas | Pendiente |
+| G | Voz en tiempo real y ampliación de la biblioteca | Pendiente |
+
+Orden fijado por Dirección: cada función detrás de un interruptor, observar primero (solo lectura), y después la «versión de oficina».
+
+## 2. Interruptores y dónde apagar cada cosa
+
+Todo se apaga cambiando **una línea** y entregando un PR (o revirtiendo el PR correspondiente).
+
+`despacho3d/entorno-config.mjs`
+
+- `ENTORNO_ACTIVO` (hoy **true**): botón y hoja «Entorno» en el Despacho. Solo aparece con un perfil autorizado por el servidor. Apagar: `false`.
+- `ENTORNO_AGENTE_CAMINA` (hoy **true**): botones «Enviar al agente» y «Que el agente vuelva a su lugar». Apagar: `false`.
+- `ENTORNO_JUNTAS` (hoy **true**): «Ver entregas por aprobar» en la sala de juntas. Apagar: `false`.
+
+`despacho3d/circulo-config.mjs` (círculo de seis sectores, **apagado**)
+
+- `CIRCULO_ACTIVO` (false) y `CIRCULO_PENDIENTES_REALES` (false). Vista previa: `?circulo=1&pendientes=1`. Encenderlos solo con visto bueno de Dirección.
+
+Vistas previas aunque el interruptor esté apagado (siempre con perfil autorizado): `?entorno=1`, `&camina=1`, `&juntas=1`.
+
+Aviso: el botón «Entorno» aparece cuando el panel de Agentes ya cargó el perfil del caso (abrir «Agentes» una vez y esperar «Cargando expediente…»; tarda hasta ~30 s en frío).
+
+## 3. Arquitectura del código (despacho3d/)
+
+- `entorno.mjs`: catálogo `ESPACIOS` (9 espacios; cada uno con `lugar` = lugar existente del Despacho o `null` = por construir, `permiso`, `tope`, `etapa`), `PERMISOS`, `puedeActuar` (hoy nada concede más que «observar»), `crearRegistro` (visitas **en memoria** de la sesión), `crearEntorno` (hoja) y `montarEntorno` (botón, gating por perfil, vista previa por URL).
+- `entorno-ruta.mjs`: `puestoDe(lugar)`, `rutaEntre(a,b,permitido,limites)` (cuadrícula + A* + suavizado verificado con la misma función `allowed` de colisiones que usa la persona al caminar) y `crearAgenteIr`.
+- `avatars/office-pilot.mjs`: la figura del agente (posición inicial fija, no la puede fijar ningún expediente). Añade `recorrer`, `posicion`, `inicio`. Animación a 15 cuadros, se pausa con overlay, pestaña oculta o movimiento reducido.
+- `office.js`: expone `window.despacho.agenteIr` solo si el interruptor o `?camina=1`.
+- `circulo*.mjs`: círculo; `circulo-pendientes.mjs` lee metas con `readGoals` (solo lectura) y clasifica tarjetas; la sala de juntas lo reutiliza.
+- Pruebas: `tests/despacho-entorno.test.cjs`, `tests/despacho-entorno-ruta.test.cjs` (incluye una prueba con los muebles reales de `scene.js`), `tests/despacho-circulo*.test.cjs`.
+- Propuestas registradas: CHG-DESPACHO-CIRCULO-056/057/058, CHG-DESPACHO-ENTORNO-059, -MOVIMIENTO-060, -ENCENDIDO-061, -JUNTAS-062 y la de encendido de juntas (063).
+
+## 4. Reglas que no se negocian
+
+1. Repositorio público: nada de datos reales de clientes, contactos, llaves o exportaciones. Los nombres del caso llegan del perfil que autoriza el servidor, nunca del repo. La prueba `tests/despacho-public-assets.test.cjs` lo vigila.
+2. **WhatsApp y Gmail**: las pruebas salen **solo al número/correo de Dirección y con su confirmación en el chat**. Borrador primero; nada sale sin visto bueno. Contactos solo autorizados.
+3. El acceso al Despacho lo controla la matriz de Accesos (código DP); solo Dirección concede acceso. «Seleccionar una figura» nunca concede acceso.
+4. Cada cambio de motor o portal termina con un clic de Dirección. En esta sesión Dirección delegó el merge para PR **con interruptor apagado y checks verdes**, y pidió expresamente encender el entorno, el movimiento y la sala de juntas. Para cualquier otra cosa, preguntar antes de mezclar.
+5. La selección privada de Dirección del 7 de octubre sustituye la exclusión anterior del proyecto incorporado. Preparar los tres primeros autónomos conforme al registro privado y a `docs/arquitectura/despacho-autones-versiones.md`; el registro público no es fuente de altas. Siguen fuera el agente animal temporal y Casa Alysa.
+6. No volver a hablar de «metas duraderas» (reanudar la meta detenida, tarjetas de Jev en metas) salvo que Dirección lo pida.
+7. El auto-despliegue de Render está apagado. La rotación de la llave de TypeSafe está pospuesta (hay un recordatorio programado).
+
+## 5. Método de entrega (probado en esta sesión)
+
+Este repositorio protege `main`: hace falta PR con los checks «Arquitectura YOD» y «Verificar YOD OS / verificar».
+
+1. Sincronizar: `git fetch origin && git checkout main && git merge --ff-only origin/main`.
+2. Implementar con interruptor apagado (o encendido solo si Dirección lo pidió) y pruebas nuevas.
+3. Registrar la propuesta en `docs/arquitectura/modelo.json` (subir `revision`, añadir un cambio en `changes[]` con `id`, `components`, `proposal`, `status:"propuesto"`, `approval`, `tests`, `deployment`, `rollback`) y actualizar `architecture-impact.json` con la misma revisión. Formato del JSON: `json.dumps(..., ensure_ascii=False, indent=2) + "\n"`.
+4. **Cada archivo de prueba nuevo necesita su entrada en `path_ownership`** de `modelo.json` (`prefix` = ruta del archivo, `components` = `SYS-YOD-OS` y `SYS-DESPACHO`); si no, el check falla con «falta declarar impacto en SYS-TRACK».
+5. Regenerar vistas: `node scripts/arquitectura.cjs` y luego `--check`.
+6. Verificar: `node --test tests/*.cjs`, `node verify-os.cjs`, `node verify-portal.cjs`, `node verify-accesos.cjs`, `node verify-obra-app.cjs`, `git diff --check`, y **con el repo**: `BASE_SHA=<origin/main> HEAD_SHA=<HEAD> node scripts/verificar-impacto.cjs --repo yodesarrollomx/yod-portal` (sin `--repo` no revisa propietarios y da falsos verdes).
+7. Subir y abrir PR. Si no hay credenciales de `git push`/`gh`, se usa la subida web de GitHub (`/upload/<rama>/<carpeta>`) archivo por archivo en tandas por carpeta, comentario de commit y «Create a new branch» la primera vez. **Esperar ~20 s tras adjuntar `docs/arquitectura/*` antes de confirmar** (si se confirma pronto el commit puede quedar vacío) y comprobar en la comparación que el PR trae todos los archivos esperados.
+8. Esperar los dos checks en verde (~1 min). Mezclar con «Merge pull request» → «Confirm merge» solo si Dirección lo autorizó.
+9. Pages despliega desde `main` en 1–2 min. Los módulos importados sin versión pueden quedar en caché: subir `?v=` en `index.html` y en los `import` cuando cambie un módulo.
+10. Probar en vivo: abrir `https://yodesarrollomx.github.io/yod-portal/os/#/despacho` con la sesión de Dirección (el panel público de Agentes no puede chatear).
+
+Pruebas locales con navegador: servidor `python3 -m http.server`, Playwright con Chromium (`--use-gl=swiftshader`) y un `window.CubefarmYOD` simulado definido con `Object.defineProperty` (para que `agents.js` no lo sobrescriba). **No usar `pkill -f http.server` en el entorno de trabajo: mata la terminal.**
+
+## 6. Lo que sigue (en orden)
+
+**D2 · Centro de comunicación (WhatsApp y Gmail).** Hoy es «por construir». Antes de código, decidir con Dirección **dónde vive un borrador**: lo más coherente con el sistema es la cola del Portero (Sheets / Apps Script) con estado `borrador → aprobado → enviado`, un registro de cada intento y el contacto validado contra la lista autorizada. Primera entrega: solo crear y mostrar borradores (nada sale). Segunda: envío de prueba **solo al número de Dirección y con su confirmación**. Después: aviso desde la sala de juntas cuando hay algo por aprobar («avisa y presenta»).
+
+**E · Información.** Biblioteca (NotebookLM; por verificar si solo puede abrirse, no consultarse), sala de navegación (pantallas que muestran lo que consulta el agente: reutilizar el registro de visitas y mostrar solo fuentes), suite de Drive (crear documentos/presentaciones/hojas; empezar solo con borradores en una carpeta propia). Cada una necesita un lugar en `office.js` (`places`) y en `scene.js`; hoy solo existen el lugar de decisiones, la sala de encuentro y la sala de edición.
+
+**F · Negocio.** Sala de edición con el embudo comercial de YOD OS (el lugar ya existe), oficina de Dirección (control, datos, programaciones, clientes), salón de usos múltiples, museo de maquetas de Aurum (recorrido y cuestionario). Los cuatro empiezan en solo lectura.
+
+**G · Voz y biblioteca ampliada.** Hay `conversation-voice.mjs` (dictado con el servicio de voz del navegador); la voz en tiempo real es una etapa propia.
+
+**Registro de visitas persistente.** Hoy el registro vive en memoria de la sesión. El paso natural es escribirlo en Sheets por el Portero (una fila por visita: espacio, quién, motivo, hora), con propuesta de arquitectura y contrato de datos nuevos.
+
+**Subir permisos por espacio.** Hoy todo está en «observar». Subir a «borrador» o «acción» es una etapa aparte por espacio, autorizada por Dirección y reflejada en la matriz de Accesos.
+
+**Personajes y cuarto de cada herramienta.** El plan de personajes (niño→joven para PPP, adulto para obra, robot para codesarrollo, equipo como dioses mitológicos, herramientas como agentes vivos con su oficina) está en el mismo documento del Drive; el módulo `avatars/` ya soporta once formas.
+
+## 7. Cómo se ve que está bien
+
+- La hoja «Entorno» lista 9 espacios, cada uno con «Solo observar».
+- «Enviar al agente» lleva la figura a su mesa sin atravesar muebles y deja una visita del agente en la bitácora.
+- «Ver entregas por aprobar» muestra solo tarjetas «por aprobar» y «por decidir» y dice que la aprobación se hace en YOD OS; no escribe nada.
+- `node --test tests/*.cjs` y los dos checks del PR en verde.
+
+
+## 8. Vista legible para agentes · publicada
+
+Dirección pidió que el agente pueda observar y operar la sala aunque WebGL no esté disponible. CHG-DESPACHO-VISTA-LEGIBLE-064 añade «Plano y estado» y una alternativa DOM/SVG sin GPU. PR #77 integrado con autorización explícita; Pages comprobado en e5162b6166fd352fb5d83700ec8c599af75cc234. Prueba autenticada por plano: tres rutas, llegadas, una visita por espacio, regreso al puesto, navegación y lectura de juntas. Capturas en el plan privado. WebGL y móvil reales siguen pendientes. Ver `docs/arquitectura/despacho-vista-legible.md`.
+
+El interruptor es `OFICINA_LEGIBLE` en `despacho3d/office-config.mjs`, `true` por esta petición. El piloto comparte sus rutas con el 3D; Entorno registra la visita después de la llegada confirmada. Las seis áreas por construir siguen pendientes. Los datos privados siguen llegando por el perfil autorizado.
+
+## 9. Acción 1.1 contrato de actividad y tandas de trabajo
+
+Dirección pidió continuar el plan en tandas de unos treinta minutos, cerrando cada tanda con avance guardado, evidencia y siguiente acción. CHG-DESPACHO-ACTIVIDAD-065 prepara el contrato y una demostración sintética independiente, accesible desde Entorno. `despacho3d/actividad.mjs` valida estados, identidad, secuencia, evidencia y reintentos de eventos en memoria. No autentica eventos ni implementa RPC o guardado en Sheets. Ver `docs/arquitectura/despacho-actividad.md`.
+
+El contrato existente conserva IDs de conversación y trabajos. PR #78 publicado y demostrado por HTTPS, 322 pruebas y ambos checks aprobados; capturas privadas guardadas en el plan. La fuente privada del motor se pudo leer: la documentación está en cloud/README.txt, no README.md. Se identificaron manifiesto y outbox por request_id; no acredita un adaptador de visitas. El siguiente trabajo es contrastar la versión efectiva de Apps Script y diseñar 1.2: registro durable de visitas, recibos, CAS, autorización y recuperación. Reintento de eventos en memoria no acredita idempotencia durable por solicitud.
+
+## 10. Acción 1.2 registro de visitas preparado
+
+CHG-DESPACHO-VISITAS-067 añade servidor genérico de visitas, enlace al Portero r6-fast y prueba Sheets aislada; cliente con recuperación, cola, reintento y CAS, carril propio y aviso de recibos reales. `ENTORNO_VISITAS_PERSISTENTES=false`: la sala continúa con registro en memoria hasta comprobar instalación y encendido en otro PR. Ver `docs/arquitectura/despacho-visitas.md`.
+
+Preflight: implementación activa de Portero v63 comprobada en el editor; build r6-fast y Code.gs actual idéntico a esa versión. Respaldo íntegro en el plan privado. La versión activa aún no acepta readVisits/recordVisit. DespachoVisitas.gs se guardó y ejecutó: 14 comprobaciones conectadas aprobadas en archivo sintético nuevo. Lectura por conector confirma dos visitas, recibos correlacionados y revisión 2, sin alterar pestaña original. Captura y archivo quedan en el plan privado. No se editó el router ni se publicó otra versión de Apps Script en esta tanda.
+
+Siguiente entrega: contrastar de nuevo la fuente del módulo guardado con el repositorio e instalar el enlace, crear solo pestañas vacías, actualizar la implementación existente y comprobar lectura autenticada antes del PR de encendido. Ninguna escritura de prueba en el libro de negocio. La recuperación de visitas reales y aceptación móvil siguen pendientes.
+
+## 11. Instalación y encendido de visitas · 4-oct-2026
+
+CHG-DESPACHO-VISITAS-ENCENDIDO-068: Portero v64 confirmado en la implementación existente; URL, permisos y configuración conservados. Única inserción en Code.gs: dispatch de readVisits/recordVisit tras validar payload y antes del allowlist. Módulo y router guardados releídos idénticos. Preparación tuvo un lock_busy sin escribir; tras comprobar ausencia de pestañas, segundo intento creó ambas vacías. Conector confirma historial sin filas y revisión 0; propiedades anteriores intactas.
+
+Cliente preparado con ENTORNO_VISITAS_PERSISTENTES=true y cache bumps. Tras Pages, comprobar lectura autenticada antes del recorrido; cotejar visita/recibo y recuperar al recargar sin otra fila. La aceptación se registra por separado. Reversión: flag false y, si hace falta, volver Portero a v63 conservando pestañas/datos.
+
+PR81 publicado y Pages comprobado. Primera lectura OS 0 visitas; llegada autorizada a juntas guardó exactamente una fila/recibo, revisión 1. Lectura posterior UI falló: no repetir escritura. Diagnóstico editor-only leído sin escribir: snapshot válido y aceptado por validador cliente. Helper nuevo guardado en HEAD, fuera de v64 activa. DOM data-visits-status/error/revision permite acotar causa sin leer estado oculto. Recarga y aceptación pendientes; actualización completa en plan privado.
+
+
+Cotejo final 1.2: PR82 integrado y Pages comprobado. Recarga OS recupera la misma visita y recibo en Entorno; sesión local vacía, DOM ready/error vacío/revisión 1. Actualización de solo lectura también ready. Conector confirma una fila y revisión 1: no se repitió el recorrido ni registro. Registro durable y recuperación funcional comprobados; no afirmar que el diagnóstico corrigió los fallos previos ni que su causa está resuelta. Evidencia y limitaciones en plan privado. Próximo paso 1.3: permisos por espacio/expediente/operación y revocación; móvil real/WebGL siguen pendientes en 0.4. Helper editor-only guardado en HEAD, implementación activa v64.
+
+## 12. Acción 1.3 · política de permisos preparada
+
+CHG-DESPACHO-PERMISOS-069 implementa un núcleo compartido entre Apps Script y prueba visual sintética. Matriz inicial: Juntas, Biblioteca y Edición solo observar; seis espacios sin conexión. No concede borradores, envíos ni aprobación. Cada consulta nueva revalida sesión/expediente/espacio/operación al inicio y al final; visitas conserva autorización antes de commit y añade comprobación al terminar lectura. No reemplaza autorización de otros protocolos existentes de conversación/metas. Ver `docs/arquitectura/despacho-permisos.md`.
+
+`ENTORNO_PERMISOS_SERVIDOR=false`. Código nuevo probado fuera de producción; Portero activo sigue v64. No instalar el nuevo visitas-portero.gs sin núcleo/adaptador de permisos. Próxima acción: respaldar y cotejar HEAD/versión activa, instalar ambos módulos y dos dispatch de lectura en el mismo Portero, verificar lectura autenticada y entregar PR de encendido. No repetir recorrido ni escritura de visitas para depurar. La demostración `permisos-demo.html` usa datos sintéticos y no acredita servidor instalado. Guardar capturas permitida/denegada/revocada en plan privado y luego aceptación de matriz real. 1.3 continúa abierto hasta esa aceptación; después 1.4 recuperación de trabajo.
+
+## 13. Acción 1.3 · servidor instalado y consumidor preparado
+
+CHG-DESPACHO-PERMISOS-ENCENDIDO-070: Portero v65 en la misma implementación; URL, principal, acceso, scopes y configuración conservados. Nuevo DespachoPermisos.gs (núcleo, adaptador y helper editor-only); visitas actualizadas; una inserción de dispatch para readOfficePermissions/readOfficePending. Tres fuentes guardadas y recargadas cotejadas idénticas. Seis casos en memoria aprobados por YOD_verificarPermisosAislados; 351 pruebas locales. No cambiar ACL reales ni hacer escrituras de prueba para simular denegación.
+
+Consulta OS de visitas con v65 termina ready/error vacío/revisión1 y conserva la misma visita y recibo. ENTORNO_PERMISOS_SERVIDOR=true preparado en esta entrega, con caché actualizada. Tras integrar y Pages, recargar OS, abrir Agentes y Entorno, comprobar matriz de nueve espacios y leer Juntas por readOfficePending. Esa aceptación sigue pendiente; encender un flag no la acredita. No repetir recorrido ni registro; comprobar que permanece una fila en Sheets. Reversión flag false y volver misma implementación a v64 si hace falta, sin borrar historial. Fuentes y pruebas de runtime en plan privado.
+
+## 14. Aceptación 1.3 · alcance inicial observar comprobado
+
+PR84 y PR85 integrados con ambos checks verdes. Pages del merge02fa4a6 comprobado; cuatro recursos del consumidor cotejados idénticos. Tras recargar OS, Entorno muestra matriz ready office-observe-v1, nueve espacios (tres observar, seis sin conexión). Ver entregas por aprobar usa readOfficePending y devuelve una entrega real. Visitas conserva una fila/recibo/revisión1; cotejo independiente Sheets coincide. No hubo otro recorrido ni registro. Capturas y pruebas de runtime guardadas en el plan privado.
+
+Paso1.3 inicial cerrado: borradores, envíos y aprobación denegados; los otros protocolos existentes mantienen autorización propia. Revocación/cambio de actor probados con identidades sintéticas, sin modificar ACL reales. Móvil real/WebGL y causa de fallos previos de conexión siguen pendientes; no afirmar estabilidad continua. ENTORNO_PERMISOS_SERVIDOR=true en entorno-config.mjs. Reversión flagfalse y misma implementación a v64 conservando historial.
+
+Siguiente1.4: recuperar contexto y trabajo al reabrir con lecturas autorizadas. Inventariar qué estado ya se conserva, mostrar última actividad/estado/fuentes/decisiones y comparar pantalla antes/después de recarga. No reanudar metas ni repetir acciones por recuperación; cualquier ejecución nueva conserva su aprobación e ID. Entregable: vista de recuperación, pruebas de respuestas tardías/no duplicación y capturas del mismo trabajo antes/después.
+
+
+## 15. Prioridad de Dirección: interfaz y voz de Gastón · 5-oct-2026
+
+Dirección adelantó conversación de voz y revisión visual antes de completar las demás funciones. Paso1.3 publicado se conserva. Próximo recorrido: abrir Despacho, Hablar con Gastón, conversar, finalizar, revisar la transcripción aquí y convertir necesidades en ajustes concretos de interfaz. Recuperación1.4 y fases restantes siguen como trabajo posterior, sin ejecutarse por abrir una sesión.
+
+CHG-DESPACHO-VOZ-070 y portal PR87 implementan WebRTC, audio remoto y oai-events sobre el servidor privado existente. El handoff GPT-Live se conserva exactamente en cloud/live-session.json: gpt-live-1, gleam, Responses gpt-5.6-terra/medium y web_search, parallel_tool_calls false; campos omitidos usan defaults. Claves solo en servidor. Espera session.started sin repetir configuración; contexto actual autorizado se añade después, una sola vez.
+
+Cada delta conserva texto exacto y tiempos; participantes se agrupan independientemente, sin turnos artificiales. Journal privado persistente y outbox actual envían bloques identificados al historial. La interfaz distingue fragmentos recibidos, respaldo pendiente y recibo confirmado. Finalizar mantiene audio y transportes hasta session.closed; timeout/desconexión antes de ese evento son finalización incompleta. El cierre confirmado y el guardado del historial son comprobaciones separadas.
+
+Servidor PR1 integrado en 97cd52c; 56 pruebas aprobadas y ws8.18.3 incluido con licencia para el build existente. YOD_VOICE_ENABLED=true conserva entorno privado y activa despliegue Render de esa versión. Portal: 356 pruebas y ambos verificadores aprobados antes del ajuste final de mensajes de cierre. La prueba sonora real, uso del contexto y respaldo de una conversación real requieren dispositivo; no se acreditan por tests ni por despliegue. Resultado de publicación se registra en plan privado. Reversión: apagar YOD_VOICE_ENABLED y revertir UI, conservando journal/outbox/historial.
+
+
+## 16. Presencia y recuperación de voz · 5-oct-2026
+
+Dirección reportó que Gastón no aparecía sin abrir Agentes, la entrada tardaba y una conversación ya conectada se cortaba. CHG-DESPACHO-PRESENCIA-VOZ-072 y PR89 muestran el perfil autorizado desde una lectura ligera, antes del historial; figura sentada en espera y tarjeta con Hablar, Escribir y Acercarme. «Conversaciones» conserva el panel de historial. Se prepara una credencial temporal en memoria sin capturar micrófono ni iniciar Live. La carga decorativa del logo deja de bloquear la escena. Las lecturas idénticas simultáneas comparten resultado sin relajar autenticación, expediente, generación ni autorización.
+
+La voz conserva la conexión al ocultar la página, tolera una desconexión WebRTC breve y vuelve a escuchar si se recupera; un fallo aislado de estado o un comando rechazado no finalizan la conversación. La pérdida persistente y el cierre sin session.closed siguen marcándose incompletos. Se conserva el JSON GPT-Live exacto, contexto tras session.started, deltas exactos y respaldo previo. Servidor privado publicado con 75 pruebas aprobadas; los fallos de contexto obligatorio sí cierran la sesión.
+
+Evidencia previa a integración: 366 pruebas de portal aprobadas, verificadores OS/portal/accesos/obra y esquema/vistas aprobados. Chromium con transporte sintético y lectura de historial demorada 5,5 segundos: agente listo en 612 ms en 1280×900 y 399 ms en 390×844, figura sentada, controles accesibles, sin micrófono ni apertura de panel y sin errores de página. Son tiempos de laboratorio, no medición de Sheets o red real. Falta comprobar publicación HTTP y conversación sonora en dispositivo; despliegue y pruebas no acreditan estabilidad continua, recibo real ni interfaz completa aceptada.
+
+Los próximos agentes usan esta presencia sólo después de tener un perfil autorizado real y capacidades comprobadas. Mantenerlos visibles y preparados no inicia inferencias continuas ni concede herramientas. No generar personajes operativos a partir de un padrón público.
+
+Dirección propuso biblioteca Obsidian/NotebookLM para que Jev investigue documentos y alimente el tablero. Siguiente requisito: índice por expediente, respuestas con fuentes/página y frescura, permisos revalidados y refresco en segundo plano. Sheets conserva datos/cálculos de negocio; no cargar toda la documentación para dibujar el despacho. Inventariar las fuentes y verificar API/sincronización de cada servicio antes de prometer conexión. Este PR no instala Obsidian ni NotebookLM.
+
+
+## 17. Biblioteca indexada · 5-oct-2026
+
+Dirección autorizó continuar con la biblioteca de Jev. CHG-DESPACHO-BIBLIOTECA-073: portal PR90 prepara tarjeta Biblioteca, lista real de fuentes, estado de preparación y búsqueda de pasajes con referencia y fecha. Índice privado en servidor PR9/PR11, sin otro proveedor contratado ni datos estáticos públicos. Ver docs/arquitectura/despacho-biblioteca.md.
+
+Las fuentes vienen sólo de Documentos del expediente actual. La entrada no espera el OCR; preparación y refresco en segundo plano. Consultar compara permisos/versiones y vuelve a revalidar después de Jev; retiradas o desactualizadas no devuelven texto viejo. Sheets con gid/rango conserva selección; sin rango se limita a A1:Z200. PDF/Docs24.000 caracteres; páginas sólo desde extracción. Una consulta visual de plano sigue usando el PDF real, no el índice de texto.
+
+Fórmulas pueden recalcular sin modificar fecha de Drive: pasajes de hojas no son cifras vigentes y drive_leer siempre consulta valores canónicos. No se reemplazan cálculos ni hojas. Chat/voz/cola preservan múltiples referencias con página/versión; JSON Live y deltas intactos.
+
+88 pruebas privadas y371 de portal aprobadas; pruebas navegador, publicación HTTP e índice real se registran separadas en plan privado. No marcar fase4 completa: Obsidian/NotebookLM/Notion por verificar, cobertura inicial limitada y aceptación de consulta real pendiente. El índice evita OCR completo repetido, no elimina latencia de contexto del Portero. Reversión off/revert sin borrar originales, historial o datos.
+
+Recepción de publicación de Biblioteca: PR90 integrado en a7cd37a; seis recursos HTTP del consumidor coinciden con la versión revisada. Chromium1280×900/390×844 validó fuentes, búsqueda, texto exacto, página y limpieza por pérdida de autorización, sin errores ni micrófono/Live. Render8811ee5 activo; salud real confirmó índice preparado/reutilizado. No certificar disponibilidad continua: la conexión del Portero puede requerir recuperación. Próximo recorrido de Dirección: Biblioteca, pregunta del expediente, abrir referencia original y conversación con Gastón; audio real y precisión de la respuesta pendientes.
+
+
+
+## 18. Voz básica publicada y comprobaciones · 5-oct-2026
+
+[Abrir Despacho05](https://yodesarrollomx.github.io/yod-portal/os/?v=despacho05#/despacho). Portal [PR92](https://github.com/yodesarrollomx/yod-portal/pull/92),0617a7f; servidor privado PR12/PR14/PR15,502867a. Portal373 pruebas y verificadores de esquema/vistas/impacto, OS, portal, accesos y obra aprobados. Servidor95 pruebas y sintaxis aprobadas.
+
+El arranque no espera Sheets ni acuses de contexto antes de activar micrófono: los acuses Live requieren avance de audio. Modo básico explícito: saludo inmediato de Gastón una vez tras session.started sin repetir JSON/configuración; documentos y herramientas del expediente todavía no están conectados a esta voz. Biblioteca y conversación escrita conservan sus capacidades.
+
+Se retira el cupo local de cuatro intentos/10 min; permanece una conversación activa autorizada. Fallos al consultar respaldo dejan audio sano activo. Se monta la pista remota incluso sin event.streams y admite reproducción inline. Conservar claves en servidor, JSON exacto, IDs opacos, deltas y tiempos, journal/outbox y revisión canónica fuera del arranque. Audio/transporte sobreviven al cierre hasta session.closed; timeout/desconexión significa finalización incompleta.
+
+[Navegador Chromium](https://github.com/alexpueblag/yod-agent-cloud/actions/runs/37334361935):1280×800/390×844, micrófono de prueba y MediaStream remoto real con protocolo/transporte sintético y política normal de autoplay. Siete errores seguidos de registro sin corte; transcripción exacta y cierre confirmado; cero errores de página. No equivale a audio físico de Dirección ni respaldo de su conversación.
+
+[Publicación y proveedor real](https://github.com/alexpueblag/yod-agent-cloud/actions/runs/37334952547): seis recursos HTTP de Pages idénticos byte a byte a0617a7f; Render502867a live; OpenAI real confirma session.started, saludo aceptado, PCM no silencioso, transcripción y session.closed. Recibir paquetes de silencio no basta para pasar el diagnóstico. Comprobación optativa acotada, sin expedientes ni escrituras de negocio, clave existente sólo servidor y estados seguros. YOD_VOICE_DIAGNOSTIC_ON_START=false después del cotejo; no ejecutarla permanentemente.
+
+Sigue pendiente conversación estable en dispositivo y recibo real de Dirección. Después: contexto/documentos Jev en segundo plano sin bloquear micrófono, herramientas de sala, pendientes/acciones con criterios y recibos. El motor existente de objetivos informó ready; no acredita invocación desde voz básica ni ejecución de pendientes. El enlace de referencia del círculo devolvió pantalla de acceso; revisar el diseño cuando sea accesible y conectar operaciones reales antes de activarlo. No declarar aceptación global ni todos los agentes operativos por salud. Reversión: PR92 y servidor PR12/PR14/PR15, conservando configuración, permisos, fuentes, IDs, historial y journal/outbox.
+
+## 19. Recuperación y claridad del puesto · 7-oct-2026
+
+CHG-PUESTO-TRABAJO-CLARO-099 retoma la recuperación 1.4 sobre el trabajo observable de PR110. La entrada es Trabajo: objetivo, estado, fecha, resultado y siguiente decisión. PPP, pendientes y fuentes se conservan en el mismo puesto. Reapertura sólo lee; no crea ni reanuda encargos. La computadora física abre esta lectura y la navegación manual queda en Herramientas. El plano deja de recomendar el botón Agentes oculto.
+
+Ver docs/arquitectura/puesto-trabajo-claro.md para autoevaluación y límites. Pruebas sintéticas acreditan mismo ID, ausencia de escrituras, pérdida de conexión y retiro de selección. puesto-demo.html usa el módulo real con lector doble sin servidor. La aceptación autenticada del mismo trabajo antes/después y el dispositivo móvil real siguen pendientes; no declarar fase1 completa por una demostración. No cambia permisos o despliegues del motor.

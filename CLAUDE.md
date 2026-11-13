@@ -12,6 +12,8 @@ como contexto: no acreditan el estado actual. Una fuente Apps Script en GitHub
 no acredita que esté desplegada. No usar caches de identidad o datos legacy para
 restaurar permisos; la cabina y el marco deben completar el canje vigente.
 
+**Matiz de la Fase 1 (30-oct-2026, plan aprobado por Dirección; propuesta `CHG-CARGADOR-FASE1-001`):** la cabina y el marco pueden **pintar** con la identidad que `os/yod-cargador.js` guardó en la carga anterior (`yodcg_sesion_v1`, ligada al hash del token, máximo 12 h) mientras **completan el canje vigente en fondo**; si ese canje rechaza (`liga, clave, expirado, revocado, sin_sesion, unauthorized, forbidden, HTTP 401/403`) se cierra y se purga (fail-closed). Eso NO es restaurar permisos desde una caché legacy: la copia sólo existe tras un canje real con ese mismo token, nunca otorga más de lo que ese canje dio, y el muro sigue siendo cada backend. `?cargador=legacy` (o `localStorage.yodcg_legacy='1'`) devuelve el comportamiento anterior.
+
 ## Qué es
 
 Es la **cabeza** del tablero YOD. No es "un tablero más": es el marco donde entran todos.
@@ -39,15 +41,17 @@ Repo: `yodesarrollomx/yod-portal` (`git remote -v`), público, Pages desde `main
 
 ## Reglas INVIOLABLES
 
+0. **Orden global constante (12-oct-2026, Dirección):** la barra y el menú de YOD OS conservan el orden de `os/catalogo.js` en todos los tableros. `navParent` mantiene proyectos dentro de su tablero padre; sólo se muestra el hijo suelto si el padre no está disponible. La pestaña Portal conserva nombres, visibilidad y estado; su campo `orden` no reordena la navegación global. El filtrado por sesión se mantiene y el logo es el acceso al Inicio. La compactación usa el control existente de `os/ui-chrome.js`, sin otra implementación.
+
 0. **El catálogo de tableros vive en `os/catalogo.js` (SH-2, 25-sep-2026).** Nombre de respaldo, ícono, códigos y destino se editan AHÍ y luego `node scripts/catalogo.cjs` regenera las copias de `os/shell.js`, `os/access-policy.js` y `os/app.js`; `verify-os` falla si alguien edita una copia a mano. La matriz de `potenciales-yod/accesos.html` la vigila `verify-accesos.cjs`.
 1. **Las tres tablas de códigos dicen LO MISMO, siempre.** `os/access-policy.js` (`SYSTEM_CODES`),
    `os/shell.js` (`CODES`) y `potenciales-yod/accesos.html` (`CODES`). Si divergen, un colaborador
    con acceso queda bloqueado — fue el bug `BA`→`TA` del 15-jul-2026 (`CODIGOS-BOARDS.md`).
    Las dos primeras las compara `node verify-os.cjs`; la tercera vive en otro repo y va a ojo.
-2. **Cada cambio a `os/app.js` exige subir el `?v=` en `os/index.html`** (la etiqueta de `app.js`,
-   línea 215; la de `styles.css`, línea 19 — no copies el valor de aquí, léelo del archivo, cambia
-   seguido). Sin el bump, Pages sirve el JS viejo y "no se ve el cambio"
-   (memoria `yod-os-menu-catalogo`).
+2. **Una sola etiqueta de versión (`os/versiones.json`).** Cada cambio a un archivo servido (p. ej. `os/app.js`)
+   exige editar `propia` (`potenciales` para los de `potenciales-yod`) y correr `node scripts/versiones.cjs --aplicar`,
+   que reescribe los `?v=` de los HTML y las constantes `CHINCHE_V`, `TABLERO_V`… `verify` falla (`--check`) si una
+   etiqueta no coincide. Sin el bump, Pages sirve el JS viejo y "no se ve el cambio" (memoria `yod-os-menu-catalogo`).
 3. **El catálogo no otorga permisos.** La cabina puede tener nombres/destinos de respaldo;
    la sesión debe validarse y las URLs deben pasar el allowlist. Distinguir metadatos
    del catálogo de caches de identidad o datos operativos. Ver el código y el atlas vigente.
@@ -210,3 +214,11 @@ La super app de obra: una sola estructura para cualquier tipo de obra (Proyecto 
 - Módulo cliente (pagos, documentos, dudas, fotos, gastos): `obra-app/motor/ObraCliente.gs`, Apps Script APARTE.
   Se instala con `obra-app/motor/INSTALAR.md`; mientras `CLIENTE` esté vacío en `obras.js`, esas secciones dicen «sin instalar».
 - Prueba: `node verify-obra-app.cjs` (además de las tres de siempre).
+
+## Herramientas del Reel · política local 1.0.0
+
+Leer [docs/agentes/POLITICA.md](docs/agentes/POLITICA.md) para búsqueda, triage Jev,
+pasajes, presupuesto, evidencia y entrega. Cargar sólo la skill documental pertinente
+indicada allí. Inventario, licencias y pendientes: docs/agentes/RESULTADOS.md y
+integraciones.lock.json en esa carpeta. No registrar skills globales ni cambiar
+proveedores por esta referencia; no enviar datos privados sin aprobación específica.

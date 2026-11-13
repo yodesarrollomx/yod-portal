@@ -66,6 +66,22 @@ test('Pin opens the existing composer without submission; duplicate ACK never re
   const upper=pin();upper.requestId=upper.requestId.toUpperCase();await h.emit(upper);assert.equal(h.calls.length,1);
   assert.equal(JSON.stringify(h.posts).includes('private'),false);
 });
+test('UI v2 pin identifies a card/control without copying its private text and preserves v1 geometry',async()=>{
+  const h=harness(),p=pin();p.version=2;
+  p.target={id:'panel:case',zone:'case',kind:'interface',point:null,ui:{surface:'tasks',path:'html:nth-of-type(1) > body:nth-of-type(1) > article:nth-of-type(2) > button:nth-of-type(1)',item:1}};
+  assert.equal(h.api.validPin(p),true);await h.hello();await h.emit(p);
+  const op=h.calls[0];assert.equal(op.sinCaptura,true);assert.equal(op.sinFolio,true);assert.equal(op.sinUrlParams,true);
+  assert.match(op.valores.referencia,/superficie=tasks/);assert.match(op.valores.referencia,/tarjeta=1/);
+  assert.equal(op.objeto.despacho3d.target.ui.path,p.target.ui.path);
+  for(const mutate of [x=>x.target.ui.text='private',x=>x.target.ui.case_id='private',x=>x.target.ui.surface='unknown',x=>x.target.ui.path='article#private-person',x=>x.target.ui.path='https://private.invalid',x=>x.target.ui.item=-1,x=>x.target.ui.item=10000,x=>x.version=1,x=>x.target.kind='zone']){
+    const bad=JSON.parse(JSON.stringify(p));mutate(bad);assert.equal(h.api.validPin(bad),false,mutate.toString());
+  }
+  const clean=pin(2);assert.equal(h.api.validPin(clean),true);
+  const fallback=JSON.parse(JSON.stringify(p));fallback.view={position:null,quaternion:null,fov:null,mode:'map'};
+  assert.equal(h.api.validPin(fallback),true);assert.match(h.api.formatContext(metadata(fallback)),/camara=null/);
+  fallback.view.position=[0,0,0];assert.equal(h.api.validPin(fallback),false,'No fictitious camera in fallback');
+  const badWorld=pin();badWorld.view={position:null,quaternion:null,fov:null,mode:'map'};assert.equal(h.api.validPin(badWorld),false);
+});
 test('Forged, unready, unauthorized, invalid and old-frame pins never open a composer',async()=>{
   const h=harness();await h.emit(pin());assert.equal(h.posts.at(-1).payload.status,'rejected');assert.equal(h.calls.length,0);
   await h.hello();const old=h.getFrame();h.setFrame({postMessage(){}});await h.emit(pin(),{source:old});assert.equal(h.calls.length,0);
@@ -95,8 +111,9 @@ function chincheHarness() {
   const h=harness(), nodes=new Map(), saved=[], notices=[], requests=[], marked=[], closed=[];
   delete h.window.YODChinche;
   let authorized=true, databaseWait=null;
-  function node(key){if(!nodes.has(key))nodes.set(key,{value:'',disabled:false,textContent:'',placeholder:'',remove(){this.removed=true;},focus(){},classList:{add(){},remove(){}}});return nodes.get(key);}
-  const composer={_urls:[],querySelector:node,querySelectorAll:()=>[]};
+  function node(key){if(!nodes.has(key))nodes.set(key,{value:'',disabled:false,textContent:'',placeholder:'',remove(){this.removed=true;},focus(){},before(){},prepend(){},classList:{add(){},remove(){}}});return nodes.get(key);}
+  const composer={isConnected:true,_urls:[],querySelector:node,querySelectorAll:()=>[]};
+  h.context.document={createElement:()=>({width:960,height:540,style:{},getContext:()=>({fillRect(){},fillText(){}}),toBlob:fn=>fn(null),querySelectorAll:()=>[]}),head:{appendChild(){} }};
   h.context.console=console;h.context.AbortController=AbortController;
   h.context.localStorage={getItem:()=>null};h.context.sessionStorage={getItem:()=>null};
   h.context.location={href:'https://example.invalid/os/#/despacho'};h.context.navigator={userAgent:'synthetic'};
@@ -104,7 +121,7 @@ function chincheHarness() {
   h.context.fetch=async(url,options)=>{requests.push({url,options});return {ok:true,text:async()=>'{}'};};
   const injected=`
   window.__chincheTest={
-    codigoDespacho,guardDespacho,enviarDirecto,guardar,armarTexto,
+    codigoDespacho,guardDespacho,enviarDirecto,guardar,armarTexto,setContext:ctx=>{CTX=ctx;},
     register:(id,guard)=>despachoGuards.set(id,guard),
     setDatabaseWait:fn=>{abrirBD=fn;},
     setTransaction:fn=>{tx=fn;},
@@ -121,6 +138,8 @@ function chincheHarness() {
   const position=chincheSource.lastIndexOf('})();');
   vm.runInContext(chincheSource.slice(0,position)+injected+chincheSource.slice(position),h.context);
   const hooks={composer,saved,notices,closed,marked};h.window.__chincheTest.setup(hooks);
+  h.window.YodChincheSecuencia={mount:()=>({canvas:{toBlob:fn=>fn(null)},hasContent:()=>false,value:async()=>({v:1,synthetic:true}),dispose(){}})};
+  h.window.YodChincheEntrega={bind:async()=>{},client:()=>({send:async(ch,guard)=>{if(!guard())return {state:'auth-required'};await h.context.fetch('synthetic-private',{method:'POST',body:JSON.stringify({accion:'chinche_secuencia_guardar',data:JSON.stringify(ch)})});return {state:'received',id:ch.id};}})};
   function options(){return {clase:'despacho3d',seccion:'Despacho3D',texto:'Zona case',vista:'3D',sinCaptura:true,
     puedeGuardar:()=>authorized,objeto:{id:'zone:case',tipo:'despacho3d',zona:'case',despacho3d:metadata()},valores:{referencia:'technical'},codigo:'https://must-not-copy.invalid'};}
   return {...h,nodes,node,composer,saved,notices,requests,marked,closed,hooks,options,setAuthorized:v=>{authorized=v;},helper:h.window.__chincheTest};
@@ -128,12 +147,12 @@ function chincheHarness() {
 test('Real composer has no POST when opened; human Clavar alone persists validated code then sends',async()=>{
   const h=chincheHarness();const controller=await h.window.YODChinche.anotar(h.options());assert.equal(typeof controller.cancel,'function');
   assert.equal(h.requests.length,0);assert.equal(h.saved.length,0);assert.equal(h.node('.chn-foto').removed,true);
-  h.node('.chn-txt').value='Synthetic human request';await h.node('[data-ok]').onclick();await Promise.resolve();
+  h.composer._secuencia.hasContent=()=>true;h.node('.chn-txt').value='Synthetic human request';await h.node('[data-ok]').onclick();await Promise.resolve();
   assert.equal(h.saved.length,1);assert.equal(h.requests.length,1);assert.equal(h.requests[0].options.method,'POST');
   assert.ok(h.saved[0].codigo.includes('punto=[6.1,0.7,-4.2]'));assert.ok(h.saved[0].codigo.includes('quaternion=[0,0,0,1]'));
   assert.equal(h.saved[0].codigo.includes('must-not-copy'),false);assert.equal(Object.values(h.saved[0]).some(v=>typeof v==='function'),false);
-  const payload=JSON.parse(h.requests[0].options.body), detail=JSON.parse(payload.detalle);
-  assert.equal(payload.accion,'produccion');assert.equal(detail.codigo,h.saved[0].codigo);assert.equal(detail.objeto.despacho3d.modelVersion,'despacho-v2');
+  const payload=JSON.parse(h.requests[0].options.body), detail=JSON.parse(payload.data);
+  assert.equal(payload.accion,'chinche_secuencia_guardar');assert.equal(detail.codigo,h.saved[0].codigo);assert.equal(detail.objeto.despacho3d.modelVersion,'despacho-v2');
 });
 test('Stale composer cannot Clavar and stale awaits cannot POST under a new session',async()=>{
   const h=chincheHarness();await h.window.YODChinche.anotar(h.options());h.setAuthorized(false);h.node('.chn-txt').value='Old draft';await h.node('[data-ok]').onclick();
@@ -161,4 +180,22 @@ test('Manual export preserves validated 3D context for non-canvas notes and reje
   h.helper.setRows([{id:'synthetic-export',modo:'contexto',pantalla:'os',repo:'yod-portal',url:'https://example.invalid/os/',texto:'Human request',objeto:h.options().objeto,
     elemento:{seccion:'Despacho3D',texto:'Zona case'},codigo:geometry,aparato:'synthetic',sello:'synthetic',creado:'2026-01-01'}]);
   const result=await h.helper.armarTexto(['synthetic-export'],'');assert.ok(result.texto.includes('Contexto geométrico del Despacho'));assert.ok(result.texto.includes('camara=[8,1.65,-4.45]'));assert.ok(result.texto.includes('viewport=390x844'));
+});
+
+test('orthographic pins preserve actual projection and reject invalid or private projection fields',async()=>{
+ const h=harness(),p=pin();p.view.mode='overview';p.view.fov=null;p.view.orthographic={left:-30,right:30,top:20,bottom:-20,zoom:1.5};
+ assert.equal(h.api.validPin(p),true);await h.hello();await h.emit(p);
+ assert.equal(h.calls.length,1);assert.match(h.calls[0].valores.referencia,/ortografica=/);
+ assert.deepEqual(JSON.parse(JSON.stringify(h.calls[0].objeto.despacho3d.view)),p.view);
+ for(const change of [v=>v.mode='walk',v=>v.mode='map',v=>v.fov=43,v=>v.orthographic.zoom=0,v=>v.orthographic.right=-30,v=>v.orthographic.top=Infinity,v=>v.orthographic.token='secret']){
+  const bad=JSON.parse(JSON.stringify(p));change(bad.view);assert.equal(h.api.validPin(bad),false);
+ }
+});
+
+test('Composer freezes host context before capture and before mutable navigation',async()=>{
+ const h=chincheHarness();const context={carta:{pid:'original',lamina:2,version:7}};
+ h.helper.setContext({valores:()=>context,alClavar:()=>{}});
+ await h.window.YODChinche.anotar(h.options());context.carta.pid='other';context.carta.version=8;
+ h.node('.chn-txt').value='Synthetic request';await h.node('[data-ok]').onclick();
+ assert.equal(h.saved[0].contexto.carta.pid,'original');assert.equal(h.saved[0].contexto.carta.version,7);
 });

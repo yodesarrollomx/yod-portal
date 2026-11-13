@@ -3,7 +3,7 @@ const base=path.resolve(__dirname,'../despacho3d'),vendor=pathToFileURL(path.joi
 const cache=new Map();
 function moduleURL(file){
  if(cache.has(file))return cache.get(file);
- let src=fs.readFileSync(file,'utf8').replace(/from 'three'/g,`from '${vendor}'`).replace(/from '(\.\/[^']+)'/g,(_,relative)=>`from '${moduleURL(path.resolve(path.dirname(file),relative))}'`);
+ let src=fs.readFileSync(file,'utf8').replace(/from 'three'/g,`from '${vendor}'`).replace(/from '(\.\.?\/[^']+)'/g,(_,relative)=>`from '${moduleURL(path.resolve(path.dirname(file),relative.split('?')[0]))}'`);
  const url='data:text/javascript;base64,'+Buffer.from(src).toString('base64');cache.set(file,url);return url;
 }
 const modules=Promise.all([import(vendor),import(moduleURL(path.join(base,'avatars/office-pilot.mjs')))]);
@@ -16,7 +16,7 @@ test('the pilot stays empty until authorized and ignores placement supplied by a
  const[T,{createOfficePilot}]=await modules,scene=new T.Scene(),p=createOfficePilot({scene});
  p.bind(panel(null));assert.equal(p.getState().count,0);
  const api=panel({...profile,placement:{position:[100,100,100],scale:999,rotationY:0}});p.bind(api);
- assert.deepEqual(p.getState(),{count:1,motion:'idle',poseTicks:0});assert.deepEqual(scene.children[0].position.toArray(),[6.65,0,-4.42]);assert.equal(scene.children[0].rotation.y,Math.PI/2);
+ assert.deepEqual(p.getState(),{count:1,motion:'sit',poseTicks:0});assert.deepEqual(scene.children[0].position.toArray(),[7,0,-6.25]);assert.equal(scene.children[0].rotation.y,Math.PI);
  const first=scene.children[0];api.publish({...profile});assert.equal(scene.children[0],first,'unchanged profile must not allocate another model');
  api.publish({...profile,id:'DIFFERENT'});assert.equal(scene.children.length,0,'mismatched identity fails closed');p.dispose();
 });
@@ -44,7 +44,7 @@ test('idle animation is capped at fifteen updates and pauses for overlays, visib
  for(const flags of [{overlay:true},{hidden:true},{reducedMotion:true}])for(const t of [1100,2100,3100])assert.equal(p.update(t,flags),false);
  assert.equal(scene.children[0].userData.body.position.y,pose);
  assert.equal(p.update(50000),false,'resume rebases time instead of making a large jump');assert.equal(p.update(50080),true);
- assert.deepEqual(p.getState(),{count:1,motion:'idle',poseTicks:updates+1});p.dispose();
+ assert.deepEqual(p.getState(),{count:1,motion:'sit',poseTicks:updates+1});p.dispose();
 });
 test('office picking respects opaque geometry and nearer controls while its case box cannot swallow the avatar',async()=>{
  const[,{chooseOfficeHit}]=await modules;
@@ -72,4 +72,75 @@ test('omitting the provisional figure before static merging retains the office l
   assert.ok(current.distance>prior.distance+.2,`the original head must no longer intercept its location (${prior.distance} vs ${current.distance})`);
   assert.deepEqual(current.collisions,prior.collisions);assert.deepEqual(current.pickBoxes,prior.pickBoxes);assert.deepEqual(current.bounds,prior.bounds);
  }finally{global.document=previous;}
+});
+
+test('seated figure faces the visible monitor and returns to its shared chair position',async()=>{
+ const[T,{createOfficePilot}]=await modules,scene=new T.Scene(),p=createOfficePilot({scene});p.bind(panel());
+ const figure=scene.children[0],screen=new T.Vector3(7,1.23,-7.2);
+ assert.ok(figure.position.z>screen.z,'chair must be on the visible side of the monitor');
+ const facing=new T.Vector3(0,0,1).applyQuaternion(figure.quaternion);
+ const toward=screen.clone().sub(figure.position);toward.y=0;toward.normalize();
+ assert.ok(facing.dot(toward)>.99,'face, knees and gaze point toward the monitor');
+ p.recorrer([[7,-6.25],[8,-5]],0,{inmediato:true,destino:'other'});
+ p.recorrer([[8,-5],p.inicio.xz],p.inicio.rot,{inmediato:true,destino:'inicio'});
+ assert.deepEqual(figure.position.toArray(),[7,0,-6.25]);assert.equal(figure.rotation.y,Math.PI);
+ p.dispose();
+});
+
+test('scaled figures contact the chair and remain seated while talking',async()=>{
+ const [T,{createOfficePilot}]=await modules;
+ for(const form of ['child','young_male','man','robot']){
+  const scene=new T.Scene(),p=createOfficePilot({scene});p.bind(panel({...profile,form}));
+  const root=scene.children[0],body=root.userData.body,leg=root.userData.legs[0];
+  // Measure the rendered upper thigh in world coordinates, independently of each rig's hip formula.
+  root.updateMatrixWorld(true);const thigh=leg.children.find(part=>part.isMesh);assert.ok(thigh,'upper thigh '+form);
+  const contact=new T.Box3().setFromObject(thigh).min.y;
+  assert.ok(Math.abs(contact-.62)<.02,'rendered seat contact '+form+': '+contact);
+  assert.equal(leg.rotation.x,-Math.PI/2);
+  const seatedY=body.position.y,rotation=root.rotation.y;
+  p.setActivity('talk');p.update(0);p.update(100);
+  assert.equal(body.position.y,seatedY);assert.equal(leg.rotation.x,-Math.PI/2);
+  root.updateMatrixWorld(true);assert.ok(Math.abs(new T.Box3().setFromObject(thigh).min.y-contact)<1e-8,'talk preserves rendered chair contact');
+  assert.equal(root.rotation.y,rotation);assert.equal(root.userData.base.visible,false);
+  p.dispose();
+ }
+});
+
+test('physical monitor repaints progress with unchanged timestamp and clears private content on revoke',async()=>{
+ const [T]=await modules,{createOfficeScreen}=await import(moduleURL(path.join(base,'office-screen.mjs')));
+ const old=global.document,written=[];let draws=0;
+ global.document={createElement:()=>({getContext:()=>({fillRect(){draws++;},fillText(text){written.push(text);},measureText(text){return {width:String(text).length*12};}})})};
+ try{
+  const screen=createOfficeScreen(new T.Mesh(new T.PlaneGeometry(1,1),new T.MeshBasicMaterial()));
+  const state={phase:'ready',case_id:'synthetic',work:{run_id:'run',phase:'working',title:'Trabajo de prueba',updated_at:'2026-10-07T12:00:00Z',progress:{sequence:1,progress:{tasks:[{title:'Primera tarea',status:'running'}],summary:''}}}};
+  screen.update(state);const before=draws;
+  state.work.progress.sequence=2;state.work.progress.progress.tasks[0].title='Siguiente tarea';
+  screen.update(state);assert.ok(draws>before);assert.ok(written.includes('Siguiente tarea'));
+  written.length=0;screen.update({phase:'unauthorized',case_id:null,work:null});
+  assert.equal(screen.snapshot().run_id,null);assert.equal(screen.snapshot().progress.total,0);
+  assert.ok(!written.includes('Siguiente tarea'));screen.dispose();
+ }finally{global.document=old;}
+});
+
+
+test('authorized residents use separate existing seats and a stale current profile cannot restore a revoked case',async()=>{
+ const [T]=await modules,{createOfficeResidents}=await import(moduleURL(path.join(base,'avatars/office-residents.mjs')));
+ const scene=new T.Scene(),fleet=createOfficeResidents({scene,authoritative:false});let currentListener,listListener;
+ const a={...profile},b={...profile,id:'CASE-SECOND',case_id:'CASE-SECOND'};
+ fleet.bind({subscribeProfile(fn){currentListener=fn;fn(a);return()=>{};},subscribeAuthorizedProfiles(fn){listListener=fn;fn([a,b]);return()=>{};},selectCase:async()=>true,openForCase:()=>true});
+ assert.equal(fleet.getState().count,2);assert.equal(scene.children.length,2);
+ assert.notDeepEqual(scene.children[0].position.toArray(),scene.children[1].position.toArray());
+ assert.deepEqual(scene.children[0].position.toArray(),[7,0,-6.25]);assert.deepEqual(scene.children[1].position.toArray(),[10.05,0,-6.25]);
+ listListener([b]);currentListener(a);assert.equal(fleet.getState().count,1);assert.equal(scene.children[0].userData.caseId,'CASE-SECOND');
+ listListener([]);assert.equal(scene.children.length,0);fleet.dispose();
+});
+
+test('every resident body delegates to the same opening flow without a second case-selection request',async()=>{
+ const [T]=await modules,{createOfficeResidents}=await import(moduleURL(path.join(base,'avatars/office-residents.mjs')));
+ const scene=new T.Scene(),fleet=createOfficeResidents({scene,authoritative:false}),opened=[];
+ const profiles=['SYNTHETIC-A','SYNTHETIC-B','SYNTHETIC-C'].map(id=>({...profile,id,case_id:id,form:'man'}));
+ fleet.bind({subscribeProfile(fn){fn(profiles[0]);return()=>{};},subscribeAuthorizedProfiles(fn){fn(profiles);return()=>{};},
+  selectCase(){throw Error('Selection must belong to the shared opening controller');},openForCase:id=>{opened.push(id);return true;}});
+ for(const body of scene.children){let mesh;body.traverse(o=>{if(!mesh&&o.isMesh)mesh=o;});assert.equal(fleet.selectIntersection({object:mesh}),true);}
+ assert.deepEqual(opened,profiles.map(p=>p.case_id));fleet.dispose();
 });

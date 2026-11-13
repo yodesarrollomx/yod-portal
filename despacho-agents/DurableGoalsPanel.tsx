@@ -1,7 +1,6 @@
 import {useEffect,useState} from 'react';
-import {DEFAULT_DURABLE_GOAL,watchGoals} from '../despacho3d/goals.mjs';
+import {DEFAULT_DURABLE_GOAL,watchGoals,goalDisplay,taskDisplay,goalReviewActions} from '../despacho3d/goals.mjs';
 
-const labels:Record<string,string>={queued:'En espera',running:'Trabajando',ready_for_review:'Lista para revisar',awaiting_data:'Faltan datos',stopped:'Detenida',completed:'Aceptada',pending:'Pendiente',blocked:'Bloqueada'};
 const intentions:Record<string,string>={approve:'Acepto el resultado y sus evidencias. Esta meta quedará cerrada; esto no aprueba el Plan de Potencial ni una decisión de negocio.',resume:'Quiero reanudar esta meta con la lectura actual del expediente. El agente conservará las evidencias ya guardadas.',stop:'Quiero detener esta meta. Se conservará lo guardado y se cancelará el trabajo que siga en ejecución.'};
 type Controller={state:()=>any,subscribe:(fn:(value:any)=>void)=>()=>void,read:()=>Promise<boolean>,create:(draft:any)=>Promise<boolean>,review:(id:string,action:string)=>Promise<boolean>,retry:()=>Promise<boolean>,hide:()=>void};
 export function DurableGoalsPanel({controller,active,workerReady}:{controller:Controller,active:boolean,workerReady:boolean}){
@@ -25,23 +24,23 @@ export function DurableGoalsPanel({controller,active,workerReady}:{controller:Co
   {!state.model&&<p className="muted">{state.busy?'Consultando las metas guardadas…':'Actualiza para consultar las metas del expediente.'}</p>}
   {state.model&&!goals.length&&<p className="muted">Todavía no hay metas guardadas.</p>}
   <div className="durable-goal-list">{goals.map((goal:any)=><article className="dossier-record durable-goal" key={goal.goal_id}>
-   <div className="durable-goal-heading"><h3>{goal.title}</h3><span className={`durable-state durable-state-${goal.status}`}>{labels[goal.status]}</span></div>
+   <div className="durable-goal-heading"><h3>{goal.title}</h3><span className={`durable-state durable-state-${goal.status}`}>{goalDisplay(goal).label}</span></div>
    <p>{goal.instruction}</p><p className="dossier-meta"><b>Resultado esperado: </b>{goal.criterion}</p>
    {goal.status==='queued'&&<p className="durable-progress-note">Meta guardada. {workerReady?'El agente la tomará cuando esté libre.':'Esperando a que se conecte el motor.'}</p>}
-   {goal.status==='running'&&<p className="durable-progress-note">El servidor registró una ejecución. Los avances aparecerán conforme se guarden.</p>}
+   {goal.status==='running'&&<p className="durable-progress-note">{goalDisplay(goal).notice}</p>}
    {goal.status==='ready_for_review'&&<p className="durable-progress-note">Revisa el resultado y sus evidencias antes de aceptarlo.</p>}
    {goal.status==='awaiting_data'&&<p className="durable-progress-note">Revisa los datos faltantes en el resumen. Puedes reanudar cuando el expediente tenga lo necesario.</p>}
    {goal.summary&&<div className="durable-summary"><h4>Resultado y siguientes pasos</h4><p>{goal.summary}</p></div>}
    <ol className="durable-tasks">{goal.tasks.map((task:any)=><li key={task.id}>
-    <div className="durable-goal-heading"><h4>{task.title}</h4><span className="durable-state">{labels[task.status]}</span></div>
+    <div className="durable-goal-heading"><h4>{task.title}</h4><span className="durable-state">{taskDisplay(task,goal)}</span></div>
     <p className="dossier-meta"><b>Comprobación: </b>{task.criterion}</p>{task.summary&&<p>{task.summary}</p>}
     {goal.evidence.filter((item:any)=>item.task_id===task.id).map((item:any)=><details className="durable-evidence" key={item.id}><summary>Evidencia: {item.title}</summary><pre>{item.text}</pre></details>)}
    </li>)}</ol>
    {!goal.tasks.length&&<p className="muted small">Todavía no hay tareas guardadas para esta meta.</p>}
    <div className="durable-actions">
-    {goal.status==='ready_for_review'&&<button type="button" className="btn btn-good" disabled={disabled} onClick={()=>setReview({id:goal.goal_id,revision:goal.revision,action:'approve'})}>Aceptar resultado</button>}
-    {(['stopped','awaiting_data'].includes(goal.status)||goal.can_resume===true)&&<button type="button" className="btn" disabled={disabled||activeGoal&&goal.status==='stopped'} onClick={()=>setReview({id:goal.goal_id,revision:goal.revision,action:'resume'})}>Reanudar meta</button>}
-    {['queued','running','ready_for_review','awaiting_data'].includes(goal.status)&&<button type="button" className="btn" disabled={disabled} onClick={()=>setReview({id:goal.goal_id,revision:goal.revision,action:'stop'})}>Detener meta</button>}
+    {goalReviewActions(goal).includes('approve')&&<button type="button" className="btn btn-good" disabled={disabled} onClick={()=>setReview({id:goal.goal_id,revision:goal.revision,action:'approve'})}>Aceptar resultado</button>}
+    {goalReviewActions(goal).includes('resume')&&<button type="button" className="btn" disabled={disabled||activeGoal&&goal.status==='stopped'} onClick={()=>setReview({id:goal.goal_id,revision:goal.revision,action:'resume'})}>Reanudar meta</button>}
+    {goalReviewActions(goal).includes('stop')&&<button type="button" className="btn" disabled={disabled} onClick={()=>setReview({id:goal.goal_id,revision:goal.revision,action:'stop'})}>Detener meta</button>}
    </div>
    {review?.id===goal.goal_id&&<div className="durable-review" role="group" aria-label="Confirmar revisión de la meta"><p>{intentions[review.action]}</p><div className="durable-actions"><button type="button" className="btn btn-good" disabled={disabled} onClick={()=>void act()}>{review.action==='approve'?'Sí, aceptar resultado':review.action==='resume'?'Sí, reanudar':'Sí, detener'}</button><button type="button" className="btn" disabled={state.busy} onClick={()=>setReview(null)}>Cancelar</button></div></div>}
    <p className="dossier-meta">Último registro: <time dateTime={goal.updated_at}>{new Date(goal.updated_at).toLocaleString('es-MX')}</time></p>
