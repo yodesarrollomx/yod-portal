@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-13.ui-consistencia.1",
+  "revision": "2026-11-13.reel-herramientas.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -16012,6 +16012,22 @@
         "Checks de arquitectura, suite Node y verificadores de portal. Recorrido público de destinos canónicos; sesión interna pendiente."
       ],
       "deployment": "Implementación aislada y PR antes de integración. Producción y recorrido autenticado se acreditan por separado. Reversión del PR sin modificar datos ni permisos."
+    },
+    {
+      "id": "CHG-REEL-TOOLS-20261018",
+      "components": [
+        "SYS-YOD-OS",
+        "EXT-JEV"
+      ],
+      "status": "propuesto",
+      "approval": "Solicitud del propietario: integrar prudentemente herramientas del Reel, priorizar Graphify y Agent Skills, comprobar compatibilidad/licencias/seguridad y duplicados. No autoriza envío de datos privados a nuevos proveedores ni ajustes globales.",
+      "proposal": "Instrucciones locales versionadas y dos skills documentales de Addy Osmani bajo demanda. Graphify en evaluación sin instalación; Ponytail y OmniRoute diferidos. Se conserva Jev existente.",
+      "tests": [
+        "Revisión estática de políticas y archivos mediante API GitHub; verificación de lectura tras escritura.",
+        "Pendiente terminal: suite completa del portal, arquitectura, pruebas de skills con ChatGPT/Codex y Claude, evaluación aislada de Graphify sin red."
+      ],
+      "deployment": "PR borrador; sin instalación ejecutable ni activación productiva. Vistas generadas con funciones originales en V8; pruebas/checks y coordinación con PR283 se registran en docs/agentes/RESULTADOS.md.",
+      "rollback": "Revertir sólo los commits de esta propuesta; conservar Jev, instrucciones previas, históricos y configuración privada."
     }
   ],
   "data_contracts": [
@@ -21265,6 +21281,13 @@
         "SYS-POTENCIALES",
         "SYS-PPP2",
         "SHEET-PPP2"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "docs/agentes/",
+      "components": [
+        "SYS-YOD-OS"
       ]
     }
   ],

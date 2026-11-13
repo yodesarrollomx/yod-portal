@@ -28,3 +28,11 @@ Colaboración entre agentes (Claude y ChatGPT/Codex): leer `docs/colaboracion/`,
 ## Eficiencia de contexto y agentes (propuesta 2026-10-18)
 
 Consultar `docs/agentes/politica-eficiencia-yod-os.md` antes de investigar o modificar sistemas. Esta política complementa —no reemplaza— los requisitos de arquitectura, seguridad y pruebas anteriores. Los complementos opcionales no se consideran instalados por mencionar su nombre.
+
+## Herramientas del Reel · política local 1.0.0
+
+Leer [docs/agentes/POLITICA.md](docs/agentes/POLITICA.md) para búsqueda, triage Jev,
+pasajes, presupuesto, evidencia y entrega. Cargar sólo la skill documental pertinente
+indicada allí. Inventario, licencias y pendientes: docs/agentes/RESULTADOS.md y
+integraciones.lock.json en esa carpeta. No registrar skills globales ni cambiar
+proveedores por esta referencia; no enviar datos privados sin aprobación específica.

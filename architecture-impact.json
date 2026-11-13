@@ -1,27 +1,14 @@
 {
-  "model_revision": "2026-11-13.ui-consistencia.1",
-  "proposal_id": "CHG-OS-UI-CONSISTENCY-20261106",
-  "summary": "Homologar búsqueda por nombre/código y teclado, corregir consulta residual al reabrir y saludo vacío; completar estado accesible, foco y cierre del menú móvil compartido. Sin cambios de identidad, ACL, datos, endpoints ni catálogo. (13-nov-2026: reaplicado sobre main; etiqueta de versión 20261113-ui-consistencia.)",
+  "model_revision": "2026-11-13.reel-herramientas.1",
+  "proposal_id": "CHG-REEL-TOOLS-20261018",
+  "summary": "Política local versionada para agentes y dos skills documentales bajo demanda; evaluación de herramientas del Reel. Sin cambios a transportes, proveedores, permisos ni ejecución de negocio.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-MERCADO",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
-    "SYS-TRACK",
-    "SYS-CONTROL",
-    "GAS-PORTERO",
-    "SYS-DESPACHO",
-    "GAS-CATALOGO",
-    "SYS-POTENCIALES"
+    "EXT-JEV"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "node verify-os.cjs",
-    "node verify-portal.cjs",
-    "node verify-accesos.cjs",
-    "node verify-obra-app.cjs",
-    "git diff --check"
+    "Revisión estática de políticas y archivos mediante API GitHub; verificación de lectura tras escritura.",
+    "Pendiente terminal: suite completa del portal, arquitectura, pruebas de skills con ChatGPT/Codex y Claude, evaluación aislada de Graphify sin red."
   ],
-  "rollback": "Revertir el PR y regenerar vistas/versiones; conservar datos, identidad, permisos e historial."
+  "rollback": "Revertir sólo los commits de esta propuesta; conservar Jev, instrucciones previas, históricos y configuración privada."
 }
