@@ -1241,6 +1241,11 @@
           "claim": "CHG-FOLIO-CARTERA-20261113: versión 110 publicada el 2026-11-13 sobre la implementación existente (misma URL), base 109 + Cartera.gs + una línea de doGet (recurso=cartera, sólo lectura). Releída por Drive; GET con sesión de Dirección → ok (19 proyectos, 7 etapas) y con clave falsa → error clave. HermesAccess.gs de otro agente viaja inerte: su línea de ruta se quitó para la versión y se restauró en el editor.",
           "status": "ejecucion",
           "source_revision": "Apps Script version 110; 2026-11-13"
+        },
+        {
+          "claim": "CHG-FOLIO-CARTERA-20261113: versión 111 publicada el 2026-11-13 sobre la implementación existente: acceso-alta escribe la columna «proyectos» de ACCESOS (validada; un folio mal escrito no se guarda), accesos-lista la devuelve y la cartera en blanco sólo abre al equipo (un externo sin tableros internos no ve ninguna). Releída por Drive; GET en vivo: 12 usuarios con el campo, cartera de Dirección 19, clave falsa → clave. HermesAccess.gs sigue fuera de la ruta.",
+          "status": "ejecucion",
+          "source_revision": "Apps Script version 111; 2026-11-13"
         }
       ],
       "data_entities": [
@@ -16344,9 +16349,10 @@
         "Prueba local de Cartera.gs con un Apps Script de mentira: 11 comprobaciones (Dirección, clave maestra, broker recortado, columna en blanco, admin, acceso revocado, credencial inválida, sin pestaña)",
         "node --test tests/*.cjs · verify-os · verify-portal · verify-accesos · verify-obra-app · node scripts/versiones.cjs --check · node scripts/arquitectura.cjs --check",
         "En vivo, 13-nov-2026: GET recurso=cartera con sesión de Dirección → ok, 19 proyectos, 7 etapas, 5 con plan; con clave falsa → error clave.",
-        "En vivo, 13-nov-2026: el Inicio pinta los siete carriles (1 · 7 · 1 · 0 · 1 · 1 · 0) y deja fuera lo dado de baja."
+        "En vivo, 13-nov-2026: el Inicio pinta los siete carriles (1 · 7 · 1 · 0 · 1 · 1 · 0) y deja fuera lo dado de baja.",
+        "En vivo, versión 111: accesos-lista trae «proyectos» en los 12 usuarios; la cartera de Dirección sigue en 19; clave falsa → clave. Pruebas privadas: Cartera.gs 23 comprobaciones y acceso-alta/accesos-lista 13."
       ],
-      "deployment": "Publicado. Tablero: PR 359 fusionado (66dc402); la tira de siete carriles se ve en vivo en el Inicio. Portero: versión 110 del 13-nov-2026 (15:22 de Hermosillo) sobre la implementación existente, misma URL, publicada por Claude desde el Chrome de Dirección con el método de docs/agentes/publicar-apps-script.md: base 109 + Cartera.gs + una línea en doGet. Lo guardado se releyó por Drive archivo por archivo. Lo guardado traía además HermesAccess.gs y su línea de ruta, de otro agente y sin visto bueno para publicarse: la línea se quitó para la versión (el archivo viaja inerte) y se restauró en el editor. Falta probar en vivo el recorte de una cuenta externa (columna proyectos con folios).",
+      "deployment": "Publicado. Tablero: PR 359 fusionado (66dc402); la tira de siete carriles se ve en vivo en el Inicio. Portero: versión 110 del 13-nov-2026 (15:22 de Hermosillo) sobre la implementación existente, misma URL, publicada por Claude desde el Chrome de Dirección con el método de docs/agentes/publicar-apps-script.md: base 109 + Cartera.gs + una línea en doGet. Lo guardado se releyó por Drive archivo por archivo. Lo guardado traía además HermesAccess.gs y su línea de ruta, de otro agente y sin visto bueno para publicarse: la línea se quitó para la versión (el archivo viaja inerte) y se restauró en el editor. Versión 111 (15:48 de Hermosillo), mismo método: puertas por proyecto. acceso-alta acepta «proyectos» (validado en Cartera.gs; un folio mal escrito no se guarda) y accesos-lista lo devuelve; con la columna en blanco el equipo ve toda la cartera y un externo, sin ningún tablero interno, no ve ninguno. El campo de Accesos va en el PR potenciales-yod 108. Falta probar en vivo el recorte de una cuenta externa con folios asignados (llega con el primer broker, PLAN-03).",
       "rollback": "Revertir el PR (vuelve la foto de cuatro etapas). Las columnas etapa_folio y proyectos se pueden dejar: nadie más las lee. En el Portero, volver a la versión anterior en Administrar implementaciones."
     }
   ],

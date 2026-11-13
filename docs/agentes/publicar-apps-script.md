@@ -155,3 +155,5 @@ En el atlas, una evidencia `ejecucion` en el componente del backend.
   versión y se restauró en el editor.
 - Prueba: GET con sesión de Dirección → 19 proyectos en 7 etapas; clave falsa → `clave`. La tira de
   siete carriles del Inicio lo pinta en vivo.
+- Ese mismo día, la versión 111 (puertas por proyecto) siguió exactamente los mismos pasos: quitar
+  la línea ajena, editar, guardar, releer por Drive, «Versión nueva», restaurar la línea, releer.
