@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-13.despacho-retro.1 · 2026-10-30.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-13.ppp2-vivo.1 · 2026-10-30.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -1233,14 +1233,16 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 
 - Componentes: SYS-PPP2, GAS-PPP2, SHEET-PPP2.
 - Evidencia: server/ppp2/PPP2.gs (ppp2-servidor-v1) y ppp2/libro/generar.py (ppp2-libro-v1) en potenciales-yod; docs/ppp2.md..
-- Entrada/campos: `GET ppp2-meta sin credencial; ppp2-vivero y ppp2-plan con k = sesión del Portero (board PT).`, `POST text/plain JSON: ppp2-dato, ppp2-producto, ppp2-palanca, ppp2-version, ppp2-responder, ppp2-investigar, ppp2-hallazgo, ppp2-candado, ppp2-reparto, ppp2-estres y ppp2-sembrar, con request_id y la revisión vista.`.
-- Salida: Resumen clave → valor del libro, tablas del plan y la serie mensual del dinero de las tres versiones., Cada escritura devuelve la revisión nueva y el resumen recalculado por el libro; deja renglón en la Bitácora..
+- Entrada/campos: `GET ppp2-meta sin credencial; ppp2-vivero y ppp2-plan con k = sesión del Portero (board PT).`, `POST text/plain JSON: ppp2-dato, ppp2-producto, ppp2-palanca, ppp2-version, ppp2-responder, ppp2-investigar (con mundo = true, lo que falta), ppp2-hallazgo, ppp2-candado, ppp2-reparto, ppp2-estres, ppp2-ronda, ppp2-consejo y ppp2-sembrar, con request_id y la revisión vista.`.
+- Salida: Resumen clave → valor del libro, tablas del plan, rondas, consejo y la serie mensual del dinero de las tres versiones; lo de quién abre (permisos, liga al libro) y del momento (latido, ronda en curso, clave de la API) se calcula en cada llamada., Cada escritura devuelve la revisión nueva, el resumen recalculado por el libro y, si sobra tiempo, el plan ya leído; deja renglón en la Bitácora. Si la API de IA falla, sólo sus códigos HTTP..
 
 - Ninguna fórmula financiera fuera del libro; el servidor sólo escribe celdas permitidas y lee lo calculado.
 - Sólo admin vuelve vigente una versión; admin y editor capturan; quien tiene PT lee.
 - Una revisión vieja no sobrescribe; el mismo request_id no escribe dos veces.
 - El PPP actual, sus motores y el Portero no cambian; el respaldo del Portero no se guarda como destino.
 - La página no lleva datos de planes ni identificadores de libros.
+- Lo ya leído de un libro sólo se sirve con la llave de su última modificación y del sello de la bitácora; nunca se guarda lo de quién abre.
+- El consejo se escribe sólo con siete votos válidos sobre la misma huella y evidencia; la clave de la API vive sólo en el servidor.
 
 ## CTR-JEV-CONSULTAS
 

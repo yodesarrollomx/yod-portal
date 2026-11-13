@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-13.despacho-retro.1",
+  "revision": "2026-11-13.ppp2-vivo.1",
   "checked_at": "2026-10-30",
   "priorities": [
     "vender_mas",
@@ -3570,25 +3570,30 @@
       "nombre": "PPP 2 · el vivero de planes",
       "tipo": "tablero",
       "repo": "yodesarrollomx/potenciales-yod",
-      "proposito": "Cultivar cada plan de potencial: nace como semilla, se nutre de datos con fuente, investiga y propone versiones; muestra primero lo que recibe el dueño y en cuánto tiempo",
+      "proposito": "Cultivar cada plan de potencial: nace como semilla, se nutre de datos con fuente, itera (mueve capital y arranque de obra, se prueba contra los golpes y se presenta al consejo de planes) y pide lo que no puede resolver solo; muestra primero lo que recibe el dueño y en cuánto tiempo. El plan es el autón: no hay un agente aparte",
       "dominio": "Ventas",
       "owner_role": "Dirección",
-      "status": "codigo",
-      "runtime_status": "Página lista en el PR; se publica al integrarlo. Lecturas del servidor con sesión de Dirección comprobadas el 12-nov-2026.",
+      "status": "ejecucion",
+      "runtime_status": "Publicada en GitHub Pages desde el 12-nov-2026 y en el menú de YOD OS (PR 354 de yod-portal). En uso con la sesión de Dirección: rondas, pruebas de estrés, investigación y consejo por API. Desde el 13-nov-2026 (PR 103) pinta al instante lo último que vio con esa sesión y trae lo nuevo en fondo: reabrir un plan lo pinta en 1 a 4 s y trae lo nuevo hacia los 4 s (antes, de 26 a 35 s).",
       "evidence": [
         {
           "repo": "yodesarrollomx/potenciales-yod",
           "path": "ppp2.js",
-          "claim": "Vivero y plan vivo; sólo presenta lo que calcula el libro y nunca borra la credencial del Portero",
+          "claim": "Vivero y plan vivo en primera persona: presenta lo que calcula el libro, pinta al instante lo último que vio con esa sesión y no guarda nada hasta traer lo nuevo; nunca borra la credencial del Portero",
           "status": "codigo",
-          "source_revision": "PR claude/ppp2-moreo (potenciales-yod)"
+          "source_revision": "PR 103 (potenciales-yod)"
         },
         {
           "repo": "yodesarrollomx/yod-portal",
           "path": "os/catalogo.js",
           "claim": "Entrada PPP 2 del menú con el código PT",
           "status": "codigo",
-          "source_revision": "PR claude/ppp2-atlas"
+          "source_revision": "PR 354 (yod-portal)"
+        },
+        {
+          "claim": "Comprobado en vivo el 13-nov-2026 con la sesión de Dirección: al reabrir un plan pintó lo último que vio a los 1.3 s y trajo lo nuevo a los 4 s; al convocar al consejo repintó el plan con la respuesta, sin volver a pedirlo.",
+          "status": "ejecucion",
+          "source_revision": "2026-11-13"
         }
       ],
       "data_entities": [
@@ -3599,11 +3604,13 @@
         "candado",
         "hallazgo",
         "voto_consejo",
-        "prueba_estres"
+        "prueba_estres",
+        "ronda"
       ],
       "risks_sanitized": [
         "La siguiente pregunta se ordena con un criterio del oficio, no con un cálculo de sensibilidad",
-        "Sin una ronda programada del autón, los pedidos de investigación esperan"
+        "Lo último que vio cada persona queda en su navegador, atado a su sesión y por 12 h (se borra si la sesión se rechaza): quien comparte un equipo con la misma sesión comparte esa copia",
+        "Mientras corre una ronda, las cifras de la versión de trabajo se ven a medias: la página lo avisa y no deja aprobarla"
       ],
       "source_of_truth": "El libro de cada plan en Google Sheets (SHEET-PPP2)"
     },
@@ -3612,23 +3619,23 @@
       "nombre": "PPP 2 · servidor",
       "tipo": "apps_script",
       "repo": "yodesarrollomx/potenciales-yod",
-      "proposito": "Validar la sesión con el Portero, leer el libro del plan y escribir sólo celdas permitidas con bitácora, revisión y request_id; no calcula finanzas",
+      "proposito": "Validar la sesión con el Portero, leer el libro del plan y escribir sólo celdas permitidas con bitácora, revisión y request_id; correr la ronda, las pruebas de estrés, el consejo de planes y la investigación por API (también solo, con el latido cada 30 minutos). No calcula finanzas: compara cifras del libro",
       "dominio": "Ventas",
       "owner_role": "Responsable técnico del backend",
       "status": "ejecucion",
-      "runtime_status": "Versión 1 activa (proyecto nuevo, implementación propia, aparte del Portero). Comprobado en vivo: ppp2-meta, rechazo de una liga inválida vía canje, y lecturas de vivero y plan con la sesión de Dirección. Escrituras reales sin probar: sólo con dobles.",
+      "runtime_status": "Versión 8 activa sobre la misma implementación desde el 13-nov-2026. Comprobado en vivo: escrituras con bitácora, ronda a pedido y ronda del latido, pruebas de estrés, investigación por API con búsqueda en la web, consejo por API con los siete votos (sesión de prueba en una copia de un plan, 31 s) y lectura desde lo ya leído: 1.7 a 2.4 s en el servidor, contra 9 a 22 s cuando hay que leer el libro.",
       "evidence": [
         {
           "repo": "yodesarrollomx/potenciales-yod",
           "path": "server/ppp2/PPP2.gs",
-          "claim": "Contrato ppp2-servidor-v1: canje con board=PT, allowlist de escrituras, LockService, revisión y bitácora",
+          "claim": "Contrato ppp2-servidor-v1: canje con board=PT, allowlist de escrituras, LockService, revisión y bitácora; ronda con diario de recuperación; consejo con siete votos sobre la misma huella; caché de lo leído con llave por última modificación y sello de la bitácora",
           "status": "codigo",
-          "source_revision": "PR claude/ppp2-moreo (potenciales-yod)"
+          "source_revision": "PR 103 (potenciales-yod)"
         },
         {
-          "claim": "Versión 1 desplegada el 12-nov-2026 12:40 (Hermosillo) y autorizada por Dirección; lecturas reales comprobadas desde el navegador de Dirección.",
+          "claim": "Versión 8 publicada el 13-nov-2026. Registro de ejecuciones: la primera lectura tardó 22.1 s (canje y libro en frío) y las siguientes 1.7 y 2.4 s con lo ya leído; el consejo tardó 30.9 s con siete votos por API y respondió con el plan ya leído.",
           "status": "ejecucion",
-          "source_revision": "Apps Script version 1"
+          "source_revision": "Apps Script versión 8"
         }
       ],
       "data_entities": [
@@ -3639,32 +3646,37 @@
         "candado",
         "hallazgo",
         "pedido",
-        "bitacora"
+        "bitacora",
+        "ronda",
+        "diario_de_ronda",
+        "voto_consejo"
       ],
       "risks_sanitized": [
         "Revocar una sesión tarda hasta 10 minutos por la caché del canje, igual que en el Portero",
-        "Una prueba de estrés escribe y restablece la columna Prueba del libro; si se interrumpe, la próxima corrida la restablece"
+        "Mientras corre una ronda, unas pruebas o el consejo (minutos), nadie puede guardar cambios en ningún plan: el servidor atiende de uno en uno",
+        "La API de IA cobra por uso; la clave vive sólo en las propiedades del script y el texto de error del proveedor no se guarda",
+        "Lo ya leído de un libro se guarda hasta 6 h, pero su llave cambia en cuanto el libro cambia; si Drive tardara en enterarse de un cambio hecho a mano en la hoja, se vería en cuanto se entere"
       ],
-      "backend_source_status": "fuente_repositorio_igual_a_version_1",
-      "source_of_truth": "Fuente en GitHub pegada sin cambios en la versión 1; los datos viven en los libros"
+      "backend_source_status": "fuente_repositorio_igual_a_version_8",
+      "source_of_truth": "Fuente en GitHub (server/ppp2/PPP2.gs) pegada sin cambios en la versión 8 de la misma implementación; los datos viven en los libros"
     },
     {
       "id": "SHEET-PPP2",
       "nombre": "PPP 2 · vivero y libros de plan",
       "tipo": "google_sheets",
       "repo": "yodesarrollomx/potenciales-yod",
-      "proposito": "Registro de planes y un libro por plan con todas las fórmulas: tres versiones, revisión para fondos, reparto, preguntas del oficio, candados, hallazgos, consejo, pruebas y bitácora",
+      "proposito": "Registro de planes y un libro por plan con todas las fórmulas: tres versiones, revisión para fondos, reparto, preguntas del oficio, candados, hallazgos, consejo, pruebas, rondas y bitácora. El libro calcula además la edad y el ciclo del plan: qué versión defiende, su huella, el siguiente paso, la evidencia y el paso de capital de la ronda",
       "dominio": "Ventas",
       "owner_role": "Dirección / propietario del libro",
       "status": "ejecucion",
-      "runtime_status": "Plantilla ppp2-libro-v1 y primer libro creados el 12-nov-2026; Google Sheets recalcula las tres versiones y cuadran con el borrador previo (comparación privada, sin cifras públicas).",
+      "runtime_status": "Plantilla ppp2-libro-v1 y un libro por plan en el Drive de Dirección; Google Sheets recalcula las tres versiones. En vivo: rondas, pruebas de estrés y, el 13-nov-2026, una sesión del consejo por API con siete votos que llevan la huella y la evidencia de la versión (copia de prueba, archivada después).",
       "evidence": [
         {
           "repo": "yodesarrollomx/potenciales-yod",
           "path": "ppp2/libro/generar.py",
           "claim": "Generador de la plantilla con fórmulas nativas",
           "status": "codigo",
-          "source_revision": "PR claude/ppp2-moreo (potenciales-yod)"
+          "source_revision": "PR 75 (potenciales-yod)"
         },
         {
           "claim": "Libros reales creados en el Drive de Dirección; comparación de resultados contra el borrador hecha en privado.",
@@ -3684,11 +3696,14 @@
         "candado",
         "hallazgo",
         "voto_consejo",
+        "prueba_estres",
+        "ronda",
         "bitacora"
       ],
       "risks_sanitized": [
         "Quien edita el libro a mano puede romper una fórmula: las pestañas calculadas llevan protección de aviso",
-        "Los identificadores de los libros no se publican"
+        "Los identificadores de los libros no se publican",
+        "Un voto del consejo sin la huella de la versión no cuenta"
       ],
       "physical_mapping_status": "registro_y_libros_por_plan"
     },
@@ -3696,14 +3711,15 @@
       "owner_role": "Dirección técnica",
       "status": "ejecucion",
       "risks_sanitized": [
-        "Costo por uso. Sin clave o sin respuesta, el grafo se rehace igual, sin explicación."
+        "Costo por uso. Sin clave o sin respuesta, el grafo se rehace igual, sin explicación.",
+        "En PPP 2 la clave vive sólo en las propiedades del script del servidor (no en Actions); cada sesión del consejo son siete consultas y cada investigación una, con costo por uso."
       ],
       "id": "EXT-ANTHROPIC",
       "nombre": "Claude · API de Anthropic",
       "tipo": "servicio_externo",
       "repo": "yodesarrollomx/potenciales-yod",
       "dominio": "Infraestructura",
-      "proposito": "Explicar en palabras qué cambió entre la versión aprobada del grafo y la rehecha a pedido.",
+      "proposito": "Claude por API: explica en palabras qué cambió entre la versión aprobada del grafo y la rehecha a pedido, y en PPP 2 vota en el consejo de planes (siete jueces por separado) e investiga con búsqueda en la web.",
       "source_of_truth": "El grafo rehecho y su diferencia contra el aprobado. La explicación es un resumen validado contra un esquema fijo; no decide ni publica nada.",
       "runtime_status": "Comprobado el 12-nov-2026: los borradores G-20261112-1147 y G-20261112-1203 salieron con explicación de Claude por API (registro de la rama grafo-datos, ia=claude). La clave vive sólo como secreto del flujo.",
       "evidence": [
@@ -7235,23 +7251,33 @@
       "id": "CON-PPP2-SERVIDOR",
       "from": "SYS-PPP2",
       "to": "GAS-PPP2",
-      "label": "Lee el vivero y el plan; envía datos, respuestas, palancas, aprobaciones y pruebas",
+      "label": "Lee el vivero y el plan; envía datos, respuestas, palancas, aprobaciones, rondas, pruebas, consejo e investigación",
       "kind": "api",
-      "status": "codigo",
+      "status": "ejecucion",
       "evidence": [
         {
           "repo": "yodesarrollomx/potenciales-yod",
           "path": "ppp2.js",
-          "claim": "fetch al /exec de PPP 2 con la sesión del Portero",
+          "claim": "leer() y escribir() con la sesión del Portero",
           "status": "codigo",
-          "source_revision": "PR claude/ppp2-moreo (potenciales-yod)"
+          "source_revision": "PR 103 (potenciales-yod)"
+        },
+        {
+          "claim": "Usada desde el navegador de Dirección el 12 y 13-nov-2026",
+          "status": "ejecucion",
+          "source_revision": "Apps Script versión 8"
         }
       ],
-      "runtime_verified": false,
+      "runtime_verified": true,
       "contract": "CTR-PPP2",
       "contract_ids": [
         "CTR-PPP2"
-      ]
+      ],
+      "runtime_evidence": {
+        "checked_at": "2026-11-13T18:57:00Z",
+        "scope": "Lecturas y escrituras desde la página publicada con la sesión de Dirección.",
+        "receipt": "Bitácoras privadas de los libros de plan y del vivero; registro de ejecuciones del proyecto de Apps Script (privado)."
+      }
     },
     {
       "id": "CON-PPP2-PORTERO",
@@ -7259,61 +7285,91 @@
       "to": "GAS-PORTERO",
       "label": "Canje de sesión con board=PT; el respaldo sólo si el original falla en esa llamada",
       "kind": "lectura",
-      "status": "codigo",
+      "status": "ejecucion",
       "evidence": [
         {
           "repo": "yodesarrollomx/potenciales-yod",
           "path": "server/ppp2/PPP2.gs",
           "claim": "canje_ con caché de 10 minutos",
           "status": "codigo",
-          "source_revision": "PR claude/ppp2-moreo (potenciales-yod)"
+          "source_revision": "PR 103 (potenciales-yod)"
+        },
+        {
+          "claim": "Cada lectura y escritura en vivo pasó por el canje; una liga inválida se rechaza",
+          "status": "ejecucion",
+          "source_revision": "Apps Script versión 8"
         }
       ],
-      "runtime_verified": false,
+      "runtime_verified": true,
       "contract": "Contrato de canje del Portero (recurso=canje) sin cambios",
-      "contract_ids": []
+      "contract_ids": [],
+      "runtime_evidence": {
+        "checked_at": "2026-11-13T18:57:00Z",
+        "scope": "Canje con el Portero original en cada llamada en vivo.",
+        "receipt": "Bitácoras privadas de los libros de plan y del vivero; registro de ejecuciones del proyecto de Apps Script (privado)."
+      }
     },
     {
       "id": "CON-PPP2-LIBROS",
       "from": "GAS-PPP2",
       "to": "SHEET-PPP2",
-      "label": "Lee el resumen y las tablas; escribe celdas permitidas y la bitácora",
+      "label": "Lee el resumen y las tablas; escribe celdas permitidas y la bitácora; guarda lo leído con llave por última modificación y sello",
       "kind": "persistencia",
-      "status": "codigo",
+      "status": "ejecucion",
       "evidence": [
         {
           "repo": "yodesarrollomx/potenciales-yod",
           "path": "server/ppp2/PPP2.gs",
           "claim": "SpreadsheetApp sobre el vivero y los libros",
           "status": "codigo",
-          "source_revision": "PR claude/ppp2-moreo (potenciales-yod)"
+          "source_revision": "PR 103 (potenciales-yod)"
+        },
+        {
+          "claim": "En vivo el 12 y 13-nov-2026: respuestas, rondas (a pedido y del latido), pruebas de estrés, hallazgos de la investigación y una sesión del consejo por API, cada una con su renglón de bitácora.",
+          "status": "ejecucion",
+          "source_revision": "Apps Script versión 8"
         }
       ],
-      "runtime_verified": false,
+      "runtime_verified": true,
       "contract": "CTR-PPP2",
       "contract_ids": [
         "CTR-PPP2"
-      ]
+      ],
+      "runtime_evidence": {
+        "checked_at": "2026-11-13T18:57:00Z",
+        "scope": "Escrituras con bitácora (respuestas, rondas, pruebas, consejo, hallazgos) y lecturas del plan.",
+        "receipt": "Bitácoras privadas de los libros de plan y del vivero; registro de ejecuciones del proyecto de Apps Script (privado)."
+      }
     },
     {
       "id": "CON-PPP2-DRIVE",
       "from": "GAS-PPP2",
       "to": "EXT-DRIVE",
-      "label": "Copia la plantilla al sembrar un plan",
+      "label": "Copia la plantilla al sembrar un plan y lee la última modificación de cada libro (llave de lo ya leído)",
       "kind": "persistencia",
-      "status": "codigo",
+      "status": "ejecucion",
       "evidence": [
         {
           "repo": "yodesarrollomx/potenciales-yod",
           "path": "server/ppp2/PPP2.gs",
-          "claim": "DriveApp.makeCopy de la plantilla",
+          "claim": "DriveApp.makeCopy de la plantilla y getLastUpdated de cada libro",
           "status": "codigo",
-          "source_revision": "PR claude/ppp2-moreo (potenciales-yod)"
+          "source_revision": "PR 103 (potenciales-yod)"
+        },
+        {
+          "claim": "Última modificación de cada libro leída en cada apertura con la versión 8: cambió tras cada escritura y sirvió de llave de lo ya leído (13-nov-2026).",
+          "status": "ejecucion",
+          "source_revision": "Apps Script versión 8"
         }
       ],
-      "runtime_verified": false,
+      "runtime_verified": true,
       "contract": "Copia en la carpeta del vivero",
-      "contract_ids": []
+      "contract_ids": [],
+      "runtime_evidence": {
+        "checked_at": "2026-11-13T18:57:00Z",
+        "scope": "Última modificación de un libro leída en vivo para servir lo ya leído.",
+        "receipt": "Bitácoras privadas de los libros de plan y del vivero; registro de ejecuciones del proyecto de Apps Script (privado)."
+      }
     },
     {
       "id": "CON-GRAFO-IA-CLAUDE",
@@ -7378,6 +7434,56 @@
           "commit": "6b5cc19a0ff4cecc17ff230e843de853df2045e2",
           "claim": "PR 97 abierto por yod-grafo-borrador[bot]; aprobado con un toque.",
           "status": "ejecucion"
+        }
+      ]
+    },
+    {
+      "id": "CON-PPP2-ANTHROPIC",
+      "from": "GAS-PPP2",
+      "to": "EXT-ANTHROPIC",
+      "kind": "api",
+      "contract": "Sale el expediente del plan (cifras ya calculadas por el libro, pruebas con la misma huella, datos con fuente) y vuelve un voto con esquema fijo, o hallazgos cuya fuente se compara contra la búsqueda. La clave vive sólo en las propiedades del script; el texto de error del proveedor no se guarda. Se escribe sólo con siete votos válidos sobre la misma huella y evidencia. Costo por uso.",
+      "contract_ids": [],
+      "label": "El consejo de planes (siete jueces por separado, con el expediente que arma el libro) y la investigación con búsqueda en la web",
+      "status": "ejecucion",
+      "runtime_verified": true,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "server/ppp2/PPP2.gs",
+          "claim": "consejo_, votarIA_ (herramienta «votar» ofrecida, sin forzarla) e investigarIA_ (sólo la búsqueda en la web)",
+          "status": "codigo",
+          "source_revision": "PR 103 (potenciales-yod)"
+        },
+        {
+          "claim": "13-nov-2026: sesión del consejo por API con siete votos válidos escritos con la huella y la evidencia de la versión, sobre una copia de prueba de un plan (archivada y a la papelera después). El primer intento, el 12-nov, no dio votos porque el modelo rechaza forzar la herramienta; se corrigió en el PR 103.",
+          "status": "ejecucion",
+          "source_revision": "Apps Script versión 8"
+        }
+      ],
+      "runtime_evidence": {
+        "checked_at": "2026-11-13T18:57:00Z",
+        "scope": "Sesión del consejo por API completa (siete jueces) desde la página publicada, con la sesión de Dirección.",
+        "receipt": "Bitácoras privadas de los libros de plan y del vivero; registro de ejecuciones del proyecto de Apps Script (privado)."
+      }
+    },
+    {
+      "id": "CON-PPP2-OPENAI",
+      "from": "GAS-PPP2",
+      "to": "EXT-OPENAI",
+      "kind": "api",
+      "contract": "Mismo expediente y mismo esquema de voto que con Anthropic. Sin comprobar en vivo: no hay clave de OpenAI en el servidor.",
+      "contract_ids": [],
+      "label": "Respaldo del consejo de planes con salida estructurada, si Config lo pide o sólo hay su clave; la investigación va sólo por Anthropic",
+      "status": "codigo",
+      "runtime_verified": false,
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "server/ppp2/PPP2.gs",
+          "claim": "pedidoIA_ con la API de respuestas, esquema estricto y store=false",
+          "status": "codigo",
+          "source_revision": "PR 103 (potenciales-yod)"
         }
       ]
     }
@@ -15843,7 +15949,7 @@
         "SYS-YOD-OS"
       ],
       "status": "implementado_local",
-      "authorization": "autorizado_por_chat: Dirección (11-nov-2026, 18:38 HMO): «Ponlo dentro de la misma tablero de Master Developer y de plan de potencial, porque esto al final es un diagrama del plan de potencial… yo me imagino este diagrama hasta arriba, explicando todo lo que está sucediendo abajo, así que tiene que estar referenciado hacia los cálculos y datos que estemos poniendo abajo… Empieza por el de Moreo, pero en realidad va a ser para todos».",
+      "authorization": "autorizado_por_chat: Dirección (11-nov-2026, 18:38 HMO): «Ponlo dentro de la misma tablero de Master Developer y de plan de potencial, porque esto al final es un diagrama del plan de potencial… yo me imagino este diagrama hasta arriba, explicando todo lo que está sucediendo abajo, así que tiene que estar referenciado hacia los cálculos y datos que estemos poniendo abajo… Empieza por el de [un plan real], pero en realidad va a ser para todos».",
       "proposal": "Diagrama en cadena arriba de cada Plan de Potencial: cuatro eslabones (1 Se vende → 2 Entra y sale → 3 En el banco y prestado → 4 Lo que queda) con notas a mano, leyendas y la línea de «antes». Pieza común nueva en potenciales-yod (ppp-cadena.js + ppp-cadena.css): sólo presentación. Un adaptador por tipo de plan traduce el estado que ya confirmó el motor del tablero (computar() o el estado nativo de Sheets) al mismo modelo de cuatro eslabones; no calcula resultados financieros, no usa la red y no guarda nada. Primera instalación: VERTICAL (mixto.html), montado después del encabezado de resultados y antes de las cinco tarjetas; recibe el mismo estado que PPPView.update al final de render(). Los botones del diagrama son las versiones que ya existen en el caso y llaman a la función del tablero (escCambiar), sin ruta nueva de escritura. Cada eslabón liga a la tarjeta de donde sale y al control que lo mueve (PPPView.reveal lo muestra sin enfocarlo). Al cambiar de versión la cadena corre 1→4; al mover un dato abajo se repinta con el «antes». ppp-intake.js vacía el diagrama mientras se captura un plan nuevo y el CSS lo oculta en los mismos modos que el encabezado de resultados. Criterio móvil restablecido en pruebas por tener ahora el diagrama arriba: las cinco tarjetas conservan su bloque (<728 px), el diagrama ocupa <0.9 pantallas y todo cabe en ≤2 pantallas (antes: cinco tarjetas en ≤1.2 pantallas). Macrolotes, Residencial, Unifamiliar y Patrimonial quedan con su contrato en docs/ppp-cadena.md y se instalan con su propio adaptador en cambios posteriores. Tipografía de las notas (Caveat 700, OFL) servida desde el propio repo. La etiqueta propia pasa a 20261111-cadena: accesos.html (SYS-CONTROL) y las demás páginas sólo cambian su etiqueta. SYS-YOD-OS: sólo este registro en el atlas; el marco no cambia. Sin backend, hojas, permisos ni datos de casos en el repositorio.",
       "tests": [
         "node --test tests/ppp-cadena.test.cjs: 7 pruebas; los cuatro eslabones suman lo que reporta el motor en 11 variantes sintéticas y 400 combinaciones al azar de los controles; sin estado no hay diagrama; el módulo no contiene red, almacenamiento ni motor.",
@@ -15852,7 +15958,7 @@
         "Recorridos de navegador existentes del flujo «Verificar interfaz PPP», con el criterio móvil restablecido en tests/ppp-browser.cjs y tests/ppp-terrain-browser.cjs.",
         "Paleta validada por tablero (separación para daltonismo ≥ 10 y contraste ≥ 3:1) sobre las superficies clara y oscura.",
         "node scripts/versiones.cjs --check y git diff --check.",
-        "Pendiente: verlo en el navegador de Dirección con un caso real tras publicar; alta del caso Moréo por el flujo normal del tablero."
+        "Pendiente: verlo en el navegador de Dirección con un caso real tras publicar; alta de un caso real por el flujo normal del tablero."
       ],
       "deployment": "Un PR de potenciales-yod a main (GitHub Pages) con el atlas fijado en el commit de esta propuesta. Sin Apps Script ni cambios de hojas.",
       "rollback": "Revertir el PR de potenciales-yod quita el diagrama y devuelve el tablero vertical a su estado anterior (incluido el criterio móvil original de las pruebas). No hay datos, hojas ni sesiones que restaurar."
@@ -15910,11 +16016,13 @@
         "SYS-POTENCIALES",
         "SYS-PPP2",
         "SYS-TRACK",
-        "SYS-YOD-OS"
+        "SYS-YOD-OS",
+        "EXT-ANTHROPIC",
+        "EXT-OPENAI"
       ],
       "proposal": "PPP 2: un portal nuevo del Plan de Potencial que empieza de cero sin tocar el PPP actual. Cada plan es un libro de Google Sheets con todas las fórmulas (plantilla ppp2-libro-v1): tres versiones con el mismo motor de flujo mensual (ventas por producto, cobranza con enganche, pagos durante la obra y saldos al individualizar, obra en campana, capital primero, banco contra avance con tope y caja mínima, respaldo si falta dinero y devolución con rendimiento), la revisión para fondos de nueve pruebas, cinco esquemas de reparto con el dueño sobre el resultado real del flujo, las 96 preguntas del oficio ordenadas por la edad del plan, candados, hallazgos del autón, votos del consejo de planes, pruebas de estrés en una columna que se restablece y bitácora. La edad (semilla, plántula, árbol, flor, fruto) la calcula el libro. Un Apps Script aparte (GAS-PPP2, ligado al registro del vivero) valida la sesión con el Portero (board PT; el respaldo sólo si el original falla en esa llamada), escribe sólo celdas permitidas con revisión, request_id y bitácora, y no calcula finanzas; sólo admin vuelve vigente una versión. La página ppp2.html de potenciales-yod muestra el vivero y el plan vivo con lo que recibe el dueño primero, y el menú de YOD OS agrega «PPP 2» con el código PT, después de Mercado.",
-      "approval": "Dirección, 12-nov-2026 por chat: «me abras un nuevo portal de plan de potencial… ponle en el tablero PPP2… no borrar nada de lo que tenemos, pero empezar de cero»; a las 11:45, tras la propuesta esquemática y el consejo: edades con esos nombres, el PPP que se cobra lleva de plántula a árbol, la radiografía muestra primero lo que recibe el dueño, «hay que integrar jueces del oficio», «empecemos por Moreo… sigue adelante y ejecútalo tú todo completo». A las 12:41 autorizó en su navegador el acceso del servidor nuevo.",
-      "status": "implementado_local",
+      "approval": "Dirección, 12-nov-2026 por chat: «me abras un nuevo portal de plan de potencial… ponle en el tablero PPP2… no borrar nada de lo que tenemos, pero empezar de cero»; a las 11:45, tras la propuesta esquemática y el consejo: edades con esos nombres, el PPP que se cobra lleva de plántula a árbol, la radiografía muestra primero lo que recibe el dueño, «hay que integrar jueces del oficio», «empecemos por [un plan real]… sigue adelante y ejecútalo tú todo completo». A las 12:41 autorizó en su navegador el acceso del servidor nuevo.",
+      "status": "publicado",
       "tests": [
         "potenciales-yod: node --test tests/ppp2-servidor.test.cjs (20: canje con board=PT y respaldo sólo ante falla, permisos por rol, rangos y claves inventadas, revisión vieja, request_id repetido, palancas y renglones calculados, aprobación sólo de Dirección, preguntas, pedidos, candados con evidencia, estrés que restablece, sembrar y pausa)",
         "potenciales-yod: node --test tests/ppp2-libro.test.cjs (el libro de ejemplo recalculado cuadra: flujo, cobranza, unidades, ganancia y reparto)",
@@ -15922,7 +16030,7 @@
         "yod-portal: node scripts/catalogo.cjs --check · verify-os · verify-portal · verify-accesos · node --test tests/*.cjs · node scripts/arquitectura.cjs --check",
         "En vivo (12-nov-2026): ppp2-meta, rechazo de liga inválida vía canje y lecturas de vivero y plan con la sesión de Dirección; el primer libro recalculado por Google Sheets cuadra con el borrador (privado)."
       ],
-      "deployment": "Apps Script nuevo «PPP 2 · servidor» ligado al registro del vivero, versión 1 como implementación propia (proyecto nuevo); futuras versiones siempre con «Nueva versión» sobre la misma implementación. Página y menú por GitHub Pages al integrar los PR de potenciales-yod y yod-portal. Rollback: revertir los PR; el servidor puede quedar en sólo lectura con Config!pausa.",
+      "deployment": "Apps Script «PPP 2 · servidor» ligado al registro del vivero: la primera implementación fue propia (proyecto nuevo) y desde ahí cada cambio es «Nueva versión» sobre la misma; vive la versión 8. Página y menú publicados por GitHub Pages (PR 75, 92, 95, 102 y 103 de potenciales-yod; PR 354 de yod-portal). Rollback: la versión anterior de la misma implementación y revertir el PR.",
       "invariants": [
         "El PPP actual y el Portero no cambian.",
         "Sin fórmulas financieras fuera del libro.",
@@ -16184,6 +16292,28 @@
       ],
       "deployment": "Implementación local verificada: opt-in del mismo host y respaldo3D, consumidores actuales y fábrica DOM en núcleos Live/Workspace compartidos. Corrida final 1126/1126 y 14/14 focales aprobadas; arquitectura/OS/portal/accesos/obra y diff aprobados. Harness Chromium sintético reporta cinco superficies, revocación, chinche v2/ACK simulado, exclusión library y teclado modal; cero errores y cargas Three. No publicado ni aceptado en producción.",
       "rollback": "Retirar opt-in del host y restaurar wrapper live anterior por PR; conservar default3D, contratos, historial, visitas, recibos, fuentes y datos. Ningún GAS por revertir."
+    },
+    {
+      "id": "CHG-ATLAS-PPP2-VIVO-20261113",
+      "components": [
+        "SYS-PPP2",
+        "GAS-PPP2",
+        "SHEET-PPP2",
+        "EXT-ANTHROPIC",
+        "EXT-OPENAI",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Registrar PPP 2 en producción: la página publicada, el servidor con su versión viva, sus conexiones con las API de IA (CON-PPP2-ANTHROPIC comprobada en vivo; CON-PPP2-OPENAI en código), lo ya leído del libro y lo comprobado en vivo; quitar del atlas las menciones del nombre de un plan. Marca como publicado CHG-PPP2-20261112. Sólo documentación.",
+      "approval": "Dirección, 12-nov-2026 por chat: «hazlo vía en línea… quiero un botón… conectado a las APIs» y, a las 21:04, «Hazlos completo para que no quede nada pendiente».",
+      "status": "implementado_local",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "verify-os · verify-portal · verify-accesos · verify-obra-app",
+        "git diff --check"
+      ],
+      "deployment": "Se publica al fusionar el PR en yod-portal.",
+      "rollback": "Revertir el PR; no toca código ni producción."
     }
   ],
   "data_contracts": [
@@ -18648,18 +18778,20 @@
       "source": "server/ppp2/PPP2.gs (ppp2-servidor-v1) y ppp2/libro/generar.py (ppp2-libro-v1) en potenciales-yod; docs/ppp2.md.",
       "input": [
         "GET ppp2-meta sin credencial; ppp2-vivero y ppp2-plan con k = sesión del Portero (board PT).",
-        "POST text/plain JSON: ppp2-dato, ppp2-producto, ppp2-palanca, ppp2-version, ppp2-responder, ppp2-investigar, ppp2-hallazgo, ppp2-candado, ppp2-reparto, ppp2-estres y ppp2-sembrar, con request_id y la revisión vista."
+        "POST text/plain JSON: ppp2-dato, ppp2-producto, ppp2-palanca, ppp2-version, ppp2-responder, ppp2-investigar (con mundo = true, lo que falta), ppp2-hallazgo, ppp2-candado, ppp2-reparto, ppp2-estres, ppp2-ronda, ppp2-consejo y ppp2-sembrar, con request_id y la revisión vista."
       ],
       "output": [
-        "Resumen clave → valor del libro, tablas del plan y la serie mensual del dinero de las tres versiones.",
-        "Cada escritura devuelve la revisión nueva y el resumen recalculado por el libro; deja renglón en la Bitácora."
+        "Resumen clave → valor del libro, tablas del plan, rondas, consejo y la serie mensual del dinero de las tres versiones; lo de quién abre (permisos, liga al libro) y del momento (latido, ronda en curso, clave de la API) se calcula en cada llamada.",
+        "Cada escritura devuelve la revisión nueva, el resumen recalculado por el libro y, si sobra tiempo, el plan ya leído; deja renglón en la Bitácora. Si la API de IA falla, sólo sus códigos HTTP."
       ],
       "invariants": [
         "Ninguna fórmula financiera fuera del libro; el servidor sólo escribe celdas permitidas y lee lo calculado.",
         "Sólo admin vuelve vigente una versión; admin y editor capturan; quien tiene PT lee.",
         "Una revisión vieja no sobrescribe; el mismo request_id no escribe dos veces.",
         "El PPP actual, sus motores y el Portero no cambian; el respaldo del Portero no se guarda como destino.",
-        "La página no lleva datos de planes ni identificadores de libros."
+        "La página no lleva datos de planes ni identificadores de libros.",
+        "Lo ya leído de un libro sólo se sirve con la llave de su última modificación y del sello de la bitácora; nunca se guarda lo de quién abre.",
+        "El consejo se escribe sólo con siete votos válidos sobre la misma huella y evidencia; la clave de la API vive sólo en el servidor."
       ]
     },
     {

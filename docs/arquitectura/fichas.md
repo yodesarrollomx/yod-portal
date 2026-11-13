@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-13.despacho-retro.1 · 2026-10-30.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-13.ppp2-vivo.1 · 2026-10-30.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -1057,7 +1057,7 @@ Proveer voz y respuestas con herramientas del servidor.
 - Entidades: sesion, audio, transcripcion, llamada_herramienta.
 - Fuente de verdad: Configuración de sesión y herramientas autorizadas en servidor; resultados deben comprobarse contra registros de negocio..
 - Evidencia: Sesión de voz y herramientas conectadas desde el servidor.; [sala-edicion/nube/motores/imagen.py](https://github.com/yodesarrollomx/sala-edicion/blob/dde4ab0151c5cc36071882380afe7ecf495ecef6/nube/motores/imagen.py) — GPT Image1.5 real por servidor existente; código429 credit_balance_exhausted e insufficient_quota confirmado38310564537. Configuración accesible no equivale a saldo disponible..
-- Conexiones: CON-MOTOR-OPENAI (SVC-AUTON-CLOUD → EXT-OPENAI); CON-BANDEJA-IA (GAS-BANDEJA-NUBE → EXT-OPENAI); CON-GRAFO-IA (EXT-ACTIONS → EXT-OPENAI).
+- Conexiones: CON-MOTOR-OPENAI (SVC-AUTON-CLOUD → EXT-OPENAI); CON-BANDEJA-IA (GAS-BANDEJA-NUBE → EXT-OPENAI); CON-GRAFO-IA (EXT-ACTIONS → EXT-OPENAI); CON-PPP2-OPENAI (GAS-PPP2 → EXT-OPENAI).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 
 ## EXT-RENDER · Render · alojamiento del motor
@@ -1162,55 +1162,55 @@ Diagrama de oferta y demanda de vivienda nueva del municipio de Hermosillo por a
 
 ## SYS-PPP2 · PPP 2 · el vivero de planes
 
-Cultivar cada plan de potencial: nace como semilla, se nutre de datos con fuente, investiga y propone versiones; muestra primero lo que recibe el dueño y en cuánto tiempo
+Cultivar cada plan de potencial: nace como semilla, se nutre de datos con fuente, itera (mueve capital y arranque de obra, se prueba contra los golpes y se presenta al consejo de planes) y pide lo que no puede resolver solo; muestra primero lo que recibe el dueño y en cuánto tiempo. El plan es el autón: no hay un agente aparte
 
 - Tipo: tablero. Dominio: Ventas. Responsable: Dirección.
-- Evidencia: codigo. Producción: Página lista en el PR; se publica al integrarlo. Lecturas del servidor con sesión de Dirección comprobadas el 12-nov-2026..
-- Entidades: plan, version, dato, pregunta, candado, hallazgo, voto_consejo, prueba_estres.
+- Evidencia: ejecucion. Producción: Publicada en GitHub Pages desde el 12-nov-2026 y en el menú de YOD OS (PR 354 de yod-portal). En uso con la sesión de Dirección: rondas, pruebas de estrés, investigación y consejo por API. Desde el 13-nov-2026 (PR 103) pinta al instante lo último que vio con esa sesión y trae lo nuevo en fondo: reabrir un plan lo pinta en 1 a 4 s y trae lo nuevo hacia los 4 s (antes, de 26 a 35 s)..
+- Entidades: plan, version, dato, pregunta, candado, hallazgo, voto_consejo, prueba_estres, ronda.
 - Fuente de verdad: El libro de cada plan en Google Sheets (SHEET-PPP2).
-- Evidencia: [potenciales-yod/ppp2.js](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/ppp2.js) — Vivero y plan vivo; sólo presenta lo que calcula el libro y nunca borra la credencial del Portero; [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js) — Entrada PPP 2 del menú con el código PT.
+- Evidencia: [potenciales-yod/ppp2.js](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/ppp2.js) — Vivero y plan vivo en primera persona: presenta lo que calcula el libro, pinta al instante lo último que vio con esa sesión y no guarda nada hasta traer lo nuevo; nunca borra la credencial del Portero; [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js) — Entrada PPP 2 del menú con el código PT; Comprobado en vivo el 13-nov-2026 con la sesión de Dirección: al reabrir un plan pintó lo último que vio a los 1.3 s y trajo lo nuevo a los 4 s; al convocar al consejo repintó el plan con la respuesta, sin volver a pedirlo..
 - Conexiones: CON-PPP2-SERVIDOR (SYS-PPP2 → GAS-PPP2).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
-- Pendientes: La siguiente pregunta se ordena con un criterio del oficio, no con un cálculo de sensibilidad; Sin una ronda programada del autón, los pedidos de investigación esperan.
+- Pendientes: La siguiente pregunta se ordena con un criterio del oficio, no con un cálculo de sensibilidad; Lo último que vio cada persona queda en su navegador, atado a su sesión y por 12 h (se borra si la sesión se rechaza): quien comparte un equipo con la misma sesión comparte esa copia; Mientras corre una ronda, las cifras de la versión de trabajo se ven a medias: la página lo avisa y no deja aprobarla.
 
 ## GAS-PPP2 · PPP 2 · servidor
 
-Validar la sesión con el Portero, leer el libro del plan y escribir sólo celdas permitidas con bitácora, revisión y request_id; no calcula finanzas
+Validar la sesión con el Portero, leer el libro del plan y escribir sólo celdas permitidas con bitácora, revisión y request_id; correr la ronda, las pruebas de estrés, el consejo de planes y la investigación por API (también solo, con el latido cada 30 minutos). No calcula finanzas: compara cifras del libro
 
 - Tipo: apps_script. Dominio: Ventas. Responsable: Responsable técnico del backend.
-- Evidencia: ejecucion. Producción: Versión 1 activa (proyecto nuevo, implementación propia, aparte del Portero). Comprobado en vivo: ppp2-meta, rechazo de una liga inválida vía canje, y lecturas de vivero y plan con la sesión de Dirección. Escrituras reales sin probar: sólo con dobles..
-- Entidades: plan, version, dato, pregunta, candado, hallazgo, pedido, bitacora.
-- Fuente de verdad: Fuente en GitHub pegada sin cambios en la versión 1; los datos viven en los libros.
-- Evidencia: [potenciales-yod/server/ppp2/PPP2.gs](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/server/ppp2/PPP2.gs) — Contrato ppp2-servidor-v1: canje con board=PT, allowlist de escrituras, LockService, revisión y bitácora; Versión 1 desplegada el 12-nov-2026 12:40 (Hermosillo) y autorizada por Dirección; lecturas reales comprobadas desde el navegador de Dirección..
-- Conexiones: CON-PPP2-SERVIDOR (SYS-PPP2 → GAS-PPP2); CON-PPP2-PORTERO (GAS-PPP2 → GAS-PORTERO); CON-PPP2-LIBROS (GAS-PPP2 → SHEET-PPP2); CON-PPP2-DRIVE (GAS-PPP2 → EXT-DRIVE).
+- Evidencia: ejecucion. Producción: Versión 8 activa sobre la misma implementación desde el 13-nov-2026. Comprobado en vivo: escrituras con bitácora, ronda a pedido y ronda del latido, pruebas de estrés, investigación por API con búsqueda en la web, consejo por API con los siete votos (sesión de prueba en una copia de un plan, 31 s) y lectura desde lo ya leído: 1.7 a 2.4 s en el servidor, contra 9 a 22 s cuando hay que leer el libro..
+- Entidades: plan, version, dato, pregunta, candado, hallazgo, pedido, bitacora, ronda, diario_de_ronda, voto_consejo.
+- Fuente de verdad: Fuente en GitHub (server/ppp2/PPP2.gs) pegada sin cambios en la versión 8 de la misma implementación; los datos viven en los libros.
+- Evidencia: [potenciales-yod/server/ppp2/PPP2.gs](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/server/ppp2/PPP2.gs) — Contrato ppp2-servidor-v1: canje con board=PT, allowlist de escrituras, LockService, revisión y bitácora; ronda con diario de recuperación; consejo con siete votos sobre la misma huella; caché de lo leído con llave por última modificación y sello de la bitácora; Versión 8 publicada el 13-nov-2026. Registro de ejecuciones: la primera lectura tardó 22.1 s (canje y libro en frío) y las siguientes 1.7 y 2.4 s con lo ya leído; el consejo tardó 30.9 s con siete votos por API y respondió con el plan ya leído..
+- Conexiones: CON-PPP2-SERVIDOR (SYS-PPP2 → GAS-PPP2); CON-PPP2-PORTERO (GAS-PPP2 → GAS-PORTERO); CON-PPP2-LIBROS (GAS-PPP2 → SHEET-PPP2); CON-PPP2-DRIVE (GAS-PPP2 → EXT-DRIVE); CON-PPP2-ANTHROPIC (GAS-PPP2 → EXT-ANTHROPIC); CON-PPP2-OPENAI (GAS-PPP2 → EXT-OPENAI).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
-- Pendientes: Revocar una sesión tarda hasta 10 minutos por la caché del canje, igual que en el Portero; Una prueba de estrés escribe y restablece la columna Prueba del libro; si se interrumpe, la próxima corrida la restablece.
+- Pendientes: Revocar una sesión tarda hasta 10 minutos por la caché del canje, igual que en el Portero; Mientras corre una ronda, unas pruebas o el consejo (minutos), nadie puede guardar cambios en ningún plan: el servidor atiende de uno en uno; La API de IA cobra por uso; la clave vive sólo en las propiedades del script y el texto de error del proveedor no se guarda; Lo ya leído de un libro se guarda hasta 6 h, pero su llave cambia en cuanto el libro cambia; si Drive tardara en enterarse de un cambio hecho a mano en la hoja, se vería en cuanto se entere.
 
 ## SHEET-PPP2 · PPP 2 · vivero y libros de plan
 
-Registro de planes y un libro por plan con todas las fórmulas: tres versiones, revisión para fondos, reparto, preguntas del oficio, candados, hallazgos, consejo, pruebas y bitácora
+Registro de planes y un libro por plan con todas las fórmulas: tres versiones, revisión para fondos, reparto, preguntas del oficio, candados, hallazgos, consejo, pruebas, rondas y bitácora. El libro calcula además la edad y el ciclo del plan: qué versión defiende, su huella, el siguiente paso, la evidencia y el paso de capital de la ronda
 
 - Tipo: google_sheets. Dominio: Ventas. Responsable: Dirección / propietario del libro.
-- Evidencia: ejecucion. Producción: Plantilla ppp2-libro-v1 y primer libro creados el 12-nov-2026; Google Sheets recalcula las tres versiones y cuadran con el borrador previo (comparación privada, sin cifras públicas)..
-- Entidades: plan, dato, producto, palanca, flujo_mensual, version, reparto, pregunta, candado, hallazgo, voto_consejo, bitacora.
+- Evidencia: ejecucion. Producción: Plantilla ppp2-libro-v1 y un libro por plan en el Drive de Dirección; Google Sheets recalcula las tres versiones. En vivo: rondas, pruebas de estrés y, el 13-nov-2026, una sesión del consejo por API con siete votos que llevan la huella y la evidencia de la versión (copia de prueba, archivada después)..
+- Entidades: plan, dato, producto, palanca, flujo_mensual, version, reparto, pregunta, candado, hallazgo, voto_consejo, prueba_estres, ronda, bitacora.
 - Fuente de verdad: Ver relaciones de persistencia; confirmar deployment y esquema.
 - Evidencia: [potenciales-yod/ppp2/libro/generar.py](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/ppp2/libro/generar.py) — Generador de la plantilla con fórmulas nativas; Libros reales creados en el Drive de Dirección; comparación de resultados contra el borrador hecha en privado..
 - Conexiones: CON-PPP2-LIBROS (GAS-PPP2 → SHEET-PPP2).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
-- Pendientes: Quien edita el libro a mano puede romper una fórmula: las pestañas calculadas llevan protección de aviso; Los identificadores de los libros no se publican.
+- Pendientes: Quien edita el libro a mano puede romper una fórmula: las pestañas calculadas llevan protección de aviso; Los identificadores de los libros no se publican; Un voto del consejo sin la huella de la versión no cuenta.
 
 ## EXT-ANTHROPIC · Claude · API de Anthropic
 
-Explicar en palabras qué cambió entre la versión aprobada del grafo y la rehecha a pedido.
+Claude por API: explica en palabras qué cambió entre la versión aprobada del grafo y la rehecha a pedido, y en PPP 2 vota en el consejo de planes (siete jueces por separado) e investiga con búsqueda en la web.
 
 - Tipo: servicio_externo. Dominio: Infraestructura. Responsable: Dirección técnica.
 - Evidencia: ejecucion. Producción: Comprobado el 12-nov-2026: los borradores G-20261112-1147 y G-20261112-1203 salieron con explicación de Claude por API (registro de la rama grafo-datos, ia=claude). La clave vive sólo como secreto del flujo..
 - Entidades: diferencia_grafo, explicacion.
 - Fuente de verdad: El grafo rehecho y su diferencia contra el aprobado. La explicación es un resumen validado contra un esquema fijo; no decide ni publica nada..
 - Evidencia: [potenciales-yod/grafo-motor/ia.py](https://github.com/yodesarrollomx/potenciales-yod/blob/e3217cca26d63fbaa65cf90b50c3a2958af0ad13/grafo-motor/ia.py) — Petición con herramienta y esquema fijo, y un segundo intento si la primera respuesta llega mal formada.; [potenciales-yod/.github/workflows/grafo-rehacer.yml](https://github.com/yodesarrollomx/potenciales-yod/blob/685ed2ccb0e1d7cf1224fe4216bc071349e7751c/.github/workflows/grafo-rehacer.yml) — Corridas 43283429071 y 43286094367 del 12-nov-2026: pedidos de rehacer con explicación de Claude..
-- Conexiones: CON-GRAFO-IA-CLAUDE (EXT-ACTIONS → EXT-ANTHROPIC).
+- Conexiones: CON-GRAFO-IA-CLAUDE (EXT-ACTIONS → EXT-ANTHROPIC); CON-PPP2-ANTHROPIC (GAS-PPP2 → EXT-ANTHROPIC).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
-- Pendientes: Costo por uso. Sin clave o sin respuesta, el grafo se rehace igual, sin explicación..
+- Pendientes: Costo por uso. Sin clave o sin respuesta, el grafo se rehace igual, sin explicación.; En PPP 2 la clave vive sólo en las propiedades del script del servidor (no en Actions); cada sesión del consejo son siete consultas y cada investigación una, con costo por uso..
 
 ## EXT-GRAFO-APP · GitHub App · YOD Grafo borrador
 
