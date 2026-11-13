@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-13.despacho-retro.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-13.ppp2-vivo.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 28 sistemas y 96 componentes distribuidos exactamente una vez.
-- 10 áreas; 161 conexiones registradas, 15 marcadas como verificadas en el atlas.
+- 10 áreas; 163 conexiones registradas, 20 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -257,7 +257,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-BANDEJA-PORTERO · GAS-BANDEJA-NUBE → GAS-PORTERO · autorizacion · Revalidar identidad de Dirección para aprobar y antes de enviar · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-BROKERS-PPP-SAVED · SYS-INVERSION → GAS-PORTERO · lectura · Resumen guardado de PPP por expediente · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-PPP-ETAPAS-ESCRITURA · SYS-POTENCIALES → GAS-PORTERO · api · Solicita etapas y relee coherencia del modelo · Estado: propuesto · Ejecución no verificada en el atlas.
-- CON-PPP2-PORTERO · GAS-PPP2 → GAS-PORTERO · lectura · Canje de sesión con board=PT; el respaldo sólo si el original falla en esa llamada · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-PPP2-PORTERO · GAS-PPP2 → GAS-PORTERO · lectura · Canje de sesión con board=PT; el respaldo sólo si el original falla en esa llamada · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
@@ -310,11 +310,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-BANDEJA-PORTERO · Código publicado; su compuerta o consentimiento reales todavía no se acreditan. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/README.md · Sin revisión inmutable en esta referencia
 - CON-BROKERS-PPP-SAVED · Consumo propuesto del mismo contrato empleado por el PPP; lectura autorizada y campos guardados se comprobarán por separado. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - CON-PPP-ETAPAS-ESCRITURA · Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
-- CON-PPP2-PORTERO · canje\_ con caché de 10 minutos · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR claude/ppp2-moreo (potenciales-yod)
+- CON-PPP2-PORTERO · canje\_ con caché de 10 minutos · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR 103 (potenciales-yod)
+- CON-PPP2-PORTERO · Cada lectura y escritura en vivo pasó por el canje; una liga inválida se rechaza · Estado: ejecucion · Revisión: Apps Script versión 8
 
 **Pendientes y límites:**
 
-- 28 conexiones sin verificación de ejecución registrada.
+- 27 conexiones sin verificación de ejecución registrada.
 - La revisión acotada no certifica todas las operaciones de negocio ni sustituye la aceptación con usuarios reales.
 - Las cachés de consumidores ajenos a esta entrega pueden conservar permisos temporalmente; revisarlos al continuar cada tablero.
 
@@ -1225,97 +1226,111 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 ### PPP 2 · el vivero de planes · SYS-PPP2
 
-**Función:** Cultivar cada plan de potencial: nace como semilla, se nutre de datos con fuente, investiga y propone versiones; muestra primero lo que recibe el dueño y en cuánto tiempo
+**Función:** Cultivar cada plan de potencial: nace como semilla, se nutre de datos con fuente, itera (mueve capital y arranque de obra, se prueba contra los golpes y se presenta al consejo de planes) y pide lo que no puede resolver solo; muestra primero lo que recibe el dueño y en cuánto tiempo. El plan es el autón: no hay un agente aparte
 
 **Fuente oficial:** El libro de cada plan en Google Sheets (SHEET-PPP2)
 
 **Responsable operativo:** Dirección
 
-**Estado registrado:** codigo. Página lista en el PR; se publica al integrarlo. Lecturas del servidor con sesión de Dirección comprobadas el 12-nov-2026.
+**Estado registrado:** ejecucion. Publicada en GitHub Pages desde el 12-nov-2026 y en el menú de YOD OS (PR 354 de yod-portal). En uso con la sesión de Dirección: rondas, pruebas de estrés, investigación y consejo por API. Desde el 13-nov-2026 (PR 103) pinta al instante lo último que vio con esa sesión y trae lo nuevo en fondo: reabrir un plan lo pinta en 1 a 4 s y trae lo nuevo hacia los 4 s (antes, de 26 a 35 s).
 
 **Conexiones registradas; no habilitan operaciones:**
 
-- CON-PPP2-SERVIDOR · SYS-PPP2 → GAS-PPP2 · api · Lee el vivero y el plan; envía datos, respuestas, palancas, aprobaciones y pruebas · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-PPP2-SERVIDOR · SYS-PPP2 → GAS-PPP2 · api · Lee el vivero y el plan; envía datos, respuestas, palancas, aprobaciones, rondas, pruebas, consejo e investigación · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
-- Vivero y plan vivo; sólo presenta lo que calcula el libro y nunca borra la credencial del Portero · Estado: codigo · yodesarrollomx/potenciales-yod · ppp2.js · Revisión: PR claude/ppp2-moreo (potenciales-yod)
-- Entrada PPP 2 del menú con el código PT · Estado: codigo · yodesarrollomx/yod-portal · os/catalogo.js · Revisión: PR claude/ppp2-atlas
+- Vivero y plan vivo en primera persona: presenta lo que calcula el libro, pinta al instante lo último que vio con esa sesión y no guarda nada hasta traer lo nuevo; nunca borra la credencial del Portero · Estado: codigo · yodesarrollomx/potenciales-yod · ppp2.js · Revisión: PR 103 (potenciales-yod)
+- Entrada PPP 2 del menú con el código PT · Estado: codigo · yodesarrollomx/yod-portal · os/catalogo.js · Revisión: PR 354 (yod-portal)
+- Comprobado en vivo el 13-nov-2026 con la sesión de Dirección: al reabrir un plan pintó lo último que vio a los 1.3 s y trajo lo nuevo a los 4 s; al convocar al consejo repintó el plan con la respuesta, sin volver a pedirlo. · Estado: ejecucion · Revisión: 2026-11-13
 
 **Evidencia de conexiones:**
 
-- CON-PPP2-SERVIDOR · fetch al /exec de PPP 2 con la sesión del Portero · Estado: codigo · yodesarrollomx/potenciales-yod · ppp2.js · Revisión: PR claude/ppp2-moreo (potenciales-yod)
+- CON-PPP2-SERVIDOR · leer() y escribir() con la sesión del Portero · Estado: codigo · yodesarrollomx/potenciales-yod · ppp2.js · Revisión: PR 103 (potenciales-yod)
+- CON-PPP2-SERVIDOR · Usada desde el navegador de Dirección el 12 y 13-nov-2026 · Estado: ejecucion · Revisión: Apps Script versión 8
+
+**Pendientes y límites:**
+
+- La siguiente pregunta se ordena con un criterio del oficio, no con un cálculo de sensibilidad
+- Lo último que vio cada persona queda en su navegador, atado a su sesión y por 12 h (se borra si la sesión se rechaza): quien comparte un equipo con la misma sesión comparte esa copia
+- Mientras corre una ronda, las cifras de la versión de trabajo se ven a medias: la página lo avisa y no deja aprobarla
+
+### PPP 2 · servidor · GAS-PPP2
+
+**Función:** Validar la sesión con el Portero, leer el libro del plan y escribir sólo celdas permitidas con bitácora, revisión y request\_id; correr la ronda, las pruebas de estrés, el consejo de planes y la investigación por API (también solo, con el latido cada 30 minutos). No calcula finanzas: compara cifras del libro
+
+**Fuente oficial:** Fuente en GitHub (server/ppp2/PPP2.gs) pegada sin cambios en la versión 8 de la misma implementación; los datos viven en los libros
+
+**Responsable operativo:** Responsable técnico del backend
+
+**Estado registrado:** ejecucion. Versión 8 activa sobre la misma implementación desde el 13-nov-2026. Comprobado en vivo: escrituras con bitácora, ronda a pedido y ronda del latido, pruebas de estrés, investigación por API con búsqueda en la web, consejo por API con los siete votos (sesión de prueba en una copia de un plan, 31 s) y lectura desde lo ya leído: 1.7 a 2.4 s en el servidor, contra 9 a 22 s cuando hay que leer el libro.
+
+**Conexiones registradas; no habilitan operaciones:**
+
+- CON-PPP2-SERVIDOR · SYS-PPP2 → GAS-PPP2 · api · Lee el vivero y el plan; envía datos, respuestas, palancas, aprobaciones, rondas, pruebas, consejo e investigación · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
+- CON-PPP2-PORTERO · GAS-PPP2 → GAS-PORTERO · lectura · Canje de sesión con board=PT; el respaldo sólo si el original falla en esa llamada · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
+- CON-PPP2-LIBROS · GAS-PPP2 → SHEET-PPP2 · persistencia · Lee el resumen y las tablas; escribe celdas permitidas y la bitácora; guarda lo leído con llave por última modificación y sello · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
+- CON-PPP2-DRIVE · GAS-PPP2 → EXT-DRIVE · persistencia · Copia la plantilla al sembrar un plan y lee la última modificación de cada libro (llave de lo ya leído) · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
+- CON-PPP2-ANTHROPIC · GAS-PPP2 → EXT-ANTHROPIC · api · El consejo de planes (siete jueces por separado, con el expediente que arma el libro) y la investigación con búsqueda en la web · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
+- CON-PPP2-OPENAI · GAS-PPP2 → EXT-OPENAI · api · Respaldo del consejo de planes con salida estructurada, si Config lo pide o sólo hay su clave; la investigación va sólo por Anthropic · Estado: codigo · Ejecución no verificada en el atlas.
+
+**Evidencia de la ficha:**
+
+- Contrato ppp2-servidor-v1: canje con board=PT, allowlist de escrituras, LockService, revisión y bitácora; ronda con diario de recuperación; consejo con siete votos sobre la misma huella; caché de lo leído con llave por última modificación y sello de la bitácora · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR 103 (potenciales-yod)
+- Versión 8 publicada el 13-nov-2026. Registro de ejecuciones: la primera lectura tardó 22.1 s (canje y libro en frío) y las siguientes 1.7 y 2.4 s con lo ya leído; el consejo tardó 30.9 s con siete votos por API y respondió con el plan ya leído. · Estado: ejecucion · Revisión: Apps Script versión 8
+
+**Evidencia de conexiones:**
+
+- CON-PPP2-SERVIDOR · leer() y escribir() con la sesión del Portero · Estado: codigo · yodesarrollomx/potenciales-yod · ppp2.js · Revisión: PR 103 (potenciales-yod)
+- CON-PPP2-SERVIDOR · Usada desde el navegador de Dirección el 12 y 13-nov-2026 · Estado: ejecucion · Revisión: Apps Script versión 8
+- CON-PPP2-PORTERO · canje\_ con caché de 10 minutos · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR 103 (potenciales-yod)
+- CON-PPP2-PORTERO · Cada lectura y escritura en vivo pasó por el canje; una liga inválida se rechaza · Estado: ejecucion · Revisión: Apps Script versión 8
+- CON-PPP2-LIBROS · SpreadsheetApp sobre el vivero y los libros · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR 103 (potenciales-yod)
+- CON-PPP2-LIBROS · En vivo el 12 y 13-nov-2026: respuestas, rondas (a pedido y del latido), pruebas de estrés, hallazgos de la investigación y una sesión del consejo por API, cada una con su renglón de bitácora. · Estado: ejecucion · Revisión: Apps Script versión 8
+- CON-PPP2-DRIVE · DriveApp.makeCopy de la plantilla y getLastUpdated de cada libro · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR 103 (potenciales-yod)
+- CON-PPP2-DRIVE · Última modificación de cada libro leída en cada apertura con la versión 8: cambió tras cada escritura y sirvió de llave de lo ya leído (13-nov-2026). · Estado: ejecucion · Revisión: Apps Script versión 8
+- CON-PPP2-ANTHROPIC · consejo\_, votarIA\_ (herramienta «votar» ofrecida, sin forzarla) e investigarIA\_ (sólo la búsqueda en la web) · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR 103 (potenciales-yod)
+- CON-PPP2-ANTHROPIC · 13-nov-2026: sesión del consejo por API con siete votos válidos escritos con la huella y la evidencia de la versión, sobre una copia de prueba de un plan (archivada y a la papelera después). El primer intento, el 12-nov, no dio votos porque el modelo rechaza forzar la herramienta; se corrigió en el PR 103. · Estado: ejecucion · Revisión: Apps Script versión 8
+- CON-PPP2-OPENAI · pedidoIA\_ con la API de respuestas, esquema estricto y store=false · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR 103 (potenciales-yod)
 
 **Pendientes y límites:**
 
 - 1 conexiones sin verificación de ejecución registrada.
-- La siguiente pregunta se ordena con un criterio del oficio, no con un cálculo de sensibilidad
-- Sin una ronda programada del autón, los pedidos de investigación esperan
-
-### PPP 2 · servidor · GAS-PPP2
-
-**Función:** Validar la sesión con el Portero, leer el libro del plan y escribir sólo celdas permitidas con bitácora, revisión y request\_id; no calcula finanzas
-
-**Fuente oficial:** Fuente en GitHub pegada sin cambios en la versión 1; los datos viven en los libros
-
-**Responsable operativo:** Responsable técnico del backend
-
-**Estado registrado:** ejecucion. Versión 1 activa (proyecto nuevo, implementación propia, aparte del Portero). Comprobado en vivo: ppp2-meta, rechazo de una liga inválida vía canje, y lecturas de vivero y plan con la sesión de Dirección. Escrituras reales sin probar: sólo con dobles.
-
-**Conexiones registradas; no habilitan operaciones:**
-
-- CON-PPP2-SERVIDOR · SYS-PPP2 → GAS-PPP2 · api · Lee el vivero y el plan; envía datos, respuestas, palancas, aprobaciones y pruebas · Estado: codigo · Ejecución no verificada en el atlas.
-- CON-PPP2-PORTERO · GAS-PPP2 → GAS-PORTERO · lectura · Canje de sesión con board=PT; el respaldo sólo si el original falla en esa llamada · Estado: codigo · Ejecución no verificada en el atlas.
-- CON-PPP2-LIBROS · GAS-PPP2 → SHEET-PPP2 · persistencia · Lee el resumen y las tablas; escribe celdas permitidas y la bitácora · Estado: codigo · Ejecución no verificada en el atlas.
-- CON-PPP2-DRIVE · GAS-PPP2 → EXT-DRIVE · persistencia · Copia la plantilla al sembrar un plan · Estado: codigo · Ejecución no verificada en el atlas.
-
-**Evidencia de la ficha:**
-
-- Contrato ppp2-servidor-v1: canje con board=PT, allowlist de escrituras, LockService, revisión y bitácora · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR claude/ppp2-moreo (potenciales-yod)
-- Versión 1 desplegada el 12-nov-2026 12:40 (Hermosillo) y autorizada por Dirección; lecturas reales comprobadas desde el navegador de Dirección. · Estado: ejecucion · Revisión: Apps Script version 1
-
-**Evidencia de conexiones:**
-
-- CON-PPP2-SERVIDOR · fetch al /exec de PPP 2 con la sesión del Portero · Estado: codigo · yodesarrollomx/potenciales-yod · ppp2.js · Revisión: PR claude/ppp2-moreo (potenciales-yod)
-- CON-PPP2-PORTERO · canje\_ con caché de 10 minutos · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR claude/ppp2-moreo (potenciales-yod)
-- CON-PPP2-LIBROS · SpreadsheetApp sobre el vivero y los libros · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR claude/ppp2-moreo (potenciales-yod)
-- CON-PPP2-DRIVE · DriveApp.makeCopy de la plantilla · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR claude/ppp2-moreo (potenciales-yod)
-
-**Pendientes y límites:**
-
-- 4 conexiones sin verificación de ejecución registrada.
 - Revocar una sesión tarda hasta 10 minutos por la caché del canje, igual que en el Portero
-- Una prueba de estrés escribe y restablece la columna Prueba del libro; si se interrumpe, la próxima corrida la restablece
+- Mientras corre una ronda, unas pruebas o el consejo (minutos), nadie puede guardar cambios en ningún plan: el servidor atiende de uno en uno
+- La API de IA cobra por uso; la clave vive sólo en las propiedades del script y el texto de error del proveedor no se guarda
+- Lo ya leído de un libro se guarda hasta 6 h, pero su llave cambia en cuanto el libro cambia; si Drive tardara en enterarse de un cambio hecho a mano en la hoja, se vería en cuanto se entere
 
 ### PPP 2 · vivero y libros de plan · SHEET-PPP2
 
-**Función:** Registro de planes y un libro por plan con todas las fórmulas: tres versiones, revisión para fondos, reparto, preguntas del oficio, candados, hallazgos, consejo, pruebas y bitácora
+**Función:** Registro de planes y un libro por plan con todas las fórmulas: tres versiones, revisión para fondos, reparto, preguntas del oficio, candados, hallazgos, consejo, pruebas, rondas y bitácora. El libro calcula además la edad y el ciclo del plan: qué versión defiende, su huella, el siguiente paso, la evidencia y el paso de capital de la ronda
 
 **Fuente oficial:** Pendiente en ficha.
 
 **Responsable operativo:** Dirección / propietario del libro
 
-**Estado registrado:** ejecucion. Plantilla ppp2-libro-v1 y primer libro creados el 12-nov-2026; Google Sheets recalcula las tres versiones y cuadran con el borrador previo (comparación privada, sin cifras públicas).
+**Estado registrado:** ejecucion. Plantilla ppp2-libro-v1 y un libro por plan en el Drive de Dirección; Google Sheets recalcula las tres versiones. En vivo: rondas, pruebas de estrés y, el 13-nov-2026, una sesión del consejo por API con siete votos que llevan la huella y la evidencia de la versión (copia de prueba, archivada después).
 
 **Conexiones registradas; no habilitan operaciones:**
 
-- CON-PPP2-LIBROS · GAS-PPP2 → SHEET-PPP2 · persistencia · Lee el resumen y las tablas; escribe celdas permitidas y la bitácora · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-PPP2-LIBROS · GAS-PPP2 → SHEET-PPP2 · persistencia · Lee el resumen y las tablas; escribe celdas permitidas y la bitácora; guarda lo leído con llave por última modificación y sello · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
-- Generador de la plantilla con fórmulas nativas · Estado: codigo · yodesarrollomx/potenciales-yod · ppp2/libro/generar.py · Revisión: PR claude/ppp2-moreo (potenciales-yod)
+- Generador de la plantilla con fórmulas nativas · Estado: codigo · yodesarrollomx/potenciales-yod · ppp2/libro/generar.py · Revisión: PR 75 (potenciales-yod)
 - Libros reales creados en el Drive de Dirección; comparación de resultados contra el borrador hecha en privado. · Estado: ejecucion · Revisión: 2026-11-12
 
 **Evidencia de conexiones:**
 
-- CON-PPP2-LIBROS · SpreadsheetApp sobre el vivero y los libros · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR claude/ppp2-moreo (potenciales-yod)
+- CON-PPP2-LIBROS · SpreadsheetApp sobre el vivero y los libros · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR 103 (potenciales-yod)
+- CON-PPP2-LIBROS · En vivo el 12 y 13-nov-2026: respuestas, rondas (a pedido y del latido), pruebas de estrés, hallazgos de la investigación y una sesión del consejo por API, cada una con su renglón de bitácora. · Estado: ejecucion · Revisión: Apps Script versión 8
 
 **Pendientes y límites:**
 
 - Fuente oficial pendiente de identificar en la ficha.
-- 1 conexiones sin verificación de ejecución registrada.
 - Quien edita el libro a mano puede romper una fórmula: las pestañas calculadas llevan protección de aviso
 - Los identificadores de los libros no se publican
+- Un voto del consejo sin la huella de la versión no cuenta
 
 ## Proyectos y diseño
 
@@ -2793,7 +2808,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PORTERO-CORCHO-DRIVE · GAS-PORTERO → EXT-DRIVE · autorizacion · Corcho: principal y ACL completos por GET · Estado: propuesto · Ejecución no verificada en el atlas.
 - CON-MOTOR-DRIVE · SVC-AUTON-CLOUD → EXT-DRIVE · lectura · Leer originales, documentos y pasajes del expediente · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-EMD-CONTINUOUS-BACKUP · GAS-EMD → EXT-DRIVE · respaldo · Propuesta: respaldo privado de administración · Estado: propuesto · Ejecución no verificada en el atlas.
-- CON-PPP2-DRIVE · GAS-PPP2 → EXT-DRIVE · persistencia · Copia la plantilla al sembrar un plan · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-PPP2-DRIVE · GAS-PPP2 → EXT-DRIVE · persistencia · Copia la plantilla al sembrar un plan y lee la última modificación de cada libro (llave de lo ya leído) · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
@@ -2807,12 +2822,13 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PORTERO-CORCHO-DRIVE · CHG-DESPACHO-CORCHO-PROVISIONAL-035: Integración provisional autorizada, pendiente en PR consumidores; preflight V57 no acredita despliegue del adapter. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - [CON-MOTOR-DRIVE · Leer originales, documentos y pasajes del expediente · Estado: codigo · alexpueblag/yod-agent-cloud · cloud/RESEARCH.md · Revisión: b88ce380d7e437cf535facdbd5592a0b8bc14dc1](https://github.com/alexpueblag/yod-agent-cloud/blob/b88ce380d7e437cf535facdbd5592a0b8bc14dc1/cloud/RESEARCH.md)
 - CON-EMD-CONTINUOUS-BACKUP · Extensión administrativa propuesta sobre los servicios privados existentes; ejecución no acreditada. · Estado: propuesto · Sin revisión inmutable en esta referencia
-- CON-PPP2-DRIVE · DriveApp.makeCopy de la plantilla · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR claude/ppp2-moreo (potenciales-yod)
+- CON-PPP2-DRIVE · DriveApp.makeCopy de la plantilla y getLastUpdated de cada libro · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR 103 (potenciales-yod)
+- CON-PPP2-DRIVE · Última modificación de cada libro leída en cada apertura con la versión 8: cambió tras cada escritura y sirvió de llave de lo ya leído (13-nov-2026). · Estado: ejecucion · Revisión: Apps Script versión 8
 
 **Pendientes y límites:**
 
 - Responsable operativo pendiente de confirmación; el encargado de verificación no sustituye esa asignación.
-- 7 conexiones sin verificación de ejecución registrada.
+- 6 conexiones sin verificación de ejecución registrada.
 - Estado y permisos no comprobados
 
 ### JEV · búsqueda y selección · EXT-JEV
@@ -3138,6 +3154,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-MOTOR-OPENAI · SVC-AUTON-CLOUD → EXT-OPENAI · integracion · Voz y herramientas con claves de servidor · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-BANDEJA-IA · GAS-BANDEJA-NUBE → EXT-OPENAI · api · Redactar cambios con API de pago por uso · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-GRAFO-IA · EXT-ACTIONS → EXT-OPENAI · api · Explicación de los cambios del grafo con OpenAI; se usa la primera respuesta válida entre los proveedores con clave · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-PPP2-OPENAI · GAS-PPP2 → EXT-OPENAI · api · Respaldo del consejo de planes con salida estructurada, si Config lo pide o sólo hay su clave; la investigación va sólo por Anthropic · Estado: codigo · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -3150,14 +3167,15 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-BANDEJA-IA · CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes. · Estado: propuesto · Sin revisión inmutable en esta referencia
 - CON-BANDEJA-IA · Código publicado; su compuerta o consentimiento reales todavía no se acreditan. · Estado: codigo · alexpueblag/yod-agent-cloud · server/bandeja/README.md · Sin revisión inmutable en esta referencia
 - [CON-GRAFO-IA · Código fusionado. Sin uso comprobado: al registrar, el flujo sólo tiene la clave de Claude, así que OpenAI no ha contestado ninguna vez. · Estado: codigo · yodesarrollomx/potenciales-yod · grafo-motor/ia.py · Revisión: e3217cca26d63fbaa65cf90b50c3a2958af0ad13](https://github.com/yodesarrollomx/potenciales-yod/blob/e3217cca26d63fbaa65cf90b50c3a2958af0ad13/grafo-motor/ia.py)
+- CON-PPP2-OPENAI · pedidoIA\_ con la API de respuestas, esquema estricto y store=false · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR 103 (potenciales-yod)
 
 **Pendientes y límites:**
 
-- 3 conexiones sin verificación de ejecución registrada.
+- 4 conexiones sin verificación de ejecución registrada.
 
 ### Claude · API de Anthropic · EXT-ANTHROPIC
 
-**Función:** Explicar en palabras qué cambió entre la versión aprobada del grafo y la rehecha a pedido.
+**Función:** Claude por API: explica en palabras qué cambió entre la versión aprobada del grafo y la rehecha a pedido, y en PPP 2 vota en el consejo de planes (siete jueces por separado) e investiga con búsqueda en la web.
 
 **Fuente oficial:** El grafo rehecho y su diferencia contra el aprobado. La explicación es un resumen validado contra un esquema fijo; no decide ni publica nada.
 
@@ -3168,6 +3186,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Conexiones registradas; no habilitan operaciones:**
 
 - CON-GRAFO-IA-CLAUDE · EXT-ACTIONS → EXT-ANTHROPIC · api · Explicación de los cambios del grafo con Claude por API; se usa la primera respuesta válida entre los proveedores con clave · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
+- CON-PPP2-ANTHROPIC · GAS-PPP2 → EXT-ANTHROPIC · api · El consejo de planes (siete jueces por separado, con el expediente que arma el libro) y la investigación con búsqueda en la web · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
@@ -3178,10 +3197,13 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - [CON-GRAFO-IA-CLAUDE · Petición con herramienta y esquema fijo, y reintento. · Estado: codigo · yodesarrollomx/potenciales-yod · grafo-motor/ia.py · Revisión: e3217cca26d63fbaa65cf90b50c3a2958af0ad13](https://github.com/yodesarrollomx/potenciales-yod/blob/e3217cca26d63fbaa65cf90b50c3a2958af0ad13/grafo-motor/ia.py)
 - [CON-GRAFO-IA-CLAUDE · Corridas 43283429071 y 43286094367 del 12-nov-2026 con explicación de Claude (ia=claude en el registro). · Estado: ejecucion · yodesarrollomx/potenciales-yod · .github/workflows/grafo-rehacer.yml · Revisión: 685ed2ccb0e1d7cf1224fe4216bc071349e7751c](https://github.com/yodesarrollomx/potenciales-yod/blob/685ed2ccb0e1d7cf1224fe4216bc071349e7751c/.github/workflows/grafo-rehacer.yml)
+- CON-PPP2-ANTHROPIC · consejo\_, votarIA\_ (herramienta «votar» ofrecida, sin forzarla) e investigarIA\_ (sólo la búsqueda en la web) · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR 103 (potenciales-yod)
+- CON-PPP2-ANTHROPIC · 13-nov-2026: sesión del consejo por API con siete votos válidos escritos con la huella y la evidencia de la versión, sobre una copia de prueba de un plan (archivada y a la papelera después). El primer intento, el 12-nov, no dio votos porque el modelo rechaza forzar la herramienta; se corrigió en el PR 103. · Estado: ejecucion · Revisión: Apps Script versión 8
 
 **Pendientes y límites:**
 
 - Costo por uso. Sin clave o sin respuesta, el grafo se rehace igual, sin explicación.
+- En PPP 2 la clave vive sólo en las propiedades del script del servidor (no en Actions); cada sesión del consejo son siete consultas y cada investigación una, con costo por uso.
 
 ### Render · alojamiento del motor · EXT-RENDER
 
