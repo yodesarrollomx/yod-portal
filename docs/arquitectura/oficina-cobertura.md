@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-12.panorama-refresco.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-13.grafo-app.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -8,8 +8,8 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
-- 28 sistemas y 95 componentes distribuidos exactamente una vez.
-- 10 áreas; 160 conexiones registradas, 14 marcadas como verificadas en el atlas.
+- 28 sistemas y 96 componentes distribuidos exactamente una vez.
+- 10 áreas; 161 conexiones registradas, 15 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -2919,7 +2919,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 ## Soporte técnico
 
-**Ubicación propuesta:** reception · 10 componentes.
+**Ubicación propuesta:** reception · 11 componentes.
 
 ### Sitio de organización · SYS-SITIO-ORG
 
@@ -2994,6 +2994,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-GRAFO-ACTIONS · SYS-CONTROL → EXT-ACTIONS · automatizacion · Rehacer el grafo a pedido y vigilar su estado cada hora · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-GRAFO-IA · EXT-ACTIONS → EXT-OPENAI · api · Explicación de los cambios del grafo con OpenAI; se usa la primera respuesta válida entre los proveedores con clave · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-GRAFO-IA-CLAUDE · EXT-ACTIONS → EXT-ANTHROPIC · api · Explicación de los cambios del grafo con Claude por API; se usa la primera respuesta válida entre los proveedores con clave · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
+- CON-GRAFO-APP · EXT-ACTIONS → EXT-GRAFO-APP · automatizacion · El flujo «Grafo · rehacer» abre el PR del borrador con el token de la App del grafo · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
@@ -3021,6 +3022,8 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - [CON-GRAFO-IA · Código fusionado. Sin uso comprobado: al registrar, el flujo sólo tiene la clave de Claude, así que OpenAI no ha contestado ninguna vez. · Estado: codigo · yodesarrollomx/potenciales-yod · grafo-motor/ia.py · Revisión: e3217cca26d63fbaa65cf90b50c3a2958af0ad13](https://github.com/yodesarrollomx/potenciales-yod/blob/e3217cca26d63fbaa65cf90b50c3a2958af0ad13/grafo-motor/ia.py)
 - [CON-GRAFO-IA-CLAUDE · Petición con herramienta y esquema fijo, y reintento. · Estado: codigo · yodesarrollomx/potenciales-yod · grafo-motor/ia.py · Revisión: e3217cca26d63fbaa65cf90b50c3a2958af0ad13](https://github.com/yodesarrollomx/potenciales-yod/blob/e3217cca26d63fbaa65cf90b50c3a2958af0ad13/grafo-motor/ia.py)
 - [CON-GRAFO-IA-CLAUDE · Corridas 43283429071 y 43286094367 del 12-nov-2026 con explicación de Claude (ia=claude en el registro). · Estado: ejecucion · yodesarrollomx/potenciales-yod · .github/workflows/grafo-rehacer.yml · Revisión: 685ed2ccb0e1d7cf1224fe4216bc071349e7751c](https://github.com/yodesarrollomx/potenciales-yod/blob/685ed2ccb0e1d7cf1224fe4216bc071349e7751c/.github/workflows/grafo-rehacer.yml)
+- [CON-GRAFO-APP · Uso del token de la App sólo en el paso del borrador. · Estado: codigo · yodesarrollomx/potenciales-yod · .github/workflows/grafo-rehacer.yml · Revisión: 6b5cc19a0ff4cecc17ff230e843de853df2045e2](https://github.com/yodesarrollomx/potenciales-yod/blob/6b5cc19a0ff4cecc17ff230e843de853df2045e2/.github/workflows/grafo-rehacer.yml)
+- [CON-GRAFO-APP · PR 97 abierto por yod-grafo-borrador\[bot\]; aprobado con un toque. · Estado: ejecucion · yodesarrollomx/potenciales-yod · .github/workflows/grafo-rehacer.yml · Revisión: 6b5cc19a0ff4cecc17ff230e843de853df2045e2](https://github.com/yodesarrollomx/potenciales-yod/blob/6b5cc19a0ff4cecc17ff230e843de853df2045e2/.github/workflows/grafo-rehacer.yml)
 
 **Pendientes y límites:**
 
@@ -3271,3 +3274,31 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Pendientes y límites:**
 
 - No acreditar verde sin prueba vigente; reconcilación de efectos inciertos antes de otro intento.
+
+### GitHub App · YOD Grafo borrador · EXT-GRAFO-APP
+
+**Función:** Abrir y poner al día el PR del borrador del grafo para que sus pruebas corran sin la aprobación manual que GitHub pide a los PR de un flujo.
+
+**Fuente oficial:** Instalación de la App en la organización (sólo potenciales-yod) y los secretos GRAFO\_APP\_ID y GRAFO\_APP\_PRIVATE\_KEY del repositorio.
+
+**Responsable operativo:** Dirección técnica
+
+**Estado registrado:** ejecucion. Instalada el 12-nov-2026 (hora de Hermosillo) por decisión de Dirección (DEC-21). Comprobada el 13-nov-2026: el PR 97 lo abrió la App, sus pruebas corrieron solas y se aprobó con un solo «Merge pull request».
+
+**Conexiones registradas; no habilitan operaciones:**
+
+- CON-GRAFO-APP · EXT-ACTIONS → EXT-GRAFO-APP · automatizacion · El flujo «Grafo · rehacer» abre el PR del borrador con el token de la App del grafo · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
+
+**Evidencia de la ficha:**
+
+- [Si existen los secretos, el flujo saca un token de la App (acción fijada por commit) sólo para subir la rama del borrador y abrir o poner al día su PR. · Estado: codigo · yodesarrollomx/potenciales-yod · .github/workflows/grafo-rehacer.yml · Revisión: 6b5cc19a0ff4cecc17ff230e843de853df2045e2](https://github.com/yodesarrollomx/potenciales-yod/blob/6b5cc19a0ff4cecc17ff230e843de853df2045e2/.github/workflows/grafo-rehacer.yml)
+- [PR 97 abierto por yod-grafo-borrador\[bot\] el 13-nov-2026; pruebas sin «Approve workflows to run»; fusionado 02:03:10Z. · Estado: ejecucion · yodesarrollomx/potenciales-yod · .github/workflows/grafo-rehacer.yml · Revisión: 6b5cc19a0ff4cecc17ff230e843de853df2045e2](https://github.com/yodesarrollomx/potenciales-yod/blob/6b5cc19a0ff4cecc17ff230e843de853df2045e2/.github/workflows/grafo-rehacer.yml)
+
+**Evidencia de conexiones:**
+
+- [CON-GRAFO-APP · Uso del token de la App sólo en el paso del borrador. · Estado: codigo · yodesarrollomx/potenciales-yod · .github/workflows/grafo-rehacer.yml · Revisión: 6b5cc19a0ff4cecc17ff230e843de853df2045e2](https://github.com/yodesarrollomx/potenciales-yod/blob/6b5cc19a0ff4cecc17ff230e843de853df2045e2/.github/workflows/grafo-rehacer.yml)
+- [CON-GRAFO-APP · PR 97 abierto por yod-grafo-borrador\[bot\]; aprobado con un toque. · Estado: ejecucion · yodesarrollomx/potenciales-yod · .github/workflows/grafo-rehacer.yml · Revisión: 6b5cc19a0ff4cecc17ff230e843de853df2045e2](https://github.com/yodesarrollomx/potenciales-yod/blob/6b5cc19a0ff4cecc17ff230e843de853df2045e2/.github/workflows/grafo-rehacer.yml)
+
+**Pendientes y límites:**
+
+- Credencial con escritura de contenido y PR en un solo repositorio; su llave vive sólo como secreto de Actions. Si falla o falta, el flujo vuelve a los dos toques.

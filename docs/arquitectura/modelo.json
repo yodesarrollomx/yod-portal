@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-12.panorama-refresco.1",
+  "revision": "2026-11-13.grafo-app.1",
   "checked_at": "2026-10-20",
   "priorities": [
     "vender_mas",
@@ -3677,6 +3677,40 @@
         "diferencia_grafo",
         "explicacion"
       ]
+    },
+    {
+      "owner_role": "Dirección técnica",
+      "status": "ejecucion",
+      "risks_sanitized": [
+        "Credencial con escritura de contenido y PR en un solo repositorio; su llave vive sólo como secreto de Actions. Si falla o falta, el flujo vuelve a los dos toques."
+      ],
+      "id": "EXT-GRAFO-APP",
+      "nombre": "GitHub App · YOD Grafo borrador",
+      "tipo": "servicio_externo",
+      "repo": "yodesarrollomx/potenciales-yod",
+      "dominio": "Infraestructura",
+      "proposito": "Abrir y poner al día el PR del borrador del grafo para que sus pruebas corran sin la aprobación manual que GitHub pide a los PR de un flujo.",
+      "source_of_truth": "Instalación de la App en la organización (sólo potenciales-yod) y los secretos GRAFO_APP_ID y GRAFO_APP_PRIVATE_KEY del repositorio.",
+      "runtime_status": "Instalada el 12-nov-2026 (hora de Hermosillo) por decisión de Dirección (DEC-21). Comprobada el 13-nov-2026: el PR 97 lo abrió la App, sus pruebas corrieron solas y se aprobó con un solo «Merge pull request».",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": ".github/workflows/grafo-rehacer.yml",
+          "commit": "6b5cc19a0ff4cecc17ff230e843de853df2045e2",
+          "claim": "Si existen los secretos, el flujo saca un token de la App (acción fijada por commit) sólo para subir la rama del borrador y abrir o poner al día su PR.",
+          "status": "codigo"
+        },
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": ".github/workflows/grafo-rehacer.yml",
+          "commit": "6b5cc19a0ff4cecc17ff230e843de853df2045e2",
+          "claim": "PR 97 abierto por yod-grafo-borrador[bot] el 13-nov-2026; pruebas sin «Approve workflows to run»; fusionado 02:03:10Z.",
+          "status": "ejecucion"
+        }
+      ],
+      "data_entities": [
+        "pr_borrador"
+      ]
     }
   ],
   "connections": [
@@ -7263,6 +7297,40 @@
         "scope": "Explicación de un borrador rehecho a pedido, recibida de Claude por API y validada contra el esquema (ia=claude en el registro). No acredita a OpenAI.",
         "receipt": "https://github.com/yodesarrollomx/potenciales-yod/actions/runs/43283429071 ; https://github.com/yodesarrollomx/potenciales-yod/actions/runs/43286094367 ; rama grafo-datos registro.jsonl"
       }
+    },
+    {
+      "id": "CON-GRAFO-APP",
+      "from": "EXT-ACTIONS",
+      "to": "EXT-GRAFO-APP",
+      "kind": "automatizacion",
+      "label": "El flujo «Grafo · rehacer» abre el PR del borrador con el token de la App del grafo",
+      "contract": "CTR-GRAFO-VERSIONES; el token vale una hora, sólo para este repositorio, con escritura de contenido y PR, y sólo se usa para la rama grafo-borrador y su PR. Sin los secretos, todo sigue con la credencial del flujo (dos toques).",
+      "contract_ids": [
+        "CTR-GRAFO-VERSIONES"
+      ],
+      "status": "ejecucion",
+      "runtime_verified": true,
+      "runtime_evidence": {
+        "checked_at": "2026-11-13T02:03:10Z",
+        "scope": "Un borrador real (G-20261112-1900) abierto por la App: pruebas sin aprobación manual y aprobado con un solo toque. No acredita la rotación de la llave.",
+        "receipt": "https://github.com/yodesarrollomx/potenciales-yod/pull/97 ; https://github.com/yodesarrollomx/potenciales-yod/issues/96"
+      },
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": ".github/workflows/grafo-rehacer.yml",
+          "commit": "6b5cc19a0ff4cecc17ff230e843de853df2045e2",
+          "claim": "Uso del token de la App sólo en el paso del borrador.",
+          "status": "codigo"
+        },
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": ".github/workflows/grafo-rehacer.yml",
+          "commit": "6b5cc19a0ff4cecc17ff230e843de853df2045e2",
+          "claim": "PR 97 abierto por yod-grafo-borrador[bot]; aprobado con un toque.",
+          "status": "ejecucion"
+        }
+      ]
     }
   ],
   "processes": [
@@ -15724,7 +15792,7 @@
         "Navegador con dobles: Accesos con sesión de admin en 1280 y 390 px, con y sin borrador, vista previa del borrador sin publicarse y sin errores de JavaScript (tests/grafo-accesos-browser.cjs). Prueba «LoPublicado» del motor: sin correos, claves, folios de tratos, repositorios privados, hallazgos de seguridad ni identificadores completos de /exec.",
         "verificar-impacto contra el atlas fijado. Pendiente de comprobar en producción después de fusionar: issue → flujo → PR de borrador, primera corrida de «Grafo · estado» (crea la rama grafo-datos) y publicación de Pages."
       ],
-      "deployment": "Fusionado en potenciales-yod (PR 61, 62, 67, 69, 72 y 74; main en 685ed2c) y publicado por Pages. Comprobado en producción el 12-nov-2026: (a) el grafo aprobado se ve al final de Accesos con la sesión de admin de Dirección, también si la lista de usuarios tarda; (b) rehacer a pedido abre el borrador con su PR y la explicación de Claude por API; (c) aprobar publica la versión nueva (G-20261112-1203, PR 71) con una sola línea en el registro y sin falso «cambió»; aprobar son dos toques, «Approve workflows to run» y «Merge pull request», porque GitHub retiene las pruebas de un PR abierto por un flujo; (d) el grafo no refleja sistemas hechos para otros clientes, aunque el atlas publique su descripción saneada (regla excluir del motor, también en el resumen del borrador, PR 72). Por comprobar: la regularidad del reloj del vigilante, la chinche automática ante una falla nueva y la respuesta de OpenAI (sin clave al registrar).",
+      "deployment": "Fusionado en potenciales-yod (PR 61, 62, 67, 69, 72 y 74; main en 685ed2c) y publicado por Pages. Comprobado en producción el 12-nov-2026: (a) el grafo aprobado se ve al final de Accesos con la sesión de admin de Dirección, también si la lista de usuarios tarda; (b) rehacer a pedido abre el borrador con su PR y la explicación de Claude por API; (c) aprobar publica la versión nueva (G-20261112-1203, PR 71) con una sola línea en el registro y sin falso «cambió»; aprobar era de dos toques porque GitHub retiene las pruebas de un PR abierto por un flujo; desde el 13-nov-2026 lo abre la App del grafo (EXT-GRAFO-APP) y es un toque; (d) el grafo no refleja sistemas hechos para otros clientes, aunque el atlas publique su descripción saneada (regla excluir del motor, también en el resumen del borrador, PR 72). Por comprobar: la regularidad del reloj del vigilante, la chinche automática ante una falla nueva y la respuesta de OpenAI (sin clave al registrar).",
       "rollback": "Revertir el merge, desactivar los flujos «Grafo · rehacer» y «Grafo · estado» y borrar las ramas grafo-datos y grafo-borrador. No hay backend, hojas ni datos de negocio."
     },
     {
@@ -15792,14 +15860,14 @@
       ],
       "proposal": "Poner el atlas al día con lo comprobado en producción el 12-nov-2026 para el grafo del sistema (CHG-GRAFO-ACCESOS-20261111) y la presentación desde el grafo (CHG-PRESENTACION-GRAFO-20261111): ambos pasan a publicado con lo comprobado y lo que falta; las conexiones CON-GRAFO-ACCESOS, CON-GRAFO-ACTIONS y CON-PRESENTACION-GRAFO pasan a ejecución con recibo fechado y alcance; Claude por API entra como componente externo EXT-ANTHROPIC (área Soporte técnico, inventario de salud) con la conexión CON-GRAFO-IA-CLAUDE; CON-GRAFO-IA (OpenAI) queda en código sin uso comprobado; CTR-GRAFO-VERSIONES agrega la exclusión de sistemas hechos para otros clientes y los dos toques para aprobar un borrador abierto por un flujo. Sólo documentación; sin cambios de código, permisos, backend ni hojas.",
       "approval": "Dirección, 12-nov-2026 por chat: «hazlo tu tienes mi autorización para todo proceso necesario en github» y, tras ver el grafo en Accesos y la presentación, «que sigue en el plan adelante», con el atlas al día como siguiente punto del plan registrado en el Buzón (GRAFO-07).",
-      "status": "implementado_local",
+      "status": "publicado",
       "tests": [
         "node scripts/arquitectura.cjs --check",
         "node --test tests/*.cjs",
         "node verify-os.cjs · node verify-portal.cjs · node verify-accesos.cjs · node verify-obra-app.cjs",
         "verificar-impacto contra origin/main"
       ],
-      "deployment": "Se publica al fusionar el PR en yod-portal; no hay nada que desplegar fuera de Pages.",
+      "deployment": "Fusionado en yod-portal (PR 355, f6f342b) y publicado por Pages el 12-nov-2026.",
       "rollback": "Revertir el PR; no toca código ni producción."
     },
     {
@@ -15820,6 +15888,26 @@
       ],
       "deployment": "Sin despliegue: sólo prueba y flujo de CI. Se da por cerrado cuando el flujo pase en main.",
       "rollback": "Revertir el PR; la prueba vuelve a refrescar sin pausa y el flujo a sus rutas anteriores."
+    },
+    {
+      "id": "CHG-ATLAS-GRAFO-APP-20261113",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-POTENCIALES",
+        "EXT-ACTIONS",
+        "EXT-GRAFO-APP"
+      ],
+      "proposal": "Registrar la GitHub App del grafo (EXT-GRAFO-APP) y su conexión con el flujo de rehacer (CON-GRAFO-APP), y poner al día lo que decía «dos toques»: desde el 13-nov-2026 aprobar un borrador es un toque. Marca como publicado CHG-ATLAS-GRAFO-VIVO-20261112. Sólo documentación.",
+      "approval": "Dirección, 12-nov-2026 por chat (DEC-21): «Hazlo todo tú, yo sólo doy un click final para aprobar» y «Sigue con eso que no nos falte nada».",
+      "status": "implementado_local",
+      "tests": [
+        "node scripts/arquitectura.cjs --check",
+        "node --test tests/*.cjs",
+        "verificar-impacto contra origin/main"
+      ],
+      "deployment": "Se publica al fusionar el PR en yod-portal.",
+      "rollback": "Revertir el PR; la App se revoca aparte (organización → GitHub Apps)."
     }
   ],
   "data_contracts": [
@@ -18247,7 +18335,8 @@
         "SYS-POTENCIALES",
         "SYS-CONTROL",
         "SYS-INVERSION",
-        "EXT-ACTIONS"
+        "EXT-ACTIONS",
+        "EXT-GRAFO-APP"
       ],
       "source": "Archivos estáticos que publica potenciales-yod y su rama de datos grafo-datos. Publicado (potenciales-yod PR 61 y siguientes; yodesarrollo-board PR 69) y comprobado en producción el 12-nov-2026 con la versión aprobada G-20261112-1203.",
       "input": [
@@ -18266,7 +18355,7 @@
         "Lo publicado es la versión completa que eligió Dirección (identificadores y pestañas de hojas y plan propuesto), y nunca lleva repositorios privados, clientes externos, hallazgos de seguridad, nombres de personas, folios o nombres de tratos, correos, claves ni identificadores completos de backends /exec",
         "Nunca refleja sistemas hechos para otros clientes, aunque este atlas publique su descripción saneada: la regla excluir del motor los saca en cada refresco y en el resumen de cada borrador",
         "El grafo aprobado sólo cambia al fusionar el PR del borrador; un borrador nunca altera lo publicado",
-        "Aprobar es fusionar el PR del borrador; cuando lo abre el flujo, GitHub pide antes «Approve workflows to run» a una persona con permiso de escritura",
+        "Aprobar es fusionar el PR del borrador. Lo abre la App del grafo (EXT-GRAFO-APP) y basta «Merge pull request»; si faltan sus secretos, lo abre el flujo y GitHub pide antes «Approve workflows to run»",
         "Quien consume lee únicamente el aprobado; el borrador es informativo",
         "Las recetas no traen cifras ni cálculo: nombran campos guardados del plan y lo ausente se muestra como no definido",
         "Las claves de IA viven sólo como secretos del flujo; no aparecen en archivos, páginas ni registros",
@@ -21299,7 +21388,8 @@
           "EXT-ANTHROPIC",
           "EXT-RENDER",
           "SVC-HORARIOS-CLOUD",
-          "STORE-HORARIOS-CLOUD"
+          "STORE-HORARIOS-CLOUD",
+          "EXT-GRAFO-APP"
         ]
       }
     ]
