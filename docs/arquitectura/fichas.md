@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-13.ppp2-vivo.1 · 2026-10-30.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-13.folio-cartera.1 · 2026-10-30.
 
 ## SYS-DESPACHO · El Despacho
 

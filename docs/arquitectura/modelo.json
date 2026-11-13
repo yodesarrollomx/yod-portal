@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-13.ppp2-vivo.1",
+  "revision": "2026-11-13.folio-cartera.1",
   "checked_at": "2026-10-30",
   "priorities": [
     "vender_mas",
@@ -16314,6 +16314,33 @@
       ],
       "deployment": "Se publica al fusionar el PR en yod-portal.",
       "rollback": "Revertir el PR; no toca código ni producción."
+    },
+    {
+      "id": "CHG-FOLIO-CARTERA-20261113",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "GAS-PORTERO",
+        "SHEET-CATALOGO",
+        "SHEET-PORTERO",
+        "GAS-CATALOGO",
+        "SYS-TRACK",
+        "SYS-POTENCIALES",
+        "SYS-MERCADO",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-DESPACHO"
+      ],
+      "proposal": "Etapa 1 del análisis «YOD OS tablero por tablero» (11-nov-2026): el folio único y la cartera. (1) Control Maestro → Proyectos gana la columna etapa_folio con siete etapas (1 Captado, 2 Evaluado, 3 Acordado, 4 Fondeado, 5 En obra, 6 En venta y cobro, 7 Repartido), una por terreno; los frentes de trabajo quedan sin etapa y lo dado de baja fuera de la cartera. Se dan de alta tres folios que no existían: Moréo, Distrito Abasto y Distrito Obregón. (2) Puertas por proyecto, mínimas: ACCESOS del Portero gana la columna «proyectos» (en blanco o * = todos, como hoy; folios PRJ en CSV = sólo esos). El Portero suma un archivo Cartera.gs y una línea en doGet: ?recurso=cartera devuelve la cartera recortada, sólo lectura, sin notas, ligas, responsables ni cifras. (3) La tira de etapas del tablero cenital deja la foto pública de cuatro etapas y pinta los siete carriles en vivo: primero ?recurso=cartera; mientras el Portero no tenga esa versión, sólo admin lee la pestaña con ?recurso=cm&hoja=Proyectos; sin respuesta se queda la foto. os/proyectos.js suma las reglas (etapaFolio, desdeControlMaestro, porEtapaFolio) sin nombres ni cifras. La etiqueta propia nueva (20261113-folio-cartera) toca el ?v= de las páginas de los demás sistemas; ahí sólo cambia la etiqueta.",
+      "approval": "Dirección, 13-nov-2026 en el chat «Análisis del sistema Yodo»: «retoma bien lo que estábamos haciendo»; aprobó las siete etapas y el mapeo («Así está bien»), los tres folios nuevos («Sí, a los tres»), las puertas por proyecto («sí prepararlo pero busca una forma de no ser muy revoltoso ni complicado») e incluir Flujo en el plan.",
+      "status": "implementado_local",
+      "tests": [
+        "node --test tests/folio-cartera.test.cjs (5 pruebas: etapas, columnas sin riesgo, carriles, respuesta del Portero, cableado de tablero.html)",
+        "Prueba local de Cartera.gs con un Apps Script de mentira: 11 comprobaciones (Dirección, clave maestra, broker recortado, columna en blanco, admin, acceso revocado, credencial inválida, sin pestaña)",
+        "node --test tests/*.cjs · verify-os · verify-portal · verify-accesos · verify-obra-app · node scripts/versiones.cjs --check · node scripts/arquitectura.cjs --check"
+      ],
+      "deployment": "La tira de siete carriles se publica al fusionar el PR (Dirección la ve desde ese momento con ?recurso=cm). La cartera recortada para externos espera la versión nueva del Portero: Cartera.gs y la línea de doGet, publicadas por Dirección como «Nueva versión» sobre la implementación existente.",
+      "rollback": "Revertir el PR (vuelve la foto de cuatro etapas). Las columnas etapa_folio y proyectos se pueden dejar: nadie más las lee. En el Portero, volver a la versión anterior en Administrar implementaciones."
     }
   ],
   "data_contracts": [

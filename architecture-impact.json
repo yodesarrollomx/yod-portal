@@ -1,12 +1,25 @@
 {
-  "model_revision": "2026-11-13.ppp2-vivo.1",
-  "proposal_id": "CHG-ATLAS-PPP2-VIVO-20261113",
-  "summary": "Atlas · PPP 2 en producción (sólo documentación). SYS-PPP2 pasa a ejecución (página publicada; reabrir un plan pinta lo último que vio y trae lo nuevo en unos 4 s, antes 26 a 35 s). GAS-PPP2 con su versión viva (8) y lo comprobado en vivo: escrituras con bitácora, rondas, pruebas de estrés, investigación y consejo por API (siete votos con huella y evidencia), y lectura desde lo ya leído. Conexiones nuevas: CON-PPP2-ANTHROPIC (en ejecución, con recibo) y CON-PPP2-OPENAI (en código, sin clave en el servidor); CON-PPP2-SERVIDOR, -PORTERO, -LIBROS y -DRIVE pasan a ejecución con recibo. CTR-PPP2 suma ronda, consejo y el plan en la respuesta. CHG-PPP2-20261112 queda publicado y suma EXT-ANTHROPIC y EXT-OPENAI. Además se quitan del atlas las menciones del nombre de un plan (el atlas es público). Vistas regeneradas con scripts/arquitectura.cjs.",
-  "components": ["SYS-PPP2", "GAS-PPP2", "SHEET-PPP2", "EXT-ANTHROPIC", "EXT-OPENAI", "SYS-YOD-OS"],
-  "tests": [
-    "node scripts/arquitectura.cjs --check: 96 componentes, 163 conexiones, 20 procesos; modelo válido y vistas sincronizadas.",
-    "Búsqueda del nombre de un plan en todo el repo: 0 coincidencias.",
-    "node --test tests/*.cjs · verify-os · verify-portal · verify-accesos · verify-obra-app · git diff --check."
+  "model_revision": "2026-11-13.folio-cartera.1",
+  "proposal_id": "CHG-FOLIO-CARTERA-20261113",
+  "summary": "Etapa 1 del análisis tablero por tablero: folio único y cartera. Siete etapas por terreno en el Control Maestro (columna etapa_folio) y tres folios nuevos; la tira de etapas del tablero cenital pasa a siete carriles leídos en vivo (Portero ?recurso=cartera; mientras no esté publicada, admin lee la pestaña con ?recurso=cm). Puertas por proyecto mínimas: columna «proyectos» en ACCESOS y Cartera.gs en el Portero (publicar es clic de Dirección). Etiqueta propia 20261113-folio-cartera.",
+  "components": [
+    "SYS-YOD-OS",
+    "SYS-CONTROL",
+    "GAS-PORTERO",
+    "SHEET-CATALOGO",
+    "SHEET-PORTERO",
+    "GAS-CATALOGO",
+    "SYS-TRACK",
+    "SYS-POTENCIALES",
+    "SYS-MERCADO",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "SYS-DESPACHO"
   ],
-  "rollback": "Revertir el PR: sólo cambia documentación del atlas; no toca código ni producción."
+  "tests": [
+    "node --test tests/folio-cartera.test.cjs (5 pruebas: etapas, columnas sin riesgo, carriles, respuesta del Portero, cableado de tablero.html)",
+    "Prueba local de Cartera.gs con un Apps Script de mentira: 11 comprobaciones (Dirección, clave maestra, broker recortado, columna en blanco, admin, acceso revocado, credencial inválida, sin pestaña)",
+    "node --test tests/*.cjs · verify-os · verify-portal · verify-accesos · verify-obra-app · node scripts/versiones.cjs --check · node scripts/arquitectura.cjs --check"
+  ],
+  "rollback": "Revertir el PR (vuelve la foto de cuatro etapas). Las columnas etapa_folio y proyectos se pueden dejar: nadie más las lee. En el Portero, volver a la versión anterior en Administrar implementaciones."
 }
