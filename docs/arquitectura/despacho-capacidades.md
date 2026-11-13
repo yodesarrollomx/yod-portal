@@ -42,6 +42,12 @@ La aceptación por agente exige una tarea auténtica: recibirla, ejecutarla con 
 
 ## Puesto de terminal · 3 de octubre de 2026
 
+La [capacidad de consultas y decisiones con Jev](jev-consultas.md),
+`CHG-JEV-CONSULTAS-001`, se prepara como paquete opcional compartido para los
+puestos nativos. Descubre todos los almacenes Sheets del atlas, relee los rangos
+autorizados y conserva fuentes/revisiones. Los adaptadores privados y la
+instalación por agente siguen pendientes; no cambia el ejecutor acotado del chat.
+
 La [actualización local 0.3](../../despacho-runtime/README.md) conserva login, keeper, workspace, vínculo y checkpoint. El panel recibe pantalla y teclado mediante una ventana local consentida, ligada al caso autorizado. Conectar no inicia procesos; iniciar, reabrir y detener son acciones explícitas. Cerrar el panel conserva la sesión; retirar el acceso limpia la vista sin matar el proceso. Una sola sesión manual o de sala a la vez. La sesión manual no escribe automáticamente su pantalla ni sus cambios en Sheets.
 
 Se comprobaron entrada/salida de PTY, reapertura, revocación, aislamiento de origen y la vista de 1280 y 390 píxeles con backend y ejecutor sintéticos. El paquete extraído también pasó la regresión nativa; el modo de sala pasó enlace firmado, ejecución, persistencia y recuperación sintéticos. No son una prueba de instalación en el equipo del propietario, ni una medición de su velocidad. La terminal requiere estar en la misma Chromebook; no hay túnel para acceder desde otro equipo.

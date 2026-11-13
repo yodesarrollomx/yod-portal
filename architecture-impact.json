@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-10-30.despacho-retro.3",
+  "model_revision": "2026-11-13.despacho-retro.1",
   "proposal_id": "CHG-DESPACHO-RETRO-INTEGRACION-20261030",
   "summary": "RETRO I1-I3: plano y adaptación de consumidores vigentes con opt-in office=retro, wrapper3D conservado y núcleo Live sin dependencia gráfica; sin cambios backend ni publicación.",
   "components": [

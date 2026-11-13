@@ -21,6 +21,8 @@ Esta es la entrada para entender y modificar YOD OS. Prioridad de mejora acordad
 
 - [Capacidades compartidas de los agentes](despacho-capacidades.md): referencia Cubefarm, funciones conectadas y plan de instalación por agente.
 
+- [Consultas de las hojas y decisiones con Jev](jev-consultas.md): catálogo completo del atlas, lecturas recientes, fuentes directas y adaptadores privados por puesto.
+
 - [Entrega técnica de Control Maestro](control-maestro.md): versiones, aceptación, mantenimiento y reversión.
 
 - [EMD #9 · cuestionario completo bajo URL GitHub](emd-github-embed.md): propuesta, handshake y matriz de aceptación; implementación en PR separado.
@@ -100,3 +102,11 @@ La auditoría no se considera completa mientras existan componentes críticos o 
 
 - [PPP · lectura y campos inactivos](ppp-read-validation.md): aplicabilidad explícita, diagnóstico de validación y conservación de cantidades y permisos.
 
+
+- [PPP · Presentaciones desde la versión visible](ppp-presentaciones.md): generación autorizada con ADN/Hairline, snapshot exacto, trabajo durable y versiones privadas compartidas con Master Developer; propuesta previa a implementación.
+
+- [Chinches · reloj del inicio del trazo](chinches-reloj-trazo.md): corrección focal y patch1.1.1, con validación estricta y borradores conservados.
+
+- [EMD · contratos de guardado, versión e interacción](emd-contratos-20261102.md): propuesta compatible, pruebas sintéticas, publicación y recuperación acreditadas por separado.
+
+- [EMD · dashboard y mejora continua](emd-mejora-continua-20261103.md): administración por capacidades, campañas aisladas, acciones persistentes y política de resultados versionada, inicialmente sin activar.

@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-30.despacho-retro.3 · 2026-10-30.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-13.despacho-retro.1 · 2026-10-30.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -1059,6 +1059,205 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Autón y voz conservan la aplicabilidad; no presentan cap0 como tasa usada ni recomiendan sustituirlo automáticamente.
 - Errores autenticados conocidos incluyen sólo identificadores acotados; no valores, fórmulas, libros, credenciales, stack o texto arbitrario.
 - No reintentar automáticamente validación determinista ni ampliar ACL. Una publicación requiere fuente vigente, reserva compatible, pruebas y lectura final.
+
+## CTR-PPP-PRESENTACIONES
+
+- Componentes: SYS-POTENCIALES, GAS-PORTERO, SHEET-PPP-MODELOS, SVC-AUTON-CLOUD, STORE-AUTON-ESTADO, SYS-INVERSION, GAS-SALA, SHEET-SALA, SYS-DESPACHO.
+- Evidencia: docs/arquitectura/ppp-presentaciones.md; propuesta autorizada 31-oct-2026. Números canónicos de SHEET-PPP-MODELOS, contexto del expediente, estado privado del agente y registro de presentaciones existente de GAS-SALA..
+- Entrada/campos: `request_id, actor autenticado y alcance presentation_draft_v1`, `board_case_id, viewed_scenario_id, ppp_revision, model_type y model_revision`, `case_id y source_revision del expediente, distintos de la revisión PPP`, `Referencia y huella privada del snapshot: entradas, resultados nativos, unidades, flujos, etapas, volúmenes y evidencia de la misma lectura`, `Audiencia, decisión, modalidad, faltantes y restricciones autorizadas`, `Versiones ADN, plantilla y renderer; presentation_id y versión editorial base cuando existan`.
+- Salida: job_id y estado durable con lease/época y recibo idempotente, Storyboard visual navegable y privado, manifiesto de origen, QA y referencias de artefactos, presentation_id estable, presentation_version_id inmutable y versión anterior, registry_revision de concurrencia y release_revision de publicación independientes, Misma versión consultable desde PPP y biblioteca Master Developer; conflicto o pendiente explícito cuando no haya recibo.
+
+- Usar el escenario visible confirmado: nunca mezclar viewed_inputs con resultados activos, base o defendidos de otra revisión. El servidor relee y valida el origen antes de aceptar.
+- Revisión PPP y revisión del expediente son distintas. Los cambios sin guardar utilizan el flujo nativo; el agente no modifica cantidades ni fórmulas.
+- MODELO_PENDIENTE o calculated:false sólo permiten diagnóstico con faltantes; no cifras calculadas ni supuestos importados de otros casos.
+- presentation_draft_v1 limita lectura de contexto y escritura de artefacto/versión al caso autorizado. local_analysis_v1 no adquiere permisos de escritura.
+- Snapshot y estado privados sobreviven cierre y reinicio. La observación efímera RAM no es fuente durable.
+- Una solicitud crea un solo trabajo/versión; ante acuse incierto se concilia recibo. Lease vencido o revocación impiden completar efectos.
+- Una meta ready_for_review ajena se conserva; la admisión no la aprueba, cierra ni cancela automáticamente.
+- La primera entrega es Guion visual con dibujo, navegación y chinches. Etapa dos necesita instrucción expresa posterior sobre esa versión; guardado, revisión, producción y publicación son estados separados.
+- Un solo registro y URL canónica por presentación; contenido, PPP, expediente, concurrencia y publicación mantienen versiones separadas. Ediciones concurrentes no se sobrescriben.
+- Proyección de visitante sin guion, fuentes ni notas privadas. Sesión de reunión fija release y no cambia al regenerar.
+- Reutilizar Hairline y motores existentes con adaptadores declarativos; no introducir código arbitrario, otro backend, Sheet, cron, catálogo o cálculo financiero.
+- Pruebas sintéticas y comprobantes independientes para código, CI, frontend, backend, lectura, job, artefacto y registro; un estado listo no prueba el recorrido completo.
+
+## CTR-EMD-WRITE-RECEIPT
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD.
+- Evidencia: Propuesta autorizada CHG-EMD-CONTRATOS-20261102; detalle técnico y evidencia sintética en el sistema privado..
+- Entrada/campos: `Sesión vigente, asignación propia, revisión esperada e identificador estable de comando`, `Snapshot inmutable de respuestas y acción de guardado/cierre con versión compatible`.
+- Salida: Confirmación verificable del mismo comando persistido o rechazo explícito, Reintento del comando idéntico devuelve su confirmación sin una segunda escritura.
+
+- El servidor conserva autorización por objeto, bloqueo, revisión optimista y cierre terminal.
+- La identidad del comando queda vinculada al contenido semántico y a su alcance; no confirmar como equivalente contenido diferente.
+- Validar el lote antes de persistir; una confirmación anterior no acredita modificaciones posteriores del cliente.
+- Conservar ediciones hechas durante una solicitud pendiente y rechazar confirmaciones tardías de otra sesión o evaluación.
+- Compatibilidad de clientes y registros anteriores se define y prueba explícitamente; no reescribir respuestas históricas ni reabrir evaluaciones.
+
+## CTR-EMD-INSTRUMENT-VERSION
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD, STORE-EMD-DRAFTS.
+- Evidencia: Propuesta autorizada CHG-EMD-CONTRATOS-20261102; refina la compatibilidad sin sustituir CTR-EMD-DRAFTS ni CTR-EMD-ESCALA-CAPTURA..
+- Entrada/campos: `Identidad estable de campaña y asignación y versión verificable del instrumento`, `Evaluación o borrador con versión conocida, compatible o legado explícito`.
+- Salida: Evaluación y copia local ligadas a un instrumento identificable, Incompatibilidad legible que conserva contenido para inspección y recuperación autorizada.
+
+- La versión del formato de matriz es distinta de la versión del instrumento.
+- IDs, textos y reglas de captura definen compatibilidad; cambiar presentación no reinterpreta respuestas.
+- Un registro legado sin versión no prueba cuál instrumento recibió: reconocerlo solo por una política acotada a la fuente previa comprobada; no afirmar una migración histórica por inferencia.
+- Una versión incompatible no se restaura ni envía automáticamente, no se convierte a la actual y no se elimina silenciosamente.
+- Conservar autenticación, cifrado, aislamiento por enlace/evaluación/escritor, revisión, cierre y consentimiento de recuperación existentes.
+- Conservar los 28 textos e IDs, escala de captura aprobada e históricos; metodología, ponderaciones y resultados requieren definición separada.
+
+## CTR-EMD-RUNTIME-MODE
+
+- Componentes: SYS-EMD, GAS-EMD.
+- Evidencia: Propuesta autorizada CHG-EMD-CONTRATOS-20261102; conserva CTR-EMD-GITHUB-EMBED..
+- Entrada/campos: `Artefacto con modo demo u operativo declarado y build/contrato identificables`, `Transporte autorizado y handshake vigente cuando corresponda`.
+- Salida: Demo identificada y aislada o operación mediante backend vigente, Indisponibilidad explícita cuando un artefacto operativo carece de transporte.
+
+- No deducir el modo deseado únicamente de la existencia de transporte.
+- Un fallo inicial o posterior del modo operativo no activa datos de muestra.
+- La versión declarada por fuente no acredita el backend desplegado: comparar ambos y registrar evidencia.
+- No ampliar orígenes, permisos, scopes ni endpoints; no enviar identidad o respuestas al wrapper público.
+- La demo y pruebas usan datos sintéticos y no producen escrituras o envíos de negocio.
+
+## CTR-EMD-INTERACTION-RECOVERY
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD, STORE-EMD-DRAFTS.
+- Evidencia: Propuesta autorizada CHG-EMD-CONTRATOS-20261102; interacción y comprobaciones de recuperación, sin nuevas reglas de negocio..
+- Entrada/campos: `Visibilidad y sesión vigentes, estado confirmado y omisiones del cuestionario`, `Operación administrativa preparada, respaldo y punto de recuperación comprobable`.
+- Salida: Actualización de listas y coordinación pausada mientras la vista está oculta y reanudada sin solapamientos, Omisiones asociadas a cada pregunta y resumen navegable, Evidencia de recuperación sobre datos sintéticos y límites explícitos del ensayo.
+
+- Pausar sondeo de lectura no cancela ni oculta un guardado pendiente, ni reinicia estado confirmado.
+- Volver a una vista solicita actualización controlada; respuestas tardías no cruzan sesiones o vistas.
+- No depender solo del color; mantener preguntas, foco, controles semánticos y anuncios accesibles.
+- Un respaldo existente no demuestra restauración; una solicitud aceptada no demuestra entrega.
+- La incertidumbre de una integración se concilia antes de repetir efectos; preservar identificadores y deduplicación existentes.
+- Ensayos usan dobles o copias aisladas; no crean correos, respuestas, accesos ni movimientos de prueba en producción.
+- Pruebas automáticas no acreditan comprensión de personas ni uso en dispositivo físico.
+
+## CTR-EMD-CONTINUOUS-DASHBOARD
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD.
+- Evidencia: Propuesta autorizada CHG-EMD-MEJORA-CONTINUA-20261103; diseño y pruebas detalladas en repositorio privado..
+- Entrada/campos: `Sesión reviewer vigente, campaña solicitada y capacidades autorizadas por el servidor`, `Registros confirmados de cobertura, estado de captura, acciones y configuración metodológica`.
+- Salida: Dashboard operativo con denominadores, campaña y fecha de actualización explícitos, Estado de política/metodología separado de resultados; sin puntuaciones cuando no existe política activada.
+
+- La lectura operativa de reviewer no concede facultades de administración o lectura de resultados.
+- El participante solo accede a sus evaluaciones y acciones; no al tablero global ni a información ajena.
+- Leer no crea campañas, hojas, acciones, métodos, respaldos ni automatizaciones y no altera estados.
+- Ningún indicador de avance equivale a resultado360, entrega de invitación, anonimato o mejora causal comprobada.
+- Conservar actualización controlada por visibilidad, aislamiento de sesión/campaña y errores accesibles.
+- No duplicar rondas, triggers o cron; continuidad del producto no implica una nueva automatización programada.
+- DTO operativos acotados y paginados, sin respuestas individuales, tokens, hashes de credenciales o IDs privados; ordenar por ID y vincular cursor a filtros/campaña/revisión. Cambio de revisión invalida la paginación en vez de mezclar cortes.
+- La operación distingue configured, checked, unavailable, failed y not_checked con fecha y alcance; configuración presente no acredita lectura, respaldo restaurable o disponibilidad permanente.
+- Los eventos históricos ausentes no se reconstruyen desde última actualización ni se convierten en una serie temporal inventada.
+
+## CTR-EMD-CONTINUOUS-ADMIN
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD, STORE-EMD-DRAFTS, EXT-DRIVE.
+- Evidencia: Propuesta autorizada CHG-EMD-MEJORA-CONTINUA-20261103; sin nuevos roles o servicios..
+- Entrada/campos: `Sesión reviewer y capacidades explícitas por actor canónico: managePeople y manageCampaigns`, `Comando revisado, revisión esperada, identidad de mutación y contexto de campaña/instrumento`.
+- Salida: Persona o campaña confirmada con identidad estable, recibo e historial, o rechazo sin persistencia parcial, Vista previa/impacto y respaldo privado antes de operaciones que lo requieran.
+
+- Las capacidades de escritura se resuelven por actor en servidor, son false por defecto y se revalidan en cada operación; rol reviewer por sí solo no las concede.
+- No aceptar capacidades ni identidad administrativa declaradas por el cliente. Revocación, inactividad o cambio de sesión invalidan escrituras y callbacks pendientes.
+- Campañas usan draft/open/paused/closed/archived con transiciones explícitas; cerrar una evaluación no cierra la campaña. La activación no se infiere de crear o guardar un borrador.
+- Campaña y EVAL_ID son inmutables y conservan su procedencia; nueva campaña no recicla ni reetiqueta respuestas, asignaciones o borradores históricos.
+- Personas conservan identificadores canónicos y referencias; no inventar integrantes, fusionar identidades por semejanza, borrar historia o emitir accesos automáticamente.
+- Mantener autorización por objeto, bloqueo, revisión, vínculo mutación/contenido y compatibilidad del instrumento en cada escritura.
+- Respaldo e historial permanecen privados; nuevas columnas o tablas son aditivas y no se crean durante consultas. Validar antes de escribir y documentar recuperación.
+- Conservar permisos de archivos, scopes, endpoints y contratos de invitación: esta ampliación no autoriza correos ni nuevas credenciales.
+- Campañas legadas se descubren como no gestionadas, sin crear registros o fechas al leer. Su adopción y estado requieren una operación explícita.
+- Campaña paused/closed/archived bloquea nuevas mutaciones de respuesta, pero permite recuperar el recibo exacto ya confirmado mientras el permiso siga vigente.
+- Cerrar una campaña requiere vista previa, incidencias y confirmación: fijar/verificar manifiesto privado del corte antes de confirmar closed. Pendientes aceptados explícitamente permanecen identificados y no se rellenan.
+- Cruces explícitos usan planHash y revisión de campaña; aplicar valida de nuevo, respalda y confirma sólo tras readback. Una operación multihoja parcial conserva plan/recibo y se reanuda por ID, sin afirmar atomicidad ni restaurar encima de trabajo posterior.
+- Alta de persona, asignación, acceso e invitación son operaciones distintas; alta permite persona sin cruces. Corrección de identidad o nombre existente requiere impacto explícito, sin reescribir etiquetas históricas.
+- Identidades QA no acceden a entidades reales mediante estos RPC; se rechazan o se usa un almacén QA completamente aislado.
+
+## CTR-EMD-IMPROVEMENT-ACTIONS
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD.
+- Evidencia: Propuesta autorizada CHG-EMD-MEJORA-CONTINUA-20261103; acciones de mejora persistentes, sin inferencias automáticas de desempeño..
+- Entrada/campos: `Sesión vigente y acceso al objeto; manageActions para gestión de acciones`, `Acción vinculada a persona/campaña, responsable, objetivo y seguimiento aportados explícitamente`, `Revisión esperada e identificador de mutación ligado al comando`.
+- Salida: Acción confirmada con estado, revisión e historial de seguimiento, o conflicto explícito, Vista individual limitada a acciones propias y vista de coordinación conforme a sus capacidades.
+
+- No generar diagnósticos, compromisos, responsables o conclusiones causales a partir de una correlación no validada.
+- El participante no edita ni consulta acciones ajenas; las operaciones propias permitidas deben estar definidas y comprobarse en servidor.
+- Una acción y sus eventos persisten en el almacén privado con IDs estables; recargar la pantalla no crea duplicados ni pierde seguimiento.
+- El estado de cumplimiento exige una mutación válida y una confirmación del servidor; el color, la fecha prevista o un envío pendiente no acreditan cumplimiento.
+- Separar corrección del dato, cambio de estado y evidencia de ejecución; mantener historial sin sobrescritura ciega.
+- No enviar avisos, correos o crear automatizaciones como efecto secundario de leer o registrar una acción.
+- La fuente canónica es un log privado append-only de eventos con postestado completo y recibo; la última revisión proyecta el estado, sin simular una transacción entre estado e historia separados.
+- Estados open, in_progress, blocked, ready_for_review, done y cancelled. El participante sólo reporta avance/evidencia, bloqueo o envío a revisión; no crea, reasigna, cierra, cancela ni cambia objetivo/plazo/campaña.
+- Cerrar o reabrir corresponde a coordinación autorizada con revisión y motivo/evidencia. overdue se deriva del plazo/estado y no es otro estado persistido.
+- Evidencia inicial admite texto y enlaces HTTPS revisables; no crear un servicio de uploads ni copiar respuestas o inferir identidad del evaluador en la referencia de origen.
+
+## CTR-EMD-VERSIONED-RESULTS-POLICY
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD.
+- Evidencia: Propuesta autorizada CHG-EMD-MEJORA-CONTINUA-20261103. No se ha aportado una regla oficial; se prepara configuración y motor, no se activa metodología por inferencia..
+- Entrada/campos: `Sesión reviewer con manageMethod, activateMethod o viewResults según la operación; capacidades false por defecto`, `Política versionada ligada al instrumento/campaña, con audiencia, umbral y universo/corte explícitos`, `Datos elegibles confirmados bajo la versión de política activada`.
+- Salida: Política borrador revisable; activación explícita separada y versión inmutable, Solo bajo política activa y acceso permitido: histograma1–5 y porcentajes sobre respuestas numéricas elegibles por ítem; NA/ausentes y evaluadores independientes diferenciados, con denominadores verificables., Estado no disponible cuando falta método, compatibilidad, suficiencia o autorización.
+
+- La configuración inicial es un borrador vacío. Guardar un borrador no lo activa y no produce resultados reales.
+- distribution_v1 es el único motor inicial: histogramas por ítem; no inventa ponderaciones, promedio global, ranking, percentiles, brechas ni objetivos.
+- La política debe declarar audiencia, umbral de confidencialidad, tratamiento de NA/ausencias, universo y corte antes de activar; no sustituirlos por valores implícitos.
+- manageMethod no concede activateMethod ni viewResults; cada operación valida la capacidad y la versión exactas en servidor.
+- Una versión activada se conserva inmutable; los cambios crean una versión nueva y no reinterpretan silenciosamente resultados históricos.
+- El resultado queda ligado a campaña, instrumento, método, corte y universo; no mezclar campañas o versiones incompatibles.
+- Aplicar permisos y supresión antes de devolver agregados; un filtro o subtotal no puede eludir el umbral ni revelar información individual.
+- Mostrar los denominadores y la razón de no disponibilidad sin revelar valores suprimidos. NA y ausencia no equivalen a cero ni a una respuesta1–5.
+- No usar resultados sintéticos como resultados humanos ni presentar distribuciones como prueba de causalidad o de mejora efectiva.
+- El umbral se mide por evaluadores independientes por celda, no por número de preguntas. Sólo evaluaciones cerradas elegibles en un corte fijo; relaciones, agrupación y tratamiento de autoevaluación se seleccionan explícitamente.
+- La agrupación inicial se limita a persona evaluada y grupo de relaciones fijado por política; no filtros arbitrarios ni combinaciones que permitan reconstruir valores suprimidos por resta.
+- El informe usa una copia privada de los datos elegibles o un agregado materializado con fuente fijada; no reconstruye un corte histórico consultando datos cambiantes o usando UPDATED como fecha de cierre.
+- Sin validación de comparabilidad de instrumento, política y denominadores se muestran fichas/cortes separados, no curvas de mejora ni comparaciones inferidas.
+
+## CTR-GRAFO-VERSIONES
+
+- Componentes: SYS-POTENCIALES, SYS-CONTROL, SYS-INVERSION, EXT-ACTIONS, EXT-GRAFO-APP.
+- Evidencia: Archivos estáticos que publica potenciales-yod y su rama de datos grafo-datos. Publicado (potenciales-yod PR 61 y siguientes; yodesarrollo-board PR 69) y comprobado en producción el 12-nov-2026 con la versión aprobada G-20261112-1203..
+- Entrada/campos: `grafo/versiones.json: esquema, aprobado, actualizado, versiones[id, armado, fecha, estado, huella, piezas, ligas, repos, nota]`, `grafo/datos/<id>.json: esquema, id, armado, huella, ppp (por tipo de plan: nombres de resultados y entradas), recetas (audiencias, escenas, datos, objetos, formatos), sin_campo`, `rama grafo-datos · borrador.json: id, fecha, pr, liga, rama, antes, piezas, ligas, titulo, resumen, recomendacion, ia, audiencias, sin_campo`, `rama grafo-datos · estado.json y registro.jsonl: estado observado por pieza, chinches abiertas y bitácora`.
+- Salida: Versión aprobada del grafo y su historial, Borrador en revisión, cuando lo hay, Recetas por audiencia y contrato del plan para armar presentaciones, Estado observado de cada pieza del sistema.
+
+- Lo publicado es la versión completa que eligió Dirección (identificadores y pestañas de hojas y plan propuesto), y nunca lleva repositorios privados, clientes externos, hallazgos de seguridad, nombres de personas, folios o nombres de tratos, correos, claves ni identificadores completos de backends /exec
+- Nunca refleja sistemas hechos para otros clientes, aunque este atlas publique su descripción saneada: la regla excluir del motor los saca en cada refresco y en el resumen de cada borrador
+- El grafo aprobado sólo cambia al fusionar el PR del borrador; un borrador nunca altera lo publicado
+- Aprobar es fusionar el PR del borrador. Lo abre la App del grafo (EXT-GRAFO-APP) y basta «Merge pull request»; si faltan sus secretos, lo abre el flujo y GitHub pide antes «Approve workflows to run»
+- Quien consume lee únicamente el aprobado; el borrador es informativo
+- Las recetas no traen cifras ni cálculo: nombran campos guardados del plan y lo ausente se muestra como no definido
+- Las claves de IA viven sólo como secretos del flujo; no aparecen en archivos, páginas ni registros
+- La rama de datos no se sirve por Pages y escribir en ella no dispara otros flujos
+
+## CTR-PPP2
+
+- Componentes: SYS-PPP2, GAS-PPP2, SHEET-PPP2.
+- Evidencia: server/ppp2/PPP2.gs (ppp2-servidor-v1) y ppp2/libro/generar.py (ppp2-libro-v1) en potenciales-yod; docs/ppp2.md..
+- Entrada/campos: `GET ppp2-meta sin credencial; ppp2-vivero y ppp2-plan con k = sesión del Portero (board PT).`, `POST text/plain JSON: ppp2-dato, ppp2-producto, ppp2-palanca, ppp2-version, ppp2-responder, ppp2-investigar, ppp2-hallazgo, ppp2-candado, ppp2-reparto, ppp2-estres y ppp2-sembrar, con request_id y la revisión vista.`.
+- Salida: Resumen clave → valor del libro, tablas del plan y la serie mensual del dinero de las tres versiones., Cada escritura devuelve la revisión nueva y el resumen recalculado por el libro; deja renglón en la Bitácora..
+
+- Ninguna fórmula financiera fuera del libro; el servidor sólo escribe celdas permitidas y lee lo calculado.
+- Sólo admin vuelve vigente una versión; admin y editor capturan; quien tiene PT lee.
+- Una revisión vieja no sobrescribe; el mismo request_id no escribe dos veces.
+- El PPP actual, sus motores y el Portero no cambian; el respaldo del Portero no se guarda como destino.
+- La página no lleva datos de planes ni identificadores de libros.
+
+## CTR-JEV-CONSULTAS
+
+- Componentes: SYS-YOD-OS, SYS-DESPACHO, GAS-PORTERO, EXT-DRIVE, SHEET-PORTERO, SHEET-PPP-MODELOS.
+- Evidencia: Prueba inicial local del asistente de conocimiento. Adaptadores con IDs físicos y ACL privados pendientes de instalación.
+- Entrada/campos: `Actor autenticado y flujo permitido: comparación PPP o uso de suelo de Gastón Madrid`, `Hojas de cálculo acotadas o documentos Drive autorizados; revisión y timestamp de cada fragmento`, `Pregunta, contexto y alternativas preparadas por el host`.
+- Salida: Evidencia recuperada con enlace, revisión, fecha y huella de contenido, Elección de Jev sólo si confianza y respaldo alcanzan 0.92; bajo el umbral se devuelve revisión sin selección, Dato faltante, falta de permiso o fuente caducada, diferenciados de una respuesta.
+
+- El catálogo lógico de veinte fuentes Sheets y EXT-DRIVE no acredita mapping físico, ACL ni instalación; el piloto sólo habilita los dos flujos registrados.
+- Leer fuentes de nuevo por consulta, limitar la frescura a cinco minutos y revalidar permisos, contenido y revisión antes y después de llamar a Jev.
+- Enviar a Jev sólo filas/texto pertinente de fuentes autorizadas; nunca IDs de acceso, credenciales ni tablas de permisos.
+- La comparación de importes/porcentajes respeta las métricas nativas; Jev decide criterios semánticos y no sustituye fórmulas o ranking determinista.
+- El uso de suelo sólo se afirma con documento normativo vigente vinculado al predio; un título de escenario PPP no equivale a autorización.
+- Confianza y respaldo menores a 0.92 producen needs_review sin candidato seleccionado. No repetir la misma pregunta para forzar confianza.
+- Choice confidence resume la concentración de alternativas y no equivale a exactitud empírica; Noul mide apoyo probabilístico del fragmento, no valida por sí solo la cita.
+- Pruebas sintéticas y una consulta sintética a Jev no acreditan conexión Google privada ni disponibilidad en otros agentes.
+- Reversión: retirar el módulo/política opcional; conservar intactas las fuentes, libros, permisos, historial y operación existentes.
 
 ## CTR-DESPACHO-RETRO-PRESENTACION
 

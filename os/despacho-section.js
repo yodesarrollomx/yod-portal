@@ -1,8 +1,8 @@
 (function(root){
   'use strict';
   // Escena estática del mismo portal: no recibe sesión, rutas ni datos del OS.
-  var FRAME_PATH='../despacho3d/index.html?v=council-trace5';
-  var RETRO_FRAME_PATH='../despacho-retro/index.html?office=retro&v=retro1';
+  var FRAME_PATH='../despacho3d/index.html?v=20261113-ui-consistencia';
+  var RETRO_FRAME_PATH='../despacho-retro/index.html?office=retro&v=20261113-ui-consistencia';
   function create(options){
     var win=options.window,doc=options.document,host=doc.getElementById('seccionDespacho'),
         canvas=doc.getElementById('despachoCanvas'),status=doc.getElementById('despachoEstado'),

@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-30.despacho-retro.3 · 2026-10-30.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-13.despacho-retro.1 · 2026-10-30.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
@@ -520,3 +520,67 @@ flowchart TD
 Vacíos: Consentimiento inicial de Google y confirmación del libro efectivo mediante sesión de Dirección.; Corte de la rutina Claude sólo después de dos ciclos de observación y pruebas; primer envío aprobado real se acredita por separado.; Si la rutina original captaba correos/creaba tarjetas, portar esas reglas antes de dar por sustituido su alcance; este ejecutor sólo procesa BANDEJA y cambios/respuestas existentes..
 
 Evidencia: CTR-BANDEJA-NUBE: propuesta y contratos registrados antes de implementar. Instalación y ejecución reales pendientes.; Proceso de nube implementado con observación, aprobación privada, reserva y conciliación; publicación comprobada, ejecución Google pendiente..
+
+## PROC-PPP-PRESENTACIONES · Presentación versionada desde el PPP visible
+
+Estado: propuesto.
+
+```mermaid
+flowchart TD
+  p0["Elegir versión visible y encargar presentación · Persona autorizada"]
+  p1["Autorizar, releer y fijar snapshot privado · Servidor existente"]
+  p0 -.-> p1
+  p2["Preparar ADN y storyboard visual · Agente existente"]
+  p1 -.-> p2
+  p3["Validar y registrar versión con recibo · Agente y registro existentes"]
+  p2 -.-> p3
+  p4["Consultar la misma versión en PPP y Master Developer · Persona autorizada"]
+  p3 -.-> p4
+  p5["Revisar y ordenar etapa dos · Dirección"]
+  p4 -.-> p5
+```
+
+| Paso | Responsable | Componentes | Entrada → salida | Ejecución |
+|---|---|---|---|---|
+| 1. Elegir versión visible y encargar presentación | Persona autorizada | SYS-POTENCIALES | Caso, escenario visible y revisión confirmada → Solicitud con identidad estable y contexto conocido | manual |
+| 2. Autorizar, releer y fijar snapshot privado | Servidor existente | GAS-PORTERO, SHEET-PPP-MODELOS, SVC-AUTON-CLOUD, STORE-AUTON-ESTADO | Solicitud y sesión vigente → Snapshot inmutable y trabajo reservado o conflicto explícito | pendiente |
+| 3. Preparar ADN y storyboard visual | Agente existente | SVC-AUTON-CLOUD, STORE-AUTON-ESTADO, SYS-INVERSION | Snapshot y método fijados → Guion, escenas declarativas y dibujo navegable con evidencia | pendiente |
+| 4. Validar y registrar versión con recibo | Agente y registro existentes | SVC-AUTON-CLOUD, GAS-SALA | Artefacto privado, revisión base y lease vigente → Versión inmutable y recibo o pendiente de conciliación | pendiente |
+| 5. Consultar la misma versión en PPP y Master Developer | Persona autorizada | SYS-POTENCIALES, SYS-INVERSION, GAS-SALA | Identidad de presentación y permiso vigente → Historial, origen exacto y storyboard revisable | pendiente |
+| 6. Revisar y ordenar etapa dos | Dirección | SYS-INVERSION, SYS-DESPACHO | Storyboard de versión identificada y chinches → Instrucción expresa o correcciones; publicación sigue separada | manual |
+
+Vacíos: Implementación, integración y despliegue se verifican por separado; el registro de este flujo no habilita el botón.; La aprobación de etapa dos corresponde a cada storyboard revisado; no se deduce de la autorización para implementar la herramienta.; Faltantes materiales del brief se preguntan sólo cuando no estén disponibles en contexto autorizado..
+
+Evidencia: [yod-portal/docs/arquitectura/ppp-presentaciones.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-presentaciones.md) — Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards..
+
+## PROC-EMD-CONTINUOUS-IMPROVEMENT · Ciclo de evaluación y seguimiento de mejora
+
+Estado: propuesto.
+
+```mermaid
+flowchart TD
+  p0["Consultar campaña y cobertura · Coordinación reviewer"]
+  p1["Preparar personas y campaña · Actor con capacidad administrativa explícita"]
+  p0 -.-> p1
+  p2["Responder y confirmar evaluación · Participante asignado"]
+  p1 -.-> p2
+  p3["Revisar y activar política metodológica · Actor con capacidades separadas de método y activación"]
+  p2 -.-> p3
+  p4["Consultar distribuciones elegibles · Actor autorizado con viewResults"]
+  p3 --> p4
+  p5["Acordar y seguir acciones · Gestor autorizado y responsable de su acción"]
+  p4 -.-> p5
+```
+
+| Paso | Responsable | Componentes | Entrada → salida | Ejecución |
+|---|---|---|---|---|
+| 1. Consultar campaña y cobertura | Coordinación reviewer | SYS-EMD, GAS-EMD, SHEET-EMD | Sesión vigente y campaña seleccionada → Avance, cobertura y seguimiento confirmados con fecha y denominadores | automatico |
+| 2. Preparar personas y campaña | Actor con capacidad administrativa explícita | SYS-EMD, GAS-EMD, SHEET-EMD, EXT-DRIVE | Cambios revisados, contexto e identidades canónicas → Vista previa y operación respaldada con recibo o conflicto | manual |
+| 3. Responder y confirmar evaluación | Participante asignado | SYS-EMD, GAS-EMD, SHEET-EMD, STORE-EMD-DRAFTS | Instrumento/campaña compatibles y respuestas propias → Borrador o confirmación/cierre individual conforme a contratos existentes | manual |
+| 4. Revisar y activar política metodológica | Actor con capacidades separadas de método y activación | SYS-EMD, GAS-EMD, SHEET-EMD | Política versionada con universo/corte, audiencia, umbral y tratamiento explícitos → Versión activada inmutable o borrador pendiente; la configuración inicial permanece vacía | manual |
+| 5. Consultar distribuciones elegibles | Actor autorizado con viewResults | SYS-EMD, GAS-EMD, SHEET-EMD | Política activa y datos elegibles de campaña/instrumento compatibles → Histogramas por ítem o razón de indisponibilidad; NA/ausentes separados | automatico |
+| 6. Acordar y seguir acciones | Gestor autorizado y responsable de su acción | SYS-EMD, GAS-EMD, SHEET-EMD | Objetivo y seguimiento aportados con revisión vigente → Acción y eventos persistentes confirmados, sin inferir cumplimiento | manual |
+
+Vacíos: La definición metodológica oficial y su activación no se infieren de la autorización para desarrollar el sistema.; Capacidades de escritura/resultados se mantienen false hasta configuración explícita del actor autorizado.; La publicación del código, la versión de Apps Script y la operación con personas se verifican por separado.; No hay nuevos triggers, cron, invitaciones o automatizaciones creados por este proceso..
+
+Evidencia: Propuesta previa a implementación; datos, configuración y evidencia operativa privados..

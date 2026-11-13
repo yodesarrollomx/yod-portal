@@ -4,7 +4,7 @@
  if(window.YodChrome)return;
  var source=document.currentScript&&document.currentScript.src;
  var base=new URL('.',source||location.href),pref='yod_os_sidebar_v1',installed=new WeakSet();
- var figures=import(new URL('ui-figures.bundle.mjs?v=2',base).href);
+ var figures=import(new URL('ui-figures.bundle.mjs?v=20261113-ui-consistencia',base).href);
  figures.catch(function(){/* Existing accessible labels remain available if a visual asset fails. */});
  var ids={'SYS-DESPACHO':'office','SYS-POTENCIALES':'plan','SYS-TRACK':'route','SYS-MIRAMAR':'buildings','SYS-TAREAS':'tasks','SYS-FLUJO':'wallet','SYS-INTERIORES':'chair','SYS-INVERSION':'present','SYS-MARKETING':'funnel','SYS-OBRA':'tower','SYS-CONTROL':'grid'};
  var icons={'home-2':'home','layout-dashboard':'home','layout-grid':'office','map-2':'plan','route':'route','building-community':'buildings','checklist':'tasks','wallet':'wallet','armchair-2':'chair','presentation-analytics':'present','speakerphone':'funnel','chart-funnel':'funnel','filter':'funnel','building-skyscraper':'tower','users':'people','photo-edit':'edit','search':'search'};
@@ -30,7 +30,7 @@
   var logo=document.createElement('img');logo.src=new URL('../marca/yod-oscuro.png',base).href;logo.alt='YoDesarrollo';logo.className='ui-brand-full';
   var mark=document.createElement('img');mark.src=new URL('../marca/yod-mono-oscuro.png',base).href;mark.alt='YoDesarrollo';mark.className='ui-brand-mark';brand.replaceChildren(logo,mark);
   var mobileBrand=shell.querySelector(shared?'.yod-topbrand':'.topbar-brand');if(mobileBrand){var mobileLogo=document.createElement('img');mobileLogo.src=new URL('../marca/yod-claro.png',base).href;mobileLogo.alt='YoDesarrollo';mobileLogo.className='ui-mobile-brand';mobileBrand.replaceChildren(mobileLogo);}
-  side.id=shared?'yod-ui-sidebar':'os-ui-sidebar';var toggle=document.createElement('button');toggle.type='button';toggle.className='ui-sidebar-toggle';toggle.setAttribute('aria-controls',side.id);toggle.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16m7-12-3 4 3 4"/></svg>';header.append(toggle);
+  side.id=shared?'yod-ui-sidebar':'os-ui-sidebar';var burger=shell.querySelector(shared?'#yodBurger':'#menu-toggle');if(burger)burger.setAttribute('aria-controls',side.id);var toggle=document.createElement('button');toggle.type='button';toggle.className='ui-sidebar-toggle';toggle.setAttribute('aria-controls',side.id);toggle.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16m7-12-3 4 3 4"/></svg>';header.append(toggle);
   var tip=document.createElement('div');tip.className='ui-nav-tip';tip.id=side.id+'-tip';tip.setAttribute('role','tooltip');tip.hidden=true;document.body.append(tip);var owner=null;
   function hideTip(){tip.hidden=true;if(owner)owner.removeAttribute('aria-describedby');owner=null;}
   function update(){shell.classList.toggle('ui-compact',compact&&!mobile.matches);toggle.setAttribute('aria-expanded',String(mobile.matches||!compact));var title=mobile.matches?'Cerrar menú':compact?'Expandir barra lateral':'Contraer barra lateral';toggle.setAttribute('aria-label',title);toggle.title=title;hideTip();}

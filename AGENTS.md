@@ -22,3 +22,17 @@ Relevo del Despacho 3D (entorno del agente y versión de oficina): `docs/ENTORNO
 ## Relevo de Jev Images · 28-oct-2026
 
 Leer [protocolo visual experimental](docs/JEV-IMAGENES-RELEVO-20261028.md) antes de clasificar fotografías, planos o capturas mediante Jev. La guía define un piloto en sombra y **no acredita ejecución ni despliegue**. Mantener los contratos, CI, reservas, pruebas y rutas canónicas vigentes; no usar Jev textual como visión ni dar por notificados a otros chats hasta observar su acuse.
+
+Colaboración entre agentes (Claude y ChatGPT/Codex): leer `docs/colaboracion/`, empezando por el documento más reciente, antes de tomar un encargo.
+
+## Eficiencia de contexto y agentes (propuesta 2026-10-18)
+
+Consultar `docs/agentes/politica-eficiencia-yod-os.md` antes de investigar o modificar sistemas. Esta política complementa —no reemplaza— los requisitos de arquitectura, seguridad y pruebas anteriores. Los complementos opcionales no se consideran instalados por mencionar su nombre.
+
+## Herramientas del Reel · política local 1.0.0
+
+Leer [docs/agentes/POLITICA.md](docs/agentes/POLITICA.md) para búsqueda, triage Jev,
+pasajes, presupuesto, evidencia y entrega. Cargar sólo la skill documental pertinente
+indicada allí. Inventario, licencias y pendientes: docs/agentes/RESULTADOS.md y
+integraciones.lock.json en esa carpeta. No registrar skills globales ni cambiar
+proveedores por esta referencia; no enviar datos privados sin aprobación específica.
