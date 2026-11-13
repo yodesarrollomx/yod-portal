@@ -22,3 +22,5 @@ Relevo del Despacho 3D (entorno del agente y versión de oficina): `docs/ENTORNO
 ## Relevo de Jev Images · 28-oct-2026
 
 Leer [protocolo visual experimental](docs/JEV-IMAGENES-RELEVO-20261028.md) antes de clasificar fotografías, planos o capturas mediante Jev. La guía define un piloto en sombra y **no acredita ejecución ni despliegue**. Mantener los contratos, CI, reservas, pruebas y rutas canónicas vigentes; no usar Jev textual como visión ni dar por notificados a otros chats hasta observar su acuse.
+
+Colaboración entre agentes (Claude y ChatGPT/Codex): leer `docs/colaboracion/`, empezando por el documento más reciente, antes de tomar un encargo.
