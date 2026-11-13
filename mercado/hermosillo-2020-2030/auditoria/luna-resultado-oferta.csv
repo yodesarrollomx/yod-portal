@@ -1,0 +1,14 @@
+serie_id,periodo,valor_reportado,valor_encontrado,coincide,evidencia_literal,nota
+prod-dtu-ruv,2020,1802,1802,si,"{""año"":2020,""viviendas"":1802}",
+prod-dtu-ruv,2024,1981,1981,si,"{""año"":2024,""viviendas"":1981}",
+prod-dtu-ruv,2025,2386,2386,si,"{""año"":2025,""viviendas"":2386}","Misma cifra 2025 que prod-hcv-canadevi (2,386 en su PDF). Dato de contraste, no discrepancia."
+reg-ruv,2025,5657,5657,si,"{""año"":2025,""viviendas"":5657}",
+reg-ruv,2021,4080,4080,si,"{""año"":2021,""viviendas"":4080}",
+inv-ruv,2022-12,7334,7334,si,"{""año"":0,""municipio"":""Hermosillo"",""viviendas"":7334,""clave_municipio"":""030""}","Objeto con año=0 y sin campo mes; el periodo 2022-12 sólo viene del parámetro de la URL."
+inv-ruv,2025-12,5335,5335,si,"{""año"":0,""municipio"":""Hermosillo"",""viviendas"":5335,""clave_municipio"":""030""}","Objeto con año=0 y sin campo mes; el periodo 2025-12 sólo viene del parámetro de la URL."
+inv-ruv,2026-07,8227,8227,si,"{""año"":0,""municipio"":""Hermosillo"",""viviendas"":8227,""clave_municipio"":""030""}","Objeto con año=0 y sin campo mes; el periodo 2026-07 sólo viene del parámetro de la URL."
+prod-hcv-canadevi,2024,792,792,si,"de acuerdo con estimaciones de CANADEVI, la producción de vivienda en Hermosillo pasó de 792 unidades en 2024 a 2,386 en 2025","El localizador cita 'Según estimaciones de CANADEVI...'; WebFetch no halló esa frase, sí 'de acuerdo con estimaciones de CANADEVI'. Párrafo que empieza 'La actividad del sector también muestra señales de dinamismo' (pp. 45-46)."
+prod-hcv-canadevi,2025,2386,"2,386",si,"pasó de 792 unidades en 2024 a 2,386 en 2025","Fuente escribe 2,386 con separador de miles; mismo número. Misma oración que la fila 2024. Igual a prod-dtu-ruv 2025."
+escrit-canadevi-nueva,2025,4808,"4 mil 808",si,"En Sonora, el año pasado fueron alrededor de 9 mil 500 viviendas nuevas escrituradas, y en Hermosillo, 4 mil 808 viviendas.","Cifra escrita '4 mil 808' (=4808). La frase dice 'el año pasado'; 2025 no aparece en la frase citada. Fecha de la nota según URL: 2026-10-02."
+cartera-sello-h-inscritas,2026-09,20861,"20 mil 861",si,"El programa “Sello H” cuenta actualmente con 20 mil 861 viviendas inscritas en Hermosillo","Cifra escrita '20 mil 861' (=20861). El titular dice 'más de 20 mil'. Fecha de la nota según URL: 2026-09-10."
+costo-ceico-hermosillo-total,2026-01,2.83,"2.83%",si,"36 Hermosillo, Son. 2.83% 2.0% 9.0% 4.0%","Fila 36, Tabla 1 (p. 6). Encabezado de la tabla: 'Periodo enero 2025 a enero 2026'; el archivo registra 2026-01. Encabezados de columna no confirmados por separado."

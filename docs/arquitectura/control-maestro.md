@@ -52,7 +52,7 @@ Las capturas son sintéticas y lo indican en la imagen. No son sesiones de perso
 ## Pendientes precisos
 
 - Aceptación con cuenta Google real autorizada y medición de carga. No se creó ni se solicitó una credencial personal para automatizarla.
-- Despacho no figura en el catálogo vivo; se conserva su respaldo técnico. El alias `SYS-PORTAL` del registro y `SYS-YOD-OS` del atlas no se migró. Son diferencias registradas, no nuevas autorizaciones.
+- Nota histórica superada en la conciliación del 7-oct-2026: la lectura directa del registro confirmó SYS-DESPACHO presente. El catálogo técnico contiene once tableros y el registro agrega SYS-PORTAL, alias existente de SYS-YOD-OS. Se conservan IDs y permisos. Bandeja/Corcho de Dirección y oficina 3D son superficies distintas; ver [cobertura de oficina](oficina-cobertura.md).
 - Los roles y accesos pendientes de Control Maestro no se activaron. Agregar usuarios o definir permisos nuevos corresponde a una decisión explícita del propietario.
 - Verificación autenticada de modificaciones en un recurso de pruebas aislado y configuración efectiva de sus libros. Las pruebas de contrato y los guardas de esquema no certifican todos los destinos operativos.
 - CRM conserva su despliegue 20. Revisar su caché de autorización y su recorrido comercial al continuar con CRM; la actualización de Portero no garantiza la frescura de todos sus consumidores.

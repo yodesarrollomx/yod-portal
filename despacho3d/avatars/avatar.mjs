@@ -1,6 +1,7 @@
 import * as T from 'three';
+import {createOfficeHuman,animateOfficeHuman,OFFICE_HUMAN_FORMS} from './office-human.mjs?v=126';
 
-export const AVATAR_VERSION='3.0.0';
+export const AVATAR_VERSION='4.0.0';
 export const FORMS={child:'Infancia · primer acercamiento',child_female:'Infancia · vivienda',young_female:'Joven · línea femenina',young_male:'Joven · línea masculina',woman:'Mujer · casa en obra',man:'Hombre · desarrollo / torre',robot:'Robot · codesarrollo',spirit:'Alma · proyecto',deity:'Deidad · equipo',tool:'Agente · herramienta',visitor:'Colaborador · visitante'};
 const skins=['#ce9672','#e8b78c','#b77c58','#f1c7a5','#a56b4b'],hairs=['#2b2225','#473326','#6b4934','#302b35','#966743'];
 const hash=s=>[...String(s)].reduce((h,c)=>((h*31+c.charCodeAt(0))>>>0),17);
@@ -10,6 +11,7 @@ const colorOr=(x,fallback)=>/^#[\da-f]{6}$/i.test(x||'')?x:fallback;
 // Drawing only: identity, permissions and memory remain with the caller.
 export function createAvatar(form,color='#57827d',name='',options={}){
  form=Object.hasOwn(FORMS,form)?form:'visitor';color=colorOr(color,'#57827d');
+ if(options.quality==='office'&&OFFICE_HUMAN_FORMS.has(form))return createOfficeHuman(form,color,name,options);
  const seed=hash(options.seed||name||form),detail=options.quality==='office'?16:24;
  const root=new T.Group(),body=new T.Group();root.add(body);root.name='avatar';body.name='body';
  const female=['woman','young_female','child_female'].includes(form)||options.presentation==='feminine';
@@ -121,11 +123,13 @@ export function createAvatar(form,color='#57827d',name='',options={}){
  root.userData.baseTransforms=new Map();body.traverse(o=>{if(o.isGroup)root.userData.baseTransforms.set(o,{position:o.position.clone(),rotation:o.rotation.clone(),scale:o.scale.clone()});});root.updateMatrixWorld(true);return root;
 }
 export function animateAvatar(root,time,walking=false,seated=false,action='idle'){
- const u=root.userData;if(!u?.body)return;const {body,arms,legs,eyes,joints,base,seed,baseTransforms}=u;
+ const u=root.userData;if(!u?.body)return;if(u.officeHuman){animateOfficeHuman(root,time,walking,seated,action);return;}const {body,arms,legs,eyes,joints,base,seed,baseTransforms}=u;
  baseTransforms.forEach((v,o)=>{o.position.copy(v.position);o.rotation.copy(v.rotation);o.scale.copy(v.scale);});
  if(joints.mouth)joints.mouth.scale.y=1;base.visible=!walking&&!seated;const phase=time*7.5;
  if(u.form==='spirit'){body.position.y=Math.sin(time*1.7)*.06;arms.forEach((a,i)=>a.rotation.z=Math.sin(time*2+i)*.20);}
- else if(seated){body.position.y=-.15;legs.forEach(l=>l.rotation.x=-Math.PI/2);for(const key of ['knee_-1','knee_1'])if(joints[key])joints[key].rotation.x=Math.PI/2;arms.forEach(a=>a.rotation.x=-.65);for(const key of ['elbow_-1','elbow_1'])if(joints[key])joints[key].rotation.x=-.48;}
+ else if(seated){// Thigh underside is ~0.50 in model coordinates; chair top is 0.62 m.
+  // Scale belongs to the character, so the seat contact must be solved after scaling.
+  body.position.y=.62-.50*body.scale.y;legs.forEach(l=>l.rotation.x=-Math.PI/2);for(const key of ['knee_-1','knee_1'])if(joints[key])joints[key].rotation.x=Math.PI/2;arms.forEach(a=>a.rotation.x=-.65);for(const key of ['elbow_-1','elbow_1'])if(joints[key])joints[key].rotation.x=-.48;}
  else if(walking){body.position.y=Math.abs(Math.sin(phase))*.032;legs.forEach((l,i)=>l.rotation.x=Math.sin(phase+i*Math.PI)*.5);arms.forEach((a,i)=>a.rotation.x=-Math.sin(phase+i*Math.PI)*.34);for(const [i,key]of ['knee_-1','knee_1'].entries())if(joints[key])joints[key].rotation.x=Math.max(0,-Math.sin(phase+i*Math.PI))*.45;}
  else{body.position.y=Math.sin(time*1.8)*.006;if(joints.head)joints.head.rotation.z=Math.sin(time*.7)*.018;arms.forEach((a,i)=>a.rotation.z+=Math.sin(time*1.6+i)*.028);}
  const blinkPhase=(time+(seed%71)/17)%4.6,blink=blinkPhase<.13?Math.max(.10,Math.abs(blinkPhase-.065)/.065):1;eyes.forEach(e=>e.scale.y=blink);

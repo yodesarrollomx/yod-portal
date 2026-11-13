@@ -20,6 +20,7 @@ Operación, 15-jul-2026).
 | Obra en vivo | `OB` | yod-portal/obra.html | adaptador de obra |
 | Accesos (admin) | `AC` (no se otorga) | potenciales-yod/accesos.html | rol admin |
 | El Despacho | `DP` | yod-despacho | Portero + el GAS del board |
+| Mercado Hermosillo | `MH` | yod-portal/mercado/hermosillo-2020-2030 | ninguno: página estática con datos públicos; el código sólo decide si aparece en el menú (marco `shell.js`) |
 
 ## Reglas
 

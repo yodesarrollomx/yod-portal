@@ -3,7 +3,7 @@
    LA fuente única de cada tablero: id, nombre de respaldo, ícono, códigos de
    acceso y destino. De aquí se GENERAN las copias que viven en os/shell.js
    (DEST, ICON, NAME, CODES), os/access-policy.js (SYSTEM_CODES) y os/app.js
-   (ICONS):   node scripts/catalogo.cjs        (escribe las copias)
+   (ICONS, orden y relaciones de navegación):   node scripts/catalogo.cjs        (escribe las copias)
               node scripts/catalogo.cjs --check (lo corre verify-os: falla si
               alguien editó una copia a mano).
    Los nombres que se ven los manda la pestaña Portal del Control Maestro; los
@@ -15,12 +15,22 @@
   var CATALOGO = [
     { id: "SYS-DESPACHO", nombre: "El Despacho", icono: "layout-grid", codigos: ["DP"], destino: "https://yodesarrollomx.github.io/yod-despacho/" },
     { id: "SYS-POTENCIALES", nombre: "PPP", icono: "map-2", codigos: ["PT","MP","MA","MX","UN","RE","PA"], destino: "https://yodesarrollomx.github.io/potenciales-yod/" },
+    /* Mercado Hermosillo (1-nov-2026): tablero estático de oferta y demanda de vivienda nueva
+       (mercado/hermosillo-2020-2030/). Va justo debajo de PPP por decisión de Dirección; sin
+       navParent para que aparezca como entrada propia del menú. Código MH: sólo decide si se
+       muestra; la página no tiene backend ni datos privados. */
+    { id: "SYS-MERCADO", nombre: "Mercado Hermosillo", icono: "chart-line", codigos: ["MH"], destino: "https://yodesarrollomx.github.io/yod-portal/mercado/hermosillo-2020-2030/" },
+    /* PPP 2 (12-nov-2026, CHG-PPP2-20261112): el vivero de planes que se cultivan solos.
+       Vive aparte del PPP actual (potenciales-yod/ppp2.html) y no lo toca; va después de
+       Mercado para respetar que Mercado queda justo debajo de PPP. Usa el código PT: quien
+       entra a Potenciales ve PPP 2; su servidor vuelve a validar la sesión con el Portero. */
+    { id: "SYS-PPP2", nombre: "PPP 2", icono: "seedling", codigos: ["PT"], destino: "https://yodesarrollomx.github.io/potenciales-yod/ppp2.html" },
     { id: "SYS-TRACK", nombre: "Codesarrollos", icono: "route", codigos: ["CO","TC"], destino: "https://yodesarrollomx.github.io/yod-portal/track-codesarrollos.html" },
-    { id: "SYS-MIRAMAR", nombre: "Real de Miramar", icono: "building-community", codigos: ["RM"], destino: "https://yodesarrollomx.github.io/real-miramar-board/" },
+    { id: "SYS-MIRAMAR", navParent: "SYS-TRACK", nombre: "Real de Miramar", icono: "building-community", codigos: ["RM"], destino: "https://yodesarrollomx.github.io/real-miramar-board/" },
     { id: "SYS-TAREAS", nombre: "MOAC", icono: "checklist", codigos: ["TA"], destino: "https://yodesarrollomx.github.io/board-aurum/" },
     { id: "SYS-FLUJO", nombre: "Flujo", icono: "wallet", codigos: ["FL"], destino: "https://yodesarrollomx.github.io/board-flujo-yod/" },
     { id: "SYS-INTERIORES", nombre: "AURUM", icono: "armchair-2", codigos: ["IN"], destino: "https://yodesarrollomx.github.io/interiores-aurum/" },
-    { id: "SYS-INVERSION", nombre: "Codesarrolladores", icono: "presentation-analytics", codigos: ["IV"], destino: "https://yodesarrollomx.github.io/yodesarrollo-board/" },
+    { id: "SYS-INVERSION", nombre: "Masterbrokers", icono: "presentation-analytics", codigos: ["IV"], destino: "https://yodesarrollomx.github.io/yodesarrollo-board/brokers.html" },
     { id: "SYS-MARKETING", nombre: "Embudo comercial", icono: "speakerphone", codigos: ["MK"], destino: "https://yodesarrollomx.github.io/aurum-board/" },
     { id: "SYS-OBRA", nombre: "Obra en vivo", icono: "building-skyscraper", codigos: ["OB"], destino: "https://yodesarrollomx.github.io/yod-portal/obra.html" },
     { id: "SYS-CONTROL", nombre: "", icono: "", codigos: ["AC"], destino: "https://docs.google.com/spreadsheets/d/1E_89GQBnOmwv5Nej2B-QEkAdVnFYQbBVQUffHWwI7Vk/", sinMarco: true }

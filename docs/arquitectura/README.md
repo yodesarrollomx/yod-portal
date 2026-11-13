@@ -4,6 +4,8 @@ Esta es la entrada para entender y modificar YOD OS. Prioridad de mejora acordad
 
 ## Explorar
 
+- [Cobertura completa de la oficina](oficina-cobertura.html): cada componente, área funcional, fuente, responsable, conexiones, evidencia y pendientes. Asignación de inventario no equivale a permiso ni integración operativa.
+
 - [Abrir el atlas visual](index.html): búsqueda, dominios, conexiones, fichas, procesos y propuestas. Es autónomo: también funciona descargado, sin acceso a producción.
 - [Diagramas de conexiones y contratos](mapas.md).
 - [Fichas por tablero, motor y almacén](fichas.md).
@@ -14,6 +16,9 @@ Esta es la entrada para entender y modificar YOD OS. Prioridad de mejora acordad
 - [Cobertura y verificación](verificacion.md), [reglas de cambio](cambios.md) y [evolución](evolucion.md).
 - [Identidad del publicador automático](publicador-github.md): causa del bloqueo, permisos mínimos y registro pendiente.
 
+- [Sala · continuidad y publicación en nube](sala-nube-20261015.md): reparación técnica autorizada, contratos de transporte, snapshots, correo y chinches; implementación y producción se acreditan por separado.
+- [Sala · capacidad para imágenes nuevas](sala-medios-publicos-20261015.md): manifiesto schema 1, lectores antes del emisor, releases públicos inmutables y verificación anónima; emisor desactivado, históricos y presupuesto conservados.
+
 - [Capacidades compartidas de los agentes](despacho-capacidades.md): referencia Cubefarm, funciones conectadas y plan de instalación por agente.
 
 - [Entrega técnica de Control Maestro](control-maestro.md): versiones, aceptación, mantenimiento y reversión.
@@ -21,6 +26,12 @@ Esta es la entrada para entender y modificar YOD OS. Prioridad de mejora acordad
 - [EMD #9 · cuestionario completo bajo URL GitHub](emd-github-embed.md): propuesta, handshake y matriz de aceptación; implementación en PR separado.
 
 - [Sala #35 · Corcho provisional en Portero](despacho-corcho-provisional.md): routing exclusivo, identidad/ACL, archivo privado original, pruebas, reversión y manifests consumidores.
+
+- [Sala #47 · Recuperación Patrimonial](ppp-patrimonial-recovery-047.md): transporte sobre V65, caché por caso, conciliación de ACK perdido y borrador durable; implementación coordinada por separado.
+
+- [Chinche y contexto del Despacho](chinche-contexto-despacho.md): geometría y tarjetas/control exacto con referencia técnica privada.
+
+- [Autónomos autorizados y versiones PPP](despacho-autones-versiones.md): preparación, contratos, pruebas y activación pendiente.
 
 ## Qué significa cada evidencia
 
@@ -50,3 +61,50 @@ Una lectura GET a un backend de negocio puede crear o modificar datos. Las audit
 Este repositorio es público. El modelo no almacena clientes, correos, importes reales, credenciales, URLs completas de Apps Script ni identificadores de hojas privadas. Las fuentes se expresan con IDs lógicos. Los hallazgos de seguridad explotables se tratan en avisos privados de GitHub hasta su corrección. Los ejemplos y pruebas utilizan datos sintéticos.
 
 La auditoría no se considera completa mientras existan componentes críticos o despliegues sin comprobar; consultar siempre el alcance vigente en `modelo.json` y `verificacion.md`.
+
+- [Sala172 · Administración de accesos por sesión vigente](sala-accesos172.md): propuesta, invariantes, regresiones y comprobación real pendiente.
+
+- [Presentación monoline4r4](investor-monoline-story.md): cobertura de fuente, orden comercial/legal, path acumulativo, pruebas y reversión; registro previo a implementación.
+
+- [Presentación principal de nueve escenas](investor-principal-story.md): A/B/C zonas, búsqueda de propiedades posterior, 36 momentos, copy en Sheets y beta4r4 conservada; registro previo a implementación.
+
+- [Masterbrokers · Mini CRM](masterbrokers-mini-crm.md): comparación de PPP guardados, historial fechado, fuentes y calendario sobre el mismo Sheet.
+
+- [Presentación simplificada de siete escenas](investor-simple-story.md): trazo grueso por escena, claridad comercial, lectura opcional y archivo anterior; registro previo.
+
+- [Presentación móvil · una superficie y chinches](investor-single-surface.md): interacción iPhone, anotaciones, almacenamiento local, pruebas y límites de recepción; registro previo.
+
+- [Chinches de presentaciones → Sala](presentation-pins-ingest.md): relevo entre orígenes, sobres privados y acuses reales; sin cambiar el calendario.
+
+- [Presentación guiada entre dispositivos](presentation-guided.md): sesión conductor/invitado, revisión temporal acotada y conservación de fuentes y chinches.
+
+- [Sala · correcciones y aprobación](sala-correcciones.md): dictado revisado, contexto fijado y acuses separados de entrega/aprobación.
+
+- [Despacho 2.0 · coordinador aislado](despacho-v2-coordinator.md): parte2, API, límites y pruebas; sin activación en pantallas.
+
+- [Storyboard público en GitHub](presentation-storyboard-github.md): entrada pública, PorteroGoogle y correcciones privadas por Sala; reemplaza destinos independientes.
+
+- [Chinches con voz y dibujo sincronizados](chinches-secuencia.md): contrato compartido, consumidores, evidencia privada y revisión.
+
+- [Puesto del agente 2.0](puesto-agente2.md): piloto de conversación con avatar, vistas móviles y contratos actuales; sin cambios de backend ni datos.
+
+- [Paquete y control de chinches](chinches-paquete.md): instalación repetible, releases inmutables, actualizaciones por huella, registro único y revisión incremental. [Abrir el control](../../chinche/control.html).
+
+- [Volúmenes nativos del PPP](ppp-volumenes-nativos.md): alcance para todos los casos de departamentos, contrato por escenario, fórmulas canónicas y recibos; ampliación autorizada y despliegue por verificar.
+
+- [Master Developer y pizarra personal](masterdeveloper-pizarra.md): alcance, contrato privado y despliegue.
+
+- [Consejo de autones dentro del despacho](consejo-autones.md): recepción de entregas, cinco perspectivas, tareas, observaciones y límites de activación.
+
+- [PPP · ficha común y etapas conversadas](ppp-ficha-etapas.md): propuesta autorizada para los cinco motores, tablero nativo, datos y fórmulas en Sheets, criterios por modificación y reversión.
+
+- [PPP · lectura y campos inactivos](ppp-read-validation.md): aplicabilidad explícita, diagnóstico de validación y conservación de cantidades y permisos.
+
+
+- [PPP · Presentaciones desde la versión visible](ppp-presentaciones.md): generación autorizada con ADN/Hairline, snapshot exacto, trabajo durable y versiones privadas compartidas con Master Developer; propuesta previa a implementación.
+
+- [Chinches · reloj del inicio del trazo](chinches-reloj-trazo.md): corrección focal y patch1.1.1, con validación estricta y borradores conservados.
+
+- [EMD · contratos de guardado, versión e interacción](emd-contratos-20261102.md): propuesta compatible, pruebas sintéticas, publicación y recuperación acreditadas por separado.
+
+- [EMD · dashboard y mejora continua](emd-mejora-continua-20261103.md): administración por capacidades, campañas aisladas, acciones persistentes y política de resultados versionada, inicialmente sin activar.

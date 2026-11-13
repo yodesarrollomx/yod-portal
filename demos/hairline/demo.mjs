@@ -1,0 +1,8 @@
+import {mountDocumentTray} from '../../despacho3d/document-tray.mjs';
+const titles=['Plano del predio','Encargo de trabajo','Modelo de potencial','Memoria del proyecto','Presentación de alternativas'];
+const roles=['Distribución y referencias del espacio','Alcance y criterios del encargo','Supuestos para comparar alternativas','Antecedentes y decisiones','Material para la siguiente revisión'];
+const rows=titles.map((title,i)=>({id:'synthetic-'+i,title,role:roles[i],url:'https://docs.google.com/document/d/hairline-example-'+i+'/edit'}));
+let view;function show(documents){view?.destroy();view=mountDocumentTray({container:document.querySelector('#tray'),documents});}
+show(rows);document.querySelector('#normal').onclick=()=>show(rows);document.querySelector('#many').onclick=()=>show([...rows,...Array.from({length:6},(_,i)=>({id:'extra-'+i,title:'Anexo de ejemplo '+(i+1),role:'Documento ficticio adicional',url:null}))]);document.querySelector('#empty').onclick=()=>show([]);
+// Demo-only: opening a source shows a synthetic local document, never a private URL.
+document.querySelector('#tray').addEventListener('click',e=>{const a=e.target.closest('a');if(!a)return;e.preventDefault();const title=document.querySelector('.document-tray-detail h3').textContent;const w=window.open('','_blank');if(w){w.opener=null;w.document.title=title;const h=w.document.createElement('h1');h.textContent=title;const p=w.document.createElement('p');p.textContent='Documento ficticio para probar la apertura. La integración del Despacho usa el enlace autorizado del expediente.';w.document.body.append(h,p);}});

@@ -7,6 +7,7 @@ const bounded=(v,max)=>typeof v==='string'&&v.length>0&&v.length<=max&&!/[\x00-\
 export function validateAvatarProfile(input,selection){
  if(input===undefined||input===null)return null; // Older authorized servers remain compatible.
  if(!input||Array.isArray(input)||input.id!==selection.case_id||input.case_id!==selection.case_id||input.entity_kind!=='case'||input.name!==selection.name||!bounded(input.id,256)||!forms.has(input.form)||!color(input.color))throw Error('invalid_selection');
+ if(input.display_name!==undefined&&(!bounded(input.display_name,120)||!input.display_name.trim()))throw Error('invalid_selection');
  const visual={};
  if(input.visual!==undefined){
   if(!input.visual||typeof input.visual!=='object'||Array.isArray(input.visual))throw Error('invalid_selection');
@@ -16,5 +17,5 @@ export function validateAvatarProfile(input,selection){
   for(const key of ['myth','role'])if(Object.hasOwn(input.visual,key)){if(!bounded(input.visual[key],60))throw Error('invalid_selection');visual[key]=input.visual[key];}
   if(Object.hasOwn(input.visual,'presentation')){if(!['feminine','masculine'].includes(input.visual.presentation))throw Error('invalid_selection');visual.presentation=input.visual.presentation;}
  }
- return {id:input.id,case_id:input.case_id,entity_kind:'case',name:selection.name,form:input.form,color:input.color,visual};
+ return {id:input.id,case_id:input.case_id,entity_kind:'case',name:input.display_name||selection.name,form:input.form,color:input.color,visual};
 }

@@ -7,9 +7,41 @@
    ========================================================================== */
 (function () {
   'use strict';
+
+  /* NAVIGATION-BEGIN */
+  // Generado desde os/catalogo.js: presentación común; no concede accesos.
+  var NAV_ORDER = ["SYS-DESPACHO","SYS-POTENCIALES","SYS-MERCADO","SYS-PPP2","SYS-TRACK","SYS-MIRAMAR","SYS-TAREAS","SYS-FLUJO","SYS-INTERIORES","SYS-INVERSION","SYS-MARKETING","SYS-OBRA","SYS-CONTROL"];
+  var NAV_PARENT = {"SYS-MIRAMAR":"SYS-TRACK"};
+  function orderedModules(rows) {
+    var seen = Object.create(null);
+    return (Array.isArray(rows) ? rows : []).filter(function (row) {
+      if (!row || !row.system_id || seen[row.system_id]) return false;
+      seen[row.system_id] = true; return true;
+    }).sort(function (a, b) {
+      var ai = NAV_ORDER.indexOf(a.system_id), bi = NAV_ORDER.indexOf(b.system_id);
+      if (ai < 0) ai = NAV_ORDER.length; if (bi < 0) bi = NAV_ORDER.length;
+      return ai - bi || String(a.system_id).localeCompare(String(b.system_id));
+    });
+  }
+  function sidebarModules(rows, available) {
+    var sorted = orderedModules(rows);
+    var ids = sorted.filter(function (row) { return !available || available(row); }).map(function (row) { return row.system_id; });
+    return sorted.filter(function (row) { return !NAV_PARENT[row.system_id] || ids.indexOf(NAV_PARENT[row.system_id]) < 0; });
+  }
+  /* NAVIGATION-END */
   if (window.__YOD_SHELL__) return; window.__YOD_SHELL__ = 1;
   // Embebido dentro de la máscara del OS: el marco ya lo pone el padre.
-  try { if (/[?&]embed=1/.test(location.search)) return; } catch (e) { }
+  try {
+    if (window.parent !== window) {
+      if (/[?&]embed=1/.test(location.search)) return;
+      var ancestor = window.parent;
+      while (true) {
+        if (ancestor.document.querySelector('.app-shell,.yod-shell')) return;
+        if (ancestor.parent === ancestor) break;
+        ancestor = ancestor.parent;
+      }
+    }
+  } catch (e) { /* Cross-origin standalone consumers keep their own shell. */ }
 
   var SELF = (document.currentScript && document.currentScript.src) || 'https://yodesarrollomx.github.io/yod-portal/os/shell.js';
   var LSC = 'pyod_clave_v1';
@@ -21,7 +53,7 @@
   /* La dirección del Portero vive SOLO en os/yod-acceso.js. Si la página no la
      cargó, se pide aquí (misma carpeta que este archivo) antes del primer canje. */
   var ACCESO_LISTO = window.YOD_PORTERO ? Promise.resolve() : new Promise(function (ok) {
-    var sc = document.createElement('script'); sc.src = SELF.replace(/shell\.js(\?.*)?$/, 'yod-acceso.js?v=1');
+    var sc = document.createElement('script'); sc.src = SELF.replace(/shell\.js(\?.*)?$/, 'yod-acceso.js?v=20261112-ppp2');
     sc.onload = sc.onerror = function () { ok(); }; document.head.appendChild(sc);
   });
   /* El ORIGINAL siempre primero; el respaldo solo si aquel falla en esta
@@ -32,7 +64,14 @@
   function rechazoAcceso(error) {
     return ['liga','clave','expirado','revocado','sin_sesion','sin_acceso','sin acceso','denegado','no autorizado','unauthorized','forbidden','http 401','http 403'].includes(String(error && error.message || error || '').trim().toLowerCase());
   }
-  async function canjeConRelevo(k) {
+  async function canjeConRelevo(k, opts) {
+    if (typeof cargadorActivo_ === 'function' && cargadorActivo_()) return canjeConCargador_(k, opts);
+    /* T-105 (30-oct-2026) · el respaldo contesta 404 «Page Not Found» desde el 23-sep (esa implementación ya no
+       existe en Google; lo midió el vigía de yod-portal). Saltar a él convertía cada tardanza del ORIGINAL en una
+       sesión «por validar». Mientras no haya un respaldo vivo, el segundo intento vuelve a ser el ORIGINAL tras
+       1.5 s, igual que potenciales-yod/portero.js (RESPALDO_VIVO). Para reactivar el respaldo: respaldoVivo = true
+       con una URL que conteste (y devolver a la prueba 'caída de transporte' su expectativa de dos direcciones). */
+    var respaldoVivo = false;
     async function intenta(base) {
       var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
       var timer = controller ? setTimeout(function () { controller.abort(); }, 25000) : null;
@@ -47,7 +86,42 @@
     var P = window.YOD_PORTERO; if (!P) return null;
     var j = null; try { j = await intenta(P.original); } catch (e) { }
     if (j && (j.ok || rechazoAcceso(j.error))) return j;
-    try { return await intenta(P.respaldo); } catch (e) { return null; }
+    if (!respaldoVivo) {
+      // T-105: el segundo intento es el ORIGINAL otra vez (el respaldo está muerto). Un rechazo explícito del
+      // original sí es concluyente; cualquier otra cosa sigue siendo «sin respuesta» (null) y se reintenta en fondo.
+      await new Promise(function (listo) { setTimeout(listo, 1500); });
+      try { var otra = await intenta(P.original); return otra && (otra.ok || rechazoAcceso(otra.error)) ? otra : null; } catch (e) { return null; }
+    }
+    // El respaldo puede usar otra base de sesiones. Un rechazo suyo no puede
+    // invalidar una credencial cuando el primario simplemente no respondió.
+    try { var backup = await intenta(P.respaldo); return backup && backup.ok ? backup : null; } catch (e) { return null; }
+  }
+  /* ══ FASE 1 · «UN CARGADOR» (T-102) ═══════════════════════════════════════════
+     Si la página cargó os/yod-cargador.js (window.YodCargador), el marco lo usa para destrabar el tablero y
+     pintar el menú desde la última copia buena, y las revalida en segundo plano. Es ADITIVO: canjeConRelevo,
+     loadIdentity, loadCatalog, cargarChinche y logout abren con UNA línea que delega aquí sólo si
+     cargadorActivo_(); sin cargador, o con ?cargador=legacy (o localStorage.yodcg_legacy='1'), corre el código
+     de siempre. El marco NUNCA borra pyod_clave_v1 por un rechazo propio (regla 5 de CLAUDE.md): sólo
+     purga las copias del cargador; la dueña de la sesión es la cabina. El muro sigue siendo cada backend. */
+  function cargadorActivo_() { var c = window.YodCargador; return !!(c && c.v && !c.legacy); }
+  // Misma forma de salida que canjeConRelevo: {ok:true,token,rol,boards,nombre,correo[,origen,edadMs]},
+  // {ok:false,error[,rechazo,origen]} o null. fuerzaRed ignora la copia (revalidar una sesión ya confirmada, reintentos).
+  async function canjeConCargador_(k, opts) {
+    var fuerzaRed = opts && opts.fuerzaRed !== undefined ? Boolean(opts.fuerzaRed)
+      : (state.identity === 'ok' && state.sessionToken === k) || (state.reconnectAttempts || 0) > 0;
+    try {
+      var r = await window.YodCargador.sesion.canjear({ modo: fuerzaRed ? 'red' : 'cache-primero' });
+      return r && typeof r === 'object' ? r : null;
+    } catch (e) { return null; }
+  }
+  // Un rechazo vivo tira TODA copia guardada: una recarga no puede resucitar la identidad.
+  function purgarCargador_() { try { window.YodCargador.purgar(); } catch (e) { } }
+  function cerrarCargador_(token, motivo) { try { return window.YodCargador.sesion.cerrar({ token: token, motivo: motivo }); } catch (e) { return false; } }
+  var CATALOG_BASE = PORTAL.split('?')[0];
+  function configurarCatalogo_() {
+    var c = window.YodCargador;
+    if (state.cargadorConfigurado || !c || typeof c.config !== 'function') return;
+    try { c.config({ catalogo: { url: CATALOG_BASE } }); state.cargadorConfigurado = true; } catch (e) { }
   }
   var OS = 'https://yodesarrollomx.github.io/yod-portal/os/';
   var CORPORATE = 'https://yodesarrollo.mx/'; // sitio público; la marca del shell ya NO cuelga de aquí (lleva al OS)
@@ -55,26 +129,30 @@
   var DEST = {
     'SYS-DESPACHO': 'https://yodesarrollomx.github.io/yod-despacho/',
     'SYS-POTENCIALES': 'https://yodesarrollomx.github.io/potenciales-yod/',
+    'SYS-MERCADO': 'https://yodesarrollomx.github.io/yod-portal/mercado/hermosillo-2020-2030/',
+    'SYS-PPP2': 'https://yodesarrollomx.github.io/potenciales-yod/ppp2.html',
     'SYS-TRACK': 'https://yodesarrollomx.github.io/yod-portal/track-codesarrollos.html',
     'SYS-MIRAMAR': 'https://yodesarrollomx.github.io/real-miramar-board/',
     'SYS-TAREAS': 'https://yodesarrollomx.github.io/board-aurum/',
     'SYS-FLUJO': 'https://yodesarrollomx.github.io/board-flujo-yod/',
     'SYS-INTERIORES': 'https://yodesarrollomx.github.io/interiores-aurum/',
-    'SYS-INVERSION': 'https://yodesarrollomx.github.io/yodesarrollo-board/',
+    'SYS-INVERSION': 'https://yodesarrollomx.github.io/yodesarrollo-board/brokers.html',
     'SYS-MARKETING': 'https://yodesarrollomx.github.io/aurum-board/',
     'SYS-OBRA': 'https://yodesarrollomx.github.io/yod-portal/obra.html'
   };
-  var ICON = { 'SYS-DESPACHO': 'layout-grid', 'SYS-POTENCIALES': 'map-2', 'SYS-TRACK': 'route', 'SYS-MIRAMAR': 'building-community', 'SYS-TAREAS': 'checklist', 'SYS-FLUJO': 'wallet', 'SYS-INTERIORES': 'armchair-2', 'SYS-INVERSION': 'presentation-analytics', 'SYS-MARKETING': 'speakerphone', 'SYS-OBRA': 'building-skyscraper' };
+  var ICON = { 'SYS-DESPACHO': 'layout-grid', 'SYS-POTENCIALES': 'map-2', 'SYS-MERCADO': 'chart-line', 'SYS-PPP2': 'seedling', 'SYS-TRACK': 'route', 'SYS-MIRAMAR': 'building-community', 'SYS-TAREAS': 'checklist', 'SYS-FLUJO': 'wallet', 'SYS-INTERIORES': 'armchair-2', 'SYS-INVERSION': 'presentation-analytics', 'SYS-MARKETING': 'speakerphone', 'SYS-OBRA': 'building-skyscraper' };
   /* Los títulos oficiales viven en la pestaña Portal del Control Maestro
      (titulo_portal); estos son solo el respaldo si aquella no contesta.
      Deben decir LO MISMO que el Sheet — si renombras allá, renombra acá. */
-  var NAME = { 'SYS-DESPACHO': 'El Despacho', 'SYS-POTENCIALES': 'PPP', 'SYS-TRACK': 'Codesarrollos', 'SYS-MIRAMAR': 'Real de Miramar', 'SYS-TAREAS': 'MOAC', 'SYS-FLUJO': 'Flujo', 'SYS-INTERIORES': 'AURUM', 'SYS-INVERSION': 'Codesarrolladores', 'SYS-MARKETING': 'Embudo comercial', 'SYS-OBRA': 'Obra en vivo' };
+  var NAME = { 'SYS-DESPACHO': 'El Despacho', 'SYS-POTENCIALES': 'PPP', 'SYS-MERCADO': 'Mercado Hermosillo', 'SYS-PPP2': 'PPP 2', 'SYS-TRACK': 'Codesarrollos', 'SYS-MIRAMAR': 'Real de Miramar', 'SYS-TAREAS': 'MOAC', 'SYS-FLUJO': 'Flujo', 'SYS-INTERIORES': 'AURUM', 'SYS-INVERSION': 'Masterbrokers', 'SYS-MARKETING': 'Embudo comercial', 'SYS-OBRA': 'Obra en vivo' };
   // Códigos por tablero — MISMA matriz que YOD OS (access-policy.js). El menú
   // solo enseña lo que tu sesión permite; el muro real sigue siendo cada backend.
   var CODES = {
     // generado desde os/catalogo.js (node scripts/catalogo.cjs); SYS-CONTROL solo lo abre Dirección
     'SYS-DESPACHO': ['DP'],
     'SYS-POTENCIALES': ['PT', 'MP', 'MA', 'MX', 'UN', 'RE', 'PA'],
+    'SYS-MERCADO': ['MH'],
+    'SYS-PPP2': ['PT'],
     'SYS-TRACK': ['CO', 'TC'],
     'SYS-MIRAMAR': ['RM'],
     'SYS-TAREAS': ['TA'],
@@ -86,7 +164,7 @@
     'SYS-CONTROL': ['AC']
   };
   // identity: 'pending' (validando) | 'ok' (canje válido) | 'fail' (sin sesión o canje falló)
-  var state = { role: '', boards: '', modules: [], identity: 'pending', catalogRows: null, catalogIds: null, identityRequest: 0, sessionToken: '', sessionIdentity: '' };
+  var state = { role: '', boards: '', modules: [], identity: 'pending', catalogRows: null, catalogIds: null, identityRequest: 0, sessionToken: '', sessionIdentity: '', verifiedAt: 0, reconnectAttempts: 0, retryTimer: null };
 
   /* El catálogo consultado se conserva en memoria de la sesión validada. Las
      antiguas llaves compartidas se mantienen aquí únicamente para purgarlas. */
@@ -137,6 +215,7 @@
   function set(id, t) { var e = document.getElementById(id); if (e) e.textContent = t; }
   function currentSys() { var here = location.href, best = ''; Object.keys(DEST).forEach(function (k) { if (here.indexOf(DEST[k].replace(/\/$/, '')) === 0) best = k; }); return best; }
 
+  function moduleTitle(row) { return row.system_id === 'SYS-INVERSION' ? (state.role === 'admin' ? 'Master Developer' : 'Master Broker') : (row.titulo_portal || NAME[row.system_id] || row.system_id); }
   function defaultRows() { return Object.keys(DEST).map(function (k) { return { system_id: k, titulo_portal: NAME[k] }; }); }
   /* Un tablero que ya vive aqui (DEST + NAME + CODES) pero al que nadie dio de
      alta en la pestaña Portal quedaba fuera del menu de TODOS los tableros,
@@ -153,32 +232,41 @@
   /* El Embudo comercial no se abre "pelón": vive en la máscara de la cabina
      (Sala · Métricas · Plan de Potencial). Desde cualquier tablero envuelto,
      su enlace lleva a esa ruta del OS, igual que un clic en la cabina. */
+  /* El Despacho tampoco: dentro de la cabina su enlace ya es #/despacho (app.js hrefDe),
+     pero desde los demás tableros mandaba a yod-despacho/, la Bandeja anterior, que
+     Dirección no reconocía como su Despacho (10-nov-2026). La Bandeja sigue a un clic
+     en «••• › Bandeja actual» dentro del Despacho. */
   function enlace(row) {
     var url = destino(row); if (!url) return '';
+    if (row && row.system_id === 'SYS-DESPACHO') return OS + '#/despacho';
     return (row && row.system_id === 'SYS-MARKETING') ? OS + '#/embudo/metricas' : url;
   }
   function navItem(row, cur) {
     var url = enlace(row); if (!url) return null;
     var nuevo = false; try { nuevo = row.system_id !== cur && localStorage.getItem('yod_nuevo_' + row.system_id) === '1'; } catch (e) { }
-    var a = el('a', 'yod-nav-item' + (row.system_id === cur ? ' active' : '') + (nuevo ? ' hay-nuevo' : ''));
+    var a = el('a', 'yod-nav-item' + (row.system_id === cur || row.system_id === NAV_PARENT[cur] ? ' active' : '') + (nuevo ? ' hay-nuevo' : ''));
     if (nuevo) a.title = 'Hay algo nuevo desde tu última visita';
     a.href = url; a.setAttribute('rel', 'noopener'); if(!esPropioShell(url)) a.setAttribute('target','_blank');
-    a.innerHTML = '<i class="ti ti-' + (ICON[row.system_id] || 'layout-dashboard') + '"></i><span>' + esc(row.titulo_portal || NAME[row.system_id] || row.system_id) + '</span>';
+    a.innerHTML = '<i class="ti ti-' + (ICON[row.system_id] || 'layout-dashboard') + '"></i><span>' + esc(moduleTitle(row)) + '</span>';
     return a;
   }
   function renderNav(rows, cur) {
     var box = document.getElementById('yodNav'); if (!box) return; box.innerHTML = '';
-    state.modules = rows;
-    // Chinche #35 (28-sep): Real de Miramar vive DENTRO de Codesarrollos, no suelto en el
-    // menú. Solo se asoma si estás en él o si tu sesión no tiene Codesarrollos para llegar.
-    var DENTRO = { 'SYS-MIRAMAR': 'SYS-TRACK' };
-    var ids = rows.map(function (r) { return r.system_id; });
-    rows.forEach(function (r) {
-      var padre = DENTRO[r.system_id];
-      if (padre && r.system_id !== cur && ids.indexOf(padre) >= 0) return;
-      var n = navItem(r, cur); if (n) box.appendChild(n);
+    rows = orderedModules(rows); state.modules = rows;
+    /* Barrido 10-nov-2026: accesos.html vive en el repo de PPP y currentSys() la
+       reconoce como PPP; el menú iluminaba «PPP» estando en «Personas y accesos».
+       Sólo cambia qué renglón se ilumina y la miga: el candado sigue con cur. */
+    var enAccesos = /\/potenciales-yod\/accesos\.html$/.test(location.pathname);
+    var navCur = enAccesos ? '' : cur;
+    sidebarModules(rows, vivo).forEach(function (r) {
+      var n = navItem(r, navCur); if (n) box.appendChild(n);
     });
-    rows.forEach(function (r) { if (r.system_id === cur && r.titulo_portal) set('yodCrumbHere', r.titulo_portal); });
+    if (state.role === 'admin') {
+      var people = el('a', 'yod-nav-item' + (enAccesos ? ' active' : '')); people.href = 'https://yodesarrollomx.github.io/potenciales-yod/accesos.html';
+      people.innerHTML = '<i class="ti ti-users"></i><span>Personas y accesos</span>'; box.appendChild(people);
+    }
+    if (enAccesos) set('yodCrumbHere', 'Personas y accesos');
+    else rows.forEach(function (r) { if (r.system_id === cur && r.titulo_portal) set('yodCrumbHere', moduleTitle(r)); });
     if (!box.children.length) box.innerHTML = '<span class="yod-nav-loading">Sin tableros</span>';
   }
 
@@ -237,6 +325,7 @@
   // lista sobrevive). Vital en dispositivos compartidos (una tablet del equipo)
   // para no dejar la sesión ni los datos de una persona al alcance de la siguiente.
   function logout() {
+    if (typeof cargadorActivo_ === 'function' && cargadorActivo_()) cerrarCargador_(tok(), 'salir');
     state.identityRequest++;state.identity='fail';state.sessionToken='';maybeLock();
     try { localStorage.removeItem(LSC); sessionStorage.removeItem('pyod_rol'); sessionStorage.removeItem('yod_id_v1'); localStorage.removeItem('yod_pulse_v1'); } catch (e) { }
     purgeAll();
@@ -294,7 +383,7 @@
   }
   function boot() {
     // registro de proyectos (folio): lo usan el buscador ⌘K y la chinche
-    if (!window.YodProyectos) { var sp = document.createElement('script'); sp.src = SELF.replace(/shell\.js(\?.*)?$/, 'proyectos.js?v=2'); document.head.appendChild(sp); }
+    if (!window.YodProyectos) { var sp = document.createElement('script'); sp.src = SELF.replace(/shell\.js(\?.*)?$/, 'proyectos.js?v=20261112-ppp2'); document.head.appendChild(sp); }
     if (document.querySelector('.yod-shell')) return;
     /* Los íconos de la barra son de Tabler: los tableros que no traían su hoja (MOAC)
        mostraban botones vacíos. El marco la carga él mismo, y las fuentes de la marca. */
@@ -314,24 +403,27 @@
     while (document.body.firstChild) { canvas.appendChild(document.body.firstChild); }
 
     var side = el('aside', 'yod-sidebar');
-    side.innerHTML = '<a class="yod-brand" href="' + OS + '" title="Ir a YOD OS" aria-label="Ir a YOD OS"><b>YOD</b><span>OS</span></a>'
-      + '<nav class="yod-nav"><a class="yod-nav-item yod-os-link" href="' + OS + '"><i class="ti ti-layout-dashboard"></i><span>Inicio YOD OS</span></a><p class="yod-nav-label">Tableros</p><div id="yodNav"><span class="yod-nav-loading"><i class="ti ti-loader-2 yod-spin"></i> Cargando…</span></div></nav>'
+    side.innerHTML = '<a class="yod-brand" href="' + OS + '#inicio" title="Ir a YOD OS" aria-label="Ir a YOD OS"><b>YOD</b><span>OS</span></a>'
+      + '<nav class="yod-nav"><p class="yod-nav-label">Tableros</p><div id="yodNav"><span class="yod-nav-loading"><i class="ti ti-loader-2 yod-spin"></i> Cargando…</span></div></nav>'
       + '<div class="yod-foot"><div class="yod-avatar" id="yodAv">YO</div><div class="yod-id"><strong id="yodName">Equipo YOD</strong><span id="yodRole">Verificando…</span></div><button class="yod-out" id="yodOut" type="button" title="Cerrar sesión" aria-label="Cerrar sesión"><i class="ti ti-logout"></i></button></div>';
 
     var main = el('main', 'yod-main');
     var top = el('header', 'yod-topbar');
     top.innerHTML = '<button class="yod-burger" id="yodBurger" type="button" aria-label="Abrir tableros"><i class="ti ti-menu-2"></i></button>'
       + '<button class="yod-back" id="yodBack" type="button" title="Volver a la pantalla anterior" aria-label="Volver a la pantalla anterior"><i class="ti ti-arrow-left"></i><span>Atrás</span></button>'
-      + '<a class="yod-topbrand" href="' + OS + '" title="Ir a YOD OS" aria-label="Ir a YOD OS"><b>YOD</b><span>OS</span></a>'
-      + '<nav class="yod-crumbs" id="yodCrumbs" aria-label="Dónde estoy"><a href="' + OS + '">YOD OS</a><i class="ti ti-chevron-right"></i><b id="yodCrumbHere">' + esc(NAME[cur] || document.title || 'Tablero') + '</b></nav>'
+      + '<a class="yod-topbrand" href="' + OS + '#inicio" title="Ir a YOD OS" aria-label="Ir a YOD OS"><b>YOD</b><span>OS</span></a>'
+      + '<nav class="yod-crumbs" id="yodCrumbs" aria-label="Dónde estoy"><span>YOD OS</span><i class="ti ti-chevron-right"></i><b id="yodCrumbHere">' + esc(NAME[cur] || document.title || 'Tablero') + '</b></nav>'
       + '<button class="yod-search" id="yodSearch" type="button"><i class="ti ti-search"></i><span>Buscar un tablero…</span><kbd>⌘ K</kbd></button>'
-      + '<div class="yod-top-actions"><span class="yod-conn yod-conn-wait" id="yodConn" title="Validando tu acceso con Google"><i></i><span>Validando…</span></span><span class="yod-role" id="yodChip" style="display:none"></span><a class="yod-home" href="' + OS + '" title="Subir a YOD OS" aria-label="Subir a YOD OS"><i class="ti ti-home-2"></i><span>YOD OS</span></a></div>';
+      + '<div class="yod-top-actions"><span class="yod-conn yod-conn-wait" id="yodConn" title="Validando tu acceso con Google"><i></i><span>Validando…</span></span><span class="yod-role" id="yodChip" style="display:none"></span></div>';
     main.appendChild(top); main.appendChild(canvas);
 
     var shell = el('div', 'yod-shell'); shell.appendChild(side); shell.appendChild(main);
     var scrim = el('div', 'yod-scrim'); shell.appendChild(scrim);
     document.body.appendChild(shell);
 
+    // The shared visual layer preserves this shell's identity and routing.
+    var chromeCSS=document.createElement('link');chromeCSS.rel='stylesheet';chromeCSS.href=new URL('ui-chrome.css?v=20261112-ppp2',SELF).href;document.head.appendChild(chromeCSS);
+    var chromeJS=document.createElement('script');chromeJS.src=new URL('ui-chrome.js?v=20261112-ppp2',SELF).href;document.head.appendChild(chromeJS);
     wireDrawer(shell, scrim);
     // «hay algo nuevo»: entrar a este tablero cuenta como visita; su punto se apaga
     try { if (cur) { localStorage.setItem('yod_visto_' + cur, String(Date.now())); localStorage.removeItem('yod_nuevo_' + cur); } } catch (e) { }
@@ -343,6 +435,7 @@
     if (out) out.addEventListener('click', function () { if (confirm('¿Cerrar tu sesión en este dispositivo?')) logout(); });
     // El menú NO se pinta hasta validar la sesión (fail-closed): queda "Cargando…"
     wireSearch();
+    suscribirCargador_();
     loadIdentity();
     cargarChinche();
   }
@@ -351,7 +444,7 @@
      (yod-portal/chinche.js), en modo "contexto" (DOM). Cada chinche guarda la tarjeta
      donde se picó por última vez y el repo de la página, para que el encargo llegue al
      repo correcto. Si el board ya la trae, no se carga dos veces. */
-  var CHINCHE_V = 'ch9';
+  var CHINCHE_V = "20261112-ppp2";
   function cargarChinche() {
     if (window.YODChinche) return;
     var ultimo = null;
@@ -366,6 +459,7 @@
     s.src = SELF.replace(/os\/shell\.js.*$/, 'chinche.js') + '?v=' + CHINCHE_V;
     s.onload = function () {
       try {
+        if (window.YODChinche && window.YODChinche.inicializada) return;
         var pag = (location.pathname.split('/').pop() || 'index.html').replace(/\.html?$/, '') || 'index';
         window.YODChinche && YODChinche.init({ pantalla: pag,
           vista: function () { return document.title || pag; },
@@ -373,7 +467,20 @@
           valores: function () { var t = ultimo && ultimo.textContent ? ultimo.textContent.replace(/\s+/g, ' ').trim().slice(0, 140) : ''; return t ? { picado: t } : {}; } });
       } catch (e) { }
     };
+    if (typeof cargadorActivo_ === 'function' && cargadorActivo_()) { insertarDespues_(s); return; }
     document.head.appendChild(s);
+  }
+  // Con cargador, la chinche se baja DESPUÉS del primer dato (o a los 4 s), no compitiendo con él. Se inserta lo
+  // que armó cargarChinche (s) y su onload corre cuando el cargador lo termina de bajar; si el cargador falla,
+  // se inserta en el acto como siempre.
+  function insertarDespues_(s) {
+    var corrio = false;
+    function alCargar() { if (corrio) return; corrio = true; try { s.onload(); } catch (e) { } }
+    try {
+      window.YodCargador.cargarDespues(s.src, { cuando: 'primer-dato', maxMs: 4000 }).then(function (el) {
+        if (window.YODChinche) alCargar(); else if (el && el.addEventListener) el.addEventListener('load', alCargar, { once: true });
+      }, function () { document.head.appendChild(s); });
+    } catch (e) { document.head.appendChild(s); }
   }
 
   function wireBack() {
@@ -409,6 +516,7 @@
   }
 
   function loadCatalog(cur) {
+    if (typeof cargadorActivo_ === 'function' && cargadorActivo_()) return loadCatalogConCargador_(cur);
     var k = tok(), request = state.identityRequest;
     return fetch(PORTAL + (k ? '&k=' + encodeURIComponent(k) : '') + '&cb=' + Date.now(), { cache: 'no-store', credentials: 'omit' })
       .then(function (r) {
@@ -439,29 +547,217 @@
     applyNav(); maybeLock();
   }
   function loadIdentity() {
+    if (typeof cargadorActivo_ === 'function' && cargadorActivo_()) return loadIdentityConCargador_();
     var k = tok(), previous = state.sessionToken, request = ++state.identityRequest;
-    state.identity = k ? 'pending' : 'fail';state.role = '';state.boards = '';state.modules = [];
-    state.catalogRows = null;state.catalogIds = null;state.catalogUnavailable=false;purgeAll();
-    set('yodName', 'Equipo YOD');set('yodRole', k ? 'Validando acceso…' : 'Sin sesión');set('yodAv', 'YO');
-    var chip = document.getElementById('yodChip');if(chip)chip.style.display='none';
-    var results = document.getElementById('yodRes');if(results)results.replaceChildren();
-    pastilla(k ? 'wait' : 'fail');applyNav();maybeLock();
-    // El board envuelto conserva su propio estado. Una persona distinta debe
-    // cargarlo desde cero; ocultarlo y reabrirlo expondría los datos anteriores.
-    if(previous && previous !== k){state.sessionToken='';location.reload();return Promise.resolve();}
-    if(!k)return Promise.resolve();
-    return canjeConRelevo(k).then(function(j){
-      if(request !== state.identityRequest || k !== tok())return;
-      if(!j || j.ok!==true || j.token!==k || typeof j.rol!=='string' || !j.rol.trim() || typeof j.boards!=='string')throw new Error(j && j.error || 'sin-respuesta');
-      var identity = JSON.stringify([j.correo||'',j.nombre||'',j.rol||'vista',j.boards||'']);
-      if(state.sessionIdentity && state.sessionIdentity !== identity){location.reload();return;}
-      state.sessionIdentity=identity;
-      state.sessionToken=k;aplicaIdentidad(j);return loadCatalog(currentSys());
-    }).catch(function(){
-      if(request !== state.identityRequest || k !== tok())return;
-      purgeAll();state.identity='fail';state.sessionToken='';pastilla('fail');
-      set('yodRole','Sesión por validar');applyNav();maybeLock();
+    var confirmedHere = !!k && previous === k && state.identity === 'ok';
+    if (state.retryTimer) { clearTimeout(state.retryTimer); state.retryTimer = null; }
+    // Solo conservar una identidad YA confirmada en esta carga. Una visita nueva
+    // nunca recibe permisos desde localStorage o una caché de roles.
+    if (!confirmedHere) {
+      state.identity = k ? 'pending' : 'fail';state.role = '';state.boards = '';state.modules = [];
+      state.catalogRows = null;state.catalogIds = null;state.catalogUnavailable = false;purgeAll();
+      set('yodName', 'Equipo YOD');set('yodRole', k ? 'Validando acceso…' : 'Sin sesión');set('yodAv', 'YO');
+      var chip = document.getElementById('yodChip');if(chip)chip.style.display='none';
+      var results = document.getElementById('yodRes');if(results)results.replaceChildren();
+      pastilla(k ? 'wait' : 'fail');applyNav();maybeLock();
+    } else {
+      pastilla('wait');set('yodRole', 'Sesión activa · verificando');
+    }
+    // Evita filtrar el estado de un board a otra persona.
+    if (previous && previous !== k) { state.sessionToken = '';location.reload();return Promise.resolve(); }
+    if (!k) { state.reconnectAttempts = 0;state.verifiedAt = 0;return Promise.resolve(); }
+    return canjeConRelevo(k).then(function(j) {
+      if (request !== state.identityRequest || k !== tok()) return;
+      if (!j) throw new Error('sin-respuesta');
+      if (j.ok !== true || j.token !== k || typeof j.rol !== 'string' || !j.rol.trim() || typeof j.boards !== 'string') {
+        throw new Error(j.ok === false && j.error ? j.error : 'respuesta-invalida');
+      }
+      var identity = JSON.stringify([j.correo || '',j.nombre || '',j.rol || 'vista',j.boards || '']);
+      if (state.sessionIdentity && state.sessionIdentity !== identity) {
+        // Un cambio de rol/permisos/persona debe ocultar datos ANTES de recargar.
+        state.identity = 'pending';state.role = '';state.boards = '';state.modules = [];
+        state.sessionToken = '';purgeAll();applyNav();maybeLock();location.reload();return;
+      }
+      state.sessionIdentity = identity;state.sessionToken = k;
+      state.verifiedAt = Date.now();state.reconnectAttempts = 0;
+      aplicaIdentidad(j);return loadCatalog(currentSys());
+    }).catch(function(err) {
+      if (request !== state.identityRequest || k !== tok()) return;
+      var reason = String(err && err.message || err || 'sin-respuesta').trim().toLowerCase();
+      // Problemas de transporte NO son pruebas de revocación. Solo el rechazo
+      // explícito del Portero invalida los permisos. Durante una caída el canje
+      // se reintenta automáticamente, sin borrar la credencial de este dispositivo.
+      var temporal = !rechazoAcceso(reason); // cualquier error no concluyente permite reconectar, sin conceder nuevos permisos
+      if (temporal) {
+        var fresh = reason !== 'respuesta-invalida' && confirmedHere && state.verifiedAt && Date.now() - state.verifiedAt < 5 * 60000;
+        if (fresh) {
+          // Gracia limitada para una identidad ya validada. El backend sigue
+          // autorizando cada operación protegida; NO hay permisos offline nuevos.
+          state.identity = 'ok';
+          pastilla('wait');set('yodRole', 'Sesión activa · reconectando');
+        } else {
+          // Sin canje confirmado recientemente se ocultan datos privados,
+          // pero no se obliga a entrar de nuevo: se espera al Portero.
+          state.identity = 'pending';state.role = '';state.boards = '';state.modules = [];
+          state.sessionToken = '';pastilla('wait');set('yodRole', 'Sin conexión · reintentando');
+          applyNav();maybeLock();
+        }
+        state.reconnectAttempts = (state.reconnectAttempts || 0) + 1;
+        var wait = Math.min(30000, 15000 * Math.pow(2, Math.min(5, state.reconnectAttempts - 1)));
+        state.retryTimer = setTimeout(function() {
+          state.retryTimer = null;
+          if (request === state.identityRequest && tok() === k) loadIdentity();
+        }, wait);
+        return;
+      }
+      // Rechazo definitivo o respuesta inválida: cerrar el lienzo sin borrar
+      // el token (el OS dueño de la sesión decide si debe pedir nuevo acceso).
+      purgeAll();state.identity = 'fail';state.sessionToken = '';state.verifiedAt = 0;
+      state.reconnectAttempts = 0;pastilla('fail');
+      set('yodRole', rechazoAcceso(reason) ? 'Acceso vencido o retirado' : 'Validando acceso…');applyNav();maybeLock();
     });
+  }
+  // Rechazo definitivo (lo mismo que hace loadIdentity al recibirlo): se cierra el lienzo y se tira lo privado, sin
+  // borrar el token (regla 5); lo único nuevo es que también se purgan las copias del cargador.
+  function rechazoDefinitivo_(reason) {
+    purgarCargador_();
+    purgeAll(); state.identity = 'fail'; state.sessionToken = ''; state.verifiedAt = 0;
+    state.reconnectAttempts = 0; pastilla('fail');
+    set('yodRole', rechazoAcceso(reason) ? 'Acceso vencido o retirado' : 'Validando acceso…'); applyNav(); maybeLock();
+  }
+  // Copia deliberada de loadIdentity (ver nota del bloque). El orden es el de siempre: primero se cierra el
+  // lienzo (carga en frío) y luego se pide el canje; si la respuesta es la copia guardada (origen:'cache') llega
+  // por microtareas, aplicaIdentidad() → maybeLock() lo abre en la MISMA tarea (sin parpadeo ni esperar a la red)
+  // y el cargador la revalida en segundo plano (sesionRefrescada_ / sesionRechazada_).
+  async function loadIdentityConCargador_() {
+    var k = tok(), previous = state.sessionToken, request = ++state.identityRequest;
+    var confirmedHere = !!k && previous === k && state.identity === 'ok';
+    if (state.retryTimer) { clearTimeout(state.retryTimer); state.retryTimer = null; }
+    if (!confirmedHere) {
+      state.identity = k ? 'pending' : 'fail';state.role = '';state.boards = '';state.modules = [];
+      state.catalogRows = null;state.catalogIds = null;state.catalogUnavailable = false;purgeAll();
+      set('yodName', 'Equipo YOD');set('yodRole', k ? 'Validando acceso…' : 'Sin sesión');set('yodAv', 'YO');
+      var chip = document.getElementById('yodChip');if(chip)chip.style.display='none';
+      var results = document.getElementById('yodRes');if(results)results.replaceChildren();
+      pastilla(k ? 'wait' : 'fail');applyNav();maybeLock();
+    } else {
+      pastilla('wait');set('yodRole', 'Sesión activa · verificando');
+    }
+    if (previous && previous !== k) { state.sessionToken = '';location.reload();return; }
+    if (!k) { state.reconnectAttempts = 0;state.verifiedAt = 0;return; }
+    try {
+      // ⟳, reintentos y sesión ya confirmada piden red; sólo la carga en frío puede salir de la copia guardada.
+      var j = await canjeConRelevo(k, { fuerzaRed: confirmedHere || (state.reconnectAttempts || 0) > 0 });
+      if (request !== state.identityRequest || k !== tok()) return;
+      if (!j) throw new Error('sin-respuesta');
+      if (j.ok !== true || j.token !== k || typeof j.rol !== 'string' || !j.rol.trim() || typeof j.boards !== 'string') {
+        throw new Error(j.ok === false && j.error ? j.error : 'respuesta-invalida');
+      }
+      var identity = JSON.stringify([j.correo || '',j.nombre || '',j.rol || 'vista',j.boards || '']);
+      if (state.sessionIdentity && state.sessionIdentity !== identity) {
+        state.identity = 'pending';state.role = '';state.boards = '';state.modules = [];
+        state.sessionToken = '';purgeAll();applyNav();maybeLock();location.reload();return;
+      }
+      state.sessionIdentity = identity;state.sessionToken = k;state.rechazadoEnFondo = '';
+      // verifiedAt dice la verdad: una identidad de copia guardada tiene la edad de la copia, no la de ahora
+      state.verifiedAt = Date.now() - (j.origen === 'cache' ? Math.max(0, Number(j.edadMs) || 0) : 0);state.reconnectAttempts = 0;
+      aplicaIdentidad(j);
+      return await loadCatalog(currentSys());
+    } catch (err) {
+      if (request !== state.identityRequest || k !== tok()) return;
+      var reason = String(err && err.message || err || 'sin-respuesta').trim().toLowerCase();
+      var temporal = !rechazoAcceso(reason);
+      if (temporal) {
+        var fresh = reason !== 'respuesta-invalida' && confirmedHere && state.verifiedAt && Date.now() - state.verifiedAt < 5 * 60000;
+        if (fresh) {
+          state.identity = 'ok';
+          pastilla('wait');set('yodRole', 'Sesión activa · reconectando');
+        } else {
+          state.identity = 'pending';state.role = '';state.boards = '';state.modules = [];
+          state.sessionToken = '';pastilla('wait');set('yodRole', 'Sin conexión · reintentando');
+          applyNav();maybeLock();
+        }
+        state.reconnectAttempts = (state.reconnectAttempts || 0) + 1;
+        var wait = Math.min(30000, 15000 * Math.pow(2, Math.min(5, state.reconnectAttempts - 1)));
+        state.retryTimer = setTimeout(function() {
+          state.retryTimer = null;
+          if (request === state.identityRequest && tok() === k) loadIdentity();
+        }, wait);
+        return;
+      }
+      rechazoDefinitivo_(reason);
+    }
+  }
+  // Resultado FRESCO de la revalidación en segundo plano (yodcargador:sesion): si cambió quién eres o qué puedes
+  // ver, se oculta todo ANTES de recargar (igual que loadIdentity); si no, sólo se anota que ya es verdad de ahora.
+  function sesionRefrescada_(d) {
+    var k = tok();
+    if (!d || d.ok !== true || !k || state.identity !== 'ok' || state.sessionToken !== k) return;
+    if (d.token !== undefined && d.token !== k) return;
+    if (typeof d.rol !== 'string' || !d.rol.trim() || typeof d.boards !== 'string') return;
+    var identity = JSON.stringify([d.correo || '',d.nombre || '',d.rol || 'vista',d.boards || '']);
+    state.verifiedAt = Date.now();
+    if (state.sessionIdentity && state.sessionIdentity !== identity) {
+      state.identity = 'pending';state.role = '';state.boards = '';state.modules = [];
+      state.sessionToken = '';purgeAll();applyNav();maybeLock();location.reload();
+    }
+  }
+  // El Portero rechazó, en segundo plano, la sesión con la que se destrabó el tablero: el mismo trato que un
+  // rechazo explícito del canje (cierra el lienzo, sin borrar el token) más la purga de las copias del cargador.
+  function sesionRechazada_(d) {
+    var k = tok();
+    if (!k || !d || (d.token && d.token !== k)) return;
+    if (state.retryTimer) { clearTimeout(state.retryTimer); state.retryTimer = null; }
+    state.identityRequest++;state.rechazadoEnFondo = k;
+    rechazoDefinitivo_(String(d.error || 'revocado').trim().toLowerCase());
+  }
+  function suscribirCargador_() {
+    var c = window.YodCargador;
+    if (!cargadorActivo_() || state.cargadorSuscrito || !c.sesion || typeof c.sesion.alCambiar !== 'function') return;
+    state.cargadorSuscrito = true; configurarCatalogo_();
+    c.sesion.alCambiar(function (ev) {
+      var tipo = String(ev && ev.type || ''), d = (ev && ev.detail) || {};
+      if (tipo === 'yodcargador:sesion-rechazada') sesionRechazada_(d);
+      else if (tipo === 'yodcargador:sesion') sesionRefrescada_(d);
+      // 'sesion-cerrada' y el 'storage' de otra pestaña ya los atiende este marco (logout, addEventListener('storage'))
+    });
+  }
+  function aplicaCatalogo_(d) {
+    var rows = d.rows.filter(function (r) { return r && r.visible === 'SI' && r.system_id && DEST[r.system_id]; })
+      .sort(function (a, b) { return Number(a.orden) - Number(b.orden); });
+    writeCatIds(Array.isArray(d.known_system_ids) ? d.known_system_ids.filter(function(id){return typeof id==='string';}) : d.rows.map(function (r) { return r && r.system_id; }).filter(Boolean));
+    writeCatCache(rows);state.catalogUnavailable=false;applyNav();
+  }
+  // Copia deliberada de loadCatalog: el menú se pinta YA desde la última copia buena (alViejo) y se refresca en
+  // segundo plano; mismas guardas que la respuesta en vivo (actor SESSION, visible==='SI', DEST).
+  function loadCatalogConCargador_(cur) {
+    var k = tok(), request = state.identityRequest, c = window.YodCargador;
+    function vigente() { return request === state.identityRequest && k === tok() && state.identity === 'ok'; }
+    function conSesion(d) { return !!(d && d.ok === true && d.actor === 'SESSION' && Array.isArray(d.rows)); }
+    // El catálogo jamás tira la identidad: si el cargador truena al pedirlo, el menú se queda como estaba.
+    try {
+      configurarCatalogo_();
+      return c.catalogo({ token: k, alViejo: function (d) { if (vigente() && conSesion(d)) aplicaCatalogo_(d); } })
+        .then(function (r) {
+          // Una copia que el backend firmó SIN sesión no sirve: una vez, en vivo y sin caché.
+          if (vigente() && r && r.origen === 'cache' && r.data && !conSesion(r.data)) {
+            return c.get(CATALOG_BASE, { action: 'read', resource: 'Portal', k: k }, { viejoMs: 0, frescoMs: 0, telemetria: 'catalogo' });
+          }
+          return r;
+        })
+        .then(function (r) {
+          if (!vigente()) return;
+          var d = r && r.data;
+          if (!d && r && (r.status === 401 || r.status === 403)) d = { ok: false, error: 'HTTP ' + r.status };
+          if (d && ((d.ok === true && d.actor !== 'SESSION') || (!d.ok && rechazoAcceso(d.error)))) {
+            state.catalogRows=null;state.catalogIds=null;state.catalogUnavailable=true;applyNav();return;
+          }
+          if (!d || !d.ok || !Array.isArray(d.rows)) return;
+          aplicaCatalogo_(d);
+        }).catch(function () { })
+        // el Portero rechazó esta credencial MIENTRAS el catálogo volaba: el cargador acaba de guardar su copia tras la purga
+        .then(function () { if (k && state.rechazadoEnFondo === k) purgarCargador_(); });
+    } catch (e) { return Promise.resolve(); }
   }
   window.addEventListener('storage',function(e){if(e.key===LSC||e.key===null)loadIdentity();});
   window.addEventListener('focus',function(){if(state.sessionToken!==tok())loadIdentity();});
@@ -474,10 +770,10 @@
     function results(q) {
       var box = document.getElementById('yodRes'); if (!box) return; box.innerHTML = '';
       var t = (q || '').toLowerCase();
-      state.modules.filter(function (r) { return vivo(r) && (!t || [r.titulo_portal || NAME[r.system_id] || '', NAME[r.system_id] || '', (CODES[r.system_id] || []).join(' ')].join(' ').toLowerCase().indexOf(t) >= 0); }).forEach(function (r) {
+      state.modules.filter(function (r) { return vivo(r) && (!t || [moduleTitle(r), r.titulo_portal || NAME[r.system_id] || '', NAME[r.system_id] || '', (CODES[r.system_id] || []).join(' ')].join(' ').toLowerCase().indexOf(t) >= 0); }).forEach(function (r) {
         var url = enlace(r); if (!url) return;
         var a = el('a'); a.href = url; a.setAttribute('rel', 'noopener'); if(!esPropioShell(url)) a.setAttribute('target','_blank');
-        a.innerHTML = '<i class="ti ti-' + (ICON[r.system_id] || 'layout-dashboard') + '"></i><span><strong>' + esc(r.titulo_portal || NAME[r.system_id]) + '</strong></span>';
+        a.innerHTML = '<i class="ti ti-' + (ICON[r.system_id] || 'layout-dashboard') + '"></i><span><strong>' + esc(moduleTitle(r)) + '</strong></span>';
         box.appendChild(a);
       });
       // OS-2 · también proyectos por folio o nombre (registro os/proyectos.js)
