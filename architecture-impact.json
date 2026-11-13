@@ -1,25 +1,25 @@
 {
-  "model_revision": "2026-11-13.folio-cartera.2",
-  "proposal_id": "CHG-FOLIO-CARTERA-20261113",
-  "summary": "Cierre de la publicación del folio: el Portero quedó en la versión 110 con recurso=cartera (verificado en vivo) y el registro pasa a publicado. Se deja el método para que cualquier agente publique un Apps Script desde el Chrome de Dirección: docs/agentes/publicar-apps-script.md y una sección en AGENTS.md (Buzón: Guías G37, regla 27). Sólo documentación y atlas; sin cambios de código.",
+  "model_revision": "2026-11-13.tu-palabra.1",
+  "proposal_id": "CHG-TU-PALABRA-20261113",
+  "summary": "PLAN-04 «Tu palabra»: las preguntas abiertas de la pestaña Decisiones del Buzón aparecen en la tarjeta «Decisiones» del Inicio de Dirección y se contestan ahí (Opción 1, Opción 2 u «Otra respuesta», con confirmación). os/tu-palabra.js (nuevo) lee ?recurso=decisiones del Portero y manda decision-responder; app.js lo monta con una línea en loadPulse; index.html suma la caja y el script. Etiqueta propia 20261113-tu-palabra. Incluye el registro del PR 360 (método para publicar Apps Script y Portero 110/111), sobre el que se apoya.",
   "components": [
     "SYS-YOD-OS",
-    "SYS-CONTROL",
     "GAS-PORTERO",
-    "SHEET-CATALOGO",
-    "SHEET-PORTERO",
+    "SYS-DESPACHO",
+    "SYS-CONTROL",
     "GAS-CATALOGO",
-    "SYS-TRACK",
     "SYS-POTENCIALES",
-    "SYS-MERCADO",
+    "SYS-TRACK",
     "SYS-OBRA",
     "SYS-OBRA-CLIENTE",
-    "SYS-DESPACHO"
+    "SYS-MERCADO"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check",
-    "node scripts/verificar-impacto.cjs (impacto válido, 0 archivos de comportamiento)",
-    "node --test tests/*.cjs · verify-os · verify-portal · verify-accesos · verify-obra-app"
+    "node --test tests/tu-palabra.test.cjs (7)",
+    "node --test tests/*.cjs",
+    "verify-os · verify-portal · verify-accesos · verify-obra-app",
+    "node scripts/versiones.cjs --check",
+    "node scripts/arquitectura.cjs --check"
   ],
-  "rollback": "Revertir el PR (sólo documentación y atlas). Si hiciera falta en el Portero: Gestionar implementaciones → Editar → volver a la versión 109."
+  "rollback": "Revertir el PR. En el Portero, volver a la versión 111."
 }

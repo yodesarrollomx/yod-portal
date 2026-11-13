@@ -374,7 +374,7 @@
   };
   // Etiqueta del tablero embebido (caché de 10 min de Pages). No se edita aquí: la escribe
   // node scripts/versiones.cjs --aplicar desde os/versiones.json, igual que todos los ?v=.
-  var TABLERO_V='20261113-folio-plan';
+  var TABLERO_V='20261113-tu-palabra';
   var state={modules:[],rawRows:[],role:'vista',boards:'',profileReady:false,loading:false,opsScope:'mias',allTasks:[],sesionEpoch:0,sessionToken:'',identityRequest:0,pulseCache:{},opsCache:null,verifiedAt:0};
   var $=function(id){return document.getElementById(id);};
   // ¿hay clave guardada? distingue «sin sesión» de «sesión validándose»
@@ -655,7 +655,7 @@
         write:function(intent){return window.YODCaseTransport.writeTeam(intent);},
         lookupReceipt:function(requestId){return window.YODCaseTransport.lookupTeamReceipt({request_id:requestId});}
       },
-      loadMount:function(){return import('../despacho3d/equipo.mjs?v=20261113-folio-plan').then(function(module){return module.mountTeamDesk;});},
+      loadMount:function(){return import('../despacho3d/equipo.mjs?v=20261113-tu-palabra').then(function(module){return module.mountTeamDesk;});},
       onError:function(){var status=$('despachoEquipoEstado');if(status)status.textContent='No se pudo abrir Equipo. Puedes volver a validar tu acceso.';}
     });
   }
@@ -1333,6 +1333,8 @@
     var despachoAllowed=window.YodAccessPolicy.canOpen(state.boards,'SYS-DESPACHO',state.role);
     $('finance-card').classList.toggle('hidden',!financeAllowed);$('marketing-card').classList.toggle('hidden',!marketingAllowed);$('decision-card').classList.toggle('hidden',!decisionsAllowed);$('despacho-card').classList.toggle('hidden',!despachoAllowed);$('pulso').classList.toggle('hidden',!financeAllowed&&!marketingAllowed&&!decisionsAllowed&&!despachoAllowed);
     if(window.revisarPuertaEmbudo)window.revisarPuertaEmbudo();   // misma regla MK para la pestaña Métricas
+    // PLAN-04 · Tu palabra: las preguntas del Buzón (pestaña Decisiones), contestadas desde aquí por el Portero (os/tu-palabra.js)
+    if(decisionsAllowed&&window.YodTuPalabra)window.YodTuPalabra.montar({token:token,portero:PORTERO_ORIGINAL,vigente:function(){return mismaSesion(token,ep);}});
     var requests=[];if(financeAllowed)requests.push(coordinatedPortalLoad('finance',function(){return loadFinance(token);},enDespacho()?3:1,'finance'));if(marketingAllowed)requests.push(coordinatedPortalLoad('marketing',function(){return loadMarketing(token);},enDespacho()?3:1,'marketing'));var results=await Promise.allSettled(requests);if(mismaSesion(token,ep)&&results.some(function(r){return r.status==='rejected';}))state.homeDataEpoch=null;
   }
 

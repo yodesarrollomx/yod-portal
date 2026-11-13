@@ -119,7 +119,7 @@
     function portero() {
       if (!accesoListo) accesoListo = env.YOD_PORTERO ? Promise.resolve() : new Promise(function (ok) {
         try {
-          var sc = doc.createElement('script'); sc.src = new URL('yod-acceso.js?v=20261113-folio-plan', SELF).href; // misma carpeta que este archivo
+          var sc = doc.createElement('script'); sc.src = new URL('yod-acceso.js?v=20261113-tu-palabra', SELF).href; // misma carpeta que este archivo
           sc.onload = sc.onerror = function () { ok(); }; doc.head.appendChild(sc);
         } catch (e) { ok(); }
       });

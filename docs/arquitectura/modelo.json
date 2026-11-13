@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-13.folio-cartera.2",
+  "revision": "2026-11-13.tu-palabra.1",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -16375,6 +16375,32 @@
       ],
       "deployment": "Se publica al fusionar el PR de potenciales-yod (Pages). No cambia ningún Apps Script ni hoja.",
       "rollback": "Revertir el PR: los planes vuelven a no enseñar su folio. Nada que regresar en Sheets ni en el Portero."
+    },
+    {
+      "id": "CHG-TU-PALABRA-20261113",
+      "components": [
+        "SYS-YOD-OS",
+        "GAS-PORTERO",
+        "SYS-DESPACHO",
+        "SYS-CONTROL",
+        "GAS-CATALOGO",
+        "SYS-POTENCIALES",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-MERCADO"
+      ],
+      "proposal": "PLAN-04 del análisis «YOD OS tablero por tablero»: «Tu palabra». La tarjeta «Decisiones» del Inicio de Dirección suma, debajo de lo de MOAC, las preguntas abiertas que los asistentes dejan en la pestaña Decisiones del Buzón (abierta = sin «Tu respuesta» y con estado en blanco o «Abierta»). Cada una se contesta con Opción 1, Opción 2 u «Otra respuesta», con un paso de confirmación; la respuesta queda escrita en el Buzón («Tu respuesta», «Respondida (UTC)» y Estado = Respondida) y nunca encima de una que ya exista. Lee y escribe por el Portero, sólo Dirección (esAdmin_): GET ?recurso=decisiones y POST decision-responder, en un archivo nuevo Decisiones.gs y dos líneas de ruta. El módulo del portal es os/tu-palabra.js, montado con una línea en loadPulse. La etiqueta propia nueva (20261113-tu-palabra) toca el ?v= de las páginas de los demás sistemas; ahí sólo cambia la etiqueta.",
+      "approval": "Dirección, 13-nov-2026 en el chat «Análisis del sistema Yodo»: programa tablero por tablero (PLAN-04 «Hoy: decisiones primero») y «hazlo todo tú completo hasta el final».",
+      "status": "implementado_local",
+      "tests": [
+        "node --test tests/tu-palabra.test.cjs (7: una lectura, escape, recomendada, nada pendiente, sin permiso no pinta, Portero caído, sesión cambiada)",
+        "Recorrido en Chrome real con Portero sintético: Opción 1 con confirmación y «Otra respuesta» mandan decision-responder con su texto y quitan la pregunta; sin errores de página",
+        "Prueba privada del Portero: Decisiones.gs 18 comprobaciones (abiertas, escribe las tres celdas, no reescribe contestadas ni aplicadas, datos malos, inexistente, repetida, fórmula neutralizada, sin pestaña)",
+        "node --test tests/*.cjs · verify-os · verify-portal · verify-accesos · verify-obra-app · versiones --check · arquitectura --check"
+      ],
+      "deployment": "El portal se publica al fusionar el PR. El Portero necesita su versión 112 (Decisiones.gs y las dos líneas de ruta) sobre la implementación existente; quedó guardada en el editor y lista en «Gestionar implementaciones», esperando el clic de Dirección en «Implementar» (el control de seguridad no dejó a Claude apretarlo porque esa versión escribe en el Buzón). Mientras no se publique, la tarjeta dice que no pudo leer las preguntas.",
+      "rollback": "Revertir el PR. En el Portero, volver a la versión 111 en Gestionar implementaciones. Las respuestas ya escritas en el Buzón se quedan: son de Dirección."
     }
   ],
   "data_contracts": [
