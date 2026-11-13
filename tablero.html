@@ -1,7 +1,7 @@
 <!doctype html>
 <meta charset="utf-8">
-<script src="os/yod-acceso.js?v=20261113-ui-consistencia"></script>
-<script src="os/yod-cargador.js?v=20261113-ui-consistencia"></script>
+<script src="os/yod-acceso.js?v=20261113-folio-plan"></script>
+<script src="os/yod-cargador.js?v=20261113-folio-plan"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>YOD OS · Tablero</title>
 <style>
@@ -107,9 +107,9 @@
 <!-- La chinche se carga DESPUÉS del primer dato (YodCargador.cargarDespues); sin cargador, o con ?cargador=legacy,
      se inserta en el acto, como siempre. Esta etiqueta es inerte (type=text/plain: el navegador no la baja) y
      existe para que scripts/versiones.cjs siga gobernando la etiqueta ?v= de chinche.js. -->
-<script type="text/plain" id="yodChincheSrc" src="chinche.js?v=20261113-ui-consistencia"></script>
-<script src="os/access-policy.js?v=20261113-ui-consistencia"></script>
-<script src="os/proyectos.js?v=20261113-ui-consistencia"></script>
+<script type="text/plain" id="yodChincheSrc" src="chinche.js?v=20261113-folio-plan"></script>
+<script src="os/access-policy.js?v=20261113-folio-plan"></script>
+<script src="os/proyectos.js?v=20261113-folio-plan"></script>
 <style>
 /* Fase 3 · folio: la tira de etapas (Potencial → Trámite → Obra → Venta) */
 #etapas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 12px}
@@ -122,6 +122,16 @@
 #fuentes .fu{padding:2px 8px;border-radius:999px;border:1px solid rgba(154,123,63,.3)}
 #fuentes .fu-ok{color:#2f7a4b}#fuentes .fu-no{color:#b3261e;border-color:rgba(179,38,30,.4)}#fuentes .fu-esp{opacity:.6}#fuentes .fu-aviso{color:#80611e}
 @media (max-width:520px){#etapas{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* Etapa 1 del análisis (13-nov-2026) · folio: siete carriles leídos en vivo del Control Maestro */
+#etapas.folio7{grid-template-columns:repeat(7,minmax(0,1fr))}
+#etapas.folio7 .et{padding:8px 9px}
+#etapas.folio7 .et b{font-size:10px;letter-spacing:.06em}
+#etapas.folio7 .et strong{font-size:22px}
+#etapas .fuera{grid-column:1/-1;margin:0;font-size:11px;opacity:.7}
+#etapas .pausa{opacity:.65;font-style:italic}
+#etapas .et a.plan{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#9a7b3f;border-bottom:0;margin-left:-2px}
+@media (max-width:900px){#etapas.folio7{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:520px){#etapas.folio7{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 <script>
 (function(){
@@ -1983,6 +1993,58 @@ async function sondaFinance(){
   }catch(e){}
 }
 
+/* ═══ ETAPA 1 DEL ANÁLISIS (13-nov-2026) · LA CARTERA DEL FOLIO ═══
+   La tira de arriba deja la foto pública de cuatro etapas y pasa a los siete carriles del folio, leídos en vivo del
+   Control Maestro (columna etapa_folio): Captado → Evaluado → Acordado → Fondeado → En obra → En venta y cobro →
+   Repartido. ?recurso=cartera del Portero ya viene recortado por la columna «proyectos» de Accesos. Mientras el
+   Portero no tenga esa versión contesta error «recurso»: entonces sólo Dirección (admin) lee la pestaña con
+   ?recurso=cm&hoja=Proyectos. Cualquier otra respuesta deja la foto de siempre. Sólo lectura; nunca toca
+   pyod_clave_v1 (regla 5). */
+function escH(x){ return String(x==null?"":x).replace(/[&<>"']/g,function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+async function pedirCartera(params){
+  const C=typeof AbortController==="function"?new AbortController():null;
+  const reloj=setTimeout(function(){ try{ if(C) C.abort(); }catch(_){} },20000);
+  try{
+    const r=await fetch(PORTERO_ORIGINAL+"?"+params+"&k="+encodeURIComponent(CLAVE_OK||""),
+      Object.assign({cache:"no-store",credentials:"omit"},C?{signal:C.signal}:{}));
+    return await r.json();
+  }catch(e){ return null; }
+  finally{ clearTimeout(reloj); }
+}
+async function cargarCartera(){
+  const RP=window.YodProyectos; if(!RP||!RP.porEtapaFolio||!CLAVE_OK||!PORTERO_ORIGINAL) return;
+  const rol=String((cargadorActivo()?(SESION&&SESION.rol):ROL)||"").trim().toLowerCase();
+  let lista=null;
+  const j=await pedirCartera("recurso=cartera");
+  if(j&&j.ok&&Array.isArray(j.proyectos)) lista=j.proyectos;
+  else if(j&&j.error==="recurso"&&rol==="admin"){
+    const c=await pedirCartera("recurso=cm&hoja=Proyectos");
+    if(c&&c.ok&&c.datos&&Array.isArray(c.datos.Proyectos)) lista=RP.desdeControlMaestro(c.datos.Proyectos);
+  }
+  if(lista&&!CERRADO) pintaFolio(lista,rol);
+}
+function pintaFolio(lista,rol){
+  const box=document.getElementById("etapas"), RP=window.YodProyectos; if(!box||!RP||!RP.porEtapaFolio) return;
+  const g=RP.porEtapaFolio(lista), MOAC='https://yodesarrollomx.github.io/board-aurum/';
+  if(!g.carriles.some(function(c){ return c.proyectos.length; })) return;   // sin etapas capturadas: se queda la foto
+  function liga(p){
+    const foto=RP.buscar(p.folio), pausa=p.admision==="standby";
+    const texto=escH(p.nombre||p.folio)+(pausa?' <span class="pausa">· en pausa</span>':'');
+    const tit=escH(p.folio+(p.etapa_actual?' · '+p.etapa_actual:'')+(pausa?' · en pausa':''));
+    const base=foto&&foto.tablero?foto.tablero:(rol==="admin"?MOAC:"");
+    const plan=RP.ligaPlan?RP.ligaPlan(p.plan):"";              // etapa 2 · el plan del terreno, desde su folio
+    const pl=plan?' <a class="plan" href="'+escH(plan)+'" target="_top" title="Abrir el plan de '+escH(p.nombre||p.folio)+'">plan</a>':'';
+    if(!base) return '<span title="'+tit+'">'+texto+'</span>'+pl;
+    const dest=base+(base.indexOf('?')>-1?'&':'?')+'folio='+encodeURIComponent(p.folio);
+    return '<a href="'+escH(dest)+'" target="_top" title="'+tit+'">'+texto+'</a>'+pl;
+  }
+  box.classList.add("folio7"); box.setAttribute("data-fuente","folio");
+  box.innerHTML=g.carriles.map(function(c,i){
+    return '<div class="et"><b>'+(i?'<span class="flecha">→ </span>':'')+c.n+' · '+escH(c.nombre)+'</b><strong>'+c.proyectos.length+'</strong>'+c.proyectos.map(liga).join('')+'</div>';
+  }).join('')+(g.fuera.length?'<p class="fuera">Fuera de la cartera: '+g.fuera.map(function(p){ return escH(p.nombre||p.folio); }).join(', ')+'</p>':'');
+  avisarAlto();
+}
+
 /* ═══ EL CANDADO · valida contra el Portero ═══
    Con el cargador compartido (os/yod-cargador.js v2) la sesión se canjea UNA vez por página y se comparte con la
    cabina: con identidad en caché el tablero abre al instante y el canje de fondo lo cierra si el Portero la
@@ -2138,6 +2200,7 @@ function abrir(){
     correrFuente(f);
   });
   sondaFinance();
+  cargarCartera();                                          // etapa 1 · la cartera del folio, en vivo
   avisarAlto(); setTimeout(avisarAlto,400); setTimeout(avisarAlto,1600);
   addEventListener("resize",avisarAlto);
 }

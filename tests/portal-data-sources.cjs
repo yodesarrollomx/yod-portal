@@ -182,7 +182,7 @@ test('abrir transmite el estado real de cada conector al resumen', async () => {
   Object.assign(context, {
     GT: { classList: { add() {} } },
     document: { getElementById(id) { return id === 'w' ? { style: {} } : box; } },
-    sondaFinance() {}, avisarAlto() {}, setTimeout() {}, addEventListener() {}
+    sondaFinance() {}, cargarCartera() {}, avisarAlto() {}, setTimeout() {}, addEventListener() {}
   });
   for (const name of names) context['conectar' + name] = async () => name === 'CRM' ? 'error' : 'sinacceso';
   vm.runInContext(html.slice(html.indexOf('function abrir(){'), html.indexOf('async function entrar(){')), context);
