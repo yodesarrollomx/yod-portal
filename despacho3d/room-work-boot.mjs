@@ -1,7 +1,8 @@
 import {officeFastSessions} from './office-preparation.mjs?v=unified283';
-import {createFrameTransport} from './conversation.mjs?v=142';
+import {createFrameTransport} from './conversation.mjs?v=records2';
 import {validateFastSession} from './fast-lane.mjs';
-import {createRoomWork} from './room-work.mjs?v=129';
+import {createRoomWork} from './room-work.mjs?v=records2';
+import {OFICINA_ESTADOS_REALES} from './office-config.mjs?v=records2';
 const transport=createFrameTransport(window),credentials=new Map();let stop=null,bound=null;
 async function request(path,data,caseId){
  if(!room.has(caseId))throw Error('unauthorized');
@@ -10,11 +11,11 @@ async function request(path,data,caseId){
   c=validateFastSession(await officeFastSessions.ensure(caseId,p=>transport.mintFastSession(p),{priority:true}),caseId);
   if(!room.has(caseId))throw Error('unauthorized');credentials.set(caseId,c);
  }
- const response=await fetch(c.endpoint+path,{method:'POST',headers:{Authorization:'Bearer '+c.token,'Content-Type':'application/json'},body:JSON.stringify(data),credentials:'omit',cache:'no-store',redirect:'error',signal:AbortSignal.timeout(12000)});
+ const response=await fetch(c.endpoint+path,{method:'POST',headers:{Authorization:'Bearer '+c.token,'Content-Type':'application/json'},body:JSON.stringify(data),credentials:'omit',cache:'no-store',redirect:'error',signal:AbortSignal.timeout(path==='/fast/auton-status'?45000:12000)});
  if(!room.has(caseId)||response.status===401||response.status===403){credentials.delete(caseId);officeFastSessions.forget(caseId);throw Error('unauthorized');}
  if(!response.ok)throw Error('unavailable');return response.json();
 }
-const room=createRoomWork({request,isVisible:()=>!document.hidden});
+const room=createRoomWork({request,observeAutonStatus:OFICINA_ESTADOS_REALES,isVisible:()=>!document.hidden});
 window.YodRoomWork=room;
 function bind(){
  const api=window.YodResidentAgents;if(api===bound)return;stop?.();credentials.clear();bound=api;

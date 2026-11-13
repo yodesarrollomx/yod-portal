@@ -3,7 +3,10 @@
 .entorno-hoja{--c-bg:#f1eee8;--c-surf:#faf8f4;--c-ink:#1f3340;--c-mut:#5d6b73;--c-line:#d9d3c7;--c-warn:#a8691b;--c-ok:#2f7a4f;
  position:fixed;inset:0;z-index:60;overflow:auto;background:var(--c-bg);color:var(--c-ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding:max(16px,env(safe-area-inset-top)) 16px max(24px,env(safe-area-inset-bottom))}
 .entorno-hoja h1{font:600 24px/1.2 Georgia,"Times New Roman",serif;margin:0 44px 8px 0}
-.entorno-cerrar{position:absolute;top:max(10px,env(safe-area-inset-top));right:14px;width:40px;height:40px;border:1px solid var(--c-line);border-radius:50%;background:var(--c-surf);color:var(--c-ink);font-size:24px;line-height:1;cursor:pointer}
+.entorno-cerrar{position:fixed;z-index:61;top:max(10px,env(safe-area-inset-top));right:14px;width:40px;height:40px;border:1px solid var(--c-line);border-radius:50%;background:var(--c-surf);color:var(--c-ink);font-size:24px;line-height:1;cursor:pointer}
+/* Barrido 10-nov-2026: la «×» era absoluta dentro de una hoja con scroll y desaparecía al bajar;
+   las ligas a las demos con datos sintéticos siguen existiendo, pero no en la vista de Dirección. */
+.entorno-hoja p:has(> a[href="actividad-demo.html"]),.entorno-hoja p:has(> a[href="permisos-demo.html"]){display:none}
 .entorno-aviso{margin:0 0 16px;padding:6px 10px;border:1px dashed var(--c-warn);color:var(--c-warn);font-size:13px;border-radius:4px;max-width:720px}
 .entorno-lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;max-width:1100px}
 .entorno-espacio{background:var(--c-surf);border:1px solid var(--c-line);border-radius:8px;padding:12px 14px}

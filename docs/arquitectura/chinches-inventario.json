@@ -1,0 +1,432 @@
+[
+  {
+    "repo": "real-miramar-board",
+    "files": [
+      "HEAD:costos-oficiales.html",
+      "HEAD:cuentas.html",
+      "HEAD:direccion.html",
+      "HEAD:evidencia.html",
+      "HEAD:index.html",
+      "HEAD:tramites.html"
+    ],
+    "commit": "9db34a902f4e1f6f1f9b727b974f813625b5e16d",
+    "capturador": "shared",
+    "inventoryStatus": "source-audited",
+    "sourceBasis": "shared-import",
+    "sourceFinding": null,
+    "sourceDependencies": [],
+    "sourceEvidence": [],
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "9db34a902f4e1f6f1f9b727b974f813625b5e16d",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.1.1"
+  },
+  {
+    "repo": "plan-potencial",
+    "files": [
+      "HEAD:index.html",
+      "HEAD:board.html"
+    ],
+    "commit": "9f036c72513d07b4b89d402ab9aa27264b56a534",
+    "capturador": "indirect",
+    "inventoryStatus": "source-not-installed",
+    "sourceBasis": "entrypoints-audited-no-loader",
+    "sourceFinding": "Instalación pendiente en las entradas propias auditadas. La cadena vigente del Portero no carga shell ni chinche. La landing pública no debe exponer la herramienta de revisión interna; antes de instalar hay que fijar una superficie autenticada y un adaptador que preserve su privacidad. Esta comprobación de fuentes no acredita ausencia global de chinches ni exclusión intencional.",
+    "sourceDependencies": [
+      {
+        "repository": "yodesarrollomx/potenciales-yod",
+        "path": "portero.js",
+        "commit": "38fe41260ac88cfaa5f0e21a368181ddbb25d818"
+      },
+      {
+        "repository": "yodesarrollomx/yod-portal",
+        "path": "os/yod-acceso.js",
+        "commit": "f5dce4465dd66bdd200eaebe22ad0dc8b55da825"
+      }
+    ],
+    "sourceEvidence": [
+      {
+        "repository": "yodesarrollomx/plan-potencial",
+        "path": "index.html",
+        "commit": "9f036c72513d07b4b89d402ab9aa27264b56a534",
+        "finding": "Entrada pública: código inline, Facebook, Leaflet y agenda; sin cargador del módulo de chinches."
+      },
+      {
+        "repository": "yodesarrollomx/plan-potencial",
+        "path": "board.html",
+        "commit": "9f036c72513d07b4b89d402ab9aa27264b56a534",
+        "finding": "La línea 160 carga potenciales-yod/portero.js."
+      },
+      {
+        "repository": "yodesarrollomx/potenciales-yod",
+        "path": "portero.js",
+        "commit": "38fe41260ac88cfaa5f0e21a368181ddbb25d818",
+        "finding": "Carga os/yod-acceso.js y Google GSI; no carga shell ni chinche."
+      },
+      {
+        "repository": "yodesarrollomx/yod-portal",
+        "path": "os/yod-acceso.js",
+        "commit": "f5dce4465dd66bdd200eaebe22ad0dc8b55da825",
+        "finding": "Sólo define YOD_PORTERO; termina la cadena sin cargar shell ni chinche."
+      }
+    ],
+    "secuencia": "Instalación pendiente en las entradas propias auditadas; no acredita ausencia global de chinches.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": null,
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.1.1"
+  },
+  {
+    "repo": "interiores-aurum",
+    "files": [
+      "HEAD:llave-maestra.html"
+    ],
+    "commit": "8bcdfc35b98c83d2a33f802abe0064e971c4fa92",
+    "capturador": "shared",
+    "inventoryStatus": "source-audited",
+    "sourceBasis": "shared-import",
+    "sourceFinding": null,
+    "sourceDependencies": [],
+    "sourceEvidence": [],
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "8bcdfc35b98c83d2a33f802abe0064e971c4fa92",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.1.1"
+  },
+  {
+    "repo": "aurum-board",
+    "files": [
+      "HEAD:index.html"
+    ],
+    "commit": "e3dd428a01b01d1c8b5775c7fcca408735c98357",
+    "capturador": "shared",
+    "inventoryStatus": "source-audited",
+    "sourceBasis": "shared-import",
+    "sourceFinding": null,
+    "sourceDependencies": [],
+    "sourceEvidence": [],
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "e3dd428a01b01d1c8b5775c7fcca408735c98357",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.1.1"
+  },
+  {
+    "repo": "Co-desarrolladores-Yod",
+    "files": [
+      "HEAD:index.html",
+      "HEAD:src/main.jsx",
+      "HEAD:src/App.jsx"
+    ],
+    "commit": "bdaf46b44735255811d164824ec35f89a592d0cd",
+    "capturador": "indirect",
+    "inventoryStatus": "source-not-installed",
+    "sourceBasis": "entrypoints-audited-no-loader",
+    "sourceFinding": "Instalación pendiente en las entradas propias auditadas. La aplicación React y su PWA no cargan shell ni chinche. No está en el catálogo técnico estático de YOD OS; el repositorio no está archivado ni deshabilitado. No se acredita que Masterbrokers lo sustituya ni ausencia global de chinches.",
+    "sourceDependencies": [],
+    "sourceEvidence": [
+      {
+        "repository": "yodesarrollomx/Co-desarrolladores-Yod",
+        "path": "index.html",
+        "commit": "bdaf46b44735255811d164824ec35f89a592d0cd",
+        "finding": "La línea 22 carga src/main.jsx."
+      },
+      {
+        "repository": "yodesarrollomx/Co-desarrolladores-Yod",
+        "path": "src/main.jsx",
+        "commit": "bdaf46b44735255811d164824ec35f89a592d0cd",
+        "finding": "Importa React, ReactDOM, App.jsx e index.css."
+      },
+      {
+        "repository": "yodesarrollomx/Co-desarrolladores-Yod",
+        "path": "src/App.jsx",
+        "commit": "bdaf46b44735255811d164824ec35f89a592d0cd",
+        "finding": "Importa React, lucide y logo; importa jsPDF/autotable bajo demanda. Sin iframe, inyección HTML ni cargador de shell o chinche."
+      },
+      {
+        "repository": "yodesarrollomx/Co-desarrolladores-Yod",
+        "path": "vite.config.js",
+        "commit": "bdaf46b44735255811d164824ec35f89a592d0cd",
+        "finding": "VitePWA registra el service worker y cachea fuentes; no carga el módulo de chinches."
+      },
+      {
+        "repository": "yodesarrollomx/yod-portal",
+        "path": "os/catalogo.js",
+        "commit": "bbf14cf67f98b5db98bcf3d89c71d7859501b784",
+        "finding": "No incluye este portal financiero. SYS-INVERSION apunta a Masterbrokers, lo que no demuestra sustitución funcional."
+      }
+    ],
+    "secuencia": "Instalación pendiente en las entradas propias auditadas; no acredita ausencia global de chinches.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": null,
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.1.1"
+  },
+  {
+    "repo": "board-flujo-yod",
+    "files": [
+      "HEAD:index.html"
+    ],
+    "commit": "e9d122f090f7fdf3a6d5478fbf27b2d91bc6b3eb",
+    "capturador": "shared",
+    "inventoryStatus": "source-audited",
+    "sourceBasis": "shared-import",
+    "sourceFinding": null,
+    "sourceDependencies": [],
+    "sourceEvidence": [],
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "e9d122f090f7fdf3a6d5478fbf27b2d91bc6b3eb",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.1.1"
+  },
+  {
+    "repo": "yodesarrollomx.github.io",
+    "files": [
+      "HEAD:propuestas/inicio/index.html"
+    ],
+    "commit": "a5680f2cf2cd37c5a9035c250a7ad7a5424197e2",
+    "capturador": "shared",
+    "inventoryStatus": "source-audited",
+    "sourceBasis": "shared-import",
+    "sourceFinding": null,
+    "sourceDependencies": [],
+    "sourceEvidence": [],
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "a5680f2cf2cd37c5a9035c250a7ad7a5424197e2",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.1.1"
+  },
+  {
+    "repo": "potenciales-yod",
+    "files": [
+      "HEAD:accesos.html",
+      "HEAD:index.html",
+      "HEAD:macrolotes.html",
+      "HEAD:mapa.html",
+      "HEAD:mixto.html",
+      "HEAD:patrimonial.html",
+      "HEAD:residencial.html",
+      "HEAD:unifamiliar.html"
+    ],
+    "commit": "48ee29f848e727a0f7e12470ce056085a7aec580",
+    "capturador": "shared",
+    "inventoryStatus": "source-audited",
+    "sourceBasis": "shared-import",
+    "sourceFinding": null,
+    "sourceDependencies": [],
+    "sourceEvidence": [],
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "48ee29f848e727a0f7e12470ce056085a7aec580",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.1.1"
+  },
+  {
+    "repo": "board-aurum",
+    "files": [
+      "HEAD:index.html"
+    ],
+    "commit": "93bf6241c8f9c9b40dd5888e81936588fe4ebafa",
+    "capturador": "shared",
+    "inventoryStatus": "source-audited",
+    "sourceBasis": "shared-import",
+    "sourceFinding": null,
+    "sourceDependencies": [],
+    "sourceEvidence": [],
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "93bf6241c8f9c9b40dd5888e81936588fe4ebafa",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.1.1"
+  },
+  {
+    "repo": "yod-despacho",
+    "files": [
+      "HEAD:clasico.html",
+      "HEAD:corcho.js",
+      "HEAD:hilo.html",
+      "HEAD:index.html"
+    ],
+    "commit": "d89b15114ffbca61bfd8e2b4eb61661642adebee",
+    "capturador": "shared",
+    "inventoryStatus": "source-audited",
+    "sourceBasis": "shared-import",
+    "sourceFinding": null,
+    "sourceDependencies": [],
+    "sourceEvidence": [],
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "d89b15114ffbca61bfd8e2b4eb61661642adebee",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.1.1"
+  },
+  {
+    "repo": "yod-portal",
+    "files": [
+      "HEAD:os/index.html",
+      "HEAD:tablero.html",
+      "HEAD:obra.html",
+      "HEAD:os/shell.js",
+      "HEAD:os/despacho-chinches.js",
+      "HEAD:chinche/revisar.html",
+      "HEAD:despacho3d/chinches3d.mjs"
+    ],
+    "commit": "baa5e318e752a3dae2ff3da9fb94c3014bf16384",
+    "capturador": "bundle",
+    "inventoryStatus": "source-audited",
+    "sourceBasis": "exact-shared-block",
+    "sourceFinding": null,
+    "sourceDependencies": [],
+    "sourceEvidence": [],
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "597c4daf9d3c8059279222616b249438ae861a68",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.1.1"
+  },
+  {
+    "repo": "yodesarrollo-board",
+    "files": [
+      "HEAD:brokers.html",
+      "HEAD:presentaciones.html",
+      "HEAD:presentacion/",
+      "HEAD:presentacion/distrito-abasto/",
+      "HEAD:presentacion/distrito-obregon/",
+      "HEAD:presentacion/gaston-madrid/",
+      "HEAD:master-brokers/"
+    ],
+    "commit": "851d9a5cc0bb31dad21611fe516de56fdc336228",
+    "capturador": "bundle",
+    "inventoryStatus": "source-audited",
+    "sourceBasis": "exact-shared-block",
+    "sourceFinding": "PMD-1.0.0 incorpora catálogo y cuatro adaptadores al mismo paquete común; publicación y revisión física pendientes de comprobar por separado.",
+    "sourceDependencies": [],
+    "sourceEvidence": [],
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "b700782c42a71cf2b72605e8d4765ae05f400a7e",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.1.1"
+  },
+  {
+    "repo": "sala-edicion",
+    "files": [
+      "HEAD:index.html",
+      "HEAD:tablero-sala.js"
+    ],
+    "commit": "c528567c2b844f79f67fb5e10d8a4667c88a63b4",
+    "capturador": "shared",
+    "inventoryStatus": "source-audited",
+    "sourceBasis": "shared-import",
+    "sourceFinding": null,
+    "sourceDependencies": [],
+    "sourceEvidence": [],
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "7f825acb951d495022c30908adf4c3e6bcb1771e",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.1.1"
+  },
+  {
+    "repo": "amalaya-board",
+    "files": [
+      "HEAD:src/App.jsx",
+      "HEAD:public/chinche.js"
+    ],
+    "commit": "a3d8fb71148c7e24e243e4fc3a6e4b8929a2dadf",
+    "capturador": "native-prefix",
+    "inventoryStatus": "source-audited",
+    "sourceBasis": "exact-shared-block",
+    "sourceFinding": null,
+    "sourceDependencies": [],
+    "sourceEvidence": [],
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "5809816629f2bca74ebcdf53b3b70bb686aa6543",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.1.1"
+  },
+  {
+    "repo": "EMDevaluacion360",
+    "files": [
+      "HEAD:web/pins.js",
+      "HEAD:index.html",
+      "HEAD:apps-script/Index.html"
+    ],
+    "commit": "e046a1a7cf9f45e7d111d4c69cdfb3c4adb5be26",
+    "capturador": "native-prefix",
+    "inventoryStatus": "source-audited",
+    "sourceBasis": "exact-shared-block",
+    "sourceFinding": null,
+    "sourceDependencies": [],
+    "sourceEvidence": [],
+    "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "40b279afe9953f34a12d222a909f94183c3c5c90",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.1.1"
+  },
+  {
+    "repo": "yodesarrollo-board",
+    "files": [
+      "HEAD:presentacion/ppp/index.html"
+    ],
+    "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+    "capturador": "bundle",
+    "inventoryStatus": "source-prepared",
+    "sourceBasis": "draft-pr-source-audited",
+    "sourceFinding": "Superficie PPP privada preparada en PR63 borrador, commit y cinco archivos exactos contrastados por huella. Inicializa captura tras verificar owner y leer una versión autorizada; reutiliza storyboard-reviews, pin-delivery y bundle común existente. No acredita despliegue, recibo central ni reproducción real.",
+    "sourceDependencies": [],
+    "sourceEvidence": [
+      {
+        "repository": "yodesarrollomx/yodesarrollo-board",
+        "path": "presentacion/ppp/index.html",
+        "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+        "sha256": "6f238b413634ebce7f21c92e594e3aba65667e4102be15a5e270a7ec86f27763",
+        "status": "draft-pr-source",
+        "finding": "Bytes del commit exacto contrastados; publicación y prueba funcional pendientes."
+      },
+      {
+        "repository": "yodesarrollomx/yodesarrollo-board",
+        "path": "presentacion/ppp/app.mjs",
+        "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+        "sha256": "dfadc369a8b5389b47498cc4ba21270281d540eb460b566e969657f6726447f8",
+        "status": "draft-pr-source",
+        "finding": "Inicialización privada después de owner y lectura de versión; liga fuente PPP, versión editorial y momento. Fuente de PR verificada; operación productiva pendiente."
+      },
+      {
+        "repository": "yodesarrollomx/yodesarrollo-board",
+        "path": "presentacion/storyboard-reviews.js",
+        "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+        "sha256": "7d0d40c068b552ba294dacb7737e2d525b0126e5414de7719fc95e136b83d5c2",
+        "status": "draft-pr-source",
+        "finding": "Bytes del commit exacto contrastados; publicación y prueba funcional pendientes."
+      },
+      {
+        "repository": "yodesarrollomx/yodesarrollo-board",
+        "path": "presentacion/pin-delivery.js",
+        "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+        "sha256": "c7be4645d9e8ccbca63ee7cd61e44a51f21453a5887000626a8cc2c81c9b9c0c",
+        "status": "draft-pr-source",
+        "finding": "Bytes del commit exacto contrastados; publicación y prueba funcional pendientes."
+      },
+      {
+        "repository": "yodesarrollomx/yodesarrollo-board",
+        "path": "presentacion/vendor/yod-chinche.js",
+        "commit": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+        "sha256": "da3081573f436457da1724ec04e17db451cdfc3922eba0e29f6e9902ca0010a3",
+        "status": "draft-pr-source",
+        "finding": "Bytes del commit exacto contrastados; publicación y prueba funcional pendientes."
+      }
+    ],
+    "secuencia": "Integración pendiente de verificar; no equivale a ausencia de chinches.",
+    "revision": "Registro canónico chinche/registro.json; plan incremental privado por ID/huella, corte de observación separado de revisión.",
+    "implementacion": "9ad73d4828c38b14e782a08be41f39fefc5e2fcd",
+    "canonicalRegistry": "chinche/registro.json",
+    "targetVersion": "1.1.1"
+  }
+]

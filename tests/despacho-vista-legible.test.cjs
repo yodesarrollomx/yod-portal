@@ -76,21 +76,23 @@ function dom(){
  let value=null;const subscribers=new Set();window.CubefarmYOD={getProfile:()=>value,isOpen:()=>false,open(){},openForCase(){},subscribeProfile(fn){subscribers.add(fn);fn(value);return()=>subscribers.delete(fn);},publish(v){value=v;subscribers.forEach(fn=>fn(v));}};
  return {document,window};
 }
-test('componente sin GPU: controles bloqueados sin perfil, navegación observable, llegada y borrado al revocar',async()=>{
+test('componente sin GPU: residencia por fuente, navegación observable, baja y borrado al revocar',async()=>{
  const saved=new Map();for(const k of ['document','window','location','requestAnimationFrame','matchMedia','CustomEvent','setInterval','clearInterval'])saved.set(k,global[k]);
  const{document,window}=dom();let animation;
+ let source=[],observe;window.YodRoomWork={snapshot:()=>source,subscribe(fn){observe=fn;fn(source);return()=>{};}};
+ const publish=(admission,activity)=>{source=[{case_id:profile.case_id,auton_status:{case_id:profile.case_id,admission,activity,observed_at:Date.now()}}];observe(source);};
  Object.assign(global,{document,window,location:window.location,requestAnimationFrame:fn=>{animation=fn;},matchMedia:()=>({matches:false}),CustomEvent:class{constructor(type,o){this.type=type;this.detail=o.detail;}},setInterval:()=>1,clearInterval:()=>{}});
  try{
   const{startAccessibleOffice,mountAccessibleView}=await import(moduleURL(path.join(base,'office-accessible.mjs')));
   const api=startAccessibleOffice(),view=mountAccessibleView(api);assert.equal(api.view,'map');assert.equal(view.root.hidden,false);
   const send=view.root.all().find(n=>n.attrs['data-agent-destination']==='decisions');
-  assert.ok(send.disabled);assert.match(view.root.textContent,/sin perfil autorizado/);assert.equal(api.agenteIr('decisions'),false);
+  assert.ok(send.disabled);assert.match(view.root.textContent,/sin perfil autorizado/);assert.equal(api.agenteIr,undefined,'manual movement is off while source placement is active');
   await api.visit('decisions');view.paint();assert.equal(view.root.attrs['data-selected'],'decisions');assert.match(view.root.textContent,/Tu vista: Decisiones/);
-  window.CubefarmYOD.publish(profile);view.paint();assert.equal(send.disabled,false);send.onclick();
-  assert.equal(view.root.attrs['data-agent-motion'],'walk');assert.equal(view.root.attrs['data-agent-destination'],'decisions');
+  window.CubefarmYOD.publish(profile);publish('alta','presenting');animation(0);view.paint();assert.equal(send.disabled,true);
   for(let t=0;t<30000;t+=70)animation(t);view.paint();
-  assert.equal(view.root.attrs['data-agent-motion'],'idle');assert.equal(view.root.attrs['data-agent-place'],'decisions');assert.match(view.root.textContent,/Llegada confirmada a Decisiones/);
+  assert.equal(view.root.attrs['data-agent-motion'],'idle');assert.equal(view.root.attrs['data-agent-place'],'presenting');assert.match(view.root.textContent,/Llegada confirmada · Ante la mesa del consejo/);
+  publish('baja',null);animation(30100);view.paint();assert.equal(api.getAgentState().position,null);assert.match(view.root.textContent,/Fuera de la oficina · Solo biblioteca/);
   window.CubefarmYOD.publish(null);view.paint();assert.equal(send.disabled,true);assert.equal(view.root.attrs['data-agent-motion'],'unavailable');assert.doesNotMatch(view.root.textContent,/Caso de prueba/);
-  assert.equal(view.root.attrs['data-agent-place'],'');assert.equal(api.agenteIr('inicio'),false);
+  assert.equal(view.root.attrs['data-agent-place'],'');
  }finally{for(const[k,v]of saved){if(v===undefined)delete global[k];else global[k]=v;}}
 });

@@ -1,0 +1,93 @@
+{
+ "P_1S_2026": 212.035,
+ "P_nominal": {
+  "centro": 216.747,
+  "max": 218.491,
+  "min": 215.05
+ },
+ "P_real": {
+  "centro": 208.826,
+  "max": 210.506,
+  "min": 207.191
+ },
+ "Q": {
+  "centro": 3609.1,
+  "max": 3712.0,
+  "min": 3383.5
+ },
+ "Q_componentes_ene_jul_2026": {
+  "apoyo": 125.0,
+  "cnbv": 568.0,
+  "cofinavit": 88.0,
+  "conyugal": 354.0,
+  "fovissste": 155.0,
+  "individual": 747.0,
+  "nodisp": 0.0,
+  "total": 92.0,
+  "unamos": 1274.0
+ },
+ "Q_ene_jul_2026": 1979.0,
+ "calidad": "estimado",
+ "control_Q": {
+  "2021": {
+   "dif_12m_vs_anual": 0.0,
+   "ene_jul": 2020.0,
+   "q_anual": 3748.0,
+   "suma_12_meses": 3748.0
+  },
+  "2022": {
+   "dif_12m_vs_anual": 0.0,
+   "ene_jul": 2067.0,
+   "q_anual": 3534.0,
+   "suma_12_meses": 3534.0
+  },
+  "2023": {
+   "dif_12m_vs_anual": 0.0,
+   "ene_jul": 1649.0,
+   "q_anual": 3093.0,
+   "suma_12_meses": 3093.0
+  },
+  "2024": {
+   "dif_12m_vs_anual": 0.0,
+   "ene_jul": 1588.0,
+   "q_anual": 2896.0,
+   "suma_12_meses": 2896.0
+  },
+  "2025": {
+   "dif_12m_vs_anual": 0.0,
+   "ene_jul": 1760.0,
+   "q_anual": 3026.0,
+   "suma_12_meses": 3026.0
+  }
+ },
+ "inpc": {
+  "acumulado_2026": {
+   "periodo": "2026-09",
+   "valor": 145.182
+  },
+  "factor_a_precios_2025": 0.963456,
+  "inflacion_esperada_2026": 3.87,
+  "promedio_2025": 140.542,
+  "promedio_2026_estimado": 145.8727
+ },
+ "meses_ausentes_como_cero": [
+  "creditos-infonavit-nueva-esq-infonavit-total-mensual 2021-04",
+  "creditos-infonavit-nueva-esq-infonavit-total-mensual 2021-07"
+ ],
+ "metodo": "Q: ene–jul 2026 ÷ participación ene–jul (misma fórmula de deduplicación), centro = mediana, rango = mín–máx de los años con meses. P: promedio 1S2026 × razón (promedio anual ÷ promedio 1S) 2021–2025. Es un cierre ESTIMADO, no un dato.",
+ "participacion_ene_jul": {
+  "2021": 0.539,
+  "2022": 0.5849,
+  "2023": 0.5331,
+  "2024": 0.5483,
+  "2025": 0.5816
+ },
+ "razon_anual_1S": {
+  "2021": 1.0142,
+  "2022": 1.0254,
+  "2023": 1.0304,
+  "2024": 1.0222,
+  "2025": 1.0206
+ },
+ "unidad_P_real": "índice SHF 2017=100 a precios de 2025 (INPC nacional promedio anual)"
+}

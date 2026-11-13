@@ -15,3 +15,6 @@
 .office-map-movement>summary{min-height:44px;display:flex;align-items:center;font:600 14px system-ui;cursor:pointer}
 .office-map-movement>button{min-height:44px;padding:10px;border-radius:10px;border:1px solid #cfc4ae;background:#20343c;color:white}
 .office-map-fallback #resident-dock{display:none}
+/* Barrido 10-nov-2026: con el plano abierto la barra de autones quedaba encima de su contenido
+   y repetía los mismos botones de «Elige con quién trabajar». */
+body:has(#office-accessible:not([hidden])) #resident-dock{display:none}

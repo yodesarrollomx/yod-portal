@@ -125,7 +125,7 @@ test('physical monitor repaints progress with unchanged timestamp and clears pri
 
 test('authorized residents use separate existing seats and a stale current profile cannot restore a revoked case',async()=>{
  const [T]=await modules,{createOfficeResidents}=await import(moduleURL(path.join(base,'avatars/office-residents.mjs')));
- const scene=new T.Scene(),fleet=createOfficeResidents({scene});let currentListener,listListener;
+ const scene=new T.Scene(),fleet=createOfficeResidents({scene,authoritative:false});let currentListener,listListener;
  const a={...profile},b={...profile,id:'CASE-SECOND',case_id:'CASE-SECOND'};
  fleet.bind({subscribeProfile(fn){currentListener=fn;fn(a);return()=>{};},subscribeAuthorizedProfiles(fn){listListener=fn;fn([a,b]);return()=>{};},selectCase:async()=>true,openForCase:()=>true});
  assert.equal(fleet.getState().count,2);assert.equal(scene.children.length,2);
@@ -137,7 +137,7 @@ test('authorized residents use separate existing seats and a stale current profi
 
 test('every resident body delegates to the same opening flow without a second case-selection request',async()=>{
  const [T]=await modules,{createOfficeResidents}=await import(moduleURL(path.join(base,'avatars/office-residents.mjs')));
- const scene=new T.Scene(),fleet=createOfficeResidents({scene}),opened=[];
+ const scene=new T.Scene(),fleet=createOfficeResidents({scene,authoritative:false}),opened=[];
  const profiles=['SYNTHETIC-A','SYNTHETIC-B','SYNTHETIC-C'].map(id=>({...profile,id,case_id:id,form:'man'}));
  fleet.bind({subscribeProfile(fn){fn(profiles[0]);return()=>{};},subscribeAuthorizedProfiles(fn){fn(profiles);return()=>{};},
   selectCase(){throw Error('Selection must belong to the shared opening controller');},openForCase:id=>{opened.push(id);return true;}});
