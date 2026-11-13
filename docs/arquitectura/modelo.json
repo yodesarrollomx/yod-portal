@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-13.folio-cartera.1",
-  "checked_at": "2026-10-30",
+  "revision": "2026-11-13.folio-cartera.2",
+  "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
     "margen_y_control",
@@ -1236,6 +1236,16 @@
           "source_revision": "2026-10-29.ppp40-semilla.1",
           "status": "propuesto",
           "claim": "PPP4 incremental: catálogo literal, grafo puro y semilla incompleta versionada dentro del frontend existente. Persistencia propuesta por módulo opt-in en la MISMA implementación GAS y tablas del master. Sin nueva URL, ACL, segundo motor financiero ni datos privados. Seed_id pre-alta es identidad de borrador, no board_case_id; promoción debe preservar vínculo explícito y no se presenta implementada."
+        },
+        {
+          "claim": "CHG-FOLIO-CARTERA-20261113: versión 110 publicada el 2026-11-13 sobre la implementación existente (misma URL), base 109 + Cartera.gs + una línea de doGet (recurso=cartera, sólo lectura). Releída por Drive; GET con sesión de Dirección → ok (19 proyectos, 7 etapas) y con clave falsa → error clave. HermesAccess.gs de otro agente viaja inerte: su línea de ruta se quitó para la versión y se restauró en el editor.",
+          "status": "ejecucion",
+          "source_revision": "Apps Script version 110; 2026-11-13"
+        },
+        {
+          "claim": "CHG-FOLIO-CARTERA-20261113: versión 111 publicada el 2026-11-13 sobre la implementación existente: acceso-alta escribe la columna «proyectos» de ACCESOS (validada; un folio mal escrito no se guarda), accesos-lista la devuelve y la cartera en blanco sólo abre al equipo (un externo sin tableros internos no ve ninguna). Releída por Drive; GET en vivo: 12 usuarios con el campo, cartera de Dirección 19, clave falsa → clave. HermesAccess.gs sigue fuera de la ruta.",
+          "status": "ejecucion",
+          "source_revision": "Apps Script version 111; 2026-11-13"
         }
       ],
       "data_entities": [
@@ -16333,14 +16343,38 @@
       ],
       "proposal": "Etapa 1 del análisis «YOD OS tablero por tablero» (11-nov-2026): el folio único y la cartera. (1) Control Maestro → Proyectos gana la columna etapa_folio con siete etapas (1 Captado, 2 Evaluado, 3 Acordado, 4 Fondeado, 5 En obra, 6 En venta y cobro, 7 Repartido), una por terreno; los frentes de trabajo quedan sin etapa y lo dado de baja fuera de la cartera. Se dan de alta tres folios que no existían: Moréo, Distrito Abasto y Distrito Obregón. (2) Puertas por proyecto, mínimas: ACCESOS del Portero gana la columna «proyectos» (en blanco o * = todos, como hoy; folios PRJ en CSV = sólo esos). El Portero suma un archivo Cartera.gs y una línea en doGet: ?recurso=cartera devuelve la cartera recortada, sólo lectura, sin notas, ligas, responsables ni cifras. (3) La tira de etapas del tablero cenital deja la foto pública de cuatro etapas y pinta los siete carriles en vivo: primero ?recurso=cartera; mientras el Portero no tenga esa versión, sólo admin lee la pestaña con ?recurso=cm&hoja=Proyectos; sin respuesta se queda la foto. os/proyectos.js suma las reglas (etapaFolio, desdeControlMaestro, porEtapaFolio) sin nombres ni cifras. La etiqueta propia nueva (20261113-folio-cartera) toca el ?v= de las páginas de los demás sistemas; ahí sólo cambia la etiqueta.",
       "approval": "Dirección, 13-nov-2026 en el chat «Análisis del sistema Yodo»: «retoma bien lo que estábamos haciendo»; aprobó las siete etapas y el mapeo («Así está bien»), los tres folios nuevos («Sí, a los tres»), las puertas por proyecto («sí prepararlo pero busca una forma de no ser muy revoltoso ni complicado») e incluir Flujo en el plan.",
-      "status": "implementado_local",
+      "status": "publicado",
       "tests": [
         "node --test tests/folio-cartera.test.cjs (5 pruebas: etapas, columnas sin riesgo, carriles, respuesta del Portero, cableado de tablero.html)",
         "Prueba local de Cartera.gs con un Apps Script de mentira: 11 comprobaciones (Dirección, clave maestra, broker recortado, columna en blanco, admin, acceso revocado, credencial inválida, sin pestaña)",
-        "node --test tests/*.cjs · verify-os · verify-portal · verify-accesos · verify-obra-app · node scripts/versiones.cjs --check · node scripts/arquitectura.cjs --check"
+        "node --test tests/*.cjs · verify-os · verify-portal · verify-accesos · verify-obra-app · node scripts/versiones.cjs --check · node scripts/arquitectura.cjs --check",
+        "En vivo, 13-nov-2026: GET recurso=cartera con sesión de Dirección → ok, 19 proyectos, 7 etapas, 5 con plan; con clave falsa → error clave.",
+        "En vivo, 13-nov-2026: el Inicio pinta los siete carriles (1 · 7 · 1 · 0 · 1 · 1 · 0) y deja fuera lo dado de baja.",
+        "En vivo, versión 111: accesos-lista trae «proyectos» en los 12 usuarios; la cartera de Dirección sigue en 19; clave falsa → clave. Pruebas privadas: Cartera.gs 23 comprobaciones y acceso-alta/accesos-lista 13."
       ],
-      "deployment": "La tira de siete carriles se publica al fusionar el PR (Dirección la ve desde ese momento con ?recurso=cm). La cartera recortada para externos espera la versión nueva del Portero: Cartera.gs y la línea de doGet, publicadas por Dirección como «Nueva versión» sobre la implementación existente.",
+      "deployment": "Publicado. Tablero: PR 359 fusionado (66dc402); la tira de siete carriles se ve en vivo en el Inicio. Portero: versión 110 del 13-nov-2026 (15:22 de Hermosillo) sobre la implementación existente, misma URL, publicada por Claude desde el Chrome de Dirección con el método de docs/agentes/publicar-apps-script.md: base 109 + Cartera.gs + una línea en doGet. Lo guardado se releyó por Drive archivo por archivo. Lo guardado traía además HermesAccess.gs y su línea de ruta, de otro agente y sin visto bueno para publicarse: la línea se quitó para la versión (el archivo viaja inerte) y se restauró en el editor. Versión 111 (15:48 de Hermosillo), mismo método: puertas por proyecto. acceso-alta acepta «proyectos» (validado en Cartera.gs; un folio mal escrito no se guarda) y accesos-lista lo devuelve; con la columna en blanco el equipo ve toda la cartera y un externo, sin ningún tablero interno, no ve ninguno. El campo de Accesos va en el PR potenciales-yod 108. Falta probar en vivo el recorte de una cuenta externa con folios asignados (llega con el primer broker, PLAN-03).",
       "rollback": "Revertir el PR (vuelve la foto de cuatro etapas). Las columnas etapa_folio y proyectos se pueden dejar: nadie más las lee. En el Portero, volver a la versión anterior en Administrar implementaciones."
+    },
+    {
+      "id": "CHG-PLAN-FOLIO-20261113",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "GAS-PPP2",
+        "GAS-PORTERO",
+        "SYS-CONTROL",
+        "SHEET-CATALOGO"
+      ],
+      "proposal": "Etapa 2 del análisis «YOD OS tablero por tablero» (PLAN-02): el PPP con su folio. Cada plan —PPP 2 y los cinco motores del PPP— enseña junto a su nombre el terreno de la cartera y su etapa del folio (p. ej. «PRJ-QUINTAS · 2 · Evaluado»), leídos con una sola lectura por página de ?recurso=cartera del Portero (ppp-folio.js, en potenciales-yod). La etapa no se copia al plan: el Control Maestro (columnas etapa_folio y plan) es la única fuente; sin sesión, sin respuesta o sin terreno ligado no se pinta nada. El reparto ya se calcula en el libro de PPP 2 y se enseña en «Versiones y reparto»; la liga de la cartera a cada plan quedó en CHG-FOLIO-CARTERA-20261113. Sin cambios en Apps Script.",
+      "approval": "Dirección, 13-nov-2026 en el chat «Análisis del sistema Yodo»: «retoma bien lo que estábamos haciendo» y el orden del programa (2 · PPP con Reparto), registrado en Tareas PLAN-02 del Buzón.",
+      "status": "implementado_local",
+      "tests": [
+        "node --test tests/ppp-folio.test.cjs (9: sello del terreno, una lectura por página, PPP 2 y pausa, sin terreno/sesión/motor no pinta, claves inválidas, escape, Portero caído sin insistir, sesión rechazada, respuesta tardía de otro plan)",
+        "node --test tests/*.test.cjs y los recorridos de navegador de verificar-ppp (CI)",
+        "node scripts/versiones.cjs --check (etiqueta propia 20261113-plan-folio)"
+      ],
+      "deployment": "Se publica al fusionar el PR de potenciales-yod (Pages). No cambia ningún Apps Script ni hoja.",
+      "rollback": "Revertir el PR: los planes vuelven a no enseñar su folio. Nada que regresar en Sheets ni en el Portero."
     }
   ],
   "data_contracts": [

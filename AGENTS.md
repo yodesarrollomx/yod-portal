@@ -25,6 +25,10 @@ Leer [protocolo visual experimental](docs/JEV-IMAGENES-RELEVO-20261028.md) antes
 
 Colaboración entre agentes (Claude y ChatGPT/Codex): leer `docs/colaboracion/`, empezando por el documento más reciente, antes de tomar un encargo.
 
+## Publicar un Apps Script (backend vivo) · 13-nov-2026
+
+Orden de Dirección: el agente que tenga el Chrome de Alejandro publica él mismo los cambios de Apps Script; no se le pide que pegue código ni que despliegue. Seguir [docs/agentes/publicar-apps-script.md](docs/agentes/publicar-apps-script.md) (Buzón: Guías G37 y regla 27 de «Cómo trabajamos»). Siempre: leer el código vivo por Drive antes de tocar; comparar lo guardado contra la versión desplegada y no publicar cambios de otro agente sin su visto bueno; «Versión nueva» sobre la implementación existente, nunca «Nueva implementación»; releer por Drive lo guardado; probar sólo con GET; dejar recibo en el Buzón y evidencia en el atlas.
+
 ## Eficiencia de contexto y agentes (propuesta 2026-10-18)
 
 Consultar `docs/agentes/politica-eficiencia-yod-os.md` antes de investigar o modificar sistemas. Esta política complementa —no reemplaza— los requisitos de arquitectura, seguridad y pruebas anteriores. Los complementos opcionales no se consideran instalados por mencionar su nombre.
