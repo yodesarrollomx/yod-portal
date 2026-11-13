@@ -125,6 +125,15 @@ clic: el diálogo tarda en cargar) → **Versión** → «Versión nueva» → *
 escribir qué cambia, sobre qué versión y quién) → **Implementar**. Debe decir «La implementación se
 ha actualizado correctamente · Versión N» con el **mismo** ID de implementación → **Hecho**.
 
+### Si el control de seguridad no deja apretar «Implementar»
+
+Puede pasar con versiones que escriben datos (el 13-nov bloqueó la 112 del Portero, que escribe en el
+Buzón; la 110 y la 111 pasaron). No se busca otra vía: se deja el diálogo listo («Versión nueva» y la
+descripción puestas), se le pide a Dirección **un solo clic en «Implementar»** y luego «Hecho», y
+**no se toca lo guardado** mientras tanto (la versión se toma de lo guardado en el momento del clic).
+Después del clic se sigue con el paso 7. Si Dirección prefiere no publicar, se restaura lo guardado
+como estaba.
+
 ## 7. Restaurar lo ajeno (si se quitó algo en el paso 3)
 
 Volver a insertar lo quitado en su lugar exacto, guardar y releer por Drive: lo guardado debe ser el
