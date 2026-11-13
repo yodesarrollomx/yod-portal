@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-13.brokers-atlas.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-13.ppp40-semilla.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -273,6 +273,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
 - Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-read-validation.md · Revisión: 2026-10-29.ppp-read-validation.1
 - Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
+- PPP4 incremental: catálogo literal, grafo puro y semilla incompleta versionada dentro del frontend existente. Persistencia propuesta por módulo opt-in en la MISMA implementación GAS y tablas del master. Sin nueva URL, ACL, segundo motor financiero ni datos privados. Seed\_id pre-alta es identidad de borrador, no board\_case\_id; promoción debe preservar vínculo explícito y no se presenta implementada. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp40-semilla.md · Revisión: 2026-10-29.ppp40-semilla.1
 
 **Evidencia de conexiones:**
 
@@ -336,6 +337,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - Integración pendiente de verificar · Estado: pendiente · Sin revisión inmutable en esta referencia
 - Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
+- PPP4 incremental: catálogo literal, grafo puro y semilla incompleta versionada dentro del frontend existente. Persistencia propuesta por módulo opt-in en la MISMA implementación GAS y tablas del master. Sin nueva URL, ACL, segundo motor financiero ni datos privados. Seed\_id pre-alta es identidad de borrador, no board\_case\_id; promoción debe preservar vínculo explícito y no se presenta implementada. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp40-semilla.md · Revisión: 2026-10-29.ppp40-semilla.1
 
 **Evidencia de conexiones:**
 
@@ -1087,6 +1089,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
 - Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-read-validation.md · Revisión: 2026-10-29.ppp-read-validation.1
 - Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
+- PPP4 incremental: catálogo literal, grafo puro y semilla incompleta versionada dentro del frontend existente. Persistencia propuesta por módulo opt-in en la MISMA implementación GAS y tablas del master. Sin nueva URL, ACL, segundo motor financiero ni datos privados. Seed\_id pre-alta es identidad de borrador, no board\_case\_id; promoción debe preservar vínculo explícito y no se presenta implementada. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp40-semilla.md · Revisión: 2026-10-29.ppp40-semilla.1
 
 **Evidencia de conexiones:**
 
@@ -1131,6 +1134,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
 - Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-read-validation.md · Revisión: 2026-10-29.ppp-read-validation.1
 - Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
+- PPP4 incremental: catálogo literal, grafo puro y semilla incompleta versionada dentro del frontend existente. Persistencia propuesta por módulo opt-in en la MISMA implementación GAS y tablas del master. Sin nueva URL, ACL, segundo motor financiero ni datos privados. Seed\_id pre-alta es identidad de borrador, no board\_case\_id; promoción debe preservar vínculo explícito y no se presenta implementada. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp40-semilla.md · Revisión: 2026-10-29.ppp40-semilla.1
 
 **Evidencia de conexiones:**
 
@@ -3095,6 +3099,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Dirección autoriza ficha común de cinco motores, tablero nativo y reorganización conversada de etapas con Sheets y coherencia por modificación. Propuesta previa a implementación; no acredita publicación ni operación productiva. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-ficha-etapas.md · Revisión: 2026-10-29.ppp-ficha-etapas.1
 - Recuperación de lectura con campo financiero inactivo explícito; conserva valores y permisos. Implementación local probada, despliegue y recorrido productivo pendientes. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-read-validation.md · Revisión: 2026-10-29.ppp-read-validation.1
 - Dirección autoriza por chat ejecutar generación de presentaciones desde la versión visible del PPP y conservar sus versiones en el registro existente. Contrato registrado antes de implementar; no acredita despliegue ni aceptación de futuros storyboards. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp-presentaciones.md · Revisión: 2026-10-31.ppp-presentaciones.1
+- PPP4 incremental: catálogo literal, grafo puro y semilla incompleta versionada dentro del frontend existente. Persistencia propuesta por módulo opt-in en la MISMA implementación GAS y tablas del master. Sin nueva URL, ACL, segundo motor financiero ni datos privados. Seed\_id pre-alta es identidad de borrador, no board\_case\_id; promoción debe preservar vínculo explícito y no se presenta implementada. · Estado: propuesto · yodesarrollomx/yod-portal · docs/arquitectura/ppp40-semilla.md · Revisión: 2026-10-29.ppp40-semilla.1
 
 **Evidencia de conexiones:**
 

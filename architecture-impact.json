@@ -1,21 +1,21 @@
 {
-  "model_revision": "2026-11-13.brokers-atlas.1",
-  "proposal_id": "CHG-MASTERBROKERS-PORTAL-INTEGRATED",
-  "summary": "Misma entrada brokers.html y contrato brokers.v1: MD abre equipo y cartera propia, broker abre únicamente su cartera validada. Un renglón por contacto; al abrirlo muestra asuntos separados, historial agregado con fuente y PPP por asunto. Responsable, etapa, último hecho y siguiente compromiso provienen de los registros, sin inventar estados agregados o finanzas. Breadcrumbs y URL conservan navegación autorizada, nunca otorgan permisos. Se conserva la vista de comparación de asuntos como herramienta opcional. Reutiliza edición, guardado idempotente/readback, agenda/reprogramación, acuerdos, documentos, presentación común, evaluación y retorno recuperable de PR43. No importa fixtures de la muestra pública ni crea otra base. La conexión real utiliza sesión existente de YOD OS; no se crea otro acceso. Preservar cambios concurrentes de roles/beneficios/pregunta clave del encargado original.",
+  "model_revision": "2026-11-13.ppp40-semilla.1",
+  "proposal_id": "CHG-PPP40-SEMILLA-20261029",
+  "summary": "PPP4 incremental: catálogo literal, grafo puro y semilla incompleta versionada dentro del frontend existente. Persistencia propuesta por módulo opt-in en la MISMA implementación GAS y tablas del master. Sin nueva URL, ACL, segundo motor financiero ni datos privados. Seed_id pre-alta es identidad de borrador, no board_case_id; promoción debe preservar vínculo explícito y no se presenta implementada.",
   "components": [
-    "SYS-INVERSION",
-    "GAS-CRM",
-    "SHEET-CRM",
     "SYS-POTENCIALES",
     "GAS-PORTERO",
     "SHEET-PORTERO",
+    "SHEET-PPP-MODELOS",
+    "SVC-AUTON-CLOUD",
     "SYS-YOD-OS"
   ],
   "tests": [
-    "Proyección por contacto/expediente, responsable nominal, última actividad real y sin mezclar carteras; no duplicar personas por varios asuntos.",
-    "Navegador320/390/1440: MD→broker→cliente→asunto→PPP/historial/avance, regreso y recarga; broker aislado, sesión revocada, datos sintéticos sólo en pruebas.",
-    "Regresiones de edición, nueva oportunidad/contacto, guardado con ACK viejo, agenda y reprogramación, presentación, acuerdos y retorno evaluador en Chromium/WebKit.",
-    "Atlas, manifiesto/pin, CI, bytes publicados y recorrido autenticado se comprueban por separado."
+    "Semilla incompleta preserva null y fuente literal; superficie conocida debe ser positiva. Estado durable requiere recibo y lectura; el grafo distingue cero de ausencia.",
+    "ACL vertical existente, revisión/CAS, repetición/payload mismatch y recuperación por lectura sin segundo POST.",
+    "Catálogo 18 módulos/96 preguntas extraído sin convertir texto en reglas; grafo separa pertenencia y cálculo, rechaza ciclos.",
+    "UI descarta respuesta al cambiar identidad/revisión; propuesta sólo manualmente confirmada; conexión ausente no simula éxito.",
+    "Agente real, promoción a caso, calendario y recorrido online aún requieren integración/QA antes de nivel Básico."
   ],
-  "rollback": "Revertir sólo interfaz y manifiestos; conservar todas las fuentes, IDs, historia, acuerdos, PPP, datos y permisos."
+  "rollback": "Revertir commits de consumidores y desactivar capacidad semilla en la implementación existente. Preservar semillas, casos, recibos e historia; no borrar ni restaurar libros."
 }
