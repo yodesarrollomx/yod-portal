@@ -1,0 +1,25 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><title>Voz para tu chinche</title>
+<style>body{font:18px system-ui;background:#f7f5ed;color:#263c30;margin:28px;max-width:500px}button{font:inherit;padding:14px 20px;border:0;border-radius:10px;background:#263c30;color:white;margin:8px 4px 8px 0}button:disabled{opacity:.5}p{line-height:1.5}</style>
+<h1>Voz para tu chinche</h1><p id="status" role="status">Conectando con tu dibujo…</p><button id="record" disabled>Grabar</button><button id="stop" hidden>Detener y conservar</button><p>Después de pulsar Grabar, vuelve a la pantalla del dibujo. Mantén esta ventana abierta hasta terminar. El audio se devuelve a tu chinche; esta ventana no lo sube a ningún servidor.</p>
+<script>
+'use strict';
+const type='yod:chinche:microphone',status=document.getElementById('status'),record=document.getElementById('record'),stop=document.getElementById('stop');
+let parentOrigin=null,nonce=null,recorder=null,stream=null,chunks=[],bytes=0,timer=null,starting=false,complete=false;
+function send(action,extra={}){if(parentOrigin&&nonce)opener.postMessage({type,action,nonce,...extra},parentOrigin);}
+function release(){clearTimeout(timer);stream?.getTracks().forEach(t=>t.stop());stream=null;}
+function error(kind){release();status.textContent='No se pudo conservar el audio. Vuelve al dibujo para intentar de nuevo.';send('error',{message:kind});record.disabled=true;stop.hidden=true;}
+addEventListener('message',e=>{if(e.source!==opener||!e.data||e.data.type!==type)return;const m=e.data;
+ if(m.action==='init'&&!nonce&&/^[a-f0-9]{48}$/.test(m.nonce)&&e.origin!=='null'){parentOrigin=e.origin;nonce=m.nonce;record.disabled=false;status.textContent='Pulsa Grabar y vuelve al dibujo.';return;}
+ if(e.origin!==parentOrigin||m.nonce!==nonce)return;
+ if(m.action==='stop'){if(recorder?.state==='recording')recorder.stop();else if(!starting&&!complete)error('cancelled');}
+ if(m.action==='received'&&complete){status.textContent='Audio conservado en tu chinche.';window.close();}
+});
+record.onclick=async()=>{if(!nonce||starting||recorder)return;starting=true;record.disabled=true;status.textContent='Esperando permiso del micrófono…';
+ try{stream=await navigator.mediaDevices.getUserMedia({audio:true});const mime=['audio/webm;codecs=opus','audio/mp4','audio/ogg;codecs=opus'].find(t=>MediaRecorder.isTypeSupported(t));recorder=new MediaRecorder(stream,{...(mime?{mimeType:mime}:{}),audioBitsPerSecond:48000});
+ recorder.ondataavailable=e=>{if(e.data?.size){chunks.push(e.data);bytes+=e.data.size;if(bytes>5000000&&recorder.state==='recording')recorder.stop();}};
+ recorder.onstop=()=>{if(complete)return;complete=true;release();const blob=new Blob(chunks,{type:recorder.mimeType||mime});if(!blob.size){error('empty');return;}const reader=new FileReader();reader.onerror=()=>error('read');reader.onload=()=>{send('complete',{mime:blob.type,data:reader.result});status.textContent='Conservando audio en tu chinche…';stop.hidden=true;};reader.readAsDataURL(blob);};
+ recorder.onerror=()=>{if(recorder.state==='recording')recorder.stop();else recorder.onstop();};recorder.start(1000);send('started');stop.hidden=false;status.textContent='Grabando. Vuelve al dibujo y explica mientras dibujas.';timer=setTimeout(()=>{if(recorder.state==='recording')recorder.stop();},600000);
+ }catch(e){error(e.name==='NotAllowedError'?'denied':'recorder');}finally{starting=false;}};
+stop.onclick=()=>{if(recorder?.state==='recording')recorder.stop();};
+if(opener)opener.postMessage({type,action:'ready'},'*');else status.textContent='Abre esta ventana desde una chinche para grabar.';
+</script></html>

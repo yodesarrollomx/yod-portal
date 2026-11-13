@@ -11,6 +11,20 @@ Antes de modificar código, leer `docs/arquitectura/README.md`, el componente y 
 
 El repositorio es público. Nunca publicar datos reales de clientes, secretos, exportaciones de hojas privadas o detalles de vulnerabilidades pendientes. Usar ejemplos sintéticos y avisos privados de seguridad para los hallazgos restringidos.
 
+## Instalar y mantener chinches
+
+Usar la skill `instalar-mantener-chinches` y `docs/arquitectura/chinches-paquete.md` al añadir una superficie, cambiar el grabador o revisar cobertura. La fuente canónica es `chinche/paquete.json` + `chinche/registro.json`; no crear otra copia artesanal ni una rutina duplicada. Ejecutar el plan antes de escribir, comprobar huellas reales y registrar la integración nueva. Separar instalación, publicación, recibo, revisión y corrección. Los estados de revisión se guardan privadamente fuera de Git.
+
 Prioridad del propietario: vender más, luego mejorar margen/control y después acelerar cobros. Seguridad e integridad de datos no se sacrifican por ese orden.
 
 Relevo del Despacho 3D (entorno del agente y versión de oficina): `docs/ENTORNO-AGENTE-RELEVO.md` (estado, interruptores, reglas, método de entrega y lo que sigue).
+
+## Relevo de Jev Images · 28-oct-2026
+
+Leer [protocolo visual experimental](docs/JEV-IMAGENES-RELEVO-20261028.md) antes de clasificar fotografías, planos o capturas mediante Jev. La guía define un piloto en sombra y **no acredita ejecución ni despliegue**. Mantener los contratos, CI, reservas, pruebas y rutas canónicas vigentes; no usar Jev textual como visión ni dar por notificados a otros chats hasta observar su acuse.
+
+Colaboración entre agentes (Claude y ChatGPT/Codex): leer `docs/colaboracion/`, empezando por el documento más reciente, antes de tomar un encargo.
+
+## Eficiencia de contexto y agentes (propuesta 2026-10-18)
+
+Consultar `docs/agentes/politica-eficiencia-yod-os.md` antes de investigar o modificar sistemas. Esta política complementa —no reemplaza— los requisitos de arquitectura, seguridad y pruebas anteriores. Los complementos opcionales no se consideran instalados por mencionar su nombre.

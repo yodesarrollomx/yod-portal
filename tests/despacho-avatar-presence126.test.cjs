@@ -1,5 +1,6 @@
 const test=require('node:test'),assert=require('node:assert/strict'),path=require('node:path'),{pathToFileURL}=require('node:url');
-const mod=import(pathToFileURL(path.resolve(__dirname,'../despacho3d/avatar-presence.mjs')));
+// Legacy projection remains covered explicitly while production uses authoritative status.
+const mod=import(pathToFileURL(path.resolve(__dirname,'../despacho3d/avatar-presence.mjs'))).then(m=>({...m,avatarPresence:options=>m.avatarPresence({...options,authoritative:false})}));
 const profile={id:'CASE-ONE',case_id:'CASE-ONE',entity_kind:'case',name:'Ruiseñor',color:'#a57eae'};
 const observation=()=>({phase:'ready',case_id:'CASE-ONE',checked_at:1000,work:{case_id:'CASE-ONE',goal_id:'GOAL-ONE',phase:'tool',current_tool:'drive_leer',progress:{progress:{tasks:[{status:'ready_for_review'},{status:'running'},{status:'blocked'}]}}}});
 test('display labels come from the authorized profile and never change the case identifier',async()=>{const {shortAvatarName,avatarPresence}=await mod;assert.equal(shortAvatarName(profile),'Ruiseñor');assert.equal(shortAvatarName({...profile,name:'Luis'}),'Luis');assert.equal(shortAvatarName({...profile,name:'Gastón'}),'Gastón');const p=avatarPresence({profile,observation:observation(),now:1500});assert.equal(p.case_id,'CASE-ONE');assert.equal(profile.name,'Ruiseñor');assert.equal(shortAvatarName({...profile,name:'Another independent project'}),'Another independent project');});

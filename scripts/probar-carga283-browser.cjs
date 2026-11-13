@@ -7,7 +7,7 @@ module.exports=async function(browser,out,root){
  import {mountResidentDock} from '/despacho3d/resident-dock.mjs';
  const profiles=['A','B','C','D'].map(x=>({id:x,case_id:x,entity_kind:'case',name:'Agente '+x}));let selection=null,catalog={phase:'loading',cases:[]},obs=[],states=[],cats=[],works=[];
  window.__talks=[];window.__setCatalog=phase=>{catalog={phase,cases:phase==='current'?profiles:[]};cats.forEach(f=>f(catalog));states.forEach(f=>f());};
- window.__works=()=>{obs=profiles.map(p=>({case_id:p.id,phase:'ready',checked_at:Date.now(),work:{case_id:p.id,phase:'prepared',goal_id:'synthetic',progress:{progress:{tasks:[{status:'ready_for_review'},{status:'pending'}]}}}}));works.forEach(f=>f());};
+ window.__works=()=>{obs=profiles.map(p=>({case_id:p.id,phase:'ready',checked_at:Date.now(),auton_status:{case_id:p.id,admission:'alta',activity:'working',observed_at:new Date().toISOString()},work:{case_id:p.id,phase:'working',goal_id:'synthetic',progress:{progress:{tasks:[{status:'ready_for_review'},{status:'pending'}]}}}}));works.forEach(f=>f());};
  window.YodResidentAgents={getAuthorizedProfiles:()=>catalog.cases,getSelection:()=>selection,snapshot:()=>({phase:selection?'standby':'selection_required'}),subscribe:f=>{states.push(f);return()=>{};},subscribeAuthorizedProfiles:f=>{cats.push(()=>f(catalog.cases));f(catalog.cases);return()=>{};},subscribeCatalog:f=>{cats.push(f);f(catalog);return()=>{};},openForCase:async id=>{selection={case_id:id,can_enqueue:id!=='B'};return true;}};
  window.YodRoomWork={snapshot:()=>obs,subscribe:f=>{works.push(f);return()=>{};}};
  window.YodAgentMenu={openForCase:async(id,target)=>{window.__talks.push({id,target});return true;}};

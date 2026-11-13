@@ -22,9 +22,12 @@
   function dueDate(task){
     // `fecha` es el día del mes; el mes viene aparte. Si alguien captura la fecha
     // completa (2026-03-15) se toma el día real, no los dos primeros dígitos del año.
+    // MOAC guarda el día con su nombre («Miércoles 7»): el número se busca en cualquier
+    // parte, igual que getDayNumber() de board-aurum. Antes sólo se aceptaba al inicio
+    // y TODAS las tareas salían «Sin fecha» con 0 vencidas (barrido 10-nov-2026).
     var raw=String(task&&task.fecha||'').trim();
     var iso=raw.match(/^\d{4}-(\d{2})-(\d{2})/);
-    var day=iso?Number(iso[2]):(raw.match(/^(\d{1,2})\b/)||[])[1];
+    var day=iso?Number(iso[2]):(raw.match(/(?:^|\D)(\d{1,2})(?!\d)/)||[])[1];
     var month=MONTHS[String(task&&(task.mesCompromiso||task.mes)||'').trim().toLowerCase()];
     if(day==null||month==null)return null;return new Date(taskYear(task),month,Number(day));
   }

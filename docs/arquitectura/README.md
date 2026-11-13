@@ -81,3 +81,30 @@ La auditoría no se considera completa mientras existan componentes críticos o 
 - [Sala · correcciones y aprobación](sala-correcciones.md): dictado revisado, contexto fijado y acuses separados de entrega/aprobación.
 
 - [Despacho 2.0 · coordinador aislado](despacho-v2-coordinator.md): parte2, API, límites y pruebas; sin activación en pantallas.
+
+- [Storyboard público en GitHub](presentation-storyboard-github.md): entrada pública, PorteroGoogle y correcciones privadas por Sala; reemplaza destinos independientes.
+
+- [Chinches con voz y dibujo sincronizados](chinches-secuencia.md): contrato compartido, consumidores, evidencia privada y revisión.
+
+- [Puesto del agente 2.0](puesto-agente2.md): piloto de conversación con avatar, vistas móviles y contratos actuales; sin cambios de backend ni datos.
+
+- [Paquete y control de chinches](chinches-paquete.md): instalación repetible, releases inmutables, actualizaciones por huella, registro único y revisión incremental. [Abrir el control](../../chinche/control.html).
+
+- [Volúmenes nativos del PPP](ppp-volumenes-nativos.md): alcance para todos los casos de departamentos, contrato por escenario, fórmulas canónicas y recibos; ampliación autorizada y despliegue por verificar.
+
+- [Master Developer y pizarra personal](masterdeveloper-pizarra.md): alcance, contrato privado y despliegue.
+
+- [Consejo de autones dentro del despacho](consejo-autones.md): recepción de entregas, cinco perspectivas, tareas, observaciones y límites de activación.
+
+- [PPP · ficha común y etapas conversadas](ppp-ficha-etapas.md): propuesta autorizada para los cinco motores, tablero nativo, datos y fórmulas en Sheets, criterios por modificación y reversión.
+
+- [PPP · lectura y campos inactivos](ppp-read-validation.md): aplicabilidad explícita, diagnóstico de validación y conservación de cantidades y permisos.
+
+
+- [PPP · Presentaciones desde la versión visible](ppp-presentaciones.md): generación autorizada con ADN/Hairline, snapshot exacto, trabajo durable y versiones privadas compartidas con Master Developer; propuesta previa a implementación.
+
+- [Chinches · reloj del inicio del trazo](chinches-reloj-trazo.md): corrección focal y patch1.1.1, con validación estricta y borradores conservados.
+
+- [EMD · contratos de guardado, versión e interacción](emd-contratos-20261102.md): propuesta compatible, pruebas sintéticas, publicación y recuperación acreditadas por separado.
+
+- [EMD · dashboard y mejora continua](emd-mejora-continua-20261103.md): administración por capacidades, campañas aisladas, acciones persistentes y política de resultados versionada, inicialmente sin activar.

@@ -1,3 +1,4 @@
+import {validateCoreObservation} from './core-observation.mjs?v=core1';
 // Read-only observation. No tool or goal execution is triggered here.
 const id=v=>typeof v==='string'&&/^[A-Za-z0-9_.:-]{1,200}$/.test(v);
 const plain=v=>v&&typeof v==='object'&&!Array.isArray(v);
@@ -41,7 +42,8 @@ export function validateObservation(raw,caseId){
  const s=raw.screen;
  if(s&&(!plain(s)||!(s.captured_at===null||stamp(s.captured_at))||!Number.isSafeInteger(s.revision)||s.revision<0))bad();
  if(s?.owner&&(!id(s.owner.run_id)||s.owner.case_id!==caseId||!id(s.owner.goal_id)||!(s.owner.task_id===null||/^task-[1-8]$/.test(s.owner.task_id))))bad();
- return structuredClone({available:true,case_id:caseId,work:w,screen:s||null,...(extended?{observed_at:raw.observed_at,runtime:raw.runtime,history_available:raw.history_available}:{})});
+ let control={};if(raw.core!==undefined){try{control={core:validateCoreObservation(raw.core,caseId,w)};}catch{control={core:null,core_error:true};}}
+ return structuredClone({available:true,case_id:caseId,work:w,screen:s||null,...control,...(extended?{observed_at:raw.observed_at,runtime:raw.runtime,history_available:raw.history_available}:{})});
 }
 const historyEntry=v=>typeof v==='string'&&/^\d{17}-[a-f0-9-]{36}$/.test(v);
 export function validateWorkHistory(raw,caseId,options={}){

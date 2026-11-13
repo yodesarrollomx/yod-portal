@@ -26,6 +26,8 @@ jobs:
           node-version: '20'
       - name: Adaptadores, portal-core y paridad de códigos
         run: node verify-os.cjs
+      - name: Una sola etiqueta de versión (os/versiones.json)
+        run: node scripts/versiones.cjs --check
       - name: Portal
         run: node verify-portal.cjs
       - name: Matriz de accesos (potenciales-yod) = SYSTEM_CODES

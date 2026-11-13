@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-10-18.equipo-relevo.4 · 2026-10-18.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-13.brokers-atlas.1 · 2026-10-20.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -71,7 +71,7 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Servidor resuelve el destino y verifica permisos, límites y revisión antes de escribir
 - Una respuesta pendiente, conflicto o desconexión conserva el último dato confirmado con estado explícito
 - Auditar antes/después y no marcar producción comprobada sin lectura pública final
-- No modificar Portero ni crear otra implementación; conservar contratos y URL existentes
+- Extensión multivolumen autorizada dentro del Portero existente: conservar URL, scopes, ACL y contratos de otros modelos; no crear otra implementación ni inferir despliegue por fuente.
 - El transporte leído conserva entradas y resultados de todas las versiones; el flujo mensual puede enviarse solo para la activa. Validar ese flujo al abrirla y no exigir ni inventar flujo de versiones inactivas.
 
 ## CTR-PUBLICADOR-GITHUB
@@ -939,3 +939,305 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Escritura local fallida no se anuncia guardada; no se almacenan credenciales. No se afirma sincronización entre dispositivos.
 - Tomas obtenidas no equivalen a llamadas pagadas ni imágenes nuevas: pueden proceder de recibos. Costo desconocido nunca se convierte en cero.
 - Estado hecho en cola y checks exitosos no acreditan calidad editorial ni entrega externa.
+
+## CTR-PRESENTACIONES-MD-V1
+
+- Componentes: SYS-INVERSION, SYS-YOD-OS, GAS-SALA, SHEET-SALA.
+- Evidencia: docs/arquitectura/presentation-hub.md; GitHub público y archivos de control privados en GAS-SALA existente.
+- Entrada/campos: `presentation_id`, `revision esperada`, `request_id y huella`, `credencial Portero`, `posición semántica, época y secuencia`.
+- Salida: catálogo autorizado, publicación vigente o fijada, recibo privado, estado público acotado de sesión.
+
+- Una URL canónica; alias conservados
+- Borrador separado de publicación explícita
+- Autorización fresca en servidor en cada operación privada
+- Sesión fija revisión; un conductor y órdenes monotónicas
+- Respaldo no amplía permisos ni inventa recibos
+- Chinches conservan identidad, huella, audio, trazos y capturas
+
+## CTR-SALA-VIDEO-PRIVADO-V1
+
+- Componentes: SYS-SALA, GAS-SALA.
+- Evidencia: Propuesta y referencia video en SHEET-SALA; original Drive conserva acceso..
+- Entrada/campos: `credencial Sala vigente`, `prop_id`, `referencia Drive exacta asociada a propuesta`.
+- Salida: MP4 ligero autenticado en reproductor nativo, descriptor AES-256-GCM autorizado por credencial Sala, objeto cifrado inmutable por commit y SHA256; llaves sólo en propiedades privadas del backend.
+
+- Validar rol antes de leer bytes
+- No aceptar URL/DriveID arbitrario fuera de propuesta
+- Nunca persistir claves ni videos privados en publicación o telemetría
+- Ningún POST decide ni cambia permisos
+- Una carta activa/una descarga coalescida; liberar Blob al salir
+- Error visible y reintento acotado; decisiones no cambian por fallo del medio
+- No copiar credencial de Drive ni publicar MP4 en claro
+- El productor existente cifra una copia ligera; verifica original MD5, duración/audio y SHA256 antes de registrar llave privada
+- El original conserva permisos; cache técnico privado no cambia PROPUESTAS/DECISIONES ni introduce binarios en Sheets
+
+## CTR-PPP-VOLUMENES-NATIVOS
+
+- Componentes: SYS-POTENCIALES, GAS-PORTERO, SHEET-PORTERO, SHEET-PPP-MODELOS, SYS-DESPACHO-3D, SYS-YOD-OS, SVC-AUTON-CLOUD.
+- Evidencia: docs/arquitectura/ppp-volumenes-nativos.md y schema JSON; contrato conciliado con fuentes locales PPPVolumes, PPPVolumesProgram, PPPVolumesFormulas y consumidores. Fuente activa y datos se verifican privadamente por coordinador; no equivalen a despliegue..
+- Entrada/campos: `POST tipo sheet-volumes, caso_id, tipo_desarrollo VERTICAL, escenario_id, revision_esperada, request_id y sesión vigente; volumes schema2/count/shared_allocation_mode/rows[id,values14drivers].`, `Los21IDs del programa nativo y14drivers/7derivados se anuncian en capabilities.volumes.fields; POST jamás envía campos de autoridad ni valores derivados.`, `Capabilities por modelo autorizado; no nombre de proyecto,query ni flag del agente.`, `GET recurso sheet-volumes-receipt con caso_id, escenario_id y request_id; no escribe negocio, puede reconciliar ledger/auditoría de la operación original.`, `E units_per_level number, etiqueta Viviendas por planta · promedio, step 0.000001; F units readonly entero. GET autenticado sheet-volume-template devuelve preview de un cuerpo; POST guardar requiere seed WRITE14/template_revision/native_body_reviewed true e inputs originales.`, `Colección read/write tiene cuatro claves: schema2,count,shared_allocation_mode preserve|built_area,volumes. Capabilities.volumes plana agrega allocation_modes y shared_resources [{id,label}], sin importes. No aliases ni default cliente para modo ausente.`.
+- Salida: Modelo con volumes_by_scenario[escenario_id]={schema:2,count,shared_allocation_mode,volumes:[{id,values:21campos}]} y capabilities.volumes={schema:2,read,write,max_volumes:16,fields:metadatos21,allocation_modes:[preserve,built_area],shared_resources:[{id,label}]}., volume_receipt conserva request_id, caso_id, escenario_id, base_revision, result_revision, volumes FULL releído y calculated. Confirmación vigente coincide con modelo; proyección 14 drivers/count/IDs/modo coincide con solicitud., ACK normal: ok, request_id, case_id, scenario_id, revision, native_collection, calculated. Si revision actual es posterior: volume_receipt_status superseded y ACK status confirmed_superseded conserva original más current_revision/current_collection., Conciliación devuelve modelo+recibo, rechazo prewrite probado, operation_pending o receipt_not_found; sin POST de reenvío ni rollback automático., Rechazo terminal GAS: operation_rejected, volume_operation_status rejected, volume_rejection con actor/contexto/base_revision/payload_hash/stage prewrite/write_attempted false/error/rejected_at; ACK validado status rejected y prewrite_rejection., native_factory_preview persisted false, template_revision, inputs de plantilla, volumes FULL un cuerpo y capability21; no acredita alta ni finanzas calculadas., Modo por escenario se devuelve siempre explícito en colección canónica y volume_receipt.volumes; ACK/before/proyección/hash incluyen el modo exacto. Recursos compartidos anuncian sólo ID y etiqueta, nunca un precio transportado como policy..
+
+- Los volúmenes pertenecen al PPP de todos los casos verticales/departamentos; mixto.html conserva el tipo nativo VERTICAL sin crear otro permiso.
+- Cálculo financiero sólo en Sheets. Cliente/servidor no duplican fórmulas ni sustituyen cálculo por promedio; calculated:true requiere fórmula nativa validada y readback.
+- Programa nativo existente se lee íntegro, incluyendo3cuerpos y fórmulas distintas; no forzar1alabrir. Factorydeescenario nuevo inicia1compatible y preserva base/históricos. Escalar16medianteplantilla nativa con fórmulasprotegidas.
+- Núcleos,elevadores,terreno y áreas comunes tienen alcance explícito y se cuentan una vez. El DTO v1 no inventa ni multiplica recursos compartidos.
+- Actor,destino/caso/tipo/capability y revisión se validan de nuevo en el servidor. Fórmulas protegidas y campos allowlisted.
+- Mismo request_id conserva actor/caso/escenario/payload. Recibo previo se consulta antes de CAS; otro contenido se rechaza y timeout se concilia sin nuevo writer ni revisión elevada.
+- Pruebas financieras usan libros aislados. Publicación de frontend, fuente GAS, migración de libro y cálculo real necesitan recibos separados.
+- El contrato reducido de siete campos era borrador preliminar; no reemplaza el programa nativo ni sus drivers. Writer requiere schema2exacto y campos anunciados por el modelo real.
+- Unidades y superficie total derivadas son sólo lectura. Huella,patio,plantas,viviendas por piso,áreas,obraPB/sótano,ventas y etapas conservan sus drivers nativos; tipología/inventario se registran aparte sin inferencia.
+- capabilities.volumes.fields es autoridad del servidor:21IDs estables,14drivers y7derivados; el cliente rechaza metadata inconsistente y nunca envía derived en POST. Bounds técnicos se distinguen de norma o datos observados.
+- Reserva durable pending antes de cantidades; lote atómico escribe drivers/IDs/count y marcador applied ligado a request/actor/payload. finish exige marcador y readback exacto antes de confirmed; igualdad externa sola no acredita operación.
+- GET no modifica drivers, fórmulas, count ni versiones; permite reconciliar ledger/auditoría fuera de la revisión de negocio. Timeout, ausencia de recibo e incertidumbre no reenvían POST ni elevan revisión.
+- Recibo vigente coincide con modelo nativo; superseded conserva recibo original inmutable y separa revisión/colección actuales. No confundir relectura posterior con resultado original ni repetir escritura.
+- Sólo rechazo durable antes de intentar lote, validado con actor/caso/escenario/request/base_revision/payload y stage prewrite/write_attempted false, libera pendiente. Fallos tras intentar lote conservan incertidumbre.
+- Factory nuevo uno requiere plantilla monovolumen nativa y paridad contra baseline; duplicar preserva programa y asignaciones por versión. Capabilidad desactivada por falta de plantilla es pendiente, no entrega final.
+- Horizonte nativo de meses 1–120: validar ventanas de obra/ventas/entrega antes de lote. Bounds transporte hasta 1200 no extienden deuda/TIR/distribuciones.
+- Guardado y cálculo se acreditan por separado; calculated true exige manifiesto nativo, inventario original no tautológico y paridad comprobada. Fuentes de fórmula no prueban paridad numérica.
+- Promedio E permite total entero F=ROUND(D*E;0) sólo en Sheets. No truncar E a dos decimales ni inferir uniformidad/tipología. Petición 17 con tres niveles usa 5.666667 y sólo readback F17 confirma; geometría e inventario usan el total nativo coherente.
+- Alta revisa 14 drivers y preserva inputs capturados, sin resumen/flujo cliente. Variantes locales sin programa por versión se conservan y bloquean creación; preview no persiste un caso y un alta incierta no se reenvía automáticamente.
+- preserve conserva PA original y exige sus pesos activos válidos; built_area requiere selección/confirmación explícita para TODOS los recursos anunciados y usa fórmula Sheets Mactivo/SUM(Mactivos), área sobre rasante sin sótano N. No cambiar método ocultamente por count ni normalizar PA raw.
+- Modo por versión vive en columna K del índice y participa en revisionMaterial, hash del payload, before/after, marcador del mismo lote de negocio, recibo vigente e histórico superseded. Fórmulas referencian el modo; cambiarlo no reinstala un motor ni escribe dinero en JS.
+- Nueva fábrica/migración declara preserve explícito; collection sin modo o capability de política incompatible falla cerrada. built_area requiere áreas activas completas, finitas y suma positiva antes de intentar lote; resultados/costos siguen sólo en Sheets.
+
+## CTR-SALA-REVISION-VIDEO-V1
+
+- Componentes: SYS-SALA, GAS-SALA, SHEET-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-MOTORES-MEDIA, EXT-DRIVE, EXT-ACTIONS.
+- Evidencia: Rechazo firmado de corte en SHEET-SALA y linaje durable de COLA; fuentes activas y aprobaciones visuales canónicas..
+- Entrada/campos: `corte rechazado`, `decisión y firma vigentes`, `corte durable original`, `política de motores y familia habilitada`.
+- Salida: trabajos de revisión con IDs nuevos, MP4 privado durable para una revisión posterior.
+
+- Nunca cambia DECISIONES ni aprueba por el editor.
+- Una nota nueva tiene otra identidad; notas iguales no duplican trabajos.
+- No reutilizar una escena no generativa como video real ni usar cámara/parallax como respaldo.
+- No congelar el último cuadro para cubrir voz; clip insuficiente queda pendiente.
+- Sin cuota o voz disponible no afirmar producción ni habilitar pago.
+- Revisar fuente y rechazo antes de ejecutar y entregar; conservar historial.
+
+## CTR-SALA-CLOUD-ADAPTATIVA-V1
+
+- Componentes: SYS-SALA, SHEET-SALA, SVC-SALA-PRODUCTOR, SVC-SALA-EJECUTOR, EXT-MOTORES-MEDIA, EXT-DRIVE, EXT-ACTIONS.
+- Evidencia: REGLAS/MOTORES/COLA en Sheet; puntajes derivados de revisiones; archivos Drive..
+- Entrada/campos: `trabajo vigente`, `motores autorizados gratuitos`, `veto explícito`, `cuota y puntuación conocidas`.
+- Salida: medio durable con formato/motor y razón de selección, espera explícita sin pago cuando no hay alternativa.
+
+- Runtime solamente Actions/APIs/Drive/Sheets; ninguna sesión de Mac, Claude o Codex.
+- No activar modelos pagos ni motores retirados.
+- Animación por código no se declara generativa.
+- Cuota agotada no penaliza calidad; puntuación sólo de decisiones vinculadas al corte.
+- No congelar video para cubrir voz; preservar aprobación manual y linaje.
+
+## CTR-PPP-FICHA-ETAPAS
+
+- Componentes: SYS-POTENCIALES, GAS-PORTERO, SHEET-PORTERO, SHEET-PPP-MODELOS, SYS-YOD-OS, SYS-DESPACHO-3D, SVC-AUTON-CLOUD.
+- Evidencia: Encargo directo de Dirección del 29-oct-2026; propuesta previa a implementación en docs/arquitectura/ppp-ficha-etapas.md. Extiende CTR-PPP-SHEETS sin cambiar permisos ni cálculo canónico..
+- Entrada/campos: `Ficha mínima por plantilla; sólo defaults estructurales y faltantes financieros explícitos`, `caso_id`, `escenario_id`, `revision_esperada`, `request_id`, `actor autenticado por el Portero existente`, `stages: {schema:1,count,duration_months,mode:sequential,allocation:preserve}`, `texto final enviado por la persona o dictado confirmado con contexto vigente`.
+- Salida: tablero normal del motor y paneles existentes, stages_by_scenario en la lectura nativa del mismo caso, revisión y resultados calculados en Sheets, stage_receipt.calculated y checks ligados a operación y lectura, recibo o pendiente explícito.
+
+- Una ficha común abre los cinco tableros existentes; las capacidades reales del modelo determinan escritura, no el nombre del motor ni la UI.
+- Una nueva alta compatible parte de una etapa; abrir un caso conserva sus etapas, escenarios e históricos.
+- Voz, dictado y texto comparten intención final y contexto. Audio provisional, lectura de documentos o mensajes de terceros no autorizan aplicar.
+- El servidor conserva autorización, allowlist, revisión esperada, idempotencia y recibos; no se reintenta una operación incierta con un ID nuevo.
+- Datos y fórmulas viven en Sheets. Reorganizar etapas no multiplica inventario, terreno, importes ni recursos comunes.
+- Cada modificación cruza coherencia del modelo completo y relee resultados; no confundir persistido con calculado o comprobado.
+- El agente no recibe rangos ni fórmulas arbitrarias para ejecutar. Una migración de fórmulas exige registro anterior/nuevo, motivo, versión y validación aislada.
+- PR, CI, Pages, GAS, libro y micrófono físico se acreditan por separado; esta extensión está propuesta.
+- sheet-stages conserva allocation preserve: no infiere reparto financiero uniforme ni altera la colección schema2 de volúmenes.
+- La fuente preparada PPPStages.gs/PPPStagesProgram.gs requiere integración con el host vigente, capacidad del libro y readback real antes de declarar operación productiva.
+
+## CTR-PPP-INACTIVE-FIELDS
+
+- Componentes: SYS-POTENCIALES, GAS-PORTERO, SHEET-PPP-MODELOS, SYS-DESPACHO-3D, SVC-AUTON-CLOUD.
+- Evidencia: Revisión de lector nativo y fórmulas del modelo. Evidencia operativa y fuentes privadas permanecen fuera del atlas público..
+- Entrada/campos: `Entradas canónicas, métricas nativas y escenario de la misma revisión.`, `Captura y propuestas sujetas al schema existente, actor y CAS.`.
+- Salida: state.inactive_fields y metadata.inactive_fields limitados a inCapRateMercado en el caso legado comprobado., Modelo sin cambios en cantidades, unidades, fórmulas ni digest del libro., Error modelo_invalido con validation.code, field_id, scenario_id y reason de listas cerradas..
+
+- Cap0 sólo es transportable como inactivo si inValorM2Zona>0, porM2===true y p.capMercado===0. No representa una tasa válida ni un dato imputado.
+- No ampliar min/max/nullable del schema ni permitir nuevas escrituras de cap0. Activar capitalización exige tasa válida; el escritor revierte estados inválidos.
+- El cliente exige marcador coherente, muestra No aplicado: valuación por m² y conserva el cero canónico sin sustituirlo por un valor de referencia.
+- Autón y voz conservan la aplicabilidad; no presentan cap0 como tasa usada ni recomiendan sustituirlo automáticamente.
+- Errores autenticados conocidos incluyen sólo identificadores acotados; no valores, fórmulas, libros, credenciales, stack o texto arbitrario.
+- No reintentar automáticamente validación determinista ni ampliar ACL. Una publicación requiere fuente vigente, reserva compatible, pruebas y lectura final.
+
+## CTR-PPP-PRESENTACIONES
+
+- Componentes: SYS-POTENCIALES, GAS-PORTERO, SHEET-PPP-MODELOS, SVC-AUTON-CLOUD, STORE-AUTON-ESTADO, SYS-INVERSION, GAS-SALA, SHEET-SALA, SYS-DESPACHO.
+- Evidencia: docs/arquitectura/ppp-presentaciones.md; propuesta autorizada 31-oct-2026. Números canónicos de SHEET-PPP-MODELOS, contexto del expediente, estado privado del agente y registro de presentaciones existente de GAS-SALA..
+- Entrada/campos: `request_id, actor autenticado y alcance presentation_draft_v1`, `board_case_id, viewed_scenario_id, ppp_revision, model_type y model_revision`, `case_id y source_revision del expediente, distintos de la revisión PPP`, `Referencia y huella privada del snapshot: entradas, resultados nativos, unidades, flujos, etapas, volúmenes y evidencia de la misma lectura`, `Audiencia, decisión, modalidad, faltantes y restricciones autorizadas`, `Versiones ADN, plantilla y renderer; presentation_id y versión editorial base cuando existan`.
+- Salida: job_id y estado durable con lease/época y recibo idempotente, Storyboard visual navegable y privado, manifiesto de origen, QA y referencias de artefactos, presentation_id estable, presentation_version_id inmutable y versión anterior, registry_revision de concurrencia y release_revision de publicación independientes, Misma versión consultable desde PPP y biblioteca Master Developer; conflicto o pendiente explícito cuando no haya recibo.
+
+- Usar el escenario visible confirmado: nunca mezclar viewed_inputs con resultados activos, base o defendidos de otra revisión. El servidor relee y valida el origen antes de aceptar.
+- Revisión PPP y revisión del expediente son distintas. Los cambios sin guardar utilizan el flujo nativo; el agente no modifica cantidades ni fórmulas.
+- MODELO_PENDIENTE o calculated:false sólo permiten diagnóstico con faltantes; no cifras calculadas ni supuestos importados de otros casos.
+- presentation_draft_v1 limita lectura de contexto y escritura de artefacto/versión al caso autorizado. local_analysis_v1 no adquiere permisos de escritura.
+- Snapshot y estado privados sobreviven cierre y reinicio. La observación efímera RAM no es fuente durable.
+- Una solicitud crea un solo trabajo/versión; ante acuse incierto se concilia recibo. Lease vencido o revocación impiden completar efectos.
+- Una meta ready_for_review ajena se conserva; la admisión no la aprueba, cierra ni cancela automáticamente.
+- La primera entrega es Guion visual con dibujo, navegación y chinches. Etapa dos necesita instrucción expresa posterior sobre esa versión; guardado, revisión, producción y publicación son estados separados.
+- Un solo registro y URL canónica por presentación; contenido, PPP, expediente, concurrencia y publicación mantienen versiones separadas. Ediciones concurrentes no se sobrescriben.
+- Proyección de visitante sin guion, fuentes ni notas privadas. Sesión de reunión fija release y no cambia al regenerar.
+- Reutilizar Hairline y motores existentes con adaptadores declarativos; no introducir código arbitrario, otro backend, Sheet, cron, catálogo o cálculo financiero.
+- Pruebas sintéticas y comprobantes independientes para código, CI, frontend, backend, lectura, job, artefacto y registro; un estado listo no prueba el recorrido completo.
+
+## CTR-EMD-WRITE-RECEIPT
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD.
+- Evidencia: Propuesta autorizada CHG-EMD-CONTRATOS-20261102; detalle técnico y evidencia sintética en el sistema privado..
+- Entrada/campos: `Sesión vigente, asignación propia, revisión esperada e identificador estable de comando`, `Snapshot inmutable de respuestas y acción de guardado/cierre con versión compatible`.
+- Salida: Confirmación verificable del mismo comando persistido o rechazo explícito, Reintento del comando idéntico devuelve su confirmación sin una segunda escritura.
+
+- El servidor conserva autorización por objeto, bloqueo, revisión optimista y cierre terminal.
+- La identidad del comando queda vinculada al contenido semántico y a su alcance; no confirmar como equivalente contenido diferente.
+- Validar el lote antes de persistir; una confirmación anterior no acredita modificaciones posteriores del cliente.
+- Conservar ediciones hechas durante una solicitud pendiente y rechazar confirmaciones tardías de otra sesión o evaluación.
+- Compatibilidad de clientes y registros anteriores se define y prueba explícitamente; no reescribir respuestas históricas ni reabrir evaluaciones.
+
+## CTR-EMD-INSTRUMENT-VERSION
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD, STORE-EMD-DRAFTS.
+- Evidencia: Propuesta autorizada CHG-EMD-CONTRATOS-20261102; refina la compatibilidad sin sustituir CTR-EMD-DRAFTS ni CTR-EMD-ESCALA-CAPTURA..
+- Entrada/campos: `Identidad estable de campaña y asignación y versión verificable del instrumento`, `Evaluación o borrador con versión conocida, compatible o legado explícito`.
+- Salida: Evaluación y copia local ligadas a un instrumento identificable, Incompatibilidad legible que conserva contenido para inspección y recuperación autorizada.
+
+- La versión del formato de matriz es distinta de la versión del instrumento.
+- IDs, textos y reglas de captura definen compatibilidad; cambiar presentación no reinterpreta respuestas.
+- Un registro legado sin versión no prueba cuál instrumento recibió: reconocerlo solo por una política acotada a la fuente previa comprobada; no afirmar una migración histórica por inferencia.
+- Una versión incompatible no se restaura ni envía automáticamente, no se convierte a la actual y no se elimina silenciosamente.
+- Conservar autenticación, cifrado, aislamiento por enlace/evaluación/escritor, revisión, cierre y consentimiento de recuperación existentes.
+- Conservar los 28 textos e IDs, escala de captura aprobada e históricos; metodología, ponderaciones y resultados requieren definición separada.
+
+## CTR-EMD-RUNTIME-MODE
+
+- Componentes: SYS-EMD, GAS-EMD.
+- Evidencia: Propuesta autorizada CHG-EMD-CONTRATOS-20261102; conserva CTR-EMD-GITHUB-EMBED..
+- Entrada/campos: `Artefacto con modo demo u operativo declarado y build/contrato identificables`, `Transporte autorizado y handshake vigente cuando corresponda`.
+- Salida: Demo identificada y aislada o operación mediante backend vigente, Indisponibilidad explícita cuando un artefacto operativo carece de transporte.
+
+- No deducir el modo deseado únicamente de la existencia de transporte.
+- Un fallo inicial o posterior del modo operativo no activa datos de muestra.
+- La versión declarada por fuente no acredita el backend desplegado: comparar ambos y registrar evidencia.
+- No ampliar orígenes, permisos, scopes ni endpoints; no enviar identidad o respuestas al wrapper público.
+- La demo y pruebas usan datos sintéticos y no producen escrituras o envíos de negocio.
+
+## CTR-EMD-INTERACTION-RECOVERY
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD, STORE-EMD-DRAFTS.
+- Evidencia: Propuesta autorizada CHG-EMD-CONTRATOS-20261102; interacción y comprobaciones de recuperación, sin nuevas reglas de negocio..
+- Entrada/campos: `Visibilidad y sesión vigentes, estado confirmado y omisiones del cuestionario`, `Operación administrativa preparada, respaldo y punto de recuperación comprobable`.
+- Salida: Actualización de listas y coordinación pausada mientras la vista está oculta y reanudada sin solapamientos, Omisiones asociadas a cada pregunta y resumen navegable, Evidencia de recuperación sobre datos sintéticos y límites explícitos del ensayo.
+
+- Pausar sondeo de lectura no cancela ni oculta un guardado pendiente, ni reinicia estado confirmado.
+- Volver a una vista solicita actualización controlada; respuestas tardías no cruzan sesiones o vistas.
+- No depender solo del color; mantener preguntas, foco, controles semánticos y anuncios accesibles.
+- Un respaldo existente no demuestra restauración; una solicitud aceptada no demuestra entrega.
+- La incertidumbre de una integración se concilia antes de repetir efectos; preservar identificadores y deduplicación existentes.
+- Ensayos usan dobles o copias aisladas; no crean correos, respuestas, accesos ni movimientos de prueba en producción.
+- Pruebas automáticas no acreditan comprensión de personas ni uso en dispositivo físico.
+
+## CTR-EMD-CONTINUOUS-DASHBOARD
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD.
+- Evidencia: Propuesta autorizada CHG-EMD-MEJORA-CONTINUA-20261103; diseño y pruebas detalladas en repositorio privado..
+- Entrada/campos: `Sesión reviewer vigente, campaña solicitada y capacidades autorizadas por el servidor`, `Registros confirmados de cobertura, estado de captura, acciones y configuración metodológica`.
+- Salida: Dashboard operativo con denominadores, campaña y fecha de actualización explícitos, Estado de política/metodología separado de resultados; sin puntuaciones cuando no existe política activada.
+
+- La lectura operativa de reviewer no concede facultades de administración o lectura de resultados.
+- El participante solo accede a sus evaluaciones y acciones; no al tablero global ni a información ajena.
+- Leer no crea campañas, hojas, acciones, métodos, respaldos ni automatizaciones y no altera estados.
+- Ningún indicador de avance equivale a resultado360, entrega de invitación, anonimato o mejora causal comprobada.
+- Conservar actualización controlada por visibilidad, aislamiento de sesión/campaña y errores accesibles.
+- No duplicar rondas, triggers o cron; continuidad del producto no implica una nueva automatización programada.
+- DTO operativos acotados y paginados, sin respuestas individuales, tokens, hashes de credenciales o IDs privados; ordenar por ID y vincular cursor a filtros/campaña/revisión. Cambio de revisión invalida la paginación en vez de mezclar cortes.
+- La operación distingue configured, checked, unavailable, failed y not_checked con fecha y alcance; configuración presente no acredita lectura, respaldo restaurable o disponibilidad permanente.
+- Los eventos históricos ausentes no se reconstruyen desde última actualización ni se convierten en una serie temporal inventada.
+
+## CTR-EMD-CONTINUOUS-ADMIN
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD, STORE-EMD-DRAFTS, EXT-DRIVE.
+- Evidencia: Propuesta autorizada CHG-EMD-MEJORA-CONTINUA-20261103; sin nuevos roles o servicios..
+- Entrada/campos: `Sesión reviewer y capacidades explícitas por actor canónico: managePeople y manageCampaigns`, `Comando revisado, revisión esperada, identidad de mutación y contexto de campaña/instrumento`.
+- Salida: Persona o campaña confirmada con identidad estable, recibo e historial, o rechazo sin persistencia parcial, Vista previa/impacto y respaldo privado antes de operaciones que lo requieran.
+
+- Las capacidades de escritura se resuelven por actor en servidor, son false por defecto y se revalidan en cada operación; rol reviewer por sí solo no las concede.
+- No aceptar capacidades ni identidad administrativa declaradas por el cliente. Revocación, inactividad o cambio de sesión invalidan escrituras y callbacks pendientes.
+- Campañas usan draft/open/paused/closed/archived con transiciones explícitas; cerrar una evaluación no cierra la campaña. La activación no se infiere de crear o guardar un borrador.
+- Campaña y EVAL_ID son inmutables y conservan su procedencia; nueva campaña no recicla ni reetiqueta respuestas, asignaciones o borradores históricos.
+- Personas conservan identificadores canónicos y referencias; no inventar integrantes, fusionar identidades por semejanza, borrar historia o emitir accesos automáticamente.
+- Mantener autorización por objeto, bloqueo, revisión, vínculo mutación/contenido y compatibilidad del instrumento en cada escritura.
+- Respaldo e historial permanecen privados; nuevas columnas o tablas son aditivas y no se crean durante consultas. Validar antes de escribir y documentar recuperación.
+- Conservar permisos de archivos, scopes, endpoints y contratos de invitación: esta ampliación no autoriza correos ni nuevas credenciales.
+- Campañas legadas se descubren como no gestionadas, sin crear registros o fechas al leer. Su adopción y estado requieren una operación explícita.
+- Campaña paused/closed/archived bloquea nuevas mutaciones de respuesta, pero permite recuperar el recibo exacto ya confirmado mientras el permiso siga vigente.
+- Cerrar una campaña requiere vista previa, incidencias y confirmación: fijar/verificar manifiesto privado del corte antes de confirmar closed. Pendientes aceptados explícitamente permanecen identificados y no se rellenan.
+- Cruces explícitos usan planHash y revisión de campaña; aplicar valida de nuevo, respalda y confirma sólo tras readback. Una operación multihoja parcial conserva plan/recibo y se reanuda por ID, sin afirmar atomicidad ni restaurar encima de trabajo posterior.
+- Alta de persona, asignación, acceso e invitación son operaciones distintas; alta permite persona sin cruces. Corrección de identidad o nombre existente requiere impacto explícito, sin reescribir etiquetas históricas.
+- Identidades QA no acceden a entidades reales mediante estos RPC; se rechazan o se usa un almacén QA completamente aislado.
+
+## CTR-EMD-IMPROVEMENT-ACTIONS
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD.
+- Evidencia: Propuesta autorizada CHG-EMD-MEJORA-CONTINUA-20261103; acciones de mejora persistentes, sin inferencias automáticas de desempeño..
+- Entrada/campos: `Sesión vigente y acceso al objeto; manageActions para gestión de acciones`, `Acción vinculada a persona/campaña, responsable, objetivo y seguimiento aportados explícitamente`, `Revisión esperada e identificador de mutación ligado al comando`.
+- Salida: Acción confirmada con estado, revisión e historial de seguimiento, o conflicto explícito, Vista individual limitada a acciones propias y vista de coordinación conforme a sus capacidades.
+
+- No generar diagnósticos, compromisos, responsables o conclusiones causales a partir de una correlación no validada.
+- El participante no edita ni consulta acciones ajenas; las operaciones propias permitidas deben estar definidas y comprobarse en servidor.
+- Una acción y sus eventos persisten en el almacén privado con IDs estables; recargar la pantalla no crea duplicados ni pierde seguimiento.
+- El estado de cumplimiento exige una mutación válida y una confirmación del servidor; el color, la fecha prevista o un envío pendiente no acreditan cumplimiento.
+- Separar corrección del dato, cambio de estado y evidencia de ejecución; mantener historial sin sobrescritura ciega.
+- No enviar avisos, correos o crear automatizaciones como efecto secundario de leer o registrar una acción.
+- La fuente canónica es un log privado append-only de eventos con postestado completo y recibo; la última revisión proyecta el estado, sin simular una transacción entre estado e historia separados.
+- Estados open, in_progress, blocked, ready_for_review, done y cancelled. El participante sólo reporta avance/evidencia, bloqueo o envío a revisión; no crea, reasigna, cierra, cancela ni cambia objetivo/plazo/campaña.
+- Cerrar o reabrir corresponde a coordinación autorizada con revisión y motivo/evidencia. overdue se deriva del plazo/estado y no es otro estado persistido.
+- Evidencia inicial admite texto y enlaces HTTPS revisables; no crear un servicio de uploads ni copiar respuestas o inferir identidad del evaluador en la referencia de origen.
+
+## CTR-EMD-VERSIONED-RESULTS-POLICY
+
+- Componentes: SYS-EMD, GAS-EMD, SHEET-EMD.
+- Evidencia: Propuesta autorizada CHG-EMD-MEJORA-CONTINUA-20261103. No se ha aportado una regla oficial; se prepara configuración y motor, no se activa metodología por inferencia..
+- Entrada/campos: `Sesión reviewer con manageMethod, activateMethod o viewResults según la operación; capacidades false por defecto`, `Política versionada ligada al instrumento/campaña, con audiencia, umbral y universo/corte explícitos`, `Datos elegibles confirmados bajo la versión de política activada`.
+- Salida: Política borrador revisable; activación explícita separada y versión inmutable, Solo bajo política activa y acceso permitido: histograma1–5 y porcentajes sobre respuestas numéricas elegibles por ítem; NA/ausentes y evaluadores independientes diferenciados, con denominadores verificables., Estado no disponible cuando falta método, compatibilidad, suficiencia o autorización.
+
+- La configuración inicial es un borrador vacío. Guardar un borrador no lo activa y no produce resultados reales.
+- distribution_v1 es el único motor inicial: histogramas por ítem; no inventa ponderaciones, promedio global, ranking, percentiles, brechas ni objetivos.
+- La política debe declarar audiencia, umbral de confidencialidad, tratamiento de NA/ausencias, universo y corte antes de activar; no sustituirlos por valores implícitos.
+- manageMethod no concede activateMethod ni viewResults; cada operación valida la capacidad y la versión exactas en servidor.
+- Una versión activada se conserva inmutable; los cambios crean una versión nueva y no reinterpretan silenciosamente resultados históricos.
+- El resultado queda ligado a campaña, instrumento, método, corte y universo; no mezclar campañas o versiones incompatibles.
+- Aplicar permisos y supresión antes de devolver agregados; un filtro o subtotal no puede eludir el umbral ni revelar información individual.
+- Mostrar los denominadores y la razón de no disponibilidad sin revelar valores suprimidos. NA y ausencia no equivalen a cero ni a una respuesta1–5.
+- No usar resultados sintéticos como resultados humanos ni presentar distribuciones como prueba de causalidad o de mejora efectiva.
+- El umbral se mide por evaluadores independientes por celda, no por número de preguntas. Sólo evaluaciones cerradas elegibles en un corte fijo; relaciones, agrupación y tratamiento de autoevaluación se seleccionan explícitamente.
+- La agrupación inicial se limita a persona evaluada y grupo de relaciones fijado por política; no filtros arbitrarios ni combinaciones que permitan reconstruir valores suprimidos por resta.
+- El informe usa una copia privada de los datos elegibles o un agregado materializado con fuente fijada; no reconstruye un corte histórico consultando datos cambiantes o usando UPDATED como fecha de cierre.
+- Sin validación de comparabilidad de instrumento, política y denominadores se muestran fichas/cortes separados, no curvas de mejora ni comparaciones inferidas.
+
+## CTR-GRAFO-VERSIONES
+
+- Componentes: SYS-POTENCIALES, SYS-CONTROL, SYS-INVERSION, EXT-ACTIONS, EXT-GRAFO-APP.
+- Evidencia: Archivos estáticos que publica potenciales-yod y su rama de datos grafo-datos. Publicado (potenciales-yod PR 61 y siguientes; yodesarrollo-board PR 69) y comprobado en producción el 12-nov-2026 con la versión aprobada G-20261112-1203..
+- Entrada/campos: `grafo/versiones.json: esquema, aprobado, actualizado, versiones[id, armado, fecha, estado, huella, piezas, ligas, repos, nota]`, `grafo/datos/<id>.json: esquema, id, armado, huella, ppp (por tipo de plan: nombres de resultados y entradas), recetas (audiencias, escenas, datos, objetos, formatos), sin_campo`, `rama grafo-datos · borrador.json: id, fecha, pr, liga, rama, antes, piezas, ligas, titulo, resumen, recomendacion, ia, audiencias, sin_campo`, `rama grafo-datos · estado.json y registro.jsonl: estado observado por pieza, chinches abiertas y bitácora`.
+- Salida: Versión aprobada del grafo y su historial, Borrador en revisión, cuando lo hay, Recetas por audiencia y contrato del plan para armar presentaciones, Estado observado de cada pieza del sistema.
+
+- Lo publicado es la versión completa que eligió Dirección (identificadores y pestañas de hojas y plan propuesto), y nunca lleva repositorios privados, clientes externos, hallazgos de seguridad, nombres de personas, folios o nombres de tratos, correos, claves ni identificadores completos de backends /exec
+- Nunca refleja sistemas hechos para otros clientes, aunque este atlas publique su descripción saneada: la regla excluir del motor los saca en cada refresco y en el resumen de cada borrador
+- El grafo aprobado sólo cambia al fusionar el PR del borrador; un borrador nunca altera lo publicado
+- Aprobar es fusionar el PR del borrador. Lo abre la App del grafo (EXT-GRAFO-APP) y basta «Merge pull request»; si faltan sus secretos, lo abre el flujo y GitHub pide antes «Approve workflows to run»
+- Quien consume lee únicamente el aprobado; el borrador es informativo
+- Las recetas no traen cifras ni cálculo: nombran campos guardados del plan y lo ausente se muestra como no definido
+- Las claves de IA viven sólo como secretos del flujo; no aparecen en archivos, páginas ni registros
+- La rama de datos no se sirve por Pages y escribir en ella no dispara otros flujos
+
+## CTR-PPP2
+
+- Componentes: SYS-PPP2, GAS-PPP2, SHEET-PPP2.
+- Evidencia: server/ppp2/PPP2.gs (ppp2-servidor-v1) y ppp2/libro/generar.py (ppp2-libro-v1) en potenciales-yod; docs/ppp2.md..
+- Entrada/campos: `GET ppp2-meta sin credencial; ppp2-vivero y ppp2-plan con k = sesión del Portero (board PT).`, `POST text/plain JSON: ppp2-dato, ppp2-producto, ppp2-palanca, ppp2-version, ppp2-responder, ppp2-investigar, ppp2-hallazgo, ppp2-candado, ppp2-reparto, ppp2-estres y ppp2-sembrar, con request_id y la revisión vista.`.
+- Salida: Resumen clave → valor del libro, tablas del plan y la serie mensual del dinero de las tres versiones., Cada escritura devuelve la revisión nueva y el resumen recalculado por el libro; deja renglón en la Bitácora..
+
+- Ninguna fórmula financiera fuera del libro; el servidor sólo escribe celdas permitidas y lee lo calculado.
+- Sólo admin vuelve vigente una versión; admin y editor capturan; quien tiene PT lee.
+- Una revisión vieja no sobrescribe; el mismo request_id no escribe dos veces.
+- El PPP actual, sus motores y el Portero no cambian; el respaldo del Portero no se guarda como destino.
+- La página no lleva datos de planes ni identificadores de libros.
