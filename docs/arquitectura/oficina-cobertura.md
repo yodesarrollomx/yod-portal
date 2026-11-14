@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-14.ficha.2
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-14.mercado.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -1224,6 +1224,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Base de 1,331 valores con fuente, URL, localizador, corte y calidad (contrato en base/CONTRATO.md); muestreo independiente 26/26 coincidencias en auditoria/ · Estado: codigo · yodesarrollomx/yod-portal · mercado/hermosillo-2020-2030/base/series-integradas.csv · Revisión: HEAD\_baseline
 - Encargo de Dirección 1-nov-2026 (Buzón Claude ↔ ChatGPT fila 505, ID CG-HMO-OFERTA-DEMANDA-20261101): publicar el HTML en GitHub de Yodesarrollo para cruzar datos después y enlazarlo bajo Plan de Potencial; el enlace en el menú se registra como propuesta aparte (código de acceso y Control Maestro) · Estado: declarado · Sin revisión inmutable en esta referencia
 - Sistema presente en el catálogo canónico, debajo de SYS-POTENCIALES, con código MH y destino en este repo · Estado: codigo · yodesarrollomx/yod-portal · os/catalogo.js · Revisión: HEAD\_baseline
+- Tarjeta «Supuestos para tus PPP» (PLAN-09): plusvalía nominal y sin inflación, promedio compuesto de tres años, absorción del municipio al año y al mes, lo que va al corte y la fecha de corte SNIIV/SHF que el plan debe anotar; todo calculado de data.json · Estado: codigo · yodesarrollomx/yod-portal · mercado/hermosillo-2020-2030/index.html · Revisión: HEAD\_baseline
 
 **Pendientes y límites:**
 

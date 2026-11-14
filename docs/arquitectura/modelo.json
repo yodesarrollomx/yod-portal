@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-14.ficha.2",
+  "revision": "2026-11-14.mercado.1",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -3574,6 +3574,13 @@
           "repo": "yodesarrollomx/yod-portal",
           "path": "os/catalogo.js",
           "claim": "Sistema presente en el catálogo canónico, debajo de SYS-POTENCIALES, con código MH y destino en este repo",
+          "status": "codigo",
+          "source_revision": "HEAD_baseline"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "mercado/hermosillo-2020-2030/index.html",
+          "claim": "Tarjeta «Supuestos para tus PPP» (PLAN-09): plusvalía nominal y sin inflación, promedio compuesto de tres años, absorción del municipio al año y al mes, lo que va al corte y la fecha de corte SNIIV/SHF que el plan debe anotar; todo calculado de data.json",
           "status": "codigo",
           "source_revision": "HEAD_baseline"
         }
@@ -16484,6 +16491,22 @@
       ],
       "deployment": "Portero: versión 114 publicada el 14-nov-2026 (10:23 de Hermosillo) por Claude, sobre la implementación existente; GET en vivo: 92 eventos y 66 pendientes abiertos. El portal se publica al fusionar el PR.",
       "rollback": "Revertir el PR. En el Portero, volver a la versión 113."
+    },
+    {
+      "id": "CHG-MERCADO-SUPUESTOS-20261114",
+      "components": [
+        "SYS-MERCADO",
+        "SYS-POTENCIALES"
+      ],
+      "proposal": "PLAN-09 del análisis «YOD OS tablero por tablero», primera parte: el tablero de Mercado gana la tarjeta «Supuestos para tus PPP» con lo que un plan toma del mercado: plusvalía del último año observado (índice SHF de Hermosillo, nominal y sin inflación), plusvalía promedio compuesta de los tres años anteriores, absorción del municipio (viviendas nuevas financiadas, al año y al mes), lo que va del año al corte y la fecha de corte (SNIIV y SHF) que el plan debe anotar. Sólo lee data.json: si falta un año, la cifra dice «—»; aclara que la absorción es de todo el municipio y que el índice mezcla vivienda nueva y usada. Siguen pendientes las otras dos partes de PLAN-09: que cada plan guarde y enseñe el corte que usó (en el libro de PPP 2, después de PLAN-02) y las notas de campo de los brokers (después de PLAN-03).",
+      "approval": "Dirección, 13-nov-2026 en el chat «Análisis del sistema Yodo» (programa tablero por tablero, PLAN-09) y 14-nov-2026: «adelante hasta terminar».",
+      "status": "implementado_local",
+      "tests": [
+        "node --test tests/mercado-supuestos.test.cjs (4: cifras iguales a data.json; tarjeta con el corte; sin años observados no pinta; año faltante «—» y texto escapado)",
+        "node --test tests/*.cjs · verify-os · verify-portal · verify-accesos · verify-obra-app · versiones --check · arquitectura --check"
+      ],
+      "deployment": "Pages al fusionar el PR. Sin backend: lee data.json del propio tablero.",
+      "rollback": "Revertir el PR."
     }
   ],
   "data_contracts": [

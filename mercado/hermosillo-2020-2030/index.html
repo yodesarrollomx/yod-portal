@@ -159,6 +159,14 @@
 
   <section class="tarjeta" id="tarjeta-anio"></section>
 
+  <!-- PLAN-09 (14-nov-2026) · los supuestos de mercado que usa un PPP, con su fecha de corte -->
+  <section class="tarjeta" id="sec-supuestos-ppp" hidden>
+    <details open>
+      <summary><h2>Supuestos para tus PPP <span class="chip estimado">estimado</span></h2></summary>
+      <div id="supuestos-ppp"></div>
+    </details>
+  </section>
+
   <section class="tarjeta">
     <details id="det-supuestos">
       <summary><h2>Pendientes de las curvas <span class="chip supuesto">supuesto</span></h2></summary>
@@ -644,10 +652,49 @@
   $('#play').onclick = play;
 
   // ---------- arranque ----------
+  /* PLAN-09 · Supuestos para tus PPP. Plusvalía = índice SHF de Hermosillo (nominal y real, a precios
+     de 2025); absorción = viviendas nuevas financiadas en todo el municipio. Sólo lee data.json: si falta
+     un año, la cifra dice «—». El corte es lo que cada PPP debe anotar para saber con qué mercado se hizo. */
+  function supuestosPPP(d){
+    const E=(d&&d.equilibrio)||{};
+    const v=(y,k,s)=>{ const e=E[y], x=e&&e[k]&&e[k][s||'base']; return x&&x.valor!=null&&isFinite(x.valor)?Number(x.valor):null; };
+    const obs=Object.keys(E).filter(y=>E[y]&&E[y].estado==='observado').map(Number).sort((a,b)=>a-b);
+    if(!obs.length) return null;
+    const u=obs[obs.length-1];
+    const corte=Object.keys(E).map(Number).filter(y=>y>u&&E[y]&&E[y].estado==='al corte').sort((a,b)=>a-b)[0]||null;
+    const r=(a,b)=>a!=null&&b!=null&&b>0?a/b-1:null;
+    const anual=(a,b,n)=>a!=null&&b!=null&&b>0?Math.pow(a/b,1/n)-1:null;
+    const mes=Number(String(d.meta&&d.meta.corte_sniiv||'').slice(5,7))||null;
+    const qu=v(u,'Q'), qc=corte?v(corte,'Q'):null;
+    const pb=(E[corte||u]&&E[corte||u].P&&E[corte||u].P.base)||{};
+    return { ultimo:u, corte:corte,
+      plusvalia:r(v(u,'P'),v(u-1,'P')), plusvaliaReal:r(v(u,'P','real'),v(u-1,'P','real')),
+      promedio:anual(v(u,'P'),v(u-3,'P'),3), promedioReal:anual(v(u,'P','real'),v(u-3,'P','real'),3),
+      precioCorte:corte?r(v(corte,'P'),v(u,'P')):null,
+      absorcion:qu, absorcionMes:qu!=null?qu/12:null,
+      absorcionCorte:qc, absorcionCorteMes:qc!=null&&mes?qc/mes:null, meses:mes,
+      corteSniiv:(d.meta&&d.meta.corte_sniiv)||'', corteShf:pb.fecha_corte||'', consulta:(d.meta&&d.meta.fecha_consulta)||'' };
+  }
+  function pintarSupuestosPPP(){
+    const s=supuestosPPP(D), caja=$('#supuestos-ppp'), sec=$('#sec-supuestos-ppp');
+    if(!s||!caja||!sec) return;
+    const celda=(n,g,dd)=>`<div class="celda"><div class="n">${n}</div><div class="grande">${g}</div><div class="delta">${dd}</div></div>`;
+    const real=x=>x==null?'':' · sin inflación '+pct(x);
+    caja.innerHTML=`<div class="par">`+
+      celda('Plusvalía '+s.ultimo, pct(s.plusvalia), 'precio nominal'+real(s.plusvaliaReal))+
+      celda('Plusvalía '+(s.ultimo-3)+'–'+s.ultimo, pct(s.promedio), 'al año, compuesta'+real(s.promedioReal))+
+      celda('Absorción '+s.ultimo, fmt(s.absorcion), 'viviendas nuevas · '+fmt(s.absorcionMes)+' al mes')+
+      (s.corte?celda('Absorción '+s.corte+' al corte', fmt(s.absorcionCorte), (s.meses?s.meses+' meses · ':'')+fmt(s.absorcionCorteMes)+' al mes'):'')+
+      `</div>`+
+      (s.corte&&s.precioCorte!=null?`<p class="nota">Precio ${s.corte} al corte: ${pct(s.precioCorte)} sobre el promedio de ${s.ultimo}. Es el promedio de los trimestres publicados, no el cierre del año.</p>`:'')+
+      `<p class="lectura">Corte de este mercado: <b>SNIIV ${esc_(s.corteSniiv)}</b> · <b>SHF ${esc_(s.corteShf)}</b> (consultado ${esc_(s.consulta)}). Si usas estas cifras en un PPP, anota este corte en el plan para saber con qué mercado se calculó.</p>`+
+      `<p class="nota">La absorción es de todo el municipio: un desarrollo vende sólo una parte. La plusvalía es del índice SHF, que mezcla vivienda nueva y usada.</p>`;
+    sec.hidden=false;
+  }
   fetch('data.json', {cache:'no-cache'}).then(r=>r.json()).then(d=>{
     D=d;
     if(!(D.equilibrio['2025'] && D.equilibrio['2025'].P.real)) proxyP='base';
-    dominio(); pintarSliders(); pintarToggleP(); pintarTabla(); pintarFuentes(); pintarEscenarios(); pintarBacktest(); pintarCartera();
+    dominio(); pintarSliders(); pintarToggleP(); pintarTabla(); pintarFuentes(); pintarEscenarios(); pintarBacktest(); pintarCartera(); pintarSupuestosPPP();
     $('#estado').innerHTML = `<span class="punto"></span><span><b>${D.meta.version}</b> · ${D.meta.estado_auditoria}</span>`;
     $('#pie').innerHTML = `${D.meta.alcance} · Corte SNIIV ${D.meta.corte_sniiv} · consulta ${D.meta.fecha_consulta} · ${fmt(D.meta.filas_base)} valores en la base (observado ${fmt(D.meta.calidad.observado)}, estimado ${fmt(D.meta.calidad.estimado)}, declarado ${fmt(D.meta.calidad.declarado)}, prensa ${fmt(D.meta.calidad.prensa)}, supuesto ${fmt(D.meta.calidad.supuesto||0)}, por verificar ${fmt(D.meta.calidad['por verificar'])}). Datos abiertos: <a href="data.json">data.json</a> · método: curvas de elasticidad constante ancladas al punto observado; escenarios con desplazamientos en logaritmos (auditoría, 1-nov-2026).`;
     irA(2020, false);
