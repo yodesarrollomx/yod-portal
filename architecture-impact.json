@@ -1,17 +1,27 @@
 {
   "model_revision": "2026-11-14.mercado.1",
-  "proposal_id": "CHG-MERCADO-SUPUESTOS-20261114",
-  "summary": "PLAN-09, primera parte: tarjeta «Supuestos para tus PPP» en el tablero de Mercado (plusvalía nominal y sin inflación, promedio de tres años, absorción del municipio y fecha de corte SNIIV/SHF que el plan debe anotar), calculada de data.json. Pendientes de PLAN-09: el corte guardado en cada plan (después de PLAN-02) y las notas de campo de los brokers (después de PLAN-03).",
+  "proposal_id": "CHG-FICHA-PROYECTO-20261114",
+  "summary": "Un solo PR con dos propuestas del plan «tablero por tablero»: CHG-FICHA-PROYECTO-20261114 (PLAN-06, ficha de proyecto igual para todos: os/ficha-proyecto.js en la cartera del tablero y en Codesarrollos; Portero 114) y CHG-MERCADO-SUPUESTOS-20261114 (PLAN-09, primera parte: tarjeta «Supuestos para tus PPP» en Mercado con plusvalía, absorción y fecha de corte, calculada de data.json). La propuesta declarada es la de la ficha porque sus componentes cubren todo el PR (incluye SYS-MERCADO). Etiqueta propia 20261114-ficha.",
   "components": [
-    "SYS-MERCADO",
-    "SYS-POTENCIALES"
+    "SYS-YOD-OS",
+    "GAS-PORTERO",
+    "SYS-DESPACHO",
+    "SYS-CONTROL",
+    "GAS-CATALOGO",
+    "SYS-POTENCIALES",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "SYS-MERCADO"
   ],
   "tests": [
+    "node --test tests/ficha-proyecto.test.cjs (4)",
+    "node --test tests/folio-cartera.test.cjs (7)",
     "node --test tests/mercado-supuestos.test.cjs (4)",
     "node --test tests/*.cjs",
     "verify-os · verify-portal · verify-accesos · verify-obra-app",
     "node scripts/versiones.cjs --check",
     "node scripts/arquitectura.cjs --check"
   ],
-  "rollback": "Revertir el PR."
+  "rollback": "Revertir el PR. En el Portero, volver a la versión 113."
 }
