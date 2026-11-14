@@ -2,15 +2,16 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<script src="os/proyectos.js?v=20261113-atorados"></script>
+<script src="os/proyectos.js?v=20261114-ficha"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
 <title>Track de Codesarrollos · Yo Desarrollo</title>
+<script src="os/yod-acceso.js?v=20261114-ficha"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <link rel="stylesheet" href="https://unpkg.com/leaflet-gesture-handling@1.2.2/dist/leaflet-gesture-handling.min.css">
-<link rel="stylesheet" href="https://yodesarrollomx.github.io/yod-portal/os/shell.css?v=20261113-atorados">
+<link rel="stylesheet" href="https://yodesarrollomx.github.io/yod-portal/os/shell.css?v=20261114-ficha">
 <style>
   :root{--bg:#f6f3ed;--card:#ffffff;--text:#231d14;--muted:#766f62;--suave:#4c4536;--linea:#e1dacb;--lineaf:#d8cfbb;--gold:#9a7b3f;--goldc:#b98b3c;--green:#39744b;--orange:#9a6a1e;--red:#a94438}
   *{box-sizing:border-box}
@@ -51,6 +52,16 @@
   /* Quick wins UX (enjambre 15-jul): foco visible + panel de fuente legible (era 9px) */
   a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
   .panel .source,.pie{font-size:11px}
+  /* PLAN-06 (14-nov-2026) · la cartera por etapa y la ficha de cada terreno */
+  .cartera-btn{margin-top:10px;font:inherit;font-size:11px;font-weight:800;color:#231C0E;background:#F1E4C4;border:1px solid #C9B27C;border-radius:9px;padding:6px 10px;cursor:pointer}
+  .cartera{margin-top:8px;max-height:min(52vh,460px);overflow:auto;padding-right:4px}
+  .cartera h2{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:10px 0 2px}
+  .cartera .vacio{font-size:11px;color:var(--muted);margin:2px 0 0}
+  .ficha-capa{position:fixed;inset:0;z-index:1300;background:rgba(20,16,10,.45);display:flex;justify-content:flex-end;align-items:flex-start}
+  .ficha-capa[hidden]{display:none}
+  .ficha-capa .hpanel{width:min(520px,100%);max-height:100dvh;overflow:auto;background:#fbf8f1;color:#211c14;padding:18px 18px 28px;box-shadow:-8px 0 24px rgba(0,0,0,.18)}
+  .ficha-capa h3{margin:0 0 4px;font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:22px}
+  .ficha-capa .hcerrar{float:right;font:inherit;font-size:12px;border:1px solid rgba(154,123,63,.5);background:transparent;color:inherit;border-radius:999px;padding:3px 10px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -65,13 +76,16 @@
     <p class="sub">Cada pin es un co-desarrollo con su tablero de trámites: qué hicimos, qué falta y qué sigue. Toca el pin y abre su track.</p>
     <p class="source" id="source">Sincronizando con Control Maestro…</p>
     <div class="leyenda"><span><i style="background:var(--green)"></i>track vivo</span><span><i style="background:var(--orange)"></i>track pendiente</span></div>
+    <button type="button" class="cartera-btn" id="carteraBtn" hidden aria-expanded="false" aria-controls="cartera">Ver la cartera por etapa</button>
+    <div class="cartera" id="cartera" hidden></div>
   </div>
+  <div class="ficha-capa" id="fichaCapa" hidden></div>
   <div class="pie">toca un pin para abrir su tablero de trámites</div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script src="https://unpkg.com/leaflet-gesture-handling@1.2.2/dist/leaflet-gesture-handling.min.js"></script>
-<script src="portal-core.js?v=20261113-atorados"></script>
+<script src="portal-core.js?v=20261114-ficha"></script>
 <script>
 (()=>{
   const ENDPOINT='https://script.google.com/macros/s/AKfycby5LKYKRwl0EsNgppOIeD_ArST8vSXRgNO4ns8XZbFW4yjfglzu4io_vhabB8h-J792Tw/exec?action=read&resource=Track';
@@ -133,6 +147,51 @@
 })();
 </script>
 <script src="https://yodesarrollomx.github.io/potenciales-yod/portero.js?v=20261031-fase1-e2"></script>
-<script src="https://yodesarrollomx.github.io/yod-portal/os/shell.js?v=20261113-atorados"></script>
+<script src="os/proyectos.js?v=20261114-ficha"></script>
+<script src="os/ficha-proyecto.js?v=20261114-ficha"></script>
+<script>
+/* PLAN-06 (14-nov-2026) · la cartera por etapa con la ficha de cada terreno.
+   La cartera (?recurso=cartera) y el historial (?recurso=historial: eventos y pendientes) los da el
+   Portero ya recortados por la puerta de cada quien; aquí sólo se pintan. Sólo lectura. */
+(()=>{
+  const PORTERO=(window.YOD_PORTERO||{}).original;   // única copia: os/yod-acceso.js
+  const btn=document.getElementById('carteraBtn'), caja=document.getElementById('cartera'), capa=document.getElementById('fichaCapa');
+  const RP=window.YodProyectos, F=window.YodFicha;
+  let k=''; try{k=localStorage.getItem('pyod_clave_v1')||'';}catch(e){}
+  if(!k||!PORTERO||!btn||!caja||!capa||!RP||!F||typeof fetch!=='function') return;
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  async function pedir(recurso){
+    const ctrl=new AbortController(), t=setTimeout(()=>ctrl.abort(),30000);
+    try{ const r=await fetch(PORTERO+'?recurso='+recurso+'&k='+encodeURIComponent(k),{credentials:'omit',cache:'no-store',signal:ctrl.signal}); return await r.json(); }
+    catch(e){ return null; } finally{ clearTimeout(t); }
+  }
+  let lista=[], hist={eventos:[],pendientes:[]};
+  function abrir(folio){
+    const p=lista.find(x=>x.folio===folio); if(!p) return;
+    capa.innerHTML='<div class="hpanel" role="dialog" aria-modal="true" aria-label="Ficha de '+esc(p.nombre||folio)+'"><button type="button" class="hcerrar">Cerrar</button>'+
+      F.html({folio:folio,nombre:p.nombre||folio,etapa:p.etapa||p.etapa_folio||'',eventos:hist.eventos,pendientes:hist.pendientes})+'</div>';
+    capa.hidden=false; const c=capa.querySelector('.hcerrar'); if(c) c.focus();
+  }
+  function cerrar(){ if(!capa.hidden){ capa.hidden=true; capa.innerHTML=''; } }
+  capa.addEventListener('click',e=>{ if(e.target===capa||(e.target.closest&&e.target.closest('.hcerrar'))) cerrar(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') cerrar(); });
+  caja.addEventListener('click',e=>{ const b=e.target.closest&&e.target.closest('.fp-fila'); if(b) abrir(b.getAttribute('data-folio')); });
+  btn.addEventListener('click',()=>{ const ver=caja.hidden; caja.hidden=!ver; btn.setAttribute('aria-expanded',String(ver)); btn.textContent=ver?'Ocultar la cartera':'Ver la cartera por etapa ('+lista.length+')'; });
+  function pintar(){
+    const g=RP.porEtapaFolio(lista);
+    caja.innerHTML=g.carriles.map(c=>'<h2>'+c.n+' · '+esc(c.nombre)+'</h2>'+(c.proyectos.length?c.proyectos.map(p=>F.fila({folio:p.folio,nombre:p.nombre,eventos:hist.eventos,pendientes:hist.pendientes})).join(''):'<p class="vacio">Ninguno</p>')).join('')+
+      (g.sinEtapa.length?'<h2>Sin etapa del folio</h2>'+g.sinEtapa.map(p=>F.fila({folio:p.folio,nombre:p.nombre,eventos:hist.eventos,pendientes:hist.pendientes})).join(''):'');
+    btn.hidden=false; if(caja.hidden) btn.textContent='Ver la cartera por etapa ('+lista.length+')';
+  }
+  (async()=>{
+    const c=await pedir('cartera');
+    if(!(c&&c.ok&&Array.isArray(c.proyectos))||!c.proyectos.length) return;
+    lista=c.proyectos; pintar();
+    const h=await pedir('historial');
+    if(h&&h.ok){ hist={eventos:Array.isArray(h.eventos)?h.eventos:[],pendientes:Array.isArray(h.pendientes)?h.pendientes:[]}; pintar(); }
+  })();
+})();
+</script>
+<script src="https://yodesarrollomx.github.io/yod-portal/os/shell.js?v=20261114-ficha"></script>
 </body>
 </html>

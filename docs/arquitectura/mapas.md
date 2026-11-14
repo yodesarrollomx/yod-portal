@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-13.atorados.3 · 2026-11-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-14.obra-flujo.1 · 2026-11-13.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -269,11 +269,13 @@ flowchart LR
   n_GAS_PORTERO["Portero y Potenciales"]
   n_GAS_FLUJO["Tesorería"]
   n_SHEET_FLUJO["Datos de Tesorería"]
+  n_GAS_OBRA["Motor de obra"]
   n_GAS_FLUJO -->|Lee/escribe registros del dominio| n_SHEET_FLUJO
   n_SYS_FLUJO -->|Consume contrato del backend| n_GAS_FLUJO
   n_SYS_YOD_OS -->|Navega al sistema autorizado| n_SYS_FLUJO
   n_SYS_FLUJO -.->|Canje de sesión y permisos| n_GAS_PORTERO
   n_GAS_FLUJO -->|Verifica credencial y acceso al módulo| n_GAS_PORTERO
+  n_SYS_FLUJO -->|Lee las estimaciones autorizadas de cada folio (sólo lectura)| n_GAS_OBRA
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
 ```
@@ -282,6 +284,7 @@ flowchart LR
 
 ```mermaid
 flowchart LR
+  n_SYS_FLUJO["Tesorería"]
   n_SYS_OBRA["Obra en vivo"]
   n_SYS_YOD_OS["YOD OS"]
   n_SYS_OBRA_CLIENTE["Obra · módulo cliente"]
@@ -299,6 +302,7 @@ flowchart LR
   n_GAS_OBRA -->|Agrega indicadores en tablero cenital| n_SYS_YOD_OS
   n_GAS_OBRA_CLIENTE -->|Consulta avance por folio mediante servicio| n_GAS_OBRA
   n_GAS_OBRA -->|Verifica credencial para operar| n_GAS_PORTERO
+  n_SYS_FLUJO -->|Lee las estimaciones autorizadas de cada folio (sólo lectura)| n_GAS_OBRA
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SHEET_OBRA pendiente;
@@ -776,3 +780,4 @@ flowchart LR
 | CON-GRAFO-APP | EXT-ACTIONS → EXT-GRAFO-APP | automatizacion: El flujo «Grafo · rehacer» abre el PR del borrador con el token de la App del grafo. CTR-GRAFO-VERSIONES; el token vale una hora, sólo para este repositorio, con escritura de contenido y PR, y sólo se usa para la rama grafo-borrador y su PR. Sin los secretos, todo sigue con la credencial del flujo (dos toques). | ejecucion | [potenciales-yod/.github/workflows/grafo-rehacer.yml](https://github.com/yodesarrollomx/potenciales-yod/blob/6b5cc19a0ff4cecc17ff230e843de853df2045e2/.github/workflows/grafo-rehacer.yml) — Uso del token de la App sólo en el paso del borrador.; [potenciales-yod/.github/workflows/grafo-rehacer.yml](https://github.com/yodesarrollomx/potenciales-yod/blob/6b5cc19a0ff4cecc17ff230e843de853df2045e2/.github/workflows/grafo-rehacer.yml) — PR 97 abierto por yod-grafo-borrador[bot]; aprobado con un toque. |
 | CON-PPP2-ANTHROPIC | GAS-PPP2 → EXT-ANTHROPIC | api: El consejo de planes (siete jueces por separado, con el expediente que arma el libro) y la investigación con búsqueda en la web. Sale el expediente del plan (cifras ya calculadas por el libro, pruebas con la misma huella, datos con fuente) y vuelve un voto con esquema fijo, o hallazgos cuya fuente se compara contra la búsqueda. La clave vive sólo en las propiedades del script; el texto de error del proveedor no se guarda. Se escribe sólo con siete votos válidos sobre la misma huella y evidencia. Costo por uso. | ejecucion | [potenciales-yod/server/ppp2/PPP2.gs](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/server/ppp2/PPP2.gs) — consejo_, votarIA_ (herramienta «votar» ofrecida, sin forzarla) e investigarIA_ (sólo la búsqueda en la web); 13-nov-2026: sesión del consejo por API con siete votos válidos escritos con la huella y la evidencia de la versión, sobre una copia de prueba de un plan (archivada y a la papelera después). El primer intento, el 12-nov, no dio votos porque el modelo rechaza forzar la herramienta; se corrigió en el PR 103. |
 | CON-PPP2-OPENAI | GAS-PPP2 → EXT-OPENAI | api: Respaldo del consejo de planes con salida estructurada, si Config lo pide o sólo hay su clave; la investigación va sólo por Anthropic. Mismo expediente y mismo esquema de voto que con Anthropic. Sin comprobar en vivo: no hay clave de OpenAI en el servidor. | codigo | [potenciales-yod/server/ppp2/PPP2.gs](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/server/ppp2/PPP2.gs) — pedidoIA_ con la API de respuestas, esquema estricto y store=false |
+| CON-FLUJO-OBRA | SYS-FLUJO → GAS-OBRA | api: Lee las estimaciones autorizadas de cada folio (sólo lectura). GET ?recurso=board&k=<sesión del Portero>; usa avances[].id, estado (AUTORIZADO), monto_propuesto, frente, fecha_autorizacion y estimacion_num. Sin acceso o sin respuesta, el Flujo lo dice y no cuenta nada. | codigo | [board-flujo-yod/index.html](https://github.com/yodesarrollomx/board-flujo-yod/blob/ef2e6e1fade1b515d10af239bc60519417d906c4/index.html) — cargarObras(): GET ?recurso=board al motor de obra de cada folio con bolsa, según obra-app/obras.js de yod-portal; enseña las AUTORIZADAS sin programar |

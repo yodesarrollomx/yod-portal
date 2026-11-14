@@ -1,7 +1,7 @@
 <!doctype html>
 <meta charset="utf-8">
-<script src="os/yod-acceso.js?v=20261113-atorados"></script>
-<script src="os/yod-cargador.js?v=20261113-atorados"></script>
+<script src="os/yod-acceso.js?v=20261114-ficha"></script>
+<script src="os/yod-cargador.js?v=20261114-ficha"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>YOD OS · Tablero</title>
 <style>
@@ -107,9 +107,10 @@
 <!-- La chinche se carga DESPUÉS del primer dato (YodCargador.cargarDespues); sin cargador, o con ?cargador=legacy,
      se inserta en el acto, como siempre. Esta etiqueta es inerte (type=text/plain: el navegador no la baja) y
      existe para que scripts/versiones.cjs siga gobernando la etiqueta ?v= de chinche.js. -->
-<script type="text/plain" id="yodChincheSrc" src="chinche.js?v=20261113-atorados"></script>
-<script src="os/access-policy.js?v=20261113-atorados"></script>
-<script src="os/proyectos.js?v=20261113-atorados"></script>
+<script type="text/plain" id="yodChincheSrc" src="chinche.js?v=20261114-ficha"></script>
+<script src="os/access-policy.js?v=20261114-ficha"></script>
+<script src="os/proyectos.js?v=20261114-ficha"></script>
+<script src="os/ficha-proyecto.js?v=20261114-ficha"></script>
 <style>
 /* Fase 3 · folio: la tira de etapas (Potencial → Trámite → Obra → Venta) */
 #etapas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 12px}
@@ -2041,14 +2042,14 @@ async function cargarCartera(){
    sólo ve lo compartido que es todo de sus terrenos, sin acuerdos internos ni ligas) y, en cada terreno de la
    cartera que tenga registros, un botón «historia N» que abre sus reuniones, minutas, presentaciones y decisiones,
    del más nuevo al más viejo. Sólo lectura. Si el Portero aún no tiene esa lectura, no aparece ningún botón. */
-let HISTORIA=null, ULTIMA_CARTERA=null;
+let HISTORIA=null, PENDIENTES=[], ULTIMA_CARTERA=null;
 const TIPO_HIST={reunion:"Reunión",minuta:"Minuta",presentacion:"Presentación",documento:"Documento",whatsapp:"WhatsApp",decision:"Decisión",pendiente:"Pendiente",reunion_agendada:"Cita",llamada:"Llamada"};
 function eventosDe(folio){ return (HISTORIA||[]).filter(function(e){ return e&&Array.isArray(e.folios)&&e.folios.indexOf(folio)>-1; }); }
 async function cargarHistoria(){
   const j=await pedirCartera("recurso=historial");
   if(!(j&&j.ok&&Array.isArray(j.eventos))||CERRADO) return;
-  HISTORIA=j.eventos;
-  if(ULTIMA_CARTERA&&HISTORIA.length) pintaFolio(ULTIMA_CARTERA.lista,ULTIMA_CARTERA.rol);
+  HISTORIA=j.eventos; PENDIENTES=Array.isArray(j.pendientes)?j.pendientes:[];
+  if(ULTIMA_CARTERA) pintaFolio(ULTIMA_CARTERA.lista,ULTIMA_CARTERA.rol);
 }
 function abrirHistoria(folio,nombre){
   let caja=document.getElementById("historia");
@@ -2058,6 +2059,14 @@ function abrirHistoria(folio,nombre){
     document.addEventListener("keydown",function(e){ if(e.key==="Escape") cerrarHistoria(); });
   }
   const evs=eventosDe(folio);
+  if(window.YodFicha){                                      // PLAN-06 · la misma ficha que Codesarrollos
+    const p=ULTIMA_CARTERA&&(ULTIMA_CARTERA.lista||[]).find(function(x){ return x&&x.folio===folio; });
+    caja.innerHTML='<div class="hpanel" role="dialog" aria-modal="true" aria-label="Ficha de '+escH(nombre)+'"><button type="button" class="hcerrar">Cerrar</button>'+
+      window.YodFicha.html({folio:folio,nombre:nombre,etapa:p&&(p.etapa||p.etapa_folio)||'',eventos:HISTORIA,pendientes:PENDIENTES})+'</div>';
+    caja.hidden=false;
+    const c=caja.querySelector(".hcerrar"); if(c&&c.focus) c.focus();
+    return;
+  }
   caja.innerHTML='<div class="hpanel" role="dialog" aria-modal="true" aria-label="Historia de '+escH(nombre)+'"><button type="button" class="hcerrar">Cerrar</button>'+
     '<h3>'+escH(nombre)+'</h3><p class="hsub">'+escH(folio)+' · '+evs.length+(evs.length===1?' registro':' registros')+' del historial, del más nuevo al más viejo</p>'+
     evs.map(function(e){
@@ -2081,8 +2090,8 @@ function pintaFolio(lista,rol){
     const base=foto&&foto.tablero?foto.tablero:(rol==="admin"?MOAC:"");
     const plan=RP.ligaPlan?RP.ligaPlan(p.plan):"";              // etapa 2 · el plan del terreno, desde su folio
     const pl=plan?' <a class="plan" href="'+escH(plan)+'" target="_top" title="Abrir el plan de '+escH(p.nombre||p.folio)+'">plan</a>':'';
-    const nh=eventosDe(p.folio).length;                      // PLAN-03 · su historia, si el historial la trae
-    const hi=nh?' <button type="button" class="hist" data-folio="'+escH(p.folio)+'" data-nombre="'+escH(p.nombre||p.folio)+'" title="Reuniones, minutas y acuerdos de '+escH(p.nombre||p.folio)+'">historia '+nh+'</button>':'';
+    // PLAN-06 · la ficha de cada terreno (antes «historia N», PLAN-03): para todos, en cuanto el Portero contesta el historial
+    const hi=HISTORIA!==null?' <button type="button" class="hist" data-folio="'+escH(p.folio)+'" data-nombre="'+escH(p.nombre||p.folio)+'" title="Ficha de '+escH(p.nombre||p.folio)+': siguiente hito, quién lo trae, qué lo frena y su historia">ficha</button>':'';
     if(!base) return '<span title="'+tit+'">'+texto+'</span>'+pl+hi;
     const dest=base+(base.indexOf('?')>-1?'&':'?')+'folio='+encodeURIComponent(p.folio);
     return '<a href="'+escH(dest)+'" target="_top" title="'+tit+'">'+texto+'</a>'+pl+hi;

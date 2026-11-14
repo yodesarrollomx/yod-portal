@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-13.atorados.3
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-14.obra-flujo.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 28 sistemas y 96 componentes distribuidos exactamente una vez.
-- 10 áreas; 163 conexiones registradas, 20 marcadas como verificadas en el atlas.
+- 10 áreas; 164 conexiones registradas, 20 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -278,6 +278,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CHG-FOLIO-CARTERA-20261113: versión 111 publicada el 2026-11-13 sobre la implementación existente: acceso-alta escribe la columna «proyectos» de ACCESOS (validada; un folio mal escrito no se guarda), accesos-lista la devuelve y la cartera en blanco sólo abre al equipo (un externo sin tableros internos no ve ninguna). Releída por Drive; GET en vivo: 12 usuarios con el campo, cartera de Dirección 19, clave falsa → clave. HermesAccess.gs sigue fuera de la ruta. · Estado: ejecucion · Revisión: Apps Script version 111; 2026-11-13
 - CHG-TU-PALABRA-20261113: versión 112 publicada el 2026-11-13 (16:44 de Hermosillo) por Dirección con un clic en «Implementar», sobre la implementación existente (misma URL): Decisiones.gs y dos líneas de ruta (recurso=decisiones y decision-responder, sólo Dirección). Lo guardado se releyó por Drive (19 archivos). GET en vivo con la sesión de Dirección → ok, abiertas DEC-06, DEC-12, DEC-16, DEC-22 y DEC-23; con clave falsa → clave. HermesAccess.gs sigue fuera de la ruta. · Estado: ejecucion · Revisión: Apps Script version 112; 2026-11-13
 - CHG-ATORADOS-LINEA-20261113: versión 113 publicada el 2026-11-13 (17:11 de Hermosillo) por Claude desde el Chrome de Dirección, sobre la implementación existente (misma URL): Atorados.gs, Historial.gs y dos líneas de ruta (recurso=atorados sólo Dirección; recurso=historial recortado como la cartera), sólo lectura. Lo guardado se releyó por Drive (21 archivos). GET en vivo con la sesión de Dirección → atorados 2 (Mando 13 y 14, 4 días); historial 92 registros (Las Quintas 18, Obregón 17, Abasto 13, La Cercada 11, HMO Sur 26, Ruiseñor 3); clave falsa → clave. Panel de historia y lista de atorados vistos en su Chrome con el código del PR. HermesAccess.gs se quitó de la ruta sólo para la versión y se restauró en el editor (huella comprobada por Drive). · Estado: ejecucion · Revisión: Apps Script version 113; 2026-11-13
+- CHG-FICHA-PROYECTO-20261114: versión 114 publicada el 2026-11-14 (10:23 de Hermosillo) por Claude desde el Chrome de Dirección, sobre la implementación existente (misma URL): Historial.gs devuelve también los pendientes abiertos con el mismo recorte (al externo sin responsable), sólo lectura. Lo guardado se releyó por Drive (21 archivos); la línea de HermesAccess se quitó sólo para la versión y quedó restaurada (huella comprobada). GET en vivo con la sesión de Dirección: 92 eventos y 66 pendientes abiertos (23 con fecha compromiso); clave falsa → clave. La ficha de Las Quintas se vio en su Chrome con el código del PR y datos reales: siguiente hito con su compromiso, quién lo trae, «Vencido hace 18 días», 19 pendientes y 18 registros. · Estado: ejecucion · Revisión: Apps Script version 114; 2026-11-14
 
 **Evidencia de conexiones:**
 
@@ -1223,6 +1224,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Base de 1,331 valores con fuente, URL, localizador, corte y calidad (contrato en base/CONTRATO.md); muestreo independiente 26/26 coincidencias en auditoria/ · Estado: codigo · yodesarrollomx/yod-portal · mercado/hermosillo-2020-2030/base/series-integradas.csv · Revisión: HEAD\_baseline
 - Encargo de Dirección 1-nov-2026 (Buzón Claude ↔ ChatGPT fila 505, ID CG-HMO-OFERTA-DEMANDA-20261101): publicar el HTML en GitHub de Yodesarrollo para cruzar datos después y enlazarlo bajo Plan de Potencial; el enlace en el menú se registra como propuesta aparte (código de acceso y Control Maestro) · Estado: declarado · Sin revisión inmutable en esta referencia
 - Sistema presente en el catálogo canónico, debajo de SYS-POTENCIALES, con código MH y destino en este repo · Estado: codigo · yodesarrollomx/yod-portal · os/catalogo.js · Revisión: HEAD\_baseline
+- Tarjeta «Supuestos para tus PPP» (PLAN-09): plusvalía nominal y sin inflación, promedio compuesto de tres años, absorción del municipio al año y al mes, lo que va al corte y la fecha de corte SNIIV/SHF que el plan debe anotar; todo calculado de data.json · Estado: codigo · yodesarrollomx/yod-portal · mercado/hermosillo-2020-2030/index.html · Revisión: HEAD\_baseline
 
 **Pendientes y límites:**
 
@@ -1949,6 +1951,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-057 · GAS-OBRA → SYS-YOD-OS · lectura\_agregada · Agrega indicadores en tablero cenital · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-058 · GAS-OBRA-CLIENTE → GAS-OBRA · lectura · Consulta avance por folio mediante servicio · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-AUTH-OBRA · GAS-OBRA → GAS-PORTERO · autenticacion · Verifica credencial para operar · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-FLUJO-OBRA · SYS-FLUJO → GAS-OBRA · api · Lee las estimaciones autorizadas de cada folio (sólo lectura) · Estado: codigo · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -1962,10 +1965,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-057 · Conector de resumen · Estado: codigo · yodesarrollomx/yod-portal · tablero.html · Revisión: HEAD\_baseline
 - CON-058 · Lectura del motor de obra · Estado: codigo · yodesarrollomx/yod-portal · obra-app/motor/ObraCliente.gs · Revisión: HEAD\_baseline
 - CON-AUTH-OBRA · Revisión de fuente activa GAS-OBRA, versión 16; dependencia de Portero contrastada en código y mediante dobles. No acredita recorrido completo de un usuario real. · Estado: codigo · Revisión: Apps Script version 16
+- CON-FLUJO-OBRA · cargarObras(): GET ?recurso=board al motor de obra de cada folio con bolsa, según obra-app/obras.js de yod-portal; enseña las AUTORIZADAS sin programar · Estado: codigo · yodesarrollomx/board-flujo-yod · index.html · Revisión: HEAD\_baseline
 
 **Pendientes y límites:**
 
-- 5 conexiones sin verificación de ejecución registrada.
+- 6 conexiones sin verificación de ejecución registrada.
 - Permisos por operación y recorridos por rol pendientes de prueba
 
 ### Datos de Motor de obra · SHEET-OBRA
@@ -2269,6 +2273,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-018 · SYS-FLUJO → GAS-FLUJO · api · Consume contrato del backend · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-038 · SYS-YOD-OS → SYS-FLUJO · navegacion · Navega al sistema autorizado · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-046 · SYS-FLUJO → GAS-PORTERO · autenticacion · Canje de sesión y permisos · Estado: declarado · Ejecución no verificada en el atlas.
+- CON-FLUJO-OBRA · SYS-FLUJO → GAS-OBRA · api · Lee las estimaciones autorizadas de cada folio (sólo lectura) · Estado: codigo · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2279,10 +2284,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-018 · Conexión cliente/backend · Estado: codigo · yodesarrollomx/board-flujo-yod · index.html · Revisión: HEAD\_baseline
 - CON-038 · Destino del catálogo · Estado: codigo · yodesarrollomx/yod-portal · os/catalogo.js · Revisión: HEAD\_baseline
 - CON-046 · Cada backend valida su acceso · Estado: declarado · yodesarrollomx/yod-portal · CLAUDE.md · Revisión: HEAD\_baseline
+- CON-FLUJO-OBRA · cargarObras(): GET ?recurso=board al motor de obra de cada folio con bolsa, según obra-app/obras.js de yod-portal; enseña las AUTORIZADAS sin programar · Estado: codigo · yodesarrollomx/board-flujo-yod · index.html · Revisión: HEAD\_baseline
 
 **Pendientes y límites:**
 
-- 3 conexiones sin verificación de ejecución registrada.
+- 4 conexiones sin verificación de ejecución registrada.
 
 ### Tesorería · GAS-FLUJO
 
