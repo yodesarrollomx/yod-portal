@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-13.atorados.2",
+  "revision": "2026-11-13.atorados.3",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -16402,14 +16402,14 @@
       ],
       "proposal": "PLAN-04 del análisis «YOD OS tablero por tablero»: «Tu palabra». La tarjeta «Decisiones» del Inicio de Dirección suma, debajo de lo de MOAC, las preguntas abiertas que los asistentes dejan en la pestaña Decisiones del Buzón (abierta = sin «Tu respuesta» y con estado en blanco o «Abierta»). Cada una se contesta con Opción 1, Opción 2 u «Otra respuesta», con un paso de confirmación; la respuesta queda escrita en el Buzón («Tu respuesta», «Respondida (UTC)» y Estado = Respondida) y nunca encima de una que ya exista. Lee y escribe por el Portero, sólo Dirección (esAdmin_): GET ?recurso=decisiones y POST decision-responder, en un archivo nuevo Decisiones.gs y dos líneas de ruta. El módulo del portal es os/tu-palabra.js, montado con una línea en loadPulse. La etiqueta propia nueva (20261113-tu-palabra) toca el ?v= de las páginas de los demás sistemas; ahí sólo cambia la etiqueta.",
       "approval": "Dirección, 13-nov-2026 en el chat «Análisis del sistema Yodo»: programa tablero por tablero (PLAN-04 «Hoy: decisiones primero») y «hazlo todo tú completo hasta el final».",
-      "status": "implementado_local",
+      "status": "publicado",
       "tests": [
         "node --test tests/tu-palabra.test.cjs (7: una lectura, escape, recomendada, nada pendiente, sin permiso no pinta, Portero caído, sesión cambiada)",
         "Recorrido en Chrome real con Portero sintético: Opción 1 con confirmación y «Otra respuesta» mandan decision-responder con su texto y quitan la pregunta; sin errores de página",
         "Prueba privada del Portero: Decisiones.gs 18 comprobaciones (abiertas, escribe las tres celdas, no reescribe contestadas ni aplicadas, datos malos, inexistente, repetida, fórmula neutralizada, sin pestaña)",
         "node --test tests/*.cjs · verify-os · verify-portal · verify-accesos · verify-obra-app · versiones --check · arquitectura --check"
       ],
-      "deployment": "Portero: versión 112 publicada el 13-nov-2026 (16:44 de Hermosillo) con el clic de Dirección, sobre la implementación existente; GET en vivo con sesión de Dirección devuelve las abiertas. El portal se publica al fusionar el PR.",
+      "deployment": "Publicado. Portal: PR 361 fusionado el 13-nov-2026 (squash 70568d98) y visto en vivo en el Inicio de Dirección: «Te preguntan los asistentes» con 6 preguntas abiertas. Portero: versión 112 del 13-nov-2026 (16:44 de Hermosillo), publicada con el clic de Dirección sobre la implementación existente; GET en vivo con sesión de Dirección devuelve las abiertas.",
       "rollback": "Revertir el PR. En el Portero, volver a la versión 111 en Gestionar implementaciones. Las respuestas ya escritas en el Buzón se quedan: son de Dirección."
     },
     {
@@ -16421,11 +16421,11 @@
       ],
       "proposal": "PLAN-05 del análisis «YOD OS tablero por tablero» (Dirección lo incluyó el 13-nov): caja por proyecto y piso de 5%. La pestaña Bolsas del libro de tesorería gana dos columnas opcionales: «folio» (PRJ-… del Control Maestro) y «costo_obra» (costo de obra del proyecto). El tablero del Flujo junta las bolsas del mismo folio en «Caja por proyecto», calcula su piso (5% del costo de obra, sin sumarlo por bolsa) y marca «Abajo del piso» —también en la tarjeta de la bolsa, que pasa a «En riesgo»—. Un folio mal escrito no agrupa. Sin folios la sección no aparece; sin costo de obra dice «Falta su costo de obra». Sólo lectura en el tablero: no escribe en la tesorería.",
       "approval": "Dirección, 13-nov-2026 en el chat «Análisis del sistema Yodo»: «Inclúyelo ya en el plan» (Flujo) y «hazlo todo tú completo hasta el final».",
-      "status": "implementado_local",
+      "status": "publicado",
       "tests": [
         "node tests/flujo.test.cjs (10, una nueva: folio y costo de obra, piso por proyecto, alarma, orden, folio mal escrito, sección oculta sin folios, marcado seguro)"
       ],
-      "deployment": "El tablero se publica al fusionar el PR de board-flujo-yod. Falta confirmar que getAll del Apps Script del Flujo devuelve las columnas nuevas de Bolsas (si lee por encabezado, ya las devuelve) y que Dirección dé el costo de obra de cada proyecto (pregunta en el Buzón).",
+      "deployment": "Publicado. board-flujo-yod PR 4 fusionado el 13-nov-2026; Pages sirve el código nuevo y el tablero real enseña «Caja por proyecto» con Casa Alysa (PRJ-ALYSA): caja y proyección a 8 semanas, y «Falta su costo de obra» mientras la columna costo_obra de Bolsas esté vacía (pregunta DEC-23). Sin cambios de backend: el Apps Script del Flujo ya pasa las columnas nuevas por encabezado.",
       "rollback": "Revertir el PR del tablero. Las columnas de Bolsas se pueden dejar: nadie más las lee."
     },
     {
