@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-11-13.atorados.3",
-  "proposal_id": "CHG-ATORADOS-LINEA-20261113",
-  "summary": "PLAN-04 «Atorados» y PLAN-03 «la historia de cada terreno». os/atorados.js (nuevo) junta en la tarjeta «Decisiones» del Inicio lo atorado de asistentes (Portero ?recurso=atorados, lee el Buzón) y de personas (MOAC vencidas); tablero.html pone «historia N» en cada terreno de la cartera y abre su línea de tiempo (Portero ?recurso=historial). Etiqueta propia 20261113-atorados. Incluye el PR 361 (Tu palabra) y el 360 (método y atlas), sobre los que se apoya.",
+  "model_revision": "2026-11-14.ficha.1",
+  "proposal_id": "CHG-FICHA-PROYECTO-20261114",
+  "summary": "PLAN-06 «ficha de proyecto igual para todos»: os/ficha-proyecto.js (nuevo) pinta folio, siguiente hito, quién lo trae, qué lo frena, último movimiento, pendientes e historia; el tablero cenital la abre con «ficha» en cada terreno de la cartera y Codesarrollos gana la cartera por etapa con la misma ficha. Datos del Portero (?recurso=historial con pendientes, versión 114). Etiqueta propia 20261114-ficha. Atlas: atorados e historia (PR 362) y folio en cada plan (potenciales-yod 109) quedan publicados.",
   "components": [
     "SYS-YOD-OS",
     "GAS-PORTERO",
@@ -15,12 +15,12 @@
     "SYS-MERCADO"
   ],
   "tests": [
-    "node --test tests/atorados.test.cjs (4)",
+    "node --test tests/ficha-proyecto.test.cjs (4)",
     "node --test tests/folio-cartera.test.cjs (7)",
     "node --test tests/*.cjs",
     "verify-os · verify-portal · verify-accesos · verify-obra-app",
     "node scripts/versiones.cjs --check",
     "node scripts/arquitectura.cjs --check"
   ],
-  "rollback": "Revertir el PR. En el Portero, volver a la versión anterior."
+  "rollback": "Revertir el PR. En el Portero, volver a la versión 113."
 }

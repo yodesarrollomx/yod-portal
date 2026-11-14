@@ -89,8 +89,8 @@ test('PLAN-03 · la historia de cada terreno: una lectura, botón con su cuenta 
   await new Promise(r=>setTimeout(r,0)); await new Promise(r=>setTimeout(r,0));
   assert.equal(pedidos.length,2,'una lectura de la cartera y una del historial');
   assert.match(pedidos[1].url,/\?recurso=historial&k=sy-sintetica/); assert.equal(pedidos[1].o.credentials,'omit');
-  assert.ok(etapas.html.includes('historia 2</button>'),'Las Quintas trae dos registros');
-  assert.equal((etapas.html.match(/class="hist"/g)||[]).length,1,'Miramar no trae historia: sin botón');
+  assert.equal((etapas.html.match(/class="hist"/g)||[]).length,2,'PLAN-06: cada terreno trae su ficha, tenga o no registros');
+  assert.ok(etapas.html.includes('>ficha</button>'));
   etapas.handlers.click({target:{closest:()=>({getAttribute:k=>k==='data-folio'?'PRJ-QUINTAS':'Las Quintas'})},preventDefault(){}});
   assert.ok(historia&&historia.hidden===false);
   const h=historia.html;
@@ -100,4 +100,11 @@ test('PLAN-03 · la historia de cada terreno: una lectura, botón con su cuenta 
   assert.ok(!h.includes('javascript:'),'una liga que no es https no se pinta como liga');
   assert.ok(h.includes('href="https://docs.google.com/x"')&&h.includes('rel="noopener noreferrer"'));
   assert.ok(h.includes('2 registros'));
+  // con la ficha cargada (como en la página), el panel es la ficha igual para todos
+  ctx.window.YodFicha=require('../os/ficha-proyecto.js');
+  vm.runInContext('PENDIENTES=[{id:"PD-1",fecha_origen:"2026-10-20",fecha_compromiso:"",tarea:"Rehacer <el> modelo",responsable:"Avermont",folios:["PRJ-QUINTAS"]}]',ctx);
+  etapas.handlers.click({target:{closest:()=>({getAttribute:k=>k==='data-folio'?'PRJ-QUINTAS':'Las Quintas'})},preventDefault(){}});
+  const f=historia.html;
+  assert.ok(f.includes('aria-label="Ficha de Las Quintas"')&&f.includes('<dt>Siguiente hito</dt><dd>Rehacer &lt;el&gt; modelo')&&f.includes('<dt>Lo trae</dt><dd>Avermont</dd>'));
+  assert.ok(f.includes('PRJ-QUINTAS · 2 · Evaluado')&&f.includes('Minuta &lt;b&gt;'));
 });
