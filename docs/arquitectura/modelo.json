@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-13.tu-palabra.2",
+  "revision": "2026-11-13.tu-palabra.3",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -1246,6 +1246,11 @@
           "claim": "CHG-FOLIO-CARTERA-20261113: versión 111 publicada el 2026-11-13 sobre la implementación existente: acceso-alta escribe la columna «proyectos» de ACCESOS (validada; un folio mal escrito no se guarda), accesos-lista la devuelve y la cartera en blanco sólo abre al equipo (un externo sin tableros internos no ve ninguna). Releída por Drive; GET en vivo: 12 usuarios con el campo, cartera de Dirección 19, clave falsa → clave. HermesAccess.gs sigue fuera de la ruta.",
           "status": "ejecucion",
           "source_revision": "Apps Script version 111; 2026-11-13"
+        },
+        {
+          "claim": "CHG-TU-PALABRA-20261113: versión 112 publicada el 2026-11-13 (16:44 de Hermosillo) por Dirección con un clic en «Implementar», sobre la implementación existente (misma URL): Decisiones.gs y dos líneas de ruta (recurso=decisiones y decision-responder, sólo Dirección). Lo guardado se releyó por Drive (19 archivos). GET en vivo con la sesión de Dirección → ok, abiertas DEC-06, DEC-12, DEC-16, DEC-22 y DEC-23; con clave falsa → clave. HermesAccess.gs sigue fuera de la ruta.",
+          "status": "ejecucion",
+          "source_revision": "Apps Script version 112; 2026-11-13"
         }
       ],
       "data_entities": [
@@ -16399,7 +16404,7 @@
         "Prueba privada del Portero: Decisiones.gs 18 comprobaciones (abiertas, escribe las tres celdas, no reescribe contestadas ni aplicadas, datos malos, inexistente, repetida, fórmula neutralizada, sin pestaña)",
         "node --test tests/*.cjs · verify-os · verify-portal · verify-accesos · verify-obra-app · versiones --check · arquitectura --check"
       ],
-      "deployment": "El portal se publica al fusionar el PR. El Portero necesita su versión 112 (Decisiones.gs y las dos líneas de ruta) sobre la implementación existente; quedó guardada en el editor y lista en «Gestionar implementaciones», esperando el clic de Dirección en «Implementar» (el control de seguridad no dejó a Claude apretarlo porque esa versión escribe en el Buzón). Mientras no se publique, la tarjeta dice que no pudo leer las preguntas.",
+      "deployment": "Portero: versión 112 publicada el 13-nov-2026 (16:44 de Hermosillo) con el clic de Dirección, sobre la implementación existente; GET en vivo con sesión de Dirección devuelve las abiertas. El portal se publica al fusionar el PR.",
       "rollback": "Revertir el PR. En el Portero, volver a la versión 111 en Gestionar implementaciones. Las respuestas ya escritas en el Buzón se quedan: son de Dirección."
     },
     {
