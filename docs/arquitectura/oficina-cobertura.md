@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-14.ficha.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-14.ficha.2
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -278,6 +278,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CHG-FOLIO-CARTERA-20261113: versión 111 publicada el 2026-11-13 sobre la implementación existente: acceso-alta escribe la columna «proyectos» de ACCESOS (validada; un folio mal escrito no se guarda), accesos-lista la devuelve y la cartera en blanco sólo abre al equipo (un externo sin tableros internos no ve ninguna). Releída por Drive; GET en vivo: 12 usuarios con el campo, cartera de Dirección 19, clave falsa → clave. HermesAccess.gs sigue fuera de la ruta. · Estado: ejecucion · Revisión: Apps Script version 111; 2026-11-13
 - CHG-TU-PALABRA-20261113: versión 112 publicada el 2026-11-13 (16:44 de Hermosillo) por Dirección con un clic en «Implementar», sobre la implementación existente (misma URL): Decisiones.gs y dos líneas de ruta (recurso=decisiones y decision-responder, sólo Dirección). Lo guardado se releyó por Drive (19 archivos). GET en vivo con la sesión de Dirección → ok, abiertas DEC-06, DEC-12, DEC-16, DEC-22 y DEC-23; con clave falsa → clave. HermesAccess.gs sigue fuera de la ruta. · Estado: ejecucion · Revisión: Apps Script version 112; 2026-11-13
 - CHG-ATORADOS-LINEA-20261113: versión 113 publicada el 2026-11-13 (17:11 de Hermosillo) por Claude desde el Chrome de Dirección, sobre la implementación existente (misma URL): Atorados.gs, Historial.gs y dos líneas de ruta (recurso=atorados sólo Dirección; recurso=historial recortado como la cartera), sólo lectura. Lo guardado se releyó por Drive (21 archivos). GET en vivo con la sesión de Dirección → atorados 2 (Mando 13 y 14, 4 días); historial 92 registros (Las Quintas 18, Obregón 17, Abasto 13, La Cercada 11, HMO Sur 26, Ruiseñor 3); clave falsa → clave. Panel de historia y lista de atorados vistos en su Chrome con el código del PR. HermesAccess.gs se quitó de la ruta sólo para la versión y se restauró en el editor (huella comprobada por Drive). · Estado: ejecucion · Revisión: Apps Script version 113; 2026-11-13
+- CHG-FICHA-PROYECTO-20261114: versión 114 publicada el 2026-11-14 (10:23 de Hermosillo) por Claude desde el Chrome de Dirección, sobre la implementación existente (misma URL): Historial.gs devuelve también los pendientes abiertos con el mismo recorte (al externo sin responsable), sólo lectura. Lo guardado se releyó por Drive (21 archivos); la línea de HermesAccess se quitó sólo para la versión y quedó restaurada (huella comprobada). GET en vivo con la sesión de Dirección: 92 eventos y 66 pendientes abiertos (23 con fecha compromiso); clave falsa → clave. La ficha de Las Quintas se vio en su Chrome con el código del PR y datos reales: siguiente hito con su compromiso, quién lo trae, «Vencido hace 18 días», 19 pendientes y 18 registros. · Estado: ejecucion · Revisión: Apps Script version 114; 2026-11-14
 
 **Evidencia de conexiones:**
 
