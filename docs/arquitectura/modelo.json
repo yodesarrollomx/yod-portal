@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-14.mercado.1",
+  "revision": "2026-11-14.obra-flujo.1",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -7518,6 +7518,26 @@
           "source_revision": "PR 103 (potenciales-yod)"
         }
       ]
+    },
+    {
+      "id": "CON-FLUJO-OBRA",
+      "from": "SYS-FLUJO",
+      "to": "GAS-OBRA",
+      "label": "Lee las estimaciones autorizadas de cada folio (sólo lectura)",
+      "kind": "api",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/board-flujo-yod",
+          "path": "index.html",
+          "claim": "cargarObras(): GET ?recurso=board al motor de obra de cada folio con bolsa, según obra-app/obras.js de yod-portal; enseña las AUTORIZADAS sin programar",
+          "status": "codigo",
+          "source_revision": "HEAD_baseline"
+        }
+      ],
+      "status": "codigo",
+      "runtime_verified": false,
+      "contract": "GET ?recurso=board&k=<sesión del Portero>; usa avances[].id, estado (AUTORIZADO), monto_propuesto, frente, fecha_autorizacion y estimacion_num. Sin acceso o sin respuesta, el Flujo lo dice y no cuenta nada.",
+      "contract_ids": []
     }
   ],
   "processes": [
@@ -16507,6 +16527,23 @@
       ],
       "deployment": "Pages al fusionar el PR. Sin backend: lee data.json del propio tablero.",
       "rollback": "Revertir el PR."
+    },
+    {
+      "id": "CHG-OBRA-FLUJO-20261114",
+      "components": [
+        "SYS-FLUJO",
+        "GAS-OBRA",
+        "SYS-OBRA"
+      ],
+      "proposal": "PLAN-07 del análisis «YOD OS tablero por tablero» (y lo que faltaba de PLAN-05): la autorización de una estimación en obra llega a la planificación del Flujo con su folio. La pestaña Planificación del Flujo gana «Autorizado en obra, por programar»: lee por GET el motor de obra de cada folio que tiene bolsa (registro obra-app/obras.js de yod-portal, el de YOD Obra; ?recurso=board con la sesión del Portero) y enseña las estimaciones en estado AUTORIZADO que todavía no tienen pago planificado ni movimiento con su id. «Programar pago» abre el formulario de pago planificado ya lleno (concepto con el id, monto, bolsa del folio, Único, Alta, a 7 días); guardarlo es de quien lo revisa y la estimación sale de la lista. En la caja por proyecto lo autorizado sin programar cuenta como compromiso de hoy. A Obra sólo se le lee: el motor no cambia. Siguen pendientes de PLAN-07 el avance real contra el programa del PPP y las vistas por folio para inversionista y comprador.",
+      "approval": "Dirección, 13-nov-2026 en el chat «Análisis del sistema Yodo» (programa tablero por tablero, PLAN-07, con Flujo incluido en el plan) y 14-nov-2026: «adelante hasta terminar».",
+      "status": "implementado_local",
+      "tests": [
+        "board-flujo-yod: node --test tests/flujo.test.cjs (12; 2 nuevas: qué cuenta como por programar sin confundir AV-1 con AV-10, el formulario lleno, que sale al programarse, y que a Obra sólo se le hace GET al motor válido del folio)",
+        "Visto en vivo con el código del PR y sin guardar nada: el motor de Casa Alysa contesta sin estimaciones capturadas; con dos de prueba sólo en pantalla, la tabla, el formulario lleno y la caja con lo autorizado se ven bien"
+      ],
+      "deployment": "Pages de board-flujo-yod al fusionar su PR. Sin cambios en el motor de obra ni en el Apps Script del Flujo.",
+      "rollback": "Revertir el PR de board-flujo-yod."
     }
   ],
   "data_contracts": [

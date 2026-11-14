@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-11-14.mercado.1",
+  "model_revision": "2026-11-14.obra-flujo.1",
   "proposal_id": "CHG-FICHA-PROYECTO-20261114",
   "summary": "Un solo PR con dos propuestas del plan «tablero por tablero»: CHG-FICHA-PROYECTO-20261114 (PLAN-06, ficha de proyecto igual para todos: os/ficha-proyecto.js en la cartera del tablero y en Codesarrollos; Portero 114) y CHG-MERCADO-SUPUESTOS-20261114 (PLAN-09, primera parte: tarjeta «Supuestos para tus PPP» en Mercado con plusvalía, absorción y fecha de corte, calculada de data.json). La propuesta declarada es la de la ficha porque sus componentes cubren todo el PR (incluye SYS-MERCADO). Etiqueta propia 20261114-ficha.",
   "components": [

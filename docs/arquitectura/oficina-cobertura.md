@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-14.mercado.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-14.obra-flujo.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 28 sistemas y 96 componentes distribuidos exactamente una vez.
-- 10 áreas; 163 conexiones registradas, 20 marcadas como verificadas en el atlas.
+- 10 áreas; 164 conexiones registradas, 20 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -1951,6 +1951,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-057 · GAS-OBRA → SYS-YOD-OS · lectura\_agregada · Agrega indicadores en tablero cenital · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-058 · GAS-OBRA-CLIENTE → GAS-OBRA · lectura · Consulta avance por folio mediante servicio · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-AUTH-OBRA · GAS-OBRA → GAS-PORTERO · autenticacion · Verifica credencial para operar · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-FLUJO-OBRA · SYS-FLUJO → GAS-OBRA · api · Lee las estimaciones autorizadas de cada folio (sólo lectura) · Estado: codigo · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -1964,10 +1965,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-057 · Conector de resumen · Estado: codigo · yodesarrollomx/yod-portal · tablero.html · Revisión: HEAD\_baseline
 - CON-058 · Lectura del motor de obra · Estado: codigo · yodesarrollomx/yod-portal · obra-app/motor/ObraCliente.gs · Revisión: HEAD\_baseline
 - CON-AUTH-OBRA · Revisión de fuente activa GAS-OBRA, versión 16; dependencia de Portero contrastada en código y mediante dobles. No acredita recorrido completo de un usuario real. · Estado: codigo · Revisión: Apps Script version 16
+- CON-FLUJO-OBRA · cargarObras(): GET ?recurso=board al motor de obra de cada folio con bolsa, según obra-app/obras.js de yod-portal; enseña las AUTORIZADAS sin programar · Estado: codigo · yodesarrollomx/board-flujo-yod · index.html · Revisión: HEAD\_baseline
 
 **Pendientes y límites:**
 
-- 5 conexiones sin verificación de ejecución registrada.
+- 6 conexiones sin verificación de ejecución registrada.
 - Permisos por operación y recorridos por rol pendientes de prueba
 
 ### Datos de Motor de obra · SHEET-OBRA
@@ -2271,6 +2273,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-018 · SYS-FLUJO → GAS-FLUJO · api · Consume contrato del backend · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-038 · SYS-YOD-OS → SYS-FLUJO · navegacion · Navega al sistema autorizado · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-046 · SYS-FLUJO → GAS-PORTERO · autenticacion · Canje de sesión y permisos · Estado: declarado · Ejecución no verificada en el atlas.
+- CON-FLUJO-OBRA · SYS-FLUJO → GAS-OBRA · api · Lee las estimaciones autorizadas de cada folio (sólo lectura) · Estado: codigo · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -2281,10 +2284,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-018 · Conexión cliente/backend · Estado: codigo · yodesarrollomx/board-flujo-yod · index.html · Revisión: HEAD\_baseline
 - CON-038 · Destino del catálogo · Estado: codigo · yodesarrollomx/yod-portal · os/catalogo.js · Revisión: HEAD\_baseline
 - CON-046 · Cada backend valida su acceso · Estado: declarado · yodesarrollomx/yod-portal · CLAUDE.md · Revisión: HEAD\_baseline
+- CON-FLUJO-OBRA · cargarObras(): GET ?recurso=board al motor de obra de cada folio con bolsa, según obra-app/obras.js de yod-portal; enseña las AUTORIZADAS sin programar · Estado: codigo · yodesarrollomx/board-flujo-yod · index.html · Revisión: HEAD\_baseline
 
 **Pendientes y límites:**
 
-- 3 conexiones sin verificación de ejecución registrada.
+- 4 conexiones sin verificación de ejecución registrada.
 
 ### Tesorería · GAS-FLUJO
 

@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-14.mercado.1 · 2026-11-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-14.obra-flujo.1 · 2026-11-13.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -72,7 +72,7 @@ Controlar bolsas, movimientos y compromisos de caja
 - Entidades: bolsa, movimiento, pago_planificado, ingreso_esperado, historial.
 - Fuente de verdad: SHEET-FLUJO mediante GAS-FLUJO; respaldo cifrado es copia de consulta.
 - Evidencia: [yod-portal/os/catalogo.js](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/os/catalogo.js#L21) — Sistema presente en el catálogo canónico.
-- Conexiones: CON-018 (SYS-FLUJO → GAS-FLUJO); CON-038 (SYS-YOD-OS → SYS-FLUJO); CON-046 (SYS-FLUJO → GAS-PORTERO).
+- Conexiones: CON-018 (SYS-FLUJO → GAS-FLUJO); CON-038 (SYS-YOD-OS → SYS-FLUJO); CON-046 (SYS-FLUJO → GAS-PORTERO); CON-FLUJO-OBRA (SYS-FLUJO → GAS-OBRA).
 - Mejoras: E · Folio común de proyecto y datos conciliados; F · Margen por proyecto y compromisos; H · Autorizaciones y evidencia antes de afectar dinero; I · Calendario único de cobros y aportaciones; J · Conciliación de recibido, banco y Tesorería; K · Indicadores confiables y rendimiento medido.
 
 ## SYS-INTERIORES · Aurum · Interiores
@@ -598,7 +598,7 @@ Servir el contrato de Motor de obra
 - Entidades: concepto, avance, rol.
 - Fuente de verdad: Fuente de la versión activa de Apps Script contrastada con el endpoint del cliente; las hojas siguen siendo fuente de datos operativos..
 - Evidencia: [yod-portal/obra.html](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/obra.html#L259) — Tipo de fuente disponible: ausente; Registro backends-verificados.json: Fuente de versión activa 16 obtenida y contrastada por API el 2026-09-30; identidad por coincidencia exacta de implementación con el cliente..
-- Conexiones: CON-012 (GAS-OBRA → SHEET-OBRA); CON-029 (SYS-OBRA → GAS-OBRA); CON-057 (GAS-OBRA → SYS-YOD-OS); CON-058 (GAS-OBRA-CLIENTE → GAS-OBRA); CON-AUTH-OBRA (GAS-OBRA → GAS-PORTERO).
+- Conexiones: CON-012 (GAS-OBRA → SHEET-OBRA); CON-029 (SYS-OBRA → GAS-OBRA); CON-057 (GAS-OBRA → SYS-YOD-OS); CON-058 (GAS-OBRA-CLIENTE → GAS-OBRA); CON-AUTH-OBRA (GAS-OBRA → GAS-PORTERO); CON-FLUJO-OBRA (SYS-FLUJO → GAS-OBRA).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Permisos por operación y recorridos por rol pendientes de prueba.
 
