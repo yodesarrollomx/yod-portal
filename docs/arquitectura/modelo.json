@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-13.atorados.1",
+  "revision": "2026-11-13.atorados.2",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -1246,6 +1246,16 @@
           "claim": "CHG-FOLIO-CARTERA-20261113: versión 111 publicada el 2026-11-13 sobre la implementación existente: acceso-alta escribe la columna «proyectos» de ACCESOS (validada; un folio mal escrito no se guarda), accesos-lista la devuelve y la cartera en blanco sólo abre al equipo (un externo sin tableros internos no ve ninguna). Releída por Drive; GET en vivo: 12 usuarios con el campo, cartera de Dirección 19, clave falsa → clave. HermesAccess.gs sigue fuera de la ruta.",
           "status": "ejecucion",
           "source_revision": "Apps Script version 111; 2026-11-13"
+        },
+        {
+          "claim": "CHG-TU-PALABRA-20261113: versión 112 publicada el 2026-11-13 (16:44 de Hermosillo) por Dirección con un clic en «Implementar», sobre la implementación existente (misma URL): Decisiones.gs y dos líneas de ruta (recurso=decisiones y decision-responder, sólo Dirección). Lo guardado se releyó por Drive (19 archivos). GET en vivo con la sesión de Dirección → ok, abiertas DEC-06, DEC-12, DEC-16, DEC-22 y DEC-23; con clave falsa → clave. HermesAccess.gs sigue fuera de la ruta.",
+          "status": "ejecucion",
+          "source_revision": "Apps Script version 112; 2026-11-13"
+        },
+        {
+          "claim": "CHG-ATORADOS-LINEA-20261113: versión 113 publicada el 2026-11-13 (17:11 de Hermosillo) por Claude desde el Chrome de Dirección, sobre la implementación existente (misma URL): Atorados.gs, Historial.gs y dos líneas de ruta (recurso=atorados sólo Dirección; recurso=historial recortado como la cartera), sólo lectura. Lo guardado se releyó por Drive (21 archivos). GET en vivo con la sesión de Dirección → atorados 2 (Mando 13 y 14, 4 días); historial 92 registros (Las Quintas 18, Obregón 17, Abasto 13, La Cercada 11, HMO Sur 26, Ruiseñor 3); clave falsa → clave. Panel de historia y lista de atorados vistos en su Chrome con el código del PR. HermesAccess.gs se quitó de la ruta sólo para la versión y se restauró en el editor (huella comprobada por Drive).",
+          "status": "ejecucion",
+          "source_revision": "Apps Script version 113; 2026-11-13"
         }
       ],
       "data_entities": [
@@ -16399,7 +16409,7 @@
         "Prueba privada del Portero: Decisiones.gs 18 comprobaciones (abiertas, escribe las tres celdas, no reescribe contestadas ni aplicadas, datos malos, inexistente, repetida, fórmula neutralizada, sin pestaña)",
         "node --test tests/*.cjs · verify-os · verify-portal · verify-accesos · verify-obra-app · versiones --check · arquitectura --check"
       ],
-      "deployment": "El portal se publica al fusionar el PR. El Portero necesita su versión 112 (Decisiones.gs y las dos líneas de ruta) sobre la implementación existente; quedó guardada en el editor y lista en «Gestionar implementaciones», esperando el clic de Dirección en «Implementar» (el control de seguridad no dejó a Claude apretarlo porque esa versión escribe en el Buzón). Mientras no se publique, la tarjeta dice que no pudo leer las preguntas.",
+      "deployment": "Portero: versión 112 publicada el 13-nov-2026 (16:44 de Hermosillo) con el clic de Dirección, sobre la implementación existente; GET en vivo con sesión de Dirección devuelve las abiertas. El portal se publica al fusionar el PR.",
       "rollback": "Revertir el PR. En el Portero, volver a la versión 111 en Gestionar implementaciones. Las respuestas ya escritas en el Buzón se quedan: son de Dirección."
     },
     {
@@ -16441,7 +16451,7 @@
         "Prueba privada del Portero: Historial.gs 24 comprobaciones (recortes de Dirección, equipo, externo y sesión falsa; minuta de varios terrenos no sale al externo; textos largos) y Atorados.gs 14 comprobaciones",
         "node --test tests/*.cjs · verify-os · verify-portal · verify-accesos · verify-obra-app · versiones --check · arquitectura --check"
       ],
-      "deployment": "El portal se publica al fusionar el PR. El Portero necesita su versión 113 (Atorados.gs, Historial.gs y dos líneas de ruta) sobre la implementación existente, después de la 112. Mientras no se publique, los atorados enseñan sólo los de personas con un aviso y la cartera no pone botones de historia.",
+      "deployment": "Portero: versión 113 publicada el 13-nov-2026 (17:11 de Hermosillo) por Claude, sobre la implementación existente; GET en vivo con sesión de Dirección: atorados 2 y historial 92 registros. El portal se publica al fusionar el PR.",
       "rollback": "Revertir el PR. En el Portero, volver a la versión anterior en Gestionar implementaciones; la columna «folio» del Historial puede quedarse (nadie más la lee)."
     }
   ],

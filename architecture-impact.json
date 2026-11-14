@@ -1,5 +1,5 @@
 {
-  "model_revision": "2026-11-13.atorados.1",
+  "model_revision": "2026-11-13.atorados.2",
   "proposal_id": "CHG-ATORADOS-LINEA-20261113",
   "summary": "PLAN-04 «Atorados» y PLAN-03 «la historia de cada terreno». os/atorados.js (nuevo) junta en la tarjeta «Decisiones» del Inicio lo atorado de asistentes (Portero ?recurso=atorados, lee el Buzón) y de personas (MOAC vencidas); tablero.html pone «historia N» en cada terreno de la cartera y abre su línea de tiempo (Portero ?recurso=historial). Etiqueta propia 20261113-atorados. Incluye el PR 361 (Tu palabra) y el 360 (método y atlas), sobre los que se apoya.",
   "components": [
