@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-14.obra-flujo.1 · 2026-11-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-15.mcp-ppp.1 · 2026-11-13.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -1275,3 +1275,16 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Cambio de actor, caso o época invalida respuestas tardías; desmontaje libera listeners, temporizadores, animación y datos visibles.
 - Navegar o recuperar sólo observa; una llegada visual no acredita visita durable, ejecución, escritura ni recibo.
 - La versión 3D se conserva como respaldo; no se modifica ni se activa una nueva ruta en este bloque.
+
+## CTR-YOD-MCP
+
+- Componentes: SYS-YOD-MCP, SYS-POTENCIALES, SYS-PPP2, GAS-PPP2, SHEET-PPP2, SYS-YOD-OS.
+- Evidencia: potenciales-yod/mcp/README.md y contratos existentes de PPP2/visor.
+- Entrada/campos: `MCP tools/resources/prompts; Streamable HTTP sólo visor y catálogo explícitamente publicado.`, `stdio con sesión local de Portero; propuestas de edición ligadas a actor, revisión y contenido.`.
+- Salida: Datos con origen, fecha de consulta, versión y naturaleza estimada., Recibos de escritura con request_id; estado incierto no se reenvía automáticamente..
+
+- Sin fórmulas financieras nuevas ni escritura directa a Sheets.
+- HTTP no carga sesiones privadas ni ofrece edición.
+- Nunca descubre un proyecto privado por tenerlo en el vivero.
+- Los permisos los valida el backend, no un rol enviado por el modelo.
+- No pruebas de escritura en producción.

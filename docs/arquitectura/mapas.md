@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-14.obra-flujo.1 · 2026-11-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-15.mcp-ppp.1 · 2026-11-13.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -121,6 +121,7 @@ flowchart LR
   n_GAS_PPP2["PPP 2 · servidor"]
   n_SHEET_PPP2["PPP 2 · vivero y libros de plan"]
   n_EXT_ANTHROPIC["Claude · API de Anthropic"]
+  n_SYS_YOD_MCP["MCP YOD OS"]
   n_GAS_MARKETING -->|Lee/escribe registros del dominio| n_SHEET_MARKETING
   n_GAS_PLAN_POTENCIAL -.->|Lee/escribe registros del dominio| n_SHEET_PLAN_POTENCIAL
   n_GAS_CROKISS -->|Lee/escribe registros del dominio| n_SHEET_CROKISS
@@ -199,6 +200,7 @@ flowchart LR
   n_GAS_PPP2 -->|Copia la plantilla al sembrar un plan y lee la última modificación de cada libro (llave de lo ya leído)| n_EXT_DRIVE
   n_GAS_PPP2 -->|El consejo de planes (siete jueces por separado, con el expediente que arma el libro) y la investigación con búsqueda en la web| n_EXT_ANTHROPIC
   n_GAS_PPP2 -->|Respaldo del consejo de planes con salida estructurada, si Config lo pide o sólo hay su clave; la investigación va sólo por Anthropic| n_EXT_OPENAI
+  n_SYS_YOD_MCP -->|Visor por liga y operaciones por sesión propia en stdio| n_GAS_PPP2
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PLAN_POTENCIAL pendiente;
@@ -613,6 +615,16 @@ flowchart LR
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
 ```
 
+## Control
+
+```mermaid
+flowchart LR
+  n_GAS_PPP2["PPP 2 · servidor"]
+  n_SYS_YOD_MCP["MCP YOD OS"]
+  n_SYS_YOD_MCP -->|Visor por liga y operaciones por sesión propia en stdio| n_GAS_PPP2
+  classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
+```
+
 ## Contratos y evidencia de cada conexión
 
 | ID | Origen → destino | Mecanismo y datos | Estado | Evidencia |
@@ -781,3 +793,4 @@ flowchart LR
 | CON-PPP2-ANTHROPIC | GAS-PPP2 → EXT-ANTHROPIC | api: El consejo de planes (siete jueces por separado, con el expediente que arma el libro) y la investigación con búsqueda en la web. Sale el expediente del plan (cifras ya calculadas por el libro, pruebas con la misma huella, datos con fuente) y vuelve un voto con esquema fijo, o hallazgos cuya fuente se compara contra la búsqueda. La clave vive sólo en las propiedades del script; el texto de error del proveedor no se guarda. Se escribe sólo con siete votos válidos sobre la misma huella y evidencia. Costo por uso. | ejecucion | [potenciales-yod/server/ppp2/PPP2.gs](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/server/ppp2/PPP2.gs) — consejo_, votarIA_ (herramienta «votar» ofrecida, sin forzarla) e investigarIA_ (sólo la búsqueda en la web); 13-nov-2026: sesión del consejo por API con siete votos válidos escritos con la huella y la evidencia de la versión, sobre una copia de prueba de un plan (archivada y a la papelera después). El primer intento, el 12-nov, no dio votos porque el modelo rechaza forzar la herramienta; se corrigió en el PR 103. |
 | CON-PPP2-OPENAI | GAS-PPP2 → EXT-OPENAI | api: Respaldo del consejo de planes con salida estructurada, si Config lo pide o sólo hay su clave; la investigación va sólo por Anthropic. Mismo expediente y mismo esquema de voto que con Anthropic. Sin comprobar en vivo: no hay clave de OpenAI en el servidor. | codigo | [potenciales-yod/server/ppp2/PPP2.gs](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/server/ppp2/PPP2.gs) — pedidoIA_ con la API de respuestas, esquema estricto y store=false |
 | CON-FLUJO-OBRA | SYS-FLUJO → GAS-OBRA | api: Lee las estimaciones autorizadas de cada folio (sólo lectura). GET ?recurso=board&k=<sesión del Portero>; usa avances[].id, estado (AUTORIZADO), monto_propuesto, frente, fecha_autorizacion y estimacion_num. Sin acceso o sin respuesta, el Flujo lo dice y no cuenta nada. | codigo | [board-flujo-yod/index.html](https://github.com/yodesarrollomx/board-flujo-yod/blob/ef2e6e1fade1b515d10af239bc60519417d906c4/index.html) — cargarObras(): GET ?recurso=board al motor de obra de cada folio con bolsa, según obra-app/obras.js de yod-portal; enseña las AUTORIZADAS sin programar |
+| CON-MCP-PPP | SYS-YOD-MCP → GAS-PPP2 | api: Visor por liga y operaciones por sesión propia en stdio. CTR-YOD-MCP | codigo | [potenciales-yod/mcp/README.md](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/mcp/README.md) — Adaptador implementado en mcp/: SDK MCP, visor compartido y edición PPP2 por sesión local; pruebas aisladas. |

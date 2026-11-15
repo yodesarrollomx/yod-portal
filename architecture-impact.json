@@ -1,27 +1,20 @@
 {
-  "model_revision": "2026-11-14.obra-flujo.1",
-  "proposal_id": "CHG-FICHA-PROYECTO-20261114",
-  "summary": "Un solo PR con dos propuestas del plan «tablero por tablero»: CHG-FICHA-PROYECTO-20261114 (PLAN-06, ficha de proyecto igual para todos: os/ficha-proyecto.js en la cartera del tablero y en Codesarrollos; Portero 114) y CHG-MERCADO-SUPUESTOS-20261114 (PLAN-09, primera parte: tarjeta «Supuestos para tus PPP» en Mercado con plusvalía, absorción y fecha de corte, calculada de data.json). La propuesta declarada es la de la ficha porque sus componentes cubren todo el PR (incluye SYS-MERCADO). Etiqueta propia 20261114-ficha.",
+  "model_revision": "2026-11-15.mcp-ppp.1",
+  "proposal_id": "CHG-YOD-MCP-20261115",
+  "summary": "Contrato y mapa de MCP YOD OS: PPP/visor primero, funciones desacopladas de roles y datos privados.",
   "components": [
-    "SYS-YOD-OS",
-    "GAS-PORTERO",
-    "SYS-DESPACHO",
-    "SYS-CONTROL",
-    "GAS-CATALOGO",
+    "SYS-YOD-MCP",
     "SYS-POTENCIALES",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
-    "SYS-MERCADO"
+    "SYS-PPP2",
+    "GAS-PPP2",
+    "SHEET-PPP2",
+    "SYS-YOD-OS",
+    "SYS-CONTROL"
   ],
   "tests": [
-    "node --test tests/ficha-proyecto.test.cjs (4)",
-    "node --test tests/folio-cartera.test.cjs (7)",
-    "node --test tests/mercado-supuestos.test.cjs (4)",
+    "node scripts/arquitectura.cjs --check",
     "node --test tests/*.cjs",
-    "verify-os · verify-portal · verify-accesos · verify-obra-app",
-    "node scripts/versiones.cjs --check",
-    "node scripts/arquitectura.cjs --check"
+    "verify-os / verify-portal / verify-accesos / verify-obra-app"
   ],
-  "rollback": "Revertir el PR. En el Portero, volver a la versión 113."
+  "rollback": "Revertir propuesta; no se modifican datos, identidades ni fórmulas."
 }
