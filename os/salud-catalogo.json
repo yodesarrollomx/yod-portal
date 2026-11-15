@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "model_revision": "2026-11-03.emd-mejora-continua.1",
+  "model_revision": "2026-11-15.mcp-ppp.1",
   "components": [
     {
       "id": "SYS-DESPACHO",
@@ -576,6 +576,12 @@
       "id": "SHEET-PPP2",
       "nombre": "PPP 2 · vivero y libros de plan",
       "tipo": "google_sheets",
+      "repo": "yodesarrollomx/potenciales-yod"
+    },
+    {
+      "id": "SYS-YOD-MCP",
+      "nombre": "MCP YOD OS",
+      "tipo": "integracion",
       "repo": "yodesarrollomx/potenciales-yod"
     }
   ],

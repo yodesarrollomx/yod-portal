@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-14.obra-flujo.1 · 2026-11-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-15.mcp-ppp.1 · 2026-11-13.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -1182,7 +1182,7 @@ Validar la sesión con el Portero, leer el libro del plan y escribir sólo celda
 - Entidades: plan, version, dato, pregunta, candado, hallazgo, pedido, bitacora, ronda, diario_de_ronda, voto_consejo.
 - Fuente de verdad: Fuente en GitHub (server/ppp2/PPP2.gs) pegada sin cambios en la versión 8 de la misma implementación; los datos viven en los libros.
 - Evidencia: [potenciales-yod/server/ppp2/PPP2.gs](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/server/ppp2/PPP2.gs) — Contrato ppp2-servidor-v1: canje con board=PT, allowlist de escrituras, LockService, revisión y bitácora; ronda con diario de recuperación; consejo con siete votos sobre la misma huella; caché de lo leído con llave por última modificación y sello de la bitácora; Versión 8 publicada el 13-nov-2026. Registro de ejecuciones: la primera lectura tardó 22.1 s (canje y libro en frío) y las siguientes 1.7 y 2.4 s con lo ya leído; el consejo tardó 30.9 s con siete votos por API y respondió con el plan ya leído..
-- Conexiones: CON-PPP2-SERVIDOR (SYS-PPP2 → GAS-PPP2); CON-PPP2-PORTERO (GAS-PPP2 → GAS-PORTERO); CON-PPP2-LIBROS (GAS-PPP2 → SHEET-PPP2); CON-PPP2-DRIVE (GAS-PPP2 → EXT-DRIVE); CON-PPP2-ANTHROPIC (GAS-PPP2 → EXT-ANTHROPIC); CON-PPP2-OPENAI (GAS-PPP2 → EXT-OPENAI).
+- Conexiones: CON-PPP2-SERVIDOR (SYS-PPP2 → GAS-PPP2); CON-PPP2-PORTERO (GAS-PPP2 → GAS-PORTERO); CON-PPP2-LIBROS (GAS-PPP2 → SHEET-PPP2); CON-PPP2-DRIVE (GAS-PPP2 → EXT-DRIVE); CON-PPP2-ANTHROPIC (GAS-PPP2 → EXT-ANTHROPIC); CON-PPP2-OPENAI (GAS-PPP2 → EXT-OPENAI); CON-MCP-PPP (SYS-YOD-MCP → GAS-PPP2).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Revocar una sesión tarda hasta 10 minutos por la caché del canje, igual que en el Portero; Mientras corre una ronda, unas pruebas o el consejo (minutos), nadie puede guardar cambios en ningún plan: el servidor atiende de uno en uno; La API de IA cobra por uso; la clave vive sólo en las propiedades del script y el texto de error del proveedor no se guarda; Lo ya leído de un libro se guarda hasta 6 h, pero su llave cambia en cuanto el libro cambia; si Drive tardara en enterarse de un cambio hecho a mano en la hoja, se vería en cuanto se entere.
 
@@ -1224,3 +1224,16 @@ Abrir y poner al día el PR del borrador del grafo para que sus pruebas corran s
 - Conexiones: CON-GRAFO-APP (EXT-ACTIONS → EXT-GRAFO-APP).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Credencial con escritura de contenido y PR en un solo repositorio; su llave vive sólo como secreto de Actions. Si falla o falta, el flujo vuelve a los dos toques..
+
+## SYS-YOD-MCP · MCP YOD OS
+
+Acceso por funciones desde asistentes compatibles; primer adaptador PPP y visor. Sin copiar el motor ni dar acceso general a las hojas.
+
+- Tipo: integracion. Dominio: Control. Responsable: Dirección.
+- Evidencia: codigo. Producción: Código y protocolo probados con datos sintéticos; publicación HTTP y clientes se acreditan aparte..
+- Entidades: capacidad, vista_autorizada, cambio_preparado, recibo.
+- Fuente de verdad: Contratos y libros existentes de cada sistema; no base de negocio nueva..
+- Evidencia: [potenciales-yod/mcp/README.md](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/mcp/README.md) — Adaptador implementado en mcp/: SDK MCP, visor compartido y edición PPP2 por sesión local; pruebas aisladas..
+- Conexiones: CON-MCP-PPP (SYS-YOD-MCP → GAS-PPP2).
+- Mejoras: Conservar y verificar alcance antes de ampliar.
+- Pendientes: Una liga del visor es acceso por posesión; apagarla conserva el plazo de revocación del servidor.; MCP no certifica calidad de datos ni rentabilidades..

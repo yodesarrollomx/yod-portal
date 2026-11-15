@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-14.obra-flujo.1",
+  "revision": "2026-11-15.mcp-ppp.1",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -3808,6 +3808,36 @@
       "data_entities": [
         "pr_borrador"
       ]
+    },
+    {
+      "id": "SYS-YOD-MCP",
+      "nombre": "MCP YOD OS",
+      "tipo": "integracion",
+      "repo": "yodesarrollomx/potenciales-yod",
+      "proposito": "Acceso por funciones desde asistentes compatibles; primer adaptador PPP y visor. Sin copiar el motor ni dar acceso general a las hojas.",
+      "dominio": "Control",
+      "owner_role": "Dirección",
+      "status": "codigo",
+      "runtime_status": "Código y protocolo probados con datos sintéticos; publicación HTTP y clientes se acreditan aparte.",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "mcp/README.md",
+          "claim": "Adaptador implementado en mcp/: SDK MCP, visor compartido y edición PPP2 por sesión local; pruebas aisladas.",
+          "status": "codigo"
+        }
+      ],
+      "data_entities": [
+        "capacidad",
+        "vista_autorizada",
+        "cambio_preparado",
+        "recibo"
+      ],
+      "risks_sanitized": [
+        "Una liga del visor es acceso por posesión; apagarla conserva el plazo de revocación del servidor.",
+        "MCP no certifica calidad de datos ni rentabilidades."
+      ],
+      "source_of_truth": "Contratos y libros existentes de cada sistema; no base de negocio nueva."
     }
   ],
   "connections": [
@@ -7538,6 +7568,27 @@
       "runtime_verified": false,
       "contract": "GET ?recurso=board&k=<sesión del Portero>; usa avances[].id, estado (AUTORIZADO), monto_propuesto, frente, fecha_autorizacion y estimacion_num. Sin acceso o sin respuesta, el Flujo lo dice y no cuenta nada.",
       "contract_ids": []
+    },
+    {
+      "id": "CON-MCP-PPP",
+      "from": "SYS-YOD-MCP",
+      "to": "GAS-PPP2",
+      "label": "Visor por liga y operaciones por sesión propia en stdio",
+      "kind": "api",
+      "status": "codigo",
+      "evidence": [
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "mcp/README.md",
+          "claim": "Adaptador implementado en mcp/: SDK MCP, visor compartido y edición PPP2 por sesión local; pruebas aisladas.",
+          "status": "codigo"
+        }
+      ],
+      "runtime_verified": false,
+      "contract_ids": [
+        "CTR-YOD-MCP"
+      ],
+      "contract": "CTR-YOD-MCP"
     }
   ],
   "processes": [
@@ -16544,6 +16595,27 @@
       ],
       "deployment": "Pages de board-flujo-yod al fusionar su PR. Sin cambios en el motor de obra ni en el Apps Script del Flujo.",
       "rollback": "Revertir el PR de board-flujo-yod."
+    },
+    {
+      "id": "CHG-YOD-MCP-20261115",
+      "components": [
+        "SYS-YOD-MCP",
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "GAS-PPP2",
+        "SHEET-PPP2",
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
+      ],
+      "proposal": "MCP extensible de YOD OS, primer adaptador PPP. Lectura del visor por liga y catálogo publicado optativo; lectura privada y cambios preparados por stdio con sesión del usuario. Aislado de las modificaciones concurrentes del visor. El inventario de salud añade el componente sin inventar un estado operativo.",
+      "approval": "Dirección, 15-nov-2026: construir hasta terminar, conectar modelos existentes por MCP y no interrumpir procesos.",
+      "status": "implementado_local",
+      "tests": [
+        "npm --prefix mcp test: cliente SDK real stdio y HTTP, contrato servidor PPP con dobles, permisos, revisión, no duplicados y revocación.",
+        "Regresiones existentes PPP y validación del atlas."
+      ],
+      "deployment": "Servicio HTTP separado, sin sesión privada, con catálogo vacío por defecto; clientes locales se configuran individualmente.",
+      "rollback": "Detener el proceso MCP/revertir PR; no borrar ni restaurar libros ni tocar Apps Script."
     }
   ],
   "data_contracts": [
@@ -19084,6 +19156,33 @@
         "Cambio de actor, caso o época invalida respuestas tardías; desmontaje libera listeners, temporizadores, animación y datos visibles.",
         "Navegar o recuperar sólo observa; una llegada visual no acredita visita durable, ejecución, escritura ni recibo.",
         "La versión 3D se conserva como respaldo; no se modifica ni se activa una nueva ruta en este bloque."
+      ]
+    },
+    {
+      "id": "CTR-YOD-MCP",
+      "components": [
+        "SYS-YOD-MCP",
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "GAS-PPP2",
+        "SHEET-PPP2",
+        "SYS-YOD-OS"
+      ],
+      "source": "potenciales-yod/mcp/README.md y contratos existentes de PPP2/visor",
+      "input": [
+        "MCP tools/resources/prompts; Streamable HTTP sólo visor y catálogo explícitamente publicado.",
+        "stdio con sesión local de Portero; propuestas de edición ligadas a actor, revisión y contenido."
+      ],
+      "output": [
+        "Datos con origen, fecha de consulta, versión y naturaleza estimada.",
+        "Recibos de escritura con request_id; estado incierto no se reenvía automáticamente."
+      ],
+      "invariants": [
+        "Sin fórmulas financieras nuevas ni escritura directa a Sheets.",
+        "HTTP no carga sesiones privadas ni ofrece edición.",
+        "Nunca descubre un proyecto privado por tenerlo en el vivero.",
+        "Los permisos los valida el backend, no un rol enviado por el modelo.",
+        "No pruebas de escritura en producción."
       ]
     }
   ],
@@ -22002,6 +22101,15 @@
         "SYS-DESPACHO",
         "SYS-DESPACHO-3D"
       ]
+    },
+    {
+      "repo": "yodesarrollomx/potenciales-yod",
+      "prefix": "mcp/",
+      "components": [
+        "SYS-YOD-MCP",
+        "GAS-PPP2",
+        "SYS-POTENCIALES"
+      ]
     }
   ],
   "office_coverage": {
@@ -22073,7 +22181,8 @@
           "GAS-PORTERO-RESPALDO",
           "STORE-DESPACHO-CORCHO",
           "GAS-BANDEJA-NUBE",
-          "STORE-BANDEJA-RECIBOS"
+          "STORE-BANDEJA-RECIBOS",
+          "SYS-YOD-MCP"
         ]
       },
       {
