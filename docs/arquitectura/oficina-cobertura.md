@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-15.mcp-ppp.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-15.mcp-ppp.2
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -9,7 +9,7 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
 - 29 sistemas y 97 componentes distribuidos exactamente una vez.
-- 10 áreas; 165 conexiones registradas, 20 marcadas como verificadas en el atlas.
+- 10 áreas; 165 conexiones registradas, 21 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -560,23 +560,24 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dirección
 
-**Estado registrado:** codigo. Código y protocolo probados con datos sintéticos; publicación HTTP y clientes se acreditan aparte.
+**Estado registrado:** ejecucion. HTTP compartido v0.1.0 en https://yod-os-mcp.onrender.com/mcp, comprobado 15-nov-2026. Catálogo vacío. stdio con edición implementado/probado sintéticamente; clientes individuales pendientes de configuración.
 
 **Conexiones registradas; no habilitan operaciones:**
 
-- CON-MCP-PPP · SYS-YOD-MCP → GAS-PPP2 · api · Visor por liga y operaciones por sesión propia en stdio · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-MCP-PPP · SYS-YOD-MCP → GAS-PPP2 · api · Visor por liga y operaciones por sesión propia en stdio · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
 - Adaptador implementado en mcp/: SDK MCP, visor compartido y edición PPP2 por sesión local; pruebas aisladas. · Estado: codigo · yodesarrollomx/potenciales-yod · mcp/README.md · Sin revisión inmutable en esta referencia
+- 2026-11-15T17:56:39Z: SDK externo inicializa HTTP y lee liga activa; resumen y flujo iguales al visor. Sin escrituras reales ni clientes instalados. · Estado: ejecucion · yodesarrollomx/yod-portal · docs/arquitectura/mcp-yod-live.json · Sin revisión inmutable en esta referencia
 
 **Evidencia de conexiones:**
 
 - CON-MCP-PPP · Adaptador implementado en mcp/: SDK MCP, visor compartido y edición PPP2 por sesión local; pruebas aisladas. · Estado: codigo · yodesarrollomx/potenciales-yod · mcp/README.md · Sin revisión inmutable en esta referencia
+- CON-MCP-PPP · 2026-11-15T17:56:39Z: SDK externo inicializa HTTP y lee liga activa; resumen y flujo iguales al visor. Sin escrituras reales ni clientes instalados. · Estado: ejecucion · yodesarrollomx/yod-portal · docs/arquitectura/mcp-yod-live.json · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 1 conexiones sin verificación de ejecución registrada.
 - Una liga del visor es acceso por posesión; apagarla conserva el plazo de revocación del servidor.
 - MCP no certifica calidad de datos ni rentabilidades.
 
@@ -1307,7 +1308,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PPP2-DRIVE · GAS-PPP2 → EXT-DRIVE · persistencia · Copia la plantilla al sembrar un plan y lee la última modificación de cada libro (llave de lo ya leído) · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-PPP2-ANTHROPIC · GAS-PPP2 → EXT-ANTHROPIC · api · El consejo de planes (siete jueces por separado, con el expediente que arma el libro) y la investigación con búsqueda en la web · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-PPP2-OPENAI · GAS-PPP2 → EXT-OPENAI · api · Respaldo del consejo de planes con salida estructurada, si Config lo pide o sólo hay su clave; la investigación va sólo por Anthropic · Estado: codigo · Ejecución no verificada en el atlas.
-- CON-MCP-PPP · SYS-YOD-MCP → GAS-PPP2 · api · Visor por liga y operaciones por sesión propia en stdio · Estado: codigo · Ejecución no verificada en el atlas.
+- CON-MCP-PPP · SYS-YOD-MCP → GAS-PPP2 · api · Visor por liga y operaciones por sesión propia en stdio · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 
 **Evidencia de la ficha:**
 
@@ -1328,10 +1329,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PPP2-ANTHROPIC · 13-nov-2026: sesión del consejo por API con siete votos válidos escritos con la huella y la evidencia de la versión, sobre una copia de prueba de un plan (archivada y a la papelera después). El primer intento, el 12-nov, no dio votos porque el modelo rechaza forzar la herramienta; se corrigió en el PR 103. · Estado: ejecucion · Revisión: Apps Script versión 8
 - CON-PPP2-OPENAI · pedidoIA\_ con la API de respuestas, esquema estricto y store=false · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR 103 (potenciales-yod)
 - CON-MCP-PPP · Adaptador implementado en mcp/: SDK MCP, visor compartido y edición PPP2 por sesión local; pruebas aisladas. · Estado: codigo · yodesarrollomx/potenciales-yod · mcp/README.md · Sin revisión inmutable en esta referencia
+- CON-MCP-PPP · 2026-11-15T17:56:39Z: SDK externo inicializa HTTP y lee liga activa; resumen y flujo iguales al visor. Sin escrituras reales ni clientes instalados. · Estado: ejecucion · yodesarrollomx/yod-portal · docs/arquitectura/mcp-yod-live.json · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 2 conexiones sin verificación de ejecución registrada.
+- 1 conexiones sin verificación de ejecución registrada.
 - Revocar una sesión tarda hasta 10 minutos por la caché del canje, igual que en el Portero
 - Mientras corre una ronda, unas pruebas o el consejo (minutos), nadie puede guardar cambios en ningún plan: el servidor atiende de uno en uno
 - La API de IA cobra por uso; la clave vive sólo en las propiedades del script y el texto de error del proveedor no se guarda

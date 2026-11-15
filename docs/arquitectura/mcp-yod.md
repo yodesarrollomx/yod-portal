@@ -56,3 +56,17 @@ financieros de un proyecto.
 
 Contrato operativo, instalación y ejemplos:
 [potenciales-yod/mcp](https://github.com/yodesarrollomx/potenciales-yod/tree/main/mcp).
+
+## Despliegue comprobado · 15-nov-2026
+
+[Endpoint MCP](https://yod-os-mcp.onrender.com/mcp), Streamable HTTP, versión 0.1.0.
+Render free, despliegue manual desde la rama `codex/yod-mcp-ppp-20261115`.
+Commit activo `5fe399d4441ff7fffa82162880a85da93ff82245`; recibo
+[JSON sin datos de clientes](mcp-yod-live.json). Puede tardar en despertar tras
+inactividad. No hay monitorización periódica nueva ni cargo de IA.
+
+La prueba externa inicializó el protocolo, descubrió cuatro herramientas, leyó
+el recurso y prompt y consultó una liga activa. Resumen y flujo coincidieron con
+el visor. Catálogo vacío, entradas no publicadas rechazadas, edición ausente y
+origen desconocido rechazado. Cero escrituras en planes reales. La sesión de cada
+cliente local se configura aparte; no se da por instalada en Hermes, Claude o Codex.

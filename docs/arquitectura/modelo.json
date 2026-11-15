@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-15.mcp-ppp.1",
+  "revision": "2026-11-15.mcp-ppp.2",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -3817,14 +3817,20 @@
       "proposito": "Acceso por funciones desde asistentes compatibles; primer adaptador PPP y visor. Sin copiar el motor ni dar acceso general a las hojas.",
       "dominio": "Control",
       "owner_role": "Dirección",
-      "status": "codigo",
-      "runtime_status": "Código y protocolo probados con datos sintéticos; publicación HTTP y clientes se acreditan aparte.",
+      "status": "ejecucion",
+      "runtime_status": "HTTP compartido v0.1.0 en https://yod-os-mcp.onrender.com/mcp, comprobado 15-nov-2026. Catálogo vacío. stdio con edición implementado/probado sintéticamente; clientes individuales pendientes de configuración.",
       "evidence": [
         {
           "repo": "yodesarrollomx/potenciales-yod",
           "path": "mcp/README.md",
           "claim": "Adaptador implementado en mcp/: SDK MCP, visor compartido y edición PPP2 por sesión local; pruebas aisladas.",
           "status": "codigo"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/mcp-yod-live.json",
+          "claim": "2026-11-15T17:56:39Z: SDK externo inicializa HTTP y lee liga activa; resumen y flujo iguales al visor. Sin escrituras reales ni clientes instalados.",
+          "status": "ejecucion"
         }
       ],
       "data_entities": [
@@ -7575,20 +7581,31 @@
       "to": "GAS-PPP2",
       "label": "Visor por liga y operaciones por sesión propia en stdio",
       "kind": "api",
-      "status": "codigo",
+      "status": "ejecucion",
       "evidence": [
         {
           "repo": "yodesarrollomx/potenciales-yod",
           "path": "mcp/README.md",
           "claim": "Adaptador implementado en mcp/: SDK MCP, visor compartido y edición PPP2 por sesión local; pruebas aisladas.",
           "status": "codigo"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/mcp-yod-live.json",
+          "claim": "2026-11-15T17:56:39Z: SDK externo inicializa HTTP y lee liga activa; resumen y flujo iguales al visor. Sin escrituras reales ni clientes instalados.",
+          "status": "ejecucion"
         }
       ],
-      "runtime_verified": false,
+      "runtime_verified": true,
       "contract_ids": [
         "CTR-YOD-MCP"
       ],
-      "contract": "CTR-YOD-MCP"
+      "contract": "CTR-YOD-MCP",
+      "runtime_evidence": {
+        "checked_at": "2026-11-15T17:56:39Z",
+        "scope": "Sólo lectura compartida HTTP: inicialización, contrato, cuatro herramientas y lectura real con paridad de resumen/flujo. No acredita edición privada real ni instalación en clientes.",
+        "receipt": "Render dep-dbsv41ei0phs73e828qg, commit 5fe399d4441ff7fffa82162880a85da93ff82245; docs/arquitectura/mcp-yod-live.json"
+      }
     }
   ],
   "processes": [
@@ -16614,7 +16631,7 @@
         "npm --prefix mcp test: cliente SDK real stdio y HTTP, contrato servidor PPP con dobles, permisos, revisión, no duplicados y revocación.",
         "Regresiones existentes PPP y validación del atlas."
       ],
-      "deployment": "Servicio HTTP separado, sin sesión privada, con catálogo vacío por defecto; clientes locales se configuran individualmente.",
+      "deployment": "HTTP desplegado y comprobado 15-nov-2026, Render plan free, rama codex/yod-mcp-ppp-20261115, autoDeploy no. Versiones futuras requieren despliegue manual. Catálogo vacío; lectura real comprobada. Configuración de cada cliente stdio pendiente.",
       "rollback": "Detener el proceso MCP/revertir PR; no borrar ni restaurar libros ni tocar Apps Script."
     }
   ],

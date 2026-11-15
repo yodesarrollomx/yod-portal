@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "model_revision": "2026-11-15.mcp-ppp.1",
+  "model_revision": "2026-11-15.mcp-ppp.2",
   "components": [
     {
       "id": "SYS-DESPACHO",
