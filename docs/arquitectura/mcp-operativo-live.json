@@ -1,0 +1,54 @@
+{
+  "checked_at": "2026-11-15T22:55:35.200Z",
+  "endpoint": "https://yod-os-mcp.onrender.com/mcp",
+  "server": "0.2.0",
+  "source_commit": "7cc06435dfea4d0ffa4b6e2de181b0f576200dca",
+  "source_pr": "https://github.com/yodesarrollomx/potenciales-yod/pull/128",
+  "render_service": "srv-dbsv416i0phs73e82830",
+  "render_deploy": "dep-dbt3g6k9v7es73c3kh7g",
+  "render_live_at": "2026-11-15T22:54:54.266513Z",
+  "initialized": true,
+  "tools": [
+    "ppp_buscar_oportunidades",
+    "ppp_leer_oportunidad",
+    "ppp_leer_visor",
+    "yod_capacidades"
+  ],
+  "contract": true,
+  "catalog_empty": true,
+  "private_tools_absent": true,
+  "unknown_origin_rejected": true,
+  "published_page": "https://yodesarrollomx.github.io/potenciales-yod/mcp-conectar.html",
+  "published_assets": [
+    {
+      "archivo": "mcp-conectar.html",
+      "sha256": "5912d27f2147d21c588c4149e5e7e00ca19729a55e81b42712fea5bab1cf7f0e"
+    },
+    {
+      "archivo": "mcp-conectar.js",
+      "sha256": "d785a79fa0a8c6fca3849b3efe62c3b262f9c9ca5c7e7b01a216f6990a3b8c09"
+    },
+    {
+      "archivo": "mcp-conectar.css",
+      "sha256": "eac2602299a5087a49f58b3e1f7d4a8bcaebd3007bb72d61a077a6198ef7a75e"
+    }
+  ],
+  "production_writes": 0,
+  "local_verification": {
+    "mcp_tests": 33,
+    "ppp_tests": 919,
+    "atlas_tests": 1474,
+    "browser": "Página y ficha reales con servidor Apps Script del repositorio y datos inventados; cambio, fuente, recibo, reintento sin duplicado y desconexión comprobados.",
+    "codex_cli": "Registro y relectura en configuración aislada; no en equipo del usuario."
+  },
+  "required_pr_workflows": "4/4 success antes de integrar",
+  "production_acceptance": {
+    "private_backend_write": "pendiente en copia autorizada con identidad real",
+    "codex": "pendiente",
+    "claude_code": "pendiente",
+    "hermes": "pendiente",
+    "reason": "Sin conexión al host personal en esta sesión."
+  },
+  "scope": "HTTP compartido sólo lectura. Autorización local desde YOD y edición PPP2 por stdio implementadas; no OAuth remoto ni adaptadores CRM/Obra.",
+  "previous_shared_visor_evidence": "mcp-yod-live.json conserva la prueba real de lectura de v0.1; esta comprobación de v0.2 no repitió consultas a un expediente real."
+}

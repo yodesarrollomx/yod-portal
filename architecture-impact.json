@@ -1,7 +1,7 @@
 {
   "model_revision": "2026-11-15.mcp-operativo.1",
   "proposal_id": "CHG-YOD-MCP-OPERATIVO-20261115",
-  "summary": "Conexión local de asistentes con planes seleccionados desde YOD, diagnóstico y recibos nativos; implementación y prueba productiva diferenciadas.",
+  "summary": "Recibo de publicación MCP 0.2 y página de conexión verificados; conserva separado el pendiente de instalación y aceptación privada en los tres clientes.",
   "components": [
     "SYS-YOD-MCP",
     "SYS-POTENCIALES",
