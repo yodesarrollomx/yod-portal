@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-15.mcp-ppp.2",
+  "revision": "2026-11-15.mcp-operativo.1",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -3831,6 +3831,12 @@
           "path": "docs/arquitectura/mcp-yod-live.json",
           "claim": "2026-11-15T17:56:39Z: SDK externo inicializa HTTP y lee liga activa; resumen y flujo iguales al visor. Sin escrituras reales ni clientes instalados.",
           "status": "ejecucion"
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/mcp-operativo.md",
+          "status": "codigo",
+          "claim": "Conexión local desde YOD con planes elegidos, permiso por llamada, registro mediante CLI, diagnóstico y recibos enlazados; implementación local, sin aceptación privada de producción."
         }
       ],
       "data_entities": [
@@ -16633,6 +16639,29 @@
       ],
       "deployment": "HTTP desplegado y comprobado 15-nov-2026, Render plan free, rama codex/yod-mcp-ppp-20261115, autoDeploy no. Versiones futuras requieren despliegue manual. Catálogo vacío; lectura real comprobada. Configuración de cada cliente stdio pendiente.",
       "rollback": "Detener el proceso MCP/revertir PR; no borrar ni restaurar libros ni tocar Apps Script."
+    },
+    {
+      "id": "CHG-YOD-MCP-OPERATIVO-20261115",
+      "components": [
+        "SYS-YOD-MCP",
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "GAS-PPP2",
+        "SHEET-PPP2",
+        "GAS-PORTERO",
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
+      ],
+      "proposal": "Cerrar el recorrido local del PPP: conexión desde su sesión real en página YOD, elección explícita de planes y lectura/edición, credencial privada fuera del chat, configuración por CLI nativa de cada cliente, diagnóstico y recibos enlazados a la ficha. Conservar cálculo y API canónicos y procedencia de cifras derivadas. No presentar lectura pública HTTP como operación privada terminada.",
+      "approval": "Dirección, 15-nov-2026: corregir integración superficial e implementar funcionamiento real sin interrumpir procesos.",
+      "status": "implementado_local",
+      "tests": [
+        "Conexión con página real y servidor PPP sobre datos sintéticos; aislamiento de planes, identidad, caducidad y retirada local.",
+        "Cliente SDK: descubrir, leer, preparar, aplicar, releer en UI, recibo y no duplicados.",
+        "Registro nativo de CLI en configuración aislada; el host personal requiere comprobación separada."
+      ],
+      "deployment": "Implementado localmente: 33 pruebas MCP, 919 PPP y 1474 atlas aprobadas. Recorrido de navegador completo con página YOD, alta local, SDK MCP, servidor PPP real sobre datos sintéticos, cambio reflejado con fuente en la ficha y desconexión. CLI Codex registrada y releída en configuración aislada. Pendientes publicación y conexión privada en cada cliente personal; no hubo escrituras productivas.",
+      "rollback": "Retirar únicamente conexión local y página; conservar recibos y libros; sin modificación de Apps Script ni fórmulas."
     }
   ],
   "data_contracts": [
