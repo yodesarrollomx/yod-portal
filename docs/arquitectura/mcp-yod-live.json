@@ -1,0 +1,28 @@
+{
+  "checked_at": "2026-11-15T17:56:39.572Z",
+  "endpoint": "https://yod-os-mcp.onrender.com/mcp",
+  "server": "0.1.0",
+  "initialized": true,
+  "tools": [
+    "ppp_buscar_oportunidades",
+    "ppp_leer_oportunidad",
+    "ppp_leer_visor",
+    "yod_capacidades"
+  ],
+  "contract": true,
+  "prompt": true,
+  "catalog_empty": true,
+  "real_visor_read": true,
+  "complete": true,
+  "version": 2,
+  "parity": "summary-and-flow-equal",
+  "private_tools_absent": true,
+  "unpublished_rejected": true,
+  "unknown_origin_rejected": true,
+  "production_writes": 0,
+  "source_commit": "5fe399d4441ff7fffa82162880a85da93ff82245",
+  "render_service": "srv-dbsv416i0phs73e82830",
+  "render_deploy": "dep-dbsv41ei0phs73e828qg",
+  "runtime_scope": "Sólo lectura compartida HTTP; edición stdio probada con datos sintéticos. Clientes del usuario aún sin configurar.",
+  "catalog_policy": "Vacío. Ningún plan publicado automáticamente."
+}

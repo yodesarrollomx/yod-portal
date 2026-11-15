@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-11-15.mcp-ppp.1",
+  "model_revision": "2026-11-15.mcp-ppp.2",
   "proposal_id": "CHG-YOD-MCP-20261115",
-  "summary": "Contrato y mapa de MCP YOD OS: PPP/visor primero, funciones desacopladas de roles y datos privados.",
+  "summary": "Registrar despliegue MCP HTTP y lectura real verificada; distinguir edición local y clientes pendientes.",
   "components": [
     "SYS-YOD-MCP",
     "SYS-POTENCIALES",
