@@ -112,3 +112,5 @@ La auditoría no se considera completa mientras existan componentes críticos o 
 - [EMD · dashboard y mejora continua](emd-mejora-continua-20261103.md): administración por capacidades, campañas aisladas, acciones persistentes y política de resultados versionada, inicialmente sin activar.
 
 - [MCP YOD OS · PPP](mcp-yod.md): visor autorizado, operaciones por sesión, recibos y extensión del sistema.
+
+- [PPP público para campaña](ppp-publico.md): entrada sin terminal, motor VERTICAL fijado, escenarios por cuenta y revisión de Dirección; publicación y límites de aceptación.

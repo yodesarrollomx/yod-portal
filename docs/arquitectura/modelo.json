@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-15.mcp-operativo.1",
+  "revision": "2026-11-15.ppp-publico.1",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -3837,6 +3837,12 @@
           "path": "docs/arquitectura/mcp-operativo.md",
           "status": "codigo",
           "claim": "Conexión local desde YOD con planes elegidos, permiso por llamada, registro mediante CLI, diagnóstico y recibos enlazados; implementación local, sin aceptación privada de producción."
+        },
+        {
+          "repo": "yodesarrollomx/yod-portal",
+          "path": "docs/arquitectura/ppp-publico.md",
+          "status": "ejecucion",
+          "claim": "Superficie pública independiente con motor VERTICAL clásico fijado, rangos, escenarios privados y revisión. Publicación v1 y acceso anónimo comprobados; autenticación real, PPP2 y clientes personales pendientes de aceptación separada."
         }
       ],
       "data_entities": [
@@ -16662,6 +16668,23 @@
       ],
       "deployment": "Implementado localmente: 33 pruebas MCP, 919 PPP y 1474 atlas aprobadas. Recorrido de navegador completo con página YOD, alta local, SDK MCP, servidor PPP real sobre datos sintéticos, cambio reflejado con fuente en la ficha y desconexión. CLI Codex registrada y releída en configuración aislada. Pendientes publicación y conexión privada en cada cliente personal; no hubo escrituras productivas.",
       "rollback": "Retirar únicamente conexión local y página; conservar recibos y libros; sin modificación de Apps Script ni fórmulas."
+    },
+    {
+      "id": "CHG-PPP-PUBLICO-20261115",
+      "components": [
+        "SYS-YOD-MCP",
+        "SYS-POTENCIALES"
+      ],
+      "proposal": "Experiencia de campaña web: exploración anónima, cuatro rangos, un escenario Jugando por cuenta/caso, envío fijo y revisión privada. Adaptación aislada del motor VERTICAL clásico con fuente y huella fijadas; importación/exportación nativa, sin escrituras en PPP oficial ni Apps Script.",
+      "approval": "Dirección, 15-nov-2026: simplificar acceso para campaña pública y permitir jugar con rangos en un escenario revisable. Sólo ejemplo sintético inicial; casos reales requieren publicación explícita de Dirección.",
+      "status": "publicado",
+      "tests": [
+        "168 escenarios con paridad completa contra bloque original VERTICAL; 10 pruebas SQLite/MCP: aislamiento, rangos, CAS, reintentos, envío/reapertura, rollback, importación/publicación/pausa y borrado.",
+        "TypeScript y build aprobados; navegador local escritorio y ancho390px. Con identidad ficticia y D1 local: guardar, enviar, bloquear controles, recibir en Dirección, comparar y guardar nota revisada; fixture retirado y fuente igual al commit publicado.",
+        "Publicación Sites v1 confirmada; página pública cargada y redirección al login comprobadas. Entrada con cuenta real y escritura productiva no verificadas."
+      ],
+      "deployment": "Site público https://yod-prueba-tu-proyecto.sayri-fraijo.chatgpt.site; versión1, fuente38bdf10e4d7c8bc2c92c8ab19f31ec0e2a7b2e9e. Guarda escenarios en D1 privado con identidad Sites. El MCP generado figura instalado; sus herramientas no aparecieron en la sesión activa. No acredita clientes personales ni PPP2.",
+      "rollback": "Pausar casos desde Dirección o retirar acceso público del Site; conservar D1 y recibos. No restaurar ni borrar libros PPP."
     }
   ],
   "data_contracts": [
