@@ -1,13 +1,14 @@
 {
-  "model_revision": "2026-11-15.mcp-ppp.2",
-  "proposal_id": "CHG-YOD-MCP-20261115",
-  "summary": "Registrar despliegue MCP HTTP y lectura real verificada; distinguir edición local y clientes pendientes.",
+  "model_revision": "2026-11-15.mcp-operativo.1",
+  "proposal_id": "CHG-YOD-MCP-OPERATIVO-20261115",
+  "summary": "Conexión local de asistentes con planes seleccionados desde YOD, diagnóstico y recibos nativos; implementación y prueba productiva diferenciadas.",
   "components": [
     "SYS-YOD-MCP",
     "SYS-POTENCIALES",
     "SYS-PPP2",
     "GAS-PPP2",
     "SHEET-PPP2",
+    "GAS-PORTERO",
     "SYS-YOD-OS",
     "SYS-CONTROL"
   ],
@@ -16,5 +17,5 @@
     "node --test tests/*.cjs",
     "verify-os / verify-portal / verify-accesos / verify-obra-app"
   ],
-  "rollback": "Revertir propuesta; no se modifican datos, identidades ni fórmulas."
+  "rollback": "Revertir propuesta y conexión; conservar datos, fórmulas, procesos y recibos."
 }
