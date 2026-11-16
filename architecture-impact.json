@@ -1,24 +1,16 @@
 {
-  "model_revision": "2026-11-16.mercado-historico.1",
-  "proposal_id": "CHG-MERCADO-HISTORICO-20261116",
-  "summary": "Exploración de observaciones de Hermosillo con corte público y exportación privada CSV local. Etiqueta de caché del portal actualizada.",
+  "model_revision": "2026-11-16.masterbrokers-registros.1",
+  "proposal_id": "CHG-MB-REGISTROS-GLOBALES-20261116",
+  "summary": "Referencias explícitas de folio, terreno o PPP único concilian las fuentes dentro del mismo alcance. Edición por campo prevalece sobre la importación. Archivo y papelera persistentes, restauración y confirmación de alcance; contactos inactivos ocultan sus asuntos sin modificar los estados individuales. Conservar historial, concurrencia e idempotencia.",
   "components": [
-    "SYS-MERCADO",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-CONTROL",
-    "SYS-YOD-OS",
-    "SYS-OBRA-CLIENTE",
-    "GAS-PORTERO",
-    "SYS-DESPACHO",
-    "GAS-CATALOGO",
-    "SYS-POTENCIALES"
+    "SYS-INVERSION",
+    "GAS-CRM",
+    "SHEET-CRM"
   ],
   "tests": [
-    "node --test mercado/hermosillo-2020-2030/tests/historico.test.cjs",
-    "python3 -m unittest discover -s mercado/hermosillo-2020-2030/tests -p 'test_*.py'",
-    "Render local con Playwright: carga de series públicas, importación privada, cambio de gráfico, restablecimiento y prueba móvil.",
-    "node scripts/arquitectura.cjs --check; verificaciones del portal y git diff --check."
+    "Pruebas sintéticas: referencia explícita y ambigua, aislamiento, edición parcial y campo vacío intencional.",
+    "Archivo, papelera y restauración de registros compartidos; readback, conflictos y reintentos.",
+    "Editor, filtros y estados en móvil/escritorio; sin escrituras de prueba en producción."
   ],
-  "rollback": "Revertir el merge del explorador y el corte publicado. La base de Google Sheets no recibe escrituras del tablero."
+  "rollback": "Revertir código y versión del motor, conservar columnas, estados e historial; no restaurar hojas de negocio."
 }
