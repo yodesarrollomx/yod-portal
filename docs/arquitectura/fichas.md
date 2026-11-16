@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-15.mcp-operativo.1 · 2026-11-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-16.mercado-historico.1 · 2026-11-13.
 
 ## SYS-DESPACHO · El Despacho
 

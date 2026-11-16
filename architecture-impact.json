@@ -1,21 +1,24 @@
 {
-  "model_revision": "2026-11-15.mcp-operativo.1",
-  "proposal_id": "CHG-YOD-MCP-OPERATIVO-20261115",
-  "summary": "Recibo de publicación MCP 0.2 y página de conexión verificados; conserva separado el pendiente de instalación y aceptación privada en los tres clientes.",
+  "model_revision": "2026-11-16.mercado-historico.1",
+  "proposal_id": "CHG-MERCADO-HISTORICO-20261116",
+  "summary": "Exploración de observaciones de Hermosillo con corte público y exportación privada CSV local. Etiqueta de caché del portal actualizada.",
   "components": [
-    "SYS-YOD-MCP",
-    "SYS-POTENCIALES",
-    "SYS-PPP2",
-    "GAS-PPP2",
-    "SHEET-PPP2",
-    "GAS-PORTERO",
+    "SYS-MERCADO",
+    "SYS-TRACK",
+    "SYS-OBRA",
+    "SYS-CONTROL",
     "SYS-YOD-OS",
-    "SYS-CONTROL"
+    "SYS-OBRA-CLIENTE",
+    "GAS-PORTERO",
+    "SYS-DESPACHO",
+    "GAS-CATALOGO",
+    "SYS-POTENCIALES"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "verify-os / verify-portal / verify-accesos / verify-obra-app"
+    "node --test mercado/hermosillo-2020-2030/tests/historico.test.cjs",
+    "python3 -m unittest discover -s mercado/hermosillo-2020-2030/tests -p 'test_*.py'",
+    "Render local con Playwright: carga de series públicas, importación privada, cambio de gráfico, restablecimiento y prueba móvil.",
+    "node scripts/arquitectura.cjs --check; verificaciones del portal y git diff --check."
   ],
-  "rollback": "Revertir propuesta y conexión; conservar datos, fórmulas, procesos y recibos."
+  "rollback": "Revertir el merge del explorador y el corte publicado. La base de Google Sheets no recibe escrituras del tablero."
 }

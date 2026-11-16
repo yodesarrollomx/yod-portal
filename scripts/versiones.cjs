@@ -53,7 +53,8 @@ const REGLAS_JS = Object.freeze([
   { archivo: 'os/app.js', nombre: 'TABLERO_V (iframe de tablero.html)', patron: /(var TABLERO_V\s*=\s*["'])([^"'\n]*)/g },
   { archivo: 'os/app.js', nombre: 'import de despacho3d/equipo.mjs', patron: new RegExp(String.raw`(despacho3d/equipo\.mjs\?v=)(${TAG})`, 'g') },
   { archivo: 'os/app.js', nombre: 'iframe de despacho3d/index.html', patron: new RegExp(String.raw`(despacho3d/index\.html\?v=)(${TAG})`, 'g'), minimo: 0 },
-  { archivo: 'os/despacho-section.js', nombre: 'FRAME_PATH (iframe de despacho3d/index.html)', patron: new RegExp(String.raw`(despacho3d/index\.html\?v=)(${TAG})`, 'g') }
+  { archivo: 'os/despacho-section.js', nombre: 'FRAME_PATH (iframe de despacho3d/index.html)', patron: new RegExp(String.raw`(despacho3d/index\.html\?v=)(${TAG})`, 'g') },
+  { archivo: 'os/despacho-section.js', nombre: 'RETRO_FRAME_PATH (iframe de despacho-retro/index.html)', patron: new RegExp(String.raw`(despacho-retro/index\.html\?office=retro&v=)(${TAG})`, 'g') }
 ].map(regla => Object.freeze({ clase: 'propia', minimo: 1, ...regla })));
 
 /* ───────────── configuración ───────────── */
