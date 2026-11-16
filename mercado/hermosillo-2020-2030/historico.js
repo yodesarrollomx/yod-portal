@@ -96,7 +96,7 @@
       const dimensions = [place, unit, frequency, segment, nature, source, evidence];
       const meta = dimensions.filter(Boolean);
       const key = JSON.stringify([series || label, ...dimensions]);
-      if (!groups.has(key)) groups.set(key, { label, series, unit, place, level, meta, search: normalize([label, series, ...meta].join(' ')), points: [] });
+      if (!groups.has(key)) groups.set(key, { label, series, unit, place, level, meta, frequency, segment, nature, source, evidence, search: normalize([label, series, ...meta].join(' ')), points: [] });
       groups.get(key).points.push({ period, date, value, source, url: field('url'), reference: field('referencia'), evidence });
       accepted++;
       if (date === null) undated++;
@@ -161,6 +161,8 @@
     if (!group) {
       chart.setAttribute('hidden', '');
       metadata.textContent = 'No hay series para ese filtro.';
+      const extremes = panel.querySelector('#hist-extremos');
+      if (extremes) extremes.textContent = '';
       return;
     }
     const { points } = group;
@@ -168,6 +170,12 @@
     const undated = points.length - datedPoints.length;
     metadata.textContent = group.meta.join(' · ') + ' · ' + number.format(points.length) + ' registros'
       + (undated ? ' · ' + number.format(undated) + ' periodos de texto en la tabla' : '');
+    const min = points.reduce((a, b) => b.value < a.value ? b : a);
+    const max = points.reduce((a, b) => b.value > a.value ? b : a);
+    const extremes = panel.querySelector('#hist-extremos');
+    if (extremes) extremes.textContent = 'Mínimo ' + number.format(min.value) + ' en ' + min.period
+      + ' · Máximo ' + number.format(max.value) + ' en ' + max.period + ' · ' + group.unit
+      + ' · Empates: ' + points.filter(p => p.value === max.value).length + ' observaciones en el máximo';
     chart.toggleAttribute('hidden', !datedPoints.length);
     if (datedPoints.length) renderChart(group, datedPoints);
     renderTable(points);
@@ -287,6 +295,7 @@
     if (levels.includes('municipio')) geography.value = 'municipio';
     reset.hidden = dataset === base || !base;
     options(defaultSeries(dataset.series));
+    panel.dispatchEvent(new CustomEvent('mercado:datos', { detail: dataset }));
   }
 
   search.addEventListener('input', () => options());

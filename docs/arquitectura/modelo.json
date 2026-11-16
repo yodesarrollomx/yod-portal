@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-16.masterbrokers-registros.1",
+  "revision": "2026-11-16.mercado-claro.1",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -16731,6 +16731,43 @@
       "titulo": "Master Brokers · registros compartidos editables y recuperables",
       "prioridad": "alta",
       "fase": "implementacion"
+    },
+    {
+      "id": "CHG-MERCADO-LECTURAS-20261116",
+      "components": [
+        "SYS-MERCADO"
+      ],
+      "status": "implementado_local",
+      "approval": "Dirección solicita ampliar el módulo con curaduría, cruces, gráficos dinámicos y escenarios con cautelas.",
+      "proposal": "Lecturas interactivas del mismo corte público y CSV local: precio nominal y real, crédito, pipeline RUV, catastro de zonas coincidentes, anuncios y sensibilidad del precio real. Fuente y periodo por observación; periodos comunes completos, duplicados conflictivos excluidos. El gráfico auditado de equilibrio sigue disponible.",
+      "tests": [
+        "Pruebas de cruces históricos y verificación del portal.",
+        "Recorrido del corte público y de una exportación de Datos en DOM."
+      ],
+      "deployment": "Integración por PR y verificación de Pages. Revertir el PR restaura el explorador anterior."
+    },
+    {
+      "id": "CHG-MERCADO-CLARO-20261116",
+      "components": [
+        "GAS-CATALOGO",
+        "GAS-PORTERO",
+        "SYS-CONTROL",
+        "SYS-DESPACHO",
+        "SYS-MERCADO",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-POTENCIALES",
+        "SYS-TRACK",
+        "SYS-YOD-OS"
+      ],
+      "status": "implementado_local",
+      "approval": "Dirección solicita una versión visual para lectores sin vocabulario inmobiliario especializado.",
+      "proposal": "Entrada por seis preguntas, cifras resumidas, gráfico con selección táctil y explicación de escala, porqué sencillo y límites visibles. Evidencia y metodología desplegables, catastro con nombres en barras horizontales y escenario ajustable. Se conservan cálculos, datos, fuentes y modelo avanzado. Fuera del módulo, sólo se propaga la etiqueta de caché canónica a OS, Obra y Track; sus contratos y lógica permanecen iguales.",
+      "tests": [
+        "Recorrido DOM de seis preguntas, filtros, fuentes y escenarios.",
+        "Pruebas existentes de Mercado y verificaciones del portal."
+      ],
+      "deployment": "Versión HTML autónoma y código local revisable. Publicación en portal por PR y comprobación separada."
     }
   ],
   "data_contracts": [

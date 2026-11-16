@@ -16,6 +16,10 @@ FIELDS = (
 )
 PRIMARY_DOMAINS = ("gob.mx", "inegi.org.mx", "banxico.org.mx", "infonavit.org.mx", "ruv.org.mx")
 PUBLIC_LEVELS = {"municipio", "ciudad", "zona metropolitana", "entidad", "estado", "país", "zona catastral", "tramo vial"}
+LAMUDI_PRICES = {
+    "Precio unitario mediano anunciado de venta": ("https://www.lamudi.com.mx/precios-inmuebles/venta/sonora/hermosillo/", "MXN/m²", "venta"),
+    "Precio unitario mediano anunciado de renta": ("https://www.lamudi.com.mx/precios-inmuebles/renta/sonora/hermosillo/", "MXN/m²/mes", "renta"),
+}
 PRIVATE_QUERY = {"access_token", "api_key", "apikey", "auth", "key", "password", "secret", "token"}
 EXCLUDED = re.compile(r"escenario|proyec|pron[oó]st|supuest|estimad|derivad|anunci|meta\b|prueba", re.I)
 PERIOD = re.compile(r"(\d{4})(?:-(?:[QT]([1-4])|(\d{2})(?:-(\d{2}))?))?", re.I)
@@ -51,14 +55,26 @@ def official_source(url):
         return False
 
 
+def public_portal_price(row):
+    definition = LAMUDI_PRICES.get(row["indicador"])
+    if not definition or row["fuente"] != "Lamudi México":
+        return False
+    url, unit, operation = definition
+    return (row["url"] == url and row["unidad"] == unit and row["frecuencia"] == "mensual"
+            and row["geografia"] == "Hermosillo" and row["nivel_geo"] == "municipio"
+            and row["segmento"] in {f"Casa · {operation}", f"Departamento · {operation}"})
+
+
 def public_rows(rows, as_of):
     exported = set()
     for row in rows:
         if row.get("visibilidad", "").strip().casefold() != "publica":
             continue
-        if row["estado"].strip().casefold() != "verificado" or not official_source(row["url"]):
+        if row["estado"].strip().casefold() != "verificado":
             continue
-        if EXCLUDED.search(" ".join(row[key] for key in ("indicador", "naturaleza"))):
+        portal = public_portal_price(row)
+        official = official_source(row["url"]) and not EXCLUDED.search(" ".join(row[key] for key in ("indicador", "naturaleza")))
+        if not (portal or official):
             continue
         if row["nivel_geo"].strip().casefold() not in PUBLIC_LEVELS:
             continue
@@ -76,7 +92,7 @@ def public_rows(rows, as_of):
             continue
         public_fields = {key: sheet_safe_text(row[key].strip()) for key in FIELDS}
         public_fields["valor"] = str(value)
-        public_fields["referencia"] = ""
+        public_fields["referencia"] = "Histórico mensual · " + row["periodo"] if portal else ""
         record = tuple(public_fields[key] for key in FIELDS)
         if record not in exported:
             exported.add(record)
