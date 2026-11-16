@@ -1,18 +1,16 @@
 {
-  "model_revision": "2026-11-16.ppp-factores.2",
-  "proposal_id": "CHG-PPP-FACTORES-20261116",
-  "summary": "Registra la edición visible de factores del PPP sin cambiar sus contratos de cálculo o autorización.",
+  "model_revision": "2026-11-16.masterbrokers-registros.1",
+  "proposal_id": "CHG-MB-REGISTROS-GLOBALES-20261116",
+  "summary": "Referencias explícitas de folio, terreno o PPP único concilian las fuentes dentro del mismo alcance. Edición por campo prevalece sobre la importación. Archivo y papelera persistentes, restauración y confirmación de alcance; contactos inactivos ocultan sus asuntos sin modificar los estados individuales. Conservar historial, concurrencia e idempotencia.",
   "components": [
-    "SYS-POTENCIALES",
-    "SYS-PPP2",
-    "SHEET-PPP2",
-    "SYS-CONTROL",
-    "GAS-PPP2"
+    "SYS-INVERSION",
+    "GAS-CRM",
+    "SHEET-CRM"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check",
-    "node --test tests/*.cjs",
-    "verify-os / verify-portal / verify-accesos / verify-obra-app"
+    "Pruebas sintéticas: referencia explícita y ambigua, aislamiento, edición parcial y campo vacío intencional.",
+    "Archivo, papelera y restauración de registros compartidos; readback, conflictos y reintentos.",
+    "Editor, filtros y estados en móvil/escritorio; sin escrituras de prueba en producción."
   ],
-  "rollback": "Revertir este registro y el PR de presentación del PPP; conservar los libros y sus versiones."
+  "rollback": "Revertir código y versión del motor, conservar columnas, estados e historial; no restaurar hojas de negocio."
 }
