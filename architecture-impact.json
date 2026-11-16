@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-11-16.mercado-historico.1",
+  "model_revision": "2026-11-16.mercado-historico.2",
   "proposal_id": "CHG-MERCADO-HISTORICO-20261116",
-  "summary": "Exploración de observaciones de Hermosillo con corte público y exportación privada CSV local. Etiqueta de caché del portal actualizada.",
+  "summary": "Conservar periodos censales y administrativos especiales de Datos en la tabla local. Selección inicial de SHF por indicador y cobertura.",
   "components": [
     "SYS-MERCADO",
     "SYS-TRACK",
