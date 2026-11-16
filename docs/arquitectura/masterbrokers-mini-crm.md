@@ -88,3 +88,8 @@ Aceptación: jerarquía y contacto único, filtros nominales, historial por fech
 CHG-MB-CARTERA-COMPACTA-20261116 sustituye la agrupación visual inicial por cliente: cada referencia canónica de terreno/PPP aparece una vez, con nombre y estado. Tocar el nombre abre su detalle y la flecha despliega un resumen para comparar. Contactos y acciones conservan sus referencias y aparecen al abrir. Los vencidos y seguimientos de hoy encabezan la lista; formalizados, pausados y descartados quedan abajo. El orden no cambia etapas ni fechas guardadas.
 
 Dentro de una cartera, cabecera con nombre y regreso al equipo; no se repite la lista de otros brokers. Búsqueda y filtros compactos; agenda, actualización y material en herramientas; altas y presentación al final. Edición compartida, archivo/papelera y restauración siguen en el mismo contrato privado. Sin migración ni nuevo backend.
+
+
+## Colores por etapa y situación · 16-nov-2026
+
+CHG-MB-COLORES-ESTADO-20261116 incorpora fondos suaves e insignias por etapa: Recibido azul, En revisión ámbar, PPP en proceso violeta, PPP presentado turquesa, En negociación naranja, Formalizado verde, En pausa gris y Descartado rosa grisáceo. El texto de la etapa permanece visible. La señal de seguimiento es independiente: vencido rojo, hoy ámbar, decisión violeta, planificación incompleta neutra; estados cerrados, pausados o registros inactivos no heredan urgencias de fechas antiguas. Lista y detalle comparten semántica, con leyenda dentro de filtros. No cambia datos, prioridad ni permisos. Validar contraste, teclado y ausencia de desbordamiento en320/390/1440.
