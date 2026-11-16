@@ -16664,6 +16664,31 @@
       "rollback": "Retirar únicamente conexión local y página; conservar recibos y libros; sin modificación de Apps Script ni fórmulas."
     },
     {
+      "id": "CHG-MERCADO-HISTORICO-20261116",
+      "components": [
+        "SYS-MERCADO",
+        "SYS-TRACK",
+        "SYS-OBRA",
+        "SYS-CONTROL",
+        "SYS-YOD-OS",
+        "SYS-OBRA-CLIENTE",
+        "GAS-PORTERO",
+        "SYS-DESPACHO",
+        "GAS-CATALOGO",
+        "SYS-POTENCIALES"
+      ],
+      "status": "implementado_local",
+      "approval": "Dirección, 16-nov-2026 por chat: rescatar datos históricos del mercado de Hermosillo a Google Sheets y hacer que el tablero pueda leerlos y actualizar sus gráficos; sin fórmulas ni proyecciones nuevas.",
+      "proposal": "Un explorador dentro de Mercado Hermosillo grafica valores publicados por indicador, unidad, geografía, periodo y evidencia. Carga un CSV público validado y permite abrir en el navegador una exportación CSV de Datos de Google Sheets. El archivo de usuario vive en memoria de la página. El exportador público comprueba visibilidad, calidad, fecha, dominio y contrato. El modelo de equilibrio conserva su fuente data.json y cálculos auditados. El enlace privado al libro no se incorpora a Pages. La etiqueta de caché del portal se propaga por el script canónico; sólo esos parámetros cambian fuera de Mercado. La lectura local conserva periodos de texto en la tabla con su etiqueta original y grafica sólo los periodos con fecha reconocible. Prioriza la serie SHF municipal aunque el identificador provenga de la hoja consolidada.",
+      "tests": [
+        "node --test mercado/hermosillo-2020-2030/tests/historico.test.cjs",
+        "python3 -m unittest discover -s mercado/hermosillo-2020-2030/tests -p 'test_*.py'",
+        "Render local con Playwright: carga de series públicas, importación privada, cambio de gráfico, restablecimiento y prueba móvil.",
+        "node scripts/arquitectura.cjs --check; verificaciones del portal y git diff --check."
+      ],
+      "deployment": "Publicar por PR a Pages. Verificar la ruta canónica y la carga del CSV público. Revertir la integración mediante el commit de merge. La importación local no requiere acceso del portal a Drive; cualquier sincronización directa necesitará ejecución privada y un permiso explícito sobre el libro."
+    },
+    {
       "id": "CHG-PPP-FACTORES-20261116",
       "components": [
         "SYS-POTENCIALES",
