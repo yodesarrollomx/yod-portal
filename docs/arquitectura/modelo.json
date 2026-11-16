@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-16.ppp-factores.1",
+  "revision": "2026-11-16.masterbrokers-registros.1",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -16709,6 +16709,27 @@
         "Sin nombres, cifras o identificadores de planes reales en Git.",
         "Las ediciones conservan revisión, request_id, bitácora y restauración existentes."
       ]
+    },
+    {
+      "id": "CHG-MB-REGISTROS-GLOBALES-20261116",
+      "components": [
+        "SYS-INVERSION",
+        "GAS-CRM",
+        "SHEET-CRM"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección solicita edición completa, archivo y borrado para todos los Master Brokers, corrección de duplicados, usabilidad y publicación inmediata el 16-nov-2026. Borrado recuperable; sin ampliar accesos ni cambiar cifras PPP.",
+      "proposal": "Referencias explícitas de folio, terreno o PPP único concilian las fuentes dentro del mismo alcance. Edición por campo prevalece sobre la importación. Archivo y papelera persistentes, restauración y confirmación de alcance; contactos inactivos ocultan sus asuntos sin modificar los estados individuales. Conservar historial, concurrencia e idempotencia.",
+      "tests": [
+        "Pruebas sintéticas: referencia explícita y ambigua, aislamiento, edición parcial y campo vacío intencional.",
+        "Archivo, papelera y restauración de registros compartidos; readback, conflictos y reintentos.",
+        "Editor, filtros y estados en móvil/escritorio; sin escrituras de prueba en producción."
+      ],
+      "deployment": "Propuesta autorizada previa a implementación; verificar publicación separadamente.",
+      "rollback": "Revertir código y versión del motor, conservar columnas, estados e historial; no restaurar hojas de negocio.",
+      "titulo": "Master Brokers · registros compartidos editables y recuperables",
+      "prioridad": "alta",
+      "fase": "implementacion"
     }
   ],
   "data_contracts": [
