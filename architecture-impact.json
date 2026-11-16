@@ -1,9 +1,10 @@
 {
   "model_revision": "2026-11-16.masterbrokers-compacto.1",
   "proposal_id": "CHG-MB-CARTERA-COMPACTA-20261116",
-  "summary": "Entrada por nombre y estado de cada expediente canónico, sin repetirlo por contacto. Abrir conserva el detalle completo; el desplegable permite comparar. Seguimientos vencidos y de hoy primero, luego decisiones y siguientes pasos; formalizados, pausados y descartados al final. Cabecera del broker con regreso al equipo, herramientas secundarias y altas al pie. Se conservan IDs, ACL, fuentes, edición compartida y archivo/papelera global.",
+  "summary": "Entrada por nombre y estado de cada expediente canónico, sin repetirlo por contacto. Abrir conserva el detalle completo; el desplegable permite comparar. Seguimientos vencidos y de hoy primero, luego decisiones y siguientes pasos; formalizados, pausados y descartados al final. Cabecera del broker con regreso al equipo, herramientas secundarias y altas al pie. Se conservan IDs, ACL, fuentes, edición compartida y archivo/papelera global. SYS-YOD-OS sólo actualiza su atlas público; no cambia comportamiento del portal.",
   "components": [
-    "SYS-INVERSION"
+    "SYS-INVERSION",
+    "SYS-YOD-OS"
   ],
   "tests": [
     "Orden con vencidos, hoy, decisión, sin fecha, futuros y estados inactivos; desempate determinista.",

@@ -16772,7 +16772,8 @@
     {
       "id": "CHG-MB-CARTERA-COMPACTA-20261116",
       "components": [
-        "SYS-INVERSION"
+        "SYS-INVERSION",
+        "SYS-YOD-OS"
       ],
       "status": "implementado_local",
       "approval": "Dirección solicita continuar y publicar: cartera compacta, casos contraídos, prioridad de seguimiento y altas al pie.",
