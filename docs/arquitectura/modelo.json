@@ -16749,11 +16749,20 @@
     {
       "id": "CHG-MERCADO-CLARO-20261116",
       "components": [
-        "SYS-MERCADO"
+        "GAS-CATALOGO",
+        "GAS-PORTERO",
+        "SYS-CONTROL",
+        "SYS-DESPACHO",
+        "SYS-MERCADO",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-POTENCIALES",
+        "SYS-TRACK",
+        "SYS-YOD-OS"
       ],
       "status": "implementado_local",
       "approval": "Dirección solicita una versión visual para lectores sin vocabulario inmobiliario especializado.",
-      "proposal": "Entrada por seis preguntas, cifras resumidas, gráfico con selección táctil y explicación de escala, porqué sencillo y límites visibles. Evidencia y metodología desplegables, catastro con nombres en barras horizontales y escenario ajustable. Se conservan cálculos, datos, fuentes y modelo avanzado.",
+      "proposal": "Entrada por seis preguntas, cifras resumidas, gráfico con selección táctil y explicación de escala, porqué sencillo y límites visibles. Evidencia y metodología desplegables, catastro con nombres en barras horizontales y escenario ajustable. Se conservan cálculos, datos, fuentes y modelo avanzado. Fuera del módulo, sólo se propaga la etiqueta de caché canónica a OS, Obra y Track; sus contratos y lógica permanecen iguales.",
       "tests": [
         "Recorrido DOM de seis preguntas, filtros, fuentes y escenarios.",
         "Pruebas existentes de Mercado y verificaciones del portal."

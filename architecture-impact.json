@@ -1,9 +1,18 @@
 {
   "model_revision": "2026-11-16.mercado-claro.1",
   "proposal_id": "CHG-MERCADO-CLARO-20261116",
-  "summary": "Entrada por seis preguntas, cifras resumidas, gráfico con selección táctil y explicación de escala, porqué sencillo y límites visibles. Evidencia y metodología desplegables, catastro con nombres en barras horizontales y escenario ajustable. Se conservan cálculos, datos, fuentes y modelo avanzado.",
+  "summary": "Entrada por seis preguntas, cifras resumidas, gráfico con selección táctil y explicación de escala, porqué sencillo y límites visibles. Evidencia y metodología desplegables, catastro con nombres en barras horizontales y escenario ajustable. Se conservan cálculos, datos, fuentes y modelo avanzado. Fuera del módulo, sólo se propaga la etiqueta de caché canónica a OS, Obra y Track; sus contratos y lógica permanecen iguales.",
   "components": [
-    "SYS-MERCADO"
+    "GAS-CATALOGO",
+    "GAS-PORTERO",
+    "SYS-CONTROL",
+    "SYS-DESPACHO",
+    "SYS-MERCADO",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "SYS-POTENCIALES",
+    "SYS-TRACK",
+    "SYS-YOD-OS"
   ],
   "tests": [
     "Recorrido DOM de seis preguntas, filtros, fuentes y escenarios.",
