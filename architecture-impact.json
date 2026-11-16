@@ -6,7 +6,9 @@
     "SYS-POTENCIALES",
     "GAS-PORTERO",
     "SHEET-PORTERO",
-    "SYS-YOD-OS"
+    "SYS-YOD-OS",
+    "SYS-CONTROL",
+    "SYS-PPP2"
   ],
   "tests": [
     "Pruebas sintéticas de conservación de inventario y efectivo, anticipo una vez, interés sobre saldo y reparto después de deuda.",
