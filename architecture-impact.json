@@ -1,10 +1,13 @@
 {
   "model_revision": "2026-11-16.aportadores-relato.1",
   "proposal_id": "CHG-APORTADORES-RELATO-20261116",
-  "summary": "Añadir un recorrido SVG de siete escenas al catálogo existente. Reutilizar dibujos aceptados, fuente de marca, control de presentaciones, Portero y chinches. Material común visible desde las carteras; control privado de Dirección. Conservar los demás casos y datos.",
+  "summary": "Añadir un recorrido SVG de siete escenas al catálogo existente. Reutilizar dibujos aceptados, fuente de marca, control de presentaciones, Portero y chinches. Material común visible desde las carteras; control privado de Dirección. Conservar los demás casos y datos. El registro de chinches es compartido; las otras aplicaciones conservan su implementación.",
   "components": [
     "SYS-INVERSION",
-    "SYS-YOD-OS"
+    "SYS-YOD-OS",
+    "SYS-SALA",
+    "SYS-AMALAYA",
+    "SYS-EMD"
   ],
   "tests": [
     "Continuidad de desarrollador, círculo y curva; avance reversible y límites.",

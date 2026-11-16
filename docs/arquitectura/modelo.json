@@ -16789,7 +16789,10 @@
       "id": "CHG-APORTADORES-RELATO-20261116",
       "components": [
         "SYS-INVERSION",
-        "SYS-YOD-OS"
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SYS-AMALAYA",
+        "SYS-EMD"
       ],
       "status": "propuesto",
       "approval": "Dirección acepta el guion y autoriza ejecutar una primera versión completa en Master Brokers, con logo auténtico y apertura por el desarrollador tradicional.",
