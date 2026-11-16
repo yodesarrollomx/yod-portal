@@ -1,14 +1,16 @@
 {
-  "model_revision": "2026-11-16.masterbrokers-colores.1",
-  "proposal_id": "CHG-MB-COLORES-ESTADO-20261116",
-  "summary": "Consumidor Master Brokers: tono suave por etapa, insignia legible y señal textual independiente de urgencia (vencido, hoy, decisión o planificación incompleta). Pausados, descartados y archivados no se marcan vencidos. Misma paleta en lista y detalle; leyenda secundaria. Sólo presentación; no cambia orden, fechas, estados guardados, permisos ni contratos. SYS-YOD-OS sólo documenta el cambio en el atlas.",
+  "model_revision": "2026-11-16.ppp-especie.1",
+  "proposal_id": "CHG-PPP-ESPECIE-20261116",
+  "summary": "Comparar pago de tierra con anticipo y viviendas: participación en utilidad, interés simple sobre saldo y porcentaje del valor de ventas. Extender el libro nativo por versión; separar adjudicación de cobros y conservar las fórmulas de deuda. La UI captura, muestra y solicita equilibrio de la entrega; Sheets calcula. Corregir primero la lectura si no confirma revisión.",
   "components": [
-    "SYS-INVERSION",
-    "SYS-YOD-OS"
+    "SYS-POTENCIALES",
+    "GAS-PORTERO",
+    "SHEET-PORTERO"
   ],
   "tests": [
-    "Regresión de señales por fechas y estados inactivos; contraste de texto de cada color.",
-    "Navegador móvil/escritorio con las ocho etapas, vencido/hoy/decisión, teclado, detalle, archivo y restauración."
+    "Pruebas sintéticas de conservación de inventario y efectivo, anticipo una vez, interés sobre saldo y reparto después de deuda.",
+    "Regresiones de versiones nativas, lectura, recuperación, permisos y móvil.",
+    "Lectura nativa y resultados guardados contrastados en UI; sin POST de prueba productivo."
   ],
-  "rollback": "Revertir sólo presentación y documentación; conservar datos y backend."
+  "rollback": "Revertir consumidor y servidor a versiones anteriores sobre la misma implementación; conservar copias nativas y registro de cambios."
 }
