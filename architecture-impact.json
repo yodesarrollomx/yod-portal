@@ -1,12 +1,13 @@
 {
-  "model_revision": "2026-11-16.ppp-factores.1",
+  "model_revision": "2026-11-16.ppp-factores.2",
   "proposal_id": "CHG-PPP-FACTORES-20261116",
   "summary": "Registra la edición visible de factores del PPP sin cambiar sus contratos de cálculo o autorización.",
   "components": [
     "SYS-POTENCIALES",
     "SYS-PPP2",
     "SHEET-PPP2",
-    "SYS-CONTROL"
+    "SYS-CONTROL",
+    "GAS-PPP2"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check",
