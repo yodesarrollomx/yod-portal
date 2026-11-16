@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-15.mcp-operativo.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-15.ppp-publico.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -571,6 +571,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Adaptador implementado en mcp/: SDK MCP, visor compartido y edición PPP2 por sesión local; pruebas aisladas. · Estado: codigo · yodesarrollomx/potenciales-yod · mcp/README.md · Sin revisión inmutable en esta referencia
 - 2026-11-15T17:56:39Z: SDK externo inicializa HTTP y lee liga activa; resumen y flujo iguales al visor. Sin escrituras reales ni clientes instalados. · Estado: ejecucion · yodesarrollomx/yod-portal · docs/arquitectura/mcp-yod-live.json · Sin revisión inmutable en esta referencia
 - Conexión local desde YOD con planes elegidos, permiso por llamada, registro mediante CLI, diagnóstico y recibos enlazados; implementación local, sin aceptación privada de producción. · Estado: codigo · yodesarrollomx/yod-portal · docs/arquitectura/mcp-operativo.md · Sin revisión inmutable en esta referencia
+- Superficie pública independiente con motor VERTICAL clásico fijado, rangos, escenarios privados y revisión. Publicación v1 y acceso anónimo comprobados; autenticación real, PPP2 y clientes personales pendientes de aceptación separada. · Estado: ejecucion · yodesarrollomx/yod-portal · docs/arquitectura/ppp-publico.md · Sin revisión inmutable en esta referencia
 
 **Evidencia de conexiones:**
 

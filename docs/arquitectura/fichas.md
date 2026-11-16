@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-15.mcp-operativo.1 · 2026-11-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-15.ppp-publico.1 · 2026-11-13.
 
 ## SYS-DESPACHO · El Despacho
 
@@ -1233,7 +1233,7 @@ Acceso por funciones desde asistentes compatibles; primer adaptador PPP y visor.
 - Evidencia: ejecucion. Producción: HTTP compartido v0.1.0 en https://yod-os-mcp.onrender.com/mcp, comprobado 15-nov-2026. Catálogo vacío. stdio con edición implementado/probado sintéticamente; clientes individuales pendientes de configuración..
 - Entidades: capacidad, vista_autorizada, cambio_preparado, recibo.
 - Fuente de verdad: Contratos y libros existentes de cada sistema; no base de negocio nueva..
-- Evidencia: [potenciales-yod/mcp/README.md](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/mcp/README.md) — Adaptador implementado en mcp/: SDK MCP, visor compartido y edición PPP2 por sesión local; pruebas aisladas.; [yod-portal/docs/arquitectura/mcp-yod-live.json](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/mcp-yod-live.json) — 2026-11-15T17:56:39Z: SDK externo inicializa HTTP y lee liga activa; resumen y flujo iguales al visor. Sin escrituras reales ni clientes instalados.; [yod-portal/docs/arquitectura/mcp-operativo.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/mcp-operativo.md) — Conexión local desde YOD con planes elegidos, permiso por llamada, registro mediante CLI, diagnóstico y recibos enlazados; implementación local, sin aceptación privada de producción..
+- Evidencia: [potenciales-yod/mcp/README.md](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/mcp/README.md) — Adaptador implementado en mcp/: SDK MCP, visor compartido y edición PPP2 por sesión local; pruebas aisladas.; [yod-portal/docs/arquitectura/mcp-yod-live.json](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/mcp-yod-live.json) — 2026-11-15T17:56:39Z: SDK externo inicializa HTTP y lee liga activa; resumen y flujo iguales al visor. Sin escrituras reales ni clientes instalados.; [yod-portal/docs/arquitectura/mcp-operativo.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/mcp-operativo.md) — Conexión local desde YOD con planes elegidos, permiso por llamada, registro mediante CLI, diagnóstico y recibos enlazados; implementación local, sin aceptación privada de producción.; [yod-portal/docs/arquitectura/ppp-publico.md](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/ppp-publico.md) — Superficie pública independiente con motor VERTICAL clásico fijado, rangos, escenarios privados y revisión. Publicación v1 y acceso anónimo comprobados; autenticación real, PPP2 y clientes personales pendientes de aceptación separada..
 - Conexiones: CON-MCP-PPP (SYS-YOD-MCP → GAS-PPP2).
 - Mejoras: Conservar y verificar alcance antes de ampliar.
 - Pendientes: Una liga del visor es acceso por posesión; apagarla conserva el plazo de revocación del servidor.; MCP no certifica calidad de datos ni rentabilidades..
