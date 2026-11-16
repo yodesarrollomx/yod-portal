@@ -16673,7 +16673,8 @@
       "id": "CHG-PPP-PUBLICO-20261115",
       "components": [
         "SYS-YOD-MCP",
-        "SYS-POTENCIALES"
+        "SYS-POTENCIALES",
+        "SYS-YOD-OS"
       ],
       "proposal": "Experiencia de campaña web: exploración anónima, cuatro rangos, un escenario Jugando por cuenta/caso, envío fijo y revisión privada. Adaptación aislada del motor VERTICAL clásico con fuente y huella fijadas; importación/exportación nativa, sin escrituras en PPP oficial ni Apps Script.",
       "approval": "Dirección, 15-nov-2026: simplificar acceso para campaña pública y permitir jugar con rangos en un escenario revisable. Sólo ejemplo sintético inicial; casos reales requieren publicación explícita de Dirección.",
