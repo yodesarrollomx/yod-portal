@@ -14,6 +14,7 @@ Encargo de Dirección del 1-nov-2026 (Buzón Claude ↔ ChatGPT, fila 505, ID `C
 |---|---|
 | `index.html` | El tablero. Lee `data.json` por `fetch`, así que hay que abrirlo desde el servidor y no como archivo. |
 | `data.json` | Lo genera `base/construir_data.py`. Contiene: equilibrio por año (P nominal y real, Q, rango); cierre 2026; escenarios 2027–2030 con sus cruces y la sensibilidad de hogares; prueba del método; cartera por etapa; desplazadores con fuente; supuestos y fuentes citadas. |
+| `historico.js` y `historico-publico.csv.gz` | Explorador de series por cobertura, unidad, segmento y evidencia. Incluye un corte público de fuentes oficiales y abre un CSV privado de la pestaña Datos en memoria del navegador. |
 | `base/series-integradas.csv` | La base completa en formato largo (ver `base/CONTRATO.md` y `base/fase2/CONTRATO-F2.md`): frentes de la Fase 1 más un folder por chunk de la Fase 2. |
 | `base/fase2/f2-*/` | Un folder por chunk de la Fase 2: tubería RUV, inventario terminado, cartera pública y privada, empleo, hogares, crédito y macro, índice SHF por categoría, supuestos de escenario, prueba del método y meses 2021–2024. |
 | `base/motor/` | `cierre2026.py` y `escenarios.py` (motor de escenarios), con sus salidas y pruebas (`tests/test_escenarios.py`). |
@@ -41,5 +42,18 @@ Los scripts corren en el expediente de trabajo (estructura `01_base/`, `02_cruce
 3. Revisar el tablero en iPhone y en escritorio, y publicar por PR.
 
 Calidad de cada cifra: `observado`, `estimado` (cálculo propio con fórmula visible), `declarado`, `prensa`, `supuesto` (decisión propia justificada) o `por verificar`.
+
+### Actualizar Datos históricos
+
+En Google Sheets, descarga la pestaña **Datos** como CSV. Ábrela en la sección **Datos históricos** del tablero para elegir una serie y ver sus valores con fuente. El archivo se lee en memoria de esa página. Los datos abiertos ahí se borran al recargar o volver al corte público.
+
+Para actualizar el corte de Pages, ejecuta desde esta carpeta con el archivo privado y la fecha de corte correspondiente:
+
+```sh
+python3 base/exportar_historico.py /ruta/privada/Datos.csv /tmp/historico-publico.csv --corte AAAA-MM-DD
+gzip -nc /tmp/historico-publico.csv > historico-publico.csv.gz
+```
+
+Revisa y publica por PR únicamente el corte generado. El exportador conserva observaciones públicas verificadas de dominios oficiales y elimina referencias de texto libre, campos internos y localidades censales individuales. Los valores catastrales anuales son tablas de vigencia, por lo que pueden aparecer desde el inicio del año. Los gráficos de equilibrio siguen leyendo `data.json`; el explorador muestra series sin recalcular sus cifras originales.
 
 El tablero está en el menú de YOD OS justo debajo de PPP (`os/catalogo.js`, `SYS-MERCADO`, código `MH`) y carga el marco `shell.js` como cualquier tablero de la casa. Con `?embed=1` se ve sin marco.

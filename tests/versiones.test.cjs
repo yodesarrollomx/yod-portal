@@ -182,7 +182,10 @@ const FUENTES_JS = v => ({
     "loadMount:function(){return import('../despacho3d/equipo.mjs?v=" + v + "').then(function(module){return module.mountTeamDesk;});},",
     "'&rol='+encodeURIComponent(state.role)+'&v='+TABLERO_V;"
   ].join('\n'),
-  'os/despacho-section.js': "var FRAME_PATH='../despacho3d/index.html?v=" + v + "';",
+  'os/despacho-section.js': [
+    "var FRAME_PATH='../despacho3d/index.html?v=" + v + "';",
+    "var RETRO_FRAME_PATH='../despacho-retro/index.html?office=retro&v=" + v + "';",
+  ].join('\n'),
   'os/yod-cargador.js': "sc.src = new URL('yod-acceso.js?v=" + v + "', SELF).href;"
 });
 
@@ -283,7 +286,7 @@ test('CLI --aplicar deja el repo en regla, no toca lo excluido y una segunda pas
   assert.equal(a.status, 0, a.stdout + a.stderr);
   assert.equal(leer(dir, 'tablero.html'), '<!doctype html>\n<script src="os/yod-acceso.js?v=A1"></script>\n<script src="chinche.js?v=A1"></script>\n<script src="https://yodesarrollomx.github.io/potenciales-yod/portero.js?v=B2"></script>\n');
   assert.equal(leer(dir, 'os/index.html'), '<!doctype html>\n<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/x@1/x.css">\n<link rel="stylesheet" href="styles.css?v=A1">\n');
-  assert.equal(leer(dir, 'os/despacho-section.js'), "var FRAME_PATH='../despacho3d/index.html?v=A1';\n");
+  assert.equal(leer(dir, 'os/despacho-section.js'), FUENTES_JS('A1')['os/despacho-section.js'] + '\n');
   for (const rel of intactos) assert.equal(leer(dir, rel), antes[rel], rel);
   const c = cli(dir, '--check');
   assert.equal(c.status, 0, c.stdout + c.stderr);
