@@ -70,6 +70,7 @@
     const groups = new Map();
     let accepted = 0;
     let omitted = 0;
+    let undated = 0;
     for (const row of rows) {
       if (row.length !== header.length) throw new Error('Hay filas con una cantidad incorrecta de columnas.');
       const field = name => (row[positions.get(name)] ?? '').trim();
@@ -80,7 +81,7 @@
       const date = periodDate(period);
       const value = Number(raw.replaceAll(',', ''));
       if (!/^[+-]?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?(?:e[+-]?\d+)?$/i.test(raw)
-          || !Number.isFinite(value) || date === null || !label || !unit) {
+          || !Number.isFinite(value) || !period || !label || !unit) {
         omitted++;
         continue;
       }
@@ -98,11 +99,21 @@
       if (!groups.has(key)) groups.set(key, { label, series, unit, place, level, meta, search: normalize([label, series, ...meta].join(' ')), points: [] });
       groups.get(key).points.push({ period, date, value, source, url: field('url'), reference: field('referencia'), evidence });
       accepted++;
+      if (date === null) undated++;
     }
-    if (!accepted) throw new Error('El CSV no tiene filas con valor numérico y periodo reconocible.');
+    if (!accepted) throw new Error('El CSV no tiene filas con valor numérico y periodo informado.');
     const series = [...groups.values()].sort((a, b) => a.label.localeCompare(b.label, 'es-MX') || a.place.localeCompare(b.place, 'es-MX'));
-    for (const group of series) group.points.sort((a, b) => a.date - b.date);
-    return { series, accepted, omitted };
+    for (const group of series) group.points.sort((a, b) =>
+      (a.date ?? Number.MAX_SAFE_INTEGER) - (b.date ?? Number.MAX_SAFE_INTEGER) || a.period.localeCompare(b.period));
+    return { series, accepted, omitted, undated };
+  }
+
+  function defaultSeries(series) {
+    const municipal = group => group.place === 'Hermosillo · municipio' && group.points.some(point => point.date !== null);
+    const official = group => municipal(group) && /^indice shf\b/.test(normalize(group.label))
+      && /^indice\b/.test(normalize(group.unit));
+    const current = series.findIndex(official);
+    return current >= 0 ? current : series.findIndex(group => municipal(group) && group.series === 'shf-indice-hermosillo');
   }
 
   function sourceLink(value) {
@@ -115,7 +126,7 @@
   }
 
   if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { parseCSV, readSeries, periodDate, sourceLink };
+    module.exports = { parseCSV, readSeries, periodDate, sourceLink, defaultSeries };
     return;
   }
 
@@ -146,14 +157,23 @@
     const group = namedSeries.value ? current.series[Number(namedSeries.value)] : undefined;
     chart.replaceChildren();
     table.replaceChildren();
-    chart.toggleAttribute('hidden', !group);
     panel.querySelector('#hist-tabla').hidden = !group;
     if (!group) {
+      chart.setAttribute('hidden', '');
       metadata.textContent = 'No hay series para ese filtro.';
       return;
     }
     const { points } = group;
-    metadata.textContent = group.meta.join(' · ') + ' · ' + number.format(points.length) + ' registros';
+    const datedPoints = points.filter(point => point.date !== null);
+    const undated = points.length - datedPoints.length;
+    metadata.textContent = group.meta.join(' · ') + ' · ' + number.format(points.length) + ' registros'
+      + (undated ? ' · ' + number.format(undated) + ' periodos de texto en la tabla' : '');
+    chart.toggleAttribute('hidden', !datedPoints.length);
+    if (datedPoints.length) renderChart(group, datedPoints);
+    renderTable(points);
+  }
+
+  function renderChart(group, points) {
     chart.append(svg('title', {}, group.label + ' — ' + group.unit));
     let minimum = points[0].value;
     let maximum = minimum;
@@ -200,6 +220,9 @@
         chart.append(circle);
       }
     }
+  }
+
+  function renderTable(points) {
     const fragment = document.createDocumentFragment();
     for (const point of points) {
       const row = document.createElement('tr');
@@ -254,7 +277,8 @@
     current = dataset;
     search.value = '';
     status.textContent = label + ' · ' + number.format(dataset.accepted) + ' registros en ' + number.format(dataset.series.length) + ' series'
-      + (dataset.omitted ? ' · ' + number.format(dataset.omitted) + ' filas sin valor o periodo graficable' : '');
+      + (dataset.undated ? ' · ' + number.format(dataset.undated) + ' periodos de texto en tabla' : '')
+      + (dataset.omitted ? ' · ' + number.format(dataset.omitted) + ' filas sin campos requeridos' : '');
     search.disabled = false;
     geography.disabled = false;
     geography.replaceChildren(new Option('Todos los niveles', ''));
@@ -262,8 +286,7 @@
     for (const level of levels) geography.add(new Option(level, level));
     if (levels.includes('municipio')) geography.value = 'municipio';
     reset.hidden = dataset === base || !base;
-    const preferred = dataset.series.findIndex(group => group.series === 'shf-indice-hermosillo');
-    options(preferred);
+    options(defaultSeries(dataset.series));
   }
 
   search.addEventListener('input', () => options());

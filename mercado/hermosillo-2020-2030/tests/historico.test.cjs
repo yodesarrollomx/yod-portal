@@ -2,7 +2,7 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { parseCSV, readSeries, periodDate, sourceLink } = require('../historico.js');
+const { parseCSV, readSeries, periodDate, sourceLink, defaultSeries } = require('../historico.js');
 
 const header = 'serie_id,indicador,valor,unidad,periodo,frecuencia,geografia,nivel_geo,segmento,naturaleza,fuente,url,referencia,estado';
 
@@ -21,14 +21,17 @@ test('preserva cero, separa geografía y unidad, y distingue estados', () => {
     's,Producción,7,créditos,2024,anual,Hermosillo,municipio,nueva,observación,INEGI,,,verificado',
     's,Producción,5,viviendas,2024,anual,Hermosillo,municipio,nueva,observación,INEGI,,,declarado',
     's,Producción,,viviendas,2022,anual,Hermosillo,municipio,nueva,observación,INEGI,,,por verificar',
-    's,Producción,1,viviendas,2021-13,mensual,Hermosillo,municipio,nueva,observación,INEGI,,,observado',
+    's,Producción,1,viviendas,2023 especial,anual,Hermosillo,municipio,nueva,observación,INEGI,,,verificado',
   ].join('\n');
   const data = readSeries(csv);
-  assert.equal(data.accepted, 5);
-  assert.equal(data.omitted, 2);
+  assert.equal(data.accepted, 6);
+  assert.equal(data.omitted, 1);
+  assert.equal(data.undated, 1);
   assert.equal(data.series.length, 4);
-  const group = data.series.find(series => series.points.length === 2);
-  assert.deepEqual(group.points.map(point => point.value), [0, 1220.35]);
+  const group = data.series.find(series => series.points.length === 3);
+  assert.deepEqual(group.points.map(point => point.value), [0, 1220.35, 1]);
+  assert.equal(group.points[2].period, '2023 especial');
+  assert.equal(group.points[2].date, null);
   assert.equal(group.points[0].reference, 'Celda A4');
 });
 
@@ -50,4 +53,14 @@ test('fechas comparables válidas y enlaces sin ejecución ni credenciales', () 
   assert.equal(sourceLink('javascript:alert(1)'), '');
   assert.equal(sourceLink('https://clave:secreto@example.com'), '');
   assert.equal(sourceLink('https://www.inegi.org.mx/punto'), 'https://www.inegi.org.mx/punto');
+});
+
+test('elige el índice SHF municipal de la Hoja con identificador generado', () => {
+  const data = readSeries([
+    header,
+    'otro,Índice SHF de precios de vivienda,100,índice,2024,anual,Sonora,estado,nueva,índice hipotecario,SHF,,,verificado',
+    'serie-generada,Índice SHF de precios de la vivienda con crédito hipotecario,100,índice,2024,anual,Hermosillo,municipio,total,índice hipotecario,SHF,,,verificado',
+    'variacion,Variación anual del índice SHF,10,%,2024,anual,Hermosillo,municipio,nueva,variación,SHF,,,verificado',
+  ].join('\n'));
+  assert.equal(data.series[defaultSeries(data.series)].series, 'serie-generada');
 });
