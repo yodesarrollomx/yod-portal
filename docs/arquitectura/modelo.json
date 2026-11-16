@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-16.masterbrokers-compacto.1",
+  "revision": "2026-11-16.aportadores-relato.1",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -16784,6 +16784,26 @@
         "Regresión de evaluación y retorno, sin escrituras de negocio en producción."
       ],
       "deployment": "Implementación local; 209 pruebas de contratos y orden aprobadas. Recorridos de navegador y Pages pendientes de CI/publicación. Revertir sólo frontend, conservar datos y contratos."
+    },
+    {
+      "id": "CHG-APORTADORES-RELATO-20261116",
+      "components": [
+        "SYS-INVERSION",
+        "SYS-YOD-OS",
+        "SYS-SALA",
+        "SYS-AMALAYA",
+        "SYS-EMD"
+      ],
+      "status": "propuesto",
+      "approval": "Dirección acepta el guion y autoriza ejecutar una primera versión completa en Master Brokers, con logo auténtico y apertura por el desarrollador tradicional.",
+      "proposal": "Añadir un recorrido SVG de siete escenas al catálogo existente. Reutilizar dibujos aceptados, fuente de marca, control de presentaciones, Portero y chinches. Material común visible desde las carteras; control privado de Dirección. Conservar los demás casos y datos.",
+      "tests": [
+        "Continuidad de desarrollador, círculo y curva; avance reversible y límites.",
+        "33 momentos en escritorio y móvil vertical/horizontal, teclado, rotor y movimiento reducido.",
+        "Catálogo, acceso a material compartido, edición privada y captura con servicios sintéticos."
+      ],
+      "deployment": "Pendiente de implementación y publicación.",
+      "rollback": "Revertir sólo esta incorporación; conservar archivos privados y recibos existentes."
     }
   ],
   "data_contracts": [

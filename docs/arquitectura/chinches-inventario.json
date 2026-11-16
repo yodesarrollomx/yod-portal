@@ -298,13 +298,14 @@
       "HEAD:presentacion/distrito-abasto/",
       "HEAD:presentacion/distrito-obregon/",
       "HEAD:presentacion/gaston-madrid/",
-      "HEAD:master-brokers/"
+      "HEAD:master-brokers/",
+      "HEAD:presentacion/aportadores/"
     ],
     "commit": "851d9a5cc0bb31dad21611fe516de56fdc336228",
     "capturador": "bundle",
     "inventoryStatus": "source-audited",
     "sourceBasis": "exact-shared-block",
-    "sourceFinding": "PMD-1.0.0 incorpora catálogo y cuatro adaptadores al mismo paquete común; publicación y revisión física pendientes de comprobar por separado.",
+    "sourceFinding": "PMD-1.0.0 incorpora catálogo y cuatro adaptadores al mismo paquete común; publicación y revisión física pendientes de comprobar por separado. Aportadores añade siete escenas y 33 momentos con el mismo paquete; recibo y reproducción reales pendientes.",
     "sourceDependencies": [],
     "sourceEvidence": [],
     "secuencia": "Paquete objetivo 1.1.1; publicación, recibo y reproducción se acreditan por separado.",
