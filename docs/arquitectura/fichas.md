@@ -1,6 +1,6 @@
 # Fichas de los componentes
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-16.aportadores-relato.1 · 2026-11-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-16.masterbrokers-colores.1 · 2026-11-13.
 
 ## SYS-DESPACHO · El Despacho
 
