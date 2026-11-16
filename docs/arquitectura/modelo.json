@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-16.ppp-factores.1",
+  "revision": "2026-11-16.ppp-factores.2",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -16694,7 +16694,8 @@
         "SYS-POTENCIALES",
         "SYS-PPP2",
         "SHEET-PPP2",
-        "SYS-CONTROL"
+        "SYS-CONTROL",
+        "GAS-PPP2"
       ],
       "proposal": "Entrada visible Editar factores en el plan, agrupación por los siete cuadros y búsqueda. Deslizadores y controles sí/no sobre el lápiz existente; conserva las relaciones derivadas de las fórmulas, la simulación en el libro, guardado por versión o dato y deshacer. El visor compartido sólo enlaza al editor autenticado, sin conceder permisos.",
       "approval": "Dirección solicita el 16-nov-2026 hacer editables los factores relacionados de los planes y conservar versiones previas.",
