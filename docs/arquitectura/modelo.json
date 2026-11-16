@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-16.mercado-historico.2",
+  "revision": "2026-11-16.ppp-factores.1",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -16687,6 +16687,28 @@
         "node scripts/arquitectura.cjs --check; verificaciones del portal y git diff --check."
       ],
       "deployment": "Publicar por PR a Pages. Verificar la ruta canónica y la carga del CSV público. Revertir la integración mediante el commit de merge. La importación local no requiere acceso del portal a Drive; cualquier sincronización directa necesitará ejecución privada y un permiso explícito sobre el libro."
+    },
+    {
+      "id": "CHG-PPP-FACTORES-20261116",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "SHEET-PPP2",
+        "SYS-CONTROL"
+      ],
+      "proposal": "Entrada visible Editar factores en el plan, agrupación por los siete cuadros y búsqueda. Deslizadores y controles sí/no sobre el lápiz existente; conserva las relaciones derivadas de las fórmulas, la simulación en el libro, guardado por versión o dato y deshacer. El visor compartido sólo enlaza al editor autenticado, sin conceder permisos.",
+      "approval": "Dirección solicita el 16-nov-2026 hacer editables los factores relacionados de los planes y conservar versiones previas.",
+      "status": "propuesto",
+      "tests": [
+        "Recorridos sintéticos de editor y lector, controles, simulación, guardado y deshacer; móvil y teclado.",
+        "Regresiones existentes de PPP2, visor, permisos y versiones."
+      ],
+      "deployment": "Preparación en rama; publicación y cambios privados de planes se acreditan por separado.",
+      "invariants": [
+        "Sin fórmulas financieras nuevas ni cambios de backend, sesión o permisos.",
+        "Sin nombres, cifras o identificadores de planes reales en Git.",
+        "Las ediciones conservan revisión, request_id, bitácora y restauración existentes."
+      ]
     }
   ],
   "data_contracts": [

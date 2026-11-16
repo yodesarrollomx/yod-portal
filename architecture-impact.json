@@ -1,24 +1,17 @@
 {
-  "model_revision": "2026-11-16.mercado-historico.2",
-  "proposal_id": "CHG-MERCADO-HISTORICO-20261116",
-  "summary": "Conservar periodos censales y administrativos especiales de Datos en la tabla local. Selección inicial de SHF por indicador y cobertura.",
+  "model_revision": "2026-11-16.ppp-factores.1",
+  "proposal_id": "CHG-PPP-FACTORES-20261116",
+  "summary": "Registra la edición visible de factores del PPP sin cambiar sus contratos de cálculo o autorización.",
   "components": [
-    "SYS-MERCADO",
-    "SYS-TRACK",
-    "SYS-OBRA",
-    "SYS-CONTROL",
-    "SYS-YOD-OS",
-    "SYS-OBRA-CLIENTE",
-    "GAS-PORTERO",
-    "SYS-DESPACHO",
-    "GAS-CATALOGO",
-    "SYS-POTENCIALES"
+    "SYS-POTENCIALES",
+    "SYS-PPP2",
+    "SHEET-PPP2",
+    "SYS-CONTROL"
   ],
   "tests": [
-    "node --test mercado/hermosillo-2020-2030/tests/historico.test.cjs",
-    "python3 -m unittest discover -s mercado/hermosillo-2020-2030/tests -p 'test_*.py'",
-    "Render local con Playwright: carga de series públicas, importación privada, cambio de gráfico, restablecimiento y prueba móvil.",
-    "node scripts/arquitectura.cjs --check; verificaciones del portal y git diff --check."
+    "node scripts/arquitectura.cjs --check",
+    "node --test tests/*.cjs",
+    "verify-os / verify-portal / verify-accesos / verify-obra-app"
   ],
-  "rollback": "Revertir el merge del explorador y el corte publicado. La base de Google Sheets no recibe escrituras del tablero."
+  "rollback": "Revertir este registro y el PR de presentación del PPP; conservar los libros y sus versiones."
 }
