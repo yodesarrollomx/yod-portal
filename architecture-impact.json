@@ -1,22 +1,15 @@
 {
-  "model_revision": "2026-11-16.mercado-claro.1",
-  "proposal_id": "CHG-MERCADO-CLARO-20261116",
-  "summary": "Entrada por seis preguntas, cifras resumidas, gráfico con selección táctil y explicación de escala, porqué sencillo y límites visibles. Evidencia y metodología desplegables, catastro con nombres en barras horizontales y escenario ajustable. Se conservan cálculos, datos, fuentes y modelo avanzado. Fuera del módulo, sólo se propaga la etiqueta de caché canónica a OS, Obra y Track; sus contratos y lógica permanecen iguales.",
+  "model_revision": "2026-11-16.masterbrokers-compacto.1",
+  "proposal_id": "CHG-MB-CARTERA-COMPACTA-20261116",
+  "summary": "Entrada por nombre y estado de cada expediente canónico, sin repetirlo por contacto. Abrir conserva el detalle completo; el desplegable permite comparar. Seguimientos vencidos y de hoy primero, luego decisiones y siguientes pasos; formalizados, pausados y descartados al final. Cabecera del broker con regreso al equipo, herramientas secundarias y altas al pie. Se conservan IDs, ACL, fuentes, edición compartida y archivo/papelera global. SYS-YOD-OS sólo actualiza su atlas público; no cambia comportamiento del portal.",
   "components": [
-    "GAS-CATALOGO",
-    "GAS-PORTERO",
-    "SYS-CONTROL",
-    "SYS-DESPACHO",
-    "SYS-MERCADO",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
-    "SYS-POTENCIALES",
-    "SYS-TRACK",
+    "SYS-INVERSION",
     "SYS-YOD-OS"
   ],
   "tests": [
-    "Recorrido DOM de seis preguntas, filtros, fuentes y escenarios.",
-    "Pruebas existentes de Mercado y verificaciones del portal."
+    "Orden con vencidos, hoy, decisión, sin fecha, futuros y estados inactivos; desempate determinista.",
+    "Recorridos sintéticos 320/390/1440, apertura y regreso, comparación, filtros, edición, archivo/papelera entre carteras y restauración.",
+    "Regresión de evaluación y retorno, sin escrituras de negocio en producción."
   ],
-  "rollback": "Revertir el cambio de presentación; no modifica datos ni fórmulas."
+  "rollback": "Revertir documentación y frontend; conservar registros de negocio y backend."
 }

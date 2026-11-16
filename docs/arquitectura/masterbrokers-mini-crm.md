@@ -81,3 +81,10 @@ CHG-MASTERBROKERS-PORTAL-INTEGRATED traslada la experiencia visual de la muestra
 Se reutilizan `brokers.v1`, fuentes canónicas y sesión vigente. La capa de presentación no concede permisos ni importa datos de demostración. La vista anterior de asuntos permanece como herramienta de comparación, sin ser la portada. Se preservan el recorrido de inmuebles y las garantías de retorno/guardado de PR43; los cambios concurrentes se concilian antes de integrar. La muestra pública conserva su indicación y enlaza al portal real.
 
 Aceptación: jerarquía y contacto único, filtros nominales, historial por fecha ocurrida, PPP por referencia real; edición y readback, agenda, acuerdos, presentación, evaluación/retorno y permisos; escritorio/móvil, navegación con historial y publicación verificadas por separado. Reversión sólo frontend.
+
+
+## Cartera compacta · 16-nov-2026
+
+CHG-MB-CARTERA-COMPACTA-20261116 sustituye la agrupación visual inicial por cliente: cada referencia canónica de terreno/PPP aparece una vez, con nombre y estado. Tocar el nombre abre su detalle y la flecha despliega un resumen para comparar. Contactos y acciones conservan sus referencias y aparecen al abrir. Los vencidos y seguimientos de hoy encabezan la lista; formalizados, pausados y descartados quedan abajo. El orden no cambia etapas ni fechas guardadas.
+
+Dentro de una cartera, cabecera con nombre y regreso al equipo; no se repite la lista de otros brokers. Búsqueda y filtros compactos; agenda, actualización y material en herramientas; altas y presentación al final. Edición compartida, archivo/papelera y restauración siguen en el mismo contrato privado. Sin migración ni nuevo backend.
