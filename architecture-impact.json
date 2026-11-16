@@ -1,16 +1,13 @@
 {
-  "model_revision": "2026-11-16.masterbrokers-registros.1",
-  "proposal_id": "CHG-MB-REGISTROS-GLOBALES-20261116",
-  "summary": "Referencias explícitas de folio, terreno o PPP único concilian las fuentes dentro del mismo alcance. Edición por campo prevalece sobre la importación. Archivo y papelera persistentes, restauración y confirmación de alcance; contactos inactivos ocultan sus asuntos sin modificar los estados individuales. Conservar historial, concurrencia e idempotencia.",
+  "model_revision": "2026-11-16.mercado-claro.1",
+  "proposal_id": "CHG-MERCADO-CLARO-20261116",
+  "summary": "Entrada por seis preguntas, cifras resumidas, gráfico con selección táctil y explicación de escala, porqué sencillo y límites visibles. Evidencia y metodología desplegables, catastro con nombres en barras horizontales y escenario ajustable. Se conservan cálculos, datos, fuentes y modelo avanzado.",
   "components": [
-    "SYS-INVERSION",
-    "GAS-CRM",
-    "SHEET-CRM"
+    "SYS-MERCADO"
   ],
   "tests": [
-    "Pruebas sintéticas: referencia explícita y ambigua, aislamiento, edición parcial y campo vacío intencional.",
-    "Archivo, papelera y restauración de registros compartidos; readback, conflictos y reintentos.",
-    "Editor, filtros y estados en móvil/escritorio; sin escrituras de prueba en producción."
+    "Recorrido DOM de seis preguntas, filtros, fuentes y escenarios.",
+    "Pruebas existentes de Mercado y verificaciones del portal."
   ],
-  "rollback": "Revertir código y versión del motor, conservar columnas, estados e historial; no restaurar hojas de negocio."
+  "rollback": "Revertir el cambio de presentación; no modifica datos ni fórmulas."
 }

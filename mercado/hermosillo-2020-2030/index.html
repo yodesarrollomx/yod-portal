@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="color-scheme" content="light">
-<title>Mercado Hermosillo 2020–2030 · YOD OS</title>
+<title>Hermosillo, en claro · Mercado inmobiliario · YoDesarrollo</title>
 <!-- Marco YOD OS (igual que los demás tableros): dirección del Portero, cargador compartido, iconos Tabler y hoja del marco. -->
-<script src="https://yodesarrollomx.github.io/yod-portal/os/yod-acceso.js?v=20261116-mercado-periodos"></script>
-<script src="https://yodesarrollomx.github.io/yod-portal/os/yod-cargador.js?v=20261116-mercado-periodos"></script>
+<script src="https://yodesarrollomx.github.io/yod-portal/os/yod-acceso.js?v=20261116-mercado-lecturas"></script>
+<script src="https://yodesarrollomx.github.io/yod-portal/os/yod-cargador.js?v=20261116-mercado-lecturas"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
-<link rel="stylesheet" href="https://yodesarrollomx.github.io/yod-portal/os/shell.css?v=20261116-mercado-periodos">
+<link rel="stylesheet" href="https://yodesarrollomx.github.io/yod-portal/os/shell.css?v=20261116-mercado-lecturas">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -111,6 +111,16 @@
   .toggle button.activo{background:var(--tinta);color:#fff}
   footer{color:var(--tinta3);font-size:12px;margin-top:10px;line-height:1.5}
   footer a{color:var(--tinta2)}
+  #lecturas [hidden]{display:none}
+  .lecturas-controles{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}
+  #lecturas label{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:13px}
+  #lecturas select,#lecturas input{font:inherit;max-width:100%;min-height:42px;padding:5px;color:var(--tinta);background:var(--papel2);border:1px solid var(--linea);border-radius:6px}
+  #lec-tasa{width:70px}
+  #lec-grafica{display:block;width:100%;max-height:310px}
+  #lec-grafica text{fill:var(--tinta2);font:12px system-ui,sans-serif}
+  .lecturas-resultado{font-weight:650}
+  .lecturas-leyenda{display:flex;gap:5px 14px;flex-wrap:wrap;font-size:12px}
+  #lecturas td:last-child{text-align:left;white-space:normal}
   #historico .hist-controles{display:grid;gap:8px;margin-top:12px}
   #historico .hist-controles label{color:var(--tinta2);font-size:13px;font-weight:600}
   #historico input,#historico select{font:inherit;color:var(--tinta);background:var(--papel2);border:1px solid var(--linea);border-radius:8px;min-height:42px;padding:7px 10px;width:100%;min-width:0}
@@ -147,32 +157,90 @@
   .desliza{display:none;font-size:12px;color:var(--tinta3);margin:6px 0 0}
   @media (max-width:599px){ .desliza{display:block} }
   @media (min-width:600px){ h1{font-size:36px} .par{grid-template-columns:repeat(4,1fr)} }
+
+/* Mercado en claro: lectura por preguntas y detalle progresivo. */
+:root{--papel:#f5f3ed;--papel2:#fffefb;--linea:#dddcd4;--tinta:#192f2b;--tinta2:#4b605a;--tinta3:#63736a;--sombra:none}
+html{scroll-behavior:smooth} .marco{max-width:960px;padding-top:32px}
+.claro-portada{padding:16px 4px 28px}.claro-portada h1{font-size:clamp(44px,7vw,66px);font-weight:500;letter-spacing:-.045em;margin:18px 0;line-height:1.02}.claro-portada em{font-style:normal;color:#087c6a}.claro-portada .sub{font-size:16px;line-height:1.65}.claro-portada .estado{display:none}.claro-meta{display:flex;gap:12px;justify-content:space-between;margin-top:24px;font-size:12px;border-top:1px solid var(--linea);padding-top:14px}.claro-meta a{color:var(--tinta)}
+#lecturas{padding:26px;border-radius:20px}.claro-intro{display:flex;justify-content:space-between;align-items:center}.claro-intro .kicker{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em}.claro-paso{font:12px monospace;color:var(--tinta2)}
+.claro-preguntas{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0 28px}.claro-preguntas button{border:1px solid var(--linea);background:var(--papel2);color:var(--tinta);font:600 13px/1.35 Inter,system-ui,sans-serif;border-radius:9px;padding:13px 10px;text-align:left;cursor:pointer;min-height:54px}.claro-preguntas button span{display:block;font-size:10px;font-weight:500;opacity:.7;margin-bottom:5px}.claro-preguntas button[aria-pressed=true]{background:#193e36;color:white;border-color:#193e36}.claro-preguntas button:hover{border-color:#087c6a}
+#lecturas h2{font-size:clamp(23px,3.5vw,32px);line-height:1.2;max-width:680px}.lecturas-resultado{font-size:15px;font-weight:400;line-height:1.65;max-width:740px;color:var(--tinta2);margin:10px 0 18px}
+.claro-cifras{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0 24px}.claro-cifra{padding:14px 14px 12px;background:#f0f4f0;border-radius:10px;border-top:3px solid var(--acento)}.claro-cifra b{font-size:clamp(22px,3.8vw,34px);font-weight:600;letter-spacing:-.04em;display:block;color:var(--acento);line-height:1.2;margin:8px 0}.claro-cifra span{font-size:12px;display:block;line-height:1.4}.claro-cifra small{display:block;font-size:10px;color:var(--tinta2);line-height:1.4}
+#lecturas .lecturas-controles{margin:0 0 16px;justify-content:space-between}#lecturas label{font-size:12px;font-weight:500}#lecturas select{border-radius:8px;padding:9px;max-width:360px}.claro-grafico{background:#f7f8f4;border:1px solid #e3e7df;border-radius:13px;padding:18px 12px 12px}.claro-escala{font-size:12px;color:var(--tinta2);margin:0 0 12px;line-height:1.5}.lecturas-leyenda{font-size:11px;margin-bottom:8px;gap:7px 18px}#lec-grafica{max-height:360px;margin:12px 0 2px}#lec-grafica circle{cursor:pointer}#lec-grafica .lec-seleccion{pointer-events:none}
+#lec-recorrido{border-top:1px solid var(--linea);padding:12px 4px 0}#lec-recorrido label{display:flex;justify-content:space-between}#lec-fecha{font-weight:700}#lec-punto,#lec-deslizador{border:none!important;padding:0!important;min-height:30px!important;accent-color:#087c6a}.claro-detalle{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:12px;min-height:22px}.claro-detalle span{border-left:3px solid var(--acento);padding-left:7px}
+.claro-explicaciones{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:22px 0}.claro-explicaciones>div{padding:4px 0}.claro-explicaciones p{font-size:13px;line-height:1.65;margin:7px 0 0}.claro-etiqueta{font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:700}.claro-cautela{border-left:2px solid #b99c5c;padding-left:16px!important}.claro-cautela .claro-etiqueta{color:#85681e}.claro-procedencia{font-size:11px;line-height:1.6;display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 0;border-top:1px solid var(--linea);color:var(--tinta2)}.claro-enlace{border:0;background:none;font:600 11px/1.5 Inter,system-ui,sans-serif;text-decoration:underline;color:#087c6a;cursor:pointer;flex-shrink:0;padding:8px 0}
+#lecturas details{border-top:1px solid var(--linea);padding:12px 0}#lecturas details summary{font-size:12px;font-weight:600}#lecturas details summary:after,.claro-profundo>summary:after{content:'+';font-size:20px;font-weight:400}#lecturas details[open]>summary:after,.claro-profundo[open]>summary:after{content:'−'}#lecturas details .nota{font-size:12px;line-height:1.7;color:var(--tinta2)}.claro-diccionario dl{display:grid;grid-template-columns:100px 1fr;gap:10px;font-size:12px;line-height:1.6}.claro-diccionario dt{font-weight:600}.claro-diccionario dd{margin:0}
+.claro-simulador{background:#f1eee4;padding:16px;border-radius:12px;margin:12px 0 16px}.claro-simulador>div{display:flex;align-items:center;gap:12px;justify-content:space-between}.claro-simulador input[type=number]{width:80px!important;text-align:right;font-size:18px!important;background:white!important}.claro-simulador .boton{font-size:11px;padding:7px 10px}.claro-profundo{border:1px solid var(--linea);border-radius:12px;margin:14px 0;padding:18px;background:var(--papel2)}.claro-profundo>summary{font-weight:600;font-size:14px;gap:12px}.claro-profundo>summary small{display:block;color:var(--tinta2);font-size:12px;font-weight:400;margin-top:5px}.claro-profundo>.tarjeta{margin:18px 0 0;padding:16px;border:0}.claro-profundo[open]>summary{padding-bottom:10px}a{color:#087c6a}button:focus-visible,summary:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #ba9d4c;outline-offset:3px}
+.claro-zona{display:block;width:100%;border:0;border-bottom:1px solid #e3e7df;background:transparent;text-align:left;padding:10px 0;cursor:pointer;color:var(--tinta);font:12px/1.5 Inter,system-ui,sans-serif}.claro-zona>span{display:flex;justify-content:space-between;gap:14px}.claro-zona strong{white-space:nowrap}.claro-zona small{display:block;color:var(--tinta2);font-size:10px}.claro-zona .barra{display:block;background:var(--acento);height:6px;border-radius:3px;margin-top:7px;width:var(--ancho);min-width:2px}.claro-zona[aria-pressed=true]{background:#e8eee7;outline:2px solid #a0b6ab;outline-offset:4px}
+@media(max-width:600px){.marco{padding:14px 12px 28px}.claro-portada{padding:8px 4px 20px}.claro-portada h1{font-size:48px}.claro-portada .sub{font-size:14px}.claro-meta{font-size:10px}#lecturas{padding:16px 12px}.claro-preguntas{grid-template-columns:repeat(2,1fr);gap:6px;margin:14px 0 22px}.claro-preguntas button{padding:10px;font-size:12px;min-height:52px}.claro-preguntas button span{display:inline;margin-right:7px}.claro-cifras{gap:5px}.claro-cifra{padding:10px 7px}.claro-cifra b{font-size:24px}.claro-cifra span{font-size:10px}.claro-cifra small{font-size:9px}.claro-grafico{padding:12px 6px}.claro-explicaciones{grid-template-columns:1fr;gap:12px;margin:18px 0}.claro-cautela{padding-left:12px!important}.claro-procedencia{align-items:flex-start}.lecturas-controles{gap:8px}#lecturas select{max-width:240px}.claro-simulador{padding:12px}.claro-simulador>div{align-items:flex-start}.claro-profundo{padding:14px}.claro-profundo>.tarjeta{padding:0}.claro-detalle{font-size:11px;gap:6px 12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
 </style>
 </head>
 <body>
 <div class="marco">
-  <header>
-    <div class="kicker">Yodesarrollo · Mercado</div>
-    <h1>Hermosillo 2020–2030</h1>
-    <p class="sub">Oferta y demanda de vivienda nueva · municipio de Hermosillo · cada posición sale de datos con fuente; la pendiente es un supuesto visible.</p>
-    <div class="estado" id="estado"><span class="punto"></span><span><b>v1 · en revisión</b> · cargando…</span></div>
+  <header class="claro-portada">
+    <div class="kicker">YoDesarrollo / Observatorio inmobiliario</div>
+    <h1>Hermosillo,<br><em>en claro.</em></h1>
+    <p class="sub">Entiende qué está pasando con la vivienda.<br>Mira los datos, encuentra el porqué y explora qué podría venir.</p>
+    <div class="claro-meta"><span>Datos históricos + escenarios</span><a href="#explorar-datos">Explorar la base ↗</a></div>
+    <div class="estado" id="estado"><span class="punto"></span><span>Cargando referencias…</span></div>
   </header>
-
-  <section class="tarjeta" aria-label="Diagrama de oferta y demanda">
-    <div class="leyenda"><span class="ld">Demanda</span><span class="lo">Oferta</span><span class="le">Equilibrio observado</span></div>
-    <p class="nota" id="nota-leyenda" style="margin:0 0 4px">Punto lleno = dato · punto hueco = cierre estimado 2026 o escenario 2027–2030 (curvas punteadas).</p>
-    <svg id="grafica" viewBox="0 0 400 360" role="img" aria-label="Curvas de oferta y demanda por año"></svg>
-    <div class="controles">
-      <button class="boton primario" id="play" aria-label="Reproducir la década" style="white-space:nowrap">▶ Década</button>
-      <span class="nota" id="pie-grafica" style="margin:0">Desliza sobre la gráfica o toca un año.</span>
+  <section class="tarjeta" id="lecturas" aria-labelledby="lecturas-titulo">
+    <div class="claro-intro"><span class="kicker">Empieza por una pregunta</span><span class="claro-paso" id="lec-paso">01 / 06</span></div>
+    <nav class="claro-preguntas" aria-label="Preguntas sobre el mercado">
+      <button type="button" data-vista="precio" aria-pressed="true"><span>01</span> ¿Subió de verdad?</button>
+      <button type="button" data-vista="credito" aria-pressed="false"><span>02</span> ¿Y los créditos?</button>
+      <button type="button" data-vista="ruv" aria-pressed="false"><span>03</span> ¿Se construye más?</button>
+      <button type="button" data-vista="suelo" aria-pressed="false"><span>04</span> ¿Qué zonas cambian?</button>
+      <button type="button" data-vista="oferta" aria-pressed="false"><span>05</span> ¿Cuánto están pidiendo?</button>
+      <button type="button" data-vista="escenario" aria-pressed="false"><span>06</span> ¿Y si cambia el ritmo?</button>
+    </nav>
+    <select id="lec-vista" aria-label="Vista del mercado" hidden>
+      <option value="precio">Precios e inflación</option><option value="credito">Créditos y precios</option>
+      <option value="ruv">Construcción</option><option value="suelo">Zonas fiscales</option>
+      <option value="oferta">Anuncios</option><option value="escenario">Escenarios</option>
+    </select>
+    <h2 id="lecturas-titulo">¿La vivienda sube más que el costo de vida?</h2>
+    <p id="lec-resultado" class="lecturas-resultado" aria-live="polite">Preparando la lectura de los datos…</p>
+    <div id="lec-resumen" class="claro-cifras"></div>
+    <div class="lecturas-controles">
+      <label id="lec-desde-label">Mirar desde <select id="lec-desde"></select></label>
+      <label id="lec-extra-label" hidden><span id="lec-extra-titulo"></span><select id="lec-extra"></select></label>
     </div>
-    <div class="anios" id="anios"></div>
-    <div class="escenario-fila"><span class="nota" style="margin:0">Escenarios 2027–2030 · demanda y oferta:</span><div class="toggle" id="toggle-esc" style="margin:0"></div></div>
-    <p class="nota" id="nota-esc"></p>
+    <div id="lec-controles-escenario" class="claro-simulador" hidden>
+      <div><label for="lec-tasa">Cambio anual por encima de la inflación</label><span><input id="lec-tasa" type="number" min="-30" max="30" step="0.1"> %</span></div>
+      <input id="lec-deslizador" type="range" min="-30" max="30" step="0.1" value="4" aria-label="Cambiar el ritmo anual del escenario">
+      <div><label>Explorar <select id="lec-horizonte"><option>1</option><option>2</option><option>3</option><option selected>4</option></select> años</label><button class="boton" type="button" id="lec-restablecer">Volver al ritmo histórico central</button></div>
+    </div>
+    <div class="claro-grafico">
+      <p id="lec-nota" class="claro-escala"></p>
+      <div id="lec-leyenda" class="lecturas-leyenda"></div>
+      <svg id="lec-grafica" viewBox="0 0 500 214" role="img" aria-label="Evolución de los datos seleccionados"></svg>
+      <div id="lec-zonas" hidden></div>
+      <div id="lec-recorrido"><label for="lec-punto">Recorre el tiempo <span id="lec-fecha"></span></label><input id="lec-punto" type="range" min="0" max="0" value="0"><div id="lec-detalle" class="claro-detalle" aria-live="polite"></div></div>
+    </div>
+    <div class="claro-explicaciones">
+      <div><span class="claro-etiqueta">Por qué importa</span><p id="lec-porque"></p></div>
+      <div class="claro-cautela"><span class="claro-etiqueta">Hasta dónde podemos concluir</span><p id="lec-cautela"></p></div>
+    </div>
+    <div class="claro-procedencia"><span id="lec-origen"></span><button type="button" class="claro-enlace" id="lec-ver-fuentes">Ver de dónde sale ↗</button></div>
+    <details id="lec-evidencia-panel">
+      <summary>Revisar cifras y fuentes originales</summary>
+      <label>Periodo o zona <select id="lec-evidencia"></select></label>
+      <div class="scroll"><table><thead><tr><th>Qué se midió</th><th>Periodo</th><th>Dato original</th><th>Fuente</th></tr></thead><tbody id="lec-fuentes"></tbody></table></div>
+    </details>
+    <details><summary>Cómo se hizo la comparación</summary><p class="nota" id="lec-limite"></p></details>
+    <details class="claro-diccionario"><summary>Diccionario de 30 segundos</summary><dl>
+      <dt>Inflación</dt><dd>La subida general de precios. Aquí se mide con el índice de precios al consumidor de Hermosillo.</dd>
+      <dt>Precio real</dt><dd>El movimiento del precio después de descontar la inflación.</dd>
+      <dt>Índice</dt><dd>Una regla para comparar cambios. Empezar en 100 y llegar a 120 significa subir 20%; no son pesos.</dd>
+      <dt>Valor catastral</dt><dd>Valor fiscal asignado al suelo. Es una referencia para impuestos, diferente del precio que acuerdan comprador y vendedor.</dd>
+      <dt>Escenario</dt><dd>Lo que resultaría si se cumpliera un supuesto. No lleva una probabilidad de ocurrir.</dd>
+    </dl></details>
   </section>
 
-  <section class="tarjeta" id="tarjeta-anio"></section>
-
+  <details class="claro-profundo" id="explorar-datos"><summary><span>Explorar todos los datos históricos<small>Busca indicadores, máximos, mínimos y sus fuentes.</small></span></summary>
   <section class="tarjeta" id="historico" aria-labelledby="hist-titulo">
     <h2 id="hist-titulo">Datos históricos</h2>
     <p class="nota" id="hist-estado" role="status">Cargando el corte público…</p>
@@ -186,6 +254,7 @@
       <span class="nota" id="hist-filtro"></span>
     </div>
     <p class="nota" id="hist-meta"></p>
+    <p class="nota" id="hist-extremos"></p>
     <svg id="hist-grafica" viewBox="0 0 426 186" role="img" hidden></svg>
     <div id="hist-tabla" hidden>
       <details>
@@ -213,6 +282,25 @@
       <div id="supuestos-ppp"></div>
     </details>
   </section>
+
+  </details>
+
+  <details class="claro-profundo" id="modelo-avanzado"><summary><span>Explorar el modelo de oferta y demanda<small>Curvas, supuestos y el detalle del análisis 2020–2030.</small></span></summary>
+  <section class="tarjeta" aria-label="Diagrama de oferta y demanda">
+    <div class="leyenda"><span class="ld">Demanda</span><span class="lo">Oferta</span><span class="le">Equilibrio observado</span></div>
+    <p class="nota" id="nota-leyenda" style="margin:0 0 4px">Punto lleno = dato · punto hueco = cierre estimado 2026 o escenario 2027–2030 (curvas punteadas).</p>
+    <svg id="grafica" viewBox="0 0 400 360" role="img" aria-label="Curvas de oferta y demanda por año"></svg>
+    <div class="controles">
+      <button class="boton primario" id="play" aria-label="Reproducir la década" style="white-space:nowrap">▶ Década</button>
+      <span class="nota" id="pie-grafica" style="margin:0">Desliza sobre la gráfica o toca un año.</span>
+    </div>
+    <div class="anios" id="anios"></div>
+    <p class="nota"><a href="#lecturas">Comparar el diagrama con el histórico completo y probar otros supuestos</a></p>
+    <div class="escenario-fila"><span class="nota" style="margin:0">Escenarios 2027–2030 · demanda y oferta:</span><div class="toggle" id="toggle-esc" style="margin:0"></div></div>
+    <p class="nota" id="nota-esc"></p>
+  </section>
+
+  <section class="tarjeta" id="tarjeta-anio"></section>
 
   <section class="tarjeta">
     <details id="det-supuestos">
@@ -289,6 +377,8 @@
   </section>
 
   <footer id="pie"></footer>
+  </details>
+  <footer>YoDesarrollo · Hermosillo. Cada comparación conserva su fuente, periodo y alcance. Las simulaciones muestran supuestos, no resultados garantizados.</footer>
 </div>
 
 <div id="hoja" role="dialog" aria-modal="true"><div class="panel" id="hoja-panel"></div></div>
@@ -751,7 +841,8 @@
 <!-- Marco YOD OS: menú, identidad y chinche, igual que los demás tableros de la casa.
      Con ?embed=1 el marco no se monta. Los ?v= los fija os/versiones.json (scripts/versiones.cjs). -->
 <script src="https://yodesarrollomx.github.io/potenciales-yod/portero.js?v=20261031-fase1-e2" data-singate></script>
-<script src="https://yodesarrollomx.github.io/yod-portal/os/shell.js?v=20261116-mercado-periodos"></script>
-<script src="historico.js?v=20261116-mercado-periodos"></script>
+<script src="https://yodesarrollomx.github.io/yod-portal/os/shell.js?v=20261116-mercado-lecturas"></script>
+<script src="lecturas.js?v=20261116-mercado-lecturas"></script>
+<script src="historico.js?v=20261116-mercado-lecturas"></script>
 </body>
 </html>
