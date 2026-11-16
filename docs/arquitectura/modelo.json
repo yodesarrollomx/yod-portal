@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-16.masterbrokers-colores.1",
+  "revision": "2026-11-16.ppp-especie.1",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -16819,6 +16819,32 @@
         "Navegador móvil/escritorio con las ocho etapas, vencido/hoy/decisión, teclado, detalle, archivo y restauración."
       ],
       "deployment": "Preparado en rama; contrastes y señales verificados en pruebas locales. Navegador y publicación pendientes de CI/Pages. Reversión de frontend sin restaurar registros."
+    },
+    {
+      "id": "CHG-PPP-ESPECIE-20261116",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PORTERO",
+        "SYS-YOD-OS",
+        "SYS-CONTROL",
+        "SYS-PPP2"
+      ],
+      "proposal": "Comparar pago de tierra con anticipo y viviendas: participación en utilidad, interés simple sobre saldo y porcentaje del valor de ventas. Extender el libro nativo por versión; separar adjudicación de cobros y conservar las fórmulas de deuda. La UI captura, muestra y solicita equilibrio de la entrega; Sheets calcula. Corregir primero la lectura si no confirma revisión. La versión común de recursos se actualiza en Accesos y PPP2 sin cambiar sus funciones.",
+      "approval": "Dirección solicita continuar la actualización editable y comparar las tres metodologías en el PPP existente.",
+      "status": "propuesto",
+      "tests": [
+        "Pruebas sintéticas de conservación de inventario y efectivo, anticipo una vez, interés sobre saldo y reparto después de deuda.",
+        "Regresiones de versiones nativas, lectura, recuperación, permisos y móvil.",
+        "Lectura nativa y resultados guardados contrastados en UI; sin POST de prueba productivo."
+      ],
+      "deployment": "Preparación; integración y publicación se registrarán por separado.",
+      "invariants": [
+        "Las fórmulas financieras permanecen en Sheets.",
+        "Unidades adjudicadas no generan cobros de terceros.",
+        "La base y versiones históricas conservan su identidad.",
+        "Sin datos privados de casos, claves ni nuevas URLs de servidor en Git."
+      ]
     }
   ],
   "data_contracts": [
