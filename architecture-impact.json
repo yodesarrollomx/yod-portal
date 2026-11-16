@@ -5,7 +5,8 @@
   "components": [
     "SYS-POTENCIALES",
     "GAS-PORTERO",
-    "SHEET-PORTERO"
+    "SHEET-PORTERO",
+    "SYS-YOD-OS"
   ],
   "tests": [
     "Pruebas sintéticas de conservación de inventario y efectivo, anticipo una vez, interés sobre saldo y reparto después de deuda.",

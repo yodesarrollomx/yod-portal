@@ -16825,7 +16825,8 @@
       "components": [
         "SYS-POTENCIALES",
         "GAS-PORTERO",
-        "SHEET-PORTERO"
+        "SHEET-PORTERO",
+        "SYS-YOD-OS"
       ],
       "proposal": "Comparar pago de tierra con anticipo y viviendas: participación en utilidad, interés simple sobre saldo y porcentaje del valor de ventas. Extender el libro nativo por versión; separar adjudicación de cobros y conservar las fórmulas de deuda. La UI captura, muestra y solicita equilibrio de la entrega; Sheets calcula. Corregir primero la lectura si no confirma revisión.",
       "approval": "Dirección solicita continuar la actualización editable y comparar las tres metodologías en el PPP existente.",
