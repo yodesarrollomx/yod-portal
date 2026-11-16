@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-16.mercado-claro.1",
+  "revision": "2026-11-16.masterbrokers-compacto.1",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -16768,6 +16768,21 @@
         "Pruebas existentes de Mercado y verificaciones del portal."
       ],
       "deployment": "Versión HTML autónoma y código local revisable. Publicación en portal por PR y comprobación separada."
+    },
+    {
+      "id": "CHG-MB-CARTERA-COMPACTA-20261116",
+      "components": [
+        "SYS-INVERSION"
+      ],
+      "status": "implementado_local",
+      "approval": "Dirección solicita continuar y publicar: cartera compacta, casos contraídos, prioridad de seguimiento y altas al pie.",
+      "proposal": "Entrada por nombre y estado de cada expediente canónico, sin repetirlo por contacto. Abrir conserva el detalle completo; el desplegable permite comparar. Seguimientos vencidos y de hoy primero, luego decisiones y siguientes pasos; formalizados, pausados y descartados al final. Cabecera del broker con regreso al equipo, herramientas secundarias y altas al pie. Se conservan IDs, ACL, fuentes, edición compartida y archivo/papelera global.",
+      "tests": [
+        "Orden con vencidos, hoy, decisión, sin fecha, futuros y estados inactivos; desempate determinista.",
+        "Recorridos sintéticos 320/390/1440, apertura y regreso, comparación, filtros, edición, archivo/papelera entre carteras y restauración.",
+        "Regresión de evaluación y retorno, sin escrituras de negocio en producción."
+      ],
+      "deployment": "Implementación local; 209 pruebas de contratos y orden aprobadas. Recorridos de navegador y Pages pendientes de CI/publicación. Revertir sólo frontend, conservar datos y contratos."
     }
   ],
   "data_contracts": [
