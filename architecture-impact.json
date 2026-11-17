@@ -1,19 +1,24 @@
 {
-  "model_revision": "2026-11-16.ppp-especie.1",
-  "proposal_id": "CHG-PPP-ESPECIE-20261116",
-  "summary": "Comparar pago de tierra con anticipo y viviendas: participación en utilidad, interés simple sobre saldo y porcentaje del valor de ventas. Extender el libro nativo por versión; separar adjudicación de cobros y conservar las fórmulas de deuda. La UI captura, muestra y solicita equilibrio de la entrega; Sheets calcula. Corregir primero la lectura si no confirma revisión.",
+  "model_revision": "2026-11-16.jarvis-grafo.1",
+  "proposal_id": "CHG-JARVIS-GRAFO-20261116",
+  "summary": "Publicar grafo nativo Graphify del código instalado de Jarvis, con manifiesto por archivo, anclas HTML y cambios por huella. Integrar acceso con el grafo de Accesos. Ocultar PPP2 y Mercado como entradas separadas; conservar sistemas, permisos, PPP vigente y Mercado dentro de Masterbrokers.",
   "components": [
-    "SYS-POTENCIALES",
+    "GAS-CATALOGO",
     "GAS-PORTERO",
-    "SHEET-PORTERO",
-    "SYS-YOD-OS",
     "SYS-CONTROL",
-    "SYS-PPP2"
+    "SYS-DESPACHO",
+    "SYS-INVERSION",
+    "SYS-MERCADO",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "SYS-POTENCIALES",
+    "SYS-PPP2",
+    "SYS-TRACK",
+    "SYS-YOD-OS"
   ],
   "tests": [
-    "Pruebas sintéticas de conservación de inventario y efectivo, anticipo una vez, interés sobre saldo y reparto después de deuda.",
-    "Regresiones de versiones nativas, lectura, recuperación, permisos y móvil.",
-    "Lectura nativa y resultados guardados contrastados en UI; sin POST de prueba productivo."
+    "Procedencia PyPI idéntica; hashes de fuentes y salidas, HTML embebido y pruebas negativas del detector.",
+    "Pruebas portal y regresiones del grafo; revisión de privacidad antes de publicación."
   ],
-  "rollback": "Revertir consumidor y servidor a versiones anteriores sobre la misma implementación; conservar copias nativas y registro de cambios."
+  "rollback": "Revertir PR de publicación y detener sólo el verificador de grafo. Conservar archivos y permisos de PPP/Mercado."
 }

@@ -35,3 +35,8 @@ test('ambos marcos provienen del mismo catálogo y no cambian permisos',()=>{
 });
 
 for(const file of ['../os/app.js','../os/shell.js'])test(file+': role label is presentation only and keeps module identity',()=>{const source=fs.readFileSync(require.resolve(file),'utf8');const fn=source.match(/function moduleTitle\(row\)\s*\{[^}]+\}/)[0];const scope=vm.createContext({state:{role:'admin'},safeText:v=>String(v||''),NAME:{}});vm.runInContext(fn,scope);const row={system_id:'SYS-INVERSION',titulo_portal:'Inversión'};assert.equal(scope.moduleTitle(row),'Master Developer');scope.state.role='vista';assert.equal(scope.moduleTitle(row),'Master Broker');assert.equal(row.system_id,'SYS-INVERSION');assert.equal(row.titulo_portal,'Inversión');assert.equal(scope.moduleTitle({system_id:'SYS-OBRA',titulo_portal:'Obra'}),'Obra');});
+for(const [name,p] of [['cabina',app],['marco',shell]])test(name+': retira accesos separados sin retirar PPP ni Masterbrokers',()=>{
+ const input=rows(['SYS-PPP2','SYS-MERCADO','SYS-POTENCIALES','SYS-INVERSION']);
+ assert.deepEqual(ids(p.orderedModules(input)),['SYS-POTENCIALES','SYS-INVERSION']);
+ assert.equal(input.length,4);assert.equal(C.find(x=>x.id==='SYS-PPP2').destino,'https://yodesarrollomx.github.io/potenciales-yod/ppp2.html');
+});

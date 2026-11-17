@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-16.ppp-especie.1",
+  "revision": "2026-11-16.jarvis-grafo.1",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -16845,6 +16845,36 @@
         "La base y versiones históricas conservan su identidad.",
         "Sin datos privados de casos, claves ni nuevas URLs de servidor en Git."
       ]
+    },
+    {
+      "id": "CHG-JARVIS-GRAFO-20261116",
+      "components": [
+        "GAS-CATALOGO",
+        "GAS-PORTERO",
+        "SYS-CONTROL",
+        "SYS-DESPACHO",
+        "SYS-INVERSION",
+        "SYS-MERCADO",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "SYS-TRACK",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Publicar grafo nativo Graphify del código instalado de Jarvis, con manifiesto por archivo, anclas HTML y cambios por huella. Integrar acceso con el grafo de Accesos. Ocultar PPP2 y Mercado como entradas separadas; conservar sistemas, permisos, PPP vigente y Mercado dentro de Masterbrokers. Actualización de etiqueta común de recursos en sus consumidores.",
+      "approval": "Alejandro pidió publicación y confirmó portal de Accesos, revisión completa y decisión de implementación.",
+      "status": "implementado_local",
+      "tests": [
+        "Procedencia PyPI idéntica; hashes de fuentes y salidas, HTML embebido y pruebas negativas del detector.",
+        "Pruebas portal y regresiones del grafo; revisión de privacidad antes de publicación."
+      ],
+      "deployment": "En preparación; sin publicación acreditada.",
+      "invariants": [
+        "Sin modificar fórmulas, hojas o permisos.",
+        "Grafo público sin fuentes privadas, sesiones ni credenciales.",
+        "Falta de latido indica desconocido, nunca sin cambios."
+      ]
     }
   ],
   "data_contracts": [
@@ -22338,6 +22368,30 @@
         "SYS-YOD-MCP",
         "GAS-PPP2",
         "SYS-POTENCIALES"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "jarvis/",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/jarvis-status.py",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/jarvis.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
       ]
     }
   ],
