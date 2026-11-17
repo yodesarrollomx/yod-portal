@@ -16945,7 +16945,8 @@
         "SYS-POTENCIALES",
         "SYS-PPP2",
         "GAS-PPP2",
-        "SHEET-PPP2"
+        "SHEET-PPP2",
+        "SYS-CONTROL"
       ],
       "proposal": "Una entrada para todos los planes nuevos. El Vivero crea un libro limpio por oportunidad y el portal consulta allí los factores, la siguiente pregunta y los escenarios.",
       "approval": "Dirección pidió publicar el PPP único y posponer la migración de cada proyecto hasta comprobar su operación.",
