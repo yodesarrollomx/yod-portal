@@ -9,7 +9,8 @@
     "SYS-POTENCIALES",
     "SYS-PPP2",
     "GAS-PPP2",
-    "SHEET-PPP2"
+    "SHEET-PPP2",
+    "SYS-CONTROL"
   ],
   "tests": [
     "Alta por nombre, reapertura del mismo libro, factor con fuente y comparación de escenarios.",
