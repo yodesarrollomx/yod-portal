@@ -18,3 +18,18 @@ test('reporte inválido nunca implica sin cambios',()=>{
   for(const s of [null,{baseline:'other',changes:[],checked_at:new Date(now).toISOString()},{baseline:'cut',changes:[],checked_at:new Date(now-900001).toISOString()}])assert.equal(M.statusInfo(s,'cut',now).fresh,false);
   assert.equal(M.statusInfo({baseline:'cut',changes:[],checked_at:new Date(now).toISOString()},'cut',now).fresh,true);
 });
+test('lector de fuentes sólo inspecciona bytes locales y diferencia huellas',async()=>{
+ const vm=require('node:vm'),fs=require('node:fs'),crypto=require('node:crypto');
+ const scope={JarvisGraph:M,crypto:crypto.webcrypto,TextDecoder,Uint8Array,Map,document:{},window:{}};
+ vm.runInNewContext(fs.readFileSync('jarvis/source-reader.js','utf8'),scope);
+ const bytes=Buffer.from('<script>unsafe()</script>'), expected={path:'06_yod/voz/jarvis.html',sha256:crypto.createHash('sha256').update(bytes).digest('hex')};
+ const file={name:'jarvis.html',size:bytes.length,arrayBuffer:async()=>bytes};
+ const result=await scope.JarvisSource.inspect(file,expected);assert.equal(result.matches,true);assert.equal(result.text,bytes.toString());
+ assert.equal((await scope.JarvisSource.inspect(file,{...expected,sha256:'different'})).matches,false);
+ await assert.rejects(scope.JarvisSource.inspect({...file,name:'otro.html'},expected),/Elige el archivo/);
+ await assert.rejects(scope.JarvisSource.inspect({...file,size:6*1024*1024},expected),/5 MB/);
+});
+test('las rutas nativas e índice cargan un solo visor y conservan el export original',()=>{
+ const fs=require('node:fs'),manifest=JSON.parse(fs.readFileSync('jarvis/manifest.json'));
+ for(const group of manifest.groups){assert.match(fs.readFileSync('jarvis/data/'+group.id+'.html','utf8'),/source-reader.js/);assert.match(fs.readFileSync('jarvis/data/'+group.id+'-original.html','utf8'),/const RAW_NODES/);}
+});

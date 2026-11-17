@@ -3,6 +3,12 @@
   const original = path => String(path || '').replace(/\.inline-\d+\.js$/, '');
   const line = value => Number(String(value || '').match(/(?:^|:)L?(\d+)/)?.[1] || 1);
   const basename = path => original(path).split('/').pop();
+  function component(path) {
+    const parts = original(path).split('/');
+    const names = {'yod-voz':'Voz de Jarvis','advanced-delegation':'Reparto de tareas','yod-mayordomo-regla':'Reglas del mayordomo','yod-red':'Mapa de relaciones','yod-visor-observer':'Observador del visor','obsidian-memory':'Memoria en Obsidian','tablero':'Tablero y tareas','visor':'Visor del mundo','motor':'Motor del mundo','gateway':'Conexión y mensajes','agent':'Ejecución del agente','tools':'Herramientas','hermes_cli':'Consola de Hermes','hermes_ui':'Panel de Hermes'};
+    const key = parts.find(p => Object.hasOwn(names,p));
+    return key ? names[key] : (parts.slice(1,-1).join(' / ') || basename(path));
+  }
   function index(graph) {
     const nodes = new Map(), files = new Map(), communities = new Map(), incoming = new Map(), outgoing = new Map();
     for (const n of graph.nodes) {
@@ -26,7 +32,7 @@
     const paths = [...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
     const main = paths[0]?.[0];
     const symbol = members.find(n => n._callable_class && original(n.source_file) === main) || members.find(n => n._callable && original(n.source_file) === main);
-    return {title: main ? basename(main) : 'Símbolos sin archivo', subtitle: symbol?.label || main?.split('/').slice(-2, -1)[0] || 'Grupo del código', paths: paths.map(x => x[0])};
+    return {title: main ? component(main) : 'Símbolos sin archivo', subtitle: symbol?.label || basename(main) || 'Grupo del código', source: main ? basename(main) : '', paths: paths.map(x => x[0])};
   }
   function aggregate(idx, key) {
     const groups = new Map();
@@ -49,6 +55,6 @@
     if (!parts.length || parts.some(p => !p || p === '.' || p === '..' || p.includes('\\') || p.includes('\0') || /^\.(env|secrets|ssh|aws|pki)(?:\.|$)/i.test(p)) || !/\.(py|js|mjs|cjs|ts|tsx|jsx|html|css|sh|gs)$/i.test(parts.at(-1))) throw Error('Ruta de código no permitida');
     return parts;
   }
-  const api = {original, line, basename, index, communityName, aggregate, statusInfo, safeParts};
+  const api = {original, line, basename, component, index, communityName, aggregate, statusInfo, safeParts};
   if (typeof module !== 'undefined') module.exports = api; else root.JarvisGraph = api;
 })(globalThis);
