@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-16.jarvis-visor.2",
+  "revision": "2026-11-17.jarvis-native-cut.1",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -16904,6 +16904,36 @@
         "No se modifica el corte ni se inventan relaciones.",
         "Código local sólo en memoria del navegador; no ejecución, escritura ni envío.",
         "Sin reporte vigente, estado desconocido."
+      ]
+    },
+    {
+      "id": "CHG-JARVIS-CORTE-20261117",
+      "components": [
+        "GAS-CATALOGO",
+        "GAS-PORTERO",
+        "SYS-CONTROL",
+        "SYS-DESPACHO",
+        "SYS-INVERSION",
+        "SYS-MERCADO",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "SYS-TRACK",
+        "SYS-YOD-OS"
+      ],
+      "proposal": "Actualizar sólo el área 06 YOD del grafo con los bytes instalados el 17-nov: exportador HTML original Graphify, JSON y huellas coherentes. Mantener explícitos los otros siete cortes anteriores; sin nuevo visor ni fuentes privadas.",
+      "approval": "Alejandro autorizó completar Jarvis y mantener publicado el grafo original ligado al código real.",
+      "status": "implementado_local",
+      "tests": [
+        "Reapertura y conteos del grafo nativo; correspondencia de huellas y anclas HTML.",
+        "Pruebas completas obligatorias del portal; bytes publicados verificados por separado."
+      ],
+      "deployment": "Candidato aislado; publicación no acreditada.",
+      "invariants": [
+        "Conservar IDs y enlaces; no modificar PPP vigente, Masterbroker ni permisos.",
+        "Sólo etiquetas y relaciones AST públicas; ningún contenido de tarjetas, conversaciones o secretos.",
+        "El grafo no acredita ejecución de las veinte mejoras ni sincronización automática."
       ]
     }
   ],

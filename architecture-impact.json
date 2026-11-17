@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-11-16.jarvis-visor.2",
-  "proposal_id": "CHG-JARVIS-VISOR-20261116",
-  "summary": "Hacer consultable el visor original abierto por Dirección: grupos con nombres por evidencia, navegación comunidad/archivo/función, relaciones dirigidas, búsqueda, cambios y lectura local del código con línea y huella. Mismo corte y datos nativos; sin publicar fuentes privadas.",
+  "model_revision": "2026-11-17.jarvis-native-cut.1",
+  "proposal_id": "CHG-JARVIS-CORTE-20261117",
+  "summary": "Actualizar sólo el área 06 YOD del grafo con los bytes instalados el 17-nov: exportador HTML original Graphify, JSON y huellas coherentes. Mantener explícitos los otros siete cortes anteriores; sin nuevo visor ni fuentes privadas.",
   "components": [
     "GAS-CATALOGO",
     "GAS-PORTERO",
@@ -17,8 +17,8 @@
     "SYS-YOD-OS"
   ],
   "tests": [
-    "Navegación real desde URL nativa y Accesos; fuentes locales sintéticas, hash distinto, rechazo de rutas y errores de red.",
-    "Verificaciones del portal, móvil y regresiones de cambios."
+    "Reapertura y conteos del grafo nativo; correspondencia de huellas y anclas HTML.",
+    "Pruebas completas obligatorias del portal; bytes publicados verificados por separado."
   ],
-  "rollback": "Revertir PR del visor; las ocho descargas y el monitor conservan su corte."
+  "rollback": "Revertir este PR de datos; código instalado de Jarvis y sus respaldos se conservan por separado."
 }
