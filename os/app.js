@@ -4,11 +4,12 @@
   /* NAVIGATION-BEGIN */
   // Generado desde os/catalogo.js: presentación común; no concede accesos.
   var NAV_ORDER = ["SYS-DESPACHO","SYS-POTENCIALES","SYS-MERCADO","SYS-PPP2","SYS-TRACK","SYS-MIRAMAR","SYS-TAREAS","SYS-FLUJO","SYS-INTERIORES","SYS-INVERSION","SYS-MARKETING","SYS-OBRA","SYS-CONTROL"];
+  var NAV_HIDDEN = ["SYS-MERCADO","SYS-PPP2"];
   var NAV_PARENT = {"SYS-MIRAMAR":"SYS-TRACK"};
   function orderedModules(rows) {
     var seen = Object.create(null);
     return (Array.isArray(rows) ? rows : []).filter(function (row) {
-      if (!row || !row.system_id || seen[row.system_id]) return false;
+      if (!row || !row.system_id || NAV_HIDDEN.indexOf(row.system_id) >= 0 || seen[row.system_id]) return false;
       seen[row.system_id] = true; return true;
     }).sort(function (a, b) {
       var ai = NAV_ORDER.indexOf(a.system_id), bi = NAV_ORDER.indexOf(b.system_id);
@@ -374,7 +375,7 @@
   };
   // Etiqueta del tablero embebido (caché de 10 min de Pages). No se edita aquí: la escribe
   // node scripts/versiones.cjs --aplicar desde os/versiones.json, igual que todos los ?v=.
-  var TABLERO_V='20261116-mercado-lecturas';
+  var TABLERO_V='20261116-jarvis-grafo';
   var state={modules:[],rawRows:[],role:'vista',boards:'',profileReady:false,loading:false,opsScope:'mias',allTasks:[],sesionEpoch:0,sessionToken:'',identityRequest:0,pulseCache:{},opsCache:null,verifiedAt:0};
   var $=function(id){return document.getElementById(id);};
   // ¿hay clave guardada? distingue «sin sesión» de «sesión validándose»
@@ -655,7 +656,7 @@
         write:function(intent){return window.YODCaseTransport.writeTeam(intent);},
         lookupReceipt:function(requestId){return window.YODCaseTransport.lookupTeamReceipt({request_id:requestId});}
       },
-      loadMount:function(){return import('../despacho3d/equipo.mjs?v=20261116-mercado-lecturas').then(function(module){return module.mountTeamDesk;});},
+      loadMount:function(){return import('../despacho3d/equipo.mjs?v=20261116-jarvis-grafo').then(function(module){return module.mountTeamDesk;});},
       onError:function(){var status=$('despachoEquipoEstado');if(status)status.textContent='No se pudo abrir Equipo. Puedes volver a validar tu acceso.';}
     });
   }
