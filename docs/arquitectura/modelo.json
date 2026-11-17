@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-17.jarvis-native-cut.1",
+  "revision": "2026-11-17.ppp-multiuso.1",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -16934,6 +16934,27 @@
         "Conservar IDs y enlaces; no modificar PPP vigente, Masterbroker ni permisos.",
         "Sólo etiquetas y relaciones AST públicas; ningún contenido de tarjetas, conversaciones o secretos.",
         "El grafo no acredita ejecución de las veinte mejoras ni sincronización automática."
+      ]
+    },
+    {
+      "id": "CHG-PPP-MULTIUSO-20261117",
+      "components": [
+        "SYS-POTENCIALES",
+        "GAS-PORTERO",
+        "SHEET-PPP-MODELOS"
+      ],
+      "proposal": "Separar productos multiuso, fuentes y dependencias de fórmulas nativas; diagnóstico de captura y migración controlada.",
+      "approval": "Dirección solicita revisar limitantes y editar código para integrar datos y grafo del PPP. No autoriza inventar acuerdos o cantidades.",
+      "status": "propuesto",
+      "tests": [
+        "Productos activos/inactivos, conflictos y faltantes; grafo ligado a fórmulas; presupuesto exclusivo.",
+        "Regresiones de captura, recibos e identidad. Aceptación financiera en Sheets y backend pendiente."
+      ],
+      "deployment": "Candidato no desplegado.",
+      "invariants": [
+        "Cálculo exclusivamente nativo en Sheets.",
+        "Sin datos privados en Git.",
+        "No promover fichas incompletas ni reenviar operaciones inciertas."
       ]
     }
   ],
