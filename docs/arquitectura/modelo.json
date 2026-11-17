@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-16.jarvis-grafo.1",
+  "revision": "2026-11-16.jarvis-visor.2",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -16874,6 +16874,26 @@
         "Sin modificar fórmulas, hojas o permisos.",
         "Grafo público sin fuentes privadas, sesiones ni credenciales.",
         "Falta de latido indica desconocido, nunca sin cambios."
+      ]
+    },
+    {
+      "id": "CHG-JARVIS-VISOR-20261116",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
+      ],
+      "proposal": "Hacer consultable el visor original abierto por Dirección: grupos con nombres por evidencia, navegación comunidad/archivo/función, relaciones dirigidas, búsqueda, cambios y lectura local del código con línea y huella. Mismo corte y datos nativos; sin publicar fuentes privadas.",
+      "approval": "Pedido directo de Alejandro: mejorar funcionalidad, clic hacia código y significado visual del visor abierto. Publicación autorizada vigente.",
+      "status": "propuesto",
+      "tests": [
+        "Navegación real desde URL nativa y Accesos; fuentes locales sintéticas, hash distinto, rechazo de rutas y errores de red.",
+        "Verificaciones del portal, móvil y regresiones de cambios."
+      ],
+      "deployment": "Preparación local; no publicado.",
+      "invariants": [
+        "No se modifica el corte ni se inventan relaciones.",
+        "Código local sólo en memoria del navegador; no ejecución, escritura ni envío.",
+        "Sin reporte vigente, estado desconocido."
       ]
     }
   ],
