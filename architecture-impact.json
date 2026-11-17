@@ -1,24 +1,19 @@
 {
-  "model_revision": "2026-11-17.jarvis-native-cut.1",
-  "proposal_id": "CHG-JARVIS-CORTE-20261117",
-  "summary": "Actualizar sólo el área 06 YOD del grafo con los bytes instalados el 17-nov: exportador HTML original Graphify, JSON y huellas coherentes. Mantener explícitos los otros siete cortes anteriores; sin nuevo visor ni fuentes privadas.",
+  "model_revision": "2026-11-17.ppp-unico.1",
+  "proposal_id": "CHG-PPP-UNICO-20261117",
+  "summary": "Una entrada para todos los planes nuevos. El Vivero crea un libro limpio por oportunidad y el portal consulta allí los factores, la siguiente pregunta y los escenarios.",
   "components": [
-    "GAS-CATALOGO",
-    "GAS-PORTERO",
-    "SYS-CONTROL",
+    "SYS-YOD-OS",
     "SYS-DESPACHO",
-    "SYS-INVERSION",
-    "SYS-MERCADO",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
+    "GAS-PORTERO",
     "SYS-POTENCIALES",
     "SYS-PPP2",
-    "SYS-TRACK",
-    "SYS-YOD-OS"
+    "GAS-PPP2",
+    "SHEET-PPP2"
   ],
   "tests": [
-    "Reapertura y conteos del grafo nativo; correspondencia de huellas y anclas HTML.",
-    "Pruebas completas obligatorias del portal; bytes publicados verificados por separado."
+    "Alta por nombre, reapertura del mismo libro, factor con fuente y comparación de escenarios.",
+    "Acceso histórico por sus enlaces, control de roles y ausencia de expedientes en la plantilla."
   ],
-  "rollback": "Revertir este PR de datos; código instalado de Jarvis y sus respaldos se conservan por separado."
+  "rollback": "Restituir la referencia anterior de plantilla y revertir la entrada del portal. Conservar los libros ya creados y su registro."
 }

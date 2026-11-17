@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": "2026-11-17.jarvis-native-cut.1",
+  "revision": "2026-11-17.ppp-unico.1",
   "checked_at": "2026-11-13",
   "priorities": [
     "vender_mas",
@@ -16934,6 +16934,31 @@
         "Conservar IDs y enlaces; no modificar PPP vigente, Masterbroker ni permisos.",
         "Sólo etiquetas y relaciones AST públicas; ningún contenido de tarjetas, conversaciones o secretos.",
         "El grafo no acredita ejecución de las veinte mejoras ni sincronización automática."
+      ]
+    },
+    {
+      "id": "CHG-PPP-UNICO-20261117",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-DESPACHO",
+        "GAS-PORTERO",
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "GAS-PPP2",
+        "SHEET-PPP2"
+      ],
+      "proposal": "Una entrada para todos los planes nuevos. El Vivero crea un libro limpio por oportunidad y el portal consulta allí los factores, la siguiente pregunta y los escenarios.",
+      "approval": "Dirección pidió publicar el PPP único y posponer la migración de cada proyecto hasta comprobar su operación.",
+      "status": "implementado_local",
+      "tests": [
+        "Alta por nombre, reapertura del mismo libro, factor con fuente y comparación de escenarios.",
+        "Acceso histórico por sus enlaces, control de roles y ausencia de expedientes en la plantilla."
+      ],
+      "deployment": "Catálogo de YOD OS, GitHub Pages de Potenciales y plantilla del registro privado del Vivero.",
+      "invariants": [
+        "Identidad por oportunidad y registro único de altas.",
+        "El Portero valida cada sesión y Google Sheets calcula las cifras.",
+        "Los proyectos históricos conservan su libro, identificador y permisos."
       ]
     }
   ],
