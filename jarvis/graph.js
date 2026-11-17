@@ -28,12 +28,12 @@ function select(path){
 function draw(){
  if(!current)return;const query=$('search').value.trim().toLowerCase();let files=fileList();
  if(query)files=files.filter(f=>f.path.toLowerCase().includes(query)||symbols(f.path).some(n=>n.label.toLowerCase().includes(query)));
- const visible=files.slice(0,350),ids=new Set(visible.map(f=>f.path));const nodes=visible.map(f=>({id:f.path,label:f.path.split('/').pop(),title:f.path,color:changes.has(f.path)?(changes.get(f.path).status==='deleted'?'#b54b4b':'#d49c24'):'#377c91',font:{color:'#eeeeee'},shape:'dot',size:9}));
+ const visible=files.slice(0,350),ids=new Set(visible.map(f=>f.path));const nodes=visible.map(f=>({id:f.path,label:f.path.split('/').pop(),title:f.path,color:changes.has(f.path)?(changes.get(f.path).status==='deleted'?'#b54b4b':'#d49c24'):'#377c91',font:{color:getComputedStyle(document.body).color},shape:'dot',size:9}));
  const edges=current.file_edges.map(([a,b,w])=>({from:original(a),to:original(b),value:Math.min(w,8)})).filter(e=>e.from!==e.to&&ids.has(e.from)&&ids.has(e.to));
  network?.destroy();network=new vis.Network($('graph'),{nodes,edges},{physics:{stabilization:{iterations:90}},interaction:{hideEdgesOnDrag:true},edges:{color:{opacity:.2},smooth:false},layout:{randomSeed:13}});
  network.on('click',e=>{if(e.nodes.length)select(e.nodes[0]);});const results=$('results');results.replaceChildren();for(const f of files.slice(0,100)){const b=document.createElement('button');b.type='button';b.textContent=f.path;b.onclick=()=>select(f.path);results.append(b);}
  const p=document.createElement('p');p.textContent=files.length+' archivos coinciden · '+visible.length+' en pantalla';results.prepend(p);
- if(selected&&ids.has(selected))network.selectNodes([selected]);
+ if(selected&&ids.has(selected))select(selected);
 }
 async function area(){const turn=++generation,id=$('area').value;try{if(!cache.has(id))cache.set(id,await json('data/'+id+'-sources.json'));if(turn!==generation)return;current=cache.get(id);$('native').href='data/'+id+'.html';$('download').href='data/'+id+'.json.gz';draw();const hash=decodeURIComponent(location.hash.slice(1));if(hash&&fileList().some(f=>f.path===hash))select(hash);}catch(e){$('status').textContent='No se pudo cargar el grafo de esta área. Recarga para reintentar.';}}
 async function check(){try{const s=await json(STATUS+'?t='+Math.floor(Date.now()/60000)),info=statusInfo(s,manifest.observed_at);$('status').textContent=info.text;changes=new Map(info.fresh?s.changes.map(c=>[c.file,c]):[]);draw();}catch(e){$('status').textContent=statusInfo(null,manifest.observed_at).text;changes.clear();draw();}}
