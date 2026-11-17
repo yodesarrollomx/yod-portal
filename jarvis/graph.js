@@ -20,10 +20,10 @@
     let file=params.get('file')||'';
     if(raw&&!raw.includes('=')){try{file=decodeURIComponent(raw);}catch{file='';}}
     const area=params.get('area')||file.split('/')[0]||document.documentElement.dataset.area||'';
-    return {area:manifest.groups.some(g=>g.id===area)?area:'',community:params.get('community'),file,node:params.get('node')||''};
+    return {area:manifest.groups.some(g=>g.id===area)?area:'',community:params.get('community'),file,node:params.get('node')||'',view:params.get('view')};
   }
   function go(next) {
-    const p=new URLSearchParams();for(const key of ['area','community','file','node'])if(next[key]!==undefined&&next[key]!==null&&next[key]!=='')p.set(key,next[key]);
+    const p=new URLSearchParams();for(const key of ['area','community','file','node','view'])if(next[key]!==undefined&&next[key]!==null&&next[key]!=='')p.set(key,next[key]);
     if(!next.area&&!next.file)p.set('area','all');
     const hash=p.toString();if(location.hash.slice(1)===hash){route=next;render();}else location.hash=hash;
   }
@@ -32,7 +32,7 @@
     route=readRoute();const turn=++request;$('area').value=route.area;$('search').value='';shown=24;
     if(route.area&&(loaded!==route.area||!idx)){
       const requestedGroup=group();
-      $('notice').textContent='Cargando el grafo original de esta área…';idx=null;map?.destroy();map=null;$('graph').replaceChildren();$('results').replaceChildren();
+      $('notice').textContent='Cargando el grafo original de esta área…';idx=null;map?.destroy();map=null;$('graph').replaceChildren();$('results').replaceChildren();$('detail').replaceChildren(el('p','Cargando el área seleccionada…'));
       try {
         const response=await fetch(new URL('data/'+requestedGroup.id+'.json.gz',base),{credentials:'omit'});
         if(!response.ok)throw Error('La descarga del grafo no está disponible.');
@@ -55,11 +55,12 @@
   function fileChoice(path,members) {const f=fileMeta(path);return {id:'file:'+path,path,paths:[path],kind:'file',title:M.basename(path),subtitle:path.split('/').slice(1,-1).join('/')||'Raíz del área',meta:counted(members.length)+' símbolos · '+(f?.lines||'?')+' líneas',open:()=>go({area:route.area,file:path})};}
   function symbolChoice(n) {return {id:n.id,path:M.original(n.source_file),paths:[M.original(n.source_file)],kind:'symbol',title:n.label,subtitle:M.basename(n.source_file)+' · línea '+M.line(n.source_location),meta:n._callable_class?'Clase':n._callable?'Función':'Símbolo del código',open:()=>go({area:route.area,file:M.original(n.source_file),node:n.id})};}
   function getChoices() {
-    if(!route.area)return manifest.groups.map((g,i)=>({id:g.id,kind:'area',paths:manifest.files.filter(f=>f.group===g.id).map(f=>f.path),title:g.name,subtitle:purpose[g.id],meta:counted(g.nodes)+' piezas · '+counted(g.edges)+' conexiones',color:colors[i],open:()=>go({area:g.id})}));
+    if(!route.area){const q=$('search').value.trim().toLowerCase();return manifest.groups.map((g,i)=>({id:g.id,kind:'area',paths:manifest.files.filter(f=>f.group===g.id).map(f=>f.path),title:g.name,subtitle:purpose[g.id],meta:counted(g.nodes)+' piezas · '+counted(g.edges)+' conexiones',color:colors[i],open:()=>go({area:g.id})})).filter(c=>(c.title+' '+c.subtitle).toLowerCase().includes(q));}
     if(!idx)return [];
     const q=$('search').value.trim().toLowerCase();
-    if(q){const files=[...idx.files].filter(([p])=>p.toLowerCase().includes(q)).map(([p,ns])=>fileChoice(p,ns));const nodes=[...idx.nodes.values()].filter(n=>String(n.label).toLowerCase().includes(q)&&n.source_file).map(symbolChoice);return files.concat(nodes);}
+    if(q){const files=manifest.files.filter(f=>f.group===route.area&&!f.html_source&&f.path.toLowerCase().includes(q)).map(f=>fileChoice(f.path,idx.files.get(f.path)||[]));const nodes=[...idx.nodes.values()].filter(n=>String(n.label).toLowerCase().includes(q)&&n.source_file).map(symbolChoice);return files.concat(nodes);}
     if(onlyChanges){return status.changes.filter(c=>c.file.startsWith(route.area+'/')).map(c=>({...fileChoice(c.file,idx.files.get(c.file)||[]),meta:stateText(c.file)}));}
+    if(route.view==='files')return manifest.files.filter(f=>f.group===route.area&&!f.html_source).map(f=>fileChoice(f.path,idx.files.get(f.path)||[]));
     if(route.file){const members=idx.files.get(route.file)||[];const functions=members.filter(n=>n._callable||n._callable_class);return (functions.length?functions:members).slice().sort((a,b)=>M.line(a.source_location)-M.line(b.source_location)).map(symbolChoice);}
     if(route.community!==null&&route.community!==undefined){const members=idx.communities.get(Number(route.community))||[];const paths=[...new Set(members.map(n=>M.original(n.source_file)).filter(Boolean))];return paths.map(path=>fileChoice(path,idx.files.get(path)||[]));}
     return [...idx.communities].sort((a,b)=>b[1].length-a[1].length).map(([id,members])=>{const name=M.communityName(members);return {id:'community:'+id,paths:name.paths,kind:'community',title:name.title,subtitle:name.subtitle,meta:name.source+' · '+counted(members.length)+' piezas · '+name.paths.length+' archivos · grupo '+id,open:()=>go({area:route.area,community:String(id)})};});
@@ -99,9 +100,11 @@
   }
   function render() {
     crumbs();const g=group();$('heading').textContent=g?g.name:'Jarvis, por dentro';$('purpose').textContent=g?purpose[g.id]:'Ocho áreas. Entra a un grupo, elige un archivo y consulta sus funciones y su código.';
+    $('search').placeholder=g?'Archivo o función en esta área':'Buscar un área de Jarvis';$('files').hidden=!g;
     $('native').hidden=$('download').hidden=!g;
     if(g){$('native').href=new URL('data/'+g.id+'-original.html',base);$('download').href=new URL('data/'+g.id+'.json.gz',base);}
     $('map-title').textContent=route.file?'Funciones y símbolos de '+M.basename(route.file):route.community!==null&&route.community!==undefined?'Archivos del grupo '+route.community:g?'Grupos del código':'Áreas de Jarvis';
+    if(route.view==='files')$('map-title').textContent='Todos los archivos del área';
     if(onlyChanges)$('map-title').textContent='Archivos con cambios posteriores';
     if($('search').value)$('map-title').textContent='Resultados en '+(g?.name||'Jarvis');
     choices=getChoices();drawMap();listChoices();showDetail();
@@ -189,6 +192,7 @@
     $('changes').onclick=()=>{onlyChanges=!onlyChanges;$('changes').setAttribute('aria-pressed',String(onlyChanges));shown=24;if(!route.area&&onlyChanges){$('notice').textContent='Elige un área para ver sus archivos modificados.';}render();};
     let debounce;$('search').oninput=()=>{clearTimeout(debounce);debounce=setTimeout(()=>{shown=24;render();},180);};
     $('more').onclick=()=>{shown+=24;listChoices();};$('fit').onclick=()=>map?.fit({animation:{duration:250}});
+    $('files').onclick=()=>{onlyChanges=false;$('changes').setAttribute('aria-pressed','false');go({area:route.area,view:'files'});};
     $('connect').onclick=async()=>{try{const name=await S.connect();$('notice').textContent='Carpeta conectada: '+name+'. Abre una función y pulsa Ver código.';$('connect').textContent='Cambiar carpeta de código';}catch(error){if(error.name!=='AbortError')$('notice').textContent=error.message;}};
     $('close-code').onclick=()=>$('code-dialog').close();$('code-dialog').onclose=()=>{codeRequest++;$('code').replaceChildren();};
     $('pick-code').onclick=async()=>{const target=codeTarget,turn=++codeRequest;const result=await S.pick(target.file);if(result&&turn===codeRequest&&$('code-dialog').open)showCode(result,target);};

@@ -14,6 +14,11 @@ const server=http.createServer((req,res)=>{const url=new URL(req.url,'http://loc
  await page.goto(base+'/jarvis/data/06_yod.html');await page.locator('#results button').first().waitFor();
  assert.match(await page.locator('#heading').innerText(),/YOD/);assert.doesNotMatch(await page.locator('#results').innerText(),/Community \d/);
  await page.screenshot({path:path.join(output,'jarvis-v2-grupos.png'),fullPage:true});
+ const canvas=page.locator('#graph canvas'),bounds=await canvas.boundingBox();await canvas.click({position:{x:bounds.width/2,y:bounds.height/8}});await page.waitForFunction(()=>location.hash.includes('community='));
+ await page.goto(base+'/jarvis/data/06_yod.html');await page.locator('#results button').first().waitFor();
+ await page.locator('#files').click();await page.waitForFunction(()=>location.hash.includes('view=files'));
+ assert.equal(await page.locator('#results button').count(),manifest.files.filter(f=>f.group==='06_yod'&&!f.html_source).length);
+ await page.goto(base+'/jarvis/data/06_yod.html');await page.locator('#results button').first().waitFor();
  await page.locator('#results button').first().click();await page.waitForFunction(()=>location.hash.includes('community='));
  await page.locator('#results button[data-item^="file:"]').first().click();await page.waitForFunction(()=>location.hash.includes('file='));
  await page.goBack();await page.locator('#results button[data-item^="file:"]').first().waitFor();
@@ -33,12 +38,16 @@ const server=http.createServer((req,res)=>{const url=new URL(req.url,'http://loc
  await page.locator('#results button').first().click();await page.waitForFunction(()=>document.querySelector('#detail').textContent.includes('ColaOportunista'));
  await page.locator('#area').selectOption('07_memoria');await page.waitForFunction(()=>document.querySelector('#heading').textContent.includes('Obsidian'));
  await page.locator('#area').selectOption('');await page.waitForFunction(()=>document.querySelectorAll('#results button').length===8);
- await page.setViewportSize({width:390,height:844});await page.screenshot({path:path.join(output,'jarvis-v2-mobile.png'),fullPage:true});
+ await page.setViewportSize({width:390,height:844});await page.waitForFunction(()=>document.querySelector('#map-count').textContent.startsWith('6 de 8'));await page.screenshot({path:path.join(output,'jarvis-v2-mobile.png'),fullPage:true});
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
  changes=[{file,status:'modified'}];await page.goto(base+'/jarvis/data/06_yod.html');await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('1 archivos'));
  await page.locator('#changes').click();assert.match(await page.locator('#results').innerText(),/jarvis.html/);
  await page.route('https://raw.githubusercontent.com/**',r=>r.fulfill({json:{baseline:manifest.observed_at,checked_at:new Date(Date.now()-1000000).toISOString(),changes:[]}}));
  await page.reload();await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('desconocido'));
+ await page.setViewportSize({width:1440,height:1050});await page.locator('#area').selectOption('01_motor');await page.waitForFunction(()=>document.querySelector('#heading').textContent==='Motor y gateway',{},{timeout:45000});
+ assert.ok(await page.locator('#results button').count()>0);
+ await page.route('**/jarvis/data/02_herramientas.json.gz',r=>r.fulfill({status:503,body:'unavailable'}));await page.locator('#area').selectOption('02_herramientas');await page.waitForFunction(()=>document.querySelector('#notice').textContent.includes('no está disponible'));
+ assert.equal(await page.locator('#results button').count(),0);
  assert.deepEqual(errors,[]);console.log('PASS: grupos, archivos, símbolos, historial, búsqueda, cambio de área, código local igual/diferente, archivo equivocado, privacidad, cambios, reporte vencido y móvil.');
  }finally{await browser.close();server.close();}
 })().catch(e=>{console.error(e);server.close();process.exitCode=1;});

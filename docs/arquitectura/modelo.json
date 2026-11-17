@@ -16879,17 +16879,27 @@
     {
       "id": "CHG-JARVIS-VISOR-20261116",
       "components": [
-        "SYS-YOD-OS",
-        "SYS-CONTROL"
+        "GAS-CATALOGO",
+        "GAS-PORTERO",
+        "SYS-CONTROL",
+        "SYS-DESPACHO",
+        "SYS-INVERSION",
+        "SYS-MERCADO",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "SYS-TRACK",
+        "SYS-YOD-OS"
       ],
-      "proposal": "Hacer consultable el visor original abierto por Dirección: grupos con nombres por evidencia, navegación comunidad/archivo/función, relaciones dirigidas, búsqueda, cambios y lectura local del código con línea y huella. Mismo corte y datos nativos; sin publicar fuentes privadas.",
+      "proposal": "Hacer consultable el visor original abierto por Dirección: grupos con nombres por evidencia, navegación comunidad/archivo/función, relaciones dirigidas, búsqueda, cambios y lectura local del código con línea y huella. Mismo corte y datos nativos; sin publicar fuentes privadas. Actualización de etiqueta común de recursos en consumidores existentes.",
       "approval": "Pedido directo de Alejandro: mejorar funcionalidad, clic hacia código y significado visual del visor abierto. Publicación autorizada vigente.",
-      "status": "propuesto",
+      "status": "implementado_local",
       "tests": [
         "Navegación real desde URL nativa y Accesos; fuentes locales sintéticas, hash distinto, rechazo de rutas y errores de red.",
         "Verificaciones del portal, móvil y regresiones de cambios."
       ],
-      "deployment": "Preparación local; no publicado.",
+      "deployment": "Navegador local verificado; publicación pendiente.",
       "invariants": [
         "No se modifica el corte ni se inventan relaciones.",
         "Código local sólo en memoria del navegador; no ejecución, escritura ni envío.",
@@ -22409,6 +22419,30 @@
     {
       "repo": "yodesarrollomx/yod-portal",
       "prefix": "tests/jarvis.test.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/jarvis-viewer.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "scripts/jarvis-browser-check.cjs",
+      "components": [
+        "SYS-YOD-OS",
+        "SYS-CONTROL"
+      ]
+    },
+    {
+      "repo": "yodesarrollomx/yod-portal",
+      "prefix": "tests/jarvis-explorer.test.cjs",
       "components": [
         "SYS-YOD-OS",
         "SYS-CONTROL"

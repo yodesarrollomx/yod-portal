@@ -47,7 +47,8 @@
   }
   function statusInfo(status, baseline, now = Date.now()) {
     const time = Date.parse(status?.checked_at);
-    const fresh = status?.baseline === baseline && Array.isArray(status.changes) && Number.isFinite(time) && now - time <= 900000 && time <= now + 60000;
+    const valid = Array.isArray(status?.changes) && status.changes.every(c => c && typeof c.file === 'string' && ['modified','deleted','added'].includes(c.status));
+    const fresh = status?.baseline === baseline && valid && Number.isFinite(time) && now - time <= 900000 && time <= now + 60000;
     return {fresh, changes: fresh ? status.changes : [], text: fresh ? (status.changes.length ? `${status.changes.length} archivos con cambios` : 'Sin cambios en los archivos comprobados') + ' · Revisado ' + new Date(time).toLocaleString('es-MX') : 'Sin reporte reciente · Estado actual desconocido'};
   }
   function safeParts(path) {

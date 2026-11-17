@@ -25,6 +25,9 @@ test('lector de fuentes sólo inspecciona bytes locales y diferencia huellas',as
  const bytes=Buffer.from('<script>unsafe()</script>'), expected={path:'06_yod/voz/jarvis.html',sha256:crypto.createHash('sha256').update(bytes).digest('hex')};
  const file={name:'jarvis.html',size:bytes.length,arrayBuffer:async()=>bytes};
  const result=await scope.JarvisSource.inspect(file,expected);assert.equal(result.matches,true);assert.equal(result.text,bytes.toString());
+ const reads=[];scope.window.showDirectoryPicker=async()=>({name:'voz',async getDirectoryHandle(name){reads.push(name);throw Object.assign(new Error('Not found'),{name:'NotFoundError'});},async getFileHandle(name){reads.push(name);return {getFile:async()=>file};}});
+ await scope.JarvisSource.connect();assert.equal((await scope.JarvisSource.read(expected)).matches,true);
+ assert.deepEqual(reads,['06_yod','voz','jarvis.html']);
  assert.equal((await scope.JarvisSource.inspect(file,{...expected,sha256:'different'})).matches,false);
  await assert.rejects(scope.JarvisSource.inspect({...file,name:'otro.html'},expected),/Elige el archivo/);
  await assert.rejects(scope.JarvisSource.inspect({...file,size:6*1024*1024},expected),/5 MB/);

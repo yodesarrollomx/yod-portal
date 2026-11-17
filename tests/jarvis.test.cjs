@@ -4,7 +4,7 @@ const scope=require('../jarvis/explorer-model.js');
 test('latido ausente, viejo o de otro corte no equivale a sin cambios',()=>{
  const now=Date.now(),baseline='cut';
  for(const s of [null,{baseline:'old',checked_at:new Date(now).toISOString()},{baseline,checked_at:new Date(now-16*60e3).toISOString()}])assert.equal(scope.statusInfo(s,baseline,now).fresh,false);
- assert.equal(scope.statusInfo({baseline,checked_at:new Date(now).toISOString(),changes:[{file:'a'}]},baseline,now).fresh,true);
+ assert.equal(scope.statusInfo({baseline,checked_at:new Date(now).toISOString(),changes:[{file:'a',status:'modified'}]},baseline,now).fresh,true);
 });
 test('salidas nativas completas, anclas HTML y procedencia oficial',()=>{
  const m=JSON.parse(fs.readFileSync('jarvis/manifest.json'));let nodes=0,edges=0;
