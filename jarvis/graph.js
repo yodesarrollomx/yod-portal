@@ -1,42 +1,203 @@
 'use strict';
-const $=id=>document.getElementById(id);
-const STATUS='https://raw.githubusercontent.com/yodesarrollomx/potenciales-yod/grafo-datos/jarvis-estado.json';
-let manifest,current,network,changes=new Map(),selected='',generation=0;
-const cache=new Map();
-const clean=s=>String(s||'');
-function original(path){return path.replace(/\.inline-\d+\.js$/,'');}
-function statusInfo(s,baseline,now=Date.now()){
-  const time=Date.parse(s&&s.checked_at);
-  if(!s||s.baseline!==baseline||!Number.isFinite(time)||now-time>15*60*1000||time>now+60000)return {fresh:false,text:'Sin comprobación reciente del equipo. El grafo conserva el corte publicado; el estado actual es desconocido.'};
-  const n=Array.isArray(s.changes)?s.changes.length:0;
-  return {fresh:true,text:(n?n+' archivos con cambios posteriores.':'Los archivos comprobados coinciden con el corte.')+' Revisado: '+new Date(time).toLocaleString('es-MX')};
-}
-async function json(url){const r=await fetch(url,{cache:'no-store',credentials:'omit'});if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}
-function fileList(){return manifest.files.filter(f=>f.group===$('area').value&&!f.html_source);}
-function symbols(path){return Object.entries(current.files).filter(([p])=>original(p)===path).flatMap(([,a])=>a);}
-function select(path){
- selected=path;const f=manifest.files.find(x=>x.path===path);if(!f)return;
- const box=$('detail');box.replaceChildren();const title=document.createElement('h2');title.textContent=path.split('/').pop();box.append(title);
- for(const text of [path,'SHA-256: '+f.sha256,'Estado: '+(changes.get(path)?.status||'En el corte publicado')]){const p=document.createElement('p');p.textContent=text;box.append(p);}
- if(path.endsWith('.html')){const p=document.createElement('p');p.textContent='Ancla del HTML original: las funciones siguientes conservan su línea dentro de este archivo. La huella identifica exactamente los bytes analizados.';box.append(p);}
- const a=document.createElement('a');a.href='data/'+f.group+'.json.gz';a.textContent='Descargar grafo nativo de esta área';box.append(a);
- const h=document.createElement('h3');h.textContent='Funciones y líneas de origen';box.append(h);const list=document.createElement('ul');
- const all=symbols(path);for(const n of all.slice(0,150)){const li=document.createElement('li');li.textContent=n.label+' · '+(n.line||'sin línea');li.id='node-'+n.id;list.append(li);}box.append(list);
- const p=document.createElement('p');p.textContent=all.length?all.length+' nodos nativos en este archivo'+(all.length>150?' (primeros 150; todos en el JSON).':'.'):'Archivo inventariado por huella; sin símbolos extraídos.';box.append(p);
- history.replaceState(null,'','#'+encodeURIComponent(path));network?.selectNodes([path]);
-}
-function draw(){
- if(!current)return;const query=$('search').value.trim().toLowerCase();let files=fileList();
- if(query)files=files.filter(f=>f.path.toLowerCase().includes(query)||symbols(f.path).some(n=>n.label.toLowerCase().includes(query)));
- const visible=files.slice(0,350),ids=new Set(visible.map(f=>f.path));const nodes=visible.map(f=>({id:f.path,label:f.path.split('/').pop(),title:f.path,color:changes.has(f.path)?(changes.get(f.path).status==='deleted'?'#b54b4b':'#d49c24'):'#377c91',font:{color:getComputedStyle(document.body).color},shape:'dot',size:9}));
- const edges=current.file_edges.map(([a,b,w])=>({from:original(a),to:original(b),value:Math.min(w,8)})).filter(e=>e.from!==e.to&&ids.has(e.from)&&ids.has(e.to));
- network?.destroy();network=new vis.Network($('graph'),{nodes,edges},{physics:{stabilization:{iterations:90}},interaction:{hideEdgesOnDrag:true},edges:{color:{opacity:.2},smooth:false},layout:{randomSeed:13}});
- network.on('click',e=>{if(e.nodes.length)select(e.nodes[0]);});const results=$('results');results.replaceChildren();for(const f of files.slice(0,100)){const b=document.createElement('button');b.type='button';b.textContent=f.path;b.onclick=()=>select(f.path);results.append(b);}
- const p=document.createElement('p');p.textContent=files.length+' archivos coinciden · '+visible.length+' en pantalla';results.prepend(p);
- if(selected&&ids.has(selected))select(selected);
-}
-async function area(){const turn=++generation,id=$('area').value;try{if(!cache.has(id))cache.set(id,await json('data/'+id+'-sources.json'));if(turn!==generation)return;current=cache.get(id);$('native').href='data/'+id+'.html';$('download').href='data/'+id+'.json.gz';draw();const hash=decodeURIComponent(location.hash.slice(1));if(hash&&fileList().some(f=>f.path===hash))select(hash);}catch(e){$('status').textContent='No se pudo cargar el grafo de esta área. Recarga para reintentar.';}}
-async function check(){try{const s=await json(STATUS+'?t='+Math.floor(Date.now()/60000)),info=statusInfo(s,manifest.observed_at);$('status').textContent=info.text;changes=new Map(info.fresh?s.changes.map(c=>[c.file,c]):[]);draw();}catch(e){$('status').textContent=statusInfo(null,manifest.observed_at).text;changes.clear();draw();}}
-async function start(){try{manifest=await json('manifest.json');$('cut').textContent='Corte: '+new Date(manifest.observed_at).toLocaleString('es-MX')+' · '+manifest.files.filter(f=>!f.html_source).length+' archivos · '+manifest.nodes.toLocaleString('es-MX')+' nodos nativos · '+manifest.edges.toLocaleString('es-MX')+' conexiones.';
- for(const g of manifest.groups){const o=document.createElement('option');o.value=g.id;o.textContent=g.name;$('area').append(o);}const hash=decodeURIComponent(location.hash.slice(1));$('area').value=manifest.files.find(f=>f.path===hash)?.group||'06_yod';$('coverage').textContent=manifest.coverage;$('area').onchange=area;let t;$('search').oninput=()=>{clearTimeout(t);t=setTimeout(draw,180);};await area();await check();setInterval(check,60000);}catch(e){$('cut').textContent='No se pudo cargar el manifiesto. Recarga para reintentar.';}}
-if(typeof document!=='undefined')start();
+(async function () {
+  const M = window.JarvisGraph, S = window.JarvisSource, $ = id => document.getElementById(id);
+  const base = new URL('.', document.currentScript.src);
+  const STATUS = 'https://raw.githubusercontent.com/yodesarrollomx/potenciales-yod/grafo-datos/jarvis-estado.json';
+  const purpose = {'01_motor':'Coordina conversaciones, sesiones y la ejecución de los agentes.','02_herramientas':'Conecta a Jarvis con herramientas y proveedores.','03_cli_panel':'Permite operar y configurar Jarvis desde el panel y la consola.','04_web':'Reúne las interfaces web y de terminal de Hermes.','05_raiz':'Contiene las piezas centrales de Hermes y su arranque.','06_yod':'Voz, delegación, mayordomo, observador y extensiones propias de YOD.','07_memoria':'Conecta la memoria con Obsidian y sus pantallas.','08_mundo':'Organiza el mundo visual, el tablero y sus servicios.'};
+  const colors = ['#72c9c0','#8eaff1','#b9a7ed','#8cc8e5','#8fc8ab','#a4b8d0','#8bb5bf','#c0b5e5'];
+  const relations = {calls:'llama a',imports:'importa',contains:'contiene',inherits:'hereda de',uses:'usa',references:'referencia',defines:'define',belongs_to:'pertenece a'};
+  let manifest, idx = null, loaded = '', map = null, route = {}, request = 0, choices = [], shown = 24;
+  let status = {fresh:false,changes:[]}, changes = new Map(), onlyChanges = false, codeTarget = null, codeRequest = 0;
+  const el = (tag,text,cls) => {const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(cls)node.className=cls;return node;};
+  const button = (text,fn,cls) => {const b=el('button',text,cls);b.type='button';b.onclick=fn;return b;};
+  const group = () => manifest.groups.find(g=>g.id===route.area);
+  const fileMeta = path => manifest.files.find(f=>f.path===path&&!f.html_source);
+  const counted = n => n.toLocaleString('es-MX');
+  const color = item => {const paths=item.paths||[item.path];const states=paths.map(p=>changes.get(p)?.status);if(states.includes('deleted'))return '#db7384';if(states.some(Boolean))return '#c99138';const seed=[...M.component(paths[0]||item.id)].reduce((n,c)=>n+c.charCodeAt(0),0);return item.color||colors[seed%colors.length];};
+  function stateText(path) {return !status.fresh?'Estado actual desconocido':changes.has(path)?({modified:'Modificado después del corte',deleted:'Eliminado después del corte',added:'Añadido después del corte'}[changes.get(path).status]||'Cambió después del corte'):'Coincide con el corte';}
+  function readRoute() {
+    const raw=location.hash.slice(1), params=new URLSearchParams(raw.includes('=')?raw:'');
+    let file=params.get('file')||'';
+    if(raw&&!raw.includes('=')){try{file=decodeURIComponent(raw);}catch{file='';}}
+    const area=params.get('area')||file.split('/')[0]||document.documentElement.dataset.area||'';
+    return {area:manifest.groups.some(g=>g.id===area)?area:'',community:params.get('community'),file,node:params.get('node')||'',view:params.get('view')};
+  }
+  function go(next) {
+    const p=new URLSearchParams();for(const key of ['area','community','file','node','view'])if(next[key]!==undefined&&next[key]!==null&&next[key]!=='')p.set(key,next[key]);
+    if(!next.area&&!next.file)p.set('area','all');
+    const hash=p.toString();if(location.hash.slice(1)===hash){route=next;render();}else location.hash=hash;
+  }
+  async function fetchJSON(path) {const response=await fetch(new URL(path,base),{credentials:'omit',cache:'no-store'});if(!response.ok)throw Error('No se pudo cargar '+path);return response.json();}
+  async function loadArea() {
+    route=readRoute();const turn=++request;$('area').value=route.area;$('search').value='';shown=24;
+    if(route.area&&(loaded!==route.area||!idx)){
+      const requestedGroup=group();
+      $('notice').textContent='Cargando el grafo original de esta área…';idx=null;map?.destroy();map=null;$('graph').replaceChildren();$('results').replaceChildren();$('detail').replaceChildren(el('p','Cargando el área seleccionada…'));
+      try {
+        const response=await fetch(new URL('data/'+requestedGroup.id+'.json.gz',base),{credentials:'omit'});
+        if(!response.ok)throw Error('La descarga del grafo no está disponible.');
+        const bytes=await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+        if(await S.digest(bytes)!==requestedGroup.sha256)throw Error('La huella del grafo no coincide con el manifiesto.');
+        if(turn!==request)return;
+        idx=M.index(JSON.parse(new TextDecoder().decode(bytes)));loaded=route.area;$('notice').textContent='';
+      }catch(error){if(turn!==request)return;$('notice').textContent=error.message+' Recarga para reintentar.';$('detail').replaceChildren(el('h2','No se pudo cargar esta área'),el('p','Elige otra área o recarga. No se muestran datos anteriores como si fueran actuales.'));return;}
+    }
+    if(turn===request)render();
+  }
+  function crumbs() {
+    const box=$('breadcrumbs');box.replaceChildren(button('Todo Jarvis',()=>go({})));
+    const parts=[];if(group())parts.push([group().name,{area:route.area}]);
+    if(route.community!==null&&route.community!==undefined&&idx?.communities.has(Number(route.community)))parts.push(['Grupo '+route.community,{area:route.area,community:route.community}]);
+    if(route.file)parts.push([M.basename(route.file),{area:route.area,file:route.file}]);
+    for(const [name,target]of parts){box.append(el('span','›'),button(name,()=>go(target)));}
+    $('full').href=new URL('index.html'+location.hash,base).href;
+  }
+  function fileChoice(path,members) {const f=fileMeta(path);return {id:'file:'+path,path,paths:[path],kind:'file',title:M.basename(path),subtitle:path.split('/').slice(1,-1).join('/')||'Raíz del área',meta:counted(members.length)+' símbolos · '+(f?.lines||'?')+' líneas',open:()=>go({area:route.area,file:path})};}
+  function symbolChoice(n) {return {id:n.id,path:M.original(n.source_file),paths:[M.original(n.source_file)],kind:'symbol',title:n.label,subtitle:M.basename(n.source_file)+' · línea '+M.line(n.source_location),meta:n._callable_class?'Clase':n._callable?'Función':'Símbolo del código',open:()=>go({area:route.area,file:M.original(n.source_file),node:n.id})};}
+  function getChoices() {
+    if(!route.area){const q=$('search').value.trim().toLowerCase();return manifest.groups.map((g,i)=>({id:g.id,kind:'area',paths:manifest.files.filter(f=>f.group===g.id).map(f=>f.path),title:g.name,subtitle:purpose[g.id],meta:counted(g.nodes)+' piezas · '+counted(g.edges)+' conexiones',color:colors[i],open:()=>go({area:g.id})})).filter(c=>(c.title+' '+c.subtitle).toLowerCase().includes(q));}
+    if(!idx)return [];
+    const q=$('search').value.trim().toLowerCase();
+    if(q){const files=manifest.files.filter(f=>f.group===route.area&&!f.html_source&&f.path.toLowerCase().includes(q)).map(f=>fileChoice(f.path,idx.files.get(f.path)||[]));const nodes=[...idx.nodes.values()].filter(n=>String(n.label).toLowerCase().includes(q)&&n.source_file).map(symbolChoice);return files.concat(nodes);}
+    if(onlyChanges){return status.changes.filter(c=>c.file.startsWith(route.area+'/')).map(c=>({...fileChoice(c.file,idx.files.get(c.file)||[]),meta:stateText(c.file)}));}
+    if(route.view==='files')return manifest.files.filter(f=>f.group===route.area&&!f.html_source).map(f=>fileChoice(f.path,idx.files.get(f.path)||[]));
+    if(route.file){const members=idx.files.get(route.file)||[];const functions=members.filter(n=>n._callable||n._callable_class);return (functions.length?functions:members).slice().sort((a,b)=>M.line(a.source_location)-M.line(b.source_location)).map(symbolChoice);}
+    if(route.community!==null&&route.community!==undefined){const members=idx.communities.get(Number(route.community))||[];const paths=[...new Set(members.map(n=>M.original(n.source_file)).filter(Boolean))];return paths.map(path=>fileChoice(path,idx.files.get(path)||[]));}
+    return [...idx.communities].sort((a,b)=>b[1].length-a[1].length).map(([id,members])=>{const name=M.communityName(members);return {id:'community:'+id,paths:name.paths,kind:'community',title:name.title,subtitle:name.subtitle,meta:name.source+' · '+counted(members.length)+' piezas · '+name.paths.length+' archivos · grupo '+id,open:()=>go({area:route.area,community:String(id)})};});
+  }
+  function drawMap() {
+    map?.destroy();map=null;$('graph').replaceChildren();
+    if(!choices.length){$('graph').append(el('p',onlyChanges&&!status.fresh?'Sin reporte reciente; no se puede confirmar si hay cambios.':'No hay piezas para esta búsqueda o vista.','empty-map'));$('map-count').textContent='0 piezas';return;}
+    const mobile=innerWidth<=720,columns=mobile?2:3;
+    const visible=choices.slice(0,mobile?6:12), ids=new Set(visible.map(c=>c.id)), byId=new Map(visible.map(c=>[c.id,c]));
+    let edges=[];
+    if(route.area&&idx){
+      const kind=visible[0].kind;
+      if(kind==='community')edges=M.aggregate(idx,n=>'community:'+n.community);
+      else if(kind==='file')edges=M.aggregate(idx,n=>'file:'+M.original(n.source_file));
+      else edges=idx.edges.map(e=>({from:e.source,to:e.target,count:1,relation:e.relation}));
+    }
+    edges=edges.filter(e=>ids.has(e.from)&&ids.has(e.to));
+    const nodes=visible.map((c,i)=>{
+      const title=el('div',c.title+' · '+c.subtitle+' · '+c.meta);
+      const short=s=>String(s).length>28?String(s).slice(0,26)+'…':String(s);
+      return {id:c.id,label:short(c.title)+'\n'+short(c.kind==='area'?counted(manifest.groups.find(g=>g.id===c.id).nodes)+' piezas':c.subtitle),title,shape:'box',margin:13,widthConstraint:{minimum:mobile?140:170,maximum:mobile?150:190},heightConstraint:{minimum:52},color:{background:color(c),border:'#b6c8da',highlight:{background:'#f6d49c',border:'#fff'}},font:{color:'#081321',size:14,face:'system-ui'},x:(i%columns)*(mobile?210:245),y:Math.floor(i/columns)*(mobile?120:145)};
+    });
+    map=new vis.Network($('graph'),{nodes,edges:edges.map((e,i)=>({id:i,from:e.from,to:e.to,arrows:'to',color:{color:'#97acc6',opacity:.45},width:Math.min(1+Math.log2(e.count),4),title:el('div',e.relation?(relations[e.relation]||e.relation):e.count+' relaciones nativas agregadas'),smooth:{type:'curvedCW',roundness:.1}}))},{physics:false,interaction:{hover:true,tooltipDelay:150},layout:{improvedLayout:false},edges:{font:{size:11}}});
+    map.on('click',event=>{if(event.nodes.length)byId.get(event.nodes[0])?.open();else if(event.edges.length)showEdge(edges[event.edges[0]]);});
+    map.fit({animation:false,padding:25});
+    if(route.node&&ids.has(route.node))map.selectNodes([route.node]);
+    $('map-count').textContent=visible.length+' de '+choices.length+' piezas dibujadas · '+edges.length+' conexiones visibles. Todas las piezas están en la lista.';
+  }
+  function listChoices() {
+    $('results').replaceChildren();$('result-count').textContent=counted(choices.length)+' resultados';
+    for(const c of choices.slice(0,shown)){
+      const b=button('',c.open);b.dataset.item=c.id;b.append(el('strong',c.title),el('small',c.subtitle),el('small',c.meta,'result-meta'));
+      if(c.paths?.some(p=>changes.has(p)))b.append(el('small','● '+(c.paths.some(p=>changes.get(p)?.status==='deleted')?'Incluye archivo eliminado':'Cambió después del corte'),'amber'));
+      $('results').append(b);
+    }
+    $('more').hidden=shown>=choices.length;
+  }
+  function render() {
+    crumbs();const g=group();$('heading').textContent=g?g.name:'Jarvis, por dentro';$('purpose').textContent=g?purpose[g.id]:'Ocho áreas. Entra a un grupo, elige un archivo y consulta sus funciones y su código.';
+    $('search').placeholder=g?'Archivo o función en esta área':'Buscar un área de Jarvis';$('files').hidden=!g;
+    $('native').hidden=$('download').hidden=!g;
+    if(g){$('native').href=new URL('data/'+g.id+'-original.html',base);$('download').href=new URL('data/'+g.id+'.json.gz',base);}
+    $('map-title').textContent=route.file?'Funciones y símbolos de '+M.basename(route.file):route.community!==null&&route.community!==undefined?'Archivos del grupo '+route.community:g?'Grupos del código':'Áreas de Jarvis';
+    if(route.view==='files')$('map-title').textContent='Todos los archivos del área';
+    if(onlyChanges)$('map-title').textContent='Archivos con cambios posteriores';
+    if($('search').value)$('map-title').textContent='Resultados en '+(g?.name||'Jarvis');
+    choices=getChoices();drawMap();listChoices();showDetail();
+  }
+  function detailStart(title,subtitle) {const box=$('detail');box.replaceChildren(el('p','PIEZA SELECCIONADA','eyebrow'),el('h2',title));if(subtitle)box.append(el('p',subtitle,'path'));return box;}
+  function reference(path,node) {return path+(node?' · '+node.label+' · L'+M.line(node.source_location):'')+' · corte '+manifest.observed_at;}
+  function showDetail() {
+    const g=group();
+    if(!g){const b=detailStart('¿Qué quieres entender?');b.append(el('p','Cada tarjeta representa un área de Jarvis. Sus cifras provienen del corte original de Graphify.'),el('h3','Un recorrido útil'),button('Voz y extensiones de YOD →',()=>go({area:'06_yod'}),'action primary'),button('Memoria y Obsidian →',()=>go({area:'07_memoria'}),'action'),button('Mundo y tablero →',()=>go({area:'08_mundo'}),'action'));return;}
+    if(route.file){showFile();return;}
+    if(route.community!==null&&route.community!==undefined){
+      const members=idx?.communities.get(Number(route.community));
+      if(!members){detailStart('Grupo no disponible','Vuelve al área para elegir un grupo del corte.');return;}
+      const name=M.communityName(members),b=detailStart(name.title,name.subtitle);
+      b.append(el('span',members.length+' piezas','badge'),el('span',name.paths.length+' archivos','badge'),el('p','Graphify agrupó estos símbolos por sus conexiones. El nombre corresponde al archivo dominante y a una función o clase del grupo.'),el('h3','Abrir un archivo'));
+      const list=el('div',undefined,'detail-list');for(const path of name.paths.slice(0,20))list.append(button(M.basename(path),()=>go({area:route.area,file:path,community:route.community})));b.append(list);return;
+    }
+    const b=detailStart(g.name,purpose[g.id]);b.append(el('span',counted(g.nodes)+' nodos','badge'),el('span',counted(g.edges)+' relaciones','badge'),el('p','Abre un grupo del mapa o de la lista para ver los archivos que lo forman. La búsqueda encuentra archivos y símbolos de toda esta área.'),el('h3','Cómo leer las flechas'),el('p','La punta indica el destino. Al abrir una función verás qué llama y quién la utiliza. La ausencia de una línea no demuestra que dos piezas sean independientes: la resolución entre lotes es parcial.'));
+  }
+  function showFile() {
+    const path=route.file,f=fileMeta(path),candidate=idx?.nodes.get(route.node),node=candidate&&M.original(candidate.source_file)===path?candidate:null,members=idx?.files.get(path)||[],b=detailStart(node?.label||M.basename(path),path);
+    b.append(el('span',stateText(path),'badge'),el('span',f?f.lines+' líneas':'Fuera del corte','badge'));
+    if(!f){b.append(el('p','Este archivo no está en el corte publicado. Si es nuevo, debe incorporarse en la siguiente regeneración.'));return;}
+    if(node)b.append(el('p','Línea '+M.line(node.source_location)+' del archivo original.'));
+    b.append(button(node?'Ver código · línea '+M.line(node.source_location):'Ver código del archivo',()=>openCode(f,node),'action primary'),button('Copiar referencia',()=>copy(reference(path,node)),'action'));
+    const sha=el('details');sha.append(el('summary','Huella del corte'),el('p',f.sha256,'path'));b.append(sha);
+    if(!node){b.append(el('p',members.length+' nodos nativos en este archivo. Elige una función de la lista para consultar su línea y relaciones.'));showFileRelations(b,path);}
+    else {b.append(button('Volver a todas las funciones',()=>go({area:route.area,file:path}),'action'));showNodeRelations(b,node);}
+  }
+  function relationList(box,title,entries,format,open) {
+    box.append(el('h3',title+' · '+entries.length));
+    if(!entries.length){box.append(el('p','No hay relaciones resueltas de este tipo en el corte.'));return;}
+    const list=el('div',undefined,'detail-list');let limit=0;
+    const more=button('Ver más conexiones',()=>append());
+    function append(){for(const entry of entries.slice(limit,limit+15))list.append(button(format(entry),()=>open(entry)));limit+=15;more.hidden=limit>=entries.length;}
+    append();box.append(list,more);
+  }
+  function showFileRelations(box,path) {
+    const edges=M.aggregate(idx,n=>M.original(n.source_file));
+    relationList(box,'Este archivo se relaciona con',edges.filter(e=>e.from===path),e=>M.basename(e.to)+' · '+e.count+' conexiones',e=>go({area:route.area,file:e.to}));
+    relationList(box,'Archivos que apuntan aquí',edges.filter(e=>e.to===path),e=>M.basename(e.from)+' · '+e.count+' conexiones',e=>go({area:route.area,file:e.from}));
+  }
+  function showNodeRelations(box,node) {
+    for(const [key,title,endpoint]of [['outgoing','Desde esta función','target'],['incoming','Hacia esta función','source']])relationList(box,title,idx[key].get(node.id)||[],e=>(relations[e.relation]||e.relation||'relación')+' · '+idx.nodes.get(e[endpoint]).label,e=>{const n=idx.nodes.get(e[endpoint]);go({area:route.area,file:M.original(n.source_file),node:n.id});});
+  }
+  function showEdge(edge) {
+    const b=detailStart('Conexión del código');
+    const a=choices.find(c=>c.id===edge.from),z=choices.find(c=>c.id===edge.to);
+    b.append(el('p',(a?.title||edge.from)+' → '+(z?.title||edge.to)),el('p',edge.relation?(relations[edge.relation]||edge.relation):edge.count+' relaciones nativas entre estas piezas.'));
+    if(a)b.append(button('Abrir origen: '+a.title,a.open,'action'));if(z)b.append(button('Abrir destino: '+z.title,z.open,'action'));
+  }
+  async function copy(value) {try{await navigator.clipboard.writeText(value);$('notice').textContent='Referencia copiada.';}catch{$('notice').textContent='Referencia: '+value;}}
+  function codeHelp(message) {$('code-status').textContent=message;$('code').replaceChildren(el('span','Elige el archivo original o conecta su carpeta. El contenido se lee aquí, sin subirlo a internet.','help'));}
+  function showCode(result,target) {
+    if(result?.error){codeHelp(result.error);return;}
+    if(!result){codeHelp('El archivo todavía no está conectado.');return;}
+    $('code-status').textContent=result.matches?'Huella verificada: este es el código exacto del corte.':'Archivo diferente al corte. Estás leyendo su versión local actual; las líneas del grafo pueden haber cambiado.';
+    $('code-status').className=result.matches?'':'amber';
+    const line=M.line(target.node?.source_location),lines=result.text.split('\n');
+    // Render a bounded window, while letting the user explicitly reveal the whole text.
+    if(line>lines.length)$('code-status').textContent+=' La línea del grafo ya no existe en este archivo; se muestra el final.';
+    function paint(all=false){const focus=Math.min(line,lines.length),start=all?0:Math.max(0,focus-41),end=all?lines.length:Math.min(lines.length,focus+80),fragment=document.createDocumentFragment();
+      if(!all&&(start>0||end<lines.length))fragment.append(button('Mostrar el archivo completo ('+lines.length+' líneas)',()=>paint(true),'help'));
+      for(let i=start;i<end;i++){const span=el('span',lines[i]||' ','code-line'+(i+1===line?' target':''));span.dataset.line=String(i+1);fragment.append(span);}
+      $('code').replaceChildren(fragment);$('code').querySelector('.target')?.scrollIntoView({block:'center'});
+    }
+    paint();
+  }
+  async function openCode(file,node) {
+    codeTarget={file,node};const turn=++codeRequest;$('code-title').textContent=M.basename(file.path)+(node?' · '+node.label:'');codeHelp('Buscando en los archivos que conectaste…');$('code-dialog').showModal();
+    try{const result=await S.read(file);if(turn===codeRequest&&$('code-dialog').open)showCode(result,codeTarget);}catch(error){if(turn===codeRequest)codeHelp(error.message);}
+  }
+  async function checkStatus() {
+    try{const r=await fetch(STATUS+'?t='+Math.floor(Date.now()/60000),{credentials:'omit',cache:'no-store'});if(!r.ok)throw Error();status=M.statusInfo(await r.json(),manifest.observed_at);}
+    catch{status=M.statusInfo(null,manifest.observed_at);}
+    changes=new Map(status.changes.map(c=>[c.file,c]));$('status').textContent=status.text;$('status').className=status.fresh?(changes.size?'changed':'fresh'):'';
+    if(idx||!route.area)render();
+  }
+  try {
+    manifest=await fetchJSON('manifest.json');
+    $('cut').textContent='CORTE · '+new Date(manifest.observed_at).toLocaleString('es-MX')+'\n'+counted(manifest.files.filter(f=>!f.html_source).length)+' archivos · '+counted(manifest.nodes)+' nodos · '+counted(manifest.edges)+' conexiones';
+    $('coverage').textContent=manifest.coverage;
+    for(const g of manifest.groups){const o=el('option',g.name);o.value=g.id;$('area').append(o);}
+    $('area').onchange=()=>{onlyChanges=false;$('changes').setAttribute('aria-pressed','false');go({area:$('area').value});};
+    $('changes').onclick=()=>{onlyChanges=!onlyChanges;$('changes').setAttribute('aria-pressed',String(onlyChanges));shown=24;if(!route.area&&onlyChanges){$('notice').textContent='Elige un área para ver sus archivos modificados.';}render();};
+    let debounce;$('search').oninput=()=>{clearTimeout(debounce);debounce=setTimeout(()=>{shown=24;render();},180);};
+    $('more').onclick=()=>{shown+=24;listChoices();};$('fit').onclick=()=>map?.fit({animation:{duration:250}});
+    $('files').onclick=()=>{onlyChanges=false;$('changes').setAttribute('aria-pressed','false');go({area:route.area,view:'files'});};
+    $('connect').onclick=async()=>{try{const name=await S.connect();$('notice').textContent='Carpeta conectada: '+name+'. Abre una función y pulsa Ver código.';$('connect').textContent='Cambiar carpeta de código';}catch(error){if(error.name!=='AbortError')$('notice').textContent=error.message;}};
+    $('close-code').onclick=()=>$('code-dialog').close();$('code-dialog').onclose=()=>{codeRequest++;$('code').replaceChildren();};
+    $('pick-code').onclick=async()=>{const target=codeTarget,turn=++codeRequest;const result=await S.pick(target.file);if(result&&turn===codeRequest&&$('code-dialog').open)showCode(result,target);};
+    $('copy-reference').onclick=()=>copy(reference(codeTarget.file.path,codeTarget.node));
+    let resize;window.addEventListener('resize',()=>{clearTimeout(resize);resize=setTimeout(()=>{if(idx||!route.area)drawMap();},150);});
+    window.addEventListener('hashchange',loadArea);await loadArea();await checkStatus();setInterval(checkStatus,60000);
+  }catch(error){$('notice').textContent='No se pudo abrir el visor: '+error.message+'. Recarga para reintentar.';}
+})();

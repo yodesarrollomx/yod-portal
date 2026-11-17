@@ -1,7 +1,7 @@
 {
-  "model_revision": "2026-11-16.jarvis-grafo.1",
-  "proposal_id": "CHG-JARVIS-GRAFO-20261116",
-  "summary": "Publicar grafo nativo Graphify del código instalado de Jarvis, con manifiesto por archivo, anclas HTML y cambios por huella. Integrar acceso con el grafo de Accesos. Ocultar PPP2 y Mercado como entradas separadas; conservar sistemas, permisos, PPP vigente y Mercado dentro de Masterbrokers.",
+  "model_revision": "2026-11-16.jarvis-visor.2",
+  "proposal_id": "CHG-JARVIS-VISOR-20261116",
+  "summary": "Hacer consultable el visor original abierto por Dirección: grupos con nombres por evidencia, navegación comunidad/archivo/función, relaciones dirigidas, búsqueda, cambios y lectura local del código con línea y huella. Mismo corte y datos nativos; sin publicar fuentes privadas.",
   "components": [
     "GAS-CATALOGO",
     "GAS-PORTERO",
@@ -17,8 +17,8 @@
     "SYS-YOD-OS"
   ],
   "tests": [
-    "Procedencia PyPI idéntica; hashes de fuentes y salidas, HTML embebido y pruebas negativas del detector.",
-    "Pruebas portal y regresiones del grafo; revisión de privacidad antes de publicación."
+    "Navegación real desde URL nativa y Accesos; fuentes locales sintéticas, hash distinto, rechazo de rutas y errores de red.",
+    "Verificaciones del portal, móvil y regresiones de cambios."
   ],
-  "rollback": "Revertir PR de publicación y detener sólo el verificador de grafo. Conservar archivos y permisos de PPP/Mercado."
+  "rollback": "Revertir PR del visor; las ocho descargas y el monitor conservan su corte."
 }
