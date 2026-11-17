@@ -16961,6 +16961,30 @@
         "El Portero valida cada sesión y Google Sheets calcula las cifras.",
         "Los proyectos históricos conservan su libro, identificador y permisos."
       ]
+    },
+    {
+      "id": "CHG-PPP-NOMBRE-20261117",
+      "components": [
+        "SYS-POTENCIALES",
+        "SYS-PPP2",
+        "GAS-PORTERO",
+        "SYS-DESPACHO",
+        "SYS-YOD-OS",
+        "SYS-OBRA",
+        "SYS-OBRA-CLIENTE",
+        "SYS-TRACK",
+        "SYS-CONTROL"
+      ],
+      "proposal": "Mostrar PPP en la barra del plan tanto al abrir la cartera como al entrar por una liga del Vivero.",
+      "approval": "Dirección solicitó una única versión publicada de PPP.",
+      "status": "implementado_local",
+      "tests": [
+        "Verificar la barra de YOD en la entrada publicada y la paridad del catálogo."
+      ],
+      "deployment": "Catálogo y marco compartido de YOD OS en Pages.",
+      "invariants": [
+        "El menú conserva un único acceso por negocio y el Portero valida los mismos permisos."
+      ]
     }
   ],
   "data_contracts": [

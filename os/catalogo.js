@@ -20,11 +20,8 @@
        navParent para que aparezca como entrada propia del menú. Código MH: sólo decide si se
        muestra; la página no tiene backend ni datos privados. */
     { id: "SYS-MERCADO", oculto: true, nombre: "Mercado Hermosillo", icono: "chart-line", codigos: ["MH"], destino: "https://yodesarrollomx.github.io/yod-portal/mercado/hermosillo-2020-2030/" },
-    /* PPP 2 (12-nov-2026, CHG-PPP2-20261112): el vivero de planes que se cultivan solos.
-       Vive aparte del PPP actual (potenciales-yod/ppp2.html) y no lo toca; va después de
-       Mercado para respetar que Mercado queda justo debajo de PPP. Usa el código PT: quien
-       entra a Potenciales ve PPP 2; su servidor vuelve a validar la sesión con el Portero. */
-    { id: "SYS-PPP2", oculto: true, nombre: "PPP 2", icono: "seedling", codigos: ["PT"], destino: "https://yodesarrollomx.github.io/potenciales-yod/ppp2.html" },
+    /* Identificador de compatibilidad del Vivero. El menú presenta una sola entrada de PPP. */
+    { id: "SYS-PPP2", oculto: true, nombre: "PPP", icono: "seedling", codigos: ["PT"], destino: "https://yodesarrollomx.github.io/potenciales-yod/ppp2.html" },
     { id: "SYS-TRACK", nombre: "Codesarrollos", icono: "route", codigos: ["CO","TC"], destino: "https://yodesarrollomx.github.io/yod-portal/track-codesarrollos.html" },
     { id: "SYS-MIRAMAR", navParent: "SYS-TRACK", nombre: "Real de Miramar", icono: "building-community", codigos: ["RM"], destino: "https://yodesarrollomx.github.io/real-miramar-board/" },
     { id: "SYS-TAREAS", nombre: "MOAC", icono: "checklist", codigos: ["TA"], destino: "https://yodesarrollomx.github.io/board-aurum/" },

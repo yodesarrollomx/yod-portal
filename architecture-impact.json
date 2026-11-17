@@ -1,20 +1,20 @@
 {
   "model_revision": "2026-11-17.ppp-unico.1",
-  "proposal_id": "CHG-PPP-UNICO-20261117",
-  "summary": "Una entrada para todos los planes nuevos. El Vivero crea un libro limpio por oportunidad y el portal consulta allí los factores, la siguiente pregunta y los escenarios.",
+  "proposal_id": "CHG-PPP-NOMBRE-20261117",
+  "summary": "Mostrar PPP en la barra del plan tanto al abrir la cartera como al entrar por una liga del Vivero.",
   "components": [
-    "SYS-YOD-OS",
-    "SYS-DESPACHO",
-    "GAS-PORTERO",
     "SYS-POTENCIALES",
     "SYS-PPP2",
-    "GAS-PPP2",
-    "SHEET-PPP2",
+    "GAS-PORTERO",
+    "SYS-DESPACHO",
+    "SYS-YOD-OS",
+    "SYS-OBRA",
+    "SYS-OBRA-CLIENTE",
+    "SYS-TRACK",
     "SYS-CONTROL"
   ],
   "tests": [
-    "Alta por nombre, reapertura del mismo libro, factor con fuente y comparación de escenarios.",
-    "Acceso histórico por sus enlaces, control de roles y ausencia de expedientes en la plantilla."
+    "Paridad de nombres, navegación y lectura de la barra del PPP publicado."
   ],
-  "rollback": "Restituir la referencia anterior de plantilla y revertir la entrada del portal. Conservar los libros ya creados y su registro."
+  "rollback": "Revertir la etiqueta mostrada por el marco."
 }
