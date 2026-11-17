@@ -1,6 +1,6 @@
 # Procesos y decisiones
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-17.jarvis-native-cut.1 · 2026-11-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-17.ppp-multiuso.1 · 2026-11-13.
 
 ## PROC-VENTA-PPP · Captación y venta de Plan de Potencial
 
