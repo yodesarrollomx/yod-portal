@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "model_revision": "2026-11-15.mcp-ppp.2",
+  "model_revision": "2026-11-23.arbol-ppp.1",
   "components": [
     {
       "id": "SYS-DESPACHO",
@@ -582,6 +582,18 @@
       "id": "SYS-YOD-MCP",
       "nombre": "MCP YOD OS",
       "tipo": "integracion",
+      "repo": "yodesarrollomx/potenciales-yod"
+    },
+    {
+      "id": "SYS-ARBOL-PPP",
+      "nombre": "PPP · Árbol de decisiones",
+      "tipo": "interfaz",
+      "repo": "yodesarrollomx/potenciales-yod"
+    },
+    {
+      "id": "SHEET-PPP-MAESTRO",
+      "nombre": "PPP Maestro · base de planes y definición del árbol",
+      "tipo": "google_sheets",
       "repo": "yodesarrollomx/potenciales-yod"
     }
   ],

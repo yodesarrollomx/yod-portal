@@ -1,6 +1,6 @@
 # Propuestas para decidir
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-17.ppp-unico.1 · 2026-11-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-23.arbol-ppp.1 · 2026-11-13.
 
 Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de mejora: no se activan por aparecer en este archivo. Responde por ID: «A sí», «B con estos cambios», «C no».
 
@@ -718,3 +718,41 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 - No se importan Three ni WebGL directa o transitivamente desde la entrada retro; Canvas2D y DOM se evalúan antes de fijar el renderer.
 - Se conservan Portero, Sheets, GAS, agentes, IDs, contratos, permisos y recibos; llegar a un lugar no concede facultades.
 - La oficina 3D permanece disponible como respaldo y la reversión del selector no elimina historial ni datos.
+
+## ARBOLPPP · Árbol de decisiones del PPP con reglas editables, vista previa y comparador
+
+- Tableros: SYS-ARBOL-PPP, SYS-POTENCIALES, SYS-PPP2, GAS-PPP2, SHEET-PPP2, SHEET-PPP-MAESTRO, SYS-YOD-OS.
+- Problema: Armar un PPP hoy exige conocer qué dato pedir y en qué orden. La ruta guiada del libro en blanco es lineal, las reglas del oficio no son datos editables, no hay forma de ver lado a lado por qué una opción es mejor que otra antes de guardarla y no se avisa en rojo qué deja de pasar al cambiar algo. El prototipo del árbol calcula en el navegador, lo que el contrato de Sheets prohíbe para cifras financieras salvo excepción de Dirección.
+- Beneficio esperado: Un solo recorrido, tipo árbol de tecnologías, que muestra sólo lo que ya se puede decidir, deja editar opciones, fuentes, rangos y componentes sin tocar código, marca en rojo lo que deja de pasar con la ruta y una sugerencia, distingue estimado de plan completo y compara dos opciones lado a lado, para vertical primero y con el mecanismo listo para macrolotes, residencial y unifamiliar.
+- Medición: Un plan armado en el árbol se guarda como una columna del Maestro y se reabre con los mismos valores; la vista previa coincide con el libro en la prueba de concordancia (hoy 48 cifras con fórmula coinciden, 38 directas y 10 por equivalencia, 7 sin par y ninguna difiere); una regla editada se refleja sin desplegar código; el contador por confirmar es igual a los datos sin confirmar de las ramas abiertas; el visor muestra el mismo plan sin cambios de contrato.
+- Dependencias: Sin dependencias previas.
+- Esfuerzo: L. Por bloques: definición en el Maestro, motor, pantalla, adaptadores y guardado, pruebas; paso a ramas, despliegue de Apps Script y aceptación separados. Decisión: **pendiente**.
+
+### Requisitos previos
+
+- Decisión de Dirección sobre la propuesta ARBOLPPP. Ya decididos: la definición vive en el libro PPP Maestro, la pantalla calcula una vista previa rotulada, sin menú ni permiso nuevo, solo admin publica. El 23-nov-2026 Dirección autorizó el paso a ramas, sin fusionar.
+- Revisión antes de cada rama: el caso de muestra, las referencias y los textos de origen son inventados o iniciales; se publica solo la lista cerrada de archivos y se repite la búsqueda de datos privados sobre la rama y su historial; los repositorios son públicos.
+- Aprobar una versión nueva de la implementación existente de Apps Script con dos rutas (lectura de definición y guardado de un plan); nunca una implementación nueva; la publica el agente con el Chrome de Dirección y se prueba solo con GET y con una copia privada de datos sintéticos.
+- Registrar el libro PPP Maestro como componente del atlas y guardar su identificador solo en la configuración del vivero.
+- Fijar el commit de esta propuesta en cada repositorio consumidor antes de integrar.
+
+### Tareas
+
+1. Pasar a ramas, con revisión, el motor puro, la pantalla, los adaptadores de conexión y sus pruebas en una carpeta propia, sin copias previas ni datos reales (hecho en rama, sin fusionar).
+2. Publicar solo la lista blanca de archivos (motor, pantalla, conexión, definición y pruebas necesarias), con la definición de referencias iniciales; los valores reales y las copias de trabajo no se publican.
+3. Agregar al servidor existente las dos rutas del borrador y probarlas contra una copia privada con datos sintéticos.
+4. Enlazar el árbol como ruta del plan en el PPP único con interruptor en la configuración del vivero.
+5. Hacer permanente la prueba de concordancia entre la vista previa y el libro con más de un caso.
+6. Probar en celulares reales a 430, 375 y 320 px y con lector de pantalla.
+
+### Criterios de aceptación
+
+- La cifra instantánea del árbol siempre dice «estimado, no sincronizado»; el plan completo y lo guardado salen del libro; sin conexión el árbol dice que el dato está desactualizado y no inventa resultados.
+- Una definición con condición inválida, ciclo o conversión desconocida se rechaza al cargar; el editor rechaza cambios de estructura; una versión publicada no se modifica.
+- Cambiar un valor o una opción abre o cierra las ramas que dependen de él y nunca deja más de tres decisiones abiertas.
+- Un dato ausente, en estado referencia o marcado como no sé todavía queda visible y cuenta como por confirmar.
+- La comparación muestra lado a lado las cifras de las dos opciones con el aporte de cada decisión y un veredicto en palabras.
+- Cada umbral de las nueve pruebas es editable por plan y, cuando difiere del libro, la prueba, la tarjeta de riesgo y el paquete lo marcan «umbral propio; el libro pide…»; las áreas del edificio se cambian, agregan, renombran y quitan por plan, con su estado.
+- Un plan fuera del horizonte de 60 meses o con la cobranza descuadrada se avisa en el paquete del visor y no pinta barras fuera del eje.
+- No cambian precios, permisos, códigos del Portero, entrada del menú ni reglas de negocio existentes; el visor y sus ligas siguen leyendo el mismo contrato.
+- Ningún dato real de proyectos, liga de visor, llave ni identificador de libro entra al repositorio ni a los registros públicos.

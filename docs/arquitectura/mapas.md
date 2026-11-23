@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-17.ppp-unico.1 · 2026-11-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-23.arbol-ppp.1 · 2026-11-13.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -122,6 +122,8 @@ flowchart LR
   n_SHEET_PPP2["PPP 2 · vivero y libros de plan"]
   n_EXT_ANTHROPIC["Claude · API de Anthropic"]
   n_SYS_YOD_MCP["MCP YOD OS"]
+  n_SYS_ARBOL_PPP["PPP · Árbol de decisiones"]
+  n_SHEET_PPP_MAESTRO["PPP Maestro · base de planes y definición del árbol"]
   n_GAS_MARKETING -->|Lee/escribe registros del dominio| n_SHEET_MARKETING
   n_GAS_PLAN_POTENCIAL -.->|Lee/escribe registros del dominio| n_SHEET_PLAN_POTENCIAL
   n_GAS_CROKISS -->|Lee/escribe registros del dominio| n_SHEET_CROKISS
@@ -201,6 +203,9 @@ flowchart LR
   n_GAS_PPP2 -->|El consejo de planes (siete jueces por separado, con el expediente que arma el libro) y la investigación con búsqueda en la web| n_EXT_ANTHROPIC
   n_GAS_PPP2 -->|Respaldo del consejo de planes con salida estructurada, si Config lo pide o sólo hay su clave; la investigación va sólo por Anthropic| n_EXT_OPENAI
   n_SYS_YOD_MCP -->|Visor por liga y operaciones por sesión propia en stdio| n_GAS_PPP2
+  n_SYS_ARBOL_PPP -.->|Lee la definición publicada y guarda el plan como una columna del Maestro| n_GAS_PPP2
+  n_GAS_PPP2 -.->|Lee las pestañas ARBOL_* y escribe una columna de plan en Borrador| n_SHEET_PPP_MAESTRO
+  n_SYS_PPP2 -.->|Abre el árbol como ruta del plan| n_SYS_ARBOL_PPP
   classDef pendiente fill:#fff5da,stroke:#996d16,stroke-dasharray:5 3;
   class n_SYS_YOD_OS pendiente;
   class n_SYS_PLAN_POTENCIAL pendiente;
@@ -220,6 +225,7 @@ flowchart LR
   class n_GAS_INVERSION pendiente;
   class n_SHEET_INVERSION pendiente;
   class n_GAS_AUX_METRICAS pendiente;
+  class n_SHEET_PPP_MAESTRO pendiente;
 ```
 
 ## Proyectos
@@ -794,3 +800,6 @@ flowchart LR
 | CON-PPP2-OPENAI | GAS-PPP2 → EXT-OPENAI | api: Respaldo del consejo de planes con salida estructurada, si Config lo pide o sólo hay su clave; la investigación va sólo por Anthropic. Mismo expediente y mismo esquema de voto que con Anthropic. Sin comprobar en vivo: no hay clave de OpenAI en el servidor. | codigo | [potenciales-yod/server/ppp2/PPP2.gs](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/server/ppp2/PPP2.gs) — pedidoIA_ con la API de respuestas, esquema estricto y store=false |
 | CON-FLUJO-OBRA | SYS-FLUJO → GAS-OBRA | api: Lee las estimaciones autorizadas de cada folio (sólo lectura). GET ?recurso=board&k=<sesión del Portero>; usa avances[].id, estado (AUTORIZADO), monto_propuesto, frente, fecha_autorizacion y estimacion_num. Sin acceso o sin respuesta, el Flujo lo dice y no cuenta nada. | codigo | [board-flujo-yod/index.html](https://github.com/yodesarrollomx/board-flujo-yod/blob/ef2e6e1fade1b515d10af239bc60519417d906c4/index.html) — cargarObras(): GET ?recurso=board al motor de obra de cada folio con bolsa, según obra-app/obras.js de yod-portal; enseña las AUTORIZADAS sin programar |
 | CON-MCP-PPP | SYS-YOD-MCP → GAS-PPP2 | api: Visor por liga y operaciones por sesión propia en stdio. CTR-YOD-MCP | ejecucion | [potenciales-yod/mcp/README.md](https://github.com/yodesarrollomx/potenciales-yod/blob/4694f7db9a3de4d5415e711d090140e6a2875f01/mcp/README.md) — Adaptador implementado en mcp/: SDK MCP, visor compartido y edición PPP2 por sesión local; pruebas aisladas.; [yod-portal/docs/arquitectura/mcp-yod-live.json](https://github.com/yodesarrollomx/yod-portal/blob/82f597bee316c942e4f631a507c7f8277178fcd3/docs/arquitectura/mcp-yod-live.json) — 2026-11-15T17:56:39Z: SDK externo inicializa HTTP y lee liga activa; resumen y flujo iguales al visor. Sin escrituras reales ni clientes instalados. |
+| CON-ARBOL-SERVIDOR | SYS-ARBOL-PPP → GAS-PPP2 | api: Lee la definición publicada y guarda el plan como una columna del Maestro. Misma implementación y URL de Apps Script; sesión del Portero; roles existentes (guardar exige editar; marcar vigente exige aprobar). Lectura: recurso arbol-definicion. Escritura: tipo arbol-guarda con request_id y bloqueo. | propuesto | Propuesta ARBOLPPP: dos rutas nuevas en el servidor existente (lectura de definición y guardado de un plan), probadas solo contra un doble de Sheets. Borrador fuera del repositorio y sin desplegar. |
+| CON-ARBOL-MAESTRO | GAS-PPP2 → SHEET-PPP-MAESTRO | persistencia: Lee las pestañas ARBOL_* y escribe una columna de plan en Borrador. La definición se publica solo por Dirección (admin). Una versión publicada no se edita ni se borra. El árbol solo actualiza una columna que él creó y que sigue en Borrador. Los identificadores del libro vienen de la configuración del vivero. | propuesto | Propuesta ARBOLPPP: lectura de las nueve pestañas con huella; escritura de una columna copiada de la plantilla del propio libro, sin fórmulas nuevas, sin borrar y con lectura de vuelta. Probado solo contra un doble. |
+| CON-ARBOL-NAVEGACION | SYS-PPP2 → SYS-ARBOL-PPP | navegacion: Abre el árbol como ruta del plan. Navegación interna del PPP único; el acceso lo valida el Portero con los códigos existentes. | propuesto | Propuesta ARBOLPPP: ruta dentro de ppp2.html; no cambia catálogo, menú ni códigos del Portero. |

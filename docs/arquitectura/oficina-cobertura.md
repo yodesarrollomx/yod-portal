@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-17.ppp-unico.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-23.arbol-ppp.1
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -8,8 +8,8 @@ Inventario conciliado y asignación funcional propuesta. No concede permisos, no
 
 La ubicación es propuesta. Este documento no concede permisos, no activa herramientas y no certifica integración operativa.
 
-- 29 sistemas y 97 componentes distribuidos exactamente una vez.
-- 10 áreas; 165 conexiones registradas, 21 marcadas como verificadas en el atlas.
+- 30 sistemas y 99 componentes distribuidos exactamente una vez.
+- 10 áreas; 168 conexiones registradas, 21 marcadas como verificadas en el atlas.
 
 ## Conciliación del catálogo
 
@@ -1086,7 +1086,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 ## Plan de Potencial y puesto
 
-**Ubicación propuesta:** potential · 7 componentes.
+**Ubicación propuesta:** potential · 9 componentes.
 
 ### PPP · Potenciales · SYS-POTENCIALES
 
@@ -1273,6 +1273,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Conexiones registradas; no habilitan operaciones:**
 
 - CON-PPP2-SERVIDOR · SYS-PPP2 → GAS-PPP2 · api · Lee el vivero y el plan; envía datos, respuestas, palancas, aprobaciones, rondas, pruebas, consejo e investigación · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
+- CON-ARBOL-NAVEGACION · SYS-PPP2 → SYS-ARBOL-PPP · navegacion · Abre el árbol como ruta del plan · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -1284,9 +1285,11 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - CON-PPP2-SERVIDOR · leer() y escribir() con la sesión del Portero · Estado: codigo · yodesarrollomx/potenciales-yod · ppp2.js · Revisión: PR 103 (potenciales-yod)
 - CON-PPP2-SERVIDOR · Usada desde el navegador de Dirección el 12 y 13-nov-2026 · Estado: ejecucion · Revisión: Apps Script versión 8
+- CON-ARBOL-NAVEGACION · Propuesta ARBOLPPP: ruta dentro de ppp2.html; no cambia catálogo, menú ni códigos del Portero. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
+- 1 conexiones sin verificación de ejecución registrada.
 - La siguiente pregunta se ordena con un criterio del oficio, no con un cálculo de sensibilidad
 - Lo último que vio cada persona queda en su navegador, atado a su sesión y por 12 h (se borra si la sesión se rechaza): quien comparte un equipo con la misma sesión comparte esa copia
 - Mientras corre una ronda, las cifras de la versión de trabajo se ven a medias: la página lo avisa y no deja aprobarla
@@ -1310,6 +1313,8 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PPP2-ANTHROPIC · GAS-PPP2 → EXT-ANTHROPIC · api · El consejo de planes (siete jueces por separado, con el expediente que arma el libro) y la investigación con búsqueda en la web · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
 - CON-PPP2-OPENAI · GAS-PPP2 → EXT-OPENAI · api · Respaldo del consejo de planes con salida estructurada, si Config lo pide o sólo hay su clave; la investigación va sólo por Anthropic · Estado: codigo · Ejecución no verificada en el atlas.
 - CON-MCP-PPP · SYS-YOD-MCP → GAS-PPP2 · api · Visor por liga y operaciones por sesión propia en stdio · Estado: ejecucion · Ejecución marcada como verificada en el atlas; revisar evidencia.
+- CON-ARBOL-SERVIDOR · SYS-ARBOL-PPP → GAS-PPP2 · api · Lee la definición publicada y guarda el plan como una columna del Maestro · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-ARBOL-MAESTRO · GAS-PPP2 → SHEET-PPP-MAESTRO · persistencia · Lee las pestañas ARBOL\_\* y escribe una columna de plan en Borrador · Estado: propuesto · Ejecución no verificada en el atlas.
 
 **Evidencia de la ficha:**
 
@@ -1331,10 +1336,12 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - CON-PPP2-OPENAI · pedidoIA\_ con la API de respuestas, esquema estricto y store=false · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR 103 (potenciales-yod)
 - CON-MCP-PPP · Adaptador implementado en mcp/: SDK MCP, visor compartido y edición PPP2 por sesión local; pruebas aisladas. · Estado: codigo · yodesarrollomx/potenciales-yod · mcp/README.md · Sin revisión inmutable en esta referencia
 - CON-MCP-PPP · 2026-11-15T17:56:39Z: SDK externo inicializa HTTP y lee liga activa; resumen y flujo iguales al visor. Sin escrituras reales ni clientes instalados. · Estado: ejecucion · yodesarrollomx/yod-portal · docs/arquitectura/mcp-yod-live.json · Sin revisión inmutable en esta referencia
+- CON-ARBOL-SERVIDOR · Propuesta ARBOLPPP: dos rutas nuevas en el servidor existente (lectura de definición y guardado de un plan), probadas solo contra un doble de Sheets. Borrador fuera del repositorio y sin desplegar. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-ARBOL-MAESTRO · Propuesta ARBOLPPP: lectura de las nueve pestañas con huella; escritura de una columna copiada de la plantilla del propio libro, sin fórmulas nuevas, sin borrar y con lectura de vuelta. Probado solo contra un doble. · Estado: propuesto · Sin revisión inmutable en esta referencia
 
 **Pendientes y límites:**
 
-- 1 conexiones sin verificación de ejecución registrada.
+- 3 conexiones sin verificación de ejecución registrada.
 - Revocar una sesión tarda hasta 10 minutos por la caché del canje, igual que en el Portero
 - Mientras corre una ronda, unas pruebas o el consejo (minutos), nadie puede guardar cambios en ningún plan: el servidor atiende de uno en uno
 - La API de IA cobra por uso; la clave vive sólo en las propiedades del script y el texto de error del proveedor no se guarda
@@ -1370,6 +1377,69 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Quien edita el libro a mano puede romper una fórmula: las pestañas calculadas llevan protección de aviso
 - Los identificadores de los libros no se publican
 - Un voto del consejo sin la huella de la versión no cuenta
+
+### PPP · Árbol de decisiones · SYS-ARBOL-PPP
+
+**Función:** Armar un PPP paso a paso: se empieza con el predio y cada dato definido abre la rama siguiente. Un motor puro de reglas (sin red) calcula una vista previa rotulada «estimado, no sincronizado», compara dos opciones lado a lado y valida la edición de reglas; la definición se lee del libro PPP Maestro y el plan se guarda como una columna de ese libro por rutas del servidor existente. El plan completo y lo guardado salen del libro.
+
+**Fuente oficial:** Pendiente en ficha.
+
+**Responsable operativo:** Dirección
+
+**Estado registrado:** propuesto. Propuesto. El motor, la pantalla, los adaptadores, la definición del árbol vertical y sus pruebas están en una rama de potenciales-yod, sin fusionar (260 pruebas del motor y 57 de la conexión en Node, con datos inventados). Nada está desplegado ni probado contra el libro vivo ni contra producción; la página no pide sesión ni guarda.
+
+**Conexiones registradas; no habilitan operaciones:**
+
+- CON-ARBOL-SERVIDOR · SYS-ARBOL-PPP → GAS-PPP2 · api · Lee la definición publicada y guarda el plan como una columna del Maestro · Estado: propuesto · Ejecución no verificada en el atlas.
+- CON-ARBOL-NAVEGACION · SYS-PPP2 → SYS-ARBOL-PPP · navegacion · Abre el árbol como ruta del plan · Estado: propuesto · Ejecución no verificada en el atlas.
+
+**Evidencia de la ficha:**
+
+- Propuesta ARBOLPPP registrada antes de integrar. No acredita despliegue ni aceptación; el módulo se alcanzaría como ruta del PPP único, sin entrada nueva en el menú ni código de permiso nuevo. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- Antecedente observado: ruta guiada del libro en blanco; el navegador dibuja la pregunta y las cifras que entrega el libro. · Estado: codigo · yodesarrollomx/potenciales-yod · ppp-unico.js · Sin revisión inmutable en esta referencia
+
+**Evidencia de conexiones:**
+
+- CON-ARBOL-SERVIDOR · Propuesta ARBOLPPP: dos rutas nuevas en el servidor existente (lectura de definición y guardado de un plan), probadas solo contra un doble de Sheets. Borrador fuera del repositorio y sin desplegar. · Estado: propuesto · Sin revisión inmutable en esta referencia
+- CON-ARBOL-NAVEGACION · Propuesta ARBOLPPP: ruta dentro de ppp2.html; no cambia catálogo, menú ni códigos del Portero. · Estado: propuesto · Sin revisión inmutable en esta referencia
+
+**Pendientes y límites:**
+
+- Fuente oficial pendiente de identificar en la ficha.
+- 2 conexiones sin verificación de ejecución registrada.
+- El caso de muestra, los valores de referencia y los textos de origen de la definición son inventados o iniciales; los valores reales se ajustan en el libro privado. Solo se publica una lista cerrada de archivos, revisada antes de cada rama.
+- La vista previa calcula en el navegador con una fórmula escrita como datos: es una excepción de Dirección y exige prueba de concordancia con el libro.
+- El visor real no muestra el aviso de plan fuera del horizonte de 60 meses ni usa los umbrales propios de las pruebas en sus indicadores.
+- Mientras no exista la ruta desde el plan, la página del árbol es una calculadora suelta de vista previa: no pide sesión, no lee ningún libro y no guarda.
+
+### PPP Maestro · base de planes y definición del árbol · SHEET-PPP-MAESTRO
+
+**Función:** Libro de Dirección con una fila por factor del PPP y una columna por plan. Guarda además la definición del árbol en nueve pestañas ARBOL\_\* (nodos, opciones, reglas, factores, componentes, flujos, tipos, listas y versiones) y una columna de prueba con datos sintéticos.
+
+**Fuente oficial:** Pendiente en ficha.
+
+**Responsable operativo:** Dirección / propietario del libro
+
+**Estado registrado:** declarado. Declarado. Se comprobó por huella de fila que las nueve pestañas ARBOL\_\* coinciden con la definición de la rama y se dieron de alta los factores nuevos del árbol; no hay ruta de lectura ni escritura desde Apps Script desplegada.
+
+**Conexiones registradas; no habilitan operaciones:**
+
+- CON-ARBOL-MAESTRO · GAS-PPP2 → SHEET-PPP-MAESTRO · persistencia · Lee las pestañas ARBOL\_\* y escribe una columna de plan en Borrador · Estado: propuesto · Ejecución no verificada en el atlas.
+
+**Evidencia de la ficha:**
+
+- Definición del árbol y factores nuevos cargados en el libro por una persona con acceso, con respaldo previo, lectura de vuelta y renglón en la pestaña CAMBIOS. El libro es privado y no está en ningún repositorio. · Estado: declarado · Sin revisión inmutable en esta referencia
+
+**Evidencia de conexiones:**
+
+- CON-ARBOL-MAESTRO · Propuesta ARBOLPPP: lectura de las nueve pestañas con huella; escritura de una columna copiada de la plantilla del propio libro, sin fórmulas nuevas, sin borrar y con lectura de vuelta. Probado solo contra un doble. · Estado: propuesto · Sin revisión inmutable en esta referencia
+
+**Pendientes y límites:**
+
+- Fuente oficial pendiente de identificar en la ficha.
+- 1 conexiones sin verificación de ejecución registrada.
+- Los identificadores del libro no se publican; el servidor los toma de la configuración del vivero.
+- Quedan 16 columnas libres para planes; al agotarse el guardado responde «sin\_columnas» y no inserta.
 
 ## Proyectos y diseño
 

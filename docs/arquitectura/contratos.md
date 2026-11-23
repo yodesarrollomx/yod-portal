@@ -1,6 +1,6 @@
 # Contratos de datos e identidad
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-17.ppp-unico.1 · 2026-11-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-23.arbol-ppp.1 · 2026-11-13.
 
 Estos contratos no contienen registros reales. Su alcance de evidencia se indica individualmente.
 
@@ -1288,3 +1288,16 @@ Estos contratos no contienen registros reales. Su alcance de evidencia se indica
 - Nunca descubre un proyecto privado por tenerlo en el vivero.
 - Los permisos los valida el backend, no un rol enviado por el modelo.
 - No pruebas de escritura en producción.
+
+## CTR-ARBOL-PPP
+
+- Componentes: SYS-ARBOL-PPP, GAS-PPP2, SHEET-PPP-MAESTRO, SHEET-PPP2, SYS-POTENCIALES, SYS-PPP2.
+- Evidencia: yod-portal/docs/arquitectura/propuestas.md (ARBOLPPP); contratos existentes de PPP 2 y del visor (ppp2-visor-v1).
+- Entrada/campos: `Definición del árbol: nueve pestañas ARBOL_* con nodos (se decide, se busca, regla del oficio, calculado) cuya llave es el ID del factor del Maestro, opciones, fuentes, componentes, reglas y alertas, flujos y tipos de proyecto, con huella y versión.`, `Plan: valores con estado y fuente (referencia, no sé todavía, decidido, confirmado), componentes del edificio editados (incluidas áreas propias con nombre libre, en una celda con código) y umbrales propios de las nueve pruebas; se guarda como una columna del Maestro con el valor del factor.`.
+- Salida: Vista previa rotulada «estimado, no sincronizado»: tarjetas, alertas con ruta y sugerencia, nueve pruebas de riesgo (con la marca «umbral propio» cuando el umbral del plan difiere del libro), comparación A/B con aportes y veredicto, y un paquete ppp2-visor-v1 que avisa cuando el plan se sale de 60 meses., Columna de plan en Borrador en el Maestro, con bitácora en CAMBIOS; el plan completo y la concordancia salen del libro..
+
+- Excepción de Dirección: la cifra instantánea es solo vista previa rotulada, no se guarda como plan completo y se compara con el libro con una prueba de concordancia.
+- Las condiciones y fórmulas son datos validados contra una lista cerrada; no se evalúa código escrito en la hoja.
+- El editor cambia solo datos (textos, opciones, valores, rangos, referencias, umbrales, componentes); la estructura no se edita desde la pantalla. El umbral de cada una de las nueve pruebas de riesgo es un dato del plan: vale el del libro por omisión y se marca «umbral propio» cuando difiere; el libro y su generador no cambian. Publica solo admin.
+- Un dato ausente permanece vacío; nunca se convierte en cero.
+- Sin códigos de permiso nuevos, sin entrada nueva de menú y sin datos reales de proyectos, ligas ni llaves en repositorios públicos.
