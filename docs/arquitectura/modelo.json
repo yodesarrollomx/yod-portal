@@ -3859,18 +3859,32 @@
       "proposito": "Armar un PPP paso a paso: se empieza con el predio y cada dato definido abre la rama siguiente. Un motor puro de reglas (sin red) calcula una vista previa rotulada «estimado, no sincronizado», compara dos opciones lado a lado y valida la edición de reglas; la definición se lee del libro PPP Maestro y el plan se guarda como una columna de ese libro por rutas del servidor existente. El plan completo y lo guardado salen del libro.",
       "dominio": "Ventas",
       "owner_role": "Dirección",
-      "status": "propuesto",
-      "runtime_status": "Propuesto. El motor, la pantalla, los adaptadores, la definición del árbol vertical y sus pruebas están en una rama de potenciales-yod, sin fusionar (260 pruebas del motor y 57 de la conexión en Node, con datos inventados). Nada está desplegado ni probado contra el libro vivo ni contra producción; la página no pide sesión y no guarda en ningún servidor ni libro (conserva el plan, la comparación y las reglas editadas solo en el almacenamiento local del navegador).",
+      "status": "codigo",
+      "runtime_status": "Código en potenciales-yod (carpeta arbol-ppp/ y server/ppp2/ArbolPPP.gs), con pruebas en Node contra dobles y datos inventados. La página calcula la vista previa en el navegador. Las rutas del servidor para leer la definición y guardar o abrir planes NO están publicadas como Apps Script y nacen apagadas (renglón arbol = sí en la configuración del vivero): hasta entonces la página no lee ningún libro, no guarda en ningún servidor y solo conserva el avance en el almacenamiento local del navegador. Nada se probó contra Google Sheets ni en producción.",
       "evidence": [
         {
-          "claim": "Propuesta ARBOLPPP registrada antes de integrar. No acredita despliegue ni aceptación; el módulo se alcanzaría como ruta del PPP único, sin entrada nueva en el menú ni código de permiso nuevo.",
-          "status": "propuesto"
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "arbol-ppp/motor.js",
+          "claim": "Motor puro de reglas: carga y valida la definición, evalúa, sugiere, compara y arma el paquete del visor; sin red, almacenamiento ni eval.",
+          "status": "codigo"
         },
         {
           "repo": "yodesarrollomx/potenciales-yod",
-          "path": "ppp-unico.js",
-          "claim": "Antecedente observado: ruta guiada del libro en blanco; el navegador dibuja la pregunta y las cifras que entrega el libro.",
+          "path": "arbol-ppp/servidor.js",
+          "claim": "Puente de la página con el servidor del PPP 2: pide la definición, guarda y abre planes con la sesión del Portero; sin sesión, apagado o sin red la pantalla sigue como calculadora y lo dice.",
           "status": "codigo"
+        },
+        {
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "server/ppp2/ArbolPPP.gs",
+          "claim": "Rutas del árbol en el servidor del PPP 2, apagadas por omisión. Fuente en el repositorio: no acredita publicación ni despliegue.",
+          "status": "codigo"
+        },
+        {
+          "claim": "Sin entrada nueva en el menú ni código de permiso nuevo: el PPP único enseña el enlace solo cuando el servidor dice que el árbol está encendido.",
+          "status": "codigo",
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "ppp2.js"
         }
       ],
       "data_entities": [
@@ -3892,7 +3906,8 @@
         "El caso de muestra, los valores de referencia y los textos de origen de la definición son inventados o iniciales; los valores reales se ajustan en el libro privado. Solo se publica una lista cerrada de archivos, revisada antes de cada rama.",
         "La vista previa calcula en el navegador con una fórmula escrita como datos: es una excepción de Dirección y exige prueba de concordancia con el libro.",
         "El visor real no muestra el aviso de plan fuera del horizonte de 60 meses ni usa los umbrales propios de las pruebas en sus indicadores.",
-        "Mientras no exista la ruta desde el plan, la página del árbol es una calculadora suelta de vista previa: no pide sesión, no lee ningún libro y no guarda en ningún servidor ni libro (conserva el plan, la comparación y las reglas editadas solo en el almacenamiento local del navegador)."
+        "Mientras el servidor no esté publicado y encendido, la página del árbol es una calculadora suelta de vista previa: no pide sesión y cualquiera con la dirección la abre (no trae datos reales).",
+        "El guardado se probó solo contra un doble de Sheets: antes de encenderlo hay que probarlo en una copia privada del libro."
       ]
     },
     {
@@ -3904,7 +3919,7 @@
       "dominio": "Ventas",
       "owner_role": "Dirección / propietario del libro",
       "status": "declarado",
-      "runtime_status": "Declarado. Se comprobó por huella de fila que las nueve pestañas ARBOL_* coinciden con la definición de la rama y se dieron de alta los factores nuevos del árbol; no hay ruta de lectura ni escritura desde Apps Script desplegada.",
+      "runtime_status": "Declarado. Se comprobó por huella de fila que las nueve pestañas ARBOL_* coinciden con la definición del repositorio y se dieron de alta los factores nuevos del árbol; ninguna ruta de Apps Script publicada lo lee ni lo escribe todavía.",
       "evidence": [
         {
           "claim": "Definición del árbol y factores nuevos cargados en el libro por una persona con acceso, con respaldo previo, lectura de vuelta y renglón en la pestaña CAMBIOS. El libro es privado y no está en ningún repositorio.",
@@ -7692,15 +7707,17 @@
       "to": "GAS-PPP2",
       "label": "Lee la definición publicada y guarda el plan como una columna del Maestro",
       "kind": "api",
-      "status": "propuesto",
+      "status": "codigo",
       "runtime_verified": false,
       "evidence": [
         {
-          "claim": "Propuesta ARBOLPPP: dos rutas nuevas en el servidor existente (lectura de definición y guardado de un plan), probadas solo contra un doble de Sheets. Borrador fuera del repositorio y sin desplegar.",
-          "status": "propuesto"
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "server/ppp2/ArbolPPP.gs",
+          "claim": "Cuatro rutas (definición, columnas del árbol, una columna y guardado) enganchadas en doGet y doPost después del canje; probadas contra un doble de Sheets. Sin publicar y apagadas por omisión.",
+          "status": "codigo"
         }
       ],
-      "contract": "Misma implementación y URL de Apps Script; sesión del Portero; roles existentes (guardar exige editar; marcar vigente exige aprobar). Lectura: recurso arbol-definicion. Escritura: tipo arbol-guarda con request_id y bloqueo.",
+      "contract": "Misma implementación y URL de Apps Script; sesión del Portero; roles existentes (leer pide sesión con el tablero PT; guardar exige editar). Interruptor arbol = sí en la configuración del vivero. Lectura: recursos arbol-definicion, arbol-columnas y arbol-columna. Escritura: tipo arbol-guarda con request_id, candado, pausa y revisión de la columna; siempre en Borrador.",
       "contract_ids": [
         "CTR-ARBOL-PPP"
       ]
@@ -7711,15 +7728,17 @@
       "to": "SHEET-PPP-MAESTRO",
       "label": "Lee las pestañas ARBOL_* y escribe una columna de plan en Borrador",
       "kind": "persistencia",
-      "status": "propuesto",
+      "status": "codigo",
       "runtime_verified": false,
       "evidence": [
         {
-          "claim": "Propuesta ARBOLPPP: lectura de las nueve pestañas con huella; escritura de una columna copiada de la plantilla del propio libro, sin fórmulas nuevas, sin borrar y con lectura de vuelta. Probado solo contra un doble.",
-          "status": "propuesto"
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "server/ppp2/ArbolPPP.gs",
+          "claim": "Lectura de las nueve pestañas con huella; escritura de una columna copiada de la plantilla del propio libro, solo en celdas sin fórmula, sin quitar ni insertar columnas y con lectura de vuelta. Probado solo contra un doble; sin publicar.",
+          "status": "codigo"
         }
       ],
-      "contract": "La definición se publica solo por Dirección (admin). Una versión publicada no se edita ni se borra. El árbol solo actualiza una columna que él creó y que sigue en Borrador. Los identificadores del libro vienen de la configuración del vivero.",
+      "contract": "Una columna nueva va en la primera columna completamente vacía a la derecha de la plantilla. El árbol solo actualiza una columna que él creó, que sigue en Borrador y que nadie cambió desde que se leyó. Las columnas hechas a mano y las vigentes no se leen por esta ruta ni se tocan. Publicar cambios a las reglas no está en el servidor. Los identificadores del libro vienen de la configuración del vivero.",
       "contract_ids": [
         "CTR-ARBOL-PPP"
       ]
@@ -7730,12 +7749,14 @@
       "to": "SYS-ARBOL-PPP",
       "label": "Abre el árbol como ruta del plan",
       "kind": "navegacion",
-      "status": "propuesto",
+      "status": "codigo",
       "runtime_verified": false,
       "evidence": [
         {
-          "claim": "Propuesta ARBOLPPP: ruta dentro de ppp2.html; no cambia catálogo, menú ni códigos del Portero.",
-          "status": "propuesto"
+          "repo": "yodesarrollomx/potenciales-yod",
+          "path": "ppp2.js",
+          "claim": "Enlace al árbol en la lista de planes, solo si el servidor responde arbol: true; no cambia catálogo, menú ni códigos del Portero.",
+          "status": "codigo"
         }
       ],
       "contract": "Navegación interna del PPP único; el acceso lo valida el Portero con los códigos existentes.",
@@ -10313,19 +10334,19 @@
       "metric": "Un plan armado en el árbol se guarda como una columna del Maestro y se reabre con los mismos valores; la vista previa coincide con el libro en la prueba de concordancia (hoy 48 cifras con fórmula coinciden, 38 directas y 10 por equivalencia, 7 sin par y ninguna difiere); una regla editada se refleja sin desplegar código; el contador por confirmar es igual a los datos sin confirmar de las ramas abiertas; el visor muestra el mismo plan sin cambios de contrato.",
       "dependencies": [],
       "effort": "L. Por bloques: definición en el Maestro, motor, pantalla, adaptadores y guardado, pruebas; paso a ramas, despliegue de Apps Script y aceptación separados",
-      "decision": "pendiente",
+      "decision": "aprobada",
       "prerequisites": [
-        "Decisión de Dirección sobre la propuesta ARBOLPPP. Ya decididos: la definición vive en el libro PPP Maestro, la pantalla calcula una vista previa rotulada, sin menú ni permiso nuevo, solo admin publica. El 23-nov-2026 Dirección autorizó el paso a ramas, sin fusionar.",
+        "Dirección aprobó el 23-nov-2026 integrar el árbol hasta terminarlo. Ya decididos: la definición vive en el libro PPP Maestro, la pantalla calcula una vista previa rotulada, sin menú ni permiso nuevo, solo admin publica.",
         "Revisión antes de cada rama: el caso de muestra, las referencias y los textos de origen son inventados o iniciales; se publica solo la lista cerrada de archivos y se repite la búsqueda de datos privados sobre la rama y su historial; los repositorios son públicos.",
         "Aprobar una versión nueva de la implementación existente de Apps Script con dos rutas (lectura de definición y guardado de un plan); nunca una implementación nueva; la publica el agente con el Chrome de Dirección y se prueba solo con GET y con una copia privada de datos sintéticos.",
         "Registrar el libro PPP Maestro como componente del atlas y guardar su identificador solo en la configuración del vivero.",
         "Fijar el commit de esta propuesta en cada repositorio consumidor antes de integrar."
       ],
       "tasks": [
-        "Pasar a ramas, con revisión, el motor puro, la pantalla, los adaptadores de conexión y sus pruebas en una carpeta propia, sin copias previas ni datos reales (hecho en rama, sin fusionar).",
+        "Pasar al repositorio, con revisión, el motor puro, la pantalla, los adaptadores de conexión y sus pruebas en una carpeta propia, sin copias previas ni datos reales (hecho).",
         "Publicar solo la lista blanca de archivos (motor, pantalla, conexión, definición y pruebas necesarias), con la definición de referencias iniciales; los valores reales y las copias de trabajo no se publican.",
-        "Agregar al servidor existente las dos rutas del borrador y probarlas contra una copia privada con datos sintéticos.",
-        "Enlazar el árbol como ruta del plan en el PPP único con interruptor en la configuración del vivero.",
+        "Agregar al servidor existente las rutas del árbol, apagadas por omisión (fuente hecha; falta publicarlas y probarlas contra una copia privada con datos sintéticos).",
+        "Enlazar el árbol desde el PPP único con interruptor en la configuración del vivero (hecho en código; se ve cuando el servidor esté publicado y encendido).",
         "Hacer permanente la prueba de concordancia entre la vista previa y el libro con más de un caso.",
         "Probar en celulares reales a 430, 375 y 320 px y con lector de pantalla."
       ],
@@ -17172,17 +17193,17 @@
         "SYS-CONTROL"
       ],
       "proposal": "Incorporar el árbol de decisiones como ruta del PPP único: motor puro con vista previa rotulada, pantalla táctil, comparador, editor de reglas, umbrales de las nueve pruebas editables por plan, áreas del edificio por plan, definición en el libro PPP Maestro y guardado del plan como una columna de ese libro por dos rutas del servidor existente.",
-      "approval": "Dirección autorizó el 23-nov-2026 el paso a ramas sin fusionar. La publicación, el despliegue del servidor y la aceptación siguen pendientes de su decisión.",
-      "status": "propuesto",
+      "approval": "Dirección autorizó el 23-nov-2026 integrar el árbol hasta terminarlo. La publicación del servidor de Apps Script se hace aparte, desde el navegador de Dirección; el árbol nace apagado.",
+      "status": "implementado_local",
       "tests": [
-        "node arbol-ppp/pruebas/motor-real.cjs: 260 de 260 con definición y planes inventados (gramática, desbloqueo, alertas con ruta y sugerencia, flujo con banco y capital, nueve pruebas, umbrales editables, áreas por plan, comparador, edición de reglas, paquete del visor).",
-        "node arbol-ppp/conexion/pruebas.cjs: 57 de 57 (ida y vuelta de la columna de factores sin diferencias, planes sembrados, números con formato).",
-        "node --check de motor.js, pantalla.js, definicion-tablas.js, conexion/conexion.js y construir-artifact.cjs; node scripts/versiones.cjs --check; git diff --check.",
-        "Fuera del repositorio, antes de pasar a ramas: recorridos de la pantalla en navegador a 430x932, 375x667 y 320x640, comprobación de la definición contra el libro y guardado contra un doble de Sheets.",
-        "Acceso: sin sesión, sin código PT y con rol sólo lector no guardan; solo admin publica reglas. Pendiente de implementar en el servidor desplegado.",
-        "Concordancia contra el libro: hacerla permanente con más de un caso antes de publicar reglas. Pendiente."
+        "node arbol-ppp/pruebas/motor-real.cjs: 260 de 260 con definición y planes inventados.",
+        "node arbol-ppp/conexion/pruebas.cjs: 57 de 57 (ida y vuelta de la columna de factores sin diferencias).",
+        "node arbol-ppp/conexion/pruebas-gs.cjs: 34 de 34 del servidor contra un doble de Sheets (interruptor, permisos, pausa, candado, revisión de la columna, columna libre solo si está vacía, texto literal, bitácora).",
+        "node --test tests/arbol-ppp-servidor.test.cjs: 8 de 8 de punta a punta con doGet y doPost reales sobre dobles (apagado por omisión, sin sesión o sin el tablero PT no entra, guardar y abrir dan las mismas cifras, dos personas no se pisan).",
+        "Pruebas existentes del PPP 2, accesos y versiones sin regresión; node scripts/versiones.cjs --check; git diff --check.",
+        "Pendiente: publicar el servidor, probar contra Google Sheets en una copia privada, concordancia permanente con el libro, prueba en celulares reales y en producción."
       ],
-      "deployment": "Sin despliegue. Frontend por PR y Pages en un bloque; Apps Script como versión nueva de la implementación existente en otro, con respaldo del libro y recibos independientes.",
+      "deployment": "Frontend por PR y Pages. Apps Script sin publicar: va como versión nueva de la implementación existente, con el árbol apagado, y se enciende con el renglón arbol = sí de la configuración del vivero después de probar en una copia privada del libro.",
       "invariants": [
         "La cifra instantánea es solo vista previa rotulada por excepción de Dirección; el libro manda.",
         "Portero, códigos, roles, precios y menú de YOD OS sin cambios.",

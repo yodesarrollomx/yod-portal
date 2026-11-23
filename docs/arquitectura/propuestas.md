@@ -726,11 +726,11 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 - Beneficio esperado: Un solo recorrido, tipo árbol de tecnologías, que muestra sólo lo que ya se puede decidir, deja editar opciones, fuentes, rangos y componentes sin tocar código, marca en rojo lo que deja de pasar con la ruta y una sugerencia, distingue estimado de plan completo y compara dos opciones lado a lado, para vertical primero y con el mecanismo listo para macrolotes, residencial y unifamiliar.
 - Medición: Un plan armado en el árbol se guarda como una columna del Maestro y se reabre con los mismos valores; la vista previa coincide con el libro en la prueba de concordancia (hoy 48 cifras con fórmula coinciden, 38 directas y 10 por equivalencia, 7 sin par y ninguna difiere); una regla editada se refleja sin desplegar código; el contador por confirmar es igual a los datos sin confirmar de las ramas abiertas; el visor muestra el mismo plan sin cambios de contrato.
 - Dependencias: Sin dependencias previas.
-- Esfuerzo: L. Por bloques: definición en el Maestro, motor, pantalla, adaptadores y guardado, pruebas; paso a ramas, despliegue de Apps Script y aceptación separados. Decisión: **pendiente**.
+- Esfuerzo: L. Por bloques: definición en el Maestro, motor, pantalla, adaptadores y guardado, pruebas; paso a ramas, despliegue de Apps Script y aceptación separados. Decisión: **aprobada**.
 
 ### Requisitos previos
 
-- Decisión de Dirección sobre la propuesta ARBOLPPP. Ya decididos: la definición vive en el libro PPP Maestro, la pantalla calcula una vista previa rotulada, sin menú ni permiso nuevo, solo admin publica. El 23-nov-2026 Dirección autorizó el paso a ramas, sin fusionar.
+- Dirección aprobó el 23-nov-2026 integrar el árbol hasta terminarlo. Ya decididos: la definición vive en el libro PPP Maestro, la pantalla calcula una vista previa rotulada, sin menú ni permiso nuevo, solo admin publica.
 - Revisión antes de cada rama: el caso de muestra, las referencias y los textos de origen son inventados o iniciales; se publica solo la lista cerrada de archivos y se repite la búsqueda de datos privados sobre la rama y su historial; los repositorios son públicos.
 - Aprobar una versión nueva de la implementación existente de Apps Script con dos rutas (lectura de definición y guardado de un plan); nunca una implementación nueva; la publica el agente con el Chrome de Dirección y se prueba solo con GET y con una copia privada de datos sintéticos.
 - Registrar el libro PPP Maestro como componente del atlas y guardar su identificador solo en la configuración del vivero.
@@ -738,10 +738,10 @@ Prioridad: vender más → margen y control → cobrar antes. Son hipótesis de 
 
 ### Tareas
 
-1. Pasar a ramas, con revisión, el motor puro, la pantalla, los adaptadores de conexión y sus pruebas en una carpeta propia, sin copias previas ni datos reales (hecho en rama, sin fusionar).
+1. Pasar al repositorio, con revisión, el motor puro, la pantalla, los adaptadores de conexión y sus pruebas en una carpeta propia, sin copias previas ni datos reales (hecho).
 2. Publicar solo la lista blanca de archivos (motor, pantalla, conexión, definición y pruebas necesarias), con la definición de referencias iniciales; los valores reales y las copias de trabajo no se publican.
-3. Agregar al servidor existente las dos rutas del borrador y probarlas contra una copia privada con datos sintéticos.
-4. Enlazar el árbol como ruta del plan en el PPP único con interruptor en la configuración del vivero.
+3. Agregar al servidor existente las rutas del árbol, apagadas por omisión (fuente hecha; falta publicarlas y probarlas contra una copia privada con datos sintéticos).
+4. Enlazar el árbol desde el PPP único con interruptor en la configuración del vivero (hecho en código; se ve cuando el servidor esté publicado y encendido).
 5. Hacer permanente la prueba de concordancia entre la vista previa y el libro con más de un caso.
 6. Probar en celulares reales a 430, 375 y 320 px y con lector de pantalla.
 
