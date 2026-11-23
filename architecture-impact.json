@@ -5,7 +5,9 @@
   "components": [
     "GAS-PPP2",
     "SYS-ARBOL-PPP",
-    "SHEET-PPP-MAESTRO"
+    "SHEET-PPP-MAESTRO",
+    "SYS-YOD-OS",
+    "SYS-CONTROL"
   ],
   "tests": [
     "node scripts/arquitectura.cjs --check: modelo válido y vistas sincronizadas.",
