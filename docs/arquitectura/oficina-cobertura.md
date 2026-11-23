@@ -1386,7 +1386,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dirección
 
-**Estado registrado:** propuesto. Propuesto. El motor, la pantalla, los adaptadores, la definición del árbol vertical y sus pruebas están en una rama de potenciales-yod, sin fusionar (260 pruebas del motor y 57 de la conexión en Node, con datos inventados). Nada está desplegado ni probado contra el libro vivo ni contra producción; la página no pide sesión ni guarda.
+**Estado registrado:** propuesto. Propuesto. El motor, la pantalla, los adaptadores, la definición del árbol vertical y sus pruebas están en una rama de potenciales-yod, sin fusionar (260 pruebas del motor y 57 de la conexión en Node, con datos inventados). Nada está desplegado ni probado contra el libro vivo ni contra producción; la página no pide sesión y no guarda en ningún servidor ni libro (conserva el plan, la comparación y las reglas editadas solo en el almacenamiento local del navegador).
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -1410,7 +1410,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - El caso de muestra, los valores de referencia y los textos de origen de la definición son inventados o iniciales; los valores reales se ajustan en el libro privado. Solo se publica una lista cerrada de archivos, revisada antes de cada rama.
 - La vista previa calcula en el navegador con una fórmula escrita como datos: es una excepción de Dirección y exige prueba de concordancia con el libro.
 - El visor real no muestra el aviso de plan fuera del horizonte de 60 meses ni usa los umbrales propios de las pruebas en sus indicadores.
-- Mientras no exista la ruta desde el plan, la página del árbol es una calculadora suelta de vista previa: no pide sesión, no lee ningún libro y no guarda.
+- Mientras no exista la ruta desde el plan, la página del árbol es una calculadora suelta de vista previa: no pide sesión, no lee ningún libro y no guarda en ningún servidor ni libro (conserva el plan, la comparación y las reglas editadas solo en el almacenamiento local del navegador).
 
 ### PPP Maestro · base de planes y definición del árbol · SHEET-PPP-MAESTRO
 
