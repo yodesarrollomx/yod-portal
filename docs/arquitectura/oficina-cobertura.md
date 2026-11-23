@@ -1,6 +1,6 @@
 # YOD OS · Cobertura de la oficina
 
-**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-23.arbol-ppp.1
+**Observación:** 2026-10-07T05:34:28Z · **Revisión:** 2026-11-23.arbol-ppp.2
 
 **Encargado de verificación:** Coordinación técnica YOD
 
@@ -1302,7 +1302,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Responsable técnico del backend
 
-**Estado registrado:** ejecucion. Versión 8 activa sobre la misma implementación desde el 13-nov-2026. Comprobado en vivo: escrituras con bitácora, ronda a pedido y ronda del latido, pruebas de estrés, investigación por API con búsqueda en la web, consejo por API con los siete votos (sesión de prueba en una copia de un plan, 31 s) y lectura desde lo ya leído: 1.7 a 2.4 s en el servidor, contra 9 a 22 s cuando hay que leer el libro.
+**Estado registrado:** ejecucion. Versión 17 activa sobre la misma implementación desde el 23-nov-2026 (trae las rutas del Árbol PPP, encendidas por la configuración del vivero). Antes, la versión 8 del 13-nov-2026 comprobó en vivo: escrituras con bitácora, ronda a pedido y ronda del latido, pruebas de estrés, investigación por API con búsqueda en la web, consejo por API con los siete votos (sesión de prueba en una copia de un plan, 31 s) y lectura desde lo ya leído: 1.7 a 2.4 s en el servidor, contra 9 a 22 s cuando hay que leer el libro.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -1320,6 +1320,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 - Contrato ppp2-servidor-v1: canje con board=PT, allowlist de escrituras, LockService, revisión y bitácora; ronda con diario de recuperación; consejo con siete votos sobre la misma huella; caché de lo leído con llave por última modificación y sello de la bitácora · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/PPP2.gs · Revisión: PR 103 (potenciales-yod)
 - Versión 8 publicada el 13-nov-2026. Registro de ejecuciones: la primera lectura tardó 22.1 s (canje y libro en frío) y las siguientes 1.7 y 2.4 s con lo ya leído; el consejo tardó 30.9 s con siete votos por API y respondió con el plan ya leído. · Estado: ejecucion · Revisión: Apps Script versión 8
+- Versión 17 publicada el 23-nov-2026 08:05 (Hermosillo) como «Versión nueva» sobre la misma implementación (antes versión 16): archivo nuevo ArbolPPP.gs y los enganches del árbol en Código.gs (main ccfb4f4); Visor.gs sin cambio. Antes de publicar, lo guardado era idéntico byte a byte a lo de la versión 16, sin cambios ajenos. Comprobado sólo con GET y el árbol apagado: ppp2-meta igual que siempre, arbol-definicion responde «apagado» con sesión y «liga» con clave falsa, el vivero lista los mismos 6 planes. · Estado: ejecucion · Revisión: Apps Script versión 17
 
 **Evidencia de conexiones:**
 
@@ -1386,7 +1387,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dirección
 
-**Estado registrado:** codigo. Código en potenciales-yod (carpeta arbol-ppp/ y server/ppp2/ArbolPPP.gs), con pruebas en Node contra dobles y datos inventados. La página calcula la vista previa en el navegador. Las rutas del servidor para leer la definición y guardar o abrir planes NO están publicadas como Apps Script y nacen apagadas (renglón arbol = sí en la configuración del vivero): hasta entonces la página no lee ningún libro, no guarda en ningún servidor y solo conserva el avance en el almacenamiento local del navegador. Nada se probó contra Google Sheets ni en producción.
+**Estado registrado:** ejecucion. Publicado y encendido el 23-nov-2026 (servidor PPP 2, versión 17; configuración del vivero arbol = sí). Probado primero en una copia privada del libro Maestro y después en el Maestro real: la página dice «Conectado al libro», guarda un plan como columna en Borrador, lo abre de vuelta y lo reemplaza; un texto que empieza con = queda como texto. La vista previa sigue calculándose en el navegador y rotulada como estimado. Se apaga con arbol = no (tarda hasta dos minutos).
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -1399,6 +1400,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 - Puente de la página con el servidor del PPP 2: pide la definición, guarda y abre planes con la sesión del Portero; sin sesión, apagado o sin red la pantalla sigue como calculadora y lo dice. · Estado: codigo · yodesarrollomx/potenciales-yod · arbol-ppp/servidor.js · Sin revisión inmutable en esta referencia
 - Rutas del árbol en el servidor del PPP 2, apagadas por omisión. Fuente en el repositorio: no acredita publicación ni despliegue. · Estado: codigo · yodesarrollomx/potenciales-yod · server/ppp2/ArbolPPP.gs · Sin revisión inmutable en esta referencia
 - Sin entrada nueva en el menú ni código de permiso nuevo: el PPP único enseña el enlace solo cuando el servidor dice que el árbol está encendido. · Estado: codigo · yodesarrollomx/potenciales-yod · ppp2.js · Sin revisión inmutable en esta referencia
+- 23-nov-2026, copia privada del Maestro: guardar creó la columna P en Borrador con la marca «Árbol PPP» en I-06, las 84 fórmulas de la plantilla J copiadas y ajustadas, las columnas J a O sin cambios y un renglón en CAMBIOS; abrir regresó nombre, decisiones y m²; reemplazar escribió en la misma columna (V1 a V2) con su renglón «Columna actualizada»; un nombre que empieza con = quedó como texto (stringValue). Después, en el Maestro real, un plan de prueba quedó en la columna P con el mismo resultado. Comparado celda por celda contra una exportación previa de cada libro. · Estado: ejecucion · Revisión: Apps Script versión 17
 
 **Evidencia de conexiones:**
 
@@ -1423,7 +1425,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 
 **Responsable operativo:** Dirección / propietario del libro
 
-**Estado registrado:** declarado. Declarado. Se comprobó por huella de fila que las nueve pestañas ARBOL\_\* coinciden con la definición del repositorio y se dieron de alta los factores nuevos del árbol; ninguna ruta de Apps Script publicada lo lee ni lo escribe todavía.
+**Estado registrado:** ejecucion. En uso desde el 23-nov-2026: el servidor PPP 2 (versión 17) lee las pestañas ARBOL\_\* y guarda los planes del árbol como columnas en Borrador de MAESTRO, con renglón en CAMBIOS. El primer guardado real es una columna de prueba de instalación (columna P), marcada como tal en su nombre. Las nueve pestañas ARBOL\_\* coinciden por huella con la definición del repositorio.
 
 **Conexiones registradas; no habilitan operaciones:**
 
@@ -1432,6 +1434,7 @@ Los IDs originales se conservan; resolver un alias no modifica permisos.
 **Evidencia de la ficha:**
 
 - Definición del árbol y factores nuevos cargados en el libro por una persona con acceso, con respaldo previo, lectura de vuelta y renglón en la pestaña CAMBIOS. El libro es privado y no está en ningún repositorio. · Estado: declarado · Sin revisión inmutable en esta referencia
+- 23-nov-2026: un plan de prueba guardado desde la página del árbol quedó en la columna P de MAESTRO (Borrador, fórmulas de la plantilla J intactas, J a O sin cambios, renglón 11 de CAMBIOS). · Estado: ejecucion · Revisión: Apps Script versión 17
 
 **Evidencia de conexiones:**
 
