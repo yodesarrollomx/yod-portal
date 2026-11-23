@@ -1,19 +1,18 @@
 {
-  "model_revision": "2026-11-23.arbol-ppp.1",
+  "model_revision": "2026-11-23.arbol-ppp.2",
   "proposal_id": "CHG-ARBOL-PPP-20261123",
-  "summary": "Registrar en el atlas el árbol de decisiones del PPP (propuesta ARBOLPPP, aprobada): dos componentes nuevos (SYS-ARBOL-PPP y el libro PPP Maestro), tres conexiones, un contrato, la propuesta, el cambio y las reglas de propiedad; regenerar las vistas; agregar los dos componentes al inventario de salud (os/salud-catalogo.json), que debe coincidir con el modelo. El modelo distingue el código del repositorio de la publicación del servidor, que no está hecha. No cambia código del portal ni menú, permisos o precios.",
+  "summary": "Registrar en el atlas la publicación y el encendido del servidor del Árbol PPP: el servidor PPP 2 queda en la versión 17 (Versión nueva sobre la misma implementación, con ArbolPPP.gs y los enganches del árbol); comprobado sólo con GET con el árbol apagado; encendido por la configuración del vivero; probado en una copia privada del libro Maestro y después en el Maestro real. SYS-ARBOL-PPP y SHEET-PPP-MAESTRO pasan a ejecución con su evidencia; el cambio CHG-ARBOL-PPP-20261123 pasa a publicado. Sólo atlas y vistas generadas: no cambia código del portal, menú, permisos ni precios. Sin ids de libros, ligas ni llaves.",
   "components": [
+    "GAS-PPP2",
     "SYS-ARBOL-PPP",
-    "SHEET-PPP-MAESTRO",
-    "SYS-YOD-OS",
-    "SYS-CONTROL"
+    "SHEET-PPP-MAESTRO"
   ],
   "tests": [
-    "node scripts/arquitectura.cjs --check: modelo válido y vistas sincronizadas con 99 componentes, 168 conexiones y 20 procesos.",
-    "node --test tests/*.cjs: la prueba «all components and process steps come from the model» exige que os/salud-catalogo.json tenga los mismos componentes que el modelo.",
-    "node verify-os.cjs, node verify-portal.cjs, node verify-accesos.cjs y node verify-obra-app.cjs.",
+    "node scripts/arquitectura.cjs --check: modelo válido y vistas sincronizadas.",
+    "node --test tests/*.cjs, node verify-os.cjs, node verify-portal.cjs, node verify-accesos.cjs y node verify-obra-app.cjs.",
     "node scripts/verificar-impacto.cjs con este registro y el modelo de la rama.",
-    "Pendiente: nada de esto demuestra funcionamiento en producción; el servidor del árbol no está publicado y nace apagado."
+    "En vivo (23-nov-2026): GET ppp2-meta, arbol-definicion (apagado y clave falsa) y vivero; en la copia privada guardar, abrir, reemplazar y texto con = como texto; en el Maestro real un plan de prueba en la columna P; comparación celda por celda contra exportaciones previas.",
+    "Sin probar: guardar con un rol editor que no sea admin, sin_columnas y dos personas a la vez."
   ],
-  "rollback": "Revertir por revisión el commit del atlas (modelo, vistas generadas y os/salud-catalogo.json) y repetir las verificaciones; volver a fijar en el workflow de potenciales-yod el commit anterior del atlas. No borrar ni restaurar registros de negocio, Sheets o archivos de clientes."
+  "rollback": "Servidor: Gestionar implementaciones → lápiz → elegir la versión 16 → Implementar; o sólo apagar con arbol = no en la configuración del vivero (tarda hasta dos minutos). Atlas: revertir por revisión este commit y repetir las verificaciones. No borrar registros de negocio ni columnas del Maestro sin indicación de Dirección."
 }

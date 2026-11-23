@@ -1,6 +1,6 @@
 # Conexiones de YOD OS
 
-> Generado desde modelo.json. No editar a mano. Revisión 2026-11-23.arbol-ppp.1 · 2026-11-13.
+> Generado desde modelo.json. No editar a mano. Revisión 2026-11-23.arbol-ppp.2 · 2026-11-23.
 
 Línea continua: conexión observada en código o ejecución. Discontinua: manual, declarada, propuesta o pendiente. Una conexión observada en código no acredita el despliegue.
 
@@ -225,7 +225,6 @@ flowchart LR
   class n_GAS_INVERSION pendiente;
   class n_SHEET_INVERSION pendiente;
   class n_GAS_AUX_METRICAS pendiente;
-  class n_SHEET_PPP_MAESTRO pendiente;
 ```
 
 ## Proyectos
