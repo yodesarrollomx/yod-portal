@@ -1,20 +1,19 @@
 {
-  "model_revision": "2026-11-17.ppp-unico.1",
-  "proposal_id": "CHG-PPP-NOMBRE-20261117",
-  "summary": "Mostrar PPP en la barra del plan tanto al abrir la cartera como al entrar por una liga del Vivero.",
+  "model_revision": "2026-11-23.arbol-ppp.1",
+  "proposal_id": "CHG-ARBOL-PPP-20261123",
+  "summary": "Registrar en el atlas el árbol de decisiones del PPP (propuesta ARBOLPPP, aprobada): dos componentes nuevos (SYS-ARBOL-PPP y el libro PPP Maestro), tres conexiones, un contrato, la propuesta, el cambio y las reglas de propiedad; regenerar las vistas; agregar los dos componentes al inventario de salud (os/salud-catalogo.json), que debe coincidir con el modelo. El modelo distingue el código del repositorio de la publicación del servidor, que no está hecha. No cambia código del portal ni menú, permisos o precios.",
   "components": [
-    "SYS-POTENCIALES",
-    "SYS-PPP2",
-    "GAS-PORTERO",
-    "SYS-DESPACHO",
+    "SYS-ARBOL-PPP",
+    "SHEET-PPP-MAESTRO",
     "SYS-YOD-OS",
-    "SYS-OBRA",
-    "SYS-OBRA-CLIENTE",
-    "SYS-TRACK",
     "SYS-CONTROL"
   ],
   "tests": [
-    "Paridad de nombres, navegación y lectura de la barra del PPP publicado."
+    "node scripts/arquitectura.cjs --check: modelo válido y vistas sincronizadas con 99 componentes, 168 conexiones y 20 procesos.",
+    "node --test tests/*.cjs: la prueba «all components and process steps come from the model» exige que os/salud-catalogo.json tenga los mismos componentes que el modelo.",
+    "node verify-os.cjs, node verify-portal.cjs, node verify-accesos.cjs y node verify-obra-app.cjs.",
+    "node scripts/verificar-impacto.cjs con este registro y el modelo de la rama.",
+    "Pendiente: nada de esto demuestra funcionamiento en producción; el servidor del árbol no está publicado y nace apagado."
   ],
-  "rollback": "Revertir la etiqueta mostrada por el marco."
+  "rollback": "Revertir por revisión el commit del atlas (modelo, vistas generadas y os/salud-catalogo.json) y repetir las verificaciones; volver a fijar en el workflow de potenciales-yod el commit anterior del atlas. No borrar ni restaurar registros de negocio, Sheets o archivos de clientes."
 }
